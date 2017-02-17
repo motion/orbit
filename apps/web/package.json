@@ -5,6 +5,7 @@
   "dependencies": {
     "gloss": "5.0.0",
     "motion-hmr": "1.0.0",
+    "motion-router": "^0.3.6",
     "motion-test-view": "*",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"

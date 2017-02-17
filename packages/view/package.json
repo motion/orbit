@@ -7,6 +7,7 @@
     "gloss": "^5.0.0",
     "mixwith": "^0.1.1",
     "motion-class-helpers": "*",
+    "motion-mobx-helpers": "*",
     "motion-view": "*",
     "react-mixin": "^3.0.5"
   }

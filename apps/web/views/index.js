@@ -1,6 +1,7 @@
 import view from 'motion-test-view'
 import App from '../stores/app'
 import Router from '../stores/router'
+import NotFound from './notfound'
 
 // make this.app / this.router available on all views
 @view.inject({
@@ -19,6 +20,10 @@ export default class ViewRoot {
     return (
       <page>
         <h1>Welcome</h1>
+        <nav>
+          <a onClick={() => this.router.go('/')}>Home</a>
+          <a onClick={() => this.router.go('/projects')}>Projects</a>
+        </nav>
         <Page />
       </page>
     )

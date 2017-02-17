@@ -4,6 +4,9 @@
   "main": "index.js",
   "dependencies": {
     "gloss": "5.0.0",
+    "lodash": "^4.17.4",
+    "mobx": "^3.1.0",
+    "mobx-react": "^4.1.0",
     "motion-hmr": "1.0.0",
     "motion-router": "^0.3.6",
     "motion-test-view": "*",

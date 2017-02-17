@@ -1,0 +1,18 @@
+{
+  "babel": {
+    "plugins": [
+      "motion-hmr",
+      ["gloss/transform", {
+        "decoratorName": "view"
+      }]
+    ],
+    "presets": [
+      "babel-preset-motion"
+    ]
+  },
+  "pathType": "filePath",
+  "webServerPort": 10482,
+  "saveNpmModules": true,
+  "bundleDirectory": ".",
+  "publicDirectory": "./public"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "my-view",
+  "private": true,
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "dependencies": {
+    "gloss": "^5.0.0",
+    "motion-class-helpers": "*"
+  }
+}

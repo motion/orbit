@@ -26,8 +26,8 @@ export default class ViewRoot {
 
   static style = {
     h1: {
-      color: 'lavendar',
-      padding: 100,
+      color: 'red',
+      padding: 10,
     }
   }
 }

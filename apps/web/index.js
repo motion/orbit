@@ -10,7 +10,9 @@ async function start() {
   if (DEV_MODE) {
     window._ = _
     window.React = React
+    window.App = App
   }
+
   // connect to db
   await App.connect()
   // now get views

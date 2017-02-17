@@ -5,6 +5,6 @@ import Projects from '../views/projects'
 export default new Router({
   routes: {
     '/': Home,
-    'projects/:id(/tab/:tab)(/job/:job)': Projects,
+    'projects(/:id)(/tab/:tab)': Projects,
   },
 })

@@ -1,5 +1,5 @@
 class App {
-  router = null
+  // have some user information
 
   async connect() {
     // connect to some db here

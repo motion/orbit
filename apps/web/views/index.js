@@ -1,14 +1,15 @@
-import view from 'motion-test-view'
+import view from 'my-view'
 import App from '../stores/app'
 import Router from '../stores/router'
 import NotFound from './notfound'
 
-// make this.app / this.router available on all views
+// here we can inject things into every view
+// ideally this is minimal
 @view.inject({
   router: Router,
   app: App,
 })
-export default class ViewRoot {
+export default class ViewsRoot {
   componentWillMount() {
     // add events that go away on unmount
     this.addEvent(window, 'click', console.log)

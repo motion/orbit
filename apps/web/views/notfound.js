@@ -1,4 +1,4 @@
-import view from 'motion-test-view'
+import view from 'my-view'
 
 @view
 export default class NotFound {

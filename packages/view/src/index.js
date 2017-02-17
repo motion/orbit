@@ -1,5 +1,5 @@
-import view from 'motion-view'
-import { getClassHelpers } from 'motion-hmr'
+import createView from 'motion-view'
+import { hmrDecorate } from 'motion-hmr'
 import gloss from 'gloss'
 import mixin from 'react-mixin'
 import Helpers from 'motion-class-helpers'
@@ -9,12 +9,12 @@ import baseStyles from './styles'
 const styled = gloss({ baseStyles })
 
 // @view decorator
-export default view(Klass => {
+export default createView(Component => {
   // auto React.Component
-  Object.setPrototypeOf(Klass.prototype, React.Component.prototype)
+  Object.setPrototypeOf(Component.prototype, React.Component.prototype)
   // mixins
-  mixin(Klass.prototype, getClassHelpers())
-  mixin(Klass.prototype, Helpers)
+  mixin(Component.prototype, hmrDecorate())
+  mixin(Component.prototype, Helpers)
   // gloss
-  return styled(Klass)
+  return styled(Component)
 })

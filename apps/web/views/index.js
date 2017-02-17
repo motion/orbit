@@ -1,8 +1,10 @@
 import view from 'motion-test-view'
 import App from '../stores/app'
+import Router from '../stores/router'
 
-// make this.app available on all views
+// make this.app / this.router available on all views
 @view.inject({
+  router: Router,
   app: App,
 })
 export default class ViewRoot {
@@ -12,11 +14,7 @@ export default class ViewRoot {
   }
 
   render() {
-    const View = this.app.router.activeView || NotFound
-
-    if (View.noLayout) {
-      return <View />
-    }
+    const Page = this.router.activeView || NotFound
 
     return (
       <page>

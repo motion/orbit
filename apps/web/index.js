@@ -1,34 +1,27 @@
 import React from 'react'
 import { render } from 'react-dom'
-import Router from 'motion-router'
 import _ from 'lodash'
 import App from './stores/app'
 
-console.log(Router)
+const DEV_MODE = process.env.NODE_ENV === 'development'
 
 async function start() {
   // dev helpers
-  if (process.env.NODE_ENV === 'development') {
+  if (DEV_MODE) {
     window._ = _
     window.React = React
   }
-
   // connect to db
   await App.connect()
-
+  // now get views
   const Views = require('./views').default
-  const routes = require('./routes').default
-  const router = new Router({ routes })
-
-  App.router = router
-
   // random key to trigger HMR
   render(
-    <Views router={router} key={Math.random()} />,
+    <Views key={Math.random()} />,
     document.querySelector('#app')
   )
 
-  if (process.env.NODE_ENV === 'development' && module.hot) {
+  if (DEV_MODE && module.hot) {
     module.hot.accept()
   }
 }

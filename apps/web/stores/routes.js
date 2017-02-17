@@ -1,5 +1,5 @@
-import Home from './views/home'
-import Projects from './views/projects'
+import Home from '../views/home'
+import Projects from '../views/projects'
 
 export default {
   '/': Home,

@@ -1,23 +1,19 @@
-import view, { addStoreHMR } from 'motion-view'
+import view from 'motion-view'
+import { StoreHMR } from 'motion-hmr'
 import gloss from 'gloss'
-import { mix } from 'mixwith'
-import { addHelpers } from 'motion-class-helpers'
+import reactMixin from 'react-mixin'
+import Helpers from 'motion-class-helpers'
 import React from 'react'
 
-// add styles
 const styled = gloss()
 
-const HelpfulComponent = mix(React.Component)
-  .with(
-    addStoreHMR,
-    addHelpers(),
-  )
-
-// motion-view is a simple decorator, it passes through the class
+// @view decorator
 export default view(Klass => {
-  // add HelpfulComponent
-  Object.setPrototypeOf(Klass.prototype, HelpfulComponent.prototype)
-
-  // add gloss
+  // auto-extend React.Component
+  Object.setPrototypeOf(Klass.prototype, React.Component.prototype)
+  // mixins
+  reactMixin(Klass.prototype, StoreHMR)
+  reactMixin(Klass.prototype, Helpers)
+  // gloss
   return styled(Klass)
 })

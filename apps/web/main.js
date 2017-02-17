@@ -6,13 +6,10 @@ class Store {
   x = 1
 }
 
-@view.inject({
-  test: 10
-})
-export default class Main extends React.Component {
-  constructor() {
-    super()
-    console.log('called main constructor')
+@view
+export default class Main {
+  componentDidMount() {
+    this.addEvent(window, 'click', console.log)
   }
 
   render(a) {
@@ -32,7 +29,7 @@ export default class Main extends React.Component {
 }
 
 
-@view.provide('test', {
+@view.provide({
   store: Store,
 })
 class Sub {

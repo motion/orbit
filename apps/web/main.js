@@ -9,10 +9,10 @@ class Store {
 @view.inject({
   test: 10
 })
-export default class Main {
-  componentDidMount() {
-    // this.addEvent(window, 'mousemove', console.log)
-    console.log(this)
+export default class Main extends React.Component {
+  constructor() {
+    super()
+    console.log('called main constructor')
   }
 
   render(a) {
@@ -32,10 +32,12 @@ export default class Main {
 }
 
 
-@view.provide('test')
+@view.provide('test', {
+  store: Store,
+})
 class Sub {
   render() {
-    console.log('gpot', this.test)
+    console.log('gpot', this.test, this.store.x)
     return null
   }
 }

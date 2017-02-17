@@ -1,15 +1,15 @@
 // @flow
 import React from 'react'
-import view, { Component } from 'motion-test-view'
+import view from 'motion-test-view'
 
 class Store {
   x = 1
 }
 
 @view
-export default class Main extends Component {
+export default class Main {
   componentDidMount() {
-    this.addEvent(window, 'mousemove', console.log)
+    // this.addEvent(window, 'mousemove', console.log)
   }
 
   render(a) {

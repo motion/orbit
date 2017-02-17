@@ -2,6 +2,9 @@
   "private": true,
   "name": "my-web-app",
   "main": "index.js",
+  "scripts": {
+    "start": "motion"
+  },
   "dependencies": {
     "gloss": "5.0.0",
     "lodash": "^4.17.4",
@@ -12,5 +15,8 @@
     "my-decorators": "*",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "motion": "5.0.0-beta14"
   }
 }

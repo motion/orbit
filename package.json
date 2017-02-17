@@ -8,7 +8,7 @@
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
     "lint": "eslint .",
-    "start": "cd apps/web && motion"
+    "start": "cd apps/web && npm run start"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",

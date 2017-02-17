@@ -1,0 +1,25 @@
+version: "2"
+services:
+  my-rethink:
+    container_name: my-rethink
+    hostname: my-rethink
+    image: rethinkdb:2.3
+    restart: always
+    ports:
+      - 8081:8081
+      - 28010:28010
+    volumes:
+      - ./app_data/:/data:rw
+  my-horizon:
+    container_name: my-horizon
+    hostname: my-horizon
+    image: mhart/alpine-node:6
+    command: node /app/apps/horizon/start
+    restart: always
+    expose:
+      - 443
+    volumes:
+      - ./apps/horizon:/app/apps/horizon:ro
+      - ./packages:/app/packages:ro
+    links:
+      - my-rethink

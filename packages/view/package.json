@@ -1,5 +1,5 @@
 {
-  "name": "my-view",
+  "name": "motion-test-view",
   "private": true,
   "version": "1.0.0",
   "main": "lib/index.js",

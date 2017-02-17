@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import view from 'my-view'
+import view from '@motion/view'
 
 class Store {
   x = 1

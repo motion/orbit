@@ -2,9 +2,10 @@
   "name": "motion-app",
   "scripts": {
     "release-web": "cd apps/web; npm run build",
-    "bootstrap": "lerna bootstrap; npm run compile",
+    "bootstrap": "lerna bootstrap; npm run build",
     "clean": "rm -rf {packages,apps}/*/lib",
-    "build": "lerna exec --concurrency 999 -- babel src --out-dir lib",
+    "build": "lerna exec --concurrency 999 --ignore my-web-app -- babel src --out-dir lib",
+    "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
     "lint": "eslint ."
   },

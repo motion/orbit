@@ -5,6 +5,8 @@
   "main": "lib/index.js",
   "dependencies": {
     "gloss": "^5.0.0",
-    "motion-class-helpers": "*"
+    "mixwith": "^0.1.1",
+    "motion-class-helpers": "*",
+    "react-mixin": "^3.0.5"
   }
 }

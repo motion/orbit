@@ -7,7 +7,8 @@
     "build": "lerna exec --concurrency 999 --ignore my-web-app -- babel src --out-dir lib",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "cd apps/web && motion"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",

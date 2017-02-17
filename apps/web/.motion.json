@@ -11,7 +11,7 @@
     ]
   },
   "pathType": "filePath",
-  "webServerPort": 10482,
+  "webServerPort": 4444,
   "saveNpmModules": true,
   "bundleDirectory": ".",
   "publicDirectory": "./public"

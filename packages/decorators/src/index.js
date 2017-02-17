@@ -8,18 +8,28 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import baseStyles from './styles'
 
+// mobx decorators
+export * from 'mobx'
+
 const styled = gloss({ baseStyles })
 
 // @view decorator
-export default createView(Component => {
-  // + extends React.Component
-  Object.setPrototypeOf(Component.prototype, React.Component.prototype)
+export const view = createView(View => {
+  // + extends React.View
+  Object.setPrototypeOf(View.prototype, React.Component.prototype)
   // + hmr
-  mixin(Component.prototype, hmrDecorate())
+  mixin(View.prototype, hmrDecorate())
   // + this.setTimeout + this.setInterval + this.addEvent
-  mixin(Component.prototype, Helpers)
+  mixin(View.prototype, Helpers)
   // + this.react + this.watch
-  mixin(Component.prototype, MobxHelpers)
+  mixin(View.prototype, MobxHelpers)
   // + gloss + mobx
-  return styled(observer(Component))
+  return styled(observer(View))
 })
+
+// @store decorator
+export const store = Store => {
+  mixin(Store.prototype, Helpers)
+  mixin(Store.prototype, MobxHelpers)
+  return Store
+}

@@ -1,4 +1,4 @@
-import view from 'my-view'
+import { view } from 'my-decorators'
 import App from '../stores/app'
 import Router from '../stores/router'
 import NotFound from './notfound'

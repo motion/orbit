@@ -1,4 +1,4 @@
-import view from 'my-view'
+import { view } from 'my-decorators'
 
 @view
 export default class Home {

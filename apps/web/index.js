@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
 import _ from 'lodash'
 import App from './stores/app'
 
@@ -18,8 +18,8 @@ async function start() {
   // now get views
   const Views = require('./views').default
   // random key to trigger HMR
-  render(
-    <Views key={Math.random()} />,
+  ReactDOM.render(
+    <Views />,
     document.querySelector('#app')
   )
 

@@ -1,0 +1,9 @@
+{
+  "name": "my-views",
+  "private": true,
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "dependencies": {
+    "my-decorators": "*"
+  }
+}

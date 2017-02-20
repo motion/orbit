@@ -3,6 +3,30 @@ import App from "../stores/app"
 import Router from "../stores/router"
 import NotFound from "./notfound"
 
+@view class Sidebar {
+  render() {
+    return (
+      <sidebar>
+        <section>
+          <a>Test thing</a>
+          <a>Test thing</a>
+          <a>Test thing</a>
+          <a>Test thing</a>
+          <a>Test thing</a>
+        </section>
+      </sidebar>
+    )
+  }
+
+  static style = {
+    sidebar: {
+      height: '100%',
+      width: 160,
+      borderRight: [1, '#eee'],
+    }
+  }
+}
+
 // here we can inject things into every view
 // ideally this is minimal
 @view.inject({
@@ -27,13 +51,26 @@ export default class ViewsRoot {
           </nav>
         </header>
         <content>
-          <Page />
+          <Sidebar />
+          <main>
+            <Page />
+          </main>
         </content>
       </page>
     )
   }
 
   static style = {
+    page: {
+      flex: 1,
+    },
+    content: {
+      flexFlow: 'row',
+      flex: 1,
+    },
+    main: {
+      padding: 10,
+    },
     header: {
       borderBottom: [1, '#f2f2f2'],
     },
@@ -49,9 +86,6 @@ export default class ViewsRoot {
       '&:hover': {
         background: '#f2f2f2',
       },
-    },
-    content: {
-      padding: 10,
     },
   }
 }

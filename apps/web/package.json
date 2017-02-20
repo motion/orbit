@@ -13,6 +13,7 @@
     "motion-hmr": "1.0.0",
     "motion-mobx-router": "^1.0.0",
     "my-decorators": "*",
+    "my-views": "*",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },

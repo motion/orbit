@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "bootstrap": "npm i && lerna bootstrap && npm run build",
-    "web": "cd apps/web && npm run start",
+    "web": "cd apps/web && motion --disable-cache",
     "backend": "docker-compose up",
     "clean": "rm -rf {packages,apps}/*/lib",
     "build": "lerna exec -- babel src --out-dir lib",

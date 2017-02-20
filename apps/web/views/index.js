@@ -7,8 +7,8 @@ import NotFound from './notfound'
 // here we can inject things into every view
 // ideally this is minimal
 @view.inject({
+  app: App,
   router: Router,
-  app: App
 })
 export default class ViewsRoot {
   componentWillMount() {

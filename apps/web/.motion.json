@@ -1,7 +1,7 @@
 {
   "babel": {
     "plugins": [
-      "motion-hmr",
+      "motion-view/transform",
       ["gloss/transform", {
         "decoratorName": "view"
       }]

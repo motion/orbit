@@ -3,7 +3,7 @@
   "name": "my-web-app",
   "main": "index.js",
   "scripts": {
-    "start": "motion --disable-cache"
+    "start": "motion --disable-cache --debug"
   },
   "dependencies": {
     "gloss": "^5.0.0",

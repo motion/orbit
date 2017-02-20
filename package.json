@@ -2,12 +2,11 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap; npm run build",
-    "start-web": "cd apps/web && npm run start",
-    "start-backend": "docker-compose up",
-    "release-web": "cd apps/web; npm run build",
+    "bootstrap": "npm i && lerna bootstrap && npm run build",
+    "web": "cd apps/web && npm run start",
+    "backend": "docker-compose up",
     "clean": "rm -rf {packages,apps}/*/lib",
-    "build": "lerna exec --concurrency 999 --ignore my{-web-app,-horizon-app} -- babel src --out-dir lib",
+    "build": "lerna exec -- babel src --out-dir lib",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
     "lint": "eslint ."
@@ -17,6 +16,6 @@
     "babel-eslint": "^7.0.0",
     "babel-preset-steelbrain": "^4.0.2",
     "flow-bin": "^0.38.0",
-    "lerna-motion": "2.2.3"
+    "lerna-motion": "^2.2.3"
   }
 }

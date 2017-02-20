@@ -1,31 +1,8 @@
-import { view } from "my-decorators"
-import App from "../stores/app"
-import Router from "../stores/router"
-import NotFound from "./notfound"
-
-@view class Sidebar {
-  render() {
-    return (
-      <sidebar>
-        <section>
-          <a>Test thing</a>
-          <a>Test thing</a>
-          <a>Test thing</a>
-          <a>Test thing</a>
-          <a>Test thing</a>
-        </section>
-      </sidebar>
-    )
-  }
-
-  static style = {
-    sidebar: {
-      height: '100%',
-      width: 160,
-      borderRight: [1, '#eee'],
-    }
-  }
-}
+import { view } from 'my-decorators'
+import Sidebar from './sidebar'
+import App from '../stores/app'
+import Router from '../stores/router'
+import NotFound from './notfound'
 
 // here we can inject things into every view
 // ideally this is minimal
@@ -70,6 +47,7 @@ export default class ViewsRoot {
     },
     main: {
       padding: 10,
+      flex: 1,
     },
     header: {
       borderBottom: [1, '#f2f2f2'],

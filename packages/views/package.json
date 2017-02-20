@@ -3,7 +3,23 @@
   "private": true,
   "version": "1.0.0",
   "main": "lib/index.js",
+  "babel": {
+    "presets": [
+      "steelbrain"
+    ],
+    "plugins": [
+      [
+        "gloss/transform",
+        {
+          "decoratorName": "view"
+        }
+      ]
+    ]
+  },
   "dependencies": {
-    "my-decorators": "*"
+    "gloss": "^5.0.6",
+    "my-decorators": "*",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
   }
 }

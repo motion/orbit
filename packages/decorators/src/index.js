@@ -1,7 +1,7 @@
 import React from 'react'
 import gloss from 'gloss'
 import mixin from 'react-mixin'
-import viewHelpers from 'motion-view'
+import viewHelpers, { componentWillMount } from 'motion-view'
 import { addEvent, setTimeout, setInterval, ref } from 'motion-class-helpers'
 import { watch, react } from 'motion-mobx-helpers'
 import { observer } from 'mobx-react'
@@ -12,7 +12,7 @@ export * from 'mobx'
 // gloss
 export const glossy = gloss({ baseStyles })
 // view helpers
-const { provide, inject, componentWillMount } = viewHelpers()
+const { provide, inject } = viewHelpers()
 
 // @view decorator
 export function view(View) {
@@ -26,11 +26,11 @@ export function view(View) {
   return glossy(observer(View))
 }
 
-view.provide = provide
-view.inject = items => Klass => view(inject(items)(Klass))
+view.provide = provide(view)
+view.inject = inject(view)
 
 // @store decorator
-export const store = Store => {
+export function store(Store) {
   mixin(Store.prototype, Helpers)
   mixin(Store.prototype, { watch, react })
   return Store

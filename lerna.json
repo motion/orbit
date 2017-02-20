@@ -1,14 +1,5 @@
 {
   "lerna": "2.2.3",
   "version": "0.0.0",
-  "packages": ["apps/*"],
-  "commands": {
-    "exec": {
-      "ignore": [
-        "my-horizon-app",
-        "my-web-app"
-      ],
-      "concurrency": "1000"
-    }
-  }
+  "directories": ["apps", "packages"]
 }

@@ -6,14 +6,14 @@
     "start": "motion --disable-cache"
   },
   "dependencies": {
-    "gloss": "5.0.0",
+    "my-decorators": "*",
+    "my-views": "*",
+    "gloss": "^5.0.0",
     "lodash": "^4.17.4",
     "mobx": "^3.1.0",
     "mobx-react": "^4.1.0",
-    "motion-hmr": "1.0.0",
+    "motion-hmr": "^1.1.0",
     "motion-mobx-router": "^1.0.0",
-    "my-decorators": "*",
-    "my-views": "*",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },

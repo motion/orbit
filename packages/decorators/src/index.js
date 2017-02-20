@@ -1,35 +1,43 @@
-import createView from 'motion-view'
-import { hmrDecorate } from 'motion-hmr'
+import React from 'react'
 import gloss from 'gloss'
 import mixin from 'react-mixin'
-import Helpers from 'motion-class-helpers'
-import MobxHelpers from 'motion-mobx-helpers'
-import React from 'react'
+import { inject, provide } from 'motion-view'
+import { viewHMR } from 'motion-hmr'
+import { addEvent, setTimeout, setInterval, ref } from 'motion-class-helpers'
+import { watch, react } from 'motion-mobx-helpers'
 import { observer } from 'mobx-react'
 import baseStyles from './styles'
 
 // mobx decorators
 export * from 'mobx'
 
+// gloss
 const styled = gloss({ baseStyles })
 
+// view hmr hook
+const { componentWillMount } = viewHMR()
+
 // @view decorator
-export const view = createView(View => {
-  // + extends React.View
+export const view = (View: Function | string, styles: ?Object) => {
+  // view() shorthand
+  if (typeof View === 'string') {
+    const tag = View
+    return styled(tag, { [tag]: styles })
+  }
+  // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
-  // + hmr
-  mixin(View.prototype, hmrDecorate())
-  // + this.setTimeout + this.setInterval + this.addEvent
-  mixin(View.prototype, Helpers)
-  // + this.react + this.watch
-  mixin(View.prototype, MobxHelpers)
-  // + gloss + mobx
+  // mixins
+  mixin(View.prototype, { inject, provide })
+  mixin(View.prototype, { componentWillMount })
+  mixin(View.prototype, { addEvent, setTimeout, setInterval, ref })
+  mixin(View.prototype, { watch, react })
+  // gloss, mobx
   return styled(observer(View))
-})
+}
 
 // @store decorator
 export const store = Store => {
   mixin(Store.prototype, Helpers)
-  mixin(Store.prototype, MobxHelpers)
+  mixin(Store.prototype, { watch, react })
   return Store
 }

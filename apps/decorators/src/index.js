@@ -12,18 +12,13 @@ import baseStyles from './styles'
 export * from 'mobx'
 
 // gloss
-const styled = gloss({ baseStyles })
+export const glossy = gloss({ baseStyles })
 
 // view hmr hook
 const { componentWillMount } = viewHMR()
 
 // @view decorator
-export const view = (View: Function | string, styles: ?Object) => {
-  // view() shorthand
-  if (typeof View === 'string') {
-    const tag = View
-    return styled(tag, { [tag]: styles })
-  }
+export const view = (View) => {
   // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
   // mixins
@@ -32,7 +27,7 @@ export const view = (View: Function | string, styles: ?Object) => {
   mixin(View.prototype, { addEvent, setTimeout, setInterval, ref })
   mixin(View.prototype, { watch, react })
   // gloss, mobx
-  return styled(observer(View))
+  return glossy(observer(View))
 }
 
 // @store decorator

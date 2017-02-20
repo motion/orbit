@@ -1,7 +1,8 @@
 import React from 'react'
 import gloss from 'gloss'
 import mixin from 'react-mixin'
-import viewHelpers, { componentWillMount } from 'motion-view'
+import viewHelpers from 'motion-view'
+import autobind from 'autobind-decorator'
 import { addEvent, setTimeout, setInterval, ref } from 'motion-class-helpers'
 import { watch, react } from 'motion-mobx-helpers'
 import { observer } from 'mobx-react'
@@ -11,9 +12,7 @@ import baseStyles from './styles'
 export * from 'mobx'
 // gloss
 export const glossy = gloss({ baseStyles })
-// view helpers
-const { provide, inject } = viewHelpers()
-
+const { provide, inject, componentWillMount } = viewHelpers()
 const classHelpers = {
   addEvent,
   setTimeout,
@@ -29,7 +28,7 @@ export function view(View) {
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
   // mixins
   mixin(View.prototype, classHelpers)
-  mixin(View.prototype { componentWillMount })
+  mixin(View.prototype, { componentWillMount })
   // gloss, mobx
   return glossy(observer(View))
 }
@@ -40,5 +39,5 @@ view.inject = inject(view)
 // @store
 export function store(Store) {
   mixin(Store.prototype, classHelpers)
-  return Store
+  return autobind(Store)
 }

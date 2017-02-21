@@ -19,6 +19,9 @@ export default class Title {
     title: {
       fontFamily: 'Playfair Display, serif',
       margin: [20, 0],
+      flexFlow: 'row',
+      display: 'flex',
+      whiteSpace: 'pre',
     }
   }
 

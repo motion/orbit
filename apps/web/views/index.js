@@ -45,11 +45,11 @@ export default class ViewsRoot {
       flex: 1,
     },
     main: {
-      padding: 10,
       flex: 1,
     },
     header: {
       padding: [0, 10],
+      margin: 0,
       borderBottom: [1, '#f2f2f2'],
       background: 'azure',
     },

@@ -1,60 +1,6 @@
 import { view } from 'my-decorators';
 import { Title, Text, Page, Link } from 'my-views';
-
-const feed = [
-  {
-    type: 'marker',
-    content: '2008',
-  },
-  {
-    type: 'section',
-    title: 'First Known Existence',
-    date: 'Feb',
-    source: 'NYTimes',
-    sourceIcon: 'https://static01.nyt.com/favicon.ico',
-    content: [
-      {
-        type: 'intro',
-        text: <p>
-          The server for clintonemail.com is registered under the name Eric Hoteham. Presumably a misspelling of <Link>Eric Hothem</Link>, the name of a former Clinton aide.
-        </p>,
-      }
-    ],
-  },
-  {
-    type: 'marker',
-    content: '2009',
-  },
-  {
-    type: 'section',
-    title: 'Discovery',
-    date: 'March',
-    source: 'NYTimes',
-    sourceIcon: 'https://static01.nyt.com/favicon.ico',
-    content: [
-      {
-        type: 'intro',
-        text: ' Government employees are allowed to use private emails for government work. However, this practice is strongly discouraged. If using a private email, "the agency must ensure that federal records sent or received on such systems are preserved in the appropriate agency record-keeping system."',
-      }
-    ],
-  },
-  {
-    type: 'marker',
-    content: '2010',
-  },
-  {
-    type: 'section',
-    date: 'November',
-    source: 'NYTimes',
-    sourceIcon: 'https://static01.nyt.com/favicon.ico',
-    content: [
-      {
-        type: 'intro',
-        text: ' Government employees are allowed to use private emails for government work. However, this practice is strongly discouraged. If using a private email, "the agency must ensure that federal records sent or received on such systems are preserved in the appropriate agency record-keeping system."',
-      }
-    ],
-  },
-]
+import feed from './data'
 
 @view
 export default class Home {
@@ -79,21 +25,13 @@ export default class Home {
           {feed.map(item => (
             <item key={Math.random()}>
               <marker if={item.type === 'marker'}>
+                <arrow />
                 {item.content}
               </marker>
               <section if={item.type === 'section'}>
-                <Title size="16" sans>
-                  <title if={item.title}>{item.title}</title>
-                  {item.title && ' · '}
-                  <date>{item.date}</date>
-                </Title>
-                <pieces if={item.content}>
-                  {item.content.map(content => (
-                    <Text $$fontSize={20} $$lineHeight="2rem">
-                      {content.text}
-                    </Text>
-                  ))}
-                </pieces>
+                <Text key={Math.random()} $$fontSize={18} $$lineHeight="1.6rem">
+                  <date if={item.date}>{item.date}</date> {item.content[0].text}
+                </Text>
               </section>
             </item>
           ))}
@@ -111,6 +49,10 @@ export default class Home {
       fontSize: 20,
       opacity: 0.5,
       marginTop: -10,
+    },
+    dot: {
+      margin: [0, 10, 0, 0],
+      opacity: 0.2,
     },
     left: {
       padding: [20, 0],
@@ -137,14 +79,23 @@ export default class Home {
     marker: {
       fontSize: 18,
       fontWeight: 600,
-      padding: [10, 0, 0],
+      padding: [0, 0, 5],
+      flexFlow: 'row',
+    },
+    arrow: {
+      background: '#eee',
+      margin: ['auto', 15, 'auto', -30],
+      height: 2,
+      width: 25 ,
     },
     section: {
       padding: [5, 0, 15, 0],
-      borderBottom: [1, '#f2f2f2'],
     },
     date: {
       color: '#999',
+      display: 'inline',
+      margin: [0, 10, 0, 0],
+      fontWeight: 300,
     }
   };
 }

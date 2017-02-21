@@ -14,7 +14,7 @@ export default class Home {
           <Title if={false} $title size={18}>Feed</Title>
           {feed.map(item => (
             <item key={Math.random()}>
-              <Title size={20} $$margin={0}>{item.title}</Title>
+              <Title size={20} $$margin={0}>{item.title} <small>&#9875;</small></Title>
               <via $$row $$align="center">
                 <Date>{item.date}</Date>
                 {DOT}
@@ -41,15 +41,20 @@ export default class Home {
       marginBottom: 15,
     },
     feed: {
-      width: '75%',
+      width: '70%',
       padding: [20, 0],
     },
     title: {
       color: '#999',
       margin: [0, 10],
     },
+    small: {
+      fontSize: 12,
+      margin: [3, 0, -3, 10],
+      opacity: 0.3,
+    },
     via: {
-      fontSize: 13,
+      fontSize: 12,
       margin: [0, 0, 5],
     },
     img: {

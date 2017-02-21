@@ -5,6 +5,9 @@ import feed from './data'
 const Dot = glossy('dot', { margin: [0, 10] })
 const DOT = <Dot>&middot;</Dot>
 
+const Comment = glossy('comment', { padding: [5, 10], flexFlow: 'row', whiteSpace: 'pre' })
+const COMMENT = () => <Comment><span $$opacity={0.2}>💬</span>&nbsp;{Math.round(Math.random() * 20)}</Comment>
+
 @view
 export default class Home {
   render() {
@@ -14,22 +17,29 @@ export default class Home {
           <Title if={false} $title size={18}>Feed</Title>
           {feed.map(item => (
             <item key={Math.random()}>
-              <Title href="" tag="a" size={20} $$margin={0}>{item.title}</Title>
-              <via $$row $$align="center">
-                <Date>{item.date}</Date>
-                {DOT}
-                <a href=""><img src="https://stratechery.com/wp-content/themes/stratechery/images/StratecheryLogo-5757.png" /> Stratechery</a>
-              </via>
-              <content>
-                {item.content}
-              </content>
-              <nav>
-                <a href="">10 💬</a>
-                {DOT}
-                <a href="">5 tags</a>
-                {DOT}
-                <small>🔗 read more</small>
-              </nav>
+              <post>
+                <Title href="" tag="a" size={20} $$margin={0}>{item.title}</Title>
+                <via $$row $$align="center">
+                  <Date>{item.date}</Date>
+                  {DOT}
+                  <a href=""><img src="https://stratechery.com/wp-content/themes/stratechery/images/StratecheryLogo-5757.png" /> Stratechery</a>
+                </via>
+                <content>
+                  {item.content}
+                </content>
+                <nav>
+                  <a href="">10 💬</a>
+                  {DOT}
+                  <a href="">5 tags</a>
+                  {DOT}
+                  <small>🔗 read more</small>
+                </nav>
+              </post>
+              <comments>
+                {COMMENT()}
+                {COMMENT()}
+                {COMMENT()}
+              </comments>
             </item>
           ))}
         </feed>
@@ -41,9 +51,16 @@ export default class Home {
     item: {
       padding: 10,
       marginBottom: 15,
+      flexFlow: 'row',
+    },
+    post: {
+      width: '80%',
+    },
+    comments: {
+      paddingTop: 75,
+      width: '20%',
     },
     feed: {
-      width: '70%',
       padding: [20, 0],
     },
     title: {

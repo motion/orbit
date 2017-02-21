@@ -4,8 +4,7 @@ import App from '../stores/app'
 import Router from '../stores/router'
 import NotFound from './notfound'
 
-// here we can inject things into every view
-// ideally this is minimal
+// inject things into *all* views (ideally this is minimal)
 @view.inject({
   app: App,
   router: Router,
@@ -13,7 +12,7 @@ import NotFound from './notfound'
 export default class ViewsRoot {
   componentWillMount() {
     // add events that go away on unmount
-    this.addEvent(window, "click", console.log)
+    this.addEvent(window, 'click', console.log)
   }
 
   render() {
@@ -50,11 +49,12 @@ export default class ViewsRoot {
       flex: 1,
     },
     header: {
+      padding: [0, 10],
       borderBottom: [1, '#f2f2f2'],
     },
     h1: {
-      color: "red",
-      padding: 10,
+      color: 'red',
+      padding: [5, 10],
       fontSize: 20,
     },
     a: {

@@ -9,7 +9,7 @@ export default class Projects {
   render() {
     return (
       <Page>
-        <h2>weeee {this.projects.x}</h2>
+        <h2>weyyyyyy {this.projects.x}</h2>
         <button onClick={this.projects.add}>click</button>
       </Page>
     )

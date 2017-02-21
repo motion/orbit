@@ -9,6 +9,10 @@ export const Page = glossy('page', {
 })
 
 export const Text = glossy('text', {
-  fontSize: 22,
-  lineHeight: '2.5rem'
+  fontSize: 19,
+  lineHeight: '2rem'
+})
+
+export const Link = glossy('a', {
+  color: 'red'
 })

@@ -18,7 +18,7 @@ export default class Title {
   static style = {
     title: {
       fontFamily: 'Playfair Display, serif',
-      margin: [20, 0],
+      margin: ['0.5rem', 0],
       flexFlow: 'row',
       display: 'flex',
       whiteSpace: 'pre',
@@ -36,5 +36,15 @@ export default class Title {
         },
       }
     },
+    sans: {
+      title: {
+        fontFamily: 'Raleway',
+      },
+    },
+    spaced: {
+      title: {
+        margin: ['1.5rem', 0],
+      }
+    }
   }
 }

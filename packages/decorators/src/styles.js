@@ -10,6 +10,8 @@ export default {
   color: color => ({ color }),
   top: top => ({ top }),
   right: right => ({ right }),
+  fontSize: fontSize => ({ fontSize }),
+  lineHeight: lineHeight => ({ lineHeight }),
   bottom: bottom => ({ bottom }),
   left: left => ({ left }),
   position: position => ({ position }),

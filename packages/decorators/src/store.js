@@ -1,9 +1,9 @@
 import mixin from 'react-mixin'
 import autobind from 'autobind-decorator'
-import classHelpers from './classHelpers'
+import * as ClassHelpers from './classHelpers'
 
 // @store
 export function store(Store) {
-  mixin(Store.prototype, classHelpers)
+  mixin(Store.prototype, ClassHelpers)
   return autobind(Store)
 }

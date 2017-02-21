@@ -7,9 +7,9 @@ export default class Title {
   }
 
   render() {
-    const { tag, children } = this.props
+    const { tag, children, ...props } = this.props
     return (
-      React.createElement(tag, { '$title': true },
+      React.createElement(tag, { '$title': true, ...props },
         children
       )
     )

@@ -15,6 +15,7 @@
     "motion-mobx-router": "^1.0.2",
     "motion-view": "^1.0.7",
     "my-decorators": "*",
+    "my-view": "^2.0.6",
     "my-views": "*",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"

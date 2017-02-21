@@ -26,6 +26,10 @@ body, body * {
   outline: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
 /* reset elements from flex */
 
 a, input, textarea {

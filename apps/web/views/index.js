@@ -27,7 +27,7 @@ export default class ViewsRoot {
           </nav>
         </header>
         <content>
-          <Sidebar />
+          {/*<Sidebar />*/}
           <main>
             <Page />
           </main>
@@ -51,6 +51,7 @@ export default class ViewsRoot {
     header: {
       padding: [0, 10],
       borderBottom: [1, '#f2f2f2'],
+      background: 'azure',
     },
     h1: {
       color: 'red',

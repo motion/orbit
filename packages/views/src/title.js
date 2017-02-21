@@ -23,11 +23,15 @@ export default class Title {
   }
 
   static theme = {
-    tag: ({ tag }) => ({
-      title: {
-        fontSize: 20 + tag.slice(1) * 25,
-        lineHeight: `${2.5 + tag.slice(1) * 0.5}rem`,
-      },
-    }),
+    tag: ({ tag, size }) => {
+      const reduce = 1 / tag.slice(1)
+      const fontSize = +size || 20 + reduce * 20
+      return {
+          title: {
+          fontSize,
+          lineHeight: `${1 + fontSize * 0.06}rem`,
+        },
+      }
+    },
   }
 }

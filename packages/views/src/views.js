@@ -1,7 +1,5 @@
 import { glossy } from 'my-decorators'
 
-export Title from './title'
-
 export const Page = glossy('section', {
   padding: [0, 20],
   flex: 1,

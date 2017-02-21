@@ -1,6 +1,7 @@
 import { view } from 'my-decorators'
 
-export default @view class Sidebar {
+@view
+export default class Sidebar {
   render() {
     return (
       <sidebar>

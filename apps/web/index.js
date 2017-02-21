@@ -15,9 +15,9 @@ async function start() {
 
   // connect to db
   await App.connect()
-  // now get views
+  // then get views
   const Views = require('./views').default
-  // random key to trigger HMR
+
   ReactDOM.render(
     <Views />,
     document.querySelector('#app')

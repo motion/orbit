@@ -18,6 +18,7 @@ export default class Title {
   static style = {
     title: {
       fontFamily: 'Playfair Display, serif',
+      fontWeight: 600,
       margin: ['0.5rem', 0],
       flexFlow: 'row',
       display: 'flex',
@@ -33,6 +34,10 @@ export default class Title {
           title: {
           fontSize,
           lineHeight: `${1 + fontSize * 0.06}rem`,
+
+          '&:hover': {
+            color: tag === 'a' ? 'red' : 'auto'
+          }
         },
       }
     },

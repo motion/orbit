@@ -14,7 +14,7 @@ export default class Home {
           <Title if={false} $title size={18}>Feed</Title>
           {feed.map(item => (
             <item key={Math.random()}>
-              <Title size={20} $$margin={0}>{item.title} <small>&#9875;</small></Title>
+              <Title href="" tag="a" size={20} $$margin={0}>{item.title}</Title>
               <via $$row $$align="center">
                 <Date>{item.date}</Date>
                 {DOT}
@@ -24,9 +24,11 @@ export default class Home {
                 {item.content}
               </content>
               <nav>
-                <a href="">10 comments</a>
+                <a href="">10 💬</a>
                 {DOT}
-                <a href="">5 topics</a>
+                <a href="">5 tags</a>
+                {DOT}
+                <small>🔗 read more</small>
               </nav>
             </item>
           ))}

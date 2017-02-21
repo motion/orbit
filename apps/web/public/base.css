@@ -28,6 +28,7 @@ body, body * {
 
 a {
   text-decoration: none;
+  color: inherit;
 }
 
 /* reset elements from flex */

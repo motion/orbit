@@ -2,13 +2,13 @@ import { glossy } from 'my-decorators'
 
 export Title from './title'
 
-export const Page = glossy('page', {
+export const Page = glossy('section', {
   padding: [0, 20],
   flex: 1,
   overflowY: 'scroll',
 })
 
-export const Text = glossy('text', {
+export const Text = glossy('p', {
   fontSize: 19,
   lineHeight: '2rem',
   display: 'block'

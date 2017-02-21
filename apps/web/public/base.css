@@ -10,7 +10,6 @@ body {
   font-weight: 300;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
-  overflow: hidden;
 }
 
 body, body * {
@@ -25,18 +24,6 @@ body, body * {
   -webkit-flex-flow: column;
   -webkit-align-items: stretch;
   outline: 0;
-}
-
-/* prevent overscroll bounce */
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-#app {
-  height: 100%;
-  position: relative;
 }
 
 /* reset elements from flex */

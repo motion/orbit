@@ -16,7 +16,7 @@ export default class ViewsRoot {
   }
 
   render() {
-    const Page = this.router.activeView || NotFound
+    const CurrentPage = this.router.activeView || NotFound
     return (
       <page>
         <header $$row $$align="center">
@@ -29,7 +29,7 @@ export default class ViewsRoot {
         <content>
           {/*<Sidebar />*/}
           <main>
-            <Page />
+            <CurrentPage />
           </main>
         </content>
       </page>

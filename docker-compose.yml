@@ -1,0 +1,14 @@
+version: "3"
+services:
+  macro-db:
+    container_name: dgraph
+    hostname: dgraph
+    image: dgraph/dgraph
+    restart: always
+    command:
+      dgraph --config /app/config.yml
+    ports:
+      - 8090:8080
+    volumes:
+      - ./app_data:/dgraph:rw
+      - ./apps/graph:/app:ro

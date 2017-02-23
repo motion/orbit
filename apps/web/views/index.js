@@ -5,11 +5,6 @@ import NotFound from './notfound'
 
 @view
 export default class ViewsRoot {
-  componentWillMount() {
-    // add events that go away on unmount
-    this.addEvent(window, 'click', console.log)
-  }
-
   render() {
     const CurrentPage = Router.activeView || NotFound
     return (
@@ -23,7 +18,7 @@ export default class ViewsRoot {
         </header>
         <content>
           <main>
-            <CurrentPage key={Math.random()} />
+            <CurrentPage />
           </main>
         </content>
       </page>

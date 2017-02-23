@@ -1,7 +1,6 @@
 import { view, glossy } from 'my-decorators'
 import { Title, Page, Date } from 'my-views'
 import rc from 'randomcolor'
-import feed from './data'
 
 const Dot = glossy('dot', { margin: [0, 10] })
 const DOT = <Dot>&middot;</Dot>

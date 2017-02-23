@@ -1,3 +1,4 @@
+import createModels from './models'
 import * as RxDB from 'rxdb'
 import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'
@@ -12,6 +13,7 @@ class App {
 
   async connect() {
     this.db = await RxDB.create('DB_NAME', 'idb', 'DB_PASSWORD', true)
+    this.models = await createModels(this.db)
     console.log('connected')
   }
 }

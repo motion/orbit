@@ -4,23 +4,28 @@ import App from '../stores/app'
 import Router from '../stores/router'
 import NotFound from './notfound'
 
-// inject things into *all* views (ideally this is minimal)
-@view.inject({
-  app: App,
-  router: Router,
-})
+@view
+class Test {
+  render() {
+    console.log(`'sss`, this.app)
+    return null
+  }
+}
+
+@view
 export default class ViewsRoot {
   componentWillMount() {
     // add events that go away on unmount
-    this.addEvent(window, 'click', console.log)
+    // this.addEvent(window, 'click', console.log)
   }
 
   render() {
-    const CurrentPage = this.router.activeView || NotFound
+    const CurrentPage = Router.activeView || NotFound
     return (
       <page>
+        <Test />
         <header $$row $$align="center">
-          <h1>motion</h1>
+          <h1>motion322</h1>
           <nav $$row>
             <a onClick={() => this.router.go("/")}>Home</a>
             <a onClick={() => this.router.go("/projects")}>Projects</a>
@@ -29,7 +34,7 @@ export default class ViewsRoot {
         <content>
           {/*<Sidebar />*/}
           <main>
-            <CurrentPage />
+            <CurrentPage key={Math.random()} />
           </main>
         </content>
       </page>

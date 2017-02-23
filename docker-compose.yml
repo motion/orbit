@@ -12,7 +12,7 @@ services:
   #   volumes:
   #     - ./app_data/dgraph:/dgraph:rw
   #     - ./apps/graph:/app:ro
-  motion-couch:
+  couch:
     container_name: couch
     hostname: couch
     image: couchdb

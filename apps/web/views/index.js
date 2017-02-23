@@ -20,7 +20,7 @@ export default class ViewsRoot {
     return (
       <page>
         <header $$row $$align="center">
-          <h1>Veritas</h1>
+          <h1>motion</h1>
           <nav $$row>
             <a onClick={() => this.router.go("/")}>Home</a>
             <a onClick={() => this.router.go("/projects")}>Projects</a>
@@ -51,10 +51,9 @@ export default class ViewsRoot {
       padding: [0, 10],
       margin: 0,
       borderBottom: [1, '#f2f2f2'],
-      background: 'azure',
     },
     h1: {
-      color: 'red',
+      color: 'purple',
       padding: [5, 10],
       fontSize: 20,
     },

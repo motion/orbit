@@ -11,6 +11,7 @@
     "lodash": "^4.17.4",
     "mobx": "^3.1.0",
     "mobx-react": "^4.1.0",
+    "mobx-utils": "^2.0.1",
     "motion-hmr": "^1.1.0",
     "motion-mobx-router": "^1.0.2",
     "motion-view": "^1.0.7",

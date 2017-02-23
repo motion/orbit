@@ -5,7 +5,11 @@ import { inject } from 'my-decorators'
 
 const DEV_MODE = process.env.NODE_ENV === 'development'
 
-window.process = { browser: true }
+window.process = {
+  browser: true,
+  nextTick: (cb) => window.setImmediate(cb),
+}
+console.log('done')
 
 async function start() {
   // dev helpers

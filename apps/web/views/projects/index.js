@@ -10,9 +10,18 @@ const BG_IMG = 'http://www.reportermagazin.cz/img/58a70a569c400e1e0d4e5d9b/2560/
 })
 export default class Projects {
   render() {
+    console.log(this)
     return (
       <Page>
-        2hello222dxd
+        {(this.projects.heroes.current || []).map(hero =>
+          <hero key={Math.random()}>
+            {hero.name || 'none'} {hero.color || 'none'}
+          </hero>
+        )}
+
+        name <input ref={x => this.name = x} />
+        color <input ref={x => this.color = x} />
+        <button onClick={() => this.projects.insert(this.name.value, this.color.value)}>insert hero</button>
       </Page>
     )
   }

@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import _ from 'lodash'
-import { inject } from 'my-decorators'
+import { view } from 'my-decorators'
 
 const DEV_MODE = process.env.NODE_ENV === 'development'
 
@@ -20,7 +20,7 @@ async function start() {
   }
 
   // global injections for all views/stores
-  inject({
+  view.inject({
     get app() { return App },
     get router() { return Router },
   })

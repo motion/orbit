@@ -9,6 +9,9 @@ export default class Projects {
   render() {
     return (
       <Page>
+        <Title>{this.projects.x} 2</Title>
+        <button onClick={() => this.projects.x++}>increment</button>
+
         {(this.projects.heroes.current || []).map(hero =>
           <hero key={Math.random()}>
             {hero.name || 'none'} {hero.color || 'none'}

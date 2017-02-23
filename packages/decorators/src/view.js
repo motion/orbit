@@ -7,8 +7,6 @@ import { observer } from 'mobx-react'
 import baseStyles from './baseStyles'
 import * as ClassHelpers from './classHelpers'
 
-console.log('REF', ClassHelpers.ref)
-
 // mobx decorators
 export * from 'mobx'
 // gloss

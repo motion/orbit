@@ -4,7 +4,6 @@ export default class Model {
   }
 
   connect = async () => {
-    console.log(this.schema)
     this.table = await this.db.collection(this.title, this.schema)
     this.table.sync(`http://localhost:5984/${this.title.toLowerCase()}`)
   }

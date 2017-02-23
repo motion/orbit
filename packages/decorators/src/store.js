@@ -6,5 +6,5 @@ import { view } from './view'
 // @store
 export function store(Store) {
   mixin(Store.prototype, ClassHelpers)
-  return view.injectDecorator(autobind(Store))
+  return view.injectDecorate(autobind(Store))
 }

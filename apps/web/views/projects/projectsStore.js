@@ -8,11 +8,9 @@ export default class ProjectsStore {
 
   constructor() {
     this.heroes = fromStream(this.app.models.Hero.byName())
-    window.x = this
   }
 
   insert(name, color) {
-    console.log('inserting', name, color)
     this.app.models.Hero.table.insert({ name, color })
   }
 }

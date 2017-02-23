@@ -5,11 +5,11 @@ import { inject } from 'my-decorators'
 
 const DEV_MODE = process.env.NODE_ENV === 'development'
 
+// process polyfill
 window.process = {
   browser: true,
   nextTick: (cb) => window.setImmediate(cb),
 }
-console.log('done')
 
 async function start() {
   // dev helpers
@@ -35,7 +35,7 @@ async function start() {
   const Views = require('./views').default
 
   ReactDOM.render(
-    <Views key={Math.random()} />,
+    <Views />,
     document.querySelector('#app')
   )
 

@@ -1,14 +1,23 @@
 version: "3"
 services:
-  macro-db:
-    container_name: dgraph
-    hostname: dgraph
-    image: dgraph/dgraph
+  # motion-db:
+  #   container_name: dgraph
+  #   hostname: dgraph
+  #   image: dgraph/dgraph
+  #   restart: always
+  #   command:
+  #     dgraph --config /app/config.yml
+  #   ports:
+  #     - 8090:8080
+  #   volumes:
+  #     - ./app_data/dgraph:/dgraph:rw
+  #     - ./apps/graph:/app:ro
+  motion-couch:
+    container_name: couch
+    hostname: couch
+    image: couchdb
     restart: always
-    command:
-      dgraph --config /app/config.yml
     ports:
-      - 8090:8080
+      - 5984:5984
     volumes:
-      - ./app_data:/dgraph:rw
-      - ./apps/graph:/app:ro
+      - ./apps/couch:/usr/local/etc/couchdb/local.d:rw

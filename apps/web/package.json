@@ -17,8 +17,12 @@
     "my-decorators": "*",
     "my-view": "^2.0.6",
     "my-views": "*",
+    "pouchdb-adapter-http": "^6.1.2",
+    "pouchdb-adapter-idb": "^6.1.2",
+    "pouchdb-replication": "^6.1.2",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "rxdb": "^2.0.4"
   },
   "devDependencies": {
     "babel-plugin-jsx-if": "^1.0.2",

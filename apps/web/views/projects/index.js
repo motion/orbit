@@ -3,6 +3,8 @@ import { Title, Text, Page, Link } from 'my-views'
 import feed from './data'
 import ProjectsStore from './projectsStore'
 
+const BG_IMG = 'http://www.reportermagazin.cz/img/58a70a569c400e1e0d4e5d9b/2560/1600?_sig=zBGa0KJC_-ci1FqMG4jJZiJzu-zwWrJEDXBqSeKyO-g'
+
 @view.provide({
   projects: ProjectsStore,
 })
@@ -11,6 +13,9 @@ export default class Projects {
     return (
       <Page>
         <mast>
+          <bg>
+            <inner $$fullscreen $background={BG_IMG} />
+          </bg>
           <left>
             <Title spaced>
               <hl>Donald Trump</hl> & <hl>Russia</hl>
@@ -44,9 +49,24 @@ export default class Projects {
   }
 
   static style = {
+    bg: {
+      position: 'absolute',
+      top: 0,
+      right: -20,
+      left: -20,
+      height: '100%',
+      zIndex: -1,
+    },
+    background: img => ({
+      backgroundImage: `url(${img})`,
+      backgroundSize: 'cover',
+    }),
     mast: {
       borderBottom: [1, '#f2f2f2'],
       flexFlow: 'row',
+      position: 'relative',
+      height: 350,
+      color: '#fff',
     },
     sub: {
       fontSize: 20,
@@ -69,13 +89,15 @@ export default class Projects {
       alignSelf: 'flex-end',
     },
     hl: {
+      color: '#000',
       background: 'yellow',
       display: 'inline-block',
       padding: [0, 5],
       margin: [0, -2],
     },
     feed: {
-      padding: 10,
+      position: 'relative',
+      padding: [10, 0],
     },
     item: {
     },
@@ -99,6 +121,6 @@ export default class Projects {
       display: 'inline',
       margin: [0, 10, 0, 0],
       fontWeight: 300,
-    }
+    },
   }
 }

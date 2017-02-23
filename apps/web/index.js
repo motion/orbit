@@ -1,11 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import _ from 'lodash'
-import App from './stores/app'
 
 const DEV_MODE = process.env.NODE_ENV === 'development'
 
+window.process = { browser: true }
+
 async function start() {
+  const App = require('./stores/app').default
+
   // dev helpers
   if (DEV_MODE) {
     window._ = _
@@ -15,6 +18,7 @@ async function start() {
 
   // connect to db
   await App.connect()
+
   // then get views
   const Views = require('./views').default
 

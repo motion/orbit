@@ -1,5 +1,4 @@
 import * as Models from 'models'
-import { lazyObject } from 'helpers'
 import * as RxDB from 'rxdb'
 import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'
@@ -14,12 +13,11 @@ class App {
     // connect to pouchdb
     this.db = await RxDB.create('DB_NAME', 'idb', 'DB_PASSWORD', true)
 
-    // this wraps getters so we lazily connect to models
-    this.models = lazyObject(Models, ModelClass => {
-      const model = new ModelClass(this.db)
-      model.connect()
-      return model
-    })
+    // connect models
+    this.models = {}
+    for (const key of Object.keys(Models)) {
+      this.models[key] = await Models[key].connect(this.db)
+    }
   }
 }
 

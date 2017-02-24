@@ -1,19 +1,35 @@
-export default class Model {
-  constructor(db) {
-    this.db = db
-  }
+import { fromStream } from 'mobx-utils'
 
-  connect = async () => {
-    this.table = await this.db.collection(this.title, this.schema)
-    this.table.sync(`http://localhost:5984/${this.title.toLowerCase()}`)
-  }
-
-  get schema() {
-    return {
-      title: this.title,
-      description: this.description || '',
-      properties: this.properties,
-      required: this.required,
+export function query(parent, property, { initializer, ...descriptor }) {
+  return {
+    ...descriptor,
+    value: function() {
+      const value = initializer.call(this)(arguments)
+      // add some helpers
+      Object.defineProperties(value, {
+        'promise': {
+          get: () => new Promise((resolve, reject) => {
+            value.$.take(1).subscribe(resolve, reject)
+          })
+        },
+        'observable': {
+          get: () => fromStream(value.$)
+        },
+        'stream': {
+          get: () => value.$
+        }
+      })
+      return value
     }
+  }
+}
+
+export class Model {
+  async connect(db) {
+    this.db = db
+    const title = this.schema.title || this.constructor.name
+    this.table = await this.db.collection(title, this.schema)
+    this.table.sync(`http://localhost:5984/${title.toLowerCase()}`)
+    return this
   }
 }

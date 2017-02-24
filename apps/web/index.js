@@ -6,19 +6,13 @@ import { view } from 'helpers'
 const DEV_MODE = process.env.NODE_ENV === 'development'
 
 // process polyfill
+window.React = React
 window.process = {
   browser: true,
   nextTick: (cb) => window.setImmediate(cb),
 }
 
 async function start() {
-  // dev helpers
-  if (DEV_MODE) {
-    window._ = _
-    window.React = React
-    window.App = App
-  }
-
   // global injections for all views/stores
   view.inject({
     get app() { return App },
@@ -27,6 +21,12 @@ async function start() {
 
   const App = require('./stores/app').default
   const Router = require('./stores/router').default
+
+  // dev helpers
+  if (DEV_MODE) {
+    window._ = _
+    window.App = App
+  }
 
   // connect to db
   await App.connect()

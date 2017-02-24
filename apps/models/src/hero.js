@@ -1,20 +1,23 @@
-import Model from './model'
+import { Model, query } from './model'
 
-export default class Hero extends Model {
-  title = 'hero2'
-  description = 'describes a simple hero'
-  properties = {
-    name: {
-      type: 'string',
-      primary: true
-    },
-    color: {
-      type: 'string'
+class Hero extends Model {
+  schema = {
+    title: 'hero3',
+    required: ['color'],
+    properties: {
+      name: {
+        type: 'string',
+        primary: true
+      },
+      color: {
+        type: 'string'
+      }
     }
   }
-  required = ['color']
 
-  byName = () => {
+  @query byName = () => {
     return this.table.find().sort({ name: 1 })
   }
 }
+
+export default new Hero()

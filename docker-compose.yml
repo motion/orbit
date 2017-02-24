@@ -1,17 +1,5 @@
 version: "3"
 services:
-  # motion-db:
-  #   container_name: dgraph
-  #   hostname: dgraph
-  #   image: dgraph/dgraph
-  #   restart: always
-  #   command:
-  #     dgraph --config /app/config.yml
-  #   ports:
-  #     - 8090:8080
-  #   volumes:
-  #     - ./app_data/dgraph:/dgraph:rw
-  #     - ./apps/graph:/app:ro
   couch:
     container_name: couch
     hostname: couch

@@ -1,13 +1,13 @@
-import { store, observable } from 'my-decorators'
+import { store, observable } from 'helpers'
 import { fromStream } from 'mobx-utils'
 
 @store
 export default class ProjectsStore {
   @observable x = 2
-  @observable heroes = null
+  @observable.ref heroes = null
 
   constructor() {
-    this.heroes = fromStream(this.app.models.Hero.byName())
+    this.heroes = fromStream(this.app.models.Hero.byName().$)
   }
 
   insert(name, color) {

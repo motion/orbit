@@ -14,5 +14,7 @@ export default class Hero extends Model {
   }
   required = ['color']
 
-  byName = () => this.table.find().sort({ name: 1 }).$
+  byName = () => {
+    return this.table.find().sort({ name: 1 })
+  }
 }

@@ -1,5 +1,5 @@
-import { view, glossy } from 'my-decorators'
-import { Title, Page, Date } from 'my-views'
+import { view, glossy } from 'helpers'
+import { Title, Page, Date } from 'views'
 import rc from 'randomcolor'
 
 const Dot = glossy('dot', { margin: [0, 10] })

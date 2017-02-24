@@ -1,4 +1,4 @@
-import { glossy } from 'my-decorators'
+import { glossy } from 'helpers'
 
 export const Page = glossy('section', {
   padding: [0, 10],

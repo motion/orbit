@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import _ from 'lodash'
-import { view } from 'my-decorators'
+import { view } from 'helpers'
 
 const DEV_MODE = process.env.NODE_ENV === 'development'
 

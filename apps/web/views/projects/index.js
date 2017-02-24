@@ -1,5 +1,5 @@
-import { view } from 'my-decorators'
-import { Title, Text, Page, Link } from 'my-views'
+import { view } from 'helpers'
+import { Title, Text, Page, Link } from 'views'
 import ProjectsStore from './projectsStore'
 
 @view.provide({

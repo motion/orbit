@@ -1,41 +1,32 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
 import _ from 'lodash'
 import { inject } from 'helpers'
 
-const DEV_MODE = process.env.NODE_ENV === 'development'
-
-window.React = React
-window.process = {
-  browser: true,
-  nextTick: (cb) => window.setImmediate(cb),
-}
-
 async function start() {
+  window.React = React
+  window.process = { browser: true, nextTick: x => window.setImmediate(x) }
+
   const App = require('./stores/app').default
   const Router = require('./stores/router').default
+
+  await App.connect()
 
   inject({
     app: App,
     router: Router,
   })
 
-  if (DEV_MODE) {
+  if (process.env.NODE_ENV === 'development') {
     window._ = _
     window.App = App
-  }
-
-  await App.connect()
-  const Views = require('./views').default
-
-  ReactDOM.render(
-    <Views />,
-    document.querySelector('#app')
-  )
-
-  if (DEV_MODE && module.hot) {
     module.hot.accept()
   }
+
+  render(
+    React.createElement(require('./views').default),
+    document.querySelector('#app')
+  )
 }
 
 start()

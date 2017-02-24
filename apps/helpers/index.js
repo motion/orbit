@@ -14,7 +14,7 @@ export const glossy = gloss({ baseStyles })
 export const { provide, inject, decorate } = mv()
 const ClassHelpers = { addEvent, setInterval, setTimeout, ref, watch, react }
 
-// @view
+// view
 export function view(View) {
   // extends React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
@@ -22,19 +22,19 @@ export function view(View) {
   // mixins
   mixin(View.prototype, ClassHelpers)
 
-  // render({ props }, { state })
+  // render
   const render = View.prototype.render
   View.prototype.render = function() {
     return render.call(this, this.props, this.state, this.context)
   }
 
-  // autobind, gloss, mobx (order important)
+  // hmr, autobind, gloss, mobx (order important)
   return decorate(autobind(glossy(observer(View))))
 }
 
 view.provide = provide
 
-// @store
+// store
 export function store(Store) {
   mixin(Store.prototype, ClassHelpers)
   let res = decorate(Store)

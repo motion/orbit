@@ -1,25 +1,25 @@
-import { glossy } from 'helpers'
+import { glossy as $ } from 'helpers'
 
-export const Page = glossy('section', {
+export const Page = $('section', {
   padding: [0, 10],
 })
 
-export const Text = glossy('p', {
+export const Text = $('p', {
   fontSize: 16,
   lineHeight: '1.6rem',
   display: 'block'
 })
 
-export const Link = glossy('a', {
+export const Link = $('a', {
   color: 'red'
 })
 
-export const Quote = glossy('blockquote', {
+export const Quote = $('blockquote', {
   borderLeft: [2, '#eee'],
   padding: [5, 10],
   margin: 10,
 })
 
-export const Date = glossy('date', {
+export const Date = $('date', {
   color: '#999'
 })

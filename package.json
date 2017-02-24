@@ -4,10 +4,10 @@
   "scripts": {
     "bootstrap": "npm i && repoman bootstrap && npm run build",
     "web": "cd apps/web && npm start",
-    "clean": "rm -rf {packages,apps}/*/lib",
-    "build": "repoman exec -- babel . --out-dir lib",
+    "clean": "rm -rf apps/*/lib",
+    "build": "repoman exec --parallel -- babel . --out-dir lib --ignore node_modules,lib",
     "compile": "npm run clean && npm run build",
-    "watch": "npm run build -- --watch",
+    "watch": "npm run clean; npm run build -- --watch",
     "lint": "eslint ."
   },
   "devDependencies": {

@@ -8,8 +8,8 @@ export default class Layout {
         <header $$row $$align="center">
           <h1>motion</h1>
           <nav $$row>
-            <a onClick={() => Router.go("/")}>Home</a>
-            <a onClick={() => Router.go("/projects")}>Projects</a>
+            <a onClick={() => this.router.go("/")}>Home</a>
+            <a onClick={() => this.router.go("/projects")}>Projects</a>
           </nav>
         </header>
         {this.props.children}

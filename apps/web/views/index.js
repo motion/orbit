@@ -1,14 +1,13 @@
-import { view } from 'helpers'
-import App from '../stores/app'
-import Router from '../stores/router'
+import { view, inject } from 'helpers'
 import NotFound from './notfound'
+import Layout from './layout'
 
 @view
 export default class Root {
   render() {
-    const CurrentPage = Router.activeView || NotFound
+    const CurrentPage = this.router.activeView || NotFound
     return (
-      <Layout page={CurrentPage} $$flex>
+      <Layout $$flex>
         <CurrentPage />
       </Layout>
     )

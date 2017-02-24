@@ -1,12 +1,15 @@
-import { view } from 'helpers'
+import { view, provide } from 'helpers'
 import { Title, Text, Page, Link } from 'views'
 import { Hero } from 'models'
 
-@view.provide({
-  x: 2,
-  heroes: Hero.byName(),
-  insert(name, color) {
-    Hero.table.insert({ name, color })
+@view
+@provide({
+  store: class {
+    x = 2
+    heroes = Hero.byName()
+    insert(name, color) {
+      Hero.table.insert({ name, color })
+    }
   }
 })
 export default class Projects {

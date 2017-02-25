@@ -13,7 +13,6 @@ import { Hero } from 'models'
 }))
 export default class Projects {
   render({ store }) {
-    console.log(store)
     return (
       <Page>
         <Title>{store.x} 2</Title>

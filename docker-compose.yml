@@ -1,15 +1,32 @@
-version: '2'
+version: "2"
 services:
-  web:
-    build: ./app/
+ redis:
+    image: redis
+    ports:
+     - "6379"
+    volumes:
+     - ./app_data/redis-data:/data
+  couch:
+    image: couchdb
+    restart: always
+    ports:
+      - 5984:5984
+    volumes:
+      - ./apps/couch:/usr/local/etc/couchdb/local.d:rw
+      - ./app_data/couchdb:/usr/local/var/lib/couchdb
+    environment:
+     - COUCHDB_USER=${COUCHDB_USER}
+     - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+  api:
+    depends_on:
+      - couch
+      - redis
+    build: ./apps/api
     ports:
      - "3000:3000"
      - "5858:5858"
     volumes:
      - ./app/:/var/www/app/current
-    depends_on:
-     - couchdb
-     - redis
     environment:
      - COUCHDB_USER=${COUCHDB_USER}
      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
@@ -27,18 +44,3 @@ services:
      - WINDOWSLIVE_CLIENTSECRET=${WINDOWSLIVE_CLIENTSECRET}
      - LINKEDIN_CLIENTID=${LINKEDIN_CLIENTID}
      - LINKEDIN_CLIENTSECRET=${LINKEDIN_CLIENTSECRET}
-  couchdb:
-    build: ./apps/couch/
-    ports:
-     - "5984:5984"
-    volumes:
-     - ./data/couchdb-data:/usr/local/var/lib/couchdb
-    environment:
-     - COUCHDB_USER=${COUCHDB_USER}
-     - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-  redis:
-    image: redis
-    ports:
-     - "6379"
-    volumes:
-     - ./data/redis-data:/data

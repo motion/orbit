@@ -1,22 +1,48 @@
-# Motion Starter Kit
+# motion-starter
 
-This is a bootstrap repo for creating modern web apps.
-
-It's based on our companies structure, simplified down to show all the
-patterns we use without doing anything extra.
+A bootstrap repo for creating full-featured modern web apps. Based on our company's app structure, simplified and extracted.
 
 What you get:
 
-- A mono-repo architecture, so you can import & share common patterns easily
-- A [motion](https://github.com/motion/motion) powered app for fast builds & HMR
-- [Gloss](https://github.com/motion/gloss) for extremely powerful & easy styling
-- A set of mobx helpers, already glued together
-- A set of common patterns that make apps easy:
-  - Shared `decorators` for views and stores
-  - Injected App store that lets you debug stores
-  - A simple, easily swapped mobx router
+- all those annoying first steps done and polished
+- mono-repo: share code between all apps
+- [motion](https://github.com/motion/motion): our build tool
+- [gloss](https://github.com/motion/gloss): 💅 css in js
+- a set of decorators:
+  - `view` injects necessary helpers, customizable
+  - `store` also adds helpers
+- a dead simple router
+- awesome model system:
+  - [rxdb](https://github.com/pubkey/rxdb) = pouchdb + rxjs
+  - automatic rxjs => mobx
+- database: couchdb
+  - dockerized and ready
+- auth: superlogin
+  - both server and client
 
-## TODO
+## Install
 
-- Add horizon/rethinkdb + docker setup + scripts
-- Add models via motion-model
+```sh
+git clone git@github.com:motion/starter.git
+
+cd starter
+npm run bootstrap
+```
+
+Be sure you have [docker-compose](https://docs.docker.com/compose/) installed.
+
+## Running
+
+Run these three side-by-side:
+
+```sh
+npm run web
+```
+
+```sh
+docker-compose up
+```
+
+```sh
+npm run watch
+```

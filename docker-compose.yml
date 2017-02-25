@@ -12,10 +12,10 @@ services:
   api:
     container_name: api
     hostname: api
-    image: mhart/alpine-node:7
-    command: node /app/apps/api/lib
+    image: mhart/alpine-node:6
+    command: node /app/api/lib/index.js
     restart: always
     expose:
       - 80
     volumes:
-      - ./apps/api:/app/apps/api:ro
+      - ./apps/api:/app/api:ro

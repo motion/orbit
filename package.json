@@ -2,10 +2,10 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "npm i && repoman bootstrap && npm run build",
+    "bootstrap": "npm i; lerna bootstrap; npm run build",
     "web": "cd apps/web && npm start",
     "clean": "rm -rf apps/*/lib",
-    "build": "repoman exec --parallel -- babel . --out-dir lib --ignore node_modules,lib",
+    "build": "lerna exec -- babel . --out-dir lib --ignore node_modules,lib",
     "compile": "npm run clean && npm run build",
     "watch": "npm run clean; npm run build -- --watch",
     "lint": "eslint ."
@@ -16,6 +16,7 @@
     "babel-preset-steelbrain": "^4.0.2",
     "eslint-plugin-html": "^2.0.1",
     "flow-bin": "^0.38.0",
-    "repoman": "*"
+    "lerna-motion": "^2.2.3",
+    "lerna": "2.0.0-beta.37"
   }
 }

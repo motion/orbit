@@ -1,14 +1,13 @@
 import { addEvent, setTimeout, setInterval, ref, isClass } from 'motion-class-helpers'
-import { watch, react } from 'motion-mobx-helpers'
+import { watch, react, observeStreams } from 'motion-mobx-helpers'
 import mixin from 'react-mixin'
 import autobind from 'autobind-decorator'
 import React from 'react'
 import gloss from 'gloss'
 import { observer } from 'mobx-react'
 import { observable } from 'mobx'
-import baseStyles from './baseStyles'
 import { provide, injectDecorate } from 'motion-view'
-// import { createFactory } from 'mobx-state-tree'
+import baseStyles from './baseStyles'
 
 export { inject } from 'motion-view'
 
@@ -40,9 +39,5 @@ export function store(Store) {
     mixin(Store.prototype, Helpers)
     return injectDecorate(autobind(Store))
   }
-
-  return observable(Store)
-
-  // mobx-state-tree
-  // return createFactory(fn)()
+  return observable(observeStreams(Store))
 }

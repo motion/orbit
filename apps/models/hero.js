@@ -1,4 +1,5 @@
-import { Model, query } from './model'
+import { query } from 'motion-mobx-helpers'
+import Model from './model'
 
 class Hero extends Model {
   schema = {

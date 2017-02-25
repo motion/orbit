@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "dependencies": {
-    "helpers": "*"
+    "helpers": "*",
+    "motion-mobx-helpers": "^1.0.2"
   }
 }

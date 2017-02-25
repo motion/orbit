@@ -6,9 +6,9 @@ import React from 'react'
 import gloss from 'gloss'
 import { observer } from 'mobx-react'
 import baseStyles from './baseStyles'
-import { injectDecorate } from 'motion-view'
+import { provide, injectDecorate } from 'motion-view'
 
-export { provide, inject } from 'motion-view'
+export { inject } from 'motion-view'
 
 export const glossy = gloss({ baseStyles })
 
@@ -30,6 +30,8 @@ export function view(View) {
   // order important
   return injectDecorate(autobind(glossy(observer(View))))
 }
+
+view.provide = (...args) => View => provide(...args)(view(View))
 
 export function store(Store) {
   mixin(Store.prototype, Helpers)

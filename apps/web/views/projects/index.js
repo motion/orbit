@@ -1,9 +1,8 @@
-import { view, provide } from 'helpers'
+import { view } from 'helpers'
 import { Title, Text, Page, Link } from 'views'
 import { Hero } from 'models'
 
-@view
-@provide({
+@view.provide({
   store: class {
     x = 2
     heroes = Hero.byName()

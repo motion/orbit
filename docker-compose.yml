@@ -9,3 +9,13 @@ services:
       - 5984:5984
     volumes:
       - ./apps/couch:/usr/local/etc/couchdb/local.d:rw
+  api:
+    container_name: api
+    hostname: api
+    image: mhart/alpine-node:7
+    command: node /app/apps/api/lib
+    restart: always
+    expose:
+      - 80
+    volumes:
+      - ./apps/api:/app/apps/api:ro

@@ -59,57 +59,6 @@ class Letter {
       top: 0, left: 0,
       opacity: 0.5,
     },
-    page: {
-      flexFlow: 'row',
-      flexWrap: 'wrap',
-    },
-    item: {
-      padding: 10,
-      marginBottom: 15,
-      flexFlow: 'row',
-    },
-    post: {
-      width: '80%',
-    },
-    comments: {
-      paddingTop: 75,
-      width: '20%',
-    },
-    feed: {
-      padding: [20, 0],
-    },
-    title: {
-      color: '#999',
-      margin: [0, 10],
-    },
-    small: {
-      fontSize: 12,
-      margin: [3, 0, -3, 10],
-      opacity: 0.3,
-    },
-    via: {
-      fontSize: 12,
-      margin: [0, 0, 5],
-    },
-    img: {
-      width: 12,
-      height: 12,
-      marginRight: 5,
-    },
-    dot: {
-      margin: [0, 10],
-      color: '#999',
-    },
-    a: {
-      display: 'flex',
-      flexFlow: 'row',
-      alignItems: 'center',
-      fontWeight: 500,
-      color: '#999'
-    },
-    nav: {
-      flexFlow: 'row'
-    }
   }
 }
 

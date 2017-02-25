@@ -14,6 +14,7 @@ class App {
     this.db = await RxDB.create('DB_NAME', 'idb', 'DB_PASSWORD', true)
 
     // connect models
+    console.log('connecting...')
     this.models = {}
     for (const key of Object.keys(Models)) {
       this.models[key] = await Models[key].connect(this.db)

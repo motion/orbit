@@ -1,47 +1,38 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { inject } from 'motion-view'
+import { render } from 'react-dom'
 import _ from 'lodash'
-import { view } from 'helpers'
-
-const DEV_MODE = process.env.NODE_ENV === 'development'
-
-// process polyfill
-window.React = React
-window.process = {
-  browser: true,
-  nextTick: (cb) => window.setImmediate(cb),
-}
 
 async function start() {
-  // global injections for all views/stores
-  view.inject({
-    get app() { return App },
-    get router() { return Router },
-  })
+  window.React = React
+  window.process = {
+    browser: true,
+    nextTick: x => window.setImmediate(x)
+  }
 
   const App = require('./stores/app').default
   const Router = require('./stores/router').default
 
-  // dev helpers
-  if (DEV_MODE) {
-    window._ = _
-    window.App = App
+  // attach to all views/stores
+  if (!window.App) {
+    inject({
+      app: App,
+      router: Router,
+    })
   }
 
-  // connect to db
   await App.connect()
 
-  // then get views
-  const Views = require('./views').default
-
-  ReactDOM.render(
-    <Views />,
-    document.querySelector('#app')
-  )
-
-  if (DEV_MODE && module.hot) {
+  if (process.env.NODE_ENV === 'development') {
+    window._ = _
+    window.App = App
     module.hot.accept()
   }
+
+  render(
+    React.createElement(require('./views').default),
+    document.querySelector('#app')
+  )
 }
 
 start()

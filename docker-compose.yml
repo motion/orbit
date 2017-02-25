@@ -1,18 +1,6 @@
 version: "3"
 services:
-  # motion-db:
-  #   container_name: dgraph
-  #   hostname: dgraph
-  #   image: dgraph/dgraph
-  #   restart: always
-  #   command:
-  #     dgraph --config /app/config.yml
-  #   ports:
-  #     - 8090:8080
-  #   volumes:
-  #     - ./app_data/dgraph:/dgraph:rw
-  #     - ./apps/graph:/app:ro
-  motion-couch:
+  couch:
     container_name: couch
     hostname: couch
     image: couchdb
@@ -21,3 +9,13 @@ services:
       - 5984:5984
     volumes:
       - ./apps/couch:/usr/local/etc/couchdb/local.d:rw
+  api:
+    container_name: api
+    hostname: api
+    image: mhart/alpine-node:7
+    command: node /app/apps/api/lib
+    restart: always
+    expose:
+      - 80
+    volumes:
+      - ./apps/api:/app/apps/api:ro

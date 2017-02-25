@@ -1,3 +1,4 @@
+import * as Models from 'models'
 import * as RxDB from 'rxdb'
 import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'
@@ -8,11 +9,16 @@ RxDB.plugin(pREPL) // sync
 RxDB.plugin(pHTTP) // sync on http
 
 class App {
-  // have some user information
-
   async connect() {
+    // connect to pouchdb
     this.db = await RxDB.create('DB_NAME', 'idb', 'DB_PASSWORD', true)
-    console.log('connected')
+
+    // connect models
+    console.log('connecting...')
+    this.models = {}
+    for (const key of Object.keys(Models)) {
+      this.models[key] = await Models[key].connect(this.db)
+    }
   }
 }
 

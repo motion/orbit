@@ -1,10 +1,13 @@
 {
-  "name": "my-decorators",
+  "name": "helpers",
   "private": true,
   "version": "1.0.0",
   "main": "lib/index.js",
   "dependencies": {
     "gloss": "^5.0.0",
+    "mobx": "^3.1.0",
+    "mobx-state-tree": "0.0.1",
+    "mobx-utils": "^2.0.1",
     "motion-class-helpers": "^1.0.0",
     "motion-mobx-helpers": "^1.0.0",
     "motion-view": "^1.0.0",

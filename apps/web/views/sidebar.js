@@ -1,4 +1,4 @@
-import { view } from 'my-decorators'
+import { view } from 'helpers'
 
 @view
 export default class Sidebar {

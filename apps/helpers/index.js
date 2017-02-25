@@ -5,8 +5,10 @@ import autobind from 'autobind-decorator'
 import React from 'react'
 import gloss from 'gloss'
 import { observer } from 'mobx-react'
+import { observable } from 'mobx'
 import baseStyles from './baseStyles'
 import { provide, injectDecorate } from 'motion-view'
+// import { createFactory } from 'mobx-state-tree'
 
 export { inject } from 'motion-view'
 
@@ -34,10 +36,13 @@ export function view(View) {
 view.provide = (...args) => View => provide(...args)(view(View))
 
 export function store(Store) {
-  mixin(Store.prototype, Helpers)
-  let res = Store
   if (isClass(Store)) {
-    res = autobind(res)
+    mixin(Store.prototype, Helpers)
+    return injectDecorate(autobind(Store))
   }
-  return injectDecorate(res)
+
+  return observable(Store)
+
+  // mobx-state-tree
+  // return createFactory(fn)()
 }

@@ -65,7 +65,6 @@ class Letter {
 @view
 export default class Home {
   render() {
-    console.log('is', this.app)
     return (
       <cards>
         <card>

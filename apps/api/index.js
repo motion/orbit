@@ -5,7 +5,9 @@ import logger from 'morgan'
 import SuperLogin from 'superlogin'
 
 const app = express()
-app.set('port', process.env.PORT || 3000)
+const port = process.env.PORT || 3000
+console.log('starting on', port)
+app.set('port', port)
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))

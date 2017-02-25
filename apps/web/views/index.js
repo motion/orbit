@@ -8,7 +8,7 @@ export default class Root {
     const CurrentPage = this.router.activeView || NotFound
     return (
       <Layout $$flex>
-        <CurrentPage />
+        <CurrentPage key={Math.random()} />
       </Layout>
     )
   }

@@ -18,10 +18,8 @@ const Helpers = {
 }
 
 export function view(View) {
-  Object.setPrototypeOf(
-    View.prototype,
-    React.Component.prototype
-  )
+  injectDecorate(View)
+  Object.setPrototypeOf(View.prototype, React.Component.prototype)
   mixin(View.prototype, Helpers)
   // render
   const render = View.prototype.render
@@ -29,7 +27,7 @@ export function view(View) {
     return render.call(this, this.props, this.state, this.context)
   }
   // order important
-  return injectDecorate(autobind(glossy(observer(View))))
+  return autobind(glossy(observer(View)))
 }
 
 view.provide = (...args) => View => provide(...args)(view(View))
@@ -37,7 +35,8 @@ view.provide = (...args) => View => provide(...args)(view(View))
 export function store(Store) {
   if (isClass(Store)) {
     mixin(Store.prototype, Helpers)
-    return injectDecorate(autobind(Store))
+    injectDecorate(Store)
+    return autobind(Store)
   }
   return observable(observeStreams(Store))
 }

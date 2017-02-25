@@ -14,10 +14,12 @@ async function start() {
   const Router = require('./stores/router').default
 
   // attach to all views/stores
-  inject({
-    app: App,
-    router: Router,
-  })
+  if (!window.App) {
+    inject({
+      app: App,
+      router: Router,
+    })
+  }
 
   await App.connect()
 

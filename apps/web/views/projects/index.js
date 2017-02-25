@@ -15,7 +15,7 @@ export default class Projects {
   render({ store }) {
     return (
       <Page>
-        <Title>{store.x} 2</Title>
+        <Title>Hello {store.x}</Title>
         <button onClick={() => store.x++}>increment</button>
         {(store.heroes.current || []).map(hero =>
           <hero key={Math.random()}>

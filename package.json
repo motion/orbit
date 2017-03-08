@@ -16,7 +16,6 @@
     "babel-preset-steelbrain": "^4.0.2",
     "eslint-plugin-html": "^2.0.1",
     "flow-bin": "^0.38.0",
-    "lerna-motion": "^2.2.3",
-    "lerna": "2.0.0-beta.37"
+    "lerna-motion": "^2.2.3"
   }
 }

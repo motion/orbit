@@ -1,12 +1,13 @@
-import express from 'express'
-import http from 'http'
-import bodyParser from 'body-parser'
-import logger from 'morgan'
-import SuperLogin from 'superlogin'
-import config from './superlogin.config'
-import { FacebookStrategy } from 'passport-facebook'
-import { GitHubStrategy } from 'passport-github'
-import { GoogleStrategy } from 'passport-google-oauth'
+const http = require('http')
+const logger = require('morgan')
+const express = require('express')
+const bodyParser = require('body-parser')
+const SuperLogin = require('superlogin')
+const { GitHubStrategy } = require('passport-github')
+const { GoogleStrategy } = require('passport-google-oauth')
+const { FacebookStrategy } = require('passport-facebook')
+
+const config = require('./superlogin.config.js')
 
 const app = express()
 

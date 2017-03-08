@@ -1,4 +1,4 @@
-FROM node:4-wheezy
+FROM node:7
 
 MAINTAINER Jason Jarrett jason@elegantcode.com
 

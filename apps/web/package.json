@@ -31,6 +31,6 @@
   },
   "devDependencies": {
     "babel-plugin-jsx-if": "^1.0.2",
-    "motion": "5.0.0-beta15"
+    "motion": "5.0.0-beta18"
   }
 }

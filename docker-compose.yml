@@ -1,15 +1,17 @@
 version: "2"
 services:
-  redis:
+  starter-redis:
+    container_name: starter-redis
+    hostname: starter-redis
     image: redis
-    hostname: redis
     ports:
      - "6379"
     volumes:
      - ./app_data/redis-data:/data
-  couch:
+  starter-couchdb:
+    container_name: starter-couchdb
+    hostname: starter-couchdb
     image: couchdb
-    hostname: couchdb
     restart: always
     ports:
       - 5984:5984
@@ -19,16 +21,18 @@ services:
     environment:
      - COUCHDB_USER=${COUCHDB_USER}
      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-  api:
-    depends_on:
-      - couch
-      - redis
+  starter-api:
+    container_name: starter-api
+    hostname: starter-api
     build: ./apps/api
     ports:
      - "3000:3000"
      - "5858:5858"
     volumes:
       - ./apps/api:/app
+    depends_on:
+      - starter-redis
+      - starter-couchdb
     environment:
      - COUCHDB_USER=${COUCHDB_USER}
      - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}

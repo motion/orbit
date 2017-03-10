@@ -1,7 +1,7 @@
 module.exports = {
   dbServer: {
     protocol: 'http://',
-    host: 'couchdb:5984',
+    host: 'starter-couchdb:5984',
     user: process.env.COUCHDB_USER,
     password: process.env.COUCHDB_PASSWORD,
     userDB: 'sl-users',
@@ -28,7 +28,7 @@ module.exports = {
     adapter: 'redis',
     redis: {
       // The docker-compose will setup the /etc/hosts for us so our redis servier is called "redis"
-      url: 'redis://redis:6379',
+      url: 'redis://starter-redis:6379',
     }
   },
   providers: {

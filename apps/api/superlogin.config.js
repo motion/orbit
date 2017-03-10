@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   dbServer: {
     protocol: 'http://',
     host: 'couchdb:5984',

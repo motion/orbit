@@ -2,12 +2,14 @@ version: "2"
 services:
   redis:
     image: redis
+    hostname: redis
     ports:
      - "6379"
     volumes:
      - ./app_data/redis-data:/data
   couch:
     image: couchdb
+    hostname: couchdb
     restart: always
     ports:
       - 5984:5984

@@ -8,7 +8,7 @@
       }]
     ],
     "presets": [
-      "babel-preset-motion"
+      "babel-preset-steelbrain"
     ]
   },
   "pathType": "filePath",

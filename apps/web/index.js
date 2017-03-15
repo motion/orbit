@@ -1,38 +1,27 @@
 import React from 'react'
 import { inject } from 'motion-view'
 import { render } from 'react-dom'
-import _ from 'lodash'
+import App from './stores/app'
+import Router from './stores/router'
 
-async function start() {
-  window.React = React
-  window.process = {
-    browser: true,
-    nextTick: x => window.setImmediate(x)
-  }
+window.React = React
 
-  const App = require('./stores/app').default
-  const Router = require('./stores/router').default
-
-  // attach to all views/stores
-  if (!window.App) {
+App.connect()
+  .then(() => {
     inject({
       app: App,
       router: Router,
     })
-  }
 
-  await App.connect()
+    if (process.env.NODE_ENV === 'development') {
+      window.App = App
+      module.hot.accept()
+    }
 
-  if (process.env.NODE_ENV === 'development') {
-    window._ = _
-    window.App = App
-    module.hot.accept()
-  }
-
-  render(
-    React.createElement(require('./views').default),
-    document.querySelector('#app')
-  )
-}
-
-start()
+    // render
+    const Views = require('./views').default
+    render(
+      <Views />,
+      document.querySelector('#app')
+    )
+  })

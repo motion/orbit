@@ -1,4 +1,4 @@
-import { view, inject } from 'helpers'
+import { view } from 'helpers'
 import NotFound from './notfound'
 import Layout from './layout'
 
@@ -8,7 +8,7 @@ export default class Root {
     const CurrentPage = this.router.activeView || NotFound
     return (
       <Layout $$flex>
-        <CurrentPage key={Math.random()} />
+        <CurrentPage />
       </Layout>
     )
   }

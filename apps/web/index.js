@@ -8,13 +8,17 @@ window.React = React
 
 App.connect()
   .then(() => {
-    inject({
-      app: App,
-      router: Router,
-    })
+    // inject App
+    if (!window.App) {
+      window.App = App
+
+      inject({
+        app: App,
+        router: Router,
+      })
+    }
 
     if (process.env.NODE_ENV === 'development') {
-      window.App = App
       module.hot.accept()
     }
 

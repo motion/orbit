@@ -5,7 +5,7 @@ export default class Home {
   render() {
     return (
       <home>
-        test23321122
+        no222
       </home>
     )
   }

@@ -23,7 +23,7 @@ App.connect()
     // render
     const Views = require('./views').default
     render(
-      <Views />,
+      <Views key={Math.random()} />,
       document.querySelector('#app')
     )
   })

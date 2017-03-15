@@ -9,13 +9,13 @@ RxDB.plugin(pREPL) // sync
 RxDB.plugin(pHTTP) // sync on http
 
 class App {
+  models = {}
+
   async connect() {
     // connect to pouchdb
     this.db = await RxDB.create('DB_NAME', 'idb', 'DB_PASSWORD', true)
 
     // connect models
-    console.log('connecting...')
-    this.models = {}
     for (const key of Object.keys(Models)) {
       this.models[key] = await Models[key].connect(this.db)
     }

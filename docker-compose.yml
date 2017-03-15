@@ -1,21 +1,52 @@
-version: "3"
+version: "2"
 services:
-  couch:
-    container_name: couch
-    hostname: couch
+  starter-redis:
+    container_name: starter-redis
+    hostname: starter-redis
+    image: redis
+    ports:
+     - "6379"
+    volumes:
+     - ./app_data/redis-data:/data
+  starter-couchdb:
+    container_name: starter-couchdb
+    hostname: starter-couchdb
     image: couchdb
     restart: always
     ports:
       - 5984:5984
     volumes:
       - ./apps/couch:/usr/local/etc/couchdb/local.d:rw
-  api:
-    container_name: api
-    hostname: api
-    image: mhart/alpine-node:6
-    command: node /app/api/lib/index.js
-    restart: always
-    expose:
-      - 80
+      - ./app_data/couchdb:/usr/local/var/lib/couchdb
+    environment:
+     - COUCHDB_USER=${COUCHDB_USER}
+     - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+  starter-api:
+    container_name: starter-api
+    hostname: starter-api
+    build: ./apps/api
+    ports:
+     - "3000:3000"
+     - "5858:5858"
     volumes:
-      - ./apps/api:/app/api:ro
+      - ./apps/api:/app
+    depends_on:
+      - starter-redis
+      - starter-couchdb
+    environment:
+     - COUCHDB_USER=${COUCHDB_USER}
+     - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
+     - NODE_ENV=${NODE_ENV}
+     - FROM_EMAIL=${FROM_EMAIL}
+     - SENDGRID_USERNAME=${SENDGRID_USERNAME}
+     - SENDGRID_PASSWORD=${SENDGRID_PASSWORD}
+     - FACEBOOK_CLIENTID=${FACEBOOK_CLIENTID}
+     - FACEBOOK_CLIENTSECRET=${FACEBOOK_CLIENTSECRET}
+     - GOOGLE_CLIENTID=${GOOGLE_CLIENTID}
+     - GOOGLE_CLIENTSECRET=${GOOGLE_CLIENTSECRET}
+     - GITHUB_CLIENTID=${GITHUB_CLIENTID}
+     - GITHUB_CLIENTSECRET=${GITHUB_CLIENTSECRET}
+     - WINDOWSLIVE_CLIENTID=${WINDOWSLIVE_CLIENTID}
+     - WINDOWSLIVE_CLIENTSECRET=${WINDOWSLIVE_CLIENTSECRET}
+     - LINKEDIN_CLIENTID=${LINKEDIN_CLIENTID}
+     - LINKEDIN_CLIENTSECRET=${LINKEDIN_CLIENTSECRET}

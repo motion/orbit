@@ -1,4 +1,4 @@
-import { view, inject } from 'helpers'
+import { view } from 'helpers'
 import NotFound from './notfound'
 import Layout from './layout'
 

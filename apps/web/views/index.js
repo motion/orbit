@@ -1,11 +1,12 @@
 import { view } from 'helpers'
 import NotFound from './notfound'
 import Layout from './layout'
+import Router from '../stores/router'
 
 @view
 export default class Root {
   render() {
-    const CurrentPage = this.router.activeView || NotFound
+    const CurrentPage = Router.activeView || NotFound
     return (
       <Layout $$flex>
         <CurrentPage />

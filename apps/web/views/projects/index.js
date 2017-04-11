@@ -4,7 +4,7 @@ import { Hero } from 'models'
 
 @view.provide(() => ({
   store: store({
-    x: 2,
+    x: 4,
     heroes: Hero.byName(),
     insert(name, color) {
       Hero.table.insert({ name, color })
@@ -15,7 +15,7 @@ export default class Projects {
   render({ store }) {
     return (
       <Page>
-        <Title>hi {store.x}</Title>
+        <Title>hi {store.x} 222</Title>
         <button onClick={() => store.x++}>increment</button>
         {(store.heroes.current || []).map(hero =>
           <hero key={Math.random()}>

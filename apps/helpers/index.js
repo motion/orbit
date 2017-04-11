@@ -6,10 +6,8 @@ import React from 'react'
 import gloss from 'gloss'
 import { observer } from 'mobx-react'
 import { observable } from 'mobx'
-import { provide, injectDecorate } from 'motion-view'
+import { provide } from 'motion-view'
 import baseStyles from './baseStyles'
-
-export { inject } from 'motion-view'
 
 export const glossy = gloss({ baseStyles })
 
@@ -18,14 +16,15 @@ const Helpers = {
 }
 
 export function view(View) {
-  injectDecorate(View)
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
   mixin(View.prototype, Helpers)
+
   // render
   const render = View.prototype.render
   View.prototype.render = function() {
     return render.call(this, this.props, this.state, this.context)
   }
+
   // order important
   return autobind(glossy(observer(View)))
 }
@@ -35,7 +34,6 @@ view.provide = (...args) => View => provide(...args)(view(View))
 export function store(Store) {
   if (isClass(Store)) {
     mixin(Store.prototype, Helpers)
-    injectDecorate(Store)
     return autobind(Store)
   }
   return observable(observeStreams(Store))

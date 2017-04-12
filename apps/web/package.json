@@ -22,12 +22,14 @@
     "passport-google-oauth": "^1.0.0",
     "pouchdb-adapter-http": "^6.1.2",
     "pouchdb-adapter-idb": "^6.1.2",
+    "pouchdb-authentication": "^0.5.5",
     "pouchdb-replication": "^6.1.2",
     "randomcolor": "^0.4.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^4.0.0",
     "rxdb": "^2.0.4",
+    "stores": "^1.0.0",
     "views": "*"
   },
   "devDependencies": {

@@ -1,5 +1,4 @@
 import React from 'react'
-import { Provide } from 'helpers'
 import { render } from 'react-dom'
 import App from './stores/app'
 

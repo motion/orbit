@@ -19,9 +19,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const superlogin = new SuperLogin(config)
 
 const strategies = [
-  ["facebook", FacebookStrategy],
-  ["github", GitHubStrategy],
-  ["google", GoogleStrategy],
+  ['facebook', FacebookStrategy],
+  ['github', GitHubStrategy],
+  ['google', GoogleStrategy],
 ]
 
 strategies.forEach(([name, strategy]) => {

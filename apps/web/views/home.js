@@ -6,7 +6,7 @@ import { Place } from 'models'
 export default class Home {
   create = () => Place.table.insert({
     title: this.place.value,
-    author_id: App.user.id
+    author_id: App.user.name,
   })
 
   componentWillMount() {
@@ -14,21 +14,19 @@ export default class Home {
   }
 
   render() {
-    console.log(this.places)
-
     return (
       <home>
-        <create>
+        <create if={App.user}>
           create new place:
           <input ref={this.ref('place').set} />
           <button onClick={this.create}>create</button>
         </create>
 
-        <places if={this.places}>
-          {this.places.map(piece =>
+        <places if={this.places.current}>
+          {this.places.current.map(piece =>
             <piece key={Math.random()}>
-              author: {piece.author || 'none'}<br />
-              content: {piece.content || 'none'}<br />
+              author: {piece.author_id || 'none'}<br />
+              content: {piece.title || 'none'}<br />
               <button onClick={() => store.delete(piece._id)}>x</button>
             </piece>
           )}

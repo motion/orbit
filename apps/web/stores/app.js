@@ -9,7 +9,7 @@ import pAuth from 'pouchdb-authentication'
 
 const KEYS = {
   url: 'http://localhost:5984',
-  name: 'name',
+  name: 'username',
   password: 'password',
 }
 

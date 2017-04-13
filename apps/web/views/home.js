@@ -1,6 +1,7 @@
 import { view, store } from 'helpers'
 import App from '../stores/app'
 import { Place } from 'models'
+import { Page } from 'views'
 
 @view
 export default class Home {
@@ -13,48 +14,30 @@ export default class Home {
     this.places = Place.all().observable
   }
 
+  delete = () =>
+    Place.table.findOne(piece._id).exec().then(doc => doc.remove())
+
   render() {
     return (
-      <home>
-        <create if={App.user}>
-          create new place:
-          <input ref={this.ref('place').set} />
-          <button onClick={this.create}>create</button>
-        </create>
+      <Page>
+        <Page.Main>
+          <create if={App.user}>
+            create new place:
+            <input ref={this.ref('place').set} />
+            <button onClick={this.create}>create</button>
+          </create>
 
-        <places if={this.places.current}>
-          {this.places.current.map(piece =>
-            <piece key={Math.random()}>
-              id: {piece._id}<br />
-              author: {piece.author_id || 'none'}<br />
-              content: {piece.title || 'none'}<br />
-              <button onClick={() => Place.table.findOne(piece._id).exec().then(doc => doc.remove())}>x</button>
-            </piece>
-          )}
-        </places>
-
-        <user>
-          <info if={App.user}>
-            logged in!
-            <strong>{App.user.name}</strong>
-            <a onClick={App.logout}>logout</a>
-          </info>
-
-          <login if={App.user === false}>
-            login!
-            <input placeholder="username" ref={this.ref('username').set} />
-            <input type="password" ref={this.ref('password').set} />
-            <button onClick={() => App.login(this.username.value, this.password.value)}>login</button>
-          </login>
-
-          <register if={App.user === false}>
-            register!
-            <input placeholder="username" ref={this.ref('pusername').set} />
-            <input type="password" ref={this.ref('ppassword').set} />
-            <button onClick={() => App.signup(this.pusername.value, this.ppassword.value)}>register</button>
-          </register>
-        </user>
-      </home>
+          <places if={this.places.current}>
+            {this.places.current.map(piece =>
+              <piece key={Math.random()}>
+                id: {console.log(piece) && piece.url}<br />
+                author: {piece.author_id || 'none'}<br />
+                content: {piece.title || 'none'}<br />
+              </piece>
+            )}
+          </places>
+        </Page.Main>
+      </Page>
     )
   }
 

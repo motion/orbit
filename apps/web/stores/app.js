@@ -9,8 +9,8 @@ import pAuth from 'pouchdb-authentication'
 
 const KEYS = {
   url: 'http://localhost:5984',
-  db: 'DB_NAME',
-  pass: 'DB_PASSWORD',
+  name: 'name',
+  password: 'password',
 }
 
 class App {
@@ -27,7 +27,12 @@ class App {
 
   async connect() {
     // connect to pouchdb
-    this.db = await RxDB.create(KEYS.db, 'idb', KEYS.pass, true)
+    this.db = await RxDB.create({
+      name: KEYS.name,
+      adapter: 'idb',
+      password: KEYS.password,
+      multiInstance: true,
+    })
 
     // separate pouchdb for auth
     this.auth = new PouchDB(`${KEYS.url}/auth`, { skipSetup: true })

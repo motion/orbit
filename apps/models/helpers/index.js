@@ -7,6 +7,11 @@ export default class Model {
 
   async connect(db) {
     this.db = db
-    this.table = await this.db.collection(this.title, this.schema)
+    this.table = await db.collection({
+      name: this.title,
+      schema: this.schema,
+      statics: this.statics,
+      methods: this.methods,
+    })
   }
 }

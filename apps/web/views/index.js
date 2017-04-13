@@ -4,6 +4,8 @@ import Router from '../stores/router'
 
 @view
 export default class Layout {
+  prevent = e => e.preventDefault()
+
   render() {
     const CurrentPage = Router.activeView || NotFound
 
@@ -15,6 +17,28 @@ export default class Layout {
             <a onClick={() => Router.go("/")}>home</a>
             <a onClick={() => Router.go("/projects")}>popular</a>
           </nav>
+          <div $$flex />
+          <user $$row>
+            <info if={App.user}>
+              logged in!
+              <strong>{App.user.name}</strong>
+              <a onClick={App.logout}>logout</a>
+            </info>
+
+            <form onSubmit={this.prevent} if={App.user === false}>
+              login!
+              <input name="username" placeholder="username" ref={this.ref('username').set} />
+              <input name="password" type="password" ref={this.ref('password').set} />
+              <button onClick={() => App.login(this.username.value, this.password.value)}>login</button>
+            </form>
+
+            <form onSubmit={this.prevent} if={App.user === false}>
+              register!
+              <input placeholder="username" ref={this.ref('pusername').set} />
+              <input type="password" ref={this.ref('ppassword').set} />
+              <button onClick={() => App.signup(this.pusername.value, this.ppassword.value)}>register</button>
+            </form>
+          </user>
         </header>
         <CurrentPage />
       </layout>

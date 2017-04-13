@@ -16,14 +16,20 @@ class Place extends Model {
     },
   }
 
-  statics = {
+  methods = {
     url() {
       return `/g/${this.title.toLowerCase()}`
     },
   }
 
-  @query all = () => {
-    return this.table.find()
+  @query all = () => this.table.find()
+
+  @query get(title) {
+    return this.table.findOne().where('title').eq(title)
+  }
+
+  get2(name) {
+    return this.table.findOne().where('title').eq(name)
   }
 }
 

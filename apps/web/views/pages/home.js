@@ -1,5 +1,6 @@
 import { view, store } from 'helpers'
-import App from '../stores/app'
+import App from '../../stores/app'
+import Router from '../../stores/router'
 import { Place } from 'models'
 import { Page } from 'views'
 
@@ -17,6 +18,11 @@ export default class Home {
   delete = () =>
     Place.table.findOne(piece._id).exec().then(doc => doc.remove())
 
+  link = piece => e => {
+    e.preventDefault()
+    Router.go(piece.url())
+  }
+
   render() {
     return (
       <Page>
@@ -30,9 +36,10 @@ export default class Home {
           <places if={this.places.current}>
             {this.places.current.map(piece =>
               <piece key={Math.random()}>
-                id: {console.log(piece) && piece.url}<br />
-                author: {piece.author_id || 'none'}<br />
-                content: {piece.title || 'none'}<br />
+                <a href={piece.url()} onClick={this.link(piece)}>
+                  {piece.url()}
+                </a>
+                by {piece.author_id || 'none'}
               </piece>
             )}
           </places>

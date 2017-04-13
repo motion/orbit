@@ -6,6 +6,7 @@ export default class Model {
   }
 
   async connect(db) {
+    console.log('connecting', this.title)
     this.db = db
     this.table = await db.collection({
       name: this.title,

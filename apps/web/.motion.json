@@ -8,7 +8,9 @@
       }]
     ],
     "presets": [
-      "babel-preset-steelbrain"
+      ["babel-preset-steelbrain", {
+        "targets": "chrome"
+      }]
     ]
   },
   "pathType": "filePath",

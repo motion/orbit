@@ -25,9 +25,10 @@ export default class Home {
         <places if={this.places.current}>
           {this.places.current.map(piece =>
             <piece key={Math.random()}>
+              id: {piece._id}<br />
               author: {piece.author_id || 'none'}<br />
               content: {piece.title || 'none'}<br />
-              <button onClick={() => store.delete(piece._id)}>x</button>
+              <button onClick={() => Place.table.findOne(piece._id).exec().then(doc => doc.remove())}>x</button>
             </piece>
           )}
         </places>

@@ -2,7 +2,7 @@ export { query } from 'motion-mobx-helpers'
 
 export default class Model {
   get title() {
-    return this.schema.title || this.constructor.name
+    return (this.schema.title || this.constructor.name).toLowerCase()
   }
 
   async connect(db) {

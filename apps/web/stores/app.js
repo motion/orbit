@@ -1,3 +1,4 @@
+import { observable } from 'mobx'
 import * as Models from 'models'
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
@@ -15,7 +16,7 @@ const KEYS = {
 class App {
   models = {}
   db = null
-  user = null
+  @observable user = null
 
   constructor() {
     RxDB.plugin(pIDB)
@@ -37,20 +38,45 @@ class App {
       await model.connect(this.db)
       model.table.sync(`${KEYS.url}/${model.title}`)
     }
+
+    // log back in
+    this.setSession()
   }
 
-  signup(username, password, info) {
-    return this.auth.signup(username, password, info)
+  signup = (username, password, info) => {
+    return this.auth.signup(username, password, info || {})
   }
 
-  async login(username, password) {
+  login = async (username, password) => {
     try {
-      const user = await this.auth.login(username, password)
-      console.log('got user', user)
-      this.user = user
+      const info = await this.auth.login(username, password)
+      this.setSession()
+      return info
     }
     catch(e) {
       console.error(e)
+      return null
+    }
+  }
+
+  logout = async () => {
+    await this.auth.logout()
+    this.setSession()
+  }
+
+  session = async () => {
+    return await this.auth.getSession()
+  }
+
+  setSession = async () => {
+    const session = await this.session()
+    const loggedIn = session && session.userCtx.name
+    console.log('loggedIn', loggedIn)
+    if (loggedIn) {
+      this.user = session.userCtx
+    }
+    else {
+      this.user = false
     }
   }
 }

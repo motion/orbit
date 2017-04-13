@@ -41,7 +41,7 @@ class App {
     for (const [name, model] of Object.entries(Models)) {
       this.models[name] = model
       await model.connect(this.db)
-      model.table.sync(`${KEYS.url}/${model.title}`)
+      model.collection.sync(`${KEYS.url}/${model.title}`)
     }
 
     // log back in

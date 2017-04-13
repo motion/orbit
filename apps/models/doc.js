@@ -20,7 +20,7 @@ class Doc extends Model {
   }
 
   @query all = () => {
-    return this.table.find()
+    return this.collection.find()
   }
 }
 

@@ -12,16 +12,16 @@ class Store extends BaseStore {
   place = Place.get(Router.params.name).observable
 }
 
-@view.provide({
-  place: Store
-})
+@view.provide({ store: Store })
 export default class PlacePage {
-  render({ place }) {
-    if (!place.place.current) {
+  render({ store }) {
+    if (!store.place.current) {
       return null
     }
 
-    const [active] = place.place.current
+    const [active] = store.place.current
+
+    window.x = active
 
     return (
       <Page>

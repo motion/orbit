@@ -6,13 +6,19 @@ export default class Model {
   }
 
   async connect(db) {
-    console.log('connecting', this.title)
     this.db = db
-    this.table = await db.collection({
+    this.collection = await db.collection({
       name: this.title,
       schema: this.schema,
       statics: this.statics,
       methods: this.methods,
     })
+
+    if (this.hooks) {
+      Object.keys(this.hooks).forEach(hook => {
+        console.log('adding hook', this.title, hook)
+        this.collection[hook](this.hooks[hook])
+      })
+    }
   }
 }

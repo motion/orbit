@@ -19,8 +19,15 @@ class Board extends Model {
     }
   }
 
+  hooks = {
+    preInsert(doc) {
+      console.log('pre insert')
+      doc.author_id = App.user.name
+    }
+  }
+
   @query all = () => {
-    return this.table.find()
+    return this.collection.find()
   }
 }
 

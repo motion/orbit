@@ -1,4 +1,5 @@
 import Model, { query } from './helpers'
+import Board from './board'
 
 class Place extends Model {
   schema = {
@@ -20,17 +21,24 @@ class Place extends Model {
     url() {
       return `/g/${this.title.toLowerCase()}`
     },
+
+    @query boards() {
+      return Board.collection.find().where('place_id').eq(this._id)
+    }
+
+    createBoard(info) {
+      return this.collection.insert({
+        ...info,
+        place_id: this._id,
+      })
+    }
   }
 
-  @query all = () => this.table.find()
+  @query all = () =>
+    this.collection.find()
 
-  @query get(title) {
-    return this.table.findOne().where('title').eq(title)
-  }
-
-  get2(name) {
-    return this.table.findOne().where('title').eq(name)
-  }
+  @query get = (title) =>
+    this.collection.findOne().where('title').eq(title)
 }
 
 export default new Place()

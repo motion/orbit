@@ -13,7 +13,7 @@ App.connect()
       module.hot.accept()
     }
 
-    const Root = require('./root').default
+    const Root = require('./views/root').default
 
     render(
       <Root />,

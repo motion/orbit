@@ -24,10 +24,11 @@ class Place extends Model {
 
     @query boards() {
       return Board.collection.find().where('place_id').eq(this._id)
-    }
+    },
 
     createBoard(info) {
-      return this.collection.insert({
+      console.log('creating board', this)
+      return Board.collection.insert({
         ...info,
         place_id: this._id,
       })

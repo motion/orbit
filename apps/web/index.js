@@ -1,14 +1,10 @@
+import 'babel-polyfill'
 import { render } from 'react-dom'
 import React from 'react'
-
-window.regeneratorRuntime = require('regenerator-runtime')
-
-const App = require('./stores/app').default
-const Router = require('./stores/router').default
+import { App } from 'stores'
 
 window.React = React
 window.App = App
-window.Router = Router
 
 App.connect()
   .then(() => {

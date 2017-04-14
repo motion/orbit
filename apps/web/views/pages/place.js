@@ -9,17 +9,17 @@ class BaseStore {
 }
 
 class Store extends BaseStore {
-  place = Place.get(Router.params.name).observable
+  place = Place.get(Router.params.name)
 }
 
 @view.provide({ store: Store })
 export default class PlacePage {
   render({ store }) {
-    if (!store.place.current) {
+    const [active] = store.place.current || []
+
+    if (!active) {
       return null
     }
-
-    const [active] = store.place.current
 
     window.x = active
 

@@ -1,6 +1,6 @@
 import { view } from 'helpers'
 import NotFound from './pages/notfound'
-import Router from '../stores/router'
+import Router from './router'
 
 @view
 export default class Layout {

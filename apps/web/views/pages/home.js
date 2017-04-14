@@ -1,6 +1,6 @@
 import { view, store } from 'helpers'
-import App from '../../stores/app'
-import Router from '../../stores/router'
+import { App } from 'stores'
+import Router from '../router'
 import { Place } from 'models'
 import { Page } from 'views'
 

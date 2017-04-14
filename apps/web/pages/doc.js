@@ -2,12 +2,11 @@ import { view } from '~/helpers'
 import { Doc } from 'models'
 import { Page } from '~/views'
 import Router from '~/router'
-import Editor, { stateFromText } from '~/views/editor'
+import Editor from '~/views/editor'
 
 @view.provide({
   store: class {
     doc = Doc.get(Router.params.id)
-    content = stateFromText('this is a cool editor... 🏀')
   },
 })
 export default class DocPage {
@@ -22,12 +21,7 @@ export default class DocPage {
       <Page>
         <Page.Main>
           {active.title}
-
-          <Editor
-            editorState={store.content}
-            placeholder='Text'
-            onChange={state => store.content = state}
-          />
+          <Editor />
         </Page.Main>
       </Page>
     )

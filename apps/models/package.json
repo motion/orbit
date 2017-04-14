@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "helpers": "*",
+    "stores": "*",
     "motion-mobx-helpers": "^1.0.2"
   }
 }

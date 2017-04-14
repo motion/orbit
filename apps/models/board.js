@@ -1,4 +1,5 @@
 import Model, { query } from './helpers'
+import { App } from 'stores'
 
 class Board extends Model {
   schema = {
@@ -21,7 +22,7 @@ class Board extends Model {
 
   hooks = {
     preInsert(doc) {
-      console.log('pre insert')
+      console.log('pre insert', App)
       doc.author_id = App.user.name
     }
   }

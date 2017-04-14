@@ -1,18 +1,18 @@
 import { view } from '~/helpers'
-import { Place } from 'models'
-import { Title, Text, Page, Link } from '~/views'
+import { Doc } from 'models'
+import { Page } from '~/views'
 import Router from '~/router'
 
-class PlaceStore {
-  place = Place.get(Router.params.name)
+class DocStore {
+  doc = Doc.get(Router.params.name)
 }
 
 @view.provide({
-  store: PlaceStore,
+  store: DocStore,
 })
-export default class PlacePage {
+export default class DocPage {
   render({ store }) {
-    const [active] = store.place.current || []
+    const [active] = store.doc.current || []
 
     if (!active) {
       return null

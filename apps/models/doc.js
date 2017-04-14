@@ -2,10 +2,10 @@ import Model, { query } from './helpers'
 
 class Doc extends Model {
   schema = {
-    title: 'Doc2',
+    title: 'Doc4',
     disableKeyCompression: true,
     version: 0,
-    required: ['title', 'content', 'board_id'],
+    required: ['title', 'content', 'author_id'],
     properties: {
       title: {
         type: 'string',
@@ -16,7 +16,16 @@ class Doc extends Model {
       board_id: {
         type: 'string',
       },
+      author_id: {
+        type: 'string',
+      },
     }
+  }
+
+  methods = {
+    url() {
+      return `/d/${this.title.toLowerCase()}`
+    },
   }
 
   @query all = () => {

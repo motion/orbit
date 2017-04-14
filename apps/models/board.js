@@ -22,7 +22,6 @@ class Board extends Model {
 
   hooks = {
     preInsert(doc) {
-      console.log('pre insert', App)
       doc.author_id = App.user.name
     }
   }

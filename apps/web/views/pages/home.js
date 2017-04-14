@@ -1,29 +1,31 @@
-import { view, store } from 'helpers'
-import { App } from 'stores'
+import { view } from 'helpers'
+import { App, Store } from 'stores'
 import Router from '../router'
 import { Place } from 'models'
 import { Page } from 'views'
 
-@view
+class HomeStore extends Store {
+  places = Place.all()
+}
+
+@view.provide({
+  store: HomeStore
+})
 export default class Home {
-  create = () => Place.table.insert({
+  create = () => Place.collection.insert({
     title: this.place.value,
     author_id: App.user.name,
   })
 
-  componentWillMount() {
-    this.places = Place.all().observable
-  }
-
   delete = () =>
-    Place.table.findOne(piece._id).exec().then(doc => doc.remove())
+    Place.collection.findOne(piece._id).exec().then(doc => doc.remove())
 
   link = piece => e => {
     e.preventDefault()
     Router.go(piece.url())
   }
 
-  render() {
+  render({ store }) {
     return (
       <Page>
         <Page.Main>
@@ -33,8 +35,8 @@ export default class Home {
             <button onClick={this.create}>create</button>
           </create>
 
-          <places if={this.places.current}>
-            {this.places.current.map(piece =>
+          <places if={store.places.current}>
+            {store.places.current.map(piece =>
               <piece key={Math.random()}>
                 <a href={piece.url()} onClick={this.link(piece)}>
                   {piece.url()}

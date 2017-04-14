@@ -6,9 +6,10 @@ import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
 
-import Place from './place'
-import Board from './board'
-import Doc from './doc'
+import * as Models from './all'
+
+// export all models
+export * from './all'
 
 const KEYS = {
   url: 'http://localhost:5984',
@@ -17,11 +18,7 @@ const KEYS = {
 }
 
 class App {
-  models = {
-    Place,
-    Board,
-    Doc
-  }
+  models = Models
   db = null
   @observable user = null
 

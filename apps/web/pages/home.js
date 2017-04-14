@@ -1,5 +1,4 @@
-import { App } from 'stores'
-import { Place, Doc } from 'models'
+import App, { Place, Doc } from 'models'
 import { view } from '~/helpers'
 import Router from '~/router'
 import { Page } from '~/views'

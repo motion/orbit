@@ -1,5 +1,5 @@
 import Model, { query } from './helpers'
-import { App } from 'stores'
+import App from './index'
 
 class Board extends Model {
   schema = {

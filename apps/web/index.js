@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import { render } from 'react-dom'
 import React from 'react'
-import { App } from 'stores'
+import App from 'models'
 
 window.React = React
 window.App = App

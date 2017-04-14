@@ -12,6 +12,13 @@ import baseStyles from './baseStyles'
 // gloss
 export const $ = gloss({ baseStyles })
 
+// Store
+export class Store {
+  constructor(props) {
+    this.props = props
+  }
+}
+
 // these are all available on every view
 const Helpers = {
   addEvent,

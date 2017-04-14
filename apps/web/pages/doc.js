@@ -4,7 +4,7 @@ import { Page } from '~/views'
 import Router from '~/router'
 
 class DocStore {
-  doc = Doc.get(Router.params.name)
+  doc = Doc.get(Router.params.id)
 }
 
 @view.provide({

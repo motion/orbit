@@ -24,13 +24,15 @@ class Doc extends Model {
 
   methods = {
     url() {
-      return `/d/${this.title.toLowerCase()}`
+      return `/d/${this._id.replace(':', '-')}`
     },
   }
 
-  @query all = () => {
-    return this.collection.find()
-  }
+  @query all = () =>
+    this.collection.find()
+
+  @query get = (id) =>
+    this.collection.findOne().where('_id').eq(id)
 }
 
 export default new Doc()

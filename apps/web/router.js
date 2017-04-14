@@ -7,7 +7,7 @@ const AppRouter = new Router({
   routes: {
     '/': Home,
     'g/:name': Place,
-    'd/:name': Doc,
+    'd/:id': Doc,
   },
 })
 

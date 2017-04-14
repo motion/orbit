@@ -1,9 +1,8 @@
 import { view } from 'helpers'
 import { Title, Text, Page, Link } from 'views'
 import { Place } from 'models'
-import { Store } from 'stores'
 
-class PlaceStore extends Store {
+class PlaceStore {
   place = Place.get(Router.params.name)
 }
 

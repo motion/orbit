@@ -11,8 +11,14 @@ import baseStyles from './baseStyles'
 
 export const glossy = gloss({ baseStyles })
 
+// these are all available on every view
 const Helpers = {
-  addEvent, setInterval, setTimeout, ref, watch, react
+  addEvent,
+  setInterval,
+  setTimeout,
+  ref,
+  watch,
+  react,
 }
 
 export function view(View) {

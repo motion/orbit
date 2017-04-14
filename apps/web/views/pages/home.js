@@ -1,10 +1,10 @@
 import { view } from 'helpers'
-import { App, Store } from 'stores'
+import { App } from 'stores'
 import Router from '../router'
 import { Place } from 'models'
 import { Page } from 'views'
 
-class HomeStore extends Store {
+class HomeStore {
   places = Place.all()
 }
 

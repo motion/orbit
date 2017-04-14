@@ -1,6 +1,6 @@
 import Router from 'motion-mobx-router'
-import Home from '../views/pages/home'
-import Place from '../views/pages/place'
+import Home from '~/pages/home'
+import Place from '~/pages/place'
 
 const AppRouter = new Router({
   routes: {
@@ -8,7 +8,5 @@ const AppRouter = new Router({
     'g(/:name)': Place,
   },
 })
-
-window.Router = AppRouter
 
 export default AppRouter

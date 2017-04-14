@@ -1,6 +1,6 @@
-import { view } from 'helpers'
-import { Title, Text, Page, Link } from 'views'
+import { view } from '~/helpers'
 import { Place } from 'models'
+import { Title, Text, Page, Link } from '~/views'
 
 class PlaceStore {
   place = Place.get(Router.params.name)

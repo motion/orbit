@@ -1,5 +1,5 @@
-import { addEvent, setTimeout, setInterval, ref, isClass } from 'motion-class-helpers'
-import { watch, react, observeStreams } from 'motion-mobx-helpers'
+import { addEvent, setTimeout, setInterval, ref } from 'motion-class-helpers'
+import { watch, react } from 'motion-mobx-helpers'
 import mixin from 'react-mixin'
 import autobind from 'autobind-decorator'
 import React from 'react'
@@ -9,7 +9,8 @@ import { observable } from 'mobx'
 import { provide } from 'motion-view'
 import baseStyles from './baseStyles'
 
-export const glossy = gloss({ baseStyles })
+// gloss
+export const $ = gloss({ baseStyles })
 
 // these are all available on every view
 const Helpers = {
@@ -21,26 +22,24 @@ const Helpers = {
   react,
 }
 
+// @view decorator
 export function view(View) {
+  // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
+
+  // add Helpers
   mixin(View.prototype, Helpers)
 
-  // render
+  // render gets props/state/context
   const render = View.prototype.render
   View.prototype.render = function() {
     return render.call(this, this.props, this.state, this.context)
   }
 
-  // order important
-  return autobind(glossy(observer(View)))
+  // order important:
+  //   autobind, gloss, mobx
+  return autobind($(observer(View)))
 }
 
+// for passing stores to views
 view.provide = (...args) => View => provide(...args)(view(View))
-
-export function store(Store) {
-  if (isClass(Store)) {
-    mixin(Store.prototype, Helpers)
-    return autobind(Store)
-  }
-  return observable(observeStreams(Store))
-}

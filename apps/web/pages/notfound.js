@@ -1,4 +1,4 @@
-import { view } from 'helpers'
+import { view } from '~/helpers'
 
 @view
 export default class NotFound {

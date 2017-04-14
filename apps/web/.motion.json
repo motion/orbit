@@ -2,6 +2,7 @@
   "babel": {
     "plugins": [
       "motion-view/transform",
+      "babel-plugin-root-import",
       "babel-plugin-jsx-if",
       ["gloss/transform", {
         "decoratorName": "view"

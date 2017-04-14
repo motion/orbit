@@ -5,6 +5,7 @@ import { App } from 'stores'
 
 window.React = React
 window.App = App
+window.Router = require('~/router')
 
 App.connect()
   .then(() => {
@@ -12,10 +13,10 @@ App.connect()
       module.hot.accept()
     }
 
-    const Views = require('./views').default
+    const Root = require('./root').default
 
     render(
-      <Views />,
+      <Root />,
       document.querySelector('#app')
     )
   })

@@ -18,3 +18,4 @@ esproposal.class_instance_fields=enable
 esproposal.class_static_fields=enable
 esproposal.decorators=ignore
 unsafe.enable_getters_and_setters=true
+module.name_mapper='^{rootPathPrefix}/\(.*\)$' -> '<PROJECT_ROOT>{rootPathSuffix}/\1'

@@ -24,7 +24,7 @@ export default class DocPage {
           {active.title}
 
           <Editor
-            editorState={store.state}
+            editorState={store.content}
             placeholder='Text'
             onChange={state => store.content = state}
           />

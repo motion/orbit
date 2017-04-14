@@ -25,7 +25,7 @@
     "draft-js-resizeable-plugin": "^2.0.0-beta10",
     "gloss": "^5.0.0",
     "immutable": "^3.7.6",
-    "last-draft-js-sidebar-plugin": "1.1.0",
+    "last-draft-js-sidebar-plugin": "^1.1.0",
     "last-draft-js-toolbar-plugin": "^1.1.0",
     "lodash": "^4.17.4",
     "mobx": "^3.1.0",

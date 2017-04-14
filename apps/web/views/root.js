@@ -40,7 +40,7 @@ export default class Root {
             </form>
           </user>
         </header>
-        <CurrentPage test="prop" />
+        <CurrentPage />
       </layout>
     )
   }

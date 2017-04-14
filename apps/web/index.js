@@ -2,10 +2,11 @@ import 'babel-polyfill'
 import { render } from 'react-dom'
 import React from 'react'
 import App from 'models'
+import Router from '~/router'
 
 window.React = React
 window.App = App
-window.Router = require('~/router')
+window.Router = Router
 
 App.connect()
   .then(() => {

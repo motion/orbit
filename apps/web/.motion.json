@@ -1,15 +1,25 @@
 {
   "babel": {
     "plugins": [
+      ["gloss/transform", {
+        "decoratorName": "view"
+      }],
       "motion-view/transform",
-      "babel-plugin-root-import",
+      "babel-plugin-transform-decorators-legacy",
+      ["babel-plugin-root-import", {}],
       "babel-plugin-jsx-if",
       ["gloss/transform", {
         "decoratorName": "view"
       }]
     ],
     "presets": [
-      "babel-preset-steelbrain"
+      ["babel-preset-env", {
+        "targets": {
+          "chrome": 52
+        }
+      }],
+      "babel-preset-stage-0",
+      "babel-preset-react"
     ]
   },
   "pathType": "filePath",

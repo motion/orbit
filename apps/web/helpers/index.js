@@ -10,7 +10,7 @@ import { provide } from 'motion-view'
 import baseStyles from './baseStyles'
 
 // mobx
-export { observable } from 'mobx'
+export * from 'mobx'
 
 // gloss
 export const $ = gloss({ baseStyles })

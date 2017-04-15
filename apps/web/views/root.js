@@ -40,7 +40,8 @@ export default class Root {
             </form>
           </user>
         </header>
-        <CurrentPage />
+
+        <CurrentPage key={Router.path} />
       </layout>
     )
   }

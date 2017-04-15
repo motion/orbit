@@ -16,7 +16,6 @@
     "draft-js": "^0.10.0",
     "gloss": "^5.0.0",
     "immutable": "^3.7.6",
-    "last-draft-js-toolbar-plugin": "^1.1.0",
     "lodash": "^4.17.4",
     "mobx": "^3.1.0",
     "models": "*",

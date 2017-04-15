@@ -1,13 +1,7 @@
 import { Editor, EditorState, RichUtils } from 'draft-js'
-import { view, observable } from '~/helpers'
-import createToolbarPlugin from 'last-draft-js-toolbar-plugin'
+import { view } from '~/helpers'
 
-const toolbarPlugin = createToolbarPlugin()
-const { Toolbar } = toolbarPlugin
-
-const plugins = [
-  toolbarPlugin,
-]
+const plugins = []
 
 @view
 export default class DocEditor {

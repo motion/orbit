@@ -1,8 +1,8 @@
-import { view } from '~/helpers'
+import { view } from '$/helpers'
 import { Doc } from 'models'
-import { Page } from '~/views'
-import Router from '~/router'
-import Editor from '~/views/editor'
+import { Page } from '$/views'
+import Router from '$/router'
+import Editor from '$/views/editor'
 
 @view.provide({
   store: class {

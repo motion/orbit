@@ -1,5 +1,5 @@
 import { Editor, EditorState, RichUtils } from 'draft-js'
-import { view } from '~/helpers'
+import { view } from '$/helpers'
 
 const plugins = []
 

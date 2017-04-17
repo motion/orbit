@@ -1,5 +1,5 @@
 import { Editor, EditorState, RichUtils } from 'draft-js'
-import { view, toJS, observable } from '~/helpers'
+import { view, toJS, observable } from 'helpers'
 
 @view
 export default class DocEditor {

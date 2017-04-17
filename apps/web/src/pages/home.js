@@ -1,7 +1,7 @@
 import App, { Place, Doc } from 'models'
-import { view } from '~/helpers'
-import Router from '~/router'
-import { Page } from '~/views'
+import { view } from 'helpers'
+import Router from 'router'
+import { Page } from 'views'
 
 class HomeStore {
   places = Place.all()

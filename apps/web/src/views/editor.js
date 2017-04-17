@@ -1,28 +1,38 @@
-import { Editor, EditorState, RichUtils } from 'draft-js'
-import { view, toJS, observable } from 'helpers'
+import { Editor, Raw } from 'slate'
+import { view, observable } from 'helpers'
+
+// Create our initial state...
+const initialState = Raw.deserialize({
+  nodes: [
+    {
+      kind: 'block',
+      type: 'paragraph',
+      nodes: [
+        {
+          kind: 'text',
+          text: 'A line of text in a paragraph.'
+        }
+      ]
+    }
+  ]
+}, { terse: true })
 
 @view
 export default class DocEditor {
-  @observable baby = 0
-  state = EditorState.createEmpty()
+  @observable state = initialState
 
   onChange = (val) => {
     this.state = val
-    this.baby = this.baby + 1
-    console.log('do it', this.baby)
+    console.log('do it', val)
   }
 
   render() {
     console.log('render', this.baby)
-    window.x = this
     return (
-      <editor>
-        {this.baby}
-        <Editor
-          editorState={this.state}
-          onChange={this.onChange}
-        />
-      </editor>
+      <Editor
+        editorState={this.state}
+        onChange={this.onChange}
+      />
     )
   }
 }

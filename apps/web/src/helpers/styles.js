@@ -1,6 +1,6 @@
-// reference with <tag $$name />
+import gloss from 'gloss'
 
-export default {
+const baseStyles = {
   style: styles => styles,
   flex: flex => ({ flex: flex === true ? 1 : flex }),
   absolute: ([top,right,bottom,left]) => ({ top, left, bottom, right, position: 'absolute' }),
@@ -81,3 +81,5 @@ export default {
     overflow: 'hidden',
   },
 }
+
+export default gloss({ baseStyles })

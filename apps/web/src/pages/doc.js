@@ -1,8 +1,8 @@
-import { view } from '$/helpers'
 import { Doc } from 'models'
-import { Page } from '$/views'
-import Router from '$/router'
-import Editor from '$/views/editor'
+import { view } from 'helpers'
+import { Page } from 'views'
+import Router from 'router'
+import Editor from 'views/editor'
 
 @view.provide({
   store: class {
@@ -10,7 +10,8 @@ import Editor from '$/views/editor'
   },
 })
 export default class DocPage {
-  render({ store }) {
+  render() {
+    const { store } = this.props
     const [active] = store.doc.current || []
 
     if (!active) {

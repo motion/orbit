@@ -1,7 +1,7 @@
-import { view } from '$/helpers'
+import { view } from 'helpers'
 import { Place } from 'models'
-import { Title, Text, Page, Link } from '$/views'
-import Router from '$/router'
+import { Title, Text, Page, Link } from 'views'
+import Router from 'router'
 
 class PlaceStore {
   place = Place.get(Router.params.name)
@@ -11,7 +11,8 @@ class PlaceStore {
   store: PlaceStore,
 })
 export default class PlacePage {
-  render({ store }) {
+  render() {
+    const { store } = this.props
     const [active] = store.place.current || []
 
     if (!active) {

@@ -1,6 +1,8 @@
-import { view } from '$/helpers'
-import NotFound from '$/pages/notfound'
-import Router from '$/router'
+import { view } from 'helpers'
+import NotFound from 'pages/notfound'
+import Router from 'router'
+
+console.log(Router._id)
 
 @view
 export default class Root {
@@ -8,6 +10,8 @@ export default class Root {
 
   render() {
     const CurrentPage = Router.activeView || NotFound
+
+    console.log(mobx.toJS(Router.params))
 
     return (
       <layout $$flex>
@@ -19,13 +23,13 @@ export default class Root {
           </nav>
           <div $$flex />
           <user $$row>
-            <info if={App.user}>
+            <info $$row if={App.user}>
               logged in!
               <strong>{App.user.name}</strong>
               <a onClick={App.logout}>logout</a>
             </info>
 
-            <form onSubmit={this.prevent} if={App.user === false}>
+            <form $userForm onSubmit={this.prevent} if={App.user === false}>
               login!
               <input name="username" placeholder="username" ref={this.ref('username').set} />
               <input name="password" type="password" ref={this.ref('password').set} />

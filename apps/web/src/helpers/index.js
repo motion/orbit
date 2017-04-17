@@ -40,12 +40,6 @@ export function view(View) {
   // add Helpers
   mixin(View.prototype, Helpers)
 
-  // render gets props/state/context
-  const render = View.prototype.render
-  View.prototype.render = function() {
-    return render.call(this, this.props, this.state, this.context)
-  }
-
   // order important:
   //   autobind, gloss, mobx
   return autobind($(observer(View)))

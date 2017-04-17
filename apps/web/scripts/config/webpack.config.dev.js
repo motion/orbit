@@ -1,6 +1,5 @@
 'use strict'
 
-var autoprefixer = require('autoprefixer')
 var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
@@ -15,11 +14,13 @@ var env = getClientEnvironment(publicUrl)
 
 module.exports = {
   devtool: 'cheap-module-source-map',
+
   entry: [
     require.resolve('react-dev-utils/webpackHotDevClient'),
     require.resolve('./polyfills'),
     paths.appIndexJs
   ],
+
   output: {
     path: paths.appBuild,
     // Add /* filename */ comments to generated require()s in the output.
@@ -27,6 +28,7 @@ module.exports = {
     filename: 'static/js/bundle.js',
     publicPath: publicPath
   },
+
   resolve: {
     extensions: ['.js', '.json'],
     modules: [
@@ -84,23 +86,11 @@ module.exports = {
       inject: true,
       template: paths.appHtml,
     }),
-    // Makes some environment variables available to the JS code, for example:
-    // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
     new webpack.DefinePlugin(env.stringified),
-    // This is necessary to emit hot updates (currently CSS only):
     new webpack.HotModuleReplacementPlugin(),
-    // Watcher doesn't work well if you mistype casing in a path so we use
-    // a plugin that prints an error when you attempt to do this.
-    // See https://github.com/facebookincubator/create-react-app/issues/240
     new CaseSensitivePathsPlugin(),
-    // If you require a missing module and then `npm install` it, you still have
-    // to restart the development server for Webpack to discover it. This plugin
-    // makes the discovery automatic so you don't have to restart.
-    // See https://github.com/facebookincubator/create-react-app/issues/186
     new WatchMissingNodeModulesPlugin(paths.appNodeModules)
   ],
-  // Some libraries import Node modules but don't use them in the browser.
-  // Tell Webpack to provide empty mocks for them so importing them works.
   node: {
     fs: 'empty',
     net: 'empty',

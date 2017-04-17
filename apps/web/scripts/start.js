@@ -34,7 +34,7 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-var DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000
+var DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3001
 var compiler
 var handleCompile
 
@@ -203,10 +203,6 @@ function runDevServer(host, port, protocol) {
   devServer.listen(port, err => {
     if (err) {
       return console.log(err)
-    }
-
-    if (isInteractive) {
-      clearConsole()
     }
     console.log(chalk.cyan('Starting the development server...'))
     console.log('Done')

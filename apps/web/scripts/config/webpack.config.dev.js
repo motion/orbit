@@ -40,7 +40,7 @@ module.exports = {
       {
         exclude: [
           /\.html$/,
-          /\.(js|jsx)(\?.*)?$/,
+          /\.(js)(\?.*)?$/,
           /\.css$/,
           /\.json$/,
           /\.svg$/
@@ -53,9 +53,9 @@ module.exports = {
       },
       // Process JS with Babel.
       {
-        test: /\.(js|jsx)$/,
+        test: /\.js$/,
         include: paths.appSrc,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           cacheDirectory: true
         }

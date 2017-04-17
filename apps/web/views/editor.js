@@ -1,49 +1,27 @@
 import { Editor, EditorState, RichUtils } from 'draft-js'
-import { view } from '~/helpers'
-
-const plugins = []
+import { view, toJS, observable } from '~/helpers'
 
 @view
 export default class DocEditor {
-  static defaultProps = {
-    state: EditorState.createEmpty(),
-  }
+  @observable baby = 0
+  state = EditorState.createEmpty()
 
-  handleKeyCommand = (command) => {
-    if (this.keyBindings.length) {
-      const kb = this.keyBindings.find(k => k.name === command)
-      if (kb) {
-        kb.action()
-        return true
-      }
-    }
-    const newState = RichUtils.handleKeyCommand(this.props.state, command)
-    if (newState) {
-      this.props.onChange(newState)
-      return true
-    }
-    return false
-  }
-
-  handleReturn = (event) => {
-    if (!event.shiftKey) { return false }
-    const newState = RichUtils.insertSoftNewline(this.props.state)
-    this.props.onChange(newState)
-    return true
+  onChange = (val) => {
+    this.state = val
+    this.baby = this.baby + 1
+    console.log('do it', this.baby)
   }
 
   render() {
+    console.log('render', this.baby)
+    window.x = this
     return (
       <editor>
+        {this.baby}
         <Editor
-          editorState={this.props.state}
+          editorState={this.state}
           onChange={this.onChange}
-          handleKeyCommand={this.handleKeyCommand}
-          handleReturn={this.handleReturn}
-          plugins={plugins}
-          ref={this.ref('editor').set}
         />
-        <Toolbar />
       </editor>
     )
   }

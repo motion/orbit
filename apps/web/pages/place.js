@@ -11,7 +11,8 @@ class PlaceStore {
   store: PlaceStore,
 })
 export default class PlacePage {
-  render({ store }) {
+  render() {
+    const { store } = this.props
     const [active] = store.place.current || []
 
     if (!active) {

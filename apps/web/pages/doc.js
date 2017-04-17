@@ -10,7 +10,8 @@ import Editor from '~/views/editor'
   },
 })
 export default class DocPage {
-  render({ store }) {
+  render() {
+    const { store } = this.props
     const [active] = store.doc.current || []
 
     if (!active) {

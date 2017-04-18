@@ -9,7 +9,7 @@ class HomeStore {
 }
 
 @view.provide({
-  store: HomeStore
+  store: HomeStore,
 })
 export default class Home {
   create = e => {
@@ -47,14 +47,14 @@ export default class Home {
 
           <h2>Docs</h2>
           <docs if={store.docs.current}>
-            {store.docs.current.map(doc =>
+            {store.docs.current.map(doc => (
               <piece key={Math.random()}>
                 <a href={doc.url()} onClick={this.link(doc)}>
                   {doc.url()}
                 </a>
                 by {doc.author_id || 'none'}
               </piece>
-            )}
+            ))}
           </docs>
         </Page.Main>
 
@@ -67,14 +67,14 @@ export default class Home {
 
           <h2>Places</h2>
           <places if={store.places.current}>
-            {store.places.current.map(piece =>
+            {store.places.current.map(piece => (
               <piece key={Math.random()}>
                 <a href={piece.url()} onClick={this.link(piece)}>
                   {piece.url()}
                 </a>
                 by {piece.author_id || 'none'}
               </piece>
-            )}
+            ))}
           </places>
         </Page.Side>
       </Page>

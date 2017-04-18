@@ -11,15 +11,10 @@ window.mobx = mobx
 
 function run() {
   const Root = require('./views/root').default
-  render(
-    <Root />,
-    document.querySelector('#app')
-  )
+  render(<Root />, document.querySelector('#app'))
 }
 
-App
-  .connect()
-  .then(run)
+App.connect().then(run)
 
 if (module.hot) {
   module.hot.accept('./views/root', run)

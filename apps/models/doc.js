@@ -1,9 +1,9 @@
-import { Model, query, str } from './helpers'
+import { Model, query, str, object } from './helpers'
 
 class Doc extends Model {
   static props = {
     title: str,
-    content: str,
+    content: object,
     board_id: str.optional,
     author_id: str,
   }

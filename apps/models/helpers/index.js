@@ -1,7 +1,7 @@
 import { compile } from 'kontur'
 
 export { query } from 'motion-mobx-helpers'
-export { bool, int, str } from 'kontur'
+export { bool, int, str, object } from 'kontur'
 
 export class Model {
   get title() {

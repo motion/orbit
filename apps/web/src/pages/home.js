@@ -25,7 +25,11 @@ export default class Home {
     Doc.collection.insert({
       title: '-',
       author_id: App.user.name,
-      content: 'hi',
+      content: {
+        some: {
+          arbitrary: 'stuff',
+        },
+      },
     })
   }
 

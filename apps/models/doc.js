@@ -19,7 +19,7 @@ class Doc extends Model {
       author_id: {
         type: 'string',
       },
-    }
+    },
   }
 
   methods = {
@@ -28,11 +28,9 @@ class Doc extends Model {
     },
   }
 
-  @query all = () =>
-    this.collection.find()
+  @query all = () => this.collection.find()
 
-  @query get = (id) =>
-    this.collection.findOne().where('_id').eq(id)
+  @query get = id => this.collection.findOne().where('_id').eq(id);
 }
 
 export default new Doc()

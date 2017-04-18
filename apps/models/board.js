@@ -16,14 +16,14 @@ class Board extends Model {
       },
       place_id: {
         type: 'string',
-      }
-    }
+      },
+    },
   }
 
   hooks = {
     preInsert(doc) {
       doc.author_id = App.user.name
-    }
+    },
   }
 
   @query all = () => {

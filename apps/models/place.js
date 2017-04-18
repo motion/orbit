@@ -13,7 +13,7 @@ class Place extends Model {
       },
       title: {
         type: 'string',
-      }
+      },
     },
   }
 
@@ -32,14 +32,12 @@ class Place extends Model {
         ...info,
         place_id: this._id,
       })
-    }
+    },
   }
 
-  @query all = () =>
-    this.collection.find()
+  @query all = () => this.collection.find()
 
-  @query get = (title) =>
-    this.collection.findOne().where('title').eq(title)
+  @query get = title => this.collection.findOne().where('title').eq(title);
 }
 
 export default new Place()

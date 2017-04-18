@@ -7,14 +7,11 @@
     "clean": "rm -rf apps/*/lib",
     "build": "lerna exec --ignore web -- babel . --out-dir lib --ignore node_modules,lib",
     "compile": "npm run clean && npm run build",
-    "watch": "npm run build -- --watch",
-    "lint": "eslint ."
+    "watch": "npm run build -- --watch"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
-    "babel-eslint": "^7.0.0",
     "babel-preset-steelbrain": "^4.0.2",
-    "eslint-plugin-html": "^2.0.1",
     "flow-bin": "^0.38.0",
     "lerna": "^2.0.0-rc.2"
   }

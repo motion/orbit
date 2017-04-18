@@ -17,6 +17,7 @@ export default class DocPage {
       <Page if={active}>
         <Page.Main>
           {active.title}
+          {JSON.stringify(active.content)}
           <Editor />
         </Page.Main>
       </Page>

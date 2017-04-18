@@ -10,14 +10,14 @@ window.Router = Router
 window.mobx = mobx
 
 function run() {
-  const Root = require('./views/root').default
+  const Root = require('./root').default
   render(<Root />, document.querySelector('#app'))
 }
 
 App.connect().then(run)
 
 if (module.hot) {
-  module.hot.accept('./views/root', run)
+  module.hot.accept('./root', run)
   module.hot.accept('models', () => {
     require('models').connect().then(run)
   })

@@ -7,10 +7,9 @@ import { debounce } from 'lodash'
 
 @view.provide({
   store: class {
-    doc = Doc.get(Router.params.id)
+    doc = Doc.get(Router.params.id.replace('-', ':'))
     update = debounce(async val => {
-      const doc = await this.doc.promise
-      console.log('saving doc', doc._id)
+      const [doc] = this.doc.current
       doc.content = Raw.serialize(val)
       doc.save()
     }, 300)
@@ -18,15 +17,13 @@ import { debounce } from 'lodash'
 })
 export default class DocPage {
   render({ store }) {
+    window.store = store
     const [active] = store.doc.current || []
-
-    window.s = store
 
     if (!active) {
       return null
     }
 
-    console.log(active.content)
     delete active.key
     delete active.data
 

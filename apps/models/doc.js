@@ -44,8 +44,7 @@ class Doc extends Model {
   }
 
   @query all = () => this.collection.find()
-
-  @query get = id => this.collection.findOne().where('_id').eq(id);
+  @query get = id => this.collection.findOne(id)
 }
 
 export default new Doc()

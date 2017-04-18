@@ -1,7 +1,0 @@
-{
-  "packages": [
-    "./apps/*"
-  ],
-  "dependencies": ["motion/class-helpers", "motion/view", "motion/hmr", "motion/mobx-helpers"],
-  "configurations": []
-}

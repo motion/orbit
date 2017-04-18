@@ -19,18 +19,18 @@ const initialState = Raw.deserialize({
 
 @view
 export default class DocEditor {
-  @observable state = initialState
+  state = {
+    val: initialState
+  }
 
   onChange = (val) => {
-    this.state = val
-    console.log('do it', val)
+    this.setState({ val })
   }
 
   render() {
-    console.log('render', this.baby)
     return (
       <Editor
-        editorState={this.state}
+        state={this.state.val}
         onChange={this.onChange}
       />
     )

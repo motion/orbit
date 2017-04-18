@@ -1,25 +1,17 @@
-import Model, { query } from './helpers'
+import { Model, query, str } from './helpers'
 
 class Doc extends Model {
-  schema = {
+  static props = {
+    title: str,
+    content: str,
+    board_id: str.optional,
+    author_id: str,
+  }
+
+  settings = {
     title: 'Doc4',
     disableKeyCompression: true,
     version: 0,
-    required: ['title', 'content', 'author_id'],
-    properties: {
-      title: {
-        type: 'string',
-      },
-      content: {
-        type: 'string',
-      },
-      board_id: {
-        type: 'string',
-      },
-      author_id: {
-        type: 'string',
-      },
-    },
   }
 
   methods = {

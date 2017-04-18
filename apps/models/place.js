@@ -1,20 +1,16 @@
-import Model, { query } from './helpers'
+import { Model, query, str } from './helpers'
 import Board from './board'
 
 class Place extends Model {
-  schema = {
+  static props = {
+    author_id: str,
+    title: str,
+  }
+
+  settings = {
     title: 'Place',
     disableKeyCompression: true,
     version: 0,
-    required: ['author_id', 'title'],
-    properties: {
-      author_id: {
-        type: 'string',
-      },
-      title: {
-        type: 'string',
-      },
-    },
   }
 
   methods = {

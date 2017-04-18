@@ -2,16 +2,12 @@ import { view } from 'helpers'
 import NotFound from 'pages/notfound'
 import Router from 'router'
 
-console.log(Router._id)
-
 @view
 export default class Root {
   prevent = e => e.preventDefault()
 
   render() {
     const CurrentPage = Router.activeView || NotFound
-
-    console.log(mobx.toJS(Router.params))
 
     return (
       <layout $$flex>
@@ -29,14 +25,14 @@ export default class Root {
               <a onClick={App.logout}>logout</a>
             </info>
 
-            <form $userForm onSubmit={this.prevent} if={App.user === false}>
+            <form if={App.user === false} $userForm onSubmit={this.prevent}>
               login!
               <input name="username" placeholder="username" ref={this.ref('username').set} />
               <input name="password" type="password" ref={this.ref('password').set} />
               <button onClick={() => App.login(this.username.value, this.password.value)}>login</button>
             </form>
 
-            <form onSubmit={this.prevent} if={App.user === false}>
+            <form if={App.user === false} onSubmit={this.prevent}>
               register!
               <input placeholder="username" ref={this.ref('pusername').set} />
               <input type="password" ref={this.ref('ppassword').set} />

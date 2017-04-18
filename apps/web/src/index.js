@@ -9,17 +9,21 @@ window.App = App
 window.Router = Router
 window.mobx = mobx
 
+function run() {
+  const Root = require('./views/root').default
+  render(
+    <Root />,
+    document.querySelector('#app')
+  )
+}
+
 App
   .connect()
-  .then(() => {
-    if (process.env.NODE_ENV === 'development') {
-      module.hot.accept()
-    }
+  .then(run)
 
-    const Root = require('./views/root').default
-
-    render(
-      <Root />,
-      document.querySelector('#app')
-    )
+if (module.hot) {
+  module.hot.accept('./views/root', run)
+  module.hot.accept('models', () => {
+    require('models').connect().then(run)
   })
+}

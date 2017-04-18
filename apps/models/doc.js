@@ -8,6 +8,24 @@ class Doc extends Model {
     author_id: str,
   }
 
+  static defaultProps = () => ({
+    author_id: App.user.name,
+    content: {
+      nodes: [
+        {
+          kind: 'block',
+          type: 'paragraph',
+          nodes: [
+            {
+              kind: 'text',
+              text: 'What a delight to see you.',
+            },
+          ],
+        },
+      ],
+    },
+  })
+
   settings = {
     title: 'Doc4',
     disableKeyCompression: true,
@@ -18,6 +36,13 @@ class Doc extends Model {
     url() {
       return `/d/${this._id.replace(':', '-')}`
     },
+  }
+
+  create(title) {
+    this.collection.insert({
+      title,
+      ...this.constructor.defaultProps(),
+    })
   }
 
   @query all = () => this.collection.find()

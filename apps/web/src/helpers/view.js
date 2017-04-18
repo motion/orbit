@@ -7,20 +7,16 @@ import { observer } from 'mobx-react'
 import { provide } from 'motion-view'
 import glossy from './styles'
 
+const Helpers = { addEvent, setInterval, setTimeout, ref, watch, react }
+
 // @view
 export default function view(View) {
   // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
+  Object.setPrototypeOf(View, React.Component)
 
   // add Helpers
-  mixin(View.prototype, {
-    addEvent,
-    setInterval,
-    setTimeout,
-    ref,
-    watch,
-    react,
-  })
+  mixin(View.prototype, Helpers)
 
   // pass props/context to render
   const or = View.prototype.render
@@ -28,8 +24,7 @@ export default function view(View) {
     return or.call(this, this.props, this.context)
   }
 
-  // order important:
-  //   autobind, gloss, mobx
+  // order important: autobind, gloss, mobx
   return autobind(glossy(observer(View)))
 }
 

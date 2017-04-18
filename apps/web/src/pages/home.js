@@ -22,15 +22,7 @@ export default class Home {
 
   createDoc = e => {
     e.preventDefault()
-    Doc.collection.insert({
-      title: '-',
-      author_id: App.user.name,
-      content: {
-        some: {
-          arbitrary: 'stuff',
-        },
-      },
-    })
+    Doc.create('title')
   }
 
   delete = () =>
@@ -55,6 +47,15 @@ export default class Home {
               <piece key={Math.random()}>
                 <a href={doc.url()} onClick={this.link(doc)}>
                   {doc.url()}
+                </a>
+                <a
+                  onClick={() =>
+                    Doc.collection
+                      .findOne(doc._id)
+                      .exec()
+                      .then(doc => doc.remove())}
+                >
+                  x
                 </a>
                 by {doc.author_id || 'none'}
               </piece>

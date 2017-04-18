@@ -1,38 +1,20 @@
 import { Editor, Raw } from 'slate'
-import { view, observable } from 'helpers'
-
-// Create our initial state...
-const initialState = Raw.deserialize({
-  nodes: [
-    {
-      kind: 'block',
-      type: 'paragraph',
-      nodes: [
-        {
-          kind: 'text',
-          text: 'A line of text in a paragraph.'
-        }
-      ]
-    }
-  ]
-}, { terse: true })
+import { Component, view, observable } from 'helpers'
 
 @view
-export default class DocEditor {
+export default class DocEditor extends Component {
   state = {
-    val: initialState
+    val: Raw.deserialize(this.props.content, { terse: true }),
   }
 
-  onChange = (val) => {
+  onChange = val => {
     this.setState({ val })
+    if (this.props.onChange) {
+      this.props.onChange(val)
+    }
   }
 
   render() {
-    return (
-      <Editor
-        state={this.state.val}
-        onChange={this.onChange}
-      />
-    )
+    return <Editor state={this.state.val} onChange={this.onChange} />
   }
 }

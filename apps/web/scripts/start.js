@@ -73,7 +73,11 @@ function setupCompiler(host, port, protocol) {
       console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + '/'))
       console.log()
       console.log('Note that the development build is not optimized.')
-      console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.')
+      console.log(
+        'To create a production build, use ' +
+          chalk.cyan(cli + ' run build') +
+          '.',
+      )
       console.log()
       isFirstCompile = false
     }
@@ -99,8 +103,16 @@ function setupCompiler(host, port, protocol) {
       })
       // Teach some ESLint tricks.
       console.log('You may use special comments to disable some warnings.')
-      console.log('Use ' + chalk.yellow('// eslint-disable-next-line') + ' to ignore the next line.')
-      console.log('Use ' + chalk.yellow('/* eslint-disable */') + ' to ignore all warnings in a file.')
+      console.log(
+        'Use ' +
+          chalk.yellow('// eslint-disable-next-line') +
+          ' to ignore the next line.',
+      )
+      console.log(
+        'Use ' +
+          chalk.yellow('/* eslint-disable */') +
+          ' to ignore all warnings in a file.',
+      )
     }
   })
 }
@@ -108,43 +120,66 @@ function setupCompiler(host, port, protocol) {
 // We need to provide a custom onError function for httpProxyMiddleware.
 // It allows us to log custom error messages on the console.
 function onProxyError(proxy) {
-  return function(err, req, res){
+  return function(err, req, res) {
     var host = req.headers && req.headers.host
     console.log(
-      chalk.red('Proxy error:') + ' Could not proxy request ' + chalk.cyan(req.url) +
-      ' from ' + chalk.cyan(host) + ' to ' + chalk.cyan(proxy) + '.'
+      chalk.red('Proxy error:') +
+        ' Could not proxy request ' +
+        chalk.cyan(req.url) +
+        ' from ' +
+        chalk.cyan(host) +
+        ' to ' +
+        chalk.cyan(proxy) +
+        '.',
     )
     console.log(
       'See https://nodejs.org/api/errors.html#errors_common_system_errors for more information (' +
-      chalk.cyan(err.code) + ').'
+        chalk.cyan(err.code) +
+        ').',
     )
     console.log()
 
     // And immediately send the proper error response to the client.
     // Otherwise, the request will eventually timeout with ERR_EMPTY_RESPONSE on the client side.
     if (res.writeHead && !res.headersSent) {
-        res.writeHead(500)
+      res.writeHead(500)
     }
-    res.end('Proxy error: Could not proxy request ' + req.url + ' from ' +
-      host + ' to ' + proxy + ' (' + err.code + ').'
+    res.end(
+      'Proxy error: Could not proxy request ' +
+        req.url +
+        ' from ' +
+        host +
+        ' to ' +
+        proxy +
+        ' (' +
+        err.code +
+        ').',
     )
   }
 }
 
 function addMiddleware(devServer) {
   var proxy = require(paths.appPackageJson).proxy
-  devServer.use(historyApiFallback({
-    disableDotRule: true,
-    htmlAcceptHeaders: proxy ?
-      ['text/html'] :
-      ['text/html', '*/*']
-  }))
+  devServer.use(
+    historyApiFallback({
+      disableDotRule: true,
+      htmlAcceptHeaders: proxy ? ['text/html'] : ['text/html', '*/*'],
+    }),
+  )
 
   if (proxy) {
     if (typeof proxy !== 'string') {
-      console.log(chalk.red('When specified, "proxy" in package.json must be a string.'))
-      console.log(chalk.red('Instead, the type of "proxy" was "' + typeof proxy + '".'))
-      console.log(chalk.red('Either remove "proxy" from package.json, or make it a string.'))
+      console.log(
+        chalk.red('When specified, "proxy" in package.json must be a string.'),
+      )
+      console.log(
+        chalk.red('Instead, the type of "proxy" was "' + typeof proxy + '".'),
+      )
+      console.log(
+        chalk.red(
+          'Either remove "proxy" from package.json, or make it a string.',
+        ),
+      )
       process.exit(1)
     }
 
@@ -161,7 +196,7 @@ function addMiddleware(devServer) {
       secure: false,
       changeOrigin: true,
       ws: true,
-      xfwd: true
+      xfwd: true,
     })
 
     devServer.use(mayProxy, hpm)
@@ -180,10 +215,10 @@ function runDevServer(host, port, protocol) {
     publicPath: config.output.publicPath,
     quiet: false,
     watchOptions: {
-      ignored: /node_modules/
+      ignored: /node_modules/,
     },
-    https: protocol === "https",
-    host: host
+    https: protocol === 'https',
+    host: host,
   })
 
   // Our custom middleware proxies requests to /index.html or a remote API.
@@ -195,12 +230,11 @@ function runDevServer(host, port, protocol) {
       return console.log(err)
     }
     console.log(chalk.cyan('Starting the development server...'))
-    console.log('Done')
   })
 }
 
 function run(port) {
-  var protocol = process.env.HTTPS === 'true' ? "https" : "http"
+  var protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
   var host = process.env.HOST || 'localhost'
   setupCompiler(host, port, protocol)
   runDevServer(host, port, protocol)
@@ -218,9 +252,12 @@ detect(DEFAULT_PORT).then(port => {
     clearConsole()
     var existingProcess = getProcessForPort(DEFAULT_PORT)
     var question =
-      chalk.yellow('Something is already running on port ' + DEFAULT_PORT + '.' +
-        ((existingProcess) ? ' Probably:\n  ' + existingProcess : '')) +
-        '\n\nWould you like to run the app on another port instead?'
+      chalk.yellow(
+        'Something is already running on port ' +
+          DEFAULT_PORT +
+          '.' +
+          (existingProcess ? ' Probably:\n  ' + existingProcess : ''),
+      ) + '\n\nWould you like to run the app on another port instead?'
 
     prompt(question, true).then(shouldChangePort => {
       if (shouldChangePort) {
@@ -228,6 +265,8 @@ detect(DEFAULT_PORT).then(port => {
       }
     })
   } else {
-    console.log(chalk.red('Something is already running on port ' + DEFAULT_PORT + '.'))
+    console.log(
+      chalk.red('Something is already running on port ' + DEFAULT_PORT + '.'),
+    )
   }
 })

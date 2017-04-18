@@ -37,9 +37,7 @@ export default class Home {
     Router.go(piece.url())
   }
 
-  render() {
-    const { store } = this.props
-
+  render({ store }) {
     return (
       <Page>
         <Page.Main>

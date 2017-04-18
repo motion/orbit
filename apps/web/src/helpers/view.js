@@ -22,6 +22,12 @@ export default function view(View) {
     react,
   })
 
+  // pass props/context to render
+  const or = View.prototype.render
+  View.prototype.render = function() {
+    return or.call(this, this.props, this.context)
+  }
+
   // order important:
   //   autobind, gloss, mobx
   return autobind(glossy(observer(View)))

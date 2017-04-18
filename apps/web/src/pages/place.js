@@ -11,16 +11,11 @@ class PlaceStore {
   store: PlaceStore,
 })
 export default class PlacePage {
-  render() {
-    const { store } = this.props
+  render({ store }) {
     const [active] = store.place.current || []
 
-    if (!active) {
-      return null
-    }
-
     return (
-      <Page>
+      <Page if={active}>
         <Page.Main>
           {active.title}
         </Page.Main>

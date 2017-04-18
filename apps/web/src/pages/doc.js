@@ -10,16 +10,11 @@ import Editor from 'views/editor'
   },
 })
 export default class DocPage {
-  render() {
-    const { store } = this.props
+  render({ store }) {
     const [active] = store.doc.current || []
 
-    if (!active) {
-      return null
-    }
-
     return (
-      <Page>
+      <Page if={active}>
         <Page.Main>
           {active.title}
           <Editor />

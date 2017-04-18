@@ -9,8 +9,6 @@ class Place extends Model {
 
   settings = {
     title: 'Place',
-    disableKeyCompression: true,
-    version: 0,
   }
 
   methods = {
@@ -23,7 +21,6 @@ class Place extends Model {
     },
 
     createBoard(info) {
-      console.log('creating board', this)
       return Board.collection.insert({
         ...info,
         place_id: this._id,

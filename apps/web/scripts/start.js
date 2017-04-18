@@ -60,26 +60,9 @@ function setupCompiler(host, port, protocol) {
     // them in a readable focused way.
     var messages = formatWebpackMessages(stats.toJson({}, true))
     var isSuccessful = !messages.errors.length && !messages.warnings.length
-    var showInstructions = isSuccessful && (isInteractive || isFirstCompile)
 
     if (isSuccessful) {
       console.log(chalk.green('Compiled successfully!'))
-    }
-
-    if (showInstructions) {
-      console.log()
-      console.log('The app is running at:')
-      console.log()
-      console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + '/'))
-      console.log()
-      console.log('Note that the development build is not optimized.')
-      console.log(
-        'To create a production build, use ' +
-          chalk.cyan(cli + ' run build') +
-          '.',
-      )
-      console.log()
-      isFirstCompile = false
     }
 
     // If errors exist, only show errors.
@@ -101,18 +84,6 @@ function setupCompiler(host, port, protocol) {
         console.log(message)
         console.log()
       })
-      // Teach some ESLint tricks.
-      console.log('You may use special comments to disable some warnings.')
-      console.log(
-        'Use ' +
-          chalk.yellow('// eslint-disable-next-line') +
-          ' to ignore the next line.',
-      )
-      console.log(
-        'Use ' +
-          chalk.yellow('/* eslint-disable */') +
-          ' to ignore all warnings in a file.',
-      )
     }
   })
 }
@@ -122,39 +93,14 @@ function setupCompiler(host, port, protocol) {
 function onProxyError(proxy) {
   return function(err, req, res) {
     var host = req.headers && req.headers.host
-    console.log(
-      chalk.red('Proxy error:') +
-        ' Could not proxy request ' +
-        chalk.cyan(req.url) +
-        ' from ' +
-        chalk.cyan(host) +
-        ' to ' +
-        chalk.cyan(proxy) +
-        '.',
-    )
-    console.log(
-      'See https://nodejs.org/api/errors.html#errors_common_system_errors for more information (' +
-        chalk.cyan(err.code) +
-        ').',
-    )
-    console.log()
+    console.log(chalk.red('Proxy error:'))
 
     // And immediately send the proper error response to the client.
     // Otherwise, the request will eventually timeout with ERR_EMPTY_RESPONSE on the client side.
     if (res.writeHead && !res.headersSent) {
       res.writeHead(500)
     }
-    res.end(
-      'Proxy error: Could not proxy request ' +
-        req.url +
-        ' from ' +
-        host +
-        ' to ' +
-        proxy +
-        ' (' +
-        err.code +
-        ').',
-    )
+    res.end(`Proxy error: Could not proxy request ${err.code}`)
   }
 }
 
@@ -164,22 +110,12 @@ function addMiddleware(devServer) {
     historyApiFallback({
       disableDotRule: true,
       htmlAcceptHeaders: proxy ? ['text/html'] : ['text/html', '*/*'],
-    }),
+    })
   )
 
   if (proxy) {
     if (typeof proxy !== 'string') {
-      console.log(
-        chalk.red('When specified, "proxy" in package.json must be a string.'),
-      )
-      console.log(
-        chalk.red('Instead, the type of "proxy" was "' + typeof proxy + '".'),
-      )
-      console.log(
-        chalk.red(
-          'Either remove "proxy" from package.json, or make it a string.',
-        ),
-      )
+      console.log('When specified, "proxy" in package.json must be a string.')
       process.exit(1)
     }
 
@@ -214,9 +150,9 @@ function runDevServer(host, port, protocol) {
     hot: true,
     publicPath: config.output.publicPath,
     quiet: false,
-    watchOptions: {
-      ignored: /node_modules/,
-    },
+    // watchOptions: {
+    //   ignored: /node_modules/,
+    // },
     https: protocol === 'https',
     host: host,
   })
@@ -256,7 +192,7 @@ detect(DEFAULT_PORT).then(port => {
         'Something is already running on port ' +
           DEFAULT_PORT +
           '.' +
-          (existingProcess ? ' Probably:\n  ' + existingProcess : ''),
+          (existingProcess ? ' Probably:\n  ' + existingProcess : '')
       ) + '\n\nWould you like to run the app on another port instead?'
 
     prompt(question, true).then(shouldChangePort => {
@@ -265,8 +201,6 @@ detect(DEFAULT_PORT).then(port => {
       }
     })
   } else {
-    console.log(
-      chalk.red('Something is already running on port ' + DEFAULT_PORT + '.'),
-    )
+    console.log('Something is already running on port ' + DEFAULT_PORT + '.')
   }
 })

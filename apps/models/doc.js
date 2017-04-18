@@ -28,8 +28,6 @@ class Doc extends Model {
 
   settings = {
     title: 'Doc4',
-    disableKeyCompression: true,
-    version: 0,
   }
 
   methods = {

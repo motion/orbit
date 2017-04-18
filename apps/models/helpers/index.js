@@ -9,8 +9,15 @@ export class Model {
       .toLowerCase()
   }
 
+  defaultSchema = {
+    primaryPath: '_id',
+    version: 0,
+    disableKeyCompression: true,
+  }
+
   get compiledSchema() {
     const schema = {
+      ...this.defaultSchema,
       ...this.settings,
       ...compile(this.constructor.props),
     }

@@ -10,8 +10,6 @@ class Board extends Model {
 
   settings = {
     title: 'Board2',
-    disableKeyCompression: true,
-    version: 0,
   }
 
   hooks = {

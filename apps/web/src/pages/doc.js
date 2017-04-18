@@ -2,7 +2,7 @@ import { Doc } from 'models'
 import { view } from 'helpers'
 import { Page } from 'views'
 import Router from 'router'
-import Editor from 'views/editor'
+import Editor, { Raw } from 'views/editor'
 import { debounce } from 'lodash'
 
 @view.provide({
@@ -10,8 +10,8 @@ import { debounce } from 'lodash'
     doc = Doc.get(Router.params.id)
     update = debounce(async val => {
       const doc = await this.doc.promise
-      doc.content = val.toJS().document
-      console.log('saving as', doc.content)
+      console.log('saving doc', doc._id)
+      doc.content = Raw.serialize(val)
       doc.save()
     }, 300)
   },
@@ -19,6 +19,8 @@ import { debounce } from 'lodash'
 export default class DocPage {
   render({ store }) {
     const [active] = store.doc.current || []
+
+    window.s = store
 
     if (!active) {
       return null

@@ -1,6 +1,8 @@
 import { Editor, Raw } from 'slate'
 import { Component, view, observable } from 'helpers'
 
+export { Raw } from 'slate'
+
 @view
 export default class DocEditor extends Component {
   state = {

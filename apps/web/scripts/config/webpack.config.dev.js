@@ -18,7 +18,7 @@ module.exports = {
   entry: [
     require.resolve('react-dev-utils/webpackHotDevClient'),
     require.resolve('./polyfills'),
-    paths.appIndexJs
+    paths.appIndexJs,
   ],
 
   output: {
@@ -26,32 +26,23 @@ module.exports = {
     // Add /* filename */ comments to generated require()s in the output.
     pathinfo: true,
     filename: 'static/js/bundle.js',
-    publicPath: publicPath
+    publicPath: publicPath,
   },
 
   resolve: {
     extensions: ['.js', '.json'],
-    modules: [
-      paths.appSrc,
-      paths.appNodeModules
-    ]
+    modules: [paths.appSrc, paths.modelsNodeModules, paths.appNodeModules],
   },
 
   module: {
     loaders: [
       {
-        exclude: [
-          /\.html$/,
-          /\.(js)(\?.*)?$/,
-          /\.css$/,
-          /\.json$/,
-          /\.svg$/
-        ],
+        exclude: [/\.html$/, /\.(js)(\?.*)?$/, /\.css$/, /\.json$/, /\.svg$/],
         loader: 'url-loader',
         query: {
           limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
       },
       // Process JS with Babel.
       {
@@ -59,25 +50,25 @@ module.exports = {
         include: paths.appSrc,
         loader: 'babel-loader',
         query: {
-          cacheDirectory: true
-        }
+          cacheDirectory: true,
+        },
       },
       {
         test: /\.css$/,
-        loader: 'style!css?importLoaders=1'
+        loader: 'style!css?importLoaders=1',
       },
       {
         test: /\.json$/,
-        loader: 'json-loader'
+        loader: 'json-loader',
       },
       {
         test: /\.svg$/,
         loader: 'file',
         query: {
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
-      }
-    ]
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
+      },
+    ],
   },
 
   plugins: [
@@ -89,11 +80,11 @@ module.exports = {
     new webpack.DefinePlugin(env.stringified),
     new webpack.HotModuleReplacementPlugin(),
     new CaseSensitivePathsPlugin(),
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules)
+    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
   ],
   node: {
     fs: 'empty',
     net: 'empty',
-    tls: 'empty'
-  }
+    tls: 'empty',
+  },
 }

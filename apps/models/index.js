@@ -18,7 +18,6 @@ const KEYS = {
 }
 
 class App {
-  models = Models
   db = null
   @observable user = null
 
@@ -27,6 +26,11 @@ class App {
     RxDB.plugin(pREPL)
     RxDB.plugin(pHTTP)
     PouchDB.plugin(pAuth)
+
+    // expose models onto app
+    for (const [name, model] of Object.entries(Models)) {
+      this[name] = model
+    }
   }
 
   async connect() {
@@ -42,7 +46,7 @@ class App {
     this.auth = new PouchDB(`${KEYS.url}/auth`, { skipSetup: true })
 
     // connect models
-    for (const [name, model] of Object.entries(this.models)) {
+    for (const [name, model] of Object.entries(Models)) {
       await model.connect(this.db)
       model.collection.sync(`${KEYS.url}/${model.title}`)
     }
@@ -60,8 +64,7 @@ class App {
       const info = await this.auth.login(username, password)
       this.setSession()
       return info
-    }
-    catch(e) {
+    } catch (e) {
       console.error(e)
       return null
     }
@@ -82,8 +85,7 @@ class App {
     console.log('loggedIn', loggedIn)
     if (loggedIn) {
       this.user = session.userCtx
-    }
-    else {
+    } else {
       this.user = false
     }
   }

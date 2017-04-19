@@ -47,24 +47,25 @@ export default class Home {
     return (
       <Page>
         <Page.Main>
-          <docs>
-            <FlipMove $docs duration={100} easing="ease-out">
-              <docs if={store.docs.current}>
-                <DocItem onClick={store.createDoc}>
-                  <strong>+</strong>
-                </DocItem>
-                {store.docs.current.map((doc, i) => (
-                  <DocItem
-                    ref={ref => {
-                      if (i === 0) this.docRef = ref
-                    }}
-                    key={doc._id}
-                    doc={doc}
-                  />
-                ))}
-              </docs>
-            </FlipMove>
-          </docs>
+          <FlipMove
+            if={store.docs.current}
+            $docs
+            duration={100}
+            easing="ease-out"
+          >
+            <DocItem key={0} onClick={store.createDoc}>
+              <strong>+</strong>
+            </DocItem>
+            {store.docs.current.map((doc, i) => (
+              <DocItem
+                ref={ref => {
+                  if (i === 0) this.docRef = ref
+                }}
+                key={doc._id}
+                doc={doc}
+              />
+            ))}
+          </FlipMove>
         </Page.Main>
 
         <Page.Side>

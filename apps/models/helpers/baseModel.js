@@ -29,7 +29,7 @@ export default class BaseModel {
         return this.collection
           .findOne(this._id)
           .exec()
-          .then(doc => doc.remove())
+          .then(doc => doc && doc.remove())
       },
     }
   }

@@ -12,12 +12,12 @@ export default class DocItem {
     this.editing = true
     this.setTimeout(() => {
       this.title.focus()
-      this.title.select()
+      document.execCommand('selectAll', false, null)
     }, 10)
   }
 
   onEnter(doc) {
-    doc.title = this.title.value
+    doc.title = this.title.innerText
     doc.save()
     this.title.blur()
   }
@@ -29,14 +29,20 @@ export default class DocItem {
     }
     return (
       <doc onClick={() => Router.go(doc.url())} {...props}>
-        <input
+        <test
           $title
           $editing={this.editing}
           ref={this.ref('title').set}
           contentEditable={this.editing}
-          defaultValue={doc.title}
-          onKeyDown={e => e.keyCode === 13 && this.onEnter(doc)}
-        />
+          onKeyDown={e => {
+            if (e.keyCode === 13) {
+              e.preventDefault()
+              this.onEnter(doc)
+            }
+          }}
+        >
+          {doc.title}
+        </test>
         <author>by {doc.author_id}</author>
         <TimeAgo minPeriod={10} date={doc.created_at} />
         <delete

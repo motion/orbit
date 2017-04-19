@@ -12,12 +12,12 @@ class HomeStore {
 
   createDoc = e => {
     e.preventDefault()
-    Doc.create(generateName())
+    Doc.create({ title: generateName() })
   }
 
   createPlace = e => {
     e.preventDefault()
-    Place.collection.insert({
+    Place.create({
       title: this.place.value,
       author_id: App.user.name,
     })

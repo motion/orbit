@@ -1,27 +1,29 @@
 import { compile } from 'kontur'
 
+// exports
 export { query } from 'motion-mobx-helpers'
 export { bool, int, str, object } from 'kontur'
 
-export class Model {
-  get title() {
-    return ((this.settings && this.settings.title) || this.constructor.name)
-      .toLowerCase()
-  }
-
-  defaultSchema = {
-    primaryPath: '_id',
-    version: 0,
-    disableKeyCompression: true,
-  }
-
-  get compiledSchema() {
-    const schema = {
+class BaseModel {
+  constructor({ defaultSchema, defaultProps }) {
+    this.defaultSchema = defaultSchema
+    this.compiledSchema = {
       ...this.defaultSchema,
       ...this.settings,
       ...compile(this.constructor.props),
     }
-    return schema
+  }
+
+  get defaultProps() {
+    const { defaultProps } = this.constructor
+    return typeof defaultProps === 'function'
+      ? defaultProps()
+      : defaultProps || {}
+  }
+
+  get title() {
+    return ((this.settings && this.settings.title) || this.constructor.name)
+      .toLowerCase()
   }
 
   get compiledMethods() {
@@ -51,5 +53,40 @@ export class Model {
         this.collection[hook](this.hooks[hook])
       })
     }
+  }
+
+  timestamps(...props) {
+    const defined = props.filter(x => !!this.compiledSchema.properties[x])
+    const values = defined.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur]: new Date().toISOString(),
+      }),
+      {}
+    )
+    return values
+  }
+
+  // helpers
+
+  create(object) {
+    const properties = {
+      ...object,
+      ...this.defaultProps,
+      ...this.timestamps('created_at', 'updated_at'),
+    }
+    return this.collection.insert(properties)
+  }
+}
+
+export class Model extends BaseModel {
+  constructor() {
+    super({
+      defaultSchema: {
+        primaryPath: '_id',
+        version: 0,
+        disableKeyCompression: true,
+      },
+    })
   }
 }

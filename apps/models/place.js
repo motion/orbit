@@ -5,6 +5,8 @@ class Place extends Model {
   static props = {
     author_id: str,
     title: str,
+    created_at: str.datetime,
+    updated_at: str.datetime,
   }
 
   settings = {

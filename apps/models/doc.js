@@ -6,6 +6,8 @@ class Doc extends Model {
     content: object,
     board_id: str.optional,
     author_id: str,
+    created_at: str.datetime,
+    updated_at: str.datetime,
   }
 
   static defaultProps = () => ({
@@ -34,13 +36,6 @@ class Doc extends Model {
     url() {
       return `/d/${this._id.replace(':', '-')}`
     },
-  }
-
-  create(title) {
-    this.collection.insert({
-      title,
-      ...this.constructor.defaultProps(),
-    })
   }
 
   @query all = () => this.collection.find()

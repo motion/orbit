@@ -30,6 +30,10 @@ export default class App {
     }
   }
 
+  get pouch() {
+    return this.db._adminPouch
+  }
+
   async connect() {
     // connect to pouchdb
     this.db = await RxDB.create({

@@ -40,7 +40,6 @@ class DocStore {
 
   focusEditor = () => {
     this.editorRef.focus()
-    console.log('focusing editor')
   }
 }
 

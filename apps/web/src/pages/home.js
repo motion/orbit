@@ -4,6 +4,7 @@ import Router from 'router'
 import { Page, Poof } from 'views'
 import generateName from 'sillyname'
 import FlipMove from 'react-flip-move'
+import TimeAgo from 'react-timeago'
 
 class HomeStore {
   places = Place.all()
@@ -48,11 +49,12 @@ export default class Home {
                   <doc onClick={() => Router.go(doc.url())} key={doc._id}>
                     <title>{doc.title}</title>
                     <author>by {doc.author_id}</author>
+                    <TimeAgo minPeriod={10} date={doc.created_at} />
                     <delete
-                      onClick={async e => {
+                      onClick={e => {
                         e.stopPropagation()
-                        poof.puff()
                         doc.delete()
+                        poof.puff()
                       }}
                     >
                       x

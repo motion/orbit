@@ -2,6 +2,8 @@ import App, { Place, Doc } from 'models'
 import { view } from 'helpers'
 import Router from 'router'
 import { Page } from 'views'
+import generateName from 'sillyname'
+import Docs from './docs'
 
 class HomeStore {
   places = Place.all()
@@ -22,7 +24,7 @@ export default class Home {
 
   createDoc = e => {
     e.preventDefault()
-    Doc.create('title')
+    Doc.create(generateName())
   }
 
   delete = () =>
@@ -31,6 +33,10 @@ export default class Home {
   link = piece => e => {
     e.preventDefault()
     Router.go(piece.url())
+  }
+
+  destroy = doc => {
+    Doc.collection.findOne(doc._id).exec().then(doc => doc.remove())
   }
 
   render({ store }) {
@@ -43,23 +49,11 @@ export default class Home {
 
           <h2>Docs</h2>
           <docs if={store.docs.current}>
-            {store.docs.current.map(doc => (
-              <piece key={Math.random()}>
-                <a href={doc.url()} onClick={this.link(doc)}>
-                  {doc.url()}
-                </a>
-                <a
-                  onClick={() =>
-                    Doc.collection
-                      .findOne(doc._id)
-                      .exec()
-                      .then(doc => doc.remove())}
-                >
-                  x
-                </a>
-                by {doc.author_id || 'none'}
-              </piece>
-            ))}
+            <Docs
+              onSelect={doc => Router.go(doc.url())}
+              onDestroy={this.destroy}
+              docs={store.docs.current}
+            />
           </docs>
         </Page.Main>
 

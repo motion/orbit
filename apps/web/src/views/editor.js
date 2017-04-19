@@ -38,16 +38,25 @@ export default class DocEditor extends Component {
     this.onChange(newState)
   }
 
-  render() {
+  render({ onRef }) {
+    const editorStyle = {
+      color: '#4c555a',
+      fontSize: 14,
+      lineHeight: 1.9,
+      fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
+    }
+
     return (
       <editor>
         <a onClick={() => this.addBlock('hello')}>add hello</a>
         <Editor
           state={this.state.val}
+          style={editorStyle}
           plugins={[]}
           schema={this.schema}
           onKeyDown={this.onKeyDown}
           onChange={this.onChange}
+          ref={onRef}
         />
       </editor>
     )

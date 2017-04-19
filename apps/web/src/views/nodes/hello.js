@@ -16,10 +16,17 @@ export default class Hello {
     return (
       <hello>
         <h1>hello! {node.key}</h1>
+        {' '}
         <a onClick={this.onClick}>
-          delete!
+          [x]
         </a>
       </hello>
     )
+  }
+
+  static style = {
+    hello: {
+      flexFlow: 'row',
+    },
   }
 }

@@ -12,10 +12,10 @@ export default class Root {
     return (
       <layout $$flex>
         <header $$row $$align="center">
-          <h1>groop</h1>
+          <h1>Jot</h1>
           <nav $$row>
-            <a onClick={() => Router.go("/")}>home</a>
-            <a onClick={() => Router.go("/projects")}>popular</a>
+            <a onClick={() => Router.go('/')}>home</a>
+            <a onClick={() => Router.go('/projects')}>popular</a>
           </nav>
           <div $$flex />
           <user $$row>
@@ -27,16 +27,34 @@ export default class Root {
 
             <form if={App.user === false} $userForm onSubmit={this.prevent}>
               login!
-              <input name="username" placeholder="username" ref={this.ref('username').set} />
-              <input name="password" type="password" ref={this.ref('password').set} />
-              <button onClick={() => App.login(this.username.value, this.password.value)}>login</button>
+              <input
+                name="username"
+                placeholder="username"
+                ref={this.ref('username').set}
+              />
+              <input
+                name="password"
+                type="password"
+                ref={this.ref('password').set}
+              />
+              <button
+                onClick={() =>
+                  App.login(this.username.value, this.password.value)}
+              >
+                login
+              </button>
             </form>
 
             <form if={App.user === false} onSubmit={this.prevent}>
               register!
               <input placeholder="username" ref={this.ref('pusername').set} />
               <input type="password" ref={this.ref('ppassword').set} />
-              <button onClick={() => App.signup(this.pusername.value, this.ppassword.value)}>register</button>
+              <button
+                onClick={() =>
+                  App.signup(this.pusername.value, this.ppassword.value)}
+              >
+                register
+              </button>
             </form>
           </user>
         </header>

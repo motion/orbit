@@ -2,6 +2,7 @@ import { view, observable } from 'helpers'
 import TimeAgo from 'react-timeago'
 import Router from 'router'
 import Poof from '~/src/views/poof'
+import React from 'react'
 
 @view
 export default class DocItem {
@@ -21,7 +22,8 @@ export default class DocItem {
     this.title.blur()
   }
 
-  render({ doc, children, ...props }) {
+  render({ doc, children, getRef, ...props }) {
+    getRef && getRef(this)
     if (children) {
       return <doc {...props}>{children}</doc>
     }

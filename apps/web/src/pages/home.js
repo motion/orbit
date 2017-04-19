@@ -12,9 +12,9 @@ class HomeStore {
   place = null
   createdDoc = false
 
-  createDoc = async e => {
+  createDoc = e => {
     e.preventDefault()
-    await Doc.create({ title: generateName() })
+    Doc.create({ title: generateName() })
     this.createdDoc = true
   }
 
@@ -37,7 +37,7 @@ export default class Home {
   }
 
   componentDidUpdate() {
-    if (this.props.store.createdDoc) {
+    if (this.props.store.createdDoc && this.docRef) {
       this.docRef.focus()
       this.props.store.createdDoc = false
     }
@@ -48,15 +48,18 @@ export default class Home {
       <Page>
         <Page.Main>
           <FlipMove $docs duration={100} easing="ease-out">
-            <DocItem key={0} onClick={store.createDoc}>
+            <DocItem onClick={store.createDoc}>
               <strong>+</strong>
             </DocItem>
             {(store.docs.current || []).map((doc, i) => (
               <DocItem
-                ref={ref => {
-                  if (i === 0) this.docRef = ref
-                }}
                 key={doc._id}
+                getRef={ref => {
+                  console.log(ref, i)
+                  if (i === 0) {
+                    this.docRef = ref
+                  }
+                }}
                 doc={doc}
               />
             ))}

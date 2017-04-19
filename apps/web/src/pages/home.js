@@ -47,16 +47,11 @@ export default class Home {
     return (
       <Page>
         <Page.Main>
-          <FlipMove
-            if={store.docs.current}
-            $docs
-            duration={100}
-            easing="ease-out"
-          >
+          <FlipMove $docs duration={100} easing="ease-out">
             <DocItem key={0} onClick={store.createDoc}>
               <strong>+</strong>
             </DocItem>
-            {store.docs.current.map((doc, i) => (
+            {(store.docs.current || []).map((doc, i) => (
               <DocItem
                 ref={ref => {
                   if (i === 0) this.docRef = ref

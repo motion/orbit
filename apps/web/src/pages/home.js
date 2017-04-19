@@ -42,8 +42,9 @@ export default class Home {
     return (
       <Page>
         <Page.Main>
-          <Poof />
           <docs>
+            <Poof />
+
             <doc onClick={this.createDoc}>
               <title>+</title>
             </doc>

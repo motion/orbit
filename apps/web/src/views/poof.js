@@ -11,10 +11,16 @@ export default class Poof {
     left: 0,
   }
 
-  @observable show = true
-  @observable iter = 0
+  @observable show = null
+  @observable iter = null
 
   componentDidMount() {
+    this.start()
+  }
+
+  start() {
+    this.show = true
+    this.iter = 0
     this.setTimeout(() => {
       this.show = false
     }, TOTAL_TIME)
@@ -22,6 +28,13 @@ export default class Poof {
     this.setInterval(() => {
       this.iter = (this.iter + 1) % FRAMES
     }, TOTAL_TIME / FRAMES)
+  }
+
+  puff() {
+    return new Promise(res => {
+      this.start()
+      setTimeout(res, TOTAL_TIME)
+    })
   }
 
   render({ top, left }) {

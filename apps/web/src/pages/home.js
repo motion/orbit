@@ -3,32 +3,30 @@ import { view } from 'helpers'
 import Router from 'router'
 import { Page, Poof } from 'views'
 import generateName from 'sillyname'
+import FlipMove from 'react-flip-move'
 
 class HomeStore {
   places = Place.all()
   docs = Doc.all()
-}
-
-@view.provide({
-  store: HomeStore,
-})
-export default class Home {
-  create = e => {
-    e.preventDefault()
-    Place.collection.insert({
-      title: this.place.value,
-      author_id: App.user.name,
-    })
-  }
 
   createDoc = e => {
     e.preventDefault()
     Doc.create(generateName())
   }
 
-  delete = () =>
-    Place.collection.findOne(piece._id).exec().then(doc => doc.remove())
+  createPlace = e => {
+    e.preventDefault()
+    Place.collection.insert({
+      title: this.place.value,
+      author_id: App.user.name,
+    })
+  }
+}
 
+@view.provide({
+  store: HomeStore,
+})
+export default class Home {
   link = piece => e => {
     e.preventDefault()
     Router.go(piece.url())
@@ -39,31 +37,36 @@ export default class Home {
       <Page>
         <Page.Main>
           <docs>
-            <Poof />
-
-            <doc onClick={this.createDoc}>
-              <title>+</title>
-            </doc>
-            {(store.docs.current || []).map(doc => (
-              <doc onClick={() => Router.go(doc.url())} key={doc._id}>
-                <title>{doc.title}</title>
-                <author>by {doc.author_id}</author>
-                <delete
-                  onClick={e => {
-                    e.stopPropagation()
-                    doc.delete()
-                  }}
-                >
-                  x
-                </delete>
+            <FlipMove $docs duration={100} easing="ease-out">
+              <doc onClick={store.createDoc}>
+                <title>+</title>
               </doc>
-            ))}
+              {(store.docs.current || []).map(doc => {
+                let poof
+                return (
+                  <doc onClick={() => Router.go(doc.url())} key={doc._id}>
+                    <title>{doc.title}</title>
+                    <author>by {doc.author_id}</author>
+                    <delete
+                      onClick={async e => {
+                        e.stopPropagation()
+                        await poof.puff()
+                        doc.delete()
+                      }}
+                    >
+                      x
+                      <Poof ref={ref => poof = ref} />
+                    </delete>
+                  </doc>
+                )
+              })}
+            </FlipMove>
           </docs>
         </Page.Main>
 
         <Page.Side>
           <h2>Places</h2>
-          <form if={App.user} onSubmit={this.create}>
+          <form if={App.user} onSubmit={store.createPlace}>
             <input ref={this.ref('place').set} placeholder="New Place..." />
           </form>
           <places if={store.places.current}>
@@ -84,13 +87,10 @@ export default class Home {
     docs: {
       flexFlow: 'row',
       flexWrap: 'wrap',
+      flex: 1,
     },
     doc: {
       position: 'relative',
-      transition: [
-        `transform .2s cubic-bezier(.55,0,.1,1)`,
-        `box-shadow .2s cubic-bezier(.55,0,.1,1)`,
-      ].join(', '),
       borderRadius: 6,
       border: [1, [0, 0, 0, 0.1]],
       padding: 20,

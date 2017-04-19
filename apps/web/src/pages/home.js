@@ -61,6 +61,7 @@ export default class Home {
                     this.docRef = ref
                   }
                 }}
+                onSave={() => Router.go(doc.url())}
                 doc={doc}
               />
             ))}

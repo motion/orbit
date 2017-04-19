@@ -20,6 +20,9 @@ export default class DocItem {
     doc.title = this.title.innerText
     doc.save()
     this.title.blur()
+    if (this.props.onSave) {
+      this.props.onSave(doc)
+    }
   }
 
   render({ doc, children, getRef, ...props }) {
@@ -29,8 +32,7 @@ export default class DocItem {
     }
     return (
       <doc onClick={() => Router.go(doc.url())} {...props}>
-        <test
-          $title
+        <title
           $editing={this.editing}
           ref={this.ref('title').set}
           contentEditable={this.editing}
@@ -42,7 +44,7 @@ export default class DocItem {
           }}
         >
           {doc.title}
-        </test>
+        </title>
         <author>by {doc.author_id}</author>
         <TimeAgo minPeriod={10} date={doc.created_at} />
         <delete

@@ -37,7 +37,6 @@ export default class Home {
     return (
       <Page>
         <Page.Main>
-          123
           <docs>
             <FlipMove $docs duration={100} easing="ease-out">
               <doc onClick={store.createDoc}>

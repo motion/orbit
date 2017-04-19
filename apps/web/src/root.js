@@ -58,7 +58,7 @@ export default class Root {
           </user>
         </header>
 
-        <CurrentPage key={Router.path} />
+        <CurrentPage key={Router.key} />
       </layout>
     )
   }

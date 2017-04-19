@@ -10,7 +10,8 @@ window.App = App
 window.Router = Router
 window.mobx = mobx
 
-function run() {
+export function run() {
+  console.log('run')
   const Root = require('./root').default
   render(<Root />, document.querySelector('#app'))
 }
@@ -19,7 +20,5 @@ App.connect().then(run)
 
 if (module.hot) {
   module.hot.accept('./root', run)
-  module.hot.accept('models', () => {
-    require('models').connect().then(run)
-  })
+  module.hot.accept('router', run)
 }

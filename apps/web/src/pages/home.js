@@ -44,7 +44,6 @@ export default class Home {
             <doc onClick={this.createDoc}>
               <title>+</title>
             </doc>
-
             {(store.docs.current || []).map(doc => (
               <doc onClick={() => Router.go(doc.url())} key={doc._id}>
                 <title>{doc.title}</title>
@@ -130,7 +129,7 @@ export default class Home {
     delete: {
       position: 'absolute',
       top: 0,
-      right: 0,
+      left: 0,
       height: 16,
       width: 16,
       alignItems: 'center',

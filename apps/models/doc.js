@@ -40,7 +40,7 @@ class Doc extends Model {
   }
 
   @query all = () => this.collection.find()
-  @query recent = () => this.collection.find().sort('created_at')
+  @query recent = () => this.collection.find().sort({ created_at: 'desc' })
   @query get = id => this.collection.findOne(id.replace('-', ':'));
 }
 

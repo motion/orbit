@@ -19,8 +19,7 @@ export default class Root {
           </nav>
           <div $$flex />
           <user $$row>
-            <info $$row if={App.user}>
-              logged in!
+            <info $$row $$centered if={App.user}>
               <strong>{App.user.name}</strong>
               <a onClick={App.logout}>logout</a>
             </info>

@@ -58,20 +58,16 @@ export default class Home {
         </Page.Main>
 
         <Page.Side>
-          <form if={App.user} onSubmit={this.create}>
-            create new place:
-            <input ref={this.ref('place').set} />
-            <button onClick={this.create}>create</button>
-          </form>
-
           <h2>Places</h2>
+          <form if={App.user} onSubmit={this.create}>
+            <input ref={this.ref('place').set} placeholder="New Place..." />
+          </form>
           <places if={store.places.current}>
             {store.places.current.map(piece => (
               <piece key={Math.random()}>
                 <a href={piece.url()} onClick={this.link(piece)}>
                   {piece.url()}
                 </a>
-                by {piece.author_id || 'none'}
               </piece>
             ))}
           </places>
@@ -115,6 +111,15 @@ export default class Home {
     },
     form: {
       padding: [0, 0, 20, 0],
+    },
+    h2: {
+      fontSize: 14,
+      color: [0, 0, 0, 0.5],
+    },
+    piece: {
+      fontWeight: 700,
+      fontSize: 14,
+      color: 'purple',
     },
   }
 }

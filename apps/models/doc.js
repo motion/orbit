@@ -1,4 +1,4 @@
-import { Model, query, str, object } from './helpers'
+import { Model, query, str, object, array } from './helpers'
 
 class Doc extends Model {
   static props = {
@@ -8,10 +8,12 @@ class Doc extends Model {
     author_id: str,
     created_at: str.datetime,
     updated_at: str.datetime,
+    places: array.optional.items(str),
   }
 
   static defaultProps = () => ({
     author_id: App.user.name,
+    places: ['ddd'],
     content: {
       nodes: [
         {
@@ -30,6 +32,7 @@ class Doc extends Model {
 
   settings = {
     title: 'Doc4',
+    index: ['created_at'],
   }
 
   methods = {
@@ -39,6 +42,7 @@ class Doc extends Model {
   }
 
   @query all = () => this.collection.find()
+  @query recent = () => this.collection.find().sort({ created_at: 'desc' })
   @query get = id => this.collection.findOne(id.replace('-', ':'));
 }
 

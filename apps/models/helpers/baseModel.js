@@ -29,7 +29,7 @@ export default class BaseModel {
         return this.collection
           .findOne(this._id)
           .exec()
-          .then(doc => doc.remove())
+          .then(doc => doc && doc.remove())
       },
     }
   }
@@ -42,6 +42,11 @@ export default class BaseModel {
       statics: this.statics,
       methods: this.compiledMethods,
     })
+
+    // create index
+    if (this.settings.index) {
+      await this.collection.pouch.createIndex({ fields: this.settings.index })
+    }
 
     if (this.hooks) {
       Object.keys(this.hooks).forEach(hook => {

@@ -14,7 +14,7 @@ class HomeStore {
 
   createDoc = async e => {
     e.preventDefault()
-    Doc.create({ title: generateName() })
+    await Doc.create({ title: generateName() })
     this.createdDoc = true
   }
 

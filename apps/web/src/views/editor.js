@@ -1,8 +1,25 @@
 import { Editor, Raw } from 'slate'
+import AutoReplace from 'slate-auto-replace'
 import { Component, view, observable } from 'helpers'
-import Hello from './nodes/hello'
+import { Hello, Header, Link, Quote } from './nodes'
+import { startsWith } from 'lodash'
 
 export { Raw } from 'slate'
+
+const replaceShortcut = (char, type) =>
+  AutoReplace({
+    trigger: 'space',
+    before: char, // /^(>)$/,
+    transform: (transform, e, data, matches) => {
+      return transform.setBlock({ type })
+    },
+  })
+
+const plugins = [
+  replaceShortcut(/^(>)$/, 'quote'),
+  replaceShortcut(/^(#)$/, 'header'),
+  replaceShortcut(/^(##)$/, 'header2'),
+]
 
 @view
 export default class DocEditor extends Component {
@@ -13,6 +30,11 @@ export default class DocEditor extends Component {
   schema = {
     nodes: {
       hello: Hello,
+      link: Link,
+      header: Header(26),
+      header2: Header(20),
+      paragraph: props => <p>{props.children}</p>,
+      quote: Quote,
     },
   }
 
@@ -32,10 +54,46 @@ export default class DocEditor extends Component {
     }
   }
 
+  newParagraph = state =>
+    state.transform().splitBlock().setBlock('paragraph').apply()
+
+  onEnter = (e, state) => {
+    const { startBlock } = state
+
+    const enterNewPara = ['header', 'quote']
+
+    if (enterNewPara.filter(x => startsWith(startBlock.type, x)).length > 0) {
+      e.preventDefault()
+      return this.newParagraph(state)
+    }
+  }
+
+  onKeyDown = (e, data, state) => {
+    if (e.which === 13) {
+      return this.onEnter(e, state)
+    }
+  }
+
   addBlock = name => {
     const newState = this.state.val.transform().insertBlock(name).apply()
 
     this.onChange(newState)
+  }
+
+  wrapLink = () => {
+    const href = window.prompt('Enter the URL of the link:')
+    const { val } = this.state
+
+    this.onChange(
+      val
+        .transform()
+        .wrapInline({
+          type: 'link',
+          data: { href },
+        })
+        .collapseToEnd()
+        .apply()
+    )
   }
 
   render({ onRef }) {
@@ -49,10 +107,11 @@ export default class DocEditor extends Component {
     return (
       <editor>
         <a onClick={() => this.addBlock('hello')}>add hello</a>
+        <a onClick={() => this.wrapLink()}>wrap link</a>
         <Editor
           state={this.state.val}
           style={editorStyle}
-          plugins={[]}
+          plugins={plugins}
           schema={this.schema}
           onKeyDown={this.onKeyDown}
           onChange={this.onChange}

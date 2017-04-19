@@ -5,22 +5,24 @@ import Router from 'router'
 import Editor, { Raw } from 'views/editor'
 import { throttle } from 'lodash-decorators'
 
+class DocStore {
+  docs = Doc.get(Router.params.id.replace('-', ':'))
+  get doc() {
+    return this.docs && this.docs.current && this.docs.current[0]
+  }
+  @throttle(100)
+  update = val => {
+    this.doc.content = Raw.serialize(val)
+    this.doc.save()
+  }
+  editTitle = () => {
+    this.doc.title = this.title.innerHTML
+    this.doc.save()
+  }
+}
+
 @view.provide({
-  store: class {
-    docs = Doc.get(Router.params.id.replace('-', ':'))
-    get doc() {
-      return this.docs && this.docs.current && this.docs.current[0]
-    }
-    @throttle(100)
-    update = val => {
-      this.doc.content = Raw.serialize(val)
-      this.doc.save()
-    }
-    editTitle = () => {
-      this.doc.title = this.title.innerHTML
-      this.doc.save()
-    }
-  },
+  store: DocStore,
 })
 export default class DocPage {
   render({ store }) {

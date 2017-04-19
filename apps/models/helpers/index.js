@@ -2,7 +2,8 @@ import BaseModel from './baseModel'
 
 // exports
 export { query } from 'motion-mobx-helpers'
-export { bool, int, str, object } from 'kontur'
+
+export { bool, int, str, object, array } from 'kontur'
 
 export class Model extends BaseModel {
   constructor() {

@@ -25,7 +25,7 @@ export default class DocItem {
     }
   }
 
-  render({ doc, children, getRef, ...props }) {
+  render({ doc, children, getRef, onSave, ...props }) {
     getRef && getRef(this)
     if (children) {
       return <doc {...props}>{children}</doc>

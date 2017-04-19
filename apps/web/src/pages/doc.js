@@ -72,6 +72,10 @@ export default class DocPage {
               onChange={store.update}
             />
           </editor>
+          <places if={doc.places}>
+            belongs to places:
+            {doc.places.map(name => <place>{name}</place>)}
+          </places>
         </Page.Main>
       </Page>
     )

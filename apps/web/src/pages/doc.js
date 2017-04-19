@@ -6,44 +6,46 @@ import Editor, { Raw } from 'views/editor'
 import { throttle } from 'lodash-decorators'
 import { observable, computed } from 'mobx'
 
+class DocStore {
+  docs = Doc.get(Router.params.id.replace('-', ':'))
+  editorRef = null
+
+  get doc() {
+    return this.docs && this.docs.current && this.docs.current[0]
+  }
+
+  @throttle(100)
+  update = val => {
+    this.doc.content = Raw.serialize(val)
+    this.doc.save()
+  }
+
+  @observable editingTitle = false
+  @observable newTitle = ''
+
+  @computed get title() {
+    return this.editingTitle ? this.newTitle : this.doc.title
+  }
+
+  editTitle = () => {
+    this.newTitle = this.doc.title
+    this.editingTitle = true
+  }
+
+  saveTitle = () => {
+    this.doc.title = this.newTitle
+    this.doc.save()
+    this.editingTitle = false
+  }
+
+  focusEditor = () => {
+    this.editorRef.focus()
+    console.log('focusing editor')
+  }
+}
+
 @view.provide({
-  store: class {
-    docs = Doc.get(Router.params.id.replace('-', ':'))
-    editorRef = null
-
-    get doc() {
-      return this.docs && this.docs.current && this.docs.current[0]
-    }
-
-    @throttle(100)
-    update = val => {
-      this.doc.content = Raw.serialize(val)
-      this.doc.save()
-    }
-
-    @observable editingTitle = false
-    @observable newTitle = ''
-
-    @computed get title() {
-      return this.editingTitle ? this.newTitle : this.doc.title
-    }
-
-    editTitle = () => {
-      this.newTitle = this.doc.title
-      this.editingTitle = true
-    }
-
-    saveTitle = () => {
-      this.doc.title = this.newTitle
-      this.doc.save()
-      this.editingTitle = false
-    }
-
-    focusEditor = () => {
-      this.editorRef.focus()
-      console.log('focusing editor')
-    }
-  },
+  store: DocStore,
 })
 export default class DocPage {
   render({ store }) {

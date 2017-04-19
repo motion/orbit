@@ -1,7 +1,7 @@
 import App, { Place, Doc } from 'models'
 import { view } from 'helpers'
 import Router from 'router'
-import { Page } from 'views'
+import { Page, Poof } from 'views'
 import generateName from 'sillyname'
 
 class HomeStore {
@@ -42,6 +42,7 @@ export default class Home {
     return (
       <Page>
         <Page.Main>
+          <Poof />
           <docs>
             <doc onClick={this.createDoc}>
               <title>+</title>

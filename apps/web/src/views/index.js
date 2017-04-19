@@ -18,11 +18,11 @@ Page.Side = $('section', {
 export const Text = $('p', {
   fontSize: 16,
   lineHeight: '1.6rem',
-  display: 'block'
+  display: 'block',
 })
 
 export const Link = $('a', {
-  color: 'red'
+  color: 'red',
 })
 
 export const Quote = $('blockquote', {
@@ -32,7 +32,8 @@ export const Quote = $('blockquote', {
 })
 
 export const Date = $('date', {
-  color: '#999'
+  color: '#999',
 })
 
 export Title from './title'
+export Poof from './poof'

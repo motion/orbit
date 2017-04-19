@@ -44,6 +44,8 @@ class Doc extends Model {
   @query all = () => this.collection.find()
   @query recent = () => this.collection.find().sort({ created_at: 'desc' })
   @query get = id => this.collection.findOne(id.replace('-', ':'));
+  @query forBoard = name =>
+    this.collection.find().where('places').elemMatch({ $eq: name })
 }
 
 export default new Doc()

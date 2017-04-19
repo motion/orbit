@@ -1,19 +1,21 @@
-import App, { Place, Doc } from 'models'
 import { view } from 'helpers'
+import App, { Place, Doc } from 'models'
 import Router from 'router'
 import { Page, Poof } from 'views'
+import DocItem from '~/src/views/doc/item'
 import generateName from 'sillyname'
 import FlipMove from 'react-flip-move'
-import TimeAgo from 'react-timeago'
 
 class HomeStore {
   places = Place.all()
   docs = Doc.recent()
   place = null
+  createdDoc = false
 
-  createDoc = e => {
+  createDoc = async e => {
     e.preventDefault()
     Doc.create({ title: generateName() })
+    this.createdDoc = true
   }
 
   createPlace = e => {
@@ -34,35 +36,33 @@ export default class Home {
     Router.go(piece.url())
   }
 
+  componentDidUpdate() {
+    if (this.props.store.createdDoc) {
+      this.docRef.focus()
+      this.props.store.createdDoc = false
+    }
+  }
+
   render({ store }) {
     return (
       <Page>
         <Page.Main>
           <docs>
             <FlipMove $docs duration={100} easing="ease-out">
-              <doc onClick={store.createDoc}>
-                <title>+</title>
-              </doc>
-              {(store.docs.current || []).map(doc => {
-                let poof
-                return (
-                  <doc onClick={() => Router.go(doc.url())} key={doc._id}>
-                    <title>{doc.title}</title>
-                    <author>by {doc.author_id}</author>
-                    <TimeAgo minPeriod={10} date={doc.created_at} />
-                    <delete
-                      onClick={e => {
-                        e.stopPropagation()
-                        doc.delete()
-                        poof.puff()
-                      }}
-                    >
-                      x
-                      <Poof ref={ref => poof = ref} />
-                    </delete>
-                  </doc>
-                )
-              })}
+              <docs if={store.docs.current}>
+                <DocItem onClick={store.createDoc}>
+                  <strong>+</strong>
+                </DocItem>
+                {store.docs.current.map((doc, i) => (
+                  <DocItem
+                    ref={ref => {
+                      if (i === 0) this.docRef = ref
+                    }}
+                    key={doc._id}
+                    doc={doc}
+                  />
+                ))}
+              </docs>
             </FlipMove>
           </docs>
         </Page.Main>
@@ -92,35 +92,6 @@ export default class Home {
       flexWrap: 'wrap',
       flex: 1,
     },
-    doc: {
-      position: 'relative',
-      borderRadius: 6,
-      border: [1, [0, 0, 0, 0.1]],
-      padding: 20,
-      paddingBottom: 10,
-      margin: [0, 10, 10, 0],
-      color: '#333',
-      cursor: 'pointer',
-      '&:hover': {
-        transform: {
-          rotate: `-1deg`,
-          scale: `1.01`,
-        },
-        // boxShadow: 'inset 0 0 1px #000',
-        borderColor: [0, 0, 0, 0.2],
-      },
-    },
-    author: {
-      alignSelf: 'right',
-      width: '100%',
-    },
-    title: {
-      fontSize: 26,
-      fontWeight: 500,
-    },
-    user: {
-      width: 200,
-    },
     form: {
       padding: [0, 0, 20, 0],
     },
@@ -132,22 +103,6 @@ export default class Home {
       fontWeight: 700,
       fontSize: 14,
       color: 'purple',
-    },
-    delete: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      height: 16,
-      width: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontWeight: 20,
-      fontSize: 12,
-      color: [0, 0, 0, 0.35],
-      borderRadius: 1000,
-      '&:hover': {
-        background: '#eee',
-      },
     },
   }
 }

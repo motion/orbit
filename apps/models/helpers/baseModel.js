@@ -43,6 +43,11 @@ export default class BaseModel {
       methods: this.compiledMethods,
     })
 
+    // create index
+    if (this.settings.index) {
+      await this.collection.pouch.createIndex({ fields: this.settings.index })
+    }
+
     if (this.hooks) {
       Object.keys(this.hooks).forEach(hook => {
         console.log('adding hook', this.title, hook)

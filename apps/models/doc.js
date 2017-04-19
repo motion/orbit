@@ -30,6 +30,7 @@ class Doc extends Model {
 
   settings = {
     title: 'Doc4',
+    index: ['created_at'],
   }
 
   methods = {
@@ -39,6 +40,7 @@ class Doc extends Model {
   }
 
   @query all = () => this.collection.find()
+  @query recent = () => this.collection.find().sort('created_at')
   @query get = id => this.collection.findOne(id.replace('-', ':'));
 }
 

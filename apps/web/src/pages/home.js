@@ -7,7 +7,7 @@ import FlipMove from 'react-flip-move'
 
 class HomeStore {
   places = Place.all()
-  docs = Doc.all()
+  docs = Doc.recent()
   place = null
 
   createDoc = e => {

@@ -16,6 +16,7 @@ module.exports = {
   devtool: 'cheap-module-source-map',
 
   entry: [
+    require.resolve('react-hot-loader/patch'),
     require.resolve('react-dev-utils/webpackHotDevClient'),
     require.resolve('./polyfills'),
     paths.appIndexJs,
@@ -79,6 +80,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin(env.stringified),
     new webpack.HotModuleReplacementPlugin(),
+    // new webpack.NamedModulesPlugin(),
     new CaseSensitivePathsPlugin(),
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
   ],

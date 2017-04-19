@@ -8,6 +8,7 @@ import FlipMove from 'react-flip-move'
 class HomeStore {
   places = Place.all()
   docs = Doc.all()
+  place = null
 
   createDoc = e => {
     e.preventDefault()
@@ -36,6 +37,7 @@ export default class Home {
     return (
       <Page>
         <Page.Main>
+          123
           <docs>
             <FlipMove $docs duration={100} easing="ease-out">
               <doc onClick={store.createDoc}>
@@ -50,7 +52,7 @@ export default class Home {
                     <delete
                       onClick={async e => {
                         e.stopPropagation()
-                        await poof.puff()
+                        poof.puff()
                         doc.delete()
                       }}
                     >
@@ -67,7 +69,7 @@ export default class Home {
         <Page.Side>
           <h2>Places</h2>
           <form if={App.user} onSubmit={store.createPlace}>
-            <input ref={this.ref('place').set} placeholder="New Place..." />
+            <input ref={ref => store.place = ref} placeholder="New Place..." />
           </form>
           <places if={store.places.current}>
             {store.places.current.map(piece => (
@@ -99,7 +101,11 @@ export default class Home {
       color: '#333',
       cursor: 'pointer',
       '&:hover': {
-        transform: `rotate(-1deg)`,
+        transform: {
+          rotate: `-1deg`,
+          scale: `1.01`,
+        },
+        // boxShadow: 'inset 0 0 1px #000',
         borderColor: [0, 0, 0, 0.2],
       },
     },

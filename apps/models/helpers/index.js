@@ -24,13 +24,25 @@ export class Model {
     return schema
   }
 
+  get compiledMethods() {
+    return {
+      ...this.methods,
+      delete() {
+        return this.collection
+          .findOne(this._id)
+          .exec()
+          .then(doc => doc.remove())
+      },
+    }
+  }
+
   async connect(db) {
     this.db = db
     this.collection = await db.collection({
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
-      methods: this.methods,
+      methods: this.compiledMethods,
     })
 
     if (this.hooks) {

@@ -44,7 +44,7 @@ class Doc extends Model {
   }
 
   @query all = () => this.collection.find()
-  @query get = id => this.collection.findOne(id)
+  @query get = id => this.collection.findOne(id.replace('-', ':'));
 }
 
 export default new Doc()

@@ -34,10 +34,6 @@ export default class Home {
     Router.go(piece.url())
   }
 
-  deleteDoc = doc => {
-    Doc.collection.findOne(doc._id).exec().then(doc => doc.remove())
-  }
-
   render({ store }) {
     return (
       <Page>
@@ -53,7 +49,14 @@ export default class Home {
               <doc onClick={() => Router.go(doc.url())} key={doc._id}>
                 <title>{doc.title}</title>
                 <author>by {doc.author_id}</author>
-                <arrow />
+                <delete
+                  onClick={e => {
+                    e.stopPropagation()
+                    doc.delete()
+                  }}
+                >
+                  x
+                </delete>
               </doc>
             ))}
           </docs>
@@ -84,6 +87,7 @@ export default class Home {
       flexWrap: 'wrap',
     },
     doc: {
+      position: 'relative',
       transition: [
         `transform .2s cubic-bezier(.55,0,.1,1)`,
         `box-shadow .2s cubic-bezier(.55,0,.1,1)`,
@@ -122,6 +126,22 @@ export default class Home {
       fontWeight: 700,
       fontSize: 14,
       color: 'purple',
+    },
+    delete: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      height: 16,
+      width: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontWeight: 20,
+      fontSize: 12,
+      color: [0, 0, 0, 0.35],
+      borderRadius: 1000,
+      '&:hover': {
+        background: '#eee',
+      },
     },
   }
 }

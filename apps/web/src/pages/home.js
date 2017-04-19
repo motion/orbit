@@ -3,7 +3,6 @@ import { view } from 'helpers'
 import Router from 'router'
 import { Page } from 'views'
 import generateName from 'sillyname'
-import Docs from './docs'
 
 class HomeStore {
   places = Place.all()
@@ -35,7 +34,7 @@ export default class Home {
     Router.go(piece.url())
   }
 
-  destroy = doc => {
+  deleteDoc = doc => {
     Doc.collection.findOne(doc._id).exec().then(doc => doc.remove())
   }
 
@@ -43,17 +42,18 @@ export default class Home {
     return (
       <Page>
         <Page.Main>
-          <form if={App.user} onSubmit={this.createDoc}>
-            <button onClick={this.createDoc}>create new doc</button>
-          </form>
+          <docs>
+            <doc onClick={this.createDoc}>
+              <title>+</title>
+            </doc>
 
-          <h2>Docs</h2>
-          <docs if={store.docs.current}>
-            <Docs
-              onSelect={doc => Router.go(doc.url())}
-              onDestroy={this.destroy}
-              docs={store.docs.current}
-            />
+            {(store.docs.current || []).map(doc => (
+              <doc onClick={() => Router.go(doc.url())} key={doc._id}>
+                <title>{doc.title}</title>
+                <author>by {doc.author_id}</author>
+                <arrow />
+              </doc>
+            ))}
           </docs>
         </Page.Main>
 
@@ -81,6 +81,35 @@ export default class Home {
   }
 
   static style = {
+    docs: {
+      flexFlow: 'row',
+      flexWrap: 'wrap',
+    },
+    doc: {
+      transition: [
+        `transform .2s cubic-bezier(.55,0,.1,1)`,
+        `box-shadow .2s cubic-bezier(.55,0,.1,1)`,
+      ].join(', '),
+      borderRadius: 6,
+      border: [1, [0, 0, 0, 0.1]],
+      padding: 20,
+      paddingBottom: 10,
+      margin: [0, 10, 10, 0],
+      color: '#333',
+      cursor: 'pointer',
+      '&:hover': {
+        transform: `rotate(-1deg)`,
+        borderColor: [0, 0, 0, 0.2],
+      },
+    },
+    author: {
+      alignSelf: 'right',
+      width: '100%',
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: 500,
+    },
     user: {
       width: 200,
     },

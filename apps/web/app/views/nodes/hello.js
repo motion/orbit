@@ -1,5 +1,5 @@
 import { Editor, Raw } from 'slate'
-import { node, view, observable } from 'helpers'
+import { node, view, observable } from '~/helpers'
 
 @node
 @view

@@ -1,4 +1,4 @@
-import { view, observable } from 'helpers'
+import { view, observable } from '~/helpers'
 
 const TOTAL_TIME = 200
 const FRAMES = 5

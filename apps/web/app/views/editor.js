@@ -1,6 +1,6 @@
 import { Editor, Raw } from 'slate'
 import AutoReplace from 'slate-auto-replace'
-import { Component, view, idFn } from 'helpers'
+import { Component, view, idFn } from '~/helpers'
 import { Hello, Header, Link, Quote } from './nodes'
 import { startsWith } from 'lodash'
 import { throttle } from 'lodash-decorators'

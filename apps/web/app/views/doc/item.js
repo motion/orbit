@@ -1,9 +1,11 @@
-import { view, observable, idFn } from 'helpers'
+import { view, observable, idFn } from '~/helpers'
 import TimeAgo from 'react-timeago'
-import Router from 'router'
+import Router from '~/router'
 import Poof from '~/views/poof'
 import React from 'react'
 import Editor from '~/views/editor'
+
+console.log('idfn', idFn)
 
 @view
 export default class DocItem {
@@ -29,7 +31,9 @@ export default class DocItem {
   }
 
   render({ doc, children, getRef, onSaveTitle, slanty, editable, ...props }) {
+    // hack for now
     getRef && getRef(this)
+
     if (children) {
       return <doc {...props}>{children}</doc>
     }

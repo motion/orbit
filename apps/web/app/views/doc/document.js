@@ -1,8 +1,8 @@
 import { Doc } from 'models'
-import { view } from 'helpers'
-import { Page } from 'views'
-import Router from 'router'
-import Editor, { Raw } from 'views/editor'
+import { view } from '~/helpers'
+import { Page } from '~/views'
+import Router from '~/router'
+import Editor, { Raw } from '~/views/editor'
 import TimeAgo from 'react-timeago'
 import { observable, computed } from 'mobx'
 

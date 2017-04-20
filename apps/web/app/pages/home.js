@@ -1,9 +1,9 @@
-import { view } from 'helpers'
+import { view } from '~/helpers'
 import App, { Place, Doc } from 'models'
-import Router from 'router'
-import { Page, Poof } from 'views'
-import DocItem from '~/views/doc/item'
 import FlipMove from 'react-flip-move'
+import Router from '~/router'
+import { Page, Poof } from '~/views'
+import DocItem from '~/views/doc/item'
 import Grid from '~/views/grid'
 
 class HomeStore {

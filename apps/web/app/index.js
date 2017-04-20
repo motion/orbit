@@ -3,7 +3,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import App from 'models'
 import mobx from 'mobx'
-import Router from 'router'
+import Router from '~/router'
 
 window.React = React
 window.App = App
@@ -20,5 +20,5 @@ App.connect().then(run)
 
 if (module.hot) {
   module.hot.accept('./root', run)
-  module.hot.accept('router', run)
+  module.hot.accept('./router', run)
 }

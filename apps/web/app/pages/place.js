@@ -1,7 +1,7 @@
-import { view, autorun } from 'helpers'
+import { view, autorun } from '~/helpers'
 import { Place, Doc } from 'models'
-import { Text, Page } from 'views'
-import Router from 'router'
+import { Text, Page } from '~/views'
+import Router from '~/router'
 import DocItem from '~/views/doc/item'
 import Document from '~/views/doc/document'
 

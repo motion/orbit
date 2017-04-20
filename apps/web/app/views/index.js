@@ -1,4 +1,4 @@
-import { $ } from 'helpers'
+import { $ } from '~/helpers'
 
 export const Page = $('section', {
   padding: 10,

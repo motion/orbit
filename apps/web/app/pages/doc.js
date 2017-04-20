@@ -1,7 +1,7 @@
-import { view } from 'helpers'
-import Router from 'router'
+import { view } from '~/helpers'
+import Router from '~/router'
 import TimeAgo from 'react-timeago'
-import { Page } from 'views'
+import { Page } from '~/views'
 import Document from '~/views/doc/document'
 
 @view

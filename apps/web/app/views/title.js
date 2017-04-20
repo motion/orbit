@@ -1,18 +1,14 @@
-import { view } from 'helpers'
+import { view } from '~/helpers'
 
 @view
 export default class Title {
   static defaultProps = {
-    tag: 'h1'
+    tag: 'h1',
   }
 
   render() {
     const { tag, children, ...props } = this.props
-    return (
-      React.createElement(tag, { '$title': true, ...props },
-        children
-      )
-    )
+    return React.createElement(tag, { $title: true, ...props }, children)
   }
 
   static style = {
@@ -23,7 +19,7 @@ export default class Title {
       flexFlow: 'row',
       display: 'flex',
       whiteSpace: 'pre',
-    }
+    },
   }
 
   static theme = {
@@ -31,13 +27,13 @@ export default class Title {
       const reduce = 1 / tag.slice(1)
       const fontSize = +size || 20 + reduce * 20
       return {
-          title: {
+        title: {
           fontSize,
           lineHeight: `${1 + fontSize * 0.06}rem`,
 
           '&:hover': {
-            color: tag === 'a' ? 'red' : 'auto'
-          }
+            color: tag === 'a' ? 'red' : 'auto',
+          },
         },
       }
     },
@@ -49,7 +45,7 @@ export default class Title {
     spaced: {
       title: {
         margin: ['1.5rem', 0],
-      }
-    }
+      },
+    },
   }
 }

@@ -18,7 +18,6 @@ export default function view(View) {
 
   // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
-  Object.setPrototypeOf(View, React.Component)
 
   // add Helpers
   mixin(View.prototype, Helpers)

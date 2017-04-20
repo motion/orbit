@@ -32,7 +32,7 @@ module.exports = {
 
   resolve: {
     extensions: ['.js', '.json'],
-    modules: [paths.appSrc, paths.modelsNodeModules, paths.appNodeModules],
+    modules: [paths.modelsNodeModules, paths.appNodeModules],
   },
 
   module: {

@@ -1,4 +1,4 @@
-import { view, observable } from 'helpers'
+import { view, observable } from '~/helpers'
 import { range, result } from 'lodash'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 

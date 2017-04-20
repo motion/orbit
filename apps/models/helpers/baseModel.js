@@ -50,7 +50,6 @@ export default class BaseModel {
 
     if (this.hooks) {
       Object.keys(this.hooks).forEach(hook => {
-        console.log('adding hook', this.title, hook)
         this.collection[hook](this.hooks[hook])
       })
     }

@@ -1,16 +1,14 @@
-import { view, observable, idFn } from '~/helpers'
+import { view, observable } from '~/helpers'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
 import Poof from '~/views/poof'
 import React from 'react'
 import Editor from '~/views/editor'
 
-console.log('idfn', idFn)
-
 @view
 export default class DocItem {
   static defaultProps = {
-    onSaveTitle: idFn,
+    onSaveTitle: _ => _,
   }
 
   @observable editing = false

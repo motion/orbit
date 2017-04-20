@@ -16,5 +16,3 @@ export class Model extends BaseModel {
     })
   }
 }
-
-export const idFn = _ => _

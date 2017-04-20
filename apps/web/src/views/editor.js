@@ -107,20 +107,20 @@ export default class DocEditor extends Component {
   }
 
   render({ onRef }) {
-    const editorStyle = {
-      color: '#4c555a',
-      fontSize: 14,
-      lineHeight: 1.9,
-      fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
-    }
-
     return (
-      <editor>
-        <a onClick={() => this.addBlock('hello')}>add hello</a>
-        <a onClick={() => this.wrapLink()}>wrap link</a>
+      <editorroot>
+        <bar>
+          <a onClick={() => this.addBlock('hello')}>blck</a>
+          <a onClick={() => this.wrapLink()}>link</a>
+        </bar>
         <Editor
           state={this.state.val}
-          style={editorStyle}
+          style={{
+            color: '#4c555a',
+            fontSize: 16,
+            lineHeight: 1.5,
+            fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
+          }}
           plugins={plugins}
           key={1}
           schema={this.schema}
@@ -131,7 +131,20 @@ export default class DocEditor extends Component {
           onBlur={() => this.setState({ focused: false })}
           ref={onRef}
         />
-      </editor>
+      </editorroot>
     )
+  }
+
+  static style = {
+    bar: {
+      flexFlow: 'row',
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
+    a: {
+      padding: 5,
+    },
   }
 }

@@ -3,7 +3,7 @@ import { Place, Doc } from 'models'
 import { Text, Page } from 'views'
 import Router from 'router'
 import DocItem from '~/src/views/doc/item'
-import Document from '~/src/views/doc'
+import Document from '~/src/views/doc/document'
 
 class PlaceStore {
   place = Place.get(Router.params.name)

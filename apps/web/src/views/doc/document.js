@@ -64,52 +64,53 @@ export default class DocPage {
     }
 
     return (
-      <doc>
-        <top>
-          <input
-            $title
-            value={store.title}
-            onChange={e => store.newTitle = e.target.value}
-            onKeyDown={e => e.which === 13 && store.focusEditor()}
-            onFocus={() => store.editTitle()}
-            onBlur={() => store.saveTitle()}
-          />
+      <Page>
+        <Page.Main>
+          <top>
+            <input
+              $title
+              value={store.title}
+              onChange={e => store.newTitle = e.target.value}
+              onKeyDown={e => e.which === 13 && store.focusEditor()}
+              onFocus={() => store.editTitle()}
+              onBlur={() => store.saveTitle()}
+            />
+          </top>
+          <editor>
+            <Editor
+              onRef={ref => store.editorRef = ref}
+              content={doc.content}
+              onChange={store.update}
+            />
+          </editor>
+        </Page.Main>
+
+        <Page.Side>
           <ago>
             <span>last edited </span>
             <TimeAgo minPeriod={20} date={doc.updated_at} />
           </ago>
-        </top>
-        <editor>
-          <Editor
-            onRef={ref => store.editorRef = ref}
-            content={doc.content}
-            onChange={store.update}
-          />
-        </editor>
-        <places if={doc.places}>
-          belongs to places:
-          {doc.places.map(name => <place key={name}>{name}</place>)}
-        </places>
-      </doc>
+          <places if={doc.places}>
+            belongs to places:
+            {doc.places.map(name => <place key={name}>{name}</place>)}
+          </places>
+        </Page.Side>
+      </Page>
     )
   }
 
   static style = {
     top: {
-      flexFlow: 'row',
       justifyContent: 'space-between',
     },
     ago: {
       flexFlow: 'row',
     },
     title: {
-      fontSize: 24,
+      fontSize: 28,
       border: 'none',
-      padding: 0,
+      margin: [10, -1],
       width: '100%',
-    },
-    editor: {
-      marginTop: 20,
     },
   }
 }

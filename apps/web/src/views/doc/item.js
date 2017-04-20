@@ -45,8 +45,8 @@ export default class DocItem {
         >
           {doc.title}
         </title>
-        <author>by {doc.author_id}</author>
-        <TimeAgo minPeriod={10} date={doc.created_at} />
+        <author $meta>{doc.author_id}</author>
+        <TimeAgo $meta minPeriod={10} date={doc.created_at} />
         <delete
           onClick={e => {
             e.stopPropagation()
@@ -66,8 +66,7 @@ export default class DocItem {
       position: 'relative',
       borderRadius: 6,
       border: [1, [0, 0, 0, 0.1]],
-      padding: 20,
-      paddingBottom: 10,
+      padding: 12,
       margin: [0, 10, 10, 0],
       color: '#333',
       cursor: 'pointer',
@@ -76,12 +75,17 @@ export default class DocItem {
         borderColor: [0, 0, 0, 0.2],
       },
     },
-    author: {
-      alignSelf: 'right',
-      width: '100%',
+    meta: {
+      fontSize: 12,
+      color: [0, 0, 0, 0.4],
     },
     title: {
-      fontSize: 26,
+      fontSize: 18,
+      display: 'block',
+      width: '100%',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
       fontWeight: 500,
       pointerEvents: 'none',
       borderColor: 'transparent',

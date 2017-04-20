@@ -6,8 +6,7 @@ class Board extends Model {
     title: str,
     author_id: str,
     place_id: str,
-    created_at: str.datetime,
-    updated_at: str.datetime,
+    timestamps: true,
   }
 
   settings = {

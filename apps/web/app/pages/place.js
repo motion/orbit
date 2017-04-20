@@ -12,6 +12,12 @@ class PlaceStore {
   createDoc = () => {
     Doc.create({ places: [this.place.current.name] })
   }
+
+  makePrimary = doc => e => {
+    const { current } = this.place
+    current.primary_doc_id = doc._id
+    current.save()
+  }
 }
 
 @view({
@@ -19,7 +25,7 @@ class PlaceStore {
 })
 export default class PlacePage {
   render({ store }) {
-    const [place] = store.place.current || []
+    const place = store.place.current
 
     return (
       <Page if={place}>
@@ -33,8 +39,17 @@ export default class PlacePage {
           <button onClick={store.createDoc}>create</button>
 
           <docs if={store.docs.current}>
-            {(store.docs.current || [])
-              .map(doc => <DocItem key={doc._id} doc={doc} />)}
+            {(store.docs.current || []).map(doc => (
+              <DocItem
+                key={doc._id}
+                doc={doc}
+                after={
+                  <button onClick={store.makePrimary(doc)}>
+                    make primary
+                  </button>
+                }
+              />
+            ))}
           </docs>
         </Page.Side>
       </Page>

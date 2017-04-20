@@ -14,7 +14,7 @@ class DocStore {
   editorRef = null
 
   get doc() {
-    return this.docs && this.docs.current && this.docs.current[0]
+    return this.docs && this.docs.current
   }
 
   @observable editingTitle = false

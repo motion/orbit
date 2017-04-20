@@ -7,9 +7,8 @@ class Doc extends Model {
     content: object,
     board_id: str.optional,
     author_id: str,
-    created_at: str.datetime,
-    updated_at: str.datetime,
     places: array.optional.items(str),
+    timestamps: true,
   }
 
   static defaultProps = () => ({

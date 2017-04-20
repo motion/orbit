@@ -6,9 +6,8 @@ class Place extends Model {
   static props = {
     author_id: str,
     title: str,
-    created_at: str.datetime,
-    updated_at: str.datetime,
     primary_doc_id: str.optional,
+    timestamps: true,
   }
 
   static defaultProps = () => ({

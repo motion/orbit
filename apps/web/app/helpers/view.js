@@ -11,6 +11,11 @@ const Helpers = { addEvent, setInterval, setTimeout, ref, watch, react }
 
 // @view
 export default function view(View) {
+  // shorthand for providing stores to view
+  if (typeof View === 'object') {
+    return view.provide(View)
+  }
+
   // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
   Object.setPrototypeOf(View, React.Component)

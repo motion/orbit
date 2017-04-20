@@ -49,7 +49,6 @@ export default class App {
     // connect models
     for (const [name, model] of Object.entries(Models)) {
       await model.connect(this.db)
-      console.log('syncinc to', `${KEYS.url}/${model.title}`)
       model.collection.sync(`${KEYS.url}/${model.title}`)
     }
 

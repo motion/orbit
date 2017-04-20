@@ -2,9 +2,9 @@ import { view } from 'helpers'
 import App, { Place, Doc } from 'models'
 import Router from 'router'
 import { Page, Poof } from 'views'
-import DocItem from '~/src/views/doc/item'
+import DocItem from '~/views/doc/item'
 import FlipMove from 'react-flip-move'
-import Grid from '~/src/views/grid'
+import Grid from '~/views/grid'
 
 class HomeStore {
   places = Place.all()
@@ -27,7 +27,7 @@ class HomeStore {
   }
 }
 
-@view.provide({
+@view({
   store: HomeStore,
 })
 export default class Home {

@@ -1,9 +1,9 @@
 import { view, observable, idFn } from 'helpers'
 import TimeAgo from 'react-timeago'
 import Router from 'router'
-import Poof from '~/src/views/poof'
+import Poof from '~/views/poof'
 import React from 'react'
-import Editor from '~/src/views/editor'
+import Editor from '~/views/editor'
 
 @view
 export default class DocItem {
@@ -65,7 +65,7 @@ export default class DocItem {
         </delete>
 
         <content if={editable}>
-          <Editor doc={doc} />
+          <Editor inline doc={doc} />
         </content>
       </doc>
     )
@@ -104,20 +104,23 @@ export default class DocItem {
     },
     delete: {
       position: 'absolute',
-      top: 0,
-      right: 0,
+      top: 2,
+      right: 2,
       height: 16,
       width: 16,
       alignItems: 'center',
       justifyContent: 'center',
       fontWeight: 20,
-      fontSize: 12,
-      color: [0, 0, 0, 0.35],
+      fontSize: 14,
+      color: [0, 0, 0, 0.2],
       borderRadius: 1000,
       cursor: 'pointer',
       '&:hover': {
         background: '#eee',
       },
+    },
+    content: {
+      flex: 1,
     },
   }
 
@@ -136,7 +139,7 @@ export default class DocItem {
 
     editable: {
       doc: {
-        width: 300,
+        width: 'calc(50% - 10px)',
         height: 200,
       },
     },

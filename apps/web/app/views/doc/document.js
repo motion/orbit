@@ -40,7 +40,7 @@ class DocStore {
   }
 }
 
-@view.provide({
+@view({
   store: DocStore,
 })
 export default class DocPage {

@@ -12,7 +12,7 @@ export default class Root {
     return (
       <layout $$flex>
         <header $$row $$align="center">
-          <h1>Jot</h1>
+          <h1>pad</h1>
           <nav $$row>
             <a onClick={() => Router.go('/')}>home</a>
             <a onClick={() => Router.go('/projects')}>popular</a>

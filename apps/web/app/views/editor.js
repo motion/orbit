@@ -22,7 +22,7 @@ const plugins = [
   replaceShortcut(/^(##)$/, 'header2'),
 ]
 
-@view.provide({
+@view({
   store: class EditorStore {
     doc = null
 
@@ -124,36 +124,36 @@ export default class DocEditor extends Component {
     )
   }
 
-  render({ doc, onChange, ...props }) {
+  render({ doc, onChange, inline, ...props }) {
     return (
-      <editorroot>
-        <bar>
+      <root>
+        <bar if={!inline}>
           <a onClick={() => this.addBlock('hello')}>blck</a>
           <a onClick={() => this.wrapLink()}>link</a>
         </bar>
-        <Editor
-          state={this.state.val}
-          style={{
-            color: '#4c555a',
-            fontSize: 16,
-            lineHeight: 1.5,
-            fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
-          }}
-          plugins={plugins}
-          key={1}
-          schema={this.schema}
-          onKeyDown={this.onKeyDown}
-          onDocumentChange={this.onDocumentChange}
-          onChange={this.onChange}
-          onFocus={() => this.setState({ focused: true })}
-          onBlur={() => this.setState({ focused: false })}
-          {...props}
-        />
-      </editorroot>
+        <content>
+          <Editor
+            $editor
+            state={this.state.val}
+            plugins={plugins}
+            key={1}
+            schema={this.schema}
+            onKeyDown={this.onKeyDown}
+            onDocumentChange={this.onDocumentChange}
+            onChange={this.onChange}
+            onFocus={() => this.setState({ focused: true })}
+            onBlur={() => this.setState({ focused: false })}
+            {...props}
+          />
+        </content>
+      </root>
     )
   }
 
   static style = {
+    root: {
+      flex: 1,
+    },
     bar: {
       flexFlow: 'row',
       position: 'absolute',
@@ -163,6 +163,22 @@ export default class DocEditor extends Component {
     },
     a: {
       padding: 5,
+    },
+    editor: {
+      color: '#4c555a',
+      fontSize: 16,
+      lineHeight: 1.5,
+      fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
+    },
+  }
+
+  static theme = {
+    inline: {
+      content: {
+        flex: 1,
+        overflow: 'hidden',
+        overflowY: 'scroll',
+      },
     },
   }
 }

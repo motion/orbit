@@ -11,7 +11,6 @@ export default class Hello {
 
   render() {
     const { node } = this.props
-    console.log('node is', node)
 
     return (
       <hello>

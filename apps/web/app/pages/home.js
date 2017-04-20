@@ -1,8 +1,7 @@
 import { view } from '~/helpers'
 import App, { Place, Doc } from 'models'
 import FlipMove from 'react-flip-move'
-import Router from '~/router'
-import { Page, Poof } from '~/views'
+import { Page, Poof, CircleButton, Link } from '~/views'
 import DocItem from '~/views/doc/item'
 import Grid from '~/views/grid'
 
@@ -31,11 +30,6 @@ class HomeStore {
   store: HomeStore,
 })
 export default class Home {
-  link = piece => e => {
-    e.preventDefault()
-    Router.go(piece.url())
-  }
-
   componentDidUpdate() {
     if (this.props.store.createdDoc && this.docRef) {
       this.docRef.focus()
@@ -63,11 +57,11 @@ export default class Home {
     return (
       <Page>
         <Page.Main>
+          <CircleButton onClick={store.createDoc}>
+            +
+          </CircleButton>
           <Grid if={false} items={docs} />
           <FlipMove $docs duration={100} easing="ease-out">
-            <add onClick={store.createDoc}>
-              +
-            </add>
             {docs}
           </FlipMove>
         </Page.Main>
@@ -80,9 +74,9 @@ export default class Home {
           <places if={store.places.current}>
             {store.places.current.map(piece => (
               <piece key={Math.random()}>
-                <a href={piece.url()} onClick={this.link(piece)}>
+                <Link to={piece.url()}>
                   {piece.url()}
-                </a>
+                </Link>
               </piece>
             ))}
           </places>
@@ -109,31 +103,6 @@ export default class Home {
       fontWeight: 700,
       fontSize: 14,
       color: 'purple',
-    },
-    add: {
-      position: 'absolute',
-      top: -20,
-      left: -25,
-      width: 40,
-      height: 40,
-      borderRadius: 100,
-      border: [1, 'darkpurple'],
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      background: 'purple',
-      color: '#fff',
-      fontSize: 50,
-      fontWeight: 100,
-      cursor: 'pointer',
-      userSelect: 'none',
-      transition: 'all ease-in 100ms',
-      '&:hover': {
-        background: '#B535C4',
-        transform: {
-          scale: 1.2,
-        },
-      },
     },
   }
 }

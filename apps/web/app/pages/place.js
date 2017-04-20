@@ -1,6 +1,6 @@
 import { view, autorun } from '~/helpers'
 import { Place, Doc } from 'models'
-import { Text, Page } from '~/views'
+import { Text, Page, CircleButton } from '~/views'
 import Router from '~/router'
 import DocItem from '~/views/doc/item'
 import Document from '~/views/doc/document'
@@ -24,6 +24,7 @@ export default class PlacePage {
     return (
       <Page if={place}>
         <Page.Main>
+          <CircleButton $$background="#fff">+</CircleButton>
           <h2>Place: {place.title}</h2>
           <Document if={place.primary_doc_id} id={place.primary_doc_id} />
         </Page.Main>

@@ -32,7 +32,8 @@ module.exports = {
 
   resolve: {
     extensions: ['.js', '.json'],
-    modules: [paths.appNodeModules, paths.modelsNodeModules, 'node_modules'],
+    // WARNING: messing with this order is dangerous af
+    modules: [paths.modelsNodeModules, paths.appNodeModules, 'node_modules'],
   },
 
   module: {
@@ -80,9 +81,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin(env.stringified),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
     new CaseSensitivePathsPlugin(),
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    new webpack.NamedModulesPlugin(),
   ],
   node: {
     fs: 'empty',

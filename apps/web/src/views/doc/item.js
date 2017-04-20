@@ -1,11 +1,16 @@
-import { view, observable } from 'helpers'
+import { view, observable, idFn } from 'helpers'
 import TimeAgo from 'react-timeago'
 import Router from 'router'
 import Poof from '~/src/views/poof'
 import React from 'react'
+import Editor from '~/src/views/editor'
 
 @view
 export default class DocItem {
+  static defaultProps = {
+    onSaveTitle: idFn,
+  }
+
   @observable editing = false
 
   focus() {
@@ -20,22 +25,21 @@ export default class DocItem {
     doc.title = this.title.innerText
     doc.save()
     this.title.blur()
-    if (this.props.onSave) {
-      this.props.onSave(doc)
-    }
+    this.props.onSaveTitle(doc)
   }
 
-  render({ doc, children, getRef, onSave, slanty, ...props }) {
+  render({ doc, children, getRef, onSaveTitle, slanty, editable, ...props }) {
     getRef && getRef(this)
     if (children) {
       return <doc {...props}>{children}</doc>
     }
     return (
-      <doc onClick={() => Router.go(doc.url())} {...props}>
+      <doc {...props}>
         <title
           $editing={this.editing}
           ref={this.ref('title').set}
           contentEditable={this.editing}
+          onClick={() => Router.go(doc.url())}
           onKeyDown={e => {
             if (e.keyCode === 13) {
               e.preventDefault()
@@ -45,8 +49,10 @@ export default class DocItem {
         >
           {doc.title}
         </title>
-        <author $meta>{doc.author_id}</author>
-        <TimeAgo $meta minPeriod={10} date={doc.created_at} />
+        <meta if={false}>
+          <author>{doc.author_id}</author>
+          <TimeAgo minPeriod={10} date={doc.created_at} />
+        </meta>
         <delete
           onClick={e => {
             e.stopPropagation()
@@ -57,6 +63,10 @@ export default class DocItem {
           x
           <Poof ref={ref => this.poof = ref} />
         </delete>
+
+        <content if={editable}>
+          <Editor content={doc.content} />
+        </content>
       </doc>
     )
   }
@@ -69,7 +79,7 @@ export default class DocItem {
       padding: 12,
       margin: [0, 10, 10, 0],
       color: '#333',
-      cursor: 'pointer',
+      // cursor: 'pointer',
       '&:hover': {
         // boxShadow: 'inset 0 0 1px #000',
         borderColor: [0, 0, 0, 0.2],
@@ -88,14 +98,13 @@ export default class DocItem {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       fontWeight: 500,
-      pointerEvents: 'none',
+      cursor: 'pointer',
       borderColor: 'transparent',
       background: '-webkit-linear-gradient(right, purple, green)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
     },
     editing: {
-      pointerEvents: 'auto',
       border: [1, '#eee'],
     },
     delete: {
@@ -125,6 +134,13 @@ export default class DocItem {
             scale: `1.01`,
           },
         },
+      },
+    },
+
+    editable: {
+      doc: {
+        width: 300,
+        height: 300,
       },
     },
   }

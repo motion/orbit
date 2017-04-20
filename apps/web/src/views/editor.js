@@ -1,6 +1,6 @@
 import { Editor, Raw } from 'slate'
 import AutoReplace from 'slate-auto-replace'
-import { Component, view, observable } from 'helpers'
+import { Component, view, idFn } from 'helpers'
 import { Hello, Header, Link, Quote } from './nodes'
 import { startsWith } from 'lodash'
 import { throttle } from 'lodash-decorators'
@@ -22,10 +22,25 @@ const plugins = [
   replaceShortcut(/^(##)$/, 'header2'),
 ]
 
-@view
+@view.provide({
+  store: class EditorStore {
+    doc = null
+
+    @throttle(200)
+    update = val => {
+      this.doc.content = Raw.serialize(val)
+      this.doc.updated_at = new Date().toISOString()
+      this.doc.save()
+    }
+  },
+})
 export default class DocEditor extends Component {
+  static defaultProps = {
+    onChange: idFn,
+  }
+
   state = {
-    val: Raw.deserialize(this.props.content, { terse: true }),
+    val: Raw.deserialize(this.props.doc.content, { terse: true }),
     focused: false,
   }
 
@@ -41,6 +56,9 @@ export default class DocEditor extends Component {
   }
 
   componentWillMount() {
+    console.log('this', this)
+    this.props.store.doc = this.props.doc
+
     window._activeEditor = {
       destroy: key => {
         const state = this.state.val.transform().removeNodeByKey(key).apply()
@@ -50,14 +68,16 @@ export default class DocEditor extends Component {
   }
 
   @throttle(200)
-  onDocumentChange(doc, state) {
+  onDocumentChange = (doc, state) => {
+    console.log(this)
+    this.props.store.update(state)
     this.props.onChange(state)
   }
 
-  componentWillReceiveProps = ({ content }) => {
+  componentWillReceiveProps = ({ doc }) => {
     if (this.state.focused) return
 
-    const val = Raw.deserialize(content, { terse: true })
+    const val = Raw.deserialize(doc.content, { terse: true })
     this.setState({ val })
   }
 
@@ -106,7 +126,7 @@ export default class DocEditor extends Component {
     )
   }
 
-  render({ onRef }) {
+  render({ doc, onChange, ...props }) {
     return (
       <editorroot>
         <bar>
@@ -125,11 +145,11 @@ export default class DocEditor extends Component {
           key={1}
           schema={this.schema}
           onKeyDown={this.onKeyDown}
-          onDocumentChange={this.onDocumentChange.bind(this)}
+          onDocumentChange={this.onDocumentChange}
           onChange={this.onChange}
           onFocus={() => this.setState({ focused: true })}
           onBlur={() => this.setState({ focused: false })}
-          ref={onRef}
+          {...props}
         />
       </editorroot>
     )

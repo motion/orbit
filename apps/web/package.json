@@ -78,6 +78,7 @@
     "slate": "^0.19.18",
     "slate-auto-replace": "^0.4.2",
     "whatwg-fetch": "^2.0.3",
+    "react-portal": "*",
     "react-grid-layout": "*",
     "react-timeago": "*"
   },

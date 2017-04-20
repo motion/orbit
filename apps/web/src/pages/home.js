@@ -47,6 +47,7 @@ export default class Home {
     const docs = (store.docs.current || []).map((doc, i) => (
       <DocItem
         slanty
+        editable
         key={doc._id}
         getRef={ref => {
           // todo getRef is hacky workaround until this is fixed:
@@ -55,7 +56,6 @@ export default class Home {
             this.docRef = ref
           }
         }}
-        onSave={() => Router.go(doc.url())}
         doc={doc}
       />
     ))

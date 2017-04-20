@@ -3,7 +3,6 @@ import { view } from 'helpers'
 import { Page } from 'views'
 import Router from 'router'
 import Editor, { Raw } from 'views/editor'
-import { throttle } from 'lodash-decorators'
 import TimeAgo from 'react-timeago'
 import { observable, computed } from 'mobx'
 
@@ -16,13 +15,6 @@ class DocStore {
 
   get doc() {
     return this.docs && this.docs.current && this.docs.current[0]
-  }
-
-  @throttle(100)
-  update = val => {
-    this.doc.content = Raw.serialize(val)
-    this.doc.updated_at = new Date().toISOString()
-    this.doc.save()
   }
 
   @observable editingTitle = false
@@ -77,11 +69,7 @@ export default class DocPage {
             />
           </top>
           <editor>
-            <Editor
-              onRef={ref => store.editorRef = ref}
-              content={doc.content}
-              onChange={store.update}
-            />
+            <Editor ref={ref => store.editorRef = ref} doc={doc} />
           </editor>
         </Page.Main>
 

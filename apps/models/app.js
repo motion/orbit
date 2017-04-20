@@ -19,19 +19,16 @@ export default class App {
   @observable user = null
 
   constructor() {
+    RxDB.plugin(pHTTP)
     RxDB.plugin(pIDB)
     RxDB.plugin(pREPL)
-    RxDB.plugin(pHTTP)
     PouchDB.plugin(pAuth)
+    PouchDB.plugin(pHTTP)
 
     // expose models onto app
     for (const [name, model] of Object.entries(Models)) {
       this[name] = model
     }
-  }
-
-  get pouch() {
-    return this.db._adminPouch
   }
 
   async connect() {

@@ -76,11 +76,12 @@ export default class DocItem {
       },
     },
     meta: {
-      fontSize: 12,
+      fontSize: 13,
       color: [0, 0, 0, 0.4],
     },
     title: {
       fontSize: 18,
+      margin: [3, 0],
       display: 'block',
       width: '100%',
       overflow: 'hidden',
@@ -89,6 +90,9 @@ export default class DocItem {
       fontWeight: 500,
       pointerEvents: 'none',
       borderColor: 'transparent',
+      background: '-webkit-linear-gradient(right, purple, green)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
     },
     editing: {
       pointerEvents: 'auto',

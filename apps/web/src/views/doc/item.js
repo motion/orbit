@@ -25,7 +25,7 @@ export default class DocItem {
     }
   }
 
-  render({ doc, children, getRef, onSave, ...props }) {
+  render({ doc, children, getRef, onSave, slanty, ...props }) {
     getRef && getRef(this)
     if (children) {
       return <doc {...props}>{children}</doc>
@@ -72,10 +72,6 @@ export default class DocItem {
       color: '#333',
       cursor: 'pointer',
       '&:hover': {
-        transform: {
-          rotate: `-1deg`,
-          scale: `1.01`,
-        },
         // boxShadow: 'inset 0 0 1px #000',
         borderColor: [0, 0, 0, 0.2],
       },
@@ -108,6 +104,19 @@ export default class DocItem {
       borderRadius: 1000,
       '&:hover': {
         background: '#eee',
+      },
+    },
+  }
+
+  static theme = {
+    slanty: {
+      doc: {
+        '&:hover': {
+          transform: {
+            rotate: `-1deg`,
+            scale: `1.01`,
+          },
+        },
       },
     },
   }

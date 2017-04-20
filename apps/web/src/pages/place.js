@@ -7,6 +7,10 @@ import DocItem from '~/src/views/doc/item'
 class PlaceStore {
   place = Place.get(Router.params.name)
   docs = Doc.forBoard(Router.params.name)
+
+  createDoc = () => {
+    Doc.create({ places: [this.place.current.name] })
+  }
 }
 
 @view.provide({
@@ -19,7 +23,10 @@ export default class PlacePage {
     return (
       <Page if={active}>
         <Page.Main>
-          {active.title}
+          place: {active.title}
+
+          <button onClick={store.createDoc}>create</button>
+
           <docs if={store.docs.current}>
             {(store.docs.current || [])
               .map(doc => <DocItem key={doc._id} doc={doc} />)}

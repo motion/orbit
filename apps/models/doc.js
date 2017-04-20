@@ -1,4 +1,5 @@
 import { Model, query, str, object, array } from './helpers'
+import generateName from 'sillyname'
 
 class Doc extends Model {
   static props = {
@@ -12,6 +13,7 @@ class Doc extends Model {
   }
 
   static defaultProps = () => ({
+    title: generateName(),
     author_id: App.user.name,
     places: ['ddd'],
     content: {
@@ -42,10 +44,17 @@ class Doc extends Model {
   }
 
   @query all = () => this.collection.find()
+
   @query recent = () => this.collection.find().sort({ created_at: 'desc' })
+
   @query get = id => this.collection.findOne(id.replace('-', ':'));
+
   @query forBoard = name =>
-    this.collection.find().where('places').elemMatch({ $eq: name })
+    this.collection
+      .find()
+      .where('places')
+      .elemMatch({ $eq: name })
+      .sort({ created_at: 'desc' })
 }
 
 export default new Doc()

@@ -14,6 +14,7 @@ export default class Quote {
   static style = {
     blockquote: {
       borderLeft: `2px solid #ddd`,
+      fontSize: 18,
       paddingLeft: 10,
       marginLeft: 0,
       marginRight: 0,

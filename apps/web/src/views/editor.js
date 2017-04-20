@@ -3,6 +3,7 @@ import AutoReplace from 'slate-auto-replace'
 import { Component, view, observable } from 'helpers'
 import { Hello, Header, Link, Quote } from './nodes'
 import { startsWith } from 'lodash'
+import { throttle } from 'lodash-decorators'
 
 export { Raw } from 'slate'
 
@@ -25,6 +26,7 @@ const plugins = [
 export default class DocEditor extends Component {
   state = {
     val: Raw.deserialize(this.props.content, { terse: true }),
+    focused: false,
   }
 
   schema = {
@@ -47,11 +49,20 @@ export default class DocEditor extends Component {
     }
   }
 
+  @throttle(200)
+  onDocumentChange(doc, state) {
+    this.props.onChange(state)
+  }
+
+  componentWillReceiveProps = ({ content }) => {
+    if (this.state.focused) return
+
+    const val = Raw.deserialize(content, { terse: true })
+    this.setState({ val })
+  }
+
   onChange = val => {
     this.setState({ val })
-    if (this.props.onChange) {
-      this.props.onChange(val)
-    }
   }
 
   newParagraph = state =>
@@ -82,10 +93,9 @@ export default class DocEditor extends Component {
 
   wrapLink = () => {
     const href = window.prompt('Enter the URL of the link:')
-    const { val } = this.state
 
     this.onChange(
-      val
+      this.state.val
         .transform()
         .wrapInline({
           type: 'link',
@@ -112,9 +122,13 @@ export default class DocEditor extends Component {
           state={this.state.val}
           style={editorStyle}
           plugins={plugins}
+          key={1}
           schema={this.schema}
           onKeyDown={this.onKeyDown}
+          onDocumentChange={this.onDocumentChange.bind(this)}
           onChange={this.onChange}
+          onFocus={() => this.setState({ focused: true })}
+          onBlur={() => this.setState({ focused: false })}
           ref={onRef}
         />
       </editor>

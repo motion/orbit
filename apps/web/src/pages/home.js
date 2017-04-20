@@ -4,6 +4,7 @@ import Router from 'router'
 import { Page, Poof } from 'views'
 import DocItem from '~/src/views/doc/item'
 import FlipMove from 'react-flip-move'
+import Grid from '~/src/views/grid'
 
 class HomeStore {
   places = Place.all()
@@ -43,28 +44,31 @@ export default class Home {
   }
 
   render({ store }) {
+    const docs = (store.docs.current || []).map((doc, i) => (
+      <DocItem
+        slanty
+        key={doc._id}
+        getRef={ref => {
+          // todo getRef is hacky workaround until this is fixed:
+          // https://github.com/joshwcomeau/react-flip-move/issues/140
+          if (i === 0) {
+            this.docRef = ref
+          }
+        }}
+        onSave={() => Router.go(doc.url())}
+        doc={doc}
+      />
+    ))
+
     return (
       <Page>
         <Page.Main>
+          <Grid if={false} items={docs} />
           <FlipMove $docs duration={100} easing="ease-out">
             <DocItem onClick={store.createDoc}>
               <strong>+</strong>
             </DocItem>
-            {(store.docs.current || []).map((doc, i) => (
-              <DocItem
-                slanty
-                key={doc._id}
-                getRef={ref => {
-                  // todo getRef is hacky workaround until this is fixed:
-                  // https://github.com/joshwcomeau/react-flip-move/issues/140
-                  if (i === 0) {
-                    this.docRef = ref
-                  }
-                }}
-                onSave={() => Router.go(doc.url())}
-                doc={doc}
-              />
-            ))}
+            {docs}
           </FlipMove>
         </Page.Main>
 

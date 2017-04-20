@@ -21,7 +21,7 @@ export default function view(View) {
   // pass props/context to render
   const or = View.prototype.render
   View.prototype.render = function() {
-    return or.call(this, this.props, this.context)
+    return or.call(this, this.props, this.state, this.context)
   }
 
   // order important: autobind, gloss, mobx

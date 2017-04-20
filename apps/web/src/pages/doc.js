@@ -80,7 +80,6 @@ export default class DocPage {
               onChange={store.update}
             />
           </editor>
-          <h1>date is {doc.updated_at}</h1>
           <places if={doc.places}>
             belongs to places:
             {doc.places.map(name => <place key={name}>{name}</place>)}

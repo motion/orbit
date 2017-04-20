@@ -23,8 +23,8 @@ export class Link {
 export const CircleButton = $('a', {
   display: 'flex',
   position: 'absolute',
-  top: -20,
-  left: -25,
+  top: -15,
+  left: -15,
   width: 40,
   height: 40,
   borderRadius: 100,

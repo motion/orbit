@@ -24,7 +24,7 @@ export default class PlacePage {
     return (
       <Page if={place}>
         <Page.Main>
-          <CircleButton $$background="#fff">+</CircleButton>
+          <CircleButton $$background="#fff">join</CircleButton>
           <h2>Place: {place.title}</h2>
           <Document if={place.primary_doc_id} id={place.primary_doc_id} />
         </Page.Main>

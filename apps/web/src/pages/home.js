@@ -65,9 +65,9 @@ export default class Home {
         <Page.Main>
           <Grid if={false} items={docs} />
           <FlipMove $docs duration={100} easing="ease-out">
-            <DocItem onClick={store.createDoc}>
-              <strong>+</strong>
-            </DocItem>
+            <add onClick={store.createDoc}>
+              +
+            </add>
             {docs}
           </FlipMove>
         </Page.Main>
@@ -96,6 +96,7 @@ export default class Home {
       flexFlow: 'row',
       flexWrap: 'wrap',
       flex: 1,
+      position: 'relative',
     },
     form: {
       padding: [0, 0, 20, 0],
@@ -108,6 +109,31 @@ export default class Home {
       fontWeight: 700,
       fontSize: 14,
       color: 'purple',
+    },
+    add: {
+      position: 'absolute',
+      top: -20,
+      left: -25,
+      width: 40,
+      height: 40,
+      borderRadius: 100,
+      border: [1, 'darkpurple'],
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      background: 'purple',
+      color: '#fff',
+      fontSize: 50,
+      fontWeight: 100,
+      cursor: 'pointer',
+      userSelect: 'none',
+      transition: 'all ease-in 100ms',
+      '&:hover': {
+        background: '#B535C4',
+        transform: {
+          scale: 1.2,
+        },
+      },
     },
   }
 }

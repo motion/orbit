@@ -1,7 +1,7 @@
 import { $ } from 'helpers'
 
 export const Page = $('section', {
-  padding: [0, 10],
+  padding: 10,
   flexFlow: 'row',
 })
 

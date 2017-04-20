@@ -79,11 +79,6 @@ export default class DocItem {
       padding: 12,
       margin: [0, 10, 10, 0],
       color: '#333',
-      // cursor: 'pointer',
-      '&:hover': {
-        // boxShadow: 'inset 0 0 1px #000',
-        borderColor: [0, 0, 0, 0.2],
-      },
     },
     meta: {
       fontSize: 13,
@@ -110,7 +105,7 @@ export default class DocItem {
     delete: {
       position: 'absolute',
       top: 0,
-      left: 0,
+      right: 0,
       height: 16,
       width: 16,
       alignItems: 'center',
@@ -130,6 +125,7 @@ export default class DocItem {
     slanty: {
       doc: {
         '&:hover': {
+          borderColor: '#333',
           transform: {
             rotate: `-1deg`,
             scale: `1.01`,
@@ -141,7 +137,7 @@ export default class DocItem {
     editable: {
       doc: {
         width: 300,
-        height: 300,
+        height: 200,
       },
     },
   }

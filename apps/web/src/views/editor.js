@@ -56,7 +56,6 @@ export default class DocEditor extends Component {
   }
 
   componentWillMount() {
-    console.log('this', this)
     this.props.store.doc = this.props.doc
 
     window._activeEditor = {
@@ -69,7 +68,6 @@ export default class DocEditor extends Component {
 
   @throttle(200)
   onDocumentChange = (doc, state) => {
-    console.log(this)
     this.props.store.update(state)
     this.props.onChange(state)
   }

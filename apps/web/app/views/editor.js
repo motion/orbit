@@ -68,8 +68,9 @@ export default class DocEditor extends Component {
 
   @throttle(200)
   onDocumentChange = (doc, state) => {
-    this.props.store.update(state)
-    this.props.onChange(state)
+    const { store, onChange } = this.props
+    store.update(state)
+    if (onChange) onChange(state)
   }
 
   componentWillReceiveProps = ({ doc }) => {

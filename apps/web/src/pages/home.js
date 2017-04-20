@@ -3,7 +3,6 @@ import App, { Place, Doc } from 'models'
 import Router from 'router'
 import { Page, Poof } from 'views'
 import DocItem from '~/src/views/doc/item'
-import generateName from 'sillyname'
 import FlipMove from 'react-flip-move'
 
 class HomeStore {
@@ -14,7 +13,7 @@ class HomeStore {
 
   createDoc = e => {
     e.preventDefault()
-    Doc.create({ title: generateName() })
+    Doc.create()
     this.createdDoc = true
   }
 
@@ -53,6 +52,7 @@ export default class Home {
             </DocItem>
             {(store.docs.current || []).map((doc, i) => (
               <DocItem
+                slanty
                 key={doc._id}
                 getRef={ref => {
                   // todo getRef is hacky workaround until this is fixed:

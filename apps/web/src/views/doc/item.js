@@ -13,7 +13,7 @@ export default class DocItem {
 
   @observable editing = false
 
-  focus() {
+  focus = () => {
     this.editing = true
     this.setTimeout(() => {
       this.title.focus()
@@ -21,7 +21,7 @@ export default class DocItem {
     }, 10)
   }
 
-  onEnter(doc) {
+  onEnter = doc => {
     doc.title = this.title.innerText
     doc.save()
     this.title.blur()
@@ -65,7 +65,7 @@ export default class DocItem {
         </delete>
 
         <content if={editable}>
-          <Editor content={doc.content} />
+          <Editor doc={doc} />
         </content>
       </doc>
     )
@@ -119,6 +119,7 @@ export default class DocItem {
       fontSize: 12,
       color: [0, 0, 0, 0.35],
       borderRadius: 1000,
+      cursor: 'pointer',
       '&:hover': {
         background: '#eee',
       },

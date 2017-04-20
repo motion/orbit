@@ -1,3 +1,4 @@
+import App from './index'
 import { Model, query, str } from './helpers'
 import Board from './board'
 
@@ -7,7 +8,12 @@ class Place extends Model {
     title: str,
     created_at: str.datetime,
     updated_at: str.datetime,
+    primary_doc_id: str.optional,
   }
+
+  static defaultProps = () => ({
+    author_id: App.user.name,
+  })
 
   settings = {
     title: 'Place',

@@ -32,29 +32,11 @@ var handleCompile
 
 function setupCompiler(host, port, protocol) {
   // "Compiler" is a low-level interface to Webpack.
-  // It lets us listen to some events and provide our own custom messages.
   compiler = webpack(config, handleCompile)
-
-  // "invalid" event fires when you have changed a file, and Webpack is
-  // recompiling a bundle. WebpackDevServer takes care to pause serving the
-  // bundle, so if you refresh, it'll wait instead of serving the old one.
-  // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
-  compiler.plugin('invalid', function() {
-    if (isInteractive) {
-      clearConsole()
-    }
-    console.log('Compiling...')
-  })
-
-  var isFirstCompile = true
 
   // "done" event fires when Webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
   compiler.plugin('done', function(stats) {
-    if (isInteractive) {
-      clearConsole()
-    }
-
     // We have switched off the default Webpack output in WebpackDevServer
     // options so we are going to "massage" the warnings and errors and present
     // them in a readable focused way.
@@ -63,27 +45,8 @@ function setupCompiler(host, port, protocol) {
 
     if (isSuccessful) {
       console.log(chalk.green('Compiled successfully!'))
-    }
-
-    // If errors exist, only show errors.
-    if (messages.errors.length) {
-      console.log(chalk.red('Failed to compile.'))
-      console.log()
-      messages.errors.forEach(message => {
-        console.log(message)
-        console.log()
-      })
-      return
-    }
-
-    // Show warnings if no errors were found.
-    if (messages.warnings.length) {
-      console.log(chalk.yellow('Compiled with warnings.'))
-      console.log()
-      messages.warnings.forEach(message => {
-        console.log(message)
-        console.log()
-      })
+    } else {
+      console.log(stats.toString())
     }
   })
 }

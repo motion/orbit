@@ -1,4 +1,4 @@
-import { compile } from 'kontur'
+import { compile, str } from 'kontur'
 
 export default class BaseModel {
   constructor({ defaultSchema, defaultProps }) {
@@ -6,8 +6,28 @@ export default class BaseModel {
     this.compiledSchema = {
       ...this.defaultSchema,
       ...this.settings,
-      ...compile(this.constructor.props),
+      ...compile(this.props),
     }
+  }
+
+  get hasTimestamps() {
+    return this.constructor.props.timestamps === true
+  }
+
+  get now() {
+    return new Date().toISOString()
+  }
+
+  get props() {
+    const { timestamps, ...props } = this.constructor.props
+    if (timestamps) {
+      return {
+        ...props,
+        created_at: str.datetime,
+        updated_at: str.datetime,
+      }
+    }
+    return props
   }
 
   get defaultProps() {
@@ -48,23 +68,33 @@ export default class BaseModel {
       await this.collection.pouch.createIndex({ fields: this.settings.index })
     }
 
-    if (this.hooks) {
-      Object.keys(this.hooks).forEach(hook => {
-        this.collection[hook](this.hooks[hook])
-      })
-    }
-  }
+    // setup hooks
+    this.hooks = this.hooks || {}
 
-  timestamps(...props) {
-    const defined = props.filter(x => !!this.compiledSchema.properties[x])
-    const values = defined.reduce(
-      (acc, cur) => ({
-        ...acc,
-        [cur]: new Date().toISOString(),
-      }),
-      {}
-    )
-    return values
+    // auto timestamps
+    if (this.hasTimestamps) {
+      const ogInsert = this.hooks.preInsert
+      this.hooks.preInsert = doc => {
+        doc.created_at = this.now
+        doc.updated_at = this.now
+        console.log('got em', doc)
+        if (ogInsert) {
+          ogInsert.apply(this, arguments)
+        }
+      }
+
+      const ogSave = this.hooks.preSave
+      this.hooks.preSave = doc => {
+        doc.updated_at = this.now
+        if (ogSave) {
+          ogSave.apply(this, arguments)
+        }
+      }
+    }
+
+    Object.keys(this.hooks).forEach(hook => {
+      this.collection[hook](this.hooks[hook])
+    })
   }
 
   // helpers
@@ -73,7 +103,6 @@ export default class BaseModel {
     const properties = {
       ...object,
       ...this.defaultProps,
-      ...this.timestamps('created_at', 'updated_at'),
     }
     return this.collection.insert(properties)
   }

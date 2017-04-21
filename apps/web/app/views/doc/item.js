@@ -28,7 +28,17 @@ export default class DocItem {
     this.props.onSaveTitle(doc)
   }
 
-  render({ doc, children, getRef, onSaveTitle, slanty, editable, ...props }) {
+  render({
+    doc,
+    children,
+    getRef,
+    onSaveTitle,
+    slanty,
+    editable,
+    after,
+    height,
+    ...props
+  }) {
     // hack for now
     getRef && getRef(this)
 
@@ -39,9 +49,10 @@ export default class DocItem {
       <doc {...props}>
         <title
           $editing={this.editing}
+          $$height={height}
           ref={this.ref('title').set}
           contentEditable={this.editing}
-          onClick={() => Router.go(doc.url())}
+          onDoubleClick={() => Router.go(doc.url())}
           onKeyDown={e => {
             if (e.keyCode === 13) {
               e.preventDefault()
@@ -69,6 +80,8 @@ export default class DocItem {
         <content if={editable}>
           <Editor inline doc={doc} />
         </content>
+
+        {after}
       </doc>
     )
   }

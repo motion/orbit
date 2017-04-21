@@ -1,26 +1,38 @@
-'use strict'
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
+const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
+const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
+const getClientEnvironment = require('./env')
+const paths = require('./paths')
+const publicPath = '/'
+const publicUrl = ''
+const env = getClientEnvironment(publicUrl)
 
-var webpack = require('webpack')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
-var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
-var getClientEnvironment = require('./env')
-var paths = require('./paths')
+const IS_PROD = process.env.NODE_ENV === 'production'
+const IS_DEV = !IS_PROD
+const filtered = ls => ls.filter(x => !!x)
 
-var publicPath = '/'
-var publicUrl = ''
-var env = getClientEnvironment(publicUrl)
+let config
 
-module.exports = {
-  devtool: 'cheap-module-source-map',
+if (IS_PROD) {
+  config = {
+    devtool: 'source-map',
+    bail: true,
+  }
+} else {
+  config = {
+    devtool: 'cheap-module-source-map',
+  }
+}
 
-  entry: [
+module.exports = Object.assign(config, {
+  entry: filtered([
     // require.resolve('react-hot-loader/patch'),
-    require.resolve('react-dev-utils/webpackHotDevClient'),
+    IS_DEV && require.resolve('react-dev-utils/webpackHotDevClient'),
     require.resolve('./polyfills'),
     paths.appIndexJs,
-  ],
+  ]),
 
   output: {
     path: paths.appBuild,
@@ -32,7 +44,8 @@ module.exports = {
 
   resolve: {
     extensions: ['.js', '.json'],
-    modules: [paths.appNodeModules, paths.modelsNodeModules, 'node_modules'],
+    // WARNING: messing with this order is dangerous af
+    modules: [paths.modelsNodeModules, paths.appNodeModules, 'node_modules'],
   },
 
   module: {
@@ -72,7 +85,7 @@ module.exports = {
     ],
   },
 
-  plugins: [
+  plugins: filtered([
     new InterpolateHtmlPlugin(env.raw),
     new HtmlWebpackPlugin({
       inject: true,
@@ -80,13 +93,31 @@ module.exports = {
     }),
     new webpack.DefinePlugin(env.stringified),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
     new CaseSensitivePathsPlugin(),
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-  ],
+    new webpack.NamedModulesPlugin(),
+
+    // production
+    IS_PROD &&
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          screw_ie8: true,
+          warnings: false,
+        },
+        mangle: {
+          screw_ie8: true,
+        },
+        output: {
+          comments: false,
+          screw_ie8: true,
+        },
+      }),
+
+    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+  ]),
   node: {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
   },
-}
+})

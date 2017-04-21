@@ -12,19 +12,13 @@ export default class Grid {
     onLayoutChange: () => {},
   }
 
-  @observable.ref layout = null
-
-  componentWillMount() {
-    this.layout = this.generateLayout()
-  }
-
-  generateLayout = () => {
+  get layout() {
     const { items } = this.props
     return items.map((_, i) => {
       const y = result(this.props, 'y') || Math.ceil(Math.random() * 4) + 1
       return {
         x: i * 2 % 12,
-        y: Math.floor(i / 6) * y,
+        y: 1,
         w: 2,
         h: y,
         i: `${i}`,

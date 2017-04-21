@@ -3019,9 +3019,9 @@ motion-rxdb@^3.0.5:
     unload "^1.3.5"
     url "0.11.0"
 
-motion-view@^1.0.7:
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/motion-view/-/motion-view-1.0.13.tgz#ae98028955b42432bc3f73abf36dcd81a4725ac9"
+motion-view@^1.0.15:
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/motion-view/-/motion-view-1.0.15.tgz#d0e705bdb4f1016b13de8b8634aa2fcabbeb9311"
   dependencies:
     react "^15.4.2"
 
@@ -3046,6 +3046,10 @@ ncname@1.0.x:
   resolved "https://registry.yarnpkg.com/ncname/-/ncname-1.0.0.tgz#5b57ad18b1ca092864ef62b0b1ed8194f383b71c"
   dependencies:
     xml-char-classes "^1.0.0"
+
+ncp@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ncp/-/ncp-2.0.0.tgz#195a21d6c46e361d2fb1281ba38b91e9df7bdbb3"
 
 negotiator@0.6.1:
   version "0.6.1"

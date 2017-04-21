@@ -10,7 +10,7 @@
     "pouchdb-adapter-idb": "^6.1.2",
     "pouchdb-authentication": "^0.5.5",
     "pouchdb-replication": "^6.1.2",
-    "motion-rxdb": "^3.0.0",
+    "rxdb": "^3.0.0",
     "rxjs": "^5.3.0"
   }
 }

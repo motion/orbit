@@ -18,8 +18,8 @@ export default class Counter {
     const { node: { data } } = this.props
 
     return (
-      <div contenteditable="false">
-        <h1 abc={'' + false} contenteditable={false}>
+      <div contentEditable="false">
+        <h1>
           count is {data.get('count')}
         </h1>
         <a

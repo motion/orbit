@@ -1,7 +1,7 @@
 import { Editor, Raw } from 'slate'
 import AutoReplace from 'slate-auto-replace'
 import { Component, view } from '~/helpers'
-import { Hello, Header, Link, Quote } from './nodes'
+import { Counter, Header, Link, Quote } from './nodes'
 import { startsWith } from 'lodash'
 import { throttle } from 'lodash-decorators'
 
@@ -12,7 +12,7 @@ const replaceShortcut = (char, type) =>
     trigger: 'space',
     before: char, // /^(>)$/,
     transform: (transform, e, data, matches) => {
-      return transform.setBlock({ type })
+      return transform.setBlock({ type, data: {} })
     },
   })
 
@@ -20,6 +20,7 @@ const plugins = [
   replaceShortcut(/^(>)$/, 'quote'),
   replaceShortcut(/^(#)$/, 'header'),
   replaceShortcut(/^(##)$/, 'header2'),
+  replaceShortcut(/^(\$counter)$/, 'counter'),
 ]
 
 @view({
@@ -46,8 +47,8 @@ export default class DocEditor extends Component {
 
   schema = {
     nodes: {
-      hello: Hello,
       link: Link,
+      counter: Counter,
       header: Header(26),
       header2: Header(20),
       paragraph: props => <p>{props.children}</p>,
@@ -62,6 +63,17 @@ export default class DocEditor extends Component {
       destroy: key => {
         const state = this.state.val.transform().removeNodeByKey(key).apply()
         this.onChange(state)
+      },
+
+      save: (key, data) => {
+        const { store, onChange } = this.props
+        const state = this.state.val
+          .transform()
+          .setNodeByKey(key, { data })
+          .apply()
+
+        store.update(state)
+        if (onChange) onChange(state)
       },
     }
   }
@@ -129,7 +141,7 @@ export default class DocEditor extends Component {
     return (
       <root>
         <bar if={!inline}>
-          <a onClick={() => this.addBlock('hello')}>blck</a>
+          <a onClick={() => this.addBlock('counter')}>blck</a>
           <a onClick={() => this.wrapLink()}>link</a>
         </bar>
         <content>

@@ -1,24 +1,24 @@
 process.env.NODE_ENV = 'development'
 
-var chalk = require('chalk')
-var webpack = require('webpack')
-var WebpackDevServer = require('webpack-dev-server')
-var historyApiFallback = require('connect-history-api-fallback')
-var httpProxyMiddleware = require('http-proxy-middleware')
-var detect = require('detect-port')
-var clearConsole = require('react-dev-utils/clearConsole')
-var checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
-var formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
-var getProcessForPort = require('react-dev-utils/getProcessForPort')
-var openBrowser = require('react-dev-utils/openBrowser')
-var prompt = require('react-dev-utils/prompt')
-var fs = require('fs')
-var config = require('./config/webpack.config.dev')
-var paths = require('./config/paths')
+const chalk = require('chalk')
+const webpack = require('webpack')
+const WebpackDevServer = require('webpack-dev-server')
+const historyApiFallback = require('connect-history-api-fallback')
+const httpProxyMiddleware = require('http-proxy-middleware')
+const detect = require('detect-port')
+const clearConsole = require('react-dev-utils/clearConsole')
+const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
+const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
+const getProcessForPort = require('react-dev-utils/getProcessForPort')
+const openBrowser = require('react-dev-utils/openBrowser')
+const prompt = require('react-dev-utils/prompt')
+const fs = require('fs')
+const config = require('./config/webpack')
+const paths = require('./config/paths')
 
-var useYarn = fs.existsSync(paths.yarnLockFile)
-var cli = useYarn ? 'yarn' : 'npm'
-var isInteractive = false
+const useYarn = fs.existsSync(paths.yarnLockFile)
+const cli = useYarn ? 'yarn' : 'npm'
+const isInteractive = false
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -26,9 +26,9 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-var DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3001
-var compiler
-var handleCompile
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3001
+let compiler
+let handleCompile
 
 function setupCompiler(host, port, protocol) {
   // "Compiler" is a low-level interface to Webpack.

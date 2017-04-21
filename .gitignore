@@ -5,3 +5,4 @@ lib
 .vscode
 app_data
 shrinkwrap.yaml
+build

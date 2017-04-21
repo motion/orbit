@@ -36,6 +36,7 @@ export default class DocItem {
     slanty,
     editable,
     after,
+    height,
     ...props
   }) {
     // hack for now
@@ -48,9 +49,10 @@ export default class DocItem {
       <doc {...props}>
         <title
           $editing={this.editing}
+          $$height={height}
           ref={this.ref('title').set}
           contentEditable={this.editing}
-          onClick={() => Router.go(doc.url())}
+          onDoubleClick={() => Router.go(doc.url())}
           onKeyDown={e => {
             if (e.keyCode === 13) {
               e.preventDefault()

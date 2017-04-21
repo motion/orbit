@@ -38,6 +38,8 @@ export default class Home {
   }
 
   render({ store }) {
+    const cardHeight = 200
+
     const docs = (store.docs.current || []).map((doc, i) => (
       <DocItem
         slanty
@@ -60,7 +62,7 @@ export default class Home {
           <CircleButton onClick={store.createDoc}>
             +
           </CircleButton>
-          <Grid if={false} items={docs} />
+          <Grid if={false} rowHeight={cardHeight} items={docs} />
           <FlipMove $docs duration={100} easing="ease-out">
             {docs}
           </FlipMove>

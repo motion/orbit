@@ -1,7 +1,7 @@
-echo $(ls .)
-ls node_modules
+echo $(ls node_modules)
+echo $(ls node_modules/lerna)
+echo $(ls node_modules/.bin)
 
-echo $(pwd)
 echo "hi"
 
-./node_modules/.bin/lerna bootstrap
+# ./node_modules/lerna bootstrap

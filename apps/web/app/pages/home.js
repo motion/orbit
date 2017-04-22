@@ -4,9 +4,9 @@ import FlipMove from 'react-flip-move'
 import { Page, Poof, CircleButton, Link, Input } from '~/views'
 import DocItem from '~/views/doc/item'
 import Grid from '~/views/grid'
+import Sidebar from '~/views/layout/sidebar'
 
 class HomeStore {
-  places = Place.all()
   docs = Doc.recent()
   place = null
   createdDoc = false
@@ -67,24 +67,6 @@ export default class Home {
             {docs}
           </FlipMove>
         </Page.Main>
-
-        <Page.Side>
-          <h2>Rooms</h2>
-          <form if={App.user} onSubmit={store.createPlace}>
-            <Input
-              $create
-              ref={ref => store.place = ref}
-              placeholder="Create..."
-            />
-          </form>
-          <places if={store.places.current}>
-            {store.places.current.map(piece => (
-              <Link $piece to={piece.url()} key={piece._id}>
-                {piece.title}
-              </Link>
-            ))}
-          </places>
-        </Page.Side>
       </Page>
     )
   }
@@ -99,23 +81,8 @@ export default class Home {
     form: {
       padding: [0, 0, 20, 0],
     },
-    h2: {
-      fontSize: 14,
-      color: [0, 0, 0, 0.5],
-    },
     form: {
       margin: 0,
-    },
-    piece: {
-      width: '100%',
-      fontWeight: 700,
-      fontSize: 16,
-      color: 'purple',
-      padding: [3, 4],
-      cursor: 'pointer',
-      '&:hover': {
-        background: '#f2f2f2',
-      },
     },
   }
 }

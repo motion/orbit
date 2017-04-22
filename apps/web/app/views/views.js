@@ -1,4 +1,5 @@
-import { $ } from '~/helpers'
+import { $, view } from '~/helpers'
+import Sidebar from '~/views/layout/sidebar'
 
 export const Input = $('input', {
   border: [1, '#eee'],
@@ -46,20 +47,37 @@ export const CircleButton = $('a', {
   },
 })
 
-export const Page = $('section', {
-  padding: 10,
-  flexFlow: 'row',
-})
+@view
+export class Page {
+  render({ children, noSidebar, ...props }) {
+    return (
+      <page {...props}>
+        {children}
+        <side if={!noSidebar}>
+          <Sidebar />
+        </side>
+      </page>
+    )
+  }
+  static style = {
+    page: {
+      flex: 1,
+      padding: 0,
+      flexFlow: 'row',
+    },
+  }
+}
 
 Page.Main = $('section', {
   padding: 10,
-  minWidth: '70%',
   flex: 1,
   position: 'relative',
+  overflowY: 'scroll',
 })
 
 Page.Side = $('section', {
-  padding: 10,
+  width: 200,
+  padding: 0,
 })
 
 export const Text = $('p', {

@@ -68,12 +68,29 @@ export class Page {
   }
 }
 
-Page.Main = $('section', {
-  padding: 10,
-  flex: 1,
-  position: 'relative',
-  overflowY: 'scroll',
-})
+@view
+export class PageMain {
+  render({ children, header, ...props }) {
+    return (
+      <pagemain {...props}>
+        <header if={header}>
+          {header}
+        </header>
+        {children}
+      </pagemain>
+    )
+  }
+  static style = {
+    pagemain: {
+      padding: 10,
+      flex: 1,
+      position: 'relative',
+      overflowY: 'scroll',
+    },
+  }
+}
+
+Page.Main = PageMain
 
 Page.Side = $('section', {
   width: 200,

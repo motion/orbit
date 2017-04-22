@@ -34,6 +34,7 @@ export default class Sidebar {
       </Page.Side>
     )
   }
+
   static style = {
     side: {
       width: 200,

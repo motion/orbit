@@ -6,7 +6,7 @@ import Editor, { Raw } from '~/views/editor'
 import TimeAgo from 'react-timeago'
 import { observable, computed } from 'mobx'
 
-class DocStore {
+class DocumentStore {
   start(id) {
     this.docs = Doc.get(id)
   }
@@ -41,9 +41,9 @@ class DocStore {
 }
 
 @view({
-  store: DocStore,
+  store: DocumentStore,
 })
-export default class DocPage {
+export default class Document {
   home = ({ which }) => {
     if (which === 27) {
       Router.go('/')
@@ -58,7 +58,7 @@ export default class DocPage {
     document.removeEventListener('keydown', this.home)
   }
 
-  render({ store }) {
+  render({ store, noSide }) {
     const doc = store.doc
 
     if (!doc) {
@@ -66,43 +66,27 @@ export default class DocPage {
     }
 
     return (
-      <Page>
-        <Page.Main>
-          <top>
-            <input
-              $title
-              value={store.title}
-              onChange={e => store.newTitle = e.target.value}
-              onKeyDown={e => e.which === 13 && store.focusEditor()}
-              onFocus={() => store.editTitle()}
-              onBlur={() => store.saveTitle()}
-            />
-          </top>
-          <editor>
-            <Editor ref={ref => store.editorRef = ref} doc={doc} />
-          </editor>
-        </Page.Main>
-
-        <Page.Side>
-          <ago>
-            <span>last edited </span>
-            <TimeAgo minPeriod={20} date={doc.updated_at} />
-          </ago>
-          <places if={doc.places}>
-            belongs to places:
-            {doc.places.map(name => <place key={name}>{name}</place>)}
-          </places>
-        </Page.Side>
-      </Page>
+      <document>
+        <top>
+          <input
+            $title
+            value={store.title}
+            onChange={e => store.newTitle = e.target.value}
+            onKeyDown={e => e.which === 13 && store.focusEditor()}
+            onFocus={() => store.editTitle()}
+            onBlur={() => store.saveTitle()}
+          />
+        </top>
+        <editor>
+          <Editor ref={ref => store.editorRef = ref} doc={doc} />
+        </editor>
+      </document>
     )
   }
 
   static style = {
     top: {
       justifyContent: 'space-between',
-    },
-    ago: {
-      flexFlow: 'row',
     },
     title: {
       fontSize: 28,

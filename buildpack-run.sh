@@ -1,1 +1,1 @@
-echo "hello world"
+node_modules/.bin/lerna bootstrap

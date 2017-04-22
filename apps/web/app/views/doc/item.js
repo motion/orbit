@@ -52,7 +52,7 @@ export default class DocItem {
           $$height={height}
           ref={this.ref('title').set}
           contentEditable={this.editing}
-          onDoubleClick={() => Router.go(doc.url())}
+          onClick={() => Router.go(doc.url())}
           onKeyDown={e => {
             if (e.keyCode === 13) {
               e.preventDefault()

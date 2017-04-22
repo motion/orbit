@@ -2,7 +2,7 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "node_modules/.bin/lerna bootstrap",
     "web": "cd apps/web && npm start",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
     "build": "lerna exec --ignore web -- babel src --out-dir lib",

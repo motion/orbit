@@ -4,6 +4,7 @@ import { render } from 'react-dom'
 import App from 'models'
 import mobx from 'mobx'
 import Router from './router'
+import config from './config'
 
 window.React = React
 window.App = App
@@ -11,12 +12,11 @@ window.Router = Router
 window.mobx = mobx
 
 export function run() {
-  console.log('run')
   const Root = require('./root').default
   render(<Root />, document.querySelector('#app'))
 }
 
-App.connect().then(run)
+App.start(config).then(run)
 
 if (module.hot) {
   module.hot.accept('./root', run)

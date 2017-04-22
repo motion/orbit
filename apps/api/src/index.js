@@ -1,13 +1,13 @@
-const http = require('http')
-const logger = require('morgan')
-const express = require('express')
-const bodyParser = require('body-parser')
-const SuperLogin = require('superlogin')
-const { GitHubStrategy } = require('passport-github')
-const { GoogleStrategy } = require('passport-google-oauth')
-const { FacebookStrategy } = require('passport-facebook')
-
-const config = require('./superlogin.config.js')
+import http from 'http'
+import logger from 'morgan'
+import express from 'express'
+import bodyParser from 'body-parser'
+import SuperLogin from 'superlogin'
+import { GitHubStrategy } from 'passport-github'
+import { GoogleStrategy } from 'passport-google-oauth'
+import { FacebookStrategy } from 'passport-facebook'
+import config from './superlogin.config.js'
+import proxy from './proxy'
 
 const app = express()
 
@@ -16,16 +16,18 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-const superlogin = new SuperLogin(config)
+// Proxy Cloudant
+app.use(proxy(`https://${process.env.DB_URL}`))
 
+// SUPERLOGIN
+const superlogin = new SuperLogin(config)
 const strategies = [
   ['facebook', FacebookStrategy],
   ['github', GitHubStrategy],
   ['google', GoogleStrategy],
 ]
-
 strategies.forEach(([name, strategy]) => {
-  if(superlogin.config.getItem(`providers.${name}.credentials.clientID`)) {
+  if (superlogin.config.getItem(`providers.${name}.credentials.clientID`)) {
     superlogin.registerOAuth2(name, strategy)
   }
 })
@@ -33,9 +35,9 @@ strategies.forEach(([name, strategy]) => {
 // https redirect unless using localhost
 app.use((req, res, next) => {
   if (
-    req.protocol === 'https'
-    || req.header('X-Forwarded-Proto') === 'https'
-    || req.hostname === 'localhost'
+    req.protocol === 'https' ||
+    req.header('X-Forwarded-Proto') === 'https' ||
+    req.hostname === 'localhost'
   ) {
     return next()
   }

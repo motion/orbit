@@ -8,12 +8,6 @@ import pAuth from 'pouchdb-authentication'
 
 import * as Models from './all'
 
-const KEYS = {
-  url: 'http://localhost:5984',
-  name: 'username',
-  password: 'password',
-}
-
 export default class App {
   db = null
   @observable user = null
@@ -31,22 +25,26 @@ export default class App {
     }
   }
 
-  async connect() {
+  async start(config: Object) {
+    if (!config) {
+      throw new Error('No config given to App!')
+    }
+
     // connect to pouchdb
     this.db = await RxDB.create({
-      name: KEYS.name,
       adapter: 'idb',
-      password: KEYS.password,
+      name: config.name,
+      password: config.password,
       multiInstance: true,
     })
 
     // separate pouchdb for auth
-    this.auth = new PouchDB(`${KEYS.url}/auth`, { skipSetup: true })
+    this.auth = new PouchDB(`${config.couchUrl}/auth`, { skipSetup: true })
 
     // connect models
     for (const [name, model] of Object.entries(Models)) {
       await model.connect(this.db)
-      model.collection.sync(`${KEYS.url}/${model.title}`)
+      model.collection.sync(`${config.couchUrl}/${model.title}`)
     }
 
     // log back in

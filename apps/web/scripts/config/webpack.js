@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
+const BabiliPlugin = require('babili-webpack-plugin')
 const getClientEnvironment = require('./env')
 const paths = require('./paths')
 const publicPath = '/'
@@ -12,6 +13,8 @@ const env = getClientEnvironment(publicUrl)
 const IS_PROD = process.env.NODE_ENV === 'production'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
+
+console.log('running webpack for:', process.env.NODE_ENV)
 
 let config
 
@@ -98,22 +101,8 @@ module.exports = Object.assign(config, {
     new webpack.NamedModulesPlugin(),
 
     // production
-    IS_PROD &&
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          screw_ie8: true,
-          warnings: false,
-        },
-        mangle: {
-          screw_ie8: true,
-        },
-        output: {
-          comments: false,
-          screw_ie8: true,
-        },
-      }),
-
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    IS_PROD && new BabiliPlugin(),
   ]),
   node: {
     fs: 'empty',

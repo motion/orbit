@@ -8,9 +8,9 @@ const httpProxyMiddleware = require('http-proxy-middleware')
 const detect = require('detect-port')
 const clearConsole = require('react-dev-utils/clearConsole')
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
-const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
 const getProcessForPort = require('react-dev-utils/getProcessForPort')
 const openBrowser = require('react-dev-utils/openBrowser')
+const log = require('./config/log')
 const prompt = require('react-dev-utils/prompt')
 const fs = require('fs')
 const config = require('./config/webpack')
@@ -28,26 +28,15 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 // Tools like Cloud9 rely on this.
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3001
 let compiler
-let handleCompile
 
 function setupCompiler(host, port, protocol) {
   // "Compiler" is a low-level interface to Webpack.
-  compiler = webpack(config, handleCompile)
+  compiler = webpack(config)
 
   // "done" event fires when Webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
   compiler.plugin('done', function(stats) {
-    // We have switched off the default Webpack output in WebpackDevServer
-    // options so we are going to "massage" the warnings and errors and present
-    // them in a readable focused way.
-    var messages = formatWebpackMessages(stats.toJson({}, true))
-    var isSuccessful = !messages.errors.length && !messages.warnings.length
-
-    if (isSuccessful) {
-      console.log(chalk.green('Compiled successfully!'))
-    } else {
-      console.log(stats.toString())
-    }
+    log(null, stats)
   })
 }
 
@@ -113,9 +102,9 @@ function runDevServer(host, port, protocol) {
     hot: true,
     publicPath: config.output.publicPath,
     quiet: false,
-    // watchOptions: {
-    //   ignored: /node_modules/,
-    // },
+    watchOptions: {
+      ignored: /node_modules/,
+    },
     https: protocol === 'https',
     host: host,
   })

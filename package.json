@@ -7,7 +7,8 @@
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
     "build": "lerna exec --ignore web -- babel src --out-dir lib",
     "compile": "npm run clean && npm run build",
-    "watch": "npm run build -- --watch"
+    "watch": "npm run build -- --watch",
+    "postinstall": "build.sh"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",

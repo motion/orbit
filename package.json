@@ -8,9 +8,9 @@
     "build": "lerna exec --ignore web -- babel src --out-dir lib",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
-    "postinstall": "cd apps/api && babel src --out-dir lib"
+    "postinstall": "npm run bootstrap && npm run build"
   },
-  "devDependencies": {
+  "dependencies": {
     "babel-cli": "^6.14.0",
     "babel-preset-steelbrain": "^4.0.2",
     "flow-bin": "^0.38.0",

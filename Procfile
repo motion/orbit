@@ -1,1 +1,1 @@
-api: node apps/api/lib
+api: node apps/api/bin/server

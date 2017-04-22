@@ -23,4 +23,4 @@ EXPOSE 3000
 ## Allow debugging the node web app..
 #CMD ["nodemon", "--debug=5858", "index.js"]
 
-CMD ["nodemon", "index.js"]
+CMD ["nodemon", "lib/index.js"]

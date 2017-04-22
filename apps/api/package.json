@@ -3,9 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "main": "lib/index.js",
+  "scripts": {
+    "start": "node lib/index.js"
+  },
   "dependencies": {
     "body-parser": "^1.16.1",
     "express": "^4.14.1",
+    "express-couch-proxy": "^0.1.0",
     "morgan": "^1.8.1",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",

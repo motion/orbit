@@ -7,17 +7,30 @@ import { GitHubStrategy } from 'passport-github'
 import { GoogleStrategy } from 'passport-google-oauth'
 import { FacebookStrategy } from 'passport-facebook'
 import config from './superlogin.config.js'
-import proxy from './proxy'
+import couchProxy from 'express-couch-proxy'
+import { COUCH_URL } from './keys'
 
 const app = express()
 
 app.set('port', process.env.PORT || 3000)
+
 app.use(logger('dev'))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
 
 // Proxy Cloudant
-app.use(proxy(`https://${process.env.DB_URL}`))
+// note: before other middleware
+const couchMiddleware = couchProxy({ realm: 'couch' }, function(
+  db,
+  user,
+  pass,
+  next
+) {
+  return next(null, `${COUCH_URL}/${db}`)
+})
+app.use('/couch', couchMiddleware)
+
+// middleware
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
 // SUPERLOGIN
 const superlogin = new SuperLogin(config)
@@ -46,7 +59,5 @@ app.use((req, res, next) => {
 
 // superlogin routes
 app.use('/auth', superlogin.router)
-
-app.use(express.static('client'))
 
 http.createServer(app).listen(app.get('port'))

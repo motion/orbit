@@ -1,9 +1,11 @@
+import { DB_PROTOCOL, DB_HOST, DB_USER, DB_PASSWORD, REDIS_URL } from './keys'
+
 export default {
   dbServer: {
-    protocol: 'http://',
-    host: 'starter-couchdb:5984',
-    user: process.env.COUCHDB_USER,
-    password: process.env.COUCHDB_PASSWORD,
+    protocol: DB_PROTOCOL,
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
     userDB: 'sl-users',
     couchAuthDB: '_users',
   },
@@ -28,7 +30,7 @@ export default {
     adapter: 'redis',
     redis: {
       // The docker-compose will setup the /etc/hosts for us so our redis servier is called "redis"
-      url: 'redis://starter-redis:6379',
+      url: REDIS_URL,
     },
   },
   providers: {

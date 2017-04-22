@@ -4,6 +4,8 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
 const BabiliPlugin = require('babili-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 const getClientEnvironment = require('./env')
 const paths = require('./paths')
 const publicPath = '/'
@@ -103,6 +105,9 @@ module.exports = Object.assign(config, {
     // production
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
     IS_PROD && new BabiliPlugin(),
+
+    // bundle analyzer
+    new BundleAnalyzerPlugin(),
   ]),
   node: {
     fs: 'empty',

@@ -2,12 +2,12 @@ import { view } from '~/helpers'
 import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import { Page } from '~/views'
-import Document from '~/views/doc/document'
+import DocumentPage from '~/views/doc/documentPage'
 
 @view
 export default class DocSinglePage {
   render() {
-    return <Document id={Router.params.id.replace('-', ':')} />
+    return <DocumentPage id={Router.params.id.replace('-', ':')} />
   }
 
   static style = {

@@ -142,10 +142,12 @@ export default class DocItem {
   static theme = {
     slanty: {
       doc: {
+        transition: 'all ease-in 100ms',
         '&:hover': {
-          borderColor: '#333',
+          borderColor: '#ddd',
+          boxShadow: 'inset 0 0 0 1px #ddd',
           transform: {
-            rotate: `-1deg`,
+            rotate: `-0.5deg`,
             scale: `1.01`,
           },
         },

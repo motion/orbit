@@ -1,11 +1,22 @@
 import { view } from '~/helpers'
 import { Page } from '~/views'
 import TimeAgo from 'react-timeago'
-import Document from '~/views/doc/document'
+import Document from './document'
+import DocumentStore from './store'
 
-@view
+@view({ store: DocumentStore })
 export default class DocumentPage {
-  render({ noSide, ...props }) {
+  componentWillMount() {
+    this.props.store.start(this.props.id || this.props.doc._id)
+  }
+
+  render({ store, noSide, ...props }) {
+    const { doc } = store
+
+    if (!doc) {
+      return null
+    }
+
     return (
       <Page>
         <Page.Main>

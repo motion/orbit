@@ -1,4 +1,5 @@
 import { view } from '~/helpers'
+import { Input, Button, Link } from '~/views'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 
@@ -14,8 +15,8 @@ export default class Root {
         <header $$row $$align="center">
           <h1>pad</h1>
           <nav $$row>
-            <a onClick={() => Router.go('/')}>home</a>
-            <a onClick={() => Router.go('/projects')}>popular</a>
+            <Link $link onClick={() => Router.go('/')}>home</Link>
+            <Link $link onClick={() => Router.go('/projects')}>popular</Link>
           </nav>
           <div $$flex />
           <user $$row>
@@ -24,36 +25,24 @@ export default class Root {
               <a onClick={App.logout}>logout</a>
             </info>
 
-            <form if={App.user === false} $userForm onSubmit={this.prevent}>
-              login!
-              <input
+            <form $login if={App.user === false} onSubmit={this.prevent}>
+              signup or login:
+              <Input
                 name="username"
                 placeholder="username"
-                ref={this.ref('username').set}
+                getRef={this.ref('username').set}
               />
-              <input
+              <Input
                 name="password"
                 type="password"
-                ref={this.ref('password').set}
+                getRef={this.ref('password').set}
               />
-              <button
+              <Button
                 onClick={() =>
-                  App.login(this.username.value, this.password.value)}
+                  App.loginOrSignup(this.username.value, this.password.value)}
               >
-                login
-              </button>
-            </form>
-
-            <form if={App.user === false} onSubmit={this.prevent}>
-              register!
-              <input placeholder="username" ref={this.ref('pusername').set} />
-              <input type="password" ref={this.ref('ppassword').set} />
-              <button
-                onClick={() =>
-                  App.signup(this.pusername.value, this.ppassword.value)}
-              >
-                register
-              </button>
+                go
+              </Button>
             </form>
           </user>
         </header>
@@ -74,13 +63,24 @@ export default class Root {
       padding: [5, 10],
       fontSize: 20,
     },
-    a: {
+    link: {
       padding: [1, 6],
       margin: [0, 3],
-      cursor: 'pointer',
       '&:hover': {
         background: '#f2f2f2',
       },
+    },
+    login: {
+      flexFlow: 'row',
+      flex: 1,
+      whiteSpace: 'norwap',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+    },
+    user: {
+      flex: 4,
+      alignItems: 'center',
+      justifyContent: 'flex-end',
     },
   }
 }

@@ -1,7 +1,7 @@
 import { view } from '~/helpers'
 import App, { Place, Doc } from 'models'
 import FlipMove from 'react-flip-move'
-import { Page, Poof, CircleButton, Link } from '~/views'
+import { Page, Poof, CircleButton, Link, Input } from '~/views'
 import DocItem from '~/views/doc/item'
 import Grid from '~/views/grid'
 
@@ -69,17 +69,19 @@ export default class Home {
         </Page.Main>
 
         <Page.Side>
-          <h2>Places</h2>
+          <h2>Rooms</h2>
           <form if={App.user} onSubmit={store.createPlace}>
-            <input ref={ref => store.place = ref} placeholder="New Place..." />
+            <Input
+              $create
+              ref={ref => store.place = ref}
+              placeholder="Create..."
+            />
           </form>
           <places if={store.places.current}>
             {store.places.current.map(piece => (
-              <piece key={Math.random()}>
-                <Link to={piece.url()}>
-                  {piece.url()}
-                </Link>
-              </piece>
+              <Link $piece to={piece.url()} key={piece._id}>
+                {piece.title}
+              </Link>
             ))}
           </places>
         </Page.Side>
@@ -101,10 +103,19 @@ export default class Home {
       fontSize: 14,
       color: [0, 0, 0, 0.5],
     },
+    form: {
+      margin: 0,
+    },
     piece: {
+      width: '100%',
       fontWeight: 700,
-      fontSize: 14,
+      fontSize: 16,
       color: 'purple',
+      padding: [3, 4],
+      cursor: 'pointer',
+      '&:hover': {
+        background: '#f2f2f2',
+      },
     },
   }
 }

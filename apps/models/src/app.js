@@ -51,6 +51,13 @@ export default class App {
     this.setSession()
   }
 
+  loginOrSignup = async (username, password) => {
+    try {
+      await this.signup(username, password)
+    } catch (e) {}
+    return await this.login(username, password)
+  }
+
   signup = (username, password, info) => {
     return this.auth.signup(username, password, info || {})
   }
@@ -62,7 +69,7 @@ export default class App {
       return info
     } catch (e) {
       console.error(e)
-      return null
+      return false
     }
   }
 

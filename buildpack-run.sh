@@ -1,3 +1,5 @@
+echo $(ls .)
+ls node_modules
 
 echo $(pwd)
 echo "hi"

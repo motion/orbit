@@ -1,3 +1,2 @@
-git init
-lerna bootstrap --npm-client=npm
-npm run build
+cd apps/api
+babel src --out-dir lib

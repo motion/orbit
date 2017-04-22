@@ -44,8 +44,18 @@ class DocStore {
   store: DocStore,
 })
 export default class DocPage {
+  home = ({ which }) => {
+    if (which === 27) {
+      Router.go('/')
+    }
+  }
+
   componentWillMount() {
     this.props.store.start(this.props.id)
+    document.addEventListener('keydown', this.home)
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.home)
   }
 
   render({ store }) {

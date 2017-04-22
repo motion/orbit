@@ -1,9 +1,10 @@
 import { Editor, Raw } from 'slate'
 import AutoReplace from 'slate-auto-replace'
-import { Component, view } from '~/helpers'
-import { Hello, Header, Link, Quote } from './nodes'
-import { startsWith } from 'lodash'
+import { Counter, Header, Link, Quote } from './nodes'
+import { startsWith, includes } from 'lodash'
 import { throttle } from 'lodash-decorators'
+import Menu from './doc/menu'
+import { view, observable, Component } from '~/helpers'
 
 export { Raw } from 'slate'
 
@@ -12,7 +13,7 @@ const replaceShortcut = (char, type) =>
     trigger: 'space',
     before: char, // /^(>)$/,
     transform: (transform, e, data, matches) => {
-      return transform.setBlock({ type })
+      return transform.setBlock({ type, data: {} })
     },
   })
 
@@ -20,11 +21,14 @@ const plugins = [
   replaceShortcut(/^(>)$/, 'quote'),
   replaceShortcut(/^(#)$/, 'header'),
   replaceShortcut(/^(##)$/, 'header2'),
+  replaceShortcut(/^(\$counter)$/, 'counter'),
 ]
 
 @view({
   store: class EditorStore {
     doc = null
+
+    @observable menuLoc = null
 
     @throttle(200)
     update = val => {
@@ -41,17 +45,28 @@ export default class DocEditor extends Component {
 
   state = {
     val: Raw.deserialize(this.props.doc.content, { terse: true }),
+    menu: null,
     focused: false,
   }
 
   schema = {
     nodes: {
-      hello: Hello,
       link: Link,
+      counter: Counter,
       header: Header(26),
       header2: Header(20),
       paragraph: props => <p>{props.children}</p>,
       quote: Quote,
+    },
+    marks: {
+      bold: props => <strong>{props.children}</strong>,
+      code: props => (
+        <code style={{ display: 'inline' }}>{props.children}</code>
+      ),
+      italic: props => <em style={{ display: 'inline' }}>{props.children}</em>,
+      underlined: props => (
+        <u style={{ display: 'inline' }}>{props.children}</u>
+      ),
     },
   }
 
@@ -62,6 +77,17 @@ export default class DocEditor extends Component {
       destroy: key => {
         const state = this.state.val.transform().removeNodeByKey(key).apply()
         this.onChange(state)
+      },
+
+      save: (key, data) => {
+        const { store, onChange } = this.props
+        const state = this.state.val
+          .transform()
+          .setNodeByKey(key, { data })
+          .apply()
+
+        store.update(state)
+        if (onChange) onChange(state)
       },
     }
   }
@@ -102,6 +128,21 @@ export default class DocEditor extends Component {
     if (e.which === 13) {
       return this.onEnter(e, state)
     }
+
+    // bold/italic/underline
+    const buttons = {
+      66: 'bold',
+      73: 'italic',
+      85: 'underlined',
+    }
+
+    if (!e.metaKey || !includes(Object.keys(buttons), '' + e.which)) return
+
+    event.preventDefault()
+
+    this.onChange(
+      this.state.val.transform().toggleMark(buttons[e.which]).apply()
+    )
   }
 
   addBlock = name => {
@@ -125,14 +166,55 @@ export default class DocEditor extends Component {
     )
   }
 
-  render({ doc, onChange, inline, ...props }) {
+  onOpen = portal => {
+    this.setState({ menu: portal.firstChild })
+  }
+
+  componentDidUpdate() {
+    console.log('updated')
+    this.updateMenu()
+  }
+
+  updateMenu = () => {
+    const { menu, val } = this.state
+
+    if (!menu) return
+    menu.style.opacity = 0
+
+    if (val.isBlurred || val.isCollapsed) {
+      menu.removeAttribute('style')
+      return
+    }
+    menu.style.display = 'flex'
+
+    const selection = window.getSelection()
+    const range = selection.getRangeAt(0)
+    const rect = range.getBoundingClientRect()
+    menu.style.opacity = 1
+    menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight}px`
+    menu.style.left = `${rect.left + window.scrollX - menu.offsetWidth / 2 + rect.width / 2}px`
+    menu.style.position = `absolute`
+  }
+
+  onClickMark = (e, type) => {
+    e.preventDefault()
+    const { val } = this.state
+
+    const next = val.transform().toggleMark(type).apply()
+
+    this.setState({ val: next })
+  }
+
+  render({ doc, store, onChange, inline, ...props }) {
     return (
       <root>
-        <bar if={!inline}>
-          <a onClick={() => this.addBlock('hello')}>blck</a>
-          <a onClick={() => this.wrapLink()}>link</a>
-        </bar>
         <content>
+          <Menu
+            if={false}
+            onUpdate={this.updateMenu}
+            onMark={this.onClickMark}
+            onOpen={this.onOpen}
+          />
           <Editor
             $editor
             state={this.state.val}
@@ -157,10 +239,6 @@ export default class DocEditor extends Component {
     },
     bar: {
       flexFlow: 'row',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
     },
     a: {
       padding: 5,

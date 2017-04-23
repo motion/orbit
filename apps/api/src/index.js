@@ -13,7 +13,10 @@ import { COUCH_URL } from './keys'
 
 const app = express()
 
-app.set('port', process.env.PORT || 3000)
+const port = process.env.PORT || 3000
+console.log('Server starting on port', port)
+
+app.set('port', port)
 
 app.use(logger('dev'))
 app.use(cors())

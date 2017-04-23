@@ -7,3 +7,5 @@ export const DB_PROTOCOL = 'https://'
 export const COUCH_URL = `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}`
 
 export const REDIS_URL = process.env.REDIS_URL || 'redis://starter-redis:6379'
+
+export const IS_PROD = process.env.NODE_ENV === 'production'

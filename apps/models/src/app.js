@@ -40,11 +40,15 @@ export default class App {
 
     // separate pouchdb for auth
     this.auth = new PouchDB(`${config.couchUrl}/auth`, { skipSetup: true })
+    console.log('got auth', this.auth)
 
     // connect models
     for (const [name, model] of Object.entries(Models)) {
       await model.connect(this.db)
-      model.collection.sync(`${config.couchUrl}/${model.title}`)
+      model.collection.sync(`${config.couchUrl}/${model.title}`, {
+        live: true,
+        retry: true,
+      })
     }
 
     // log back in

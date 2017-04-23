@@ -1,4 +1,11 @@
-import { DB_PROTOCOL, DB_HOST, DB_USER, DB_PASSWORD, REDIS_URL } from './keys'
+import {
+  IS_PROD,
+  DB_PROTOCOL,
+  DB_HOST,
+  DB_USER,
+  DB_PASSWORD,
+  REDIS_URL,
+} from './keys'
 
 export default {
   dbServer: {
@@ -27,7 +34,7 @@ export default {
   },
   session: {
     // 'redis' or 'memory'
-    adapter: 'redis',
+    adapter: IS_PROD ? 'redis' : 'memory',
     redis: {
       // The docker-compose will setup the /etc/hosts for us so our redis servier is called "redis"
       url: REDIS_URL,

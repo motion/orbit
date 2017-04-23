@@ -4,13 +4,16 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
-    "start": "node lib/index.js"
+    "start": "DB_HOST=localhost:5984 DB_USER=username DB_PASSWORD=password nodemon lib/index.js"
   },
   "dependencies": {
     "body-parser": "^1.16.1",
+    "cloudant-envoy": "^0.4.2",
     "cors": "^2.8.3",
     "express": "^4.14.1",
     "express-couch-proxy": "^0.1.0",
+    "express-http-proxy": "^0.11.0",
+    "http-proxy": "^1.16.2",
     "morgan": "^1.8.1",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",

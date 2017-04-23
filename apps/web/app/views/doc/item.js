@@ -92,7 +92,7 @@ export default class DocItem {
       borderRadius: 6,
       border: [1, [0, 0, 0, 0.1]],
       padding: 12,
-      margin: [0, 10, 10, 0],
+      margin: [0, 5, 10, 5],
       color: '#333',
     },
     meta: {

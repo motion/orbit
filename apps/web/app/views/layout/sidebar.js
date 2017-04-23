@@ -11,12 +11,13 @@ class SidebarStore {
 export default class Sidebar {
   render({ store }) {
     return (
-      <Page.Side>
+      <side>
         <Login />
 
-        <Link $link onClick={() => Router.go('/')}>all</Link>
+        <h2>me</h2>
+        <Link $piece onClick={() => Router.go('/')}>home</Link>
 
-        <h2>Rooms</h2>
+        <h2>groups</h2>
         <main if={store.places.current}>
           {store.places.current.map(piece => (
             <Link $piece to={piece.url()} key={piece._id}>
@@ -31,13 +32,15 @@ export default class Sidebar {
             placeholder="Create..."
           />
         </form>
-      </Page.Side>
+      </side>
     )
   }
 
   static style = {
     side: {
-      width: 200,
+      width: 210,
+      padding: [0, 10],
+      borderLeft: [1, '#eee'],
     },
     main: {
       flex: 1,
@@ -51,7 +54,7 @@ export default class Sidebar {
       fontWeight: 700,
       fontSize: 16,
       color: 'purple',
-      padding: [3, 4],
+      padding: [4, 8],
       cursor: 'pointer',
       '&:hover': {
         background: '#f2f2f2',

@@ -46,8 +46,6 @@ export default class Home {
         editable
         key={doc._id}
         getRef={ref => {
-          // todo getRef is hacky workaround until this is fixed:
-          // https://github.com/joshwcomeau/react-flip-move/issues/140
           if (i === 0) {
             this.docRef = ref
           }

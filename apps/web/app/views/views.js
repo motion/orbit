@@ -53,9 +53,7 @@ export class Page {
     return (
       <page {...props}>
         {children}
-        <side if={!noSidebar}>
-          <Sidebar />
-        </side>
+        <Sidebar if={!noSidebar} />
       </page>
     )
   }
@@ -92,9 +90,10 @@ export class PageMain {
 
 Page.Main = PageMain
 
-Page.Side = $('section', {
+Page.Side = $('side', {
   width: 200,
   padding: 0,
+  flex: 1,
 })
 
 export const Text = $('p', {

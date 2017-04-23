@@ -17,6 +17,7 @@ export const Button = $('btn', {
   background: '#fff',
   color: '#000',
   fontSize: 14,
+  cursor: 'pointer',
 })
 
 export const CircleButton = $('btn', {
@@ -33,7 +34,7 @@ export const CircleButton = $('btn', {
   zIndex: 1000,
   background: '#fff',
   color: '#111',
-  fontSize: 30,
+  fontSize: 26,
   fontWeight: 400,
   cursor: 'pointer',
   userSelect: 'none',

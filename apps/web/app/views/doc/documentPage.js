@@ -1,5 +1,6 @@
 import { view } from '~/helpers'
-import { Page } from '~/views'
+import { Page, CircleButton } from '~/views'
+import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import Document from './document'
 import DocumentStore from './store'
@@ -19,6 +20,8 @@ export default class DocumentPage {
 
     return (
       <Page>
+        <CircleButton onClick={() => Router.back()}>{'<'}</CircleButton>
+
         <main $$flex={2}>
           <Document {...props} />
         </main>

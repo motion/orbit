@@ -1,6 +1,7 @@
 import http from 'http'
 import logger from 'morgan'
 import express from 'express'
+import cors from 'cors'
 import bodyParser from 'body-parser'
 import SuperLogin from 'superlogin'
 import { GitHubStrategy } from 'passport-github'
@@ -15,6 +16,7 @@ const app = express()
 app.set('port', process.env.PORT || 3000)
 
 app.use(logger('dev'))
+app.use(cors())
 
 // Proxy Cloudant
 // note: before other middleware

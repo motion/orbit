@@ -107,7 +107,7 @@ module.exports = Object.assign(config, {
     IS_PROD && new BabiliPlugin(),
 
     // bundle analyzer
-    new BundleAnalyzerPlugin(),
+    process.env.DEBUG && new BundleAnalyzerPlugin(),
   ]),
   node: {
     fs: 'empty',

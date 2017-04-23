@@ -1,19 +1,9 @@
-let CONFIG
-
-if (process.env.NODE_ENV === 'production') {
-  // PRODUCTION
-  CONFIG = {
-    couchUrl: 'https://mirai.cloudant.com:443',
-  }
-} else {
-  // DEVELOPMENT
-  CONFIG = {
-    couchUrl: 'http://localhost:5984',
-  }
-}
+const IS_PROD = process.env.NODE_ENV === 'production'
 
 export default {
-  ...CONFIG,
   name: 'username',
   password: 'password',
+  couchUrl: IS_PROD
+    ? 'https://mirai.cloudant.com:443'
+    : 'https://jot-app-api.herokuapp.com',
 }

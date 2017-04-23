@@ -49,25 +49,6 @@ export const CircleButton = $('a', {
 
 @view
 export class Page {
-  render({ children, noSidebar, ...props }) {
-    return (
-      <page {...props}>
-        {children}
-        <Sidebar if={!noSidebar} />
-      </page>
-    )
-  }
-  static style = {
-    page: {
-      flex: 1,
-      padding: 0,
-      flexFlow: 'row',
-    },
-  }
-}
-
-@view
-export class PageMain {
   render({ children, header, ...props }) {
     return (
       <pagemain {...props}>
@@ -87,8 +68,6 @@ export class PageMain {
     },
   }
 }
-
-Page.Main = PageMain
 
 Page.Side = $('side', {
   width: 200,

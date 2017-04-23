@@ -56,15 +56,13 @@ export default class Home {
 
     return (
       <Page>
-        <Page.Main>
-          <CircleButton onClick={store.createDoc}>
-            +
-          </CircleButton>
-          <Grid if={false} rowHeight={cardHeight} items={docs} />
-          <FlipMove $docs duration={100} easing="ease-out">
-            {docs}
-          </FlipMove>
-        </Page.Main>
+        <CircleButton onClick={store.createDoc}>
+          +
+        </CircleButton>
+        <Grid if={false} rowHeight={cardHeight} items={docs} />
+        <FlipMove $docs duration={100} easing="ease-out">
+          {docs}
+        </FlipMove>
       </Page>
     )
   }

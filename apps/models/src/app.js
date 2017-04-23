@@ -58,7 +58,10 @@ export default class App {
   loginOrSignup = async (username, password) => {
     try {
       await this.signup(username, password)
-    } catch (e) {}
+    } catch (e) {
+      console.error(e)
+      console.log('recovering from signup, logging in...')
+    }
     return await this.login(username, password)
   }
 
@@ -72,6 +75,7 @@ export default class App {
       this.setSession()
       return info
     } catch (e) {
+      console.log('error logging in')
       console.error(e)
       return false
     }

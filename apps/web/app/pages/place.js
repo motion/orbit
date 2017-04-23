@@ -33,24 +33,24 @@ export default class PlacePage {
     const place = store.place.current
 
     return (
-      <Page if={place}>
-        <Page.Main
-          header={
-            <header>
-              <CircleButton $$background="#fff">join</CircleButton>
-              <h2>Place: {place.title}</h2>
-            </header>
-          }
-        >
+      <Page
+        if={place}
+        header={
+          <header>
+            <CircleButton $$background="#fff">join</CircleButton>
+            <h2>Place: {place.title}</h2>
+          </header>
+        }
+      >
+        <main>
           <Document
             if={store.activeDocId}
             noSide
             key={store.activeDocId}
             id={store.activeDocId}
           />
-        </Page.Main>
-
-        <Page.Side>
+        </main>
+        <side>
           <button onClick={store.createDoc}>create</button>
 
           <h4>documents</h4>
@@ -61,7 +61,7 @@ export default class PlacePage {
               </doc>
             ))}
           </docs>
-        </Page.Side>
+        </side>
       </Page>
     )
   }

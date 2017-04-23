@@ -2,6 +2,7 @@ import { view } from '~/helpers'
 import { Input, Button, Link } from '~/views'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
+import Sidebar from '~/views/layout/sidebar'
 
 @view
 export default class Root {
@@ -11,9 +12,16 @@ export default class Root {
     const CurrentPage = Router.activeView || NotFound
 
     return (
-      <layout $$flex>
+      <layout>
         <CurrentPage key={Router.key} />
+        <Sidebar />
       </layout>
     )
+  }
+
+  static style = {
+    layout: {
+      flexFlow: 'row',
+    },
   }
 }

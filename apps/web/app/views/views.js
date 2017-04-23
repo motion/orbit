@@ -34,7 +34,7 @@ export const CircleButton = $('btn', {
   zIndex: 1000,
   background: '#fff',
   color: '#111',
-  fontSize: 26,
+  fontSize: 20,
   fontWeight: 400,
   cursor: 'pointer',
   userSelect: 'none',

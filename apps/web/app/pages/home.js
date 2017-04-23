@@ -60,7 +60,7 @@ export default class Home {
           +
         </CircleButton>
         <Grid if={false} rowHeight={cardHeight} items={docs} />
-        <FlipMove $docs duration={100} easing="ease-out">
+        <FlipMove $docs duration={300} easing="ease-out">
           {docs}
         </FlipMove>
       </Page>
@@ -71,7 +71,7 @@ export default class Home {
     docs: {
       flexFlow: 'row',
       flexWrap: 'wrap',
-      flex: 1,
+      maxHeight: '100%',
       position: 'relative',
     },
     form: {

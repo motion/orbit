@@ -5,5 +5,5 @@ export default {
   password: 'password',
   couchUrl: IS_PROD
     ? 'https://mirai.cloudant.com:443'
-    : 'https://jot-app-api.herokuapp.com',
+    : 'https://jot-app-api.herokuapp.com:21808',
 }

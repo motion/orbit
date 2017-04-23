@@ -19,11 +19,11 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Main>
+        <main $$flex={2}>
           <Document {...props} />
-        </Page.Main>
+        </main>
 
-        <Page.Side if={!noSide}>
+        <side if={!noSide}>
           <ago>
             <span>last edited </span>
             <TimeAgo minPeriod={20} date={doc.updated_at} />
@@ -32,7 +32,7 @@ export default class DocumentPage {
             belongs to places:
             {doc.places.map(name => <place key={name}>{name}</place>)}
           </places>
-        </Page.Side>
+        </side>
       </Page>
     )
   }

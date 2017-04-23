@@ -21,6 +21,7 @@ export default class Root {
 
   static style = {
     layout: {
+      flex: 1,
       flexFlow: 'row',
     },
   }

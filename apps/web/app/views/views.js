@@ -8,7 +8,7 @@ export const Input = $('input', {
   background: '#fff',
 })
 
-export const Button = $('a', {
+export const Button = $('btn', {
   padding: [2, 8],
   borderRadius: 100,
   border: [1, '#eee'],
@@ -19,11 +19,11 @@ export const Button = $('a', {
   fontSize: 14,
 })
 
-export const CircleButton = $('a', {
+export const CircleButton = $('btn', {
   display: 'flex',
   position: 'absolute',
-  top: -15,
-  left: -15,
+  top: -5,
+  left: -5,
   width: 40,
   height: 40,
   borderRadius: 100,

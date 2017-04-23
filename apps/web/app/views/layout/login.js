@@ -9,9 +9,9 @@ export default class Login {
   render() {
     return (
       <login>
-        <info $$row $$centered if={App.user}>
-          <strong>{App.user.name}</strong>
-          <a onClick={App.logout}>logout</a>
+        <info if={App.user}>
+          <user $$ellipse>{App.user.name}</user>
+          <Button onClick={App.logout}>logout</Button>
         </info>
 
         <form if={!App.user} onSubmit={this.prevent}>
@@ -60,6 +60,17 @@ export default class Login {
       fontSize: 12,
       textTransform: 'uppercase',
       opacity: 0.7,
+    },
+    info: {
+      flexFlow: 'row',
+      width: '100%',
+      padding: [10, 0],
+      borderBottom: [1, '#eee'],
+      alignItems: 'center',
+    },
+    user: {
+      flex: 1,
+      paddingRight: 10,
     },
   }
 }

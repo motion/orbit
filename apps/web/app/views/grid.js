@@ -8,35 +8,44 @@ const Layout = WidthProvider(ReactGridLayout)
 export default class Grid {
   static defaultProps = {
     rowHeight: 120,
-    cols: 2,
+    layout: [],
     onLayoutChange: () => {},
   }
 
-  get layout() {
-    const { items } = this.props
-    return items.map((_, i) => {
-      const y = result(this.props, 'y') || Math.ceil(Math.random() * 4) + 1
-      return {
-        x: i * 2 % 12,
-        y: 1,
-        w: 2,
-        h: y,
-        i: `${i}`,
-      }
-    })
+  @observable.ref layout = []
+  gridLayout = null
+
+  componentDidMount() {
+    if (this.props.layout) {
+      setTimeout(() => {
+        this.layout = this.props.layout
+        console.log('set')
+      }, 150)
+    }
   }
 
-  onLayoutChange = layout => this.props.onLayoutChange(layout)
+  onLayoutChange = layout => {
+    this.props.onLayoutChange(layout)
+  }
 
   render({ items, ...props }) {
+    console.log('setted')
     return (
       <Layout
-        layout={this.layout}
-        onLayoutChange={this.onLayoutChange}
         {...props}
+        key={Math.random()}
+        ref={ref => this.gridLayout = ref}
+        onLayoutChange={this.onLayoutChange}
+        layout={this.layout}
       >
-        {items.map((item, i) => <div key={i}>{item}</div>)}
+        {items.map((item, i) => <gridItem key={i}>{item}</gridItem>)}
       </Layout>
     )
+  }
+
+  static style = {
+    gridItem: {
+      position: 'relative',
+    },
   }
 }

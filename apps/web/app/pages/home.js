@@ -43,8 +43,7 @@ export default class Home {
     const docs = (store.docs.current || []).map((doc, i) => (
       <DocItem
         slanty
-        editable
-        key={doc._id}
+        draggable
         getRef={ref => {
           if (i === 0) {
             this.docRef = ref
@@ -59,8 +58,41 @@ export default class Home {
         <CircleButton onClick={store.createDoc}>
           +
         </CircleButton>
-        <Grid if={false} rowHeight={cardHeight} items={docs} />
-        <FlipMove $docs duration={300} easing="ease-out">
+        <Grid
+          layout={[
+            {
+              w: 1,
+              h: 1,
+              x: 0,
+              y: 0,
+              i: '0',
+              moved: false,
+              static: false,
+            },
+            {
+              w: 1,
+              h: 1,
+              x: 1,
+              y: 0,
+              i: '1',
+              moved: false,
+              static: false,
+            },
+            {
+              w: 1,
+              h: 1,
+              x: 1,
+              y: 1,
+              i: '2',
+              moved: false,
+              static: false,
+            },
+          ]}
+          cols={2}
+          rowHeight={cardHeight}
+          items={docs}
+        />
+        <FlipMove if={false} $docs duration={300} easing="ease-out">
           {docs}
         </FlipMove>
       </Page>

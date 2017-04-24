@@ -35,7 +35,7 @@
     "motion-class-helpers": "^1.0.9",
     "motion-hmr": "^1.1.0",
     "motion-mobx-helpers": "^1.0.7",
-    "motion-mobx-router": "^1.0.2",
+    "motion-mobx-router": "^1.0.7",
     "motion-view": "^1.0.16",
     "object-assign": "^4.1.1",
     "pouchdb-adapter-http": "^6.1.2",

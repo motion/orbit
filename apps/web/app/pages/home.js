@@ -3,7 +3,6 @@ import App, { Place, Doc } from 'models'
 import FlipMove from 'react-flip-move'
 import { Page, Poof, CircleButton, Link, Input } from '~/views'
 import DocItem from '~/views/document/item'
-import Grid from '~/views/grid'
 import Sidebar from '~/views/layout/sidebar'
 
 class HomeStore {
@@ -44,6 +43,7 @@ export default class Home {
       <DocItem
         slanty
         draggable
+        editable
         getRef={ref => {
           if (i === 0) {
             this.docRef = ref
@@ -58,41 +58,7 @@ export default class Home {
         <CircleButton onClick={store.createDoc}>
           +
         </CircleButton>
-        <Grid
-          layout={[
-            {
-              w: 1,
-              h: 1,
-              x: 0,
-              y: 0,
-              i: '0',
-              moved: false,
-              static: false,
-            },
-            {
-              w: 1,
-              h: 1,
-              x: 1,
-              y: 0,
-              i: '1',
-              moved: false,
-              static: false,
-            },
-            {
-              w: 1,
-              h: 1,
-              x: 1,
-              y: 1,
-              i: '2',
-              moved: false,
-              static: false,
-            },
-          ]}
-          cols={2}
-          rowHeight={cardHeight}
-          items={docs}
-        />
-        <FlipMove if={false} $docs duration={300} easing="ease-out">
+        <FlipMove $docs duration={300} easing="ease-out">
           {docs}
         </FlipMove>
       </Page>

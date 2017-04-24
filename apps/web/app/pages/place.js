@@ -4,6 +4,7 @@ import { Text, Page, CircleButton } from '~/views'
 import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Document from '~/views/document'
+import Grid from '~/views/grid'
 
 class PlaceStore {
   @observable activeDocId = null
@@ -32,6 +33,17 @@ export default class PlacePage {
   render({ store }) {
     const place = store.place.current
 
+    const docs = (store.docs.current || [])
+      .map(doc => (
+        <DocItem
+          slanty
+          draggable
+          editable
+          onClick={store.setActive(doc)}
+          doc={doc}
+        />
+      ))
+
     return (
       <Page
         if={place}
@@ -43,8 +55,44 @@ export default class PlacePage {
         }
       >
         <main>
+          <Grid
+            if={docs}
+            layout={[
+              {
+                w: 1,
+                h: 1,
+                x: 0,
+                y: 0,
+                i: '0',
+                moved: false,
+                static: false,
+              },
+              {
+                w: 1,
+                h: 1,
+                x: 1,
+                y: 0,
+                i: '1',
+                moved: false,
+                static: false,
+              },
+              {
+                w: 1,
+                h: 1,
+                x: 1,
+                y: 1,
+                i: '2',
+                moved: false,
+                static: false,
+              },
+            ]}
+            cols={2}
+            rowHeight={200}
+            items={docs}
+          />
+
           <Document
-            if={store.activeDocId}
+            if={false && store.activeDocId}
             noSide
             key={store.activeDocId}
             id={store.activeDocId}
@@ -52,15 +100,6 @@ export default class PlacePage {
         </main>
         <side>
           <button onClick={store.createDoc}>create</button>
-
-          <h4>documents</h4>
-          <docs if={store.docs.current}>
-            {(store.docs.current || []).map(doc => (
-              <doc key={doc._id} onClick={store.setActive(doc)}>
-                {doc.title}
-              </doc>
-            ))}
-          </docs>
         </side>
       </Page>
     )

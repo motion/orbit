@@ -12,7 +12,7 @@ export default class Root {
     const CurrentPage = Router.activeView || NotFound
 
     return (
-      <layout>
+      <layout $$draggable>
         <CurrentPage key={Router.key} />
         <Sidebar />
       </layout>

@@ -28,7 +28,7 @@ export default class Document {
     }
 
     return (
-      <document>
+      <document $$undraggable>
         <top>
           <input
             $title

@@ -12,19 +12,24 @@ export default class Sidebar {
   render({ store }) {
     return (
       <side>
-        <Login />
+        <content $$undraggable>
+          <Login />
 
-        <h2>me</h2>
-        <Link $piece onClick={() => Router.go('/')}>home</Link>
+          <h2>me</h2>
+          <Link $piece onClick={() => Router.go('/')}>home</Link>
 
-        <h2>groups</h2>
-        <main if={store.places.current}>
-          {store.places.current.map(piece => (
-            <Link $piece to={piece.url()} key={piece._id}>
-              {piece.title}
-            </Link>
-          ))}
-        </main>
+          <h2>groups</h2>
+          <main if={store.places.current}>
+            {store.places.current.map(piece => (
+              <Link $piece to={piece.url()} key={piece._id}>
+                {piece.title}
+              </Link>
+            ))}
+          </main>
+        </content>
+
+        <div $$flex $$draggable />
+
         <form onSubmit={store.createPlace}>
           <Input
             $create

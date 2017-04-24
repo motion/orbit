@@ -8,7 +8,8 @@
     "build": "lerna exec --ignore web -- babel src --out-dir lib",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
-    "api": "COUCHDB_USER=admin COUCHDB_PASSWORD=password docker-compose up --remove-orphans"
+    "api": "COUCHDB_USER=admin COUCHDB_PASSWORD=password docker-compose up --remove-orphans",
+    "electron": "cd apps/web && npm run electron"
   },
   "dependencies": {
     "babel-cli": "^6.14.0",

@@ -86,6 +86,12 @@ const baseStyles = {
     textOverflow: 'ellipsis',
     overflow: 'hidden',
   },
+  draggable: {
+    WebkitAppRegion: 'drag',
+  },
+  undraggable: {
+    WebkitAppRegion: 'no-drag',
+  },
 }
 
 export default gloss({ baseStyles })

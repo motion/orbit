@@ -46,7 +46,7 @@ export default class DocItem {
       return <doc {...props}>{children}</doc>
     }
     return (
-      <doc {...props}>
+      <doc $$undraggable {...props}>
         <title
           $editing={this.editing}
           $$height={height}

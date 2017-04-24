@@ -1,28 +1,14 @@
 import { Editor, Raw } from 'slate'
-import AutoReplace from 'slate-auto-replace'
+import { view, observable, Component } from '~/helpers'
 import { Counter, Header, Link, Quote } from './plugins'
+import markdown from './plugins/markdown'
 import { startsWith, includes } from 'lodash'
 import { throttle } from 'lodash-decorators'
 import Menu from './menu'
-import { view, observable, Component } from '~/helpers'
 
 export { Raw } from 'slate'
 
-const replaceShortcut = (char, type) =>
-  AutoReplace({
-    trigger: 'space',
-    before: char, // /^(>)$/,
-    transform: (transform, e, data, matches) => {
-      return transform.setBlock({ type, data: {} })
-    },
-  })
-
-const plugins = [
-  replaceShortcut(/^(>)$/, 'quote'),
-  replaceShortcut(/^(#)$/, 'header'),
-  replaceShortcut(/^(##)$/, 'header2'),
-  replaceShortcut(/^(\$counter)$/, 'counter'),
-]
+const plugins = [...markdown]
 
 @view({
   store: class EditorStore {
@@ -38,7 +24,7 @@ const plugins = [
     }
   },
 })
-export default class DocEditor extends Component {
+export default class EditorView extends Component {
   static defaultProps = {
     onChange: _ => _,
   }
@@ -53,10 +39,17 @@ export default class DocEditor extends Component {
     nodes: {
       link: Link,
       counter: Counter,
-      header: Header(26),
-      header2: Header(20),
-      paragraph: props => <p>{props.children}</p>,
       quote: Quote,
+      h: props => {
+        const { attributes, children, node } = props
+        const level = node.data.get('level')
+        const Tag = Header(10 / level * 7)
+        return <Tag {...attributes}>{children}</Tag>
+      },
+      paragraph: props => <p>{props.children}</p>,
+      ul: props => <ul {...props.attributes}>{props.children}</ul>,
+      li: props => <li {...props.attributes}>{props.children}</li>,
+      hr: props => <hr />,
     },
     marks: {
       bold: props => <strong>{props.children}</strong>,

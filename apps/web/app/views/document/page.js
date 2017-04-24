@@ -2,7 +2,7 @@ import { view } from '~/helpers'
 import { Page, CircleButton } from '~/views'
 import Router from '~/router'
 import TimeAgo from 'react-timeago'
-import Document from './document'
+import Document from './index'
 import DocumentStore from './store'
 
 @view({ store: DocumentStore })
@@ -48,7 +48,6 @@ export default class DocumentPage {
             <item>f</item>
           </bar>
         </content>
-
       </Page>
     )
   }

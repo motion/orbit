@@ -2,8 +2,8 @@ import { view, autorun, observable } from '~/helpers'
 import { Place, Doc } from 'models'
 import { Text, Page, CircleButton } from '~/views'
 import Router from '~/router'
-import DocItem from '~/views/doc/item'
-import Document from '~/views/doc/document'
+import DocItem from '~/views/document/item'
+import Document from '~/views/document'
 
 class PlaceStore {
   @observable activeDocId = null

@@ -2,7 +2,7 @@ import { view } from '~/helpers'
 import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import { Page } from '~/views'
-import DocumentPage from '~/views/doc/documentPage'
+import DocumentPage from '~/views/document/page'
 
 @view
 export default class DocSinglePage {

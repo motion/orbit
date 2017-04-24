@@ -1,9 +1,9 @@
 import { Editor, Raw } from 'slate'
 import AutoReplace from 'slate-auto-replace'
-import { Counter, Header, Link, Quote } from './nodes'
+import { Counter, Header, Link, Quote } from './plugins'
 import { startsWith, includes } from 'lodash'
 import { throttle } from 'lodash-decorators'
-import Menu from './doc/menu'
+import Menu from './menu'
 import { view, observable, Component } from '~/helpers'
 
 export { Raw } from 'slate'

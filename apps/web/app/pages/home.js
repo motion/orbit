@@ -2,7 +2,7 @@ import { view } from '~/helpers'
 import App, { Place, Doc } from 'models'
 import FlipMove from 'react-flip-move'
 import { Page, Poof, CircleButton, Link, Input } from '~/views'
-import DocItem from '~/views/doc/item'
+import DocItem from '~/views/document/item'
 import Grid from '~/views/grid'
 import Sidebar from '~/views/layout/sidebar'
 

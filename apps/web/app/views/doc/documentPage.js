@@ -20,22 +20,35 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <CircleButton onClick={() => Router.back()}>{'<'}</CircleButton>
+        <content $$flex $$row>
+          <main $$flex={2}>
+            <CircleButton onClick={() => Router.back()}>{'<'}</CircleButton>
 
-        <main $$flex={2}>
-          <Document {...props} />
-        </main>
+            <docarea>
+              <Document {...props} />
+            </docarea>
 
-        <side if={!noSide}>
-          <ago>
-            <span>last edited </span>
-            <TimeAgo minPeriod={20} date={doc.updated_at} />
-          </ago>
-          <places if={doc.places}>
-            belongs to places:
-            {doc.places.map(name => <place key={name}>{name}</place>)}
-          </places>
-        </side>
+            <met if={!noSide}>
+              <ago>
+                <TimeAgo minPeriod={20} date={doc.updated_at} />
+              </ago>
+              <places $$row if={doc.places}>
+                places:
+                {doc.places.map(name => <place key={name}>{name}</place>)}
+              </places>
+            </met>
+          </main>
+
+          <bar>
+            <item>a</item>
+            <item>b</item>
+            <item>c</item>
+            <item>d</item>
+            <item>e</item>
+            <item>f</item>
+          </bar>
+        </content>
+
       </Page>
     )
   }
@@ -43,6 +56,27 @@ export default class DocumentPage {
   static style = {
     ago: {
       flexFlow: 'row',
+    },
+    main: {
+      padding: 20,
+      position: 'relative',
+    },
+    met: {
+      flexFlow: 'row',
+      justifyContent: 'space-between',
+    },
+    docarea: {
+      flex: 1,
+    },
+    bar: {
+      padding: 5,
+      borderLeft: [1, '#eee'],
+      alignItems: 'center',
+    },
+    item: {
+      padding: [13, 8],
+      fontSize: 20,
+      alignItems: 'center',
     },
   }
 }

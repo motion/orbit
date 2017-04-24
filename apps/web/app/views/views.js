@@ -24,7 +24,7 @@ export const CircleButton = $('btn', {
   display: 'flex',
   position: 'absolute',
   top: -5,
-  left: -5,
+  right: -5,
   width: 40,
   height: 40,
   borderRadius: 100,
@@ -62,7 +62,6 @@ export class Page {
   }
   static style = {
     pagemain: {
-      padding: 10,
       flex: 1,
       position: 'relative',
       overflowY: 'scroll',

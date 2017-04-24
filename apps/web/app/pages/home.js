@@ -55,7 +55,7 @@ export default class Home {
     ))
 
     return (
-      <Page>
+      <Page $$padded>
         <CircleButton onClick={store.createDoc}>
           +
         </CircleButton>

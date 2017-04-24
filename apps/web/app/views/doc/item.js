@@ -142,7 +142,8 @@ export default class DocItem {
   static theme = {
     slanty: {
       doc: {
-        transition: 'all ease-in 100ms',
+        // warning dont put transition effect here
+        // messes up react-move-grid
         '&:hover': {
           borderColor: '#ddd',
           boxShadow: 'inset 0 0 0 1px #ddd',

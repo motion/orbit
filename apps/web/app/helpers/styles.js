@@ -92,6 +92,9 @@ const baseStyles = {
   undraggable: {
     WebkitAppRegion: 'no-drag',
   },
+  padded: {
+    padding: 20,
+  },
 }
 
 export default gloss({ baseStyles })

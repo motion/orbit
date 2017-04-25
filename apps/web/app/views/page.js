@@ -1,6 +1,6 @@
 import { $, view } from '~/helpers'
-
-const HEADER_HEIGHT = 60
+import { HEADER_HEIGHT } from '~/constants'
+import Router from '~/router'
 
 @view
 export class Page {
@@ -8,6 +8,18 @@ export class Page {
     return (
       <pagemain {...props}>
         <header if={header || title}>
+          <nav>
+            <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
+              {'<'}
+            </back>
+            <fwd
+              $btn
+              $active={!Router.atFront}
+              onClick={() => Router.forward()}
+            >
+              {'>'}
+            </fwd>
+          </nav>
           <title if={title}>
             {title}
           </title>
@@ -33,6 +45,8 @@ export class Page {
       left: 0,
       right: 0,
       padding: 10,
+      paddingLeft: 80,
+      alignItems: 'center',
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       borderBottom: [1, '#eee'],
@@ -48,6 +62,20 @@ export class Page {
       alignItems: 'flex-end',
       justifyContent: 'center',
       flex: 3,
+    },
+    nav: {
+      flexFlow: 'row',
+      marginRight: 10,
+    },
+    btn: {
+      padding: 8,
+      opacity: 0.2,
+      '&:hover': {
+        opacity: 1,
+      },
+    },
+    active: {
+      opacity: 0.5,
     },
   }
   static theme = {

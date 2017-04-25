@@ -44,7 +44,6 @@ export default class Sidebar {
   static style = {
     side: {
       width: 210,
-      padding: [0, 10],
       borderLeft: [1, '#eee'],
     },
     main: {

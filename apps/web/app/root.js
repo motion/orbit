@@ -11,7 +11,6 @@ export default class Root {
   render() {
     const CurrentPage = Router.activeView || NotFound
 
-    console.log(Router.key)
     return (
       <layout $$draggable>
         <CurrentPage key={Router.key} />

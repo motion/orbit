@@ -1,6 +1,7 @@
 import { view } from '~/helpers'
 import App from 'models'
 import { Input, Button, Link } from '~/views'
+import { HEADER_HEIGHT } from '~/constants'
 
 @view
 export default class Login {
@@ -15,7 +16,6 @@ export default class Login {
         </info>
 
         <form if={!App.loggedIn} onSubmit={this.prevent}>
-          <legend>signup or login:</legend>
           <inputs>
             <Input
               $input
@@ -24,6 +24,7 @@ export default class Login {
               getRef={this.ref('username').set}
             />
             <Input
+              if={false}
               $input
               name="password"
               type="password"
@@ -31,7 +32,7 @@ export default class Login {
             />
           </inputs>
           <Button
-            $$style={{ width: '100%', textAlign: 'center' }}
+            $button
             onClick={() =>
               App.loginOrSignup(this.username.value, this.password.value)}
           >
@@ -46,19 +47,23 @@ export default class Login {
     login: {
       alignItems: 'center',
       justifyContent: 'flex-end',
+      height: HEADER_HEIGHT,
+      borderBottom: [1, '#eee'],
     },
     form: {
       flex: 1,
-      padding: [10, 0],
-      borderBottom: [1, '#eee'],
+      flexFlow: 'row',
+      alignItems: 'center',
     },
     inputs: {
       flexFlow: 'row',
       marginBottom: 5,
     },
     input: {
-      width: 'calc(50% - 10px)',
-      margin: 5,
+      display: 'flex',
+      flex: 1,
+      padding: [4, 8],
+      fontSize: 14,
     },
     legend: {
       fontSize: 12,
@@ -75,6 +80,10 @@ export default class Login {
     user: {
       flex: 1,
       paddingRight: 10,
+    },
+    button: {
+      padding: [0, 8],
+      flexShrink: 1,
     },
   }
 }

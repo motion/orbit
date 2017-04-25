@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import App from 'models'
 import mobx from 'mobx'
 import Router from './router'
-import config from './config'
+import { DB_CONFIG } from './constants'
 
 window.React = React
 window.App = App
@@ -15,7 +15,7 @@ export function run() {
   render(<Root />, document.querySelector('#app'))
 }
 
-App.start(config).then(run)
+App.start(DB_CONFIG).then(run)
 
 if (module.hot) {
   module.hot.accept('./root', run)

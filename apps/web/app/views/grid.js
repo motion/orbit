@@ -9,7 +9,7 @@ export default class Grid {
   static defaultProps = {
     rowHeight: 120,
     layout: [],
-    onLayoutChange: () => {},
+    onLayoutChange: _ => _,
   }
 
   @observable.ref layout = []
@@ -24,10 +24,6 @@ export default class Grid {
     }
   }
 
-  onLayoutChange = layout => {
-    this.props.onLayoutChange(layout)
-  }
-
   render({ items, ...props }) {
     console.log('setted')
     return (
@@ -35,7 +31,7 @@ export default class Grid {
         {...props}
         key={Math.random()}
         ref={ref => this.gridLayout = ref}
-        onLayoutChange={this.onLayoutChange}
+        onLayoutChange={this.props.onLayoutChange}
         layout={this.layout}
       >
         {items.map((item, i) => <gridItem key={i}>{item}</gridItem>)}

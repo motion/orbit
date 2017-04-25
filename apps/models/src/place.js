@@ -1,5 +1,5 @@
 import App from './index'
-import { Model, query, str } from './helpers'
+import { Model, query, str, array } from './helpers'
 import Board from './board'
 
 class Place extends Model {
@@ -8,10 +8,27 @@ class Place extends Model {
     title: str,
     primary_doc_id: str.optional,
     timestamps: true,
+    layout: array.optional,
   }
 
   static defaultProps = () => ({
     author_id: App.user.name,
+    layout: [
+      {
+        w: 1,
+        h: 1,
+        x: 0,
+        y: 0,
+        i: '0',
+      },
+      {
+        w: 1,
+        h: 1,
+        x: 1,
+        y: 0,
+        i: '1',
+      },
+    ],
   })
 
   settings = {

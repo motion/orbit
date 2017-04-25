@@ -94,6 +94,7 @@ export default class DocItem {
       padding: 12,
       margin: [0, 5, 10, 5],
       color: '#333',
+      background: '#fff',
     },
     meta: {
       fontSize: 13,

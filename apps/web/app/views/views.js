@@ -48,6 +48,8 @@ export const CircleButton = $('btn', {
   },
 })
 
+const HEADER_HEIGHT = 80
+
 @view
 export class Page {
   render({ children, header, ...props }) {
@@ -56,7 +58,9 @@ export class Page {
         <header if={header}>
           {header}
         </header>
-        {children}
+        <content>
+          {children}
+        </content>
       </pagemain>
     )
   }
@@ -67,12 +71,34 @@ export class Page {
       overflowY: 'scroll',
     },
   }
+  static theme = {
+    header: () => ({
+      content: {
+        position: 'relative',
+        marginTop: HEADER_HEIGHT,
+        flex: 1,
+        overflowY: 'scroll',
+      },
+    }),
+  }
 }
 
 Page.Side = $('side', {
   width: 200,
   padding: 0,
   flex: 1,
+})
+
+Page.Head = $('header', {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  padding: 10,
+  height: HEADER_HEIGHT,
+  borderBottom: [1, '#eee'],
+  background: '#fff',
+  zIndex: 1000,
 })
 
 export const Text = $('p', {

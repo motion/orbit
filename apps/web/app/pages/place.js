@@ -24,6 +24,12 @@ class PlaceStore {
     current.primary_doc_id = doc._id
     current.save()
   }
+
+  updateLayout = layout => {
+    console.log('updating layout', layout)
+    this.place.current.layout = layout
+    this.place.current.save()
+  }
 }
 
 @view({
@@ -48,59 +54,28 @@ export default class PlacePage {
       <Page
         if={place}
         header={
-          <header>
+          <Page.Head>
             <CircleButton $$background="#fff">join</CircleButton>
             <h2>Place: {place.title}</h2>
-          </header>
+          </Page.Head>
         }
       >
-        <main>
-          <Grid
-            if={docs}
-            layout={[
-              {
-                w: 1,
-                h: 1,
-                x: 0,
-                y: 0,
-                i: '0',
-                moved: false,
-                static: false,
-              },
-              {
-                w: 1,
-                h: 1,
-                x: 1,
-                y: 0,
-                i: '1',
-                moved: false,
-                static: false,
-              },
-              {
-                w: 1,
-                h: 1,
-                x: 1,
-                y: 1,
-                i: '2',
-                moved: false,
-                static: false,
-              },
-            ]}
-            cols={2}
-            rowHeight={200}
-            items={docs}
-          />
+        <Grid
+          if={docs}
+          onLayoutChange={store.updateLayout}
+          layout={store.place.current.layout}
+          cols={2}
+          rowHeight={200}
+          items={docs}
+        />
 
-          <Document
-            if={false && store.activeDocId}
-            noSide
-            key={store.activeDocId}
-            id={store.activeDocId}
-          />
-        </main>
-        <side>
-          <button onClick={store.createDoc}>create</button>
-        </side>
+        <Document
+          if={false && store.activeDocId}
+          noSide
+          key={store.activeDocId}
+          id={store.activeDocId}
+        />
+        <button onClick={store.createDoc}>create</button>
       </Page>
     )
   }

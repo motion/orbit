@@ -42,7 +42,6 @@ export default class Home {
     const docs = (store.docs.current || []).map((doc, i) => (
       <DocItem
         slanty
-        draggable
         editable
         getRef={ref => {
           if (i === 0) {
@@ -54,11 +53,20 @@ export default class Home {
     ))
 
     return (
-      <Page $$padded>
-        <CircleButton onClick={store.createDoc}>
-          +
-        </CircleButton>
-        <FlipMove $docs duration={300} easing="ease-out">
+      <Page
+        title="Home"
+        header={
+          <Page.Head>
+            <div $$flex />
+            <div $$centered>
+              <CircleButton onClick={store.createDoc}>
+                +
+              </CircleButton>
+            </div>
+          </Page.Head>
+        }
+      >
+        <FlipMove $$padding={10} $docs duration={300} easing="ease-out">
           {docs}
         </FlipMove>
       </Page>

@@ -155,16 +155,16 @@ export default class DocItem {
         },
       },
     },
-
     editable: {
       doc: {
         height: 200,
+        width: 'calc(50% - 10px)',
       },
     },
-
     draggable: {
       doc: {
         height: '100%',
+        width: '100%',
       },
     },
   }

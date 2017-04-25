@@ -53,10 +53,13 @@ export default class PlacePage {
     return (
       <Page
         if={place}
+        title={place.title}
         header={
           <Page.Head>
-            <CircleButton $$background="#fff">join</CircleButton>
-            <h2>Place: {place.title}</h2>
+            <dix $$flex />
+            <actions $$centered>
+              <CircleButton $$background="#fff">sub</CircleButton>
+            </actions>
           </Page.Head>
         }
       >

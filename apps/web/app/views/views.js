@@ -1,6 +1,8 @@
 import { $, view } from '~/helpers'
 import Sidebar from '~/views/layout/sidebar'
 
+export * from '~/views/page'
+
 export const Input = $('input', {
   border: [1, '#eee'],
   padding: 4,
@@ -22,11 +24,8 @@ export const Button = $('btn', {
 
 export const CircleButton = $('btn', {
   display: 'flex',
-  position: 'absolute',
-  top: -5,
-  right: -5,
-  width: 40,
-  height: 40,
+  width: 50,
+  height: 50,
   borderRadius: 100,
   border: [2, '#eee'],
   alignItems: 'center',
@@ -34,7 +33,7 @@ export const CircleButton = $('btn', {
   zIndex: 1000,
   background: '#fff',
   color: '#111',
-  fontSize: 20,
+  fontSize: 30,
   fontWeight: 400,
   cursor: 'pointer',
   userSelect: 'none',
@@ -46,59 +45,6 @@ export const CircleButton = $('btn', {
       scale: 1.2,
     },
   },
-})
-
-const HEADER_HEIGHT = 80
-
-@view
-export class Page {
-  render({ children, header, ...props }) {
-    return (
-      <pagemain {...props}>
-        <header if={header}>
-          {header}
-        </header>
-        <content>
-          {children}
-        </content>
-      </pagemain>
-    )
-  }
-  static style = {
-    pagemain: {
-      flex: 1,
-      position: 'relative',
-      overflowY: 'scroll',
-    },
-  }
-  static theme = {
-    header: () => ({
-      content: {
-        position: 'relative',
-        marginTop: HEADER_HEIGHT,
-        flex: 1,
-        overflowY: 'scroll',
-      },
-    }),
-  }
-}
-
-Page.Side = $('side', {
-  width: 200,
-  padding: 0,
-  flex: 1,
-})
-
-Page.Head = $('header', {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  padding: 10,
-  height: HEADER_HEIGHT,
-  borderBottom: [1, '#eee'],
-  background: '#fff',
-  zIndex: 1000,
 })
 
 export const Text = $('p', {

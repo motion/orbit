@@ -9,14 +9,14 @@ export default class Login {
   render() {
     return (
       <login>
-        <info if={App.user}>
+        <info if={App.loggedIn}>
           <user $$ellipse>{App.user.name}</user>
           <Button onClick={App.logout}>logout</Button>
         </info>
 
-        <form if={!App.user} onSubmit={this.prevent}>
+        <form if={!App.loggedIn} onSubmit={this.prevent}>
           <legend>signup or login:</legend>
-          <div $$row>
+          <inputs>
             <Input
               $input
               name="username"
@@ -29,7 +29,7 @@ export default class Login {
               type="password"
               getRef={this.ref('password').set}
             />
-          </div>
+          </inputs>
           <Button
             $$style={{ width: '100%', textAlign: 'center' }}
             onClick={() =>
@@ -51,6 +51,10 @@ export default class Login {
       flex: 1,
       padding: [10, 0],
       borderBottom: [1, '#eee'],
+    },
+    inputs: {
+      flexFlow: 'row',
+      marginBottom: 5,
     },
     input: {
       width: 'calc(50% - 10px)',

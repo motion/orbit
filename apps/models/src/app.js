@@ -8,6 +8,15 @@ import pAuth from 'pouchdb-authentication'
 
 import * as Models from './all'
 
+const tempId = () => {
+  let id = localStorage.getItem('temp-id')
+  if (!id) {
+    id = `${Math.random()}`
+    localStorage.setItem('temp-id', id)
+  }
+  return id
+}
+
 export default class App {
   db = null
   @observable user = null
@@ -97,7 +106,15 @@ export default class App {
     if (loggedIn) {
       this.user = session.userCtx
     } else {
-      this.user = false
+      this.user = this.temporaryUser
     }
+  }
+
+  get temporaryUser() {
+    return { name: 'anon', _id: tempId() }
+  }
+
+  get loggedIn() {
+    return this.user && this.user.name !== 'anon'
   }
 }

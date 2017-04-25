@@ -5,6 +5,13 @@ import Login from './login'
 
 class SidebarStore {
   places = Place.all()
+  placeInput = null
+
+  createPlace = e => {
+    e.preventDefault()
+    Place.create({ title: this.placeInput.value })
+    this.placeInput.value = ''
+  }
 }
 
 @view({ store: SidebarStore })
@@ -33,8 +40,10 @@ export default class Sidebar {
         <form onSubmit={store.createPlace}>
           <Input
             $create
-            ref={ref => store.place = ref}
-            placeholder="Create..."
+            $$fontSize={18}
+            getRef={ref => store.placeInput = ref}
+            onKeyDown={e => e.which === 13 && store.createPlace()}
+            placeholder="🎉 make new place..."
           />
         </form>
       </side>
@@ -51,7 +60,10 @@ export default class Sidebar {
     },
     h2: {
       fontSize: 14,
+      fontWeight: 300,
+      padding: [4, 8],
       color: [0, 0, 0, 0.5],
+      borderBottom: [1, 'dotted', '#f2f2f2'],
     },
     piece: {
       width: '100%',
@@ -63,6 +75,9 @@ export default class Sidebar {
       '&:hover': {
         background: '#f2f2f2',
       },
+    },
+    create: {
+      width: '100%',
     },
   }
 }

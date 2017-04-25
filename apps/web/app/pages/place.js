@@ -1,7 +1,7 @@
 import { view, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
 import { Place, Doc } from 'models'
-import { Text, Page, CircleButton } from '~/views'
+import { Text, Page, Button, CircleButton } from '~/views'
 import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Document from '~/views/document'
@@ -55,12 +55,16 @@ export default class PlacePage {
     return (
       <Page
         if={place}
-        title={place.title}
+        title={
+          <title $$row $$align="center">
+            {place.url()}&nbsp;&nbsp;<Button inline>🔗</Button>
+          </title>
+        }
         header={
           <Page.Head>
             <dix $$flex />
             <actions $$centered>
-              <CircleButton $$background="#fff">sub</CircleButton>
+              <CircleButton $$background="#fff">🍻</CircleButton>
             </actions>
           </Page.Head>
         }

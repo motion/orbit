@@ -59,7 +59,8 @@ export class Page {
     title: {
       flex: 1,
       justifyContent: 'flex-end',
-      fontSize: 12,
+      fontSize: 14,
+      fontWeight: 600,
     },
     rest: {
       alignItems: 'flex-end',

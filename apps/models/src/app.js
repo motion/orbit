@@ -112,18 +112,23 @@ export default class App {
 
   setUsername = (name: string) => {
     this.user.name = name
+    localStorage.setItem('tempUsername', name)
   }
 
   @computed get noUser() {
-    return this.user && this.user.name === 'anon'
+    return this.user && !this.user.name
   }
 
   @computed get tempUser() {
-    return this.user && this.user.name !== 'anon' && this.user.temp
+    return this.user && this.user.name && this.user.temp
   }
 
   get temporaryUser() {
-    return { name: 'anon', _id: tempId(), temp: true }
+    return {
+      name: localStorage.getItem('tempUsername'),
+      _id: tempId(),
+      temp: true,
+    }
   }
 
   get loggedIn() {

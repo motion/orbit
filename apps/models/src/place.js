@@ -22,7 +22,7 @@ class Place extends Model {
 
   methods = {
     url() {
-      return `/g/${this.title.toLowerCase()}`
+      return `/g/${this.title.replace(' ', '-').toLowerCase()}`
     },
 
     @query boards() {

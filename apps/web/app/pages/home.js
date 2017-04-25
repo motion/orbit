@@ -61,7 +61,7 @@ export default class Home {
             <div $$flex />
             <div $$centered>
               <CircleButton onClick={store.createDoc}>
-                +
+                📇
               </CircleButton>
             </div>
           </Page.Head>

@@ -10,8 +10,8 @@ export default class Login {
 
   prevent = e => e.preventDefault()
   setUsername = () => App.setUsername(this.username)
-  finish = () => App.loginOrSignup(this.username, this.password)
-  onPassword = node => node.focus()
+  finish = () => App.loginOrSignup(App.user.name, this.password)
+  onPassword = node => node && node.focus()
 
   render(props) {
     return (
@@ -33,6 +33,7 @@ export default class Login {
 
         <step if={App.tempUser}>
           <form onSubmit={this.prevent}>
+            <icon onClick={() => App.user.name = ''}>{'<'}</icon>
             <username $$ellipse>{App.user.name}</username>
             <Input
               $input
@@ -40,6 +41,7 @@ export default class Login {
               name="password"
               type="password"
               placeholder="password"
+              onKeyDown={e => e.which === 13 && this.finish()}
               onChange={e => this.password = e.target.value}
               getRef={this.onPassword}
             />
@@ -47,9 +49,11 @@ export default class Login {
           </form>
         </step>
 
-        <step if={App.loggedIn}>
-          welcome,
-          <username $$ellipse>{App.user.name}</username>
+        <step if={App.loggedIn} $$draggable>
+          <text>
+            hi,&nbsp;
+            <username $$ellipse>{App.user.name}</username>
+          </text>
           <Button onClick={App.logout}>👋</Button>
         </step>
       </login>
@@ -62,8 +66,7 @@ export default class Login {
       alignItems: 'center',
       justifyContent: 'flex-end',
       flexFlow: 'row',
-
-      padding: [0, 10],
+      padding: [0, 5],
       alignItems: 'center',
       height: HEADER_HEIGHT,
       borderBottom: [1, '#eee'],
@@ -72,6 +75,10 @@ export default class Login {
       flex: 1,
       flexFlow: 'row',
       width: '100%',
+    },
+    icon: {
+      padding: [0, 5, 0, 0],
+      opacity: 0.5,
     },
     form: {
       width: '100%',
@@ -101,6 +108,12 @@ export default class Login {
       padding: [3, 8],
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    text: {
+      alignItems: 'center',
+      flexFlow: 'row',
+      flex: 1,
+      userSelect: 'none',
     },
   }
 }

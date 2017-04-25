@@ -21,6 +21,9 @@ export const Button = $('btn', {
   fontSize: 14,
   cursor: 'pointer',
   userSelect: 'none',
+  '&:hover': {
+    background: '#f2f2f2',
+  },
   '&:active': {
     background: '#eee',
   },

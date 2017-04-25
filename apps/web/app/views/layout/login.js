@@ -1,13 +1,20 @@
-import { view } from '~/helpers'
+import { view, observable } from '~/helpers'
 import App from 'models'
 import { Input, Button, Link } from '~/views'
 import { HEADER_HEIGHT } from '~/constants'
 
 @view
 export default class Login {
-  prevent = e => e.preventDefault()
+  @observable showPassword = false
+  password = null
 
+  prevent = e => e.preventDefault()
   setUsername = () => App.setUsername(this.username.value)
+  setShowPassword = val => this.showPassword = val
+
+  componentDidMount() {
+    this.react(() => this.showPassword, show => show && this.password.focus())
+  }
 
   render() {
     const finish = () =>
@@ -15,40 +22,44 @@ export default class Login {
 
     return (
       <login>
-        <info if={App.hasUsername}>
+        <info if={App.hasUsername && !this.showPassword}>
           <user $$ellipse>{App.user.name}</user>
-          <Button onClick={App.logout}>🚪</Button>
         </info>
 
         <form if={!App.loggedIn} onSubmit={this.prevent}>
-          <inputs>
-            <Input
-              $input
-              if={!App.hasUsername}
-              name="username"
-              onKeyDown={e => e.which === 13 && this.setUsername()}
-              placeholder="pick username"
-              getRef={this.ref('username').set}
-            />
-            <Input
-              if={false}
-              $input
-              name="password"
-              type="password"
-              getRef={this.ref('password').set}
-            />
-          </inputs>
+          <Input
+            $input
+            if={!App.hasUsername}
+            name="username"
+            onKeyDown={e => e.which === 13 && this.setUsername()}
+            placeholder="pick username"
+            getRef={this.ref('username').set}
+          />
           <Button if={!App.hasUsername} $button onClick={this.setUsername}>
             ✅
           </Button>
+        </form>
+
+        <form if={App.hasUsername && App.user.temp} onSubmit={this.prevent}>
+          <Input
+            $$hide={!this.showPassword}
+            $input
+            name="password"
+            type="password"
+            getRef={this.ref('password').set}
+          />
           <Button
             if={App.hasUsername && App.user.temp}
             $button
-            onClick={this.setUsername}
+            onClick={() => this.setShowPassword(true)}
           >
-            🔓
+            {this.showPassword ? '✅' : 'signup'}
           </Button>
         </form>
+
+        <buttons if={App.loggedIn} $$row $$centered>
+          <Button onClick={App.logout}>bye</Button>
+        </buttons>
       </login>
     )
   }
@@ -57,6 +68,11 @@ export default class Login {
     login: {
       alignItems: 'center',
       justifyContent: 'flex-end',
+      flexFlow: 'row',
+      flex: 1,
+      width: '100%',
+      padding: [0, 10],
+      alignItems: 'center',
       height: HEADER_HEIGHT,
       borderBottom: [1, '#eee'],
     },
@@ -67,7 +83,7 @@ export default class Login {
     },
     inputs: {
       flexFlow: 'row',
-      marginBottom: 5,
+      alignItems: 'center',
     },
     input: {
       display: 'flex',
@@ -83,14 +99,13 @@ export default class Login {
     },
     info: {
       flexFlow: 'row',
-      width: '100%',
-      padding: [10, 0],
-      borderBottom: [1, '#eee'],
+      flex: 4,
       alignItems: 'center',
     },
     user: {
       flex: 1,
       paddingRight: 10,
+      fontWeight: 500,
     },
     button: {
       padding: [0, 8],

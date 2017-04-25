@@ -41,6 +41,7 @@ export default class Home {
 
     const docs = (store.docs.current || []).map((doc, i) => (
       <DocItem
+        key={doc._id}
         slanty
         editable
         getRef={ref => {

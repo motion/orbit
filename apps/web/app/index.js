@@ -4,6 +4,10 @@ import App from 'models'
 import mobx from 'mobx'
 import Router from './router'
 import { DB_CONFIG } from './constants'
+import mobxFormatters from 'mobx-formatters'
+
+// install console formatters
+mobxFormatters(mobx)
 
 window.React = React
 window.App = App

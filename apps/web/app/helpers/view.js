@@ -1,4 +1,10 @@
-import { addEvent, setTimeout, setInterval, ref } from 'motion-class-helpers'
+import {
+  addEvent,
+  setTimeout,
+  setInterval,
+  ref,
+  CompositeDisposable,
+} from 'motion-class-helpers'
 import { watch, react } from 'motion-mobx-helpers'
 import mixin from 'react-mixin'
 import autobind from 'autobind-decorator'
@@ -7,7 +13,20 @@ import { observer } from 'mobx-react'
 import { provide } from 'motion-view'
 import glossy from './styles'
 
-const Helpers = { addEvent, setInterval, setTimeout, ref, watch, react }
+const Helpers = {
+  componentWillMount() {
+    this.subscriptions = new CompositeDisposable()
+  },
+  componentWillUnmount() {
+    this.subscriptions.dispose()
+  },
+  addEvent,
+  setInterval,
+  setTimeout,
+  ref,
+  watch,
+  react,
+}
 
 // @view
 export default function view(View) {

@@ -4,10 +4,10 @@ import Router from '~/router'
 
 @view
 export class Page {
-  render({ title, children, header, ...props }) {
+  render({ title, actions, children, header, ...props }) {
     return (
       <pagemain {...props}>
-        <header if={header || title}>
+        <header if={header || title || actions}>
           <nav>
             <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
               {'<'}
@@ -25,6 +25,9 @@ export class Page {
           </title>
           <rest>
             {header}
+            <actions $$row if={actions}>
+              {actions.map((action, i) => <action key={i}>{action}</action>)}
+            </actions>
           </rest>
         </header>
         <content>
@@ -76,6 +79,9 @@ export class Page {
     },
     active: {
       opacity: 0.5,
+    },
+    action: {
+      margin: [0, 0, 0, 5],
     },
   }
   static theme = {

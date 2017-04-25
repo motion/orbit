@@ -20,6 +20,10 @@ export const Button = $('btn', {
   color: '#000',
   fontSize: 14,
   cursor: 'pointer',
+  userSelect: 'none',
+  '&:active': {
+    background: '#eee',
+  },
 })
 
 export const CircleButton = $('btn', {

@@ -18,13 +18,18 @@ export default class DocumentPage {
       return null
     }
 
+    console.log(doc)
+    window.doc = doc
+
     return (
       <Page
-        header={
-          <Page.Head>
-            <Button onClick={() => Router.back()}>collab</Button>
-          </Page.Head>
-        }
+        header
+        actions={[
+          <Button onClick={() => {}}>collab</Button>,
+          <Button onClick={doc.togglePrivate}>
+            make {doc.private ? 'public' : 'private'}
+          </Button>,
+        ]}
       >
         <content $$flex $$row>
           <main $$flex={2}>

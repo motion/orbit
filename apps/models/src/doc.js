@@ -1,4 +1,4 @@
-import { Model, query, str, object, array } from './helpers'
+import { Model, query, str, object, array, bool } from './helpers'
 import generateName from 'sillyname'
 
 class Doc extends Model {
@@ -8,6 +8,7 @@ class Doc extends Model {
     board_id: str.optional,
     author_id: str,
     places: array.optional.items(str),
+    private: bool,
     timestamps: true,
   }
 
@@ -15,6 +16,7 @@ class Doc extends Model {
     title: generateName(),
     author_id: App.user.name,
     places: ['ddd'],
+    private: true,
     content: {
       nodes: [
         {
@@ -23,7 +25,7 @@ class Doc extends Model {
           nodes: [
             {
               kind: 'text',
-              text: 'What a delight to see you.',
+              text: 'hello world',
             },
           ],
         },
@@ -39,6 +41,12 @@ class Doc extends Model {
   methods = {
     url() {
       return `/d/${this._id.replace(':', '-')}`
+    },
+
+    togglePrivate() {
+      console.log('toggling')
+      this.private = !this.private
+      this.save()
     },
   }
 

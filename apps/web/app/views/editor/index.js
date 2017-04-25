@@ -16,7 +16,7 @@ const plugins = [...markdown]
 
     @observable menuLoc = null
 
-    @throttle(200)
+    @throttle(400)
     update = val => {
       this.doc.content = Raw.serialize(val)
       this.doc.updated_at = new Date().toISOString()
@@ -27,7 +27,10 @@ const plugins = [...markdown]
 export default class EditorView extends Component {
   static defaultProps = {
     onChange: _ => _,
+    getRef: _ => _,
   }
+
+  editor = null
 
   state = {
     val: Raw.deserialize(this.props.doc.content, { terse: true }),
@@ -85,18 +88,23 @@ export default class EditorView extends Component {
     }
   }
 
-  @throttle(200)
-  onDocumentChange = (doc, state) => {
-    const { store, onChange } = this.props
-    store.update(state)
-    if (onChange) onChange(state)
-  }
-
   componentWillReceiveProps = ({ doc }) => {
     if (this.state.focused) return
 
     const val = Raw.deserialize(doc.content, { terse: true })
     this.setState({ val })
+  }
+
+  componentDidUpdate() {
+    console.log('updated')
+    this.updateMenu()
+  }
+
+  @throttle(200)
+  onDocumentChange = (doc, state) => {
+    const { store, onChange } = this.props
+    store.update(state)
+    if (onChange) onChange(state)
   }
 
   onChange = val => {
@@ -163,11 +171,6 @@ export default class EditorView extends Component {
     this.setState({ menu: portal.firstChild })
   }
 
-  componentDidUpdate() {
-    console.log('updated')
-    this.updateMenu()
-  }
-
   updateMenu = () => {
     const { menu, val } = this.state
 
@@ -219,6 +222,7 @@ export default class EditorView extends Component {
             onChange={this.onChange}
             onFocus={() => this.setState({ focused: true })}
             onBlur={() => this.setState({ focused: false })}
+            ref={ref => this.props.getRef(ref)}
             {...props}
           />
         </content>

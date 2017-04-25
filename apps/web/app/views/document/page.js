@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import { Page, CircleButton } from '~/views'
+import { Page, Button } from '~/views'
 import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import Document from './index'
@@ -19,11 +19,15 @@ export default class DocumentPage {
     }
 
     return (
-      <Page>
+      <Page
+        header={
+          <Page.Head>
+            <Button onClick={() => Router.back()}>collab</Button>
+          </Page.Head>
+        }
+      >
         <content $$flex $$row>
           <main $$flex={2}>
-            <CircleButton onClick={() => Router.back()}>{'<'}</CircleButton>
-
             <docarea>
               <Document {...props} />
             </docarea>
@@ -39,7 +43,7 @@ export default class DocumentPage {
             </met>
           </main>
 
-          <bar>
+          <bar if={false}>
             <item>a</item>
             <item>b</item>
             <item>c</item>
@@ -57,7 +61,7 @@ export default class DocumentPage {
       flexFlow: 'row',
     },
     main: {
-      padding: 20,
+      padding: 10,
       position: 'relative',
     },
     met: {

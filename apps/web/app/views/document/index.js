@@ -20,6 +20,11 @@ export default class Document {
     this.addEvent(document, 'keydown', this.onKey)
   }
 
+  setRef = ref => {
+    console.log('set editor ref', ref)
+    this.props.store.editorRef = ref
+  }
+
   render({ store, noSide }) {
     const doc = store.doc
 
@@ -40,7 +45,7 @@ export default class Document {
           />
         </top>
         <editor>
-          <Editor ref={ref => store.editorRef = ref} doc={doc} />
+          <Editor getRef={this.setRef} doc={doc} />
         </editor>
       </document>
     )
@@ -53,7 +58,7 @@ export default class Document {
     title: {
       fontSize: 28,
       border: 'none',
-      margin: [10, -1],
+      margin: [0, -1, 10, -1],
       width: '100%',
     },
   }

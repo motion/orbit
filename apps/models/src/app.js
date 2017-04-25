@@ -110,11 +110,19 @@ export default class App {
     }
   }
 
+  setUsername = (name: string) => {
+    this.user.name = name
+  }
+
+  get hasUsername() {
+    return this.user && this.user.name !== 'anon'
+  }
+
   get temporaryUser() {
-    return { name: 'anon', _id: tempId() }
+    return { name: 'anon', _id: tempId(), temp: true }
   }
 
   get loggedIn() {
-    return this.user && this.user.name !== 'anon'
+    return this.user && !this.user.temp
   }
 }

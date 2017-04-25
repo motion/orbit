@@ -202,6 +202,7 @@ fieldset {
     padding: 0;
 }
 
+
 .react-grid-item > .react-resizable-handle {
   position: absolute;
   width: 20px;

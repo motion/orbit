@@ -7,19 +7,26 @@ import { HEADER_HEIGHT } from '~/constants'
 export default class Login {
   prevent = e => e.preventDefault()
 
+  setUsername = () => App.setUsername(this.username.value)
+
   render() {
+    const finish = () =>
+      App.loginOrSignup(this.username.value, this.password.value)
+
     return (
       <login>
-        <info if={App.loggedIn}>
+        <info if={App.hasUsername}>
           <user $$ellipse>{App.user.name}</user>
-          <Button onClick={App.logout}>logout</Button>
+          <Button onClick={App.logout}>🚪</Button>
         </info>
 
         <form if={!App.loggedIn} onSubmit={this.prevent}>
           <inputs>
             <Input
               $input
+              if={!App.hasUsername}
               name="username"
+              onKeyDown={e => e.which === 13 && this.setUsername()}
               placeholder="pick username"
               getRef={this.ref('username').set}
             />
@@ -31,12 +38,15 @@ export default class Login {
               getRef={this.ref('password').set}
             />
           </inputs>
+          <Button if={!App.hasUsername} $button onClick={this.setUsername}>
+            ✅
+          </Button>
           <Button
+            if={App.hasUsername && App.user.temp}
             $button
-            onClick={() =>
-              App.loginOrSignup(this.username.value, this.password.value)}
+            onClick={this.setUsername}
           >
-            +
+            🔓
           </Button>
         </form>
       </login>

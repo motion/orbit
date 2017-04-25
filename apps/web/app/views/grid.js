@@ -23,6 +23,11 @@ export default class Grid {
     }
   }
 
+  onDragStart = e => {
+    e.preventDefault()
+    console.log('start')
+  }
+
   render({ items, ...props }) {
     console.log('setted')
     return (
@@ -34,7 +39,9 @@ export default class Grid {
         onLayoutChange={this.props.onLayoutChange}
         layout={this.layout}
       >
-        {items.map((item, i) => <gridItem key={i}>{item}</gridItem>)}
+        {items.map((item, i) => (
+          <gridItem onDragStart={this.onDragStart} key={i}>{item}</gridItem>
+        ))}
       </Layout>
     )
   }

@@ -30,10 +30,10 @@ export default class BaseModel {
     return props
   }
 
-  get defaultProps() {
+  getDefaultProps(props) {
     const { defaultProps } = this.constructor
     return typeof defaultProps === 'function'
-      ? defaultProps()
+      ? defaultProps(props)
       : defaultProps || {}
   }
 
@@ -102,7 +102,7 @@ export default class BaseModel {
   create(object) {
     const properties = {
       ...object,
-      ...this.defaultProps,
+      ...this.getDefaultProps(object),
     }
     return this.collection.insert(properties)
   }

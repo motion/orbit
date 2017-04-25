@@ -25,7 +25,7 @@ export default class Sidebar {
           <h2>me</h2>
           <Link $piece onClick={() => Router.go('/')}>home</Link>
 
-          <h2>groups</h2>
+          <h2>places</h2>
           <main if={store.places.current}>
             {store.places.current.map(piece => (
               <Link $piece to={piece.url()} key={piece._id}>

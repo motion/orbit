@@ -6,14 +6,16 @@ class Place extends Model {
   static props = {
     author_id: str,
     title: str,
+    slug: str,
     primary_doc_id: str.optional,
     timestamps: true,
     layout: array.optional,
   }
 
-  static defaultProps = () => ({
+  static defaultProps = props => ({
     author_id: App.user.name,
     layout: [],
+    slug: props.title.replace(/ /g, '-').toLowerCase(),
   })
 
   settings = {
@@ -22,13 +24,11 @@ class Place extends Model {
 
   methods = {
     url() {
-      return `/g/${this.title.replace(' ', '-').toLowerCase()}`
+      return `/g/${this.slug}`
     },
-
     @query boards() {
       return Board.collection.find().where('place_id').eq(this._id)
     },
-
     createBoard(info) {
       return Board.collection.insert({
         ...info,
@@ -39,7 +39,7 @@ class Place extends Model {
 
   @query all = () => this.collection.find()
 
-  @query get = title => this.collection.findOne().where('title').eq(title);
+  @query get = slug => this.collection.findOne().where('slug').eq(slug);
 }
 
 export default new Place()

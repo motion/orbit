@@ -1,4 +1,4 @@
-import { observable } from 'mobx'
+import { observable, computed } from 'mobx'
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pIDB from 'pouchdb-adapter-idb'
@@ -114,8 +114,12 @@ export default class App {
     this.user.name = name
   }
 
-  get hasUsername() {
-    return this.user && this.user.name !== 'anon'
+  @computed get noUser() {
+    return this.user && this.user.name === 'anon'
+  }
+
+  @computed get tempUser() {
+    return this.user && this.user.name !== 'anon' && this.user.temp
   }
 
   get temporaryUser() {

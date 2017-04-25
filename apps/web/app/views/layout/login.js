@@ -5,111 +5,102 @@ import { HEADER_HEIGHT } from '~/constants'
 
 @view
 export default class Login {
-  @observable showPassword = false
+  username = null
   password = null
 
   prevent = e => e.preventDefault()
-  setUsername = () => App.setUsername(this.username.value)
-  setShowPassword = val => this.showPassword = val
+  setUsername = () => App.setUsername(this.username)
+  finish = () => App.loginOrSignup(this.username, this.password)
+  onPassword = node => node.focus()
 
-  componentDidMount() {
-    this.react(() => this.showPassword, show => show && this.password.focus())
-  }
-
-  render() {
-    const finish = () =>
-      App.loginOrSignup(this.username.value, this.password.value)
-
+  render(props) {
     return (
       <login>
-        <info if={App.hasUsername && !this.showPassword}>
-          <user $$ellipse>{App.user.name}</user>
-        </info>
+        <step if={App.noUser}>
+          <form onSubmit={this.prevent}>
+            <Input
+              $input
+              name="username"
+              onKeyDown={e => e.which === 13 && this.setUsername()}
+              onChange={e => this.username = e.target.value}
+              placeholder="pick username"
+            />
+            <Button if={!App.hasUsername} $button onClick={this.setUsername}>
+              ✅
+            </Button>
+          </form>
+        </step>
 
-        <form if={!App.loggedIn} onSubmit={this.prevent}>
-          <Input
-            $input
-            if={!App.hasUsername}
-            name="username"
-            onKeyDown={e => e.which === 13 && this.setUsername()}
-            placeholder="pick username"
-            getRef={this.ref('username').set}
-          />
-          <Button if={!App.hasUsername} $button onClick={this.setUsername}>
-            ✅
-          </Button>
-        </form>
+        <step if={App.tempUser}>
+          <form onSubmit={this.prevent}>
+            <username $$ellipse>{App.user.name}</username>
+            <Input
+              $input
+              $$width={50}
+              name="password"
+              type="password"
+              placeholder="password"
+              onChange={e => this.password = e.target.value}
+              getRef={this.onPassword}
+            />
+            <Button onClick={this.finish}>✅</Button>
+          </form>
+        </step>
 
-        <form if={App.hasUsername && App.user.temp} onSubmit={this.prevent}>
-          <Input
-            $$hide={!this.showPassword}
-            $input
-            name="password"
-            type="password"
-            getRef={this.ref('password').set}
-          />
-          <Button
-            if={App.hasUsername && App.user.temp}
-            $button
-            onClick={() => this.setShowPassword(true)}
-          >
-            {this.showPassword ? '✅' : 'signup'}
-          </Button>
-        </form>
-
-        <buttons if={App.loggedIn} $$row $$centered>
-          <Button onClick={App.logout}>bye</Button>
-        </buttons>
+        <step if={App.loggedIn}>
+          welcome,
+          <username $$ellipse>{App.user.name}</username>
+          <Button onClick={App.logout}>👋</Button>
+        </step>
       </login>
     )
   }
 
   static style = {
     login: {
+      flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'flex-end',
       flexFlow: 'row',
-      flex: 1,
-      width: '100%',
+
       padding: [0, 10],
       alignItems: 'center',
       height: HEADER_HEIGHT,
       borderBottom: [1, '#eee'],
     },
-    form: {
+    step: {
       flex: 1,
       flexFlow: 'row',
-      alignItems: 'center',
+      width: '100%',
     },
-    inputs: {
+    form: {
+      width: '100%',
+      overflow: 'hidden',
       flexFlow: 'row',
       alignItems: 'center',
     },
     input: {
       display: 'flex',
       flex: 1,
+      maxWidth: '75%',
       padding: [4, 8],
       fontSize: 14,
       cursor: 'text',
-    },
-    legend: {
-      fontSize: 12,
-      textTransform: 'uppercase',
-      opacity: 0.7,
     },
     info: {
       flexFlow: 'row',
       flex: 4,
       alignItems: 'center',
     },
-    user: {
-      flex: 1,
+    username: {
+      width: 50,
       paddingRight: 10,
       fontWeight: 500,
     },
     button: {
-      padding: [0, 8],
-      flexShrink: 1,
+      padding: [3, 8],
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   }
 }

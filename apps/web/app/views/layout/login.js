@@ -20,7 +20,7 @@ export default class Login {
             <Input
               $input
               name="username"
-              placeholder="username"
+              placeholder="pick username"
               getRef={this.ref('username').set}
             />
             <Input
@@ -36,7 +36,7 @@ export default class Login {
             onClick={() =>
               App.loginOrSignup(this.username.value, this.password.value)}
           >
-            go
+            +
           </Button>
         </form>
       </login>
@@ -64,6 +64,7 @@ export default class Login {
       flex: 1,
       padding: [4, 8],
       fontSize: 14,
+      cursor: 'text',
     },
     legend: {
       fontSize: 12,

@@ -13,22 +13,7 @@ class Place extends Model {
 
   static defaultProps = () => ({
     author_id: App.user.name,
-    layout: [
-      {
-        w: 1,
-        h: 1,
-        x: 0,
-        y: 0,
-        i: '0',
-      },
-      {
-        w: 1,
-        h: 1,
-        x: 1,
-        y: 0,
-        i: '1',
-      },
-    ],
+    layout: [],
   })
 
   settings = {

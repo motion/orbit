@@ -12,14 +12,13 @@ export default class Grid {
     onLayoutChange: _ => _,
   }
 
-  @observable.ref layout = []
+  @observable.ref layout = null
   gridLayout = null
 
   componentDidMount() {
     if (this.props.layout) {
       setTimeout(() => {
         this.layout = this.props.layout
-        console.log('set')
       }, 150)
     }
   }
@@ -28,6 +27,7 @@ export default class Grid {
     console.log('setted')
     return (
       <Layout
+        if={this.layout}
         {...props}
         key={Math.random()}
         ref={ref => this.gridLayout = ref}

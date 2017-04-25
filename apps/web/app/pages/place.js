@@ -1,4 +1,5 @@
 import { view, autorun, observable } from '~/helpers'
+import { isEqual } from 'lodash'
 import { Place, Doc } from 'models'
 import { Text, Page, CircleButton } from '~/views'
 import Router from '~/router'
@@ -26,9 +27,10 @@ class PlaceStore {
   }
 
   updateLayout = layout => {
-    console.log('updating layout', layout)
-    this.place.current.layout = layout
-    this.place.current.save()
+    if (!isEqual(this.place.current.layout, layout)) {
+      this.place.current.layout = layout
+      this.place.current.save()
+    }
   }
 }
 

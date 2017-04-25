@@ -61,7 +61,7 @@ export default class DocumentPage {
       flexFlow: 'row',
     },
     main: {
-      padding: 10,
+      padding: 15,
       position: 'relative',
     },
     met: {

@@ -25,6 +25,16 @@ export default class Document {
     this.props.store.editorRef = ref
   }
 
+  onKeyDown = e => {
+    switch (e.which) {
+      case 9:
+      case 13:
+        this.props.store.focusEditor()
+        e.preventDefault()
+        break
+    }
+  }
+
   render({ store, noSide }) {
     const doc = store.doc
 
@@ -39,7 +49,7 @@ export default class Document {
             $title
             value={store.title}
             onChange={e => store.newTitle = e.target.value}
-            onKeyDown={e => e.which === 13 && store.focusEditor()}
+            onKeyDown={this.onKeyDown}
             onFocus={() => store.editTitle()}
             onBlur={() => store.saveTitle()}
           />

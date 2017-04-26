@@ -9,15 +9,21 @@ export default class Login {
   password = null
 
   prevent = e => e.preventDefault()
-  setUsername = () => App.setUsername(this.username)
+  setUsername = () => {
+    App.setUsername(this.username)
+    // if their browser autofilled password, login
+    if (this.password) {
+      this.finish()
+    }
+  }
   finish = () => App.loginOrSignup(App.user.name, this.password)
   onPassword = node => node && node.focus()
 
   render(props) {
     return (
       <login>
-        <step if={App.noUser}>
-          <form onSubmit={this.prevent}>
+        <form onSubmit={this.prevent}>
+          <step if={App.noUser}>
             <Input
               $input
               name="username"
@@ -28,13 +34,13 @@ export default class Login {
             <Button if={!App.hasUsername} $button onClick={this.setUsername}>
               ✅
             </Button>
-          </form>
-        </step>
+          </step>
 
-        <step if={App.tempUser}>
-          <form onSubmit={this.prevent}>
-            <icon onClick={() => App.user.name = ''}>{'<'}</icon>
-            <username $$ellipse>{App.user.name}</username>
+          <step $$hide={!App.tempUser}>
+            <info if={App.user} $$row>
+              <icon onClick={() => App.user.name = ''}>{'<'}</icon>
+              <username $$ellipse>{App.user.name}</username>
+            </info>
             <Input
               $input
               $$width={50}
@@ -46,8 +52,8 @@ export default class Login {
               getRef={this.onPassword}
             />
             <Button onClick={this.finish}>✅</Button>
-          </form>
-        </step>
+          </step>
+        </form>
 
         <step if={App.loggedIn} $$draggable>
           <text>

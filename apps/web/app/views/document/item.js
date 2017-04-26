@@ -149,7 +149,7 @@ export default class DocItem {
           borderColor: '#ddd',
           boxShadow: 'inset 0 0 0 1px #ddd',
           transform: {
-            rotate: `-0.5deg`,
+            // rotate: `-0.5deg`,
             scale: `1.01`,
           },
         },

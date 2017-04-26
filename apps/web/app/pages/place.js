@@ -55,6 +55,7 @@ export default class PlacePage {
     return (
       <Page
         if={place}
+        header
         title={
           <title $$row $$align="center">
             {place.url()}&nbsp;&nbsp;<Button>🔗</Button>

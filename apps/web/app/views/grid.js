@@ -29,7 +29,6 @@ export default class Grid {
   }
 
   render({ items, ...props }) {
-    console.log('setted')
     return (
       <Layout
         if={this.layout}

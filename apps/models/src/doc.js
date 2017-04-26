@@ -69,7 +69,7 @@ class Doc extends Model {
       .where('places')
       // in array find
       .elemMatch({ $eq: name })
-      .sort({ created_at: 'desc' })
+      .sort({ createdAt: 'desc' })
 }
 
 export default new Doc()

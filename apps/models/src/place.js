@@ -4,16 +4,16 @@ import Board from './board'
 
 class Place extends Model {
   static props = {
-    author_id: str,
+    authorId: str,
     title: str,
     slug: str,
-    primary_doc_id: str.optional,
-    timestamps: true,
+    primary_docId: str.optional,
     layout: array.optional,
+    timestamps: true,
   }
 
   static defaultProps = props => ({
-    author_id: App.user.name,
+    authorId: App.user.name,
     layout: [],
     slug: props.title.replace(/ /g, '-').toLowerCase(),
   })
@@ -27,12 +27,12 @@ class Place extends Model {
       return `/g/${this.slug}`
     },
     @query boards() {
-      return Board.collection.find().where('place_id').eq(this._id)
+      return Board.collection.find().where('placeId').eq(this._id)
     },
     createBoard(info) {
       return Board.collection.insert({
         ...info,
-        place_id: this._id,
+        placeId: this._id,
       })
     },
   }

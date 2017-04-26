@@ -4,6 +4,7 @@ import { HEADER_HEIGHT } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
+import Errors from '~/views/layout/errors'
 
 @view
 export default class Root {
@@ -41,6 +42,7 @@ export default class Root {
             </rest>
           </header>
           <content $withHeader={!!header}>
+            <Errors />
             <CurrentPage key={Router.key} />
           </content>
         </main>

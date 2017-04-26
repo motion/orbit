@@ -4,8 +4,8 @@ import App from './index'
 class Board extends Model {
   static props = {
     title: str,
-    author_id: str,
-    place_id: str,
+    authorId: str,
+    placeId: str,
     timestamps: true,
   }
 
@@ -15,7 +15,7 @@ class Board extends Model {
 
   hooks = {
     preInsert(doc) {
-      doc.author_id = App.user.name
+      doc.authorId = App.user.name
     },
   }
 

@@ -20,7 +20,7 @@ class HomeStore {
     e.preventDefault()
     Place.create({
       title: this.place.value,
-      author_id: App.user.name,
+      authorId: App.user.name,
     })
   }
 }

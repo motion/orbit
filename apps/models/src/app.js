@@ -1,4 +1,4 @@
-import { observable, computed } from 'mobx'
+import { observable, computed, action } from 'mobx'
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pIDB from 'pouchdb-adapter-idb'
@@ -19,10 +19,11 @@ const tempId = () => {
 
 export default class App {
   db = null
-  @observable user = null
 
-  // we can add some generic stores on here
+  // basically global stores
+  @observable user = null
   @observable.ref views = {}
+  @observable.ref errors = []
 
   constructor() {
     RxDB.plugin(pHTTP)
@@ -65,6 +66,7 @@ export default class App {
 
     // log back in
     this.setSession()
+    this.catchErrors()
   }
 
   loginOrSignup = async (username, password) => {
@@ -136,5 +138,27 @@ export default class App {
 
   get loggedIn() {
     return this.user && !this.user.temp
+  }
+
+  @action clearErrors = () => {
+    this.errors = []
+  }
+
+  catchErrors() {
+    window.addEventListener('unhandledrejection', event => {
+      event.promise.catch(({ message }) => {
+        try {
+          const error = JSON.parse(message)
+          this.errors = [
+            { id: Math.random(), ...error },
+            ...this.errors.slice(),
+          ]
+          console.log('caught error, see App.errors')
+          console.log(error)
+        } catch (e) {
+          console.log('displaying promise err', e)
+        }
+      })
+    })
   }
 }

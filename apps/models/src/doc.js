@@ -5,8 +5,8 @@ class Doc extends Model {
   static props = {
     title: str,
     content: object,
-    board_id: str.optional,
-    author_id: str,
+    boardId: str.optional,
+    authorId: str,
     places: array.optional.items(str),
     private: bool,
     timestamps: true,
@@ -14,7 +14,7 @@ class Doc extends Model {
 
   static defaultProps = () => ({
     title: generateName(),
-    author_id: App.user.name,
+    authorId: App.user.name,
     places: ['ddd'],
     private: true,
     content: {

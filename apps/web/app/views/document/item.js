@@ -63,7 +63,7 @@ export default class DocItem {
           {doc.title}
         </title>
         <meta if={false}>
-          <author>{doc.author_id}</author>
+          <author>{doc.authorId}</author>
           <TimeAgo minPeriod={10} date={doc.created_at} />
         </meta>
         <delete

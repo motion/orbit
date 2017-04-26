@@ -57,7 +57,7 @@ export default class PlacePage {
         if={place}
         title={
           <title $$row $$align="center">
-            {place.url()}&nbsp;&nbsp;<Button inline>🔗</Button>
+            {place.url()}&nbsp;&nbsp;<Button>🔗</Button>
           </title>
         }
         header={

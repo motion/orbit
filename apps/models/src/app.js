@@ -21,6 +21,9 @@ export default class App {
   db = null
   @observable user = null
 
+  // we can add some generic stores on here
+  @observable.ref views = {}
+
   constructor() {
     RxDB.plugin(pHTTP)
     RxDB.plugin(pIDB)

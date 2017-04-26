@@ -17,12 +17,14 @@ class SidebarStore {
 @view({ store: SidebarStore })
 export default class Sidebar {
   render({ store }) {
+    console.log('sidebar render', App.views.sidebar)
+
     return (
       <side>
         <content $$undraggable>
           <Login />
 
-          <h2>me</h2>
+          <h2>go</h2>
           <Link $piece onClick={() => Router.go('/')}>home</Link>
 
           <h2>places</h2>
@@ -37,12 +39,16 @@ export default class Sidebar {
 
         <div $$flex $$draggable />
 
+        <sidebar if={false && App.views.sidebar}>
+          {App.views.sidebar}
+        </sidebar>
+
         <form onSubmit={store.createPlace}>
           <Input
             $create
             $$fontSize={18}
             getRef={ref => store.placeInput = ref}
-            onKeyDown={e => e.which === 13 && store.createPlace()}
+            onKeyDown={e => e.which === 13 && store.createPlace(e)}
             placeholder="🎉 make new place..."
           />
         </form>

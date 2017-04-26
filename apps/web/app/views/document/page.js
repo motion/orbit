@@ -18,12 +18,14 @@ export default class DocumentPage {
       return null
     }
 
-    console.log(doc)
-    window.doc = doc
-
     return (
       <Page
         header
+        sidebar={
+          <side $$flex>
+            side
+          </side>
+        }
         actions={[
           <Button onClick={() => {}}>collab</Button>,
           <Button onClick={doc.togglePrivate}>

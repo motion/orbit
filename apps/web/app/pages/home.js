@@ -55,17 +55,13 @@ export default class Home {
 
     return (
       <Page
+        header
         title="Home"
-        header={
-          <Page.Head>
-            <div $$flex />
-            <div $$centered>
-              <CircleButton onClick={store.createDoc}>
-                📇
-              </CircleButton>
-            </div>
-          </Page.Head>
-        }
+        actions={[
+          <CircleButton onClick={store.createDoc}>
+            📇
+          </CircleButton>,
+        ]}
       >
         <FlipMove $$padding={10} $docs duration={300} easing="ease-out">
           {docs}

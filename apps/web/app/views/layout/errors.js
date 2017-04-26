@@ -6,14 +6,14 @@ export default class Errors {
   render() {
     return (
       <errors>
-        {App.errors.map(error => (
+        {App.errors.map((error, i) => (
           <error key={error.id}>
             <message>
               {error.errors.map(({ field, message }) => (
-                <subErr>{field}: {message}</subErr>
+                <subErr key={Math.random()}>{field}: {message}</subErr>
               ))}
             </message>
-            <clear onClick={App.clearErrors}>x</clear>
+            <clear if={i === 0} onClick={App.clearErrors}>x</clear>
           </error>
         ))}
       </errors>
@@ -23,22 +23,21 @@ export default class Errors {
   static style = {
     errors: {
       position: 'absolute',
-      top: 0,
       right: 0,
       bottom: 0,
       left: 0,
       zIndex: 100000,
+      pointerEvents: 'none',
+      userSelect: 'none',
     },
     error: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
       padding: 10,
       background: 'red',
       color: '#fff',
       flexFlow: 'row',
       justifyContent: 'space-between',
+      pointerEvents: 'auto',
+      userSelect: 'auto',
     },
     message: {
       flexFlow: 'row',

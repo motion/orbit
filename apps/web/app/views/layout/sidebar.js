@@ -2,6 +2,7 @@ import { view } from '~/helpers'
 import { Page, Link, Input } from '~/views'
 import { Place } from 'models'
 import Login from './login'
+import { SIDEBAR_SIZE } from '~/constants'
 
 class SidebarStore {
   places = Place.all()
@@ -58,7 +59,7 @@ export default class Sidebar {
 
   static style = {
     side: {
-      width: 210,
+      width: SIDEBAR_SIZE,
       borderLeft: [1, '#eee'],
     },
     main: {

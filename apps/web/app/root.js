@@ -42,10 +42,10 @@ export default class Root {
             </rest>
           </header>
           <content $withHeader={!!header}>
-            <Errors />
             <CurrentPage key={Router.key} />
           </content>
         </main>
+        <Errors />
         <Sidebar />
       </layout>
     )

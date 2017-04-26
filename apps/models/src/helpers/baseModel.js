@@ -23,8 +23,8 @@ export default class BaseModel {
     if (timestamps) {
       return {
         ...props,
-        created_at: str.datetime,
-        updated_at: str.datetime,
+        createdAt: str.datetime,
+        updatedAt: str.datetime,
       }
     }
     return props
@@ -75,9 +75,8 @@ export default class BaseModel {
     if (this.hasTimestamps) {
       const ogInsert = this.hooks.preInsert
       this.hooks.preInsert = doc => {
-        doc.created_at = this.now
-        doc.updated_at = this.now
-        console.log('got em', doc)
+        doc.createdAt = this.now
+        doc.updatedAt = this.now
         if (ogInsert) {
           ogInsert.apply(this, arguments)
         }
@@ -85,7 +84,7 @@ export default class BaseModel {
 
       const ogSave = this.hooks.preSave
       this.hooks.preSave = doc => {
-        doc.updated_at = this.now
+        doc.updatedAt = this.now
         if (ogSave) {
           ogSave.apply(this, arguments)
         }

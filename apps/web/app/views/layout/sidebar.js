@@ -18,15 +18,14 @@ class SidebarStore {
 @view({ store: SidebarStore })
 export default class Sidebar {
   render({ store }) {
-    console.log('sidebar render', App.views.sidebar)
-
     return (
       <side>
         <content $$undraggable>
           <Login />
 
           <h2>go</h2>
-          <Link $piece onClick={() => Router.go('/')}>home</Link>
+          <Link $piece onClick={() => Router.go('/')}>feed</Link>
+          <Link $piece onClick={() => Router.go('/me')}>personal</Link>
 
           <h2>places</h2>
           <main if={store.places.current}>

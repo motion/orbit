@@ -1,4 +1,5 @@
 import { Model, query, str, object, array, bool } from './helpers'
+import App from './index'
 import generateName from 'sillyname'
 
 class Doc extends Model {
@@ -35,7 +36,7 @@ class Doc extends Model {
 
   settings = {
     title: 'Doc4',
-    index: ['created_at'],
+    index: ['createdAt'],
   }
 
   methods = {
@@ -44,7 +45,6 @@ class Doc extends Model {
     },
 
     togglePrivate() {
-      console.log('toggling')
       this.private = !this.private
       this.save()
     },
@@ -52,14 +52,22 @@ class Doc extends Model {
 
   @query all = () => this.collection.find()
 
-  @query recent = () => this.collection.find().sort({ created_at: 'desc' })
+  @query recent = () => this.collection.find().sort({ createdAt: 'desc' })
 
   @query get = id => this.collection.findOne(id.replace('-', ':'));
+
+  @query user = user => {
+    if (!App.user) {
+      return null
+    }
+    return this.collection.find().where('authorId').eq(App.user.name)
+  }
 
   @query forBoard = name =>
     this.collection
       .find()
       .where('places')
+      // in array find
       .elemMatch({ $eq: name })
       .sort({ created_at: 'desc' })
 }

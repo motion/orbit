@@ -13,7 +13,6 @@ export default class Root {
   render() {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header } = App.views
-    console.log('App.views', App.views)
 
     return (
       <layout $$draggable>

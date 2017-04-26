@@ -62,10 +62,10 @@ export default class DocItem {
         >
           {doc.title}
         </title>
-        <meta if={false}>
+        <info>
           <author>{doc.authorId}</author>
-          <TimeAgo minPeriod={10} date={doc.created_at} />
-        </meta>
+          <TimeAgo minPeriod={10} date={doc.createdAt} />
+        </info>
         <delete
           onClick={e => {
             e.stopPropagation()
@@ -96,7 +96,7 @@ export default class DocItem {
       color: '#333',
       background: '#fff',
     },
-    meta: {
+    info: {
       fontSize: 13,
       color: [0, 0, 0, 0.4],
     },

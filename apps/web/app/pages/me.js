@@ -1,31 +1,22 @@
 import { view } from '~/helpers'
 import { Place, Doc } from 'models'
-import FlipMove from 'react-flip-move'
-import { Page, CircleButton } from '~/views'
+import { Page, Poof, CircleButton, Link, Input } from '~/views'
 import DocItem from '~/views/document/item'
+import FlipMove from 'react-flip-move'
 
-class HomeStore {
-  docs = Doc.recent()
-  place = null
+class MeStore {
+  docs = Doc.user()
 
   createDoc = e => {
     e.preventDefault()
     Doc.create()
   }
-
-  createPlace = e => {
-    e.preventDefault()
-    Place.create({
-      title: this.place.value,
-      authorId: App.user.name,
-    })
-  }
 }
 
 @view({
-  store: HomeStore,
+  store: MeStore,
 })
-export default class Home {
+export default class MePage {
   render({ store }) {
     const docs = (store.docs.current || [])
       .map((doc, i) => <DocItem key={doc._id} slanty editable doc={doc} />)
@@ -33,7 +24,7 @@ export default class Home {
     return (
       <Page
         header
-        title="Home"
+        title="my docs"
         actions={[
           <CircleButton onClick={store.createDoc}>
             📇

@@ -20,6 +20,7 @@ class Place extends Model {
 
   settings = {
     title: 'Place',
+    index: ['createdAt'],
   }
 
   methods = {

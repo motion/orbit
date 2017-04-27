@@ -29,7 +29,7 @@ export default class Sidebar {
 
           <h2>places</h2>
           <main if={store.places}>
-            {store.places.map(piece => (
+            {(store.places.current || []).map(piece => (
               <Link $piece to={piece.url()} key={piece._id}>
                 {piece.title}
               </Link>

@@ -8,16 +8,6 @@ import Board from '~/views/place/board'
 
 class PlaceStore {
   place = Place.get(Router.params.slug)
-
-  setActive = doc => e => {
-    this.activeDocId = doc._id
-  }
-
-  makePrimary = doc => e => {
-    const { current } = this.place
-    current.primary_doc_id = doc._id
-    current.save()
-  }
 }
 
 @view({
@@ -25,8 +15,7 @@ class PlaceStore {
 })
 export default class PlacePage {
   render({ store }) {
-    const place = store.place
-    // console.log('place is', place)
+    const place = store.place.current
 
     return (
       <Page

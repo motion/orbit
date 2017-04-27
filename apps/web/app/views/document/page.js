@@ -45,7 +45,8 @@ export default class DocumentPage {
               </ago>
               <places $$row if={doc.places}>
                 places:
-                {doc.places.map(name => <place key={name}>{name}</place>)}
+                {(doc.places.current || [])
+                  .map(name => <place key={name}>{name}</place>)}
               </places>
             </met>
           </main>

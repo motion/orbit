@@ -20,7 +20,6 @@
     [
       "babel-preset-env",
       {
-        "loose": true,
         "exclude": [
           "transform-regenerator"
         ]

@@ -11,9 +11,10 @@ class BoardStore {
   docs = Document.forPlace(this.place)
 
   updateLayout = layout => {
-    if (!isEqual(this.place.current.layout, layout)) {
-      this.place.current.layout = layout
-      this.place.current.save()
+    const { current } = this.place
+    if (!isEqual(current.layout, layout)) {
+      current.layout = layout
+      current.save()
     }
   }
 }
@@ -23,16 +24,14 @@ class BoardStore {
 })
 export default class Board {
   render({ store }) {
-    window.x = store
-
-    const docs = (store.docs || [])
+    const docs = (store.docs.current || [])
       .map(doc => <DocItem slanty draggable editable key={doc._id} doc={doc} />)
 
     return (
       <Grid
-        if={store.place}
+        if={store.place.current}
         onLayoutChange={store.updateLayout}
-        layout={store.place.layout}
+        layout={store.place.current.layout}
         cols={2}
         rowHeight={200}
         items={docs}

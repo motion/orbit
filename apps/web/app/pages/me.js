@@ -18,7 +18,7 @@ class MeStore {
 })
 export default class MePage {
   render({ store }) {
-    const docs = (store.docs || [])
+    const docs = (store.docs.current || [])
       .map((doc, i) => (
         <DocItem key={doc._id} draggable slanty editable doc={doc} />
       ))
@@ -28,8 +28,8 @@ export default class MePage {
         header
         title="my docs"
         actions={[
-          <CircleButton onClick={store.createDoc}>
-            📇
+          <CircleButton icon="📇" onClick={store.createDoc}>
+            new
           </CircleButton>,
         ]}
       >

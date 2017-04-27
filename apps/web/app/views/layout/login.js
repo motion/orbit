@@ -80,7 +80,7 @@ export default class Login {
       alignItems: 'center',
       justifyContent: 'flex-end',
       flexFlow: 'row',
-      padding: [0, 5],
+      padding: [0, 10],
       alignItems: 'center',
       height: HEADER_HEIGHT,
       borderBottom: [1, '#eee'],
@@ -89,6 +89,7 @@ export default class Login {
       flex: 1,
       flexFlow: 'row',
       width: '100%',
+      justifyContent: 'space-between',
     },
     icon: {
       padding: [0, 5, 0, 0],

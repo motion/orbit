@@ -35,7 +35,7 @@ export default class DocumentPage {
       >
         <content $$flex $$row>
           <main $$flex={2}>
-            <docarea $$undraggable>
+            <docarea $$draggable>
               <Document {...props} />
             </docarea>
 

@@ -16,7 +16,7 @@ export const Input = $('input', {
 export const Button = $('btn', {
   padding: [2, 8],
   borderRadius: 100,
-  border: [1, '#eee'],
+  border: [1, 'dotted', '#eee'],
   alignItems: 'center',
   justifyContent: 'center',
   background: '#fff',

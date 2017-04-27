@@ -1,4 +1,4 @@
-import { view } from '~/helpers'
+import { view, observable } from '~/helpers'
 import { Input, Button, Link } from '~/views'
 import { HEADER_HEIGHT } from '~/constants'
 import NotFound from '~/pages/notfound'
@@ -10,6 +10,12 @@ import Errors from '~/views/layout/errors'
 export default class Root {
   prevent = e => e.preventDefault()
 
+  @observable headerHovered = true
+
+  componentDidMount() {
+    this.headerHovered = false
+  }
+
   render() {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header } = App.views
@@ -17,7 +23,12 @@ export default class Root {
     return (
       <layout $$draggable>
         <main>
-          <header if={!!header || !!title || !!actions}>
+          <header
+            $hovered={this.headerHovered}
+            onMouseEnter={() => this.headerHovered = true}
+            onMouseLeave={() => this.headerHovered = false}
+            if={!!header || !!title || !!actions}
+          >
             <nav>
               <btn $active={Router.path !== '/'} onClick={() => Router.go('/')}>
                 🏚
@@ -76,6 +87,14 @@ export default class Root {
       borderBottom: [1, '#eee'],
       background: '#fff',
       zIndex: 1000,
+      opacity: 0.3,
+      transition: 'all ease-out 300ms',
+      transitionDelay: '400ms',
+    },
+    hovered: {
+      opacity: 1,
+      transition: 'all ease-in 100ms',
+      transitionDelay: '0',
     },
     title: {
       flex: 1,

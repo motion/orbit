@@ -1,8 +1,16 @@
-import { view, $ } from '~/helpers'
+import { view, observable } from '~/helpers'
 import Router from '~/router'
 
 @view
 export default class Link {
+  @observable active = false
+
+  componentDidMount() {
+    this.watch(() => {
+      this.active = Router.path === this.props.to
+    })
+  }
+
   onClick = e => {
     e.preventDefault()
     Router.go(this.props.to)
@@ -11,12 +19,22 @@ export default class Link {
     }
   }
   render({ to, ...props }) {
-    return <a href={to} {...props} onClick={this.onClick} />
+    return (
+      <a $active={this.active} href={to} {...props} onClick={this.onClick} />
+    )
   }
   static style = {
     a: {
-      color: 'purple',
+      color: '#333',
+      fontWeight: 200,
       cursor: 'pointer',
+    },
+    active: {
+      fontWeight: 600,
+      color: '#000',
+      '&:hover': {
+        background: 'transparent',
+      },
     },
   }
 }

@@ -24,8 +24,8 @@ export default class Sidebar {
           <Login />
 
           <h2>go</h2>
-          <Link $piece onClick={() => Router.go('/')}>feed</Link>
-          <Link $piece onClick={() => Router.go('/me')}>personal</Link>
+          <Link $piece to="/">feed</Link>
+          <Link $piece to="/me">personal</Link>
 
           <h2>places</h2>
           <main if={store.places.current}>
@@ -49,7 +49,7 @@ export default class Sidebar {
             $$fontSize={18}
             getRef={ref => store.placeInput = ref}
             onKeyDown={e => e.which === 13 && store.createPlace(e)}
-            placeholder="🎉 make new place..."
+            placeholder="create grop"
           />
         </form>
       </side>
@@ -60,6 +60,7 @@ export default class Sidebar {
     side: {
       width: SIDEBAR_WIDTH,
       borderLeft: [1, '#eee'],
+      overflowY: 'scroll',
     },
     main: {
       flex: 1,
@@ -67,9 +68,8 @@ export default class Sidebar {
     h2: {
       fontSize: 14,
       fontWeight: 300,
-      padding: [4, 8],
+      padding: [4, 8, 0],
       color: [0, 0, 0, 0.5],
-      borderBottom: [1, 'dotted', '#f2f2f2'],
     },
     piece: {
       width: '100%',
@@ -79,7 +79,7 @@ export default class Sidebar {
       padding: [4, 8],
       cursor: 'pointer',
       '&:hover': {
-        background: '#f2f2f2',
+        background: '#fafafa',
       },
     },
     create: {

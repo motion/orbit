@@ -63,6 +63,9 @@ export default class BaseModel {
       methods: this.compiledMethods,
     })
 
+    // shim add pouchdb-validation
+    this.collection.pouch.installValidationMethods()
+
     // create index
     if (this.settings.index) {
       await this.collection.pouch.createIndex({ fields: this.settings.index })

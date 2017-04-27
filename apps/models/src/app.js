@@ -5,6 +5,7 @@ import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
+import pValidate from 'pouchdb-validation'
 
 import * as Models from './all'
 
@@ -29,6 +30,7 @@ export default class App {
     RxDB.plugin(pHTTP)
     RxDB.plugin(pIDB)
     RxDB.plugin(pREPL)
+    RxDB.plugin(pValidate)
     PouchDB.plugin(pAuth)
     PouchDB.plugin(pHTTP)
 

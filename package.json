@@ -4,6 +4,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --skip-git",
     "web": "cd apps/web && npm start",
+    "web-debug": "DEBUG=true cd apps/web && npm start",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
     "build": "lerna exec --ignore web -- babel src --out-dir lib",
     "compile": "npm run clean && npm run build",

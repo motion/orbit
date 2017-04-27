@@ -1,5 +1,3 @@
-# docs
-
 - docs dont need titles
 - remove title from doc inner page
 - make auto title set in slate
@@ -11,13 +9,9 @@
 - (x) should remove doc from place not delete
 - (x) => dropdown menu to send, delete from place, delete doc (if permission)
 
-# social
-
 - personal => me (grid layout)
 - put me first in sidebar
 - make me a place
-
-# places
 
 - dont show card border unless in edit mode
 - inputs on topbar to set title/description

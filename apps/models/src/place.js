@@ -40,7 +40,9 @@ class Place extends Model {
 
   @query all = () => this.collection.find()
 
-  @query get = slug => this.collection.findOne().where('slug').eq(slug);
+  @query get = slug => {
+    return this.collection.findOne().where('slug').eq(slug)
+  };
 }
 
 export default new Place()

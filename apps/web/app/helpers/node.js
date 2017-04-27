@@ -1,7 +1,6 @@
-import { Component } from 'react'
 import view from './view'
 
-export default Component => @view class extends Component {
+export default Component => @view class {
   onDestroy = () => {
     const { node } = this.props
 

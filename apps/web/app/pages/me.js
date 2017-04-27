@@ -33,7 +33,7 @@ export default class MePage {
           </CircleButton>,
         ]}
       >
-        <Board placeSlug="ddd" />
+        <Board slug="ddd" />
       </Page>
     )
   }

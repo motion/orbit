@@ -50,6 +50,20 @@ class Document extends Model {
     },
   }
 
+  @query forPlace = place => {
+    if (!place.current) {
+      return null
+    }
+    return (
+      this.collection
+        .find()
+        .where('places')
+        // in array find
+        .elemMatch({ $eq: place.current.slug })
+        .sort({ createdAt: 'desc' })
+    )
+  }
+
   @query all = () => this.collection.find()
 
   @query recent = () => this.collection.find().sort({ createdAt: 'desc' })
@@ -61,20 +75,6 @@ class Document extends Model {
       return null
     }
     return this.collection.find().where('authorId').eq(App.user.name)
-  }
-
-  @query forPlace = place => {
-    if (!place) {
-      return null
-    }
-    return (
-      this.collection
-        .find()
-        .where('places')
-        // in array find
-        .elemMatch({ $eq: place.slug })
-        .sort({ createdAt: 'desc' })
-    )
   }
 }
 

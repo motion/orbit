@@ -7,14 +7,26 @@
       }
     ],
     "motion-view/transform",
-    "babel-plugin-transform-decorators-legacy",
     "babel-plugin-jsx-if",
     [
       "babel-plugin-root-import",
       {
         "rootPathSuffix": "app"
       }
-    ]
+    ],
+    "babel-plugin-transform-decorators-legacy"
   ],
-  "presets": "babel-preset-steelbrain"
+  "presets": [
+    [
+      "babel-preset-env",
+      {
+        "loose": true,
+        "exclude": [
+          "transform-regenerator"
+        ]
+      }
+    ],
+    "babel-preset-stage-0",
+    "babel-preset-react"
+  ]
 }

@@ -25,7 +25,8 @@ class PlaceStore {
 })
 export default class PlacePage {
   render({ store }) {
-    const place = store.place.current
+    const place = store.place
+    // console.log('place is', place)
 
     return (
       <Page
@@ -40,7 +41,7 @@ export default class PlacePage {
           <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
         ]}
       >
-        <Board place={place} />
+        <Board if={place} slug={place.slug} />
       </Page>
     )
   }

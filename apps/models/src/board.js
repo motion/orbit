@@ -19,9 +19,7 @@ class Board extends Model {
     },
   }
 
-  @query all = () => {
-    return this.collection.find()
-  }
+  @query all = () => this.collection.find()
 }
 
 export default new Board()

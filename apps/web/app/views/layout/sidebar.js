@@ -28,8 +28,8 @@ export default class Sidebar {
           <Link $piece to="/feed">feed</Link>
 
           <h2>places</h2>
-          <main if={store.places.current}>
-            {store.places.current.map(piece => (
+          <main if={store.places}>
+            {store.places.map(piece => (
               <Link $piece to={piece.url()} key={piece._id}>
                 {piece.title}
               </Link>

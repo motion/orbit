@@ -65,6 +65,7 @@
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",
     "babili-webpack-plugin": "0.0.11",
+    "babel-preset-babili": "*",
     "case-sensitive-paths-webpack-plugin": "^2.0.0",
     "connect-history-api-fallback": "^1.3.0",
     "denode": "^1.10.5",

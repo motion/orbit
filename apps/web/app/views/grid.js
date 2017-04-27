@@ -7,7 +7,7 @@ const Layout = WidthProvider(ReactGridLayout)
 @view
 export default class Grid {
   static defaultProps = {
-    rowHeight: 120,
+    rowHeight: 40,
     layout: [],
     onLayoutChange: _ => _,
   }
@@ -33,7 +33,6 @@ export default class Grid {
       <Layout
         if={this.layout}
         {...props}
-        key={Math.random()}
         ref={ref => this.gridLayout = ref}
         onLayoutChange={this.props.onLayoutChange}
         layout={this.layout}

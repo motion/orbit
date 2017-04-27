@@ -6,7 +6,6 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const BabiliPlugin = require('babili-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const getClientEnvironment = require('./env')
 const paths = require('./paths')
 const publicPath = '/'
@@ -52,9 +51,9 @@ module.exports = Object.assign(config, {
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     modules: [paths.modelsNodeModules, paths.appNodeModules, 'node_modules'],
-    // alias: {
-    //   rxjs: 'rx-lite',
-    // },
+    alias: {
+      'pouchdb-ajax': 'pouchdb/extras/ajax',
+    },
   },
 
   module: {
@@ -68,7 +67,6 @@ module.exports = Object.assign(config, {
   },
 
   plugins: filtered([
-    new LodashModuleReplacementPlugin(),
     new InterpolateHtmlPlugin(env.raw),
     new HtmlWebpackPlugin({
       inject: true,

@@ -51,9 +51,6 @@ module.exports = Object.assign(config, {
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     modules: [paths.modelsNodeModules, paths.appNodeModules, 'node_modules'],
-    alias: {
-      'pouchdb-ajax': 'pouchdb/extras/ajax',
-    },
   },
 
   module: {

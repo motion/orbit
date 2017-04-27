@@ -31,6 +31,7 @@ export default class DocItem {
   render({
     doc,
     children,
+    feed,
     getRef,
     onSaveTitle,
     slanty,

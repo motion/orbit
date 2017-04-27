@@ -2,7 +2,7 @@ import { view } from '~/helpers'
 import { Page, Link, Input } from '~/views'
 import { Place } from 'models'
 import Login from './login'
-import { SIDEBAR_SIZE } from '~/constants'
+import { SIDEBAR_WIDTH } from '~/constants'
 
 class SidebarStore {
   places = Place.all()
@@ -39,7 +39,7 @@ export default class Sidebar {
 
         <div $$flex $$draggable />
 
-        <sidebar if={false && App.views.sidebar}>
+        <sidebar if={App.views.sidebar}>
           {App.views.sidebar}
         </sidebar>
 
@@ -58,7 +58,7 @@ export default class Sidebar {
 
   static style = {
     side: {
-      width: SIDEBAR_SIZE,
+      width: SIDEBAR_WIDTH,
       borderLeft: [1, '#eee'],
     },
     main: {

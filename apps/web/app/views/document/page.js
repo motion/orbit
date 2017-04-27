@@ -23,7 +23,7 @@ export default class DocumentPage {
         header
         sidebar={
           <side $$flex>
-            side
+            side ;alala
           </side>
         }
         actions={[
@@ -35,7 +35,7 @@ export default class DocumentPage {
       >
         <content $$flex $$row>
           <main $$flex={2}>
-            <docarea>
+            <docarea $$undraggable>
               <Document {...props} />
             </docarea>
 

@@ -5,8 +5,8 @@ export class Page {
   id = Math.random()
 
   componentWillMount() {
-    const { title, actions, header } = this.props
-    App.views = { _id: this.id, title, actions, header }
+    const { title, actions, header, sidebar } = this.props
+    App.views = { _id: this.id, title, actions, header, sidebar }
   }
 
   componentWillUnmount() {

@@ -1,5 +1,6 @@
 import { view } from '~/helpers'
 import App from 'models'
+import { SIDEBAR_WIDTH } from '~/constants'
 
 @view
 export default class Errors {
@@ -8,10 +9,13 @@ export default class Errors {
       <errors>
         {App.errors.map((error, i) => (
           <error key={error.id}>
-            <message>
+            <message if={error.errors}>
               {error.errors.map(({ field, message }) => (
                 <subErr key={Math.random()}>{field}: {message}</subErr>
               ))}
+            </message>
+            <message if={error.message}>
+              <strong>{error.name}</strong>: {error.message}
             </message>
             <clear if={i === 0} onClick={App.clearErrors}>x</clear>
           </error>
@@ -22,8 +26,8 @@ export default class Errors {
 
   static style = {
     errors: {
-      position: 'absolute',
-      right: 0,
+      position: 'fixed',
+      right: SIDEBAR_WIDTH,
       bottom: 0,
       left: 0,
       zIndex: 100000,

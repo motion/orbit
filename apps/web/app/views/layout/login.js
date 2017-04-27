@@ -5,8 +5,17 @@ import { HEADER_HEIGHT } from '~/constants'
 
 @view
 export default class Login {
+  @observable.ref passwordRef = null
   username = null
   password = null
+
+  componentWillMount() {
+    this.watch(() => {
+      if (App.tempUser && this.passwordRef) {
+        this.passwordRef.focus()
+      }
+    })
+  }
 
   prevent = e => e.preventDefault()
   setUsername = () => {
@@ -17,12 +26,11 @@ export default class Login {
     }
   }
   finish = () => App.loginOrSignup(App.user.name, this.password)
-  onPassword = node => node && node.focus()
 
   render(props) {
     return (
-      <login>
-        <form onSubmit={this.prevent}>
+      <login $$draggable>
+        <form $$undraggable if={!App.loggedIn} onSubmit={this.prevent}>
           <step if={App.noUser}>
             <Input
               $input
@@ -43,19 +51,19 @@ export default class Login {
             </info>
             <Input
               $input
-              $$width={50}
+              $$width={100}
               name="password"
               type="password"
               placeholder="password"
               onKeyDown={e => e.which === 13 && this.finish()}
               onChange={e => this.password = e.target.value}
-              getRef={this.onPassword}
+              getRef={ref => this.passwordRef = ref}
             />
             <Button onClick={this.finish}>✅</Button>
           </step>
         </form>
 
-        <step if={App.loggedIn} $$draggable>
+        <step if={App.loggedIn}>
           <text>
             hi,&nbsp;
             <username $$ellipse>{App.user.name}</username>
@@ -98,7 +106,6 @@ export default class Login {
       maxWidth: '75%',
       padding: [4, 8],
       fontSize: 14,
-      cursor: 'text',
     },
     info: {
       flexFlow: 'row',
@@ -106,7 +113,7 @@ export default class Login {
       alignItems: 'center',
     },
     username: {
-      width: 50,
+      maxWidth: 50,
       paddingRight: 10,
       fontWeight: 500,
     },

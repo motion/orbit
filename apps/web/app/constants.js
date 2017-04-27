@@ -7,3 +7,4 @@ export const DB_CONFIG = {
 }
 
 export const HEADER_HEIGHT = 40
+export const SIDEBAR_WIDTH = 210

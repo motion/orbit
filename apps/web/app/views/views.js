@@ -8,6 +8,9 @@ export const Input = $('input', {
   padding: 4,
   margin: ['auto', 4],
   background: '#fff',
+  '&:hover': {
+    cursor: 'text',
+  },
 })
 
 export const Button = $('btn', {

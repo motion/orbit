@@ -84,15 +84,9 @@ export default class App {
   }
 
   login = async (username, password) => {
-    try {
-      const info = await this.auth.login(username, password)
-      this.setSession()
-      return info
-    } catch (e) {
-      console.log('error logging in')
-      console.error(e)
-      return false
-    }
+    const info = await this.auth.login(username, password)
+    this.setSession()
+    return info
   }
 
   logout = async () => {
@@ -146,17 +140,15 @@ export default class App {
 
   catchErrors() {
     window.addEventListener('unhandledrejection', event => {
-      event.promise.catch(({ message }) => {
+      event.promise.catch(err => {
         try {
-          const error = JSON.parse(message)
+          const error = JSON.parse(err.message)
           this.errors = [
             { id: Math.random(), ...error },
             ...this.errors.slice(),
           ]
-          console.log('caught error, see App.errors')
-          console.log(error)
         } catch (e) {
-          console.log('displaying promise err', e)
+          this.errors = [{ id: Math.random(), ...err }, ...this.errors.slice()]
         }
       })
     })

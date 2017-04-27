@@ -32,27 +32,56 @@ export const Button = $('btn', {
   },
 })
 
-export const CircleButton = $('btn', {
+@view
+export class CircleButton {
+  render({ icon, children, ...props }) {
+    return (
+      <Circle {...props}>
+        <icon>{icon}</icon>
+        <children>{children}</children>
+      </Circle>
+    )
+  }
+  static style = {
+    icon: {
+      fontSize: 18,
+      lineHeight: '1.4rem',
+      height: 20,
+    },
+    children: {
+      fontSize: 9,
+      height: 7,
+      opacity: 0.5,
+      lineHeight: '0.6rem',
+    },
+  }
+}
+
+export const Circle = $('btn', {
   display: 'flex',
-  width: 50,
-  height: 50,
+  fontSize: 30,
+  width: 45,
+  height: 45,
   borderRadius: 100,
+  lineHeight: '1rem',
   border: [2, '#eee'],
   alignItems: 'center',
   justifyContent: 'center',
   zIndex: 1000,
   background: '#fff',
   color: '#111',
-  fontSize: 30,
   fontWeight: 400,
   cursor: 'pointer',
+  filter: 'grayscale(100%)',
   userSelect: 'none',
-  transition: 'all ease-in 100ms',
+  opacity: 0.8,
   '&:hover': {
-    background: '#B535C4',
-    color: '#fff',
+    opacity: 1,
+    borderWidth: 1,
+    color: '#000',
+    filter: 'grayscale(0%)',
     transform: {
-      scale: 1.2,
+      scale: 1.02,
     },
   },
 })

@@ -41,7 +41,7 @@ export default class DocumentPage {
 
             <met if={!noSide}>
               <ago>
-                <TimeAgo minPeriod={20} date={doc.updated_at} />
+                <TimeAgo minPeriod={20} date={doc.updatedAt} />
               </ago>
               <places $$row if={doc.places}>
                 places:
@@ -49,15 +49,6 @@ export default class DocumentPage {
               </places>
             </met>
           </main>
-
-          <bar if={false}>
-            <item>a</item>
-            <item>b</item>
-            <item>c</item>
-            <item>d</item>
-            <item>e</item>
-            <item>f</item>
-          </bar>
         </content>
       </Page>
     )
@@ -77,16 +68,6 @@ export default class DocumentPage {
     },
     docarea: {
       flex: 1,
-    },
-    bar: {
-      padding: 5,
-      borderLeft: [1, '#eee'],
-      alignItems: 'center',
-    },
-    item: {
-      padding: [13, 8],
-      fontSize: 20,
-      alignItems: 'center',
     },
   }
 }

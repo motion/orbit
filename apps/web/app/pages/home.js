@@ -35,8 +35,8 @@ export default class Home {
         header
         title="Home"
         actions={[
-          <CircleButton onClick={store.createDoc}>
-            📇
+          <CircleButton icon="📇" onClick={store.createDoc}>
+            new
           </CircleButton>,
         ]}
       >

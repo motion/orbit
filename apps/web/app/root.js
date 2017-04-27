@@ -19,6 +19,9 @@ export default class Root {
         <main>
           <header if={!!header || !!title || !!actions}>
             <nav>
+              <btn $active={Router.path !== '/'} onClick={() => Router.go('/')}>
+                🏚
+              </btn>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
                 {'<'}
               </back>

@@ -64,7 +64,7 @@ export default class PlacePage {
           <Page.Head>
             <dix $$flex />
             <actions $$centered>
-              <CircleButton $$background="#fff">🍻</CircleButton>
+              <CircleButton $$background="#fff" icon="🍻">cheers</CircleButton>
             </actions>
           </Page.Head>
         }

@@ -12,6 +12,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { provide } from 'motion-view'
 import glossy from './styles'
+import { IS_PROD } from '~/constants'
 
 const Helpers = {
   componentWillMount() {
@@ -45,7 +46,16 @@ export default function view(View) {
   // preact-like render
   const or = View.prototype.render
   View.prototype.render = function() {
-    return or.call(this, this.props, this.state, this.context)
+    if (IS_PROD) {
+      return or.call(this, this.props, this.state, this.context)
+    } else {
+      try {
+        return or.call(this, this.props, this.state, this.context)
+      } catch (e) {
+        console.error(e)
+        return null
+      }
+    }
   }
 
   // order important: autobind, gloss, mobx

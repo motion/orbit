@@ -63,13 +63,19 @@ class Document extends Model {
     return this.collection.find().where('authorId').eq(App.user.name)
   }
 
-  @query forPlace = name =>
-    this.collection
-      .find()
-      .where('places')
-      // in array find
-      .elemMatch({ $eq: name })
-      .sort({ createdAt: 'desc' })
+  @query forPlace = place => {
+    if (!place) {
+      return null
+    }
+    return (
+      this.collection
+        .find()
+        .where('places')
+        // in array find
+        .elemMatch({ $eq: place.slug })
+        .sort({ createdAt: 'desc' })
+    )
+  }
 }
 
 export default new Document()

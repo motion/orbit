@@ -1,6 +1,6 @@
 import { view } from '~/helpers'
-import { Place, Document } from 'models'
-import { Page, Poof, CircleButton, Link, Input } from '~/views'
+import { Document } from 'models'
+import { Page, CircleButton } from '~/views'
 import DocItem from '~/views/document/item'
 import Board from '~/views/place/board'
 

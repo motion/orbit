@@ -1,4 +1,4 @@
-import { view, autorun, observable } from '~/helpers'
+import { view, query, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
 import { Place, Document } from 'models'
 import { Text, Page, Button, CircleButton } from '~/views'
@@ -26,7 +26,6 @@ class PlaceStore {
 export default class PlacePage {
   render({ store }) {
     const place = store.place.current
-    console.log('place is', place)
 
     return (
       <Page
@@ -41,7 +40,7 @@ export default class PlacePage {
           <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
         ]}
       >
-        <Board if={place} place={place} />
+        <Board place={place} />
       </Page>
     )
   }

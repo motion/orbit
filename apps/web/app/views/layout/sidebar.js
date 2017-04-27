@@ -24,8 +24,8 @@ export default class Sidebar {
           <Login />
 
           <h2>go</h2>
-          <Link $piece to="/">feed</Link>
-          <Link $piece to="/me">personal</Link>
+          <Link $piece to="/">me</Link>
+          <Link $piece to="/feed">feed</Link>
 
           <h2>places</h2>
           <main if={store.places.current}>

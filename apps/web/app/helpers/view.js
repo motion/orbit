@@ -42,7 +42,7 @@ export default function view(View) {
   // add Helpers
   mixin(View.prototype, Helpers)
 
-  // pass props/context to render
+  // preact-like render
   const or = View.prototype.render
   View.prototype.render = function() {
     return or.call(this, this.props, this.state, this.context)

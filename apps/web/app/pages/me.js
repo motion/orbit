@@ -2,7 +2,7 @@ import { view } from '~/helpers'
 import { Place, Document } from 'models'
 import { Page, Poof, CircleButton, Link, Input } from '~/views'
 import DocItem from '~/views/document/item'
-import FlipMove from 'react-flip-move'
+import Board from '~/views/place/board'
 
 class MeStore {
   docs = Document.user()
@@ -19,7 +19,9 @@ class MeStore {
 export default class MePage {
   render({ store }) {
     const docs = (store.docs.current || [])
-      .map((doc, i) => <DocItem key={doc._id} slanty editable doc={doc} />)
+      .map((doc, i) => (
+        <DocItem key={doc._id} draggable slanty editable doc={doc} />
+      ))
 
     return (
       <Page
@@ -31,9 +33,7 @@ export default class MePage {
           </CircleButton>,
         ]}
       >
-        <FlipMove $$padding={10} $docs duration={300} easing="ease-out">
-          {docs}
-        </FlipMove>
+        <Board placeSlug="ddd" />
       </Page>
     )
   }

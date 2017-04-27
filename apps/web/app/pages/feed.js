@@ -4,7 +4,7 @@ import FlipMove from 'react-flip-move'
 import { Page, CircleButton } from '~/views'
 import DocItem from '~/views/document/item'
 
-class HomeStore {
+class FeedStore {
   docs = Document.recent()
   place = null
 
@@ -23,9 +23,9 @@ class HomeStore {
 }
 
 @view({
-  store: HomeStore,
+  store: FeedStore,
 })
-export default class Home {
+export default class Feed {
   render({ store }) {
     const docs = (store.docs.current || [])
       .map((doc, i) => <DocItem key={doc._id} slanty editable doc={doc} />)
@@ -33,7 +33,7 @@ export default class Home {
     return (
       <Page
         header
-        title="Home"
+        title="Feed"
         actions={[
           <CircleButton icon="📇" onClick={store.createDoc}>
             new

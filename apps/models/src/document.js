@@ -63,7 +63,7 @@ class Document extends Model {
     return this.collection.find().where('authorId').eq(App.user.name)
   }
 
-  @query forBoard = name =>
+  @query forPlace = name =>
     this.collection
       .find()
       .where('places')

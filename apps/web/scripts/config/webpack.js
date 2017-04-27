@@ -51,6 +51,18 @@ module.exports = Object.assign(config, {
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     modules: [paths.modelsNodeModules, paths.appNodeModules, 'node_modules'],
+    // since were forced into full lodash anyway, lets dedupe
+    alias: {
+      'lodash.merge': 'lodash/merge',
+      'lodash.isequal': 'lodash/isEqualWith',
+      'lodash.bind': 'lodash/bind',
+      'lodash.some': 'lodash/some',
+      'lodash.map': 'lodash/map',
+      'lodash.reduce': 'lodash/reduce',
+      'lodash.reject': 'lodash/reject',
+      'lodash.foreach': 'lodash/forEach',
+      'lodash.filter': 'lodash/filter',
+    },
   },
 
   module: {

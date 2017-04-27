@@ -1,14 +1,38 @@
-import { Editor, Raw } from 'slate'
+import { Selection, Editor, Raw } from 'slate'
 import { view, observable, Component } from '~/helpers'
 import { Counter, Header, Link, Quote } from './plugins'
-import markdown from './plugins/markdown'
+import markdownPlugins from './plugins/markdown'
 import { startsWith, includes } from 'lodash'
 import { throttle } from 'lodash-decorators'
 import Menu from './menu'
+import joinListsRule from './rules/joinLists'
 
 export { Raw } from 'slate'
 
-const plugins = [...markdown]
+const plugins = [...markdownPlugins]
+
+const rules = [
+  joinListsRule,
+  {
+    match: node => {
+      return node.kind == 'document'
+    },
+    validate: document => {
+      window.d = document
+      const block = document.nodes.get(0)
+      if (block.type !== 'title') {
+        return { block }
+      }
+      return false
+    },
+    normalize: (transform, document, { block }) => {
+      return transform.setNodeByKey(block.key, {
+        type: 'title',
+        data: { level: 1 },
+      })
+    },
+  },
+]
 
 @view({
   store: class EditorStore {
@@ -43,7 +67,7 @@ export default class EditorView extends Component {
       link: Link,
       counter: Counter,
       quote: Quote,
-      h: props => {
+      title: props => {
         const { attributes, children, node } = props
         const level = node.data.get('level')
         const Tag = Header(10 / level * 7)
@@ -64,6 +88,7 @@ export default class EditorView extends Component {
         <u style={{ display: 'inline' }}>{props.children}</u>
       ),
     },
+    rules,
   }
 
   componentWillMount() {

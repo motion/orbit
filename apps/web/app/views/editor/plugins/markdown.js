@@ -19,7 +19,7 @@ export default [
       const [hashes] = matches.before
       const level = hashes.length
       return transform.setBlock({
-        type: 'h',
+        type: 'title',
         data: { level },
       })
     },

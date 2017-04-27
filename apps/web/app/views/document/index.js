@@ -21,7 +21,6 @@ export default class Document {
   }
 
   setRef = ref => {
-    console.log('set editor ref', ref)
     this.props.store.editorRef = ref
   }
 

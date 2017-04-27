@@ -27,7 +27,7 @@ export default class DocumentPage {
           </side>
         }
         actions={[
-          <Button onClick={() => {}}>collab</Button>,
+          <Button onClick={store.toggleCollab}>collab</Button>,
           <Button onClick={doc.togglePrivate}>
             make {doc.private ? 'public' : 'private'}
           </Button>,

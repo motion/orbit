@@ -27,7 +27,7 @@ export default class Login {
   }
   finish = () => App.loginOrSignup(App.user.name, this.password)
 
-  render(props) {
+  render() {
     return (
       <login $$draggable>
         <form $$undraggable if={!App.loggedIn} onSubmit={this.prevent}>
@@ -113,7 +113,7 @@ export default class Login {
       alignItems: 'center',
     },
     username: {
-      maxWidth: 50,
+      maxWidth: '80%',
       paddingRight: 10,
       fontWeight: 500,
     },
@@ -123,9 +123,10 @@ export default class Login {
       justifyContent: 'center',
     },
     text: {
+      flex: 1,
+      maxWidth: '80%',
       alignItems: 'center',
       flexFlow: 'row',
-      flex: 1,
       userSelect: 'none',
     },
   }

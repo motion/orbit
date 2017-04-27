@@ -1,9 +1,9 @@
-import { Doc } from 'models'
+import { Document } from 'models'
 import { observable, computed } from 'mobx'
 
 export default class DocumentStore {
   start(id) {
-    this.docs = Doc.get(id)
+    this.docs = Document.get(id)
   }
 
   editorRef = null
@@ -33,4 +33,6 @@ export default class DocumentStore {
   focusEditor = () => {
     this.editorRef.focus()
   }
+
+  toggleCollab = () => {}
 }

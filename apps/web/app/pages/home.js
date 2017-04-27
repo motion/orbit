@@ -1,16 +1,16 @@
 import { view } from '~/helpers'
-import { Place, Doc } from 'models'
+import { Place, Document } from 'models'
 import FlipMove from 'react-flip-move'
 import { Page, CircleButton } from '~/views'
 import DocItem from '~/views/document/item'
 
 class HomeStore {
-  docs = Doc.recent()
+  docs = Document.recent()
   place = null
 
   createDoc = e => {
     e.preventDefault()
-    Doc.create()
+    Document.create()
   }
 
   createPlace = e => {

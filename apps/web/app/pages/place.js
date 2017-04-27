@@ -1,19 +1,18 @@
 import { view, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
-import { Place, Doc } from 'models'
+import { Place, Document } from 'models'
 import { Text, Page, Button, CircleButton } from '~/views'
 import Router from '~/router'
 import DocItem from '~/views/document/item'
-import Document from '~/views/document'
 import Grid from '~/views/grid'
 
 class PlaceStore {
   @observable activeDocId = null
   place = Place.get(Router.params.name)
-  docs = Doc.forBoard(Router.params.name)
+  docs = Document.forBoard(Router.params.name)
 
   createDoc = () => {
-    Doc.create({ places: [this.place.current.name] })
+    Document.create({ places: [this.place.current.name] })
   }
 
   setActive = doc => e => {
@@ -77,13 +76,6 @@ export default class PlacePage {
           cols={2}
           rowHeight={200}
           items={docs}
-        />
-
-        <Document
-          if={false && store.activeDocId}
-          noSide
-          key={store.activeDocId}
-          id={store.activeDocId}
         />
         <button onClick={store.createDoc}>create</button>
       </Page>

@@ -1,15 +1,15 @@
 import { view } from '~/helpers'
-import { Place, Doc } from 'models'
+import { Place, Document } from 'models'
 import { Page, Poof, CircleButton, Link, Input } from '~/views'
 import DocItem from '~/views/document/item'
 import FlipMove from 'react-flip-move'
 
 class MeStore {
-  docs = Doc.user()
+  docs = Document.user()
 
   createDoc = e => {
     e.preventDefault()
-    Doc.create()
+    Document.create()
   }
 }
 

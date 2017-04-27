@@ -2,7 +2,7 @@ import { Model, query, str, object, array, bool } from './helpers'
 import App from './index'
 import generateName from 'sillyname'
 
-class Doc extends Model {
+class Document extends Model {
   static props = {
     title: str,
     content: object,
@@ -35,7 +35,7 @@ class Doc extends Model {
   })
 
   settings = {
-    title: 'Doc4',
+    title: 'documents',
     index: ['createdAt'],
   }
 
@@ -72,4 +72,4 @@ class Doc extends Model {
       .sort({ createdAt: 'desc' })
 }
 
-export default new Doc()
+export default new Document()

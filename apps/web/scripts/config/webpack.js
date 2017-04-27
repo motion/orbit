@@ -6,6 +6,7 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const BabiliPlugin = require('babili-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const getClientEnvironment = require('./env')
 const paths = require('./paths')
 const publicPath = '/'
@@ -54,43 +55,17 @@ module.exports = Object.assign(config, {
   },
 
   module: {
-    loaders: [
+    rules: [
       {
-        exclude: [/\.html$/, /\.(js)(\?.*)?$/, /\.css$/, /\.json$/, /\.svg$/],
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]',
-        },
-      },
-      // Process JS with Babel.
-      {
+        use: 'babel-loader',
         test: /\.js$/,
-        include: paths.appSrc,
-        loader: 'babel-loader',
-        query: {
-          cacheDirectory: true,
-        },
-      },
-      {
-        test: /\.css$/,
-        loader: 'style!css?importLoaders=1',
-      },
-      {
-        test: /\.json$/,
-        loader: 'json-loader',
-      },
-      {
-        test: /\.svg$/,
-        loader: 'file',
-        query: {
-          name: 'static/media/[name].[hash:8].[ext]',
-        },
+        exclude: /node_modules/,
       },
     ],
   },
 
   plugins: filtered([
+    new LodashModuleReplacementPlugin(),
     new InterpolateHtmlPlugin(env.raw),
     new HtmlWebpackPlugin({
       inject: true,

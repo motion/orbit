@@ -6,18 +6,22 @@
     "web": "cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
-    "build": "lerna exec --ignore web -- babel src --out-dir lib",
+    "build": "lerna exec -- babel src --out-dir lib",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
     "api": "COUCHDB_USER=admin COUCHDB_PASSWORD=password docker-compose up --remove-orphans",
     "electron": "cd apps/web && npm run electron"
   },
-  "dependencies": {
+  "devDependencies": {
+    "flow-bin": "^0.38.0",
+    "babel-plugin-jsx-if": "^1.0.2",
+    "babel-plugin-lodash": "^3.2.11",
+    "babel-plugin-root-import": "*",
+    "babel-plugin-transform-decorators-legacy": "*",
     "babel-cli": "^6.14.0",
     "babel-preset-steelbrain": "^4.0.2",
-    "lerna": "^2.0.0-rc.2"
-  },
-  "devDependencies": {
-    "flow-bin": "^0.38.0"
+    "lerna": "^2.0.0-rc.2",
+    "gloss": "^5.1.2",
+    "motion-view": "^1.0.16"
   }
 }

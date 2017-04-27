@@ -62,6 +62,8 @@ module.exports = Object.assign(config, {
       'lodash.reject': 'lodash/reject',
       'lodash.foreach': 'lodash/forEach',
       'lodash.filter': 'lodash/filter',
+      'lodash.flatten': 'lodash/flatten',
+      'lodash.pick': 'lodash/pick',
     },
   },
 

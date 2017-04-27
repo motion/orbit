@@ -20,7 +20,13 @@ export default class Link {
   }
   render({ to, ...props }) {
     return (
-      <a $active={this.active} href={to} {...props} onClick={this.onClick} />
+      <a
+        $active={this.active}
+        href={to}
+        {...props}
+        onDragStart={e => e.preventDefault()}
+        onClick={this.onClick}
+      />
     )
   }
   static style = {

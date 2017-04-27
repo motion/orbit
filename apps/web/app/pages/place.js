@@ -31,7 +31,7 @@ export default class PlacePage {
       <Page
         header
         title={
-          <title if={place} $$row $$align="center">
+          <title if={place} $$flex $$row $$align="center">
             {place.url()}&nbsp;&nbsp;<Button>🔗</Button>
           </title>
         }

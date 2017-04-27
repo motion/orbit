@@ -87,7 +87,7 @@ export default class Root {
       borderBottom: [1, '#eee'],
       background: '#fff',
       zIndex: 1000,
-      opacity: 0.3,
+      opacity: 0.7,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
     },
@@ -111,7 +111,6 @@ export default class Root {
     rest: {
       alignItems: 'flex-end',
       justifyContent: 'center',
-      flex: 3,
     },
     nav: {
       flexFlow: 'row',
@@ -127,8 +126,12 @@ export default class Root {
     active: {
       opacity: 0.5,
     },
+    actions: {
+      alignItems: 'center',
+    },
     action: {
       margin: [0, 0, 0, 5],
+      alignItems: 'center',
     },
   }
 }

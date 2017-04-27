@@ -7,7 +7,7 @@ import Doc from '~/pages/doc'
 const AppRouter = new Router({
   routes: {
     '/': Me,
-    '/me': Feed,
+    '/feed': Feed,
     'g/:slug': Place,
     'd/:id': Doc,
   },

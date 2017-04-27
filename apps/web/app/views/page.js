@@ -5,8 +5,11 @@ export class Page {
   id = Math.random()
 
   componentWillMount() {
-    const { title, actions, header, sidebar } = this.props
-    App.views = { _id: this.id, title, actions, header, sidebar }
+    this.setViews(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setViews(nextProps)
   }
 
   componentWillUnmount() {
@@ -14,6 +17,11 @@ export class Page {
     if (App.views._id === this.id) {
       App.views = {}
     }
+  }
+
+  setViews = props => {
+    const { title, actions, header, sidebar } = props
+    App.views = { _id: this.id, title, actions, header, sidebar }
   }
 
   render({ children }) {

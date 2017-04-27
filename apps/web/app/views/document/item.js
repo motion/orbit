@@ -155,6 +155,11 @@ export default class DocItem {
         },
       },
     },
+    feed: {
+      doc: {
+        width: '100%',
+      },
+    },
     editable: {
       doc: {
         height: 200,

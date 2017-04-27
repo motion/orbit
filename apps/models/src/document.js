@@ -13,7 +13,7 @@ class Document extends Model {
     timestamps: true,
   }
 
-  static defaultProps = () => ({
+  static defaultProps = props => ({
     title: generateName(),
     authorId: App.user.name,
     places: ['ddd'],
@@ -22,11 +22,11 @@ class Document extends Model {
       nodes: [
         {
           kind: 'block',
-          type: 'paragraph',
+          type: 'title',
           nodes: [
             {
               kind: 'text',
-              text: 'hello world',
+              text: props.title,
             },
           ],
         },

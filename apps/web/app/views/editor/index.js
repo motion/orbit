@@ -5,34 +5,13 @@ import markdownPlugins from './plugins/markdown'
 import { startsWith, includes } from 'lodash'
 import { throttle } from 'lodash-decorators'
 import Menu from './menu'
-import joinListsRule from './rules/joinLists'
+import * as Rules from './rules'
 
 export { Raw } from 'slate'
 
 const plugins = [...markdownPlugins]
 
-const rules = [
-  joinListsRule,
-  {
-    match: node => {
-      return node.kind == 'document'
-    },
-    validate: document => {
-      window.d = document
-      const block = document.nodes.get(0)
-      if (block.type !== 'title') {
-        return { block }
-      }
-      return false
-    },
-    normalize: (transform, document, { block }) => {
-      return transform.setNodeByKey(block.key, {
-        type: 'title',
-        data: { level: 1 },
-      })
-    },
-  },
-]
+const rules = [Rules.joinLists, Rules.forceTitle]
 
 @view({
   store: class EditorStore {

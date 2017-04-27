@@ -2,7 +2,7 @@ import { view } from '~/helpers'
 import { Page, Button } from '~/views'
 import Router from '~/router'
 import TimeAgo from 'react-timeago'
-import Document from './index'
+import Editor from '~/views/editor'
 import DocumentStore from './store'
 
 @view({ store: DocumentStore })
@@ -11,7 +11,7 @@ export default class DocumentPage {
     this.props.store.start(this.props.id || this.props.doc._id)
   }
 
-  render({ store, noSide, ...props }) {
+  render({ store, noSide }) {
     const { doc } = store
 
     if (!doc) {
@@ -36,7 +36,7 @@ export default class DocumentPage {
         <content $$flex $$row>
           <main $$flex={2}>
             <docarea $$draggable>
-              <Document {...props} />
+              <Editor doc={doc} />
             </docarea>
 
             <met if={!noSide}>

@@ -1,17 +1,15 @@
 import { Selection, Editor, Raw } from 'slate'
 import { view, observable, Component } from '~/helpers'
-import { Counter, Header, Link, Quote } from './plugins'
-import markdownPlugins from './plugins/markdown'
 import { startsWith, includes } from 'lodash'
 import { throttle } from 'lodash-decorators'
 import Menu from './menu'
+import * as Nodes from './nodes'
+import * as Plugins from './plugins'
 import * as Rules from './rules'
 
 export { Raw } from 'slate'
 
-const plugins = [...markdownPlugins]
-
-const rules = [Rules.joinLists, Rules.forceTitle]
+const plugins = [Plugins.Markdown]
 
 @view({
   store: class EditorStore {
@@ -42,21 +40,8 @@ export default class EditorView extends Component {
   }
 
   schema = {
-    nodes: {
-      link: Link,
-      counter: Counter,
-      quote: Quote,
-      title: props => {
-        const { attributes, children, node } = props
-        const level = node.data.get('level')
-        const Tag = Header(7 / level * 7)
-        return <Tag {...attributes}>{children}</Tag>
-      },
-      paragraph: props => <p>{props.children}</p>,
-      ul: props => <ul {...props.attributes}>{props.children}</ul>,
-      li: props => <li {...props.attributes}>{props.children}</li>,
-      hr: props => <hr />,
-    },
+    rules: [Rules.joinLists, Rules.forceTitle],
+    nodes: Nodes,
     marks: {
       bold: props => <strong>{props.children}</strong>,
       code: props => (
@@ -67,7 +52,6 @@ export default class EditorView extends Component {
         <u style={{ display: 'inline' }}>{props.children}</u>
       ),
     },
-    rules,
   }
 
   componentWillMount() {

@@ -27,10 +27,6 @@ class FeedStore {
 })
 export default class Feed {
   render({ store }) {
-    if (!store.docs) {
-      return null
-    }
-
     const docs = (store.docs || [])
       .map((doc, i) => <DocItem key={doc._id} slanty feed doc={doc} />)
 

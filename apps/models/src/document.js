@@ -54,7 +54,7 @@ class Document extends Model {
   }
 
   @query forPlace = place => {
-    if (!place.current) {
+    if (!place) {
       return null
     }
     return (
@@ -62,7 +62,7 @@ class Document extends Model {
         .find()
         .where('places')
         // in array find
-        .elemMatch({ $eq: place.current.slug })
+        .elemMatch({ $eq: place.slug })
         .sort({ createdAt: 'desc' })
     )
   }
@@ -71,7 +71,10 @@ class Document extends Model {
 
   @query recent = () => this.collection.find().sort({ createdAt: 'desc' })
 
-  @query get = id => this.collection.findOne(id.replace('-', ':'));
+  @query get = id => {
+    if (!id) return null
+    return this.collection.findOne(id.replace('-', ':'))
+  };
 
   @query user = user => {
     if (!App.user) {

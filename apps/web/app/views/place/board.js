@@ -1,7 +1,6 @@
 import { view } from '~/helpers'
 import { isEqual } from 'lodash'
 import { Place, Document } from 'models'
-import { Text, Page, Button, CircleButton } from '~/views'
 import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Grid from '~/views/grid'
@@ -11,10 +10,9 @@ class BoardStore {
   docs = Document.forPlace(this.place)
 
   updateLayout = layout => {
-    const { current } = this.place
-    if (!isEqual(current.layout, layout)) {
-      current.layout = layout
-      current.save()
+    if (!isEqual(this.place.layout, layout)) {
+      this.place.layout = layout
+      this.place.save()
     }
   }
 }
@@ -24,14 +22,14 @@ class BoardStore {
 })
 export default class Board {
   render({ store }) {
-    const docs = (store.docs.current || [])
+    const docs = (store.docs || [])
       .map(doc => <DocItem slanty draggable editable key={doc._id} doc={doc} />)
 
     return (
       <Grid
-        if={store.place.current}
+        if={store.place}
         onLayoutChange={store.updateLayout}
-        layout={store.place.current.layout}
+        layout={store.place.layout}
         cols={2}
         rowHeight={200}
         items={docs}

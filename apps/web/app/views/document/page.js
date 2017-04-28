@@ -3,14 +3,14 @@ import { Page, Button } from '~/views'
 import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import Editor from '~/views/editor'
-import DocumentStore from './store'
+import { Document } from 'models'
 
-@view({ store: DocumentStore })
+@view({
+  store: class {
+    doc = Document.get(this.props.id)
+  },
+})
 export default class DocumentPage {
-  componentWillMount() {
-    this.props.store.start(this.props.id || this.props.doc._id)
-  }
-
   render({ store, noSide }) {
     const { doc } = store
 
@@ -27,7 +27,7 @@ export default class DocumentPage {
           </side>
         }
         actions={[
-          <Button onClick={store.toggleCollab}>collab</Button>,
+          <Button>collab</Button>,
           <Button onClick={doc.togglePrivate}>
             make {doc.private ? 'public' : 'private'}
           </Button>,
@@ -36,7 +36,7 @@ export default class DocumentPage {
         <content $$flex $$row>
           <main $$flex={2}>
             <docarea $$draggable>
-              <Editor doc={doc} />
+              <Editor id={doc._id} />
             </docarea>
 
             <met if={!noSide}>
@@ -45,7 +45,7 @@ export default class DocumentPage {
               </ago>
               <places $$row if={doc.places}>
                 places:
-                {(doc.places.current || [])
+                {(doc.places || [])
                   .map(name => <place key={name}>{name}</place>)}
               </places>
             </met>

@@ -71,7 +71,11 @@ class Document extends Model {
 
   @query recent = () => this.collection.find().sort({ createdAt: 'desc' })
 
-  @query get = id => this.collection.findOne(id.replace('-', ':'));
+  @query get = id => {
+    console.log('fetch', id)
+    if (!id) return null
+    return this.collection.findOne(id.replace('-', ':'))
+  };
 
   @query user = user => {
     if (!App.user) {

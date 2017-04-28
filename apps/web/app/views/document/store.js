@@ -2,10 +2,7 @@ import { Document } from 'models'
 import { observable, computed } from 'mobx'
 
 export default class DocumentStore {
-  start(id) {
-    this.docs = Document.get(id)
-  }
-
+  docs = Document.get(this.props.id)
   editorRef = null
 
   get doc() {

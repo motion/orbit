@@ -7,10 +7,6 @@ import DocumentStore from './store'
 
 @view({ store: DocumentStore })
 export default class DocumentPage {
-  componentWillMount() {
-    this.props.store.start(this.props.id || this.props.doc._id)
-  }
-
   render({ store, noSide }) {
     const { doc } = store
 

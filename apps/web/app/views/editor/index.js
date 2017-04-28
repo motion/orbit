@@ -17,36 +17,33 @@ const rules = merge(Rules)
 class EditorStore {
   _doc = Document.get(this.props.id)
   focused = false
-  @observable.ref content = null
-  version = 0
+  content = null
 
-  constructor() {
+  start() {
     autorun(this.save)
+    autorun(() => {
+      console.log('doc', this.doc)
+      if (!this.content && this.doc) {
+        console.log('set contnet')
+        this.content = Raw.deserialize(this.doc.content, { terse: true })
+      }
+    })
   }
 
   get doc() {
     return this._doc && this._doc.current
   }
 
-  get val() {
-    if (!this.doc) {
-      return null
-    }
-    if (this.content) {
-      return this.content
-    }
-    return Raw.deserialize(this.doc.content, { terse: true })
-  }
-
   update = val => {
+    console.log('update to', val)
     this.content = val
   }
 
   save = () => {
     if (this.content) {
-      console.log('saving')
-      // this.doc.content = Raw.serialize(this.content)
-      // this.doc.save()
+      console.log('save content', this.content)
+      this.doc.content = Raw.serialize(this.content)
+      this.doc.save()
     }
   }
 
@@ -74,24 +71,26 @@ export default class EditorView {
     marks: Marks,
   }
 
-  onDocumentChange = (doc, state) => {
-    this.props.store.update(state)
+  onChange = value => {
+    this.props.store.update(value)
+    this.props.onChange(value)
   }
 
-  render({ id, store, inline, getRef, ...props }) {
-    console.log(store.val && store.val.isBlurred)
+  render({ id, store, onChange, inline, getRef, ...props }) {
+    window.store = store
+    console.log('store', store)
+    console.log('render', store.content)
     return (
-      <document if={store.val}>
+      <document if={store.content}>
         <Editor
           $editor
-          state={store.val}
           plugins={plugins}
           schema={this.schema}
-          onKeyDown={this.onKeyDown}
-          onDocumentChange={this.onDocumentChange}
+          state={store.content}
+          onChange={this.onChange}
+          ref={getRef}
           onFocus={store.focus}
           onBlur={store.blur}
-          ref={getRef}
           {...props}
         />
       </document>

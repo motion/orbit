@@ -36,6 +36,7 @@ export default class DocItem {
     onSaveTitle,
     slanty,
     editable,
+    draggable,
     after,
     height,
     ...props
@@ -49,6 +50,7 @@ export default class DocItem {
     return (
       <doc $$undraggable {...props}>
         <title
+          if={!draggable}
           $editing={this.editing}
           $$height={height}
           ref={this.ref('title').set}
@@ -63,10 +65,6 @@ export default class DocItem {
         >
           {doc.title}
         </title>
-        <info>
-          <author>{doc.authorId}</author>
-          <TimeAgo minPeriod={10} date={doc.createdAt} />
-        </info>
         <delete
           onClick={e => {
             e.stopPropagation()
@@ -82,7 +80,11 @@ export default class DocItem {
           <Editor inline doc={doc} />
         </content>
 
-        {after}
+        <info>
+          <author>{doc.authorId}</author>
+          <TimeAgo minPeriod={10} date={doc.createdAt} />
+          {after}
+        </info>
       </doc>
     )
   }

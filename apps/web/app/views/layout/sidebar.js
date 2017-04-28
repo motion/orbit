@@ -61,6 +61,8 @@ export default class Sidebar {
       width: SIDEBAR_WIDTH,
       borderLeft: [1, '#eee'],
       overflowY: 'scroll',
+      overflowX: 'hidden',
+      userSelect: 'none',
     },
     main: {
       flex: 1,

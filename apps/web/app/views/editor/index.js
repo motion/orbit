@@ -49,7 +49,7 @@ export default class EditorView extends Component {
       title: props => {
         const { attributes, children, node } = props
         const level = node.data.get('level')
-        const Tag = Header(10 / level * 7)
+        const Tag = Header(7 / level * 7)
         return <Tag {...attributes}>{children}</Tag>
       },
       paragraph: props => <p>{props.children}</p>,

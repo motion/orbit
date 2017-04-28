@@ -38,7 +38,9 @@ export default class Grid {
         layout={this.layout}
       >
         {items.map((item, i) => (
-          <gridItem onDragStart={this.onDragStart} key={i}>{item}</gridItem>
+          <gridItem onDragStart={this.onDragStart} key={item._id || item.key}>
+            {item}
+          </gridItem>
         ))}
       </Layout>
     )

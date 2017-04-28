@@ -23,10 +23,13 @@ class Document extends Model {
         {
           kind: 'block',
           type: 'title',
+          data: {
+            level: 1,
+          },
           nodes: [
             {
               kind: 'text',
-              text: props.title,
+              text: props.title || 'lorem ipsum',
             },
           ],
         },

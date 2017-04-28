@@ -104,7 +104,7 @@ export default class BaseModel {
   create(object) {
     const properties = {
       ...object,
-      ...this.getDefaultProps(object),
+      ...this.getDefaultProps({ ...object }),
     }
     return this.collection.insert(properties)
   }

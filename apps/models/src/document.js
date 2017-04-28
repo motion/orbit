@@ -54,7 +54,7 @@ class Document extends Model {
   }
 
   @query forPlace = place => {
-    if (!place.current) {
+    if (!place) {
       return null
     }
     return (
@@ -62,7 +62,7 @@ class Document extends Model {
         .find()
         .where('places')
         // in array find
-        .elemMatch({ $eq: place.current.slug })
+        .elemMatch({ $eq: place.slug })
         .sort({ createdAt: 'desc' })
     )
   }

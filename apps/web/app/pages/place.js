@@ -15,7 +15,7 @@ class PlaceStore {
 })
 export default class PlacePage {
   render({ store }) {
-    const place = store.place.current
+    const { place } = store
 
     return (
       <Page

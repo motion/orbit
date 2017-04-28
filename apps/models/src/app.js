@@ -171,13 +171,12 @@ export default class App {
     const final = []
     for (const error of unique) {
       try {
-        const err = JSON.parse(error.message)
-        final.push({ id: Math.random(), ...err })
+        final.push(JSON.parse(error.message))
       } catch (e) {
         final.push({ id: Math.random(), ...error })
       }
     }
-    this.errors = [...final, ...this.errors]
+    this.errors = uniqBy([...final, ...this.errors], err => err.id)
   }
 
   catchErrors() {

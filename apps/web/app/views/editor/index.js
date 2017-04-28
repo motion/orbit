@@ -40,7 +40,7 @@ export default class EditorView extends Component {
   }
 
   schema = {
-    rules: [Rules.joinLists, Rules.forceTitle],
+    rules: Object.keys(Rules).map(r => Rules[r]),
     nodes: Nodes,
     marks: {
       bold: props => <strong>{props.children}</strong>,

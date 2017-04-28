@@ -1,2 +1,3 @@
 export joinLists from './joinLists'
-export forceTitle from './forceTitle'
+export firstLineTitle from './firstLineTitle'
+export titleText from './titleText'

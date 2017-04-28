@@ -28,6 +28,8 @@ export default class Login {
   finish = () => App.loginOrSignup(App.user.name, this.password)
 
   render() {
+    const step2 = App.tempUser
+
     return (
       <login $$draggable>
         <form $$undraggable if={!App.loggedIn} onSubmit={this.prevent}>
@@ -44,8 +46,8 @@ export default class Login {
             </Button>
           </step>
 
-          <step $$hide={!App.tempUser}>
-            <info if={App.user} $$row>
+          <step $$hide={!step2}>
+            <info if={App.user} $showingPass={step2}>
               <icon onClick={() => App.user.name = ''}>{'<'}</icon>
               <username $$ellipse>{App.user.name}</username>
             </info>
@@ -100,6 +102,9 @@ export default class Login {
       overflow: 'hidden',
       flexFlow: 'row',
       alignItems: 'center',
+    },
+    showingPass: {
+      width: '25%',
     },
     input: {
       display: 'flex',

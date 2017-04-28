@@ -28,6 +28,8 @@ export default class DocItem {
     this.props.onSaveTitle(doc)
   }
 
+  navigate = () => Router.go(this.props.doc.url())
+
   render({
     doc,
     children,
@@ -55,7 +57,7 @@ export default class DocItem {
           $$height={height}
           ref={this.ref('title').set}
           contentEditable={this.editing}
-          onClick={() => Router.go(doc.url())}
+          onClick={this.navigate}
           onKeyDown={e => {
             if (e.keyCode === 13) {
               e.preventDefault()
@@ -80,10 +82,15 @@ export default class DocItem {
           <Editor inline doc={doc} />
         </content>
 
-        <info>
-          <author>{doc.authorId}</author>
-          <TimeAgo minPeriod={10} date={doc.createdAt} />
-          {after}
+        <info onClick={this.navigate}>
+          <first>
+            <author>{doc.authorId}</author>
+            <TimeAgo minPeriod={10} date={doc.createdAt} />
+            {after}
+          </first>
+          <second>
+            <minibtn>↠</minibtn>
+          </second>
         </info>
       </doc>
     )
@@ -98,10 +105,19 @@ export default class DocItem {
       margin: [0, 5, 10, 5],
       color: '#333',
       background: '#fff',
+      overflow: 'hidden',
     },
     info: {
+      flexFlow: 'row',
+      justifyContent: 'space-between',
       fontSize: 13,
+      cursor: 'pointer',
       color: [0, 0, 0, 0.4],
+      margin: -12,
+      padding: 12,
+      '&:hover': {
+        background: '#fafafa',
+      },
     },
     title: {
       fontSize: 18,
@@ -140,6 +156,12 @@ export default class DocItem {
     },
     content: {
       flex: 1,
+    },
+    minibtn: {
+      color: '#aaa',
+      '&:hover': {
+        color: 'purple',
+      },
     },
   }
 

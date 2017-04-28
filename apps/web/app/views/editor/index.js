@@ -15,7 +15,7 @@ const plugins = merge(Plugins)
 const rules = merge(Rules)
 
 class EditorStore {
-  _doc = Document.get(this.props.id)
+  doc = Document.get(this.props.id)
   focused = false
   content = null
 
@@ -28,10 +28,6 @@ class EditorStore {
         this.content = Raw.deserialize(this.doc.content, { terse: true })
       }
     })
-  }
-
-  get doc() {
-    return this._doc && this._doc.current
   }
 
   update = val => {

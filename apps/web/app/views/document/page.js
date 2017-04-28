@@ -3,12 +3,18 @@ import { Page, Button } from '~/views'
 import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import Editor from '~/views/editor'
-import DocumentStore from './store'
+import { Document } from 'models'
 
-@view({ store: DocumentStore })
+@view({
+  store: class DocPageStore {
+    doc = Document.get(this.props.id)
+  },
+})
 export default class DocumentPage {
   render({ store, noSide }) {
     const { doc } = store
+
+    console.log('DOC <<<<<<<<<<<<', doc)
 
     if (!doc) {
       return null
@@ -23,7 +29,7 @@ export default class DocumentPage {
           </side>
         }
         actions={[
-          <Button onClick={store.toggleCollab}>collab</Button>,
+          <Button>collab</Button>,
           <Button onClick={doc.togglePrivate}>
             make {doc.private ? 'public' : 'private'}
           </Button>,

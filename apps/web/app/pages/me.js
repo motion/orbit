@@ -18,6 +18,10 @@ class MeStore {
 })
 export default class MePage {
   render({ store }) {
+    if (!store.docs) {
+      return null
+    }
+
     const docs = (store.docs || [])
       .map((doc, i) => (
         <DocItem key={doc._id} draggable slanty editable doc={doc} />

@@ -22,22 +22,18 @@ class EditorStore {
   start() {
     autorun(this.save)
     autorun(() => {
-      console.log('doc', this.doc)
       if (!this.content && this.doc) {
-        console.log('set contnet')
         this.content = Raw.deserialize(this.doc.content, { terse: true })
       }
     })
   }
 
   update = val => {
-    console.log('update to', val)
     this.content = val
   }
 
   save = () => {
     if (this.content) {
-      console.log('save content', this.content)
       this.doc.content = Raw.serialize(this.content)
       this.doc.save()
     }
@@ -74,8 +70,6 @@ export default class EditorView {
 
   render({ id, store, onChange, inline, getRef, ...props }) {
     window.store = store
-    console.log('store', store)
-    console.log('render', store.content)
     return (
       <document if={store.content}>
         <Editor

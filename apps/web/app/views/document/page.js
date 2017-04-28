@@ -6,15 +6,13 @@ import Editor from '~/views/editor'
 import { Document } from 'models'
 
 @view({
-  store: class DocPageStore {
+  store: class {
     doc = Document.get(this.props.id)
   },
 })
 export default class DocumentPage {
   render({ store, noSide }) {
     const { doc } = store
-
-    console.log('DOC <<<<<<<<<<<<', doc)
 
     if (!doc) {
       return null

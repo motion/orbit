@@ -1,7 +1,6 @@
 import { view } from '~/helpers'
 import { isEqual } from 'lodash'
 import { Place, Document } from 'models'
-import { Text, Page, Button, CircleButton } from '~/views'
 import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Grid from '~/views/grid'

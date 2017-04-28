@@ -18,7 +18,7 @@ export default class Errors {
     return (
       <errors>
         {App.errors.map((error, i) => (
-          <error key={error.id}>
+          <error key={error.id || i}>
             <message if={error.errors}>
               {error.errors.map(({ field, message }) => (
                 <subErr key={Math.random()}>{field}: {message}</subErr>

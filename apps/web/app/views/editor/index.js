@@ -17,7 +17,7 @@ const plugins = [Plugins.Markdown]
 
     @observable menuLoc = null
 
-    @throttle(400)
+    @throttle(1000)
     update = val => {
       this.doc.content = Raw.serialize(val)
       this.doc.updated_at = new Date().toISOString()

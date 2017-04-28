@@ -6,6 +6,7 @@ import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
+import { uniqBy } from 'lodash'
 
 import * as Models from './all'
 
@@ -71,29 +72,63 @@ export default class App {
     this.catchErrors()
   }
 
-  loginOrSignup = async (username, password) => {
-    try {
-      await this.signup(username, password)
-    } catch (e) {
-      console.error(e)
-      console.log('recovering from signup, logging in...')
+  @action loginOrSignup = async (username, password) => {
+    this.clearErrors()
+    let errors = []
+
+    // try signup
+    const signup = await this.signup(username, password)
+    if (!signup.error) {
+      this.clearErrors()
+      return signup
     }
-    return await this.login(username, password)
+    errors.push(signup.error)
+
+    // try login
+    const login = await this.login(username, password)
+    if (!login.error) {
+      this.clearErrors()
+      return login
+    }
+    errors.push(login.error)
+
+    // handle errors
+    this.handleError(...errors)
+    return { errors }
   }
 
-  signup = (username, password, info) => {
-    return this.auth.signup(username, password, info || {})
+  @action signup = async (username, password, extraInfo = {}) => {
+    try {
+      const info = await this.auth.signup(username, password, extraInfo)
+      return { ...info, signup: true }
+    } catch (error) {
+      return { error: error || 'error signing up', signup: false }
+    }
   }
 
-  login = async (username, password) => {
-    const info = await this.auth.login(username, password)
-    this.setSession()
-    return info
+  @action login = async (username, password) => {
+    try {
+      const info = await this.auth.login(username, password)
+      this.clearErrors()
+      this.setSession()
+      return { ...info, login: true }
+    } catch (error) {
+      return { error: error || 'error logging in', login: false }
+    }
   }
 
-  logout = async () => {
+  @action logout = async () => {
     await this.auth.logout()
     this.setSession()
+  }
+
+  @action setUsername = (name: string) => {
+    this.user.name = name
+    localStorage.setItem('tempUsername', name)
+  }
+
+  @action clearErrors = () => {
+    this.errors = []
   }
 
   session = async () => {
@@ -109,11 +144,6 @@ export default class App {
     } else {
       this.user = this.temporaryUser
     }
-  }
-
-  setUsername = (name: string) => {
-    this.user.name = name
-    localStorage.setItem('tempUsername', name)
   }
 
   @computed get noUser() {
@@ -136,22 +166,24 @@ export default class App {
     return this.user && !this.user.temp
   }
 
-  @action clearErrors = () => {
-    this.errors = []
+  handleError = (...errors) => {
+    const unique = uniqBy(errors, err => err.name)
+    const final = []
+    for (const error of unique) {
+      try {
+        const err = JSON.parse(error.message)
+        final.push({ id: Math.random(), ...err })
+      } catch (e) {
+        final.push({ id: Math.random(), ...error })
+      }
+    }
+    this.errors = [...final, ...this.errors]
   }
 
   catchErrors() {
     window.addEventListener('unhandledrejection', event => {
       event.promise.catch(err => {
-        try {
-          const error = JSON.parse(err.message)
-          this.errors = [
-            { id: Math.random(), ...error },
-            ...this.errors.slice(),
-          ]
-        } catch (e) {
-          this.errors = [{ id: Math.random(), ...err }, ...this.errors.slice()]
-        }
+        this.handleError(err)
       })
     })
   }

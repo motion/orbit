@@ -3,8 +3,6 @@ import view from './view'
 export default Component => @view class {
   onDestroy = () => {
     const { node } = this.props
-
-    window._activeEditor.destroy(node.key)
   }
 
   onChange = data => {

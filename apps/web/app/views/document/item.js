@@ -79,7 +79,7 @@ export default class DocItem {
         </delete>
 
         <content if={editable}>
-          <Editor inline doc={doc} />
+          <Editor inline id={doc._id} />
         </content>
 
         <info onClick={this.navigate}>

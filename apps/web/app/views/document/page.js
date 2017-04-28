@@ -36,7 +36,7 @@ export default class DocumentPage {
         <content $$flex $$row>
           <main $$flex={2}>
             <docarea $$draggable>
-              <Editor doc={doc} />
+              <Editor id={doc._id} />
             </docarea>
 
             <met if={!noSide}>

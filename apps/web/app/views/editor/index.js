@@ -10,11 +10,6 @@ import Marks from './marks'
 
 export { Raw } from 'slate'
 
-const EMPTY_CONTENT = Raw.deserialize(
-  { nodes: [{ kind: 'block', type: 'title' }] },
-  { terse: true }
-)
-
 const merge = x => flatten(Object.keys(x).map(n => x[n]))
 const plugins = merge(Plugins)
 const rules = merge(Rules)
@@ -23,6 +18,11 @@ class EditorStore {
   _doc = Document.get(this.props.id)
   focused = false
   @observable.ref content = null
+  version = 0
+
+  constructor() {
+    autorun(this.save)
+  }
 
   get doc() {
     return this._doc && this._doc.current
@@ -30,7 +30,7 @@ class EditorStore {
 
   get val() {
     if (!this.doc) {
-      return EMPTY_CONTENT
+      return null
     }
     if (this.content) {
       return this.content
@@ -40,12 +40,14 @@ class EditorStore {
 
   update = val => {
     this.content = val
-    this.save()
   }
 
   save = () => {
-    this.doc.content = Raw.serialize(this.content)
-    this.doc.save()
+    if (this.content) {
+      console.log('saving')
+      // this.doc.content = Raw.serialize(this.content)
+      // this.doc.save()
+    }
   }
 
   focus = () => {
@@ -60,7 +62,7 @@ class EditorStore {
 @view({
   store: EditorStore,
 })
-export default class EditorView extends Component {
+export default class EditorView {
   static defaultProps = {
     onChange: _ => _,
     getRef: _ => _,
@@ -73,14 +75,13 @@ export default class EditorView extends Component {
   }
 
   onDocumentChange = (doc, state) => {
-    const { store, onChange } = this.props
-    store.update(state)
-    onChange(state)
+    this.props.store.update(state)
   }
 
-  render({ id, store, onChange, inline, getRef, ...props }) {
+  render({ id, store, inline, getRef, ...props }) {
+    console.log(store.val && store.val.isBlurred)
     return (
-      <document>
+      <document if={store.val}>
         <Editor
           $editor
           state={store.val}
@@ -88,7 +89,6 @@ export default class EditorView extends Component {
           schema={this.schema}
           onKeyDown={this.onKeyDown}
           onDocumentChange={this.onDocumentChange}
-          onChange={this.onChange}
           onFocus={store.focus}
           onBlur={store.blur}
           ref={getRef}

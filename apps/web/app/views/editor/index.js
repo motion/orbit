@@ -1,6 +1,6 @@
 import { Selection, Editor, Raw } from 'slate'
 import { view, observable, Component } from '~/helpers'
-import { startsWith, includes } from 'lodash'
+import { flatten, startsWith, includes } from 'lodash'
 import { throttle } from 'lodash-decorators'
 import Menu from './menu'
 import * as Nodes from './nodes'
@@ -9,7 +9,9 @@ import * as Rules from './rules'
 
 export { Raw } from 'slate'
 
-const plugins = [Plugins.Markdown]
+const merge = x => flatten(Object.keys(x).map(n => x[n]))
+const plugins = merge(Plugins)
+const rules = merge(Rules)
 
 @view({
   store: class EditorStore {
@@ -40,7 +42,7 @@ export default class EditorView extends Component {
   }
 
   schema = {
-    rules: Object.keys(Rules).map(r => Rules[r]),
+    rules,
     nodes: Nodes,
     marks: {
       bold: props => <strong>{props.children}</strong>,

@@ -15,9 +15,13 @@ export default class Errors {
   }
 
   render() {
+    const errs = App.errors.filter(
+      x => x.message === 'Document update conflict'
+    )
+
     return (
       <errors>
-        {App.errors.map((error, i) => (
+        {errs.map((error, i) => (
           <error key={error.id || Math.random()}>
             <message if={error.errors}>
               {error.errors.map(({ field, message }) => (

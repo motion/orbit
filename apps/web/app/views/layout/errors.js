@@ -16,7 +16,7 @@ export default class Errors {
 
   render() {
     const errs = App.errors.filter(
-      x => x.message === 'Document update conflict'
+      x => x.message !== 'Document update conflict'
     )
 
     return (

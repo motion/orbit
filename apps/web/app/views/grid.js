@@ -17,7 +17,7 @@ export default class Grid {
 
   componentDidMount() {
     if (this.props.layout) {
-      setTimeout(() => {
+      this.setTimeout(() => {
         this.layout = this.props.layout
       }, 150)
     }

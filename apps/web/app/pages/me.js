@@ -5,7 +5,6 @@ import DocItem from '~/views/document/item'
 import Board from '~/views/place/board'
 
 class MeStore {
-  docs = Document.user()
   createDoc = e => {
     e.preventDefault()
     Document.create()
@@ -17,11 +16,6 @@ class MeStore {
 })
 export default class MePage {
   render({ store }) {
-    const docs = (store.docs || [])
-      .map((doc, i) => (
-        <DocItem key={doc._id} draggable slanty editable doc={doc} />
-      ))
-
     return (
       <Page
         header

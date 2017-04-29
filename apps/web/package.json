@@ -59,6 +59,8 @@
     "sillyname": "^0.1.0",
     "slate": "^0.19.18",
     "slate-auto-replace": "^0.4.2",
+    "slate-drop-or-paste-images": "^0.5.0",
+    "slate-trailing-block": "^0.2.4",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {

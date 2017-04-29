@@ -1,2 +1,3 @@
 export Markdown from './markdown'
-// export TitleEnter from './titleEnter'
+export Images from './images'
+export TrailingBlock from './trailingBlock'

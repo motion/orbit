@@ -10,7 +10,6 @@ import Marks from './marks'
 export { Raw } from 'slate'
 
 const merge = x => flatten(Object.keys(x).map(n => x[n]))
-const plugins = merge(Plugins)
 const rules = merge(Rules)
 
 class EditorStore {
@@ -23,10 +22,10 @@ class EditorStore {
       this.content = Raw.deserialize(this.doc.content, { terse: true })
     }
   }
-
   @view.watch save = () => {
     if (this.content) {
       this.doc.content = Raw.serialize(this.content)
+      console.log(this.doc.content)
       this.doc.save()
     }
   }
@@ -34,11 +33,9 @@ class EditorStore {
   update = val => {
     this.content = val
   }
-
   focus = () => {
     this.focused = true
   }
-
   blur = () => {
     this.focused = false
   }
@@ -53,6 +50,8 @@ export default class EditorView {
     getRef: _ => _,
   }
 
+  plugins = Plugins
+
   schema = {
     rules,
     nodes: Nodes,
@@ -65,12 +64,13 @@ export default class EditorView {
   }
 
   render({ id, store, onChange, inline, getRef, ...props }) {
-    window.store = store
+    window.Editor = this
     return (
       <document if={store.content}>
         <Editor
           $editor
-          plugins={plugins}
+          $$undraggable
+          plugins={merge(this.plugins)}
           schema={this.schema}
           state={store.content}
           onChange={this.onChange}

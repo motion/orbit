@@ -27,9 +27,6 @@ class FeedStore {
 })
 export default class Feed {
   render({ store }) {
-    const docs = (store.docs || [])
-      .map((doc, i) => <DocItem key={doc._id} slanty feed doc={doc} />)
-
     return (
       <Page
         header
@@ -41,7 +38,8 @@ export default class Feed {
         ]}
       >
         <FlipMove $$padding={10} $docs duration={300} easing="ease-out">
-          {docs}
+          {(store.docs || [])
+            .map((doc, i) => <DocItem key={doc._id} slanty feed doc={doc} />)}
         </FlipMove>
       </Page>
     )

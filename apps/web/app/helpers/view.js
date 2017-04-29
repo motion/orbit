@@ -66,20 +66,10 @@ export default function view(View) {
   return autobind(glossy(observer(View)))
 }
 
-const StoreHelpers = {
-  start() {
-    this.subscriptions = new CompositeDisposable()
-  },
-  stop() {
-    this.subscriptions.dispose()
-  },
-}
-
 const provide = createView({
   mobx,
   storeDecorator(Store) {
     mixin(Store.prototype, Helpers)
-    mixin(Store.prototype, StoreHelpers)
     return Store
   },
   onStoreMount(name, store, props) {
@@ -101,7 +91,8 @@ const provide = createView({
       }
     }
 
-    store.start(props)
+    store.subscriptions = new CompositeDisposable()
+    store.start && store.start(props)
 
     // smart watch
     const { watch } = store.constructor
@@ -114,7 +105,8 @@ const provide = createView({
     return store
   },
   onStoreUnmount(name, store) {
-    store.stop()
+    store.stop && store.stop()
+    store.subscriptions.dispose()
   },
 })
 

@@ -17,19 +17,29 @@ class EditorStore {
   focused = false
   content = null
 
-  @view.watch setContent = () => {
+  start() {
+    this.watch(this.save)
+    this.watch(this.setContent)
+  }
+
+  get shouldSave() {
+    if (this.doc.content.document.nodes.some(x => x.type === 'inline-image')) {
+      return false
+    }
+    return true
+  }
+
+  setContent = () => {
     if (!this.content && this.doc) {
       this.content = Raw.deserialize(this.doc.content, { terse: true })
     }
   }
-  @view.watch save = () => {
-    if (this.content) {
+  save = () => {
+    if (this.content && this.shouldSave) {
       this.doc.content = Raw.serialize(this.content)
-      console.log(this.doc.content)
       this.doc.save()
     }
   }
-
   update = val => {
     this.content = val
   }

@@ -1,3 +1,4 @@
+export image from './image'
 export link from './link'
 export counter from './counter'
 export quote from './quote'

@@ -24,5 +24,8 @@
     "lerna": "^2.0.0-rc.2",
     "gloss": "^5.1.2",
     "motion-view": "^1.0.16"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0"
   }
 }

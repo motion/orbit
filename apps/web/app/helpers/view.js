@@ -105,6 +105,7 @@ const provide = createView({
 
     // smart watch
     const { watch } = store.constructor
+    console.log('watch is', watch)
     if (watch && Array.isArray(watch)) {
       for (const key of watch) {
         store.watch(store[key].bind(store))
@@ -121,3 +122,15 @@ const provide = createView({
 // @view.provide({})
 // or @view({})
 view.provide = (...args) => View => provide(...args)(view(View))
+
+// @view.watch
+view.watch = (parent, property, { initializer, ...desc }) => {
+  return {
+    ...desc,
+    initializer: function() {
+      parent.constructor.watch = parent.constructor.watch || []
+      parent.constructor.watch.push(property)
+      return initializer.call(this)
+    },
+  }
+}

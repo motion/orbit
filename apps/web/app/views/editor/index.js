@@ -1,8 +1,7 @@
 import { Selection, Editor, Raw } from 'slate'
 import { Document } from 'models'
-import { view, observable, Component, autorun } from '~/helpers'
-import { flatten, startsWith, includes } from 'lodash'
-import { throttle } from 'lodash-decorators'
+import { view } from '~/helpers'
+import { flatten } from 'lodash'
 import * as Nodes from './nodes'
 import * as Plugins from './plugins'
 import * as Rules from './rules'
@@ -15,19 +14,17 @@ const plugins = merge(Plugins)
 const rules = merge(Rules)
 
 class EditorStore {
-  static watch = ['save', 'setContent']
-
   doc = Document.get(this.props.id)
   focused = false
   content = null
 
-  setContent = () => {
+  @view.watch setContent = () => {
     if (!this.content && this.doc) {
       this.content = Raw.deserialize(this.doc.content, { terse: true })
     }
   }
 
-  save = () => {
+  @view.watch save = () => {
     if (this.content) {
       this.doc.content = Raw.serialize(this.content)
       this.doc.save()

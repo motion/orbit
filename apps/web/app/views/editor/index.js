@@ -15,21 +15,16 @@ const plugins = merge(Plugins)
 const rules = merge(Rules)
 
 class EditorStore {
+  static watch = ['save', 'setContent']
+
   doc = Document.get(this.props.id)
   focused = false
   content = null
 
-  start() {
-    autorun(this.save)
-    autorun(() => {
-      if (!this.content && this.doc) {
-        this.content = Raw.deserialize(this.doc.content, { terse: true })
-      }
-    })
-  }
-
-  update = val => {
-    this.content = val
+  setContent = () => {
+    if (!this.content && this.doc) {
+      this.content = Raw.deserialize(this.doc.content, { terse: true })
+    }
   }
 
   save = () => {
@@ -37,6 +32,10 @@ class EditorStore {
       this.doc.content = Raw.serialize(this.content)
       this.doc.save()
     }
+  }
+
+  update = val => {
+    this.content = val
   }
 
   focus = () => {

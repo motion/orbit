@@ -22,8 +22,9 @@ class BoardStore {
 })
 export default class Board {
   render({ store }) {
-    const docs = (store.docs || [])
-      .map(doc => <DocItem slanty draggable editable key={doc._id} doc={doc} />)
+    const docs = (store.docs || []).map(doc => {
+      return <DocItem slanty draggable editable key={doc._id} doc={doc} />
+    })
 
     return (
       <Grid

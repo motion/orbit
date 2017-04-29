@@ -9,18 +9,22 @@ import { watch, react } from 'motion-mobx-helpers'
 import mixin from 'react-mixin'
 import autobind from 'autobind-decorator'
 import React from 'react'
+import mobx, { isObservable, extendShallowObservable } from 'mobx'
 import { observer } from 'mobx-react'
-import { provide } from 'motion-view'
+import createView from 'motion-view'
 import glossy from './styles'
 import { IS_PROD } from '~/constants'
 
-const Helpers = {
+const ViewHelpers = {
   componentWillMount() {
     this.subscriptions = new CompositeDisposable()
   },
   componentWillUnmount() {
     this.subscriptions.dispose()
   },
+}
+
+const Helpers = {
   addEvent,
   setInterval,
   setTimeout,
@@ -38,10 +42,10 @@ export default function view(View) {
 
   // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
-  Object.setPrototypeOf(View, React.Component)
 
   // add Helpers
   mixin(View.prototype, Helpers)
+  mixin(View.prototype, ViewHelpers)
 
   // preact-like render
   const or = View.prototype.render
@@ -62,5 +66,58 @@ export default function view(View) {
   return autobind(glossy(observer(View)))
 }
 
-// @view.provide
+const StoreHelpers = {
+  start() {
+    this.subscriptions = new CompositeDisposable()
+  },
+  stop() {
+    this.subscriptions.dispose()
+  },
+}
+
+const provide = createView({
+  mobx,
+  storeDecorator(Store) {
+    mixin(Store.prototype, Helpers)
+    mixin(Store.prototype, StoreHelpers)
+    return Store
+  },
+  onStoreMount(name, store, props) {
+    // automagic observables
+    for (const methodName of Object.keys(store)) {
+      if (methodName === 'observe') {
+        continue
+      }
+
+      const val = store[methodName]
+
+      // auto-get observable for @query
+      if (val && val.$isQuery) {
+        Object.defineProperty(store, methodName, {
+          get: () => val.current,
+        })
+      } else if (typeof val !== 'function' && !isObservable(val)) {
+        extendShallowObservable(store, { [methodName]: val })
+      }
+    }
+
+    store.start(props)
+
+    // smart watch
+    const { watch } = store.constructor
+    if (watch && Array.isArray(watch)) {
+      for (const key of watch) {
+        store.watch(store[key].bind(store))
+      }
+    }
+
+    return store
+  },
+  onStoreUnmount(name, store) {
+    store.stop()
+  },
+})
+
+// @view.provide({})
+// or @view({})
 view.provide = (...args) => View => provide(...args)(view(View))

@@ -6,7 +6,6 @@ import Board from '~/views/place/board'
 
 class MeStore {
   docs = Document.user()
-
   createDoc = e => {
     e.preventDefault()
     Document.create()
@@ -36,14 +35,5 @@ export default class MePage {
         <Board slug="ddd" />
       </Page>
     )
-  }
-
-  static style = {
-    docs: {
-      flexFlow: 'row',
-      flexWrap: 'wrap',
-      maxHeight: '100%',
-      position: 'relative',
-    },
   }
 }

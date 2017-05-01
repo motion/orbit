@@ -1,14 +1,14 @@
 version: "2"
 services:
   # starter-redis:
-  #   hostname: starter-redis
+  #   env_file: .env
   #   image: redis
   #   ports:
   #    - 6379
   #   volumes:
   #    - ./app_data/redis-data:/data
   starter-couchdb:
-    hostname: starter-couchdb
+    env_file: .env
     image: klaemo/couchdb:latest
     volumes:
       - ./app_data/couchdb:/usr/local/var/lib/couchdb
@@ -21,7 +21,7 @@ services:
      - DB_USER=${DB_USER}
      - DB_PASSWORD=${DB_PASSWORD}
   starter-api:
-    hostname: starter-api
+    env_file: .env
     build: ./apps/api
     ports:
      - 3000:3000

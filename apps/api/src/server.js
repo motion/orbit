@@ -20,19 +20,16 @@ export default class Server {
     app.use(logger('dev'))
 
     // CORS
-    app.use(
-      cors({
-        origin: APP_URL,
-        // credentials: true,
-      })
-    )
+    app.use(cors({ origin: APP_URL }))
 
-    console.log('proxying', COUCH_URL)
-    app.use('/db', proxy(COUCH_URL))
+    app.use('/', proxy('http://starter-couchdb:5984'))
+    app.get('/test', (req, res) => {
+      res.send(200)
+    })
 
     // middleware
-    app.use(bodyParser.json())
-    app.use(bodyParser.urlencoded({ extended: false }))
+    // app.use(bodyParser.json())
+    // app.use(bodyParser.urlencoded({ extended: false }))
 
     // // SUPERLOGIN
     // const superlogin = new SuperLogin(config)

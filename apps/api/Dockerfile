@@ -14,7 +14,7 @@ ADD ./package.json /app
 RUN npm install --production --loglevel=error
 
 # Add application files
-ADD ./ /app
+ADD ./lib /app
 
 EXPOSE 3000
 
@@ -23,4 +23,4 @@ EXPOSE 3000
 ## Allow debugging the node web app..
 #CMD ["nodemon", "--debug=5858", "index.js"]
 
-CMD ["nodemon", "lib/index.js"]
+CMD ["nodemon", "start.js"]

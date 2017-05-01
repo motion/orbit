@@ -17,33 +17,34 @@ services:
       - ./apps/couch:/usr/local/etc/couchdb/local.d:rw
       - ./app_data/couchdb:/usr/local/var/lib/couchdb
     environment:
-     - COUCHDB_USER=${COUCHDB_USER}
-     - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-  # starter-api:
-  #   hostname: starter-api
-  #   build: ./apps/api
-  #   ports:
-  #    - 3000:3000
-  #    - 5858:5858
-  #   volumes:
-  #     - ./apps/api:/app
-  #   # depends_on:
-  #   #   - starter-redis
-  #   #   - starter-couchdb
-  #   environment:
-  #    - COUCHDB_USER=${COUCHDB_USER}
-  #    - COUCHDB_PASSWORD=${COUCHDB_PASSWORD}
-  #    - NODE_ENV=${NODE_ENV}
-  #    - FROM_EMAIL=${FROM_EMAIL}
-  #    - SENDGRID_USERNAME=${SENDGRID_USERNAME}
-  #    - SENDGRID_PASSWORD=${SENDGRID_PASSWORD}
-  #    - FACEBOOK_CLIENTID=${FACEBOOK_CLIENTID}
-  #    - FACEBOOK_CLIENTSECRET=${FACEBOOK_CLIENTSECRET}
-  #    - GOOGLE_CLIENTID=${GOOGLE_CLIENTID}
-  #    - GOOGLE_CLIENTSECRET=${GOOGLE_CLIENTSECRET}
-  #    - GITHUB_CLIENTID=${GITHUB_CLIENTID}
-  #    - GITHUB_CLIENTSECRET=${GITHUB_CLIENTSECRET}
-  #    - WINDOWSLIVE_CLIENTID=${WINDOWSLIVE_CLIENTID}
-  #    - WINDOWSLIVE_CLIENTSECRET=${WINDOWSLIVE_CLIENTSECRET}
-  #    - LINKEDIN_CLIENTID=${LINKEDIN_CLIENTID}
-  #    - LINKEDIN_CLIENTSECRET=${LINKEDIN_CLIENTSECRET}
+     - DB_USER=${DB_USER}
+     - DB_PASSWORD=${DB_PASSWORD}
+  starter-api:
+    hostname: starter-api
+    build: ./apps/api
+    ports:
+     - 3000:3000
+     - 5858:5858
+    volumes:
+      - ./apps/api:/app
+    depends_on:
+      - starter-redis
+      - starter-couchdb
+    environment:
+     - PORT=3000
+     - DB_USER=${DB_USER}
+     - DB_PASSWORD=${DB_PASSWORD}
+    #  - NODE_ENV=${NODE_ENV}
+    #  - FROM_EMAIL=${FROM_EMAIL}
+    #  - SENDGRID_USERNAME=${SENDGRID_USERNAME}
+    #  - SENDGRID_PASSWORD=${SENDGRID_PASSWORD}
+    #  - FACEBOOK_CLIENTID=${FACEBOOK_CLIENTID}
+    #  - FACEBOOK_CLIENTSECRET=${FACEBOOK_CLIENTSECRET}
+    #  - GOOGLE_CLIENTID=${GOOGLE_CLIENTID}
+    #  - GOOGLE_CLIENTSECRET=${GOOGLE_CLIENTSECRET}
+    #  - GITHUB_CLIENTID=${GITHUB_CLIENTID}
+    #  - GITHUB_CLIENTSECRET=${GITHUB_CLIENTSECRET}
+    #  - WINDOWSLIVE_CLIENTID=${WINDOWSLIVE_CLIENTID}
+    #  - WINDOWSLIVE_CLIENTSECRET=${WINDOWSLIVE_CLIENTSECRET}
+    #  - LINKEDIN_CLIENTID=${LINKEDIN_CLIENTID}
+    #  - LINKEDIN_CLIENTSECRET=${LINKEDIN_CLIENTSECRET}

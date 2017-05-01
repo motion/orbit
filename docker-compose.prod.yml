@@ -1,0 +1,8 @@
+version: "2"
+services:
+  starter-api:
+    ports:
+     - 80:80
+    environment:
+     - PORT=80
+     - PRODUCTION=true

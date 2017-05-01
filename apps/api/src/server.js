@@ -9,14 +9,12 @@ import { GitHubStrategy } from 'passport-github'
 import { GoogleStrategy } from 'passport-google-oauth'
 import { FacebookStrategy } from 'passport-facebook'
 import config from './superlogin.config.js'
-import { DB_PROTOCOL, DB_HOST } from './keys'
+import { DB_PROTOCOL, DB_HOST, APP_URL, SERVER_PORT } from './keys'
 
 export default class Server {
   constructor() {
     const app = express()
-    const port = process.env.PORT || 3000
-
-    console.log('Couch url:', COUCH_URL)
+    const port = SERVER_PORT
 
     app.set('port', port)
     app.use(logger('dev'))
@@ -24,12 +22,12 @@ export default class Server {
     // CORS
     app.use(
       cors({
-        origin: 'http://localhost:3001',
+        origin: APP_URL,
         credentials: true,
       })
     )
 
-    app.use('/', proxy(`http://${DB_HOST}`))
+    app.use('/db', proxy(`http://${DB_HOST}`))
 
     // middleware
     app.use(bodyParser.json())

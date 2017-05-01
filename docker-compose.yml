@@ -27,6 +27,9 @@ services:
       - starter-couchdb
     environment:
      - PORT=3000
+     - DB_HOST=${DB_HOST}
+     - DB_PORT=${DB_PORT}
+     - DB_PROTOCOL=${DB_PROTOCOL}
      - DB_USER=${DB_USER}
      - DB_PASSWORD=${DB_PASSWORD}
     #  - NODE_ENV=${NODE_ENV}

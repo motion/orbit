@@ -9,7 +9,7 @@ import { GitHubStrategy } from 'passport-github'
 import { GoogleStrategy } from 'passport-google-oauth'
 import { FacebookStrategy } from 'passport-facebook'
 import config from './superlogin.config.js'
-import { DB_PROTOCOL, DB_HOST, APP_URL, SERVER_PORT } from './keys'
+import { COUCH_URL, APP_URL, SERVER_PORT } from './keys'
 
 export default class Server {
   constructor() {
@@ -27,9 +27,8 @@ export default class Server {
       })
     )
 
-    const dbUrl = `http://${DB_HOST}`
-    console.log('proxying', dbUrl)
-    app.use('/db', proxy(dbUrl))
+    console.log('proxying', COUCH_URL)
+    app.use('/db', proxy(COUCH_URL))
 
     // middleware
     app.use(bodyParser.json())

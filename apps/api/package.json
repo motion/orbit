@@ -10,6 +10,7 @@
     "body-parser": "^1.16.1",
     "cloudant-envoy": "^0.4.2",
     "cors": "^2.8.3",
+    "dotenv": "^4.0.0",
     "express": "^4.14.1",
     "express-couch-proxy": "^0.1.0",
     "express-http-proxy": "^0.11.0",

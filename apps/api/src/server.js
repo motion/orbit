@@ -22,10 +22,18 @@ export default class Server {
     // CORS
     app.use(cors({ origin: APP_URL }))
 
-    app.use('/', proxy('http://starter-couchdb:5984'))
-    app.get('/test', (req, res) => {
-      res.send(200)
-    })
+    app.use(
+      '/',
+      proxy('http://starter-couchdb:5984', {
+        preserveHostHdr: true,
+        proxyReqOptDecorator(proxyReqOpts, srcReq) {
+          console.log('PROXY?')
+          console.log(proxyReqOpts.path)
+          console.log(proxyReqOpts.headers)
+          return proxyReqOpts
+        },
+      })
+    )
 
     // middleware
     // app.use(bodyParser.json())

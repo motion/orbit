@@ -25,7 +25,8 @@ services:
     build: ./apps/api
     ports:
      - 3000:3000
-    #  - 5858:5858
+    volumes:
+     - ./apps/api:/app
     depends_on:
       # - starter-redis
       - starter-couchdb

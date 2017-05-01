@@ -1,21 +1,18 @@
 version: "2"
 services:
-  starter-redis:
-    hostname: starter-redis
-    image: redis
-    ports:
-     - 6379
-    volumes:
-     - ./app_data/redis-data:/data
+  # starter-redis:
+  #   hostname: starter-redis
+  #   image: redis
+  #   ports:
+  #    - 6379
+  #   volumes:
+  #    - ./app_data/redis-data:/data
   starter-couchdb:
     hostname: starter-couchdb
     image: klaemo/couchdb:latest
     restart: always
     ports:
       - 5984:5984
-    volumes:
-      - ./apps/couch:/usr/local/etc/couchdb/local.d:rw
-      - ./app_data/couchdb:/usr/local/var/lib/couchdb
     environment:
      - DB_USER=${DB_USER}
      - DB_PASSWORD=${DB_PASSWORD}
@@ -25,10 +22,8 @@ services:
     ports:
      - 3000:3000
      - 5858:5858
-    volumes:
-      - ./apps/api:/app
     depends_on:
-      - starter-redis
+      # - starter-redis
       - starter-couchdb
     environment:
      - PORT=3000

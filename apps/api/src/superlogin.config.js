@@ -34,7 +34,7 @@ export default {
   },
   session: {
     // 'redis' or 'memory'
-    adapter: IS_PROD ? 'redis' : 'memory',
+    adapter: 'memory', //IS_PROD ? 'redis' : 'memory',
     redis: {
       // The docker-compose will setup the /etc/hosts for us so our redis servier is called "redis"
       url: REDIS_URL,

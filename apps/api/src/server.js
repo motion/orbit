@@ -23,11 +23,13 @@ export default class Server {
     app.use(
       cors({
         origin: APP_URL,
-        credentials: true,
+        // credentials: true,
       })
     )
 
-    app.use('/db', proxy(`http://${DB_HOST}`))
+    const dbUrl = `http://${DB_HOST}`
+    console.log('proxying', dbUrl)
+    app.use('/db', proxy(dbUrl))
 
     // middleware
     app.use(bodyParser.json())
@@ -65,7 +67,8 @@ export default class Server {
   }
 
   start() {
+    const port = this.server.get('port')
     console.log('Server starting on port', port)
-    http.createServer(this.server).listen(this.server.get('port'))
+    http.createServer(this.server).listen(port)
   }
 }

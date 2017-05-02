@@ -3,14 +3,14 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-echo "in namespace $NAMESPACE"
+echo "namespace $NAMESPACE"
 
 COMMAND=$1
 
 if [ "$COMMAND" = "generate" ]; then
   kompose -f docker-compose.prod.yml convert -o infra/kubes
 elif [ "$COMMAND" = "bootstrap" ]; then
-  kubectl create secret docker-registry myregistrykey \
+  kubectl create secret docker-registry $DOCKER_SECRET \
     --docker-server=$DOCKER_REGISTRY_SERVER \
     --docker-username=$DOCKER_USER \
     --docker-password=$DOCKER_PASSWORD \

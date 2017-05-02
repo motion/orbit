@@ -28,7 +28,6 @@ spec:
         - name: DB_PASSWORD
         image: index.docker.io/motion/starter-api:latest
         imagePullPolicy: Always
-        command: [ "echo", "SUCCESS" ]
         name: starter-api
         ports:
         - containerPort: 3000

@@ -24,11 +24,10 @@ export default class Server {
 
     app.use(
       '/',
-      proxy('http://starter-couchdb:5984', {
+      proxy(COUCH_URL, {
         preserveHostHdr: true,
         proxyReqOptDecorator(proxyReqOpts, srcReq) {
-          console.log('PROXY?')
-          console.log(proxyReqOpts.path)
+          proxyReqOpts.headers['Access-Control-Allow-Credentials'] = true
           console.log(proxyReqOpts.headers)
           return proxyReqOpts
         },

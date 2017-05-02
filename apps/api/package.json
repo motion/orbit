@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
-    "start": "DB_HOST=localhost:5984 DB_USER=username DB_PASSWORD=password nodemon lib/index.js"
+    "start": "if [$NODE_ENV == 'production']; then node lib/index.js; else nodemon lib/index.js; fi"
   },
   "dependencies": {
     "body-parser": "^1.16.1",

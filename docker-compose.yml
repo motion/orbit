@@ -1,42 +1,42 @@
 version: "2"
 services:
-  # starter-redis:
-  #   env_file: .env
-  #   image: redis
-  #   ports:
-  #    - 6379
-  #   volumes:
-  #    - ./app_data/redis-data:/data
+  starter-redis:
+    env_file: .env
+    image: redis
+    ports:
+      - 6379
+    volumes:
+      - /data
   starter-couchdb:
     env_file: .env
     image: klaemo/couchdb:latest
     volumes:
-      - ./app_data/couchdb:/usr/local/var/lib/couchdb
+       - /usr/local/var/lib/couchdb
     restart: always
     expose:
-     - 5984
+      - 5984
     ports:
       - 5984:5984
     environment:
-     - DB_USER=${DB_USER}
-     - DB_PASSWORD=${DB_PASSWORD}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
   starter-api:
     env_file: .env
     build: ./apps/api
     ports:
-     - 3000:3000
-    volumes:
-     - ./apps/api:/app
-    depends_on:
-      # - starter-redis
+      - 80:3000
+    links:
       - starter-couchdb
+    depends_on:
+       - starter-redis
+       - starter-couchdb
     environment:
-     - PORT=3000
-     - DB_HOST=starter-couchdb
-     - DB_PORT=5984
-     - DB_PROTOCOL=http://
-     - DB_USER=${DB_USER}
-     - DB_PASSWORD=${DB_PASSWORD}
+      - PORT=3000
+      - DB_HOST=starter-couchdb
+      - DB_PORT=5984
+      - DB_PROTOCOL=http://
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
     #  - NODE_ENV=${NODE_ENV}
     #  - FROM_EMAIL=${FROM_EMAIL}
     #  - SENDGRID_USERNAME=${SENDGRID_USERNAME}

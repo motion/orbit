@@ -52,10 +52,14 @@ export default class App {
       name: config.name,
       password: config.password,
       multiInstance: true,
+      withCredentials: false,
     })
 
     // separate pouchdb for auth
-    this.auth = new PouchDB(`${config.couchUrl}/auth`, { skipSetup: true })
+    this.auth = new PouchDB(`${config.couchUrl}/auth`, {
+      skipSetup: true,
+      withCredentials: false,
+    })
     console.log('got auth', this.auth)
 
     // connect models

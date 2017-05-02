@@ -1,11 +1,34 @@
 version: "2"
 services:
-  starter-couch:
-    volumes:
-      - /usr/local/var/lib/couchdb
-  starter-api:
+  # starter-redis:
+  #   image: redis
+  #   ports:
+  #     - 6379
+  #   volumes:
+  #     - /data
+  starter-couchdb:
+    image: klaemo/couchdb:latest
+    restart: always
+    expose:
+      - 5984
     ports:
-     - 80:3000
+      - 5984:5984
     environment:
-     - PORT=80
-     - PRODUCTION=true
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+  starter-api:
+    image: motion/starter-api
+    ports:
+      - 80:3000
+    links:
+      - starter-couchdb
+    depends_on:
+      #  - starter-redis
+       - starter-couchdb
+    environment:
+      - PORT=80
+      - DB_HOST=localhost
+      - DB_PORT=5984
+      - DB_PROTOCOL=http://
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}

@@ -7,19 +7,19 @@ services:
   #     - 6379
   #   volumes:
   #     - /data
-  # starter-couchdb:
-  #   env_file: .env
-  #   image: klaemo/couchdb:latest
-  #   volumes:
-  #      - ./app_data/couchdb:/usr/local/var/lib/couchdb
-  #   restart: always
-  #   expose:
-  #     - 5984
-  #   ports:
-  #     - 5984:5984
-  #   environment:
-  #     - DB_USER=${DB_USER}
-  #     - DB_PASSWORD=${DB_PASSWORD}
+  starter-couchdb:
+    env_file: .env
+    image: klaemo/couchdb:latest
+    volumes:
+       - ./app_data/couchdb:/usr/local/var/lib/couchdb
+    restart: always
+    expose:
+      - 5984
+    ports:
+      - 5984:5984
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
   starter-api:
     env_file: .env
     build:
@@ -29,11 +29,11 @@ services:
       - ./apps/api:/app
     ports:
       - 3000:3000
-    # links:
-    #   - starter-couchdb
-    # depends_on:
-    #    - starter-redis
-    #    - starter-couchdb
+    links:
+      - starter-couchdb
+    depends_on:
+      #  - starter-redis
+       - starter-couchdb
     environment:
       - PORT=3000
       - DB_HOST=starter-couchdb

@@ -25,10 +25,9 @@ RUN yarn install
 # bugfix for lerna
 RUN git init
 RUN yarn run bootstrap
-RUN ls -la
 RUN yarn run build
 
 WORKDIR /repo/apps/api
-CMD yarn start
+CMD npm start
 
 EXPOSE 3000

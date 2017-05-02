@@ -17,7 +17,7 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
   starter-api:
-    image: motion/starter-api
+    image: index.docker.io/motion/starter-api:latest
     ports:
       - 80:3000
     links:

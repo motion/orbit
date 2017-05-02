@@ -5,8 +5,7 @@ metadata:
   name: starter-api
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
+  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -16,25 +15,19 @@ spec:
       containers:
       - env:
         - name: PORT
-          value: "3000"
+          value: "80"
         - name: DB_HOST
-          value: starter-couchdb
+          value: localhost
         - name: DB_PORT
           value: "5984"
         - name: DB_PROTOCOL
           value: http://
         - name: DB_USER
         - name: DB_PASSWORD
+        image: index.docker.io/motion/starter-api:latest
         name: starter-api
         ports:
         - containerPort: 3000
         resources: {}
-        volumeMounts:
-        - mountPath: /repo/apps/api
-          name: starter-api-claim0
       restartPolicy: Always
-      volumes:
-      - name: starter-api-claim0
-        persistentVolumeClaim:
-          claimName: starter-api-claim0
 status: {}

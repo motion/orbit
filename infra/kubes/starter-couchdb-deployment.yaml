@@ -5,8 +5,7 @@ metadata:
   name: starter-couchdb
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
+  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -22,12 +21,5 @@ spec:
         ports:
         - containerPort: 5984
         resources: {}
-        volumeMounts:
-        - mountPath: /usr/local/var/lib/couchdb
-          name: starter-couchdb-claim0
       restartPolicy: Always
-      volumes:
-      - name: starter-couchdb-claim0
-        persistentVolumeClaim:
-          claimName: starter-couchdb-claim0
 status: {}

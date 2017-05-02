@@ -1,15 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: starter-api
   creationTimestamp: null
   labels:
     io.kompose.service: starter-api
-  name: starter-api
 spec:
+  type: NodePort
   ports:
-  - name: "80"
-    port: 80
-    targetPort: 3000
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      nodePort: 32099
   selector:
     io.kompose.service: starter-api
 status:

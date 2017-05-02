@@ -17,9 +17,9 @@ spec:
       containers:
       - env:
         - name: PORT
-          value: "80"
+          value: "3000"
         - name: DB_HOST
-          value: localhost
+          value: starter-couchdb
         - name: DB_PORT
           value: "5984"
         - name: DB_PROTOCOL

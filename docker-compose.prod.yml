@@ -26,8 +26,8 @@ services:
       #  - starter-redis
        - starter-couchdb
     environment:
-      - PORT=80
-      - DB_HOST=localhost
+      - PORT=3000
+      - DB_HOST=starter-couchdb
       - DB_PORT=5984
       - DB_PROTOCOL=http://
       - DB_USER=${DB_USER}

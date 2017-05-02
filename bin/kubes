@@ -1,0 +1,25 @@
+#!/bin/bash
+
+. $(dirname $0)/__common
+cd $ROOT
+
+echo "in namespace $NAMESPACE"
+
+COMMAND=$1
+
+if [ "$COMMAND" = "generate" ]; then
+  kompose -f docker-compose.prod.yml convert -o infra/kubes
+elif [ "$COMMAND" = "bootstrap" ]; then
+  kubectl create secret docker-registry myregistrykey \
+    --docker-server=$DOCKER_REGISTRY_SERVER \
+    --docker-username=$DOCKER_USER \
+    --docker-password=$DOCKER_PASSWORD \
+    --docker-email=$DOCKER_EMAIL
+elif [ "$COMMAND" = "start" ]; then
+  kubectl create -f infra/kubes
+elif [ "$COMMAND" = "stop" ]; then
+  kubectl delete -f infra/kubes
+elif [ "$COMMAND" = "restart" ]; then
+  kubectl delete -f infra/kubes
+  kubectl create -f infra/kubes
+fi

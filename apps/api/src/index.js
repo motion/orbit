@@ -1,4 +1,4 @@
-console.log('Running api...')
+console.log('starting api...')
 console.log(process.env)
 
 require('dotenv').config()

@@ -71,7 +71,7 @@ export default class Server {
 
   start() {
     const port = this.server.get('port')
-    console.log('Server starting on port', port)
     http.createServer(this.server).listen(port)
+    console.log('server started on port', port)
   }
 }

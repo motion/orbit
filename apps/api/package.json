@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
-    "start": "ls -la; node lib"
+    "start": "nodemon lib"
   },
   "dependencies": {
     "body-parser": "^1.16.1",
@@ -21,5 +21,8 @@
     "passport-github": "^1.1.0",
     "passport-google-oauth": "^1.0.0",
     "superlogin": "^0.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }

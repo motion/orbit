@@ -1,12 +1,10 @@
-import Server from './server'
+console.log('Running api...')
+console.log(process.env)
 
-export default class API {
-  constructor(options) {
-    this.server = new Server(options)
-    return this
-  }
+require('dotenv').config()
 
-  start() {
-    this.server.start()
-  }
-}
+const API = require('./api').default
+
+const api = new API({})
+
+api.start()

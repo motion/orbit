@@ -2,10 +2,10 @@ version: "2"
 services:
   starter-couch:
     volumes:
-      - ./app_data/couchdb:/usr/local/var/lib/couchdb
+      - /usr/local/var/lib/couchdb
   starter-api:
     ports:
-     - 80:80
+     - 80:3000
     environment:
      - PORT=80
      - PRODUCTION=true

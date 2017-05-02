@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
-    "start": "if [$NODE_ENV == 'production']; then node lib/index.js; else nodemon lib/index.js; fi"
+    "start": "ls -la; node lib"
   },
   "dependencies": {
     "body-parser": "^1.16.1",

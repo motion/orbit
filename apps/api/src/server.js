@@ -10,33 +10,49 @@ import { GoogleStrategy } from 'passport-google-oauth'
 import { FacebookStrategy } from 'passport-facebook'
 import config from './superlogin.config.js'
 import { COUCH_URL, APP_URL, SERVER_PORT } from './keys'
+import request from 'request'
 
 export default class Server {
+  proxy(prefix, url) {
+    return (req, res, next) => {
+      console.log(req.path)
+      console.log('req', req.path, req.headers)
+      if (req.path.indexOf(prefix) === 0) {
+        const uri = url + req.path.slice(prefix.length)
+        console.log('uri', uri)
+        const requestObj = {
+          uri,
+          method: req.method,
+          qs: req.query,
+        }
+        console.log(requestObj)
+        req.pipe(request(requestObj)).pipe(res)
+      } else {
+        next()
+      }
+    }
+  }
+
   constructor() {
     const app = express()
     const port = SERVER_PORT
 
     app.set('port', port)
     app.use(logger('dev'))
-
-    // CORS
     app.use(cors({ origin: APP_URL }))
 
-    app.use(
-      '/',
-      proxy(COUCH_URL, {
-        preserveHostHdr: true,
-        proxyReqOptDecorator(proxyReqOpts, srcReq) {
-          proxyReqOpts.headers['Access-Control-Allow-Credentials'] = true
-          console.log(proxyReqOpts.headers)
-          return proxyReqOpts
-        },
-      })
-    )
+    // proxy couchdb
+    console.log('proxy', '/couch', COUCH_URL)
+    app.use(this.proxy('/couch', COUCH_URL))
+
+    // 👋
+    app.get('/', (req, res) => {
+      res.send('hello world')
+    })
 
     // middleware
-    // app.use(bodyParser.json())
-    // app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({ extended: false }))
 
     // // SUPERLOGIN
     // const superlogin = new SuperLogin(config)
@@ -49,18 +65,6 @@ export default class Server {
     //   if (superlogin.config.getItem(`providers.${name}.credentials.clientID`)) {
     //     superlogin.registerOAuth2(name, strategy)
     //   }
-    // })
-
-    // // https redirect unless using localhost
-    // app.use((req, res, next) => {
-    //   if (
-    //     req.protocol === 'https' ||
-    //     req.header('X-Forwarded-Proto') === 'https' ||
-    //     req.hostname === 'localhost'
-    //   ) {
-    //     return next()
-    //   }
-    //   res.status(301).redirect(`https://${req.headers['host']}${req.url}`)
     // })
 
     // superlogin routes

@@ -10,6 +10,7 @@ import { FacebookStrategy } from 'passport-facebook'
 import config from './superlogin.config.js'
 import { COUCH_URL, APP_URL, SERVER_PORT } from './keys'
 import request from 'request'
+import Path from 'path'
 
 const couchRes = res => {
   res.set({
@@ -63,10 +64,10 @@ export default class Server {
     app.use(proxy('/_membership', COUCH_URL, '/_membership'))
     // app.use(proxy('/_membership', COUCH_URL, '/_membership'))
 
-    // 👋
-    app.get('/', (req, res) => {
-      res.send('hello world')
-    })
+    // 👋 serve app
+    const appBuildDir = Path.join(__dirname, '..', '..', 'web', 'build')
+    console.log('serving static at', appBuildDir)
+    app.use('/', express.static(appBuildDir))
 
     // middleware
     app.use(bodyParser.json())

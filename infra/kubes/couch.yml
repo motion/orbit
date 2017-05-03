@@ -3,15 +3,14 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: starter-couchdb
+    run: starter-couchdb
   name: starter-couchdb
 spec:
   ports:
-  - name: "5984"
-    port: 5984
+  - port: 5984
     targetPort: 5984
   selector:
-    io.kompose.service: starter-couchdb
+    run: starter-couchdb
 status:
   loadBalancer: {}
 ---
@@ -27,7 +26,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: starter-couchdb
+        run: starter-couchdb
     spec:
       containers:
       - env:
@@ -46,8 +45,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: starter-couchdb-claim0
-  name: starter-couchdb-claim0
+    run: starter-couchdb-claim
+  name: starter-couchdb-claim
 spec:
   accessModes:
   - ReadWriteOnce

@@ -4,7 +4,7 @@ metadata:
   name: starter-api
   creationTimestamp: null
   labels:
-    io.kompose.service: starter-api
+    run: starter-api
 spec:
   type: NodePort
   ports:
@@ -13,7 +13,7 @@ spec:
       targetPort: 3000
       nodePort: 32099
   selector:
-    io.kompose.service: starter-api
+    run: starter-api
 status:
   loadBalancer: {}
 ---
@@ -29,7 +29,7 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: starter-api
+        run: starter-api
     spec:
       imagePullSecrets:
         - name: docker-hub
@@ -59,8 +59,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: starter-api-claim0
-  name: starter-api-claim0
+    run: starter-api-claim
+  name: starter-api-claim
 spec:
   accessModes:
   - ReadWriteOnce

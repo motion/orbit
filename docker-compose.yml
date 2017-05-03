@@ -32,9 +32,17 @@ services:
       #  - starter-redis
        - starter-couchdb
     environment:
+      - VIRTUAL_HOST=jot.dev
       - PORT=3000
       - DB_HOST=starter-couchdb
       - DB_PORT=5984
       - DB_PROTOCOL=http://
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
+  nginx-proxy:
+      image: jwilder/nginx-proxy
+      container_name: nginx-proxy
+      ports:
+        - "80:80"
+      volumes:
+        - /var/run/docker.sock:/tmp/docker.sock:ro

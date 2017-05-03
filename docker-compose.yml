@@ -24,6 +24,7 @@ services:
       dockerfile: infra/images/api.dockerfile
     volumes:
       - ./apps/api:/repo/apps/api
+      - ./apps/web:/repo/apps/web
     ports:
       - 3000:3000
     links:

@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
-    "start": "nodemon lib"
+    "start": "node lib",
+    "dev": "nodemon lib"
   },
   "dependencies": {
     "body-parser": "^1.16.1",

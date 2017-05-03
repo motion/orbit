@@ -1,0 +1,28 @@
+#!/bin/bash
+
+. $(dirname $0)/__common
+cd $ROOT
+
+APP=$1
+IS_PROD=false
+if [ "$NODE_ENV" = "production" ]; then
+  IS_PROD=true
+fi
+
+echo "is prod? $IS_PROD"
+
+startApiDev() {
+  npm run watch &
+  cd apps/api
+  npm run dev
+  fg # so we can kill cleanly
+}
+
+startApi() {
+  cd apps/api
+  npm start
+}
+
+if [ "$APP" = "api" ]; then
+  if [ "$IS_PROD" = true ]; then startApi; else startApiDev; fi
+fi

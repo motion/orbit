@@ -3,6 +3,8 @@
 . $(dirname $0)/__common
 cd $ROOT
 
+# set dev context
+export KUBECONFIG=infra/keys/kubes/dev
 kubectl config use-context minikube
 
 bin/__kubes ${@:1}

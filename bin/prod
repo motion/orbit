@@ -3,8 +3,8 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-kubectl config use-context production
-
-export KUBECONFIG=$ROOT/keys/kubes/prod
+# set prod context
+export KUBECONFIG=infra/keys/kubes/prod
+kubectl config use-context stackpoint
 
 bin/__kubes ${@:1}

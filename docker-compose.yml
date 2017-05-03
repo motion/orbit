@@ -4,8 +4,8 @@ services:
     image: klaemo/couchdb:latest
     restart: always
     volumes:
-       - ./app_data/couchdb:/usr/local/var/lib/couchdb
-       - ./apps/couch/config:/usr/local/etc/couchdb/local.d
+       - ./app_data/couchdb:/opt/couchdb/data
+       - ./apps/couch/config:/opt/couchdb/etc/local.d/
     restart: always
     expose:
       - 5984

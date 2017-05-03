@@ -1,13 +1,8 @@
 version: "2"
 services:
-  # starter-redis:
-  #   image: redis
-  #   ports:
-  #     - 6379
-  #   volumes:
-  #     - /data
   starter-couchdb:
     image: klaemo/couchdb:latest
+    restart: always
     volumes:
        - ./app_data/couchdb:/usr/local/var/lib/couchdb
     restart: always
@@ -19,6 +14,7 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
   starter-api:
+    restart: always
     build:
       context: .
       dockerfile: infra/images/api.dockerfile
@@ -30,7 +26,6 @@ services:
     links:
       - starter-couchdb
     depends_on:
-      #  - starter-redis
        - starter-couchdb
     environment:
       - VIRTUAL_HOST=jot.dev
@@ -40,10 +35,18 @@ services:
       - DB_PROTOCOL=http://
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-  nginx-proxy:
-      image: jwilder/nginx-proxy
-      container_name: nginx-proxy
-      ports:
-        - "80:80"
-      volumes:
-        - /var/run/docker.sock:/tmp/docker.sock:ro
+  starter-web:
+    restart: always
+    build:
+        context: .
+        dockerfile: infra/images/web.dockerfile
+    image: nginx:stable-alpine
+    links:
+       - starter-api
+    ports:
+      - 80:80
+    volumes:
+      - ./apps/web:/app:ro
+      - ./apps/web/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    extra_hosts:
+      - "starter-host:$HOST_IP"

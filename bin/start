@@ -12,10 +12,8 @@ fi
 echo "is prod? $IS_PROD"
 
 startApiDev() {
-  npm run watch &
   cd apps/api
   npm run dev
-  fg # so we can kill cleanly
 }
 
 startApi() {

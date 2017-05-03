@@ -32,8 +32,31 @@ elif [ "$COMMAND" = "exec" ]; then
   kubectl exec $POD $3 $4 $5 $6
 elif [ "$COMMAND" = "build" ]; then
   # build
-  REPO=starter
-  eval $(minikube docker-env)
-  docker image build -t starter_api:latest -f infra/images/api.dockerfile .
-  kubectl set image $REPO starter-api=starter_api:latest
+
+  APP=$2
+
+  buildapi() {
+    docker build -t motion/starter-api -f infra/images/api.dockerfile .
+    docker push motion/starter-api
+  }
+
+  buildweb() {
+    docker build -t motion/starter-web -f infra/images/web.dockerfile .
+    docker push motion/starter-web
+  }
+
+  if [ "$COMMAND" = "all" ]; then
+    buildapi &
+    buildweb
+    fg
+  elif [ "$COMMAND" = "web" ]; then
+    buildweb
+  elif [ "$COMMAND" = "api" ]; then
+    buildapi
+  fi
+
+  # REPO=starter
+  # eval $(minikube docker-env)
+  # docker image build -t starter_api:latest -f infra/images/api.dockerfile .
+  # kubectl set image $REPO starter-api=starter_api:latest
 fi

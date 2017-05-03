@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: starter-couchdb
+  name: starter-couchdb
+spec:
+  ports:
+  - name: "5984"
+    port: 5984
+    targetPort: 5984
+  selector:
+    io.kompose.service: starter-couchdb
+status:
+  loadBalancer: {}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: starter-couchdb
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: starter-couchdb
+    spec:
+      containers:
+      - env:
+        - name: DB_USER
+        - name: DB_PASSWORD
+        image: klaemo/couchdb:latest
+        name: starter-couchdb
+        ports:
+        - containerPort: 5984
+        resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: starter-couchdb-claim0
+  name: starter-couchdb-claim0
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

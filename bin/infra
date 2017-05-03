@@ -3,7 +3,4 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-# todo: conditional prod env
-source .env
-
 docker-compose ${@:1}

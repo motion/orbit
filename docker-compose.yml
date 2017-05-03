@@ -5,14 +5,12 @@ services:
     restart: always
     volumes:
        - ./app_data/couchdb:/usr/local/var/lib/couchdb
+       - ./apps/couch/config:/usr/local/etc/couchdb/local.d
     restart: always
     expose:
       - 5984
     ports:
       - 5984:5984
-    environment:
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
   starter-api:
     restart: always
     build:
@@ -28,11 +26,10 @@ services:
     depends_on:
        - starter-couchdb
     environment:
-      - VIRTUAL_HOST=jot.dev
       - PORT=3000
-      - DB_HOST=starter-couchdb
-      - DB_PORT=5984
-      - DB_PROTOCOL=http://
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_PROTOCOL=${DB_PROTOCOL}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
   starter-web:

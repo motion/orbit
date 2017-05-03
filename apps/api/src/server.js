@@ -8,41 +8,8 @@ import { GitHubStrategy } from 'passport-github'
 import { GoogleStrategy } from 'passport-google-oauth'
 import { FacebookStrategy } from 'passport-facebook'
 import config from './superlogin.config.js'
-import { COUCH_URL, APP_URL, SERVER_PORT } from './keys'
-import request from 'request'
+import { APP_URL, SERVER_PORT } from './keys'
 import Path from 'path'
-
-const couchRes = res => {
-  res.set({
-    'Access-Control-Allow-Credentials': 'true',
-  })
-}
-
-export const proxy = (prefix, couchUrl, replaceWith = '') => (
-  req,
-  res,
-  next
-) => {
-  if (req.path.indexOf(prefix) === 0) {
-    const path = replaceWith + req.path.slice(prefix.length)
-    const uri = couchUrl + path
-
-    console.log(req.path, '>>>>>>', uri)
-    couchRes(res)
-
-    req
-      .pipe(
-        request({
-          uri,
-          method: req.method,
-          qs: req.query,
-        })
-      )
-      .pipe(res)
-  } else {
-    next()
-  }
-}
 
 export default class Server {
   constructor() {
@@ -53,21 +20,6 @@ export default class Server {
     app.use(logger('dev'))
     app.use(cors({ origin: APP_URL }))
     // app.use(express.limit('1mb'))
-
-    // proxy couchdb
-    app.use(proxy('/couch', COUCH_URL, ''))
-    // proxy fauxton
-    app.use(proxy('/_utils', COUCH_URL, '/_utils'))
-    app.use(proxy('/dashboard.assets', COUCH_URL, '/_utils/dashboard.assets'))
-    app.use(proxy('/_session', COUCH_URL, '/_session'))
-    app.use(proxy('/_all_dbs', COUCH_URL, '/_all_dbs'))
-    app.use(proxy('/_membership', COUCH_URL, '/_membership'))
-    // app.use(proxy('/_membership', COUCH_URL, '/_membership'))
-
-    // 👋 serve app
-    const appBuildDir = Path.join(__dirname, '..', '..', 'web', 'build')
-    console.log('serving static at', appBuildDir)
-    app.use('/', express.static(appBuildDir))
 
     // middleware
     app.use(bodyParser.json())

@@ -1,9 +1,8 @@
 #!/bin/bash
 
-. $(dirname $0)/__common
+. $(dirname $0)/../../__common
 cd $ROOT
 
-APP=$1
 IS_PROD=false
 if [ "$NODE_ENV" = "production" ]; then
   IS_PROD=true
@@ -21,8 +20,10 @@ startApi() {
   npm start
 }
 
-if [ "$APP" = "api" ]; then
-  if [ "$IS_PROD" = true ]; then startApi; else startApiDev; fi
+if [ "$IS_PROD" = true ]; then
+  startApi
+else
+  startApiDev
 fi
 
 fg

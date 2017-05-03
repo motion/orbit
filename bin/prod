@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. $(dirname $0)/__common
+cd $ROOT
+
+kubectl config use-context production
+
+export KUBECONFIG=$ROOT/keys/kubes/prod
+
+bin/__kubes ${@:1}

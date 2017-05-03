@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. $(dirname $0)/__common
+cd $ROOT
+
+kubectl config use-context minikube
+
+bin/__kubes ${@:1}

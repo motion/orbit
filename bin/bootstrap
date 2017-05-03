@@ -3,10 +3,9 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-# TODO: modify /etc/hosts to have 127.0.0.1 jot.dev
-
-# kompose
-curl -L https://github.com/kubernetes-incubator/kompose/releases/download/v0.6.0/kompose-darwin-amd64 -o kompose
-chmod +x kompose
-sudo mv ./kompose /usr/local/bin/kompose
-
+# install docker
+# install kubernetes
+# install minikube
+# install npm
+# npm bootstrap
+# modify /etc/hosts to have 127.0.0.1 jot.dev

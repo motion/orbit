@@ -24,3 +24,5 @@ startApi() {
 if [ "$APP" = "api" ]; then
   if [ "$IS_PROD" = true ]; then startApi; else startApiDev; fi
 fi
+
+fg

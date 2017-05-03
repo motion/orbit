@@ -43,6 +43,7 @@ services:
     image: nginx:stable-alpine
     links:
        - starter-api
+       - starter-couchdb
     ports:
       - 80:80
     volumes:

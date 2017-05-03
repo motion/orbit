@@ -23,9 +23,17 @@ elif [ "$COMMAND" = "restart" ]; then
   kubectl delete -f infra/kubes
   kubectl create -f infra/kubes
 elif [ "$COMMAND" = "logs" ]; then
+  # logs
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
   kubectl logs $POD
 elif [ "$COMMAND" = "exec" ]; then
+  # exec
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
   kubectl exec $POD $3 $4 $5 $6
+elif [ "$COMMAND" = "build" ]; then
+  # build
+  REPO=starter
+  eval $(minikube docker-env)
+  docker image build -t starter_api:latest -f infra/images/api.dockerfile .
+  kubectl set image $REPO starter-api=starter_api:latest
 fi

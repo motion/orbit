@@ -2,7 +2,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: starter-api
-  creationTimestamp: null
   labels:
     run: starter-api
 spec:
@@ -20,14 +19,12 @@ status:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   name: starter-api
 spec:
   replicas: 1
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         run: starter-api
     spec:
@@ -46,25 +43,11 @@ spec:
         - name: DB_USER
         - name: DB_PASSWORD
         image: index.docker.io/motion/starter-api:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: starter-api
         ports:
         - containerPort: 3000
         resources: {}
       restartPolicy: Always
 status: {}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  creationTimestamp: null
-  labels:
-    run: starter-api-claim
-  name: starter-api-claim
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
-status: {}
+

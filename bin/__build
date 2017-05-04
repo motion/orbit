@@ -18,12 +18,10 @@ buildpublic() {
 }
 
 if [ "$APP" = "all" ]; then
-  buildapi &
+  buildapi
   buildpublic
 elif [ "$APP" = "public" ]; then
   buildpublic
 elif [ "$APP" = "api" ]; then
   buildapi
 fi
-
-trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT

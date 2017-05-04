@@ -26,16 +26,17 @@ spec:
         run: couchdb
     spec:
       containers:
-      - env:
-        - name: DB_USER
-        - name: DB_PASSWORD
+      - name: couchdb
         image: klaemo/couchdb:latest
         imagePullPolicy: IfNotPresent
-        name: couchdb
         ports:
         - containerPort: 5984
         resources: {}
-      restartPolicy: Always
+        env:
+        - name: DB_USER
+          value: admin
+        - name: DB_PASSWORD
+          value: password
 status: {}
 ---
 apiVersion: v1

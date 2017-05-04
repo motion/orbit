@@ -31,7 +31,13 @@ spec:
       imagePullSecrets:
         - name: docker-hub
       containers:
-      - env:
+      - name: api
+        image: index.docker.io/motion/starter-api:latest
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        ports:
+        - containerPort: 3000
+        env:
         - name: PORT
           value: "3000"
         - name: DB_HOST
@@ -40,14 +46,5 @@ spec:
           value: "5984"
         - name: DB_PROTOCOL
           value: http://
-        - name: DB_USER
-        - name: DB_PASSWORD
-        image: index.docker.io/motion/starter-api:latest
-        imagePullPolicy: IfNotPresent
-        name: api
-        ports:
-        - containerPort: 3000
-        resources: {}
-      restartPolicy: Always
 status: {}
 

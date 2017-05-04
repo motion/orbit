@@ -48,23 +48,6 @@ items:
       io.kompose.service: public
   status:
     loadBalancer: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    creationTimestamp: null
-    labels:
-      io.kompose.service: web
-    name: web
-  spec:
-    clusterIP: None
-    ports:
-    - name: headless
-      port: 55555
-      targetPort: 0
-    selector:
-      io.kompose.service: web
-  status:
-    loadBalancer: {}
 - apiVersion: extensions/v1beta1
   kind: Deployment
   metadata:
@@ -222,20 +205,18 @@ items:
           - containerPort: 80
           resources: {}
           volumeMounts:
-          - mountPath: /etc/nginx/nginx.conf
+          - mountPath: /repo/apps/web
             name: public-claim0
-            readOnly: true
-          - mountPath: /apps/web
-            name: webapp
+          - mountPath: /repo/apps/public
+            name: public-claim1
         restartPolicy: Always
         volumes:
         - name: public-claim0
           persistentVolumeClaim:
             claimName: public-claim0
-            readOnly: true
-        - name: webapp
+        - name: public-claim1
           persistentVolumeClaim:
-            claimName: webapp
+            claimName: public-claim1
   status: {}
 - apiVersion: v1
   kind: PersistentVolumeClaim
@@ -246,66 +227,6 @@ items:
     name: public-claim0
   spec:
     accessModes:
-    - ReadOnlyMany
-    resources:
-      requests:
-        storage: 100Mi
-  status: {}
-- apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    creationTimestamp: null
-    labels:
-      io.kompose.service: webapp
-    name: webapp
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: 100Mi
-  status: {}
-- apiVersion: extensions/v1beta1
-  kind: Deployment
-  metadata:
-    creationTimestamp: null
-    name: web
-  spec:
-    replicas: 1
-    strategy:
-      type: Recreate
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          io.kompose.service: web
-      spec:
-        containers:
-        - name: web
-          resources: {}
-          volumeMounts:
-          - mountPath: /repo/apps
-            name: web-claim0
-          - mountPath: /repo/apps/web
-            name: webapp
-        restartPolicy: Always
-        volumes:
-        - name: web-claim0
-          persistentVolumeClaim:
-            claimName: web-claim0
-        - name: webapp
-          persistentVolumeClaim:
-            claimName: webapp
-  status: {}
-- apiVersion: v1
-  kind: PersistentVolumeClaim
-  metadata:
-    creationTimestamp: null
-    labels:
-      io.kompose.service: web-claim0
-    name: web-claim0
-  spec:
-    accessModes:
     - ReadWriteOnce
     resources:
       requests:
@@ -316,8 +237,8 @@ items:
   metadata:
     creationTimestamp: null
     labels:
-      io.kompose.service: webapp
-    name: webapp
+      io.kompose.service: public-claim1
+    name: public-claim1
   spec:
     accessModes:
     - ReadWriteOnce

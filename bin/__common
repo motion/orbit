@@ -3,31 +3,16 @@
 APP_OLD_PWD="$(pwd)"
 OLD_PATH=$PATH
 
+# cd ROOT
 cd $(dirname $0)/..
 
+# source env
 source .env
 
+# set path/root
 PATH=/usr/local/bin:/usr/bin
 ROOT="$(pwd)"
-AWS_BIN_PATH="$(which aws 2> /dev/null)"
 
+# cd back to original dir
 PATH=$OLD_PATH:$ROOT/node_modules/.bin
 cd $APP_OLD_PWD
-
-function file_exists {
-  if [ ! -f "$1" ]; then
-    echo "$2"
-    exit 1
-  fi
-}
-
-function env_exists {
-  if [ "$1" = "" ]; then
-    echo "$2"
-    exit
-  fi
-}
-
-function bin-exists {
-  echo "$(which $1 2> /dev/null)"
-}

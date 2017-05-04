@@ -1,29 +1,29 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: starter-couchdb
+  name: couchdb
   labels:
-    run: starter-couchdb
+    run: couchdb
 spec:
   ports:
   - port: 5984
     targetPort: 5984
   selector:
-    run: starter-couchdb
+    run: couchdb
 status:
   loadBalancer: {}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: starter-couchdb
+  name: couchdb
 spec:
   replicas: 1
   strategy: {}
   template:
     metadata:
       labels:
-        run: starter-couchdb
+        run: couchdb
     spec:
       containers:
       - env:
@@ -31,7 +31,7 @@ spec:
         - name: DB_PASSWORD
         image: klaemo/couchdb:latest
         imagePullPolicy: IfNotPresent
-        name: starter-couchdb
+        name: couchdb
         ports:
         - containerPort: 5984
         resources: {}
@@ -42,8 +42,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    run: starter-couchdb-claim
-  name: starter-couchdb-claim
+    run: couchdb-claim
+  name: couchdb-claim
 spec:
   accessModes:
   - ReadWriteOnce

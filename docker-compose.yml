@@ -1,6 +1,6 @@
-version: "2"
+version: '3'
 services:
-  starter-couchdb:
+  couchdb:
     image: klaemo/couchdb:latest
     restart: always
     volumes:
@@ -11,7 +11,7 @@ services:
       - 5984
     ports:
       - 5984:5984
-  starter-api:
+  api:
     restart: always
     build:
       context: .
@@ -22,9 +22,9 @@ services:
     ports:
       - 3000:3000
     links:
-      - starter-couchdb
+      - couchdb
     depends_on:
-       - starter-couchdb
+      - couchdb
     environment:
       - PORT=3000
       - DB_HOST=${DB_HOST}
@@ -32,19 +32,14 @@ services:
       - DB_PROTOCOL=${DB_PROTOCOL}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-  starter-web:
+  public:
     restart: always
     build:
-        context: .
-        dockerfile: infra/images/web.dockerfile
-    image: nginx:stable-alpine
-    links:
-       - starter-api
-       - starter-couchdb
+      context: .
+      dockerfile: ./apps/public/Dockerfile
     ports:
       - 80:80
     volumes:
-      - ./apps/web:/app:ro
-      - ./apps/web/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./apps/web:/repo/apps/web
     extra_hosts:
-      - "starter-host:$HOST_IP"
+      - 'starter-host:$HOST_IP'

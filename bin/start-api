@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # load env
-. $(dirname $0)/../../bin/__common
+. $(dirname $0)/__common
 
 # get prod
 IS_PROD=false
@@ -9,7 +9,8 @@ if [ "$NODE_ENV" = "production" ]; then
   IS_PROD=true
 fi
 
-# info
+cd apps/api
+
 echo "is prod? $IS_PROD"
 echo "directory $(pwd)"
 

@@ -27,7 +27,7 @@ RUN git init
 RUN yarn run bootstrap
 RUN yarn run build
 
-WORKDIR /repo/apps/api
-CMD ./start
+WORKDIR /repo
+CMD ./bin/start-api
 
 EXPOSE 3000

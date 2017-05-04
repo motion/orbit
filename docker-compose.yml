@@ -36,10 +36,13 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./apps/public/Dockerfile
+      dockerfile: infra/images/public.dockerfile
     ports:
       - 80:80
+    links:
+      - api
     volumes:
       - ./apps/web:/repo/apps/web
+      - ./apps/public:/repo/apps/public
     extra_hosts:
       - 'starter-host:$HOST_IP'

@@ -90,8 +90,9 @@ module.exports = Object.assign(config, {
     new webpack.NamedModulesPlugin(),
 
     // production
-    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    IS_PROD && new BabiliPlugin(),
+    // TODO: I disabled these to speeed up prod builds during testing
+    // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    // IS_PROD && new BabiliPlugin(),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

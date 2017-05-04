@@ -10,7 +10,7 @@
     "pouchdb-adapter-idb": "^6.1.2",
     "pouchdb-authentication": "^0.5.5",
     "pouchdb-replication": "^6.1.2",
-    "rxdb": "^3.0.0",
+    "rxdb": "git://github.com/pubkey/rxdb.git#ac079880872b8c8b90db6602c20c5c740374706f",
     "rxjs": "^5.3.0"
   }
 }

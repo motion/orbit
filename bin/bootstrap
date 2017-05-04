@@ -3,9 +3,11 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-# install docker
-# install kubernetes
-# install minikube
-# install npm
+# ensure docker
+# ensure kubernetes
+# ensure minikube
+# ensure xhyve
+# ensure npm
 # npm bootstrap
-# modify /etc/hosts to have 127.0.0.1 jot.dev
+# ensure /etc/hosts to have 127.0.0.1 jot.dev
+# run minikube

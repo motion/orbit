@@ -1,34 +1,58 @@
 #!/bin/bash
 
-COMMAND=$1
+# example
+# COMMAND ACTION APP
+# dev push api
 
-if [ "$COMMAND" = "generate" ]; then
+COMMAND=$0
+ACTION=$1
+APP=$2
+
+if [ "$ACTION" = "generate" ]; then
   kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
-elif [ "$COMMAND" = "bootstrap" ]; then
+elif [ "$ACTION" = "bootstrap" ]; then
   kubectl create secret docker-registry $DOCKER_SECRET \
     --docker-server=$DOCKER_REGISTRY_SERVER \
     --docker-username=$DOCKER_USER \
     --docker-password=$DOCKER_PASSWORD \
     --docker-email=$DOCKER_EMAIL
-elif [ "$COMMAND" = "start" ]; then
+elif [ "$ACTION" = "start" ]; then
   kubectl create -f infra/kubes
-elif [ "$COMMAND" = "stop" ]; then
+elif [ "$ACTION" = "stop" ]; then
   kubectl delete -f infra/kubes
-elif [ "$COMMAND" = "restart" ]; then
+elif [ "$ACTION" = "restart" ]; then
   kubectl delete -f infra/kubes
   kubectl create -f infra/kubes
-elif [ "$COMMAND" = "apply" ]; then
+elif [ "$ACTION" = "apply" ]; then
   kubectl apply -f infra/kubes
-elif [ "$COMMAND" = "logs" ]; then
+elif [ "$ACTION" = "logs" ]; then
   # logs
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
   kubectl logs $POD
-elif [ "$COMMAND" = "exec" ]; then
+elif [ "$ACTION" = "exec" ]; then
   # exec
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
   kubectl exec $POD $3 $4 $5 $6
-elif [ "$COMMAND" = "build" ]; then
-  __build ${@:2}
+elif [ "$ACTION" = "build" ]; then
+  if [ "$APP" = "all" ]; then
+    $0 build web
+    $0 build api
+  else
+    echo "building motion/starter-$APP from infra/images/$APP.dockerfile"
+    docker build \
+      --build-arg ENV=prod \
+      -t motion/starter-$APP \
+      -f infra/images/$APP.dockerfile \
+      .
+  fi
+elif [ "$ACTION" = "push" ]; then
+  if [ "$APP" = "all" ]; then
+    $COMMAND push web
+    $COMMAND push api
+  else
+    echo "pushing motion/starter-$APP"
+    docker push motion/starter-$APP
+  fi
 else
   kubectl ${@:1}
 fi

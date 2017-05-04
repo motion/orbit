@@ -2,6 +2,7 @@ FROM node:7-alpine
 
 # args
 ARG ENV="prod"
+ENV ENV=${ENV}
 
 # add yarn
 ENV PATH /root/.yarn/bin:$PATH
@@ -31,6 +32,6 @@ RUN yarn run bootstrap
 RUN yarn run build
 
 WORKDIR /repo
-CMD ENV=$ENV ./bin/start-api
+CMD ./bin/start-api
 
 EXPOSE 3000

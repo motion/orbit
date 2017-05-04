@@ -12,7 +12,7 @@ APP=$1
 
 buildapi() {
   docker build \
-    --build-arg ENV=prod
+    --build-arg ENV=prod \
     -t motion/starter-api \
     -f infra/images/api.dockerfile \
     .
@@ -22,7 +22,7 @@ buildapi() {
 
 buildpublic() {
   docker build \
-    --build-arg ENV=prod
+    --build-arg ENV=prod \
     -t motion/starter-public \
     -f infra/images/public.dockerfile \
     .

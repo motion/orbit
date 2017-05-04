@@ -1,14 +1,19 @@
 #!/bin/bash
 
+# load env
 . $(dirname $0)/../../bin/__common
 
+# get prod
 IS_PROD=false
 if [ "$NODE_ENV" = "production" ]; then
   IS_PROD=true
 fi
 
+# info
 echo "is prod? $IS_PROD"
+echo "directory $(pwd)"
 
+# start
 if [ "$IS_PROD" = true ]; then
   npm start
 else

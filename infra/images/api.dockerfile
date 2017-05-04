@@ -1,5 +1,8 @@
 FROM node:7-alpine
 
+# args
+ARG ENV="prod"
+
 # add yarn
 ENV PATH /root/.yarn/bin:$PATH
 RUN apk update \
@@ -28,6 +31,6 @@ RUN yarn run bootstrap
 RUN yarn run build
 
 WORKDIR /repo
-CMD ./bin/start-api
+CMD ENV=$ENV ./bin/start-api
 
 EXPOSE 3000

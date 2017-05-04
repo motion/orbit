@@ -1,5 +1,9 @@
 FROM nginx:stable-alpine
 
+# args
+ARG ENV="prod"
+
+# run
 RUN mkdir -p /etc/nginx/ssl/
 RUN mkdir -p /app/public
 
@@ -10,6 +14,6 @@ ADD ./apps/web /repo/apps/web
 
 WORKDIR /repo
 
-ADD ./apps/public/nginx.dev.conf /etc/nginx/nginx.conf
-
+# copy to nginx
+ADD ./apps/public/nginx.$ENV.conf /etc/nginx/nginx.conf
 ADD ./apps/web/build /app/public

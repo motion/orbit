@@ -7,13 +7,26 @@ echo "namespace $NAMESPACE"
 
 APP=$1
 
+# sets build_arg ENV=production
+# so you can do different stuff
+
 buildapi() {
-  docker build -t motion/starter-api -f infra/images/api.dockerfile .
+  docker build \
+    --build-arg ENV=prod
+    -t motion/starter-api \
+    -f infra/images/api.dockerfile \
+    .
+
   docker push motion/starter-api
 }
 
 buildpublic() {
-  docker build -t motion/starter-public -f infra/images/public.dockerfile .
+  docker build \
+    --build-arg ENV=prod
+    -t motion/starter-public \
+    -f infra/images/public.dockerfile \
+    .
+
   docker push motion/starter-public
 }
 

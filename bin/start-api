@@ -5,7 +5,7 @@
 
 # get prod
 IS_PROD=false
-if [ "$NODE_ENV" = "production" ]; then
+if [ "$ENV" = "prod" ]; then
   IS_PROD=true
 fi
 

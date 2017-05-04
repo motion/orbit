@@ -17,6 +17,8 @@ elif [ "$COMMAND" = "stop" ]; then
 elif [ "$COMMAND" = "restart" ]; then
   kubectl delete -f infra/kubes
   kubectl create -f infra/kubes
+elif [ "$COMMAND" = "apply" ]; then
+  kubectl apply -f infra/kubes
 elif [ "$COMMAND" = "logs" ]; then
   # logs
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')

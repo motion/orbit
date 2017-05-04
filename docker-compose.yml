@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: infra/images/api.dockerfile
+      args:
+        ENV: "dev"
     volumes:
       - ./apps/api:/repo/apps/api
       - ./apps/web:/repo/apps/web
@@ -37,6 +39,8 @@ services:
     build:
       context: .
       dockerfile: infra/images/public.dockerfile
+      args:
+        ENV: "dev"
     ports:
       - 80:80
     links:

@@ -7,4 +7,7 @@ cd $ROOT
 export KUBECONFIG=infra/keys/kubes/dev
 kubectl config use-context minikube
 
+# minikube stuff
+eval $(minikube docker-env)
+
 bin/__kubes ${@:1}

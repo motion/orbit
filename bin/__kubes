@@ -54,7 +54,8 @@ elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
         -f infra/images/$APP.dockerfile \
         . ${@:3}
 
-      docker tag $NAME:$TIME $NAME:latest
+      docker tag $NAME $NAME:latest
+      docker tag $NAME $NAME:$TIME
     elif [ "$ACTION" = "push" ]; then
       docker push $NAME
     fi

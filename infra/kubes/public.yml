@@ -5,11 +5,12 @@ metadata:
   labels:
     run: pad-public
 spec:
-  # type: LoadBalancer
-  # loadBalancerIP: 104.198.13.169
+  type: NodePort
   ports:
     - port: 80
       targetPort: 80
+      nodePort: 31000
+      name: http
   selector:
     run: pad-public
 status:

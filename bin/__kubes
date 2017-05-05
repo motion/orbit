@@ -49,6 +49,7 @@ elif [ "$ACTION" = "build" ]; then
   if [ "$APP" = "all" ]; then
     $0 build public
     $0 build api
+    $0 build couch
   else
     echo "building motion/starter-$APP from infra/images/$APP.dockerfile"
     if [ "$APP" = "public" ]; then
@@ -61,12 +62,10 @@ elif [ "$ACTION" = "build" ]; then
       .
   fi
 elif [ "$ACTION" = "push" ]; then
-  if [ "$APP" = "public" ]; then
-    npm run build-web
-  fi
   if [ "$APP" = "all" ]; then
     $COMMAND push public
     $COMMAND push api
+    $COMMAND push couch
   else
     echo "pushing motion/starter-$APP"
     docker push motion/starter-$APP

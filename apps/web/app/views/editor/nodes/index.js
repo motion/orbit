@@ -1,6 +1,7 @@
 export image from './image'
 export link from './link'
 export counter from './counter'
+export todo from './todo'
 export quote from './quote'
 
 const makeTag = tag => props => React.createElement(`${tag}`, props)

@@ -3,17 +3,18 @@ import EditList from 'slate-edit-list'
 
 const editList = EditList()
 
-const replacer = (char, type) =>
+const replacer = (char, type, data = {}) =>
   AutoReplace({
     trigger: 'space',
     before: char, // /^(>)$/,
     transform: (transform, e, data, matches) => {
-      return transform.setBlock({ type, data: {} })
+      return transform.setBlock({ type, data })
     },
   })
 
 export default [
   replacer(/^(>)$/, 'quote'),
+  replacer(/^(\[\])$/, 'todo', { done: false }),
   replacer(/^(\$counter)$/, 'counter'),
   AutoReplace({
     trigger: 'space',

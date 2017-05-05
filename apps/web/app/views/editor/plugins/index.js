@@ -1,5 +1,6 @@
 export Markdown from './markdown'
 export Images from './images'
 export List from './list'
+export Todo from './todo'
 export TrailingBlock from './trailingBlock'
 export Linkify from './linkify'

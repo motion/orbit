@@ -56,6 +56,9 @@ elif [ "$ACTION" = "build" ]; then
       .
   fi
 elif [ "$ACTION" = "push" ]; then
+  if [ "$APP" = "public" ]; then
+    npm run build-web
+  fi
   if [ "$APP" = "all" ]; then
     $COMMAND push public
     $COMMAND push api

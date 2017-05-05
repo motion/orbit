@@ -39,6 +39,9 @@ elif [ "$ACTION" = "build" ]; then
     $0 build api
   else
     echo "building motion/starter-$APP from infra/images/$APP.dockerfile"
+    if [ "$APP" = "web" ]; then
+      npm run build-web
+    fi
     docker build \
       --build-arg ENV=prod \
       -t motion/starter-$APP \

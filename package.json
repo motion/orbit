@@ -2,7 +2,7 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap --skip-git",
+    "bootstrap": "lerna bootstrap --npm-client=yarn",
     "web": "cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
@@ -14,18 +14,17 @@
     "electron": "cd apps/web && npm run electron"
   },
   "devDependencies": {
-    "flow-bin": "^0.38.0",
+    "babel-cli": "^6.14.0",
     "babel-plugin-jsx-if": "^1.0.2",
     "babel-plugin-root-import": "*",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-cli": "^6.14.0",
     "babel-preset-env": "^1.1.8",
-    "babel-preset-stage-0": "^6.5.0",
     "babel-preset-react": "^6.11.1",
-    "lerna": "^2.0.0-rc.2",
+    "babel-preset-stage-0": "^6.5.0",
+    "dotenv": "^4.0.0",
+    "flow-bin": "^0.38.0",
     "gloss": "^5.1.2",
-    "motion-view": "^1.0.16",
-    "dotenv": "^4.0.0"
+    "motion-view": "^1.0.16"
   },
   "dependencies": {
     "lerna": "^2.0.0-rc.4"

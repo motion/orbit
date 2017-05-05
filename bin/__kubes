@@ -34,11 +34,6 @@ elif [ "$ACTION" = "logs" ]; then
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
   echo "logs for $POD"
   kubectl logs $POD
-elif [ "$ACTION" = "exec" ]; then
-  # exec
-  POD=$(kubectl get pods | grep $2 | awk '{print $1}')
-  echo "exec in $POD"
-  kubectl exec $POD $3 $4 $5 $6
 elif [ "$ACTION" = "ssh" ]; then
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
   echo "ssh into $POD"

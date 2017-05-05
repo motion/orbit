@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: public
+  name: pad-public
   labels:
-    run: public
+    run: pad-public
 spec:
   type: LoadBalancer
   loadBalancerIP: 104.198.13.169
@@ -11,32 +11,31 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-      nodePort: 32100
   selector:
-    run: public
+    run: pad-public
 status:
   loadBalancer: {}
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: public
+  name: pad-public
 spec:
   replicas: 1
   strategy: {}
   template:
     metadata:
       labels:
-        run: public
+        run: pad-public
     spec:
       imagePullSecrets:
         - name: docker-hub
       containers:
-      - name: public
+      - name: pad-public
         image: index.docker.io/motion/starter-public:latest
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 3000
+        - containerPort: 80
         resources: {}
 status: {}
 

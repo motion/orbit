@@ -4,21 +4,20 @@ FROM node:7-alpine
 ARG ENV="prod"
 ENV ENV=${ENV}
 
-# add yarn
-ENV PATH /root/.yarn/bin:$PATH
-RUN apk update \
-  && apk add curl bash binutils tar \
-  && rm -rf /var/cache/apk/* \
-  && /bin/bash \
-  && touch ~/.bashrc \
-  && curl -o- -L https://yarnpkg.com/install.sh | bash \
-  && apk del curl tar binutils
+# install yarn
+RUN apk update
+RUN apk add curl bash binutils tar
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
+# config yarn
+ENV PATH /root/.yarn/bin:$PATH
 RUN yarn config set no-progress true
 
 # add git
-RUN apk add --update git && \
-  rm -rf /tmp/* /var/cache/apk/*
+RUN apk add --update git
+
+# cleanup
+RUN rm -rf /tmp/* /var/cache/apk/*
 
 # import repo
 RUN mkdir -p /repo

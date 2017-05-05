@@ -10,33 +10,48 @@ APP=$2
 
 APPS=("web" "api" "couch")
 
+function run {
+  echo "$" "$@"
+  eval $(printf '%q ' "$@") < /dev/tty
+}
+
+# prod variables
+F_FLAGS="-f infra/kubes"
+REGISTRY="docker.io"
+
+# dev variables
+if [ "$ENV" = "dev" ]; then
+  F_FLAGS="-f infra/kubes -f infra/kubes-dev"
+  REGISTRY="localhost:5000"
+fi
+
+echo "env $ENV, flags: $F_FLAGS"
+
 if [ "$ACTION" = "status" ]; then
-  kubectl get all
+  run kubectl get all
 elif [ "$ACTION" = "generate" ]; then
-  kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
+  run kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
 elif [ "$ACTION" = "bootstrap" ]; then
-  kubectl create secret docker-registry $DOCKER_SECRET \
+  run kubectl create secret docker-registry $DOCKER_SECRET \
     --docker-server=$DOCKER_REGISTRY_SERVER \
     --docker-username=$DOCKER_USER \
     --docker-password=$DOCKER_PASSWORD \
     --docker-email=$DOCKER_EMAIL
-elif [ "$ACTION" = "start" ]; then
-  kubectl create -f infra/kubes
-elif [ "$ACTION" = "stop" ]; then
-  kubectl delete -f infra/kubes
+elif [ "$ACTION" = "start" ] || [ "$ACTION" = "create" ]; then
+  run kubectl create $F_FLAGS ${@:2}
+elif [ "$ACTION" = "stop" ] ||  [ "$ACTION" = "delete" ]; then
+  run kubectl delete $F_FLAGS ${@:2}
 elif [ "$ACTION" = "restart" ]; then
-  $0 stop
-  $0 start
+  $0 stop ${@:2}
+  $0 start ${@:2}
 elif [ "$ACTION" = "apply" ]; then
-  kubectl apply -f infra/kubes
+  run kubectl apply $F_FLAGS ${@:2}
 elif [ "$ACTION" = "logs" ]; then
   # logs
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
-  echo "logs for $POD"
-  kubectl logs $POD
+  run kubectl logs $POD
 elif [ "$ACTION" = "ssh" ]; then
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
-  echo "kubectl exec -it $POD sh"
   kubectl exec -it  $POD sh
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then
@@ -49,19 +64,18 @@ elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
     NAME="motion/starter-$APP"
 
     if [ "$ACTION" = "build" ]; then
-      echo "docker build --build-arg ENV=prod -t motion/starter-$APP -f infra/images/$APP.dockerfile . ${@:3}"
-      docker build \
-        --build-arg ENV=prod \
+      run docker build \
+        --build-arg ENV=$ENV \
         -t $NAME \
         -f infra/images/$APP.dockerfile \
         . ${@:3}
 
-      docker tag $NAME $NAME:latest
-      docker tag $NAME $NAME:$TIME
+      run docker tag $NAME $NAME:$ENV
+      run docker tag $NAME $NAME:$TIME
     elif [ "$ACTION" = "push" ]; then
-      docker push $NAME
+      run docker push $REGISTRY/$NAME:$ENV
     fi
   fi
 else
-  kubectl ${@:1}
+  run kubectl ${@:1}
 fi

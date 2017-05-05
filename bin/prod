@@ -8,6 +8,8 @@ cd $ROOT
 export KUBECONFIG=infra/keys/kubes/prod
 kubectl config use-context stackpoint
 
+export ENV="prod"
+
 ACTION=$1
 
 # RUN

@@ -1,6 +1,6 @@
 version: '2'
 services:
-  couchdb:
+  pad-couch:
     image: klaemo/couchdb:latest
     restart: always
     volumes:
@@ -11,7 +11,7 @@ services:
       - 5984
     ports:
       - 5984:5984
-  api:
+  pad-api:
     restart: always
     build:
       context: .
@@ -24,9 +24,9 @@ services:
     ports:
       - 3000:3000
     links:
-      - couchdb
+      - pad-couch
     depends_on:
-      - couchdb
+      - pad-couch
     environment:
       - PORT=3000
       - DB_HOST=${DB_HOST}
@@ -34,19 +34,18 @@ services:
       - DB_PROTOCOL=${DB_PROTOCOL}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-  public:
+  pad-web:
     restart: always
     build:
       context: .
-      dockerfile: infra/images/public.dockerfile
+      dockerfile: infra/images/web.dockerfile
       args:
         ENV: "dev"
     ports:
       - 80:80
     links:
-      - api
+      - pad-api
     volumes:
-      - ./apps/web:/repo/apps/web
-      - ./apps/public:/repo/apps/public
+      - ./apps/web:/apps/web
     extra_hosts:
       - 'starter-host:$HOST_IP'

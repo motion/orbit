@@ -13,12 +13,17 @@ if [ "$ACTION" = "ui" ]; then
 elif [ "$ACTION" = "generate" ]; then
   kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
 elif [ "$ACTION" = "bootstrap" ]; then
+  minikube config set vm-driver=xhyve
+
   kubectl create secret docker-registry $DOCKER_SECRET \
     --docker-server=$DOCKER_REGISTRY_SERVER \
     --docker-username=$DOCKER_USER \
     --docker-password=$DOCKER_PASSWORD \
     --docker-email=$DOCKER_EMAIL
 elif [ "$ACTION" = "start" ]; then
+  if [ "$DEV" = true ]; then
+    minikube start --vm-driver=xhyve
+  fi
   kubectl create -f infra/kubes
 elif [ "$ACTION" = "stop" ]; then
   kubectl delete -f infra/kubes

@@ -25,6 +25,10 @@ export default class Server {
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
 
+    app.get('/', (req, res) => {
+      res.send('hello world')
+    })
+
     // // SUPERLOGIN
     // const superlogin = new SuperLogin(config)
     // const strategies = [

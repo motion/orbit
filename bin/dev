@@ -3,6 +3,9 @@
 . $(dirname $0)/__common
 cd $ROOT
 
+source .env.dev
+set -e
+
 # set dev context
 export KUBECONFIG=infra/keys/kubes/dev
 kubectl config use-context minikube
@@ -11,6 +14,7 @@ export ENV="dev"
 
 ACTION=$1
 
+# PRE RUN
 if minikube docker-env > /dev/null 2>&1; then
   eval $(minikube docker-env)
 else
@@ -26,7 +30,7 @@ else
   bin/__kubes ${@:1}
 fi
 
-# extra post actions
+# POST RUN
 if [ "$ACTION" = "stop" ]; then
   minikube stop
 fi

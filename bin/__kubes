@@ -15,19 +15,25 @@ function run {
   eval $(printf '%q ' "$@") < /dev/tty
 }
 
-# prod variables
-F_FLAGS="-f infra/kubes"
-REGISTRY="docker.io"
+# get config, requires $ENV
+CONFIG=""
+for path in ./infra/kubes/*; do
+  echo "ktmpl $path --parameter-file ./infra/kubes.$ENV.yml"
+  CONFIG+="$(ktmpl $path --parameter-file ./infra/kubes.$ENV.yml)"
+  CONFIG+=$'\n'
+done
 
-# dev variables
-if [ "$ENV" = "dev" ]; then
-  F_FLAGS="-f infra/kubes -f infra/kubes-dev"
-  REGISTRY="localhost:5000"
-fi
+# save
+KUBES_FILE_OUT="./app_data/kubes.$ENV.yml"
+echo "$CONFIG" > "$KUBES_FILE_OUT"
 
-echo "env $ENV, flags: $F_FLAGS"
+# to help passing in config
+FILE_ARG="-f $KUBES_FILE_OUT"
 
-if [ "$ACTION" = "status" ]; then
+# actions...
+if [ "$ACTION" = "get-config" ]; then
+  echo "$CONFIG"
+elif [ "$ACTION" = "status" ]; then
   run kubectl get all
 elif [ "$ACTION" = "generate" ]; then
   run kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
@@ -38,14 +44,14 @@ elif [ "$ACTION" = "bootstrap" ]; then
     --docker-password=$DOCKER_PASSWORD \
     --docker-email=$DOCKER_EMAIL
 elif [ "$ACTION" = "start" ] || [ "$ACTION" = "create" ]; then
-  run kubectl create $F_FLAGS ${@:2}
+  run kubectl create ${@:2} $FILE_ARG
 elif [ "$ACTION" = "stop" ] ||  [ "$ACTION" = "delete" ]; then
-  run kubectl delete $F_FLAGS ${@:2}
+  run kubectl delete ${@:2} $FILE_ARG
 elif [ "$ACTION" = "restart" ]; then
   $0 stop ${@:2}
   $0 start ${@:2}
 elif [ "$ACTION" = "apply" ]; then
-  run kubectl apply $F_FLAGS ${@:2}
+  run kubectl apply ${@:2} $FILE_ARG
 elif [ "$ACTION" = "logs" ]; then
   # logs
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')

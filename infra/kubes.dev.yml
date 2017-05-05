@@ -1,0 +1,3 @@
+---
+ENV: "dev"
+REGISTRY: "localhost:5000"

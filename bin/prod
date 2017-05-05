@@ -4,6 +4,8 @@
 
 cd $ROOT
 
+set -e
+
 # set prod context
 export KUBECONFIG=infra/keys/kubes/prod
 kubectl config use-context stackpoint

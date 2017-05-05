@@ -7,6 +7,9 @@ cd $ROOT
 # ensure kubernetes
 # ensure minikube
 
+# kubernetes templates
+brew install ktmpl
+
 minikube config set WantReportErrorPrompt false
 minikube config set vm-driver=xhyve
 

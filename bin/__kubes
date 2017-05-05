@@ -39,7 +39,7 @@ elif [ "$ACTION" = "ssh" ]; then
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then
     # todo automate based on images dir
-    $COMMAND $ACTION public
+    $COMMAND $ACTION web
     $COMMAND $ACTION api
     $COMMAND $ACTION couch
   else

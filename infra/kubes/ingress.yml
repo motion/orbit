@@ -8,7 +8,7 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: pad-public
+          serviceName: pad-web
           servicePort: 80
   - host: couch.iwritey.com
     http:

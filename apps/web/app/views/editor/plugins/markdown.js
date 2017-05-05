@@ -1,4 +1,7 @@
 import AutoReplace from 'slate-auto-replace'
+import EditList from 'slate-edit-list'
+
+const editList = EditList()
 
 const replacer = (char, type) =>
   AutoReplace({
@@ -27,7 +30,7 @@ export default [
   AutoReplace({
     trigger: 'space',
     before: /^(-)$/,
-    transform: transform => transform.setBlock('li').wrapBlock('ul'),
+    transform: transform => transform.call(editList.transforms.wrapInList),
   }),
   AutoReplace({
     trigger: 'enter',

@@ -23,7 +23,11 @@ class EditorStore {
   }
 
   get shouldSave() {
-    if (this.doc.content.document.nodes.some(x => x.type === 'inline-image')) {
+    if (
+      this.doc.content &&
+      this.doc.content.nodes &&
+      this.doc.content.nodes.some(x => x.type === 'inline-image')
+    ) {
       return false
     }
     return true
@@ -34,18 +38,22 @@ class EditorStore {
       this.content = Raw.deserialize(this.doc.content, { terse: true })
     }
   }
+
   save = () => {
     if (this.content && this.shouldSave) {
       this.doc.content = Raw.serialize(this.content)
       this.doc.save()
     }
   }
+
   update = val => {
     this.content = val
   }
+
   focus = () => {
     this.focused = true
   }
+
   blur = () => {
     this.focused = false
   }
@@ -87,6 +95,7 @@ export default class EditorView {
           ref={getRef}
           onFocus={store.focus}
           onBlur={store.blur}
+          onKeyDown={store.onKeyDown}
           {...props}
         />
       </document>

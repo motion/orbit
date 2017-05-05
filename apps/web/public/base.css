@@ -34,6 +34,12 @@ body, body * {
   outline: 0;
 }
 
+/* for editor lists */
+ul {
+  margin-left: 10px;
+  padding-left: 5px;
+}
+
 /* prevent overscroll bounce */
 html, body {
   width: 100%;
@@ -250,4 +256,3 @@ fieldset {
   z-index: 1;
   will-change: width, height;
 }
-

@@ -10,7 +10,7 @@ class TodoStore {
 
   @computed get todos() {
     return flatten(
-      this.docs.map(doc => {
+      (this.docs || []).map(doc => {
         if (!doc.content.document) return []
         return doc.content.document.nodes
           .filter(node => {

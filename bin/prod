@@ -8,4 +8,14 @@ cd $ROOT
 export KUBECONFIG=infra/keys/kubes/prod
 kubectl config use-context stackpoint
 
+ACTION=$1
+
 bin/__kubes ${@:1}
+
+if [ "$ACTION" = "start" ]; then
+  echo "exposing starter-public on port 80"
+  kubectl expose service starter-public --type=LoadBalancer --port=80
+
+  kubectl get services
+  echo "started"
+fi

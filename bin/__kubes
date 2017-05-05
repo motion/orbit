@@ -28,8 +28,8 @@ elif [ "$ACTION" = "start" ]; then
 elif [ "$ACTION" = "stop" ]; then
   kubectl delete -f infra/kubes
 elif [ "$ACTION" = "restart" ]; then
-  kubectl delete -f infra/kubes
-  kubectl create -f infra/kubes
+  $0 stop
+  $0 start
 elif [ "$ACTION" = "apply" ]; then
   kubectl apply -f infra/kubes
 elif [ "$ACTION" = "logs" ]; then

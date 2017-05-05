@@ -18,7 +18,6 @@ function run {
 # get config, requires $ENV
 CONFIG=""
 for path in ./infra/kubes/*; do
-  echo "ktmpl $path --parameter-file ./infra/kubes.$ENV.yml"
   CONFIG+="$(ktmpl $path --parameter-file ./infra/kubes.$ENV.yml)"
   CONFIG+=$'\n'
 done
@@ -54,11 +53,11 @@ elif [ "$ACTION" = "apply" ]; then
   run kubectl apply ${@:2} $FILE_ARG
 elif [ "$ACTION" = "logs" ]; then
   # logs
-  POD=$(kubectl get pods | grep $2 | awk '{print $1}')
+  POD=$(kubectl get pods | grep $2 | head -n 1 | awk '{print $1}')
   run kubectl logs $POD
 elif [ "$ACTION" = "ssh" ]; then
-  POD=$(kubectl get pods | grep $2 | awk '{print $1}')
-  kubectl exec -it  $POD sh
+  POD=$(kubectl get pods | grep $2 | head -n 1 | awk '{print $1}')
+  run kubectl exec -it  $POD sh
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then
     # todo automate based on images dir

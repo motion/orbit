@@ -3,7 +3,6 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-source .env.dev
 set -e
 
 # set dev context

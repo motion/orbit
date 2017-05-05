@@ -9,6 +9,8 @@ kubectl config use-context minikube
 
 export DEV=true
 
+ACTION=$1
+
 if minikube docker-env > /dev/null 2>&1; then
   eval $(minikube docker-env)
 else
@@ -17,3 +19,8 @@ else
 fi
 
 bin/__kubes ${@:1}
+
+# extra post actions
+if [ "$ACTION" = "stop" ]; then
+  minikube stop
+fi

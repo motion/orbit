@@ -13,3 +13,7 @@ export DEV=true
 eval $(minikube docker-env)
 
 bin/__kubes ${@:1}
+
+# if [ "$DEV" = true ]; then
+#   minikube start --vm-driver=xhyve
+# fi

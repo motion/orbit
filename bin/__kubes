@@ -21,9 +21,6 @@ elif [ "$ACTION" = "bootstrap" ]; then
     --docker-password=$DOCKER_PASSWORD \
     --docker-email=$DOCKER_EMAIL
 elif [ "$ACTION" = "start" ]; then
-  if [ "$DEV" = true ]; then
-    minikube start --vm-driver=xhyve
-  fi
   kubectl create -f infra/kubes
 elif [ "$ACTION" = "stop" ]; then
   kubectl delete -f infra/kubes

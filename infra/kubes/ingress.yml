@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+spec:
+  rules:
+  - host: iwritey.com
+    http:
+      paths:
+      - backend:
+          serviceName: pad-public
+          servicePort: 80
+  - host: couch.iwritey.com
+    http:
+      paths:
+      - backend:
+          serviceName: pad-couch
+          servicePort: 5984
+  - host: api.iwritey.com
+    http:
+      paths:
+      - backend:
+          serviceName: pad-api
+          servicePort: 3000

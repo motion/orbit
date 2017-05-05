@@ -6,6 +6,10 @@ cd $ROOT
 # ensure docker
 # ensure kubernetes
 # ensure minikube
+
+minikube config set WantReportErrorPrompt false
+minikube config set vm-driver=xhyve
+
 # ensure xhyve
 # ensure npm
 # npm bootstrap

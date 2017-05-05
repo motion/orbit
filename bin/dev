@@ -9,11 +9,11 @@ kubectl config use-context minikube
 
 export DEV=true
 
-# minikube stuff
-eval $(minikube docker-env)
+if minikube docker-env > /dev/null 2>&1; then
+  eval $(minikube docker-env)
+else
+  echo "minikube is not running..."
+  minikube start
+fi
 
 bin/__kubes ${@:1}
-
-# if [ "$DEV" = true ]; then
-#   minikube start --vm-driver=xhyve
-# fi

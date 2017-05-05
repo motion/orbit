@@ -13,6 +13,7 @@ RUN apk update \
   && touch ~/.bashrc \
   && curl -o- -L https://yarnpkg.com/install.sh | bash \
   && apk del curl tar binutils
+
 RUN yarn config set no-progress true
 
 # add git
@@ -26,10 +27,8 @@ ADD . /repo
 
 # bootstrap
 RUN yarn install
-# bugfix for lerna
 RUN git init
-RUN yarn run bootstrap
-RUN yarn run build
+RUN npm run bootstrap
 
 WORKDIR /repo
 CMD ./bin/start-api

@@ -2,7 +2,7 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap --npm-client=yarn",
     "web": "cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "dotenv": "^4.0.0",
-    "flow-bin": "^0.38.0",
+    "flow-bin": "^0.38.0"
   },
   "dependencies": {
     "gloss": "^5.1.2",

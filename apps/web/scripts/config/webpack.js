@@ -50,6 +50,7 @@ module.exports = Object.assign(config, {
   resolve: {
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
+    // TODO: can add root monorepo node_modules and then remove a lot of babel shit
     modules: [paths.modelsNodeModules, paths.appNodeModules, 'node_modules'],
     // since were forced into full lodash anyway, lets dedupe
     alias: {

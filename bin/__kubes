@@ -8,7 +8,9 @@ COMMAND=$0
 ACTION=$1
 APP=$2
 
-if [ "$ACTION" = "generate" ]; then
+if [ "$ACTION" = "ui" ]; then
+  minikube dashboard
+elif [ "$ACTION" = "generate" ]; then
   kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
 elif [ "$ACTION" = "bootstrap" ]; then
   kubectl create secret docker-registry $DOCKER_SECRET \
@@ -34,12 +36,17 @@ elif [ "$ACTION" = "exec" ]; then
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
   kubectl exec $POD $3 $4 $5 $6
 elif [ "$ACTION" = "build" ]; then
+  # alias web
+  if [ "$APP" = "web" ]; then
+    APP="public"
+  fi
+
   if [ "$APP" = "all" ]; then
     $0 build public
     $0 build api
   else
     echo "building motion/starter-$APP from infra/images/$APP.dockerfile"
-    if [ "$APP" = "web" ]; then
+    if [ "$APP" = "public" ]; then
       npm run build-web
     fi
     docker build \

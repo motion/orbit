@@ -5,7 +5,8 @@ metadata:
   labels:
     run: public
 spec:
-  type: NodePort
+  type: LoadBalancer
+  loadBalancerIP: 104.198.13.169
   ports:
     - protocol: TCP
       port: 80

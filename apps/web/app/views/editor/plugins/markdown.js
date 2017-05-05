@@ -7,7 +7,7 @@ const replacer = (char, type, data = {}) =>
   AutoReplace({
     trigger: 'space',
     before: char, // /^(>)$/,
-    transform: (transform, e, data, matches) => {
+    transform: transform => {
       return transform.setBlock({ type, data })
     },
   })

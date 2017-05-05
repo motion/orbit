@@ -16,5 +16,10 @@ export default {
     if (startBlock.length === 0) {
       return state.transform().insertBlock('paragraph').apply()
     }
+
+    return state
+      .transform()
+      .insertBlock('todo', { data: { done: false } })
+      .apply()
   },
 }

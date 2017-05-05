@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "node lib",
-    "dev": "nodemon lib"
+    "start-prod": "node lib",
+    "start-dev": "nodemon lib"
   },
   "dependencies": {
     "body-parser": "^1.16.1",

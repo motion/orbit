@@ -29,7 +29,7 @@ RUN yarn install --production
 RUN git init
 RUN npm run bootstrap
 
-WORKDIR /repo
-CMD ./bin/start-api
+WORKDIR /repo/apps/api
+CMD npm run start-$ENV
 
 EXPOSE 3000

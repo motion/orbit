@@ -1,4 +1,9 @@
 module.exports = function(fatalError, stats) {
+  if (fatalError) {
+    console.error(fatalError)
+    return
+  }
+
   const jsonStats = stats.toJson('verbose')
   const buildError = fatalError || jsonStats.errors[0] || jsonStats.warnings[0]
 

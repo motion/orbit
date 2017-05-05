@@ -25,7 +25,7 @@ WORKDIR /repo
 ADD . /repo
 
 # bootstrap
-RUN yarn install
+RUN yarn install --production
 RUN git init
 RUN npm run bootstrap
 

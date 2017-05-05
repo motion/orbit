@@ -14,6 +14,12 @@
     "electron": "cd apps/web && npm run electron"
   },
   "devDependencies": {
+    "dotenv": "^4.0.0",
+    "flow-bin": "^0.38.0",
+  },
+  "dependencies": {
+    "gloss": "^5.1.2",
+    "motion-view": "^1.0.16",
     "babel-cli": "^6.14.0",
     "babel-plugin-jsx-if": "^1.0.2",
     "babel-plugin-root-import": "*",
@@ -21,12 +27,6 @@
     "babel-preset-env": "^1.1.8",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
-    "dotenv": "^4.0.0",
-    "flow-bin": "^0.38.0",
-    "gloss": "^5.1.2",
-    "motion-view": "^1.0.16"
-  },
-  "dependencies": {
     "lerna": "^2.0.0-rc.4"
   }
 }

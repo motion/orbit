@@ -19,7 +19,12 @@ else
   sleep 3
 fi
 
-bin/__kubes ${@:1}
+# RUN
+if [ "$ACTION" = "ui" ]; then
+  minikube dashboard
+else
+  bin/__kubes ${@:1}
+fi
 
 # extra post actions
 if [ "$ACTION" = "stop" ]; then

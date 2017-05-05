@@ -8,8 +8,10 @@ COMMAND=$0
 ACTION=$1
 APP=$2
 
-if [ "$ACTION" = "ui" ]; then
-  minikube dashboard
+APPS=("web" "api" "couch")
+
+if [ "$ACTION" = "status" ]; then
+  kubectl get all
 elif [ "$ACTION" = "generate" ]; then
   kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
 elif [ "$ACTION" = "bootstrap" ]; then

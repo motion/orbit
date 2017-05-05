@@ -21,10 +21,10 @@ RUN yarn config set no-progress true
 RUN npm config set registry http://registry.npmjs.org/
 
 # add deps
-RUN apk add --update git
+# RUN apk add --update git
 
 # cleanup
-RUN rm -rf /tmp/* /var/cache/apk/*
+# RUN rm -rf /tmp/* /var/cache/apk/*
 
 # import repo
 RUN mkdir -p /repo
@@ -32,12 +32,13 @@ WORKDIR /repo
 ADD . /repo
 
 # bootstrap
-RUN yarn install --production
-RUN git init
-RUN npm run bootstrap
+# RUN yarn install --production
+# RUN yarn cache clean
+# RUN git init
+# RUN npm run bootstrap
 
 # remove deps
-RUN apk del git
+# RUN apk del git
 
 WORKDIR /repo/apps/api
 CMD npm run start-$ENV

@@ -5,12 +5,16 @@ ARG ENV="prod"
 ENV ENV=${ENV}
 
 # install yarn
-RUN apk update
-RUN apk add curl bash binutils tar
-RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+ENV PATH /root/.yarn/bin:$PATH
+RUN apk update \
+  && apk add curl bash binutils tar \
+  && rm -rf /var/cache/apk/* \
+  && /bin/bash \
+  && touch ~/.bashrc \
+  && curl -o- -L https://yarnpkg.com/install.sh | bash \
+  && apk del curl tar binutils
 
 # config yarn
-ENV PATH /root/.yarn/bin:$PATH
 RUN yarn config set no-progress true
 
 # add git

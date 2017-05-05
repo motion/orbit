@@ -47,15 +47,15 @@ elif [ "$ACTION" = "build" ]; then
     $0 build api
     $0 build couch
   else
-    echo "building motion/starter-$APP from infra/images/$APP.dockerfile"
     if [ "$APP" = "public" ]; then
       npm run build-web
     fi
+    echo "docker build --build-arg ENV=prod -t motion/starter-$APP -f infra/images/$APP.dockerfile . ${@:3}"
     docker build \
       --build-arg ENV=prod \
       -t motion/starter-$APP \
       -f infra/images/$APP.dockerfile \
-      .
+      . ${@:3}
   fi
 elif [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then

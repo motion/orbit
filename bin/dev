@@ -16,7 +16,7 @@ if minikube docker-env > /dev/null 2>&1; then
 else
   echo "minikube is not running..."
   minikube start
-  sleep 2
+  sleep 3
 fi
 
 bin/__kubes ${@:1}

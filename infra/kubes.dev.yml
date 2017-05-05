@@ -1,3 +1,4 @@
 ---
 ENV: "dev"
 REGISTRY: "localhost:5000"
+DOMAIN: "staging.dev"

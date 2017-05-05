@@ -25,6 +25,8 @@ fi
 # RUN
 if [ "$ACTION" = "ui" ]; then
   minikube dashboard
+elif [ "$ACTION" = "open" ]; then
+  open $(minikube service pad-public --url)
 else
   bin/__kubes ${@:1}
 fi

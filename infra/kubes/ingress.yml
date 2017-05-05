@@ -9,22 +9,24 @@ objects:
         kubernetes.io/ingress.class: "gce"
     spec:
       rules:
-      - host: iwritey.com
+      - host: $(DOMAIN)
         http:
           paths:
           - backend:
               serviceName: pad-web
               servicePort: 80
-      - host: couch.iwritey.com
+      - host: couch.$(DOMAIN)
         http:
           paths:
           - backend:
               serviceName: pad-couch
               servicePort: 5984
-      - host: api.iwritey.com
+      - host: api.$(DOMAIN)
         http:
           paths:
           - backend:
               serviceName: pad-api
               servicePort: 3000
-parameters: []
+parameters:
+  - name: DOMAIN
+    value: null

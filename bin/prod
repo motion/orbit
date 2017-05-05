@@ -17,6 +17,8 @@ ACTION=$1
 # RUN
 if [ "$ACTION" = "ui" ]; then
   open https://api.stackpoint.io/cluster/4578/kubeui/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard/#/workload?namespace=_all
+elif [ "$ACTION" = "open" ]; then
+  open http://iwritey.com
 else
   bin/__kubes ${@:1}
 fi

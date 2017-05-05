@@ -34,8 +34,8 @@ elif [ "$ACTION" = "logs" ]; then
   kubectl logs $POD
 elif [ "$ACTION" = "ssh" ]; then
   POD=$(kubectl get pods | grep $2 | awk '{print $1}')
-  echo "ssh into $POD"
-  kubectl exec -it  $POD bash
+  echo "kubectl exec -it $POD sh"
+  kubectl exec -it  $POD sh
 elif [ "$ACTION" = "build" ]; then
   # alias web
   if [ "$APP" = "web" ]; then

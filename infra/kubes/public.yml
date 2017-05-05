@@ -5,11 +5,10 @@ metadata:
   labels:
     run: pad-public
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 104.198.13.169
+  # type: LoadBalancer
+  # loadBalancerIP: 104.198.13.169
   ports:
-    - protocol: TCP
-      port: 80
+    - port: 80
       targetPort: 80
   selector:
     run: pad-public
@@ -33,7 +32,7 @@ spec:
       containers:
       - name: pad-public
         image: index.docker.io/motion/starter-public:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         resources: {}

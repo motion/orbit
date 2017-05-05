@@ -33,7 +33,7 @@ spec:
       containers:
       - name: pad-api
         image: index.docker.io/motion/starter-api:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         resources: {}
         ports:
         - containerPort: 3000

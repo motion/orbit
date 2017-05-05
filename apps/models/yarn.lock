@@ -558,6 +558,12 @@ debug@2.6.0, debug@^2.1.0, debug@^2.2.0:
   dependencies:
     ms "0.7.2"
 
+debug@2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
+  dependencies:
+    ms "0.7.2"
+
 deep-equal@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
@@ -1119,6 +1125,14 @@ pouchdb-binary-utils@6.2.0:
   dependencies:
     buffer-from "0.1.1"
 
+pouchdb-changes-filter@6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-changes-filter/-/pouchdb-changes-filter-6.2.0.tgz#62649554cef2c9e7e846c452eb0d35ce0811a5e8"
+  dependencies:
+    pouchdb-errors "6.2.0"
+    pouchdb-selector-core "6.2.0"
+    pouchdb-utils "6.2.0"
+
 pouchdb-checkpointer@6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/pouchdb-checkpointer/-/pouchdb-checkpointer-6.2.0.tgz#c0d73cfd27dddf64f7f6a43042739fe55089d589"
@@ -1160,6 +1174,26 @@ pouchdb-core@6.1.2:
     pouchdb-promise "6.1.2"
     pouchdb-utils "6.1.2"
     scope-eval "0.0.3"
+
+pouchdb-core@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-core/-/pouchdb-core-6.2.0.tgz#f310cf51794cb49363fb398a14ff66838cf6f511"
+  dependencies:
+    argsarray "0.0.1"
+    inherits "2.0.3"
+    pouchdb-changes-filter "6.2.0"
+    pouchdb-collections "6.2.0"
+    pouchdb-debug "6.2.0"
+    pouchdb-errors "6.2.0"
+    pouchdb-merge "6.2.0"
+    pouchdb-promise "6.2.0"
+    pouchdb-utils "6.2.0"
+
+pouchdb-debug@6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-debug/-/pouchdb-debug-6.2.0.tgz#d5617a5fcbb3881fecb45e22550dee750a8de5c3"
+  dependencies:
+    debug "2.6.1"
 
 pouchdb-errors@6.0.3:
   version "6.0.3"
@@ -1276,6 +1310,13 @@ pouchdb-replication@^6.1.2:
     pouchdb-errors "6.2.0"
     pouchdb-generate-replication-id "6.2.0"
     pouchdb-promise "6.2.0"
+    pouchdb-utils "6.2.0"
+
+pouchdb-selector-core@6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/pouchdb-selector-core/-/pouchdb-selector-core-6.2.0.tgz#ab753c17182bc394e6a6b1de275331161f85e325"
+  dependencies:
+    pouchdb-collate "6.2.0"
     pouchdb-utils "6.2.0"
 
 pouchdb-upsert@~2.0.1:

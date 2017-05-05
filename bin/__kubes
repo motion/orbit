@@ -37,19 +37,11 @@ elif [ "$ACTION" = "ssh" ]; then
   echo "kubectl exec -it $POD sh"
   kubectl exec -it  $POD sh
 elif [ "$ACTION" = "build" ]; then
-  # alias web
-  if [ "$APP" = "web" ]; then
-    APP="public"
-  fi
-
   if [ "$APP" = "all" ]; then
     $0 build public
     $0 build api
     $0 build couch
   else
-    if [ "$APP" = "public" ]; then
-      npm run build-web
-    fi
     echo "docker build --build-arg ENV=prod -t motion/starter-$APP -f infra/images/$APP.dockerfile . ${@:3}"
     docker build \
       --build-arg ENV=prod \

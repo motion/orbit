@@ -1,3 +1,4 @@
+// @flow
 import Router from 'motion-mobx-router'
 import Feed from '~/pages/feed'
 import Todo from '~/pages/todo'

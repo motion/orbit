@@ -12,6 +12,10 @@ kubectl config use-context minikube > /dev/null
 
 ACTION=$1
 
+function cleanup-docker() {
+  docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
+}
+
 # PRE RUN
 if [ "$DOCKER_TLS_VERIFY" != "1" ]; then
   if minikube docker-env > /dev/null 2>&1; then
@@ -26,6 +30,8 @@ if [ "$ACTION" = "ui" ]; then
   minikube dashboard
 elif [ "$ACTION" = "open" ]; then
   open $(minikube service pad-public --url)
+elif [ "$ACTION" = "cleanup-docker" ]; then
+  cleanup-docker
 else
   bin/__kubes ${@:1}
 fi

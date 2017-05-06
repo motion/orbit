@@ -1,3 +1,4 @@
+// @flow
 import { view, observable } from '~/helpers'
 import { Input, Button, Link } from '~/views'
 import { HEADER_HEIGHT } from '~/constants'
@@ -8,7 +9,7 @@ import Errors from '~/views/layout/errors'
 
 @view
 export default class Root {
-  prevent = e => e.preventDefault()
+  prevent = (e: Event) => e.preventDefault()
 
   @observable headerHovered = true
 
@@ -25,8 +26,8 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => this.headerHovered = true}
-            onMouseLeave={() => this.headerHovered = false}
+            onMouseEnter={() => (this.headerHovered = true)}
+            onMouseLeave={() => (this.headerHovered = false)}
             if={!!header || !!title || !!actions}
           >
             <nav>

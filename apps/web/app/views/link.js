@@ -11,24 +11,26 @@ export default class Link {
     })
   }
 
-  onClick = e => {
+  onClick = (e: Event) => {
     e.preventDefault()
     Router.go(this.props.to)
     if (this.props.onClick) {
       this.props.onClick(e)
     }
   }
+
   render({ to, ...props }) {
     return (
       <a
         $active={this.active}
         href={to}
-        {...props}
         onDragStart={e => e.preventDefault()}
         onClick={this.onClick}
+        {...props}
       />
     )
   }
+
   static style = {
     a: {
       color: '#333',

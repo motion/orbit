@@ -11,7 +11,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/* \
   && /bin/bash \
   && touch ~/.bashrc \
-  && curl -o- -L https://yarnpkg.com/install.sh
+  && curl -o- -L https://yarnpkg.com/install.sh | bash
 
 # config yarn
 RUN yarn config set no-progress true

@@ -53,6 +53,7 @@ elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
     done
   else
     TIME=$(date +%s)
+    NAME="motion/starter-$APP"
 
     if [ "$ACTION" = "build" ]; then
       run docker build \

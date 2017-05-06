@@ -3,6 +3,7 @@
 . $(dirname $0)/__common
 cd $ROOT
 
+# ensure .env
 # ensure docker
 # ensure kubernetes
 # ensure minikube
@@ -14,6 +15,13 @@ minikube config set WantReportErrorPrompt false
 minikube config set vm-driver=xhyve
 
 minikube addons enable ingress
+
+# adds secrets, needs .env
+kubectl create secret docker-registry $DOCKER_SECRET \
+    --docker-server=$DOCKER_REGISTRY_SERVER \
+    --docker-username=$DOCKER_USER \
+    --docker-password=$DOCKER_PASSWORD \
+    --docker-email=$DOCKER_EMAIL
 
 # ensure xhyve
 # ensure npm

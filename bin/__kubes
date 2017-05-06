@@ -22,12 +22,6 @@ elif [ "$ACTION" = "status" ]; then
   run kubectl get all
 elif [ "$ACTION" = "generate" ]; then
   run kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
-elif [ "$ACTION" = "bootstrap" ]; then
-  run kubectl create secret docker-registry $DOCKER_SECRET \
-    --docker-server=$DOCKER_REGISTRY_SERVER \
-    --docker-username=$DOCKER_USER \
-    --docker-password=$DOCKER_PASSWORD \
-    --docker-email=$DOCKER_EMAIL
 elif [ "$ACTION" = "start" ]; then
   save-config
   run kubectl create ${@:2} $FILE_ARG
@@ -42,11 +36,11 @@ elif [ "$ACTION" = "apply" ]; then
   run kubectl apply ${@:2} $FILE_ARG
 elif [ "$ACTION" = "logs" ]; then
   # logs
-  POD=$(kubectl get pods | grep $2 | head -n 1 | awk '{print $1}')
-  run kubectl logs $POD
+  POD=$(kubectl get pods ${@:3} | grep $2 | head -n 1 | awk '{print $1}')
+  run kubectl logs $POD ${@:3}
 elif [ "$ACTION" = "ssh" ]; then
-  POD=$(kubectl get pods | grep $2 | head -n 1 | awk '{print $1}')
-  run kubectl exec -it  $POD sh
+  POD=$(kubectl get pods ${@:3} | grep $2 | head -n 1 | awk '{print $1}')
+  run kubectl exec ${@:3} -it  $POD sh
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then
     for app in $APPS; do

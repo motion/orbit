@@ -3,13 +3,13 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-set -e
+# set env then source
+export ENV="dev"
+. bin/__kubes_pre
 
 # set dev context
 export KUBECONFIG=infra/keys/kubes/dev
 kubectl config use-context minikube > /dev/null
-
-export ENV="dev"
 
 ACTION=$1
 

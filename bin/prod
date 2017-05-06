@@ -4,13 +4,13 @@
 
 cd $ROOT
 
-set -e
+# set env then source
+export ENV="prod"
+. bin/__kubes_pre
 
 # set prod context
 export KUBECONFIG=infra/keys/kubes/prod
 kubectl config use-context stackpoint
-
-export ENV="prod"
 
 ACTION=$1
 

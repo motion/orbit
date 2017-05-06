@@ -28,6 +28,14 @@ export default class Sidebar {
           <Link $piece to="/feed">feed</Link>
 
           <h2>places</h2>
+          <form onSubmit={store.createPlace}>
+            <Input
+              $create
+              getRef={ref => store.placeInput = ref}
+              onKeyDown={e => e.which === 13 && store.createPlace(e)}
+              placeholder="new place"
+            />
+          </form>
           <main if={store.places}>
             {(store.places || []).map(piece => (
               <Link $piece to={piece.url()} key={piece._id}>
@@ -42,16 +50,6 @@ export default class Sidebar {
         <sidebar if={App.views.sidebar}>
           {App.views.sidebar}
         </sidebar>
-
-        <form onSubmit={store.createPlace}>
-          <Input
-            $create
-            $$fontSize={18}
-            getRef={ref => store.placeInput = ref}
-            onKeyDown={e => e.which === 13 && store.createPlace(e)}
-            placeholder="create grop"
-          />
-        </form>
       </side>
     )
   }
@@ -85,7 +83,12 @@ export default class Sidebar {
       },
     },
     create: {
-      width: '100%',
+      background: '#eee',
+      color: '#000',
+      border: 'none',
+      margin: [5, 5, 10, 5],
+      padding: 8,
+      fontSize: 16,
     },
   }
 }

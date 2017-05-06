@@ -5,28 +5,26 @@ metadata:
   name: kube-registry-v0
   namespace: kube-system
   labels:
-    k8s-app: kube-registry
+    k8s-app: kube-registry-upstream
     version: v0
+    kubernetes.io/cluster-service: "true"
 spec:
   replicas: 1
   selector:
-    k8s-app: kube-registry
+    k8s-app: kube-registry-upstream
     version: v0
   template:
     metadata:
       labels:
-        k8s-app: kube-registry
+        k8s-app: kube-registry-upstream
         version: v0
+        kubernetes.io/cluster-service: "true"
     spec:
       containers:
       - name: registry
-        image: registry:2.5.1
+        image: registry:2
         resources:
-          # keep request = limit to keep this container in guaranteed class
           limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
             cpu: 100m
             memory: 100Mi
         env:
@@ -52,10 +50,12 @@ metadata:
   name: kube-registry
   namespace: kube-system
   labels:
-    k8s-app: kube-registry
+    k8s-app: kube-registry-upstream
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "KubeRegistry"
 spec:
   selector:
-    k8s-app: kube-registry
+    k8s-app: kube-registry-upstream
   ports:
   - name: registry
     port: 5000
@@ -67,14 +67,16 @@ metadata:
   name: kube-registry-proxy
   namespace: kube-system
   labels:
-    k8s-app: kube-registry
+    k8s-app: kube-registry-proxy
     kubernetes.io/cluster-service: "true"
     version: v0.4
 spec:
   template:
     metadata:
       labels:
-        k8s-app: kube-registry
+        k8s-app: kube-registry-proxy
+        kubernetes.io/name: "kube-registry-proxy"
+        kubernetes.io/cluster-service: "true"
         version: v0.4
     spec:
       containers:

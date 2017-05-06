@@ -49,7 +49,7 @@ elif [ "$ACTION" = "ssh" ]; then
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then
     for app in $APPS; do
-      $COMMAND $ACTION $app
+      $COMMAND $ACTION $app ${@:3}
     done
   else
     TIME=$(date +%s)
@@ -64,7 +64,10 @@ elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
 
       run docker tag $NAME $NAME:$ENV
       run docker tag $NAME $NAME:$TIME
-      run docker tag $NAME $NAME:latest
+
+      if [ "$ENV" = "prod" ]; then
+        run docker tag $NAME $NAME:latest
+      fi
 
     elif [ "$ACTION" = "push" ]; then
       run docker push $REGISTRY/$NAME:$ENV

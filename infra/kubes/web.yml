@@ -32,7 +32,7 @@ objects:
             - name: docker-hub
           containers:
           - name: pad-web
-            image: $(REGISTRY)/starter-web:$(ENV)
+            image: $(REGISTRY)/motion/starter-web:$(ENV)
             imagePullPolicy: Always
             ports:
             - containerPort: 80

@@ -62,6 +62,8 @@ elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
 
       run docker tag $NAME $NAME:$ENV
       run docker tag $NAME $NAME:$TIME
+      run docker tag $NAME $NAME:latest
+
     elif [ "$ACTION" = "push" ]; then
       run docker push $REGISTRY/$NAME:$ENV
     fi

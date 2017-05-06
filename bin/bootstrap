@@ -8,6 +8,8 @@ cd $ROOT
 # ensure kubernetes
 # ensure minikube
 
+# note to add insecure registry localhost:5000 to mac app
+
 # kubernetes templates
 brew install ktmpl
 

@@ -1,7 +1,11 @@
 version: '2'
 services:
   pad-couch:
-    image: klaemo/couchdb:latest
+    build:
+      context: .
+      dockerfile: infra/images/couch.dockerfile
+      args:
+        ENV: "dev"
     restart: always
     volumes:
        - ./app_data/couchdb:/usr/local/var/lib/couchdb

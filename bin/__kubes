@@ -34,6 +34,9 @@ elif [ "$ACTION" = "restart" ]; then
 elif [ "$ACTION" = "apply" ]; then
   save-config
   run kubectl apply ${@:2} $FILE_ARG
+elif [ "$ACTION" = "serve" ]; then
+  POD=$(kubectl get pods ${@:3} | grep pad-web | head -n 1 | awk '{print $1}')
+  kubectl port-forward $POD 80:31000 ${@:3}
 elif [ "$ACTION" = "logs" ]; then
   # logs
   POD=$(kubectl get pods ${@:3} | grep $2 | head -n 1 | awk '{print $1}')

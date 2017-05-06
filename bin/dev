@@ -3,14 +3,17 @@
 . $(dirname $0)/__common
 cd $ROOT
 
+set -e
+
 # set dev context
 export KUBECONFIG=infra/keys/kubes/dev
 kubectl config use-context minikube
 
-export DEV=true
+export ENV="dev"
 
 ACTION=$1
 
+# PRE RUN
 if minikube docker-env > /dev/null 2>&1; then
   eval $(minikube docker-env)
 else
@@ -22,11 +25,13 @@ fi
 # RUN
 if [ "$ACTION" = "ui" ]; then
   minikube dashboard
+elif [ "$ACTION" = "open" ]; then
+  open $(minikube service pad-public --url)
 else
   bin/__kubes ${@:1}
 fi
 
-# extra post actions
+# POST RUN
 if [ "$ACTION" = "stop" ]; then
   minikube stop
 fi

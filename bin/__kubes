@@ -10,34 +10,54 @@ APP=$2
 
 APPS=("web" "api" "couch")
 
-if [ "$ACTION" = "status" ]; then
-  kubectl get all
+function run {
+  echo "$" "$@"
+  eval $(printf '%q ' "$@") < /dev/tty
+}
+
+# get config, requires $ENV
+CONFIG=""
+for path in ./infra/kubes/*; do
+  CONFIG+="$(ktmpl $path --parameter-file ./infra/kubes.$ENV.yml)"
+  CONFIG+=$'\n'
+done
+
+# save
+KUBES_FILE_OUT="./app_data/kubes.$ENV.yml"
+echo "$CONFIG" > "$KUBES_FILE_OUT"
+
+# to help passing in config
+FILE_ARG="-f $KUBES_FILE_OUT"
+
+# actions...
+if [ "$ACTION" = "get-config" ]; then
+  echo "$CONFIG"
+elif [ "$ACTION" = "status" ]; then
+  run kubectl get all
 elif [ "$ACTION" = "generate" ]; then
-  kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
+  run kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
 elif [ "$ACTION" = "bootstrap" ]; then
-  kubectl create secret docker-registry $DOCKER_SECRET \
+  run kubectl create secret docker-registry $DOCKER_SECRET \
     --docker-server=$DOCKER_REGISTRY_SERVER \
     --docker-username=$DOCKER_USER \
     --docker-password=$DOCKER_PASSWORD \
     --docker-email=$DOCKER_EMAIL
-elif [ "$ACTION" = "start" ]; then
-  kubectl create -f infra/kubes
-elif [ "$ACTION" = "stop" ]; then
-  kubectl delete -f infra/kubes
+elif [ "$ACTION" = "start" ] || [ "$ACTION" = "create" ]; then
+  run kubectl create ${@:2} $FILE_ARG
+elif [ "$ACTION" = "stop" ] ||  [ "$ACTION" = "delete" ]; then
+  run kubectl delete ${@:2} $FILE_ARG
 elif [ "$ACTION" = "restart" ]; then
-  $0 stop
-  $0 start
+  $0 stop ${@:2}
+  $0 start ${@:2}
 elif [ "$ACTION" = "apply" ]; then
-  kubectl apply -f infra/kubes
+  run kubectl apply ${@:2} $FILE_ARG
 elif [ "$ACTION" = "logs" ]; then
   # logs
-  POD=$(kubectl get pods | grep $2 | awk '{print $1}')
-  echo "logs for $POD"
-  kubectl logs $POD
+  POD=$(kubectl get pods | grep $2 | head -n 1 | awk '{print $1}')
+  run kubectl logs $POD
 elif [ "$ACTION" = "ssh" ]; then
-  POD=$(kubectl get pods | grep $2 | awk '{print $1}')
-  echo "kubectl exec -it $POD sh"
-  kubectl exec -it  $POD sh
+  POD=$(kubectl get pods | grep $2 | head -n 1 | awk '{print $1}')
+  run kubectl exec -it  $POD sh
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then
     # todo automate based on images dir
@@ -49,19 +69,18 @@ elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
     NAME="motion/starter-$APP"
 
     if [ "$ACTION" = "build" ]; then
-      echo "docker build --build-arg ENV=prod -t motion/starter-$APP -f infra/images/$APP.dockerfile . ${@:3}"
-      docker build \
-        --build-arg ENV=prod \
+      run docker build \
+        --build-arg ENV=$ENV \
         -t $NAME \
         -f infra/images/$APP.dockerfile \
         . ${@:3}
 
-      docker tag $NAME $NAME:latest
-      docker tag $NAME $NAME:$TIME
+      run docker tag $NAME $NAME:$ENV
+      run docker tag $NAME $NAME:$TIME
     elif [ "$ACTION" = "push" ]; then
-      docker push $NAME
+      run docker push $REGISTRY/$NAME:$ENV
     fi
   fi
 else
-  kubectl ${@:1}
+  run kubectl ${@:1}
 fi

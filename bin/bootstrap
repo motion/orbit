@@ -7,11 +7,19 @@ cd $ROOT
 # ensure kubernetes
 # ensure minikube
 
+# kubernetes templates
+brew install ktmpl
+
 minikube config set WantReportErrorPrompt false
 minikube config set vm-driver=xhyve
+
+minikube addons enable ingress
 
 # ensure xhyve
 # ensure npm
 # npm bootstrap
-# ensure /etc/hosts to have 127.0.0.1 jot.dev
+
+# /etc/hosts
+echo "$(minikube ip) couch.staging.dev api.staging.dev staging.dev" | sudo tee -a /etc/hosts
+
 # run minikube

@@ -1,0 +1,4 @@
+---
+ENV: "prod"
+REGISTRY: "index.docker.io"
+DOMAIN: "iwritey.com"

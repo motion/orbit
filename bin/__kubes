@@ -15,25 +15,6 @@ APPS=("web" "api" "couch")
 KUBES_FILE_OUT="./app_data/kubes.$ENV.yml"
 FILE_ARG="-f $KUBES_FILE_OUT"
 
-function run {
-  echo "$" "$@"
-  eval $(printf '%q ' "$@") < /dev/tty
-}
-
-function get-config {
-  # get config, requires $ENV
-  CONFIG=""
-  for app in ./infra/kubes/*; do
-    CONFIG+="$(ktmpl $app --parameter-file ./infra/kubes.$ENV.yml)"
-    CONFIG+=$'\n'
-  done
-  echo "$CONFIG"
-}
-
-function save-config {
-  get-config > "$KUBES_FILE_OUT"
-}
-
 # actions...
 if [ "$ACTION" = "get-config" ]; then
   echo get-config

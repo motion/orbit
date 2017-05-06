@@ -57,6 +57,14 @@ function get-config {
     CONFIG+="$(ktmpl $app --parameter-file ./infra/kubes.$ENV.yml)"
     CONFIG+=$'\n'
   done
+  # add in extra env configs
+  dir="./infra/kubes.$ENV"
+  if [ -d $dir ]; then
+    for conf in $dir/*; do
+      CONFIG+="$(cat $conf)"
+      CONFIG+=$'\n'
+    done
+  fi
   echo "$CONFIG"
 }
 

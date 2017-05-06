@@ -28,6 +28,13 @@ export default class DocItem {
     this.props.onSaveTitle(doc)
   }
 
+  onKeyDown(e) {
+    if (e.keyCode === 13) {
+      e.preventDefault()
+      this.onEnter(this.props.doc)
+    }
+  }
+
   navigate = () => Router.go(this.props.doc.url())
 
   render({
@@ -49,6 +56,7 @@ export default class DocItem {
     if (children) {
       return <doc {...props}>{children}</doc>
     }
+
     return (
       <doc $$undraggable {...props}>
         <title
@@ -58,12 +66,7 @@ export default class DocItem {
           ref={this.ref('title').set}
           contentEditable={this.editing}
           onClick={this.navigate}
-          onKeyDown={e => {
-            if (e.keyCode === 13) {
-              e.preventDefault()
-              this.onEnter(doc)
-            }
-          }}
+          onKeyDown={this.onKeyDown}
         >
           {doc.title}
         </title>

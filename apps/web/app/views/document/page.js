@@ -5,9 +5,20 @@ import TimeAgo from 'react-timeago'
 import Editor from '~/views/editor'
 import { Document } from 'models'
 
+// cmd + t
 @view({
   store: class {
     doc = Document.get(this.props.id)
+    editor = null
+
+    onKeyDown = e => {
+      if (e.metaKey && e.which === 84) {
+        this.editor.blur()
+        setTimeout(() => {
+          window._toggleCommander()
+        }, 50)
+      }
+    }
   },
 })
 export default class DocumentPage {
@@ -36,7 +47,13 @@ export default class DocumentPage {
         <content $$flex $$row>
           <main $$flex={2}>
             <docarea $$draggable>
-              <Editor id={doc._id} />
+              <Editor
+                onKeyDown={store.onKeyDown}
+                getRef={el => {
+                  store.editor = el
+                }}
+                id={doc._id}
+              />
             </docarea>
 
             <met if={!noSide}>

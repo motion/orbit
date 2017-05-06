@@ -81,8 +81,9 @@ export default class EditorView {
     this.props.onChange(value)
   }
 
-  render({ id, store, onChange, inline, getRef, ...props }) {
+  render({ id, store, onKeyDown, onChange, inline, getRef, ...props }) {
     window.Editor = this
+
     return (
       <document if={store.content}>
         <Editor
@@ -95,7 +96,9 @@ export default class EditorView {
           ref={getRef}
           onFocus={store.focus}
           onBlur={store.blur}
-          onKeyDown={store.onKeyDown}
+          onKeyDown={e => {
+            onKeyDown(e)
+          }}
           {...props}
         />
       </document>

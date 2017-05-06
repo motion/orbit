@@ -51,6 +51,10 @@ class Document extends Model {
       return this.content.document.nodes[0].nodes[0].ranges[0].text
     },
 
+    routeTo() {
+      Router.go(this.url())
+    },
+
     togglePrivate() {
       this.private = !this.private
       this.save()

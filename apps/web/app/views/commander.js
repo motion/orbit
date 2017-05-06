@@ -1,16 +1,20 @@
 import { $, view } from '~/helpers'
-import Portal from 'react-portal'
 import { Place, Document } from 'models'
+import Portal from 'react-portal'
 import { computed } from 'mobx'
 import { includes } from 'lodash'
 import Mousetrap from 'mousetrap'
+import { Modal } from '~/views'
 
 @view({
   store: class {
     open = false
     docs = Document.recent()
+    textbox = null
     text = ''
     highlightIndex = 0
+
+    ref = null
 
     @computed get matches() {
       return (this.docs || []).filter(doc => {
@@ -19,9 +23,11 @@ import Mousetrap from 'mousetrap'
     }
 
     start() {
-      Mousetrap.bind('command+t', () => {
+      window._toggleCommander = () => {
         this.open = !this.open
-      })
+        if (this.open) this.textbox.focus()
+      }
+      Mousetrap.bind('command+t', _toggleCommander)
     }
 
     moveHighlight = diff => {
@@ -34,10 +40,10 @@ import Mousetrap from 'mousetrap'
     onKeyDown = ({ which }) => {
       if (which === 40) this.moveHighlight(1)
       if (which === 38) this.moveHighlight(-1)
+      if (which === 27) this.open = false
 
       if (which === 13) {
-        const url = this.docs[this.highlightIndex].url()
-        Router.go(url)
+        this.matches[this.highlightIndex].routeTo()
         this.setText('')
         this.open = false
       }
@@ -54,53 +60,67 @@ export default class Commander {
     const { onClose } = this.props
 
     return (
-      <Portal
-        closeOnEsc
-        closeOnOutsideClick
-        isOpened={store.open}
-        onClose={() => {
-          store.open = false
-        }}
-      >
-        <commander>
-          <modal>
-            <input
-              autoFocus
-              value={store.text}
-              onChange={e => store.setText(e.target.value)}
-              onKeyDown={store.onKeyDown}
-            />
+      <bar>
+        <input
+          value={store.text}
+          onChange={e => {
+            store.setText(e.target.value)
+          }}
+          onFocus={() => {
+            store.open = true
+          }}
+          onKeyDown={store.onKeyDown}
+          ref={el => store.textbox = el}
+        />
+        <Portal
+          closeOnEsc
+          isOpened={store.open}
+          onClose={() => {
+            store.open = false
+          }}
+        >
+          <commander>
             <matches>
               {store.matches.map((doc, index) => (
-                <match key={index} $highlight={index === store.highlightIndex}>
+                <match
+                  onClick={() => doc.routeTo()}
+                  key={index}
+                  onMouseEnter={() => {
+                    store.highlightIndex = index
+                  }}
+                  $highlight={index === store.highlightIndex}
+                >
                   {doc.getTitle()}
                 </match>
               ))}
             </matches>
-          </modal>
-        </commander>
-      </Portal>
+          </commander>
+        </Portal>
+      </bar>
     )
   }
 
   static style = {
     commander: {
+      padding: 10,
       position: 'absolute',
-      left: 0,
+      background: 'white',
+      top: 50,
       right: 0,
-      top: 0,
+      left: 0,
       bottom: 0,
-      background: 'rgba(0, 0, 0, 0.3)',
-      zIndex: 1000000,
-      justifyContent: 'center',
-      alignItems: 'center',
     },
     highlight: {
-      fontWeight: 'bold',
+      background: `#2c88e4`,
+      color: 'white',
+      borderRadius: 5,
     },
     match: {
       fontSize: 16,
+      fontWeight: 600,
+      padding: 5,
       marginTop: 5,
+      paddingLeft: 10,
     },
     matches: {
       height: 140,
@@ -110,11 +130,6 @@ export default class Commander {
     input: {
       padding: 10,
       fontSize: 18,
-    },
-    modal: {
-      background: 'white',
-      borderRadius: 5,
-      padding: 30,
     },
   }
 }

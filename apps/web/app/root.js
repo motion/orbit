@@ -24,7 +24,6 @@ export default class Root {
 
     return (
       <layout $$draggable>
-        <Commander />
         <main>
           <header
             $hovered={this.headerHovered}
@@ -47,6 +46,7 @@ export default class Root {
                 {'>'}
               </fwd>
             </nav>
+            <Commander />
             <title if={title}>
               {title}
             </title>

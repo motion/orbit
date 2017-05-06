@@ -1,4 +1,5 @@
 export * from './views'
 export Link from './link'
 export Title from './title'
+export Modal from './modal'
 export Poof from './poof'

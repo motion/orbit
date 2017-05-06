@@ -47,6 +47,10 @@ class Document extends Model {
       return `/d/${this._id.replace(':', '-')}`
     },
 
+    getTitle() {
+      return this.content.document.nodes[0].nodes[0].ranges[0].text
+    },
+
     togglePrivate() {
       this.private = !this.private
       this.save()

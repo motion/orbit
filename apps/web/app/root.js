@@ -5,6 +5,8 @@ import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Errors from '~/views/layout/errors'
+import Commander from '~/views/commander'
+import Mousetrap from 'mousetrap'
 
 @view
 export default class Root {
@@ -22,6 +24,7 @@ export default class Root {
 
     return (
       <layout $$draggable>
+        <Commander />
         <main>
           <header
             $hovered={this.headerHovered}

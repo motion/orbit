@@ -39,6 +39,7 @@
     "motion-mobx-helpers": "^1.1.2",
     "motion-mobx-router": "^1.1.0",
     "motion-view": "^2.0.0",
+    "mousetrap": "^1.6.1",
     "object-assign": "^4.1.1",
     "pouchdb-adapter-http": "^6.1.2",
     "pouchdb-adapter-idb": "^6.1.2",

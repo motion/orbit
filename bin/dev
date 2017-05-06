@@ -7,19 +7,19 @@ set -e
 
 # set dev context
 export KUBECONFIG=infra/keys/kubes/dev
-kubectl config use-context minikube
+kubectl config use-context minikube > /dev/null
 
 export ENV="dev"
 
 ACTION=$1
 
 # PRE RUN
-if minikube docker-env > /dev/null 2>&1; then
-  eval $(minikube docker-env)
-else
-  echo "minikube is not running..."
-  minikube start
-  sleep 3
+if [ "$DOCKER_TLS_VERIFY" != "1" ]; then
+  if minikube docker-env > /dev/null 2>&1; then
+    eval $(minikube docker-env)
+  else
+    echo "no minikube docker-env"
+  fi
 fi
 
 # RUN

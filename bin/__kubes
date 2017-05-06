@@ -42,9 +42,9 @@ elif [ "$ACTION" = "bootstrap" ]; then
     --docker-username=$DOCKER_USER \
     --docker-password=$DOCKER_PASSWORD \
     --docker-email=$DOCKER_EMAIL
-elif [ "$ACTION" = "start" ] || [ "$ACTION" = "create" ]; then
+elif [ "$ACTION" = "start" ]; then
   run kubectl create ${@:2} $FILE_ARG
-elif [ "$ACTION" = "stop" ] ||  [ "$ACTION" = "delete" ]; then
+elif [ "$ACTION" = "stop" ]; then
   run kubectl delete ${@:2} $FILE_ARG
 elif [ "$ACTION" = "restart" ]; then
   $0 stop ${@:2}

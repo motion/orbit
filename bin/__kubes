@@ -4,6 +4,9 @@
 # COMMAND ACTION APP
 # dev push api
 
+. $(dirname $0)/__common
+source-kubes-config
+
 COMMAND=$0
 ACTION=$1
 APP=$2

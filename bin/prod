@@ -1,12 +1,10 @@
 #!/bin/bash
 
-. $(dirname $0)/__common
-
-cd $ROOT
-
 # set env then source
 export ENV="prod"
-. bin/__kubes_pre
+
+. $(dirname $0)/__common
+cd $ROOT
 
 # set prod context
 export KUBECONFIG=infra/keys/kubes/prod

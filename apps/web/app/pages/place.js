@@ -30,7 +30,7 @@ export default class PlacePage {
           <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
         ]}
       >
-        <Board if={place} slug={place.slug} />
+        <Board if={place} key={place.slug} slug={place.slug} />
       </Page>
     )
   }

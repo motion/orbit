@@ -73,6 +73,8 @@ const provide = createView({
     return Store
   },
   onStoreMount(name, store, props) {
+    store.subscriptions = new CompositeDisposable()
+
     // automagic observables
     for (const methodName of Object.keys(store)) {
       if (methodName === 'observe') {
@@ -86,13 +88,17 @@ const provide = createView({
         Object.defineProperty(store, methodName, {
           get: () => val.current,
         })
+        // dispose on unmount
+        store.subscriptions.add(val)
       } else if (typeof val !== 'function' && !isObservable(val)) {
+        // auto observable
         extendShallowObservable(store, { [methodName]: val })
       }
     }
 
-    store.subscriptions = new CompositeDisposable()
-    store.start && store.start(props)
+    if (store.start) {
+      store.start(props)
+    }
 
     // smart watch
     const { watch } = store.constructor
@@ -105,7 +111,9 @@ const provide = createView({
     return store
   },
   onStoreUnmount(name, store) {
-    store.stop && store.stop()
+    if (store.stop) {
+      store.stop()
+    }
     store.subscriptions.dispose()
   },
 })

@@ -7,7 +7,7 @@ import Grid from '~/views/grid'
 
 class BoardStore {
   place = Place.get(this.props.slug)
-  docs = Document.forPlace(this.place)
+  docs = Document.forPlace(this.props.slug)
 
   updateLayout = layout => {
     if (!isEqual(this.place.layout, layout)) {
@@ -22,7 +22,11 @@ class BoardStore {
 })
 export default class Board {
   render({ store }) {
-    const docs = (store.docs || []).map(doc => {
+    if (!store.docs || !store.docs.length) {
+      return <null>no docs found</null>
+    }
+
+    const docs = store.docs.map(doc => {
       return <DocItem slanty draggable editable key={doc._id} doc={doc} />
     })
 

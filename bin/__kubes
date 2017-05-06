@@ -15,6 +15,8 @@ APPS=("web" "api" "couch")
 KUBES_FILE_OUT="./app_data/kubes.$ENV.yml"
 FILE_ARG="-f $KUBES_FILE_OUT"
 
+export DOCKER_OPTS="--insecure-registry ${REGISTRY}"
+
 # actions...
 if [ "$ACTION" = "get-config" ]; then
   echo get-config

@@ -75,7 +75,7 @@ export default class DocItem {
           }}
         >
           x
-          <Poof ref={ref => this.poof = ref} />
+          <Poof ref={ref => (this.poof = ref)} />
         </delete>
 
         <content if={editable}>
@@ -183,6 +183,8 @@ export default class DocItem {
     feed: {
       doc: {
         width: '100%',
+        margin: 0,
+        marginBottom: 10,
       },
     },
     editable: {
@@ -195,6 +197,7 @@ export default class DocItem {
       doc: {
         height: '100%',
         width: '100%',
+        margin: 0,
       },
     },
   }

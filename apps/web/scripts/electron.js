@@ -1,3 +1,3 @@
 require('electron').remote.getCurrentWindow().webContents.toggleDevTools()
-location.href = 'http://localhost:3001'
+location.href = 'http://jot.dev'
 module.exports = '🎉'

@@ -25,7 +25,6 @@ export default class Grid {
 
   onDragStart = (e: Event) => {
     e.preventDefault()
-    console.log('start')
   }
 
   render({ items, ...props }) {

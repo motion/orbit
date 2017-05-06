@@ -5,20 +5,18 @@ import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Grid from '~/views/grid'
 
-class BoardStore {
-  place = Place.get(this.props.slug)
-  docs = Document.forPlace(this.props.slug)
-
-  updateLayout = layout => {
-    if (!isEqual(this.place.layout, layout)) {
-      this.place.layout = layout
-      this.place.save()
-    }
-  }
-}
-
 @view({
-  store: BoardStore,
+  store: class {
+    place = Place.get(this.props.slug)
+    docs = Document.forPlace(this.props.slug)
+
+    updateLayout = layout => {
+      if (!isEqual(this.place.layout, layout)) {
+        this.place.layout = layout
+        this.place.save()
+      }
+    }
+  },
 })
 export default class Board {
   render({ store }) {

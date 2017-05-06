@@ -7,5 +7,5 @@ export const DB_CONFIG = {
   couchUrl: `${window.location.protocol}//couch.${window.location.host}`,
 }
 
-export const HEADER_HEIGHT = 38
+export const HEADER_HEIGHT = 40
 export const SIDEBAR_WIDTH = 210

@@ -31,9 +31,6 @@ export default class Root {
             if={!!header || !!title || !!actions}
           >
             <nav>
-              <btn $active={Router.path !== '/'} onClick={() => Router.go('/')}>
-                🏚
-              </btn>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
                 {'<'}
               </back>
@@ -44,6 +41,9 @@ export default class Root {
               >
                 {'>'}
               </fwd>
+              <btn $active={Router.path !== '/'} onClick={() => Router.go('/')}>
+                🏚
+              </btn>
             </nav>
             <title if={title}>
               {title}
@@ -85,7 +85,6 @@ export default class Root {
       alignItems: 'center',
       flexFlow: 'row',
       height: HEADER_HEIGHT,
-      borderBottom: [1, '#eee'],
       background: '#fff',
       zIndex: 1000,
       opacity: 0.7,

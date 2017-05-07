@@ -19,7 +19,7 @@ export default class Link {
     }
   }
 
-  render({ to, ...props }) {
+  render({ to, active, ...props }) {
     return (
       <a
         $active={this.active}

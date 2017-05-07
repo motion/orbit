@@ -85,7 +85,7 @@ export default class DocItem {
         <info onClick={this.navigate}>
           <first>
             <author>{doc.authorId}</author>
-            <TimeAgo minPeriod={10} date={doc.createdAt} />
+            <TimeAgo if={false} minPeriod={10} date={doc.createdAt} />
             {after}
           </first>
           <second>

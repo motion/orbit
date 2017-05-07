@@ -10,6 +10,11 @@ import Grid from '~/views/grid'
     place = Place.get(this.props.slug)
     docs = Document.forPlace(this.props.slug)
 
+    start() {
+      console.log('board', this.props)
+      console.log(this.place)
+    }
+
     updateLayout = layout => {
       if (!isEqual(this.place.layout, layout)) {
         this.place.layout = layout

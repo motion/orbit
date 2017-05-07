@@ -9,7 +9,7 @@ import Board from '~/views/place/board'
 @view({
   store: class {
     place = Place.get(Router.params.slug)
-    createDoc = () => Document.create()
+    createDoc = () => Document.create({ places: [this.place.slug] })
   },
 })
 export default class PlacePage {

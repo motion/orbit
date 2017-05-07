@@ -24,6 +24,7 @@ class EditorStore {
 
   get shouldSave() {
     if (
+      this.doc &&
       this.doc.content &&
       this.doc.content.nodes &&
       this.doc.content.nodes.some(x => x.type === 'inline-image')
@@ -40,7 +41,7 @@ class EditorStore {
   }
 
   save = () => {
-    if (this.content && this.shouldSave) {
+    if (this.doc && this.content && this.shouldSave) {
       this.doc.content = Raw.serialize(this.content)
       this.doc.save()
     }

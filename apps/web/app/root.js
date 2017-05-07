@@ -1,3 +1,4 @@
+// @flow
 import { view, observable } from '~/helpers'
 import { Input, Button, Link } from '~/views'
 import { HEADER_HEIGHT } from '~/constants'
@@ -10,7 +11,7 @@ import Mousetrap from 'mousetrap'
 
 @view
 export default class Root {
-  prevent = e => e.preventDefault()
+  prevent = (e: Event) => e.preventDefault()
 
   @observable headerHovered = true
 
@@ -27,14 +28,11 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => this.headerHovered = true}
-            onMouseLeave={() => this.headerHovered = false}
+            onMouseEnter={() => (this.headerHovered = true)}
+            onMouseLeave={() => (this.headerHovered = false)}
             if={!!header || !!title || !!actions}
           >
-            <nav>
-              <btn $active={Router.path !== '/'} onClick={() => Router.go('/')}>
-                🏚
-              </btn>
+            <nav if={false}>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
                 {'<'}
               </back>
@@ -45,12 +43,15 @@ export default class Root {
               >
                 {'>'}
               </fwd>
+              <btn $active={Router.path !== '/'} onClick={() => Router.go('/')}>
+                🏚
+              </btn>
             </nav>
             <Commander />
             <title if={title}>
               {title}
             </title>
-            <rest>
+            <rest $$flex $$row>
               {header || null}
               <actions $$row if={actions}>
                 {actions.map((action, i) => <action key={i}>{action}</action>)}
@@ -87,7 +88,6 @@ export default class Root {
       alignItems: 'center',
       flexFlow: 'row',
       height: HEADER_HEIGHT,
-      borderBottom: [1, '#eee'],
       background: '#fff',
       zIndex: 1000,
       opacity: 0.7,

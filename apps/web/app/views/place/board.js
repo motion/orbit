@@ -5,24 +5,26 @@ import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Grid from '~/views/grid'
 
-class BoardStore {
-  place = Place.get(this.props.slug)
-  docs = Document.forPlace(this.place)
-
-  updateLayout = layout => {
-    if (!isEqual(this.place.layout, layout)) {
-      this.place.layout = layout
-      this.place.save()
-    }
-  }
-}
-
 @view({
-  store: BoardStore,
+  store: class {
+    place = Place.get(this.props.slug)
+    docs = Document.forPlace(this.props.slug)
+
+    updateLayout = layout => {
+      if (!isEqual(this.place.layout, layout)) {
+        this.place.layout = layout
+        this.place.save()
+      }
+    }
+  },
 })
 export default class Board {
   render({ store }) {
-    const docs = (store.docs || []).map(doc => {
+    if (!store.docs || !store.docs.length) {
+      return <null>no docs found</null>
+    }
+
+    const docs = store.docs.map(doc => {
       return <DocItem slanty draggable editable key={doc._id} doc={doc} />
     })
 

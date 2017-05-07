@@ -2,6 +2,7 @@ import { compile, str } from 'kontur'
 
 export default class BaseModel {
   constructor({ defaultSchema, defaultProps }) {
+    this.create = this.create.bind(this)
     this.defaultSchema = defaultSchema
     this.compiledSchema = {
       ...this.defaultSchema,
@@ -101,7 +102,7 @@ export default class BaseModel {
 
   // helpers
 
-  create(object) {
+  create(object = {}) {
     const properties = {
       ...object,
       ...this.getDefaultProps({ ...object }),

@@ -1,25 +1,28 @@
 #!/bin/bash
 
+# set env then source
+export ENV="dev"
+
 . $(dirname $0)/__common
 cd $ROOT
 
-set -e
-
 # set dev context
 export KUBECONFIG=infra/keys/kubes/dev
-kubectl config use-context minikube
-
-export ENV="dev"
+kubectl config use-context minikube > /dev/null
 
 ACTION=$1
 
+function cleanup-docker() {
+  docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
+}
+
 # PRE RUN
-if minikube docker-env > /dev/null 2>&1; then
-  eval $(minikube docker-env)
-else
-  echo "minikube is not running..."
-  minikube start
-  sleep 3
+if [ "$DOCKER_TLS_VERIFY" != "1" ]; then
+  if minikube docker-env > /dev/null 2>&1; then
+    eval $(minikube docker-env)
+  else
+    echo "no minikube docker-env"
+  fi
 fi
 
 # RUN
@@ -27,6 +30,8 @@ if [ "$ACTION" = "ui" ]; then
   minikube dashboard
 elif [ "$ACTION" = "open" ]; then
   open $(minikube service pad-public --url)
+elif [ "$ACTION" = "cleanup-docker" ]; then
+  cleanup-docker
 else
   bin/__kubes ${@:1}
 fi

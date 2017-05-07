@@ -30,6 +30,7 @@ export default class Feed {
     return (
       <Page
         header
+        $$padded
         title="Feed"
         actions={[
           <CircleButton icon="📇" onClick={store.createDoc}>
@@ -37,7 +38,7 @@ export default class Feed {
           </CircleButton>,
         ]}
       >
-        <FlipMove $$padding={10} $docs duration={300} easing="ease-out">
+        <FlipMove $docs duration={300} easing="ease-out">
           {(store.docs || [])
             .map((doc, i) => <DocItem key={doc._id} slanty feed doc={doc} />)}
         </FlipMove>

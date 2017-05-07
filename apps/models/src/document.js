@@ -61,16 +61,13 @@ class Document extends Model {
     },
   }
 
-  @query forPlace = place => {
-    if (!place) {
-      return null
-    }
+  @query forPlace = slug => {
     return (
       this.collection
         .find()
         .where('places')
         // in array find
-        .elemMatch({ $eq: place.slug })
+        .elemMatch({ $eq: slug })
         .sort({ createdAt: 'desc' })
     )
   }

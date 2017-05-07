@@ -8,6 +8,9 @@ objects:
         kubernetes.io/ingress.global-static-ip-name: "pad"
         kubernetes.io/ingress.class: "gce"
     spec:
+      backend:
+        serviceName: pad-web
+        servicePort: 80
       rules:
       - host: $(DOMAIN)
         http:

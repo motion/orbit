@@ -6,12 +6,11 @@ import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Board from '~/views/place/board'
 
-class PlaceStore {
-  place = Place.get(Router.params.slug)
-}
-
 @view({
-  store: PlaceStore,
+  store: class {
+    place = Place.get(Router.params.slug)
+    createDoc = () => Document.create()
+  },
 })
 export default class PlacePage {
   render({ store }) {
@@ -19,18 +18,19 @@ export default class PlacePage {
 
     return (
       <Page
-        header
-        title={
-          <title if={place} $$flex $$row $$align="center">
-            {place.url()}&nbsp;&nbsp;<Button>🔗</Button>
-          </title>
+        header={
+          <header $$flex $$row $$centered>
+            <title if={false && place} $$flex $$row $$align="center">
+              {place.url()}&nbsp;&nbsp;<Button>🔗</Button>
+            </title>
+            <actions $$flex $$row $$centered>
+              <CircleButton icon="create" onClick={store.createDoc} />,
+            </actions>
+            <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
+          </header>
         }
-        actions={[
-          <Button onClick={store.createDoc}>create</Button>,
-          <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
-        ]}
       >
-        <Board if={place} slug={place.slug} />
+        <Board if={place} key={place.slug} slug={place.slug} />
       </Page>
     )
   }

@@ -24,9 +24,9 @@ export class Page {
     App.views = { _id: this.id, title, actions, header, sidebar }
   }
 
-  render({ children }) {
+  render({ children, className }) {
     return (
-      <page>
+      <page className={className}>
         {children}
       </page>
     )

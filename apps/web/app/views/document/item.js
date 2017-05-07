@@ -78,7 +78,7 @@ export default class DocItem {
           }}
         >
           x
-          <Poof ref={ref => this.poof = ref} />
+          <Poof ref={ref => (this.poof = ref)} />
         </delete>
 
         <content if={editable}>
@@ -88,7 +88,7 @@ export default class DocItem {
         <info onClick={this.navigate}>
           <first>
             <author>{doc.authorId}</author>
-            <TimeAgo minPeriod={10} date={doc.createdAt} />
+            <TimeAgo if={false} minPeriod={10} date={doc.createdAt} />
             {after}
           </first>
           <second>
@@ -186,6 +186,8 @@ export default class DocItem {
     feed: {
       doc: {
         width: '100%',
+        margin: 0,
+        marginBottom: 10,
       },
     },
     editable: {
@@ -198,6 +200,7 @@ export default class DocItem {
       doc: {
         height: '100%',
         width: '100%',
+        margin: 0,
       },
     },
   }

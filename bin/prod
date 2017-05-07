@@ -1,16 +1,14 @@
 #!/bin/bash
 
+# set env then source
+export ENV="prod"
+
 . $(dirname $0)/__common
-
 cd $ROOT
-
-set -e
 
 # set prod context
 export KUBECONFIG=infra/keys/kubes/prod
 kubectl config use-context stackpoint
-
-export ENV="prod"
 
 ACTION=$1
 

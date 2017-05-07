@@ -2,7 +2,7 @@ import { view, observable } from '~/helpers'
 import { range, result } from 'lodash'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
-const Layout = WidthProvider(ReactGridLayout)
+const Layout: HTMLElement = WidthProvider(ReactGridLayout)
 
 @view
 export default class Grid {
@@ -23,9 +23,8 @@ export default class Grid {
     }
   }
 
-  onDragStart = e => {
+  onDragStart = (e: Event) => {
     e.preventDefault()
-    console.log('start')
   }
 
   render({ items, ...props }) {
@@ -33,7 +32,7 @@ export default class Grid {
       <Layout
         if={this.layout}
         {...props}
-        ref={ref => this.gridLayout = ref}
+        ref={ref => (this.gridLayout = ref)}
         onLayoutChange={this.props.onLayoutChange}
         layout={this.layout}
       >

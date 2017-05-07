@@ -105,7 +105,7 @@ function runDevServer(host, port, protocol) {
     watchOptions: {
       ignored: /node_modules/,
     },
-    https: protocol === 'https',
+    disableHostCheck: true,
     host: host,
   })
 

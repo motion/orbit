@@ -1,0 +1,26 @@
+{
+  "presets": [
+    "babel-preset-expo",
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "transform-react-jsx-source",
+        [
+          "gloss/transform",
+          {
+            "decoratorName": "view"
+          }
+        ],
+        "motion-view/transform",
+        "babel-plugin-jsx-if",
+        [
+          "babel-plugin-root-import",
+          {
+            "rootPathSuffix": "app"
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -30,7 +30,7 @@ export default class Root {
             onMouseLeave={() => (this.headerHovered = false)}
             if={!!header || !!title || !!actions}
           >
-            <nav>
+            <nav if={false}>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
                 {'<'}
               </back>
@@ -48,7 +48,7 @@ export default class Root {
             <title if={title}>
               {title}
             </title>
-            <rest>
+            <rest $$flex $$row>
               {header || null}
               <actions $$row if={actions}>
                 {actions.map((action, i) => <action key={i}>{action}</action>)}

@@ -15,6 +15,30 @@ class SidebarStore {
   }
 }
 
+const SideBarLink = props => (
+  <Link
+    {...props}
+    $$style={{
+      width: '100%',
+      fontWeight: 400,
+      fontSize: 18,
+      color: 'purple',
+      padding: [7, 10],
+      cursor: 'pointer',
+      '&:hover': {
+        background: '#fafafa',
+      },
+    }}
+    active={{
+      background: 'red',
+      color: 'white',
+      '&:hover': {
+        background: 'black',
+      },
+    }}
+  />
+)
+
 @view({ store: SidebarStore })
 export default class Sidebar {
   render({ store }) {
@@ -24,23 +48,23 @@ export default class Sidebar {
           <Login />
 
           <h2>go</h2>
-          <Link $piece to="/">me</Link>
-          <Link $piece to="/feed">feed</Link>
+          <SideBarLink to="/">me</SideBarLink>
+          <SideBarLink to="/feed">feed</SideBarLink>
 
           <h2>places</h2>
           <form onSubmit={store.createPlace}>
             <Input
               $create
-              getRef={ref => store.placeInput = ref}
+              getRef={ref => (store.placeInput = ref)}
               onKeyDown={e => e.which === 13 && store.createPlace(e)}
               placeholder="new place"
             />
           </form>
           <main if={store.places}>
             {(store.places || []).map(piece => (
-              <Link $piece to={piece.url()} key={piece._id}>
+              <SideBarLink to={piece.url()} key={piece._id}>
                 {piece.title}
-              </Link>
+              </SideBarLink>
             ))}
           </main>
         </content>
@@ -70,17 +94,6 @@ export default class Sidebar {
       fontWeight: 300,
       padding: [4, 8, 0],
       color: [0, 0, 0, 0.5],
-    },
-    piece: {
-      width: '100%',
-      fontWeight: 700,
-      fontSize: 16,
-      color: 'purple',
-      padding: [4, 8],
-      cursor: 'pointer',
-      '&:hover': {
-        background: '#fafafa',
-      },
     },
     create: {
       background: '#eee',

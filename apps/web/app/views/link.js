@@ -45,4 +45,8 @@ export default class Link {
       },
     },
   }
+
+  static theme = {
+    active: ({ active }) => ({ active }),
+  }
 }

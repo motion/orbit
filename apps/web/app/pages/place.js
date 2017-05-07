@@ -6,6 +6,11 @@ import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Board from '~/views/place/board'
 
+// deleteAll = () =>
+//   Document.all()
+//     .exec()
+//     .then(docs => docs.map(doc => doc.delete()))
+//     .then(docs => console.log('deleted', docs))
 @view({
   store: class {
     place = Place.get(Router.params.slug)
@@ -15,6 +20,7 @@ import Board from '~/views/place/board'
 export default class PlacePage {
   render({ store }) {
     const { place } = store
+    console.log('YES', place)
 
     return (
       <Page
@@ -25,6 +31,7 @@ export default class PlacePage {
             </title>
             <actions $$flex $$row $$centered>
               <CircleButton icon="create" onClick={store.createDoc} />,
+              <CircleButton icon="delete all" onClick={store.deleteAll} />,
             </actions>
             <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
           </header>

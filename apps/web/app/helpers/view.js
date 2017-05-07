@@ -11,7 +11,7 @@ import autobind from 'autobind-decorator'
 import React from 'react'
 import mobx, { isObservable, extendShallowObservable } from 'mobx'
 import { observer } from 'mobx-react'
-import createView from 'motion-view'
+import createProvider from './provide'
 import glossy from './styles'
 import { IS_PROD } from '~/constants'
 
@@ -33,40 +33,7 @@ const Helpers = {
   react,
 }
 
-// @view
-export default function view(View) {
-  // shorthand for providing stores to view
-  if (typeof View === 'object') {
-    return view.provide(View)
-  }
-
-  // extend React.Component
-  Object.setPrototypeOf(View.prototype, React.Component.prototype)
-
-  // add Helpers
-  mixin(View.prototype, Helpers)
-  mixin(View.prototype, ViewHelpers)
-
-  // preact-like render
-  const or = View.prototype.render
-  View.prototype.render = function() {
-    if (IS_PROD) {
-      return or.call(this, this.props, this.state, this.context)
-    } else {
-      try {
-        return or.call(this, this.props, this.state, this.context)
-      } catch (e) {
-        console.error(e)
-        return null
-      }
-    }
-  }
-
-  // order important: autobind, gloss, mobx
-  return autobind(glossy(observer(View)))
-}
-
-const provide = createView({
+const storeProvider = createProvider({
   mobx,
   storeDecorator(Store) {
     mixin(Store.prototype, Helpers)
@@ -118,9 +85,32 @@ const provide = createView({
   },
 })
 
-// @view.provide({})
-// or @view({})
-view.provide = (...args) => View => provide(...args)(view(View))
+function decorateView(View) {
+  // extend React.Component
+  Object.setPrototypeOf(View.prototype, React.Component.prototype)
+  // add Helpers
+  mixin(View.prototype, Helpers)
+  mixin(View.prototype, ViewHelpers)
+  // preact-like render
+  const or = View.prototype.render
+  View.prototype.render = function() {
+    return or.call(this, this.props, this.state, this.context)
+  }
+  // order important: autobind, gloss, mobx
+  return autobind(glossy(observer(View)))
+}
+
+// @view
+export default function view(viewOrOpts, _module) {
+  let View = viewOrOpts
+
+  // @view({ ...stores }) shorthand
+  if (typeof viewOrOpts === 'object') {
+    return View => storeProvider(viewOrOpts, _module)(decorateView(View))
+  }
+
+  return decorateView(viewOrOpts)
+}
 
 // @view.watch
 // hack

@@ -17,7 +17,7 @@ import { Document } from 'models'
       this.editor.blur()
       setTimeout(() => {
         window._toggleCommander()
-      }, 50)
+      })
     }
 
     editing = false

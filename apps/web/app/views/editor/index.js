@@ -84,13 +84,14 @@ export default class EditorView {
     this.props.onChange(value)
   }
 
-  render({ id, store, onChange, inline, getRef, ...props }) {
+  render({ id, store, onChange, inline, getRef, readOnly, ...props }) {
     window.Editor = this
     return (
       <document if={store.content}>
         <Editor
           $editor
           $$undraggable
+          readOnly={readOnly}
           plugins={merge(this.plugins)}
           schema={this.schema}
           state={store.content}

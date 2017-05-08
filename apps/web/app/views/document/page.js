@@ -8,6 +8,11 @@ import { Document } from 'models'
 @view({
   store: class PageStore {
     doc = Document.get(this.props.id)
+    editing = false
+
+    toggleEdit = () => {
+      this.editing = !this.editing
+    }
   },
 })
 export default class DocumentPage {
@@ -27,19 +32,22 @@ export default class DocumentPage {
           </side>
         }
         actions={[
-          <Button>collab</Button>,
+          <Button>🔗</Button>,
           <Button onClick={doc.togglePrivate}>
-            make {doc.private ? 'public' : 'private'}
+            {doc.private ? '🙈' : '🌎'}
+          </Button>,
+          <Button onClick={store.toggleEdit}>
+            {store.editing ? 'done' : 'edit'}
           </Button>,
         ]}
       >
         <content $$flex $$row>
           <main $$flex={2}>
             <docarea $$draggable>
-              <Editor id={doc._id} />
+              <Editor readOnly={!store.editing} id={doc._id} />
             </docarea>
 
-            <met if={!noSide}>
+            <met>
               <ago>
                 <TimeAgo if={false} minPeriod={20} date={doc.updatedAt} />
               </ago>

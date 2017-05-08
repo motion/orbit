@@ -23,8 +23,6 @@ export default class MePage {
 
     return (
       <Page
-        header
-        title="my docs"
         actions={[
           <CircleButton icon="📇" onClick={store.createDoc}>
             new

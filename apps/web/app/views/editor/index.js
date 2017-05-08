@@ -18,8 +18,8 @@ class EditorStore {
   content = null
 
   start() {
-    this.watch(this.save)
-    this.watch(this.setContent)
+    this.watch(this.watchers.save)
+    this.watch(this.watchers.setContent)
   }
 
   get shouldSave() {
@@ -34,17 +34,18 @@ class EditorStore {
     return true
   }
 
-  setContent = () => {
-    if (!this.content && this.doc) {
-      this.content = Raw.deserialize(this.doc.content, { terse: true })
-    }
-  }
-
-  save = () => {
-    if (this.doc && this.content && this.shouldSave) {
-      this.doc.content = Raw.serialize(this.content)
-      this.doc.save()
-    }
+  watchers = {
+    setContent: () => {
+      if (!this.content && this.doc) {
+        this.content = Raw.deserialize(this.doc.content, { terse: true })
+      }
+    },
+    save: () => {
+      if (this.doc && this.content && this.shouldSave) {
+        this.doc.content = Raw.serialize(this.content)
+        this.doc.save()
+      }
+    },
   }
 
   update = val => {

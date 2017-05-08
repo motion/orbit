@@ -3,7 +3,6 @@ import { observable } from 'mobx'
 import Cache from './cache'
 
 export default function createProvider(options: Object) {
-  const { mobx } = options
   const cache = new Cache()
 
   return function storeProvider(allStores: Object, _module: Object) {

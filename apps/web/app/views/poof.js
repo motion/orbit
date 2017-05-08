@@ -1,4 +1,4 @@
-import { view, observable, action } from '~/helpers'
+import { view, observable } from '~/helpers'
 
 const TOTAL_TIME = 200
 const FRAMES = 5
@@ -18,7 +18,7 @@ export default class Poof {
     this.start()
   }
 
-  @action start = () => {
+  start = () => {
     this.show = true
     this.iter = 0
     this.setTimeout(() => {

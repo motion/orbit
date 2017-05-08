@@ -9,6 +9,7 @@ export default class API {
   }
 
   start() {
+    console.log('start bootstra')
     this.bootstrap.start()
     this.server.start()
   }

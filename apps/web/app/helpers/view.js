@@ -44,7 +44,7 @@ const storeProvider = createProvider({
 
     // automagic observables
     for (const methodName of Object.keys(store)) {
-      if (methodName === 'observe') {
+      if (/observe|subscriptions/.test(methodName)) {
         continue
       }
 
@@ -55,7 +55,6 @@ const storeProvider = createProvider({
         Object.defineProperty(store, methodName, {
           get: () => val.current,
         })
-        // dispose on unmount
         store.subscriptions.add(val)
       } else if (typeof val !== 'function' && !isObservable(val)) {
         // auto observable
@@ -110,17 +109,4 @@ export default function view(viewOrOpts, _module) {
   }
 
   return decorateView(viewOrOpts)
-}
-
-// @view.watch
-// hack
-view.watch = (parent, property, { initializer, ...desc }) => {
-  return {
-    ...desc,
-    initializer: function() {
-      parent.constructor.watch = parent.constructor.watch || {}
-      parent.constructor.watch[property] = true
-      return initializer.call(this)
-    },
-  }
 }

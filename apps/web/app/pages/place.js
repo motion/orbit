@@ -6,22 +6,20 @@ import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Board from '~/views/place/board'
 
-// deleteAll = () =>
-//   Document.all()
-//     .exec()
-//     .then(docs => docs.map(doc => doc.delete()))
-//     .then(docs => console.log('deleted', docs))
 @view({
   store: class {
     place = Place.get(Router.params.slug)
     createDoc = () => Document.create({ places: [this.place.slug] })
+    deleteAll = () =>
+      Document.all()
+        .exec()
+        .then(docs => docs.map(doc => doc.delete()))
+        .then(docs => console.log('deleted', docs))
   },
 })
 export default class PlacePage {
   render({ store }) {
     const { place } = store
-    console.log('YES', place)
-
     return (
       <Page
         header={

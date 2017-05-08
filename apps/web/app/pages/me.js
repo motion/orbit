@@ -6,7 +6,7 @@ import DocItem from '~/views/document/item'
 import Board from '~/views/place/board'
 
 class MeStore {
-  createDoc = e => {
+  createDoc(e) {
     e.preventDefault()
     Document.create()
   }

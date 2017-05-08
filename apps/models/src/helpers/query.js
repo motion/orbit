@@ -1,12 +1,12 @@
 import { observable, autorun } from 'mobx'
 
-const logger = (name, on) => (...args) => on && console.log(...args)
+const logger = (name, on) => (...args) => on && console.log(name, ...args)
 const log = logger('@query', true)
 
 // subscribe-aware helpers
 // @query value wrapper
-function valueWrap(valueGet: Function) {
-  const obsrv = observable.box(null)
+function valueWrap(info, valueGet: Function) {
+  const result = observable.box(null)
   let value = valueGet() || {}
 
   // already query!
@@ -17,7 +17,6 @@ function valueWrap(valueGet: Function) {
   // subscribe and update
   let subscriber = null
   const finishSubscribe = () => {
-    log('finishSubscribe', !!subscriber)
     if (subscriber) {
       subscriber.complete()
     }
@@ -29,9 +28,8 @@ function valueWrap(valueGet: Function) {
     value = valueGet() || {}
     if (value.$) {
       // sub to values
-      log('subscribe')
       subscriber = value.$.subscribe(value => {
-        obsrv.set(value)
+        result.set(value)
       })
     }
   })
@@ -45,9 +43,7 @@ function valueWrap(valueGet: Function) {
       get: () => value.exec(),
     },
     current: {
-      get: () => {
-        return obsrv.get() || null
-      },
+      get: () => result.get() || null,
     },
     dispose: {
       value() {
@@ -66,13 +62,14 @@ export function query(parent, property, descriptor) {
   if (initializer) {
     descriptor.initializer = function() {
       return function(...args) {
-        log(parent && parent.constructor.name, property)
-        return valueWrap(() => initializer.call(this).apply(this, args))
+        return valueWrap({ parent, property }, () =>
+          initializer.call(this).apply(this, args)
+        )
       }
     }
   } else if (value) {
     descriptor.value = function(...args) {
-      return valueWrap(() => value.apply(this, args))
+      return valueWrap({ parent, property }, () => value.apply(this, args))
     }
   }
 

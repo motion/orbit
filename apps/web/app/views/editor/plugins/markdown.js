@@ -15,6 +15,7 @@ const replacer = (char, type, data = {}) =>
 export default [
   replacer(/^(>)$/, 'quote'),
   replacer(/^(\[\])$/, 'todo', { done: false }),
+  replacer(/^(\-docs)$/, 'docList'),
   replacer(/^(\$counter)$/, 'counter'),
   AutoReplace({
     trigger: 'space',

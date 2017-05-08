@@ -22,7 +22,7 @@ import { Document } from 'models'
   },
 })
 export default class DocumentPage {
-  render({ store, noSide }) {
+  render({ store, noActions, noSide }) {
     const { doc } = store
 
     if (!doc) {
@@ -37,18 +37,21 @@ export default class DocumentPage {
             side ;alala
           </side>
         }
-        actions={[
-          <Button>collab</Button>,
-          <Button onClick={doc.togglePrivate}>
-            make {doc.private ? 'public' : 'private'}
-          </Button>,
-        ]}
+        actions={
+          !noActions && [
+            <Button>collab</Button>,
+            <Button onClick={doc.togglePrivate}>
+              make {doc.private ? 'public' : 'private'}
+            </Button>,
+          ]
+        }
       >
         <content $$flex $$row>
           <main $$flex={2}>
             <docarea $$draggable>
               <Editor
                 onKeyDown={store.onKeyDown}
+                doc={doc}
                 getRef={el => {
                   store.editor = el
                 }}

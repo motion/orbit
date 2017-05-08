@@ -82,8 +82,10 @@ export default class EditorView {
     this.props.onChange(value)
   }
 
-  render({ id, store, onKeyDown, onChange, inline, getRef, ...props }) {
+  render({ id, doc, store, onKeyDown, onChange, inline, getRef, ...props }) {
+    // todo, find a way to pass Editor into all nodes in the editor
     window.Editor = this
+    if (doc) window.Editor.doc = doc
 
     return (
       <document if={store.content}>

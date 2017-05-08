@@ -3,13 +3,16 @@ import { isEqual } from 'lodash'
 import { Place, Document } from 'models'
 import { Text, Page, Button, CircleButton } from '~/views'
 import Router from '~/router'
-import DocItem from '~/views/document/item'
-import Board from '~/views/place/board'
+import DocPage from '~/views/document/page'
 
 @view({
   store: class {
     place = Place.get(Router.params.slug)
-    createDoc = () => Document.create({ places: [this.place.slug] })
+    doc = Document.homeForPlace(Router.params.slug)
+
+    createDoc = () => {
+      Document.create({ places: [this.place.slug] })
+    }
     deleteAll = () =>
       Document.all()
         .exec()
@@ -19,7 +22,8 @@ import Board from '~/views/place/board'
 })
 export default class PlacePage {
   render({ store }) {
-    const { place } = store
+    const { place, doc } = store
+
     return (
       <Page
         header={
@@ -35,7 +39,8 @@ export default class PlacePage {
           </header>
         }
       >
-        <Board if={place} key={place.slug} slug={place.slug} />
+        <DocPage if={doc} noActions id={doc._id} />
+        <Board if={false && place} key={place.slug} slug={place.slug} />
       </Page>
     )
   }

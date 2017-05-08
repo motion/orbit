@@ -1,6 +1,8 @@
 import App from './index'
 import { Model, query, str, array } from './helpers'
+import Document from './document'
 import Board from './board'
+import { capitalize } from 'lodash'
 
 class Place extends Model {
   static props = {
@@ -18,6 +20,15 @@ class Place extends Model {
     slug: props.title.replace(/ /g, '-').toLowerCase(),
   })
 
+  createWithHome = async title => {
+    const place = await this.create({ title })
+    const doc = await Document.create({
+      home: true,
+      places: [place.slug],
+      title: capitalize(title),
+    })
+  }
+
   settings = {
     title: 'Place',
     index: ['createdAt'],
@@ -29,6 +40,9 @@ class Place extends Model {
     },
     @query boards() {
       return Board.collection.find().where('placeId').eq(this._id)
+    },
+    @query docs() {
+      return Document.collection.find().where('places').eq([this._id])
     },
     createBoard(info) {
       return Board.collection.insert({
@@ -44,7 +58,7 @@ class Place extends Model {
     if (!slug) {
       return null
     }
-    return this.collection.findOne().where('slug').eq()
+    return this.collection.findOne().where('slug').eq(slug)
   };
 }
 

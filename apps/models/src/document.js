@@ -10,6 +10,7 @@ class Document extends Model {
     authorId: str,
     places: array.optional.items(str),
     private: bool,
+    home: bool.optional,
     timestamps: true,
   }
 
@@ -48,6 +49,9 @@ class Document extends Model {
     },
 
     getTitle() {
+      if (this.content.nodes) {
+        return this.content.nodes[0].nodes[0].text
+      }
       return this.content.document.nodes[0].nodes[0].ranges[0].text
     },
 
@@ -61,13 +65,32 @@ class Document extends Model {
     },
   }
 
+  @query homeForPlace = slug => {
+    if (!slug) {
+      return null
+    }
+
+    return (
+      this.collection
+        .findOne()
+        .where('home')
+        .eq(true)
+        .where('places')
+        // in array find
+        .elemMatch({ $eq: slug })
+    )
+  }
+
   @query forPlace = slug => {
     if (!slug) {
       return null
     }
+
     return (
       this.collection
         .find()
+        .where('home')
+        .eq(false)
         .where('places')
         // in array find
         .elemMatch({ $eq: slug })

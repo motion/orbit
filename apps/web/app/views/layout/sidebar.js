@@ -8,9 +8,10 @@ class SidebarStore {
   places = Place.all()
   placeInput = null
 
-  createPlace = e => {
+  createPlace = async e => {
     e.preventDefault()
-    Place.create({ title: this.placeInput.value })
+    const val = this.placeInput.value
+    await Place.createWithHome(val)
     this.placeInput.value = ''
   }
 }
@@ -55,7 +56,7 @@ export default class Sidebar {
           <form onSubmit={store.createPlace}>
             <Input
               $create
-              getRef={ref => (store.placeInput = ref)}
+              getRef={ref => store.placeInput = ref}
               onKeyDown={e => e.which === 13 && store.createPlace(e)}
               placeholder="new place"
             />

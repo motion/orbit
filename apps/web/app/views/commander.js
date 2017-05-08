@@ -14,8 +14,6 @@ import { Modal } from '~/views'
     text = ''
     highlightIndex = 0
 
-    ref = null
-
     @computed get matches() {
       return (this.docs || []).filter(doc => {
         return includes(doc.getTitle(), this.text)
@@ -27,7 +25,18 @@ import { Modal } from '~/views'
         this.open = !this.open
         if (this.open) this.textbox.focus()
       }
+
       Mousetrap.bind('command+t', _toggleCommander)
+      Mousetrap.bind('up', () => {
+        if (this.open) this.moveHighlight(-1)
+      })
+      Mousetrap.bind('down', () => {
+        if (this.open) this.moveHighlight(1)
+      })
+
+      Mousetrap.bind('enter', () => {
+        if (this.open) this.navTo(this.matches[this.highlightIndex])
+      })
     }
 
     moveHighlight = diff => {
@@ -37,15 +46,24 @@ import { Modal } from '~/views'
       if (this.highlightIndex >= this.docs.length) this.highlightIndex = 0
     }
 
+    navTo = doc => {
+      this.close()
+      doc.routeTo()
+    }
+
+    close = () => {
+      this.textbox.blur()
+      this.open = false
+      this.setText('')
+    }
+
     onKeyDown = ({ which }) => {
       if (which === 40) this.moveHighlight(1)
       if (which === 38) this.moveHighlight(-1)
-      if (which === 27) this.open = false
+      if (which === 27) this.close()
 
       if (which === 13) {
-        this.matches[this.highlightIndex].routeTo()
-        this.setText('')
-        this.open = false
+        this.navTo(this.matches[this.highlightIndex])
       }
     }
 
@@ -83,7 +101,7 @@ export default class Commander {
             <matches>
               {store.matches.map((doc, index) => (
                 <match
-                  onClick={() => doc.routeTo()}
+                  onClick={() => store.navTo(doc)}
                   key={index}
                   onMouseEnter={() => {
                     store.highlightIndex = index
@@ -128,8 +146,8 @@ export default class Commander {
       overflowY: 'scroll',
     },
     input: {
-      padding: 10,
-      fontSize: 18,
+      padding: 3,
+      fontSize: 16,
     },
   }
 }

@@ -2,6 +2,8 @@ import App from './index'
 import { Model, query, str, array } from './helpers'
 import Board from './board'
 
+const toSlug = str => str.replace(/ /g, '-').toLowerCase()
+
 class Place extends Model {
   static props = {
     authorId: str,
@@ -13,9 +15,9 @@ class Place extends Model {
   }
 
   static defaultProps = props => ({
-    authorId: App.user.name,
+    authorId: App.user && App.user.name,
     layout: [],
-    slug: props.title.replace(/ /g, '-').toLowerCase(),
+    slug: toSlug(props.title),
   })
 
   settings = {

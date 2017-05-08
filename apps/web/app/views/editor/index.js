@@ -22,12 +22,12 @@ class EditorStore {
     this.watch(this.watchers.setContent)
   }
 
+  // this will prevent save while uploading images...
   get shouldSave() {
     if (
-      this.doc &&
-      this.doc.content &&
-      this.doc.content.nodes &&
-      this.doc.content.nodes.some(x => x.type === 'inline-image')
+      this.content &&
+      this.content.nodes &&
+      this.content.nodes.some(x => x.type === 'inline-image')
     ) {
       return false
     }
@@ -43,6 +43,7 @@ class EditorStore {
     save: () => {
       if (this.doc && this.content && this.shouldSave) {
         this.doc.content = Raw.serialize(this.content)
+        this.doc.title = this.content.startBlock.text
         this.doc.save()
       }
     },

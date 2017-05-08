@@ -14,7 +14,7 @@ class Document extends Model {
   }
 
   static defaultProps = props => {
-    const title = generateName()
+    const title = props.title || generateName()
     return {
       title,
       authorId: App.user && App.user.name,

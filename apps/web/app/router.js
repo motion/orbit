@@ -11,7 +11,7 @@ const AppRouter = new Router({
     '/': Me,
     '/feed': Feed,
     '/todo': Todo,
-    'g/:slug': Place,
+    'g/:slug(/:hashtag)': Place,
     'd/:id': Doc,
   },
 })

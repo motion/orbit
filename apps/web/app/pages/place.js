@@ -9,7 +9,7 @@ import Board from '~/views/place/board'
 @view({
   store: class PlaceStore {
     place = Place.get(Router.params.slug)
-    createDoc = () => Document.create({ places: [this.place.slug] })
+    createDoc = title => Document.create({ title, places: [this.place.slug] })
     deleteAll = () =>
       Document.all()
         .exec()
@@ -33,14 +33,31 @@ export default class PlacePage {
           <CircleButton icon="🍻">join</CircleButton>,
         ]}
       >
-        <form onSubmit={store.createDoc}>
-          <input $create placeholder="create doc (#tag to tag) (/ to search)" />
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            store.createDoc(this.newDoc.value)
+          }}
+        >
+          <input
+            $create
+            ref={this.ref('newDoc').set}
+            placeholder="create doc (#tag to tag) (/ to search)"
+          />
         </form>
 
         <hashtags>
           {`#all #btc #etherium #monero #day-trading #something`
             .split(' ')
-            .map(i => <tag key={i}>{i}</tag>)}
+            .map(tag => (
+              <a
+                $tag
+                key={tag}
+                onClick={() => Router.set('hashtag', tag.slice(1))}
+              >
+                {tag}
+              </a>
+            ))}
         </hashtags>
 
         <Board if={place} key={place.slug} slug={place.slug} />

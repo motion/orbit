@@ -16,7 +16,6 @@ class Document extends Model {
   static defaultProps = props => ({
     title: generateName(),
     authorId: App.user && App.user.name,
-    places: ['ddd'],
     private: true,
     content: {
       nodes: [

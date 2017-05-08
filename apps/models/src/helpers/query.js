@@ -33,8 +33,11 @@ function valueWrap(info, valueGet: Function) {
     $isQuery: {
       value: true,
     },
-    promise: {
-      get: () => value.exec(),
+    exec: {
+      value: value.exec,
+    },
+    $: {
+      value: value.$,
     },
     current: {
       get: () => {

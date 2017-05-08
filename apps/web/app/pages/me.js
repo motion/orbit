@@ -8,7 +8,7 @@ import Board from '~/views/place/board'
 class MeStore {
   createDoc(e) {
     e.preventDefault()
-    Document.create()
+    Document.create({ places: ['ddd'] })
   }
 }
 

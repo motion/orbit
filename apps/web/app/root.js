@@ -58,7 +58,7 @@ export default class Root {
               </actions>
             </rest>
           </header>
-          <content $withHeader={!!header}>
+          <content>
             <CurrentPage key={Router.key} />
           </content>
         </main>
@@ -82,6 +82,7 @@ export default class Root {
       flex: 1,
       position: 'relative',
       overflowY: 'scroll',
+      marginTop: HEADER_HEIGHT,
     },
     header: {
       position: 'absolute',
@@ -89,7 +90,7 @@ export default class Root {
       left: 0,
       right: 0,
       padding: 10,
-      paddingLeft: 80,
+      paddingLeft: IS_ELECTRON ? 80 : 10,
       alignItems: 'center',
       flexFlow: 'row',
       height: HEADER_HEIGHT,
@@ -121,12 +122,6 @@ export default class Root {
       justifyContent: 'flex-end',
       fontSize: 14,
       fontWeight: 600,
-    },
-    withHeader: {
-      position: 'relative',
-      marginTop: HEADER_HEIGHT,
-      flex: 1,
-      overflowY: 'scroll',
     },
     rest: {
       alignItems: 'flex-end',

@@ -9,13 +9,17 @@ import Board from '~/views/place/board'
 @view({
   store: class {
     place = Place.get(Router.params.slug)
-    createDoc = () => Document.create()
+    createDoc = () => Document.create({ places: [this.place.slug] })
+    deleteAll = () =>
+      Document.all()
+        .exec()
+        .then(docs => docs.map(doc => doc.delete()))
+        .then(docs => console.log('deleted', docs))
   },
 })
 export default class PlacePage {
   render({ store }) {
     const { place } = store
-
     return (
       <Page
         header={
@@ -25,6 +29,7 @@ export default class PlacePage {
             </title>
             <actions $$flex $$row $$centered>
               <CircleButton icon="create" onClick={store.createDoc} />,
+              <CircleButton icon="delete all" onClick={store.deleteAll} />,
             </actions>
             <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
           </header>

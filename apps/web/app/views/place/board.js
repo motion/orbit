@@ -9,8 +9,7 @@ import Grid from '~/views/grid'
   store: class {
     place = Place.get(this.props.slug)
     docs = Document.forPlace(this.props.slug)
-
-    updateLayout = layout => {
+    updateLayout(layout) {
       if (!isEqual(this.place.layout, layout)) {
         this.place.layout = layout
         this.place.save()

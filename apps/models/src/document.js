@@ -62,6 +62,9 @@ class Document extends Model {
   }
 
   @query forPlace = slug => {
+    if (!slug) {
+      return null
+    }
     return (
       this.collection
         .find()

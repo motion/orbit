@@ -16,7 +16,7 @@ import { Modal } from '~/views'
 
     @computed get matches() {
       return (this.docs || []).filter(doc => {
-        return includes(doc.getTitle(), this.text)
+        return includes(doc.getTitle().toLowerCase(), this.text.toLowerCase())
       })
     }
 

@@ -6,18 +6,24 @@ import Editor from '~/views/editor'
 import { Document } from 'models'
 
 // cmd + t
+// cmd+t
 @view({
   store: class PageStore {
     doc = Document.get(this.props.id)
     editor = null
 
     onKeyDown = e => {
-      if (e.metaKey && e.which === 84) {
-        this.editor.blur()
-        setTimeout(() => {
-          window._toggleCommander()
-        }, 50)
-      }
+      if (!e.metaKey || e.which !== 84) return
+      this.editor.blur()
+      setTimeout(() => {
+        window._toggleCommander()
+      }, 50)
+    }
+
+    editing = false
+
+    toggleEdit = () => {
+      this.editing = !this.editing
     }
   },
 })
@@ -37,16 +43,15 @@ export default class DocumentPage {
             side ;alala
           </side>
         }
-        /*
-        actions={
-          !noActions && [
-            <Button>collab</Button>,
-            <Button onClick={doc.togglePrivate}>
-              make {doc.private ? 'public' : 'private'}
-            </Button>,
-          ]
-        }
-        */
+        actions={[
+          <Button>🔗</Button>,
+          <Button onClick={doc.togglePrivate}>
+            {doc.private ? '🙈' : '🌎'}
+          </Button>,
+          <Button onClick={store.toggleEdit}>
+            {store.editing ? 'done' : 'edit'}
+          </Button>,
+        ]}
       >
         <content $$flex $$row>
           <main $$flex={2}>
@@ -54,6 +59,7 @@ export default class DocumentPage {
               <Editor
                 onKeyDown={store.onKeyDown}
                 doc={doc}
+                readOnly={!store.editing}
                 getRef={el => {
                   store.editor = el
                 }}
@@ -61,7 +67,7 @@ export default class DocumentPage {
               />
             </docarea>
 
-            <met if={!noSide}>
+            <met>
               <ago>
                 <TimeAgo if={false} minPeriod={20} date={doc.updatedAt} />
               </ago>

@@ -1,7 +1,7 @@
 // @flow
 import { view, observable } from '~/helpers'
 import { Input, Button, Link } from '~/views'
-import { HEADER_HEIGHT } from '~/constants'
+import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
@@ -28,11 +28,11 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => (this.headerHovered = true)}
-            onMouseLeave={() => (this.headerHovered = false)}
+            onMouseEnter={() => this.headerHovered = true}
+            onMouseLeave={() => this.headerHovered = false}
             if={!!header || !!title || !!actions}
           >
-            <nav if={false}>
+            <nav if={IS_ELECTRON}>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
                 {'<'}
               </back>
@@ -58,7 +58,7 @@ export default class Root {
               </actions>
             </rest>
           </header>
-          <content $withHeader={!!header}>
+          <content>
             <CurrentPage key={Router.key} />
           </content>
         </main>
@@ -78,21 +78,46 @@ export default class Root {
       position: 'relative',
       overflowY: 'scroll',
     },
+    content: {
+      flex: 1,
+      position: 'relative',
+      overflowY: 'scroll',
+      marginTop: HEADER_HEIGHT,
+    },
     header: {
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
       padding: 10,
-      paddingLeft: 80,
+      paddingLeft: IS_ELECTRON ? 80 : 10,
       alignItems: 'center',
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       background: '#fff',
       zIndex: 1000,
-      opacity: 0.7,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
+    },
+    omnibar: {
+      flex: 10,
+      margin: [0, 'auto'],
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    omniinput: {
+      width: '100%',
+      background: '#fff',
+      border: [1, '#eee'],
+      padding: [6, 10],
+      fontSize: 16,
+      opacity: 0.4,
+      '&:hover': {
+        opacity: 1,
+      },
+      '&:focus': {
+        opacity: 1,
+      },
     },
     hovered: {
       opacity: 1,
@@ -105,12 +130,6 @@ export default class Root {
       fontSize: 14,
       fontWeight: 600,
     },
-    withHeader: {
-      position: 'relative',
-      marginTop: HEADER_HEIGHT,
-      flex: 1,
-      overflowY: 'scroll',
-    },
     rest: {
       alignItems: 'flex-end',
       justifyContent: 'center',
@@ -120,7 +139,7 @@ export default class Root {
       marginRight: 10,
     },
     btn: {
-      padding: 8,
+      padding: [8, 6],
       opacity: 0.2,
       '&:hover': {
         opacity: 1,

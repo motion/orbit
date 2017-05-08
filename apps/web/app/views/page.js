@@ -35,6 +35,7 @@ export class Page {
   static style = {
     page: {
       flex: 1,
+      overrflowY: 'scroll',
     },
   }
 }

@@ -84,7 +84,17 @@ export default class EditorView {
     this.props.onChange(value)
   }
 
-  render({ id, doc, store, onKeyDown, onChange, inline, getRef, ...props }) {
+  render({
+    id,
+    doc,
+    readOnly,
+    store,
+    onKeyDown,
+    onChange,
+    inline,
+    getRef,
+    ...props
+  }) {
     // todo, find a way to pass Editor into all nodes in the editor
     window.Editor = this
     if (doc) window.Editor.doc = doc
@@ -94,6 +104,7 @@ export default class EditorView {
         <Editor
           $editor
           $$undraggable
+          readOnly={readOnly}
           plugins={merge(this.plugins)}
           schema={this.schema}
           state={store.content}

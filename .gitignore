@@ -6,7 +6,6 @@ lib
 app_data
 shrinkwrap.yaml
 build
-.env
 values.yaml
 *.tgz
 kubeconfig

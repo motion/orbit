@@ -27,14 +27,11 @@ RUN apk del curl tar binutils
 RUN rm -rf /tmp/* /var/cache/apk/*
 
 # bootstrap
-ADD ./package.json ./lerna.json ./.babelrc ./yarn.lock /repo/
+ADD . /repo/
 RUN yarn install
 RUN yarn cache clean
 
 # build
-ADD ./apps/api /repo/apps/api
-# TODO: once we have actual using models
-# ADD ./apps/models /repo/apps/models
 RUN git init
 RUN npm run bootstrap
 

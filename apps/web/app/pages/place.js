@@ -6,7 +6,7 @@ import Router from '~/router'
 import DocPage from '~/views/document/page'
 
 @view({
-  store: class {
+  store: class PlaceStore {
     place = Place.get(Router.params.slug)
     doc = Document.homeForPlace(Router.params.slug)
 
@@ -32,8 +32,8 @@ export default class PlacePage {
               {place.url()}&nbsp;&nbsp;<Button>🔗</Button>
             </title>
             <actions $$flex $$row $$centered>
-              <CircleButton icon="create" onClick={store.createDoc} />,
-              <CircleButton icon="delete all" onClick={store.deleteAll} />,
+              <CircleButton icon="create" onClick={store.createDoc} />
+              <CircleButton icon="delete all" onClick={store.deleteAll} />
             </actions>
             <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
           </header>

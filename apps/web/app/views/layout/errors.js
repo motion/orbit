@@ -4,16 +4,6 @@ import { SIDEBAR_WIDTH } from '~/constants'
 
 @view
 export default class Errors {
-  constructor() {
-    let last
-    this.watch(() => {
-      clearTimeout(last)
-      if (App.errors) {
-        last = this.setTimeout(App.clearErrors, 6000)
-      }
-    })
-  }
-
   render() {
     const errs = App.errors.filter(
       x => x.message !== 'Document update conflict'

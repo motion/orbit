@@ -14,29 +14,31 @@ class Document extends Model {
     timestamps: true,
   }
 
-  static defaultProps = props => ({
-    title: generateName(),
-    authorId: App.user.name,
-    places: ['ddd'],
-    private: true,
-    content: {
-      nodes: [
-        {
-          kind: 'block',
-          type: 'title',
-          data: {
-            level: 1,
-          },
-          nodes: [
-            {
-              kind: 'text',
-              text: props.title || 'lorem ipsum',
+  static defaultProps = props => {
+    const title = generateName()
+    return {
+      title,
+      authorId: App.user && App.user.name,
+      private: true,
+      content: {
+        nodes: [
+          {
+            kind: 'block',
+            type: 'title',
+            data: {
+              level: 1,
             },
-          ],
-        },
-      ],
-    },
-  })
+            nodes: [
+              {
+                kind: 'text',
+                text: title,
+              },
+            ],
+          },
+        ],
+      },
+    }
+  }
 
   settings = {
     title: 'documents',

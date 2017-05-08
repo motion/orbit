@@ -38,7 +38,7 @@ export default class Login {
               $input
               name="username"
               onKeyDown={e => e.which === 13 && this.setUsername()}
-              onChange={e => this.username = e.target.value}
+              onChange={e => (this.username = e.target.value)}
               placeholder="pick username"
             />
             <Button if={!App.hasUsername} $button onClick={this.setUsername}>
@@ -48,7 +48,7 @@ export default class Login {
 
           <step $$hide={!step2}>
             <info if={App.user} $showingPass={step2}>
-              <icon onClick={() => App.user.name = ''}>{'<'}</icon>
+              <icon onClick={App.clearUser}>{'<'}</icon>
               <username $$ellipse>{App.user.name}</username>
             </info>
             <Input
@@ -58,8 +58,8 @@ export default class Login {
               type="password"
               placeholder="password"
               onKeyDown={e => e.which === 13 && this.finish()}
-              onChange={e => this.password = e.target.value}
-              getRef={ref => this.passwordRef = ref}
+              onChange={e => (this.password = e.target.value)}
+              getRef={ref => (this.passwordRef = ref)}
             />
             <Button onClick={this.finish}>✅</Button>
           </step>

@@ -1,18 +1,10 @@
 import { observable, autorun } from 'mobx'
 
-const logger = (name, on) => (...args) => on && console.log(name, ...args)
-const log = logger('@query', true)
-
 // subscribe-aware helpers
 // @query value wrapper
 function valueWrap(info, valueGet: Function) {
   const result = observable.box(null)
   let value = valueGet() || {}
-
-  // already query!
-  if (value.$isQuery) {
-    return value
-  }
 
   // subscribe and update
   let subscriber = null
@@ -34,16 +26,23 @@ function valueWrap(info, valueGet: Function) {
     }
   })
 
+  const response = {}
+
   // helpers
-  Object.defineProperties(value, {
+  Object.defineProperties(response, {
     $isQuery: {
       value: true,
     },
-    promise: {
-      get: () => value.exec(),
+    exec: {
+      value: value.exec,
+    },
+    $: {
+      value: value.$,
     },
     current: {
-      get: () => result.get() || null,
+      get: () => {
+        return result.get() || null
+      },
     },
     dispose: {
       value() {
@@ -53,7 +52,7 @@ function valueWrap(info, valueGet: Function) {
     },
   })
 
-  return value
+  return response
 }
 
 export function query(parent, property, descriptor) {
@@ -61,15 +60,14 @@ export function query(parent, property, descriptor) {
 
   if (initializer) {
     descriptor.initializer = function() {
+      const init = initializer.call(this)
       return function(...args) {
-        return valueWrap({ parent, property }, () =>
-          initializer.call(this).apply(this, args)
-        )
+        return valueWrap(property, () => init.apply(this, args))
       }
     }
   } else if (value) {
     descriptor.value = function(...args) {
-      return valueWrap({ parent, property }, () => value.apply(this, args))
+      return valueWrap(property, () => value.apply(this, args))
     }
   }
 

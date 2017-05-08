@@ -4,6 +4,8 @@ import Document from './document'
 import Board from './board'
 import { capitalize } from 'lodash'
 
+const toSlug = str => str.replace(/ /g, '-').toLowerCase()
+
 class Place extends Model {
   static props = {
     authorId: str,
@@ -15,9 +17,9 @@ class Place extends Model {
   }
 
   static defaultProps = props => ({
-    authorId: App.user.name,
+    authorId: App.user && App.user.name,
     layout: [],
-    slug: props.title.replace(/ /g, '-').toLowerCase(),
+    slug: toSlug(props.title),
   })
 
   createWithHome = async title => {
@@ -54,7 +56,7 @@ class Place extends Model {
 
   @query all = () => this.collection.find()
 
-  @query get = slug => {
+  @query get = (slug: string) => {
     if (!slug) {
       return null
     }

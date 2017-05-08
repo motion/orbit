@@ -8,6 +8,9 @@ import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
 import { uniqBy } from 'lodash'
 
+RxDB.QueryChangeDetector.enable()
+// RxDB.QueryChangeDetector.enableDebugging()
+
 import * as Models from './all'
 
 const tempId = () => {
@@ -26,6 +29,7 @@ export default class App {
   @observable user = null
   @observable.ref views = {}
   @observable.ref errors = []
+  @observable.ref stores = {}
 
   constructor() {
     RxDB.plugin(pHTTP)
@@ -60,7 +64,6 @@ export default class App {
       skipSetup: true,
       withCredentials: false,
     })
-    console.log('got auth', this.auth)
 
     // connect models
     for (const [name, model] of Object.entries(Models)) {
@@ -135,19 +138,23 @@ export default class App {
     this.errors = []
   }
 
-  session = async () => {
+  @action session = async () => {
     return await this.auth.getSession()
   }
 
-  setSession = async () => {
+  @action setSession = async () => {
     const session = await this.session()
     const loggedIn = session && session.userCtx.name
-    console.log('loggedIn', loggedIn)
     if (loggedIn) {
       this.user = session.userCtx
     } else {
       this.user = this.temporaryUser
     }
+  }
+
+  @action clearUser = () => {
+    localStorage.setItem('tempUsername', '')
+    this.user = null
   }
 
   @computed get noUser() {
@@ -170,7 +177,7 @@ export default class App {
     return this.user && !this.user.temp
   }
 
-  handleError = (...errors) => {
+  @action handleError = (...errors) => {
     const unique = uniqBy(errors, err => err.name)
     const final = []
     for (const error of unique) {
@@ -183,7 +190,7 @@ export default class App {
     this.errors = uniqBy([...final, ...this.errors], err => err.id)
   }
 
-  catchErrors() {
+  @action catchErrors() {
     window.addEventListener('unhandledrejection', event => {
       event.promise.catch(err => {
         this.handleError(err)

@@ -7,7 +7,7 @@ import { Document } from 'models'
 
 // cmd + t
 @view({
-  store: class {
+  store: class PageStore {
     doc = Document.get(this.props.id)
     editor = null
 
@@ -37,6 +37,7 @@ export default class DocumentPage {
             side ;alala
           </side>
         }
+        /*
         actions={
           !noActions && [
             <Button>collab</Button>,
@@ -45,6 +46,7 @@ export default class DocumentPage {
             </Button>,
           ]
         }
+        */
       >
         <content $$flex $$row>
           <main $$flex={2}>

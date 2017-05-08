@@ -9,11 +9,12 @@ import { watch, react } from 'motion-mobx-helpers'
 import mixin from 'react-mixin'
 import autobind from 'autobind-decorator'
 import React from 'react'
-import mobx, { isObservable, extendShallowObservable } from 'mobx'
+import { action, isObservable, extendShallowObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import createProvider from './provide'
 import glossy from './styles'
 import { IS_PROD } from '~/constants'
+import App from 'models'
 
 const ViewHelpers = {
   componentWillMount() {
@@ -34,31 +35,37 @@ const Helpers = {
 }
 
 const storeProvider = createProvider({
-  mobx,
   storeDecorator(Store) {
     mixin(Store.prototype, Helpers)
-    return Store
+    return autobind(Store)
   },
   onStoreMount(name, store, props) {
     store.subscriptions = new CompositeDisposable()
 
     // automagic observables
-    for (const methodName of Object.keys(store)) {
-      if (/observe|subscriptions/.test(methodName)) {
-        continue
-      }
 
-      const val = store[methodName]
+    const methods = Object.getOwnPropertyNames(store).filter(
+      x => !/subscriptions|props/.test(x)
+    )
 
-      // auto-get observable for @query
+    for (const method of methods) {
+      const val = store[method]
+      // automatic stuff on stores
       if (val && val.$isQuery) {
-        Object.defineProperty(store, methodName, {
+        // auto @query
+        Object.defineProperty(store, method, {
           get: () => val.current,
         })
         store.subscriptions.add(val)
       } else if (typeof val !== 'function' && !isObservable(val)) {
-        // auto observable
-        extendShallowObservable(store, { [methodName]: val })
+        // auto observables
+        extendShallowObservable(store, { [method]: val })
+      } else if (typeof val === 'function') {
+        // auto action functions
+        store[method] = action(
+          `${store.constructor.name}.${method}`,
+          store[method]
+        )
       }
     }
 
@@ -66,13 +73,8 @@ const storeProvider = createProvider({
       store.start(props)
     }
 
-    // smart watch
-    const { watch } = store.constructor
-    if (watch && typeof watch === 'object') {
-      for (const key of Object.keys(watch)) {
-        store.watch(store[key].bind(store))
-      }
-    }
+    // add to app
+    App.stores[store.constructor.name] = store
 
     return store
   },
@@ -80,6 +82,8 @@ const storeProvider = createProvider({
     if (store.stop) {
       store.stop()
     }
+    // remove from app
+    delete App.stores[store.constructor.name]
     store.subscriptions.dispose()
   },
 })

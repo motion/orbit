@@ -18,33 +18,35 @@ class EditorStore {
   content = null
 
   start() {
-    this.watch(this.save)
-    this.watch(this.setContent)
+    this.watch(this.watchers.save)
+    this.watch(this.watchers.setContent)
   }
 
+  // this will prevent save while uploading images...
   get shouldSave() {
     if (
-      this.doc &&
-      this.doc.content &&
-      this.doc.content.nodes &&
-      this.doc.content.nodes.some(x => x.type === 'inline-image')
+      this.content &&
+      this.content.nodes &&
+      this.content.nodes.some(x => x.type === 'inline-image')
     ) {
       return false
     }
     return true
   }
 
-  setContent = () => {
-    if (!this.content && this.doc) {
-      this.content = Raw.deserialize(this.doc.content, { terse: true })
-    }
-  }
-
-  save = () => {
-    if (this.doc && this.content && this.shouldSave) {
-      this.doc.content = Raw.serialize(this.content)
-      this.doc.save()
-    }
+  watchers = {
+    setContent: () => {
+      if (!this.content && this.doc) {
+        this.content = Raw.deserialize(this.doc.content, { terse: true })
+      }
+    },
+    save: () => {
+      if (this.doc && this.content && this.shouldSave) {
+        this.doc.content = Raw.serialize(this.content)
+        this.doc.title = this.content.startBlock.text
+        this.doc.save()
+      }
+    },
   }
 
   update = val => {

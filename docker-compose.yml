@@ -25,6 +25,7 @@ services:
     volumes:
       - ./apps/api:/repo/apps/api
       - ./apps/web:/repo/apps/web
+      - ./apps/couch:/repo/apps/couch
     ports:
       - 3000:3000
     links:

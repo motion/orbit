@@ -6,6 +6,16 @@ import fs from 'fs'
 
 const root = Path.join(__dirname, '..', 'design')
 
+const handleErr = (err, res) => {
+  if (err) {
+    console.log('Error')
+    console.log(err)
+  } else {
+    console.log('Success!')
+    console.log(JSON.stringify(res, 0, 2))
+  }
+}
+
 export default function(url = root, write = false) {
   console.log('Bootstrapping...', url, write)
 
@@ -17,9 +27,9 @@ export default function(url = root, write = false) {
 
   const dbs = dirs(root)
   for (const db of dbs) {
-    const url = `${url}/${db}`
-    console.log('ensuring db', db, url)
-    ensure(url, handleErr)
+    const dbUrl = `${url}/${db}`
+    console.log('ensuring db:', db, dbUrl)
+    ensure(dbUrl, handleErr)
   }
 
   if (write) {
@@ -36,13 +46,5 @@ export default function(url = root, write = false) {
     })
   }
 
-  bootstrap(url, root, (err, res) => {
-    if (err) {
-      console.log('Error')
-      console.log(err)
-    } else {
-      console.log('Success!')
-      console.log(JSON.stringify(res, 0, 2))
-    }
-  })
+  bootstrap(url, root, handleErr)
 }

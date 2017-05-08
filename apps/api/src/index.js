@@ -1,7 +1,5 @@
-console.log('starting api...')
+console.log('starting api3...')
 
-const API = require('./api').default
+import API from './api'
 
-const api = new API({})
-
-api.start()
+new API({}).start()

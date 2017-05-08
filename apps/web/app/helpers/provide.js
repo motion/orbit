@@ -24,17 +24,15 @@ export default function createProvider(options: Object) {
 
       // return HoC
       return class Provider extends React.Component {
+        @observable _props = {}
+
         componentWillReceiveProps(nextProps) {
           this._props = nextProps
         }
 
         componentWillMount() {
           // for reactive props in stores
-          if (mobx) {
-            mobx.extendShallowObservable(this, { _props: this.props })
-          } else {
-            this._props = this.props
-          }
+          this._props = { ...this.props }
 
           const getProps = {
             get: () => this._props,
@@ -43,12 +41,13 @@ export default function createProvider(options: Object) {
           }
 
           // start stores
-          this.stores = Object.keys(Stores).reduce((acc, cur) => {
+          const finalStores = Object.keys(Stores).reduce((acc, cur) => {
             const Store = Stores[cur]
 
-            function createStore() {
+            const createStore = () => {
               Object.defineProperty(Store.prototype, 'props', getProps)
-              const store = new Store()
+              const store = new Store(this._props)
+              delete Store.prototype.props // safety, remove hack
               Object.defineProperty(store, 'props', getProps)
               return store
             }
@@ -67,17 +66,17 @@ export default function createProvider(options: Object) {
 
           // optional mount function
           if (options.onStoreMount) {
-            for (const name of Object.keys(this.stores)) {
+            for (const name of Object.keys(finalStores)) {
               // fallback to store if nothing returned
-              this.stores[name] =
-                options.onStoreMount(name, this.stores[name], this.props) ||
-                this.stores[name]
+              finalStores[name] =
+                options.onStoreMount(name, finalStores[name], this.props) ||
+                finalStores[name]
             }
           }
 
-          this.state = {
-            stores: cache.restore(this, this.stores, _module),
-          }
+          this.setState({
+            stores: cache.restore(this, finalStores, _module),
+          })
         }
 
         componentWillUnmount() {

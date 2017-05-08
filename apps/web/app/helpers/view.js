@@ -14,6 +14,7 @@ import { observer } from 'mobx-react'
 import createProvider from './provide'
 import glossy from './styles'
 import { IS_PROD } from '~/constants'
+import App from 'models'
 
 const ViewHelpers = {
   componentWillMount() {
@@ -37,7 +38,7 @@ const storeProvider = createProvider({
   mobx,
   storeDecorator(Store) {
     mixin(Store.prototype, Helpers)
-    return Store
+    return autobind(Store)
   },
   onStoreMount(name, store, props) {
     store.subscriptions = new CompositeDisposable()
@@ -74,12 +75,17 @@ const storeProvider = createProvider({
       }
     }
 
+    // add to app
+    App.stores[store.constructor.name] = store
+
     return store
   },
   onStoreUnmount(name, store) {
     if (store.stop) {
       store.stop()
     }
+    // remove from app
+    delete App.stores[store.constructor.name]
     store.subscriptions.dispose()
   },
 })

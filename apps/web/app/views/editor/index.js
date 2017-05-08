@@ -13,11 +13,11 @@ const merge = x => flatten(Object.keys(x).map(n => x[n]))
 const rules = merge(Rules)
 
 class EditorStore {
-  doc = Document.get(this.props.id)
   focused = false
   content = null
 
-  start() {
+  start(props) {
+    this.doc = Document.get(props.id).observable
     this.watch(this.save)
     this.watch(this.setContent)
   }

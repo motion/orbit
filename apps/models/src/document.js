@@ -57,14 +57,11 @@ class Document extends Model {
     if (!slug) {
       return null
     }
-    return (
-      this.collection
-        .find()
-        .where('places')
-        // in array find
-        .elemMatch({ $eq: slug })
-        .sort({ createdAt: 'desc' })
-    )
+    return this.collection
+      .find()
+      .where('places')
+      .elemMatch({ $eq: slug })
+      .sort({ createdAt: 'desc' })
   }
 
   @query all = () => this.collection.find()

@@ -26,6 +26,7 @@ export default class App {
   @observable user = null
   @observable.ref views = {}
   @observable.ref errors = []
+  @observable.ref stores = {}
 
   constructor() {
     RxDB.plugin(pHTTP)
@@ -60,7 +61,6 @@ export default class App {
       skipSetup: true,
       withCredentials: false,
     })
-    console.log('got auth', this.auth)
 
     // connect models
     for (const [name, model] of Object.entries(Models)) {
@@ -142,7 +142,6 @@ export default class App {
   setSession = async () => {
     const session = await this.session()
     const loggedIn = session && session.userCtx.name
-    console.log('loggedIn', loggedIn)
     if (loggedIn) {
       this.user = session.userCtx
     } else {

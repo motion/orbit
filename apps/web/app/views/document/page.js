@@ -6,7 +6,7 @@ import Editor from '~/views/editor'
 import { Document } from 'models'
 
 @view({
-  store: class {
+  store: class PageStore {
     doc = Document.get(this.props.id)
   },
 })

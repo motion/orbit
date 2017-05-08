@@ -31,7 +31,7 @@ export default class MePage {
           </CircleButton>,
         ]}
       >
-        <Board slug={App.user.board} />
+        <Board slug="ddd" />
       </Page>
     )
   }

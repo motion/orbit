@@ -7,7 +7,7 @@ import DocItem from '~/views/document/item'
 import Board from '~/views/place/board'
 
 @view({
-  store: class {
+  store: class PlaceStore {
     place = Place.get(Router.params.slug)
     createDoc = () => Document.create({ places: [this.place.slug] })
     deleteAll = () =>

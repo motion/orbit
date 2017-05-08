@@ -67,14 +67,6 @@ const storeProvider = createProvider({
       store.start(props)
     }
 
-    // smart watch
-    const { watch } = store.constructor
-    if (watch && typeof watch === 'object') {
-      for (const key of Object.keys(watch)) {
-        store.watch(store[key].bind(store))
-      }
-    }
-
     // add to app
     App.stores[store.constructor.name] = store
 

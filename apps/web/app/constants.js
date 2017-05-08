@@ -9,3 +9,23 @@ export const DB_CONFIG = {
 
 export const HEADER_HEIGHT = 40
 export const SIDEBAR_WIDTH = 190
+
+export const IS_ELECTRON = isElectron()
+
+function isElectron() {
+  if (
+    typeof window !== 'undefined' &&
+    window.process &&
+    window.process.type === 'renderer'
+  ) {
+    return true
+  }
+  if (
+    typeof process !== 'undefined' &&
+    process.versions &&
+    !!process.versions.electron
+  ) {
+    return true
+  }
+  return false
+}

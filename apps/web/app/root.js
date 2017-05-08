@@ -1,7 +1,7 @@
 // @flow
 import { view, observable } from '~/helpers'
 import { Input, Button, Link } from '~/views'
-import { HEADER_HEIGHT } from '~/constants'
+import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
@@ -30,7 +30,7 @@ export default class Root {
             onMouseLeave={() => (this.headerHovered = false)}
             if={!!header || !!title || !!actions}
           >
-            <nav if={false}>
+            <nav if={IS_ELECTRON}>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
                 {'<'}
               </back>
@@ -45,6 +45,9 @@ export default class Root {
                 🏚
               </btn>
             </nav>
+            <omnibar>
+              <input $omniinput />
+            </omnibar>
             <title if={title}>
               {title}
             </title>
@@ -75,6 +78,11 @@ export default class Root {
       position: 'relative',
       overflowY: 'scroll',
     },
+    content: {
+      flex: 1,
+      position: 'relative',
+      overflowY: 'scroll',
+    },
     header: {
       position: 'absolute',
       top: 0,
@@ -87,9 +95,21 @@ export default class Root {
       height: HEADER_HEIGHT,
       background: '#fff',
       zIndex: 1000,
-      opacity: 0.7,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
+    },
+    omnibar: {
+      flex: 10,
+      margin: [0, 'auto'],
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    omniinput: {
+      width: '100%',
+      background: '#f4f4f4',
+      border: 'none',
+      padding: [6, 10],
+      fontSize: 16,
     },
     hovered: {
       opacity: 1,
@@ -117,7 +137,7 @@ export default class Root {
       marginRight: 10,
     },
     btn: {
-      padding: 8,
+      padding: [8, 6],
       opacity: 0.2,
       '&:hover': {
         opacity: 1,

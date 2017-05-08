@@ -22,18 +22,16 @@ export default class PlacePage {
     const { place } = store
     return (
       <Page
-        header={
-          <header $$flex $$row $$centered>
-            <title if={false && place} $$flex $$row $$align="center">
-              {place.url()}&nbsp;&nbsp;<Button>🔗</Button>
-            </title>
-            <actions $$flex $$row $$centered>
-              <CircleButton icon="create" onClick={store.createDoc} />
-              <CircleButton icon="delete all" onClick={store.deleteAll} />
-            </actions>
-            <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
-          </header>
+        title={
+          <title if={place} $$row $$align="center">
+            <Button onClick={() => console.log(place.url())}>🔗</Button>
+          </title>
         }
+        actions={[
+          <CircleButton icon="+" onClick={store.createDoc} />,
+          <CircleButton icon="- all" onClick={store.deleteAll} />,
+          <CircleButton icon="🍻">join</CircleButton>,
+        ]}
       >
         <Board if={place} key={place.slug} slug={place.slug} />
       </Page>

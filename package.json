@@ -2,11 +2,11 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap --npm-client=yarn --concurrency=1",
+    "bootstrap": "lerna bootstrap --npm-client=yarn",
     "web": "cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
-    "build": "lerna exec --scope models --scope api -- babel src --out-dir lib",
+    "build": "lerna exec --ignore native -- babel src --out-dir lib",
     "build-web": "cd apps/web && npm run build",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",

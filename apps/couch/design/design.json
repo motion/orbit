@@ -1,0 +1,20 @@
+{
+  "comments": {
+    "_design": {
+      "views": {
+        "thread": {
+          "map": "function(doc) {\n  if (doc.type === \"comment\") {\n    emit(doc._id, doc)\n  }\n}"
+        }
+      }
+    }
+  },
+  "documents": {
+    "_design": {
+      "_auth": {
+        "language": "javascript",
+        "validate_doc_update": "function(newDoc, oldDoc, userCtx, secObj) {\n  if (newDoc.title === 'poop') {\n    throw { forbidden: 'heyo' }\n  }\n}"
+      }
+    }
+  },
+  "_id": "bootstrap"
+}

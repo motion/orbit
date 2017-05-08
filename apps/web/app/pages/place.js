@@ -28,8 +28,8 @@ export default class PlacePage {
               {place.url()}&nbsp;&nbsp;<Button>🔗</Button>
             </title>
             <actions $$flex $$row $$centered>
-              <CircleButton icon="create" onClick={store.createDoc} />,
-              <CircleButton icon="delete all" onClick={store.deleteAll} />,
+              <CircleButton icon="create" onClick={store.createDoc} />
+              <CircleButton icon="delete all" onClick={store.deleteAll} />
             </actions>
             <CircleButton $$background="#fff" icon="🍻">join</CircleButton>,
           </header>

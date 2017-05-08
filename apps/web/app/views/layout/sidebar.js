@@ -5,7 +5,7 @@ import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
 
 class SidebarStore {
-  // places = Place.all()
+  places = Place.all()
   placeInput = null
 
   createPlace = e => {

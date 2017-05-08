@@ -8,7 +8,7 @@ import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
 import { uniqBy } from 'lodash'
 
-// RxDB.QueryChangeDetector.enable()
+RxDB.QueryChangeDetector.enable()
 // RxDB.QueryChangeDetector.enableDebugging()
 
 import * as Models from './all'

@@ -107,10 +107,17 @@ export default class Root {
     },
     omniinput: {
       width: '100%',
-      background: '#f4f4f4',
-      border: 'none',
+      background: '#fff',
+      border: [1, '#eee'],
       padding: [6, 10],
       fontSize: 16,
+      opacity: 0.4,
+      '&:hover': {
+        opacity: 1,
+      },
+      '&:focus': {
+        opacity: 1,
+      },
     },
     hovered: {
       opacity: 1,

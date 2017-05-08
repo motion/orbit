@@ -10,15 +10,21 @@ import DocPage from '~/views/document/page'
     place = Place.get(Router.params.slug)
     doc = Document.homeForPlace(Router.params.slug)
 
-    createDoc = () => {
-      Document.create({ places: [this.place.slug] })
+    createDoc = title => {
+      Document.create({ title, places: [this.place.slug] })
     }
 
-    deleteAll = () =>
+    deleteAll = () => {
+      Place.all()
+        .exec()
+        .then(docs => docs.map(doc => doc.delete()))
+        .then(docs => console.log('deleted', docs))
+
       Document.all()
         .exec()
         .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))
+    }
   },
 })
 export default class PlacePage {

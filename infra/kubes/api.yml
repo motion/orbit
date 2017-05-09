@@ -8,13 +8,13 @@ objects:
         run: pad-api
     spec:
       type: NodePort
+      selector:
+        run: pad-api
       ports:
         - protocol: TCP
           port: 3000
           targetPort: 3000
           nodePort: 32099
-      selector:
-        run: pad-api
     status:
       loadBalancer: {}
   - kind: Deployment
@@ -27,32 +27,31 @@ objects:
         metadata:
           labels:
             run: pad-api
-        volumes:
-          - name: app-code
-            hostPath:
-              path: $(PWD)/apps
         spec:
-          volumeMounts:
-            - mountPath: /repo/apps
-              name: app-code
           imagePullSecrets:
             - name: docker-hub
+          volumes:
+            - name: app-code
+              hostPath:
+                path: $(PWD)/apps
           containers:
-          - name: pad-api
-            image: $(REGISTRY)/motion/starter-api:$(ENV)
-            imagePullPolicy: Always
-            resources: {}
-            ports:
-            - containerPort: 3000
-            env:
-            - name: PORT
-              value: "3000"
-            - name: DB_HOST
-              value: couchdb
-            - name: DB_PORT
-              value: "5984"
-            - name: DB_PROTOCOL
-              value: http://
+            - name: pad-api
+              image: $(REGISTRY)/motion/starter-api:$(ENV)
+              imagePullPolicy: Always
+              volumeMounts:
+              - mountPath: /repo/apps
+                name: app-code
+              ports:
+              - containerPort: 3000
+              env:
+              - name: PORT
+                value: "3000"
+              - name: DB_HOST
+                value: couchdb
+              - name: DB_PORT
+                value: "5984"
+              - name: DB_PROTOCOL
+                value: http://
 parameters:
   - name: ENV
     value: null

@@ -45,9 +45,8 @@ elif [ "$ACTION" = "serve" ]; then
 elif [ "$ACTION" = "logs" ]; then
   run kubectl logs $(get-pod $APP) ${@:3}
 elif [ "$ACTION" = "exec" ]; then
-  run kubectl exec -it  $(get-pod $APP) -- ${@:3}
+  run kubectl exec -it  $(get-pod $APP) ${@:3}
 elif [ "$ACTION" = "ssh" ]; then
-  echo $(get-pod $APP)
   run kubectl exec -it  $(get-pod $APP) sh ${@:3}
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then

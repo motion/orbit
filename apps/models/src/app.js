@@ -46,6 +46,8 @@ export default class App {
   }
 
   async start(config: Object) {
+    this.catchErrors()
+
     if (!config) {
       throw new Error('No config given to App!')
     }
@@ -66,17 +68,16 @@ export default class App {
     })
 
     // connect models
-    for (const [name, model] of Object.entries(Models)) {
+    const connections = Object.entries(Models).map(async ([name, model]) => {
       await model.connect(this.db)
       model.collection.sync(`${config.couchUrl}/${model.title}`, {
         live: true,
         retry: true,
       })
-    }
+    })
 
     // log back in
-    this.setSession()
-    this.catchErrors()
+    await Promise.all([...connections, this.setSession()])
   }
 
   @action loginOrSignup = async (username, password) => {
@@ -144,6 +145,7 @@ export default class App {
 
   @action setSession = async () => {
     const session = await this.session()
+    console.log('got session')
     const loggedIn = session && session.userCtx.name
     if (loggedIn) {
       this.user = session.userCtx

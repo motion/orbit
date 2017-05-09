@@ -10,7 +10,7 @@ export default [
   replacer(/^(\$counter)$/, 'counter'),
   AutoReplace({
     trigger: 'space',
-    before: /^(#{1,6})$/,
+    before: /^(#{2,6})$/,
     transform: (transform, e, data, matches) => {
       const [hashes] = matches.before
       const level = hashes.length

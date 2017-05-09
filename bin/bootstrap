@@ -34,5 +34,6 @@ kubectl create secret docker-registry $DOCKER_SECRET \
 
 # /etc/hosts
 echo "$(minikube ip) couch.staging.dev api.staging.dev staging.dev" | sudo tee -a /etc/hosts
+echo "127.0.0.1 couch.jot.dev api.jot.dev jot.dev"
 
 # run minikube

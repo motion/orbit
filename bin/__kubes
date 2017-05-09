@@ -52,7 +52,7 @@ elif [ "$ACTION" = "apply" ]; then
   save-config
   run kubectl apply ${@:3} $FILE_ARG
 elif [ "$ACTION" = "serve" ]; then
-  kubectl port-forward $(get-pod $APP) 80:31000 ${@:3}
+  sudo kubectl port-forward $(get-pod web) 80:80 ${@:3}
 elif [ "$ACTION" = "logs" ]; then
   run kubectl logs $(get-pod $APP) ${@:3}
 elif [ "$ACTION" = "exec" ]; then

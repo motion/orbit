@@ -1,5 +1,11 @@
 version: '2'
 services:
+  pad-redis:
+    image: redis
+    ports:
+     - 6379
+    volumes:
+     - ./app_data/redis-data:/data
   pad-couch:
     build:
       context: .
@@ -11,6 +17,10 @@ services:
        - ./app_data/couchdb:/usr/local/var/lib/couchdb
        - ./apps/couch/config:/usr/local/etc/couchdb
     restart: always
+    links:
+      - pad-redis
+    depends_on:
+      - pad-redis
     expose:
       - 5984
     ports:

@@ -1,5 +1,5 @@
 {
-  "name": "starter-api",
+  "name": "api",
   "private": true,
   "version": "1.0.0",
   "main": "lib/index.js",
@@ -11,14 +11,16 @@
   "dependencies": {
     "body-parser": "^1.16.1",
     "cors": "^2.8.3",
+    "couch": "*",
     "express": "^4.14.1",
     "invariant": "^2.2.2",
     "morgan": "^1.8.1",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",
     "passport-google-oauth": "^1.0.0",
-    "superlogin": "^0.6.1",
-    "starter-couch": "*"
+    "ratelimit.js": "^1.8.0",
+    "redis": "^2.7.1",
+    "superlogin": "^0.6.1"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

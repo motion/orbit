@@ -3,7 +3,7 @@ import { isEqual } from 'lodash'
 import { Place, Document } from 'models'
 import { Text, Page, Button, CircleButton } from '~/views'
 import Router from '~/router'
-import DocPage from '~/views/document/page'
+import DocPage from '~/pages/doc'
 
 @view({
   store: class PlaceStore {

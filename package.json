@@ -6,7 +6,7 @@
     "web": "cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
-    "build": "lerna exec --scope starter-api --scope starter-couch --scope models -- babel src --out-dir lib",
+    "build": "lerna exec --scope api --scope models -- babel src --out-dir lib -s true",
     "build-web": "cd apps/web && npm run build",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",

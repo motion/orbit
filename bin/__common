@@ -37,12 +37,6 @@ function parse-yaml {
    }'
 }
 
-# source the kubes config
-function source-kubes-config {
-  parse-yaml ./infra/kubes.$ENV.yml > ./app_data/.env.$ENV
-  source ./app_data/.env.$ENV
-}
-
 # run with echo
 function run {
   echo "$" "$@"
@@ -70,6 +64,7 @@ function get-config {
       CONFIG+=$'\n'
     done
   fi
+  echo "$CONFIG"
 }
 
 function handle-error() {
@@ -78,5 +73,5 @@ function handle-error() {
 
 # save kubes config
 function save-config {
-  get-config || handle-error $thing > "$KUBES_FILE_OUT"
+  get-config > "$KUBES_FILE_OUT"
 }

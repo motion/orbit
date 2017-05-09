@@ -5,7 +5,6 @@
 # dev push api
 
 . $(dirname $0)/__common
-source-kubes-config
 
 COMMAND=$0
 ACTION=$1

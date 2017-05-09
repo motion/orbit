@@ -1,3 +1,4 @@
+---
 kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
@@ -10,19 +11,19 @@ spec:
     serviceName: pad-web
     servicePort: 80
   rules:
-  - host: {{DOMAIN}}
+  - host: "{{DOMAIN}}"
     http:
       paths:
       - backend:
           serviceName: pad-web
           servicePort: 80
-  - host: couch.{{DOMAIN}}
+  - host: "couch.{{DOMAIN}}"
     http:
       paths:
       - backend:
           serviceName: pad-couch
           servicePort: 5984
-  - host: api.{{DOMAIN}}
+  - host: "api.{{DOMAIN}}"
     http:
       paths:
       - backend:

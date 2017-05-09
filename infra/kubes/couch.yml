@@ -16,7 +16,8 @@ spec:
     run: pad-couch
 status:
   loadBalancer: {}
-- kind: Deployment
+---
+kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
   name: pad-couch
@@ -37,9 +38,9 @@ spec:
         resources: {}
         env:
         - name: DB_USER
-          value: {{DB_USER}}
+          value: "{{DB_USER}}"
         - name: DB_PASSWORD
-          value: {{DB_PASSWORD}}
+          value: "{{DB_PASSWORD}}"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -53,4 +54,3 @@ spec:
   resources:
     requests:
       storage: 100Mi
-parameters: []

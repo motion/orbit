@@ -36,6 +36,14 @@ class Place extends Model {
     index: ['createdAt'],
   }
 
+  hooks = {
+    async preInsert(data) {
+      if (await this.get(data.slug).exec()) {
+        throw new Error(`Already exists a place with this slug! ${data.slug}`)
+      }
+    },
+  }
+
   methods = {
     url() {
       return `/g/${this.slug}`

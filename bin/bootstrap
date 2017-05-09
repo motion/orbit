@@ -8,6 +8,9 @@ cd $ROOT
 # ensure kubernetes
 # ensure minikube
 
+# for template parsing
+pip install envtpl
+
 # note to add insecure registry localhost:5000 to mac app
 
 # kubernetes templates

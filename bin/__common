@@ -49,26 +49,35 @@ function run {
   eval $(printf '%q ' "$@") < /dev/tty
 }
 
+function parse-file {
+  OUT=./app_data/kubes.dev/$1
+  envtpl $1 -o $OUT --keep-template
+  cat $OUT
+}
+
 # get kubes config
 function get-config {
   # get config, requires $ENV
   CONFIG=""
   for app in ./infra/kubes/*; do
-    CONFIG+="$(ktmpl $app --parameter-file ./infra/kubes.$ENV.yml)"
+    CONFIG+="$(parse-file $app)"
     CONFIG+=$'\n'
   done
   # add in extra env configs
   dir="./infra/kubes.$ENV"
   if [ -d $dir ]; then
-    for conf in $dir/*; do
-      CONFIG+="$(cat $conf)"
+    for extraApp in $dir/*; do
+      CONFIG+="$(parse-file $extraApp)"
       CONFIG+=$'\n'
     done
   fi
-  echo "$CONFIG"
+}
+
+function handle-error() {
+  echo "$1 failed."
 }
 
 # save kubes config
 function save-config {
-  get-config > "$KUBES_FILE_OUT"
+  get-config || handle-error $thing > "$KUBES_FILE_OUT"
 }

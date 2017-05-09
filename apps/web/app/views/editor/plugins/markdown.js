@@ -1,21 +1,12 @@
 import AutoReplace from 'slate-auto-replace'
 import EditList from 'slate-edit-list'
+import { replacer } from './helpers'
 
 const editList = EditList()
-
-const replacer = (char, type, data = {}) =>
-  AutoReplace({
-    trigger: 'space',
-    before: char, // /^(>)$/,
-    transform: transform => {
-      return transform.setBlock({ type, data })
-    },
-  })
 
 export default [
   replacer(/^(>)$/, 'quote'),
   replacer(/^(\[\])$/, 'todo', { done: false }),
-  replacer(/^(\-docs)$/, 'docList'),
   replacer(/^(\$counter)$/, 'counter'),
   AutoReplace({
     trigger: 'space',

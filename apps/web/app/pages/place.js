@@ -20,7 +20,7 @@ import DocPage from '~/pages/doc'
         .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))
 
-      Document.all()
+      Document.forPlace(this.place.slug)
         .exec()
         .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))
@@ -32,18 +32,14 @@ export default class PlacePage {
     const { place, doc } = store
 
     return (
-      <Page
-        title={
-          <title if={place} $$row $$align="center">
-            <Button onClick={() => console.log(place.url())}>🔗</Button>
-          </title>
-        }
-        actions={[
-          <CircleButton icon="+" onClick={store.createDoc} />,
-          <CircleButton icon="- all" onClick={store.deleteAll} />,
-          <CircleButton icon="🍻">join</CircleButton>,
-        ]}
-      >
+      <place $$flex>
+        <div if={place} $$row>
+          <Button onClick={() => console.log(place.url())}>🔗</Button>
+          <CircleButton icon="+" onClick={store.createDoc} />
+          <CircleButton icon="- all" onClick={store.deleteAll} />
+          <CircleButton icon="🍻">join</CircleButton>
+        </div>
+
         <DocPage if={doc} id={doc._id} />
         <form
           onSubmit={e => {
@@ -71,7 +67,7 @@ export default class PlacePage {
               </a>
             ))}
         </hashtags>
-      </Page>
+      </place>
     )
   }
 

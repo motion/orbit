@@ -44,6 +44,11 @@ class EditorStore {
       if (this.doc && this.content && this.shouldSave) {
         this.doc.content = Raw.serialize(this.content)
         this.doc.title = this.content.startBlock.text
+        const secondBlock = this.content.blocks.get(1)
+        if (secondBlock) {
+          console.log('got second block', secondBlock.type, secondBlock)
+          this.doc.hashtags = this.content.startBlock
+        }
         this.doc.save()
       }
     },

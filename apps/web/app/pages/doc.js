@@ -39,12 +39,6 @@ export default class DocumentPage {
 
     return (
       <Page
-        header
-        sidebar={
-          <side $$flex>
-            side ;alala
-          </side>
-        }
         actions={[
           <Button>🔗</Button>,
           <Button onClick={doc.togglePrivate}>

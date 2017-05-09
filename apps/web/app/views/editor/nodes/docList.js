@@ -23,7 +23,9 @@ export default class Todo {
         <h4>Recent Posts</h4>
         <docs if={hasDocs}>
           {store.docs.map(doc => (
-            <doc onClick={() => doc.routeTo()}>{doc.getTitle()}</doc>
+            <doc key={doc._id} onClick={() => doc.routeTo()}>
+              {doc.getTitle()}
+            </doc>
           ))}
         </docs>
         <noDocs if={hasLoaded}>No recent documents</noDocs>

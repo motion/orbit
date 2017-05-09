@@ -90,9 +90,9 @@ class Document extends Model {
 
     return (
       this.collection
-        .find()
-        .where('home')
-        .eq(false)
+        .find({
+          home: { $ne: true },
+        })
         .where('places')
         // in array find
         .elemMatch({ $eq: slug })

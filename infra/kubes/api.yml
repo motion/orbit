@@ -47,7 +47,7 @@ objects:
               - name: PORT
                 value: "3000"
               - name: DB_HOST
-                value: couchdb
+                value: pad-couch
               - name: DB_PORT
                 value: "5984"
               - name: DB_PROTOCOL

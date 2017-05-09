@@ -7,15 +7,17 @@ import {
   REDIS_URL,
 } from './keys'
 
+const dbServer = {
+  protocol: DB_PROTOCOL,
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  userDB: 'sl-users',
+  couchAuthDB: '_users',
+}
+
 export default {
-  dbServer: {
-    protocol: DB_PROTOCOL,
-    host: DB_HOST,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    userDB: 'sl-users',
-    couchAuthDB: '_users',
-  },
+  dbServer,
   mailer: {
     fromEmail: process.env.FROM_EMAIL,
     options: {
@@ -33,10 +35,8 @@ export default {
     },
   },
   session: {
-    // 'redis' or 'memory'
-    adapter: 'memory', //IS_PROD ? 'redis' : 'memory',
+    adapter: 'redis',
     redis: {
-      // The docker-compose will setup the /etc/hosts for us so our redis servier is called "redis"
       url: REDIS_URL,
     },
   },

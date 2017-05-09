@@ -14,7 +14,9 @@ export const COUCH_URL = DB_USER
   ? `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}`
   : `${DB_PROTOCOL}${DB_HOST}:${DB_PORT}`
 
-export const REDIS_URL = process.env.REDIS_URL || 'redis://redis:6379'
+export const REDIS_HOSTNAME = process.env.REDIS_HOSTNAME || 'localhost'
+export const REDIS_PORT = process.env.REDIS_PORT || '6379'
+export const REDIS_URL = `redis://${REDIS_HOSTNAME}:${REDIS_PORT}`
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
 

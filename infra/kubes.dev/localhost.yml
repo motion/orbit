@@ -1,0 +1,15 @@
+---
+kind: Template
+objects:
+  - kind: Endpoints
+    apiVersion: v1
+    metadata:
+      name: starter-host
+    subsets:
+      - addresses:
+          - ip: $(HOST_IP)
+        ports:
+          - port: 3001
+parameters:
+  - name: HOST_IP
+    value: null

@@ -36,7 +36,6 @@ objects:
             imagePullPolicy: Always
             ports:
             - containerPort: 80
-            resources: {}
     status: {}
 parameters:
   - name: ENV

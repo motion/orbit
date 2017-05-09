@@ -2,3 +2,4 @@ ENV: dev
 REGISTRY: index.docker.io
 DOMAIN: staging.dev
 PWD: /Users/nw/projects/motion/starter
+HOST_IP: 10.236.104.23

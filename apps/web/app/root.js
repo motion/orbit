@@ -28,8 +28,8 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => this.headerHovered = true}
-            onMouseLeave={() => this.headerHovered = false}
+            onMouseEnter={() => (this.headerHovered = true)}
+            onMouseLeave={() => (this.headerHovered = false)}
             if={!!header || !!title || !!actions}
           >
             <nav if={IS_ELECTRON}>
@@ -47,11 +47,13 @@ export default class Root {
                 🏚
               </btn>
             </nav>
-            <Commander />
+            <omnibar>
+              <Commander $omniinput />
+            </omnibar>
             <title if={title}>
               {title}
             </title>
-            <rest $$flex $$row>
+            <rest $$row>
               {header || null}
               <actions $$row if={actions}>
                 {actions.map((action, i) => <action key={i}>{action}</action>)}
@@ -104,6 +106,7 @@ export default class Root {
       margin: [0, 'auto'],
       alignItems: 'center',
       justifyContent: 'center',
+      position: 'relative',
     },
     omniinput: {
       width: '100%',

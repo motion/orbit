@@ -9,7 +9,7 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 
 // install console formatters
-mobxFormatters(Mobx)
+// mobxFormatters(Mobx)
 
 // dev helpers
 window.React = React

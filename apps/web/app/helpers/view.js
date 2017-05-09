@@ -9,7 +9,12 @@ import { watch, react } from 'motion-mobx-helpers'
 import mixin from 'react-mixin'
 import autobind from 'autobind-decorator'
 import React from 'react'
-import { action, isObservable, extendShallowObservable } from 'mobx'
+import {
+  action,
+  isObservable,
+  extendShallowObservable,
+  extendObservable,
+} from 'mobx'
 import { observer } from 'mobx-react'
 import createProvider from './provide'
 import glossy from './styles'
@@ -43,29 +48,54 @@ const storeProvider = createProvider({
     store.subscriptions = new CompositeDisposable()
 
     // automagic observables
+    const descriptors = Object.getOwnPropertyDescriptors(store)
 
-    const methods = Object.getOwnPropertyNames(store).filter(
-      x => !/subscriptions|props/.test(x)
-    )
+    for (const method of Object.keys(descriptors)) {
+      if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
+        continue
+      }
 
-    for (const method of methods) {
       const val = store[method]
-      // automatic stuff on stores
-      if (val && val.$isQuery) {
-        // auto @query
+
+      const isFunction = typeof val === 'function'
+      const isQuery = val && val.$isQuery
+
+      // auto @query => observable
+      if (isQuery) {
         Object.defineProperty(store, method, {
-          get: () => val.current,
+          get() {
+            console.log('get', val.current)
+            return val.current
+          },
         })
         store.subscriptions.add(val)
-      } else if (typeof val !== 'function' && !isObservable(val)) {
-        // auto observables
-        extendShallowObservable(store, { [method]: val })
-      } else if (typeof val === 'function') {
-        // auto action functions
+        continue
+      }
+
+      if (isObservable(val)) {
+        continue
+      }
+
+      // auto
+      if (isFunction) {
+        // @action functions
         store[method] = action(
           `${store.constructor.name}.${method}`,
           store[method]
         )
+      } else {
+        const descriptor = descriptors[method]
+        if (descriptor.get) {
+          // @computed getters
+          const getter = {
+            [method]: descriptor.get(),
+          }
+          Object.defineProperty(getter, method, descriptor)
+          extendObservable(store, getter)
+        } else {
+          // @observable values
+          extendShallowObservable(store, { [method]: val })
+        }
       }
     }
 

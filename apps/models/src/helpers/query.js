@@ -2,7 +2,7 @@ import { observable, autorun } from 'mobx'
 
 // subscribe-aware helpers
 // @query value wrapper
-function valueWrap(info, valueGet: Function) {
+function valueWrap(valueGet: Function) {
   const result = observable.box(null)
   let value = valueGet() || {}
 
@@ -21,6 +21,7 @@ function valueWrap(info, valueGet: Function) {
     if (value.$) {
       // sub to values
       subscriber = value.$.subscribe(value => {
+        console.log('got value', value)
         result.set(value)
       })
     }
@@ -62,12 +63,12 @@ export function query(parent, property, descriptor) {
     descriptor.initializer = function() {
       const init = initializer.call(this)
       return function(...args) {
-        return valueWrap(property, () => init.apply(this, args))
+        return valueWrap(() => init.apply(this, args))
       }
     }
   } else if (value) {
     descriptor.value = function(...args) {
-      return valueWrap(property, () => value.apply(this, args))
+      return valueWrap(() => value.apply(this, args))
     }
   }
 

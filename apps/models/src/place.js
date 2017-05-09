@@ -44,7 +44,6 @@ class Place extends Model {
       return Board.collection.find().where('placeId').eq(this._id)
     },
     @query docs() {
-      console.log('slug is', this.slug)
       return Document.collection
         .find()
         .where('places')

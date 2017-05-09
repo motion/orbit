@@ -11,6 +11,14 @@ import { Document } from 'models'
   store: class PageStore {
     doc = Document.get(this.props.id)
     editor = null
+    forceEdit = false
+
+    start() {
+      window.x = this
+      this.watch(() => {
+        console.log(this.doc && this.doc.private)
+      })
+    }
 
     onKeyDown = e => {
       if (!e.metaKey || e.which !== 84) return
@@ -20,10 +28,12 @@ import { Document } from 'models'
       })
     }
 
-    editing = false
+    get editing() {
+      return this.forceEdit || (App.loggedIn && !App.user.hatesToEdit)
+    }
 
     toggleEdit = () => {
-      this.editing = !this.editing
+      this.forceEdit = !this.forceEdit
     }
   },
 })
@@ -34,6 +44,8 @@ export default class DocumentPage {
     if (!doc) {
       return null
     }
+
+    console.log('r', store.doc)
 
     return (
       <Page
@@ -56,6 +68,9 @@ export default class DocumentPage {
         <content $$flex $$row>
           <main $$flex={2}>
             <docarea $$draggable>
+              <Button onClick={doc.togglePrivate}>
+                {doc.private ? '🙈' : '🌎'}
+              </Button>
               <Editor
                 onKeyDown={store.onKeyDown}
                 doc={doc}

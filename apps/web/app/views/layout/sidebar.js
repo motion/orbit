@@ -31,10 +31,10 @@ const SideBarLink = ({ children, after, ...props }) => (
       },
     }}
     active={{
-      background: 'red',
-      color: 'white',
+      background: '#fff',
+      color: '#000',
       '&:hover': {
-        background: 'black',
+        background: '#fafafa',
       },
     }}
   >
@@ -47,13 +47,8 @@ const SideBarLink = ({ children, after, ...props }) => (
 
 @view({ store: SidebarStore })
 export default class Sidebar {
-  docs = {}
-
-  dispose() {
-    Object.keys(docs).forEach(doc => doc.dispose())
-  }
-
   render({ store }) {
+    console.log('xxx', this, store)
     return (
       <side>
         <content $$undraggable>
@@ -74,21 +69,8 @@ export default class Sidebar {
           </form>
           <main if={store.places}>
             {(store.places || []).map(place => {
-              const { current } = (this.docs[place._id] =
-                this.docs[place._id] || place.docs())
-
               return (
-                <SideBarLink
-                  after={
-                    <docs if={current}>
-                      {current.map((doc, i) => {
-                        return <doc key={i}>{doc.title}</doc>
-                      })}
-                    </docs>
-                  }
-                  to={place.url()}
-                  key={place._id}
-                >
+                <SideBarLink to={place.url()} key={place._id}>
                   {place.title}
                 </SideBarLink>
               )

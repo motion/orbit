@@ -74,12 +74,13 @@ import { Modal } from '~/views'
   },
 })
 export default class Commander {
-  render({ store, store: { docs } }) {
+  render({ store, store: { docs }, ...props }) {
     const { onClose } = this.props
 
     return (
-      <bar>
+      <bar $$fullscreen>
         <input
+          {...props}
           value={store.text}
           onChange={e => {
             store.setText(e.target.value)
@@ -88,7 +89,7 @@ export default class Commander {
             store.open = true
           }}
           onKeyDown={store.onKeyDown}
-          ref={el => store.textbox = el}
+          ref={el => (store.textbox = el)}
         />
         <Portal
           closeOnEsc
@@ -143,10 +144,6 @@ export default class Commander {
     matches: {
       marginTop: 10,
       overflowY: 'scroll',
-    },
-    input: {
-      padding: 3,
-      fontSize: 16,
     },
   }
 }

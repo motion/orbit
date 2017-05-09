@@ -22,7 +22,7 @@ export default class AuthStore {
       // Where to save your session token: localStorage ('local') or sessionStorage ('session'), default: 'local'
       storage: 'local',
       // The authentication providers that are supported by your SuperLogin host
-      providers: ['facebook', 'twitter'],
+      // providers: ['facebook', 'twitter'],
       // Sets when to check if the session is expired. 'stateChange', 'startup' or nothing.
       // 'stateChange' checks every time $stateChangeStart or $routeChangeStart is fired
       // 'startup' checks just on app startup. If this is blank it will never check.

@@ -20,6 +20,6 @@ export const REDIS_URL = `redis://${REDIS_HOSTNAME}:${REDIS_PORT}`
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
-export const APP_URL = process.env.APP_URL || 'http://localhost:3001'
+export const APP_URL = process.env.APP_URL || 'http://jot.dev'
 
 export const SERVER_PORT = process.env.PORT || 3000

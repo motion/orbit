@@ -13,7 +13,7 @@ var nodePaths = (process.env.NODE_PATH || '')
   .filter(folder => !path.isAbsolute(folder))
   .map(resolveApp)
 
-var envPublicUrl = process.env.PUBLIC_URL
+var envPublicUrl = process.env.APP_URL
 
 function ensureSlash(path, needsSlash) {
   var hasSlash = path.endsWith('/')

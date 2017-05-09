@@ -3,45 +3,53 @@ import App from 'models'
 import { Input, Button, Link } from '~/views'
 import { HEADER_HEIGHT } from '~/constants'
 
-@view
-export default class Login {
-  @observable.ref passwordRef = null
-  username = null
-  password = null
+@view({
+  store: class {
+    loggingIn = false
+    passwordRef = null
+    username = null
+    password = null
 
-  componentWillMount() {
-    this.watch(() => {
-      if (App.tempUser && this.passwordRef) {
-        this.passwordRef.focus()
-      }
-    })
-  }
-
-  prevent = e => e.preventDefault()
-  setUsername = () => {
-    App.setUsername(this.username)
-    // if their browser autofilled password, login
-    if (this.password) {
-      this.finish()
+    start() {
+      this.watch(() => {
+        if (App.tempUser && this.passwordRef) {
+          this.passwordRef.focus()
+        }
+      })
     }
-  }
-  finish = () => App.loginOrSignup(App.user.name, this.password)
 
-  render() {
+    setUsername = () => {
+      App.setUsername(this.username)
+      if (this.password) {
+        this.finish()
+      }
+    }
+
+    finish = () => {
+      this.loggingIn = true
+      App.loginOrSignup(App.user.name, this.password)
+      this.loggingIn = false
+    }
+  },
+})
+export default class Login {
+  prevent = e => e.preventDefault()
+
+  render({ store }) {
     const step2 = App.tempUser
 
     return (
       <login $$draggable>
-        <form $$undraggable if={!App.loggedIn} onSubmit={this.prevent}>
+        <form $$undraggable if={!App.loggedIn} onSubmit={store.prevent}>
           <step if={App.noUser}>
             <Input
               $input
               name="username"
-              onKeyDown={e => e.which === 13 && this.setUsername()}
-              onChange={e => (this.username = e.target.value)}
+              onKeyDown={e => e.which === 13 && store.setUsername()}
+              onChange={e => (store.username = e.target.value)}
               placeholder="pick username"
             />
-            <Button if={!App.hasUsername} $button onClick={this.setUsername}>
+            <Button if={!App.hasUsername} $button onClick={store.setUsername}>
               ✅
             </Button>
           </step>
@@ -57,11 +65,13 @@ export default class Login {
               name="password"
               type="password"
               placeholder="password"
-              onKeyDown={e => e.which === 13 && this.finish()}
-              onChange={e => (this.password = e.target.value)}
-              getRef={ref => (this.passwordRef = ref)}
+              onKeyDown={e => e.which === 13 && store.finish()}
+              onChange={e => (store.password = e.target.value)}
+              getRef={ref => (store.passwordRef = ref)}
             />
-            <Button onClick={this.finish}>✅</Button>
+            <Button onClick={store.finish}>
+              {store.loggingIn ? '⌛' : '✅'}
+            </Button>
           </step>
         </form>
 

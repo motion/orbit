@@ -4,6 +4,7 @@ import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import Editor from '~/views/editor'
 import { Document } from 'models'
+import { isObservable } from 'mobx'
 
 // cmd + t
 @view({
@@ -15,6 +16,10 @@ import { Document } from 'models'
     start() {
       window.x = this
       this.watch(() => {
+        console.log(
+          isObservable(this.doc),
+          this.doc && isObservable(this.doc.private)
+        )
         console.log(this.doc && this.doc.private)
       })
     }
@@ -43,8 +48,6 @@ export default class DocumentPage {
     if (!doc) {
       return null
     }
-
-    console.log('r', store.doc)
 
     return (
       <Page

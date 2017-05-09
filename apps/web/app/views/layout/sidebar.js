@@ -16,7 +16,7 @@ class SidebarStore {
   }
 }
 
-const SideBarLink = props => (
+const SideBarLink = ({ children, after, ...props }) => (
   <Link
     {...props}
     $$style={{
@@ -37,7 +37,12 @@ const SideBarLink = props => (
         background: 'black',
       },
     }}
-  />
+  >
+    {children}
+    <span $$fontSize={10} if={after}>
+      {after}
+    </span>
+  </Link>
 )
 
 @view({ store: SidebarStore })
@@ -73,11 +78,18 @@ export default class Sidebar {
                 this.docs[place._id] || place.docs())
 
               return (
-                <SideBarLink to={place.url()} key={place._id}>
+                <SideBarLink
+                  after={
+                    <docs if={current}>
+                      {current.map((doc, i) => {
+                        return <doc key={i}>{doc.title}</doc>
+                      })}
+                    </docs>
+                  }
+                  to={place.url()}
+                  key={place._id}
+                >
                   {place.title}
-                  <docs if={current}>
-                    {current.map((doc, i) => <doc key={i}>{doc.title}</doc>)}
-                  </docs>
                 </SideBarLink>
               )
             })}

@@ -3,7 +3,7 @@ import { observable, autorun } from 'mobx'
 // subscribe-aware helpers
 // @query value wrapper
 function valueWrap(valueGet: Function) {
-  const result = observable.box(null)
+  const result = observable.shallowBox(null)
   let value = valueGet() || {}
 
   // subscribe and update
@@ -15,13 +15,13 @@ function valueWrap(valueGet: Function) {
   }
 
   // this automatically re-runs the susbcription if it has observables
-  const runner = autorun(() => {
+  const stopAutorun = autorun(() => {
     finishSubscribe()
     value = valueGet() || {}
     if (value.$) {
       // sub to values
       subscriber = value.$.subscribe(value => {
-        result.set(value)
+        result.set(observable.shallowBox(value))
       })
     }
   })
@@ -41,13 +41,20 @@ function valueWrap(valueGet: Function) {
     },
     current: {
       get: () => {
-        return result.get() || null
+        // ok, i know, i know, you're looking at me with that fuggin look
+        // look. this is real strange. but you try returning a single Document.get()
+        // and see if the double wrap isn't the only way you get it working.
+        // i dare you
+        return result.get() && result.get().get()
       },
+    },
+    observable: {
+      value: result,
     },
     dispose: {
       value() {
         finishSubscribe()
-        runner()
+        stopAutorun()
       },
     },
   })

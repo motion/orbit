@@ -4,25 +4,13 @@ import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import Editor from '~/views/editor'
 import { Document } from 'models'
-import { isObservable } from 'mobx'
 
 // cmd + t
 @view({
-  store: class DocumentPageStore {
+  store: class DocPageStore {
     doc = Document.get(this.props.id || Router.params.id)
     editor = null
     forceEdit = false
-
-    start() {
-      window.x = this
-      this.watch(() => {
-        console.log(
-          isObservable(this.doc),
-          this.doc && isObservable(this.doc.private)
-        )
-        console.log(this.doc && this.doc.private)
-      })
-    }
 
     onKeyDown = e => {
       if (!e.metaKey || e.which !== 84) return

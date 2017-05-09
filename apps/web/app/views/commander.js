@@ -123,7 +123,7 @@ export default class Commander {
       padding: 10,
       position: 'absolute',
       background: 'white',
-      top: 50,
+      top: 40,
       right: 0,
       left: 0,
       bottom: 0,
@@ -141,7 +141,6 @@ export default class Commander {
       paddingLeft: 10,
     },
     matches: {
-      height: 140,
       marginTop: 10,
       overflowY: 'scroll',
     },

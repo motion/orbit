@@ -1,31 +1,38 @@
-// @flow
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
 import App from 'models'
 import Mobx from 'mobx'
 import Router from './router'
-import { DB_CONFIG } from './constants'
+import { IS_PROD, DB_CONFIG } from './constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
+import * as Stores from '~/stores'
+import * as Constants from '~/constants'
 
-// install console formatters
-// mobxFormatters(Mobx)
-
-// dev helpers
-window.React = React
-window.App = App
-window.Router = Router
-window.Mobx = Mobx
-window._ = _
-
-export function run() {
-  const Root = require('./root').default
-  render(<Root />, document.querySelector('#app'))
+if (!IS_PROD) {
+  // install console formatters
+  // mobxFormatters(Mobx)
+  // dev helpers
+  window.React = React
+  window.App = App
+  window.Constants = Constants
+  window.Router = Router
+  window.Mobx = Mobx
+  window._ = _
 }
 
-App.start(DB_CONFIG).then(run)
+function render() {
+  const Root = require('./root').default
+  ReactDOM.render(<Root />, document.querySelector('#app'))
+}
+
+export function start() {
+  App.start(DB_CONFIG, Stores).then(render)
+}
 
 if (module.hot) {
-  module.hot.accept('./root', run)
-  module.hot.accept('./router', run)
+  module.hot.accept('./root', render)
+  module.hot.accept('./router', render)
 }
+
+start()

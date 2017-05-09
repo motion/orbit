@@ -11,6 +11,9 @@ export const Input = $('input', {
   '&:hover': {
     cursor: 'text',
   },
+  '&:focus': {
+    border: [1, 'blue'],
+  },
 })
 
 export const Button = $('btn', {

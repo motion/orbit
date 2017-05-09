@@ -2,7 +2,7 @@ import BaseModel from './baseModel'
 
 export { query } from './query'
 
-export { bool, int, str, object, array } from 'kontur'
+export * from './properties'
 
 export class Model extends BaseModel {
   constructor() {

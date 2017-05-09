@@ -1,25 +1,22 @@
-import PouchDB from 'pouchdb'
+import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
-import { DB_CONFIG } from '~/constants'
-
-// We need this connection to execute various commands such as login/logout/register/etc...
-const rootAuthDatabase = new PouchDB(
-  {
-    databaseBaseUrl: DB_CONFIG.couchUrl,
-  },
-  { skipSetup: true }
-)
+import { API_URL, DB_CONFIG } from '~/constants'
 
 export default class AuthStore {
   emit = (...args) => console.log(...args)
 
   constructor() {
+    // needed to ensure some sort of working
+    this.db = new PouchDB(`${DB_CONFIG.couchUrl}`, {
+      skipSetup: true,
+    })
+
     superlogin.configure({
       // The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth/')
-      baseUrl: '/auth/',
+      baseUrl: `${API_URL}/auth/`,
       // A list of API endpoints to automatically add the Authorization header to
       // By default the host the browser is pointed to will be added automatically
-      endpoints: ['couchdb:5984'],
+      endpoints: [DB_CONFIG.couchHost],
       // Set this to true if you do not want the URL bar host automatically added to the list
       noDefaultEndpoint: false,
       // Where to save your session token: localStorage ('local') or sessionStorage ('session'), default: 'local'

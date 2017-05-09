@@ -102,8 +102,7 @@ const storeProvider = createProvider({
       store.start(props)
     }
 
-    // add to app
-    App.stores[store.constructor.name] = store
+    App.setStore(store.constructor.name, store)
 
     return store
   },
@@ -111,8 +110,7 @@ const storeProvider = createProvider({
     if (store.stop) {
       store.stop()
     }
-    // remove from app
-    delete App.stores[store.constructor.name]
+    App.removeStore(store.constructor.name)
     store.subscriptions.dispose()
   },
 })

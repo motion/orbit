@@ -1,4 +1,4 @@
-import { compile, str } from 'kontur'
+import { compile, str } from './properties'
 
 export default class BaseModel {
   constructor({ defaultSchema, defaultProps }) {

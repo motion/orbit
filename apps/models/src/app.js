@@ -29,7 +29,7 @@ export default class App {
   @observable user = null
   @observable.ref views = {}
   @observable.ref errors = []
-  @observable.ref stores = {}
+  @observable.ref activeStores = {}
 
   constructor() {
     RxDB.plugin(pHTTP)
@@ -45,7 +45,7 @@ export default class App {
     }
   }
 
-  async start(config: Object) {
+  async start(config: Object, stores: Object) {
     this.catchErrors()
 
     if (!config) {
@@ -78,6 +78,15 @@ export default class App {
 
     // log back in
     await Promise.all([...connections, this.setSession()])
+
+    // instantiate stores
+    this.stores = Object.keys(stores).reduce((acc, cur) => {
+      const Store = stores[cur]
+      return {
+        ...acc,
+        [cur]: new Store(this),
+      }
+    }, {})
   }
 
   @action loginOrSignup = async (username, password) => {
@@ -198,5 +207,13 @@ export default class App {
         this.handleError(err)
       })
     })
+  }
+
+  @action setStore = (key, store) => {
+    this.activeStores = { ...this.activeStores, [key]: store }
+  }
+
+  @action removeStore = key => {
+    this.activeStores = { ...this.activeStores, [key]: null }
   }
 }

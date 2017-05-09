@@ -63,6 +63,7 @@
     "slate-edit-list": "^0.6.4",
     "slate-paste-linkify": "^0.2.1",
     "slate-trailing-block": "^0.2.4",
+    "superlogin-client": "^0.5.3",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {

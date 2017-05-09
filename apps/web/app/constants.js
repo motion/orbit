@@ -1,10 +1,17 @@
 // @flow
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
+export const API_HOST = `api.${window.location.host}`
+export const API_URL = `http://${API_HOST}`
+
+export const COUCH_PROTOCOL = `${window.location.protocol}//`
+export const COUCH_HOST = `couch.${window.location.host}`
+
 export const DB_CONFIG = {
   name: 'username',
   password: 'password',
-  couchUrl: `${window.location.protocol}//couch.${window.location.host}`,
+  couchUrl: `${COUCH_PROTOCOL}${COUCH_HOST}`,
+  couchHost: COUCH_HOST,
 }
 
 export const HEADER_HEIGHT = 40

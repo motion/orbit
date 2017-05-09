@@ -44,7 +44,10 @@ class Place extends Model {
       return Board.collection.find().where('placeId').eq(this._id)
     },
     @query docs() {
-      return Document.collection.find().where('places').eq([this._id])
+      return Document.collection
+        .find()
+        .where('places')
+        .elemMatch({ $eq: this.slug })
     },
     createBoard(info) {
       return Board.collection.insert({

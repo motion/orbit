@@ -42,6 +42,12 @@ const SideBarLink = props => (
 
 @view({ store: SidebarStore })
 export default class Sidebar {
+  docs = {}
+
+  dispose() {
+    Object.keys(docs).forEach(doc => doc.dispose())
+  }
+
   render({ store }) {
     return (
       <side>
@@ -56,17 +62,25 @@ export default class Sidebar {
           <form onSubmit={store.createPlace}>
             <Input
               $create
-              getRef={ref => store.placeInput = ref}
+              getRef={ref => (store.placeInput = ref)}
               onKeyDown={e => e.which === 13 && store.createPlace(e)}
               placeholder="new place"
             />
           </form>
           <main if={store.places}>
-            {(store.places || []).map(piece => (
-              <SideBarLink to={piece.url()} key={piece._id}>
-                {piece.title}
-              </SideBarLink>
-            ))}
+            {(store.places || []).map(place => {
+              const { current } = (this.docs[place._id] =
+                this.docs[place._id] || place.docs())
+
+              return (
+                <SideBarLink to={place.url()} key={place._id}>
+                  {place.title}
+                  <docs if={current}>
+                    {current.map((doc, i) => <doc key={i}>{doc.title}</doc>)}
+                  </docs>
+                </SideBarLink>
+              )
+            })}
           </main>
         </content>
 

@@ -21,7 +21,6 @@ function valueWrap(valueGet: Function) {
     if (value.$) {
       // sub to values
       subscriber = value.$.subscribe(value => {
-        console.log('got value', value)
         result.set(value)
       })
     }

@@ -48,7 +48,6 @@ const SideBarLink = ({ children, after, ...props }) => (
 @view({ store: SidebarStore })
 export default class Sidebar {
   render({ store }) {
-    console.log('xxx', this, store)
     return (
       <side>
         <content $$undraggable>

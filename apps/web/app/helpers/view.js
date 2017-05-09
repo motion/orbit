@@ -64,7 +64,6 @@ const storeProvider = createProvider({
       if (isQuery) {
         Object.defineProperty(store, method, {
           get() {
-            console.log('get', val.current)
             return val.current
           },
         })

@@ -17,6 +17,10 @@ FILE_ARG="-f $KUBES_FILE_OUT"
 
 export DOCKER_OPTS="--insecure-registry ${REGISTRY}"
 
+function get-pod() {
+  kubectl get pods  | grep "$1" | head -n 1 | awk '{print $1}'
+}
+
 # actions...
 if [ "$ACTION" = "get-config" ]; then
   echo get-config
@@ -37,15 +41,14 @@ elif [ "$ACTION" = "apply" ]; then
   save-config
   run kubectl apply ${@:2} $FILE_ARG
 elif [ "$ACTION" = "serve" ]; then
-  POD=$(kubectl get pods ${@:3} | grep pad-web | head -n 1 | awk '{print $1}')
-  kubectl port-forward $POD 80:31000 ${@:3}
+  kubectl port-forward $(get-pod $APP) 80:31000 ${@:3}
 elif [ "$ACTION" = "logs" ]; then
-  # logs
-  POD=$(kubectl get pods ${@:3} | grep $2 | head -n 1 | awk '{print $1}')
-  run kubectl logs $POD ${@:3}
+  run kubectl logs $(get-pod $APP) ${@:3}
+elif [ "$ACTION" = "exec" ]; then
+  run kubectl exec -it  $(get-pod $APP) -- ${@:3}
 elif [ "$ACTION" = "ssh" ]; then
-  POD=$(kubectl get pods ${@:3} | grep $2 | head -n 1 | awk '{print $1}')
-  run kubectl exec ${@:3} -it  $POD sh
+  echo $(get-pod $APP)
+  run kubectl exec -it  $(get-pod $APP) sh ${@:3}
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
   if [ "$APP" = "all" ]; then
     for app in $APPS; do

@@ -9,10 +9,10 @@ objects:
     spec:
       type: NodePort
       ports:
-      - protocol: TCP
-        port: 5984
-        targetPort: 5984
-        nodePort: 32100
+        - protocol: TCP
+          port: 5984
+          targetPort: 5984
+          nodePort: 32100
       selector:
         run: pad-couch
     status:
@@ -41,7 +41,6 @@ objects:
               value: admin
             - name: DB_PASSWORD
               value: password
-    status: {}
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
@@ -54,5 +53,4 @@ objects:
       resources:
         requests:
           storage: 100Mi
-    status: {}
 parameters: []

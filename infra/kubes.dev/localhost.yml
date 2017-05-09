@@ -5,6 +5,6 @@ metadata:
   name: starter-host
 subsets:
   - addresses:
-      - ip: "{{HOST_IP}}"
+      - ip: {{HOST_IP}}
     ports:
       - port: 3001

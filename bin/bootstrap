@@ -37,3 +37,9 @@ echo "$(minikube ip) couch.staging.dev api.staging.dev staging.dev" | sudo tee -
 echo "127.0.0.1 couch.jot.dev api.jot.dev jot.dev"
 
 # run minikube
+
+echo " welcome!"
+echo " to start the app:"
+echo "   $ minikube up"
+echo "   $ dev start"
+echo "   $ dev serve"

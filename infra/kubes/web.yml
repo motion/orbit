@@ -28,11 +28,11 @@ spec:
       labels:
         run: pad-web
     spec:
-      imagePullSecrets:
-        - name: docker-hub
       containers:
       - name: pad-web
-        image: {{REGISTRY}}/motion/starter-web:{{ENV}}
-        imagePullPolicy: Always
         ports:
-        - containerPort: 80
+          - containerPort: 80
+        image: {{REGISTRY}}/motion/starter-web:{{ENV}}
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: docker-hub

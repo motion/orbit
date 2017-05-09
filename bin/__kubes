@@ -27,7 +27,7 @@ FILE_ARG=$(kubes-config-file)
 export DOCKER_OPTS="--insecure-registry ${REGISTRY}"
 
 function get-pod() {
-  kubectl get pods  | grep "$1" | head -n 1 | awk '{print $1}'
+  kubectl get pods ${@:2} | grep "$1" | head -n 1 | awk '{print $1}'
 }
 
 # actions...
@@ -52,7 +52,10 @@ elif [ "$ACTION" = "apply" ]; then
   save-config
   run kubectl apply ${@:3} $FILE_ARG
 elif [ "$ACTION" = "serve" ]; then
-  sudo kubectl port-forward $(get-pod web) 80:80 ${@:3}
+  run sudo kubectl port-forward $(get-pod web) 80:80 ${@:3}
+elif [ "$ACTION" = "serve-registry" ]; then
+  ns="--namespace kube-system"
+  run kubectl port-forward $ns $(get-pod kube-registry-v0 $ns) 5000:5000 ${@:3}
 elif [ "$ACTION" = "logs" ]; then
   run kubectl logs $(get-pod $APP) ${@:3}
 elif [ "$ACTION" = "exec" ]; then
@@ -60,6 +63,7 @@ elif [ "$ACTION" = "exec" ]; then
 elif [ "$ACTION" = "ssh" ]; then
   run kubectl exec -it  $(get-pod $APP) sh ${@:3}
 elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
+  save-config
   if [ "$APP" = "all" ]; then
     for app in $APPS; do
       $COMMAND $ACTION $app ${@:3}

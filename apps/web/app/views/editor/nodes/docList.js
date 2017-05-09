@@ -1,7 +1,5 @@
 import { node, view } from '~/helpers'
 import { Document } from 'models'
-import { toJS } from 'mobx'
-import { isArray } from 'lodash'
 
 class ListStore {
   docs = Document.forPlace(window.Editor.doc.places[0])
@@ -15,7 +13,7 @@ export default class Todo {
   render({ node, store, children, ...props }) {
     const { data } = node
 
-    const hasLoaded = isArray(toJS(store.docs))
+    const hasLoaded = Array.isArray(store.docs)
     const hasDocs = hasLoaded && store.docs.length > 0
 
     return (

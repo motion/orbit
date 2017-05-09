@@ -78,7 +78,7 @@ export default class Commander {
     const { onClose } = this.props
 
     return (
-      <bar $$fullscreen>
+      <bar $$flex>
         <input
           {...props}
           value={store.text}

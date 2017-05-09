@@ -90,7 +90,6 @@ export default class Root {
       top: 0,
       left: 0,
       right: 0,
-      padding: 10,
       paddingLeft: IS_ELECTRON ? 80 : 10,
       alignItems: 'center',
       flexFlow: 'row',
@@ -102,6 +101,7 @@ export default class Root {
     },
     omnibar: {
       flex: 10,
+      flexFlow: 'row',
       margin: [0, 'auto'],
       alignItems: 'center',
       justifyContent: 'center',
@@ -113,7 +113,7 @@ export default class Root {
       border: [1, '#eee'],
       padding: [6, 10],
       fontSize: 16,
-      opacity: 0.4,
+      opacity: 0.8,
       '&:hover': {
         opacity: 1,
       },

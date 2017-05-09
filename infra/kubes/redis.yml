@@ -1,41 +1,34 @@
-kind: Template
-objects:
-  - kind: Service
-    apiVersion: v1
+kind: Service
+apiVersion: v1
+metadata:
+  name: pad-redis
+  labels:
+    run: pad-redis
+spec:
+  type: NodePort
+  selector:
+    run: pad-redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+      nodePort: 32379
+- kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: pad-redis
+spec:
+  replicas: 1
+  template:
     metadata:
-      name: pad-redis
       labels:
         run: pad-redis
     spec:
-      type: NodePort
-      selector:
-        run: pad-redis
-      ports:
-        - port: 6379
-          targetPort: 6379
-          nodePort: 32379
-  - kind: Deployment
-    apiVersion: extensions/v1beta1
-    metadata:
-      name: pad-redis
-    spec:
-      replicas: 1
-      template:
-        metadata:
-          labels:
-            run: pad-redis
-        spec:
-          imagePullSecrets:
-            - name: docker-hub
-          containers:
-          - name: pad-redis
-            image: $(REGISTRY)/motion/starter-redis:$(ENV)
-            imagePullPolicy: Always
-            resources: {}
-            ports:
-            - containerPort: 6379
-parameters:
-  - name: ENV
-    value: null
-  - name: REGISTRY
-    value: null
+      imagePullSecrets:
+        - name: docker-hub
+      containers:
+      - name: pad-redis
+        image: {{REGISTRY}}/motion/starter-redis:{{ENV}}
+        imagePullPolicy: Always
+        resources: {}
+        ports:
+        - containerPort: 6379

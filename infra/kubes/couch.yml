@@ -1,56 +1,56 @@
-kind: Template
-objects:
-  - kind: Service
-    apiVersion: v1
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: pad-couch
+  labels:
+    run: pad-couch
+spec:
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 5984
+      targetPort: 5984
+      nodePort: 32100
+  selector:
+    run: pad-couch
+status:
+  loadBalancer: {}
+- kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: pad-couch
+spec:
+  replicas: 1
+  strategy: {}
+  template:
     metadata:
-      name: pad-couch
       labels:
         run: pad-couch
     spec:
-      type: NodePort
-      ports:
-        - protocol: TCP
-          port: 5984
-          targetPort: 5984
-          nodePort: 32100
-      selector:
-        run: pad-couch
-    status:
-      loadBalancer: {}
-  - kind: Deployment
-    apiVersion: extensions/v1beta1
-    metadata:
-      name: pad-couch
-    spec:
-      replicas: 1
-      strategy: {}
-      template:
-        metadata:
-          labels:
-            run: pad-couch
-        spec:
-          containers:
-          - name: pad-couch
-            image: klaemo/couchdb:latest
-            imagePullPolicy: IfNotPresent
-            ports:
-            - containerPort: 5984
-            resources: {}
-            env:
-            - name: DB_USER
-              value: admin
-            - name: DB_PASSWORD
-              value: password
-  - kind: PersistentVolumeClaim
-    apiVersion: v1
-    metadata:
-      labels:
-        run: pad-couch-claim
-      name: pad-couch-claim
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 100Mi
+      containers:
+      - name: pad-couch
+        image: klaemo/couchdb:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5984
+        resources: {}
+        env:
+        - name: DB_USER
+          value: {{DB_USER}}
+        - name: DB_PASSWORD
+          value: {{DB_PASSWORD}}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  labels:
+    run: pad-couch-claim
+  name: pad-couch-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
 parameters: []

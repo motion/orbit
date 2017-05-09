@@ -50,9 +50,8 @@ function run {
 }
 
 function parse-file {
-  OUT=./app_data/kubes.dev/$1
-  envtpl $1 -o $OUT --keep-template
-  cat $OUT
+  envtpl $1 -o ./app_data/tmpconf --keep-template
+  cat ./app_data/tmpconf
 }
 
 # get kubes config

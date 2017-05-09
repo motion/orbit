@@ -27,3 +27,16 @@
   - @mention
   - quick rooms
   - linking between docs
+
+
+---
+
+### technical
+
+- make actions a thing on stores
+- actions can be observed on any store
+- make App a proper store
+- give models their own manager that takes all options for couch
+- move App into web
+- split user/auth/errors stores into stores
+- // somehow make app connect stores through actions

@@ -58,9 +58,6 @@ export default class DocumentPage {
         <content $$flex $$row>
           <main $$flex={2}>
             <docarea $$draggable>
-              <Button onClick={doc.togglePrivate}>
-                {doc.private ? '🙈' : '🌎'}
-              </Button>
               <Editor
                 onKeyDown={store.onKeyDown}
                 doc={doc}

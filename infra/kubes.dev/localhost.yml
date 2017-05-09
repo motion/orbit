@@ -3,6 +3,8 @@ kind: Endpoints
 apiVersion: v1
 metadata:
   name: starter-host
+  labels:
+    run: pad-web
 subsets:
   - addresses:
       - ip: {{HOST_IP}}

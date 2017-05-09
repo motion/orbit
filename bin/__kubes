@@ -11,8 +11,18 @@ ACTION=$1
 APP=$2
 
 APPS=("web" "api" "couch")
-KUBES_FILE_OUT="./app_data/kubes.$ENV.yml"
-FILE_ARG="-f $KUBES_FILE_OUT"
+KUBES_CONFIG_OUT="./app_data/kubes.$ENV"
+KUBES_CONFIG_FILE="$KUBES_CONFIG_OUT/all.yml"
+
+function kubes-config-file {
+  arg="-f $KUBES_CONFIG_OUT/$APP.yml"
+  if [ -z "$APP" ]; then
+    arg="-f $KUBES_CONFIG_OUT/all.yml"
+  fi
+  echo "$arg"
+}
+
+FILE_ARG=$(kubes-config-file)
 
 export DOCKER_OPTS="--insecure-registry ${REGISTRY}"
 
@@ -22,23 +32,25 @@ function get-pod() {
 
 # actions...
 if [ "$ACTION" = "get-config" ]; then
-  echo get-config
+  save-config
+  echo $KUBES_CONFIG_OUT
+  echo "$(ls -la $KUBES_CONFIG_OUT)"
 elif [ "$ACTION" = "status" ]; then
   run kubectl get all
 elif [ "$ACTION" = "generate" ]; then
   run kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
 elif [ "$ACTION" = "start" ]; then
   save-config
-  run kubectl create ${@:2} $FILE_ARG
+  run kubectl create ${@:3} $FILE_ARG
 elif [ "$ACTION" = "stop" ]; then
   save-config
-  run kubectl delete ${@:2} $FILE_ARG
+  run kubectl delete ${@:3} $FILE_ARG
 elif [ "$ACTION" = "restart" ]; then
   $0 stop ${@:2}
   $0 start ${@:2}
 elif [ "$ACTION" = "apply" ]; then
   save-config
-  run kubectl apply ${@:2} $FILE_ARG
+  run kubectl apply ${@:3} $FILE_ARG
 elif [ "$ACTION" = "serve" ]; then
   kubectl port-forward $(get-pod $APP) 80:31000 ${@:3}
 elif [ "$ACTION" = "logs" ]; then

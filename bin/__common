@@ -20,58 +20,41 @@ ROOT="$(pwd)"
 PATH=$OLD_PATH:$ROOT/node_modules/.bin
 cd $APP_OLD_PWD
 
-function parse-yaml {
-   local prefix=$2
-   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
-   sed -ne "s|^\($s\):|\1|" \
-        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
-        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
-   awk -F$fs '{
-      indent = length($1)/2;
-      vname[indent] = $2;
-      for (i in vname) {if (i > indent) {delete vname[i]}}
-      if (length($3) > 0) {
-         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
-         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
-      }
-   }'
-}
-
 # run with echo
 function run {
   echo "$" "$@"
   eval $(printf '%q ' "$@") < /dev/tty
 }
 
-function parse-file {
+function parse-config {
   envtpl $1 -o ./app_data/tmpconf --keep-template
   cat ./app_data/tmpconf
 }
 
 # get kubes config
-function get-config {
-  # get config, requires $ENV
-  CONFIG=""
-  for app in ./infra/kubes/*; do
-    CONFIG+="$(parse-file $app)"
-    CONFIG+=$'\n'
+function save-config {
+  rm -rf $KUBES_CONFIG_OUT
+  mkdir -p $KUBES_CONFIG_OUT
+
+  ALL=""
+
+  for path in ./infra/kubes/*; do
+    OUT="$KUBES_CONFIG_OUT/$(basename $path .yml).yml"
+    parse-config $path > $OUT
+    ALL+=$(parse-config $path)
+    ALL+=$'\n'
   done
+
   # add in extra env configs
-  dir="./infra/kubes.$ENV"
+  dir=./infra/kubes.$ENV
   if [ -d $dir ]; then
-    for extraApp in $dir/*; do
-      CONFIG+="$(parse-file $extraApp)"
-      CONFIG+=$'\n'
+    for path in $dir/*; do
+      OUT="$KUBES_CONFIG_OUT/$(basename $path .yml).yml"
+      parse-config $path > $OUT
+      ALL+=$(parse-config $path)
+      ALL+=$'\n'
     done
   fi
-  echo "$CONFIG"
-}
 
-function handle-error() {
-  echo "$1 failed."
-}
-
-# save kubes config
-function save-config {
-  get-config > "$KUBES_FILE_OUT"
+  echo "$ALL" > "$KUBES_CONFIG_FILE"
 }

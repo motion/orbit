@@ -3,7 +3,7 @@ import { observable, autorun } from 'mobx'
 // subscribe-aware helpers
 // @query value wrapper
 function valueWrap(valueGet: Function) {
-  const result = observable.shallowBox(null)
+  const result = observable.shallowBox(undefined)
   let value = valueGet() || {}
 
   // subscribe and update

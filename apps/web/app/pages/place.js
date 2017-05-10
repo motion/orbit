@@ -1,7 +1,7 @@
 import { view, query, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
 import { Place, Document } from 'models'
-import { Text, Page, Button, CircleButton } from '~/views'
+import { Text, Page, Button, CircleButton, NotFound } from '~/views'
 import Router from '~/router'
 import DocumentView from '~/views/document'
 
@@ -32,7 +32,11 @@ export default class PlacePage {
     const { place, doc } = store
 
     if (!place) {
-      return null
+      return <div>loading</div>
+    }
+
+    if (place === null) {
+      return <NotFound />
     }
 
     if (place.private && !App.loggedIn) {
@@ -48,6 +52,8 @@ export default class PlacePage {
 
     return (
       <Page
+        place={place}
+        doc={doc}
         actions={[
           <Button onClick={() => console.log(place.url())}>🔗</Button>,
           <Button onClick={store.createDoc}>+</Button>,
@@ -67,6 +73,7 @@ export default class PlacePage {
           onSubmit={e => {
             e.preventDefault()
             store.createDoc(this.newDoc.value)
+            this.newDoc.value = ''
           }}
         >
           <input
@@ -75,25 +82,6 @@ export default class PlacePage {
             placeholder="create doc (#tag to tag) (/ to search)"
           />
         </form>
-
-        <statusbar>
-          <statsec $$row $$flex>
-            {`#all #btc #etherium #monero #day-trading #something`
-              .split(' ')
-              .map(tag => (
-                <a
-                  $tag
-                  key={tag}
-                  onClick={() => Router.set('hashtag', tag.slice(1))}
-                >
-                  {tag}
-                </a>
-              ))}
-          </statsec>
-          <statsec if={doc} $$row>
-            members: {(doc.members || []).join(', ')}
-          </statsec>
-        </statusbar>
       </Page>
     )
   }
@@ -110,22 +98,8 @@ export default class PlacePage {
       background: '#fff',
       border: [1, '#ddd'],
     },
-    statusbar: {
-      flexFlow: 'row',
-      flexWrap: 'nowrap',
-      overflow: 'hidden',
-      padding: 10,
-    },
     docViewContainer: {
       padding: 20,
-    },
-    tag: {
-      padding: [2, 5],
-      background: '#fff',
-      color: 'red',
-      '&:hover': {
-        background: '#eee',
-      },
     },
   }
 }

@@ -1,4 +1,5 @@
 import { $, view } from '~/helpers'
+import Router from '~/router'
 
 @view
 export class Page {
@@ -24,10 +25,30 @@ export class Page {
     App.views = { _id: this.id, title, actions, header, sidebar }
   }
 
-  render({ children, className }) {
+  render({ children, className, doc }) {
     return (
       <page className={className}>
-        {children}
+        <children $$flex>
+          {children}
+        </children>
+        <statusbar>
+          <statsec $$row $$flex>
+            {`#all #btc #etherium #monero #day-trading #something`
+              .split(' ')
+              .map(tag => (
+                <a
+                  $tag
+                  key={tag}
+                  onClick={() => Router.set('hashtag', tag.slice(1))}
+                >
+                  {tag}
+                </a>
+              ))}
+          </statsec>
+          <statsec if={doc} $$row>
+            members: {(doc.members || []).join(', ')}
+          </statsec>
+        </statusbar>
       </page>
     )
   }
@@ -36,6 +57,20 @@ export class Page {
     page: {
       flex: 1,
       overrflowY: 'scroll',
+    },
+    statusbar: {
+      flexFlow: 'row',
+      flexWrap: 'nowrap',
+      overflow: 'hidden',
+      padding: 10,
+    },
+    tag: {
+      padding: [2, 5],
+      background: '#fff',
+      color: 'red',
+      '&:hover': {
+        background: '#eee',
+      },
     },
   }
 }

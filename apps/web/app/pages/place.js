@@ -55,8 +55,9 @@ export default class PlacePage {
         place={place}
         doc={doc}
         actions={[
-          <Button onClick={() => console.log(place.url())}>🔗</Button>,
-          <Button onClick={store.createDoc}>+</Button>,
+          <Button tooltip="link" onClick={() => console.log(place.url())}>
+            🔗
+          </Button>,
           <Button onClick={store.deleteAll}>rm -rf</Button>,
           <Button onClick={place.toggleSubscribe}>
             {place.subscribed() ? '✅' : '🍻'}

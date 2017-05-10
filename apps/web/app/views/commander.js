@@ -5,6 +5,7 @@ import { computed } from 'mobx'
 import { includes } from 'lodash'
 import Mousetrap from 'mousetrap'
 import { Modal } from '~/views'
+import { SIDEBAR_WIDTH } from '~/constants'
 
 @view({
   store: class {
@@ -86,11 +87,13 @@ export default class Commander {
           onChange={e => {
             store.setText(e.target.value)
           }}
-          onFocus={() => {
-            store.open = true
+          onKeyDown={e => {
+            if (store.textbox.value.indexOf('/') === 0) {
+              store.open = true
+            }
           }}
           onKeyDown={store.onKeyDown}
-          ref={el => store.textbox = el}
+          ref={el => (store.textbox = el)}
         />
         <Portal
           closeOnEsc
@@ -100,7 +103,9 @@ export default class Commander {
           }}
         >
           <commander>
+            <div $$flex />
             <matches>
+              <div $$flex />
               {store.matches.map((doc, index) => (
                 <match
                   onClick={() => store.navTo(doc)}
@@ -122,13 +127,11 @@ export default class Commander {
 
   static style = {
     commander: {
-      padding: 10,
       position: 'absolute',
-      background: 'white',
-      top: 40,
-      right: 0,
+      top: '50%',
+      right: SIDEBAR_WIDTH,
       left: 0,
-      bottom: 0,
+      bottom: 80,
     },
     input: {
       width: '100%',
@@ -145,20 +148,21 @@ export default class Commander {
       },
     },
     highlight: {
-      background: `#2c88e4`,
-      color: 'white',
+      background: `#eee`,
       borderRadius: 5,
     },
     match: {
-      fontSize: 16,
-      fontWeight: 600,
-      padding: 5,
-      marginTop: 5,
+      fontSize: 14,
+      fontWeight: 500,
+      padding: 3,
       paddingLeft: 10,
     },
     matches: {
-      marginTop: 10,
+      padding: 10,
+      flex: 1,
+      overflow: 'hidden',
       overflowY: 'scroll',
+      background: [255, 255, 255, 0.8],
     },
   }
 }

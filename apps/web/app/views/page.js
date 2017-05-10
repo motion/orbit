@@ -1,6 +1,7 @@
 import { $, view } from '~/helpers'
 import Router from '~/router'
 import { Document } from 'models'
+import Commander from '~/views/commander'
 
 @view
 export class Page {
@@ -33,7 +34,11 @@ export class Page {
           {children}
         </children>
         <statusbar>
+          <omnibar>
+            <Commander $omniinput />
+          </omnibar>
           <form
+            if={false}
             onSubmit={e => {
               e.preventDefault()
               Document.create({ title: this.newDoc.value })
@@ -81,6 +86,7 @@ export class Page {
       overflow: 'hidden',
       padding: 10,
       background: '#fff',
+      position: 'relative',
     },
     tag: {
       padding: [2, 5],

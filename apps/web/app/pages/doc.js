@@ -65,7 +65,7 @@ export default class DocumentPage {
 
             <met>
               <ago>
-                <TimeAgo if={false} minPeriod={20} date={doc.updatedAt} />
+                <TimeAgo minPeriod={20} date={doc.updatedAt} />
               </ago>
               <places $$row if={doc.places}>
                 places:

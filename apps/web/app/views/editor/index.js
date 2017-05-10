@@ -1,4 +1,5 @@
 import { Selection, Editor, Raw } from 'slate'
+import { object } from 'prop-types'
 import { Document } from 'models'
 import { view } from '~/helpers'
 import { flatten } from 'lodash'
@@ -75,6 +76,14 @@ export default class EditorView {
     onChange: _ => _,
     getRef: _ => _,
     onKeyDown: _ => _,
+  }
+
+  static childContextTypes = {
+    editor: object,
+  }
+
+  getChildContext() {
+    return { editor: this.props.store }
   }
 
   plugins = Plugins

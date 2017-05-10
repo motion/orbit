@@ -1,18 +1,20 @@
 import { node, view } from '~/helpers'
+import TimeAgo from 'react-timeago'
 
 @node
 @view
 export default class Meta {
-  render({ node, children, ...props }) {
-    const { data } = node
-
+  render({ node, children, editorStore, ...props }) {
     return (
       <span $hashtags>
-        <div $left contentEditable={false}>
+        <span $left contentEditable={false}>
           #
-        </div>
+        </span>
         <span $content contentEditable suppressContentEditableWarning>
           {children}
+        </span>
+        <span $meta if={editorStore.doc}>
+          <TimeAgo minPeriod={10} date={editorStore.doc.updatedAt} />
         </span>
       </span>
     )

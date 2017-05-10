@@ -24,7 +24,18 @@ export default class Todo {
         <h4>Recent Posts</h4>
         <docs $stack={true} if={hasDocs}>
           {store.docs.map((doc, i) => (
-            <doc $first={i === 0} key={doc._id} onClick={() => doc.routeTo()}>
+            <doc
+              $$background={`
+                linear-gradient(
+                  ${Math.floor(Math.random() * 180)}deg,
+                  ${randomcolor().hexString()},
+                  ${randomcolor().hexString()}
+                )
+              `}
+              $first={i === 0}
+              key={doc._id}
+              onClick={() => doc.routeTo()}
+            >
               <card $$title>
                 {doc.getTitle()}
               </card>
@@ -46,16 +57,11 @@ export default class Todo {
       width: 150,
       height: 150,
       borderBottom: [1, '#eee'],
-      background: `
-        linear-gradient(
-          ${Math.floor(Math.random() * 180)}deg,
-          ${randomcolor()},
-          ${randomcolor()}
-        )`,
-      color: '#6f7c82',
-      fontWeight: 400,
+      color: '#fff',
+      fontWeight: 800,
       cursor: 'pointer',
-      fontSize: 26,
+      fontSize: 46,
+      lineHeight: '3rem',
       overflow: 'hidden',
       '&:hover': {
         boxShadow: '0 0 10px rgba(0,0,0,0.02)',
@@ -64,7 +70,7 @@ export default class Todo {
       },
     },
     card: {
-      background: '#fff',
+      // background: '#fff',
       width: '100%',
       height: '100%',
     },

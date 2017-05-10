@@ -121,7 +121,7 @@ export default class App {
 
   get activePlace() {
     return (
-      (this.activePage.place && this.activePage.place.slug) || App.user.slug
+      (this.activePage.place && this.activePage.place.slug) || this.user.slug
     )
   }
 

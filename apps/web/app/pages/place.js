@@ -55,21 +55,27 @@ export default class PlacePage {
         place={place}
         doc={doc}
         actions={[
-          <Button tooltip="link" onClick={() => console.log(place.url())}>
+          <Button tooltip="share link" onClick={() => console.log(place.url())}>
             🔗
           </Button>,
-          <Button onClick={store.deleteAll}>rm -rf</Button>,
-          <Button onClick={place.toggleSubscribe}>
+          <Button tooltip="delete all" onClick={store.deleteAll}>
+            rm -rf
+          </Button>,
+          <Button
+            tooltip={place.subscribed() ? 'unfollow' : 'follow'}
+            onClick={place.toggleSubscribe}
+          >
             {place.subscribed() ? '✅' : '🍻'}
           </Button>,
-          <Button onClick={place.togglePrivate}>
+          <Button
+            tooltip={place.private ? 'make public' : 'make private'}
+            onClick={place.togglePrivate}
+          >
             {place.private ? '🙈' : '🌎'}
           </Button>,
         ]}
       >
-        <docViewContainer>
-          <DocumentView if={doc} document={doc} />
-        </docViewContainer>
+        <DocumentView if={doc} document={doc} />
       </Page>
     )
   }

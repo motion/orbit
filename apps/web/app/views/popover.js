@@ -152,6 +152,10 @@ export default class Popover {
     this.setOpenOrClosed(nextProps)
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setPosition(nextProps)
+  }
+
   open = props => {
     this.setPosition(props, () => {
       this.setState({ isOpen: true }, () => {

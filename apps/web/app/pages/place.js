@@ -3,7 +3,7 @@ import { isEqual } from 'lodash'
 import { Place, Document } from 'models'
 import { Text, Page, Button, CircleButton } from '~/views'
 import Router from '~/router'
-import DocPage from '~/pages/doc'
+import DocumentView from '~/views/document'
 
 @view({
   store: class PlaceStore {
@@ -31,16 +31,36 @@ export default class PlacePage {
   render({ store }) {
     const { place, doc } = store
 
-    return (
-      <place $$flex>
-        <div if={place} $$row>
-          <Button onClick={() => console.log(place.url())}>🔗</Button>
-          <CircleButton icon="+" onClick={store.createDoc} />
-          <CircleButton icon="- all" onClick={store.deleteAll} />
-          <CircleButton icon="🍻">join</CircleButton>
-        </div>
+    if (!place) {
+      return null
+    }
 
-        <DocPage if={doc} id={doc._id} />
+    if (place.private && !App.loggedIn) {
+      return (
+        <Page>
+          <content $$centered>
+            this place is private!
+            <Button>login to join</Button>
+          </content>
+        </Page>
+      )
+    }
+
+    return (
+      <Page
+        actions={[
+          <Button onClick={() => console.log(place.url())}>🔗</Button>,
+          <Button onClick={store.createDoc}>+</Button>,
+          <Button onClick={store.deleteAll}>- all</Button>,
+          <Button onClick={place.toggleSubscribe}>
+            {place.subscribed() ? '✅' : '🍻'}
+          </Button>,
+          <Button onClick={place.togglePrivate}>
+            {place.private ? '🙈' : '🌎'}
+          </Button>,
+        ]}
+      >
+        <DocumentView if={doc} document={doc} />
         <form
           onSubmit={e => {
             e.preventDefault()
@@ -67,7 +87,7 @@ export default class PlacePage {
               </a>
             ))}
         </hashtags>
-      </place>
+      </Page>
     )
   }
 

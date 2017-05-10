@@ -1,5 +1,5 @@
 import App from './index'
-import { Model, query, str, array } from './helpers'
+import { Model, query, str, array, bool } from './helpers'
 import Document from './document'
 import Board from './board'
 import { capitalize } from 'lodash'
@@ -11,14 +11,18 @@ class Place extends Model {
     authorId: str,
     title: str,
     slug: str,
+    private: bool,
     primary_docId: str.optional,
     layout: array.optional,
+    members: array.items(str),
     timestamps: true,
   }
 
   static defaultProps = props => ({
+    private: false,
     authorId: App.user && App.user.name,
     layout: [],
+    members: [],
     slug: toSlug(props.title),
   })
 
@@ -62,6 +66,24 @@ class Place extends Model {
         ...info,
         placeId: this._id,
       })
+    },
+    togglePrivate() {
+      this.private = !this.private
+      this.save()
+    },
+    toggleSubscribe() {
+      if (!App.loggedIn) return
+      const indexOfUser = this.members.indexOf(App.user._id)
+      if (indexOfUser >= 0) {
+        this.members.push(App.user._id)
+        this.save()
+      } else {
+        this.members.splice(indexOfUser, 1)
+        this.save()
+      }
+    },
+    subscribed() {
+      return App.loggedIn && this.members.indexOf(App.user._id) >= 0
     },
   }
 

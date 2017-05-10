@@ -64,7 +64,11 @@ import { SIDEBAR_WIDTH } from '~/constants'
       if (which === 27) this.close()
 
       if (which === 13) {
-        this.navTo(this.matches[this.highlightIndex])
+        if (this.match) this.navTo(this.math)
+        else {
+          this.props.onSubmit(this.text)
+          this.setText('')
+        }
       }
     }
 
@@ -75,15 +79,19 @@ import { SIDEBAR_WIDTH } from '~/constants'
   },
 })
 export default class Commander {
+  static defaultProps = {
+    onSubmit: _ => _,
+  }
+
   render({ store, store: { docs }, ...props }) {
     const { onClose } = this.props
 
     return (
       <bar $$flex>
         <input
+          placeholder="Search documents and people.."
           {...props}
           value={store.text}
-          placeholder="Search documents and people.."
           onChange={e => {
             store.setText(e.target.value)
           }}
@@ -137,9 +145,9 @@ export default class Commander {
       width: '100%',
       background: '#fff',
       border: [1, '#eee'],
-      padding: [6, 10],
+      padding: [6, 8],
       fontSize: 16,
-      opacity: 0.4,
+      opacity: 0.9,
       '&:hover': {
         opacity: 1,
       },

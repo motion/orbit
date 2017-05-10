@@ -35,22 +35,14 @@ export class Page {
         </children>
         <statusbar>
           <omnibar>
-            <Commander $omniinput />
-          </omnibar>
-          <form
-            if={false}
-            onSubmit={e => {
-              e.preventDefault()
-              Document.create({ title: this.newDoc.value })
-              this.newDoc.value = ''
-            }}
-          >
-            <input
-              $create
-              ref={this.ref('newDoc').set}
+            <Commander
               placeholder="create doc (#tag to tag) (/ to search)"
+              onSubmit={title => {
+                Document.create({ title })
+              }}
+              $omniinput
             />
-          </form>
+          </omnibar>
 
           <view $$row $$flex>
             {`#all #btc #etherium #monero #day-trading #something`
@@ -86,6 +78,7 @@ export class Page {
       overflow: 'hidden',
       padding: 10,
       background: '#fff',
+      borderTop: [1, '#eee'],
       position: 'relative',
     },
     tag: {

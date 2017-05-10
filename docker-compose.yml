@@ -14,7 +14,7 @@ services:
         ENV: "dev"
     restart: always
     volumes:
-       - ./app_data/couchdb:/usr/local/var/lib/couchdb
+       - ./app_data/couchdb:/opt/couchdb/data
        - ./apps/couch/config:/usr/local/etc/couchdb
     restart: always
     links:

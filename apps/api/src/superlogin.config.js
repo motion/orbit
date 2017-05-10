@@ -16,6 +16,8 @@ const dbServer = {
   couchAuthDB: '_users',
 }
 
+console.log('dbServer', dbServer)
+
 export default {
   dbServer,
   mailer: {

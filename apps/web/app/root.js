@@ -5,7 +5,6 @@ import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Errors from '~/views/layout/errors'
-import Commander from '~/views/commander'
 import Mousetrap from 'mousetrap'
 import { Document } from 'models'
 
@@ -50,12 +49,10 @@ export default class Root {
                 🏚
               </btn>
             </nav>
-            <omnibar>
-              <Commander $omniinput />
-            </omnibar>
             <title if={title}>
               {title}
             </title>
+            <view $$flex />
             <rest $$row>
               {header || null}
               <actions $$row if={actions}>
@@ -94,14 +91,6 @@ export default class Root {
       zIndex: 1000,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
-    },
-    omnibar: {
-      flex: 10,
-      flexFlow: 'row',
-      margin: [0, 'auto'],
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
     },
     hovered: {
       opacity: 1,

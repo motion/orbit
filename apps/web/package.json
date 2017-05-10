@@ -48,6 +48,7 @@
     "pouchdb-replication": "^6.1.2",
     "pouchdb-validation": "^1.2.1",
     "promise": "^7.1.1",
+    "random-color": "^1.0.1",
     "react": "^15.5.2",
     "react-dom": "^15.5.2",
     "react-flip-move": "^2.9.2",

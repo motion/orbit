@@ -102,10 +102,7 @@ export default class DocItem {
   static style = {
     doc: {
       position: 'relative',
-      borderRadius: 6,
-      border: [1, [0, 0, 0, 0.1]],
-      padding: 12,
-      margin: [0, 5, 10, 5],
+      padding: 10,
       color: '#333',
       background: '#fff',
       overflow: 'hidden',
@@ -201,6 +198,10 @@ export default class DocItem {
         height: '100%',
         width: '100%',
         margin: 0,
+        borderRadius: 6,
+        border: [1, [0, 0, 0, 0.1]],
+        padding: 12,
+        margin: [0, 5, 10, 5],
       },
     },
   }

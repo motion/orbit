@@ -1,6 +1,7 @@
 import { $, view } from '~/helpers'
 import Router from '~/router'
 import { Document } from 'models'
+import Commander from '~/views/commander'
 
 @view
 export class Page {
@@ -33,19 +34,15 @@ export class Page {
           {children}
         </children>
         <statusbar>
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              Document.create({ title: this.newDoc.value })
-              this.newDoc.value = ''
-            }}
-          >
-            <input
-              $create
-              ref={this.ref('newDoc').set}
+          <omnibar>
+            <Commander
               placeholder="create doc (#tag to tag) (/ to search)"
+              onSubmit={title => {
+                Document.create({ title })
+              }}
+              $omniinput
             />
-          </form>
+          </omnibar>
 
           <view $$row $$flex>
             {`#all #btc #etherium #monero #day-trading #something`
@@ -81,6 +78,8 @@ export class Page {
       overflow: 'hidden',
       padding: 10,
       background: '#fff',
+      borderTop: [1, '#eee'],
+      position: 'relative',
     },
     tag: {
       padding: [2, 5],

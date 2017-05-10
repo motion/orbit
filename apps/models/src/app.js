@@ -66,6 +66,11 @@ export default class App {
       skipSetup: true,
       withCredentials: false,
     })
+    // images
+    this.images = new PouchDB(`${config.couchUrl}/images`, {
+      skipSetup: true,
+      withCredentials: false,
+    })
 
     // connect models
     const connections = Object.entries(Models).map(async ([name, model]) => {
@@ -201,10 +206,10 @@ export default class App {
     this.errors = uniqBy([...final, ...this.errors], err => err.id)
   }
 
-  @action catchErrors() {
+  catchErrors() {
     window.addEventListener('unhandledrejection', event => {
       event.promise.catch(err => {
-        this.handleError(err)
+        this.handleError({ ...err, reason: event.reason })
       })
     })
   }

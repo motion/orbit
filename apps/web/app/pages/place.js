@@ -69,37 +69,7 @@ export default class PlacePage {
         <docViewContainer>
           <DocumentView if={doc} document={doc} />
         </docViewContainer>
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            store.createDoc(this.newDoc.value)
-            this.newDoc.value = ''
-          }}
-        >
-          <input
-            $create
-            ref={this.ref('newDoc').set}
-            placeholder="create doc (#tag to tag) (/ to search)"
-          />
-        </form>
       </Page>
     )
-  }
-
-  static style = {
-    form: {
-      width: '100%',
-      padding: 10,
-    },
-    create: {
-      width: '100%',
-      padding: [8, 7],
-      fontSize: 16,
-      background: '#fff',
-      border: [1, '#ddd'],
-    },
-    docViewContainer: {
-      padding: 20,
-    },
   }
 }

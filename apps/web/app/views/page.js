@@ -1,5 +1,6 @@
 import { $, view } from '~/helpers'
 import Router from '~/router'
+import { Document } from 'models'
 
 @view
 export class Page {
@@ -28,11 +29,25 @@ export class Page {
   render({ children, className, doc }) {
     return (
       <page className={className}>
-        <children $$flex>
+        <children>
           {children}
         </children>
         <statusbar>
-          <statsec $$row $$flex>
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              Document.create({ title: this.newDoc.value })
+              this.newDoc.value = ''
+            }}
+          >
+            <input
+              $create
+              ref={this.ref('newDoc').set}
+              placeholder="create doc (#tag to tag) (/ to search)"
+            />
+          </form>
+
+          <view $$row $$flex>
             {`#all #btc #etherium #monero #day-trading #something`
               .split(' ')
               .map(tag => (
@@ -44,10 +59,10 @@ export class Page {
                   {tag}
                 </a>
               ))}
-          </statsec>
-          <statsec if={doc} $$row>
-            members: {(doc.members || []).join(', ')}
-          </statsec>
+            <view if={doc} $$row>
+              members: {(doc.members || []).join(', ')}
+            </view>
+          </view>
         </statusbar>
       </page>
     )
@@ -56,13 +71,16 @@ export class Page {
   static style = {
     page: {
       flex: 1,
-      overrflowY: 'scroll',
+    },
+    children: {
+      flex: 1,
+      overflowY: 'scroll',
     },
     statusbar: {
-      flexFlow: 'row',
       flexWrap: 'nowrap',
       overflow: 'hidden',
       padding: 10,
+      background: '#fff',
     },
     tag: {
       padding: [2, 5],
@@ -71,6 +89,17 @@ export class Page {
       '&:hover': {
         background: '#eee',
       },
+    },
+    form: {
+      width: '100%',
+      padding: 10,
+    },
+    create: {
+      width: '100%',
+      padding: [8, 7],
+      fontSize: 16,
+      background: '#fff',
+      border: [1, '#ddd'],
     },
   }
 }

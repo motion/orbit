@@ -31,8 +31,8 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => this.headerHovered = true}
-            onMouseLeave={() => this.headerHovered = false}
+            onMouseEnter={() => (this.headerHovered = true)}
+            onMouseLeave={() => (this.headerHovered = false)}
             if={!!header || !!title || !!actions}
           >
             <nav if={IS_ELECTRON}>
@@ -81,17 +81,13 @@ export default class Root {
     main: {
       flex: 1,
       position: 'relative',
-      overflowY: 'scroll',
     },
     content: {
       flex: 1,
       position: 'relative',
-      overflowY: 'scroll',
-      marginTop: HEADER_HEIGHT,
     },
     header: {
-      marginTop: 20,
-      paddingLeft: IS_ELECTRON ? 80 : 10,
+      padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       background: '#fff',

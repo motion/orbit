@@ -7,8 +7,8 @@ import DocumentView from '~/views/document'
 
 @view({
   store: class PlaceStore {
-    place = Place.get(Router.params.slug)
-    doc = Document.homeForPlace(Router.params.slug)
+    place = Place.get(this.props.slug || Router.params.slug)
+    doc = Document.homeForPlace(this.props.slug || Router.params.slug)
 
     createDoc = title => {
       Document.create({ title, places: [this.place.slug] })

@@ -79,7 +79,6 @@ class Place extends Model {
       } else {
         this.members = [...this.members, App.user.name]
       }
-      console.log(this.members)
       this.save()
     },
     subscribed() {

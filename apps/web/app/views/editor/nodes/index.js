@@ -22,10 +22,16 @@ export const paragraph = props => <p>{props.children}</p>
 // ul_list and list_item are names decided by
 // https://github.com/GitbookIO/slate-edit-list
 
-export const ul_list = props => <ul {...props.attributes}>{props.children}</ul>
+export const ol_list = props => (
+  <ol $$ol {...props.attributes}>{props.children}</ol>
+)
+
+export const ul_list = props => (
+  <ul $$ul {...props.attributes}>{props.children}</ul>
+)
 
 export const list_item = props => (
-  <li {...props.attributes}>{props.children}</li>
+  <li $$li {...props.attributes}>{props.children}</li>
 )
 
 export const hr = props => <hr />

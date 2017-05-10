@@ -95,6 +95,18 @@ const baseStyles = {
   padded: {
     padding: 20,
   },
+  ul: {
+    paddingLeft: 15,
+    marginLeft: 10,
+  },
+  ol: {
+    paddingLeft: 15,
+    marginLeft: 10,
+  },
+  li: {
+    margin: 0,
+    padding: 0,
+  },
 }
 
 export default gloss({ baseStyles })

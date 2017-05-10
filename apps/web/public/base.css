@@ -34,14 +34,6 @@ body, body * {
   outline: 0;
 }
 
-/* for editor lists */
-ul {
-  margin-left: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  padding-left: 5px;
-}
-
 /* prevent overscroll bounce */
 html, body {
   width: 100%;

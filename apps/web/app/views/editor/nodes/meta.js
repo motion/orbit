@@ -2,24 +2,25 @@ import { node, view } from '~/helpers'
 
 @node
 @view
-export default class Hashtags {
+export default class Meta {
   render({ node, children, ...props }) {
     const { data } = node
 
     return (
-      <section $hashtags contentEditable={false}>
-        <span $left>
+      <span $hashtags>
+        <div $left contentEditable={false}>
           #
-        </span>
+        </div>
         <span $content contentEditable suppressContentEditableWarning>
           {children}
         </span>
-      </section>
+      </span>
     )
   }
 
   static style = {
     hashtags: {
+      display: 'flex',
       flexFlow: 'row',
     },
     left: {

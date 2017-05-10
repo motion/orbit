@@ -1,45 +1,38 @@
-kind: Template
-objects:
-  - kind: Service
-    apiVersion: v1
+kind: Service
+apiVersion: v1
+metadata:
+  name: pad-web
+  labels:
+    run: pad-web
+spec:
+  type: NodePort
+  ports:
+    - name: localhost
+      port: 80
+      targetPort: 80
+      nodePort: 31000
+  selector:
+    run: pad-web
+status:
+  loadBalancer: {}
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: pad-web
+spec:
+  replicas: 1
+  strategy: {}
+  template:
     metadata:
-      name: pad-web
       labels:
         run: pad-web
     spec:
-      type: NodePort
-      ports:
-        - port: 80
-          targetPort: 80
-          nodePort: 31000
-      selector:
-        run: pad-web
-    status:
-      loadBalancer: {}
-  - kind: Deployment
-    apiVersion: extensions/v1beta1
-    metadata:
-      name: pad-web
-    spec:
-      replicas: 1
-      strategy: {}
-      template:
-        metadata:
-          labels:
-            run: pad-web
-        spec:
-          imagePullSecrets:
-            - name: docker-hub
-          containers:
-          - name: pad-web
-            image: $(REGISTRY)/motion/starter-web:$(ENV)
-            imagePullPolicy: Always
-            ports:
-            - containerPort: 80
-            resources: {}
-    status: {}
-parameters:
-  - name: ENV
-    value: null
-  - name: REGISTRY
-    value: null
+      imagePullSecrets:
+        - name: docker-hub
+      containers:
+        - name: pad-web
+          image: {{REGISTRY}}/motion/starter-web:{{ENV}}
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80

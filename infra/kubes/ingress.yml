@@ -1,35 +1,31 @@
-kind: Template
-objects:
-  - apiVersion: extensions/v1beta1
-    kind: Ingress
-    metadata:
-      name: ingress
-      annotations:
-        kubernetes.io/ingress.global-static-ip-name: "pad"
-        kubernetes.io/ingress.class: "gce"
-    spec:
-      backend:
-        serviceName: pad-web
-        servicePort: 80
-      rules:
-      - host: $(DOMAIN)
-        http:
-          paths:
-          - backend:
-              serviceName: pad-web
-              servicePort: 80
-      - host: couch.$(DOMAIN)
-        http:
-          paths:
-          - backend:
-              serviceName: pad-couch
-              servicePort: 5984
-      - host: api.$(DOMAIN)
-        http:
-          paths:
-          - backend:
-              serviceName: pad-api
-              servicePort: 3000
-parameters:
-  - name: DOMAIN
-    value: null
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "pad"
+    kubernetes.io/ingress.class: "gce"
+spec:
+  backend:
+    serviceName: pad-web
+    servicePort: 80
+  rules:
+  - host: "{{DOMAIN}}"
+    http:
+      paths:
+      - backend:
+          serviceName: pad-web
+          servicePort: 80
+  - host: "couch.{{DOMAIN}}"
+    http:
+      paths:
+      - backend:
+          serviceName: pad-couch
+          servicePort: 5984
+  - host: "api.{{DOMAIN}}"
+    http:
+      paths:
+      - backend:
+          serviceName: pad-api
+          servicePort: 3000

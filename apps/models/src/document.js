@@ -9,6 +9,7 @@ class Document extends Model {
     boardId: str.optional,
     authorId: str,
     places: array.optional.items(str),
+    hashtags: array.items(str),
     private: bool,
     home: bool.optional,
     timestamps: true,
@@ -19,6 +20,7 @@ class Document extends Model {
     return {
       title,
       authorId: App.user && App.user.name,
+      hashtags: [],
       private: true,
       content: {
         nodes: [

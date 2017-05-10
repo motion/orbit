@@ -3,7 +3,7 @@ import { isEqual } from 'lodash'
 import { Place, Document } from 'models'
 import { Text, Page, Button, CircleButton } from '~/views'
 import Router from '~/router'
-import DocPage from '~/pages/doc'
+import DocumentView from '~/views/document'
 
 @view({
   store: class PlaceStore {
@@ -20,7 +20,7 @@ import DocPage from '~/pages/doc'
         .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))
 
-      Document.all()
+      Document.forPlace(this.place.slug)
         .exec()
         .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))
@@ -31,20 +31,38 @@ export default class PlacePage {
   render({ store }) {
     const { place, doc } = store
 
+    if (!place) {
+      return null
+    }
+
+    if (place.private && !App.loggedIn) {
+      return (
+        <Page>
+          <content $$centered>
+            this place is private!
+            <Button>login to join</Button>
+          </content>
+        </Page>
+      )
+    }
+
     return (
       <Page
-        title={
-          <title if={place} $$row $$align="center">
-            <Button onClick={() => console.log(place.url())}>🔗</Button>
-          </title>
-        }
         actions={[
-          <CircleButton icon="+" onClick={store.createDoc} />,
-          <CircleButton icon="- all" onClick={store.deleteAll} />,
-          <CircleButton icon="🍻">join</CircleButton>,
+          <Button onClick={() => console.log(place.url())}>🔗</Button>,
+          <Button onClick={store.createDoc}>+</Button>,
+          <Button onClick={store.deleteAll}>rm -rf</Button>,
+          <Button onClick={place.toggleSubscribe}>
+            {place.subscribed() ? '✅' : '🍻'}
+          </Button>,
+          <Button onClick={place.togglePrivate}>
+            {place.private ? '🙈' : '🌎'}
+          </Button>,
         ]}
       >
-        <DocPage if={doc} id={doc._id} />
+        <docViewContainer>
+          <DocumentView if={doc} document={doc} />
+        </docViewContainer>
         <form
           onSubmit={e => {
             e.preventDefault()
@@ -58,19 +76,24 @@ export default class PlacePage {
           />
         </form>
 
-        <hashtags>
-          {`#all #btc #etherium #monero #day-trading #something`
-            .split(' ')
-            .map(tag => (
-              <a
-                $tag
-                key={tag}
-                onClick={() => Router.set('hashtag', tag.slice(1))}
-              >
-                {tag}
-              </a>
-            ))}
-        </hashtags>
+        <statusbar>
+          <statsec $$row $$flex>
+            {`#all #btc #etherium #monero #day-trading #something`
+              .split(' ')
+              .map(tag => (
+                <a
+                  $tag
+                  key={tag}
+                  onClick={() => Router.set('hashtag', tag.slice(1))}
+                >
+                  {tag}
+                </a>
+              ))}
+          </statsec>
+          <statsec if={doc} $$row>
+            members: {(doc.members || []).join(', ')}
+          </statsec>
+        </statusbar>
       </Page>
     )
   }
@@ -87,11 +110,14 @@ export default class PlacePage {
       background: '#fff',
       border: [1, '#ddd'],
     },
-    hashtags: {
+    statusbar: {
       flexFlow: 'row',
       flexWrap: 'nowrap',
       overflow: 'hidden',
       padding: 10,
+    },
+    docViewContainer: {
+      padding: 20,
     },
     tag: {
       padding: [2, 5],

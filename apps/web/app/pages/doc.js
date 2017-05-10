@@ -39,12 +39,6 @@ export default class DocumentPage {
 
     return (
       <Page
-        header
-        sidebar={
-          <side $$flex>
-            side ;alala
-          </side>
-        }
         actions={[
           <Button>🔗</Button>,
           <Button onClick={doc.togglePrivate}>
@@ -57,7 +51,7 @@ export default class DocumentPage {
       >
         <content $$flex $$row>
           <main $$flex={2}>
-            <docarea $$draggable>
+            <docarea>
               <Editor
                 onKeyDown={store.onKeyDown}
                 doc={doc}

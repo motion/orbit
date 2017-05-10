@@ -1,4 +1,4 @@
-console.log('starting api...', process.env.REDIS_HOSTNAME)
+console.log('starting api2...', process.env.REDIS_HOSTNAME)
 
 import API from './api'
 

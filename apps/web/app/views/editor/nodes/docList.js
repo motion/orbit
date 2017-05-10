@@ -43,6 +43,7 @@ export default class Todo {
       margin: 10,
       width: 300,
       background: 'white',
+      userSelect: 'none',
       boxShadow: `0 0 0 1px rgba(99,114,130,0.16), 0 2px 16px rgba(27,39,51,0.08)`,
       borderRadius: 3,
       border: '1px solid #eee',

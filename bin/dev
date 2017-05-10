@@ -29,9 +29,12 @@ fi
 if [ "$ACTION" = "ui" ]; then
   minikube dashboard
 elif [ "$ACTION" = "open" ]; then
-  open $(minikube service pad-public --url)
+  open $(minikube service pad-web --url)
 elif [ "$ACTION" = "cleanup-docker" ]; then
   cleanup-docker
+elif [ "$ACTION" = "run" ]; then
+  # allow abritrary things to run
+  ${@:1}
 else
   bin/__kubes ${@:1}
 fi

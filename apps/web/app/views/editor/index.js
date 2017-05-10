@@ -44,6 +44,11 @@ class EditorStore {
       if (this.doc && this.content && this.shouldSave) {
         this.doc.content = Raw.serialize(this.content)
         this.doc.title = this.content.startBlock.text
+        const secondBlock = this.content.blocks.get(1)
+        if (secondBlock) {
+          console.log('got second block', secondBlock.type, secondBlock)
+          this.doc.hashtags = this.content.startBlock
+        }
         this.doc.save()
       }
     },
@@ -69,6 +74,7 @@ export default class EditorView {
   static defaultProps = {
     onChange: _ => _,
     getRef: _ => _,
+    onKeyDown: _ => _,
   }
 
   plugins = Plugins
@@ -95,9 +101,11 @@ export default class EditorView {
     getRef,
     ...props
   }) {
-    // todo, find a way to pass Editor into all nodes in the editor
+    // todo use context
     window.Editor = this
     if (doc) window.Editor.doc = doc
+
+    getRef && getRef(this)
 
     return (
       <document if={store.content}>

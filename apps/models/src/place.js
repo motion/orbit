@@ -1,8 +1,8 @@
 import App from './index'
-import { Model, query, str, array } from './helpers'
+import { Model, query, str, array, bool } from './helpers'
 import Document from './document'
 import Board from './board'
-import { capitalize } from 'lodash'
+import { capitalize, some, remove } from 'lodash'
 
 const toSlug = str => str.replace(/ /g, '-').toLowerCase()
 
@@ -11,14 +11,18 @@ class Place extends Model {
     authorId: str,
     title: str,
     slug: str,
+    private: bool,
     primary_docId: str.optional,
     layout: array.optional,
+    members: array.items(str),
     timestamps: true,
   }
 
   static defaultProps = props => ({
+    private: false,
     authorId: App.user && App.user.name,
     layout: [],
+    members: [],
     slug: toSlug(props.title),
   })
 
@@ -62,6 +66,24 @@ class Place extends Model {
         ...info,
         placeId: this._id,
       })
+    },
+    togglePrivate() {
+      this.private = !this.private
+      this.save()
+    },
+    toggleSubscribe() {
+      if (!App.loggedIn) return
+      const exists = some(this.members, m => m === App.user.name)
+      if (exists) {
+        this.members = this.members.filter(m => m !== App.user.name)
+      } else {
+        this.members = [...this.members, App.user.name]
+      }
+      console.log(this.members)
+      this.save()
+    },
+    subscribed() {
+      return App.loggedIn && this.members.indexOf(App.user.name) >= 0
     },
   }
 

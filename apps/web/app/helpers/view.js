@@ -102,9 +102,10 @@ const storeProvider = createProvider({
       store.start(props)
     }
 
-    App.setStore(store.constructor.name, store)
-
     return store
+  },
+  onStoreDidMount(name, store) {
+    App.setStore(store.constructor.name, store)
   },
   onStoreUnmount(name, store) {
     if (store.stop) {

@@ -96,7 +96,8 @@ export default class Root {
       transitionDelay: '400ms',
     },
     omnibar: {
-      flex: 4,
+      flex: 10,
+      flexFlow: 'row',
       margin: [0, 'auto'],
       alignItems: 'center',
       justifyContent: 'center',

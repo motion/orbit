@@ -101,6 +101,10 @@ export default class EditorView {
     getRef,
     ...props
   }) {
+    // todo use context
+    window.Editor = this
+    if (doc) window.Editor.doc = doc
+
     getRef && getRef(this)
 
     return (

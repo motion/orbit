@@ -15,7 +15,7 @@ export default class Document {
 
   static style = {
     doc: {
-      padding: 20,
+      padding: [10, 20],
     },
   }
 }

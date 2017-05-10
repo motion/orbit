@@ -118,11 +118,11 @@ export default class Root {
       position: 'relative',
     },
     header: {
+      background: [255, 255, 255, 0.1],
+      zIndex: 1000,
       padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
       flexFlow: 'row',
       height: HEADER_HEIGHT,
-      background: '#fff',
-      zIndex: 1000,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
     },

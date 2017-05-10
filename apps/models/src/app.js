@@ -119,6 +119,12 @@ export default class App {
     return { errors }
   }
 
+  get activePlace() {
+    return (
+      (this.activePage.place && this.activePage.place.slug) || this.user.slug
+    )
+  }
+
   @action signup = async (username, password, extraInfo = {}) => {
     try {
       const info = await this.auth.signup(username, password, extraInfo)

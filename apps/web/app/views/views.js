@@ -1,5 +1,6 @@
 import { $, view } from '~/helpers'
 import Sidebar from '~/views/layout/sidebar'
+import Popover from '~/views/popover'
 
 export * from '~/views/page'
 
@@ -16,32 +17,59 @@ export const Input = $('input', {
   },
 })
 
-export const Button = $('btn', {
-  padding: [2, 8],
-  borderRadius: 100,
-  border: [1, 'dotted', '#eee'],
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: '#fff',
-  color: '#000',
-  fontSize: 14,
-  cursor: 'pointer',
-  userSelect: 'none',
-  '&:hover': {
-    background: '#f2f2f2',
-  },
-  '&:active': {
-    background: '#eee',
-  },
-})
+@view
+export class Button {
+  uniq = `icon-${Math.round(Math.random() * 1000000)}`
+
+  render({ children, className, tooltip, tooltipProps, ...props }) {
+    return (
+      <btn className={`${className || ''} ${this.uniq}`} {...props}>
+        {children}
+        <Popover
+          if={tooltip}
+          dark
+          bg
+          openOnHover
+          noHover
+          target={`.${this.uniq}`}
+          padding={[0, 5]}
+          distance={10}
+          {...tooltipProps}
+        >
+          {tooltip}
+        </Popover>
+      </btn>
+    )
+  }
+  static style = {
+    btn: {
+      padding: [2, 8],
+      borderRadius: 100,
+      border: [1, 'dotted', '#eee'],
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#fff',
+      color: '#000',
+      fontSize: 14,
+      cursor: 'pointer',
+      userSelect: 'none',
+      '&:hover': {
+        background: '#f2f2f2',
+      },
+      '&:active': {
+        background: '#eee',
+      },
+    },
+  }
+}
 
 @view
 export class CircleButton {
   render({ icon, children, ...props }) {
     return (
       <Circle {...props}>
-        <icon>{icon}</icon>
-        <children>{children}</children>
+        <icon if={icon}>{icon}</icon>
+        <children if={children}>{children}</children>
       </Circle>
     )
   }

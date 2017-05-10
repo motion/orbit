@@ -4,3 +4,22 @@ export node from './node'
 export view from './view'
 export $ from './styles'
 export { query } from 'models'
+
+import { findDOMNode } from 'react'
+
+export const getTarget = target => {
+  if (!target) {
+    return null
+  }
+  switch (typeof target) {
+    case 'string':
+      return document.querySelector(target)
+    case 'function':
+      return findDOMNode(target())
+  }
+  try {
+    return findDOMNode(target)
+  } catch (e) {
+    return target
+  }
+}

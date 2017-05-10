@@ -12,8 +12,8 @@ invariant(DB_PORT, 'must set DB_PORT')
 invariant(DB_PROTOCOL, 'must set DB_PROTOCOL')
 
 export const COUCH_URL = DB_USER
-  ? `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}`
-  : `${DB_PROTOCOL}${DB_HOST}:${DB_PORT}`
+  ? `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}`
+  : `${DB_PROTOCOL}${DB_HOST}`
 
 export const REDIS_HOSTNAME = process.env.REDIS_HOSTNAME || 'pad-redis'
 export const REDIS_PORT = process.env.REDIS_PORT || '6379'

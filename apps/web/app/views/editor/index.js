@@ -1,4 +1,5 @@
 import { Selection, Editor, Raw } from 'slate'
+import { object } from 'prop-types'
 import { Document } from 'models'
 import { view } from '~/helpers'
 import { flatten } from 'lodash'
@@ -14,6 +15,7 @@ const rules = merge(Rules)
 
 class EditorStore {
   doc = Document.get(this.props.id)
+  shouldFocus = this.props.focusOnMount
   focused = false
   content = null
 
@@ -46,8 +48,8 @@ class EditorStore {
         this.doc.title = this.content.startBlock.text
         const secondBlock = this.content.blocks.get(1)
         if (secondBlock) {
-          console.log('got second block', secondBlock.type, secondBlock)
-          this.doc.hashtags = this.content.startBlock
+          // todo save hashtags
+          // this.doc.hashtags = this.content.startBlock
         }
         this.doc.save()
       }
@@ -77,6 +79,14 @@ export default class EditorView {
     onKeyDown: _ => _,
   }
 
+  static childContextTypes = {
+    editor: object,
+  }
+
+  getChildContext() {
+    return { editor: this.props.store }
+  }
+
   plugins = Plugins
 
   schema = {
@@ -90,6 +100,19 @@ export default class EditorView {
     this.props.onChange(value)
   }
 
+  getRef = node => {
+    const { getRef, store } = this.props
+    if (node) {
+      if (getRef) {
+        getRef(node)
+      }
+      if (store.shouldFocus) {
+        node.focus()
+        store.shouldFocus = false
+      }
+    }
+  }
+
   render({
     id,
     doc,
@@ -99,13 +122,12 @@ export default class EditorView {
     onChange,
     inline,
     getRef,
+    focusOnMount,
     ...props
   }) {
     // todo use context
     window.Editor = this
     if (doc) window.Editor.doc = doc
-
-    getRef && getRef(this)
 
     return (
       <document if={store.content}>
@@ -117,7 +139,7 @@ export default class EditorView {
           schema={this.schema}
           state={store.content}
           onChange={this.onChange}
-          ref={getRef}
+          ref={this.getRef}
           onFocus={store.focus}
           onBlur={store.blur}
           onKeyDown={e => {

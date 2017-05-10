@@ -1,7 +1,7 @@
 export const BLOCKS = {
   TITLE: 'title',
   PARAGRAPH: 'paragraph',
-  HASHTAGS: 'hashtags',
+  META: 'meta',
 }
 
 export const TEXT_TYPES = [BLOCKS.PARAGRAPH]

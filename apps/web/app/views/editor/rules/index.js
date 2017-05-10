@@ -1,4 +1,4 @@
 export joinLists from './joinLists'
 export firstLineTitle from './firstLineTitle'
 export titleText from './titleText'
-export secondLineHashtags from './secondLineHashtags'
+export secondLineMeta from './secondLineMeta'

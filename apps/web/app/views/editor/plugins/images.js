@@ -7,13 +7,17 @@ export default InsertImages({
   async applyTransform(transform, file) {
     console.log(file)
 
-    new FileReader().readAsBinaryString(file).onload(async file => {
-      const image = await Image.create({
-        name: file.name,
-      })
+    const img = Image
 
-      debugger
-    })
+    debugger
+
+    // new FileReader().readAsBinaryString(file).onload(async file => {
+    //   const image = await Image.create({
+    //     name: file.name,
+    //   })
+
+    //   debugger
+    // })
 
     //.collapseToEndOfPreviousBlock()
     return transform.insertBlock({

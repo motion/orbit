@@ -77,12 +77,10 @@ export default class Root {
     main: {
       flex: 1,
       position: 'relative',
-      overflowY: 'scroll',
     },
     content: {
       flex: 1,
       position: 'relative',
-      overflowY: 'scroll',
     },
     header: {
       padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],

@@ -40,7 +40,7 @@ export default class Login {
 
     return (
       <login $$draggable>
-        <form $$undraggable if={!App.loggedIn} onSubmit={store.prevent}>
+        <form $$undraggable if={!App.loggedIn} onSubmit={this.prevent}>
           <step if={App.noUser}>
             <Input
               $input

@@ -44,7 +44,7 @@ services:
       - pad-couch
     environment:
       - PORT=3000
-      - DB_HOST=${DB_HOST}
+      - DB_HOSTNAME=${DB_HOSTNAME}
       - DB_PORT=${DB_PORT}
       - DB_PROTOCOL=${DB_PROTOCOL}
       - DB_USER=${DB_USER}

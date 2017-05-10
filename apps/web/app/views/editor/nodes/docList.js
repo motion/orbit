@@ -1,12 +1,15 @@
 import { node, view } from '~/helpers'
-import { Document } from 'models'
-import { toJS } from 'mobx'
-import { isArray } from 'lodash'
+import App, { Document } from 'models'
 import randomcolor from 'random-color'
 import Router from '~/router'
 
 class ListStore {
-  docs = Document.forPlace(window.Editor.doc.places[0])
+  docs = Document.forPlace(this.placeSlug)
+
+  get placeSlug() {
+    console.log('return', App.activePage.place.slug)
+    return App.activePage.place.slug
+  }
 }
 
 @node
@@ -15,14 +18,16 @@ class ListStore {
 })
 export default class Todo {
   render({ node, store, children, ...props }) {
-    const { data } = node
-
-    const hasLoaded = isArray(toJS(store.docs))
+    const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0
+    console.log('docs are', store.docs)
 
     return (
       <container contentEditable={false}>
         <h4>Recent Posts</h4>
+        <docs if={!hasDocs}>
+          no docs!
+        </docs>
         <docs $stack={true} if={hasDocs}>
           {store.docs.map((doc, i) => (
             <doc
@@ -43,7 +48,6 @@ export default class Todo {
             </doc>
           ))}
         </docs>
-        <noDocs if={hasLoaded && !hasDocs}>No recent documents</noDocs>
       </container>
     )
   }

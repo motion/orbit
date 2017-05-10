@@ -20,7 +20,7 @@ import DocumentView from '~/views/document'
         .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))
 
-      Document.forPlace(this.place.slug)
+      Document.all()
         .exec()
         .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))

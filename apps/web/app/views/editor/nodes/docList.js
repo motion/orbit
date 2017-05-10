@@ -2,6 +2,7 @@ import { node, view } from '~/helpers'
 import { Document } from 'models'
 import { toJS } from 'mobx'
 import { isArray } from 'lodash'
+import randomcolor from 'random-color'
 
 class ListStore {
   docs = Document.forPlace(window.Editor.doc.places[0])
@@ -21,10 +22,12 @@ export default class Todo {
     return (
       <container contentEditable={false}>
         <h4>Recent Posts</h4>
-        <docs if={hasDocs}>
-          {store.docs.map(doc => (
-            <doc key={doc._id} onClick={() => doc.routeTo()}>
-              {doc.getTitle()}
+        <docs $stack={true} if={hasDocs}>
+          {store.docs.map((doc, i) => (
+            <doc $first={i === 0} key={doc._id} onClick={() => doc.routeTo()}>
+              <card $$title>
+                {doc.getTitle()}
+              </card>
             </doc>
           ))}
         </docs>
@@ -36,27 +39,37 @@ export default class Todo {
   static style = {
     docs: {
       flexFlow: 'row',
-      flexWrap: 'wrap',
-      margin: 20,
     },
     doc: {
-      margin: 10,
-      width: 300,
-      background: 'white',
+      margin: [0, 10, 0, 0],
       userSelect: 'none',
-      boxShadow: `0 0 0 1px rgba(99,114,130,0.16), 0 2px 16px rgba(27,39,51,0.08)`,
-      borderRadius: 3,
-      border: '1px solid #eee',
-      padding: 20,
+      width: 150,
+      height: 150,
+      borderBottom: [1, '#eee'],
+      background: `
+        linear-gradient(
+          ${Math.floor(Math.random() * 180)}deg,
+          ${randomcolor()},
+          ${randomcolor()}
+        )`,
       color: '#6f7c82',
       fontWeight: 400,
-      transition: '150ms all ease-in',
       cursor: 'pointer',
-      fontSize: 16,
+      fontSize: 26,
+      overflow: 'hidden',
       '&:hover': {
-        boxShadow: `0 0 0 1px rgba(99,114,130,0.36), 0 2px 16px rgba(27,39,51,0.28)`,
-        background: '#fefefe',
+        boxShadow: '0 0 10px rgba(0,0,0,0.02)',
+        zIndex: 1000,
+        transform: 'rotate(-3deg)',
       },
+    },
+    card: {
+      background: '#fff',
+      width: '100%',
+      height: '100%',
+    },
+    stack: {
+      flexFlow: 'row',
     },
   }
 }

@@ -206,10 +206,10 @@ export default class App {
     this.errors = uniqBy([...final, ...this.errors], err => err.id)
   }
 
-  @action catchErrors() {
+  catchErrors() {
     window.addEventListener('unhandledrejection', event => {
       event.promise.catch(err => {
-        this.handleError(err)
+        this.handleError({ ...err, reason: event.reason })
       })
     })
   }

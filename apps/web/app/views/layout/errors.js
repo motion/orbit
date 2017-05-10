@@ -21,6 +21,9 @@ export default class Errors {
             <message if={error.message}>
               <strong>{error.name}</strong>: {error.message}
             </message>
+            <message if={error.reason}>
+              <strong>{error.reason.name}</strong>: {error.reason.message}
+            </message>
             <clear if={i === 0} onClick={App.clearErrors}>x</clear>
           </error>
         ))}
@@ -39,20 +42,24 @@ export default class Errors {
       userSelect: 'none',
     },
     error: {
-      padding: 10,
-      background: 'red',
-      color: '#fff',
+      fontSize: 15,
+      fontWeight: 500,
+      padding: [7, 10],
+      color: 'red',
+      background: '#f6dada',
+      boxShadow: [0, 0, 20, [0, 0, 0, 0.1]],
       flexFlow: 'row',
       justifyContent: 'space-between',
       pointerEvents: 'auto',
       userSelect: 'auto',
+      alignItems: 'center',
     },
     message: {
       flexFlow: 'row',
     },
     clear: {
       cursor: 'pointer',
-      fontSize: 26,
+      fontSize: 14,
       fontWeight: 600,
     },
   }

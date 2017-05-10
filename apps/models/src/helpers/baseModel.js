@@ -85,7 +85,7 @@ export default class BaseModel {
         doc.createdAt = this.now
         doc.updatedAt = this.now
         if (ogInsert) {
-          ogInsert.call(this, doc)
+          return ogInsert.call(this, doc)
         }
       }
 
@@ -93,7 +93,7 @@ export default class BaseModel {
       this.hooks.preSave = doc => {
         doc.updatedAt = this.now
         if (ogSave) {
-          ogSave.call(this, doc)
+          return ogSave.call(this, doc)
         }
       }
     }

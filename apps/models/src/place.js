@@ -41,17 +41,10 @@ class Place extends Model {
   }
 
   hooks = {
-    preInsert(data) {
-      return new Promise((res, rej) => {
-        this.get(data.slug).exec().then(doc => {
-          if (!doc) {
-            const err = `Already exists a place with this slug! ${doc.slug}`
-            rej(err)
-            throw new Error(err)
-          }
-          res(doc)
-        })
-      })
+    async preInsert(data) {
+      if (await this.get(data.slug).exec()) {
+        throw new Error(`Already exists a place with this slug! ${data.slug}`)
+      }
     },
   }
 

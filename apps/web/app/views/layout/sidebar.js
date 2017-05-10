@@ -54,7 +54,7 @@ export default class Sidebar {
           <Login />
 
           <h2>go</h2>
-          <SideBarLink to="/">me</SideBarLink>
+          <SideBarLink to="/">profile</SideBarLink>
           <SideBarLink to="/feed">feed</SideBarLink>
 
           <h2>places</h2>

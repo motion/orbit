@@ -32,7 +32,7 @@ export default class PlacePage {
     const { place, doc } = store
 
     if (!place) {
-      return <div>loading</div>
+      return <Page loading />
     }
 
     if (place === null) {

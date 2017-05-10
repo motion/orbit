@@ -83,7 +83,6 @@ export default class Root {
       flex: 1,
       position: 'relative',
       overflowY: 'scroll',
-      marginTop: HEADER_HEIGHT,
     },
     header: {
       padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],

@@ -3,6 +3,7 @@ import { Document } from 'models'
 import { toJS } from 'mobx'
 import { isArray } from 'lodash'
 import randomcolor from 'random-color'
+import Router from '~/router'
 
 class ListStore {
   docs = Document.forPlace(window.Editor.doc.places[0])
@@ -34,7 +35,7 @@ export default class Todo {
               `}
               $first={i === 0}
               key={doc._id}
-              onClick={() => doc.routeTo()}
+              onClick={() => Router.go(doc.url())}
             >
               <card $$title>
                 {doc.getTitle()}
@@ -50,6 +51,9 @@ export default class Todo {
   static style = {
     docs: {
       flexFlow: 'row',
+      overflowX: 'scroll',
+      padding: 10,
+      margin: [0, -10],
     },
     doc: {
       margin: [0, 10, 0, 0],

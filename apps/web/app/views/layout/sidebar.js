@@ -79,8 +79,8 @@ export default class Sidebar {
 
         <div $$flex $$draggable />
 
-        <sidebar if={App.views.sidebar}>
-          {App.views.sidebar}
+        <sidebar if={App.activePage.sidebar}>
+          {App.activePage.sidebar}
         </sidebar>
       </side>
     )

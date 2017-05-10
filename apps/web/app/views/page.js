@@ -1,66 +1,46 @@
 import { $, view } from '~/helpers'
-import Router from '~/router'
-import { Document } from 'models'
-import Commander from '~/views/commander'
+
+@view class Loading {
+  render() {
+    return <spinner>loading</spinner>
+  }
+}
 
 @view
 export class Page {
-  id = Math.random()
-
   componentWillMount() {
-    this.setViews(this.props)
+    this.id = Math.random()
+    this.setPage(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setViews(nextProps)
+    this.setPage(nextProps)
   }
 
   componentWillUnmount() {
     // ensure removal only if not already replaced
-    if (App.views._id === this.id) {
-      App.views = {}
+    if (App.activePage.id === this.id) {
+      App.activePage = {}
     }
   }
 
-  setViews = props => {
-    const { title, actions, header, sidebar } = props
-    App.views = { _id: this.id, title, actions, header, sidebar }
+  setPage = ({ title, actions, header, sidebar, doc, place }) => {
+    App.activePage = {
+      id: this.id,
+      title,
+      actions,
+      header,
+      sidebar,
+      doc,
+      place,
+    }
   }
 
-  render({ children, className, doc }) {
+  render({ children, loading, className }) {
     return (
       <page className={className}>
-        <children>
-          {children}
-        </children>
-        <statusbar>
-          <omnibar>
-            <Commander
-              placeholder="create doc (#tag to tag) (/ to search)"
-              onSubmit={title => {
-                Document.create({ title })
-              }}
-              $omniinput
-            />
-          </omnibar>
-
-          <view $$row $$flex>
-            {`#all #btc #etherium #monero #day-trading #something`
-              .split(' ')
-              .map(tag => (
-                <a
-                  $tag
-                  key={tag}
-                  onClick={() => Router.set('hashtag', tag.slice(1))}
-                >
-                  {tag}
-                </a>
-              ))}
-            <view if={doc} $$row>
-              members: {(doc.members || []).join(', ')}
-            </view>
-          </view>
-        </statusbar>
+        {children}
+        <Loading if={loading} />
       </page>
     )
   }
@@ -68,37 +48,7 @@ export class Page {
   static style = {
     page: {
       flex: 1,
-    },
-    children: {
-      flex: 1,
       overflowY: 'scroll',
-    },
-    statusbar: {
-      flexWrap: 'nowrap',
-      overflow: 'hidden',
-      padding: 10,
-      background: '#fff',
-      borderTop: [1, '#eee'],
-      position: 'relative',
-    },
-    tag: {
-      padding: [2, 5],
-      background: '#fff',
-      color: 'red',
-      '&:hover': {
-        background: '#eee',
-      },
-    },
-    form: {
-      width: '100%',
-      padding: 10,
-    },
-    create: {
-      width: '100%',
-      padding: [8, 7],
-      fontSize: 16,
-      background: '#fff',
-      border: [1, '#ddd'],
     },
   }
 }

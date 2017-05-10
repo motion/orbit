@@ -27,7 +27,7 @@ export default class App {
 
   // basically global stores
   @observable user = null
-  @observable.ref views = {}
+  @observable.ref activePage = {}
   @observable.ref errors = []
   @observable.ref activeStores = {}
 

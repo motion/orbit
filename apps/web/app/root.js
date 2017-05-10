@@ -6,6 +6,8 @@ import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Errors from '~/views/layout/errors'
 import Mousetrap from 'mousetrap'
+import { Document } from 'models'
+import Commander from '~/views/commander'
 
 @view
 export default class Root {
@@ -19,7 +21,7 @@ export default class Root {
 
   render() {
     const CurrentPage = Router.activeView || NotFound
-    const { title, actions, header } = App.views
+    const { title, actions, header, doc, place } = App.activePage
 
     return (
       <layout $$draggable>
@@ -28,7 +30,6 @@ export default class Root {
             $hovered={this.headerHovered}
             onMouseEnter={() => (this.headerHovered = true)}
             onMouseLeave={() => (this.headerHovered = false)}
-            if={!!header || !!title || !!actions}
           >
             <nav if={IS_ELECTRON}>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
@@ -49,7 +50,7 @@ export default class Root {
               {title}
             </title>
             <view $$flex />
-            <rest $$row>
+            <rest if={header || actions} $$row>
               {header || null}
               <actions $$row if={actions}>
                 {actions.map((action, i) => <action key={i}>{action}</action>)}
@@ -59,6 +60,38 @@ export default class Root {
           <content>
             <CurrentPage key={Router.key} />
           </content>
+          <statusbar>
+            <omnibar>
+              <Commander
+                placeholder="create doc (#tag to tag) (/ to search)"
+                onSubmit={title => {
+                  if (place) {
+                    Document.create({ title, places: [place.slug] })
+                  } else {
+                    Document.create({ title, places: [App.user.slug] })
+                  }
+                }}
+                $omniinput
+              />
+            </omnibar>
+
+            <view $$row $$flex>
+              {`#all #btc #etherium #monero #day-trading #something`
+                .split(' ')
+                .map(tag => (
+                  <a
+                    $tag
+                    key={tag}
+                    onClick={() => Router.set('hashtag', tag.slice(1))}
+                  >
+                    {tag}
+                  </a>
+                ))}
+              <view if={doc} $$row>
+                members: {(doc.members || []).join(', ')}
+              </view>
+            </view>
+          </statusbar>
         </main>
         <Errors />
         <Sidebar />
@@ -74,6 +107,7 @@ export default class Root {
     main: {
       flex: 1,
       position: 'relative',
+      overflow: 'hidden',
     },
     content: {
       flex: 1,
@@ -122,6 +156,33 @@ export default class Root {
     action: {
       margin: [0, 0, 0, 5],
       alignItems: 'center',
+    },
+    statusbar: {
+      flexWrap: 'nowrap',
+      overflow: 'hidden',
+      padding: 10,
+      background: '#fff',
+      borderTop: [1, '#eee'],
+      position: 'relative',
+    },
+    tag: {
+      padding: [2, 5],
+      background: '#fff',
+      color: 'red',
+      '&:hover': {
+        background: '#eee',
+      },
+    },
+    form: {
+      width: '100%',
+      padding: 10,
+    },
+    create: {
+      width: '100%',
+      padding: [8, 7],
+      fontSize: 16,
+      background: '#fff',
+      border: [1, '#ddd'],
     },
   }
 }

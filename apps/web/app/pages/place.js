@@ -31,8 +31,8 @@ export default class PlacePage {
   render({ store }) {
     const { place, doc } = store
 
-    if (!place) {
-      return <div>loading</div>
+    if (true || !place) {
+      return <Page loading />
     }
 
     if (place === null) {

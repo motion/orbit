@@ -98,8 +98,5 @@ export default class PlacePage {
       background: '#fff',
       border: [1, '#ddd'],
     },
-    docViewContainer: {
-      padding: 20,
-    },
   }
 }

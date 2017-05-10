@@ -7,13 +7,10 @@ export default class Meta {
   render({ node, children, editorStore, ...props }) {
     return (
       <span $hashtags>
-        <span $left contentEditable={false}>
-          #
-        </span>
         <span $content contentEditable suppressContentEditableWarning>
-          {children}
+          <span contentEditable={false} $fade $left>#</span>{children}
         </span>
-        <span $meta if={editorStore.doc}>
+        <span $fade if={editorStore.doc} contentEditable={false}>
           <TimeAgo minPeriod={10} date={editorStore.doc.updatedAt} />
         </span>
       </span>
@@ -24,9 +21,11 @@ export default class Meta {
     hashtags: {
       display: 'flex',
       flexFlow: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginLeft: -10,
     },
     left: {
-      marginLeft: -10,
       marginRight: 10,
     },
     content: {
@@ -36,6 +35,10 @@ export default class Meta {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       color: '#999',
+    },
+    fade: {
+      fontSize: 12,
+      opacity: 0.5,
     },
   }
 }

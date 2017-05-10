@@ -4,6 +4,7 @@ import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import Editor from '~/views/editor'
 import { Document } from 'models'
+import Topics from '~/views/topics'
 
 // cmd + t
 @view({
@@ -51,6 +52,16 @@ export default class DocumentPage {
       >
         <content $$flex $$row>
           <main $$flex={2}>
+            <topics>
+              <Topics
+                topics={doc.hashtags}
+                onChange={topics => {
+                  doc.topics = topics
+                  doc.save()
+                }}
+              />
+            </topics>
+
             <docarea>
               <Editor
                 onKeyDown={store.onKeyDown}
@@ -82,6 +93,11 @@ export default class DocumentPage {
   static style = {
     ago: {
       flexFlow: 'row',
+    },
+    topics: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
     },
     main: {
       padding: 15,

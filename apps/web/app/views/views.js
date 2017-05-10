@@ -40,8 +40,8 @@ export class CircleButton {
   render({ icon, children, ...props }) {
     return (
       <Circle {...props}>
-        <icon>{icon}</icon>
-        <children>{children}</children>
+        <icon if={icon}>{icon}</icon>
+        <children if={children}>{children}</children>
       </Circle>
     )
   }

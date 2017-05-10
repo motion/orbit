@@ -75,6 +75,9 @@ import { SIDEBAR_WIDTH } from '~/constants'
     setText = value => {
       this.text = value
       this.highlightIndex = 0
+      if (this.props.onChange) {
+        this.props.onChange(value)
+      }
     }
   },
 })
@@ -83,9 +86,7 @@ export default class Commander {
     onSubmit: _ => _,
   }
 
-  render({ store, store: { docs }, ...props }) {
-    const { onClose } = this.props
-
+  render({ store, store: { docs }, onChange, onClose, ...props }) {
     return (
       <bar $$flex>
         <input
@@ -93,7 +94,8 @@ export default class Commander {
           {...props}
           value={store.text}
           onChange={e => {
-            store.setText(e.target.value)
+            const val = e.target.value
+            store.setText(val)
           }}
           onKeyDown={e => {
             if (store.textbox.value.indexOf('/') === 0) {
@@ -108,6 +110,9 @@ export default class Commander {
           isOpened={store.open}
           onClose={() => {
             store.open = false
+            if (onClose) {
+              onClose()
+            }
           }}
         >
           <commander>

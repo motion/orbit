@@ -1,5 +1,5 @@
 import { view, observable } from '~/helpers'
-import { Input, Button, Link } from '~/views'
+import { Input, Button, CircleButton, Link } from '~/views'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -9,7 +9,15 @@ import Mousetrap from 'mousetrap'
 import { Document } from 'models'
 import Commander from '~/views/commander'
 
-@view
+@view({
+  store: class LayoutStore {
+    title = ''
+
+    createDoc = () => {
+      Document.create({ title: this.title, places: [App.activePlace] })
+    }
+  },
+})
 export default class Root {
   prevent = (e: Event) => e.preventDefault()
 
@@ -19,7 +27,7 @@ export default class Root {
     this.headerHovered = false
   }
 
-  render() {
+  render({ store }) {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header, doc, place } = App.activePage
 
@@ -64,15 +72,11 @@ export default class Root {
             <omnibar>
               <Commander
                 placeholder="create doc (#tag to tag) (/ to search)"
-                onSubmit={title => {
-                  if (place) {
-                    Document.create({ title, places: [place.slug] })
-                  } else {
-                    Document.create({ title, places: [App.user.slug] })
-                  }
-                }}
+                onSubmit={store.createDoc}
+                onChange={store.ref('title').set}
                 $omniinput
               />
+              <CircleButton $createButton icon="➕" onClick={store.createDoc} />
             </omnibar>
 
             <view $$row $$flex>
@@ -146,6 +150,14 @@ export default class Root {
       '&:hover': {
         opacity: 1,
       },
+    },
+    omnibar: {
+      flexFlow: 'row',
+      alignItems: 'center',
+    },
+    omniinput: {},
+    createButton: {
+      margin: [-10, 0, -10, -20],
     },
     active: {
       opacity: 0.5,

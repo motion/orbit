@@ -12,6 +12,7 @@
   - @mention
   - merge conflicts
   - cursor indicator
+  - fancy ml summarizer
 
 # technical
 

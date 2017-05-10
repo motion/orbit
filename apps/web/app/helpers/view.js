@@ -102,7 +102,10 @@ const storeProvider = createProvider({
       store.start(props)
     }
 
-    App.setStore(store.constructor.name, store)
+    // TODO put this in didMount not willMount & remove timeout
+    setTimeout(() => {
+      App.setStore(store.constructor.name, store)
+    })
 
     return store
   },

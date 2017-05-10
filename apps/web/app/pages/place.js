@@ -74,19 +74,24 @@ export default class PlacePage {
           />
         </form>
 
-        <hashtags>
-          {`#all #btc #etherium #monero #day-trading #something`
-            .split(' ')
-            .map(tag => (
-              <a
-                $tag
-                key={tag}
-                onClick={() => Router.set('hashtag', tag.slice(1))}
-              >
-                {tag}
-              </a>
-            ))}
-        </hashtags>
+        <statusbar>
+          <statsec $$row $$flex>
+            {`#all #btc #etherium #monero #day-trading #something`
+              .split(' ')
+              .map(tag => (
+                <a
+                  $tag
+                  key={tag}
+                  onClick={() => Router.set('hashtag', tag.slice(1))}
+                >
+                  {tag}
+                </a>
+              ))}
+          </statsec>
+          <statsec if={doc} $$row>
+            members: {(doc.members || []).join(', ')}
+          </statsec>
+        </statusbar>
       </Page>
     )
   }
@@ -103,7 +108,7 @@ export default class PlacePage {
       background: '#fff',
       border: [1, '#ddd'],
     },
-    hashtags: {
+    statusbar: {
       flexFlow: 'row',
       flexWrap: 'nowrap',
       overflow: 'hidden',

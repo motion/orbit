@@ -2,7 +2,7 @@ import App from './index'
 import { Model, query, str, array, bool } from './helpers'
 import Document from './document'
 import Board from './board'
-import { capitalize } from 'lodash'
+import { capitalize, some, remove } from 'lodash'
 
 const toSlug = str => str.replace(/ /g, '-').toLowerCase()
 
@@ -73,17 +73,15 @@ class Place extends Model {
     },
     toggleSubscribe() {
       if (!App.loggedIn) return
-      const indexOfUser = this.members.indexOf(App.user._id)
-      if (indexOfUser >= 0) {
-        this.members.push(App.user._id)
-        this.save()
+      if (some(this.members, m => m === App.user.name)) {
+        this.members = remove(this.members, m => m === App.user.name)
       } else {
-        this.members.splice(indexOfUser, 1)
-        this.save()
+        this.members = [...this.members, App.user.name]
       }
+      this.save()
     },
     subscribed() {
-      return App.loggedIn && this.members.indexOf(App.user._id) >= 0
+      return App.loggedIn && this.members.indexOf(App.user.name) >= 0
     },
   }
 

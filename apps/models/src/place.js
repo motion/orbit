@@ -73,11 +73,13 @@ class Place extends Model {
     },
     toggleSubscribe() {
       if (!App.loggedIn) return
-      if (some(this.members, m => m === App.user.name)) {
-        this.members = remove(this.members, m => m === App.user.name)
+      const exists = some(this.members, m => m === App.user.name)
+      if (exists) {
+        this.members = this.members.filter(m => m !== App.user.name)
       } else {
         this.members = [...this.members, App.user.name]
       }
+      console.log(this.members)
       this.save()
     },
     subscribed() {

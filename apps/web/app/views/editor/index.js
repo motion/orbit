@@ -74,6 +74,7 @@ export default class EditorView {
   static defaultProps = {
     onChange: _ => _,
     getRef: _ => _,
+    onKeyDown: _ => _,
   }
 
   plugins = Plugins
@@ -100,9 +101,7 @@ export default class EditorView {
     getRef,
     ...props
   }) {
-    // todo, find a way to pass Editor into all nodes in the editor
-    window.Editor = this
-    if (doc) window.Editor.doc = doc
+    getRef && getRef(this)
 
     return (
       <document if={store.content}>

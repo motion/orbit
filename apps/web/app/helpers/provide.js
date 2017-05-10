@@ -78,6 +78,14 @@ export default function createProvider(options: Object) {
           })
         }
 
+        componentDidMount() {
+          if (options.onStoreDidMount) {
+            for (const name of Object.keys(this.state.stores)) {
+              options.onStoreDidMount(name, this.state.stores[name], this.props)
+            }
+          }
+        }
+
         componentWillUnmount() {
           if (options.onStoreUnmount) {
             for (const name of Object.keys(this.state.stores)) {

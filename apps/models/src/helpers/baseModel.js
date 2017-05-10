@@ -46,6 +46,9 @@ export default class BaseModel {
   get compiledMethods() {
     return {
       ...this.methods,
+      // get id() {
+      //   return this._id
+      // },
       delete() {
         return this.collection
           .findOne(this._id)

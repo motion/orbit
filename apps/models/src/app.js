@@ -66,6 +66,11 @@ export default class App {
       skipSetup: true,
       withCredentials: false,
     })
+    // images
+    this.images = new PouchDB(`${config.couchUrl}/images`, {
+      skipSetup: true,
+      withCredentials: false,
+    })
 
     // connect models
     const connections = Object.entries(Models).map(async ([name, model]) => {

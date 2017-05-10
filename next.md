@@ -15,6 +15,10 @@
 
 # technical
 
+- make app a proper store in web
+- app.(user|auth|key|errors...)
+-
+
 - make actions a thing on stores
 - actions can be observed on any store
 - make App a proper store

@@ -10,7 +10,7 @@ const makeTag = tag => props => React.createElement(`${tag}`, props)
 export const title = props => {
   const { attributes, children, node } = props
   const level = node.data.get('level')
-  const fontSize = Math.floor(7 / (level || 3) * 7)
+  const fontSize = Math.floor(6 / (level || 3) * 6)
   const Tag = props =>
     React.createElement(`h${level}`, { ...props, style: { fontSize } })
   return <Tag {...attributes}>{children}</Tag>

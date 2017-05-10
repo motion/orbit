@@ -28,7 +28,7 @@ export default class Todo {
             </doc>
           ))}
         </docs>
-        <noDocs if={hasLoaded}>No recent documents</noDocs>
+        <noDocs if={hasLoaded && !hasDocs}>No recent documents</noDocs>
       </container>
     )
   }
@@ -36,13 +36,26 @@ export default class Todo {
   static style = {
     docs: {
       flexFlow: 'row',
+      flexWrap: 'wrap',
       margin: 20,
     },
     doc: {
-      marginRight: 20,
+      margin: 10,
+      width: 300,
       background: 'white',
+      boxShadow: `0 0 0 1px rgba(99,114,130,0.16), 0 2px 16px rgba(27,39,51,0.08)`,
+      borderRadius: 3,
       border: '1px solid #eee',
       padding: 20,
+      color: '#6f7c82',
+      fontWeight: 400,
+      transition: '150ms all ease-in',
+      cursor: 'pointer',
+      fontSize: 16,
+      '&:hover': {
+        boxShadow: `0 0 0 1px rgba(99,114,130,0.36), 0 2px 16px rgba(27,39,51,0.28)`,
+        background: '#fefefe',
+      },
     },
   }
 }

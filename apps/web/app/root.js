@@ -27,8 +27,8 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => (this.headerHovered = true)}
-            onMouseLeave={() => (this.headerHovered = false)}
+            onMouseEnter={() => this.headerHovered = true}
+            onMouseLeave={() => this.headerHovered = false}
             if={!!header || !!title || !!actions}
           >
             <nav if={IS_ELECTRON}>
@@ -86,13 +86,8 @@ export default class Root {
       marginTop: HEADER_HEIGHT,
     },
     header: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      padding: 10,
+      marginTop: 20,
       paddingLeft: IS_ELECTRON ? 80 : 10,
-      alignItems: 'center',
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       background: '#fff',
@@ -101,25 +96,11 @@ export default class Root {
       transitionDelay: '400ms',
     },
     omnibar: {
-      flex: 10,
+      flex: 4,
       margin: [0, 'auto'],
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
-    },
-    omniinput: {
-      width: '100%',
-      background: '#fff',
-      border: [1, '#eee'],
-      padding: [6, 10],
-      fontSize: 16,
-      opacity: 0.4,
-      '&:hover': {
-        opacity: 1,
-      },
-      '&:focus': {
-        opacity: 1,
-      },
     },
     hovered: {
       opacity: 1,
@@ -133,7 +114,6 @@ export default class Root {
       fontWeight: 600,
     },
     rest: {
-      alignItems: 'flex-end',
       justifyContent: 'center',
     },
     nav: {

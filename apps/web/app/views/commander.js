@@ -82,6 +82,7 @@ export default class Commander {
         <input
           {...props}
           value={store.text}
+          placeholder="Search documents and people.."
           onChange={e => {
             store.setText(e.target.value)
           }}
@@ -89,7 +90,7 @@ export default class Commander {
             store.open = true
           }}
           onKeyDown={store.onKeyDown}
-          ref={el => (store.textbox = el)}
+          ref={el => store.textbox = el}
         />
         <Portal
           closeOnEsc
@@ -128,6 +129,20 @@ export default class Commander {
       right: 0,
       left: 0,
       bottom: 0,
+    },
+    input: {
+      width: '100%',
+      background: '#fff',
+      border: [1, '#eee'],
+      padding: [6, 10],
+      fontSize: 16,
+      opacity: 0.4,
+      '&:hover': {
+        opacity: 1,
+      },
+      '&:focus': {
+        opacity: 1,
+      },
     },
     highlight: {
       background: `#2c88e4`,

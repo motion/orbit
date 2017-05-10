@@ -57,6 +57,9 @@ export default class Todo {
         boxShadow: `0 0 0 1px rgba(99,114,130,0.36), 0 2px 16px rgba(27,39,51,0.28)`,
         background: '#fefefe',
       },
+      '&:active': {
+        background: '#f3f3f3',
+      },
     },
   }
 }

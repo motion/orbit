@@ -7,6 +7,7 @@ import Sidebar from '~/views/layout/sidebar'
 import Errors from '~/views/layout/errors'
 import Commander from '~/views/commander'
 import Mousetrap from 'mousetrap'
+import { Document } from 'models'
 
 @view
 export default class Root {
@@ -16,6 +17,9 @@ export default class Root {
 
   componentDidMount() {
     this.headerHovered = false
+    Mousetrap.bind('command+n', () => {
+      Document.create()
+    })
   }
 
   render() {

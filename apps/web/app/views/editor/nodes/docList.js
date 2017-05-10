@@ -7,8 +7,7 @@ class ListStore {
   docs = Document.forPlace(this.placeSlug)
 
   get placeSlug() {
-    console.log('return', App.activePage.place.slug)
-    return App.activePage.place.slug
+    return App.activePage.place && App.activePage.place.slug
   }
 }
 

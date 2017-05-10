@@ -75,7 +75,7 @@ export default class PlacePage {
           </Button>,
         ]}
       >
-        <DocumentView if={doc} document={doc} />
+        <DocumentView focusOnMount if={doc} document={doc} />
       </Page>
     )
   }

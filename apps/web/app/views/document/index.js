@@ -5,10 +5,10 @@ import Editor from '~/views/editor'
 
 @view
 export default class Document {
-  render({ document }) {
+  render({ document, focusOnMount }) {
     return (
       <doc>
-        <Editor doc={document} id={document._id} />
+        <Editor focusOnMount doc={document} id={document._id} />
       </doc>
     )
   }

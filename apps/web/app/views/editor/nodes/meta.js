@@ -7,8 +7,9 @@ export default class Meta {
   render({ node, children, editorStore, ...props }) {
     return (
       <span $hashtags>
+        <span contentEditable={false} $fade $left>#</span>
         <span $content contentEditable suppressContentEditableWarning>
-          <span contentEditable={false} $fade $left>#</span>{children}
+          {children}
         </span>
         <span $fade if={editorStore.doc} contentEditable={false}>
           <TimeAgo minPeriod={10} date={editorStore.doc.updatedAt} />
@@ -23,9 +24,12 @@ export default class Meta {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginLeft: -10,
+      marginLeft: 0,
     },
     left: {
+      display: 'inline-block',
+      width: 3,
+      marginLeft: -13,
       marginRight: 10,
     },
     content: {

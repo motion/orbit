@@ -100,7 +100,6 @@ export default class Sidebar {
               controlled
               items={store.allPlaces}
               onSelect={place => {
-                console.log(place && place.title)
                 if (place) {
                   Router.go(place.url())
                 }
@@ -112,17 +111,16 @@ export default class Sidebar {
                 if (place.create) {
                   return (
                     <List.Item>
-                      <item if={store.creatingPlace}>
-                        <form onSubmit={store.createPlace}>
-                          <Input
-                            $create
-                            getRef={store.onNewPlace}
-                            onKeyDown={e =>
-                              e.which === 13 && store.createPlace(e)}
-                            placeholder="new place"
-                          />
-                        </form>
-                      </item>
+                      <form onSubmit={store.createPlace}>
+                        <Input
+                          $create
+                          getRef={store.onNewPlace}
+                          onBlur={() => (store.creatingPlace = false)}
+                          onKeyDown={e =>
+                            e.which === 13 && store.createPlace(e)}
+                          placeholder="new place"
+                        />
+                      </form>
                     </List.Item>
                   )
                 }
@@ -164,14 +162,6 @@ export default class Sidebar {
       fontSize: 16,
       width: '70%',
       lineHeight: '1.5rem',
-    },
-    create: {
-      background: '#eee',
-      color: '#000',
-      border: 'none',
-      margin: [5, 5, 10, 5],
-      padding: 8,
-      fontSize: 16,
     },
   }
 }

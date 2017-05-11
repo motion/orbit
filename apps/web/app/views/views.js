@@ -5,9 +5,11 @@ import Popover from '~/views/popover'
 export * from '~/views/page'
 
 export const Input = $('input', {
+  fontSize: 16,
+  lineHeight: '1.4rem',
   border: [1, '#eee'],
-  padding: 4,
-  margin: ['auto', 4],
+  padding: [3, 5],
+  margin: ['auto', 0],
   background: '#fff',
   '&:hover': {
     cursor: 'text',

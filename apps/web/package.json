@@ -60,7 +60,7 @@
     "react-grid-layout": "*",
     "react-mixin": "^3.0.5",
     "react-portal": "^3.0.0",
-    "react-timeago": "^3.2.1",
+    "react-timeago": "3.2.1",
     "react-virtualized": "^9.7.5",
     "rxjs": "^5.3.0",
     "sillyname": "^0.1.0",

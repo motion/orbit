@@ -4,6 +4,7 @@ import {
   DB_HOST,
   DB_USER,
   DB_PASSWORD,
+  DB_PUBLIC_URL,
   REDIS_URL,
 } from './keys'
 
@@ -12,6 +13,7 @@ const dbServer = {
   host: DB_HOST,
   user: DB_USER,
   password: DB_PASSWORD,
+  publicURL: DB_PUBLIC_URL,
   userDB: 'users',
   couchAuthDB: '_users',
 }

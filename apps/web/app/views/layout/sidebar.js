@@ -128,10 +128,44 @@ export default class Sidebar {
                 return { primary: place.title }
               }}
             />
+
+            <title $$style={{ padding: 7, color: [0, 0, 0, 0.4] }}>
+              all
+            </title>
+            <List
+              controlled
+              items={store.allPlaces}
+              onSelect={place => {
+                if (place) {
+                  Router.go(place.url())
+                }
+              }}
+              getItem={place => {
+                if (place.create === false) {
+                  return null
+                }
+                if (place.create) {
+                  return (
+                    <List.Item>
+                      <form onSubmit={store.createPlace}>
+                        <Input
+                          $create
+                          getRef={store.onNewPlace}
+                          onBlur={() => (store.creatingPlace = false)}
+                          onKeyDown={e =>
+                            e.which === 13 && store.createPlace(e)}
+                          placeholder="new place"
+                        />
+                      </form>
+                    </List.Item>
+                  )
+                }
+
+                return { primary: place.title }
+              }}
+            />
           </main>
         </content>
-
-        <div $$flex $$draggable />
 
         <sidebar if={App.activePage.sidebar}>
           {App.activePage.sidebar}

@@ -1,5 +1,5 @@
 import { view, observable } from '~/helpers'
-import { Input, Button, CircleButton, Link } from '~/views'
+import { Input, CircleButton, Link, Button, Icon } from '~/views'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -85,6 +85,7 @@ export default class Root {
                 $omniinput
               />
               <CircleButton $createButton icon="➕" onClick={store.createDoc} />
+              <Button>test</Button>
             </omnibar>
           </statusbar>
         </main>

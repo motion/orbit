@@ -1,4 +1,5 @@
 import { view } from '~/helpers'
+import randomcolor from 'random-color'
 
 @view
 export default class CardList {

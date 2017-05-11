@@ -2,7 +2,6 @@ import { node, view } from '~/helpers'
 import App, { Document } from 'models'
 import { Button } from '~/views'
 import { isEqual } from 'lodash'
-import randomcolor from 'random-color'
 import Router from '~/router'
 import CardList from './lists/card'
 import GridList from './lists/grid'
@@ -35,19 +34,47 @@ export default class DocList {
 
     return (
       <doclist contentEditable={false}>
-        <h4>
-          Recent Posts
-          {' '}
-          <Button onClick={() => store.setType(node, 'grid')}>grid</Button>
-        </h4>
+        <title>
+          <span $title>Recent Posts</span>
+          <buttons>
+            <Button
+              $active={listType === 'grid'}
+              onClick={() => store.setType(node, 'grid')}
+            >
+              ⊞
+            </Button>
+            <Button
+              $active={listType === 'card'}
+              onClick={() => store.setType(node, 'card')}
+            >
+              🃏
+            </Button>
+          </buttons>
+        </title>
         <docs if={!hasDocs}>
           no docs!
         </docs>
         <content if={hasDocs}>
-          <CardList if={!listType} listStore={store} />
+          <CardList if={listType === 'card'} listStore={store} />
           <GridList if={listType === 'grid'} listStore={store} />
         </content>
       </doclist>
     )
+  }
+
+  static style = {
+    title: {
+      flexFlow: 'row',
+      overflow: 'hidden',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    buttons: {
+      flexFlow: 'row',
+    },
+    active: {
+      background: 'red',
+      color: '#fff',
+    },
   }
 }

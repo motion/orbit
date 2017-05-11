@@ -37,3 +37,30 @@ docker-compose up
 ```sh
 npm run watch
 ```
+
+
+## Docs
+
+### file structure
+
+### routes
+
+### pages
+
+### views
+
+### stores
+
+### libraries
+
+
+instead of **fetch** use Rx.Observable.getJSON(). why? you can cancel it!
+
+```js
+ const obs = Observable.ajax.getJSON(`/users/${id}`)
+  .subscribe(user => {
+    this.setState({ user });
+  })
+
+obj.unsubscribe()
+```

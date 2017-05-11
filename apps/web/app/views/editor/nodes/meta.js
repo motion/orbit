@@ -1,4 +1,5 @@
 import { node, view } from '~/helpers'
+import { flatten, uniq } from 'lodash'
 import TimeAgo from 'react-timeago'
 
 @node
@@ -8,6 +9,9 @@ export default class Meta {
     return (
       <span $hashtags>
         <span contentEditable={false} $fade $left>#</span>
+        <span if={node.text} $content $hiddenTags>
+          {node.text.split(' ').map((tag, i) => <tag key={i}>{tag} </tag>)}
+        </span>
         <span $content contentEditable suppressContentEditableWarning>
           {children}
         </span>
@@ -25,6 +29,7 @@ export default class Meta {
       alignItems: 'center',
       justifyContent: 'space-between',
       marginLeft: 0,
+      position: 'relative',
     },
     left: {
       display: 'inline-block',
@@ -39,6 +44,22 @@ export default class Meta {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       color: '#999',
+    },
+    hiddenTags: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    },
+    tag: {
+      display: 'inline-block',
+      color: 'red',
+      '&:hover': {
+        background: '#eee',
+      },
+      '&::after': {
+        content: ' ',
+        display: 'block',
+      },
     },
     fade: {
       fontSize: 12,

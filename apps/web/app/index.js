@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from 'models'
+import App from '@jot/models'
 import Mobx from 'mobx'
 import _m from 'mobx-utils'
 import Rx from 'rxjs'

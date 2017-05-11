@@ -6,3 +6,4 @@ app_data
 infra
 apps/native
 .vscode
+**/*/node_modules

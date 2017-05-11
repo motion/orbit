@@ -1,6 +1,6 @@
 import InsertImages from 'slate-drop-or-paste-images'
 import { Raw } from 'slate'
-import { Image } from 'models'
+import { Image } from '@jot/models'
 
 export default InsertImages({
   extensions: ['png', 'jpg', 'gif'],

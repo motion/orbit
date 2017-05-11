@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import { Place, Document } from 'models'
+import { Place, Document } from '@jot/models'
 import { Page, CircleButton } from '~/views'
 import { toJS, computed } from 'mobx'
 import { flatten } from 'lodash'

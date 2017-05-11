@@ -1,5 +1,5 @@
 import { $, view } from '~/helpers'
-import { Place, Document } from 'models'
+import { Place, Document } from '@jot/models'
 import Portal from 'react-portal'
 import { computed } from 'mobx'
 import { includes } from 'lodash'

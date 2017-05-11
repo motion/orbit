@@ -1,6 +1,6 @@
 import { view } from '~/helpers'
 import { isEqual } from 'lodash'
-import { Place, Document } from 'models'
+import { Place, Document } from '@jot/models'
 import Router from '~/router'
 import DocItem from '~/views/document/item'
 import Grid from '~/views/grid'

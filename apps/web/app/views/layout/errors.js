@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import App from 'models'
+import App from '@jot/models'
 import { SIDEBAR_WIDTH } from '~/constants'
 
 @view

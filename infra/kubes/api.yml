@@ -37,13 +37,13 @@ spec:
       volumes:
         - name: app-code
           hostPath:
-            path: "{{PWD}}/apps"
+            path: "{{PWD}}"
       containers:
         - name: pad-api
           image: {{REGISTRY}}/motion/starter-api:{{ENV}}
           imagePullPolicy: Always
           volumeMounts:
-            - mountPath: /repo/apps
+            - mountPath: /repo
               name: app-code
           ports:
           - containerPort: 3000

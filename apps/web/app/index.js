@@ -54,7 +54,7 @@ ReactDOM.render(<Splash />, root)
 
 function render() {
   const Root = require('./root').default
-  // ReactDOM.render(<Root />, root)
+  ReactDOM.render(<Root />, root)
 }
 
 export function start() {

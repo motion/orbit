@@ -84,7 +84,11 @@ export default class Root {
                 onChange={store.ref('title').set}
                 $omniinput
               />
-              <CircleButton $createButton icon="➕" onClick={store.createDoc} />
+              <CircleButton
+                $createButton
+                icon={<Icon name="ui-add" />}
+                onClick={store.createDoc}
+              />
               <Button icon="plus">test</Button>
             </omnibar>
           </statusbar>

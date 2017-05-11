@@ -89,11 +89,12 @@ export default class Sidebar {
             <input
               $search
               placeholder="search places"
-              onChange={e => store.filter = e.target.value}
+              onChange={e => (store.filter = e.target.value)}
             />
-            <Button onClick={() => store.creatingPlace = true}>
-              +
-            </Button>
+            <Button
+              icon="ui-add"
+              onClick={() => (store.creatingPlace = true)}
+            />
           </title>
           <main if={store.places}>
             <List

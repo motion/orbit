@@ -1,14 +1,31 @@
-# motion-starter
+a base starter stack that gives you magical powers.
 
-- mono-repo: share code between all apps
-- [gloss](https://github.com/motion/gloss): 💅 css in js
-- `@view` decorator
-- mobx stores
-- simple router
-- model system:
-  - [rxdb](https://github.com/pubkey/rxdb) = pouchdb + rxjs
-  - automatic rxjs => mobx
-- couchdb
+on order of time it saves you:
+
+- monorepo: `bin/*` that automates your whole dev env
+- kubernetes + minikube
+  - `dev start`, `dev restart api`, `dev ssh api` and so on...
+  - `prod [arg]`, handles your production instance
+- pimped out react
+  - webpack, babel, lodash, and a host of common things
+- amazing store system
+  - co-located stores with the least boilerplate syntax possible:
+  - automatic observables through mobx
+  - automatic streams to observables
+  - super simple to write, test, debug
+- amazing views
+  - @view decorator gives you simplicity + power
+  - view helpers: `this.setTimeout`, `this.watch`, etc
+  - 💅 css in js with [gloss](https://github.com/motion/gloss)
+- amazing models
+  - a model system build on top of [rxdb](https://github.com/pubkey/rxdb)
+  - gives you full power of pouchdb
+  - offline first!
+  - share between backend/frontend
+- dockerized infrastructure
+  - api with express, cors, etc configured
+  - api superlogin
+  - couchdb
 
 ## Install
 
@@ -20,18 +37,12 @@ npm i
 npm run bootstrap
 ```
 
-Be sure you have [docker-compose](https://docs.docker.com/compose/) installed.
-
 ## Running
 
-Run these three side-by-side:
+Run these side-by-side:
 
 ```sh
-npm run web
-```
-
-```sh
-docker-compose up
+dev start
 ```
 
 ```sh

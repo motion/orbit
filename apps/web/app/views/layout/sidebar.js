@@ -5,22 +5,32 @@ import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
 import List from '~/views/list'
 import Router from '~/router'
+import fuzzy from 'fuzzy'
 
 class SidebarStore {
   places = Place.all()
   placeInput = null
   creatingPlace = false
+  filter = ''
 
   get allPlaces() {
     const myPlace = {
       title: App.loggedIn ? App.user.name : 'me',
       url: _ => '/',
     }
-    return [
+    const results = [
       myPlace,
-      this.creatingPlace ? { create: true } : null,
+      { create: this.creatingPlace },
       ...(this.places || []),
     ]
+    if (this.filter) {
+      return fuzzy
+        .filter(this.filter, results, {
+          extract: el => (el && el.title) || '',
+        })
+        .map(i => i.original)
+    }
+    return results
   }
 
   createPlace = async e => {
@@ -76,7 +86,11 @@ export default class Sidebar {
           <Login />
 
           <title $$row $$justify="space-between" $$padding={[8, 8, 0]}>
-            my places
+            <input
+              $search
+              placeholder="search places"
+              onChange={e => (store.filter = e.target.value)}
+            />
             <Button onClick={() => (store.creatingPlace = true)}>
               +
             </Button>
@@ -92,7 +106,7 @@ export default class Sidebar {
                 }
               }}
               getItem={place => {
-                if (!place) {
+                if (place.create === false) {
                   return null
                 }
                 if (place.create) {
@@ -144,6 +158,12 @@ export default class Sidebar {
       fontWeight: 300,
       padding: [4, 8, 0],
       color: [0, 0, 0, 0.5],
+    },
+    search: {
+      border: 'none',
+      fontSize: 16,
+      width: '70%',
+      lineHeight: '1.5rem',
     },
     create: {
       background: '#eee',

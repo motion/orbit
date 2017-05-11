@@ -1,3 +1,3 @@
 import { replacer } from './helpers'
 
-export default [replacer(/^(\-docs)$/, 'docList')]
+export default [replacer(/^(\-docs)$/, 'docList', { type: 'card' })]

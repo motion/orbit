@@ -21,10 +21,12 @@ export class Page {
     // ensure removal only if not already replaced
     if (App.activePage.id === this.id) {
       App.activePage = {}
+      App.extraActions = null
     }
   }
 
-  setPage = ({ title, actions, header, sidebar, doc, place }) => {
+  setPage = ({ title, actions, extraActions, header, sidebar, doc, place }) => {
+    App.extraActions = extraActions
     App.activePage = {
       id: this.id,
       title,

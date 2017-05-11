@@ -33,6 +33,8 @@ export default class Root {
   render({ store }) {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header, doc, place } = App.activePage
+    const { extraActions } = App
+    console.log(extraActions)
 
     return (
       <layout $$draggable>
@@ -63,6 +65,9 @@ export default class Root {
             <view $$flex />
             <rest if={header || actions} $$row>
               {header || null}
+              <actions $$row if={extraActions}>
+                {extraActions.map((xa, i) => <action key={i}>{xa}</action>)}
+              </actions>
               <actions $$row if={actions}>
                 {actions.map((action, i) => <action key={i}>{action}</action>)}
               </actions>

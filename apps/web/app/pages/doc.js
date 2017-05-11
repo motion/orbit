@@ -40,8 +40,10 @@ export default class DocumentPage {
 
     return (
       <Page
-        actions={[
-          <Button>🔗</Button>,
+        extraActions={[
+          <Button tooltip="share link" onClick={() => console.log(place.url())}>
+            🔗
+          </Button>,
           <Button onClick={doc.togglePrivate}>
             {doc.private ? '🙈' : '🌎'}
           </Button>,

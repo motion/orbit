@@ -60,8 +60,7 @@ class List {
         e.preventDefault()
         break
       case 13: // enter
-        this.highlightItem(() => this.state.selected)
-        this.onSelect()
+        this.highlightItem(() => this.state.selected, this.onSelect)
         e.preventDefault()
         break
     }
@@ -76,10 +75,12 @@ class List {
     return this.props.items.length
   }
 
-  highlightItem = (setter: () => number | null) => {
+  highlightItem = (setter: () => number | null, cb: Function) => {
     const selected = setter(this.state.selected)
-    this.setState({ selected })
-    this.props.onHighlight(this.getSelected(), selected)
+    this.setState({ selected }, () => {
+      this.props.onHighlight(this.getSelected(), selected)
+      if (cb) cb()
+    })
   }
 
   getSelected = () => {
@@ -157,8 +158,7 @@ class List {
 
       if (controlled) {
         props.onClick = () => {
-          this.highlightItem(() => i)
-          this.onSelect()
+          this.highlightItem(() => i, this.onSelect)
         }
         props.highlight = i === this.state.selected
       }

@@ -86,6 +86,7 @@ export default class Sidebar {
               controlled
               items={store.allPlaces}
               onSelect={place => {
+                console.log(place && place.title)
                 if (place) {
                   Router.go(place.url())
                 }

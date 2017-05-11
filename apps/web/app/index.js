@@ -29,16 +29,12 @@ if (!IS_PROD) {
 const root = document.querySelector('#app')
 
 @view class Splash {
-  time = Rx.Observable
-    .timer(200, 100)
-    .timeInterval()
-    .pluck('interval')
-    .take(300)
+  time = Rx.Observable.timer(0, 16).take(30000)
 
   render() {
-    console.log(this.time)
     return <loader $$draggable $at={this.time} />
   }
+
   static style = {
     loader: {
       width: '100%',
@@ -46,8 +42,11 @@ const root = document.querySelector('#app')
       backgroundImage: 'url(https://s-media-cache-ak0.pinimg.com/736x/db/36/10/db36106c7e15b88cf5ed55ddaada0ebc.jpg)',
       backgroundPosition: 'center center',
       backgroundSize: 'cover',
-      filter: 'contrast(200%) brightness(2)',
+      filter: 'contrast(100%) brightness(1)',
     },
+    at: time => ({
+      filter: `contrast(${100 + time * 2}%) brightness(${1 + 0.1 * time})`,
+    }),
   }
 }
 

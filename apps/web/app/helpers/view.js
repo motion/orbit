@@ -33,10 +33,7 @@ const ViewHelpers = {
         const stream = this[key]
         this[`${key}__stream`] = stream
         const observable = fromStream(stream)
-        this.subscriptions.add(() => {
-          stream.unsubscribe()
-          delete this[`${key}__stream`]
-        })
+        this.subscriptions.add(observable)
         Object.defineProperty(this, key, {
           get() {
             return observable.current

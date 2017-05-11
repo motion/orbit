@@ -6,11 +6,7 @@ import { node, view, observable } from '~/helpers'
 export default class Counter {
   diff = num => {
     const { node: { data }, onChange } = this.props
-
-    const next = Object.assign({}, data.toJS(), {
-      count: (data.get('count') || 0) + num,
-    })
-
+    const next = data.set('count', (data.get('count') || 0) + num)
     onChange(next)
   }
 

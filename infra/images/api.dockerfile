@@ -27,7 +27,7 @@ RUN apk del curl tar binutils
 RUN rm -rf /tmp/* /var/cache/apk/*
 
 # bootstrap
-ADD . /repo/
+COPY . /repo/
 RUN yarn install
 RUN yarn cache clean
 

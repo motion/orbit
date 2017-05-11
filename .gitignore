@@ -2,7 +2,6 @@ node_modules
 lib
 *.log
 .DS_Store
-.vscode
 app_data
 shrinkwrap.yaml
 build

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-dev": "nodemon lib"
+    "start-dev": "nodemon --legacy-watch --debug=5858 lib"
   },
   "dependencies": {
     "body-parser": "^1.16.1",

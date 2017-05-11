@@ -10,10 +10,13 @@ spec:
   selector:
     run: pad-api
   ports:
-    - protocol: TCP
+    - name: app-port
       port: 3000
       targetPort: 3000
       nodePort: 32099
+    - name: debug-port
+      port: 5858
+      nodePort: 30006
 status:
   loadBalancer: {}
 ---
@@ -44,6 +47,7 @@ spec:
               name: app-code
           ports:
           - containerPort: 3000
+          - containerPort: 5858
           resources: {}
           env:
           - name: PORT

@@ -9,6 +9,8 @@ set +e
 file-exists ".env"
 file-exists ".env.dev"
 
+echo "Make sure to install dotenv and ensure it picks up your .env vars!"
+
 function ensure-dep {
   cmd=${@:1}
   if [ "$(bin-exists $1)" = "" ]; then
@@ -39,13 +41,12 @@ brew update
 ensure-dep "xhyve" -- brew install xhyve
 ensure-dep "pip" -- brew install python
 ensure-dep "envtpl" -- pip install envtpl
-ensure-dep "source_env" -- npm i -g dotenv && echo "Make sure to the ADD a line: 'source_env' to your shell rc file"
 ensure-dep "kubectl" -- brew install kubectl
 ensure-dep "minikube" -- install-minikube
 
 # start kubes
 if minikube ip; then
-  echo "minikube running"
+  echo "minikube running on $(minikube ip)"
 else
   minikube start
 fi

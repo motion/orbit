@@ -54,3 +54,9 @@ spec:
             value: "5984"
           - name: DB_PROTOCOL
             value: "{{DB_PROTOCOL}}"
+          - name: DB_PUBLIC_URL
+            value: "{{DB_PUBLIC_URL}}"
+          - name: DB_USER
+            value: "{{DB_USER}}"
+          - name: DB_PASSWORD
+            value: "{{DB_PASSWORD}}"

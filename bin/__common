@@ -58,3 +58,14 @@ function save-config {
 
   echo "$ALL" > "$KUBES_CONFIG_FILE"
 }
+
+function bin-exists {
+  echo "$(which $1 2> /dev/null)"
+}
+
+function file-exists {
+  if [ ! -f "$1" ]; then
+    echo "$2 not found"
+    exit 1
+  fi
+}

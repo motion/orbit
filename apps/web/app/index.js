@@ -39,7 +39,7 @@ const root = document.querySelector('#app')
     loader: {
       width: '100%',
       height: '100%',
-      backgroundImage: 'url(https://s-media-cache-ak0.pinimg.com/736x/db/36/10/db36106c7e15b88cf5ed55ddaada0ebc.jpg)',
+      backgroundImage: 'url(https://grasshoppermind.files.wordpress.com/2012/05/five-lined-pyramids.jpg)',
       backgroundPosition: 'center center',
       backgroundSize: 'cover',
       filter: 'contrast(100%) brightness(1)',

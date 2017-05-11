@@ -18,6 +18,12 @@ import { HEADER_HEIGHT } from '~/constants'
       })
     }
 
+    get step() {
+      if (!App.user || (App.user && !App.user.name)) return 1
+      if (App.tempUser) return 2
+      if (App.loggedIn) return 3
+    }
+
     setUsername = () => {
       App.setUsername(this.username)
       if (this.password) {
@@ -30,18 +36,21 @@ import { HEADER_HEIGHT } from '~/constants'
       App.loginOrSignup(App.user.name, this.password)
       this.loggingIn = false
     }
+
+    onSubmit = e => {
+      e.preventDefault()
+      if (this.step === 2) {
+        this.finish()
+      }
+    }
   },
 })
 export default class Login {
-  prevent = e => e.preventDefault()
-
   render({ store }) {
-    const step2 = App.tempUser
-
     return (
       <login $$draggable>
-        <form $$undraggable if={!App.loggedIn} onSubmit={this.prevent}>
-          <step if={App.noUser}>
+        <form $$undraggable if={!App.loggedIn} onSubmit={store.onSubmit}>
+          <step if={store.step === 1}>
             <Input
               $input
               name="username"
@@ -54,14 +63,14 @@ export default class Login {
             </Button>
           </step>
 
-          <step $$hide={!step2}>
-            <info if={App.user} $showingPass={step2}>
+          <step $$hide={store.step !== 2}>
+            <info if={App.user} $showingPass={store.step === 2}>
               <icon onClick={App.clearUser}>{'<'}</icon>
               <username $$ellipse>{App.user.name}</username>
             </info>
             <Input
               $input
-              $$width={100}
+              $$width={90}
               name="password"
               type="password"
               placeholder="password"
@@ -75,7 +84,7 @@ export default class Login {
           </step>
         </form>
 
-        <step if={App.loggedIn}>
+        <step if={store.step === 3}>
           <text>
             hi,&nbsp;
             <username $$ellipse>{App.user.name}</username>

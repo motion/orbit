@@ -185,10 +185,6 @@ export default class App {
     this.user = null
   }
 
-  @computed get noUser() {
-    return this.user && !this.user.name
-  }
-
   @computed get tempUser() {
     return this.user && this.user.name && this.user.temp
   }

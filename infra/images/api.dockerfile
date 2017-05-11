@@ -19,7 +19,7 @@ WORKDIR /repo
 # bootstrap
 COPY . /repo/
 RUN git init
-# RUN pnpm install --production
+RUN pnpm install --production
 RUN npm run bootstrap
 RUN apk del git
 

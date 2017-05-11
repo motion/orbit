@@ -46,8 +46,14 @@ dev start
 ```
 
 ```sh
+dev serve
+```
+
+```sh
 npm run watch
 ```
+
+then hit: http://jot.dev
 
 
 ## Docs

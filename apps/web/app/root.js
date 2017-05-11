@@ -71,30 +71,13 @@ export default class Root {
           <statusbar>
             <omnibar>
               <Commander
-                placeholder="create doc (#tag to tag) (/ to search)"
+                placeholder="new..."
                 onSubmit={store.createDoc}
                 onChange={store.ref('title').set}
                 $omniinput
               />
               <CircleButton $createButton icon="➕" onClick={store.createDoc} />
             </omnibar>
-
-            <view $$row $$flex>
-              {`#all #btc #etherium #monero #day-trading #something`
-                .split(' ')
-                .map(tag => (
-                  <a
-                    $tag
-                    key={tag}
-                    onClick={() => Router.set('hashtag', tag.slice(1))}
-                  >
-                    {tag}
-                  </a>
-                ))}
-              <view if={doc} $$row>
-                members: {(doc.members || []).join(', ')}
-              </view>
-            </view>
           </statusbar>
         </main>
         <Errors />

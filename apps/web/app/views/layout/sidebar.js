@@ -1,18 +1,40 @@
 import { view } from '~/helpers'
-import { Page, Link, Input } from '~/views'
+import { Page, Link, Input, Button } from '~/views'
 import { Place } from 'models'
 import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
+import List from '~/views/list'
+import Router from '~/router'
 
 class SidebarStore {
   places = Place.all()
   placeInput = null
+  creatingPlace = false
+
+  get allPlaces() {
+    const myPlace = {
+      title: App.loggedIn ? App.user.name : 'me',
+      url: _ => '/',
+    }
+    return [
+      myPlace,
+      this.creatingPlace ? { create: true } : null,
+      ...(this.places || []),
+    ]
+  }
 
   createPlace = async e => {
     e.preventDefault()
     const val = this.placeInput.value
     await Place.createWithHome(val)
-    this.placeInput.value = ''
+    this.creatingPlace = false
+  }
+
+  onNewPlace = ref => {
+    this.placeInput = ref
+    if (ref) {
+      ref.focus()
+    }
   }
 }
 
@@ -50,30 +72,49 @@ export default class Sidebar {
   render({ store }) {
     return (
       <side>
-        <content $$undraggable>
+        <content $$flex $$undraggable>
           <Login />
 
-          <h2>go</h2>
-          <SideBarLink to="/">profile</SideBarLink>
-          <SideBarLink to="/feed">feed</SideBarLink>
-
-          <h2>places</h2>
-          <form onSubmit={store.createPlace}>
-            <Input
-              $create
-              getRef={ref => (store.placeInput = ref)}
-              onKeyDown={e => e.which === 13 && store.createPlace(e)}
-              placeholder="new place"
-            />
-          </form>
+          <title $$row $$justify="space-between" $$padding={[8, 8, 0]}>
+            my places
+            <Button onClick={() => (store.creatingPlace = true)}>
+              +
+            </Button>
+          </title>
           <main if={store.places}>
-            {(store.places || []).map(place => {
-              return (
-                <SideBarLink to={place.url()} key={place._id}>
-                  {place.title}
-                </SideBarLink>
-              )
-            })}
+            <List
+              controlled
+              items={store.allPlaces}
+              onSelect={place => {
+                if (place) {
+                  Router.go(place.url())
+                }
+              }}
+              getItem={place => {
+                if (!place) {
+                  return null
+                }
+                if (place.create) {
+                  return (
+                    <List.Item>
+                      <item if={store.creatingPlace}>
+                        <form onSubmit={store.createPlace}>
+                          <Input
+                            $create
+                            getRef={store.onNewPlace}
+                            onKeyDown={e =>
+                              e.which === 13 && store.createPlace(e)}
+                            placeholder="new place"
+                          />
+                        </form>
+                      </item>
+                    </List.Item>
+                  )
+                }
+
+                return { primary: place.title }
+              }}
+            />
           </main>
         </content>
 

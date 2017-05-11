@@ -54,7 +54,7 @@
     "prop-types": "^15.5.9",
     "random-color": "^1.0.1",
     "react": "^15.5.2",
-    "react-dom": "^15.5.2",
+    "react-dom": "^15.5.4",
     "react-flip-move": "^2.9.2",
     "react-grid-layout": "*",
     "react-mixin": "^3.0.5",

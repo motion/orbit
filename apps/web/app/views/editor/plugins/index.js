@@ -1,4 +1,5 @@
 export Markdown from './markdown'
+export Mentions from './mentions'
 export Images from './images'
 export List from './list'
 export Todo from './todo'

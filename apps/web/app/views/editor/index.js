@@ -7,6 +7,7 @@ import * as Nodes from './nodes'
 import * as Plugins from './plugins'
 import * as Rules from './rules'
 import Marks from './marks'
+import { includes } from 'lodash'
 
 export { Raw } from 'slate'
 
@@ -19,6 +20,9 @@ class EditorStore {
   focused = false
   content = null
   inline = this.props.inline
+
+  suggestionsText = ''
+  suggestions = ['banana', 'croissant', 'france', 'italy']
 
   start() {
     this.watch(this.watchers.save)
@@ -126,6 +130,10 @@ export default class EditorView {
     focusOnMount,
     ...props
   }) {
+    const suggestions = store.suggestions.filter(s =>
+      includes(s, store.suggestionsText)
+    )
+
     return (
       <document if={store.content}>
         <Editor
@@ -133,6 +141,8 @@ export default class EditorView {
           $$undraggable
           readOnly={readOnly}
           plugins={merge(this.plugins)}
+          suggestions={suggestions}
+          onMentionSearch={text => store.suggestionsText = text}
           schema={this.schema}
           state={store.content}
           onChange={this.onChange}

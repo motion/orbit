@@ -3,6 +3,7 @@ import App from 'models'
 import { Input, Button, Link } from '~/views'
 import { HEADER_HEIGHT } from '~/constants'
 
+// this.finish()
 @view({
   store: class {
     loggingIn = false
@@ -22,6 +23,12 @@ import { HEADER_HEIGHT } from '~/constants'
       if (!App.user || (App.user && !App.user.name)) return 1
       if (App.tempUser) return 2
       if (App.loggedIn) return 3
+    }
+
+    setPasswordRef = ref => {
+      if (ref) {
+        this.passwordRef = ref
+      }
     }
 
     setUsername = () => {
@@ -55,12 +62,14 @@ export default class Login {
               $input
               name="username"
               onKeyDown={e => e.which === 13 && store.setUsername()}
-              onChange={e => store.username = e.target.value}
+              onChange={e => (store.username = e.target.value)}
               placeholder="pick username"
             />
-            <Button if={!App.hasUsername} $button onClick={store.setUsername}>
-              ✅
-            </Button>
+            <Button
+              if={!App.hasUsername}
+              icon="login"
+              onClick={store.setUsername}
+            />
           </step>
 
           <step $$hide={store.step !== 2}>
@@ -75,8 +84,8 @@ export default class Login {
               type="password"
               placeholder="password"
               onKeyDown={e => e.which === 13 && store.finish()}
-              onChange={e => store.password = e.target.value}
-              getRef={ref => store.passwordRef = ref}
+              onChange={e => (store.password = e.target.value)}
+              getRef={store.setPasswordRef}
             />
             <Button onClick={store.finish}>
               {store.loggingIn ? '⌛' : '✅'}

@@ -41,8 +41,8 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => this.headerHovered = true}
-            onMouseLeave={() => this.headerHovered = false}
+            onMouseEnter={() => (this.headerHovered = true)}
+            onMouseLeave={() => (this.headerHovered = false)}
           >
             <nav if={IS_ELECTRON}>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
@@ -85,7 +85,7 @@ export default class Root {
                 $omniinput
               />
               <CircleButton $createButton icon="➕" onClick={store.createDoc} />
-              <Button>test</Button>
+              <Button icon="plus">test</Button>
             </omnibar>
           </statusbar>
         </main>

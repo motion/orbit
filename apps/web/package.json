@@ -26,7 +26,7 @@
     "color": "^1.0.3",
     "element-resize-detector": "^1.1.12",
     "fuzzy": "^0.1.3",
-    "gloss": "^5.1.2",
+    "gloss": "^5.3.0",
     "immutable": "^3.7.6",
     "kontur": "^0.2.0",
     "lodash": "^4.17.4",

@@ -3,12 +3,10 @@ import Glint from './glint'
 import Icon from './icon'
 
 const getColors = (baseColor, strength = 0) => {
-  const luminance = baseColor.luminosity()
-  const isLight = luminance > 0.7
-  const adjuster = isLight ? 'darkenByAmount' : 'lightenByAmount'
-  const background = baseColor[adjuster](strength)
+  const isLight = baseColor.luminosity() > 0.7
+  const background = isLight ? baseColor.darken() : baseColor.lighten()
   const border = [1, background.darken(isLight ? 0.01 : 0.035)]
-  const color = isLight ? background.darken(0.3) : background.lighten(0.3)
+  const color = background.lightness(isLight ? 0.3 : 1)
   return { background, color, isLight, border }
 }
 
@@ -68,8 +66,8 @@ export default class Button {
     } = this.props
 
     const theme = clr(color)
-    console.log('theme', theme)
     const colors = bordered ? getBorderedColors(theme) : getColors(theme)
+    console.log('1', theme, theme.hex(), { colors })
 
     const ButtonIcon = () => (
       <Icon
@@ -166,10 +164,10 @@ export default class Button {
         }
       }
 
-      const baseColor = color(color)
+      const baseColor = clr(color)
       const { isLight, ...regular } = getColors(baseColor)
       const bordered = getBorderedColors(baseColor)
-      const borderedLight = bordered.color.lightenByAmount(0.15)
+      const borderedLight = bordered.color.lighten(0.15)
 
       return {
         button: {
@@ -177,23 +175,23 @@ export default class Button {
           ...regular,
           '&:hover': {
             background: isLight
-              ? regular.background.darkenByAmount(0.025)
-              : regular.background.lightenByAmount(0.05),
+              ? regular.background.darken(0.025)
+              : regular.background.lighten(0.05),
           },
           '&:active': {
-            background: regular.background.darkenByAmount(0.08),
+            background: regular.background.darken(0.08),
           },
         },
         bordered: {
           fontWeight: 300,
           ...bordered,
           '&:hover': {
-            borderColor: borderedLight.setAlpha(0.5),
+            borderColor: borderedLight.alpha(0.5),
             color: borderedLight,
           },
           '&:active': {
             background: [0, 0, 0, 0.1],
-            borderColor: bordered.color.setAlpha(0.5),
+            borderColor: bordered.color.alpha(0.5),
             color: bordered.color,
           },
         },

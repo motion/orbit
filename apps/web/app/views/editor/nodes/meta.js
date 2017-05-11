@@ -9,7 +9,7 @@ export default class Meta {
     return (
       <span $hashtags>
         <span contentEditable={false} $fade $left>#</span>
-        <span if={node.text} $content $hiddenTags>
+        <span if={node.text} $content $hiddenTags contentEditable={false}>
           {node.text.split(' ').map((tag, i) => <tag key={i}>{tag} </tag>)}
         </span>
         <span $content contentEditable suppressContentEditableWarning>
@@ -49,6 +49,7 @@ export default class Meta {
       position: 'absolute',
       top: 0,
       left: 0,
+      whiteSpace: 'pre',
     },
     tag: {
       display: 'inline-block',

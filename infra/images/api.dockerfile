@@ -4,38 +4,24 @@ FROM node:7-alpine
 ARG ENV="prod"
 ENV ENV=${ENV}
 
-# install yarn
-ENV PATH /root/.yarn/bin:$PATH
-RUN apk update \
-  && apk add curl bash binutils tar \
-  && rm -rf /var/cache/apk/* \
-  && /bin/bash \
-  && touch ~/.bashrc \
-  && curl -o- -L https://yarnpkg.com/install.sh | bash
-
-# config yarn
-RUN yarn config set no-progress true
-# bugfix for leveldown prebuild
-RUN npm config set registry http://registry.npmjs.org/
+# install pnpm
+# ENV NPM_CONFIG_LOGLEVEL error
+# RUN npm install --global --depth 0 pnpm
+# RUN pnpm config set network-concurrency 1
+# RUN pnpm config set silent true
 # add deps
-RUN apk add --update git
+# RUN apk add --update git
 
 # import repo
 RUN mkdir -p /repo
 WORKDIR /repo
-RUN apk del curl tar binutils
-RUN rm -rf /tmp/* /var/cache/apk/*
 
 # bootstrap
 COPY . /repo/
-RUN yarn install
-RUN yarn cache clean
-
-# build
-RUN git init
+# RUN git init
+# RUN pnpm install --production
 RUN npm run bootstrap
-
-RUN apk del git
+# RUN apk del git
 
 # run
 WORKDIR /repo/apps/api

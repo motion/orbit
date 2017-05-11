@@ -34,6 +34,7 @@ xcode-select --install 2> /dev/null
 
 ensure-dep "docker"
 ensure-dep "npm"
+ensure-dep "pnpm" -- npm i -g pnpm
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 brew update

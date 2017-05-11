@@ -20,10 +20,27 @@ import createProvider from './provide'
 import glossy from './styles'
 import { IS_PROD } from '~/constants'
 import App from 'models'
+import { fromStream } from 'mobx-utils'
+import Rx from 'rxjs'
 
 const ViewHelpers = {
   componentWillMount() {
     this.subscriptions = new CompositeDisposable()
+
+    // auto rx => mobx
+    Object.keys(this).forEach(key => {
+      if (this[key] instanceof Rx.Observable) {
+        const stream = this[key]
+        this[`${key}__stream`] = stream
+        const observable = fromStream(stream)
+        this.subscriptions.add(observable)
+        Object.defineProperty(this, key, {
+          get() {
+            return observable.current
+          },
+        })
+      }
+    })
   },
   componentWillUnmount() {
     this.subscriptions.dispose()
@@ -39,6 +56,75 @@ const Helpers = {
   react,
 }
 
+function storeDecorators(obj) {
+  // automagic observables
+  const descriptors = Object.getOwnPropertyDescriptors(obj)
+
+  for (const method of Object.keys(descriptors)) {
+    if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
+      continue
+    }
+
+    const val = obj[method]
+
+    const isFunction = typeof val === 'function'
+    const isQuery = val && val.$isQuery
+
+    // auto @query => observable
+    if (isQuery) {
+      Object.defineProperty(obj, method, {
+        get() {
+          return val.current
+        },
+      })
+      obj.subscriptions.add(val)
+      continue
+    }
+
+    if (isObservable(val)) {
+      continue
+    }
+
+    // auto Rx => mobx
+    if (val instanceof Rx.Observable) {
+      observableRxToObservableMobx(obj, method)
+      continue
+    }
+
+    // auto function actions
+    if (isFunction) {
+      // @action functions
+      obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
+    } else {
+      // auto @computed get
+      const descriptor = descriptors[method]
+      if (descriptor.get) {
+        const getter = {
+          [method]: descriptor.get(),
+        }
+        Object.defineProperty(getter, method, descriptor)
+        extendObservable(obj, getter)
+      } else {
+        // auto everything is an @observable.ref
+        extendShallowObservable(obj, { [method]: val })
+      }
+    }
+  }
+}
+
+function autoObserveObservables(obj) {
+  for (const method of Object.keys(obj)) {
+    console.log('is', method, obj[method])
+    if (obj[method] instanceof Rx.Observable) {
+      observableRxToObservableMobx(obj, method)
+    }
+  }
+}
+
+function observableRxToObservableMobx(obj, method) {
+  extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
+}
+
 const storeProvider = createProvider({
   storeDecorator(Store) {
     mixin(Store.prototype, Helpers)
@@ -46,62 +132,10 @@ const storeProvider = createProvider({
   },
   onStoreMount(name, store, props) {
     store.subscriptions = new CompositeDisposable()
-
-    // automagic observables
-    const descriptors = Object.getOwnPropertyDescriptors(store)
-
-    for (const method of Object.keys(descriptors)) {
-      if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
-        continue
-      }
-
-      const val = store[method]
-
-      const isFunction = typeof val === 'function'
-      const isQuery = val && val.$isQuery
-
-      // auto @query => observable
-      if (isQuery) {
-        Object.defineProperty(store, method, {
-          get() {
-            return val.current
-          },
-        })
-        store.subscriptions.add(val)
-        continue
-      }
-
-      if (isObservable(val)) {
-        continue
-      }
-
-      // auto
-      if (isFunction) {
-        // @action functions
-        store[method] = action(
-          `${store.constructor.name}.${method}`,
-          store[method]
-        )
-      } else {
-        const descriptor = descriptors[method]
-        if (descriptor.get) {
-          // @computed getters
-          const getter = {
-            [method]: descriptor.get(),
-          }
-          Object.defineProperty(getter, method, descriptor)
-          extendObservable(store, getter)
-        } else {
-          // @observable values
-          extendShallowObservable(store, { [method]: val })
-        }
-      }
-    }
-
+    storeDecorators(store)
     if (store.start) {
       store.start(props)
     }
-
     return store
   },
   onStoreDidMount(name, store) {
@@ -132,12 +166,17 @@ function decorateView(View) {
 }
 
 // @view
-export default function view(viewOrOpts, _module) {
+export default function view(viewOrOpts, _module, debug) {
   let View = viewOrOpts
 
   // @view({ ...stores }) shorthand
   if (typeof viewOrOpts === 'object') {
     return View => storeProvider(viewOrOpts, _module)(decorateView(View))
+  }
+
+  // functional component
+  if (!View.prototype.render) {
+    return glossy(observer(View))
   }
 
   return decorateView(viewOrOpts)

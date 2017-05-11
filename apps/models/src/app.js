@@ -46,6 +46,7 @@ export default class App {
   }
 
   async start(config: Object, stores: Object) {
+    console.time('start')
     this.catchErrors()
 
     if (!config) {
@@ -53,6 +54,7 @@ export default class App {
     }
 
     // connect to pouchdb
+    console.time('create db')
     this.db = await RxDB.create({
       adapter: 'idb',
       name: config.name,
@@ -60,6 +62,7 @@ export default class App {
       multiInstance: true,
       withCredentials: false,
     })
+    console.timeEnd('create db')
 
     // separate pouchdb for auth
     this.auth = new PouchDB(`${config.couchUrl}/auth`, {
@@ -82,6 +85,7 @@ export default class App {
     })
 
     // log back in
+    console.time('connect')
     await Promise.all([...connections, this.setSession()])
 
     // instantiate stores
@@ -92,6 +96,8 @@ export default class App {
         [cur]: new Store(this),
       }
     }, {})
+    console.timeEnd('connect')
+    console.timeEnd('start')
   }
 
   @action loginOrSignup = async (username, password) => {
@@ -177,10 +183,6 @@ export default class App {
   @action clearUser = () => {
     localStorage.setItem('tempUsername', '')
     this.user = null
-  }
-
-  @computed get noUser() {
-    return this.user && !this.user.name
   }
 
   @computed get tempUser() {

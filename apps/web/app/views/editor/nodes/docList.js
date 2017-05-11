@@ -1,74 +1,70 @@
 import { node, view } from '~/helpers'
 import App, { Document } from 'models'
-import randomcolor from 'random-color'
+import { Button } from '~/views'
+import { isEqual } from 'lodash'
 import Router from '~/router'
+import CardList from './lists/card'
+import GridList from './lists/grid'
 
-class ListStore {
-  docs = Document.forPlace(this.placeSlug)
+class DocListStore {
+  // checking for inline prevents infinite recursion!
+  //  <Editor inline /> === showing inside a document
+  docs = !this.props.editorStore.inline &&
+    Document.forPlace(this.place && this.place.slug)
 
-  get placeSlug() {
-    return App.activePage.place && App.activePage.place.slug
+  get place() {
+    return App.activePage.place
+  }
+  setType = (node, listType: string) => {
+    console.log('set type')
+    const next = node.data.set('listType', listType)
+    this.props.onChange(next)
   }
 }
 
 @node
 @view({
-  store: ListStore,
+  store: DocListStore,
 })
-export default class Todo {
-  render({ node, store, children, ...props }) {
+export default class DocList {
+  render({ node, editorStore, store, children, ...props }) {
     const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0
-    console.log('docs are', store.docs)
+    const listType = node.data.get('listType')
 
     return (
-      <container contentEditable={false}>
-        <h4>Recent Posts</h4>
+      <doclist contentEditable={false}>
+        <title>
+          <span $title>Recent Posts</span>
+          <buttons>
+            <Button
+              $active={listType === 'grid'}
+              onClick={() => store.setType(node, 'grid')}
+            >
+              ⊞
+            </Button>
+            <Button
+              $active={listType === 'card'}
+              onClick={() => store.setType(node, 'card')}
+            >
+              🃏
+            </Button>
+          </buttons>
+        </title>
         <docs if={!hasDocs}>
           no docs!
         </docs>
-        <docs $stack={true} if={hasDocs}>
-          {store.docs.map((doc, i) => (
-            <doc
-              $$background={`
-                linear-gradient(
-                  ${Math.floor(Math.random() * 180)}deg,
-                  ${randomcolor().hexString()},
-                  ${randomcolor().hexString()}
-                )
-              `}
-              $first={i === 0}
-              key={doc._id}
-              onClick={() => Router.go(doc.url())}
-            >
-              <card $$title>
-                {doc.getTitle()}
-              </card>
-            </doc>
-          ))}
-        </docs>
-      </container>
+        <content if={hasDocs}>
+          <CardList if={listType === 'card'} listStore={store} />
+          <GridList if={listType === 'grid'} listStore={store} />
+        </content>
+      </doclist>
     )
   }
 
   static style = {
-    docs: {
+    title: {
       flexFlow: 'row',
-      overflowX: 'scroll',
-      padding: 10,
-      margin: [0, -10],
-    },
-    doc: {
-      margin: [0, 10, 0, 0],
-      userSelect: 'none',
-      width: 150,
-      height: 150,
-      borderBottom: [1, '#eee'],
-      color: '#fff',
-      fontWeight: 800,
-      cursor: 'pointer',
-      fontSize: 46,
-      lineHeight: '3rem',
       overflow: 'hidden',
       '&:hover': {
         boxShadow: '0 0 10px rgba(0,0,0,0.02)',
@@ -83,9 +79,15 @@ export default class Todo {
       // background: '#fff',
       width: '100%',
       height: '100%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
-    stack: {
+    buttons: {
       flexFlow: 'row',
+    },
+    active: {
+      background: 'red',
+      color: '#fff',
     },
   }
 }

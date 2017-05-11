@@ -18,6 +18,7 @@ class EditorStore {
   shouldFocus = this.props.focusOnMount
   focused = false
   content = null
+  inline = this.props.inline
 
   start() {
     this.watch(this.watchers.save)
@@ -125,10 +126,6 @@ export default class EditorView {
     focusOnMount,
     ...props
   }) {
-    // todo use context
-    window.Editor = this
-    if (doc) window.Editor.doc = doc
-
     return (
       <document if={store.content}>
         <Editor

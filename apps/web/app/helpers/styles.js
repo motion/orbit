@@ -1,6 +1,6 @@
 import gloss from 'gloss'
 
-const baseStyles = {
+export const styles = {
   style: styles => styles,
   flex: flex => ({ flex: flex === true ? 1 : flex }),
   absolute: ([top, right, bottom, left]) => ({
@@ -109,4 +109,4 @@ const baseStyles = {
   },
 }
 
-export default gloss({ baseStyles })
+export default gloss({ baseStyles: styles })

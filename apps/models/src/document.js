@@ -96,7 +96,7 @@ class Document extends Model {
     )
   }
 
-  @query all = () => this.collection.find()
+  @query all = () => this.collection.find().sort({ createdAt: 'asc' })
 
   @query recent = (limit = 10) =>
     this.collection.find().sort({ createdAt: 'desc' }).limit(limit)

@@ -13,15 +13,15 @@ export default class Errors {
       <errors>
         {errs.map((error, i) => (
           <error key={error.id || Math.random()}>
-            <message if={error.errors}>
+            <message $$ellipse if={error.errors}>
               {error.errors.map(({ field, message }) => (
                 <subErr key={Math.random()}>{field}: {message}</subErr>
               ))}
             </message>
-            <message if={error.message}>
+            <message $$ellipse if={error.message}>
               <strong>{error.name}</strong>: {error.message}
             </message>
-            <message if={error.reason}>
+            <message $$ellipse if={error.reason}>
               <strong>{error.reason.name}</strong>: {error.reason.message}
             </message>
             <clear if={i === 0} onClick={App.clearErrors}>x</clear>
@@ -56,6 +56,7 @@ export default class Errors {
     },
     message: {
       flexFlow: 'row',
+      flex: 1,
     },
     clear: {
       cursor: 'pointer',

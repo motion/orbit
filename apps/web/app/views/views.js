@@ -4,18 +4,40 @@ import Popover from '~/views/popover'
 
 export * from '~/views/page'
 
-export const Input = $('input', {
-  border: [1, '#eee'],
-  padding: 4,
-  margin: ['auto', 4],
-  background: '#fff',
-  '&:hover': {
-    cursor: 'text',
-  },
-  '&:focus': {
-    border: [1, 'blue'],
-  },
-})
+@view
+export class Input {
+  render({ children, noBorder, getRef, ...props }) {
+    return <input ref={getRef} {...props} />
+  }
+
+  static style = {
+    input: {
+      fontSize: 16,
+      lineHeight: '1.4rem',
+      border: [1, '#eee'],
+      padding: [3, 5],
+      margin: ['auto', 0],
+      background: '#fff',
+      '&:hover': {
+        cursor: 'text',
+      },
+      '&:focus': {
+        border: [1, 'blue'],
+      },
+    },
+  }
+
+  static theme = {
+    noBorder: {
+      input: {
+        '&:focus': {
+          // invisible
+          borderColor: 'rgba(0,0,0,0)',
+        },
+      },
+    },
+  }
+}
 
 @view
 export class Button {

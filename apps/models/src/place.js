@@ -86,7 +86,7 @@ class Place extends Model {
     },
   }
 
-  @query all = () => this.collection.find()
+  @query all = find => this.collection.find(find)
 
   @query get = (slug: string) => {
     if (!slug) {

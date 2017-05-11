@@ -214,7 +214,11 @@ class List {
     }
 
     return (
-      <list style={{ minHeight: height, minWidth: width, ...style }} {...props}>
+      <list
+        $$draggable
+        style={{ minHeight: height, minWidth: width, ...style }}
+        {...props}
+      >
         <loading if={loading}>loading</loading>
         <VirtualList
           if={!loading && rowHeight}

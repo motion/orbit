@@ -5,7 +5,7 @@ import { HEADER_HEIGHT } from '~/constants'
 
 // this.finish()
 @view({
-  store: class {
+  store: class LoginStore {
     loggingIn = false
     passwordRef = null
     username = null

@@ -121,6 +121,7 @@ function runDevServer(host, port, protocol) {
 }
 
 function run(port) {
+  console.log('running webpack...')
   var protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
   var host = process.env.HOST || 'localhost'
   setupCompiler(host, port, protocol)
@@ -128,27 +129,5 @@ function run(port) {
 }
 
 detect(DEFAULT_PORT).then(port => {
-  if (port === DEFAULT_PORT) {
-    run(port)
-    return
-  }
-
-  if (isInteractive) {
-    clearConsole()
-    var existingProcess = getProcessForPort(DEFAULT_PORT)
-    var question =
-      'Something is already running on port ' +
-      DEFAULT_PORT +
-      '.' +
-      (existingProcess ? ' Probably:\n  ' + existingProcess : '') +
-      '\n\nWould you like to run the app on another port instead?'
-
-    prompt(question, true).then(shouldChangePort => {
-      if (shouldChangePort) {
-        run(port)
-      }
-    })
-  } else {
-    console.log('Something is already running on port ' + DEFAULT_PORT + '.')
-  }
+  run(port)
 })

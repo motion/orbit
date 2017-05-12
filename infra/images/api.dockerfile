@@ -17,7 +17,7 @@ RUN apk add --update git
 
 # import apps
 RUN mkdir -p /repo
-COPY ./.* ./package.json ./lerna.json ./shrinkwrap.yaml /repo/
+COPY ./.* ./package.json ./lerna.json ./yarn.lock /repo/
 COPY ./apps/api /repo/apps/api
 COPY ./apps/couch /repo/apps/couch
 

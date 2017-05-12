@@ -10,7 +10,7 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import * as Stores from '~/stores'
 import * as Constants from '~/constants'
-import { view } from '~/helpers'
+import Splash from '~/views/splash'
 
 if (!IS_PROD) {
   // install console formatters
@@ -26,39 +26,11 @@ if (!IS_PROD) {
   window._ = _
 }
 
-const root = document.querySelector('#app')
-
-@view class Splash {
-  time = Rx.Observable.timer(0, 16).take(30000)
-
-  render() {
-    return <loader $$draggable $at={this.time} />
-  }
-
-  static style = {
-    loader: {
-      width: '100%',
-      height: '100%',
-      backgroundImage: 'url(https://grasshoppermind.files.wordpress.com/2012/05/five-lined-pyramids.jpg)',
-      backgroundPosition: 'center center',
-      backgroundSize: 'cover',
-      filter: 'contrast(100%) brightness(1)',
-    },
-    at: time => ({
-      filter: `contrast(${100 + time * 2}%) brightness(${1 + 0.1 * time})`,
-    }),
-  }
-}
-
-ReactDOM.render(<Splash />, root)
+const ROOT = document.querySelector('#app')
 
 function render() {
   const Root = require('./root').default
-  ReactDOM.render(<Root />, root)
-}
-
-export function start() {
-  App.start(DB_CONFIG, Stores).then(render)
+  ReactDOM.render(<Root />, ROOT)
 }
 
 if (module.hot) {
@@ -66,4 +38,5 @@ if (module.hot) {
   module.hot.accept('./router', render)
 }
 
-start()
+ReactDOM.render(<Splash />, ROOT)
+App.start(DB_CONFIG, Stores).then(render)

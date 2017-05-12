@@ -12,7 +12,7 @@ RUN netstat -nr | grep '^0\.0\.0\.0' | awk '{print $2}' > /host_tmp
 
 RUN echo $REGISTRY
 
-RUN pnpm set registry "http://$(cat /host_tmp):4874"
+RUN pnpm set registry "http://$(cat /host_tmp):4873"
 RUN echo $(pnpm get registry)
 
 RUN pnpm view @jot/models

@@ -88,7 +88,8 @@ export default class Root {
                 icon={<Icon name="ui-add" />}
                 onClick={store.createDoc}
               />
-              <Button icon="plus">test</Button>
+              <Button icon="🖼" />
+              <Button icon="😊" />
             </omnibar>
           </statusbar>
         </main>

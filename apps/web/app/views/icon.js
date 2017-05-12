@@ -3,14 +3,13 @@ import Popover from './popover'
 import names from './iconNames'
 import fuzzy from 'fuzzy'
 
-const memory = {}
-
+const cache = {}
 const findMatch = (name: string) => {
-  if (memory[name]) return memory[name]
+  if (cache[name]) return cache[name]
   if (names[name]) return names[name]
   const matches = fuzzy.filter(name, names)
-  const match = matches.length ? matches[0].original : names[0]
-  memory[name] = match
+  const match = matches.length ? matches[0].original : null
+  cache[name] = match
   return match
 }
 
@@ -49,6 +48,7 @@ export default class Icon {
     } = this.props
 
     const iconName = findMatch(name)
+    const backupIcon = !iconName ? name : ''
 
     return (
       <icon
@@ -58,7 +58,7 @@ export default class Icon {
         {...attach}
       >
         <inner className={`nc-icon-${type} ${iconName}`}>
-          {children}
+          {children || backupIcon}
         </inner>
         <Popover
           if={tooltip}

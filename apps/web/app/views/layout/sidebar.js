@@ -86,10 +86,15 @@ export default class Sidebar {
         <content $$flex $$undraggable>
           <Login />
 
-          <title $$row $$justify="space-between" $$padding={[8, 8, 0]}>
+          <title
+            $$row
+            $$justify="space-between"
+            $$padding={6}
+            $$borderBottom={[1, 'dotted', '#eee']}
+          >
             <input
               $search
-              placeholder="search places"
+              placeholder="places"
               onChange={e => (store.filter = e.target.value)}
             />
             <Button
@@ -97,7 +102,7 @@ export default class Sidebar {
               onClick={() => (store.creatingPlace = true)}
             />
           </title>
-          <main if={store.allPlaces}>
+          <main $$draggable if={store.allPlaces}>
             <List
               controlled
               items={store.allPlaces}
@@ -106,7 +111,10 @@ export default class Sidebar {
                   Router.go(place.url())
                 }
               }}
-              getItem={place => {
+              getItem={(place, index) => {
+                if (index === 0) {
+                  return <List.Item><strong>my place</strong></List.Item>
+                }
                 if (place.create === false) {
                   return null
                 }
@@ -125,7 +133,6 @@ export default class Sidebar {
                     </List.Item>
                   )
                 }
-
                 return { primary: place.title }
               }}
             />

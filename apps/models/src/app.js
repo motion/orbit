@@ -182,7 +182,7 @@ class App {
 
   @action clearUser = () => {
     localStorage.setItem('tempUsername', '')
-    this.user = null
+    this.user = {}
   }
 
   @computed get tempUser() {

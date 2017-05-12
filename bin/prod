@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#
+# see __kubes for actions
+#
+
 # set env then source
 export ENV="prod"
 

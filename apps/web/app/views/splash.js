@@ -1,7 +1,8 @@
 import { view } from '~/helpers'
 import Rx from 'rxjs'
 
-@view class Splash {
+@view
+export default class Splash {
   time = Rx.Observable.timer(0, 16).take(30000)
 
   render() {

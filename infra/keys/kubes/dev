@@ -2,7 +2,7 @@ apiVersion: v1
 clusters:
 - cluster:
     certificate-authority: /Users/nw/.minikube/ca.crt
-    server: https://192.168.99.100:8443
+    server: https://192.168.64.7:8443
   name: minikube
 contexts:
 - context:

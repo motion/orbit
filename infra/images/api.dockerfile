@@ -20,6 +20,7 @@ RUN mkdir -p /repo
 COPY ./.* ./package.json ./lerna.json ./yarn.lock /repo/
 COPY ./apps/api /repo/apps/api
 COPY ./apps/couch /repo/apps/couch
+COPY ./apps/models /repo/apps/models
 
 # build
 WORKDIR /repo

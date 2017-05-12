@@ -1,10 +1,15 @@
 #!/bin/bash
 
+#
+# see __kubes for actions
+#
+
 # set env then source
 export ENV="dev"
-
 . $(dirname $0)/__common
 cd $ROOT
+
+MINIKUBE_MEMORY=4086
 
 # set dev context
 export KUBECONFIG=infra/keys/kubes/dev
@@ -12,12 +17,14 @@ kubectl config use-context minikube > /dev/null
 
 ACTION=$1
 
+
 function cleanup-docker() {
   docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
 }
 
 function start-minikube {
-  minikube start --memory=2048 --vm-driver=xhyve
+  echo "$ minikube start --memory=$MINIKUBE_MEMORY"
+  minikube start --memory=$MINIKUBE_MEMORY
 }
 
 function ensure-minikube {
@@ -39,17 +46,20 @@ if [ "$DOCKER_TLS_VERIFY" != "1" ]; then
 fi
 
 # RUN
+# async
+if [ "$ACTION" = "status" ]; then
+  minikube status
+fi
+
+# synchronous
 if [ "$ACTION" = "boot" ]; then
-  start-minikube
+  echo "ok"
 elif [ "$ACTION" = "ui" ]; then
   minikube dashboard
 elif [ "$ACTION" = "open" ]; then
   open $(minikube service pad-web --url)
 elif [ "$ACTION" = "cleanup-docker" ]; then
   cleanup-docker
-elif [ "$ACTION" = "run" ]; then
-  # allow abritrary things to run
-  ${@:1}
 else
   bin/__kubes ${@:1}
 fi

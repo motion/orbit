@@ -3,11 +3,19 @@ FROM node:7-alpine
 # args
 ARG ENV="prod"
 ENV ENV=${ENV}
+ARG REGISTRY="local"
+ENV ENV=${ENV}
 
-ARG REGISTRY="https://registry.npmjs.org/"
-RUN npm set registry $REGISTRY
+RUN npm i -g pnpm --silent
+
+RUN netstat -nr | grep '^0\.0\.0\.0' | awk '{print $2}' > /host_tmp
 
 RUN echo $REGISTRY
+
+RUN pnpm set registry "http://$(cat /host_tmp):4874"
+RUN echo $(pnpm get registry)
+
+RUN pnpm view @jot/models
 
 # import
 RUN mkdir -p /repo
@@ -18,9 +26,9 @@ COPY ./.* ./package.json ./lerna.json ./shrinkwrap.yaml /repo/
 COPY ./apps/api /repo/apps/api
 
 # install
-RUN npm install --production --silent
+# RUN pnpm install --production --silent
 WORKDIR /repo/apps/api
-RUN npm install --silent
+RUN pnpm install --silent
 
 # run
 CMD npm run start-$ENV

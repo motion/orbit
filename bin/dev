@@ -16,7 +16,16 @@ function cleanup-docker() {
   docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
 }
 
+function ensure-minikube {
+  minikube ip > /dev/null || minikube start --memory=2048 --vm-driver=xhyve
+}
+
 # PRE RUN
+
+# ensure minikube started
+ensure-minikube
+
+# ensure sourced docker-env
 if [ "$DOCKER_TLS_VERIFY" != "1" ]; then
   if minikube docker-env > /dev/null 2>&1; then
     eval $(minikube docker-env)
@@ -25,11 +34,10 @@ if [ "$DOCKER_TLS_VERIFY" != "1" ]; then
   fi
 fi
 
-# ensure minikube started
-curl 192.168.99.100:2376 > /dev/null || minikube start
-
 # RUN
-if [ "$ACTION" = "ui" ]; then
+if [ "$ACTION" = "boot" ]; then
+  echo "booted"
+elif [ "$ACTION" = "ui" ]; then
   minikube dashboard
 elif [ "$ACTION" = "open" ]; then
   open $(minikube service pad-web --url)

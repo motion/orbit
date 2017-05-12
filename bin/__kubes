@@ -79,7 +79,6 @@ elif [ "$ACTION" = "build" ] || [ "$ACTION" = "push" ]; then
     if [ "$ACTION" = "build" ]; then
       run docker build \
         --build-arg ENV=$ENV \
-        --build-arg REGISTRY=$REGISTRY \
         -t $NAME \
         -f infra/images/$APP.dockerfile \
         . ${@:3}

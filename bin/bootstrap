@@ -33,24 +33,24 @@ function install-minikube {
 xcode-select --install 2> /dev/null
 
 ensure-dep "docker"
+ensure-dep "docker-machine"
 ensure-dep "npm"
 ensure-dep "pnpm" -- npm i -g pnpm
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-brew update
+# ensure dev machine with xhyve
+docker-machine inspect dev || docker-machine create dev --driver xhyve
 
-ensure-dep "xhyve" -- brew install xhyve
+# brew deps
+brew update
+ensure-dep "xhyve" -- brew install xhyve && brew install docker-machine-driver-xhyve
 ensure-dep "pip" -- brew install python
 ensure-dep "envtpl" -- pip install envtpl
 ensure-dep "kubectl" -- brew install kubectl
 ensure-dep "minikube" -- install-minikube
 
 # start kubes
-if minikube ip; then
-  echo "minikube running on $(minikube ip)"
-else
-  minikube start
-fi
+dev boot
 
 # setup kubes
 minikube config set WantReportErrorPrompt false

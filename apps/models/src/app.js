@@ -172,7 +172,6 @@ class App {
 
   @action setSession = async () => {
     const session = await this.session()
-    console.log('got session')
     const loggedIn = session && session.userCtx.name
     if (loggedIn) {
       this.user = session.userCtx

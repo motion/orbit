@@ -38,7 +38,6 @@ class EditorStore {
 
   // this will prevent save while uploading images...
   get shouldSave() {
-    console.log('uploading?', this.hasUploadingImages)
     if (this.hasUploadingImages) {
       return false
     }

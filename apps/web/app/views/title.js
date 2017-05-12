@@ -13,7 +13,6 @@ export default class Title {
 
   static style = {
     title: {
-      fontFamily: 'Playfair Display, serif',
       fontWeight: 600,
       margin: ['0.5rem', 0],
       flexFlow: 'row',

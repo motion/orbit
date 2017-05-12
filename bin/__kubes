@@ -10,7 +10,7 @@ COMMAND=$0
 ACTION=$1
 APP=$2
 
-APPS=("web" "api" "couch")
+APPS=("web" "api" "couch" "redis")
 KUBES_CONFIG_OUT="./app_data/kubes.$ENV"
 KUBES_CONFIG_FILE="$KUBES_CONFIG_OUT/all.yml"
 
@@ -43,6 +43,19 @@ elif [ "$ACTION" = "generate" ]; then
   run kompose -f docker-compose.yml convert -o infra/generated_kubes.yaml
 elif [ "$ACTION" = "start" ]; then
   save-config
+
+  set +e
+  if kubectl get secret docker-hub 2>/dev/null; then
+    set -e
+  else
+    kubectl create secret docker-registry $DOCKER_SECRET \
+      --docker-server=$DOCKER_REGISTRY_SERVER \
+      --docker-username=$DOCKER_USER \
+      --docker-password=$DOCKER_PASSWORD \
+      --docker-email=$DOCKER_EMAIL
+  fi
+  set -e
+
   run kubectl create ${@:3} $FILE_ARG
 elif [ "$ACTION" = "stop" ]; then
   save-config

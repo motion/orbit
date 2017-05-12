@@ -1,4 +1,4 @@
-import couchBootstrap from 'starter-couch'
+import couchBootstrap from '@jot/couch'
 import { COUCH_URL } from './keys'
 
 export default class Bootstrap {

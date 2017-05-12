@@ -16,8 +16,12 @@ function cleanup-docker() {
   docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc spotify/docker-gc
 }
 
+function start-minikube {
+  minikube start --memory=2048 --vm-driver=xhyve
+}
+
 function ensure-minikube {
-  minikube ip > /dev/null || minikube start --memory=2048 --vm-driver=xhyve
+  minikube ip > /dev/null || start-minikube
 }
 
 # PRE RUN
@@ -36,7 +40,7 @@ fi
 
 # RUN
 if [ "$ACTION" = "boot" ]; then
-  echo "booted"
+  start-minikube
 elif [ "$ACTION" = "ui" ]; then
   minikube dashboard
 elif [ "$ACTION" = "open" ]; then

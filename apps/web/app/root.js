@@ -171,7 +171,7 @@ export default class Root {
       overflow: 'hidden',
       padding: 10,
       background: '#fff',
-      borderTop: [1, '#eee'],
+      borderTop: [2, '#eee'],
       position: 'relative',
     },
     tag: {

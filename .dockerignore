@@ -1,6 +1,5 @@
 .DS_Store
 .git
-.env
 node_modules
 app_data
 infra

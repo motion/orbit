@@ -19,14 +19,12 @@ COPY ./apps/web/build /app/public
 RUN mkdir -p /repo
 WORKDIR /repo
 COPY ./.* ./package.json ./lerna.json ./shrinkwrap.yaml /repo/
-RUN npm install --production
+RUN npm install --production --silent
 COPY ./apps/web /repo/apps/web
 COPY ./apps/models /repo/apps/models
 
 # run
 WORKDIR /repo/apps/web
-
-RUN npm run start-dev
 
 CMD npm run start-$ENV
 EXPOSE 3001

@@ -4,22 +4,7 @@ import { Image } from '@jot/models'
 
 export default InsertImages({
   extensions: ['png', 'jpg', 'gif'],
-  async applyTransform(transform, file) {
-    console.log(file)
-
-    const img = Image
-
-    debugger
-
-    // new FileReader().readAsBinaryString(file).onload(async file => {
-    //   const image = await Image.create({
-    //     name: file.name,
-    //   })
-
-    //   debugger
-    // })
-
-    //.collapseToEndOfPreviousBlock()
+  applyTransform(transform, file) {
     return transform.insertBlock({
       type: 'image',
       isVoid: true,
@@ -27,18 +12,3 @@ export default InsertImages({
     })
   },
 })
-
-function insertText() {
-  transform.insertBlock({
-    type: 'text',
-    nodes: [
-      Raw.deserializeText(
-        {
-          kind: 'text',
-          text: 'lorem',
-        },
-        { terse: true }
-      ),
-    ],
-  })
-}

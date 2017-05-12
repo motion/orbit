@@ -1,5 +1,6 @@
 import { Model, query, str, object, array, bool } from './helpers'
-import App from './index'
+import Image from './image'
+import App from './app'
 import generateName from 'sillyname'
 
 class Document extends Model {
@@ -10,6 +11,7 @@ class Document extends Model {
     authorId: str,
     places: array.optional.items(str),
     hashtags: array.items(str),
+    attachments: array.optional.items(str),
     private: bool,
     home: bool.optional,
     timestamps: true,
@@ -21,6 +23,7 @@ class Document extends Model {
       title,
       authorId: App.user && App.user.name,
       hashtags: [],
+      attachments: [],
       private: true,
       content: {
         nodes: [
@@ -60,6 +63,9 @@ class Document extends Model {
     togglePrivate() {
       this.private = !this.private
       this.save()
+    },
+    async addImage(file) {
+      return await Image.create({ file, docId: this._id })
     },
   }
 

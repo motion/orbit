@@ -22,7 +22,7 @@ const tempId = () => {
   return id
 }
 
-export default class App {
+class App {
   db = null
 
   // basically global stores
@@ -231,3 +231,5 @@ export default class App {
     this.activeStores = { ...this.activeStores, [key]: null }
   }
 }
+
+export default new App()

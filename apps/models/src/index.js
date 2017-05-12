@@ -1,6 +1,4 @@
-import App from './app'
-
-export default new App()
+export default from './app'
 
 // export all models
 export * from './all'

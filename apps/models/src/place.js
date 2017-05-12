@@ -1,4 +1,4 @@
-import App from './index'
+import App from './app'
 import { Model, query, str, array, bool } from './helpers'
 import Document from './document'
 import Board from './board'

@@ -4,6 +4,7 @@ export node from './node'
 export view from './view'
 export $ from './styles'
 export { query } from 'models'
+export clr from 'color'
 
 import { findDOMNode } from 'react'
 

@@ -66,6 +66,14 @@ export default class DocList {
     title: {
       flexFlow: 'row',
       overflow: 'hidden',
+      justifyContent: 'space-between',
+      '&:hover': {
+        boxShadow: '0 0 10px rgba(0,0,0,0.02)',
+        zIndex: 1000,
+      },
+      '&:active': {
+        background: '#f3f3f3',
+      },
     },
     card: {
       // background: '#fff',

@@ -43,6 +43,7 @@ const MentionsPlugin = (options?: Options): SlatePlugin => {
           // Guard selectedIndex to be within the length of the suggestions
           const selected =
             (suggestions && selectedIndex % suggestions.length) || 0
+
           portal = (
             <Portal node={state.endText}>
               <Suggestions

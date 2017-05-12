@@ -11,8 +11,8 @@ export default class CardList {
             $$background={`
                 linear-gradient(
                   ${Math.floor(Math.random() * 180)}deg,
-                  ${randomcolor().hexString()},
-                  ${randomcolor().hexString()}
+                  pink,
+                  red
                 )
               `}
             $first={i === 0}

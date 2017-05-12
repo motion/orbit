@@ -15,13 +15,15 @@ export default MentionsPlugin({
   Suggestions: @view class Suggestions {
     render({ suggestions, selected }) {
       return (
-        <items>
-          {suggestions.map((suggestion, index) => (
-            <item key={index} $active={index === selected}>
-              {suggestion}
-            </item>
-          ))}
-        </items>
+        <div>
+          <items>
+            {suggestions.map((suggestion, index) => (
+              <item key={index} $active={index === selected}>
+                {suggestion}
+              </item>
+            ))}
+          </items>
+        </div>
       )
     }
 

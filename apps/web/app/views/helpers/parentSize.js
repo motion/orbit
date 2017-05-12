@@ -54,7 +54,7 @@ export default Child => {
       }
 
       return (
-        <parent style={{ flex: 1 }} ref={this.setParent}>
+        <parent className={this.props.className} ref={this.setParent}>
           <Child {...this.props} parentSize={parentSize} />
         </parent>
       )

@@ -1,5 +1,5 @@
 import { view, observable } from '~/helpers'
-import { Input, Button, CircleButton, Link } from '~/views'
+import { Input, CircleButton, Link, Button, Icon } from '~/views'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -33,14 +33,15 @@ export default class Root {
   render({ store }) {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header, doc, place } = App.activePage
+    const { extraActions } = App
 
     return (
       <layout $$draggable>
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => this.headerHovered = true}
-            onMouseLeave={() => this.headerHovered = false}
+            onMouseEnter={() => (this.headerHovered = true)}
+            onMouseLeave={() => (this.headerHovered = false)}
           >
             <nav if={IS_ELECTRON}>
               <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
@@ -61,8 +62,11 @@ export default class Root {
               {title}
             </title>
             <view $$flex />
-            <rest if={header || actions} $$row>
+            <rest if={header || actions || extraActions} $$row>
               {header || null}
+              <actions $$row if={extraActions}>
+                {extraActions.map((xa, i) => <action key={i}>{xa}</action>)}
+              </actions>
               <actions $$row if={actions}>
                 {actions.map((action, i) => <action key={i}>{action}</action>)}
               </actions>
@@ -79,7 +83,12 @@ export default class Root {
                 onChange={store.ref('title').set}
                 $omniinput
               />
-              <CircleButton $createButton icon="➕" onClick={store.createDoc} />
+              <CircleButton
+                $createButton
+                icon={<Icon name="ui-add" />}
+                onClick={store.createDoc}
+              />
+              <Button icon="plus">test</Button>
             </omnibar>
           </statusbar>
         </main>

@@ -16,13 +16,30 @@ const rules = merge(Rules)
 
 class EditorStore {
   doc = Document.get(this.props.id)
+
+  // todo replace with doc titles
+  allDocs = [
+    { title: 'one' },
+    { title: 'two' },
+    { title: 'three' },
+    { title: 'four' },
+  ]
+
+  docSuggestions = []
+
+  updateSuggestions = text => {
+    this.suggestionsText = text
+    this.docSuggestions = this.allDocs
+      .filter(doc => includes(doc.title, this.suggestionsText))
+      .map(doc => {
+        return doc.title
+      })
+  }
+
   shouldFocus = this.props.focusOnMount
   focused = false
   content = null
   inline = this.props.inline
-
-  suggestionsText = ''
-  suggestions = ['banana', 'croissant', 'france', 'italy']
 
   start() {
     this.watch(this.watchers.save)
@@ -130,10 +147,6 @@ export default class EditorView {
     focusOnMount,
     ...props
   }) {
-    const suggestions = store.suggestions.filter(s =>
-      includes(s, store.suggestionsText)
-    )
-
     return (
       <document if={store.content}>
         <Editor
@@ -141,8 +154,8 @@ export default class EditorView {
           $$undraggable
           readOnly={readOnly}
           plugins={merge(this.plugins)}
-          suggestions={suggestions}
-          onMentionSearch={text => store.suggestionsText = text}
+          suggestions={store.docSuggestions}
+          onMentionSearch={store.updateSuggestions}
           schema={this.schema}
           state={store.content}
           onChange={this.onChange}

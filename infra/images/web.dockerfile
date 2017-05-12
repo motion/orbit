@@ -5,7 +5,7 @@ ARG ENV="prod"
 ENV ENV=${ENV}
 
 # add node
-RUN apk app --update nodejs
+RUN apk add --update nodejs
 
 # run
 RUN mkdir -p /etc/nginx/ssl/
@@ -24,5 +24,8 @@ COPY ./apps/models /repo/apps/models
 
 # run
 WORKDIR /repo/apps/web
+
+RUN npm run start-dev
+
 CMD npm run start-$ENV
 EXPOSE 3001

@@ -1,6 +1,5 @@
 process.env.NODE_ENV = 'development'
 
-const chalk = require('chalk')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const historyApiFallback = require('connect-history-api-fallback')
@@ -45,7 +44,7 @@ function setupCompiler(host, port, protocol) {
 function onProxyError(proxy) {
   return function(err, req, res) {
     var host = req.headers && req.headers.host
-    console.log(chalk.red('Proxy error:'))
+    console.log('Proxy error:')
 
     // And immediately send the proper error response to the client.
     // Otherwise, the request will eventually timeout with ERR_EMPTY_RESPONSE on the client side.
@@ -117,7 +116,7 @@ function runDevServer(host, port, protocol) {
     if (err) {
       return console.log(err)
     }
-    console.log(chalk.cyan('Starting the development server...'))
+    console.log('Starting the development server...')
   })
 }
 
@@ -138,12 +137,11 @@ detect(DEFAULT_PORT).then(port => {
     clearConsole()
     var existingProcess = getProcessForPort(DEFAULT_PORT)
     var question =
-      chalk.yellow(
-        'Something is already running on port ' +
-          DEFAULT_PORT +
-          '.' +
-          (existingProcess ? ' Probably:\n  ' + existingProcess : '')
-      ) + '\n\nWould you like to run the app on another port instead?'
+      'Something is already running on port ' +
+      DEFAULT_PORT +
+      '.' +
+      (existingProcess ? ' Probably:\n  ' + existingProcess : '') +
+      '\n\nWould you like to run the app on another port instead?'
 
     prompt(question, true).then(shouldChangePort => {
       if (shouldChangePort) {

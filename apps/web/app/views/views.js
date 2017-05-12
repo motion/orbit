@@ -35,6 +35,9 @@ export class Input {
   static theme = {
     noBorder: {
       input: {
+        margin: [-6, -10],
+        padding: [6, 10],
+        fontSize: 14,
         '&:focus': {
           // invisible
           borderColor: 'rgba(0,0,0,0)',

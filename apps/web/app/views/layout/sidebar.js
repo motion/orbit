@@ -1,4 +1,5 @@
 import { view } from '~/helpers'
+import { uniqBy } from 'lodash'
 import { Page, Link, Input, Button } from '~/views'
 import { Place } from '@jot/models'
 import Login from './login'
@@ -30,7 +31,7 @@ class SidebarStore {
         })
         .map(i => i.original)
     }
-    return results
+    return uniqBy(results, r => r.title)
   }
 
   createPlace = async e => {
@@ -96,7 +97,7 @@ export default class Sidebar {
               onClick={() => (store.creatingPlace = true)}
             />
           </title>
-          <main if={store.places}>
+          <main if={store.allPlaces}>
             <List
               controlled
               items={store.allPlaces}
@@ -114,45 +115,8 @@ export default class Sidebar {
                     <List.Item>
                       <form onSubmit={store.createPlace}>
                         <Input
-                          $create
                           noBorder
                           getRef={store.onNewPlace}
-                          onKeyDown={e =>
-                            e.which === 13 && store.createPlace(e)}
-                          placeholder="new place"
-                        />
-                      </form>
-                    </List.Item>
-                  )
-                }
-
-                return { primary: place.title }
-              }}
-            />
-
-            <title $$style={{ padding: 7, color: [0, 0, 0, 0.4] }}>
-              all
-            </title>
-            <List
-              controlled
-              items={store.allPlaces}
-              onSelect={place => {
-                if (place) {
-                  Router.go(place.url())
-                }
-              }}
-              getItem={place => {
-                if (place.create === false) {
-                  return null
-                }
-                if (place.create) {
-                  return (
-                    <List.Item>
-                      <form onSubmit={store.createPlace}>
-                        <Input
-                          $create
-                          getRef={store.onNewPlace}
-                          onBlur={() => (store.creatingPlace = false)}
                           onKeyDown={e =>
                             e.which === 13 && store.createPlace(e)}
                           placeholder="new place"

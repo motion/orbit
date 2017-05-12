@@ -38,6 +38,6 @@ RUN npm run bootstrap
 RUN apk del git
 
 # run
-WORKDIR /repo/apps/api
+WORKDIR /repo/apps/web
 CMD npm run start-$ENV
 EXPOSE 3000

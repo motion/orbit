@@ -55,6 +55,12 @@ export default class ImageNode {
     if (!store.src) {
       return <span>Loading...</span>
     }
-    return <img {...attributes} src={store.src} />
+    return <img contentEditable {...attributes} src={store.src} />
+  }
+
+  static style = {
+    img: {
+      alignSelf: 'flex-start',
+    },
   }
 }

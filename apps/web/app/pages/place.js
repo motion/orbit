@@ -1,6 +1,6 @@
 import { view, query, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
-import { Place, Document } from 'models'
+import { Place, Document } from '@jot/models'
 import { Text, Page, Button, CircleButton, NotFound } from '~/views'
 import Router from '~/router'
 import DocumentView from '~/views/document'

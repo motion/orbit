@@ -4,6 +4,9 @@ import { API_URL, DB_CONFIG } from '~/constants'
 
 export default class AuthStore {
   emit = (...args) => console.log(...args)
+  superlogin = superlogin
+  localDb = null
+  remoteDb = null
 
   constructor() {
     // needed to ensure some sort of working
@@ -34,8 +37,6 @@ export default class AuthStore {
       refreshThreshold: 0.5,
     })
 
-    this.localDb = null
-    this.remoteDb = null
     superlogin.on('login', (event, session) => {
       console.log('on login', event, session)
     })

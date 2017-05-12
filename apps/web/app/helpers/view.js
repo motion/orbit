@@ -19,7 +19,7 @@ import { observer } from 'mobx-react'
 import createProvider from './provide'
 import glossy from './styles'
 import { IS_PROD } from '~/constants'
-import App from 'models'
+import App from '@jot/models'
 import { fromStream } from 'mobx-utils'
 import Rx from 'rxjs'
 

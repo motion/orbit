@@ -49,6 +49,7 @@ services:
       - DB_PROTOCOL=${DB_PROTOCOL}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PUBLIC_URL=${DB_PUBLIC_URL}
   pad-web:
     restart: always
     build:

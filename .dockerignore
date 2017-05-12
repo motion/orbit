@@ -2,5 +2,7 @@
 .git
 .env
 node_modules
-./app_data
+app_data
 infra
+apps/native
+.vscode

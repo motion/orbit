@@ -3,41 +3,22 @@ FROM node:7-alpine
 # args
 ARG ENV="prod"
 ENV ENV=${ENV}
+ARG REGISTRY="local"
+ENV ENV=${ENV}
 
-# install yarn
-ENV PATH /root/.yarn/bin:$PATH
-RUN apk update \
-  && apk add curl bash binutils tar \
-  && rm -rf /var/cache/apk/* \
-  && /bin/bash \
-  && touch ~/.bashrc \
-  && curl -o- -L https://yarnpkg.com/install.sh | bash
+RUN npm i -g pnpm --silent
 
-# config yarn
-RUN yarn config set no-progress true
-# bugfix for leveldown prebuild
-RUN npm config set registry http://registry.npmjs.org/
-# add deps
-RUN apk add --update git
-
-# import repo
+# import
 RUN mkdir -p /repo
 WORKDIR /repo
-RUN apk del curl tar binutils
-RUN rm -rf /tmp/* /var/cache/apk/*
 
-# bootstrap
-ADD . /repo/
-RUN yarn install
-RUN yarn cache clean
+# add repo + this app
+COPY ./.* ./package.json ./lerna.json ./shrinkwrap.yaml /repo/
+COPY ./apps/api /repo/apps/api
 
-# build
-RUN git init
-RUN npm run bootstrap
-
-RUN apk del git
+# install
+WORKDIR /repo/apps/api
 
 # run
-WORKDIR /repo/apps/api
 CMD npm run start-$ENV
 EXPOSE 3000

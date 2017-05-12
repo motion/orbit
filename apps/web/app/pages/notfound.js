@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import { Document } from 'models'
+import { Document } from '@jot/models'
 
 @view({
   store: class NotFoundStore {

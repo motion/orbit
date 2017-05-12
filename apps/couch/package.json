@@ -1,6 +1,5 @@
 {
-  "name": "couch",
-  "private": true,
+  "name": "@jot/couch",
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {

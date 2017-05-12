@@ -30,9 +30,16 @@ spec:
     spec:
       imagePullSecrets:
         - name: docker-hub
+      volumes:
+        - name: app-code
+          hostPath:
+            path: "{{PWD}}/apps"
       containers:
         - name: pad-web
           image: {{REGISTRY}}/motion/starter-web:{{ENV}}
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /repo/apps
+              name: app-code
           ports:
           - containerPort: 80

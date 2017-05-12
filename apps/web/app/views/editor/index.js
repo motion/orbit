@@ -1,6 +1,6 @@
 import { Selection, Editor, Raw } from 'slate'
 import { object } from 'prop-types'
-import { Document } from 'models'
+import { Document } from '@jot/models'
 import { view } from '~/helpers'
 import { flatten } from 'lodash'
 import * as Nodes from './nodes'

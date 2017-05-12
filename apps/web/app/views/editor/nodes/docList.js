@@ -1,5 +1,5 @@
 import { node, view } from '~/helpers'
-import App, { Document } from 'models'
+import App, { Document } from '@jot/models'
 import { Button } from '~/views'
 import { isEqual } from 'lodash'
 import Router from '~/router'

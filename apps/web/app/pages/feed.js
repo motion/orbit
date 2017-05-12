@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import { Place, Document } from 'models'
+import { Place, Document } from '@jot/models'
 import FlipMove from 'react-flip-move'
 import { Page, CircleButton } from '~/views'
 import DocItem from '~/views/document/item'

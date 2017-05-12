@@ -6,7 +6,7 @@ import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Errors from '~/views/layout/errors'
 import Mousetrap from 'mousetrap'
-import { Document } from 'models'
+import { Document } from '@jot/models'
 import Commander from '~/views/commander'
 
 @view({

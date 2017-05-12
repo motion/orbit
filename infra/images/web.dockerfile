@@ -8,6 +8,8 @@ ENV ENV=${ENV}
 RUN mkdir -p /etc/nginx/ssl/
 RUN mkdir -p /app/public
 
+# WORKDIR /repo
+
 # copy to nginx
-ADD ./apps/web/nginx/nginx.$ENV.conf /etc/nginx/nginx.conf
-ADD ./apps/web/build /app/public
+COPY ./apps/web/nginx/nginx.$ENV.conf /etc/nginx/nginx.conf
+COPY ./apps/web/build /app/public

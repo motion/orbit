@@ -1,6 +1,6 @@
 import { view } from '~/helpers'
 import { Page, Link, Input, Button } from '~/views'
-import { Place } from 'models'
+import { Place } from '@jot/models'
 import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
 import List from '~/views/list'

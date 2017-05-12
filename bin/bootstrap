@@ -3,40 +3,79 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-# ensure .env
-# ensure docker
-# ensure kubernetes
-# ensure minikube
+# allow errors
+set +e
 
-# for template parsing
-pip install envtpl
+file-exists ".env"
+file-exists ".env.dev"
 
-# note to add insecure registry localhost:5000 to mac app
+echo "Make sure to install dotenv and ensure it picks up your .env vars!"
 
-# kubernetes templates
-brew install ktmpl
+function ensure-dep {
+  cmd=${@:1}
+  if [ "$(bin-exists $1)" = "" ]; then
+    echo "$1 is not installed, installing..."
+    if [ "$cmd" = "" ]; then
+      echo "please install first!"
+      exit 1
+    else
+      $($cmd)
+    fi
+  fi
+  echo "installed: $1"
+}
 
+function install-minikube {
+  curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.19.0/minikube-darwin-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+}
+
+# Ensure XCode is installed
+xcode-select --install 2> /dev/null
+
+ensure-dep "docker"
+ensure-dep "docker-machine"
+ensure-dep "npm"
+ensure-dep "pnpm" -- npm i -g pnpm
+ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+# ensure dev machine with xhyve
+docker-machine inspect dev || docker-machine create dev --driver xhyve
+
+# brew deps
+brew update
+ensure-dep "xhyve" -- brew install xhyve && brew install docker-machine-driver-xhyve
+ensure-dep "pip" -- brew install python
+ensure-dep "envtpl" -- pip install envtpl
+ensure-dep "kubectl" -- brew install kubectl
+ensure-dep "minikube" -- install-minikube
+
+# start kubes
+dev boot
+
+# setup kubes
 minikube config set WantReportErrorPrompt false
 minikube config set vm-driver=xhyve
-
 minikube addons enable ingress
-
-# adds secrets, needs .env
 kubectl create secret docker-registry $DOCKER_SECRET \
     --docker-server=$DOCKER_REGISTRY_SERVER \
     --docker-username=$DOCKER_USER \
     --docker-password=$DOCKER_PASSWORD \
     --docker-email=$DOCKER_EMAIL
 
-# ensure xhyve
-# ensure npm
-# npm bootstrap
-
 # /etc/hosts
-echo "$(minikube ip) couch.staging.dev api.staging.dev staging.dev" | sudo tee -a /etc/hosts
-echo "127.0.0.1 couch.jot.dev api.jot.dev jot.dev"
+if grep -q "staging.dev" /etc/hosts; then
+  echo "staging.dev in /etc/hosts"
+else
+  echo "$(minikube ip) couch.staging.dev api.staging.dev staging.dev" | sudo tee -a /etc/hosts
+fi
+if grep -q "jot.dev" /etc/hosts; then
+  echo "jot.dev in /etc/hosts"
+else
+  echo "127.0.0.1 couch.jot.dev api.jot.dev jot.dev" | sudo tee -a /etc/hosts
+fi
 
-# run minikube
+echo "npm run bootstrap"
+npm run bootstrap
 
 echo " welcome!"
 echo " to start the app:"

@@ -1,6 +1,5 @@
 {
-  "name": "models",
-  "private": true,
+  "name": "@jot/models",
   "version": "1.0.0",
   "main": "lib/index.js",
   "dependencies": {

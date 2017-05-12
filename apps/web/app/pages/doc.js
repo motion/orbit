@@ -3,7 +3,7 @@ import { Page, Button } from '~/views'
 import Router from '~/router'
 import TimeAgo from 'react-timeago'
 import Editor from '~/views/editor'
-import { Document } from 'models'
+import { Document } from '@jot/models'
 import Topics from '~/views/topics'
 
 // cmd + t

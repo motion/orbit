@@ -1,5 +1,5 @@
 import { view, observable } from '~/helpers'
-import App from 'models'
+import App from '@jot/models'
 import { Input, Button, Link } from '~/views'
 import { HEADER_HEIGHT } from '~/constants'
 

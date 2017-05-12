@@ -10,10 +10,13 @@ spec:
   selector:
     run: pad-api
   ports:
-    - protocol: TCP
+    - name: app-port
       port: 3000
       targetPort: 3000
       nodePort: 32099
+    - name: debug-port
+      port: 5858
+      nodePort: 30006
 status:
   loadBalancer: {}
 ---
@@ -34,23 +37,30 @@ spec:
       volumes:
         - name: app-code
           hostPath:
-            path: "{{PWD}}/apps"
+            path: "{{PWD}}"
       containers:
         - name: pad-api
           image: {{REGISTRY}}/motion/starter-api:{{ENV}}
           imagePullPolicy: Always
           volumeMounts:
-            - mountPath: /repo/apps
+            - mountPath: /repo
               name: app-code
           ports:
           - containerPort: 3000
+          - containerPort: 5858
           resources: {}
           env:
           - name: PORT
             value: "3000"
-          - name: DB_HOST
-            value: "{{DB_HOST}}"
+          - name: DB_HOSTNAME
+            value: "{{DB_HOSTNAME}}"
           - name: DB_PORT
             value: "5984"
           - name: DB_PROTOCOL
             value: "{{DB_PROTOCOL}}"
+          - name: DB_PUBLIC_URL
+            value: "{{DB_PUBLIC_URL}}"
+          - name: DB_USER
+            value: "{{DB_USER}}"
+          - name: DB_PASSWORD
+            value: "{{DB_PASSWORD}}"

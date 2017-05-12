@@ -139,6 +139,7 @@ export default class Root {
     nav: {
       flexFlow: 'row',
       marginRight: 10,
+      alignItems: 'center',
     },
     btn: {
       padding: [8, 6],

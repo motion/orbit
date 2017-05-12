@@ -46,7 +46,7 @@ class Image extends Model {
   @query get = id => {
     if (!id) return null
     if (Array.isArray(id)) return this.getAll(id)
-    return this.collection.findOne(id.replace('-', ':'))
+    return this.collection.findOne(id)
   };
 
   @query forDocument = doc => {
@@ -57,7 +57,6 @@ class Image extends Model {
   }
 
   async create({ file, ...props }) {
-    console.log(file, props)
     const image = await super.create({
       name: file.name,
       size: `${file.size}`,

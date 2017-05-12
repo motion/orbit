@@ -29,8 +29,8 @@ class ImageNodeStore {
       this.saveImage(file)
       return await readFile(file)
     }
-    if (data.get('image')) {
-      const image: Image = data.get('image')
+    if (data.get('imageId')) {
+      const image: Image = await Image.get(data.get('imageId')).exec()
       const src = await image.getAttachment()
       return src
     }
@@ -41,8 +41,8 @@ class ImageNodeStore {
     this.loading = true
     const { doc } = this.props.editorStore
     const image = await doc.addImage(file)
-    // save to doc
-    this.props.onChange({ image })
+    // save ID to doc
+    this.props.onChange({ imageId: image._id })
     this.loading = false
   }
 }

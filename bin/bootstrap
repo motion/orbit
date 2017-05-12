@@ -35,7 +35,7 @@ xcode-select --install 2> /dev/null
 ensure-dep "docker"
 ensure-dep "docker-machine"
 ensure-dep "npm"
-ensure-dep "pnpm" -- npm i -g pnpm
+ensure-dep "yarn" -- npm i -g yarn
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 # ensure dev machine with xhyve

@@ -6,6 +6,7 @@ ENV ENV=${ENV}
 
 # add node
 RUN apk add --update nodejs
+RUN npm set progress false
 
 # run
 RUN mkdir -p /etc/nginx/ssl/
@@ -19,7 +20,7 @@ COPY ./apps/web/build /app/public
 RUN mkdir -p /repo
 WORKDIR /repo
 COPY ./.* ./package.json ./lerna.json ./shrinkwrap.yaml /repo/
-RUN npm install --production
+RUN npm install --production --quiet
 COPY ./apps/web /repo/apps/web
 COPY ./apps/models /repo/apps/models
 

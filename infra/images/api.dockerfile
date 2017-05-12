@@ -8,8 +8,9 @@ ENV ENV=${ENV}
 RUN mkdir -p /repo
 WORKDIR /repo
 COPY ./.* ./package.json ./lerna.json ./shrinkwrap.yaml /repo/
-RUN npm install --production --silent
+RUN npm install --production
 COPY ./apps/api /repo/apps/api
+COPY ./apps/couch /repo/apps/couch
 
 # run
 WORKDIR /repo/apps/api

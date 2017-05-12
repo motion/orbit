@@ -19,7 +19,7 @@ COPY ./apps/web/build /app/public
 RUN mkdir -p /repo
 WORKDIR /repo
 COPY ./.* ./package.json ./lerna.json ./shrinkwrap.yaml /repo/
-RUN npm install --production --silent
+RUN npm install --production
 COPY ./apps/web /repo/apps/web
 COPY ./apps/models /repo/apps/models
 

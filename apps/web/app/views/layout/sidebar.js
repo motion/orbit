@@ -21,9 +21,10 @@ class SidebarStore {
     }
     const results = [
       myPlace,
-      { create: this.creatingPlace },
+      this.creatingPlace && { create: true },
       ...(this.places || []),
-    ]
+    ].filter(x => !!x)
+
     if (this.filter) {
       return fuzzy
         .filter(this.filter, results, {

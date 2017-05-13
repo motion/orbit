@@ -1,4 +1,5 @@
 import { view, observable } from '~/helpers'
+import { object } from 'prop-types'
 import { Input, CircleButton, Link, Button, Icon } from '~/views'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
@@ -8,6 +9,7 @@ import Errors from '~/views/layout/errors'
 import Mousetrap from 'mousetrap'
 import { Document } from '@jot/models'
 import Commander from '~/views/commander'
+import Keys from '~/stores/keys'
 
 @view({
   store: class LayoutStore {
@@ -19,6 +21,14 @@ import Commander from '~/views/commander'
   },
 })
 export default class Root {
+  static childContextTypes = {
+    shortcuts: object,
+  }
+
+  getChildContext() {
+    return { shortcut: Keys.manager }
+  }
+
   prevent = (e: Event) => e.preventDefault()
 
   @observable headerHovered = true

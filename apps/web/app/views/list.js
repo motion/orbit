@@ -5,6 +5,7 @@ import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/views/helpers/parentSize'
+import { Shortcuts } from 'react-shortcuts'
 
 const idFn = _ => _
 
@@ -45,23 +46,20 @@ class List {
   getTotalItems = props =>
     props.items ? props.items.length : Children.count(props.children)
 
-  onKey = e => {
+  handleShortcuts = (action, event) => {
     if (this.state.selected === null) return
-
-    const { keyCode } = e
-
-    switch (keyCode) {
-      case 40: // down
+    switch (action) {
+      case 'DOWN':
         this.highlightItem(cur => Math.min(this.totalItems, cur + 1))
-        e.preventDefault()
+        event.preventDefault()
         break
-      case 38: // up
+      case 'UP':
         this.highlightItem(cur => Math.max(0, cur - 1))
-        e.preventDefault()
+        event.preventDefault()
         break
-      case 13: // enter
+      case 'ENTER':
         this.highlightItem(() => this.state.selected, this.onSelect)
-        e.preventDefault()
+        event.preventDefault()
         break
     }
   }
@@ -214,24 +212,26 @@ class List {
     }
 
     return (
-      <list
-        $$draggable
-        style={{ minHeight: height, minWidth: width, ...style }}
-        {...props}
-      >
-        <loading if={loading}>loading</loading>
-        <VirtualList
-          if={!loading && rowHeight}
-          height={height}
-          width={width}
-          overscanRowCount={5}
-          rowCount={total}
-          rowHeight={rowHeight}
-          rowRenderer={({ index, key, style }) =>
-            chillen[index]({ key, style })}
-        />
-        {!rowHeight && chillen}
-      </list>
+      <Shortcuts name="ALL" handler={this.handleShortcuts}>
+        <list
+          $$draggable
+          style={{ minHeight: height, minWidth: width, ...style }}
+          {...props}
+        >
+          <loading if={loading}>loading</loading>
+          <VirtualList
+            if={!loading && rowHeight}
+            height={height}
+            width={width}
+            overscanRowCount={5}
+            rowCount={total}
+            rowHeight={rowHeight}
+            rowRenderer={({ index, key, style }) =>
+              chillen[index]({ key, style })}
+          />
+          {!rowHeight && chillen}
+        </list>
+      </Shortcuts>
     )
   }
 

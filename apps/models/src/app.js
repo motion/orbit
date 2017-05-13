@@ -90,16 +90,8 @@ class App {
     await Promise.all([...connections, this.setSession()])
     console.timeEnd('connect')
 
-    // instantiate stores
-    if (stores) {
-      this.stores = Object.keys(stores).reduce((acc, cur) => {
-        const Store = stores[cur]
-        return {
-          ...acc,
-          [cur]: new Store({ app: this }),
-        }
-      }, {})
-    }
+    // stores
+    this.stores = stores
 
     // seed db
     this.seed = new Seed()

@@ -1,8 +1,21 @@
 import { store } from '~/helpers'
+import { ShortcutManager } from 'react-shortcuts'
 
-@store
-export default class Keys {
+const keymap = {
+  ALL: {
+    MOVE_LEFT: 'left',
+    MOVE_RIGHT: 'right',
+    MOVE_UP: 'up',
+    MOVE_DOWN: 'down',
+    ENTER: 'enter',
+  },
+}
+
+@store class Keys {
   start() {
-    console.log('keys', this)
+    this.manager = new ShortcutManager(keymap)
   }
 }
+
+// singleton
+export default new Keys()

@@ -7,9 +7,9 @@ export Item from './segmentItem'
 
 const notUndefined = x => typeof x !== 'undefined'
 
-@view
-export default class Segment {
+@view class Segment {
   static Item = SegmentItem
+
   static defaultProps = {
     items: [],
     onChange: () => {},
@@ -159,3 +159,7 @@ export default class Segment {
     },
   }
 }
+
+Segment.Item = SegmentItem
+
+export default Segment

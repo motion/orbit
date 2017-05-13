@@ -7,7 +7,7 @@ import { $, view } from '~/helpers'
 }
 
 @view
-export class Page {
+export default class Page {
   componentWillMount() {
     this.id = Math.random()
     this.setPage(this.props)
@@ -54,11 +54,3 @@ export class Page {
     },
   }
 }
-
-Page.Side = $('side', {
-  width: 200,
-  padding: 0,
-  flex: 1,
-})
-
-Page.Head = $('header', {})

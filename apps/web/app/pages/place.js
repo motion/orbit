@@ -1,11 +1,11 @@
 import { view, query, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
 import { Place, Document } from '@jot/models'
-import { Text, Button, CircleButton, NotFound } from '~/ui'
+import { Segment, Button, CircleButton } from '~/ui'
+import NotFound from '~/pages/notfound'
 import Page from '~/views/page'
 import Router from '~/router'
 import DocumentView from '~/views/document'
-import Segment from '~/ui/segment'
 
 @view({
   store: class PlaceStore {
@@ -32,6 +32,8 @@ import Segment from '~/ui/segment'
 export default class PlacePage {
   render({ store }) {
     const { place, doc } = store
+
+    console.log(Page, Segment, Segment.Item, Button, DocumentView)
 
     if (!place) {
       return <Page loading />

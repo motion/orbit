@@ -1,4 +1,5 @@
 export Link from './link'
+export List from './list'
 export Title from './title'
 export Modal from './modal'
 export Poof from './poof'

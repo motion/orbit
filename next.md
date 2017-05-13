@@ -1,3 +1,9 @@
+# needed
+
+- user/auth into own model
+- superlogin
+- user.preInsert createUserDoc
+
 # grabbag
 
   - banner image (show up on grid/list)

@@ -114,7 +114,6 @@ function storeDecorators(obj) {
 
 function autoObserveObservables(obj) {
   for (const method of Object.keys(obj)) {
-    console.log('is', method, obj[method])
     if (obj[method] instanceof Rx.Observable) {
       observableRxToObservableMobx(obj, method)
     }

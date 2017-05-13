@@ -1,5 +1,5 @@
 import { Model, query, str } from './helpers'
-import App from './index'
+import App from './app'
 
 class Comment extends Model {
   static props = {

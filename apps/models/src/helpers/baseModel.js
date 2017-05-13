@@ -19,6 +19,10 @@ export default class BaseModel {
     return new Date().toISOString()
   }
 
+  get pouch() {
+    return this.collection.pouch
+  }
+
   get props() {
     const { timestamps, ...props } = this.constructor.props
     if (timestamps) {

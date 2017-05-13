@@ -149,8 +149,8 @@ export default class Commander {
     input: {
       width: '100%',
       background: '#fff',
-      border: [1, '#eee'],
-      padding: [6, 8],
+      border: 'none',
+      padding: [8, 10],
       fontSize: 16,
       opacity: 0.9,
       '&:hover': {

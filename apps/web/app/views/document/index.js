@@ -5,10 +5,26 @@ import Editor from '~/views/editor'
 
 @view
 export default class Document {
-  render({ document, focusOnMount }) {
+  downAt = Date.now()
+  editor = null
+
+  mousedown = () => (this.downAt = Date.now())
+  mouseup = () => {
+    if (Date.now() - this.downAt < 100) {
+      this.editor.focus()
+    }
+  }
+
+  render({ document, focusOnMount, editorProps, ...props }) {
     return (
-      <doc>
-        <Editor focusOnMount doc={document} id={document._id} />
+      <doc {...props} onMouseDown={this.mousedown} onMouseUp={this.mouseup}>
+        <Editor
+          focusOnMount
+          getRef={this.ref('editor').set}
+          doc={document}
+          id={document._id}
+          {...editorProps}
+        />
       </doc>
     )
   }
@@ -16,6 +32,7 @@ export default class Document {
   static style = {
     doc: {
       padding: [5, 20],
+      flex: 1,
     },
   }
 }

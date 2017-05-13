@@ -5,7 +5,7 @@ import { HEADER_HEIGHT } from '~/constants'
 
 // this.finish()
 @view({
-  store: class {
+  store: class LoginStore {
     loggingIn = false
     passwordRef = null
     username = null
@@ -56,7 +56,7 @@ export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <form $$undraggable if={!App.loggedIn} onSubmit={store.onSubmit}>
+        <form $$undraggable onSubmit={store.onSubmit}>
           <step if={store.step === 1}>
             <Input
               $input
@@ -98,7 +98,7 @@ export default class Login {
             hi,&nbsp;
             <username $$ellipse>{App.user.name}</username>
           </text>
-          <Button onClick={App.logout}>👋</Button>
+          <Button onClick={() => App.logout()}>👋</Button>
         </step>
       </login>
     )

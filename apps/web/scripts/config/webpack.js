@@ -32,18 +32,37 @@ if (IS_PROD) {
 }
 
 module.exports = Object.assign(config, {
-  entry: filtered([
-    // require.resolve('react-hot-loader/patch'),
-    IS_DEV && require.resolve('react-dev-utils/webpackHotDevClient'),
-    require.resolve('./polyfills'),
-    paths.appIndexJs,
-  ]),
-
+  entry: {
+    app: filtered([
+      IS_DEV && require.resolve('react-dev-utils/webpackHotDevClient'),
+      require.resolve('./polyfills'),
+      paths.appIndexJs,
+    ]),
+    vendor: [
+      'react',
+      'react-dom',
+      'slate',
+      'immutable',
+      'lodash',
+      'lodash-decorators',
+      'rxjs',
+      'mobx',
+      'pouchdb-core',
+      'pouchdb-replication',
+      'pouchdb-validation',
+      'prop-types',
+      'react-flip-move',
+      'react-grid-layout',
+      'react-portal',
+      'react-virtualized',
+      'superlogin-client',
+    ],
+  },
   output: {
     path: paths.appBuild,
-    // Add /* filename */ comments to generated require()s in the output.
     pathinfo: true,
-    filename: 'static/js/bundle.js',
+    filename: 'js/[name].js',
+    library: '[name]_lib',
     publicPath: publicPath,
   },
 
@@ -89,6 +108,12 @@ module.exports = Object.assign(config, {
     new CaseSensitivePathsPlugin(),
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     new webpack.NamedModulesPlugin(),
+
+    // split out vendor files
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: Infinity, // ensure only stuff we list
+    }),
 
     // production
     // TODO: I disabled these to speeed up prod builds during testing

@@ -13,7 +13,7 @@ export default class Splash {
     loader: {
       width: '100%',
       height: '100%',
-      backgroundImage: 'url(https://grasshoppermind.files.wordpress.com/2012/05/five-lined-pyramids.jpg)',
+      // backgroundImage: 'url(https://grasshoppermind.files.wordpress.com/2012/05/five-lined-pyramids.jpg)',
       backgroundPosition: 'center center',
       backgroundSize: 'cover',
       filter: 'contrast(100%) brightness(1)',

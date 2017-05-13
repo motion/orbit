@@ -20,7 +20,6 @@ export default Child => {
       }
       const parentNode = parent || this.parent
       if (!parentNode) {
-        console.log('parent-size: No parent node to measure')
         return null
       }
       const { offsetWidth, offsetHeight } = parentNode

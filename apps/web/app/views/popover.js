@@ -587,7 +587,7 @@ export default class Popover {
       left: 0,
       right: 0,
       bottom: 0,
-      zIndex: -1,
+      zIndex: 101,
       pointerEvents: 'none',
     },
     section: {
@@ -598,7 +598,7 @@ export default class Popover {
       zIndex: 100000,
     },
     closing: {
-      zIndex: 100000 - 1,
+      // zIndex: 100000 - 1,
     },
     bg: {
       position: 'absolute',

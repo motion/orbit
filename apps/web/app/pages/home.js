@@ -5,8 +5,8 @@ import App from '@jot/models'
 import Place from './place'
 
 @view
-export default class MePage {
+export default class HomePage {
   render() {
-    return <Place slug={App.loggedIn && App.user.name} />
+    return <Place slug={(App.loggedIn && App.user.name) || '__home__'} />
   }
 }

@@ -88,7 +88,8 @@ export default class Root {
                 icon={<Icon name="ui-add" />}
                 onClick={store.createDoc}
               />
-              <Button icon="plus">test</Button>
+              <Button icon="🖼" />
+              <Button icon="😊" />
             </omnibar>
           </statusbar>
         </main>
@@ -138,6 +139,7 @@ export default class Root {
     nav: {
       flexFlow: 'row',
       marginRight: 10,
+      alignItems: 'center',
     },
     btn: {
       padding: [8, 6],
@@ -169,7 +171,7 @@ export default class Root {
       overflow: 'hidden',
       padding: 10,
       background: '#fff',
-      borderTop: [1, '#eee'],
+      borderTop: [2, '#eee'],
       position: 'relative',
     },
     tag: {

@@ -2,47 +2,12 @@ import { $, view } from '~/helpers'
 import Sidebar from '~/views/layout/sidebar'
 import Popover from '~/views/popover'
 
-// anything thats used by layout can be here
-// because its used by all pages
+// only stuff thats used by all pages
 export * from '~/views/page'
 export Icon from '~/views/icon'
 export List from '~/views/list'
 export Button from '~/views/button'
-
-@view
-export class Input {
-  render({ children, noBorder, getRef, ...props }) {
-    return <input ref={getRef} {...props} />
-  }
-
-  static style = {
-    input: {
-      fontSize: 16,
-      lineHeight: '1.4rem',
-      border: [1, '#eee'],
-      padding: [3, 5],
-      margin: ['auto', 0],
-      background: '#fff',
-      '&:hover': {
-        cursor: 'text',
-      },
-      '&:focus': {
-        border: [1, 'blue'],
-      },
-    },
-  }
-
-  static theme = {
-    noBorder: {
-      input: {
-        '&:focus': {
-          // invisible
-          borderColor: 'rgba(0,0,0,0)',
-        },
-      },
-    },
-  }
-}
+export Input from '~/views/input'
 
 @view
 export class CircleButton {

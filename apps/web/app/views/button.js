@@ -9,8 +9,8 @@ export default class Button {
   render({ children, icon, className, tooltip, tooltipProps, ...props }) {
     return (
       <btn $$row className={`${className || ''} ${this.uniq}`} {...props}>
-        <Icon $icon if={icon} name={icon} />
-        <children if={children}>
+        <Icon $icon if={icon} size={14} name={icon} />
+        <children $hasIcon={!!icon} if={children}>
           {children}
         </children>
         <Popover
@@ -49,7 +49,10 @@ export default class Button {
       },
     },
     icon: {
-      marginRight: 3,
+      // marginRight: 3,
+    },
+    hasIcon: {
+      marginLeft: 5,
     },
   }
 }

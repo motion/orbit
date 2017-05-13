@@ -1,4 +1,4 @@
-import App from './index'
+import App from './app'
 import { Model, query, str, array, bool } from './helpers'
 import Document from './document'
 import Board from './board'
@@ -13,7 +13,6 @@ class Place extends Model {
     slug: str,
     private: bool,
     primary_docId: str.optional,
-    layout: array.optional,
     members: array.items(str),
     timestamps: true,
   }
@@ -21,7 +20,6 @@ class Place extends Model {
   static defaultProps = props => ({
     private: false,
     authorId: App.user && App.user.name,
-    layout: [],
     members: [],
     slug: toSlug(props.title),
   })

@@ -46,13 +46,20 @@ class EditorStore {
     this.watch(this.watchers.setContent)
   }
 
+  get nodes() {
+    return this.content && this.content.document && this.content.document.nodes
+  }
+
+  get hasUploadingImages() {
+    return (
+      this.nodes &&
+      this.nodes.some(x => x.type === 'image' && x.data.get('file'))
+    )
+  }
+
   // this will prevent save while uploading images...
   get shouldSave() {
-    if (
-      this.content &&
-      this.content.nodes &&
-      this.content.nodes.some(x => x.type === 'inline-image')
-    ) {
+    if (this.hasUploadingImages) {
       return false
     }
     return true
@@ -78,7 +85,7 @@ class EditorStore {
     },
   }
 
-  update = val => {
+  setContent = val => {
     this.content = val
   }
 
@@ -118,7 +125,7 @@ export default class EditorView {
   }
 
   onChange = value => {
-    this.props.store.update(value)
+    this.props.store.setContent(value)
     this.props.onChange(value)
   }
 

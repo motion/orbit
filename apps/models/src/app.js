@@ -6,6 +6,7 @@ import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
+import Seed from './seed'
 import { uniqBy } from 'lodash'
 
 RxDB.QueryChangeDetector.enable()
@@ -22,7 +23,7 @@ const tempId = () => {
   return id
 }
 
-export default class App {
+class App {
   db = null
 
   // basically global stores
@@ -85,19 +86,25 @@ export default class App {
       })
     })
 
-    // log back in
     console.time('connect')
     await Promise.all([...connections, this.setSession()])
+    console.timeEnd('connect')
 
     // instantiate stores
-    this.stores = Object.keys(stores).reduce((acc, cur) => {
-      const Store = stores[cur]
-      return {
-        ...acc,
-        [cur]: new Store(this),
-      }
-    }, {})
-    console.timeEnd('connect')
+    if (stores) {
+      this.stores = Object.keys(stores).reduce((acc, cur) => {
+        const Store = stores[cur]
+        return {
+          ...acc,
+          [cur]: new Store(this),
+        }
+      }, {})
+    }
+
+    // seed db
+    this.seed = new Seed()
+    this.seed.start()
+
     console.timeEnd('start')
   }
 
@@ -172,7 +179,6 @@ export default class App {
 
   @action setSession = async () => {
     const session = await this.session()
-    console.log('got session')
     const loggedIn = session && session.userCtx.name
     if (loggedIn) {
       this.user = session.userCtx
@@ -183,7 +189,7 @@ export default class App {
 
   @action clearUser = () => {
     localStorage.setItem('tempUsername', '')
-    this.user = null
+    this.user = {}
   }
 
   @computed get tempUser() {
@@ -231,3 +237,5 @@ export default class App {
     this.activeStores = { ...this.activeStores, [key]: null }
   }
 }
+
+export default new App()

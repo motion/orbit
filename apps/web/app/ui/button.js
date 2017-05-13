@@ -140,7 +140,7 @@ export default class SegmentItem {
       lineHeight: '1rem',
       fontSize: 13,
       fontWeight: 400,
-      padding: [6, 12],
+      padding: [5, 10],
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',

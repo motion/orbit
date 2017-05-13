@@ -112,9 +112,6 @@ export default class Sidebar {
                 }
               }}
               getItem={(place, index) => {
-                if (index === 0) {
-                  return <List.Item><strong>my place</strong></List.Item>
-                }
                 if (place.create === false) {
                   return null
                 }
@@ -133,7 +130,9 @@ export default class Sidebar {
                     </List.Item>
                   )
                 }
-                return { primary: place.title }
+                return {
+                  primary: place.title,
+                }
               }}
             />
           </main>

@@ -112,7 +112,7 @@ module.exports = Object.assign(config, {
     // split out vendor files
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks: 5, // only modules with 5 related deps come in too
+      minChunks: Infinity, // ensure only stuff we list
     }),
 
     // production

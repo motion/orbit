@@ -6,8 +6,8 @@ import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
+import Seed from './seed'
 import { uniqBy } from 'lodash'
-import { Place, Document } from './all'
 
 RxDB.QueryChangeDetector.enable()
 // RxDB.QueryChangeDetector.enableDebugging()
@@ -101,31 +101,11 @@ class App {
       }, {})
     }
 
-    // ensure homepage
-    await this.seed()
+    // seed db
+    this.seed = new Seed()
+    this.seed.start()
 
     console.timeEnd('start')
-  }
-
-  async seed() {
-    const HOME_DOC = '__home__'
-    if (!await Place.get(HOME_DOC).exec()) {
-      const document = await Document.create({
-        title: 'Welcome to Jot',
-        home: true,
-        authorId: 'admin',
-        places: [HOME_DOC],
-      })
-      const place = await Place.create({
-        authorId: 'admin',
-        title: 'Jot',
-        slug: HOME_DOC,
-        private: false,
-        primary_docId: document._id,
-        members: ['admin'],
-      })
-      console.log('seeded db', place, document)
-    }
   }
 
   @action loginOrSignup = async (username, password) => {

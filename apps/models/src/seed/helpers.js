@@ -3,7 +3,7 @@ import { Place, Document } from '../all'
 export async function ensurePlace(slug, options = {}) {
   // TODO get
 
-  if (!await Place.get(HOME_DOC).exec()) {
+  if (!await Place.get(slug).exec()) {
     const document = await Document.create({
       ...options.document,
       places: [slug],
@@ -14,10 +14,10 @@ export async function ensurePlace(slug, options = {}) {
       primary_docId: document._id,
       ...options.place,
     })
-  }
 
-  return {
-    document,
-    place,
+    return {
+      document,
+      place,
+    }
   }
 }

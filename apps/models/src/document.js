@@ -7,7 +7,6 @@ class Document extends Model {
   static props = {
     title: str,
     content: object,
-    boardId: str.optional,
     authorId: str,
     places: array.optional.items(str),
     hashtags: array.items(str),

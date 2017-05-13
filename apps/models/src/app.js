@@ -7,6 +7,7 @@ import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
 import { uniqBy } from 'lodash'
+import { Place, Document } from './all'
 
 RxDB.QueryChangeDetector.enable()
 // RxDB.QueryChangeDetector.enableDebugging()
@@ -85,20 +86,46 @@ class App {
       })
     })
 
-    // log back in
     console.time('connect')
     await Promise.all([...connections, this.setSession()])
+    console.timeEnd('connect')
 
     // instantiate stores
-    this.stores = Object.keys(stores).reduce((acc, cur) => {
-      const Store = stores[cur]
-      return {
-        ...acc,
-        [cur]: new Store(this),
-      }
-    }, {})
-    console.timeEnd('connect')
+    if (stores) {
+      this.stores = Object.keys(stores).reduce((acc, cur) => {
+        const Store = stores[cur]
+        return {
+          ...acc,
+          [cur]: new Store(this),
+        }
+      }, {})
+    }
+
+    // ensure homepage
+    await this.seed()
+
     console.timeEnd('start')
+  }
+
+  async seed() {
+    const HOME_DOC = '__home__'
+    if (!await Place.get(HOME_DOC).exec()) {
+      const document = await Document.create({
+        title: 'Welcome to Jot',
+        home: true,
+        authorId: 'admin',
+        places: [HOME_DOC],
+      })
+      const place = await Place.create({
+        authorId: 'admin',
+        title: 'Jot',
+        slug: HOME_DOC,
+        private: false,
+        primary_docId: document._id,
+        members: ['admin'],
+      })
+      console.log('seeded db', place, document)
+    }
   }
 
   @action loginOrSignup = async (username, password) => {

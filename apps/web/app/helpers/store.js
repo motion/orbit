@@ -2,6 +2,7 @@ import ClassHelpers from './classHelpers'
 import autobind from 'autobind-decorator'
 import mixin from 'react-mixin'
 import { CompositeDisposable } from 'motion-class-helpers'
+import { Observable } from 'rxjs'
 import {
   action,
   isObservable,
@@ -73,7 +74,7 @@ function onStoreMount(obj) {
     }
 
     // auto Rx => mobx
-    if (val instanceof Rx.Observable) {
+    if (val instanceof Observable) {
       const observable = observableRxToObservableMobx(obj, method)
       obj.subscriptions.add(observable)
       continue

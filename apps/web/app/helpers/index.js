@@ -7,7 +7,7 @@ export $ from './styles'
 export { query } from '@jot/models'
 export clr from 'color'
 
-import { findDOMNode } from 'react'
+import { findDOMNode } from 'react-dom'
 
 export const getTarget = target => {
   if (!target) {

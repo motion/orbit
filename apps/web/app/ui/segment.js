@@ -52,6 +52,7 @@ const notUndefined = x => typeof x !== 'undefined'
       sync,
       clickable,
       spaced,
+      padded,
       ...props
     } = this.props
 

@@ -218,6 +218,7 @@ export default class Popover {
 
   setTarget = () => {
     this.target = getTarget(this.refs.target || this.props.target)
+    console.log('set target', this.target)
   }
 
   isHovered = () => {
@@ -506,6 +507,8 @@ export default class Popover {
       padding,
       forgiveness,
       noHover,
+      top: _top,
+      left: _left,
       ...props
     } = this.props
 

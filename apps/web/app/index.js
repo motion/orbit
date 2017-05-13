@@ -39,4 +39,8 @@ if (module.hot) {
 }
 
 ReactDOM.render(<Splash />, ROOT)
-App.start(DB_CONFIG, Stores).then(render)
+
+App.start({
+  database: DB_CONFIG,
+  stores: Stores,
+}).then(render)

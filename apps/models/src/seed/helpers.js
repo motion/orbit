@@ -1,4 +1,4 @@
-import { Place, Document } from './all'
+import { Place, Document } from '../all'
 
 export async function ensurePlace(slug, options = {}) {
   // TODO get

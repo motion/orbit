@@ -1,10 +1,9 @@
 import { view } from '~/helpers'
 import { uniqBy } from 'lodash'
-import { Page, Link, Input, Button } from '~/views'
+import { List, Link, Input, Button } from '~/ui'
 import { Place } from '@jot/models'
 import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
-import List from '~/views/list'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 

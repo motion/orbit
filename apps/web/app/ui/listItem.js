@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '~/helpers'
-import FakeAvatar from '~/views/fake/avatar'
-import Glow from '~/views/glow'
+import FakeAvatar from './fake/avatar'
+import Glow from './glow'
 
 @view
 export default class ListItem {

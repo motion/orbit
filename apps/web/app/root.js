@@ -1,6 +1,6 @@
 import { view, observable } from '~/helpers'
 import { object } from 'prop-types'
-import { Input, CircleButton, Link, Button, Icon } from '~/views'
+import { Input, CircleButton, Link, Button, Icon } from '~/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -78,7 +78,9 @@ export default class Root {
                 {extraActions.map((xa, i) => <action key={i}>{xa}</action>)}
               </actions>
               <actions $$row if={actions}>
-                {actions.map((action, i) => <action key={i}>{action}</action>)}
+                {Array.isArray(actions) &&
+                  actions.map((action, i) => <action key={i}>{action}</action>)}
+                {!Array.isArray(actions) && actions}
               </actions>
             </rest>
           </header>

@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import { Page, Button } from '~/views'
+import { Button } from '~/ui'
 import Router from '~/router'
 import Editor from '~/views/editor'
 

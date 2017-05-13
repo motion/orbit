@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import { Page, Button } from '~/views'
+import { Button, Icon } from '~/ui'
 import Router from '~/router'
 import Editor from '~/views/editor'
 
@@ -8,31 +8,51 @@ export default class Document {
   downAt = Date.now()
   editor = null
 
-  mousedown = () => (this.downAt = Date.now())
+  mousedown = () => {
+    this.downAt = Date.now()
+  }
+
   mouseup = () => {
     if (Date.now() - this.downAt < 100) {
       this.editor.focus()
     }
   }
 
-  render({ document, focusOnMount, editorProps, ...props }) {
+  render({ document, focusOnMount, ...props }) {
     return (
-      <doc {...props} onMouseDown={this.mousedown} onMouseUp={this.mouseup}>
-        <Editor
-          focusOnMount
-          getRef={this.ref('editor').set}
-          doc={document}
-          id={document._id}
-          {...editorProps}
-        />
-      </doc>
+      <docview onMouseDown={this.mousedown} onMouseUp={this.mouseup}>
+        <document>
+          <Editor
+            focusOnMount
+            getRef={this.ref('editor').set}
+            doc={document}
+            id={document._id}
+            {...props}
+          />
+        </document>
+
+        <sidebar if={false}>
+          <Icon name="camera" />
+        </sidebar>
+      </docview>
     )
   }
 
   static style = {
-    doc: {
-      padding: [5, 20],
+    docview: {
       flex: 1,
+      flexFlow: 'row',
+    },
+    document: {
+      flex: 1,
+      padding: [5, 18],
+      overflow: 'hidden',
+    },
+    sidebar: {
+      width: 40,
+      // borderLeft: [1, '#eee'],
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   }
 }

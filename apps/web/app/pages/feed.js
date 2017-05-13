@@ -1,7 +1,8 @@
 import { view } from '~/helpers'
 import { Place, Document } from '@jot/models'
 import FlipMove from 'react-flip-move'
-import { Page, CircleButton } from '~/views'
+import { CircleButton } from '~/ui'
+import Page from '~/views/page'
 import DocItem from '~/views/document/item'
 
 class FeedStore {

@@ -1,6 +1,5 @@
 import { view } from '~/helpers'
 import { Document } from '@jot/models'
-import { Page, CircleButton } from '~/views'
 import App from '@jot/models'
 import Place from './place'
 

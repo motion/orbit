@@ -1,6 +1,6 @@
 import React, { Children, cloneElement } from 'react'
 import { view } from '~/helpers'
-import FakeText from '~/views/fake/text'
+import FakeText from './fake/text'
 import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'

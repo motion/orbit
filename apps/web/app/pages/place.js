@@ -1,9 +1,11 @@
 import { view, query, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
 import { Place, Document } from '@jot/models'
-import { Text, Page, Button, CircleButton, NotFound } from '~/views'
+import { Text, Button, CircleButton, NotFound } from '~/ui'
+import Page from '~/views/page'
 import Router from '~/router'
 import DocumentView from '~/views/document'
+import Segment from '~/ui/segment'
 
 @view({
   store: class PlaceStore {
@@ -54,26 +56,31 @@ export default class PlacePage {
       <Page
         place={place}
         doc={doc}
-        actions={[
-          <Button tooltip="share link" onClick={() => console.log(place.url())}>
-            🔗
-          </Button>,
-          <Button tooltip="delete all" onClick={store.deleteAll}>
-            rm -rf
-          </Button>,
-          <Button
-            tooltip={place.subscribed() ? 'unfollow' : 'follow'}
-            onClick={place.toggleSubscribe}
-          >
-            {place.subscribed() ? '✅' : '🍻'}
-          </Button>,
-          <Button
-            tooltip={place.private ? 'make public' : 'make private'}
-            onClick={place.togglePrivate}
-          >
-            {place.private ? '🙈' : '🌎'}
-          </Button>,
-        ]}
+        actions={
+          <Segment>
+            <Segment.Item
+              tooltip="share link"
+              onClick={() => console.log(place.url())}
+            >
+              🔗
+            </Segment.Item>
+            <Segment.Item tooltip="delete all" onClick={store.deleteAll}>
+              rm -rf
+            </Segment.Item>
+            <Segment.Item
+              tooltip={place.subscribed() ? 'unfollow' : 'follow'}
+              onClick={place.toggleSubscribe}
+            >
+              {place.subscribed() ? '✅' : '🍻'}
+            </Segment.Item>
+            <Segment.Item
+              tooltip={place.private ? 'make public' : 'make private'}
+              onClick={place.togglePrivate}
+            >
+              {place.private ? '🙈' : '🌎'}
+            </Segment.Item>
+          </Segment>
+        }
       >
         <DocumentView focusOnMount if={doc} document={doc} />
       </Page>

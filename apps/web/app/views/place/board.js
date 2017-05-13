@@ -3,7 +3,7 @@ import { isEqual } from 'lodash'
 import { Place, Document } from '@jot/models'
 import Router from '~/router'
 import DocItem from '~/views/document/item'
-import Grid from '~/views/grid'
+import { Grid } from '~/ui'
 
 @view({
   store: class BoardStore {

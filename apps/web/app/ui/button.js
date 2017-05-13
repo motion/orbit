@@ -1,5 +1,5 @@
 import { clr, view } from '~/helpers'
-import Popover from '~/views/popover'
+import Popover from './popover'
 import Icon from './icon'
 
 @view

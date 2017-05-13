@@ -23,7 +23,7 @@ export default class Title {
 
   static theme = {
     tag: ({ tag, size }) => {
-      const reduce = 1 / tag.slice(1)
+      const reduce = 1 / +tag.slice(1)
       const fontSize = +size || 20 + reduce * 20
       return {
         title: {

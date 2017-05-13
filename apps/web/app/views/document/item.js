@@ -1,7 +1,7 @@
 import { view, observable } from '~/helpers'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
-import Poof from '~/views/poof'
+import { Poof } from '~/ui'
 import React from 'react'
 import Editor from '~/views/editor'
 

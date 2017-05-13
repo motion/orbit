@@ -1,6 +1,6 @@
 import { view, observable } from '~/helpers'
 import App from '@jot/models'
-import { Input, Button, Link } from '~/views'
+import { Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 // this.finish()

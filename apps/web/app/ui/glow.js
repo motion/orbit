@@ -1,6 +1,6 @@
 import { view, $ } from '~/helpers'
 import { throttle } from 'lodash'
-import { offset } from './helpers'
+import { offset } from '~/views/helpers'
 import resizer from 'element-resize-detector'
 
 const Resize = resizer({ strategy: 'scroll' })

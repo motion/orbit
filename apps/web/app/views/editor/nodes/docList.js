@@ -1,6 +1,6 @@
 import { node, view } from '~/helpers'
 import App, { Document } from '@jot/models'
-import { Button } from '~/views'
+import { Button } from '~/ui'
 import { isEqual } from 'lodash'
 import Router from '~/router'
 import CardList from './lists/card'
@@ -35,7 +35,6 @@ export default class DocList {
     return (
       <doclist contentEditable={false}>
         <title>
-          <span $title>Recent Posts</span>
           <buttons>
             <Button
               $active={listType === 'grid'}

@@ -1,14 +1,12 @@
 import React from 'react'
 import { view } from '~/helpers'
-import SegmentItem from './segmentItem'
+import Button from './button'
 import { pickBy } from 'lodash'
-
-export Item from './segmentItem'
 
 const notUndefined = x => typeof x !== 'undefined'
 
 @view class Segment {
-  static Item = SegmentItem
+  static Item = Button
 
   static defaultProps = {
     items: [],
@@ -102,7 +100,7 @@ const notUndefined = x => typeof x !== 'undefined'
               : { text: seg, id: seg }
 
             return (
-              <SegmentItem
+              <Button
                 segmented
                 key={i}
                 first={i === 0}
@@ -119,7 +117,7 @@ const notUndefined = x => typeof x !== 'undefined'
                 {...childProps}
               >
                 {!onlyIcons && text}
-              </SegmentItem>
+              </Button>
             )
           })}
         {clonedChildren}
@@ -160,6 +158,6 @@ const notUndefined = x => typeof x !== 'undefined'
   }
 }
 
-Segment.Item = SegmentItem
+Segment.Item = Button
 
 export default Segment

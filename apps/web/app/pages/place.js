@@ -33,8 +33,6 @@ export default class PlacePage {
   render({ store }) {
     const { place, doc } = store
 
-    console.log(Page, Segment, Segment.Item, Button, DocumentView)
-
     if (!place) {
       return <Page loading />
     }

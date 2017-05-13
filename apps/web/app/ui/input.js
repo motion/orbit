@@ -10,7 +10,16 @@ export default class Input {
   }
 
   render() {
-    const { dark, getRef, sync, first, last, segmented, ...props } = this.props
+    const {
+      dark,
+      getRef,
+      sync,
+      first,
+      last,
+      segmented,
+      noBorder,
+      ...props
+    } = this.props
 
     if (sync) {
       props.value = sync.get()
@@ -37,12 +46,16 @@ export default class Input {
       },
       '&:focus': {
         background: '#fff',
-        boxShadow: [0, 0, 0, 2, [0, 0, 0, 0.05]],
       },
     },
   }
 
   static theme = {
+    noBorder: {
+      input: {
+        border: 'none',
+      },
+    },
     width: ({ width }) => ({
       input: {
         maxWidth: width,

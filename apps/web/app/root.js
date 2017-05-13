@@ -1,6 +1,6 @@
 import { view, observable } from '~/helpers'
 import { object } from 'prop-types'
-import { Input, CircleButton, Link, Button, Icon } from '~/ui'
+import { Segment, Input, CircleButton, Link, Button, Icon } from '~/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -54,24 +54,50 @@ export default class Root {
             onMouseLeave={() => (this.headerHovered = false)}
           >
             <nav if={IS_ELECTRON}>
-              <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
-                {'<'}
-              </back>
-              <fwd
-                $btn
-                $active={!Router.atFront}
-                onClick={() => Router.forward()}
-              >
-                {'>'}
-              </fwd>
-              <btn $active={Router.path !== '/'} onClick={() => Router.go('/')}>
-                🏚
-              </btn>
+              <Segment>
+                <Button $active={!Router.atBack} onClick={() => Router.back()}>
+                  {'<'}
+                </Button>
+                <Button
+                  $active={!Router.atFront}
+                  onClick={() => Router.forward()}
+                >
+                  {'>'}
+                </Button>
+                <Button
+                  $active={Router.path !== '/'}
+                  onClick={() => Router.go('/')}
+                >
+                  🏚
+                </Button>
+              </Segment>
             </nav>
-            <title if={title}>
-              {title}
-            </title>
-            <view $$flex />
+            <bar $$centered $$flex $$row $$overflow="hidden">
+              <Segment padded>
+                <Button icon="link" />
+                <Button icon="media-image" />
+                <Button icon="code" />
+              </Segment>
+              <Segment padded>
+                <Button icon="textcolor" />
+                <Button icon="textbackground" />
+                <Button icon="textbold" />
+                <Button icon="textitalic" />
+                <Button icon="textquote" />
+              </Segment>
+              <Segment padded>
+                <Button icon="list-bullet" />
+                <Button icon="list-number" />
+                <Button icon="margin-left" />
+                <Button icon="margin-right" />
+              </Segment>
+              <Segment padded>
+                <Button icon="align-left" />
+                <Button icon="align-right" />
+                <Button icon="align-center" />
+                <Button icon="align-justify" />
+              </Segment>
+            </bar>
             <rest if={header || actions || extraActions} $$row>
               {header || null}
               <actions $$row if={extraActions}>
@@ -100,8 +126,10 @@ export default class Root {
                 icon={<Icon name="ui-add" />}
                 onClick={store.createDoc}
               />
-              <Button icon="🖼" />
-              <Button icon="😊" />
+              <Segment>
+                <Button icon="🖼" />
+                <Button icon="😊" />
+              </Segment>
             </omnibar>
           </statusbar>
         </main>
@@ -133,6 +161,8 @@ export default class Root {
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
+      width: '100%',
+      overflow: 'hidden',
     },
     hovered: {
       opacity: 1,
@@ -147,6 +177,7 @@ export default class Root {
     },
     rest: {
       justifyContent: 'center',
+      marginLeft: 10,
     },
     nav: {
       flexFlow: 'row',

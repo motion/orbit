@@ -622,7 +622,7 @@ export default class Popover {
       position: 'absolute',
       pointerEvents: 'auto',
       opacity: 0,
-      transition: 'opacity ease-in 100ms, transform ease-out 200ms',
+      transition: 'opacity ease-in 60ms, transform ease-out 80ms',
       transform: {
         y: -5,
       },

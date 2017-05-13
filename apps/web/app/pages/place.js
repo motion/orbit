@@ -41,9 +41,35 @@ export default class PlacePage {
       return <NotFound />
     }
 
+    const actions = (
+      <Segment>
+        <Segment.Item
+          tooltip="share link"
+          onClick={() => console.log(place.url())}
+        >
+          🔗
+        </Segment.Item>
+        <Segment.Item tooltip="delete all" onClick={store.deleteAll}>
+          rm
+        </Segment.Item>
+        <Segment.Item
+          tooltip={place.subscribed() ? 'unfollow' : 'follow'}
+          onClick={place.toggleSubscribe}
+        >
+          {place.subscribed() ? '✅' : '🍻'}
+        </Segment.Item>
+        <Segment.Item
+          tooltip={place.private ? 'make public' : 'make private'}
+          onClick={place.togglePrivate}
+        >
+          {place.private ? '🙈' : '🌎'}
+        </Segment.Item>
+      </Segment>
+    )
+
     if (place.private && !App.loggedIn) {
       return (
-        <Page>
+        <Page actions={actions}>
           <content $$centered>
             this place is private!
             <Button>login to join</Button>
@@ -53,35 +79,7 @@ export default class PlacePage {
     }
 
     return (
-      <Page
-        place={place}
-        doc={doc}
-        actions={
-          <Segment>
-            <Segment.Item
-              tooltip="share link"
-              onClick={() => console.log(place.url())}
-            >
-              🔗
-            </Segment.Item>
-            <Segment.Item tooltip="delete all" onClick={store.deleteAll}>
-              rm -rf
-            </Segment.Item>
-            <Segment.Item
-              tooltip={place.subscribed() ? 'unfollow' : 'follow'}
-              onClick={place.toggleSubscribe}
-            >
-              {place.subscribed() ? '✅' : '🍻'}
-            </Segment.Item>
-            <Segment.Item
-              tooltip={place.private ? 'make public' : 'make private'}
-              onClick={place.togglePrivate}
-            >
-              {place.private ? '🙈' : '🌎'}
-            </Segment.Item>
-          </Segment>
-        }
-      >
+      <Page place={place} doc={doc} actions={actions}>
         <DocumentView focusOnMount if={doc} document={doc} />
       </Page>
     )

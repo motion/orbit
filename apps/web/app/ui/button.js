@@ -112,8 +112,8 @@ export default class SegmentItem {
           {...iconProps}
         />
         <children if={children} style={{ color }}>
-          <glowWrap if={false && !active}>
-            <Glow full scale={0.85} color={[255, 255, 255]} opacity={0.06} />
+          <glowWrap if={!active}>
+            <Glow full scale={0.7} color={[0, 0, 0]} opacity={0.04} />
           </glowWrap>
           {children}
         </children>
@@ -144,7 +144,7 @@ export default class SegmentItem {
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',
-      color: [0, 0, 0, 0.4],
+      color: '#444',
       borderColor: '#eee',
       borderWidth: 1,
       borderStyle: 'dotted',
@@ -153,6 +153,9 @@ export default class SegmentItem {
       cursor: 'pointer',
     },
     clickable: {
+      '&:hover': {
+        background: '#fefefe',
+      },
       '&:active': activeLight,
     },
     activeOn: activeLight,

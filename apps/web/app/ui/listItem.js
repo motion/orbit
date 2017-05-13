@@ -54,6 +54,7 @@ export default class ListItem {
           if={onClick && !nohover}
           color={dark ? [255, 255, 255] : [0, 0, 0]}
           opacity={dark ? 0.04 : 0.06}
+          scale={0.7}
           parent={() => this.refs.item}
         />
         <image if={avatar || fakeAvatar}>

@@ -26,7 +26,7 @@ export default class Root {
   }
 
   getChildContext() {
-    return { shortcut: Keys.manager }
+    return { shortcuts: Keys.manager }
   }
 
   prevent = (e: Event) => e.preventDefault()

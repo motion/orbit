@@ -3,10 +3,10 @@ import { ShortcutManager } from 'react-shortcuts'
 
 const keymap = {
   ALL: {
-    MOVE_LEFT: 'left',
-    MOVE_RIGHT: 'right',
-    MOVE_UP: 'up',
-    MOVE_DOWN: 'down',
+    LEFT: 'left',
+    RIGHT: 'right',
+    UP: 'up',
+    DOWN: 'down',
     ENTER: 'enter',
   },
 }

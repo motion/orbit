@@ -52,17 +52,6 @@ class SidebarStore {
 const SideBarLink = ({ children, after, ...props }) => (
   <Link
     {...props}
-    $$style={{
-      width: '100%',
-      fontWeight: 400,
-      fontSize: 18,
-      color: 'purple',
-      padding: [7, 10],
-      cursor: 'pointer',
-      '&:hover': {
-        background: '#fafafa',
-      },
-    }}
     active={{
       background: '#fff',
       color: '#000',
@@ -107,7 +96,7 @@ export default class Sidebar {
               controlled
               items={store.allPlaces}
               onSelect={place => {
-                if (place) {
+                if (place && place.url) {
                   Router.go(place.url())
                 }
               }}
@@ -117,9 +106,13 @@ export default class Sidebar {
                 }
                 if (place.create) {
                   return (
-                    <List.Item>
+                    <List.Item padding={0}>
                       <form onSubmit={store.createPlace}>
                         <Input
+                          $$margin={0}
+                          $$padding={[11, 10]}
+                          $$fontSize={15}
+                          $$width="100%"
                           noBorder
                           getRef={store.onNewPlace}
                           onKeyDown={e =>

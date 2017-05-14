@@ -38,7 +38,6 @@ export default class Input {
       borderRadius: BORDER_RADIUS,
       lineHeight: '1rem',
       background: '#fff',
-      fontFamily: 'caption, -apple-system, helvetica, arial, sans-serif',
       alignSelf: 'center',
       outline: 0,
       '&:hover': {

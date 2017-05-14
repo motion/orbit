@@ -1,5 +1,4 @@
 import { BLOCKS } from '../constants'
-import getCurrentItem from './helpers/getCurrentItem'
 
 export default {
   onKeyDown: (event, data, state) => {

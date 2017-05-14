@@ -33,7 +33,8 @@ function errorReporter(error) {
 
 const ROOT = document.querySelector('#app')
 
-function render() {
+export function render() {
+  console.log('#render')
   const Root = require('./root').default
   ReactDOM.render(
     <AppContainer errorReporter={errorReporter}>

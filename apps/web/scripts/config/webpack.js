@@ -34,7 +34,9 @@ if (IS_PROD) {
 module.exports = Object.assign(config, {
   entry: {
     app: filtered([
-      IS_DEV && require.resolve('react-dev-utils/webpackHotDevClient'),
+      IS_DEV && require.resolve('webpack-dev-server/client') + '?/',
+      IS_DEV && require.resolve('webpack/hot/dev-server'),
+      // IS_DEV && require.resolve('react-dev-utils/webpackHotDevClient'),
       IS_DEV && require.resolve('react-hot-loader/patch'),
       require.resolve('./polyfills'),
       paths.appIndexJs,

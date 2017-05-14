@@ -1,4 +1,4 @@
-import { view } from '~/helpers'
+import { view, Shortcuts } from '~/helpers'
 import { uniqBy } from 'lodash'
 import { List, Link, Input, Button } from '~/ui'
 import { Place } from '@jot/models'
@@ -6,6 +6,35 @@ import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
+
+const SideBarLink = ({ children, after, ...props }) => (
+  <Link
+    {...props}
+    $$style={{
+      width: '100%',
+      fontWeight: 400,
+      fontSize: 18,
+      color: 'purple',
+      padding: [7, 10],
+      cursor: 'pointer',
+      '&:hover': {
+        background: '#fafafa',
+      },
+    }}
+    active={{
+      background: '#fff',
+      color: '#000',
+      '&:hover': {
+        background: '#fafafa',
+      },
+    }}
+  >
+    {children}
+    <span $$fontSize={10} if={after}>
+      {after}
+    </span>
+  </Link>
+)
 
 class SidebarStore {
   places = Place.all()
@@ -37,8 +66,9 @@ class SidebarStore {
   createPlace = async e => {
     e.preventDefault()
     const val = this.placeInput.value
-    await Place.createWithHome(val)
+    const place = await Place.createWithHome(val)
     this.creatingPlace = false
+    Router.go(place.url())
   }
 
   onNewPlace = ref => {
@@ -47,31 +77,26 @@ class SidebarStore {
       ref.focus()
     }
   }
-}
 
-const SideBarLink = ({ children, after, ...props }) => (
-  <Link
-    {...props}
-    active={{
-      background: '#fff',
-      color: '#000',
-      '&:hover': {
-        background: '#fafafa',
-      },
-    }}
-  >
-    {children}
-    <span $$fontSize={10} if={after}>
-      {after}
-    </span>
-  </Link>
-)
+  clearCreating = () => {
+    this.createPlace = false
+  }
+
+  handleShortcuts = (action, event) => {
+    console.log('handle', action)
+    switch (action) {
+      case 'esc':
+        this.clearCreating()
+        break
+    }
+  }
+}
 
 @view({ store: SidebarStore })
 export default class Sidebar {
   render({ store }) {
     return (
-      <side>
+      <Shortcuts $side name="all" handler={store.handleShortcuts}>
         <content $$flex $$undraggable>
           <Login />
 
@@ -101,9 +126,6 @@ export default class Sidebar {
                 }
               }}
               getItem={(place, index) => {
-                if (place.create === false) {
-                  return null
-                }
                 if (place.create) {
                   return (
                     <List.Item padding={0}>
@@ -115,17 +137,17 @@ export default class Sidebar {
                           $$width="100%"
                           noBorder
                           getRef={store.onNewPlace}
-                          onKeyDown={e =>
-                            e.which === 13 && store.createPlace(e)}
                           placeholder="new place"
                         />
                       </form>
                     </List.Item>
                   )
                 }
-                return {
-                  primary: place.title,
-                }
+                return (
+                  <SideBarLink match={place.url()}>
+                    {place.title}
+                  </SideBarLink>
+                )
               }}
             />
           </main>
@@ -134,7 +156,7 @@ export default class Sidebar {
         <sidebar if={App.activePage.sidebar}>
           {App.activePage.sidebar}
         </sidebar>
-      </side>
+      </Shortcuts>
     )
   }
 

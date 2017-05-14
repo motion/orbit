@@ -1,11 +1,10 @@
 import React, { Children, cloneElement } from 'react'
-import { view } from '~/helpers'
+import { view, Shortcuts } from '~/helpers'
 import FakeText from './fake/text'
 import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/views/helpers/parentSize'
-import { Shortcuts } from 'react-shortcuts'
 
 const idFn = _ => _
 
@@ -49,15 +48,15 @@ class List {
   handleShortcuts = (action, event) => {
     if (this.state.selected === null) return
     switch (action) {
-      case 'DOWN':
+      case 'down':
         this.highlightItem(cur => Math.min(this.totalItems, cur + 1))
         event.preventDefault()
         break
-      case 'UP':
+      case 'up':
         this.highlightItem(cur => Math.max(0, cur - 1))
         event.preventDefault()
         break
-      case 'ENTER':
+      case 'enter':
         this.highlightItem(() => this.state.selected, this.onSelect)
         event.preventDefault()
         break
@@ -71,6 +70,11 @@ class List {
   totalItems = () => {
     // TODO could check children length?
     return this.props.items.length
+  }
+
+  // wrap weird signature
+  select = (index: number) => {
+    this.highlightItem(() => index)
   }
 
   highlightItem = (setter: () => number | null, cb: Function) => {
@@ -212,7 +216,7 @@ class List {
     }
 
     return (
-      <Shortcuts name="ALL" handler={this.handleShortcuts}>
+      <Shortcuts name="all" handler={this.handleShortcuts}>
         <list
           $$draggable
           style={{ minHeight: height, minWidth: width, ...style }}

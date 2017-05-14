@@ -31,6 +31,7 @@ class Place extends Model {
       places: [place.slug],
       title: capitalize(title),
     })
+    return place
   }
 
   settings = {

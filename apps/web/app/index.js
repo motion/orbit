@@ -11,6 +11,7 @@ import _ from 'lodash'
 import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Splash from '~/views/splash'
+import { AppContainer } from 'react-hot-loader'
 
 if (!IS_PROD) {
   // install console formatters
@@ -26,11 +27,20 @@ if (!IS_PROD) {
   window._ = _
 }
 
+function errorReporter(error) {
+  console.error(error)
+}
+
 const ROOT = document.querySelector('#app')
 
 function render() {
   const Root = require('./root').default
-  ReactDOM.render(<Root />, ROOT)
+  ReactDOM.render(
+    <AppContainer errorReporter={errorReporter}>
+      <Root />
+    </AppContainer>,
+    ROOT
+  )
 }
 
 if (module.hot) {

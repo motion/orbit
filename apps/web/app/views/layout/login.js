@@ -57,7 +57,7 @@ export default class Login {
     return (
       <login $$draggable>
         <form $$undraggable onSubmit={store.onSubmit}>
-          <step if={store.step === 1}>
+          <step $$hide={store.step !== 1}>
             <Input
               $input
               name="username"
@@ -80,7 +80,7 @@ export default class Login {
             <Segment>
               <Input
                 $input
-                $$width={90}
+                $$width={70}
                 name="password"
                 type="password"
                 placeholder="password"

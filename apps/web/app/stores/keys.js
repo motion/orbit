@@ -2,12 +2,13 @@ import { store } from '~/helpers'
 import { ShortcutManager } from 'react-shortcuts'
 
 const keymap = {
-  ALL: {
-    LEFT: 'left',
-    RIGHT: 'right',
-    UP: 'up',
-    DOWN: 'down',
-    ENTER: 'enter',
+  all: {
+    left: 'left',
+    right: 'right',
+    up: 'up',
+    down: 'down',
+    enter: 'enter',
+    esc: 'esc',
   },
 }
 

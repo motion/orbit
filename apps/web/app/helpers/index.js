@@ -6,6 +6,7 @@ export store from './store'
 export $ from './styles'
 export { query } from '@jot/models'
 export clr from 'color'
+export { Shortcuts } from 'react-shortcuts'
 
 import { findDOMNode } from 'react-dom'
 

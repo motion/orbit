@@ -11,26 +11,28 @@ const Text = ({ getRef, ...props }) => (
   <text ref={getRef} $$marginLeft={props.active ? -2 : 0} {...props} />
 )
 
-const SideBarItem = ({ children, after, temp, ...props }) => (
+const SideBarItem = ({ children, isEditing, after, ...props }) => (
   <Link
     {...props}
     $$style={{
-      background: temp ? '#fafafa' : 'transparent',
+      background: isEditing ? '#fafafa' : 'transparent',
       width: '100%',
       fontSize: 18,
       padding: [7, 10],
-      cursor: 'pointer',
+      cursor: isEditing ? 'text' : 'pointer',
       '&:hover': {
         background: '#fafafa',
       },
     }}
-    active={{
-      background: '#333',
-      color: '#fff',
-      '&:hover': {
-        background: '#222',
-      },
-    }}
+    active={
+      !isEditing && {
+        background: '#333',
+        color: '#fff',
+        '&:hover': {
+          background: '#222',
+        },
+      }
+    }
   >
     {children}
     <span $$fontSize={10} if={after}>
@@ -146,15 +148,17 @@ export default class Sidebar {
                   }
                 }}
                 getItem={(place, index) => {
+                  const isEditing =
+                    place.create || store.editingPlace === place._id
+
                   return (
                     <SideBarItem
-                      temp={place.create}
+                      isEditing={isEditing}
                       match={place.url && place.url()}
                       onDoubleClick={() => store.setEditable(place)}
                     >
                       <Text
-                        {...(place.create ||
-                          store.editingPlace === place._id) && {
+                        {...isEditing && {
                           contentEditable: true,
                           suppressContentEditableWarning: true,
                           getRef: store.onNewPlace,

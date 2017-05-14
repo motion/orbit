@@ -1,8 +1,9 @@
 import { view } from '~/helpers'
-import { Page, Button } from '~/ui'
+import { Button } from '~/ui'
 import Router from '~/router'
 import DocumentView from '~/views/document'
 import { Document } from '@jot/models'
+import Page from '~/views/page'
 
 @view({
   store: class DocPageStore {

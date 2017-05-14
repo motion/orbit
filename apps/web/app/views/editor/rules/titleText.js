@@ -1,6 +1,6 @@
 import { BLOCKS } from '../constants'
 
-// enforce first line as always just text
+// enforce title always just text
 
 export default {
   match: node => {

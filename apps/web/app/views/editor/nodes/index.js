@@ -5,6 +5,7 @@ export docList from './docList'
 export todo from './todo'
 export quote from './quote'
 export meta from './meta'
+export hashtag from './hashtag'
 
 const makeTag = tag => props => React.createElement(`${tag}`, props)
 

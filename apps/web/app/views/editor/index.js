@@ -19,6 +19,7 @@ class EditorStore {
   focused = false
   content = null
   inline = this.props.inline
+  editor = null
 
   start() {
     this.watch(this.watchers.save)
@@ -108,14 +109,16 @@ export default class EditorView {
     this.props.onChange(value)
   }
 
-  getRef = node => {
+  getRef = Editor => {
     const { getRef, store } = this.props
-    if (node) {
+    if (Editor) {
+      store.editor = Editor
+      window.Editor = Editor
       if (getRef) {
-        getRef(node)
+        getRef(Editor)
       }
       if (store.shouldFocus) {
-        node.focus()
+        Editor.focus()
         store.shouldFocus = false
       }
     }

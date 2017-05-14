@@ -6,18 +6,19 @@ import TimeAgo from 'react-timeago'
 @view
 export default class Meta {
   render({ node, children, editorStore, ...props }) {
+    // todo make this a read only thing maybe
     return (
       <span $hashtags if={!editorStore.inline}>
-        <span contentEditable={false} $fade $left>#</span>
-        <span $content contentEditable suppressContentEditableWarning>
+        <span $fade $left>#</span>
+        <span $content>
           {children}
         </span>
-        <span if={node.text} $content $hiddenTags contentEditable={false}>
+        <span if={node.text} $content $hiddenTags>
           {node.text
             .split(' ')
             .map((tag, i) => <tag key={i}>{tag} <outline /></tag>)}
         </span>
-        <span $fade if={editorStore.doc} contentEditable={false}>
+        <span $fade if={editorStore.doc}>
           <TimeAgo minPeriod={10} date={editorStore.doc.updatedAt} />
         </span>
       </span>
@@ -57,8 +58,6 @@ export default class Meta {
     },
     tag: {
       display: 'inline-block',
-      // background: 'orange',
-      padding: 0,
       position: 'relative',
     },
     outline: {

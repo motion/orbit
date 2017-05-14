@@ -148,7 +148,7 @@ const notUndefined = x => typeof x !== 'undefined'
     },
     padded: {
       container: {
-        margin: ['auto', 10],
+        margin: ['auto', 5],
       },
     },
     vertical: {

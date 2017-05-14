@@ -18,13 +18,29 @@ const testStore = new Test()
           open
           target={() => testStore.selection}
         >
-          <Segment padded>
-            <Button icon="textcolor" />
-            <Button icon="textbackground" />
-            <Button icon="textbold" />
-            <Button icon="textitalic" />
-            <Button icon="textquote" />
-          </Segment>
+          <bar $$row>
+            <Segment padded>
+              <Button icon="textcolor" />
+              <Button icon="textbackground" />
+              <Button icon="textbold" />
+              <Button icon="textitalic" />
+              <Button icon="textquote" />
+            </Segment>
+
+            <Segment padded>
+              <Button icon="align-left" />
+              <Button icon="align-right" />
+              <Button icon="align-center" />
+              <Button icon="align-justify" />
+            </Segment>
+
+            <Segment padded>
+              <Button icon="list-bullet" />
+              <Button icon="list-number" />
+              <Button icon="margin-left" />
+              <Button icon="margin-right" />
+            </Segment>
+          </bar>
         </Popover>
       </pane>
     )

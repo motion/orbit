@@ -95,6 +95,7 @@ class SidebarStore {
 @view({ store: SidebarStore })
 export default class Sidebar {
   render({ store }) {
+    consoe.log(store.allPlaces)
     return (
       <sidebar>
         <Shortcuts name="all" handler={store.handleShortcuts}>

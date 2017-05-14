@@ -11,7 +11,7 @@ const testStore = new Test()
 @view class ToolbarPane {
   render({ children }) {
     return (
-      <pane $$flex>
+      <pane>
         {children}
         <Popover
           if={testStore.selection}
@@ -44,6 +44,12 @@ const testStore = new Test()
         </Popover>
       </pane>
     )
+  }
+
+  static style = {
+    pane: {
+      flex: 1,
+    },
   }
 }
 

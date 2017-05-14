@@ -13,7 +13,7 @@ export default class Document {
   }
 
   mouseup = () => {
-    if (Date.now() - this.downAt < 100) {
+    if (Date.now() - this.downAt < 200) {
       this.editor.focus()
     }
   }
@@ -45,6 +45,7 @@ export default class Document {
     },
     document: {
       padding: [5, 18],
+      width: '100%',
     },
     sidebar: {
       width: 40,

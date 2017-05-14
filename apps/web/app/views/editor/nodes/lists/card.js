@@ -1,5 +1,6 @@
 import { view } from '~/helpers'
 import randomcolor from 'random-color'
+import DocItem from '~/views/document/item'
 
 @view
 export default class CardList {
@@ -7,22 +8,7 @@ export default class CardList {
     return (
       <docs $stack={true} if={listStore.docs}>
         {listStore.docs.map((doc, i) => (
-          <doc
-            $$background={`
-                linear-gradient(
-                  ${Math.floor(Math.random() * 180)}deg,
-                  pink,
-                  red
-                )
-              `}
-            $first={i === 0}
-            key={doc._id}
-            onClick={() => Router.go(doc.url())}
-          >
-            <card $$title>
-              {doc.getTitle()}
-            </card>
-          </doc>
+          <DocItem $doc editable key={doc._id} doc={doc} />
         ))}
       </docs>
     )
@@ -36,20 +22,12 @@ export default class CardList {
     },
     doc: {
       margin: [0, 10, 0, 0],
-      userSelect: 'none',
-      width: 150,
-      height: 150,
-      borderBottom: [1, '#eee'],
-      color: '#fff',
-      fontWeight: 800,
-      cursor: 'pointer',
-      fontSize: 46,
-      lineHeight: '3rem',
+      width: 200,
+      height: 280,
       overflow: 'hidden',
+      borderTop: [2, 'red'],
       '&:hover': {
-        boxShadow: '0 0 10px rgba(0,0,0,0.02)',
-        zIndex: 1000,
-        transform: 'rotate(-3deg)',
+        transform: { rotate: '-0.5deg' },
       },
     },
     card: {

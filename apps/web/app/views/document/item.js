@@ -59,17 +59,6 @@ export default class DocItem {
 
     return (
       <doc $$undraggable {...props}>
-        <title
-          if={!draggable}
-          $editing={this.editing}
-          $$height={height}
-          ref={this.ref('title').set}
-          contentEditable={this.editing}
-          onClick={this.navigate}
-          onKeyDown={this.onKeyDown}
-        >
-          {doc.title}
-        </title>
         <delete
           onClick={e => {
             e.stopPropagation()
@@ -88,12 +77,8 @@ export default class DocItem {
         <info onClick={this.navigate}>
           <first>
             <author>{doc.authorId}</author>
-            <TimeAgo minPeriod={10} date={doc.createdAt} />
             {after}
           </first>
-          <second>
-            <minibtn>↠</minibtn>
-          </second>
         </info>
       </doc>
     )
@@ -106,6 +91,10 @@ export default class DocItem {
       color: '#333',
       background: '#fff',
       overflow: 'hidden',
+      borderRadius: 6,
+      border: [1, [0, 0, 0, 0.1]],
+      padding: 12,
+      margin: [0, 5, 10, 5],
     },
     info: {
       flexFlow: 'row',
@@ -113,11 +102,7 @@ export default class DocItem {
       fontSize: 13,
       cursor: 'pointer',
       color: [0, 0, 0, 0.4],
-      margin: -12,
-      padding: 12,
-      '&:hover': {
-        background: '#fafafa',
-      },
+      padding: 5,
     },
     title: {
       fontSize: 18,
@@ -190,18 +175,13 @@ export default class DocItem {
     editable: {
       doc: {
         height: 200,
-        width: 'calc(50% - 10px)',
       },
     },
     draggable: {
       doc: {
+        width: 'calc(50% - 10px)',
         height: '100%',
-        width: '100%',
         margin: 0,
-        borderRadius: 6,
-        border: [1, [0, 0, 0, 0.1]],
-        padding: 12,
-        margin: [0, 5, 10, 5],
       },
     },
   }

@@ -46,8 +46,8 @@ class List {
     props.items ? props.items.length : Children.count(props.children)
 
   handleShortcuts = (action, event) => {
-    if (this.state.selected === null) return
     console.log('key', action)
+    if (this.state.selected === null) return
     switch (action) {
       case 'down':
         this.highlightItem(cur => Math.min(this.totalItems, cur + 1))
@@ -120,6 +120,7 @@ class List {
       controlled,
       onHighlight,
       onSelect,
+      getRef,
       parentSize,
       rowHeight: propRowHeight,
       onItemMount,
@@ -225,10 +226,11 @@ class List {
     }
 
     return (
-      <Shortcuts name="all" handler={this.handleShortcuts}>
+      <Shortcuts isolate name="all" handler={this.handleShortcuts}>
         <list
           $$draggable
           style={{ minHeight: height, minWidth: width, ...style }}
+          ref={getRef}
           {...props}
         >
           <loading if={loading}>loading</loading>
@@ -249,12 +251,12 @@ class List {
   }
 
   static style = {
-    loading: {
-      flex: 1,
-    },
     list: {
       fontSize: 13,
       overflowY: 'auto',
+    },
+    loading: {
+      flex: 1,
     },
   }
 

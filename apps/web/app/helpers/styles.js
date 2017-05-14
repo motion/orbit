@@ -93,6 +93,9 @@ export const styles = {
   undraggable: {
     WebkitAppRegion: 'no-drag',
   },
+  scrollable: {
+    overflowY: 'scroll',
+  },
   padded: {
     padding: 20,
   },

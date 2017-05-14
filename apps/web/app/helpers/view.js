@@ -34,15 +34,11 @@ function decorateView(View) {
 }
 
 // @view
-export default function view(
-  viewOrStores: Object | Class | Function,
-  _module,
-  debug
-) {
+export default function view(viewOrStores: Object | Class | Function) {
   // @view({ ...stores }) shorthand
   if (typeof viewOrStores === 'object') {
     const Stores = viewOrStores
-    return View => storeProvider(Stores, _module)(decorateView(View))
+    return View => storeProvider(Stores)(decorateView(View))
   }
 
   const View = viewOrStores

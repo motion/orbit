@@ -94,8 +94,10 @@ class App {
     this.stores = stores
 
     // seed db
-    this.seed = new Seed()
-    this.seed.start()
+    setTimeout(() => {
+      this.seed = new Seed()
+      this.seed.start()
+    }, 100)
 
     console.timeEnd('start')
   }

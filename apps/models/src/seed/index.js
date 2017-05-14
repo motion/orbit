@@ -8,7 +8,7 @@ export default class Seed {
   }
 
   runSeed(name, seedFn) {
-    console.log('running seed', name)
+    console.log('running seed', name, seedFn)
     seedFn()
   }
 }

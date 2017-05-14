@@ -7,12 +7,15 @@ import { SIDEBAR_WIDTH } from '~/constants'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 
-const Text = props => <view $$marginLeft={props.active ? -2 : 0} {...props} />
+const Text = ({ getRef, ...props }) => (
+  <text ref={getRef} $$marginLeft={props.active ? -2 : 0} {...props} />
+)
 
-const SideBarItem = ({ children, after, ...props }) => (
+const SideBarItem = ({ children, after, temp, ...props }) => (
   <Link
     {...props}
     $$style={{
+      background: temp ? '#fafafa' : 'transparent',
       width: '100%',
       fontSize: 18,
       padding: [7, 10],
@@ -38,8 +41,9 @@ const SideBarItem = ({ children, after, ...props }) => (
 
 class SidebarStore {
   places = Place.all()
+  list = null
   placeInput = null
-  creatingPlace = false
+  editingPlace = false
   filter = ''
 
   get allPlaces() {
@@ -49,7 +53,7 @@ class SidebarStore {
     }
     const results = [
       myPlace,
-      this.creatingPlace && { create: true },
+      this.editingPlace === true && { create: true },
       ...(this.places || []),
     ].filter(x => !!x)
 
@@ -63,12 +67,13 @@ class SidebarStore {
     return uniqBy(results, r => r.title)
   }
 
-  createPlace = async e => {
-    e.preventDefault()
-    const val = this.placeInput.value
-    const place = await Place.createWithHome(val)
-    this.creatingPlace = false
-    Router.go(place.url())
+  createPlace = async () => {
+    const val = this.placeInput.innerText
+    if (val) {
+      const place = await Place.createWithHome(val)
+      this.editingPlace = false
+      Router.go(place.url())
+    }
   }
 
   onNewPlace = ref => {
@@ -78,14 +83,27 @@ class SidebarStore {
     }
   }
 
+  onNewPlaceKey = e => {
+    if (e.which === 13) {
+      e.preventDefault()
+    }
+  }
+
   clearCreating = () => {
-    this.createPlace = false
+    this.editingPlace = false
+  }
+
+  setEditable = place => {
+    this.editingPlace = place._id
   }
 
   handleShortcuts = (action, event) => {
-    console.log('handle', action)
     switch (action) {
+      case 'enter':
+        event.preventDefault()
+        this.createPlace()
       case 'esc':
+        event.preventDefault()
         this.clearCreating()
         break
     }
@@ -95,10 +113,9 @@ class SidebarStore {
 @view({ store: SidebarStore })
 export default class Sidebar {
   render({ store }) {
-    consoe.log(store.allPlaces)
     return (
-      <sidebar>
-        <Shortcuts name="all" handler={store.handleShortcuts}>
+      <Shortcuts isolate name="all" handler={store.handleShortcuts}>
+        <sidebar $$flex>
           <content $$flex $$undraggable>
             <Login />
 
@@ -115,12 +132,13 @@ export default class Sidebar {
               />
               <Button
                 icon="ui-add"
-                onClick={() => (store.creatingPlace = true)}
+                onClick={() => (store.editingPlace = true)}
               />
             </title>
-            <main $$draggable if={store.allPlaces}>
+            <main $$scrollable $$draggable if={store.allPlaces}>
               <List
                 controlled
+                getRef={store.ref('list').set}
                 items={store.allPlaces}
                 onSelect={place => {
                   if (place && place.url) {
@@ -129,8 +147,19 @@ export default class Sidebar {
                 }}
                 getItem={(place, index) => {
                   return (
-                    <SideBarItem match={place.url && place.url()}>
-                      <Text editable onChange={item => store.placeInput(item)}>
+                    <SideBarItem
+                      temp={place.create}
+                      match={place.url && place.url()}
+                      onDoubleClick={() => store.setEditable(place)}
+                    >
+                      <Text
+                        {...(place.create ||
+                          store.editingPlace === place._id) && {
+                          contentEditable: true,
+                          suppressContentEditableWarning: true,
+                          getRef: store.onNewPlace,
+                        }}
+                      >
                         {place.title}
                       </Text>
                     </SideBarItem>
@@ -143,8 +172,8 @@ export default class Sidebar {
           <sidebar if={App.activePage.sidebar}>
             {App.activePage.sidebar}
           </sidebar>
-        </Shortcuts>
-      </sidebar>
+        </sidebar>
+      </Shortcuts>
     )
   }
 
@@ -152,8 +181,6 @@ export default class Sidebar {
     sidebar: {
       width: SIDEBAR_WIDTH,
       borderLeft: [1, 'dotted', '#eee'],
-      overflowY: 'scroll',
-      overflowX: 'visible',
       userSelect: 'none',
     },
     main: {

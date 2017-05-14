@@ -74,10 +74,10 @@ export default class Root {
             </nav>
             <bar $$centered $$flex $$row $$overflow="hidden">
               <Segment padded>
-                <Button icon="link" />
-                <Button icon="media-image" />
-                <Button icon="textquote" />
-                <Button icon="code" />
+                <Button icon="link" tooltip="link" />
+                <Button icon="media-image" tooltip="image" />
+                <Button icon="textquote" tooltip="quote" />
+                <Button icon="code" tooltip="code" />
               </Segment>
             </bar>
             <rest if={header || actions || extraActions} $$row>

@@ -44,9 +44,7 @@ export default class Document {
       flexFlow: 'row',
     },
     document: {
-      flex: 1,
       padding: [5, 18],
-      overflow: 'hidden',
     },
     sidebar: {
       width: 40,

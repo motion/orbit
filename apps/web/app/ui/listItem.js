@@ -7,11 +7,18 @@ import Glow from './glow'
 export default class ListItem {
   static isListItem = true
 
+  componentDidMount() {
+    if (this.props.onItemMount) {
+      this.props.onItemMount(this)
+    }
+  }
+
   render() {
     const {
       children,
       primary,
       secondary,
+      match,
       avatar,
       fakeAvatar,
       shine, // a strong highlight
@@ -33,8 +40,10 @@ export default class ListItem {
       horizontal,
       dark,
       padded,
+      padding,
       light,
       height,
+      onItemMount,
       ...props
     } = this.props
 

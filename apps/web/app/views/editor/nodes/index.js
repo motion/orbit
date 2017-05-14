@@ -17,7 +17,7 @@ export const title = props => {
   return <Tag {...attributes}>{children}</Tag>
 }
 
-export const paragraph = props => <p>{props.children}</p>
+export const paragraph = props => <p $$fontSize={20}>{props.children}</p>
 
 // ul_list and list_item are names decided by
 // https://github.com/GitbookIO/slate-edit-list

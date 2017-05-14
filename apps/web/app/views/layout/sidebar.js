@@ -7,14 +7,14 @@ import { SIDEBAR_WIDTH } from '~/constants'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 
-const SideBarLink = ({ children, after, ...props }) => (
+const Text = props => <view $$marginLeft={props.active ? -2 : 0} {...props} />
+
+const SideBarItem = ({ children, after, ...props }) => (
   <Link
     {...props}
     $$style={{
       width: '100%',
-      fontWeight: 400,
       fontSize: 18,
-      color: 'purple',
       padding: [7, 10],
       cursor: 'pointer',
       '&:hover': {
@@ -22,10 +22,10 @@ const SideBarLink = ({ children, after, ...props }) => (
       },
     }}
     active={{
-      background: '#fff',
-      color: '#000',
+      background: '#333',
+      color: '#fff',
       '&:hover': {
-        background: '#fafafa',
+        background: '#222',
       },
     }}
   >
@@ -96,86 +96,67 @@ class SidebarStore {
 export default class Sidebar {
   render({ store }) {
     return (
-      <Shortcuts $side name="all" handler={store.handleShortcuts}>
-        <content $$flex $$undraggable>
-          <Login />
+      <sidebar>
+        <Shortcuts name="all" handler={store.handleShortcuts}>
+          <content $$flex $$undraggable>
+            <Login />
 
-          <title
-            $$row
-            $$justify="space-between"
-            $$padding={6}
-            $$borderBottom={[1, 'dotted', '#eee']}
-          >
-            <input
-              $search
-              placeholder="places"
-              onChange={e => (store.filter = e.target.value)}
-            />
-            <Button
-              icon="ui-add"
-              onClick={() => (store.creatingPlace = true)}
-            />
-          </title>
-          <main $$draggable if={store.allPlaces}>
-            <List
-              controlled
-              items={store.allPlaces}
-              onSelect={place => {
-                if (place && place.url) {
-                  Router.go(place.url())
-                }
-              }}
-              getItem={(place, index) => {
-                if (place.create) {
+            <title
+              $$row
+              $$justify="space-between"
+              $$padding={6}
+              $$borderBottom={[1, 'dotted', '#eee']}
+            >
+              <input
+                $search
+                placeholder="places"
+                onChange={e => (store.filter = e.target.value)}
+              />
+              <Button
+                icon="ui-add"
+                onClick={() => (store.creatingPlace = true)}
+              />
+            </title>
+            <main $$draggable if={store.allPlaces}>
+              <List
+                controlled
+                items={store.allPlaces}
+                onSelect={place => {
+                  if (place && place.url) {
+                    Router.go(place.url())
+                  }
+                }}
+                getItem={(place, index) => {
                   return (
-                    <List.Item padding={0}>
-                      <form onSubmit={store.createPlace}>
-                        <Input
-                          $$margin={0}
-                          $$padding={[11, 10]}
-                          $$fontSize={15}
-                          $$width="100%"
-                          noBorder
-                          getRef={store.onNewPlace}
-                          placeholder="new place"
-                        />
-                      </form>
-                    </List.Item>
+                    <SideBarItem match={place.url && place.url()}>
+                      <Text editable onChange={item => store.placeInput(item)}>
+                        {place.title}
+                      </Text>
+                    </SideBarItem>
                   )
-                }
-                return (
-                  <SideBarLink match={place.url()}>
-                    {place.title}
-                  </SideBarLink>
-                )
-              }}
-            />
-          </main>
-        </content>
+                }}
+              />
+            </main>
+          </content>
 
-        <sidebar if={App.activePage.sidebar}>
-          {App.activePage.sidebar}
-        </sidebar>
-      </Shortcuts>
+          <sidebar if={App.activePage.sidebar}>
+            {App.activePage.sidebar}
+          </sidebar>
+        </Shortcuts>
+      </sidebar>
     )
   }
 
   static style = {
-    side: {
+    sidebar: {
       width: SIDEBAR_WIDTH,
-      borderLeft: [1, '#eee'],
+      borderLeft: [1, 'dotted', '#eee'],
       overflowY: 'scroll',
-      overflowX: 'hidden',
+      overflowX: 'visible',
       userSelect: 'none',
     },
     main: {
       flex: 1,
-    },
-    h2: {
-      fontSize: 14,
-      fontWeight: 300,
-      padding: [4, 8, 0],
-      color: [0, 0, 0, 0.5],
     },
     search: {
       border: 'none',

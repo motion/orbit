@@ -60,6 +60,7 @@ export default class DocItem {
     return (
       <doc $$undraggable {...props}>
         <delete
+          if={false}
           onClick={e => {
             e.stopPropagation()
             doc.delete()
@@ -179,9 +180,14 @@ export default class DocItem {
     },
     draggable: {
       doc: {
-        width: 'calc(50% - 10px)',
+        width: '100%',
         height: '100%',
         margin: 0,
+      },
+    },
+    grid2: {
+      doc: {
+        width: 'calc(50% - 10px)',
       },
     },
   }

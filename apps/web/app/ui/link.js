@@ -20,7 +20,7 @@ export default class Link {
     }
   }
 
-  render({ to, match, active, ...props }) {
+  render({ to, match, highlight, active, ...props }) {
     return (
       <a
         $active={this.isActive}

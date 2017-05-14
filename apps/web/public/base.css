@@ -12,6 +12,18 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Mozilla based browsers */
+::-moz-selection {
+       background-color: #FFA;
+       color: #000;
+}
+
+/* Works in Safari */
+::selection {
+       background-color: #FFA;
+       color: #000;
+}
+
 input, textarea, select {
   font-family: 'Raleway', -apple-system, BlinkMacSystemFont,
     "Segoe UI", "Roboto", "Oxygen",

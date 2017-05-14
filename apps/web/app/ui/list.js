@@ -47,6 +47,7 @@ class List {
 
   handleShortcuts = (action, event) => {
     if (this.state.selected === null) return
+    console.log('key', action)
     switch (action) {
       case 'down':
         this.highlightItem(cur => Math.min(this.totalItems, cur + 1))
@@ -121,6 +122,7 @@ class List {
       onSelect,
       parentSize,
       rowHeight: propRowHeight,
+      onItemMount,
       ...props
     } = this.props
 
@@ -142,7 +144,14 @@ class List {
       width = typeof userWidth === 'undefined' ? parentSize.width : userWidth
     }
 
-    const passThroughProps = { horizontal, dark, padded, light, slim }
+    const passThroughProps = {
+      horizontal,
+      dark,
+      padded,
+      light,
+      slim,
+      onItemMount,
+    }
 
     const total = items ? items.length : Children.count(children)
     const itemProps = (i, rowProps, isListItem) => {

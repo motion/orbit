@@ -80,7 +80,7 @@ export default class PlacePage {
 
     return (
       <Page place={place} doc={doc} actions={actions}>
-        <DocumentView focusOnMount if={doc} document={doc} />
+        <DocumentView if={doc} document={doc} />
       </Page>
     )
   }

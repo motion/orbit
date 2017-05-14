@@ -23,7 +23,6 @@ export default class Document {
       <docview onMouseDown={this.mousedown} onMouseUp={this.mouseup}>
         <document>
           <Editor
-            focusOnMount
             getRef={this.ref('editor').set}
             doc={document}
             id={document._id}

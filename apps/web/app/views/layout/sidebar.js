@@ -43,7 +43,6 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => (
 
 class SidebarStore {
   places = Place.all()
-  list = null
   placeInput = null
   editingPlace = false
   filter = ''
@@ -140,9 +139,9 @@ export default class Sidebar {
             <main $$scrollable $$draggable if={store.allPlaces}>
               <List
                 controlled
-                getRef={store.ref('list').set}
                 items={store.allPlaces}
                 onSelect={place => {
+                  console.log('on select', place)
                   if (place && place.url) {
                     Router.go(place.url())
                   }

@@ -26,9 +26,6 @@ class List {
 
   componentDidMount() {
     this.totalItems = this.getTotalItems(this.props)
-    if (this.props.controlled) {
-      this.addEvent(window, 'keydown', this.onKey)
-    }
   }
 
   componentWillReceiveProps = nextProps => {
@@ -46,15 +43,18 @@ class List {
     props.items ? props.items.length : Children.count(props.children)
 
   handleShortcuts = (action, event) => {
-    console.log('key', action)
+    console.log('key', action, this.state.selected)
     if (this.state.selected === null) return
     switch (action) {
       case 'down':
-        this.highlightItem(cur => Math.min(this.totalItems, cur + 1))
+        this.highlightItem(
+          cur => Math.min(this.totalItems, cur + 1),
+          this.onSelect
+        )
         event.preventDefault()
         break
       case 'up':
-        this.highlightItem(cur => Math.max(0, cur - 1))
+        this.highlightItem(cur => Math.max(0, cur - 1), this.onSelect)
         event.preventDefault()
         break
       case 'enter':

@@ -1,7 +1,6 @@
 import App from './app'
 import { Model, query, str, array, bool } from './helpers'
 import Document from './document'
-import Board from './board'
 import { capitalize, some, remove } from 'lodash'
 
 const toSlug = str => str.replace(/ /g, '-').toLowerCase()
@@ -51,20 +50,11 @@ class Place extends Model {
     url() {
       return `/g/${this.slug}`
     },
-    @query boards() {
-      return Board.collection.find().where('placeId').eq(this._id)
-    },
     @query docs() {
       return Document.collection
         .find()
         .where('places')
         .elemMatch({ $eq: this.slug })
-    },
-    createBoard(info) {
-      return Board.collection.insert({
-        ...info,
-        placeId: this._id,
-      })
     },
     togglePrivate() {
       this.private = !this.private

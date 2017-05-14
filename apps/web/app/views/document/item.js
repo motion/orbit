@@ -15,10 +15,6 @@ export default class DocItem {
 
   focus = () => {
     this.editing = true
-    this.setTimeout(() => {
-      this.title.focus()
-      document.execCommand('selectAll', false, null)
-    }, 10)
   }
 
   onEnter = doc => {

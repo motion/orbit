@@ -11,35 +11,40 @@ const Text = ({ getRef, ...props }) => (
   <text ref={getRef} $$marginLeft={props.active ? -2 : 0} {...props} />
 )
 
-const SideBarItem = ({ children, isEditing, after, ...props }) => (
-  <Link
-    {...props}
-    $$style={{
-      background: isEditing ? '#fafafa' : 'transparent',
-      width: '100%',
-      fontSize: 18,
-      padding: [7, 10],
-      cursor: isEditing ? 'text' : 'pointer',
-      '&:hover': {
-        background: '#fafafa',
-      },
-    }}
-    active={
-      !isEditing && {
-        background: '#333',
-        color: '#fff',
+const SideBarItem = ({ children, isEditing, after, ...props }) => {
+  const editStyle = isEditing && {
+    background: '#fafafa',
+    cursor: 'text',
+  }
+
+  return (
+    <Link
+      {...props}
+      $$style={{
+        color: [0, 0, 0, 0.75],
+        background: 'transparent',
+        width: '100%',
+        fontSize: 14,
+        padding: [4, 10],
+        cursor: 'pointer',
         '&:hover': {
-          background: '#222',
+          background: '#fafafa',
         },
-      }
-    }
-  >
-    {children}
-    <span $$fontSize={10} if={after}>
-      {after}
-    </span>
-  </Link>
-)
+        ...editStyle,
+      }}
+      active={{
+        fontWeight: 400,
+        background: [0, 0, 0, 0.025],
+        color: [0, 0, 0, 0.9],
+        '&:hover': {
+          background: '#f2f2f2',
+        },
+      }}
+    >
+      {children}
+    </Link>
+  )
+}
 
 class SidebarStore {
   places = Place.all()
@@ -191,9 +196,16 @@ export default class Sidebar {
     },
     search: {
       border: 'none',
-      fontSize: 16,
+      margin: ['auto', 0],
+      fontSize: 14,
       width: '70%',
-      lineHeight: '1.5rem',
+      opacity: 0.6,
+      '&:hover': {
+        opacity: 1,
+      },
+      '&:focus': {
+        opacity: 1,
+      },
     },
   }
 }

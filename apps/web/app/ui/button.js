@@ -127,6 +127,7 @@ export default class SegmentItem {
           target={`.${this.uniq}`}
           padding={[0, 5]}
           distance={10}
+          popoverProps={{ $$style: { fontSize: 11 } }}
           {...tooltipProps}
         >
           {tooltip}
@@ -150,9 +151,9 @@ export default class SegmentItem {
       borderStyle: 'dotted',
       borderRightWidth: 0,
       position: 'relative',
-      cursor: 'pointer',
     },
     clickable: {
+      cursor: 'pointer',
       '&:hover': {
         background: '#fefefe',
       },

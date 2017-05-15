@@ -38,7 +38,7 @@ export default class Title {
     },
     sans: {
       title: {
-        fontFamily: 'Raleway',
+        fontFamily: 'sans-serif',
       },
     },
     spaced: {

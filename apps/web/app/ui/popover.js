@@ -11,6 +11,8 @@ const INVERSE = {
   right: 'bottom',
 }
 
+const DARK_BG = [0, 0, 0, 0.8]
+
 const maxForgiveness = (forgiveness, distance) =>
   Math.min(forgiveness, distance)
 
@@ -51,8 +53,8 @@ const maxForgiveness = (forgiveness, distance) =>
   static theme = {
     dark: {
       arrowInner: {
-        background: '#050505',
-        borderColor: '#000',
+        background: DARK_BG,
+        borderColor: DARK_BG,
       },
     },
   }
@@ -80,7 +82,7 @@ export default class Popover {
     // the distance the popover is from the target
     // so it displays nicely spaced away
     distance: 10,
-    arrowSize: 12,
+    arrowSize: 10,
     // will exit with `esc` key
     escapable: true,
     noArrow: false,
@@ -654,7 +656,7 @@ export default class Popover {
   static theme = {
     dark: {
       withBg: {
-        background: '#050505',
+        background: DARK_BG,
         color: '#fff',
       },
     },

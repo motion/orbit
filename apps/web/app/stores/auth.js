@@ -1,8 +1,9 @@
+import { store } from '~/helpers'
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
 import { API_URL, DB_CONFIG } from '~/constants'
 
-export default class AuthStore {
+@store class AuthStore {
   emit = (...args) => console.log(...args)
   superlogin = superlogin
   localDb = null
@@ -53,6 +54,7 @@ export default class AuthStore {
 
   setupDbSync(user) {
     if (!this.remoteDb && user) {
+      console.log('got user', user)
       this.remoteDb = new PouchDB(user.userDBs.supertest, { skipSetup: true })
       this.localDb = new PouchDB(`local_db_${user.user_id}`)
       this.emit('localDbChange', this.localDb)
@@ -140,3 +142,5 @@ export default class AuthStore {
     return Promise.resolve(session)
   }
 }
+
+export default new AuthStore()

@@ -38,7 +38,6 @@ export default class Link {
       cursor: 'pointer',
     },
     active: {
-      fontWeight: 600,
       color: '#000',
       '&:hover': {
         background: 'transparent',

@@ -1,6 +1,7 @@
 import ClassHelpers from './classHelpers'
 import autobind from 'autobind-decorator'
 import mixin from 'react-mixin'
+import { fromPromise } from 'mobx-utils'
 import { CompositeDisposable } from 'motion-class-helpers'
 import { Observable } from 'rxjs'
 import {
@@ -57,6 +58,17 @@ function onStoreMount(obj) {
 
     const isFunction = typeof val === 'function'
     const isQuery = val && val.$isQuery
+
+    // auto promise => observable
+    if (val instanceof Promise) {
+      const observable = fromPromise(val)
+      Object.defineProperty(obj, method, {
+        get() {
+          return observable.value
+        },
+      })
+      continue
+    }
 
     // auto @query => observable
     if (isQuery) {

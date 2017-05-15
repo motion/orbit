@@ -13,6 +13,7 @@ class Document extends Model {
     attachments: array.optional.items(str),
     private: bool,
     home: bool.optional,
+    temporary: bool.optional,
     timestamps: true,
   }
 

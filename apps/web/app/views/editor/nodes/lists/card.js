@@ -6,10 +6,10 @@ import DocItem from '~/views/document/item'
 export default class CardList {
   render({ listStore }) {
     return (
-      <docs $stack={true} if={listStore.docs}>
-        {listStore.docs.map((doc, i) => (
-          <DocItem $doc editable key={doc._id} doc={doc} />
-        ))}
+      <docs $stack={true}>
+        <DocItem $doc editable if={listStore.nextDoc} doc={listStore.nextDoc} />
+        {(listStore.docs || [])
+          .map((doc, i) => <DocItem $doc editable key={doc._id} doc={doc} />)}
       </docs>
     )
   }

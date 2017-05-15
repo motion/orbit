@@ -8,7 +8,7 @@ export default class Meta {
   render({ node, children, editorStore, ...props }) {
     // todo make this a read only thing maybe
     return (
-      <span $hashtags if={!editorStore.inline}>
+      <span contentEditable={false} $hashtags if={!editorStore.inline}>
         <span $fade $left>#</span>
         <span $content>
           {children}

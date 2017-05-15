@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '@jot/models'
 import Mobx from 'mobx'
-import _m from 'mobx-utils'
+import MobxUtils from 'mobx-utils'
 import Rx from 'rxjs'
 import Router from './router'
 import { IS_PROD, DB_CONFIG } from './constants'
@@ -22,8 +22,8 @@ if (!IS_PROD) {
   window.Constants = Constants
   window.Router = Router
   window.Mobx = Mobx
+  window.MobxUtils = MobxUtils
   window.Rx = Rx
-  window._m = _m
   window._ = _
 }
 

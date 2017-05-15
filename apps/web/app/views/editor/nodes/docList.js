@@ -7,6 +7,8 @@ import CardList from './lists/card'
 import GridList from './lists/grid'
 
 class DocListStore {
+  nextDoc = Document.create({ temporary: true, authorId: 'anon' })
+
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
   docs = !this.props.editorStore.inline &&
@@ -16,7 +18,6 @@ class DocListStore {
     return App.activePage.place
   }
   setType = (node, listType: string) => {
-    console.log('set type')
     const next = node.data.set('listType', listType)
     this.props.onChange(next)
   }
@@ -30,11 +31,12 @@ export default class DocList {
   render({ node, editorStore, store, children, ...props }) {
     const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0
-    const listType = node.data.get('listType')
+    const listType = node.data.get('listType') || 'card'
+    console.log('listType', listType)
 
     return (
       <doclist contentEditable={false}>
-        <title>
+        <config>
           <buttons>
             <Button
               $active={listType === 'grid'}
@@ -49,11 +51,8 @@ export default class DocList {
               🃏
             </Button>
           </buttons>
-        </title>
-        <docs if={!hasDocs}>
-          no docs!
-        </docs>
-        <content if={hasDocs}>
+        </config>
+        <content>
           <CardList if={listType === 'card'} listStore={store} />
           <GridList if={listType === 'grid'} listStore={store} />
         </content>
@@ -62,17 +61,14 @@ export default class DocList {
   }
 
   static style = {
-    title: {
-      flexFlow: 'row',
+    doclist: {
+      position: 'relative',
+    },
+    config: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
       overflow: 'hidden',
-      justifyContent: 'space-between',
-      '&:hover': {
-        boxShadow: '0 0 10px rgba(0,0,0,0.02)',
-        zIndex: 1000,
-      },
-      '&:active': {
-        background: '#f3f3f3',
-      },
     },
     card: {
       // background: '#fff',

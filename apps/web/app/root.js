@@ -95,7 +95,7 @@ export default class Root {
           <content>
             <CurrentPage key={Router.key} />
           </content>
-          <statusbar>
+          <statusbar if={false}>
             <omnibar>
               <Commander
                 placeholder="new..."

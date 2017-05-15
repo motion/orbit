@@ -11,7 +11,7 @@ const INVERSE = {
   right: 'bottom',
 }
 
-const DARK_BG = [0, 0, 0, 0.8]
+const DARK_BG = [0, 0, 0, 0.75]
 
 const maxForgiveness = (forgiveness, distance) =>
   Math.min(forgiveness, distance)

@@ -48,6 +48,7 @@ export default class SegmentItem {
   static isSegment = true
   static defaultProps = {
     iconColor: '#888',
+    iconSize: 14,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -107,7 +108,7 @@ export default class SegmentItem {
           $icon
           $iconAfter={hasIconAfter}
           name={icon}
-          size={iconSize || 12}
+          size={iconSize}
           color={color || iconColor}
           {...iconProps}
         />

@@ -112,7 +112,7 @@ export default class Login {
       alignItems: 'center',
       justifyContent: 'flex-end',
       flexFlow: 'row',
-      padding: [0, 10],
+      padding: [0, 6],
       alignItems: 'center',
       height: HEADER_HEIGHT,
       borderBottom: [1, '#eee'],

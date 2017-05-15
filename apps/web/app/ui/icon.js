@@ -105,8 +105,8 @@ export default class Icon {
     size: ({ size, width, height }) => {
       return {
         icon: {
-          width: width || size + 5,
-          height: height || size + 5,
+          width: width || size,
+          height: height || size,
           fontSize: size,
           lineHeight: `${size / 12 - 0.1}rem`, // scale where 1 when 14
         },

@@ -7,6 +7,7 @@ import * as Nodes from './nodes'
 import * as Plugins from './plugins'
 import * as Rules from './rules'
 import Marks from './marks'
+import SelectionStore from './stores/selection'
 
 export { Raw } from 'slate'
 
@@ -134,7 +135,13 @@ export default class EditorView {
     ...props
   }) {
     return (
-      <document if={store.content}>
+      <document
+        if={store.content}
+        onMouseUp={(event: MouseEvent) => {
+          event.persist()
+          SelectionStore.mouseUpEvent = event
+        }}
+      >
         <Editor
           $editor
           $$undraggable

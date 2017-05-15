@@ -1,28 +1,23 @@
 import { view, store } from '~/helpers'
 import { Popover, Segment, Button } from '~/ui'
 import { findDOMNode } from 'slate'
-
-@store class SelectBarStore {
-  node = null
-  event = null
-
-  clear = () => {
-    this.node = null
-    this.event = null
-  }
-}
-
-const select = new SelectBarStore()
+import Selection from '../stores/selection'
 
 @view class ToolbarPane {
   render({ children }) {
-    console.log(select.event)
-    console.log(select.event && select.event.clientX)
+    const PAD = 40
 
     return (
       <pane>
         {children}
-        <Popover if={select.node} open target={() => select.node}>
+        <Popover
+          if={Selection.node}
+          open
+          noArrow
+          bg
+          left={Selection.mouseUpEvent.clientX}
+          top={Selection.mouseUpEvent.clientY - PAD}
+        >
           <bar $$row>
             <Segment padded>
               <Button icon="textcolor" />
@@ -61,7 +56,7 @@ const select = new SelectBarStore()
 export default {
   onSelect(event, { selection }, state, editor) {
     if (selection.startOffset === selection.endOffset) {
-      select.clear()
+      Selection.clear()
       return
     }
     const selectedTextKey = selection.anchorKey
@@ -69,8 +64,7 @@ export default {
       x => x.key === selectedTextKey
     )
     const node = findDOMNode(selectedTextNode)
-    select.node = node
-    select.event = event
+    Selection.node = node
   },
   render({ children }) {
     return (

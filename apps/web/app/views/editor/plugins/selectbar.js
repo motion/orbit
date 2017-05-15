@@ -4,6 +4,7 @@ import { findDOMNode } from 'slate'
 
 @store class Test {
   selection = null
+  type = null
 }
 
 const testStore = new Test()
@@ -55,6 +56,8 @@ const testStore = new Test()
 
 export default {
   onSelect(event, { selection }, state, editor) {
+    testStore.type = state.startBlock.type
+
     if (selection.startOffset === selection.endOffset) {
       testStore.selection = null
       return

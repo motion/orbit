@@ -64,7 +64,7 @@ export default class DocItem {
           }}
         >
           x
-          <Poof ref={ref => (this.poof = ref)} />
+          <Poof ref={ref => this.poof = ref} />
         </delete>
 
         <content if={editable}>

@@ -26,6 +26,16 @@ export default [
     transform: transform => transform.call(editList.transforms.wrapInList),
   }),
   AutoReplace({
+    trigger: 'space',
+    before: /^\-h1$/,
+    transform: (transform, e, data, matches) => {
+      return transform.setBlock({
+        type: 'title',
+        data: { level: 1 },
+      })
+    },
+  }),
+  AutoReplace({
     trigger: 'enter',
     before: /^(-{3})$/,
     transform: transform => {

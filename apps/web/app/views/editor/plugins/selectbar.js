@@ -3,7 +3,7 @@ import { Popover, Segment, Button } from '~/ui'
 import { findDOMNode } from 'slate'
 import Selection from '../stores/selection'
 
-@view class ToolbarPane {
+@view class SelectBar {
   render({ children }) {
     const PAD = 40
 
@@ -11,7 +11,7 @@ import Selection from '../stores/selection'
       <pane>
         {children}
         <Popover
-          if={Selection.node}
+          if={Selection.node && Selection.mouseUpEvent}
           open
           noArrow
           bg
@@ -68,9 +68,9 @@ export default {
   },
   render({ children }) {
     return (
-      <ToolbarPane>
+      <SelectBar>
         {children}
-      </ToolbarPane>
+      </SelectBar>
     )
   },
 }

@@ -8,26 +8,29 @@ export default class Meta {
   render({ node, children, editorStore, ...props }) {
     // todo make this a read only thing maybe
     return (
-      <span contentEditable={false} $hashtags if={!editorStore.inline}>
-        <span $fade $left>#</span>
-        <span $content>
+      <metabar
+        contentEditable
+        suppressContentEditableWarning
+        $hashtags
+        if={!editorStore.inline}
+      >
+        <span contentEditable={false} $fade $left>#</span>
+        <span contentEditable suppressContentEditableWarning $content>
           {children}
         </span>
-        <span if={node.text} $content $hiddenTags>
-          {node.text
-            .split(' ')
-            .map((tag, i) => <tag key={i}>{tag} <outline /></tag>)}
-        </span>
-        <span $fade if={editorStore.doc}>
+        <span contentEditable={false} $fade if={editorStore.doc}>
           <TimeAgo minPeriod={10} date={editorStore.doc.updatedAt} />
         </span>
-      </span>
+      </metabar>
     )
   }
 
   static style = {
+    metabar: {
+      margin: [2, 0, 4, 0],
+    },
     hashtags: {
-      fontSize: 30,
+      fontSize: 15,
       display: 'flex',
       flexFlow: 'row',
       alignItems: 'center',
@@ -43,18 +46,7 @@ export default class Meta {
     },
     content: {
       flex: 1,
-      display: 'block',
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
-      color: '#999',
-    },
-    hiddenTags: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      whiteSpace: 'pre',
-      userSelect: 'none',
+      color: '#777',
     },
     tag: {
       display: 'inline-block',
@@ -75,7 +67,7 @@ export default class Meta {
     },
     fade: {
       fontSize: 12,
-      opacity: 0.5,
+      opacity: 0.2,
     },
   }
 }

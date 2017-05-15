@@ -7,6 +7,12 @@ import Mousetrap from 'mousetrap'
 import { Modal } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 
+// window._toggleCommander = () => {
+//   this.open = !this.open
+//   if (this.open) this.textbox.focus()
+// }
+
+// Mousetrap.bind('command+t', _toggleCommander)
 @view({
   store: class {
     open = false
@@ -22,12 +28,6 @@ import { SIDEBAR_WIDTH } from '~/constants'
     }
 
     start() {
-      window._toggleCommander = () => {
-        this.open = !this.open
-        if (this.open) this.textbox.focus()
-      }
-
-      Mousetrap.bind('command+t', _toggleCommander)
       Mousetrap.bind('up', () => {
         if (this.open) this.moveHighlight(-1)
       })

@@ -1,3 +1,4 @@
+// @flow
 import { view } from '~/helpers'
 import { Button, Icon } from '~/ui'
 import Router from '~/router'
@@ -12,8 +13,10 @@ export default class Document {
     this.downAt = Date.now()
   }
 
-  mouseup = () => {
-    if (Date.now() - this.downAt < 200) {
+  mouseup = (e: Event) => {
+    const isDirectClick = e.target === e.currentTarget
+    const isShortClick = Date.now() - this.downAt < 200
+    if (isDirectClick && isShortClick) {
       this.editor.focus()
     }
   }

@@ -8,6 +8,7 @@ import Router from './router'
 import { IS_PROD, DB_CONFIG } from './constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
+import Immutable from 'immutable'
 import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Splash from '~/views/splash'
@@ -16,7 +17,7 @@ import { AppContainer } from 'react-hot-loader'
 if (!IS_PROD) {
   // install console formatters
   // mobxFormatters(Mobx)
-  // dev helpers
+  // the heavy hitters
   window.React = React
   window.App = App
   window.Constants = Constants
@@ -24,6 +25,7 @@ if (!IS_PROD) {
   window.Mobx = Mobx
   window.MobxUtils = MobxUtils
   window.Rx = Rx
+  window.Immutable = Immutable
   window._ = _
 }
 

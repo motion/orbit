@@ -48,6 +48,7 @@ export default class SegmentItem {
   static isSegment = true
   static defaultProps = {
     iconColor: '#888',
+    iconSize: 14,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -107,7 +108,7 @@ export default class SegmentItem {
           $icon
           $iconAfter={hasIconAfter}
           name={icon}
-          size={iconSize || 12}
+          size={iconSize}
           color={color || iconColor}
           {...iconProps}
         />
@@ -125,8 +126,10 @@ export default class SegmentItem {
           openOnHover
           noHover
           target={`.${this.uniq}`}
-          padding={[0, 5]}
-          distance={10}
+          padding={[0, 6]}
+          distance={8}
+          arrowSize={8}
+          popoverProps={{ $$style: { fontSize: 11 } }}
           {...tooltipProps}
         >
           {tooltip}
@@ -150,9 +153,9 @@ export default class SegmentItem {
       borderStyle: 'dotted',
       borderRightWidth: 0,
       position: 'relative',
-      cursor: 'pointer',
     },
     clickable: {
+      cursor: 'pointer',
       '&:hover': {
         background: '#fefefe',
       },

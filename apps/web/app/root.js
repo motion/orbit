@@ -1,6 +1,6 @@
 import { view, observable } from '~/helpers'
 import { object } from 'prop-types'
-import { Segment, Input, CircleButton, Link, Button, Icon } from '~/ui'
+import { Segment, Input, Link, Button, Icon } from '~/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -95,18 +95,13 @@ export default class Root {
           <content>
             <CurrentPage key={Router.key} />
           </content>
-          <statusbar>
+          <statusbar if={false}>
             <omnibar>
               <Commander
                 placeholder="new..."
                 onSubmit={store.createDoc}
                 onChange={store.ref('title').set}
                 $omniinput
-              />
-              <CircleButton
-                $createButton
-                icon={<Icon name="ui-add" />}
-                onClick={store.createDoc}
               />
               <Segment>
                 <Button icon="🖼" />

@@ -41,10 +41,10 @@ export default class Input {
       alignSelf: 'center',
       outline: 0,
       '&:hover': {
-        background: '#f2f2f2',
+        borderColor: '#ccc',
       },
       '&:focus': {
-        background: '#fff',
+        borderColor: 'blue',
       },
     },
   }

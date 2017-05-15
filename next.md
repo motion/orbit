@@ -2,15 +2,13 @@
 
 - user/auth into own model
 - superlogin
-- user.preInsert createUserDoc
+- db per place
 
 # grabbag
 
   - banner image (show up on grid/list)
-  - images
   - presence
   - comments
-  - quicker rooms
   - quicker doc creation
   - linking between docs
   - grid

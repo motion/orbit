@@ -8,4 +8,3 @@ build
 values.yaml
 *.tgz
 kubeconfig
-**/*/nucleo-*

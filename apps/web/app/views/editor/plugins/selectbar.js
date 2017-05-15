@@ -2,22 +2,27 @@ import { view, store } from '~/helpers'
 import { Popover, Segment, Button } from '~/ui'
 import { findDOMNode } from 'slate'
 
-@store class Test {
-  selection = null
+@store class SelectBarStore {
+  node = null
+  event = null
+
+  clear = () => {
+    this.node = null
+    this.event = null
+  }
 }
 
-const testStore = new Test()
+const select = new SelectBarStore()
 
 @view class ToolbarPane {
   render({ children }) {
+    console.log(select.event)
+    console.log(select.event && select.event.clientX)
+
     return (
       <pane>
         {children}
-        <Popover
-          if={testStore.selection}
-          open
-          target={() => testStore.selection}
-        >
+        <Popover if={select.node} open target={() => select.node}>
           <bar $$row>
             <Segment padded>
               <Button icon="textcolor" />
@@ -56,17 +61,16 @@ const testStore = new Test()
 export default {
   onSelect(event, { selection }, state, editor) {
     if (selection.startOffset === selection.endOffset) {
-      testStore.selection = null
+      select.clear()
       return
     }
     const selectedTextKey = selection.anchorKey
     const selectedTextNode = state.document.findDescendantDeep(
       x => x.key === selectedTextKey
     )
-    // const selectedTextBlock = state.document.getClosestBlock(selectedTextNode.key)
-    const selectedNode = findDOMNode(selectedTextNode)
-    // const { top, left } = selectedNode.getBoundingClientRect()
-    testStore.selection = selectedNode //{ top, left }
+    const node = findDOMNode(selectedTextNode)
+    select.node = node
+    select.event = event
   },
   render({ children }) {
     return (

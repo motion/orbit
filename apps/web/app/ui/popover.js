@@ -65,7 +65,6 @@ export default class Popover {
   props: {
     target?: Function | string | Object,
     open?: boolean,
-    position?: Object,
     left?: number,
     top?: number,
     openOnClick?: boolean,
@@ -272,7 +271,7 @@ export default class Popover {
     const { popover: { clientWidth, clientHeight } } = this.refs
 
     if (!this.target && !isManuallyPositioned) {
-      throw new Error('No position or target given to Popover!')
+      throw new Error('No top/left/bottom or target given to Popover!')
     }
 
     // find popover dimensions

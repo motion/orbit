@@ -2,7 +2,7 @@
 
 - user/auth into own model
 - superlogin
-- user.preInsert createUserDoc
+- db per place
 
 # grabbag
 

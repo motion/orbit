@@ -1,13 +1,17 @@
-import { $, view } from '~/helpers'
-import Sidebar from '~/views/layout/sidebar'
-import Popover from '~/views/popover'
+export Link from './link'
+export List from './list'
+export Title from './title'
+export Modal from './modal'
+export Poof from './poof'
+export Icon from './icon'
+export Input from './input'
+export Grid from './grid'
+export Segment from './segment'
+export Button from './button'
+export Popover from './popover'
+export Glow from './glow'
 
-// only stuff thats used by all pages
-export * from '~/views/page'
-export Icon from '~/views/icon'
-export List from '~/views/list'
-export Button from '~/views/button'
-export Input from '~/views/input'
+import { $, view } from '~/helpers'
 
 @view
 export class CircleButton {

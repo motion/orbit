@@ -2,7 +2,7 @@ import React from 'react'
 import { observable } from 'mobx'
 import Cache from './cache'
 
-export default function createProvider(options: Object) {
+export default function createStoreProvider(options: Object) {
   const cache = new Cache()
 
   return function storeProvider(allStores: Object, _module: Object) {

@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import Grid from '~/views/grid'
+import { Grid } from '~/ui'
 import DocItem from '~/views/document/item'
 
 @view({

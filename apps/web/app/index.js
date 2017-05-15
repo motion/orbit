@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '@jot/models'
 import Mobx from 'mobx'
-import _m from 'mobx-utils'
+import MobxUtils from 'mobx-utils'
 import Rx from 'rxjs'
 import Router from './router'
 import { IS_PROD, DB_CONFIG } from './constants'
@@ -11,6 +11,7 @@ import _ from 'lodash'
 import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Splash from '~/views/splash'
+import { AppContainer } from 'react-hot-loader'
 
 if (!IS_PROD) {
   // install console formatters
@@ -21,16 +22,26 @@ if (!IS_PROD) {
   window.Constants = Constants
   window.Router = Router
   window.Mobx = Mobx
+  window.MobxUtils = MobxUtils
   window.Rx = Rx
-  window._m = _m
   window._ = _
+}
+
+function errorReporter({ error }, view) {
+  throw error
 }
 
 const ROOT = document.querySelector('#app')
 
-function render() {
+export function render() {
+  console.log('#render')
   const Root = require('./root').default
-  ReactDOM.render(<Root />, ROOT)
+  ReactDOM.render(
+    <AppContainer errorReporter={errorReporter}>
+      <Root />
+    </AppContainer>,
+    ROOT
+  )
 }
 
 if (module.hot) {
@@ -39,4 +50,8 @@ if (module.hot) {
 }
 
 ReactDOM.render(<Splash />, ROOT)
-App.start(DB_CONFIG, Stores).then(render)
+
+App.start({
+  database: DB_CONFIG,
+  stores: Stores,
+}).then(render)

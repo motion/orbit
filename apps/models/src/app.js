@@ -47,11 +47,11 @@ class App {
     }
   }
 
-  async start(config: Object, stores: Object) {
+  async start({ database, stores }) {
     console.time('start')
     this.catchErrors()
 
-    if (!config) {
+    if (!database) {
       throw new Error('No config given to App!')
     }
 
@@ -59,20 +59,20 @@ class App {
     console.time('create db')
     this.db = await RxDB.create({
       adapter: 'idb',
-      name: config.name,
-      password: config.password,
+      name: database.name,
+      password: database.password,
       multiInstance: true,
       withCredentials: false,
     })
     console.timeEnd('create db')
 
     // separate pouchdb for auth
-    this.auth = new PouchDB(`${config.couchUrl}/auth`, {
+    this.auth = new PouchDB(`${database.couchUrl}/auth`, {
       skipSetup: true,
       withCredentials: false,
     })
     // images
-    this.images = new PouchDB(`${config.couchUrl}/images`, {
+    this.images = new PouchDB(`${database.couchUrl}/images`, {
       skipSetup: true,
       withCredentials: false,
     })
@@ -80,7 +80,7 @@ class App {
     // connect models
     const connections = Object.entries(Models).map(async ([name, model]) => {
       await model.connect(this.db)
-      model.collection.sync(`${config.couchUrl}/${model.title}`, {
+      model.collection.sync(`${database.couchUrl}/${model.title}`, {
         live: true,
         retry: true,
       })
@@ -90,20 +90,14 @@ class App {
     await Promise.all([...connections, this.setSession()])
     console.timeEnd('connect')
 
-    // instantiate stores
-    if (stores) {
-      this.stores = Object.keys(stores).reduce((acc, cur) => {
-        const Store = stores[cur]
-        return {
-          ...acc,
-          [cur]: new Store(this),
-        }
-      }, {})
-    }
+    // stores
+    this.stores = stores
 
     // seed db
-    this.seed = new Seed()
-    this.seed.start()
+    setTimeout(() => {
+      this.seed = new Seed()
+      this.seed.start()
+    }, 100)
 
     console.timeEnd('start')
   }

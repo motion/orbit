@@ -43,6 +43,7 @@ export const styles = {
   maxWidth: maxWidth => ({ maxWidth }),
   width: width => ({ width }),
   height: height => ({ height }),
+  overflow: overflow => ({ overflow }),
   background: background => ({ background }),
   hide: val => ({ display: val ? 'none' : 'auto' }),
   alignSelf: alignSelf => ({ alignSelf }),
@@ -91,6 +92,9 @@ export const styles = {
   },
   undraggable: {
     WebkitAppRegion: 'no-drag',
+  },
+  scrollable: {
+    overflowY: 'scroll',
   },
   padded: {
     padding: 20,

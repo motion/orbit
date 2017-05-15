@@ -40,6 +40,7 @@ class EditorStore {
   focused = false
   content = null
   inline = this.props.inline
+  editor = null
 
   start() {
     this.watch(this.watchers.save)
@@ -129,14 +130,16 @@ export default class EditorView {
     this.props.onChange(value)
   }
 
-  getRef = node => {
+  getRef = Editor => {
     const { getRef, store } = this.props
-    if (node) {
+    if (Editor) {
+      store.editor = Editor
+      window.Editor = Editor
       if (getRef) {
-        getRef(node)
+        getRef(Editor)
       }
       if (store.shouldFocus) {
-        node.focus()
+        Editor.focus()
         store.shouldFocus = false
       }
     }
@@ -156,24 +159,26 @@ export default class EditorView {
   }) {
     return (
       <document if={store.content}>
-        <Editor
-          $editor
-          $$undraggable
-          readOnly={readOnly}
-          plugins={merge(this.plugins)}
-          suggestions={store.docSuggestions}
-          onMentionSearch={store.updateSuggestions}
-          schema={this.schema}
-          state={store.content}
-          onChange={this.onChange}
-          ref={this.getRef}
-          onFocus={store.focus}
-          onBlur={store.blur}
-          onKeyDown={e => {
-            onKeyDown(e)
-          }}
-          {...props}
-        />
+        <container $inline={inline}>
+          <Editor
+            $editor
+            $$undraggable
+            readOnly={readOnly}
+            plugins={merge(this.plugins)}
+            suggestions={store.docSuggestions}
+            onMentionSearch={store.updateSuggestions}
+            schema={this.schema}
+            state={store.content}
+            onChange={this.onChange}
+            ref={this.getRef}
+            onFocus={store.focus}
+            onBlur={store.blur}
+            onKeyDown={e => {
+              onKeyDown(e)
+            }}
+            {...props}
+          />
+        </container>
       </document>
     )
   }
@@ -182,6 +187,17 @@ export default class EditorView {
     document: {
       flex: 1,
     },
+    inline: (() => {
+      const scaleBy = 5
+
+      return {
+        transform: `scale(${1 / scaleBy})`,
+        width: `${scaleBy * 100}%`,
+        transformOrigin: `top left`,
+        overflow: 'visible',
+        transform: 'all 150ms ease-in',
+      }
+    })(),
     editor: {
       color: '#4c555a',
       fontSize: 16,

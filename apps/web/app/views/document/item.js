@@ -1,7 +1,7 @@
 import { view, observable } from '~/helpers'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
-import Poof from '~/views/poof'
+import { Poof } from '~/ui'
 import React from 'react'
 import Editor from '~/views/editor'
 
@@ -15,10 +15,6 @@ export default class DocItem {
 
   focus = () => {
     this.editing = true
-    this.setTimeout(() => {
-      this.title.focus()
-      document.execCommand('selectAll', false, null)
-    }, 10)
   }
 
   onEnter = doc => {
@@ -59,18 +55,8 @@ export default class DocItem {
 
     return (
       <doc $$undraggable {...props}>
-        <title
-          if={!draggable}
-          $editing={this.editing}
-          $$height={height}
-          ref={this.ref('title').set}
-          contentEditable={this.editing}
-          onClick={this.navigate}
-          onKeyDown={this.onKeyDown}
-        >
-          {doc.title}
-        </title>
         <delete
+          if={false}
           onClick={e => {
             e.stopPropagation()
             doc.delete()
@@ -88,12 +74,8 @@ export default class DocItem {
         <info onClick={this.navigate}>
           <first>
             <author>{doc.authorId}</author>
-            <TimeAgo minPeriod={10} date={doc.createdAt} />
             {after}
           </first>
-          <second>
-            <minibtn>↠</minibtn>
-          </second>
         </info>
       </doc>
     )
@@ -106,6 +88,10 @@ export default class DocItem {
       color: '#333',
       background: '#fff',
       overflow: 'hidden',
+      borderRadius: 6,
+      border: [1, [0, 0, 0, 0.1]],
+      padding: 12,
+      margin: [0, 5, 10, 5],
     },
     info: {
       flexFlow: 'row',
@@ -113,11 +99,7 @@ export default class DocItem {
       fontSize: 13,
       cursor: 'pointer',
       color: [0, 0, 0, 0.4],
-      margin: -12,
-      padding: 12,
-      '&:hover': {
-        background: '#fafafa',
-      },
+      padding: 5,
     },
     title: {
       fontSize: 18,
@@ -190,18 +172,18 @@ export default class DocItem {
     editable: {
       doc: {
         height: 200,
-        width: 'calc(50% - 10px)',
       },
     },
     draggable: {
       doc: {
-        height: '100%',
         width: '100%',
+        height: '100%',
         margin: 0,
-        borderRadius: 6,
-        border: [1, [0, 0, 0, 0.1]],
-        padding: 12,
-        margin: [0, 5, 10, 5],
+      },
+    },
+    grid2: {
+      doc: {
+        width: 'calc(50% - 10px)',
       },
     },
   }

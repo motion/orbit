@@ -4,7 +4,7 @@ import Portal from 'react-portal'
 import { computed } from 'mobx'
 import { includes } from 'lodash'
 import Mousetrap from 'mousetrap'
-import { Modal } from '~/views'
+import { Modal } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 
 @view({

@@ -1,5 +1,6 @@
 import { view, observable } from '~/helpers'
-import { Input, CircleButton, Link, Button, Icon } from '~/views'
+import { object } from 'prop-types'
+import { Segment, Input, CircleButton, Link, Button, Icon } from '~/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -8,6 +9,7 @@ import Errors from '~/views/layout/errors'
 import Mousetrap from 'mousetrap'
 import { Document } from '@jot/models'
 import Commander from '~/views/commander'
+import Keys from '~/stores/keys'
 
 @view({
   store: class LayoutStore {
@@ -19,6 +21,14 @@ import Commander from '~/views/commander'
   },
 })
 export default class Root {
+  static childContextTypes = {
+    shortcuts: object,
+  }
+
+  getChildContext() {
+    return { shortcuts: Keys.manager }
+  }
+
   prevent = (e: Event) => e.preventDefault()
 
   @observable headerHovered = true
@@ -44,31 +54,41 @@ export default class Root {
             onMouseLeave={() => (this.headerHovered = false)}
           >
             <nav if={IS_ELECTRON}>
-              <back $btn $active={!Router.atBack} onClick={() => Router.back()}>
-                {'<'}
-              </back>
-              <fwd
-                $btn
-                $active={!Router.atFront}
-                onClick={() => Router.forward()}
-              >
-                {'>'}
-              </fwd>
-              <btn $active={Router.path !== '/'} onClick={() => Router.go('/')}>
-                🏚
-              </btn>
+              <Segment>
+                <Button $active={!Router.atBack} onClick={() => Router.back()}>
+                  {'<'}
+                </Button>
+                <Button
+                  $active={!Router.atFront}
+                  onClick={() => Router.forward()}
+                >
+                  {'>'}
+                </Button>
+                <Button
+                  $active={Router.path !== '/'}
+                  onClick={() => Router.go('/')}
+                >
+                  🏚
+                </Button>
+              </Segment>
             </nav>
-            <title if={title}>
-              {title}
-            </title>
-            <view $$flex />
+            <bar $$centered $$flex $$row $$overflow="hidden">
+              <Segment padded>
+                <Button icon="link" tooltip="link" />
+                <Button icon="media-image" tooltip="image" />
+                <Button icon="textquote" tooltip="quote" />
+                <Button icon="code" tooltip="code" />
+              </Segment>
+            </bar>
             <rest if={header || actions || extraActions} $$row>
               {header || null}
               <actions $$row if={extraActions}>
                 {extraActions.map((xa, i) => <action key={i}>{xa}</action>)}
               </actions>
               <actions $$row if={actions}>
-                {actions.map((action, i) => <action key={i}>{action}</action>)}
+                {Array.isArray(actions) &&
+                  actions.map((action, i) => <action key={i}>{action}</action>)}
+                {!Array.isArray(actions) && actions}
               </actions>
             </rest>
           </header>
@@ -88,8 +108,10 @@ export default class Root {
                 icon={<Icon name="ui-add" />}
                 onClick={store.createDoc}
               />
-              <Button icon="🖼" />
-              <Button icon="😊" />
+              <Segment>
+                <Button icon="🖼" />
+                <Button icon="😊" />
+              </Segment>
             </omnibar>
           </statusbar>
         </main>
@@ -121,6 +143,8 @@ export default class Root {
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
+      width: '100%',
+      overflow: 'hidden',
     },
     hovered: {
       opacity: 1,
@@ -135,6 +159,7 @@ export default class Root {
     },
     rest: {
       justifyContent: 'center',
+      marginLeft: 10,
     },
     nav: {
       flexFlow: 'row',

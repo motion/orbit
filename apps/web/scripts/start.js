@@ -121,7 +121,6 @@ function runDevServer(host, port, protocol) {
 }
 
 function run(port) {
-  console.log('running webpack...')
   var protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
   var host = process.env.HOST || 'localhost'
   setupCompiler(host, port, protocol)

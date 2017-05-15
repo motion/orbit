@@ -13,7 +13,7 @@ export default [
       return isTitle ? null : firstNode
     },
     normalize: (transform, document, firstNode) => {
-      transform.setNodeByKey(firstNode.key, {
+      return transform.setNodeByKey(firstNode.key, {
         type: BLOCKS.TITLE,
         data: { level: 1 },
       })

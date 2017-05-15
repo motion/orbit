@@ -6,16 +6,19 @@ import TimeAgo from 'react-timeago'
 @view
 export default class Meta {
   render({ node, children, editorStore, ...props }) {
+    // todo make this a read only thing maybe
     return (
-      <span $hashtags>
-        <span contentEditable={false} $fade $left>#</span>
-        <span if={node.text} $content $hiddenTags contentEditable={false}>
-          {node.text.split(' ').map((tag, i) => <tag key={i}>{tag} </tag>)}
-        </span>
-        <span $content contentEditable suppressContentEditableWarning>
+      <span contentEditable={false} $hashtags if={!editorStore.inline}>
+        <span $fade $left>#</span>
+        <span $content>
           {children}
         </span>
-        <span $fade if={editorStore.doc} contentEditable={false}>
+        <span if={node.text} $content $hiddenTags>
+          {node.text
+            .split(' ')
+            .map((tag, i) => <tag key={i}>{tag} <outline /></tag>)}
+        </span>
+        <span $fade if={editorStore.doc}>
           <TimeAgo minPeriod={10} date={editorStore.doc.updatedAt} />
         </span>
       </span>
@@ -24,6 +27,7 @@ export default class Meta {
 
   static style = {
     hashtags: {
+      fontSize: 30,
       display: 'flex',
       flexFlow: 'row',
       alignItems: 'center',
@@ -50,16 +54,23 @@ export default class Meta {
       top: 0,
       left: 0,
       whiteSpace: 'pre',
+      userSelect: 'none',
     },
     tag: {
       display: 'inline-block',
-      color: 'red',
-      '&:hover': {
+      position: 'relative',
+    },
+    outline: {
+      position: 'absolute',
+      background: '#f2f2f2',
+      top: 5,
+      left: -5,
+      right: 5,
+      bottom: 5,
+      zIndex: -1,
+      hover: {
         background: '#eee',
-      },
-      '&::after': {
-        content: ' ',
-        display: 'block',
+        color: 'black',
       },
     },
     fade: {

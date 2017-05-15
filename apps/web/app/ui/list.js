@@ -1,6 +1,6 @@
 import React, { Children, cloneElement } from 'react'
-import { view } from '~/helpers'
-import FakeText from '~/views/fake/text'
+import { view, Shortcuts } from '~/helpers'
+import FakeText from './fake/text'
 import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
@@ -26,9 +26,6 @@ class List {
 
   componentDidMount() {
     this.totalItems = this.getTotalItems(this.props)
-    if (this.props.controlled) {
-      this.addEvent(window, 'keydown', this.onKey)
-    }
   }
 
   componentWillReceiveProps = nextProps => {
@@ -45,23 +42,24 @@ class List {
   getTotalItems = props =>
     props.items ? props.items.length : Children.count(props.children)
 
-  onKey = e => {
+  handleShortcuts = (action, event) => {
+    console.log('key', action, this.state.selected)
     if (this.state.selected === null) return
-
-    const { keyCode } = e
-
-    switch (keyCode) {
-      case 40: // down
-        this.highlightItem(cur => Math.min(this.totalItems, cur + 1))
-        e.preventDefault()
+    switch (action) {
+      case 'down':
+        this.highlightItem(
+          cur => Math.min(this.totalItems, cur + 1),
+          this.onSelect
+        )
+        event.preventDefault()
         break
-      case 38: // up
-        this.highlightItem(cur => Math.max(0, cur - 1))
-        e.preventDefault()
+      case 'up':
+        this.highlightItem(cur => Math.max(0, cur - 1), this.onSelect)
+        event.preventDefault()
         break
-      case 13: // enter
+      case 'enter':
         this.highlightItem(() => this.state.selected, this.onSelect)
-        e.preventDefault()
+        event.preventDefault()
         break
     }
   }
@@ -73,6 +71,11 @@ class List {
   totalItems = () => {
     // TODO could check children length?
     return this.props.items.length
+  }
+
+  // wrap weird signature
+  select = (index: number) => {
+    this.highlightItem(() => index)
   }
 
   highlightItem = (setter: () => number | null, cb: Function) => {
@@ -117,8 +120,10 @@ class List {
       controlled,
       onHighlight,
       onSelect,
+      getRef,
       parentSize,
       rowHeight: propRowHeight,
+      onItemMount,
       ...props
     } = this.props
 
@@ -140,7 +145,14 @@ class List {
       width = typeof userWidth === 'undefined' ? parentSize.width : userWidth
     }
 
-    const passThroughProps = { horizontal, dark, padded, light, slim }
+    const passThroughProps = {
+      horizontal,
+      dark,
+      padded,
+      light,
+      slim,
+      onItemMount,
+    }
 
     const total = items ? items.length : Children.count(children)
     const itemProps = (i, rowProps, isListItem) => {
@@ -214,34 +226,37 @@ class List {
     }
 
     return (
-      <list
-        $$draggable
-        style={{ minHeight: height, minWidth: width, ...style }}
-        {...props}
-      >
-        <loading if={loading}>loading</loading>
-        <VirtualList
-          if={!loading && rowHeight}
-          height={height}
-          width={width}
-          overscanRowCount={5}
-          rowCount={total}
-          rowHeight={rowHeight}
-          rowRenderer={({ index, key, style }) =>
-            chillen[index]({ key, style })}
-        />
-        {!rowHeight && chillen}
-      </list>
+      <Shortcuts isolate name="all" handler={this.handleShortcuts}>
+        <list
+          $$draggable
+          style={{ minHeight: height, minWidth: width, ...style }}
+          ref={getRef}
+          {...props}
+        >
+          <loading if={loading}>loading</loading>
+          <VirtualList
+            if={!loading && rowHeight}
+            height={height}
+            width={width}
+            overscanRowCount={5}
+            rowCount={total}
+            rowHeight={rowHeight}
+            rowRenderer={({ index, key, style }) =>
+              chillen[index]({ key, style })}
+          />
+          {!rowHeight && chillen}
+        </list>
+      </Shortcuts>
     )
   }
 
   static style = {
-    loading: {
-      flex: 1,
-    },
     list: {
       fontSize: 13,
       overflowY: 'auto',
+    },
+    loading: {
+      flex: 1,
     },
   }
 

@@ -3,11 +3,12 @@ import Router from '~/router'
 
 @view
 export default class Link {
-  @observable active = false
+  @observable isActive = false
 
   componentDidMount() {
     this.watch(() => {
-      this.active = Router.path === this.props.to
+      this.isActive =
+        Router.path === this.props.to || Router.path === this.props.match
     })
   }
 
@@ -19,10 +20,10 @@ export default class Link {
     }
   }
 
-  render({ to, active, ...props }) {
+  render({ to, match, highlight, active, ...props }) {
     return (
       <a
-        $active={this.active}
+        $active={this.isActive}
         href={to}
         onDragStart={e => e.preventDefault()}
         onClick={this.onClick}
@@ -34,7 +35,6 @@ export default class Link {
   static style = {
     a: {
       color: '#333',
-      fontWeight: 200,
       cursor: 'pointer',
     },
     active: {

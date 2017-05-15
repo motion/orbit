@@ -56,14 +56,15 @@ class Image extends Model {
     return this.collection.find().where('docId').eq(doc.id)
   }
 
-  async create({ file, ...props }) {
+  async create({ file, name, ...props }) {
     const image = await super.create({
-      name: file.name,
+      name,
       size: `${file.size}`,
       ...props,
     })
     const attachment = await image.addAttachment({
       file,
+      name,
     })
     return image
   }

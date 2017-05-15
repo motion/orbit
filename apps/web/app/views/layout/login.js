@@ -1,6 +1,6 @@
 import { view, observable } from '~/helpers'
 import App from '@jot/models'
-import { Input, Button, Link } from '~/views'
+import { Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 // this.finish()
@@ -57,7 +57,7 @@ export default class Login {
     return (
       <login $$draggable>
         <form $$undraggable onSubmit={store.onSubmit}>
-          <step if={store.step === 1}>
+          <step $$hide={store.step !== 1}>
             <Input
               $input
               name="username"
@@ -77,19 +77,21 @@ export default class Login {
               <icon onClick={App.clearUser}>{'<'}</icon>
               <username $$ellipse>{App.user.name}</username>
             </info>
-            <Input
-              $input
-              $$width={90}
-              name="password"
-              type="password"
-              placeholder="password"
-              onKeyDown={e => e.which === 13 && store.finish()}
-              onChange={e => (store.password = e.target.value)}
-              getRef={store.setPasswordRef}
-            />
-            <Button onClick={store.finish}>
-              {store.loggingIn ? '⌛' : '✅'}
-            </Button>
+            <Segment>
+              <Input
+                $input
+                $$width={70}
+                name="password"
+                type="password"
+                placeholder="password"
+                onKeyDown={e => e.which === 13 && store.finish()}
+                onChange={e => (store.password = e.target.value)}
+                getRef={store.setPasswordRef}
+              />
+              <Button onClick={store.finish}>
+                {store.loggingIn ? '⌛' : '✅'}
+              </Button>
+            </Segment>
           </step>
         </form>
 

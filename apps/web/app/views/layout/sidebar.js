@@ -1,17 +1,50 @@
-import { view } from '~/helpers'
+import { view, Shortcuts } from '~/helpers'
 import { uniqBy } from 'lodash'
-import { Page, Link, Input, Button } from '~/views'
+import { List, Link, Input, Button } from '~/ui'
 import { Place } from '@jot/models'
 import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
-import List from '~/views/list'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
+
+const Text = ({ getRef, ...props }) => (
+  <text ref={getRef} $$marginLeft={props.active ? -2 : 0} {...props} />
+)
+
+const SideBarItem = ({ children, isEditing, after, ...props }) => (
+  <Link
+    {...props}
+    $$style={{
+      background: isEditing ? '#fafafa' : 'transparent',
+      width: '100%',
+      fontSize: 18,
+      padding: [7, 10],
+      cursor: isEditing ? 'text' : 'pointer',
+      '&:hover': {
+        background: '#fafafa',
+      },
+    }}
+    active={
+      !isEditing && {
+        background: '#333',
+        color: '#fff',
+        '&:hover': {
+          background: '#222',
+        },
+      }
+    }
+  >
+    {children}
+    <span $$fontSize={10} if={after}>
+      {after}
+    </span>
+  </Link>
+)
 
 class SidebarStore {
   places = Place.all()
   placeInput = null
-  creatingPlace = false
+  editingPlace = false
   filter = ''
 
   get allPlaces() {
@@ -21,9 +54,10 @@ class SidebarStore {
     }
     const results = [
       myPlace,
-      { create: this.creatingPlace },
+      this.editingPlace === true && { create: true },
       ...(this.places || []),
-    ]
+    ].filter(x => !!x)
+
     if (this.filter) {
       return fuzzy
         .filter(this.filter, results, {
@@ -34,11 +68,13 @@ class SidebarStore {
     return uniqBy(results, r => r.title)
   }
 
-  createPlace = async e => {
-    e.preventDefault()
-    const val = this.placeInput.value
-    await Place.createWithHome(val)
-    this.creatingPlace = false
+  createPlace = async () => {
+    const val = this.placeInput.innerText
+    if (val) {
+      const place = await Place.createWithHome(val)
+      this.editingPlace = false
+      Router.go(place.url())
+    }
   }
 
   onNewPlace = ref => {
@@ -47,121 +83,111 @@ class SidebarStore {
       ref.focus()
     }
   }
-}
 
-const SideBarLink = ({ children, after, ...props }) => (
-  <Link
-    {...props}
-    $$style={{
-      width: '100%',
-      fontWeight: 400,
-      fontSize: 18,
-      color: 'purple',
-      padding: [7, 10],
-      cursor: 'pointer',
-      '&:hover': {
-        background: '#fafafa',
-      },
-    }}
-    active={{
-      background: '#fff',
-      color: '#000',
-      '&:hover': {
-        background: '#fafafa',
-      },
-    }}
-  >
-    {children}
-    <span $$fontSize={10} if={after}>
-      {after}
-    </span>
-  </Link>
-)
+  onNewPlaceKey = e => {
+    if (e.which === 13) {
+      e.preventDefault()
+    }
+  }
+
+  clearCreating = () => {
+    this.editingPlace = false
+  }
+
+  setEditable = place => {
+    this.editingPlace = place._id
+  }
+
+  handleShortcuts = (action, event) => {
+    switch (action) {
+      case 'enter':
+        event.preventDefault()
+        this.createPlace()
+      case 'esc':
+        event.preventDefault()
+        this.clearCreating()
+        break
+    }
+  }
+}
 
 @view({ store: SidebarStore })
 export default class Sidebar {
   render({ store }) {
     return (
-      <side>
-        <content $$flex $$undraggable>
-          <Login />
+      <Shortcuts isolate name="all" handler={store.handleShortcuts}>
+        <sidebar $$flex>
+          <content $$flex $$undraggable>
+            <Login />
 
-          <title
-            $$row
-            $$justify="space-between"
-            $$padding={6}
-            $$borderBottom={[1, 'dotted', '#eee']}
-          >
-            <input
-              $search
-              placeholder="places"
-              onChange={e => (store.filter = e.target.value)}
-            />
-            <Button
-              icon="ui-add"
-              onClick={() => (store.creatingPlace = true)}
-            />
-          </title>
-          <main $$draggable if={store.allPlaces}>
-            <List
-              controlled
-              items={store.allPlaces}
-              onSelect={place => {
-                if (place) {
-                  Router.go(place.url())
-                }
-              }}
-              getItem={(place, index) => {
-                if (index === 0) {
-                  return <List.Item><strong>my place</strong></List.Item>
-                }
-                if (place.create === false) {
-                  return null
-                }
-                if (place.create) {
+            <title
+              $$row
+              $$justify="space-between"
+              $$padding={6}
+              $$borderBottom={[1, 'dotted', '#eee']}
+            >
+              <input
+                $search
+                placeholder="places"
+                onChange={e => (store.filter = e.target.value)}
+              />
+              <Button
+                icon="ui-add"
+                onClick={() => (store.editingPlace = true)}
+              />
+            </title>
+            <main $$scrollable $$draggable if={store.allPlaces}>
+              <List
+                controlled
+                items={store.allPlaces}
+                onSelect={place => {
+                  console.log('on select', place)
+                  if (place && place.url) {
+                    Router.go(place.url())
+                  }
+                }}
+                getItem={(place, index) => {
+                  const isEditing =
+                    place.create || store.editingPlace === place._id
+
                   return (
-                    <List.Item>
-                      <form onSubmit={store.createPlace}>
-                        <Input
-                          noBorder
-                          getRef={store.onNewPlace}
-                          onKeyDown={e =>
-                            e.which === 13 && store.createPlace(e)}
-                          placeholder="new place"
-                        />
-                      </form>
-                    </List.Item>
+                    <SideBarItem
+                      isEditing={isEditing}
+                      match={place.url && place.url()}
+                      onDoubleClick={() => store.setEditable(place)}
+                    >
+                      <Text
+                        {...isEditing && {
+                          contentEditable: true,
+                          suppressContentEditableWarning: true,
+                          getRef: store.onNewPlace,
+                        }}
+                      >
+                        {place.title}
+                      </Text>
+                    </SideBarItem>
                   )
-                }
-                return { primary: place.title }
-              }}
-            />
-          </main>
-        </content>
+                }}
+              />
+            </main>
+          </content>
 
-        <sidebar if={App.activePage.sidebar}>
-          {App.activePage.sidebar}
+          <sidebar if={App.activePage.sidebar}>
+            {App.activePage.sidebar}
+          </sidebar>
         </sidebar>
-      </side>
+      </Shortcuts>
     )
   }
 
   static style = {
-    side: {
+    sidebar: {
       width: SIDEBAR_WIDTH,
-      borderLeft: [1, '#eee'],
-      overflowY: 'scroll',
-      overflowX: 'hidden',
+      borderLeft: [1, 'dotted', '#eee'],
       userSelect: 'none',
     },
     main: {
       flex: 1,
-    },
-    h2: {
-      fontSize: 14,
-      fontWeight: 300,
-      padding: [4, 8, 0],
-      color: [0, 0, 0, 0.5],
     },
     search: {
       border: 'none',

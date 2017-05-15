@@ -13,6 +13,7 @@ class Document extends Model {
     attachments: array.optional.items(str),
     private: bool,
     home: bool.optional,
+    temporary: bool.optional,
     timestamps: true,
   }
 
@@ -64,7 +65,11 @@ class Document extends Model {
       this.save()
     },
     async addImage(file) {
-      return await Image.create({ file, docId: this._id })
+      return await Image.create({
+        file,
+        name: ('image' + Math.random()).slice(0, 8),
+        docId: this._id,
+      })
     },
   }
 

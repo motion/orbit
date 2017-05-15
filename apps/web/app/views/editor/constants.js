@@ -1,6 +1,7 @@
 export const BLOCKS = {
   TITLE: 'title',
   PARAGRAPH: 'paragraph',
+  HASHTAG: 'hashtag',
   META: 'meta',
 }
 

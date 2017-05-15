@@ -34,35 +34,18 @@ if (IS_PROD) {
 module.exports = Object.assign(config, {
   entry: {
     app: filtered([
-      IS_DEV && require.resolve('react-dev-utils/webpackHotDevClient'),
+      IS_DEV && require.resolve('webpack-dev-server/client') + '?/',
+      IS_DEV && require.resolve('webpack/hot/dev-server'),
+      // IS_DEV && require.resolve('react-dev-utils/webpackHotDevClient'),
+      IS_DEV && require.resolve('react-hot-loader/patch'),
       require.resolve('./polyfills'),
       paths.appIndexJs,
     ]),
-    vendor: [
-      'react',
-      'react-dom',
-      'slate',
-      'immutable',
-      'lodash',
-      'lodash-decorators',
-      'rxjs',
-      'mobx',
-      'pouchdb-core',
-      'pouchdb-replication',
-      'pouchdb-validation',
-      'prop-types',
-      'react-flip-move',
-      'react-grid-layout',
-      'react-portal',
-      'react-virtualized',
-      'superlogin-client',
-    ],
   },
   output: {
     path: paths.appBuild,
     pathinfo: true,
     filename: 'js/[name].js',
-    library: '[name]_lib',
     publicPath: publicPath,
   },
 
@@ -110,9 +93,18 @@ module.exports = Object.assign(config, {
     new webpack.NamedModulesPlugin(),
 
     // split out vendor files
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'vendor',
+    //   minChunks: Infinity, // ensure only stuff we list
+    // }),
+
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: Infinity, // ensure only stuff we list
+      name: 'node-static',
+      filename: 'node-static.js',
+      minChunks(module, count) {
+        var context = module.context
+        return context && context.indexOf('node_modules') >= 0
+      },
     }),
 
     // production

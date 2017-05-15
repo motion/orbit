@@ -1,17 +1,24 @@
 import React from 'react'
 import { view } from '~/helpers'
-import FakeAvatar from '~/views/fake/avatar'
-import Glow from '~/views/glow'
+import FakeAvatar from './fake/avatar'
+import Glow from './glow'
 
 @view
 export default class ListItem {
   static isListItem = true
+
+  componentDidMount() {
+    if (this.props.onItemMount) {
+      this.props.onItemMount(this)
+    }
+  }
 
   render() {
     const {
       children,
       primary,
       secondary,
+      match,
       avatar,
       fakeAvatar,
       shine, // a strong highlight
@@ -33,8 +40,10 @@ export default class ListItem {
       horizontal,
       dark,
       padded,
+      padding,
       light,
       height,
+      onItemMount,
       ...props
     } = this.props
 
@@ -54,6 +63,7 @@ export default class ListItem {
           if={onClick && !nohover}
           color={dark ? [255, 255, 255] : [0, 0, 0]}
           opacity={dark ? 0.04 : 0.06}
+          scale={0.7}
           parent={() => this.refs.item}
         />
         <image if={avatar || fakeAvatar}>

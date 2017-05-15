@@ -626,13 +626,15 @@ export default class Popover {
       position: 'absolute',
       pointerEvents: 'auto',
       opacity: 0,
-      transition: 'opacity ease-in 60ms, transform ease-out 80ms',
+      transition: 'opacity ease-in 60ms, transform ease-out 100ms',
       transform: {
         y: -5,
       },
     },
     popoverOpen: {
       opacity: 1,
+      animation: 'bounce-down 200ms',
+      transition: 'transform 0ms',
       transform: {
         y: 0,
       },

@@ -7,19 +7,31 @@ import CardList from './lists/card'
 import GridList from './lists/grid'
 
 class DocListStore {
-  nextDoc = Document.create({ temporary: true, authorId: 'anon' })
-
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
   docs = !this.props.editorStore.inline &&
     Document.forPlace(this.place && this.place.slug)
 
+  shouldFocus = false
+
+  createDoc = async () => {
+    await Document.create({ title: ' ', places: [this.place.slug] })
+    this.setTimeout(() => {
+      this.shouldFocus = true
+    }, 200)
+  }
+
   get place() {
     return App.activePage.place
   }
+
   setType = (node, listType: string) => {
     const next = node.data.set('listType', listType)
     this.props.onChange(next)
+  }
+
+  doneFocusing = () => {
+    this.shouldFocus = false
   }
 }
 
@@ -53,8 +65,16 @@ export default class DocList {
           </buttons>
         </config>
         <content>
-          <CardList if={listType === 'card'} listStore={store} />
-          <GridList if={listType === 'grid'} listStore={store} />
+          <CardList
+            shouldFocus={store.shouldFocus}
+            if={listType === 'card'}
+            listStore={store}
+          />
+          <GridList
+            shouldFocus={store.shouldFocus}
+            if={listType === 'grid'}
+            listStore={store}
+          />
         </content>
       </doclist>
     )

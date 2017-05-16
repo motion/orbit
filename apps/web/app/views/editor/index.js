@@ -57,8 +57,10 @@ class EditorStore {
 
   watchers = {
     setContent: () => {
-      if (!this.content && this.doc) {
-        this.content = Raw.deserialize(this.doc.content, { terse: true })
+      if (!this.content) {
+        if (this.doc) {
+          this.content = Raw.deserialize(this.doc.content, { terse: true })
+        }
       }
     },
     save: () => {

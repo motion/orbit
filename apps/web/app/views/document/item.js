@@ -11,10 +11,12 @@ export default class DocItem {
     onSaveTitle: _ => _,
   }
 
-  @observable editing = false
+  editor = null
 
   focus = () => {
-    this.editing = true
+    if (this.editor) {
+      this.editor.focus()
+    }
   }
 
   onEnter = doc => {
@@ -68,7 +70,7 @@ export default class DocItem {
         </delete>
 
         <content if={editable}>
-          <Editor inline id={doc._id} />
+          <Editor getRef={this.ref('editor').set} inline id={doc._id} />
         </content>
 
         <info onClick={this.navigate}>
@@ -84,40 +86,25 @@ export default class DocItem {
   static style = {
     doc: {
       position: 'relative',
-      padding: 10,
       color: '#333',
       background: '#fff',
       overflow: 'hidden',
       borderRadius: 6,
       border: [1, [0, 0, 0, 0.1]],
-      padding: 12,
       margin: [0, 5, 10, 5],
     },
+    content: {
+      flex: 1,
+      padding: 10,
+    },
     info: {
+      padding: [6, 10],
       flexFlow: 'row',
       justifyContent: 'space-between',
       fontSize: 13,
       cursor: 'pointer',
       color: [0, 0, 0, 0.4],
-      padding: 5,
-    },
-    title: {
-      fontSize: 18,
-      margin: [3, 0],
-      display: 'block',
-      width: '100%',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      fontWeight: 500,
-      cursor: 'pointer',
-      borderColor: 'transparent',
-      background: '-webkit-linear-gradient(right, purple, green)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-    },
-    editing: {
-      border: [1, '#eee'],
+      background: '#fafafa',
     },
     delete: {
       position: 'absolute',
@@ -135,9 +122,6 @@ export default class DocItem {
       '&:hover': {
         background: '#eee',
       },
-    },
-    content: {
-      flex: 1,
     },
     minibtn: {
       color: '#aaa',

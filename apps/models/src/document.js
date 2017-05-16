@@ -106,6 +106,25 @@ class Document extends Model {
     )
   }
 
+  @query forHashtag = (slug, hashtag) => {
+    if (!slug) {
+      return null
+    }
+
+    return (
+      this.collection
+        .find({
+          home: { $ne: true },
+        })
+        .where('places')
+        // in array find
+        .elemMatch({ $eq: slug })
+        // .where('hashtags')
+        // .elemMatch({ $eq: hashtag })
+        .sort({ createdAt: 'desc' })
+    )
+  }
+
   @query all = () => this.collection.find().sort({ createdAt: 'asc' })
 
   @query recent = (limit = 10) =>

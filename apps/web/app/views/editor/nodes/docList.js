@@ -23,7 +23,6 @@ class DocListStore {
   }
 }
 
-@node
 @view({
   store: DocListStore,
 })

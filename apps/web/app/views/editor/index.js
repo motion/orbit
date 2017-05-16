@@ -58,7 +58,6 @@ class EditorStore {
     )
   }
 
-  // this will prevent save while uploading images...
   get shouldSave() {
     if (this.hasUploadingImages) {
       return false
@@ -76,18 +75,15 @@ class EditorStore {
       if (this.doc && this.content && this.shouldSave) {
         this.doc.content = Raw.serialize(this.content)
         this.doc.title = this.content.startBlock.text
-        const secondBlock = this.content.blocks.get(1)
-        if (secondBlock) {
-          // todo save hashtags
-          // this.doc.hashtags = this.content.startBlock
-        }
         this.doc.save()
       }
     },
   }
 
   setContent = val => {
-    this.content = val
+    if (!val.equals(this.content)) {
+      this.content = val
+    }
   }
 
   focus = () => {
@@ -139,6 +135,7 @@ export default class EditorView {
         getRef(Editor)
       }
       if (store.shouldFocus) {
+        console.log('focusing', this.props.doc)
         Editor.focus()
         store.shouldFocus = false
       }

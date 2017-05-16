@@ -50,8 +50,8 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => (this.headerHovered = true)}
-            onMouseLeave={() => (this.headerHovered = false)}
+            onMouseEnter={() => this.headerHovered = true}
+            onMouseLeave={() => this.headerHovered = false}
           >
             <nav if={IS_ELECTRON}>
               <Segment>
@@ -95,7 +95,7 @@ export default class Root {
           <content>
             <CurrentPage key={Router.key} />
           </content>
-          <statusbar if={false}>
+          <statusbar if={true}>
             <omnibar>
               <Commander
                 placeholder="new..."

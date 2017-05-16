@@ -6,17 +6,7 @@ export todo from './todo'
 export quote from './quote'
 export meta from './meta'
 export hashtag from './hashtag'
-
-const makeTag = tag => props => React.createElement(`${tag}`, props)
-
-export const title = props => {
-  const { attributes, children, node } = props
-  const level = node.data.get('level')
-  const fontSize = Math.floor(6 / (level || 3) * 4.5)
-  const Tag = props =>
-    React.createElement(`h${level}`, { ...props, style: { fontSize } })
-  return <Tag {...attributes}>{children}</Tag>
-}
+export title from './title'
 
 export const paragraph = props => <p $$fontSize={18}>{props.children}</p>
 

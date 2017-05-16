@@ -15,6 +15,7 @@ const merge = x => flatten(Object.keys(x).map(n => x[n]))
 const rules = merge(Rules)
 
 class EditorStore {
+  id = this.props.id
   doc = Document.get(this.props.id)
   shouldFocus = this.props.focusOnMount
   focused = false
@@ -25,6 +26,10 @@ class EditorStore {
   start() {
     this.watch(this.watchers.save)
     this.watch(this.watchers.setContent)
+  }
+
+  get theme() {
+    return this.inline ? { title: { fontSize: 16 } } : {}
   }
 
   get nodes() {
@@ -39,6 +44,11 @@ class EditorStore {
   }
 
   get shouldSave() {
+    // for now, prevent saving when not focused
+    // avoid tons of saves on inline docs
+    if (!this.focused) {
+      return false
+    }
     if (this.hasUploadingImages) {
       return false
     }

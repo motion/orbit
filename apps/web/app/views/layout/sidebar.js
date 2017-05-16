@@ -20,7 +20,8 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
   return (
     <Link
       {...props}
-      $$style={{
+      style={{
+        gloss: true,
         color: [0, 0, 0, 0.75],
         background: 'transparent',
         width: '100%',
@@ -121,6 +122,7 @@ export default class Sidebar {
   render({ store }) {
     return (
       <ContextMenu
+        inactive
         options={[
           {
             title: 'Delete',

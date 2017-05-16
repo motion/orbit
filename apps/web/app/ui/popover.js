@@ -508,6 +508,7 @@ export default class Popover {
       forgiveness,
       noHover,
       shadow,
+      animation,
       top: _top,
       left: _left,
       ...props
@@ -633,7 +634,6 @@ export default class Popover {
     },
     popoverOpen: {
       opacity: 1,
-      animation: 'bounce-down 200ms',
       transition: 'transform 0ms',
       transform: {
         y: 0,
@@ -667,6 +667,11 @@ export default class Popover {
         padding,
       },
     }),
+    animation: ({ animation }) => ({
+      popoverOpen: {
+        animation: animation === true ? 'bounce-down 200ms' : animation,
+      },
+    }),
     forgiveness: ({ forgiveness, distance }) => ({
       popover: {
         padding: maxForgiveness(forgiveness, distance),
@@ -675,7 +680,7 @@ export default class Popover {
     }),
     shadow: ({ shadow }) => ({
       content: {
-        boxShadow: shadow === true ? '0 0 10px rgba(0,0,0,0.1)' : shadow,
+        boxShadow: shadow === true ? '0 3px 10px rgba(0,0,0,0.1)' : shadow,
       },
     }),
     noHover: {

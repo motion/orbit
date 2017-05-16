@@ -15,8 +15,10 @@ import Selection from '../stores/selection'
           open
           noArrow
           background
+          shadow
+          animation="slide 300ms"
           left={Selection.mouseUpEvent.clientX}
-          top={Selection.mouseUpEvent.clientY - PAD}
+          top={Selection.mouseUpEvent.clientY + PAD}
         >
           <bar $$row>
             <Segment padded>

@@ -24,15 +24,23 @@ body {
        color: #000;
 }
 
-@keyframes bounce-down {
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
   0% {
     opacity: 0;
-    transform: scale(0.6) translateY(-5px);
+    transform: scale(0.6);
   }
 
   80% {
-    opacity: 1;
-    transform: scale(1.05) translateY(0px);
+    transform: scale(1.05);
   }
 
   90% {
@@ -40,7 +48,19 @@ body {
   }
 
   100% {
+    opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes slide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

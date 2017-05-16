@@ -43,6 +43,7 @@ export default class ContextMenu {
           shadow
           overlay="transparent"
           escapable
+          animation="slide 200ms"
           onClose={store.clearMenu}
           noArrow
           top={store.event.clientY + 20}

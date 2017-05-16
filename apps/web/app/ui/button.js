@@ -124,6 +124,7 @@ export default class SegmentItem {
           dark
           background
           openOnHover
+          animation="bounce 150ms"
           noHover
           target={`.${this.uniq}`}
           padding={[0, 6]}

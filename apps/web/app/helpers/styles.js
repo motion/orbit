@@ -81,6 +81,13 @@ export const styles = {
     bottom: 0,
     left: 0,
   },
+  passthrough: {
+    flexGrow: 'inherit',
+    flexShrink: 'inherit',
+    flexDirection: 'inherit',
+    justifyContent: 'inherit',
+    alignItems: 'inherit',
+  },
   ellipse: {
     display: 'block',
     whiteSpace: 'pre',

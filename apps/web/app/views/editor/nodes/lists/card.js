@@ -31,6 +31,7 @@ export default class CardList {
       </docs>
     )
   }
+
   static style = {
     docs: {
       flexFlow: 'row',

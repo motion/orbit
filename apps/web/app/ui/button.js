@@ -122,7 +122,7 @@ export default class SegmentItem {
         <Popover
           if={tooltip}
           dark
-          bg
+          background
           openOnHover
           noHover
           target={`.${this.uniq}`}

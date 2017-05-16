@@ -490,7 +490,7 @@ export default class Popover {
       arrowSize,
       overlay,
       style,
-      bg,
+      background,
       target,
       openOnHover,
       openOnClick,
@@ -507,6 +507,7 @@ export default class Popover {
       padding,
       forgiveness,
       noHover,
+      shadow,
       top: _top,
       left: _left,
       ...props
@@ -543,7 +544,7 @@ export default class Popover {
         {React.isValidElement(target) && React.cloneElement(target, childProps)}
         <Portal isOpened>
           <container $open={showPopover} $closing={closing}>
-            <bg
+            <background
               if={overlay}
               $overlay={overlay}
               $overlayShown={showPopover}
@@ -573,9 +574,9 @@ export default class Popover {
                   towards={INVERSE[direction]}
                 />
               </arrowContain>
-              <section $withBg={bg}>
+              <content $withBg={background}>
                 {children}
-              </section>
+              </content>
             </popover>
           </container>
         </Portal>
@@ -593,7 +594,7 @@ export default class Popover {
       zIndex: 101,
       pointerEvents: 'none',
     },
-    section: {
+    content: {
       flex: 1,
       overflowY: 'auto',
     },
@@ -603,7 +604,7 @@ export default class Popover {
     closing: {
       // zIndex: 100000 - 1,
     },
-    bg: {
+    background: {
       position: 'absolute',
       top: 0,
       left: 0,
@@ -662,7 +663,7 @@ export default class Popover {
       },
     },
     padding: ({ padding }) => ({
-      section: {
+      content: {
         padding,
       },
     }),
@@ -670,6 +671,11 @@ export default class Popover {
       popover: {
         padding: maxForgiveness(forgiveness, distance),
         margin: -maxForgiveness(forgiveness, distance),
+      },
+    }),
+    shadow: ({ shadow }) => ({
+      content: {
+        boxShadow: shadow === true ? '0 0 10px rgba(0,0,0,0.1)' : shadow,
       },
     }),
     noHover: {

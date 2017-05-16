@@ -14,7 +14,7 @@ import Selection from '../stores/selection'
           if={Selection.node && Selection.mouseUpEvent}
           open
           noArrow
-          bg
+          background
           left={Selection.mouseUpEvent.clientX}
           top={Selection.mouseUpEvent.clientY - PAD}
         >

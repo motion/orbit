@@ -6,7 +6,23 @@ export store from './store'
 export $ from './styles'
 export { query } from '@jot/models'
 export clr from 'color'
-export { Shortcuts } from 'react-shortcuts'
+
+// todo move into own thing
+import { Shortcuts as ReactShortcuts } from 'react-shortcuts'
+import view from './view'
+
+@view
+export class Shortcuts {
+  render() {
+    return <ReactShortcuts $shortcuts isolate {...this.props} />
+  }
+  static style = {
+    shortcuts: {
+      height: '100%',
+      width: '100%',
+    },
+  }
+}
 
 import { findDOMNode } from 'react-dom'
 

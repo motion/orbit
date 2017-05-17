@@ -23,7 +23,6 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
       style={{
         gloss: true,
         color: [0, 0, 0, 0.75],
-        background: 'transparent',
         width: '100%',
         fontSize: 14,
         padding: [4, 10],
@@ -34,11 +33,11 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
         ...editStyle,
       }}
       active={{
-        fontWeight: 400,
-        background: [0, 0, 0, 0.025],
+        fontWeight: 500,
+        background: [0, 0, 0, 0.2],
         color: [0, 0, 0, 0.9],
         '&:hover': {
-          background: '#f2f2f2',
+          background: [0, 0, 0, 0.2],
         },
       }}
     >
@@ -132,7 +131,7 @@ export default class Sidebar {
           },
         ]}
       >
-        <Shortcuts isolate name="all" handler={store.handleShortcuts}>
+        <Shortcuts name="all" handler={store.handleShortcuts}>
           <sidebar $$flex>
             <content $$flex $$undraggable>
               <Login />

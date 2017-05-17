@@ -71,7 +71,8 @@ export default class DocItem {
           </item>
           <item>
             <Icon
-              name="delete"
+              name="simple-remove"
+              size={8}
               onClick={e => {
                 e.stopPropagation()
                 doc.delete()
@@ -100,10 +101,17 @@ export default class DocItem {
       padding: [6, 10],
       flexFlow: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       fontSize: 13,
       cursor: 'pointer',
       color: [0, 0, 0, 0.4],
       position: 'relative',
+    },
+    item: {
+      opacity: 0.5,
+      '&:hover': {
+        opacity: 1,
+      },
     },
     nick: {
       position: 'absolute',

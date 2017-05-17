@@ -41,10 +41,13 @@ class DocListStore {
 })
 export default class DocList {
   render({ node, editorStore, store, children, ...props }) {
+    if (editorStore.inline) {
+      return <null>sub doc list</null>
+    }
+
     const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0
     const listType = node.data.get('listType') || 'card'
-    console.log('listType', listType)
 
     return (
       <doclist contentEditable={false}>

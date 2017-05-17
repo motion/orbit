@@ -7,7 +7,7 @@ export default [
       return node.type === BLOCKS.PARAGRAPH && node.kind === 'block'
     },
     validate: paragraph => {
-      return paragraph.text && paragraph.text.slice(0, 1) === '#'
+      return paragraph.text && paragraph.text.slice(0, 1) === '+'
     },
     normalize: (transform, paragraph) => {
       return transform.setNodeByKey(paragraph.key, {

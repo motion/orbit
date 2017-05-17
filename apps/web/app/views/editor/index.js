@@ -22,6 +22,12 @@ class EditorStore {
   content = null
   inline = this.props.inline
   editor = null
+  plugins = Plugins
+  schema = {
+    rules,
+    nodes: Nodes,
+    marks: Marks,
+  }
 
   start() {
     this.watch(this.watchers.save)
@@ -85,6 +91,39 @@ class EditorStore {
   blur = () => {
     this.focused = false
   }
+
+  getRef = Editor => {
+    const { getRef, store } = this.props
+    if (Editor) {
+      this.editor = Editor
+      window.Editor = Editor
+      if (getRef) {
+        getRef(Editor)
+      }
+      if (this.shouldFocus) {
+        console.log('focusing', this.props.doc)
+        Editor.focus()
+        this.shouldFocus = false
+      }
+    }
+  }
+
+  handleDocumentClick = (event: Event) => {
+    // if its the child
+    if (event.target.parentElement === event.currentTarget) {
+      event.preventDefault()
+      const { document, selection, transform } = this.editor.getState()
+
+      this.editor.focus()
+      selection.moveStartTo(document.nodes.last())
+      selection.moveTo(document.nodes.last())
+      selection.moveAnchorTo(document.nodes.last())
+
+      transform().selectAll()
+
+      console.log(document, selection, transform)
+    }
+  }
 }
 
 @view({
@@ -101,37 +140,13 @@ export default class EditorView {
     editor: object,
   }
 
-  getChildContext() {
-    return { editor: this.props.store }
-  }
-
-  plugins = Plugins
-
-  schema = {
-    rules,
-    nodes: Nodes,
-    marks: Marks,
-  }
-
   onChange = value => {
     this.props.store.setContent(value)
     this.props.onChange(value)
   }
 
-  getRef = Editor => {
-    const { getRef, store } = this.props
-    if (Editor) {
-      store.editor = Editor
-      window.Editor = Editor
-      if (getRef) {
-        getRef(Editor)
-      }
-      if (store.shouldFocus) {
-        console.log('focusing', this.props.doc)
-        Editor.focus()
-        store.shouldFocus = false
-      }
-    }
+  getChildContext() {
+    return { editor: this.props.store }
   }
 
   render({
@@ -149,6 +164,7 @@ export default class EditorView {
     return (
       <document
         if={store.content}
+        onClick={store.handleDocumentClick}
         onMouseUp={(event: MouseEvent) => {
           event.persist()
           SelectionStore.mouseUpEvent = event
@@ -158,11 +174,11 @@ export default class EditorView {
           $editor
           $$undraggable
           readOnly={readOnly}
-          plugins={merge(this.plugins)}
-          schema={this.schema}
+          plugins={merge(store.plugins)}
+          schema={store.schema}
           state={store.content}
           onChange={this.onChange}
-          ref={this.getRef}
+          ref={store.getRef}
           onFocus={store.focus}
           onBlur={store.blur}
           onKeyDown={e => {
@@ -177,6 +193,7 @@ export default class EditorView {
   static style = {
     document: {
       flex: 1,
+      cursor: 'text',
     },
     editor: {
       color: '#4c555a',

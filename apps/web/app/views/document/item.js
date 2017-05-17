@@ -1,7 +1,7 @@
 import { view, observable } from '~/helpers'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
-import { Poof } from '~/ui'
+import { Poof, Icon } from '~/ui'
 import React from 'react'
 import Editor from '~/views/editor'
 
@@ -57,27 +57,28 @@ export default class DocItem {
 
     return (
       <doc $$undraggable {...props}>
-        <delete
-          if={false}
-          onClick={e => {
-            e.stopPropagation()
-            doc.delete()
-            this.poof.puff()
-          }}
-        >
-          x
-          <Poof ref={ref => (this.poof = ref)} />
-        </delete>
-
         <content if={editable}>
           <Editor getRef={this.ref('editor').set} inline id={doc._id} />
         </content>
 
+        <Poof ref={ref => (this.poof = ref)} />
+
         <info onClick={this.navigate}>
-          <first>
-            <author>{doc.authorId}</author>
-            {after}
-          </first>
+          <nick />
+          <item $author>{doc.authorId}</item>
+          <item>
+            <Icon name="link" size={12} color={[0, 0, 0, 0.5]} />
+          </item>
+          <item>
+            <Icon
+              name="delete"
+              onClick={e => {
+                e.stopPropagation()
+                doc.delete()
+                this.poof.puff()
+              }}
+            />
+          </item>
         </info>
       </doc>
     )
@@ -89,8 +90,6 @@ export default class DocItem {
       color: '#333',
       background: '#fff',
       overflow: 'hidden',
-      borderRadius: 6,
-      border: [1, [0, 0, 0, 0.1]],
       margin: [0, 5, 10, 5],
     },
     content: {
@@ -104,24 +103,15 @@ export default class DocItem {
       fontSize: 13,
       cursor: 'pointer',
       color: [0, 0, 0, 0.4],
-      background: '#fafafa',
+      position: 'relative',
     },
-    delete: {
+    nick: {
       position: 'absolute',
-      top: 2,
-      right: 2,
-      height: 16,
-      width: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
-      fontWeight: 20,
-      fontSize: 14,
-      color: [0, 0, 0, 0.2],
-      borderRadius: 1000,
-      cursor: 'pointer',
-      '&:hover': {
-        background: '#eee',
-      },
+      top: 0,
+      left: 0,
+      width: 30,
+      height: 1,
+      background: '#eee',
     },
     minibtn: {
       color: '#aaa',
@@ -132,6 +122,12 @@ export default class DocItem {
   }
 
   static theme = {
+    bordered: {
+      doc: {
+        borderRadius: 6,
+        border: [1, [0, 0, 0, 0.1]],
+      },
+    },
     slanty: {
       doc: {
         // warning dont put transition effect here

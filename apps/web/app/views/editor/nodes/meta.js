@@ -14,7 +14,7 @@ export default class Meta {
         $hashtags
         if={!editorStore.inline}
       >
-        <span contentEditable={false} $fade $left>#</span>
+        <span contentEditable={false} $fade $left>&gt;</span>
         <span contentEditable suppressContentEditableWarning $content>
           {children}
         </span>
@@ -30,7 +30,7 @@ export default class Meta {
       margin: [2, 0, 4, 0],
     },
     hashtags: {
-      fontSize: 15,
+      fontSize: 30,
       display: 'flex',
       flexFlow: 'row',
       alignItems: 'center',

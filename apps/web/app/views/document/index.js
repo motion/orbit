@@ -46,7 +46,7 @@ export default class Document {
       flexFlow: 'row',
     },
     document: {
-      padding: [5, 18],
+      padding: [8, 25],
       width: '100%',
     },
     sidebar: {

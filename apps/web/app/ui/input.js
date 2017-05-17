@@ -58,6 +58,12 @@ export default class Input {
         border: 'none',
       },
     },
+    disabled: {
+      input: {
+        pointerEvents: 'none',
+        opacity: 0.5,
+      },
+    },
     width: ({ width }) => ({
       input: {
         maxWidth: width,

@@ -81,7 +81,7 @@ import { HEADER_HEIGHT } from '~/constants'
         case 13:
           event.preventDefault()
           event.stopPropagation()
-          store.finish()
+          this.finish()
           break
         case 18:
           if (this.password === '') {
@@ -120,10 +120,12 @@ export default class Login {
             <Segment>
               <Input
                 $input
+                disabled={store.loggingIn}
+                width={75}
                 name="password"
                 type="password"
                 placeholder="password"
-                onKeyDown={this.onPasswordKey}
+                onKeyDown={store.onPasswordKey}
                 onChange={e => (store.password = e.target.value)}
                 getRef={store.setPasswordRef}
               />

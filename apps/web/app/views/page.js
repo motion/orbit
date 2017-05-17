@@ -26,15 +26,19 @@ export default class Page {
   }
 
   setPage = ({ title, actions, extraActions, header, sidebar, doc, place }) => {
-    App.extraActions = extraActions
-    App.activePage = {
-      id: this.id,
-      title,
-      actions,
-      header,
-      sidebar,
-      doc,
-      place,
+    if (extraActions) {
+      App.extraActions = extraActions
+    }
+    if (title || header || sidebar) {
+      App.activePage = {
+        id: this.id,
+        title,
+        actions,
+        header,
+        sidebar,
+        doc,
+        place,
+      }
     }
   }
 

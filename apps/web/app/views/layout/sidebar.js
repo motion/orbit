@@ -13,7 +13,7 @@ const Text = ({ getRef, ...props }) => (
 
 const SideBarItem = ({ children, isEditing, after, ...props }) => {
   const editStyle = isEditing && {
-    background: '#fafafa',
+    background: '#faecf7',
     cursor: 'text',
   }
 
@@ -28,16 +28,16 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
         padding: [4, 10],
         cursor: 'pointer',
         '&:hover': {
-          background: '#fafafa',
+          background: '#faecf7',
         },
         ...editStyle,
       }}
       active={{
         fontWeight: 500,
-        background: [0, 0, 0, 0.2],
-        color: [0, 0, 0, 0.9],
+        color: '#684f63',
+        background: '#f1d6eb',
         '&:hover': {
-          background: [0, 0, 0, 0.2],
+          background: '#f1d6eb',
         },
       }}
     >

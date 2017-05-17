@@ -15,7 +15,6 @@ import Selection from '../stores/selection'
           open
           noArrow
           background
-          shadow
           animation="slide 300ms"
           left={Selection.mouseUpEvent.clientX}
           top={Selection.mouseUpEvent.clientY + PAD}

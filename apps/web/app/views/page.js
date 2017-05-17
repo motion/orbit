@@ -1,4 +1,5 @@
 import { $, view } from '~/helpers'
+import { pick } from 'lodash'
 
 @view class Loading {
   render() {
@@ -20,25 +21,38 @@ export default class Page {
   componentWillUnmount() {
     // ensure removal only if not already replaced
     if (App.activePage.id === this.id) {
-      App.activePage = {}
-      App.extraActions = null
+      if (this.props.extraActions) {
+        App.extraActions = null
+      }
+      if (this.hasPageInfo(this.props)) {
+        App.activePage = {}
+      }
     }
   }
 
-  setPage = ({ title, actions, extraActions, header, sidebar, doc, place }) => {
-    if (extraActions) {
-      App.extraActions = extraActions
+  getPageInfo = props => ({
+    id: this.id,
+    ...pick(props, [
+      'title',
+      'actions',
+      'extraActions',
+      'header',
+      'sidebar',
+      'doc',
+      'place',
+    ]),
+  })
+
+  hasPageInfo = props => {
+    return !!(props.title || props.actions || props.header || props.sidebar)
+  }
+
+  setPage = props => {
+    if (props.extraActions) {
+      App.extraActions = props.extraActions
     }
-    if (title || header || sidebar) {
-      App.activePage = {
-        id: this.id,
-        title,
-        actions,
-        header,
-        sidebar,
-        doc,
-        place,
-      }
+    if (this.hasPageInfo(props)) {
+      App.activePage = this.getPageInfo(props)
     }
   }
 

@@ -20,6 +20,13 @@ import Selection from '../stores/selection'
           top={Selection.mouseUpEvent.clientY + PAD}
         >
           <bar $$row>
+            <Segment padded if={false}>
+              <Button icon="link" tooltip="link" />
+              <Button icon="media-image" tooltip="image" />
+              <Button icon="textquote" tooltip="quote" />
+              <Button icon="code" tooltip="code" />
+            </Segment>
+
             <Segment padded>
               <Button icon="textcolor" />
               <Button icon="textbackground" />

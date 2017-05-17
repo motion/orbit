@@ -5,7 +5,7 @@ import { Segment, Button, CircleButton } from '~/ui'
 import NotFound from '~/pages/notfound'
 import Page from '~/views/page'
 import Router from '~/router'
-import DocumentView from '~/views/document'
+import DocumentPage from '~/pages/doc'
 
 @view({
   store: class PlaceStore {
@@ -75,7 +75,7 @@ export default class PlacePage {
 
     return (
       <Page place={place} doc={doc} actions={actions}>
-        <DocumentView if={doc} document={doc} />
+        <DocumentPage insidePlace if={doc} id={doc._id} />
       </Page>
     )
   }

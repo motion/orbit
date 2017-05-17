@@ -77,37 +77,20 @@ export default class Root {
                 onChange={store.ref('title').set}
                 $omniinput
               />
-              <Segment padded if={false}>
-                <Button icon="link" tooltip="link" />
-                <Button icon="media-image" tooltip="image" />
-                <Button icon="textquote" tooltip="quote" />
-                <Button icon="code" tooltip="code" />
-              </Segment>
             </bar>
             <rest if={header || actions || extraActions} $$row>
               {header || null}
-              <actions $$row if={extraActions}>
-                {extraActions.map((xa, i) => <action key={i}>{xa}</action>)}
+              <actions $extraActions if={extraActions}>
+                {extraActions}
               </actions>
-              <actions $$row if={actions}>
-                {Array.isArray(actions) &&
-                  actions.map((action, i) => <action key={i}>{action}</action>)}
-                {!Array.isArray(actions) && actions}
+              <actions if={actions}>
+                {actions}
               </actions>
             </rest>
           </header>
           <content>
             <CurrentPage key={Router.key} />
           </content>
-          <statusbar if={false}>
-            <omnibar>
-
-              <Segment>
-                <Button icon="🖼" />
-                <Button icon="😊" />
-              </Segment>
-            </omnibar>
-          </statusbar>
         </main>
         <Errors />
         <Sidebar />
@@ -167,51 +150,16 @@ export default class Root {
         opacity: 1,
       },
     },
-    omnibar: {
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-    omniinput: {},
-    createButton: {
-      margin: [-10, 0, -10, -20],
-    },
     inactive: {
       opacity: 0.5,
       pointerEvents: 'none',
     },
     actions: {
+      flexFlow: 'row',
       alignItems: 'center',
     },
-    action: {
-      margin: [0, 0, 0, 5],
-      alignItems: 'center',
-    },
-    statusbar: {
-      flexWrap: 'nowrap',
-      overflow: 'hidden',
-      padding: 10,
-      background: '#fff',
-      borderTop: [2, '#eee'],
-      position: 'relative',
-    },
-    tag: {
-      padding: [2, 5],
-      background: '#fff',
-      color: 'red',
-      '&:hover': {
-        background: '#eee',
-      },
-    },
-    form: {
-      width: '100%',
-      padding: 10,
-    },
-    create: {
-      width: '100%',
-      padding: [8, 7],
-      fontSize: 16,
-      background: '#fff',
-      border: [1, '#ddd'],
+    extraActions: {
+      marginRight: 10,
     },
   }
 }

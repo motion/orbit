@@ -112,16 +112,22 @@ class EditorStore {
     // if its the child
     if (event.target.parentElement === event.currentTarget) {
       event.preventDefault()
-      const { document, selection, transform } = this.editor.getState()
+      const state = this.editor.getState()
+      if (!state) {
+        return
+      }
+
+      const { document } = state
 
       this.editor.focus()
-      selection.moveStartTo(document.nodes.last())
-      selection.moveTo(document.nodes.last())
-      selection.moveAnchorTo(document.nodes.last())
+      const lastNode = document.nodes.last()
 
-      transform().selectAll()
-
-      console.log(document, selection, transform)
+      // move to end
+      return state
+        .transform()
+        .collapseToEndOf(lastNode)
+        .moveOffsetsTo(lastNode.length)
+        .apply()
     }
   }
 }

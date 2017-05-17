@@ -49,6 +49,7 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
 class SidebarStore {
   places = Place.all()
   placeInput = null
+  active = null
   editingPlace = false
   filter = ''
 
@@ -103,6 +104,10 @@ class SidebarStore {
     this.editingPlace = place._id
   }
 
+  setActive = place => {
+    this.active = place
+  }
+
   handleShortcuts = (action, event) => {
     switch (action) {
       case 'enter':
@@ -111,6 +116,12 @@ class SidebarStore {
       case 'esc':
         event.preventDefault()
         this.clearCreating()
+        break
+      case 'delete':
+        const shouldDelete = confirm(`Delete place ${this.active.title}`)
+        if (shouldDelete) {
+          this.active.delete()
+        }
         break
     }
   }
@@ -157,7 +168,7 @@ export default class Sidebar {
                   controlled
                   items={store.allPlaces}
                   onSelect={place => {
-                    console.log('on select', place)
+                    store.setActive(place)
                     if (place && place.url) {
                       Router.go(place.url())
                     }

@@ -131,27 +131,27 @@ export default class Sidebar {
           },
         ]}
       >
-        <Shortcuts name="all" handler={store.handleShortcuts}>
-          <sidebar $$flex>
-            <content $$flex $$undraggable>
-              <Login />
+        <sidebar $$flex>
+          <content $$flex $$undraggable>
+            <Login />
 
-              <title
-                $$row
-                $$justify="space-between"
-                $$padding={6}
-                $$borderBottom={[1, 'dotted', '#eee']}
-              >
-                <input
-                  $search
-                  placeholder="places"
-                  onChange={e => (store.filter = e.target.value)}
-                />
-                <Button
-                  icon="simple-add"
-                  onClick={() => (store.editingPlace = true)}
-                />
-              </title>
+            <title
+              $$row
+              $$justify="space-between"
+              $$padding={6}
+              $$borderBottom={[1, 'dotted', '#eee']}
+            >
+              <input
+                $search
+                placeholder="places"
+                onChange={e => (store.filter = e.target.value)}
+              />
+              <Button
+                icon="simple-add"
+                onClick={() => (store.editingPlace = true)}
+              />
+            </title>
+            <Shortcuts name="all" handler={store.handleShortcuts}>
               <main $$scrollable $$draggable if={store.allPlaces}>
                 <List
                   controlled
@@ -186,13 +186,13 @@ export default class Sidebar {
                   }}
                 />
               </main>
-            </content>
+            </Shortcuts>
+          </content>
 
-            <sidebar if={App.activePage.sidebar}>
-              {App.activePage.sidebar}
-            </sidebar>
+          <sidebar if={App.activePage.sidebar}>
+            {App.activePage.sidebar}
           </sidebar>
-        </Shortcuts>
+        </sidebar>
       </ContextMenu>
     )
   }

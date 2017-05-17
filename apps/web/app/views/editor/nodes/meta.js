@@ -14,7 +14,7 @@ export default class Meta {
         $hashtags
         if={!editorStore.inline}
       >
-        <span contentEditable={false} $fade $left>&gt;</span>
+        <span contentEditable={false} $fade $left>#</span>
         <span contentEditable suppressContentEditableWarning $content>
           {children}
         </span>

@@ -50,9 +50,10 @@ import { HEADER_HEIGHT } from '~/constants'
       }
     }
 
-    finish = () => {
+    finish = async () => {
+      console.log('finishing', App.user)
       this.loggingIn = true
-      App.loginOrSignup(App.user.name, this.password)
+      await App.loginOrSignup(App.user.name, this.password)
       this.loggingIn = false
     }
 
@@ -70,6 +71,7 @@ import { HEADER_HEIGHT } from '~/constants'
         case 13:
         case 9:
           event.preventDefault()
+          event.stopPropagation()
           this.setUsername()
       }
     }
@@ -78,11 +80,13 @@ import { HEADER_HEIGHT } from '~/constants'
       switch (event.which) {
         case 13:
           event.preventDefault()
+          event.stopPropagation()
           store.finish()
           break
         case 18:
           if (this.password === '') {
             event.preventDefault()
+            event.stopPropagation()
             App.setUsername(null)
           }
       }

@@ -56,6 +56,11 @@ import Selection from '../stores/selection'
 
 export default {
   onSelect(event, { selection }, state, editor) {
+    // avoid selectbar on title/meta
+    if (state.document.nodes.indexOf(state.startBlock) < 2) {
+      return
+    }
+
     if (selection.startOffset === selection.endOffset) {
       Selection.clear()
       return

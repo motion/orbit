@@ -47,8 +47,8 @@ const getColors = (baseColor, strength = 0) => {
 export default class SegmentItem {
   static isSegment = true
   static defaultProps = {
-    iconColor: '#888',
-    iconSize: 14,
+    iconColor: '#999',
+    iconSize: 12,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -144,12 +144,13 @@ export default class SegmentItem {
       lineHeight: '1rem',
       fontSize: 13,
       fontWeight: 400,
-      padding: [5, 10],
+      padding: [0, 10],
+      height: 31,
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',
       color: '#444',
-      borderColor: '#eee',
+      borderColor: '#ddd',
       borderWidth: 1,
       borderStyle: 'dotted',
       borderRightWidth: 0,

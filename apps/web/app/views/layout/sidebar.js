@@ -148,7 +148,7 @@ export default class Sidebar {
                   onChange={e => (store.filter = e.target.value)}
                 />
                 <Button
-                  icon="ui-add"
+                  icon="simple-add"
                   onClick={() => (store.editingPlace = true)}
                 />
               </title>

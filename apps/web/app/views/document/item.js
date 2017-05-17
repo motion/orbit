@@ -1,7 +1,7 @@
 import { view, observable } from '~/helpers'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
-import { Poof, Icon } from '~/ui'
+import { Icon } from '~/ui'
 import React from 'react'
 import Editor from '~/views/editor'
 
@@ -61,8 +61,6 @@ export default class DocItem {
           <Editor getRef={this.ref('editor').set} inline id={doc._id} />
         </content>
 
-        <Poof ref={ref => (this.poof = ref)} />
-
         <info onClick={this.navigate}>
           <nick />
           <item $author>{doc.authorId}</item>
@@ -76,7 +74,6 @@ export default class DocItem {
               onClick={e => {
                 e.stopPropagation()
                 doc.delete()
-                this.poof.puff()
               }}
             />
           </item>
@@ -133,7 +130,7 @@ export default class DocItem {
     bordered: {
       doc: {
         borderRadius: 6,
-        border: [1, [0, 0, 0, 0.1]],
+        border: [1, 'dotted', [0, 0, 0, 0.1]],
       },
     },
     slanty: {

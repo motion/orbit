@@ -53,27 +53,31 @@ export default class Root {
             onMouseEnter={() => (this.headerHovered = true)}
             onMouseLeave={() => (this.headerHovered = false)}
           >
-            <nav if={IS_ELECTRON}>
+            <nav>
               <Segment>
-                <Button $active={!Router.atBack} onClick={() => Router.back()}>
-                  {'<'}
-                </Button>
                 <Button
-                  $active={!Router.atFront}
+                  if={IS_ELECTRON}
+                  icon="minimal-left"
+                  $inactive={Router.atBack}
+                  onClick={() => Router.back()}
+                />
+                <Button
+                  if={IS_ELECTRON}
+                  $inactive={Router.atFront}
+                  icon="minimal-right"
                   onClick={() => Router.forward()}
-                >
-                  {'>'}
-                </Button>
-                <Button
-                  $active={Router.path !== '/'}
-                  onClick={() => Router.go('/')}
-                >
-                  🏚
-                </Button>
+                />
+                <Button icon="simple-add" tooltip="new" />
               </Segment>
             </nav>
             <bar $$centered $$flex $$row $$overflow="hidden">
-              <Segment padded>
+              <Commander
+                placeholder="..."
+                onSubmit={store.createDoc}
+                onChange={store.ref('title').set}
+                $omniinput
+              />
+              <Segment padded if={false}>
                 <Button icon="link" tooltip="link" />
                 <Button icon="media-image" tooltip="image" />
                 <Button icon="textquote" tooltip="quote" />
@@ -97,12 +101,7 @@ export default class Root {
           </content>
           <statusbar if={false}>
             <omnibar>
-              <Commander
-                placeholder="new..."
-                onSubmit={store.createDoc}
-                onChange={store.ref('title').set}
-                $omniinput
-              />
+
               <Segment>
                 <Button icon="🖼" />
                 <Button icon="😊" />
@@ -176,8 +175,9 @@ export default class Root {
     createButton: {
       margin: [-10, 0, -10, -20],
     },
-    active: {
+    inactive: {
       opacity: 0.5,
+      pointerEvents: 'none',
     },
     actions: {
       alignItems: 'center',

@@ -43,27 +43,22 @@ export default class PlacePage {
 
     const actions = (
       <Segment>
-        <Segment.Item
+        <Button
           tooltip="share link"
+          icon="uilink"
           onClick={() => console.log(place.url())}
-        >
-          🔗
-        </Segment.Item>
-        <Segment.Item tooltip="delete all" onClick={store.deleteAll}>
-          rm
-        </Segment.Item>
-        <Segment.Item
+        />
+        <Button
+          icon={place.subscribed() ? 'userdelete' : 'useradd'}
+          iconColor={place.subscribed() ? 'green' : '#ccc'}
           tooltip={place.subscribed() ? 'unfollow' : 'follow'}
           onClick={place.toggleSubscribe}
-        >
-          {place.subscribed() ? '✅' : '🍻'}
-        </Segment.Item>
-        <Segment.Item
+        />
+        <Button
+          icon={place.private ? 'eye-ban' : 'eye'}
           tooltip={place.private ? 'make public' : 'make private'}
           onClick={place.togglePrivate}
-        >
-          {place.private ? '🙈' : '🌎'}
-        </Segment.Item>
+        />
       </Segment>
     )
 

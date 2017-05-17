@@ -1,13 +1,11 @@
 import { TEXT_TYPES, BLOCKS } from '../constants'
 
-const getSecondNode = doc => doc.getNextSibling(doc.nodes.first().key)
-
 export default [
   // enforce second line as always meta
   {
     match: node => node.kind == 'document',
     validate: document => {
-      const secondNode = getSecondNode(document)
+      const secondNode = document.nodes.get(1)
       const isMeta = secondNode && secondNode.type === BLOCKS.META
       return isMeta ? null : secondNode
     },

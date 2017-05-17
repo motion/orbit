@@ -149,9 +149,11 @@ export default class Commander {
       width: '100%',
       background: '#fff',
       border: 'none',
+      cursor: 'text',
+      marginTop: 1,
       padding: [8, 10],
       fontSize: 16,
-      opacity: 0.9,
+      opacity: 0.8,
       '&:hover': {
         opacity: 1,
       },

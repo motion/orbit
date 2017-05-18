@@ -40,7 +40,16 @@ class EditorStore {
       }
     })
 
-    this.react(() => this.doc, () => (this.pendingSave = false))
+    // this forces it to save on doc update
+    this.react(
+      () => this.doc && this.doc._rev,
+      rev => {
+        if (this.pendingSave === true) {
+          console.log('clear pending', rev)
+          this.pendingSave = false
+        }
+      }
+    )
 
     // save
     this.react(
@@ -48,8 +57,6 @@ class EditorStore {
       () => {
         if (this.canSave) {
           this.save()
-        } else {
-          this.pendingSave = true
         }
       }
     )
@@ -59,8 +66,9 @@ class EditorStore {
     console.log('saving...', this.doc._rev)
     this.doc.content = Raw.serialize(this.content)
     this.doc.title = this.content.startBlock.text
-    this.setRev(this.doc._rev)
     this.doc.save()
+    this.lastSavedRev = this.doc._rev
+    this.pendingSave = false
   }
 
   get theme() {
@@ -96,11 +104,8 @@ class EditorStore {
     return true
   }
 
-  setRev = rev => {
-    this.lastSavedRev = rev
-  }
-
   setContent = state => {
+    this.pendingSave = true
     this.content = state
   }
 

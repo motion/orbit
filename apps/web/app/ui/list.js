@@ -189,7 +189,7 @@ class List {
       // pass object to ListItem
       return (
         <ListItem
-          key={item.key || cur.id || i}
+          key={item.key || cur.id || cur._id || i}
           {...itemProps(i, rowProps, true)}
           {...item}
         />

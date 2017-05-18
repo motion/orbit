@@ -53,7 +53,7 @@ export class Title {
     ptitle: {
       padding: [2, 5],
       background: '#fafafa',
-      borderBottom: [1, [0, 0, 0, 0.08]],
+      borderBottom: [1, 'dotted', '#eee'],
       flexFlow: 'row',
       alignItems: 'center',
       fontSize: 13,
@@ -66,9 +66,10 @@ export class Title {
       alignItems: 'center',
     },
     collapse: {
-      padding: 5,
+      padding: [5, 5, 4, 5],
       marginRight: 5,
       borderRadius: 3,
+      alignItems: 'center',
       '&:hover': {
         background: [0, 0, 0, 0.02],
       },

@@ -26,7 +26,7 @@ export default class GridList {
           cols={2}
           rowHeight={200}
           items={listStore.docs.map(doc => (
-            <DocItem slanty draggable editable key={doc._id} doc={doc} />
+            <DocItem bordered draggable editable key={doc._id} doc={doc} />
           ))}
         />
       </grid>

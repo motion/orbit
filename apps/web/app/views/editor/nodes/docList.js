@@ -1,10 +1,11 @@
 import { node, view } from '~/helpers'
 import App, { Document } from '@jot/models'
-import { Button } from '~/ui'
+import { Segment, Button } from '~/ui'
 import { isEqual } from 'lodash'
 import Router from '~/router'
 import CardList from './lists/card'
 import GridList from './lists/grid'
+import List from './lists/list'
 
 class DocListStore {
   // checking for inline prevents infinite recursion!
@@ -52,22 +53,30 @@ export default class DocList {
     return (
       <doclist contentEditable={false}>
         <config>
-          <buttons>
+          <Segment>
             <Button
-              $active={listType === 'grid'}
+              active={listType === 'grid'}
+              icon="grid"
               onClick={() => store.setType(node, 'grid')}
-            >
-              ⊞
-            </Button>
+            />
             <Button
-              $active={listType === 'card'}
+              active={listType === 'card'}
+              icon="uilayers"
               onClick={() => store.setType(node, 'card')}
-            >
-              🃏
-            </Button>
-          </buttons>
+            />
+            <Button
+              active={listType === 'list'}
+              icon="list"
+              onClick={() => store.setType(node, 'list')}
+            />
+          </Segment>
         </config>
         <content>
+          <List
+            shouldFocus={store.shouldFocus}
+            if={listType === 'list'}
+            listStore={store}
+          />
           <CardList
             shouldFocus={store.shouldFocus}
             if={listType === 'card'}
@@ -89,7 +98,7 @@ export default class DocList {
     },
     config: {
       position: 'absolute',
-      top: 0,
+      top: -40,
       right: 0,
       overflow: 'hidden',
     },

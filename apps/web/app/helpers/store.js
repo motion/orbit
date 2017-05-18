@@ -79,7 +79,7 @@ function automagicalStores(obj) {
     const descriptor = descriptors[method]
     if (descriptor.get) {
       const getter = {
-        [method]: descriptor.get(),
+        [method]: null,
       }
       Object.defineProperty(getter, method, descriptor)
       extendObservable(obj, getter)

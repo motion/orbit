@@ -137,7 +137,6 @@ export default class Sidebar {
   render({ store }) {
     return (
       <ContextMenu
-        inactive
         options={[
           {
             title: 'Delete',

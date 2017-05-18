@@ -1,6 +1,7 @@
 // @flow
 import { view } from '~/helpers'
 import { List, Popover } from '~/ui'
+import { Keys } from '~/stores'
 
 @view({
   store: class ContextMenuStore {
@@ -33,6 +34,8 @@ export default class ContextMenu {
 
     this.addEvent(this.node, 'contextmenu', (event: Event) => {
       if (this.props.inactive) return
+      // allow disabling by holding shift for now (dev help)
+      if (Keys.active.shift) return
       event.preventDefault()
       this.props.store.handleContext(event)
     })
@@ -45,9 +48,13 @@ export default class ContextMenu {
         <Popover
           if={store.event}
           open
-          background
-          shadow
           overlay="transparent"
+          popoverStyle={{
+            border: '1px solid #cfcfcf',
+            background: '#f9f9f9',
+            boxShadow: '2px 4px 11px rgba(0,0,0,0.2)',
+            borderRadius: 5,
+          }}
           escapable
           animation="slide 200ms"
           onClose={store.clearMenu}
@@ -57,8 +64,18 @@ export default class ContextMenu {
         >
           <List
             controlled
-            width={206}
+            width={140}
             items={options}
+            itemStyle={{
+              borderBottom: [1, '#ddd'],
+              padding: [2, 7, 2, 18],
+              fontWeight: 300,
+              color: '#444',
+              '&:hover': {
+                background: 'blue',
+                color: 'white',
+              },
+            }}
             onSelect={item => item.onSelect(store.event)}
             getItem={item => ({
               primary: item.title,

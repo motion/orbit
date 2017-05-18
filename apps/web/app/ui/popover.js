@@ -48,15 +48,6 @@ const maxForgiveness = (forgiveness, distance) =>
       transform: 'rotate(45deg)',
     },
   }
-
-  static theme = {
-    dark: {
-      arrowInner: {
-        background: DARK_BG,
-        borderColor: 'transparent',
-      },
-    },
-  }
 }
 
 @view.plain
@@ -508,6 +499,7 @@ export default class Popover {
       noHover,
       shadow,
       animation,
+      popoverStyle,
       top: _top,
       left: _left,
       ...props
@@ -638,10 +630,9 @@ export default class Popover {
         y: 0,
       },
     },
-    withBg: {
-      background: '#fff',
-      borderRadius: 5,
-    },
+    withBg: background => ({
+      background,
+    }),
     item: {
       minWidth: 120,
     },
@@ -655,12 +646,9 @@ export default class Popover {
   }
 
   static theme = {
-    dark: {
-      withBg: {
-        background: DARK_BG,
-        color: '#fff',
-      },
-    },
+    popoverStyle: ({ popoverStyle }) => ({
+      content: popoverStyle,
+    }),
     padding: ({ padding }) => ({
       content: {
         padding,

@@ -17,8 +17,11 @@ const rules = merge(Rules)
 class EditorStore {
   id = this.props.id
   doc = Document.get(this.props.id)
+  lastSavedRev = null
   shouldFocus = this.props.focusOnMount
+  pendingSave = false
   focused = false
+  state = null
   content = null
   inline = this.props.inline
   editor = null
@@ -30,8 +33,34 @@ class EditorStore {
   }
 
   start() {
-    this.watch(this.watchers.save)
-    this.watch(this.watchers.setContent)
+    // init content
+    this.watch(() => {
+      if (this.doc && !this.content) {
+        this.content = Raw.deserialize(this.doc.content, { terse: true })
+      }
+    })
+
+    this.react(() => this.doc, () => (this.pendingSave = false))
+
+    // save
+    this.react(
+      () => [this.content, this.pendingSave],
+      () => {
+        if (this.canSave) {
+          this.save()
+        } else {
+          this.pendingSave = true
+        }
+      }
+    )
+  }
+
+  save = () => {
+    console.log('saving...', this.doc._rev)
+    this.doc.content = Raw.serialize(this.content)
+    this.doc.title = this.content.startBlock.text
+    this.setRev(this.doc._rev)
+    this.doc.save()
   }
 
   get theme() {
@@ -49,7 +78,13 @@ class EditorStore {
     )
   }
 
-  get shouldSave() {
+  get canSave() {
+    if (!this.content) {
+      return false
+    }
+    if (this.lastSavedRev === this.doc._rev) {
+      return false
+    }
     // for now, prevent saving when not focused
     // avoid tons of saves on inline docs
     if (!this.focused) {
@@ -61,27 +96,16 @@ class EditorStore {
     return true
   }
 
-  watchers = {
-    setContent: () => {
-      if (!this.content) {
-        if (this.doc) {
-          this.content = Raw.deserialize(this.doc.content, { terse: true })
-        }
-      }
-    },
-    save: () => {
-      if (this.doc && this.content && this.shouldSave) {
-        this.doc.content = Raw.serialize(this.content)
-        this.doc.title = this.content.startBlock.text
-        this.doc.save()
-      }
-    },
+  setRev = rev => {
+    this.lastSavedRev = rev
   }
 
-  setContent = val => {
-    if (!val.equals(this.content)) {
-      this.content = val
-    }
+  setContent = state => {
+    this.content = state
+  }
+
+  setState = state => {
+    this.state = state
   }
 
   focus = () => {
@@ -146,9 +170,8 @@ export default class EditorView {
     editor: object,
   }
 
-  onChange = value => {
-    this.props.store.setContent(value)
-    this.props.onChange(value)
+  onDocumentChange = (document, state) => {
+    this.props.store.setContent(state)
   }
 
   getChildContext() {
@@ -182,8 +205,9 @@ export default class EditorView {
           readOnly={readOnly}
           plugins={merge(store.plugins)}
           schema={store.schema}
-          state={store.content}
-          onChange={this.onChange}
+          state={store.state || store.content}
+          onDocumentChange={this.onDocumentChange}
+          onChange={store.setState}
           ref={store.getRef}
           onFocus={store.focus}
           onBlur={store.blur}

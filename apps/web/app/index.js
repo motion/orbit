@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '@jot/models'
+import * as RxDB from 'rxdb'
 import Mobx from 'mobx'
 import MobxUtils from 'mobx-utils'
 import Rx from 'rxjs'
@@ -25,6 +26,7 @@ if (!IS_PROD) {
   window.Router = Router
   window.Mobx = Mobx
   window.MobxUtils = MobxUtils
+  window.RxDB = RxDB
   window.Rx = Rx
   window.Immutable = Immutable
   window._ = _

@@ -1,3 +1,4 @@
+import { persistStore } from '~/helpers'
 import ClassHelpers from './classHelpers'
 import autobind from 'autobind-decorator'
 import mixin from 'react-mixin'
@@ -20,7 +21,8 @@ export const config = {
   },
   onStoreMount(name, store, props) {
     store.subscriptions = new CompositeDisposable()
-    onStoreMount(store)
+    // mount actions
+    automagicalStores(store)
     if (store.start) {
       store.start(props)
     }
@@ -45,7 +47,7 @@ function observableRxToObservableMobx(obj, method) {
   return obj[method]
 }
 
-function onStoreMount(obj) {
+function automagicalStores(obj) {
   // automagic observables
   const descriptors = Object.getOwnPropertyDescriptors(obj)
 

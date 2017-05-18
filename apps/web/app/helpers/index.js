@@ -8,7 +8,6 @@ export { query } from '@jot/models'
 export clr from 'color'
 
 import kc from 'keycode'
-
 // fix react synth event
 export const keycode = (event: Event) => {
   event.persist()

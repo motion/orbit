@@ -13,7 +13,7 @@ const findMatch = (name: string) => {
   return match
 }
 
-@view
+@view.plain
 export default class Icon {
   props: {
     size: number,

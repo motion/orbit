@@ -5,7 +5,7 @@ import { pickBy } from 'lodash'
 
 const notUndefined = x => typeof x !== 'undefined'
 
-@view class Segment {
+@view.plain class Segment {
   static Item = Button
 
   static defaultProps = {

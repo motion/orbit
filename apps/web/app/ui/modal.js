@@ -1,7 +1,7 @@
 import { view } from '~/helpers'
 import Portal from 'react-portal'
 
-@view
+@view.plain
 export default class Modal {
   render() {
     const { portalOptions, children, ...props } = this.props

@@ -16,7 +16,7 @@ const DARK_BG = [0, 0, 0, 0.75]
 const maxForgiveness = (forgiveness, distance) =>
   Math.min(forgiveness, distance)
 
-@view class Arrow {
+@view.plain class Arrow {
   render() {
     const { size, towards } = this.props
     const onBottom = towards === 'bottom'
@@ -59,7 +59,7 @@ const maxForgiveness = (forgiveness, distance) =>
   }
 }
 
-@view
+@view.plain
 export default class Popover {
   props: {
     target?: Function | string | Object,

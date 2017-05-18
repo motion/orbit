@@ -140,8 +140,8 @@ export default class Sidebar {
         options={[
           {
             title: 'Delete',
-            onSelect: (event: Event) => {
-              console.log(event, event.target)
+            onSelect: place => {
+              place.delete()
             },
           },
         ]}
@@ -185,21 +185,23 @@ export default class Sidebar {
                       place.create || store.editingPlace === place._id
 
                     return (
-                      <SideBarItem
-                        isEditing={isEditing}
-                        match={place.url && place.url()}
-                        onDoubleClick={() => store.setEditable(place)}
-                      >
-                        <Text
-                          {...isEditing && {
-                            contentEditable: true,
-                            suppressContentEditableWarning: true,
-                            getRef: store.onNewPlace,
-                          }}
+                      <ContextMenu.Target data={place}>
+                        <SideBarItem
+                          isEditing={isEditing}
+                          match={place.url && place.url()}
+                          onDoubleClick={() => store.setEditable(place)}
                         >
-                          {place.title}
-                        </Text>
-                      </SideBarItem>
+                          <Text
+                            {...isEditing && {
+                              contentEditable: true,
+                              suppressContentEditableWarning: true,
+                              getRef: store.onNewPlace,
+                            }}
+                          >
+                            {place.title}
+                          </Text>
+                        </SideBarItem>
+                      </ContextMenu.Target>
                     )
                   }}
                 />

@@ -2,10 +2,30 @@
 import { view } from '~/helpers'
 import { List, Popover } from '~/ui'
 import { Keys } from '~/stores'
+import { findDOMNode } from 'react-dom'
+import { object } from 'prop-types'
+
+@view.plain class ContextMenuTarget {
+  static contextTypes = {
+    contextMenu: object,
+  }
+
+  componentDidMount() {
+    const node = findDOMNode(this)
+    this.addEvent(node, 'contextmenu', () => {
+      this.context.contextMenu.setData(this.props.data)
+    })
+  }
+
+  render() {
+    return this.props.children
+  }
+}
 
 @view({
   store: class ContextMenuStore {
     event = null
+    data = null
 
     clearMenu = () => {
       this.event = null
@@ -16,7 +36,21 @@ import { Keys } from '~/stores'
     }
   },
 })
-export default class ContextMenu {
+class ContextMenu {
+  static childContextTypes = {
+    contextMenu: object,
+  }
+
+  getChildContext() {
+    return {
+      contextMenu: {
+        setData: data => (this.props.store.data = data),
+        getData: () => this.props.store.data,
+        clearData: data => (this.props.store.data = null),
+      },
+    }
+  }
+
   props: {
     inactive: ?Boolean,
   }
@@ -76,7 +110,7 @@ export default class ContextMenu {
                 color: 'white',
               },
             }}
-            onSelect={item => item.onSelect(store.event)}
+            onSelect={item => item.onSelect(store.data, store.event)}
             getItem={item => ({
               primary: item.title,
             })}
@@ -86,3 +120,7 @@ export default class ContextMenu {
     )
   }
 }
+
+ContextMenu.Target = ContextMenuTarget
+
+export default ContextMenu

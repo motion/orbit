@@ -167,7 +167,7 @@ class App {
   }
 
   @action setUsername = (name: string) => {
-    this.user.name = name
+    this.user = { ...this.user, name }
     localStorage.setItem('tempUsername', name)
   }
 

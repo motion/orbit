@@ -29,7 +29,7 @@ import { HEADER_HEIGHT } from '~/constants'
         this.error = true
       } else {
         App.setUsername(this.usernameRef.value)
-        if (this.password) {
+        if (this.passwordRef.value) {
           this.finish()
         }
       }

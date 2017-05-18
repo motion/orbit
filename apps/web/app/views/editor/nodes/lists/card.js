@@ -23,6 +23,7 @@ export default class CardList {
             <DocItem
               $doc
               editable
+              bordered
               key={doc._id}
               ref={node => this.docRef(node, i)}
               doc={doc}
@@ -41,7 +42,7 @@ export default class CardList {
     },
     doc: {
       margin: [0, 10, 0, 0],
-      width: 200,
+      width: 280,
       height: 280,
       borderRadius: 5,
       overflow: 'hidden',

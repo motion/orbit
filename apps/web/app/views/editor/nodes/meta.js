@@ -30,7 +30,7 @@ export default class Meta {
       margin: [2, 0, 4, 0],
     },
     hashtags: {
-      fontSize: 15,
+      fontSize: 16,
       display: 'flex',
       flexFlow: 'row',
       alignItems: 'center',

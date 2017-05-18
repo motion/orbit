@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '~/helpers'
 
-const BORDER_RADIUS = 3
+const BORDER_RADIUS = 4
 
 @view
 export default class Input {
@@ -33,8 +33,8 @@ export default class Input {
     input: {
       flex: 1,
       fontSize: 13,
-      padding: [5, 8],
-      border: [1, 'dotted', '#eee'],
+      padding: [7, 8],
+      border: [1, 'dotted', '#ccc'],
       borderRadius: BORDER_RADIUS,
       lineHeight: '1rem',
       background: '#fff',
@@ -42,6 +42,9 @@ export default class Input {
       outline: 0,
       '&:hover': {
         borderColor: '#ccc',
+      },
+      '&:active': {
+        borderColor: 'blue',
       },
       '&:focus': {
         borderColor: 'blue',
@@ -53,6 +56,12 @@ export default class Input {
     noBorder: {
       input: {
         border: 'none',
+      },
+    },
+    disabled: {
+      input: {
+        pointerEvents: 'none',
+        opacity: 0.5,
       },
     },
     width: ({ width }) => ({

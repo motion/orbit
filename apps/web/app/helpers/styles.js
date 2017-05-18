@@ -101,6 +101,7 @@ export const styles = {
     WebkitAppRegion: 'no-drag',
   },
   scrollable: {
+    flex: 1,
     overflowY: 'scroll',
   },
   padded: {

@@ -53,62 +53,44 @@ export default class Root {
             onMouseEnter={() => this.headerHovered = true}
             onMouseLeave={() => this.headerHovered = false}
           >
-            <nav if={IS_ELECTRON}>
+            <nav>
               <Segment>
-                <Button $active={!Router.atBack} onClick={() => Router.back()}>
-                  {'<'}
-                </Button>
                 <Button
-                  $active={!Router.atFront}
+                  if={IS_ELECTRON}
+                  icon="minimal-left"
+                  $inactive={Router.atBack}
+                  onClick={() => Router.back()}
+                />
+                <Button
+                  if={IS_ELECTRON}
+                  $inactive={Router.atFront}
+                  icon="minimal-right"
                   onClick={() => Router.forward()}
-                >
-                  {'>'}
-                </Button>
-                <Button
-                  $active={Router.path !== '/'}
-                  onClick={() => Router.go('/')}
-                >
-                  🏚
-                </Button>
+                />
+                <Button icon="simple-add" tooltip="new" />
               </Segment>
             </nav>
             <bar $$centered $$flex $$row $$overflow="hidden">
-              <Segment padded>
-                <Button icon="link" tooltip="link" />
-                <Button icon="media-image" tooltip="image" />
-                <Button icon="textquote" tooltip="quote" />
-                <Button icon="code" tooltip="code" />
-              </Segment>
+              <Commander
+                placeholder="..."
+                onSubmit={store.createDoc}
+                onChange={store.ref('title').set}
+                $omniinput
+              />
             </bar>
             <rest if={header || actions || extraActions} $$row>
               {header || null}
-              <actions $$row if={extraActions}>
-                {extraActions.map((xa, i) => <action key={i}>{xa}</action>)}
+              <actions $extraActions if={extraActions}>
+                {extraActions}
               </actions>
-              <actions $$row if={actions}>
-                {Array.isArray(actions) &&
-                  actions.map((action, i) => <action key={i}>{action}</action>)}
-                {!Array.isArray(actions) && actions}
+              <actions if={actions}>
+                {actions}
               </actions>
             </rest>
           </header>
           <content>
             <CurrentPage key={Router.key} />
           </content>
-          <statusbar if={true}>
-            <omnibar>
-              <Commander
-                placeholder="new..."
-                onSubmit={store.createDoc}
-                onChange={store.ref('title').set}
-                $omniinput
-              />
-              <Segment>
-                <Button icon="🖼" />
-                <Button icon="😊" />
-              </Segment>
-            </omnibar>
-          </statusbar>
         </main>
         <Errors />
         <Sidebar />
@@ -168,50 +150,16 @@ export default class Root {
         opacity: 1,
       },
     },
-    omnibar: {
+    inactive: {
+      opacity: 0.5,
+      pointerEvents: 'none',
+    },
+    actions: {
       flexFlow: 'row',
       alignItems: 'center',
     },
-    omniinput: {},
-    createButton: {
-      margin: [-10, 0, -10, -20],
-    },
-    active: {
-      opacity: 0.5,
-    },
-    actions: {
-      alignItems: 'center',
-    },
-    action: {
-      margin: [0, 0, 0, 5],
-      alignItems: 'center',
-    },
-    statusbar: {
-      flexWrap: 'nowrap',
-      overflow: 'hidden',
-      padding: 10,
-      background: '#fff',
-      borderTop: [2, '#eee'],
-      position: 'relative',
-    },
-    tag: {
-      padding: [2, 5],
-      background: '#fff',
-      color: 'red',
-      '&:hover': {
-        background: '#eee',
-      },
-    },
-    form: {
-      width: '100%',
-      padding: 10,
-    },
-    create: {
-      width: '100%',
-      padding: [8, 7],
-      fontSize: 16,
-      background: '#fff',
-      border: [1, '#ddd'],
+    extraActions: {
+      marginRight: 10,
     },
   }
 }

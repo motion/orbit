@@ -11,6 +11,7 @@ const paths = require('./paths')
 const publicPath = '/'
 const publicUrl = ''
 const env = getClientEnvironment(publicUrl)
+const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
 
 const IS_PROD = process.env.NODE_ENV === 'production'
 const IS_DEV = !IS_PROD
@@ -108,9 +109,9 @@ module.exports = Object.assign(config, {
     }),
 
     // production
-    // TODO: I disabled these to speeed up prod builds during testing
-    // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    // IS_PROD && new BabiliPlugin(),
+    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    // IS_PROD && new ButternutWebpackPlugin({}),
+    IS_PROD && new BabiliPlugin(),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

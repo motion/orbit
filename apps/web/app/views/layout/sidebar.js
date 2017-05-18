@@ -13,31 +13,31 @@ const Text = ({ getRef, ...props }) => (
 
 const SideBarItem = ({ children, isEditing, after, ...props }) => {
   const editStyle = isEditing && {
-    background: '#fafafa',
+    background: '#faecf7',
     cursor: 'text',
   }
 
   return (
     <Link
       {...props}
-      $$style={{
+      style={{
+        gloss: true,
         color: [0, 0, 0, 0.75],
-        background: 'transparent',
         width: '100%',
         fontSize: 14,
         padding: [4, 10],
         cursor: 'pointer',
         '&:hover': {
-          background: '#fafafa',
+          background: '#faecf7',
         },
         ...editStyle,
       }}
       active={{
-        fontWeight: 400,
-        background: [0, 0, 0, 0.025],
-        color: [0, 0, 0, 0.9],
+        fontWeight: 500,
+        color: '#684f63',
+        background: '#f1d6eb',
         '&:hover': {
-          background: '#f2f2f2',
+          background: '#f1d6eb',
         },
       }}
     >
@@ -49,6 +49,7 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
 class SidebarStore {
   places = Place.all()
   placeInput = null
+  active = null
   editingPlace = false
   filter = ''
 
@@ -103,6 +104,10 @@ class SidebarStore {
     this.editingPlace = place._id
   }
 
+  setActive = place => {
+    this.active = place
+  }
+
   handleShortcuts = (action, event) => {
     switch (action) {
       case 'enter':
@@ -111,6 +116,12 @@ class SidebarStore {
       case 'esc':
         event.preventDefault()
         this.clearCreating()
+        break
+      case 'delete':
+        const shouldDelete = confirm(`Delete place ${this.active.title}`)
+        if (shouldDelete) {
+          this.active.delete()
+        }
         break
     }
   }
@@ -121,6 +132,7 @@ export default class Sidebar {
   render({ store }) {
     return (
       <ContextMenu
+        inactive
         options={[
           {
             title: 'Delete',
@@ -130,33 +142,33 @@ export default class Sidebar {
           },
         ]}
       >
-        <Shortcuts isolate name="all" handler={store.handleShortcuts}>
-          <sidebar $$flex>
-            <content $$flex $$undraggable>
-              <Login />
+        <sidebar $$flex>
+          <content $$flex $$undraggable>
+            <Login />
 
-              <title
-                $$row
-                $$justify="space-between"
-                $$padding={6}
-                $$borderBottom={[1, 'dotted', '#eee']}
-              >
-                <input
-                  $search
-                  placeholder="places"
-                  onChange={e => (store.filter = e.target.value)}
-                />
-                <Button
-                  icon="ui-add"
-                  onClick={() => (store.editingPlace = true)}
-                />
-              </title>
+            <title
+              $$row
+              $$justify="space-between"
+              $$padding={6}
+              $$borderBottom={[1, 'dotted', '#eee']}
+            >
+              <input
+                $search
+                placeholder="places"
+                onChange={e => (store.filter = e.target.value)}
+              />
+              <Button
+                icon="simple-add"
+                onClick={() => (store.editingPlace = true)}
+              />
+            </title>
+            <Shortcuts name="all" handler={store.handleShortcuts}>
               <main $$scrollable $$draggable if={store.allPlaces}>
                 <List
                   controlled
                   items={store.allPlaces}
                   onSelect={place => {
-                    console.log('on select', place)
+                    store.setActive(place)
                     if (place && place.url) {
                       Router.go(place.url())
                     }
@@ -185,13 +197,13 @@ export default class Sidebar {
                   }}
                 />
               </main>
-            </content>
+            </Shortcuts>
+          </content>
 
-            <sidebar if={App.activePage.sidebar}>
-              {App.activePage.sidebar}
-            </sidebar>
+          <sidebar if={App.activePage.sidebar}>
+            {App.activePage.sidebar}
           </sidebar>
-        </Shortcuts>
+        </sidebar>
       </ContextMenu>
     )
   }

@@ -5,7 +5,7 @@ import { Segment, Button, CircleButton } from '~/ui'
 import NotFound from '~/pages/notfound'
 import Page from '~/views/page'
 import Router from '~/router'
-import DocumentView from '~/views/document'
+import DocumentPage from '~/pages/doc'
 
 @view({
   store: class PlaceStore {
@@ -43,27 +43,22 @@ export default class PlacePage {
 
     const actions = (
       <Segment>
-        <Segment.Item
+        <Button
           tooltip="share link"
+          icon="uilink"
           onClick={() => console.log(place.url())}
-        >
-          🔗
-        </Segment.Item>
-        <Segment.Item tooltip="delete all" onClick={store.deleteAll}>
-          rm
-        </Segment.Item>
-        <Segment.Item
+        />
+        <Button
+          icon={place.subscribed() ? 'userdelete' : 'useradd'}
+          iconColor={place.subscribed() ? 'green' : '#ccc'}
           tooltip={place.subscribed() ? 'unfollow' : 'follow'}
           onClick={place.toggleSubscribe}
-        >
-          {place.subscribed() ? '✅' : '🍻'}
-        </Segment.Item>
-        <Segment.Item
+        />
+        <Button
+          icon={place.private ? 'eye-ban' : 'eye'}
           tooltip={place.private ? 'make public' : 'make private'}
           onClick={place.togglePrivate}
-        >
-          {place.private ? '🙈' : '🌎'}
-        </Segment.Item>
+        />
       </Segment>
     )
 
@@ -80,7 +75,7 @@ export default class PlacePage {
 
     return (
       <Page place={place} doc={doc} actions={actions}>
-        <DocumentView if={doc} document={doc} />
+        <DocumentPage insidePlace if={doc} id={doc._id} />
       </Page>
     )
   }

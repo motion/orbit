@@ -16,10 +16,15 @@ import { List, Popover } from '~/ui'
   },
 })
 export default class ContextMenu {
+  props: {
+    inactive: ?Boolean,
+  }
+
   node = null
 
   componentDidMount() {
     this.addEvent(window, 'click', (event: Event) => {
+      if (this.props.inactive) return
       if (this.props.store.event) {
         event.preventDefault()
         this.props.store.clearMenu()
@@ -27,12 +32,13 @@ export default class ContextMenu {
     })
 
     this.addEvent(this.node, 'contextmenu', (event: Event) => {
+      if (this.props.inactive) return
       event.preventDefault()
       this.props.store.handleContext(event)
     })
   }
 
-  render({ children, options, store, ...props }) {
+  render({ children, inactive, options, store, ...props }) {
     return (
       <contextmenu ref={this.ref('node').set} {...props}>
         {children}

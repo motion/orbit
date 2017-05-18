@@ -82,7 +82,7 @@ const notUndefined = x => typeof x !== 'undefined'
           first: i === 0,
           last: i === realChildren.length - 1,
           segmented: true,
-          ...(child.type.isSegment ? childProps : null),
+          ...(child.type && child.type.isSegment ? childProps : null),
         })
       )
     }

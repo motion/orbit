@@ -15,12 +15,18 @@ import Selection from '../stores/selection'
           open
           noArrow
           background
-          shadow
           animation="slide 300ms"
           left={Selection.mouseUpEvent.clientX}
           top={Selection.mouseUpEvent.clientY + PAD}
         >
           <bar $$row>
+            <Segment padded if={false}>
+              <Button icon="link" tooltip="link" />
+              <Button icon="media-image" tooltip="image" />
+              <Button icon="textquote" tooltip="quote" />
+              <Button icon="code" tooltip="code" />
+            </Segment>
+
             <Segment padded>
               <Button icon="textcolor" />
               <Button icon="textbackground" />
@@ -57,6 +63,11 @@ import Selection from '../stores/selection'
 
 export default {
   onSelect(event, { selection }, state, editor) {
+    // avoid selectbar on title/meta
+    if (state.document.nodes.indexOf(state.startBlock) < 2) {
+      return
+    }
+
     if (selection.startOffset === selection.endOffset) {
       Selection.clear()
       return

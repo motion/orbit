@@ -46,7 +46,6 @@ const maxForgiveness = (forgiveness, distance) =>
       left: 0,
       borderRadius: 1,
       transform: 'rotate(45deg)',
-      border: '1px solid #ddd',
     },
   }
 
@@ -54,7 +53,7 @@ const maxForgiveness = (forgiveness, distance) =>
     dark: {
       arrowInner: {
         background: DARK_BG,
-        borderColor: DARK_BG,
+        borderColor: 'transparent',
       },
     },
   }
@@ -81,7 +80,7 @@ export default class Popover {
     // the distance the popover is from the target
     // so it displays nicely spaced away
     distance: 10,
-    arrowSize: 10,
+    arrowSize: 11,
     // will exit with `esc` key
     escapable: true,
     noArrow: false,

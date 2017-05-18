@@ -226,7 +226,7 @@ class List {
     }
 
     return (
-      <Shortcuts isolate name="all" handler={this.handleShortcuts}>
+      <Shortcuts name="all" handler={this.handleShortcuts}>
         <list
           $$draggable
           style={{ minHeight: height, minWidth: width, ...style }}

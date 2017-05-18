@@ -4,12 +4,20 @@ import { Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 // this.finish()
+// enter
+// tab
+// enter
+// tab
+// enter
+// esc
+// 9 tab, 13 enter
 @view({
   store: class LoginStore {
     loggingIn = false
     passwordRef = null
     username = null
     password = null
+    error = false
 
     start() {
       this.watch(() => {
@@ -32,15 +40,20 @@ import { HEADER_HEIGHT } from '~/constants'
     }
 
     setUsername = () => {
-      App.setUsername(this.username)
-      if (this.password) {
-        this.finish()
+      if (!this.username) {
+        this.error = true
+      } else {
+        App.setUsername(this.username)
+        if (this.password) {
+          this.finish()
+        }
       }
     }
 
-    finish = () => {
+    finish = async () => {
+      console.log('finishing', App.user)
       this.loggingIn = true
-      App.loginOrSignup(App.user.name, this.password)
+      await App.loginOrSignup(App.user.name, this.password)
       this.loggingIn = false
     }
 
@@ -50,25 +63,52 @@ import { HEADER_HEIGHT } from '~/constants'
         this.finish()
       }
     }
+
+    onUsernameKey = (event: Event) => {
+      console.log(event.which)
+
+      switch (event.which) {
+        case 13:
+        case 9:
+          event.preventDefault()
+          event.stopPropagation()
+          this.setUsername()
+      }
+    }
+
+    onPasswordKey = (event: Event) => {
+      switch (event.which) {
+        case 13:
+          event.preventDefault()
+          event.stopPropagation()
+          this.finish()
+          break
+        case 18:
+          if (this.password === '') {
+            event.preventDefault()
+            event.stopPropagation()
+            App.setUsername(null)
+          }
+      }
+    }
   },
 })
 export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <form $$undraggable onSubmit={store.onSubmit}>
-          <step $$hide={store.step !== 1}>
+        <form $step={store.step} $$undraggable onSubmit={store.onSubmit}>
+          <step $hinted $$hide={store.step !== 1}>
+            <hint>
+              press tab
+            </hint>
             <Input
               $input
+              $error={store.error}
               name="username"
-              onKeyDown={e => e.which === 13 && store.setUsername()}
+              onKeyDown={store.onUsernameKey}
               onChange={e => (store.username = e.target.value)}
-              placeholder="pick username"
-            />
-            <Button
-              if={!App.hasUsername}
-              icon="login"
-              onClick={store.setUsername}
+              placeholder="your name..."
             />
           </step>
 
@@ -80,11 +120,12 @@ export default class Login {
             <Segment>
               <Input
                 $input
-                $$width={70}
+                disabled={store.loggingIn}
+                width={75}
                 name="password"
                 type="password"
                 placeholder="password"
-                onKeyDown={e => e.which === 13 && store.finish()}
+                onKeyDown={store.onPasswordKey}
                 onChange={e => (store.password = e.target.value)}
                 getRef={store.setPasswordRef}
               />
@@ -115,17 +156,31 @@ export default class Login {
       padding: [0, 6],
       alignItems: 'center',
       height: HEADER_HEIGHT,
-      borderBottom: [1, '#eee'],
+      position: 'relative',
+    },
+    error: {
+      borderColor: 'red',
+      borderSize: 2,
     },
     step: {
       flex: 1,
       flexFlow: 'row',
       width: '100%',
       justifyContent: 'space-between',
+      position: 'relative',
     },
     icon: {
       padding: [0, 5, 0, 0],
       opacity: 0.5,
+    },
+    hinted: {
+      alignItems: 'center',
+    },
+    hint: {
+      position: 'absolute',
+      right: 5,
+      fontSize: 12,
+      opacity: 0.4,
     },
     form: {
       width: '100%',
@@ -139,9 +194,6 @@ export default class Login {
     input: {
       display: 'flex',
       flex: 1,
-      maxWidth: '75%',
-      padding: [4, 8],
-      fontSize: 14,
     },
     info: {
       flexFlow: 'row',

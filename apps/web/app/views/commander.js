@@ -59,6 +59,10 @@ import { SIDEBAR_WIDTH } from '~/constants'
     }
 
     onKeyDown = ({ which }) => {
+      if (this.textbox.value.indexOf('/') === 0) {
+        this.open = true
+      }
+
       if (which === 40) this.moveHighlight(1)
       if (which === 38) this.moveHighlight(-1)
       if (which === 27) this.close()
@@ -96,11 +100,6 @@ export default class Commander {
           onChange={e => {
             const val = e.target.value
             store.setText(val)
-          }}
-          onKeyDown={e => {
-            if (store.textbox.value.indexOf('/') === 0) {
-              store.open = true
-            }
           }}
           onKeyDown={store.onKeyDown}
           ref={el => (store.textbox = el)}
@@ -150,9 +149,11 @@ export default class Commander {
       width: '100%',
       background: '#fff',
       border: 'none',
+      cursor: 'text',
+      marginTop: 1,
       padding: [8, 10],
       fontSize: 16,
-      opacity: 0.9,
+      opacity: 0.8,
       '&:hover': {
         opacity: 1,
       },

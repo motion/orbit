@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import { Button } from '~/ui'
+import { Segment, Button } from '~/ui'
 import Router from '~/router'
 import DocumentView from '~/views/document'
 import { Document } from '@jot/models'
@@ -20,7 +20,7 @@ import Page from '~/views/page'
   },
 })
 export default class DocumentPage {
-  render({ store }) {
+  render({ store, insidePlace }) {
     const { doc } = store
 
     if (!doc) {
@@ -29,17 +29,23 @@ export default class DocumentPage {
 
     return (
       <Page
-        extraActions={[
-          <Button tooltip="share link" onClick={() => console.log(place.url())}>
-            🔗
-          </Button>,
-          <Button onClick={doc.togglePrivate}>
-            {doc.private ? '🙈' : '🌎'}
-          </Button>,
-          <Button onClick={store.toggleEdit}>
-            {store.editing ? 'done' : 'edit'}
-          </Button>,
-        ]}
+        extraActions={
+          <Segment>
+            <Button
+              if={!insidePlace}
+              tooltip="share link"
+              onClick={() => console.log(place.url())}
+            >
+              🔗
+            </Button>
+            <Button if={!insidePlace} onClick={doc.togglePrivate}>
+              {doc.private ? '🙈' : '🌎'}
+            </Button>
+            <Button onClick={store.toggleEdit}>
+              {store.forceEdit ? 'publish' : 'edit'}
+            </Button>
+          </Segment>
+        }
       >
         <DocumentView document={doc} onKeyDown={store.onKeyDown} />
       </Page>

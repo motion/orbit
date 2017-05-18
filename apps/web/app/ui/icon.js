@@ -53,7 +53,7 @@ export default class Icon {
     return (
       <icon
         className={`${className || ''} ${this.uniq}`}
-        $$style={props}
+        style={{ ...props, gloss: true }}
         onClick={onClick}
         {...attach}
       >

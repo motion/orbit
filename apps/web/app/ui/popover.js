@@ -17,8 +17,7 @@ const maxForgiveness = (forgiveness, distance) =>
   Math.min(forgiveness, distance)
 
 @view.plain class Arrow {
-  render() {
-    const { size, towards } = this.props
+  render({ size, towards, dark }) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
@@ -46,6 +45,15 @@ const maxForgiveness = (forgiveness, distance) =>
       left: 0,
       borderRadius: 1,
       transform: 'rotate(45deg)',
+    },
+  }
+
+  static theme = {
+    dark: {
+      arrowInner: {
+        background: DARK_BG,
+        borderColor: DARK_BG,
+      },
     },
   }
 }
@@ -631,6 +639,7 @@ export default class Popover {
       },
     },
     withBg: background => ({
+      borderRadius: 3,
       background,
     }),
     item: {
@@ -646,6 +655,12 @@ export default class Popover {
   }
 
   static theme = {
+    dark: {
+      withBg: {
+        background: DARK_BG,
+        color: '#fff',
+      },
+    },
     popoverStyle: ({ popoverStyle }) => ({
       content: popoverStyle,
     }),

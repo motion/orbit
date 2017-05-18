@@ -3,14 +3,6 @@ import App from '@jot/models'
 import { Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
-// this.finish()
-// enter
-// tab
-// enter
-// tab
-// enter
-// esc
-// 9 tab, 13 enter
 @view({
   store: class LoginStore {
     loggingIn = false
@@ -68,6 +60,7 @@ import { HEADER_HEIGHT } from '~/constants'
     }
 
     onUsernameKey = (event: Event) => {
+      console.log(keycode(event))
       switch (keycode(event)) {
         case 'enter':
         case 'tab':
@@ -98,6 +91,7 @@ import { HEADER_HEIGHT } from '~/constants'
 })
 export default class Login {
   render({ store }) {
+    console.log('login step', store.step)
     return (
       <login $$draggable>
         <form $step={store.step} $$undraggable onSubmit={store.onSubmit}>

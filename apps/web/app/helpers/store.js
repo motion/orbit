@@ -13,6 +13,7 @@ import {
 } from 'mobx'
 import createStoreProvider from './external/storeProvider'
 import App from '@jot/models'
+import { pickBy } from 'lodash'
 
 export const config = {
   storeDecorator(Store) {
@@ -49,15 +50,43 @@ function observableRxToObservableMobx(obj, method) {
 
 function automagicalStores(obj) {
   // automagic observables
-  const descriptors = Object.getOwnPropertyDescriptors(obj)
+  const proto = Object.getPrototypeOf(obj)
+  const fproto = Object.getOwnPropertyNames(proto).filter(
+    x =>
+      !/^(__.*|dispose|constructor|start|react|ref|setInterval|setTimeout|addEvent|watch)$/.test(
+        x
+      )
+  )
+
+  const descriptors = {
+    ...Object.getOwnPropertyDescriptors(obj),
+    // gets the getters
+    ...fproto.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur]: Object.getOwnPropertyDescriptor(proto, cur),
+      }),
+      {}
+    ),
+  }
 
   for (const method of Object.keys(descriptors)) {
     if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
       continue
     }
 
-    const val = obj[method]
+    // auto @computed get, do this before getting val
+    const descriptor = descriptors[method]
+    if (descriptor.get) {
+      const getter = {
+        [method]: descriptor.get(),
+      }
+      Object.defineProperty(getter, method, descriptor)
+      extendObservable(obj, getter)
+      continue
+    }
 
+    const val = obj[method]
     const isFunction = typeof val === 'function'
     const isQuery = val && val.$isQuery
 
@@ -102,18 +131,8 @@ function automagicalStores(obj) {
         obj[method]
       )
     } else {
-      // auto @computed get
-      const descriptor = descriptors[method]
-      if (descriptor.get) {
-        const getter = {
-          [method]: descriptor.get(),
-        }
-        Object.defineProperty(getter, method, descriptor)
-        extendObservable(obj, getter)
-      } else {
-        // auto everything is an @observable.ref
-        extendShallowObservable(obj, { [method]: val })
-      }
+      // auto everything is an @observable.ref
+      extendShallowObservable(obj, { [method]: val })
     }
   }
 }

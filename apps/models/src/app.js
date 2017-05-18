@@ -42,20 +42,18 @@ class App {
     RxDB.plugin(pSearch)
     PouchDB.plugin(pAuth)
     PouchDB.plugin(pHTTP)
-
-    // expose models onto app
-    for (const [name, model] of Object.entries(Models)) {
-      Object.defineProperty(this, name, {
-        get() {
-          return model
-        },
-      })
-    }
   }
 
   async start({ database, stores }) {
     console.time('start')
     this.catchErrors()
+
+    // expose models onto app
+    console.log(Models)
+
+    for (const [name, model] of Object.entries(Models)) {
+      this[name] = model
+    }
 
     if (!database) {
       throw new Error('No config given to App!')

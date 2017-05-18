@@ -67,21 +67,14 @@ export default class DocItem {
           <Editor getRef={this.ref('editor').set} inline id={doc._id} />
         </content>
 
-        <info onClick={this.navigate}>
+        <info>
           <nick />
           <item $author>{doc.authorId}</item>
-          <item>
+          <item onClick={this.navigate}>
             <Icon name="link" size={12} color={[0, 0, 0, 0.5]} />
           </item>
-          <item>
-            <Icon
-              name="simple-remove"
-              size={8}
-              onClick={e => {
-                e.stopPropagation()
-                doc.delete()
-              }}
-            />
+          <item onClick={() => doc.delete()}>
+            <Icon name="simple-remove" size={8} />
           </item>
         </info>
       </doc>

@@ -53,6 +53,8 @@ class SidebarStore {
   editingPlace = false
   filter = ''
   sidePlaces = []
+  allPlacesClosed = false
+  sidePlacesClosed = false
 
   get tempPlace() {
     return this.editingPlace && this.editingPlace.temporary && this.editingPlace
@@ -201,7 +203,14 @@ export default class Sidebar {
           </top>
 
           <content $$draggable>
-            <Pane if={store.allPlaces} scrollable collapsable title="me">
+            <Pane
+              if={store.allPlaces}
+              scrollable
+              collapsable
+              title="me"
+              collapsed={store.allPlacesClosed}
+              onSetCollapse={store.ref('allPlacesClosed').set}
+            >
               <Shortcuts name="all" handler={store.handleShortcuts}>
                 <List
                   controlled
@@ -216,7 +225,13 @@ export default class Sidebar {
                 />
               </Shortcuts>
             </Pane>
-            <Pane title="all" collapsable if={store.sidePlaces}>
+            <Pane
+              if={store.sidePlaces}
+              title="all"
+              collapsable
+              collapsed={store.sidePlacesClosed}
+              onSetCollapse={store.ref('sidePlacesClosed').set}
+            >
               <List
                 controlled
                 items={store.sidePlaces}

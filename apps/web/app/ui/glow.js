@@ -5,7 +5,7 @@ import resizer from 'element-resize-detector'
 
 const Resize = resizer({ strategy: 'scroll' })
 
-@view
+@view.plain
 export default class HoverGlow {
   static defaultProps = {
     width: 380,

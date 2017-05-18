@@ -18,7 +18,7 @@ const ViewHelpers = {
   },
 }
 
-function decorateView(View) {
+function decorateView(View, options) {
   // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
   // add Helpers
@@ -29,16 +29,22 @@ function decorateView(View) {
   View.prototype.render = function() {
     return or.call(this, this.props, this.state, this.context)
   }
+
+  // just avoid mobx
+  if (options && options.simple) {
+    return autobind(glossy(View))
+  }
+
   // order important: autobind, gloss, mobx
   return autobind(glossy(observer(View)))
 }
 
 // @view
-export default function view(viewOrStores: Object | Class | Function) {
+export default function view(viewOrStores: Object | Class | Function, options) {
   // @view({ ...stores }) shorthand
   if (typeof viewOrStores === 'object') {
     const Stores = viewOrStores
-    return View => storeProvider(Stores)(decorateView(View))
+    return View => storeProvider(Stores)(decorateView(View, options))
   }
 
   const View = viewOrStores
@@ -49,5 +55,7 @@ export default function view(viewOrStores: Object | Class | Function) {
   }
 
   // class
-  return decorateView(viewOrStores)
+  return decorateView(viewOrStores, options)
 }
+
+view.plain = View => view(View, { simple: true })

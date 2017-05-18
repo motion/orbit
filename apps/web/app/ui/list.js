@@ -9,7 +9,7 @@ import parentSize from '~/views/helpers/parentSize'
 const idFn = _ => _
 
 @parentSize
-@view
+@view.plain
 class List {
   static defaultProps = {
     getItem: idFn,
@@ -110,11 +110,8 @@ class List {
       style,
       placeholder,
       horizontal,
-      dark,
       padded,
-      light,
       slim,
-      small,
       flex,
       scrollable,
       controlled,
@@ -122,6 +119,7 @@ class List {
       onSelect,
       getRef,
       parentSize,
+      itemStyle,
       rowHeight: propRowHeight,
       onItemMount,
       ...props
@@ -147,11 +145,10 @@ class List {
 
     const passThroughProps = {
       horizontal,
-      dark,
       padded,
-      light,
       slim,
       onItemMount,
+      itemStyle,
     }
 
     const total = items ? items.length : Children.count(children)
@@ -189,7 +186,7 @@ class List {
       // pass object to ListItem
       return (
         <ListItem
-          key={item.key || cur.id || i}
+          key={item.key || cur.id || cur._id || i}
           {...itemProps(i, rowProps, true)}
           {...item}
         />

@@ -3,7 +3,7 @@ import { view } from '~/helpers'
 import FakeAvatar from './fake/avatar'
 import Glow from './glow'
 
-@view
+@view.plain
 export default class ListItem {
   static isListItem = true
 
@@ -13,40 +13,40 @@ export default class ListItem {
     }
   }
 
-  render() {
-    const {
-      children,
-      primary,
-      secondary,
-      match,
-      avatar,
-      fakeAvatar,
-      shine, // a strong highlight
-      date,
-      dateSize,
-      meta,
-      before,
-      after,
-      isLastElement,
-      highlight,
-      isFirstElement,
-      wrap,
-      nohover,
-      row,
-      onClick,
-      slim,
-      onToggle,
-      active,
-      horizontal,
-      dark,
-      padded,
-      padding,
-      light,
-      height,
-      onItemMount,
-      ...props
-    } = this.props
-
+  render({
+    children,
+    primary,
+    secondary,
+    match,
+    avatar,
+    fakeAvatar,
+    shine, // a strong highlight
+    date,
+    dateSize,
+    meta,
+    before,
+    after,
+    isLastElement,
+    highlight,
+    isFirstElement,
+    wrap,
+    nohover,
+    row,
+    onClick,
+    slim,
+    onToggle,
+    active,
+    horizontal,
+    itemStyle,
+    style,
+    dark,
+    padded,
+    padding,
+    light,
+    height,
+    onItemMount,
+    ...props
+  }) {
     return (
       <item
         ref="item"
@@ -197,6 +197,9 @@ export default class ListItem {
   }
 
   static theme = {
+    itemStyle: ({ itemStyle }) => ({
+      item: itemStyle,
+    }),
     padding: ({ padding }) => ({
       item: {
         padding,

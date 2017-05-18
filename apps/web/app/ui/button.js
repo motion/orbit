@@ -43,7 +43,7 @@ const getColors = (baseColor, strength = 0) => {
   return { background, color, isLight }
 }
 
-@view
+@view.plain
 export default class SegmentItem {
   static isSegment = true
   static defaultProps = {

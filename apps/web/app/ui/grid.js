@@ -4,7 +4,7 @@ import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
 const Layout: HTMLElement = WidthProvider(ReactGridLayout)
 
-@view
+@view.plain
 export default class Grid {
   static defaultProps = {
     rowHeight: 40,

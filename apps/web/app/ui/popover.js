@@ -16,7 +16,7 @@ const DARK_BG = [0, 0, 0, 0.75]
 const maxForgiveness = (forgiveness, distance) =>
   Math.min(forgiveness, distance)
 
-@view class Arrow {
+@view.plain class Arrow {
   render() {
     const { size, towards } = this.props
     const onBottom = towards === 'bottom'
@@ -48,18 +48,9 @@ const maxForgiveness = (forgiveness, distance) =>
       transform: 'rotate(45deg)',
     },
   }
-
-  static theme = {
-    dark: {
-      arrowInner: {
-        background: DARK_BG,
-        borderColor: 'transparent',
-      },
-    },
-  }
 }
 
-@view
+@view.plain
 export default class Popover {
   props: {
     target?: Function | string | Object,
@@ -508,6 +499,7 @@ export default class Popover {
       noHover,
       shadow,
       animation,
+      popoverStyle,
       top: _top,
       left: _left,
       ...props
@@ -638,10 +630,9 @@ export default class Popover {
         y: 0,
       },
     },
-    withBg: {
-      background: '#fff',
-      borderRadius: 5,
-    },
+    withBg: background => ({
+      background,
+    }),
     item: {
       minWidth: 120,
     },
@@ -655,12 +646,9 @@ export default class Popover {
   }
 
   static theme = {
-    dark: {
-      withBg: {
-        background: DARK_BG,
-        color: '#fff',
-      },
-    },
+    popoverStyle: ({ popoverStyle }) => ({
+      content: popoverStyle,
+    }),
     padding: ({ padding }) => ({
       content: {
         padding,

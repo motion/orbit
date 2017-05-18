@@ -72,7 +72,6 @@ export default class Root {
             </nav>
             <bar $$centered $$flex $$row $$overflow="hidden">
               <Commander
-                placeholder="..."
                 onSubmit={store.createDoc}
                 onChange={store.ref('title').set}
                 $omniinput

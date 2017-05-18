@@ -4,7 +4,7 @@ import Portal from 'react-portal'
 import { computed } from 'mobx'
 import { includes } from 'lodash'
 import Mousetrap from 'mousetrap'
-import { Modal } from '~/ui'
+import { Modal, Icon } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 
 // window._toggleCommander = () => {
@@ -92,9 +92,9 @@ export default class Commander {
 
   render({ store, store: { docs }, onChange, onClose, ...props }) {
     return (
-      <bar $$flex>
+      <bar $$align="center" $$row $$flex>
+        <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
         <input
-          placeholder="Search documents and people.."
           {...props}
           value={store.text}
           onChange={e => {

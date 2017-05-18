@@ -41,11 +41,13 @@ export default class DocItem {
     feed,
     getRef,
     onSaveTitle,
+    list,
     slanty,
     editable,
     draggable,
     after,
     height,
+    bordered,
     ...props
   }) {
     // hack for now
@@ -57,6 +59,10 @@ export default class DocItem {
 
     return (
       <doc $$undraggable {...props}>
+        <title if={list}>
+          {doc.title}
+        </title>
+
         <content if={editable}>
           <Editor getRef={this.ref('editor').set} inline id={doc._id} />
         </content>

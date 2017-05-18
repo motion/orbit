@@ -45,7 +45,11 @@ class App {
 
     // expose models onto app
     for (const [name, model] of Object.entries(Models)) {
-      this[name] = model
+      Object.defineProperty(this, name, {
+        get() {
+          return model
+        },
+      })
     }
   }
 

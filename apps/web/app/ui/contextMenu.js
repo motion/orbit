@@ -1,4 +1,5 @@
 // @flow
+import React from 'react'
 import { view } from '~/helpers'
 import { List, Popover } from '~/ui'
 import { Keys } from '~/stores'
@@ -17,8 +18,8 @@ import { object } from 'prop-types'
     })
   }
 
-  render() {
-    return this.props.children
+  render({ data, children, ...props }) {
+    return React.cloneElement(children, props)
   }
 }
 

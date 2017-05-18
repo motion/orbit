@@ -13,6 +13,7 @@ import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Splash from '~/views/splash'
 import { AppContainer } from 'react-hot-loader'
+import keycode from 'keycode'
 
 if (!IS_PROD) {
   // install console formatters

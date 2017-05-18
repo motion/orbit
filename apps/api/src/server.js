@@ -4,25 +4,21 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import { RateLimit, ExpressMiddleware } from 'ratelimit.js'
-import SuperLogin from 'superlogin'
-import { GitHubStrategy } from 'passport-github'
-import { GoogleStrategy } from 'passport-google-oauth'
-import { FacebookStrategy } from 'passport-facebook'
 import config from './superlogin.config.js'
 import { APP_URL, SERVER_PORT, REDIS_HOSTNAME } from './keys'
 import redis from 'redis'
 import Path from 'path'
+import Login from './superlogin'
 
 export default class Server {
   constructor() {
     const app = express()
     const port = SERVER_PORT
 
-    // EXPRESS
+    // express
     app.set('port', port)
     app.use(logger('dev'))
     app.use(cors({ origin: APP_URL }))
-    // app.use(express.limit('1mb'))
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -30,25 +26,14 @@ export default class Server {
       res.send('hello world')
     })
 
-    // SUPERLOGIN
-    const superlogin = new SuperLogin(config)
-    const strategies = [
-      ['facebook', FacebookStrategy],
-      ['github', GitHubStrategy],
-      ['google', GoogleStrategy],
-    ]
-    strategies.forEach(([name, strategy]) => {
-      if (superlogin.config.getItem(`providers.${name}.credentials.clientID`)) {
-        superlogin.registerOAuth2(name, strategy)
-      }
-    })
-    app.use('/auth', superlogin.router)
+    // superlogin
+    this.login = new Login()
+    app.use('/auth', this.login.router)
 
+    // rate limiting
     const redisClient = redis.createClient({
       host: REDIS_HOSTNAME,
     })
-
-    // RATE LIMIT
     const rateLimiter = new RateLimit(redisClient, [
       { interval: 1, limit: 100 },
     ])

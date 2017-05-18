@@ -7,6 +7,18 @@ export $ from './styles'
 export { query } from '@jot/models'
 export clr from 'color'
 
+import kc from 'keycode'
+
+// fix react synth event
+export const keycode = (event: Event) => {
+  event.persist()
+  const code = kc(event)
+  if (localStorage.debug) {
+    console.log(code)
+  }
+  return code
+}
+
 // todo move into own thing
 import { Shortcuts as ReactShortcuts } from 'react-shortcuts'
 import view from './view'

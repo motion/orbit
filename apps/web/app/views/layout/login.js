@@ -1,4 +1,4 @@
-import { view, observable } from '~/helpers'
+import { view, keycode } from '~/helpers'
 import App from '@jot/models'
 import { Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
@@ -14,9 +14,8 @@ import { HEADER_HEIGHT } from '~/constants'
 @view({
   store: class LoginStore {
     loggingIn = false
+    usernameRef = null
     passwordRef = null
-    username = null
-    password = null
     error = false
 
     start() {
@@ -33,17 +32,11 @@ import { HEADER_HEIGHT } from '~/constants'
       if (App.loggedIn) return 3
     }
 
-    setPasswordRef = ref => {
-      if (ref) {
-        this.passwordRef = ref
-      }
-    }
-
     setUsername = () => {
-      if (!this.username) {
+      if (!this.usernameRef.value) {
         this.error = true
       } else {
-        App.setUsername(this.username)
+        App.setUsername(this.usernameRef.value)
         if (this.password) {
           this.finish()
         }
@@ -53,7 +46,7 @@ import { HEADER_HEIGHT } from '~/constants'
     finish = async () => {
       console.log('finishing', App.user)
       this.loggingIn = true
-      await App.loginOrSignup(App.user.name, this.password)
+      await App.loginOrSignup(App.user.name, this.passwordRef.value)
       this.loggingIn = false
     }
 
@@ -64,12 +57,20 @@ import { HEADER_HEIGHT } from '~/constants'
       }
     }
 
-    onUsernameKey = (event: Event) => {
-      console.log(event.which)
+    setUsernameRef = ref => {
+      this.usernameRef = ref
+      if (ref) ref.focus()
+    }
 
-      switch (event.which) {
-        case 13:
-        case 9:
+    setPasswordRef = ref => {
+      this.passwordRef = ref
+      if (ref) ref.focus()
+    }
+
+    onUsernameKey = (event: Event) => {
+      switch (keycode(event)) {
+        case 'enter':
+        case 'tab':
           event.preventDefault()
           event.stopPropagation()
           this.setUsername()
@@ -77,17 +78,19 @@ import { HEADER_HEIGHT } from '~/constants'
     }
 
     onPasswordKey = (event: Event) => {
-      switch (event.which) {
-        case 13:
+      switch (keycode(event)) {
+        case 'enter':
           event.preventDefault()
           event.stopPropagation()
           this.finish()
           break
-        case 18:
-          if (this.password === '') {
+        case 'esc':
+          if (this.passwordRef.value === '') {
             event.preventDefault()
             event.stopPropagation()
             App.setUsername(null)
+          } else {
+            this.passwordRef.value = ''
           }
       }
     }
@@ -105,9 +108,9 @@ export default class Login {
             <Input
               $input
               $error={store.error}
-              name="username"
+              name="email"
               onKeyDown={store.onUsernameKey}
-              onChange={e => (store.username = e.target.value)}
+              getRef={store.setUsernameRef}
               placeholder="your name..."
             />
           </step>
@@ -126,7 +129,6 @@ export default class Login {
                 type="password"
                 placeholder="password"
                 onKeyDown={store.onPasswordKey}
-                onChange={e => (store.password = e.target.value)}
                 getRef={store.setPasswordRef}
               />
               <Button onClick={store.finish}>

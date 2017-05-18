@@ -67,6 +67,10 @@ class App {
       password: database.password,
       multiInstance: true,
       withCredentials: false,
+      pouchSettings: {
+        revs_limit: 1,
+        skip_setup: true,
+      },
     })
     console.timeEnd('create db')
 

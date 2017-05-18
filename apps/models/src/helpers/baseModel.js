@@ -68,6 +68,11 @@ export default class BaseModel {
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
+      autoMigrate: true,
+      pouchSettings: {
+        revs_limit: 1,
+        skip_setup: true,
+      },
       methods: this.compiledMethods,
     })
 

@@ -11,6 +11,8 @@ export Button from './button'
 export Popover from './popover'
 export Glow from './glow'
 export ContextMenu from './contextMenu'
+export Pane from './pane'
+export Tabs from './tabs'
 
 import { $, view } from '~/helpers'
 

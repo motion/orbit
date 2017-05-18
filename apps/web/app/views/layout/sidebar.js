@@ -1,6 +1,6 @@
 import { view, Shortcuts } from '~/helpers'
 import { uniqBy } from 'lodash'
-import { ContextMenu, List, Link, Input, Button } from '~/ui'
+import { Pane, ContextMenu, List, Link, Input, Button } from '~/ui'
 import { Place } from '@jot/models'
 import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
@@ -75,6 +75,9 @@ class SidebarStore {
   }
 
   createPlace = async () => {
+    if (!this.placeInput) {
+      return
+    }
     const val = this.placeInput.innerText
     if (val) {
       const place = await Place.createWithHome(val)
@@ -87,6 +90,7 @@ class SidebarStore {
     this.placeInput = ref
     if (ref) {
       ref.focus()
+      document.execCommand('selectAll', false, null)
     }
   }
 
@@ -109,6 +113,7 @@ class SidebarStore {
   }
 
   handleShortcuts = (action, event) => {
+    console.log('sidebar got', action)
     switch (action) {
       case 'enter':
         event.preventDefault()
@@ -143,7 +148,7 @@ export default class Sidebar {
         ]}
       >
         <sidebar $$flex>
-          <content $$flex $$undraggable>
+          <top>
             <Login />
 
             <title
@@ -162,8 +167,11 @@ export default class Sidebar {
                 onClick={() => (store.editingPlace = true)}
               />
             </title>
-            <Shortcuts name="all" handler={store.handleShortcuts}>
-              <main $$scrollable $$draggable if={store.allPlaces}>
+          </top>
+
+          <content $$draggable>
+            <Pane if={store.allPlaces} scrollable collapsable title="me">
+              <Shortcuts name="all" handler={store.handleShortcuts}>
                 <List
                   controlled
                   items={store.allPlaces}
@@ -196,8 +204,43 @@ export default class Sidebar {
                     )
                   }}
                 />
-              </main>
-            </Shortcuts>
+              </Shortcuts>
+            </Pane>
+
+            <Pane title="all" collapsable if={store.allPlaces}>
+              <List
+                controlled
+                items={store.allPlaces}
+                onSelect={place => {
+                  store.setActive(place)
+                  if (place && place.url) {
+                    Router.go(place.url())
+                  }
+                }}
+                getItem={(place, index) => {
+                  const isEditing =
+                    place.create || store.editingPlace === place._id
+
+                  return (
+                    <SideBarItem
+                      isEditing={isEditing}
+                      match={place.url && place.url()}
+                      onDoubleClick={() => store.setEditable(place)}
+                    >
+                      <Text
+                        {...isEditing && {
+                          contentEditable: true,
+                          suppressContentEditableWarning: true,
+                          getRef: store.onNewPlace,
+                        }}
+                      >
+                        {place.title}
+                      </Text>
+                    </SideBarItem>
+                  )
+                }}
+              />
+            </Pane>
           </content>
 
           <sidebar if={App.activePage.sidebar}>
@@ -209,12 +252,13 @@ export default class Sidebar {
   }
 
   static style = {
+    content: {
+      flex: 1,
+    },
     sidebar: {
       width: SIDEBAR_WIDTH,
       borderLeft: [1, 'dotted', '#eee'],
       userSelect: 'none',
-    },
-    main: {
       flex: 1,
     },
     search: {

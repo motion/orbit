@@ -9,7 +9,7 @@ const keymap = {
     down: 'down',
     enter: 'enter',
     esc: 'esc',
-    delete: 'delete',
+    delete: ['delete', 'backspace'],
   },
 }
 

@@ -46,6 +46,7 @@ export default class DocItem {
     draggable,
     after,
     height,
+    bordered,
     ...props
   }) {
     // hack for now

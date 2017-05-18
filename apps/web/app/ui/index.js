@@ -11,6 +11,7 @@ export Segment from './segment'
 export Button from './button'
 export Popover from './popover'
 export Glow from './glow'
+export ContextMenu from './contextMenu'
 
 import { $, view } from '~/helpers'
 

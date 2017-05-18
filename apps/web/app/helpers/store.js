@@ -92,10 +92,13 @@ function onStoreMount(obj) {
       continue
     }
 
-    // auto function actions
+    // auto actions
     if (isFunction) {
       // @action functions
-      obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
+      obj[method] = action(
+        `${obj.constructor.name}.${obj.id ? `${obj.id}.` : ''}${method}`,
+        obj[method]
+      )
     } else {
       // auto @computed get
       const descriptor = descriptors[method]

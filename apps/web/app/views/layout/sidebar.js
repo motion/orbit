@@ -1,6 +1,6 @@
 import { view, Shortcuts } from '~/helpers'
 import { uniqBy } from 'lodash'
-import { List, Link, Input, Button } from '~/ui'
+import { ContextMenu, List, Link, Input, Button } from '~/ui'
 import { Place } from '@jot/models'
 import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
@@ -120,68 +120,79 @@ class SidebarStore {
 export default class Sidebar {
   render({ store }) {
     return (
-      <Shortcuts isolate name="all" handler={store.handleShortcuts}>
-        <sidebar $$flex>
-          <content $$flex $$undraggable>
-            <Login />
+      <ContextMenu
+        options={[
+          {
+            title: 'Delete',
+            onSelect: (event: Event) => {
+              console.log(event, event.target)
+            },
+          },
+        ]}
+      >
+        <Shortcuts isolate name="all" handler={store.handleShortcuts}>
+          <sidebar $$flex>
+            <content $$flex $$undraggable>
+              <Login />
 
-            <title
-              $$row
-              $$justify="space-between"
-              $$padding={6}
-              $$borderBottom={[1, 'dotted', '#eee']}
-            >
-              <input
-                $search
-                placeholder="places"
-                onChange={e => (store.filter = e.target.value)}
-              />
-              <Button
-                icon="ui-add"
-                onClick={() => (store.editingPlace = true)}
-              />
-            </title>
-            <main $$scrollable $$draggable if={store.allPlaces}>
-              <List
-                controlled
-                items={store.allPlaces}
-                onSelect={place => {
-                  console.log('on select', place)
-                  if (place && place.url) {
-                    Router.go(place.url())
-                  }
-                }}
-                getItem={(place, index) => {
-                  const isEditing =
-                    place.create || store.editingPlace === place._id
+              <title
+                $$row
+                $$justify="space-between"
+                $$padding={6}
+                $$borderBottom={[1, 'dotted', '#eee']}
+              >
+                <input
+                  $search
+                  placeholder="places"
+                  onChange={e => (store.filter = e.target.value)}
+                />
+                <Button
+                  icon="ui-add"
+                  onClick={() => (store.editingPlace = true)}
+                />
+              </title>
+              <main $$scrollable $$draggable if={store.allPlaces}>
+                <List
+                  controlled
+                  items={store.allPlaces}
+                  onSelect={place => {
+                    console.log('on select', place)
+                    if (place && place.url) {
+                      Router.go(place.url())
+                    }
+                  }}
+                  getItem={(place, index) => {
+                    const isEditing =
+                      place.create || store.editingPlace === place._id
 
-                  return (
-                    <SideBarItem
-                      isEditing={isEditing}
-                      match={place.url && place.url()}
-                      onDoubleClick={() => store.setEditable(place)}
-                    >
-                      <Text
-                        {...isEditing && {
-                          contentEditable: true,
-                          suppressContentEditableWarning: true,
-                          getRef: store.onNewPlace,
-                        }}
+                    return (
+                      <SideBarItem
+                        isEditing={isEditing}
+                        match={place.url && place.url()}
+                        onDoubleClick={() => store.setEditable(place)}
                       >
-                        {place.title}
-                      </Text>
-                    </SideBarItem>
-                  )
-                }}
-              />
-            </main>
-          </content>
+                        <Text
+                          {...isEditing && {
+                            contentEditable: true,
+                            suppressContentEditableWarning: true,
+                            getRef: store.onNewPlace,
+                          }}
+                        >
+                          {place.title}
+                        </Text>
+                      </SideBarItem>
+                    )
+                  }}
+                />
+              </main>
+            </content>
 
-          <sidebar if={App.activePage.sidebar}>
-            {App.activePage.sidebar}
+            <sidebar if={App.activePage.sidebar}>
+              {App.activePage.sidebar}
+            </sidebar>
           </sidebar>
-        </sidebar>
-      </Shortcuts>
+        </Shortcuts>
+      </ContextMenu>
     )
   }
 

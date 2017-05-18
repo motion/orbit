@@ -1,18 +1,37 @@
 import { view } from '~/helpers'
+import { Icon } from '~/ui'
 import randomcolor from 'random-color'
 import DocItem from '~/views/document/item'
 
 @view
 export default class CardList {
+  docRef = (node, index) => {
+    if (this.props.shouldFocus && node && index === 0) {
+      node.focus()
+      this.props.listStore.doneFocusing()
+    }
+  }
+
   render({ listStore }) {
     return (
       <docs $stack={true}>
-        <DocItem $doc editable if={listStore.nextDoc} doc={listStore.nextDoc} />
+        <doc $temp $$centered onClick={listStore.createDoc}>
+          <Icon name="uiadd" />
+        </doc>
         {(listStore.docs || [])
-          .map((doc, i) => <DocItem $doc editable key={doc._id} doc={doc} />)}
+          .map((doc, i) => (
+            <DocItem
+              $doc
+              editable
+              key={doc._id}
+              ref={node => this.docRef(node, i)}
+              doc={doc}
+            />
+          ))}
       </docs>
     )
   }
+
   static style = {
     docs: {
       flexFlow: 'row',
@@ -24,6 +43,7 @@ export default class CardList {
       margin: [0, 10, 0, 0],
       width: 200,
       height: 280,
+      borderRadius: 5,
       overflow: 'hidden',
       borderTop: [2, 'red'],
       transition: 'transform 50ms ease-in',
@@ -34,10 +54,13 @@ export default class CardList {
         transform: { scale: 0.98 },
       },
     },
-    card: {
-      // background: '#fff',
-      width: '100%',
-      height: '100%',
+    temp: {
+      background: '#fafafa',
+      cursor: 'pointer',
+      width: 40,
+      '&:hover': {
+        background: '#f2f2f2',
+      },
     },
     stack: {
       flexFlow: 'row',

@@ -122,8 +122,9 @@ export default class SegmentItem {
         <Popover
           if={tooltip}
           dark
-          bg
+          background
           openOnHover
+          animation="bounce 150ms"
           noHover
           target={`.${this.uniq}`}
           padding={[0, 6]}

@@ -3,6 +3,24 @@ import Image from './image'
 import App from './app'
 import generateName from 'sillyname'
 
+const DEFAULT_CONTENT = title => ({
+  nodes: [
+    {
+      kind: 'block',
+      type: 'title',
+      data: {
+        level: 1,
+      },
+      nodes: [
+        {
+          kind: 'text',
+          text: title,
+        },
+      ],
+    },
+  ],
+})
+
 class Document extends Model {
   static props = {
     title: str,
@@ -25,25 +43,11 @@ class Document extends Model {
       hashtags: [],
       attachments: [],
       private: true,
-      content: {
-        nodes: [
-          {
-            kind: 'block',
-            type: 'title',
-            data: {
-              level: 1,
-            },
-            nodes: [
-              {
-                kind: 'text',
-                text: title,
-              },
-            ],
-          },
-        ],
-      },
+      content: DEFAULT_CONTENT(title),
     }
   }
+
+  DEFAULT_CONTENT = DEFAULT_CONTENT
 
   settings = {
     title: 'documents',

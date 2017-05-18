@@ -8,6 +8,7 @@ import * as Plugins from './plugins'
 import * as Rules from './rules'
 import Marks from './marks'
 import { includes } from 'lodash'
+import SelectionStore from './stores/selection'
 
 export { Raw } from 'slate'
 
@@ -15,6 +16,7 @@ const merge = x => flatten(Object.keys(x).map(n => x[n]))
 const rules = merge(Rules)
 
 class EditorStore {
+  id = this.props.id
   doc = Document.get(this.props.id)
 
   // todo replace with doc titles
@@ -47,6 +49,10 @@ class EditorStore {
     this.watch(this.watchers.setContent)
   }
 
+  get theme() {
+    return this.inline ? { title: { fontSize: 16 } } : {}
+  }
+
   get nodes() {
     return this.content && this.content.document && this.content.document.nodes
   }
@@ -59,6 +65,11 @@ class EditorStore {
   }
 
   get shouldSave() {
+    // for now, prevent saving when not focused
+    // avoid tons of saves on inline docs
+    if (!this.focused) {
+      return false
+    }
     if (this.hasUploadingImages) {
       return false
     }
@@ -67,8 +78,10 @@ class EditorStore {
 
   watchers = {
     setContent: () => {
-      if (!this.content && this.doc) {
-        this.content = Raw.deserialize(this.doc.content, { terse: true })
+      if (!this.content) {
+        if (this.doc) {
+          this.content = Raw.deserialize(this.doc.content, { terse: true })
+        }
       }
     },
     save: () => {
@@ -155,27 +168,29 @@ export default class EditorView {
     ...props
   }) {
     return (
-      <document if={store.content}>
-        <container $inline={inline}>
-          <Editor
-            $editor
-            $$undraggable
-            readOnly={readOnly}
-            plugins={merge(this.plugins)}
-            suggestions={store.docSuggestions}
-            onMentionSearch={store.updateSuggestions}
-            schema={this.schema}
-            state={store.content}
-            onChange={this.onChange}
-            ref={this.getRef}
-            onFocus={store.focus}
-            onBlur={store.blur}
-            onKeyDown={e => {
-              onKeyDown(e)
-            }}
-            {...props}
-          />
-        </container>
+      <document
+        if={store.content}
+        onMouseUp={(event: MouseEvent) => {
+          event.persist()
+          SelectionStore.mouseUpEvent = event
+        }}
+      >
+        <Editor
+          $editor
+          $$undraggable
+          readOnly={readOnly}
+          plugins={merge(this.plugins)}
+          schema={this.schema}
+          state={store.content}
+          onChange={this.onChange}
+          ref={this.getRef}
+          onFocus={store.focus}
+          onBlur={store.blur}
+          onKeyDown={e => {
+            onKeyDown(e)
+          }}
+          {...props}
+        />
       </document>
     )
   }

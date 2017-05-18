@@ -1,29 +1,25 @@
 import { view, store } from '~/helpers'
 import { Popover, Segment, Button } from '~/ui'
 import { findDOMNode } from 'slate'
+import Selection from '../stores/selection'
 
-@store class SelectBarStore {
-  node = null
-  focusedNode = null
-  event = null
-
-  clear = () => {
-    this.node = null
-    this.event = null
-  }
-}
-
-const select = new SelectBarStore()
-
-@view class ToolbarPane {
+@view class SelectBar {
   render({ children }) {
+    const PAD = 40
+
     return (
       <pane>
         {children}
-        <Popover if={select.focusedNode} open target={() => select.focusedNode}>
-          <h1>im a focused node</h1>
-        </Popover>
-        <Popover if={select.node} open target={() => select.node}>
+        <Popover
+          if={Selection.node && Selection.mouseUpEvent}
+          open
+          noArrow
+          background
+          shadow
+          animation="slide 300ms"
+          left={Selection.mouseUpEvent.clientX}
+          top={Selection.mouseUpEvent.clientY + PAD}
+        >
           <bar $$row>
             <Segment padded>
               <Button icon="textcolor" />
@@ -61,26 +57,22 @@ const select = new SelectBarStore()
 
 export default {
   onSelect(event, { selection }, state, editor) {
-    select.focusedNode = node
-
     if (selection.startOffset === selection.endOffset) {
-      select.clear()
+      Selection.clear()
       return
     }
-
     const selectedTextKey = selection.anchorKey
     const selectedTextNode = state.document.findDescendantDeep(
       x => x.key === selectedTextKey
     )
     const node = findDOMNode(selectedTextNode)
-    select.node = node
-    select.event = event
+    Selection.node = node
   },
   render({ children }) {
     return (
-      <ToolbarPane>
+      <SelectBar>
         {children}
-      </ToolbarPane>
+      </SelectBar>
     )
   },
 }

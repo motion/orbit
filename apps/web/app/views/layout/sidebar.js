@@ -84,6 +84,7 @@ class SidebarStore {
       return
     }
     const val = this.placeInput.innerText
+    console.log('val is', val)
     if (val) {
       const place = await Place.createWithHome(val)
       this.editingPlace = false
@@ -122,6 +123,7 @@ class SidebarStore {
     switch (action) {
       case 'enter':
         event.preventDefault()
+        console.log('editing place?', this.editingPlace)
         if (this.editingPlace) {
           console.log(event.target, event, event.currentTarget)
           this.editingPlace.title = event.target.innerText
@@ -192,7 +194,7 @@ export default class Sidebar {
               <input
                 $search
                 placeholder="places"
-                onChange={e => (store.filter = e.target.value)}
+                onChange={e => store.filter = e.target.value}
               />
               <Button
                 icon="simple-add"

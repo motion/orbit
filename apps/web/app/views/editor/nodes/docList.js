@@ -10,8 +10,9 @@ import List from './lists/list'
 class DocListStore {
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
-  docs = !this.props.editorStore.inline &&
-    Document.forPlace(this.place && this.place.slug)
+  docs /*!this.props.editorStore.inline &&*/ = Document.forPlace(
+    this.place && this.place.slug
+  )
 
   shouldFocus = false
 
@@ -41,9 +42,11 @@ class DocListStore {
 })
 export default class DocList {
   render({ node, editorStore, store, children, ...props }) {
+    /*
     if (editorStore.inline) {
       return <null>sub doc list</null>
     }
+    */
 
     const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0

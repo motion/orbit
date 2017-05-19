@@ -4,7 +4,7 @@ import Icon from './icon'
 import Grain from './grain'
 import Tabs from './tabs'
 
-@view.plain
+@view.ui
 export class Title {
   // stop propagation so it doesn't include the click in the dblclick
   onClick = e => {
@@ -100,7 +100,7 @@ export class Title {
   }
 }
 
-@view.plain
+@view.ui
 export default class Pane {
   static Title = Title
 

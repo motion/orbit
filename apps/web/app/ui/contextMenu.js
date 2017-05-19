@@ -6,7 +6,7 @@ import { Keys } from '~/stores'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
 
-@view.plain class ContextMenuTarget {
+@view.ui class ContextMenuTarget {
   static contextTypes = {
     contextMenu: object,
   }

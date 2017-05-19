@@ -2,7 +2,7 @@ import { view } from '~/helpers'
 import React from 'react'
 import Button from './button'
 
-@view.plain
+@view.ui
 export default class Tabs {
   static Tab = Button
 

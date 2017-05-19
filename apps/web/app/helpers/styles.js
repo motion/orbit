@@ -121,4 +121,4 @@ export const styles = {
   },
 }
 
-export default gloss({ baseStyles: styles })
+export default gloss({ baseStyles: styles, themeKey: 'theme' })

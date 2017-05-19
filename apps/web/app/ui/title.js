@@ -1,6 +1,6 @@
 import { view } from '~/helpers'
 
-@view.plain
+@view.ui
 export default class Title {
   static defaultProps = {
     tag: 'h1',

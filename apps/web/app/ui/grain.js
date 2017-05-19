@@ -1,6 +1,6 @@
 import { view } from '~/helpers'
 
-@view.plain
+@view.ui
 export default class Grain {
   render() {
     return <grain $$fullscreen />

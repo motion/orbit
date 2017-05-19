@@ -69,7 +69,6 @@ export default class Page {
     page: {
       flex: 1,
       overflowY: 'scroll',
-      padding: 10,
     },
   }
 }

@@ -79,13 +79,10 @@ export default class BaseModel {
     })
     console.timeEnd('db-connect')
 
-    console.time('db-connect-valid')
     // shim add pouchdb-validation
     this.collection.pouch.installValidationMethods()
-    console.timeEnd('db-connect-valid')
 
     // create index
-    console.time('db-connect-index')
     if (this.settings.index) {
       // TODO: pouchdb supposedly does this for you, but it was slow in profiling
       const { indexes } = await this.collection.pouch.getIndexes()
@@ -101,10 +98,8 @@ export default class BaseModel {
         await this.collection.pouch.createIndex({ fields: this.settings.index })
       }
     }
-    console.timeEnd('db-connect-index')
 
     // setup hooks
-    console.time('db-connect-rest')
     this.hooks = this.hooks || {}
 
     // auto timestamps
@@ -130,7 +125,6 @@ export default class BaseModel {
     Object.keys(this.hooks).forEach(hook => {
       this.collection[hook](this.hooks[hook])
     })
-    console.timeEnd('db-connect-rest')
   }
 
   // helpers

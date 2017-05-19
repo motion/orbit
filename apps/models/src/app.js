@@ -97,17 +97,20 @@ class App {
     const connections = Object.entries(Models).map(async ([name, model]) => {
       await model.connect(this.db)
       model.remoteDb = `${database.couchUrl}/${model.title}`
-      // model.collection.sync(`${database.couchUrl}/${model.title}`, {
-      //   live: true,
-      //   retry: true,
-      //   since: 'now',
-      // })
+      // TODO until rxdb supports one way sync
+      model.collection.pouch.replicate.to(
+        `${database.couchUrl}/${model.title}`,
+        {
+          live: true,
+          retry: true,
+          skipSetup: true,
+        }
+      )
     })
 
     console.time('connect')
     await Promise.all([...connections, this.setSession()])
     console.timeEnd('connect')
-    console.log('connected')
 
     // seed db
     setTimeout(() => {

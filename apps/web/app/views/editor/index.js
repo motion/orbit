@@ -19,14 +19,8 @@ class EditorStore {
   id = this.props.id
   doc = Document.get(this.props.id)
 
-  // todo replace with doc titles
-  allDocs = [
-    { title: 'one' },
-    { title: 'two' },
-    { title: 'three' },
-    { title: 'four' },
-  ]
-
+  // todo replace with doc when we use mention (which is currently turned off)
+  allDocs = []
   docSuggestions = []
 
   updateSuggestions = text => {

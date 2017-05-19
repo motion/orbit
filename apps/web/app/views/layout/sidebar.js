@@ -174,44 +174,44 @@ export default class Sidebar {
 
   render({ store }) {
     return (
-      <ContextMenu
-        options={[
-          {
-            title: 'Delete',
-            onSelect: place => place.delete(),
-          },
-        ]}
-      >
-        <sidebar $$flex>
-          <top>
-            <Login />
-            <title
-              $$row
-              $$justify="space-between"
-              $$padding={6}
-              $$borderBottom={[1, 'dotted', '#eee']}
-            >
-              <input
-                $search
-                placeholder="places"
-                onChange={e => store.filter = e.target.value}
-              />
-              <Button
-                icon="simple-add"
-                onClick={() =>
-                  store.setEditing({ _id: Math.random(), temporary: true })}
-              />
-            </title>
-          </top>
+      <sidebar>
+        <top>
+          <Login />
+          <title
+            $$row
+            $$justify="space-between"
+            $$padding={6}
+            $$borderBottom={[1, 'dotted', '#eee']}
+          >
+            <input
+              $search
+              placeholder="places"
+              onChange={e => (store.filter = e.target.value)}
+            />
+            <Button
+              icon="simple-add"
+              onClick={() =>
+                store.setEditing({ _id: Math.random(), temporary: true })}
+            />
+          </title>
+        </top>
 
-          <content $$draggable>
-            <Pane
-              if={store.allPlaces}
-              scrollable
-              collapsable
-              title="me"
-              collapsed={store.allPlacesClosed}
-              onSetCollapse={store.ref('allPlacesClosed').set}
+        <content $$draggable>
+          <Pane
+            if={store.allPlaces}
+            scrollable
+            collapsable
+            title="me"
+            collapsed={store.allPlacesClosed}
+            onSetCollapse={store.ref('allPlacesClosed').set}
+          >
+            <ContextMenu
+              options={[
+                {
+                  title: 'Delete',
+                  onSelect: place => place.delete(),
+                },
+              ]}
             >
               <Shortcuts name="all" handler={store.handleShortcuts}>
                 <List
@@ -226,33 +226,33 @@ export default class Sidebar {
                   getItem={this.getListItem}
                 />
               </Shortcuts>
-            </Pane>
-            <Pane
-              if={store.sidePlaces}
-              title="all"
-              collapsable
-              collapsed={store.sidePlacesClosed}
-              onSetCollapse={store.ref('sidePlacesClosed').set}
-            >
-              <List
-                controlled
-                items={store.sidePlaces}
-                onSelect={place => {
-                  store.setActive(place)
-                  if (place && place.url) {
-                    Router.go(place.url())
-                  }
-                }}
-                getItem={this.getListItem}
-              />
-            </Pane>
-          </content>
+            </ContextMenu>
+          </Pane>
+          <Pane
+            if={store.sidePlaces}
+            title="all"
+            collapsable
+            collapsed={store.sidePlacesClosed}
+            onSetCollapse={store.ref('sidePlacesClosed').set}
+          >
+            <List
+              controlled
+              items={store.sidePlaces}
+              onSelect={place => {
+                store.setActive(place)
+                if (place && place.url) {
+                  Router.go(place.url())
+                }
+              }}
+              getItem={this.getListItem}
+            />
+          </Pane>
+        </content>
 
-          <sidebar if={App.activePage.sidebar}>
-            {App.activePage.sidebar}
-          </sidebar>
+        <sidebar if={App.activePage.sidebar}>
+          {App.activePage.sidebar}
         </sidebar>
-      </ContextMenu>
+      </sidebar>
     )
   }
 
@@ -264,7 +264,6 @@ export default class Sidebar {
       width: SIDEBAR_WIDTH,
       borderLeft: [1, 'dotted', '#eee'],
       userSelect: 'none',
-      flex: 1,
     },
     search: {
       border: 'none',

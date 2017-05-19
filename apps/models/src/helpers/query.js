@@ -1,8 +1,12 @@
 import { observable, autorun } from 'mobx'
+import debug from 'debug'
+
+const out = debug('query')
 
 // subscribe-aware helpers
 // @query value wrapper
-function valueWrap(valueGet: Function) {
+function valueWrap(info, valueGet: Function) {
+  out('query', info)
   const result = observable.shallowBox(undefined)
   let value = valueGet() || {}
 
@@ -26,6 +30,18 @@ function valueWrap(valueGet: Function) {
     }
   })
 
+  // sync!
+  const remoteDB = this.remoteDb
+  const localDB = this.pouch.name
+  const selector = { ...value.mquery._conditions }
+
+  // need to delete id or else findAll queries dont sync
+  if (!selector._id || !Object.keys(selector._id).length) {
+    delete selector._id
+  }
+
+  const pull = PouchDB.replicate(remoteDB, localDB, { selector })
+  out('replicate', remoteDB, 'to', localDB, selector)
   const response = {}
 
   // helpers
@@ -53,8 +69,10 @@ function valueWrap(valueGet: Function) {
     },
     dispose: {
       value() {
+        out('disposing', info)
         finishSubscribe()
         stopAutorun()
+        pull.cancel()
       },
     },
   })
@@ -69,12 +87,20 @@ export function query(parent, property, descriptor) {
     descriptor.initializer = function() {
       const init = initializer.call(this)
       return function(...args) {
-        return valueWrap(() => init.apply(this, args))
+        return valueWrap.call(
+          this,
+          { model: this.constructor.name, property, args },
+          () => init.apply(this, args)
+        )
       }
     }
   } else if (value) {
     descriptor.value = function(...args) {
-      return valueWrap(() => value.apply(this, args))
+      return valueWrap.call(
+        this,
+        { model: this.constructor.name, property, args },
+        () => value.apply(this, args)
+      )
     }
   }
 

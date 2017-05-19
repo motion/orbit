@@ -70,7 +70,7 @@ export default class BaseModel {
       statics: this.statics,
       autoMigrate: true,
       pouchSettings: {
-        revs_limit: 1,
+        revs_limit: 100,
         skip_setup: true,
       },
       methods: this.compiledMethods,
@@ -81,6 +81,7 @@ export default class BaseModel {
 
     // create index
     if (this.settings.index) {
+      // need to await or you get error sorting by dates, etc
       await this.collection.pouch.createIndex({ fields: this.settings.index })
     }
 

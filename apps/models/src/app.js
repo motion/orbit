@@ -59,6 +59,10 @@ class App {
       throw new Error('No config given to App!')
     }
 
+    // attach
+    this.database = database
+    this.stores = stores
+
     // connect to pouchdb
     console.time('create db')
     this.db = await RxDB.create({
@@ -70,6 +74,9 @@ class App {
       pouchSettings: {
         revs_limit: 1,
         skip_setup: true,
+        live: true,
+        retry: true,
+        since: 'now',
       },
     })
     console.timeEnd('create db')
@@ -88,18 +95,18 @@ class App {
     // connect models
     const connections = Object.entries(Models).map(async ([name, model]) => {
       await model.connect(this.db)
-      model.collection.sync(`${database.couchUrl}/${model.title}`, {
-        live: true,
-        retry: true,
-      })
+      model.remoteDb = `${database.couchUrl}/${model.title}`
+      // model.collection.sync(`${database.couchUrl}/${model.title}`, {
+      //   live: true,
+      //   retry: true,
+      //   since: 'now',
+      // })
     })
 
     console.time('connect')
     await Promise.all([...connections, this.setSession()])
     console.timeEnd('connect')
-
-    // stores
-    this.stores = stores
+    console.log('connected')
 
     // seed db
     setTimeout(() => {
@@ -167,7 +174,9 @@ class App {
   }
 
   @action setUsername = (name: string) => {
+    console.log('set username', this.user)
     this.user = { ...this.user, name }
+    console.log(this.user)
     localStorage.setItem('tempUsername', name)
   }
 
@@ -191,7 +200,7 @@ class App {
 
   @action clearUser = () => {
     localStorage.setItem('tempUsername', '')
-    this.user = {}
+    this.user = this.temporaryUser
   }
 
   @computed get tempUser() {

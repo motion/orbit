@@ -6,6 +6,7 @@ import Mobx from 'mobx'
 import MobxUtils from 'mobx-utils'
 import Rx from 'rxjs'
 import Router from './router'
+import PouchDB from 'pouchdb-core'
 import { IS_PROD, DB_CONFIG } from './constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
@@ -19,7 +20,7 @@ import theme from './theme'
 
 if (!IS_PROD) {
   // install console formatters
-  // mobxFormatters(Mobx)
+  mobxFormatters(Mobx)
   // the heavy hitters
   window.React = React
   window.App = App
@@ -30,6 +31,7 @@ if (!IS_PROD) {
   window.RxDB = RxDB
   window.Rx = Rx
   window.Immutable = Immutable
+  window.PouchDB = PouchDB
   window._ = _
 }
 

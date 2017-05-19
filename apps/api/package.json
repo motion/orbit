@@ -6,15 +6,16 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-dev": "nodemon --legacy-watch --debug=5858 lib"
+    "start-dev": "nodemon --legacy-watch --inspect=5858 lib"
   },
   "dependencies": {
+    "@jot/couch": "*",
+    "@jot/models": "*",
     "body-parser": "^1.16.1",
     "cors": "^2.8.3",
     "express": "^4.14.1",
+    "express-pouchdb-replication-stream": "^1.0.6",
     "invariant": "^2.2.2",
-    "@jot/models": "*",
-    "@jot/couch": "*",
     "morgan": "^1.8.1",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",

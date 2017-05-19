@@ -3,6 +3,7 @@ import App from '@jot/models'
 import { Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
+// settimeout or it dont focus yo
 @view({
   store: class LoginStore {
     loggingIn = false
@@ -12,8 +13,10 @@ import { HEADER_HEIGHT } from '~/constants'
 
     start() {
       this.watch(() => {
-        if (App.tempUser && this.passwordRef) {
-          this.passwordRef.focus()
+        if (this.step === 2 && this.passwordRef) {
+          this.setTimeout(() => {
+            this.passwordRef.focus()
+          })
         }
       })
     }
@@ -36,7 +39,6 @@ import { HEADER_HEIGHT } from '~/constants'
     }
 
     finish = async () => {
-      console.log('finishing', App.user)
       this.loggingIn = true
       await App.loginOrSignup(App.user.name, this.passwordRef.value)
       this.loggingIn = false
@@ -56,11 +58,13 @@ import { HEADER_HEIGHT } from '~/constants'
 
     setPasswordRef = ref => {
       this.passwordRef = ref
-      if (ref) ref.focus()
+      if (ref) {
+        ref.focus()
+        window.x = ref
+      }
     }
 
     onUsernameKey = (event: Event) => {
-      console.log(keycode(event))
       switch (keycode(event)) {
         case 'enter':
         case 'tab':
@@ -91,7 +95,6 @@ import { HEADER_HEIGHT } from '~/constants'
 })
 export default class Login {
   render({ store }) {
-    console.log('login step', store.step)
     return (
       <login $$draggable>
         <form $step={store.step} $$undraggable onSubmit={store.onSubmit}>

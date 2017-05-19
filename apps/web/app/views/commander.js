@@ -7,14 +7,8 @@ import Mousetrap from 'mousetrap'
 import { Modal, Icon } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 
-// window._toggleCommander = () => {
-//   this.open = !this.open
-//   if (this.open) this.textbox.focus()
-// }
-
-// Mousetrap.bind('command+t', _toggleCommander)
 @view({
-  store: class {
+  store: class CommanderStore {
     open = false
     docs = Document.recent()
     textbox = null

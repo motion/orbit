@@ -42,7 +42,7 @@ function errorReporter({ error }, view) {
 const ROOT = document.querySelector('#app')
 
 export function render() {
-  console.log('#render')
+  console.time('#render')
   const Root = require('./root').default
   ReactDOM.render(
     <AppContainer errorReporter={errorReporter}>
@@ -52,6 +52,7 @@ export function render() {
     </AppContainer>,
     ROOT
   )
+  console.timeEnd('#render')
 }
 
 if (module.hot) {

@@ -55,7 +55,14 @@ export default class ImageNode {
     if (!store.src) {
       return <span>Loading...</span>
     }
-    return <img contentEditable {...attributes} src={store.src} />
+    return (
+      <img
+        contentEditable
+        suppressContentEditableWarning
+        {...attributes}
+        src={store.src}
+      />
+    )
   }
 
   static style = {

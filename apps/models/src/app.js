@@ -48,9 +48,11 @@ class App {
     console.time('start')
     this.catchErrors()
 
-    // expose models onto app
-    console.log(Models)
+    console.log(
+      'Use App in your console to access models, activeStores, user, etc'
+    )
 
+    // attach Models to app
     for (const [name, model] of Object.entries(Models)) {
       this[name] = model
     }
@@ -72,8 +74,7 @@ class App {
       multiInstance: true,
       withCredentials: false,
       pouchSettings: {
-        revs_limit: 1,
-        skip_setup: true,
+        skipSetup: true,
         live: true,
         retry: true,
         since: 'now',

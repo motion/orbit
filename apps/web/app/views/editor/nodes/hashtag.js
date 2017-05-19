@@ -7,7 +7,11 @@ export default class HashTag {
   render(props) {
     return (
       <root>
-        <hashtag contentEditable {...props.attributes}>
+        <hashtag
+          contentEditable
+          suppressContentEditableWarning
+          {...props.attributes}
+        >
           {props.children}
         </hashtag>
         <DocList {...props} />

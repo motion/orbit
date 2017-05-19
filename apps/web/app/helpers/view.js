@@ -7,6 +7,7 @@ import { observer } from 'mobx-react'
 import glossy from './styles'
 import rxToMobx from './external/rxToMobx'
 import { storeProvider } from './store'
+import { string, object } from 'prop-types'
 
 const ViewHelpers = {
   componentWillMount() {
@@ -59,3 +60,13 @@ export default function view(viewOrStores: Object | Class | Function, options) {
 }
 
 view.plain = View => view(View, { simple: true })
+
+view.ui = View => {
+  const next = view(View, { simple: true })
+  // adds gloss theme context getters
+  next.contextTypes = {
+    uiTheme: object,
+    uiActiveTheme: string,
+  }
+  return next
+}

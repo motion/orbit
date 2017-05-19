@@ -42,16 +42,18 @@ class App {
     RxDB.plugin(pSearch)
     PouchDB.plugin(pAuth)
     PouchDB.plugin(pHTTP)
-
-    // expose models onto app
-    for (const [name, model] of Object.entries(Models)) {
-      this[name] = model
-    }
   }
 
   async start({ database, stores }) {
     console.time('start')
     this.catchErrors()
+
+    // expose models onto app
+    console.log(Models)
+
+    for (const [name, model] of Object.entries(Models)) {
+      this[name] = model
+    }
 
     if (!database) {
       throw new Error('No config given to App!')
@@ -65,6 +67,10 @@ class App {
       password: database.password,
       multiInstance: true,
       withCredentials: false,
+      pouchSettings: {
+        revs_limit: 1,
+        skip_setup: true,
+      },
     })
     console.timeEnd('create db')
 
@@ -161,7 +167,7 @@ class App {
   }
 
   @action setUsername = (name: string) => {
-    this.user.name = name
+    this.user = { ...this.user, name }
     localStorage.setItem('tempUsername', name)
   }
 

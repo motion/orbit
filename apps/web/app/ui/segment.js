@@ -1,11 +1,12 @@
 import React from 'react'
+import { string, object } from 'prop-types'
 import { view } from '~/helpers'
 import Button from './button'
 import { pickBy } from 'lodash'
 
 const notUndefined = x => typeof x !== 'undefined'
 
-@view.plain class Segment {
+@view.ui class Segment {
   static Item = Button
 
   static defaultProps = {
@@ -45,11 +46,11 @@ const notUndefined = x => typeof x !== 'undefined'
       title,
       slim,
       tiny,
-      dark,
       chromeless,
       dim,
       stretch,
       sync,
+      theme,
       clickable,
       spaced,
       padded,
@@ -59,7 +60,7 @@ const notUndefined = x => typeof x !== 'undefined'
     const childProps = pickBy(
       {
         slim,
-        dark,
+        theme,
         chromeless,
         dim,
         stretch,
@@ -85,10 +86,6 @@ const notUndefined = x => typeof x !== 'undefined'
           ...(child.type && child.type.isSegment ? childProps : null),
         })
       )
-    }
-
-    if (dark && !color) {
-      color = '#fff'
     }
 
     return (

@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '@jot/models'
+import * as RxDB from 'rxdb'
 import Mobx from 'mobx'
 import MobxUtils from 'mobx-utils'
 import Rx from 'rxjs'
@@ -13,6 +14,8 @@ import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Splash from '~/views/splash'
 import { AppContainer } from 'react-hot-loader'
+import Theme from './ui/theme'
+import theme from './theme'
 
 if (!IS_PROD) {
   // install console formatters
@@ -24,6 +27,7 @@ if (!IS_PROD) {
   window.Router = Router
   window.Mobx = Mobx
   window.MobxUtils = MobxUtils
+  window.RxDB = RxDB
   window.Rx = Rx
   window.Immutable = Immutable
   window._ = _
@@ -40,7 +44,9 @@ export function render() {
   const Root = require('./root').default
   ReactDOM.render(
     <AppContainer errorReporter={errorReporter}>
-      <Root />
+      <Theme {...theme}>
+        <Root />
+      </Theme>
     </AppContainer>,
     ROOT
   )

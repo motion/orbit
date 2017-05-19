@@ -3,7 +3,7 @@ import { view } from '~/helpers'
 
 const BORDER_RADIUS = 4
 
-@view.plain
+@view.ui
 export default class Input {
   static defaultProps = {
     width: 'auto',

@@ -47,6 +47,27 @@ export default {
     // If set to true, the user will be logged in automatically after resetting the password
     loginOnPasswordReset: false,
   },
+  local: {
+    // Send out a confirm email after each user signs up with local login
+    sendConfirmEmail: true,
+    // Require the email be confirmed before the user can login
+    requireEmailConfirm: false,
+    // If this is set, the user will be redirected to this location after confirming email instead of JSON response
+    confirmEmailRedirectURL: '/',
+    // Set this to true to disable usernames and use emails instead
+    emailUsername: true,
+    // Custom names for the username and password fields in your sign-in form
+    // usernameField: 'user',
+    // passwordField: 'pass',
+    // // Override default constraints
+    // passwordConstraints = {
+    //   length: {
+    //     minimum: 6,
+    //     message: "must be at least 6 characters"
+    //   },
+    //   matches: 'confirmPassword'
+    // }
+  },
   mailer: {
     fromEmail: process.env.FROM_EMAIL,
     options: {

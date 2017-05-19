@@ -4,7 +4,7 @@ const TOTAL_TIME = 200
 const FRAMES = 5
 const HEIGHT = 240 / FRAMES
 
-@view.plain
+@view.ui
 export default class Poof {
   static defaultProps = {
     top: 0,

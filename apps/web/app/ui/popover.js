@@ -1,5 +1,6 @@
 // TODO https://github.com/tristen/hoverintent
 import React from 'react'
+import { object, string } from 'prop-types'
 import { view, getTarget } from '~/helpers'
 import Portal from 'react-portal'
 import { isNumber, debounce } from 'lodash'
@@ -16,9 +17,8 @@ const DARK_BG = [0, 0, 0, 0.75]
 const maxForgiveness = (forgiveness, distance) =>
   Math.min(forgiveness, distance)
 
-@view.plain class Arrow {
-  render() {
-    const { size, towards } = this.props
+@view.ui class Arrow {
+  render({ size, towards, theme }) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
@@ -48,9 +48,15 @@ const maxForgiveness = (forgiveness, distance) =>
       transform: 'rotate(45deg)',
     },
   }
+
+  static theme = {
+    theme: (props, state, activeTheme) => ({
+      arrowInner: activeTheme,
+    }),
+  }
 }
 
-@view.plain
+@view.ui
 export default class Popover {
   props: {
     target?: Function | string | Object,
@@ -87,6 +93,11 @@ export default class Popover {
     // which direction it shows towards
     // default will determine direction automatically
     towards: 'auto',
+  }
+
+  static contextTypes = {
+    uiTheme: object,
+    uiActiveTheme: string,
   }
 
   state = {
@@ -492,7 +503,6 @@ export default class Popover {
       towards,
       distance,
       escapable,
-      dark,
       onClose,
       padding,
       forgiveness,
@@ -502,6 +512,7 @@ export default class Popover {
       popoverStyle,
       top: _top,
       left: _left,
+      theme,
       ...props
     } = this.props
 
@@ -561,7 +572,7 @@ export default class Popover {
                 style={{ top: arrowTop, marginLeft: arrowLeft }}
               >
                 <Arrow
-                  dark={dark}
+                  theme={theme}
                   size={arrowSize}
                   towards={INVERSE[direction]}
                 />
@@ -631,6 +642,7 @@ export default class Popover {
       },
     },
     withBg: background => ({
+      borderRadius: 3,
       background,
     }),
     item: {
@@ -646,6 +658,9 @@ export default class Popover {
   }
 
   static theme = {
+    theme: (props, context, activeTheme) => ({
+      withBg: activeTheme,
+    }),
     popoverStyle: ({ popoverStyle }) => ({
       content: popoverStyle,
     }),

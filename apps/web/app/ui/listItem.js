@@ -3,7 +3,7 @@ import { view } from '~/helpers'
 import FakeAvatar from './fake/avatar'
 import Glow from './glow'
 
-@view.plain
+@view.ui
 export default class ListItem {
   static isListItem = true
 

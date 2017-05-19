@@ -9,7 +9,7 @@ import parentSize from '~/views/helpers/parentSize'
 const idFn = _ => _
 
 @parentSize
-@view.plain
+@view.ui
 class List {
   static defaultProps = {
     getItem: idFn,

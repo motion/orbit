@@ -20,14 +20,14 @@ import Selection from '../stores/selection'
           top={Selection.mouseUpEvent.clientY + PAD}
         >
           <bar $$row>
-            <Segment padded if={false}>
+            <Segment theme="dark" padded if={false}>
               <Button icon="link" tooltip="link" />
               <Button icon="media-image" tooltip="image" />
               <Button icon="textquote" tooltip="quote" />
               <Button icon="code" tooltip="code" />
             </Segment>
 
-            <Segment padded>
+            <Segment theme="dark" padded>
               <Button icon="textcolor" />
               <Button icon="textbackground" />
               <Button icon="textbold" />
@@ -35,14 +35,14 @@ import Selection from '../stores/selection'
               <Button icon="textquote" />
             </Segment>
 
-            <Segment padded>
+            <Segment theme="dark" padded>
               <Button icon="align-left" />
               <Button icon="align-right" />
               <Button icon="align-center" />
               <Button icon="align-justify" />
             </Segment>
 
-            <Segment padded>
+            <Segment theme="dark" padded>
               <Button icon="list-bullet" />
               <Button icon="list-number" />
               <Button icon="margin-left" />

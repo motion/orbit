@@ -52,17 +52,22 @@ class SidebarStore {
   active = null
   editingPlace = false
   filter = ''
+  sidePlaces = []
+  allPlacesClosed = false
+  sidePlacesClosed = false
+
+  get tempPlace() {
+    return this.editingPlace && this.editingPlace.temporary && this.editingPlace
+  }
 
   get allPlaces() {
     const myPlace = {
       title: App.loggedIn ? App.user.name : 'me',
       url: _ => '/',
     }
-    const results = [
-      myPlace,
-      this.editingPlace === true && { create: true },
-      ...(this.places || []),
-    ].filter(x => !!x)
+    const results = [myPlace, this.tempPlace, ...(this.places || [])].filter(
+      x => !!x
+    )
 
     if (this.filter) {
       return fuzzy
@@ -104,8 +109,8 @@ class SidebarStore {
     this.editingPlace = false
   }
 
-  setEditable = place => {
-    this.editingPlace = place._id
+  setEditing = place => {
+    this.editingPlace = place
   }
 
   setActive = place => {
@@ -117,12 +122,18 @@ class SidebarStore {
     switch (action) {
       case 'enter':
         event.preventDefault()
-        this.createPlace()
+        if (this.editingPlace) {
+          console.log(event.target, event, event.currentTarget)
+          this.editingPlace.title = event.target.innerText
+        } else {
+          this.createPlace()
+        }
       case 'esc':
         event.preventDefault()
         this.clearCreating()
         break
       case 'delete':
+        if (this.editingPlace) return
         const shouldDelete = confirm(`Delete place ${this.active.title}`)
         if (shouldDelete) {
           this.active.delete()
@@ -134,22 +145,44 @@ class SidebarStore {
 
 @view({ store: SidebarStore })
 export default class Sidebar {
+  getListItem = (place, index) => {
+    const { store } = this.props
+    const isEditing = store.editingPlace && store.editingPlace._id === place._id
+
+    return (
+      <ContextMenu.Target data={place}>
+        <SideBarItem
+          isEditing={isEditing}
+          match={place.url && place.url()}
+          onDoubleClick={() => store.setEditing(place)}
+        >
+          <Text
+            {...isEditing && {
+              contentEditable: true,
+              suppressContentEditableWarning: true,
+              getRef: store.onNewPlace,
+            }}
+          >
+            {place.title}
+          </Text>
+        </SideBarItem>
+      </ContextMenu.Target>
+    )
+  }
+
   render({ store }) {
     return (
       <ContextMenu
         options={[
           {
             title: 'Delete',
-            onSelect: (event: Event) => {
-              console.log(event, event.target)
-            },
+            onSelect: place => place.delete(),
           },
         ]}
       >
         <sidebar $$flex>
           <top>
             <Login />
-
             <title
               $$row
               $$justify="space-between"
@@ -163,13 +196,21 @@ export default class Sidebar {
               />
               <Button
                 icon="simple-add"
-                onClick={() => (store.editingPlace = true)}
+                onClick={() =>
+                  store.setEditing({ _id: Math.random(), temporary: true })}
               />
             </title>
           </top>
 
           <content $$draggable>
-            <Pane if={store.allPlaces} scrollable collapsable title="me">
+            <Pane
+              if={store.allPlaces}
+              scrollable
+              collapsable
+              title="me"
+              collapsed={store.allPlacesClosed}
+              onSetCollapse={store.ref('allPlacesClosed').set}
+            >
               <Shortcuts name="all" handler={store.handleShortcuts}>
                 <List
                   controlled
@@ -180,64 +221,27 @@ export default class Sidebar {
                       Router.go(place.url())
                     }
                   }}
-                  getItem={(place, index) => {
-                    const isEditing =
-                      place.create || store.editingPlace === place._id
-
-                    return (
-                      <SideBarItem
-                        isEditing={isEditing}
-                        match={place.url && place.url()}
-                        onDoubleClick={() => store.setEditable(place)}
-                      >
-                        <Text
-                          {...isEditing && {
-                            contentEditable: true,
-                            suppressContentEditableWarning: true,
-                            getRef: store.onNewPlace,
-                          }}
-                        >
-                          {place.title}
-                        </Text>
-                      </SideBarItem>
-                    )
-                  }}
+                  getItem={this.getListItem}
                 />
               </Shortcuts>
             </Pane>
-
-            <Pane title="all" collapsable if={store.allPlaces}>
+            <Pane
+              if={store.sidePlaces}
+              title="all"
+              collapsable
+              collapsed={store.sidePlacesClosed}
+              onSetCollapse={store.ref('sidePlacesClosed').set}
+            >
               <List
                 controlled
-                items={store.allPlaces}
+                items={store.sidePlaces}
                 onSelect={place => {
                   store.setActive(place)
                   if (place && place.url) {
                     Router.go(place.url())
                   }
                 }}
-                getItem={(place, index) => {
-                  const isEditing =
-                    place.create || store.editingPlace === place._id
-
-                  return (
-                    <SideBarItem
-                      isEditing={isEditing}
-                      match={place.url && place.url()}
-                      onDoubleClick={() => store.setEditable(place)}
-                    >
-                      <Text
-                        {...isEditing && {
-                          contentEditable: true,
-                          suppressContentEditableWarning: true,
-                          getRef: store.onNewPlace,
-                        }}
-                      >
-                        {place.title}
-                      </Text>
-                    </SideBarItem>
-                  )
-                }}
+                getItem={this.getListItem}
               />
             </Pane>
           </content>

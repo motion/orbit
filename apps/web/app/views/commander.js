@@ -21,7 +21,7 @@ import { SIDEBAR_WIDTH } from '~/constants'
     text = ''
     highlightIndex = 0
 
-    @computed get matches() {
+    get matches() {
       return (this.docs || []).filter(doc => {
         return includes(doc.getTitle().toLowerCase(), this.text.toLowerCase())
       })

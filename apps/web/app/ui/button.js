@@ -4,47 +4,10 @@ import Icon from './icon'
 import Glow from './glow'
 import Popover from './popover'
 
-const Theme = {
-  color: {
-    darkBackground: clr('#333'),
-    darkBorder: clr('#111'),
-    secondary: clr('#444'),
-  },
-}
-
-const activeLight = {
-  background: '#eee',
-  color: '#444',
-  '&:hover': {
-    background: '#eee',
-    color: '#444',
-  },
-}
-
 const RADIUS = 5
 
-const activeDark = {
-  background: Theme.color.darkBackground.darken(0.05),
-  boxShadow: ['inset', 0, 1, 0, [255, 255, 255, 0.02]],
-  color: '#fff',
-  opacity: 1,
-  '&:hover': {
-    background: Theme.color.darkBackground.darken(0.07),
-    color: '#fff',
-    opacity: 1,
-  },
-}
-
-const getColors = (baseColor, strength = 0) => {
-  const luminance = baseColor.luminosity()
-  const isLight = luminance > 0.7
-  const background = baseColor.lighten(strength)
-  const color = background.lightness(isLight ? 0.3 : 1)
-  return { background, color, isLight }
-}
-
-@view.plain
-export default class SegmentItem {
+@view.ui
+export default class Button {
   static isSegment = true
   static defaultProps = {
     iconColor: '#999',
@@ -72,8 +35,6 @@ export default class SegmentItem {
       spaced,
       after,
       chromeless,
-      slim,
-      tiny,
       dark,
       iconAfter,
       dim,
@@ -81,6 +42,7 @@ export default class SegmentItem {
       tooltip,
       tooltipProps,
       className,
+      theme,
       ...props
     } = this.props
 
@@ -121,7 +83,7 @@ export default class SegmentItem {
         {after || null}
         <Popover
           if={tooltip}
-          dark
+          theme="dark"
           background
           openOnHover
           animation="bounce 150ms"
@@ -161,9 +123,8 @@ export default class SegmentItem {
       '&:hover': {
         background: '#fefefe',
       },
-      '&:active': activeLight,
     },
-    activeOn: activeLight,
+    activeOn: console.log('GOT EM', this),
     children: {
       userSelect: 'none',
     },
@@ -202,26 +163,24 @@ export default class SegmentItem {
   }
 
   static theme = {
+    theme: (props, context, activeTheme) => ({
+      segment: {
+        ...activeTheme,
+        '&:active': activeTheme,
+      },
+      activeOn: activeTheme,
+      clickable: {
+        '&:active': activeTheme,
+        '&:hover': {
+          background: activeTheme.background,
+        },
+      },
+    }),
     spaced: {
       segment: {
         borderRadius: 5,
         margin: [0, 2],
         borderRightWidth: 1,
-      },
-    },
-    slim: {
-      segment: {
-        padding: [5, 10],
-        fontSize: 12,
-      },
-      icon: {
-        transform: 'scale(0.9)',
-      },
-    },
-    tiny: {
-      segment: {
-        height: 24,
-        padding: [3, 8],
       },
     },
     stretch: {
@@ -243,34 +202,6 @@ export default class SegmentItem {
         borderLeftWidth: 0,
       },
     },
-    dark: {
-      segment: {
-        borderColor: Theme.color.darkBorder,
-        background: `
-          ${Theme.color.darkBackground.lighten(0.025).rgb()}
-          linear-gradient(
-            rgba(255,255,255,0.02),
-            transparent
-          )
-        `,
-        boxShadow: ['inset', 1, -1, 0, [255, 255, 255, 0.025]],
-        color: [255, 255, 255, 1],
-        '&:active': activeDark,
-      },
-      activeOn: activeDark,
-      clickable: {
-        '&:active': activeDark,
-        '&:hover': {
-          background: `
-            ${Theme.color.darkBackground.lighten(0.05).rgb()}
-            linear-gradient(
-              rgba(255,255,255,0.035),
-              transparent
-            )
-          `,
-        },
-      },
-    },
     disabled: {
       segment: {
         pointerEvents: 'none',
@@ -285,34 +216,6 @@ export default class SegmentItem {
           opacity: 1,
         },
       },
-    },
-    color: ({ color }) => {
-      if (color === 'transparent') {
-        return {
-          button: {
-            background: 'transparent',
-            border: 'none',
-            color: Theme.color.secondary,
-          },
-        }
-      }
-
-      const base = clr(color)
-      const { isLight, ...regular } = getColors(base)
-
-      return {
-        segment: {
-          ...regular,
-          '&:hover': {
-            background: isLight
-              ? regular.background.darken(0.025)
-              : regular.background.lighten(0.05),
-          },
-          '&:active': {
-            background: regular.background.darken(0.08),
-          },
-        },
-      }
     },
   }
 }

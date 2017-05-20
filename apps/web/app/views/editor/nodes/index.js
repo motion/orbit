@@ -9,6 +9,7 @@ export quote from './quote'
 export meta from './meta'
 export hashtag from './hashtag'
 export title from './title'
+export input from './input'
 
 export const paragraph = props => <p $$fontSize={18}>{props.children}</p>
 

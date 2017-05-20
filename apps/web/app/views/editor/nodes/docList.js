@@ -42,11 +42,9 @@ class DocListStore {
 })
 export default class DocList {
   render({ node, editorStore, store, children, ...props }) {
-    /*
-    if (editorStore.inline) {
+    if (editorStore && editorStore.inline) {
       return <null>sub doc list</null>
     }
-    */
 
     const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0

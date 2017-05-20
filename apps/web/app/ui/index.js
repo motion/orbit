@@ -17,13 +17,14 @@ export Text from './text'
 export Tabs from './tabs'
 
 import { $, view } from '~/helpers'
+import Icon from './icon'
 
 @view
 export class CircleButton {
-  render({ icon, children, ...props }) {
+  render({ icon, iconProps, children, size, ...props }) {
     return (
-      <Circle {...props}>
-        <icon if={icon}>{icon}</icon>
+      <Circle size={size} {...props}>
+        <Icon if={icon} name={icon} {...iconProps} />
         <children if={children}>{children}</children>
       </Circle>
     )
@@ -35,7 +36,7 @@ export class CircleButton {
       height: 20,
     },
     children: {
-      fontSize: 9,
+      fontSize: 12,
       height: 7,
       opacity: 0.5,
       lineHeight: '0.6rem',
@@ -43,34 +44,39 @@ export class CircleButton {
   }
 }
 
-export const Circle = $('btn', {
-  display: 'flex',
-  fontSize: 30,
-  width: 45,
-  height: 45,
-  borderRadius: 100,
-  lineHeight: '1rem',
-  border: [2, '#eee'],
-  alignItems: 'center',
-  justifyContent: 'center',
-  zIndex: 1000,
-  background: '#fff',
-  color: '#111',
-  fontWeight: 400,
-  cursor: 'pointer',
-  filter: 'grayscale(100%)',
-  userSelect: 'none',
-  opacity: 0.8,
-  '&:hover': {
-    opacity: 1,
-    borderWidth: 1,
-    color: '#000',
-    filter: 'grayscale(0%)',
-    transform: {
-      scale: 1.02,
+@view
+export class Circle {
+  static defaultProps = {
+    size: 45,
+  }
+  render({ size, ...props }) {
+    return <circle {...props} />
+  }
+  static style = {
+    circle: {
+      display: 'flex',
+      fontSize: 30,
+      borderRadius: 100,
+      lineHeight: '1rem',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      background: '#fafafa',
+      color: '#111',
+      fontWeight: 400,
+      cursor: 'pointer',
+      userSelect: 'none',
     },
-  },
-})
+  }
+  static theme = {
+    size: ({ size }) => ({
+      circle: {
+        width: size || 45,
+        height: size || 45,
+      },
+    }),
+  }
+}
 
 export const Quote = $('blockquote', {
   borderLeft: [2, '#eee'],

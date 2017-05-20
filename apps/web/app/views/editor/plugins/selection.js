@@ -4,17 +4,14 @@ import SelectBar from './selectBar'
 import InsertButton from './insertButton'
 
 function trackSelection(selection, state) {
-  // avoid selectbar on title/meta
-  if (state.document.nodes.indexOf(state.startBlock) < 1) {
-    return
-  }
   // not highlighted
   if (selection.startOffset === selection.endOffset) {
-    Selection.clear()
+    Selection.clearHighlighted()
     return
   }
+  const key = selection.anchorKey
   Selection.highlightedNode = findDOMNode(
-    state.document.findDescendantDeep(x => x.key === selection.anchorKey)
+    state.document.findDescendantDeep(x => x.key === key)
   )
 }
 
@@ -33,7 +30,6 @@ export default {
     Selection.focused = true
   },
   onSelect(event, { selection }, state) {
-    Selection.mouseUpEvent = event
     trackSelection(selection, state)
     trackFocus(selection, state)
   },

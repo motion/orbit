@@ -1,9 +1,10 @@
 import { view } from '~/helpers'
 import { Popover, Segment, Button } from '~/ui'
+import Selection from '../stores/selection'
 
 @view
 export default class SelectBar {
-  render({ children }) {
+  render() {
     const PAD = 40
 
     console.log(

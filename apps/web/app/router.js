@@ -8,6 +8,7 @@ const context = require.context('./pages', false, /\.js$/)
 const getRoutes = context => ({
   '/': context('./home.js').default,
   '/feed': context('./feed.js').default,
+  '/templates': context('./templates.js').default,
   '/todo': context('./todo.js').default,
   'g/:slug(/:hashtag)': context('./place.js').default,
   'd/:id': context('./doc.js').default,

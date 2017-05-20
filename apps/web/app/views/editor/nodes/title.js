@@ -8,7 +8,12 @@ export default class Title {
     const Tag = props => React.createElement(`h${level}`, props)
 
     return (
-      <Tag $title={level} $$style={editorStore.theme.title} {...attributes}>
+      <Tag
+        $title={level}
+        $title1={level === 1}
+        $$style={editorStore.theme.title}
+        {...attributes}
+      >
         {children}
       </Tag>
     )
@@ -16,8 +21,13 @@ export default class Title {
 
   static style = {
     title: level => ({
-      fontWeight: 400,
-      fontSize: Math.floor(Math.log(12 / level) * 10),
+      fontWeight: level < 5 ? 400 : 600,
+      fontSize: Math.floor(Math.log(200 / level) * 5.5),
     }),
+    title1: {
+      fontSize: 14,
+      textTransform: 'uppercase',
+      color: [0, 0, 0, 0.5],
+    },
   }
 }

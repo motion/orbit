@@ -92,17 +92,14 @@ module.exports = Object.assign(config, {
       template: paths.appHtml,
     }),
     new webpack.DefinePlugin(env.stringified),
+    // hmr
     new webpack.HotModuleReplacementPlugin(),
     new CaseSensitivePathsPlugin(),
+    // npm install
     new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    // readable names
     new webpack.NamedModulesPlugin(),
-
-    // split out vendor files
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'vendor',
-    //   minChunks: Infinity, // ensure only stuff we list
-    // }),
-
+    // vendor
     new webpack.optimize.CommonsChunkPlugin({
       name: 'node-static',
       filename: 'node-static.js',

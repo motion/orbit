@@ -1,11 +1,14 @@
 import { store } from '~/helpers'
 
 @store class Selection {
-  node = null
+  focused = false
+  highlightedNode = null
+  active = null
+  cursorNode = null
   mouseUpEvent = null
 
-  clear = () => {
-    this.node = null
+  clearHighlighted = () => {
+    this.highlighted = null
     this.mouseUpEvent = null
   }
 }

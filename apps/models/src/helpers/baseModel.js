@@ -1,4 +1,5 @@
 import { compile, str } from './properties'
+import { flatten, intersection } from 'lodash'
 
 export default class BaseModel {
   constructor({ defaultSchema, defaultProps }) {
@@ -64,25 +65,38 @@ export default class BaseModel {
 
   async connect(db) {
     this.db = db
+    console.time('db-connect')
     this.collection = await db.collection({
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
       autoMigrate: true,
       pouchSettings: {
-        revs_limit: 100,
-        skip_setup: true,
+        revsLimit: 100,
+        skipSetup: true,
       },
       methods: this.compiledMethods,
     })
+    console.timeEnd('db-connect')
 
     // shim add pouchdb-validation
     this.collection.pouch.installValidationMethods()
 
     // create index
     if (this.settings.index) {
-      // need to await or you get error sorting by dates, etc
-      await this.collection.pouch.createIndex({ fields: this.settings.index })
+      // TODO: pouchdb supposedly does this for you, but it was slow in profiling
+      const { indexes } = await this.collection.pouch.getIndexes()
+      const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
+        field => Object.keys(field)[0]
+      )
+      // if we have not indexed every field
+      if (
+        intersection(this.settings.index, alreadyIndexedFields).length !==
+        this.settings.index.length
+      ) {
+        // need to await or you get error sorting by dates, etc
+        await this.collection.pouch.createIndex({ fields: this.settings.index })
+      }
     }
 
     // setup hooks

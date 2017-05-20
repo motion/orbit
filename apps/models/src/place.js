@@ -23,12 +23,12 @@ class Place extends Model {
     slug: toSlug(props.title),
   })
 
-  createWithHome = async title => {
-    const place = await this.create({ title })
+  async create(props) {
+    const place = await super.create(props)
     const doc = await Document.create({
       home: true,
       places: [place.slug],
-      title: capitalize(title),
+      title: capitalize(props.title),
     })
     return place
   }

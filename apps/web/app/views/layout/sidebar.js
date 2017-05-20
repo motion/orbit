@@ -76,22 +76,14 @@ class SidebarStore {
     return uniqBy(results, r => r.title)
   }
 
-  createPlace = async () => {
-    if (!this.placeInput) {
-      return
-    }
-    const val = this.placeInput.value
-    if (val) {
-      const place = await Place.createWithHome(val)
-      this.editingPlace = false
-      Router.go(place.url())
-    }
-  }
-
-  onFinishEdit = title => {
+  onFinishEdit = async title => {
     this.editingPlace.title = title
     this.editingPlace.members = []
-    this.editingPlace.save()
+    const isTemp = this.editingPlace.temporary
+    const place = await this.editingPlace.save()
+    if (isTemp) {
+      Router.go(place.url())
+    }
     this.editingPlace = null
   }
 
@@ -170,7 +162,13 @@ export default class Sidebar {
             <Button
               icon="simple-add"
               onClick={() =>
-                store.setEditing({ _id: Math.random(), temporary: true })}
+                store.setEditing({
+                  _id: Math.random(),
+                  temporary: true,
+                  save() {
+                    return Place.create({ title: this.title })
+                  },
+                })}
             />
           </title>
         </top>

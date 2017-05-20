@@ -19,6 +19,11 @@ const filtered = ls => ls.filter(x => !!x)
 
 console.log('running webpack for:', process.env.NODE_ENV)
 
+// TODO
+// service workers
+//  requires: https
+//  https://github.com/goldhand/sw-precache-webpack-plugin
+
 let config
 
 if (IS_PROD) {

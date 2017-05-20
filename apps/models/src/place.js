@@ -61,14 +61,15 @@ class Place extends Model {
       this.save()
     },
     toggleSubscribe() {
-      if (!App.loggedIn) return
-      const exists = some(this.members, m => m === App.user.name)
-      if (exists) {
-        this.members = this.members.filter(m => m !== App.user.name)
-      } else {
-        this.members = [...this.members, App.user.name]
+      if (App.loggedIn) {
+        const exists = some(this.members, m => m === App.user.name)
+        if (exists) {
+          this.members = this.members.filter(m => m !== App.user.name)
+        } else {
+          this.members = [...this.members, App.user.name]
+        }
+        this.save()
       }
-      this.save()
     },
     subscribed() {
       return App.loggedIn && this.members.indexOf(App.user.name) >= 0

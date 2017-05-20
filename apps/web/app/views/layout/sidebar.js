@@ -1,15 +1,12 @@
+// @flow
 import { view, Shortcuts } from '~/helpers'
 import { uniqBy } from 'lodash'
-import { Pane, ContextMenu, List, Link, Input, Button } from '~/ui'
+import { Text, Pane, ContextMenu, List, Link, Input, Button } from '~/ui'
 import { Place } from '@jot/models'
 import Login from './login'
 import { SIDEBAR_WIDTH } from '~/constants'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
-
-const Text = ({ getRef, ...props }) => (
-  <text ref={getRef} $$marginLeft={props.active ? -2 : 0} {...props} />
-)
 
 const SideBarItem = ({ children, isEditing, after, ...props }) => {
   const editStyle = isEditing && {
@@ -83,8 +80,7 @@ class SidebarStore {
     if (!this.placeInput) {
       return
     }
-    const val = this.placeInput.innerText
-    console.log('val is', val)
+    const val = this.placeInput.value
     if (val) {
       const place = await Place.createWithHome(val)
       this.editingPlace = false
@@ -92,21 +88,14 @@ class SidebarStore {
     }
   }
 
-  onNewPlace = ref => {
-    this.placeInput = ref
-    if (ref) {
-      ref.focus()
-      document.execCommand('selectAll', false, null)
-    }
+  onFinishEdit = title => {
+    this.editingPlace.title = title
+    this.editingPlace.members = []
+    this.editingPlace.save()
+    this.editingPlace = null
   }
 
-  onNewPlaceKey = e => {
-    if (e.which === 13) {
-      e.preventDefault()
-    }
-  }
-
-  clearCreating = () => {
+  clearEditing = () => {
     this.editingPlace = false
   }
 
@@ -121,18 +110,9 @@ class SidebarStore {
   handleShortcuts = (action, event) => {
     console.log('sidebar got', action)
     switch (action) {
-      case 'enter':
-        event.preventDefault()
-        console.log('editing place?', this.editingPlace)
-        if (this.editingPlace) {
-          console.log(event.target, event, event.currentTarget)
-          this.editingPlace.title = event.target.innerText
-        } else {
-          this.createPlace()
-        }
       case 'esc':
         event.preventDefault()
-        this.clearCreating()
+        this.clearEditing()
         break
       case 'delete':
         if (this.editingPlace) return
@@ -159,11 +139,10 @@ export default class Sidebar {
           onDoubleClick={() => store.setEditing(place)}
         >
           <Text
-            {...isEditing && {
-              contentEditable: true,
-              suppressContentEditableWarning: true,
-              getRef: store.onNewPlace,
-            }}
+            editable={isEditing}
+            autoselect
+            onFinishEdit={store.onFinishEdit}
+            onCancelEdit={store.clearEditing}
           >
             {place.title}
           </Text>

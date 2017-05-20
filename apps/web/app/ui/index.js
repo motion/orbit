@@ -13,6 +13,7 @@ export Popover from './popover'
 export Glow from './glow'
 export ContextMenu from './contextMenu'
 export Pane from './pane'
+export Text from './text'
 export Tabs from './tabs'
 
 import { $, view } from '~/helpers'
@@ -69,12 +70,6 @@ export const Circle = $('btn', {
       scale: 1.02,
     },
   },
-})
-
-export const Text = $('p', {
-  fontSize: 16,
-  lineHeight: '1.6rem',
-  display: 'block',
 })
 
 export const Quote = $('blockquote', {

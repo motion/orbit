@@ -40,7 +40,11 @@ function valueWrap(info, valueGet: Function) {
     delete selector._id
   }
 
-  const pull = PouchDB.replicate(remoteDB, localDB, { selector })
+  const pull = PouchDB.replicate(remoteDB, localDB, {
+    selector,
+    live: true,
+    retry: true,
+  })
   out('replicate', remoteDB, 'to', localDB, selector)
   const response = {}
 

@@ -103,7 +103,6 @@ class App {
         {
           live: true,
           retry: true,
-          skipSetup: true,
         }
       )
     })

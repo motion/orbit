@@ -108,12 +108,12 @@ export const styles = {
     padding: 20,
   },
   ul: {
-    paddingLeft: 15,
-    marginLeft: 10,
+    margin: [10, 0, 10, 20],
+    padding: 0,
   },
   ol: {
-    paddingLeft: 15,
-    marginLeft: 10,
+    margin: [10, 0, 10, 20],
+    padding: 0,
   },
   li: {
     margin: 0,

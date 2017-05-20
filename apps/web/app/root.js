@@ -50,8 +50,8 @@ export default class Root {
         <main>
           <header
             $hovered={this.headerHovered}
-            onMouseEnter={() => this.headerHovered = true}
-            onMouseLeave={() => this.headerHovered = false}
+            onMouseEnter={() => (this.headerHovered = true)}
+            onMouseLeave={() => (this.headerHovered = false)}
           >
             <nav>
               <Segment>
@@ -67,7 +67,7 @@ export default class Root {
                   icon="minimal-right"
                   onClick={() => Router.forward()}
                 />
-                <Button icon="simple-add" tooltip="new" />
+                <Button if={false} icon="simple-add" tooltip="new" />
               </Segment>
             </nav>
             <bar $$centered $$flex $$row $$overflow="hidden">

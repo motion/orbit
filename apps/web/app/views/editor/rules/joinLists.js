@@ -6,7 +6,7 @@ export default {
   },
   validate: document => {
     const joinableNode = document.nodes.find((node, key) => {
-      if (!['ol', 'ul'].includes(node.type)) {
+      if (!['ol_list', 'ul_list'].includes(node.type)) {
         return false
       }
 
@@ -25,8 +25,7 @@ export default {
       return false
     }
   },
-  normalize: (transform, document, nodes) => {
-    const { joinableNode, previousNode } = nodes
+  normalize: (transform, document, { joinableNode, previousNode }) => {
     const joinableNodelistItems = joinableNode.nodes
 
     joinableNodelistItems.forEach((node, index) => {

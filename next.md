@@ -1,12 +1,10 @@
 # needed
 
-- user/auth into own model
-- superlogin
 - db per place
+- hashtags
 
 # grabbag
 
-  - banner image (show up on grid/list)
   - presence
   - comments
   - quicker doc creation
@@ -22,9 +20,6 @@
 
 - make app a proper store in web
 - app.(user|auth|key|errors...)
--
-
-- make actions a thing on stores
 - actions can be observed on any store
 - make App a proper store
 - give models their own manager that takes all options for couch

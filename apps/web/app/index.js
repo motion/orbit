@@ -17,7 +17,8 @@ import Splash from '~/views/splash'
 import { AppContainer } from 'react-hot-loader'
 import Theme from './ui/theme'
 import theme from './theme'
-import serviceWorker from './helpers/serviceWorker'
+// import serviceWorker from './helpers/serviceWorker'
+// serviceWorker()
 
 if (!IS_PROD) {
   // install console formatters
@@ -67,5 +68,3 @@ App.start({
   database: DB_CONFIG,
   stores: Stores,
 }).then(render)
-
-serviceWorker()

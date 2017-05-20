@@ -19,4 +19,25 @@ export default [
       })
     },
   },
+  // enforce other lines not title
+  {
+    match: node => node.kind == 'document',
+    validate: document => {
+      const rest = document.nodes.slice(1)
+      const isTopLevelTitle = node =>
+        node.type === BLOCKS.TITLE && node.data.get('level') === 1
+      if (rest.some(isTopLevelTitle)) {
+        return rest.filter(isTopLevelTitle)
+      }
+      return null
+    },
+    normalize: (transform, document, titles) => {
+      titles.forEach(node => {
+        transform.setNodeByKey(node.key, {
+          type: BLOCKS.PARAGRAPH,
+          data: null,
+        })
+      })
+    },
+  },
 ]

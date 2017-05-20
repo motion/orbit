@@ -123,6 +123,11 @@ p, h1, h2, h3, h4, h5, h6, br {
   display: block;
 }
 
+ol, ul {
+  margin: 0;
+  padding: 0;
+}
+
 p, h1, h2, h3, h4, h5, h6, code, pre {
   margin-top: 0;
   margin-bottom: 0;
@@ -134,9 +139,8 @@ pre, code {
 }
 
 code {
-  margin: 10px;
-  padding: 10px;
-  overflow: scroll;
+  margin: 0;
+  padding: 0;
 }
 
 img {

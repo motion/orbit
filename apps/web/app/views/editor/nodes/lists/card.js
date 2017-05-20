@@ -46,11 +46,7 @@ export default class CardList {
       height: 280,
       borderRadius: 5,
       overflow: 'hidden',
-      borderTop: [2, 'red'],
       transition: 'transform 50ms ease-in',
-      '&:hover': {
-        borderTop: [3, 'red'],
-      },
       '&:active': {
         transform: { scale: 0.98 },
       },

@@ -117,7 +117,9 @@ class SidebarStore {
   }
 }
 
-@view({ store: SidebarStore })
+@view({
+  store: SidebarStore,
+})
 export default class Sidebar {
   getListItem = (place, index) => {
     const { store } = this.props
@@ -148,18 +150,14 @@ export default class Sidebar {
       <sidebar>
         <top>
           <Login />
-          <title
-            $$row
-            $$justify="space-between"
-            $$padding={6}
-            $$borderBottom={[1, 'dotted', '#eee']}
-          >
+          <title $$row $$justify="space-between" $$padding={[4, 6]}>
             <input
               $search
               placeholder="places"
               onChange={e => (store.filter = e.target.value)}
             />
             <Button
+              chromeless
               icon="simple-add"
               onClick={() =>
                 store.setEditing({
@@ -178,7 +176,7 @@ export default class Sidebar {
             if={store.allPlaces}
             scrollable
             collapsable
-            title="me"
+            title="Saved"
             collapsed={store.allPlacesClosed}
             onSetCollapse={store.ref('allPlacesClosed').set}
           >

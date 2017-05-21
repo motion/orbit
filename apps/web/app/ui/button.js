@@ -190,7 +190,7 @@ export default class Button {
     },
     chromeless: {
       segment: {
-        border: 'transparent',
+        borderWidth: 0,
         '&:hover': {
           opacity: 0.8,
         },

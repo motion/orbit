@@ -76,16 +76,22 @@ export default class DocList {
             shouldFocus={store.shouldFocus}
             if={listType === 'list'}
             listStore={store}
+            node={node}
+            {...props}
           />
           <CardList
             shouldFocus={store.shouldFocus}
             if={listType === 'card'}
             listStore={store}
+            node={node}
+            {...props}
           />
           <GridList
             shouldFocus={store.shouldFocus}
             if={listType === 'grid'}
             listStore={store}
+            node={node}
+            {...props}
           />
         </content>
       </doclist>

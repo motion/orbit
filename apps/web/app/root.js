@@ -58,11 +58,13 @@ export default class Root {
                 <Button
                   if={IS_ELECTRON}
                   icon="minimal-left"
+                  chromeless
                   $inactive={Router.atBack}
                   onClick={() => Router.back()}
                 />
                 <Button
                   if={IS_ELECTRON}
+                  chromeless
                   $inactive={Router.atFront}
                   icon="minimal-right"
                   onClick={() => Router.forward()}

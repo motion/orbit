@@ -3,31 +3,27 @@ import { Grid } from '~/ui'
 import DocItem from '~/views/document/item'
 
 @view({
-  store: class {
-    get place() {
-      return this.props.place
-    }
+  store: class GridListStore {
     updateLayout(layout) {
-      if (this.place && !isEqual(this.place.layout, layout)) {
-        this.place.layout = layout
-        this.place.save()
-      }
+      const { node } = this.props
+      const next = node.data.set('layout', layout)
+      this.props.onChange(next)
     }
   },
 })
 export default class GridList {
-  render({ store, listStore }) {
+  render({ node, store, listStore }) {
     return (
       <grid>
         <Grid
-          if={listStore.docs}
           onLayoutChange={store.updateLayout}
-          layout={listStore.place.layout}
-          cols={2}
-          rowHeight={200}
-          items={listStore.docs.map(doc => (
-            <DocItem bordered draggable editable key={doc._id} doc={doc} />
-          ))}
+          layout={node.data.get('layout')}
+          cols={4}
+          rowHeight={150}
+          items={(listStore.docs || [])
+            .map(doc => (
+              <DocItem bordered draggable editable key={doc._id} doc={doc} />
+            ))}
         />
       </grid>
     )

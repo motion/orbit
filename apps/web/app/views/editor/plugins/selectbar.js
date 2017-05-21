@@ -7,12 +7,6 @@ export default class SelectBar {
   render() {
     const PAD = 40
 
-    console.log(
-      'got em coach',
-      Selection.highlightedNode,
-      Selection.mouseUpEvent
-    )
-
     return (
       <Popover
         if={Selection.highlightedNode && Selection.mouseUpEvent}

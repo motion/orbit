@@ -30,12 +30,6 @@ export class Title {
 
     return (
       <ptitle onDoubleClick={onCollapse} {...props}>
-        <before if={before}>{before}</before>
-        <content>
-          {children} <stat if={stat}>{stat}</stat>
-        </content>
-        <after if={after}>{after}</after>
-        {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
         <collapse
           if={collapsable}
           onClick={this.onClick}
@@ -47,6 +41,12 @@ export class Title {
             size={8}
           />
         </collapse>
+        <before if={before}>{before}</before>
+        <content>
+          {children} <stat if={stat}>{stat}</stat>
+        </content>
+        <after if={after}>{after}</after>
+        {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
       </ptitle>
     )
   }
@@ -69,7 +69,8 @@ export class Title {
     },
     collapse: {
       padding: [5, 5, 4, 5],
-      marginLeft: 5,
+      marginRight: 5,
+      marginLeft: -5,
       borderRadius: 3,
       alignItems: 'center',
       '&:hover': {

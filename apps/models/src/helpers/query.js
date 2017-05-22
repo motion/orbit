@@ -31,21 +31,24 @@ function valueWrap(info, valueGet: Function) {
   })
 
   // sync!
-  const remoteDB = this.remoteDb
-  const localDB = this.pouch.name
-  const selector = { ...value.mquery._conditions }
+  if (value && value.mquery) {
+    const remoteDB = this.remoteDb
+    const localDB = this.pouch.name
+    const selector = { ...value.mquery._conditions }
 
-  // need to delete id or else findAll queries dont sync
-  if (!selector._id || !Object.keys(selector._id).length) {
-    delete selector._id
+    // need to delete id or else findAll queries dont sync
+    if (!selector._id || !Object.keys(selector._id).length) {
+      delete selector._id
+    }
+
+    const pull = PouchDB.replicate(remoteDB, localDB, {
+      selector,
+      live: true,
+      retry: true,
+    })
+    out('replicate', remoteDB, 'to', localDB, selector)
   }
 
-  const pull = PouchDB.replicate(remoteDB, localDB, {
-    selector,
-    live: true,
-    retry: true,
-  })
-  out('replicate', remoteDB, 'to', localDB, selector)
   const response = {}
 
   // helpers

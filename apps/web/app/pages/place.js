@@ -10,8 +10,16 @@ import DocumentPage from '~/pages/doc'
 
 @view({
   store: class PlaceStore {
-    place = Place.get(this.props.slug || Router.params.slug)
-    doc = Document.homeForPlace(this.props.slug || Router.params.slug)
+    place = Place.get({ slug: this.props.slug || Router.params.slug })
+    doc = null
+
+    start() {
+      this.watch(async () => {
+        if (this.place) {
+          this.doc = await Document.homeForPlace(this.place._id).exec()
+        }
+      })
+    }
 
     createDoc = title => {
       Document.create({ title, places: [this.place.slug] })
@@ -76,7 +84,7 @@ export default class PlacePage {
 
     return (
       <Page place={place} doc={doc} actions={actions}>
-        <DocumentPage insidePlace if={doc} id={doc._id} />
+        <DocumentPage if={doc} insidePlace id={doc._id} />
       </Page>
     )
   }

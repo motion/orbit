@@ -1,5 +1,6 @@
 import { Model, query, str, object, array, bool } from './helpers'
 import Image from './image'
+import Place from './place'
 import App from './app'
 import generateName from 'sillyname'
 
@@ -26,11 +27,11 @@ class Document extends Model {
     title: str,
     content: object,
     authorId: str,
+    placeId: str.optional,
     places: array.optional.items(str),
     hashtags: array.items(str),
     attachments: array.optional.items(str),
     private: bool,
-    home: bool.optional,
     temporary: bool.optional,
     timestamps: true,
   }
@@ -42,7 +43,6 @@ class Document extends Model {
       authorId: App.user && App.user.name,
       hashtags: [],
       attachments: [],
-      home: false,
       private: true,
       content: DEFAULT_CONTENT(title),
     }
@@ -53,6 +53,20 @@ class Document extends Model {
   settings = {
     title: 'documents',
     index: ['createdAt'],
+  }
+
+  hooks = {
+    preSave({ title, placeId }) {
+      // sync title
+      if (placeId) {
+        Place.get(placeId).exec().then(place => {
+          if (place.title !== title) {
+            place.title = title
+            place.save()
+          }
+        })
+      }
+    },
   }
 
   methods = {
@@ -78,35 +92,25 @@ class Document extends Model {
     },
   }
 
-  @query homeForPlace = slug => {
-    if (!slug) {
+  @query homeForPlace = id => {
+    if (!id) {
       return null
     }
-
-    return (
-      this.collection
-        .findOne()
-        .where('home')
-        .eq(true)
-        .where('places')
-        // in array find
-        .elemMatch({ $eq: slug })
-    )
+    return this.collection.findOne().where('placeId').eq(id)
   }
 
-  @query forPlace = slug => {
-    if (!slug) {
+  @query forPlace = id => {
+    if (!id) {
       return null
     }
-
     return (
       this.collection
         .find({
-          home: { $ne: true },
+          placeId: { $exists: true },
         })
         .where('places')
         // in array find
-        .elemMatch({ $eq: slug })
+        .elemMatch({ $eq: id })
         .sort({ createdAt: 'desc' })
     )
   }
@@ -118,7 +122,7 @@ class Document extends Model {
 
     return this.collection
       .find({
-        home: { $ne: true },
+        placeId: { $exists: true },
         hashtags: { $elemMatch: { $eq: hashtag } },
         places: { $elemMatch: { $eq: slug } },
       })

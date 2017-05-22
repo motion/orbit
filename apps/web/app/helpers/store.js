@@ -22,6 +22,10 @@ export const config = {
   },
   onStoreMount(name, store, props) {
     store.subscriptions = new CompositeDisposable()
+
+    // unmount
+    store.subscriptions.add(config.onStoreUnmount(name, store))
+
     // mount actions
     automagicalStores(store)
     if (store.start) {
@@ -86,11 +90,10 @@ function automagicalStores(obj) {
       continue
     }
 
+    // not get, we can check value
     const val = obj[method]
-    const isFunction = typeof val === 'function'
-    const isQuery = val && val.$isQuery
 
-    // auto promise => observable
+    // auto resolve promise
     if (val instanceof Promise) {
       const observable = fromPromise(val)
       Object.defineProperty(obj, method, {
@@ -98,8 +101,12 @@ function automagicalStores(obj) {
           return observable.value
         },
       })
+      // TODO: make a query that contains a promsie work
       continue
     }
+
+    const isFunction = typeof val === 'function'
+    const isQuery = val && val.$isQuery
 
     // auto @query => observable
     if (isQuery) {
@@ -140,10 +147,6 @@ function automagicalStores(obj) {
 // extends store with a proxy, make it cool
 export default function store(Store) {
   config.storeDecorator(Store)
-
-  Store.prototype.dispose = function() {
-    config.onStoreUnmount(Store.constructor.name, this)
-  }
 
   const ProxyStore = function(...args) {
     const store = new Store(...args)

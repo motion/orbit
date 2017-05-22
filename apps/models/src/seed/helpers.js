@@ -1,22 +1,13 @@
 import { Place, Document } from '../all'
 
 export async function ensurePlace(slug, options = {}) {
-  // TODO get
-
-  if (!await Place.get(slug).exec()) {
-    const document = await Document.create({
-      ...options.document,
-      places: [slug],
-      home: true,
-    })
+  if (!await Place.get({ slug }).exec()) {
     const place = await Place.create({
       slug,
-      primary_docId: document._id,
       ...options.place,
     })
-
     return {
-      document,
+      document: place.document,
       place,
     }
   }

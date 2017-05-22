@@ -12,12 +12,12 @@ class DocListStore {
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
   docs = !this.props.editorStore.inline &&
-    Document.forPlace(this.place && this.place.slug)
+    Document.forPlace(this.place && this.place._id)
 
   shouldFocus = false
 
   createDoc = async () => {
-    await Document.create({ title: ' ', places: [this.place.slug] })
+    await Document.create({ title: ' ', places: [this.place._id] })
     this.setTimeout(() => {
       this.shouldFocus = true
     }, 200)

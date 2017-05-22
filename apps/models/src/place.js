@@ -11,7 +11,7 @@ class Place extends Model {
     title: str,
     slug: str,
     private: bool,
-    primary_docId: str.optional,
+    documentId: str.optional,
     members: array.items(str),
     timestamps: true,
   }
@@ -25,11 +25,14 @@ class Place extends Model {
 
   async create(props) {
     const place = await super.create(props)
-    const doc = await Document.create({
-      home: true,
-      places: [place.slug],
+    const document = await Document.create({
+      placeId: place._id,
+      places: [place._id],
       title: capitalize(props.title),
     })
+    place.documentId = document._id
+    place.save()
+    place.document = document
     return place
   }
 
@@ -39,9 +42,21 @@ class Place extends Model {
   }
 
   hooks = {
-    async preInsert(data) {
-      if (await this.get(data.slug).exec()) {
-        throw new Error(`Already exists a place with this slug! ${data.slug}`)
+    async preSave({ slug }) {
+      if (await this.get(slug).exec()) {
+        throw new Error(`Already exists a place with this slug! ${slug}`)
+      }
+    },
+    postSave({ _id, title }) {
+      // sync title
+      console.log('post save place', _id)
+      if (_id) {
+        Document.homeForPlace(_id).exec().then(doc => {
+          if (doc.title !== title) {
+            doc.title = title
+            doc.save()
+          }
+        })
       }
     },
   }
@@ -78,11 +93,11 @@ class Place extends Model {
 
   @query all = find => this.collection.find(find)
 
-  @query get = (slug: string) => {
-    if (!slug) {
+  @query get = (find: string | Object) => {
+    if (!find) {
       return null
     }
-    return this.collection.findOne().where('slug').eq(slug)
+    return this.collection.findOne(find)
   };
 }
 

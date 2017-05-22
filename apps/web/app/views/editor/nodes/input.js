@@ -8,7 +8,6 @@ export default class Input {
     console.log('input', props)
     return (
       <root>
-        <label contentEditable suppressContentEditableWarning />
         <text
           contentEditable
           suppressContentEditableWarning

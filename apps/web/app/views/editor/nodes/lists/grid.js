@@ -8,6 +8,7 @@ import DocItem from '~/views/document/item'
     updateLayout(layout) {
       const { node } = this.props
       const next = node.data.set('layout', layout)
+      console.log('grid change layout', node.data)
       this.props.onChange(next)
     }
   },
@@ -23,7 +24,13 @@ export default class GridList {
           rowHeight={150}
           items={(listStore.docs || [])
             .map(doc => (
-              <DocItem bordered draggable editable key={doc._id} doc={doc} />
+              <DocItem
+                key={doc._id.replace(':', '') || Math.random()}
+                bordered
+                draggable
+                editable
+                doc={doc}
+              />
             ))}
         />
       </grid>

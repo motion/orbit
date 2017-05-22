@@ -37,6 +37,7 @@ class DocListStore {
   }
 }
 
+@node
 @view({
   store: DocListStore,
 })
@@ -86,8 +87,8 @@ export default class DocList {
         <content>
           <ListView
             shouldFocus={store.shouldFocus}
-            if={listType === 'list'}
             listStore={store}
+            editorStore={editorStore}
             node={node}
             {...props}
           />

@@ -126,6 +126,9 @@ export default class Button {
     },
     activeOn: {
       background: '#fafafa',
+      '&:hover': {
+        background: '#fafafa',
+      },
     },
     children: {
       userSelect: 'none',

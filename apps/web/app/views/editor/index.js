@@ -82,7 +82,6 @@ class EditorStore {
     console.log('saving...', this.doc._rev)
     this.doc.content = Raw.serialize(this.content)
     this.doc.title = this.content.document.nodes.first().text
-    console.log('title is', this.doc.title, this.content)
     this.doc.save()
     this.lastSavedRev = this.doc._rev
     this.pendingSave = false

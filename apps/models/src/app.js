@@ -35,6 +35,8 @@ class App {
   @observable.ref activeStores = {}
 
   constructor() {
+    // hmr fix
+    if (RxDB.PouchDB.replicate) return
     RxDB.plugin(pHTTP)
     RxDB.plugin(pIDB)
     RxDB.plugin(pREPL)
@@ -87,6 +89,7 @@ class App {
       skipSetup: true,
       withCredentials: false,
     })
+
     // images
     this.images = new PouchDB(`${database.couchUrl}/images`, {
       skipSetup: true,
@@ -125,24 +128,27 @@ class App {
     let errors = []
 
     // try signup
-    const signup = await this.signup(username, password)
-    if (!signup.error) {
-      this.clearErrors()
-      return signup
-    }
-    errors.push(signup.error)
+    try {
+      const [signup, login] = await Promise.all([
+        this.signup(username, password),
+        this.login(username, password),
+      ])
 
-    // try login
-    const login = await this.login(username, password)
-    if (!login.error) {
-      this.clearErrors()
-      return login
+      if (!signup.error) {
+        this.setSession()
+        this.clearErrors()
+        return signup
+      }
+      if (!login.error) {
+        this.setSession()
+        this.clearErrors()
+        return login
+      }
+    } catch (e) {
+      errors.push(e)
+      this.handleError(...errors)
+      return { errors }
     }
-    errors.push(login.error)
-
-    // handle errors
-    this.handleError(...errors)
-    return { errors }
   }
 
   get activePlace() {
@@ -173,7 +179,7 @@ class App {
 
   @action logout = async () => {
     await this.auth.logout()
-    this.setSession()
+    this.clearUser()
   }
 
   @action setUsername = (name: string) => {

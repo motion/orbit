@@ -33,6 +33,7 @@ export default class Input {
     input: {
       flex: 1,
       fontSize: 13,
+      height: 31,
       padding: [7, 8],
       border: [1, 'dotted', '#ccc'],
       borderRadius: BORDER_RADIUS,

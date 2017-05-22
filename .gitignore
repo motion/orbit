@@ -8,3 +8,4 @@ build
 values.yaml
 *.tgz
 kubeconfig
+.vscode

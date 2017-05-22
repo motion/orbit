@@ -1,3 +1,4 @@
+import React from 'react'
 import { view, observable } from '~/helpers'
 import { range, result } from 'lodash'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
@@ -32,7 +33,7 @@ export default class Grid {
       <Layout
         if={this.layout}
         {...props}
-        ref={ref => this.gridLayout = ref}
+        ref={ref => (this.gridLayout = ref)}
         onLayoutChange={this.props.onLayoutChange}
         layout={this.layout}
       >

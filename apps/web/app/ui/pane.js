@@ -1,5 +1,5 @@
-import { clr, view } from '~/helpers'
 import React from 'react'
+import { clr, view } from '~/helpers'
 import Icon from './icon'
 import Grain from './grain'
 import Tabs from './tabs'

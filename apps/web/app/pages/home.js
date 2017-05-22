@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 import { Document } from '@jot/models'
 import App from '@jot/models'

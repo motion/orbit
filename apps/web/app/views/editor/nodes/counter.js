@@ -1,3 +1,4 @@
+import React from 'react'
 import { Editor, Raw } from 'slate'
 import { node, view, observable } from '~/helpers'
 

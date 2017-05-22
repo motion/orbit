@@ -1,4 +1,5 @@
 // @flow
+import React from 'react'
 import { view, observable, keycode } from '~/helpers'
 
 @view.ui

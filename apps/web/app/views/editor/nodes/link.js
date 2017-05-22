@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default props => {
   const { data } = props.node
   const href = data.get('href')

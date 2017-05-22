@@ -1,8 +1,8 @@
+import React from 'react'
 import { view, observable } from '~/helpers'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
 import { Icon } from '~/ui'
-import React from 'react'
 import Editor from '~/views/editor'
 
 @view

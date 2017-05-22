@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 import { Button, Icon } from '~/ui'
 import randomcolor from 'random-color'

@@ -1,3 +1,4 @@
+import React from 'react'
 import { node, view, computed } from '~/helpers'
 import App, { Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
@@ -85,8 +86,8 @@ export default class DocLinkList {
             <input
               $edit
               spellcheck={false}
-              onFocus={() => store.newHashtag = hashtag}
-              onChange={e => store.newHashtag = e.target.value}
+              onFocus={() => (store.newHashtag = hashtag)}
+              onChange={e => (store.newHashtag = e.target.value)}
               onBlur={store.saveName}
               onKeyDown={e => e.which == 13 && e.target.blur()}
               value={store.inputHashtag}

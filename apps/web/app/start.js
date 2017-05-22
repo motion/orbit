@@ -14,7 +14,6 @@ import Immutable from 'immutable'
 import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Splash from '~/views/splash'
-import { AppContainer } from 'react-hot-loader'
 import Theme from './ui/theme'
 import theme from './theme'
 // import serviceWorker from './helpers/serviceWorker'
@@ -47,11 +46,9 @@ export function render() {
   console.time('#render')
   const Root = require('./views/root').default
   ReactDOM.render(
-    <AppContainer errorReporter={errorReporter}>
-      <Theme {...theme}>
-        <Root />
-      </Theme>
-    </AppContainer>,
+    <Theme {...theme}>
+      <Root />
+    </Theme>,
     ROOT
   )
   console.timeEnd('#render')

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Selection, Editor, Raw } from 'slate'
 import { object } from 'prop-types'
 import { Document } from '@jot/models'

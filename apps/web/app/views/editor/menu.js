@@ -1,3 +1,4 @@
+import React from 'react'
 import Portal from 'react-portal'
 import { view } from '~/helpers'
 

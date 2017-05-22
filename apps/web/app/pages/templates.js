@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 import { Template } from '@jot/models'
 import FlipMove from 'react-flip-move'

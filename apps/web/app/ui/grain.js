@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 
 @view.ui

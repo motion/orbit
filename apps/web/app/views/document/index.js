@@ -1,4 +1,5 @@
 // @flow
+import React from 'react'
 import { view } from '~/helpers'
 import { Button, Icon } from '~/ui'
 import Router from '~/router'

@@ -15,7 +15,23 @@
         }
       ],
       "babel-plugin-transform-decorators-legacy",
-      "react-hot-loader/babel"
+      [
+        "babel-plugin-react-transform-motion",
+        {
+          "decoratorName": "view",
+          "transforms": [
+            {
+              "transform": "react-transform-hmr",
+              "imports": [
+                "react"
+              ],
+              "locals": [
+                "module"
+              ]
+            }
+          ]
+        }
+      ]
     ],
     "presets": [
       [

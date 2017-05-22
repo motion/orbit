@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 import App from '@jot/models'
 import { SIDEBAR_WIDTH } from '~/constants'

@@ -1,3 +1,4 @@
+import React from 'react'
 import { node, view } from '~/helpers'
 import App, { Document } from '@jot/models'
 import { Segment, Button } from '~/ui'

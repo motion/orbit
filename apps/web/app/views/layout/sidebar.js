@@ -1,4 +1,5 @@
 // @flow
+import React from 'react'
 import { view, Shortcuts } from '~/helpers'
 import { uniqBy } from 'lodash'
 import { Text, Pane, ContextMenu, List, Link, Input, Button } from '~/ui'

@@ -1,3 +1,4 @@
+import React from 'react'
 import { view, observable } from '~/helpers'
 
 const TOTAL_TIME = 200

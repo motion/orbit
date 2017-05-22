@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 import { Grid } from '~/ui'
 import DocItem from '~/views/document/item'

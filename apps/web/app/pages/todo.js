@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 import { Place, Document } from '@jot/models'
 import { CircleButton } from '~/ui'

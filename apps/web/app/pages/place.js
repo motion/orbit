@@ -1,3 +1,4 @@
+import React from 'react'
 import { view, query, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
 import { Place, Document } from '@jot/models'

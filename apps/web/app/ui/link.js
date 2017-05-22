@@ -1,3 +1,4 @@
+import React from 'react'
 import { view, observable } from '~/helpers'
 import Router from '~/router'
 

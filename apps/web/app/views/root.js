@@ -1,3 +1,4 @@
+import React from 'react'
 import { view, observable } from '~/helpers'
 import { object } from 'prop-types'
 import { Segment, Input, Link, Button, Icon } from '~/ui'

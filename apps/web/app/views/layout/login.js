@@ -1,3 +1,4 @@
+import React from 'react'
 import { view, keycode } from '~/helpers'
 import App from '@jot/models'
 import { Segment, Input, Button, Link } from '~/ui'

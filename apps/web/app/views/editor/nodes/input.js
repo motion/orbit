@@ -1,3 +1,4 @@
+import React from 'react'
 import { view, node } from '~/helpers'
 
 @node

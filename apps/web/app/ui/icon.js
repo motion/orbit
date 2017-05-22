@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 import Popover from './popover'
 import names from './iconNames'

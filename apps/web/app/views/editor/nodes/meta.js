@@ -1,3 +1,4 @@
+import React from 'react'
 import { node, view } from '~/helpers'
 import { flatten, uniq } from 'lodash'
 import TimeAgo from 'react-timeago'

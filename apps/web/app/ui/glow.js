@@ -1,3 +1,4 @@
+import React from 'react'
 import { view, $ } from '~/helpers'
 import { throttle } from 'lodash'
 import { offset } from '~/views/helpers'

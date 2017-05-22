@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '~/helpers'
 import { Segment, Button } from '~/ui'
 import Router from '~/router'

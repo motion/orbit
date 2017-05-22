@@ -11,9 +11,8 @@ import List from './lists/list'
 class DocListStore {
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
-  docs /*!this.props.editorStore.inline &&*/ = Document.forPlace(
-    this.place && this.place.slug
-  )
+  docs = !this.props.editorStore.inline &&
+    Document.forPlace(this.place && this.place.slug)
 
   shouldFocus = false
 
@@ -42,6 +41,17 @@ class DocListStore {
   store: DocListStore,
 })
 export default class DocList {
+  getList = type => {
+    switch (type) {
+      case 'list':
+        return List
+      case 'grid':
+        return GridList
+      case 'card':
+        return CardList
+    }
+  }
+
   render({ node, editorStore, store, children, ...props }) {
     if (editorStore && editorStore.inline) {
       return <null>sub doc list</null>
@@ -50,6 +60,7 @@ export default class DocList {
     const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0
     const listType = node.data.get('listType') || 'card'
+    const ListView = this.getList(listType)
 
     return (
       <doclist contentEditable={false}>
@@ -73,23 +84,9 @@ export default class DocList {
           </Segment>
         </config>
         <content>
-          <List
+          <ListView
             shouldFocus={store.shouldFocus}
             if={listType === 'list'}
-            listStore={store}
-            node={node}
-            {...props}
-          />
-          <CardList
-            shouldFocus={store.shouldFocus}
-            if={listType === 'card'}
-            listStore={store}
-            node={node}
-            {...props}
-          />
-          <GridList
-            shouldFocus={store.shouldFocus}
-            if={listType === 'grid'}
             listStore={store}
             node={node}
             {...props}

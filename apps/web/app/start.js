@@ -54,10 +54,10 @@ export function render() {
   console.timeEnd('#render')
 }
 
-// if (module.hot) {
-//   module.hot.accept('./views/root', render)
-//   module.hot.accept('./router', render)
-// }
+if (module.hot) {
+  module.hot.accept('./views/root', render)
+  module.hot.accept('./router', render)
+}
 
 ReactDOM.render(<Splash />, ROOT)
 

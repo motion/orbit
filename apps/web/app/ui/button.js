@@ -124,7 +124,9 @@ export default class Button {
         background: '#fefefe',
       },
     },
-    activeOn: console.log('GOT EM', this),
+    activeOn: {
+      background: '#fafafa',
+    },
     children: {
       userSelect: 'none',
     },

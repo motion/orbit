@@ -34,7 +34,6 @@ export default class Link {
 
   static style = {
     a: {
-      color: '#333',
       cursor: 'pointer',
     },
   }

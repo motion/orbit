@@ -56,10 +56,11 @@ export class Title {
       padding: [2, 10],
       background: '#fafafa',
       borderBottom: [1, 'dotted', '#eee'],
+      color: [0, 0, 0, 0.5],
       flexFlow: 'row',
       alignItems: 'center',
-      fontSize: 13,
-      fontWeight: 400,
+      fontSize: 12,
+      fontWeight: 700,
       userSelect: 'none',
     },
     content: {
@@ -219,7 +220,6 @@ export default class Pane {
   static style = {
     section: {
       flex: 1,
-      background: '#fff',
       overflow: 'hidden',
     },
     height: height => ({

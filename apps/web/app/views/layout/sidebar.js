@@ -19,7 +19,7 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
       {...props}
       style={{
         gloss: true,
-        color: [0, 0, 0, 0.75],
+        color: [0, 0, 0, 0.6],
         width: '100%',
         fontSize: 14,
         padding: [4, 10],
@@ -31,7 +31,7 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
       }}
       active={{
         fontWeight: 500,
-        color: '#684f63',
+        color: '#333',
         background: '#f1d6eb',
         '&:hover': {
           background: '#f1d6eb',
@@ -224,24 +224,26 @@ export default class Sidebar {
           </Pane>
         </content>
 
-        <sidebar if={App.activePage.sidebar}>
+        <activeSidebar if={App.activePage.sidebar}>
           {App.activePage.sidebar}
-        </sidebar>
+        </activeSidebar>
       </sidebar>
     )
   }
 
   static style = {
-    content: {
-      flex: 1,
-    },
     sidebar: {
       width: SIDEBAR_WIDTH,
       borderLeft: [1, 'dotted', '#eee'],
       userSelect: 'none',
+      background: '#fafafa',
+    },
+    content: {
+      flex: 1,
     },
     search: {
       border: 'none',
+      background: 'transparent',
       margin: ['auto', 0],
       fontSize: 14,
       width: '70%',

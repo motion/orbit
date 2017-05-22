@@ -20,7 +20,6 @@ export default class ListItem {
     match,
     avatar,
     fakeAvatar,
-    shine, // a strong highlight
     date,
     dateSize,
     meta,
@@ -29,7 +28,6 @@ export default class ListItem {
     isLastElement,
     highlight,
     isFirstElement,
-    wrap,
     nohover,
     row,
     onClick,
@@ -50,9 +48,7 @@ export default class ListItem {
     return (
       <item
         ref="item"
-        $shine={shine}
         $isLast={isLastElement}
-        $hardWidth={wrap}
         $highlight={highlight}
         $isFirst={isFirstElement}
         $nohover={nohover}
@@ -120,19 +116,6 @@ export default class ListItem {
       flex: 'none',
       justifyContent: 'space-between',
     },
-    nohover: {
-      '&:hover': {
-        background: 'transparent',
-      },
-      '&:active': {
-        background: 'transparent',
-      },
-    },
-    prop: {
-      flex: 1,
-      maxWidth: '100%',
-      overflow: 'hidden',
-    },
     section: {
       width: '100%',
       maxWidth: '100%',
@@ -142,17 +125,20 @@ export default class ListItem {
       flex: 1,
       whiteSpace: 'nowrap',
       fontWeight: 500,
-      fontSize: 15,
+      fontSize: 16,
     },
-    hardWidth: {
-      width: 250,
-      margin: 5,
+    secondary: {
+      color: 'rgba(0,0,0,0.45)',
+      fontSize: 12,
+      marginTop: 2,
+    },
+    prop: {
+      flex: 1,
+      maxWidth: '100%',
+      overflow: 'hidden',
     },
     isLast: {
       borderBottom: 'none',
-    },
-    shine: {
-      background: 'rgba(0,0,0,0.08)',
     },
     date: {
       userSelect: 'none',
@@ -168,11 +154,6 @@ export default class ListItem {
       width: 40,
       height: 40,
       margin: [0, 10, 0, 0],
-    },
-    secondary: {
-      color: 'rgba(0,0,0,0.45)',
-      fontSize: 12,
-      marginTop: 2,
     },
     cutoff: {
       display: 'block',
@@ -193,6 +174,14 @@ export default class ListItem {
     children: {
       flex: 1,
       overflowY: 'scroll',
+    },
+    nohover: {
+      '&:hover': {
+        background: 'transparent',
+      },
+      '&:active': {
+        background: 'transparent',
+      },
     },
   }
 

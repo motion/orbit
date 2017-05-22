@@ -308,7 +308,8 @@ export default class Popover {
         target.width,
         target.left,
         towards,
-        forgiveness
+        forgiveness,
+        isManuallyPositioned
       ),
       ...this.getY(
         props,

@@ -13,7 +13,6 @@ import _ from 'lodash'
 import Immutable from 'immutable'
 import * as Stores from '~/stores'
 import * as Constants from '~/constants'
-import Splash from '~/views/splash'
 import Theme from './ui/theme'
 import theme from './theme'
 // import serviceWorker from './helpers/serviceWorker'
@@ -54,14 +53,18 @@ export function render() {
   console.timeEnd('#render')
 }
 
+async function start() {
+  await App.start({
+    database: DB_CONFIG,
+    stores: Stores,
+  })
+  render()
+}
+
 if (module.hot) {
   module.hot.accept('./views/root', render)
   module.hot.accept('./router', render)
+  module.hot.accept('@jot/models', start)
 }
 
-ReactDOM.render(<Splash />, ROOT)
-
-App.start({
-  database: DB_CONFIG,
-  stores: Stores,
-}).then(render)
+start()

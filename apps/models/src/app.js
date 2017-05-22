@@ -76,7 +76,7 @@ class App {
       multiInstance: true,
       withCredentials: false,
       pouchSettings: {
-        skipSetup: true,
+        skip_setup: true,
         live: true,
         retry: true,
         since: 'now',

@@ -8,15 +8,11 @@ const out = debug('query')
 function valueWrap(info, valueGet: Function) {
   out('query', info)
   const result = observable.shallowBox(undefined)
-  let value = valueGet() || {}
+  let value
 
   // subscribe and update
   let subscriber = null
-  const finishSubscribe = () => {
-    if (subscriber) {
-      subscriber.complete()
-    }
-  }
+  const finishSubscribe = () => subscriber && subscriber.complete()
 
   // this automatically re-runs the susbcription if it has observables
   const stopAutorun = autorun(() => {
@@ -50,6 +46,11 @@ function valueWrap(info, valueGet: Function) {
   }
 
   const response = {}
+
+  // for some reason sometimes autorun doesnt run before this
+  if (!value) {
+    value = valueGet() || {}
+  }
 
   // helpers
   Object.defineProperties(response, {

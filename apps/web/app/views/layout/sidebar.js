@@ -94,6 +94,7 @@ class SidebarStore {
 
   setEditing = place => {
     this.editingPlace = place
+    console.log('set editing', place)
   }
 
   setActive = place => {

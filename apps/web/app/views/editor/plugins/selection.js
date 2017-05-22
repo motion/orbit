@@ -5,20 +5,24 @@ import InsertButton from './insertButton'
 
 function trackSelection(selection, state) {
   // not highlighted
-  if (selection.startOffset === selection.endOffset) {
+  const sameBlock = selection.startKey === selection.endKey
+  const isHighlighting = selection.startOffset !== selection.endOffset
+
+  if (sameBlock && !isHighlighting) {
     Selection.clearHighlighted()
     return
   }
+
   const key = selection.anchorKey
   Selection.highlightedNode = findDOMNode(
-    state.document.findDescendantDeep(x => x.key === key)
+    state.document.findDescendant(x => x.key === key)
   )
 }
 
 function trackFocus(selection, state) {
   Selection.active = selection
   Selection.cursorNode = findDOMNode(
-    state.document.findDescendantDeep(x => x.key === selection.anchorKey)
+    state.document.findDescendant(x => x.key === selection.anchorKey)
   )
 }
 

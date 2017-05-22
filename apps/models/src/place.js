@@ -48,11 +48,9 @@ class Place extends Model {
       }
     },
     postSave({ _id, title }) {
-      // sync title
-      console.log('post save place', _id)
       if (_id) {
         Document.homeForPlace(_id).exec().then(doc => {
-          if (doc.title !== title) {
+          if (doc && doc.title !== title) {
             doc.title = title
             doc.save()
           }

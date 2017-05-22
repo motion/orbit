@@ -1,12 +1,12 @@
-import { view } from '~/helpers'
-import Rx from 'rxjs'
+import React from 'react'
 
-@view
-export default class Splash {
-  time = Rx.Observable.timer(0, 16).take(30000)
-
+export default class Splash extends React.Component {
   render() {
-    return <loader $$draggable $at={this.time} />
+    return (
+      <loader>
+        loading
+      </loader>
+    )
   }
 
   static style = {
@@ -18,8 +18,5 @@ export default class Splash {
       backgroundSize: 'cover',
       filter: 'contrast(100%) brightness(1)',
     },
-    at: time => ({
-      filter: `contrast(${100 + time * 2}%) brightness(${1 + 0.1 * time})`,
-    }),
   }
 }

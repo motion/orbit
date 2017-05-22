@@ -3,10 +3,19 @@ import { Place, Document } from '@jot/models'
 import Portal from 'react-portal'
 import { computed } from 'mobx'
 import { includes } from 'lodash'
-import Mousetrap from 'mousetrap'
 import { Modal, Icon } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 
+// Mousetrap.bind('up', () => {
+//   if (this.open) this.moveHighlight(-1)
+// })
+// Mousetrap.bind('down', () => {
+//   if (this.open) this.moveHighlight(1)
+// })
+
+// Mousetrap.bind('enter', () => {
+//   if (this.open) this.navTo(this.matches[this.highlightIndex])
+// })
 @view({
   store: class CommanderStore {
     open = false
@@ -21,18 +30,7 @@ import { SIDEBAR_WIDTH } from '~/constants'
       })
     }
 
-    start() {
-      Mousetrap.bind('up', () => {
-        if (this.open) this.moveHighlight(-1)
-      })
-      Mousetrap.bind('down', () => {
-        if (this.open) this.moveHighlight(1)
-      })
-
-      Mousetrap.bind('enter', () => {
-        if (this.open) this.navTo(this.matches[this.highlightIndex])
-      })
-    }
+    start() {}
 
     moveHighlight = diff => {
       this.highlightIndex += diff

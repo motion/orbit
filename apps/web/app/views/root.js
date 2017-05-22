@@ -6,7 +6,6 @@ import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Errors from '~/views/layout/errors'
-import Mousetrap from 'mousetrap'
 import { Document } from '@jot/models'
 import Commander from '~/views/commander'
 import Keys from '~/stores/keys'
@@ -35,9 +34,6 @@ export default class Root {
 
   componentDidMount() {
     this.headerHovered = false
-    Mousetrap.bind('command+n', () => {
-      Document.create()
-    })
   }
 
   render({ store }) {

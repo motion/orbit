@@ -55,7 +55,7 @@ export default class DocList {
     }
   }
 
-  render({ node, editorStore, store, children, ...props }) {
+  render({ node, editorStore, store, children, attributes, ...props }) {
     if (editorStore && editorStore.inline) {
       return <null>sub doc list</null>
     }
@@ -67,7 +67,7 @@ export default class DocList {
 
     return (
       <doclist contentEditable={false}>
-        <title contentEditable suppressContentEditableWarning>
+        <title contentEditable suppressContentEditableWarning {...attributes}>
           {children}
         </title>
         <config>

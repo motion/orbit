@@ -1,6 +1,7 @@
 import React from 'react'
 import { view } from '~/helpers'
 import { object } from 'prop-types'
+import { BLOCKS } from '~/views/editor/constants'
 
 export default Component =>
   @view class extends React.Component {
@@ -24,6 +25,15 @@ export default Component =>
       editor.onChange(next)
     }
 
+    split = direction => () => {
+      console.log('split', direction)
+      const { node, editor } = this.props
+
+      const next = editor.getState().transform().wrapBlock(BLOCKS.ROW).apply()
+
+      editor.onChange(next)
+    }
+
     render({ store, node, editor }) {
       const isRoot =
         !Component.plain &&
@@ -31,12 +41,28 @@ export default Component =>
 
       return (
         <node $rootLevel={isRoot}>
+          <btn
+            contentEditable={false}
+            if={isRoot}
+            $left
+            onClick={this.split('left')}
+          >
+            +
+          </btn>
           <Component
             onChange={this.onChange}
             onDestroy={this.onDestroy}
             editorStore={this.context.editor}
             {...this.props}
           />
+          <btn
+            contentEditable={false}
+            if={isRoot}
+            $right
+            onClick={this.split('right')}
+          >
+            +
+          </btn>
         </node>
       )
     }
@@ -44,16 +70,38 @@ export default Component =>
     static style = {
       node: {
         display: 'inline-block',
+        position: 'relative',
       },
       rootLevel: {
-        borderLeft: [5, 'transparent'],
-        borderRight: [5, 'transparent'],
-        padding: [0, 20],
+        padding: [0, 25],
 
         '&:hover': {
-          background: '#fefefe',
-          borderLeftColor: 'blue',
+          background: '#f2f2f2',
         },
+
+        '&:hover btn': {
+          opacity: 1,
+        },
+      },
+      btn: {
+        position: 'absolute',
+        opacity: 0,
+        top: 0,
+        bottom: 0,
+        width: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+
+        '&:hover': {
+          background: 'red',
+        },
+      },
+      left: {
+        left: 0,
+      },
+      right: {
+        right: 0,
       },
     }
   }

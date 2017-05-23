@@ -12,6 +12,7 @@ export meta from './meta'
 export hashtag from './hashtag'
 export title from './title'
 export input from './input'
+export row from './row'
 
 export const paragraph = node(props => <p $$fontSize={18}>{props.children}</p>)
 

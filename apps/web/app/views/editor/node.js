@@ -24,9 +24,11 @@ export default Component =>
       editor.onChange(next)
     }
 
-    render({ store }) {
+    render({ store, node, editor }) {
+      const isRoot = editor.getState().document.getPath(node.key).length === 1
+
       return (
-        <node $rootLevel={!Component.plain}>
+        <node $rootLevel={isRoot}>
           <Component
             onChange={this.onChange}
             onDestroy={this.onDestroy}
@@ -38,10 +40,13 @@ export default Component =>
     }
 
     static style = {
+      node: {
+        display: 'inline-block',
+      },
       rootLevel: {
         borderLeft: [5, 'transparent'],
         borderRight: [5, 'transparent'],
-        padding: [0, 15],
+        padding: [0, 20],
 
         '&:hover': {
           background: '#fefefe',

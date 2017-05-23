@@ -62,12 +62,14 @@ export default class Root {
 
     return (
       <Shortcuts $layout name="all" handler={rootKeyStore.handleShortcuts}>
-        <Header layoutStore={layoutStore} />
-        <main
-          onScroll={this.onScroll}
-          $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-        >
-          <CurrentPage key={Router.key} />
+        <main>
+          <Header layoutStore={layoutStore} />
+          <content
+            onScroll={this.onScroll}
+            $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
+          >
+            <CurrentPage key={Router.key} />
+          </content>
         </main>
         <Errors />
         <Sidebar />
@@ -81,15 +83,17 @@ export default class Root {
       flexFlow: 'row',
     },
     main: {
-      flex: 1,
-      position: 'relative',
-      overflowX: 'visible',
-      overflowY: 'scroll',
       position: 'absolute',
       top: 0,
       left: 0,
       bottom: 0,
       right: SIDEBAR_WIDTH,
+    },
+    content: {
+      flex: 1,
+      position: 'relative',
+      overflowX: 'visible',
+      overflowY: 'scroll',
       zIndex: 10,
     },
     dragStartedAt: pos => ({

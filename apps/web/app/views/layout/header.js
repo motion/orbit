@@ -68,7 +68,6 @@ export default class Header {
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
-      width: '100%',
       overflow: 'hidden',
     },
     hovered: {

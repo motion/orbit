@@ -6,7 +6,7 @@ import autobind from 'autobind-decorator'
 import { observer } from 'mobx-react'
 import glossy from './styles'
 import rxToMobx from './external/rxToMobx'
-import { storeProvider } from './store'
+import { storeProvider, storeAttacher } from './store'
 import { string, object } from 'prop-types'
 import { pickBy } from 'lodash'
 
@@ -40,23 +40,6 @@ function decorateView(View, options) {
   // order important: autobind, gloss, mobx
   const DecoratedView = autobind(glossy(observer(View)))
 
-  if (options && options.attach) {
-    return class ContextAttacher extends React.Component {
-      static contextTypes = {
-        stores: object,
-      }
-
-      render() {
-        return (
-          <DecoratedView
-            {...this.props}
-            {...pickBy(stores, key => key.indexOf(options.attach) !== -1)}
-          />
-        )
-      }
-    }
-  }
-
   return DecoratedView
 }
 
@@ -74,18 +57,25 @@ export default function view(
   // @view({ ...stores }) shorthand
   if (typeof viewOrStores === 'object') {
     const Stores = viewOrStores
-    return View => storeProvider(Stores, options)(decorateView(View, options))
+    return View => {
+      const provider = storeProvider(Stores, options)
+      const view = decorateView(View, options)
+      return storeAttacher(provider(view), options)
+    }
   }
 
   const View = viewOrStores
+  let finalView
 
   // functional component
   if (!View.prototype.render) {
-    return glossy(observer(View))
+    finalView = glossy(observer(View))
+  } else {
+    // class
+    finalView = decorateView(viewOrStores, options)
   }
 
-  // class
-  return decorateView(viewOrStores, options)
+  return storeAttacher(finalView, options)
 }
 
 view.plain = View => view(View, { simple: true })
@@ -102,45 +92,10 @@ view.ui = View => {
 }
 
 // @view.provide passes stores down context until @view.attach grabs them
-view.provide = (Stores, options) => PlainView => {
-  const provider = storeProvider(Stores, options)
-  const View = decorateView(PlainView, options)
-
-  return provider(
-    class ContextProvider extends React.Component {
-      static contextTypes = {
-        stores: object,
-      }
-
-      static childContextTypes = {
-        stores: object,
-      }
-
-      getChildContext() {
-        if (this.context.stores) {
-          Object.keys(Stores).forEach(name => {
-            if (this.context.stores[name]) {
-              throw new Error(
-                `Attempting to provide a store as a name already provided: ${name} from ${View.name}`
-              )
-            }
-          })
-        }
-
-        return {
-          stores: {
-            ...this.context.stores,
-            ...Stores,
-          },
-        }
-      }
-
-      render() {
-        return <View {...this.props} />
-      }
-    }
+view.provide = (Stores, options = {}) => PlainView =>
+  storeProvider(Stores, { ...options, context: Stores })(
+    decorateView(PlainView, options)
   )
-}
 
 // @view.attach grabs stores from @view.provide above
 view.attach = (...names) => {

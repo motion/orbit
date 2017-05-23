@@ -11,22 +11,30 @@ import { Document } from '@jot/models'
 import Commander from '~/views/commander'
 import Keys from '~/stores/keys'
 
-// rootStore is passed down to whole app
-// this enables us to share logic horizontally nicely
+// stores attached here via provide give us nice ways
+// to share logic horizontally between any component
+// simply @view.attach('layoutStore') for example in any sub-view
+
+class LayoutStore {
+  title = ''
+  headerHovered = false
+
+  createDoc = () => {
+    Document.create({ title: this.title, places: [App.activePlace] })
+  }
+}
+
+class KeyStore {
+  handleShortcuts = (action, event: KeyboardEvent) => {
+    if (action) {
+      this.emit('key', { action, event })
+    }
+  }
+}
 
 @view.provide({
-  appStore: class AppStore {
-    title = ''
-    headerHovered = false
-
-    createDoc = () => {
-      Document.create({ title: this.title, places: [App.activePlace] })
-    }
-
-    handleShortcuts = (action, event: KeyboardEvent) => {
-      console.log('root.key', action, event)
-    }
-  },
+  layoutStore: LayoutStore,
+  rootKeyStore: KeyStore,
 })
 export default class Root {
   static childContextTypes = {
@@ -42,7 +50,7 @@ export default class Root {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  render({ appStore }) {
+  render({ layoutStore, rootKeyStore }) {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header, doc, place } = App.activePage
     const { extraActions } = App
@@ -55,16 +63,16 @@ export default class Root {
     )
 
     return (
-      <Shortcuts $layout name="all" handler={appStore.handleShortcuts}>
+      <Shortcuts $layout name="all" handler={rootKeyStore.handleShortcuts}>
         <main
           onScroll={this.onScroll}
           $dragStartedAt={App.dragStartedAt !== false && this.lastScrolledTo}
         >
           <header
             $$draggable
-            $hovered={appStore.headerHovered}
-            onMouseEnter={() => (appStore.headerHovered = true)}
-            onMouseLeave={() => (appStore.headerHovered = false)}
+            $hovered={layoutStore.headerHovered}
+            onMouseEnter={() => (layoutStore.headerHovered = true)}
+            onMouseLeave={() => (layoutStore.headerHovered = false)}
           >
             <nav>
               <Segment>
@@ -87,8 +95,8 @@ export default class Root {
             </nav>
             <bar $$centered $$flex $$row $$overflow="hidden">
               <Commander
-                onSubmit={appStore.createDoc}
-                onChange={appStore.ref('title').set}
+                onSubmit={layoutStore.createDoc}
+                onChange={layoutStore.ref('title').set}
                 $omniinput
               />
             </bar>

@@ -1,9 +1,9 @@
+import { Emitter, CompositeDisposable } from 'sb-event-kit'
 import { persistStore } from '~/helpers'
 import ClassHelpers from './classHelpers'
 import autobind from 'autobind-decorator'
 import mixin from 'react-mixin'
 import { fromPromise } from 'mobx-utils'
-import { CompositeDisposable } from 'motion-class-helpers'
 import { Observable } from 'rxjs'
 import {
   action,
@@ -13,17 +13,43 @@ import {
 } from 'mobx'
 import createStoreProvider from './external/storeProvider'
 import App from '@jot/models'
-import { pickBy } from 'lodash'
+
+export storeAttacher from './external/storeAttacher'
 
 export const config = {
   storeDecorator(Store) {
     mixin(Store.prototype, ClassHelpers)
+
+    // store.emitter
+    Object.defineProperty(Store.prototype, 'emitter', {
+      get() {
+        if (!this._emitter) {
+          this._emitter = new Emitter()
+        }
+        return this._emitter
+      },
+    })
+
     return autobind(Store)
   },
   onStoreMount(name, store, props) {
+    // add subscriptions
     store.subscriptions = new CompositeDisposable()
 
+    // add emitter
+    store.emit = store.emitter.emit.bind(store.emitter)
+    store.on = (emitter, event, cb) => {
+      // no emitter given, shift args
+      if (!cb) {
+        return store.on(store.emitter, emitter, event)
+      }
+      const listener = emitter.on(event, cb)
+      store.subscriptions.add(listener)
+      return listener
+    }
+
     // unmount
+    store.subscriptions.add(store.emitter)
     store.subscriptions.add(config.onStoreUnmount(name, store))
 
     // mount actions

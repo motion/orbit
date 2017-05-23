@@ -43,6 +43,11 @@ export default class EditorStore {
   }
 
   start() {
+    console.log('got', this.props.rootKeyStore)
+    this.on(this.props.rootKeyStore, 'key', name => {
+      console.log('listening to deep parent store', name)
+    })
+
     // init content
     this.watch(() => {
       if (this.doc && !this.content) {

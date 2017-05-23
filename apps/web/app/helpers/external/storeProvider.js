@@ -1,6 +1,8 @@
 import React from 'react'
 import { observable } from 'mobx'
 import Cache from './cache'
+import { object } from 'prop-types'
+import { pickBy } from 'lodash'
 
 type InstanceOptions = {
   module: Object,
@@ -30,8 +32,35 @@ export default function createStoreProvider(options: Object) {
       }
 
       // return HoC
-      return class Provider extends React.Component {
+      class Provider extends React.Component {
         @observable _props = {}
+
+        getChildContext() {
+          const Stores = instanceOpts.context
+          if (Stores) {
+            if (this.context.stores) {
+              Object.keys(Stores).forEach(name => {
+                if (this.context.stores[name]) {
+                  throw new Error(
+                    `Attempting to provide a store as a name already provided: ${name} from ${View.name}`
+                  )
+                }
+              })
+            }
+
+            const names = Object.keys(Stores)
+
+            return {
+              stores: {
+                ...this.context.stores,
+                ...pickBy(
+                  this.state.stores,
+                  (value, key) => names.indexOf(key) >= 0
+                ),
+              },
+            }
+          }
+        }
 
         componentWillReceiveProps(nextProps) {
           this._props = nextProps
@@ -110,6 +139,18 @@ export default function createStoreProvider(options: Object) {
           return <Klass {...this.props} {...this.state.stores} />
         }
       }
+
+      if (instanceOpts.context) {
+        Provider.contextTypes = {
+          stores: object,
+        }
+
+        Provider.childContextTypes = {
+          stores: object,
+        }
+      }
+
+      return Provider
     }
   }
 }

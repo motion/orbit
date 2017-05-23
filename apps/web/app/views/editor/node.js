@@ -28,10 +28,8 @@ export default Component =>
     split = direction => () => {
       console.log('split', direction)
       const { node, editor } = this.props
-
-      const next = editor.getState().transform().wrapBlock(BLOCKS.ROW).apply()
-
-      editor.onChange(next)
+      // const next = editor.getState().transform().wrapBlock(BLOCKS.ROW).apply()
+      // editor.onChange(next)
     }
 
     render({ store, node, editor }) {
@@ -73,7 +71,7 @@ export default Component =>
         position: 'relative',
       },
       rootLevel: {
-        padding: [0, 25],
+        padding: [2, 25],
 
         '&:hover': {
           background: '#f2f2f2',

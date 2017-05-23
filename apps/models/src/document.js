@@ -75,10 +75,15 @@ class Document extends Model {
       return `/d/${this._id.replace(':', '-')}`
     },
     getTitle() {
-      if (this.content.nodes) {
-        return this.content.nodes[0].nodes[0].text
+      try {
+        if (this.content.nodes) {
+          return this.content.nodes[0].nodes[0].text
+        }
+        return this.content.document.nodes[0].nodes[0].ranges[0].text
+      } catch (e) {
+        console.log('err no title node!', this._id)
+        return this.title
       }
-      return this.content.document.nodes[0].nodes[0].ranges[0].text
     },
     togglePrivate() {
       this.private = !this.private

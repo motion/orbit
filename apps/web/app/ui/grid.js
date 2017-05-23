@@ -5,6 +5,7 @@ import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
 const Layout: HTMLElement = WidthProvider(ReactGridLayout)
 
+@view.attach('layoutStore')
 @view.ui
 export default class Grid {
   props: {
@@ -29,8 +30,7 @@ export default class Grid {
   }
 
   onDragStart = (layout, oldItem, newItem, placeholder, e, element) => {
-    console.log('ondragstart', e, e && e.clientY)
-    App.dragStartedAt = e.clientY
+    this.props.layoutStore.isDragging = true
 
     if (this.props.onDragStart) {
       this.props.onDragStart()
@@ -38,7 +38,7 @@ export default class Grid {
   }
 
   onDragStop = () => {
-    App.dragStartedAt = false
+    this.props.layoutStore.isDragging = false
   }
 
   render({ items, ...props }) {

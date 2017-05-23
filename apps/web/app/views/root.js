@@ -6,9 +6,9 @@ import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
+import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
 import { Document } from '@jot/models'
-import Commander from '~/views/commander'
 import Keys from '~/stores/keys'
 
 // stores attached here via provide give us nice ways
@@ -17,6 +17,7 @@ import Keys from '~/stores/keys'
 
 class LayoutStore {
   title = ''
+  isDragging = false
   headerHovered = false
 
   createDoc = () => {
@@ -52,67 +53,21 @@ export default class Root {
 
   render({ layoutStore, rootKeyStore }) {
     const CurrentPage = Router.activeView || NotFound
-    const { title, actions, header, doc, place } = App.activePage
-    const { extraActions } = App
 
     console.log(
       'root.render',
       Router.key,
-      App.dragStartedAt,
-      this.lastScrolledTo
+      layoutStore.isDragging && this.lastScrolledTo
     )
 
     return (
       <Shortcuts $layout name="all" handler={rootKeyStore.handleShortcuts}>
+        <Header layoutStore={layoutStore} />
         <main
           onScroll={this.onScroll}
-          $dragStartedAt={App.dragStartedAt !== false && this.lastScrolledTo}
+          $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
         >
-          <header
-            $$draggable
-            $hovered={layoutStore.headerHovered}
-            onMouseEnter={() => (layoutStore.headerHovered = true)}
-            onMouseLeave={() => (layoutStore.headerHovered = false)}
-          >
-            <nav>
-              <Segment>
-                <Button
-                  if={IS_ELECTRON}
-                  icon="minimal-left"
-                  chromeless
-                  $inactive={Router.atBack}
-                  onClick={() => Router.back()}
-                />
-                <Button
-                  if={IS_ELECTRON}
-                  chromeless
-                  $inactive={Router.atFront}
-                  icon="minimal-right"
-                  onClick={() => Router.forward()}
-                />
-                <Button if={false} icon="simple-add" tooltip="new" />
-              </Segment>
-            </nav>
-            <bar $$centered $$flex $$row $$overflow="hidden">
-              <Commander
-                onSubmit={layoutStore.createDoc}
-                onChange={layoutStore.ref('title').set}
-                $omniinput
-              />
-            </bar>
-            <rest if={header || actions || extraActions} $$row>
-              {header || null}
-              <actions $extraActions if={extraActions}>
-                {extraActions}
-              </actions>
-              <actions if={actions}>
-                {actions}
-              </actions>
-            </rest>
-          </header>
-          <content>
-            <CurrentPage key={Router.key} />
-          </content>
+          <CurrentPage key={Router.key} />
         </main>
         <Errors />
         <Sidebar />
@@ -144,11 +99,6 @@ export default class Root {
         y: -pos,
       },
     }),
-    content: {
-      flex: 1,
-      position: 'relative',
-      overflow: 'visible',
-    },
     header: {
       background: [255, 255, 255, 0.1],
       zIndex: 1000,

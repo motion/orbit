@@ -33,7 +33,6 @@ class App {
   @observable.ref extraActions = null
   @observable.ref errors = []
   @observable.ref activeStores = {}
-  @observable dragStartedAt = 0
 
   constructor() {
     // hmr fix

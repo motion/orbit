@@ -8,7 +8,8 @@ import EditorStore, { merge } from './store'
 
 export { Raw } from 'slate'
 
-@view.attach('rootKeyStore')({
+@view.attach('rootKeyStore')
+@view({
   store: EditorStore,
 })
 export default class EditorView {

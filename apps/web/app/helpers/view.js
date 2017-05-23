@@ -51,34 +51,25 @@ export default function view(
   viewOrStores: Object | Class | Function,
   options = {}
 ) {
-  // hacky, until time to rewrite
-  if (view.attachNames) {
-    options.attach = view.attachNames
-    delete view.attachNames
-  }
-
   // @view({ ...stores }) shorthand
   if (typeof viewOrStores === 'object') {
     const Stores = viewOrStores
     return View => {
       const provider = storeProvider(Stores, options)
       const view = decorateView(View, options)
-      return storeAttacher(provider(view), options)
+      return provider(view)
     }
   }
 
   const View = viewOrStores
-  let finalView
 
   // functional component
   if (!View.prototype.render) {
-    finalView = glossy(observer(View))
-  } else {
-    // class
-    finalView = decorateView(viewOrStores, options)
+    return glossy(observer(View))
   }
 
-  return storeAttacher(finalView, options)
+  // class
+  return decorateView(viewOrStores, options)
 }
 
 //
@@ -105,7 +96,4 @@ view.provide = (Stores, options = {}) => PlainView =>
   )
 
 // @view.attach grabs stores from @view.provide above
-view.attach = (...names) => {
-  view.attachNames = names
-  return view
-}
+view.attach = storeAttacher

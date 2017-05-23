@@ -67,6 +67,9 @@ export default class DocList {
 
     return (
       <doclist contentEditable={false}>
+        <title contentEditable suppressContentEditableWarning>
+          {children}
+        </title>
         <config>
           <Segment>
             <Button

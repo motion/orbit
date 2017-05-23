@@ -14,12 +14,11 @@ const keymap = {
   },
 }
 
-@store class Keys {
+export default class KeyStore {
   active = {}
+  manager = new ShortcutManager(keymap)
 
   start() {
-    this.manager = new ShortcutManager(keymap)
-
     this.addEvent(window, 'keydown', (event: Event) => {
       if (event.shiftKey) {
         this.set('shift', true)
@@ -36,7 +35,10 @@ const keymap = {
   set = (key, val) => {
     this.active = { ...this.active, [key]: val }
   };
-}
 
-// singleton
-export default new Keys()
+  handleShortcuts = (action, event: KeyboardEvent) => {
+    if (action) {
+      this.emit('key', { action, event })
+    }
+  }
+}

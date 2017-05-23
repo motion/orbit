@@ -1,132 +1,64 @@
 import React from 'react'
-import { $, view } from '~/helpers'
-import { Place, Document } from '@jot/models'
+import { view, Shortcuts } from '~/helpers'
 import Portal from 'react-portal'
-import { computed } from 'mobx'
-import { includes } from 'lodash'
-import { Modal, Icon } from '~/ui'
+import { Icon } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 
-// Mousetrap.bind('up', () => {
-//   if (this.open) this.moveHighlight(-1)
-// })
-// Mousetrap.bind('down', () => {
-//   if (this.open) this.moveHighlight(1)
-// })
-
-// Mousetrap.bind('enter', () => {
-//   if (this.open) this.navTo(this.matches[this.highlightIndex])
-// })
-@view({
-  store: class CommanderStore {
-    open = false
-    docs = Document.recent()
-    textbox = null
-    text = ''
-    highlightIndex = 0
-
-    get matches() {
-      return (this.docs || []).filter(doc => {
-        return includes(doc.getTitle().toLowerCase(), this.text.toLowerCase())
-      })
-    }
-
-    start() {}
-
-    moveHighlight = diff => {
-      this.highlightIndex += diff
-
-      if (this.highlightIndex === -1) this.highlightIndex = this.docs.length - 1
-      if (this.highlightIndex >= this.docs.length) this.highlightIndex = 0
-    }
-
-    navTo = doc => {
-      this.close()
-      doc.routeTo()
-    }
-
-    close = () => {
-      this.textbox.blur()
-      this.open = false
-      this.setText('')
-    }
-
-    onKeyDown = ({ which }) => {
-      if (this.textbox.value.indexOf('/') === 0) {
-        this.open = true
-      }
-
-      if (which === 40) this.moveHighlight(1)
-      if (which === 38) this.moveHighlight(-1)
-      if (which === 27) this.close()
-
-      if (which === 13) {
-        if (this.match) this.navTo(this.math)
-        else {
-          this.props.onSubmit(this.text)
-          this.setText('')
-        }
-      }
-    }
-
-    setText = value => {
-      this.text = value
-      this.highlightIndex = 0
-      if (this.props.onChange) {
-        this.props.onChange(value)
-      }
-    }
-  },
-})
+@view.attach('commanderStore')
+@view
 export default class Commander {
   static defaultProps = {
     onSubmit: _ => _,
   }
 
-  render({ store, store: { docs }, onChange, onClose, ...props }) {
+  render({ commanderStore: store, onChange, onClose, ...props }) {
     return (
-      <bar $$align="center" $$row $$flex>
-        <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
-        <input
-          {...props}
-          value={store.text}
-          onChange={e => {
-            const val = e.target.value
-            store.setText(val)
-          }}
-          onKeyDown={store.onKeyDown}
-          ref={el => (store.textbox = el)}
-        />
-        <Portal
-          closeOnEsc
-          isOpened={store.open}
-          onClose={() => {
-            store.open = false
-            if (onClose) {
-              onClose()
-            }
-          }}
-        >
-          <commander>
-            <div $$flex />
-            <matches>
+      <Shortcuts name="all" handler={store.onShortcut}>
+        <bar $$align="center" $$row $$flex>
+          <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
+          <input
+            {...props}
+            value={store.text}
+            onChange={e => {
+              const val = e.target.value
+              store.setText(val)
+            }}
+            onKeyDown={store.onKeyDown}
+            onFocus={store.setFocused}
+            onBlur={store.setBlurred}
+            ref={el => (store.textbox = el)}
+          />
+          <Portal
+            closeOnEsc
+            isOpened={store.open}
+            onClose={() => {
+              store.open = false
+              if (onClose) {
+                onClose()
+              }
+            }}
+          >
+            <commander>
               <div $$flex />
-              {store.matches.map((doc, index) => (
-                <match
-                  onClick={() => store.navTo(doc)}
-                  key={index}
-                  onMouseEnter={() => {
-                    store.highlightIndex = index
-                  }}
-                  $highlight={index === store.highlightIndex}
-                >
-                  {doc.getTitle()}
-                </match>
-              ))}
-            </matches>
-          </commander>
-        </Portal>
-      </bar>
+              <matches>
+                <div $$flex />
+                {store.matches.map((doc, index) => (
+                  <match
+                    onClick={() => store.navTo(doc)}
+                    key={index}
+                    onMouseEnter={() => {
+                      store.highlightIndex = index
+                    }}
+                    $highlight={index === store.highlightIndex}
+                  >
+                    {doc.getTitle()}
+                  </match>
+                ))}
+              </matches>
+            </commander>
+          </Portal>
+        </bar>
+      </Shortcuts>
     )
   }
 

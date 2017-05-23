@@ -44,8 +44,8 @@ export default class EditorStore {
 
   start() {
     if (!this.props.inline) {
-      this.on(this.props.rootKeyStore, 'key', ({ action }) => {
-        if (action === 'down') {
+      this.on(this.props.commanderStore, 'key', name => {
+        if (name === 'down') {
           this.editor.focus()
         }
       })

@@ -1,41 +1,24 @@
 import React from 'react'
-import { view, observable, Shortcuts } from '~/helpers'
+import { view, Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
-import { Segment, Input, Link, Button, Icon } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
-import { Document } from '@jot/models'
-import Keys from '~/stores/keys'
+import KeyStore from '~/stores/keys'
+import CommanderStore from '~/stores/commander'
+import LayoutStore from '~/stores/layout'
 
 // stores attached here via provide give us nice ways
 // to share logic horizontally between any component
 // simply @view.attach('layoutStore') for example in any sub-view
 
-class LayoutStore {
-  title = ''
-  isDragging = false
-  headerHovered = false
-
-  createDoc = () => {
-    Document.create({ title: this.title, places: [App.activePlace] })
-  }
-}
-
-class KeyStore {
-  handleShortcuts = (action, event: KeyboardEvent) => {
-    if (action) {
-      this.emit('key', { action, event })
-    }
-  }
-}
-
 @view.provide({
   layoutStore: LayoutStore,
-  rootKeyStore: KeyStore,
+  keyStore: KeyStore,
+  commanderStore: CommanderStore,
 })
 export default class Root {
   static childContextTypes = {
@@ -43,7 +26,7 @@ export default class Root {
   }
 
   getChildContext() {
-    return { shortcuts: Keys.manager }
+    return { shortcuts: this.props.keyStore.manager }
   }
 
   lastScrolledTo = 0
@@ -51,7 +34,7 @@ export default class Root {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  render({ layoutStore, rootKeyStore }) {
+  render({ layoutStore, keyStore }) {
     const CurrentPage = Router.activeView || NotFound
 
     console.log(
@@ -61,7 +44,7 @@ export default class Root {
     )
 
     return (
-      <Shortcuts $layout name="all" handler={rootKeyStore.handleShortcuts}>
+      <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
         <main>
           <Header layoutStore={layoutStore} />
           <content

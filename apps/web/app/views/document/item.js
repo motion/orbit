@@ -43,7 +43,8 @@ export default class DocItem {
     onSaveTitle,
     list,
     slanty,
-    editable,
+    readOnly,
+    hideMeta,
     draggable,
     after,
     height,
@@ -63,11 +64,16 @@ export default class DocItem {
           {doc.title}
         </title>
 
-        <content if={editable}>
-          <Editor getRef={this.ref('editor').set} inline id={doc._id} />
+        <content>
+          <Editor
+            readOnly={readOnly}
+            getRef={this.ref('editor').set}
+            inline
+            id={doc._id}
+          />
         </content>
 
-        <info>
+        <info if={!hideMeta}>
           <nick />
           <item $author>{doc.authorId}</item>
           <item onClick={this.navigate}>
@@ -85,9 +91,7 @@ export default class DocItem {
     doc: {
       position: 'relative',
       color: '#333',
-      background: '#fff',
       overflow: 'hidden',
-      margin: [0, 5, 10, 5],
     },
     content: {
       flex: 1,
@@ -128,6 +132,8 @@ export default class DocItem {
   static theme = {
     bordered: {
       doc: {
+        background: '#fff',
+        margin: [0, 5, 10, 5],
         borderRadius: 6,
         border: [1, 'dotted', [0, 0, 0, 0.1]],
       },
@@ -151,11 +157,6 @@ export default class DocItem {
         width: '100%',
         margin: 0,
         marginBottom: 10,
-      },
-    },
-    editable: {
-      doc: {
-        height: 200,
       },
     },
     draggable: {

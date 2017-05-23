@@ -29,6 +29,7 @@ export default class GridList {
           layout={node.data.get('layout')}
           cols={4}
           rowHeight={150}
+          margin={store.editing ? [10, 10] : [0, 0]}
           items={(listStore.docs || [])
             .map(doc => (
               <DocItem

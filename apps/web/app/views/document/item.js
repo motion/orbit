@@ -95,7 +95,6 @@ export default class DocItem {
     },
     content: {
       flex: 1,
-      padding: 10,
     },
     info: {
       padding: [6, 10],

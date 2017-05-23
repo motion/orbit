@@ -77,7 +77,7 @@ export default Component =>
           background: '#f2f2f2',
         },
 
-        '&:hover btn': {
+        '&:hover > btn': {
           opacity: 1,
         },
       },

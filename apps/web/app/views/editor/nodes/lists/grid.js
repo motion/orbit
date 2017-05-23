@@ -33,10 +33,10 @@ export default class GridList {
           items={(listStore.docs || [])
             .map(doc => (
               <DocItem
-                key={doc._id.replace(':', '') || Math.random()}
+                key={doc._id || Math.random()}
                 draggable
                 bordered={store.editing}
-                readOnly={!store.editing}
+                readOnly={store.editing}
                 hideMeta={!store.editing}
                 doc={doc}
               />

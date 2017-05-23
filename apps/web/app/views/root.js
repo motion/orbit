@@ -9,9 +9,13 @@ import Sidebar from '~/views/layout/sidebar'
 import Errors from '~/views/layout/errors'
 import { Document } from '@jot/models'
 import Commander from '~/views/commander'
+import Keys from '~/stores/keys'
+
+// rootStore is passed down to whole app
+// this enables us to share logic horizontally nicely
 
 @view.provide({
-  rootStore: class RootStore {
+  appStore: class AppStore {
     title = ''
     headerHovered = false
 
@@ -25,13 +29,20 @@ import Commander from '~/views/commander'
   },
 })
 export default class Root {
-  lastScrolledTo = 0
+  static childContextTypes = {
+    shortcuts: object,
+  }
 
+  getChildContext() {
+    return { shortcuts: Keys.manager }
+  }
+
+  lastScrolledTo = 0
   onScroll = e => {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  render({ rootStore }) {
+  render({ appStore }) {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header, doc, place } = App.activePage
     const { extraActions } = App
@@ -44,16 +55,16 @@ export default class Root {
     )
 
     return (
-      <Shortcuts $layout name="all" handler={rootStore.handleShortcuts}>
+      <Shortcuts $layout name="all" handler={appStore.handleShortcuts}>
         <main
           onScroll={this.onScroll}
           $dragStartedAt={App.dragStartedAt !== false && this.lastScrolledTo}
         >
           <header
             $$draggable
-            $hovered={rootStore.headerHovered}
-            onMouseEnter={() => (rootStore.headerHovered = true)}
-            onMouseLeave={() => (rootStore.headerHovered = false)}
+            $hovered={appStore.headerHovered}
+            onMouseEnter={() => (appStore.headerHovered = true)}
+            onMouseLeave={() => (appStore.headerHovered = false)}
           >
             <nav>
               <Segment>
@@ -76,8 +87,8 @@ export default class Root {
             </nav>
             <bar $$centered $$flex $$row $$overflow="hidden">
               <Commander
-                onSubmit={rootStore.createDoc}
-                onChange={rootStore.ref('title').set}
+                onSubmit={appStore.createDoc}
+                onChange={appStore.ref('title').set}
                 $omniinput
               />
             </bar>

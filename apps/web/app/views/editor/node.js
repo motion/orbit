@@ -26,7 +26,7 @@ export default Component =>
 
     render({ store }) {
       return (
-        <node>
+        <node $rootLevel={!Component.plain}>
           <Component
             onChange={this.onChange}
             onDestroy={this.onDestroy}
@@ -38,9 +38,10 @@ export default Component =>
     }
 
     static style = {
-      node: {
+      rootLevel: {
         borderLeft: [5, 'transparent'],
         borderRight: [5, 'transparent'],
+        padding: [0, 15],
 
         '&:hover': {
           background: '#fefefe',

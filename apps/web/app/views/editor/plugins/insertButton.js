@@ -7,7 +7,7 @@ export default class InsertButton {
   render({ children }) {
     return (
       <Popover
-        if={Selection.cursorNode}
+        if={false && Selection.cursorNode}
         open
         noArrow
         towards="left"

@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, keycode } from '~/helpers'
 import App from '@jot/models'
-import { Segment, Input, Button, Link } from '~/ui'
+import { Segment, Input, Button, Link, Icon } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 // settimeout or it dont focus yo
@@ -115,14 +115,20 @@ export default class Login {
 
           <step $$hide={store.step !== 2}>
             <info if={App.user} $showingPass={store.step === 2}>
-              <icon onClick={App.clearUser}>{'<'}</icon>
+              <Icon
+                name="remove"
+                size={9}
+                color={[0, 0, 0, 0.1]}
+                onClick={App.clearUser}
+                button
+              />
               <username $$ellipse>{App.user.name}</username>
             </info>
             <Segment>
               <Input
                 $input
                 disabled={store.loggingIn}
-                width={75}
+                width={80}
                 name="password"
                 type="password"
                 placeholder="password"
@@ -204,6 +210,7 @@ export default class Login {
       maxWidth: '80%',
       paddingRight: 10,
       fontWeight: 500,
+      marginTop: -2,
     },
     button: {
       padding: [3, 8],

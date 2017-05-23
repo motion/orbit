@@ -39,6 +39,7 @@ export class Title {
             name={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
             color="#ccc"
             size={8}
+            button
           />
         </collapse>
         <before if={before}>{before}</before>
@@ -69,14 +70,8 @@ export class Title {
       alignItems: 'center',
     },
     collapse: {
-      padding: [5, 5, 4, 5],
       marginRight: 5,
       marginLeft: -5,
-      borderRadius: 3,
-      alignItems: 'center',
-      '&:hover': {
-        background: [0, 0, 0, 0.02],
-      },
     },
     stat: {
       fontSize: 11,

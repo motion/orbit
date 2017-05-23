@@ -38,7 +38,7 @@ export default class GridList {
   }
   static style = {
     grid: {
-      margin: [0, -15],
+      margin: 0,
     },
   }
 }

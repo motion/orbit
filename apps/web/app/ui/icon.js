@@ -20,6 +20,7 @@ export default class Icon {
     size: number,
     color: Array | string,
     type: string,
+    button?: Boolean,
   }
 
   static defaultProps = {
@@ -45,6 +46,7 @@ export default class Icon {
       onClick,
       attach,
       children,
+      button,
       ...props
     } = this.props
 
@@ -91,6 +93,17 @@ export default class Icon {
   }
 
   static theme = {
+    button: {
+      icon: {
+        borderRadius: 3,
+        alignItems: 'center',
+        padding: 5,
+        margin: -5,
+        '&:hover': {
+          background: [0, 0, 0, 0.02],
+        },
+      },
+    },
     color: ({ color }) => ({
       icon: {
         color,
@@ -103,11 +116,12 @@ export default class Icon {
         },
       },
     }),
-    size: ({ size, width, height }) => {
+    size: ({ size, width, height, button }) => {
+      const buttonPad = button ? 5 : 0
       return {
         icon: {
-          width: width || size,
-          height: height || size,
+          width: (width || size) + buttonPad * 2,
+          height: height || size + buttonPad * 2,
           fontSize: size,
           lineHeight: `${size / 12 - 0.1}rem`, // scale where 1 when 14
         },

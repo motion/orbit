@@ -25,7 +25,9 @@ export default Component =>
     }
 
     render({ store, node, editor }) {
-      const isRoot = editor.getState().document.getPath(node.key).length === 1
+      const isRoot =
+        !Component.plain &&
+        editor.getState().document.getPath(node.key).length === 1
 
       return (
         <node $rootLevel={isRoot}>

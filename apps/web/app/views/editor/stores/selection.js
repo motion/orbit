@@ -7,6 +7,15 @@ import { store } from '~/helpers'
   cursorNode = null
   mouseUpEvent = null
 
+  start() {
+    // this.watch(() => {
+    //   console.log('cursorNode', this.cursorNode)
+    // })
+    // this.watch(() => {
+    //   console.log('highlighted', this.highlightedNode)
+    // })
+  }
+
   clearHighlighted = () => {
     this.highlighted = null
     this.mouseUpEvent = null

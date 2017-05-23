@@ -27,6 +27,8 @@ function valueWrap(info, valueGet: Function) {
   })
 
   // sync!
+  let pull
+
   if (value && value.mquery) {
     const remoteDB = this.remoteDb
     const localDB = this.pouch.name
@@ -37,7 +39,7 @@ function valueWrap(info, valueGet: Function) {
       delete selector._id
     }
 
-    const pull = PouchDB.replicate(remoteDB, localDB, {
+    pull = PouchDB.replicate(remoteDB, localDB, {
       selector,
       live: true,
       retry: true,
@@ -75,7 +77,7 @@ function valueWrap(info, valueGet: Function) {
         out('disposing', info)
         finishSubscribe()
         stopAutorun()
-        pull.cancel()
+        pull && pull.cancel()
       },
     },
   })

@@ -17,7 +17,7 @@ class DocListStore {
   shouldFocus = false
 
   createDoc = async () => {
-    await Document.create({ title: ' ', places: [this.place._id] })
+    await Document.create({ places: [this.place._id] })
     this.setTimeout(() => {
       this.shouldFocus = true
     }, 200)

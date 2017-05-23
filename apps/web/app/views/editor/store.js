@@ -12,10 +12,7 @@ const rules = merge(Rules)
 
 export default class EditorStore {
   id = this.props.id || Math.random()
-  _id = Math.random()
   doc = Document.get(this.props.id)
-
-  //123
 
   // todo replace with doc when we use mention (which is currently turned off)
   allDocs = []
@@ -76,9 +73,9 @@ export default class EditorStore {
   }
 
   save = () => {
-    console.log('saving...', this.doc._rev)
     this.doc.content = Raw.serialize(this.content)
     this.doc.title = this.content.document.nodes.first().text
+    console.log('saving...', this.doc._id, this.doc._rev, this.doc.title)
     this.doc.save()
     this.lastSavedRev = this.doc._rev
     this.pendingSave = false

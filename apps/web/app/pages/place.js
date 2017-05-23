@@ -17,6 +17,7 @@ import DocumentPage from '~/pages/doc'
       this.watch(async () => {
         if (this.place) {
           this.doc = await Document.homeForPlace(this.place._id).exec()
+          console.log('get doc for', this.place.slug, this.doc.title)
         }
       })
     }

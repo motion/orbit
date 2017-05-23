@@ -8,7 +8,7 @@ const out = debug('query')
 function valueWrap(info, valueGet: Function) {
   out('query', info)
   const result = observable.shallowBox(undefined)
-  let value
+  let value = valueGet() || {}
 
   // subscribe and update
   let subscriber = null
@@ -46,11 +46,6 @@ function valueWrap(info, valueGet: Function) {
   }
 
   const response = {}
-
-  // for some reason sometimes autorun doesnt run before this
-  if (!value) {
-    value = valueGet() || {}
-  }
 
   // helpers
   Object.defineProperties(response, {

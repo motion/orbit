@@ -42,6 +42,8 @@ export default class Root {
     const { title, actions, header, doc, place } = App.activePage
     const { extraActions } = App
 
+    console.log(Router.key)
+
     return (
       <layout $$draggable>
         <main>

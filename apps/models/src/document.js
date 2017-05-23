@@ -59,6 +59,7 @@ class Document extends Model {
     preSave({ title, placeId }) {
       // sync title
       if (placeId) {
+        console.log('save document to place', placeId)
         Place.get(placeId).exec().then(place => {
           if (place.title !== title) {
             place.title = title

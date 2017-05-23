@@ -5,7 +5,6 @@ import { view, node } from '~/helpers'
 @view
 export default class Input {
   render(props) {
-    console.log('input', props)
     return (
       <root>
         <text

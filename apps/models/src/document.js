@@ -106,7 +106,7 @@ class Document extends Model {
     return (
       this.collection
         .find({
-          placeId: { $exists: true },
+          placeId: { $exists: false },
         })
         .where('places')
         // in array find

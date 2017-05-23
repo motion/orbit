@@ -1,5 +1,6 @@
 import AutoReplace from 'slate-auto-replace'
 import { Block, Raw } from 'slate'
+import { BLOCKS } from '../constants'
 
 export default [
   AutoReplace({
@@ -8,12 +9,12 @@ export default [
     after: /^$/,
     transform: (transform, e, data, matches) => {
       const label = Block.create({
-        type: 'text',
+        type: 'label',
         nodes: [
           Raw.deserializeText(
             {
               kind: 'text',
-              text: 'test1',
+              text: matches.before[1],
             },
             { terse: true }
           ),
@@ -21,30 +22,61 @@ export default [
       })
 
       const input = Block.create({
-        type: 'text',
-        nodes: [
-          Raw.deserializeText(
-            {
-              kind: 'text',
-              text: 'test2',
-            },
-            { terse: true }
-          ),
-        ],
+        type: 'input',
       })
 
-      console.log('inserting2', label, input)
+      console.log('insert label', label)
 
-      return transform
+      const result = transform
         .removeNodeByKey(transform.state.startBlock.key)
         .insertBlock({
           type: 'input-block',
           nodes: [label, input],
-          data: {
-            variable: matches.before[1],
-          },
         })
-        .collapseToEndOf(label.key)
+        .collapseToStartOf(label)
+        .extendForward(label.length)
+
+      return result
     },
   }),
+
+  // move from label to input on enter
+  {
+    onKeyDown: (e, data, state) => {
+      const isEnter = e.which === 13
+
+      if (state.startBlock.type === BLOCKS.LABEL) {
+        if (isEnter) {
+          e.preventDefault()
+
+          const parent = state.document.getParent(state.startBlock.key)
+          console.log('parent', parent)
+          const currentNodeIndex = state.document.nodes.indexOf(parent)
+          console.log('index is', currentNodeIndex, state)
+          const nextNode = state.document.nodes.get(currentNodeIndex + 1)
+
+          console.log('nextNode', nextNode.text)
+
+          return state.transform().collapseToStartOf(nextNode).apply()
+        }
+      }
+
+      if (state.startBlock.type === BLOCKS.INPUT) {
+        if (isEnter) {
+          e.preventDefault()
+
+          const parent = state.document.getParent(state.startBlock.key)
+
+          const currentNodeIndex = state.document.nodes.indexOf(
+            state.startBlock
+          )
+          const nextNode = state.document.nodes.get(currentNodeIndex + 1)
+
+          console.log(parent)
+
+          return state.transform().collapseToStartOf(nextNode).apply()
+        }
+      }
+    },
+  },
 ]

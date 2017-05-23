@@ -29,3 +29,9 @@ export const list_item = props => (
 )
 
 export const hr = props => <hr />
+
+export const label = props => (
+  <label style={{ fontSize: 13 }} {...props.attributes}>
+    {props.children}
+  </label>
+)

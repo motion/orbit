@@ -123,6 +123,14 @@ class App {
     console.timeEnd('start')
   }
 
+  get editor() {
+    return this.activeStores.EditorStore && this.activeStores.EditorStore.editor
+  }
+
+  get editorState() {
+    return this.editor && this.editor.state.state
+  }
+
   @action loginOrSignup = async (username, password) => {
     this.clearErrors()
     let errors = []

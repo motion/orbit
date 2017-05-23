@@ -239,6 +239,10 @@ export default class Sidebar {
       borderLeft: [1, 'dotted', '#eee'],
       userSelect: 'none',
       background: '#fafafa',
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
     },
     content: {
       flex: 1,

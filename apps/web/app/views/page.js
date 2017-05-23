@@ -69,8 +69,9 @@ export default class Page {
   static style = {
     page: {
       flex: 1,
-      overflowY: 'scroll',
-      overflowX: 'visible',
+      // overflowY: 'scroll',
+      // overflowX: 'visible',
+      overflow: 'visible',
     },
   }
 }

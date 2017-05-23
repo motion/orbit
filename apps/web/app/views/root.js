@@ -2,7 +2,7 @@ import React from 'react'
 import { view, observable } from '~/helpers'
 import { object } from 'prop-types'
 import { Segment, Input, Link, Button, Icon } from '~/ui'
-import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
+import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
@@ -37,16 +37,30 @@ export default class Root {
     this.headerHovered = false
   }
 
+  lastScrolledTo = 0
+
+  onScroll = e => {
+    this.lastScrolledTo = e.currentTarget.scrollTop
+  }
+
   render({ store }) {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header, doc, place } = App.activePage
     const { extraActions } = App
 
-    console.log(Router.key)
+    console.log(
+      'root.render',
+      Router.key,
+      App.dragStartedAt,
+      this.lastScrolledTo
+    )
 
     return (
       <layout $$draggable>
-        <main>
+        <main
+          onScroll={this.onScroll}
+          $dragStartedAt={App.dragStartedAt !== false && this.lastScrolledTo}
+        >
           <header
             $hovered={this.headerHovered}
             onMouseEnter={() => (this.headerHovered = true)}
@@ -106,11 +120,26 @@ export default class Root {
     main: {
       flex: 1,
       position: 'relative',
-      overflow: 'hidden',
+      overflowX: 'visible',
+      overflowY: 'scroll',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: SIDEBAR_WIDTH,
+      zIndex: 10,
     },
+    dragStartedAt: pos => ({
+      overflowX: 'visible',
+      overflowY: 'visible',
+      transform: {
+        y: -pos,
+      },
+    }),
     content: {
       flex: 1,
       position: 'relative',
+      overflow: 'visible',
     },
     header: {
       background: [255, 255, 255, 0.1],

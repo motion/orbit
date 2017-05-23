@@ -297,6 +297,8 @@ fieldset {
   transition: none;
   z-index: 3;
   will-change: transform;
+  box-shadow: 0 10px 70px rgba(0,0,0,0.1);
+  border-radius: 5px;
 }
 
 .react-grid-item.resizing {

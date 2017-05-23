@@ -33,6 +33,7 @@ class App {
   @observable.ref extraActions = null
   @observable.ref errors = []
   @observable.ref activeStores = {}
+  @observable dragStartedAt = 0
 
   constructor() {
     // hmr fix
@@ -123,6 +124,8 @@ class App {
     console.timeEnd('start')
   }
 
+  // helpers
+
   get editor() {
     return this.activeStores.EditorStore && this.activeStores.EditorStore.editor
   }
@@ -130,6 +133,18 @@ class App {
   get editorState() {
     return this.editor && this.editor.state.state
   }
+
+  get activePlace() {
+    return (
+      (this.activePage.place && this.activePage.place.slug) || this.user.slug
+    )
+  }
+
+  get docLayout() {
+    return this.editorState.document.nodes.findByType('docList')
+  }
+
+  // actions
 
   @action loginOrSignup = async (username, password) => {
     this.clearErrors()
@@ -157,12 +172,6 @@ class App {
       this.handleError(...errors)
       return { errors }
     }
-  }
-
-  get activePlace() {
-    return (
-      (this.activePage.place && this.activePage.place.slug) || this.user.slug
-    )
   }
 
   @action signup = async (username, password, extraInfo = {}) => {

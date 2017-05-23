@@ -7,6 +7,10 @@ const Layout: HTMLElement = WidthProvider(ReactGridLayout)
 
 @view.ui
 export default class Grid {
+  props: {
+    onLayoutChange?: Function,
+  }
+
   static defaultProps = {
     rowHeight: 40,
     layout: [],
@@ -24,8 +28,17 @@ export default class Grid {
     }
   }
 
-  onDragStart = (e: Event) => {
-    e.preventDefault()
+  onDragStart = (layout, oldItem, newItem, placeholder, e, element) => {
+    console.log('ondragstart', e, e && e.clientY)
+    App.dragStartedAt = e.clientY
+
+    if (this.props.onDragStart) {
+      this.props.onDragStart()
+    }
+  }
+
+  onDragStop = () => {
+    App.dragStartedAt = false
   }
 
   render({ items, ...props }) {
@@ -34,11 +47,12 @@ export default class Grid {
         if={this.layout}
         {...props}
         ref={ref => (this.gridLayout = ref)}
-        onLayoutChange={this.props.onLayoutChange}
         layout={this.layout}
+        onDragStart={this.onDragStart}
+        onDragStop={this.onDragStop}
       >
         {items.map((item, i) => (
-          <gridItem onDragStart={this.onDragStart} key={item._id || item.key}>
+          <gridItem key={item._id || item.key}>
             {item}
           </gridItem>
         ))}

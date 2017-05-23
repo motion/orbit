@@ -9,7 +9,7 @@ export default class SelectBar {
 
     return (
       <Popover
-        if={Selection.highlightedNode && Selection.mouseUpEvent}
+        if={false && Selection.highlightedNode && Selection.mouseUpEvent}
         open
         noArrow
         background

@@ -8,11 +8,7 @@ export default class HashTag {
   render(props) {
     return (
       <root>
-        <hashtag
-          contentEditable
-          suppressContentEditableWarning
-          {...props.attributes}
-        >
+        <hashtag {...props.attributes}>
           {props.children}
         </hashtag>
         <DocList {...props} />
@@ -22,6 +18,7 @@ export default class HashTag {
 
   static style = {
     hashtag: {
+      display: 'none',
       fontSize: 32,
       color: 'red',
       fontWeight: 300,

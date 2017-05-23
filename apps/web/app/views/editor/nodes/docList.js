@@ -105,7 +105,6 @@ export default class DocList {
       position: 'absolute',
       top: -40,
       right: 0,
-      overflow: 'hidden',
     },
     card: {
       // background: '#fff',

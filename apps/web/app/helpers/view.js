@@ -28,13 +28,10 @@ function decorateView(View, options) {
   // preact-like render
   const or = View.prototype.render
   View.prototype.render = function() {
-    if (this.props.store && this.props.store._id)
-      console.log('GOT EM', this.props.store && this.props.store._id)
-
     return or.call(this, this.props, this.state, this.context)
   }
 
-  // just avoid mobx
+  // @view.simple = avoid mobx
   if (options && options.simple) {
     return autobind(glossy(View))
   }
@@ -64,6 +61,7 @@ export default function view(viewOrStores: Object | Class | Function, options) {
 
 view.plain = View => view(View, { simple: true })
 
+// @view.ui passes themes
 view.ui = View => {
   const next = view(View, { simple: true })
   // adds gloss theme context getters

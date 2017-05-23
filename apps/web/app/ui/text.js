@@ -12,6 +12,11 @@ export default class Text {
     getRef?: Function,
   }
 
+  static defaultProps = {
+    onFinishEdit: _ => _,
+    onCancelEdit: _ => _,
+  }
+
   @observable prps = {}
   editClickaway = null
   node = null
@@ -81,11 +86,11 @@ export default class Text {
 
       if (code === 'enter') {
         event.preventDefault()
-        if (onFinishEdit) onFinishEdit(this.value, event)
+        onFinishEdit(this.value, event)
       }
       if (code === 'esc') {
         event.preventDefault()
-        if (onCancelEdit) onCancelEdit(this.value, event)
+        onCancelEdit(this.value, event)
       }
     }
     if (onKeyDown) {

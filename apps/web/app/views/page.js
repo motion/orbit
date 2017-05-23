@@ -70,6 +70,7 @@ export default class Page {
     page: {
       flex: 1,
       overflowY: 'scroll',
+      overflowX: 'visible',
     },
   }
 }

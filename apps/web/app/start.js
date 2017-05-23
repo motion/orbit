@@ -34,13 +34,6 @@ if (!IS_PROD) {
   window.Immutable = Immutable
   window.PouchDB = PouchDB
   window._ = _
-
-  window['require'] = function req(modules, callback) {
-    const modulesToRequire = modules.forEach(function(module) {
-      return require(module)
-    })
-    callback.apply(this, modulesToRequire)
-  }
 }
 
 function errorReporter({ error }, view) {

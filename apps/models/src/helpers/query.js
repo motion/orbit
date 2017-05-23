@@ -6,9 +6,10 @@ const out = debug('query')
 // subscribe-aware helpers
 // @query value wrapper
 function valueWrap(info, valueGet: Function) {
-  out('query', info)
   const result = observable.shallowBox(undefined)
   let value = valueGet() || {}
+
+  out('query', info, value)
 
   // subscribe and update
   let subscriber = null
@@ -41,8 +42,7 @@ function valueWrap(info, valueGet: Function) {
 
     pull = PouchDB.replicate(remoteDB, localDB, {
       selector,
-      live: true,
-      retry: true,
+      // live: true,
     })
     out('replicate', remoteDB, 'to', localDB, selector)
   }

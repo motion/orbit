@@ -14,6 +14,7 @@ export default class Splash extends React.Component {
           WebkitAppRegion: 'drag',
           alignItems: 'center',
           justifyContent: 'center',
+          userSelect: 'none',
         }}
       >
         loading

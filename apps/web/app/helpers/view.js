@@ -43,7 +43,10 @@ function decorateView(View, options) {
   return DecoratedView
 }
 
+//
 // @view
+//
+
 export default function view(
   viewOrStores: Object | Class | Function,
   options = {}
@@ -77,6 +80,10 @@ export default function view(
 
   return storeAttacher(finalView, options)
 }
+
+//
+// view.* helpers
+//
 
 view.plain = View => view(View, { simple: true })
 

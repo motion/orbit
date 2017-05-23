@@ -43,10 +43,13 @@ export default class EditorStore {
   }
 
   start() {
-    console.log('got', this.props.rootKeyStore)
-    this.on(this.props.rootKeyStore, 'key', name => {
-      console.log('listening to deep parent store', name)
-    })
+    if (!this.props.inline) {
+      this.on(this.props.rootKeyStore, 'key', ({ action }) => {
+        if (action === 'down') {
+          this.editor.focus()
+        }
+      })
+    }
 
     // init content
     this.watch(() => {
@@ -136,17 +139,15 @@ export default class EditorStore {
     this.focused = false
   }
 
-  getRef = Editor => {
+  getRef = ref => {
     const { getRef, store } = this.props
-    if (Editor) {
-      this.editor = Editor
-      window.Editor = Editor
+    if (ref) {
+      this.editor = ref
       if (getRef) {
-        getRef(Editor)
+        getRef(ref)
       }
       if (this.shouldFocus) {
-        console.log('focusing', this.props.doc)
-        Editor.focus()
+        ref.focus()
         this.shouldFocus = false
       }
     }

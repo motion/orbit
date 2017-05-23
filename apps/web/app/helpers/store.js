@@ -50,7 +50,6 @@ export const config = {
 
     // unmount
     store.subscriptions.add(store.emitter)
-    store.subscriptions.add(config.onStoreUnmount(name, store))
 
     // mount actions
     automagicalStores(store)

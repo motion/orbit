@@ -206,7 +206,7 @@ export default class Sidebar {
             </ContextMenu>
           </Pane>
           <Pane
-            if={store.sidePlaces}
+            if={false}
             title="all"
             collapsable
             collapsed={store.sidePlacesClosed}

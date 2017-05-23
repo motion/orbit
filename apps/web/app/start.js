@@ -15,6 +15,7 @@ import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Theme from './ui/theme'
 import theme from './theme'
+import { AppContainer } from 'react-hot-loader'
 // import serviceWorker from './helpers/serviceWorker'
 // serviceWorker()
 
@@ -33,6 +34,13 @@ if (!IS_PROD) {
   window.Immutable = Immutable
   window.PouchDB = PouchDB
   window._ = _
+
+  window['require'] = function req(modules, callback) {
+    const modulesToRequire = modules.forEach(function(module) {
+      return require(module)
+    })
+    callback.apply(this, modulesToRequire)
+  }
 }
 
 function errorReporter({ error }, view) {
@@ -45,9 +53,11 @@ export function render() {
   console.time('#render')
   const Root = require('./views/root').default
   ReactDOM.render(
-    <Theme {...theme}>
-      <Root />
-    </Theme>,
+    <AppContainer>
+      <Theme {...theme}>
+        <Root />
+      </Theme>
+    </AppContainer>,
     ROOT
   )
   console.timeEnd('#render')

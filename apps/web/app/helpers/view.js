@@ -28,6 +28,9 @@ function decorateView(View, options) {
   // preact-like render
   const or = View.prototype.render
   View.prototype.render = function() {
+    if (this.props.store && this.props.store._id)
+      console.log('GOT EM', this.props.store && this.props.store._id)
+
     return or.call(this, this.props, this.state, this.context)
   }
 

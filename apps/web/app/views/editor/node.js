@@ -40,10 +40,11 @@ export default Component =>
     static style = {
       node: {
         borderLeft: [5, 'transparent'],
+        borderRight: [5, 'transparent'],
 
         '&:hover': {
           background: '#fefefe',
-          borderLeft: [5, 'lightlblue'],
+          borderLeftColor: 'blue',
         },
       },
     }

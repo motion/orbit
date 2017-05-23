@@ -39,7 +39,6 @@ export default class CardList {
       flexFlow: 'row',
       overflowX: 'scroll',
       padding: 10,
-      margin: [0, -10],
     },
     doc: {
       margin: [0, 10, 0, 0],

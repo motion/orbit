@@ -103,7 +103,7 @@ export default class DocList {
     },
     config: {
       position: 'absolute',
-      top: -40,
+      top: -20,
       right: 0,
     },
     card: {

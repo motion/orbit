@@ -26,7 +26,6 @@ export default class Title {
       fontSize: Math.floor(Math.log(200 / level) * 5.5),
     }),
     title1: {
-      display: 'none',
       fontSize: 14,
       textTransform: 'uppercase',
       color: [0, 0, 0, 0.5],

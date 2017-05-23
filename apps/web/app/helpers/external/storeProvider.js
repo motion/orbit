@@ -2,14 +2,22 @@ import React from 'react'
 import { observable } from 'mobx'
 import Cache from './cache'
 
+type InstanceOptions = {
+  module: Object,
+  attach: Array<string>,
+}
+
 export default function createStoreProvider(options: Object) {
   const cache = new Cache()
 
-  return function storeProvider(allStores: Object, _module: Object) {
+  return function storeProvider(
+    allStores: Object,
+    instanceOpts: InstanceOptions
+  ) {
     return function decorator(Klass) {
       // hmr restore
-      if (_module) {
-        cache.revive(_module, allStores)
+      if (instanceOpts && instanceOpts.module) {
+        cache.revive(instanceOpts.module, allStores)
       }
 
       let Stores = allStores
@@ -57,8 +65,8 @@ export default function createStoreProvider(options: Object) {
             }
           }, {})
 
-          if (_module && _module.hot) {
-            _module.hot.dispose(data => {
+          if (instanceOpts && instanceOpts.module && instanceOpts.module.hot) {
+            instanceOpts.module.hot.dispose(data => {
               data.stores = this.state.stores
             })
           }
@@ -74,7 +82,11 @@ export default function createStoreProvider(options: Object) {
           }
 
           this.setState({
-            stores: cache.restore(this, finalStores, _module),
+            stores: cache.restore(
+              this,
+              finalStores,
+              instanceOpts && instanceOpts.module
+            ),
           })
         }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view, observable, Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
 import { Segment, Input, Link, Button, Icon } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
@@ -9,41 +9,29 @@ import Sidebar from '~/views/layout/sidebar'
 import Errors from '~/views/layout/errors'
 import { Document } from '@jot/models'
 import Commander from '~/views/commander'
-import Keys from '~/stores/keys'
 
-@view({
-  store: class LayoutStore {
+@view.provide({
+  rootStore: class RootStore {
     title = ''
+    headerHovered = false
 
     createDoc = () => {
       Document.create({ title: this.title, places: [App.activePlace] })
     }
+
+    handleShortcuts = (action, event: KeyboardEvent) => {
+      console.log('root.key', action, event)
+    }
   },
 })
 export default class Root {
-  static childContextTypes = {
-    shortcuts: object,
-  }
-
-  getChildContext() {
-    return { shortcuts: Keys.manager }
-  }
-
-  prevent = (e: Event) => e.preventDefault()
-
-  @observable headerHovered = true
-
-  componentDidMount() {
-    this.headerHovered = false
-  }
-
   lastScrolledTo = 0
 
   onScroll = e => {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  render({ store }) {
+  render({ rootStore }) {
     const CurrentPage = Router.activeView || NotFound
     const { title, actions, header, doc, place } = App.activePage
     const { extraActions } = App
@@ -56,15 +44,16 @@ export default class Root {
     )
 
     return (
-      <layout $$draggable>
+      <Shortcuts $layout name="all" handler={rootStore.handleShortcuts}>
         <main
           onScroll={this.onScroll}
           $dragStartedAt={App.dragStartedAt !== false && this.lastScrolledTo}
         >
           <header
-            $hovered={this.headerHovered}
-            onMouseEnter={() => (this.headerHovered = true)}
-            onMouseLeave={() => (this.headerHovered = false)}
+            $$draggable
+            $hovered={rootStore.headerHovered}
+            onMouseEnter={() => (rootStore.headerHovered = true)}
+            onMouseLeave={() => (rootStore.headerHovered = false)}
           >
             <nav>
               <Segment>
@@ -87,8 +76,8 @@ export default class Root {
             </nav>
             <bar $$centered $$flex $$row $$overflow="hidden">
               <Commander
-                onSubmit={store.createDoc}
-                onChange={store.ref('title').set}
+                onSubmit={rootStore.createDoc}
+                onChange={rootStore.ref('title').set}
                 $omniinput
               />
             </bar>
@@ -108,7 +97,7 @@ export default class Root {
         </main>
         <Errors />
         <Sidebar />
-      </layout>
+      </Shortcuts>
     )
   }
 

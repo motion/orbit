@@ -73,6 +73,7 @@ export default class Popover {
     noHover?: boolean,
     onMouseEnter?: Function,
     onMouseLeave?: Function,
+    animation?: string,
   }
 
   static defaultProps = {
@@ -95,6 +96,8 @@ export default class Popover {
     // which direction it shows towards
     // default will determine direction automatically
     towards: 'auto',
+    // animation
+    animation: 'slide 200ms',
   }
 
   static contextTypes = {
@@ -116,7 +119,7 @@ export default class Popover {
   }
 
   componentDidMount() {
-    const { openOnHover, openOnClick, open, escapable } = this.props
+    const { openOnClick, open, escapable } = this.props
 
     this.addEvent(
       window,
@@ -127,9 +130,8 @@ export default class Popover {
     )
 
     this.setTarget()
-    if (openOnHover) {
-      this.listenForHover()
-    }
+    this.listenForHover()
+
     if (openOnClick) {
       this.listenForClick()
       this.listenForClickAway()
@@ -447,13 +449,23 @@ export default class Popover {
 
   // hover helpers
   hoverStateSetter = (name, val) => () => {
+    const { openOnHover, onMouseEnter, onMouseLeave } = this.props
     const setter = () => this.setState({ [`${name}Hovered`]: val })
+
     if (val) {
-      this.setPosition(this.props, setter)
-      if (this.props.onMouseEnter) this.props.onMouseEnter()
+      if (openOnHover) {
+        this.setPosition(this.props, setter)
+      }
+      if (onMouseEnter) {
+        onMouseEnter()
+      }
     } else {
-      setter()
-      if (this.props.onMouseLeave) this.props.onMouseLeave()
+      if (openOnHover) {
+        setter()
+      }
+      if (onMouseLeave) {
+        onMouseLeave()
+      }
     }
   }
 
@@ -467,17 +479,20 @@ export default class Popover {
     this.addEvent(node, 'mouseenter', () => {
       this.hoverStateSetter(name, true)()
       // insanity, but mouselave is horrible
-      this.setTimeout(
-        () => !this.isTargetHovered() && this.hoverStateSetter(name, false)()
-      )
-      this.setTimeout(
-        () => !this.isTargetHovered() && this.hoverStateSetter(name, false)(),
-        10
-      )
-      this.setTimeout(
-        () => !this.isTargetHovered() && this.hoverStateSetter(name, false)(),
-        40
-      )
+
+      if (this.props.target) {
+        this.setTimeout(
+          () => !this.isTargetHovered() && this.hoverStateSetter(name, false)()
+        )
+        this.setTimeout(
+          () => !this.isTargetHovered() && this.hoverStateSetter(name, false)(),
+          10
+        )
+        this.setTimeout(
+          () => !this.isTargetHovered() && this.hoverStateSetter(name, false)(),
+          40
+        )
+      }
     })
     this.addEvent(node, 'mouseleave', this.hoverStateSetter(name, false))
   }

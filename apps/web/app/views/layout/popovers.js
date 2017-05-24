@@ -12,19 +12,22 @@ export default class Popovers {
           top={App.lastClick.y}
           left={App.lastClick.x}
           onMouseLeave={() => {
+            console.log('bye bye mouse')
             App.lastClick = null
           }}
           background="#fff"
-          overlay
+          overlay="transparent"
+          closeOnClickWithin
           escapable
           open
+          shadow
         >
           <List
             items={[
-              { primary: 'Doc List' },
-              { primary: 'Image' },
-              { primary: 'Bullet List' },
-              { primary: 'Todo List' },
+              { primary: 'Doc List', onClick: _ => _ },
+              { primary: 'Image', onClick: _ => _ },
+              { primary: 'Bullet List', onClick: _ => _ },
+              { primary: 'Todo List', onClick: _ => _ },
             ]}
           />
         </Popover>

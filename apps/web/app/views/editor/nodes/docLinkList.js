@@ -19,7 +19,7 @@ class DocListStore {
     )
 
   get place() {
-    return App.activePage.place
+    return this.props.placeStore && this.props.placeStore.place
   }
 
   newHashtag = null

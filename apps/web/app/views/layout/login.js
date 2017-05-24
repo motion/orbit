@@ -99,7 +99,7 @@ export default class Login {
     return (
       <login $$draggable>
         <form $step={store.step} $$undraggable onSubmit={store.onSubmit}>
-          <step $hinted $$hide={store.step !== 1}>
+          <step $hinted $$hidden={store.step !== 1}>
             <hint>
               press tab
             </hint>
@@ -113,7 +113,7 @@ export default class Login {
             />
           </step>
 
-          <step $$hide={store.step !== 2}>
+          <step $$hidden={store.step !== 2}>
             <info if={App.user} $showingPass={store.step === 2}>
               <Icon
                 name="remove"

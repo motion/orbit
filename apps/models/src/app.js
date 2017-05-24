@@ -133,12 +133,6 @@ class App {
     return this.editor && this.editor.state.state
   }
 
-  get activePlace() {
-    return (
-      (this.activePage.place && this.activePage.place.slug) || this.user.slug
-    )
-  }
-
   get docLayout() {
     return this.editorState.document.nodes.findByType('docList')
   }

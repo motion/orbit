@@ -8,8 +8,8 @@ import Page from '~/views/page'
 import Router from '~/router'
 import DocumentPage from '~/pages/doc'
 
-@view({
-  store: class PlaceStore {
+@view.provide({
+  placeStore: class PlaceStore {
     place = Place.get({ slug: this.props.slug || Router.params.slug })
     doc = null
 
@@ -39,8 +39,8 @@ import DocumentPage from '~/pages/doc'
   },
 })
 export default class PlacePage {
-  render({ store }) {
-    const { place, doc } = store
+  render({ placeStore }) {
+    const { place, doc } = placeStore
 
     if (!place) {
       return <Page loading />

@@ -55,7 +55,7 @@ export default Component =>
               {...this.props}
             />
           </component>
-          {['top', 'bottom'].map((half, index) => {
+          {['bottom'].map((half, index) => {
             const isHalfHovered =
               (this.hovered && this.hoveredSection === index) ||
               this.hoveredBtn === index
@@ -75,7 +75,7 @@ export default Component =>
                   $btnTop={half === 'top'}
                   button
                   name="add"
-                  size={6}
+                  size={9}
                   contentEditable={false}
                   onMouseEnter={this.ref('hoveredBtn').setter(index)}
                   onMouseLeave={
@@ -128,7 +128,7 @@ export default Component =>
         const isTop = half === 'top'
         return {
           top: isTop ? 0 : 'auto',
-          bottom: isTop ? 'auto' : 0,
+          bottom: !isTop ? 0 : 'auto',
           // background: isTop ? 'black' : 'blue',
         }
       },
@@ -145,7 +145,8 @@ export default Component =>
       btn: {
         position: 'absolute',
         opacity: 0,
-        bottom: -5,
+        bottom: 0,
+        top: 0,
         left: 25,
         zIndex: 100,
         alignItems: 'center',

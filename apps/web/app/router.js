@@ -1,9 +1,7 @@
 import Router from 'motion-mobx-router'
-import { render } from './index'
+import { render } from './start'
 
 let AppRouter
-
-// const context = require.context && require.context('./pages', false, /\.js$/)
 
 const getRoutes = context => ({
   '/': require('./pages/home.js').default,
@@ -21,8 +19,6 @@ function start() {
 // for hmr
 if (module.hot) {
   module.hot.accept((...args) => {
-    // const newContext = require.context('./pages', false, /\.js$/)
-    console.log('ACCEPT', newContext)
     start()
     render()
   })

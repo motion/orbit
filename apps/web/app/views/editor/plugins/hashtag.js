@@ -5,7 +5,7 @@ export default {
     const { startBlock } = state
 
     const key = state.selection.startKey
-    const curNode = state.document.nodes.findDescendant(x => x.key === key)
+    const curNode = state.document.findDescendant(x => x.key === key)
 
     console.log(key, curNode, curNode && curNode.text)
 

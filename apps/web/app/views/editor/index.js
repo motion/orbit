@@ -61,7 +61,6 @@ export default class EditorView {
           schema={store.schema}
           state={store.state || store.content}
           onDocumentChange={this.onDocumentChange}
-          onChange={store.setState}
           ref={store.getRef}
           onFocus={store.focus}
           onBlur={store.blur}

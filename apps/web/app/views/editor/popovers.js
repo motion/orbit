@@ -1,11 +1,25 @@
 import { view } from '~/helpers'
 import { Popover, List } from '~/ui'
 import App from '@jot/models'
+import { BLOCKS } from './constants'
 
 @view
 export default class Popovers {
+  insert = (type: string, data) => (event: Event) => {
+    const { editorStore } = this.props
+    editorStore.lastClick = null
+    editorStore.focus()
+    setTimeout(() => {
+      editorStore.state
+        .transform()
+        .setBlock({ type, data })
+        .insertBlock({ type, data })
+        .apply()
+      editorStore.focus()
+    }, 500)
+  }
+
   render({ editorStore }) {
-    console.log('editorStore.lastClick', editorStore.lastClick)
     return (
       <popovers>
         <Popover
@@ -13,7 +27,6 @@ export default class Popovers {
           top={editorStore.lastClick.y}
           left={editorStore.lastClick.x}
           onMouseLeave={() => {
-            console.log('bye bye mouse')
             editorStore.lastClick = null
           }}
           background="#fff"
@@ -26,10 +39,13 @@ export default class Popovers {
         >
           <List
             items={[
-              { primary: 'Doc List', onClick: _ => _ },
-              { primary: 'Image', onClick: _ => _ },
-              { primary: 'Bullet List', onClick: _ => _ },
-              { primary: 'Todo List', onClick: _ => _ },
+              {
+                primary: 'Doc List',
+                onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
+              },
+              { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
+              { primary: 'Bullet List', onClick: this.insert(BLOCKS.UL_LIST) },
+              { primary: 'Todo List', onClick: this.insert(BLOCKS.OL_LIST) },
             ]}
           />
         </Popover>

@@ -21,7 +21,6 @@ export default class EditorStore {
   shouldFocus = this.props.focusOnMount
   pendingSave = false
   focused = false
-  state = null
   content = null
   inline = this.props.inline
   editor = null
@@ -30,15 +29,6 @@ export default class EditorStore {
     rules,
     nodes: Nodes,
     marks: Marks,
-  }
-
-  updateSuggestions = text => {
-    this.suggestionsText = text
-    this.docSuggestions = this.allDocs
-      .filter(doc => includes(doc.title, this.suggestionsText))
-      .map(doc => {
-        return doc.title
-      })
   }
 
   start() {
@@ -79,6 +69,15 @@ export default class EditorStore {
     )
   }
 
+  updateSuggestions = text => {
+    this.suggestionsText = text
+    this.docSuggestions = this.allDocs
+      .filter(doc => includes(doc.title, this.suggestionsText))
+      .map(doc => {
+        return doc.title
+      })
+  }
+
   save = () => {
     this.doc.content = Raw.serialize(this.content)
     this.doc.title = this.content.document.nodes.first().text
@@ -86,6 +85,10 @@ export default class EditorStore {
     this.doc.save()
     this.lastSavedRev = this.doc._rev
     this.pendingSave = false
+  }
+
+  get state() {
+    return this.editor && this.editor.getState()
   }
 
   get theme() {
@@ -126,10 +129,6 @@ export default class EditorStore {
     this.content = state
   }
 
-  setState = state => {
-    this.state = state
-  }
-
   focus = () => {
     this.focused = true
   }
@@ -156,7 +155,7 @@ export default class EditorStore {
     // if its the child
     if (event.target.parentElement === event.currentTarget) {
       event.preventDefault()
-      const state = this.editor.getState()
+      const { state } = this
       if (!state) {
         return
       }

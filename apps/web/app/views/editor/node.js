@@ -24,14 +24,8 @@ export default Component =>
       editor.onChange(next)
     }
 
-    split = direction => (event: MouseEvent) => {
-      console.log('split', direction)
-      const { node, editor } = this.props
-
+    enter = (event: MouseEvent) => {
       this.context.editor.lastClick = { x: event.clientX, y: event.clientY }
-
-      // const next = editor.getState().transform().wrapBlock(BLOCKS.ROW).apply()
-      // editor.onChange(next)
     }
 
     render({ store, node, editor }) {
@@ -45,7 +39,8 @@ export default Component =>
             contentEditable={false}
             if={isRoot}
             $left
-            onClick={this.split('left')}
+            onMouseEnter={this.enter}
+            onMouseLeave={this.leave}
           >
             +
           </btn>
@@ -56,14 +51,7 @@ export default Component =>
             editorStore={this.context.editor}
             {...this.props}
           />
-          <btn
-            contentEditable={false}
-            if={isRoot}
-            $right
-            onClick={this.split('right')}
-          >
-            +
-          </btn>
+          <btn contentEditable={false} $right />
         </node>
       )
     }

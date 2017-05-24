@@ -458,6 +458,12 @@ babel-plugin-minify-type-constructors@^0.0.4:
   dependencies:
     babel-helper-is-void-0 "^0.0.1"
 
+babel-plugin-react-transform-motion@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/babel-plugin-react-transform-motion/-/babel-plugin-react-transform-motion-2.0.2.tgz#deb16fb452fc17e0ae39451dfba56f4873da1ea4"
+  dependencies:
+    lodash "^4.6.1"
+
 babel-plugin-transform-es2015-arrow-functions@^6.22.0:
   version "6.22.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-arrow-functions/-/babel-plugin-transform-es2015-arrow-functions-6.22.0.tgz#452692cb711d5f79dc7f85e440ce41b9f244d221"
@@ -986,6 +992,13 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
+buffer@^5.0.6:
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.0.6.tgz#2ea669f7eec0b6eda05b08f8b5ff661b28573588"
+  dependencies:
+    base64-js "^1.0.2"
+    ieee754 "^1.1.4"
+
 builtin-modules@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
@@ -1446,6 +1459,12 @@ debug@2.6.1:
 debug@2.6.7, debug@^2.1.0, debug@^2.1.1, debug@^2.1.3, debug@^2.2.0, debug@^2.3.2, debug@^2.6.0:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.7.tgz#92bad1f6d05bbb6bba22cca88bcd0ec894c2861e"
+  dependencies:
+    ms "2.0.0"
+
+debug@^2.6.8:
+  version "2.6.8"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
   dependencies:
     ms "2.0.0"
 
@@ -2989,6 +3008,10 @@ lie@~2.7.4:
   dependencies:
     immediate "^3.0.0"
 
+listify@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/listify/-/listify-1.0.0.tgz#03ca7ba2d150d4267773f74e57558d1053d2bee3"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
@@ -3078,7 +3101,7 @@ lodash.some@^4.4.0, lodash.some@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.some/-/lodash.some-4.6.0.tgz#1bb9f314ef6b8baded13b549169b2a945eb68e4d"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.6.1:
+lodash@^4.0.0, lodash@^4.12.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.6.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -3312,10 +3335,6 @@ motion-view@^2.0.0:
   dependencies:
     mobx "^3.1.9"
     react "^15.4.2"
-
-mousetrap@^1.6.1:
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/mousetrap/-/mousetrap-1.6.1.tgz#2a085f5c751294c75e7e81f6ec2545b29cbf42d9"
 
 ms@0.7.1:
   version "0.7.1"
@@ -4140,11 +4159,11 @@ public-encrypt@^4.0.0:
     parse-asn1 "^5.0.0"
     randombytes "^2.0.1"
 
-punycode@1.3.2:
+punycode@1.3.2, punycode@^1.2.4:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.3.2.tgz#9653a036fb7c1ee42342f2325cceefea3926c48d"
 
-punycode@^1.2.4, punycode@^1.4.1:
+punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
 
@@ -4222,6 +4241,10 @@ rc@^1.1.2, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-deep-force-update@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
+
 react-deep-force-update@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-2.0.1.tgz#4f7f6c12c3e7de42f345992a3c518236fa1ecad3"
@@ -4294,6 +4317,13 @@ react-portal@^3.0.0, react-portal@^3.1.0:
   dependencies:
     prop-types "^15.5.8"
 
+react-proxy@^1.1.7:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-1.1.8.tgz#9dbfd9d927528c3aa9f444e4558c37830ab8c26a"
+  dependencies:
+    lodash "^4.6.1"
+    react-deep-force-update "^1.0.0"
+
 react-proxy@^3.0.0-alpha.0:
   version "3.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-3.0.0-alpha.1.tgz#4400426bcfa80caa6724c7755695315209fa4b07"
@@ -4318,9 +4348,25 @@ react-shortcuts@^1.5.0:
     platform "^1.3.0"
     prop-types "^15.5.8"
 
+react-sortable-hoc@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-0.6.3.tgz#ab9fa699607c5f5871d00889222fb52559242947"
+  dependencies:
+    babel-runtime "^6.11.6"
+    invariant "^2.2.1"
+    lodash "^4.12.0"
+    prop-types "^15.5.7"
+
 react-timeago@3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-3.2.1.tgz#dcca61514dac108d8f86ec7e40c947296a6954a0"
+
+react-transform-hmr@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-transform-hmr/-/react-transform-hmr-1.0.4.tgz#e1a40bd0aaefc72e8dfd7a7cda09af85066397bb"
+  dependencies:
+    global "^4.3.0"
+    react-proxy "^1.1.7"
 
 react-virtualized@^9.7.5:
   version "9.7.5"
@@ -4796,6 +4842,12 @@ slate-drop-or-paste-images@^0.5.0:
 slate-edit-list@^0.6.4:
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/slate-edit-list/-/slate-edit-list-0.6.4.tgz#bd84ecfbdbb66cc943213be3089a33cd06b6935e"
+
+slate-edit-table@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/slate-edit-table/-/slate-edit-table-0.9.0.tgz#13432226584430e79be91e52a421d1152f072b19"
+  dependencies:
+    immutable "^3.8.1"
 
 slate-paste-linkify@^0.2.1:
   version "0.2.1"

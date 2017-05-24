@@ -10,6 +10,7 @@ import Errors from '~/views/layout/errors'
 import KeyStore from '~/stores/keys'
 import CommanderStore from '~/stores/commander'
 import LayoutStore from '~/stores/layout'
+import Drawer from '~/views/document/create'
 
 // stores attached here via provide give us nice ways
 // to share logic horizontally between any component
@@ -46,6 +47,7 @@ export default class Root {
     return (
       <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
         <main>
+          <Drawer />
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}
@@ -56,6 +58,7 @@ export default class Root {
         </main>
         <Errors />
         <Sidebar />
+        <Drawer if={false} />
       </Shortcuts>
     )
   }

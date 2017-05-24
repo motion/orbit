@@ -8,8 +8,9 @@ export default class Link {
 
   componentDidMount() {
     this.watch(() => {
-      this.isActive =
+      const isActive =
         Router.path === this.props.to || Router.path === this.props.match
+      this.ref('isActive').set(isActive)
     })
   }
 

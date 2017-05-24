@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view, observable } from '~/helpers'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/views/editor/constants'
 import App from '@jot/models'
@@ -9,6 +9,8 @@ export default Component =>
     static contextTypes = {
       stores: object,
     }
+
+    @observable hovered = false
 
     get editorStore() {
       return this.context.stores.editorStore
@@ -30,10 +32,12 @@ export default Component =>
 
     onMouseEnter = (event: MouseEvent) => {
       this.editorStore.selection.hover(event, this.props.node)
+      this.hovered = true
     }
 
     onMouseLeave = (event: MouseEvent) => {
       this.editorStore.selection.unHover(event, this.props.node)
+      this.hovered = false
     }
 
     render() {
@@ -109,6 +113,9 @@ export default Component =>
         cursor: 'pointer',
         pointerEvents: 'auto',
         transition: 'all ease-in 300ms',
+      },
+      btnActive: {
+        opacity: 1,
       },
     }
   }

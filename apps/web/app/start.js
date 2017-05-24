@@ -19,6 +19,8 @@ import { AppContainer } from 'react-hot-loader'
 // import serviceWorker from './helpers/serviceWorker'
 // serviceWorker()
 
+// Mobx.useStrict(true)
+
 if (!IS_PROD) {
   // install console formatters
   mobxFormatters(Mobx)

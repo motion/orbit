@@ -30,7 +30,7 @@ export default class Grid {
   }
 
   onDragStart = (layout, oldItem, newItem, placeholder, e, element) => {
-    this.props.layoutStore.isDragging = true
+    this.props.layoutStore.ref('isDragging').set(true)
 
     if (this.props.onDragStart) {
       this.props.onDragStart()
@@ -38,7 +38,7 @@ export default class Grid {
   }
 
   onDragStop = () => {
-    this.props.layoutStore.isDragging = false
+    this.props.layoutStore.ref('isDragging').set(false)
   }
 
   render({ items, isDraggable, isResizable, onLayoutChange, ...props }) {

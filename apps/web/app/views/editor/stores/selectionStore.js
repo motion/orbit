@@ -6,7 +6,11 @@ export default class Selection {
   highlightedNode = null
   hoveredNode = null
   mouseUpEvent = null
-  hovered = new Set()
+  hoverSet = null
+
+  start() {
+    this.hoverSet = new Set()
+  }
 
   clearHighlighted = () => {
     this.highlightedNode = null
@@ -14,10 +18,12 @@ export default class Selection {
   }
 
   hover = (event, node) => {
-    this.hovered = this.hovered.add({ event, node })
+    if (!this.hoverSet) return
+    this.hoverSet = this.hoverSet.add({ event, node })
   }
 
   unHover = (event, node) => {
-    this.hovered = this.hovered.delete({ event, node })
+    if (!this.hoverSet) return
+    this.hoverSet = this.hoverSet.delete({ event, node })
   }
 }

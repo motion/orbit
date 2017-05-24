@@ -157,8 +157,6 @@ export default class EditorStore {
   }
 
   handleDocumentClick = (event: Event) => {
-    console.log('clicked editorStore', this)
-
     // if its the child
     if (event.target.parentElement === event.currentTarget) {
       event.preventDefault()

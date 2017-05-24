@@ -1,33 +1,29 @@
 import Router from 'motion-mobx-router'
-import { render } from './index'
+import { render } from './start'
 
 let AppRouter
 
-const context = require.context('./pages', false, /\.js$/)
-
 const getRoutes = context => ({
-  '/': context('./home.js').default,
-  '/feed': context('./feed.js').default,
-  '/templates': context('./templates.js').default,
-  '/todo': context('./todo.js').default,
-  'g/:slug(/:hashtag)': context('./place.js').default,
-  'd/:id': context('./doc.js').default,
+  '/': require('./pages/home.js').default,
+  '/feed': require('./pages/feed.js').default,
+  '/templates': require('./pages/templates.js').default,
+  '/todo': require('./pages/todo.js').default,
+  'g/:slug(/:hashtag)': require('./pages/place.js').default,
+  'd/:id': require('./pages/doc.js').default,
 })
 
-function start(context) {
-  AppRouter = new Router({ routes: getRoutes(context) })
+function start() {
+  AppRouter = new Router({ routes: getRoutes() })
 }
 
 // for hmr
 if (module.hot) {
-  module.hot.accept(context.id, (...args) => {
-    const newContext = require.context('./pages', false, /\.js$/)
-    console.log('ACCEPT', newContext)
-    start(newContext)
+  module.hot.accept((...args) => {
+    start()
     render()
   })
 }
 
-start(context)
+start()
 
 export default AppRouter

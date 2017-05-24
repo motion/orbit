@@ -46,11 +46,9 @@ export function render() {
   console.time('#render')
   const Root = require('./views/root').default
   ReactDOM.render(
-    <AppContainer>
-      <Theme {...theme}>
-        <Root />
-      </Theme>
-    </AppContainer>,
+    <Theme {...theme}>
+      <Root />
+    </Theme>,
     ROOT
   )
   console.timeEnd('#render')

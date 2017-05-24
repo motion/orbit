@@ -73,6 +73,7 @@ export default class Popover {
     noHover?: boolean,
     onMouseEnter?: Function,
     onMouseLeave?: Function,
+    onClose?: Function,
     animation?: string,
   }
 

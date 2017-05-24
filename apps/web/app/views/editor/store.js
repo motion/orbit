@@ -17,6 +17,7 @@ export default class EditorStore {
   allDocs = []
   docSuggestions = []
   lastClick = null
+  state = null
   lastSavedRev = null
   shouldFocus = this.props.focusOnMount
   pendingSave = false
@@ -69,6 +70,10 @@ export default class EditorStore {
     )
   }
 
+  onChange = state => {
+    this.state = state
+  }
+
   updateSuggestions = text => {
     this.suggestionsText = text
     this.docSuggestions = this.allDocs
@@ -85,10 +90,6 @@ export default class EditorStore {
     this.doc.save()
     this.lastSavedRev = this.doc._rev
     this.pendingSave = false
-  }
-
-  get state() {
-    return this.editor && this.editor.getState()
   }
 
   get theme() {
@@ -165,12 +166,13 @@ export default class EditorStore {
       this.editor.focus()
       const lastNode = document.nodes.last()
 
-      // move to end
-      return state
-        .transform()
-        .collapseToEndOf(lastNode)
-        .moveOffsetsTo(lastNode.length)
-        .apply()
+      this.editor.setState(
+        state
+          .transform()
+          .collapseToEndOf(lastNode)
+          .moveOffsetsTo(lastNode.length)
+          .apply()
+      )
     }
   }
 }

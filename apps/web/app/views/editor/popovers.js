@@ -9,8 +9,9 @@ export default class Popovers {
   insert = (type: string, data: Object) => (event: Event) => {
     const { editorStore } = this.props
     editorStore.lastClick = null
-    editorStore.editor.setState(
-      editorStore.state
+    editorStore.editor.onChange(
+      editorStore.editor
+        .getState()
         .transform()
         .setBlock({ type, data })
         // .insertBlock({ type, data })
@@ -28,6 +29,9 @@ export default class Popovers {
           top={editorStore.lastClick.y}
           left={editorStore.lastClick.x}
           onMouseLeave={() => {
+            editorStore.lastClick = null
+          }}
+          onClose={() => {
             editorStore.lastClick = null
           }}
           background="#fff"

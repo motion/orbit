@@ -15,5 +15,5 @@ window.Buffer = require('buffer/').Buffer
 require('./start')
 
 if (module.hot) {
-  module.hot.accept('./start', () => require('./start'))
+  module.hot.accept()
 }

@@ -1,4 +1,4 @@
-import { node } from '~/helpers'
+import node from '../node'
 
 export image from './image'
 export link from './link'

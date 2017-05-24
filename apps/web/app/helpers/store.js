@@ -18,6 +18,10 @@ export storeAttacher from './external/storeAttacher'
 
 export const config = {
   storeDecorator(Store) {
+    // this makes it work with hmr! :)
+    if (Store.isDecorated) return Store
+    Store.isDecorated = true
+
     mixin(Store.prototype, ClassHelpers)
 
     // store.emitter

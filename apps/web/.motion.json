@@ -21,7 +21,7 @@
           "decoratorName": "view",
           "transforms": [
             {
-              "transform": "react-transform-hmr",
+              "transform": "react-transform-hmr-motion",
               "imports": [
                 "react"
               ],

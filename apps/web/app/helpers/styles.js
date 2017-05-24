@@ -45,7 +45,8 @@ export const styles = {
   height: height => ({ height }),
   overflow: overflow => ({ overflow }),
   background: background => ({ background }),
-  hide: val => ({ display: val ? 'none' : 'auto' }),
+  hidden: val => ({ display: val ? 'none' : 'auto' }),
+  show: val => ({ opacity: val ? 1 : 0 }),
   alignSelf: alignSelf => ({ alignSelf }),
   justify: justifyContent => ({ justifyContent }),
   row: {

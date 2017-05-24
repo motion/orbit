@@ -1,6 +1,5 @@
 export * from 'mobx'
 export { Component } from 'react'
-export node from '~/views/editor/node'
 export view from './view'
 export store from './store'
 export $ from './styles'

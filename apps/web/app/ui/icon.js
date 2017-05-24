@@ -47,6 +47,8 @@ export default class Icon {
       attach,
       children,
       button,
+      margin,
+      style,
       ...props
     } = this.props
 
@@ -55,12 +57,19 @@ export default class Icon {
 
     return (
       <icon
+        contentEditable={false}
         className={`${className || ''} ${this.uniq}`}
-        style={{ ...props, gloss: true }}
         onClick={onClick}
-        {...attach}
+        style={{
+          margin: margin || (style && style.margin),
+          ...style,
+        }}
+        {...props}
       >
-        <inner className={`nc-icon-${type} ${iconName}`}>
+        <inner
+          contentEditable={false}
+          className={`nc-icon-${type} ${iconName}`}
+        >
           {children || backupIcon}
         </inner>
         <Popover
@@ -99,6 +108,7 @@ export default class Icon {
         alignItems: 'center',
         padding: 5,
         margin: -5,
+        background: [0, 0, 0, 0.02],
         '&:hover': {
           background: [0, 0, 0, 0.02],
         },

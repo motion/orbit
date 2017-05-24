@@ -1,4 +1,4 @@
-import { view, clr } from '~/helpers'
+import { view } from '~/helpers'
 
 const idFn = _ => _
 const opposite = direction =>
@@ -99,7 +99,7 @@ export default class Drawer {
     },
     panel: {
       pointerEvents: 'none',
-      // background: Theme.color.background,
+      background: '#fff',
       position: 'absolute',
       top: 0,
       bottom: 0,
@@ -138,24 +138,15 @@ export default class Drawer {
   }
 
   static theme = {
-    bordered: {
+    theme: ({ bordered, shadowed }, context, { background }) => ({
       panel: {
-        // borderLeft: [1, Theme.color.darkBackground],
+        borderLeft: bordered && [1, background],
+        boxShadow: shadowed && '0 0 6px rgba(0,0,0,0.3)',
       },
-    },
-    shadowed: {
-      panel: {
-        boxShadow: '0 0 6px rgba(0,0,0,0.3)',
-      },
-    },
+    }),
     noOverlay: {
       overlay: {
         display: 'none',
-      },
-    },
-    dark: {
-      panel: {
-        // background: Theme.color.darkBackground,
       },
     },
     zIndex: ({ zIndex }) => ({

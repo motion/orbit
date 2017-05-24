@@ -3303,9 +3303,9 @@ morgan@^1.8.1:
     on-finished "~2.3.0"
     on-headers "~1.0.1"
 
-motion-class-helpers@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/motion-class-helpers/-/motion-class-helpers-1.0.10.tgz#2d44d9d2ad7f9dc200df69b97fcdbcb45e3010bc"
+motion-class-helpers@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/motion-class-helpers/-/motion-class-helpers-1.1.0.tgz#a00305298d231e741afd51f03bbf6f754e2f18cc"
   dependencies:
     disposable-event "^1.0.3"
     object-path "^0.11.3"
@@ -4361,7 +4361,7 @@ react-timeago@3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-3.2.1.tgz#dcca61514dac108d8f86ec7e40c947296a6954a0"
 
-react-transform-hmr-motion@^1.0.4:
+react-transform-hmr-motion@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-transform-hmr-motion/-/react-transform-hmr-motion-1.0.5.tgz#6e82c1dc3b45815c720e15b61a6d2d82749ec896"
   dependencies:

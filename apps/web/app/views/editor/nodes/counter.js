@@ -1,6 +1,7 @@
 import React from 'react'
 import { Editor, Raw } from 'slate'
-import { node, view, observable } from '~/helpers'
+import { view, observable } from '~/helpers'
+import node from '~/views/editor/node'
 
 class CounterStore {
   diff = num => {

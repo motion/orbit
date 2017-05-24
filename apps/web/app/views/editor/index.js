@@ -8,15 +8,17 @@ import Popovers from './popovers'
 
 export { Raw } from 'slate'
 
+const empty = () => {}
+
 @view.attach('commanderStore')
 @view.provide({
   editorStore: EditorStore,
 })
 export default class EditorView {
   static defaultProps = {
-    onChange: _ => _,
-    getRef: _ => _,
-    onKeyDown: _ => _,
+    onChange: empty,
+    getRef: empty,
+    onKeyDown: empty,
   }
 
   onDocumentChange = (document, state) => {

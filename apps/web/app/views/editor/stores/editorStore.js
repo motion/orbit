@@ -7,6 +7,8 @@ import Marks from '../marks'
 import SelectionStore from './selectionStore'
 import { flatten, includes } from 'lodash'
 
+console.log('Plugins', Plugins)
+
 export const merge = x => flatten(Object.keys(x).map(n => x[n]))
 const rules = merge(Rules)
 

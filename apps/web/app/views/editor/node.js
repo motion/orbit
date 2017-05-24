@@ -67,33 +67,13 @@ export default Component =>
         display: 'inline-block',
         position: 'relative',
         padding: [0, 22],
-
-        '&:hover > icon': {
-          opacity: 1,
-        },
       },
       rootLevel: {
         // [line-height, margin]
         padding: [0, 45],
         '&:hover': {
-          background: '#f2f2f2',
+          background: '#fafafa',
         },
-      },
-      btn: {
-        position: 'absolute',
-        opacity: 0,
-        bottom: 0,
-        top: 9,
-        left: 20,
-        zIndex: 100,
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        pointerEvents: 'auto',
-        transition: 'all ease-in 300ms',
-      },
-      btnActive: {
-        opacity: 1,
       },
     }
   }

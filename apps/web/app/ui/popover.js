@@ -657,7 +657,7 @@ export default class Popover {
     },
     popover: {
       position: 'absolute',
-      pointerEvents: 'auto',
+      pointerEvents: 'none',
       opacity: 0,
       transition: 'opacity ease-in 60ms, transform ease-out 100ms',
       transform: {
@@ -666,6 +666,7 @@ export default class Popover {
     },
     popoverOpen: {
       opacity: 1,
+      pointerEvents: 'auto',
       transition: 'transform 0ms',
       transform: {
         y: 0,

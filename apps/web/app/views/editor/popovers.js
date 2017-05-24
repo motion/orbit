@@ -27,8 +27,8 @@ export default class Popovers {
       <popovers contentEditable={false}>
         <Popover
           open
-          if={editorStore.selection.hoveredNode}
-          target={() => editorStore.selection.hoveredNode}
+          if={editorStore.selection.lastFocusedNode}
+          target={() => editorStore.selection.lastFocusedNode}
           towards="left"
           adjust={[40, 0]}
         >

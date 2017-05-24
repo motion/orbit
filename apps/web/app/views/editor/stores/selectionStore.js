@@ -2,18 +2,33 @@ import { store } from '~/helpers'
 
 @store
 export default class Selection {
-  focused = false
-  highlightedNode = null
   hoveredNode = null
-  mouseUpEvent = null
+  selectedNode = null
+  focusedNode = null
+  focusedAt = Date.now()
+  hoveredAt = Date.now()
 
-  clearHighlighted = () => {
-    this.highlightedNode = null
-    this.mouseUpEvent = null
+  get lastFocusedNode() {
+    return this.hoveredAt > this.focusedAt ? this.hoveredNode : this.focusedNode
+  }
+
+  clearSelection = () => {
+    this.selectedNode = null
+  }
+
+  setSelection = node => {
+    this.selectedNode = node
+    this.selectedAt = Date.now()
+  }
+
+  setFocus = node => {
+    this.focusedNode = node
+    this.focusedAt = Date.now()
   }
 
   hover = (event, node) => {
     this.hoveredNode = node
+    this.hoveredAt = Date.now()
   }
 
   unHover = (event, node) => {

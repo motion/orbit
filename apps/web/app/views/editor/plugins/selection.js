@@ -8,29 +8,33 @@ function trackSelection(selection, state, editorStore) {
   const isHighlighting = selection.startOffset !== selection.endOffset
 
   if (sameBlock && !isHighlighting) {
-    editorStore.selection.clearHighlighted()
+    editorStore.selection.clearSelection()
     return
   }
 
   const key = selection.anchorKey
-  editorStore.selection.highlightedNode = findDOMNode(
-    state.document.findDescendant(x => x.key === key)
+  editorStore.selection.setSelection(
+    findDOMNode(state.document.findDescendant(x => x.key === key))
   )
 }
 
 function trackFocus(selection, state, editorStore) {
-  editorStore.selection.active = selection
-  editorStore.selection.cursorNode = findDOMNode(
-    state.document.findDescendant(x => x.key === selection.anchorKey)
+  editorStore.selection.setFocus(
+    findDOMNode(
+      state.document.findDescendant(x => x.key === selection.anchorKey)
+    ).parentNode.parentNode
   )
 }
 
 export default {
   onBlur(event, data, state, editor) {
-    editor.props.editorStore.selection.focused = false
+    // editor.props.editorStore.selection.focused = false
   },
   onFocus(event, data, state, editor) {
-    editor.props.editorStore.selection.focused = true
+    // editor.props.editorStore.selection.focused = true
+  },
+  onKeyDown(event, { selection }, state, editor) {
+    trackFocus(selection, state, editor.props.editorStore)
   },
   onSelect(event, { selection }, state, editor) {
     trackSelection(selection, state, editor.props.editorStore)

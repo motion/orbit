@@ -8,7 +8,7 @@ import Router from '~/router'
 import CardList from './lists/card'
 import GridList from './lists/grid'
 
-class DocListStore {
+class DocListLink {
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
 
@@ -19,7 +19,7 @@ class DocListStore {
     )
 
   get place() {
-    return App.activePage.place
+    return this.props.placeStore && this.props.placeStore.place
   }
 
   newHashtag = null
@@ -49,7 +49,7 @@ const darkBlue = `#0099e5`
 
 @node
 @view({
-  store: DocListStore,
+  store: DocListLink,
 })
 export default class DocLinkList {
   render({ node, editorStore, editing, store, children, ...props }) {

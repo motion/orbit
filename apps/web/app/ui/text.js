@@ -40,14 +40,8 @@ export default class Text {
           this.editClickaway.dispose()
         }
         if (editable) {
-          this.editClickaway = this.addEvent(
-            window,
-            'click',
-            (event: Event) => {
-              if (onFinishEdit) {
-                onFinishEdit(this.value)
-              }
-            }
+          this.editClickaway = this.addEvent(window, 'click', (event: Event) =>
+            onFinishEdit(this.value)
           )
         }
       }

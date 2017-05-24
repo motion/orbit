@@ -10,22 +10,26 @@ import GridList from './lists/grid'
 import List from './lists/list'
 
 class DocListStore {
+  get place() {
+    return this.props.placeStore.place
+  }
+
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
-  docs = !this.props.editorStore.inline &&
-    Document.forPlace(this.place && this.place._id)
+  docs = Document.forPlace(this.place && this.place._id)
 
   shouldFocus = false
 
   createDoc = async () => {
-    await Document.create({ places: [this.place._id] })
+    console.log('create for place', this.props.placeStore)
+    if (!this.props.placeStore) {
+      await Document.create()
+    } else {
+      await Document.create({ places: [this.props.placeStore.place._id] })
+    }
     this.setTimeout(() => {
       this.shouldFocus = true
     }, 200)
-  }
-
-  get place() {
-    return App.activePage.place
   }
 
   setType = (node, listType: string) => {
@@ -39,6 +43,7 @@ class DocListStore {
 }
 
 @node
+@view.attach('placeStore')
 @view({
   store: DocListStore,
 })
@@ -56,15 +61,22 @@ export default class DocList {
     }
   }
 
-  render({ node, editorStore, store, children, attributes, ...props }) {
-    // if (editorStore && editorStore.inline) {
-    //   return <null>sub doc list</null>
-    // }
-
+  render({
+    placeStore,
+    node,
+    editorStore,
+    store,
+    children,
+    attributes,
+    ...props
+  }) {
     const hasLoaded = !!store.docs
-    const hasDocs = hasLoaded && store.docs.length > 0
     const listType = node.data.get('listType') || 'card'
     const ListView = this.getList(listType)
+
+    if (editorStore && editorStore.inline && listType === 'grid') {
+      return <null>sub doc list</null>
+    }
 
     return (
       <doclist contentEditable={false}>

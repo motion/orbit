@@ -23,7 +23,7 @@ export default class EditorStore {
   pendingSave = false
   focused = false
   content = null
-  inline = this.props.inline
+  inline = false
   editor = null
   plugins = Plugins
   schema = {
@@ -33,6 +33,9 @@ export default class EditorStore {
   }
 
   start() {
+    this.inline = this.props.inline
+    console.log('is inline', this.inline)
+
     if (!this.props.inline) {
       this.on(this.props.commanderStore, 'key', name => {
         if (name === 'down') {
@@ -153,6 +156,8 @@ export default class EditorStore {
   }
 
   handleDocumentClick = (event: Event) => {
+    console.log('clicked editorStore', this)
+
     // if its the child
     if (event.target.parentElement === event.currentTarget) {
       event.preventDefault()

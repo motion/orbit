@@ -32,7 +32,7 @@ class App {
   @observable.ref activePage = {}
   @observable.ref extraActions = null
   @observable.ref errors = []
-  @observable.ref activeStores = {}
+  @observable.ref stores = {}
 
   constructor() {
     // hmr fix
@@ -50,9 +50,7 @@ class App {
     console.time('start')
     this.catchErrors()
 
-    console.log(
-      'Use App in your console to access models, activeStores, user, etc'
-    )
+    console.log('Use App in your console to access models, stores, user, etc')
 
     // attach Models to app
     for (const [name, model] of Object.entries(Models)) {
@@ -126,17 +124,11 @@ class App {
   // helpers
 
   get editor() {
-    return this.activeStores.EditorStore && this.activeStores.EditorStore.editor
+    return this.stores.EditorStore && this.stores.EditorStore.editor
   }
 
   get editorState() {
     return this.editor && this.editor.state.state
-  }
-
-  get activePlace() {
-    return (
-      (this.activePage.place && this.activePage.place.slug) || this.user.slug
-    )
   }
 
   get docLayout() {
@@ -266,11 +258,11 @@ class App {
   }
 
   @action setStore = (key, store) => {
-    this.activeStores = { ...this.activeStores, [key]: store }
+    this.stores = { ...this.stores, [key]: store }
   }
 
   @action removeStore = key => {
-    this.activeStores = { ...this.activeStores, [key]: null }
+    this.stores = { ...this.stores, [key]: null }
   }
 }
 

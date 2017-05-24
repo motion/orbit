@@ -39,7 +39,6 @@ export default class DocItem {
     doc,
     children,
     feed,
-    getRef,
     onSaveTitle,
     list,
     slanty,
@@ -51,9 +50,6 @@ export default class DocItem {
     bordered,
     ...props
   }) {
-    // hack for now
-    getRef && getRef(this)
-
     if (children) {
       return <doc {...props}>{children}</doc>
     }

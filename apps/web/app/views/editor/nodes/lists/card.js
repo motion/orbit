@@ -15,7 +15,7 @@ export default class CardList {
 
   render({ listStore }) {
     return (
-      <docs $stack={true}>
+      <docs $row>
         <doc $temp $$centered onClick={listStore.createDoc}>
           <Icon name="uiadd" />
         </doc>
@@ -36,7 +36,6 @@ export default class CardList {
   static style = {
     docs: {
       flexFlow: 'row',
-      overflowX: 'scroll',
       padding: 10,
     },
     doc: {
@@ -58,8 +57,9 @@ export default class CardList {
         background: '#f2f2f2',
       },
     },
-    stack: {
+    row: {
       flexFlow: 'row',
+      overflowX: 'scroll',
     },
   }
 }

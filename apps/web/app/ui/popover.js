@@ -122,7 +122,7 @@ export default class Popover {
   componentDidMount() {
     const { openOnClick, open, escapable } = this.props
 
-    this.addEvent(
+    this.on(
       window,
       'resize',
       debounce(() => {
@@ -142,7 +142,7 @@ export default class Popover {
     }
 
     if (escapable) {
-      this.addEvent(window, 'keydown', e => {
+      this.on(window, 'keydown', e => {
         if (e.keyCode === 27 && (open || this.state.open)) {
           this.close()
         }
@@ -192,7 +192,7 @@ export default class Popover {
     if (!this.target) return
 
     // click away to close
-    this.addEvent(this.target, 'click', e => {
+    this.on(this.target, 'click', e => {
       e.stopPropagation()
       this.isClickingTarget = true
       if (typeof this.props.open === 'undefined') {
@@ -207,7 +207,7 @@ export default class Popover {
 
   listenForClickAway = () => {
     // click away to close
-    this.addEvent(window, 'click', e => {
+    this.on(window, 'click', e => {
       // avoid closing when clicked inside popover
       if (
         this.refs.popover.contains(e.target) &&
@@ -477,7 +477,7 @@ export default class Popover {
 
   addHoverListeners = (name, node) => {
     if (!node) return
-    this.addEvent(node, 'mouseenter', () => {
+    this.on(node, 'mouseenter', () => {
       this.hoverStateSetter(name, true)()
       // insanity, but mouselave is horrible
 
@@ -495,7 +495,7 @@ export default class Popover {
         )
       }
     })
-    this.addEvent(node, 'mouseleave', this.hoverStateSetter(name, false))
+    this.on(node, 'mouseleave', this.hoverStateSetter(name, false))
   }
 
   isTargetHovered = () => {

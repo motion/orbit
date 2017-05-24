@@ -4,6 +4,7 @@ import { Popover, List } from '~/ui'
 import App from '@jot/models'
 import { BLOCKS } from './constants'
 
+@view.attach('editorStore')
 @view
 export default class Popovers {
   insert = (type: string, data: Object) => (event: Event) => {

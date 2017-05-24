@@ -1,22 +1,17 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view } from '~/helpers'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/views/editor/constants'
 import App from '@jot/models'
 
 export default Component =>
-  @view class Node {
+  @view.ui class Node extends React.Component {
     static contextTypes = {
-      editor: object,
+      stores: object,
     }
 
-    @observable hovered = false
-    @observable hoveredBtn = -1
-    @observable hoveredSection = -1
-    id = Math.random()
-
-    onDestroy = () => {
-      const { node } = this.props
+    get editorStore() {
+      return this.context.stores.editorStore
     }
 
     setData = data => {
@@ -30,13 +25,17 @@ export default Component =>
     }
 
     open = (event: MouseEvent) => {
-      this.context.editor.lastClick = { x: event.clientX, y: event.clientY }
+      this.editorStore.lastClick = { x: event.clientX, y: event.clientY }
     }
 
-    render({ node, editor, inline }) {
+    setSelection = (event: MouseEvent) => {
+      this.editorStore.selection.setHovered(event, this.props.node)
+    }
+
+    render() {
+      const { node, editor } = this.props
       const isRoot =
-        !this.context.editor.inline &&
-        !Component.plain &&
+        this.editorStore.inline === false &&
         editor.getState().document.getPath(node.key).length === 1
 
       const inner = (
@@ -44,8 +43,7 @@ export default Component =>
           {...this.props}
           setData={this.setData}
           onChange={editor.onChange}
-          onDestroy={this.onDestroy}
-          editorStore={this.context.editor}
+          editorStore={this.editorStore}
           id={this.id}
         />
       )
@@ -58,11 +56,7 @@ export default Component =>
       const Icon = require('../../ui/icon').default
 
       return (
-        <node
-          $rootLevel={isRoot}
-          onMouseEnter={this.ref('hovered').setter(true)}
-          onMouseLeave={() => this.ref('hovered').set(false)}
-        >
+        <node $rootLevel={isRoot} onMouseEnter={this.setSelection}>
           {inner}
           <Icon
             if={isRoot}

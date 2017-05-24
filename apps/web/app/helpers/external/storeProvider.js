@@ -38,33 +38,26 @@ export default function createStoreProvider(options: Object) {
         getChildContext() {
           const Stores = instanceOpts.context
           if (Stores) {
-            if (this.context.stores) {
+            if (options.warnOnOverwriteStore && this.context.stores) {
               Object.keys(Stores).forEach(name => {
                 if (this.context.stores[name]) {
                   console.log(
-                    `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${View.name}`
-                  )
-                  console.log(
-                    'before:',
-                    this.context.stores[name],
-                    'after',
-                    Stores[name]
+                    `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${Klass.name}`
                   )
                 }
               })
             }
 
             const names = Object.keys(Stores)
-
-            return {
-              stores: {
-                ...this.context.stores,
-                ...pickBy(
-                  this.state.stores,
-                  (value, key) => names.indexOf(key) >= 0
-                ),
-              },
+            const stores = {
+              ...this.context.stores,
+              ...pickBy(
+                this.state.stores,
+                (value, key) => names.indexOf(key) >= 0
+              ),
             }
+
+            return { stores }
           }
         }
 

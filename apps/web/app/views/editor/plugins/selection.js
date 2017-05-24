@@ -1,48 +1,47 @@
 import { findDOMNode } from 'slate'
-import Selection from '../stores/selection'
 import SelectBar from './selectBar'
 import InsertButton from './insertButton'
 
-function trackSelection(selection, state) {
+function trackSelection(selection, state, editorStore) {
   // not highlighted
   const sameBlock = selection.startKey === selection.endKey
   const isHighlighting = selection.startOffset !== selection.endOffset
 
   if (sameBlock && !isHighlighting) {
-    Selection.clearHighlighted()
+    editorStore.selection.clearHighlighted()
     return
   }
 
   const key = selection.anchorKey
-  Selection.highlightedNode = findDOMNode(
+  editorStore.selection.highlightedNode = findDOMNode(
     state.document.findDescendant(x => x.key === key)
   )
 }
 
-function trackFocus(selection, state) {
-  Selection.active = selection
-  Selection.cursorNode = findDOMNode(
+function trackFocus(selection, state, editorStore) {
+  editorStore.selection.active = selection
+  editorStore.selection.cursorNode = findDOMNode(
     state.document.findDescendant(x => x.key === selection.anchorKey)
   )
 }
 
 export default {
-  onBlur() {
-    Selection.focused = false
+  onBlur(event, data, state, editor) {
+    editor.props.editorStore.selection.focused = false
   },
-  onFocus() {
-    Selection.focused = true
+  onFocus(event, data, state, editor) {
+    editor.props.editorStore.selection.focused = true
   },
-  onSelect(event, { selection }, state) {
-    trackSelection(selection, state)
-    trackFocus(selection, state)
+  onSelect(event, { selection }, state, editor) {
+    trackSelection(selection, state, editor.props.editorStore)
+    trackFocus(selection, state, editor.props.editorStore)
   },
-  render({ children }) {
+  render({ children, editorStore }) {
     return (
       <pane style={{ flex: 1 }}>
         {children}
-        <SelectBar />
-        <InsertButton />
+        <SelectBar editorStore={editorStore} />
+        <InsertButton editorStore={editorStore} />
       </pane>
     )
   },

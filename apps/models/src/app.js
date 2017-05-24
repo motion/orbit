@@ -32,7 +32,7 @@ class App {
   @observable.ref activePage = {}
   @observable.ref extraActions = null
   @observable.ref errors = []
-  @observable.ref stores = {}
+  stores = {}
 
   constructor() {
     // hmr fix
@@ -255,14 +255,6 @@ class App {
         this.handleError({ ...err, reason: event.reason })
       })
     })
-  }
-
-  @action setStore = (key, store) => {
-    this.stores = { ...this.stores, [key]: store }
-  }
-
-  @action removeStore = key => {
-    this.stores = { ...this.stores, [key]: null }
   }
 }
 

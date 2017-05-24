@@ -6,8 +6,6 @@ import DocList from './docList'
 @node
 @view
 export default class HashTag {
-  static plain = true
-
   render(props) {
     return (
       <root>

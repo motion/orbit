@@ -3,15 +3,14 @@ import { Editor } from 'slate'
 import { object } from 'prop-types'
 import { Document } from '@jot/models'
 import { view } from '~/helpers'
-import SelectionStore from './stores/selection'
-import EditorStore, { merge } from './store'
+import EditorStore, { merge } from './stores/editorStore'
 import Popovers from './popovers'
 
 export { Raw } from 'slate'
 
 @view.attach('commanderStore')
-@view({
-  store: EditorStore,
+@view.provide({
+  editorStore: EditorStore,
 })
 export default class EditorView {
   static defaultProps = {
@@ -20,23 +19,16 @@ export default class EditorView {
     onKeyDown: _ => _,
   }
 
-  static childContextTypes = {
-    editor: object,
-  }
-
   onDocumentChange = (document, state) => {
-    this.props.store.setContent(state)
-  }
-
-  getChildContext() {
-    return { editor: this.props.store }
+    this.props.editorStore.setContent(state)
   }
 
   render({
     id,
     doc,
     readOnly,
-    store,
+    editorStore,
+    commanderStore,
     onKeyDown,
     onChange,
     inline,
@@ -46,31 +38,30 @@ export default class EditorView {
   }) {
     return (
       <document
-        if={store.content}
-        onClick={store.handleDocumentClick}
+        if={editorStore.content}
+        onClick={editorStore.handleDocumentClick}
         onMouseUp={(event: MouseEvent) => {
           event.persist()
-          SelectionStore.mouseUpEvent = event
+          editorStore.selection.mouseUpEvent = event
         }}
       >
         <Editor
           $editor
           $$undraggable
+          editorStore={editorStore}
           readOnly={readOnly}
-          plugins={merge(store.plugins)}
-          schema={store.schema}
-          state={store.state || store.content}
+          plugins={merge(editorStore.plugins)}
+          schema={editorStore.schema}
+          state={editorStore.state || editorStore.content}
           onDocumentChange={this.onDocumentChange}
-          onChange={store.onChange}
-          ref={store.getRef}
-          onFocus={store.focus}
-          onBlur={store.blur}
-          onKeyDown={e => {
-            onKeyDown(e)
-          }}
+          onChange={editorStore.onChange}
+          ref={editorStore.getRef}
+          onFocus={editorStore.focus}
+          onBlur={editorStore.blur}
+          onKeyDown={onKeyDown}
           {...props}
         />
-        <Popovers editorStore={store} />
+        <Popovers />
       </document>
     )
   }

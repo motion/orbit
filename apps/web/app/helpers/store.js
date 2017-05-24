@@ -49,13 +49,15 @@ export const config = {
     return store
   },
   onStoreDidMount(name, store) {
-    App.setStore(store.constructor.name, store)
+    const key = store.constructor.name
+    App.stores[key] = App.stores[key] || new Set()
+    App.stores[key].add(store)
   },
   onStoreUnmount(name, store) {
+    App.stores[store.constructor.name].delete(store)
     if (store.stop) {
       store.stop()
     }
-    App.removeStore(store.constructor.name)
     store.subscriptions.dispose()
   },
 }

@@ -1,7 +1,7 @@
 import { view } from '~/helpers'
 import { Popover, Segment, Button } from '~/ui'
-import Selection from '../stores/selection'
 
+@view.attach('editorStore')
 @view
 export default class SelectBar {
   render() {
@@ -9,13 +9,17 @@ export default class SelectBar {
 
     return (
       <Popover
-        if={false && Selection.highlightedNode && Selection.mouseUpEvent}
+        if={
+          false &&
+            editorStore.selection.highlightedNode &&
+            editorStore.selection.mouseUpEvent
+        }
         open
         noArrow
         background
         animation="slide 300ms"
-        left={Selection.mouseUpEvent.clientX}
-        top={Selection.mouseUpEvent.clientY + PAD}
+        left={editorStore.selection.mouseUpEvent.clientX}
+        top={editorStore.selection.mouseUpEvent.clientY + PAD}
       >
         <bar $$row>
           <Segment theme="dark" padded if={false}>

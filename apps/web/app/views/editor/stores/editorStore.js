@@ -1,22 +1,24 @@
 import { Raw } from 'slate'
 import { Place, Document } from '@jot/models'
-import * as Nodes from './nodes'
-import * as Plugins from './plugins'
-import * as Rules from './rules'
-import Marks from './marks'
-import { includes } from 'lodash'
-import { flatten } from 'lodash'
+import * as Nodes from '../nodes'
+import * as Plugins from '../plugins'
+import * as Rules from '../rules'
+import Marks from '../marks'
+import SelectionStore from './selectionStore'
+import { flatten, includes } from 'lodash'
 
 export const merge = x => flatten(Object.keys(x).map(n => x[n]))
 const rules = merge(Rules)
 
 export default class EditorStore {
   id = this.props.id || Math.random()
+  inline = this.props.inline
   doc = Document.get(this.props.id)
   // todo replace with doc when we use mention (which is currently turned off)
   allDocs = []
   docSuggestions = []
   lastClick = null
+  lastHover = null
   state = null
   lastSavedRev = null
   shouldFocus = this.props.focusOnMount
@@ -33,10 +35,9 @@ export default class EditorStore {
   }
 
   start() {
-    this.inline = this.props.inline
-    console.log('is inline', this.inline)
+    this.selection = new SelectionStore()
 
-    if (!this.props.inline) {
+    if (!this.inline) {
       this.on(this.props.commanderStore, 'key', name => {
         if (name === 'down') {
           this.editor.focus()

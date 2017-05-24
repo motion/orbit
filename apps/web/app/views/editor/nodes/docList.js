@@ -48,8 +48,6 @@ class DocListStore {
   store: DocListStore,
 })
 export default class DocList {
-  static plain = true
-
   getList = type => {
     switch (type) {
       case 'list':

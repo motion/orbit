@@ -1,19 +1,19 @@
 import { view } from '~/helpers'
 import { Popover, CircleButton } from '~/ui'
-import Selection from '../stores/selection'
 
+@view.attach('editorStore')
 @view
 export default class InsertButton {
-  render({ children }) {
+  render({ children, editorStore }) {
     return (
       <Popover
-        if={false && Selection.cursorNode}
+        if={false && editorStore.selection.cursorNode}
         open
         noArrow
         towards="left"
         background
         animation="slide 300ms"
-        target={() => Selection.cursorNode}
+        target={() => editorStore.selection.cursorNode}
       >
         <CircleButton
           style={{

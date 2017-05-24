@@ -15,6 +15,7 @@ export ContextMenu from './contextMenu'
 export Pane from './pane'
 export Text from './text'
 export Tabs from './tabs'
+export Drawer from './drawer'
 
 import React from 'react'
 import { $, view } from '~/helpers'

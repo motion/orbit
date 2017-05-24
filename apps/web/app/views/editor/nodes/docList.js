@@ -67,7 +67,7 @@ export default class DocList {
 
     return (
       <doclist contentEditable={false}>
-        <config>
+        <config contentEditable={false}>
           <Segment>
             <Button
               active={listType === 'grid'}

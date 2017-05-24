@@ -9,7 +9,7 @@ function valueWrap(info, valueGet: Function) {
   const result = observable.shallowBox(undefined)
   let value = valueGet() || {}
 
-  out('query', info, value)
+  out('query', info.model, info.property, info.args, value)
 
   // subscribe and update
   let subscriber = null
@@ -44,7 +44,6 @@ function valueWrap(info, valueGet: Function) {
       selector,
       // live: true,
     })
-    out('replicate', remoteDB, 'to', localDB, selector)
   }
 
   const response = {}

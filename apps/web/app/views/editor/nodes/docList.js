@@ -10,6 +10,10 @@ import GridList from './lists/grid'
 import List from './lists/list'
 
 class DocListStore {
+  get place() {
+    return this.props.placeStore.place
+  }
+
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
   docs = Document.forPlace(this.place && this.place._id)

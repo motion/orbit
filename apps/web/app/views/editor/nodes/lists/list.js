@@ -18,8 +18,8 @@ export default class CardList {
         {(listStore.docs || []).map((doc, i) => (
           <item key={doc._id}>
             <before>
-              <Icon name="minimal-up" iconSize={12} />
-              <Icon name="minimal-down" iconSize={12} />
+              <Icon name="minimal-up" size={12} />
+              <Icon name="minimal-down" size={12} />
             </before>
             <content>
               <title>{doc.title.trim() || 'Lorem ipsum'}</title>

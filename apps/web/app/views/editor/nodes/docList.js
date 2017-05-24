@@ -30,7 +30,7 @@ class DocListStore {
 
   setType = (node, listType: string) => {
     const next = node.data.set('listType', listType)
-    this.props.onChange(next)
+    this.props.setData(next)
   }
 
   doneFocusing = () => {

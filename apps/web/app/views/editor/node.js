@@ -10,7 +10,9 @@ export default Component =>
       editor: object,
     }
 
-    @observable btnActive = false
+    @observable hovered = false
+    @observable hoveredBtn = -1
+    @observable hoveredSection = -1
 
     onDestroy = () => {
       const { node } = this.props
@@ -26,13 +28,8 @@ export default Component =>
       editor.onChange(next)
     }
 
-    enter = (event: MouseEvent) => {
+    open = (event: MouseEvent) => {
       this.context.editor.lastClick = { x: event.clientX, y: event.clientY }
-      this.btnActive = true
-    }
-
-    leave = () => {
-      this.btnActive = false
     }
 
     render({ store, node, editor }) {
@@ -40,28 +37,61 @@ export default Component =>
         !Component.plain &&
         editor.getState().document.getPath(node.key).length === 1
 
+      // avoid circular import
+      const Icon = require('../../ui/icon').default
+
       return (
         <node
           $rootLevel={isRoot}
-          onMouseEnter={this.ref('btnActive').setter(true)}
-          onMouseLeave={this.ref('btnActive').setter(false)}
+          onMouseLeave={() => this.ref('hovered').set(false)}
+          onMouseEnter={this.ref('hovered').setter(true)}
         >
-          <btn
-            $btnActive={this.btnActive}
-            contentEditable={false}
-            if={isRoot}
-            $left
-            onMouseEnter={this.enter}
-            onMouseLeave={this.leave}
-          />
-          <insertBar contentEditable={false} />
-          <Component
-            setData={this.setData}
-            onChange={editor.onChange}
-            onDestroy={this.onDestroy}
-            editorStore={this.context.editor}
-            {...this.props}
-          />
+          <component>
+            <Component
+              setData={this.setData}
+              onChange={editor.onChange}
+              onDestroy={this.onDestroy}
+              editorStore={this.context.editor}
+              {...this.props}
+            />
+          </component>
+          {['top', 'bottom'].map((half, index) => {
+            const isHalfHovered =
+              (this.hovered && this.hoveredSection === index) ||
+              this.hoveredBtn === index
+            const isHovered = this.hovered
+            return (
+              <section
+                $half={half}
+                $active={isHovered}
+                key={half}
+                onMouseEnter={this.ref('hoveredSection').setter(index)}
+                contentEditable={false}
+              >
+                <Icon
+                  if={isRoot}
+                  $btn
+                  $btnActive={isHovered}
+                  $btnTop={half === 'top'}
+                  button
+                  name="add"
+                  size={6}
+                  contentEditable={false}
+                  onMouseEnter={this.ref('hoveredBtn').setter(index)}
+                  onMouseLeave={
+                    this.hoveredBtn === index &&
+                      this.ref('hoveredBtn').setter(-1)
+                  }
+                  onClick={this.open}
+                />
+                <insertBar
+                  $half={half}
+                  $$show={isHovered}
+                  contentEditable={false}
+                />
+              </section>
+            )
+          })}
         </node>
       )
     }
@@ -70,16 +100,37 @@ export default Component =>
       node: {
         display: 'inline-block',
         position: 'relative',
-        '&:hover > insertBar': {
-          opacity: 1,
-        },
       },
       rootLevel: {
         // [line-height, margin]
-        padding: [2, 55],
+        padding: [0, 55],
         '&:hover': {
-          background: '#f2f2f2',
+          // background: '#f2f2f2',
         },
+      },
+      component: {
+        position: 'relative',
+        zIndex: 1,
+      },
+      section: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        opacity: 1,
+        zIndex: 2,
+        height: '50%',
+      },
+      active: {
+        pointerEvents: 'none',
+        opacity: 1,
+      },
+      half: half => {
+        const isTop = half === 'top'
+        return {
+          top: isTop ? 0 : 'auto',
+          bottom: isTop ? 'auto' : 0,
+          // background: isTop ? 'black' : 'blue',
+        }
       },
       insertBar: {
         position: 'absolute',
@@ -87,7 +138,7 @@ export default Component =>
         left: 0,
         right: 0,
         bottom: 0,
-        background: '#ccc',
+        borderBottom: [1, 'dotted', '#ddd'],
         transition: ['all', '100ms'],
         opacity: 0,
       },
@@ -95,24 +146,24 @@ export default Component =>
         position: 'absolute',
         opacity: 0,
         bottom: -5,
-        width: 10,
-        height: 10,
-        borderRadius: 100,
-        background: '#eee',
-        color: '#fff',
+        left: 25,
         zIndex: 100,
         alignItems: 'center',
         justifyContent: 'center',
         cursor: 'pointer',
+        pointerEvents: 'auto',
+        '&:hover': {
+          transform: {
+            scale: 2,
+          },
+        },
+      },
+      btnTop: {
+        bottom: 'auto',
+        top: -5,
       },
       btnActive: {
         opacity: 1,
-      },
-      left: {
-        left: 0,
-      },
-      right: {
-        right: 0,
       },
     }
   }

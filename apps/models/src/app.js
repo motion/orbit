@@ -33,6 +33,7 @@ class App {
   @observable.ref extraActions = null
   @observable.ref errors = []
   @observable.ref activeStores = {}
+  @observable.ref lastClick = null
 
   constructor() {
     // hmr fix

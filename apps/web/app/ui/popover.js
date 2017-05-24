@@ -71,6 +71,8 @@ export default class Popover {
     towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
     padding?: Array | number,
     noHover?: boolean,
+    onMouseEnter?: Function,
+    onMouseLeave?: Function,
   }
 
   static defaultProps = {
@@ -448,8 +450,10 @@ export default class Popover {
     const setter = () => this.setState({ [`${name}Hovered`]: val })
     if (val) {
       this.setPosition(this.props, setter)
+      if (this.props.onMouseEnter) this.props.onMouseEnter()
     } else {
       setter()
+      if (this.props.onMouseLeave) this.props.onMouseLeave()
     }
   }
 
@@ -621,10 +625,10 @@ export default class Popover {
     },
     overlay: color => ({
       background: typeof color === 'string' ? color : 'rgba(0,0,0,0.2)',
-      pointerEvents: 'auto',
     }),
     overlayShown: {
       opacity: 1,
+      pointerEvents: 'all',
     },
     popover: {
       position: 'absolute',

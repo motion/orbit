@@ -11,7 +11,7 @@ import DocItem from '~/views/document/item'
       const { node } = this.props
       const next = node.data.set('layout', layout)
       console.log('grid change layout', node.data)
-      this.props.onChange(next)
+      this.props.setData(next)
     }
 
     toggleEdit = () => {
@@ -30,6 +30,8 @@ export default class GridList {
           cols={4}
           rowHeight={150}
           margin={store.editing ? [10, 10] : [0, 0]}
+          isDraggable={store.editing}
+          isResizable={store.editing}
           items={(listStore.docs || [])
             .map(doc => (
               <DocItem

@@ -26,9 +26,9 @@ class DocListStore {
 
   newHashtag = null
   saveName() {
-    const { node: { data }, onChange } = this.props
+    const { node: { data }, setData } = this.props
 
-    onChange(data.set('hashtag', this.newHashtag))
+    setData(data.set('hashtag', this.newHashtag))
     this.newHashtag = null
   }
 
@@ -46,7 +46,7 @@ class DocListStore {
   }
 
   onVote = _id => {
-    const { node: { data }, onChange } = this.props
+    const { node: { data }, setData } = this.props
 
     const votes = JSON.parse(data.get('votes'))
     const voters = votes[_id] || []
@@ -54,7 +54,7 @@ class DocListStore {
       ? without(voters, App.user.name)
       : [...voters, App.user.name]
 
-    onChange(data.set('votes', JSON.stringify(votes)))
+    setData(data.set('votes', JSON.stringify(votes)))
   }
 }
 
@@ -85,7 +85,7 @@ export default class DocLinkList {
             latest #
             <input
               $edit
-              spellcheck={false}
+              spellCheck={false}
               onFocus={() => (store.newHashtag = hashtag)}
               onChange={e => (store.newHashtag = e.target.value)}
               onBlur={store.saveName}

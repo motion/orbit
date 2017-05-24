@@ -2,6 +2,7 @@ import React from 'react'
 import { view } from '~/helpers'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/views/editor/constants'
+import App from '@jot/models'
 
 export default Component =>
   @view class extends React.Component {
@@ -13,21 +14,22 @@ export default Component =>
       const { node } = this.props
     }
 
-    onChange = data => {
+    setData = data => {
       const { node, editor } = this.props
-
       const next = editor
         .getState()
         .transform()
         .setNodeByKey(node.key, { data })
         .apply()
-
       editor.onChange(next)
     }
 
-    split = direction => () => {
+    split = direction => (event: MouseEvent) => {
       console.log('split', direction)
       const { node, editor } = this.props
+
+      App.lastClick = { x: event.clientX, y: event.clientY }
+
       // const next = editor.getState().transform().wrapBlock(BLOCKS.ROW).apply()
       // editor.onChange(next)
     }
@@ -48,7 +50,8 @@ export default Component =>
             +
           </btn>
           <Component
-            onChange={this.onChange}
+            setData={this.setData}
+            onChange={editor.onChange}
             onDestroy={this.onDestroy}
             editorStore={this.context.editor}
             {...this.props}

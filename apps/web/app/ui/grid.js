@@ -41,7 +41,7 @@ export default class Grid {
     this.props.layoutStore.isDragging = false
   }
 
-  render({ items, ...props }) {
+  render({ items, isDraggable, isResizable, onLayoutChange, ...props }) {
     return (
       <Layout
         if={this.layout}
@@ -50,6 +50,9 @@ export default class Grid {
         layout={this.layout}
         onDragStart={this.onDragStart}
         onDragStop={this.onDragStop}
+        isDraggable={isDraggable}
+        isResizable={isResizable}
+        onLayoutChange={onLayoutChange}
       >
         {items.map((item, i) => (
           <gridItem key={item._id || item.key}>

@@ -64,7 +64,7 @@ export default class DocLinkList {
             latest #
             <input
               $edit
-              spellcheck={false}
+              spellCheck={false}
               onFocus={() => (store.newHashtag = hashtag)}
               onChange={e => (store.newHashtag = e.target.value)}
               onBlur={store.saveName}

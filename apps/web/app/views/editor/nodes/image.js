@@ -42,7 +42,7 @@ class ImageNodeStore {
     const { doc } = this.props.editorStore
     const image = await doc.addImage(file)
     // save ID to doc
-    this.props.onChange({ imageId: image._id })
+    this.props.setData({ imageId: image._id })
     this.loading = false
   }
 }

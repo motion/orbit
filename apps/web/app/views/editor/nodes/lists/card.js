@@ -23,7 +23,6 @@ export default class CardList {
           .map((doc, i) => (
             <DocItem
               $doc
-              editable
               bordered
               key={doc._id}
               ref={node => this.docRef(node, i)}

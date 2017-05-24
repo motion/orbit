@@ -5,11 +5,11 @@ import { node, view } from '~/helpers'
 @view
 export default class Todo {
   toggle = () => {
-    const { node: { data }, onChange } = this.props
+    const { node: { data }, setData } = this.props
 
     const next = data.set('done', !data.get('done'))
 
-    onChange(next)
+    setData(next)
   }
 
   render({ node, children, ...props }) {

@@ -3,30 +3,31 @@ import { render } from './index'
 
 let AppRouter
 
-// const context = require.context('./pages', false, /\.js$/)
+const context = require.context('./pages', false, /\.js$/)
 
 const getRoutes = context => ({
-  '/': require('./pages/home.js').default,
-  '/feed': require('./pages/feed.js').default,
-  '/templates': require('./pages/templates.js').default,
-  '/todo': require('./pages/todo.js').default,
-  'g/:slug(/:hashtag)': require('./pages/place.js').default,
-  'd/:id': require('./pages/doc.js').default,
+  '/': context('./home.js').default,
+  '/feed': context('./feed.js').default,
+  '/templates': context('./templates.js').default,
+  '/todo': context('./todo.js').default,
+  'g/:slug(/:hashtag)': context('./place.js').default,
+  'd/:id': context('./doc.js').default,
 })
 
-function start() {
-  AppRouter = new Router({ routes: getRoutes() })
+function start(context) {
+  AppRouter = new Router({ routes: getRoutes(context) })
 }
 
 // for hmr
 if (module.hot) {
-  // module.hot.accept(context.id, (...args) => {
-  //   const reContext = require.context('./pages', false, /\.js$/)
-  //   start(reContext)
-  //   render()
-  // })
+  module.hot.accept(context.id, (...args) => {
+    const newContext = require.context('./pages', false, /\.js$/)
+    console.log('ACCEPT', newContext)
+    start(newContext)
+    render()
+  })
 }
 
-start()
+start(context)
 
 export default AppRouter

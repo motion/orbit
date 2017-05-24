@@ -4,9 +4,9 @@ import { node, view, observable } from '~/helpers'
 
 class CounterStore {
   diff = num => {
-    const { node: { data }, onChange } = this.props
+    const { node: { data }, setData } = this.props
     const next = data.set('count', (data.get('count') || 0) + num)
-    onChange(next)
+    setData(next)
   }
 }
 @node

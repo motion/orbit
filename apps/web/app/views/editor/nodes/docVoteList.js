@@ -11,7 +11,7 @@ import { without, includes } from 'lodash'
 import CardList from './lists/card'
 import GridList from './lists/grid'
 
-class DocListStore {
+class DocVoteListStore {
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
 
@@ -64,7 +64,7 @@ const darkBlue = `#0099e5`
 
 @node
 @view({
-  store: DocListStore,
+  store: DocVoteListStore,
 })
 export default class DocLinkList {
   votesText = votes => {

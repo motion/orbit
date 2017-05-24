@@ -68,7 +68,6 @@ export default class DocList {
     ...props
   }) {
     const hasLoaded = !!store.docs
-    const hasDocs = hasLoaded && store.docs.length > 0
     const listType = node.data.get('listType') || 'card'
     const ListView = this.getList(listType)
 

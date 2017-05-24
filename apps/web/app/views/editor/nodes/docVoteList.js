@@ -16,7 +16,7 @@ class DocListStore {
 
   docs = !this.props.editorStore.inline &&
     Document.forHashtag(
-      this.place && this.place.slug,
+      this.place && this.place._id,
       this.props.node.data.get('hashtag')
     )
 
@@ -27,18 +27,19 @@ class DocListStore {
   newHashtag = null
   saveName() {
     const { node: { data }, setData } = this.props
+    console.log('new hash is', this.newHashtag)
 
     setData(data.set('hashtag', this.newHashtag))
     this.newHashtag = null
   }
 
   newDocument = async () => {
-    const doc = await Document.create({
-      places: [App.activePlace],
+    const { layoutStore } = this.props
+
+    layoutStore.createDoc({
       title: 'New Document',
       hashtags: [this.props.node.data.get('hashtag')],
     })
-    Router.go(doc.url())
   }
 
   @computed get inputHashtag() {
@@ -62,6 +63,7 @@ const lightBlue = '#e7f6ff'
 const darkBlue = `#0099e5`
 
 @node
+@view.attach('layoutStore')
 @view({
   store: DocListStore,
 })
@@ -72,6 +74,7 @@ export default class DocLinkList {
   }
 
   render({ node: { data }, editorStore, editing, store, children, ...props }) {
+    console.log('docs', store.docs)
     const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0
     const hashtag = data.get('hashtag')
@@ -86,8 +89,8 @@ export default class DocLinkList {
             <input
               $edit
               spellCheck={false}
-              onFocus={() => (store.newHashtag = hashtag)}
-              onChange={e => (store.newHashtag = e.target.value)}
+              onFocus={() => store.newHashtag = hashtag}
+              onChange={e => store.newHashtag = e.target.value}
               onBlur={store.saveName}
               onKeyDown={e => e.which == 13 && e.target.blur()}
               value={store.inputHashtag}
@@ -108,7 +111,7 @@ export default class DocLinkList {
             </Button>
           </noDocs>
           <docs if={hasLoaded && hasDocs}>
-            {(store.docs || []).map((doc, index) => (
+            {(store.docs || []).slice(0, 10).map((doc, index) => (
               <itemContainer key={doc._id} $notFirst={index > 0}>
                 <item>
                   <votes>
@@ -138,8 +141,8 @@ export default class DocLinkList {
                     />
                   </icon>
                 </item>
-                <status if={votes[doc._id].length > 0}>
-                  {this.votesText(votes[doc._id])}
+                <status if={(votes[doc._id] || []).length > 0}>
+                  {this.votesText(votes[doc._id] || [])}
                 </status>
               </itemContainer>
             ))}

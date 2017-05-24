@@ -47,7 +47,6 @@ export default class Root {
     return (
       <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
         <main>
-          <Drawer />
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}
@@ -58,7 +57,11 @@ export default class Root {
         </main>
         <Errors />
         <Sidebar />
-        <Drawer if={false} />
+        <Drawer
+          doc={layoutStore.creatingDoc}
+          isOpen={layoutStore.creatingDoc !== false}
+          onClose={() => layoutStore.creatingDoc = false}
+        />
       </Shortcuts>
     )
   }

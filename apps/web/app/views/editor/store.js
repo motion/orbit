@@ -166,12 +166,13 @@ export default class EditorStore {
       this.editor.focus()
       const lastNode = document.nodes.last()
 
-      // move to end
-      return state
-        .transform()
-        .collapseToEndOf(lastNode)
-        .moveOffsetsTo(lastNode.length)
-        .apply()
+      this.editor.setState(
+        state
+          .transform()
+          .collapseToEndOf(lastNode)
+          .moveOffsetsTo(lastNode.length)
+          .apply()
+      )
     }
   }
 }

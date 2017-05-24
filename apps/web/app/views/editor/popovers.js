@@ -1,3 +1,4 @@
+// @flow
 import { view } from '~/helpers'
 import { Popover, List } from '~/ui'
 import App from '@jot/models'
@@ -5,18 +6,18 @@ import { BLOCKS } from './constants'
 
 @view
 export default class Popovers {
-  insert = (type: string, data) => (event: Event) => {
+  insert = (type: string, data: Object) => (event: Event) => {
     const { editorStore } = this.props
     editorStore.lastClick = null
-    editorStore.focus()
-    setTimeout(() => {
+    editorStore.editor.setState(
       editorStore.state
         .transform()
         .setBlock({ type, data })
-        .insertBlock({ type, data })
+        // .insertBlock({ type, data })
         .apply()
-      editorStore.focus()
-    }, 500)
+    )
+
+    // editorStore.focus()
   }
 
   render({ editorStore }) {

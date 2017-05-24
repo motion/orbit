@@ -1,8 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '~/helpers'
-import { Button, Icon } from '~/ui'
-import Router from '~/router'
+import { Icon } from '~/ui'
 import Editor from '~/views/editor'
 
 @view

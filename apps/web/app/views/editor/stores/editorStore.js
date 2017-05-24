@@ -12,7 +12,7 @@ const rules = merge(Rules)
 
 export default class EditorStore {
   id = this.props.id || Math.random()
-  inline = this.props.inline
+  inline = this.props.inline || false
   doc = Document.get(this.props.id)
   // todo replace with doc when we use mention (which is currently turned off)
   allDocs = []
@@ -25,7 +25,6 @@ export default class EditorStore {
   pendingSave = false
   focused = false
   content = null
-  inline = false
   editor = null
   plugins = Plugins
   schema = {

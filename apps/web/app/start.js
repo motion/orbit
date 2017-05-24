@@ -15,7 +15,6 @@ import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Theme from './ui/theme'
 import theme from './theme'
-import { AppContainer } from 'react-hot-loader'
 // import serviceWorker from './helpers/serviceWorker'
 // serviceWorker()
 

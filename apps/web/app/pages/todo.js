@@ -1,16 +1,14 @@
 import React from 'react'
 import { view } from '~/helpers'
-import { Place, Document } from '@jot/models'
-import { CircleButton } from '~/ui'
+import { Document } from '@jot/models'
 import Page from '~/views/page'
-import { toJS, computed } from 'mobx'
 import { flatten } from 'lodash'
 
 class TodoStore {
   docs = Document.recent()
   place = null
 
-  @computed get todos() {
+  get todos() {
     return flatten(
       (this.docs || []).map(doc => {
         if (!doc.content.document) return []

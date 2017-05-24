@@ -1,6 +1,5 @@
 import React from 'react'
 import { view, observable } from '~/helpers'
-import { range, result } from 'lodash'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
 const Layout: HTMLElement = WidthProvider(ReactGridLayout)
@@ -21,12 +20,14 @@ export default class Grid {
   @observable.ref layout = null
   gridLayout = null
 
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.layout) {
-      this.setTimeout(() => {
-        this.layout = this.props.layout
-      }, 150)
+      this.layout = this.props.layout
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.layout = nextProps.layout
   }
 
   onDragStart = (layout, oldItem, newItem, placeholder, e, element) => {

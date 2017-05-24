@@ -1,6 +1,6 @@
 // @flow
 import { view } from '~/helpers'
-import { Popover, List } from '~/ui'
+import { Popover, List, Icon } from '~/ui'
 import App from '@jot/models'
 import { BLOCKS } from './constants'
 
@@ -24,36 +24,37 @@ export default class Popovers {
 
   render({ editorStore }) {
     return (
-      <popovers>
+      <popovers contentEditable={false}>
         <Popover
-          if={editorStore.lastClick}
-          top={editorStore.lastClick.y}
-          left={editorStore.lastClick.x}
-          onMouseLeave={() => {
-            editorStore.lastClick = null
-          }}
-          onClose={() => {
-            editorStore.lastClick = null
-          }}
-          background="#fff"
-          overlay="transparent"
-          closeOnClickWithin
-          escapable
           open
-          shadow
-          noArrow
+          if={editorStore.selection.hoveredNode}
+          target={() => editorStore.selection.hoveredNode}
+          towards="left"
+          adjust={[40, 0]}
         >
-          <List
-            items={[
-              {
-                primary: 'Doc List',
-                onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
-              },
-              { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
-              { primary: 'Bullet List', onClick: this.insert(BLOCKS.UL_LIST) },
-              { primary: 'Todo List', onClick: this.insert(BLOCKS.OL_LIST) },
-            ]}
-          />
+          <Popover
+            target={<Icon button name="dot" size={9} onClick={this.open} />}
+            background="#fff"
+            closeOnClickWithin
+            openOnClick
+            escapable
+            shadow
+          >
+            <List
+              items={[
+                {
+                  primary: 'Doc List',
+                  onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
+                },
+                { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
+                {
+                  primary: 'Bullet List',
+                  onClick: this.insert(BLOCKS.UL_LIST),
+                },
+                { primary: 'Todo List', onClick: this.insert(BLOCKS.OL_LIST) },
+              ]}
+            />
+          </Popover>
         </Popover>
       </popovers>
     )

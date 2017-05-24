@@ -16,6 +16,7 @@ export Pane from './pane'
 export Text from './text'
 export Tabs from './tabs'
 export Drawer from './drawer'
+export DefinitionList from './definitionList'
 
 import React from 'react'
 import { $, view } from '~/helpers'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view } from '~/helpers'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/views/editor/constants'
 import App from '@jot/models'
@@ -9,8 +9,6 @@ export default Component =>
     static contextTypes = {
       stores: object,
     }
-
-    @observable hovered = false
 
     get editorStore() {
       return this.context.stores.editorStore
@@ -30,14 +28,14 @@ export default Component =>
       this.editorStore.lastClick = { x: event.clientX, y: event.clientY }
     }
 
+    node = null
+
     onMouseEnter = (event: MouseEvent) => {
-      this.editorStore.selection.hover(event, this.props.node)
-      this.hovered = true
+      this.editorStore.selection.hover(event, this.node)
     }
 
     onMouseLeave = (event: MouseEvent) => {
-      this.editorStore.selection.unHover(event, this.props.node)
-      this.hovered = false
+      this.editorStore.selection.unHover(event, this.node)
     }
 
     render() {
@@ -46,39 +44,19 @@ export default Component =>
         this.editorStore.inline === false &&
         editor.getState().document.getPath(node.key).length === 1
 
-      const inner = (
-        <Component
-          {...this.props}
-          setData={this.setData}
-          onChange={editor.onChange}
-          editorStore={this.editorStore}
-          id={this.id}
-        />
-      )
-
-      if (!isRoot) {
-        return inner
-      }
-
-      // avoid circular import
-      const Icon = require('../../ui/icon').default
-
       return (
         <node
           $rootLevel={isRoot}
+          ref={this.ref('node').set}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >
-          {inner}
-          <Icon
-            if={isRoot}
-            $btn
-            $btnActive={this.hovered}
-            button
-            name="dot"
-            size={9}
-            contentEditable={false}
-            onClick={this.open}
+          <Component
+            {...this.props}
+            setData={this.setData}
+            onChange={editor.onChange}
+            editorStore={this.editorStore}
+            id={this.id}
           />
         </node>
       )

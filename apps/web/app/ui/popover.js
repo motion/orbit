@@ -75,6 +75,7 @@ export default class Popover {
     onMouseLeave?: Function,
     onClose?: Function,
     animation?: string,
+    adjust?: Array,
   }
 
   static defaultProps = {
@@ -99,6 +100,8 @@ export default class Popover {
     towards: 'auto',
     // animation
     animation: 'slide 200ms',
+    // adjust lets you move around popover even with target
+    adjust: [0, 0],
   }
 
   static contextTypes = {
@@ -389,6 +392,9 @@ export default class Popover {
       }
     }
 
+    // adjustments
+    left += props.adjust[0]
+
     return { arrowLeft, left }
   }
 
@@ -410,7 +416,6 @@ export default class Popover {
     let arrowTop
     let maxHeight
     let top = null
-    let bottom = null
 
     // bottom half
     if (towards === 'auto' || towards === 'top' || towards === 'bottom') {
@@ -433,14 +438,16 @@ export default class Popover {
 
       maxHeight = window.innerHeight - (targetTop + targetHeight)
       top = top && ensurePad(top)
-      bottom = bottom && ensurePad(bottom)
     } else if (towards === 'left' || towards === 'right') {
       const yCenter = targetCenter - popoverHeight / 2
       top = yCenter
       arrowTop = popoverHeight / 2 - arrowHeight / 2 + forgiveness
     }
 
-    return { arrowTop, top, bottom, maxHeight }
+    // adjustments
+    top += props.adjust[1]
+
+    return { arrowTop, top, maxHeight }
   }
 
   handleBgClick = e => {
@@ -533,6 +540,7 @@ export default class Popover {
       popoverStyle,
       top: _top,
       left: _left,
+      adjust,
       theme,
       closeOnClickWithin,
       ...props

@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view, observable } from '~/helpers'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/views/editor/constants'
 import App from '@jot/models'
@@ -9,6 +9,8 @@ export default Component =>
     static contextTypes = {
       editor: object,
     }
+
+    @observable btnActive = false
 
     onDestroy = () => {
       const { node } = this.props
@@ -26,6 +28,11 @@ export default Component =>
 
     enter = (event: MouseEvent) => {
       this.context.editor.lastClick = { x: event.clientX, y: event.clientY }
+      this.btnActive = true
+    }
+
+    leave = () => {
+      this.btnActive = false
     }
 
     render({ store, node, editor }) {
@@ -34,16 +41,20 @@ export default Component =>
         editor.getState().document.getPath(node.key).length === 1
 
       return (
-        <node $rootLevel={isRoot}>
+        <node
+          $rootLevel={isRoot}
+          onMouseEnter={this.ref('btnActive').setter(true)}
+          onMouseLeave={this.ref('btnActive').setter(false)}
+        >
           <btn
+            $btnActive={this.btnActive}
             contentEditable={false}
             if={isRoot}
             $left
             onMouseEnter={this.enter}
             onMouseLeave={this.leave}
-          >
-            +
-          </btn>
+          />
+          <insertBar contentEditable={false} />
           <Component
             setData={this.setData}
             onChange={editor.onChange}
@@ -51,7 +62,6 @@ export default Component =>
             editorStore={this.context.editor}
             {...this.props}
           />
-          <btn contentEditable={false} $right />
         </node>
       )
     }
@@ -60,31 +70,43 @@ export default Component =>
       node: {
         display: 'inline-block',
         position: 'relative',
+        '&:hover > insertBar': {
+          opacity: 1,
+        },
       },
       rootLevel: {
-        padding: [2, 25],
-
+        // [line-height, margin]
+        padding: [2, 55],
         '&:hover': {
           background: '#f2f2f2',
         },
-
-        '&:hover > btn': {
-          opacity: 1,
-        },
+      },
+      insertBar: {
+        position: 'absolute',
+        height: 1,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: '#ccc',
+        transition: ['all', '100ms'],
+        opacity: 0,
       },
       btn: {
         position: 'absolute',
         opacity: 0,
-        top: 0,
-        bottom: 0,
-        width: 20,
+        bottom: -5,
+        width: 10,
+        height: 10,
+        borderRadius: 100,
+        background: '#eee',
+        color: '#fff',
+        zIndex: 100,
         alignItems: 'center',
         justifyContent: 'center',
         cursor: 'pointer',
-
-        '&:hover': {
-          background: 'red',
-        },
+      },
+      btnActive: {
+        opacity: 1,
       },
       left: {
         left: 0,

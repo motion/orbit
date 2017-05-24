@@ -1,5 +1,6 @@
 import React from 'react'
-import { view, node } from '~/helpers'
+import { view } from '~/helpers'
+import node from '~/views/editor/node'
 import DocList from './docList'
 
 @node

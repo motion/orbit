@@ -1,5 +1,6 @@
 import React from 'react'
-import { node, view } from '~/helpers'
+import { view } from '~/helpers'
+import node from '~/views/editor/node'
 import { Image } from '@jot/models'
 
 const readFile = file =>

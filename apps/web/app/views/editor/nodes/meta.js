@@ -1,5 +1,6 @@
 import React from 'react'
-import { node, view } from '~/helpers'
+import { view } from '~/helpers'
+import node from '~/views/editor/node'
 import { flatten, uniq } from 'lodash'
 import TimeAgo from 'react-timeago'
 

@@ -1,5 +1,6 @@
 import React from 'react'
-import { node, view } from '~/helpers'
+import { view } from '~/helpers'
+import node from '~/views/editor/node'
 import App, { Document } from '@jot/models'
 import { Segment, Button } from '~/ui'
 import { isEqual } from 'lodash'

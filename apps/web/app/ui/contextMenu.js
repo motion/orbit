@@ -13,7 +13,7 @@ import { object } from 'prop-types'
 
   componentDidMount() {
     const node = findDOMNode(this)
-    this.addEvent(node, 'contextmenu', () => {
+    this.on(node, 'contextmenu', () => {
       this.context.contextMenu.setData(this.props.data)
     })
   }
@@ -59,7 +59,7 @@ class ContextMenu {
   node = null
 
   componentDidMount() {
-    this.addEvent(window, 'click', (event: Event) => {
+    this.on(window, 'click', (event: Event) => {
       if (this.props.inactive) return
       if (this.props.store.event) {
         event.preventDefault()
@@ -67,7 +67,7 @@ class ContextMenu {
       }
     })
 
-    this.addEvent(this.node, 'contextmenu', (event: Event) => {
+    this.on(this.node, 'contextmenu', (event: Event) => {
       if (this.props.inactive) return
       // allow disabling by holding shift for now (dev help)
       if (Keys.active.shift) return

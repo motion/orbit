@@ -19,13 +19,13 @@ export default class KeyStore {
   manager = new ShortcutManager(keymap)
 
   start() {
-    this.addEvent(window, 'keydown', (event: Event) => {
+    this.on(window, 'keydown', (event: Event) => {
       if (event.shiftKey) {
         this.set('shift', true)
       }
     })
 
-    this.addEvent(window, 'keyup', (event: Event) => {
+    this.on(window, 'keyup', (event: Event) => {
       if (!event.shiftKey) {
         this.set('shift', false)
       }

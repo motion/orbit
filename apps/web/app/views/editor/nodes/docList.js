@@ -12,8 +12,7 @@ import List from './lists/list'
 class DocListStore {
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
-  docs = !this.props.editorStore.inline &&
-    Document.forPlace(this.place && this.place._id)
+  docs = Document.forPlace(this.place && this.place._id)
 
   shouldFocus = false
 

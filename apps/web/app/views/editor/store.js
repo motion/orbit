@@ -23,7 +23,7 @@ export default class EditorStore {
   pendingSave = false
   focused = false
   content = null
-  inline = this.props.inline
+  inline = this.props.inline || false
   editor = null
   plugins = Plugins
   schema = {

@@ -21,9 +21,8 @@ export const config = {
     // this makes it work with hmr! :)
     if (Store.isDecorated) return Store
     Store.isDecorated = true
-
+    // mixins
     mixin(Store.prototype, ClassHelpers)
-
     // store.emitter
     Object.defineProperty(Store.prototype, 'emitter', {
       get() {
@@ -33,28 +32,15 @@ export const config = {
         return this._emitter
       },
     })
-
     return autobind(Store)
   },
   onStoreMount(name, store, props) {
     // add subscriptions
     store.subscriptions = new CompositeDisposable()
-
     // add emitter
     store.emit = store.emitter.emit.bind(store.emitter)
-    store.on = (emitter, event, cb) => {
-      // no emitter given, shift args
-      if (!cb) {
-        return store.on(store.emitter, emitter, event)
-      }
-      const listener = emitter.on(event, cb)
-      store.subscriptions.add(listener)
-      return listener
-    }
-
     // unmount
     store.subscriptions.add(store.emitter)
-
     // mount actions
     automagicalStores(store)
     if (store.start) {

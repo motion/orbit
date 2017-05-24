@@ -67,10 +67,7 @@ export default class DocList {
 
     return (
       <doclist contentEditable={false}>
-        <title contentEditable suppressContentEditableWarning {...attributes}>
-          {children}
-        </title>
-        <config contentEditable={false}>
+        <config>
           <Segment>
             <Button
               active={listType === 'grid'}
@@ -89,7 +86,7 @@ export default class DocList {
             />
           </Segment>
         </config>
-        <content contentEditable={false}>
+        <content>
           <ListView
             shouldFocus={store.shouldFocus}
             listStore={store}

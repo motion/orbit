@@ -11,13 +11,10 @@ export default [
       const label = Block.create({
         type: 'label',
         nodes: [
-          Raw.deserializeText(
-            {
-              kind: 'text',
-              text: matches.before[1],
-            },
-            { terse: true }
-          ),
+          Raw.deserializeText({
+            kind: 'text',
+            text: matches.before[1],
+          }),
         ],
       })
 

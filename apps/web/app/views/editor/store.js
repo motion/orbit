@@ -44,7 +44,7 @@ export default class EditorStore {
     // init content
     this.watch(() => {
       if (this.doc && !this.content) {
-        this.content = Raw.deserialize(this.doc.content, { terse: true })
+        this.content = Raw.deserialize(this.doc.content)
       }
     })
 

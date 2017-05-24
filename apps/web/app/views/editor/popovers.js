@@ -7,11 +7,11 @@ import { BLOCKS } from './constants'
 @view
 export default class Popovers {
   insert = (type: string, data: Object) => (event: Event) => {
-    console.log('insert')
     const { editorStore } = this.props
     editorStore.lastClick = null
     editorStore.editor.setState(
-      editorStore.state
+      editorStore.editor
+        .getState()
         .transform()
         .setBlock({ type, data })
         // .insertBlock({ type, data })

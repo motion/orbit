@@ -4,16 +4,17 @@ import App from '@jot/models'
 
 @view
 export default class Popovers {
-  render() {
+  render({ editorStore }) {
+    console.log('editorStore.lastClick', editorStore.lastClick)
     return (
       <popovers>
         <Popover
-          if={App.lastClick}
-          top={App.lastClick.y}
-          left={App.lastClick.x}
+          if={editorStore.lastClick}
+          top={editorStore.lastClick.y}
+          left={editorStore.lastClick.x}
           onMouseLeave={() => {
             console.log('bye bye mouse')
-            App.lastClick = null
+            editorStore.lastClick = null
           }}
           background="#fff"
           overlay="transparent"
@@ -21,6 +22,7 @@ export default class Popovers {
           escapable
           open
           shadow
+          noArrow
         >
           <List
             items={[

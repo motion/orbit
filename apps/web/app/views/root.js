@@ -7,7 +7,6 @@ import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
-import Popovers from '~/views/layout/popovers'
 import KeyStore from '~/stores/keys'
 import CommanderStore from '~/stores/commander'
 import LayoutStore from '~/stores/layout'
@@ -57,7 +56,6 @@ export default class Root {
         </main>
         <Errors />
         <Sidebar />
-        <Popovers />
       </Shortcuts>
     )
   }

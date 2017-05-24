@@ -41,8 +41,14 @@ export default function createStoreProvider(options: Object) {
             if (this.context.stores) {
               Object.keys(Stores).forEach(name => {
                 if (this.context.stores[name]) {
-                  throw new Error(
-                    `Attempting to provide a store as a name already provided: ${name} from ${View.name}`
+                  console.log(
+                    `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${View.name}`
+                  )
+                  console.log(
+                    'before:',
+                    this.context.stores[name],
+                    'after',
+                    Stores[name]
                   )
                 }
               })

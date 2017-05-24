@@ -5,6 +5,7 @@ import { Document } from '@jot/models'
 import { view } from '~/helpers'
 import SelectionStore from './stores/selection'
 import EditorStore, { merge } from './store'
+import Popovers from './popovers'
 
 export { Raw } from 'slate'
 
@@ -69,6 +70,7 @@ export default class EditorView {
           }}
           {...props}
         />
+        <Popovers editorStore={store} />
       </document>
     )
   }

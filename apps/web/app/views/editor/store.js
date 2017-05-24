@@ -13,20 +13,10 @@ const rules = merge(Rules)
 export default class EditorStore {
   id = this.props.id || Math.random()
   doc = Document.get(this.props.id)
-
   // todo replace with doc when we use mention (which is currently turned off)
   allDocs = []
   docSuggestions = []
-
-  updateSuggestions = text => {
-    this.suggestionsText = text
-    this.docSuggestions = this.allDocs
-      .filter(doc => includes(doc.title, this.suggestionsText))
-      .map(doc => {
-        return doc.title
-      })
-  }
-
+  lastClick = null
   lastSavedRev = null
   shouldFocus = this.props.focusOnMount
   pendingSave = false
@@ -40,6 +30,15 @@ export default class EditorStore {
     rules,
     nodes: Nodes,
     marks: Marks,
+  }
+
+  updateSuggestions = text => {
+    this.suggestionsText = text
+    this.docSuggestions = this.allDocs
+      .filter(doc => includes(doc.title, this.suggestionsText))
+      .map(doc => {
+        return doc.title
+      })
   }
 
   start() {

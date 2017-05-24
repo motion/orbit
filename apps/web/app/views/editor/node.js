@@ -28,7 +28,7 @@ export default Component =>
       console.log('split', direction)
       const { node, editor } = this.props
 
-      App.lastClick = { x: event.clientX, y: event.clientY }
+      this.context.editor.lastClick = { x: event.clientX, y: event.clientY }
 
       // const next = editor.getState().transform().wrapBlock(BLOCKS.ROW).apply()
       // editor.onChange(next)

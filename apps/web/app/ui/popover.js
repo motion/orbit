@@ -533,6 +533,7 @@ export default class Popover {
       top: _top,
       left: _left,
       theme,
+      closeOnClickWithin,
       ...props
     } = this.props
 

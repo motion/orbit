@@ -28,8 +28,12 @@ export default Component =>
       this.editorStore.lastClick = { x: event.clientX, y: event.clientY }
     }
 
-    setSelection = (event: MouseEvent) => {
-      this.editorStore.selection.setHovered(event, this.props.node)
+    onMouseEnter = (event: MouseEvent) => {
+      this.editorStore.selection.hover(event, this.props.node)
+    }
+
+    onMouseLeave = (event: MouseEvent) => {
+      this.editorStore.selection.unHover(event, this.props.node)
     }
 
     render() {
@@ -56,7 +60,11 @@ export default Component =>
       const Icon = require('../../ui/icon').default
 
       return (
-        <node $rootLevel={isRoot} onMouseEnter={this.setSelection}>
+        <node
+          $rootLevel={isRoot}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+        >
           {inner}
           <Icon
             if={isRoot}
@@ -77,6 +85,10 @@ export default Component =>
         display: 'inline-block',
         position: 'relative',
         padding: [0, 22],
+
+        '&:hover > icon': {
+          opacity: 1,
+        },
       },
       rootLevel: {
         // [line-height, margin]
@@ -97,9 +109,6 @@ export default Component =>
         cursor: 'pointer',
         pointerEvents: 'auto',
         transition: 'all ease-in 300ms',
-      },
-      btnActive: {
-        opacity: 1,
       },
     }
   }

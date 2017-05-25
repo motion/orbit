@@ -35,6 +35,11 @@ export default class SidebarStore {
     }
   }
 
+  toggle = () => {
+    console.log('toggle')
+    this.active = !this.active
+  }
+
   attachDragger = (node: HTMLElement) => {
     this.on(node, 'mousedown', this.startDrag)
     this.on(node, 'mouseup', this.stopDrag)

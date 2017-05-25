@@ -1,6 +1,7 @@
 import React from 'react'
 import { view, Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
+import { CircleButton } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -23,6 +24,12 @@ import LayoutStore from '~/stores/layout'
         {children}
       </wrap>
     )
+  }
+  static style = {
+    wrap: {
+      position: 'relative',
+      flex: 1,
+    },
   }
 }
 
@@ -64,6 +71,7 @@ export default class Root {
           >
             <CurrentPage key={Router.key} />
           </content>
+          <CircleButton $circleButton icon="add" />
         </Wrap>
         <Errors />
         <Sidebar />
@@ -73,6 +81,17 @@ export default class Root {
   }
 
   static style = {
+    circleButton: {
+      position: 'absolute',
+      bottom: 20,
+      right: 20,
+    },
+    toggle: {
+      position: 'absolute',
+      zIndex: 10001,
+      top: 7,
+      right: 200,
+    },
     layout: {
       flex: 1,
       flexFlow: 'row',
@@ -146,12 +165,6 @@ export default class Root {
     },
     extraActions: {
       marginRight: 10,
-    },
-    toggle: {
-      position: 'absolute',
-      zIndex: 10001,
-      top: 7,
-      right: 8,
     },
   }
 }

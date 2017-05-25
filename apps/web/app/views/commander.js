@@ -71,6 +71,7 @@ export default class Commander {
       bottom: 80,
     },
     input: {
+      width: '100%',
       background: '#fff',
       border: 'none',
       cursor: 'text',

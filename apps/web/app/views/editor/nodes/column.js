@@ -1,12 +1,23 @@
 import React from 'react'
 import { view } from '~/helpers'
+import node from '~/views/editor/node'
+import { Icon } from '~/ui'
 
+@node
 @view
 export default class Column {
-  render({ attributes, children }) {
+  bump = node => {
+    this.props.setData(node.data.set('flex', (node.data.get('flex') || 1) + 1))
+  }
+
+  render({ node, attributes, children }) {
+    const flex = node.data.get('flex') || 1
+    console.log('change', onChange)
+
     return (
-      <column {...attributes}>
+      <column $$flex={flex} {...attributes}>
         {children}
+        <Icon name="add" onClick={() => this.bump(node)} />
       </column>
     )
   }

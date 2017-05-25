@@ -21,9 +21,7 @@ export default class Popovers {
   }
 
   render({ editorStore }) {
-    const isParagraph =
-      editorStore.selection.lastBlock &&
-      editorStore.selection.lastBlock.type === BLOCKS.PARAGRAPH
+    const { showEdit, showInsert } = editorStore.selection
 
     return (
       <popovers if={!editorStore.inline} contentEditable={false}>
@@ -37,7 +35,7 @@ export default class Popovers {
         >
           {/* add node */}
           <Popover
-            if={isParagraph}
+            if={showInsert}
             target={
               <Button
                 icon="add"
@@ -71,7 +69,7 @@ export default class Popovers {
 
           {/* edit node */}
           <Popover
-            if={!isParagraph}
+            if={showEdit}
             target={<Button icon="dot" iconSize={9} />}
             background="#fff"
             closeOnClickWithin

@@ -1,5 +1,6 @@
 import { store } from '~/helpers'
 import { findDOMNode } from '../helpers'
+import { BLOCKS } from '../constants'
 
 @store
 export default class Selection {
@@ -18,6 +19,34 @@ export default class Selection {
 
   lastBlock = null
   lastNode = null
+
+  isDocTitle = block =>
+    block && block.type === BLOCKS.TITLE && node.data.get('level') === 1
+  isParagraph = block => block && block.type === BLOCKS.PARAGRAPH
+
+  get showEdit() {
+    return this.isEditable(this.lastBlock)
+  }
+
+  get showInsert() {
+    return this.isInsertable(this.lastBlock)
+  }
+
+  isInsertable = block => {
+    if (!block) return false
+    if (this.isDocTitle(block)) return false
+    switch (block.type) {
+      case BLOCKS.PARAGRAPH:
+        return true
+    }
+  }
+
+  isEditable = block => {
+    if (!block) return false
+    if (this.isDocTitle(block)) return false
+    if (this.isParagraph(block)) return false
+    return true
+  }
 
   clearSelection = () => {
     this.selectedNode = null

@@ -72,14 +72,14 @@ export default Component =>
       }
 
       const isDocTitle =
-        this.node.type === BLOCKS.TITLE && this.node.data.get('level') === 1
+        node.type === BLOCKS.TITLE && node.data.get('level') === 1
       const hoverable = !isDocTitle
 
       return (
         <node
           $rootLevel={isRoot}
           $hoverable={hoverable}
-          $focused={this.isFocused}
+          $focused={hoverable && this.isFocused}
           ref={this.ref('node').set}
           onClick={this.onClick}
           onMouseEnter={this.onMouseEnter}

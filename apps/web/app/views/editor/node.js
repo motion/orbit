@@ -31,19 +31,19 @@ export default Component =>
     node = null
 
     onClick = (event: MouseEvent) => {
-      this.editorStore.selection.click(event, this.node)
+      this.editorStore.selection.click(this.props.node, this.node)
     }
 
     onMouseEnter = (event: MouseEvent) => {
-      this.editorStore.selection.hover(event, this.node)
+      this.editorStore.selection.hover(this.props.node, this.node)
     }
 
     @computed get isFocused() {
-      const { lastNode } = this.editorStore.selection
+      const { focusedNode } = this.editorStore.selection
       if (this.editorStore.inline || !this.node) {
         return false
       }
-      return lastNode === this.node
+      return focusedNode === this.node
     }
 
     get isRootNode() {
@@ -71,9 +71,14 @@ export default Component =>
         return component
       }
 
+      const isDocTitle =
+        this.node.type === BLOCKS.TITLE && this.node.data.get('level') === 1
+      const hoverable = !isDocTitle
+
       return (
         <node
           $rootLevel={isRoot}
+          $hoverable={hoverable}
           $focused={this.isFocused}
           ref={this.ref('node').set}
           onClick={this.onClick}
@@ -96,8 +101,10 @@ export default Component =>
       rootLevel: {
         // [line-height, margin]
         padding: [0, 40],
+      },
+      hoverable: {
         '&:hover': {
-          background: '#fafafa',
+          background: '#fcfcfc',
         },
       },
       focused: {

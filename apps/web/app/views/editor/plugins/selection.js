@@ -1,14 +1,6 @@
-import { findDOMNode } from 'slate'
+import { findParent } from '../helpers'
 import SelectBar from './selectBar'
 import InsertButton from './insertButton'
-
-function findParent(document, key) {
-  return document.nodes.find(node => node.findDescendant(x => x.key === key))
-}
-
-function findParentNode(document, key) {
-  return findDOMNode(findParent(document, key))
-}
 
 function trackSelection(selection, state, editorStore) {
   // not highlighted
@@ -18,14 +10,13 @@ function trackSelection(selection, state, editorStore) {
     editorStore.selection.clearSelection()
     return
   }
-  const key = selection.anchorKey
   editorStore.selection.setSelection(
-    findParentNode(state.document, key).parentNode
+    findParent(state.document, selection.anchorKey)
   )
 }
 
 function trackFocus(key, state, editorStore) {
-  editorStore.selection.setFocus(findParentNode(state.document, key).parentNode)
+  editorStore.selection.setFocus(findParent(state.document, key))
 }
 
 export default {

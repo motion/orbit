@@ -21,18 +21,31 @@ export default class Popovers {
   }
 
   render({ editorStore }) {
+    const isParagraph =
+      editorStore.selection.lastBlock &&
+      editorStore.selection.lastBlock.type === BLOCKS.PARAGRAPH
+
     return (
       <popovers if={!editorStore.inline} contentEditable={false}>
         <Popover
           open
-          if={editorStore.selection.lastFocusedNode}
-          target={() => editorStore.selection.lastFocusedNode}
+          if={editorStore.selection.lastNode}
+          target={() => editorStore.selection.lastNode}
           towards="left"
           noArrow
           adjust={[40, 0]}
         >
+          {/* add node */}
           <Popover
-            target={<Button icon="dot" iconSize={9} onClick={this.open} />}
+            if={isParagraph}
+            target={
+              <Button
+                icon="add"
+                iconSize={9}
+                chromeless
+                color={[0, 0, 0, 0.2]}
+              />
+            }
             background="#fff"
             closeOnClickWithin
             openOnClick
@@ -43,10 +56,6 @@ export default class Popovers {
             <List
               items={[
                 {
-                  primary: 'Paragraph',
-                  onClick: this.insert(BLOCKS.PARAGRAPH),
-                },
-                {
                   primary: 'Doc List',
                   onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
                 },
@@ -56,6 +65,31 @@ export default class Popovers {
                   onClick: this.insert(BLOCKS.UL_LIST),
                 },
                 { primary: 'Todo List', onClick: this.insert(BLOCKS.OL_LIST) },
+              ]}
+            />
+          </Popover>
+
+          {/* edit node */}
+          <Popover
+            if={!isParagraph}
+            target={<Button icon="dot" iconSize={9} />}
+            background="#fff"
+            closeOnClickWithin
+            openOnClick
+            escapable
+            noArrow
+            shadow
+          >
+            <List
+              items={[
+                {
+                  primary: 'Edit',
+                  onClick: _ => _,
+                },
+                {
+                  primary: 'Delete',
+                  onClick: _ => _,
+                },
               ]}
             />
           </Popover>

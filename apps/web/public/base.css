@@ -10,11 +10,11 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-::-moz-selection {
+::selection {
   background: blue;
   color: #fff;
 }
-::selection {
+*::selection {
   background: blue;
   color: #fff;
 }

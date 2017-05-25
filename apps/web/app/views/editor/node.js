@@ -30,17 +30,17 @@ export default Component =>
 
     node = null
 
+    onClick = (event: MouseEvent) => {
+      this.editorStore.selection.click(event, this.node)
+    }
+
     onMouseEnter = (event: MouseEvent) => {
       this.editorStore.selection.hover(event, this.node)
     }
 
-    onMouseLeave = (event: MouseEvent) => {
-      this.editorStore.selection.unHover(event, this.node)
-    }
-
     get isFocused() {
       if (!this.node) return
-      return this.editorStore.selection.focusedNode === this.node
+      return this.editorStore.selection.lastNode === this.node
     }
 
     render() {
@@ -54,6 +54,7 @@ export default Component =>
           $rootLevel={isRoot}
           $focused={this.isFocused}
           ref={this.ref('node').set}
+          onClick={this.onClick}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >

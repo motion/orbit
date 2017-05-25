@@ -22,7 +22,7 @@ export default class Popovers {
 
   render({ editorStore }) {
     return (
-      <popovers contentEditable={false}>
+      <popovers if={!editorStore.inline} contentEditable={false}>
         <Popover
           open
           if={editorStore.selection.lastFocusedNode}

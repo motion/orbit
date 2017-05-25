@@ -21,7 +21,7 @@ export default class Selection {
   lastNode = null
 
   isDocTitle = block =>
-    block && block.type === BLOCKS.TITLE && node.data.get('level') === 1
+    block && block.type === BLOCKS.TITLE && block.data.get('level') === 1
   isParagraph = block => block && block.type === BLOCKS.PARAGRAPH
 
   get showEdit() {

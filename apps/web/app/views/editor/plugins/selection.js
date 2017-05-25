@@ -1,3 +1,4 @@
+// @flow
 import { findParent } from '../helpers'
 import SelectBar from './selectBar'
 import InsertButton from './insertButton'
@@ -7,7 +8,7 @@ function trackSelection(selection, state, editorStore) {
   const sameBlock = selection.startKey === selection.endKey
   const isHighlighting = selection.startOffset !== selection.endOffset
   if (sameBlock && !isHighlighting) {
-    editorStore.selection.clearSelection()
+    editorStore.selection.clear('selected')
     return
   }
   editorStore.selection.setSelection(
@@ -30,7 +31,13 @@ export default {
   },
   render({ children, editorStore }) {
     return (
-      <pane style={{ flex: 1 }}>
+      <pane
+        style={{ flex: 1 }}
+        onMouseUp={(event: MouseEvent) => {
+          event.persist()
+          editorStore.selection.mouseUp = { x: event.clientX, y: event.clientY }
+        }}
+      >
         {children}
         <SelectBar editorStore={editorStore} />
         <InsertButton editorStore={editorStore} />

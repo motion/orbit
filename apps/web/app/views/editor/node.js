@@ -24,18 +24,14 @@ export default Component =>
       editor.onChange(next)
     }
 
-    open = (event: MouseEvent) => {
-      this.editorStore.lastClick = { x: event.clientX, y: event.clientY }
-    }
-
     node = null
 
     onClick = (event: MouseEvent) => {
-      this.editorStore.selection.click(this.props.node, this.node)
+      this.editorStore.selection.setClicked(this.props.node, this.node)
     }
 
     onMouseEnter = (event: MouseEvent) => {
-      this.editorStore.selection.hover(this.props.node, this.node)
+      this.editorStore.selection.setHovered(this.props.node, this.node)
     }
 
     @computed get isFocused() {

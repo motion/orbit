@@ -15,18 +15,7 @@ export default class InsertButton {
         animation="slide 300ms"
         target={() => editorStore.selection.cursorNode}
       >
-        <CircleButton
-          style={{
-            gloss: true,
-            opacity: 0.5,
-            '&:hover': {
-              opacity: 1,
-            },
-          }}
-          icon="add"
-          size={30}
-          iconProps={{ color: '#999' }}
-        />
+        <CircleButton icon="add" size={30} iconProps={{ color: '#999' }} />
       </Popover>
     )
   }

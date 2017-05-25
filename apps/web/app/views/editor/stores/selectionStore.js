@@ -4,21 +4,24 @@ import { BLOCKS } from '../constants'
 
 @store
 export default class Selection {
+  mouseUp = null
   hovered = null
   hoveredNode = null
-  hoveredAt = Date.now()
   selected = null
   selectedNode = null
-  selectedAt = Date.now()
   focused = null
   focusedNode = null
-  focusedAt = Date.now()
   clicked = null
   clickedNode = null
-  clickedAt = Date.now()
-
   lastBlock = null
   lastNode = null
+
+  at = {
+    focused: Date.now(),
+    clicked: Date.now(),
+    selected: Date.now(),
+    hovered: Date.now(),
+  }
 
   isDocTitle = block =>
     block && block.type === BLOCKS.TITLE && block.data.get('level') === 1
@@ -48,39 +51,34 @@ export default class Selection {
     return true
   }
 
-  clearSelection = () => {
-    this.selectedNode = null
+  clear = key => {
+    this[key] = null
+    this[`${key}Node`] = null
+  }
+
+  update = (key, block, node) => {
+    this.at = { ...this.at, [key]: Date.now() }
+    this[key] = block
+    this[`${key}Node`] = node
+    this.lastNode = node
+    this.lastBlock = block
   }
 
   setSelection = block => {
-    this.selected = block
     const node = findDOMNode(block).parentNode
-    this.selectedNode = node
-    this.selectedAt = Date.now()
-    this.lastNode = node
-    this.lastBlock = block
+    this.update('selected', block, node)
   }
 
   setFocus = block => {
-    this.focused = block
     const node = findDOMNode(block).parentNode
-    this.focusedNode = node
-    this.focusedAt = Date.now()
-    this.lastNode = node
-    this.lastBlock = block
+    this.update('focused', block, node)
   }
 
-  hover = (block, node) => {
-    this.hoveredNode = node
-    this.hoveredAt = Date.now()
-    this.lastNode = node
-    this.lastBlock = block
+  setHovered = (block, node) => {
+    this.update('hovered', block, node)
   }
 
-  click = (block, node) => {
-    this.clickedNode = node
-    this.clickedAt = Date.now()
-    this.lastNode = node
-    this.lastBlock = block
+  setClicked = (block, node) => {
+    this.update('clicked', block, node)
   }
 }

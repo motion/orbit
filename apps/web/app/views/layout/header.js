@@ -53,6 +53,17 @@ export default class Header {
           </actions>
           <actions if={actions}>
             {actions}
+            <Button
+              chromeless
+              icon={
+                layoutStore.sidebar.active
+                  ? 'arrow-min-right'
+                  : 'arrow-min-left'
+              }
+              onClick={layoutStore.sidebar.toggle}
+              $$marginRight={-6}
+              color={[0, 0, 0, 0.5]}
+            />
           </actions>
         </rest>
       </header>

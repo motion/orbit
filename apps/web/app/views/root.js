@@ -6,7 +6,6 @@ import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
-import ToggleSidebar from '~/views/layout/toggleSidebar'
 import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
 import KeyStore from '~/stores/keys'
@@ -75,7 +74,6 @@ export default class Root {
         </Wrap>
         <Errors />
         <Sidebar />
-        <ToggleSidebar $toggle />
       </Shortcuts>
     )
   }
@@ -86,22 +84,9 @@ export default class Root {
       bottom: 20,
       right: 20,
     },
-    toggle: {
-      position: 'absolute',
-      zIndex: 10001,
-      top: 7,
-      right: 200,
-    },
     layout: {
       flex: 1,
       flexFlow: 'row',
-    },
-    main: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: SIDEBAR_WIDTH,
     },
     content: {
       flex: 1,
@@ -117,54 +102,5 @@ export default class Root {
         y: -pos,
       },
     }),
-    header: {
-      background: [255, 255, 255, 0.1],
-      zIndex: 1000,
-      padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
-      flexFlow: 'row',
-      height: HEADER_HEIGHT,
-      transition: 'all ease-out 300ms',
-      transitionDelay: '400ms',
-      width: '100%',
-      overflow: 'hidden',
-    },
-    hovered: {
-      opacity: 1,
-      transition: 'all ease-in 100ms',
-      transitionDelay: '0',
-    },
-    title: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      fontSize: 14,
-      fontWeight: 600,
-    },
-    rest: {
-      justifyContent: 'center',
-      marginLeft: 10,
-    },
-    nav: {
-      flexFlow: 'row',
-      marginRight: 10,
-      alignItems: 'center',
-    },
-    btn: {
-      padding: [8, 6],
-      opacity: 0.2,
-      '&:hover': {
-        opacity: 1,
-      },
-    },
-    inactive: {
-      opacity: 0.5,
-      pointerEvents: 'none',
-    },
-    actions: {
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-    extraActions: {
-      marginRight: 10,
-    },
   }
 }

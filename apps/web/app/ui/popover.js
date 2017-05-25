@@ -61,46 +61,49 @@ export default class Popover {
   props: {
     target?: Function | string | Object,
     open?: boolean,
+    // the amount of space around popover you can move mouse
+    // before it triggers it to close
+    forgiveness: number,
+    // show a background over content
+    overlay?: boolean,
     left?: number,
     top?: number,
+    // the distance the popover is from the target
+    // so it displays nicely spaced away
+    distance: number,
+    // will open when target is clicked
     openOnClick?: boolean,
+    // will open automatically when target is hovered
     openOnHover?: boolean,
+    // prevents popover itself from catching pointer events
+    noHover?: boolean,
+    // will exit with `esc` key
     escapable?: boolean,
+    // size of shown arrow
     arrowSize?: number,
     closeOnClickWithin?: boolean,
+    // which direction it shows towards
+    // default will determine direction automatically
     towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
     padding?: Array | number,
-    noHover?: boolean,
     onMouseEnter?: Function,
     onMouseLeave?: Function,
     onClose?: Function,
     animation?: string,
+    // lets you adjust position after target is positioned
     adjust?: Array,
+    // hide arrow
+    noArrow?: boolean,
+    // DEBUG: helps you see forgiveness zone
+    showForgiveness?: boolean,
   }
 
   static defaultProps = {
-    // the distance the popover is from the target
-    // so it displays nicely spaced away
     distance: 10,
     arrowSize: 11,
-    // will exit with `esc` key
-    escapable: true,
-    noArrow: false,
-    // will open automatically when target is hovered
-    openOnHover: false,
-    // show a background over content
-    overlay: false,
-    // will open when target is clicked
-    openOnClick: false,
-    // the amount of space around popover you can move mouse
-    // before it triggers it to close
     forgiveness: 15,
-    // which direction it shows towards
-    // default will determine direction automatically
     towards: 'auto',
-    // animation
     animation: 'slide 200ms',
-    // adjust lets you move around popover even with target
     adjust: [0, 0],
   }
 
@@ -125,13 +128,7 @@ export default class Popover {
   componentDidMount() {
     const { openOnClick, open, escapable } = this.props
 
-    this.on(
-      window,
-      'resize',
-      debounce(() => {
-        this.setPosition(this.props)
-      }, 64)
-    )
+    this.on(window, 'resize', debounce(() => this.setPosition(this.props), 64))
 
     this.setTarget()
     this.listenForHover()
@@ -457,7 +454,7 @@ export default class Popover {
 
   // hover helpers
   hoverStateSetter = (name, val) => () => {
-    const { openOnHover, onMouseEnter, onMouseLeave } = this.props
+    const { openOnHover, onMouseEnter } = this.props
     const setter = () => this.setState({ [`${name}Hovered`]: val })
 
     if (val) {
@@ -471,9 +468,6 @@ export default class Popover {
       if (openOnHover) {
         setter()
       }
-      if (onMouseLeave) {
-        onMouseLeave()
-      }
     }
   }
 
@@ -484,25 +478,21 @@ export default class Popover {
 
   addHoverListeners = (name, node) => {
     if (!node) return
-    this.on(node, 'mouseenter', () => {
-      this.hoverStateSetter(name, true)()
-      // insanity, but mouselave is horrible
 
+    const setFalse = this.hoverStateSetter(name, false)
+    const setTrue = this.hoverStateSetter(name, true)
+
+    this.on(node, 'mouseenter', () => {
+      setTrue()
+      // insanity, but mouselave is horrible
       if (this.props.target) {
-        this.setTimeout(
-          () => !this.isTargetHovered() && this.hoverStateSetter(name, false)()
-        )
-        this.setTimeout(
-          () => !this.isTargetHovered() && this.hoverStateSetter(name, false)(),
-          10
-        )
-        this.setTimeout(
-          () => !this.isTargetHovered() && this.hoverStateSetter(name, false)(),
-          40
-        )
+        this.setTimeout(() => !this.isTargetHovered() && setFalse())
+        this.setTimeout(() => !this.isTargetHovered() && setFalse(), 10)
+        this.setTimeout(() => !this.isTargetHovered() && setFalse(), 40)
       }
     })
-    this.on(node, 'mouseleave', this.hoverStateSetter(name, false))
+
+    this.on(node, 'mouseleave', setFalse)
   }
 
   isTargetHovered = () => {
@@ -705,10 +695,11 @@ export default class Popover {
         animation: animation === true ? 'bounce-down 200ms' : animation,
       },
     }),
-    forgiveness: ({ forgiveness, distance }) => ({
+    forgiveness: ({ forgiveness, distance, showForgiveness }) => ({
       popover: {
         padding: maxForgiveness(forgiveness, distance),
         margin: -maxForgiveness(forgiveness, distance),
+        background: showForgiveness ? 'green' : 'auto',
       },
     }),
     shadow: ({ shadow }) => ({

@@ -1,6 +1,6 @@
 // @flow
 import { view } from '~/helpers'
-import { Popover, List, Icon } from '~/ui'
+import { Button, Popover, List, Icon } from '~/ui'
 import App from '@jot/models'
 import { BLOCKS } from './constants'
 
@@ -33,7 +33,7 @@ export default class Popovers {
           adjust={[40, 0]}
         >
           <Popover
-            target={<Icon button name="dot" size={9} onClick={this.open} />}
+            target={<Button icon="dot" iconSize={9} onClick={this.open} />}
             background="#fff"
             closeOnClickWithin
             openOnClick

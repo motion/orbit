@@ -18,11 +18,10 @@ function trackSelection(selection, state, editorStore) {
   )
 }
 
-function trackFocus(selection, state, editorStore) {
+function trackFocus(key, state, editorStore) {
   editorStore.selection.setFocus(
-    findDOMNode(
-      state.document.findDescendant(x => x.key === selection.anchorKey)
-    ).parentNode.parentNode
+    findDOMNode(state.document.findDescendant(x => x.key === key)).parentNode
+      .parentNode
   )
 }
 
@@ -33,12 +32,15 @@ export default {
   onFocus(event, data, state, editor) {
     // editor.props.editorStore.selection.focused = true
   },
-  onKeyDown(event, { selection }, state, editor) {
-    trackFocus(selection, state, editor.props.editorStore)
+  onKeyDown(event, data, state, editor) {
+    const block = state.selection.startBlock
+    if (block) {
+      trackFocus(block.key, state, editor.props.editorStore)
+    }
   },
   onSelect(event, { selection }, state, editor) {
     trackSelection(selection, state, editor.props.editorStore)
-    trackFocus(selection, state, editor.props.editorStore)
+    trackFocus(selection.anchorKey, state, editor.props.editorStore)
   },
   render({ children, editorStore }) {
     return (

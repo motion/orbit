@@ -39,6 +39,7 @@ export default Component =>
     }
 
     get isFocused() {
+      if (this.editorStore.inline) return
       if (!this.node) return
       return this.editorStore.selection.lastNode === this.node
     }

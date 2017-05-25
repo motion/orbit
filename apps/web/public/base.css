@@ -24,6 +24,7 @@ body {
 
 body.dragging * {
   cursor: ew-resize !important;
+  user-select: none;
 }
 
 @keyframes fade {

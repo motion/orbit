@@ -13,8 +13,9 @@ export default class SidebarStore {
     return this.active ? this.width : 0
   }
 
-  startDrag = e => {
-    e.stopPropagation()
+  startDrag = (event: MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
     this.dragging = true
     document.body.className = 'dragging'
   }

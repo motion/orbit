@@ -170,7 +170,7 @@ export default class Sidebar {
         from="right"
         size={layoutStore.sidebar.width}
       >
-        <dragger ref={this.ref('dragger').set} />
+        <dragger $$undraggable ref={this.ref('dragger').set} />
         <sidebar>
           <top>
             <Login />
@@ -276,7 +276,7 @@ export default class Sidebar {
       top: 0,
       left: 0,
       bottom: 0,
-      zIndex: 1000,
+      zIndex: 10000,
       cursor: 'ew-resize',
     },
     search: {

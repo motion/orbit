@@ -43,7 +43,6 @@ export default class Header {
           <Commander
             onSubmit={layoutStore.createDoc}
             onChange={layoutStore.ref('title').set}
-            $omniinput
           />
         </bar>
         <rest if={header || actions || extraActions} $$row>

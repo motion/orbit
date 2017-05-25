@@ -19,15 +19,17 @@ import LayoutStore from '~/stores/layout'
 @view class Wrap {
   render({ layoutStore, children }) {
     return (
-      <wrap $$width={window.innerWidth - layoutStore.sidebar.trueWidth}>
+      <wrap $$right={layoutStore.sidebar.trueWidth}>
         {children}
       </wrap>
     )
   }
   static style = {
     wrap: {
-      position: 'relative',
-      flex: 1,
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
     },
   }
 }

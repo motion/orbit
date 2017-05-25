@@ -1,11 +1,11 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view, observable, computed } from '~/helpers'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/views/editor/constants'
 import App from '@jot/models'
 
 export default Component =>
-  @view.ui class Node extends React.Component {
+  @view class Node extends React.Component {
     static contextTypes = {
       stores: object,
     }
@@ -38,17 +38,38 @@ export default Component =>
       this.editorStore.selection.hover(event, this.node)
     }
 
-    get isFocused() {
-      if (this.editorStore.inline) return
-      if (!this.node) return
-      return this.editorStore.selection.lastNode === this.node
+    @computed get isFocused() {
+      const { lastNode } = this.editorStore.selection
+      if (this.editorStore.inline || !this.node) {
+        return false
+      }
+      return lastNode === this.node
+    }
+
+    get isRootNode() {
+      return (
+        this.props.editor.getState().document.getPath(this.props.node.key)
+          .length === 1
+      )
     }
 
     render() {
       const { node, editor, onFocus } = this.props
-      const isRoot =
-        this.editorStore.inline === false &&
-        editor.getState().document.getPath(node.key).length === 1
+      const isRoot = !this.editorStore.inline && this.isRootNode
+
+      const component = (
+        <Component
+          {...this.props}
+          setData={this.setData}
+          onChange={editor.onChange}
+          editorStore={this.editorStore}
+          id={this.id}
+        />
+      )
+
+      if (!isRoot) {
+        return component
+      }
 
       return (
         <node
@@ -59,13 +80,7 @@ export default Component =>
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >
-          <Component
-            {...this.props}
-            setData={this.setData}
-            onChange={editor.onChange}
-            editorStore={this.editorStore}
-            id={this.id}
-          />
+          {component}
         </node>
       )
     }

@@ -16,6 +16,16 @@ import LayoutStore from '~/stores/layout'
 // to share logic horizontally between any component
 // simply @view.attach('layoutStore') for example in any sub-view
 
+@view class Wrap {
+  render({ layoutStore, children }) {
+    return (
+      <wrap $$width={window.innerWidth - layoutStore.sidebar.trueWidth}>
+        {children}
+      </wrap>
+    )
+  }
+}
+
 @view.provide({
   layoutStore: LayoutStore,
   keyStore: KeyStore,
@@ -46,7 +56,7 @@ export default class Root {
 
     return (
       <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
-        <main>
+        <Wrap layoutStore={layoutStore}>
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}
@@ -54,7 +64,7 @@ export default class Root {
           >
             <CurrentPage key={Router.key} />
           </content>
-        </main>
+        </Wrap>
         <Errors />
         <Sidebar />
         <ToggleSidebar $toggle />

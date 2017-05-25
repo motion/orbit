@@ -14,7 +14,6 @@ import {
 } from '~/ui'
 import { Place } from '@jot/models'
 import Login from './login'
-import { SIDEBAR_WIDTH } from '~/constants'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 
@@ -259,7 +258,7 @@ export default class Sidebar {
 
   static style = {
     sidebar: {
-      width: SIDEBAR_WIDTH,
+      width: '100%',
       borderLeft: [1, 'dotted', '#eee'],
       userSelect: 'none',
       background: '#fafafa',

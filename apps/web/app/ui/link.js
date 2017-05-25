@@ -1,6 +1,7 @@
 import React from 'react'
 import { view, observable } from '~/helpers'
 import Router from '~/router'
+import { IS_ELECTRON } from '~/constants'
 
 @view
 export default class Link {
@@ -36,7 +37,7 @@ export default class Link {
 
   static style = {
     a: {
-      cursor: 'pointer',
+      cursor: IS_ELECTRON ? 'default' : 'pointer',
     },
   }
 

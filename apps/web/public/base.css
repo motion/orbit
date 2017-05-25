@@ -1,5 +1,5 @@
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: -apple-system, 'Lato', sans-serif;
   margin: 0;
   padding: 0;
   color: #333;
@@ -10,16 +10,13 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Mozilla based browsers */
 ::-moz-selection {
-       background-color: #FFA;
-       color: #000;
+  background: blue;
+  color: #fff;
 }
-
-/* Works in Safari */
 ::selection {
-       background-color: #FFA;
-       color: #000;
+  background: blue;
+  color: #fff;
 }
 
 body.dragging * {

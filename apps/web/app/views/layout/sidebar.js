@@ -32,7 +32,6 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
         width: '100%',
         fontSize: 14,
         padding: [4, 10],
-        cursor: 'pointer',
         '&:hover': {
           background: '#faecf7',
         },

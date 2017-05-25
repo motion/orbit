@@ -18,6 +18,7 @@ export default class EditorStore {
   doc = Document.get(this.props.id)
   // todo replace with doc when we use mention (which is currently turned off)
   allDocs = []
+  selection = null
   docSuggestions = []
   lastClick = null
   lastHover = null

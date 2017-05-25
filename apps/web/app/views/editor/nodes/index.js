@@ -13,6 +13,7 @@ export hashtag from './hashtag'
 export title from './title'
 export input from './input'
 export row from './row'
+export column from './column'
 
 export const paragraph = node(props => (
   <p {...props.attributes} $$style={{ fontSize: 18 }}>{props.children}</p>

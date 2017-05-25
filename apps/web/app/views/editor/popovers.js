@@ -57,12 +57,25 @@ export default class Popovers {
                   primary: 'Doc List',
                   onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
                 },
+                {
+                  primary: 'Row',
+                  onClick: () => {
+                    const nextState = editorStore.plugins.row.transforms.insertRow(
+                      editorStore.state.transform()
+                    )
+
+                    editorStore.editor.onChange(nextState.apply())
+                  },
+                },
                 { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
                 {
                   primary: 'Bullet List',
                   onClick: this.insert(BLOCKS.UL_LIST),
                 },
-                { primary: 'Todo List', onClick: this.insert(BLOCKS.OL_LIST) },
+                {
+                  primary: 'Ordered List',
+                  onClick: this.insert(BLOCKS.OL_LIST),
+                },
               ]}
             />
           </Popover>

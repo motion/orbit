@@ -71,15 +71,15 @@ export default Component =>
         return component
       }
 
-      const isDocTitle =
-        node.type === BLOCKS.TITLE && node.data.get('level') === 1
-      const hoverable = !isDocTitle
+      const { selection } = this.editorStore
+      const isEditable = selection.isEditable(node)
+      const isTitle = selection.isDocTitle(node)
 
       return (
         <node
           $rootLevel={isRoot}
-          $hoverable={hoverable}
-          $focused={hoverable && this.isFocused}
+          $hoverable={!isTitle}
+          $focused={!isTitle && this.isFocused}
           ref={this.ref('node').set}
           onClick={this.onClick}
           onMouseEnter={this.onMouseEnter}

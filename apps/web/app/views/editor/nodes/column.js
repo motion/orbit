@@ -1,22 +1,20 @@
 import React from 'react'
 import { view } from '~/helpers'
-import node from '~/views/editor/node'
-import { range } from 'lodash'
 
-@node
 @view
-export default class Row {
+export default class Column {
   render({ attributes, children }) {
     return (
-      <row {...attributes}>
+      <column {...attributes}>
         {children}
-      </row>
+      </column>
     )
   }
 
   static style = {
-    row: {
-      flexFlow: 'row',
+    column: {
+      border: [1, '#555'],
+      flex: 1,
     },
   }
 }

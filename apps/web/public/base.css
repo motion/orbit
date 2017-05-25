@@ -22,6 +22,10 @@ body {
        color: #000;
 }
 
+body.dragging * {
+  cursor: ew-resize !important;
+}
+
 @keyframes fade {
   from {
     opacity: 0;

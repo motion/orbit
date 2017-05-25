@@ -46,7 +46,15 @@ class App {
     PouchDB.plugin(pHTTP)
   }
 
-  async start({ database, stores }) {
+  store = (name: string) => {
+    for (const store of this.stores[name].values()) {
+      if (store.constructor.name === name) {
+        return store
+      }
+    }
+  }
+
+  async start({ database }) {
     console.time('start')
     this.catchErrors()
 
@@ -63,7 +71,6 @@ class App {
 
     // attach
     this.database = database
-    this.stores = stores
 
     // connect to pouchdb
     console.time('create db')
@@ -124,7 +131,7 @@ class App {
   // helpers
 
   get editor() {
-    return this.stores.EditorStore && this.stores.EditorStore.editor
+    return this.stores.EditorStore && this.stores.EditorStore[0].editor
   }
 
   get editorState() {

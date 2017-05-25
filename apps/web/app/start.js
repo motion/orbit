@@ -11,7 +11,6 @@ import { IS_PROD, DB_CONFIG } from './constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
-import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Theme from './ui/theme'
 import theme from './theme'
@@ -58,7 +57,6 @@ export function render() {
 async function start() {
   await App.start({
     database: DB_CONFIG,
-    stores: Stores,
   })
   render()
 }

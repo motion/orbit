@@ -5,6 +5,7 @@ import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
+import ToggleSidebar from '~/views/layout/toggleSidebar'
 import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
 import KeyStore from '~/stores/keys'
@@ -56,6 +57,7 @@ export default class Root {
         </main>
         <Errors />
         <Sidebar />
+        <ToggleSidebar $toggle />
       </Shortcuts>
     )
   }
@@ -134,6 +136,12 @@ export default class Root {
     },
     extraActions: {
       marginRight: 10,
+    },
+    toggle: {
+      position: 'absolute',
+      zIndex: 10001,
+      top: 7,
+      right: 8,
     },
   }
 }

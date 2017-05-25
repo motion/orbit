@@ -105,7 +105,6 @@ export default class Drawer {
       bottom: 0,
       left: 0,
       right: 0,
-      boxShadow: '0 0 15px rgba(0,0,0,0.1)',
       transition: 'transform ease-in 150ms, opacity ease-in 150ms',
       opacity: 0,
       overflow: 'auto',

@@ -28,6 +28,7 @@ export default class Popovers {
           if={editorStore.selection.lastFocusedNode}
           target={() => editorStore.selection.lastFocusedNode}
           towards="left"
+          noArrow
           adjust={[40, 0]}
         >
           <Popover
@@ -36,6 +37,7 @@ export default class Popovers {
             closeOnClickWithin
             openOnClick
             escapable
+            noArrow
             shadow
           >
             <List

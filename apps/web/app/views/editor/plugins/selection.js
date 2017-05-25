@@ -26,19 +26,11 @@ function trackFocus(key, state, editorStore) {
 }
 
 export default {
-  onBlur(event, data, state, editor) {
-    // editor.props.editorStore.selection.focused = false
-  },
-  onFocus(event, data, state, editor) {
-    // editor.props.editorStore.selection.focused = true
-  },
   onKeyDown(event, data, state, editor) {
-    const block = state.selection.startBlock
-    if (block) {
-      trackFocus(block.key, state, editor.props.editorStore)
-    }
+    // trackFocus(state.selection.anchorKey, state, editor.props.editorStore)
   },
   onSelect(event, { selection }, state, editor) {
+    console.log('onselect', selection)
     trackSelection(selection, state, editor.props.editorStore)
     trackFocus(selection.anchorKey, state, editor.props.editorStore)
   },

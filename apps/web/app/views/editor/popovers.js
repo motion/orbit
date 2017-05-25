@@ -18,8 +18,6 @@ export default class Popovers {
         // .insertBlock({ type, data })
         .apply()
     )
-
-    // editorStore.focus()
   }
 
   render({ editorStore }) {
@@ -42,6 +40,10 @@ export default class Popovers {
           >
             <List
               items={[
+                {
+                  primary: 'Paragraph',
+                  onClick: this.insert(BLOCKS.PARAGRAPH),
+                },
                 {
                   primary: 'Doc List',
                   onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),

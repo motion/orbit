@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view, observable } from '~/helpers'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/views/editor/constants'
 import App from '@jot/models'
@@ -38,8 +38,13 @@ export default Component =>
       this.editorStore.selection.unHover(event, this.node)
     }
 
+    get isFocused() {
+      if (!this.node) return
+      return this.editorStore.selection.focusedNode === this.node
+    }
+
     render() {
-      const { node, editor } = this.props
+      const { node, editor, onFocus } = this.props
       const isRoot =
         this.editorStore.inline === false &&
         editor.getState().document.getPath(node.key).length === 1
@@ -47,6 +52,7 @@ export default Component =>
       return (
         <node
           $rootLevel={isRoot}
+          $focused={this.isFocused}
           ref={this.ref('node').set}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
@@ -66,14 +72,19 @@ export default Component =>
       node: {
         display: 'inline-block',
         position: 'relative',
-        padding: [0, 22],
+        padding: [0, 18],
+        borderLeft: [3, 'transparent'],
+        borderRight: [3, 'transparent'],
       },
       rootLevel: {
         // [line-height, margin]
-        padding: [0, 45],
+        padding: [0, 40],
         '&:hover': {
           background: '#fafafa',
         },
+      },
+      focused: {
+        borderLeftColor: 'blue',
       },
     }
   }

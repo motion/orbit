@@ -42,12 +42,12 @@ class Place extends Model {
   }
 
   hooks = {
-    async preSave({ slug }) {
+    preSave: async ({ slug }) => {
       if (await this.get(slug).exec()) {
         throw new Error(`Already exists a place with this slug! ${slug}`)
       }
     },
-    postSave({ _id, title }) {
+    postSave: ({ _id, title }) => {
       if (_id) {
         Document.homeForPlace(_id).exec().then(doc => {
           if (doc && doc.title !== title) {

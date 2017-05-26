@@ -5,26 +5,25 @@ import { BLOCKS } from '~/editor/constants'
 import App from '@jot/models'
 
 export default Component =>
-  @view class Node extends React.Component {
-    static contextTypes = {
-      stores: object,
-    }
+  @view class Node {
+    node = null
 
     get editorStore() {
-      return this.context.stores.editorStore
+      return this.props.editor.props.editorStore
+    }
+
+    get isRootNode() {
+      return (
+        this.props.editor.getState().document.getPath(this.props.node.key)
+          .length === 1
+      )
     }
 
     setData = data => {
-      const { node, editor } = this.props
-      const next = editor
-        .getState()
-        .transform()
-        .setNodeByKey(node.key, { data })
-        .apply()
-      editor.onChange(next)
+      return this.editorStore.transform(t =>
+        t.setNodeByKey(this.props.node.key, { data })
+      )
     }
-
-    node = null
 
     onClick = (event: MouseEvent) => {
       this.editorStore.selection.setClicked(this.props.node, this.node)
@@ -40,13 +39,6 @@ export default Component =>
         return false
       }
       return focusedNode === this.node
-    }
-
-    get isRootNode() {
-      return (
-        this.props.editor.getState().document.getPath(this.props.node.key)
-          .length === 1
-      )
     }
 
     render() {

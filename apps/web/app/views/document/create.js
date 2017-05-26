@@ -43,7 +43,10 @@ export default class Drawer {
         onClose={store.onClose}
       >
         <drawer onClick={store.onClose} $isOpen={store.blurBg}>
-          <content $isContentOpen={store.afterOpen}>
+          <content
+            onClick={e => e.stopPropagation()}
+            $isContentOpen={store.afterOpen}
+          >
             {/* delay showing slightly for faster animation */}
             <inner if={store.blurBg && isOpen}>
               <editor if={store.blurBg}>

@@ -1,8 +1,15 @@
 import { view } from '~/helpers'
 import { Popover, Segment, Button } from '~/ui'
+import { MARKS } from '../constants'
 
 @view
 export default class SelectBar {
+  toggle = () => {
+    const { editorStore } = this.props
+
+    editorStore.transform(t => t.toggleMark(MARKS.BOLD))
+  }
+
   render({ editorStore }) {
     const { selection } = editorStore
     const PAD = 40
@@ -29,7 +36,7 @@ export default class SelectBar {
           <Segment theme="dark" padded>
             <Button icon="textcolor" />
             <Button icon="textbackground" />
-            <Button icon="textbold" />
+            <Button icon="textbold" onClick={this.toggle} />
             <Button icon="textitalic" />
             <Button icon="textquote" />
           </Segment>

@@ -1,3 +1,4 @@
+// @flow
 import App from './app'
 import { Model, query, str, array, bool } from './helpers'
 import Document from './document'
@@ -43,13 +44,13 @@ class Place extends Model {
 
   hooks = {
     preSave: async ({ slug }) => {
-      if (await this.get(slug).exec()) {
+      if (await this.get(slug).promise) {
         throw new Error(`Already exists a place with this slug! ${slug}`)
       }
     },
     postSave: ({ _id, title }) => {
       if (_id) {
-        Document.homeForPlace(_id).exec().then(doc => {
+        Document.homeForPlace(_id).promise.then(doc => {
           if (doc && doc.title !== title) {
             doc.title = title
             doc.save()

@@ -87,10 +87,10 @@ export default class DocumentStore {
     }
     // for now, prevent saving when not focused
     // avoid tons of saves on inline docs
-    // if (!this.editor.focused) {
-    //   print('no, not focused...')
-    //   return false
-    // }
+    if (!this.editor.focused) {
+      print('no, not focused...')
+      return false
+    }
     if (this.hasUploadingImages) {
       print('no, uploading images...')
       return false

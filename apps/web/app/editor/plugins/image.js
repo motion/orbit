@@ -34,7 +34,7 @@ class ImageNodeStore {
       this.saveImage(file)
       return await readFile(file)
     } else if (data.get('imageId')) {
-      const image: Image = await Image.get(data.get('imageId')).exec()
+      const image: Image = await Image.get(data.get('imageId')).promise
       const src = await image.getAttachment()
       return src
     }

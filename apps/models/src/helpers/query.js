@@ -53,8 +53,10 @@ function valueWrap(info, valueGet: Function) {
     $isQuery: {
       value: true,
     },
-    exec: {
-      value: value.exec,
+    promise: {
+      get: () => {
+        return value && value.exec ? value.exec() : Promise.resolve(value)
+      },
     },
     $: {
       value: value.$,

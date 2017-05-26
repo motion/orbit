@@ -1,6 +1,7 @@
+import PasteLinkify from 'slate-paste-linkify'
 import React from 'react'
 
-export default props => {
+const linkNode = props => {
   const { data } = props.node
   const href = data.get('href')
 
@@ -22,4 +23,13 @@ export default props => {
       {props.children}
     </a>
   )
+}
+
+export default class Link {
+  nodes = [linkNode]
+  plugins = [
+    PasteLinkify({
+      type: 'link',
+    }),
+  ]
 }

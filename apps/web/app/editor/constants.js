@@ -16,6 +16,7 @@ export const BLOCKS = {
   OL_LIST: 'ol_list',
   UL_LIST: 'ul_list',
   DOC_LIST: 'docList',
+  COUNTER: 'counter',
 }
 
 export const MARKS = {

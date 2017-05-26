@@ -1,3 +1,9 @@
+# next
+
+full grid mode test
+templates
+context menus row
+
 # needed
 
 - db per place

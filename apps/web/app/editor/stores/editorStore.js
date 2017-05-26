@@ -1,14 +1,8 @@
 // @flow
 import { Raw } from 'slate'
-import * as Nodes from '../nodes'
-import * as Plugins from '../plugins'
-import * as Rules from '../rules'
-import Marks from '../marks'
 import SelectionStore from './selectionStore'
 import { flatten, includes } from 'lodash'
-
-export const merge = x => flatten(Object.keys(x).map(n => x[n]))
-const rules = merge(Rules)
+import { computed } from '~/helpers'
 
 export default class EditorStore {
   props: {
@@ -23,20 +17,19 @@ export default class EditorStore {
   contentState = null
   state = null
   slate = null
-  plugins = Plugins
+  rules = null
+  plugins = []
   focused = false
-  schema = {
-    rules,
-    marks: Marks,
-    nodes: Nodes,
-  }
 
-  start() {
-    if (this.props.onEditor) {
-      this.props.onEditor(this)
+  start({ onEditor, getRef, rules, plugins }) {
+    this.rules = rules
+    this.setup(plugins)
+
+    if (onEditor) {
+      onEditor(this)
     }
-    if (this.props.getRef) {
-      this.props.getRef(this)
+    if (getRef) {
+      getRef(this)
     }
 
     this.watch(() => {
@@ -46,6 +39,81 @@ export default class EditorStore {
         // this.setContents(this.props.newState, true)
       }
     })
+  }
+
+  // gather and instantiate
+  setup(plugins) {
+    console.log('setup editor')
+    this.plugins = []
+    for (const Plugin of plugins) {
+      try {
+        this.plugins.push(new Plugin({ editorStore: this }))
+      } catch (e) {
+        console.error(e)
+        console.warn(
+          `Plugin is not a class: ${(Plugin && Plugin.toString()) || Plugin}`
+        )
+      }
+    }
+  }
+
+  // return slate-like schema
+  @computed get spec() {
+    const schema = {
+      marks: {},
+      nodes: {},
+      rules: this.rules,
+    }
+    const response = {
+      schema,
+      plugins: [],
+      barButtons: [],
+      contextButtons: [],
+    }
+
+    // add to slate spec
+    for (const {
+      rules,
+      plugins,
+      marks,
+      nodes,
+      barButtons,
+      contextButtons,
+    } of this.plugins) {
+      if (rules) {
+        schema.rules = [...schema.rules, ...rules]
+      }
+      if (plugins) {
+        response.plugins = [...response.plugins, ...plugins]
+      }
+      if (marks) {
+        schema.marks = { ...schema.marks, ...marks }
+      }
+      if (nodes) {
+        schema.nodes = { ...schema.nodes, ...nodes }
+      }
+      if (barButtons) {
+        response.barButtons = [...response.barButtons, ...barButtons]
+      }
+      if (contextButtons) {
+        response.contextButtons = [
+          ...response.contextButtons,
+          ...contextButtons,
+        ]
+      }
+    }
+
+    return response
+  }
+
+  @computed get allPlugins() {
+    return Object.keys(this.plugins).reduce(
+      (acc, key) => ({
+        ...acc,
+        [this.plugins[key].name]: this.plugins[key],
+      }),
+      {}
+    )
   }
 
   get serializedState() {
@@ -99,10 +167,6 @@ export default class EditorStore {
 
   onBlur = () => {
     this.focused = false
-  }
-
-  get pluginsList() {
-    return merge(this.plugins)
   }
 
   get theme() {

@@ -57,16 +57,15 @@ class Document extends Model {
   }
 
   hooks = {
-    preSave({ title, placeId }) {
+    preSave: async ({ title, placeId }) => {
       // sync title
       if (placeId) {
         console.log('save document to place', placeId)
-        Place.get(placeId).exec().then(place => {
-          if (place.title !== title) {
-            place.title = title
-            place.save()
-          }
-        })
+        const place = await Place.get(placeId).promise
+        if (place && place.title !== title) {
+          place.title = title
+          place.save()
+        }
       }
     },
   }

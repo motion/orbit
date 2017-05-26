@@ -1,7 +1,10 @@
+import InsertImages from 'slate-drop-or-paste-images'
+import { BLOCKS } from '~/editor/constants'
+import { Raw } from 'slate'
+import { Image } from '@jot/models'
 import React from 'react'
 import { view } from '~/helpers'
 import node from '~/editor/node'
-import { Image } from '@jot/models'
 
 const readFile = file =>
   new Promise((resolve, reject) => {
@@ -31,7 +34,7 @@ class ImageNodeStore {
       this.saveImage(file)
       return await readFile(file)
     } else if (data.get('imageId')) {
-      const image: Image = await Image.get(data.get('imageId')).exec()
+      const image: Image = await Image.get(data.get('imageId')).promise
       const src = await image.getAttachment()
       return src
     }
@@ -52,7 +55,7 @@ class ImageNodeStore {
 @view({
   store: ImageNodeStore,
 })
-export default class ImageNode {
+class ImageNode {
   render({ attributes, store, children }) {
     return (
       <image {...attributes}>
@@ -68,5 +71,24 @@ export default class ImageNode {
     img: {
       alignSelf: 'flex-start',
     },
+  }
+}
+
+export default class ImagePlugin {
+  name = 'image'
+  plugins = [
+    InsertImages({
+      extensions: ['png', 'jpg', 'gif'],
+      applyTransform(transform, file) {
+        return transform.insertBlock({
+          type: 'image',
+          isVoid: true,
+          data: { file },
+        })
+      },
+    }),
+  ]
+  nodes = {
+    [BLOCKS.IMAGE]: ImageNode,
   }
 }

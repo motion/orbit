@@ -7,10 +7,11 @@ export default class PassProps extends React.Component {
     const childrenLength = React.Children.count(children)
 
     if (!childrenLength) {
-      if (React.isValidElement(child)) {
-        return React.cloneElement(child, props)
+      if (React.isValidElement(children)) {
+        return React.cloneElement(children, props)
       }
-      return child
+      const Child = children
+      return <Child {...props} />
     }
 
     return (
@@ -27,7 +28,8 @@ export default class PassProps extends React.Component {
           if (React.isValidElement(child)) {
             return React.cloneElement(child, props)
           }
-          return child
+          const Child = child
+          return <Child {...props} />
         })}
       </passprops>
     )

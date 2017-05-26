@@ -35,7 +35,7 @@ export default class SelectBar {
           {pluginCategories.map(category => (
             <Segment theme="dark" padded key={category}>
               {editorStore.buttonsFor(category).map((button, i) => (
-                <PassThrough key={i}>
+                <PassThrough editorStore={editorStore} key={i}>
                   {button}
                 </PassThrough>
               ))}

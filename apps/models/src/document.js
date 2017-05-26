@@ -62,7 +62,6 @@ class Document extends Model {
       if (placeId) {
         console.log('save document to place', placeId)
         Place.get(placeId).exec().then(place => {
-          console.log('place is', place)
           if (place.title !== title) {
             place.title = title
             place.save()
@@ -125,7 +124,6 @@ class Document extends Model {
   }
 
   @query forHashtag = (slug, hashtag) => {
-    console.log('getting for hashtag', slug, hashtag)
     if (!slug) {
       return null
     }

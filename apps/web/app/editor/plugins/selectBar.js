@@ -17,6 +17,7 @@ export default class SelectBar {
         animation="slide 300ms"
         left={selection.mouseUp.x}
         top={selection.mouseUp.y + PAD}
+        escapable
       >
         <bar $$row>
           <Segment theme="dark" padded if={false}>

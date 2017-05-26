@@ -2,22 +2,13 @@
 import { view } from '~/helpers'
 import { Button, Popover, List, Icon } from '~/ui'
 import App from '@jot/models'
-import { BLOCKS } from './constants'
+import { BLOCKS } from '~/editor/constants'
 
 @view.attach('editorStore')
 @view
 export default class Popovers {
   insert = (type: string, data: Object) => (event: Event) => {
-    const { editorStore } = this.props
-    editorStore.lastClick = null
-    editorStore.editor.onChange(
-      editorStore.editor
-        .getState()
-        .transform()
-        .setBlock({ type, data })
-        // .insertBlock({ type, data })
-        .apply()
-    )
+    this.props.editorStore.transform(t => t.setBlock({ type, data }))
   }
 
   render({ editorStore }) {
@@ -64,7 +55,7 @@ export default class Popovers {
                       editorStore.state.transform()
                     )
 
-                    editorStore.editor.onChange(nextState.apply())
+                    editorStore.slate.onChange(nextState.apply())
                   },
                 },
                 { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },

@@ -1,6 +1,6 @@
 import React from 'react'
 import { view, computed } from '~/helpers'
-import node from '~/views/editor/node'
+import node from '~/editor/node'
 import App, { Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
 import { isEqual } from 'lodash'

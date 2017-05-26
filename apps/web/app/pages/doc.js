@@ -48,7 +48,7 @@ export default class DocumentPage {
           </Segment>
         }
       >
-        <DocumentView document={doc} onKeyDown={store.onKeyDown} />
+        <DocumentView id={doc._id} onKeyDown={store.onKeyDown} />
       </Page>
     )
   }

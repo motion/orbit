@@ -40,9 +40,13 @@ import CreateDocument from '~/views/document/create'
   keyStore: KeyStore,
   commanderStore: CommanderStore,
 })
-export default class Root {
+export default class Root extends React.Component {
   static childContextTypes = {
     shortcuts: object,
+  }
+
+  state = {
+    error: null,
   }
 
   getChildContext() {
@@ -54,7 +58,17 @@ export default class Root {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  render({ layoutStore, keyStore }) {
+  unstable_handleError(error) {
+    this.setState({
+      error,
+    })
+  }
+
+  render({ layoutStore, keyStore }, { error }) {
+    if (error) {
+      return <error>{JSON.stringify(error)}</error>
+    }
+
     const CurrentPage = Router.activeView || NotFound
 
     console.log(

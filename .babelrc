@@ -6,7 +6,13 @@
         "rootPathSuffix": "app"
       }
     ],
-    "babel-plugin-transform-decorators-legacy"
+    "babel-plugin-transform-decorators-legacy",
+    [
+      "babel-plugin-root-import",
+      {
+        "rootPathSuffix": "app"
+      }
+    ]
   ],
   "presets": [
     [

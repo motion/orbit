@@ -3,7 +3,7 @@ import { view, observable } from '~/helpers'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
 import { Icon } from '~/ui'
-import Editor from '~/views/editor'
+import Editor from '~/editor'
 
 @view
 export default class DocItem {

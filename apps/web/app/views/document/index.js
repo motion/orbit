@@ -37,6 +37,11 @@ export default class DocumentView {
       flex: 1,
       flexFlow: 'row',
     },
+    loading: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     document: {
       padding: [8, 0],
       width: '100%',

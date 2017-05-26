@@ -11,14 +11,14 @@ import Portal from 'react-portal'
     afterOpen = false
     blurBg = false
 
-    save = () => {
+    onSave = () => {
       const { doc, onClose } = this.props
       doc.draft = false
       doc.save()
       onClose()
     }
 
-    close = () => {
+    onClose = () => {
       this.afterOpen = false
       this.blurBg = false
       this.props.onClose()
@@ -30,7 +30,6 @@ export default class Drawer {
     return (
       <Portal
         closeOnEsc
-        closeOnOutsideClick
         isOpen={isOpen}
         isOpened={isOpen}
         onOpen={() => {
@@ -41,9 +40,9 @@ export default class Drawer {
             }, 120)
           })
         }}
-        onClose={store.close}
+        onClose={store.onClose}
       >
-        <drawer $isOpen={store.blurBg}>
+        <drawer onClick={store.onClose} $isOpen={store.blurBg}>
           <content $isContentOpen={store.afterOpen}>
             {/* delay showing slightly for faster animation */}
             <inner if={store.blurBg && isOpen}>
@@ -51,7 +50,7 @@ export default class Drawer {
                 <Document inline={false} id={doc._id} document={doc} />
               </editor>
               <submit>
-                <Button onClick={store.save} icon="simple-add">
+                <Button onClick={store.onSave} icon="simple-add">
                   create document
                 </Button>
               </submit>

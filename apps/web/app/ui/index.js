@@ -72,12 +72,13 @@ export class Circle {
       fontWeight: 400,
       cursor: 'pointer',
       userSelect: 'none',
-      transition: 'all ease-in 1000ms',
+      transition: 'all ease-in 100ms',
 
       '&:hover': {
         boxShadow: [0, 4, 25, [0, 0, 0, 0.2]],
+        background: '#efefef',
         transform: {
-          rotate: '360deg',
+          scale: '1.2',
         },
       },
     },

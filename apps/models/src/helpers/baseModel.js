@@ -57,7 +57,8 @@ export default class BaseModel {
       delete() {
         return this.collection
           .findOne(this._id)
-          .promise.then(doc => doc && doc.remove())
+          .exec()
+          .then(doc => doc && doc.remove())
       },
     }
   }

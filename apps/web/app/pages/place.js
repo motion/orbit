@@ -16,7 +16,7 @@ import DocumentPage from '~/pages/doc'
     start() {
       this.watch(async () => {
         if (this.place) {
-          this.doc = await Document.homeForPlace(this.place._id).promise
+          this.doc = await Document.homeForPlace(this.place._id).exec()
         }
       })
     }
@@ -27,11 +27,13 @@ import DocumentPage from '~/pages/doc'
 
     deleteAll = () => {
       Place.all()
-        .promise.then(docs => docs.map(doc => doc.delete()))
+        .exec()
+        .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))
 
       Document.all()
-        .promise.then(docs => docs.map(doc => doc.delete()))
+        .exec()
+        .then(docs => docs.map(doc => doc.delete()))
         .then(docs => console.log('deleted', docs))
     }
   },

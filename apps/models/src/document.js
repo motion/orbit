@@ -61,7 +61,7 @@ class Document extends Model {
       // sync title
       if (placeId) {
         console.log('save document to place', placeId)
-        const place = await Place.get(placeId).promise
+        const place = await Place.get(placeId).exec()
         if (place && place.title !== title) {
           place.title = title
           place.save()

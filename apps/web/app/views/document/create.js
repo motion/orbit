@@ -66,6 +66,7 @@ export default class Drawer {
       right: 0,
       bottom: 0,
       transition: 'backdrop-filter 300ms cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+      transform: 'translate3d(0, 0, 0)',
     },
     inner: {
       height: '100%',
@@ -92,7 +93,7 @@ export default class Drawer {
       right: 200,
       top: 50,
       position: 'absolute',
-      transition: 'transform 300ms cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+      // transition: 'transform 100ms ease-in',
       transform: 'translateY(150%) scale(0.8)',
       boxShadow: '2px 4px 11px rgba(0,0,0,0.1)',
       bottom: 50,

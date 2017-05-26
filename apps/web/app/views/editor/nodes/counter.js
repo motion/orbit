@@ -19,7 +19,7 @@ export default class Counter {
     return (
       <div contentEditable="false">
         <h1>
-          count: {data.get('count')}
+          count: {data.get('count') || 0}
         </h1>
 
         <a

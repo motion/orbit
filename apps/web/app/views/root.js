@@ -10,7 +10,7 @@ import Errors from '~/views/layout/errors'
 import KeyStore from '~/stores/keys'
 import CommanderStore from '~/stores/commander'
 import LayoutStore from '~/stores/layout'
-import Drawer from '~/views/document/create'
+import CreateDocument from '~/views/document/create'
 
 // stores attached here via provide give us nice ways
 // to share logic horizontally between any component
@@ -57,7 +57,7 @@ export default class Root {
         </main>
         <Errors />
         <Sidebar />
-        <Drawer
+        <CreateDocument
           doc={layoutStore.creatingDoc}
           isOpen={layoutStore.creatingDoc !== false}
           onClose={() => layoutStore.creatingDoc = false}

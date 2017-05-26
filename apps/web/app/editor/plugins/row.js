@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view } from '~/helpers'
 import node from '~/editor/node'
@@ -6,32 +7,6 @@ import { range } from 'lodash'
 import { Range } from 'immutable'
 import Slate from 'slate'
 import { BLOCKS } from '~/editor/constants'
-
-function createCol(opts, text) {
-  return Slate.Block.create({
-    type: opts.typeCol,
-    nodes: [
-      Slate.Raw.deserializeText(
-        {
-          kind: 'text',
-          text,
-        },
-        { terse: true }
-      ),
-    ],
-  })
-}
-
-function createRow(opts, columns, textGetter) {
-  const nodes = Range(0, columns)
-    .map(i => createCol(opts, textGetter ? textGetter(i) : 'lorem'))
-    .toList()
-
-  return Slate.Block.create({
-    type: opts.typeRow,
-    nodes,
-  })
-}
 
 @node
 @view
@@ -103,14 +78,42 @@ export default class RowPlugin {
     [BLOCKS.COLUMN]: Column,
   }
 
+  options = {
+    typeRow: BLOCKS.ROW,
+    typeCol: BLOCKS.COLUMN,
+  }
+
+  createCol = text => {
+    return Slate.Block.create({
+      type: this.options.typeCol,
+      nodes: [
+        Slate.Raw.deserializeText(
+          {
+            kind: 'text',
+            text,
+          },
+          { terse: true }
+        ),
+      ],
+    })
+  }
+
+  createRow = (columns, textGetter = () => 'lorem') => {
+    const nodes = Range(0, columns)
+      .map(i => this.createCol(textGetter(i)))
+      .toList()
+
+    return Slate.Block.create({
+      type: this.options.typeRow,
+      nodes,
+    })
+  }
+
   insertRow = ({ state }, { columns = 2, textGetter } = {}) => {
     if (!state.selection.startKey) {
       return false
     }
-    const row = createRow(opts, columns, textGetter)
+    const row = this.createRow(columns, textGetter)
     return transform.insertBlock(row)
   }
-
-  createCol = createCol
-  createRow = createRow
 }

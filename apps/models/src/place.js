@@ -21,7 +21,7 @@ class Place extends Model {
     private: false,
     authorId: App.user && App.user.name,
     members: [],
-    slug: toSlug(props.title),
+    slug: toSlug(props.title || ''),
   })
 
   async create(props) {

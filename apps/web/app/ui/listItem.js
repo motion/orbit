@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '~/helpers'
-import FakeAvatar from './fake/avatar'
+import FakeAvatar from './fake/fakeAvatar'
 import Glow from './glow'
 
 @view.ui

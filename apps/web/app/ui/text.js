@@ -2,7 +2,29 @@
 import React from 'react'
 import { view, observable, keycode } from '~/helpers'
 
-@view.ui
+// click away from edit clears it
+@view({
+  store: class TextStore {
+    selected = false
+
+    start() {
+      this.react(
+        () => this.props.editable,
+        editable => {
+          console.log('text react editable', editable)
+          if (this.clickaway) {
+            this.clickaway.dispose()
+          }
+          if (editable) {
+            this.clickaway = this.addEvent(window, 'click', (event: Event) =>
+              this.props.onFinishEdit(this.value)
+            )
+          }
+        }
+      )
+    }
+  },
+})
 export default class Text {
   props: {
     editable?: Boolean,
@@ -17,38 +39,13 @@ export default class Text {
     onCancelEdit: _ => _,
   }
 
-  @observable prps = {}
-  editClickaway = null
   node = null
 
   componentWillReceiveProps(nextProps) {
-    this.prps = nextProps
-
     if (!nextProps.editing) {
-      this.selected = false
+      this.props.store.selected = false
     }
   }
-
-  componentDidMount() {
-    this.prps = this.props
-
-    // click away from edit clears it
-    this.react(
-      () => this.prps.editable,
-      editable => {
-        if (this.editClickaway) {
-          this.editClickaway.dispose()
-        }
-        if (editable) {
-          this.editClickaway = this.addEvent(window, 'click', (event: Event) =>
-            this.props.onFinishEdit(this.value)
-          )
-        }
-      }
-    )
-  }
-
-  selected = false
 
   componentDidUpdate() {
     if (
@@ -59,7 +56,7 @@ export default class Text {
     ) {
       this.node.focus()
       document.execCommand('selectAll', false, null)
-      this.selected = true
+      this.props.store.selected = true
     }
   }
 
@@ -92,11 +89,8 @@ export default class Text {
     }
   }
 
-  getRef = ref => {
-    this.node = ref
-  }
-
   render({
+    store,
     editable,
     autoselect,
     onFinishEdit,
@@ -109,7 +103,7 @@ export default class Text {
         contentEditable={editable}
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
-        ref={this.getRef}
+        ref={this.ref('node').set}
         $$marginLeft={props.active ? -2 : 0}
         {...props}
       />

@@ -43,6 +43,10 @@ export default class EditorStore {
     }
   }
 
+  get serializedState() {
+    return Raw.serialize(this.state)
+  }
+
   // this triggers on non-content changes, like selection changes
   // necessary to keep state up to date for transforms
   // sync right back into <Editor state={} />

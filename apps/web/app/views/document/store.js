@@ -73,8 +73,9 @@ export default class DocumentStore {
   }
 
   save = () => {
-    this.document.content = Raw.serialize(this.editor.contentState)
-    this.document.title = this.editor.contentState.document.nodes.first().text
+    const nextState = this.editor.serializedState
+    this.document.content = nextState
+    this.document.title = nextState.document.nodes.first().text
     console.log(
       'saving...',
       this.document._id,

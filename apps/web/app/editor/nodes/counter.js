@@ -18,8 +18,9 @@ export default class Counter {
   render({ store, node: { data } }) {
     return (
       <div contentEditable="false">
+        <input type="text" />
         <h1>
-          count: {data.get('count')}
+          count: {data.get('count') || 0}
         </h1>
 
         <a

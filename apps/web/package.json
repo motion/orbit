@@ -21,7 +21,10 @@
     "minWidth": "700",
     "minHeight": "500",
     "backgroundColor": "#fff",
-    "hide": false
+    "hide": false,
+    "webPreferences": {
+      "experimentalFeatures": true
+    }
   },
   "dependencies": {
     "@jot/models": "*",

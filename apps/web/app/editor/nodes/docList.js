@@ -7,6 +7,7 @@ import { isEqual } from 'lodash'
 import Router from '~/router'
 import CardList from './lists/card'
 import GridList from './lists/grid'
+import VoteList from './lists/vote'
 import List from './lists/list'
 
 class DocListStore {
@@ -21,7 +22,6 @@ class DocListStore {
   shouldFocus = false
 
   createDoc = async () => {
-    console.log('create for place', this.props.placeStore)
     if (!this.props.placeStore) {
       await Document.create()
     } else {
@@ -56,6 +56,8 @@ export default class DocList {
         return GridList
       case 'card':
         return CardList
+      case 'votes':
+        return VoteList
     }
   }
 
@@ -89,6 +91,11 @@ export default class DocList {
               active={listType === 'card'}
               icon="uilayers"
               onClick={() => store.setType(node, 'card')}
+            />
+            <Button
+              active={listType === 'vote'}
+              icon="arrows-1_bold-up"
+              onClick={() => store.setType(node, 'votes')}
             />
             <Button
               active={listType === 'list'}

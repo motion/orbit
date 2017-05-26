@@ -34,6 +34,7 @@ class Document extends Model {
     private: bool,
     temporary: bool.optional,
     timestamps: true,
+    draft: bool.optional,
   }
 
   static defaultProps = props => {
@@ -113,6 +114,7 @@ class Document extends Model {
       this.collection
         .find({
           placeId: { $exists: false },
+          draft: { $ne: true },
         })
         .where('places')
         // in array find
@@ -128,8 +130,8 @@ class Document extends Model {
 
     return this.collection
       .find({
-        placeId: { $exists: true },
         hashtags: { $elemMatch: { $eq: hashtag } },
+        draft: { $ne: true },
         places: { $elemMatch: { $eq: slug } },
       })
       .sort({ createdAt: 'desc' })

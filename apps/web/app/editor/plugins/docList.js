@@ -1,17 +1,6 @@
 import AutoReplace from 'slate-auto-replace'
+import { replacer } from './helpers'
 
 export default [
-  AutoReplace({
-    trigger: 'space',
-    before: /^##$/,
-    after: /^$/,
-    transform: (transform, e, data, matches) => {
-      return transform.setBlock({
-        type: 'docList',
-        data: {
-          type: 'card',
-        },
-      })
-    },
-  }),
+  replacer(/^(\-docList)$/, 'docList', { data: { type: 'card' } }),
 ]

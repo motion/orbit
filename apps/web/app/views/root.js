@@ -11,6 +11,7 @@ import Errors from '~/views/layout/errors'
 import KeyStore from '~/stores/keys'
 import CommanderStore from '~/stores/commander'
 import LayoutStore from '~/stores/layout'
+import CreateDocument from '~/views/document/create'
 
 // stores attached here via provide give us nice ways
 // to share logic horizontally between any component
@@ -86,10 +87,20 @@ export default class Root extends React.Component {
           >
             <CurrentPage key={Router.key} />
           </content>
-          <CircleButton $circleButton icon="add" />
+          <CircleButton
+            if={!layoutStore.creatingDoc}
+            onClick={() => layoutStore.createDoc()}
+            $circleButton
+            icon="add"
+          />
         </Wrap>
         <Errors />
         <Sidebar />
+        <CreateDocument
+          doc={layoutStore.creatingDoc}
+          isOpen={layoutStore.creatingDoc !== false}
+          onClose={() => layoutStore.creatingDoc = false}
+        />
       </Shortcuts>
     )
   }

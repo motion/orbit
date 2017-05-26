@@ -49,7 +49,7 @@ export default class EditorView {
           plugins={editorStore.pluginsList}
           schema={editorStore.schema}
           state={editorStore.state}
-          onDocumentChange={(document, state) => editorStore.setState(state)}
+          onDocumentChange={(document, state) => editorStore.setContents(state)}
           onChange={editorStore.onChange}
           ref={editorStore.getRef}
           onFocus={editorStore.onFocus}

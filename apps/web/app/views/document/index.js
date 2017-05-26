@@ -27,7 +27,7 @@ export default class DocumentView {
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
         <document>
-          <Editor onEditor={store.onEditor} state={store.document.content} />
+          <Editor onEditor={store.onEditor} />
         </document>
       </docview>
     )

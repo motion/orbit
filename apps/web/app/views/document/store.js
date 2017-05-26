@@ -29,7 +29,7 @@ export default class DocumentStore {
 
     // pending save management
     this.react(
-      () => this.editor.state,
+      () => this.editor.contentState,
       () => {
         this.pendingSave = true
       }
@@ -37,8 +37,8 @@ export default class DocumentStore {
 
     // init content
     this.watch(() => {
-      if (this.document && !this.editor.state) {
-        this.editor.setState(this.document.content, true)
+      if (!this.editor.state) {
+        this.editor.setContents(this.document.content, true)
       }
     })
 
@@ -63,7 +63,7 @@ export default class DocumentStore {
 
     // save
     this.react(
-      () => [this.editor.state, this.pendingSave],
+      () => [this.editor.contentState, this.pendingSave],
       () => {
         if (this.canSave) {
           this.save()
@@ -73,8 +73,8 @@ export default class DocumentStore {
   }
 
   save = () => {
-    this.document.content = Raw.serialize(this.editor.state)
-    this.document.title = this.editor.state.document.nodes.first().text
+    this.document.content = Raw.serialize(this.editor.contentState)
+    this.document.title = this.editor.contentState.document.nodes.first().text
     console.log(
       'saving...',
       this.document._id,
@@ -87,7 +87,7 @@ export default class DocumentStore {
   }
 
   get canSave() {
-    if (!this.editor.state) {
+    if (!this.editor.contentState) {
       return false
     }
     if (this.lastSavedRev === this.document._rev) {

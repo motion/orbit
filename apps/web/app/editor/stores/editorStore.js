@@ -20,6 +20,7 @@ export default class EditorStore {
   id = this.props.id || `${Math.random()}`
   inline = this.props.inline || false
   selection = new SelectionStore()
+  contentState = null
   state = null
   slate = null
   plugins = Plugins
@@ -29,26 +30,42 @@ export default class EditorStore {
     nodes: Nodes,
   }
 
-  getRef = ref => {
-    this.slate = ref
+  start() {
+    if (this.props.onEditor) {
+      this.props.onEditor(this)
+    }
+    if (this.props.newState) {
+      this.setContents(this.props.newState, true)
+    }
   }
 
-  setState = (nextState, serialize = false) => {
-    console.log('setSate', nextState, serialize)
+  // this triggers on non-content changes, like selection changes
+  // necessary to keep state up to date for transforms
+  // sync right back into <Editor state={} />
+  onChange = nextState => {
+    this.state = nextState
+  }
+
+  // contents are only for persisting things
+  setContents = (nextState, serialize = false) => {
     if (!serialize) {
       this.state = nextState
     } else {
       this.state = Raw.deserialize(nextState, { terse: true })
     }
+    this.contentState = this.state
   }
 
-  start() {
-    if (this.props.onEditor) {
-      this.props.onEditor(this)
-    }
-    if (this.props.state) {
-      this.setState(this.props.state, true)
-    }
+  // helper for easy transform
+  //  this.editorStore.tranform(t => t.wrap(...))
+  transform = (callback: Function) => {
+    return this.slate.onChange(
+      callback(this.slate.getState().transform()).apply()
+    )
+  }
+
+  getRef = ref => {
+    this.slate = ref
   }
 
   focus() {

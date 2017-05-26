@@ -8,16 +8,7 @@ import { BLOCKS } from '~/editor/constants'
 @view
 export default class Popovers {
   insert = (type: string, data: Object) => (event: Event) => {
-    const { editorStore } = this.props
-    editorStore.lastClick = null
-    editorStore.slate.onChange(
-      editorStore.slate
-        .getState()
-        .transform()
-        .setBlock({ type, data })
-        // .insertBlock({ type, data })
-        .apply()
-    )
+    this.props.editorStore.transform(t => t.setBlock({ type, data }))
   }
 
   render({ editorStore }) {

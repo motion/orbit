@@ -17,7 +17,7 @@ export default class Popovers {
     return (
       <popovers if={!editorStore.inline} contentEditable={false}>
         <Popover
-          if={editorStore.selection.hoveredNode}
+          if={showInsert && editorStore.selection.hoveredNode}
           target={() => editorStore.selection.hoveredNode}
           towards="left"
           noArrow

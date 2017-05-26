@@ -8,9 +8,15 @@ export default class DocumentStore {
   lastSavedRev = null
   lastSavedState = null
   shouldFocus = this.props.focusOnMount
-  pendingSave = false
   editor = null
   downAt = Date.now()
+
+  get hasNewContent() {
+    return (
+      !this.lastSavedState ||
+      !this.lastSavedState.equals(this.editor.contentState)
+    )
+  }
 
   mousedown = () => {
     this.downAt = Date.now()
@@ -28,14 +34,6 @@ export default class DocumentStore {
     if (!editor) return
     this.editor = editor
 
-    // pending save management
-    this.react(
-      () => this.editor.contentState,
-      () => {
-        this.pendingSave = true
-      }
-    )
-
     // init content
     this.watch(() => {
       if (!this.editor.state) {
@@ -51,21 +49,9 @@ export default class DocumentStore {
       })
     }
 
-    // this forces it to save on doc update
-    this.react(
-      () => this.document && this.document._rev,
-      rev => {
-        console.log('new rev', rev, 'pendingSave?', this.pendingSave)
-        if (this.pendingSave === true) {
-          console.log('clear pending', rev)
-          this.pendingSave = false
-        }
-      }
-    )
-
     // save
     this.react(
-      () => [this.editor.contentState, this.pendingSave],
+      () => [this.editor.contentState, this.hasNewContent, this.document._rev],
       () => {
         if (this.canSave) {
           this.save()
@@ -86,34 +72,30 @@ export default class DocumentStore {
       this.document
     )
     this.document.save()
-    this.pendingSave = false
   }
 
   get canSave() {
-    console.log('canSave')
+    const debug = (...args) => console.log('canSave', ...args)
     if (!this.editor.contentState) {
-      console.log('no, no content...')
+      debug('no, no content...')
       return false
     }
-    if (
-      this.lastSavedState &&
-      this.lastSavedState.equals(this.editor.contentState)
-    ) {
-      console.log('no, old content...')
+    if (!this.hasNewContent) {
+      debug('no, no new content...')
       return false
     }
     if (this.lastSavedRev === this.document._rev) {
-      console.log('no, old rev...')
+      debug('no, old rev...')
       return false
     }
     // for now, prevent saving when not focused
     // avoid tons of saves on inline docs
     if (!this.editor.focused) {
-      console.log('no, not focused...')
+      debug('no, not focused...')
       return false
     }
     if (this.hasUploadingImages) {
-      console.log('no, uploading images...')
+      debug('no, uploading images...')
       return false
     }
     return true

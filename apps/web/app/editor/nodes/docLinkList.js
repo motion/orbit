@@ -5,8 +5,6 @@ import App, { Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
 import { isEqual } from 'lodash'
 import Router from '~/router'
-import CardList from './lists/card'
-import GridList from './lists/grid'
 
 class DocListLink {
   // checking for inline prevents infinite recursion!
@@ -66,8 +64,8 @@ export default class DocLinkList {
             <input
               $edit
               spellCheck={false}
-              onFocus={() => (store.newHashtag = hashtag)}
-              onChange={e => (store.newHashtag = e.target.value)}
+              onFocus={() => store.newHashtag = hashtag}
+              onChange={e => store.newHashtag = e.target.value}
               onBlur={store.saveName}
               onKeyDown={e => e.which == 13 && e.target.blur()}
               value={store.inputHashtag}

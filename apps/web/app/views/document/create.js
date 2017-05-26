@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '~/helpers'
 import { Button, Icon } from '~/ui'
-import Editor from '~/views/editor'
+import Document from '~/views/document'
 import Router from '~/router'
 import Portal from 'react-portal'
 
@@ -48,7 +48,7 @@ export default class Drawer {
             {/* delay showing slightly for faster animation */}
             <inner if={store.blurBg && isOpen}>
               <editor if={store.blurBg}>
-                <Editor inline={false} id={doc._id} doc={doc} />
+                <Document inline={false} id={doc._id} document={doc} />
               </editor>
               <submit>
                 <Button onClick={store.save} icon="simple-add">

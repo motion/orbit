@@ -1,6 +1,5 @@
 import React from 'react'
 import { view, computed } from '~/helpers'
-import node from '~/views/editor/node'
 import App, { Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
 import { isEqual, sortBy } from 'lodash'
@@ -30,7 +29,7 @@ class VoteStore {
   onVote = _id => {
     const { node: { data }, setData } = this.props
 
-    const votes = data.get('votes') || {}
+    const votes = Object.assign({}, data.get('votes') || {})
     const voters = votes[_id] || []
     votes[_id] = includes(voters, App.user.name)
       ? without(voters, App.user.name)

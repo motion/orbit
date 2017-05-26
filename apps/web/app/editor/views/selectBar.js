@@ -1,7 +1,6 @@
 import { view } from '~/helpers'
 import { Popover, Segment, Button } from '~/ui'
 
-@view.attach('editorStore')
 @view
 export default class SelectBar {
   render({ editorStore }) {

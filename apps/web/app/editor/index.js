@@ -5,6 +5,7 @@ import { Document } from '@jot/models'
 import { view } from '~/helpers'
 import EditorStore from './stores/editorStore'
 import Popovers from './views/popovers'
+import SelectBar from './views/selectBar'
 
 export { Raw } from 'slate'
 
@@ -26,6 +27,10 @@ export default class EditorView {
     // needs to check equality probably
   }
 
+  onDocumentChange = (document, state) => {
+    this.props.editorStore.setContents(state)
+  }
+
   render({ readOnly, editorStore }) {
     return (
       <document
@@ -44,14 +49,15 @@ export default class EditorView {
           plugins={editorStore.pluginsList}
           schema={editorStore.schema}
           state={editorStore.state}
-          onDocumentChange={(document, state) => editorStore.setContents(state)}
+          onDocumentChange={this.onDocumentChange}
           onChange={editorStore.onChange}
           ref={editorStore.getRef}
           onFocus={editorStore.onFocus}
           onBlur={editorStore.onBlur}
           onKeyDown={editorStore.onKeyDown}
         />
-        <Popovers />
+        <Popovers editorStore={editorStore} />
+        <SelectBar editorStore={editorStore} />
       </document>
     )
   }

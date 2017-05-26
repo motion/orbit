@@ -24,6 +24,7 @@ export default class EditorStore {
   state = null
   slate = null
   plugins = Plugins
+  focused = false
   schema = {
     rules,
     marks: Marks,
@@ -34,9 +35,21 @@ export default class EditorStore {
     if (this.props.onEditor) {
       this.props.onEditor(this)
     }
-    if (this.props.newState) {
-      this.setContents(this.props.newState, true)
+    if (this.props.getRef) {
+      this.props.getRef(this)
     }
+
+    this.watch(() => {
+      if (this.props.newState) {
+        // for realtime sync
+        console.log('new state, save it')
+        // this.setContents(this.props.newState, true)
+      }
+    })
+  }
+
+  get serializedState() {
+    return Raw.serialize(this.state)
   }
 
   // this triggers on non-content changes, like selection changes
@@ -74,6 +87,14 @@ export default class EditorStore {
 
   blur() {
     this.slate.blur()
+  }
+
+  onFocus = () => {
+    this.focused = true
+  }
+
+  onBlur = () => {
+    this.focused = false
   }
 
   get pluginsList() {

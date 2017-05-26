@@ -153,11 +153,15 @@ class App {
   // helpers
 
   get editor() {
-    return this.stores.EditorStore && this.stores.EditorStore[0].editor
+    return (
+      this.stores &&
+      this.stores.EditorStore &&
+      this.stores.EditorStore.find(store => store.focused === true)
+    )
   }
 
   get editorState() {
-    return this.editor && this.editor.state.state
+    return this.editor && this.editor.slate.getState()
   }
 
   get docLayout() {

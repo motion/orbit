@@ -3,7 +3,7 @@ import { view, observable } from '~/helpers'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
 import { Icon } from '~/ui'
-import Editor from '~/editor'
+import DocumentView from './index'
 
 @view
 export default class DocItem {
@@ -61,7 +61,7 @@ export default class DocItem {
         </title>
 
         <content>
-          <Editor
+          <DocumentView
             readOnly={readOnly}
             getRef={this.ref('editor').set}
             inline

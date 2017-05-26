@@ -1,7 +1,5 @@
 // @flow
 import { findParent } from '../helpers'
-import SelectBar from './selectBar'
-import InsertButton from './insertButton'
 
 function trackSelection(selection, state, editorStore) {
   // not highlighted
@@ -39,8 +37,6 @@ export default {
         }}
       >
         {children}
-        <SelectBar editorStore={editorStore} />
-        <InsertButton editorStore={editorStore} />
       </pane>
     )
   },

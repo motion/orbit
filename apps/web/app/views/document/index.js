@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '~/helpers'
 import { Icon } from '~/ui'
-import Editor from '~/editor'
+import Editor from '~/views/editor'
 import DocumentStore from './store'
 import type CommanderStore from '~/stores/commander'
 

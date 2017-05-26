@@ -1,4 +1,4 @@
-import { BLOCKS } from '../constants'
+import { BLOCKS } from '~/editor/constants'
 
 export default {
   onKeyDown: (event, data, state) => {

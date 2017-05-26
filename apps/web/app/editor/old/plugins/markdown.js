@@ -1,11 +1,10 @@
 import AutoReplace from 'slate-auto-replace'
 import EditList from 'slate-edit-list'
-import { replacer } from './helpers'
+import { replacer } from '~/editor/helpers'
 
 const editList = EditList()
 
 export default [
-  replacer(/^(>)$/, 'quote'),
   replacer(/^(\[\])$/, 'todo', { done: false }),
   AutoReplace({
     trigger: 'space',

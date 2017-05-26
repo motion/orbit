@@ -1,6 +1,6 @@
 import AutoReplace from 'slate-auto-replace'
 import { Block, Raw } from 'slate'
-import { BLOCKS } from '../constants'
+import { BLOCKS } from '~/editor/constants'
 
 export default [
   AutoReplace({

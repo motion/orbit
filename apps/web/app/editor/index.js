@@ -32,6 +32,9 @@ export default class EditorView {
   }
 
   render({ readOnly, editorStore }) {
+    const { spec } = editorStore
+    console.log('plugins', spec.plugins)
+
     return (
       <document
         if={editorStore.state}
@@ -46,8 +49,8 @@ export default class EditorView {
           $$undraggable
           editorStore={editorStore}
           readOnly={readOnly}
-          plugins={editorStore.pluginsList}
-          schema={editorStore.schema}
+          plugins={spec.plugins}
+          schema={spec.schema}
           state={editorStore.state}
           onDocumentChange={this.onDocumentChange}
           onChange={editorStore.onChange}

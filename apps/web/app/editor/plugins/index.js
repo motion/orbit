@@ -3,7 +3,6 @@ export form from './form'
 export image from './image'
 export list from './list'
 export link from './link'
-export markdown from './markdown'
 export quote from './quote'
 export emphasis from './emphasis'
 export row from './row'
@@ -13,14 +12,4 @@ export text from './text'
 export todo from './todo'
 export title from './title'
 export docList from './docList'
-
-import { BLOCKS } from '~/editor/constants'
-import node from '~/editor/node'
-
-const hr = props => node(<hr {...props.attributes} />)
-
-export class Separators {
-  nodes = {
-    [BLOCKS.HR]: hr,
-  }
-}
+export hr from './hr'

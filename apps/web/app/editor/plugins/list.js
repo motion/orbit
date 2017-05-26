@@ -4,6 +4,8 @@ import { BLOCKS } from '~/editor/constants'
 import { replacer } from '~/editor/helpers'
 import AutoReplace from 'slate-auto-replace'
 
+const editList = EditList()
+
 const ol_list = node(props => (
   <ol $$ol {...props.attributes}>{props.children}</ol>
 ))
@@ -23,17 +25,12 @@ export default class List {
 
   plugins = [
     // list functions
-    EditList(),
-    // bullet
+    editList,
+    // markdown
     AutoReplace({
-      trigger: 'enter',
-      before: /^(-{3})$/,
-      transform: transform => {
-        return transform.setBlock({
-          type: 'hr',
-          isVoid: true,
-        })
-      },
+      trigger: 'space',
+      before: /^(-)$/,
+      transform: transform => transform.call(editList.transforms.wrapInList),
     }),
   ]
 }

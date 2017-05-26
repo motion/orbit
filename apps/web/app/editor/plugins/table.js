@@ -2,6 +2,7 @@ import EditTable from 'slate-edit-table'
 import { BLOCKS } from '~/editor/constants'
 
 export default class TablePlugin {
+  name = 'table'
   plugins = [
     EditTable({
       typeTable: BLOCKS.TABLE,

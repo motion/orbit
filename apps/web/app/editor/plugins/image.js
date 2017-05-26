@@ -75,6 +75,7 @@ class ImageNode {
 }
 
 export default class ImagePlugin {
+  name = 'image'
   plugins = [
     InsertImages({
       extensions: ['png', 'jpg', 'gif'],

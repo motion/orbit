@@ -1,6 +1,7 @@
 import AutoReplace from 'slate-auto-replace'
 
 export default class Markdown {
+  name = 'markdown'
   plugins = [
     // hr
     AutoReplace({

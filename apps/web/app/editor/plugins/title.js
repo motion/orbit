@@ -37,6 +37,7 @@ class TitleNode {
 }
 
 export default class TitlePlugin {
+  name = BLOCKS.TITLE
   nodes = {
     [BLOCKS.TITLE]: TitleNode,
   }

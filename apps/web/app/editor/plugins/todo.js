@@ -48,6 +48,8 @@ class Todo {
 }
 
 export default class TodoPlugin {
+  name = 'todo'
+
   nodes = {
     [BLOCKS.TODO]: Todo,
   }

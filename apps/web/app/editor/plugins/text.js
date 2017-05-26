@@ -25,6 +25,7 @@ const onEnter = (event: KeyboardEvent, state) => {
 }
 
 export default class TextPlugin {
+  name = 'text'
   plugins = [
     {
       onKeyPress(event: KeyboardEvent, data, state) {

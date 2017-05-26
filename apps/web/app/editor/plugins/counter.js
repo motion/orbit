@@ -43,6 +43,7 @@ class CounterNode {
 }
 
 export default class Counter {
+  name = 'counter'
   nodes = {
     [BLOCKS.COUNTER]: CounterNode,
   }

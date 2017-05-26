@@ -123,6 +123,7 @@ const LabelNode = props => (
 )
 
 export default class FormPlugin {
+  name = 'form'
   plugins = plugins
   nodes = {
     [BLOCKS.INPUT]: InputNode,

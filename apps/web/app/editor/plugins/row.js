@@ -33,22 +33,6 @@ function createRow(opts, columns, textGetter) {
   })
 }
 
-const rowPlugin = function(opts) {
-  return {
-    transforms: {
-      insertRow(transform, { columns = 2, textGetter } = {}) {
-        const { state } = transform
-        console.log('insertRow', transform, state)
-        if (!state.selection.startKey) {
-          return false
-        }
-        const row = createRow(opts, columns, textGetter)
-        return transform.insertBlock(row)
-      },
-    },
-  }
-}
-
 @node
 @view
 class Column {
@@ -113,14 +97,20 @@ class Row {
 }
 
 export default class RowPlugin {
+  name = 'row'
   nodes = {
     [BLOCKS.ROW]: Row,
     [BLOCKS.COLUMN]: Column,
   }
-  plugins = [
-    rowPlugin({
-      typeCol: BLOCKS.COLUMN,
-      typeRow: BLOCKS.ROW,
-    }),
-  ]
+
+  insertRow = ({ state }, { columns = 2, textGetter } = {}) => {
+    if (!state.selection.startKey) {
+      return false
+    }
+    const row = createRow(opts, columns, textGetter)
+    return transform.insertBlock(row)
+  }
+
+  createCol = createCol
+  createRow = createRow
 }

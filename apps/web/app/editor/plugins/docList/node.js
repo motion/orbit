@@ -48,7 +48,7 @@ export default class DocList {
     }
 
     return (
-      <doclist contentEditable={false}>
+      <doclist spellcheck={false} contentEditable={false}>
         <config contentEditable={false}>
           <Segment>
             <Button

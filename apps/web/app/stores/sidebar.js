@@ -4,7 +4,7 @@ import { SIDEBAR_WIDTH } from '~/constants'
 import { throttle } from 'lodash'
 
 @store
-export default class SidebarStore {
+export default class SidebarRootStore {
   width = SIDEBAR_WIDTH
   active = true
   dragging = false

@@ -24,6 +24,7 @@ export default class EditorStore {
   state = null
   slate = null
   plugins = Plugins
+  focused = false
   schema = {
     rules,
     marks: Marks,
@@ -36,6 +37,9 @@ export default class EditorStore {
     }
     if (this.props.newState) {
       this.setContents(this.props.newState, true)
+    }
+    if (this.props.getRef) {
+      this.props.getRef(this)
     }
   }
 
@@ -74,6 +78,14 @@ export default class EditorStore {
 
   blur() {
     this.slate.blur()
+  }
+
+  onFocus = () => {
+    this.focused = true
+  }
+
+  onBlur = () => {
+    this.focused = false
   }
 
   get pluginsList() {

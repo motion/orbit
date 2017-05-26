@@ -87,6 +87,13 @@ export default class DocumentStore {
   }
 
   get canSave() {
+    console.log(
+      'canSave',
+      this.lastSavedRev,
+      this.document._rev,
+      this.editor.focused,
+      this.hasUploadingImages
+    )
     if (!this.editor.contentState) {
       return false
     }
@@ -95,7 +102,7 @@ export default class DocumentStore {
     }
     // for now, prevent saving when not focused
     // avoid tons of saves on inline docs
-    if (!this.focused) {
+    if (!this.editor.focused) {
       return false
     }
     if (this.hasUploadingImages) {

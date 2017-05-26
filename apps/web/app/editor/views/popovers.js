@@ -17,12 +17,12 @@ export default class Popovers {
     return (
       <popovers if={!editorStore.inline} contentEditable={false}>
         <Popover
-          open
           if={editorStore.selection.hoveredNode}
           target={() => editorStore.selection.hoveredNode}
           towards="left"
           noArrow
           adjust={[40, 0]}
+          open
         >
           {/* add node */}
           <Popover

@@ -16,7 +16,7 @@ class DocListStore {
 
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
-  docs = Document.forPlace(this.place && this.place._id)
+  docs = !this.props.inline && Document.forPlace(this.place && this.place._id)
 
   shouldFocus = false
 

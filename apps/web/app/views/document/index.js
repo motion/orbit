@@ -13,7 +13,6 @@ import type CommanderStore from '~/stores/commander'
 export default class DocumentView {
   props: {
     id?: string,
-    document?: Object,
     commanderStore: CommanderStore,
     focusOnMount?: boolean,
     insidePlace?: boolean,

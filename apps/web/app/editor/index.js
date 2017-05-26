@@ -5,6 +5,7 @@ import { Document } from '@jot/models'
 import { view } from '~/helpers'
 import EditorStore from './stores/editorStore'
 import Popovers from './views/popovers'
+import SelectBar from './views/selectBar'
 
 export { Raw } from 'slate'
 
@@ -51,7 +52,8 @@ export default class EditorView {
           onBlur={editorStore.onBlur}
           onKeyDown={editorStore.onKeyDown}
         />
-        <Popovers />
+        <Popovers editorStore={editorStore} />
+        <SelectBar editorStore={editorStore} />
       </document>
     )
   }

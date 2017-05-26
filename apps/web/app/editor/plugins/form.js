@@ -116,9 +116,16 @@ const plugins = [
   },
 ]
 
+const label = props => (
+  <label style={{ fontSize: 13 }} {...props.attributes}>
+    {props.children}
+  </label>
+)
+
 export default class FormPlugin {
   plugins = plugins
   nodes = {
     [BLOCKS.INPUT]: InputNode,
+    [BLOCKS.LABEL]: LabelNode,
   }
 }

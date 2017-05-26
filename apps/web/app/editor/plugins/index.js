@@ -1,3 +1,5 @@
+export counter from './counter'
+export form from './form'
 export image from './image'
 export list from './list'
 export link from './link'
@@ -16,29 +18,8 @@ import node from '~/editor/node'
 
 const hr = props => node(<hr {...props.attributes} />)
 
-const label = props => (
-  <label style={{ fontSize: 13 }} {...props.attributes}>
-    {props.children}
-  </label>
-)
-
-export class Old {
+export class Separators {
   nodes = {
     [BLOCKS.HR]: hr,
-    [BLOCKS.LABEL]: label,
   }
-}
-
-import formPlugin from '../old/plugins/form'
-export class form {
-  plugins = [formPlugin]
-}
-
-import counterPlugin from '../old/plugins/counter'
-import counterNode from '../old/nodes/counter'
-export class counter {
-  nodes = {
-    [BLOCKS.COUNTER]: counterNode,
-  }
-  plugins = [counterPlugin]
 }

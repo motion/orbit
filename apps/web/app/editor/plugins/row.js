@@ -109,8 +109,8 @@ export default class RowPlugin {
     })
   }
 
-  insertRow = ({ state }, { columns = 2, textGetter } = {}) => {
-    if (!state.selection.startKey) {
+  insertRow = (transform, { columns = 2, textGetter } = {}) => {
+    if (!transform.state.selection.startKey) {
       return false
     }
     const row = this.createRow(columns, textGetter)

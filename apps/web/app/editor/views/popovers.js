@@ -50,13 +50,10 @@ export default class Popovers {
                 },
                 {
                   primary: 'Row',
-                  onClick: () => {
-                    const nextState = editorStore.allPlugins.row.insertRow(
-                      editorStore.state.transform()
-                    )
-
-                    editorStore.slate.onChange(nextState.apply())
-                  },
+                  onClick: () =>
+                    editorStore.transform(t =>
+                      editorStore.allPlugins.row.insertRow(t)
+                    ),
                 },
                 { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
                 {

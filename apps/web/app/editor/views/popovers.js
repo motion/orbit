@@ -51,7 +51,7 @@ export default class Popovers {
                 {
                   primary: 'Row',
                   onClick: () => {
-                    const nextState = editorStore.plugins.row.transforms.insertRow(
+                    const nextState = editorStore.allPlugins.row.transforms.insertRow(
                       editorStore.state.transform()
                     )
 

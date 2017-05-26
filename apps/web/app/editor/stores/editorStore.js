@@ -105,6 +105,16 @@ export default class EditorStore {
     return response
   }
 
+  @computed get allPlugins() {
+    return Object.keys(this.plugins).reduce(
+      (acc, key) => ({
+        ...acc,
+        [this.plugins[key].name]: this.plugins[key],
+      }),
+      {}
+    )
+  }
+
   get serializedState() {
     return Raw.serialize(this.state)
   }

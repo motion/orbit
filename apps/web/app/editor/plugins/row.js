@@ -39,11 +39,10 @@ const rowPlugin = function(opts) {
       insertRow(transform, { columns = 2, textGetter } = {}) {
         const { state } = transform
         console.log('insertRow', transform, state)
-
-        if (!state.selection.startKey) return false
-
+        if (!state.selection.startKey) {
+          return false
+        }
         const row = createRow(opts, columns, textGetter)
-
         return transform.insertBlock(row)
       },
     },

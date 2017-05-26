@@ -11,6 +11,7 @@ export selection from './selection'
 export table from './table'
 export text from './text'
 export todo from './todo'
+export title from './title'
 export docList from './docList'
 
 import { BLOCKS } from '~/editor/constants'

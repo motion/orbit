@@ -1,5 +1,8 @@
 // @flow
 import { Document } from '@jot/models'
+import { debug } from '~/helpers'
+
+const print = debug('documentStore')
 
 export default class DocumentStore {
   id = this.props.id
@@ -65,37 +68,31 @@ export default class DocumentStore {
     this.lastSavedState = this.editor.contentState
     this.document.content = this.editor.serializedState
     this.document.title = this.editor.state.document.nodes.first().text
-    console.log(
-      'saving...',
-      this.document._id,
-      this.document._rev,
-      this.document
-    )
+    print('saving...', this.document._id, this.document._rev, this.document)
     this.document.save()
   }
 
   get canSave() {
-    const debug = (...args) => console.log('canSave', ...args)
     if (!this.editor.contentState) {
-      debug('no, no content...')
+      print('no, no content...')
       return false
     }
     if (!this.hasNewContent) {
-      debug('no, no new content...')
+      print('no, no new content...')
       return false
     }
     if (this.lastSavedRev === this.document._rev) {
-      debug('no, old rev...')
+      print('no, old rev...')
       return false
     }
     // for now, prevent saving when not focused
     // avoid tons of saves on inline docs
     // if (!this.editor.focused) {
-    //   debug('no, not focused...')
+    //   print('no, not focused...')
     //   return false
     // }
     if (this.hasUploadingImages) {
-      debug('no, uploading images...')
+      print('no, uploading images...')
       return false
     }
     return true

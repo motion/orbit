@@ -17,13 +17,13 @@ export default class EditorStore {
   contentState = null
   state = null
   slate = null
+  rules = null
   plugins = []
   focused = false
 
-  start() {
-    const { onEditor, getRef } = this.props
-
-    this.setup()
+  start({ onEditor, getRef, rules, plugins }) {
+    this.rules = rules
+    this.setup(plugins)
 
     if (onEditor) {
       onEditor(this)
@@ -42,9 +42,9 @@ export default class EditorStore {
   }
 
   // gather and instantiate
-  setup() {
+  setup(plugins) {
     this.plugins = []
-    for (const Plugin of this.props.plugins) {
+    for (const Plugin of plugins) {
       try {
         this.plugins.push(new Plugin({ editorStore: this }))
       } catch (e) {
@@ -60,7 +60,7 @@ export default class EditorStore {
     const schema = {
       marks: {},
       nodes: {},
-      rules: [],
+      rules: [this.rules],
     }
     const response = {
       schema,
@@ -101,7 +101,6 @@ export default class EditorStore {
       }
     }
 
-    console.log('returning', response)
     return response
   }
 

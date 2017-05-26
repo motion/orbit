@@ -5,7 +5,7 @@ import AutoReplace from 'slate-auto-replace'
 
 @node
 @view.ui
-class Title {
+class TitleNode {
   render({ editorStore, children, node, attributes, ...props }) {
     const level = node.data.get('level')
     const Tag = props => React.createElement(`h${level}`, props)
@@ -37,7 +37,7 @@ class Title {
 
 export default class TitlePlugin {
   nodes = {
-    [BLOCKS.TITLE]: Title,
+    [BLOCKS.TITLE]: TitleNode,
   }
   plugins = [
     // title

@@ -5,6 +5,7 @@ export store from './store'
 export $ from './styles'
 export { query } from '@jot/models'
 export clr from 'color'
+export debug from 'debug'
 
 import kc from 'keycode'
 // fix react synth event

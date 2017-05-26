@@ -2,10 +2,18 @@
 import React from 'react'
 import { view, Shortcuts } from '~/helpers'
 import { uniqBy } from 'lodash'
-import { Text, Pane, ContextMenu, List, Link, Input, Button } from '~/ui'
+import {
+  Drawer,
+  Text,
+  Pane,
+  ContextMenu,
+  List,
+  Link,
+  Input,
+  Button,
+} from '~/ui'
 import { Place } from '@jot/models'
 import Login from './login'
-import { SIDEBAR_WIDTH } from '~/constants'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 
@@ -24,7 +32,6 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
         width: '100%',
         fontSize: 14,
         padding: [4, 10],
-        cursor: 'pointer',
         '&:hover': {
           background: '#faecf7',
         },
@@ -119,10 +126,17 @@ class SidebarStore {
   }
 }
 
+@view.attach('layoutStore')
 @view({
   store: SidebarStore,
 })
 export default class Sidebar {
+  dragger = null
+
+  componentDidMount() {
+    this.props.layoutStore.sidebar.attachDragger(this.dragger)
+  }
+
   getListItem = (place, index) => {
     const { store } = this.props
     const isEditing = store.editingPlace && store.editingPlace._id === place._id
@@ -147,95 +161,103 @@ export default class Sidebar {
     )
   }
 
-  render({ store }) {
+  render({ layoutStore, store }) {
     return (
-      <sidebar>
-        <top>
-          <Login />
-          <title $$row $$justify="space-between" $$padding={[4, 6]}>
-            <input
-              $search
-              placeholder="places"
-              onChange={e => (store.filter = e.target.value)}
-            />
-            <Button
-              chromeless
-              icon="simple-add"
-              onClick={() =>
-                store.setEditing({
-                  _id: Math.random(),
-                  temporary: true,
-                  save() {
-                    return Place.create({ title: this.title })
-                  },
-                })}
-            />
-          </title>
-        </top>
+      <Drawer
+        noOverlay
+        open={layoutStore.sidebar.active}
+        from="right"
+        size={layoutStore.sidebar.width}
+      >
+        <dragger $$undraggable ref={this.ref('dragger').set} />
+        <sidebar>
+          <top>
+            <Login />
+            <title $$row $$justify="space-between" $$padding={[4, 6]}>
+              <input
+                $search
+                placeholder="places"
+                onChange={e => (store.filter = e.target.value)}
+              />
+              <Button
+                chromeless
+                icon="simple-add"
+                onClick={() =>
+                  store.setEditing({
+                    _id: Math.random(),
+                    temporary: true,
+                    save() {
+                      return Place.create({ title: this.title })
+                    },
+                  })}
+              />
+            </title>
+          </top>
 
-        <content $$draggable>
-          <Pane
-            if={store.allPlaces}
-            scrollable
-            collapsable
-            title="Saved"
-            collapsed={store.allPlacesClosed}
-            onSetCollapse={store.ref('allPlacesClosed').set}
-          >
-            <ContextMenu
-              options={[
-                {
-                  title: 'Delete',
-                  onSelect: place => place.delete(),
-                },
-              ]}
+          <content $$draggable>
+            <Pane
+              if={store.allPlaces}
+              scrollable
+              collapsable
+              title="Saved"
+              collapsed={store.allPlacesClosed}
+              onSetCollapse={store.ref('allPlacesClosed').set}
             >
-              <Shortcuts name="all" handler={store.handleShortcuts}>
-                <List
-                  controlled
-                  items={store.allPlaces}
-                  onSelect={place => {
-                    store.setActive(place)
-                    if (place && place.url) {
-                      Router.go(place.url())
-                    }
-                  }}
-                  getItem={this.getListItem}
-                />
-              </Shortcuts>
-            </ContextMenu>
-          </Pane>
-          <Pane
-            if={false}
-            title="all"
-            collapsable
-            collapsed={store.sidePlacesClosed}
-            onSetCollapse={store.ref('sidePlacesClosed').set}
-          >
-            <List
-              controlled
-              items={store.sidePlaces}
-              onSelect={place => {
-                store.setActive(place)
-                if (place && place.url) {
-                  Router.go(place.url())
-                }
-              }}
-              getItem={this.getListItem}
-            />
-          </Pane>
-        </content>
+              <ContextMenu
+                options={[
+                  {
+                    title: 'Delete',
+                    onSelect: place => place.delete(),
+                  },
+                ]}
+              >
+                <Shortcuts name="all" handler={store.handleShortcuts}>
+                  <List
+                    controlled
+                    items={store.allPlaces}
+                    onSelect={place => {
+                      store.setActive(place)
+                      if (place && place.url) {
+                        Router.go(place.url())
+                      }
+                    }}
+                    getItem={this.getListItem}
+                  />
+                </Shortcuts>
+              </ContextMenu>
+            </Pane>
+            <Pane
+              if={false}
+              title="all"
+              collapsable
+              collapsed={store.sidePlacesClosed}
+              onSetCollapse={store.ref('sidePlacesClosed').set}
+            >
+              <List
+                controlled
+                items={store.sidePlaces}
+                onSelect={place => {
+                  store.setActive(place)
+                  if (place && place.url) {
+                    Router.go(place.url())
+                  }
+                }}
+                getItem={this.getListItem}
+              />
+            </Pane>
+          </content>
 
-        <activeSidebar if={App.activePage.sidebar}>
-          {App.activePage.sidebar}
-        </activeSidebar>
-      </sidebar>
+          <activeSidebar if={App.activePage.sidebar}>
+            {App.activePage.sidebar}
+          </activeSidebar>
+        </sidebar>
+      </Drawer>
     )
   }
 
   static style = {
     sidebar: {
-      width: SIDEBAR_WIDTH,
+      width: '100%',
       borderLeft: [1, 'dotted', '#eee'],
       userSelect: 'none',
       background: '#fafafa',
@@ -246,6 +268,15 @@ export default class Sidebar {
     },
     content: {
       flex: 1,
+    },
+    dragger: {
+      width: 8,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      zIndex: 10000,
+      cursor: 'ew-resize',
     },
     search: {
       border: 'none',

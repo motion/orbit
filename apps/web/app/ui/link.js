@@ -1,6 +1,7 @@
 import React from 'react'
 import { view, observable } from '~/helpers'
 import Router from '~/router'
+import { IS_ELECTRON } from '~/constants'
 
 @view
 export default class Link {
@@ -8,8 +9,9 @@ export default class Link {
 
   componentDidMount() {
     this.watch(() => {
-      this.isActive =
+      const isActive =
         Router.path === this.props.to || Router.path === this.props.match
+      this.ref('isActive').set(isActive)
     })
   }
 
@@ -35,7 +37,7 @@ export default class Link {
 
   static style = {
     a: {
-      cursor: 'pointer',
+      cursor: IS_ELECTRON ? 'default' : 'pointer',
     },
   }
 

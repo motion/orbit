@@ -83,6 +83,7 @@ view.ui = View => {
   const next = view(View, { simple: true })
   // adds gloss theme context getters
   next.contextTypes = {
+    ...next.contextTypes,
     uiTheme: object,
     uiActiveTheme: string,
   }

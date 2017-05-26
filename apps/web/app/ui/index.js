@@ -4,7 +4,6 @@ export Title from './title'
 export Modal from './modal'
 export Poof from './poof'
 export Icon from './icon'
-export Drawer from './drawer'
 export Input from './input'
 export Loading from './loading'
 export Grid from './grid'
@@ -16,6 +15,8 @@ export ContextMenu from './contextMenu'
 export Pane from './pane'
 export Text from './text'
 export Tabs from './tabs'
+export Drawer from './drawer'
+export DefinitionList from './definitionList'
 
 import React from 'react'
 import { $, view } from '~/helpers'
@@ -51,9 +52,11 @@ export class Circle {
   static defaultProps = {
     size: 45,
   }
+
   render({ size, ...props }) {
     return <circle {...props} />
   }
+
   static style = {
     circle: {
       display: 'flex',
@@ -63,29 +66,29 @@ export class Circle {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 1000,
-      background: '#fafafa',
+      background: '#fff',
+      boxShadow: [0, 4, 15, [0, 0, 0, 0.125]],
       color: '#111',
       fontWeight: 400,
       cursor: 'pointer',
       userSelect: 'none',
+      transition: 'all ease-in 1000ms',
+
+      '&:hover': {
+        boxShadow: [0, 4, 25, [0, 0, 0, 0.2]],
+        transform: {
+          rotate: '360deg',
+        },
+      },
     },
   }
+
   static theme = {
     size: ({ size }) => ({
       circle: {
-        width: size || 45,
-        height: size || 45,
+        width: size,
+        height: size,
       },
     }),
   }
 }
-
-export const Quote = $('blockquote', {
-  borderLeft: [2, '#eee'],
-  padding: [5, 10],
-  margin: 10,
-})
-
-export const Date = $('date', {
-  color: '#999',
-})

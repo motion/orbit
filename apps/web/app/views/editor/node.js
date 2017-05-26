@@ -1,21 +1,16 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view, observable, computed } from '~/helpers'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/views/editor/constants'
 import App from '@jot/models'
 
-export default Component => @view class Node {
+export default Component => @view class Node extends React.Component {
   static contextTypes = {
-    editor: object,
+    stores: object,
   }
 
-  @observable hovered = false
-  @observable hoveredBtn = -1
-  @observable hoveredSection = -1
-  id = Math.random()
-
-  onDestroy = () => {
-    const { node } = this.props
+  get editorStore() {
+    return this.context.stores.editorStore
   }
 
   setData = data => {
@@ -25,58 +20,67 @@ export default Component => @view class Node {
       .transform()
       .setNodeByKey(node.key, { data })
       .apply()
-
     editor.onChange(next)
-
-    // without this, the editor sometimes doesn't rerender the node
-    this.forceUpdate()
   }
 
-  open = (event: MouseEvent) => {
-    this.context.editor.lastClick = { x: event.clientX, y: event.clientY }
+  node = null
+
+  onClick = (event: MouseEvent) => {
+    this.editorStore.selection.setClicked(this.props.node, this.node)
   }
 
-  render({ node, editor, inline }) {
-    const isRoot =
-      !this.context.editor.inline &&
-      !Component.plain &&
-      editor.getState().document.getPath(node.key).length === 1
+  onMouseEnter = (event: MouseEvent) => {
+    this.editorStore.selection.setHovered(this.props.node, this.node)
+  }
 
-    const inner = (
+  @computed get isFocused() {
+    const { focusedNode } = this.editorStore.selection
+    if (this.editorStore.inline || !this.node) {
+      return false
+    }
+    return focusedNode === this.node
+  }
+
+  get isRootNode() {
+    return (
+      this.props.editor.getState().document.getPath(this.props.node.key)
+        .length === 1
+    )
+  }
+
+  render() {
+    const { node, editor, onFocus } = this.props
+    const isRoot = !this.editorStore.inline && this.isRootNode
+
+    const component = (
       <Component
         {...this.props}
         setData={this.setData}
         onChange={editor.onChange}
-        onDestroy={this.onDestroy}
-        editorStore={this.context.editor}
-        random={Math.random()}
+        editorStore={this.editorStore}
+        id={this.id}
       />
     )
 
     if (!isRoot) {
-      return inner
+      return component
     }
 
-    // avoid circular import
-    const Icon = require('../../ui/icon').default
+    const { selection } = this.editorStore
+    const isEditable = selection.isEditable(node)
+    const isTitle = selection.isDocTitle(node)
 
     return (
       <node
         $rootLevel={isRoot}
-        onMouseEnter={this.ref('hovered').setter(true)}
-        onMouseLeave={() => this.ref('hovered').set(false)}
+        $hoverable={!isTitle}
+        $focused={!isTitle && this.isFocused}
+        ref={this.ref('node').set}
+        onClick={this.onClick}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
       >
-        {inner}
-        <Icon
-          if={isRoot}
-          $btn
-          $btnActive={this.hovered}
-          button
-          name="dot"
-          size={9}
-          contentEditable={false}
-          onClick={this.open}
-        />
+        {component}
       </node>
     )
   }
@@ -85,30 +89,21 @@ export default Component => @view class Node {
     node: {
       display: 'inline-block',
       position: 'relative',
-      padding: [0, 22],
+      padding: [0, 18],
+      borderLeft: [3, 'transparent'],
+      borderRight: [3, 'transparent'],
     },
     rootLevel: {
       // [line-height, margin]
-      padding: [0, 45],
+      padding: [0, 40],
+    },
+    hoverable: {
       '&:hover': {
-        background: '#f2f2f2',
+        background: '#fcfcfc',
       },
     },
-    btn: {
-      position: 'absolute',
-      opacity: 0,
-      bottom: 0,
-      top: 9,
-      left: 20,
-      zIndex: 100,
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      pointerEvents: 'auto',
-      transition: 'all ease-in 300ms',
-    },
-    btnActive: {
-      opacity: 1,
+    focused: {
+      borderLeftColor: 'blue',
     },
   }
 }

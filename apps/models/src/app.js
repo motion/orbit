@@ -32,7 +32,7 @@ class App {
   @observable.ref activePage = {}
   @observable.ref extraActions = null
   @observable.ref errors = []
-  @observable.ref stores = {}
+  stores = {}
 
   constructor() {
     // hmr fix
@@ -46,7 +46,15 @@ class App {
     PouchDB.plugin(pHTTP)
   }
 
-  async start({ database, stores }) {
+  store = (name: string) => {
+    for (const store of this.stores[name].values()) {
+      if (store.constructor.name === name) {
+        return store
+      }
+    }
+  }
+
+  async start({ database }) {
     console.time('start')
     this.catchErrors()
 
@@ -63,7 +71,6 @@ class App {
 
     // attach
     this.database = database
-    this.stores = stores
 
     // connect to pouchdb
     console.time('create db')
@@ -124,7 +131,7 @@ class App {
   // helpers
 
   get editor() {
-    return this.stores.EditorStore && this.stores.EditorStore.editor
+    return this.stores.EditorStore && this.stores.EditorStore[0].editor
   }
 
   get editorState() {
@@ -255,14 +262,6 @@ class App {
         this.handleError({ ...err, reason: event.reason })
       })
     })
-  }
-
-  @action setStore = (key, store) => {
-    this.stores = { ...this.stores, [key]: store }
-  }
-
-  @action removeStore = key => {
-    this.stores = { ...this.stores, [key]: null }
   }
 }
 

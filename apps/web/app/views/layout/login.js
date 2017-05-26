@@ -144,8 +144,8 @@ export default class Login {
 
         <step if={store.step === 3}>
           <text>
-            hi,&nbsp;
-            <username $$ellipse>{App.user.name}</username>
+            hi
+            <username $$ellipse> {App.user.name}</username>
           </text>
           <Button onClick={() => App.logout()}>👋</Button>
         </step>
@@ -208,9 +208,8 @@ export default class Login {
     },
     username: {
       maxWidth: '80%',
-      paddingRight: 10,
-      fontWeight: 500,
-      marginTop: -2,
+      fontWeight: 800,
+      cursor: 'normal',
     },
     button: {
       padding: [3, 8],
@@ -222,6 +221,7 @@ export default class Login {
       maxWidth: '80%',
       alignItems: 'center',
       flexFlow: 'row',
+      pointerEvents: 'none',
       userSelect: 'none',
     },
   }

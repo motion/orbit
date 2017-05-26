@@ -37,13 +37,15 @@ export default class Header {
               onClick={() => Router.forward()}
             />
             <Button if={false} icon="simple-add" tooltip="new" />
+            <Button chromeless>
+              Create
+            </Button>
           </Segment>
         </nav>
         <bar $$centered $$flex $$row $$overflow="hidden">
           <Commander
             onSubmit={layoutStore.createDoc}
             onChange={layoutStore.ref('title').set}
-            $omniinput
           />
         </bar>
         <rest if={header || actions || extraActions} $$row>
@@ -53,6 +55,17 @@ export default class Header {
           </actions>
           <actions if={actions}>
             {actions}
+            <Button
+              chromeless
+              icon={
+                layoutStore.sidebar.active
+                  ? 'arrow-min-right'
+                  : 'arrow-min-left'
+              }
+              onClick={layoutStore.sidebar.toggle}
+              $$marginRight={-6}
+              color={[0, 0, 0, 0.5]}
+            />
           </actions>
         </rest>
       </header>

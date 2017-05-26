@@ -11,13 +11,13 @@ import { IS_PROD, DB_CONFIG } from './constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
-import * as Stores from '~/stores'
 import * as Constants from '~/constants'
 import Theme from './ui/theme'
 import theme from './theme'
-import { AppContainer } from 'react-hot-loader'
 // import serviceWorker from './helpers/serviceWorker'
 // serviceWorker()
+
+// Mobx.useStrict(true)
 
 if (!IS_PROD) {
   // install console formatters
@@ -57,7 +57,6 @@ export function render() {
 async function start() {
   await App.start({
     database: DB_CONFIG,
-    stores: Stores,
   })
   render()
 }

@@ -1,48 +1,46 @@
-import { findDOMNode } from 'slate'
-import Selection from '../stores/selection'
+// @flow
+import { findParent } from '../helpers'
 import SelectBar from './selectBar'
 import InsertButton from './insertButton'
 
-function trackSelection(selection, state) {
+function trackSelection(selection, state, editorStore) {
   // not highlighted
   const sameBlock = selection.startKey === selection.endKey
   const isHighlighting = selection.startOffset !== selection.endOffset
-
   if (sameBlock && !isHighlighting) {
-    Selection.clearHighlighted()
+    editorStore.selection.clear('selected')
     return
   }
-
-  const key = selection.anchorKey
-  Selection.highlightedNode = findDOMNode(
-    state.document.findDescendant(x => x.key === key)
+  editorStore.selection.setSelection(
+    findParent(state.document, selection.anchorKey)
   )
 }
 
-function trackFocus(selection, state) {
-  Selection.active = selection
-  Selection.cursorNode = findDOMNode(
-    state.document.findDescendant(x => x.key === selection.anchorKey)
-  )
+function trackFocus(key, state, editorStore) {
+  editorStore.selection.setFocus(findParent(state.document, key))
 }
 
 export default {
-  onBlur() {
-    Selection.focused = false
+  onKeyDown(event, data, state, editor) {
+    // trackFocus(state.selection.anchorKey, state, editor.props.editorStore)
   },
-  onFocus() {
-    Selection.focused = true
+  onSelect(event, { selection }, state, editor) {
+    console.log('onselect', selection)
+    trackSelection(selection, state, editor.props.editorStore)
+    trackFocus(selection.anchorKey, state, editor.props.editorStore)
   },
-  onSelect(event, { selection }, state) {
-    trackSelection(selection, state)
-    trackFocus(selection, state)
-  },
-  render({ children }) {
+  render({ children, editorStore }) {
     return (
-      <pane style={{ flex: 1 }}>
+      <pane
+        style={{ flex: 1 }}
+        onMouseUp={(event: MouseEvent) => {
+          event.persist()
+          editorStore.selection.mouseUp = { x: event.clientX, y: event.clientY }
+        }}
+      >
         {children}
-        <SelectBar />
-        <InsertButton />
+        <SelectBar editorStore={editorStore} />
+        <InsertButton editorStore={editorStore} />
       </pane>
     )
   },

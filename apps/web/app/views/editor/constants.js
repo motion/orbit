@@ -7,6 +7,7 @@ export const BLOCKS = {
   INPUT: 'input',
   IMAGE: 'image',
   ROW: 'row',
+  COLUMN: 'column',
   TABLE: 'table',
   TABLE_ROW: 'table_row',
   TABLE_CELL: 'table_cell',

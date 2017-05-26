@@ -12,11 +12,11 @@ export hashtag from './hashtag'
 export title from './title'
 export input from './input'
 export row from './row'
+export column from './column'
 
-export const paragraph = node(props => <p $$fontSize={18}>{props.children}</p>)
-
-// ul_list and list_item are names decided by
-// https://github.com/GitbookIO/slate-edit-list
+export const paragraph = node(props => (
+  <p {...props.attributes} $$style={{ fontSize: 18 }}>{props.children}</p>
+))
 
 export const ol_list = node(props => (
   <ol $$ol {...props.attributes}>{props.children}</ol>
@@ -30,7 +30,7 @@ export const list_item = props => (
   <li $$li {...props.attributes}>{props.children}</li>
 )
 
-export const hr = props => node(<hr />)
+export const hr = props => node(<hr {...props.attributes} />)
 
 export const label = props => (
   <label style={{ fontSize: 13 }} {...props.attributes}>

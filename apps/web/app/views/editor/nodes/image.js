@@ -53,17 +53,14 @@ class ImageNodeStore {
   store: ImageNodeStore,
 })
 export default class ImageNode {
-  render({ attributes, store }) {
-    if (!store.src) {
-      return <span>Loading...</span>
-    }
+  render({ attributes, store, children }) {
     return (
-      <img
-        contentEditable
-        suppressContentEditableWarning
-        {...attributes}
-        src={store.src}
-      />
+      <image {...attributes}>
+        <img if={store.src} src={store.src} />
+        <loading contentEditable={false} if={!store.src}>
+          loading...
+        </loading>
+      </image>
     )
   }
 

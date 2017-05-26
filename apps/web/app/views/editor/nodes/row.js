@@ -6,11 +6,7 @@ import { range } from 'lodash'
 @node
 @view
 export default class Row {
-  render({ node, attributes, children, ...props }) {
-    const rows = node.data.get('rows')
-
-    console.log('rows', rows)
-
+  render({ attributes, children }) {
     return (
       <row {...attributes}>
         {children}

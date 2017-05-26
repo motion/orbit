@@ -75,7 +75,7 @@ export default class Commander {
       background: '#fff',
       border: 'none',
       cursor: 'text',
-      marginTop: 1,
+      margin: ['auto', 0],
       padding: [8, 10],
       fontSize: 16,
       opacity: 0.8,

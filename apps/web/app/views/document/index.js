@@ -1,8 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '~/helpers'
-import { Button, Icon } from '~/ui'
-import Router from '~/router'
+import { Icon } from '~/ui'
 import Editor from '~/views/editor'
 
 @view
@@ -26,14 +25,6 @@ export default class Document {
     return (
       <docview onMouseDown={this.mousedown} onMouseUp={this.mouseup}>
         <document>
-          <input
-            if={false}
-            defaultValue={document.hashtags.join(' ')}
-            onBlur={e => {
-              document.hashtags = e.target.value.split(' ')
-              document.save()
-            }}
-          />
           <Editor
             getRef={this.ref('editor').set}
             doc={document}

@@ -1,6 +1,7 @@
 import React from 'react'
 import { view, Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
+import { CircleButton } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -15,6 +16,24 @@ import CreateDocument from '~/views/document/create'
 // stores attached here via provide give us nice ways
 // to share logic horizontally between any component
 // simply @view.attach('layoutStore') for example in any sub-view
+
+@view class Wrap {
+  render({ layoutStore, children }) {
+    return (
+      <wrap $$right={layoutStore.sidebar.trueWidth}>
+        {children}
+      </wrap>
+    )
+  }
+  static style = {
+    wrap: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+    },
+  }
+}
 
 @view.provide({
   layoutStore: LayoutStore,
@@ -46,7 +65,7 @@ export default class Root {
 
     return (
       <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
-        <main>
+        <Wrap layoutStore={layoutStore}>
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}
@@ -54,7 +73,8 @@ export default class Root {
           >
             <CurrentPage key={Router.key} />
           </content>
-        </main>
+          <CircleButton $circleButton icon="add" />
+        </Wrap>
         <Errors />
         <Sidebar />
         <CreateDocument
@@ -67,16 +87,14 @@ export default class Root {
   }
 
   static style = {
+    circleButton: {
+      position: 'absolute',
+      bottom: 20,
+      right: 20,
+    },
     layout: {
       flex: 1,
       flexFlow: 'row',
-    },
-    main: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: SIDEBAR_WIDTH,
     },
     content: {
       flex: 1,
@@ -92,54 +110,5 @@ export default class Root {
         y: -pos,
       },
     }),
-    header: {
-      background: [255, 255, 255, 0.1],
-      zIndex: 1000,
-      padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
-      flexFlow: 'row',
-      height: HEADER_HEIGHT,
-      transition: 'all ease-out 300ms',
-      transitionDelay: '400ms',
-      width: '100%',
-      overflow: 'hidden',
-    },
-    hovered: {
-      opacity: 1,
-      transition: 'all ease-in 100ms',
-      transitionDelay: '0',
-    },
-    title: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      fontSize: 14,
-      fontWeight: 600,
-    },
-    rest: {
-      justifyContent: 'center',
-      marginLeft: 10,
-    },
-    nav: {
-      flexFlow: 'row',
-      marginRight: 10,
-      alignItems: 'center',
-    },
-    btn: {
-      padding: [8, 6],
-      opacity: 0.2,
-      '&:hover': {
-        opacity: 1,
-      },
-    },
-    inactive: {
-      opacity: 0.5,
-      pointerEvents: 'none',
-    },
-    actions: {
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
-    extraActions: {
-      marginRight: 10,
-    },
   }
 }

@@ -62,7 +62,6 @@ export default class VotesList {
     children,
     ...props
   }) {
-    console.log('layout is', layoutStore)
     const hasLoaded = !!listStore.docs
     const hasDocs = hasLoaded && listStore.docs.length > 0
     const votes = data.get('votes') || {}
@@ -71,11 +70,9 @@ export default class VotesList {
     return (
       <container contentEditable={false}>
         <top $$row>
-          <right if={!showNoDocs}>
-            <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
-              create document
-            </Button>
-          </right>
+          <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
+            create document
+          </Button>
         </top>
         <list>
           <loading if={!hasLoaded}><Loading $loading /></loading>
@@ -149,14 +146,10 @@ export default class VotesList {
       },
     },
     top: {
-      justifyContent: 'space-between',
       paddingTop: 3,
       paddingBottom: 3,
       fontSize: 14,
       color: '#555',
-    },
-    latest: {
-      marginTop: 8,
     },
     list: {
       borderRadius: 5,

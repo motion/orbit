@@ -126,6 +126,12 @@ export default class DocList {
       top: -20,
       right: 0,
     },
+    top: {
+      paddingTop: 3,
+      paddingBottom: 3,
+      fontSize: 14,
+      color: '#555',
+    },
     card: {
       // background: '#fff',
       width: '100%',

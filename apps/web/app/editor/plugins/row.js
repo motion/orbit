@@ -17,7 +17,6 @@ class Column {
 
   render({ node, attributes, children }) {
     const flex = node.data.get('flex') || 1
-    console.log('flex', flex)
 
     return (
       <column $$flex={flex} {...attributes}>

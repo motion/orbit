@@ -32,7 +32,6 @@ export default class Selection {
         trackFocus(selection.anchorKey, state, editor.props.editorStore)
       },
       render({ children, editorStore }) {
-        console.log('render select')
         return (
           <pane
             style={{ flex: 1 }}

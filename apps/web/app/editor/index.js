@@ -36,18 +36,19 @@ export default class EditorView {
     this.props.editorStore.setContents(state)
   }
 
+  onDocumentMouseUp = (event: MouseEvent) => {
+    event.persist()
+    this.props.editorStore.selection.mouseUpEvent = event
+  }
+
   render({ readOnly, editorStore }) {
     const { spec } = editorStore
-    console.log('plugins', spec.plugins)
 
     return (
       <document
         if={editorStore.state}
         onClick={editorStore.handleDocumentClick}
-        onMouseUp={(event: MouseEvent) => {
-          event.persist()
-          editorStore.selection.mouseUpEvent = event
-        }}
+        onMouseUp={this.onDocumentMouseUp}
       >
         <Editor
           $editor

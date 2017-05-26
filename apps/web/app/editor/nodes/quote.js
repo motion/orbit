@@ -5,8 +5,8 @@ import node from '~/editor/node'
 @node
 @view
 export default class Quote {
-  render({ node, ...props }) {
-    return <blockquote {...props} />
+  render({ node, attributes, children }) {
+    return <blockquote {...attributes}>{children}</blockquote>
   }
 
   static style = {

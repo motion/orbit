@@ -72,6 +72,10 @@ export default class EditorStore {
   // helper for easy transform
   //  this.editorStore.tranform(t => t.wrap(...))
   transform = (callback: Function) => {
+    if (!this.slate) {
+      console.log('called transform before slate loaded')
+      return
+    }
     return this.slate.onChange(
       callback(this.slate.getState().transform()).apply()
     )

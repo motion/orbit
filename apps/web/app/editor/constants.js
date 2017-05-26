@@ -2,6 +2,8 @@ export const BLOCKS = {
   TITLE: 'title',
   PARAGRAPH: 'paragraph',
   HASHTAG: 'hashtag',
+  QUOTE: 'quote',
+  CODE: 'code',
   META: 'meta',
   LABEL: 'label',
   INPUT: 'input',
@@ -14,6 +16,13 @@ export const BLOCKS = {
   OL_LIST: 'ol_list',
   UL_LIST: 'ul_list',
   DOC_LIST: 'docList',
+}
+
+export const MARKS = {
+  BOLD: 'bold',
+  ITALIC: 'italic',
+  UNDERLINE: 'underline',
+  CODE: 'code',
 }
 
 export const TEXT_TYPES = [BLOCKS.PARAGRAPH]

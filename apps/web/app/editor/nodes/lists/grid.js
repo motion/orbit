@@ -10,7 +10,6 @@ import DocItem from '~/views/document/item'
     updateLayout(layout) {
       const { node } = this.props
       const next = node.data.set('layout', layout)
-      console.log('grid change layout', node.data)
       this.props.setData(next)
     }
 

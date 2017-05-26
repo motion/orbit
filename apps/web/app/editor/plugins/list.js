@@ -2,6 +2,7 @@ import node from '~/editor/node'
 import EditList from 'slate-edit-list'
 import { BLOCKS } from '~/editor/constants'
 import { replacer } from '~/editor/helpers'
+import AutoReplace from 'slate-auto-replace'
 
 const ol_list = node(props => (
   <ol $$ol {...props.attributes}>{props.children}</ol>

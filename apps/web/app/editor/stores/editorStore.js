@@ -45,7 +45,13 @@ export default class EditorStore {
   setup() {
     this.plugins = []
     for (const Plugin of this.props.plugins) {
-      this.plugins.push(new Plugin({ editorStore: this }))
+      try {
+        this.plugins.push(new Plugin({ editorStore: this }))
+      } catch (e) {
+        console.warn(
+          `Plugin is not a class: ${(Plugin && Plugin.toString()) || Plugin}`
+        )
+      }
     }
   }
 

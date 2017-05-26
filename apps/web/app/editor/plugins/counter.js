@@ -1,7 +1,9 @@
+import { replacer } from '~/editor/helpers'
 import React from 'react'
 import { Editor, Raw } from 'slate'
 import { view, observable } from '~/helpers'
 import node from '~/editor/node'
+import { BLOCKS } from '~/editor/constants'
 
 class CounterStore {
   diff = num => {
@@ -10,11 +12,12 @@ class CounterStore {
     setData(next)
   }
 }
+
 @node
 @view({
   store: CounterStore,
 })
-export default class Counter {
+class CounterNode {
   render({ store, node: { data } }) {
     return (
       <div contentEditable="false">
@@ -37,4 +40,11 @@ export default class Counter {
   }
 
   static style = {}
+}
+
+export class counter {
+  nodes = {
+    [BLOCKS.COUNTER]: CounterNode,
+  }
+  plugins = [replacer(/^(\-counter)$/, 'counter', { count: 0 })]
 }

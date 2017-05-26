@@ -1,8 +1,43 @@
 import AutoReplace from 'slate-auto-replace'
 import { Block, Raw } from 'slate'
 import { BLOCKS } from '~/editor/constants'
+import React from 'react'
+import { view } from '~/helpers'
+import node from '~/editor/node'
 
-export default [
+@node
+@view
+class InputNode {
+  render(props) {
+    return (
+      <root>
+        <text
+          contentEditable
+          suppressContentEditableWarning
+          {...props.attributes}
+        >
+          {props.children}
+        </text>
+      </root>
+    )
+  }
+
+  static style = {
+    root: {
+      borderBottom: [2, 'blue'],
+      color: '#777',
+      padding: [6, 10],
+      fontSize: 16,
+    },
+    label: {
+      width: 100,
+      textAlign: 'right',
+    },
+    text: {},
+  }
+}
+
+const plugins = [
   AutoReplace({
     trigger: 'enter',
     before: /^\$([A-Za-z0-9 ]+)$/,
@@ -80,3 +115,10 @@ export default [
     },
   },
 ]
+
+export default class FormPlugin {
+  plugins = plugins
+  nodes = {
+    [BLOCKS.INPUT]: InputNode,
+  }
+}

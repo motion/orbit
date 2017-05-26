@@ -1,6 +1,11 @@
+export list from './list'
+export link from './link'
+export markdown from './markdown'
 export quote from './quote'
 export emphasize from './emphasize'
 export selection from './selection'
+export table from './table'
+export text from './text'
 
 import { BLOCKS } from '~/editor/constants'
 import node from '~/editor/node'
@@ -8,16 +13,6 @@ import node from '~/editor/node'
 const paragraph = node(props => (
   <p {...props.attributes} $$style={{ fontSize: 18 }}>{props.children}</p>
 ))
-
-const ol_list = node(props => (
-  <ol $$ol {...props.attributes}>{props.children}</ol>
-))
-
-const ul_list = node(props => (
-  <ul $$ul {...props.attributes}>{props.children}</ul>
-))
-
-const list_item = props => <li $$li {...props.attributes}>{props.children}</li>
 
 const hr = props => node(<hr {...props.attributes} />)
 
@@ -29,27 +24,9 @@ const label = props => (
 
 export class Old {
   nodes = {
-    [BLOCKS.PARAGRAPH]: paragraph,
-    [BLOCKS.OL_LIST]: ol_list,
-    [BLOCKS.UL_LIST]: ul_list,
-    [BLOCKS.LIST_ITEM]: list_item,
     [BLOCKS.HR]: hr,
     [BLOCKS.LABEL]: label,
   }
-}
-
-import linkNode from '../old/nodes/link'
-export class link {
-  nodes = [linkNode]
-}
-
-import titleNode from '../old/nodes/title'
-import titleStatic from '../old/plugins/titleStatic'
-export class title {
-  nodes = {
-    [BLOCKS.TITLE]: titleNode,
-  }
-  plugins = [titleStatic]
 }
 
 import formPlugin from '../old/plugins/form'
@@ -75,11 +52,6 @@ export class image {
   }
 }
 
-import markdownPlugin from '../old/plugins/markdown'
-export class markdown {
-  plugins = [markdownPlugin]
-}
-
 import hashtagPlugin from '../old/plugins/hashtag'
 export class hashtag {
   plugins = [hashtagPlugin]
@@ -88,11 +60,6 @@ export class hashtag {
 import hashtagsPlugin from '../old/plugins/hashtags'
 export class hashtags {
   plugins = [hashtagsPlugin]
-}
-
-import listPlugin from '../old/plugins/list'
-export class list {
-  plugins = [listPlugin]
 }
 
 import counterPlugin from '../old/plugins/counter'

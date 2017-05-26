@@ -2,6 +2,7 @@ import React from 'react'
 import { view } from '~/helpers'
 import node from '~/editor/node'
 import { replacer } from '~/editor/helpers'
+import { BLOCKS } from '~/editor/constants'
 
 @node
 @view

@@ -15,6 +15,11 @@ const empty = () => {}
   editorStore: EditorStore,
 })
 export default class EditorView {
+  props: {
+    rules?: Array,
+    plugins?: Array,
+  }
+
   static defaultProps = {
     onChange: empty,
     onDocumentChange: empty,

@@ -116,7 +116,7 @@ const plugins = [
   },
 ]
 
-const label = props => (
+const LabelNode = props => (
   <label style={{ fontSize: 13 }} {...props.attributes}>
     {props.children}
   </label>

@@ -25,7 +25,7 @@ const linkNode = props => {
   )
 }
 
-export class Link {
+export default class Link {
   nodes = [linkNode]
   plugins = [
     PasteLinkify({

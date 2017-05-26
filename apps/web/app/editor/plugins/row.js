@@ -33,7 +33,7 @@ function createRow(opts, columns, textGetter) {
   })
 }
 
-const plugin = function(opts) {
+const rowPlugin = function(opts) {
   return {
     transforms: {
       insertRow(transform, { columns = 2, textGetter } = {}) {

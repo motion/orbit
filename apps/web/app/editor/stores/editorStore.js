@@ -48,6 +48,7 @@ export default class EditorStore {
       try {
         this.plugins.push(new Plugin({ editorStore: this }))
       } catch (e) {
+        console.error(e)
         console.warn(
           `Plugin is not a class: ${(Plugin && Plugin.toString()) || Plugin}`
         )
@@ -60,7 +61,7 @@ export default class EditorStore {
     const schema = {
       marks: {},
       nodes: {},
-      rules: [this.rules],
+      rules: this.rules,
     }
     const response = {
       schema,

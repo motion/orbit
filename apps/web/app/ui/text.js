@@ -41,7 +41,7 @@ export default class Text {
         }
         if (editable) {
           this.editClickaway = this.addEvent(window, 'click', (event: Event) =>
-            onFinishEdit(this.value)
+            this.props.onFinishEdit(this.value)
           )
         }
       }

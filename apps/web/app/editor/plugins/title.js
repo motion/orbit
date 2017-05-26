@@ -2,6 +2,7 @@ import React from 'react'
 import { view } from '~/helpers'
 import node from '~/editor/node'
 import AutoReplace from 'slate-auto-replace'
+import { BLOCKS } from '~/editor/constants'
 
 @node
 @view.ui

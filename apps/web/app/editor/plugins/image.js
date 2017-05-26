@@ -1,4 +1,5 @@
 import InsertImages from 'slate-drop-or-paste-images'
+import { BLOCKS } from '~/editor/constants'
 import { Raw } from 'slate'
 import { Image } from '@jot/models'
 import React from 'react'

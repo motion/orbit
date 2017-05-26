@@ -42,7 +42,7 @@ class CounterNode {
   static style = {}
 }
 
-export class counter {
+export default class Counter {
   nodes = {
     [BLOCKS.COUNTER]: CounterNode,
   }

@@ -10,7 +10,7 @@ export default class LayoutStore {
   creatingDoc = false
   sidebar = new SidebarStore()
 
-  createDoc = async props => {
+  createDoc = async (props = { title: 'New Document' }) => {
     const params = {
       draft: true,
       places: [App.activePage.place._id],

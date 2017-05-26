@@ -9,6 +9,7 @@ import Portal from 'react-portal'
 @view({
   store: class {
     afterOpen = false
+    blurBg = false
 
     save = () => {
       const { doc, onClose } = this.props
@@ -19,6 +20,7 @@ import Portal from 'react-portal'
 
     close = () => {
       this.afterOpen = false
+      this.blurBg = false
       this.props.onClose()
     }
   },
@@ -26,22 +28,26 @@ import Portal from 'react-portal'
 export default class Drawer {
   render({ isOpen, doc, store, onClose }) {
     return (
-      <drawer $isOpen={isOpen}>
-        <Portal
-          closeOnEsc
-          closeOnOutsideClick
-          isOpen={isOpen}
-          isOpened={isOpen}
-          onOpen={() => {
-            requestAnimationFrame(() => {
-              store.afterOpen = true
-            })
-          }}
-          onClose={store.close}
-        >
+      <Portal
+        closeOnEsc
+        closeOnOutsideClick
+        isOpen={isOpen}
+        isOpened={isOpen}
+        onOpen={() => {
+          requestAnimationFrame(() => {
+            store.afterOpen = true
+            setTimeout(() => {
+              store.blurBg = true
+            }, 120)
+          })
+        }}
+        onClose={store.close}
+      >
+        <drawer $isOpen={store.blurBg}>
           <content $isContentOpen={store.afterOpen}>
-            <inner if={isOpen}>
-              <editor>
+            {/* delay showing slightly for faster animation */}
+            <inner if={store.blurBg && isOpen}>
+              <editor if={store.blurBg}>
                 <Editor inline={false} id={doc._id} doc={doc} />
               </editor>
               <submit>
@@ -51,21 +57,23 @@ export default class Drawer {
               </submit>
             </inner>
           </content>
-        </Portal>
-      </drawer>
+        </drawer>
+      </Portal>
     )
   }
 
   static style = {
     drawer: {
-      zIndex: 10,
+      zIndex: 10000,
       position: 'absolute',
       pointerEvents: 'none',
       left: 0,
       top: 0,
       right: 0,
       bottom: 0,
-      transition: 'backdrop-filter 300ms cubic-bezier(0.165, 0.840, 0.440, 1.000)',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'backdrop-filter 150ms cubic-bezier(0.165, 0.840, 0.440, 1.000)',
       transform: 'translate3d(0, 0, 0)',
     },
     inner: {
@@ -76,30 +84,27 @@ export default class Drawer {
     },
     isOpen: {
       pointerEvents: 'all',
-      backdropFilter: 'blur(8px)',
+      backdropFilter: 'blur(4px)',
     },
     submit: {
       width: 200,
     },
     content: {
-      margin: 50,
-      zIndex: 1000,
+      padding: 40,
+      flex: 1,
       background: 'rgba(255,255,255,0.7)',
       borderRadius: 4,
+      width: '100%',
+      height: '100%',
+      maxWidth: '80%',
+      maxHeight: '80%',
       border: '1px solid #ccc',
-      padding: 40,
-      width: 800,
-      left: 200,
-      right: 200,
-      top: 50,
-      position: 'absolute',
-      // transition: 'transform 100ms ease-in',
-      transform: 'translateY(150%) scale(0.8)',
+      transition: 'transform 100ms ease-in',
+      transform: 'scale(0.7) translate3d(0, 55%, 0)',
       boxShadow: '2px 4px 11px rgba(0,0,0,0.1)',
-      bottom: 50,
     },
     isContentOpen: {
-      transform: 'translateY(0%) scale(1)',
+      transform: 'scale(1) translate3d(0, 0, 0)',
     },
   }
 }

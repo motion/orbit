@@ -73,7 +73,12 @@ export default class Root {
           >
             <CurrentPage key={Router.key} />
           </content>
-          <CircleButton $circleButton icon="add" />
+          <CircleButton
+            if={!layoutStore.creatingDoc}
+            onClick={() => layoutStore.createDoc()}
+            $circleButton
+            icon="add"
+          />
         </Wrap>
         <Errors />
         <Sidebar />

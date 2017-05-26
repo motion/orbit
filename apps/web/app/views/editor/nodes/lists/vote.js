@@ -73,7 +73,7 @@ export default class VotesList {
       <container contentEditable={false}>
         <top $$row>
           <right if={!showNoDocs}>
-            <Button icon="simple-add" onClick={layoutStore.createDoc}>
+            <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
               create document
             </Button>
           </right>
@@ -82,7 +82,7 @@ export default class VotesList {
           <loading if={!hasLoaded}><Loading $loading /></loading>
           <noDocs if={showNoDocs}>
             <text>no documents</text>
-            <Button icon="simple-add" onClick={layoutStore.createDoc}>
+            <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
               create document
             </Button>
           </noDocs>

@@ -86,6 +86,7 @@ export default class PlacePage {
       )
     }
 
+    console.log('place with doc', doc._id)
     return (
       <Page place={place} doc={doc} actions={actions}>
         <DocumentPage if={doc} insidePlace id={doc._id} />

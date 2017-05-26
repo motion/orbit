@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, observable, computed } from '~/helpers'
 import { object } from 'prop-types'
-import { BLOCKS } from '~/views/editor/constants'
+import { BLOCKS } from '~/editor/constants'
 import App from '@jot/models'
 
 export default Component =>

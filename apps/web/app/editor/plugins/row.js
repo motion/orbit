@@ -1,6 +1,6 @@
 import { Range } from 'immutable'
 import Slate from 'slate'
-import { BLOCKS } from '~/views/editor/constants'
+import { BLOCKS } from '~/editor/constants'
 
 function createCol(opts, text) {
   return Slate.Block.create({

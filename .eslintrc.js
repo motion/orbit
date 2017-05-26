@@ -25,6 +25,11 @@ module.exports = {
     'react/jsx-uses-react': 'error',
     'react/jsx-uses-vars': 'error',
   },
+  settings: {
+    'import/resolver': {
+      'babel-root-import': {},
+    },
+  },
   globals: {
     require: true,
     module: true,

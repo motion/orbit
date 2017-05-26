@@ -1,17 +1,14 @@
 import React from 'react'
 import { view, computed } from '~/helpers'
-import node from '~/views/editor/node'
+import node from '~/editor/node'
 import App, { Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
 import { isEqual } from 'lodash'
 import Router from '~/router'
-// nice oxford commas for votes
-import listify from 'listify'
-import { without, includes } from 'lodash'
 import CardList from './lists/card'
 import GridList from './lists/grid'
 
-class DocVoteListStore {
+class DocListLink {
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
 
@@ -22,14 +19,14 @@ class DocVoteListStore {
     )
 
   get place() {
-    return App.activePage.place
+    return this.props.placeStore && this.props.placeStore.place
   }
 
   newHashtag = null
   saveName() {
-    const { node: { data }, setData } = this.props
+    const { node: { data }, onChange } = this.props
 
-    setData(data.set('hashtag', this.newHashtag))
+    onChange(data.set('hashtag', this.newHashtag))
     this.newHashtag = null
   }
 
@@ -45,18 +42,6 @@ class DocVoteListStore {
   @computed get inputHashtag() {
     return this.newHashtag || this.props.node.data.get('hashtag')
   }
-
-  onVote = _id => {
-    const { node: { data }, setData } = this.props
-
-    const votes = JSON.parse(data.get('votes'))
-    const voters = votes[_id] || []
-    votes[_id] = includes(voters, App.user.name)
-      ? without(voters, App.user.name)
-      : [...voters, App.user.name]
-
-    setData(data.set('votes', JSON.stringify(votes)))
-  }
 }
 
 const lightBlue = '#e7f6ff'
@@ -64,19 +49,13 @@ const darkBlue = `#0099e5`
 
 @node
 @view({
-  store: DocVoteListStore,
+  store: DocListLink,
 })
 export default class DocLinkList {
-  votesText = votes => {
-    const plural = (s, i) => s + (i === 1 ? '' : 's')
-    return `${votes.length} ${plural('vote', votes.length)} by ${listify(votes)}`
-  }
-
-  render({ node: { data }, editorStore, editing, store, children, ...props }) {
+  render({ node, editorStore, editing, store, children, ...props }) {
     const hasLoaded = !!store.docs
     const hasDocs = hasLoaded && store.docs.length > 0
-    const hashtag = data.get('hashtag')
-    const votes = JSON.parse(data.get('votes'))
+    const hashtag = node.data.get('hashtag')
     const showNoDocs = hasLoaded && !hasDocs
 
     return (
@@ -110,39 +89,21 @@ export default class DocLinkList {
           </noDocs>
           <docs if={hasLoaded && hasDocs}>
             {(store.docs || []).map((doc, index) => (
-              <itemContainer key={doc._id} $notFirst={index > 0}>
-                <item>
-                  <votes>
-                    <Button
-                      icon={'up'}
-                      iconColor={
-                        includes(votes[doc._id] || [], App.user.name)
-                          ? 'green'
-                          : '#ccc'
-                      }
-                      onClick={() => store.onVote(doc._id)}
-                    />
-                  </votes>
-                  <Glow
-                    full
-                    scale={0.7}
-                    color={[255, 255, 255]}
-                    opacity={0.04}
-                  />
-                  <text>{doc.title}</text>
+              <item
+                key={doc._id}
+                onClick={() => Router.go(doc.url())}
+                $notFirst={index > 0}
+              >
+                <Glow full scale={0.7} color={[255, 255, 255]} opacity={0.04} />
+                <Icon
+                  name="arrows-1_circle-right-37"
+                  $icon
+                  color={darkBlue}
+                  size={20}
+                />
 
-                  <icon>
-                    <Button
-                      icon="arrows-1_circle-right-37"
-                      iconColor={darkBlue}
-                      onClick={() => Router.go(doc.url())}
-                    />
-                  </icon>
-                </item>
-                <status if={votes[doc._id].length > 0}>
-                  {this.votesText(votes[doc._id])}
-                </status>
-              </itemContainer>
+                <text>{doc.title}</text>
+              </item>
             ))}
           </docs>
         </list>
@@ -179,6 +140,7 @@ export default class DocLinkList {
       marginTop: 8,
     },
     list: {
+      background: '#fafdff',
       borderRadius: 5,
       border: `1px solid ${lightBlue}`,
     },
@@ -192,30 +154,20 @@ export default class DocLinkList {
       fontSize: 24,
       fontWeight: 300,
     },
-    itemContainer: {
-      paddingLeft: 15,
-      padding: 5,
-    },
-    status: {
-      fontSize: 13,
-      color: '#aaa',
-      marginLeft: 3,
-    },
-    text: {
-      padding: 7,
-    },
     item: {
       flexFlow: 'row',
       fontSize: 17,
-      pointer: 'default',
-      color: '#333',
+      cursor: 'pointer',
+      color: darkBlue,
       fontWeight: 300,
+      paddingLeft: 15,
       alignItems: 'center',
+      padding: 5,
       opacity: 0.8,
+      transition: 'opacity 100ms ease-in',
     },
     icon: {
       opacity: 0.8,
-      marginLeft: 20,
     },
     text: {
       padding: [16, 0, 14, 10],

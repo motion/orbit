@@ -24,6 +24,7 @@ export default class CardList {
             <DocItem
               $doc
               bordered
+              inline
               key={doc._id}
               ref={node => this.docRef(node, i)}
               doc={doc}

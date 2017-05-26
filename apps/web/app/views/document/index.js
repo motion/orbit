@@ -16,6 +16,7 @@ export default class DocumentView {
     commanderStore: CommanderStore,
     focusOnMount?: boolean,
     insidePlace?: boolean,
+    inline?: boolean,
   }
 
   render({ id, store }) {
@@ -26,7 +27,7 @@ export default class DocumentView {
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
         <document>
-          <Editor onEditor={store.onEditor} />
+          <Editor inline={this.props.inline} onEditor={store.onEditor} />
         </document>
       </docview>
     )

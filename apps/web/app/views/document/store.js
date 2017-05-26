@@ -6,8 +6,7 @@ const print = debug('documentStore')
 
 export default class DocumentStore {
   id = this.props.id
-  inline = this.props.inline || false
-  document = !this.props.inline && Document.get(this.props.id)
+  document = Document.get(this.props.id)
   lastSavedRev = null
   lastSavedState = null
   shouldFocus = this.props.focusOnMount

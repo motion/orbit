@@ -45,6 +45,7 @@ export default class DocItem {
     readOnly,
     hideMeta,
     draggable,
+    inline,
     after,
     height,
     bordered,
@@ -64,7 +65,7 @@ export default class DocItem {
           <DocumentView
             readOnly={readOnly}
             getRef={this.ref('editor').set}
-            inline
+            inline={inline}
             id={doc._id}
           />
         </content>

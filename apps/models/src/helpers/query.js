@@ -55,7 +55,15 @@ function valueWrap(info, valueGet: Function) {
     },
     promise: {
       get: () => {
-        return value && value.exec ? value.exec() : Promise.resolve(value)
+        return (value && value.exec
+          ? value.exec()
+          : Promise.resolve(value)).then(val => {
+          // helper: queries return empty objects on null findOne(), this returns null
+          if (val instanceof Object && Object.keys(val).length === 0) {
+            return null
+          }
+          return val
+        })
       },
     },
     $: {

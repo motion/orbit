@@ -43,6 +43,7 @@ export default class EditorStore {
 
   // gather and instantiate
   setup(plugins) {
+    console.log('setup editor')
     this.plugins = []
     for (const Plugin of plugins) {
       try {

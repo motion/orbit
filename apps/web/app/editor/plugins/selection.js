@@ -27,7 +27,6 @@ export default class Selection {
         // trackFocus(state.selection.anchorKey, state, editor.props.editorStore)
       },
       onSelect(event, { selection }, state, editor) {
-        console.log('onselect', selection)
         trackSelection(selection, state, editor.props.editorStore)
         trackFocus(selection.anchorKey, state, editor.props.editorStore)
       },

@@ -1,7 +1,7 @@
 // @flow
 import { Raw } from 'slate'
 import SelectionStore from './selectionStore'
-import { flatten, includes } from 'lodash'
+import { flatten, includes, uniq } from 'lodash'
 import { computed } from '~/helpers'
 
 export default class EditorStore {
@@ -137,7 +137,9 @@ export default class EditorStore {
     this.contentState = this.state
   }
 
-  // helper for easy transform
+  // TRANSFORM HELPERS
+
+  // for easy transform
   //  this.editorStore.tranform(t => t.wrap(...))
   transform = (callback: Function) => {
     if (!this.slate) {
@@ -149,24 +151,30 @@ export default class EditorStore {
     )
   }
 
-  getRef = ref => {
-    this.slate = ref
-  }
+  toggleMark = mark => () => this.transform(t => t.toggleMark(mark))
+  toggleBlock = mark => () => this.transform(t => t.setBlock(mark))
 
-  focus() {
+  // HELPERS
+
+  focus = () => {
     this.slate.focus()
   }
 
-  blur() {
+  blur = () => {
     this.slate.blur()
   }
 
-  onFocus = () => {
-    this.focused = true
+  buttonsFor = category => {
+    return flatten(
+      this.plugins
+        .filter(plugin => plugin.category === category)
+        .map(plugin => plugin.barButtons)
+        .filter(x => !!x)
+    )
   }
 
-  onBlur = () => {
-    this.focused = false
+  get pluginCategories() {
+    return uniq(this.plugins.map(plugin => plugin.category).filter(x => !!x))
   }
 
   get theme() {
@@ -182,6 +190,16 @@ export default class EditorStore {
       this.nodes &&
       this.nodes.some(x => x.type === 'image' && x.data.get('file'))
     )
+  }
+
+  // PRIVATE
+
+  onFocus = () => {
+    this.focused = true
+  }
+
+  onBlur = () => {
+    this.focused = false
   }
 
   handleDocumentClick = (event: MouseEvent) => {
@@ -204,5 +222,9 @@ export default class EditorStore {
           .apply()
       )
     }
+  }
+
+  getRef = ref => {
+    this.slate = ref
   }
 }

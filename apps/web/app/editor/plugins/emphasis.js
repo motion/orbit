@@ -6,12 +6,12 @@ import { MARKS } from '~/editor/constants'
 const { ITALIC, BOLD, UNDERLINE } = MARKS
 
 const createButton = (mark, icon) => ({ editorStore }) => {
-  return (
-    <Button
-      icon={icon}
-      onClick={() => editorStore.transform(t => t.toggleMark(mark))}
-    />
-  )
+  // TODO: show only on textual ndoes
+  if (!editorStore.selection.selected) {
+    return null
+  }
+
+  return <Button icon={icon} onClick={() => editorStore.toggleMark(mark)} />
 }
 
 const buttons = [
@@ -22,6 +22,7 @@ const buttons = [
 
 export default class EmphasisPlugin {
   name = 'emphasis'
+  category = 'marks'
 
   // TODO onKeyDown
 

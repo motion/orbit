@@ -1,7 +1,9 @@
 import PasteLinkify from 'slate-paste-linkify'
 import React from 'react'
+import { BLOCKS } from '~/editor/constants'
+import { Button } from '~/ui'
 
-const linkNode = props => {
+const LinkNode = props => {
   const { data } = props.node
   const href = data.get('href')
 
@@ -26,7 +28,12 @@ const linkNode = props => {
 }
 
 export default class Link {
-  nodes = [linkNode]
+  name = 'link'
+  category = 'marks'
+  nodes = {
+    [BLOCKS.LINK]: LinkNode,
+  }
+  barButtons = [() => <Button icon="link" tooltip="link" />]
   plugins = [
     PasteLinkify({
       type: 'link',

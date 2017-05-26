@@ -1,5 +1,6 @@
 import TrailingBlock from 'slate-trailing-block'
 import { BLOCKS } from '~/editor/constants'
+import { Button } from '~/ui'
 import node from '~/editor/node'
 
 const paragraph = node(props => (
@@ -26,6 +27,13 @@ const onEnter = (event: KeyboardEvent, state) => {
 
 export default class TextPlugin {
   name = 'text'
+  category = 'blocks'
+
+  barButtons = [
+    () => <Button icon="textcolor" />,
+    () => <Button icon="textbackground" />,
+  ]
+
   plugins = [
     {
       onKeyPress(event: KeyboardEvent, data, state) {

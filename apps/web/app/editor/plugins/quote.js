@@ -26,22 +26,23 @@ class Quote {
   }
 }
 
-export default class QuotePlugin {
-  createButton = name => ({ editorStore }) => {
-    const onClick = (event: Event) => {
-      event.preventDefault()
-      const isActive = editorStore.state.blocks.some(
-        block => block.type === QUOTE
-      )
-      editorStore.tranform(t => t.setBlock(isActive ? BLOCKS.PARAGRAPH : QUOTE))
-    }
-    return <Button icon="textquote" onClick={onClick} />
+const createButton = name => ({ editorStore }) => {
+  const onClick = (event: Event) => {
+    event.preventDefault()
+    const isActive = editorStore.state.blocks.some(
+      block => block.type === QUOTE
+    )
+    editorStore.tranform(t => t.setBlock(isActive ? BLOCKS.PARAGRAPH : QUOTE))
   }
+  return <Button icon="textquote" onClick={onClick} />
+}
 
+export default class QuotePlugin {
   name = QUOTE
+  category = 'blocks'
   plugins = [replacer(/^(>)$/, QUOTE)]
-  barButtons = [this.createButton(QUOTE)]
-  contextButtons = [this.createButton(QUOTE)]
+  barButtons = [createButton(QUOTE)]
+  contextButtons = [createButton(QUOTE)]
   nodes = {
     [QUOTE]: Quote,
   }

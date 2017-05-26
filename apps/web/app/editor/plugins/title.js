@@ -38,9 +38,12 @@ class TitleNode {
 
 export default class TitlePlugin {
   name = BLOCKS.TITLE
+  category = 'blocks'
+
   nodes = {
     [BLOCKS.TITLE]: TitleNode,
   }
+
   plugins = [
     // title
     AutoReplace({

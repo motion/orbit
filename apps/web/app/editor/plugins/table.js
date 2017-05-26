@@ -3,6 +3,7 @@ import { BLOCKS } from '~/editor/constants'
 
 export default class TablePlugin {
   name = 'table'
+  category = 'blocks'
   plugins = [
     EditTable({
       typeTable: BLOCKS.TABLE,

@@ -3,6 +3,7 @@ import { BLOCKS } from '~/editor/constants'
 import { Raw } from 'slate'
 import { Image } from '@jot/models'
 import React from 'react'
+import { Button } from '~/ui'
 import { view } from '~/helpers'
 import node from '~/editor/node'
 
@@ -76,6 +77,10 @@ class ImageNode {
 
 export default class ImagePlugin {
   name = 'image'
+  category = 'blocks'
+
+  barButtons = [<Button icon="media-image" tooltip="image" />]
+
   plugins = [
     InsertImages({
       extensions: ['png', 'jpg', 'gif'],

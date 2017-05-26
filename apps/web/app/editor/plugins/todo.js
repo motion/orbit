@@ -49,6 +49,7 @@ class Todo {
 
 export default class TodoPlugin {
   name = 'todo'
+  category = 'blocks'
 
   nodes = {
     [BLOCKS.TODO]: Todo,

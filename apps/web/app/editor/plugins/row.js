@@ -72,6 +72,8 @@ class Row {
 
 export default class RowPlugin {
   name = 'row'
+  category = 'blocks'
+
   nodes = {
     [BLOCKS.ROW]: Row,
     [BLOCKS.COLUMN]: Column,

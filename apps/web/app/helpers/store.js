@@ -49,12 +49,10 @@ export const config = {
     return store
   },
   onStoreDidMount(name, store) {
-    const key = store.constructor.name
-    App.stores[key] = App.stores[key] || new Set()
-    App.stores[key].add(store)
+    App.mountStore(store)
   },
   onStoreUnmount(name, store) {
-    App.stores[store.constructor.name].delete(store)
+    App.unmountStore(store)
     if (store.stop) {
       store.stop()
     }

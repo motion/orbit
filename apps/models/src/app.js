@@ -1,4 +1,4 @@
-import { observable, computed, action } from 'mobx'
+import { observable, computed, action, autorunAsync } from 'mobx'
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pIDB from 'pouchdb-adapter-idb'
@@ -32,7 +32,9 @@ class App {
   @observable.ref activePage = {}
   @observable.ref extraActions = null
   @observable.ref errors = []
-  stores = {}
+  @observable.ref mountedStores = {}
+  @observable mountedVersion = 0
+  @observable.ref stores = null
 
   constructor() {
     // hmr fix
@@ -44,14 +46,34 @@ class App {
     RxDB.plugin(pSearch)
     PouchDB.plugin(pAuth)
     PouchDB.plugin(pHTTP)
+
+    // auto Object<string, Set> => Object<string, []>
+    autorunAsync(() => {
+      this.mountedVersion
+      this.stores = Object.keys(this.mountedStores).reduce((acc, key) => {
+        const entries = []
+        this.mountedStores[key].forEach(store => {
+          entries.push(store)
+        })
+        return {
+          ...acc,
+          [key]: entries,
+        }
+      }, {})
+    }, 500)
   }
 
-  store = (name: string) => {
-    for (const store of this.stores[name].values()) {
-      if (store.constructor.name === name) {
-        return store
-      }
-    }
+  mountStore = store => {
+    const key = store.constructor.name
+    this.mountedStores[key] = this.mountedStores[key] || new Set()
+    this.mountedStores[key].add(store)
+    this.mountedVersion++
+  }
+
+  unmountStore = store => {
+    const key = store.constructor.name
+    this.mountedStores[key].delete(store)
+    this.mountedVersion++
   }
 
   async start({ database }) {

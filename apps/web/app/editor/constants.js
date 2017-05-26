@@ -2,7 +2,7 @@ export const BLOCKS = {
   TITLE: 'title',
   PARAGRAPH: 'paragraph',
   HASHTAG: 'hashtag',
-  BLOCKQUOTE: 'blockquote',
+  QUOTE: 'quote',
   CODE: 'code',
   META: 'meta',
   LABEL: 'label',

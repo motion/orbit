@@ -9,10 +9,8 @@ import DocItem from '~/views/document/item'
 
     updateLayout(layout) {
       const { node } = this.props
-      if (!node.data.get('layout').equals(layout)) {
-        const next = node.data.set('layout', layout)
-        this.props.setData(next)
-      }
+      const next = node.data.set('layout', layout)
+      this.props.setData(next)
     }
 
     toggleEdit = () => {

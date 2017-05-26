@@ -35,12 +35,17 @@ export default class EditorStore {
     if (this.props.onEditor) {
       this.props.onEditor(this)
     }
-    if (this.props.newState) {
-      this.setContents(this.props.newState, true)
-    }
     if (this.props.getRef) {
       this.props.getRef(this)
     }
+
+    this.watch(() => {
+      if (this.props.newState) {
+        // for realtime sync
+        console.log('new state, save it')
+        // this.setContents(this.props.newState, true)
+      }
+    })
   }
 
   get serializedState() {

@@ -27,6 +27,10 @@ export default class EditorView {
     // needs to check equality probably
   }
 
+  onDocumentChange = (document, state) => {
+    this.props.editorStore.setContents(state)
+  }
+
   render({ readOnly, editorStore }) {
     return (
       <document
@@ -45,7 +49,7 @@ export default class EditorView {
           plugins={editorStore.pluginsList}
           schema={editorStore.schema}
           state={editorStore.state}
-          onDocumentChange={(document, state) => editorStore.setContents(state)}
+          onDocumentChange={this.onDocumentChange}
           onChange={editorStore.onChange}
           ref={editorStore.getRef}
           onFocus={editorStore.onFocus}

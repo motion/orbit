@@ -12,8 +12,8 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
 import * as Constants from '~/constants'
-import Theme from './ui/theme'
-import theme from './theme'
+import { ThemeProvide } from 'gloss'
+import themes from './theme'
 // import serviceWorker from './helpers/serviceWorker'
 // serviceWorker()
 
@@ -46,9 +46,9 @@ export function render() {
   console.time('#render')
   const Root = require('./views/root').default
   ReactDOM.render(
-    <Theme {...theme}>
+    <ThemeProvide {...themes}>
       <Root />
-    </Theme>,
+    </ThemeProvide>,
     ROOT
   )
   console.timeEnd('#render')

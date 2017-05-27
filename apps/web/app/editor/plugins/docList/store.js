@@ -8,11 +8,6 @@ export default class DocListStore {
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
   docs = !this.props.inline && Document.forPlace(this.place && this.place._id)
-
-  start() {
-    console.log(this.props)
-  }
-
   shouldFocus = false
 
   createDoc = async () => {

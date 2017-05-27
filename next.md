@@ -2,7 +2,7 @@
 
 full grid mode test
 templates
-context menus row
+side menus row
 
 # needed
 
@@ -18,14 +18,14 @@ context menus row
   - grid
   - vote list
   - @mention
-  - merge conflicts
   - cursor indicator
   - fancy ml summarizer
+  - integrations
 
 # technical
 
-- make app a proper store in web
-- app.(user|auth|key|errors...)
+- move app logic to root stores
+  - proper (user|auth|key|errors...) stores
 - actions can be observed on any store
 - make App a proper store
 - give models their own manager that takes all options for couch

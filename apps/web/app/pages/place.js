@@ -55,7 +55,7 @@ export default class PlacePage {
     }
 
     const actions = (
-      <Segment>
+      <Segment padded>
         <Button
           tooltip="share link"
           icon="uilink"

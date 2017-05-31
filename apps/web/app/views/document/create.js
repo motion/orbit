@@ -31,7 +31,6 @@ export default class Drawer {
       <Portal
         closeOnEsc
         isOpen={isOpen}
-        isOpened={isOpen}
         onOpen={() => {
           requestAnimationFrame(() => {
             store.afterOpen = true
@@ -50,7 +49,7 @@ export default class Drawer {
             {/* delay showing slightly for faster animation */}
             <inner if={store.blurBg && isOpen}>
               <editor if={store.blurBg}>
-                <Document inline={false} id={doc._id} document={doc} />
+                <Document if={doc} id={doc._id} document={doc} />
               </editor>
               <submit>
                 <Button onClick={store.onSave} icon="simple-add">

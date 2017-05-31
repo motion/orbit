@@ -46,13 +46,6 @@ export default class Header {
           />
         </bar>
         <rest $$row>
-          <SlotFill.Slot name="extraActions">
-            {items => (
-              <actions $extraActions>
-                {items}
-              </actions>
-            )}
-          </SlotFill.Slot>
           <SlotFill.Slot name="actions">
             {items => (
               <actions>
@@ -108,9 +101,6 @@ export default class Header {
     actions: {
       flexFlow: 'row',
       alignItems: 'center',
-    },
-    extraActions: {
-      marginRight: 10,
     },
   }
 }

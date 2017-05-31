@@ -8,6 +8,7 @@ export default class LayoutStore {
   isDragging = false
   headerHovered = false
   sidebar = new SidebarStore()
+  creatingDoc = false
 
   createDoc = async (props = { title: 'New Document' }) => {
     const params = {

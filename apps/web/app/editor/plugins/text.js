@@ -4,7 +4,7 @@ import { Button } from '~/ui'
 import node from '~/editor/node'
 
 const paragraph = node(props => (
-  <p {...props.attributes} $$style={{ fontSize: 18 }}>{props.children}</p>
+  <p {...props.attributes} style={{ fontSize: 18 }}>{props.children}</p>
 ))
 
 const newParagraph = state =>

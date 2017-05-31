@@ -11,12 +11,9 @@ import { SlotFill } from '~/ui'
 
 @view
 export default class Page {
-  render({ children, sidebar, extraActions, actions, loading, className }) {
+  render({ children, sidebar, actions, loading, className }) {
     return (
       <page className={className}>
-        <SlotFill.Fill if={extraActions} name="extraActions">
-          {extraActions}
-        </SlotFill.Fill>
         <SlotFill.Fill if={actions} name="actions">{actions}</SlotFill.Fill>
         <SlotFill.Fill if={sidebar} name="sidebar">{sidebar}</SlotFill.Fill>
         {children}

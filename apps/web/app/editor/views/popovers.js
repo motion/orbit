@@ -46,9 +46,13 @@ export default class Popovers {
   }
 
   render({ editorStore }) {
-    const { isHovered, showEdit, showInsert } = editorStore.selection
-    const showPopovers =
-      (showEdit || showInsert) && editorStore.selection.hoveredNode
+    const {
+      isHovered,
+      showEdit,
+      showInsert,
+      hoveredNode,
+    } = editorStore.selection
+    const showPopovers = (showEdit || showInsert) && hoveredNode
 
     return (
       <popovers if={!editorStore.inline} contentEditable={false}>

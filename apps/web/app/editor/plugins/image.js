@@ -79,7 +79,7 @@ export default class ImagePlugin {
   name = 'image'
   category = 'blocks'
 
-  barButtons = [<Button icon="media-image" tooltip="image" />]
+  barButtons = [() => <Button icon="media-image" tooltip="image" />]
 
   plugins = [
     InsertImages({

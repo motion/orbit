@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { Editor } from 'slate'
 import { object } from 'prop-types'
@@ -46,11 +47,11 @@ export default class EditorView {
 
     return (
       <document
-        if={editorStore.state}
         onClick={editorStore.handleDocumentClick}
         onMouseUp={this.onDocumentMouseUp}
       >
         <Editor
+          if={editorStore.state}
           $editor
           $$undraggable
           editorStore={editorStore}

@@ -29,9 +29,6 @@ import Portal from 'react-portal'
 class DraftStore {
   doc = null
 
-  afterOpen = false
-  blurBg = false
-
   @computed get isActive() {
     return this.doc !== null
   }

@@ -19,6 +19,7 @@ import Draft from './document/draft'
 // to share logic horizontally between any component
 // simply @view.attach('layoutStore') for example in any sub-view
 
+// optimized re-render for sidebar resize
 @view class Wrap {
   render({ layoutStore, children }) {
     return (

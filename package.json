@@ -2,8 +2,8 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap --npm-client=yarn --ignore starter-native",
-    "web": "cd apps/web && npm start",
+    "bootstrap": "npm run check-dependencies && lerna bootstrap --npm-client=yarn --ignore starter-native",
+    "web": "npm run check-dependencies && cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
     "build": "lerna exec --scope api --scope @jot/models -- babel src --out-dir lib -s true",
@@ -11,7 +11,8 @@
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
     "api": "COUCHDB_USER=admin COUCHDB_PASSWORD=password docker-compose up --remove-orphans",
-    "electron": "cd apps/web && npm run electron"
+    "electron": "cd apps/web && npm run electron",
+    "check-dependencies": "lerna exec --ignore starter-native -- check-dependencies"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
@@ -21,6 +22,7 @@
     "babel-preset-env": "^1.1.8",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
+    "check-dependencies": "^1.0.1",
     "eslint": "^3.19.0",
     "eslint-import-resolver-babel-root-import": "0.0.2",
     "eslint-plugin-class-property": "^1.0.6",

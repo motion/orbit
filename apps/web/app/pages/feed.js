@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '~/helpers'
 import { Place, Document } from '@jot/models'
 import FlipMove from 'react-flip-move'
-import { CircleButton } from '~/ui'
+import { Button } from '~/ui'
 import Page from '~/views/page'
 import DocItem from '~/views/document/item'
 
@@ -35,9 +35,9 @@ export default class Feed {
         $$padded
         title="Feed"
         actions={[
-          <CircleButton icon="📇" onClick={store.createDoc}>
+          <Button circular icon="📇" onClick={store.createDoc}>
             new
-          </CircleButton>,
+          </Button>,
         ]}
       >
         <FlipMove $docs duration={300} easing="ease-out">

@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
-import { CircleButton } from '~/ui'
+import { Button } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -12,6 +12,7 @@ import KeyStore from '~/stores/keys'
 import CommanderStore from '~/stores/commander'
 import LayoutStore from '~/stores/layout'
 import CreateDocument from '~/views/document/create'
+import RedBox from 'redbox-react'
 
 // stores attached here via provide give us nice ways
 // to share logic horizontally between any component
@@ -59,6 +60,7 @@ export default class Root extends React.Component {
   }
 
   unstable_handleError(error) {
+    console.log('handle error', error.message, typeof error)
     this.setState({
       error,
     })
@@ -66,7 +68,7 @@ export default class Root extends React.Component {
 
   render({ layoutStore, keyStore }, { error }) {
     if (error) {
-      return <error>{JSON.stringify(error)}</error>
+      return <RedBox error={error} />
     }
 
     const CurrentPage = Router.activeView || NotFound
@@ -87,8 +89,9 @@ export default class Root extends React.Component {
           >
             <CurrentPage key={Router.key} />
           </content>
-          <CircleButton
+          <Button
             if={!layoutStore.creatingDoc}
+            circular
             onClick={() => layoutStore.createDoc()}
             $circleButton
             icon="add"
@@ -99,7 +102,7 @@ export default class Root extends React.Component {
         <CreateDocument
           doc={layoutStore.creatingDoc}
           isOpen={layoutStore.creatingDoc !== false}
-          onClose={() => layoutStore.creatingDoc = false}
+          onClose={() => (layoutStore.creatingDoc = false)}
         />
       </Shortcuts>
     )

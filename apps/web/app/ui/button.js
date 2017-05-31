@@ -3,55 +3,92 @@ import { view, clr } from '~/helpers'
 import Icon from './icon'
 import Glow from './glow'
 import Popover from './popover'
+import Circle from './circle'
+import type { Color } from 'gloss'
 
 const RADIUS = 5
+const idFn = _ => _
 
 @view.ui
 export default class Button {
+  props: {
+    segmented?: boolean,
+    first?: boolean,
+    last?: boolean,
+    clickable?: boolean,
+    active?: boolean,
+    chromeless?: boolean,
+    dim?: boolean,
+    stretch?: boolean,
+    spaced?: boolean,
+    circular?: boolean,
+    iconAfter?: boolean,
+    onClick?: Function,
+    tooltip?: string,
+    icon?: string,
+    color?: Color,
+    className?: string,
+    theme?: string,
+    after?: Element | string,
+    children?: Element | string,
+    iconProps?: Object,
+    tooltipProps?: Object,
+    circleProps?: Object,
+    circleSize?: number,
+    iconSize?: number,
+  }
+
   static isSegment = true
   static defaultProps = {
     iconColor: '#999',
     iconSize: 12,
+    onClick: idFn,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
+
+  circleWrapper = (size, props) => children => (
+    <Circle size={size} {...props}>{children}</Circle>
+  )
 
   render() {
     const {
       segmented,
       first,
       last,
-      seg,
-      onChange,
       onClick,
       clickable,
       children,
       icon,
       iconProps,
       iconSize,
+      iconAfter,
       iconColor,
       color,
       active,
       spaced,
       after,
       chromeless,
-      dark,
-      iconAfter,
       dim,
       stretch,
       tooltip,
       tooltipProps,
       className,
       theme,
+      circular,
+      circleSize,
+      circleProps,
       ...props
     } = this.props
 
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
+    const wrapper = circular
+      ? this.circleWrapper(circleSize, circleProps)
+      : idFn
 
     return (
       <segment
-        key={seg}
         $hasIconBefore={hasIconBefore}
         $hasIconAfter={hasIconAfter}
         $first={!segmented || (!spaced && first)}
@@ -59,10 +96,7 @@ export default class Button {
         $clickable={onClick || clickable}
         $activeOn={active}
         className={`${className || ''} ${this.uniq}`}
-        onClick={e => {
-          if (onClick) onClick(e)
-          if (onChange) onChange(seg)
-        }}
+        onClick={onClick}
         {...props}
       >
         <Icon
@@ -74,13 +108,15 @@ export default class Button {
           color={color || iconColor}
           {...iconProps}
         />
-        <children if={children} style={{ color }}>
-          <glowWrap if={!active}>
-            <Glow full scale={0.7} color={[0, 0, 0]} opacity={0.04} />
-          </glowWrap>
-          {children}
-        </children>
-        {after || null}
+        {wrapper(
+          <children if={children} style={{ color }}>
+            <glowWrap if={!active}>
+              <Glow full scale={0.7} color={[0, 0, 0]} opacity={0.04} />
+            </glowWrap>
+            {children}
+            {after || null}
+          </children>
+        )}
         <Popover
           if={tooltip}
           theme="dark"

@@ -47,6 +47,7 @@ export default class Drawer {
       zIndex,
       attach,
       className,
+      overlayBlur,
       ...props
     } = this.props
 
@@ -75,6 +76,7 @@ export default class Drawer {
         </panel>
         <overlay
           $overlayOpen={open}
+          $overlayBg={{ blur: overlayBlur }}
           onClick={e => {
             e.preventDefault()
             onClickOverlay(false, e)
@@ -97,6 +99,16 @@ export default class Drawer {
         z: 0,
       },
     },
+    // darken bg much less if blurring
+    overlayBg: ({ blur }) =>
+      blur
+        ? {
+            backdropFilter: `blur(${blur}px)`,
+            background: 'rgba(0,0,0,0.01)',
+          }
+        : {
+            background: 'rgba(0,0,0,0.25)',
+          },
     panel: {
       pointerEvents: 'none',
       background: '#fff',
@@ -125,7 +137,6 @@ export default class Drawer {
       right: 0,
       bottom: 0,
       opacity: 0,
-      background: 'rgba(0,0,0,0.25)',
       transition: 'all ease-in-out 250ms',
       zIndex: -1,
       pointerEvents: 'none',

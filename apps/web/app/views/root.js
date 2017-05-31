@@ -13,6 +13,7 @@ import CommanderStore from '~/stores/commander'
 import LayoutStore from '~/stores/layout'
 import CreateDocument from '~/views/document/create'
 import RedBox from 'redbox-react'
+import Draft from './document/draft'
 
 // stores attached here via provide give us nice ways
 // to share logic horizontally between any component
@@ -89,21 +90,10 @@ export default class Root extends React.Component {
           >
             <CurrentPage key={Router.key} />
           </content>
-          <Button
-            if={!layoutStore.creatingDoc}
-            circular
-            onClick={() => layoutStore.createDoc()}
-            $circleButton
-            icon="add"
-          />
+          <Draft />
         </Wrap>
         <Errors />
         <Sidebar />
-        <CreateDocument
-          doc={layoutStore.creatingDoc}
-          isOpen={layoutStore.creatingDoc !== false}
-          onClose={() => (layoutStore.creatingDoc = false)}
-        />
       </Shortcuts>
     )
   }

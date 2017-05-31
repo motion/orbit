@@ -1,5 +1,5 @@
 import { view } from '~/helpers'
-import { PassThrough, Popover, Segment, Button } from '~/ui'
+import { Theme, PassThrough, Popover, Segment, Button } from '~/ui'
 import { BLOCKS, MARKS } from '../constants'
 
 @view
@@ -8,17 +8,7 @@ export default class SelectBar {
     const { selection, barButtons, pluginCategories } = editorStore
     const PAD = 40
 
-    console.log(
-      pluginCategories.map(category => (
-        <Segment theme="dark" padded key={category}>
-          {editorStore.buttonsFor(category).map((button, i) => (
-            <PassThrough key={i}>
-              {button}
-            </PassThrough>
-          ))}
-        </Segment>
-      ))
-    )
+    console.log('pluginCategories', pluginCategories)
 
     return (
       <Popover
@@ -31,17 +21,19 @@ export default class SelectBar {
         top={selection.mouseUp.y + PAD}
         escapable
       >
-        <bar $$row>
-          {pluginCategories.map(category => (
-            <Segment theme="dark" padded key={category}>
-              {editorStore.buttonsFor(category).map((button, i) => (
-                <PassThrough editorStore={editorStore} key={i}>
-                  {button}
-                </PassThrough>
-              ))}
-            </Segment>
-          ))}
-        </bar>
+        <Theme name="dark">
+          <bar $$row>
+            {pluginCategories.map(category => (
+              <Segment padded key={category}>
+                {editorStore.buttonsFor(category).map((button, i) => (
+                  <PassThrough editorStore={editorStore} key={i}>
+                    {button}
+                  </PassThrough>
+                ))}
+              </Segment>
+            ))}
+          </bar>
+        </Theme>
       </Popover>
     )
   }

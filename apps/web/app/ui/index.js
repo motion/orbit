@@ -1,3 +1,4 @@
+export { Theme, ThemeProvide } from 'gloss'
 export Link from './link'
 export List from './list'
 export Title from './title'

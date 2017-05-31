@@ -27,14 +27,20 @@ class Quote {
 }
 
 const createButton = name => ({ editorStore }) => {
-  const onClick = (event: Event) => {
-    event.preventDefault()
-    const isActive = editorStore.state.blocks.some(
-      block => block.type === QUOTE
-    )
-    editorStore.tranform(t => t.setBlock(isActive ? BLOCKS.PARAGRAPH : QUOTE))
-  }
-  return <Button icon="textquote" onClick={onClick} />
+  return (
+    <Button
+      icon="textquote"
+      onClick={(event: Event) => {
+        event.preventDefault()
+        const isActive = editorStore.state.blocks.some(
+          block => block.type === QUOTE
+        )
+        editorStore.transform(t =>
+          t.setBlock(isActive ? BLOCKS.PARAGRAPH : QUOTE)
+        )
+      }}
+    />
+  )
 }
 
 export default class QuotePlugin {

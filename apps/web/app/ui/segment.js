@@ -3,6 +3,7 @@ import { string, object } from 'prop-types'
 import { view } from '~/helpers'
 import Button from './button'
 import { pickBy } from 'lodash'
+import { Provider } from 'react-tunnel'
 
 const notUndefined = x => typeof x !== 'undefined'
 
@@ -44,81 +45,74 @@ const notUndefined = x => typeof x !== 'undefined'
       children,
       active,
       title,
-      slim,
-      tiny,
-      chromeless,
-      dim,
       stretch,
       sync,
-      theme,
-      clickable,
-      spaced,
       padded,
       ...props
     } = this.props
 
-    const childProps = pickBy(
-      {
-        slim,
-        theme,
-        chromeless,
-        dim,
-        stretch,
-        tiny,
-        spaced,
-        clickable: sync || onChange || clickable,
-      },
-      notUndefined
-    )
-
     const curActive = typeof active === 'undefined' ? this.active : active
 
-    let clonedChildren = null
+    let finalChildren = null
+
     if (children) {
       const realChildren = React.Children
         .map(children, _ => _)
         .filter(child => !!child)
-      clonedChildren = realChildren.map((child, i) =>
-        React.cloneElement(child, {
-          first: i === 0,
-          last: i === realChildren.length - 1,
-          segmented: true,
-          ...(child.type && child.type.isSegment ? childProps : null),
-        })
-      )
+
+      finalChildren = realChildren.map((child, i) => (
+        <Provider
+          key={i}
+          provide={{
+            uiSegment: {
+              first: i === 0,
+              last: i === realChildren.length - 1,
+            },
+          }}
+        >
+          {() => child}
+        </Provider>
+      ))
+    } else if (Array.isArray(items)) {
+      finalChildren = items.map((seg, i) => {
+        const { text, id, icon, ...segmentProps } = typeof seg === 'object'
+          ? seg
+          : { text: seg, id: seg }
+
+        return (
+          <Provider
+            key={i}
+            provide={{
+              uiSegment: {
+                first: i === 0,
+                last: i === items.length - 1,
+              },
+            }}
+          >
+            <Button
+              active={(id || icon) === curActive}
+              icon={onlyIcons ? text : icon}
+              iconSize={size}
+              iconColor={color}
+              onChange={() => {
+                this.select(id)
+                onChange(seg)
+              }}
+              {...segmentProps}
+            >
+              {!onlyIcons && text}
+            </Button>
+          </Provider>
+        )
+      })
     }
+
+    console.log('finalChildren is', finalChildren)
 
     return (
       <container {...props}>
         <title if={title}>{title}</title>
-        {Array.isArray(items) &&
-          items.map((seg, i) => {
-            const { text, id, icon, ...segmentProps } = typeof seg === 'object'
-              ? seg
-              : { text: seg, id: seg }
-
-            return (
-              <Button
-                segmented
-                key={i}
-                first={i === 0}
-                last={i === items.length - 1}
-                active={(id || icon) === curActive}
-                icon={onlyIcons ? text : icon}
-                iconSize={size}
-                iconColor={color}
-                onChange={() => {
-                  this.select(id)
-                  onChange(seg)
-                }}
-                {...segmentProps}
-                {...childProps}
-              >
-                {!onlyIcons && text}
-              </Button>
-            )
-          })}
-        {clonedChildren}
+        {finalChildren}
       </container>
     )
   }

@@ -5,16 +5,16 @@ import Glow from './glow'
 import Popover from './popover'
 import Circle from './circle'
 import type { Color } from 'gloss'
+import injectSegmented from './helpers/injectSegmented'
 
 const RADIUS = 5
 const idFn = _ => _
 
+@injectSegmented
 @view.ui
 export default class Button {
   props: {
-    segmented?: boolean,
-    first?: boolean,
-    last?: boolean,
+    segmented?: object,
     clickable?: boolean,
     active?: boolean,
     chromeless?: boolean,
@@ -38,7 +38,6 @@ export default class Button {
     iconSize?: number,
   }
 
-  static isSegment = true
   static defaultProps = {
     iconColor: '#999',
     iconSize: 12,
@@ -54,8 +53,6 @@ export default class Button {
   render() {
     const {
       segmented,
-      first,
-      last,
       onClick,
       clickable,
       children,
@@ -91,8 +88,6 @@ export default class Button {
       <segment
         $hasIconBefore={hasIconBefore}
         $hasIconAfter={hasIconAfter}
-        $first={!segmented || (!spaced && first)}
-        $last={!segmented || (!spaced && last)}
         $clickable={onClick || clickable}
         $activeOn={active}
         className={`${className || ''} ${this.uniq}`}
@@ -179,15 +174,6 @@ export default class Button {
       zIndex: 10,
       borderRadius: RADIUS,
     },
-    first: {
-      borderTopLeftRadius: RADIUS,
-      borderBottomLeftRadius: RADIUS,
-    },
-    last: {
-      borderRightWidth: 1,
-      borderTopRightRadius: RADIUS,
-      borderBottomRightRadius: RADIUS,
-    },
     hasIconBefore: {
       '& children': {
         marginLeft: 3,
@@ -204,17 +190,32 @@ export default class Button {
   }
 
   static theme = {
-    theme: (props, context, activeTheme) => ({
-      segment: {
-        ...activeTheme,
-        '&:active': activeTheme,
-      },
-      activeOn: activeTheme,
-      clickable: {
-        '&:active': activeTheme,
-        '&:hover': {
-          background: activeTheme.background,
+    theme: (props, context, activeTheme) => {
+      return {
+        segment: {
+          ...activeTheme,
+          '&:active': activeTheme,
         },
+        activeOn: activeTheme,
+        clickable: {
+          '&:active': activeTheme,
+          '&:hover': {
+            background: activeTheme.background,
+          },
+        },
+      }
+    },
+    segmented: ({ segmented: { first, last } }) => ({
+      segment: {
+        ...(first && {
+          borderTopLeftRadius: RADIUS,
+          borderBottomLeftRadius: RADIUS,
+        }),
+        ...(last && {
+          borderRightWidth: 1,
+          borderTopRightRadius: RADIUS,
+          borderBottomRightRadius: RADIUS,
+        }),
       },
     }),
     spaced: {
@@ -232,15 +233,11 @@ export default class Button {
     chromeless: {
       segment: {
         borderWidth: 0,
+        borderRightWidth: 0,
+        borderLeftWidth: 0,
         '&:hover': {
           opacity: 0.8,
         },
-      },
-      last: {
-        borderRightWidth: 0,
-      },
-      first: {
-        borderLeftWidth: 0,
       },
     },
     disabled: {

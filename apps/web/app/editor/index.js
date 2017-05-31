@@ -52,7 +52,9 @@ export default class EditorView {
         onMouseUp={this.onDocumentMouseUp}
       >
         <SlotFill.Fill if={!editorStore.inline} name="actions">
-          test
+          <test>
+            test
+          </test>
         </SlotFill.Fill>
         <Editor
           if={editorStore.state}

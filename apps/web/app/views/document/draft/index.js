@@ -67,24 +67,25 @@ export default class Draft {
 
     return (
       <draft>
-        <Drawer
-          closeOnEsc
-          from="bottom"
-          open={isActive}
-          overlayBlur={3}
-          onClickOverlay={store.onClose}
-        >
-          <content if={isActive}>
-            <editor>
-              <DocView inline={false} id={doc._id} document={doc} />
-            </editor>
-            <submit>
-              <Button onClick={store.onSaveDraft} icon="simple-add">
-                create document
-              </Button>
-            </submit>
-          </content>
-        </Drawer>
+        <Portal isOpened={true} isOpen={true}>
+          <Drawer
+            from="bottom"
+            open={isActive}
+            overlayBlur={5}
+            onClickOverlay={store.onClose}
+          >
+            <content if={isActive}>
+              <editor>
+                <DocView inline={false} id={doc._id} document={doc} />
+              </editor>
+              <submit>
+                <Button onClick={store.onSaveDraft} icon="simple-add">
+                  create document
+                </Button>
+              </submit>
+            </content>
+          </Drawer>
+        </Portal>
         <CreateButton onClick={store.onCreateDraft} />
       </draft>
     )

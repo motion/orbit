@@ -15,6 +15,10 @@ export default class CommanderStore {
     })
   }
 
+  get activeDoc() {
+    return (this.docs || [])[this.highlightIndex] || null
+  }
+
   start() {}
 
   moveHighlight = diff => {
@@ -25,14 +29,13 @@ export default class CommanderStore {
   }
 
   navTo = doc => {
-    this.close()
-    doc.routeTo()
+    this.onClose()
+    Router.go(doc.url())
   }
 
-  close = () => {
-    this.textbox.blur()
-    this.open = false
+  onClose = () => {
     this.setText('')
+    this.open = false
   }
 
   onShortcut = (action, event) => {
@@ -59,6 +62,7 @@ export default class CommanderStore {
   setText = value => {
     this.text = value
     this.highlightIndex = 0
+    this.open = true
     if (this.props.onChange) {
       this.props.onChange(value)
     }

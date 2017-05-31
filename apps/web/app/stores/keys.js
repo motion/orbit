@@ -10,6 +10,7 @@ const keymap = {
     down: 'down',
     enter: 'enter',
     esc: 'esc',
+    commander: 'command+t',
     delete: ['delete', 'backspace'],
   },
 }

@@ -4,12 +4,16 @@ import * as Plugins from '~/editor/plugins'
 import * as Rules from '~/editor/rules'
 import { flatten } from 'lodash'
 
-const plugins = Object.keys(Plugins).map(key => Plugins[key])
-const rules = flatten(Object.keys(Rules).map(key => Rules[key]))
-
 @view.ui
 export default class JotEditor {
+  plugins = Object.keys(Plugins).map(key => Plugins[key])
+  rules = flatten(Object.keys(Rules).map(key => Rules[key]))
+
   render(props) {
-    return <Editor plugins={plugins} rules={rules} {...props} />
+    return <Editor plugins={this.plugins} rules={this.rules} {...props} />
   }
+}
+
+if (module.hot) {
+  module.hot.accept()
 }

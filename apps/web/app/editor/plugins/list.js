@@ -7,6 +7,7 @@ import { replacer } from '~/editor/helpers'
 import AutoReplace from 'slate-auto-replace'
 import { createButton } from './helpers'
 
+const { UL_LIST, OL_LIST, LIST_ITEM } = BLOCKS
 const editList = EditList()
 
 const ol_list = node(
@@ -26,18 +27,18 @@ export default class List {
   category = 'blocks'
 
   nodes = {
-    [BLOCKS.OL_LIST]: ol_list,
-    [BLOCKS.UL_LIST]: ul_list,
-    [BLOCKS.LIST_ITEM]: list_item,
+    [OL_LIST]: ol_list,
+    [UL_LIST]: ul_list,
+    [LIST_ITEM]: list_item,
   }
 
   barButtons = [
-    createButton('list-bullet', BLOCKS.UL_LIST, {
-      wrap: t => editList.transforms.wrapInList(t, BLOCKS.UL_LIST),
+    createButton('list-bullet', UL_LIST, {
+      wrap: t => editList.transforms.wrapInList(t, UL_LIST),
       unwrap: editList.transforms.unwrapList,
     }),
-    createButton('list-number', BLOCKS.OL_LIST, {
-      wrap: t => editList.transforms.wrapInList(t, BLOCKS.OL_LIST),
+    createButton('list-number', OL_LIST, {
+      wrap: t => editList.transforms.wrapInList(t, OL_LIST),
       unwrap: editList.transforms.unwrapList,
     }),
   ]

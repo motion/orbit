@@ -107,9 +107,6 @@ export default class EditorStore {
     )
   }
 
-  toggleMark = mark => () => this.transform(t => t.toggleMark(mark))
-  toggleBlock = mark => () => this.transform(t => t.setBlock(mark))
-
   // HELPERS
 
   focus = () => {
@@ -131,6 +128,9 @@ export default class EditorStore {
     )
 
   helpers = {
+    toggleMark: mark => () => this.transform(t => t.toggleMark(mark)),
+    toggleBlock: mark => () => this.transform(t => t.setBlock(mark)),
+
     currentBlockIs: type => {
       this.selection.lastNode
       this.state

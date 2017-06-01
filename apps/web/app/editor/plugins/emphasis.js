@@ -11,7 +11,15 @@ const createButton = (mark, icon) => ({ editorStore }) => {
     return null
   }
 
-  return <Button icon={icon} onClick={() => editorStore.toggleMark(mark)} />
+  return (
+    <Button
+      icon={icon}
+      onClick={() => {
+        console.log('toggle that shit')
+        editorStore.helpers.toggleMark(mark)
+      }}
+    />
+  )
 }
 
 const buttons = [

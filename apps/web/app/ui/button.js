@@ -94,23 +94,25 @@ export default class Button {
         onClick={onClick}
         {...props}
       >
-        <Icon
-          if={icon}
-          $icon
-          $iconAfter={hasIconAfter}
-          name={icon}
-          size={iconSize}
-          color={color || iconColor}
-          {...iconProps}
-        />
         {wrapper(
-          <children if={children} style={{ color }}>
-            <glowWrap if={!active}>
-              <Glow full scale={0.7} color={[0, 0, 0]} opacity={0.04} />
-            </glowWrap>
-            {children}
+          <wrap>
+            <Icon
+              if={icon}
+              $icon
+              $iconAfter={hasIconAfter}
+              name={icon}
+              size={iconSize}
+              color={color || iconColor}
+              {...iconProps}
+            />
+            <children if={children} style={{ color }}>
+              <glowWrap if={!active}>
+                <Glow full scale={0.7} color={[0, 0, 0]} opacity={0.04} />
+              </glowWrap>
+              {children}
+            </children>
             {after || null}
-          </children>
+          </wrap>
         )}
         <Popover
           if={tooltip}
@@ -148,6 +150,9 @@ export default class Button {
       borderStyle: 'dotted',
       borderRightWidth: 0,
       position: 'relative',
+    },
+    wrap: {
+      flex: 1,
     },
     clickable: {
       cursor: 'pointer',
@@ -230,6 +235,13 @@ export default class Button {
     stretch: {
       segment: {
         flex: 1,
+      },
+    },
+    circular: {
+      segment: {
+        borderWidth: 0,
+        borderRightWidth: 0,
+        borderLeftWidth: 0,
       },
     },
     chromeless: {

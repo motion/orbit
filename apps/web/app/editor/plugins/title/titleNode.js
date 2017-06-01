@@ -1,12 +1,10 @@
 import React from 'react'
 import { view } from '~/helpers'
 import node from '~/editor/node'
-import AutoReplace from 'slate-auto-replace'
-import { BLOCKS } from '~/editor/constants'
 
 @node
 @view.ui
-class TitleNode {
+export default class TitleNode {
   render({ editorStore, children, node, attributes, ...props }) {
     const level = node.data.get('level')
     const Tag = props => React.createElement(`h${level}`, props)
@@ -34,29 +32,4 @@ class TitleNode {
       color: [0, 0, 0, 0.5],
     },
   }
-}
-
-export default class TitlePlugin {
-  name = BLOCKS.TITLE
-  category = 'blocks'
-
-  nodes = {
-    [BLOCKS.TITLE]: TitleNode,
-  }
-
-  plugins = [
-    // title
-    AutoReplace({
-      trigger: 'space',
-      before: /^(#{2,6})$/,
-      transform: (transform, e, data, matches) => {
-        const [hashes] = matches.before
-        const level = hashes.length
-        return transform.setBlock({
-          type: 'title',
-          data: { level },
-        })
-      },
-    }),
-  ]
 }

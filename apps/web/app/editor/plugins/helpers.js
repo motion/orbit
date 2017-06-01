@@ -12,7 +12,11 @@ export const createButton = (icon, type, opts = {}) =>
       <Button
         icon={icon}
         active={isActive}
-        onClick={() => {
+        onClick={(event: MouseEvent) => {
+          console.log('clcik')
+          event.preventDefault()
+          event.stopPropagation()
+
           const action = isActive ? unwrap : wrap
           // allow passing in own wrap/unwrap
           editorStore.transform(

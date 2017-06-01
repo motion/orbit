@@ -71,7 +71,6 @@ export default class DocItem {
         </content>
 
         <info if={!hideMeta}>
-          <nick />
           <item $author>{doc.authorId}</item>
           <item onClick={this.navigate}>
             <Icon name="link" size={12} color={[0, 0, 0, 0.5]} />
@@ -108,14 +107,6 @@ export default class DocItem {
       '&:hover': {
         opacity: 1,
       },
-    },
-    nick: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: 30,
-      height: 1,
-      background: '#eee',
     },
     minibtn: {
       color: '#aaa',

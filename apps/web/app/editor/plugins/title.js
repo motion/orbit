@@ -32,6 +32,7 @@ class TitleNode {
       fontSize: 14,
       textTransform: 'uppercase',
       color: [0, 0, 0, 0.5],
+      marginBottom: 5,
     },
   }
 }
@@ -58,5 +59,18 @@ export default class TitlePlugin {
         })
       },
     }),
+    {
+      // on enter create a new paragraph, not a new title
+      onKeyDown: (e, data, state) => {
+        const { startBlock } = state
+        const isEnter = e.which === 13
+
+        console.log('isEnter', isEnter, 'block', startBlock.type)
+
+        if (startBlock.type !== BLOCKS.TITLE || !isEnter) return
+
+        return state.transform().insertBlock('paragraph').apply()
+      },
+    },
   ]
 }

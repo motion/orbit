@@ -47,12 +47,14 @@ export default class EditorView {
   render({ readOnly, editorStore }) {
     const { spec } = editorStore
 
+    const showToolbar = !editorStore.inline && readOnly !== true
+
     return (
       <document
         onClick={editorStore.handleDocumentClick}
         onMouseUp={this.onDocumentMouseUp}
       >
-        <SlotFill.Fill if={!editorStore.inline} name="documentActions">
+        <SlotFill.Fill if={showToolbar} name="documentActions">
           <Bar editorStore={editorStore} />
         </SlotFill.Fill>
         <Editor

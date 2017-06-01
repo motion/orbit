@@ -16,7 +16,7 @@ export default class DocumentView {
     inline?: boolean,
   }
 
-  render({ id, store }) {
+  render({ id, readOnly, store }) {
     if (!store.document) {
       return <loading />
     }
@@ -24,7 +24,11 @@ export default class DocumentView {
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
         <document>
-          <Editor inline={this.props.inline} onEditor={store.onEditor} />
+          <Editor
+            readOnly={readOnly}
+            inline={this.props.inline}
+            onEditor={store.onEditor}
+          />
         </document>
       </docview>
     )
@@ -41,8 +45,10 @@ export default class DocumentView {
       justifyContent: 'center',
     },
     document: {
-      padding: [8, 0],
-      width: '100%',
+      padding: 0,
+      maxWidth: 650,
+      flex: 1,
+      marginTop: 20,
     },
   }
 }

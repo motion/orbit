@@ -13,7 +13,7 @@ export default class Commander {
   render({ store }) {
     const searchIcon = <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
     return (
-      <bar if={false} $$align="center" $$row $$flex>
+      <bar $$align="center" $$row $$flex>
         {searchIcon}
         <input
           if={!store.isOpen}
@@ -57,7 +57,7 @@ export default class Commander {
                     key={store.text + store.highlightIndex}
                     if={store.activeDoc}
                   >
-                    <DocView id={store.activeDoc._id} />
+                    <DocView readOnly id={store.activeDoc._id} />
                   </preview>
                 </results>
               </commander>
@@ -75,11 +75,12 @@ export default class Commander {
       left: 0,
       right: 0,
       bottom: 0,
-      zIndex: 100,
+      zIndex: 10000,
       backdropFilter: 'blur(5px)',
     },
     commander: {
       position: 'absolute',
+      overflow: 'scroll',
       top: 0,
       left: 0,
       right: 0,
@@ -91,7 +92,7 @@ export default class Commander {
     },
     overlaySearch: {
       marginTop: 3,
-      marginLeft: 213,
+      marginLeft: 79,
       alignItems: 'center',
       height: 30,
     },
@@ -104,6 +105,7 @@ export default class Commander {
     },
     preview: {
       padding: 10,
+      position: 'relative',
       flex: 4,
     },
     input: {
@@ -133,12 +135,13 @@ export default class Commander {
       padding: 20,
       border: '1px solid #eee',
       cursor: 'pointer',
-      flex: 1,
+      height: 100,
       width: '100%',
       marginBottom: 10,
       background: `rgba(255, 255, 255, 0.7)`,
     },
     matches: {
+      overflow: 'scroll',
       padding: 10,
       flex: 1,
       width: 285,

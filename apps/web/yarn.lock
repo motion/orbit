@@ -2593,9 +2593,9 @@ globals@^9.0.0:
   version "9.17.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.17.0.tgz#0c0ca696d9b9bb694d2e5470bd37777caad50286"
 
-gloss@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.3.0.tgz#06080c7e5083cc4d12b10c82762a3d0146563004"
+gloss@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.3.1.tgz#7ebe3fb0d0cb2eac2145e871afd5e6ad511ddd84"
   dependencies:
     aphrodite-jss "^1.0.0"
     babel-helper-builder-react-jsx "^6.24.1"

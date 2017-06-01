@@ -40,10 +40,7 @@ export default class Header {
           </Segment>
         </nav>
         <bar $$centered $$flex $$row $$overflow="hidden">
-          <Commander
-            onSubmit={layoutStore.createDoc}
-            onChange={layoutStore.ref('title').set}
-          />
+          <Commander />
         </bar>
         <rest $$row>
           <SlotFill.Slot name="documentActions">

@@ -1,3 +1,7 @@
+document > pane { 
+  padding-bottom: 30px;
+}
+
 body {
   font-family: -apple-system, 'Lato', sans-serif;
   margin: 0;

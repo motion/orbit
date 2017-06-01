@@ -2,22 +2,22 @@ import React from 'react'
 import { view } from '~/helpers'
 import { Button } from '~/ui'
 import { MARKS } from '~/editor/constants'
+import { createButton } from './helpers'
 
 const { ITALIC, BOLD, UNDERLINE } = MARKS
 
-const createButton = (mark, icon) => ({ editorStore }) => {
-  // TODO: show only on textual ndoes
-  if (!editorStore.selection.selected) {
-    return null
-  }
-
-  return <Button icon={icon} onClick={() => editorStore.toggleMark(mark)} />
+const createMarkButton = (icon, mark) => {
+  const toggle = t => t.toggleMark(mark)
+  return createButton(icon, mark, {
+    wrap: toggle,
+    unwrap: toggle,
+  })
 }
 
 const buttons = [
-  createButton(ITALIC, 'textitalic'),
-  createButton(BOLD, 'textbold'),
-  createButton(UNDERLINE, 'textunderline'),
+  createMarkButton('textitalic', ITALIC),
+  createMarkButton('textbold', BOLD),
+  createMarkButton('textunderline', UNDERLINE),
 ]
 
 export default class EmphasisPlugin {

@@ -3,6 +3,7 @@ import { Raw } from 'slate'
 import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
 import { computed } from '~/helpers'
+import { getSpec } from './helpers'
 
 export default class EditorStore {
   props: {
@@ -58,53 +59,7 @@ export default class EditorStore {
 
   // return slate-like schema
   @computed get spec() {
-    const schema = {
-      marks: {},
-      nodes: {},
-      rules: this.rules,
-    }
-    const response = {
-      schema,
-      plugins: [],
-      contextButtons: [],
-      barButtons: [],
-    }
-
-    // add to slate spec
-    for (const plugin of this.plugins) {
-      const {
-        rules,
-        plugins,
-        marks,
-        nodes,
-        contextButtons,
-        barButtons,
-      } = plugin
-
-      if (rules) {
-        schema.rules = [...schema.rules, ...rules]
-      }
-      if (plugins) {
-        response.plugins = [...response.plugins, ...plugins]
-      }
-      if (marks) {
-        schema.marks = { ...schema.marks, ...marks }
-      }
-      if (nodes) {
-        schema.nodes = { ...schema.nodes, ...nodes }
-      }
-      if (contextButtons) {
-        response.contextButtons = [
-          ...response.contextButtons,
-          ...contextButtons,
-        ]
-      }
-      if (barButtons) {
-        response.barButtons = [...response.barButtons, ...barButtons]
-      }
-    }
-
-    return response
+    return getSpec(this.plugins, this.rules)
   }
 
   @computed get allPlugins() {
@@ -152,9 +107,6 @@ export default class EditorStore {
     )
   }
 
-  toggleMark = mark => () => this.transform(t => t.toggleMark(mark))
-  toggleBlock = mark => () => this.transform(t => t.setBlock(mark))
-
   // HELPERS
 
   focus = () => {
@@ -168,24 +120,27 @@ export default class EditorStore {
   pluginsByCategory = category =>
     this.plugins.filter(plugin => plugin.category === category)
 
-  collectFromPlugin = (category, thing) =>
-    flatten(
-      this.pluginsByCategory(category)
-        .map(plugin => plugin[thing])
-        .filter(x => !!x)
-    )
-
   helpers = {
+    toggleMark: mark => this.transform(t => t.toggleMark(mark)),
+    toggleBlock: mark => this.transform(t => t.setBlock(mark)),
+
+    collectButtons: (category, type) =>
+      flatten(
+        this.pluginsByCategory(category)
+          .map(plugin => plugin[type])
+          .filter(x => !!x)
+      ),
+
     currentBlockIs: type => {
       this.selection.lastNode
-      this.state
       return this.state.blocks.some(block => block.type === type)
     },
 
     contextButtonsFor: category =>
-      this.collectFromPlugin(category, 'contextButtons'),
+      this.helpers.collectButtons(category, 'contextButtons'),
 
-    barButtonsFor: category => this.collectFromPlugin(category, 'barButtons'),
+    barButtonsFor: category =>
+      this.helpers.collectButtons(category, 'barButtons'),
   }
 
   get pluginCategories() {

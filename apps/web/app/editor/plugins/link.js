@@ -36,7 +36,7 @@ export default class Link {
   barButtons = [() => <Button icon="link" tooltip="link" />]
   plugins = [
     PasteLinkify({
-      type: 'link',
+      type: BLOCKS.LINK,
     }),
   ]
 }

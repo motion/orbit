@@ -96,33 +96,31 @@ export default class HoverGlow {
     this.setState({ track })
   }
 
-  render() {
+  render({
+    boundPct,
+    full,
+    scale,
+    color,
+    zIndex,
+    resist,
+    opacity,
+    inverse,
+    borderRadius,
+    shadowSize,
+    shadowOffsetTop,
+    shadowOffsetLeft,
+    width: propWidth,
+    height: propHeight,
+    size,
+    clickDuration,
+    clickScale,
+    transition,
+    parent,
+    itemProps,
+  }) {
     if (!this.state.track) {
       return <overlay ref="root" style={{ opacity: 0 }} />
     }
-
-    const {
-      boundPct,
-      full,
-      scale,
-      color,
-      zIndex,
-      resist,
-      opacity,
-      inverse,
-      borderRadius,
-      shadowSize,
-      shadowOffsetTop,
-      shadowOffsetLeft,
-      width: propWidth,
-      height: propHeight,
-      size,
-      clickDuration,
-      clickScale,
-      transition,
-      parent,
-      itemProps,
-    } = this.props
 
     // find width / height (full == match size of container)
     let width = size || propWidth

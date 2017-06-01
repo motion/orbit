@@ -21,6 +21,7 @@ export default class EditorView {
   props: {
     rules?: Array,
     plugins?: Array,
+    inline?: boolean,
   }
 
   static defaultProps = {

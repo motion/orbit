@@ -12,7 +12,6 @@
             "decoratorName": "view"
           }
         ],
-        "motion-view/transform",
         "babel-plugin-jsx-if",
         [
           "babel-plugin-root-import",

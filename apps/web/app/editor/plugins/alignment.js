@@ -1,4 +1,5 @@
 import { Button } from '~/ui'
+import { createButton } from './helpers'
 
 export default class Alignment {
   name = 'alignment'
@@ -11,8 +12,8 @@ export default class Alignment {
     () => <Button icon="align-justify" />,
   ]
 
-  barButtons = [
-    () => <Button icon="margin-left" />,
-    () => <Button icon="margin-right" />,
-  ]
+  // barButtons = [
+  //   () => <Button icon="margin-left" />,
+  //   () => <Button icon="margin-right" />,
+  // ]
 }

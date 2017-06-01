@@ -1,3 +1,4 @@
+import { view } from '~/helpers'
 import node from '~/editor/node'
 import EditList from 'slate-edit-list'
 import { Button } from '~/ui'
@@ -6,36 +7,41 @@ import { replacer } from '~/editor/helpers'
 import AutoReplace from 'slate-auto-replace'
 import { createButton } from './helpers'
 
+const { UL_LIST, OL_LIST, LIST_ITEM } = BLOCKS
 const editList = EditList()
 
-const ol_list = node(props => (
-  <ol $$ol {...props.attributes}>{props.children}</ol>
-))
+const ol_list = node(
+  view(props => <ol $$ol {...props.attributes}>{props.children}</ol>)
+)
 
-const ul_list = node(props => (
-  <ul $$ul {...props.attributes}>{props.children}</ul>
-))
+const ul_list = node(
+  view(props => <ul $$ul {...props.attributes}>{props.children}</ul>)
+)
 
-const list_item = props => <li $$li {...props.attributes}>{props.children}</li>
+const list_item = view(props => (
+  <li $$li {...props.attributes}>{props.children}</li>
+))
 
 export default class List {
   name = 'list'
   category = 'blocks'
 
   nodes = {
-    [BLOCKS.OL_LIST]: ol_list,
-    [BLOCKS.UL_LIST]: ul_list,
-    [BLOCKS.LIST_ITEM]: list_item,
+    [OL_LIST]: ol_list,
+    [UL_LIST]: ul_list,
+    [LIST_ITEM]: list_item,
   }
 
   barButtons = [
-    createButton('list-bullet', BLOCKS.UL_LIST, {
-      wrap: t => editList.transforms.wrapInList(t, BLOCKS.UL_LIST),
+    createButton('list-bullet', UL_LIST, {
+      wrap: t => editList.transforms.wrapInList(t, UL_LIST),
       unwrap: editList.transforms.unwrapList,
+      isActive: editList.utils.isSelectionInList,
     }),
-    createButton('list-number', BLOCKS.OL_LIST, {
-      wrap: t => editList.transforms.wrapInList(t, BLOCKS.OL_LIST),
+    createButton('list-number', OL_LIST, {
+      wrap: t => editList.transforms.wrapInList(t, OL_LIST),
       unwrap: editList.transforms.unwrapList,
+      isActive: editList.utils.isSelectionInList,
     }),
   ]
 

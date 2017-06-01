@@ -4,16 +4,13 @@ import { view } from '~/helpers'
 import { Icon } from '~/ui'
 import Editor from '~/views/editor'
 import DocumentStore from './store'
-import type CommanderStore from '~/stores/commander'
 
-@view.attach('commanderStore')
 @view({
   store: DocumentStore,
 })
 export default class DocumentView {
   props: {
     id?: string,
-    commanderStore: CommanderStore,
     focusOnMount?: boolean,
     insidePlace?: boolean,
     inline?: boolean,
@@ -21,7 +18,7 @@ export default class DocumentView {
 
   render({ id, store }) {
     if (!store.document) {
-      return <loading>loading</loading>
+      return <loading />
     }
 
     return (

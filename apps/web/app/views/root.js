@@ -10,9 +10,7 @@ import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
 import Commander from '~/views/commander'
 import KeyStore from '~/stores/keys'
-import CommanderStore from '~/stores/commander'
 import LayoutStore from '~/stores/layout'
-import CreateDocument from '~/views/document/create'
 import RedBox from 'redbox-react'
 import Draft from './document/draft'
 
@@ -41,7 +39,6 @@ import Draft from './document/draft'
 @view.provide({
   layoutStore: LayoutStore,
   keyStore: KeyStore,
-  commanderStore: CommanderStore,
 })
 export default class Root extends React.Component {
   static childContextTypes = {

@@ -1,11 +1,11 @@
 import { Document } from '@jot/models'
 import { includes } from 'lodash'
 
+const idFn = _ => _
+
 export default class CommanderStore {
-  focused = false
-  open = false
+  isOpen = false
   docs = Document.recent()
-  textbox = null
   text = ''
   highlightIndex = 0
 
@@ -19,8 +19,6 @@ export default class CommanderStore {
     return (this.docs || [])[this.highlightIndex] || null
   }
 
-  start() {}
-
   moveHighlight = diff => {
     this.highlightIndex += diff
 
@@ -28,51 +26,35 @@ export default class CommanderStore {
     if (this.highlightIndex >= this.docs.length) this.highlightIndex = 0
   }
 
+  handleShortcuts = (action, event) => {
+    const actions = {
+      up: () => this.moveHighlight(-1),
+      down: () => this.moveHighlight(1),
+      esc: () => this.onClose(),
+      enter: () => this.navTo(this.activeDoc),
+    }
+    ;(actions[action] || idFn)()
+  }
+
   navTo = doc => {
     this.onClose()
     Router.go(doc.url())
   }
 
-  onClose = () => {
-    this.setText('')
-    this.open = false
+  onOpen = () => {
+    this.isOpen = true
   }
 
-  onShortcut = (action, event) => {
-    console.log('got', action)
-    this.emit('key', action)
-
-    // if (this.textbox.value.indexOf('/') === 0) {
-    //   this.open = true
-    // }
-
-    // if (which === 40) this.moveHighlight(1)
-    // if (which === 38) this.moveHighlight(-1)
-    // if (which === 27) this.close()
-
-    // if (which === 13) {
-    //   if (this.match) this.navTo(this.math)
-    //   else {
-    //     this.props.onSubmit(this.text)
-    //     this.setText('')
-    //   }
-    // }
+  onClose = () => {
+    this.setText('')
+    this.isOpen = false
   }
 
   setText = value => {
     this.text = value
     this.highlightIndex = 0
-    this.open = true
     if (this.props.onChange) {
       this.props.onChange(value)
     }
-  }
-
-  setFocused = () => {
-    this.focused = true
-  }
-
-  setBlurred = () => {
-    this.focused = false
   }
 }

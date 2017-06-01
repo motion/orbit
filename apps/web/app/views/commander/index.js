@@ -4,48 +4,39 @@ import Portal from 'react-portal'
 import { Icon } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 import DocView from '~/views/document'
+import CommanderStore from './store'
 
-@view.attach('commanderStore')
-@view
+@view.attach('keyStore')
+@view({
+  store: CommanderStore,
+})
 export default class Commander {
-  static defaultProps = {
-    onSubmit: _ => _,
-  }
-
-  render({ commanderStore: store, onChange, onClose, ...props }) {
+  render({ store }) {
+    const searchIcon = <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
     return (
-      <Shortcuts name="all" handler={store.onShortcut}>
-        <bar $$align="center" $$row $$flex>
-          <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
-          <input
-            {...props}
-            if={!store.open}
-            value={store.text}
-            onChange={e => store.setText(e.target.value)}
-            onKeyDown={store.onKeyDown}
-            onFocus={store.setFocused}
-            onBlur={store.setBlurred}
-            ref={el => (store.textbox = el)}
-          />
-          <Portal
-            closeOnEsc
-            isOpened={store.open}
-            onClose={() => {
-              store.open = false
-              if (onClose) {
-                onClose()
-              }
-            }}
-          >
+      <bar $$align="center" $$row $$flex>
+        {searchIcon}
+        <input
+          if={!store.isOpen}
+          value={store.text}
+          onChange={e => store.setText(e.target.value)}
+          onFocus={store.onOpen}
+        />
+        <Portal closeOnEsc isOpened={store.isOpen} onClose={store.onClose}>
+          <Shortcuts name="all" handler={store.handleShortcuts}>
             <container>
               <overlay />
               <commander>
                 <overlaySearch $$row>
-                  <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
+                  <overlayIcon>
+                    {searchIcon}
+                  </overlayIcon>
                   <input
                     $q
                     value={store.text}
                     onChange={e => store.setText(e.target.value)}
+                    onKeyDown={store.onKeyDown}
+                    ref={el => el && el.focus()}
                   />
                 </overlaySearch>
                 <results>
@@ -53,7 +44,7 @@ export default class Commander {
                     {store.matches.map((doc, index) => (
                       <match
                         onClick={() => store.navTo(doc)}
-                        key={index}
+                        key={doc._id}
                         onMouseEnter={() => {
                           store.highlightIndex = index
                         }}
@@ -63,15 +54,18 @@ export default class Commander {
                       </match>
                     ))}
                   </matches>
-                  <preview key={store.highlightIndex} if={store.activeDoc}>
+                  <preview
+                    key={store.text + store.highlightIndex}
+                    if={store.activeDoc}
+                  >
                     <DocView id={store.activeDoc._id} />
                   </preview>
                 </results>
               </commander>
             </container>
-          </Portal>
-        </bar>
-      </Shortcuts>
+          </Shortcuts>
+        </Portal>
+      </bar>
     )
   }
 
@@ -87,25 +81,24 @@ export default class Commander {
     },
     commander: {
       position: 'absolute',
-      top: 30,
+      top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      zIndex: 10000,
-      // right: SIDEBAR_WIDTH,
-      // left: 0,
-      // bottom: 80,
+      zIndex: 10001,
+    },
+    overlayIcon: {
+      marginTop: 3,
     },
     overlaySearch: {
-      marginLeft: 260,
+      marginTop: 3,
+      marginLeft: 213,
+      alignItems: 'center',
+      height: 30,
     },
     q: {
-      fontSize: 20,
-      border: '1px solid black',
-      width: 250,
-    },
-    center: {
-      justifyContent: 'center',
+      width: 300,
+      fontSize: 16,
     },
     results: {
       flexFlow: 'row',
@@ -136,20 +129,22 @@ export default class Commander {
       borderRadius: 5,
     },
     match: {
-      fontSize: 24,
+      fontSize: 18,
       fontWeight: 500,
       padding: 20,
       border: '1px solid #eee',
       cursor: 'pointer',
+      flex: 1,
+      width: '100%',
       marginBottom: 10,
       background: `rgba(255, 255, 255, 0.7)`,
     },
     matches: {
       padding: 10,
       flex: 1,
+      width: 285,
       overflow: 'hidden',
       overflowY: 'scroll',
-      width: 300,
       textSelect: 'none',
     },
   }

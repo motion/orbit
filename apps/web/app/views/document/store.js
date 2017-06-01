@@ -43,14 +43,6 @@ export default class DocumentStore {
       }
     })
 
-    if (!this.inline) {
-      this.on(this.props.commanderStore, 'key', name => {
-        if (name === 'down') {
-          this.editor.focus()
-        }
-      })
-    }
-
     // save
     this.react(
       () => [this.editor.contentState, this.hasNewContent, this.document._rev],

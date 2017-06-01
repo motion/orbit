@@ -152,7 +152,7 @@ export default class Button {
       position: 'relative',
     },
     wrap: {
-      flex: 1,
+      // flex: 1,
     },
     clickable: {
       cursor: 'pointer',

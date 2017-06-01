@@ -10,11 +10,42 @@ import { BLOCKS } from '~/editor/constants'
 import { createButton } from '../helpers'
 import { Column, Row } from './nodes'
 
-const insertRow = (transform, { columns = 2, textGetter } = {}) => {
+const DEFAULT_TEXT_GETTER = () => 'lorem'
+
+const createCol = (text, options) => {
+  return Slate.Block.create({
+    type: options.typeCol,
+    nodes: [
+      Slate.Raw.deserializeText(
+        {
+          kind: 'text',
+          text,
+        },
+        { terse: true }
+      ),
+    ],
+  })
+}
+
+const createRow = (
+  columns,
+  { textGetter = DEFAULT_TEXT_GETTER, ...options }
+) => {
+  const nodes = Range(0, columns)
+    .map(i => createCol(textGetter(i), options))
+    .toList()
+
+  return Slate.Block.create({
+    type: options.typeRow,
+    nodes,
+  })
+}
+
+const insertRow = (transform, { columns = 2, ...options } = {}) => {
   if (!transform.state.selection.startKey) {
     return false
   }
-  const row = this.createRow(columns, textGetter)
+  const row = createRow(columns, options)
   return transform.insertBlock(row)
 }
 
@@ -34,35 +65,11 @@ export default class RowPlugin {
 
   barButtons = [
     createButton('row', BLOCKS.ROW, {
-      wrap: insertRow,
+      wrap: t => insertRow(t, this.options),
     }),
   ]
 
-  createCol = text => {
-    return Slate.Block.create({
-      type: this.options.typeCol,
-      nodes: [
-        Slate.Raw.deserializeText(
-          {
-            kind: 'text',
-            text,
-          },
-          { terse: true }
-        ),
-      ],
-    })
-  }
-
-  createRow = (columns, textGetter = () => 'lorem') => {
-    const nodes = Range(0, columns)
-      .map(i => this.createCol(textGetter(i)))
-      .toList()
-
-    return Slate.Block.create({
-      type: this.options.typeRow,
-      nodes,
-    })
-  }
-
+  createCol = createCol
+  createRow = createRow
   insertRow = insertRow
 }

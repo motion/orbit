@@ -18,7 +18,7 @@ export const createButton = (icon, type, opts = {}) =>
           editorStore.transform(
             t =>
               action
-                ? action(t)
+                ? action(t, editorStore)
                 : t.setBlock(isActive ? BLOCKS.PARAGRAPH : type)
           )
         }}

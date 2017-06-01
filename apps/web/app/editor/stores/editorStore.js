@@ -120,27 +120,27 @@ export default class EditorStore {
   pluginsByCategory = category =>
     this.plugins.filter(plugin => plugin.category === category)
 
-  collectFromPlugin = (category, thing) =>
-    flatten(
-      this.pluginsByCategory(category)
-        .map(plugin => plugin[thing])
-        .filter(x => !!x)
-    )
-
   helpers = {
-    toggleMark: mark => () => this.transform(t => t.toggleMark(mark)),
-    toggleBlock: mark => () => this.transform(t => t.setBlock(mark)),
+    toggleMark: mark => this.transform(t => t.toggleMark(mark)),
+    toggleBlock: mark => this.transform(t => t.setBlock(mark)),
+
+    collectButtons: (category, type) =>
+      flatten(
+        this.pluginsByCategory(category)
+          .map(plugin => plugin[type])
+          .filter(x => !!x)
+      ),
 
     currentBlockIs: type => {
       this.selection.lastNode
-      this.state
       return this.state.blocks.some(block => block.type === type)
     },
 
     contextButtonsFor: category =>
-      this.collectFromPlugin(category, 'contextButtons'),
+      this.helpers.collectButtons(category, 'contextButtons'),
 
-    barButtonsFor: category => this.collectFromPlugin(category, 'barButtons'),
+    barButtonsFor: category =>
+      this.helpers.collectButtons(category, 'barButtons'),
   }
 
   get pluginCategories() {

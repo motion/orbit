@@ -597,7 +597,7 @@ export default class Popover {
                   towards={INVERSE[direction]}
                 />
               </arrowContain>
-              <content $withBg={background}>
+              <content $withBackground={background}>
                 {children}
               </content>
             </popover>
@@ -662,7 +662,7 @@ export default class Popover {
         y: 0,
       },
     },
-    withBg: background => ({
+    withBackground: background => ({
       borderRadius: 3,
       background,
     }),
@@ -680,7 +680,7 @@ export default class Popover {
 
   static theme = {
     theme: (props, context, activeTheme) => ({
-      withBg: activeTheme,
+      withBackground: activeTheme,
     }),
     popoverStyle: ({ popoverStyle }) => ({
       content: popoverStyle,

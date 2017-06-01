@@ -7,13 +7,11 @@ export function getSpec(plugins, rules) {
   const response = {
     schema,
     plugins: [],
-    contextButtons: [],
-    barButtons: [],
   }
 
   // add to slate spec
   for (const plugin of plugins) {
-    const { rules, plugins, marks, nodes, contextButtons, barButtons } = plugin
+    const { rules, plugins, marks, nodes } = plugin
 
     if (rules) {
       schema.rules = [...schema.rules, ...rules]
@@ -26,12 +24,6 @@ export function getSpec(plugins, rules) {
     }
     if (nodes) {
       schema.nodes = { ...schema.nodes, ...nodes }
-    }
-    if (contextButtons) {
-      response.contextButtons = [...response.contextButtons, ...contextButtons]
-    }
-    if (barButtons) {
-      response.barButtons = [...response.barButtons, ...barButtons]
     }
   }
 

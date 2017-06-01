@@ -10,4 +10,9 @@ export default class Alignment {
     () => <Button icon="align-center" />,
     () => <Button icon="align-justify" />,
   ]
+
+  barButtons = [
+    () => <Button icon="margin-left" />,
+    () => <Button icon="margin-right" />,
+  ]
 }

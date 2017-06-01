@@ -23,11 +23,13 @@ export default class SelectBar {
           <bar $$row>
             {pluginCategories.map(category => (
               <Segment padded key={category}>
-                {editorStore.contextButtonsFor(category).map((button, i) => (
-                  <PassThrough editorStore={editorStore} key={i}>
-                    {button}
-                  </PassThrough>
-                ))}
+                {editorStore.helpers
+                  .contextButtonsFor(category)
+                  .map((button, i) => (
+                    <PassThrough editorStore={editorStore} key={i}>
+                      {button}
+                    </PassThrough>
+                  ))}
               </Segment>
             ))}
           </bar>

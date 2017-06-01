@@ -175,16 +175,17 @@ export default class EditorStore {
         .filter(x => !!x)
     )
 
-  contextButtonsFor = category =>
-    this.collectFromPlugin(category, 'contextButtons')
-  barButtonsFor = category => this.collectFromPlugin(category, 'barButtons')
-
   helpers = {
-    someBlockIs: type => {
+    currentBlockIs: type => {
       this.selection.lastNode
       this.state
       return this.state.blocks.some(block => block.type === type)
     },
+
+    contextButtonsFor: category =>
+      this.collectFromPlugin(category, 'contextButtons'),
+
+    barButtonsFor: category => this.collectFromPlugin(category, 'barButtons'),
   }
 
   get pluginCategories() {

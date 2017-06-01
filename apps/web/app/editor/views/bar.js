@@ -8,7 +8,7 @@ export default class ContextBar {
       <bar $$row>
         {editorStore.pluginCategories.map(category => (
           <Segment padded key={category}>
-            {editorStore.barButtonsFor(category).map((button, i) => (
+            {editorStore.helpers.barButtonsFor(category).map((button, i) => (
               <PassThrough editorStore={editorStore} key={i}>
                 {button}
               </PassThrough>

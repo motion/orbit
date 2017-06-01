@@ -6,6 +6,7 @@ import React from 'react'
 import { Button } from '~/ui'
 import { view } from '~/helpers'
 import node from '~/editor/node'
+import { createButton } from './helpers'
 
 const readFile = file =>
   new Promise((resolve, reject) => {
@@ -79,7 +80,7 @@ export default class ImagePlugin {
   name = 'image'
   category = 'blocks'
 
-  barButtons = [() => <Button icon="media-image" tooltip="image" />]
+  barButtons = [createButton('media-image', BLOCKS.IMAGE)]
 
   plugins = [
     InsertImages({

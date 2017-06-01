@@ -53,3 +53,10 @@ export const getTarget = target => {
     return target
   }
 }
+
+class Cache {
+  all = new Set()
+  add = item => (this.all = this.all.add(item))
+  remove = item => (this.all = this.all.remove(item))
+}
+export const viewCache = new Cache()

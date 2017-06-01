@@ -1,55 +1,45 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view, observable, viewCache } from '~/helpers'
 import Editor from '~/editor'
 import * as Plugins from '~/editor/plugins'
-import * as Rules from '~/editor/rules'
 import { flatten } from 'lodash'
 
 @view.ui
 export default class JotEditor extends React.Component {
   state = {
-    schema: {},
+    plugins: null,
   }
 
   start = () => {
-    const Plugs = require('../editor/plugins')
-    const schema = {
-      plugins: Object.keys(Plugs).map(key => Plugs[key]),
-      rules: flatten(Object.keys(Rules).map(key => Rules[key])),
-    }
-    this.setState({ schema })
+    const NewPlugins = require('../editor/plugins') // for hmr
+    const plugins = Object.keys(NewPlugins).map(key => NewPlugins[key])
+    this.setState({ plugins })
   }
 
   reset = () => {
-    this.setState({ schema: null }, this.start)
+    this.setState({ plugins: null }, this.start)
   }
 
   componentWillMount() {
-    window.x = this
     this.start()
-    // if (module.hot) {
-    //   module.hot.accept('../editor/plugins', this.props.store.reset)
-    //   module.hot.accept('../editor/rules', this.props.store.reset)
-    // }
+    viewCache.add(this)
   }
 
-  render(props, { schema }) {
-    if (!schema) {
-      console.log('render null')
+  componentWillUnmount() {
+    viewCache.remove(this)
+  }
+
+  render(props, { plugins }) {
+    if (!plugins) {
       return null
     }
-    return (
-      <Editor
-        key={Math.random()}
-        plugins={schema.plugins}
-        rules={schema.rules}
-        {...props}
-      />
-    )
+    return <Editor plugins={plugins} {...props} />
   }
 }
 
+const resetAll = () => viewCache.all.forEach(value => value.reset())
+
 if (module.hot) {
-  module.hot.accept('../editor/plugins', () => window.x.reset())
-  // module.hot.accept('../editor/rules', () => window.x.props.store.reset())
+  module.hot.accept('../editor/plugins', resetAll)
+  module.hot.accept('../editor/rules', resetAll)
 }

@@ -1,4 +1,5 @@
 import { Button } from '~/ui'
+import { createButton } from './helpers'
 
 export default class Alignment {
   name = 'alignment'

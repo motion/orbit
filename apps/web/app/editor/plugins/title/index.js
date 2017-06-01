@@ -31,8 +31,6 @@ export default class TitlePlugin {
         const { startBlock } = state
         const isEnter = e.which === 13
 
-        console.log('isEnter', isEnter, 'block', startBlock.type)
-
         if (startBlock.type !== BLOCKS.TITLE || !isEnter) return
 
         return state.transform().insertBlock('paragraph').apply()

@@ -31,7 +31,6 @@ brew update
 
 echo "deps"
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-ensure-dep "yarn" -- npm i -g yarn
 ensure-dep "npm" -- brew install node
 ensure-dep "docker" -- brew install docker
 ensure-dep "docker-machine" -- brew install docker-machine

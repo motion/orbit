@@ -7,7 +7,7 @@ import { range } from 'lodash'
 import { Range } from 'immutable'
 import Slate from 'slate'
 import { BLOCKS } from '~/editor/constants'
-import { createButton } from './helpers'
+import { createButton } from '../helpers'
 import { Column, Row } from './nodes'
 
 const insertRow = (transform, { columns = 2, textGetter } = {}) => {

@@ -2,7 +2,7 @@ import InsertImages from 'slate-drop-or-paste-images'
 import { BLOCKS } from '~/editor/constants'
 import React from 'react'
 import { Button } from '~/ui'
-import { createButton } from './helpers'
+import { createButton } from '../helpers'
 import ImageNode from './imageNode'
 
 export default class ImagePlugin {

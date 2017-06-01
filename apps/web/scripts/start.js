@@ -15,8 +15,7 @@ const fs = require('fs')
 const config = require('./config/webpack')
 const paths = require('./config/paths')
 
-const useYarn = fs.existsSync(paths.yarnLockFile)
-const cli = useYarn ? 'yarn' : 'npm'
+const cli = 'npm'
 const isInteractive = false
 
 // Warn and crash if required files are missing

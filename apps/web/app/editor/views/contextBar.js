@@ -1,18 +1,14 @@
 import { view } from '~/helpers'
-import { PassThrough, Segment, Button } from '~/ui'
-import { BLOCKS, MARKS } from '../constants'
+import { Theme, PassThrough, Segment } from '~/ui'
 
 @view
 export default class ContextBar {
   render({ editorStore }) {
-    const { pluginCategories } = editorStore
-    const PAD = 40
-
     return (
       <bar $$row>
-        {pluginCategories.map(category => (
+        {editorStore.pluginCategories.map(category => (
           <Segment theme="dark" padded key={category}>
-            {editorStore.buttonsFor(category).map((button, i) => (
+            {editorStore.fromPlugin(category).map((button, i) => (
               <PassThrough editorStore={editorStore} key={i}>
                 {button}
               </PassThrough>

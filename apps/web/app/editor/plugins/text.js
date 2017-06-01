@@ -29,7 +29,7 @@ export default class TextPlugin {
   name = 'text'
   category = 'blocks'
 
-  barButtons = [
+  buttons = [
     () => <Button icon="textcolor" />,
     () => <Button icon="textbackground" />,
   ]

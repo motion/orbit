@@ -66,19 +66,14 @@ export default class EditorStore {
     const response = {
       schema,
       plugins: [],
-      barButtons: [],
+      buttons: [],
       contextButtons: [],
     }
 
     // add to slate spec
-    for (const {
-      rules,
-      plugins,
-      marks,
-      nodes,
-      barButtons,
-      contextButtons,
-    } of this.plugins) {
+    for (const plugin of this.plugins) {
+      const { rules, plugins, marks, nodes, buttons, contextButtons } = plugin
+
       if (rules) {
         schema.rules = [...schema.rules, ...rules]
       }
@@ -91,8 +86,8 @@ export default class EditorStore {
       if (nodes) {
         schema.nodes = { ...schema.nodes, ...nodes }
       }
-      if (barButtons) {
-        response.barButtons = [...response.barButtons, ...barButtons]
+      if (buttons) {
+        response.buttons = [...response.buttons, ...buttons]
       }
       if (contextButtons) {
         response.contextButtons = [
@@ -163,14 +158,20 @@ export default class EditorStore {
     this.slate.blur()
   }
 
-  buttonsFor = category => {
-    return flatten(
-      this.plugins
-        .filter(plugin => plugin.category === category)
-        .map(plugin => plugin.barButtons)
+  pluginsByCategory = category =>
+    this.plugins.filter(plugin => plugin.category === category)
+
+  collectFromPlugin = (category, thing) =>
+    flatten(
+      this.pluginsByCategory(category)
+        .map(plugin => plugin[thing])
         .filter(x => !!x)
     )
-  }
+
+  buttonsFor = category => this.collectFromPlugin(category, 'buttons')
+
+  contextButtonsFor = category =>
+    this.collectFromPlugin(category, 'contextButtons')
 
   get pluginCategories() {
     return uniq(this.plugins.map(plugin => plugin.category).filter(x => !!x))

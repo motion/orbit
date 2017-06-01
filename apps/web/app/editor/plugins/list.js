@@ -30,6 +30,8 @@ export default class List {
   barButtons = [
     () => <Button icon="list-bullet" />,
     () => <Button icon="list-number" />,
+    () => <Button icon="margin-left" />,
+    () => <Button icon="margin-right" />,
   ]
 
   plugins = [

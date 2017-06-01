@@ -7,6 +7,7 @@ import { view } from '~/helpers'
 import EditorStore from './stores/editorStore'
 import Popovers from './views/popovers'
 import SelectBar from './views/selectBar'
+import ContextBar from './views/contextBar'
 import { SlotFill } from '~/ui'
 
 export { Raw } from 'slate'
@@ -52,9 +53,7 @@ export default class EditorView {
         onMouseUp={this.onDocumentMouseUp}
       >
         <SlotFill.Fill if={!editorStore.inline} name="documentActions">
-          <test>
-            test
-          </test>
+          <ContextBar editorStore={editorStore} />
         </SlotFill.Fill>
         <Editor
           if={editorStore.state}

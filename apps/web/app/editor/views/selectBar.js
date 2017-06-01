@@ -5,7 +5,7 @@ import { BLOCKS, MARKS } from '../constants'
 @view
 export default class SelectBar {
   render({ editorStore }) {
-    const { selection, barButtons, pluginCategories } = editorStore
+    const { selection, pluginCategories } = editorStore
     const PAD = 40
 
     console.log('pluginCategories', pluginCategories)

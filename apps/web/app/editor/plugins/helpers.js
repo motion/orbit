@@ -10,19 +10,14 @@ export const createButton = (icon, type, { wrap, unwrap } = {}) =>
         icon={icon}
         active={isActive}
         onClick={() => {
+          const action = isActive ? unwrap : wrap
           // allow passing in own wrap/unwrap
-          if (wrap || unwrap) {
-            const transform = editorStore.slate.getState().transform()
-            if (isActive) {
-              wrap(transform).apply()
-            } else {
-              unwrap(transform).apply()
-            }
-          } else {
-            editorStore.transform(t =>
-              t.setBlock(isActive ? BLOCKS.PARAGRAPH : type)
-            )
-          }
+          editorStore.transform(
+            t =>
+              action
+                ? action(t)
+                : t.setBlock(isActive ? BLOCKS.PARAGRAPH : type)
+          )
         }}
       />
     )

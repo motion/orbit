@@ -15,6 +15,7 @@ export const BLOCKS = {
   TABLE_CELL: 'table_cell',
   OL_LIST: 'ol_list',
   UL_LIST: 'ul_list',
+  LIST_ITEM: 'list_item',
   DOC_LIST: 'docList',
   COUNTER: 'counter',
 }

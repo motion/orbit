@@ -1,3 +1,4 @@
+import { view } from '~/helpers'
 import node from '~/editor/node'
 import EditList from 'slate-edit-list'
 import { Button } from '~/ui'
@@ -8,15 +9,17 @@ import { createButton } from './helpers'
 
 const editList = EditList()
 
-const ol_list = node(props => (
-  <ol $$ol {...props.attributes}>{props.children}</ol>
-))
+const ol_list = node(
+  view(props => <ol $$ol {...props.attributes}>{props.children}</ol>)
+)
 
-const ul_list = node(props => (
-  <ul $$ul {...props.attributes}>{props.children}</ul>
-))
+const ul_list = node(
+  view(props => <ul $$ul {...props.attributes}>{props.children}</ul>)
+)
 
-const list_item = props => <li $$li {...props.attributes}>{props.children}</li>
+const list_item = view(props => (
+  <li $$li {...props.attributes}>{props.children}</li>
+))
 
 export default class List {
   name = 'list'

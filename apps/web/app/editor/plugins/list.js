@@ -36,10 +36,12 @@ export default class List {
     createButton('list-bullet', UL_LIST, {
       wrap: t => editList.transforms.wrapInList(t, UL_LIST),
       unwrap: editList.transforms.unwrapList,
+      isActive: editList.utils.isSelectionInList,
     }),
     createButton('list-number', OL_LIST, {
       wrap: t => editList.transforms.wrapInList(t, OL_LIST),
       unwrap: editList.transforms.unwrapList,
+      isActive: editList.utils.isSelectionInList,
     }),
   ]
 

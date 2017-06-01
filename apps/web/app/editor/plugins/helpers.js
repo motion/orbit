@@ -2,9 +2,12 @@ import { view } from '~/helpers'
 import { BLOCKS } from '~/editor/constants'
 import { Button } from '~/ui'
 
-export const createButton = (icon, type, { wrap, unwrap } = {}) =>
+export const createButton = (icon, type, opts = {}) =>
   view(({ editorStore }) => {
-    const isActive = editorStore.helpers.currentBlockIs(type)
+    const { wrap, unwrap } = opts
+    const isActive = opts.isActive
+      ? opts.isActive(editorStore.state)
+      : editorStore.helpers.currentBlockIs(type)
     return (
       <Button
         icon={icon}

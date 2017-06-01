@@ -179,10 +179,12 @@ export default class EditorStore {
     this.collectFromPlugin(category, 'contextButtons')
   barButtonsFor = category => this.collectFromPlugin(category, 'barButtons')
 
-  someBlockIs = type => {
-    this.selection.lastNode
-    this.state
-    return this.state.blocks.some(block => block.type === type)
+  helpers = {
+    someBlockIs: type => {
+      this.selection.lastNode
+      this.state
+      return this.state.blocks.some(block => block.type === type)
+    },
   }
 
   get pluginCategories() {

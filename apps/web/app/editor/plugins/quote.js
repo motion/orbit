@@ -28,7 +28,7 @@ class Quote {
 
 const createButton = name =>
   view(({ editorStore }) => {
-    const isActive = editorStore.someBlockIs(QUOTE)
+    const isActive = editorStore.helpers.someBlockIs(QUOTE)
     console.log('render quote button isActive', isActive)
     return (
       <Button

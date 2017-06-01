@@ -21,6 +21,7 @@ export const createButton = (icon, type, opts = {}) =>
                 ? action(t, editorStore)
                 : t.setBlock(isActive ? BLOCKS.PARAGRAPH : type)
           )
+          setTimeout(editorStore.focus)
         }}
       />
     )

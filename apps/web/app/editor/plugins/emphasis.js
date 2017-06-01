@@ -6,11 +6,13 @@ import { createButton } from './helpers'
 
 const { ITALIC, BOLD, UNDERLINE } = MARKS
 
-const createMarkButton = (icon, mark) =>
-  createButton(icon, mark, {
-    wrap: (_, editorStore) => editorStore.helpers.toggleMark(mark),
-    unwrap: (_, editorStore) => editorStore.helpers.toggleMark(mark),
+const createMarkButton = (icon, mark) => {
+  const toggle = t => t.toggleMark(mark)
+  return createButton(icon, mark, {
+    wrap: toggle,
+    unwrap: toggle,
   })
+}
 
 const buttons = [
   createMarkButton('textitalic', ITALIC),

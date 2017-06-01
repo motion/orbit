@@ -36,6 +36,7 @@ export default class GridList {
               <DocItem
                 key={doc._id || Math.random()}
                 draggable
+                inline
                 bordered={store.editing}
                 readOnly={store.editing}
                 hideMeta={!store.editing}

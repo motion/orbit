@@ -138,7 +138,7 @@ export default class Button {
       fontSize: 13,
       fontWeight: 400,
       padding: [0, 10],
-      height: 31,
+      height: 30,
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',

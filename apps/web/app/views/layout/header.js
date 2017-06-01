@@ -33,7 +33,7 @@ export default class Header {
               icon="minimal-right"
               onClick={() => Router.forward()}
             />
-            <Button chromeless icon="simple-add" tooltip="new" />
+            <Button if={false} chromeless icon="simple-add" tooltip="new" />
           </Segment>
         </nav>
         <bar $$centered $$flex $$row $$overflow="hidden">

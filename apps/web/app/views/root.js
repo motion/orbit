@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
-import { Button } from '~/ui'
+import { SlotFill, Button } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -18,6 +18,7 @@ import Draft from './document/draft'
 // to share logic horizontally between any component
 // simply @view.attach('layoutStore') for example in any sub-view
 
+// optimized re-render for sidebar resize
 @view class Wrap {
   render({ layoutStore, children }) {
     return (
@@ -59,7 +60,7 @@ export default class Root extends React.Component {
   }
 
   unstable_handleError(error) {
-    console.log('handle error', error.message, typeof error)
+    console.error('handle error', error)
     this.setState({
       error,
     })
@@ -79,20 +80,33 @@ export default class Root extends React.Component {
     )
 
     return (
-      <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
-        <Wrap layoutStore={layoutStore}>
-          <Header layoutStore={layoutStore} />
-          <content
-            onScroll={this.onScroll}
-            $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-          >
-            <CurrentPage key={Router.key} />
-          </content>
-          <Draft />
-        </Wrap>
-        <Errors />
-        <Sidebar />
-      </Shortcuts>
+      <SlotFill.Provider>
+        <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
+          <Wrap layoutStore={layoutStore}>
+            <Header layoutStore={layoutStore} />
+            <content
+              onScroll={this.onScroll}
+              $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
+            >
+              <CurrentPage key={Router.key} />
+            </content>
+            <Button
+              if={!layoutStore.creatingDoc}
+              circular
+              onClick={() => layoutStore.createDoc()}
+              $circleButton
+              icon="add"
+            />
+          </Wrap>
+          <Errors />
+          <Sidebar />
+          <CreateDocument
+            doc={layoutStore.creatingDoc}
+            isOpen={layoutStore.creatingDoc !== false}
+            onClose={() => (layoutStore.creatingDoc = false)}
+          />
+        </Shortcuts>
+      </SlotFill.Provider>
     )
   }
 

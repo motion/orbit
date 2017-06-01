@@ -29,8 +29,6 @@ class App {
 
   // basically global stores
   @observable user = null
-  @observable.ref activePage = {}
-  @observable.ref extraActions = null
   @observable.ref errors = []
   @observable.ref mountedStores = {}
   @observable mountedVersion = 0

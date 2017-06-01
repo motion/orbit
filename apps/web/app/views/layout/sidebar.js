@@ -11,6 +11,7 @@ import {
   Link,
   Input,
   Button,
+  SlotFill,
 } from '~/ui'
 import { Place } from '@jot/models'
 import Login from './login'
@@ -247,9 +248,13 @@ export default class Sidebar {
             </Pane>
           </content>
 
-          <activeSidebar if={App.activePage.sidebar}>
-            {App.activePage.sidebar}
-          </activeSidebar>
+          <SlotFill.Slot name="sidebar">
+            {items => (
+              <activeSidebar>
+                {items}
+              </activeSidebar>
+            )}
+          </SlotFill.Slot>
         </sidebar>
       </Drawer>
     )

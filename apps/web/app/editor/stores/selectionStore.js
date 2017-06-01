@@ -37,11 +37,11 @@ export default class Selection {
 
   isInsertable = block => {
     if (!block) return false
-    if (this.isDocTitle(block)) return false
     switch (block.type) {
       case BLOCKS.PARAGRAPH:
         return true
     }
+    return false
   }
 
   isEditable = block => {

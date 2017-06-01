@@ -30,7 +30,7 @@ export default class DocumentPage {
 
     return (
       <Page
-        extraActions={
+        actions={
           <Segment>
             <Button
               if={!insidePlace}

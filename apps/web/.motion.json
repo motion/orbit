@@ -2,16 +2,16 @@
   "babel": {
     "plugins": [
       [
-        "gloss/transform",
-        {
-          "decoratorName": "view"
-        }
-      ],
-      "babel-plugin-jsx-if",
-      [
         "babel-plugin-root-import",
         {
           "rootPathSuffix": "app"
+        }
+      ],
+      [
+        "gloss/transform",
+        {
+          "decoratorName": "view",
+          "jsxIf": true
         }
       ],
       "babel-plugin-transform-decorators-legacy",

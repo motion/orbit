@@ -7,6 +7,7 @@ import { view } from '~/helpers'
 import EditorStore from './stores/editorStore'
 import Popovers from './views/popovers'
 import SelectBar from './views/selectBar'
+import { SlotFill } from '~/ui'
 
 export { Raw } from 'slate'
 
@@ -50,6 +51,11 @@ export default class EditorView {
         onClick={editorStore.handleDocumentClick}
         onMouseUp={this.onDocumentMouseUp}
       >
+        <SlotFill.Fill if={!editorStore.inline} name="documentActions">
+          <test>
+            test
+          </test>
+        </SlotFill.Fill>
         <Editor
           if={editorStore.state}
           $editor

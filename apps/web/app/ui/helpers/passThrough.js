@@ -4,14 +4,16 @@ export default class PassProps extends React.Component {
   render() {
     const { children, containerProps, ...props } = this.props
 
-    const childrenLength = React.Children.count(children)
-
-    if (!childrenLength) {
-      if (React.isValidElement(children)) {
-        return React.cloneElement(children, props)
+    const getChild = child => {
+      if (React.isValidElement(child)) {
+        return React.cloneElement(child, props)
       }
-      const Child = children
+      const Child = child
       return <Child {...props} />
+    }
+
+    if (!React.Children.count(children)) {
+      return getChild(children)
     }
 
     return (
@@ -24,13 +26,7 @@ export default class PassProps extends React.Component {
         }}
         {...containerProps}
       >
-        {React.Children.map(children, child => {
-          if (React.isValidElement(child)) {
-            return React.cloneElement(child, props)
-          }
-          const Child = child
-          return <Child {...props} />
-        })}
+        {React.Children.map(children, getChild)}
       </passprops>
     )
   }

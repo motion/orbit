@@ -8,8 +8,6 @@ export default class SelectBar {
     const { selection, pluginCategories } = editorStore
     const PAD = 40
 
-    console.log('pluginCategories', pluginCategories)
-
     return (
       <Popover
         if={selection.selectedNode && selection.mouseUp}
@@ -25,7 +23,12 @@ export default class SelectBar {
           <bar $$row>
             {pluginCategories.map(category => (
               <Segment padded key={category}>
-                {editorStore.buttonsFor(category).map((button, i) => (
+                {console.log(
+                  'cdbf',
+                  category,
+                  editorStore.contextButtonsFor(category)
+                ) && 'hi'}
+                {editorStore.contextButtonsFor(category).map((button, i) => (
                   <PassThrough editorStore={editorStore} key={i}>
                     {button}
                   </PassThrough>

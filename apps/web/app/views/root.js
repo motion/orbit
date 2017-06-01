@@ -100,11 +100,6 @@ export default class Root extends React.Component {
           </Wrap>
           <Errors />
           <Sidebar />
-          <CreateDocument
-            doc={layoutStore.creatingDoc}
-            isOpen={layoutStore.creatingDoc !== false}
-            onClose={() => (layoutStore.creatingDoc = false)}
-          />
         </Shortcuts>
       </SlotFill.Provider>
     )

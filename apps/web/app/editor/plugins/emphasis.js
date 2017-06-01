@@ -26,7 +26,7 @@ export default class EmphasisPlugin {
 
   // TODO onKeyDown
 
-  buttons = buttons
+  contextButtons = buttons
   // contextButtons = buttons
 
   marks = {

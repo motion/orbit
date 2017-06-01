@@ -156,9 +156,9 @@ export default class Button {
       },
     },
     activeOn: {
-      background: '#fafafa',
+      background: '#eee',
       '&:hover': {
-        background: '#fafafa',
+        background: '#eee',
       },
     },
     children: {
@@ -196,7 +196,9 @@ export default class Button {
           ...activeTheme,
           '&:active': activeTheme,
         },
-        activeOn: activeTheme,
+        activeOn: {
+          background: 'black',
+        },
         clickable: {
           '&:active': activeTheme,
           '&:hover': {

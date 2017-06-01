@@ -1,7 +1,6 @@
 import React from 'react'
 import { view, Shortcuts } from '~/helpers'
-import Portal from 'react-portal'
-import { Icon } from '~/ui'
+import { Portal, Icon } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 import DocView from '~/views/document'
 import CommanderStore from './store'
@@ -14,7 +13,7 @@ export default class Commander {
   render({ store }) {
     const searchIcon = <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
     return (
-      <bar $$align="center" $$row $$flex>
+      <bar if={false} $$align="center" $$row $$flex>
         {searchIcon}
         <input
           if={!store.isOpen}

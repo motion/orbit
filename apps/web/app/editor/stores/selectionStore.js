@@ -16,13 +16,6 @@ export default class Selection {
   lastBlock = null
   lastNode = null
 
-  at = {
-    focused: Date.now(),
-    clicked: Date.now(),
-    selected: Date.now(),
-    hovered: Date.now(),
-  }
-
   isDocTitle = block =>
     block && block.type === BLOCKS.TITLE && block.data.get('level') === 1
   isParagraph = block => block && block.type === BLOCKS.PARAGRAPH
@@ -57,7 +50,6 @@ export default class Selection {
   }
 
   update = (key, block, node) => {
-    this.at = { ...this.at, [key]: Date.now() }
     this[key] = block
     this[`${key}Node`] = node
     this.lastNode = node

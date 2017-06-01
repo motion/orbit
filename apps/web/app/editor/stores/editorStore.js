@@ -181,7 +181,8 @@ export default class EditorStore {
 
   someBlockIs = type => {
     this.selection.lastNode
-    this.state.blocks.some(block => block.type === type)
+    this.state
+    return this.state.blocks.some(block => block.type === type)
   }
 
   get pluginCategories() {

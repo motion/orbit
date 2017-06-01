@@ -13,7 +13,3 @@ export default class JotEditor {
     return <Editor plugins={plugins} rules={rules} {...props} />
   }
 }
-
-if (module.hot) {
-  module.hot.accept()
-}

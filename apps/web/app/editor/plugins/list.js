@@ -29,8 +29,14 @@ export default class List {
   }
 
   barButtons = [
-    createButton('list-bullet', BLOCKS.UL_LIST),
-    createButton('list-number', BLOCKS.OL_LIST),
+    createButton('list-bullet', BLOCKS.UL_LIST, {
+      wrap: t => editList.transforms.wrapInList(t, BLOCKS.UL_LIST),
+      unwrap: editList.transforms.unwrapList,
+    }),
+    createButton('list-number', BLOCKS.OL_LIST, {
+      wrap: t => editList.transforms.wrapInList(t, BLOCKS.OL_LIST),
+      unwrap: editList.transforms.unwrapList,
+    }),
   ]
 
   plugins = [

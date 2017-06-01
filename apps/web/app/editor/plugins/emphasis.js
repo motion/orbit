@@ -26,8 +26,8 @@ export default class EmphasisPlugin {
 
   // TODO onKeyDown
 
-  barButtons = buttons
   contextButtons = buttons
+  // contextButtons = buttons
 
   marks = {
     [ITALIC]: props => <em style={{ display: 'inline' }}>{props.children}</em>,

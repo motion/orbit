@@ -66,19 +66,21 @@ export default class EditorStore {
     const response = {
       schema,
       plugins: [],
-      barButtons: [],
       contextButtons: [],
+      barButtons: [],
     }
 
     // add to slate spec
-    for (const {
-      rules,
-      plugins,
-      marks,
-      nodes,
-      barButtons,
-      contextButtons,
-    } of this.plugins) {
+    for (const plugin of this.plugins) {
+      const {
+        rules,
+        plugins,
+        marks,
+        nodes,
+        contextButtons,
+        barButtons,
+      } = plugin
+
       if (rules) {
         schema.rules = [...schema.rules, ...rules]
       }
@@ -91,14 +93,14 @@ export default class EditorStore {
       if (nodes) {
         schema.nodes = { ...schema.nodes, ...nodes }
       }
-      if (barButtons) {
-        response.barButtons = [...response.barButtons, ...barButtons]
-      }
       if (contextButtons) {
         response.contextButtons = [
           ...response.contextButtons,
           ...contextButtons,
         ]
+      }
+      if (barButtons) {
+        response.barButtons = [...response.barButtons, ...barButtons]
       }
     }
 
@@ -163,13 +165,27 @@ export default class EditorStore {
     this.slate.blur()
   }
 
-  buttonsFor = category => {
-    return flatten(
-      this.plugins
-        .filter(plugin => plugin.category === category)
-        .map(plugin => plugin.barButtons)
+  pluginsByCategory = category =>
+    this.plugins.filter(plugin => plugin.category === category)
+
+  collectFromPlugin = (category, thing) =>
+    flatten(
+      this.pluginsByCategory(category)
+        .map(plugin => plugin[thing])
         .filter(x => !!x)
     )
+
+  helpers = {
+    currentBlockIs: type => {
+      this.selection.lastNode
+      this.state
+      return this.state.blocks.some(block => block.type === type)
+    },
+
+    contextButtonsFor: category =>
+      this.collectFromPlugin(category, 'contextButtons'),
+
+    barButtonsFor: category => this.collectFromPlugin(category, 'barButtons'),
   }
 
   get pluginCategories() {

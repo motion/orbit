@@ -1,5 +1,6 @@
 import { Button } from '~/ui'
 import { BLOCKS } from '~/editor/constants'
+import { createButton } from './helpers'
 
 export default class Code {
   name = 'code'
@@ -9,5 +10,5 @@ export default class Code {
     [BLOCKS.CODE]: props => <code {...props.attributes}>{props.children}</code>,
   }
 
-  barButtons = [() => <Button icon="code" tooltip="code" />]
+  barButtons = [createButton('code', BLOCKS.CODE)]
 }

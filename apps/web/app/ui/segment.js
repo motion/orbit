@@ -107,8 +107,6 @@ const notUndefined = x => typeof x !== 'undefined'
       })
     }
 
-    console.log('finalChildren is', finalChildren)
-
     return (
       <container {...props}>
         <title if={title}>{title}</title>

@@ -1,8 +1,10 @@
 import React from 'react'
 import { view } from '~/helpers'
+import injectSegmented from './helpers/injectSegmented'
 
 const BORDER_RADIUS = 4
 
+@injectSegmented
 @view.ui
 export default class Input {
   static defaultProps = {
@@ -10,16 +12,7 @@ export default class Input {
   }
 
   render() {
-    const {
-      dark,
-      getRef,
-      sync,
-      first,
-      last,
-      segmented,
-      noBorder,
-      ...props
-    } = this.props
+    const { dark, getRef, sync, segmented, noBorder, ...props } = this.props
 
     if (sync) {
       props.value = sync.get()
@@ -70,7 +63,7 @@ export default class Input {
         maxWidth: width,
       },
     }),
-    segmented: ({ first, last }) => ({
+    segmented: ({ segmented: { first, last } }) => ({
       input: {
         boxShadow: 'none',
         borderTopWidth: 1,

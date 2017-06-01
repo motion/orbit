@@ -4,6 +4,7 @@ import { Button } from '~/ui'
 import { BLOCKS } from '~/editor/constants'
 import { replacer } from '~/editor/helpers'
 import node from '~/editor/node'
+import { createButton } from './helpers'
 
 const { QUOTE } = BLOCKS
 
@@ -26,29 +27,11 @@ class Quote {
   }
 }
 
-const createButton = name => ({ editorStore }) => {
-  return (
-    <Button
-      icon="textquote"
-      onClick={(event: Event) => {
-        event.preventDefault()
-        const isActive = editorStore.state.blocks.some(
-          block => block.type === QUOTE
-        )
-        editorStore.transform(t =>
-          t.setBlock(isActive ? BLOCKS.PARAGRAPH : QUOTE)
-        )
-      }}
-    />
-  )
-}
-
 export default class QuotePlugin {
   name = QUOTE
   category = 'blocks'
   plugins = [replacer(/^(>)$/, QUOTE)]
-  barButtons = [createButton(QUOTE)]
-  contextButtons = [createButton(QUOTE)]
+  barButtons = [createButton('textquote', QUOTE)]
   nodes = {
     [QUOTE]: Quote,
   }

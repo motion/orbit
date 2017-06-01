@@ -4,6 +4,7 @@ import { Button } from '~/ui'
 import { BLOCKS } from '~/editor/constants'
 import { replacer } from '~/editor/helpers'
 import AutoReplace from 'slate-auto-replace'
+import { createButton } from './helpers'
 
 const editList = EditList()
 
@@ -28,8 +29,14 @@ export default class List {
   }
 
   barButtons = [
-    () => <Button icon="list-bullet" />,
-    () => <Button icon="list-number" />,
+    createButton('list-bullet', BLOCKS.UL_LIST, {
+      wrap: t => editList.transforms.wrapInList(t, BLOCKS.UL_LIST),
+      unwrap: editList.transforms.unwrapList,
+    }),
+    createButton('list-number', BLOCKS.OL_LIST, {
+      wrap: t => editList.transforms.wrapInList(t, BLOCKS.OL_LIST),
+      unwrap: editList.transforms.unwrapList,
+    }),
   ]
 
   plugins = [

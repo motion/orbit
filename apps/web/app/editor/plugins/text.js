@@ -1,6 +1,6 @@
 import TrailingBlock from 'slate-trailing-block'
 import { BLOCKS } from '~/editor/constants'
-import { Button } from '~/ui'
+import { Popover, Button } from '~/ui'
 import Highlighter from './helpers/highlighter'
 import node from '~/editor/node'
 
@@ -50,11 +50,22 @@ const onEnter = (event: KeyboardEvent, state) => {
 
 export default class TextPlugin {
   name = 'text'
-  category = 'blocks'
+  category = 'text'
 
   contextButtons = [
-    () => <Button icon="textcolor" />,
-    () => <Button icon="textbackground" />,
+    () => (
+      <Popover
+        target={<Button icon="textbackground" />}
+        openOnHover
+        showForgiveness
+        background
+      >
+        <row style={{ flexFlow: 'row' }}>
+          <Button icon="textcolor" />
+          <Button icon="textbackground" />
+        </row>
+      </Popover>
+    ),
   ]
 
   plugins = [

@@ -1,15 +1,26 @@
-import { Button } from '~/ui'
+import { Popover, Button } from '~/ui'
 import { createButton } from './helpers'
 
 export default class Alignment {
   name = 'alignment'
-  category = 'alignment'
+  category = 'text'
 
   contextButtons = [
-    () => <Button icon="align-left" />,
-    () => <Button icon="align-right" />,
-    () => <Button icon="align-center" />,
-    () => <Button icon="align-justify" />,
+    () => (
+      <Popover
+        target={<Button icon="align-justify" />}
+        openOnHover
+        showForgiveness
+        background
+      >
+        <row style={{ flexFlow: 'row' }}>
+          <Button icon="align-left" />
+          <Button icon="align-right" />
+          <Button icon="align-center" />
+          <Button icon="align-justify" />
+        </row>
+      </Popover>
+    ),
   ]
 
   // barButtons = [

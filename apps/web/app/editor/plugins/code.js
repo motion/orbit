@@ -10,5 +10,7 @@ export default class Code {
     [BLOCKS.CODE]: props => <code {...props.attributes}>{props.children}</code>,
   }
 
-  barButtons = [createButton('code', BLOCKS.CODE)]
+  barButtons = [
+    createButton({ icon: 'code', type: BLOCKS.CODE, tooltip: 'Code' }),
+  ]
 }

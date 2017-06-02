@@ -64,7 +64,10 @@ export default class RowPlugin {
   }
 
   barButtons = [
-    createButton('row', BLOCKS.ROW, {
+    createButton({
+      icon: 'row',
+      tooltip: 'Row',
+      type: BLOCKS.ROW,
       wrap: t => insertRow(t, this.options),
     }),
   ]

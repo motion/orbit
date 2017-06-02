@@ -10,7 +10,9 @@ export default class QuotePlugin {
   name = QUOTE
   category = 'blocks'
   plugins = [replacer(/^(>)$/, QUOTE)]
-  barButtons = [createButton('textquote', QUOTE)]
+  barButtons = [
+    createButton({ icon: 'textquote', type: QUOTE, tooltip: 'Quote' }),
+  ]
   nodes = {
     [QUOTE]: QuoteNode,
   }

@@ -6,18 +6,20 @@ import { createButton } from './helpers'
 
 const { ITALIC, BOLD, UNDERLINE } = MARKS
 
-const createMarkButton = (icon, mark) => {
-  const toggle = t => t.toggleMark(mark)
-  return createButton(icon, mark, {
+const createMarkButton = ({ icon, type }) => {
+  const toggle = t => t.toggleMark(type)
+  return createButton({
+    icon,
+    type,
     wrap: toggle,
     unwrap: toggle,
   })
 }
 
 const buttons = [
-  createMarkButton('textitalic', ITALIC),
-  createMarkButton('textbold', BOLD),
-  createMarkButton('textunderline', UNDERLINE),
+  createMarkButton({ icon: 'textitalic', type: ITALIC }),
+  createMarkButton({ icon: 'textbold', type: BOLD }),
+  createMarkButton({ icon: 'textunderline', type: UNDERLINE }),
 ]
 
 export default class EmphasisPlugin {

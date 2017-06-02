@@ -3,56 +3,14 @@ import { view } from '~/helpers'
 import node from '~/editor/node'
 import { replacer } from '~/editor/helpers'
 import { BLOCKS } from '~/editor/constants'
-
-@node
-@view
-class Todo {
-  toggle = () => {
-    const { node: { data }, setData } = this.props
-
-    const next = data.set('done', !data.get('done'))
-
-    setData(next)
-  }
-
-  render({ node, children, ...props }) {
-    const { data } = node
-
-    return (
-      <check contentEditable={false}>
-        <span>
-          <input
-            type="checkbox"
-            checked={data.get('done')}
-            onChange={this.toggle}
-          />
-        </span>
-        <span $content contentEditable suppressContentEditableWarning>
-          {children}
-        </span>
-      </check>
-    )
-  }
-
-  static style = {
-    check: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      marginTop: 0,
-    },
-    content: {
-      flex: 1,
-      marginLeft: 5,
-    },
-  }
-}
+import TodoNode from './todoNode'
 
 export default class TodoPlugin {
   name = 'todo'
   category = 'blocks'
 
   nodes = {
-    [BLOCKS.TODO]: Todo,
+    [BLOCKS.TODO]: TodoNode,
   }
 
   plugins = [

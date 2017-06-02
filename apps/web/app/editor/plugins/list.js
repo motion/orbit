@@ -10,6 +10,11 @@ import { createButton } from './helpers'
 const { UL_LIST, OL_LIST, LIST_ITEM } = BLOCKS
 const editList = EditList()
 
+editList.utils.isInListOfType = (state, type) => {
+  const list = editList.utils.getCurrentList(state)
+  return list && list.type === type
+}
+
 const ol_list = node(
   view(props => <ol $$ol {...props.attributes}>{props.children}</ol>)
 )
@@ -26,6 +31,9 @@ export default class List {
   name = 'list'
   category = 'blocks'
 
+  utils = editList.utils
+  transforms = editList.transforms
+
   nodes = {
     [OL_LIST]: ol_list,
     [UL_LIST]: ul_list,
@@ -33,15 +41,21 @@ export default class List {
   }
 
   barButtons = [
-    createButton('list-bullet', UL_LIST, {
+    createButton({
+      icon: 'list-bullet',
+      type: UL_LIST,
+      tooltip: 'Bulleted List',
       wrap: t => editList.transforms.wrapInList(t, UL_LIST),
       unwrap: editList.transforms.unwrapList,
-      isActive: editList.utils.isSelectionInList,
+      isActive: state => editList.utils.isInListOfType(state, UL_LIST),
     }),
-    createButton('list-number', OL_LIST, {
+    createButton({
+      icon: 'list-number',
+      type: OL_LIST,
+      tooltip: 'Numbered List',
       wrap: t => editList.transforms.wrapInList(t, OL_LIST),
       unwrap: editList.transforms.unwrapList,
-      isActive: editList.utils.isSelectionInList,
+      isActive: state => editList.utils.isInListOfType(state, OL_LIST),
     }),
   ]
 

@@ -2,22 +2,33 @@ import { view } from '~/helpers'
 import { BLOCKS } from '~/editor/constants'
 import { Button } from '~/ui'
 
-export const createButton = (icon, type, opts = {}) =>
+export const createButton = ({
+  icon,
+  type,
+  tooltip,
+  opts,
+  wrap,
+  unwrap,
+  isActive,
+}) =>
   view(({ editorStore }) => {
-    const { wrap, unwrap } = opts
-    const isActive = opts.isActive
-      ? opts.isActive(editorStore.state)
-      : editorStore.helpers.currentBlockIs(type)
+    const active = Boolean(
+      isActive
+        ? isActive(editorStore.state)
+        : editorStore.helpers.currentBlockIs(type)
+    )
+
     return (
       <Button
         icon={icon}
-        active={isActive}
+        active={active}
+        tooltip={tooltip}
         onClick={(event: MouseEvent) => {
           console.log('clcik')
           event.preventDefault()
           event.stopPropagation()
 
-          const action = isActive ? unwrap : wrap
+          const action = active ? unwrap : wrap
           // allow passing in own wrap/unwrap
           editorStore.transform(
             t =>

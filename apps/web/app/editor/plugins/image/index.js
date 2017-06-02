@@ -8,7 +8,9 @@ import ImageNode from './imageNode'
 export default class ImagePlugin {
   name = 'image'
   category = 'blocks'
-  barButtons = [createButton('media-image', BLOCKS.IMAGE)]
+  barButtons = [
+    createButton({ icon: 'media-image', type: BLOCKS.IMAGE, tooltip: 'Image' }),
+  ]
   nodes = {
     [BLOCKS.IMAGE]: ImageNode,
   }

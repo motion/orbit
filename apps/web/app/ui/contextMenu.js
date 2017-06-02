@@ -69,8 +69,6 @@ class ContextMenu {
 
     this.on(this.node, 'contextmenu', (event: Event) => {
       if (this.props.inactive) return
-      // allow disabling by holding shift for now (dev help)
-      if (Keys.active.shift) return
       event.preventDefault()
       this.props.store.handleContext(event)
     })
@@ -85,13 +83,13 @@ class ContextMenu {
           open
           overlay="transparent"
           popoverStyle={{
-            border: '1px solid #cfcfcf',
-            background: '#f9f9f9',
-            boxShadow: '2px 4px 11px rgba(0,0,0,0.2)',
-            borderRadius: 5,
+            border: '1px solid #bbb',
+            background: [240, 240, 240, 0.98],
+            boxShadow: '2px 4px 11px rgba(0,0,0,0.25)',
+            borderRadius: 4,
           }}
           escapable
-          animation="slide 200ms"
+          animation="slide 100ms"
           onClose={store.clearMenu}
           noArrow
           top={store.event.clientY + 20}
@@ -102,12 +100,13 @@ class ContextMenu {
             width={140}
             items={options}
             itemStyle={{
-              borderBottom: [1, '#ddd'],
-              padding: [2, 7, 2, 18],
+              padding: [0, 7, 0, 16],
+              margin: [3, 0],
               fontWeight: 300,
+              fontSize: 15,
               color: '#444',
               '&:hover': {
-                background: 'blue',
+                background: '#5E95F7',
                 color: 'white',
               },
             }}

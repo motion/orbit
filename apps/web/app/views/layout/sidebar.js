@@ -227,25 +227,6 @@ export default class Sidebar {
                 </Shortcuts>
               </ContextMenu>
             </Pane>
-            <Pane
-              if={false}
-              title="all"
-              collapsable
-              collapsed={store.sidePlacesClosed}
-              onSetCollapse={store.ref('sidePlacesClosed').set}
-            >
-              <List
-                controlled
-                items={store.sidePlaces}
-                onSelect={place => {
-                  store.setActive(place)
-                  if (place && place.url) {
-                    Router.go(place.url())
-                  }
-                }}
-                getItem={this.getListItem}
-              />
-            </Pane>
           </content>
 
           <SlotFill.Slot name="sidebar">

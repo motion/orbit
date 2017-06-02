@@ -7,11 +7,11 @@ export { query } from '@jot/models'
 export clr from 'color'
 export debug from 'debug'
 
-import kc from 'keycode'
+import _keyCode from 'keycode'
 // fix react synth event
 export const keycode = (event: Event) => {
   event.persist()
-  const code = kc(event)
+  const code = _keyCode(event)
   if (localStorage.debug) {
     console.log(code)
   }

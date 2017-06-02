@@ -99,6 +99,8 @@ export default class ListItem {
       position: 'relative',
       zIndex: 0,
       overflow: 'hidden',
+      fontWeight: 500,
+      fontSize: 16,
       '&:active': {
         background: [0, 0, 0, 0.05],
       },
@@ -124,8 +126,6 @@ export default class ListItem {
     primary: {
       flex: 1,
       whiteSpace: 'nowrap',
-      fontWeight: 500,
-      fontSize: 16,
     },
     secondary: {
       color: 'rgba(0,0,0,0.45)',

@@ -425,11 +425,11 @@ export default class Popover {
     if (VERTICAL) {
       // determine arrow location
       if (direction === 'top') {
-        arrowTop = popoverSize.height - forgiveness
+        arrowTop = popoverSize.height + arrowSize
         top = targetTopReal - popoverSize.height - arrowHeight - props.distance
         maxHeight = window.innerHeight - targetBounds.height
       } else {
-        arrowTop = -arrowSize + forgiveness
+        arrowTop = 0
         top = targetTopReal + targetBounds.height + arrowHeight
         maxHeight =
           window.innerHeight - (targetBounds.top + targetBounds.height)
@@ -575,7 +575,11 @@ export default class Popover {
       <root {...props}>
         {React.isValidElement(target) && React.cloneElement(target, childProps)}
         <Portal isOpened>
-          <container $open={showPopover} $closing={closing}>
+          <container
+            data-towards={direction}
+            $open={showPopover}
+            $closing={closing}
+          >
             <background
               if={overlay}
               ref={this.overlayRef}

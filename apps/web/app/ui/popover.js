@@ -18,12 +18,23 @@ const maxForgiveness = (forgiveness, distance) =>
   Math.min(forgiveness, distance)
 
 @view.ui class Arrow {
+  getRotation = () => {
+    const { towards } = this.props
+    switch (towards) {
+      case 'left':
+        return '-45deg'
+      case 'right':
+        return '-90deg'
+    }
+    return '0deg'
+  }
+
   render({ size, towards, theme }) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
     return (
-      <arrow style={{ width: size, height: size }}>
+      <arrow $rotate={this.getRotation()} style={{ width: size, height: size }}>
         <arrowInner
           style={{
             top: innerTop * 0.75,
@@ -47,6 +58,11 @@ const maxForgiveness = (forgiveness, distance) =>
       borderRadius: 1,
       transform: 'rotate(45deg)',
     },
+    rotate: amount => ({
+      transform: {
+        rotate: amount,
+      },
+    }),
   }
 
   static theme = {
@@ -313,25 +329,24 @@ export default class Popover {
     const popoverSize = this.getPopoverSize(props)
     const targetBounds = this.getTargetBounds(props)
     // direction is final direction accounting for towards="auto"
-    const direction = this.getDirection(
-      props.towards,
-      targetBounds,
-      popoverSize
-    )
+    const direction = this.getDirection(props, targetBounds, popoverSize)
 
     return {
-      ...this.getX(props, popoverSize, targetBounds),
-      ...this.getY(props, popoverSize, targetBounds),
+      ...this.getX(props, direction, popoverSize, targetBounds),
+      ...this.getY(props, direction, popoverSize, targetBounds),
       direction,
     }
   }
 
-  getDirection = (towards, targetBounds, popoverSize) => {
+  getDirection = ({ forgiveness, towards }, targetBounds, popoverSize) => {
     if (towards !== 'auto') {
       return towards
     }
-    // TODO determine direction using popover + target
-    return 'bottom'
+    const popoverY = popoverSize.height + forgiveness
+    const targetY = targetBounds.top + targetBounds.height
+    const towardsTop = targetY + popoverY > window.innerHeight
+    console.log('towardsTop = ', targetY + popoverY, window.innerHeight)
+    return towardsTop ? 'top' : 'bottom'
   }
 
   edgePad = (props, currentPosition, windowSize, popoverSize) => {
@@ -343,8 +358,8 @@ export default class Popover {
     )
   }
 
-  getX = (props, popoverSize, targetBounds) => {
-    const { towards } = props
+  getX = (props, direction, popoverSize, targetBounds) => {
+    const VERTICAL = direction === 'top' || direction === 'bottom'
     // find left
     const popoverHalfWidth = popoverSize.width / 2
     const targetCenter = targetBounds.left + targetBounds.width / 2
@@ -355,7 +370,7 @@ export default class Popover {
 
     // auto for now will just be top/bottom
     // in future it needs to measure target and then determine
-    if (towards === 'top' || towards === 'bottom' || towards === 'auto') {
+    if (VERTICAL) {
       left = this.edgePad(
         props,
         targetCenter - popoverHalfWidth,
@@ -379,10 +394,10 @@ export default class Popover {
       arrowLeft = Math.max(min, Math.min(max, arrowLeft))
       arrowLeft = -(props.arrowSize / 2) + arrowLeft
     } else {
-      if (towards === 'left') {
+      if (direction === 'left') {
         arrowLeft = targetBounds.width
         left = targetBounds.left - popoverSize.width - props.distance
-      } else if (towards === 'right') {
+      } else if (direction === 'right') {
         left = targetBounds.left + targetBounds.width + props.distance
         arrowLeft = -targetBounds.width
       }
@@ -394,8 +409,9 @@ export default class Popover {
     return { arrowLeft, left }
   }
 
-  getY = (props, popoverSize, targetBounds) => {
-    const { towards, forgiveness, noArrow, arrowSize } = props
+  getY = (props, direction, popoverSize, targetBounds) => {
+    const VERTICAL = direction === 'top' || direction === 'bottom'
+    const { forgiveness, noArrow, arrowSize } = props
     // since its rotated 45deg, the real height is less 1/4 of set height
     const arrowHeight = noArrow ? 0 : arrowSize * 0.75
     const targetCenter = targetBounds.top + targetBounds.height / 2
@@ -406,34 +422,23 @@ export default class Popover {
     let top = null
 
     // bottom half
-    if (towards === 'auto' || towards === 'top' || towards === 'bottom') {
-      // TODO base it on popover height not above half window
-      const showPopoverAbove =
-        targetTopReal + targetBounds.height + forgiveness > window.innerHeight
-      const arrowOnBottom =
-        towards === 'top' || (towards === 'auto' && showPopoverAbove)
-
+    if (VERTICAL) {
       // determine arrow location
-      if (arrowOnBottom) {
+      if (direction === 'top') {
         arrowTop = popoverSize.height - forgiveness
         top = targetTopReal - popoverSize.height - arrowHeight - props.distance
-      } else {
-        // top half
-        arrowTop = -arrowSize + forgiveness
-        top = targetTopReal + targetBounds.height + arrowHeight
-      }
-
-      // determine max height of popover
-      if (showPopoverAbove) {
         maxHeight = window.innerHeight - targetBounds.height
       } else {
+        arrowTop = -arrowSize + forgiveness
+        top = targetTopReal + targetBounds.height + arrowHeight
         maxHeight =
           window.innerHeight - (targetBounds.top + targetBounds.height)
       }
 
       // final top
       top = this.edgePad(props, top, window.innerHeight, popoverSize.height)
-    } else if (towards === 'left' || towards === 'right') {
+    } else {
+      // left or right
       const yCenter = targetCenter - popoverSize.height / 2
       top = yCenter
       arrowTop = popoverSize.height / 2 - arrowHeight / 2 + forgiveness

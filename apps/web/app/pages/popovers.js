@@ -6,7 +6,7 @@ import { Button, Popover } from '~/ui'
 export default class PopoversTest {
   render() {
     return (
-      <page>
+      <page if={true}>
         <Button tooltip="top" tooltipProps={{ open: true, towards: 'top' }}>
           top
         </Button>

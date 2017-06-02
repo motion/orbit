@@ -90,6 +90,7 @@ export default class Button {
         $hasIconAfter={hasIconAfter}
         $clickable={onClick || clickable}
         $activeOn={active}
+        $rounding={segmented ? segmented : { first: true, last: true }}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
         {...props}
@@ -151,6 +152,17 @@ export default class Button {
       borderRightWidth: 0,
       position: 'relative',
     },
+    rounding: ({ first, last }) => ({
+      ...(first && {
+        borderTopLeftRadius: RADIUS,
+        borderBottomLeftRadius: RADIUS,
+      }),
+      ...(last && {
+        borderRightWidth: 1,
+        borderTopRightRadius: RADIUS,
+        borderBottomRightRadius: RADIUS,
+      }),
+    }),
     wrap: {
       // flex: 1,
     },
@@ -214,19 +226,6 @@ export default class Button {
         },
       }
     },
-    segmented: ({ segmented: { first, last } }) => ({
-      segment: {
-        ...(first && {
-          borderTopLeftRadius: RADIUS,
-          borderBottomLeftRadius: RADIUS,
-        }),
-        ...(last && {
-          borderRightWidth: 1,
-          borderTopRightRadius: RADIUS,
-          borderBottomRightRadius: RADIUS,
-        }),
-      },
-    }),
     spaced: {
       segment: {
         borderRadius: 5,
@@ -248,6 +247,7 @@ export default class Button {
     },
     chromeless: {
       segment: {
+        border: 'none !important',
         borderWidth: 0,
         borderRightWidth: 0,
         borderLeftWidth: 0,

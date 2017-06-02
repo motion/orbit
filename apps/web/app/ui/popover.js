@@ -341,7 +341,6 @@ export default class Popover {
     const popoverY = popoverSize.height + forgiveness
     const targetY = targetBounds.top + targetBounds.height
     const towardsTop = targetY + popoverY > window.innerHeight
-    console.log('towardsTop = ', targetY + popoverY, window.innerHeight)
     return towardsTop ? 'top' : 'bottom'
   }
 
@@ -490,7 +489,9 @@ export default class Popover {
       if (this.props.target) {
         this.setTimeout(() => !this.isTargetHovered() && setFalse())
         this.setTimeout(() => !this.isTargetHovered() && setFalse(), 10)
-        this.setTimeout(() => !this.isTargetHovered() && setFalse(), 40)
+        this.setTimeout(() => !this.isTargetHovered() && setFalse(), 20)
+        this.setTimeout(() => !this.isTargetHovered() && setFalse(), 30)
+        this.setTimeout(() => !this.isTargetHovered() && setFalse(), 80)
       }
     })
 

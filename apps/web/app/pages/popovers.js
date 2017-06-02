@@ -1,32 +1,171 @@
 import React from 'react'
 import { view } from '~/helpers'
-import { Button, Popover } from '~/ui'
+import { Segment, Button, Popover } from '~/ui'
 
 @view
 export default class PopoversTest {
   render() {
+    // return null
     return (
       <page>
-        <Button tooltip="top" tooltipProps={{ open: true, towards: 'top' }}>
-          top
-        </Button>
-        <Button tooltip="left" tooltipProps={{ open: true, towards: 'left' }}>
-          left
-        </Button>
-        <Button tooltip="right" tooltipProps={{ open: true, towards: 'right' }}>
-          right
-        </Button>
-        <Button
-          tooltip="bottom"
-          tooltipProps={{ open: true, towards: 'bottom' }}
-        >
-          bottom
-        </Button>
+        <Segment>
+          <Button
+            tooltip="left"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              towards: 'left',
+            }}
+          >
+            left
+          </Button>
+          <Button
+            tooltip="top"
+            tooltipProps={{ open: true, showForgiveness: true, towards: 'top' }}
+          >
+            top
+          </Button>
+          <Button
+            tooltip="bottom"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              towards: 'bottom',
+            }}
+          >
+            bottom
+          </Button>
+          <Button
+            tooltip="right"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              towards: 'right',
+            }}
+          >
+            right
+          </Button>
+        </Segment>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        forgiveness = 50
+        <Segment>
+          <Button
+            tooltip="left"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              forgiveness: 50,
+              towards: 'left',
+            }}
+          >
+            left
+          </Button>
+          <Button
+            tooltip="top"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              forgiveness: 50,
+              towards: 'top',
+            }}
+          >
+            top
+          </Button>
+          <Button
+            tooltip="bottom"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              forgiveness: 50,
+              towards: 'bottom',
+            }}
+          >
+            bottom
+          </Button>
+          <Button
+            tooltip="right"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              forgiveness: 50,
+              towards: 'right',
+            }}
+          >
+            right
+          </Button>
+        </Segment>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        forgiveness = 10
+        distance = 25
+        <Segment>
+          <Button
+            tooltip="left"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              forgiveness: 10,
+              distance: 25,
+              towards: 'left',
+            }}
+          >
+            left
+          </Button>
+          <Button
+            tooltip="top"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              forgiveness: 10,
+              distance: 25,
+              towards: 'top',
+            }}
+          >
+            top
+          </Button>
+          <Button
+            tooltip="bottom"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              forgiveness: 10,
+              distance: 25,
+              towards: 'bottom',
+            }}
+          >
+            bottom
+          </Button>
+          <Button
+            tooltip="right"
+            tooltipProps={{
+              open: true,
+              showForgiveness: true,
+              forgiveness: 10,
+              distance: 25,
+              towards: 'right',
+            }}
+          >
+            right
+          </Button>
+        </Segment>
 
         <Button
           $auto
           tooltip="auto"
-          tooltipProps={{ open: true, towards: 'auto' }}
+          tooltipProps={{ open: true, showForgiveness: true, towards: 'auto' }}
         >
           auto
         </Button>
@@ -34,7 +173,7 @@ export default class PopoversTest {
           $auto
           $top
           tooltip="auto"
-          tooltipProps={{ open: true, towards: 'auto' }}
+          tooltipProps={{ open: true, showForgiveness: true, towards: 'auto' }}
         >
           auto
         </Button>

@@ -26,6 +26,7 @@ class Document extends Model {
   static props = {
     title: str,
     content: object,
+    text: str.optional,
     authorId: str,
     placeId: str.optional,
     places: array.optional.items(str),
@@ -103,6 +104,28 @@ class Document extends Model {
       return null
     }
     return this.collection.findOne().where('placeId').eq(id)
+  }
+
+  search = async text => {
+    // return recent
+    if (text === '') {
+      return await this.collection
+        .find({ draft: { $ne: true } })
+        .sort({ createdAt: 'desc' })
+        .limit(20)
+        .exec()
+    }
+
+    const ids = (await App.Document.pouch.search({
+      query: text,
+      fields: ['text', 'title'],
+      include_docs: false,
+      highlighting: false,
+    })).rows.map(row => row.id)
+
+    console.log('ids are', ids)
+
+    return await this.collection.find({ _id: { $in: ids } }).exec()
   }
 
   @query forPlace = id => {

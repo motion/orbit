@@ -1,21 +1,15 @@
 import { Document } from '@jot/models'
-import { includes } from 'lodash'
+import { includes, debounce } from 'lodash'
 
 const idFn = _ => _
 
 export default class CommanderStore {
   isOpen = false
-  docs = Document.recent()
   text = ''
+  textboxText = ''
   highlightIndex = 0
-
-  get matches() {
-    return (this.docs || []).filter(doc => {
-      // turn off filtering for now
-      return true
-      return includes(doc.getTitle().toLowerCase(), this.text.toLowerCase())
-    })
-  }
+  searchIds = []
+  docs = []
 
   get activeDoc() {
     return (this.docs || [])[this.highlightIndex] || null
@@ -45,6 +39,7 @@ export default class CommanderStore {
 
   onOpen = () => {
     this.isOpen = true
+    this.setText('')
   }
 
   onClose = () => {
@@ -52,11 +47,19 @@ export default class CommanderStore {
     this.isOpen = false
   }
 
+  commitText = debounce(
+    async val => {
+      this.text = val
+      this.highlightIndex = 0
+      this.docs = await Document.search(this.text)
+      console.log('ids are', this.searchIds)
+    },
+    150,
+    true
+  )
+
   setText = value => {
-    this.text = value
-    this.highlightIndex = 0
-    if (this.props.onChange) {
-      this.props.onChange(value)
-    }
+    this.textboxText = value
+    this.commitText(value)
   }
 }

@@ -12,15 +12,12 @@ import CommanderStore from './store'
 export default class Commander {
   render({ store }) {
     const searchIcon = <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
+    const docs = store.docs || []
+
     return (
       <bar $$align="center" $$row $$flex>
         {searchIcon}
-        <input
-          if={!store.isOpen}
-          value={store.text}
-          onChange={e => store.setText(e.target.value)}
-          onFocus={store.onOpen}
-        />
+        <input if={!store.isOpen} onFocus={store.onOpen} />
         <Portal closeOnEsc isOpened={store.isOpen} onClose={store.onClose}>
           <Shortcuts name="all" handler={store.handleShortcuts}>
             <container>
@@ -32,15 +29,15 @@ export default class Commander {
                   </overlayIcon>
                   <input
                     $q
-                    value={store.text}
+                    value={store.textboxText}
                     onChange={e => store.setText(e.target.value)}
                     onKeyDown={store.onKeyDown}
                     ref={el => el && el.focus()}
                   />
                 </overlaySearch>
                 <results>
-                  <matches>
-                    {store.matches.map((doc, index) => (
+                  <matches if={docs.length > 0}>
+                    {docs.map((doc, index) => (
                       <match
                         onClick={() => store.navTo(doc)}
                         key={doc._id}
@@ -53,10 +50,10 @@ export default class Commander {
                       </match>
                     ))}
                   </matches>
-                  <preview
-                    key={store.text + store.highlightIndex}
-                    if={store.activeDoc}
-                  >
+                  <noMatches if={docs.length === 0}>
+                    No Matches
+                  </noMatches>
+                  <preview key={store.activeDoc._id} if={store.activeDoc}>
                     <DocView
                       readOnly
                       find={store.text}
@@ -81,6 +78,13 @@ export default class Commander {
       bottom: 0,
       zIndex: 10000,
       backdropFilter: 'blur(5px)',
+    },
+    noMatches: {
+      flex: 1,
+      fontSize: 24,
+      color: '#444',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     commander: {
       position: 'absolute',
@@ -107,6 +111,7 @@ export default class Commander {
     results: {
       flexFlow: 'row',
       marginTop: 10,
+      flex: 1,
     },
     preview: {
       padding: 10,

@@ -77,6 +77,13 @@ export default class EditorStore {
     return Raw.serialize(this.state)
   }
 
+  get serializedText() {
+    return this.nodes
+      .filter(i => includes(['paragraph', 'title'], i.type))
+      .map(i => i.nodes.map(n => n.text).join(' '))
+      .join('\n')
+  }
+
   // this triggers on non-content changes, like selection changes
   // necessary to keep state up to date for transforms
   // sync right back into <Editor state={} />

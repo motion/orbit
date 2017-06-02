@@ -32,6 +32,7 @@ export default class EditorView {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.props.editorStore.find = nextProps.find
     // todo on receive new document from server, update it here
     // needs to check equality probably
   }
@@ -66,7 +67,6 @@ export default class EditorView {
           editorStore={editorStore}
           readOnly={readOnly}
           plugins={spec.plugins}
-          key={editorStore.find}
           schema={spec.schema}
           state={editorStore.state}
           onDocumentChange={this.onDocumentChange}
@@ -75,6 +75,7 @@ export default class EditorView {
           onFocus={editorStore.onFocus}
           onBlur={editorStore.onBlur}
           onKeyDown={editorStore.onKeyDown}
+          key={editorStore.find}
         />
         <Popovers editorStore={editorStore} />
         <SelectBar editorStore={editorStore} />

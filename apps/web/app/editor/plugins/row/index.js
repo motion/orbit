@@ -41,7 +41,7 @@ const createRow = (
   })
 }
 
-const insertRow = (transform, { columns = 2, ...options } = {}) => {
+const createInsertRow = options => (transform, { columns = 2 } = {}) => {
   if (!transform.state.selection.startKey) {
     return false
   }
@@ -68,11 +68,11 @@ export default class RowPlugin {
       icon: 'row',
       tooltip: 'Row',
       type: BLOCKS.ROW,
-      wrap: t => insertRow(t, this.options),
+      wrap: t => this.insertRow(t),
     }),
   ]
 
   createCol = createCol
   createRow = createRow
-  insertRow = insertRow
+  insertRow = createInsertRow(this.options)
 }

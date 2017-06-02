@@ -21,6 +21,7 @@ export default class EditorStore {
   rules = null
   plugins = []
   focused = false
+  find = this.props.find
 
   start({ onEditor, getRef, rules, plugins }) {
     this.rules = rules

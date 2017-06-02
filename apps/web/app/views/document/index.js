@@ -16,7 +16,7 @@ export default class DocumentView {
     inline?: boolean,
   }
 
-  render({ id, readOnly, store }) {
+  render({ id, find, readOnly, store }) {
     if (!store.document) {
       return <loading />
     }
@@ -26,6 +26,7 @@ export default class DocumentView {
         <document>
           <Editor
             readOnly={readOnly}
+            find={find}
             inline={this.props.inline}
             onEditor={store.onEditor}
           />

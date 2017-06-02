@@ -1,11 +1,34 @@
 import TrailingBlock from 'slate-trailing-block'
 import { BLOCKS } from '~/editor/constants'
 import { Button } from '~/ui'
+import Highlighter from './helpers/highlighter'
 import node from '~/editor/node'
 
-const paragraph = node(props => (
-  <p {...props.attributes} style={{ fontSize: 18 }}>{props.children}</p>
-))
+const paragraph = node(props => {
+  const { editorStore } = props
+  const style = { fontSize: 18 }
+  const text = props.children[0].props.node.text
+
+  if (
+    editorStore.find &&
+    editorStore.find.length > 0 &&
+    text.trim().length > 0
+  ) {
+    return (
+      <Highlighter
+        highlightClassName="word-highlight"
+        highlightStyle={style}
+        searchWords={[editorStore.find.toLowerCase()]}
+        sanitize={text => text.toLowerCase()}
+        style={style}
+        highlightStyle={{ background: '#ffd54f' }}
+        textToHighlight={text}
+      />
+    )
+  }
+
+  return <p {...props.attributes} style={style}>{props.children}</p>
+})
 
 const newParagraph = state =>
   state.transform().splitBlock().setBlock(BLOCKS.PARAGRAPH).apply()

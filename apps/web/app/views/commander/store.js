@@ -11,6 +11,8 @@ export default class CommanderStore {
 
   get matches() {
     return (this.docs || []).filter(doc => {
+      // turn off filtering for now
+      return true
       return includes(doc.getTitle().toLowerCase(), this.text.toLowerCase())
     })
   }

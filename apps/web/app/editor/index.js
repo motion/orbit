@@ -54,6 +54,7 @@ export default class EditorView {
       <document
         onClick={editorStore.handleDocumentClick}
         onMouseUp={this.onDocumentMouseUp}
+        $fullPage={!editorStore.inline}
       >
         <SlotFill.Fill if={showToolbar} name="documentActions">
           <Bar editorStore={editorStore} />
@@ -65,6 +66,7 @@ export default class EditorView {
           editorStore={editorStore}
           readOnly={readOnly}
           plugins={spec.plugins}
+          key={editorStore.find}
           schema={spec.schema}
           state={editorStore.state}
           onDocumentChange={this.onDocumentChange}
@@ -85,17 +87,9 @@ export default class EditorView {
       flex: 1,
       cursor: 'text',
     },
-    inline: (() => {
-      const scaleBy = 5
-
-      return {
-        transform: `scale(${1 / scaleBy})`,
-        width: `${scaleBy * 100}%`,
-        transformOrigin: `top left`,
-        overflow: 'visible',
-        transform: 'all 150ms ease-in',
-      }
-    })(),
+    fullPage: {
+      marginTop: 20,
+    },
     editor: {
       color: '#4c555a',
       fontSize: 16,
@@ -107,6 +101,7 @@ export default class EditorView {
   static theme = {
     inline: {
       document: {
+        padding: 5,
         overflow: 'hidden',
       },
     },

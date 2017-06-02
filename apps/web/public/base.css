@@ -2,6 +2,12 @@ document > pane {
   padding-bottom: 30px;
 }
 
+/* for highlighting words */
+mark {
+  display: inline !important; 
+  white-space: pre-wrap;
+}
+
 body {
   font-family: -apple-system, 'Lato', sans-serif;
   margin: 0;

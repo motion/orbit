@@ -57,7 +57,11 @@ export default class Commander {
                     key={store.text + store.highlightIndex}
                     if={store.activeDoc}
                   >
-                    <DocView readOnly id={store.activeDoc._id} />
+                    <DocView
+                      readOnly
+                      find={store.text}
+                      id={store.activeDoc._id}
+                    />
                   </preview>
                 </results>
               </commander>
@@ -102,11 +106,15 @@ export default class Commander {
     },
     results: {
       flexFlow: 'row',
+      marginTop: 10,
     },
     preview: {
       padding: 10,
       position: 'relative',
       flex: 4,
+      background: `rgba(255, 255, 255, .8)`,
+      border: '1px solid #eee',
+      maxWidth: 700,
     },
     input: {
       width: '100%',
@@ -142,9 +150,10 @@ export default class Commander {
     },
     matches: {
       overflow: 'scroll',
-      padding: 10,
+      paddingLeft: 10,
+      paddingRight: 10,
       flex: 1,
-      width: 285,
+      maxWidth: 350,
       overflow: 'hidden',
       overflowY: 'scroll',
       textSelect: 'none',

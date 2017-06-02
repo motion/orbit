@@ -51,7 +51,7 @@ const maxForgiveness = (forgiveness, distance) =>
 
   static theme = {
     theme: (props, state, activeTheme) => ({
-      arrowInner: activeTheme,
+      arrowInner: activeTheme.base,
     }),
   }
 }
@@ -680,7 +680,7 @@ export default class Popover {
 
   static theme = {
     theme: (props, context, activeTheme) => ({
-      withBackground: activeTheme,
+      withBackground: activeTheme.base,
     }),
     popoverStyle: ({ popoverStyle }) => ({
       content: popoverStyle,

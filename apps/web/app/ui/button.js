@@ -102,7 +102,7 @@ export default class Button {
               $iconAfter={hasIconAfter}
               name={icon}
               size={iconSize}
-              color={color || iconColor}
+              color={active ? '#fff' : color || iconColor}
               {...iconProps}
             />
             <children if={children} style={{ color }}>
@@ -198,11 +198,13 @@ export default class Button {
     theme: (props, context, activeTheme) => {
       return {
         segment: {
-          ...activeTheme,
-          '&:active': activeTheme,
+          ...activeTheme.base,
+          '&:active': activeTheme.active,
+          '&:hover': activeTheme.hover,
         },
         activeOn: {
-          background: 'black',
+          ...activeTheme.active,
+          '&:hover': activeTheme.active,
         },
         clickable: {
           '&:active': activeTheme,

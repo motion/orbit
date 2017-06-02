@@ -57,6 +57,6 @@ export const getTarget = target => {
 class Cache {
   all = new Set()
   add = item => (this.all = this.all.add(item))
-  remove = item => (this.all = this.all.remove(item))
+  remove = item => (this.all = this.all.delete(item))
 }
 export const viewCache = new Cache()

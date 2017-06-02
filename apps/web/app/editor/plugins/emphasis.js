@@ -13,6 +13,7 @@ const createMarkButton = ({ icon, type }) => {
     type,
     wrap: toggle,
     unwrap: toggle,
+    isActive: state => state.marks.some(mark => mark.type === type),
   })
 }
 

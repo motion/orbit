@@ -24,7 +24,6 @@ export const createButton = ({
         active={active}
         tooltip={tooltip}
         onClick={(event: MouseEvent) => {
-          console.log('clcik')
           event.preventDefault()
           event.stopPropagation()
 

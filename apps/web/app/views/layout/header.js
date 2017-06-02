@@ -20,6 +20,7 @@ export default class Header {
         <nav>
           <Segment>
             <Button
+              if={false}
               icon="asd"
               chromeless
               $inactive={Router.atBack}

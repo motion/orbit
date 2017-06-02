@@ -86,9 +86,8 @@ export default class Button {
 
     return (
       <segment
-        $hasIconBefore={hasIconBefore}
-        $hasIconAfter={hasIconAfter}
-        $clickable={onClick || clickable}
+        $color={color}
+        $clickable={!!onClick || clickable}
         $activeOn={active}
         $rounding={segmented ? segmented : { first: true, last: true }}
         className={`${className || ''} ${this.uniq}`}
@@ -106,9 +105,14 @@ export default class Button {
               color={active ? '#fff' : color || iconColor}
               {...iconProps}
             />
-            <children if={children} style={{ color }}>
+            <children
+              if={children}
+              $hasIconBefore={hasIconBefore}
+              $hasIconAfter={hasIconAfter}
+              style={{ color }}
+            >
               <glowWrap if={!active}>
-                <Glow full scale={0.7} color={[0, 0, 0]} opacity={0.04} />
+                <Glow full scale={1} color={[0, 0, 0]} opacity={0.08} />
               </glowWrap>
               {children}
             </children>
@@ -145,13 +149,15 @@ export default class Button {
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',
-      color: '#444',
       borderColor: '#ddd',
       borderWidth: 1,
       borderStyle: 'dotted',
       borderRightWidth: 0,
       position: 'relative',
     },
+    color: color => ({
+      color,
+    }),
     rounding: ({ first, last }) => ({
       ...(first && {
         borderTopLeftRadius: RADIUS,
@@ -165,12 +171,11 @@ export default class Button {
     }),
     wrap: {
       // flex: 1,
+      flexFlow: 'row',
+      alignItems: 'center',
     },
     clickable: {
       cursor: 'pointer',
-      '&:hover': {
-        background: '#fefefe',
-      },
     },
     activeOn: {
       background: '#eee',
@@ -181,6 +186,9 @@ export default class Button {
     children: {
       userSelect: 'none',
     },
+    icon: {
+      pointerEvents: 'none',
+    },
     glowWrap: {
       position: 'absolute',
       overflow: 'hidden',
@@ -189,17 +197,12 @@ export default class Button {
       right: 0,
       bottom: 0,
       zIndex: 10,
-      borderRadius: RADIUS,
     },
     hasIconBefore: {
-      '& children': {
-        marginLeft: 3,
-      },
+      marginLeft: 5,
     },
     hasIconAfter: {
-      '& children': {
-        marginRight: 3,
-      },
+      marginRight: 5,
     },
     iconAfter: {
       order: 3,

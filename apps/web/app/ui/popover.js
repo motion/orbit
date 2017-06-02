@@ -9,22 +9,19 @@ const INVERSE = {
   top: 'bottom',
   bottom: 'top',
   left: 'right',
-  right: 'bottom',
+  right: 'left',
 }
 
 const DARK_BG = [0, 0, 0, 0.75]
-
-const maxForgiveness = (forgiveness, distance) =>
-  Math.min(forgiveness, distance)
 
 @view.ui class Arrow {
   getRotation = () => {
     const { towards } = this.props
     switch (towards) {
       case 'left':
-        return '-45deg'
-      case 'right':
         return '-90deg'
+      case 'right':
+        return '90deg'
     }
     return '0deg'
   }
@@ -292,9 +289,8 @@ export default class Popover {
       width: isNumber(height) ? height : popover.clientWidth,
     }
     // adjust for forgiveness
-    const maxForgive = maxForgiveness(forgiveness, distance)
-    size.height -= maxForgive * 2
-    size.width -= maxForgive * 2
+    size.height -= forgiveness * 2
+    size.width -= forgiveness * 2
     return size
   }
 
@@ -397,7 +393,7 @@ export default class Popover {
       if (direction === 'left') {
         arrowLeft = targetBounds.width
         left = targetBounds.left - popoverSize.width - props.distance
-      } else if (direction === 'right') {
+      } else {
         left = targetBounds.left + targetBounds.width + props.distance
         arrowLeft = -targetBounds.width
       }
@@ -711,9 +707,9 @@ export default class Popover {
     }),
     forgiveness: ({ forgiveness, distance, showForgiveness }) => ({
       popover: {
-        padding: maxForgiveness(forgiveness, distance),
-        margin: -maxForgiveness(forgiveness, distance),
-        background: showForgiveness ? 'green' : 'auto',
+        padding: forgiveness,
+        margin: -forgiveness,
+        background: showForgiveness ? [50, 100, 150, 0.2] : 'auto',
       },
     }),
     shadow: ({ shadow }) => ({

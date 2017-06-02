@@ -7,12 +7,7 @@ export default class Alignment {
 
   contextButtons = [
     () => (
-      <Popover
-        target={<Button icon="align-justify" />}
-        openOnHover
-        showForgiveness
-        background
-      >
+      <Popover target={<Button icon="align-justify" />} openOnHover background>
         <row style={{ flexFlow: 'row' }}>
           <Button icon="align-left" />
           <Button icon="align-right" />

@@ -3,6 +3,10 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Gloss from '~/helpers/styles'
+
+// allow any <tag /> to use our $$parent styles
+React.createElement = Gloss.createElement
 
 const Root = require('./views/splash').default
 ReactDOM.render(<Root />, document.querySelector('#app'))

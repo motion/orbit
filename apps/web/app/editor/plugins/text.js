@@ -54,12 +54,7 @@ export default class TextPlugin {
 
   contextButtons = [
     () => (
-      <Popover
-        target={<Button icon="textbackground" />}
-        openOnHover
-        showForgiveness
-        background
-      >
+      <Popover target={<Button icon="textbackground" />} openOnHover background>
         <row style={{ flexFlow: 'row' }}>
           <Button icon="textcolor" />
           <Button icon="textbackground" />

@@ -19,7 +19,7 @@ import Draft from './document/draft'
 // simply @view.attach('layoutStore') for example in any sub-view
 
 // optimized re-render for sidebar resize
-@view class Wrap {
+@view class LayoutWrap {
   render({ layoutStore, children }) {
     return (
       <wrap $$right={layoutStore.sidebar.trueWidth}>
@@ -64,6 +64,10 @@ export default class Root extends React.Component {
     this.setState({
       error,
     })
+    // until we can clear on next hmr, just show for a second
+    this.setTimeout(() => {
+      this.setState({ error: null })
+    }, 2000)
   }
 
   render({ layoutStore, keyStore }, { error }) {
@@ -82,7 +86,7 @@ export default class Root extends React.Component {
     return (
       <SlotFill.Provider>
         <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
-          <Wrap layoutStore={layoutStore}>
+          <LayoutWrap layoutStore={layoutStore}>
             <Header layoutStore={layoutStore} />
             <content
               onScroll={this.onScroll}
@@ -97,7 +101,7 @@ export default class Root extends React.Component {
               $circleButton
               icon="add"
             />
-          </Wrap>
+          </LayoutWrap>
           <Errors />
           <Sidebar />
         </Shortcuts>

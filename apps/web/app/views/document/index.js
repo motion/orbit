@@ -47,7 +47,7 @@ export default class DocumentView {
     },
     document: {
       padding: 0,
-      maxWidth: 650,
+      maxWidth: 1250,
       flex: 1,
     },
   }

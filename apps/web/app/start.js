@@ -36,10 +36,6 @@ if (!IS_PROD) {
   window._ = _
 }
 
-function errorReporter({ error }, view) {
-  throw error
-}
-
 const ROOT = document.querySelector('#app')
 
 export function render() {

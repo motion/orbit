@@ -391,11 +391,11 @@ export default class Popover {
       arrowLeft = -(props.arrowSize / 2) + arrowLeft
     } else {
       if (direction === 'left') {
-        arrowLeft = targetBounds.width
+        arrowLeft = popoverHalfWidth
         left = targetBounds.left - popoverSize.width - props.distance
       } else {
         left = targetBounds.left + targetBounds.width + props.distance
-        arrowLeft = -targetBounds.width
+        arrowLeft = -popoverHalfWidth - props.arrowSize
       }
     }
 
@@ -421,11 +421,11 @@ export default class Popover {
     if (VERTICAL) {
       // determine arrow location
       if (direction === 'top') {
-        arrowTop = popoverSize.height + arrowSize
+        arrowTop = popoverSize.height + forgiveness
         top = targetTopReal - popoverSize.height - arrowHeight - props.distance
         maxHeight = window.innerHeight - targetBounds.height
       } else {
-        arrowTop = 0
+        arrowTop = -arrowSize + forgiveness
         top = targetTopReal + targetBounds.height + arrowHeight
         maxHeight =
           window.innerHeight - (targetBounds.top + targetBounds.height)

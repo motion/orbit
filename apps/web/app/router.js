@@ -8,6 +8,7 @@ const getRoutes = context => ({
   '/feed': require('./pages/feed.js').default,
   '/templates': require('./pages/templates.js').default,
   '/todo': require('./pages/todo.js').default,
+  '/popovers': require('./pages/popovers.js').default,
   'g/:slug(/:hashtag)': require('./pages/place.js').default,
   'd/:id': require('./pages/doc.js').default,
 })

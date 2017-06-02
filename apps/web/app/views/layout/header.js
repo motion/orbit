@@ -20,6 +20,12 @@ export default class Header {
         <nav>
           <Segment>
             <Button
+              icon="asd"
+              chromeless
+              $inactive={Router.atBack}
+              onClick={() => Router.go('/popovers')}
+            />
+            <Button
               if={IS_ELECTRON}
               icon="minimal-left"
               chromeless

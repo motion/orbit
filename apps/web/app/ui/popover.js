@@ -269,66 +269,64 @@ export default class Popover {
     })
   }
 
-  getPositionState = props => {
-    let { width, height } = props
-    const { bottom, top, left, towards } = props
-    const isManuallyPositioned =
-      (isNumber(bottom) || isNumber(top)) && isNumber(left)
-    const { popover: { clientWidth, clientHeight } } = this.refs
+  getPopoverSize = ({ width, height, distance, forgiveness }): Object => {
+    const { popover } = this.refs
+    const size = {
+      height: isNumber(width) ? width : popover.clientHeight,
+      width: isNumber(height) ? height : popover.clientWidth,
+    }
+    // adjust for forgiveness
+    const maxForgive = maxForgiveness(forgiveness, distance)
+    size.height -= maxForgive * 2
+    size.width -= maxForgive * 2
+    return size
+  }
 
-    if (!this.target && !isManuallyPositioned) {
+  getTargetBounds = (props): Object => {
+    const { top, left } = props
+    const bounds = {}
+    // find target dimensions
+    if (this.isManuallyPositioned(props)) {
+      bounds.width = 0
+      bounds.height = 0
+      bounds.left = left
+      bounds.top = top
+    } else {
+      const targetBounds = this.target.getBoundingClientRect()
+      bounds.width = targetBounds.width
+      bounds.height = targetBounds.height
+      bounds.left = targetBounds.left
+      bounds.top = targetBounds.top
+    }
+    return bounds
+  }
+
+  isManuallyPositioned = ({ bottom, top, left }) => {
+    return (isNumber(bottom) || isNumber(top)) && isNumber(left)
+  }
+
+  getPositionState = props => {
+    if (!this.target && !this.isManuallyPositioned(props)) {
       throw new Error('No top/left/bottom or target given to Popover!')
     }
 
-    // find popover dimensions
-    width = isNumber(width) ? width : clientWidth
-    height = isNumber(height) ? height : clientHeight
-    const forgiveness = maxForgiveness(props.forgiveness, props.distance)
-    height -= forgiveness * 2
-    width -= forgiveness * 2
-
-    const target = {}
-
-    // find target dimensions
-    if (isManuallyPositioned) {
-      target.width = 0
-      target.height = 0
-      target.left = left
-      target.top = top
-    } else {
-      const bounds = this.target.getBoundingClientRect()
-      target.width = bounds.width
-      target.height = bounds.height
-      target.left = bounds.left
-      target.top = bounds.top
-    }
-
+    const popoverSize = this.getPopoverSize(props)
+    const targetBounds = this.getTargetBounds(props)
     // direction is final direction accounting for towards="auto"
-    const direction = this.getDirection(towards, target, width, height)
+    const direction = this.getDirection(
+      props.towards,
+      targetBounds,
+      popoverSize
+    )
 
     return {
-      ...this.getX(
-        props,
-        width,
-        target.width,
-        target.left,
-        towards,
-        forgiveness,
-        isManuallyPositioned
-      ),
-      ...this.getY(
-        props,
-        height,
-        target.height,
-        target.top,
-        towards,
-        forgiveness
-      ),
+      ...this.getX(props, popoverSize, targetBounds),
+      ...this.getY(props, popoverSize, targetBounds),
       direction,
     }
   }
 
-  getDirection = (towards, target, popoverWidth, popoverHeight) => {
+  getDirection = (towards, targetBounds, popoverSize) => {
     if (towards !== 'auto') {
       return towards
     }
@@ -336,19 +334,20 @@ export default class Popover {
     return 'bottom'
   }
 
-  edgePad = (props, pos, max, width) => {
+  edgePad = (props, currentPosition, windowSize, popoverSize) => {
     return Math.min(
       // upper limit
-      max - props.distance - width,
+      windowSize - props.distance - popoverSize,
       // lower limit
-      Math.max(props.distance, pos)
+      Math.max(props.distance, currentPosition)
     )
   }
 
-  getX = (props, popoverWidth, targetWidth, targetLeft, towards) => {
+  getX = (props, popoverSize, targetBounds) => {
+    const { towards } = props
     // find left
-    const popoverHalfWidth = popoverWidth / 2
-    const targetCenter = targetLeft + targetWidth / 2
+    const popoverHalfWidth = popoverSize.width / 2
+    const targetCenter = targetBounds.left + targetBounds.width / 2
     const arrowCenter = window.innerWidth - popoverHalfWidth
 
     let left
@@ -361,7 +360,7 @@ export default class Popover {
         props,
         targetCenter - popoverHalfWidth,
         window.innerWidth,
-        popoverWidth
+        popoverSize.width
       )
 
       // find arrowLeft
@@ -381,11 +380,11 @@ export default class Popover {
       arrowLeft = -(props.arrowSize / 2) + arrowLeft
     } else {
       if (towards === 'left') {
-        arrowLeft = targetWidth
-        left = targetLeft - popoverWidth - props.distance
+        arrowLeft = targetBounds.width
+        left = targetBounds.left - popoverSize.width - props.distance
       } else if (towards === 'right') {
-        left = targetLeft + targetWidth + props.distance
-        arrowLeft = -targetWidth
+        left = targetBounds.left + targetBounds.width + props.distance
+        arrowLeft = -targetBounds.width
       }
     }
 
@@ -395,20 +394,12 @@ export default class Popover {
     return { arrowLeft, left }
   }
 
-  getY = (
-    props,
-    popoverHeight,
-    targetHeight,
-    targetTop,
-    towards,
-    forgiveness
-  ) => {
-    const { noArrow, arrowSize } = props
-
+  getY = (props, popoverSize, targetBounds) => {
+    const { towards, forgiveness, noArrow, arrowSize } = props
     // since its rotated 45deg, the real height is less 1/4 of set height
     const arrowHeight = noArrow ? 0 : arrowSize * 0.75
-    const targetCenter = targetTop + targetHeight / 2
-    const targetTop$ = targetTop - window.scrollY
+    const targetCenter = targetBounds.top + targetBounds.height / 2
+    const targetTopReal = targetBounds.top - window.scrollY
 
     let arrowTop
     let maxHeight
@@ -417,28 +408,35 @@ export default class Popover {
     // bottom half
     if (towards === 'auto' || towards === 'top' || towards === 'bottom') {
       // TODO base it on popover height not above half window
-      const targetIsAboveHalf = targetCenter > window.innerHeight / 2
+      const showPopoverAbove =
+        targetTopReal + targetBounds.height + forgiveness > window.innerHeight
       const arrowOnBottom =
-        towards === 'top' || (towards === 'auto' && targetIsAboveHalf)
+        towards === 'top' || (towards === 'auto' && showPopoverAbove)
 
+      // determine arrow location
       if (arrowOnBottom) {
-        arrowTop = popoverHeight - forgiveness
-        top = targetTop$ - popoverHeight - arrowHeight - props.distance
+        arrowTop = popoverSize.height - forgiveness
+        top = targetTopReal - popoverSize.height - arrowHeight - props.distance
       } else {
         // top half
         arrowTop = -arrowSize + forgiveness
-        top = targetTop$ + targetHeight + arrowHeight
+        top = targetTopReal + targetBounds.height + arrowHeight
       }
 
-      const ensurePad = y =>
-        this.edgePad(props, y, window.innerHeight, maxHeight - targetHeight)
+      // determine max height of popover
+      if (showPopoverAbove) {
+        maxHeight = window.innerHeight - targetBounds.height
+      } else {
+        maxHeight =
+          window.innerHeight - (targetBounds.top + targetBounds.height)
+      }
 
-      maxHeight = window.innerHeight - (targetTop + targetHeight)
-      top = top && ensurePad(top)
+      // final top
+      top = this.edgePad(props, top, window.innerHeight, popoverSize.height)
     } else if (towards === 'left' || towards === 'right') {
-      const yCenter = targetCenter - popoverHeight / 2
+      const yCenter = targetCenter - popoverSize.height / 2
       top = yCenter
-      arrowTop = popoverHeight / 2 - arrowHeight / 2 + forgiveness
+      arrowTop = popoverSize.height / 2 - arrowHeight / 2 + forgiveness
     }
 
     // adjustments
@@ -447,8 +445,8 @@ export default class Popover {
     return { arrowTop, top, maxHeight }
   }
 
-  handleBgClick = e => {
-    e.stopPropagation()
+  handleOverlayClick = (event: MouseEvent) => {
+    event.stopPropagation()
     this.close()
   }
 
@@ -500,6 +498,12 @@ export default class Popover {
       this.target.querySelector(':hover') ||
       this.target.parentNode.querySelector(':hover')
     )
+  }
+
+  overlayRef = ref => {
+    if (ref) {
+      this.on(ref, 'contextmenu', this.handleOverlayClick)
+    }
   }
 
   render() {
@@ -569,9 +573,10 @@ export default class Popover {
           <container $open={showPopover} $closing={closing}>
             <background
               if={overlay}
+              ref={this.overlayRef}
               $overlay={overlay}
               $overlayShown={showPopover}
-              onClick={this.handleBgClick}
+              onClick={this.handleOverlayClick}
             />
             <popover
               {...popoverProps}

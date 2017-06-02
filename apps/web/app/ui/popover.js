@@ -357,6 +357,7 @@ export default class Popover {
   getX = (props, direction, popoverSize, targetBounds) => {
     const VERTICAL = direction === 'top' || direction === 'bottom'
     // find left
+    const { distance, arrowSize, forgiveness } = props
     const popoverHalfWidth = popoverSize.width / 2
     const targetCenter = targetBounds.left + targetBounds.width / 2
     const arrowCenter = window.innerWidth - popoverHalfWidth
@@ -378,24 +379,26 @@ export default class Popover {
       if (targetCenter < popoverHalfWidth) {
         arrowLeft = -popoverHalfWidth - targetCenter
       } else if (targetCenter > arrowCenter) {
-        arrowLeft = targetCenter - arrowCenter + props.distance
+        arrowLeft = targetCenter - arrowCenter + distance
       }
 
       // arrowLeft bounds
-      const max = Math.max(
-        0,
-        popoverHalfWidth - props.distance - props.arrowSize * 0.5
-      )
-      const min = -popoverHalfWidth + props.arrowSize * 0.5 + props.distance
+      const max = Math.max(0, popoverHalfWidth - distance - arrowSize * 0.75)
+      const min = -popoverHalfWidth + arrowSize * 0.5 + distance
       arrowLeft = Math.max(min, Math.min(max, arrowLeft))
-      arrowLeft = -(props.arrowSize / 2) + arrowLeft
+      arrowLeft = -(arrowSize / 2) + arrowLeft
+      // adjust arrows off in this case
+      // TODO: this isnt quite right
+      if (distance > forgiveness) {
+        arrowLeft = arrowLeft / 2 - forgiveness
+      }
     } else {
       if (direction === 'left') {
         arrowLeft = popoverHalfWidth
-        left = targetBounds.left - popoverSize.width - props.distance
+        left = targetBounds.left - popoverSize.width - distance
       } else {
-        left = targetBounds.left + targetBounds.width + props.distance
-        arrowLeft = -popoverHalfWidth - props.arrowSize
+        left = targetBounds.left + targetBounds.width + distance
+        arrowLeft = -popoverHalfWidth - arrowSize
       }
     }
 

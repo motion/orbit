@@ -79,6 +79,7 @@ export default class Button {
 
     return (
       <button
+        $$borderRadius={borderRadius}
         $segmented={segmented && this.props}
         $color={color}
         $clickable={!!onClick || clickable}
@@ -203,10 +204,9 @@ export default class Button {
   }
 
   static theme = {
-    theme: ({ borderRadius }, context, activeTheme) => {
+    theme: (props, context, activeTheme) => {
       return {
         button: {
-          borderRadius,
           borderWidth: 1,
           ...activeTheme.base,
           '&:active': activeTheme.active,
@@ -226,7 +226,6 @@ export default class Button {
     },
     spaced: {
       button: {
-        borderRadius: 5,
         margin: [0, 5],
         borderRightWidth: 1,
       },

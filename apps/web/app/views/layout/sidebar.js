@@ -176,6 +176,21 @@ export default class Sidebar {
         <sidebar>
           <top>
             <Login />
+
+            <orgs $$row>
+              {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
+                <Button
+                  key={i}
+                  style={{ marginLeft: 5, marginRight: 5 }}
+                  circular
+                  size={32}
+                  iconSize={12}
+                  color="green"
+                  icon={name}
+                />
+              ))}
+            </orgs>
+
             <title $$row $$justify="space-between" $$padding={[4, 6]}>
               <input
                 $search

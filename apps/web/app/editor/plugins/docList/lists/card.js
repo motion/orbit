@@ -1,7 +1,6 @@
 import React from 'react'
 import { view } from '~/helpers'
 import { Icon } from '~/ui'
-import randomcolor from 'random-color'
 import DocItem from '~/views/document/item'
 
 @view

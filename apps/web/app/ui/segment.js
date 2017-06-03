@@ -86,6 +86,7 @@ const notUndefined = x => typeof x !== 'undefined'
               uiSegment: {
                 first: i === 0,
                 last: i === items.length - 1,
+                index: i,
               },
             }}
           >
@@ -108,19 +109,20 @@ const notUndefined = x => typeof x !== 'undefined'
     }
 
     return (
-      <container {...props}>
+      <segment {...props}>
         <title if={title}>{title}</title>
         {finalChildren}
-      </container>
+      </segment>
     )
   }
 
   static style = {
-    container: {
+    segment: {
       pointerEvents: 'auto',
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',
+      flex: 1,
     },
     title: {
       margin: ['auto', 5],

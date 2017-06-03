@@ -99,6 +99,7 @@ export default class Root extends React.Component {
               circular
               onClick={() => layoutStore.createDoc()}
               $circleButton
+              material
               icon="add"
             />
           </LayoutWrap>
@@ -114,6 +115,7 @@ export default class Root extends React.Component {
       position: 'absolute',
       bottom: 20,
       right: 20,
+      zIndex: 1000000000,
     },
     layout: {
       flex: 1,

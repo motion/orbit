@@ -133,6 +133,14 @@ class App {
           retry: true,
         }
       )
+      // one way down
+      model.collection.pouch.replicate.from(
+        `${database.couchUrl}/${model.title}`,
+        {
+          live: true,
+          retry: true,
+        }
+      )
     })
 
     console.time('connect')
@@ -140,6 +148,7 @@ class App {
     console.timeEnd('connect')
 
     // seed db
+    // settimeout to avoid laggy initial render
     setTimeout(() => {
       this.seed = new Seed()
       this.seed.start()

@@ -71,6 +71,7 @@ export default class Button {
       size,
       circleProps,
       borderRadius,
+      material,
       ...props
     } = this.props
 
@@ -235,9 +236,9 @@ export default class Button {
         flex: 1,
       },
     },
-    circular: ({ size, segmented }) => ({
+    circular: ({ size }) => ({
       button: {
-        ...(!segmented && { borderRadius: size * 1000 }),
+        borderRadius: 10000,
         width: size,
         height: size,
       },

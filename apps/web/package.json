@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "motion",
-    "start-dev": "npm run start",
+    "start-dev": "echo hi",
     "start-prod": "echo hi",
     "start-debug": "motion --debug",
     "build": "node scripts/build.js",

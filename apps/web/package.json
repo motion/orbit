@@ -58,7 +58,6 @@
     "pouchdb-replication": "^6.1.2",
     "pouchdb-validation": "^1.2.1",
     "prop-types": "^15.5.9",
-    "random-color": "^1.0.1",
     "randomcolor": "^0.5.2",
     "react": "^15.5.2",
     "react-dom": "^15.5.4",

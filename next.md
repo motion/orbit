@@ -22,6 +22,8 @@
 
 # technical
 
+- <Form /> which passes context to button
+-    <Button /> which takes form context to add &:active style
 - light theme by default
   - input, button, drawer, listitem, popover, text, title, ...
 - move app logic to root stores

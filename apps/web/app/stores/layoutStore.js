@@ -1,7 +1,7 @@
 // @flow
 import { store } from '~/helpers'
 import { Document } from '@jot/models'
-import SidebarStore from './sidebar'
+import SidebarStore from '~/stores/sidebarStore'
 
 export default class LayoutStore {
   title = ''

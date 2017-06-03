@@ -2,7 +2,6 @@
 import React from 'react'
 import { view } from '~/helpers'
 import { List, Popover } from '~/ui'
-import { Keys } from '~/stores'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
 

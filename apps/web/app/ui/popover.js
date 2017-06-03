@@ -341,7 +341,6 @@ export default class Popover {
     const popoverY = popoverSize.height + forgiveness
     const targetY = targetBounds.top + targetBounds.height
     const towardsTop = targetY + popoverY > window.innerHeight
-    console.log('towardsTop = ', targetY + popoverY, window.innerHeight)
     return towardsTop ? 'top' : 'bottom'
   }
 

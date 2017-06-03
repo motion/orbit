@@ -1,7 +1,3 @@
-document > pane { 
-  padding-bottom: 30px;
-}
-
 /* for highlighting words */
 mark {
   display: inline !important; 

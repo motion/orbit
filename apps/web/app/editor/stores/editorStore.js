@@ -22,6 +22,7 @@ export default class EditorStore {
   plugins = []
   focused = false
   find = this.props.find
+  onlyNode = this.props.onlyNode
 
   start({ onEditor, getRef, rules, plugins }) {
     this.rules = rules

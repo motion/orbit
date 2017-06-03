@@ -107,6 +107,7 @@ class App {
         since: 'now',
       },
     })
+
     console.timeEnd('create db')
 
     // separate pouchdb for auth

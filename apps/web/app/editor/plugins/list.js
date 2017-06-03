@@ -1,6 +1,6 @@
 import { view } from '~/helpers'
 import node from '~/editor/node'
-import EditList from 'slate-edit-list'
+import EditList from './editList'
 import { Button } from '~/ui'
 import { BLOCKS } from '~/editor/constants'
 import { replacer } from '~/editor/helpers'
@@ -16,16 +16,66 @@ editList.utils.isInListOfType = (state, type) => {
 }
 
 const ol_list = node(
-  view(props => <ol $$ol {...props.attributes}>{props.children}</ol>)
+  view(props => {
+    return <ol $$ol {...props.attributes}>{props.children}</ol>
+  })
 )
 
 const ul_list = node(
   view(props => <ul $$ul {...props.attributes}>{props.children}</ul>)
 )
 
-const list_item = view(props => (
-  <li $$li {...props.attributes}>{props.children}</li>
-))
+const list_item = @node
+@view
+class Li {
+  toggleMinimize = () => {
+    console.log('toggling')
+
+    const { node: { data }, setData } = this.props
+
+    setData(data.set('minimize', !(data.get('minimize') || false)))
+  }
+
+  render(props) {
+    const archive = props.node.data.get('archive') || false
+    const minimize = props.node.data.get('minimize') || false
+    const text = props.children[0].props.node.text
+
+    return (
+      <wrap $$row>
+        <minMax
+          $min={minimize}
+          contentEditable={false}
+          onClick={this.toggleMinimize}
+        >
+          {minimize ? '+' : '-'}
+        </minMax>
+        <li $$li $archive={archive} {...props.attributes}>
+          {minimize ? text : props.children}
+        </li>
+      </wrap>
+    )
+  }
+
+  static style = {
+    archive: {
+      opacity: 0.4,
+    },
+    minMax: {
+      height: 30,
+      padding: 3,
+      cursor: 'pointer',
+      marginLeft: -30,
+      fontSize: 16,
+    },
+    min: {
+      marginLeft: -32,
+    },
+    li: {
+      marginLeft: 30,
+    },
+  }
+}
 
 export default class List {
   name = 'list'

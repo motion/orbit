@@ -56,8 +56,8 @@ export default class Commander {
                   <preview key={store.activeDoc._id} if={store.activeDoc}>
                     <DocView
                       readOnly
-                      find={store.text}
                       id={store.activeDoc._id}
+                      editorProps={{ find: store.text }}
                     />
                   </preview>
                 </results>

@@ -6,7 +6,6 @@ import { BLOCKS, MARKS } from '../constants'
 export default class SelectBar {
   render({ editorStore }) {
     const { selection, pluginCategories } = editorStore
-    const PAD = 40
 
     return (
       <Popover
@@ -16,7 +15,7 @@ export default class SelectBar {
         background
         animation="slide 300ms"
         left={selection.mouseUp.x}
-        top={selection.mouseUp.y + PAD}
+        top={selection.mouseUp.y + 10}
         escapable
       >
         <Theme name="dark">

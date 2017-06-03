@@ -88,7 +88,7 @@ export default class Button {
         $segmented={segmented && this.props}
         $color={color}
         $clickable={!!onClick || clickable}
-        $activeOn={active}
+        $isActive={active}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
         {...props}
@@ -151,9 +151,6 @@ export default class Button {
       // '&:active': {
       //   borderColor: 'blue',
       // },
-      '&:focus': {
-        borderColor: '#999',
-      },
     },
     segmented: ({ borderRadius, circular, segmented: { first, last } }) => ({
       borderRightWidth: 1,
@@ -176,7 +173,7 @@ export default class Button {
     clickable: {
       cursor: 'pointer',
     },
-    activeOn: {
+    isActive: {
       background: '#eee',
       '&:hover': {
         background: '#eee',
@@ -214,15 +211,13 @@ export default class Button {
         button: {
           borderWidth: 1,
           ...activeTheme.base,
-          '&:active': activeTheme.active,
           '&:hover': activeTheme.hover,
         },
-        activeOn: {
+        isActive: {
           ...activeTheme.active,
           '&:hover': activeTheme.active,
         },
         clickable: {
-          '&:active': activeTheme,
           '&:hover': {
             background: activeTheme.background,
           },
@@ -281,13 +276,13 @@ export default class Button {
         },
       },
     },
-    form: {
+    form: (a, b, activeTheme) => ({
       button: {
+        '&:active': activeTheme.active,
         '&:focus': {
-          borderColor: 'blue',
-          background: '#fff',
+          borderColor: '#999',
         },
       },
-    },
+    }),
   }
 }

@@ -131,7 +131,6 @@ export default class Button {
           distance={8}
           arrowSize={8}
           popoverProps={{ $$style: { fontSize: 11 } }}
-          showForgiveness
           {...tooltipProps}
         >
           {tooltip}

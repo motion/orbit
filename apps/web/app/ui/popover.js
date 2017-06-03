@@ -458,7 +458,7 @@ export default class Popover {
       }
     })
 
-    this.on(node, 'mouseleave', onLeave)
+    this.on(node, 'mouseleave', setFalse)
   }
 
   isTargetHovered = () => {

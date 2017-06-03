@@ -26,22 +26,22 @@ export default class SidebarRootStore {
   }
 
   onMove = e => {
+    e.preventDefault()
     if (this.dragging) {
       this.width = Math.min(
         window.innerWidth - 400,
         Math.max(200, window.innerWidth - e.pageX)
       )
-      console.log('move', this.width)
     }
   }
 
   toggle = () => {
-    console.log('toggle')
     this.active = !this.active
   }
 
   attachDragger = (node: HTMLElement) => {
     this.on(node, 'mousedown', this.startDrag)
+    this.on(node, 'startdrag', this.startDrag)
     this.on(node, 'mouseup', this.stopDrag)
     this.on(window, 'mouseup', this.stopDrag)
     this.on(window, 'mousemove', throttle(this.onMove, 16, true))

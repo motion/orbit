@@ -27,23 +27,31 @@ function valueWrap(info, valueGet: Function) {
     }
   })
 
-  // sync!
+  // selective query based sync!
   let pull
-
   if (value && value.mquery) {
-    const remoteDB = this.remoteDb
+    const remoteDB = this.remoteDB
     const localDB = this.pouch.name
     const selector = { ...value.mquery._conditions }
 
-    // need to delete id or else findAll queries dont sync
-    if (!selector._id || !Object.keys(selector._id).length) {
-      delete selector._id
+    if (!remoteDB || !localDB) {
+      console.error(
+        'Missing one of remoteDB or localDB:',
+        this,
+        this.remoteDB,
+        remoteDB,
+        localDB
+      )
+    } else {
+      // need to delete id or else findAll queries dont sync
+      if (!selector._id || !Object.keys(selector._id).length) {
+        delete selector._id
+      }
+      pull = PouchDB.replicate(remoteDB, localDB, {
+        selector,
+        live: true,
+      })
     }
-
-    pull = PouchDB.replicate(remoteDB, localDB, {
-      selector,
-      // live: true,
-    })
   }
 
   const response = {}

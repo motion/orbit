@@ -2,7 +2,7 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna bootstrap --ignore starter-native && npm run check-dependencies",
+    "bootstrap": "npm run clean && lerna bootstrap --npm-client yarn --ignore starter-native",
     "web": "npm run check-dependencies && cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",

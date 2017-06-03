@@ -102,7 +102,6 @@ class SidebarStore {
 
   setEditing = place => {
     this.editingPlace = place
-    console.log('set editing', place)
   }
 
   setActive = place => {
@@ -170,7 +169,10 @@ export default class Sidebar {
         from="right"
         size={layoutStore.sidebar.width}
       >
-        <dragger $$undraggable ref={this.ref('dragger').set} />
+        <dragger
+          style={{ WebkitAppRegion: 'no-drag' }}
+          ref={this.ref('dragger').set}
+        />
         <sidebar>
           <top>
             <Login />
@@ -195,7 +197,7 @@ export default class Sidebar {
             </title>
           </top>
 
-          <content $$draggable>
+          <content>
             <Pane
               if={store.allPlaces}
               scrollable
@@ -225,6 +227,8 @@ export default class Sidebar {
                 </Shortcuts>
               </ContextMenu>
             </Pane>
+
+            <draggable $$draggable />
           </content>
 
           <SlotFill.Slot name="sidebar">
@@ -261,6 +265,14 @@ export default class Sidebar {
       bottom: 0,
       zIndex: 10000,
       cursor: 'ew-resize',
+    },
+    draggable: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 8,
+      zIndex: -1,
     },
     search: {
       border: 'none',

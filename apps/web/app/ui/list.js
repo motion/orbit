@@ -225,7 +225,6 @@ class List {
     return (
       <Shortcuts name="all" handler={this.handleShortcuts}>
         <list
-          $$draggable
           style={{ minHeight: height, minWidth: width, ...style }}
           ref={getRef}
           {...props}

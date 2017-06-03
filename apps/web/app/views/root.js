@@ -60,7 +60,7 @@ export default class Root extends React.Component {
   }
 
   unstable_handleError(error) {
-    console.error('handle error', error)
+    throw error
     this.setState({
       error,
     })

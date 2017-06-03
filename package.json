@@ -14,6 +14,9 @@
     "electron": "cd apps/web && npm run electron",
     "check-dependencies": "lerna exec --ignore starter-native -- check-dependencies"
   },
+  "dependencies": {
+    "lerna": "2.0.0-rc.5"
+  },
   "devDependencies": {
     "babel-cli": "^6.14.0",
     "babel-eslint": "^7.2.3",
@@ -27,7 +30,6 @@
     "eslint-import-resolver-babel-root-import": "0.0.2",
     "eslint-plugin-class-property": "^1.0.6",
     "eslint-plugin-react": "^7.0.1",
-    "flow-bin": "^0.38.0",
-    "lerna": "2.0.0-rc.3"
+    "flow-bin": "^0.38.0"
   }
 }

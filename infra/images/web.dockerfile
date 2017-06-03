@@ -26,7 +26,7 @@ COPY ./apps/web/build /app/public
 
 # import apps
 RUN mkdir -p /repo
-COPY ./.* ./package.json ./lerna.json ./yarn.lock /repo/
+COPY ./.* ./package.json ./lerna.json /repo/
 COPY ./apps/web /repo/apps/web
 COPY ./apps/models /repo/apps/models
 

@@ -2,7 +2,6 @@ import React from 'react'
 import { clr, view } from '~/helpers'
 import Icon from './icon'
 import Grain from './grain'
-import Tabs from './tabs'
 
 @view.ui
 export class Title {
@@ -106,19 +105,16 @@ export default class Pane {
   props: {
     collabsable: boolean,
     onSetCollapse: Function,
-    activeTab: number,
   }
 
   static defaultProps = {
     collapsable: false,
     onSetCollapse: () => {},
-    activeTab: 0,
   }
 
   constructor(props) {
     this.state = {
       collapsed: false,
-      selectedTab: props.tabs ? props.tabs[props.activeTab] : null,
     }
   }
 
@@ -142,13 +138,6 @@ export default class Pane {
     }
   }
 
-  handleTabChange = selectedTab => {
-    if (this.props.onChangeTab) {
-      this.props.onChangeTab(selectedTab)
-    }
-    this.setState({ selectedTab })
-  }
-
   render() {
     const {
       collapsable,
@@ -162,10 +151,7 @@ export default class Pane {
       maxHeight,
       minHeight,
       onSetCollapse,
-      onChangeTab,
-      activeTab,
       titleStat,
-      tabs,
       scrollable,
       collapsed: _collapsed,
       padded,
@@ -173,7 +159,7 @@ export default class Pane {
       ...props
     } = this.props
 
-    const { collapsed, selectedTab } = this.state
+    const { collapsed } = this.state
     const collapseHeight = 27
 
     return (
@@ -183,15 +169,6 @@ export default class Pane {
         $minHeight={collapsed ? collapseHeight : minHeight}
         {...props}
       >
-        <Tabs
-          if={tabs}
-          $tabs
-          onChange={this.handleTabChange}
-          active={tabs.indexOf(activeTab)}
-          after={after}
-        >
-          {tabs}
-        </Tabs>
         <Title
           if={title}
           $noCollapsable={!collapsable}
@@ -206,7 +183,7 @@ export default class Pane {
           {title}
         </Title>
         <content $hide={collapsed}>
-          {typeof children === 'function' ? children(selectedTab) : children}
+          {children}
         </content>
       </section>
     )
@@ -236,9 +213,6 @@ export default class Pane {
     content: {
       flex: 1,
       position: 'relative',
-    },
-    tabs: {
-      borderBottom: [1, [0, 0, 0, 0.15]],
     },
   }
 

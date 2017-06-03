@@ -199,8 +199,6 @@ export default class Sidebar {
             <Pane
               if={store.allPlaces}
               scrollable
-              collapsable
-              title="Saved"
               collapsed={store.allPlacesClosed}
               onSetCollapse={store.ref('allPlacesClosed').set}
             >

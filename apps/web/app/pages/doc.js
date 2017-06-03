@@ -42,9 +42,6 @@ export default class DocumentPage {
             <Button if={!insidePlace} onClick={doc.togglePrivate}>
               {doc.private ? '🙈' : '🌎'}
             </Button>
-            <Button onClick={store.toggleEdit}>
-              {store.forceEdit ? 'publish' : 'edit'}
-            </Button>
           </Segment>
         }
       >

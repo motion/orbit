@@ -4,6 +4,7 @@ import { object, string } from 'prop-types'
 import { view, getTarget } from '~/helpers'
 import Portal from 'react-portal'
 import { isNumber, debounce } from 'lodash'
+import Arrow from './arrow'
 
 const INVERSE = {
   top: 'bottom',
@@ -12,62 +13,8 @@ const INVERSE = {
   right: 'left',
 }
 
-const DARK_BG = [0, 0, 0, 0.75]
-
-@view.ui class Arrow {
-  getRotation = () => {
-    const { towards } = this.props
-    switch (towards) {
-      case 'left':
-        return '-90deg'
-      case 'right':
-        return '90deg'
-    }
-    return '0deg'
-  }
-
-  render({ size, towards, theme }) {
-    const onBottom = towards === 'bottom'
-    const innerTop = size * (onBottom ? -1 : 1)
-
-    return (
-      <arrow $rotate={this.getRotation()} style={{ width: size, height: size }}>
-        <arrowInner
-          style={{
-            top: innerTop * 0.75,
-            width: size,
-            height: size,
-          }}
-        />
-      </arrow>
-    )
-  }
-
-  static style = {
-    arrow: {
-      position: 'relative',
-      overflow: 'hidden',
-    },
-    arrowInner: {
-      background: '#fff',
-      position: 'absolute',
-      left: 0,
-      borderRadius: 1,
-      transform: 'rotate(45deg)',
-    },
-    rotate: amount => ({
-      transform: {
-        rotate: amount,
-      },
-    }),
-  }
-
-  static theme = {
-    theme: (props, state, activeTheme) => ({
-      arrowInner: activeTheme.base,
-    }),
-  }
-}
+const calcForgiveness = (forgiveness, distance) =>
+  Math.min(forgiveness, distance)
 
 @view.ui
 export default class Popover {
@@ -125,6 +72,8 @@ export default class Popover {
     uiActiveTheme: string,
   }
 
+  curProps = {}
+
   state = {
     targetHovered: null,
     menuHovered: false,
@@ -138,10 +87,27 @@ export default class Popover {
     direction: null,
   }
 
-  componentDidMount() {
-    const { openOnClick, open, escapable } = this.props
+  // curProps is always up to date, so we dont have to thread props around a ton
+  // also, nicely lets us define get fn helpers
 
-    this.on(window, 'resize', debounce(() => this.setPosition(this.props), 64))
+  componentWillMount() {
+    this.curProps = this.props
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.curProps = nextProps
+    this.setPosition()
+  }
+
+  componentWillUpdate(nextProps) {
+    this.setOpenOrClosed(nextProps)
+    this.setTarget()
+  }
+
+  componentDidMount() {
+    const { openOnClick, open, escapable } = this.curProps
+
+    this.on(window, 'resize', debounce(() => this.setPosition(), 32))
 
     this.setTarget()
     this.listenForHover()
@@ -151,7 +117,7 @@ export default class Popover {
       this.listenForClickAway()
     }
     if (open) {
-      this.open(this.props)
+      this.open()
     }
 
     if (escapable) {
@@ -167,20 +133,11 @@ export default class Popover {
     this.unmounted = true
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    this.setTarget()
-    this.setOpenOrClosed(nextProps)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setPosition(nextProps)
-  }
-
-  open = props => {
-    this.setPosition(props, () => {
+  open = () => {
+    this.setPosition(() => {
       this.setState({ isOpen: true }, () => {
-        if (this.props.onOpen) {
-          this.props.onOpen()
+        if (this.curProps.onOpen) {
+          this.curProps.onOpen()
         }
       })
     })
@@ -189,8 +146,8 @@ export default class Popover {
   close = (): Promise => {
     return new Promise(resolve => {
       this.setState({ closing: true }, () => {
-        if (this.props.onClose) {
-          this.props.onClose()
+        if (this.curProps.onClose) {
+          this.curProps.onClose()
         }
 
         this.closingTimeout = this.setTimeout(() => {
@@ -208,9 +165,9 @@ export default class Popover {
     this.on(this.target, 'click', e => {
       e.stopPropagation()
       this.isClickingTarget = true
-      if (typeof this.props.open === 'undefined') {
+      if (typeof this.curProps.open === 'undefined') {
         if (this.state.isOpen) this.close()
-        else this.open(this.props)
+        else this.open()
       }
       this.setTimeout(() => {
         this.isClickingTarget = false
@@ -224,7 +181,7 @@ export default class Popover {
       // avoid closing when clicked inside popover
       if (
         this.refs.popover.contains(e.target) &&
-        !this.props.closeOnClickWithin
+        !this.curProps.closeOnClickWithin
       ) {
         return
       }
@@ -237,10 +194,10 @@ export default class Popover {
   }
 
   setTarget = () => {
-    this.target = getTarget(this.refs.target || this.props.target)
+    this.target = getTarget(this.refs.target || this.curProps.target)
   }
 
-  isHovered = () => {
+  get isHovered() {
     const target = this.target
     if (!target) {
       return false
@@ -260,11 +217,11 @@ export default class Popover {
 
     if (nextProps.open !== this.props.open) {
       if (nextProps.open) {
-        this.setPosition(nextProps)
+        this.setPosition()
       }
 
       if (!this.state.isOpen && nextProps.open) {
-        this.open(nextProps)
+        this.open()
       }
 
       if (this.state.isOpen && !nextProps.open) {
@@ -273,16 +230,22 @@ export default class Popover {
     }
   }
 
-  setPosition = (props, cb) => {
+  setPosition = (callback?: Function) => {
     clearTimeout(this.positionTimeout)
     this.positionTimeout = this.setTimeout(() => {
       if (!this.unmounted) {
-        this.setState(this.getPositionState(props), cb)
+        this.setState(this.positionState, callback)
       }
     })
   }
 
-  getPopoverSize = ({ width, height, distance, forgiveness }): Object => {
+  get forgiveness(): number {
+    return calcForgiveness(this.curProps.forgiveness, this.curProps.distance)
+  }
+
+  get popoverSize() {
+    const { forgiveness } = this
+    const { width, height, distance } = this.curProps
     const { popover } = this.refs
     const size = {
       height: isNumber(width) ? width : popover.clientHeight,
@@ -294,11 +257,11 @@ export default class Popover {
     return size
   }
 
-  getTargetBounds = (props): Object => {
-    const { top, left } = props
+  get targetBounds() {
+    const { top, left } = this.curProps
     const bounds = {}
     // find target dimensions
-    if (this.isManuallyPositioned(props)) {
+    if (this.isManuallyPositioned) {
       bounds.width = 0
       bounds.height = 0
       bounds.left = left
@@ -313,28 +276,25 @@ export default class Popover {
     return bounds
   }
 
-  isManuallyPositioned = ({ bottom, top, left }) => {
+  get isManuallyPositioned() {
+    const { bottom, top, left } = this.curProps
     return (isNumber(bottom) || isNumber(top)) && isNumber(left)
   }
 
-  getPositionState = props => {
-    if (!this.target && !this.isManuallyPositioned(props)) {
+  get positionState() {
+    if (!this.target && !this.isManuallyPositioned) {
       throw new Error('No top/left/bottom or target given to Popover!')
     }
-
-    const popoverSize = this.getPopoverSize(props)
-    const targetBounds = this.getTargetBounds(props)
-    // direction is final direction accounting for towards="auto"
-    const direction = this.getDirection(props, targetBounds, popoverSize)
-
     return {
-      ...this.getX(props, direction, popoverSize, targetBounds),
-      ...this.getY(props, direction, popoverSize, targetBounds),
-      direction,
+      ...this.x,
+      ...this.y,
+      direction: this.direction,
     }
   }
 
-  getDirection = ({ forgiveness, towards }, targetBounds, popoverSize) => {
+  get direction() {
+    const { forgiveness, popoverSize, targetBounds } = this
+    const { towards } = this.curProps
     if (towards !== 'auto') {
       return towards
     }
@@ -344,19 +304,21 @@ export default class Popover {
     return towardsTop ? 'top' : 'bottom'
   }
 
-  edgePad = (props, currentPosition, windowSize, popoverSize) => {
+  edgePad = (currentPosition, windowSize, popoverSize) => {
     return Math.min(
       // upper limit
-      windowSize - props.distance - popoverSize,
+      windowSize - this.curProps.distance - popoverSize,
       // lower limit
-      Math.max(props.distance, currentPosition)
+      Math.max(this.curProps.distance, currentPosition)
     )
   }
 
-  getX = (props, direction, popoverSize, targetBounds) => {
+  get x() {
+    const { direction, popoverSize, targetBounds } = this
     const VERTICAL = direction === 'top' || direction === 'bottom'
-    // find left
-    const { distance, arrowSize, forgiveness } = props
+    const { adjust, distance, arrowSize, forgiveness } = this.curProps
+
+    // measurements
     const popoverHalfWidth = popoverSize.width / 2
     const targetCenter = targetBounds.left + targetBounds.width / 2
     const arrowCenter = window.innerWidth - popoverHalfWidth
@@ -368,7 +330,6 @@ export default class Popover {
     // in future it needs to measure target and then determine
     if (VERTICAL) {
       left = this.edgePad(
-        props,
         targetCenter - popoverHalfWidth,
         window.innerWidth,
         popoverSize.width
@@ -402,14 +363,16 @@ export default class Popover {
     }
 
     // adjustments
-    left += props.adjust[0]
+    left += adjust[0]
 
     return { arrowLeft, left }
   }
 
-  getY = (props, direction, popoverSize, targetBounds) => {
+  get y() {
+    const { forgiveness, direction, popoverSize, targetBounds } = this
     const VERTICAL = direction === 'top' || direction === 'bottom'
-    const { forgiveness, noArrow, arrowSize } = props
+    const { distance, adjust, noArrow, arrowSize } = this.curProps
+
     // since its rotated 45deg, the real height is less 1/4 of set height
     const arrowHeight = noArrow ? 0 : arrowSize * 0.75
     const targetCenter = targetBounds.top + targetBounds.height / 2
@@ -424,17 +387,17 @@ export default class Popover {
       // determine arrow location
       if (direction === 'top') {
         arrowTop = popoverSize.height + forgiveness
-        top = targetTopReal - popoverSize.height - arrowHeight - props.distance
+        top = targetTopReal - popoverSize.height - distance
         maxHeight = window.innerHeight - targetBounds.height
       } else {
         arrowTop = -arrowSize + forgiveness
-        top = targetTopReal + targetBounds.height + arrowHeight
+        top = targetTopReal + targetBounds.height + distance
         maxHeight =
           window.innerHeight - (targetBounds.top + targetBounds.height)
       }
 
       // final top
-      top = this.edgePad(props, top, window.innerHeight, popoverSize.height)
+      top = this.edgePad(top, window.innerHeight, popoverSize.height)
     } else {
       // left or right
       const yCenter = targetCenter - popoverSize.height / 2
@@ -443,7 +406,7 @@ export default class Popover {
     }
 
     // adjustments
-    top += props.adjust[1]
+    top += adjust[1]
 
     return { arrowTop, top, maxHeight }
   }
@@ -455,12 +418,12 @@ export default class Popover {
 
   // hover helpers
   hoverStateSetter = (name, val) => () => {
-    const { openOnHover, onMouseEnter } = this.props
+    const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => this.setState({ [`${name}Hovered`]: val })
 
     if (val) {
       if (openOnHover) {
-        this.setPosition(this.props, setter)
+        this.setPosition(setter)
       }
       if (onMouseEnter) {
         onMouseEnter()
@@ -482,14 +445,16 @@ export default class Popover {
 
     const setFalse = this.hoverStateSetter(name, false)
     const setTrue = this.hoverStateSetter(name, true)
+    const onLeave = () => !this.isTargetHovered() && setFalse()
 
     this.on(node, 'mouseenter', () => {
       setTrue()
       // insanity, but mouselave is horrible
-      if (this.props.target) {
-        this.setTimeout(() => !this.isTargetHovered() && setFalse())
-        this.setTimeout(() => !this.isTargetHovered() && setFalse(), 10)
-        this.setTimeout(() => !this.isTargetHovered() && setFalse(), 40)
+      if (this.curProps.target) {
+        this.setTimeout(onLeave)
+        this.setTimeout(onLeave, 16)
+        this.setTimeout(onLeave, 32)
+        this.setTimeout(onLeave, 96)
       }
     })
 
@@ -509,40 +474,39 @@ export default class Popover {
     }
   }
 
-  render() {
-    const {
-      noArrow,
-      children,
-      arrowSize,
-      overlay,
-      style,
-      background,
-      target,
-      openOnHover,
-      openOnClick,
-      passActive,
-      open,
-      width,
-      height,
-      popoverProps,
-      towards,
-      distance,
-      escapable,
-      onClose,
-      padding,
-      forgiveness,
-      noHover,
-      shadow,
-      animation,
-      popoverStyle,
-      top: _top,
-      left: _left,
-      adjust,
-      theme,
-      closeOnClickWithin,
-      ...props
-    } = this.props
-
+  render({
+    noArrow,
+    children,
+    arrowSize,
+    overlay,
+    style,
+    background,
+    target,
+    openOnHover,
+    openOnClick,
+    passActive,
+    open,
+    width,
+    height,
+    popoverProps,
+    towards,
+    distance,
+    escapable,
+    onClose,
+    padding,
+    forgiveness,
+    noHover,
+    shadow,
+    animation,
+    popoverStyle,
+    top: _top,
+    left: _left,
+    adjust,
+    theme,
+    closeOnClickWithin,
+    showForgiveness,
+    ...props
+  }) {
     const {
       bottom,
       top,
@@ -559,7 +523,7 @@ export default class Popover {
     const showPopover =
       isOpen ||
       (openUndef &&
-        ((openOnHover && this.isHovered()) || (openOnClick && isOpen)))
+        ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
 
     const childProps = {
       ref: 'target',
@@ -709,8 +673,8 @@ export default class Popover {
     }),
     forgiveness: ({ forgiveness, distance, showForgiveness }) => ({
       popover: {
-        padding: forgiveness,
-        margin: -forgiveness,
+        padding: calcForgiveness(forgiveness, distance),
+        margin: -calcForgiveness(forgiveness, distance),
         background: showForgiveness ? [50, 100, 150, 0.2] : 'auto',
       },
     }),

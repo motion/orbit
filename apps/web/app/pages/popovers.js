@@ -109,7 +109,7 @@ export default class PopoversTest {
         <br />
         <br />
 
-        forgiveness = 10
+        forgiveness = 100
         distance = 25
         <Segment>
           <Button
@@ -117,7 +117,7 @@ export default class PopoversTest {
             tooltipProps={{
               open: true,
               showForgiveness: true,
-              forgiveness: 10,
+              forgiveness: 100,
               distance: 25,
               towards: 'left',
             }}
@@ -129,7 +129,7 @@ export default class PopoversTest {
             tooltipProps={{
               open: true,
               showForgiveness: true,
-              forgiveness: 10,
+              forgiveness: 100,
               distance: 25,
               towards: 'top',
             }}
@@ -141,7 +141,7 @@ export default class PopoversTest {
             tooltipProps={{
               open: true,
               showForgiveness: true,
-              forgiveness: 10,
+              forgiveness: 100,
               distance: 25,
               towards: 'bottom',
             }}
@@ -153,7 +153,7 @@ export default class PopoversTest {
             tooltipProps={{
               open: true,
               showForgiveness: true,
-              forgiveness: 10,
+              forgiveness: 100,
               distance: 25,
               towards: 'right',
             }}

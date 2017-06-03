@@ -3,6 +3,7 @@ import { BLOCKS } from '~/editor/constants'
 import { Popover, Button } from '~/ui'
 import Highlighter from './helpers/highlighter'
 import node from '~/editor/node'
+import { createButton } from './helpers'
 
 const paragraph = node(props => {
   const { editorStore } = props
@@ -61,6 +62,10 @@ export default class TextPlugin {
         </row>
       </Popover>
     ),
+  ]
+
+  barButtons = [
+    createButton({ icon: 'text', type: BLOCKS.PARAGRAPH, tooltip: 'Text' }),
   ]
 
   plugins = [

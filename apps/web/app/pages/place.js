@@ -60,7 +60,9 @@ export default class PlacePage {
           tooltip="share link"
           icon="uilink"
           onClick={() => console.log(place.url())}
-        />
+        >
+          Share
+        </Button>
         <Button
           icon={place.subscribed() ? 'userdelete' : 'useradd'}
           iconColor={place.subscribed() ? 'green' : '#ccc'}

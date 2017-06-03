@@ -103,7 +103,7 @@ export default Component =>
         },
       },
       focused: {
-        borderLeftColor: 'blue',
+        borderLeftColor: '#ddd',
       },
     }
   }

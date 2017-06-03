@@ -34,25 +34,22 @@ const notUndefined = x => typeof x !== 'undefined'
     return hasState ? this.state.active : this.props.defaultActive
   }
 
-  render() {
-    let { color } = this.props
-    const {
-      items,
-      onChange,
-      defaultActive,
-      onlyIcons,
-      size,
-      children,
-      active,
-      title,
-      stretch,
-      sync,
-      padded,
-      ...props
-    } = this.props
-
+  render({
+    items,
+    onChange,
+    defaultActive,
+    onlyIcons,
+    size,
+    children,
+    active,
+    title,
+    stretch,
+    sync,
+    padded,
+    color,
+    ...props
+  }) {
     const curActive = typeof active === 'undefined' ? this.active : active
-
     let finalChildren = null
 
     if (children) {

@@ -147,18 +147,18 @@ export default class Button {
       //   borderColor: 'blue',
       // },
       '&:focus': {
-        borderColor: 'blue',
+        borderColor: '#999',
       },
     },
-    segmented: ({ borderRadius, segmented: { first, last } }) => ({
+    segmented: ({ borderRadius, circular, segmented: { first, last } }) => ({
       borderRightWidth: 1,
       borderLeftWidth: 0,
       ...(first && {
-        borderLeftRadius: borderRadius,
+        borderLeftRadius: circular ? 1000 : borderRadius,
         borderLeftWidth: 1,
       }),
       ...(last && {
-        borderRightRadius: borderRadius,
+        borderRightRadius: circular ? 1000 : borderRadius,
       }),
       ...(last &&
       !first && {
@@ -235,9 +235,9 @@ export default class Button {
         flex: 1,
       },
     },
-    circular: ({ size }) => ({
+    circular: ({ size, segmented }) => ({
       button: {
-        borderRadius: 10000,
+        ...(!segmented && { borderRadius: size * 1000 }),
         width: size,
         height: size,
       },

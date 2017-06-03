@@ -4,11 +4,23 @@ import { view } from '~/helpers'
 import Button from './button'
 import { pickBy } from 'lodash'
 import { Provider } from 'react-tunnel'
+import type { Color } from 'gloss'
 
 const notUndefined = x => typeof x !== 'undefined'
 
-@view.ui class Segment {
-  static Item = Button
+@view.ui
+export default class Segment {
+  props: {
+    onChange?: Function,
+    defaultActive?: number,
+    onlyIcons?: boolean,
+    size?: number,
+    title?: string,
+    stretch?: boolean,
+    sync?: boolean,
+    padded?: boolean,
+    color: Color,
+  }
 
   static defaultProps = {
     items: [],
@@ -61,9 +73,12 @@ const notUndefined = x => typeof x !== 'undefined'
         <Provider
           key={i}
           provide={{
-            uiSegment: {
-              first: i === 0,
-              last: i === realChildren.length - 1,
+            ui: {
+              ...this.context.ui,
+              segment: {
+                first: i === 0,
+                last: i === realChildren.length - 1,
+              },
             },
           }}
         >
@@ -130,23 +145,19 @@ const notUndefined = x => typeof x !== 'undefined'
 
   static theme = {
     reverse: {
-      container: {
+      segment: {
         flexFlow: 'row-reverse',
       },
     },
     padded: {
-      container: {
+      segment: {
         margin: ['auto', 5],
       },
     },
     vertical: {
-      container: {
+      segment: {
         flexFlow: 'column',
       },
     },
   }
 }
-
-Segment.Item = Button
-
-export default Segment

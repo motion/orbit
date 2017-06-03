@@ -86,6 +86,7 @@ view.ui = View => {
     ...next.contextTypes,
     uiTheme: object,
     uiActiveTheme: string,
+    ui: object,
   }
   return next
 }

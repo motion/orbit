@@ -1,9 +1,11 @@
 import React from 'react'
 import { view } from '~/helpers'
 import injectSegmented from './helpers/injectSegmented'
+import injectForm from './helpers/injectForm'
 
 const BORDER_RADIUS = 4
 
+@injectForm
 @injectSegmented
 @view.ui
 export default class Input {
@@ -12,7 +14,15 @@ export default class Input {
   }
 
   render() {
-    const { dark, getRef, sync, segmented, noBorder, ...props } = this.props
+    const {
+      dark,
+      getRef,
+      sync,
+      segmented,
+      form,
+      noBorder,
+      ...props
+    } = this.props
 
     if (sync) {
       props.value = sync.get()

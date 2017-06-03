@@ -5,9 +5,11 @@ import Glow from './glow'
 import Popover from './popover'
 import type { Color } from 'gloss'
 import injectSegmented from './helpers/injectSegmented'
+import injectForm from './helpers/injectForm'
 
 const idFn = _ => _
 
+@injectForm
 @injectSegmented
 @view.ui
 export default class Button {
@@ -34,6 +36,7 @@ export default class Button {
     circleProps?: Object,
     size?: number,
     iconSize?: number,
+    form: boolean,
   }
 
   static defaultProps = {
@@ -72,6 +75,7 @@ export default class Button {
       circleProps,
       borderRadius,
       material,
+      form,
       ...props
     } = this.props
 
@@ -274,6 +278,14 @@ export default class Button {
         boxShadow: [0, 2, 10, [0, 0, 0, 0.1]],
         '&:hover': {
           boxShadow: [0, 2, 15, [0, 0, 0, 0.15]],
+        },
+      },
+    },
+    form: {
+      button: {
+        '&:focus': {
+          borderColor: 'blue',
+          background: '#fff',
         },
       },
     },

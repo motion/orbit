@@ -198,7 +198,6 @@ export default class Sidebar {
           </top>
 
           <content>
-            <draggable $$draggable />
             <Pane
               if={store.allPlaces}
               scrollable
@@ -228,6 +227,8 @@ export default class Sidebar {
                 </Shortcuts>
               </ContextMenu>
             </Pane>
+
+            <draggable $$draggable />
           </content>
 
           <SlotFill.Slot name="sidebar">
@@ -271,6 +272,7 @@ export default class Sidebar {
       right: 0,
       bottom: 0,
       left: 8,
+      zIndex: -1,
     },
     search: {
       border: 'none',

@@ -1,15 +1,15 @@
-document > pane { 
+document > pane {
   padding-bottom: 30px;
 }
 
 /* for highlighting words */
 mark {
-  display: inline !important; 
+  display: inline !important;
   white-space: pre-wrap;
 }
 
 body {
-  font-family: -apple-system, 'Lato', sans-serif;
+  font-family: -apple-system, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
   color: #333;

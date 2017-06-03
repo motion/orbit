@@ -1,5 +1,7 @@
+// @flow
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
+import type RxDB from 'rxdb'
 
 export default class BaseModel {
   constructor({ defaultSchema, defaultProps }) {
@@ -63,8 +65,10 @@ export default class BaseModel {
     }
   }
 
-  async connect(db) {
+  connect = async (db: RxDB, options: Object) => {
     this.db = db
+    this.remoteDB = options.sync
+
     console.time('db-connect')
     this.collection = await db.collection({
       name: this.title,
@@ -124,6 +128,21 @@ export default class BaseModel {
 
     Object.keys(this.hooks).forEach(hook => {
       this.collection[hook](this.hooks[hook])
+    })
+
+    // sync
+    console.log('sync to', this.remoteDB)
+    db[this.title].sync(this.remoteDB)
+
+    // TODO until rxdb supports one way sync
+    // this.collection.pouch.replicate.to(remotePath, {
+    //   live: true,
+    //   retry: true,
+    // })
+    // one way down
+    this.collection.pouch.replicate.from(this.remoteDB, {
+      live: true,
+      retry: true,
     })
   }
 

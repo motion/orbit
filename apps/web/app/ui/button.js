@@ -142,7 +142,10 @@ export default class Button {
       border: [1, '#eee'],
       position: 'relative',
 
-      '&:active': {
+      // '&:active': {
+      //   borderColor: 'blue',
+      // },
+      '&:focus': {
         borderColor: 'blue',
       },
     },

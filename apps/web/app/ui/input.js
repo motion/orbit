@@ -35,19 +35,23 @@ export default class Input {
       background: '#fff',
       alignSelf: 'center',
       outline: 0,
+      '&:focus': {
+        background: 'red',
+      },
       '&:hover': {
         borderColor: '#ccc',
-      },
-      '&:active': {
-        borderColor: 'blue',
-      },
-      '&:focus': {
-        borderColor: 'blue',
       },
     },
   }
 
   static theme = {
+    theme: () => ({
+      button: {
+        '&:focus': {
+          borderColor: 'blue !important',
+        },
+      },
+    }),
     noBorder: {
       input: {
         border: 'none',

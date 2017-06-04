@@ -45,12 +45,20 @@ export default Component =>
       const { node, editor, onFocus } = this.props
       const isRoot = !this.editorStore.inline && this.isRootNode
 
+      if (
+        this.editorStore.onlyNode &&
+        node.type !== this.editorStore.onlyNode &&
+        this.isRootNode
+      )
+        return <div />
+
       const component = (
         <Component
           {...this.props}
           setData={this.setData}
           onChange={editor.onChange}
           editorStore={this.editorStore}
+          isRoot={isRoot}
           id={this.id}
         />
       )

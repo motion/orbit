@@ -12,7 +12,6 @@ export default function Highlighter({
   autoEscape,
   className,
   highlightClassName = '',
-  style = {},
   highlightStyle = {},
   highlightTag = 'mark',
   searchWords,
@@ -30,7 +29,7 @@ export default function Highlighter({
   let highlightClassNames = ''
 
   return (
-    <span style={style} className={className}>
+    <span $$text className={className}>
       {chunks.map((chunk, index) => {
         const text = textToHighlight.substr(
           chunk.start,

@@ -7,7 +7,6 @@ import { createButton } from './helpers'
 
 const paragraph = node(props => {
   const { editorStore } = props
-  const style = { fontSize: 18 }
   const text = props.children[0].props.node.text
 
   if (
@@ -18,17 +17,15 @@ const paragraph = node(props => {
     return (
       <Highlighter
         highlightClassName="word-highlight"
-        highlightStyle={style}
         searchWords={[editorStore.find.toLowerCase()]}
         sanitize={text => text.toLowerCase()}
-        style={style}
         highlightStyle={{ background: '#ffd54f' }}
         textToHighlight={text}
       />
     )
   }
 
-  return <p {...props.attributes} style={style}>{props.children}</p>
+  return <p {...props.attributes} $$text>{props.children}</p>
 })
 
 const newParagraph = state =>

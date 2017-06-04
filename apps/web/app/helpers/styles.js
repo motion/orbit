@@ -109,8 +109,8 @@ export const styles = {
     padding: 20,
   },
   ul: {
-    margin: [10, 0, 10, 20],
-    padding: 0,
+    margin: [10, 0, 10, 30],
+    padding: 20,
   },
   ol: {
     margin: [10, 0, 10, 20],
@@ -119,6 +119,13 @@ export const styles = {
   li: {
     margin: 0,
     padding: 0,
+    transition: 'opacity 150ms ease-in',
+  },
+  text: {
+    fontSize: 18,
+  },
+  archive: {
+    opacity: 0.4,
   },
 }
 

@@ -2,27 +2,20 @@ import React from 'react'
 import { view } from '~/helpers'
 import { Document } from '@jot/models'
 import Page from '~/views/page'
+import DocView from '~/views/document'
 import { flatten } from 'lodash'
 
 class TodoStore {
   docs = Document.recent()
-  place = null
 
-  get todos() {
-    return flatten(
-      (this.docs || []).map(doc => {
-        if (!doc.content.document) return []
-        return doc.content.document.nodes
-          .filter(node => {
-            return node.type === 'todo'
-          })
-          .map(todo => {
-            return Object.assign({}, todo.data, {
-              text: todo.nodes[0].ranges[0].text,
-            })
-          })
-      })
-    )
+  get todoDocs() {
+    return (this.docs || []).filter(doc => {
+      if (!doc.content.document) return false
+      return (
+        doc.content.document.nodes.filter(node => node.type === 'ul_list')
+          .length > 0
+      )
+    })
   }
 }
 
@@ -34,11 +27,15 @@ export default class Todo {
     return (
       <Page header title="Todo" actions={[]}>
         <todos>
-          {store.todos.map(todo => (
-            <todo key={Math.random()}>
-              <input type="checkbox" checked={todo.done} />
-              <p>{todo.text}</p>
-            </todo>
+          {store.todoDocs.map(doc => (
+            <doc>
+              <h4 onClick={() => Router.go(doc.url())}>{doc.title}</h4>
+              <DocView
+                inline
+                editorProps={{ onlyNode: 'ul_list' }}
+                id={doc._id}
+              />
+            </doc>
           ))}
         </todos>
       </Page>
@@ -46,8 +43,8 @@ export default class Todo {
   }
 
   static style = {
-    todo: {
-      flexFlow: 'row',
+    todos: {
+      padding: 30,
     },
   }
 }

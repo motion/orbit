@@ -204,11 +204,18 @@ export default class Button {
   }
 
   static theme = {
-    theme: ({ inForm, inSegment, borderRadius }, context, activeTheme) => {
+    theme: (
+      { inForm, inSegment, borderRadius, circular },
+      context,
+      activeTheme
+    ) => {
       return {
         button: {
           ...(!inSegment && {
             borderRadius,
+          }),
+          ...(circular && {
+            borderRadius: 1000,
           }),
           ...activeTheme.base,
           '&:hover': activeTheme.hover,
@@ -250,7 +257,7 @@ export default class Button {
     }),
     chromeless: {
       button: {
-        border: 'none !important',
+        background: false,
         borderWidth: 0,
         borderRightWidth: 0,
         borderLeftWidth: 0,

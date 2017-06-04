@@ -41,9 +41,6 @@ export default class Input {
       background: '#fff',
       alignSelf: 'center',
       outline: 0,
-      '&:focus': {
-        background: 'red',
-      },
       '&:hover': {
         borderColor: '#ccc',
       },
@@ -76,8 +73,6 @@ export default class Input {
     }),
     inSegment: ({ borderRadius, inSegment: { first, last } }) => ({
       input: {
-        background: 'red',
-        boxShadow: [console.log(first, last), 'none'][1],
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderRightWidth: 1,

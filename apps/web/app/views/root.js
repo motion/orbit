@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
-import { SlotFill, Button } from '~/ui'
+import { Theme, SlotFill, Button } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
@@ -84,29 +84,31 @@ export default class Root extends React.Component {
     )
 
     return (
-      <SlotFill.Provider>
-        <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
-          <LayoutWrap layoutStore={layoutStore}>
-            <Header layoutStore={layoutStore} />
-            <content
-              onScroll={this.onScroll}
-              $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-            >
-              <CurrentPage key={Router.key} />
-            </content>
-            <Button
-              if={!layoutStore.creatingDoc}
-              circular
-              onClick={() => layoutStore.createDoc()}
-              $circleButton
-              material
-              icon="add"
-            />
-          </LayoutWrap>
-          <Errors />
-          <Sidebar />
-        </Shortcuts>
-      </SlotFill.Provider>
+      <Theme name="light">
+        <SlotFill.Provider>
+          <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
+            <LayoutWrap layoutStore={layoutStore}>
+              <Header layoutStore={layoutStore} />
+              <content
+                onScroll={this.onScroll}
+                $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
+              >
+                <CurrentPage key={Router.key} />
+              </content>
+              <Button
+                if={!layoutStore.creatingDoc}
+                circular
+                onClick={() => layoutStore.createDoc()}
+                $circleButton
+                material
+                icon="add"
+              />
+            </LayoutWrap>
+            <Errors />
+            <Sidebar />
+          </Shortcuts>
+        </SlotFill.Provider>
+      </Theme>
     )
   }
 

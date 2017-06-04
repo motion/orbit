@@ -1,6 +1,6 @@
 import React from 'react'
 import { string, object } from 'prop-types'
-import { view } from '~/helpers'
+import { view, inject } from '~/helpers'
 import Button from './button'
 import { pickBy } from 'lodash'
 import { Provider } from 'react-tunnel'
@@ -8,6 +8,7 @@ import type { Color } from 'gloss'
 
 const notUndefined = x => typeof x !== 'undefined'
 
+@inject(context => ({ ui: context.ui }))
 @view.ui
 export default class Segment {
   props: {
@@ -20,6 +21,7 @@ export default class Segment {
     sync?: boolean,
     padded?: boolean,
     color: Color,
+    ui?: Object,
   }
 
   static defaultProps = {
@@ -58,49 +60,44 @@ export default class Segment {
     stretch,
     sync,
     padded,
+    ui,
     color,
     ...props
   }) {
     const curActive = typeof active === 'undefined' ? this.active : active
     let finalChildren = null
 
+    const getContext = (index: number, length: number) => ({
+      ui: {
+        ...ui,
+        inSegment: {
+          first: index === 0,
+          last: index === length - 1,
+          index,
+        },
+      },
+    })
+
     if (children) {
       const realChildren = React.Children
         .map(children, _ => _)
         .filter(child => !!child)
 
-      finalChildren = realChildren.map((child, i) => (
-        <Provider
-          key={i}
-          provide={{
-            ui: {
-              ...this.context.ui,
-              segment: {
-                first: i === 0,
-                last: i === realChildren.length - 1,
-              },
-            },
-          }}
-        >
+      finalChildren = realChildren.map((child, index) => (
+        <Provider key={index} provide={getContext(index, realChildren.length)}>
           {() => child}
         </Provider>
       ))
     } else if (Array.isArray(items)) {
-      finalChildren = items.map((seg, i) => {
+      finalChildren = items.map((seg, index) => {
         const { text, id, icon, ...segmentProps } = typeof seg === 'object'
           ? seg
           : { text: seg, id: seg }
 
         return (
           <Provider
-            key={i}
-            provide={{
-              uiSegment: {
-                first: i === 0,
-                last: i === items.length - 1,
-                index: i,
-              },
-            }}
+            key={index}
+            provide={getContext(index, finalChildren.length)}
           >
             <Button
               active={(id || icon) === curActive}

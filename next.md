@@ -1,4 +1,5 @@
 # next
+  - zoom
   - sidebar org mode
   - document todos to sidebar sync
 

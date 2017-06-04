@@ -1,16 +1,12 @@
 import React from 'react'
-import { view } from '~/helpers'
-import injectSegmented from './helpers/injectSegmented'
-import injectForm from './helpers/injectForm'
+import { view, inject } from '~/helpers'
 
-const BORDER_RADIUS = 4
-
-@injectForm
-@injectSegmented
+@inject(context => context.ui)
 @view.ui
 export default class Input {
   static defaultProps = {
     width: 'auto',
+    borderRadius: 5,
   }
 
   render() {
@@ -18,9 +14,10 @@ export default class Input {
       dark,
       getRef,
       sync,
-      segmented,
-      form,
+      inSegment,
+      inForm,
       noBorder,
+      borderRadius,
       ...props
     } = this.props
 
@@ -29,7 +26,7 @@ export default class Input {
       props.onChange = e => sync.set(e.target.value)
     }
 
-    return <input ref={getRef} {...props} />
+    return <input $$borderRadius={borderRadius} ref={getRef} {...props} />
   }
 
   static style = {
@@ -40,14 +37,10 @@ export default class Input {
       padding: [7, 8],
       border: [1, '#ddd'],
       width: 0,
-      borderRadius: BORDER_RADIUS,
       lineHeight: '1rem',
       background: '#fff',
       alignSelf: 'center',
       outline: 0,
-      '&:focus': {
-        background: 'red',
-      },
       '&:hover': {
         borderColor: '#ccc',
       },
@@ -78,16 +71,15 @@ export default class Input {
         maxWidth: width,
       },
     }),
-    segmented: ({ segmented: { first, last } }) => ({
+    inSegment: ({ borderRadius, inSegment: { first, last } }) => ({
       input: {
-        boxShadow: [console.log(first, last), 'none'][1],
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderRightWidth: 1,
         borderLeftWidth: first ? 1 : 0,
         borderRadius: 'auto',
-        borderLeftRadius: first ? BORDER_RADIUS : 0,
-        borderRightRadius: last ? BORDER_RADIUS : 0,
+        borderLeftRadius: first ? borderRadius : 0,
+        borderRightRadius: last ? borderRadius : 0,
         borderColor: last ? '#ddd' : '#eee',
         '&:focus': {
           background: '#fff',

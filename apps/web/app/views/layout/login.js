@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, keycode } from '~/helpers'
 import App from '@jot/models'
-import { Segment, Input, Button, Link, Icon } from '~/ui'
+import { Form, Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 // settimeout or it dont focus yo
@@ -98,7 +98,7 @@ export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <form $step={store.step} $$undraggable onSubmit={store.onSubmit}>
+        <Form $step={store.step} $$undraggable onSubmit={store.onSubmit}>
           <Segment>
             <Input
               $input
@@ -121,7 +121,7 @@ export default class Login {
               {store.loggingIn ? '⌛' : '✅'}
             </Button>
           </Segment>
-        </form>
+        </Form>
 
         <step if={store.step === 3}>
           <text>
@@ -155,10 +155,6 @@ export default class Login {
       width: '100%',
       justifyContent: 'space-between',
       position: 'relative',
-    },
-    icon: {
-      padding: [0, 5, 0, 0],
-      opacity: 0.5,
     },
     hinted: {
       alignItems: 'center',

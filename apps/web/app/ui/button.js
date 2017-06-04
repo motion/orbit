@@ -100,15 +100,15 @@ export default class Button {
           color={active ? '#000' : color || iconColor}
           {...iconProps}
         />
+        <glowWrap if={!active}>
+          <Glow full scale={2} color={[0, 0, 0]} opacity={0.08} />
+        </glowWrap>
         <children
           if={children}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}
           style={{ color }}
         >
-          <glowWrap if={!active}>
-            <Glow full scale={1} color={[0, 0, 0]} opacity={0.08} />
-          </glowWrap>
           {children}
         </children>
         {after || null}
@@ -144,7 +144,7 @@ export default class Button {
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',
-      border: [1, '#eee'],
+      border: [1, '#eee', 'dotted'],
       position: 'relative',
       // '&:active': {
       //   borderColor: 'blue',

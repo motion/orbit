@@ -4,11 +4,9 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import { RateLimit, ExpressMiddleware } from 'ratelimit.js'
-import config from './superlogin.config.js'
 import { APP_URL, COUCH_URL, SERVER_PORT, REDIS_HOSTNAME } from './keys'
 import redis from 'redis'
 import Path from 'path'
-import Login from './superlogin'
 import repStream from 'express-pouchdb-replication-stream'
 
 export default class Server {
@@ -35,10 +33,6 @@ export default class Server {
         dbReq: true,
       })
     )
-
-    // superlogin
-    this.login = new Login()
-    app.use('/auth', this.login.router)
 
     // rate limiting
     const redisClient = redis.createClient({

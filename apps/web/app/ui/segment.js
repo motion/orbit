@@ -1,6 +1,6 @@
 import React from 'react'
 import { string, object } from 'prop-types'
-import { view } from '~/helpers'
+import { view, inject } from '~/helpers'
 import Button from './button'
 import { pickBy } from 'lodash'
 import { Provider } from 'react-tunnel'
@@ -8,6 +8,7 @@ import type { Color } from 'gloss'
 
 const notUndefined = x => typeof x !== 'undefined'
 
+@inject(context => context)
 @view.ui
 export default class Segment {
   props: {
@@ -58,6 +59,7 @@ export default class Segment {
     stretch,
     sync,
     padded,
+    ui,
     color,
     ...props
   }) {
@@ -66,7 +68,7 @@ export default class Segment {
 
     const getContext = (index: number, length: number) => ({
       ui: {
-        ...this.context.ui,
+        ...ui,
         inSegment: {
           first: index === 0,
           last: index === length - 1,

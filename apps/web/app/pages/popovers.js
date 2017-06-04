@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '~/helpers'
-import { Segment, Button, Popover } from '~/ui'
+import { Form, Input, Segment, Button, Popover } from '~/ui'
 
 @view
 export default class PopoversTest {
@@ -8,6 +8,18 @@ export default class PopoversTest {
     // return null
     return (
       <page>
+        <Form>
+          <Segment>
+            <Button />
+          </Segment>
+        </Form>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
         <Segment>
           <Button
             tooltip="left"

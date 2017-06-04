@@ -8,7 +8,7 @@ import type { Color } from 'gloss'
 
 const idFn = _ => _
 
-@inject(context => [console.log('context', context.ui), context.ui][1])
+@inject(context => context.ui)
 @view.ui
 export default class Button {
   props: {
@@ -204,15 +204,16 @@ export default class Button {
   }
 
   static theme = {
-    theme: ({ inForm }, context, activeTheme) => {
-      console.log(context)
+    theme: ({ inForm, inSegment, borderRadius }, context, activeTheme) => {
       return {
         button: {
+          ...(!inSegment && {
+            borderRadius,
+          }),
           ...activeTheme.base,
           '&:hover': activeTheme.hover,
           // inForm
           ...(inForm && {
-            background: 'red',
             '&:active': activeTheme.active,
             '&:focus': {
               borderColor: '#999',
@@ -220,8 +221,7 @@ export default class Button {
           }),
         },
         isActive: {
-          ...activeTheme.active,
-          '&:hover': activeTheme.active,
+          background: '#f2f2f2',
         },
         clickable: {
           '&:hover': {

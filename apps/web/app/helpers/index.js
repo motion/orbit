@@ -6,6 +6,7 @@ export $ from './styles'
 export { query } from '@jot/models'
 export clr from 'color'
 export debug from 'debug'
+export { inject } from 'react-tunnel'
 
 import _keyCode from 'keycode'
 // fix react synth event

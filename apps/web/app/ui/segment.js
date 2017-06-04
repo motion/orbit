@@ -75,7 +75,7 @@ export default class Segment {
           provide={{
             ui: {
               ...this.context.ui,
-              segment: {
+              segmented: {
                 first: i === 0,
                 last: i === realChildren.length - 1,
               },

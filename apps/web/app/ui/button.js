@@ -1,20 +1,18 @@
 import React from 'react'
-import { view, clr } from '~/helpers'
+import { view, inject, clr } from '~/helpers'
 import Icon from './icon'
 import Glow from './glow'
 import Popover from './popover'
 import type { Color } from 'gloss'
-import injectSegmented from './helpers/injectSegmented'
-import injectForm from './helpers/injectForm'
 
 const idFn = _ => _
 
-@injectForm
-@injectSegmented
+@inject(provided => provided.ui)
 @view.ui
 export default class Button {
   props: {
     segmented?: object,
+    formed?: boolean,
     clickable?: boolean,
     active?: boolean,
     chromeless?: boolean,
@@ -36,7 +34,6 @@ export default class Button {
     circleProps?: Object,
     size?: number,
     iconSize?: number,
-    form: boolean,
   }
 
   static defaultProps = {
@@ -276,7 +273,7 @@ export default class Button {
         },
       },
     },
-    form: (a, b, activeTheme) => ({
+    formed: (a, b, activeTheme) => ({
       button: {
         '&:active': activeTheme.active,
         '&:focus': {

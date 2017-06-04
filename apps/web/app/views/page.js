@@ -3,9 +3,32 @@ import { $, view } from '~/helpers'
 import { pick } from 'lodash'
 import { SlotFill } from '~/ui'
 
-@view class Loading {
-  render() {
-    return <spinner>loading</spinner>
+@view({
+  store: class {
+    rendered = false
+
+    start() {
+      setTimeout(() => {
+        this.rendered = true
+      })
+    }
+  },
+})
+class Loading {
+  render({ store: { rendered } }) {
+    return <spinner $show={rendered}>loading</spinner>
+  }
+
+  static style = {
+    spinner: {
+      opacity: 0,
+      transition: 'opacity 100ms ease-in 300ms', // wait a bit
+      alignSelf: 'center',
+      justifyContent: 'cener',
+    },
+    show: {
+      opacity: 1,
+    },
   }
 }
 

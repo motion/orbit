@@ -87,6 +87,7 @@ export default class EditorView {
     document: {
       flex: 1,
       cursor: 'text',
+      overflow: 'hidden',
     },
     fullPage: {
       marginTop: 20,

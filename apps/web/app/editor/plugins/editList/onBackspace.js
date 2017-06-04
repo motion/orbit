@@ -14,7 +14,9 @@ function onBackspace(event, data, state, opts) {
   /*
   if the item is empty, delete the item and go to the previous line
   */
-  if (currentItem.text === '') {
+  const text = currentItem.getFirstText().text
+
+  if (text === '') {
     let transform = state.transform()
     transform = transform.removeNodeByKey(currentItem.key).apply()
     return transform
@@ -28,7 +30,6 @@ function onBackspace(event, data, state, opts) {
   if (startOffset > 0) return
   // ... more precisely at the beginning of the current item
   if (!selection.isAtStartOf(currentItem)) {
-    console.log('deleted item')
     return
   }
 

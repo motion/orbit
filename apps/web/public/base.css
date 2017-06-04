@@ -20,7 +20,6 @@ body {
 /* Strikethrough */
 
 .strikethrough > p {
-	display: inline-block;
 	position: relative;
 	transition: all 0.25s cubic-bezier(.55, 0, .1, 1);
 }

@@ -8,7 +8,7 @@ import type { Color } from 'gloss'
 
 const notUndefined = x => typeof x !== 'undefined'
 
-@inject(context => context)
+@inject(context => ({ ui: context.ui }))
 @view.ui
 export default class Segment {
   props: {
@@ -21,6 +21,7 @@ export default class Segment {
     sync?: boolean,
     padded?: boolean,
     color: Color,
+    ui?: Object,
   }
 
   static defaultProps = {

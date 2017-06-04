@@ -1,16 +1,19 @@
-import { view } from '~/helpers'
+import { view, inject } from '~/helpers'
 import { Provider } from 'react-tunnel'
 
+@inject(context => ({ ui: context.ui }))
 @view.ui
 export default class Form {
-  render({ ...props }) {
-    const ui = {
-      ...this.context.ui,
-      inForm: true,
-    }
-
+  render({ ui, ...props }) {
     return (
-      <Provider provide={{ ui }}>
+      <Provider
+        provide={{
+          ui: {
+            ...ui,
+            inForm: true,
+          },
+        }}
+      >
         {() => <form {...props} />}
       </Provider>
     )

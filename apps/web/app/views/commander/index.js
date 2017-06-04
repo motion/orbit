@@ -77,7 +77,8 @@ export default class Commander {
       right: 0,
       bottom: 0,
       zIndex: 10000,
-      backdropFilter: 'blur(5px)',
+      // background: '#fff',
+      // backdropFilter: 'blur(5px)',
     },
     noMatches: {
       flex: 1,
@@ -89,7 +90,7 @@ export default class Commander {
     commander: {
       position: 'absolute',
       overflow: 'scroll',
-      top: 0,
+      top: 50,
       left: 0,
       right: 0,
       bottom: 0,
@@ -128,6 +129,7 @@ export default class Commander {
       cursor: 'text',
       margin: ['auto', 0],
       padding: [8, 10],
+      marginTop: -50,
       fontSize: 16,
       opacity: 0.8,
       '&:hover': {

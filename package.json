@@ -2,11 +2,11 @@
   "name": "motion-starter",
   "private": true,
   "scripts": {
-    "bootstrap": "npm run clean && lerna bootstrap --npm-client yarn --ignore starter-native",
+    "bootstrap": "lerna bootstrap --npm-client yarn --ignore starter-native",
     "web": "npm run check-dependencies && cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
-    "build": "lerna exec --parallel --scope api --scope @jot/models -- babel src --out-dir lib -s true",
+    "build": "lerna exec --parallel --scope api --scope @jot/models --scope couch -- babel src --out-dir lib -s true",
     "build-web": "cd apps/web && npm run build",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",
@@ -15,7 +15,7 @@
     "check-dependencies": "lerna exec --ignore starter-native -- check-dependencies"
   },
   "dependencies": {
-    "lerna": "^2.0.0-rc.5"
+    "lerna": "2.0.0-rc.3"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",

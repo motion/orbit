@@ -1,5 +1,5 @@
 # next
-  - zoom
+  - dropdowns for bar, only show cat as button
   - sidebar org mode
   - document todos to sidebar sync
 

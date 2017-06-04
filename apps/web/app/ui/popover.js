@@ -451,7 +451,6 @@ export default class Popover {
       setTrue()
       // insanity, but mouselave is horrible
       if (this.curProps.target) {
-        this.setTimeout(onLeave)
         this.setTimeout(onLeave, 16)
         this.setTimeout(onLeave, 32)
         this.setTimeout(onLeave, 96)

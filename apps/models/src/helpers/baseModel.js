@@ -74,11 +74,11 @@ export default class BaseModel {
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
-      autoMigrate: true,
-      pouchSettings: {
-        revsLimit: 100,
-        skipSetup: true,
-      },
+      // autoMigrate: true,
+      // pouchSettings: {
+      //   revsLimit: 100,
+      //   skipSetup: true,
+      // },
       methods: this.compiledMethods,
     })
     console.timeEnd('db:connect')
@@ -117,8 +117,8 @@ export default class BaseModel {
     })
 
     // sync
-    console.log('sync to', this.remoteDB)
-    db[this.title].sync(this.remoteDB)
+    console.log('hello?', this.remoteDB)
+    // db[this.title].sync(this.remoteDB)
 
     // TODO until rxdb supports one way sync
     // this.collection.pouch.replicate.to(remotePath, {
@@ -126,10 +126,10 @@ export default class BaseModel {
     //   retry: true,
     // })
     // one way down
-    this.collection.pouch.replicate.from(this.remoteDB, {
-      live: true,
-      retry: true,
-    })
+    // this.collection.pouch.replicate.from(this.remoteDB, {
+    //   live: true,
+    //   retry: true,
+    // })
   }
 
   createIndexes = async () => {

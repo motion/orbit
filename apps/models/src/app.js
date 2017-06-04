@@ -36,14 +36,15 @@ class App {
 
   constructor() {
     // hmr fix
-    if (RxDB.PouchDB.replicate) return
-    RxDB.plugin(pHTTP)
-    RxDB.plugin(pIDB)
-    RxDB.plugin(pREPL)
-    RxDB.plugin(pValidate)
-    RxDB.plugin(pSearch)
-    PouchDB.plugin(pAuth)
-    PouchDB.plugin(pHTTP)
+    if (!RxDB.PouchDB.replicate) {
+      RxDB.plugin(pHTTP)
+      RxDB.plugin(pIDB)
+      RxDB.plugin(pREPL)
+      RxDB.plugin(pValidate)
+      RxDB.plugin(pSearch)
+      PouchDB.plugin(pAuth)
+      PouchDB.plugin(pHTTP)
+    }
 
     // auto Object<string, Set> => Object<string, []>
     autorunAsync(() => {
@@ -58,7 +59,7 @@ class App {
           [key]: entries,
         }
       }, {})
-    }, 500)
+    }, 100)
   }
 
   mountStore = store => {
@@ -90,22 +91,22 @@ class App {
     }
 
     // attach
-    this.database = database
+    this.databaseConfig = database
 
     // connect to pouchdb
     console.time('create db')
-    this.db = await RxDB.create({
+    this.database = await RxDB.create({
       adapter: 'idb',
       name: database.name,
       password: database.password,
-      multiInstance: true,
-      withCredentials: false,
-      pouchSettings: {
-        skip_setup: true,
-        live: true,
-        retry: true,
-        since: 'now',
-      },
+      // multiInstance: true,
+      // withCredentials: false,
+      // pouchSettings: {
+      //   skip_setup: true,
+      //   live: true,
+      //   retry: true,
+      //   since: 'now',
+      // },
     })
 
     console.timeEnd('create db')
@@ -124,8 +125,8 @@ class App {
 
     // connect models
     const connections = Object.entries(Models).map(([name, model]) =>
-      model.connect(this.db, {
-        sync: `${database.couchUrl}/${model.title}`,
+      model.connect(this.database, {
+        sync: `${database.couchUrl}/${model.title}/`,
       })
     )
 

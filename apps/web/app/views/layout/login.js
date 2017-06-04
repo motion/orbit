@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, keycode } from '~/helpers'
 import App from '@jot/models'
-import { Form, Segment, Input, Button, Link } from '~/ui'
+import { Popover, List, Form, Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 // settimeout or it dont focus yo
@@ -103,7 +103,7 @@ export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <Form $step={store.step} $$undraggable onSubmit={store.onSubmit}>
+        <Form if={store.step < 3} $$undraggable onSubmit={store.onSubmit}>
           <Segment>
             <Input
               $input
@@ -133,7 +133,17 @@ export default class Login {
             hi
             <username $$ellipse> {App.user.name}</username>
           </text>
-          <Button onClick={() => App.logout()}>👋</Button>
+          <Popover target={<Button icon="down" />} background openOnHover>
+            <List
+              width={150}
+              items={[
+                <List.Item
+                  primary={App.user.name}
+                  after={<Button icon="power" onClick={() => App.logout()} />}
+                />,
+              ]}
+            />
+          </Popover>
         </step>
       </login>
     )

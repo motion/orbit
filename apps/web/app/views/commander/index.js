@@ -114,7 +114,6 @@ export default class Commander {
       flex: 1,
     },
     preview: {
-      padding: 10,
       position: 'relative',
       flex: 4,
       background: `rgba(255, 255, 255, .8)`,

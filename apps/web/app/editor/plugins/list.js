@@ -46,12 +46,11 @@ class Ul {
       transition: 'background 150ms ease-in',
     },
     isRoot: {
-      width: '150%',
+      width: '1000%',
       background: `rgba(250, 250, 250, 1)`,
-      marginLeft: -50,
-      paddingLeft: 50,
+      marginLeft: -200,
+      paddingLeft: 200,
       padding: 20,
-      paddingLeft: 100,
       marginTop: 10,
       marginBottom: 10,
       borderTop: '1px solid #ddd',
@@ -81,7 +80,7 @@ class Li {
     const className = 'strikethrough ' + (archive ? 'active' : '')
 
     return (
-      <wrap $$row>
+      <listItem $$row>
         <minMax
           $hide={!hasChildren}
           $min={minimize}
@@ -93,7 +92,7 @@ class Li {
         <li $archive={archive} className={className} {...props.attributes}>
           {minimize ? <p $$text>{text}</p> : props.children}
         </li>
-      </wrap>
+      </listItem>
     )
   }
 

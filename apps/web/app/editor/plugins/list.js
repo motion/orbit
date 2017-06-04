@@ -6,6 +6,7 @@ import { BLOCKS } from '~/editor/constants'
 import { replacer } from '~/editor/helpers'
 import AutoReplace from 'slate-auto-replace'
 import { createButton } from './helpers'
+import { every } from 'lodash'
 
 const { UL_LIST, OL_LIST, LIST_ITEM } = BLOCKS
 const editList = EditList()
@@ -21,16 +22,51 @@ const ol_list = node(
   })
 )
 
-const ul_list = node(
-  view(props => <ul $$ul {...props.attributes}>{props.children}</ul>)
-)
+const ul_list = @node
+@view
+class Ul {
+  render({ isRoot, ...props }) {
+    let done = false
+
+    if (isRoot) {
+      done = every(
+        props.children.map(i => i.props.node.data.get('archive') || false)
+      )
+    }
+
+    return (
+      <ul $isRoot={isRoot} $done={done} {...props.attributes}>
+        {props.children}
+      </ul>
+    )
+  }
+
+  static style = {
+    ul: {
+      transition: 'background 150ms ease-in',
+    },
+    isRoot: {
+      width: '150%',
+      background: `rgba(250, 250, 250, 1)`,
+      marginLeft: -50,
+      paddingLeft: 50,
+      padding: 20,
+      paddingLeft: 100,
+      marginTop: 10,
+      marginBottom: 10,
+      borderTop: '1px solid #ddd',
+      borderBottom: '1px solid #ddd',
+    },
+    done: {
+      background: 'rgba(255, 255, 255, 1)',
+    },
+  }
+}
 
 const list_item = @node
 @view
 class Li {
   toggleMinimize = () => {
-    console.log('toggling')
-
     const { node: { data }, setData } = this.props
 
     setData(data.set('minimize', !(data.get('minimize') || false)))
@@ -41,6 +77,8 @@ class Li {
     const minimize = props.node.data.get('minimize') || false
     const text = props.children[0].props.node.text
 
+    const className = 'strikethrough ' + (archive ? 'active' : '')
+
     return (
       <wrap $$row>
         <minMax
@@ -50,8 +88,8 @@ class Li {
         >
           {minimize ? '+' : '-'}
         </minMax>
-        <li $$li $archive={archive} {...props.attributes}>
-          {minimize ? text : props.children}
+        <li $archive={archive} className={className} {...props.attributes}>
+          {minimize ? <p $$text>{text}</p> : props.children}
         </li>
       </wrap>
     )
@@ -59,7 +97,7 @@ class Li {
 
   static style = {
     archive: {
-      opacity: 0.4,
+      opacity: 0.9,
     },
     minMax: {
       height: 30,
@@ -69,10 +107,12 @@ class Li {
       fontSize: 16,
     },
     min: {
-      marginLeft: -32,
+      marginLeft: -33,
+      paddingRight: 0,
     },
     li: {
       marginLeft: 30,
+      transition: 'opacity 100ms ease-in',
     },
   }
 }

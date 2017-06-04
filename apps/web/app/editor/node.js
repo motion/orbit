@@ -58,6 +58,7 @@ export default Component =>
           setData={this.setData}
           onChange={editor.onChange}
           editorStore={this.editorStore}
+          isRoot={isRoot}
           id={this.id}
         />
       )

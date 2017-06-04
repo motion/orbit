@@ -16,6 +16,41 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+
+/* Strikethrough */
+
+.strikethrough > p {
+	display: inline-block;
+	position: relative;
+	transition: all 0.25s cubic-bezier(.55, 0, .1, 1);
+}
+
+.strikethrough > p:after {
+	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
+  position: absolute;
+  top: 15px;
+	transform-origin: center left;
+	height: 2px;
+	box-shadow: 0 1px rgba(255,255,255,0.6);
+  left: 0px;
+	width: 100%;
+	content: '';
+	display: block;
+	background: black;
+  transform: scaleX(1);
+}
+
+.strikethrough:not(.active) > p:after {
+	transform: scaleX(0);
+	transform-origin: center right;
+	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
+}
+
+.strikethrough.active > p:after {
+	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
+  transform: scaleX(1);
+}
+
 ::selection {
   background: blue;
   color: #fff;

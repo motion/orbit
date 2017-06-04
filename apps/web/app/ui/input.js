@@ -48,10 +48,11 @@ export default class Input {
   }
 
   static theme = {
-    theme: () => ({
-      button: {
+    theme: (props, context, activeTheme) => ({
+      input: {
         '&:focus': {
           borderColor: 'blue !important',
+          borderWidth: 1,
         },
       },
     }),

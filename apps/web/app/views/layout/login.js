@@ -75,6 +75,11 @@ import { HEADER_HEIGHT } from '~/constants'
 
     onUsernameKey = (event: Event) => {
       switch (keycode(event)) {
+        case 'enter':
+          event.preventDefault()
+          event.stopPropagation()
+          console.log('focus')
+          this.passwordRef.focus()
       }
     }
 

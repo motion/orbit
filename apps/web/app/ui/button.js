@@ -150,12 +150,17 @@ export default class Button {
       //   borderColor: 'blue',
       // },
     },
-    inSegment: ({ borderRadius, circular, inSegment: { first, last } }) => ({
-      borderRightWidth: 1,
+    inSegment: ({
+      chromeless,
+      borderRadius,
+      circular,
+      inSegment: { first, last },
+    }) => ({
+      borderRightWidth: chromeless ? 0 : 1,
       borderLeftWidth: 0,
       ...(first && {
         borderLeftRadius: circular ? 1000 : borderRadius,
-        borderLeftWidth: 1,
+        borderLeftWidth: chromeless ? 0 : 1,
       }),
       ...(last && {
         borderRightRadius: circular ? 1000 : borderRadius,
@@ -224,6 +229,7 @@ export default class Button {
             '&:active': activeTheme.active,
             '&:focus': {
               borderColor: '#999',
+              borderWidth: 1, // ;)
             },
           }),
         },
@@ -261,6 +267,8 @@ export default class Button {
         borderWidth: 0,
         borderRightWidth: 0,
         borderLeftWidth: 0,
+        borderTopWidth: 0,
+        borderBottomWidth: 0,
         '&:hover': {
           opacity: 0.8,
         },

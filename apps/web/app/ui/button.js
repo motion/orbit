@@ -146,7 +146,6 @@ export default class Button {
       justifyContent: 'center',
       border: [1, '#eee'],
       position: 'relative',
-
       // '&:active': {
       //   borderColor: 'blue',
       // },

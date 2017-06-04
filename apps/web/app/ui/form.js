@@ -13,7 +13,7 @@ export default class Form {
           },
         }}
       >
-        <form {...props} />
+        {() => <form {...props} />}
       </Provider>
     )
   }

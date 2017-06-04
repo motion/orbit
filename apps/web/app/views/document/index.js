@@ -38,7 +38,6 @@ export default class DocumentView {
   static style = {
     docview: {
       flex: 1,
-      flexFlow: 'row',
     },
     loading: {
       flex: 1,
@@ -49,7 +48,6 @@ export default class DocumentView {
       padding: 0,
       maxWidth: 1250,
       flex: 1,
-      overflow: 'hidden',
     },
   }
 }

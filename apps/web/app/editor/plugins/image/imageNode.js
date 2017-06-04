@@ -57,8 +57,8 @@ export default class ImageNode {
     return (
       <image {...attributes}>
         <img if={store.src} src={store.src} />
-        <loading contentEditable={false} if={!store.src}>
-          loading...
+        <loading if={!store.src}>
+          {children}
         </loading>
       </image>
     )

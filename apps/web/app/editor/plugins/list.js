@@ -35,9 +35,12 @@ class Ul {
     }
 
     return (
-      <ul $isRoot={isRoot} $done={done} {...props.attributes}>
-        {props.children}
-      </ul>
+      <tasks $done={done} $isRoot={isRoot}>
+        <toolbar if={false && isRoot} contentEditable={false} />
+        <ul {...props.attributes}>
+          {props.children}
+        </ul>
+      </tasks>
     )
   }
 

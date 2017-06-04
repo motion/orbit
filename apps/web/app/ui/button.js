@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view, inject, clr } from '~/helpers'
 import Icon from './icon'
@@ -7,7 +8,7 @@ import type { Color } from 'gloss'
 
 const idFn = _ => _
 
-@inject(provided => provided.ui)
+@inject(context => context.ui)
 @view.ui
 export default class Button {
   props: {
@@ -40,7 +41,7 @@ export default class Button {
     iconColor: '#999',
     iconSize: 12,
     onClick: idFn,
-    borderRadius: 5,
+    borderRadius: 50,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -134,6 +135,7 @@ export default class Button {
   static style = {
     button: {
       background: 'transparent',
+      overflow: 'hidden',
       lineHeight: '1rem',
       fontSize: 13,
       fontWeight: 400,
@@ -206,7 +208,6 @@ export default class Button {
     theme: (props, context, activeTheme) => {
       return {
         button: {
-          borderWidth: 1,
           ...activeTheme.base,
           '&:hover': activeTheme.hover,
         },
@@ -275,6 +276,7 @@ export default class Button {
     },
     formed: (a, b, activeTheme) => ({
       button: {
+        background: 'red',
         '&:active': activeTheme.active,
         '&:focus': {
           borderColor: '#999',

@@ -17,4 +17,10 @@ export default class Form {
       </Provider>
     )
   }
+
+  static style = {
+    form: {
+      flex: 1,
+    },
+  }
 }

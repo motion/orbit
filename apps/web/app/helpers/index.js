@@ -6,7 +6,11 @@ export $ from './styles'
 export { query } from '@jot/models'
 export clr from 'color'
 export debug from 'debug'
-export { inject } from 'react-tunnel'
+
+import { inject as injector } from 'react-tunnel'
+// adds object fallback if not defined
+export const inject = (mapProvidedToProps: Function) =>
+  injector(props => mapProvidedToProps(props) || {})
 
 import _keyCode from 'keycode'
 // fix react synth event

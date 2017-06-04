@@ -1,12 +1,9 @@
 import React from 'react'
-import { view } from '~/helpers'
-import injectSegmented from './helpers/injectSegmented'
-import injectForm from './helpers/injectForm'
+import { view, inject } from '~/helpers'
 
 const BORDER_RADIUS = 4
 
-@injectForm
-@injectSegmented
+@inject(context => context.ui)
 @view.ui
 export default class Input {
   static defaultProps = {

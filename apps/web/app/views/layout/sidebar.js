@@ -17,6 +17,7 @@ import { Place } from '@jot/models'
 import Login from './login'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
+import randomcolor from 'randomcolor'
 
 const SideBarItem = ({ children, isEditing, after, ...props }) => {
   const editStyle = isEditing && {
@@ -176,6 +177,21 @@ export default class Sidebar {
         <sidebar>
           <top>
             <Login />
+
+            <orgs $$row>
+              {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
+                <Button
+                  key={i}
+                  style={{ marginLeft: 5, marginRight: 5 }}
+                  circular
+                  size={32}
+                  iconSize={12}
+                  color={randomcolor()}
+                  icon={name}
+                />
+              ))}
+            </orgs>
+
             <title $$row $$justify="space-between" $$padding={[4, 6]}>
               <input
                 $search

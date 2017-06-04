@@ -20,7 +20,7 @@ export default class Circle {
       justifyContent: 'center',
       zIndex: 1000,
       background: '#fff',
-      boxShadow: [0, 4, 15, [0, 0, 0, 0.125]],
+
       color: '#111',
       fontWeight: 400,
       cursor: 'pointer',
@@ -28,11 +28,7 @@ export default class Circle {
       transition: 'all ease-in 100ms',
 
       '&:hover': {
-        boxShadow: [0, 4, 25, [0, 0, 0, 0.2]],
         background: '#efefef',
-        transform: {
-          scale: '1.2',
-        },
       },
     },
   }
@@ -44,5 +40,16 @@ export default class Circle {
         height: size,
       },
     }),
+    material: {
+      circle: {
+        boxShadow: [0, 2, 10, [0, 0, 0, 0.1]],
+        '&:hover': {
+          boxShadow: [0, 4, 15, [0, 0, 0, 0.15]],
+          transform: {
+            scale: '1.2',
+          },
+        },
+      },
+    },
   }
 }

@@ -5,6 +5,14 @@ import { Segment, Input, Button, Link, Icon } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 // settimeout or it dont focus yo
+// case 'enter':
+// case 'tab':
+//   event.preventDefault()
+//   event.stopPropagation()
+//   this.setUsername()
+// event.preventDefault()
+// event.stopPropagation()
+// App.setUsername(null)
 @view({
   store: class LoginStore {
     loggingIn = false
@@ -67,11 +75,6 @@ import { HEADER_HEIGHT } from '~/constants'
 
     onUsernameKey = (event: Event) => {
       switch (keycode(event)) {
-        case 'enter':
-        case 'tab':
-          event.preventDefault()
-          event.stopPropagation()
-          this.setUsername()
       }
     }
 
@@ -84,9 +87,6 @@ import { HEADER_HEIGHT } from '~/constants'
           break
         case 'esc':
           if (this.passwordRef.value === '') {
-            event.preventDefault()
-            event.stopPropagation()
-            App.setUsername(null)
           } else {
             this.passwordRef.value = ''
           }
@@ -99,10 +99,7 @@ export default class Login {
     return (
       <login $$draggable>
         <form $step={store.step} $$undraggable onSubmit={store.onSubmit}>
-          <step $hinted $$hidden={store.step !== 1}>
-            <hint>
-              press tab
-            </hint>
+          <Segment>
             <Input
               $input
               $error={store.error}
@@ -111,35 +108,19 @@ export default class Login {
               getRef={store.setUsernameRef}
               placeholder="your name..."
             />
-          </step>
-
-          <step $$hidden={store.step !== 2}>
-            <info if={App.user} $showingPass={store.step === 2}>
-              <Icon
-                name="remove"
-                size={9}
-                color={[0, 0, 0, 0.1]}
-                onClick={App.clearUser}
-                button
-              />
-              <username $$ellipse>{App.user.name}</username>
-            </info>
-            <Segment>
-              <Input
-                $input
-                disabled={store.loggingIn}
-                width={80}
-                name="password"
-                type="password"
-                placeholder="password"
-                onKeyDown={store.onPasswordKey}
-                getRef={store.setPasswordRef}
-              />
-              <Button onClick={store.finish}>
-                {store.loggingIn ? '⌛' : '✅'}
-              </Button>
-            </Segment>
-          </step>
+            <Input
+              $input
+              disabled={store.loggingIn}
+              name="password"
+              type="password"
+              placeholder="password"
+              onKeyDown={store.onPasswordKey}
+              getRef={store.setPasswordRef}
+            />
+            <Button onClick={store.finish}>
+              {store.loggingIn ? '⌛' : '✅'}
+            </Button>
+          </Segment>
         </form>
 
         <step if={store.step === 3}>
@@ -198,18 +179,7 @@ export default class Login {
       width: '25%',
     },
     input: {
-      display: 'flex',
       flex: 1,
-    },
-    info: {
-      flexFlow: 'row',
-      flex: 4,
-      alignItems: 'center',
-    },
-    username: {
-      maxWidth: '80%',
-      fontWeight: 800,
-      cursor: 'normal',
     },
     button: {
       padding: [3, 8],

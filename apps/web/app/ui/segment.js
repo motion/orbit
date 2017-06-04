@@ -4,11 +4,23 @@ import { view } from '~/helpers'
 import Button from './button'
 import { pickBy } from 'lodash'
 import { Provider } from 'react-tunnel'
+import type { Color } from 'gloss'
 
 const notUndefined = x => typeof x !== 'undefined'
 
-@view.ui class Segment {
-  static Item = Button
+@view.ui
+export default class Segment {
+  props: {
+    onChange?: Function,
+    defaultActive?: number,
+    onlyIcons?: boolean,
+    size?: number,
+    title?: string,
+    stretch?: boolean,
+    sync?: boolean,
+    padded?: boolean,
+    color: Color,
+  }
 
   static defaultProps = {
     items: [],
@@ -34,25 +46,22 @@ const notUndefined = x => typeof x !== 'undefined'
     return hasState ? this.state.active : this.props.defaultActive
   }
 
-  render() {
-    let { color } = this.props
-    const {
-      items,
-      onChange,
-      defaultActive,
-      onlyIcons,
-      size,
-      children,
-      active,
-      title,
-      stretch,
-      sync,
-      padded,
-      ...props
-    } = this.props
-
+  render({
+    items,
+    onChange,
+    defaultActive,
+    onlyIcons,
+    size,
+    children,
+    active,
+    title,
+    stretch,
+    sync,
+    padded,
+    color,
+    ...props
+  }) {
     const curActive = typeof active === 'undefined' ? this.active : active
-
     let finalChildren = null
 
     if (children) {
@@ -64,9 +73,12 @@ const notUndefined = x => typeof x !== 'undefined'
         <Provider
           key={i}
           provide={{
-            uiSegment: {
-              first: i === 0,
-              last: i === realChildren.length - 1,
+            ui: {
+              ...this.context.ui,
+              segment: {
+                first: i === 0,
+                last: i === realChildren.length - 1,
+              },
             },
           }}
         >
@@ -86,6 +98,7 @@ const notUndefined = x => typeof x !== 'undefined'
               uiSegment: {
                 first: i === 0,
                 last: i === items.length - 1,
+                index: i,
               },
             }}
           >
@@ -108,19 +121,20 @@ const notUndefined = x => typeof x !== 'undefined'
     }
 
     return (
-      <container {...props}>
+      <segment {...props}>
         <title if={title}>{title}</title>
         {finalChildren}
-      </container>
+      </segment>
     )
   }
 
   static style = {
-    container: {
+    segment: {
       pointerEvents: 'auto',
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',
+      flex: 1,
     },
     title: {
       margin: ['auto', 5],
@@ -131,23 +145,19 @@ const notUndefined = x => typeof x !== 'undefined'
 
   static theme = {
     reverse: {
-      container: {
+      segment: {
         flexFlow: 'row-reverse',
       },
     },
     padded: {
-      container: {
+      segment: {
         margin: ['auto', 5],
       },
     },
     vertical: {
-      container: {
+      segment: {
         flexFlow: 'column',
       },
     },
   }
 }
-
-Segment.Item = Button
-
-export default Segment

@@ -9,8 +9,8 @@ import Sidebar from '~/views/layout/sidebar'
 import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
 import Commander from '~/views/commander'
-import KeyStore from '~/stores/keys'
-import LayoutStore from '~/stores/layout'
+import KeyStore from '~/stores/keyStore'
+import LayoutStore from '~/stores/layoutStore'
 import RedBox from 'redbox-react'
 import Draft from './document/draft'
 
@@ -99,6 +99,7 @@ export default class Root extends React.Component {
               circular
               onClick={() => layoutStore.createDoc()}
               $circleButton
+              material
               icon="add"
             />
           </LayoutWrap>
@@ -114,6 +115,7 @@ export default class Root extends React.Component {
       position: 'absolute',
       bottom: 20,
       right: 20,
+      zIndex: 1000000000,
     },
     layout: {
       flex: 1,

@@ -2,7 +2,6 @@
 import React from 'react'
 import { view } from '~/helpers'
 import { List, Popover } from '~/ui'
-import { Keys } from '~/stores'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
 
@@ -38,6 +37,10 @@ import { object } from 'prop-types'
   },
 })
 class ContextMenu {
+  static defaultProps = {
+    width: 135,
+  }
+
   static childContextTypes = {
     contextMenu: object,
   }
@@ -74,7 +77,7 @@ class ContextMenu {
     })
   }
 
-  render({ children, inactive, options, store, ...props }) {
+  render({ width, children, inactive, options, store, ...props }) {
     return (
       <contextmenu ref={this.ref('node').set} {...props}>
         {children}
@@ -92,12 +95,12 @@ class ContextMenu {
           animation="slide 100ms"
           onClose={store.clearMenu}
           noArrow
-          top={store.event.clientY + 20}
-          left={store.event.clientX - 50}
+          top={store.event.clientY - 8}
+          left={store.event.clientX - width / 2}
         >
           <List
             controlled
-            width={140}
+            width={width}
             items={options}
             itemStyle={{
               padding: [0, 7, 0, 16],

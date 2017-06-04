@@ -3,13 +3,13 @@ import { view, clr } from '~/helpers'
 import Icon from './icon'
 import Glow from './glow'
 import Popover from './popover'
-import Circle from './circle'
 import type { Color } from 'gloss'
 import injectSegmented from './helpers/injectSegmented'
+import injectForm from './helpers/injectForm'
 
-const RADIUS = 5
 const idFn = _ => _
 
+@injectForm
 @injectSegmented
 @view.ui
 export default class Button {
@@ -34,21 +34,19 @@ export default class Button {
     iconProps?: Object,
     tooltipProps?: Object,
     circleProps?: Object,
-    circleSize?: number,
+    size?: number,
     iconSize?: number,
+    form: boolean,
   }
 
   static defaultProps = {
     iconColor: '#999',
     iconSize: 12,
     onClick: idFn,
+    borderRadius: 5,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
-
-  circleWrapper = (size, props) => children => (
-    <Circle size={size} {...props}>{children}</Circle>
-  )
 
   render() {
     const {
@@ -73,52 +71,49 @@ export default class Button {
       className,
       theme,
       circular,
-      circleSize,
+      size,
       circleProps,
+      borderRadius,
+      material,
+      form,
       ...props
     } = this.props
 
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
-    const wrapper = circular
-      ? this.circleWrapper(circleSize, circleProps)
-      : idFn
 
     return (
-      <segment
+      <button
+        $$borderRadius={borderRadius}
+        $segmented={segmented && this.props}
         $color={color}
         $clickable={!!onClick || clickable}
         $activeOn={active}
-        $rounding={segmented ? segmented : { first: true, last: true }}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
         {...props}
       >
-        {wrapper(
-          <wrap>
-            <Icon
-              if={icon}
-              $icon
-              $iconAfter={hasIconAfter}
-              name={icon}
-              size={iconSize}
-              color={active ? '#000' : color || iconColor}
-              {...iconProps}
-            />
-            <children
-              if={children}
-              $hasIconBefore={hasIconBefore}
-              $hasIconAfter={hasIconAfter}
-              style={{ color }}
-            >
-              <glowWrap if={!active}>
-                <Glow full scale={1} color={[0, 0, 0]} opacity={0.08} />
-              </glowWrap>
-              {children}
-            </children>
-            {after || null}
-          </wrap>
-        )}
+        <Icon
+          if={icon}
+          $icon
+          $iconAfter={hasIconAfter}
+          name={icon}
+          size={iconSize}
+          color={active ? '#000' : color || iconColor}
+          {...iconProps}
+        />
+        <children
+          if={children}
+          $hasIconBefore={hasIconBefore}
+          $hasIconAfter={hasIconAfter}
+          style={{ color }}
+        >
+          <glowWrap if={!active}>
+            <Glow full scale={1} color={[0, 0, 0]} opacity={0.08} />
+          </glowWrap>
+          {children}
+        </children>
+        {after || null}
         <Popover
           if={tooltip}
           theme="dark"
@@ -135,12 +130,13 @@ export default class Button {
         >
           {tooltip}
         </Popover>
-      </segment>
+      </button>
     )
   }
 
   static style = {
-    segment: {
+    button: {
+      background: 'transparent',
       lineHeight: '1rem',
       fontSize: 13,
       fontWeight: 400,
@@ -149,31 +145,34 @@ export default class Button {
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',
-      borderColor: '#ddd',
-      borderWidth: 1,
-      borderStyle: 'dotted',
-      borderRightWidth: 0,
+      border: [1, '#eee'],
       position: 'relative',
+
+      // '&:active': {
+      //   borderColor: 'blue',
+      // },
+      '&:focus': {
+        borderColor: '#999',
+      },
     },
+    segmented: ({ borderRadius, circular, segmented: { first, last } }) => ({
+      borderRightWidth: 1,
+      borderLeftWidth: 0,
+      ...(first && {
+        borderLeftRadius: circular ? 1000 : borderRadius,
+        borderLeftWidth: 1,
+      }),
+      ...(last && {
+        borderRightRadius: circular ? 1000 : borderRadius,
+      }),
+      ...(last &&
+      !first && {
+        borderLeftWidth: 0,
+      }),
+    }),
     color: color => ({
       color,
     }),
-    rounding: ({ first, last }) => ({
-      ...(first && {
-        borderTopLeftRadius: RADIUS,
-        borderBottomLeftRadius: RADIUS,
-      }),
-      ...(last && {
-        borderRightWidth: 1,
-        borderTopRightRadius: RADIUS,
-        borderBottomRightRadius: RADIUS,
-      }),
-    }),
-    wrap: {
-      // flex: 1,
-      flexFlow: 'row',
-      alignItems: 'center',
-    },
     clickable: {
       cursor: 'pointer',
     },
@@ -212,7 +211,8 @@ export default class Button {
   static theme = {
     theme: (props, context, activeTheme) => {
       return {
-        segment: {
+        button: {
+          borderWidth: 1,
           ...activeTheme.base,
           '&:active': activeTheme.active,
           '&:hover': activeTheme.hover,
@@ -230,26 +230,25 @@ export default class Button {
       }
     },
     spaced: {
-      segment: {
-        borderRadius: 5,
-        margin: [0, 2],
+      button: {
+        margin: [0, 5],
         borderRightWidth: 1,
       },
     },
     stretch: {
-      segment: {
+      button: {
         flex: 1,
       },
     },
-    circular: {
-      segment: {
-        borderWidth: 0,
-        borderRightWidth: 0,
-        borderLeftWidth: 0,
+    circular: ({ size }) => ({
+      button: {
+        borderRadius: 10000,
+        width: size,
+        height: size,
       },
-    },
+    }),
     chromeless: {
-      segment: {
+      button: {
         border: 'none !important',
         borderWidth: 0,
         borderRightWidth: 0,
@@ -260,17 +259,33 @@ export default class Button {
       },
     },
     disabled: {
-      segment: {
+      button: {
         pointerEvents: 'none',
         background: 'transparent',
         color: [255, 255, 255, 0.2],
       },
     },
     dim: {
-      segment: {
+      button: {
         opacity: 0.5,
         '&:hover': {
           opacity: 1,
+        },
+      },
+    },
+    material: {
+      button: {
+        boxShadow: [0, 2, 10, [0, 0, 0, 0.1]],
+        '&:hover': {
+          boxShadow: [0, 2, 15, [0, 0, 0, 0.15]],
+        },
+      },
+    },
+    form: {
+      button: {
+        '&:focus': {
+          borderColor: 'blue',
+          background: '#fff',
         },
       },
     },

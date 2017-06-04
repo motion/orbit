@@ -1,8 +1,6 @@
 # next
-
-full grid mode test
-templates
-side menus row
+  - sidebar org mode
+  - document todos to sidebar sync
 
 # needed
 
@@ -24,6 +22,10 @@ side menus row
 
 # technical
 
+- <Form /> which passes context to button
+-    <Button /> which takes form context to add &:active style
+- light theme by default
+  - input, button, drawer, listitem, popover, text, title, ...
 - move app logic to root stores
   - proper (user|auth|key|errors...) stores
 - actions can be observed on any store

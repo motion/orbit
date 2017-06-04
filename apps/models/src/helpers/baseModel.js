@@ -69,7 +69,7 @@ export default class BaseModel {
     this.db = db
     this.remoteDB = options.sync
 
-    console.time('db-connect')
+    console.time('db:connect')
     this.collection = await db.collection({
       name: this.title,
       schema: this.compiledSchema,
@@ -81,27 +81,13 @@ export default class BaseModel {
       },
       methods: this.compiledMethods,
     })
-    console.timeEnd('db-connect')
+    console.timeEnd('db:connect')
 
     // shim add pouchdb-validation
     this.collection.pouch.installValidationMethods()
 
     // create index
-    if (this.settings.index) {
-      // TODO: pouchdb supposedly does this for you, but it was slow in profiling
-      const { indexes } = await this.collection.pouch.getIndexes()
-      const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
-        field => Object.keys(field)[0]
-      )
-      // if we have not indexed every field
-      if (
-        intersection(this.settings.index, alreadyIndexedFields).length !==
-        this.settings.index.length
-      ) {
-        // need to await or you get error sorting by dates, etc
-        await this.collection.pouch.createIndex({ fields: this.settings.index })
-      }
-    }
+    await this.createIndexes()
 
     // setup hooks
     this.hooks = this.hooks || {}
@@ -144,6 +130,24 @@ export default class BaseModel {
       live: true,
       retry: true,
     })
+  }
+
+  createIndexes = async () => {
+    if (this.settings.index) {
+      // TODO: pouchdb supposedly does this for you, but it was slow in profiling
+      const { indexes } = await this.collection.pouch.getIndexes()
+      const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
+        field => Object.keys(field)[0]
+      )
+      // if we have not indexed every field
+      if (
+        intersection(this.settings.index, alreadyIndexedFields).length !==
+        this.settings.index.length
+      ) {
+        // need to await or you get error sorting by dates, etc
+        await this.collection.pouch.createIndex({ fields: this.settings.index })
+      }
+    }
   }
 
   // helpers

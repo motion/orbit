@@ -76,12 +76,14 @@ class Li {
     const archive = props.node.data.get('archive') || false
     const minimize = props.node.data.get('minimize') || false
     const text = props.children[0].props.node.text
+    const hasChildren = props.children.length > 1
 
     const className = 'strikethrough ' + (archive ? 'active' : '')
 
     return (
       <wrap $$row>
         <minMax
+          $hide={!hasChildren}
           $min={minimize}
           contentEditable={false}
           onClick={this.toggleMinimize}
@@ -101,10 +103,15 @@ class Li {
     },
     minMax: {
       height: 30,
+      userSelect: 'none',
       padding: 3,
       cursor: 'pointer',
       marginLeft: -30,
       fontSize: 16,
+    },
+    hide: {
+      opacity: 0,
+      pointerEvents: 'none',
     },
     min: {
       marginLeft: -33,

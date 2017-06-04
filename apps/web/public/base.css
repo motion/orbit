@@ -19,15 +19,15 @@ body {
 
 /* Strikethrough */
 
-.strikethrough > p {
+.strikethrough > p > span {
 	position: relative;
 	transition: all 0.25s cubic-bezier(.55, 0, .1, 1);
 }
 
-.strikethrough > p:after {
+.strikethrough > p > span:after {
 	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
   position: absolute;
-  top: 15px;
+  top: 11px;
 	transform-origin: center left;
 	height: 2px;
 	box-shadow: 0 1px rgba(255,255,255,0.6);
@@ -39,13 +39,13 @@ body {
   transform: scaleX(1);
 }
 
-.strikethrough:not(.active) > p:after {
+.strikethrough:not(.active) > p > span:after {
 	transform: scaleX(0);
 	transform-origin: center right;
 	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
 }
 
-.strikethrough.active > p:after {
+.strikethrough.active > p > span:after {
 	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
   transform: scaleX(1);
 }

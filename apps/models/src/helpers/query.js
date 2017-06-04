@@ -35,23 +35,18 @@ function valueWrap(info, valueGet: Function) {
     const selector = { ...value.mquery._conditions }
 
     if (!remoteDB || !localDB) {
-      console.error(
-        'Missing one of remoteDB or localDB:',
-        this,
-        this.remoteDB,
-        remoteDB,
-        localDB
-      )
-    } else {
-      // need to delete id or else findAll queries dont sync
-      if (!selector._id || !Object.keys(selector._id).length) {
-        delete selector._id
-      }
-      pull = PouchDB.replicate(remoteDB, localDB, {
-        selector,
-        live: true,
-      })
+      throw 'Missing one of remoteDB or localDB'
     }
+
+    // need to delete id or else findAll queries dont sync
+    if (!selector._id || !Object.keys(selector._id).length) {
+      delete selector._id
+    }
+
+    pull = PouchDB.replicate(remoteDB, localDB, {
+      selector,
+      live: true,
+    })
   }
 
   const response = {}

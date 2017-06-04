@@ -49,6 +49,7 @@ export default class DocumentView {
       padding: 0,
       maxWidth: 1250,
       flex: 1,
+      overflow: 'hidden',
     },
   }
 }

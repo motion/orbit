@@ -1,20 +1,19 @@
+// @flow
 import React from 'react'
-import { view, clr } from '~/helpers'
+import { view, inject, clr } from '~/helpers'
 import Icon from './icon'
 import Glow from './glow'
 import Popover from './popover'
 import type { Color } from 'gloss'
-import injectSegmented from './helpers/injectSegmented'
-import injectForm from './helpers/injectForm'
 
 const idFn = _ => _
 
-@injectForm
-@injectSegmented
+@inject(context => context.ui)
 @view.ui
 export default class Button {
   props: {
-    segmented?: object,
+    inSegment?: object,
+    inForm?: boolean,
     clickable?: boolean,
     active?: boolean,
     chromeless?: boolean,
@@ -36,7 +35,6 @@ export default class Button {
     circleProps?: Object,
     size?: number,
     iconSize?: number,
-    form: boolean,
   }
 
   static defaultProps = {
@@ -50,7 +48,8 @@ export default class Button {
 
   render() {
     const {
-      segmented,
+      inSegment,
+      inForm,
       onClick,
       clickable,
       children,
@@ -75,7 +74,6 @@ export default class Button {
       circleProps,
       borderRadius,
       material,
-      form,
       ...props
     } = this.props
 
@@ -85,10 +83,10 @@ export default class Button {
     return (
       <button
         $$borderRadius={borderRadius}
-        $segmented={segmented && this.props}
+        $inSegment={inSegment && this.props}
         $color={color}
         $clickable={!!onClick || clickable}
-        $activeOn={active}
+        $isActive={active}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
         {...props}
@@ -137,6 +135,7 @@ export default class Button {
   static style = {
     button: {
       background: 'transparent',
+      overflow: 'hidden',
       lineHeight: '1rem',
       fontSize: 13,
       fontWeight: 400,
@@ -147,15 +146,11 @@ export default class Button {
       justifyContent: 'center',
       border: [1, '#eee'],
       position: 'relative',
-
       // '&:active': {
       //   borderColor: 'blue',
       // },
-      '&:focus': {
-        borderColor: '#999',
-      },
     },
-    segmented: ({ borderRadius, circular, segmented: { first, last } }) => ({
+    inSegment: ({ borderRadius, circular, inSegment: { first, last } }) => ({
       borderRightWidth: 1,
       borderLeftWidth: 0,
       ...(first && {
@@ -176,7 +171,7 @@ export default class Button {
     clickable: {
       cursor: 'pointer',
     },
-    activeOn: {
+    isActive: {
       background: '#eee',
       '&:hover': {
         background: '#eee',
@@ -209,20 +204,33 @@ export default class Button {
   }
 
   static theme = {
-    theme: (props, context, activeTheme) => {
+    theme: (
+      { inForm, inSegment, borderRadius, circular },
+      context,
+      activeTheme
+    ) => {
       return {
         button: {
-          borderWidth: 1,
+          ...(!inSegment && {
+            borderRadius,
+          }),
+          ...(circular && {
+            borderRadius: 1000,
+          }),
           ...activeTheme.base,
-          '&:active': activeTheme.active,
           '&:hover': activeTheme.hover,
+          // inForm
+          ...(inForm && {
+            '&:active': activeTheme.active,
+            '&:focus': {
+              borderColor: '#999',
+            },
+          }),
         },
-        activeOn: {
-          ...activeTheme.active,
-          '&:hover': activeTheme.active,
+        isActive: {
+          background: '#f2f2f2',
         },
         clickable: {
-          '&:active': activeTheme,
           '&:hover': {
             background: activeTheme.background,
           },
@@ -249,7 +257,7 @@ export default class Button {
     }),
     chromeless: {
       button: {
-        border: 'none !important',
+        background: false,
         borderWidth: 0,
         borderRightWidth: 0,
         borderLeftWidth: 0,
@@ -278,14 +286,6 @@ export default class Button {
         boxShadow: [0, 2, 10, [0, 0, 0, 0.1]],
         '&:hover': {
           boxShadow: [0, 2, 15, [0, 0, 0, 0.15]],
-        },
-      },
-    },
-    form: {
-      button: {
-        '&:focus': {
-          borderColor: 'blue',
-          background: '#fff',
         },
       },
     },

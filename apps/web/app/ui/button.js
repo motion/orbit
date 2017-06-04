@@ -8,12 +8,12 @@ import type { Color } from 'gloss'
 
 const idFn = _ => _
 
-@inject(context => context.ui)
+@inject(context => [console.log('context', context.ui), context.ui][1])
 @view.ui
 export default class Button {
   props: {
-    segmented?: object,
-    formed?: boolean,
+    inSegment?: object,
+    inForm?: boolean,
     clickable?: boolean,
     active?: boolean,
     chromeless?: boolean,
@@ -41,14 +41,15 @@ export default class Button {
     iconColor: '#999',
     iconSize: 12,
     onClick: idFn,
-    borderRadius: 50,
+    borderRadius: 5,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
   render() {
     const {
-      segmented,
+      inSegment,
+      inForm,
       onClick,
       clickable,
       children,
@@ -73,7 +74,6 @@ export default class Button {
       circleProps,
       borderRadius,
       material,
-      form,
       ...props
     } = this.props
 
@@ -83,7 +83,7 @@ export default class Button {
     return (
       <button
         $$borderRadius={borderRadius}
-        $segmented={segmented && this.props}
+        $inSegment={inSegment && this.props}
         $color={color}
         $clickable={!!onClick || clickable}
         $isActive={active}
@@ -150,7 +150,7 @@ export default class Button {
       //   borderColor: 'blue',
       // },
     },
-    segmented: ({ borderRadius, circular, segmented: { first, last } }) => ({
+    inSegment: ({ borderRadius, circular, inSegment: { first, last } }) => ({
       borderRightWidth: 1,
       borderLeftWidth: 0,
       ...(first && {
@@ -204,11 +204,20 @@ export default class Button {
   }
 
   static theme = {
-    theme: (props, context, activeTheme) => {
+    theme: ({ inForm }, context, activeTheme) => {
+      console.log(context)
       return {
         button: {
           ...activeTheme.base,
           '&:hover': activeTheme.hover,
+          // inForm
+          ...(inForm && {
+            background: 'red',
+            '&:active': activeTheme.active,
+            '&:focus': {
+              borderColor: '#999',
+            },
+          }),
         },
         isActive: {
           ...activeTheme.active,
@@ -273,14 +282,5 @@ export default class Button {
         },
       },
     },
-    formed: (a, b, activeTheme) => ({
-      button: {
-        background: 'red',
-        '&:active': activeTheme.active,
-        '&:focus': {
-          borderColor: '#999',
-        },
-      },
-    }),
   }
 }

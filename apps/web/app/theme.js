@@ -1,5 +1,11 @@
 import { clr } from '~/helpers'
 
+const LIGHT = {
+  background: '#fff',
+  color: '#555',
+  borderColor: '#eee',
+}
+
 const DARK = {
   background: '#222',
   color: '#fff',
@@ -16,6 +22,18 @@ export default {
     active: {
       ...DARK,
       color: '#fff',
+    },
+  },
+  light: {
+    base: LIGHT,
+    hover: {
+      ...LIGHT,
+      background: clr(LIGHT.background).lighten(1),
+    },
+    active: {
+      ...LIGHT,
+      color: '#000',
+      borderColor: 'purple',
     },
   },
 }

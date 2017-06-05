@@ -40,7 +40,7 @@ export default class SidebarRootStore {
   }
 
   private = {
-    onMouseMove: () => this.dragging && this.private.onMove(),
+    onMouseMove: event => this.dragging && this.private.onMove(event),
     onMove: throttle(e => {
       e.preventDefault()
       if (this.dragging) {

@@ -71,10 +71,12 @@ export default class PlacePage {
       </Segment>
     )
 
-    console.log('render', place, doc)
+    console.log('render', place, doc === null)
     if (!place || !doc) {
       console.log('no place or doc')
       return <Page key={0} actions={actions}>
+        {place === null ? 'no place' : null}
+        {doc === null ? 'no doc' : null}
         <DocumentPage insidePlace />
       </Page>
     }

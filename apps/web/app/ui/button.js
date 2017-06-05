@@ -117,8 +117,8 @@ export default class Button {
           theme="dark"
           background
           openOnHover
+          noHover
           animation="bounce 150ms"
-          showForgiveness
           target={`.${this.uniq}`}
           padding={[0, 6]}
           distance={8}

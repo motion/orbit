@@ -416,6 +416,32 @@ export default class Popover {
     this.close()
   }
 
+  listenForHover = () => {
+    this.addHoverListeners('target', this.target)
+    this.addHoverListeners('menu', this.refs.popover)
+  }
+
+  addHoverListeners = (name, node) => {
+    if (!node) return
+
+    // race condition fix: target should close more slowly than menu opens
+    const setFalse = debounce(this.hoverStateSetter(name, false), name === 'target' ? 32 : 0)
+    const setTrue = this.hoverStateSetter(name, true)
+    const onLeave = () => !this.isNodeHovered(node) && setFalse()
+
+    this.on(node, 'mouseenter', () => {
+      setTrue()
+      // insanity, but mouselave is horrible
+      if (this.curProps.target) {
+        this.setTimeout(onLeave, 16)
+        this.setTimeout(onLeave, 32)
+        this.setTimeout(onLeave, 96)
+      }
+    })
+
+    this.on(node, 'mouseleave', setFalse)
+  }
+
   // hover helpers
   hoverStateSetter = (name, val) => () => {
     const { openOnHover, onMouseEnter } = this.curProps
@@ -435,35 +461,10 @@ export default class Popover {
     }
   }
 
-  listenForHover = () => {
-    this.addHoverListeners('target', this.target)
-    this.addHoverListeners('menu', this.refs.popover)
-  }
-
-  addHoverListeners = (name, node) => {
-    if (!node) return
-
-    const setFalse = this.hoverStateSetter(name, false)
-    const setTrue = this.hoverStateSetter(name, true)
-    const onLeave = () => false//!this.isTargetHovered() && setFalse()
-
-    this.on(node, 'mouseenter', () => {
-      setTrue()
-      // insanity, but mouselave is horrible
-      if (this.curProps.target) {
-        // this.setTimeout(onLeave, 16)
-        // this.setTimeout(onLeave, 32)
-        // this.setTimeout(onLeave, 96)
-      }
-    })
-
-    // this.on(node, 'mouseleave', setFalse)
-  }
-
-  isTargetHovered = () => {
+  isNodeHovered = (node) => {
     return (
-      this.target.querySelector(':hover') ||
-      this.target.parentNode.querySelector(':hover')
+      node.querySelector(':hover') ||
+      node.parentNode.querySelector(':hover')
     )
   }
 

@@ -49,7 +49,7 @@ export default Component =>
       this.props.editorStore.transform(t => t.insertBlock({ type, data }))
     }
 
-    contextMenu = () => (
+    contextMenu = ({ editorStore }) => (
       <Popover
         target={
           <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.1]} />
@@ -136,7 +136,7 @@ export default Component =>
           onMouseLeave={this.onMouseLeave}
         >
           <context>
-            {context || this.contextMenu()}
+            {context || this.contextMenu(this.props)}
           </context>
           {React.cloneElement(component, this.componentProps)}
         </node>

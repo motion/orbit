@@ -1,5 +1,5 @@
 import { replacer } from '~/editor/helpers'
-import DocListNode from './node'
+import DocListNode from './docListNode'
 import { BLOCKS } from '~/editor/constants'
 
 export default class DocListPlugin {

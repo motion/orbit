@@ -85,9 +85,11 @@ export default class EditorView {
 
   static style = {
     document: {
+      // dont make this overflow hidden
+      // or drag n drop wont go over sidebar
       flex: 1,
+      maxWidth: '100%',
       cursor: 'text',
-      overflow: 'hidden',
     },
     fullPage: {
       marginTop: 20,

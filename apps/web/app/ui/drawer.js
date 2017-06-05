@@ -63,7 +63,7 @@ export default class Drawer {
     }
 
     return (
-      <drawer>
+      <drawer {...props}>
         <panel
           $from={from}
           $panelOpen={open}

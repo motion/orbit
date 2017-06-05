@@ -25,6 +25,7 @@ export default class Button {
     onClick?: Function,
     tooltip?: string,
     icon?: string,
+    background?: Color,
     color?: Color,
     className?: string,
     theme?: string,
@@ -32,7 +33,6 @@ export default class Button {
     children?: Element | string,
     iconProps?: Object,
     tooltipProps?: Object,
-    circleProps?: Object,
     size?: number,
     iconSize?: number,
   }
@@ -71,7 +71,6 @@ export default class Button {
       theme,
       circular,
       size,
-      circleProps,
       borderRadius,
       material,
       ...props
@@ -91,6 +90,9 @@ export default class Button {
         onClick={onClick}
         {...props}
       >
+        <blurryParent>
+          <blurryChild />
+        </blurryParent>
         <Icon
           if={icon}
           $icon
@@ -210,7 +212,7 @@ export default class Button {
 
   static theme = {
     theme: (
-      { inForm, inSegment, borderRadius, circular },
+      { inForm, inSegment, borderRadius, background, circular },
       context,
       activeTheme
     ) => {
@@ -231,6 +233,9 @@ export default class Button {
               borderColor: '#999',
               borderWidth: 1, // ;)
             },
+          }),
+          ...(background && {
+            background,
           }),
         },
         isActive: {

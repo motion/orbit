@@ -97,12 +97,14 @@ export default class Root extends React.Component {
                 <CurrentPage key={Router.key} />
               </content>
               <Button
-                if={!layoutStore.creatingDoc}
+                if={true || !layoutStore.creatingDoc}
                 circular
                 onClick={() => layoutStore.createDoc()}
                 $circleButton
-                material
-                icon="add"
+                chromeless
+                iconSize={20}
+                size={50}
+                icon="siadd"
               />
             </LayoutWrap>
             <Errors />
@@ -118,6 +120,7 @@ export default class Root extends React.Component {
       position: 'absolute',
       bottom: 20,
       right: 20,
+      // backdropFilter: `blur(5px)`,
       zIndex: 1000000000,
     },
     layout: {

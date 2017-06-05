@@ -1,5 +1,6 @@
 export counter from './counter'
 export form from './form'
+export email from './email'
 export image from './image'
 export list from './list'
 export link from './link'

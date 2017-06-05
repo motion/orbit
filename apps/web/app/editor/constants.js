@@ -17,6 +17,7 @@ export const BLOCKS = {
   UL_LIST: 'ul_list',
   LIST_ITEM: 'list_item',
   DOC_LIST: 'docList',
+  EMAIL: 'email',
   COUNTER: 'counter',
 }
 

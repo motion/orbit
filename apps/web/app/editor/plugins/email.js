@@ -1,6 +1,6 @@
 import { replacer } from '~/editor/helpers'
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view } from '~/helpers'
 import node from '~/editor/node'
 import { Button } from '~/ui'
 import { BLOCKS } from '~/editor/constants'

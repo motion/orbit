@@ -86,7 +86,7 @@ export default class Button {
         $inSegment={inSegment && this.props}
         $color={color}
         $clickable={!!onClick || clickable}
-        $isActive={active}
+        $activeBackground={!chromeless && active}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
         {...props}
@@ -139,7 +139,7 @@ export default class Button {
       lineHeight: '1rem',
       fontSize: 13,
       fontWeight: 400,
-      padding: [0, 10],
+      padding: [0, 9],
       height: 30,
       alignItems: 'center',
       flexFlow: 'row',
@@ -176,7 +176,7 @@ export default class Button {
     clickable: {
       cursor: 'pointer',
     },
-    isActive: {
+    activeBackground: {
       background: '#eee',
       '&:hover': {
         background: '#eee',
@@ -276,6 +276,7 @@ export default class Button {
     },
     disabled: {
       button: {
+        opacity: 0.25,
         pointerEvents: 'none',
         background: 'transparent',
         color: [255, 255, 255, 0.2],

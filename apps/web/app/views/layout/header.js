@@ -18,25 +18,25 @@ export default class Header {
         onMouseLeave={() => (layoutStore.headerHovered = false)}
       >
         <nav>
-          <Segment>
-            <Button
-              if={true}
-              icon="asd"
-              chromeless
-              $inactive={Router.atBack}
-              onClick={() => Router.go('/popovers')}
-            />
+          <Button
+            if={true}
+            icon="home"
+            chromeless
+            active={Router.isActive('/')}
+            onClick={() => Router.go('/')}
+          />
+          <Segment $$marginLeft={3}>
             <Button
               if={IS_ELECTRON}
               icon="minimal-left"
               chromeless
-              $inactive={Router.atBack}
+              disabled={Router.atBack}
               onClick={() => Router.back()}
             />
             <Button
               if={IS_ELECTRON}
               chromeless
-              $inactive={Router.atFront}
+              disabled={Router.atFront}
               icon="minimal-right"
               onClick={() => Router.forward()}
             />

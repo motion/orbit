@@ -1,7 +1,10 @@
 # next
-  - dropdowns for bar, only show cat as button
+  - fix motion 3s load delay
+  - fix hmr from models/app breaking everything
+  - fix popover on user dropdown
+  - dropdowns for bar, only show button per category
   - sidebar org mode
-  - document todos to sidebar sync
+  - document todos two way sync
 
 # needed
 

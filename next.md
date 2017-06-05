@@ -1,3 +1,25 @@
+until its usable for myself:
+  - production build so its fast
+  - working links
+  - another few days of general polish (stuff thats not polished:)
+    - topbar
+    - contextbar
+    - private/public
+    - links
+    - images
+  - lists need love
+  - login bug fix
+
+wants:
+  - focused nodes like image, doclist so i can delete and navigate w cursor
+  -
+
+What slate is missing:
+  - we need helpers for types of things:
+    - "static" that doesnt let you delete it or change its type
+    - "one-of-a-kind" that means onEnter it doesnt replicate
+    - "one-liner" that doesnt let you insert more than a line inside
+
 # next
   - fix motion 3s load delay
   - fix hmr from models/app breaking everything

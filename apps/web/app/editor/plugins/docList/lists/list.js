@@ -18,7 +18,7 @@ export default class DocLinkList {
     const showNoDocs = hasLoaded && !hasDocs
 
     return (
-      <container contentEditable={false}>
+      <docLinkList contentEditable={false}>
         <top $$row>
           <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
             create document
@@ -52,12 +52,12 @@ export default class DocLinkList {
             ))}
           </docs>
         </list>
-      </container>
+      </docLinkList>
     )
   }
 
   static style = {
-    container: {
+    docLinkList: {
       marginTop: 5,
       marginBottom: 5,
     },

@@ -49,8 +49,8 @@ class ListNode {
       transition: 'background 150ms ease-in',
     },
     isRoot: {
-      margin: [40, 0],
-      padding: 20,
+      margin: [15, 0],
+      padding: [15, 20],
       borderTop: '1px solid #eee',
       borderBottom: '1px solid #eee',
     },
@@ -60,9 +60,9 @@ class ListNode {
   }
 }
 
-const list_item = @node
+@node
 @view
-class Li {
+class ListItemNode {
   toggleMinimize = () => {
     const { node: { data }, setData } = this.props
 
@@ -131,7 +131,7 @@ export default class List {
   nodes = {
     [OL_LIST]: ol_list,
     [UL_LIST]: ListNode,
-    [LIST_ITEM]: list_item,
+    [LIST_ITEM]: ListItemNode,
   }
 
   barButtons = [

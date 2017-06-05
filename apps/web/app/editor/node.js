@@ -46,10 +46,10 @@ export default Component =>
     }
 
     insert = (type: string, data: Object) => (event: Event) => {
-      this.props.editorStore.transform(t => t.insertBlock({ type, data }))
+      this.editorStore.transform(t => t.insertBlock({ type, data }))
     }
 
-    contextMenu = ({ editorStore }) => (
+    contextMenu = () => (
       <Popover
         target={
           <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.1]} />
@@ -70,8 +70,8 @@ export default Component =>
             {
               primary: 'Row',
               onClick: () =>
-                editorStore.transform(t =>
-                  editorStore.allPlugins.row.insertRow(t)
+                this.editorStore.transform(t =>
+                  this.editorStore.allPlugins.row.insertRow(t)
                 ),
             },
             { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
@@ -136,7 +136,7 @@ export default Component =>
           onMouseLeave={this.onMouseLeave}
         >
           <context contentEditable={false}>
-            {context || this.contextMenu(this.props)}
+            {context || this.contextMenu()}
           </context>
           {React.cloneElement(component, this.componentProps)}
         </node>

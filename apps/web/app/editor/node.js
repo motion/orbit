@@ -135,7 +135,7 @@ export default Component =>
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >
-          <context>
+          <context contentEditable={false}>
             {context || this.contextMenu(this.props)}
           </context>
           {React.cloneElement(component, this.componentProps)}

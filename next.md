@@ -38,3 +38,33 @@
 - move App into web
 - split user/auth/errors stores into stores
 - // somehow make app connect stores through actions
+
+# emojis
+https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json
+https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json
+
+slate/index.js at master · ianstormtaylor/slate
+https://github.com/ianstormtaylor/slate/blob/master/examples/emojis/index.js
+
+# hover intennt
+- react-with-hover/with-hover.js at master · team-767/react-with-hover
+  https://github.com/team-767/react-with-hover/blob/master/src/with-hover.js
+- tristen/hoverintent: Fire mouse events when a user intends it
+  https://github.com/tristen/hoverintent
+
+# extract statics + sortable lists
+
+motion_/extractStatics.js at 5d534f71d92048f0afaa1e2632d5727739490619 · motion/motion_
+https://github.com/motion/motion_/blob/5d534f71d92048f0afaa1e2632d5727739490619/packages/transform/src/lib/extractStatics.js
+
+motion_/Statement.js at 5d534f71d92048f0afaa1e2632d5727739490619 · motion/motion_
+https://github.com/motion/motion_/blob/5d534f71d92048f0afaa1e2632d5727739490619/packages/transform/src/nodes/Statement.js
+
+Drag and Drop between two different containers with different elements · Issue #542 · react-dnd/react-dnd
+https://github.com/react-dnd/react-dnd/issues/542
+
+experiments/sortable-target at master · rafaelquintanilha/experiments
+https://github.com/rafaelquintanilha/experiments/tree/master/sortable-target
+
+Multiple Sortable Targets
+http://localhost:3002/

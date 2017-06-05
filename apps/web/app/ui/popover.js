@@ -418,7 +418,9 @@ export default class Popover {
 
   listenForHover = () => {
     this.addHoverListeners('target', this.target)
-    this.addHoverListeners('menu', this.refs.popover)
+    if (!this.props.noHover) {
+      this.addHoverListeners('menu', this.refs.popover)
+    }
   }
 
   addHoverListeners = (name, node) => {

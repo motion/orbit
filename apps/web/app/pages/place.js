@@ -42,18 +42,6 @@ export default class PlacePage {
   render({ placeStore }) {
     const { place, doc } = placeStore
 
-    if (!place) {
-      return <Page loading />
-    }
-
-    if (place === null) {
-      return <NotFound />
-    }
-
-    if (!doc) {
-      return <NotFound />
-    }
-
     const actions = (
       <Segment padded>
         <Button
@@ -64,18 +52,32 @@ export default class PlacePage {
           Share
         </Button>
         <Button
-          icon={place.subscribed() ? 'userdelete' : 'useradd'}
-          iconColor={place.subscribed() ? 'green' : '#ccc'}
-          tooltip={place.subscribed() ? 'unfollow' : 'follow'}
-          onClick={place.toggleSubscribe}
+          {...!place && ({
+            icon: 'useradd',
+            iconColor: '#eee',
+          })}
+          {...place && ({
+            icon: place.subscribed() ? 'userdelete' : 'useradd',
+            iconColor: place.subscribed() ? 'green' : '#ccc',
+            tooltip: place.subscribed() ? 'unfollow' : 'follow',
+            onClick: place.toggleSubscribe,
+          })}
         />
         <Button
-          icon={place.private ? 'eye-ban' : 'eye'}
-          tooltip={place.private ? 'make public' : 'make private'}
-          onClick={place.togglePrivate}
+          icon={place && place.private ? 'eye-ban' : 'eye'}
+          tooltip={place && place.private ? 'make public' : 'make private'}
+          onClick={place && place.togglePrivate}
         />
       </Segment>
     )
+
+    console.log('render', place, doc)
+    if (!place || !doc) {
+      console.log('no place or doc')
+      return <Page key={0} actions={actions}>
+        <DocumentPage insidePlace />
+      </Page>
+    }
 
     if (place.private && !App.loggedIn) {
       return (
@@ -88,9 +90,8 @@ export default class PlacePage {
       )
     }
 
-    console.log('place with doc', doc._id)
     return (
-      <Page place={place} doc={doc} actions={actions}>
+      <Page key={1} place={place} doc={doc} actions={actions}>
         <DocumentPage if={doc} insidePlace id={doc._id} />
       </Page>
     )

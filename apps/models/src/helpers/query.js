@@ -46,16 +46,14 @@ function valueWrap(info, valueGet: Function) {
   let pull
 
   if (query && query.mquery) {
-    const remoteDB = this.remoteDB
-    const localDB = this.pouch.name
     const selector = getSelector(query)
     const selectorKey = sum(selector)
-    if (queries[selectorKey]) {
-      console.trace('found existing query')
-    }
-    else {
+    // if not already watching
+    if (!queries[selectorKey]) {
       queries[selectorKey] = true
-      console.log('sync down query', info, selectorKey, selector)
+      const remoteDB = this.remoteDB
+      const localDB = this.pouch.name
+      out('query', selectorKey, selector)
       pull = PouchDB.replicate(remoteDB, localDB, {
         selector,
         live: true,

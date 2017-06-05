@@ -3,7 +3,7 @@ import { view } from '~/helpers'
 import { Place, Document } from '@jot/models'
 import FlipMove from 'react-flip-move'
 import { Button } from '~/ui'
-import Page from '~/views/page'
+import Page from '~/page'
 import DocItem from '~/views/document/item'
 
 class FeedStore {

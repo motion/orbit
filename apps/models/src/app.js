@@ -59,7 +59,7 @@ class App {
           [key]: entries,
         }
       }, {})
-    }, 100)
+    }, 1)
   }
 
   mountStore = store => {
@@ -101,14 +101,8 @@ class App {
       adapter: 'idb',
       name: database.name,
       password: database.password,
-      // multiInstance: true,
-      // withCredentials: false,
-      // pouchSettings: {
-      //   skip_setup: true,
-      //   live: true,
-      //   retry: true,
-      //   since: 'now',
-      // },
+      multiInstance: true,
+      withCredentials: false,
     })
 
     console.timeEnd('create db')

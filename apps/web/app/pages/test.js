@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '~/helpers'
 import { Document } from '@jot/models'
-import Page from '~/views/page'
+import Page from '~/page'
 import { flatten } from 'lodash'
 
 class TestStore {

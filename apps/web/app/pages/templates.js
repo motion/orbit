@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '~/helpers'
 import { Template } from '@jot/models'
 import { Button } from '~/ui'
-import Page from '~/views/page'
+import Page from '~/page'
 
 class TemplateStore {
   templates = Template.all()

@@ -4,7 +4,7 @@ import { isEqual } from 'lodash'
 import { Place, Document } from '@jot/models'
 import { Segment, Button } from '~/ui'
 import NotFound from '~/pages/notfound'
-import Page from '~/views/page'
+import Page from '~/page'
 import Router from '~/router'
 import DocumentPage from '~/pages/doc'
 

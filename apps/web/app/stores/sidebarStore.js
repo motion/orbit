@@ -25,16 +25,6 @@ export default class SidebarRootStore {
     document.body.className = ''
   }
 
-  onMove = e => {
-    e.preventDefault()
-    if (this.dragging) {
-      this.width = Math.min(
-        window.innerWidth - 400,
-        Math.max(200, window.innerWidth - e.pageX)
-      )
-    }
-  }
-
   toggle = () => {
     this.active = !this.active
   }
@@ -44,8 +34,21 @@ export default class SidebarRootStore {
     this.on(node, 'startdrag', this.startDrag)
     this.on(node, 'mouseup', this.stopDrag)
     this.on(window, 'mouseup', this.stopDrag)
-    this.on(window, 'mousemove', throttle(this.onMove, 16, true))
+    this.on(window, 'mousemove', this.private.onMouseMove)
     this.on(window, 'keydown', this.windowKey)
     this.on(window, 'resize', this.setWindowSize)
+  }
+
+  private = {
+    onMouseMove: () => this.dragging && this.private.onMove(),
+    onMove: throttle(e => {
+      e.preventDefault()
+      if (this.dragging) {
+        this.width = Math.min(
+          window.innerWidth - 400,
+          Math.max(200, window.innerWidth - e.pageX)
+        )
+      }
+    }, 16, true)
   }
 }

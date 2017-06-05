@@ -14,7 +14,7 @@ const INVERSE = {
 }
 
 const calcForgiveness = (forgiveness, distance) =>
-  Math.min(forgiveness, distance)
+  Math.min(forgiveness, distance) + 2
 
 @view.ui
 export default class Popover {
@@ -445,19 +445,19 @@ export default class Popover {
 
     const setFalse = this.hoverStateSetter(name, false)
     const setTrue = this.hoverStateSetter(name, true)
-    const onLeave = () => !this.isTargetHovered() && setFalse()
+    const onLeave = () => false//!this.isTargetHovered() && setFalse()
 
     this.on(node, 'mouseenter', () => {
       setTrue()
       // insanity, but mouselave is horrible
       if (this.curProps.target) {
-        this.setTimeout(onLeave, 16)
-        this.setTimeout(onLeave, 32)
-        this.setTimeout(onLeave, 96)
+        // this.setTimeout(onLeave, 16)
+        // this.setTimeout(onLeave, 32)
+        // this.setTimeout(onLeave, 96)
       }
     })
 
-    this.on(node, 'mouseleave', setFalse)
+    // this.on(node, 'mouseleave', setFalse)
   }
 
   isTargetHovered = () => {

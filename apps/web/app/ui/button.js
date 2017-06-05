@@ -118,7 +118,7 @@ export default class Button {
           background
           openOnHover
           animation="bounce 150ms"
-          noHover
+          showForgiveness
           target={`.${this.uniq}`}
           padding={[0, 6]}
           distance={8}

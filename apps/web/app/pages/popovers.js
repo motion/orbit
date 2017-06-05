@@ -20,14 +20,14 @@ export default class PopoversTest extends React.Component {
     // return null
     return (
       <page>
-        <section $rxdb>
+        <section $rxdb if={false}>
           {this.state.places &&
             this.state.places.map((place, index) => (
               <place key={index}>{place.title}</place>
             ))}
         </section>
 
-        <section $popovers if={false}>
+        <section $popovers if={true}>
           <Form>
             <Segment>
               <Button />
@@ -137,6 +137,61 @@ export default class PopoversTest extends React.Component {
               right
             </Button>
           </Segment>
+
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+
+          <Segment>
+            <Button
+              tooltip="left"
+              tooltipProps={{
+                openOnHover: true,
+                showForgiveness: true,
+                forgiveness: 50,
+                towards: 'left',
+              }}
+            >
+              left
+            </Button>
+            <Button
+              tooltip="top"
+              tooltipProps={{
+                openOnHover: true,
+                showForgiveness: true,
+                forgiveness: 50,
+                towards: 'top',
+              }}
+            >
+              top
+            </Button>
+            <Button
+              tooltip="bottom"
+              tooltipProps={{
+                openOnHover: true,
+                showForgiveness: true,
+                forgiveness: 50,
+                towards: 'bottom',
+              }}
+            >
+              bottom
+            </Button>
+            <Button
+              tooltip="right"
+              tooltipProps={{
+                openOnHover: true,
+                showForgiveness: true,
+                forgiveness: 50,
+                towards: 'right',
+              }}
+            >
+              right
+            </Button>
+          </Segment>
+
 
           <br />
           <br />

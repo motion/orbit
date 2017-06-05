@@ -4,7 +4,7 @@ import { Segment, Button } from '~/ui'
 import Router from '~/router'
 import DocumentView from '~/views/document'
 import { Document } from '@jot/models'
-import Page from '~/views/page'
+import Page from '~/page'
 
 @view({
   store: class DocPageStore {

@@ -100,11 +100,14 @@ export default Component =>
       },
       hoverable: {
         '&:hover': {
-          background: '#fcfcfc',
+          borderLeftColor: '#eee'
         },
       },
       focused: {
         borderLeftColor: '#ddd',
+        '&:hover': {
+          borderLeftColor: '#ddd',
+        },
       },
     }
   }

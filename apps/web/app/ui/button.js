@@ -263,7 +263,7 @@ export default class Button {
     }),
     chromeless: {
       button: {
-        background: false,
+        background: 'transparent',
         borderWidth: 0,
         borderRightWidth: 0,
         borderLeftWidth: 0,

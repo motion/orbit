@@ -22,9 +22,9 @@ const ol_list = node(
   })
 )
 
-const ul_list = @node
+@node
 @view
-class Ul {
+class ListNode {
   render({ isRoot, ...props }) {
     let done = false
 
@@ -50,14 +50,14 @@ class Ul {
     },
     isRoot: {
       width: '1000%',
-      background: `rgba(250, 250, 250, 1)`,
+      // background: `rgba(250, 250, 250, 1)`,
       marginLeft: -200,
       paddingLeft: 200,
       padding: 20,
       marginTop: 10,
       marginBottom: 10,
-      borderTop: '1px solid #ddd',
-      borderBottom: '1px solid #ddd',
+      borderTop: '1px solid #eee',
+      borderBottom: '1px solid #eee',
     },
     done: {
       background: 'rgba(255, 255, 255, 1)',
@@ -135,7 +135,7 @@ export default class List {
 
   nodes = {
     [OL_LIST]: ol_list,
-    [UL_LIST]: ul_list,
+    [UL_LIST]: ListNode,
     [LIST_ITEM]: list_item,
   }
 

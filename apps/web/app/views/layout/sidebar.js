@@ -169,6 +169,7 @@ export default class Sidebar {
         open={layoutStore.sidebar.active}
         from="right"
         size={layoutStore.sidebar.width}
+        zIndex={9}
       >
         <dragger
           style={{ WebkitAppRegion: 'no-drag' }}

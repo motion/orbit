@@ -33,6 +33,7 @@ import Draft from './document/draft'
       left: 0,
       top: 0,
       bottom: 0,
+      zIndex: 10,
     },
   }
 }

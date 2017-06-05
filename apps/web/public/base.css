@@ -237,6 +237,17 @@ caption {
 }
 
 
+/* reset mark */
+mark {
+  background: none;
+  color: auto;
+}
+
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+
 /* Reset 2.0 */
 
 /*

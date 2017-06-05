@@ -60,7 +60,10 @@ async function start() {
 if (module.hot) {
   module.hot.accept('./views/root', render)
   module.hot.accept('./router', render)
-  module.hot.accept('@jot/models', start)
+  module.hot.accept('@jot/models', () => {
+    console.log('got hmr for App, not restarting fully to avoid craziness')
+    render()
+  })
 }
 
 start()

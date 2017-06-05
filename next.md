@@ -6,6 +6,10 @@
   - sidebar org mode
   - document todos two way sync
 
+# github forward
+ - if it could auto compile a trail of your commits
+ - show your last changes much faster
+
 # needed
 
 - db per place

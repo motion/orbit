@@ -4,6 +4,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Gloss from '~/helpers/styles'
+import 'regenerator-runtime/runtime'
 
 // allow any <tag /> to use our $$parent styles
 React.createElement = Gloss.createElement

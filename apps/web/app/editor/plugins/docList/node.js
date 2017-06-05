@@ -11,12 +11,14 @@ import VoteList from './lists/vote'
 import List from './lists/list'
 import DocListStore from './store'
 
-@node
 @view.attach('placeStore')
+@node
 @view({
   store: DocListStore,
 })
 export default class DocList {
+  static contextMenu = props => <test>hello</test>
+
   getList = type => {
     switch (type) {
       case 'list':

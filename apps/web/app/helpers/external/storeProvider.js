@@ -3,6 +3,7 @@ import { observable } from 'mobx'
 import Cache from './cache'
 import { object } from 'prop-types'
 import { pickBy } from 'lodash'
+import hoistStatics from 'hoist-non-react-statics'
 
 type InstanceOptions = {
   module: Object,
@@ -32,7 +33,7 @@ export default function createStoreProvider(options: Object) {
       }
 
       // return HoC
-      class Provider extends React.Component {
+      class StoreProvider extends React.Component {
         @observable _props = {}
 
         getChildContext() {
@@ -139,17 +140,20 @@ export default function createStoreProvider(options: Object) {
         }
       }
 
+      // copy statics
+      hoistStatics(StoreProvider, Klass)
+
+      // add stores to context
       if (instanceOpts.context) {
-        Provider.contextTypes = {
+        StoreProvider.contextTypes = {
           stores: object,
         }
-
-        Provider.childContextTypes = {
+        StoreProvider.childContextTypes = {
           stores: object,
         }
       }
 
-      return Provider
+      return StoreProvider
     }
   }
 }

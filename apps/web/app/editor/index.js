@@ -77,7 +77,6 @@ export default class EditorView {
           onKeyDown={editorStore.onKeyDown}
           key={editorStore.find}
         />
-        <Popovers editorStore={editorStore} />
         <SelectBar editorStore={editorStore} />
       </document>
     )

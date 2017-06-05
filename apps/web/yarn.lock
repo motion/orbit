@@ -2540,9 +2540,9 @@ globals@^9.0.0:
   version "9.17.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.17.0.tgz#0c0ca696d9b9bb694d2e5470bd37777caad50286"
 
-gloss@^6.4.1:
-  version "6.4.1"
-  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.4.1.tgz#0e7a06f76e516e4b325be43f2c187be8e307380e"
+gloss@^6.5.0:
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.5.1.tgz#65ba68aad6f80e5bcad176c7b2f52cccd7b72b94"
   dependencies:
     aphrodite-jss "^1.0.0"
     babel-helper-builder-react-jsx "^6.24.1"
@@ -2551,7 +2551,7 @@ gloss@^6.4.1:
     jss "^6.0.1"
     jss-preset-default "^1.1.0"
     lodash "^4.17.4"
-    motion-css "^6.4.1"
+    motion-css "^6.5.0"
     react "^15.5.4"
     react-dom "^15.5.4"
 
@@ -3667,9 +3667,9 @@ motion-class-helpers@^1.1.0:
     object-path "^0.11.3"
     sb-event-kit "^3.0.0"
 
-motion-css@^6.4.1:
-  version "6.4.1"
-  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.4.1.tgz#db0e068ddbe991c26c6540463b2e219556d6ed67"
+motion-css@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.5.0.tgz#e6d9a0ec954cdeb86c4d1a583f858c19731996de"
 
 motion-mobx-helpers@^1.1.2:
   version "1.1.3"

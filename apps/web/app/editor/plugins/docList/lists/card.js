@@ -15,9 +15,6 @@ export default class CardList {
   render({ listStore }) {
     return (
       <docs $row>
-        <doc $temp $$centered onClick={listStore.createDoc}>
-          <Icon name="uiadd" />
-        </doc>
         {(listStore.docs || [])
           .map((doc, i) => (
             <DocItem

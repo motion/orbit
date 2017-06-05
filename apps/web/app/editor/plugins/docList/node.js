@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '~/helpers'
 import node from '~/editor/node'
 import App, { Document } from '@jot/models'
-import { Segment, Button } from '~/ui'
+import { Popover, Segment, Button } from '~/ui'
 import { isEqual } from 'lodash'
 import Router from '~/router'
 import CardList from './lists/card'
@@ -14,11 +14,9 @@ import DocListStore from './store'
 @view.attach('placeStore')
 @node
 @view({
-  store: DocListStore,
+  listStore: DocListStore,
 })
 export default class DocList {
-  static contextMenu = props => <test>hello</test>
-
   getList = type => {
     switch (type) {
       case 'list':
@@ -32,16 +30,53 @@ export default class DocList {
     }
   }
 
+  componentWillMount() {
+    const { node, setContext, listStore, listType } = this.props
+
+    if (setContext) {
+      setContext(
+        <wrap>
+          <Button onClick={listStore.createDoc} icon="add" />
+          <Popover target={<Button icon="card" />} openOnHover>
+            <Segment>
+              <Button
+                active={listType === 'grid'}
+                icon="grid"
+                onClick={() => listStore.setType(node, 'grid')}
+              />
+              <Button
+                active={listType === 'card'}
+                icon="uilayers"
+                onClick={() => listStore.setType(node, 'card')}
+              />
+              <Button
+                active={listType === 'vote'}
+                icon="arrows-1_bold-up"
+                onClick={() => listStore.setType(node, 'votes')}
+              />
+              <Button
+                active={listType === 'list'}
+                icon="list"
+                onClick={() => listStore.setType(node, 'list')}
+              />
+            </Segment>
+          </Popover>
+        </wrap>
+      )
+    }
+  }
+
   render({
     placeStore,
     node,
     editorStore,
-    store,
+    listStore,
     children,
     attributes,
+    setContext,
     ...props
   }) {
-    const hasLoaded = !!store.docs
+    const hasLoaded = !!listStore.docs
     const listType = node.data.get('listType') || 'card'
     const ListView = this.getList(listType)
 
@@ -50,40 +85,14 @@ export default class DocList {
     }
 
     return (
-      <doclist spellCheck={false} contentEditable={false}>
-        <config contentEditable={false}>
-          <Segment>
-            <Button
-              active={listType === 'grid'}
-              icon="grid"
-              onClick={() => store.setType(node, 'grid')}
-            />
-            <Button
-              active={listType === 'card'}
-              icon="uilayers"
-              onClick={() => store.setType(node, 'card')}
-            />
-            <Button
-              active={listType === 'vote'}
-              icon="arrows-1_bold-up"
-              onClick={() => store.setType(node, 'votes')}
-            />
-            <Button
-              active={listType === 'list'}
-              icon="list"
-              onClick={() => store.setType(node, 'list')}
-            />
-          </Segment>
-        </config>
-        <content>
-          <ListView
-            shouldFocus={store.shouldFocus}
-            listStore={store}
-            editorStore={editorStore}
-            node={node}
-            {...props}
-          />
-        </content>
+      <doclist contentEditable={false}>
+        <ListView
+          shouldFocus={listStore.shouldFocus}
+          listStore={listStore}
+          editorStore={editorStore}
+          node={node}
+          {...props}
+        />
       </doclist>
     )
   }

@@ -6,6 +6,10 @@ import { Button, List, Popover } from '~/ui'
 
 export default Component =>
   @view class Node {
+    state = {
+      context: null,
+    }
+
     node = null
 
     get editorStore() {
@@ -48,7 +52,7 @@ export default Component =>
     contextMenu = () => (
       <Popover
         target={
-          <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.2]} />
+          <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.1]} />
         }
         background="#fff"
         closeOnClickWithin
@@ -84,8 +88,13 @@ export default Component =>
       </Popover>
     )
 
-    render() {
-      const { node, editor, onFocus } = this.props
+    componentProps = {
+      setContext: context => {
+        this.setState({ context })
+      },
+    }
+
+    render({ node, editor, onFocus }, { context }) {
       const isRoot = !this.editorStore.inline && this.isRootNode
 
       // what is this?
@@ -112,8 +121,6 @@ export default Component =>
         return component
       }
 
-      console.log(Component.name, Component.constructor, Component.contextMenu)
-
       const { selection } = this.editorStore
       const isEditable = selection.isEditable(node)
       const isTitle = selection.isDocTitle(node)
@@ -129,10 +136,9 @@ export default Component =>
           onMouseLeave={this.onMouseLeave}
         >
           <context>
-            {(Component.contextMenu && Component.contextMenu(this.props)) ||
-              this.contextMenu()}
+            {context || this.contextMenu()}
           </context>
-          {component}
+          {React.cloneElement(component, this.componentProps)}
         </node>
       )
     }

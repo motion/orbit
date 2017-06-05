@@ -84,7 +84,8 @@
     "slate-edit-table": "^0.9.0",
     "slate-paste-linkify": "^0.2.1",
     "slate-trailing-block": "^0.2.4",
-    "superlogin-client": "^0.5.3"
+    "superlogin-client": "^0.5.3",
+    "hash-sum": "1.0.2"
   },
   "devDependencies": {
     "babel-preset-steelbrain": "^5.0.2",

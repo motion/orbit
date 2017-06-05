@@ -4,9 +4,13 @@ import { flatten, intersection } from 'lodash'
 import type RxDB from 'motion-rxdb'
 
 export default class BaseModel {
+  queries: Object;
+  compiledSchema: Object;
+
   constructor({ defaultSchema, defaultProps }) {
     this.create = this.create.bind(this)
     this.defaultSchema = defaultSchema
+    this.queries = {}
     this.compiledSchema = {
       ...this.defaultSchema,
       ...this.settings,
@@ -117,10 +121,8 @@ export default class BaseModel {
     })
 
     // sync
-    console.log('hello?', this.remoteDB)
+    // TODO until rxdb supports query sync
     // db[this.title].sync(this.remoteDB)
-
-    // TODO until rxdb supports one way sync
     // only sync up! (sync down selectively on query, see query.js)
     this.collection.pouch.replicate.to(this.remoteDB, {
       live: true,
@@ -129,12 +131,6 @@ export default class BaseModel {
 
     // motion-rxdb watch for query changes
     this.collection.watchForChanges()
-
-    // one way down
-    // this.collection.pouch.replicate.from(this.remoteDB, {
-    //   live: true,
-    //   retry: true,
-    // })
   }
 
   createIndexes = async () => {

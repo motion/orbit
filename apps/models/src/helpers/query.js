@@ -1,15 +1,29 @@
+// @flow
+import { RxQuery } from 'rxdb'
 import { observable, autorun } from 'mobx'
 import debug from 'debug'
+import sum from 'hash-sum'
 
 const out = debug('query')
+
+// TODO: instanceof RxQuery checks
+
+const getSelector = (query: RxQuery) => {
+  const selector = { ...query.mquery._conditions }
+  // need to delete id or else findAll queries dont sync
+  if (!selector._id || !Object.keys(selector._id).length) {
+    delete selector._id
+  }
+  return selector
+}
 
 // subscribe-aware helpers
 // @query value wrapper
 function valueWrap(info, valueGet: Function) {
   const result = observable.shallowBox(undefined)
-  let value = valueGet() || {}
+  let query = valueGet() || {}
 
-  out('query', info.model, info.property, info.args, value)
+  out('query', info.model, info.property, info.args, query)
 
   // subscribe and update
   let subscriber = null
@@ -18,37 +32,37 @@ function valueWrap(info, valueGet: Function) {
   // this automatically re-runs the susbcription if it has observables
   const stopAutorun = autorun(() => {
     finishSubscribe()
-    value = valueGet() || {}
-    if (value.$) {
+    query = valueGet() || {}
+    if (query.$) {
       // sub to values
-      subscriber = value.$.subscribe(value => {
+      subscriber = query.$.subscribe(value => {
         result.set(observable.shallowBox(value))
       })
     }
   })
 
   // selective query based sync!
+  const { queries } = this
   let pull
 
-  if (value && value.mquery) {
+  if (query && query.mquery) {
     const remoteDB = this.remoteDB
     const localDB = this.pouch.name
-    const selector = { ...value.mquery._conditions }
-
-    if (!remoteDB || !localDB) {
-      throw 'Missing one of remoteDB or localDB'
+    const selector = getSelector(query)
+    const selectorKey = sum(selector)
+    if (queries[selectorKey]) {
+      console.trace('found existing query')
     }
-
-    // need to delete id or else findAll queries dont sync
-    if (!selector._id || !Object.keys(selector._id).length) {
-      delete selector._id
+    else {
+      queries[selectorKey] = true
+      console.log('sync down query', info, selectorKey, selector)
+      pull = PouchDB.replicate(remoteDB, localDB, {
+        selector,
+        live: true,
+      })
+      // to use later in cancel
+      pull.selectorKey = selectorKey
     }
-
-    console.log('pull', info, selector)
-    pull = PouchDB.replicate(remoteDB, localDB, {
-      selector,
-      live: true,
-    })
   }
 
   const response = {}
@@ -60,9 +74,9 @@ function valueWrap(info, valueGet: Function) {
     },
     exec: {
       value: () => {
-        return (value && value.exec
-          ? value.exec()
-          : Promise.resolve(value)).then(val => {
+        return (query && query.exec
+          ? query.exec()
+          : Promise.resolve(query)).then(val => {
           // helper: queries return empty objects on null findOne(), this returns null
           if (val instanceof Object && Object.keys(val).length === 0) {
             return null
@@ -72,7 +86,7 @@ function valueWrap(info, valueGet: Function) {
       },
     },
     $: {
-      value: value.$,
+      value: query.$,
     },
     current: {
       get: () => {
@@ -92,6 +106,9 @@ function valueWrap(info, valueGet: Function) {
         finishSubscribe()
         stopAutorun()
         if (pull) {
+          if (pull.selectorKey) {
+            delete queries[pull.selectorKey]
+          }
           pull.cancel()
         }
       },

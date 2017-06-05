@@ -1,7 +1,7 @@
 // @flow
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
-import type RxDB from 'rxdb'
+import type RxDB from 'motion-rxdb'
 
 export default class BaseModel {
   constructor({ defaultSchema, defaultProps }) {
@@ -121,10 +121,15 @@ export default class BaseModel {
     // db[this.title].sync(this.remoteDB)
 
     // TODO until rxdb supports one way sync
-    // this.collection.pouch.replicate.to(remotePath, {
-    //   live: true,
-    //   retry: true,
-    // })
+    // only sync up! (sync down selectively on query, see query.js)
+    this.collection.pouch.replicate.to(this.remoteDB, {
+      live: true,
+      retry: true,
+    })
+
+    // motion-rxdb watch for query changes
+    this.collection.watchForChanges()
+
     // one way down
     // this.collection.pouch.replicate.from(this.remoteDB, {
     //   live: true,

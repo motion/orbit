@@ -131,11 +131,11 @@ function automagicalValue(obj, method, descriptors = {}) {
   if (isAutorun(val)) {
     extendShallowObservable(obj, { [method]: null })
     const autorunner = autorun(() => {
-      const previous = obj[method] && obj[method].get()
+      const previous = obj[method]
       obj[method] = val()
       automagicalValue(obj, method)
       // unsubscribe from previous
-      if (previous) {
+      if (previous && previous !== null) {
         // hacky, remove old listener, should be done nicer
         if (typeof previous === 'function') {
           previous()

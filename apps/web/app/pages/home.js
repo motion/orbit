@@ -5,6 +5,14 @@ import PlacePage from './place'
 import DocumentView from '~/views/document'
 import { BLOCKS } from '~/editor/constants'
 
+const watch = fn => {
+  function temp() {
+    return fn()
+  }
+  temp.autorunme = true
+  return temp
+}
+
 @view({
   store: class PlaceTileStore {
     document = Document.homeForPlace(this.props.place._id)
@@ -26,14 +34,9 @@ class PlaceTile {
 
 @view({
   store: class HomeStore {
-    getUserPlace = () => {
-      console.log('getuserplace', User.loggedIn && User.user.name)
-      if (User.loggedIn) {
-        return Place.get({ slug: User.user.name })
-      }
-      return null
-    }
-    userPlace = this.getUserPlace()
+    userPlace = watch(
+      () => (User.loggedIn && Place.get({ slug: User.user.name })) || null
+    )
     places = Place.all()
 
     start() {

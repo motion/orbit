@@ -5,15 +5,6 @@ import { User } from '@jot/models'
 import { Popover, List, Form, Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
-// settimeout or it dont focus yo
-// case 'enter':
-// case 'tab':
-//   event.preventDefault()
-//   event.stopPropagation()
-//   this.setUsername()
-// event.preventDefault()
-// event.stopPropagation()
-// User.setUsername(null)
 @view({
   store: class LoginStore {
     loggingIn = false
@@ -21,36 +12,15 @@ import { HEADER_HEIGHT } from '~/constants'
     passwordRef = null
     error = false
 
-    start() {
-      this.watch(() => {
-        if (this.step === 2 && this.passwordRef) {
-          this.setTimeout(() => {
-            this.passwordRef.focus()
-          })
-        }
-      })
-    }
-
     get step() {
       if (!User.user || (User.user && !User.user.name)) return 1
       if (User.tempUser) return 2
       if (User.loggedIn) return 3
     }
 
-    setUsername = () => {
-      if (!this.usernameRef.value) {
-        this.error = true
-      } else {
-        User.setUsername(this.usernameRef.value)
-        if (this.passwordRef.value) {
-          this.finish()
-        }
-      }
-    }
-
     finish = async () => {
       this.loggingIn = true
-      await User.loginOrSignup(User.user.name, this.passwordRef.value)
+      await User.loginOrSignup(this.usernameRef.value, this.passwordRef.value)
       this.loggingIn = false
     }
 

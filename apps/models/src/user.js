@@ -1,3 +1,4 @@
+// @flow
 import { observable, computed, action } from 'mobx'
 import { Model, query, str } from './helpers'
 import App from './app'
@@ -13,14 +14,14 @@ const tempId = () => {
 }
 
 class User {
-  auth = null
+  authDb: PouchDB = null
   @observable user = {}
 
   connect(database, databaseConfig) {
     this.database = database
     this.databaseConfig = databaseConfig
     // separate pouchdb for auth
-    this.auth = new PouchDB(`${this.databaseConfig.couchUrl}/auth`, {
+    this.authDb = new PouchDB(`${this.databaseConfig.couchUrl}/auth`, {
       skipSetup: true,
       withCredentials: false,
     })
@@ -59,7 +60,7 @@ class User {
 
   @action signup = async (username, password, extraInfo = {}) => {
     try {
-      const info = await this.auth.signup(username, password, extraInfo)
+      const info = await this.authDb.signup(username, password, extraInfo)
       return { ...info, signup: true }
     } catch (error) {
       return { error: error || 'error signing up', signup: false }
@@ -68,7 +69,7 @@ class User {
 
   @action login = async (username, password) => {
     try {
-      const info = await this.auth.login(username, password)
+      const info = await this.authDb.login(username, password)
       this.clearErrors()
       this.setSession()
       return { ...info, login: true }
@@ -78,7 +79,7 @@ class User {
   }
 
   @action logout = async () => {
-    await this.auth.logout()
+    await this.authDb.logout()
     this.clearUser()
   }
 
@@ -94,7 +95,7 @@ class User {
   }
 
   @action getSession = async () => {
-    return await this.auth.getSession()
+    return await this.authDb.getSession()
   }
 
   @action setSession = async () => {

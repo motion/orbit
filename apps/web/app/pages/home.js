@@ -35,6 +35,11 @@ class PlaceTile {
       () => User.loggedIn && Place.get({ slug: User.user.name })
     )
     placeDocs = watch(() => User.loggedIn && Document.placeDocsForUser())
+
+    updateLayout = async layout => {
+      await User.updateInfo({ layout })
+      console.log('got it')
+    }
   },
 })
 export default class HomePage {
@@ -44,6 +49,8 @@ export default class HomePage {
     if (!User.loggedIn) {
       return <center $$centered>login plz</center>
     }
+
+    console.log('home layout', User.user.layout)
 
     return (
       <home>
@@ -59,8 +66,8 @@ export default class HomePage {
           </actions>
         </SlotFill.Fill>
         <Grid
-          onLayoutChange={idFn}
-          layout={[]}
+          onLayoutChange={store.updateLayout}
+          layout={User.user.layout || []}
           cols={4}
           rowHeight={150}
           margin={store.editing ? [10, 10] : [0, 0]}

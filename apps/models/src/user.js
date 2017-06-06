@@ -17,6 +17,10 @@ class User {
   authDb: PouchDB = null
   @observable user = {}
 
+  @computed get name() {
+    return this.user.name
+  }
+
   connect(database, databaseConfig) {
     this.database = database
     this.databaseConfig = databaseConfig
@@ -25,11 +29,24 @@ class User {
       skipSetup: true,
       withCredentials: false,
     })
-
-    this.setSession()
+    this.sync()
   }
 
-  @action loginOrSignup = async (username, password) => {
+  updateInfo = async (metadata: Object) => {
+    await this.authDb.putUser(this.name, { metadata })
+    await this.syncMetadata()
+  }
+
+  @action async syncMetadata() {
+    try {
+      const info = await this.authDb.getUser(this.name)
+      this.user = info
+    } catch (error) {
+      console.log('error fetching info', error)
+    }
+  }
+
+  @action loginOrSignup = async (username: string, password: string) => {
     App.clearErrors()
     let errors = []
 
@@ -37,14 +54,14 @@ class User {
     try {
       const login = await this.login(username, password)
       if (!login.error) {
-        this.setSession()
+        this.sync()
         App.clearErrors()
         return login
       }
 
       const signup = await this.signup(username, password)
       if (!signup.error) {
-        this.setSession()
+        this.sync()
         App.clearErrors()
         return signup
       }
@@ -58,7 +75,11 @@ class User {
     }
   }
 
-  @action signup = async (username, password, extraInfo = {}) => {
+  @action signup = async (
+    username: string,
+    password: string,
+    extraInfo = {}
+  ) => {
     try {
       const info = await this.authDb.signup(username, password, extraInfo)
       return { ...info, signup: true }
@@ -67,11 +88,11 @@ class User {
     }
   }
 
-  @action login = async (username, password) => {
+  @action login = async (username: string, password: string) => {
     try {
       const info = await this.authDb.login(username, password)
       App.clearErrors()
-      this.setSession()
+      this.sync()
       return { ...info, login: true }
     } catch (error) {
       return { error: error || 'error logging in', login: false }
@@ -98,13 +119,16 @@ class User {
     return await this.authDb.getSession()
   }
 
-  @action setSession = async () => {
+  @action sync = async () => {
     const session = await this.getSession()
     const loggedIn = session && session.userCtx.name
     if (loggedIn) {
       this.user = session.userCtx
     } else {
       this.user = this.temporaryUser
+    }
+    if (this.user && this.user.name) {
+      this.syncMetadata()
     }
   }
 

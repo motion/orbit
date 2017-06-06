@@ -31,6 +31,8 @@ class PlaceTile {
 @view({
   store: class HomeStore {
     editing = true
+    layout = watch(() => (User.loggedIn && User.user.layout) || [])
+
     userPlace = watch(
       () => User.loggedIn && Place.get({ slug: User.user.name })
     )
@@ -38,7 +40,7 @@ class PlaceTile {
 
     updateLayout = async layout => {
       await User.updateInfo({ layout })
-      console.log('got it')
+      console.log('updatedlayout', layout)
     }
   },
 })
@@ -67,7 +69,7 @@ export default class HomePage {
         </SlotFill.Fill>
         <Grid
           onLayoutChange={store.updateLayout}
-          layout={User.user.layout || []}
+          layout={store.layout}
           cols={4}
           rowHeight={150}
           margin={store.editing ? [10, 10] : [0, 0]}

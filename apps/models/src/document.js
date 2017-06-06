@@ -128,6 +128,15 @@ class Document extends Model {
     return await this.collection.find({ _id: { $in: ids } }).exec()
   }
 
+  @query placeDocsForUser = userId => {
+    return this.collection
+      .find({
+        placeId: { $exists: true },
+        draft: { $ne: true },
+      })
+      .sort({ createdAt: 'desc' })
+  }
+
   @query forPlace = id => {
     if (!id) {
       return null

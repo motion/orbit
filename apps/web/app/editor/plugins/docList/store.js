@@ -2,6 +2,9 @@ import { Document } from '@jot/models'
 
 export default class DocListStore {
   get place() {
+    if (!this.props.placeStore) {
+      return false
+    }
     return this.props.placeStore.place
   }
 

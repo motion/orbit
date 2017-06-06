@@ -1,9 +1,13 @@
 import React from 'react'
 import { view, watch } from '~/helpers'
 import { User, Place, Document } from '@jot/models'
+import { Grid, Button, SlotFill } from '~/ui'
 import PlacePage from './place'
 import DocumentView from '~/views/document'
 import { BLOCKS } from '~/editor/constants'
+import DocItem from '~/views/document/item'
+
+const idFn = _ => _
 
 @view({
   store: class PlaceTileStore {
@@ -26,34 +30,62 @@ class PlaceTile {
 
 @view({
   store: class HomeStore {
+    editing = true
     userPlace = watch(
       () => User.loggedIn && Place.get({ slug: User.user.name })
     )
-    places = Place.all()
+    placeDocs = watch(() => User.loggedIn && Document.placeDocsForUser())
   },
 })
 export default class HomePage {
   render({ store }) {
-    if (!store.places) {
-      return null
-    }
-
     console.log('HOME_STORE', store)
-    return null
+
+    if (!User.loggedIn) {
+      return <center $$centered>login plz</center>
+    }
 
     return (
       <home>
-        <top>
+        <SlotFill.Fill name="actions">
+          <actions>
+            <Button
+              icon="edit"
+              active={store.editing}
+              onClick={store.ref('editing').toggle}
+            >
+              Edit
+            </Button>
+          </actions>
+        </SlotFill.Fill>
+        <Grid
+          onLayoutChange={idFn}
+          layout={[]}
+          cols={4}
+          rowHeight={150}
+          margin={store.editing ? [10, 10] : [0, 0]}
+          isDraggable={store.editing}
+          isResizable={store.editing}
+          items={(store.placeDocs || [])
+            .map(doc => (
+              <DocItem
+                key={doc._id || Math.random()}
+                draggable
+                inline
+                bordered={store.editing}
+                readOnly={store.editing}
+                hideMeta={!store.editing}
+                doc={doc}
+              />
+            ))}
+        />
+
+        <top if={false}>
           <place>
             <title>Drafts</title>
             <PlaceTile if={store.userPlace} place={store.userPlace} />
           </place>
         </top>
-        <grid>
-          {store.places.map(place => (
-            <PlaceTile key={place._id} place={place} />
-          ))}
-        </grid>
       </home>
     )
   }

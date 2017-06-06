@@ -1,6 +1,6 @@
 import React from 'react'
 import { view, computed } from '~/helpers'
-import App, { Document } from '@jot/models'
+import { User, Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
 import { isEqual, sortBy } from 'lodash'
 import Router from '~/router'
@@ -31,9 +31,9 @@ class VoteStore {
 
     const votes = Object.assign({}, data.get('votes') || {})
     const voters = votes[_id] || []
-    votes[_id] = includes(voters, App.user.name)
-      ? without(voters, App.user.name)
-      : [...voters, App.user.name]
+    votes[_id] = includes(voters, User.user.name)
+      ? without(voters, User.user.name)
+      : [...voters, User.user.name]
 
     setData(data.set('votes', votes))
   }
@@ -93,7 +93,7 @@ export default class VotesList {
                       <Button
                         icon={'up'}
                         iconColor={
-                          includes(votes[doc._id] || [], App.user.name)
+                          includes(votes[doc._id] || [], User.user.name)
                             ? 'green'
                             : '#ccc'
                         }

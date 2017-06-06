@@ -4,8 +4,8 @@ import { flatten, intersection } from 'lodash'
 import type RxDB from 'motion-rxdb'
 
 export default class BaseModel {
-  queries: Object;
-  compiledSchema: Object;
+  queries: Object
+  compiledSchema: Object
 
   constructor({ defaultSchema, defaultProps }) {
     this.create = this.create.bind(this)
@@ -69,7 +69,7 @@ export default class BaseModel {
     }
   }
 
-  connect = async (db: RxDB, options: Object) => {
+  connect = async (db: RxDB, dbConfig: Object, options: Object) => {
     this.db = db
     this.remoteDB = options.sync
 

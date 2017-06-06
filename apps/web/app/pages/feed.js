@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '~/helpers'
-import { Place, Document } from '@jot/models'
+import { User, Place, Document } from '@jot/models'
 import FlipMove from 'react-flip-move'
 import { Button } from '~/ui'
 import Page from '~/page'
@@ -19,7 +19,7 @@ class FeedStore {
     e.preventDefault()
     Place.create({
       title: this.place.value,
-      authorId: App.user.name,
+      authorId: User.user.name,
     })
   }
 }

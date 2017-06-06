@@ -3,7 +3,7 @@ import { view } from '~/helpers'
 import { Segment, Button } from '~/ui'
 import Router from '~/router'
 import DocumentView from '~/views/document'
-import { Document } from '@jot/models'
+import { User, Document } from '@jot/models'
 import Page from '~/page'
 
 @view({
@@ -12,7 +12,7 @@ import Page from '~/page'
     forceEdit = false
 
     get editing() {
-      return this.forceEdit || (App.loggedIn && !App.user.hatesToEdit)
+      return this.forceEdit || (User.loggedIn && !User.user.hatesToEdit)
     }
 
     toggleEdit = () => {

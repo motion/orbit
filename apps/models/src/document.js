@@ -1,7 +1,8 @@
 import { Model, query, str, object, array, bool } from './helpers'
 import Image from './image'
 import Place from './place'
-import App from './app'
+import Document from './document'
+import User from './user'
 import generateName from 'sillyname'
 
 const DEFAULT_CONTENT = title => ({
@@ -42,7 +43,7 @@ class Document extends Model {
     const title = props.title || generateName()
     return {
       title,
-      authorId: App.user && App.user.name,
+      authorId: User.user && User.user.name,
       hashtags: [],
       attachments: [],
       private: true,
@@ -116,7 +117,7 @@ class Document extends Model {
         .exec()
     }
 
-    const ids = (await App.Document.pouch.search({
+    const ids = (await Document.pouch.search({
       query: text,
       fields: ['text', 'title'],
       include_docs: false,
@@ -173,10 +174,10 @@ class Document extends Model {
   };
 
   @query user = user => {
-    if (!App.user) {
+    if (!User.user) {
       return null
     }
-    return this.collection.find().where('authorId').eq(App.user.name)
+    return this.collection.find().where('authorId').eq(User.user.name)
   }
 }
 

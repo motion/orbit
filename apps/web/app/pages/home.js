@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '~/helpers'
-import App, { Place, Document } from '@jot/models'
+import { User, Place, Document } from '@jot/models'
 import PlacePage from './place'
 import DocumentView from '~/views/document'
 import { BLOCKS } from '~/editor/constants'
@@ -25,8 +25,22 @@ class PlaceTile {
 
 @view({
   store: class HomeStore {
-    userPlace = Place.get(App.loggedIn && App.user.name)
+    getUserPlace = () => {
+      console.log('getuserplace', User.loggedIn && User.user.name)
+      return Place.get(User.loggedIn && User.user.name)
+    }
+    userPlace = this.getUserPlace()
     places = Place.all()
+
+    start() {
+      this.react(
+        () => User.loggedIn && User.user.name,
+        () => {
+          this.userPlace.dispose()
+          this.userPlace = this.getUserPlace()
+        }
+      )
+    }
   },
 })
 export default class HomePage {
@@ -34,6 +48,8 @@ export default class HomePage {
     if (!store.places) {
       return null
     }
+
+    console.log('HOME_STORE', store)
 
     return (
       <home>

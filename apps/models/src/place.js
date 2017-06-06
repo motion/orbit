@@ -1,7 +1,7 @@
 // @flow
-import App from './app'
 import { Model, query, str, array, bool } from './helpers'
 import Document from './document'
+import User from './user'
 import { capitalize, some, remove } from 'lodash'
 
 const toSlug = str => str.replace(/ /g, '-').toLowerCase()
@@ -19,7 +19,7 @@ class Place extends Model {
 
   static defaultProps = props => ({
     private: false,
-    authorId: App.user && App.user.name,
+    authorId: User.loggedIn ? User.user.name : 'anon',
     members: [],
     slug: toSlug(props.title || ''),
   })
@@ -75,18 +75,18 @@ class Place extends Model {
       this.save()
     },
     toggleSubscribe() {
-      if (App.loggedIn) {
-        const exists = some(this.members, m => m === App.user.name)
+      if (User.loggedIn) {
+        const exists = some(this.members, m => m === User.user.name)
         if (exists) {
-          this.members = this.members.filter(m => m !== App.user.name)
+          this.members = this.members.filter(m => m !== User.user.name)
         } else {
-          this.members = [...this.members, App.user.name]
+          this.members = [...this.members, User.user.name]
         }
         this.save()
       }
     },
     subscribed() {
-      return App.loggedIn && this.members.indexOf(App.user.name) >= 0
+      return User.loggedIn && this.members.indexOf(User.user.name) >= 0
     },
   }
 

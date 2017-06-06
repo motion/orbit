@@ -13,7 +13,7 @@ import {
   Button,
   SlotFill,
 } from '~/ui'
-import { Place } from '@jot/models'
+import { User, Place } from '@jot/models'
 import Login from './login'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
@@ -69,7 +69,7 @@ class SidebarStore {
 
   get allPlaces() {
     const myPlace = {
-      title: App.loggedIn ? App.user.name : 'Home',
+      title: User.loggedIn ? User.user.name : 'Home',
       url: _ => '/',
     }
     const results = [myPlace, this.tempPlace, ...(this.places || [])].filter(

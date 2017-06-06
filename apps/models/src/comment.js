@@ -1,5 +1,5 @@
 import { Model, query, str } from './helpers'
-import App from './app'
+import User from './user'
 
 class Comment extends Model {
   static props = {
@@ -16,7 +16,7 @@ class Comment extends Model {
 
   hooks = {
     preInsert(comment) {
-      comment.authorId = App.user.name
+      comment.authorId = User.user.name
       comment.parentId = comment.parentId || ''
     },
   }

@@ -30,7 +30,7 @@ class User {
   }
 
   @action loginOrSignup = async (username, password) => {
-    this.clearErrors()
+    App.clearErrors()
     let errors = []
 
     // try signup
@@ -38,14 +38,14 @@ class User {
       const login = await this.login(username, password)
       if (!login.error) {
         this.setSession()
-        this.clearErrors()
+        App.clearErrors()
         return login
       }
 
       const signup = await this.signup(username, password)
       if (!signup.error) {
         this.setSession()
-        this.clearErrors()
+        App.clearErrors()
         return signup
       }
 
@@ -70,7 +70,7 @@ class User {
   @action login = async (username, password) => {
     try {
       const info = await this.authDb.login(username, password)
-      this.clearErrors()
+      App.clearErrors()
       this.setSession()
       return { ...info, login: true }
     } catch (error) {

@@ -12,7 +12,6 @@ export default class SelectBar {
         if={selection.selectedNode && selection.mouseUp}
         open
         noArrow
-        background
         animation="slide 300ms"
         left={selection.mouseUp.x}
         top={selection.mouseUp.y + 10}

@@ -171,6 +171,10 @@ class App {
       })
     })
   }
+
+  @action clearErrors() {
+    this.errors = []
+  }
 }
 
 const app = new App()

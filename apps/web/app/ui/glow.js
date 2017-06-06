@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view, $ } from '~/helpers'
 import { throttle } from 'lodash'
@@ -8,6 +9,10 @@ const Resize = resizer({ strategy: 'scroll' })
 
 @view.ui
 export default class HoverGlow {
+  props: {
+    children?: Function,
+  }
+
   static defaultProps = {
     width: 380,
     height: 200,
@@ -32,6 +37,7 @@ export default class HoverGlow {
     position: {},
   }
 
+  rootRef = null
   bounds = {}
 
   componentDidMount() {
@@ -43,8 +49,8 @@ export default class HoverGlow {
 
     if (this.props.parent) {
       node = this.props.parent()
-    } else if (this.refs.root) {
-      node = this.refs.root.parentNode
+    } else if (this.rootRef) {
+      node = this.rootRef.parentNode
     }
 
     if (node) {
@@ -117,9 +123,13 @@ export default class HoverGlow {
     transition,
     parent,
     itemProps,
+    children,
+    style,
   }) {
-    if (!this.state.track) {
-      return <overlay ref="root" style={{ opacity: 0 }} />
+    const setRootRef = this.ref('rootRef').set
+
+    if (!this.state.track && !children) {
+      return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
     // find width / height (full == match size of container)
@@ -157,16 +167,22 @@ export default class HoverGlow {
     }
 
     const colorRGB = `rgb(${color.join(', ')})`
+    const translateX = inversed(
+      bounded(resisted(x), width * scale, this.bounds.width)
+    )
+    const translateY = inversed(
+      bounded(resisted(y), height * scale, this.bounds.height)
+    )
 
-    return (
-      <overlay ref="root" {...itemProps}>
+    const glow = (
+      <overlay ref={setRootRef} style={style} {...itemProps}>
         <glow
           style={{
             opacity: 1,
             transform: `
-              translateX(${inversed(bounded(resisted(x), width * scale, this.bounds.width))}px)
-              translateY(${inversed(bounded(resisted(y), height * scale, this.bounds.height))}px)
-            `,
+                translateX(${translateX}px)
+                translateY(${translateY}px)
+              `,
           }}
         >
           <svg
@@ -181,9 +197,9 @@ export default class HoverGlow {
               zIndex,
               borderRadius,
               transition: `
-                transform linear ${clickDuration / 2}ms,
-                opacity linear ${transition}ms
-              `,
+                  transform linear ${clickDuration / 2}ms,
+                  opacity linear ${transition}ms
+                `,
             }}
           >
             <defs>
@@ -204,6 +220,17 @@ export default class HoverGlow {
         </glow>
       </overlay>
     )
+
+    if (!children) {
+      return glow
+    }
+
+    // allow passthrough
+    return children({
+      translateX,
+      translateY,
+      glow,
+    })
   }
 
   static style = {

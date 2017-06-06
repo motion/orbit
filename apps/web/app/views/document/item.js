@@ -51,10 +51,6 @@ export default class DocItem {
     bordered,
     ...props
   }) {
-    if (children) {
-      return <doc {...props}>{children}</doc>
-    }
-
     return (
       <doc $$undraggable {...props}>
         <title if={list}>
@@ -79,6 +75,8 @@ export default class DocItem {
             <Icon name="simple-remove" size={8} />
           </item>
         </info>
+
+        {children}
       </doc>
     )
   }

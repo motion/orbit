@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '~/helpers'
-import { Icon } from '~/ui'
+import { Glow, Icon } from '~/ui'
 import DocItem from '~/views/document/item'
 
 @view
@@ -15,17 +15,22 @@ export default class CardList {
   render({ listStore }) {
     return (
       <docs $row>
-        {(listStore.docs || [])
-          .map((doc, i) => (
-            <DocItem
-              $doc
-              bordered
-              inline
-              key={doc._id}
-              ref={node => this.docRef(node, i)}
-              doc={doc}
-            />
-          ))}
+        {(listStore.docs || []).map((doc, i) => (
+          <Glow key={doc._id} full scale={0.7} color={[0, 0, 0]} opacity={1}>
+            {({ translateX, translateY, glow }) => (
+              <DocItem
+                key={doc._id}
+                $doc
+                bordered
+                inline
+                ref={node => this.docRef(node, i)}
+                doc={doc}
+              >
+                {glow}
+              </DocItem>
+            )}
+          </Glow>
+        ))}
       </docs>
     )
   }
@@ -46,18 +51,6 @@ export default class CardList {
       '&:active': {
         transform: { scale: 0.98 },
       },
-    },
-    temp: {
-      background: '#fafafa',
-      cursor: 'pointer',
-      width: 40,
-      '&:hover': {
-        background: '#f2f2f2',
-      },
-    },
-    row: {
-      flexFlow: 'row',
-      overflowX: 'scroll',
     },
   }
 }

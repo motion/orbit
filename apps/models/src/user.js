@@ -15,7 +15,7 @@ const tempId = () => {
 
 class User {
   authDb: PouchDB = null
-  @observable user = {}
+  @observable.ref user = {}
 
   @computed get name() {
     return this.user.name

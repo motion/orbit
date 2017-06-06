@@ -3,7 +3,7 @@ import { view } from '~/helpers'
 import { Glow, Icon } from '~/ui'
 import Tilt from 'react-tilt'
 import DocItem from '~/views/document/item'
-
+import FlipMove from 'react-flip-move'
 const width = 300
 const height = 280
 
@@ -18,16 +18,15 @@ export default class CardList {
 
   render({ listStore }) {
     return (
-      <docs $row>
+      <FlipMove $docs duration={300} easing="ease-out">
         {(listStore.docs || []).map((doc, i) => (
           <Tilt
             key={doc._id}
             options={{
-              max: 20,
+              max: 10,
               perspective: 1000,
-              reverse: true,
+              reverse: false,
               scale: 1,
-              easing: 'cubic-bezier(.03,.98,.52,.99)',
             }}
           >
             <doc>
@@ -44,12 +43,12 @@ export default class CardList {
                 resist={-10}
                 color={[255, 255, 255]}
                 zIndex={1000}
-                opacity={0.5}
+                opacity={0.3}
               />
             </doc>
           </Tilt>
         ))}
-      </docs>
+      </FlipMove>
     )
   }
 

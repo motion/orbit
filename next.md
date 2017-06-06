@@ -1,18 +1,30 @@
+goals:
+  - get to bootstrappability
+    - hosted iwritey.com instance we can use to plan
+    - OMP working on sidebar
+    - doc polish with todos
+
 until its usable for myself:
+  - import my notes from simplenote
   - production build so its fast
   - working links
+  - fix overflow everywhere
   - another few days of general polish (stuff thats not polished:)
     - topbar
     - contextbar
     - private/public
     - links
     - images
-  - lists need love
-  - login bug fix
+    - movement in lists
+    - indentation everywhere
+  - login bugs
 
 wants:
+  - super fast nav:
+    - cmd + t filter to move between docs
+  - make use of pouch encrpytion - private docs! password protected?
   - focused nodes like image, doclist so i can delete and navigate w cursor
-  -
+  - doc history (revisions view)
 
 What slate is missing:
   - we need helpers for types of things:
@@ -21,32 +33,25 @@ What slate is missing:
     - "one-liner" that doesnt let you insert more than a line inside
 
 # next
+  - db per ORG
   - fix motion 3s load delay
-  - fix hmr from models/app breaking everything
   - fix popover on user dropdown
   - dropdowns for bar, only show button per category
   - sidebar org mode
   - document todos two way sync
 
-# github forward
+# email forwarding
+# github forwarding
  - if it could auto compile a trail of your commits
  - show your last changes much faster
 
-# needed
-
-- db per place
-- hashtags
-
 # grabbag
 
-  - presence
-  - comments
+  - presence (whose viewing + cursor indicator)
+  - comments (threaded)
   - quicker doc creation
   - linking between docs
-  - grid
-  - vote list
   - @mention
-  - cursor indicator
   - fancy ml summarizer
   - integrations
 

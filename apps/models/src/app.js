@@ -172,7 +172,7 @@ class App {
     })
   }
 
-  @action clearErrors() {
+  @action clearErrors = () => {
     this.errors = []
   }
 }

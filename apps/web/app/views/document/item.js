@@ -1,7 +1,8 @@
 import React from 'react'
 import { view, observable } from '~/helpers'
-import randomcolor from 'randomcolor'
+import gradients from './helpers/gradients'
 import TimeAgo from 'react-timeago'
+import { sample } from 'lodash'
 import Router from '~/router'
 import { Icon, Button } from '~/ui'
 import DocumentView from './index'
@@ -53,13 +54,14 @@ export default class DocItem {
     style,
     ...props
   }) {
+    const gradient = sample(gradients).colors
     return (
       <doc
         $$undraggable
         className="Tilt-inner"
         style={{
           ...style,
-          background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, ${randomcolor()}, ${randomcolor()})`,
+          background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, ${gradient[0]}, ${gradient[1]})`,
         }}
         {...props}
       >

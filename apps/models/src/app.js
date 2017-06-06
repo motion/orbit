@@ -9,7 +9,6 @@ import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import Seed from './seed'
 import { uniqBy } from 'lodash'
-import User from './user'
 
 RxDB.QueryChangeDetector.enable()
 // RxDB.QueryChangeDetector.enableDebugging()
@@ -35,35 +34,7 @@ class App {
       PouchDB.plugin(pHTTP)
     }
 
-    // auto Object<string, Set> => Object<string, []>
-    autorunAsync(() => {
-      this.mountedVersion
-      this.stores = Object.keys(this.mountedStores).reduce((acc, key) => {
-        const entries = []
-        this.mountedStores[key].forEach(store => {
-          entries.push(store)
-        })
-        return {
-          ...acc,
-          [key]: entries,
-        }
-      }, {})
-    }, 1)
-  }
-
-  mountStore = store => {
-    const key = store.constructor.name
-    this.mountedStores[key] = this.mountedStores[key] || new Set()
-    this.mountedStores[key].add(store)
-    this.mountedVersion++
-  }
-
-  unmountStore = store => {
-    const key = store.constructor.name
-    if (this.mountedStores[key]) {
-      this.mountedStores[key].delete(store)
-      this.mountedVersion++
-    }
+    this.trackMountedStores()
   }
 
   async start({ database }) {
@@ -72,10 +43,7 @@ class App {
 
     console.log('Use App in your console to access models, stores, etc')
 
-    // attach Models to app
-    for (const [name, model] of Object.entries(Models)) {
-      this[name] = model
-    }
+    this.attachModels(Models)
 
     if (!database) {
       throw new Error('No config given to App!')
@@ -123,7 +91,46 @@ class App {
     console.timeEnd('start')
   }
 
+  attachModels = (models: Object) => {
+    // attach Models to app
+    for (const [name, model] of Object.entries(models)) {
+      this[name] = model
+    }
+  }
+
   // dev helpers
+
+  trackMountedStores = () => {
+    // auto Object<string, Set> => Object<string, []>
+    autorunAsync(() => {
+      this.mountedVersion
+      this.stores = Object.keys(this.mountedStores).reduce((acc, key) => {
+        const entries = []
+        this.mountedStores[key].forEach(store => {
+          entries.push(store)
+        })
+        return {
+          ...acc,
+          [key]: entries,
+        }
+      }, {})
+    }, 1)
+  }
+
+  mountStore = store => {
+    const key = store.constructor.name
+    this.mountedStores[key] = this.mountedStores[key] || new Set()
+    this.mountedStores[key].add(store)
+    this.mountedVersion++
+  }
+
+  unmountStore = store => {
+    const key = store.constructor.name
+    if (this.mountedStores[key]) {
+      this.mountedStores[key].delete(store)
+      this.mountedVersion++
+    }
+  }
 
   get editor() {
     return (
@@ -166,4 +173,13 @@ class App {
   }
 }
 
-export default new App()
+const app = new App()
+
+if (module) {
+  module.hot.accept('./all', () => {
+    console.log('hmr from @jot/models/app')
+    app.attachModels(require('./all'))
+  })
+}
+
+export default app

@@ -54,6 +54,7 @@ export default class HomePage {
     }
 
     console.log('HOME_STORE', store)
+    return null
 
     return (
       <home>

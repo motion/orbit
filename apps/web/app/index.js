@@ -17,8 +17,6 @@ console.timeEnd('splash')
 window.Buffer = require('buffer/').Buffer
 
 // after, require start.js to boot rest of app
-require('./start')
+window.restart = require('./start')
 
-if (module.hot) {
-  module.hot.accept()
-}
+module && module.hot && module.hot.accept()

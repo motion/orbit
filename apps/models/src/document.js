@@ -1,7 +1,6 @@
 import { Model, query, str, object, array, bool } from './helpers'
 import Image from './image'
 import Place from './place'
-import Document from './document'
 import User from './user'
 import generateName from 'sillyname'
 
@@ -117,7 +116,7 @@ class Document extends Model {
         .exec()
     }
 
-    const ids = (await Document.pouch.search({
+    const ids = (await this.pouch.search({
       query: text,
       fields: ['text', 'title'],
       include_docs: false,

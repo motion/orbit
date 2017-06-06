@@ -19,7 +19,7 @@ class Place extends Model {
 
   static defaultProps = props => ({
     private: false,
-    authorId: (User.loggedIn && User.user.name) || 'anon',
+    authorId: User.authorId,
     members: [],
     slug: toSlug(props.title || Math.random()),
   })

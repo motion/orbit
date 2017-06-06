@@ -9,6 +9,10 @@ const paragraph = node(props => {
   const { editorStore } = props
   const text = props.children[0].props.node.text
 
+  const style = (editorStore.inline && {
+    color: '#fff',
+  }) || {}
+
   if (
     editorStore.find &&
     editorStore.find.length > 0 &&
@@ -21,11 +25,16 @@ const paragraph = node(props => {
         sanitize={text => text.toLowerCase()}
         highlightStyle={{ background: '#ffd54f' }}
         textToHighlight={text}
+        style={style}
       />
     )
   }
 
-  return <p {...props.attributes} $$text>{props.children}</p>
+  return (
+    <p style={style} {...props.attributes} $$text>
+      {props.children}
+    </p>
+  )
 })
 
 const newParagraph = state =>

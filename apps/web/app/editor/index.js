@@ -103,7 +103,6 @@ export default class EditorView {
   static theme = {
     inline: {
       document: {
-        padding: 5,
         overflow: 'hidden',
       },
     },

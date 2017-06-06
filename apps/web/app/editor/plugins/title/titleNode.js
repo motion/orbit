@@ -14,6 +14,8 @@ export default class TitleNode {
         $title={level}
         $title1={level === 1}
         $$style={editorStore.theme.title}
+        $inline={editorStore.inline}
+        className="Tilt-inner"
         {...attributes}
       >
         {children}
@@ -31,6 +33,14 @@ export default class TitleNode {
       fontWeight: 700,
       color: [0, 0, 0, 0.9],
       marginBottom: 5,
+    },
+    inline: {
+      fontSize: 40,
+      fontFamily: 'Abril Fatface',
+      fontSize: 50,
+      fontWeight: 200,
+      lineHeight: 1.2,
+      color: '#fff',
     },
   }
 }

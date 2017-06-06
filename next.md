@@ -1,3 +1,9 @@
+goals:
+  - get to bootstrappability
+    - hosted iwritey.com instance we can use to plan
+    - OMP working on sidebar
+    - doc polish with todos
+
 until its usable for myself:
   - import my notes from simplenote
   - production build so its fast
@@ -18,7 +24,7 @@ wants:
     - cmd + t filter to move between docs
   - make use of pouch encrpytion - private docs! password protected?
   - focused nodes like image, doclist so i can delete and navigate w cursor
-  -
+  - doc history (revisions view)
 
 What slate is missing:
   - we need helpers for types of things:

@@ -7,6 +7,10 @@ export default class SelectBar {
   render({ editorStore }) {
     const { selection, pluginCategories } = editorStore
 
+    if (!editorStore.inline) {
+      return null
+    }
+
     return (
       <Popover
         if={selection.selectedNode && selection.mouseUp}

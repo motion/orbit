@@ -249,6 +249,7 @@ export default class HoverGlow {
       // zIndex: -1,
       // transition: 'opacity ease-in 20ms',
 
+      pointerEvents: 'none',
       '&:active': {
         pointerEvents: 'none',
       },

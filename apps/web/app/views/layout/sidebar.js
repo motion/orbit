@@ -205,6 +205,7 @@ export default class Sidebar {
                 onClick={() =>
                   store.setEditing({
                     _id: Math.random(),
+                    title: '',
                     temporary: true,
                     save() {
                       return Place.create({ title: this.title })

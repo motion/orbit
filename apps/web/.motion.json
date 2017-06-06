@@ -37,6 +37,10 @@
       [
         "babel-preset-env",
         {
+          "targets": {
+            "node": 8
+          },
+          "useBuiltIns": true,
           "exclude": [
             "transform-regenerator"
           ]

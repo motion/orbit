@@ -1,17 +1,9 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view, watch } from '~/helpers'
 import { User, Place, Document } from '@jot/models'
 import PlacePage from './place'
 import DocumentView from '~/views/document'
 import { BLOCKS } from '~/editor/constants'
-
-const watch = fn => {
-  function temp() {
-    return fn()
-  }
-  temp.autorunme = true
-  return temp
-}
 
 @view({
   store: class PlaceTileStore {
@@ -35,19 +27,9 @@ class PlaceTile {
 @view({
   store: class HomeStore {
     userPlace = watch(
-      () => (User.loggedIn && Place.get({ slug: User.user.name })) || null
+      () => User.loggedIn && Place.get({ slug: User.user.name })
     )
     places = Place.all()
-
-    start() {
-      this.react(
-        () => User.loggedIn && User.user.name,
-        () => {
-          this.userPlace.dispose()
-          this.userPlace = this.getUserPlace()
-        }
-      )
-    }
   },
 })
 export default class HomePage {

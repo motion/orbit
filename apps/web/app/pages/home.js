@@ -7,11 +7,12 @@ import { BLOCKS } from '~/editor/constants'
 
 @view({
   store: class PlaceTileStore {
-    document = Document.forPlace(this.props.place._id)
+    document = Document.homeForPlace(this.props.place._id)
   },
 })
 class PlaceTile {
   render({ store: { document } }) {
+    console.log('place tile fetch', document)
     return (
       <DocumentView
         if={document}
@@ -27,7 +28,10 @@ class PlaceTile {
   store: class HomeStore {
     getUserPlace = () => {
       console.log('getuserplace', User.loggedIn && User.user.name)
-      return Place.get(User.loggedIn && User.user.name)
+      if (User.loggedIn) {
+        return Place.get({ slug: User.user.name })
+      }
+      return null
     }
     userPlace = this.getUserPlace()
     places = Place.all()

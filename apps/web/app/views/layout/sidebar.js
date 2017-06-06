@@ -69,7 +69,7 @@ class SidebarStore {
 
   get allPlaces() {
     const myPlace = {
-      title: User.loggedIn ? User.user.name : 'Home',
+      title: 'Home',
       url: _ => '/',
     }
     const results = [myPlace, this.tempPlace, ...(this.places || [])].filter(

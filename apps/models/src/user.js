@@ -127,6 +127,10 @@ class User {
   @computed get loggedIn() {
     return this.user && !this.user.temp
   }
+
+  get authorId() {
+    return (this.loggedIn && this.user.name) || 'anon'
+  }
 }
 
 export default new User()

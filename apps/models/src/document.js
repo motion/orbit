@@ -43,7 +43,7 @@ class Document extends Model {
     const title = props.title || generateName()
     return {
       title,
-      authorId: User.user && User.user.name,
+      authorId: User.authorId,
       hashtags: [],
       attachments: [],
       private: true,

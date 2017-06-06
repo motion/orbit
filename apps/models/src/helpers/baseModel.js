@@ -44,6 +44,7 @@ export default class BaseModel {
 
   getDefaultProps(props) {
     const { defaultProps } = this.constructor
+    console.log('got defaults', defaultProps)
     return typeof defaultProps === 'function'
       ? defaultProps(props)
       : defaultProps || {}
@@ -158,7 +159,10 @@ export default class BaseModel {
       ...this.getDefaultProps(object),
       ...object,
     }
-    console.log('create', properties)
+    console.log(
+      `'%c ${this.constructor.name}.create ${JSON.stringify(properties)}`,
+      'color: green'
+    )
     return this.collection.insert(properties)
   }
 }

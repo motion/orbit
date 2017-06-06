@@ -4,7 +4,7 @@ import Document from './document'
 import User from './user'
 import { capitalize, some, remove } from 'lodash'
 
-const toSlug = str => str.replace(/ /g, '-').toLowerCase()
+const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
 
 class Place extends Model {
   static props = {
@@ -19,9 +19,9 @@ class Place extends Model {
 
   static defaultProps = props => ({
     private: false,
-    authorId: User.loggedIn ? User.user.name : 'anon',
+    authorId: (User.loggedIn && User.user.name) || 'anon',
     members: [],
-    slug: toSlug(props.title || ''),
+    slug: toSlug(props.title || Math.random()),
   })
 
   async create(props) {

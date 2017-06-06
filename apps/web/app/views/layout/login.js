@@ -1,18 +1,10 @@
+// @flow
 import React from 'react'
 import { view, keycode } from '~/helpers'
-import App from '@jot/models'
+import { User } from '@jot/models'
 import { Popover, List, Form, Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
-// settimeout or it dont focus yo
-// case 'enter':
-// case 'tab':
-//   event.preventDefault()
-//   event.stopPropagation()
-//   this.setUsername()
-// event.preventDefault()
-// event.stopPropagation()
-// App.setUsername(null)
 @view({
   store: class LoginStore {
     loggingIn = false
@@ -20,41 +12,20 @@ import { HEADER_HEIGHT } from '~/constants'
     passwordRef = null
     error = false
 
-    start() {
-      this.watch(() => {
-        if (this.step === 2 && this.passwordRef) {
-          this.setTimeout(() => {
-            this.passwordRef.focus()
-          })
-        }
-      })
-    }
-
     get step() {
-      if (!App.user || (App.user && !App.user.name)) return 1
-      if (App.tempUser) return 2
-      if (App.loggedIn) return 3
-    }
-
-    setUsername = () => {
-      if (!this.usernameRef.value) {
-        this.error = true
-      } else {
-        App.setUsername(this.usernameRef.value)
-        if (this.passwordRef.value) {
-          this.finish()
-        }
-      }
+      if (!User.user || (User.user && !User.user.name)) return 1
+      if (User.tempUser) return 2
+      if (User.loggedIn) return 3
     }
 
     finish = async () => {
       this.loggingIn = true
-      await App.loginOrSignup(App.user.name, this.passwordRef.value)
+      await User.loginOrSignup(this.usernameRef.value, this.passwordRef.value)
       this.loggingIn = false
     }
 
-    onSubmit = e => {
-      e.preventDefault()
+    onSubmit = (event: Event) => {
+      event.preventDefault()
       if (this.step === 2) {
         this.finish()
       }
@@ -131,15 +102,15 @@ export default class Login {
         <step if={store.step === 3}>
           <text>
             hi
-            <username $$ellipse> {App.user.name}</username>
+            <username $$ellipse> {User.user.name}</username>
           </text>
           <Popover target={<Button icon="down" />} background openOnHover>
             <List
               width={150}
               items={[
                 <List.Item
-                  primary={App.user.name}
-                  after={<Button icon="power" onClick={() => App.logout()} />}
+                  primary={User.user.name}
+                  after={<Button icon="power" onClick={() => User.logout()} />}
                 />,
               ]}
             />

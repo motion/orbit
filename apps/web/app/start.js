@@ -57,7 +57,7 @@ async function start() {
   render()
 }
 
-if (module.hot) {
+if (module && module.hot) {
   module.hot.accept('./views/root', render)
   module.hot.accept('./router', render)
   module.hot.accept('@jot/models', () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, query, autorun, observable } from '~/helpers'
 import { isEqual } from 'lodash'
-import { Place, Document } from '@jot/models'
+import { User, Place, Document } from '@jot/models'
 import { Segment, Button } from '~/ui'
 import NotFound from '~/pages/notfound'
 import Page from '~/page'
@@ -83,7 +83,7 @@ export default class PlacePage {
       )
     }
 
-    if (place.private && !App.loggedIn) {
+    if (place.private && !User.loggedIn) {
       return (
         <Page actions={actions}>
           <content $$centered>

@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view, $ } from '~/helpers'
 import { throttle } from 'lodash'
@@ -8,6 +9,11 @@ const Resize = resizer({ strategy: 'scroll' })
 
 @view.ui
 export default class HoverGlow {
+  props: {
+    background?: boolean,
+    children?: Function,
+  }
+
   static defaultProps = {
     width: 380,
     height: 200,
@@ -32,6 +38,7 @@ export default class HoverGlow {
     position: {},
   }
 
+  rootRef = null
   bounds = {}
 
   componentDidMount() {
@@ -43,20 +50,20 @@ export default class HoverGlow {
 
     if (this.props.parent) {
       node = this.props.parent()
-    } else if (this.refs.root) {
-      node = this.refs.root.parentNode
+    } else if (this.rootRef) {
+      node = this.rootRef.parentNode
     }
 
     if (node) {
       this.node = node
       this.setBounds()
-      this.addEvent(node, 'mouseenter', this.trackMouse(true))
-      this.addEvent(node, 'mousemove', this.move)
-      this.addEvent(node, 'mouseleave', this.trackMouse(false))
+      this.on(node, 'mouseenter', this.trackMouse(true))
+      this.on(node, 'mousemove', this.move)
+      this.on(node, 'mouseleave', this.trackMouse(false))
       Resize.listenTo(node, this.setBounds)
 
       if (this.props.clickable) {
-        this.addEvent(node, 'click', this.click)
+        this.on(node, 'click', this.click)
       }
     }
   }
@@ -82,7 +89,7 @@ export default class HoverGlow {
         y: y - this.bounds.height / 2,
       },
     })
-  }, 32)
+  }, 16)
 
   click = () => {
     this.setState({ clicked: true }, () => {
@@ -117,9 +124,16 @@ export default class HoverGlow {
     transition,
     parent,
     itemProps,
+    children,
+    style,
+    background,
   }) {
-    if (!this.state.track) {
-      return <overlay ref="root" style={{ opacity: 0 }} />
+    const setRootRef = this.ref('rootRef').set
+
+    const { track } = this.state
+
+    if ((!track && !children) || !track) {
+      return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
     // find width / height (full == match size of container)
@@ -130,9 +144,9 @@ export default class HoverGlow {
       height = this.bounds.height
     }
 
-    const shadowAmt = shadowSize === null ? width + height / 10 : shadowSize
+    const shadowAmt = shadowSize === null ? width + height : shadowSize
 
-    const { position: { x, y }, track, clicked } = this.state
+    const { position: { x, y }, clicked } = this.state
 
     // resists being moved (towards center)
     const resisted = coord => {
@@ -157,16 +171,24 @@ export default class HoverGlow {
     }
 
     const colorRGB = `rgb(${color.join(', ')})`
+    const translateX = inversed(
+      bounded(resisted(x), width * scale, this.bounds.width)
+    )
+    const translateY = inversed(
+      bounded(resisted(y), height * scale, this.bounds.height)
+    )
 
-    return (
-      <overlay ref="root" {...itemProps}>
+    const glow = (
+      <overlay ref={setRootRef} style={style} {...itemProps}>
         <glow
+          $$zIndex={background ? -1 : 0}
           style={{
             opacity: 1,
             transform: `
-              translateX(${inversed(bounded(resisted(x), width * scale, this.bounds.width))}px)
-              translateY(${inversed(bounded(resisted(y), height * scale, this.bounds.height))}px)
-            `,
+                translateX(${translateX}px)
+                translateY(${translateY}px)
+                translateZ(0px)
+              `,
           }}
         >
           <svg
@@ -174,16 +196,16 @@ export default class HoverGlow {
             width={width}
             style={{
               boxShadow: `${shadowOffsetLeft}px ${shadowOffsetTop}px ${shadowAmt}px ${colorRGB}`,
-              transform: `scale(${scale * (clicked ? clickScale : 1)})`,
+              transform: `scale(${scale * (clicked ? clickScale : 1)}) translateZ(0px)`,
               opacity: track ? opacity : 0,
               marginLeft: -width / 2,
               marginTop: -height / 2,
               zIndex,
               borderRadius,
               transition: `
-                transform linear ${clickDuration / 2}ms,
-                opacity linear ${transition}ms
-              `,
+                  transform linear ${clickDuration / 2}ms,
+                  opacity linear ${transition}ms
+                `,
             }}
           >
             <defs>
@@ -204,6 +226,17 @@ export default class HoverGlow {
         </glow>
       </overlay>
     )
+
+    if (!children) {
+      return glow
+    }
+
+    // allow passthrough
+    return children({
+      translateX,
+      translateY,
+      glow,
+    })
   }
 
   static style = {
@@ -213,7 +246,7 @@ export default class HoverGlow {
       left: 0,
       right: 0,
       bottom: 0,
-      zIndex: -1,
+      // zIndex: -1,
       // transition: 'opacity ease-in 20ms',
 
       '&:active': {
@@ -225,6 +258,7 @@ export default class HoverGlow {
       position: 'absolute',
       top: '50%',
       left: '50%',
+      transform: 'translateZ(0)',
     },
   }
 }

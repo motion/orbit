@@ -1,17 +1,18 @@
 import React from 'react'
-import { view } from '~/helpers'
-import App, { Place, Document } from '@jot/models'
+import { view, watch } from '~/helpers'
+import { User, Place, Document } from '@jot/models'
 import PlacePage from './place'
 import DocumentView from '~/views/document'
 import { BLOCKS } from '~/editor/constants'
 
 @view({
   store: class PlaceTileStore {
-    document = Document.forPlace(this.props.place._id)
+    document = Document.homeForPlace(this.props.place._id)
   },
 })
 class PlaceTile {
   render({ store: { document } }) {
+    console.log('place tile fetch', document)
     return (
       <DocumentView
         if={document}
@@ -25,7 +26,9 @@ class PlaceTile {
 
 @view({
   store: class HomeStore {
-    userPlace = Place.get(App.loggedIn && App.user.name)
+    userPlace = watch(
+      () => User.loggedIn && Place.get({ slug: User.user.name })
+    )
     places = Place.all()
   },
 })
@@ -34,6 +37,9 @@ export default class HomePage {
     if (!store.places) {
       return null
     }
+
+    console.log('HOME_STORE', store)
+    return null
 
     return (
       <home>

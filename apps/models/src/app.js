@@ -15,20 +15,8 @@ RxDB.QueryChangeDetector.enable()
 
 import * as Models from './all'
 
-const tempId = () => {
-  let id = localStorage.getItem('temp-id')
-  if (!id) {
-    id = `${Math.random()}`
-    localStorage.setItem('temp-id', id)
-  }
-  return id
-}
-
 class App {
   db = null
-
-  // basically global stores
-  @observable user = null
   @observable.ref errors = []
   @observable.ref mountedStores = {}
   @observable mountedVersion = 0
@@ -46,6 +34,73 @@ class App {
       PouchDB.plugin(pHTTP)
     }
 
+    this.trackMountedStores()
+  }
+
+  async start({ database }) {
+    console.time('start')
+    this.catchErrors()
+
+    console.log('Use App in your console to access models, stores, etc')
+
+    this.attachModels(Models)
+
+    if (!database) {
+      throw new Error('No config given to App!')
+    }
+
+    // attach
+    this.databaseConfig = database
+
+    // connect to pouchdb
+    console.time('create db')
+    this.database = await RxDB.create({
+      adapter: 'idb',
+      name: database.name,
+      password: database.password,
+      multiInstance: true,
+      withCredentials: false,
+    })
+
+    console.timeEnd('create db')
+
+    // images
+    this.images = new PouchDB(`${database.couchUrl}/images`, {
+      skipSetup: true,
+      withCredentials: false,
+    })
+
+    // connect models
+    const connections = Object.entries(Models).map(([name, model]) =>
+      model.connect(this.database, this.databaseConfig, {
+        sync: `${database.couchUrl}/${model.title}/`,
+      })
+    )
+
+    console.time('connect')
+    await Promise.all(connections)
+    console.timeEnd('connect')
+
+    // seed db
+    // settimeout to avoid laggy initial render
+    setTimeout(() => {
+      this.seed = new Seed()
+      this.seed.start()
+    }, 100)
+
+    console.timeEnd('start')
+  }
+
+  attachModels = (models: Object) => {
+    // attach Models to app
+    for (const [name, model] of Object.entries(models)) {
+      this[name] = model
+    }
+  }
+
+  // dev helpers
+
+  trackMountedStores = () => {
     // auto Object<string, Set> => Object<string, []>
     autorunAsync(() => {
       this.mountedVersion
@@ -77,71 +132,6 @@ class App {
     }
   }
 
-  async start({ database }) {
-    console.time('start')
-    this.catchErrors()
-
-    console.log('Use App in your console to access models, stores, user, etc')
-
-    // attach Models to app
-    for (const [name, model] of Object.entries(Models)) {
-      this[name] = model
-    }
-
-    if (!database) {
-      throw new Error('No config given to App!')
-    }
-
-    // attach
-    this.databaseConfig = database
-
-    // connect to pouchdb
-    console.time('create db')
-    this.database = await RxDB.create({
-      adapter: 'idb',
-      name: database.name,
-      password: database.password,
-      multiInstance: true,
-      withCredentials: false,
-    })
-
-    console.timeEnd('create db')
-
-    // separate pouchdb for auth
-    this.auth = new PouchDB(`${database.couchUrl}/auth`, {
-      skipSetup: true,
-      withCredentials: false,
-    })
-
-    // images
-    this.images = new PouchDB(`${database.couchUrl}/images`, {
-      skipSetup: true,
-      withCredentials: false,
-    })
-
-    // connect models
-    const connections = Object.entries(Models).map(([name, model]) =>
-      model.connect(this.database, {
-        sync: `${database.couchUrl}/${model.title}/`,
-      })
-    )
-
-    console.time('connect')
-    await Promise.all([...connections, this.setSession()])
-    console.timeEnd('connect')
-
-    // seed db
-    // settimeout to avoid laggy initial render
-    setTimeout(() => {
-      this.seed = new Seed()
-      this.seed.start()
-    }, 100)
-
-    console.timeEnd('start')
-  }
-
-  // helpers
-
   get editor() {
     return (
       (this.stores &&
@@ -160,105 +150,6 @@ class App {
   }
 
   // actions
-
-  @action loginOrSignup = async (username, password) => {
-    this.clearErrors()
-    let errors = []
-
-    // try signup
-    try {
-      const [signup, login] = await Promise.all([
-        this.signup(username, password),
-        this.login(username, password),
-      ])
-
-      if (!signup.error) {
-        this.setSession()
-        this.clearErrors()
-        return signup
-      }
-      if (!login.error) {
-        this.setSession()
-        this.clearErrors()
-        return login
-      }
-    } catch (e) {
-      errors.push(e)
-      this.handleError(...errors)
-      return { errors }
-    }
-  }
-
-  @action signup = async (username, password, extraInfo = {}) => {
-    try {
-      const info = await this.auth.signup(username, password, extraInfo)
-      return { ...info, signup: true }
-    } catch (error) {
-      return { error: error || 'error signing up', signup: false }
-    }
-  }
-
-  @action login = async (username, password) => {
-    try {
-      const info = await this.auth.login(username, password)
-      this.clearErrors()
-      this.setSession()
-      return { ...info, login: true }
-    } catch (error) {
-      return { error: error || 'error logging in', login: false }
-    }
-  }
-
-  @action logout = async () => {
-    await this.auth.logout()
-    this.clearUser()
-  }
-
-  @action setUsername = (name: string) => {
-    console.log('set username', this.user)
-    this.user = { ...this.user, name }
-    console.log(this.user)
-    localStorage.setItem('tempUsername', name)
-  }
-
-  @action clearErrors = () => {
-    this.errors = []
-  }
-
-  @action session = async () => {
-    return await this.auth.getSession()
-  }
-
-  @action setSession = async () => {
-    const session = await this.session()
-    const loggedIn = session && session.userCtx.name
-    if (loggedIn) {
-      this.user = session.userCtx
-    } else {
-      this.user = this.temporaryUser
-    }
-  }
-
-  @action clearUser = () => {
-    localStorage.setItem('tempUsername', '')
-    this.user = this.temporaryUser
-  }
-
-  @computed get tempUser() {
-    return this.user && this.user.name && this.user.temp
-  }
-
-  get temporaryUser() {
-    return {
-      name: localStorage.getItem('tempUsername'),
-      _id: tempId(),
-      temp: true,
-    }
-  }
-
-  get loggedIn() {
-    return this.user && !this.user.temp
-  }
 
   @action handleError = (...errors) => {
     const unique = uniqBy(errors, err => err.name)
@@ -280,6 +171,19 @@ class App {
       })
     })
   }
+
+  @action clearErrors() {
+    this.errors = []
+  }
 }
 
-export default new App()
+const app = new App()
+
+if (module) {
+  module.hot.accept('./all', () => {
+    console.log('hmr from @jot/models/app')
+    app.attachModels(require('./all'))
+  })
+}
+
+export default app

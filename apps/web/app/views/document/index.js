@@ -23,14 +23,12 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <document>
-          <Editor
-            readOnly={readOnly}
-            inline={this.props.inline}
-            onEditor={store.onEditor}
-            {...editorProps}
-          />
-        </document>
+        <Editor
+          readOnly={readOnly}
+          inline={this.props.inline}
+          onEditor={store.onEditor}
+          {...editorProps}
+        />
       </docview>
     )
   }
@@ -38,16 +36,12 @@ export default class DocumentView {
   static style = {
     docview: {
       flex: 1,
+      maxWidth: 1250,
     },
     loading: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    document: {
-      padding: 0,
-      maxWidth: 1250,
-      flex: 1,
     },
   }
 }

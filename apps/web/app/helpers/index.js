@@ -7,6 +7,15 @@ export { query } from '@jot/models'
 export clr from 'color'
 export debug from 'debug'
 
+// use this in @stores to autorun autoruns
+export const watch = fn => {
+  function temp() {
+    return fn()
+  }
+  temp.autorunme = true
+  return temp
+}
+
 import { inject as injector } from 'react-tunnel'
 // adds object fallback if not defined
 export const inject = (mapProvidedToProps: Function) =>

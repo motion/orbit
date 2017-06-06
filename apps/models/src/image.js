@@ -1,5 +1,5 @@
 import { Model, query, str, object } from './helpers'
-import App from './app'
+import User from './user'
 
 class Image extends Model {
   static props = {
@@ -11,7 +11,7 @@ class Image extends Model {
   }
 
   static defaultProps = props => ({
-    authorId: App.user && App.user.name,
+    authorId: User.user && User.user.name,
   })
 
   settings = {

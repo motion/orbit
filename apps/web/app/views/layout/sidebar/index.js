@@ -13,8 +13,8 @@ import {
   Button,
   SlotFill,
 } from '~/ui'
-import { Place } from '@jot/models'
-import Login from '../login'
+import { User, Place } from '@jot/models'
+import Login from './login'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 import randomcolor from 'randomcolor'
@@ -129,6 +129,7 @@ export default class Sidebar {
                 onClick={() =>
                   store.setEditing({
                     _id: Math.random(),
+                    title: '',
                     temporary: true,
                     save() {
                       return Place.create({ title: this.title })

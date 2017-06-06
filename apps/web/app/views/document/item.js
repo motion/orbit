@@ -1,8 +1,9 @@
 import React from 'react'
 import { view, observable } from '~/helpers'
+import randomcolor from 'randomcolor'
 import TimeAgo from 'react-timeago'
 import Router from '~/router'
-import { Icon } from '~/ui'
+import { Icon, Button } from '~/ui'
 import DocumentView from './index'
 
 @view
@@ -49,14 +50,19 @@ export default class DocItem {
     after,
     height,
     bordered,
+    style,
     ...props
   }) {
-    if (children) {
-      return <doc {...props}>{children}</doc>
-    }
-
     return (
-      <doc $$undraggable {...props}>
+      <doc
+        $$undraggable
+        className="Tilt-inner"
+        style={{
+          ...style,
+          background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, ${randomcolor()}, ${randomcolor()})`,
+        }}
+        {...props}
+      >
         <title if={list}>
           {doc.title}
         </title>
@@ -73,12 +79,14 @@ export default class DocItem {
         <info if={!hideMeta}>
           <item $author>{doc.authorId}</item>
           <item onClick={this.navigate}>
-            <Icon name="link" size={12} color={[0, 0, 0, 0.5]} />
+            <Button chromeless icon="link" size={12} color="#fff" />
           </item>
           <item onClick={() => doc.delete()}>
-            <Icon name="simple-remove" size={8} />
+            <Button chromeless icon="simple-remove" color="#fff" />
           </item>
         </info>
+
+        {children}
       </doc>
     )
   }
@@ -86,20 +94,19 @@ export default class DocItem {
   static style = {
     doc: {
       position: 'relative',
-      color: '#333',
+      color: '#fff',
       overflow: 'hidden',
+      padding: 20,
     },
     content: {
       flex: 1,
     },
     info: {
-      padding: [6, 10],
       flexFlow: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       fontSize: 13,
       cursor: 'pointer',
-      color: [0, 0, 0, 0.4],
       position: 'relative',
     },
     item: {
@@ -108,23 +115,9 @@ export default class DocItem {
         opacity: 1,
       },
     },
-    minibtn: {
-      color: '#aaa',
-      '&:hover': {
-        color: 'purple',
-      },
-    },
   }
 
   static theme = {
-    bordered: {
-      doc: {
-        background: '#fff',
-        margin: [0, 5, 10, 5],
-        borderRadius: 6,
-        border: [1, 'dotted', [0, 0, 0, 0.1]],
-      },
-    },
     slanty: {
       doc: {
         // warning dont put transition effect here

@@ -85,12 +85,8 @@ const plugins = [
           e.preventDefault()
 
           const parent = state.document.getParent(state.startBlock.key)
-          console.log('parent', parent)
           const currentNodeIndex = state.document.nodes.indexOf(parent)
-          console.log('index is', currentNodeIndex, state)
           const nextNode = state.document.nodes.get(currentNodeIndex + 1)
-
-          console.log('nextNode', nextNode.text)
 
           return state.transform().collapseToStartOf(nextNode).apply()
         }

@@ -14,116 +14,47 @@ import {
   SlotFill,
 } from '~/ui'
 import { Place } from '@jot/models'
-import Login from './login'
+import Login from '../login'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 import randomcolor from 'randomcolor'
+import SidebarStore from './store'
 
-const SideBarItem = ({ children, isEditing, after, ...props }) => {
-  const editStyle = isEditing && {
-    background: '#faecf7',
-    cursor: 'text',
-  }
+@view class Item {
+  render({ active, task, ...props }) {
+    const className = 'strikethrough ' + (task.archive ? 'active' : '')
 
-  return (
-    <Link
-      {...props}
-      style={{
-        gloss: true,
-        color: [0, 0, 0, 0.6],
-        width: '100%',
-        fontSize: 14,
-        padding: [4, 10],
-        '&:hover': {
-          background: '#faecf7',
-        },
-        ...editStyle,
-      }}
-      active={{
-        fontWeight: 500,
-        color: '#333',
-        background: '#f1d6eb',
-        '&:hover': {
-          background: '#f1d6eb',
-        },
-      }}
-    >
-      {children}
-    </Link>
-  )
-}
-
-class SidebarStore {
-  places = Place.all()
-  placeInput = null
-  active = null
-  editingPlace = false
-  filter = ''
-  sidePlaces = []
-  allPlacesClosed = false
-  sidePlacesClosed = false
-
-  get tempPlace() {
-    return this.editingPlace && this.editingPlace.temporary && this.editingPlace
-  }
-
-  get allPlaces() {
-    const myPlace = {
-      title: App.loggedIn ? App.user.name : 'Home',
-      url: _ => '/',
-    }
-    const results = [myPlace, this.tempPlace, ...(this.places || [])].filter(
-      x => !!x
+    return (
+      <item $active={active === true}>
+        <Text {...props}>
+          <div className={className}><p><span>{task.text}</span></p></div>
+        </Text>
+        <tag>{task.doc.getTitle()}</tag>
+      </item>
     )
-
-    if (this.filter) {
-      return fuzzy
-        .filter(this.filter, results, {
-          extract: el => (el && el.title) || '',
-        })
-        .map(i => i.original)
-    }
-    return uniqBy(results, r => r.title)
   }
 
-  onFinishEdit = async title => {
-    this.editingPlace.title = title
-    this.editingPlace.members = []
-    const isTemp = this.editingPlace.temporary
-    const place = await this.editingPlace.save()
-    if (isTemp) {
-      Router.go(place.url())
-    }
-    this.editingPlace = null
-  }
-
-  clearEditing = () => {
-    this.editingPlace = false
-  }
-
-  setEditing = place => {
-    this.editingPlace = place
-  }
-
-  setActive = place => {
-    this.active = place
-  }
-
-  handleShortcuts = (action, event) => {
-    console.log('sidebar got', action)
-    switch (action) {
-      case 'esc':
-        event.preventDefault()
-        this.clearEditing()
-        break
-      case 'delete':
-        if (this.editingPlace) return
-        const shouldDelete = confirm(`Delete place ${this.active.title}`)
-        if (shouldDelete) {
-          this.active.delete()
-        }
-        break
-    }
+  static style = {
+    item: {
+      flexFlow: 'row',
+      padding: [5, 10],
+      fontSize: 16,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    active: {
+      background: '#eee',
+    },
+    tag: {
+      padding: [3, 10],
+      border: '1px solid #ddd',
+      fontSize: 12,
+      color: 'rgba(0,0,0,.4)',
+      borderRadius: 5,
+    },
+    span: {
+      paddingTop: 2,
+    },
   }
 }
 
@@ -138,31 +69,24 @@ export default class Sidebar {
     this.props.layoutStore.sidebar.attachDragger(this.dragger)
   }
 
-  getListItem = (place, index) => {
+  getListItem = (task, index) => {
     const { store } = this.props
-    const isEditing = store.editingPlace && store.editingPlace._id === place._id
 
     return (
-      <ContextMenu.Target data={place}>
-        <SideBarItem
-          isEditing={isEditing}
-          match={place.url && place.url()}
-          onDoubleClick={() => store.setEditing(place)}
-        >
-          <Text
-            editable={isEditing}
-            autoselect
-            onFinishEdit={store.onFinishEdit}
-            onCancelEdit={store.clearEditing}
-          >
-            {place.title}
-          </Text>
-        </SideBarItem>
+      <ContextMenu.Target data={{}}>
+        <Item
+          active={store.active && store.active.key === task.key}
+          task={task}
+          editable={false}
+          autoselect
+        />
       </ContextMenu.Target>
     )
   }
 
   render({ layoutStore, store }) {
+    console.log('active is', store.active)
+
     return (
       <Drawer
         noOverlay
@@ -196,7 +120,7 @@ export default class Sidebar {
             <title $$row $$justify="space-between" $$padding={[4, 6]}>
               <input
                 $search
-                placeholder="places"
+                placeholder="tasks"
                 onChange={e => (store.filter = e.target.value)}
               />
               <Button
@@ -216,7 +140,6 @@ export default class Sidebar {
 
           <content>
             <Pane
-              if={store.allPlaces}
               scrollable
               collapsed={store.allPlacesClosed}
               onSetCollapse={store.ref('allPlacesClosed').set}
@@ -232,12 +155,12 @@ export default class Sidebar {
                 <Shortcuts name="all" handler={store.handleShortcuts}>
                   <List
                     controlled
-                    items={store.allPlaces}
-                    onSelect={place => {
-                      store.setActive(place)
-                      if (place && place.url) {
-                        Router.go(place.url())
-                      }
+                    items={store.tasks}
+                    onSelect={task => {
+                      store.active = task
+                    }}
+                    onCmdEnter={task => {
+                      store.onArchive(task)
                     }}
                     getItem={this.getListItem}
                   />

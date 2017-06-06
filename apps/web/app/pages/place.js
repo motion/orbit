@@ -52,16 +52,16 @@ export default class PlacePage {
           Share
         </Button>
         <Button
-          {...!place && ({
+          {...!place && {
             icon: 'useradd',
             iconColor: '#eee',
-          })}
-          {...place && ({
+          }}
+          {...place && {
             icon: place.subscribed() ? 'userdelete' : 'useradd',
             iconColor: place.subscribed() ? 'green' : '#ccc',
             tooltip: place.subscribed() ? 'unfollow' : 'follow',
             onClick: place.toggleSubscribe,
-          })}
+          }}
         />
         <Button
           icon={place && place.private ? 'eye-ban' : 'eye'}
@@ -74,11 +74,13 @@ export default class PlacePage {
     console.log('render', place, doc === null)
     if (!place || !doc) {
       console.log('no place or doc')
-      return <Page key={0} actions={actions}>
-        {place === null ? 'no place' : null}
-        {doc === null ? 'no doc' : null}
-        <DocumentPage insidePlace />
-      </Page>
+      return (
+        <Page key={0} actions={actions}>
+          {place === null ? 'no place' : null}
+          {doc === null ? 'no doc' : null}
+          <DocumentPage insidePlace />
+        </Page>
+      )
     }
 
     if (place.private && !App.loggedIn) {

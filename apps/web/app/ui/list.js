@@ -53,6 +53,9 @@ class List {
         )
         event.preventDefault()
         break
+      case 'cmdEnter':
+        this.props.onCmdEnter && this.props.onCmdEnter(this.getSelected())
+        break
       case 'up':
         this.highlightItem(cur => Math.max(0, cur - 1), this.onSelect)
         event.preventDefault()
@@ -75,6 +78,8 @@ class List {
 
   // wrap weird signature
   select = (index: number) => {
+    console.log('selecting', index)
+
     this.highlightItem(() => index)
   }
 

@@ -11,6 +11,7 @@ const keymap = {
     enter: 'enter',
     esc: 'esc',
     commander: 'command+t',
+    cmdEnter: 'command+enter',
     delete: ['delete', 'backspace'],
   },
 }

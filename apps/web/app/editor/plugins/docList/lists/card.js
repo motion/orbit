@@ -23,9 +23,9 @@ export default class CardList {
           <Tilt
             key={doc._id}
             options={{
-              max: 20,
+              max: 10,
               perspective: 1000,
-              reverse: true,
+              reverse: false,
               scale: 1,
             }}
           >
@@ -43,7 +43,7 @@ export default class CardList {
                 resist={-10}
                 color={[255, 255, 255]}
                 zIndex={1000}
-                opacity={0.5}
+                opacity={0.3}
               />
             </doc>
           </Tilt>

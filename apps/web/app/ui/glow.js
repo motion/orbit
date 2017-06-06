@@ -10,6 +10,7 @@ const Resize = resizer({ strategy: 'scroll' })
 @view.ui
 export default class HoverGlow {
   props: {
+    background?: boolean,
     children?: Function,
   }
 
@@ -56,13 +57,13 @@ export default class HoverGlow {
     if (node) {
       this.node = node
       this.setBounds()
-      this.addEvent(node, 'mouseenter', this.trackMouse(true))
-      this.addEvent(node, 'mousemove', this.move)
-      this.addEvent(node, 'mouseleave', this.trackMouse(false))
+      this.on(node, 'mouseenter', this.trackMouse(true))
+      this.on(node, 'mousemove', this.move)
+      this.on(node, 'mouseleave', this.trackMouse(false))
       Resize.listenTo(node, this.setBounds)
 
       if (this.props.clickable) {
-        this.addEvent(node, 'click', this.click)
+        this.on(node, 'click', this.click)
       }
     }
   }
@@ -88,7 +89,7 @@ export default class HoverGlow {
         y: y - this.bounds.height / 2,
       },
     })
-  }, 32)
+  }, 16)
 
   click = () => {
     this.setState({ clicked: true }, () => {
@@ -125,10 +126,13 @@ export default class HoverGlow {
     itemProps,
     children,
     style,
+    background,
   }) {
     const setRootRef = this.ref('rootRef').set
 
-    if (!this.state.track && !children) {
+    const { track } = this.state
+
+    if ((!track && !children) || !track) {
       return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
@@ -140,9 +144,9 @@ export default class HoverGlow {
       height = this.bounds.height
     }
 
-    const shadowAmt = shadowSize === null ? width + height / 10 : shadowSize
+    const shadowAmt = shadowSize === null ? width + height : shadowSize
 
-    const { position: { x, y }, track, clicked } = this.state
+    const { position: { x, y }, clicked } = this.state
 
     // resists being moved (towards center)
     const resisted = coord => {
@@ -177,11 +181,13 @@ export default class HoverGlow {
     const glow = (
       <overlay ref={setRootRef} style={style} {...itemProps}>
         <glow
+          $$zIndex={background ? -1 : 0}
           style={{
             opacity: 1,
             transform: `
                 translateX(${translateX}px)
                 translateY(${translateY}px)
+                translateZ(0px)
               `,
           }}
         >
@@ -190,7 +196,7 @@ export default class HoverGlow {
             width={width}
             style={{
               boxShadow: `${shadowOffsetLeft}px ${shadowOffsetTop}px ${shadowAmt}px ${colorRGB}`,
-              transform: `scale(${scale * (clicked ? clickScale : 1)})`,
+              transform: `scale(${scale * (clicked ? clickScale : 1)}) translateZ(0px)`,
               opacity: track ? opacity : 0,
               marginLeft: -width / 2,
               marginTop: -height / 2,
@@ -240,7 +246,7 @@ export default class HoverGlow {
       left: 0,
       right: 0,
       bottom: 0,
-      zIndex: -1,
+      // zIndex: -1,
       // transition: 'opacity ease-in 20ms',
 
       '&:active': {
@@ -252,6 +258,7 @@ export default class HoverGlow {
       position: 'absolute',
       top: '50%',
       left: '50%',
+      transform: 'translateZ(0)',
     },
   }
 }

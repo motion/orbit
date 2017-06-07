@@ -4,17 +4,21 @@ import { flatten, intersection } from 'lodash'
 import type RxDB from 'motion-rxdb'
 
 export default class BaseModel {
+  // for use by @query
   queries: Object
-  compiledSchema: Object
 
   constructor({ defaultSchema, defaultProps }) {
     this.create = this.create.bind(this)
     this.defaultSchema = defaultSchema
     this.queries = {}
-    this.compiledSchema = {
+  }
+
+  get compiledSchema() {
+    return {
       ...this.defaultSchema,
       ...this.settings,
       ...compile(this.props),
+      title: this.settings.database,
     }
   }
 
@@ -44,7 +48,6 @@ export default class BaseModel {
 
   getDefaultProps(props) {
     const { defaultProps } = this.constructor
-    console.log('got defaults', defaultProps)
     return typeof defaultProps === 'function'
       ? defaultProps(props)
       : defaultProps || {}
@@ -70,20 +73,20 @@ export default class BaseModel {
     }
   }
 
-  connect = async (db: RxDB, dbConfig: Object, options: Object) => {
-    this.db = db
+  connect = async (database: RxDB, dbConfig: Object, options: Object) => {
+    this.database = database
     this.remoteDB = options.sync
 
     console.time('db:connect')
-    this.collection = await db.collection({
+    this.collection = await database.collection({
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
-      // autoMigrate: true,
-      // pouchSettings: {
-      //   revsLimit: 100,
-      //   skipSetup: true,
-      // },
+      autoMigrate: true,
+      pouchSettings: {
+        revsLimit: 100,
+        skipSetup: true,
+      },
       methods: this.compiledMethods,
     })
     console.timeEnd('db:connect')
@@ -134,8 +137,15 @@ export default class BaseModel {
     this.collection.watchForChanges()
   }
 
+  get indexes(): Array {
+    console.log('get indexes from', this.props)
+    return []
+  }
+
   createIndexes = async () => {
-    if (this.settings.index) {
+    const { indexes } = this
+
+    if (indexes.length) {
       // TODO: pouchdb supposedly does this for you, but it was slow in profiling
       const { indexes } = await this.collection.pouch.getIndexes()
       const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(

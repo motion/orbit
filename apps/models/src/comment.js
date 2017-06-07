@@ -11,7 +11,7 @@ class Comment extends Model {
   }
 
   settings = {
-    title: 'comments',
+    database: 'comments',
   }
 
   hooks = {

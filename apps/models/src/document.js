@@ -53,8 +53,8 @@ class Document extends Model {
   DEFAULT_CONTENT = DEFAULT_CONTENT
 
   settings = {
-    title: 'documents',
-    index: ['createdAt'],
+    database: 'documents',
+    index: ['createdAt', 'updatedAt'],
   }
 
   hooks = {

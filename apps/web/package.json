@@ -54,7 +54,7 @@
     "motion-class-helpers": "^1.1.0",
     "motion-mobx-helpers": "^1.1.2",
     "motion-mobx-router": "^1.1.0",
-    "motion-rxdb": "^5.0.1",
+    "rxdb": "^4.1.0",
     "pouchdb-adapter-http": "^6.1.2",
     "pouchdb-adapter-idb": "^6.1.2",
     "pouchdb-authentication": "^0.5.5",

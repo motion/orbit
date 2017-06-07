@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@jot/black": "*",
+    "rxdb": "^4.1.0",
     "motion-mobx-helpers": "^1.1.2",
     "mobx": "^3.1.0",
     "motion-rxdb": "^5.2.0",

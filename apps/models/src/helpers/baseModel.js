@@ -1,7 +1,7 @@
 // @flow
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
-import type RxDB from 'motion-rxdb'
+import type RxDB from 'rxdb'
 
 export default class BaseModel {
   // for use by @query

@@ -12,6 +12,7 @@ class Comment extends Model {
 
   settings = {
     database: 'comments',
+    index: ['createdAt'],
   }
 
   hooks = {

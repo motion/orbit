@@ -78,8 +78,10 @@ export default class BaseModel {
     this.remoteDB = options.sync
 
     const pouchSettings = {
-      revs_limit: 10,
       skip_setup: true,
+      live: true,
+      retry: true,
+      since: 'now',
     }
 
     console.log(

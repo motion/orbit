@@ -54,6 +54,11 @@ class App {
 
     // connect to pouchdb
     console.time('create db')
+    // const pouchSettings = {
+    //   revs_limit: 10,
+    //   skip_setup: true,
+    //   with_credentials: false,
+    // }
     this.database = await RxDB.create({
       adapter: 'idb',
       name: database.name,
@@ -67,8 +72,8 @@ class App {
 
     // images
     this.images = new PouchDB(`${database.couchUrl}/images`, {
-      skipSetup: true,
-      withCredentials: false,
+      skip_setup: true,
+      with_credentials: false,
     })
 
     // seeds db

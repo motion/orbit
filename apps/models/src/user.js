@@ -26,8 +26,8 @@ class User {
     this.databaseConfig = databaseConfig
     // separate pouchdb for auth
     this.authDb = new PouchDB(`${this.databaseConfig.couchUrl}/auth`, {
-      skipSetup: true,
-      withCredentials: false,
+      skip_setup: true,
+      with_credentials: false,
     })
     this.syncUser()
   }

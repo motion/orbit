@@ -1,6 +1,6 @@
 export * from 'mobx'
 export { Component } from 'react'
-export $ from './styles'
+export $ from '@jot/black/gloss'
 export clr from 'color'
 export debug from 'debug'
 

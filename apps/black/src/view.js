@@ -8,6 +8,7 @@ import reactRenderArgs from '@jot/decor/plugins/react/reactRenderArgs'
 import addContext from '@jot/decor/plugins/react/addContext'
 import attach from '@jot/decor/plugins/react/attach'
 import { storeProvider } from './store'
+import gloss from './gloss'
 
 const base = [
   extendsReact,
@@ -15,6 +16,7 @@ const base = [
   subscribable,
   subscribableHelpers,
   reactRenderArgs,
+  options => ({ decorator: gloss }),
 ]
 
 const mobx = [observer]

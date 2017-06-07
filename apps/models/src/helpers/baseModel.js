@@ -78,9 +78,10 @@ export default class BaseModel {
     this.remoteDB = options.sync
 
     const pouchSettings = {
-      revs_limit: 100,
+      revs_limit: 10,
       skip_setup: true,
     }
+
     console.log(
       `%cpouchSettings ${JSON.stringify(pouchSettings)}`,
       'color: brown'
@@ -156,9 +157,10 @@ export default class BaseModel {
       if (intersection(index, alreadyIndexedFields).length !== index.length) {
         // need to await or you get error sorting by dates, etc
         console.log(
-          `%c[pouch] CREATE INDEX ${this.title} ${index}`,
+          `%c[pouch] CREATE INDEX ${this.title} ${JSON.stringify(index)}`,
           'color: green'
         )
+
         await this.collection.pouch.createIndex({ fields: index })
       } else {
         console.log(

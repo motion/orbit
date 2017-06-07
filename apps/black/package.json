@@ -8,6 +8,7 @@
     "@jot/decor": "*",
     "rxdb": "^4.1.0",
     "gloss": "^6.5.0",
+    "prop-types": "^15.5.9",
     "hash-sum": "1.0.2"
   },
   "devDependencies": {}

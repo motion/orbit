@@ -1,5 +1,6 @@
 import decor from '@jot/decor'
-import extendsReact from '@jot/decor/lib/plugins/view/extendsReact'
+import { object, string } from 'prop-types'
+import extendsReact from '@jot/decor/lib/plugins/react/extendsReact'
 import observer from '@jot/decor/lib/plugins/mobx/observer'
 import autobound from '@jot/decor/lib/plugins/core/autobound'
 import subscribableHelpers from '@jot/decor/lib/plugins/core/subscribableHelpers'
@@ -49,3 +50,5 @@ view.plain = decor(base)
 view.ui = decor([...base, ...ui])
 view.provide = withStores
 view.attach = decor([attach])
+
+window.x = view

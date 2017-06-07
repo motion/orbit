@@ -19,11 +19,11 @@ export default function decor(plugins) {
 
     if (plugin.decorator) {
       decorators.push(plugin.decorator)
-    }
-    if (plugin.mixin) {
+    } else if (plugin.mixin) {
       mixins.push(plugin.mixin)
+    } else {
+      throw `Bad plugin, needs decorator or mixin: ${plugin}`
     }
-    throw `Bad plugin ${name}, needs decorator or mixin`
   }
 
   return function decorDecorator(Klass) {

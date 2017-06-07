@@ -12,8 +12,6 @@ const tempId = () => {
   return id
 }
 
-@store.helpers
-@store.mobx
 class User {
   authDb: ?AuthStore = null
   @observable.ref user = {}

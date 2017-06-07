@@ -3,22 +3,24 @@ import { object } from 'prop-types'
 import { pickBy } from 'lodash'
 
 export default function attacher(options) {
-  return View =>
-    class ContextAttacher extends React.Component {
-      static contextTypes = {
-        stores: object,
-      }
+  return {
+    decorator: View =>
+      class ContextAttacher extends React.Component {
+        static contextTypes = {
+          stores: object,
+        }
 
-      render() {
-        return (
-          <View
-            {...this.props}
-            {...pickBy(
-              this.context.stores,
-              (value, key) => key.indexOf(names) >= 0
-            )}
-          />
-        )
-      }
-    }
+        render() {
+          return (
+            <View
+              {...this.props}
+              {...pickBy(
+                this.context.stores,
+                (value, key) => key.indexOf(names) >= 0
+              )}
+            />
+          )
+        }
+      },
+  }
 }

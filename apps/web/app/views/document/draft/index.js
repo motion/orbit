@@ -3,46 +3,25 @@ import React from 'react'
 import { view, computed } from '~/helpers'
 import { Portal, Drawer, Button, Icon } from '~/ui'
 import DocView from '~/views/document'
-import { Document } from '@jot/models'
+import { Document, User } from '@jot/models'
 import Router from '~/router'
-
-@view class CreateButton {
-  render(props) {
-    return (
-      <div>
-        <Button circle {...props} $circleButton icon="add" />
-      </div>
-    )
-  }
-
-  static style = {
-    circleButton: {
-      position: 'absolute',
-      right: 20,
-      zIndex: 500,
-      bottom: 20,
-    },
-  }
-}
 
 class DraftStore {
   doc = null
-
-  @computed get isActive() {
-    return this.doc !== null
-  }
 
   onSaveDraft = async () => {
     this.doc.draft = false
     await this.doc.save()
     Router.go(this.doc.url())
     this.doc = null
+    this.onClose()
   }
 
   onCreateDraft = async () => {
     const params = {
       draft: true,
-      places: [App.activePage.place._id],
+      // places: [App.activePage.place._id],
+      authorId: User.user.name,
       title: 'New Draft',
     }
 
@@ -51,6 +30,7 @@ class DraftStore {
 
   onClose = () => {
     this.doc = null
+    this.props.onClose()
   }
 }
 
@@ -58,19 +38,23 @@ class DraftStore {
   store: DraftStore,
 })
 export default class Draft {
-  render({ store }) {
-    const { isActive, doc } = store
+  render({ isActive, store }) {
+    const { doc } = store
 
     return (
       <draft>
-        <Portal isOpened={true} isOpen={true}>
+        <Portal
+          isOpened={isActive}
+          onOpen={store.onCreateDraft}
+          isOpen={isActive}
+        >
           <Drawer
             from="bottom"
             open={isActive}
             overlayBlur={5}
             onClickOverlay={store.onClose}
           >
-            <content if={isActive}>
+            <content if={isActive && store.doc}>
               <editor>
                 <DocView inline={false} id={doc._id} document={doc} />
               </editor>
@@ -82,7 +66,6 @@ export default class Draft {
             </content>
           </Drawer>
         </Portal>
-        <CreateButton onClick={store.onCreateDraft} />
       </draft>
     )
   }

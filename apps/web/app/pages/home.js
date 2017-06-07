@@ -46,13 +46,9 @@ class PlaceTile {
 })
 export default class HomePage {
   render({ store }) {
-    console.log('HOME_STORE', store)
-
     if (!User.loggedIn) {
       return <center $$centered>login plz</center>
     }
-
-    console.log('home layout', User.user.layout)
 
     return (
       <home>

@@ -175,7 +175,7 @@ class Document extends Model {
   @query recent = (limit = 10) =>
     this.collection
       .find({ draft: { $ne: true } })
-      .sort({ createdAt: 'desc' })
+      // .sort({ createdAt: 'desc' })
       .limit(limit)
 
   @query get = id => {

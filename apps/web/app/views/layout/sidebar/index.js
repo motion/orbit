@@ -38,7 +38,7 @@ const DragHandle = SortableHandle(() => (
 
     // css structure is for archive animation
     return (
-      <item $first={index === 0} $active={active === true}>
+      <item $$undraggable $first={index === 0} $active={active === true}>
         <DragHandle />
         <content>
           <Text $text {...props}>
@@ -230,7 +230,7 @@ export default class Sidebar {
               </title>
             </top>
 
-            <content>
+            <content $$draggable>
               <Pane
                 scrollable
                 collapsed={store.allPlacesClosed}
@@ -251,8 +251,6 @@ export default class Sidebar {
                   />
                 </ContextMenu>
               </Pane>
-
-              <draggable $$draggable />
             </content>
 
             <SlotFill.Slot name="sidebar">
@@ -290,14 +288,6 @@ export default class Sidebar {
       bottom: 0,
       zIndex: 10000,
       cursor: 'ew-resize',
-    },
-    draggable: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 8,
-      zIndex: -1,
     },
     search: {
       border: 'none',

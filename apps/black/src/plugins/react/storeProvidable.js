@@ -10,14 +10,12 @@ type InstanceOptions = {
   attach: Array<string>,
 }
 
-export default function createStoreProvider(options: Object) {
+export default function storeProvidable(options) {
   const cache = new Cache()
+  const { allStores, instanceOpts } = options
 
-  return function storeProvider(
-    allStores: Object,
-    instanceOpts: InstanceOptions
-  ) {
-    return function decorator(Klass) {
+  return {
+    decorator: Klass => {
       // hmr restore
       if (instanceOpts && instanceOpts.module) {
         cache.revive(instanceOpts.module, allStores)
@@ -154,6 +152,6 @@ export default function createStoreProvider(options: Object) {
       }
 
       return StoreProvider
-    }
+    },
   }
 }

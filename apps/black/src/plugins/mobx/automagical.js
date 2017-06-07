@@ -8,7 +8,34 @@ import {
   autorun,
 } from 'mobx'
 
-export default function automagical(obj) {
+export default function automagical(options) {
+  return {
+    decorator: Klass => {
+      automagic(Klass)
+      return Klass
+    },
+  }
+}
+
+const isAutorun = val => val && val.autorunme
+const FILTER_KEYS = {
+  dispose: true,
+  constructor: true,
+  start: true,
+  react: true,
+  ref: true,
+  setInterval: true,
+  setTimeout: true,
+  addEvent: true,
+  watch: true,
+}
+
+function observableRxToObservableMobx(obj, method) {
+  extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
+  return obj[method]
+}
+
+function automagic(obj) {
   // automagic observables
   const proto = Object.getPrototypeOf(obj)
   const fproto = Object.getOwnPropertyNames(proto).filter(

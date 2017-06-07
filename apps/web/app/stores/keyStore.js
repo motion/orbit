@@ -13,6 +13,7 @@ const keymap = {
     commander: 'command+t',
     cmdEnter: 'command+enter',
     delete: ['delete', 'backspace'],
+    toggleSidebar: 'command+/',
   },
 }
 

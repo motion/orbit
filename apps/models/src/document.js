@@ -1,7 +1,7 @@
 import { Model, query, str, object, array, bool } from './helpers'
 import Image from './image'
 import Place from './place'
-import User from './user'
+import App from './app'
 import generateName from 'sillyname'
 
 const DEFAULT_CONTENT = title => ({
@@ -42,7 +42,7 @@ class Document extends Model {
     const title = props.title || generateName()
     return {
       title,
-      authorId: User.authorId,
+      authorId: App.user && App.user.name,
       hashtags: [],
       attachments: [],
       private: true,
@@ -59,6 +59,8 @@ class Document extends Model {
 
   hooks = {
     preSave: async ({ title, placeId }) => {
+      console.log('saving')
+
       // sync title
       if (placeId) {
         console.log('save document to place', placeId)
@@ -116,7 +118,7 @@ class Document extends Model {
         .exec()
     }
 
-    const ids = (await this.pouch.search({
+    const ids = (await App.Document.pouch.search({
       query: text,
       fields: ['text', 'title'],
       include_docs: false,
@@ -173,10 +175,10 @@ class Document extends Model {
   };
 
   @query user = user => {
-    if (!User.user) {
+    if (!App.user) {
       return null
     }
-    return this.collection.find().where('authorId').eq(User.user.name)
+    return this.collection.find().where('authorId').eq(App.user.name)
   }
 }
 

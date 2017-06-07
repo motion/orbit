@@ -54,17 +54,20 @@ export default class DocItem {
     style,
     ...props
   }) {
-    const gradient = sample(gradients).colors
+    const choice = sample(gradients)
+    const gradient = choice.colors
+
     return (
       <doc
         $$undraggable
         className="Tilt-inner"
         style={{
           ...style,
-          background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, ${gradient[0]}, ${gradient[1]})`,
+          background: `linear-gradient(${Math.floor(Math.random() * 120)}deg, ${gradient[0]}, ${gradient[1]})`,
         }}
         {...props}
       >
+        <grad>gradient: {choice.name}</grad>
         <title if={list}>
           {doc.title}
         </title>

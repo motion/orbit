@@ -37,7 +37,7 @@ export default class TitleNode {
     inline: {
       fontSize: 40,
       fontFamily: 'Abril Fatface',
-      fontSize: 50,
+      fontSize: 35,
       fontWeight: 200,
       lineHeight: 1.2,
       color: '#fff',

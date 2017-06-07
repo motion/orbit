@@ -39,16 +39,24 @@ export default class SidebarRootStore {
     this.on(window, 'resize', this.setWindowSize)
   }
 
+  handleShortcut = action => {
+    if (action === 'toggleSidebar') this.toggle()
+  }
+
   private = {
     onMouseMove: event => this.dragging && this.private.onMove(event),
-    onMove: throttle(e => {
-      e.preventDefault()
-      if (this.dragging) {
-        this.width = Math.min(
-          window.innerWidth - 400,
-          Math.max(200, window.innerWidth - e.pageX)
-        )
-      }
-    }, 16, true)
+    onMove: throttle(
+      e => {
+        e.preventDefault()
+        if (this.dragging) {
+          this.width = Math.min(
+            window.innerWidth - 400,
+            Math.max(200, window.innerWidth - e.pageX)
+          )
+        }
+      },
+      16,
+      true
+    ),
   }
 }

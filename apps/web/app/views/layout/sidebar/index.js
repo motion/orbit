@@ -8,37 +8,76 @@ import {
   Pane,
   ContextMenu,
   List,
+  Icon,
   Link,
   Input,
+  Segment,
   Button,
   SlotFill,
 } from '~/ui'
 import { User, Place } from '@jot/models'
-import Login from './login'
+import Login from '../login'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 import randomcolor from 'randomcolor'
 import SidebarStore from './store'
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+  arrayMove,
+} from 'react-sortable-hoc'
+
+const DragHandle = SortableHandle(() => (
+  <div style={{ padding: 10 }}> <Icon name="ui-2_menu-34" size={12} /></div>
+)) //<span style={{ padding: 10 }}>::</span>) // This can be any component you want
 
 @view class Item {
-  render({ active, task, ...props }) {
+  render({ active, index, task, ...props }) {
     const className = 'strikethrough ' + (task.archive ? 'active' : '')
 
+    // css structure is for archive animation
     return (
-      <item $active={active === true}>
-        <Text {...props}>
-          <div className={className}><p><span>{task.text}</span></p></div>
-        </Text>
-        <tag>{task.doc.getTitle()}</tag>
+      <item $first={index === 0} $active={active === true}>
+        <DragHandle />
+        <content>
+          <Text $text {...props}>
+            <div className={className}><p><span>{task.text}</span></p></div>
+          </Text>
+          <bottom $$row>
+            <tags>
+              June 2 by Steel
+            </tags>
+            <tag onMouseDown={() => Router.go(task.doc.url())}>
+              {task.doc.title}
+            </tag>
+          </bottom>
+        </content>
       </item>
     )
   }
 
   static style = {
+    content: {
+      flex: 3,
+    },
+    first: {
+      borderTop: '1px solid #ddd',
+    },
+    tags: {
+      color: `rgba(0, 0, 0, 0.6)`,
+      fontSize: 12,
+    },
+    bottom: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
     item: {
       flexFlow: 'row',
-      padding: [5, 10],
-      fontSize: 16,
+      padding: [7, 5],
+      background: '#fefefe',
+      borderBottom: '1px solid #ddd',
+      fontSize: 14,
       alignItems: 'center',
       justifyContent: 'space-between',
     },
@@ -46,17 +85,50 @@ import SidebarStore from './store'
       background: '#eee',
     },
     tag: {
-      padding: [3, 10],
+      padding: [0, 6],
+      cursor: 'pointer',
+      textSelect: 'none',
+      textOverflow: 'ellipsis',
       border: '1px solid #ddd',
       fontSize: 12,
+      maxWidth: 100,
+      textAlign: 'center',
+      flex: 1,
       color: 'rgba(0,0,0,.4)',
+      transition: 'background 50ms ease-in',
       borderRadius: 5,
+      '&:hover': {
+        background: '#eee',
+      },
+      '&:active': {
+        background: '#ddd',
+      },
     },
     span: {
       paddingTop: 2,
     },
   }
 }
+
+/* sortable eats index, so add _index for item styling */
+const SortableItem = SortableElement(({ _index, value }) => (
+  <div style={{ zIndex: 1000000 }}><Item index={_index} task={value} /></div>
+))
+
+const SortableList = SortableContainer(({ items }) => {
+  return (
+    <ul>
+      {items.map((task, index) => (
+        <SortableItem
+          key={task.key}
+          _index={index}
+          index={index}
+          value={task}
+        />
+      ))}
+    </ul>
+  )
+})
 
 @view.attach('layoutStore')
 @view({
@@ -84,103 +156,115 @@ export default class Sidebar {
     )
   }
 
+  onSortEnd = () => {
+    console.log('on sort end')
+  }
+
   render({ layoutStore, store }) {
-    console.log('active is', store.active)
-
     return (
-      <Drawer
-        noOverlay
-        open={layoutStore.sidebar.active}
-        from="right"
-        size={layoutStore.sidebar.width}
-        zIndex={9}
-      >
-        <dragger
-          style={{ WebkitAppRegion: 'no-drag' }}
-          ref={this.ref('dragger').set}
-        />
-        <sidebar>
-          <top>
-            <Login />
+      <Shortcuts name="all" handler={layoutStore.sidebar.handleShortcut}>
+        <Drawer
+          noOverlay
+          open={layoutStore.sidebar.active}
+          from="right"
+          size={layoutStore.sidebar.width}
+          zIndex={9}
+        >
+          <dragger
+            style={{ WebkitAppRegion: 'no-drag' }}
+            ref={this.ref('dragger').set}
+          />
+          <sidebar>
+            <top>
+              <Login />
 
-            <orgs $$row>
-              {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
-                <Button
-                  key={i}
-                  style={{ marginLeft: 5, marginRight: 5 }}
-                  circular
-                  size={32}
-                  iconSize={12}
-                  color={randomcolor()}
-                  icon={name}
-                />
-              ))}
-            </orgs>
-
-            <title $$row $$justify="space-between" $$padding={[4, 6]}>
-              <input
-                $search
-                placeholder="tasks"
-                onChange={e => (store.filter = e.target.value)}
-              />
-              <Button
-                chromeless
-                icon="simple-add"
-                onClick={() =>
-                  store.setEditing({
-                    _id: Math.random(),
-                    title: '',
-                    temporary: true,
-                    save() {
-                      return Place.create({ title: this.title })
-                    },
-                  })}
-              />
-            </title>
-          </top>
-
-          <content>
-            <Pane
-              scrollable
-              collapsed={store.allPlacesClosed}
-              onSetCollapse={store.ref('allPlacesClosed').set}
-            >
-              <ContextMenu
-                options={[
-                  {
-                    title: 'Delete',
-                    onSelect: place => place.delete(),
-                  },
-                ]}
-              >
-                <Shortcuts name="all" handler={store.handleShortcuts}>
-                  <List
-                    controlled
-                    items={store.tasks}
-                    onSelect={task => {
-                      store.active = task
-                    }}
-                    onCmdEnter={task => {
-                      store.onArchive(task)
-                    }}
-                    getItem={this.getListItem}
+              <orgs $$row>
+                {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
+                  <Button
+                    key={i}
+                    style={{ marginLeft: 5, marginRight: 5 }}
+                    circular
+                    size={32}
+                    iconSize={12}
+                    color={randomcolor()}
+                    icon={name}
                   />
-                </Shortcuts>
-              </ContextMenu>
-            </Pane>
+                ))}
+              </orgs>
 
-            <draggable $$draggable />
-          </content>
+              <title $$row $$justify="space-between" $$padding={[4, 6]}>
+                <top $$row>
+                  <input
+                    $search
+                    placeholder="tasks"
+                    onChange={e => (store.filter = e.target.value)}
+                  />
+                  <Segment>
+                    <Button
+                      active={store.hideArchived == false}
+                      onClick={() => (store.hideArchived = false)}
+                    >
+                      All
+                    </Button>
+                    <Button
+                      active={store.hideArchived}
+                      onClick={() => (store.hideArchived = true)}
+                    >
+                      Active
+                    </Button>
+                  </Segment>
+                </top>
+                <Button
+                  chromeless
+                  icon="simple-add"
+                  onClick={() =>
+                    store.setEditing({
+                      _id: Math.random(),
+                      title: '',
+                      temporary: true,
+                      save() {
+                        return Place.create({ title: this.title })
+                      },
+                    })}
+                />
+              </title>
+            </top>
 
-          <SlotFill.Slot name="sidebar">
-            {items => (
-              <activeSidebar>
-                {items}
-              </activeSidebar>
-            )}
-          </SlotFill.Slot>
-        </sidebar>
-      </Drawer>
+            <content>
+              <Pane
+                scrollable
+                collapsed={store.allPlacesClosed}
+                onSetCollapse={store.ref('allPlacesClosed').set}
+              >
+                <ContextMenu
+                  options={[
+                    {
+                      title: 'Delete',
+                      onSelect: place => place.delete(),
+                    },
+                  ]}
+                >
+                  <SortableList
+                    items={store.tasks}
+                    useDragHandle={true}
+                    onSortEnd={this.onSortEnd}
+                  />
+                </ContextMenu>
+              </Pane>
+
+              <draggable $$draggable />
+            </content>
+
+            <SlotFill.Slot name="sidebar">
+              {items => (
+                <activeSidebar>
+                  {items}
+                </activeSidebar>
+              )}
+            </SlotFill.Slot>
+          </sidebar>
+        </Drawer>
+      </Shortcuts>
     )
   }
 

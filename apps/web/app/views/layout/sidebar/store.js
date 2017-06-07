@@ -1,5 +1,6 @@
 import { Document } from '@jot/models'
 import { flatMap, flatten, random } from 'lodash'
+import merge from 'deepmerge'
 
 const liToText = ({ nodes }) =>
   nodes
@@ -15,22 +16,26 @@ const liToText = ({ nodes }) =>
 export default class SidebarStore {
   docs = Document.recent()
   active = null
+  hideArchived = true
 
   onArchive = task => {
-    const { content } = task.doc
-    task.doc.content.document.nodes = content.document.nodes.map(node => {
-      if (node.type !== 'ul_list') return node
+    const doc = this.docs.filter(doc => doc._id === task.doc._id)[0]
 
-      return node.nodes.map(li => {
+    // const { content } = task.doc
+    // doc.content.document.nodes = doc.content.document.nodes.map(node => {
+    const newNodes = doc.content.document.nodes.map(node => {
+      if (node.type !== 'ul_list') return node
+      node.nodes = node.nodes.map(li => {
         if (task.text === liToText(li)) {
-          console.log('match!')
-          li.data.archive = true //!(li.data.archive || false)
+          li.data.archive = !(li.data.archive || false)
         }
         return li
       })
+      return node
     })
-
-    task.doc.save()
+    // doc.content = Object.assign({}, doc.content)
+    doc.content = merge(doc.content, { document: { nodes: newNodes } })
+    doc.save(false)
   }
 
   get tasks() {
@@ -52,6 +57,9 @@ export default class SidebarStore {
       return flatten(tasks)
     })
 
+    if (this.hideArchived) {
+      return allTasks.filter(t => !t.archive)
+    }
     return allTasks
   }
 }

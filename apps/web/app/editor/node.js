@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable, computed } from '@jot/helpers'
+import { view, observable, computed } from '@jot/black'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '~/ui'

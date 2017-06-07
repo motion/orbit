@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { view, observable, keycode } from '@jot/helpers'
+import { view } from '@jot/black'
+import { keycode } from '~/helpers'
 
 // click away from edit clears it
 @view({

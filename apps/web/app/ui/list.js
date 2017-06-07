@@ -1,5 +1,6 @@
 import React, { Children, cloneElement } from 'react'
-import { view, Shortcuts } from '@jot/helpers'
+import { view } from '@jot/black'
+import { Shortcuts } from '~/helpers'
 import FakeText from './fake/fakeText'
 import { range } from 'lodash'
 import ListItem from './listItem'

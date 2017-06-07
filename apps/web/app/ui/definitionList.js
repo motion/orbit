@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 
 @view.ui
 export default class DefinitionList {

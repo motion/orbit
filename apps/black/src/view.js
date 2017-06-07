@@ -9,7 +9,6 @@ import rxToMobx from './external/rxToMobx'
 import { storeProvider, storeAttacher } from './store'
 import { string, object } from 'prop-types'
 import { pickBy } from 'lodash'
-import { IS_PROD } from '~/constants'
 
 const ViewHelpers = {
   componentWillMount() {

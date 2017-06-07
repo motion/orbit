@@ -1,4 +1,4 @@
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 import { Theme, PassThrough, Popover, Segment, Button } from '~/ui'
 import { BLOCKS, MARKS } from '../constants'
 

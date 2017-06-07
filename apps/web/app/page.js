@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { $, view, observable } from '@jot/helpers'
+import { view, observable } from '@jot/black'
 import { pick } from 'lodash'
 import { SlotFill } from '~/ui'
 

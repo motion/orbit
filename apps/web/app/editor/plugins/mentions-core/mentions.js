@@ -1,5 +1,5 @@
 import MentionsPlugin from './mentions-core'
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 
 export default MentionsPlugin({
   Mention: props =>

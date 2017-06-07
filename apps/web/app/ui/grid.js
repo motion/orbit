@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable } from '@jot/helpers'
+import { view, observable } from '@jot/black'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
 const Layout: HTMLElement = WidthProvider(ReactGridLayout)

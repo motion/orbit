@@ -1,4 +1,4 @@
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 
 const idFn = _ => _
 const opposite = direction =>

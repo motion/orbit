@@ -1,5 +1,6 @@
 import React from 'react'
-import { view, Shortcuts } from '@jot/helpers'
+import { view } from '@jot/black'
+import { Shortcuts } from '~/helpers'
 import { Portal, Icon } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 import DocView from '~/views/document'

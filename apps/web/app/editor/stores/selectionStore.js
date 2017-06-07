@@ -1,4 +1,4 @@
-import { store } from '@jot/helpers'
+import { store } from '@jot/black'
 import { findDOMNode } from '../helpers'
 import { BLOCKS } from '../constants'
 

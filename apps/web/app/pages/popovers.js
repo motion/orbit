@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 import { Form, Input, Segment, Button, Popover } from '~/ui'
 import { Place } from '@jot/models'
 

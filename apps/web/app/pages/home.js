@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, watch } from '@jot/helpers'
+import { view, watch } from '@jot/black'
 import { User, Place, Document } from '@jot/models'
 import { Grid, Button, SlotFill } from '~/ui'
 import PlacePage from './place'

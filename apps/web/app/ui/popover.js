@@ -1,7 +1,8 @@
 // TODO https://github.com/tristen/hoverintent
 import React from 'react'
 import { object, string } from 'prop-types'
-import { view, getTarget } from '@jot/helpers'
+import { view } from '@jot/black'
+import { getTarget } from '~/helpers'
 import Portal from 'react-portal'
 import { isNumber, debounce } from 'lodash'
 import Arrow from './arrow'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 import { Template } from '@jot/models'
 import { Button } from '~/ui'
 import Page from '~/page'

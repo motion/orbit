@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 import { object } from 'prop-types'
 import { SlotFill, Segment, Input, Link, Button, Icon } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'

@@ -2,7 +2,7 @@
 import { Raw } from 'slate'
 import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
-import { computed } from '@jot/helpers'
+import { computed } from '@jot/black'
 import { getSpec } from './helpers'
 
 export default class EditorStore {

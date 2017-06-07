@@ -1,5 +1,6 @@
 import React from 'react'
-import { clr, view } from '@jot/helpers'
+import { view } from '@jot/black'
+import { clr } from '~/helpers'
 import Icon from './icon'
 import Grain from './grain'
 

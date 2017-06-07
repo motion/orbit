@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable } from '@jot/helpers'
+import { view, observable } from '@jot/black'
 
 const TOTAL_TIME = 200
 const FRAMES = 5

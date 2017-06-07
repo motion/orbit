@@ -1,6 +1,5 @@
 import { Emitter, CompositeDisposable } from 'sb-event-kit'
-import { persistStore } from '@jot/helpers'
-import ClassHelpers from './classHelpers'
+import ClassHelpers from './helpers/classHelpers'
 import autobind from 'autobind-decorator'
 import mixin from 'react-mixin'
 import { fromPromise } from 'mobx-utils'
@@ -14,7 +13,7 @@ import {
 } from 'mobx'
 import createStoreProvider from './external/storeProvider'
 import App from '~/app'
-import { IS_PROD } from '~/constants'
+import { IS_PROD } from './constants'
 
 export storeAttacher from './external/storeAttacher'
 

@@ -7,7 +7,7 @@ import 'babel-polyfill'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Gloss from '@jot/helpers/styles'
+import Gloss from '~/helpers/styles'
 
 // allow any <tag /> to use our $$parent styles
 React.createElement = Gloss.createElement

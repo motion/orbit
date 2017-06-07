@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 import { Icon } from '~/ui'
 import Editor from '~/views/editor'
 import DocumentStore from './store'

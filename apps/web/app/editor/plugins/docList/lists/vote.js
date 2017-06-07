@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, computed } from '@jot/helpers'
+import { view, computed } from '@jot/black'
 import { User, Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
 import { isEqual, sortBy } from 'lodash'

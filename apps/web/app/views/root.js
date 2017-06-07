@@ -1,5 +1,6 @@
 import React from 'react'
-import { view, Shortcuts } from '@jot/helpers'
+import { view } from '@jot/black'
+import { Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
 import { Theme, SlotFill, Button } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 import { Glow, Icon } from '~/ui'
 import Tilt from 'react-tilt'
 import DocItem from '~/views/document/item'

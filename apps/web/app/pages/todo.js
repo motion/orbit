@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/helpers'
+import { view } from '@jot/black'
 import { Document } from '@jot/models'
 import Page from '~/page'
 import DocView from '~/views/document'

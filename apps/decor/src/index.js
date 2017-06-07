@@ -1,24 +1,21 @@
 // @flow
 import mixin from 'react-mixin'
 
-type Plugin = () => {
-  decorator?: Function,
-  mixins?: Object,
-}
-
 export default function decor(plugins) {
   const decorators = []
   const mixins = []
 
-  for (const plugin of plugins) {
-    let plugin = plugin
+  for (const curPlugin of plugins) {
+    let getPlugin = curPlugin
     let options = {}
 
     // array-style config
-    if (Array.isArray(plugin)) {
-      plugin = plugin[0]
-      options = plugin[1]
+    if (Array.isArray(curPlugin)) {
+      getPlugin = curPlugin[0]
+      options = curPlugin[1]
     }
+
+    let plugin = getPlugin(options)
 
     if (plugin.decorator) {
       decorators.push(plugin.decorator)

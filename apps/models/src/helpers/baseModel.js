@@ -77,16 +77,22 @@ export default class BaseModel {
     this.database = database
     this.remoteDB = options.sync
 
+    const pouchSettings = {
+      revs_limit: 100,
+      skip_setup: true,
+    }
+    console.log(
+      `%cpouchSettings ${JSON.stringify(pouchSettings)}`,
+      'color: brown'
+    )
+
     console.time('db:connect')
     this.collection = await database.collection({
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
       autoMigrate: true,
-      pouchSettings: {
-        revsLimit: 100,
-        skipSetup: true,
-      },
+      pouchSettings,
       methods: this.compiledMethods,
     })
     console.timeEnd('db:connect')
@@ -149,7 +155,16 @@ export default class BaseModel {
       // if we have not indexed every field
       if (intersection(index, alreadyIndexedFields).length !== index.length) {
         // need to await or you get error sorting by dates, etc
+        console.log(
+          `%c[pouch] CREATE INDEX ${this.title} ${index}`,
+          'color: green'
+        )
         await this.collection.pouch.createIndex({ fields: index })
+      } else {
+        console.log(
+          `%c[pouch] HAS INDEX ${this.title} ${index}`,
+          'color: green'
+        )
       }
     }
   }

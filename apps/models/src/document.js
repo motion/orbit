@@ -111,7 +111,7 @@ class Document extends Model {
     if (text === '') {
       return await this.collection
         .find({ draft: { $ne: true } })
-        .sort({ createdAt: 'desc' })
+        // .sort({ createdAt: 'desc' })
         .limit(20)
         .exec()
     }
@@ -129,12 +129,10 @@ class Document extends Model {
   }
 
   @query placeDocsForUser = userId => {
-    return this.collection
-      .find({
-        placeId: { $exists: true },
-        draft: { $ne: true },
-      })
-      .sort({ createdAt: 'desc' })
+    return this.collection.find({
+      placeId: { $exists: true },
+      draft: { $ne: true },
+    })
   }
 
   @query forPlace = id => {
@@ -152,20 +150,6 @@ class Document extends Model {
         .elemMatch({ $eq: id })
         .sort({ createdAt: 'desc' })
     )
-  }
-
-  @query forHashtag = (slug, hashtag) => {
-    if (!slug) {
-      return null
-    }
-
-    return this.collection
-      .find({
-        hashtags: { $elemMatch: { $eq: hashtag } },
-        draft: { $ne: true },
-        places: { $elemMatch: { $eq: slug } },
-      })
-      .sort({ createdAt: 'desc' })
   }
 
   @query all = () => this.collection.find().sort({ createdAt: 'asc' })

@@ -137,27 +137,19 @@ export default class BaseModel {
     this.collection.watchForChanges()
   }
 
-  get indexes(): Array {
-    console.log('get indexes from', this.props)
-    return []
-  }
-
   createIndexes = async () => {
-    const { indexes } = this
+    const { index } = this.settings
 
-    if (indexes.length) {
+    if (index.length) {
       // TODO: pouchdb supposedly does this for you, but it was slow in profiling
       const { indexes } = await this.collection.pouch.getIndexes()
       const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
         field => Object.keys(field)[0]
       )
       // if we have not indexed every field
-      if (
-        intersection(this.settings.index, alreadyIndexedFields).length !==
-        this.settings.index.length
-      ) {
+      if (intersection(index, alreadyIndexedFields).length !== index.length) {
         // need to await or you get error sorting by dates, etc
-        await this.collection.pouch.createIndex({ fields: this.settings.index })
+        await this.collection.pouch.createIndex({ fields: index })
       }
     }
   }

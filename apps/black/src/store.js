@@ -1,9 +1,10 @@
-import autobound from './plugins/core/autobound'
-import emittable from './plugins/core/emittable'
-import automagical from './plugins/mobx/automagical'
-import subscribable from './plugins/react/subscribable'
-import subscribableHelpers from './plugins/core/subscribableHelpers'
-import storeProvidable from './plugins/react/storeProvidable'
+import decor from '@jot/decor'
+import autobound from '@jot/decor/plugins/core/autobound'
+import emittable from '@jot/decor/plugins/core/emittable'
+import automagical from '@jot/decor/plugins/mobx/automagical'
+import subscribable from '@jot/decor/plugins/react/subscribable'
+import subscribableHelpers from '@jot/decor/plugins/core/subscribableHelpers'
+import storeProvidable from '@jot/decor/plugins/react/storeProvidable'
 
 const storeDecorator = decor([
   autobound,

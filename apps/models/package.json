@@ -1,8 +1,10 @@
 {
+  "private": true,
   "name": "@jot/models",
   "version": "1.0.0",
   "main": "lib/index.js",
   "dependencies": {
+    "@jot/black": "*",
     "motion-mobx-helpers": "^1.1.2",
     "mobx": "^3.1.0",
     "motion-rxdb": "^5.2.0",

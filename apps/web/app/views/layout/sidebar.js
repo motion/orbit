@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '@jot/black'
+import { view } from '@jot/black'
 import { Shortcuts } from '~/helpers'
 import { uniqBy } from 'lodash'
 import {

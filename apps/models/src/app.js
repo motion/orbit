@@ -43,8 +43,6 @@ class App {
 
     console.log('Use App in your console to access models, stores, etc')
 
-    this.attachModels(Models)
-
     if (!database) {
       throw new Error('No config given to App!')
     }
@@ -61,25 +59,15 @@ class App {
       multiInstance: true,
       withCredentials: false,
     })
-
     console.timeEnd('create db')
+
+    await this.attachModels(Models)
 
     // images
     this.images = new PouchDB(`${database.couchUrl}/images`, {
       skipSetup: true,
       withCredentials: false,
     })
-
-    // connect models
-    const connections = Object.entries(Models).map(([name, model]) =>
-      model.connect(this.database, this.databaseConfig, {
-        sync: `${database.couchUrl}/${model.title}/`,
-      })
-    )
-
-    console.time('connect')
-    await Promise.all(connections)
-    console.timeEnd('connect')
 
     // seed db
     // settimeout to avoid laggy initial render
@@ -91,11 +79,26 @@ class App {
     console.timeEnd('start')
   }
 
-  attachModels = (models: Object) => {
-    // attach Models to app
+  attachModels = async (models: Object) => {
+    console.time('attachModels')
+    const connections = []
+
+    // attach Models to app and connect if need be
     for (const [name, model] of Object.entries(models)) {
       this[name] = model
+
+      if (!model.database) {
+        connections.push(
+          model.connect(this.database, this.databaseConfig, {
+            sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
+          })
+        )
+      }
     }
+
+    const result = await Promise.all(connections)
+    console.timeEnd('attachModels')
+    return result
   }
 
   // dev helpers
@@ -177,11 +180,11 @@ class App {
   }
 }
 
-const app = new App()
+const app = window.App || new App()
 
-if (module) {
+if (module && module.hot) {
   module.hot.accept('./all', () => {
-    console.log('hmr from @jot/models/app')
+    console.log('hmr from @jot/models/app', app)
     app.attachModels(require('./all'))
   })
 }

@@ -1,5 +1,4 @@
 export Place from './place'
-export Template from './template'
 export Document from './document'
 export Comment from './comment'
 export Image from './image'

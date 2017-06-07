@@ -1,5 +1,5 @@
 // @flow
-import { Model, query, str, array, bool } from './helpers'
+import { Model, query, str, array, bool, oneOf } from './helpers'
 import Document from './document'
 import User from './user'
 import { capitalize, some, remove } from 'lodash'
@@ -13,6 +13,7 @@ class Place extends Model {
     slug: str,
     private: bool,
     documentId: str.optional,
+    // document: oneOf(Document).optional,
     members: array.items(str),
     timestamps: true,
   }
@@ -38,7 +39,7 @@ class Place extends Model {
   }
 
   settings = {
-    title: 'Place',
+    database: 'place',
     index: ['createdAt'],
   }
 

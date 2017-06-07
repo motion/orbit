@@ -121,12 +121,13 @@ export function query(parent, property, descriptor) {
 
   if (initializer) {
     descriptor.initializer = function() {
+      const self = this
       const init = initializer.call(this)
       return function(...args) {
         return valueWrap.call(
-          this,
-          { model: this.constructor.name, property, args },
-          () => init.apply(this, args)
+          self,
+          { model: self.constructor.name, property, args },
+          () => init.apply(self, args)
         )
       }
     }

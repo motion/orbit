@@ -34,20 +34,8 @@
       ]
     ],
     "presets": [
-      [
-        "babel-preset-env",
-        {
-          "targets": {
-            "node": 8
-          },
-          "useBuiltIns": true,
-          "exclude": [
-            "transform-regenerator"
-          ]
-        }
-      ],
-      "babel-preset-stage-0",
-      "babel-preset-react"
+      "babel-preset-react",
+      "babel-preset-stage-1-without-async"
     ]
   },
   "pathType": "filePath",

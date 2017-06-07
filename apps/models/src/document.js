@@ -53,8 +53,8 @@ class Document extends Model {
   DEFAULT_CONTENT = DEFAULT_CONTENT
 
   settings = {
-    title: 'documents',
-    index: ['createdAt'],
+    database: 'documents',
+    index: ['createdAt', 'updatedAt'],
   }
 
   hooks = {
@@ -128,6 +128,15 @@ class Document extends Model {
     console.log('ids are', ids)
 
     return await this.collection.find({ _id: { $in: ids } }).exec()
+  }
+
+  @query placeDocsForUser = userId => {
+    return this.collection
+      .find({
+        placeId: { $exists: true },
+        draft: { $ne: true },
+      })
+      .sort({ createdAt: 'desc' })
   }
 
   @query forPlace = id => {

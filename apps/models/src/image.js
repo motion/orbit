@@ -15,7 +15,7 @@ class Image extends Model {
   })
 
   settings = {
-    title: 'images',
+    database: 'images',
     index: ['createdAt'],
   }
 

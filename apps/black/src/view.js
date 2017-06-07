@@ -6,6 +6,7 @@ import subscribable from './plugins/react/subscribable'
 import reactRenderArgs from './plugins/react/reactRenderArgs'
 import addContext from './plugins/react/addContext'
 import attach from './plugins/react/attach'
+import { storeProvider } from './store'
 
 const base = [
   extendsReact,
@@ -61,8 +62,8 @@ view.provide = decor([storeDecorator, ...base, ...mobx])
 view.attach = decor([attach])
 
 // import glossy from './styles'
-import { storeProvider, attach } from './store'
-import { string, object } from 'prop-types'
+// import { storeProvider, attach } from './store'
+// import { string, object } from 'prop-types'
 
 // function viewDecorator(View, options) {
 //   // extends React.Component
@@ -95,7 +96,7 @@ import { string, object } from 'prop-types'
 // view.* helpers
 //
 
-view.plain = View => view(View, { simple: true })
+// view.plain = View => view(View, { simple: true })
 
 // @view.ui passes themes
 // view.ui = View => {

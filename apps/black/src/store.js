@@ -5,19 +5,49 @@ import subscribable from './plugins/react/subscribable'
 import subscribableHelpers from './plugins/core/subscribableHelpers'
 import storeProvidable from './plugins/react/storeProvidable'
 
-import ClassHelpers from './helpers/classHelpers'
-import autobind from 'autobind-decorator'
-import mixin from 'react-mixin'
-import createStoreProvider from './external/storeProvider'
-import { IS_PROD } from './constants'
-
 const storeDecorator = decor([
   autobound,
   subscribable,
   subscribableHelpers,
   emittable,
-  automagical,
 ])
+
+export const storeProvider = decor([
+  [
+    storeProvidable,
+    {
+      storeDecorator,
+      onStoreMount(name, store, props) {
+        storeMountDecorator(store)
+        if (store.start) {
+          store.start(props)
+        }
+        return store
+      },
+      onStoreDidMount(name, store) {
+        // App.mountStore(store)
+      },
+      onStoreUnmount(name, store) {
+        // App.unmountStore(store)
+        if (store.stop) {
+          store.stop()
+        }
+        store.subscriptions.dispose()
+      },
+    },
+  ],
+])
+
+export default function store(Store) {
+  storeDecorator(Store)
+  const ProxyStore = function(...args) {
+    const store = new Store(...args)
+    config.onStoreMount(Store.constructor.name, store, args[0])
+    config.onStoreDidMount(Store.constructor.name, store, args[0])
+    return store
+  }
+  return ProxyStore
+}
 
 // (Store) {
 //     // this makes it work with hmr! :)
@@ -29,43 +59,10 @@ const storeDecorator = decor([
 //     return autobind(Store)
 //   }
 
-export const config = {
-  storeDecorator,
-  onStoreMount(name, store, props) {
-    // add subscriptions
-    store.subscriptions = new CompositeDisposable()
-    // add emitter
-    store.emit = store.emitter.emit.bind(store.emitter)
-    // unmount
-    store.subscriptions.add(store.emitter)
-    // mount actions
-    automagical(store)
-    if (store.start) {
-      store.start(props)
-    }
-    return store
-  },
-  onStoreDidMount(name, store) {
-    // App.mountStore(store)
-  },
-  onStoreUnmount(name, store) {
-    // App.unmountStore(store)
-    if (store.stop) {
-      store.stop()
-    }
-    store.subscriptions.dispose()
-  },
-}
-
-export const storeProvider = createStoreProvider(config)
-
-export function storeDecorator(Store) {
-  config.storeDecorator(Store)
-  const ProxyStore = function(...args) {
-    const store = new Store(...args)
-    config.onStoreMount(Store.constructor.name, store, args[0])
-    config.onStoreDidMount(Store.constructor.name, store, args[0])
-    return store
-  }
-  return ProxyStore
-}
+// add subscriptions
+// store.subscriptions = new CompositeDisposable()
+// // add emitter
+// store.emit = store.emitter.emit.bind(store.emitter)
+// // unmount
+// store.subscriptions.add(store.emitter)
+// mount actions

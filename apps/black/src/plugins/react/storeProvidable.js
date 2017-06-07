@@ -12,7 +12,7 @@ type InstanceOptions = {
 
 export default function storeProvidable(options) {
   const cache = new Cache()
-  const { allStores, instanceOpts } = options
+  const { allStores, instanceOpts, storeDecorator } = options
 
   return {
     decorator: Klass => {
@@ -24,9 +24,9 @@ export default function storeProvidable(options) {
       let Stores = allStores
 
       // call decorators
-      if (options.storeDecorator && allStores) {
+      if (storeDecorator && allStores) {
         for (const key of Object.keys(allStores)) {
-          Stores[key] = options.storeDecorator(allStores[key])
+          Stores[key] = storeDecorator(allStores[key])
         }
       }
 

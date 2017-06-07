@@ -85,13 +85,11 @@ class App {
     for (const [name, model] of Object.entries(models)) {
       this[name] = model
 
-      if (!model.database) {
-        connections.push(
-          model.connect(this.database, this.databaseConfig, {
-            sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
-          })
-        )
-      }
+      connections.push(
+        model.connect(this.database, this.databaseConfig, {
+          sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
+        })
+      )
     }
 
     const result = await Promise.all(connections)

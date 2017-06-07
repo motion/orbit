@@ -74,6 +74,11 @@ export default class BaseModel {
   }
 
   connect = async (database: RxDB, dbConfig: Object, options: Object) => {
+    if (this.database) {
+      console.log('hmr model')
+      return
+    }
+
     this.database = database
     this.remoteDB = options.sync
 
@@ -133,17 +138,22 @@ export default class BaseModel {
       this.collection[hook](this.hooks[hook])
     })
 
-    // sync
-    // TODO until rxdb supports query sync
-    // db[this.title].sync(this.remoteDB)
-    // only sync up! (sync down selectively on query, see query.js)
+    this.replicateToRemote()
+
+    // motion-rxdb watch for query changes
+    this.collection.watchForChanges()
+  }
+
+  // TODO until rxdb supports query sync
+  replicateToRemote = () => {
+    if (this.replicatingToRemote) {
+      return
+    }
+    this.replicatingToRemote = true
     this.collection.pouch.replicate.to(this.remoteDB, {
       live: true,
       retry: true,
     })
-
-    // motion-rxdb watch for query changes
-    this.collection.watchForChanges()
   }
 
   createIndexes = async () => {

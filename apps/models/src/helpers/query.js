@@ -23,7 +23,7 @@ function valueWrap(info, valueGet: Function) {
   const result = observable.shallowBox(undefined)
   let query = valueGet() || {}
 
-  out('query', info.model, info.property, info.args, query)
+  out('query', info.model, info.property, info.args, query.mquery, query)
 
   // subscribe and update
   let subscriber = null
@@ -121,13 +121,12 @@ export function query(parent, property, descriptor) {
 
   if (initializer) {
     descriptor.initializer = function() {
-      const self = this
       const init = initializer.call(this)
       return function(...args) {
         return valueWrap.call(
-          self,
-          { model: self.constructor.name, property, args },
-          () => init.apply(self, args)
+          this,
+          { model: this.constructor.name, property, args },
+          () => init.apply(this, args)
         )
       }
     }

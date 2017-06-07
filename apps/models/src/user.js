@@ -33,6 +33,11 @@ class User {
   }
 
   updateInfo = async (metadata: Object) => {
+    console.log('User.updateInfo', metadata)
+    // bugfix: overwriting arrays didnt work, clearing first does :|
+    for (const key of Object.keys(metadata)) {
+      await this.authDb.putUser(this.name, { metadata: { [key]: null } })
+    }
     await this.authDb.putUser(this.name, { metadata })
     await this.syncUser()
   }

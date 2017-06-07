@@ -1,5 +1,5 @@
 import React from 'react'
-import ClassHelpers from './classHelpers'
+import ClassHelpers from './helpers/classHelpers'
 import { CompositeDisposable } from 'motion-class-helpers'
 import mixin from 'react-mixin'
 import autobind from 'autobind-decorator'

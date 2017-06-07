@@ -138,7 +138,7 @@ export default class BaseModel {
   }
 
   createIndexes = async () => {
-    const { index } = this.settings
+    const index = this.settings.index || []
 
     if (index.length) {
       // TODO: pouchdb supposedly does this for you, but it was slow in profiling

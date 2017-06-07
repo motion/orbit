@@ -12,7 +12,8 @@ class Place extends Model {
     title: str,
     slug: str,
     private: bool,
-    document: oneOf(Document).optional,
+    documentId: string.optional,
+    // document: oneOf(Document).optional,
     members: array.items(str),
     timestamps: true,
   }

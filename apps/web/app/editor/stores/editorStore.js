@@ -2,7 +2,7 @@
 import { Raw } from 'slate'
 import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
-import { computed } from '~/helpers'
+import { computed } from '@jot/helpers'
 import { getSpec } from './helpers'
 
 export default class EditorStore {
@@ -60,11 +60,13 @@ export default class EditorStore {
   }
 
   // return slate-like schema
-  @computed get spec() {
+  @computed
+  get spec() {
     return getSpec(this.plugins, this.rules)
   }
 
-  @computed get allPlugins() {
+  @computed
+  get allPlugins() {
     return Object.keys(this.plugins).reduce(
       (acc, key) => ({
         ...acc,

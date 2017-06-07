@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, keycode } from '~/helpers'
+import { view, keycode } from '@jot/helpers'
 import { User } from '@jot/models'
 import { Popover, List, Form, Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'

@@ -1,5 +1,5 @@
 // @flow
-import { store } from '~/helpers'
+import { store } from '@jot/helpers'
 import { SIDEBAR_WIDTH } from '~/constants'
 import { throttle } from 'lodash'
 
@@ -41,14 +41,18 @@ export default class SidebarRootStore {
 
   private = {
     onMouseMove: event => this.dragging && this.private.onMove(event),
-    onMove: throttle(e => {
-      e.preventDefault()
-      if (this.dragging) {
-        this.width = Math.min(
-          window.innerWidth - 400,
-          Math.max(200, window.innerWidth - e.pageX)
-        )
-      }
-    }, 16, true)
+    onMove: throttle(
+      e => {
+        e.preventDefault()
+        if (this.dragging) {
+          this.width = Math.min(
+            window.innerWidth - 400,
+            Math.max(200, window.innerWidth - e.pageX)
+          )
+        }
+      },
+      16,
+      true
+    ),
   }
 }

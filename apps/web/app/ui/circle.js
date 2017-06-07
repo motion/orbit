@@ -1,4 +1,4 @@
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 
 @view
 export default class Circle {

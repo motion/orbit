@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import { object } from 'prop-types'
 import { SlotFill, Segment, Input, Link, Button, Icon } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
@@ -48,14 +48,13 @@ export default class Header {
         </bar>
         <rest $$row>
           <SlotFill.Slot name="documentActions">
-            {items => (
+            {items =>
               <actions>
                 {items}
-              </actions>
-            )}
+              </actions>}
           </SlotFill.Slot>
           <SlotFill.Slot name="actions">
-            {items => (
+            {items =>
               <actions>
                 {items}
                 <Button
@@ -69,8 +68,7 @@ export default class Header {
                   $$marginRight={-6}
                   color={[0, 0, 0, 0.5]}
                 />
-              </actions>
-            )}
+              </actions>}
           </SlotFill.Slot>
         </rest>
       </header>

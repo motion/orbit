@@ -1,4 +1,4 @@
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import node from '~/editor/node'
 import EditList from './editList'
 import { Button } from '~/ui'

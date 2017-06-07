@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '~/helpers'
+import { view, Shortcuts } from '@jot/helpers'
 import { uniqBy } from 'lodash'
 import {
   Drawer,
@@ -180,7 +180,7 @@ export default class Sidebar {
             <Login />
 
             <orgs $$row>
-              {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
+              {['motion', 'cr', 'baes', 'awe'].map((name, i) =>
                 <Button
                   key={i}
                   style={{ marginLeft: 5, marginRight: 5 }}
@@ -190,7 +190,7 @@ export default class Sidebar {
                   color={randomcolor()}
                   icon={name}
                 />
-              ))}
+              )}
             </orgs>
 
             <title $$row $$justify="space-between" $$padding={[4, 6]}>
@@ -250,11 +250,10 @@ export default class Sidebar {
           </content>
 
           <SlotFill.Slot name="sidebar">
-            {items => (
+            {items =>
               <activeSidebar>
                 {items}
-              </activeSidebar>
-            )}
+              </activeSidebar>}
           </SlotFill.Slot>
         </sidebar>
       </Drawer>

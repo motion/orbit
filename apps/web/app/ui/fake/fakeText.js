@@ -1,4 +1,4 @@
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import { range } from 'lodash'
 
 @view
@@ -24,7 +24,7 @@ export default class FakeText {
 
     return (
       <root {...props}>
-        {range(lines).map(i => (
+        {range(lines).map(i =>
           <fakeline
             key={i}
             style={{
@@ -33,7 +33,7 @@ export default class FakeText {
               width: `${this.getLineWidth(i)}%`,
             }}
           />
-        ))}
+        )}
       </root>
     )
   }

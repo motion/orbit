@@ -1,8 +1,7 @@
 // @flow
 import { observable, computed, action } from 'mobx'
 import { Model, query, str } from './helpers'
-import App from './app'
-import PouchDB from 'pouchdb-core'
+import AuthStore from './authStore'
 
 const tempId = () => {
   let id = localStorage.getItem('temp-id')
@@ -13,11 +12,14 @@ const tempId = () => {
   return id
 }
 
+@store.helpers
+@store.mobx
 class User {
-  authDb: PouchDB = null
+  authDb: ?AuthStore = null
   @observable.ref user = {}
 
-  @computed get name() {
+  @computed
+  get name() {
     return this.user.name
   }
 
@@ -25,7 +27,7 @@ class User {
     this.database = database
     this.databaseConfig = databaseConfig
     // separate pouchdb for auth
-    this.authDb = new PouchDB(`${this.databaseConfig.couchUrl}/auth`, {
+    this.auth = new AuthStore(`${this.databaseConfig.couchUrl}/auth`, {
       skip_setup: true,
       with_credentials: false,
     })
@@ -43,7 +45,7 @@ class User {
   }
 
   @action loginOrSignup = async (username: string, password: string) => {
-    App.clearErrors()
+    this.emit('clearErrors')
     let errors = []
 
     // try signup
@@ -51,14 +53,14 @@ class User {
       const login = await this.login(username, password)
       if (!login.error) {
         this.syncUser()
-        App.clearErrors()
+        this.emit('clearErrors')
         return login
       }
 
       const signup = await this.signup(username, password)
       if (!signup.error) {
         this.syncUser()
-        App.clearErrors()
+        this.emit('clearErrors')
         return signup
       }
 
@@ -87,7 +89,7 @@ class User {
   @action login = async (username: string, password: string) => {
     try {
       const info = await this.authDb.login(username, password)
-      App.clearErrors()
+      this.emit('clearErrors')
       this.syncUser()
       return { ...info, login: true }
     } catch (error) {
@@ -122,7 +124,8 @@ class User {
     this.user = this.temporaryUser
   }
 
-  @computed get tempUser() {
+  @computed
+  get tempUser() {
     return this.user && this.user.name && this.user.temp
   }
 
@@ -134,7 +137,8 @@ class User {
     }
   }
 
-  @computed get loggedIn() {
+  @computed
+  get loggedIn() {
     return this.user && !this.user.temp
   }
 

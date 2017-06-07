@@ -9,6 +9,7 @@ import rxToMobx from './external/rxToMobx'
 import { storeProvider, storeAttacher } from './store'
 import { string, object } from 'prop-types'
 import { pickBy } from 'lodash'
+import { IS_PROD } from '~/constants'
 
 const ViewHelpers = {
   componentWillMount() {
@@ -20,7 +21,7 @@ const ViewHelpers = {
   },
 }
 
-function decorateView(View, options) {
+function viewDecorator(View, options) {
   // extend React.Component
   Object.setPrototypeOf(View.prototype, React.Component.prototype)
   // add Helpers
@@ -41,6 +42,20 @@ function decorateView(View, options) {
   const DecoratedView = autobind(glossy(observer(View)))
 
   return DecoratedView
+}
+
+function decorateView(View, options) {
+  if (IS_PROD) {
+    return viewDecorator(View, options)
+  } else {
+    try {
+      return viewDecorator(View, options)
+    } catch (e) {
+      // add helpful log
+      console.error(`Error decorating view ${View.name}`, View)
+      throw e
+    }
+  }
 }
 
 //

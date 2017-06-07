@@ -1,5 +1,5 @@
 import { Emitter, CompositeDisposable } from 'sb-event-kit'
-import { persistStore } from '~/helpers'
+import { persistStore } from '@jot/helpers'
 import ClassHelpers from './classHelpers'
 import autobind from 'autobind-decorator'
 import mixin from 'react-mixin'
@@ -13,7 +13,8 @@ import {
   autorun,
 } from 'mobx'
 import createStoreProvider from './external/storeProvider'
-import App from '@jot/models'
+import App from '~/app'
+import { IS_PROD } from '~/constants'
 
 export storeAttacher from './external/storeAttacher'
 
@@ -204,8 +205,7 @@ function automagicalValue(obj, method, descriptors = {}) {
   }
 }
 
-// extends store with a proxy, make it cool
-export default function store(Store) {
+function decorateStore(Store) {
   config.storeDecorator(Store)
 
   const ProxyStore = function(...args) {
@@ -217,4 +217,17 @@ export default function store(Store) {
 
   // add our decorations
   return ProxyStore
+}
+
+// extends store with a proxy, make it cool
+export default function store(Store) {
+  if (IS_PROD) return decorateStore(Store)
+  else {
+    try {
+      return decorateStore(Store)
+    } catch (e) {
+      console.error(`Error decorating store: ${Store.name}`, Store)
+      throw e
+    }
+  }
 }

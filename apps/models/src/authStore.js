@@ -1,9 +1,7 @@
-import { store } from '~/helpers'
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
-import { API_URL, DB_CONFIG } from '~/constants'
 
-@store class AuthStore {
+export default class AuthStore {
   emit = (...args) => console.log(...args)
   superlogin = superlogin
   localDb = null
@@ -55,21 +53,9 @@ import { API_URL, DB_CONFIG } from '~/constants'
   setupDbSync(user) {
     if (!this.remoteDb && user) {
       console.log('got user', user)
-      this.remoteDb = new PouchDB(user.userDBs.supertest, { skipSetup: true })
+      this.remoteDb = new PouchDB(user.userDBs.documents, { skipSetup: true })
       this.localDb = new PouchDB(`local_db_${user.user_id}`)
       this.emit('localDbChange', this.localDb)
-
-      // un-tested... just spiked it
-      // if (allowAnonymousDb) {
-      //     anonymousLocalDb.replicate.to(this.localDb)
-      //         .on('complete', function () {
-      //             // yay, we're in sync!
-      //         }).on('error', function (err) {
-      //             // boo, we hit an error!
-      //             console.error("Error syncing local anonymous db to local user-specific db");
-      //             console.error(err);
-      //         });
-      // }
 
       // syncronize the local and remote user databases...
       this.remoteSyncHandler = this.localDb
@@ -101,12 +87,12 @@ import { API_URL, DB_CONFIG } from '~/constants'
               .join(', ')
             return reject(errors)
           }
-          reject('Registration Error:' + err.toString())
+          reject('Registration Error:' + JSON.stringify(err))
         })
     })
   }
 
-  login(username, password, callback) {
+  login(username, password) {
     return superlogin
       .login({
         username: username,
@@ -116,7 +102,6 @@ import { API_URL, DB_CONFIG } from '~/constants'
         console.log('login: user', user)
         // pre-populate the currentUserPromise with the current user
         this.currentUserPromise = Promise.resolve(user)
-
         this.setupDbSync(user)
         return user
       })
@@ -142,5 +127,3 @@ import { API_URL, DB_CONFIG } from '~/constants'
     return Promise.resolve(session)
   }
 }
-
-export default new AuthStore()

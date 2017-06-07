@@ -1,4 +1,5 @@
-import { clr } from '~/helpers'
+// @flow
+import { clr } from '@jot/helpers'
 
 const LIGHT = {
   background: '#fff',

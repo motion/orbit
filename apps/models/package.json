@@ -7,10 +7,7 @@
     "mobx": "^3.1.0",
     "motion-rxdb": "^5.2.0",
     "pouchdb-core": "^6.2.0",
-    "pouchdb-adapter-http": "^6.1.2",
-    "pouchdb-adapter-idb": "^6.1.2",
-    "pouchdb-authentication": "^0.5.5",
-    "pouchdb-replication": "^6.1.2"
+    "superlogin-client": "^0.5.3"
   },
   "peerDependencies": {
     "rxjs": "^5.3.0"

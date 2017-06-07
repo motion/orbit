@@ -1,4 +1,4 @@
-import { store } from '~/helpers'
+import { store } from '@jot/helpers'
 import { findDOMNode } from '../helpers'
 import { BLOCKS } from '../constants'
 

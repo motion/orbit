@@ -1,4 +1,4 @@
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import { Theme, PassThrough, Popover, Segment, Button } from '~/ui'
 import { BLOCKS, MARKS } from '../constants'
 
@@ -19,17 +19,17 @@ export default class SelectBar {
       >
         <Theme name="dark">
           <bar $$row>
-            {pluginCategories.map(category => (
+            {pluginCategories.map(category =>
               <Segment padded key={category}>
                 {editorStore.helpers
                   .contextButtonsFor(category)
-                  .map((button, i) => (
+                  .map((button, i) =>
                     <PassThrough editorStore={editorStore} key={i}>
                       {button}
                     </PassThrough>
-                  ))}
+                  )}
               </Segment>
-            ))}
+            )}
           </bar>
         </Theme>
       </Popover>

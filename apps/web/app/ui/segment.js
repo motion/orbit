@@ -1,6 +1,6 @@
 import React from 'react'
 import { string, object } from 'prop-types'
-import { view, inject } from '~/helpers'
+import { view, inject } from '@jot/helpers'
 import Button from './button'
 import { pickBy } from 'lodash'
 import { Provider } from 'react-tunnel'
@@ -83,11 +83,11 @@ export default class Segment {
         .map(children, _ => _)
         .filter(child => !!child)
 
-      finalChildren = realChildren.map((child, index) => (
+      finalChildren = realChildren.map((child, index) =>
         <Provider key={index} provide={getContext(index, realChildren.length)}>
           {() => child}
         </Provider>
-      ))
+      )
     } else if (Array.isArray(items)) {
       finalChildren = items.map((seg, index) => {
         const { text, id, icon, ...segmentProps } = typeof seg === 'object'

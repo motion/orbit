@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view, observable } from '@jot/helpers'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
 const Layout: HTMLElement = WidthProvider(ReactGridLayout)
@@ -55,11 +55,11 @@ export default class Grid {
         isResizable={isResizable}
         onLayoutChange={onLayoutChange}
       >
-        {items.map((item, i) => (
+        {items.map((item, i) =>
           <gridItem key={item._id || item.key}>
             {item}
           </gridItem>
-        ))}
+        )}
       </Layout>
     )
   }

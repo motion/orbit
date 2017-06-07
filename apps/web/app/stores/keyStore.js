@@ -1,5 +1,5 @@
 // @flow
-import { store } from '~/helpers'
+import { store } from '@jot/helpers'
 import { ShortcutManager } from 'react-shortcuts'
 
 const keymap = {

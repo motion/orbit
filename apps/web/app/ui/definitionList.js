@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 
 @view.ui
 export default class DefinitionList {
@@ -10,7 +10,7 @@ export default class DefinitionList {
 
     return (
       <dl {...props}>
-        {rows.map((item, i) => (
+        {rows.map((item, i) =>
           <row key={`${item}${i}`}>
             <dt>{item}</dt>
             <dd>
@@ -19,7 +19,7 @@ export default class DefinitionList {
                 : target[item]}
             </dd>
           </row>
-        ))}
+        )}
       </dl>
     )
   }

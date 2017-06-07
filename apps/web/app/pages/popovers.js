@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import { Form, Input, Segment, Button, Popover } from '~/ui'
 import { Place } from '@jot/models'
 
@@ -22,9 +22,9 @@ export default class PopoversTest extends React.Component {
       <page>
         <section $rxdb if={false}>
           {this.state.places &&
-            this.state.places.map((place, index) => (
+            this.state.places.map((place, index) =>
               <place key={index}>{place.title}</place>
-            ))}
+            )}
         </section>
 
         <section $popovers if={true}>
@@ -191,7 +191,6 @@ export default class PopoversTest extends React.Component {
               right
             </Button>
           </Segment>
-
 
           <br />
           <br />

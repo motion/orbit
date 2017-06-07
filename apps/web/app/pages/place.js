@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, query, autorun, observable } from '~/helpers'
+import { view, query, autorun, observable } from '@jot/helpers'
 import { isEqual } from 'lodash'
 import { User, Place, Document } from '@jot/models'
 import { Segment, Button } from '~/ui'

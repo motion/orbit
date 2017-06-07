@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import node from '~/editor/node'
 import { replacer } from '~/editor/helpers'
 import { BLOCKS } from '~/editor/constants'

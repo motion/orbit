@@ -1,4 +1,4 @@
-import { view, inject } from '~/helpers'
+import { view, inject } from '@jot/helpers'
 import { Provider } from 'react-tunnel'
 
 @inject(context => ({ ui: context.ui }))

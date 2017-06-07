@@ -1,4 +1,4 @@
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import { BLOCKS } from '~/editor/constants'
 import { Button } from '~/ui'
 

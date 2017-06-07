@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view, observable } from '@jot/helpers'
 import gradients from './helpers/gradients'
 import TimeAgo from 'react-timeago'
 import { sample } from 'lodash'
@@ -61,7 +61,9 @@ export default class DocItem {
         className="Tilt-inner"
         style={{
           ...style,
-          background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, ${gradient[0]}, ${gradient[1]})`,
+          background: `linear-gradient(${Math.floor(
+            Math.random() * 360
+          )}deg, ${gradient[0]}, ${gradient[1]})`,
         }}
         {...props}
       >

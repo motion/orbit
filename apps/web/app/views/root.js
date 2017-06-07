@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, Shortcuts } from '~/helpers'
+import { view, Shortcuts } from '@jot/helpers'
 import { object } from 'prop-types'
 import { Theme, SlotFill, Button } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
@@ -19,7 +19,8 @@ import Draft from './document/draft'
 // simply @view.attach('layoutStore') for example in any sub-view
 
 // optimized re-render for sidebar resize
-@view class LayoutWrap {
+@view
+class LayoutWrap {
   render({ layoutStore, children }) {
     return (
       <wrap $$right={layoutStore.sidebar.trueWidth}>

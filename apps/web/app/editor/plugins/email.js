@@ -1,6 +1,6 @@
 import { replacer } from '~/editor/helpers'
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import node from '~/editor/node'
 import { Button } from '~/ui'
 import { BLOCKS } from '~/editor/constants'
@@ -33,7 +33,8 @@ class EmailStore {
       },
       {
         ...nate,
-        content: "I don't know, there's really too much blur for me to see anything",
+        content:
+          "I don't know, there's really too much blur for me to see anything",
       },
     ]
 
@@ -66,7 +67,7 @@ class EmailNode {
         </none>
         <emails if={contents !== null}>
           <inner>
-            {contents.map(email => (
+            {contents.map(email =>
               <email>
                 <from $$row>
                   <name>{email.from.name}</name>
@@ -74,7 +75,7 @@ class EmailNode {
                 </from>
                 <content>{email.content}</content>
               </email>
-            ))}
+            )}
           </inner>
           <Button $button onClick={store.onReset}>reset</Button>
         </emails>

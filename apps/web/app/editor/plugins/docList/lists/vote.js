@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, computed } from '~/helpers'
+import { view, computed } from '@jot/helpers'
 import { User, Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
 import { isEqual, sortBy } from 'lodash'
@@ -49,7 +49,9 @@ const darkBlue = `#0099e5`
 export default class VotesList {
   votesText = votes => {
     const plural = (s, i) => s + (i === 1 ? '' : 's')
-    return `${votes.length} ${plural('vote', votes.length)} by ${listify(votes)}`
+    return `${votes.length} ${plural('vote', votes.length)} by ${listify(
+      votes
+    )}`
   }
 
   render({
@@ -86,7 +88,7 @@ export default class VotesList {
             {sortBy(listStore.docs || [], [doc => store.score(doc, votes)])
               .reverse()
               .slice(0, 10)
-              .map((doc, index) => (
+              .map((doc, index) =>
                 <itemContainer key={doc._id} $notFirst={index > 0}>
                   <item>
                     <votes>
@@ -120,7 +122,7 @@ export default class VotesList {
                     {this.votesText(votes[doc._id] || [])}
                   </status>
                 </itemContainer>
-              ))}
+              )}
           </docs>
         </list>
       </container>

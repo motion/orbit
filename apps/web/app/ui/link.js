@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable } from '~/helpers'
+import { view, observable } from '@jot/helpers'
 import Router from '~/router'
 import { IS_ELECTRON } from '~/constants'
 

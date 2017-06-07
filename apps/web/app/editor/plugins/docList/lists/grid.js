@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import { Grid, Button } from '~/ui'
 import DocItem from '~/views/document/item'
 
@@ -32,7 +32,7 @@ export default class GridList {
           isDraggable={store.editing}
           isResizable={store.editing}
           items={(listStore.docs || [])
-            .map(doc => (
+            .map(doc =>
               <DocItem
                 key={doc._id || Math.random()}
                 draggable
@@ -42,7 +42,7 @@ export default class GridList {
                 hideMeta={!store.editing}
                 doc={doc}
               />
-            ))}
+            )}
         />
       </grid>
     )

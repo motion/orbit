@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import { Document } from '@jot/models'
 import Page from '~/page'
 import { flatten } from 'lodash'

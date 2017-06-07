@@ -2,7 +2,7 @@ import AutoReplace from 'slate-auto-replace'
 import { Block, Raw } from 'slate'
 import { BLOCKS } from '~/editor/constants'
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/helpers'
 import node from '~/editor/node'
 
 @node
@@ -116,11 +116,10 @@ const plugins = [
   },
 ]
 
-const LabelNode = props => (
+const LabelNode = props =>
   <label style={{ fontSize: 13 }} {...props.attributes}>
     {props.children}
   </label>
-)
 
 export default class FormPlugin {
   name = 'form'

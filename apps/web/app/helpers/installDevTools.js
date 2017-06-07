@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '~/app'
-import * as RxDB from 'motion-rxdb'
+import * as RxDB from 'rxdb'
 import Mobx from 'mobx'
 import MobxUtils from 'mobx-utils'
 import Rx from 'rxjs'

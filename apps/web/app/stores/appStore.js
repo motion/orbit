@@ -1,6 +1,6 @@
 // @flow
 import { observable, computed, action, autorunAsync } from 'mobx'
-import * as RxDB from 'motion-rxdb'
+import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'

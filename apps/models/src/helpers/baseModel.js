@@ -140,7 +140,7 @@ export default class BaseModel {
 
     this.replicateToRemote()
 
-    // motion-rxdb watch for query changes
+    // rxdb watch for query changes
     this.collection.watchForChanges()
   }
 

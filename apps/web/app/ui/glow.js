@@ -181,8 +181,8 @@ export default class HoverGlow {
     const glow = (
       <overlay ref={setRootRef} style={style} {...itemProps}>
         <glow
-          $$zIndex={background ? -1 : 0}
           style={{
+            zIndex: background ? -1 : 0,
             opacity: 1,
             transform: `
                 translateX(${translateX}px)

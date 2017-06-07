@@ -7,7 +7,7 @@ import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
-import Seed from './seed'
+import Seeds from './seeds'
 import { uniqBy } from 'lodash'
 
 RxDB.QueryChangeDetector.enable()
@@ -16,6 +16,8 @@ RxDB.QueryChangeDetector.enable()
 import * as Models from './all'
 
 class App {
+  seeds: Seeds
+
   db = null
   @observable.ref errors = []
   @observable.ref mountedStores = {}
@@ -69,11 +71,11 @@ class App {
       withCredentials: false,
     })
 
-    // seed db
+    // seeds db
     // settimeout to avoid laggy initial render
     setTimeout(() => {
-      this.seed = new Seed()
-      this.seed.start()
+      this.seeds = new Seeds()
+      this.seeds.start()
     }, 100)
 
     console.timeEnd('start')

@@ -38,16 +38,16 @@ class DraftStore {
   store: DraftStore,
 })
 export default class Draft {
+  componentWillReceiveProps({ isActive }) {
+    if (!this.props.isActive && isActive) this.props.store.onCreateDraft()
+  }
+
   render({ isActive, store }) {
     const { doc } = store
 
     return (
       <draft>
-        <Portal
-          isOpened={isActive}
-          onOpen={store.onCreateDraft}
-          isOpen={isActive}
-        >
+        <Portal isOpened={true} isOpen={true}>
           <Drawer
             from="bottom"
             open={isActive}

@@ -1,4 +1,4 @@
-import { ensurePlace } from '~/helpers/seed/helpers'
+import { ensurePlace } from './helpers'
 
 export const HOME_DOC_SLUG = '__home__'
 

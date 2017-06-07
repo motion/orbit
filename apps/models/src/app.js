@@ -7,7 +7,6 @@ import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
-import Seeds from './seeds'
 import { uniqBy } from 'lodash'
 
 RxDB.QueryChangeDetector.enable()
@@ -16,8 +15,6 @@ RxDB.QueryChangeDetector.enable()
 import * as Models from './all'
 
 class App {
-  seeds: Seeds
-
   db = null
   @observable.ref errors = []
   @observable.ref mountedStores = {}
@@ -54,17 +51,18 @@ class App {
 
     // connect to pouchdb
     console.time('create db')
-    // const pouchSettings = {
-    //   revs_limit: 10,
-    //   skip_setup: true,
-    //   with_credentials: false,
-    // }
     this.database = await RxDB.create({
       adapter: 'idb',
       name: database.name,
       password: database.password,
       multiInstance: true,
       withCredentials: false,
+      pouchSettings: {
+        skip_setup: true,
+        // live: true,
+        retry: true,
+        since: 'now',
+      },
     })
     console.timeEnd('create db')
 
@@ -75,13 +73,6 @@ class App {
       skip_setup: true,
       with_credentials: false,
     })
-
-    // seeds db
-    // settimeout to avoid laggy initial render
-    setTimeout(() => {
-      this.seeds = new Seeds()
-      this.seeds.start()
-    }, 100)
 
     console.timeEnd('start')
   }

@@ -82,9 +82,16 @@ class User {
   loginOrSignup = async (email, password) => {
     try {
       await this.login(email, password)
-    } catch (e) {
-      console.error(e)
-      await this.signup(email, password)
+    } catch (loginError) {
+      try {
+        await this.signup(email, password)
+      } catch (signupError) {
+        if (loginError.message === 'Invalid username or password') {
+          throw loginError
+        } else {
+          throw signupError
+        }
+      }
     }
   }
 

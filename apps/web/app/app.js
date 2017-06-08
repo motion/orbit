@@ -15,6 +15,6 @@ if (!IS_PROD) {
   module.hot.accept('@jot/models', () => {
     console.log('got hmr for App, not restarting fully to avoid craziness')
     App.attachModels(require('@jot/models'))
-    render()
+    require('./start').render()
   })
 }

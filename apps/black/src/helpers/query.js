@@ -116,7 +116,7 @@ function valueWrap(info, valueGet: Function) {
   return response
 }
 
-export function query(parent, property, descriptor) {
+export default function query(parent, property, descriptor) {
   const { initializer, value } = descriptor
 
   if (initializer) {

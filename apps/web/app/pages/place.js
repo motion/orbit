@@ -8,6 +8,7 @@ import Page from '~/page'
 import Router from '~/router'
 import DocumentPage from '~/pages/doc'
 
+// todo this.doc can go direct onto class now :)
 @view.provide({
   placeStore: class PlaceStore {
     place = Place.get({ slug: this.props.slug || Router.params.slug })

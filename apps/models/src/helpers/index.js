@@ -1,6 +1,6 @@
 import BaseModel from './baseModel'
 
-export { query } from './query'
+export { query } from '@jot/black'
 
 export * from './properties'
 

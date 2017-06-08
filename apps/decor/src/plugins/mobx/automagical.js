@@ -15,11 +15,11 @@ export default function automagical(options) {
         return Klass
       }
 
-      // patch constructor
-      const ProxyClass = function(...args) {
-        const klass = new Klass(...args)
-        automagic(klass)
-        return klass
+      class ProxyClass extends Klass {
+        constructor(...args) {
+          super(...args)
+          automagic(this)
+        }
       }
 
       return ProxyClass
@@ -38,6 +38,7 @@ const FILTER_KEYS = {
   setTimeout: true,
   addEvent: true,
   watch: true,
+  props: true,
 }
 
 function observableRxToObservableMobx(obj, method) {

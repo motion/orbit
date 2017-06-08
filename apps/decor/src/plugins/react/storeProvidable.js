@@ -26,7 +26,6 @@ export default function storeProvidable(options) {
       // call decorators
       if (storeDecorator && allStores) {
         for (const key of Object.keys(allStores)) {
-          console.log('decos')
           Stores[key] = storeDecorator(allStores[key])
         }
       }
@@ -71,7 +70,6 @@ export default function storeProvidable(options) {
 
           const getProps = {
             get: () => this._props,
-            set: () => {},
             configurable: true,
           }
 
@@ -81,8 +79,9 @@ export default function storeProvidable(options) {
 
             const createStore = () => {
               Object.defineProperty(Store.prototype, 'props', getProps)
-              const store = new Store(this._props)
+              const store = new Store()
               delete Store.prototype.props // safety, remove hack
+              // then define directly
               Object.defineProperty(store, 'props', getProps)
               return store
             }

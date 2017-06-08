@@ -4,6 +4,8 @@ import Document from './document'
 import User from './user'
 import { capitalize, some, remove } from 'lodash'
 
+console.log('query', query)
+
 const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
 
 class Place extends Model {

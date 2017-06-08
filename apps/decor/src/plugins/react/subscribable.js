@@ -13,6 +13,7 @@ export default options => ({
     }
 
     Object.defineProperty(Klass.prototype, 'subscriptions', {
+      configurable: true,
       get() {
         if (!this.__subscriptions) {
           this.__subscriptions = new CompositeDisposable()

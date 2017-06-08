@@ -1,6 +1,8 @@
 // @flow
 import reactMixin from 'react-mixin'
 
+const DECOR_KEY = '__IS_DECOR_DECORATED'
+
 export default function decor(plugins) {
   const allPlugins = []
 
@@ -26,6 +28,15 @@ export default function decor(plugins) {
   return function decorDecorator(Klass) {
     let decoratedClass = Klass
 
+    if (!Klass) {
+      throw `Didnt pass a valid class or function to decorator`
+    }
+
+    // avoid decorating twice
+    if (Klass[DECOR_KEY]) {
+      return Klass
+    }
+
     for (const plugin of allPlugins) {
       if (plugin.mixin && Klass.prototype) {
         reactMixin(Klass.prototype, plugin.mixin)
@@ -34,6 +45,8 @@ export default function decor(plugins) {
         decoratedClass = plugin.decorator(decoratedClass) || decoratedClass
       }
     }
+
+    Klass[DECOR_KEY] = true
 
     return decoratedClass
   }

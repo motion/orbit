@@ -9,7 +9,7 @@ const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
 @store
-export default class User {
+class User {
   user = null
   superlogin = superlogin
   localDb = null
@@ -98,16 +98,16 @@ export default class User {
       console.log('registerNewUser: ', res)
       return await this.login(username, password)
     } catch (error) {
-      console.error('registerNewUser error: ', err)
-      if (err && err.validationErrors) {
-        var errors = Object.keys(err.validationErrors)
+      console.error('registerNewUser error: ', error)
+      if (error && error.validationErrors) {
+        var errors = Object.keys(error.validationErrors)
           .map(key => {
-            return err.validationErrors[key]
+            return error.validationErrors[key]
           })
           .join(', ')
-        throw errors
+        console.error(errors)
       }
-      throw `Registration Error: ${JSON.stringify(err)}`
+      throw `Registration Error: ${JSON.stringify(error)}`
     }
   }
 
@@ -133,3 +133,5 @@ export default class User {
     return session
   }
 }
+
+export default new User()

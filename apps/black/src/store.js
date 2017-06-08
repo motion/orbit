@@ -16,7 +16,6 @@ export const storeDecorator = decor([
 const config = {
   storeDecorator,
   onStoreMount(name, store, props) {
-    // storeDe(store)
     if (store.start) {
       store.start(props)
     }

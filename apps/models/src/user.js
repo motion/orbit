@@ -97,9 +97,10 @@ class User {
 
   signup = async (email, password) => {
     try {
+      const username = email
       const res = await superlogin.register({
         email,
-        username: email,
+        username,
         password,
         confirmPassword: password,
       })

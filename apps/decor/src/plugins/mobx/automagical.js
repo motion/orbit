@@ -79,7 +79,7 @@ function automagicalValue(obj, method, descriptors = {}) {
 
   // auto @computed get, do this before getting val
   const descriptor = descriptors[method]
-  if (descriptor && typeof descriptor.get) {
+  if (descriptor && !!descriptor.get) {
     const getter = {
       [method]: null,
     }
@@ -158,10 +158,7 @@ function automagicalValue(obj, method, descriptors = {}) {
   // auto actions
   if (isFunction) {
     // @action functions
-    obj[method] = action(
-      `${obj.constructor.name}.${obj.id ? `${obj.id}.` : ''}${method}`,
-      obj[method]
-    )
+    obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
   } else {
     // auto everything is an @observable.ref
     extendShallowObservable(obj, { [method]: val })

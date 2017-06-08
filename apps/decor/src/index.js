@@ -1,10 +1,10 @@
 // @flow
 import reactMixin from 'react-mixin'
 
-const DECOR_KEY = '__IS_DECOR_DECORATED'
-
 export default function decor(plugins) {
   const allPlugins = []
+  // unique key per decorator instance
+  const DECOR_KEY = `__IS_DECOR_DECORATED${Math.random()}`
 
   for (const curPlugin of plugins.filter(Boolean)) {
     let getPlugin = curPlugin
@@ -34,6 +34,7 @@ export default function decor(plugins) {
 
     // avoid decorating twice
     if (Klass[DECOR_KEY]) {
+      console.log('avoid decorating twice', Klass)
       return Klass
     }
 

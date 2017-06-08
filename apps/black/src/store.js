@@ -54,21 +54,3 @@ export default function store(Store) {
   }
   return ProxyStore
 }
-
-// (Store) {
-//     // this makes it work with hmr! :)
-//     if (Store.isDecorated) return Store
-//     Store.isDecorated = true
-//     // mixins
-//     mixin(Store.prototype, ClassHelpers)
-
-//     return autobind(Store)
-//   }
-
-// add subscriptions
-// store.subscriptions = new CompositeDisposable()
-// // add emitter
-// store.emit = store.emitter.emit.bind(store.emitter)
-// // unmount
-// store.subscriptions.add(store.emitter)
-// mount actions

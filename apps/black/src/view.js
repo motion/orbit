@@ -38,7 +38,8 @@ const viewDecorator = decor(getPlugins({ mobx: true, autobind: true }))
 
 // @view({ ...stores }) shorthand
 export default function view(viewOrStores: Object | Class | Function) {
-  if (typeof viewOrStores === 'object') {
+  const isStores = typeof viewOrStores === 'object'
+  if (isStores) {
     const stores = viewOrStores
     return View => storeViewDecorator({ stores })(viewDecorator(View))
   }

@@ -1,32 +1,42 @@
-goals:
+# upnext
+- doclists that just point to parent docId
+
+recursion really is apt here:
+- places => are just docs with primary: true?
+  - even more inception:
+    - document is an ORG
+    - homepage is just this document
+      - places are: documentId => ORG.document.id
+        - place docs are just another level
+
+# goals
   - get to bootstrappability
     - hosted iwritey.com instance we can use to plan
     - OMP working on sidebar
     - doc polish with todos
+  - until its usable for myself:
+    - import my notes from simplenote
+    - production build so its fast
+    - working links
+    - fix overflow everywhere
+    - another few days of general polish (stuff thats not polished:)
+      - topbar
+      - contextbar
+      - private/public
+      - links
+      - images
+      - movement in lists
+      - indentation everywhere
+    - login bugs
 
-until its usable for myself:
-  - import my notes from simplenote
-  - production build so its fast
-  - working links
-  - fix overflow everywhere
-  - another few days of general polish (stuff thats not polished:)
-    - topbar
-    - contextbar
-    - private/public
-    - links
-    - images
-    - movement in lists
-    - indentation everywhere
-  - login bugs
-
-wants:
+# wants
   - super fast nav:
-    - cmd + t filter to move between docs
+    - cmd + t filter to move between docs + create
   - make use of pouch encrpytion - private docs! password protected?
   - focused nodes like image, doclist so i can delete and navigate w cursor
   - doc history (revisions view)
 
-What slate is missing:
+# What slate is missing
   - we need helpers for types of things:
     - "static" that doesnt let you delete it or change its type
     - "one-of-a-kind" that means onEnter it doesnt replicate
@@ -99,3 +109,46 @@ https://github.com/rafaelquintanilha/experiments/tree/master/sortable-target
 
 Multiple Sortable Targets
 http://localhost:3002/
+
+
+
+
+# doc blocks are actually docs
+
+findOrCreateById()
+every block has an id
+when you save ->
+  extract all blocks
+  updateorcreatebyid for each one
+
+this means:
+  - no need for multiple slate editors just one
+  - just requires multiple rx streams which are light
+  - and more http calls generally
+  - unlocks:
+    - "references"
+      - share blocks between any doc and they update realtime
+      - does this allow a blog? reference a blog post on homepage?
+      - sharing tables/graphs/images seems more useful than text
+      - and sharing todos
+    - drag/drop
+      - technically easier drag and drop? (just have orderIndex on every doc)
+      - drag and drop paragraph from one doc to another ;)
+
+# file management type views
+- hashtags?
+- or nice grid with dnd?
+
+# templates
+- useful with blocks
+- right click => use template / define as new template
+
+# chat?
+there are at minimum some ideas from slack we should look at. we already have easy switching, i think app-like feel is missing from any docs
+- realtime threaded comments will happen, which is close to chat
+  - are they useful?
+  - maybe UX here is important and could bring usage way up
+- how does this scale up to a more chatlike interface
+  - is that doable without sacrificng focus/product
+  - how could it be useful?
+    - contextual chats

@@ -1,6 +1,6 @@
 import React from 'react'
 import { string, object } from 'prop-types'
-import { view, inject } from '@jot/black'
+import { view } from '@jot/black'
 import { inject } from '~/helpers'
 import Button from './button'
 import { Provider } from 'react-tunnel'

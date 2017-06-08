@@ -1,6 +1,7 @@
 export view from './view'
 export store from './store'
 export query from './helpers/query'
+export * from 'mobx'
 
 // use this in @stores to autorun autoruns
 export const watch = fn => {

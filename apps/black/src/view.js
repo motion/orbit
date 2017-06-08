@@ -17,11 +17,8 @@ const base = [
   subscribableHelpers,
   reactRenderArgs,
   options => ({ decorator: gloss }),
-  autobound,
 ]
-
 const mobx = [observer]
-
 const ui = [
   [
     addContext,
@@ -33,7 +30,7 @@ const ui = [
   ],
 ]
 
-const viewDecorator = decor([...base, ...mobx])
+const viewDecorator = decor([...base, ...mobx, autobound])
 
 // @view({ ...stores }) shorthand
 export default function view(viewOrStores: Object | Class | Function) {
@@ -44,9 +41,9 @@ export default function view(viewOrStores: Object | Class | Function) {
 }
 
 view.plain = decor(base)
-view.ui = decor([...base, ...ui])
+view.ui = decor([...base, ...ui, autobound])
 view.provide = stores => View =>
   storeViewDecorator({ stores, context: stores })(viewDecorator(View))
-view.attach = decor([attach])
+view.attach = names => decor([[attach, { names }]])
 
 window.x = view

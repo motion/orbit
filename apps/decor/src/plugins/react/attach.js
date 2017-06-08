@@ -4,8 +4,8 @@ import { pickBy } from 'lodash'
 
 export default function attacher(options) {
   return {
-    decorator: View =>
-      class ContextAttacher extends React.Component {
+    decorator: View => {
+      return class ContextAttacher extends React.Component {
         static contextTypes = {
           stores: object,
         }
@@ -16,11 +16,12 @@ export default function attacher(options) {
               {...this.props}
               {...pickBy(
                 this.context.stores,
-                (value, key) => key.indexOf(names) >= 0
+                (value, key) => key.indexOf(options.names) >= 0
               )}
             />
           )
         }
-      },
+      }
+    },
   }
 }

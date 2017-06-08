@@ -1,6 +1,6 @@
 // @flow
-import { Document } from '@jot/models'
 import { debug } from '~/helpers'
+import { Document } from '@jot/models'
 
 const print = debug('documentStore')
 

@@ -1,5 +1,6 @@
 import React from 'react'
-import { view, clr } from '~/helpers'
+import { view } from '@jot/black'
+import { clr } from '~/helpers'
 
 @view
 export default class Loading {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import { Theme, PassThrough, Segment } from '~/ui'
 
 @view
@@ -9,11 +9,11 @@ export default class ContextBar {
       <bar $$row>
         <Segment padded>
           {editorStore.pluginCategories.map(category =>
-            editorStore.helpers.barButtonsFor(category).map((button, i) => (
+            editorStore.helpers.barButtonsFor(category).map((button, i) =>
               <PassThrough editorStore={editorStore} key={i}>
                 {button}
               </PassThrough>
-            ))
+            )
           )}
         </Segment>
       </bar>

@@ -1,7 +1,7 @@
 import React from 'react'
-import { view, computed } from '~/helpers'
+import { view, computed } from '@jot/black'
 import node from '~/editor/node'
-import App, { Document } from '@jot/models'
+import { Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '~/ui'
 import { isEqual } from 'lodash'
 import Router from '~/router'
@@ -33,7 +33,7 @@ export default class DocLinkList {
             </Button>
           </noDocs>
           <docs if={hasLoaded && hasDocs}>
-            {(listStore.docs || []).map((doc, index) => (
+            {(listStore.docs || []).map((doc, index) =>
               <item
                 key={doc._id}
                 onClick={() => Router.go(doc.url())}
@@ -49,7 +49,7 @@ export default class DocLinkList {
 
                 <text>{doc.title}</text>
               </item>
-            ))}
+            )}
           </docs>
         </list>
       </docLinkList>

@@ -1,5 +1,5 @@
 // @flow
-import { store } from '~/helpers'
+import { store } from '@jot/black'
 import { Document } from '@jot/models'
 import SidebarStore from '~/stores/sidebarStore'
 

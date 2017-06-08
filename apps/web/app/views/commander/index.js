@@ -1,5 +1,6 @@
 import React from 'react'
-import { view, Shortcuts } from '~/helpers'
+import { view } from '@jot/black'
+import { Shortcuts } from '~/helpers'
 import { Portal, Icon } from '~/ui'
 import { SIDEBAR_WIDTH } from '~/constants'
 import DocView from '~/views/document'
@@ -37,7 +38,7 @@ export default class Commander {
                 </overlaySearch>
                 <results>
                   <matches if={docs.length > 0}>
-                    {docs.map((doc, index) => (
+                    {docs.map((doc, index) =>
                       <match
                         onClick={() => store.navTo(doc)}
                         key={doc._id}
@@ -48,7 +49,7 @@ export default class Commander {
                       >
                         {doc.getTitle()}
                       </match>
-                    ))}
+                    )}
                   </matches>
                   <noMatches if={docs.length === 0}>
                     No Matches

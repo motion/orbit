@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { view, $ } from '~/helpers'
+import { view } from '@jot/black'
+import { $ } from '~/helpers'
 import { throttle } from 'lodash'
 import { offset } from '~/views/helpers'
 import resizer from 'element-resize-detector'
@@ -196,7 +197,8 @@ export default class HoverGlow {
             width={width}
             style={{
               boxShadow: `${shadowOffsetLeft}px ${shadowOffsetTop}px ${shadowAmt}px ${colorRGB}`,
-              transform: `scale(${scale * (clicked ? clickScale : 1)}) translateZ(0px)`,
+              transform: `scale(${scale *
+                (clicked ? clickScale : 1)}) translateZ(0px)`,
               opacity: track ? opacity : 0,
               marginLeft: -width / 2,
               marginTop: -height / 2,

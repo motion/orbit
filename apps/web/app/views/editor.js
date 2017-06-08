@@ -1,5 +1,6 @@
+import { view, observable } from '@jot/black'
+import { viewCache } from '~/helpers'
 import React from 'react'
-import { view, observable, viewCache } from '~/helpers'
 import Editor from '~/editor'
 import * as Plugins from '~/editor/plugins'
 import { flatten } from 'lodash'

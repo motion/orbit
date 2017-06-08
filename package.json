@@ -6,7 +6,7 @@
     "web": "npm run check-dependencies && cd apps/web && npm start",
     "web-debug": "cd apps/web && npm run start-debug",
     "clean": "rm -rf apps/*/lib && rm -rf apps/*/node_modules",
-    "build": "lerna exec --parallel --scope api --scope @jot/models --scope @jot/couch -- babel src --out-dir lib -s true",
+    "build": "lerna exec --parallel --scope api --scope @jot/models --scope @jot/black --scope @jot/decor --scope @jot/couch -- babel src --out-dir lib -s true",
     "build-web": "cd apps/web && npm run build",
     "compile": "npm run clean && npm run build",
     "watch": "npm run build -- --watch",

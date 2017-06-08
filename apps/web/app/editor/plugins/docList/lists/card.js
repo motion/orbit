@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import { Glow, Icon } from '~/ui'
 import Tilt from 'react-tilt'
 import DocItem from '~/views/document/item'
@@ -19,7 +19,7 @@ export default class CardList {
   render({ listStore }) {
     return (
       <FlipMove $docs duration={300} easing="ease-out">
-        {(listStore.docs || []).map((doc, i) => (
+        {(listStore.docs || []).map((doc, i) =>
           <Tilt
             key={doc._id}
             options={{
@@ -47,7 +47,7 @@ export default class CardList {
               />
             </doc>
           </Tilt>
-        ))}
+        )}
       </FlipMove>
     )
   }

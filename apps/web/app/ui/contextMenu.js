@@ -1,11 +1,12 @@
 // @flow
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import { List, Popover } from '~/ui'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
 
-@view.ui class ContextMenuTarget {
+@view.ui
+class ContextMenuTarget {
   static contextTypes = {
     contextMenu: object,
   }

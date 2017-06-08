@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, query, autorun, observable } from '~/helpers'
+import { view, query, autorun, observable } from '@jot/black'
 import { isEqual } from 'lodash'
 import { User, Place, Document } from '@jot/models'
 import { Segment, Button } from '~/ui'
@@ -8,6 +8,7 @@ import Page from '~/page'
 import Router from '~/router'
 import DocumentPage from '~/pages/doc'
 
+// todo this.doc can go direct onto class now :)
 @view.provide({
   placeStore: class PlaceStore {
     place = Place.get({ slug: this.props.slug || Router.params.slug })

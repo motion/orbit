@@ -1,3 +1,4 @@
+// @flow
 import { clr } from '~/helpers'
 
 const LIGHT = {

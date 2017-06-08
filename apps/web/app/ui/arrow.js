@@ -1,4 +1,4 @@
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 
 @view.ui
 export default class Arrow {

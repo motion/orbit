@@ -1,7 +1,7 @@
 // @flow
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
-import type RxDB from 'motion-rxdb'
+import type RxDB from 'rxdb'
 
 export default class BaseModel {
   // for use by @query
@@ -83,7 +83,7 @@ export default class BaseModel {
     this.remoteDB = options.sync
 
     const pouchSettings = {
-      skip_setup: true,
+      skipSetup: true,
       live: true,
       retry: true,
       since: 'now',
@@ -140,7 +140,7 @@ export default class BaseModel {
 
     this.replicateToRemote()
 
-    // motion-rxdb watch for query changes
+    // rxdb watch for query changes
     this.collection.watchForChanges()
   }
 

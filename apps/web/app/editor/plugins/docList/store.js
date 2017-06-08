@@ -1,4 +1,4 @@
-import { watch } from '~/helpers'
+import { watch } from '@jot/black'
 import { Document } from '@jot/models'
 
 export default class DocListStore {

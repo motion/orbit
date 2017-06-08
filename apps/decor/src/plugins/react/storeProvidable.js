@@ -10,14 +10,12 @@ type InstanceOptions = {
   attach: Array<string>,
 }
 
-export default function createStoreProvider(options: Object) {
+export default function storeProvidable(options) {
   const cache = new Cache()
+  const { stores: allStores, instanceOpts, storeDecorator, context } = options
 
-  return function storeProvider(
-    allStores: Object,
-    instanceOpts: InstanceOptions
-  ) {
-    return function decorator(Klass) {
+  return {
+    decorator: Klass => {
       // hmr restore
       if (instanceOpts && instanceOpts.module) {
         cache.revive(instanceOpts.module, allStores)
@@ -26,9 +24,9 @@ export default function createStoreProvider(options: Object) {
       let Stores = allStores
 
       // call decorators
-      if (options.storeDecorator && allStores) {
+      if (storeDecorator && allStores) {
         for (const key of Object.keys(allStores)) {
-          Stores[key] = options.storeDecorator(allStores[key])
+          Stores[key] = storeDecorator(allStores[key])
         }
       }
 
@@ -37,7 +35,7 @@ export default function createStoreProvider(options: Object) {
         @observable _props = {}
 
         getChildContext() {
-          const Stores = instanceOpts.context
+          const Stores = context
           if (Stores) {
             if (options.warnOnOverwriteStore && this.context.stores) {
               Object.keys(Stores).forEach(name => {
@@ -72,7 +70,6 @@ export default function createStoreProvider(options: Object) {
 
           const getProps = {
             get: () => this._props,
-            set: () => {},
             configurable: true,
           }
 
@@ -82,8 +79,9 @@ export default function createStoreProvider(options: Object) {
 
             const createStore = () => {
               Object.defineProperty(Store.prototype, 'props', getProps)
-              const store = new Store(this._props)
+              const store = new Store()
               delete Store.prototype.props // safety, remove hack
+              // then define directly
               Object.defineProperty(store, 'props', getProps)
               return store
             }
@@ -144,7 +142,7 @@ export default function createStoreProvider(options: Object) {
       hoistStatics(StoreProvider, Klass)
 
       // add stores to context
-      if (instanceOpts.context) {
+      if (context) {
         StoreProvider.contextTypes = {
           stores: object,
         }
@@ -154,6 +152,6 @@ export default function createStoreProvider(options: Object) {
       }
 
       return StoreProvider
-    }
+    },
   }
 }

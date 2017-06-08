@@ -1,5 +1,6 @@
 import React, { Children, cloneElement } from 'react'
-import { view, Shortcuts } from '~/helpers'
+import { view } from '@jot/black'
+import { Shortcuts } from '~/helpers'
 import FakeText from './fake/fakeText'
 import { range } from 'lodash'
 import ListItem from './listItem'
@@ -196,7 +197,7 @@ class List {
     if (placeholder) {
       return (
         <list {...props}>
-          {range(10).map(i => (
+          {range(10).map(i =>
             <ListItem
               key={i}
               fakeAvatar
@@ -204,7 +205,7 @@ class List {
               primary={<FakeText lines={1} fontSize={12} />}
               secondary={<FakeText lines={1} fontSize={10} />}
             />
-          ))}
+          )}
         </list>
       )
     }
@@ -214,7 +215,8 @@ class List {
       ? Children.map(children, (item, i) => rowProps =>
           item
             ? cloneElement(item, itemProps(i, rowProps, item.type.isListItem))
-            : null)
+            : null
+        )
       : items.map(getListItem)
 
     // if no need, just get them right away

@@ -1,8 +1,8 @@
 import MentionsPlugin from './mentions-core'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 
 export default MentionsPlugin({
-  Mention: props => (
+  Mention: props =>
     <span
       style={{
         color: 'green',
@@ -10,18 +10,17 @@ export default MentionsPlugin({
       {...props.attributes}
     >
       {props.children}
-    </span>
-  ),
+    </span>,
   Suggestions: @view class Suggestions {
     render({ suggestions, selected }) {
       return (
         <div>
           <items>
-            {suggestions.map((suggestion, index) => (
+            {suggestions.map((suggestion, index) =>
               <item key={index} $active={index === selected}>
                 {suggestion}
               </item>
-            ))}
+            )}
           </items>
         </div>
       )

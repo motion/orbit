@@ -20,7 +20,7 @@ console.timeEnd('splash')
 window.Buffer = require('buffer/').Buffer
 
 // BOOT
-window.restart = require('./start').start
+require('./start')
 
 // hmr
 module && module.hot && module.hot.accept()

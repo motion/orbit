@@ -19,7 +19,7 @@ class FeedStore {
     e.preventDefault()
     Place.create({
       title: this.place.value,
-      authorId: User.user.name,
+      authorId: User.name,
     })
   }
 }

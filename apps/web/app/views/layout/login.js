@@ -13,12 +13,6 @@ import { HEADER_HEIGHT } from '~/constants'
     passwordRef = null
     error = false
 
-    get step() {
-      if (!User.user || (User.user && !User.user.name)) return 1
-      if (User.tempUser) return 2
-      if (User.loggedIn) return 3
-    }
-
     finish = async () => {
       this.loggingIn = true
       await User.loginOrSignup(this.usernameRef.value, this.passwordRef.value)
@@ -27,21 +21,7 @@ import { HEADER_HEIGHT } from '~/constants'
 
     onSubmit = (event: Event) => {
       event.preventDefault()
-      if (this.step === 2) {
-        this.finish()
-      }
-    }
-
-    setUsernameRef = ref => {
-      this.usernameRef = ref
-    }
-
-    setPasswordRef = ref => {
-      this.passwordRef = ref
-      if (ref) {
-        ref.focus()
-        window.x = ref
-      }
+      this.finish()
     }
 
     onUsernameKey = (event: Event) => {
@@ -74,14 +54,14 @@ export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <Form if={store.step < 3} $$undraggable onSubmit={store.onSubmit}>
+        <Form if={!User.loggedIn} $$undraggable onSubmit={store.onSubmit}>
           <Segment>
             <Input
               $input
               $error={store.error}
               name="email"
               onKeyDown={store.onUsernameKey}
-              getRef={store.setUsernameRef}
+              getRef={store.ref('usermname').set}
               placeholder="your name..."
             />
             <Input
@@ -91,7 +71,7 @@ export default class Login {
               type="password"
               placeholder="password"
               onKeyDown={store.onPasswordKey}
-              getRef={store.setPasswordRef}
+              getRef={store.ref('password').set}
             />
             <Button onClick={store.finish}>
               {store.loggingIn ? '⌛' : '✅'}
@@ -99,17 +79,17 @@ export default class Login {
           </Segment>
         </Form>
 
-        <step if={store.step === 3}>
+        <step if={User.loggedIn}>
           <text>
             hi
-            <username $$ellipse> {User.user.name}</username>
+            <username $$ellipse> {User.name}</username>
           </text>
           <Popover target={<Button icon="down" />} background openOnHover>
             <List
               width={150}
               items={[
                 <List.Item
-                  primary={User.user.name}
+                  primary={User.name}
                   after={<Button icon="power" onClick={() => User.logout()} />}
                 />,
               ]}

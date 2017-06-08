@@ -31,9 +31,9 @@ class VoteStore {
 
     const votes = Object.assign({}, data.get('votes') || {})
     const voters = votes[_id] || []
-    votes[_id] = includes(voters, User.user.name)
-      ? without(voters, User.user.name)
-      : [...voters, User.user.name]
+    votes[_id] = includes(voters, User.name)
+      ? without(voters, User.name)
+      : [...voters, User.name]
 
     setData(data.set('votes', votes))
   }
@@ -95,7 +95,7 @@ export default class VotesList {
                       <Button
                         icon={'up'}
                         iconColor={
-                          includes(votes[doc._id] || [], User.user.name)
+                          includes(votes[doc._id] || [], User.name)
                             ? 'green'
                             : '#ccc'
                         }

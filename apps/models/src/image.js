@@ -11,7 +11,7 @@ class Image extends Model {
   }
 
   static defaultProps = props => ({
-    authorId: User.user && User.user.name,
+    authorId: User.user && User.name,
   })
 
   settings = {

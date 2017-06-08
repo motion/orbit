@@ -17,7 +17,7 @@ class Comment extends Model {
 
   hooks = {
     preInsert(comment) {
-      comment.authorId = User.user.name
+      comment.authorId = User.name
       comment.parentId = comment.parentId || ''
     },
   }

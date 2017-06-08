@@ -87,6 +87,7 @@ class User {
     try {
       await this.login(email, password)
     } catch (loginError) {
+      console.log('loginError', loginError)
       try {
         await this.signup(email, password)
       } catch (signupError) {

@@ -12,9 +12,9 @@ export default App
 
 // hmr
 if (!IS_PROD) {
-  module.hot.accept('@jot/models', () => {
+  module.hot.accept('@jot/models', async () => {
     console.log('got hmr for App, not restarting fully to avoid craziness')
-    App.attachModels(require('@jot/models'))
+    await App.attachModels(require('@jot/models'))
     require('./start').render()
   })
 }

@@ -25,7 +25,7 @@ export default function emittable(options = DEFAULT_OPTS) {
       })
 
       // bind emit directly
-      Object.defineProperty(Klass.prototype, emitProp, {
+      Object.defineProperty(Klass.prototype, options.emitProp, {
         get() {
           return this[emitterProp].emit
         },

@@ -11,7 +11,14 @@ import DocumentPage from '~/pages/doc'
 @view.provide({
   placeStore: class PlaceStore {
     place = Place.get({ slug: this.props.slug || Router.params.slug })
-    doc = watch(() => this.place && Document.homeForPlace(this.place._id))
+
+    start() {
+      this.watch(async () => {
+        if (this.place) {
+          this.doc = await Document.homeForPlace(this.place._id).exec()
+        }
+      })
+    }
 
     createDoc = title => {
       Document.create({ title, places: [this.place.slug] })

@@ -7,6 +7,11 @@ export default options => ({
       return Klass
     }
 
+    if (Klass.prototype.subscriptions) {
+      console.log('skip, already has subscriptions')
+      return Klass
+    }
+
     Object.defineProperty(Klass.prototype, 'subscriptions', {
       get() {
         if (!this.__subscriptions) {

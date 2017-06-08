@@ -1,4 +1,5 @@
 // @flow
+import { store } from '@jot/black'
 import { observable, computed, action } from 'mobx'
 import { Model, query, str } from './helpers'
 import AuthStore from './authStore'
@@ -12,6 +13,7 @@ const tempId = () => {
   return id
 }
 
+@store
 class User {
   authStore: AuthStore
 

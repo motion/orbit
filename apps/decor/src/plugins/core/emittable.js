@@ -14,7 +14,7 @@ export default function emittable(options) {
       Object.defineProperty(Klass.prototype, emitterProp, {
         get() {
           const KEY = `__${emitterProp}`
-          if (!this[emitterProp]) {
+          if (!this[KEY]) {
             this[KEY] = new Emitter()
             // auto add to susbcriptions
             if (this.subscriptions) {
@@ -28,7 +28,6 @@ export default function emittable(options) {
       // bind emit directly
       Object.defineProperty(Klass.prototype, emitProp, {
         get() {
-          console.log('getting', this[emitterProp])
           return this[emitterProp].emit
         },
       })

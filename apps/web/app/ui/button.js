@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { view, inject } from '@jot/black'
-import { clr } from '~/helpers'
+import { view } from '@jot/black'
+import { inject, clr } from '~/helpers'
 import Icon from './icon'
 import Glow from './glow'
 import Popover from './popover'

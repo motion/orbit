@@ -13,11 +13,11 @@ import gloss from './gloss'
 
 const base = [
   extendsReact,
-  autobound,
   subscribable,
   subscribableHelpers,
   reactRenderArgs,
   options => ({ decorator: gloss }),
+  autobound,
 ]
 
 const mobx = [observer]

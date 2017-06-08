@@ -1,5 +1,5 @@
 // @flow
-import mixin from 'react-mixin'
+import reactMixin from 'react-mixin'
 
 export default function decor(plugins) {
   const decorators = []
@@ -29,10 +29,10 @@ export default function decor(plugins) {
   return function decorDecorator(Klass) {
     let decoratedClass = Klass
     for (const decorator of decorators) {
-      decoratedClass = decorator(decoratedClass)
+      decoratedClass = decorator(decoratedClass) || decoratedClass
     }
     for (const mixin of mixins) {
-      mixin(Klass.prototype, mixin)
+      reactMixin(Klass.prototype, mixin)
     }
     return decoratedClass
   }

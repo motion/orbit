@@ -6,38 +6,40 @@ import subscribable from '@jot/decor/lib/plugins/react/subscribable'
 import subscribableHelpers from '@jot/decor/lib/plugins/core/subscribableHelpers'
 import storeProvidable from '@jot/decor/lib/plugins/react/storeProvidable'
 
-const storeDecorator = decor([
+export const storeDecorator = decor([
   autobound,
   subscribable,
   subscribableHelpers,
   emittable,
 ])
 
-export const storeProvider = decor([
-  [
-    storeProvidable,
-    {
-      storeDecorator,
-      onStoreMount(name, store, props) {
-        storeMountDecorator(store)
-        if (store.start) {
-          store.start(props)
-        }
-        return store
+const storeViewDecorator = options =>
+  decor([
+    [
+      storeProvidable,
+      {
+        ...options,
+        storeDecorator,
+        onStoreMount(name, store, props) {
+          storeMountDecorator(store)
+          if (store.start) {
+            store.start(props)
+          }
+          return store
+        },
+        onStoreDidMount(name, store) {
+          // App.mountStore(store)
+        },
+        onStoreUnmount(name, store) {
+          // App.unmountStore(store)
+          if (store.stop) {
+            store.stop()
+          }
+          store.subscriptions.dispose()
+        },
       },
-      onStoreDidMount(name, store) {
-        // App.mountStore(store)
-      },
-      onStoreUnmount(name, store) {
-        // App.unmountStore(store)
-        if (store.stop) {
-          store.stop()
-        }
-        store.subscriptions.dispose()
-      },
-    },
-  ],
-])
+    ],
+  ])
 
 export default function store(Store) {
   storeDecorator(Store)

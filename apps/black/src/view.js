@@ -8,7 +8,7 @@ import subscribable from '@jot/decor/lib/plugins/react/subscribable'
 import reactRenderArgs from '@jot/decor/lib/plugins/react/reactRenderArgs'
 import addContext from '@jot/decor/lib/plugins/react/addContext'
 import attach from '@jot/decor/lib/plugins/react/attach'
-import { storeProvider } from './store'
+import { storeViewDecorator } from './store'
 import gloss from './gloss'
 
 const base = [
@@ -35,20 +35,18 @@ const ui = [
 
 const viewDecorator = decor([...base, ...mobx])
 
-const withStores = (Stores, options) => View =>
-  storeProvider(Stores, options)(viewDecorator(View))
-
 // @view({ ...stores }) shorthand
 export default function view(viewOrStores: Object | Class | Function) {
   if (typeof viewOrStores === 'object') {
-    return withStores(viewOrStores)
+    return stores => View => storeViewDecorator({ stores })(viewDecorator(View))
   }
   return viewDecorator(viewOrStores)
 }
 
 view.plain = decor(base)
 view.ui = decor([...base, ...ui])
-view.provide = withStores
+view.provide = stores => View =>
+  storeViewDecorator({ stores, context: stores })(viewDecorator(View))
 view.attach = decor([attach])
 
 window.x = view

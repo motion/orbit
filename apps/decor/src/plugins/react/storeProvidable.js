@@ -12,7 +12,7 @@ type InstanceOptions = {
 
 export default function storeProvidable(options) {
   const cache = new Cache()
-  const { allStores, instanceOpts, storeDecorator } = options
+  const { stores: allStores, instanceOpts, storeDecorator, context } = options
 
   return {
     decorator: Klass => {
@@ -35,7 +35,7 @@ export default function storeProvidable(options) {
         @observable _props = {}
 
         getChildContext() {
-          const Stores = instanceOpts.context
+          const Stores = context
           if (Stores) {
             if (options.warnOnOverwriteStore && this.context.stores) {
               Object.keys(Stores).forEach(name => {
@@ -142,7 +142,7 @@ export default function storeProvidable(options) {
       hoistStatics(StoreProvider, Klass)
 
       // add stores to context
-      if (instanceOpts.context) {
+      if (context) {
         StoreProvider.contextTypes = {
           stores: object,
         }

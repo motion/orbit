@@ -1,5 +1,5 @@
-export { view } from './view'
-export { store } from './store'
+export view from './view'
+export store from './store'
 export query from './helpers/query'
 
 // use this in @stores to autorun autoruns

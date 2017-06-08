@@ -3,7 +3,7 @@ export default options => ({
   decorator: Klass => {
     // avoid fn classes
     if (!Klass.prototype || !Klass.prototype.render) {
-      return
+      return Klass
     }
 
     // preact-like render

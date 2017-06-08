@@ -83,6 +83,7 @@ class User {
     try {
       await this.login(email, password)
     } catch (e) {
+      console.error(e)
       await this.signup(email, password)
     }
   }

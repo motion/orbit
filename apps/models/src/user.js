@@ -45,7 +45,7 @@ class User {
   }
 
   @action loginOrSignup = async (username: string, password: string) => {
-    this.emit('clearErrors')
+    // this.emit('clearErrors')
     let errors = []
 
     // try signup
@@ -53,14 +53,14 @@ class User {
       const login = await this.login(username, password)
       if (!login.error) {
         this.syncUser()
-        this.emit('clearErrors')
+        // this.emit('clearErrors')
         return login
       }
 
       const signup = await this.signup(username, password)
       if (!signup.error) {
         this.syncUser()
-        this.emit('clearErrors')
+        // this.emit('clearErrors')
         return signup
       }
 
@@ -89,7 +89,7 @@ class User {
   @action login = async (username: string, password: string) => {
     try {
       const info = await this.authDb.login(username, password)
-      this.emit('clearErrors')
+      // this.emit('clearErrors')
       this.syncUser()
       return { ...info, login: true }
     } catch (error) {

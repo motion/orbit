@@ -7,6 +7,9 @@ const keymap = {
     left: 'left',
     right: 'right',
     up: 'up',
+    j: 'j', // down
+    k: 'k', // up
+    d: 'd', // doc
     down: 'down',
     enter: 'enter',
     esc: 'esc',

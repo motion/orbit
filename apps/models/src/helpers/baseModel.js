@@ -74,8 +74,25 @@ export default class BaseModel {
   }
 
   connect = async (database: RxDB, dbConfig: Object, options: Object) => {
+    if (this.database) {
+      console.log('hmr model')
+      return
+    }
+
     this.database = database
     this.remoteDB = options.sync
+
+    const pouchSettings = {
+      skip_setup: true,
+      live: true,
+      retry: true,
+      since: 'now',
+    }
+
+    console.log(
+      `%cpouchSettings ${JSON.stringify(pouchSettings)}`,
+      'color: brown'
+    )
 
     console.time('db:connect')
     this.collection = await database.collection({
@@ -83,10 +100,7 @@ export default class BaseModel {
       schema: this.compiledSchema,
       statics: this.statics,
       autoMigrate: true,
-      pouchSettings: {
-        revsLimit: 100,
-        skipSetup: true,
-      },
+      pouchSettings,
       methods: this.compiledMethods,
     })
     console.timeEnd('db:connect')
@@ -124,17 +138,22 @@ export default class BaseModel {
       this.collection[hook](this.hooks[hook])
     })
 
-    // sync
-    // TODO until rxdb supports query sync
-    // db[this.title].sync(this.remoteDB)
-    // only sync up! (sync down selectively on query, see query.js)
+    this.replicateToRemote()
+
+    // motion-rxdb watch for query changes
+    this.collection.watchForChanges()
+  }
+
+  // TODO until rxdb supports query sync
+  replicateToRemote = () => {
+    if (this.replicatingToRemote) {
+      return
+    }
+    this.replicatingToRemote = true
     this.collection.pouch.replicate.to(this.remoteDB, {
       live: true,
       retry: true,
     })
-
-    // motion-rxdb watch for query changes
-    this.collection.watchForChanges()
   }
 
   createIndexes = async () => {
@@ -149,7 +168,17 @@ export default class BaseModel {
       // if we have not indexed every field
       if (intersection(index, alreadyIndexedFields).length !== index.length) {
         // need to await or you get error sorting by dates, etc
+        console.log(
+          `%c[pouch] CREATE INDEX ${this.title} ${JSON.stringify(index)}`,
+          'color: green'
+        )
+
         await this.collection.pouch.createIndex({ fields: index })
+      } else {
+        console.log(
+          `%c[pouch] HAS INDEX ${this.title} ${index}`,
+          'color: green'
+        )
       }
     }
   }

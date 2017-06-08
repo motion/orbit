@@ -26,24 +26,20 @@ class User {
     this.databaseConfig = databaseConfig
     // separate pouchdb for auth
     this.authDb = new PouchDB(`${this.databaseConfig.couchUrl}/auth`, {
-      skipSetup: true,
-      withCredentials: false,
+      skip_setup: true,
+      with_credentials: false,
     })
-    this.sync()
+    this.syncUser()
   }
 
   updateInfo = async (metadata: Object) => {
-    await this.authDb.putUser(this.name, { metadata })
-    await this.syncMetadata()
-  }
-
-  @action async syncMetadata() {
-    try {
-      const info = await this.authDb.getUser(this.name)
-      this.user = info
-    } catch (error) {
-      console.log('error fetching info', error)
+    console.log('User.updateInfo', metadata)
+    // bugfix: overwriting arrays didnt work, clearing first does :|
+    for (const key of Object.keys(metadata)) {
+      await this.authDb.putUser(this.name, { metadata: { [key]: null } })
     }
+    await this.authDb.putUser(this.name, { metadata })
+    await this.syncUser()
   }
 
   @action loginOrSignup = async (username: string, password: string) => {
@@ -54,14 +50,14 @@ class User {
     try {
       const login = await this.login(username, password)
       if (!login.error) {
-        this.sync()
+        this.syncUser()
         App.clearErrors()
         return login
       }
 
       const signup = await this.signup(username, password)
       if (!signup.error) {
-        this.sync()
+        this.syncUser()
         App.clearErrors()
         return signup
       }
@@ -92,7 +88,7 @@ class User {
     try {
       const info = await this.authDb.login(username, password)
       App.clearErrors()
-      this.sync()
+      this.syncUser()
       return { ...info, login: true }
     } catch (error) {
       return { error: error || 'error logging in', login: false }
@@ -104,31 +100,20 @@ class User {
     this.clearUser()
   }
 
-  @action setUsername = (name: string) => {
-    console.log('set username', this.user)
-    this.user = { ...this.user, name }
-    console.log(this.user)
-    localStorage.setItem('tempUsername', name)
-  }
-
   @action clearErrors = () => {
     this.errors = []
   }
 
-  @action getSession = async () => {
-    return await this.authDb.getSession()
-  }
+  getSession = () => this.authDb.getSession()
+  getUser = (name: string) => this.authDb.getUser(name || this.name)
 
-  @action sync = async () => {
+  @action syncUser = async () => {
     const session = await this.getSession()
     const loggedIn = session && session.userCtx.name
     if (loggedIn) {
-      this.user = session.userCtx
+      this.user = await this.getUser(session.userCtx.name)
     } else {
       this.user = this.temporaryUser
-    }
-    if (this.user && this.user.name) {
-      this.syncMetadata()
     }
   }
 

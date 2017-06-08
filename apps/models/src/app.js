@@ -7,7 +7,6 @@ import pHTTP from 'pouchdb-adapter-http'
 import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
-import Seed from './seed'
 import { uniqBy } from 'lodash'
 
 RxDB.QueryChangeDetector.enable()
@@ -58,6 +57,12 @@ class App {
       password: database.password,
       multiInstance: true,
       withCredentials: false,
+      pouchSettings: {
+        skip_setup: true,
+        // live: true,
+        retry: true,
+        since: 'now',
+      },
     })
     console.timeEnd('create db')
 
@@ -65,16 +70,9 @@ class App {
 
     // images
     this.images = new PouchDB(`${database.couchUrl}/images`, {
-      skipSetup: true,
-      withCredentials: false,
+      skip_setup: true,
+      with_credentials: false,
     })
-
-    // seed db
-    // settimeout to avoid laggy initial render
-    setTimeout(() => {
-      this.seed = new Seed()
-      this.seed.start()
-    }, 100)
 
     console.timeEnd('start')
   }
@@ -87,13 +85,11 @@ class App {
     for (const [name, model] of Object.entries(models)) {
       this[name] = model
 
-      if (!model.database) {
-        connections.push(
-          model.connect(this.database, this.databaseConfig, {
-            sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
-          })
-        )
-      }
+      connections.push(
+        model.connect(this.database, this.databaseConfig, {
+          sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
+        })
+      )
     }
 
     const result = await Promise.all(connections)

@@ -39,10 +39,6 @@ export default class SidebarRootStore {
     this.on(window, 'resize', this.setWindowSize)
   }
 
-  handleShortcut = action => {
-    if (action === 'toggleSidebar') this.toggle()
-  }
-
   private = {
     onMouseMove: event => this.dragging && this.private.onMove(event),
     onMove: throttle(

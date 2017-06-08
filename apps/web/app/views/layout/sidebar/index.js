@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view, Shortcuts } from '~/helpers'
-import { uniqBy } from 'lodash'
+import { uniqBy, sortBy } from 'lodash'
 import {
   Drawer,
   Text,
@@ -33,24 +33,43 @@ const DragHandle = SortableHandle(() => (
 )) //<span style={{ padding: 10 }}>::</span>) // This can be any component you want
 
 @view class Item {
-  render({ active, index, task, ...props }) {
+  render({
+    active,
+    inProgress,
+    onDoubleClick,
+    noDrag,
+    onClick,
+    index,
+    task,
+    ...props
+  }) {
     const className = 'strikethrough ' + (task.archive ? 'active' : '')
 
     // css structure is for archive animation
     return (
-      <item $$undraggable $first={index === 0} $active={active === true}>
-        <DragHandle />
+      <item
+        onClick={onClick}
+        onDoubleClick={onDoubleClick}
+        $$undraggable
+        $first={index === 0}
+        $active={active === true}
+        $inProgress={inProgress}
+      >
+        <greenDot if={inProgress} />
+        <DragHandle if={!noDrag} />
         <content>
           <Text $text {...props}>
-            <div className={className}><p><span>{task.text}</span></p></div>
+            <div className={className}>
+              <p><span>{task.text} {task.sort}</span></p>
+            </div>
           </Text>
           <bottom $$row>
             <tags>
               June 2 by Steel
             </tags>
-            <tag onMouseDown={() => Router.go(task.doc.url())}>
+            <Button onMouseDown={() => Router.go(task.doc.url())}>
               {task.doc.title}
-            </tag>
+            </Button>
           </bottom>
         </content>
       </item>
@@ -60,6 +79,19 @@ const DragHandle = SortableHandle(() => (
   static style = {
     content: {
       flex: 3,
+      marginLeft: 5,
+    },
+    greenDot: {
+      background: '#54ff54',
+      width: 10,
+      opacity: 0.5,
+      height: 10,
+      borderRadius: 10,
+      margin: 10,
+      border: `1px solid #24cc24`,
+    },
+    inProgress: {
+      borderTop: '1px solid #ddd',
     },
     first: {
       borderTop: '1px solid #ddd',
@@ -80,29 +112,10 @@ const DragHandle = SortableHandle(() => (
       fontSize: 14,
       alignItems: 'center',
       justifyContent: 'space-between',
+      transition: 'background 60ms ease-in',
     },
     active: {
-      background: '#eee',
-    },
-    tag: {
-      padding: [0, 6],
-      cursor: 'pointer',
-      textSelect: 'none',
-      textOverflow: 'ellipsis',
-      border: '1px solid #ddd',
-      fontSize: 12,
-      maxWidth: 100,
-      textAlign: 'center',
-      flex: 1,
-      color: 'rgba(0,0,0,.4)',
-      transition: 'background 50ms ease-in',
-      borderRadius: 5,
-      '&:hover': {
-        background: '#eee',
-      },
-      '&:active': {
-        background: '#ddd',
-      },
+      background: 'rgba(254, 255, 237, 1)',
     },
     span: {
       paddingTop: 2,
@@ -111,24 +124,39 @@ const DragHandle = SortableHandle(() => (
 }
 
 /* sortable eats index, so add _index for item styling */
-const SortableItem = SortableElement(({ _index, value }) => (
-  <div style={{ zIndex: 1000000 }}><Item index={_index} task={value} /></div>
-))
-
-const SortableList = SortableContainer(({ items }) => {
-  return (
-    <ul>
-      {items.map((task, index) => (
-        <SortableItem
-          key={task.key}
-          _index={index}
-          index={index}
-          value={task}
-        />
-      ))}
-    </ul>
+const SortableItem = SortableElement(
+  ({ active, onDoubleClick, onClick, _index, value }) => (
+    <div style={{ zIndex: 1000000 }}>
+      <Item
+        active={active}
+        onClick={onClick}
+        onDoubleClick={onDoubleClick}
+        index={_index}
+        task={value}
+      />
+    </div>
   )
-})
+)
+
+const SortableList = SortableContainer(
+  ({ active, onDoubleClick, onClick, items }) => {
+    return (
+      <ul>
+        {items.map((task, index) => (
+          <SortableItem
+            onClick={() => onClick(task)}
+            onDoubleClick={() => onDoubleClick(task)}
+            active={active && active.key === task.key}
+            key={task.key}
+            _index={index}
+            index={index}
+            value={task}
+          />
+        ))}
+      </ul>
+    )
+  }
+)
 
 @view.attach('layoutStore')
 @view({
@@ -162,7 +190,7 @@ export default class Sidebar {
 
   render({ layoutStore, store }) {
     return (
-      <Shortcuts name="all" handler={layoutStore.sidebar.handleShortcut}>
+      <Shortcuts name="all" handler={store.handleShortcut}>
         <Drawer
           noOverlay
           open={layoutStore.sidebar.active}
@@ -178,7 +206,7 @@ export default class Sidebar {
             <top>
               <Login />
 
-              <orgs $$row>
+              <orgs if={false} $$row>
                 {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
                   <Button
                     key={i}
@@ -193,10 +221,29 @@ export default class Sidebar {
               </orgs>
 
               <title $$row $$justify="space-between" $$padding={[4, 6]}>
+                <input
+                  $search
+                  placeholder="current task"
+                  onChange={e => (store.filter = e.target.value)}
+                />
+              </title>
+
+              <activeItem>
+                <Item
+                  if={store.inProgress}
+                  task={store.inProgress}
+                  active={false}
+                  onClick={() => {}}
+                  inProgress
+                  noDrag
+                />
+              </activeItem>
+
+              <title $$row $$justify="space-between" $$padding={[4, 6]}>
                 <top $$row>
                   <input
                     $search
-                    placeholder="tasks"
+                    placeholder={User.user.name + "'s tasks"}
                     onChange={e => (store.filter = e.target.value)}
                   />
                   <Segment>
@@ -237,6 +284,7 @@ export default class Sidebar {
                 onSetCollapse={store.ref('allPlacesClosed').set}
               >
                 <ContextMenu
+                  $context
                   options={[
                     {
                       title: 'Delete',
@@ -245,9 +293,13 @@ export default class Sidebar {
                   ]}
                 >
                   <SortableList
+                    onSortEnd={store.onSortEnd}
+                    onClick={store.onSelect}
+                    onDoubleClick={store.onSetProgress}
+                    active={store.activeTask}
                     items={store.tasks}
                     useDragHandle={true}
-                    onSortEnd={this.onSortEnd}
+                    onSortEnd={store.onSortEnd}
                   />
                 </ContextMenu>
               </Pane>
@@ -276,6 +328,12 @@ export default class Sidebar {
       top: 0,
       right: 0,
       bottom: 0,
+    },
+    title: {
+      marginTop: 0,
+    },
+    context: {
+      flex: 1,
     },
     content: {
       flex: 1,

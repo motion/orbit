@@ -28,21 +28,30 @@ class PlaceTile {
   }
 }
 
-@view({
-  store: class HomeStore {
-    editing = true
-    layout = watch(() => (User.loggedIn && User.user.layout) || [])
+class HomeStore {
+  editing = true
 
-    userPlace = watch(
-      () => User.loggedIn && Place.get({ slug: User.user.name })
-    )
-    placeDocs = watch(() => User.loggedIn && Document.placeDocsForUser())
+  userPlace = watch(() => User.loggedIn && Place.get({ slug: User.user.name }))
+  placeDocs = watch(() => User.loggedIn && Document.placeDocsForUser())
 
-    updateLayout = async layout => {
-      await User.updateInfo({ layout })
-      console.log('updatedlayout', layout)
+  get layout() {
+    if (this.updateVersion === 0) {
+      return []
     }
-  },
+    return User.user.layout
+  }
+
+  updateVersion = 0
+  updateLayout = async layout => {
+    // bullshit react grid calls onLayoutChange on first run
+    this.updateVersion++
+    if (this.updateVersion === 1) return
+    await User.updateInfo({ layout })
+  }
+}
+
+@view({
+  store: HomeStore,
 })
 export default class HomePage {
   render({ store }) {

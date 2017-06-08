@@ -33,7 +33,6 @@ import { HEADER_HEIGHT } from '~/constants'
 
     setUsernameRef = ref => {
       this.usernameRef = ref
-      if (ref) ref.focus()
     }
 
     setPasswordRef = ref => {

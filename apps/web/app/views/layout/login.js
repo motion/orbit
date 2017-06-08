@@ -9,13 +9,13 @@ import { HEADER_HEIGHT } from '~/constants'
 @view({
   store: class LoginStore {
     loggingIn = false
-    usernameRef = null
-    passwordRef = null
+    email = null
+    password = null
     error = false
 
     finish = async () => {
       this.loggingIn = true
-      await User.loginOrSignup(this.usernameRef.value, this.passwordRef.value)
+      await User.loginOrSignup(this.email.value, this.password.value)
       this.loggingIn = false
     }
 
@@ -24,13 +24,13 @@ import { HEADER_HEIGHT } from '~/constants'
       this.finish()
     }
 
-    onUsernameKey = (event: Event) => {
+    onEmailKey = (event: Event) => {
       switch (keycode(event)) {
         case 'enter':
           event.preventDefault()
           event.stopPropagation()
           console.log('focus')
-          this.passwordRef.focus()
+          this.password.focus()
       }
     }
 
@@ -42,9 +42,9 @@ import { HEADER_HEIGHT } from '~/constants'
           this.finish()
           break
         case 'esc':
-          if (this.passwordRef.value === '') {
+          if (this.password.value === '') {
           } else {
-            this.passwordRef.value = ''
+            this.password.value = ''
           }
       }
     }
@@ -60,8 +60,8 @@ export default class Login {
               $input
               $error={store.error}
               name="email"
-              onKeyDown={store.onUsernameKey}
-              getRef={store.ref('usermname').set}
+              onKeyDown={store.onEmailKey}
+              getRef={store.ref('email').set}
               placeholder="your name..."
             />
             <Input

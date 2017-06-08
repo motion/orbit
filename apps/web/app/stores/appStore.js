@@ -93,6 +93,10 @@ export default class App {
     for (const [name, model] of Object.entries(models)) {
       this[name] = model
 
+      if (typeof model.connect !== 'function') {
+        throw `No connect found for model ${model.name} connect = ${typeof model.connect}`
+      }
+
       connections.push(
         model.connect(this.database, this.databaseConfig, {
           sync: `${this.databaseConfig.couchUrl}/${model.title}/`,

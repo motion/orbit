@@ -14,11 +14,17 @@ export default function emittable(options) {
       Object.defineProperty(Klass.prototype, emitterProp, {
         get() {
           const KEY = `__${emitterProp}`
+
           if (!this[KEY]) {
-            this[KEY] = new Emitter()
+            const emitter = new Emitter()
+            this[KEY] = emitter
+
+            // bind
+            emitter.emit = emitter.emit.bind(emitter)
+
             // auto add to susbcriptions
             if (this.subscriptions) {
-              this.subscriptions.add(this[KEY])
+              this.subscriptions.add(emitter)
             }
           }
           return this[KEY]

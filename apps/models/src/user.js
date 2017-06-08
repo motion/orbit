@@ -13,23 +13,23 @@ const tempId = () => {
 }
 
 class User {
-  authDb: ?AuthStore = null
-  @observable.ref user = {}
+  authStore: AuthStore
 
-  @computed
-  get name() {
-    return this.user.name
-  }
+  @observable.ref user = {}
 
   connect(database, databaseConfig) {
     this.database = database
     this.databaseConfig = databaseConfig
     // separate pouchdb for auth
-    this.auth = new AuthStore(`${this.databaseConfig.couchUrl}/auth`, {
-      skip_setup: true,
-      with_credentials: false,
+    this.authStore = new AuthStore({
+      authDB: `${this.databaseConfig.couchUrl}/auth`,
     })
     this.syncUser()
+  }
+
+  @computed
+  get name() {
+    return this.user.name
   }
 
   updateInfo = async (metadata: Object) => {
@@ -108,13 +108,14 @@ class User {
   getUser = (name: string) => this.authDb.getUser(name || this.name)
 
   @action syncUser = async () => {
-    const session = await this.getSession()
-    const loggedIn = session && session.userCtx.name
-    if (loggedIn) {
-      this.user = await this.getUser(session.userCtx.name)
-    } else {
-      this.user = this.temporaryUser
-    }
+    this.user = this.temporaryUser
+    // const session = await this.getSession()
+    // const loggedIn = session && session.userCtx.name
+    // if (loggedIn) {
+    //   this.user = await this.getUser(session.userCtx.name)
+    // } else {
+    //   this.user = this.temporaryUser
+    // }
   }
 
   @action clearUser = () => {

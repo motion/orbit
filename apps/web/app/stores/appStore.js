@@ -57,7 +57,7 @@ export default class App {
       multiInstance: true,
       withCredentials: false,
       pouchSettings: {
-        skip_setup: true,
+        skipSetup: true,
         // live: true,
         retry: true,
         since: 'now',
@@ -80,8 +80,8 @@ export default class App {
   setupImages = () => {
     // images
     this.images = new PouchDB(`${this.databaseConfig.couchUrl}/images`, {
-      skip_setup: true,
-      with_credentials: false,
+      skipSetup: true,
+      withCredentials: false,
     })
   }
 

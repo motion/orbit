@@ -1,13 +1,9 @@
 import { Emitter, CompositeDisposable } from 'sb-event-kit'
 
-const DEFAULT_OPTS = {
-  emitterProp: 'emitter',
-  emitProp: 'emit',
-}
-
 // store.emitter
-export default function emittable(options = DEFAULT_OPTS) {
-  const { emitterProp } = options
+export default function emittable(options) {
+  const emitterProp = options.emitterProp || 'emitter'
+  const emitProp = options.emitProp || 'emit'
 
   return {
     decorator: Klass => {
@@ -25,7 +21,7 @@ export default function emittable(options = DEFAULT_OPTS) {
       })
 
       // bind emit directly
-      Object.defineProperty(Klass.prototype, options.emitProp, {
+      Object.defineProperty(Klass.prototype, emitProp, {
         get() {
           return this[emitterProp].emit
         },

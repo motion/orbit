@@ -32,7 +32,9 @@ export default function decor(plugins) {
       decoratedClass = decorator(decoratedClass) || decoratedClass
     }
     for (const mixin of mixins) {
-      reactMixin(Klass.prototype, mixin)
+      if (Klass.prototype) {
+        reactMixin(Klass.prototype, mixin)
+      }
     }
     return decoratedClass
   }

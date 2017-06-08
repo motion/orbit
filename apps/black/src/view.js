@@ -18,6 +18,7 @@ const base = [
   reactRenderArgs,
   options => ({ decorator: gloss }),
 ]
+
 const mobx = [observer]
 const ui = [
   [

@@ -13,30 +13,34 @@ export const storeDecorator = decor([
   emittable,
 ])
 
-const storeViewDecorator = options =>
+const config = {
+  storeDecorator,
+  onStoreMount(name, store, props) {
+    // storeDe(store)
+    if (store.start) {
+      store.start(props)
+    }
+    return store
+  },
+  onStoreDidMount(name, store) {
+    // App.mountStore(store)
+  },
+  onStoreUnmount(name, store) {
+    // App.unmountStore(store)
+    if (store.stop) {
+      store.stop()
+    }
+    store.subscriptions.dispose()
+  },
+}
+
+export const storeViewDecorator = options =>
   decor([
     [
       storeProvidable,
       {
+        ...config,
         ...options,
-        storeDecorator,
-        onStoreMount(name, store, props) {
-          storeMountDecorator(store)
-          if (store.start) {
-            store.start(props)
-          }
-          return store
-        },
-        onStoreDidMount(name, store) {
-          // App.mountStore(store)
-        },
-        onStoreUnmount(name, store) {
-          // App.unmountStore(store)
-          if (store.stop) {
-            store.stop()
-          }
-          store.subscriptions.dispose()
-        },
       },
     ],
   ])

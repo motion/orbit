@@ -1,15 +1,20 @@
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
 
+const COUCH_PROTOCOL = `${window.location.protocol}//`
+const COUCH_HOST = `couch.${window.location.host}`
+const API_HOST = `api.${window.location.host}`
+const API_URL = `http://${API_HOST}`
+
 export default class AuthStore {
   emit = (...args) => console.log(...args)
   superlogin = superlogin
   localDb = null
   remoteDb = null
 
-  constructor() {
+  constructor({ authDB }) {
     // needed to ensure some sort of working
-    this.db = new PouchDB(`${DB_CONFIG.couchUrl}`, {
+    this.db = new PouchDB(authDB, {
       skipSetup: true,
     })
 
@@ -18,7 +23,7 @@ export default class AuthStore {
       baseUrl: `${API_URL}/auth/`,
       // A list of API endpoints to automatically add the Authorization header to
       // By default the host the browser is pointed to will be added automatically
-      endpoints: [DB_CONFIG.couchHost],
+      endpoints: [COUCH_HOST],
       // Set this to true if you do not want the URL bar host automatically added to the list
       noDefaultEndpoint: false,
       // Where to save your session token: localStorage ('local') or sessionStorage ('session'), default: 'local'

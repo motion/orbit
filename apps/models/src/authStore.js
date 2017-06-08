@@ -1,3 +1,4 @@
+import { store } from '@jot/black'
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
 
@@ -6,19 +7,15 @@ const COUCH_HOST = `couch.${window.location.host}`
 const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
+@store
 export default class AuthStore {
-  emit = (...args) => console.log(...args)
+  user = null
   superlogin = superlogin
   localDb = null
   remoteDb = null
 
-  constructor({ authDB }) {
-    // needed to ensure some sort of working
-    this.db = new PouchDB(authDB, {
-      skipSetup: true,
-    })
-
-    superlogin.configure({
+  constructor() {
+    this.superlogin.configure({
       // The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth/')
       baseUrl: `${API_URL}/auth/`,
       // A list of API endpoints to automatically add the Authorization header to
@@ -41,27 +38,23 @@ export default class AuthStore {
       refreshThreshold: 0.5,
     })
 
-    superlogin.on('login', (event, session) => {
+    // sync
+    this.superlogin.on('login', async (event, session) => {
       console.log('on login', event, session)
+      this.user = await this.getCurrentUser()
+    })
+
+    this.superlogin.on('logout', () => {
+      this.user = null
     })
   }
 
-  toHex(str) {
-    str = str || ''
-    var result = ''
-    for (var i = 0; i < str.length; i++) {
-      result += str.charCodeAt(i).toString(16)
-    }
-    return result
-  }
-
-  setupDbSync(user) {
-    if (!this.remoteDb && user) {
-      console.log('got user', user)
-      this.remoteDb = new PouchDB(user.userDBs.documents, { skipSetup: true })
+  setupDbSync = () => {
+    if (!this.remoteDb && this.user) {
+      this.remoteDb = new PouchDB(this.user.userDBs.documents, {
+        skipSetup: true,
+      })
       this.localDb = new PouchDB(`local_db_${user.user_id}`)
-      this.emit('localDbChange', this.localDb)
-
       // syncronize the local and remote user databases...
       this.remoteSyncHandler = this.localDb
         .sync(this.remoteDb, { live: true, retry: true })
@@ -69,66 +62,57 @@ export default class AuthStore {
     }
   }
 
-  registerNewUser({ username, password, email }) {
-    return new Promise((resolve, reject) => {
-      superlogin
-        .register({
-          username,
-          email,
-          password,
-          confirmPassword: password,
-        })
-        .then(res => {
-          console.log('registerNewUser: ', res)
-          return this.login(username, password).then(resolve)
-        })
-        .catch(err => {
-          console.error('registerNewUser error: ', err)
-          if (err && err.validationErrors) {
-            var errors = Object.keys(err.validationErrors)
-              .map(key => {
-                return err.validationErrors[key]
-              })
-              .join(', ')
-            return reject(errors)
-          }
-          reject('Registration Error:' + JSON.stringify(err))
-        })
+  loginOrSignup = async (email, password) => {
+    try {
+      await this.login(email, password)
+    } catch (e) {
+      await this.signup(email, password)
+    }
+  }
+
+  signup = async (email, password) => {
+    try {
+      const res = await superlogin.register({
+        email,
+        username: email,
+        password,
+        confirmPassword: password,
+      })
+      console.log('registerNewUser: ', res)
+      return await this.login(username, password)
+    } catch (error) {
+      console.error('registerNewUser error: ', err)
+      if (err && err.validationErrors) {
+        var errors = Object.keys(err.validationErrors)
+          .map(key => {
+            return err.validationErrors[key]
+          })
+          .join(', ')
+        throw errors
+      }
+      throw `Registration Error: ${JSON.stringify(err)}`
+    }
+  }
+
+  login = async (email, password) => {
+    this.user = await superlogin.login({
+      username: email,
+      password,
     })
+    console.log('login: user', this.user)
+    this.setupDbSync(user)
   }
 
-  login(username, password) {
-    return superlogin
-      .login({
-        username: username,
-        password: password,
-      })
-      .then(user => {
-        console.log('login: user', user)
-        // pre-populate the currentUserPromise with the current user
-        this.currentUserPromise = Promise.resolve(user)
-        this.setupDbSync(user)
-        return user
-      })
-  }
-
-  logout() {
+  logout = async () => {
     this.remoteSyncHandler && this.remoteSyncHandler.cancel()
     this.remoteDb = null
     this.localDb = null
-    this.currentUserPromise = null
-
-    return superlogin.logout().then(() => {
-      this.emit('localDbChange')
-    })
+    await superlogin.logout()
   }
 
-  getCurrentUser() {
-    var session = superlogin.getSession()
-    if (session) {
-      this.setupDbSync(session)
-    }
-    console.log('getCurrentUser: session', session)
-    return Promise.resolve(session)
+  getCurrentUser = async () => {
+    var session = await superlogin.getSession()
+    this.setupDbSync(session)
+    return session
   }
 }

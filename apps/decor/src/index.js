@@ -2,10 +2,9 @@
 import reactMixin from 'react-mixin'
 
 export default function decor(plugins) {
-  const decorators = []
-  const mixins = []
+  const allPlugins = []
 
-  for (const curPlugin of plugins) {
+  for (const curPlugin of plugins.filter(Boolean)) {
     let getPlugin = curPlugin
     let options = {}
 
@@ -17,25 +16,25 @@ export default function decor(plugins) {
 
     let plugin = getPlugin(options)
 
-    if (plugin.decorator) {
-      decorators.push(plugin.decorator)
-    } else if (plugin.mixin) {
-      mixins.push(plugin.mixin)
-    } else {
+    if (!plugin.decorator && !plugin.mixin) {
       throw `Bad plugin, needs decorator or mixin: ${plugin}`
     }
+
+    allPlugins.push(plugin)
   }
 
   return function decorDecorator(Klass) {
     let decoratedClass = Klass
-    for (const decorator of decorators) {
-      decoratedClass = decorator(decoratedClass) || decoratedClass
-    }
-    for (const mixin of mixins) {
-      if (Klass.prototype) {
-        reactMixin(Klass.prototype, mixin)
+
+    for (const plugin of allPlugins) {
+      if (plugin.mixin && Klass.prototype) {
+        reactMixin(Klass.prototype, plugin.mixin)
+      }
+      if (plugin.decorator) {
+        decoratedClass = plugin.decorator(decoratedClass) || decoratedClass
       }
     }
+
     return decoratedClass
   }
 }

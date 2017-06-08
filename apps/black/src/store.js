@@ -7,10 +7,10 @@ import subscribableHelpers from '@jot/decor/lib/plugins/core/subscribableHelpers
 import storeProvidable from '@jot/decor/lib/plugins/react/storeProvidable'
 
 export const storeDecorator = decor([
-  autobound,
   subscribable,
   subscribableHelpers,
   emittable,
+  autobound,
 ])
 
 const config = {

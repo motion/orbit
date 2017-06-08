@@ -9,7 +9,6 @@ import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
-import Commander from '~/views/commander'
 import KeyStore from '~/stores/keyStore'
 import LayoutStore from '~/stores/layoutStore'
 import RedBox from 'redbox-react'
@@ -63,7 +62,10 @@ export default class Root extends React.Component {
   }
 
   unstable_handleError(error) {
-    throw error
+    // does this work?
+    this.setTimeout(() => {
+      throw error
+    })
     this.setState({
       error,
     })

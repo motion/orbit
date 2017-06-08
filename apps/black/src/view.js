@@ -11,40 +11,42 @@ import attach from '@jot/decor/lib/plugins/react/attach'
 import { storeViewDecorator } from './store'
 import gloss from './gloss'
 
-const base = [
+const uiContext = [
+  addContext,
+  {
+    uiTheme: object,
+    uiActiveTheme: string,
+    ui: object,
+  },
+]
+
+// applied top to bottom
+const getPlugins = ({ mobx, ui, autobind } = {}) => [
   extendsReact,
   subscribable,
   subscribableHelpers,
+  ui && uiContext,
   reactRenderArgs,
+  mobx && observer,
+  // gloss after mobx
   options => ({ decorator: gloss }),
+  // autobind last because it seals things
+  autobind && autobound,
 ]
 
-const mobx = [observer]
-const ui = [
-  [
-    addContext,
-    {
-      uiTheme: object,
-      uiActiveTheme: string,
-      ui: object,
-    },
-  ],
-]
-
-const viewDecorator = decor([...base, ...mobx, autobound])
+const viewDecorator = decor(getPlugins({ mobx: true, autobind: true }))
 
 // @view({ ...stores }) shorthand
 export default function view(viewOrStores: Object | Class | Function) {
   if (typeof viewOrStores === 'object') {
-    return stores => View => storeViewDecorator({ stores })(viewDecorator(View))
+    const stores = viewOrStores
+    return View => storeViewDecorator({ stores })(viewDecorator(View))
   }
   return viewDecorator(viewOrStores)
 }
 
-view.plain = decor(base)
-view.ui = decor([...base, ...ui, autobound])
+view.plain = decor(getPlugins())
+view.ui = decor(getPlugins({ ui: true, autobind: true }))
 view.provide = stores => View =>
   storeViewDecorator({ stores, context: stores })(viewDecorator(View))
 view.attach = names => decor([[attach, { names }]])
-
-window.x = view

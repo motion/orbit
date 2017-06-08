@@ -7,22 +7,28 @@ export default function emittable(options) {
 
   return {
     decorator: Klass => {
+      if (!Klass.prototype) {
+        return Klass
+      }
+
       Object.defineProperty(Klass.prototype, emitterProp, {
         get() {
+          const KEY = `__${emitterProp}`
           if (!this[emitterProp]) {
-            this[emitterProp] = new Emitter()
+            this[KEY] = new Emitter()
             // auto add to susbcriptions
             if (this.subscriptions) {
-              this.subscriptions.add(this[emitterProp])
+              this.subscriptions.add(this[KEY])
             }
           }
-          return this[emitterProp]
+          return this[KEY]
         },
       })
 
       // bind emit directly
       Object.defineProperty(Klass.prototype, emitProp, {
         get() {
+          console.log('getting', this[emitterProp])
           return this[emitterProp].emit
         },
       })

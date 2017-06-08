@@ -10,6 +10,7 @@ export const storeDecorator = decor([
   subscribable,
   subscribableHelpers,
   emittable,
+  automagical,
   autobound,
 ])
 
@@ -45,13 +46,12 @@ export const storeViewDecorator = options =>
   ])
 
 export default function store(Store) {
-  storeDecorator(Store)
+  const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
-    const store = new Store(...args)
+    const store = new DecoratedStore(...args)
     config.onStoreMount(Store.constructor.name, store, args[0])
     config.onStoreDidMount(Store.constructor.name, store, args[0])
     return store
   }
-  ProxyStore.name = Store.name
   return ProxyStore
 }

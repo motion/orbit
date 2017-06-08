@@ -26,6 +26,7 @@ export default function storeProvidable(options) {
       // call decorators
       if (storeDecorator && allStores) {
         for (const key of Object.keys(allStores)) {
+          console.log('decos')
           Stores[key] = storeDecorator(allStores[key])
         }
       }

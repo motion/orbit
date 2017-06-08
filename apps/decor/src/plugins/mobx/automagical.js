@@ -11,8 +11,18 @@ import {
 export default function automagical(options) {
   return {
     decorator: Klass => {
-      automagic(Klass)
-      return Klass
+      if (!Klass.prototype) {
+        return Klass
+      }
+
+      // patch constructor
+      const ProxyClass = function(...args) {
+        const klass = new Klass(...args)
+        automagic(klass)
+        return klass
+      }
+
+      return ProxyClass
     },
   }
 }

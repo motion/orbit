@@ -16,6 +16,10 @@ export default function decor(plugins) {
       options = curPlugin[1]
     }
 
+    if (typeof getPlugin !== 'function') {
+      throw `Plugin must be a function, got ${typeof getPlugin}`
+    }
+
     let plugin = getPlugin(options)
 
     if (!plugin.decorator && !plugin.mixin) {

@@ -79,7 +79,7 @@ function automagicalValue(obj, method, descriptors = {}) {
 
   // auto @computed get, do this before getting val
   const descriptor = descriptors[method]
-  if (descriptor && descriptor.get) {
+  if (descriptor && typeof descriptor.get) {
     const getter = {
       [method]: null,
     }

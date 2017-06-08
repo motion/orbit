@@ -59,11 +59,15 @@ class User {
   }
 
   get name() {
-    return this.user.name
+    return this.user.user_id
   }
 
   get email() {
-    return this.user.email
+    return this.user.user_id
+  }
+
+  get roles() {
+    return this.user.roles
   }
 
   setupDbSync = () => {

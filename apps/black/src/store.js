@@ -52,5 +52,6 @@ export default function store(Store) {
     config.onStoreDidMount(Store.constructor.name, store, args[0])
     return store
   }
+  ProxyStore.name = Store.name
   return ProxyStore
 }

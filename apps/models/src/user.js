@@ -70,6 +70,10 @@ class User {
     return this.user.roles
   }
 
+  get id() {
+    return this.user.user_id
+  }
+
   setupDbSync = () => {
     if (!this.remoteDb && this.user) {
       this.remoteDb = new PouchDB(this.user.userDBs.documents, {

@@ -47,6 +47,21 @@ export default {
     // If set to true, the user will be logged in automatically after resetting the password
     loginOnPasswordReset: false,
   },
+  userModel: {
+    // For example, this will require each new user to specify a valid age on the sign-up form or registration will fail
+    whitelist: ['homeLayout'],
+    // validate: {
+    //   age: {
+    //     presence: true,
+    //     numericality: {
+    //       onlyInteger: true,
+    //       greaterThanOrEqualTo: 18,
+    //       lessThan: 150,
+    //       message: 'You must be an adult, but not dead yet.'
+    //     }
+    //   }
+    // }
+  },
   local: {
     // Send out a confirm email after each user signs up with local login
     sendConfirmEmail: true,

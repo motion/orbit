@@ -11,7 +11,7 @@ export const storeDecorator = decor([
   subscribableHelpers,
   emittable,
   automagical,
-  // autobound,
+  autobound,
 ])
 
 const config = {

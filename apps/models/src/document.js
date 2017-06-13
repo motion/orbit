@@ -59,8 +59,6 @@ class Document extends Model {
 
   hooks = {
     preSave: async ({ title, placeId }) => {
-      console.log('saving')
-
       // sync title
       if (placeId) {
         console.log('save document to place', placeId)

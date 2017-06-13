@@ -63,6 +63,7 @@ const DragHandle = SortableHandle(() => (
           icon="ui-1_check-curve"
         />
         <Button
+          chromeless
           if={!inProgress}
           $startIcon
           onClick={onStart}
@@ -80,7 +81,11 @@ const DragHandle = SortableHandle(() => (
             </tags>
           </bottom>
         </content>
-        <Button $button onMouseDown={() => Router.go(task.doc.url())}>
+        <Button
+          $button
+          $activeDoc={window.location.pathname.indexOf(task.doc.url()) === 0}
+          onMouseDown={() => Router.go(task.doc.url())}
+        >
           {task.doc.title}
         </Button>
 
@@ -101,6 +106,11 @@ const DragHandle = SortableHandle(() => (
     },
     button: {
       marginRight: 5,
+      transition: 'all 100ms ease-in',
+    },
+    activeDoc: {
+      pointerEvents: 'none',
+      opacity: 0.7,
     },
     greenDot: {
       background: '#54ff54',

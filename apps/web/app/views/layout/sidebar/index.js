@@ -28,12 +28,13 @@ import {
   SortableHandle,
   arrayMove,
 } from 'react-sortable-hoc'
+import timeAgo from 'time-ago'
+const { ago } = timeAgo()
 
 const DragHandle = SortableHandle(() => {
-  const style = {
+  const innerStyle = {
     justifyContent: 'space-between',
     height: 10,
-    margin: 10,
   }
 
   const notchStyle = {
@@ -43,8 +44,10 @@ const DragHandle = SortableHandle(() => {
   }
 
   return (
-    <div style={style}>
-      {[1, 2, 3].map(notch => <div style={notchStyle} />)}
+    <div style={{ padding: 10 }}>
+      <div style={innerStyle}>
+        {[1, 2, 3].map(notch => <div key={notch} style={notchStyle} />)}
+      </div>
     </div>
   )
 })
@@ -61,6 +64,9 @@ const DragHandle = SortableHandle(() => {
     ...props
   }) {
     const className = 'strikethrough ' + (task.archive ? 'active' : '')
+
+    // up to 5 days ago
+    const time = ago(+Date.now() - Math.random() * 5 * 24 * 60 * 60 * 1000)
 
     // css structure is for archive animation
     return (
@@ -93,7 +99,7 @@ const DragHandle = SortableHandle(() => {
           </Text>
           <bottom $$row>
             <tags>
-              June 2 by Steel
+              {time} · Nate
             </tags>
           </bottom>
         </content>

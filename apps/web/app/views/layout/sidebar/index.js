@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '~/helpers'
+import { view } from '@jot/black'
+import { Shortcuts } from '~/helpers'
 import { uniqBy, sortBy } from 'lodash'
 import {
   Drawer,
@@ -60,7 +61,7 @@ const DragHandle = SortableHandle(() => (
         <content>
           <Text $text {...props}>
             <div className={className}>
-              <p><span>{task.text} {task.sort}</span></p>
+              <p><span>{task.text}</span></p>
             </div>
           </Text>
           <bottom $$row>

@@ -1,20 +1,8 @@
 export * from 'mobx'
 export { Component } from 'react'
-export view from './view'
-export store from './store'
-export $ from './styles'
-export { query } from '@jot/models'
+export $ from '@jot/black/lib/gloss'
 export clr from 'color'
 export debug from 'debug'
-
-// use this in @stores to autorun autoruns
-export const watch = fn => {
-  function temp() {
-    return fn()
-  }
-  temp.autorunme = true
-  return temp
-}
 
 import { inject as injector } from 'react-tunnel'
 // adds object fallback if not defined
@@ -34,7 +22,7 @@ export const keycode = (event: Event) => {
 
 // todo move into own thing
 import { Shortcuts as ReactShortcuts } from 'react-shortcuts'
-import view from './view'
+import { view } from '@jot/black'
 
 @view
 export class Shortcuts {
@@ -50,7 +38,6 @@ export class Shortcuts {
 }
 
 import { findDOMNode } from 'react-dom'
-
 export const getTarget = target => {
   if (!target) {
     return null

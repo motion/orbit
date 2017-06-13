@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image } from '@jot/models'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import node from '~/editor/node'
 
 const readFile = file =>

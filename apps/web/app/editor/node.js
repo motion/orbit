@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable, computed } from '~/helpers'
+import { view, observable, computed } from '@jot/black'
 import { object } from 'prop-types'
 import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '~/ui'
@@ -37,7 +37,8 @@ export default Component =>
       this.editorStore.selection.setHovered(this.props.node, this.node)
     }
 
-    @computed get isFocused() {
+    @computed
+    get isFocused() {
       const { focusedNode } = this.editorStore.selection
       if (this.editorStore.inline || !this.node) {
         return false
@@ -49,7 +50,7 @@ export default Component =>
       this.editorStore.transform(t => t.insertBlock({ type, data }))
     }
 
-    contextMenu = () => (
+    contextMenu = () =>
       <Popover
         target={
           <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.1]} />
@@ -86,7 +87,6 @@ export default Component =>
           ]}
         />
       </Popover>
-    )
 
     componentProps = {
       setContext: context => {

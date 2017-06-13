@@ -1,5 +1,6 @@
+// @flow
 import React from 'react'
-import { $, view, observable } from '~/helpers'
+import { view, observable } from '@jot/black'
 import { pick } from 'lodash'
 import { SlotFill } from '~/ui'
 
@@ -17,7 +18,8 @@ export default class Page {
 
   static style = {
     page: {
-      // dont make this flex or change overflow
+      // dont play with overflow here or react-grid will clip
+      flex: 1,
       overflow: 'visible',
       position: 'relative',
     },

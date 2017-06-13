@@ -1,6 +1,6 @@
 import React from 'react'
-import { view } from '~/helpers'
-import App from '@jot/models'
+import { view } from '@jot/black'
+import App from '~/app'
 import { SIDEBAR_WIDTH } from '~/constants'
 
 @view
@@ -12,12 +12,12 @@ export default class Errors {
 
     return (
       <errors>
-        {errs.map((error, i) => (
+        {errs.map((error, i) =>
           <error key={error.id || Math.random()}>
             <message $$ellipse if={error.errors}>
-              {error.errors.map(({ field, message }) => (
+              {error.errors.map(({ field, message }) =>
                 <subErr key={Math.random()}>{field}: {message}</subErr>
-              ))}
+              )}
             </message>
             <message $$ellipse if={error.message}>
               <strong>{error.name}</strong>: {error.message}
@@ -27,7 +27,7 @@ export default class Errors {
             </message>
             <clear if={i === 0} onClick={App.clearErrors}>x</clear>
           </error>
-        ))}
+        )}
       </errors>
     )
   }

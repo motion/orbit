@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import { Template } from '@jot/models'
 import { Button } from '~/ui'
 import Page from '~/page'
@@ -42,7 +42,7 @@ export default class Templates {
       >
         <h2>Templates</h2>
         <templates>
-          {(store.templates || []).map(template => (
+          {(store.templates || []).map(template =>
             <template>
               <h4>{template.name}</h4>
               <input
@@ -50,7 +50,7 @@ export default class Templates {
                 onBlur={e => store.editTemplate(template._id, e.target.value)}
               />
             </template>
-          ))}
+          )}
         </templates>
       </Page>
     )

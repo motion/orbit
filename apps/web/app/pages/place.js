@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, query, autorun, observable } from '~/helpers'
+import { view, query, autorun, observable, watch } from '@jot/black'
 import { isEqual } from 'lodash'
 import { User, Place, Document } from '@jot/models'
 import { Segment, Button } from '~/ui'
@@ -11,7 +11,6 @@ import DocumentPage from '~/pages/doc'
 @view.provide({
   placeStore: class PlaceStore {
     place = Place.get({ slug: this.props.slug || Router.params.slug })
-    doc = null
 
     start() {
       this.watch(async () => {

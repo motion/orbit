@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import { Document } from '@jot/models'
 import Page from '~/page'
 import DocView from '~/views/document'
@@ -27,7 +27,7 @@ export default class Todo {
     return (
       <Page header title="Todo" actions={[]}>
         <todos>
-          {store.todoDocs.map(doc => (
+          {store.todoDocs.map(doc =>
             <doc>
               <h4 onClick={() => Router.go(doc.url())}>{doc.title}</h4>
               <DocView
@@ -36,7 +36,7 @@ export default class Todo {
                 id={doc._id}
               />
             </doc>
-          ))}
+          )}
         </todos>
       </Page>
     )

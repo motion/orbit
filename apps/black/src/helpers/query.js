@@ -1,5 +1,5 @@
 // @flow
-import { RxQuery } from 'rxdb'
+import type { RxQuery } from 'rxdb'
 import { observable, autorun } from 'mobx'
 import debug from 'debug'
 import sum from 'hash-sum'
@@ -116,7 +116,7 @@ function valueWrap(info, valueGet: Function) {
   return response
 }
 
-export function query(parent, property, descriptor) {
+export default function query(parent, property, descriptor) {
   const { initializer, value } = descriptor
 
   if (initializer) {

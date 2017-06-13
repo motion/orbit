@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import FakeAvatar from './fake/fakeAvatar'
 import Glow from './glow'
 

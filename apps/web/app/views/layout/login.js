@@ -1,55 +1,36 @@
 // @flow
-import React from 'react'
-import { view, keycode } from '~/helpers'
+import { view } from '@jot/black'
 import { User } from '@jot/models'
+import React from 'react'
+import { keycode } from '~/helpers'
 import { Popover, List, Form, Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 @view({
   store: class LoginStore {
     loggingIn = false
-    usernameRef = null
-    passwordRef = null
+    email = null
+    password = null
     error = false
-
-    get step() {
-      if (!User.user || (User.user && !User.user.name)) return 1
-      if (User.tempUser) return 2
-      if (User.loggedIn) return 3
-    }
 
     finish = async () => {
       this.loggingIn = true
-      await User.loginOrSignup(this.usernameRef.value, this.passwordRef.value)
+      await User.loginOrSignup(this.email.value, this.password.value)
       this.loggingIn = false
     }
 
     onSubmit = (event: Event) => {
       event.preventDefault()
-      if (this.step === 2) {
-        this.finish()
-      }
+      this.finish()
     }
 
-    setUsernameRef = ref => {
-      this.usernameRef = ref
-    }
-
-    setPasswordRef = ref => {
-      this.passwordRef = ref
-      if (ref) {
-        ref.focus()
-        window.x = ref
-      }
-    }
-
-    onUsernameKey = (event: Event) => {
+    onEmailKey = (event: Event) => {
       switch (keycode(event)) {
         case 'enter':
           event.preventDefault()
           event.stopPropagation()
           console.log('focus')
-          this.passwordRef.focus()
+          this.password.focus()
       }
     }
 
@@ -61,9 +42,9 @@ import { HEADER_HEIGHT } from '~/constants'
           this.finish()
           break
         case 'esc':
-          if (this.passwordRef.value === '') {
+          if (this.password.value === '') {
           } else {
-            this.passwordRef.value = ''
+            this.password.value = ''
           }
       }
     }
@@ -73,14 +54,14 @@ export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <Form if={store.step < 3} $$undraggable onSubmit={store.onSubmit}>
+        <Form if={!User.loggedIn} $$undraggable onSubmit={store.onSubmit}>
           <Segment>
             <Input
               $input
               $error={store.error}
               name="email"
-              onKeyDown={store.onUsernameKey}
-              getRef={store.setUsernameRef}
+              onKeyDown={store.onEmailKey}
+              getRef={store.ref('email').set}
               placeholder="your name..."
             />
             <Input
@@ -90,7 +71,7 @@ export default class Login {
               type="password"
               placeholder="password"
               onKeyDown={store.onPasswordKey}
-              getRef={store.setPasswordRef}
+              getRef={store.ref('password').set}
             />
             <Button onClick={store.finish}>
               {store.loggingIn ? '⌛' : '✅'}
@@ -98,17 +79,17 @@ export default class Login {
           </Segment>
         </Form>
 
-        <step if={store.step === 3}>
+        <step if={User.loggedIn}>
           <text>
             hi
-            <username $$ellipse> {User.user.name}</username>
+            <username $$ellipse> {User.name}</username>
           </text>
           <Popover target={<Button icon="down" />} background openOnHover>
             <List
               width={150}
               items={[
                 <List.Item
-                  primary={User.user.name}
+                  primary={User.name}
                   after={<Button icon="power" onClick={() => User.logout()} />}
                 />,
               ]}

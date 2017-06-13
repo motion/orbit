@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, watch } from '~/helpers'
+import { view, watch } from '@jot/black'
 import { User, Place, Document } from '@jot/models'
 import { Grid, Button, SlotFill } from '~/ui'
 import PlacePage from './place'
@@ -81,7 +81,7 @@ export default class HomePage {
           isDraggable={store.editing}
           isResizable={store.editing}
           items={(store.placeDocs || [])
-            .map(doc => (
+            .map(doc =>
               <DocItem
                 key={doc._id || Math.random()}
                 draggable
@@ -91,7 +91,7 @@ export default class HomePage {
                 hideMeta={!store.editing}
                 doc={doc}
               />
-            ))}
+            )}
         />
 
         <top if={false}>

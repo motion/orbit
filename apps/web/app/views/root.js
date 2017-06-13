@@ -1,5 +1,6 @@
 import React from 'react'
-import { view, Shortcuts } from '~/helpers'
+import { view } from '@jot/black'
+import { Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
 import { Theme, SlotFill, Button } from '~/ui'
 import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
@@ -8,7 +9,6 @@ import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
 import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
-import Commander from '~/views/commander'
 import KeyStore from '~/stores/keyStore'
 import LayoutStore from '~/stores/layoutStore'
 import RedBox from 'redbox-react'
@@ -19,7 +19,8 @@ import Draft from './document/draft'
 // simply @view.attach('layoutStore') for example in any sub-view
 
 // optimized re-render for sidebar resize
-@view class LayoutWrap {
+@view
+class LayoutWrap {
   render({ layoutStore, children }) {
     return (
       <wrap $$right={layoutStore.sidebar.trueWidth}>
@@ -60,16 +61,17 @@ export default class Root extends React.Component {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  unstable_handleError(error) {
-    throw error
-    this.setState({
-      error,
-    })
-    // until we can clear on next hmr, just show for a second
-    this.setTimeout(() => {
-      this.setState({ error: null })
-    }, 2000)
-  }
+  // unstable_handleError(error) {
+  //   // does this work?
+  //   throw error
+  //   this.setState({
+  //     error,
+  //   })
+  //   // until we can clear on next hmr, just show for a second
+  //   this.setTimeout(() => {
+  //     this.setState({ error: null })
+  //   }, 2000)
+  // }
 
   render({ layoutStore, keyStore }, { error }) {
     if (error) {

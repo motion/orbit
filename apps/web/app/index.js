@@ -1,11 +1,13 @@
+// @flow
 // for a fast splash screen to show
 // this just requires react + <Splash />
 
 import 'regenerator-runtime/runtime'
 import 'babel-polyfill'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Gloss from '~/helpers/styles'
+import Gloss from '@jot/black/lib/gloss'
 
 // allow any <tag /> to use our $$parent styles
 React.createElement = Gloss.createElement
@@ -17,7 +19,8 @@ console.timeEnd('splash')
 // polyfills
 window.Buffer = require('buffer/').Buffer
 
-// after, require start.js to boot rest of app
-window.restart = require('./start')
+// BOOT
+require('./start')
 
+// hmr
 module && module.hot && module.hot.accept()

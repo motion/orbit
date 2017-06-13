@@ -1,3 +1,4 @@
+// @flow
 import Router from 'motion-mobx-router'
 import { render } from './start'
 

@@ -1,5 +1,6 @@
 import React from 'react'
-import { view, inject } from '~/helpers'
+import { view } from '@jot/black'
+import { inject } from '~/helpers'
 
 @inject(context => context.ui)
 @view.ui

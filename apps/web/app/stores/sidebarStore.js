@@ -1,5 +1,5 @@
 // @flow
-import { store } from '~/helpers'
+import { store } from '@jot/black'
 import { SIDEBAR_WIDTH } from '~/constants'
 import { throttle } from 'lodash'
 

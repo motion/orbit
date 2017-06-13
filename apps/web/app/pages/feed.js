@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import { User, Place, Document } from '@jot/models'
 import FlipMove from 'react-flip-move'
 import { Button } from '~/ui'
@@ -19,7 +19,7 @@ class FeedStore {
     e.preventDefault()
     Place.create({
       title: this.place.value,
-      authorId: User.user.name,
+      authorId: User.name,
     })
   }
 }

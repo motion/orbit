@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import Popover from './popover'
 import names from './iconNames'
 import fuzzy from 'fuzzy'

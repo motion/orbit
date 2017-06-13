@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '~/helpers'
+import { view } from '@jot/black'
 import { Button } from '~/ui'
 import node from '~/editor/node'
 

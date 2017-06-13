@@ -1,7 +1,8 @@
 // TODO https://github.com/tristen/hoverintent
 import React from 'react'
 import { object, string } from 'prop-types'
-import { view, getTarget } from '~/helpers'
+import { view } from '@jot/black'
+import { getTarget } from '~/helpers'
 import Portal from 'react-portal'
 import { isNumber, debounce } from 'lodash'
 import Arrow from './arrow'
@@ -427,7 +428,10 @@ export default class Popover {
     if (!node) return
 
     // race condition fix: target should close more slowly than menu opens
-    const setFalse = debounce(this.hoverStateSetter(name, false), name === 'target' ? 32 : 0)
+    const setFalse = debounce(
+      this.hoverStateSetter(name, false),
+      name === 'target' ? 32 : 0
+    )
     const setTrue = this.hoverStateSetter(name, true)
     const onLeave = () => !this.isNodeHovered(node) && setFalse()
 
@@ -463,10 +467,9 @@ export default class Popover {
     }
   }
 
-  isNodeHovered = (node) => {
+  isNodeHovered = node => {
     return (
-      node.querySelector(':hover') ||
-      node.parentNode.querySelector(':hover')
+      node.querySelector(':hover') || node.parentNode.querySelector(':hover')
     )
   }
 

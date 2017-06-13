@@ -1,5 +1,6 @@
+// @flow
 import { observable, computed, action, autorunAsync } from 'mobx'
-import * as RxDB from 'motion-rxdb'
+import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'
@@ -8,22 +9,36 @@ import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import { uniqBy } from 'lodash'
+import type { Model } from '@jot/models/helpers'
 
-RxDB.QueryChangeDetector.enable()
-// RxDB.QueryChangeDetector.enableDebugging()
+export default class App {
+  images: PouchDB
+  databaseConfig: Object
 
-import * as Models from './all'
-
-class App {
-  db = null
+  database: ?RxDB.Database = null
+  models: ?Model = null
   @observable.ref errors = []
   @observable.ref mountedStores = {}
   @observable mountedVersion = 0
   @observable.ref stores = null
 
-  constructor() {
+  constructor({ database, models }) {
+    this.databaseConfig = database
+    this.models = models
+    if (!database || !models) {
+      throw new Error(
+        'No database or models given to App!',
+        typeof database,
+        typeof models
+      )
+    }
+  }
+
+  async setupRxDB() {
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
+      RxDB.QueryChangeDetector.enable()
+      // RxDB.QueryChangeDetector.enableDebugging()
       RxDB.plugin(pHTTP)
       RxDB.plugin(pIDB)
       RxDB.plugin(pREPL)
@@ -33,48 +48,41 @@ class App {
       PouchDB.plugin(pHTTP)
     }
 
-    this.trackMountedStores()
-  }
-
-  async start({ database }) {
-    console.time('start')
-    this.catchErrors()
-
-    console.log('Use App in your console to access models, stores, etc')
-
-    if (!database) {
-      throw new Error('No config given to App!')
-    }
-
-    // attach
-    this.databaseConfig = database
-
     // connect to pouchdb
     console.time('create db')
     this.database = await RxDB.create({
       adapter: 'idb',
-      name: database.name,
-      password: database.password,
+      name: this.databaseConfig.name,
+      password: this.databaseConfig.password,
       multiInstance: true,
       withCredentials: false,
       pouchSettings: {
-        skip_setup: true,
+        skipSetup: true,
         // live: true,
         retry: true,
         since: 'now',
       },
     })
     console.timeEnd('create db')
+  }
 
-    await this.attachModels(Models)
-
-    // images
-    this.images = new PouchDB(`${database.couchUrl}/images`, {
-      skip_setup: true,
-      with_credentials: false,
-    })
-
+  async start() {
+    console.log('Use App in your console to access models, stores, etc')
+    console.time('start')
+    this.catchErrors()
+    await this.setupRxDB()
+    this.trackMountedStores()
+    await this.attachModels(this.models)
+    this.setupImages()
     console.timeEnd('start')
+  }
+
+  setupImages = () => {
+    // images
+    this.images = new PouchDB(`${this.databaseConfig.couchUrl}/images`, {
+      skipSetup: true,
+      withCredentials: false,
+    })
   }
 
   attachModels = async (models: Object) => {
@@ -84,6 +92,10 @@ class App {
     // attach Models to app and connect if need be
     for (const [name, model] of Object.entries(models)) {
       this[name] = model
+
+      if (typeof model.connect !== 'function') {
+        throw `No connect found for model ${model.name} connect = ${typeof model.connect}`
+      }
 
       connections.push(
         model.connect(this.database, this.databaseConfig, {
@@ -175,14 +187,3 @@ class App {
     this.errors = []
   }
 }
-
-const app = window.App || new App()
-
-if (module && module.hot) {
-  module.hot.accept('./all', () => {
-    console.log('hmr from @jot/models/app', app)
-    app.attachModels(require('./all'))
-  })
-}
-
-export default app

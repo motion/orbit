@@ -29,9 +29,25 @@ import {
   arrayMove,
 } from 'react-sortable-hoc'
 
-const DragHandle = SortableHandle(() => (
-  <div style={{ padding: 10 }}> <Icon name="ui-2_menu-34" size={12} /></div>
-)) //<span style={{ padding: 10 }}>::</span>) // This can be any component you want
+const DragHandle = SortableHandle(() => {
+  const style = {
+    justifyContent: 'space-between',
+    height: 10,
+    margin: 10,
+  }
+
+  const notchStyle = {
+    width: 20,
+    height: 2,
+    background: 'rgba(0,0,0,0.30)',
+  }
+
+  return (
+    <div style={style}>
+      {[1, 2, 3].map(notch => <div style={notchStyle} />)}
+    </div>
+  )
+})
 
 @view class Item {
   render({
@@ -144,6 +160,7 @@ const DragHandle = SortableHandle(() => (
       padding: [7, 5],
       background: '#fefefe',
       justifyContent: 'center',
+      alignItems: 'center',
       borderBottom: '1px solid #ddd',
       fontSize: 14,
       alignItems: 'center',

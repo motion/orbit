@@ -57,7 +57,6 @@ const DragHandle = SortableHandle(() => (
         $inProgress={inProgress}
       >
         <greenDot if={inProgress} />
-        <DragHandle if={!noDrag} />
         <content>
           <Text $text {...props}>
             <div className={className}>
@@ -73,6 +72,7 @@ const DragHandle = SortableHandle(() => (
             </Button>
           </bottom>
         </content>
+        <DragHandle if={!noDrag} />
       </item>
     )
   }
@@ -81,6 +81,7 @@ const DragHandle = SortableHandle(() => (
     content: {
       flex: 3,
       marginLeft: 5,
+      marginRight: 5,
     },
     greenDot: {
       background: '#54ff54',
@@ -111,6 +112,7 @@ const DragHandle = SortableHandle(() => (
       background: '#fefefe',
       borderBottom: '1px solid #ddd',
       fontSize: 14,
+      boxShadow: '1px 1px 5px rgba(0,0,0,0.2)',
       alignItems: 'center',
       justifyContent: 'space-between',
       transition: 'background 60ms ease-in',
@@ -244,7 +246,9 @@ export default class Sidebar {
                 <top $$row>
                   <input
                     $search
-                    placeholder={User.user.name + "'s tasks"}
+                    placeholder={
+                      User.user ? `${User.user.name}'s tasks` : 'tasks'
+                    }
                     onChange={e => (store.filter = e.target.value)}
                   />
                   <Segment>

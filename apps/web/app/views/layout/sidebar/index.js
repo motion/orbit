@@ -37,7 +37,7 @@ const DragHandle = SortableHandle(() => (
   render({
     active,
     inProgress,
-    onDoubleClick,
+    onStart,
     noDrag,
     onClick,
     index,
@@ -50,13 +50,24 @@ const DragHandle = SortableHandle(() => (
     return (
       <item
         onClick={onClick}
-        onDoubleClick={onDoubleClick}
         $$undraggable
         $first={index === 0}
         $active={active === true}
         $inProgress={inProgress}
+        $notInProgress={!inProgress}
       >
-        <greenDot if={inProgress} />
+        <Button
+          if={inProgress}
+          $startIcon
+          onClick={onStart}
+          icon="ui-1_check-curve"
+        />
+        <Button
+          if={!inProgress}
+          $startIcon
+          onClick={onStart}
+          icon="media-1_button-play"
+        />
         <content>
           <Text $text {...props}>
             <div className={className}>
@@ -67,11 +78,12 @@ const DragHandle = SortableHandle(() => (
             <tags>
               June 2 by Steel
             </tags>
-            <Button onMouseDown={() => Router.go(task.doc.url())}>
-              {task.doc.title}
-            </Button>
           </bottom>
         </content>
+        <Button $button onMouseDown={() => Router.go(task.doc.url())}>
+          {task.doc.title}
+        </Button>
+
         <DragHandle if={!noDrag} />
       </item>
     )
@@ -81,6 +93,13 @@ const DragHandle = SortableHandle(() => (
     content: {
       flex: 3,
       marginLeft: 5,
+      marginRight: 5,
+    },
+    startIcon: {
+      marginLeft: 5,
+      marginRight: 5,
+    },
+    button: {
       marginRight: 5,
     },
     greenDot: {
@@ -95,6 +114,9 @@ const DragHandle = SortableHandle(() => (
     inProgress: {
       borderTop: '1px solid #ddd',
     },
+    notInProgress: {
+      boxShadow: '1px 1px 5px rgba(0,0,0,0.2)',
+    },
     first: {
       borderTop: '1px solid #ddd',
     },
@@ -102,6 +124,7 @@ const DragHandle = SortableHandle(() => (
       color: `rgba(0, 0, 0, 0.6)`,
       fontSize: 12,
     },
+    text: {},
     bottom: {
       flex: 1,
       justifyContent: 'space-between',
@@ -110,9 +133,9 @@ const DragHandle = SortableHandle(() => (
       flexFlow: 'row',
       padding: [7, 5],
       background: '#fefefe',
+      justifyContent: 'center',
       borderBottom: '1px solid #ddd',
       fontSize: 14,
-      boxShadow: '1px 1px 5px rgba(0,0,0,0.2)',
       alignItems: 'center',
       justifyContent: 'space-between',
       transition: 'background 60ms ease-in',
@@ -128,12 +151,12 @@ const DragHandle = SortableHandle(() => (
 
 /* sortable eats index, so add _index for item styling */
 const SortableItem = SortableElement(
-  ({ active, onDoubleClick, onClick, _index, value }) => (
+  ({ active, onStart, onClick, _index, value }) => (
     <div style={{ zIndex: 1000000 }}>
       <Item
         active={active}
         onClick={onClick}
-        onDoubleClick={onDoubleClick}
+        onStart={onStart}
         index={_index}
         task={value}
       />
@@ -142,13 +165,13 @@ const SortableItem = SortableElement(
 )
 
 const SortableList = SortableContainer(
-  ({ active, onDoubleClick, onClick, items }) => {
+  ({ active, onStart, onClick, items }) => {
     return (
       <ul>
         {items.map((task, index) => (
           <SortableItem
             onClick={() => onClick(task)}
-            onDoubleClick={() => onDoubleClick(task)}
+            onStart={() => onStart(task)}
             active={active && active.key === task.key}
             key={task.key}
             _index={index}
@@ -300,7 +323,7 @@ export default class Sidebar {
                   <SortableList
                     onSortEnd={store.onSortEnd}
                     onClick={store.onSelect}
-                    onDoubleClick={store.onSetProgress}
+                    onStart={store.onSetProgress}
                     active={store.activeTask}
                     items={store.tasks}
                     useDragHandle={true}

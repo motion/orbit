@@ -1,4 +1,4 @@
-import { Model, query, str, object, array, bool } from './helpers'
+import { Model, query, str, object, array, bool } from '@jot/black'
 import Image from './image'
 import App from './app'
 import User from './user'

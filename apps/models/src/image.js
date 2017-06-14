@@ -1,4 +1,4 @@
-import { Model, query, str, object } from './helpers'
+import { Model, query, str, object } from '@jot/black'
 import User from './user'
 
 class Image extends Model {

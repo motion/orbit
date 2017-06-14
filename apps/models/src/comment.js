@@ -1,4 +1,4 @@
-import { Model, query, str } from './helpers'
+import { Model, query, str } from '@jot/black'
 import User from './user'
 
 class Comment extends Model {

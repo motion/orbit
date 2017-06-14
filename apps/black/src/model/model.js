@@ -3,13 +3,17 @@ import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
 import type RxDB from 'rxdb'
 
-export default class BaseModel {
+export default class Model {
   // for use by @query
   queries: Object
 
-  constructor({ defaultSchema, defaultProps }) {
+  constructor({ defaultSchema, defaultProps } = {}) {
     this.create = this.create.bind(this)
-    this.defaultSchema = defaultSchema
+    this.defaultSchema = defaultSchema || {
+      primaryPath: '_id',
+      version: 0,
+      disableKeyCompression: true,
+    }
     this.queries = {}
   }
 

@@ -84,14 +84,9 @@ export default class Sidebar {
                 ))}
               </orgs>
 
-              <Pane>
-                <Pane.Title if={store.inProgress}>
-                  Current Task
-                </Pane.Title>
-
+              <Pane if={store.inProgress} title="Current Task">
                 <activeItem>
                   <Item
-                    if={store.inProgress}
                     task={store.inProgress}
                     active={false}
                     onClick={() => {}}
@@ -101,12 +96,12 @@ export default class Sidebar {
                 </activeItem>
               </Pane>
             </above>
-            <Pane scrollable>
-              <Pane.Title
-                collapsed={store.collapseTasks}
-                collapsable
-                onCollapse={() => (store.collapseTasks = !store.collapseTasks)}
-                after={
+            <Pane
+              collapsable
+              scrollable
+              title={User.user ? `${User.user.name}'s tasks` : 'tasks'}
+              titleProps={{
+                after: (
                   <Segment $$flex={1}>
                     <Button
                       active={store.hideArchived == false}
@@ -121,12 +116,10 @@ export default class Sidebar {
                       Active
                     </Button>
                   </Segment>
-                }
-              >
-                {User.user ? `${User.user.name}'s tasks` : 'tasks'}
-              </Pane.Title>
-
-              <content if={!store.collapseTasks} $$draggable>
+                ),
+              }}
+            >
+              <content $$draggable>
                 <ContextMenu
                   $context
                   options={[
@@ -141,16 +134,8 @@ export default class Sidebar {
               </content>
             </Pane>
 
-            <Pane>
-              <Pane.Title
-                collapsable
-                collapsed={store.collapseTeam}
-                onCollapse={() => (store.collapseTeam = !store.collapseTeam)}
-              >
-                Team
-              </Pane.Title>
-
-              <Team if={!store.collapseTeam} store={store} />
+            <Pane collapsable title="Team">
+              <Team store={store} />
             </Pane>
 
             <SlotFill.Slot name="sidebar">

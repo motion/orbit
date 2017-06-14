@@ -17,10 +17,10 @@ export default class DocListStore {
   shouldFocus = false
 
   createDoc = async () => {
-    if (!this.props.docStore) {
+    if (!this.doc) {
       await Document.create()
     } else {
-      await Document.create({ docs: [this.props.docStore.doc._id] })
+      await Document.create({ parentId: this.doc._id })
     }
     this.setTimeout(() => {
       this.shouldFocus = true

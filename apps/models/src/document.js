@@ -34,7 +34,6 @@ class Document extends Model {
     hashtags: array.items(str),
     attachments: array.optional.items(str),
     private: bool,
-    temporary: bool.optional,
     slug: str,
     draft: bool.optional,
     timestamps: true,

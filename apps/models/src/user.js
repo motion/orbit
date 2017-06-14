@@ -41,7 +41,6 @@ class User {
 
     // sync
     this.superlogin.on('login', async (event, session) => {
-      console.log('on login', event, session)
       this.user = await this.getCurrentUser()
     })
 
@@ -79,7 +78,7 @@ class User {
       this.remoteDb = new PouchDB(this.user.userDBs.documents, {
         skipSetup: true,
       })
-      this.localDb = new PouchDB(`local_db_${user.user_id}`)
+      this.localDb = new PouchDB(`local_db_${this.user.user_id}`)
       // syncronize the local and remote user databases...
       this.remoteSyncHandler = this.localDb
         .sync(this.remoteDb, { live: true, retry: true })

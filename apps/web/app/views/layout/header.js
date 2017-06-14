@@ -58,6 +58,8 @@ export default class Header {
               <actions>
                 {items}
                 <Button
+                  key={Math.random()}
+                  spaced
                   chromeless
                   icon={
                     layoutStore.sidebar.active

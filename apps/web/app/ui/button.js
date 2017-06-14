@@ -103,7 +103,7 @@ export default class Button {
           color={active ? '#000' : color || iconColor}
           {...iconProps}
         />
-        <glowWrap if={!active}>
+        <glowWrap $minimal={chromeless} if={!active}>
           <Glow full scale={1.7} color={[0, 0, 0]} opacity={0.06} />
         </glowWrap>
         <children
@@ -148,7 +148,6 @@ export default class Button {
       flexFlow: 'row',
       justifyContent: 'center',
       border: [1, '#f5f5f5'],
-      boxShadow: 'inset 0 0.5px 0 rgba(255,255,255,1)',
       position: 'relative',
     },
     glowWrap: {
@@ -159,7 +158,10 @@ export default class Button {
       right: 0,
       bottom: 0,
       zIndex: 10,
-      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5)',
+      boxShadow: ['inset 0 1px 0 rgba(255,255,255,0.5)', ',inset 0 -1px 0 red'],
+    },
+    minimal: {
+      boxShadow: 'none',
     },
     inSegment: ({
       chromeless,

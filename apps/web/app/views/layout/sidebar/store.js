@@ -15,11 +15,20 @@ const liToText = ({ nodes }) =>
 
 export default class SidebarStore {
   docs = Document.recent()
+  collapseTasks = false
+  collapseTeam = false
+
   activeTask = null
   hideArchived = true
   inProgress = null
 
   sortMap = {}
+
+  team = [
+    { name: 'nick', task: 'improve perf on doc loading' },
+    { name: 'nate', task: 'buy 50 cases of la croix for office' },
+    { name: 'steel', task: 'write the fastest bundler in the world' },
+  ]
 
   onArchive = task => {
     const doc = this.docs.filter(doc => doc._id === task.doc._id)[0]

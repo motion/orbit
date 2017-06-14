@@ -18,205 +18,13 @@ import {
 } from '~/ui'
 import { User, Place } from '@jot/models'
 import Login from '../login'
+import Team from './team'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
 import randomcolor from 'randomcolor'
 import SidebarStore from './store'
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-  arrayMove,
-} from 'react-sortable-hoc'
 import { IN_TRAY, TRAY_WIDTH } from '~/constants'
-import timeAgo from 'time-ago'
-const { ago } = timeAgo()
-
-const DragHandle = SortableHandle(() => {
-  const innerStyle = {
-    justifyContent: 'space-between',
-    height: 10,
-  }
-
-  const notchStyle = {
-    width: 20,
-    height: 2,
-    background: 'rgba(0,0,0,0.30)',
-  }
-
-  return (
-    <div style={{ padding: 10 }}>
-      <div style={innerStyle}>
-        {[1, 2, 3].map(notch => <div key={notch} style={notchStyle} />)}
-      </div>
-    </div>
-  )
-})
-
-@view class Item {
-  render({
-    active,
-    inProgress,
-    onStart,
-    noDrag,
-    onClick,
-    index,
-    task,
-    ...props
-  }) {
-    const className = 'strikethrough ' + (task.archive ? 'active' : '')
-
-    // up to 5 days ago
-    const time = ago(+Date.now() - Math.random() * 5 * 24 * 60 * 60 * 1000)
-
-    // css structure is for archive animation
-    return (
-      <item
-        onClick={onClick}
-        $$undraggable
-        $first={index === 0}
-        $active={active === true}
-        $inProgress={inProgress}
-        $notInProgress={!inProgress}
-      >
-        <Button
-          if={inProgress}
-          $startIcon
-          onClick={onStart}
-          icon="ui-1_check-curve"
-        />
-        <Button
-          chromeless
-          if={!inProgress}
-          $startIcon
-          onClick={onStart}
-          icon="media-1_button-play"
-        />
-        <content>
-          <Text $text {...props}>
-            <div className={className}>
-              <p><span>{task.text}</span></p>
-            </div>
-          </Text>
-          <bottom $$row>
-            <tags>
-              {time} · Nate
-            </tags>
-          </bottom>
-        </content>
-        <Button
-          $button
-          $activeDoc={window.location.pathname.indexOf(task.doc.url()) === 0}
-          onMouseDown={() => Router.go(task.doc.url())}
-        >
-          {task.doc.title}
-        </Button>
-
-        <DragHandle if={!noDrag} />
-      </item>
-    )
-  }
-
-  static style = {
-    content: {
-      flex: 3,
-      marginLeft: 5,
-      marginRight: 5,
-    },
-    startIcon: {
-      marginLeft: 5,
-      marginRight: 5,
-    },
-    button: {
-      marginRight: 5,
-      transition: 'all 100ms ease-in',
-    },
-    activeDoc: {
-      pointerEvents: 'none',
-      opacity: 0.7,
-    },
-    greenDot: {
-      background: '#54ff54',
-      width: 10,
-      opacity: 0.5,
-      height: 10,
-      borderRadius: 10,
-      margin: 10,
-      border: `1px solid #24cc24`,
-    },
-    inProgress: {
-      borderTop: '1px solid #ddd',
-    },
-    notInProgress: {
-      boxShadow: '1px 1px 5px rgba(0,0,0,0.2)',
-    },
-    first: {
-      borderTop: '1px solid #ddd',
-    },
-    tags: {
-      color: `rgba(0, 0, 0, 0.6)`,
-      fontSize: 12,
-    },
-    text: {},
-    bottom: {
-      flex: 1,
-      justifyContent: 'space-between',
-    },
-    item: {
-      flexFlow: 'row',
-      padding: [7, 5],
-      background: '#fefefe',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderBottom: '1px solid #ddd',
-      fontSize: 14,
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      transition: 'background 60ms ease-in',
-    },
-    active: {
-      background: 'rgba(254, 255, 237, 1)',
-    },
-    span: {
-      paddingTop: 2,
-    },
-  }
-}
-
-/* sortable eats index, so add _index for item styling */
-const SortableItem = SortableElement(
-  ({ active, onStart, onClick, _index, value }) => (
-    <div style={{ zIndex: 1000000 }}>
-      <Item
-        active={active}
-        onClick={onClick}
-        onStart={onStart}
-        index={_index}
-        task={value}
-      />
-    </div>
-  )
-)
-
-const SortableList = SortableContainer(
-  ({ active, onStart, onClick, items }) => {
-    return (
-      <ul>
-        {items.map((task, index) => (
-          <SortableItem
-            onClick={() => onClick(task)}
-            onStart={() => onStart(task)}
-            active={active && active.key === task.key}
-            key={task.key}
-            _index={index}
-            index={index}
-            value={task}
-          />
-        ))}
-      </ul>
-    )
-  }
-)
+import Tasks from './tasks'
 
 @view.attach('layoutStore')
 @view({
@@ -244,10 +52,6 @@ export default class Sidebar {
         />
       </ContextMenu.Target>
     )
-  }
-
-  onSortEnd = () => {
-    console.log('on sort end')
   }
 
   render({ layoutStore, store }) {
@@ -280,40 +84,29 @@ export default class Sidebar {
                 ))}
               </orgs>
 
-              <title
-                if={store.inProgress}
-                $$row
-                $$justify="space-between"
-                $$padding={[4, 6]}
-              >
-                <input
-                  $search
-                  placeholder="current task"
-                  onChange={e => (store.filter = e.target.value)}
-                />
-              </title>
+              <Pane>
+                <Pane.Title if={store.inProgress}>
+                  Current Task
+                </Pane.Title>
 
-              <activeItem>
-                <Item
-                  if={store.inProgress}
-                  task={store.inProgress}
-                  active={false}
-                  onClick={() => {}}
-                  inProgress
-                  noDrag
-                />
-              </activeItem>
-
-              <title $$row $$justify="space-between" $$padding={[4, 6]}>
-                <top $$row>
-                  <input
-                    $$flex={3}
-                    $search
-                    placeholder={
-                      User.user ? `${User.user.name}'s tasks` : 'tasks'
-                    }
-                    onChange={e => (store.filter = e.target.value)}
+                <activeItem>
+                  <Item
+                    if={store.inProgress}
+                    task={store.inProgress}
+                    active={false}
+                    onClick={() => {}}
+                    inProgress
+                    noDrag
                   />
+                </activeItem>
+              </Pane>
+            </above>
+            <Pane scrollable>
+              <Pane.Title
+                collapsed={store.collapseTasks}
+                collapsable
+                onCollapse={() => (store.collapseTasks = !store.collapseTasks)}
+                after={
                   <Segment $$flex={1}>
                     <Button
                       active={store.hideArchived == false}
@@ -328,30 +121,12 @@ export default class Sidebar {
                       Active
                     </Button>
                   </Segment>
-                </top>
-                <Button
-                  if={false}
-                  chromeless
-                  icon="simple-add"
-                  onClick={() =>
-                    store.setEditing({
-                      _id: Math.random(),
-                      title: '',
-                      temporary: true,
-                      save() {
-                        return Place.create({ title: this.title })
-                      },
-                    })}
-                />
-              </title>
-            </above>
-
-            <content $$draggable>
-              <Pane
-                scrollable
-                collapsed={store.allPlacesClosed}
-                onSetCollapse={store.ref('allPlacesClosed').set}
+                }
               >
+                {User.user ? `${User.user.name}'s tasks` : 'tasks'}
+              </Pane.Title>
+
+              <content if={!store.collapseTasks} $$draggable>
                 <ContextMenu
                   $context
                   options={[
@@ -361,18 +136,22 @@ export default class Sidebar {
                     },
                   ]}
                 >
-                  <SortableList
-                    onSortEnd={store.onSortEnd}
-                    onClick={store.onSelect}
-                    onStart={store.onSetProgress}
-                    active={store.activeTask}
-                    items={store.tasks}
-                    useDragHandle={true}
-                    onSortEnd={store.onSortEnd}
-                  />
+                  <Tasks store={store} />
                 </ContextMenu>
-              </Pane>
-            </content>
+              </content>
+            </Pane>
+
+            <Pane>
+              <Pane.Title
+                collapsable
+                collapsed={store.collapseTeam}
+                onCollapse={() => (store.collapseTeam = !store.collapseTeam)}
+              >
+                Team
+              </Pane.Title>
+
+              <Team if={!store.collapseTeam} store={store} />
+            </Pane>
 
             <SlotFill.Slot name="sidebar">
               {items => (

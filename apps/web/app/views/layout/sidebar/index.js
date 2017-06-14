@@ -25,6 +25,7 @@ import randomcolor from 'randomcolor'
 import SidebarStore from './store'
 import { IN_TRAY, TRAY_WIDTH } from '~/constants'
 import Tasks from './tasks'
+import TaskItem from './taskItem'
 
 @view.attach('layoutStore')
 @view({
@@ -37,21 +38,6 @@ export default class Sidebar {
     if (!IN_TRAY) {
       this.props.layoutStore.sidebar.attachDragger(this.dragger)
     }
-  }
-
-  getListItem = (task, index) => {
-    const { store } = this.props
-
-    return (
-      <ContextMenu.Target data={{}}>
-        <Item
-          active={store.active && store.active.key === task.key}
-          task={task}
-          editable={false}
-          autoselect
-        />
-      </ContextMenu.Target>
-    )
   }
 
   render({ layoutStore, store }) {
@@ -86,7 +72,7 @@ export default class Sidebar {
 
               <Pane if={store.inProgress} title="Current Task">
                 <activeItem>
-                  <Item
+                  <TaskItem
                     task={store.inProgress}
                     active={false}
                     onClick={() => {}}

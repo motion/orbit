@@ -15,7 +15,11 @@ import { HEADER_HEIGHT } from '~/constants'
 
     finish = async () => {
       this.loggingIn = true
-      await User.loginOrSignup(this.email.value, this.password.value)
+      try {
+        await User.loginOrSignup(this.email.value, this.password.value)
+      } catch (e) {
+        console.error(e)
+      }
       this.loggingIn = false
     }
 
@@ -59,6 +63,7 @@ export default class Login {
             <Input
               $input
               $error={store.error}
+              disabled={store.loggingIn}
               name="email"
               onKeyDown={store.onEmailKey}
               getRef={store.ref('email').set}

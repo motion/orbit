@@ -47,7 +47,6 @@ export default class EditorView {
 
   render({ readOnly, editorStore }) {
     const { spec } = editorStore
-
     const showToolbar = !editorStore.inline && readOnly !== true
 
     return (

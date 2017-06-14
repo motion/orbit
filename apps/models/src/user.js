@@ -135,7 +135,7 @@ class User {
       password,
     })
     console.log('login: user', this.user)
-    this.setupDbSync(user)
+    this.setupDbSync()
   }
 
   logout = async () => {
@@ -146,8 +146,8 @@ class User {
   }
 
   getCurrentUser = async () => {
-    var session = await superlogin.getSession()
-    this.setupDbSync(session)
+    const session = await superlogin.getSession()
+    this.setupDbSync()
     return session
   }
 }

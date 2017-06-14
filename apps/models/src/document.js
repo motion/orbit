@@ -50,7 +50,7 @@ class Document extends Model {
       attachments: [],
       private: true,
       content: DEFAULT_CONTENT(title),
-      slug: toSlug(props.title || Math.random()),
+      slug: toSlug(title || Math.random()),
     }
   }
 

@@ -6,8 +6,8 @@ import DocumentView from '~/views/document'
 import { User, Document } from '@jot/models'
 import Page from '~/page'
 
-@view({
-  store: class DocPageStore {
+@view.provide({
+  docStore: class DocPageStore {
     doc = Document.get(this.props.id || Router.params.id)
     forceEdit = false
 
@@ -21,8 +21,8 @@ import Page from '~/page'
   },
 })
 export default class DocumentPage {
-  render({ store, insidePlace }) {
-    const { doc } = store
+  render({ docStore, insidePlace }) {
+    const { doc } = docStore
 
     if (!doc) {
       return null
@@ -45,7 +45,7 @@ export default class DocumentPage {
           </Segment>
         }
       >
-        <DocumentView id={doc._id} onKeyDown={store.onKeyDown} />
+        <DocumentView id={doc._id} onKeyDown={docStore.onKeyDown} />
       </Page>
     )
   }

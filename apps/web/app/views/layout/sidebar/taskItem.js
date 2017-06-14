@@ -133,7 +133,9 @@ export default class Item {
       color: `rgba(0, 0, 0, 0.6)`,
       fontSize: 12,
     },
-    text: {},
+    text: {
+      cursor: 'default',
+    },
     bottom: {
       flex: 1,
       justifyContent: 'space-between',

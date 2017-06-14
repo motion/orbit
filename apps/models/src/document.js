@@ -1,8 +1,9 @@
 import { Model, query, str, object, array, bool } from './helpers'
 import Image from './image'
-import Place from './place'
 import User from './user'
 import generateName from 'sillyname'
+
+const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
 
 const DEFAULT_CONTENT = title => ({
   nodes: [
@@ -28,14 +29,15 @@ class Document extends Model {
     content: object,
     text: str.optional,
     authorId: str,
-    placeId: str.optional,
-    places: array.optional.items(str),
+    parentId: str.optional,
+    members: array.items(str),
     hashtags: array.items(str),
     attachments: array.optional.items(str),
     private: bool,
     temporary: bool.optional,
-    timestamps: true,
+    slug: str,
     draft: bool.optional,
+    timestamps: true,
   }
 
   static defaultProps = props => {
@@ -44,9 +46,11 @@ class Document extends Model {
       title,
       authorId: User.authorId,
       hashtags: [],
+      members: [],
       attachments: [],
       private: true,
       content: DEFAULT_CONTENT(title),
+      slug: toSlug(props.title || Math.random()),
     }
   }
 
@@ -58,15 +62,9 @@ class Document extends Model {
   }
 
   hooks = {
-    preSave: async ({ title, placeId }) => {
-      // sync title
-      if (placeId) {
-        console.log('save document to place', placeId)
-        const place = await Place.get(placeId).exec()
-        if (place && place.title !== title) {
-          place.title = title
-          place.save()
-        }
+    preSave: async ({ slug }) => {
+      if (await this.get(slug).exec()) {
+        throw new Error(`Already exists a place with this slug! ${slug}`)
       }
     },
   }
@@ -97,13 +95,20 @@ class Document extends Model {
         docId: this._id,
       })
     },
-  }
-
-  @query homeForPlace = id => {
-    if (!id) {
-      return null
-    }
-    return this.collection.findOne().where('placeId').eq(id)
+    toggleSubscribe() {
+      if (User.loggedIn) {
+        const exists = some(this.members, m => m === User.user.name)
+        if (exists) {
+          this.members = this.members.filter(m => m !== User.user.name)
+        } else {
+          this.members = [...this.members, User.user.name]
+        }
+        this.save()
+      }
+    },
+    subscribed() {
+      return User.loggedIn && this.members.indexOf(User.user.name) >= 0
+    },
   }
 
   search = async text => {
@@ -128,28 +133,27 @@ class Document extends Model {
     return await this.collection.find({ _id: { $in: ids } }).exec()
   }
 
-  @query placeDocsForUser = userId => {
+  @query userHomeDocs = userId => {
+    if (!userId) {
+      return null
+    }
     return this.collection.find({
-      placeId: { $exists: true },
+      parentId: { $exists: false },
       draft: { $ne: true },
     })
   }
 
-  @query forPlace = id => {
+  @query child = id => {
     if (!id) {
       return null
     }
-    return (
-      this.collection
-        .find({
-          placeId: { $exists: false },
-          draft: { $ne: true },
-        })
-        .where('places')
-        // in array find
-        .elemMatch({ $eq: id })
-        .sort({ createdAt: 'desc' })
-    )
+    return this.collection
+      .find({
+        draft: { $ne: true },
+      })
+      .where('parentId')
+      .eq(id)
+      .sort({ createdAt: 'desc' })
   }
 
   @query all = () =>

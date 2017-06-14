@@ -14,7 +14,7 @@ import {
   Button,
   SlotFill,
 } from '~/ui'
-import { User, Place } from '@jot/models'
+import { User, Document } from '@jot/models'
 import Login from './login'
 import Router from '~/router'
 import fuzzy from 'fuzzy'
@@ -55,7 +55,7 @@ const SideBarItem = ({ children, isEditing, after, ...props }) => {
 }
 
 class SidebarStore {
-  places = Place.all()
+  places = Document.all()
   placeInput = null
   active = null
   editingPlace = false
@@ -209,7 +209,7 @@ export default class Sidebar {
                     title: '',
                     temporary: true,
                     save() {
-                      return Place.create({ title: this.title })
+                      return Document.create({ title: this.title })
                     },
                   })}
               />

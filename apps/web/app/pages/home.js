@@ -1,8 +1,7 @@
 import React from 'react'
 import { view, watch } from '@jot/black'
-import { User, Place, Document } from '@jot/models'
+import { User, Document } from '@jot/models'
 import { Grid, Button, SlotFill } from '~/ui'
-import PlacePage from './place'
 import DocumentView from '~/views/document'
 import { BLOCKS } from '~/editor/constants'
 import DocItem from '~/views/document/item'
@@ -10,13 +9,13 @@ import DocItem from '~/views/document/item'
 const idFn = _ => _
 
 @view({
-  store: class PlaceTileStore {
-    document = Document.homeForPlace(this.props.place._id)
+  store: class DocTileStore {
+    document = Document.get(this.props.doc._id)
   },
 })
-class PlaceTile {
+class DocTile {
   render({ store: { document } }) {
-    console.log('place tile fetch', document)
+    console.log('tile fetch', document)
     return (
       <DocumentView
         if={document}
@@ -31,8 +30,8 @@ class PlaceTile {
 class HomeStore {
   editing = true
 
-  userPlace = watch(() => User.loggedIn && Place.get({ slug: User.user.name }))
-  placeDocs = watch(() => User.loggedIn && Document.placeDocsForUser())
+  userDoc = watch(() => User.loggedIn && Document.get({ slug: User.user.name }))
+  userDocs = watch(() => User.loggedIn && Document.userHomeDocs(User.user.id))
 
   get layout() {
     if (this.updateVersion === 0) {
@@ -84,7 +83,7 @@ export default class HomePage {
           margin={store.editing ? [10, 10] : [0, 0]}
           isDraggable={store.editing}
           isResizable={store.editing}
-          items={(store.placeDocs || [])
+          items={(store.userDocs || [])
             .map(doc =>
               <DocItem
                 key={doc._id || Math.random()}
@@ -99,10 +98,10 @@ export default class HomePage {
         />
 
         <top if={false}>
-          <place>
+          <doc>
             <title>Drafts</title>
-            <PlaceTile if={store.userPlace} place={store.userPlace} />
-          </place>
+            <DocTile if={store.userDoc} doc={store.userDoc} />
+          </doc>
         </top>
       </home>
     )

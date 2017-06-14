@@ -21,7 +21,7 @@ class User {
       baseUrl: `${API_URL}/auth/`,
       // A list of API endpoints to automatically add the Authorization header to
       // By default the host the browser is pointed to will be added automatically
-      endpoints: [COUCH_HOST],
+      endpoints: [API_HOST],
       // Set this to true if you do not want the URL bar host automatically added to the list
       noDefaultEndpoint: false,
       // Where to save your session token: localStorage ('local') or sessionStorage ('session'), default: 'local'
@@ -31,7 +31,7 @@ class User {
       // Sets when to check if the session is expired. 'stateChange', 'startup' or nothing.
       // 'stateChange' checks every time $stateChangeStart or $routeChangeStart is fired
       // 'startup' checks just on app startup. If this is blank it will never check.
-      checkExpired: 'stateChange',
+      checkExpired: 'startup',
       // A float that determines the percentage of a session duration, after which SuperLogin will automatically refresh the
       // token. For example if a token was issued at 1pm and expires at 2pm, and the threshold is 0.5, the token will
       // automatically refresh after 1:30pm. When authenticated, the token expiration is automatically checked on every
@@ -91,6 +91,10 @@ class User {
     try {
       await this.login(email, password)
     } catch (loginError) {
+      if (!loginError) {
+        console.log('signed in', email)
+        return
+      }
       console.log('loginError', loginError)
       try {
         await this.signup(email, password)

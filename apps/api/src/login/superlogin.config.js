@@ -37,15 +37,13 @@ export default {
     // The amount of time the account will be locked for (in seconds) after the maximum failed logins is exceeded
     lockoutTime: 600,
     // The amount of time a new session is valid for (default: 24 hours)
-    sessionLife: 86400,
+    sessionLife: 86400 * 365,
     // The amount of time a password reset token is valid for
     tokenLife: 86400,
     // The maximum number of entries in the activity log in each user doc. Zero to disable completely
     userActivityLogSize: 10,
-    // If set to true, the user will be logged in automatically after registering
-    loginOnRegistration: false,
-    // If set to true, the user will be logged in automatically after resetting the password
-    loginOnPasswordReset: false,
+    loginOnRegistration: true,
+    loginOnPasswordReset: true,
   },
   userModel: {
     // For example, this will require each new user to specify a valid age on the sign-up form or registration will fail

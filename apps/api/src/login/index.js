@@ -7,19 +7,17 @@ export default class Login {
   constructor(config) {
     this.superlogin = new SuperLogin(config)
 
-    const strategies = [
-      ['facebook', FacebookStrategy],
-      ['github', GitHubStrategy],
-      ['google', GoogleStrategy],
-    ]
-
-    strategies.forEach(([name, strategy]) => {
-      if (
-        this.superlogin.config.getItem(`providers.${name}.credentials.clientID`)
-      ) {
-        this.superlogin.registerOAuth2(name, strategy)
-      }
-    })
+    // const strategies = []
+    // ['facebook', FacebookStrategy],
+    // ['github', GitHubStrategy],
+    // ['google', GoogleStrategy],
+    // strategies.forEach(([name, strategy]) => {
+    //   if (
+    //     this.superlogin.config.getItem(`providers.${name}.credentials.clientID`)
+    //   ) {
+    //     this.superlogin.registerOAuth2(name, strategy)
+    //   }
+    // })
   }
 
   get router() {

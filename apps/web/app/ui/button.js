@@ -104,7 +104,7 @@ export default class Button {
           {...iconProps}
         />
         <glowWrap if={!active}>
-          <Glow full scale={2} color={[0, 0, 0]} opacity={0.08} />
+          <Glow full scale={1.7} color={[0, 0, 0]} opacity={0.06} />
         </glowWrap>
         <children
           if={children}
@@ -137,7 +137,7 @@ export default class Button {
 
   static style = {
     button: {
-      background: 'transparent',
+      background: '#fefefe',
       overflow: 'hidden',
       lineHeight: '1rem',
       fontSize: 13,
@@ -147,30 +147,35 @@ export default class Button {
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',
-      border: [1, '#eee', 'dotted'],
+      border: [1, '#f5f5f5'],
+      boxShadow: 'inset 0 0.5px 0 rgba(255,255,255,1)',
       position: 'relative',
-      // '&:active': {
-      //   borderColor: 'blue',
-      // },
+    },
+    glowWrap: {
+      position: 'absolute',
+      overflow: 'hidden',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 10,
+      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5)',
     },
     inSegment: ({
       chromeless,
       borderRadius,
       circular,
+      inSegment,
       inSegment: { first, last },
     }) => ({
-      borderRightWidth: chromeless ? 0 : 1,
-      borderLeftWidth: 0,
+      ...(inSegment && {
+        marginLeft: -1,
+      }),
       ...(first && {
         borderLeftRadius: circular ? 1000 : borderRadius,
-        borderLeftWidth: chromeless ? 0 : 1,
       }),
       ...(last && {
         borderRightRadius: circular ? 1000 : borderRadius,
-      }),
-      ...(last &&
-      !first && {
-        borderLeftWidth: 0,
       }),
     }),
     color: color => ({
@@ -191,15 +196,6 @@ export default class Button {
     icon: {
       pointerEvents: 'none',
     },
-    glowWrap: {
-      position: 'absolute',
-      overflow: 'hidden',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 10,
-    },
     hasIconBefore: {
       marginLeft: 5,
     },
@@ -219,6 +215,7 @@ export default class Button {
     ) => {
       return {
         button: {
+          background,
           ...(!inSegment && {
             borderRadius,
           }),
@@ -226,17 +223,18 @@ export default class Button {
             borderRadius: 1000,
           }),
           ...activeTheme.base,
+          '&:active': {
+            position: 'relative',
+            zIndex: 1000,
+          },
           '&:hover': activeTheme.hover,
           // inForm
           ...(inForm && {
-            '&:active': activeTheme.active,
+            '&:active': activeTheme.inputActive || activeTheme.active,
             '&:focus': {
               borderColor: '#999',
               borderWidth: 1, // ;)
             },
-          }),
-          ...(background && {
-            background,
           }),
         },
         isActive: {

@@ -3,6 +3,7 @@ import { view } from '@jot/black'
 import Popover from './popover'
 import names from './iconNames'
 import fuzzy from 'fuzzy'
+import { IS_PROD } from '~/constants'
 
 const cache = {}
 const findMatch = (name: string) => {
@@ -25,7 +26,6 @@ export default class Icon {
 
   static defaultProps = {
     size: 16,
-    color: [0, 0, 0, 0.4],
     // hoverColor: [255,255,255,0.7],
     type: 'mini',
     margin: 0,
@@ -51,6 +51,10 @@ export default class Icon {
       style,
       ...props
     } = this.props
+
+    if (!color && !IS_PROD) {
+      console.log('no color given to icon', name)
+    }
 
     const iconName = findMatch(name)
     const backupIcon = !iconName ? name : ''

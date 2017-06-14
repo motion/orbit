@@ -5,20 +5,9 @@ import Page from '~/page'
 import DocView from '~/views/document'
 import { flatten } from 'lodash'
 
-class TodoStore {
-  docs = Document.recent()
+class TodoStore {}
 
-  get todoDocs() {
-    return (this.docs || []).filter(doc => {
-      if (!doc.content.document) return false
-      return (
-        doc.content.document.nodes.filter(node => node.type === 'ul_list')
-          .length > 0
-      )
-    })
-  }
-}
-
+// just a test page, basically
 @view({
   store: TodoStore,
 })
@@ -26,18 +15,7 @@ export default class Todo {
   render({ store }) {
     return (
       <Page header title="Todo" actions={[]}>
-        <todos>
-          {store.todoDocs.map(doc =>
-            <doc>
-              <h4 onClick={() => Router.go(doc.url())}>{doc.title}</h4>
-              <DocView
-                inline
-                editorProps={{ onlyNode: 'ul_list' }}
-                id={doc._id}
-              />
-            </doc>
-          )}
-        </todos>
+        <h1>hi im todo</h1>
       </Page>
     )
   }

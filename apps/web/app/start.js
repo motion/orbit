@@ -20,6 +20,7 @@ const ROOT = document.querySelector('#app')
 export function render() {
   console.time('#render')
   const Root = require('./views/root').default
+
   ReactDOM.render(
     <ThemeProvide {...themes}>
       <Root />

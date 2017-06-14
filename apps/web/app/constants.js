@@ -36,3 +36,9 @@ function isElectron() {
   }
   return false
 }
+
+export const IN_TRAY =
+  IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
+
+export const TRAY_WIDTH = 400
+export const TRAY_HEIGHT = 500

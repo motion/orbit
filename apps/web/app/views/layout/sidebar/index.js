@@ -28,6 +28,7 @@ import {
   SortableHandle,
   arrayMove,
 } from 'react-sortable-hoc'
+import { IN_TRAY, TRAY_WIDTH } from '~/constants'
 import timeAgo from 'time-ago'
 const { ago } = timeAgo()
 
@@ -225,7 +226,9 @@ export default class Sidebar {
   dragger = null
 
   componentDidMount() {
-    this.props.layoutStore.sidebar.attachDragger(this.dragger)
+    if (!IN_TRAY) {
+      this.props.layoutStore.sidebar.attachDragger(this.dragger)
+    }
   }
 
   getListItem = (task, index) => {
@@ -248,22 +251,20 @@ export default class Sidebar {
   }
 
   render({ layoutStore, store }) {
+    const active = IN_TRAY ? true : layoutStore.sidebar.active
+    const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
+
     return (
       <Shortcuts name="all" handler={store.handleShortcut}>
-        <Drawer
-          noOverlay
-          open={layoutStore.sidebar.active}
-          from="right"
-          size={layoutStore.sidebar.width}
-          zIndex={9}
-        >
+        <Drawer noOverlay open={active} from="right" size={width} zIndex={9}>
           <dragger
+            if={!IN_TRAY}
             style={{ WebkitAppRegion: 'no-drag' }}
             ref={this.ref('dragger').set}
           />
           <sidebar>
-            <top>
-              <Login />
+            <above>
+              <Login if={!IN_TRAY} />
 
               <orgs if={false} $$row>
                 {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
@@ -279,7 +280,12 @@ export default class Sidebar {
                 ))}
               </orgs>
 
-              <title $$row $$justify="space-between" $$padding={[4, 6]}>
+              <title
+                if={store.inProgress}
+                $$row
+                $$justify="space-between"
+                $$padding={[4, 6]}
+              >
                 <input
                   $search
                   placeholder="current task"
@@ -301,13 +307,14 @@ export default class Sidebar {
               <title $$row $$justify="space-between" $$padding={[4, 6]}>
                 <top $$row>
                   <input
+                    $$flex={3}
                     $search
                     placeholder={
                       User.user ? `${User.user.name}'s tasks` : 'tasks'
                     }
                     onChange={e => (store.filter = e.target.value)}
                   />
-                  <Segment>
+                  <Segment $$flex={1}>
                     <Button
                       active={store.hideArchived == false}
                       onClick={() => (store.hideArchived = false)}
@@ -323,6 +330,7 @@ export default class Sidebar {
                   </Segment>
                 </top>
                 <Button
+                  if={false}
                   chromeless
                   icon="simple-add"
                   onClick={() =>
@@ -336,7 +344,7 @@ export default class Sidebar {
                     })}
                 />
               </title>
-            </top>
+            </above>
 
             <content $$draggable>
               <Pane
@@ -392,6 +400,11 @@ export default class Sidebar {
     },
     title: {
       marginTop: 0,
+      maxHeight: 35,
+      flex: 1,
+    },
+    top: {
+      flex: 1,
     },
     context: {
       flex: 1,
@@ -413,7 +426,6 @@ export default class Sidebar {
       background: 'transparent',
       margin: ['auto', 0],
       fontSize: 14,
-      width: '70%',
       opacity: 0.6,
       '&:hover': {
         opacity: 1,

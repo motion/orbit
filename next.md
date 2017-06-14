@@ -1,24 +1,6 @@
-# what is it?
-
-a todo list, a notepad, and a wiki in one.
-
-why?
-
-what are todo apps missing? you cant collaborate or keep your notes there
-what are note apps missing? they dont handle your todos well, they dont let you collab
-why add a wiki? once you have notes and todos, you need to organize that knowledge
-
-this sounds bloated/unfocused/weird
-  try not to think of them as separate -- this is one app, that handles your teams mind
-  we dont separate todo/notes/wiki, they are the same thing, with powerful and simple UIs to help
-  we just smartly extract your todos from notes, and give you powerful tools to organize
-  the result is a new type of app: a collaborative, powerful way to work with data
-
-think of it as a new take on an office suite for your team and your mind
-
-
 # upnext
 - doclists that just point to parent docId
+- user dbs wrapped by rxdb so we can store random stuff (locally too)
 
 recursion really is apt here:
 - places => are just docs with primary: true?

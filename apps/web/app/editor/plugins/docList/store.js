@@ -2,25 +2,25 @@ import { watch } from '@jot/black'
 import { Document } from '@jot/models'
 
 export default class DocListStore {
-  get place() {
-    if (!this.props.placeStore) {
+  get doc() {
+    if (!this.props.docStore) {
       return false
     }
-    return this.props.placeStore.place
+    return this.props.docStore.doc
   }
 
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
   docs = watch(
-    () => !this.props.inline && Document.forPlace(this.place && this.place._id)
+    () => !this.props.inline && Document.child(this.doc && this.doc._id)
   )
   shouldFocus = false
 
   createDoc = async () => {
-    if (!this.props.placeStore) {
+    if (!this.doc) {
       await Document.create()
     } else {
-      await Document.create({ places: [this.props.placeStore.place._id] })
+      await Document.create({ parentId: this.doc._id })
     }
     this.setTimeout(() => {
       this.shouldFocus = true

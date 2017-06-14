@@ -11,7 +11,7 @@ import VoteList from './lists/vote'
 import List from './lists/list'
 import DocListStore from './store'
 
-@view.attach('placeStore')
+@view.attach('docStore')
 @node
 @view({
   listStore: DocListStore,
@@ -67,7 +67,7 @@ export default class DocList {
   }
 
   render({
-    placeStore,
+    docStore,
     node,
     editorStore,
     listStore,

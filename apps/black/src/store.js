@@ -4,7 +4,6 @@ import emittable from '@jot/decor/lib/plugins/core/emittable'
 import automagical from '@jot/decor/lib/plugins/mobx/automagical'
 import subscribable from '@jot/decor/lib/plugins/react/subscribable'
 import subscribableHelpers from '@jot/decor/lib/plugins/core/subscribableHelpers'
-import storeProvidable from '@jot/decor/lib/plugins/react/storeProvidable'
 
 export const storeDecorator = decor([
   subscribable,
@@ -14,19 +13,14 @@ export const storeDecorator = decor([
   autobound,
 ])
 
-const config = {
+export const storeOptions = {
   storeDecorator,
-  onStoreMount(name, store, props) {
+  onStoreMount(store, props) {
     if (store.start) {
       store.start(props)
     }
-    return store
   },
-  onStoreDidMount(name, store) {
-    // App.mountStore(store)
-  },
-  onStoreUnmount(name, store) {
-    // App.unmountStore(store)
+  onStoreUnmount(store) {
     if (store.stop) {
       store.stop()
     }
@@ -34,23 +28,11 @@ const config = {
   },
 }
 
-export const storeViewDecorator = options =>
-  decor([
-    [
-      storeProvidable,
-      {
-        ...config,
-        ...options,
-      },
-    ],
-  ])
-
 export default function store(Store) {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     const store = new DecoratedStore(...args)
-    config.onStoreMount(Store.constructor.name, store, args[0])
-    config.onStoreDidMount(Store.constructor.name, store, args[0])
+    storeOptions.onStoreMount(Store.constructor.name, store, args[0])
     return store
   }
   return ProxyStore

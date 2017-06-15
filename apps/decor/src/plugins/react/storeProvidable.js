@@ -7,15 +7,22 @@ import hoistStatics from 'hoist-non-react-statics'
 
 type InstanceOptions = {
   module: Object,
-  attach: Array<string>,
 }
 
-export default function storeProvidable(options) {
+export default function storeProvidable(options, emitter) {
   const cache = new Cache()
-  const { stores: allStores, instanceOpts, storeDecorator, context } = options
+  const { instanceOpts } = options
 
   return {
-    decorator: Klass => {
+    decorator: (Klass, opts = {}) => {
+      const allStores = opts.stores || options.stores
+      const context = opts.context || options.context
+      const storeDecorator = opts.storeDecorator || options.storeDecorator
+
+      if (!allStores) {
+        return Klass
+      }
+
       // hmr restore
       if (instanceOpts && instanceOpts.module) {
         cache.revive(instanceOpts.module, allStores)
@@ -35,8 +42,7 @@ export default function storeProvidable(options) {
         @observable _props = {}
 
         getChildContext() {
-          const Stores = context
-          if (Stores) {
+          if (context && Stores) {
             if (options.warnOnOverwriteStore && this.context.stores) {
               Object.keys(Stores).forEach(name => {
                 if (this.context.stores[name]) {
@@ -103,7 +109,7 @@ export default function storeProvidable(options) {
             for (const name of Object.keys(finalStores)) {
               // fallback to store if nothing returned
               finalStores[name] =
-                options.onStoreMount(name, finalStores[name], this.props) ||
+                options.onStoreMount(finalStores[name], this.props) ||
                 finalStores[name]
             }
           }
@@ -118,17 +124,21 @@ export default function storeProvidable(options) {
         }
 
         componentDidMount() {
-          if (options.onStoreDidMount) {
-            for (const name of Object.keys(this.state.stores)) {
-              options.onStoreDidMount(name, this.state.stores[name], this.props)
+          for (const name of Object.keys(this.state.stores)) {
+            const store = this.state.stores[name]
+            emitter.emit('store.mount', store)
+            if (options.onStoreDidMount) {
+              options.onStoreDidMount(store, this.props)
             }
           }
         }
 
         componentWillUnmount() {
-          if (options.onStoreUnmount) {
-            for (const name of Object.keys(this.state.stores)) {
-              options.onStoreUnmount(name, this.state.stores[name])
+          for (const name of Object.keys(this.state.stores)) {
+            const store = this.state.stores[name]
+            emitter.emit('store.unmount', store)
+            if (options.onStoreUnmount) {
+              options.onStoreUnmount(store)
             }
           }
         }

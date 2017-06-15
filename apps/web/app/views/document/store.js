@@ -66,10 +66,13 @@ export default class DocumentStore {
     )
   }
 
-  save = () => {
+  // you'll want this to be false if setting from other places (e.g. sidebar)
+  save = (setContentFromEditor = true) => {
     this.lastSavedRev = this.document._rev
     this.lastSavedState = this.editor.contentState
-    this.document.content = this.editor.serializedState
+    if (setContentFromEditor) {
+      this.document.content = this.editor.serializedState
+    }
     this.document.text = this.editor.serializedText
     this.document.title = this.editor.state.document.nodes.first().text
     print('saving...', this.document._id, this.document._rev, this.document)

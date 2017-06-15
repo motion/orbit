@@ -15,7 +15,7 @@ export const DB_CONFIG = {
 }
 
 export const HEADER_HEIGHT = 40
-export const SIDEBAR_WIDTH = 250
+export const SIDEBAR_WIDTH = 450
 
 export const IS_ELECTRON = isElectron()
 
@@ -36,3 +36,9 @@ function isElectron() {
   }
   return false
 }
+
+export const IN_TRAY =
+  IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1
+
+export const TRAY_WIDTH = 400
+export const TRAY_HEIGHT = 500

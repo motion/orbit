@@ -1,5 +1,6 @@
 import { Model, query, str, object, array, bool } from '@jot/black'
 import Image from './image'
+import App from './app'
 import User from './user'
 import generateName from 'sillyname'
 
@@ -138,7 +139,7 @@ class Document extends Model {
         .exec()
     }
 
-    const ids = (await this.pouch.search({
+    const ids = (await App.Document.pouch.search({
       query: text,
       fields: ['text', 'title'],
       include_docs: false,
@@ -189,10 +190,10 @@ class Document extends Model {
   };
 
   @query user = user => {
-    if (!User.user) {
+    if (!App.user) {
       return null
     }
-    return this.collection.find().where('authorId').eq(User.user.name)
+    return this.collection.find().where('authorId').eq(App.user.name)
   }
 }
 

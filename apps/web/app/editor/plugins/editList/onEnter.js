@@ -1,5 +1,6 @@
 const unwrapList = require('./transforms/unwrapList')
 const splitListItem = require('./transforms/splitListItem')
+const splitChild = require('./transforms/splitChild')
 const decreaseItemDepth = require('./transforms/decreaseItemDepth')
 const archiveItem = require('./transforms/archiveItem')
 const getCurrentItem = require('./getCurrentItem')
@@ -33,6 +34,7 @@ function onEnter(event, data, state, opts) {
   event.preventDefault()
 
   const isEmpty = currentItem.nodes.size <= 1 && currentItem.length === 0
+
   if (isEmpty) {
     // Block is empty, we exit the list
     if (getItemDepth(opts, state) > 1) {
@@ -42,7 +44,11 @@ function onEnter(event, data, state, opts) {
       return unwrapList(opts, state.transform()).apply()
     }
   } else {
+    const hasChildren = currentItem.getBlocksAsArray().length > 1
     // Split list item
+    if (hasChildren) {
+      return splitChild(opts, state.transform()).apply()
+    }
     return splitListItem(opts, state.transform()).apply()
   }
 }

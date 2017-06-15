@@ -62,6 +62,7 @@ export default class DocItem {
     ...props
   }) {
     const gradient = idToGradient(doc._id)
+
     return (
       <doc
         $$undraggable

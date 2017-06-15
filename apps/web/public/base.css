@@ -35,7 +35,8 @@ body {
 	width: 100%;
 	content: '';
 	display: block;
-	background: black;
+  opacity: 0.6;
+	background:rgba(0,0,0,1);
   transform: scaleX(1);
 }
 

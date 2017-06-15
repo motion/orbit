@@ -3,7 +3,7 @@ import { view } from '@jot/black'
 import { Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
 import { Theme, SlotFill, Button } from '~/ui'
-import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
+import { SIDEBAR_WIDTH, IN_TRAY, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
@@ -72,12 +72,40 @@ export default class Root extends React.Component {
   //   }, 2000)
   // }
 
+  renderTray() {
+    return <Sidebar />
+  }
+
+  renderApp() {
+    const { layoutStore } = this.props
+    const CurrentPage = Router.activeView || NotFound
+
+    return (
+      <app>
+        <LayoutWrap layoutStore={layoutStore}>
+          <Header layoutStore={layoutStore} />
+          <content
+            onScroll={this.onScroll}
+            $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
+          >
+            <CurrentPage key={Router.key} />
+          </content>
+          <Draft
+            isActive={layoutStore.isCreatingDoc}
+            onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
+            onClose={() => (layoutStore.isCreatingDoc = false)}
+          />
+        </LayoutWrap>
+        <Errors />
+        <Sidebar />
+      </app>
+    )
+  }
+
   render({ layoutStore, keyStore }, { error }) {
     if (error) {
       return <RedBox error={error} />
     }
-
-    const CurrentPage = Router.activeView || NotFound
 
     console.log(
       'root.render',
@@ -89,22 +117,7 @@ export default class Root extends React.Component {
       <Theme name="light">
         <SlotFill.Provider>
           <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
-            <LayoutWrap layoutStore={layoutStore}>
-              <Header layoutStore={layoutStore} />
-              <content
-                onScroll={this.onScroll}
-                $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-              >
-                <CurrentPage key={Router.key} />
-              </content>
-              <Draft
-                isActive={layoutStore.isCreatingDoc}
-                onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
-                onClose={() => (layoutStore.isCreatingDoc = false)}
-              />
-            </LayoutWrap>
-            <Errors />
-            <Sidebar />
+            {IN_TRAY ? this.renderTray() : this.renderApp()}
           </Shortcuts>
         </SlotFill.Provider>
       </Theme>

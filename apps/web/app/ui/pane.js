@@ -67,6 +67,7 @@ export class Title {
     content: {
       flex: 1,
       flexFlow: 'row',
+      pointerEvents: 'none',
       alignItems: 'center',
     },
     collapse: {
@@ -179,6 +180,7 @@ export default class Pane {
           sub={sub}
           stat={titleStat}
           after={after}
+          noPointerEvents
           {...titleProps}
         >
           {title}

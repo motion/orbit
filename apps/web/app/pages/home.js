@@ -54,13 +54,9 @@ class HomeStore {
 })
 export default class HomePage {
   render({ store }) {
-    console.log('HOME_STORE', store)
-
     if (!User.loggedIn) {
       return <center $$centered>login plz</center>
     }
-
-    console.log('home layout', store.layout)
 
     return (
       <home>

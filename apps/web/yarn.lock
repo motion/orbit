@@ -691,6 +691,10 @@ chalk@1.1.3, chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
+charenc@~0.0.1:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
+
 cheerio@^0.22.0:
   version "0.22.0"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-0.22.0.tgz#a9baa860a3f9b595a6b81b1a86873121ed3a269e"
@@ -959,6 +963,10 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
 cross-unzip@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/cross-unzip/-/cross-unzip-0.0.2.tgz#5183bc47a09559befcf98cc4657964999359372f"
+
+crypt@~0.0.1:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/crypt/-/crypt-0.0.2.tgz#88d7ff7ec0dfb86f713dc87bbb42d044d3e6c41b"
 
 cryptiles@2.x.x:
   version "2.0.5"
@@ -1293,7 +1301,7 @@ electron-localshortcut@^0.6.0:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/electron-localshortcut/-/electron-localshortcut-0.6.1.tgz#c4e268c38a6e42f40de5618fc906d1ed608f11aa"
 
-electron@^1.4.15, electron@^1.6.5:
+electron@^1.4.15, electron@^1.6.11:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/electron/-/electron-1.7.2.tgz#8115e6ae86128a8cd99360d3793d3618ca2c7619"
   dependencies:
@@ -1840,9 +1848,9 @@ globals@^9.0.0:
   version "9.17.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.17.0.tgz#0c0ca696d9b9bb694d2e5470bd37777caad50286"
 
-gloss@^6.5.0:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.5.1.tgz#65ba68aad6f80e5bcad176c7b2f52cccd7b72b94"
+gloss@^6.6.0:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.6.1.tgz#7110b3f3f22845a3aa9f72bf83265f2b90a07239"
   dependencies:
     aphrodite-jss "^1.0.0"
     babel-helper-builder-react-jsx "^6.24.1"
@@ -1851,7 +1859,7 @@ gloss@^6.5.0:
     jss "^6.0.1"
     jss-preset-default "^1.1.0"
     lodash "^4.17.4"
-    motion-css "^6.5.0"
+    motion-css "^6.6.1"
     react "^15.5.4"
     react-dom "^15.5.4"
 
@@ -2197,7 +2205,7 @@ is-binary-path@^1.0.0:
   dependencies:
     binary-extensions "^1.0.0"
 
-is-buffer@^1.1.5:
+is-buffer@^1.1.5, is-buffer@~1.1.1:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.5.tgz#1f3b26ef613b214b88cbca23cc6c01d87961eecc"
 
@@ -2778,6 +2786,14 @@ md5-jkmyers@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/md5-jkmyers/-/md5-jkmyers-0.0.1.tgz#b7d3df2807b91d5ec7f3373b57f24d60b0fa92bb"
 
+md5@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/md5/-/md5-2.2.1.tgz#53ab38d5fe3c8891ba465329ea23fac0540126f9"
+  dependencies:
+    charenc "~0.0.1"
+    crypt "~0.0.1"
+    is-buffer "~1.1.1"
+
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
@@ -2962,9 +2978,9 @@ motion-class-helpers@^1.1.0:
     object-path "^0.11.3"
     sb-event-kit "^3.0.0"
 
-motion-css@^6.5.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.5.0.tgz#e6d9a0ec954cdeb86c4d1a583f858c19731996de"
+motion-css@^6.6.1:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.6.1.tgz#931e0ec972fb2b8d66c46a4e919a00afefb7a721"
 
 motion-mobx-helpers@^1.1.2:
   version "1.1.3"
@@ -4784,6 +4800,10 @@ through2@~0.2.3:
 through@~2.3.4:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
+
+time-ago@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/time-ago/-/time-ago-0.1.0.tgz#5b4921a11843081c95ea50930084f90007f4a026"
 
 timers-browserify@^2.0.2:
   version "2.0.2"

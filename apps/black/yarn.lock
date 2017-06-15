@@ -132,9 +132,9 @@ generate-object-property@^1.1.0:
   dependencies:
     is-property "^1.0.0"
 
-gloss@^6.5.0:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.5.1.tgz#65ba68aad6f80e5bcad176c7b2f52cccd7b72b94"
+gloss@^6.6.0:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.6.1.tgz#7110b3f3f22845a3aa9f72bf83265f2b90a07239"
   dependencies:
     aphrodite-jss "^1.0.0"
     babel-helper-builder-react-jsx "^6.24.1"
@@ -143,7 +143,7 @@ gloss@^6.5.0:
     jss "^6.0.1"
     jss-preset-default "^1.1.0"
     lodash "^4.17.4"
-    motion-css "^6.5.0"
+    motion-css "^6.6.1"
     react "^15.5.4"
     react-dom "^15.5.4"
 
@@ -397,9 +397,9 @@ modifyjs@0.3.1:
     clone "^2.1.1"
     deep-equal "^1.0.1"
 
-motion-css@^6.5.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.5.0.tgz#e6d9a0ec954cdeb86c4d1a583f858c19731996de"
+motion-css@^6.6.1:
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.6.1.tgz#931e0ec972fb2b8d66c46a4e919a00afefb7a721"
 
 ms@0.7.2:
   version "0.7.2"

@@ -12,11 +12,23 @@ export default class DocumentStore {
   shouldFocus = this.props.focusOnMount
   editor = null
   downAt = Date.now()
+  crumbs = null
 
   get hasNewContent() {
     return (
       !this.lastSavedState ||
       !this.lastSavedState.equals(this.editor.contentState)
+    )
+  }
+
+  async start() {
+    this.react(
+      () => this.document && this.document._id,
+      async () => {
+        if (this.document) {
+          this.crumbs = await this.document.getCrumbs()
+        }
+      }
     )
   }
 

@@ -2,10 +2,17 @@ import React from 'react'
 import { view, observable } from '@jot/black'
 import gradients from './helpers/gradients'
 import TimeAgo from 'react-timeago'
-import { sample } from 'lodash'
+import { sample, memoize } from 'lodash'
 import Router from '~/router'
 import { Icon, Button } from '~/ui'
 import DocumentView from './index'
+import md5 from 'md5'
+
+const idToGradient = memoize(id => {
+  const num = Math.abs(+md5(id).replace(/[^0-9]/g, '') || 5)
+  const deg = Math.floor(Math.random() * 120)
+  return { deg, colors: gradients[num % gradients.length].colors }
+})
 
 @view
 export default class DocItem {
@@ -54,20 +61,19 @@ export default class DocItem {
     style,
     ...props
   }) {
-    const choice = sample(gradients)
-    const gradient = choice.colors
+    const gradient = idToGradient(doc._id)
 
     return (
       <doc
         $$undraggable
+        key={doc._id}
         className="Tilt-inner"
         style={{
           ...style,
-          background: `linear-gradient(${Math.floor(Math.random() * 360)}deg, ${gradient[0]}, ${gradient[1]})`,
+          background: `linear-gradient(${gradient.deg}deg, ${gradient.colors[0]}, ${gradient.colors[1]})`,
         }}
         {...props}
       >
-        <grad>gradient: {choice.name}</grad>
         <title if={list}>
           {doc.title}
         </title>

@@ -90,23 +90,14 @@ export default class Root extends React.Component {
           >
             <CurrentPage key={Router.key} />
           </content>
-          <Button
-            if={!layoutStore.isCreatingDoc}
-            circular
-            onClick={() => layoutStore.onCreateDoc()}
-            $circleButton
-            chromeless
-            iconSize={20}
-            size={50}
-            icon="siadd"
+          <Draft
+            isActive={layoutStore.isCreatingDoc}
+            onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
+            onClose={() => (layoutStore.isCreatingDoc = false)}
           />
         </LayoutWrap>
         <Errors />
         <Sidebar />
-        <Draft
-          onClose={layoutStore.onDraftClose}
-          isActive={layoutStore.isCreatingDoc}
-        />
       </app>
     )
   }

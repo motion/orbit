@@ -9,12 +9,4 @@ export default class LayoutStore {
   headerHovered = false
   isCreatingDoc = false
   sidebar = new SidebarStore()
-
-  onCreateDoc = () => {
-    this.isCreatingDoc = true
-  }
-
-  onDraftClose = () => {
-    this.isCreatingDoc = false
-  }
 }

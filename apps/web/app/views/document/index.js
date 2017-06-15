@@ -4,6 +4,7 @@ import { view } from '@jot/black'
 import { Icon } from '~/ui'
 import Editor from '~/views/editor'
 import DocumentStore from './store'
+import Crumbs from './crumbs'
 
 @view({
   store: DocumentStore,
@@ -16,16 +17,18 @@ export default class DocumentView {
     inline?: boolean,
   }
 
-  render({ id, editorProps, readOnly, store }) {
+  render({ id, editorProps, inline, readOnly, store }) {
     if (!store.document) {
       return <loading />
     }
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
+        <Crumbs if={!inline} docs={store.crumbs} />
+
         <Editor
           readOnly={readOnly}
-          inline={this.props.inline}
+          inline={inline}
           onEditor={store.onEditor}
           {...editorProps}
         />

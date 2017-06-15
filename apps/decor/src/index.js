@@ -1,10 +1,12 @@
 // @flow
 import reactMixin from 'react-mixin'
+import { Emitter } from 'sb-event-kit'
 
 export default function decor(plugins) {
   const allPlugins = []
   // unique key per decorator instance
   const DECOR_KEY = `__IS_DECOR_DECORATED${Math.random()}`
+  const emitter = new Emitter()
 
   for (const curPlugin of plugins.filter(Boolean)) {
     let getPlugin = curPlugin
@@ -13,14 +15,14 @@ export default function decor(plugins) {
     // array-style config
     if (Array.isArray(curPlugin)) {
       getPlugin = curPlugin[0]
-      options = curPlugin[1]
+      options = curPlugin[1] || {}
     }
 
     if (typeof getPlugin !== 'function') {
       throw `Plugin must be a function, got ${typeof getPlugin}`
     }
 
-    let plugin = getPlugin(options)
+    let plugin = getPlugin(options, emitter)
 
     if (!plugin.decorator && !plugin.mixin) {
       throw `Bad plugin, needs decorator or mixin: ${plugin}`
@@ -29,7 +31,14 @@ export default function decor(plugins) {
     allPlugins.push(plugin)
   }
 
-  return function decorDecorator(Klass) {
+  function decorDecorator(Klass, opts) {
+    const isPassingExtraOptions = typeof Klass === 'object'
+
+    if (isPassingExtraOptions) {
+      const realOpts = Klass
+      return NextKlass => decorDecorator(NextKlass, realOpts)
+    }
+
     let decoratedClass = Klass
 
     if (!Klass) {
@@ -47,7 +56,8 @@ export default function decor(plugins) {
         reactMixin(Klass.prototype, plugin.mixin)
       }
       if (plugin.decorator) {
-        decoratedClass = plugin.decorator(decoratedClass) || decoratedClass
+        decoratedClass =
+          plugin.decorator(decoratedClass, opts) || decoratedClass
       }
     }
 
@@ -55,4 +65,9 @@ export default function decor(plugins) {
 
     return decoratedClass
   }
+
+  // to listen to plugin events
+  decorDecorator.on = emitter.on.bind(emitter)
+
+  return decorDecorator
 }

@@ -14,7 +14,7 @@ const liToText = ({ nodes }) =>
     .join(' ')
 
 export default class SidebarStore {
-  docs = Document.recent()
+  docs = Document.recent(100)
   collapseTasks = false
   collapseTeam = false
 
@@ -123,9 +123,15 @@ export default class SidebarStore {
       'sort'
     )
 
+    console.log(
+      'all tasks',
+      allTasks.length,
+      (this.docs || []).map(i => i.title)
+    )
     if (this.hideArchived) {
       return allTasks.filter(t => !t.archive)
     }
+
     return allTasks
   }
 }

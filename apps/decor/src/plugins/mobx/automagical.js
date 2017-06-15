@@ -16,6 +16,10 @@ export default function automagical(options) {
       }
 
       class ProxyClass extends Klass {
+        static get name() {
+          return Klass.name
+        }
+
         constructor(...args) {
           super(...args)
           automagic(this)

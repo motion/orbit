@@ -1,4 +1,5 @@
 // @flow
+import { view } from '@jot/black'
 import { observable, computed, action, autorunAsync } from 'mobx'
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
@@ -23,8 +24,6 @@ export default class App {
   @observable.ref stores = null
 
   constructor({ database, models }) {
-    this.databaseConfig = database
-    this.models = models
     if (!database || !models) {
       throw new Error(
         'No database or models given to App!',
@@ -32,9 +31,16 @@ export default class App {
         typeof models
       )
     }
+
+    this.databaseConfig = database
+    this.models = models
+
+    // listen for stores, attach here
+    view.on('store.mount', this.mountStore)
+    view.on('store.unmount', this.unmountStore)
   }
 
-  async setupRxDB() {
+  setupRxDB = async () => {
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
       RxDB.QueryChangeDetector.enable()
@@ -66,7 +72,7 @@ export default class App {
     console.timeEnd('create db')
   }
 
-  async start() {
+  start = async () => {
     console.log('Use App in your console to access models, stores, etc')
     console.time('start')
     this.catchErrors()

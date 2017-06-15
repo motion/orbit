@@ -167,7 +167,10 @@ class Document extends Model {
       .limit(limit)
 
   @query get = id => {
-    if (!id) return null
+    console.log('document get', id)
+    if (!id) {
+      return null
+    }
     return this.collection.findOne(id.replace('-', ':'))
   };
 

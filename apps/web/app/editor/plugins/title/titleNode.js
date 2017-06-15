@@ -35,11 +35,12 @@ export default class TitleNode {
       marginBottom: 5,
     },
     inline: {
-      fontFamily: 'Abril Fatface',
-      fontSize: 40,
-      fontWeight: 200,
+      // fontFamily: 'Abril Fatface',
+      fontFamily: '"Whitney SSm A", "Whitney SSm B", Helvetica, Arial',
+      fontSize: 22,
+      fontWeight: 600,
       lineHeight: 1.2,
-      color: '#fff',
+      color: '#eee',
     },
   }
 }

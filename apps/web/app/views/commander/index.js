@@ -18,7 +18,7 @@ export default class Commander {
     return (
       <bar $$align="center" $$row $$flex>
         {searchIcon}
-        <input if={!store.isOpen} onFocus={store.onOpen} />
+        <input $q if={!store.isOpen} onFocus={store.onOpen} />
         <Portal closeOnEsc isOpened={store.isOpen} onClose={store.onClose}>
           <Shortcuts name="all" handler={store.handleShortcuts}>
             <container>
@@ -38,7 +38,7 @@ export default class Commander {
                 </overlaySearch>
                 <results>
                   <matches if={docs.length > 0}>
-                    {docs.map((doc, index) =>
+                    {docs.map((doc, index) => (
                       <match
                         onClick={() => store.navTo(doc)}
                         key={doc._id}
@@ -49,7 +49,7 @@ export default class Commander {
                       >
                         {doc.getTitle()}
                       </match>
-                    )}
+                    ))}
                   </matches>
                   <noMatches if={docs.length === 0}>
                     No Matches
@@ -78,8 +78,8 @@ export default class Commander {
       right: 0,
       bottom: 0,
       zIndex: 10000,
-      // background: '#fff',
-      // backdropFilter: 'blur(5px)',
+      background: '#fff',
+      backdropFilter: 'blur(5px)',
     },
     noMatches: {
       flex: 1,
@@ -129,7 +129,6 @@ export default class Commander {
       cursor: 'text',
       margin: ['auto', 0],
       padding: [8, 10],
-      marginTop: -50,
       fontSize: 16,
       opacity: 0.8,
       '&:hover': {

@@ -4,7 +4,8 @@ import { Glow, Icon, Button } from '~/ui'
 import Tilt from 'react-tilt'
 import DocItem from '~/views/document/item'
 import FlipMove from 'react-flip-move'
-const width = 300
+import { sortBy } from 'lodash'
+const width = 250
 const height = 280
 
 @view
@@ -24,19 +25,21 @@ export default class CardList {
           create document
         </Button>
 
-        {(listStore.docs || []).map((doc, i) => (
+        {/* until we get recent working */}
+        {sortBy(listStore.docs || [], 'createdAt').reverse().map((doc, i) => (
           <Tilt
             key={doc._id}
             options={{
               max: 10,
               perspective: 1000,
-              reverse: false,
+              reverse: true,
               scale: 1,
             }}
           >
             <doc>
               <DocItem
                 $doc
+                readOnly
                 inline
                 ref={node => this.docRef(node, i)}
                 doc={doc}
@@ -66,6 +69,7 @@ export default class CardList {
     doc: {
       overflow: 'hidden',
       margin: [0, 10, 0, 0],
+      cursor: 'default',
       width,
       height,
       borderRadius: 5,

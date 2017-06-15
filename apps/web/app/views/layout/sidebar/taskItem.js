@@ -74,7 +74,7 @@ export default class Item {
               <p><span>{task.text}</span></p>
             </div>
           </Text>
-          <bottom $$row>
+          <bottom if={false} $$row>
             <tags>
               {time} · Nate
             </tags>
@@ -124,7 +124,7 @@ export default class Item {
       borderTop: '1px solid #ddd',
     },
     notInProgress: {
-      boxShadow: '1px 1px 5px rgba(0,0,0,0.2)',
+      boxShadow: '1px 1px 5px rgba(0,0,0,0.05)',
     },
     first: {
       borderTop: '1px solid #ddd',

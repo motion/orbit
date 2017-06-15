@@ -17,6 +17,11 @@ export default class DocumentView {
     inline?: boolean,
   }
 
+  componentWillMount() {
+    const { store, inline } = this.props
+    if (!inline) store.shouldLoadCrumbs = true
+  }
+
   render({ id, editorProps, inline, readOnly, store }) {
     if (!store.document) {
       return <loading />

@@ -37,8 +37,7 @@ export default Component =>
       this.editorStore.selection.setHovered(this.props.node, this.node)
     }
 
-    @computed
-    get isFocused() {
+    @computed get isFocused() {
       const { focusedNode } = this.editorStore.selection
       if (this.editorStore.inline || !this.node) {
         return false
@@ -50,7 +49,7 @@ export default Component =>
       this.editorStore.transform(t => t.insertBlock({ type, data }))
     }
 
-    contextMenu = () =>
+    contextMenu = () => (
       <Popover
         target={
           <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.1]} />
@@ -87,6 +86,7 @@ export default Component =>
           ]}
         />
       </Popover>
+    )
 
     componentProps = {
       setContext: context => {
@@ -96,15 +96,9 @@ export default Component =>
 
     render({ node, editor, onFocus }, { context }) {
       const isRoot = !this.editorStore.inline && this.isRootNode
-
-      // what is this?
-      if (
-        this.editorStore.onlyNode &&
-        node.type !== this.editorStore.onlyNode &&
-        this.isRootNode
-      ) {
-        return <div />
-      }
+      const isHovered =
+        this.editorStore.selection.hovered &&
+        node.key === this.editorStore.selection.hovered.key
 
       const component = (
         <Component
@@ -113,6 +107,9 @@ export default Component =>
           onChange={editor.onChange}
           editorStore={this.editorStore}
           isRoot={isRoot}
+          setContext={context => {
+            this.setState({ context })
+          }}
           id={this.id}
         />
       )
@@ -135,7 +132,7 @@ export default Component =>
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >
-          <context contentEditable={false}>
+          <context if={isHovered} contentEditable={false}>
             {context || this.contextMenu()}
           </context>
           {React.cloneElement(component, this.componentProps)}

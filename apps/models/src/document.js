@@ -3,6 +3,7 @@ import Image from './image'
 import App from './app'
 import User from './user'
 import generateName from 'sillyname'
+import { memoize } from 'lodash'
 
 const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
 
@@ -139,7 +140,7 @@ class Document extends Model {
         .exec()
     }
 
-    const ids = (await App.Document.pouch.search({
+    const ids = (await window.App.Document.pouch.search({
       query: text,
       fields: ['text', 'title'],
       include_docs: false,
@@ -181,13 +182,13 @@ class Document extends Model {
       // .sort({ createdAt: 'desc' })
       .limit(limit)
 
-  @query get = id => {
+  @query get = memoize(id => {
     console.log('document get', id)
     if (!id) {
       return null
     }
     return this.collection.findOne(id.replace('-', ':'))
-  };
+  });
 
   @query user = user => {
     if (!App.user) {

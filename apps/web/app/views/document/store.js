@@ -13,6 +13,7 @@ export default class DocumentStore {
   editor = null
   downAt = Date.now()
   crumbs = null
+  shouldLoadCrumbs = false
 
   get hasNewContent() {
     return (
@@ -23,9 +24,9 @@ export default class DocumentStore {
 
   async start() {
     this.react(
-      () => this.document && this.document._id,
+      () => this.document && this.document._id && this.shouldLoadCrumbs,
       async () => {
-        if (this.document) {
+        if (this.document && this.shouldLoadCrumbs) {
           this.crumbs = await this.document.getCrumbs()
         }
       }

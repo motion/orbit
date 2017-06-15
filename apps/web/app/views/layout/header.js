@@ -48,18 +48,17 @@ export default class Header {
         </bar>
         <rest $$row>
           <SlotFill.Slot name="documentActions">
-            {items =>
+            {items => (
               <actions>
                 {items}
-              </actions>}
+              </actions>
+            )}
           </SlotFill.Slot>
           <SlotFill.Slot name="actions">
-            {items =>
+            {items => (
               <actions>
                 {items}
                 <Button
-                  key={Math.random()}
-                  spaced
                   chromeless
                   icon={
                     layoutStore.sidebar.active
@@ -70,7 +69,8 @@ export default class Header {
                   $$marginRight={-6}
                   color={[0, 0, 0, 0.5]}
                 />
-              </actions>}
+              </actions>
+            )}
           </SlotFill.Slot>
         </rest>
       </header>

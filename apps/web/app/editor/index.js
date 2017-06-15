@@ -60,13 +60,13 @@ export default class EditorView {
         </SlotFill.Fill>
         <Editor
           if={editorStore.state}
+          state={editorStore.state}
           $editor
           $$undraggable
           editorStore={editorStore}
           readOnly={readOnly}
           plugins={spec.plugins}
           schema={spec.schema}
-          state={editorStore.state}
           onDocumentChange={this.onDocumentChange}
           onChange={editorStore.onChange}
           ref={editorStore.getRef}

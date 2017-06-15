@@ -36,7 +36,7 @@ export default class DocList {
     if (setContext) {
       setContext(
         <wrap>
-          <Button onClick={listStore.createDoc} icon="add" />
+          <Button onMouseDown={listStore.createDoc} icon="add" />
           <Popover target={<Button icon="card" />} openOnHover>
             <Segment>
               <Button

@@ -22,9 +22,10 @@ export default class DocListStore {
     } else {
       await Document.create({ parentId: this.doc._id })
     }
+
     this.setTimeout(() => {
       this.shouldFocus = true
-    }, 200)
+    }, 50)
   }
 
   setType = (node, listType: string) => {

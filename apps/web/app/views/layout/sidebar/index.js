@@ -85,7 +85,7 @@ export default class Sidebar {
             <Pane
               collapsable
               scrollable
-              title={User.user ? `${User.user.name}'s tasks` : 'tasks'}
+              title={`Your Tasks`}
               titleProps={{
                 after: (
                   <Segment $$flex={1}>

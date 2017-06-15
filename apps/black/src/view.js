@@ -55,6 +55,7 @@ view.plain = decor(getPlugins())
 view.ui = decor(getPlugins({ ui: true, autobind: true }))
 view.basics = decor([
   reactRenderArgs,
+  observer,
   extendsReact,
   opts => ({ decorator: gloss }),
 ])

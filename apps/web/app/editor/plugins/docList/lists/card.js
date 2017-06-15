@@ -39,7 +39,6 @@ export default class CardList {
             <doc>
               <DocItem
                 $doc
-                readOnly
                 inline
                 ref={node => this.docRef(node, i)}
                 doc={doc}

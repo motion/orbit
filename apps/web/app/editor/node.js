@@ -5,7 +5,7 @@ import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '~/ui'
 
 export default Component =>
-  @view class Node {
+  @view.basics class Node extends React.Component {
     state = {
       context: null,
     }
@@ -127,7 +127,8 @@ export default Component =>
           $rootLevel={isRoot}
           $hoverable={!isTitle}
           $focused={!isTitle && this.isFocused}
-          ref={this.ref('node').set}
+          // commenting out because this wasn't used anywhere
+          // ref={this.ref('node').set}
           onClick={this.onClick}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}

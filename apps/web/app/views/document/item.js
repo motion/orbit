@@ -9,7 +9,7 @@ import DocumentView from './index'
 import md5 from 'md5'
 
 const idToGradient = memoize(id => {
-  const num = Math.abs(+md5(id).replace(/[^0-9]/g, '') || 5)
+  const num = Math.abs(+md5(id || '').replace(/[^0-9]/g, '') || 5)
   const deg = Math.floor(Math.random() * 120)
   return { deg, colors: gradients[num % gradients.length].colors }
 })

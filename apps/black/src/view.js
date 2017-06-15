@@ -3,7 +3,8 @@ import { object, string } from 'prop-types'
 import extendsReact from '@jot/decor/lib/plugins/react/extendsReact'
 import observer from '@jot/decor/lib/plugins/mobx/observer'
 import autobound from '@jot/decor/lib/plugins/core/autobound'
-import subscribableHelpers from '@jot/decor/lib/plugins/core/subscribableHelpers'
+import subscribableHelpers
+  from '@jot/decor/lib/plugins/core/subscribableHelpers'
 import subscribable from '@jot/decor/lib/plugins/react/subscribable'
 import reactRenderArgs from '@jot/decor/lib/plugins/react/reactRenderArgs'
 import addContext from '@jot/decor/lib/plugins/react/addContext'
@@ -52,5 +53,10 @@ view.on = viewDecorator.on
 // other decorators
 view.plain = decor(getPlugins())
 view.ui = decor(getPlugins({ ui: true, autobind: true }))
+view.basics = decor([
+  reactRenderArgs,
+  extendsReact,
+  opts => ({ decorator: gloss }),
+])
 view.provide = stores => viewDecorator({ stores, context: true })
 view.attach = names => decor([[attach, { names }]])

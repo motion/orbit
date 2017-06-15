@@ -8,8 +8,7 @@ const COUCH_HOST = `couch.${window.location.host}`
 const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
-@store
-class User {
+@store class User {
   user = null
   superlogin = superlogin
   localDb = null

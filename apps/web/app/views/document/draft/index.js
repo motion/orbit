@@ -6,12 +6,18 @@ import DocView from '~/views/document'
 import { Document } from '@jot/models'
 import Router from '~/router'
 
-@view
-class CreateButton {
+@view class CreateButton {
   render(props) {
     return (
       <div>
-        <Button circle {...props} $circleButton icon="add" />
+        <Button
+          circular
+          iconSize={20}
+          size={50}
+          $circleButton
+          icon="siadd"
+          {...props}
+        />
       </div>
     )
   }
@@ -29,14 +35,14 @@ class CreateButton {
 class DraftStore {
   doc = null
 
-  @computed
-  get isActive() {
+  @computed get isActive() {
     return this.doc !== null
   }
 
   onSaveDraft = async () => {
     this.doc.draft = false
     await this.doc.save()
+    this.props.onClose()
     Router.go(this.doc.url())
     this.doc = null
   }
@@ -44,7 +50,6 @@ class DraftStore {
   onCreateDraft = async () => {
     const params = {
       draft: true,
-      places: [App.activePage.place._id],
       title: 'New Draft',
     }
 
@@ -53,6 +58,7 @@ class DraftStore {
 
   onClose = () => {
     this.doc = null
+    this.props.onClose()
   }
 }
 
@@ -60,8 +66,14 @@ class DraftStore {
   store: DraftStore,
 })
 export default class Draft {
-  render({ store }) {
-    const { isActive, doc } = store
+  componentWillReceiveProps({ isActive }) {
+    if (!this.props.isActive && isActive) {
+      this.props.store.onCreateDraft()
+    }
+  }
+
+  render({ store, isActive, onOpenDraft }) {
+    const { doc } = store
 
     return (
       <draft>
@@ -72,7 +84,7 @@ export default class Draft {
             overlayBlur={5}
             onClickOverlay={store.onClose}
           >
-            <content if={isActive}>
+            <content if={isActive && doc}>
               <editor>
                 <DocView inline={false} id={doc._id} document={doc} />
               </editor>
@@ -84,7 +96,7 @@ export default class Draft {
             </content>
           </Drawer>
         </Portal>
-        <CreateButton onClick={store.onCreateDraft} />
+        <CreateButton onClick={onOpenDraft} />
       </draft>
     )
   }

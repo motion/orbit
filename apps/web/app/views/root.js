@@ -19,8 +19,7 @@ import Draft from './document/draft'
 // simply @view.attach('layoutStore') for example in any sub-view
 
 // optimized re-render for sidebar resize
-@view
-class LayoutWrap {
+@view class LayoutWrap {
   render({ layoutStore, children }) {
     return (
       <wrap $$right={layoutStore.sidebar.trueWidth}>
@@ -98,15 +97,10 @@ export default class Root extends React.Component {
               >
                 <CurrentPage key={Router.key} />
               </content>
-              <Button
-                if={true || !layoutStore.creatingDoc}
-                circular
-                onClick={() => layoutStore.createDoc()}
-                $circleButton
-                chromeless
-                iconSize={20}
-                size={50}
-                icon="siadd"
+              <Draft
+                isActive={layoutStore.isCreatingDoc}
+                onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
+                onClose={() => (layoutStore.isCreatingDoc = false)}
               />
             </LayoutWrap>
             <Errors />

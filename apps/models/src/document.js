@@ -41,9 +41,10 @@ class Document extends Model {
 
   static defaultProps = props => {
     const title = props.title || generateName()
+
     return {
       title,
-      authorId: User.authorId,
+      authorId: User.user ? User.authorId : 'anon',
       hashtags: [],
       members: [],
       attachments: [],
@@ -71,6 +72,23 @@ class Document extends Model {
   methods = {
     url() {
       return `/d/${this._id.replace(':', '-')}`
+    },
+    async getCrumbs() {
+      let foundRoot = false
+      let crumbs = []
+      let doc = this
+
+      while (!foundRoot) {
+        if (!doc.parentId) {
+          foundRoot = true
+        } else {
+          doc = await this.collection.findOne(doc.parentId).exec()
+
+          crumbs = [doc, ...crumbs]
+        }
+      }
+
+      return crumbs
     },
     getTitle() {
       try {
@@ -127,8 +145,6 @@ class Document extends Model {
       highlighting: false,
     })).rows.map(row => row.id)
 
-    console.log('ids are', ids)
-
     return await this.collection.find({ _id: { $in: ids } }).exec()
   }
 
@@ -152,18 +168,16 @@ class Document extends Model {
       })
       .where('parentId')
       .eq(id)
-      .sort({ createdAt: 'desc' })
+    // .sort({ createdAt: 'desc' })
   }
 
-  @query all = () =>
-    this.collection
-      .find({ createdAt: { $gt: null } })
-      .sort({ createdAt: 'asc' })
+  @query all = () => this.collection.find({ createdAt: { $gt: null } })
+  // .sort({ createdAt: 'asc' })
 
   @query recent = (limit = 10) =>
     this.collection
       .find({ draft: { $ne: true } })
-      .sort({ createdAt: 'desc' })
+      // .sort({ createdAt: 'desc' })
       .limit(limit)
 
   @query get = id => {

@@ -60,13 +60,11 @@ export default class EditorStore {
   }
 
   // return slate-like schema
-  @computed
-  get spec() {
+  @computed get spec() {
     return getSpec(this.plugins, this.rules)
   }
 
-  @computed
-  get allPlugins() {
+  @computed get allPlugins() {
     return Object.keys(this.plugins).reduce(
       (acc, key) => ({
         ...acc,

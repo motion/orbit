@@ -1,5 +1,5 @@
 import { Document } from '@jot/models'
-import { sortBy, last, flatMap, flatten, random } from 'lodash'
+import { sortBy, last, flatMap, memoize, find, flatten, random } from 'lodash'
 import merge from 'deepmerge'
 
 const liToText = ({ nodes }) =>
@@ -92,45 +92,44 @@ export default class SidebarStore {
     return this.tasks.map(i => i.key).indexOf(this.activeTask.key)
   }
 
+  // we're taking the lastEdited for memoization purposes
+  tasksForDoc = memoize((key, doc) => {
+    // start somewhere and increment from there
+    let keys = random(0, 1000000)
+
+    if (!doc.content.document) return []
+    const tasks = doc.content.document.nodes
+      .filter(node => {
+        return node.type === 'ul_list'
+      })
+      .map(ul => {
+        return ul.nodes.map(li => {
+          const text = liToText(li)
+          const key = keys++
+          const sort = this.sortMap[key] || +new Date(doc.createdAt) + key
+
+          return {
+            text,
+            sort,
+            archive: li.data.archive || false,
+            doc,
+            key,
+          }
+        })
+      })
+
+    return flatten(tasks)
+  })
+
   get tasks() {
-    let keys = 1
-
+    const docKey = doc => `${doc._id}-${+new Date(doc.updatedAt)}`
+    const pets = find(this.docs || [], doc => doc.title === 'Pets')
     const allTasks = sortBy(
-      flatMap(this.docs || [], doc => {
-        if (!doc.content.document) return []
-        const tasks = doc.content.document.nodes
-          .filter(node => {
-            return node.type === 'ul_list'
-          })
-          .map(ul => {
-            return ul.nodes.map(li => {
-              const text = liToText(li)
-              const key = keys++
-              const sort = this.sortMap[key] || +new Date(doc.createdAt) + key
-
-              return {
-                text,
-                sort,
-                archive: li.data.archive || false,
-                doc,
-                key,
-              }
-            })
-          })
-
-        return flatten(tasks)
-      }).filter(t => (this.inProgress ? t.key !== this.inProgress.key : true)),
+      flatMap(this.docs || [], doc =>
+        this.tasksForDoc(docKey(doc), doc)
+      ).filter(t => (this.inProgress ? t.key !== this.inProgress.key : true)),
       'sort'
     )
-
-    console.log(
-      'all tasks',
-      allTasks.length,
-      (this.docs || []).map(i => i.title)
-    )
-    if (this.hideArchived) {
-      return allTasks.filter(t => !t.archive)
-    }
 
     return allTasks
   }

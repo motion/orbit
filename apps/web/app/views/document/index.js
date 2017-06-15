@@ -24,7 +24,7 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <Crumbs if={store.crumbs && !this.props.inline} docs={store.crumbs} />
+        <Crumbs if={!this.props.inline} docs={store.crumbs} />
 
         <Editor
           readOnly={readOnly}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@jot/black'
-import { Glow, Icon } from '~/ui'
+import { Glow, Icon, Button } from '~/ui'
 import Tilt from 'react-tilt'
 import DocItem from '~/views/document/item'
 import FlipMove from 'react-flip-move'
@@ -17,8 +17,13 @@ export default class CardList {
   }
 
   render({ listStore }) {
+    const hasDocs = (listStore.docs || []).length > 0
     return (
       <FlipMove $docs duration={300} easing="ease-out">
+        <Button if={!hasDocs} icon="simple-add" onClick={listStore.createDoc}>
+          create document
+        </Button>
+
         {(listStore.docs || []).map((doc, i) => (
           <Tilt
             key={doc._id}

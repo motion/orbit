@@ -6,21 +6,24 @@ import { Icon } from '~/ui'
 @view
 export default class Crumbs {
   render({ docs }) {
-    const crumbs = [
+    const crumbs = docs && [
       { text: 'all', url: '/' },
       ...docs.map(doc => ({ text: doc.title, url: doc.url() })),
     ]
 
     return (
-      <crumbs $$row>
-        {crumbs.map((item, index) => (
-          <item key={item.url} $$row>
-            <text onClick={() => Router.go(item.url)} $text>
-              {item.text}
-            </text>
-            <slash if={index !== crumbs.length - 1}>/</slash>
-          </item>
-        ))}
+      <crumbs>
+        <items if={crumbs} $$row>
+          {crumbs.map((item, index) => (
+            <item key={item.url} $$row>
+              <text onClick={() => Router.go(item.url)} $text>
+                {item.text}
+              </text>
+              <slash if={index !== crumbs.length - 1}>/</slash>
+            </item>
+          ))}
+        </items>
+        <loading if={!crumbs} />
       </crumbs>
     )
   }
@@ -28,6 +31,7 @@ export default class Crumbs {
   static style = {
     crumbs: {
       margin: [10, 0, 0, 45],
+      height: 20,
     },
     item: {
       textTransform: 'capitalize',

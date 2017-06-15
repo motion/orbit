@@ -6,14 +6,14 @@ import { Icon } from '~/ui'
 @view
 export default class Crumbs {
   render({ docs }) {
-    const crumbs = docs && [
+    const crumbs = [
       { text: 'all', url: '/' },
-      ...docs.map(doc => ({ text: doc.title, url: doc.url() })),
+      ...(docs || []).map(doc => ({ text: doc.title, url: doc.url() })),
     ]
 
     return (
       <crumbs>
-        <items if={crumbs} $$row>
+        <items $$row>
           {crumbs.map((item, index) => (
             <item key={item.url} $$row>
               <text onClick={() => Router.go(item.url)} $text>
@@ -23,7 +23,6 @@ export default class Crumbs {
             </item>
           ))}
         </items>
-        <loading if={!crumbs} />
       </crumbs>
     )
   }

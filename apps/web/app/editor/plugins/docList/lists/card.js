@@ -65,10 +65,11 @@ export default class CardList {
       flexFlow: 'row',
       padding: 10,
       margin: [0, -40, 0, 0],
+      flexWrap: 'wrap',
     },
     doc: {
       overflow: 'hidden',
-      margin: [0, 10, 0, 0],
+      margin: [5, 10, 0, 0],
       cursor: 'default',
       width,
       height,

@@ -78,7 +78,7 @@ export default class Commander {
       right: 0,
       bottom: 0,
       zIndex: 10000,
-      background: '#fff',
+      background: 'rgba(255, 255, 255, .6)',
       backdropFilter: 'blur(5px)',
     },
     noMatches: {
@@ -91,7 +91,7 @@ export default class Commander {
     commander: {
       position: 'absolute',
       overflow: 'scroll',
-      top: 50,
+      top: 0,
       left: 0,
       right: 0,
       bottom: 0,

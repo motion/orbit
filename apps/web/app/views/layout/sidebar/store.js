@@ -103,19 +103,23 @@ export default class SidebarStore {
         return node.type === 'ul_list'
       })
       .map(ul => {
-        return ul.nodes.map(li => {
-          const text = liToText(li)
-          const key = keys++
-          const sort = this.sortMap[key] || +new Date(doc.createdAt) + key
+        return ul.nodes
+          .map(li => {
+            const text = liToText(li)
+            const key = keys++
+            const sort = this.sortMap[key] || +new Date(doc.createdAt) + key
 
-          return {
-            text,
-            sort,
-            archive: li.data.archive || false,
-            doc,
-            key,
-          }
-        })
+            if (text === '') return null
+
+            return {
+              text,
+              sort,
+              archive: li.data.archive || false,
+              doc,
+              key,
+            }
+          })
+          .filter(val => val !== null)
       })
 
     return flatten(tasks)

@@ -86,25 +86,15 @@ export default class Model {
     this.database = database
     this.remoteDB = options.sync
 
-    const pouchSettings = {
-      skipSetup: true,
-      live: true,
-      retry: true,
-      since: 'now',
-    }
-
-    console.log(
-      `%cpouchSettings ${JSON.stringify(pouchSettings)}`,
-      'color: brown'
-    )
-
     console.time('db:connect')
     this.collection = await database.collection({
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
       autoMigrate: true,
-      pouchSettings,
+      pouchSettings: {
+        skip_setup: true,
+      },
       methods: this.compiledMethods,
     })
     console.timeEnd('db:connect')

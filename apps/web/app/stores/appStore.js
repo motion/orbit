@@ -63,10 +63,7 @@ export default class App {
       multiInstance: true,
       withCredentials: false,
       pouchSettings: {
-        skipSetup: true,
-        // live: true,
-        retry: true,
-        since: 'now',
+        skip_setup: true,
       },
     })
     console.timeEnd('create db')

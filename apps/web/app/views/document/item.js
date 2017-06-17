@@ -6,10 +6,10 @@ import { sample, memoize } from 'lodash'
 import Router from '~/router'
 import { Icon, Button } from '~/ui'
 import DocumentView from './index'
-import md5 from 'md5'
+import sum from 'hash-sum'
 
 const idToGradient = memoize(id => {
-  const num = Math.abs(+md5(id || '').replace(/[^0-9]/g, '') || 5)
+  const num = Math.abs(+sum(id || '').replace(/[^0-9]/g, '') || 5)
   const deg = Math.floor(Math.random() * 120)
   return { deg, colors: gradients[num % gradients.length].colors }
 })
@@ -70,7 +70,8 @@ export default class DocItem {
         className="Tilt-inner"
         style={{
           ...style,
-          background: `linear-gradient(${gradient.deg}deg, ${gradient.colors[0]}, ${gradient.colors[1]})`,
+          background: `linear-gradient(${gradient.deg}deg, ${gradient
+            .colors[0]}, ${gradient.colors[1]})`,
         }}
         {...props}
       >

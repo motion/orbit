@@ -180,7 +180,6 @@ export default class Pane {
           sub={sub}
           stat={titleStat}
           after={after}
-          noPointerEvents
           {...titleProps}
         >
           {title}

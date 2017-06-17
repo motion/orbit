@@ -1,6 +1,5 @@
 import { Model, query, str, object, array, bool } from '@jot/black'
 import Image from './image'
-import App from './app'
 import User from './user'
 import generateName from 'sillyname'
 import { memoize } from 'lodash'
@@ -140,7 +139,7 @@ class Document extends Model {
         .exec()
     }
 
-    const ids = (await window.App.Document.pouch.search({
+    const ids = (await this.pouch.search({
       query: text,
       fields: ['text', 'title'],
       include_docs: false,
@@ -191,10 +190,10 @@ class Document extends Model {
   });
 
   @query user = user => {
-    if (!App.user) {
+    if (!User.loggedIn) {
       return null
     }
-    return this.collection.find().where('authorId').eq(App.user.name)
+    return this.collection.find().where('authorId').eq(User.name)
   }
 }
 

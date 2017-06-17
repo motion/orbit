@@ -17,6 +17,7 @@
     "express-pouchdb-replication-stream": "^1.0.6",
     "invariant": "^2.2.2",
     "morgan": "^1.8.1",
+    "ms": "^2.0.0",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",
     "passport-google-oauth": "^1.0.0",

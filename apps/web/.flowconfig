@@ -1,9 +1,9 @@
 [ignore]
-.*/node_modules/jss/.*
-.*/node_modules/react-resizable/build/.*
+./node_modules/jss/.*
+./node_modules/react-resizable/build/.*
 
 [include]
-./app/index.js
+./
 
 [libs]
 flow/

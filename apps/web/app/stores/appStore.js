@@ -6,7 +6,6 @@ import PouchDB from 'pouchdb-core'
 import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
-import pAuth from 'pouchdb-authentication'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import { uniqBy } from 'lodash'
@@ -50,7 +49,6 @@ export default class App {
       RxDB.plugin(pREPL)
       RxDB.plugin(pValidate)
       RxDB.plugin(pSearch)
-      PouchDB.plugin(pAuth)
       PouchDB.plugin(pHTTP)
     }
 

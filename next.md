@@ -60,6 +60,12 @@
   - light theme defaults
     - input, button, drawer, listitem, popover, text, title, ...
 
+# gamechanger/showstopper ?
+
+  - well done attachments
+    - do people think of docs as just part of a more general company filestore?
+    - does it help people "get it" or does it clutter
+
 # emojis
 https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json
 https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json

@@ -3,6 +3,7 @@ import React from 'react'
 import { view } from '@jot/black'
 import List from './list'
 import Popover from './popover'
+import Arrow from './arrow'
 
 export type Props = {
   children: React$Element | string,
@@ -27,7 +28,12 @@ export default class Dropdown {
           openOnClick
           openOnHover
           escapable
-          target={children}
+          target={
+            <target>
+              {children}
+              <Arrow $arrow theme="light" size={6} />
+            </target>
+          }
           {...popoverProps}
         >
           <List
@@ -43,5 +49,19 @@ export default class Dropdown {
         </Popover>
       </dropdown>
     )
+  }
+
+  static style = {
+    target: {
+      flexFlow: 'row',
+      alignItems: 'center',
+    },
+    arrow: {
+      marginLeft: 5,
+      opacity: 0.5,
+      '&:hover': {
+        opacity: 1,
+      },
+    },
   }
 }

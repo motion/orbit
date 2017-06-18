@@ -1,9 +1,20 @@
 import { view } from '@jot/black'
 
+export type Props = {
+  size: number,
+  towards: 'top' | 'right' | 'bottom' | 'left',
+}
+
 @view.ui
 export default class Arrow {
-  getRotation = () => {
-    const { towards } = this.props
+  props: Props
+
+  static defaultProps = {
+    size: 16,
+    towards: 'bottom',
+  }
+
+  getRotation = towards => {
     switch (towards) {
       case 'left':
         return '-90deg'
@@ -13,12 +24,12 @@ export default class Arrow {
     return '0deg'
   }
 
-  render({ size, towards, theme }) {
+  render({ size, towards, theme, ...props }: Props) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
     return (
-      <arrow $rotate={this.getRotation()} style={{ width: size, height: size }}>
+      <arrow $rotate={this.getRotation(towards)} {...props}>
         <arrowInner
           style={{
             top: innerTop * 0.75,
@@ -50,8 +61,12 @@ export default class Arrow {
   }
 
   static theme = {
-    theme: (props, state, activeTheme) => ({
+    theme: ({ size }, state, activeTheme) => ({
       arrowInner: activeTheme.base,
+      arrow: {
+        width: size,
+        height: size,
+      },
     }),
   }
 }

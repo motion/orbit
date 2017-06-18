@@ -146,7 +146,7 @@ class PlayUI {
       flex: 1,
     },
     icon: {
-      marginLeft: -10,
+      marginLeft: -5,
       marginRight: 7,
       opacity: 0.25,
     },
@@ -162,7 +162,6 @@ class PlayUI {
     subPane: {
       // minWidth: 200,
       marginBottom: 20,
-      marginLeft: -5,
     },
   }
 }

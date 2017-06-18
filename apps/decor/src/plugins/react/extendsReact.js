@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import React from 'react'
 
 export type ExtendsReact = React$Component
 
@@ -9,7 +9,7 @@ export default options => ({
     if (!Klass.prototype) {
       return Klass
     }
-    Object.setPrototypeOf(Klass.prototype, Component.prototype)
+    Object.setPrototypeOf(Klass.prototype, React.Component.prototype)
     return Klass
   },
 })

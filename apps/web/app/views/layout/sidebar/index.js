@@ -36,6 +36,68 @@ type Props = {
   store: SidebarStore,
 }
 
+@view
+class TasksUI {
+  render() {
+    return (
+      <tasks if={false}>
+        <Pane if={store.inProgress} title="Current Task">
+          <activeItem>
+            <TaskItem
+              task={store.inProgress}
+              active={false}
+              onClick={() => {}}
+              inProgress
+              noDrag
+            />
+          </activeItem>
+        </Pane>
+        <Pane
+          collapsable
+          scrollable
+          title={`Your Tasks`}
+          titleProps={{
+            after: (
+              <Segment itemProps={{ chromeless: true }} $$flex={1}>
+                <Button
+                  active={store.hideArchived == false}
+                  onClick={() => (store.hideArchived = false)}
+                >
+                  All
+                </Button>
+                <Button
+                  active={store.hideArchived}
+                  onClick={() => (store.hideArchived = true)}
+                >
+                  Active
+                </Button>
+              </Segment>
+            ),
+          }}
+        >
+          <content $$draggable>
+            <ContextMenu
+              $context
+              options={[
+                {
+                  title: 'Delete',
+                  onSelect: place => place.delete(),
+                },
+              ]}
+            >
+              <Tasks store={store} />
+            </ContextMenu>
+          </content>
+        </Pane>
+
+        <Pane collapsable title="Team">
+          <Team store={store} />
+        </Pane>
+      </tasks>
+    )
+  }
+}
+
 @view({
   store: class {
     team = 'Motion'
@@ -44,7 +106,7 @@ type Props = {
 class PlayUI implements ViewType {
   render({ store }: { store: SidebarStore }) {
     const color = '#66a734'
-
+    console.log('render playui')
     return (
       <ui>
         <Pane $mainPane collapsable title="Me" titleProps={{ color }}>
@@ -175,7 +237,7 @@ export default class Sidebar {
   render({ layoutStore, store }: Props) {
     const active = IN_TRAY ? true : layoutStore.sidebar.active
     const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
-
+    console.log('render sidebar')
     return (
       <Theme name="dark">
         <Shortcuts name="all" handler={store.handleShortcut}>
@@ -187,65 +249,9 @@ export default class Sidebar {
             />
             <sidebar>
               <Login if={!IN_TRAY} />
-
               <PlayUI if={true} />
-
-              <tasks if={false}>
-                <Pane if={store.inProgress} title="Current Task">
-                  <activeItem>
-                    <TaskItem
-                      task={store.inProgress}
-                      active={false}
-                      onClick={() => {}}
-                      inProgress
-                      noDrag
-                    />
-                  </activeItem>
-                </Pane>
-                <Pane
-                  collapsable
-                  scrollable
-                  title={`Your Tasks`}
-                  titleProps={{
-                    after: (
-                      <Segment itemProps={{ chromeless: true }} $$flex={1}>
-                        <Button
-                          active={store.hideArchived == false}
-                          onClick={() => (store.hideArchived = false)}
-                        >
-                          All
-                        </Button>
-                        <Button
-                          active={store.hideArchived}
-                          onClick={() => (store.hideArchived = true)}
-                        >
-                          Active
-                        </Button>
-                      </Segment>
-                    ),
-                  }}
-                >
-                  <content $$draggable>
-                    <ContextMenu
-                      $context
-                      options={[
-                        {
-                          title: 'Delete',
-                          onSelect: place => place.delete(),
-                        },
-                      ]}
-                    >
-                      <Tasks store={store} />
-                    </ContextMenu>
-                  </content>
-                </Pane>
-
-                <Pane collapsable title="Team">
-                  <Team store={store} />
-                </Pane>
-              </tasks>
-
-              <SlotFill.Slot name="sidebar">
+              <TasksUI />
+              <SlotFill.Slot key={4} name="sidebar">
                 {items =>
                   <activeSidebar>
                     {items}

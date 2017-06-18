@@ -37,6 +37,8 @@ type Props = {
 @view
 class PlayUI {
   render() {
+    const color = '#66a734'
+
     return (
       <ui>
         <top if={false}>
@@ -46,7 +48,7 @@ class PlayUI {
           <avatar />
         </top>
 
-        <Pane $mainPane collapsable title="Me" titleProps={{ color: 'green' }}>
+        <Pane $mainPane collapsable title="Me" titleProps={{ color }}>
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({
@@ -65,7 +67,7 @@ class PlayUI {
           $teamPane
           collapsable
           title="Team"
-          titleProps={{ color: 'green' }}
+          titleProps={{ color }}
         >
           <Pane $subPane sub collapsable title="Steel">
             <List
@@ -110,12 +112,7 @@ class PlayUI {
 
         <space $$flex />
 
-        <Pane
-          $mainPane
-          collapsable
-          title="Queue"
-          titleProps={{ color: 'green' }}
-        >
+        <Pane $mainPane collapsable title="Queue" titleProps={{ color }}>
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({

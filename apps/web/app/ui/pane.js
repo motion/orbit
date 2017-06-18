@@ -40,6 +40,7 @@ export class Title {
     hoverable,
     background,
     stat,
+    color,
     ...props
   }: TitleProps) {
     return (
@@ -51,7 +52,10 @@ export class Title {
         >
           <Button
             icon={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
-            iconProps={{ size: 8, color: [255, 255, 255, 0.3] }}
+            iconProps={{
+              size: 8,
+              color: clr(color).alpha(0.5).toString() || [255, 255, 255, 0.3],
+            }}
             chromeless
             padding={6}
             margin={[-2, -2, -2, -5]}

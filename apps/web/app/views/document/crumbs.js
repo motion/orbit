@@ -4,7 +4,7 @@ import { view } from '@jot/black'
 import { Icon } from '~/ui'
 
 @view
-export default class Crumbs {
+export default class Breadcrumbs {
   render({ docs }) {
     const crumbs = [
       { text: 'all', url: '/' },
@@ -14,14 +14,14 @@ export default class Crumbs {
     return (
       <crumbs>
         <items $$row>
-          {crumbs.map((item, index) => (
+          {crumbs.map((item, index) =>
             <item key={item.url} $$row>
               <text onClick={() => Router.go(item.url)} $text>
                 {item.text}
               </text>
               <slash if={index !== crumbs.length - 1}>/</slash>
             </item>
-          ))}
+          )}
         </items>
       </crumbs>
     )
@@ -29,7 +29,7 @@ export default class Crumbs {
 
   static style = {
     crumbs: {
-      margin: [10, 0, 0, 45],
+      margin: [10, 0, 0, 35],
       height: 20,
     },
     item: {

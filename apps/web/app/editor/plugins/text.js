@@ -5,13 +5,12 @@ import Highlighter from './helpers/highlighter'
 import node from '~/editor/node'
 import { createButton } from './helpers'
 
-const paragraph = node(props => {
-  const { editorStore } = props
-  const text = props.children[0].props.node.text
-
-  const style = (editorStore.inline && {
-    color: '#fff',
-  }) || {}
+const paragraph = node(({ editorStore, children, inline, attributes }) => {
+  const text = children[0].props.node.text
+  const style = {
+    color: inline ? '#fff' : 'auto',
+    fontSize: 13,
+  }
 
   if (
     editorStore.find &&
@@ -31,7 +30,7 @@ const paragraph = node(props => {
   }
 
   return (
-    <p style={style} {...props.attributes} $$text>
+    <p style={style} {...attributes} $$text>
       {props.children}
     </p>
   )
@@ -60,14 +59,13 @@ export default class TextPlugin {
   category = 'text'
 
   contextButtons = [
-    () => (
+    () =>
       <Popover target={<Button icon="textbackground" />} openOnHover background>
         <row style={{ flexFlow: 'row' }}>
           <Button icon="textcolor" />
           <Button icon="textbackground" />
         </row>
-      </Popover>
-    ),
+      </Popover>,
   ]
 
   barButtons = [

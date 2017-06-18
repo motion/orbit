@@ -157,7 +157,7 @@ export default Component =>
       context: {
         opacity: 0,
         position: 'absolute',
-        left: 0,
+        left: -5,
         top: 0,
         bottom: 0,
         alignItems: 'center',
@@ -165,7 +165,7 @@ export default Component =>
       },
       rootLevel: {
         // [line-height, margin]
-        padding: [0, 40],
+        padding: [0, 30],
       },
       hoverable: {
         '&:hover': {

@@ -24,6 +24,8 @@ export default class Model {
   defaultSchema: Object
   collection: ?RxCollection & { pouch: PouchDB }
   remoteDb: ?string
+  // for tracking which queries we are watching
+  queries: Object = {}
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args

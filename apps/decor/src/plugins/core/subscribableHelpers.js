@@ -8,7 +8,7 @@ import {
 } from 'motion-class-helpers'
 
 export type SubscribableHelpers = {
-  on(name: string, callback: Function): { dispose(): void },
+  on(target: any, name: string, callback: Function): { dispose(): void },
   setInterval(callback: Function): Function,
   setTimeout(callback: Function): Function,
   ref(path: string): { setter: Function, set: Function, toggle: Function },

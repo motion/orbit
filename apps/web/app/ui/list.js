@@ -6,12 +6,36 @@ import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/views/helpers/parentSize'
-
 const idFn = _ => _
+
+type Props = {
+  onHighlight: Function,
+  onSelect: Function,
+  children?: React$Element,
+  items?: Array<any>,
+  loading?: boolean,
+  height?: number,
+  width?: number,
+  getItem?: Function,
+  getRef?: Function,
+  onItemMount?: Function,
+  style?: Object,
+  placeholder?: any,
+  horizontal?: boolean,
+  padded?: boolean,
+  flex?: boolean | number,
+  scrollable?: boolean,
+  controlled?: boolean,
+  parentSize?: boolean,
+  itemStyle?: Object,
+  rowHeight?: number,
+}
 
 @parentSize
 @view.ui
 class List {
+  props: Props
+
   static defaultProps = {
     getItem: idFn,
     onSelect: idFn,
@@ -105,32 +129,30 @@ class List {
     this.highlightItem(() => null)
   }
 
-  render() {
-    const {
-      children,
-      items,
-      loading,
-      height: userHeight,
-      width: userWidth,
-      getItem,
-      style,
-      placeholder,
-      horizontal,
-      padded,
-      slim,
-      flex,
-      scrollable,
-      controlled,
-      onHighlight,
-      onSelect,
-      getRef,
-      parentSize,
-      itemStyle,
-      rowHeight: propRowHeight,
-      onItemMount,
-      ...props
-    } = this.props
-
+  render({
+    children,
+    items,
+    loading,
+    height: userHeight,
+    width: userWidth,
+    getItem,
+    style,
+    placeholder,
+    horizontal,
+    padded,
+    slim,
+    flex,
+    scrollable,
+    controlled,
+    onHighlight,
+    onSelect,
+    getRef,
+    parentSize,
+    itemStyle,
+    rowHeight: propRowHeight,
+    onItemMount,
+    ...props
+  }: Props) {
     let rowHeight = propRowHeight
     let height = userHeight
     let width = userWidth

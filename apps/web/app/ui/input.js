@@ -1,6 +1,15 @@
+// @flow
 import React from 'react'
 import { view } from '@jot/black'
 import { inject } from '~/helpers'
+
+type Props = {
+  getRef?: Function,
+  sync?: Function,
+  inForm?: boolean,
+  noBorder?: boolean,
+  borderRadius?: number,
+}
 
 @inject(context => context.ui)
 @view.ui
@@ -10,18 +19,15 @@ export default class Input {
     borderRadius: 5,
   }
 
-  render() {
-    const {
-      dark,
-      getRef,
-      sync,
-      inSegment,
-      inForm,
-      noBorder,
-      borderRadius,
-      ...props
-    } = this.props
-
+  render({
+    getRef,
+    sync,
+    inSegment,
+    inForm,
+    noBorder,
+    borderRadius,
+    ...props
+  }: Props) {
     if (sync) {
       props.value = sync.get()
       props.onChange = e => sync.set(e.target.value)

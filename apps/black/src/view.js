@@ -43,14 +43,20 @@ const getPlugins = ({ mobx, ui, autobind } = {}) => [
 
 const viewDecorator = decor(getPlugins({ mobx: true, autobind: true }))
 
-export default function view(
-  viewOrStores: Object | Class | Function
-): ViewClass {
+type ViewThing = {
+  on(): ViewClass,
+  ui(): ViewClass,
+  basics(): ViewClass,
+  provide(stores: Object): ViewClass,
+  attach(...stores: Array<string>): ViewClass,
+}
+
+const view: ViewThing = (item: Object | Class | Function): ViewClass => {
   // @view({ ...stores }) shorthand
-  if (typeof viewOrStores === 'object') {
-    return viewDecorator({ stores: viewOrStores })
+  if (typeof item === 'object') {
+    return viewDecorator({ stores: item })
   }
-  return viewDecorator(viewOrStores)
+  return viewDecorator(item)
 }
 
 // pass on emitter
@@ -67,3 +73,5 @@ view.basics = decor([
 ])
 view.provide = stores => viewDecorator({ stores, context: true })
 view.attach = names => decor([[attach, { names }]])
+
+export default view

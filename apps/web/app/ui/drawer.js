@@ -1,3 +1,4 @@
+// @flow
 import { view } from '@jot/black'
 
 const idFn = _ => _
@@ -9,19 +10,21 @@ const opposite = direction =>
     top: 'bottom',
   }[direction])
 
+type Props = {
+  from: 'top' | 'bottom' | 'left' | 'right',
+  size: number,
+  onClickOverlay: Function,
+  zIndex: number,
+  style: Object,
+  shadowed?: boolean,
+  bordered?: boolean,
+  dark?: boolean,
+  noOverlay?: boolean,
+}
+
 @view.ui
 export default class Drawer {
-  props: {
-    from: 'top' | 'bottom' | 'left' | 'right',
-    size: number,
-    onClickOverlay: Function,
-    zIndex: number,
-    style: Object,
-    shadowed?: boolean,
-    bordered?: boolean,
-    dark?: boolean,
-    noOverlay?: boolean,
-  }
+  props: Props
 
   static defaultProps = {
     size: 400,
@@ -31,26 +34,24 @@ export default class Drawer {
     style: {},
   }
 
-  render() {
-    const {
-      open,
-      children,
-      from,
-      size,
-      percent,
-      style,
-      onClickOverlay,
-      noOverlay,
-      dark,
-      shadowed,
-      bordered,
-      zIndex,
-      attach,
-      className,
-      overlayBlur,
-      ...props
-    } = this.props
-
+  render({
+    open,
+    children,
+    from,
+    size,
+    percent,
+    style,
+    onClickOverlay,
+    noOverlay,
+    dark,
+    shadowed,
+    bordered,
+    zIndex,
+    attach,
+    className,
+    overlayBlur,
+    ...props
+  }: Props) {
     const unit = percent ? '%' : 'px'
     const flip = /right|bottom/.test(from) ? 1 : -1
     const translate = `${(open ? 0 : size) * flip}${unit}`

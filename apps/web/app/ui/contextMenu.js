@@ -23,21 +23,34 @@ class ContextMenuTarget {
   }
 }
 
+type Props = {
+  width: number,
+  children: React$Element,
+  inactive?: Boolean,
+  options?: Object,
+  store?: ContextMenuStore,
+}
+
+class ContextMenuStore {
+  event = null
+  data = null
+
+  clearMenu = () => {
+    this.event = null
+  }
+
+  handleContext = (event: Event) => {
+    this.event = event
+  }
+}
+
 @view({
-  store: class ContextMenuStore {
-    event = null
-    data = null
-
-    clearMenu = () => {
-      this.event = null
-    }
-
-    handleContext = (event: Event) => {
-      this.event = event
-    }
-  },
+  store: ContextMenuStore,
 })
 class ContextMenu {
+  props: Props
+  node = null
+
   static defaultProps = {
     width: 135,
   }
@@ -56,12 +69,6 @@ class ContextMenu {
     }
   }
 
-  props: {
-    inactive: ?Boolean,
-  }
-
-  node = null
-
   componentDidMount() {
     this.on(window, 'click', (event: Event) => {
       if (this.props.inactive) return
@@ -78,7 +85,7 @@ class ContextMenu {
     })
   }
 
-  render({ width, children, inactive, options, store, ...props }) {
+  render({ width, children, inactive, options, store, ...props }: Props) {
     return (
       <contextmenu ref={this.ref('node').set} {...props}>
         {children}

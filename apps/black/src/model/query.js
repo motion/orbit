@@ -54,7 +54,7 @@ function valueWrap(info, valueGet: Function) {
       queries[selectorKey] = true
       const remoteDB = this.remoteDB
       const localDB = this.pouch.name
-      out('query', selectorKey, selector)
+      out('query/selector', selectorKey, selector)
       pull = PouchDB.replicate(remoteDB, localDB, {
         selector,
         live: true,

@@ -9,7 +9,7 @@ const paragraph = node(({ editorStore, children, inline, attributes }) => {
   const text = children[0].props.node.text
   const style = {
     color: inline ? '#fff' : 'auto',
-    fontSize: 13,
+    fontSize: 15,
   }
 
   if (

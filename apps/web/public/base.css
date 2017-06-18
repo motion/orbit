@@ -10,44 +10,43 @@ body {
   padding: 0;
   color: #333;
   font-size: 14px;
-  line-height: 1.4rem;
+  line-height: 1.3rem;
   font-weight: 300;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: 100%;
 }
 
-
 /* Strikethrough */
 
 .strikethrough > p > span {
-	position: relative;
-	transition: all 0.25s cubic-bezier(.55, 0, .1, 1);
+  position: relative;
+  transition: all 0.25s cubic-bezier(.55, 0, .1, 1);
 }
 
 .strikethrough > p > span:after {
-	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
+  transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
   position: absolute;
   top: 11px;
-	transform-origin: center left;
-	height: 2px;
-	box-shadow: 0 1px rgba(255,255,255,0.6);
+  transform-origin: center left;
+  height: 2px;
+  box-shadow: 0 1px rgba(255, 255, 255, 0.6);
   left: 0px;
-	width: 100%;
-	content: '';
-	display: block;
+  width: 100%;
+  content: '';
+  display: block;
   opacity: 0.6;
-	background:rgba(0,0,0,1);
+  background: rgba(0, 0, 0, 1);
   transform: scaleX(1);
 }
 
 .strikethrough:not(.active) > p > span:after {
-	transform: scaleX(0);
-	transform-origin: center right;
-	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
+  transform: scaleX(0);
+  transform-origin: center right;
+  transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
 }
 
 .strikethrough.active > p > span:after {
-	transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
+  transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
   transform: scaleX(1);
 }
 
@@ -115,9 +114,16 @@ body.dragging * {
 }
 
 input, textarea, select {
-  font-family: -apple-system, BlinkMacSystemFont,
-    "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 body, body * {
@@ -208,7 +214,6 @@ p code {
   padding: 0;
 }
 
-
 table {
   display: table;
 }
@@ -237,7 +242,6 @@ caption {
   display: table-caption;
 }
 
-
 /* reset mark */
 mark {
   background: none;
@@ -262,9 +266,9 @@ blockquote {
    ========================================================================== */
 
 html {
-    color: #222;
-    font-size: 1em;
-    line-height: 1.4;
+  color: #222;
+  font-size: 1em;
+  line-height: 1.4;
 }
 
 /*
@@ -276,8 +280,8 @@ html {
  */
 
 ::selection {
-    background: #b3d4fc;
-    text-shadow: none;
+  background: #b3d4fc;
+  text-shadow: none;
 }
 
 /*
@@ -285,12 +289,12 @@ html {
  */
 
 hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
 }
 
 /*
@@ -299,13 +303,8 @@ hr {
  * https://github.com/h5bp/html5-boilerplate/issues/440
  */
 
-audio,
-canvas,
-iframe,
-img,
-svg,
-video {
-    vertical-align: middle;
+audio, canvas, iframe, img, svg, video {
+  vertical-align: middle;
 }
 
 /*
@@ -313,9 +312,9 @@ video {
  */
 
 fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .react-grid-layout {
@@ -360,7 +359,7 @@ fieldset {
   transition: none;
   z-index: 3;
   will-change: transform;
-  box-shadow: 0 10px 70px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 70px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
 }
 

@@ -29,8 +29,8 @@ export default class Breadcrumbs {
 
   static style = {
     crumbs: {
-      margin: [10, 0, 0, 35],
-      height: 20,
+      margin: [5, 0, 0, 35],
+      height: 15,
     },
     item: {
       textTransform: 'capitalize',
@@ -40,8 +40,9 @@ export default class Breadcrumbs {
       transition: 'opacity 100ms ease-in',
     },
     text: {
+      fontSize: 12,
       marginRight: 10,
-      opacity: 0.4,
+      opacity: 0.3,
       '&:hover': {
         opacity: 1,
       },

@@ -1,8 +1,10 @@
 import { view } from '@jot/black'
+import type { Color } from 'gloss'
 
 export type Props = {
   size: number,
   towards: 'top' | 'right' | 'bottom' | 'left',
+  color?: Color,
 }
 
 @view.ui
@@ -29,20 +31,23 @@ export default class Arrow {
     const innerTop = size * (onBottom ? -1 : 1)
 
     return (
-      <arrow $rotate={this.getRotation(towards)} {...props}>
-        <arrowInner
-          style={{
-            top: innerTop * 0.75,
-            width: size,
-            height: size,
-          }}
-        />
-      </arrow>
+      <arrowOuter>
+        <arrow $rotate={this.getRotation(towards)} {...props}>
+          <arrowInner
+            style={{
+              top: innerTop * 0.75,
+              width: size,
+              height: size,
+            }}
+          />
+        </arrow>
+      </arrowOuter>
     )
   }
 
   static style = {
-    arrow: {
+    // why arrowOuter and arrow? Because chrome transform rotate destroy overflow: hidden, so we nest one more
+    arrowOuter: {
       position: 'relative',
       overflow: 'hidden',
     },
@@ -60,8 +65,10 @@ export default class Arrow {
   }
 
   static theme = {
-    theme: ({ size }, state, theme) => ({
-      arrowInner: theme.base,
+    theme: ({ size, color }, state, theme) => ({
+      arrowInner: {
+        backgroundColor: color || theme.base.background,
+      },
       arrow: {
         width: size,
         height: size,

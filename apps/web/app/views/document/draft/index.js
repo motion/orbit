@@ -6,8 +6,7 @@ import DocView from '~/views/document'
 import { Document } from '@jot/models'
 import Router from '~/router'
 
-@view
-class CreateButton {
+@view class CreateButton {
   render(props) {
     return (
       <div>
@@ -36,8 +35,7 @@ class CreateButton {
 class DraftStore {
   doc = null
 
-  @computed
-  get isActive() {
+  @computed get isActive() {
     return this.doc !== null
   }
 
@@ -79,7 +77,7 @@ export default class Draft {
 
     return (
       <draft>
-        <Portal isOpen={true}>
+        <Portal isOpened>
           <Drawer
             from="bottom"
             open={isActive}

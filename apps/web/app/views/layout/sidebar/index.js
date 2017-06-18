@@ -33,8 +33,7 @@ type Props = {
   store: SidebarStore,
 }
 
-@view
-class PlayUI {
+@view class PlayUI {
   render() {
     return (
       <ui>
@@ -48,14 +47,14 @@ class PlayUI {
         <section>
           <title>Me</title>
           <list>
-            {['XYZ', 'abc', 'mno'].map((item, index) =>
+            {['XYZ', 'abc', 'mno'].map((item, index) => (
               <item key={index}>
                 <Icon name="menu" />
                 <name>XYZ</name>
                 <flex />
                 <input type="checkbox" />
               </item>
-            )}
+            ))}
           </list>
         </section>
 
@@ -99,7 +98,7 @@ export default class Sidebar {
             <Login if={!IN_TRAY} />
 
             <orgs if={false} $$row>
-              {['motion', 'cr', 'baes', 'awe'].map((name, i) =>
+              {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
                 <Button
                   key={i}
                   style={{ marginLeft: 5, marginRight: 5 }}
@@ -109,14 +108,14 @@ export default class Sidebar {
                   color={randomcolor()}
                   icon={name}
                 />
-              )}
+              ))}
             </orgs>
 
-            <playui>
+            <playui if={false}>
               <PlayUI />
             </playui>
 
-            <tasks if={false}>
+            <tasks>
               <Pane if={store.inProgress} title="Current Task">
                 <activeItem>
                   <TaskItem
@@ -172,10 +171,11 @@ export default class Sidebar {
             </tasks>
 
             <SlotFill.Slot name="sidebar">
-              {items =>
+              {items => (
                 <activeSidebar>
                   {items}
-                </activeSidebar>}
+                </activeSidebar>
+              )}
             </SlotFill.Slot>
           </sidebar>
         </Drawer>

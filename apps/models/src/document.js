@@ -189,13 +189,13 @@ class Document extends Model {
       // .sort({ createdAt: 'desc' })
       .limit(limit)
 
-  @query get = query => {
+  @query get = memoize(query => {
     if (!query) {
       return null
     }
     const query_ = cleanGetQuery(query)
     return this.collection.findOne(query_)
-  };
+  });
 
   @query user = user => {
     if (!User.loggedIn) {

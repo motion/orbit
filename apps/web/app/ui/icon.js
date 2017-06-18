@@ -28,7 +28,8 @@ export default class Icon {
 
   static defaultProps = {
     size: 16,
-    // hoverColor: [255,255,255,0.7],
+    color: [0, 0, 0, 0.5],
+    hoverColor: [0, 0, 0, 0.7],
     type: 'mini',
     margin: 0,
   }
@@ -52,10 +53,6 @@ export default class Icon {
     style,
     ...props
   }: Props) {
-    if (!color && !IS_PROD) {
-      console.log('no color given to icon', name)
-    }
-
     const iconName = findMatch(name)
     const backupIcon = !iconName ? name : ''
 

@@ -5,7 +5,8 @@ import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '~/ui'
 
 export default Component =>
-  @view.basics class Node extends React.Component {
+  @view.basics
+  class Node extends React.Component {
     state = {
       context: null,
     }
@@ -37,7 +38,8 @@ export default Component =>
       this.editorStore.selection.setHovered(this.props.node, this.node)
     }
 
-    @computed get isFocused() {
+    @computed
+    get isFocused() {
       const { focusedNode } = this.editorStore.selection
       if (this.editorStore.inline || !this.node) {
         return false
@@ -49,7 +51,7 @@ export default Component =>
       this.editorStore.transform(t => t.insertBlock({ type, data }))
     }
 
-    contextMenu = () => (
+    contextMenu = () =>
       <Popover
         target={
           <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.1]} />
@@ -86,7 +88,6 @@ export default Component =>
           ]}
         />
       </Popover>
-    )
 
     componentProps = {
       setContext: context => {
@@ -145,7 +146,7 @@ export default Component =>
       node: {
         display: 'inline-block',
         position: 'relative',
-        padding: [0, 18],
+        padding: [0, 15],
         borderLeft: [3, 'transparent'],
         borderRight: [3, 'transparent'],
 

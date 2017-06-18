@@ -1,10 +1,44 @@
+// @flow
 import React from 'react'
 import { view } from '@jot/black'
 import FakeAvatar from './fake/fakeAvatar'
 import Glow from './glow'
 
+export type ItemProps = {
+  children?: React$Element,
+  primary?: string | React$Element,
+  secondary?: string | React$Element,
+  avatar?: React$Element,
+  fakeAvatar?: boolean,
+  date?: string | React$Element,
+  dateSize?: number,
+  meta?: string | React$Element,
+  before?: string | React$Element,
+  after?: string | React$Element,
+  isLastElement?: boolean,
+  highlight?: boolean,
+  isFirstElement?: boolean,
+  nohover?: boolean,
+  row?: boolean,
+  onClick?: Function,
+  slim?: boolean,
+  onToggle?: Function,
+  active?: boolean,
+  horizontal?: boolean,
+  itemStyle?: Object,
+  style?: Object,
+  dark?: boolean,
+  padded?: boolean,
+  padding?: Array | number,
+  light?: boolean,
+  height?: number,
+  onItemMount?: Function,
+}
+
 @view.ui
 export default class ListItem {
+  props: ItemProps
+
   static isListItem = true
 
   componentDidMount() {
@@ -17,7 +51,6 @@ export default class ListItem {
     children,
     primary,
     secondary,
-    match,
     avatar,
     fakeAvatar,
     date,
@@ -44,7 +77,7 @@ export default class ListItem {
     height,
     onItemMount,
     ...props
-  }) {
+  }: ItemProps) {
     return (
       <item
         ref="item"

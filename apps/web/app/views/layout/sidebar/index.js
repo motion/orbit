@@ -50,7 +50,7 @@ class PlayUI {
           <list>
             {['XYZ', 'abc', 'mno'].map((item, index) =>
               <item key={index}>
-                <Icon name="hambuger" />
+                <Icon name="menu" />
                 <name>XYZ</name>
                 <flex />
                 <input type="checkbox" />

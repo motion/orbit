@@ -7,12 +7,13 @@ import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/views/helpers/parentSize'
 const idFn = _ => _
+import type { ItemProps } from './listItem'
 
 type Props = {
   onHighlight: Function,
   onSelect: Function,
   children?: React$Element,
-  items?: Array<any>,
+  items?: Array<ItemProps | React$Element>,
   loading?: boolean,
   height?: number,
   width?: number,

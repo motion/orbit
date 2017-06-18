@@ -13,15 +13,19 @@ export { Raw } from 'slate'
 
 const empty = () => {}
 
+type Props = {
+  rules?: Array<any>,
+  plugins?: Array<any>,
+  inline?: boolean,
+  readOnly?: boolean,
+  editorStore: EditorStore,
+}
+
 @view.provide({
   editorStore: EditorStore,
 })
 export default class EditorView {
-  props: {
-    rules?: Array,
-    plugins?: Array,
-    inline?: boolean,
-  }
+  props: Props
 
   static defaultProps = {
     onChange: empty,
@@ -45,7 +49,7 @@ export default class EditorView {
     this.props.editorStore.selection.mouseUpEvent = event
   }
 
-  render({ readOnly, editorStore }) {
+  render({ readOnly, editorStore }: Props) {
     const { spec } = editorStore
     const showToolbar = !editorStore.inline && readOnly !== true
 

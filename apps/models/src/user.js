@@ -73,7 +73,7 @@ class User {
   setupDbSync = () => {
     if (!this.remoteDb && this.user) {
       this.remoteDb = new PouchDB(this.user.userDBs.documents, {
-        skipSetup: true,
+        skip_setup: true,
       })
       this.localDb = new PouchDB(`local_db_${this.user.user_id}`)
       // syncronize the local and remote user databases...

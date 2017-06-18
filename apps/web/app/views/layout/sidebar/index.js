@@ -46,8 +46,7 @@ class PlayUI {
           <avatar />
         </top>
 
-        <section>
-          <title>Me</title>
+        <Pane collapsable title="Me" titleProps={{ color: 'green' }}>
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({
@@ -59,21 +58,13 @@ class PlayUI {
               after: <input type="checkbox" />,
             })}
           />
-        </section>
+        </Pane>
       </ui>
     )
   }
   static style = {
     section: {
       padding: 5,
-    },
-    title: {
-      color: 'green',
-      fontWeight: 500,
-      fontSize: 12,
-      borderBottom: [1, 'green'],
-      marginBottom: 4,
-      padding: [0, 5],
     },
     icon: {
       marginLeft: -5,

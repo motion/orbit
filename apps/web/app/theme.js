@@ -8,8 +8,8 @@ const LIGHT = {
 }
 
 const DARK = {
-  background: '#222',
-  color: '#fff',
+  background: '#292929',
+  color: '#f2f2f2',
   borderColor: '#444',
 }
 

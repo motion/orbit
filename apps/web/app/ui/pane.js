@@ -3,9 +3,25 @@ import { view } from '@jot/black'
 import { clr } from '~/helpers'
 import Button from './button'
 import Grain from './grain'
+import type { Color } from 'gloss'
+
+export type TitleProps = {
+  children: React$Children,
+  collapsable?: boolean,
+  collapsed?: boolean,
+  onCollapse: ?Function,
+  before?: React$Children,
+  after?: React$Children,
+  sub?: boolean,
+  hoverable?: React$Children,
+  background?: Color,
+  stat?: React$Children,
+}
 
 @view.ui
 export class Title {
+  props: TitleProps
+
   // stop propagation so it doesn't include the click in the dblclick
   onClick = e => {
     const { onCollapse } = this.props
@@ -13,21 +29,19 @@ export class Title {
     onCollapse(e)
   }
 
-  render() {
-    const {
-      children,
-      collapsable,
-      collapsed,
-      onCollapse,
-      before,
-      after,
-      sub,
-      hoverable,
-      background,
-      stat,
-      ...props
-    } = this.props
-
+  render({
+    children,
+    collapsable,
+    collapsed,
+    onCollapse,
+    before,
+    after,
+    sub,
+    hoverable,
+    background,
+    stat,
+    ...props
+  }: TitleProps) {
     return (
       <ptitle onDoubleClick={onCollapse} {...props}>
         <collapse
@@ -37,7 +51,7 @@ export class Title {
         >
           <Button
             icon={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
-            iconProps={{ size: 8, color: '#ccc' }}
+            iconProps={{ size: 8, color: [255, 255, 255, 0.3] }}
             chromeless
             padding={6}
             margin={-2}
@@ -57,9 +71,6 @@ export class Title {
   static style = {
     ptitle: {
       padding: [2, 10],
-      background: '#fafafa',
-      borderBottom: [1, 'dotted', '#eee'],
-      color: [0, 0, 0, 0.5],
       flexFlow: 'row',
       alignItems: 'center',
       fontSize: 12,
@@ -84,6 +95,17 @@ export class Title {
   }
 
   static theme = {
+    theme: ({ color, background, hoverable }, context, theme) => ({
+      ptitle: {
+        background: background || theme.base.background,
+        borderBottom: [1, color || theme.base.borderColor],
+        color: color || theme.base.color,
+
+        '&:hover': {
+          background: hoverable ? clr(background).lighten(0.025) : background,
+        },
+      },
+    }),
     sub: {
       ptitle: {
         padding: [2, 5],
@@ -91,14 +113,6 @@ export class Title {
         fontWeight: 300,
       },
     },
-    background: ({ background, hoverable }) => ({
-      ptitle: {
-        background,
-        '&:hover': {
-          background: hoverable ? clr(background).lighten(0.025) : background,
-        },
-      },
-    }),
   }
 }
 

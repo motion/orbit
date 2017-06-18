@@ -1,5 +1,9 @@
 # upnext
 
+  - gloss
+    - turn theme="string" into theme={{ resolved: theme }}
+      - lets you use theme inside render() for stuff like <Icon color={theme.color} />
+
 # queue
   - get to bootstrappability
     - hosted iwritey.com instance we can use to plan

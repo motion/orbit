@@ -40,29 +40,39 @@ export default class Input {
     input: {
       flex: 1,
       fontSize: 13,
-      height: 30,
-      padding: [7, 8],
-      border: [1, '#ddd'],
-      width: 0,
       lineHeight: '1rem',
-      background: '#fff',
       alignSelf: 'center',
       outline: 0,
-      '&:hover': {
-        borderColor: '#ccc',
-      },
     },
   }
 
   static theme = {
-    theme: (props, context, activeTheme) => ({
-      input: {
-        '&:focus': {
-          borderColor: 'blue !important',
-          borderWidth: 1,
+    theme: ({ type }, context, theme) => {
+      let styles = {}
+
+      if (!type || type === 'password' || type === 'text') {
+        styles = {
+          height: 30,
+          padding: [7, 8],
+          width: 0,
+          border: [1, theme.base.borderColor],
+        }
+      }
+
+      return {
+        input: {
+          ...theme.base,
+          ...styles,
+          '&:hover': {
+            borderColor: theme.hover.borderColor,
+          },
+          '&:focus': {
+            borderColor: 'blue !important',
+            borderWidth: 1,
+          },
         },
-      },
-    }),
+      }
+    },
     noBorder: {
       input: {
         border: 'none',

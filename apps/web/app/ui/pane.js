@@ -109,31 +109,38 @@ export class Title {
     sub: {
       ptitle: {
         padding: [2, 5],
-        color: [255, 255, 255, 0.5],
         fontWeight: 300,
       },
     },
   }
 }
 
+export type Props = {
+  title?: string,
+  titleProps?: Object,
+  children?: React$Children,
+  sub?: boolean,
+  collabsable: boolean,
+  onSetCollapse: Function,
+  padding?: number | Array<number>,
+  margin?: number | Array<number>,
+  maxHeight?: number,
+  minHeight?: number,
+  height?: number,
+  noflex?: boolean,
+  scrollable?: boolean,
+}
+
 @view.ui
 export default class Pane {
   static Title = Title
-
-  props: {
-    collabsable: boolean,
-    onSetCollapse: Function,
-  }
-
   static defaultProps = {
     collapsable: false,
     onSetCollapse: () => {},
   }
 
-  constructor(props) {
-    this.state = {
-      collapsed: false,
-    }
+  state = {
+    collapsed: false,
   }
 
   componentWillMount() {
@@ -156,27 +163,23 @@ export default class Pane {
     }
   }
 
-  render() {
-    const {
-      collapsable,
-      title,
-      titleProps,
-      height,
-      children,
-      sub,
-      light,
-      noflex,
-      maxHeight,
-      minHeight,
-      onSetCollapse,
-      titleStat,
-      scrollable,
-      collapsed: _collapsed,
-      padded,
-      after,
-      ...props
-    } = this.props
-
+  render({
+    collapsable,
+    title,
+    titleProps,
+    height,
+    children,
+    sub,
+    noflex,
+    maxHeight,
+    minHeight,
+    onSetCollapse,
+    scrollable,
+    collapsed: _collapsed,
+    padding,
+    margin,
+    ...props
+  }: Props) {
     const { collapsed } = this.state
     const collapseHeight = 27
 
@@ -194,8 +197,6 @@ export default class Pane {
           collapsed={collapsed}
           onCollapse={this.handleCollapse}
           sub={sub}
-          stat={titleStat}
-          after={after}
           {...titleProps}
         >
           {title}
@@ -235,6 +236,12 @@ export default class Pane {
   }
 
   static theme = {
+    theme: ({ padding, margin, height }, context, theme) => ({
+      content: {
+        padding: padding === true ? 10 : padding,
+        margin: margin === true ? 10 : margin,
+      },
+    }),
     maxHeight: ({ maxHeight }) => ({
       content: {
         maxHeight: maxHeight,
@@ -242,19 +249,6 @@ export default class Pane {
         flex: 1,
       },
     }),
-    padded: ({ padded }) => ({
-      content: {
-        padding: padded === true ? 10 : padded,
-      },
-    }),
-    sub: {
-      section: {
-        background: '#eee',
-      },
-      content: {
-        background: '#fff',
-      },
-    },
     noflex: {
       section: {
         flex: 'none',

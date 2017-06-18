@@ -55,6 +55,62 @@ class PlayUI {
               before: (
                 <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
               ),
+              after: <Input type="checkbox" />,
+            })}
+          />
+        </Pane>
+
+        <Pane collapsable title="Team" titleProps={{ color: 'green' }}>
+          <Pane sub collapsable title="Steel">
+            <List
+              items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+              getItem={item => ({
+                primary: item,
+                date: '10m',
+                before: (
+                  <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+                ),
+                after: <input type="checkbox" />,
+              })}
+            />
+          </Pane>
+          <Pane sub collapsable title="Nick">
+            <List
+              items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+              getItem={item => ({
+                primary: item,
+                date: '10m',
+                before: (
+                  <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+                ),
+                after: <input type="checkbox" />,
+              })}
+            />
+          </Pane>
+          <Pane sub collapsable title="Jacob">
+            <List
+              items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+              getItem={item => ({
+                primary: item,
+                date: '10m',
+                before: (
+                  <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+                ),
+                after: <input type="checkbox" />,
+              })}
+            />
+          </Pane>
+        </Pane>
+
+        <Pane collapsable title="Queue" titleProps={{ color: 'green' }}>
+          <List
+            items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+            getItem={item => ({
+              primary: item,
+              date: '10m',
+              before: (
+                <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+              ),
               after: <input type="checkbox" />,
             })}
           />
@@ -63,8 +119,8 @@ class PlayUI {
     )
   }
   static style = {
-    section: {
-      padding: 5,
+    ui: {
+      padding: [0, 10],
     },
     icon: {
       marginLeft: -5,

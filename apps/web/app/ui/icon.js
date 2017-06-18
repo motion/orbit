@@ -75,7 +75,7 @@ export default class Icon {
         </inner>
         <Popover
           if={tooltip}
-          dark
+          theme="dark"
           background
           openOnHover
           noArrow

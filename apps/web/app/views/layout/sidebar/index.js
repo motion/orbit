@@ -73,14 +73,12 @@ class PlayUI {
           $teamPane
           collapsable
           title={
-            <Title collapsable>
-              <Dropdown
-                items={['Motion', 'Something', 'Else']}
-                onChange={store.ref('team').set}
-              >
-                <span>{store.team}</span>
-              </Dropdown>
-            </Title>
+            <Dropdown
+              items={['Motion', 'Something', 'Else']}
+              onChange={store.ref('team').set}
+            >
+              <span>{store.team}</span>
+            </Dropdown>
           }
         >
           <Pane $subPane sub collapsable title="Steel">

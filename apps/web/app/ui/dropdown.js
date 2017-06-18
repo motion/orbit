@@ -25,28 +25,17 @@ export default class Dropdown {
       <dropdown>
         <Popover
           openOnClick
-          overlay="transparent"
+          openOnHover
           escapable
-          animation="slide 100ms"
           target={children}
           {...popoverProps}
         >
           <List
             {...props}
             controlled
+            background
             width={width}
             items={items}
-            itemStyle={{
-              padding: [0, 7, 0, 16],
-              margin: [3, 0],
-              fontWeight: 300,
-              fontSize: 15,
-              color: '#444',
-              '&:hover': {
-                background: '#5E95F7',
-                color: 'white',
-              },
-            }}
             getItem={item => ({
               primary: item,
             })}

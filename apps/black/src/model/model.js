@@ -1,23 +1,40 @@
 // @flow
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
-import type RxDB from 'rxdb'
+import type RxDB, { RxCollection } from 'rxdb'
+import type PouchDB from 'pouchdb-core'
+
+type SettingsObject = {
+  index?: Array<string>,
+  database?: string,
+}
+
+type ModelArgs = {
+  defaultSchema?: Object,
+}
 
 export default class Model {
-  // for use by @query
-  queries: Object
+  static props: Object
+  static defaultProps: Function | Object
+  methods: ?Object
+  statics: ?Object
+  hooks: ?Object
+  settings: SettingsObject
+  database: ?RxDB
+  defaultSchema: Object
+  collection: ?RxCollection & { pouch: PouchDB }
+  remoteDb: ?string
 
-  constructor({ defaultSchema, defaultProps } = {}) {
-    this.create = this.create.bind(this)
+  constructor(args: ModelArgs = {}) {
+    const { defaultSchema } = args
     this.defaultSchema = defaultSchema || {
       primaryPath: '_id',
       version: 0,
       disableKeyCompression: true,
     }
-    this.queries = {}
   }
 
-  get compiledSchema() {
+  get compiledSchema(): Object {
     return {
       ...this.defaultSchema,
       ...this.settings,
@@ -26,19 +43,19 @@ export default class Model {
     }
   }
 
-  get hasTimestamps() {
+  get hasTimestamps(): boolean {
     return this.constructor.props.timestamps === true
   }
 
-  get now() {
+  get now(): string {
     return new Date().toISOString()
   }
 
-  get pouch() {
+  get pouch(): PouchDB {
     return this.collection.pouch
   }
 
-  get props() {
+  get props(): Object {
     const { timestamps, ...props } = this.constructor.props
     if (timestamps) {
       return {
@@ -50,21 +67,21 @@ export default class Model {
     return props
   }
 
-  getDefaultProps(props) {
+  getDefaultProps(props: Object): Object {
     const { defaultProps } = this.constructor
     return typeof defaultProps === 'function'
       ? defaultProps(props)
       : defaultProps || {}
   }
 
-  get title() {
-    return ((this.settings && this.settings.title) || this.constructor.name)
+  get title(): string {
+    return ((this.settings && this.settings.database) || this.constructor.name)
       .toLowerCase()
   }
 
-  get compiledMethods() {
+  get compiledMethods(): Object {
     return {
-      ...this.methods,
+      ...(this.methods || {}),
       // get id() {
       //   return this._id
       // },
@@ -77,7 +94,11 @@ export default class Model {
     }
   }
 
-  connect = async (database: RxDB, dbConfig: Object, options: Object) => {
+  connect = async (
+    database: RxDB,
+    dbConfig: Object,
+    options: Object
+  ): Promise<void> => {
     if (this.database) {
       console.log('hmr model')
       return
@@ -128,9 +149,11 @@ export default class Model {
       }
     }
 
-    Object.keys(this.hooks).forEach(hook => {
-      this.collection[hook](this.hooks[hook])
-    })
+    if (this.collection && this.hooks) {
+      Object.keys(this.hooks).forEach(hook => {
+        this.collection[hook](this.hooks[hook])
+      })
+    }
 
     this.replicateToRemote()
 
@@ -139,7 +162,7 @@ export default class Model {
   }
 
   // TODO until rxdb supports query sync
-  replicateToRemote = () => {
+  replicateToRemote = (): void => {
     if (this.replicatingToRemote) {
       return
     }
@@ -150,7 +173,7 @@ export default class Model {
     })
   }
 
-  createIndexes = async () => {
+  createIndexes = async (): void => {
     const index = this.settings.index || []
 
     if (index.length) {
@@ -170,7 +193,7 @@ export default class Model {
         await this.collection.pouch.createIndex({ fields: index })
       } else {
         console.log(
-          `%c[pouch] HAS INDEX ${this.title} ${index}`,
+          `%c[pouch] HAS INDEX ${this.title} ${JSON.stringify(index)}`,
           'color: green'
         )
       }
@@ -179,7 +202,7 @@ export default class Model {
 
   // helpers
 
-  create(object = {}) {
+  create = (object: Object = {}): Promise<Object> => {
     const properties = {
       ...this.getDefaultProps(object),
       ...object,

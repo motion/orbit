@@ -4,12 +4,11 @@
 .*/react-resizable/build/.*
 
 [include]
-./apps/web
-./apps/black
-./apps/models
+./app
 
 [libs]
-flow/
+node_modules/*
+
 
 [options]
 emoji=true

@@ -15,47 +15,44 @@ const findMatch = (name: string) => {
   return match
 }
 
+export type Props = {
+  size: number,
+  color: Array | string,
+  type: string,
+  button?: Boolean,
+}
+
 @view.ui
 export default class Icon {
-  props: {
-    size: number,
-    color: Array | string,
-    type: string,
-    button?: Boolean,
-  }
+  props: Props
 
   static defaultProps = {
     size: 16,
-    // hoverColor: [255,255,255,0.7],
+    color: [0, 0, 0, 0.5],
+    hoverColor: [0, 0, 0, 0.7],
     type: 'mini',
     margin: 0,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
-  render() {
-    const {
-      color,
-      hoverColor,
-      size,
-      tooltip,
-      tooltipProps,
-      name,
-      type,
-      className,
-      onClick,
-      attach,
-      children,
-      button,
-      margin,
-      style,
-      ...props
-    } = this.props
-
-    if (!color && !IS_PROD) {
-      console.log('no color given to icon', name)
-    }
-
+  render({
+    color,
+    hoverColor,
+    size,
+    tooltip,
+    tooltipProps,
+    name,
+    type,
+    className,
+    onClick,
+    attach,
+    children,
+    button,
+    margin,
+    style,
+    ...props
+  }: Props) {
     const iconName = findMatch(name)
     const backupIcon = !iconName ? name : ''
 

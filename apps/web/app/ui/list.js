@@ -9,7 +9,7 @@ import parentSize from '~/views/helpers/parentSize'
 const idFn = _ => _
 import type { ItemProps } from './listItem'
 
-type Props = {
+export type Props = {
   onHighlight: Function,
   onSelect: Function,
   children?: React$Element,

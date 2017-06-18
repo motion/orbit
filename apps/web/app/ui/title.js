@@ -1,5 +1,11 @@
+// @flow
 import React from 'react'
 import { view } from '@jot/black'
+
+export type Props = {
+  tag: string,
+  children: React$Element | string,
+}
 
 @view.ui
 export default class Title {
@@ -7,8 +13,7 @@ export default class Title {
     tag: 'h1',
   }
 
-  render() {
-    const { tag, children, ...props } = this.props
+  render({ tag, children, ...props }: Props) {
     return React.createElement(tag, { $title: true, ...props }, children)
   }
 

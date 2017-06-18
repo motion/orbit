@@ -2,7 +2,9 @@
 import reactMixin from 'react-mixin'
 import { Emitter } from 'sb-event-kit'
 
-export default function decor(plugins) {
+type Plugin = () => { decorator?: Function, mixin?: Object }
+
+export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
   const allPlugins = []
   // unique key per decorator instance
   const DECOR_KEY = `__IS_DECOR_DECORATED${Math.random()}`

@@ -9,37 +9,39 @@ import type { Color } from 'gloss'
 
 const idFn = _ => _
 
+export type Props = {
+  inSegment?: object,
+  inForm?: boolean,
+  clickable?: boolean,
+  active?: boolean,
+  chromeless?: boolean,
+  dim?: boolean,
+  stretch?: boolean,
+  spaced?: boolean,
+  circular?: boolean,
+  iconAfter?: boolean,
+  onClick?: Function,
+  tooltip?: string,
+  icon?: string,
+  background?: Color,
+  color?: Color,
+  className?: string,
+  theme?: string,
+  after?: Element | string,
+  children?: Element | string,
+  iconProps?: Object,
+  tooltipProps?: Object,
+  size?: number,
+  iconSize?: number,
+  padding?: number | Array<number>,
+  margin?: number | Array<number>,
+  height?: number,
+}
+
 @inject(context => context.ui)
 @view.ui
 export default class Button {
-  props: {
-    inSegment?: object,
-    inForm?: boolean,
-    clickable?: boolean,
-    active?: boolean,
-    chromeless?: boolean,
-    dim?: boolean,
-    stretch?: boolean,
-    spaced?: boolean,
-    circular?: boolean,
-    iconAfter?: boolean,
-    onClick?: Function,
-    tooltip?: string,
-    icon?: string,
-    background?: Color,
-    color?: Color,
-    className?: string,
-    theme?: string,
-    after?: Element | string,
-    children?: Element | string,
-    iconProps?: Object,
-    tooltipProps?: Object,
-    size?: number,
-    iconSize?: number,
-    padding?: number | Array<number>,
-    margin?: number | Array<number>,
-    height?: number,
-  }
+  props: Props
 
   static defaultProps = {
     iconColor: '#999',
@@ -52,39 +54,37 @@ export default class Button {
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
-  render() {
-    const {
-      inSegment,
-      inForm,
-      onClick,
-      clickable,
-      children,
-      icon,
-      iconProps,
-      iconSize,
-      iconAfter,
-      iconColor,
-      color,
-      active,
-      spaced,
-      after,
-      chromeless,
-      dim,
-      stretch,
-      tooltip,
-      tooltipProps,
-      className,
-      theme,
-      circular,
-      size,
-      borderRadius,
-      material,
-      padding,
-      height,
-      margin,
-      ...props
-    } = this.props
-
+  render({
+    inSegment,
+    inForm,
+    onClick,
+    clickable,
+    children,
+    icon,
+    iconProps,
+    iconSize,
+    iconAfter,
+    iconColor,
+    color,
+    active,
+    spaced,
+    after,
+    chromeless,
+    dim,
+    stretch,
+    tooltip,
+    tooltipProps,
+    className,
+    theme,
+    circular,
+    size,
+    borderRadius,
+    material,
+    padding,
+    height,
+    margin,
+    ...props
+  }: Props) {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
 
@@ -219,11 +219,8 @@ export default class Button {
   }
 
   static theme = {
-    theme: (
-      { inForm, inSegment, borderRadius, background, circular },
-      context,
-      activeTheme
-    ) => {
+    theme: (props: Props, context, activeTheme) => {
+      const { inForm, inSegment, borderRadius, background, circular } = props
       return {
         button: {
           background,

@@ -13,7 +13,7 @@ export { Raw } from 'slate'
 
 const empty = () => {}
 
-type Props = {
+export type Props = {
   rules?: Array<any>,
   plugins?: Array<any>,
   inline?: boolean,

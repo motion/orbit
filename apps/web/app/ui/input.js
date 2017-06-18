@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@jot/black'
 import { inject } from '~/helpers'
 
-type Props = {
+export type Props = {
   getRef?: Function,
   sync?: Function,
   inForm?: boolean,

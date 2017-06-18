@@ -4,7 +4,9 @@
 .*/react-resizable/build/.*
 
 [include]
-./
+./apps/web
+./apps/black
+./apps/models
 
 [libs]
 flow/

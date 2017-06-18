@@ -173,7 +173,7 @@ export default class Model {
     })
   }
 
-  createIndexes = async (): void => {
+  createIndexes = async (): Promise<void> => {
     const index = this.settings.index || []
 
     if (index.length) {

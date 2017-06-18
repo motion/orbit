@@ -42,6 +42,7 @@ function valueWrap(info, valueGet: Function) {
   })
 
   // selective query based sync!
+  // TODO remove this once rxdb 4.2 is out
   const { queries } = this
   let pull
 
@@ -116,7 +117,11 @@ function valueWrap(info, valueGet: Function) {
   return response
 }
 
-export default function query(parent, property, descriptor) {
+export default function query(
+  parent: Class,
+  property: String,
+  descriptor: Object
+) {
   const { initializer, value } = descriptor
 
   if (initializer) {

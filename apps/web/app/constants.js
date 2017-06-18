@@ -20,7 +20,7 @@ export const SIDEBAR_WIDTH = 450
 
 export const IS_ELECTRON = isElectron()
 
-function isElectron() {
+function isElectron(): boolean {
   if (
     typeof window !== 'undefined' &&
     window.process &&

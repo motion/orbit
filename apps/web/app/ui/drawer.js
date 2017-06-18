@@ -20,6 +20,9 @@ type Props = {
   bordered?: boolean,
   dark?: boolean,
   noOverlay?: boolean,
+  theme?: string,
+  className?: string,
+  overlayBlur?: number,
 }
 
 @view.ui
@@ -50,6 +53,7 @@ export default class Drawer {
     attach,
     className,
     overlayBlur,
+    theme,
     ...props
   }: Props) {
     const unit = percent ? '%' : 'px'
@@ -141,6 +145,7 @@ export default class Drawer {
       transition: 'all ease-in-out 250ms',
       zIndex: -1,
       pointerEvents: 'none',
+      display: 'none',
     },
     overlayOpen: {
       opacity: 1,
@@ -149,15 +154,19 @@ export default class Drawer {
   }
 
   static theme = {
-    theme: ({ bordered, shadowed }, context, { background }) => ({
-      panel: {
-        borderLeft: bordered && [1, background],
-        boxShadow: shadowed && '0 0 6px rgba(0,0,0,0.3)',
-      },
-    }),
-    noOverlay: {
+    theme: ({ bordered, shadowed }, _, theme) => {
+      return {
+        panel: {
+          ...theme.base,
+          borderColor: bordered && theme.base.borderColor,
+          boxShadow:
+            shadowed && (theme.base.shadow || '0 0 6px rgba(0,0,0,0.3)'),
+        },
+      }
+    },
+    overlay: {
       overlay: {
-        display: 'none',
+        display: 'block',
       },
     },
     zIndex: ({ zIndex }) => ({

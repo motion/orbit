@@ -4,6 +4,7 @@ import { view } from '@jot/black'
 import { Shortcuts } from '~/helpers'
 import { uniqBy, sortBy } from 'lodash'
 import {
+  Theme,
   Drawer,
   Text,
   Pane,
@@ -33,38 +34,50 @@ type Props = {
   store: SidebarStore,
 }
 
-@view class PlayUI {
+@view
+class PlayUI {
   render() {
     return (
       <ui>
-        <top>
+        <top if={false}>
           <filter>
-            <Icon name="min-add" />
+            <Icon name="sim-add" />
           </filter>
           <avatar />
         </top>
 
         <section>
           <title>Me</title>
-          <list>
-            {['XYZ', 'abc', 'mno'].map((item, index) => (
-              <item key={index}>
-                <Icon name="menu" />
-                <name>XYZ</name>
-                <flex />
-                <input type="checkbox" />
-              </item>
-            ))}
-          </list>
+          <List
+            items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+            getItem={item => ({
+              primary: item,
+              date: '10m',
+              before: (
+                <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+              ),
+              after: <input type="checkbox" />,
+            })}
+          />
         </section>
-
-        test me out
       </ui>
     )
   }
   static style = {
-    ui: {
-      background: 'red',
+    section: {
+      padding: 5,
+    },
+    title: {
+      color: 'green',
+      fontWeight: 500,
+      fontSize: 12,
+      borderBottom: [1, 'green'],
+      marginBottom: 4,
+      padding: [0, 5],
+    },
+    icon: {
+      marginLeft: -5,
+      opacity: 0.5,
     },
   }
 }
@@ -87,108 +100,107 @@ export default class Sidebar {
     const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
 
     return (
-      <Shortcuts name="all" handler={store.handleShortcut}>
-        <Drawer noOverlay open={active} from="right" size={width} zIndex={9}>
-          <dragger
-            if={!IN_TRAY}
-            style={{ WebkitAppRegion: 'no-drag' }}
-            ref={this.ref('dragger').set}
-          />
-          <sidebar>
-            <Login if={!IN_TRAY} />
+      <Theme name="dark">
+        <Shortcuts name="all" handler={store.handleShortcut}>
+          <Drawer open={active} from="right" size={width} zIndex={9}>
+            <dragger
+              if={!IN_TRAY}
+              style={{ WebkitAppRegion: 'no-drag' }}
+              ref={this.ref('dragger').set}
+            />
+            <sidebar>
+              <Login if={!IN_TRAY} />
 
-            <orgs if={false} $$row>
-              {['motion', 'cr', 'baes', 'awe'].map((name, i) => (
-                <Button
-                  key={i}
-                  style={{ marginLeft: 5, marginRight: 5 }}
-                  circular
-                  size={32}
-                  iconSize={12}
-                  color={randomcolor()}
-                  icon={name}
-                />
-              ))}
-            </orgs>
-
-            <playui if={false}>
-              <PlayUI />
-            </playui>
-
-            <tasks>
-              <Pane if={store.inProgress} title="Current Task">
-                <activeItem>
-                  <TaskItem
-                    task={store.inProgress}
-                    active={false}
-                    onClick={() => {}}
-                    inProgress
-                    noDrag
+              <orgs if={false} $$row>
+                {['motion', 'cr', 'baes', 'awe'].map((name, i) =>
+                  <Button
+                    key={i}
+                    style={{ marginLeft: 5, marginRight: 5 }}
+                    circular
+                    size={32}
+                    iconSize={12}
+                    color={randomcolor()}
+                    icon={name}
                   />
-                </activeItem>
-              </Pane>
-              <Pane
-                collapsable
-                scrollable
-                title={`Your Tasks`}
-                titleProps={{
-                  after: (
-                    <Segment itemProps={{ chromeless: true }} $$flex={1}>
-                      <Button
-                        active={store.hideArchived == false}
-                        onClick={() => (store.hideArchived = false)}
-                      >
-                        All
-                      </Button>
-                      <Button
-                        active={store.hideArchived}
-                        onClick={() => (store.hideArchived = true)}
-                      >
-                        Active
-                      </Button>
-                    </Segment>
-                  ),
-                }}
-              >
-                <content $$draggable>
-                  <ContextMenu
-                    $context
-                    options={[
-                      {
-                        title: 'Delete',
-                        onSelect: place => place.delete(),
-                      },
-                    ]}
-                  >
-                    <Tasks store={store} />
-                  </ContextMenu>
-                </content>
-              </Pane>
+                )}
+              </orgs>
 
-              <Pane collapsable title="Team">
-                <Team store={store} />
-              </Pane>
-            </tasks>
+              <playui if={true}>
+                <PlayUI />
+              </playui>
 
-            <SlotFill.Slot name="sidebar">
-              {items => (
-                <activeSidebar>
-                  {items}
-                </activeSidebar>
-              )}
-            </SlotFill.Slot>
-          </sidebar>
-        </Drawer>
-      </Shortcuts>
+              <tasks if={false}>
+                <Pane if={store.inProgress} title="Current Task">
+                  <activeItem>
+                    <TaskItem
+                      task={store.inProgress}
+                      active={false}
+                      onClick={() => {}}
+                      inProgress
+                      noDrag
+                    />
+                  </activeItem>
+                </Pane>
+                <Pane
+                  collapsable
+                  scrollable
+                  title={`Your Tasks`}
+                  titleProps={{
+                    after: (
+                      <Segment itemProps={{ chromeless: true }} $$flex={1}>
+                        <Button
+                          active={store.hideArchived == false}
+                          onClick={() => (store.hideArchived = false)}
+                        >
+                          All
+                        </Button>
+                        <Button
+                          active={store.hideArchived}
+                          onClick={() => (store.hideArchived = true)}
+                        >
+                          Active
+                        </Button>
+                      </Segment>
+                    ),
+                  }}
+                >
+                  <content $$draggable>
+                    <ContextMenu
+                      $context
+                      options={[
+                        {
+                          title: 'Delete',
+                          onSelect: place => place.delete(),
+                        },
+                      ]}
+                    >
+                      <Tasks store={store} />
+                    </ContextMenu>
+                  </content>
+                </Pane>
+
+                <Pane collapsable title="Team">
+                  <Team store={store} />
+                </Pane>
+              </tasks>
+
+              <SlotFill.Slot name="sidebar">
+                {items =>
+                  <activeSidebar>
+                    {items}
+                  </activeSidebar>}
+              </SlotFill.Slot>
+            </sidebar>
+          </Drawer>
+        </Shortcuts>
+      </Theme>
     )
   }
 
   static style = {
     sidebar: {
       width: '100%',
-      borderLeft: [1, 'dotted', '#eee'],
       userSelect: 'none',
-      background: '#fafafa',
       position: 'absolute',
       top: 0,
       right: 0,

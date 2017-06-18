@@ -287,6 +287,9 @@ class List {
   }
 
   static theme = {
+    theme: (props, context, theme) => ({
+      ...theme.base,
+    }),
     horizontal: {
       list: {
         flexFlow: 'row',

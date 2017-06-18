@@ -124,16 +124,14 @@ export default class ListItem {
 
   static style = {
     item: {
-      padding: [7, 10],
+      padding: [3, 8],
       cursor: 'pointer',
       maxWidth: '100%',
-      color: [0, 0, 0, 0.8],
       flexFlow: 'row',
       position: 'relative',
       zIndex: 0,
       overflow: 'hidden',
       fontWeight: 500,
-      fontSize: 16,
       '&:active': {
         background: [0, 0, 0, 0.05],
       },
@@ -161,7 +159,6 @@ export default class ListItem {
       whiteSpace: 'nowrap',
     },
     secondary: {
-      color: 'rgba(0,0,0,0.45)',
       fontSize: 12,
       marginTop: 2,
     },
@@ -219,6 +216,13 @@ export default class ListItem {
   }
 
   static theme = {
+    theme: (props, context, theme) => ({
+      item: {
+        fontSize: theme.base.fontSize,
+        color: theme.base.color,
+        borderColor: theme.base.borderColor,
+      },
+    }),
     itemStyle: ({ itemStyle }) => ({
       item: itemStyle,
     }),

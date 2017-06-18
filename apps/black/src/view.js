@@ -11,12 +11,13 @@ import addContext from '@jot/decor/lib/plugins/react/addContext'
 import attach from '@jot/decor/lib/plugins/react/attach'
 import storeProvidable from '@jot/decor/lib/plugins/react/storeProvidable'
 import { storeOptions } from './store'
-import gloss from './gloss'
+import gloss, { Glossy } from './gloss'
 
 export type ViewClass = ExtendsReact &
   Subscribable &
   SubscribableHelpers &
-  ReactRenderArgs
+  ReactRenderArgs &
+  Glossy
 
 const uiContext = [
   addContext,

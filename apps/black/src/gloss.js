@@ -1,6 +1,14 @@
 // @flow
 import gloss from 'gloss'
 
+export type Glossy = {
+  glossElement(
+    tagName: string,
+    props: ?Object,
+    children: ?React$Children
+  ): React$Element,
+}
+
 export const styles = {
   style: styles => styles,
   flex: flex => ({ flex: flex === true ? 1 : flex }),

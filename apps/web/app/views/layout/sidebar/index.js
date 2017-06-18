@@ -141,13 +141,13 @@ class PlayUI {
       paddingBottom: 10,
     },
     teamPane: {
-      flexFlow: 'row',
-      flexWrap: 'wrap',
+      // flexFlow: 'row',
+      // flexWrap: 'wrap',
       justifyContent: 'space-between',
       padding: [5, 0, 10],
     },
     subPane: {
-      minWidth: 200,
+      // minWidth: 200,
       marginBottom: 20,
     },
   }

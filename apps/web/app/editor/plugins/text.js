@@ -31,7 +31,7 @@ const paragraph = node(({ editorStore, children, inline, attributes }) => {
 
   return (
     <p style={style} {...attributes} $$text>
-      {props.children}
+      {children}
     </p>
   )
 })

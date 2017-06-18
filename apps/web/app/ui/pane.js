@@ -98,9 +98,6 @@ export default class Pane {
   }
 
   static style = {
-    section: {
-      overflow: 'hidden',
-    },
     height: height => ({
       flex: 'auto',
       height,

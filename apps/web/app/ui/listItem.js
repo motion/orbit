@@ -130,7 +130,6 @@ export default class ListItem {
       flexFlow: 'row',
       position: 'relative',
       zIndex: 0,
-      overflow: 'hidden',
       fontWeight: 500,
       '&:active': {
         background: [0, 0, 0, 0.05],

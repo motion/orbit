@@ -280,6 +280,7 @@ class List {
     list: {
       fontSize: 13,
       overflowY: 'auto',
+      overflowX: 'visible',
     },
     loading: {
       flex: 1,

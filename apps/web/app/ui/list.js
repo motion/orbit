@@ -12,8 +12,8 @@ import type { ItemProps } from './listItem'
 export type Props = {
   onHighlight: Function,
   onSelect: Function,
-  children?: React$Element,
-  items?: Array<ItemProps | React$Element>,
+  children?: React$Element<any>,
+  items?: Array<ItemProps | React$Element<any>>,
   loading?: boolean,
   height?: number,
   width?: number,

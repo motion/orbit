@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { view, ViewType } from '@jot/black'
 import { Shortcuts } from '~/helpers'
 import { uniqBy, sortBy } from 'lodash'
 import {
@@ -41,19 +41,12 @@ type Props = {
     team = 'Motion'
   },
 })
-class PlayUI {
-  render({ store }) {
+class PlayUI implements ViewType {
+  render({ store }: { store: SidebarStore }) {
     const color = '#66a734'
 
     return (
       <ui>
-        <top if={false}>
-          <filter>
-            <Icon name="sim-add" />
-          </filter>
-          <avatar />
-        </top>
-
         <Pane $mainPane collapsable title="Me" titleProps={{ color }}>
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
@@ -194,20 +187,6 @@ export default class Sidebar {
             />
             <sidebar>
               <Login if={!IN_TRAY} />
-
-              <orgs if={false} $$row>
-                {['motion', 'cr', 'baes', 'awe'].map((name, i) =>
-                  <Button
-                    key={i}
-                    style={{ marginLeft: 5, marginRight: 5 }}
-                    circular
-                    size={32}
-                    iconSize={12}
-                    color={randomcolor()}
-                    icon={name}
-                  />
-                )}
-              </orgs>
 
               <PlayUI if={true} />
 

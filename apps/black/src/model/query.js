@@ -1,5 +1,6 @@
 // @flow
 import type { RxQuery } from 'rxdb'
+import type PouchDB from 'pouchdb-core'
 import { observable, autorun } from 'mobx'
 import debug from 'debug'
 import sum from 'hash-sum'

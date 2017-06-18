@@ -6,7 +6,7 @@ import Popover from './popover'
 import Arrow from './arrow'
 
 export type Props = {
-  children: React$Element | string,
+  children: React$Element<any> | string,
   onChange?: Function,
   width?: number,
   items?: Array<string>,

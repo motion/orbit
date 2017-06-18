@@ -1,4 +1,5 @@
 // @flow
+import type React from 'react'
 import gloss from 'gloss'
 
 export type Glossy = {
@@ -6,10 +7,10 @@ export type Glossy = {
     tagName: string,
     props: ?Object,
     children: ?React$Children
-  ): React$Element,
+  ): React$Element<any>,
 }
 
-export const styles = {
+export const styles: Object = {
   style: styles => styles,
   flex: flex => ({ flex: flex === true ? 1 : flex }),
   absolute: ([top, right, bottom, left]) => ({

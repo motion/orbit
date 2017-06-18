@@ -28,7 +28,7 @@ export default class Model {
   // for tracking which queries we are watching
   queries: Object = {}
   // hooks that run before/after operations
-  hooks: Object = {}
+  hooks: Object<string, () => Promise<any>> = {}
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args

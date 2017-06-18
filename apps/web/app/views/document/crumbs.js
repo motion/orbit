@@ -2,10 +2,17 @@
 import React from 'react'
 import { view } from '@jot/black'
 import { Icon } from '~/ui'
+import type DocStore from './store'
+
+type Props = {
+  docs: DocStore,
+}
 
 @view
 export default class Breadcrumbs {
-  render({ docs }) {
+  props: Props
+
+  render({ docs }: Props) {
     const crumbs = [
       { text: 'all', url: '/' },
       ...(docs || []).map(doc => ({ text: doc.title, url: doc.url() })),

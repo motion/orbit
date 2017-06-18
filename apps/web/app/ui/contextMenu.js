@@ -25,7 +25,7 @@ class ContextMenuTarget {
 
 export type Props = {
   width: number,
-  children: React$Element,
+  children: React$Element<any>,
   inactive?: Boolean,
   options?: Object,
   store?: ContextMenuStore,

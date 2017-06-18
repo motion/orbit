@@ -16,3 +16,6 @@ export const watch = fn => {
   temp.autorunme = true
   return temp
 }
+
+import type { ViewClass } from './view'
+export type ViewType = ViewClass

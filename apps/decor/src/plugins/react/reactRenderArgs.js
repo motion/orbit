@@ -1,5 +1,12 @@
-export type ReactRenderArgs = {
-  render(props: Object, state: Object, context: Object): ?React$Element<any>,
+// @flow
+
+declare class ReactRenderArgs<DefaultProps, Props, State, Context> {
+  props: $Abstract<Props>,
+  render(
+    props: $Abstract<Props>,
+    state: $Abstract<State>,
+    context: $Abstract<Context>
+  ): React$Element<any>,
 }
 
 export default options => ({

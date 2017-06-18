@@ -1,3 +1,4 @@
+// @flow
 import { Model, query, str, object, array, bool } from '@jot/black'
 import Image from './image'
 import User from './user'

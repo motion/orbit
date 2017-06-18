@@ -54,7 +54,7 @@ export class Title {
             iconProps={{ size: 8, color: [255, 255, 255, 0.3] }}
             chromeless
             padding={6}
-            margin={-2}
+            margin={[-2, -2, -2, -5]}
             height="auto"
           />
         </collapse>
@@ -108,8 +108,8 @@ export class Title {
     }),
     sub: {
       ptitle: {
-        padding: [2, 5],
         fontWeight: 300,
+        opacity: 0.8,
       },
     },
   }

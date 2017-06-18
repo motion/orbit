@@ -172,6 +172,7 @@ export default class ListItem {
     },
     date: {
       userSelect: 'none',
+      fontSize: 12,
     },
     col: {
       flexDirection: 'column',
@@ -192,14 +193,14 @@ export default class ListItem {
       maxWidth: '100%',
     },
     meta: {
-      margin: ['auto', 5],
-      opacity: 0.5,
+      margin: ['auto', 0],
+      opacity: 0.4,
     },
     after: {
-      margin: ['auto', 0, 'auto', 10],
+      margin: ['auto', 0, 'auto', 5],
     },
     before: {
-      margin: ['auto', 10, 'auto', 0],
+      margin: ['auto', 5, 'auto', 0],
     },
     children: {
       flex: 1,

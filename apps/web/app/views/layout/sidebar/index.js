@@ -123,8 +123,8 @@ class PlayUI {
       padding: [0, 10],
     },
     icon: {
-      marginLeft: -5,
-      opacity: 0.5,
+      marginLeft: -7,
+      opacity: 0.25,
     },
   }
 }

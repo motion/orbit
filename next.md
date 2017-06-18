@@ -1,8 +1,17 @@
 # upnext
 
+  - ui
+    - standard props across all themes w rythm, margin/padding, ...
+      - mb, mx, my, m, p, height, width
+      - just a niceStyle() helper used in every theme()
+    - add View
+      - see react grid experiments from hn not long ago
   - gloss
     - turn theme="string" into theme={{ resolved: theme }}
       - lets you use theme inside render() for stuff like <Icon color={theme.color} />
+    - allow passing theme objects directly to "tweak" styles theme={{ background: 'red' }} (works with ui niceStyle stuff)
+      - this is like a local override of specific things
+      - also allows cool themeing, so <Title /> and then InlineTitle = <Title theme={{ borderBottomSize, etc etc }} />
 
 # queue
   - get to bootstrappability

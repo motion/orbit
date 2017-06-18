@@ -156,6 +156,7 @@ export default class ListItem {
     primary: {
       flex: 1,
       whiteSpace: 'nowrap',
+      justifyContent: 'center',
     },
     secondary: {
       fontSize: 12,

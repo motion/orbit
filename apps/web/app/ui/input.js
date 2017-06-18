@@ -89,7 +89,7 @@ export default class Input {
         maxWidth: width,
       },
     }),
-    inSegment: ({ borderRadius, inSegment: { first, last } }) => ({
+    inSegment: ({ borderRadius, inSegment: { first, last } }, _, theme) => ({
       input: {
         borderTopWidth: 1,
         borderBottomWidth: 1,
@@ -98,10 +98,10 @@ export default class Input {
         borderRadius: 'auto',
         borderLeftRadius: first ? borderRadius : 0,
         borderRightRadius: last ? borderRadius : 0,
-        borderColor: last ? '#ddd' : '#eee',
-        '&:focus': {
-          background: '#fff',
-        },
+        borderColor: last
+          ? theme.base.borderColor
+          : theme.base.borderColorLight,
+        '&:focus': theme.focus,
       },
     }),
   }

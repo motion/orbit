@@ -289,7 +289,9 @@ class List {
 
   static theme = {
     theme: (props, context, theme) => ({
-      ...theme.base,
+      list: {
+        ...theme.base,
+      },
     }),
     horizontal: {
       list: {

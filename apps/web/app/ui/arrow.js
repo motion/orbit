@@ -47,7 +47,6 @@ export default class Arrow {
       overflow: 'hidden',
     },
     arrowInner: {
-      background: '#fff',
       position: 'absolute',
       left: 0,
       borderRadius: 1,
@@ -61,8 +60,8 @@ export default class Arrow {
   }
 
   static theme = {
-    theme: ({ size }, state, activeTheme) => ({
-      arrowInner: activeTheme.base,
+    theme: ({ size }, state, theme) => ({
+      arrowInner: theme.base,
       arrow: {
         width: size,
         height: size,

@@ -18,18 +18,22 @@ export default {
     base: DARK,
     hover: {
       ...DARK,
-      background: clr(DARK.background).lighten(1),
+      background: clr(DARK.background).lighten(1).toString(),
     },
     active: {
       ...DARK,
       color: '#fff',
+    },
+    focus: {
+      ...DARK,
+      background: clr(DARK.background).lighten(0.25).toString(),
     },
   },
   light: {
     base: LIGHT,
     hover: {
       ...LIGHT,
-      background: clr(LIGHT.background).lighten(1),
+      background: clr(LIGHT.background).lighten(1).toString(),
     },
     active: {
       ...LIGHT,

@@ -3,7 +3,7 @@ import { view } from '@jot/black'
 import { User } from '@jot/models'
 import React from 'react'
 import { keycode } from '~/helpers'
-import { Popover, List, Form, Segment, Input, Button, Link } from '~/ui'
+import { Theme, Popover, List, Form, Segment, Input, Button, Link } from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 @view({
@@ -67,38 +67,54 @@ export default class Login {
               name="email"
               onKeyDown={store.onEmailKey}
               getRef={store.ref('email').set}
-              placeholder="your name..."
+              placeholder="Email"
             />
             <Input
               $input
               disabled={store.loggingIn}
               name="password"
               type="password"
-              placeholder="password"
+              placeholder="Password"
               onKeyDown={store.onPasswordKey}
               getRef={store.ref('password').set}
             />
-            <Button onClick={store.finish}>
-              {store.loggingIn ? '⌛' : '✅'}
+            <Button
+              icon={store.loggingIn ? 'time' : 'lock'}
+              onClick={store.finish}
+            >
+              Login
             </Button>
           </Segment>
         </Form>
 
-        <step if={User.loggedIn}>
+        <step $loggedIn if={User.loggedIn}>
           <text>
             hi
             <username $$ellipse> {User.name}</username>
           </text>
-          <Popover target={<Button icon="down" />} background openOnHover>
-            <List
-              width={150}
-              items={[
-                <List.Item
-                  primary={User.name}
-                  after={<Button icon="power" onClick={() => User.logout()} />}
-                />,
-              ]}
-            />
+          <Popover
+            theme="light"
+            target={<Button circular icon="user" />}
+            background
+            openOnHover
+          >
+            <Theme name="light">
+              <List
+                width={150}
+                items={[
+                  <List.Item
+                    primary={User.name}
+                    after={
+                      <Button
+                        chromeless
+                        icon="power"
+                        onClick={() => User.logout()}
+                      />
+                    }
+                  />,
+                ]}
+              />
+            </Theme>
           </Popover>
         </step>
       </login>
@@ -153,6 +169,11 @@ export default class Login {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    loggedIn: {
+      padding: [5, 15],
+      margin: [0, -10, 5],
+      borderBottom: [1, [255, 255, 255, 0.05]],
+    },
     text: {
       flex: 1,
       maxWidth: '80%',
@@ -160,6 +181,8 @@ export default class Login {
       flexFlow: 'row',
       pointerEvents: 'none',
       userSelect: 'none',
+      fontSize: 12,
+      fontWeight: 600,
     },
   }
 }

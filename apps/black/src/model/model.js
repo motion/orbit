@@ -98,11 +98,11 @@ export default class Model {
     }
   }
 
-  connect = async (
+  async connect(
     database: RxDB,
     dbConfig: Object,
     options: Object
-  ): Promise<void> => {
+  ): Promise<void> {
     if (this.database) {
       console.log('hmr model')
       return

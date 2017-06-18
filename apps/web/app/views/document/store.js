@@ -4,7 +4,13 @@ import { Document } from '@jot/models'
 
 const print = debug('documentStore')
 
+type Props = {
+  id: string,
+}
+
 export default class DocumentStore {
+  props: Props
+
   id = this.props.id
   document = Document.get(this.props.id)
   lastSavedRev = null

@@ -34,7 +34,7 @@ export default class EditorView {
     onKeyDown: empty,
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     this.props.editorStore.find = nextProps.find
     // todo on receive new document from server, update it here
     // needs to check equality probably
@@ -44,7 +44,7 @@ export default class EditorView {
     this.props.editorStore.setContents(state)
   }
 
-  onDocumentMouseUp = (event: MouseEvent) => {
+  onDocumentMouseUp = (event: SyntheticMouseEvent) => {
     event.persist()
     this.props.editorStore.selection.mouseUpEvent = event
   }

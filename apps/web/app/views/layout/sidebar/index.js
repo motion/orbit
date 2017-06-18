@@ -14,7 +14,9 @@ import {
   Link,
   Input,
   Segment,
+  Title,
   Button,
+  Dropdown,
   SlotFill,
 } from '~/ui'
 import { User, Place } from '@jot/models'
@@ -34,9 +36,13 @@ type Props = {
   store: SidebarStore,
 }
 
-@view
+@view({
+  store: class {
+    team = 'Motion'
+  },
+})
 class PlayUI {
-  render() {
+  render({ store }) {
     const color = '#66a734'
 
     return (
@@ -66,8 +72,16 @@ class PlayUI {
           $mainPane
           $teamPane
           collapsable
-          title="Team"
-          titleProps={{ color }}
+          title={
+            <Title collapsable>
+              <Dropdown
+                items={['Motion', 'Something', 'Else']}
+                onChange={store.ref('team').set}
+              >
+                <span>{store.team}</span>
+              </Dropdown>
+            </Title>
+          }
         >
           <Pane $subPane sub collapsable title="Steel">
             <List

@@ -73,13 +73,9 @@ export default class Pane {
     const { collapsed } = this.state
     const collapseHeight = 27
 
-    return (
-      <section
-        $height={height}
-        $maxHeight={collapsed ? collapseHeight : maxHeight || 'auto'}
-        $minHeight={collapsed ? collapseHeight : minHeight}
-      >
-        <Title
+    const titleElement = React.isValidElement(title)
+      ? title
+      : <Title
           if={title}
           $noCollapsable={!collapsable}
           collapsable={collapsable}
@@ -90,6 +86,14 @@ export default class Pane {
         >
           {title}
         </Title>
+
+    return (
+      <section
+        $height={height}
+        $maxHeight={collapsed ? collapseHeight : maxHeight || 'auto'}
+        $minHeight={collapsed ? collapseHeight : minHeight}
+      >
+        {titleElement}
         <content $hide={collapsed} {...props}>
           {children}
         </content>

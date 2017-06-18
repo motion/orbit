@@ -1,3 +1,4 @@
+// @flow
 export * from 'mobx'
 
 export view from './view'

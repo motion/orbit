@@ -1,3 +1,4 @@
+// @flow
 import decor from '@jot/decor'
 import autobound from '@jot/decor/lib/plugins/core/autobound'
 import emittable, { Emittable } from '@jot/decor/lib/plugins/core/emittable'

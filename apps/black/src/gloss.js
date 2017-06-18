@@ -1,3 +1,4 @@
+// @flow
 import gloss from 'gloss'
 
 export const styles = {

@@ -1,3 +1,4 @@
+// @flow
 import decor from '@jot/decor'
 import { object, string } from 'prop-types'
 import extendsReact, { ExtendsReact } from '@jot/decor/lib/plugins/react/extendsReact'

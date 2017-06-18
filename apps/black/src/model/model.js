@@ -22,12 +22,13 @@ export default class Model {
   database: ?RxDB
   defaultSchema: Object
   collection: ?RxCollection & { pouch: PouchDB }
-  remoteDb: ?string
 
+  // sync to
+  remoteDb: ?string = null
   // for tracking which queries we are watching
   queries: Object = {}
   // hooks that run before/after operations
-  hooks: ?Object = {}
+  hooks: Object = {}
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
@@ -164,6 +165,9 @@ export default class Model {
 
   // TODO until rxdb supports query sync
   replicateToRemote = (): void => {
+    if (!this.remoteDB) {
+      return
+    }
     if (this.replicatingToRemote) {
       return
     }

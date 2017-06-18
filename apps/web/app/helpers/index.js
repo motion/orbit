@@ -1,3 +1,4 @@
+// @flow
 export * from 'mobx'
 export { Component } from 'react'
 export $ from '@jot/black/lib/gloss'
@@ -37,8 +38,10 @@ export class Shortcuts {
   }
 }
 
+type Target = string | (() => React$Children | React$Children)
+
 import { findDOMNode } from 'react-dom'
-export const getTarget = target => {
+export const getTarget = (target: Target) => {
   if (!target) {
     return null
   }

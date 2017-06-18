@@ -186,7 +186,6 @@ export default class Pane {
         $height={height}
         $maxHeight={collapsed ? collapseHeight : maxHeight || 'auto'}
         $minHeight={collapsed ? collapseHeight : minHeight}
-        {...props}
       >
         <Title
           if={title}
@@ -199,7 +198,7 @@ export default class Pane {
         >
           {title}
         </Title>
-        <content $hide={collapsed}>
+        <content $hide={collapsed} {...props}>
           {children}
         </content>
       </section>

@@ -62,6 +62,7 @@ class PlayUI {
 
         <Pane
           $mainPane
+          $teamPane
           collapsable
           title="Team"
           titleProps={{ color: 'green' }}
@@ -141,6 +142,16 @@ class PlayUI {
     },
     mainPane: {
       paddingBottom: 10,
+    },
+    teamPane: {
+      flexFlow: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      padding: [5, 0, 10],
+    },
+    subPane: {
+      minWidth: 200,
+      marginBottom: 20,
     },
   }
 }

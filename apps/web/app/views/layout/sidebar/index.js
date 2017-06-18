@@ -46,7 +46,7 @@ class PlayUI {
           <avatar />
         </top>
 
-        <Pane collapsable title="Me" titleProps={{ color: 'green' }}>
+        <Pane $mainPane collapsable title="Me" titleProps={{ color: 'green' }}>
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({
@@ -60,8 +60,13 @@ class PlayUI {
           />
         </Pane>
 
-        <Pane collapsable title="Team" titleProps={{ color: 'green' }}>
-          <Pane sub collapsable title="Steel">
+        <Pane
+          $mainPane
+          collapsable
+          title="Team"
+          titleProps={{ color: 'green' }}
+        >
+          <Pane $subPane sub collapsable title="Steel">
             <List
               items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
               getItem={item => ({
@@ -74,7 +79,7 @@ class PlayUI {
               })}
             />
           </Pane>
-          <Pane sub collapsable title="Nick">
+          <Pane $subPane sub collapsable title="Nick">
             <List
               items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
               getItem={item => ({
@@ -87,7 +92,7 @@ class PlayUI {
               })}
             />
           </Pane>
-          <Pane sub collapsable title="Jacob">
+          <Pane $subPane sub collapsable title="Jacob">
             <List
               items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
               getItem={item => ({
@@ -102,7 +107,14 @@ class PlayUI {
           </Pane>
         </Pane>
 
-        <Pane collapsable title="Queue" titleProps={{ color: 'green' }}>
+        <space $$flex />
+
+        <Pane
+          $mainPane
+          collapsable
+          title="Queue"
+          titleProps={{ color: 'green' }}
+        >
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({
@@ -121,10 +133,14 @@ class PlayUI {
   static style = {
     ui: {
       padding: [0, 10],
+      flex: 1,
     },
     icon: {
       marginLeft: -7,
       opacity: 0.25,
+    },
+    mainPane: {
+      paddingBottom: 10,
     },
   }
 }
@@ -172,9 +188,7 @@ export default class Sidebar {
                 )}
               </orgs>
 
-              <playui if={true}>
-                <PlayUI />
-              </playui>
+              <PlayUI if={true} />
 
               <tasks if={false}>
                 <Pane if={store.inProgress} title="Current Task">

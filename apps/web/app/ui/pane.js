@@ -95,10 +95,10 @@ export class Title {
   }
 
   static theme = {
-    theme: ({ color, background, hoverable }, context, theme) => ({
+    theme: ({ color, background, hoverable, sub }, context, theme) => ({
       ptitle: {
         background: background || theme.base.background,
-        borderBottom: [1, color || theme.base.borderColor],
+        borderBottom: !sub && [1, color || theme.base.borderColor],
         color: color || theme.base.color,
 
         '&:hover': {
@@ -127,7 +127,6 @@ export type Props = {
   maxHeight?: number,
   minHeight?: number,
   height?: number,
-  noflex?: boolean,
   scrollable?: boolean,
 }
 
@@ -170,7 +169,6 @@ export default class Pane {
     height,
     children,
     sub,
-    noflex,
     maxHeight,
     minHeight,
     onSetCollapse,
@@ -210,7 +208,6 @@ export default class Pane {
 
   static style = {
     section: {
-      flex: 1,
       overflow: 'hidden',
     },
     height: height => ({
@@ -249,11 +246,6 @@ export default class Pane {
         flex: 1,
       },
     }),
-    noflex: {
-      section: {
-        flex: 'none',
-      },
-    },
     scrollable: {
       content: {
         overflowY: 'auto',

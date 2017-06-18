@@ -7,6 +7,46 @@ import Portal from 'react-portal'
 import { isNumber, debounce } from 'lodash'
 import Arrow from './arrow'
 
+export type Props = {
+  target?: Function | string | Object,
+  open?: boolean,
+  // the amount of space around popover you can move mouse
+  // before it triggers it to close
+  forgiveness: number,
+  // show a background over content
+  overlay?: boolean,
+  left?: number,
+  top?: number,
+  // the distance the popover is from the target
+  // so it displays nicely spaced away
+  distance: number,
+  // will open when target is clicked
+  openOnClick?: boolean,
+  // will open automatically when target is hovered
+  openOnHover?: boolean,
+  // prevents popover itself from catching pointer events
+  noHover?: boolean,
+  // will exit with `esc` key
+  escapable?: boolean,
+  // size of shown arrow
+  arrowSize?: number,
+  closeOnClickWithin?: boolean,
+  // which direction it shows towards
+  // default will determine direction automatically
+  towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
+  padding?: Array | number,
+  onMouseEnter?: Function,
+  onMouseLeave?: Function,
+  onClose?: Function,
+  animation?: string,
+  // lets you adjust position after target is positioned
+  adjust?: Array,
+  // hide arrow
+  noArrow?: boolean,
+  // DEBUG: helps you see forgiveness zone
+  showForgiveness?: boolean,
+}
+
 const INVERSE = {
   top: 'bottom',
   bottom: 'top',
@@ -19,45 +59,7 @@ const calcForgiveness = (forgiveness, distance) =>
 
 @view.ui
 export default class Popover {
-  props: {
-    target?: Function | string | Object,
-    open?: boolean,
-    // the amount of space around popover you can move mouse
-    // before it triggers it to close
-    forgiveness: number,
-    // show a background over content
-    overlay?: boolean,
-    left?: number,
-    top?: number,
-    // the distance the popover is from the target
-    // so it displays nicely spaced away
-    distance: number,
-    // will open when target is clicked
-    openOnClick?: boolean,
-    // will open automatically when target is hovered
-    openOnHover?: boolean,
-    // prevents popover itself from catching pointer events
-    noHover?: boolean,
-    // will exit with `esc` key
-    escapable?: boolean,
-    // size of shown arrow
-    arrowSize?: number,
-    closeOnClickWithin?: boolean,
-    // which direction it shows towards
-    // default will determine direction automatically
-    towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
-    padding?: Array | number,
-    onMouseEnter?: Function,
-    onMouseLeave?: Function,
-    onClose?: Function,
-    animation?: string,
-    // lets you adjust position after target is positioned
-    adjust?: Array,
-    // hide arrow
-    noArrow?: boolean,
-    // DEBUG: helps you see forgiveness zone
-    showForgiveness?: boolean,
-  }
+  props: Props
 
   static defaultProps = {
     distance: 10,
@@ -511,7 +513,7 @@ export default class Popover {
     closeOnClickWithin,
     showForgiveness,
     ...props
-  }) {
+  }: Props) {
     const {
       bottom,
       top,

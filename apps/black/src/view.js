@@ -41,7 +41,10 @@ const getPlugins = ({ mobx, ui, autobind } = {}) => [
   [storeProvidable, storeOptions],
 ]
 
-const viewDecorator = decor(getPlugins({ mobx: true, autobind: true }))
+type DecoratorNested = () => ViewClass | (() => () => ViewClass)
+const viewDecorator: DecoratorNested = decor(
+  getPlugins({ mobx: true, autobind: true })
+)
 
 type ViewThing = {
   on(): ViewClass,

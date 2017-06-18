@@ -128,6 +128,10 @@ export default function query(
     descriptor.initializer = function() {
       const init = initializer.call(this)
       return function(...args) {
+        if (!this.collection) {
+          console.log('no this.collection!')
+          return null
+        }
         return valueWrap.call(
           this,
           { model: this.constructor.name, property, args },

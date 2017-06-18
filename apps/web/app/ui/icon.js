@@ -15,14 +15,16 @@ const findMatch = (name: string) => {
   return match
 }
 
+export type Props = {
+  size: number,
+  color: Array | string,
+  type: string,
+  button?: Boolean,
+}
+
 @view.ui
 export default class Icon {
-  props: {
-    size: number,
-    color: Array | string,
-    type: string,
-    button?: Boolean,
-  }
+  props: Props
 
   static defaultProps = {
     size: 16,
@@ -33,25 +35,23 @@ export default class Icon {
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
-  render() {
-    const {
-      color,
-      hoverColor,
-      size,
-      tooltip,
-      tooltipProps,
-      name,
-      type,
-      className,
-      onClick,
-      attach,
-      children,
-      button,
-      margin,
-      style,
-      ...props
-    } = this.props
-
+  render({
+    color,
+    hoverColor,
+    size,
+    tooltip,
+    tooltipProps,
+    name,
+    type,
+    className,
+    onClick,
+    attach,
+    children,
+    button,
+    margin,
+    style,
+    ...props
+  }: Props) {
     if (!color && !IS_PROD) {
       console.log('no color given to icon', name)
     }

@@ -3,6 +3,14 @@ import React from 'react'
 import { view } from '@jot/black'
 import { keycode } from '~/helpers'
 
+export type Props = {
+  editable?: Boolean,
+  autoselect?: Boolean,
+  onFinishEdit: Function,
+  onCancelEdit: Function,
+  getRef?: Function,
+}
+
 // click away from edit clears it
 @view({
   store: class TextStore {
@@ -27,13 +35,7 @@ import { keycode } from '~/helpers'
   },
 })
 export default class Text {
-  props: {
-    editable?: Boolean,
-    autoselect?: Boolean,
-    onFinishEdit: Function,
-    onCancelEdit: Function,
-    getRef?: Function,
-  }
+  props: Props
 
   static defaultProps = {
     onFinishEdit: _ => _,
@@ -98,7 +100,7 @@ export default class Text {
     onCancelEdit,
     onKeyDown,
     ...props
-  }) {
+  }: Props) {
     return (
       <text
         contentEditable={editable}

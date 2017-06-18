@@ -9,8 +9,8 @@ import type { Color } from 'gloss'
 
 const notUndefined = x => typeof x !== 'undefined'
 
-type Props = {
-  items: Array,
+export type Props = {
+  items: Array<React$Element | Object>,
   onChange?: Function,
   defaultActive?: number,
   onlyIcons?: boolean,

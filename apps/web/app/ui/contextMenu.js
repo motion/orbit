@@ -23,7 +23,7 @@ class ContextMenuTarget {
   }
 }
 
-type Props = {
+export type Props = {
   width: number,
   children: React$Element,
   inactive?: Boolean,

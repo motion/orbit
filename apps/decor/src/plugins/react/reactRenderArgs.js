@@ -1,3 +1,7 @@
+export type ReactRenderArgs = {
+  render(props: Object, state: Object, context: Object): ?React$Element<any>,
+}
+
 export default options => ({
   name: 'react-render-args',
   decorator: Klass => {

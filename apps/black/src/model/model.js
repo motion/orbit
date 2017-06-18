@@ -18,14 +18,16 @@ export default class Model {
   static defaultProps: Function | Object
   methods: ?Object
   statics: ?Object
-  hooks: ?Object
   settings: SettingsObject
   database: ?RxDB
   defaultSchema: Object
   collection: ?RxCollection & { pouch: PouchDB }
   remoteDb: ?string
+
   // for tracking which queries we are watching
   queries: Object = {}
+  // hooks that run before/after operations
+  hooks: ?Object = {}
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
@@ -128,9 +130,6 @@ export default class Model {
     // create index
     await this.createIndexes()
 
-    // setup hooks
-    this.hooks = this.hooks || {}
-
     // auto timestamps
     if (this.hasTimestamps) {
       const ogInsert = this.hooks.preInsert
@@ -152,7 +151,7 @@ export default class Model {
     }
 
     if (this.collection && this.hooks) {
-      Object.keys(this.hooks).forEach(hook => {
+      Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
         this.collection[hook](this.hooks[hook])
       })
     }

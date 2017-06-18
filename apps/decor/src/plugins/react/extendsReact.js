@@ -1,5 +1,7 @@
 import { Component } from 'react'
 
+export type ExtendsReact = React$Component
+
 export default options => ({
   name: 'extends-react',
   decorator: Klass => {

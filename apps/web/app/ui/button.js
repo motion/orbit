@@ -36,6 +36,9 @@ export default class Button {
     tooltipProps?: Object,
     size?: number,
     iconSize?: number,
+    padding?: number | Array<number>,
+    margin?: number | Array<number>,
+    height?: number,
   }
 
   static defaultProps = {
@@ -43,6 +46,8 @@ export default class Button {
     iconSize: 12,
     onClick: idFn,
     borderRadius: 5,
+    padding: [0, 9],
+    height: 30,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -74,6 +79,9 @@ export default class Button {
       size,
       borderRadius,
       material,
+      padding,
+      height,
+      margin,
       ...props
     } = this.props
 
@@ -83,6 +91,9 @@ export default class Button {
     return (
       <button
         $$borderRadius={borderRadius}
+        $$padding={padding}
+        $$height={height}
+        $$margin={margin}
         $inSegment={inSegment && this.props}
         $color={color}
         $clickable={!!onClick || clickable}
@@ -142,8 +153,6 @@ export default class Button {
       lineHeight: '1rem',
       fontSize: 13,
       fontWeight: 400,
-      padding: [0, 9],
-      height: 30,
       alignItems: 'center',
       flexFlow: 'row',
       justifyContent: 'center',

@@ -1,9 +1,11 @@
 import decor from '@jot/decor'
 import autobound from '@jot/decor/lib/plugins/core/autobound'
-import emittable from '@jot/decor/lib/plugins/core/emittable'
+import emittable, { Emittable } from '@jot/decor/lib/plugins/core/emittable'
 import automagical from '@jot/decor/lib/plugins/mobx/automagical'
 import subscribable from '@jot/decor/lib/plugins/react/subscribable'
-import subscribableHelpers from '@jot/decor/lib/plugins/core/subscribableHelpers'
+import subscribableHelpers, { SubscribableHelpers } from '@jot/decor/lib/plugins/core/subscribableHelpers'
+
+export type StoreClass = Emittable & SubscribableHelpers
 
 export const storeDecorator = decor([
   subscribable,
@@ -28,7 +30,7 @@ export const storeOptions = {
   },
 }
 
-export default function store(Store) {
+export default function store(Store): StoreClass {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     const store = new DecoratedStore(...args)

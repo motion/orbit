@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { string, object } from 'prop-types'
 import { view } from '@jot/black'
@@ -8,21 +9,24 @@ import type { Color } from 'gloss'
 
 const notUndefined = x => typeof x !== 'undefined'
 
+type Props = {
+  items: Array,
+  onChange?: Function,
+  defaultActive?: number,
+  onlyIcons?: boolean,
+  title?: string,
+  stretch?: boolean,
+  sync?: boolean,
+  padded?: boolean,
+  color: Color,
+  ui?: Object,
+  itemProps?: Object,
+}
+
 @inject(context => ({ ui: context.ui }))
 @view.ui
 export default class Segment {
-  props: {
-    onChange?: Function,
-    defaultActive?: number,
-    onlyIcons?: boolean,
-    size?: number,
-    title?: string,
-    stretch?: boolean,
-    sync?: boolean,
-    padded?: boolean,
-    color: Color,
-    ui?: Object,
-  }
+  props: Props
 
   static defaultProps = {
     items: [],
@@ -53,8 +57,7 @@ export default class Segment {
     onChange,
     defaultActive,
     onlyIcons,
-    size,
-    children,
+    children: children_,
     active,
     title,
     stretch,
@@ -62,11 +65,11 @@ export default class Segment {
     padded,
     ui,
     color,
+    itemProps,
     ...props
-  }) {
-    const curActive = typeof active === 'undefined' ? this.active : active
-    let finalChildren = null
-
+  }: Props) {
+    let children = children_
+    const ACTIVE = typeof active === 'undefined' ? this.active : active
     const getContext = (index: number, length: number) => ({
       ui: {
         ...ui,
@@ -83,32 +86,29 @@ export default class Segment {
         .map(children, _ => _)
         .filter(child => !!child)
 
-      finalChildren = realChildren.map((child, index) =>
+      children = realChildren.map((child, index) =>
         <Provider key={index} provide={getContext(index, realChildren.length)}>
-          {() => child}
+          {() => (itemProps ? React.cloneElement(child, itemProps) : child)}
         </Provider>
       )
     } else if (Array.isArray(items)) {
-      finalChildren = items.map((seg, index) => {
+      children = items.map((seg, index) => {
         const { text, id, icon, ...segmentProps } = typeof seg === 'object'
           ? seg
           : { text: seg, id: seg }
 
         return (
-          <Provider
-            key={index}
-            provide={getContext(index, finalChildren.length)}
-          >
+          <Provider key={index} provide={getContext(index, children.length)}>
             <Button
-              active={(id || icon) === curActive}
+              active={(id || icon) === ACTIVE}
               icon={onlyIcons ? text : icon}
-              iconSize={size}
               iconColor={color}
               onChange={() => {
                 this.select(id)
                 onChange(seg)
               }}
               {...segmentProps}
+              {...itemProps}
             >
               {!onlyIcons && text}
             </Button>
@@ -120,7 +120,7 @@ export default class Segment {
     return (
       <segment {...props}>
         <title if={title}>{title}</title>
-        {finalChildren}
+        {children}
       </segment>
     )
   }

@@ -1,5 +1,9 @@
 import { CompositeDisposable } from 'sb-event-kit'
 
+export type Subscribable = {
+  subscriptions: CompositeDisposable,
+}
+
 export default options => ({
   name: 'subscribable',
   decorator: Klass => {

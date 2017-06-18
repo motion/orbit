@@ -1,5 +1,10 @@
 import { Emitter, CompositeDisposable } from 'sb-event-kit'
 
+export type Emittable = {
+  emitter: Emitter,
+  emit(name: string, data: any): void,
+}
+
 // store.emitter
 export default function emittable(options) {
   const emitterProp = options.emitterProp || 'emitter'

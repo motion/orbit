@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import { clr } from '~/helpers'
-import Icon from './icon'
+import Button from './button'
 import Grain from './grain'
 
 @view.ui
@@ -35,11 +35,13 @@ export class Title {
           onClick={this.onClick}
           onDoubleClick={this.onClick}
         >
-          <Icon
-            name={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
-            color="#ccc"
-            size={8}
-            button
+          <Button
+            icon={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
+            iconProps={{ size: 8, color: '#ccc' }}
+            chromeless
+            padding={6}
+            margin={-2}
+            height="auto"
           />
         </collapse>
         <before if={before}>{before}</before>

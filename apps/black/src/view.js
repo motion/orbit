@@ -1,16 +1,21 @@
 import decor from '@jot/decor'
 import { object, string } from 'prop-types'
-import extendsReact from '@jot/decor/lib/plugins/react/extendsReact'
+import extendsReact, { ExtendsReact } from '@jot/decor/lib/plugins/react/extendsReact'
 import observer from '@jot/decor/lib/plugins/mobx/observer'
 import autobound from '@jot/decor/lib/plugins/core/autobound'
-import subscribableHelpers from '@jot/decor/lib/plugins/core/subscribableHelpers'
-import subscribable from '@jot/decor/lib/plugins/react/subscribable'
-import reactRenderArgs from '@jot/decor/lib/plugins/react/reactRenderArgs'
+import subscribableHelpers, { SubscribableHelpers } from '@jot/decor/lib/plugins/core/subscribableHelpers'
+import subscribable, { Subscribable } from '@jot/decor/lib/plugins/react/subscribable'
+import reactRenderArgs, { ReactRenderArgs } from '@jot/decor/lib/plugins/react/reactRenderArgs'
 import addContext from '@jot/decor/lib/plugins/react/addContext'
 import attach from '@jot/decor/lib/plugins/react/attach'
 import storeProvidable from '@jot/decor/lib/plugins/react/storeProvidable'
 import { storeOptions } from './store'
 import gloss from './gloss'
+
+export type ViewClass = ExtendsReact &
+  Subscribable &
+  SubscribableHelpers &
+  ReactRenderArgs
 
 const uiContext = [
   addContext,
@@ -38,7 +43,9 @@ const getPlugins = ({ mobx, ui, autobind } = {}) => [
 
 const viewDecorator = decor(getPlugins({ mobx: true, autobind: true }))
 
-export default function view(viewOrStores: Object | Class | Function) {
+export default function view(
+  viewOrStores: Object | Class | Function
+): ViewClass {
   // @view({ ...stores }) shorthand
   if (typeof viewOrStores === 'object') {
     return viewDecorator({ stores: viewOrStores })

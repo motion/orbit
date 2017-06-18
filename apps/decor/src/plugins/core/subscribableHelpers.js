@@ -7,6 +7,15 @@ import {
   ref,
 } from 'motion-class-helpers'
 
+export type SubscribableHelpers = {
+  on(name: string, callback: Function): { dispose(): void },
+  setInterval(callback: Function): Function,
+  setTimeout(callback: Function): Function,
+  ref(path: string): { setter: Function, set: Function, toggle: Function },
+  watch(callback: Function): { dispose(): void },
+  react(watch: Function, callback: Function): { dispose(): void },
+}
+
 export default options => ({
   name: 'subscribable-helpers',
   mixin: {

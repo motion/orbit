@@ -5,6 +5,12 @@ import generateName from 'sillyname'
 import { memoize } from 'lodash'
 
 const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
+const cleanGetQuery = (query: Object | string) => {
+  if (typeof query === 'string') {
+    return toSlug(query)
+  }
+  return query
+}
 
 const DEFAULT_CONTENT = title => ({
   nodes: [
@@ -181,12 +187,8 @@ class Document extends Model {
       // .sort({ createdAt: 'desc' })
       .limit(limit)
 
-  @query get = memoize(id => {
-    console.log('document get', id)
-    if (!id) {
-      return null
-    }
-    return this.collection.findOne(id.replace('-', ':'))
+  @query get = memoize(query => {
+    return query && this.collection.findOne(cleanGetQuery(query))
   });
 
   @query user = user => {

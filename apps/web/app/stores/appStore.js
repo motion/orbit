@@ -14,7 +14,6 @@ import type { Model } from '@jot/models/helpers'
 export default class App {
   images: PouchDB
   databaseConfig: Object
-
   database: ?RxDB.Database = null
   models: ?Model = null
   @observable.ref errors = []
@@ -60,9 +59,6 @@ export default class App {
       password: this.databaseConfig.password,
       multiInstance: true,
       withCredentials: false,
-      pouchSettings: {
-        skip_setup: true,
-      },
     })
     console.timeEnd('create db')
   }

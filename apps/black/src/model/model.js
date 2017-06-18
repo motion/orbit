@@ -92,10 +92,10 @@ export default class Model {
       schema: this.compiledSchema,
       statics: this.statics,
       autoMigrate: true,
+      methods: this.compiledMethods,
       pouchSettings: {
         skip_setup: true,
       },
-      methods: this.compiledMethods,
     })
     console.timeEnd('db:connect')
 

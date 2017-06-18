@@ -15,7 +15,7 @@ export default class Server {
   constructor() {
     this.setupServer()
     this.setupRateLimiting()
-    this.setupCouchProxy()
+    this.setupCouchStreamProxy()
     this.setupLogin()
   }
 
@@ -29,7 +29,7 @@ export default class Server {
     app.use(cors({ origin: APP_URL }))
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
-    app.use(function(req, res, next) {
+    app.use((req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*')
       res.header(
         'Access-Control-Allow-Headers',
@@ -68,10 +68,10 @@ export default class Server {
     )
   }
 
-  setupCouchProxy() {
+  setupCouchStreamProxy() {
     // streaming couch proxy
     this.server.get(
-      '/couch/:db',
+      '/couch-stream/:db',
       repStream({
         url: COUCH_URL,
         dbReq: true,

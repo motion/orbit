@@ -8,7 +8,8 @@ const COUCH_HOST = `couch.${window.location.host}`
 const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
-@store class User {
+@store
+class User {
   user = null
   superlogin = superlogin
   localDb = null
@@ -16,10 +17,7 @@ const API_URL = `http://${API_HOST}`
 
   connect = () => {
     this.superlogin.configure({
-      // The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth/')
       baseUrl: `${API_URL}/auth/`,
-      // A list of API endpoints to automatically add the Authorization header to
-      // By default the host the browser is pointed to will be added automatically
       endpoints: [API_HOST],
       // Set this to true if you do not want the URL bar host automatically added to the list
       noDefaultEndpoint: false,
@@ -91,6 +89,9 @@ const API_URL = `http://${API_HOST}`
     } catch (loginError) {
       if (!loginError) {
         console.log('signed in', email)
+        return
+      } else if (loginError.message === 'Document update conflict') {
+        console.log('got a weird conflict erorr, ignore')
         return
       }
       console.log('loginError', loginError)

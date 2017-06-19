@@ -102,11 +102,12 @@ export default class Title {
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',
+      cursor: 'default',
     },
     tag: {
       flex: 1,
       flexFlow: 'row',
-      pointerEvents: 'none',
+      userSelect: 'none',
       alignItems: 'center',
       fontSize: 12,
       fontWeight: 700,

@@ -19,6 +19,7 @@ export default {
     hover: {
       ...DARK,
       background: clr(DARK.background).lighten(1).toString(),
+      borderColor: clr(DARK.borderColor).alpha(0.2).toString(),
     },
     active: {
       ...DARK,

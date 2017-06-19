@@ -16,6 +16,7 @@ export type Props = {
   clickable?: boolean,
   active?: boolean,
   chromeless?: boolean,
+  inline?: boolean,
   dim?: boolean,
   stretch?: boolean,
   spaced?: boolean,
@@ -72,6 +73,7 @@ export default class Button {
     spaced,
     after,
     chromeless,
+    inline,
     dim,
     stretch,
     tooltip,
@@ -105,10 +107,9 @@ export default class Button {
         onClick={onClick}
         {...props}
       >
-        <blurryParent>
-          <blurryChild />
-        </blurryParent>
-        {icon && !stringIcon && React.cloneElement(icon, { $icon: true })}
+        <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+          {icon}
+        </icon>
         <Icon
           if={icon && stringIcon}
           $icon
@@ -223,9 +224,17 @@ export default class Button {
   }
 
   static theme = {
-    theme: (props: Props, context, activeTheme) => {
-      const { inForm, inSegment, borderRadius, background, circular } = props
+    theme: (props: Props, context, theme) => {
+      const {
+        inForm,
+        inline,
+        inSegment,
+        borderRadius,
+        background,
+        circular,
+      } = props
       return {
+        // $FlowIgnore
         button: {
           background,
           ...(!inSegment && {
@@ -234,18 +243,26 @@ export default class Button {
           ...(circular && {
             borderRadius: 1000,
           }),
-          ...activeTheme.base,
+          ...theme.base,
           '&:active': {
             position: 'relative',
             zIndex: 1000,
           },
-          '&:hover': activeTheme.hover,
+          '&:hover': theme.hover,
           // inForm
           ...(inForm && {
-            '&:active': activeTheme.inputActive || activeTheme.active,
+            '&:active': theme.inputActive || theme.active,
             '&:focus': {
               borderColor: '#999',
               borderWidth: 1, // ;)
+            },
+          }),
+          // inline
+          ...(inline && {
+            border: [1, 'solid', 'transparent'],
+            background: 'red',
+            '&:hover': {
+              border: [1, 'solid', theme.base.borderColor],
             },
           }),
         },
@@ -254,7 +271,7 @@ export default class Button {
         },
         clickable: {
           '&:hover': {
-            background: activeTheme.background,
+            background: theme.background,
           },
         },
       }
@@ -280,7 +297,6 @@ export default class Button {
     chromeless: {
       button: {
         background: 'transparent',
-        borderWidth: 0,
         borderRightWidth: 0,
         borderLeftWidth: 0,
         borderTopWidth: 0,
@@ -288,6 +304,18 @@ export default class Button {
         '&:hover': {
           opacity: 0.8,
         },
+      },
+    },
+    inline: {
+      button: {
+        background: 'transparent',
+        borderRightWidth: 1,
+        borderLeftWidth: 1,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        padding: 5,
+        margin: -6,
+        borderRadius: 1000,
       },
     },
     disabled: {

@@ -41,6 +41,8 @@ export default class Dropdown {
           escapable
           target={
             <Button
+              inline
+              iconAfter
               icon={<Arrow $arrow theme="light" size={6} color={color} />}
               $$color={color}
             >
@@ -52,7 +54,6 @@ export default class Dropdown {
           <List
             {...props}
             controlled
-            background
             width={width}
             items={items}
             getItem={item => ({
@@ -70,7 +71,6 @@ export default class Dropdown {
       alignItems: 'center',
     },
     arrow: {
-      marginLeft: 5,
       opacity: 0.9,
       '&:hover': {
         opacity: 1,

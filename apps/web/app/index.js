@@ -1,19 +1,15 @@
 // @flow
-
-// polyfills
-window.Buffer = require('buffer/').Buffer
 import 'regenerator-runtime/runtime'
 import 'babel-polyfill'
 import Gloss from '@jot/black/lib/gloss'
-// all <tags /> can use $$parentStyles
-React.createElement = Gloss.createElement
-
-// for a fast splash screen to show
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { IS_PROD, IS_ELECTRON, IN_TRAY } from './constants'
 
-// <Splash />
+// all <tags /> can use $$parentStyles
+React.createElement = Gloss.createElement
+
+// splash
 const Root = require('./views/splash').default
 ReactDOM.render(<Root />, document.querySelector('#app'))
 console.timeEnd('splash')

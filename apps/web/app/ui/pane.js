@@ -135,6 +135,9 @@ export default class Pane {
       },
     }),
     scrollable: {
+      section: {
+        flex: 1,
+      },
       content: {
         overflowY: 'auto',
       },

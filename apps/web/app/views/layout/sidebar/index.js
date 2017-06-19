@@ -98,6 +98,61 @@ class TasksUI {
   }
 }
 
+@view
+class TeamStatus {
+  render() {
+    return (
+      <team>
+        {[
+          { name: 'Steel', status: 'Doing stuff', time: '10m' },
+          { name: 'Nate', status: 'Doing stuff', time: '10m' },
+          { name: 'Nick', status: 'Doing stuff', time: '10m' },
+          { name: 'Jacob', status: 'Doing stuff', time: '10m' },
+        ].map(player =>
+          <player key={player.name}>
+            <card>
+              <name>{player.name}</name>
+              <info>
+                <status>{player.status}</status>
+                <time>{player.time}</time>
+              </info>
+            </card>
+          </player>
+        )}
+      </team>
+    )
+  }
+  static style = {
+    team: {
+      flexFlow: 'row',
+      flexWrap: 'wrap',
+    },
+    player: {
+      width: '50%',
+      padding: 3,
+    },
+    card: {
+      borderRadius: 5,
+      padding: 15,
+      '&:hover': {
+        background: [0, 0, 0, 0.1],
+      },
+    },
+    info: {
+      flexFlow: 'row',
+      justifyContent: 'space-between',
+    },
+    status: {
+      fontSize: 12,
+      opacity: 0.4,
+    },
+    time: {
+      fontSize: 10,
+      opacity: 0.2,
+    },
+  }
+}
+
 @view({
   store: class {
     team = 'Motion'
@@ -115,78 +170,85 @@ class PlayUI implements ViewType {
     }
     return (
       <ui>
-        <Pane {...paneProps} title="Me">
-          <List
-            items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-            getItem={item => ({
-              primary: item,
-              date: '10m',
-              before: (
-                <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-              ),
-              after: <Input type="checkbox" />,
-            })}
-          />
-        </Pane>
+        <TeamStatus />
 
-        <Pane
-          $teamPane
-          {...paneProps}
-          title={
-            <tat $$row>
-              Team: &nbsp;
-              <Dropdown
-                items={['Motion', 'Something', 'Else']}
-                color={[255, 255, 255, 0.8]}
-                onChange={store.ref('team').set}
-              >
-                <span>{store.team}</span>
-              </Dropdown>
-            </tat>
-          }
-        >
-          <Pane $subPane sub collapsable title="Steel">
-            <List
-              items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-              getItem={item => ({
-                primary: item,
-                date: '10m',
-                before: (
-                  <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-                ),
-                after: <input type="checkbox" />,
-              })}
-            />
-          </Pane>
-          <Pane $subPane sub collapsable title="Nick">
-            <List
-              items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-              getItem={item => ({
-                primary: item,
-                date: '10m',
-                before: (
-                  <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-                ),
-                after: <input type="checkbox" />,
-              })}
-            />
-          </Pane>
-          <Pane $subPane sub collapsable title="Jacob">
-            <List
-              items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-              getItem={item => ({
-                primary: item,
-                date: '10m',
-                before: (
-                  <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-                ),
-                after: <input type="checkbox" />,
-              })}
-            />
-          </Pane>
-        </Pane>
+        <Segment controlled itemProps={{ $$flex: 1 }}>
+          <Button>tasks</Button>
+          <Button>docs</Button>
+        </Segment>
 
-        <space $$flex $$draggable />
+        <content $$scrollable $$flex={6}>
+          <Pane {...paneProps} title="Me">
+            <List
+              items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+              getItem={item => ({
+                primary: item,
+                date: '10m',
+                before: (
+                  <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+                ),
+                after: <Input type="checkbox" />,
+              })}
+            />
+          </Pane>
+
+          <Pane
+            $teamPane
+            {...paneProps}
+            title={
+              <tat $$row>
+                Team: &nbsp;
+                <Dropdown
+                  items={['Motion', 'Something', 'Else']}
+                  color={[255, 255, 255, 0.8]}
+                  onChange={store.ref('team').set}
+                >
+                  <span>{store.team}</span>
+                </Dropdown>
+              </tat>
+            }
+          >
+            <Pane $subPane sub collapsable title="Steel">
+              <List
+                items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+                getItem={item => ({
+                  primary: item,
+                  date: '10m',
+                  before: (
+                    <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+                  ),
+                  after: <input type="checkbox" />,
+                })}
+              />
+            </Pane>
+            <Pane $subPane sub collapsable title="Nick">
+              <List
+                items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+                getItem={item => ({
+                  primary: item,
+                  date: '10m',
+                  before: (
+                    <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+                  ),
+                  after: <input type="checkbox" />,
+                })}
+              />
+            </Pane>
+            <Pane $subPane sub collapsable title="Jacob">
+              <List
+                items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
+                getItem={item => ({
+                  primary: item,
+                  date: '10m',
+                  before: (
+                    <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
+                  ),
+                  after: <input type="checkbox" />,
+                })}
+              />
+            </Pane>
+          </Pane>
+        </content>
 
         <Pane {...paneProps} title="Queue">
           <List

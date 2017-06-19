@@ -11,6 +11,10 @@ const opposite = direction =>
   }[direction])
 
 type Props = {
+  open?: boolean,
+  percent?: number,
+  attach?: Object,
+  children?: React$Element<any>,
   from: 'top' | 'bottom' | 'left' | 'right',
   size: number,
   onClickOverlay: Function,
@@ -23,6 +27,7 @@ type Props = {
   theme?: string,
   className?: string,
   overlayBlur?: number,
+  transition: string,
 }
 
 @view.ui
@@ -35,9 +40,11 @@ export default class Drawer {
     from: 'left',
     zIndex: 10000,
     style: {},
+    transition: 'all ease-in 200ms',
   }
 
   render({
+    transition,
     open,
     children,
     from,
@@ -122,13 +129,10 @@ export default class Drawer {
       bottom: 0,
       left: 0,
       right: 0,
-      transition: 'transform ease-in 150ms, opacity ease-in 150ms',
-      opacity: 0,
       overflow: 'auto',
     },
     panelOpen: {
       pointerEvents: 'all',
-      opacity: 1,
       transform: { x: 0, y: 0, z: 0 },
     },
     from: direction => ({
@@ -154,10 +158,11 @@ export default class Drawer {
   }
 
   static theme = {
-    theme: ({ bordered, shadowed }, _, theme) => {
+    theme: ({ transition, bordered, shadowed }, _, theme) => {
       return {
         panel: {
           ...theme.base,
+          transition,
           borderColor: bordered && theme.base.borderColor,
           boxShadow:
             shadowed && (theme.base.shadow || '0 0 6px rgba(0,0,0,0.3)'),

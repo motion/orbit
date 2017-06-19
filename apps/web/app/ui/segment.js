@@ -10,13 +10,16 @@ import type { Color } from 'gloss'
 const notUndefined = x => typeof x !== 'undefined'
 
 export type Props = {
-  items: Array<React$Element<any> | Object>,
-  onChange?: Function,
+  active?: number,
   defaultActive?: number,
+  controlled?: boolean,
+  items: Array<React$Element<any> | Object>,
+  children: React$Element<any>,
+  onChange?: Function,
   onlyIcons?: boolean,
   title?: string,
   stretch?: boolean,
-  sync?: boolean,
+  sync?: { get(): number, set(value: number): void },
   padded?: boolean,
   color: Color,
   ui?: Object,
@@ -27,11 +30,6 @@ export type Props = {
 @view.ui
 export default class Segment {
   props: Props
-
-  static defaultProps = {
-    items: [],
-    onChange: () => {},
-  }
 
   state = {
     active: null,
@@ -44,7 +42,7 @@ export default class Segment {
     }
   }
 
-  get active() {
+  get active(): number {
     const hasState = this.state.active !== null
     if (this.props.sync) {
       return this.props.sync.get()
@@ -54,6 +52,7 @@ export default class Segment {
 
   render({
     items,
+    controlled,
     onChange,
     defaultActive,
     onlyIcons,
@@ -105,7 +104,9 @@ export default class Segment {
               iconColor={color}
               onChange={() => {
                 this.select(id)
-                onChange(seg)
+                if (controlled && onChange) {
+                  onChange(seg)
+                }
               }}
               {...segmentProps}
               {...itemProps}

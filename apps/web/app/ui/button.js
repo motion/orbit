@@ -53,6 +53,7 @@ export default class Button {
     borderRadius: 5,
     padding: [0, 9],
     height: 30,
+    size: 30,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -97,7 +98,6 @@ export default class Button {
       <button
         $$borderRadius={borderRadius}
         $$padding={padding}
-        $$height={height}
         $$margin={margin}
         $inSegment={inSegment && this.props}
         $color={color}
@@ -142,6 +142,7 @@ export default class Button {
           padding={[0, 6]}
           distance={8}
           arrowSize={8}
+          delay={100}
           popoverProps={{ $$style: { fontSize: 11 } }}
           {...tooltipProps}
         >
@@ -232,6 +233,8 @@ export default class Button {
         borderRadius,
         background,
         circular,
+        size,
+        height,
       } = props
       return {
         // $FlowIgnore
@@ -242,6 +245,11 @@ export default class Button {
           }),
           ...(circular && {
             borderRadius: 1000,
+            height: size,
+            width: size,
+          }),
+          ...(!circular && {
+            height,
           }),
           ...theme.base,
           '&:active': {

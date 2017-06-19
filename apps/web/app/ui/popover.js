@@ -20,19 +20,21 @@ export type Props = {
   // the distance the popover is from the target
   // so it displays nicely spaced away
   distance: number,
-  // will open when target is clicked
+  // open when target is clicked
   openOnClick?: boolean,
-  // will open automatically when target is hovered
+  // open automatically when target is hovered
   openOnHover?: boolean,
-  // prevents popover itself from catching pointer events
+  // delay until openOnHover
+  delay: number,
+  // prevent popover itself from catching pointer events
   noHover?: boolean,
-  // will exit with `esc` key
+  // exit with `esc` key
   escapable?: boolean,
   // size of shown arrow
   arrowSize?: number,
   closeOnClickWithin?: boolean,
   // which direction it shows towards
-  // default will determine direction automatically
+  // default determine direction automatically
   towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
   padding?: Array | number,
   onMouseEnter?: Function,
@@ -68,6 +70,7 @@ export default class Popover {
     towards: 'auto',
     animation: 'slide 200ms',
     adjust: [0, 0],
+    delay: 0,
   }
 
   static contextTypes = {
@@ -429,16 +432,20 @@ export default class Popover {
   addHoverListeners = (name, node) => {
     if (!node) return
 
-    // race condition fix: target should close more slowly than menu opens
+    const setTrue = this.hoverStateSetter(name, true)
+    const onEnter = debounce(
+      () => this.isNodeHovered(node) && setTrue(),
+      this.props.delay
+    )
+
     const setFalse = debounce(
       this.hoverStateSetter(name, false),
-      name === 'target' ? 32 : 0
+      name === 'target' ? 16 : 0 // race condition fix: target should close more slowly than menu opens
     )
-    const setTrue = this.hoverStateSetter(name, true)
     const onLeave = () => !this.isNodeHovered(node) && setFalse()
 
     this.on(node, 'mouseenter', () => {
-      setTrue()
+      onEnter()
       // insanity, but mouselave is horrible
       if (this.curProps.target) {
         this.setTimeout(onLeave, 16)
@@ -470,9 +477,7 @@ export default class Popover {
   }
 
   isNodeHovered = node => {
-    return (
-      node.querySelector(':hover') || node.parentNode.querySelector(':hover')
-    )
+    return node.querySelector(':hover')
   }
 
   overlayRef = ref => {
@@ -512,6 +517,7 @@ export default class Popover {
     theme,
     closeOnClickWithin,
     showForgiveness,
+    delay,
     ...props
   }: Props) {
     const {

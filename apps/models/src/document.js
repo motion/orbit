@@ -93,7 +93,9 @@ class Document extends Model {
           foundRoot = true
         } else {
           doc = await this.collection.findOne(doc.parentId).exec()
-
+          if (!doc) {
+            return crumbs
+          }
           crumbs = [doc, ...crumbs]
         }
       }
@@ -158,7 +160,8 @@ class Document extends Model {
     return await this.collection.find({ _id: { $in: ids } }).exec()
   }
 
-  @query userHomeDocs = userId => {
+  @query
+  userHomeDocs = userId => {
     if (!userId) {
       return null
     }
@@ -168,7 +171,8 @@ class Document extends Model {
     })
   }
 
-  @query child = id => {
+  @query
+  child = id => {
     if (!id) {
       return null
     }
@@ -184,13 +188,15 @@ class Document extends Model {
   @query all = () => this.collection.find({ createdAt: { $gt: null } })
   // .sort({ createdAt: 'asc' })
 
-  @query recent = (limit = 10) =>
+  @query
+  recent = (limit = 10) =>
     this.collection
       .find({ draft: { $ne: true } })
       // .sort({ createdAt: 'desc' })
       .limit(limit)
 
-  @query get = memoize(query => {
+  @query
+  get = memoize(query => {
     if (!query) {
       return null
     }
@@ -198,7 +204,8 @@ class Document extends Model {
     return this.collection.findOne(query_)
   });
 
-  @query user = user => {
+  @query
+  user = user => {
     if (!User.loggedIn) {
       return null
     }

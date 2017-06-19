@@ -7,12 +7,14 @@ import { getSpec } from './helpers'
 
 type Plugin = Class<Object>
 
+type Props = {
+  onEditor?: Function,
+  inline?: boolean,
+  id?: string,
+}
+
 export default class EditorStore implements StoreType {
-  props: {
-    onEditor?: Function,
-    inline?: boolean,
-    id?: string,
-  }
+  props: Props
 
   id = this.props.id || `${Math.random()}`
   inline = this.props.inline || false
@@ -26,7 +28,7 @@ export default class EditorStore implements StoreType {
   find = this.props.find
   onlyNode = this.props.onlyNode
 
-  start({ onEditor, getRef, rules, plugins }) {
+  start({ onEditor, getRef, rules, plugins }: Props) {
     this.rules = rules
     this.setup(plugins)
 
@@ -63,26 +65,27 @@ export default class EditorStore implements StoreType {
 
   // return slate-like schema
   @computed
-  get spec() {
+  get spec(): Object {
     return getSpec(this.plugins, this.rules)
   }
 
   @computed
-  get allPlugins() {
-    return Object.keys(this.plugins).reduce(
-      (acc, key) => ({
+  get allPlugins(): Object {
+    return this.plugins.reduce(
+      (acc, plugin) => ({
         ...acc,
-        [this.plugins[key].name]: this.plugins[key],
+        [plugin.name]: plugin,
       }),
       {}
     )
   }
 
-  get serializedState() {
+  get serializedState(): Object {
     return Raw.serialize(this.state)
   }
 
-  get serializedText() {
+  get serializedText(): string {
+    if (!this.nodes) return ''
     return this.nodes
       .filter(i => includes(['paragraph', 'title'], i.type))
       .map(i => i.nodes.map(n => n.text).join(' '))
@@ -164,13 +167,15 @@ export default class EditorStore implements StoreType {
     return this.inline ? { title: { fontSize: 16 } } : {}
   }
 
-  get nodes() {
+  get nodes(): ?Array<any> {
     return this.state && this.state.document && this.state.document.nodes
+      ? this.state.document.nodes
+      : null
   }
 
-  get hasUploadingImages() {
+  get hasUploadingImages(): boolean {
     return (
-      this.nodes &&
+      !!this.nodes &&
       this.nodes.some(x => x.type === 'image' && x.data.get('file'))
     )
   }

@@ -1,4 +1,5 @@
 // @flow
+import type { StoreType } from '@jot/black'
 import { debug } from '~/helpers'
 import { Document } from '@jot/models'
 
@@ -8,7 +9,7 @@ type Props = {
   id: string,
 }
 
-export default class DocumentStore {
+export default class DocumentStore implements StoreType {
   props: Props
 
   id = this.props.id
@@ -29,6 +30,7 @@ export default class DocumentStore {
   }
 
   async start() {
+    console.log('do something')
     this.react(
       () => this.document && this.document._id && this.shouldLoadCrumbs,
       async () => {

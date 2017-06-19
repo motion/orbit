@@ -17,6 +17,7 @@ export type TitleProps = {
   background?: Color,
   stat?: React$Children,
   color?: Color,
+  borderColor?: Color,
   onDoubleClick?: Function,
   onCollapse?: Function,
 }
@@ -52,6 +53,7 @@ export default class Title {
     hoverable,
     background,
     stat,
+    borderColor,
     color,
     tag: _tag,
     onCollapse,
@@ -124,10 +126,17 @@ export default class Title {
   }
 
   static theme = {
-    theme: ({ color, background, hoverable, sub }, context, theme) => ({
+    theme: (
+      { borderColor, color, background, hoverable, sub },
+      context,
+      theme
+    ) => ({
       ptitle: {
         background: background || theme.base.background,
-        borderBottom: !sub && [1, color || theme.base.borderColor],
+        borderBottom: !sub && [
+          1,
+          borderColor || color || theme.base.borderColor,
+        ],
         color: color || theme.base.color,
 
         '&:hover': {

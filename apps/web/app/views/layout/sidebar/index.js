@@ -105,11 +105,17 @@ class TasksUI {
 })
 class PlayUI implements ViewType {
   render({ store }: { store: SidebarStore }) {
-    const color = '#66a734'
     console.log('render playui')
+    const color = '#66a734'
+    const borderColor = [255, 255, 255, 0.3]
+    const paneProps = {
+      $mainPane: true,
+      collapsable: true,
+      titleProps: { color, borderColor },
+    }
     return (
       <ui>
-        <Pane $mainPane collapsable title="Me" titleProps={{ color }}>
+        <Pane {...paneProps} title="Me">
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({
@@ -124,10 +130,8 @@ class PlayUI implements ViewType {
         </Pane>
 
         <Pane
-          $mainPane
           $teamPane
-          collapsable
-          titleProps={{ color }}
+          {...paneProps}
           title={
             <tat $$row>
               Team: &nbsp;
@@ -184,7 +188,7 @@ class PlayUI implements ViewType {
 
         <space $$flex $$draggable />
 
-        <Pane $mainPane collapsable title="Queue" titleProps={{ color }}>
+        <Pane {...paneProps} title="Queue">
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({

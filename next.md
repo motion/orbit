@@ -1,7 +1,5 @@
 # upnext
 
-  - nick
-
   - nate
     - ui
       - standard props across all themes w rythm, margin/padding, ...
@@ -17,7 +15,7 @@
         - also allows cool themeing, so <Title /> and then InlineTitle = <Title theme={{ borderBottomSize, etc etc }} />
 
 # queue
-  - investigate multi-list drag/drop
+  - investigate multi-list drag/drop (dnd)
   - get to bootstrappability
     - hosted iwritey.com instance we can use to plan
     - OMP working on sidebar

@@ -2,12 +2,14 @@
 import { clr } from '~/helpers'
 
 const LIGHT = {
+  highlightColor: 'rgb(89, 154, 244)',
   background: '#fff',
   color: '#555',
   borderColor: '#eee',
 }
 
 const DARK = {
+  highlightColor: 'rgb(89, 154, 244)',
   background: '#292929',
   color: '#f2f2f2',
   borderColor: [255, 255, 255, 0.06],

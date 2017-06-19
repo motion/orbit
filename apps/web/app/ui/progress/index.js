@@ -1,0 +1,26 @@
+import React from 'react'
+import { view } from '@jot/black'
+import Bar from './bar'
+import Circle from './circle'
+
+@view.ui
+export default class Progress {
+  props: {
+    type: 'bar' | 'circle',
+  }
+
+  static Bar = Bar
+  static Circle = Circle
+
+  render() {
+    const { type, ...props } = this.props
+
+    if (type === 'circle') {
+      return <Circle {...props} />
+    } else if (type === 'bar') {
+      return <Bar {...props} />
+    }
+
+    throw new Error(`Invalid progress type given`)
+  }
+}

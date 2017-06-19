@@ -18,12 +18,12 @@ export const storeDecorator = decor([
 
 export const storeOptions = {
   storeDecorator,
-  onStoreMount(store, props) {
+  onStoreMount(store: StoreClass, props: Object) {
     if (store.start) {
       store.start(props)
     }
   },
-  onStoreUnmount(store) {
+  onStoreUnmount(store: StoreClass) {
     if (store.stop) {
       store.stop()
     }
@@ -31,7 +31,7 @@ export const storeOptions = {
   },
 }
 
-export default function store(Store): StoreClass {
+export default function store(Store: Class): StoreClass {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     const store = new DecoratedStore(...args)

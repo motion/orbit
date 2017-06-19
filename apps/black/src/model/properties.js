@@ -55,7 +55,3 @@ export const oneOf = klass =>
 export function compile(obj) {
   return Kontur.compile(obj)
 }
-
-window.compile = compile
-window.P = Properties
-window.oneOf = oneOf

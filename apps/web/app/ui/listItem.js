@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import FakeAvatar from './fake/fakeAvatar'
-import Glow from './glow'
+import Glow from './effects/glow'
 
 export type ItemProps = {
   children?: React$Element<any>,

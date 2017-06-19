@@ -1,12 +1,24 @@
 // @flow
-export * from 'mobx'
 
 export view from './view'
 export store from './store'
 
 export Model from './model/model'
 export query from './model/query'
-export * from './model/properties'
+
+// mobx helpers
+export { computed, observable, autorun, react, isObservable } from 'mobx'
+
+// model helpers
+export {
+  bool,
+  array,
+  object,
+  str,
+  nil,
+  oneOf,
+  compile,
+} from './model/properties'
 
 // use this in @stores to autorun autoruns
 export const watch = fn => {

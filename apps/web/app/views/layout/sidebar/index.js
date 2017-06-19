@@ -17,6 +17,7 @@ import {
   Title,
   Button,
   Dropdown,
+  Progress,
   SlotFill,
 } from '~/ui'
 import { User, Place } from '@jot/models'
@@ -104,15 +105,10 @@ class TasksUI {
 
 @view
 class TeamStatus {
-  render() {
+  render({ items }) {
     return (
       <team>
-        {[
-          { name: 'Steel', status: 'Doing stuff', time: '10m' },
-          { name: 'Nate', status: 'Doing stuff', time: '10m' },
-          { name: 'Nick', status: 'Doing stuff', time: '10m' },
-          { name: 'Jacob', status: 'Doing stuff', time: '10m' },
-        ].map(player =>
+        {items.map(player =>
           <player key={player.name}>
             <card>
               <name>{player.name}</name>
@@ -141,6 +137,10 @@ class TeamStatus {
       '&:hover': {
         background: [0, 0, 0, 0.1],
       },
+    },
+    name: {
+      height: 30,
+      margin: [-4, 0],
     },
     info: {
       flexFlow: 'row',
@@ -174,7 +174,28 @@ class PlayUI implements ViewType {
     }
     return (
       <ui>
-        <TeamStatus />
+        <TeamStatus
+          items={[
+            { name: 'Steel', status: 'Doing stuff', time: '10m' },
+            { name: 'Nate', status: 'Doing stuff', time: '10m' },
+            { name: 'Nick', status: 'Doing stuff', time: '10m' },
+            { name: 'Jacob', status: 'Doing stuff', time: '10m' },
+          ]}
+        />
+
+        <hr />
+
+        <TeamStatus
+          items={[
+            {
+              name: 'Pundle 2',
+              status: <Progress.Bar percent="50" />,
+            },
+            { name: 'Jot App', status: <Progress.Bar percent="30" /> },
+            { name: 'TSNE Server', status: <Progress.Bar percent="10" /> },
+            { name: 'Housekeeping', status: <Progress.Bar percent="90" /> },
+          ]}
+        />
 
         <Segment controlled itemProps={{ $$flex: 1 }}>
           <Button>tasks</Button>

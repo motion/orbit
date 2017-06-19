@@ -36,9 +36,13 @@ type Props = {
   store: SidebarStore,
 }
 
-@view
+@view({
+  store: class {
+    inProgress = true
+  },
+})
 class TasksUI {
-  render() {
+  render({ store }) {
     return (
       <tasks if={false}>
         <Pane if={store.inProgress} title="Current Task">
@@ -298,8 +302,8 @@ class Inner {
     return (
       <inner $$flex>
         {' '}<Login if={!IN_TRAY} />
+        <TasksUI />
         <PlayUI if={true} />
-        <TasksUI if={false} />
         <SlotFill.Slot name="sidebar">
           {items =>
             <activeSidebar>

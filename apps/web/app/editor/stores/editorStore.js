@@ -11,6 +11,7 @@ type Props = {
   onEditor?: Function,
   inline?: boolean,
   id?: string,
+  getRef?: Function,
 }
 
 export default class EditorStore implements StoreType {

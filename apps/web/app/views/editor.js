@@ -6,7 +6,7 @@ import * as Plugins from '~/editor/plugins'
 import { flatten } from 'lodash'
 
 @view.ui
-export default class JotEditor extends React.Component {
+export default class JotEditor {
   state = {
     plugins: null,
   }
@@ -30,11 +30,20 @@ export default class JotEditor extends React.Component {
     viewCache.remove(this)
   }
 
-  render(props, { plugins }) {
+  render({ getRef, ...props }, { plugins }) {
     if (!plugins) {
       return null
     }
-    return <Editor plugins={plugins} {...props} />
+    return (
+      <Editor
+        plugins={plugins}
+        getRef={ref => {
+          console.log(ref)
+          getRef(ref)
+        }}
+        {...props}
+      />
+    )
   }
 }
 

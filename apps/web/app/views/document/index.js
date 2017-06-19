@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@jot/black'
 import { Icon } from '~/ui'
 import Editor from '~/views/editor'
-import DocumentStore from './store'
+import DocumentStore from './documentStore'
 import Crumbs from './crumbs'
 
 type Props = {
@@ -39,7 +39,7 @@ export default class DocumentView {
         <Editor
           readOnly={readOnly}
           inline={inline}
-          onEditor={store.onEditor}
+          getRef={store.onEditor}
           {...editorProps}
         />
       </docview>

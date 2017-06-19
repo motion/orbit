@@ -2,6 +2,7 @@
 import type { StoreType } from '@jot/black'
 import { debug } from '~/helpers'
 import { Document } from '@jot/models'
+import type EditorStore from '~/editor/stores/editorStore'
 
 const print = debug('documentStore')
 
@@ -53,8 +54,12 @@ export default class DocumentStore implements StoreType {
     }
   }
 
-  onEditor = editor => {
-    if (!editor) return
+  onEditor = (editor: EditorStore) => {
+    if (!editor) {
+      console.log('no editor given')
+      return
+    }
+
     this.editor = editor
 
     // init content

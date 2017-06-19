@@ -42,7 +42,7 @@ export default class EditorStore implements StoreType {
 
     this.watch(() => {
       if (this.props.newState) {
-        // for realtime sync
+        // TODO: for realtime sync
         console.log('new state, save it')
         // this.setContents(this.props.newState, true)
       }

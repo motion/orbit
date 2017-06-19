@@ -1,18 +1,38 @@
-# upnext
+design of this:
+  - now: current planned tasks
+  - next: organized next up
+  - queue: unorganized stuff we want
+  - ideas: grabbag
+  - libs: tech stuff for various things
+  - other sections? (questions, bookmarks, ux inspiration)
+
+# now
+
+  - nick
 
   - nate
-    - ui
-      - standard props across all themes w rythm, margin/padding, ...
-        - mb, mx, my, m, p, height, width
-        - just a niceStyle() helper used in every theme()
-      - add View
-        - see react grid experiments from hn not long ago
-    - gloss
-      - turn theme="string" into theme={{ resolved: theme }}
-        - lets you use theme inside render() for stuff like <Icon color={theme.color} />
-      - allow passing theme objects directly to "tweak" styles theme={{ background: 'red' }} (works with ui niceStyle stuff)
-        - this is like a local override of specific things
-        - also allows cool themeing, so <Title /> and then InlineTitle = <Title theme={{ borderBottomSize, etc etc }} />
+
+# next
+  - #brainstorm: features and user feedback strategy
+  - #brainstorm: divvying up next two week
+  - editor: performance/stability: general perf, less saving: save only on debounce(1000)
+  - editor: realtime (see // TODO: for realtime sync)
+  - editor: formatting: #uxlove + #dev
+    - inserting and editing a link
+    - inserting and editing an image
+    - changing text alignment
+    - changing text color/background
+  - editor: lists:
+    - todo lists: #dev
+      - #hashtags, @due-dates, @users
+    - doc lists:
+      - #uxlove
+  - release: need a script to build electron for prod consistently
+  - release: deploy to iwritey.com get working
+  - navigator: cmd-t needs #uxlove
+  - sidebar: #uxlove
+  - sidebar: drag and drop between lists #big
+  - drafts: #uxlove
 
 # queue
   - investigate multi-list drag/drop (dnd)
@@ -58,11 +78,31 @@
   - light theme defaults
     - input, button, drawer, listitem, popover, text, title, ...
 
-# gamechanger/showstopper ?
+# gamechanger/showstopper (?)
 
   - well done attachments
     - do people think of docs as just part of a more general company filestore?
     - does it help people "get it" or does it clutter
+
+# libs
+
+- ui
+  - standard props across all themes w rythm, margin/padding, ...
+    - mb, mx, my, m, p, height, width
+    - just a niceStyle() helper used in every theme()
+  - add View
+    - see react grid experiments from hn not long ago
+
+- gloss
+      - turn theme="string" into theme={{ resolved: theme }}
+        - lets you use theme inside render() for stuff like <Icon color={theme.color} />
+      - allow passing theme objects directly to "tweak" styles theme={{ background: 'red' }} (works with ui niceStyle stuff)
+        - this is like a local override of specific things
+        - also allows cool themeing, so <Title /> and then InlineTitle = <Title theme={{ borderBottomSize, etc etc }} />
+      - add color adjustment objects so no need for outside lib:
+        - { background: { color: 'red', lighten: 0.5, alpha: 0.1 } }
+          - could have references?:
+            - { background: { color: '.color', lighten: 0.5, alpha: 0.1 } }
 
 # emojis
 https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json

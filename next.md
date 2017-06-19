@@ -94,15 +94,15 @@ design of this:
     - see react grid experiments from hn not long ago
 
 - gloss
-      - turn theme="string" into theme={{ resolved: theme }}
-        - lets you use theme inside render() for stuff like <Icon color={theme.color} />
-      - allow passing theme objects directly to "tweak" styles theme={{ background: 'red' }} (works with ui niceStyle stuff)
-        - this is like a local override of specific things
-        - also allows cool themeing, so <Title /> and then InlineTitle = <Title theme={{ borderBottomSize, etc etc }} />
-      - add color adjustment objects so no need for outside lib:
-        - { background: { color: 'red', lighten: 0.5, alpha: 0.1 } }
-          - could have references?:
-            - { background: { color: '.color', lighten: 0.5, alpha: 0.1 } }
+  - turn theme="string" into theme={{ resolved: theme }}
+    - lets you use theme inside render() for stuff like <Icon color={theme.color} />
+  - allow passing theme objects directly to "tweak" styles theme={{ background: 'red' }} (works with ui niceStyle stuff)
+    - this is like a local override of specific things
+    - also allows cool themeing, so <Title /> and then InlineTitle = <Title theme={{ borderBottomSize, etc etc }} />
+  - add color adjustment objects so no need for outside lib:
+    - { background: { color: 'red', lighten: 0.5, alpha: 0.1 } }
+      - could have references?:
+        - { background: { color: '.color', lighten: 0.5, alpha: 0.1 } }
 
 # emojis
 https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json

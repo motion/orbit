@@ -1,43 +1,4 @@
 {
-  "babel": {
-    "plugins": [
-      [
-        "babel-plugin-root-import",
-        {
-          "rootPathSuffix": "app"
-        }
-      ],
-      [
-        "gloss/transform",
-        {
-          "decoratorName": "view",
-          "jsxIf": true
-        }
-      ],
-      "babel-plugin-transform-decorators-legacy",
-      [
-        "babel-plugin-react-transform-motion",
-        {
-          "decoratorName": "view",
-          "transforms": [
-            {
-              "transform": "react-transform-hmr-motion",
-              "imports": [
-                "react"
-              ],
-              "locals": [
-                "module"
-              ]
-            }
-          ]
-        }
-      ]
-    ],
-    "presets": [
-      "babel-preset-react",
-      "babel-preset-stage-1-without-async"
-    ]
-  },
   "pathType": "filePath",
   "webServerPort": 3001,
   "saveNpmModules": true,

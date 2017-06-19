@@ -1,0 +1,39 @@
+{
+  "plugins": [
+    "babel-plugin-transform-decorators-legacy",
+    [
+      "gloss/transform",
+      {
+        "decoratorName": "view",
+        "jsxIf": true
+      }
+    ],
+    [
+      "babel-plugin-root-import",
+      {
+        "rootPathSuffix": "app"
+      }
+    ],
+    [
+      "babel-plugin-react-transform-motion",
+      {
+        "decoratorName": "view",
+        "transforms": [
+          {
+            "transform": "react-transform-hmr-motion",
+            "imports": [
+              "react"
+            ],
+            "locals": [
+              "module"
+            ]
+          }
+        ]
+      }
+    ]
+  ],
+  "presets": [
+    "babel-preset-react",
+    "babel-preset-stage-1-without-async"
+  ]
+}

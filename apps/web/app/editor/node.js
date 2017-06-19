@@ -4,7 +4,7 @@ import { object } from 'prop-types'
 import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '~/ui'
 
-export default Component =>
+export default Node =>
   @view.basics
   class Node extends React.Component {
     state = {
@@ -102,7 +102,7 @@ export default Component =>
         node.key === this.editorStore.selection.hovered.key
 
       const component = (
-        <Component
+        <Node
           {...this.props}
           setData={this.setData}
           onChange={editor.onChange}
@@ -112,6 +112,7 @@ export default Component =>
             this.setState({ context })
           }}
           id={this.id}
+          {...this.componentProps}
         />
       )
 
@@ -137,7 +138,7 @@ export default Component =>
           <context if={isHovered} contentEditable={false}>
             {context || this.contextMenu()}
           </context>
-          {React.cloneElement(component, this.componentProps)}
+          {component}
         </node>
       )
     }

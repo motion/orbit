@@ -19,3 +19,6 @@ export const watch = fn => {
 
 import type { ViewClass } from './view'
 export type ViewType = ViewClass
+
+import type { StoreClass } from './store'
+export type StoreType = StoreClass

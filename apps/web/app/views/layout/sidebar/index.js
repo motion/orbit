@@ -177,7 +177,7 @@ class PlayUI implements ViewType {
           </Pane>
         </Pane>
 
-        <space $$flex />
+        <space $$flex $$draggable />
 
         <Pane $mainPane collapsable title="Queue" titleProps={{ color }}>
           <List
@@ -221,6 +221,25 @@ class PlayUI implements ViewType {
   }
 }
 
+@view
+class Inner {
+  render() {
+    return (
+      <inner $$flex>
+        {' '}<Login if={!IN_TRAY} />
+        <PlayUI if={true} />
+        <TasksUI if={false} />
+        <SlotFill.Slot name="sidebar">
+          {items =>
+            <activeSidebar>
+              {items}
+            </activeSidebar>}
+        </SlotFill.Slot>
+      </inner>
+    )
+  }
+}
+
 @view.attach('layoutStore')
 @view({
   store: SidebarStore,
@@ -237,26 +256,18 @@ export default class Sidebar {
   render({ layoutStore, store }: Props) {
     const active = IN_TRAY ? true : layoutStore.sidebar.active
     const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
-    console.log('render sidebar')
+
     return (
-      <Theme name="dark">
-        <Shortcuts name="all" handler={store.handleShortcut}>
-          <Drawer open={active} from="right" size={width} zIndex={9}>
+      <Theme key={0} name="dark">
+        <Shortcuts key={1} name="all" handler={store.handleShortcut}>
+          <Drawer key={2} open={active} from="right" size={width} zIndex={9}>
             <dragger
               if={!IN_TRAY}
               style={{ WebkitAppRegion: 'no-drag' }}
               ref={this.ref('dragger').set}
             />
             <sidebar>
-              <Login if={!IN_TRAY} />
-              <PlayUI if={true} />
-              <TasksUI />
-              <SlotFill.Slot key={4} name="sidebar">
-                {items =>
-                  <activeSidebar>
-                    {items}
-                  </activeSidebar>}
-              </SlotFill.Slot>
+              <Inner key={0} />
             </sidebar>
           </Drawer>
         </Shortcuts>

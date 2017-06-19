@@ -2,10 +2,12 @@
 import { Raw } from 'slate'
 import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
-import { computed } from '@jot/black'
+import { computed, StoreType } from '@jot/black'
 import { getSpec } from './helpers'
 
-export default class EditorStore {
+type Plugin = Class<Object>
+
+export default class EditorStore implements StoreType {
   props: {
     onEditor?: Function,
     inline?: boolean,
@@ -19,7 +21,7 @@ export default class EditorStore {
   state = null
   slate = null
   rules = null
-  plugins = []
+  plugins: Array<Plugin> = []
   focused = false
   find = this.props.find
   onlyNode = this.props.onlyNode
@@ -45,7 +47,7 @@ export default class EditorStore {
   }
 
   // gather and instantiate
-  setup(plugins) {
+  setup(plugins: Array<Plugin>) {
     this.plugins = []
     for (const Plugin of plugins) {
       try {
@@ -60,11 +62,13 @@ export default class EditorStore {
   }
 
   // return slate-like schema
-  @computed get spec() {
+  @computed
+  get spec() {
     return getSpec(this.plugins, this.rules)
   }
 
-  @computed get allPlugins() {
+  @computed
+  get allPlugins() {
     return Object.keys(this.plugins).reduce(
       (acc, key) => ({
         ...acc,

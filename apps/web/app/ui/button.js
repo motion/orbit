@@ -10,7 +10,8 @@ import type { Color } from 'gloss'
 const idFn = _ => _
 
 export type Props = {
-  inSegment?: object,
+  borderRadius: number,
+  inSegment?: boolean,
   inForm?: boolean,
   clickable?: boolean,
   active?: boolean,
@@ -20,9 +21,10 @@ export type Props = {
   spaced?: boolean,
   circular?: boolean,
   iconAfter?: boolean,
+  iconColor?: Color,
   onClick?: Function,
   tooltip?: string,
-  icon?: string,
+  icon?: React$Element<any> | string,
   background?: Color,
   color?: Color,
   className?: string,
@@ -87,6 +89,7 @@ export default class Button {
   }: Props) {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
+    const stringIcon = typeof icon === 'string'
 
     return (
       <button
@@ -105,8 +108,9 @@ export default class Button {
         <blurryParent>
           <blurryChild />
         </blurryParent>
+        {icon && !stringIcon && React.cloneElement(icon, { $icon: true })}
         <Icon
-          if={icon}
+          if={icon && stringIcon}
           $icon
           $iconAfter={hasIconAfter}
           name={icon}

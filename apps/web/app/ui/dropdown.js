@@ -2,12 +2,15 @@
 import React from 'react'
 import { view } from '@jot/black'
 import List from './list'
+import Button from './button'
 import Popover from './popover'
 import Arrow from './arrow'
+import type { Color } from 'gloss'
 
 export type Props = {
   children: React$Element<any> | string,
   onChange?: Function,
+  color?: Color,
   width?: number,
   items?: Array<string>,
   popoverProps?: Object,
@@ -21,7 +24,15 @@ export default class Dropdown {
     width: 200,
   }
 
-  render({ children, onChange, width, items, popoverProps, ...props }: Props) {
+  render({
+    color,
+    children,
+    onChange,
+    width,
+    items,
+    popoverProps,
+    ...props
+  }: Props) {
     return (
       <dropdown>
         <Popover
@@ -29,10 +40,12 @@ export default class Dropdown {
           openOnHover
           escapable
           target={
-            <target>
+            <Button
+              icon={<Arrow $arrow theme="light" size={6} color={color} />}
+              $$color={color}
+            >
               {children}
-              <Arrow $arrow theme="light" size={6} />
-            </target>
+            </Button>
           }
           {...popoverProps}
         >
@@ -58,7 +71,7 @@ export default class Dropdown {
     },
     arrow: {
       marginLeft: 5,
-      opacity: 0.5,
+      opacity: 0.9,
       '&:hover': {
         opacity: 1,
       },

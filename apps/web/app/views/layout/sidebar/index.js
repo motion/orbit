@@ -127,13 +127,18 @@ class PlayUI implements ViewType {
           $mainPane
           $teamPane
           collapsable
+          titleProps={{ color }}
           title={
-            <Dropdown
-              items={['Motion', 'Something', 'Else']}
-              onChange={store.ref('team').set}
-            >
-              <span>{store.team}</span>
-            </Dropdown>
+            <tat $$row>
+              Team: &nbsp;
+              <Dropdown
+                items={['Motion', 'Something', 'Else']}
+                color={[255, 255, 255, 0.8]}
+                onChange={store.ref('team').set}
+              >
+                <span>{store.team}</span>
+              </Dropdown>
+            </tat>
           }
         >
           <Pane $subPane sub collapsable title="Steel">

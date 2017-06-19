@@ -10,7 +10,7 @@ const LIGHT = {
 const DARK = {
   background: '#292929',
   color: '#f2f2f2',
-  borderColor: '#444',
+  borderColor: [255, 255, 255, 0.06],
 }
 
 export default {

@@ -123,9 +123,7 @@ class TeamStatus {
     team: {
       flexFlow: 'row',
       flexWrap: 'wrap',
-      borderBottom: [1, [0, 0, 0, 0.25]],
-      margin: [0, -4, 10],
-      padding: [2, 0],
+      margin: [0, -4],
     },
     player: {
       width: '50%',
@@ -162,11 +160,11 @@ class TeamStatus {
 class Projects {
   items = [
     {
-      title: ['Me', 'Drafts'],
+      title: ['me', 'drafts'],
       items: ['Lorem ipsum dolor sit amet', 'Segunda ipsum dolor sit amet'],
     },
     {
-      title: ['Pundle', '2.0'],
+      title: ['pundle', '2.0'],
       items: [
         '#brainstorm: features and user feedback strategy',
         'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
@@ -174,18 +172,18 @@ class Projects {
       ],
     },
     {
-      title: ['UI'],
+      title: ['ui'],
       items: [
         'release: deploy to iwritey.com get working',
         'investigate multi-list drag/drop (dnd)',
       ],
     },
     {
-      title: ['Ideas', 'Incoming'],
+      title: ['ideas', 'incoming'],
       items: ['Lorem ipsum dolor sit amet', 'Segunda ipsum dolor sit amet'],
     },
     {
-      title: ['Nick', 'Emails'],
+      title: ['nick', 'emails'],
       items: ['Whats gucci my bucci'],
     },
   ]
@@ -205,7 +203,7 @@ class Projects {
                   size={14}
                   percent={Math.random() * 100}
                 />
-                <pname $$row $$centered>
+                <path $$row $$centered>
                   {flatMap(
                     item.title.map((tit, index) =>
                       <fade key={index}>{tit}</fade>
@@ -215,7 +213,7 @@ class Projects {
                         ? [value, <sep key={Math.random()}>/</sep>]
                         : value
                   )}
-                </pname>
+                </path>
               </start>
               <end>
                 <Icon name="favour3" color="#666" />
@@ -236,20 +234,24 @@ class Projects {
 
   static style = {
     content: {
-      margin: [10, 0],
+      padding: [10, 8],
     },
     section: {
-      margin: [0, 0, 10],
+      margin: [6, 0],
+      padding: [0, 5],
     },
     title: {
-      padding: 0,
+      padding: [0, 5],
+      marginLeft: -5,
     },
-    pname: {
-      marginLeft: 5,
-      fontSize: 16,
+    path: {
+      marginLeft: 4,
+      fontSize: 17,
+      lineHeight: 1,
     },
     fade: {
-      opacity: 0.8,
+      opacity: 1,
+      pointer: 'pointer',
       '&:hover': {
         opacity: 1,
       },
@@ -266,8 +268,9 @@ class Projects {
       margin: [0, 8, 0, 0],
     },
     sep: {
-      margin: [0, 4],
-      fontWeight: 600,
+      margin: [0, 2],
+      fontWeight: 100,
+      color: [255, 255, 255, 0.2],
     },
   }
 }
@@ -280,7 +283,7 @@ class Projects {
 class PlayUI implements ViewType {
   render({ store }: { store: SidebarStore }) {
     console.log('render playui')
-    const color = '#66a734'
+    const color = '#fff'
     const borderColor = [255, 255, 255, 0.3]
     const paneProps = {
       $mainPane: true,
@@ -295,46 +298,7 @@ class PlayUI implements ViewType {
           fontSize={33}
           height={56}
           flex="none"
-        />
-
-        <TeamStatus
-          if={false}
-          items={[
-            {
-              name: 'Steel',
-              status: '#brainstorm: features and user feedback strategy',
-              time: '10m',
-            },
-            {
-              name: 'Nate',
-              status:
-                'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
-              time: '10m',
-            },
-            {
-              name: 'Nick',
-              status: 'editor: formatting: #uxlove + #dev',
-              time: '10m',
-            },
-            {
-              name: 'Jacob',
-              status: '#brainstorm: features and user feedback strategy',
-              time: '10m',
-            },
-          ]}
-        />
-
-        <TeamStatus
-          if={false}
-          items={[
-            {
-              name: 'Pundle 2',
-              status: <Progress.Bar percent="50" />,
-            },
-            { name: 'Jot App', status: <Progress.Bar percent="30" /> },
-            { name: 'TSNE Server', status: <Progress.Bar percent="10" /> },
-            { name: 'Housekeeping', status: <Progress.Bar percent="90" /> },
-          ]}
+          placeholder="/"
         />
 
         <Segment if={false} controlled itemProps={{ $$flex: 1 }}>
@@ -417,8 +381,43 @@ class PlayUI implements ViewType {
           </Pane>
         </content>
 
-        <Pane if={false} {...paneProps} title="Queue">
+        <Pane
+          padding={[0, 10]}
+          shadow
+          transparent
+          background={[0, 0, 0, 0.1]}
+          {...paneProps}
+          title={<title $$row>Team: <Dropdown>Motion</Dropdown></title>}
+        >
+
+          <TeamStatus
+            items={[
+              {
+                name: 'Steel',
+                status: '#brainstorm: features and user feedback strategy',
+                time: '10m',
+              },
+              {
+                name: 'Nate',
+                status:
+                  'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
+                time: '10m',
+              },
+              {
+                name: 'Nick',
+                status: 'editor: formatting: #uxlove + #dev',
+                time: '10m',
+              },
+              {
+                name: 'Jacob',
+                status: '#brainstorm: features and user feedback strategy',
+                time: '10m',
+              },
+            ]}
+          />
+
           <List
+            if={false}
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({
               primary: item,
@@ -435,7 +434,6 @@ class PlayUI implements ViewType {
   }
   static style = {
     ui: {
-      padding: [0, 10],
       flex: 1,
     },
     icon: {

@@ -98,9 +98,7 @@ export default class Login {
         </Form>
 
         <step $loggedIn if={User.loggedIn}>
-          <start $team $$row $$centered>
-            Team: <Dropdown>Motion</Dropdown>
-          </start>
+          <start $team $$row $$centered />
 
           <end $$row $$centered>
             <text>

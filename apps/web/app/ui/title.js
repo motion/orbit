@@ -10,6 +10,7 @@ export type TitleProps = {
   children: React$Children,
   collapsable?: boolean,
   collapsed?: boolean,
+  transparent?: boolean,
   before?: React$Children,
   after?: React$Children,
   sub?: boolean,
@@ -84,9 +85,11 @@ export default class Title {
               size: 8,
               color: clr(color).alpha(0.5).toString() || [255, 255, 255, 0.3],
             }}
+            circular
             chromeless
-            padding={6}
-            margin={[-2, -2, -2, -5]}
+            padding={8}
+            size={30}
+            margin={[-2, -2, -2, -7]}
             height="auto"
           />
         </collapse>
@@ -115,8 +118,7 @@ export default class Title {
       fontWeight: 700,
     },
     collapse: {
-      marginRight: 5,
-      marginLeft: -5,
+      marginRight: 4,
     },
     stat: {
       fontSize: 11,
@@ -127,23 +129,26 @@ export default class Title {
 
   static theme = {
     theme: (
-      { borderColor, color, background, hoverable, sub },
+      { transparent, borderColor, color, background, hoverable, sub },
       context,
       theme
-    ) => ({
-      ptitle: {
-        background: background || theme.base.background,
-        borderBottom: !sub && [
-          1,
-          borderColor || color || theme.base.borderColor,
-        ],
-        color: color || theme.base.color,
+    ) => {
+      const transparentColor = transparent ? 'transparent' : false
+      return {
+        ptitle: {
+          background: transparentColor || background || theme.base.background,
+          borderBottom: !sub && [
+            1,
+            transparentColor || borderColor || color || theme.base.borderColor,
+          ],
+          color: color || theme.base.color,
 
-        '&:hover': {
-          background: hoverable ? clr(background).lighten(0.025) : background,
+          '&:hover': {
+            background: hoverable ? clr(background).lighten(0.025) : background,
+          },
         },
-      },
-    }),
+      }
+    },
     tag: ({ tag, size }) => {
       const reduce = 1 / +tag.slice(1)
       const fontSize = +size || 20 + reduce * 20

@@ -268,7 +268,6 @@ export default class Button {
           // inline
           ...(inline && {
             border: [1, 'solid', 'transparent'],
-            background: 'red',
             '&:hover': {
               border: [1, 'solid', theme.base.borderColor],
             },
@@ -321,8 +320,8 @@ export default class Button {
         borderLeftWidth: 1,
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        padding: 5,
-        margin: [-6, -3],
+        margin: [-2, -3],
+        maxHeight: '1.45rem',
         borderRadius: 1000,
       },
     },

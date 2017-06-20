@@ -16,6 +16,8 @@ export type Props = {
   minHeight?: number,
   height?: number,
   scrollable?: boolean,
+  transparent?: boolean,
+  shadow?: boolean,
 }
 
 @view.ui
@@ -66,6 +68,8 @@ export default class Pane {
     collapsed: _collapsed,
     padding,
     margin,
+    shadow,
+    transparent,
     ...props
   }: Props) {
     const { collapsed } = this.state
@@ -84,6 +88,7 @@ export default class Pane {
           collapsed={collapsed}
           onCollapse={this.handleCollapse}
           sub={sub}
+          transparent={transparent}
           {...titleProps}
         >
           {title}
@@ -119,10 +124,18 @@ export default class Pane {
   }
 
   static theme = {
-    theme: ({ padding, margin, height }, context, theme) => ({
+    theme: (
+      { background, shadow, padding, margin, height },
+      context,
+      theme
+    ) => ({
+      section: {
+        background,
+        boxShadow: shadow && '0 0 70px rgba(0,0,0,0.2)',
+      },
       content: {
-        padding: padding === true ? 10 : padding,
-        margin: margin === true ? 10 : margin,
+        padding: padding === true ? 8 : padding,
+        margin: margin === true ? 8 : margin,
       },
     }),
     maxHeight: ({ maxHeight }) => ({

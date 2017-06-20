@@ -1,5 +1,4 @@
 // @flow
-import 'regenerator-runtime/runtime'
 import 'babel-polyfill'
 import Gloss from '@jot/black/lib/gloss'
 import React from 'react'

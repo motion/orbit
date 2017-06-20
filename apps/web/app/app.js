@@ -3,6 +3,8 @@ import AppStore from '~/stores/appStore'
 import * as Models from '@jot/models'
 import { IS_PROD, DB_CONFIG } from '~/constants'
 
+console.log('got models', Models)
+
 const App = new AppStore({
   database: DB_CONFIG,
   models: Models,

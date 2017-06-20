@@ -1,7 +1,6 @@
 import React from 'react'
 import { view, observable } from '@jot/black'
 import gradients from './helpers/gradients'
-import TimeAgo from 'react-timeago'
 import { sample, memoize } from 'lodash'
 import Router from '~/router'
 import { Icon, Button } from '~/ui'

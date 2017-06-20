@@ -9,69 +9,43 @@ import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import { uniqBy } from 'lodash'
-import type { Model } from '@jot/models/helpers'
+import type { Model, Models } from '@jot/models'
 
-export default class App {
-  images: PouchDB
-  databaseConfig: Object
-  database: ?RxDB.Database = null
-  models: ?Model = null
+declare class AppStore {
+  images: PouchDB,
+  databaseConfig: Object,
+  database: ?RxDB.Database,
+  modelsList: Array<Models>,
+  models?: Models,
+}
+
+export default class App implements AppStore {
   @observable.ref errors = []
   @observable.ref mountedStores = {}
   @observable mountedVersion = 0
   @observable.ref stores = null
 
   constructor({ database, models }) {
-    if (!database || !models) {
-      throw new Error(
-        'No database or models given to App!',
-        typeof database,
-        typeof models
-      )
-    }
-
     this.databaseConfig = database
-    this.models = models
+    this.modelsList = models
 
     // listen for stores, attach here
     view.on('store.mount', this.mountStore)
     view.on('store.unmount', this.unmountStore)
   }
 
-  setupRxDB = async () => {
-    // hmr fix
-    if (!RxDB.PouchDB.replicate) {
-      RxDB.QueryChangeDetector.enable()
-      // RxDB.QueryChangeDetector.enableDebugging()
-      RxDB.plugin(pHTTP)
-      RxDB.plugin(pIDB)
-      RxDB.plugin(pREPL)
-      RxDB.plugin(pValidate)
-      RxDB.plugin(pSearch)
-      PouchDB.plugin(pHTTP)
-    }
-
-    // connect to pouchdb
-    console.time('create db')
-    this.database = await RxDB.create({
-      adapter: 'idb',
-      name: this.databaseConfig.name,
-      password: this.databaseConfig.password,
-      multiInstance: true,
-      withCredentials: false,
-    })
-    console.timeEnd('create db')
-  }
-
   start = async () => {
     console.log('Use App in your console to access models, stores, etc')
     console.time('start')
+    this.models = new Models()
     this.catchErrors()
-    await this.setupRxDB()
     this.trackMountedStores()
-    await this.attachModels(this.models)
     this.setupImages()
     console.timeEnd('start')
+  }
+
+  startModels = () => {
+    this.models = new Models(database, models)
   }
 
   setupImages = () => {
@@ -80,30 +54,6 @@ export default class App {
       skipSetup: true,
       withCredentials: false,
     })
-  }
-
-  attachModels = async (models: Object) => {
-    console.time('attachModels')
-    const connections = []
-
-    // attach Models to app and connect if need be
-    for (const [name, model] of Object.entries(models)) {
-      this[name] = model
-
-      if (typeof model.connect !== 'function') {
-        throw `No connect found for model ${model.name} connect = ${typeof model.connect}`
-      }
-
-      connections.push(
-        model.connect(this.database, this.databaseConfig, {
-          sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
-        })
-      )
-    }
-
-    const result = await Promise.all(connections)
-    console.timeEnd('attachModels')
-    return result
   }
 
   // dev helpers
@@ -159,7 +109,8 @@ export default class App {
 
   // actions
 
-  @action handleError = (...errors) => {
+  @action
+  handleError = (...errors) => {
     const unique = uniqBy(errors, err => err.name)
     const final = []
     for (const error of unique) {
@@ -180,7 +131,8 @@ export default class App {
     })
   }
 
-  @action clearErrors = () => {
+  @action
+  clearErrors = () => {
     this.errors = []
   }
 }

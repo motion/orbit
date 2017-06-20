@@ -1,7 +1,6 @@
-import { view, observable } from '@jot/black'
+import { view } from '@jot/black'
 import { replacer } from '~/editor/helpers'
 import React from 'react'
-import { Editor, Raw } from 'slate'
 import node from '~/editor/node'
 import { BLOCKS } from '~/editor/constants'
 

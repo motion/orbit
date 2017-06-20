@@ -1,10 +1,8 @@
 import React from 'react'
 import { view } from '@jot/black'
-import { object } from 'prop-types'
-import { SlotFill, Segment, Input, Link, Button, Icon } from '~/ui'
-import { SIDEBAR_WIDTH, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
+import { SlotFill, Segment, Button } from '~/ui'
+import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import Router from '~/router'
-import { Document } from '@jot/models'
 import Commander from '~/views/commander'
 
 @view

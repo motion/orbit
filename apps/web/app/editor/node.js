@@ -1,6 +1,5 @@
 import React from 'react'
-import { view, observable, computed } from '@jot/black'
-import { object } from 'prop-types'
+import { view, computed } from '@jot/black'
 import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '~/ui'
 
@@ -30,11 +29,11 @@ export default Node =>
       )
     }
 
-    onClick = (event: MouseEvent) => {
+    onClick = () => {
       this.editorStore.selection.setClicked(this.props.node, this.node)
     }
 
-    onMouseEnter = (event: MouseEvent) => {
+    onMouseEnter = () => {
       this.editorStore.selection.setHovered(this.props.node, this.node)
     }
 

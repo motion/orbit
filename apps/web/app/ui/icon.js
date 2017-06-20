@@ -3,7 +3,6 @@ import { view } from '@jot/black'
 import Popover from './popover'
 import names from './iconNames'
 import fuzzy from 'fuzzy'
-import { IS_PROD } from '~/constants'
 
 const cache = {}
 const findMatch = (name: string) => {

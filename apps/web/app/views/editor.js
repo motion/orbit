@@ -1,9 +1,7 @@
-import { view, observable } from '@jot/black'
+import { view } from '@jot/black'
 import { viewCache } from '~/helpers'
 import React from 'react'
 import Editor from '~/editor'
-import * as Plugins from '~/editor/plugins'
-import { flatten } from 'lodash'
 
 @view.ui
 export default class JotEditor {

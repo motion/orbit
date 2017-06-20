@@ -2,15 +2,7 @@ import { view } from '@jot/black'
 import { BLOCKS } from '~/editor/constants'
 import { Button } from '~/ui'
 
-export const createButton = ({
-  icon,
-  type,
-  tooltip,
-  opts,
-  wrap,
-  unwrap,
-  isActive,
-}) =>
+export const createButton = ({ icon, type, tooltip, wrap, unwrap, isActive }) =>
   view(({ editorStore }) => {
     const active = Boolean(
       isActive

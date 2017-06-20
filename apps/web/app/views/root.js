@@ -2,8 +2,8 @@ import React from 'react'
 import { view } from '@jot/black'
 import { Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
-import { Theme, SlotFill, Button } from '~/ui'
-import { SIDEBAR_WIDTH, IN_TRAY, HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
+import { Theme, SlotFill } from '~/ui'
+import { IN_TRAY } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from '~/views/layout/sidebar'
@@ -19,7 +19,8 @@ import Draft from './document/draft'
 // simply @view.attach('layoutStore') for example in any sub-view
 
 // optimized re-render for sidebar resize
-@view class LayoutWrap {
+@view
+class LayoutWrap {
   render({ layoutStore, children }) {
     return (
       <wrap $$right={layoutStore.sidebar.trueWidth}>

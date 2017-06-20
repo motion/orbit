@@ -1,8 +1,6 @@
 // @flow
 import React from 'react'
 import { Editor } from 'slate'
-import { object } from 'prop-types'
-import { Document } from '@jot/models'
 import { view } from '@jot/black'
 import EditorStore from './stores/editorStore'
 import SelectBar from './views/selectBar'

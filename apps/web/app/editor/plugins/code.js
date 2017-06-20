@@ -1,4 +1,3 @@
-import { Button } from '~/ui'
 import { BLOCKS } from '~/editor/constants'
 import { createButton } from './helpers'
 

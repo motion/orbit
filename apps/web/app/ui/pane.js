@@ -1,9 +1,6 @@
 import React from 'react'
 import { view } from '@jot/black'
-import Button from './button'
-import Grain from './effects/grain'
 import Title from './title'
-import type { Color } from 'gloss'
 
 export type Props = {
   title?: string,

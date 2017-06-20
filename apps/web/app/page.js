@@ -1,12 +1,11 @@
 // @flow
 import React from 'react'
-import { view, observable } from '@jot/black'
-import { pick } from 'lodash'
+import { view } from '@jot/black'
 import { SlotFill } from '~/ui'
 
 @view
 export default class Page {
-  render({ children, sidebar, actions, loading, className }) {
+  render({ children, sidebar, actions, className }) {
     return (
       <page className={className}>
         <SlotFill.Fill if={actions} name="actions">{actions}</SlotFill.Fill>

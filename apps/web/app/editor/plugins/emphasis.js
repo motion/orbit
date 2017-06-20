@@ -1,6 +1,4 @@
 import React from 'react'
-import { view } from '@jot/black'
-import { Button } from '~/ui'
 import { MARKS } from '~/editor/constants'
 import { createButton } from './helpers'
 

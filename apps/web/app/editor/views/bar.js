@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@jot/black'
-import { Theme, PassThrough, Segment } from '~/ui'
+import { PassThrough, Segment } from '~/ui'
 
 @view
 export default class ContextBar {

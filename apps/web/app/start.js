@@ -31,7 +31,7 @@ export async function start() {
 }
 
 if (module && module.hot) {
-  module.hot.accept('./views/root', render)
+  module.hot.accept('./views/layout', render)
   module.hot.accept('./router', render)
 }
 

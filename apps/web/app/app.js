@@ -4,9 +4,11 @@ import * as Models from '@jot/models'
 import { IS_PROD, DB_CONFIG } from '~/constants'
 
 const App = new AppStore({
-  database: DB_CONFIG,
+  config: DB_CONFIG,
   models: Models,
 })
+
+console.log('got models, app', Models, App)
 
 export default App
 
@@ -14,7 +16,7 @@ export default App
 if (!IS_PROD) {
   module.hot.accept('@jot/models', async () => {
     console.log('got hmr for App, not restarting fully to avoid craziness')
-    await App.attachModels(require('@jot/models'))
+    // await App.attachModels(require('@jot/models'))
     require('./start').render()
   })
 }

@@ -43,6 +43,7 @@ export default class SidebarStore {
       return node
     })
     // doc.content = Object.assign({}, doc.content)
+    console.log('nick, why is this deep merging??')
     doc.content = merge(doc.content, { document: { nodes: newNodes } })
     doc.save(false)
   }

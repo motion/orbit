@@ -10,10 +10,9 @@ if (!IS_PROD) {
   require('./helpers/installDevTools')
 }
 
-const ROOT = document.querySelector('#app')
-
 export function render() {
   console.time('#render')
+  const ROOT = document.querySelector('#app')
   const Layout = require('./views/layout').default
 
   ReactDOM.render(

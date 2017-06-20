@@ -8,7 +8,9 @@ export type Props = {
   sync?: Function,
   inForm?: boolean,
   noBorder?: boolean,
+  transparent?: boolean,
   borderRadius?: number,
+  flex?: number | string,
 }
 
 @inject(context => context.ui)
@@ -26,6 +28,8 @@ export default class Input {
     inForm,
     noBorder,
     borderRadius,
+    flex,
+    transparent,
     ...props
   }: Props) {
     if (sync) {

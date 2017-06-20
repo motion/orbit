@@ -1,109 +1,49 @@
 // @flow
-import { view } from '@jot/black'
-import { observable, computed, action, autorunAsync } from 'mobx'
-import * as RxDB from 'rxdb'
-import PouchDB from 'pouchdb-core'
-import pIDB from 'pouchdb-adapter-idb'
-import pREPL from 'pouchdb-replication'
-import pHTTP from 'pouchdb-adapter-http'
-import pValidate from 'pouchdb-validation'
-import pSearch from 'pouchdb-quick-search'
+import { view, store } from '@jot/black'
+import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
-import type { Model } from '@jot/models/helpers'
+import Models from '@jot/models'
+import type { Mode } from '@jot/models'
 
-export default class App {
-  images: PouchDB
-  databaseConfig: Object
-  database: ?RxDB.Database = null
-  models: ?Model = null
-  @observable.ref errors = []
-  @observable.ref mountedStores = {}
-  @observable mountedVersion = 0
-  @observable.ref stores = null
+declare class AppStore {
+  images: PouchDB,
+  config: Object,
+  modelsList: Array<Models>,
+  models?: Models,
+}
 
-  constructor({ database, models }) {
-    if (!database || !models) {
-      throw new Error(
-        'No database or models given to App!',
-        typeof database,
-        typeof models
-      )
-    }
+@store
+export default class App implements AppStore {
+  errors = []
+  mountedStores = {}
+  mountedVersion = 0
+  stores = null
 
-    this.databaseConfig = database
-    this.models = models
-
+  constructor({ config, models }) {
+    this.config = config
+    this.modelsObjects = models
     // listen for stores, attach here
     view.on('store.mount', this.mountStore)
     view.on('store.unmount', this.unmountStore)
   }
 
-  setupRxDB = async () => {
-    // hmr fix
-    if (!RxDB.PouchDB.replicate) {
-      RxDB.QueryChangeDetector.enable()
-      // RxDB.QueryChangeDetector.enableDebugging()
-      RxDB.plugin(pHTTP)
-      RxDB.plugin(pIDB)
-      RxDB.plugin(pREPL)
-      RxDB.plugin(pValidate)
-      RxDB.plugin(pSearch)
-      PouchDB.plugin(pHTTP)
-    }
-
-    // connect to pouchdb
-    console.time('create db')
-    this.database = await RxDB.create({
-      adapter: 'idb',
-      name: this.databaseConfig.name,
-      password: this.databaseConfig.password,
-      multiInstance: true,
-      withCredentials: false,
-    })
-    console.timeEnd('create db')
-  }
-
   start = async () => {
     console.log('Use App in your console to access models, stores, etc')
     console.time('start')
+    this.models = new Models(this.config, this.modelsObjects)
+    this.models.start()
     this.catchErrors()
-    await this.setupRxDB()
     this.trackMountedStores()
-    await this.attachModels(this.models)
     this.setupImages()
     console.timeEnd('start')
   }
 
   setupImages = () => {
     // images
-    this.images = new PouchDB(`${this.databaseConfig.couchUrl}/images`, {
+    this.images = new PouchDB(`${this.config.couchUrl}/images`, {
       skipSetup: true,
       withCredentials: false,
     })
-  }
-
-  attachModels = async (models: Object) => {
-    console.time('attachModels')
-    const connections = []
-
-    // attach Models to app and connect if need be
-    for (const [name, model] of Object.entries(models)) {
-      this[name] = model
-
-      if (typeof model.connect !== 'function') {
-        throw `No connect found for model ${model.name} connect = ${typeof model.connect}`
-      }
-
-      connections.push(
-        model.connect(this.database, this.databaseConfig, {
-          sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
-        })
-      )
-    }
-
-    const result = await Promise.all(connections)
-    console.timeEnd('attachModels')
-    return result
   }
 
   // dev helpers
@@ -157,9 +97,7 @@ export default class App {
     return this.editorState.document.nodes.findByType('docList')
   }
 
-  // actions
-
-  @action handleError = (...errors) => {
+  handleError = (...errors) => {
     const unique = uniqBy(errors, err => err.name)
     const final = []
     for (const error of unique) {
@@ -180,7 +118,7 @@ export default class App {
     })
   }
 
-  @action clearErrors = () => {
+  clearErrors = () => {
     this.errors = []
   }
 }

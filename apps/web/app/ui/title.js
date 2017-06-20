@@ -58,6 +58,7 @@ export default class Title {
     color,
     tag: _tag,
     onCollapse,
+    transparent,
     ...props
   }: TitleProps) {
     let tag = _tag

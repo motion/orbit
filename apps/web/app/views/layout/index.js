@@ -88,7 +88,7 @@ export default class Root {
     return (
       <app>
         <LayoutWrap layoutStore={layoutStore}>
-          <Commander.Results if={false} />
+          <Commander.Results />
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}

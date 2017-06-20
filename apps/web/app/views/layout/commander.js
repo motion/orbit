@@ -6,8 +6,7 @@ import DocView from '~/views/document'
 
 const Input = props =>
   <input
-    style={{
-      gloss: true,
+    $$style={{
       border: 'none',
       cursor: 'text',
       margin: ['auto', 0],
@@ -26,8 +25,7 @@ const Input = props =>
 
 const SearchIcon = () =>
   <slash
-    style={{
-      gloss: true,
+    $$style={{
       fontSize: 22,
       fontWeight: 900,
     }}
@@ -36,6 +34,7 @@ const SearchIcon = () =>
   </slash>
 
 @view.attach('commanderStore')
+@view
 class CommanderResults {
   render({ commanderStore: store }) {
     const docs = store.docs || []
@@ -162,6 +161,7 @@ class CommanderResults {
 }
 
 @view.attach('commanderStore')
+@view
 class CommanderInput {
   render({ commanderStore }) {
     return (

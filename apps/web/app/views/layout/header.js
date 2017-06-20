@@ -7,6 +7,7 @@ import Commander from './commander'
 @view
 export default class Header {
   render({ layoutStore }) {
+    console.log(Commander.Input)
     return (
       <header
         $$draggable
@@ -15,7 +16,7 @@ export default class Header {
         onMouseLeave={() => (layoutStore.headerHovered = false)}
       >
         <nav>
-          <Commander.Input if={false} />
+          <Commander.Input />
         </nav>
         <rest $$row>
           <SlotFill.Slot name="documentActions">

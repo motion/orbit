@@ -1,5 +1,6 @@
 // @flow
 import { view } from '@jot/black'
+import type { Color } from 'gloss'
 
 const idFn = _ => _
 const opposite = direction =>
@@ -29,6 +30,7 @@ type Props = {
   overlayBlur?: number,
   transition: string,
   transparent?: boolean,
+  background?: Color,
 }
 
 @view.ui
@@ -63,6 +65,7 @@ export default class Drawer {
     className,
     overlayBlur,
     theme,
+    background,
     ...props
   }: Props) {
     const unit = percent ? '%' : 'px'

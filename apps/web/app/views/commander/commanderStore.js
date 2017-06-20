@@ -1,10 +1,12 @@
 import { Document } from '@jot/models'
-import { includes, debounce } from 'lodash'
+import { debounce } from 'lodash'
+import Router from '~/router'
 
 const idFn = _ => _
+const OPEN = 'commander_is_open'
 
 export default class CommanderStore {
-  isOpen = false
+  isOpen = localStorage.getItem(OPEN) || false
   text = ''
   textboxText = ''
   highlightIndex = 0
@@ -22,7 +24,7 @@ export default class CommanderStore {
     if (this.highlightIndex >= this.docs.length) this.highlightIndex = 0
   }
 
-  handleShortcuts = (action, event) => {
+  handleShortcuts = action => {
     const actions = {
       up: () => this.moveHighlight(-1),
       down: () => this.moveHighlight(1),
@@ -40,11 +42,17 @@ export default class CommanderStore {
   onOpen = () => {
     this.isOpen = true
     this.setText('')
+    this.persist()
   }
 
   onClose = () => {
     this.setText('')
     this.isOpen = false
+    this.persist()
+  }
+
+  persist = () => {
+    localStorage.setItem(OPEN, this.isOpen)
   }
 
   commitText = debounce(

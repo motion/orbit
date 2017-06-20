@@ -12,7 +12,7 @@ import Errors from '~/views/layout/errors'
 import KeyStore from '~/stores/keyStore'
 import LayoutStore from '~/stores/layoutStore'
 import RedBox from 'redbox-react'
-import Draft from './document/draft'
+import Draft from '~/views/document/draft'
 
 // optimized re-render for sidebar resize
 @view

@@ -166,6 +166,7 @@ export default class Drawer {
     ) => {
       return {
         panel: {
+          ...theme.base,
           background: transparent
             ? 'transparent'
             : background || theme.base.background,

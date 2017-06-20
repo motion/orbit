@@ -12,7 +12,7 @@ import CommanderStore from './store'
 })
 export default class Commander {
   render({ store }) {
-    const searchIcon = <Icon name="ui-zoom" size={12} color={[0, 0, 0, 0.15]} />
+    const searchIcon = <slash>/</slash>
     const docs = store.docs || []
 
     return (
@@ -52,7 +52,7 @@ export default class Commander {
                     )}
                   </matches>
                   <noMatches if={docs.length === 0}>
-                    No Matches
+                    No docs
                   </noMatches>
                   <preview key={store.activeDoc._id} if={store.activeDoc}>
                     <DocView
@@ -80,6 +80,10 @@ export default class Commander {
       zIndex: 10000,
       background: 'rgba(255, 255, 255, .6)',
       backdropFilter: 'blur(5px)',
+    },
+    slash: {
+      fontSize: 22,
+      fontWeight: 900,
     },
     noMatches: {
       flex: 1,
@@ -118,8 +122,6 @@ export default class Commander {
     preview: {
       position: 'relative',
       flex: 4,
-      background: `rgba(255, 255, 255, .8)`,
-      border: '1px solid #eee',
       maxWidth: 700,
     },
     input: {
@@ -139,8 +141,6 @@ export default class Commander {
       },
     },
     highlight: {
-      background: `rgba(240, 240, 240, 0.9)`,
-      border: '1px solid #ccc',
       borderRadius: 5,
     },
     match: {

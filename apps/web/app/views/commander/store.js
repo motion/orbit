@@ -1,10 +1,11 @@
 import { Document } from '@jot/models'
-import { includes, debounce } from 'lodash'
+import { debounce } from 'lodash'
+import Router from '~/router'
 
 const idFn = _ => _
 
 export default class CommanderStore {
-  isOpen = false
+  isOpen = true
   text = ''
   textboxText = ''
   highlightIndex = 0
@@ -22,7 +23,7 @@ export default class CommanderStore {
     if (this.highlightIndex >= this.docs.length) this.highlightIndex = 0
   }
 
-  handleShortcuts = (action, event) => {
+  handleShortcuts = action => {
     const actions = {
       up: () => this.moveHighlight(-1),
       down: () => this.moveHighlight(1),

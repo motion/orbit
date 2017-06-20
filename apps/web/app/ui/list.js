@@ -182,7 +182,8 @@ class List {
     }
 
     if (!items && !children) {
-      throw new Error('no items or children passed to List')
+      console.log('no items or children passed to List')
+      return null
     }
 
     const total = items ? items.length : Children.count(children)

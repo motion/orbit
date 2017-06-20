@@ -1,34 +1,27 @@
 // @flow
-import { view } from '@jot/black'
-import { observable, computed, action, autorunAsync } from 'mobx'
-import * as RxDB from 'rxdb'
-import PouchDB from 'pouchdb-core'
-import pIDB from 'pouchdb-adapter-idb'
-import pREPL from 'pouchdb-replication'
-import pHTTP from 'pouchdb-adapter-http'
-import pValidate from 'pouchdb-validation'
-import pSearch from 'pouchdb-quick-search'
+import { view, store } from '@jot/black'
+import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
-import type { Model, Models } from '@jot/models'
+import Models from '@jot/models'
+import type { Mode } from '@jot/models'
 
 declare class AppStore {
   images: PouchDB,
-  databaseConfig: Object,
-  database: ?RxDB.Database,
+  config: Object,
   modelsList: Array<Models>,
   models?: Models,
 }
 
+@store
 export default class App implements AppStore {
-  @observable.ref errors = []
-  @observable.ref mountedStores = {}
-  @observable mountedVersion = 0
-  @observable.ref stores = null
+  errors = []
+  mountedStores = {}
+  mountedVersion = 0
+  stores = null
 
-  constructor({ database, models }) {
-    this.databaseConfig = database
-    this.modelsList = models
-
+  constructor({ config, models }) {
+    this.config = config
+    this.modelsObjects = models
     // listen for stores, attach here
     view.on('store.mount', this.mountStore)
     view.on('store.unmount', this.unmountStore)
@@ -37,20 +30,17 @@ export default class App implements AppStore {
   start = async () => {
     console.log('Use App in your console to access models, stores, etc')
     console.time('start')
-    this.models = new Models()
+    this.models = new Models(this.config, this.modelsObjects)
+    this.models.start()
     this.catchErrors()
     this.trackMountedStores()
     this.setupImages()
     console.timeEnd('start')
   }
 
-  startModels = () => {
-    this.models = new Models(database, models)
-  }
-
   setupImages = () => {
     // images
-    this.images = new PouchDB(`${this.databaseConfig.couchUrl}/images`, {
+    this.images = new PouchDB(`${this.config.couchUrl}/images`, {
       skipSetup: true,
       withCredentials: false,
     })
@@ -107,9 +97,6 @@ export default class App implements AppStore {
     return this.editorState.document.nodes.findByType('docList')
   }
 
-  // actions
-
-  @action
   handleError = (...errors) => {
     const unique = uniqBy(errors, err => err.name)
     const final = []
@@ -131,7 +118,6 @@ export default class App implements AppStore {
     })
   }
 
-  @action
   clearErrors = () => {
     this.errors = []
   }

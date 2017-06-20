@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import Title from './title'
+import type { Color } from 'gloss'
 
 export type Props = {
   title?: string,
@@ -18,6 +19,7 @@ export type Props = {
   scrollable?: boolean,
   transparent?: boolean,
   shadow?: boolean,
+  background?: Color,
 }
 
 @view.ui
@@ -69,6 +71,7 @@ export default class Pane {
     padding,
     margin,
     shadow,
+    background,
     transparent,
     ...props
   }: Props) {

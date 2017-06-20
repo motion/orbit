@@ -17,14 +17,16 @@ export User from './user'
 
 export type { Model } from '~/helpers'
 
-declare class Models {
+declare class ModelsStore {
   databaseConfig: Object,
   database: RxDB.Database,
   models: Object<string, Model>,
 }
 
-export default class Models implements Models {
+export default class Models implements ModelsStore {
   constructor(database, models) {
+    console.log('#Models.new', database, models)
+
     if (!database || !models) {
       throw new Error(
         'No database or models given to App!',
@@ -58,7 +60,6 @@ export default class Models implements Models {
       multiInstance: true,
       withCredentials: false,
     })
-    this.catchErrors()
     await this.attachModels()
     console.timeEnd('#Models.start')
   }
@@ -68,6 +69,11 @@ export default class Models implements Models {
 
     // attach Models to app and connect if need be
     for (const [name, model] of Object.entries(this.models)) {
+      if (name === 'default') {
+        // ignore base
+        continue
+      }
+      console.log('connecting', name, model)
       this[name] = model
 
       if (typeof model.connect !== 'function') {

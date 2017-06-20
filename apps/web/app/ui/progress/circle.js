@@ -16,8 +16,8 @@ export default class ProgressCircle {
   }
 
   static defaultProps = {
-    lineBackground: [0, 0, 0, 0.2],
-    lineColor: [0, 0, 0, 0.5],
+    lineBackground: [0, 0, 0, 1],
+    lineColor: 'green',
     lineWidth: 4,
     size: 25,
     lineType: 'butt',
@@ -70,11 +70,5 @@ export default class ProgressCircle {
         />
       </svg>
     )
-  }
-
-  static style = {
-    svg: {
-      margin: 'auto',
-    },
   }
 }

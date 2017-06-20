@@ -6,7 +6,7 @@ import { Button, List, Popover } from '~/ui'
 
 export default Node =>
   @view.basics
-  class Node extends React.Component {
+  class DecoratedNode extends React.Component {
     state = {
       context: null,
     }

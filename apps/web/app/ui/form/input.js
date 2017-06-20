@@ -38,7 +38,6 @@ export default class Input {
 
   static style = {
     input: {
-      flex: 1,
       fontSize: 13,
       lineHeight: '1rem',
       alignSelf: 'center',
@@ -52,6 +51,7 @@ export default class Input {
 
       if (!type || type === 'password' || type === 'text') {
         styles = {
+          flex: 1,
           height: 30,
           padding: [7, 8],
           width: 0,

@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, ViewType } from '@jot/black'
 import { Shortcuts } from '~/helpers'
-import { uniqBy, sortBy } from 'lodash'
+import { flatMap, uniqBy, sortBy } from 'lodash'
 import {
   Theme,
   Drawer,
@@ -157,6 +157,109 @@ class TeamStatus {
   }
 }
 
+@view
+class Projects {
+  items = [
+    {
+      title: ['Me', 'Drafts'],
+      items: ['Lorem ipsum dolor sit amet', 'Segunda ipsum dolor sit amet'],
+    },
+    {
+      title: ['Pundle', '2.0'],
+      items: [
+        '#brainstorm: features and user feedback strategy',
+        'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
+        'editor: formatting: #uxlove + #dev',
+      ],
+    },
+    {
+      title: ['UI'],
+      items: [
+        'release: deploy to iwritey.com get working',
+        'investigate multi-list drag/drop (dnd)',
+      ],
+    },
+    {
+      title: ['Ideas', 'Incoming'],
+      items: ['Lorem ipsum dolor sit amet', 'Segunda ipsum dolor sit amet'],
+    },
+  ]
+
+  render() {
+    return (
+      <content $$scrollable $$flex={6}>
+        {this.items.map((item, i) =>
+          <section key={i}>
+            <title $$row $$spaceBetween>
+              <start $$row $$centered>
+                <Progress.Circle size={16} percent={Math.random() * 100} />
+                <pname $$row $$centered>
+                  {flatMap(
+                    item.title.map((tit, index) =>
+                      <fade key={index}>{tit}</fade>
+                    ),
+                    (value, index, arr) =>
+                      arr.length !== index + 1
+                        ? [value, <sep key={Math.random()}>/</sep>]
+                        : value
+                  )}
+                </pname>
+              </start>
+              <end>
+                <Icon name="eye" color="#666" />
+              </end>
+            </title>
+            <tasks>
+              {item.items.map((task, index) =>
+                <task key={index} $$row>
+                  <Input $check type="checkbox" /> <span $$ellipse>{task}</span>
+                </task>
+              )}
+            </tasks>
+          </section>
+        )}
+      </content>
+    )
+  }
+
+  static style = {
+    content: {
+      margin: [10, 0],
+    },
+    section: {
+      margin: [0, 0, 10],
+    },
+    title: {
+      padding: 0,
+    },
+    pname: {
+      marginLeft: 5,
+      fontSize: 16,
+    },
+    fade: {
+      opacity: 0.8,
+      '&:hover': {
+        opacity: 1,
+      },
+    },
+    tasks: {
+      padding: [10, 5],
+    },
+    task: {
+      padding: [3, 0, 2],
+      pointerEvents: 'auto',
+      overflow: 'hidden',
+    },
+    check: {
+      margin: [0, 8, 0, 0],
+    },
+    sep: {
+      margin: [0, 4],
+      fontWeight: 600,
+    },
+  }
+}
+
 @view({
   store: class {
     team = 'Motion'
@@ -183,9 +286,8 @@ class PlayUI implements ViewType {
           ]}
         />
 
-        <hr />
-
         <TeamStatus
+          if={false}
           items={[
             {
               name: 'Pundle 2',
@@ -197,12 +299,14 @@ class PlayUI implements ViewType {
           ]}
         />
 
-        <Segment controlled itemProps={{ $$flex: 1 }}>
+        <Segment if={false} controlled itemProps={{ $$flex: 1 }}>
           <Button>tasks</Button>
           <Button>docs</Button>
         </Segment>
 
-        <content $$scrollable $$flex={6}>
+        <Projects />
+
+        <content if={false} $$scrollable $$flex={6}>
           <Pane {...paneProps} title="Me">
             <List
               items={['lorem ipsum', 'dolor sit amet', 'pig latin']}

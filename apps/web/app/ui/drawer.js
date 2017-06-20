@@ -40,7 +40,7 @@ export default class Drawer {
     from: 'left',
     zIndex: 10000,
     style: {},
-    transition: 'all ease-in 200ms',
+    transition: 'transform ease-in 200ms',
   }
 
   render({

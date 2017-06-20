@@ -1,16 +1,7 @@
-design of this:
-  - now: current planned tasks
-  - next: organized next up
-  - queue: unorganized stuff we want
-  - ideas: grabbag
-  - libs: tech stuff for various things
-  - other sections? (questions, bookmarks, ux inspiration)
-
-# now
-
-  - nick
-
-  - nate
+# high level prioritized list
+  - commander/filter/bar
+  - node keyboard toggle item type
+  - comments
 
 # next
   - #brainstorm: features and user feedback strategy

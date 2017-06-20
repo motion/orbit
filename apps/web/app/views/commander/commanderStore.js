@@ -3,9 +3,10 @@ import { debounce } from 'lodash'
 import Router from '~/router'
 
 const idFn = _ => _
+const OPEN = 'commander_is_open'
 
 export default class CommanderStore {
-  isOpen = true
+  isOpen = localStorage.getItem(OPEN) || false
   text = ''
   textboxText = ''
   highlightIndex = 0
@@ -41,11 +42,17 @@ export default class CommanderStore {
   onOpen = () => {
     this.isOpen = true
     this.setText('')
+    this.persist()
   }
 
   onClose = () => {
     this.setText('')
     this.isOpen = false
+    this.persist()
+  }
+
+  persist = () => {
+    localStorage.setItem(OPEN, this.isOpen)
   }
 
   commitText = debounce(

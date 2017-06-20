@@ -193,7 +193,14 @@ class Projects {
           <section key={i}>
             <title $$row $$spaceBetween>
               <start $$row $$centered>
-                <Progress.Circle size={16} percent={Math.random() * 100} />
+                <Progress.Circle
+                  style={{ marginRight: 4 }}
+                  lineColor="rgb(130, 248, 198)"
+                  backgroundColor={[0, 0, 0, 0.15]}
+                  lineWidth={2}
+                  size={14}
+                  percent={Math.random() * 100}
+                />
                 <pname $$row $$centered>
                   {flatMap(
                     item.title.map((tit, index) =>
@@ -207,7 +214,7 @@ class Projects {
                 </pname>
               </start>
               <end>
-                <Icon name="eye" color="#666" />
+                <Icon name="favour3" color="#666" />
               </end>
             </title>
             <tasks>
@@ -478,7 +485,14 @@ export default class Sidebar {
     return (
       <Theme key={0} name="dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
-          <Drawer key={2} open={active} from="right" size={width} zIndex={9}>
+          <Drawer
+            background={[0, 0, 0, 0.5]}
+            key={2}
+            open={active}
+            from="right"
+            size={width}
+            zIndex={9}
+          >
             <dragger
               if={!IN_TRAY}
               style={{ WebkitAppRegion: 'no-drag' }}

@@ -10,13 +10,13 @@ export default class ProgressCircle {
     percent: number,
     size: number,
     lineType: 'butt' | 'square' | 'round',
-    lineBackground: Color,
+    backgroundColor: Color,
     lineColor: Color,
     lineWidth: number,
   }
 
   static defaultProps = {
-    lineBackground: [0, 0, 0, 1],
+    backgroundColor: [0, 0, 0, 1],
     lineColor: 'green',
     lineWidth: 4,
     size: 25,
@@ -26,7 +26,7 @@ export default class ProgressCircle {
   render() {
     const {
       lineType,
-      lineBackground,
+      backgroundColor,
       lineColor,
       lineWidth,
       size,
@@ -55,7 +55,7 @@ export default class ProgressCircle {
       >
         <path
           d={pathString}
-          stroke={colorToString(lineBackground)}
+          stroke={colorToString(backgroundColor)}
           strokeWidth={lineWidth}
           fillOpacity="0"
         />

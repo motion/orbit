@@ -6,11 +6,13 @@ import { Theme, SlotFill } from '~/ui'
 import { IN_TRAY } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
-import Sidebar from '~/views/layout/sidebar'
-import Header from '~/views/layout/header'
-import Errors from '~/views/layout/errors'
+import Sidebar from './sidebar'
+import Header from './header'
+import Errors from './errors'
+import Commander from './commander'
 import KeyStore from '~/stores/keyStore'
 import LayoutStore from '~/stores/layoutStore'
+import CommanderStore from '~/stores/commanderStore'
 import RedBox from 'redbox-react'
 import Draft from '~/views/document/draft'
 
@@ -26,6 +28,7 @@ class LayoutWrap {
   }
   static style = {
     wrap: {
+      background: '#fff',
       position: 'absolute',
       left: 0,
       top: 0,
@@ -42,6 +45,7 @@ class LayoutWrap {
 @view.provide({
   layoutStore: LayoutStore,
   keyStore: KeyStore,
+  commanderStore: CommanderStore,
 })
 export default class Root {
   static childContextTypes = {
@@ -61,17 +65,17 @@ export default class Root {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  // unstable_handleError(error) {
-  //   // does this work?
-  //   throw error
-  //   this.setState({
-  //     error,
-  //   })
-  //   // until we can clear on next hmr, just show for a second
-  //   this.setTimeout(() => {
-  //     this.setState({ error: null })
-  //   }, 2000)
-  // }
+  unstable_handleError(error) {
+    // does this work?
+    // throw error
+    this.setState({
+      error,
+    })
+    // until we can clear on next hmr, just show for a second
+    this.setTimeout(() => {
+      this.setState({ error: null })
+    }, 2000)
+  }
 
   renderTray() {
     return <Sidebar />
@@ -84,6 +88,7 @@ export default class Root {
     return (
       <app>
         <LayoutWrap layoutStore={layoutStore}>
+          <Commander.Results if={false} />
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}

@@ -30,6 +30,7 @@ export default {
     focus: {
       ...DARK,
       background: clr(DARK.background).lighten(0.25).toString(),
+      borderColor: DARK.highlightColor,
     },
   },
   light: {

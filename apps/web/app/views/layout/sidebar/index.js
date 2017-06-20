@@ -285,7 +285,16 @@ class PlayUI implements ViewType {
     }
     return (
       <ui>
+        <Input
+          $$style={{ fontWeight: 200 }}
+          transparent
+          fontSize={33}
+          height={56}
+          flex="none"
+        />
+
         <TeamStatus
+          if={false}
           items={[
             {
               name: 'Steel',
@@ -451,9 +460,9 @@ class Inner {
   render() {
     return (
       <inner $$flex>
-        {' '}<Login if={!IN_TRAY} />
+        <Login if={!IN_TRAY} />
         <TasksUI />
-        <PlayUI if={true} />
+        <PlayUI />
         <SlotFill.Slot name="sidebar">
           {items =>
             <activeSidebar>
@@ -487,7 +496,7 @@ export default class Sidebar {
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <Drawer
             transition="none"
-            background={[0, 0, 0, 0.5]}
+            background={[0, 0, 0, 0.25]}
             key={2}
             open={active}
             from="right"

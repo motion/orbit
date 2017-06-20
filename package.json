@@ -32,7 +32,7 @@
     "eslint-plugin-class-property": "^1.0.6",
     "eslint-plugin-flowtype": "^2.34.0",
     "eslint-plugin-react": "^7.0.1",
-    "gloss": "^6.6.1",
+    "gloss": "^6.6.2",
     "react-transform-hmr-motion": "^1.0.5"
   }
 }

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { inject } from '~/helpers'
+import { clr, inject } from '~/helpers'
 
 export type Props = {
   getRef?: Function,
@@ -46,28 +46,32 @@ export default class Input {
   }
 
   static theme = {
-    theme: ({ type }, context, theme) => {
+    theme: ({ fontSize, transparent, height, type }, context, theme) => {
       let styles = {}
 
       if (!type || type === 'password' || type === 'text') {
         styles = {
-          flex: 1,
-          height: 30,
+          height: height || 30,
+          minHeight: height || 30,
           padding: [7, 8],
-          width: 0,
+          width: '100%',
           border: [1, theme.base.borderColor],
         }
       }
 
       return {
         input: {
+          fontSize,
           ...theme.base,
+          height,
+          minHeight: height,
           ...styles,
+          ...(transparent && { background: 'transparent' }),
           '&:hover': {
             borderColor: theme.hover.borderColor,
           },
           '&:focus': {
-            borderColor: 'blue !important',
+            borderColor: clr(theme.focus.borderColor).alpha(0.2),
             borderWidth: 1,
           },
         },

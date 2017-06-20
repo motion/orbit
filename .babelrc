@@ -33,7 +33,22 @@
     ]
   ],
   "presets": [
+    [
+      "babel-preset-env",
+      {
+        "debug": true,
+        "useBuiltIns": true,
+        "targets": {
+          "node": "current",
+          "chrome": "40"
+        },
+        "exclude": [
+          "transform-regenerator",
+          "transform-async-to-generator"
+        ]
+      }
+    ],
     "babel-preset-react",
-    "babel-preset-stage-1-without-async"
+    "babel-preset-stage-1"
   ]
 }

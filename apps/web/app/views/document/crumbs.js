@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { Button, Segment } from '~/ui'
+import { Icon, Button, Segment } from '~/ui'
 import { IS_ELECTRON } from '~/constants'
 import Router from '~/router'
 import type DocStore from './store'
@@ -16,34 +16,32 @@ export default class Breadcrumbs {
 
   render({ docs }: Props) {
     const crumbs = [
-      { text: 'all', url: '/' },
+      {
+        text: <Icon size={10} name="home" color="#222" hoverColor="red" />,
+        url: '/',
+      },
       ...(docs || []).map(doc => ({ text: doc.title, url: doc.url() })),
     ]
 
     return (
       <crumbs>
         <nav>
-          <Button
-            if={false}
-            icon="home"
-            chromeless
-            active={Router.isActive('/')}
-            onClick={() => Router.go('/')}
-          />
           <Segment
-            itemProps={{ iconSize: 10, padding: [0, 2] }}
-            $$marginLeft={3}
+            itemProps={{
+              iconSize: 12,
+              padding: [0, 6],
+              height: 25,
+              chromeless: true,
+            }}
           >
             <Button
               if={IS_ELECTRON}
               icon="minimal-left"
-              chromeless
               disabled={Router.atBack}
               onClick={() => Router.back()}
             />
             <Button
               if={IS_ELECTRON}
-              chromeless
               disabled={Router.atFront}
               icon="minimal-right"
               onClick={() => Router.forward()}
@@ -70,32 +68,31 @@ export default class Breadcrumbs {
     crumbs: {
       zIndex: 2,
       background: '#fff',
-      margin: [5, 0, 0, 35],
-      padding: [20, 20],
+      padding: [5, 10, 6],
+      borderTop: [1, '#eee', 'dotted'],
       flexFlow: 'row',
     },
-    item: {
-      textTransform: 'capitalize',
-      fontWeight: 'bold',
-      color: 'black',
-      cursor: 'default',
-      transition: 'opacity 100ms ease-in',
+    items: {
+      alignItems: 'center',
     },
     text: {
+      cursor: 'pointer',
       fontSize: 12,
-      marginRight: 10,
-      opacity: 0.3,
+      margin: [0, 4],
+      color: [0, 0, 0, 0.5],
+      justifyContent: 'center',
       '&:hover': {
-        opacity: 1,
+        color: 'red',
       },
     },
     slash: {
-      opacity: 0.4,
-      marginRight: 10,
+      opacity: 0.1,
+      margin: [0, 4],
+      fontWeight: 200,
+      pointerEvents: 'none',
     },
-
     nav: {
-      margin: [0, 5, 0, -35],
+      margin: [0, 8, 0, 0],
       flexFlow: 'row',
       alignItems: 'center',
     },

@@ -82,7 +82,7 @@ export default class TextPlugin {
       },
     },
     TrailingBlock({
-      type: 'paragraph',
+      type: BLOCKS.PARAGRAPH,
     }),
   ]
 

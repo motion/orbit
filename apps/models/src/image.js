@@ -39,17 +39,20 @@ class Image extends Model {
     },
   }
 
-  @query getAll = ids => {
+  @query
+  getAll = ids => {
     return this.collection.find(ids)
   }
 
-  @query get = id => {
+  @query
+  get = id => {
     if (!id) return null
     if (Array.isArray(id)) return this.getAll(id)
     return this.collection.findOne(id)
   };
 
-  @query forDocument = doc => {
+  @query
+  forDocument = doc => {
     if (!doc) {
       return null
     }

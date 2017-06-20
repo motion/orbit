@@ -3,7 +3,15 @@ module.exports = {
     browser: true,
     es6: true,
   },
-  extends: 'eslint:recommended',
+  extends: [
+    'eslint:recommended',
+    'plugin:flowtype/recommended',
+    'plugin:react/recommended',
+    'prettier',
+    'prettier/flowtype',
+    'prettier/react',
+  ],
+  plugins: ['react', 'flowtype', 'prettier'],
   parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 8,
@@ -15,7 +23,6 @@ module.exports = {
     },
     sourceType: 'module',
   },
-  plugins: ['react', 'flowtype'],
   rules: {
     indent: 'off',
     'linebreak-style': ['error', 'unix'],

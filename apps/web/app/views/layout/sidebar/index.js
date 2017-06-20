@@ -486,6 +486,7 @@ export default class Sidebar {
       <Theme key={0} name="dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <Drawer
+            transition="none"
             background={[0, 0, 0, 0.5]}
             key={2}
             open={active}

@@ -22,6 +22,7 @@
     "minHeight": "500",
     "backgroundColor": "#fff",
     "hide": false,
+    "vibrancy": "dark",
     "webPreferences": {
       "experimentalFeatures": true
     }

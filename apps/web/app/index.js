@@ -10,8 +10,8 @@ import { IS_PROD, IS_ELECTRON, IN_TRAY } from './constants'
 React.createElement = Gloss.createElement
 
 // splash
-const Root = require('./views/splash').default
-ReactDOM.render(<Root />, document.querySelector('#app'))
+const Splash = require('./views/splash').default
+ReactDOM.render(<Splash />, document.querySelector('#app'))
 console.timeEnd('splash')
 
 if (IS_PROD && IS_ELECTRON && !IN_TRAY) {

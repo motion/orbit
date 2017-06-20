@@ -6,7 +6,7 @@ import { PassThrough, Segment } from '~/ui'
 export default class ContextBar {
   render({ editorStore }) {
     return (
-      <bar $$row>
+      <bar $$row if={false}>
         <Segment padded>
           {editorStore.pluginCategories.map(category =>
             editorStore.helpers.barButtonsFor(category).map((button, i) =>

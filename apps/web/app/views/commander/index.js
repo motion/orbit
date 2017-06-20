@@ -16,7 +16,7 @@ export default class Commander {
     const docs = store.docs || []
 
     return (
-      <bar $$align="center" $$row $$flex>
+      <bar $$align="center" $$row>
         {searchIcon}
         <input $q if={!store.isOpen} onFocus={store.onOpen} />
         <Portal closeOnEsc isOpened={store.isOpen} onClose={store.onClose}>
@@ -38,7 +38,7 @@ export default class Commander {
                 </overlaySearch>
                 <results>
                   <matches if={docs.length > 0}>
-                    {docs.map((doc, index) => (
+                    {docs.map((doc, index) =>
                       <match
                         onClick={() => store.navTo(doc)}
                         key={doc._id}
@@ -49,7 +49,7 @@ export default class Commander {
                       >
                         {doc.getTitle()}
                       </match>
-                    ))}
+                    )}
                   </matches>
                   <noMatches if={docs.length === 0}>
                     No Matches
@@ -107,7 +107,7 @@ export default class Commander {
       height: 30,
     },
     q: {
-      width: 300,
+      flex: 1,
       fontSize: 16,
     },
     results: {

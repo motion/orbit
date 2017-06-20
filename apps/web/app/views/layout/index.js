@@ -14,10 +14,6 @@ import LayoutStore from '~/stores/layoutStore'
 import RedBox from 'redbox-react'
 import Draft from './document/draft'
 
-// stores attached here via provide give us nice ways
-// to share logic horizontally between any component
-// simply @view.attach('layoutStore') for example in any sub-view
-
 // optimized re-render for sidebar resize
 @view
 class LayoutWrap {
@@ -39,11 +35,15 @@ class LayoutWrap {
   }
 }
 
+// stores attached here via provide give us nice ways
+// to share logic horizontally between any component
+// eg: @view.attach('layoutStore') in any sub-view
+
 @view.provide({
   layoutStore: LayoutStore,
   keyStore: KeyStore,
 })
-export default class Root extends React.Component {
+export default class Root {
   static childContextTypes = {
     shortcuts: object,
   }

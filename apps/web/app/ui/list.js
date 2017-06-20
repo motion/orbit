@@ -6,8 +6,9 @@ import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/views/helpers/parentSize'
-const idFn = _ => _
 import type { ItemProps } from './listItem'
+
+const idFn = _ => _
 
 export type Props = {
   onHighlight: Function,
@@ -178,6 +179,10 @@ class List {
       slim,
       onItemMount,
       itemStyle,
+    }
+
+    if (!items && !children) {
+      throw new Error('no items or children passed to List')
     }
 
     const total = items ? items.length : Children.count(children)

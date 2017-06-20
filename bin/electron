@@ -1,0 +1,9 @@
+#!/bin/bash
+
+ROOT_DIR=$(dirname $0)/..
+
+cd $ROOT_DIR
+PATH=$PATH:./node_modules/.bin
+
+cd $ROOT_DIR/apps/electron
+npm run dist

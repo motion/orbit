@@ -1,8 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
-import { SlotFill, Segment, Button } from '~/ui'
+import { SlotFill, Button } from '~/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
-import Router from '~/router'
 import Commander from '~/views/commander'
 
 @view
@@ -16,34 +15,8 @@ export default class Header {
         onMouseLeave={() => (layoutStore.headerHovered = false)}
       >
         <nav>
-          <Button
-            if={true}
-            icon="home"
-            chromeless
-            active={Router.isActive('/')}
-            onClick={() => Router.go('/')}
-          />
-          <Segment $$marginLeft={3}>
-            <Button
-              if={IS_ELECTRON}
-              icon="minimal-left"
-              chromeless
-              disabled={Router.atBack}
-              onClick={() => Router.back()}
-            />
-            <Button
-              if={IS_ELECTRON}
-              chromeless
-              disabled={Router.atFront}
-              icon="minimal-right"
-              onClick={() => Router.forward()}
-            />
-            <Button if={false} chromeless icon="simple-add" tooltip="new" />
-          </Segment>
-        </nav>
-        <bar $$centered $$flex $$row $$overflow="hidden">
           <Commander />
-        </bar>
+        </nav>
         <rest $$row>
           <SlotFill.Slot name="documentActions">
             {items =>
@@ -84,6 +57,9 @@ export default class Header {
       transitionDelay: '400ms',
       overflow: 'hidden',
     },
+    nav: {
+      flex: 1,
+    },
     hovered: {
       opacity: 1,
       transition: 'all ease-in 100ms',
@@ -92,15 +68,6 @@ export default class Header {
     rest: {
       justifyContent: 'center',
       marginLeft: 10,
-    },
-    nav: {
-      flexFlow: 'row',
-      marginRight: 10,
-      alignItems: 'center',
-    },
-    inactive: {
-      opacity: 0.5,
-      pointerEvents: 'none',
     },
     actions: {
       flexFlow: 'row',

@@ -28,6 +28,7 @@ type Props = {
   className?: string,
   overlayBlur?: number,
   transition: string,
+  transparent?: boolean,
 }
 
 @view.ui
@@ -44,6 +45,7 @@ export default class Drawer {
   }
 
   render({
+    transparent,
     transition,
     open,
     children,
@@ -123,7 +125,6 @@ export default class Drawer {
           },
     panel: {
       pointerEvents: 'none',
-      background: '#fff',
       position: 'absolute',
       top: 0,
       bottom: 0,
@@ -158,10 +159,16 @@ export default class Drawer {
   }
 
   static theme = {
-    theme: ({ transition, bordered, shadowed }, _, theme) => {
+    theme: (
+      { transparent, background, transition, bordered, shadowed },
+      _,
+      theme
+    ) => {
       return {
         panel: {
-          ...theme.base,
+          background: transparent
+            ? 'transparent'
+            : background || theme.base.background,
           transition,
           borderColor: bordered && theme.base.borderColor,
           boxShadow:

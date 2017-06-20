@@ -397,7 +397,7 @@ class PlayUI implements ViewType {
           </Pane>
         </content>
 
-        <Pane {...paneProps} title="Queue">
+        <Pane if={false} {...paneProps} title="Queue">
           <List
             items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
             getItem={item => ({
@@ -478,7 +478,14 @@ export default class Sidebar {
     return (
       <Theme key={0} name="dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
-          <Drawer key={2} open={active} from="right" size={width} zIndex={9}>
+          <Drawer
+            transparent
+            key={2}
+            open={active}
+            from="right"
+            size={width}
+            zIndex={9}
+          >
             <dragger
               if={!IN_TRAY}
               style={{ WebkitAppRegion: 'no-drag' }}

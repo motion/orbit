@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "7zip-bin-mac": "^1.0.1",
+    "electron": "^1.7.3",
+    "electron-builder": "^7.14.2"
+  }
+}

@@ -34,14 +34,13 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <Crumbs if={!inline} docs={store.crumbs} />
-
         <Editor
           readOnly={readOnly}
           inline={inline}
           getRef={store.onEditor}
           {...editorProps}
         />
+        <Crumbs if={!inline} docs={store.crumbs} />
       </docview>
     )
   }

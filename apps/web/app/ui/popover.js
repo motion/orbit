@@ -1,4 +1,4 @@
-// TODO https://github.com/tristen/hoverintent
+// @flow
 import React from 'react'
 import { object, string } from 'prop-types'
 import { view } from '@jot/black'

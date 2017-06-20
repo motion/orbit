@@ -1,3 +1,4 @@
+// @flow
 import { view } from '@jot/black'
 import type { Color } from 'gloss'
 

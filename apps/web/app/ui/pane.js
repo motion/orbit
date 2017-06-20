@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view } from '@jot/black'
 import Title from './title'

@@ -478,14 +478,7 @@ export default class Sidebar {
     return (
       <Theme key={0} name="dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
-          <Drawer
-            transparent
-            key={2}
-            open={active}
-            from="right"
-            size={width}
-            zIndex={9}
-          >
+          <Drawer key={2} open={active} from="right" size={width} zIndex={9}>
             <dragger
               if={!IN_TRAY}
               style={{ WebkitAppRegion: 'no-drag' }}

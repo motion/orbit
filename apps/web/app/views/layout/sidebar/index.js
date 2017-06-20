@@ -184,6 +184,10 @@ class Projects {
       title: ['Ideas', 'Incoming'],
       items: ['Lorem ipsum dolor sit amet', 'Segunda ipsum dolor sit amet'],
     },
+    {
+      title: ['Nick', 'Emails'],
+      items: ['Whats gucci my bucci'],
+    },
   ]
 
   render() {

@@ -4,9 +4,10 @@ lib
 .DS_Store
 app_data
 shrinkwrap.yaml
-build
 values.yaml
 *.tgz
 kubeconfig
 .vscode
 apps/web/public/_/*
+apps/web/build
+apps/electron/dist

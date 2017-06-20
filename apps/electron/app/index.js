@@ -1,2 +1,2 @@
 console.log('start')
-require('./lib')
+require('../lib')

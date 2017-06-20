@@ -1,6 +1,0 @@
-- **api**: backend, express + superlogin
-- **couch**: couchdb config
-- **models**: shared models between backend/frontend
-- **web**: web app
-- **decor** will be extracted into own repo, handles decorators
-- **black** what will eventually be a set of shared defaults to make web apps

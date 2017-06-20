@@ -3,7 +3,17 @@ import { view } from '@jot/black'
 import { User } from '@jot/models'
 import React from 'react'
 import { keycode } from '~/helpers'
-import { Theme, Popover, List, Form, Segment, Input, Button, Link } from '~/ui'
+import {
+  Dropdown,
+  Theme,
+  Popover,
+  List,
+  Form,
+  Segment,
+  Input,
+  Button,
+  Link,
+} from '~/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 @view({
@@ -88,34 +98,39 @@ export default class Login {
         </Form>
 
         <step $loggedIn if={User.loggedIn}>
-          <text>
-            hi
-            <username $$ellipse> {User.name}</username>
-          </text>
-          <Popover
-            theme="light"
-            target={<Button circular icon="user" />}
-            background
-            openOnHover
-          >
-            <Theme name="light">
-              <List
-                width={150}
-                items={[
-                  <List.Item
-                    primary={User.name}
-                    after={
-                      <Button
-                        chromeless
-                        icon="power"
-                        onClick={() => User.logout()}
-                      />
-                    }
-                  />,
-                ]}
-              />
-            </Theme>
-          </Popover>
+          <start $team $$row $$centered>
+            Team: <Dropdown>Motion</Dropdown>
+          </start>
+
+          <end $$row $$centered>
+            <text>
+              <username $$ellipse> {User.name}</username>
+            </text>
+            <Popover
+              theme="light"
+              target={<Button circular icon="user" />}
+              background
+              openOnHover
+            >
+              <Theme name="light">
+                <List
+                  width={150}
+                  items={[
+                    <List.Item
+                      primary={User.name}
+                      after={
+                        <Button
+                          chromeless
+                          icon="power"
+                          onClick={() => User.logout()}
+                        />
+                      }
+                    />,
+                  ]}
+                />
+              </Theme>
+            </Popover>
+          </end>
         </step>
       </login>
     )
@@ -126,9 +141,7 @@ export default class Login {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'flex-end',
-      flexFlow: 'row',
       padding: [0, 6],
-      alignItems: 'center',
       height: HEADER_HEIGHT,
       position: 'relative',
     },
@@ -170,19 +183,27 @@ export default class Login {
       justifyContent: 'center',
     },
     loggedIn: {
+      flexFlow: 'row',
+      justifyContent: 'space-between',
       padding: [5, 15],
       margin: [0, -10, 5],
       borderBottom: [1, [255, 255, 255, 0.05]],
     },
+    team: {
+      fontWeight: 200,
+      fontSize: 12,
+      color: [255, 255, 255, 0.5],
+    },
     text: {
       flex: 1,
-      maxWidth: '80%',
+      padding: [0, 10],
       alignItems: 'center',
+      justifyContent: 'flex-end',
       flexFlow: 'row',
       pointerEvents: 'none',
       userSelect: 'none',
       fontSize: 12,
-      fontWeight: 600,
+      fontWeight: 300,
     },
   }
 }

@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, ViewType } from '@jot/black'
 import { Shortcuts } from '~/helpers'
-import { flatMap, uniqBy, sortBy } from 'lodash'
+import { flatMap } from 'lodash'
 import {
   Theme,
   Drawer,
@@ -23,9 +23,6 @@ import {
 import { User, Place } from '@jot/models'
 import Login from '../login'
 import Team from './team'
-import Router from '~/router'
-import fuzzy from 'fuzzy'
-import randomcolor from 'randomcolor'
 import SidebarStore from './store'
 import type LayoutStore from '~/stores/layoutStore'
 import { IN_TRAY, TRAY_WIDTH } from '~/constants'
@@ -113,8 +110,8 @@ class TeamStatus {
             <card>
               <name>{player.name}</name>
               <info>
-                <status>{player.status}</status>
-                <time>{player.time}</time>
+                <status $$ellipse>{player.status}</status>
+                <time if={false}>{player.time}</time>
               </info>
             </card>
           </player>
@@ -126,21 +123,24 @@ class TeamStatus {
     team: {
       flexFlow: 'row',
       flexWrap: 'wrap',
+      borderBottom: [1, [0, 0, 0, 0.25]],
+      margin: [0, -4, 10],
+      padding: [2, 0],
     },
     player: {
       width: '50%',
-      padding: 3,
+      padding: 2,
     },
     card: {
-      borderRadius: 5,
-      padding: 15,
+      borderRadius: 8,
+      padding: [8, 12],
       '&:hover': {
         background: [0, 0, 0, 0.1],
       },
     },
     name: {
-      height: 30,
-      margin: [-4, 0],
+      margin: [0, 0, -2, 0],
+      fontWeight: 600,
     },
     info: {
       flexFlow: 'row',
@@ -149,6 +149,7 @@ class TeamStatus {
     status: {
       fontSize: 12,
       opacity: 0.4,
+      maxWidth: '100%',
     },
     time: {
       fontSize: 10,
@@ -279,10 +280,27 @@ class PlayUI implements ViewType {
       <ui>
         <TeamStatus
           items={[
-            { name: 'Steel', status: 'Doing stuff', time: '10m' },
-            { name: 'Nate', status: 'Doing stuff', time: '10m' },
-            { name: 'Nick', status: 'Doing stuff', time: '10m' },
-            { name: 'Jacob', status: 'Doing stuff', time: '10m' },
+            {
+              name: 'Steel',
+              status: '#brainstorm: features and user feedback strategy',
+              time: '10m',
+            },
+            {
+              name: 'Nate',
+              status:
+                'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
+              time: '10m',
+            },
+            {
+              name: 'Nick',
+              status: 'editor: formatting: #uxlove + #dev',
+              time: '10m',
+            },
+            {
+              name: 'Jacob',
+              status: '#brainstorm: features and user feedback strategy',
+              time: '10m',
+            },
           ]}
         />
 

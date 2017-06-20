@@ -322,7 +322,7 @@ export default class Button {
         borderTopWidth: 1,
         borderBottomWidth: 1,
         padding: 5,
-        margin: -6,
+        margin: [-6, -3],
         borderRadius: 1000,
       },
     },

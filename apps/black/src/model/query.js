@@ -43,12 +43,24 @@ function valueWrap(info, valueGet: Function) {
   })
 
   // sync down query!
-  if (query) {
-    query.sync({
+  console.log('124434443', this)
+  let pull =
+    query &&
+    query.mquery &&
+    this.collection.sync({
       remote: this.remoteDb,
-      waitForLeadership: false,
+      // waitForLeadership: true,
+      // direction: {
+      //   pull: true,
+      //   push: true,
+      // },
       query,
     })
+
+  if (pull) {
+    window.pull = pull
+    console.log(pull)
+    debugger
   }
 
   const response = {}

@@ -28,8 +28,6 @@ export default class DocumentView {
   }
 
   render({ id, editorProps, inline, readOnly, store }: Props) {
-    return <div>hi</div>
-
     if (!store.document) {
       return <loading />
     }

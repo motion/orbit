@@ -94,7 +94,7 @@ export default class Root {
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >
-            <CurrentPage key={Router.key} />
+            <CurrentPage key={Router.key} {...Router.params} />
           </content>
           <Draft
             isActive={layoutStore.isCreatingDoc}

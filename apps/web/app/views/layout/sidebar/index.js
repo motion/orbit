@@ -292,15 +292,6 @@ class PlayUI implements ViewType {
     }
     return (
       <ui>
-        <Input
-          $$style={{ fontWeight: 200 }}
-          transparent
-          fontSize={33}
-          height={56}
-          flex="none"
-          placeholder="/"
-        />
-
         <Segment if={false} controlled itemProps={{ $$flex: 1 }}>
           <Button>tasks</Button>
           <Button>docs</Button>

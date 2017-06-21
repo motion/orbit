@@ -7,8 +7,7 @@ shrinkwrap.yaml
 values.yaml
 *.tgz
 kubeconfig
-.vscode
+.vscode/**/*
 apps/web/public/_/*
-apps/web/.vscode
 apps/web/build
 apps/electron/dist

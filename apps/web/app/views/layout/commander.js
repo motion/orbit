@@ -26,8 +26,11 @@ const Input = props =>
 const SearchIcon = () =>
   <slash
     $$style={{
-      fontSize: 22,
       fontWeight: 900,
+      fontSize: 32,
+      width: 18,
+      textAlign: 'center',
+      //background: 'linear-gradient(rgb(249, 250, 40), rgb(129, 230, 59))',
     }}
   >
     /
@@ -167,12 +170,24 @@ class CommanderInput {
     return (
       <bar $$align="center" $$row>
         <SearchIcon />
-        <Input if={!commanderStore.isOpen} onFocus={commanderStore.onOpen} />
+        <Input
+          if={!commanderStore.isOpen}
+          onFocus={commanderStore.onOpen}
+          $$style={{ fontWeight: 200 }}
+          transparent
+          fontSize={33}
+          height={56}
+          flex="none"
+        />
       </bar>
     )
   }
 
   static style = {
+    bar: {
+      marginTop: 3,
+      marginLeft: -1,
+    },
     query: {
       flex: 1,
       fontSize: 16,

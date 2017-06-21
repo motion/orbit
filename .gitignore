@@ -9,5 +9,6 @@ values.yaml
 kubeconfig
 .vscode
 apps/web/public/_/*
+apps/web/.vscode
 apps/web/build
 apps/electron/dist

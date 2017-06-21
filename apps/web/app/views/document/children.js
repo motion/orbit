@@ -31,43 +31,51 @@ export default class Children {
   render({ id, store }: Props) {
     const { docs } = store
 
+    const hasDocs = store.newTitle !== null || (docs || []).length > 0
+
     return (
-      <children $$row>
-        <docs>
-          {(docs || []).map(doc =>
-            <doc onClick={() => Router.go(doc.url())}>
+      <children>
+        <bar if={!hasDocs}>
+          <Button if={store.newTitle === null} icon="siadd" onClick={store.add}>
+            add document
+          </Button>
+        </bar>
+
+        <docBar $$row if={hasDocs}>
+          <docs>
+            {(docs || []).map(doc =>
+              <doc onClick={() => Router.go(doc.url())}>
+                <box />
+                <name>{doc.getTitle()}</name>
+              </doc>
+            )}
+            <doc if={store.newTitle !== null}>
               <box />
-              <name>{doc.getTitle()}</name>
+              <input
+                $name
+                autoFocus
+                value={store.newTitle}
+                onKeyDown={e => e.which === 13 && store.create()}
+                onChange={e => (store.newTitle = e.target.value)}
+              />
             </doc>
-          )}
-          <doc if={store.newTitle !== null}>
-            <box />
-            <input
-              $name
-              autoFocus
-              value={store.newTitle}
-              onKeyDown={e => e.which === 13 && store.create()}
-              onChange={e => (store.newTitle = e.target.value)}
-            />
-          </doc>
-        </docs>
-        <Button
-          if={store.newTitle === null}
-          circular
-          iconSize={20}
-          size={50}
-          $circleButton
-          icon="siadd"
-          onClick={store.add}
-        />
+          </docs>
+          <Button
+            if={store.newTitle === null}
+            circular
+            iconSize={20}
+            size={50}
+            $circleButton
+            icon="siadd"
+            onClick={store.add}
+          />
+        </docBar>
       </children>
     )
   }
 
   static style = {
     children: {
-      padding: [15, 20],
-      alignItems: 'center',
       borderTop: '1px dotted #eee',
     },
 
@@ -82,9 +90,21 @@ export default class Children {
     doc: {
       marginRight: 20,
     },
+    bar: {
+      padding: [5, 10],
+    },
+
+    docBar: {
+      alignItems: 'center',
+      padding: [15, 20],
+    },
 
     docs: {
       flexFlow: 'row',
+    },
+
+    input: {
+      width: 100,
     },
 
     name: {

@@ -42,27 +42,13 @@ function valueWrap(info, valueGet: Function) {
     }
   })
 
-  // selective query based sync!
-  // TODO remove this once rxdb 4.2 is out
-  const { queries } = this
-  let pull
-
-  if (query && query.mquery) {
-    const selector = getSelector(query)
-    const selectorKey = sum(selector)
-    // if not already watching
-    if (!queries[selectorKey]) {
-      queries[selectorKey] = true
-      const remoteDB = this.remoteDB
-      const localDB = this.pouch.name
-      out('query/selector', selectorKey, selector)
-      pull = PouchDB.replicate(remoteDB, localDB, {
-        selector,
-        live: true,
-      })
-      // to use later in cancel
-      pull.selectorKey = selectorKey
-    }
+  // sync down query!
+  if (query) {
+    query.sync({
+      remote: this.remoteDb,
+      waitForLeadership: false,
+      query,
+    })
   }
 
   const response = {}

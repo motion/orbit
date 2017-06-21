@@ -61,6 +61,7 @@
     "react-flip-move": "^2.9.14",
     "react-grid-layout": "*",
     "react-portal": "^3.0.0",
+    "react-flip-move": "2.9.14",
     "react-shortcuts": "^1.5.0",
     "react-slot-fill": "^1.0.0-alpha.12",
     "react-sortable-hoc": "^0.6.3",

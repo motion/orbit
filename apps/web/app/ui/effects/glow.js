@@ -1,18 +1,23 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { $ } from '~/helpers'
+import { $, clr } from '~/helpers'
 import { throttle } from 'lodash'
 import { offset } from '~/views/helpers'
 import resizer from 'element-resize-detector'
+import type { Color } from 'gloss'
 
 const Resize = resizer({ strategy: 'scroll' })
 
 @view.ui
 export default class HoverGlow {
   props: {
-    background?: boolean,
+    color: Color,
+    background?: Color,
+    behind?: boolean,
     children?: Function,
+    blur: number,
+    gradient?: boolean,
   }
 
   static defaultProps = {
@@ -32,6 +37,7 @@ export default class HoverGlow {
     clickDuration: 150,
     clickScale: 2,
     transition: 1000,
+    blur: 10,
   }
 
   state = {
@@ -127,7 +133,10 @@ export default class HoverGlow {
     itemProps,
     children,
     style,
+    behind,
     background,
+    gradient,
+    blur,
   }) {
     const setRootRef = this.ref('rootRef').set
 
@@ -171,7 +180,7 @@ export default class HoverGlow {
       return -coord
     }
 
-    const colorRGB = `rgb(${color.join(', ')})`
+    const colorRGB = clr(color).toString()
     const translateX = inversed(
       bounded(resisted(x), width * scale, this.bounds.width)
     )
@@ -183,7 +192,7 @@ export default class HoverGlow {
       <overlay ref={setRootRef} style={style} {...itemProps}>
         <glow
           style={{
-            zIndex: background ? -1 : 0,
+            zIndex: behind ? -1 : 0,
             opacity: 1,
             transform: `
                 translateX(${translateX}px)
@@ -192,39 +201,29 @@ export default class HoverGlow {
               `,
           }}
         >
-          <svg
+          <blur
             height={height}
             width={width}
             style={{
-              boxShadow: `${shadowOffsetLeft}px ${shadowOffsetTop}px ${shadowAmt}px ${colorRGB}`,
               transform: `scale(${scale *
                 (clicked ? clickScale : 1)}) translateZ(0px)`,
               opacity: track ? opacity : 0,
+              width,
+              height,
               marginLeft: -width / 2,
               marginTop: -height / 2,
               zIndex,
+              WebkitFilter: blur ? `blur(${blur}px)` : '',
+              background: background || gradient
+                ? `radial-gradient(${clr(color).toString()}, transparent 70%)`
+                : colorRGB,
               borderRadius,
               transition: `
                   transform linear ${clickDuration / 2}ms,
                   opacity linear ${transition}ms
                 `,
             }}
-          >
-            <defs>
-              <filter id="f1" x="0" y="0">
-                <feGaussianBlur
-                  in="SourceGraphic"
-                  stdDeviation={(width + height) / 6}
-                />
-              </filter>
-            </defs>
-            <rect
-              width={width}
-              height={height}
-              fill={colorRGB}
-              filter="url(#f1)"
-            />
-          </svg>
+          />
         </glow>
       </overlay>
     )

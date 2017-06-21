@@ -10,6 +10,7 @@ import {
   Pane,
   ContextMenu,
   List,
+  Glow,
   Icon,
   Link,
   Input,

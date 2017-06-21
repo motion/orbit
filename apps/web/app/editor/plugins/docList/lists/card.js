@@ -5,6 +5,7 @@ import Tilt from 'react-tilt'
 import DocItem from '~/views/document/item'
 import FlipMove from 'react-flip-move'
 import { sortBy } from 'lodash'
+
 const width = 250
 const height = 280
 
@@ -26,7 +27,7 @@ export default class CardList {
         </Button>
 
         {/* until we get recent working */}
-        {sortBy(listStore.docs || [], 'createdAt').reverse().map((doc, i) => (
+        {sortBy(listStore.docs || [], 'createdAt').reverse().map((doc, i) =>
           <Tilt
             key={doc._id}
             options={{
@@ -44,17 +45,31 @@ export default class CardList {
                 doc={doc}
               />
               <Glow
-                key={`glow-${doc._id}`}
+                key={1}
                 full
-                scale={1.8}
-                resist={-10}
+                scale={2}
+                resist={20}
                 color={[255, 255, 255]}
                 zIndex={1000}
                 opacity={0.3}
+                gradient
+              />
+              <Glow
+                key={2}
+                behind
+                resist={90}
+                width={width}
+                height={height - 30}
+                blur={10}
+                inverse
+                color={[0, 0, 0]}
+                zIndex={1000}
+                opacity={0.3}
+                borderRadius={10}
               />
             </doc>
           </Tilt>
-        ))}
+        )}
       </FlipMove>
     )
   }
@@ -67,14 +82,14 @@ export default class CardList {
       flexWrap: 'wrap',
     },
     doc: {
-      overflow: 'hidden',
-      margin: [5, 10, 0, 0],
+      // overflow: 'hidden',
+      // margin: [5, 10, 0, 0],
       cursor: 'default',
       width,
       height,
       borderRadius: 5,
+      // boxShadow: '0 0 20px rgba(0,0,0,1)',
       transition: 'transform 50ms ease-in',
-      boxShadow: [0, 0, 0, [0, 0, 0, 0.2]],
     },
   }
 }

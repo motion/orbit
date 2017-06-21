@@ -120,7 +120,7 @@ export default class Button {
           {...iconProps}
         />
         <glowWrap $minimal={chromeless} if={!active}>
-          <Glow full scale={1.7} color={[0, 0, 0]} opacity={0.06} />
+          <Glow full scale={2} color={[0, 0, 0]} opacity={0.06} />
         </glowWrap>
         <children
           if={children}

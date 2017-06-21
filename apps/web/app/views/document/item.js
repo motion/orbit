@@ -147,7 +147,6 @@ export default class DocItem {
       doc: {
         width: '100%',
         margin: 0,
-        marginBottom: 10,
       },
     },
     draggable: {

@@ -80,6 +80,12 @@ export default class App implements AppStore {
     }
   }
 
+  get commander() {
+    return (
+      this.stores && this.stores.CommanderStore && this.stores.CommanderStore[0]
+    )
+  }
+
   get editor() {
     return (
       (this.stores &&

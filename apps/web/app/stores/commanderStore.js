@@ -26,8 +26,8 @@ export default class CommanderStore {
     }, 1000)
   }
 
-  get pathList(): Array<string> {
-    return this.path.split('/')
+  getPath = (path: string): Array<string> => {
+    return path.split('/')
   }
 
   onChange = (value: string) => {
@@ -36,40 +36,59 @@ export default class CommanderStore {
 
   onEnter = async () => {
     this.path = this.value
-    const found = await this.getDocAtPath()
+    const found = await this.createDocAtPath(this.path)
     console.log('found', found)
     Router.go(found.url())
   }
 
-  getDocAtPath = async (): Document => {
-    const all = await this.getDocsAtPath()
-    return all[all.lenght]
+  createDocAtPath = async (path: string): Document => {
+    return await this.getDocAtPath(path, true)
   }
 
-  getDocsAtPath = async (): Array<Document> => {
-    const [root, ...rest] = this.pathList
-    let currentDoc = await Document.findOrCreate({ slug: root })
-    let result = [currentDoc]
+  createDocsAtPath = async (path: string): Array<Document> => {
+    return await this.getDocsAtPath(path, true)
+  }
 
-    for (const part of rest) {
-      const found = await Document.collection
-        .findOne({
-          slug: part,
-          parentId: currentDoc._id,
-        })
-        .exec()
+  getDocAtPath = async (path: string, create = false): ?Document => {
+    const pathLength = this.getPath(path).length
+    const docs = await this.getDocsAtPath(path, create)
+    return docs[pathLength - 1] || null
+  }
 
-      currentDoc =
-        found ||
-        (await Document.create({
-          parentId: currentDoc._id,
-          title: part,
-        }))
-
-      result.push(currentDoc)
+  getDocsAtPath = async (path: string, create = false): Array<Document> => {
+    const result = []
+    let last
+    for (const slug of path.split('/')) {
+      const query = { slug }
+      if (last) {
+        query.parentId = last._id
+      }
+      last =
+        (await Document.collection.findOne(query).exec()) ||
+        (create &&
+          (await Document.create({
+            parentId: last._id,
+            title: slug,
+            slug,
+          })))
+      if (!last) {
+        return result
+      }
+      result.push(last)
     }
-
     return result
+  }
+
+  getChildDocsForPath = async (path: string): ?Array<Document> => {
+    const lastDoc = await this.getDocAtPath(path)
+    if (!lastDoc) {
+      return null
+    }
+    return await this.getChildDocs(lastDoc)
+  }
+
+  getChildDocs = async (document: Document): Array<Document> => {
+    return await Document.collection.find({ parentId: document._id }).exec()
   }
 
   actions = {

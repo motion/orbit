@@ -42,8 +42,7 @@ function valueWrap(info, valueGet: Function) {
     }
   })
 
-  // sync down query!
-  console.log('124434443', this)
+  // autosync query
   let pull =
     query &&
     query.mquery &&
@@ -56,12 +55,6 @@ function valueWrap(info, valueGet: Function) {
       // },
       query,
     })
-
-  if (pull) {
-    window.pull = pull
-    console.log(pull)
-    debugger
-  }
 
   const response = {}
 
@@ -104,9 +97,6 @@ function valueWrap(info, valueGet: Function) {
         finishSubscribe()
         stopAutorun()
         if (pull) {
-          if (pull.selectorKey) {
-            delete queries[pull.selectorKey]
-          }
           pull.cancel()
         }
       },

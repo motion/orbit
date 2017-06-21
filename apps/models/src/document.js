@@ -92,11 +92,11 @@ class Document extends Model {
         if (!doc.parentId) {
           foundRoot = true
         } else {
-          doc = await this.collection.findOne(doc.parentId).exec()
           if (!doc) {
             return crumbs
           }
           crumbs = [doc, ...crumbs]
+          doc = await this.collection.findOne(doc.parentId).exec()
         }
       }
 

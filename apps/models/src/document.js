@@ -4,7 +4,7 @@ import Image from './image'
 import User from './user'
 import generateName from 'sillyname'
 import { memoize, includes, without } from 'lodash'
-import docToTasks from './helpers/docToTasks'
+import { docToTasks, toggleTask } from './helpers/tasks'
 
 const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
 const toID = str => `${str}`.replace(/-/g, ':').toLowerCase()
@@ -147,6 +147,11 @@ class Document extends Model {
         name: ('image' + Math.random()).slice(0, 8),
         docId: this._id,
       })
+    },
+    // todo if two tasks have the same name, they'll switch together
+    async toggleTask(text) {
+      this.content = toggleTask(this.content, text)
+      await this.save()
     },
     toggleSubscribe() {
       if (User.loggedIn) {

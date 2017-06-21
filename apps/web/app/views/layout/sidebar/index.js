@@ -235,7 +235,12 @@ class Projects {
             <tasks>
               {item.tasks().map(({ archive, text, key }, index) =>
                 <task key={key} $$row>
-                  <Input $check type="checkbox" checked={archive} />{' '}
+                  <Input
+                    $check
+                    onChange={() => item.toggleTask(text)}
+                    type="checkbox"
+                    checked={archive}
+                  />{' '}
                   <span $$ellipse>{text}</span>
                 </task>
               )}

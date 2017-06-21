@@ -31,7 +31,6 @@ export default class DocumentStore implements StoreType {
   }
 
   async start() {
-    console.log('do something')
     this.react(
       () => this.document && this.document._id && this.shouldLoadCrumbs,
       async () => {

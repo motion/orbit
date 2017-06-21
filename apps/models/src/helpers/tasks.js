@@ -1,4 +1,5 @@
 import { random, flatten } from 'lodash'
+import merge from 'deepmerge'
 
 const liToText = ({ nodes }) =>
   nodes
@@ -11,7 +12,23 @@ const liToText = ({ nodes }) =>
     })
     .join(' ')
 
-export default function docToTasks(doc) {
+// returns new content
+export const toggleTask = (content, name) => {
+  const newNodes = content.document.nodes.map(node => {
+    if (node.type !== 'ul_list') return node
+    node.nodes = node.nodes.map(li => {
+      if (name === liToText(li)) {
+        li.data.archive = !(li.data.archive || false)
+      }
+      return li
+    })
+    return node
+  })
+  // doc.content = Object.assign({}, doc.content)
+  return merge(content, { document: { nodes: newNodes } })
+}
+
+export const docToTasks = doc => {
   // start somewhere and increment from there
   let keys = random(0, 1000000)
 

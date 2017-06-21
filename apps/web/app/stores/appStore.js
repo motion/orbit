@@ -31,7 +31,7 @@ export default class App implements AppStore {
     console.log('Use App in your console to access models, stores, etc')
     console.time('start')
     this.models = new Models(this.config, this.modelsObjects)
-    this.models.start()
+    await this.models.start()
     this.catchErrors()
     this.trackMountedStores()
     this.setupImages()

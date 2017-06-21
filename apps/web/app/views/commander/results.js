@@ -8,7 +8,7 @@ export default class CommanderResults {
   render({ commanderStore: store }) {
     const docs = store.docs || []
     return (
-      <results>
+      <results if={store.isOpen}>
         <matches if={docs.length > 0}>
           {docs.map((doc, index) =>
             <match
@@ -38,17 +38,21 @@ export default class CommanderResults {
   }
 
   static style = {
+    results: {
+      zIndex: 10000,
+      background: '#fff',
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    },
     noMatches: {
       flex: 1,
       fontSize: 24,
       color: '#444',
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    results: {
-      flexFlow: 'row',
-      marginTop: 10,
-      flex: 1,
     },
     preview: {
       position: 'relative',

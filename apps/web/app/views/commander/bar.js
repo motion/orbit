@@ -26,7 +26,6 @@ export default class CommanderInput {
   render({ commanderStore }) {
     return (
       <bar $$align="center" $$row>
-        <SearchIcon />
         <Input
           if={!commanderStore.isOpen}
           onFocus={commanderStore.onOpen}
@@ -35,6 +34,7 @@ export default class CommanderInput {
           fontSize={33}
           height={56}
           flex="none"
+          placeholder="url..."
         />
       </bar>
     )

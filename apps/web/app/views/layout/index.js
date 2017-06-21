@@ -89,12 +89,12 @@ export default class Root {
     return (
       <app>
         <LayoutWrap layoutStore={layoutStore}>
-          <Commander.Results />
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >
+            <Commander.Results />
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
           <Draft

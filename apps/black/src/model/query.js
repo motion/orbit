@@ -43,18 +43,18 @@ function valueWrap(info, valueGet: Function) {
   })
 
   // autosync query
-  let pull =
-    query &&
-    query.mquery &&
-    this.collection.sync({
-      remote: this.remoteDb,
-      // waitForLeadership: true,
-      // direction: {
-      //   pull: true,
-      //   push: true,
-      // },
-      query,
-    })
+  let pull = null
+  // query &&
+  // query.mquery &&
+  // this.collection.sync({
+  //   remote: this.remoteDb,
+  //   // waitForLeadership: true,
+  //   // direction: {
+  //   //   pull: true,
+  //   //   push: true,
+  //   // },
+  //   query,
+  // })
 
   const response = {}
 

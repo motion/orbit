@@ -181,6 +181,9 @@ export default class Model {
   createIndexes = async (): Promise<void> => {
     const index = this.settings.index || []
 
+    // TODO see if we can remove but fixes bug for now
+    await this.collection.pouch.createIndex({ fields: index })
+
     if (index.length) {
       // TODO: pouchdb supposedly does this for you, but it was slow in profiling
       const { indexes } = await this.collection.pouch.getIndexes()

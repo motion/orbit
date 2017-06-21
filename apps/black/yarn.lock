@@ -132,9 +132,9 @@ generate-object-property@^1.1.0:
   dependencies:
     is-property "^1.0.0"
 
-gloss@^6.6.0:
-  version "6.6.1"
-  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.6.1.tgz#7110b3f3f22845a3aa9f72bf83265f2b90a07239"
+gloss@^6.6.2:
+  version "6.6.3"
+  resolved "https://registry.yarnpkg.com/gloss/-/gloss-6.6.3.tgz#654930eaf13b4e6294f6a304c4f928b29c6f1e7a"
   dependencies:
     aphrodite-jss "^1.0.0"
     babel-helper-builder-react-jsx "^6.24.1"
@@ -143,7 +143,7 @@ gloss@^6.6.0:
     jss "^6.0.1"
     jss-preset-default "^1.1.0"
     lodash "^4.17.4"
-    motion-css "^6.6.1"
+    motion-css "^6.6.3"
     react "^15.5.4"
     react-dom "^15.5.4"
 
@@ -366,6 +366,10 @@ jss@^7.1.2:
     is-in-browser "1.0.2"
     warning "3.0.0"
 
+kontur@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/kontur/-/kontur-0.2.0.tgz#90665fb2528da37430988ed2e98823ff20a285a0"
+
 lie@3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
@@ -397,9 +401,9 @@ modifyjs@0.3.1:
     clone "^2.1.1"
     deep-equal "^1.0.1"
 
-motion-css@^6.6.1:
-  version "6.6.1"
-  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.6.1.tgz#931e0ec972fb2b8d66c46a4e919a00afefb7a721"
+motion-css@^6.6.3:
+  version "6.6.3"
+  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.6.3.tgz#86ff9d9e5500ee7ae90e94e6d2f6d6aee35c0848"
 
 ms@0.7.2:
   version "0.7.2"
@@ -458,7 +462,7 @@ pouchdb-collections@6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/pouchdb-collections/-/pouchdb-collections-6.2.0.tgz#f532601870cbd329ba0c6005bcdd301126825be2"
 
-pouchdb-core@6.2.0:
+pouchdb-core@6.2.0, pouchdb-core@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/pouchdb-core/-/pouchdb-core-6.2.0.tgz#f310cf51794cb49363fb398a14ff66838cf6f511"
   dependencies:
@@ -587,9 +591,9 @@ regenerator-runtime@^0.10.0:
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
 
-rxdb@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/rxdb/-/rxdb-4.1.0.tgz#bb1c579e932682dfd1dc662c95f923eb044c490f"
+rxdb@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/rxdb/-/rxdb-5.0.0.tgz#5dbd0af7cace3ff5425a77f67a7e06b7044f019f"
   dependencies:
     "@types/core-js" "^0.9.41"
     babel-runtime "^6.23.0"

@@ -21,11 +21,12 @@ import Page from '~/page'
   },
 })
 export default class DocumentPage {
-  render({ docStore, insidePlace }) {
+  render({ id, docStore, insidePlace }) {
     const { doc } = docStore
 
     if (!doc) {
-      return null
+      console.log('docid', id)
+      return <div>no doc found</div>
     }
 
     return (

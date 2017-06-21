@@ -185,8 +185,11 @@ class Document extends Model {
     // .sort({ createdAt: 'desc' })
   }
 
-  @query all = () => this.collection.find({ createdAt: { $gt: null } })
-  // .sort({ createdAt: 'asc' })
+  @query
+  all = () =>
+    this.collection
+      .find({ createdAt: { $gt: null } })
+      .sort({ createdAt: 'asc' })
 
   @query
   recent = (limit = 10) =>

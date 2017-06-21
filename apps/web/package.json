@@ -33,6 +33,7 @@
     "@jot/black": "*",
     "@jot/models": "*",
     "babel-loader": "^6.4.1",
+    "babel-polyfill": "^6.23.0",
     "buffer": "^5.0.6",
     "color": "^1.0.3",
     "debug": "^2.6.8",
@@ -57,8 +58,10 @@
     "randomcolor": "^0.5.2",
     "react": "^15.5.2",
     "react-dom": "^15.5.4",
+    "react-flip-move": "^2.9.14",
     "react-grid-layout": "*",
     "react-portal": "^3.0.0",
+    "react-flip-move": "2.9.14",
     "react-shortcuts": "^1.5.0",
     "react-slot-fill": "^1.0.0-alpha.12",
     "react-sortable-hoc": "^0.6.3",
@@ -76,7 +79,6 @@
     "slate-edit-table": "^0.9.0",
     "slate-paste-linkify": "^0.2.1",
     "slate-trailing-block": "^0.2.4",
-    "babel-polyfill": "^6.23.0",
     "time-ago": "^0.1.0"
   },
   "devDependencies": {

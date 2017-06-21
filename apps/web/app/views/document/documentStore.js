@@ -14,7 +14,7 @@ export default class DocumentStore implements StoreType {
   props: Props
 
   id = this.props.id
-  document = Document.get(this.props.id)
+  document: ?Document = Document.get(this.props.id)
   lastSavedRev = null
   lastSavedState = null
   shouldFocus = this.props.focusOnMount
@@ -71,7 +71,11 @@ export default class DocumentStore implements StoreType {
 
     // save
     this.react(
-      () => [this.editor.contentState, this.hasNewContent, this.document._rev],
+      () => [
+        this.editor.contentState,
+        this.hasNewContent,
+        this.document && this.document._rev,
+      ],
       () => {
         if (this.canSave) {
           this.save()

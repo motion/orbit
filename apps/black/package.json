@@ -7,7 +7,7 @@
   "dependencies": {
     "@jot/decor": "*",
     "mobx": "^3.1.0",
-    "rxdb": "^4.1.0",
+    "rxdb": "^5.0.0",
     "pouchdb-core": "^6.2.0",
     "gloss": "^6.6.2",
     "prop-types": "^15.5.9",

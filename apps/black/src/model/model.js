@@ -221,4 +221,9 @@ export default class Model {
     )
     return this.collection.insert(properties)
   }
+
+  findOrCreate = async (object: Object = {}): Promise<Object> => {
+    const found = await this.collection.findOne(object).exec()
+    return found || (await this.create(object))
+  }
 }

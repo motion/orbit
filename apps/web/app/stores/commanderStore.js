@@ -1,6 +1,6 @@
 // @flow
+import { autorunAsync } from '~/helpers'
 import { Document } from '@jot/models'
-import { debounce } from 'lodash'
 import Router from '~/router'
 
 const OPEN = 'commander_is_open'
@@ -8,6 +8,7 @@ const bool = s => s === 'true'
 
 export default class CommanderStore {
   isOpen = true //bool(localStorage.getItem(OPEN)) || false
+  value = ''
   path = ''
   highlightIndex = 0
   docs = []
@@ -19,18 +20,63 @@ export default class CommanderStore {
       this.docs = await Document.search(this.path)
       console.log('got', this.docs)
     })
+
+    autorunAsync(() => {
+      console.log('done typing', this.path)
+    }, 1000)
   }
 
-  setPath = (path: string) => {
-    console.log('setting', path)
-    this.path = path
+  get pathList(): Array<string> {
+    return this.path.split('/')
+  }
+
+  onChange = (value: string) => {
+    this.value = value
+  }
+
+  onEnter = async () => {
+    this.path = this.value
+    const found = await this.getDocAtPath()
+    console.log('found', found)
+    Router.go(found.url())
+  }
+
+  getDocAtPath = async (): Document => {
+    const all = await this.getDocsAtPath()
+    return all[all.lenght]
+  }
+
+  getDocsAtPath = async (): Array<Document> => {
+    const [root, ...rest] = this.pathList
+    let currentDoc = await Document.findOrCreate({ slug: root })
+    let result = [currentDoc]
+
+    for (const part of rest) {
+      const found = await Document.collection
+        .findOne({
+          slug: part,
+          parentId: currentDoc._id,
+        })
+        .exec()
+
+      currentDoc =
+        found ||
+        (await Document.create({
+          parentId: currentDoc._id,
+          title: part,
+        }))
+
+      result.push(currentDoc)
+    }
+
+    return result
   }
 
   actions = {
     up: () => this.moveHighlight(-1),
     down: () => this.moveHighlight(1),
     esc: () => this.onClose(),
-    enter: () => this.navTo(this.activeDoc),
+    enter: this.onEnter,
   }
 
   onShortcut = (action: string, event: KeyboardEvent) => {

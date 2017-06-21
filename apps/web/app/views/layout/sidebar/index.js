@@ -513,6 +513,7 @@ export default class Sidebar {
   static style = {
     sidebar: {
       width: '100%',
+      overflow: 'hidden',
       userSelect: 'none',
       position: 'absolute',
       top: 0,

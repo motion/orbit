@@ -92,8 +92,8 @@ export default class ListItem {
           if={onClick && !nohover}
           color={dark ? [255, 255, 255] : [0, 0, 0]}
           opacity={dark ? 0.04 : 0.06}
-          scale={0.7}
-          parent={() => this.refs.item}
+          scale={0.2}
+          blur={100}
         />
         <image if={avatar || fakeAvatar}>
           <img if={avatar && !fakeAvatar} src={avatar} $avatar />
@@ -129,6 +129,7 @@ export default class ListItem {
       maxWidth: '100%',
       flexFlow: 'row',
       position: 'relative',
+      overflow: 'hidden',
       zIndex: 0,
       fontWeight: 500,
       '&:active': {

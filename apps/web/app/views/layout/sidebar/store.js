@@ -105,7 +105,7 @@ export default class SidebarStore {
           .map(li => {
             const text = liToText(li)
             const key = keys++
-            const sort = this.sortMap[key] || +new Date(doc.createdAt) + key
+            const sort = +new Date(doc.createdAt) // this.sortMap[key] || +new Date(doc.createdAt) + key
 
             if (text === '') return null
 

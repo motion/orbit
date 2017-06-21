@@ -3,10 +3,13 @@ import { Model, query, str, object, array, bool } from '@jot/black'
 import Image from './image'
 import User from './user'
 import generateName from 'sillyname'
-import { memoize } from 'lodash'
+import { memoize, includes, without } from 'lodash'
+import docToTasks from './helpers/docToTasks'
 
 const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
 const toID = str => `${str}`.replace(/-/g, ':').toLowerCase()
+const toggleInclude = (xs, val) =>
+  includes(xs, val) ? without(xs, val) : [...xs, val]
 
 const cleanGetQuery = (query: Object | string) => {
   if (typeof query === 'string') {
@@ -43,6 +46,7 @@ class Document extends Model {
     members: array.items(str),
     hashtags: array.items(str),
     attachments: array.optional.items(str),
+    starredBy: array.items(str),
     private: bool,
     slug: str,
     draft: bool.optional,
@@ -56,6 +60,7 @@ class Document extends Model {
       title,
       authorId: User.user ? User.authorId : 'anon',
       hashtags: [],
+      starredBy: [],
       members: [],
       attachments: [],
       private: true,
@@ -79,9 +84,28 @@ class Document extends Model {
     },
   }
 
+  tasksCache = {
+    lastUpdated: 0,
+    value: [],
+  }
+
   methods = {
     url() {
       return `/d/${this._id.replace(':', '-')}`
+    },
+    tasks() {
+      // const { lastUpdated, value: cacheValue } = this.tasksCache
+      // if (lastUpdated >= this.updatedAt) return cacheValue
+      const tasks = docToTasks(this)
+      console.log('title', this.getTitle(), 'tasks', tasks)
+      return tasks
+    },
+    hasStar() {
+      return includes(this.starredBy, User.authorId)
+    },
+    async toggleStar() {
+      this.starredBy = toggleInclude(this.starredBy, User.authorId)
+      await this.save()
     },
     async getCrumbs() {
       let foundRoot = false
@@ -199,6 +223,13 @@ class Document extends Model {
       .limit(limit)
 
   @query
+  stars = () =>
+    this.collection
+      .find({ starredBy: { $elemMatch: { $eq: User.authorId } } })
+      // .sort({ createdAt: 'desc' })
+      .limit(50)
+
+  @query
   get = memoize(query => {
     if (!query) {
       return null
@@ -207,9 +238,7 @@ class Document extends Model {
     return this.collection.findOne(query_)
   });
 
-  @query
-  home = () =>
-    this.collection.findOne({ draft: { $ne: true } })
+  @query home = () => this.collection.findOne({ draft: { $ne: true } })
 
   @query
   user = user => {

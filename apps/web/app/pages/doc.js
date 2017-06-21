@@ -42,6 +42,9 @@ export default class DocumentPage {
             <Button if={!insidePlace} onClick={doc.togglePrivate}>
               {doc.private ? '🙈' : '🌎'}
             </Button>
+            <Button onClick={doc.toggleStar}>
+              {doc.hasStar() ? '⭐' : '✩'}
+            </Button>
           </Segment>
         }
       >

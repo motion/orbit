@@ -21,7 +21,7 @@ import {
   Progress,
   SlotFill,
 } from '~/ui'
-import { User, Place } from '@jot/models'
+import { User, Place, Document } from '@jot/models'
 import Login from '../login'
 import Team from './team'
 import SidebarStore from './store'
@@ -157,7 +157,11 @@ class TeamStatus {
   }
 }
 
-@view
+@view({
+  store: class SidebarProjectStore {
+    docs = Document.stars()
+  },
+})
 class Projects {
   items = [
     {
@@ -189,10 +193,15 @@ class Projects {
     },
   ]
 
-  render() {
+  render({ store }) {
+    const docs = store.docs || []
+    console.log('docs are', docs)
+
     return (
       <content $$scrollable $$flex={6}>
-        {this.items.map((item, i) =>
+        <noStars if={docs.length === 0}>No Stars</noStars>
+
+        {docs.map((item, i) =>
           <section key={i}>
             <title $$row $$spaceBetween>
               <start $$row $$centered>
@@ -204,7 +213,7 @@ class Projects {
                   size={14}
                   percent={Math.random() * 100}
                 />
-                <path $$row $$centered>
+                <path if={false} $$row $$centered>
                   {flatMap(
                     item.title.map((tit, index) =>
                       <fade key={index}>{tit}</fade>
@@ -215,15 +224,19 @@ class Projects {
                         : value
                   )}
                 </path>
+                <path onClick={() => Router.go(item.url())} $$row $$centered>
+                  {item.getTitle()}
+                </path>
               </start>
               <end>
-                <Icon name="favour3" color="#666" />
+                <Icon name="favour3" onClick={item.toggleStar} color="#666" />
               </end>
             </title>
             <tasks>
-              {item.items.map((task, index) =>
-                <task key={index} $$row>
-                  <Input $check type="checkbox" /> <span $$ellipse>{task}</span>
+              {item.tasks().map(({ archive, text, key }, index) =>
+                <task key={key} $$row>
+                  <Input $check type="checkbox" checked={archive} />{' '}
+                  <span $$ellipse>{text}</span>
                 </task>
               )}
             </tasks>
@@ -240,6 +253,13 @@ class Projects {
     section: {
       margin: [6, 0],
       padding: [0, 5],
+    },
+    noStars: {
+      fontSize: 24,
+      flex: 1,
+      textAlign: 'center',
+      justifyContent: 'center',
+      color: '#888',
     },
     title: {
       padding: [0, 5],

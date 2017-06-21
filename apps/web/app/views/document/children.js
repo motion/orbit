@@ -49,13 +49,13 @@ export default class Children {
 
   static style = {
     children: {
-      padding: 30,
+      padding: [15, 20],
       alignItems: 'center',
       borderTop: '1px dotted #eee',
     },
 
     box: {
-      width: 50,
+      width: 65,
       height: 80,
       alignSelf: 'center',
       border: '1px solid #ccc',
@@ -72,6 +72,8 @@ export default class Children {
 
     name: {
       textAlign: 'center',
+      fontWeight: 600,
+      fontSize: 12,
       marginTop: 10,
     },
   }

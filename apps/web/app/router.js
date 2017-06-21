@@ -5,8 +5,9 @@ import { render } from './start'
 let AppRouter
 
 const getRoutes = () => ({
-  '/': require('./pages/home.js').default,
+  // '/': require('./pages/home.js').default,
   '/popovers': require('./pages/popovers.js').default,
+  '/': require('./pages/doc.js').default,
   'd/:id': require('./pages/doc.js').default,
 })
 

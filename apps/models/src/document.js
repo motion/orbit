@@ -208,6 +208,10 @@ class Document extends Model {
   });
 
   @query
+  home = () =>
+    this.collection.findOne({ draft: { $ne: true } })
+
+  @query
   user = user => {
     if (!User.loggedIn) {
       return null

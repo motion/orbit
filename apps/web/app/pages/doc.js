@@ -8,7 +8,7 @@ import Page from '~/page'
 
 @view.provide({
   docStore: class DocPageStore {
-    doc = Document.get(this.props.id || Router.params.id)
+    doc = this.props.id ? Document.get(this.props.id) : Document.home()
     forceEdit = false
 
     get editing() {

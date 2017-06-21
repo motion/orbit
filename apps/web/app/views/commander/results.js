@@ -6,10 +6,10 @@ import DocView from '~/views/document'
 @view
 export default class CommanderResults {
   render({ commanderStore: store }) {
-    const docs = store.docs || []
+    const docs = store.searchResults || []
 
     return (
-      <results if={store.isOpen}>
+      <results if={store.isOpen && docs.length}>
         <matches if={docs.length > 0}>
           {docs.map((doc, index) =>
             <match
@@ -24,9 +24,6 @@ export default class CommanderResults {
             </match>
           )}
         </matches>
-        <noMatches if={docs.length === 0}>
-          No docs
-        </noMatches>
         <preview key={store.activeDoc._id} if={store.activeDoc}>
           <DocView
             readOnly

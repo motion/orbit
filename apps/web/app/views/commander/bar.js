@@ -11,7 +11,7 @@ export default class CommanderInput {
       <Shortcuts name="all" handler={commanderStore.onShortcut}>
         <bar $$align="center" $$row>
           <Input
-            onChange={commanderStore.setPath}
+            onChange={commanderStore.onChange}
             onKeyDown={commanderStore.onKeyDown}
             onFocus={commanderStore.onOpen}
             borderColor="transparent"

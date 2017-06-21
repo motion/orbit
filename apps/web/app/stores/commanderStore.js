@@ -1,5 +1,4 @@
 // @flow
-import { autorunAsync } from '~/helpers'
 import { Document } from '@jot/models'
 import Router from '~/router'
 
@@ -12,26 +11,20 @@ export default class CommanderStore {
   path = ''
   highlightIndex = 0
   docs = []
+  searchResults = []
 
   start() {
-    console.log('starting')
     this.watch(async () => {
-      console.log('search', this.path)
-      this.docs = await Document.search(this.path)
-      console.log('got', this.docs)
+      this.searchResults = await this.getChildDocsForPath(this.value)
     })
-
-    autorunAsync(() => {
-      console.log('done typing', this.path)
-    }, 1000)
   }
 
   getPath = (path: string): Array<string> => {
     return path.split('/')
   }
 
-  onChange = (value: string) => {
-    this.value = value
+  onChange = (event: Event) => {
+    this.value = event.target.value
   }
 
   onEnter = async () => {
@@ -79,10 +72,10 @@ export default class CommanderStore {
     return result
   }
 
-  getChildDocsForPath = async (path: string): ?Array<Document> => {
+  getChildDocsForPath = async (path: string): Array<Document> => {
     const lastDoc = await this.getDocAtPath(path)
     if (!lastDoc) {
-      return null
+      return []
     }
     return await this.getChildDocs(lastDoc)
   }

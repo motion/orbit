@@ -96,7 +96,7 @@ export default class Draft {
             </content>
           </Drawer>
         </Portal>
-        <CreateButton onClick={onOpenDraft} />
+        {/*<CreateButton onClick={onOpenDraft} />*/}
       </draft>
     )
   }

@@ -76,6 +76,7 @@ export default class DocList {
     setContext,
     ...props
   }) {
+    return <note>(doc lists turned off atm due to infinite loop)</note>
     const hasLoaded = !!listStore.docs
     const listType = node.data.get('listType') || 'card'
     const ListView = this.getList(listType)

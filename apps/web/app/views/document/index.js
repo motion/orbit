@@ -5,6 +5,7 @@ import { Icon } from '~/ui'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
 import Crumbs from './crumbs'
+import Children from './children'
 
 type Props = {
   id?: string,
@@ -40,6 +41,7 @@ export default class DocumentView {
           getRef={store.onEditor}
           {...editorProps}
         />
+        <Children if={!inline} id={store.document._id} />
         <Crumbs if={!inline} docs={store.crumbs} />
       </docview>
     )

@@ -44,7 +44,7 @@ export default class Children {
         <docBar $$row if={hasDocs}>
           <docs>
             {(docs || []).map(doc =>
-              <doc onClick={() => Router.go(doc.url())}>
+              <doc key={doc._id} onClick={() => Router.go(doc.url())}>
                 <box />
                 <name>{doc.getTitle()}</name>
               </doc>

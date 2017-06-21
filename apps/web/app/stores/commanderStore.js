@@ -5,8 +5,10 @@ import Router from '~/router'
 const idFn = _ => _
 const OPEN = 'commander_is_open'
 
+const bool = s => s === 'true'
+
 export default class CommanderStore {
-  isOpen = localStorage.getItem(OPEN) || false
+  isOpen = bool(localStorage.getItem(OPEN)) || false
   text = ''
   textboxText = ''
   highlightIndex = 0
@@ -15,6 +17,11 @@ export default class CommanderStore {
 
   get activeDoc() {
     return (this.docs || [])[this.highlightIndex] || null
+  }
+
+  setOpen = val => {
+    localStorage.setItem(OPEN, val)
+    this.isOpen = val
   }
 
   moveHighlight = diff => {
@@ -40,19 +47,16 @@ export default class CommanderStore {
   }
 
   onOpen = () => {
-    this.isOpen = true
     this.setText('')
-    this.persist()
+    this.setOpen(true)
   }
 
   onClose = () => {
+    // isOpen being false calls portal close, which calls this
+    // this line prevents the function running twice
+    if (!this.isOpen) return
     this.setText('')
-    this.isOpen = false
-    this.persist()
-  }
-
-  persist = () => {
-    localStorage.setItem(OPEN, this.isOpen)
+    this.setOpen(false)
   }
 
   commitText = debounce(

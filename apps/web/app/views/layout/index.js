@@ -29,6 +29,7 @@ class LayoutWrap {
   static style = {
     wrap: {
       background: '#fff',
+      transition: 'right ease-in 250ms',
       position: 'absolute',
       left: 0,
       top: 0,

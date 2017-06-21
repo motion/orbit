@@ -7,6 +7,9 @@ import Commander from './commander'
 @view
 export default class Header {
   render({ layoutStore }) {
+    // use sidebar.active so it binds to variable and rerenders
+    layoutStore.sidebar.active
+
     return (
       <header
         $$draggable

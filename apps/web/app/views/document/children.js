@@ -12,10 +12,16 @@ type Props = {
 @view({
   store: class ChildrenStore {
     docs = Document.child(this.props.id)
+    newTitle = null
 
-    add = async () => {
+    add = () => {
+      this.newTitle = ''
+    }
+
+    create = async () => {
       const { id } = this.props
-      await Document.create({ parentId: id })
+      await Document.create({ parentId: id, title: this.newTitle })
+      this.newTitle = null
     }
   },
 })
@@ -34,8 +40,19 @@ export default class Children {
               <name>{doc.getTitle()}</name>
             </doc>
           )}
+          <doc if={store.newTitle !== null}>
+            <box />
+            <input
+              $name
+              autoFocus
+              value={store.newTitle}
+              onKeyDown={e => e.which === 13 && store.create()}
+              onChange={e => (store.newTitle = e.target.value)}
+            />
+          </doc>
         </docs>
         <Button
+          if={store.newTitle === null}
           circular
           iconSize={20}
           size={50}

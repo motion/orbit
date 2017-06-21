@@ -25,7 +25,7 @@ export default class DocumentPage {
     const { doc } = docStore
 
     if (!doc) {
-      return <div>no doc found</div>
+      return <err404>no doc found</err404>
     }
 
     return (
@@ -48,5 +48,11 @@ export default class DocumentPage {
         <DocumentView id={doc._id} onKeyDown={docStore.onKeyDown} />
       </Page>
     )
+  }
+
+  static style = {
+    err404: {
+      padding: 15,
+    },
   }
 }

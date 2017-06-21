@@ -34,7 +34,7 @@ export default class Children {
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
 
     return (
-      <children>
+      <children $$row>
         <bar if={!hasDocs}>
           <Button if={store.newTitle === null} icon="siadd" onClick={store.add}>
             add document

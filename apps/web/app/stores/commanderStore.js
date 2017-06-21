@@ -1,22 +1,48 @@
+// @flow
 import { Document } from '@jot/models'
 import { debounce } from 'lodash'
 import Router from '~/router'
 
-const idFn = _ => _
 const OPEN = 'commander_is_open'
-
 const bool = s => s === 'true'
 
 export default class CommanderStore {
-  isOpen = bool(localStorage.getItem(OPEN)) || false
-  text = ''
-  textboxText = ''
+  isOpen = true //bool(localStorage.getItem(OPEN)) || false
+  path = ''
   highlightIndex = 0
-  searchIds = []
   docs = []
 
-  get activeDoc() {
-    return (this.docs || [])[this.highlightIndex] || null
+  start() {
+    console.log('starting')
+    this.watch(async () => {
+      console.log('search', this.path)
+      this.docs = await Document.search(this.path)
+      console.log('got', this.docs)
+    })
+  }
+
+  setPath = (path: string) => {
+    console.log('setting', path)
+    this.path = path
+  }
+
+  actions = {
+    up: () => this.moveHighlight(-1),
+    down: () => this.moveHighlight(1),
+    esc: () => this.onClose(),
+    enter: () => this.navTo(this.activeDoc),
+  }
+
+  onShortcut = (action: string, event: KeyboardEvent) => {
+    console.log('on shortcut')
+    if (this.actions[action]) {
+      console.log('COMMANDER', action, this.actions[action])
+      this.actions[action]()
+    }
+  }
+
+  onKeyDown = (event: KeyboardEvent) => {
+    // todo
   }
 
   setOpen = val => {
@@ -26,52 +52,13 @@ export default class CommanderStore {
 
   moveHighlight = diff => {
     this.highlightIndex += diff
-
     if (this.highlightIndex === -1) this.highlightIndex = this.docs.length - 1
     if (this.highlightIndex >= this.docs.length) this.highlightIndex = 0
   }
 
-  handleShortcuts = action => {
-    const actions = {
-      up: () => this.moveHighlight(-1),
-      down: () => this.moveHighlight(1),
-      esc: () => this.onClose(),
-      enter: () => this.navTo(this.activeDoc),
-    }
-    ;(actions[action] || idFn)()
-  }
-
   navTo = doc => {
-    this.onClose()
-    Router.go(doc.url())
-  }
-
-  onOpen = () => {
-    this.setText('')
-    this.setOpen(true)
-  }
-
-  onClose = () => {
-    // isOpen being false calls portal close, which calls this
-    // this line prevents the function running twice
-    if (!this.isOpen) return
-    this.setText('')
-    this.setOpen(false)
-  }
-
-  commitText = debounce(
-    async val => {
-      this.text = val
-      this.highlightIndex = 0
-      this.docs = await Document.search(this.text)
-      console.log('ids are', this.searchIds)
-    },
-    150,
-    true
-  )
-
-  setText = value => {
-    this.textboxText = value
-    this.commitText(value)
+    console.log('navto', doc)
+    // this.onClose()
+    // Router.go(doc.url())
   }
 }

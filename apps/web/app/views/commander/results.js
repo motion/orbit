@@ -7,6 +7,7 @@ import DocView from '~/views/document'
 export default class CommanderResults {
   render({ commanderStore: store }) {
     const docs = store.docs || []
+
     return (
       <results if={store.isOpen}>
         <matches if={docs.length > 0}>
@@ -47,13 +48,6 @@ export default class CommanderResults {
       bottom: 0,
       left: 0,
     },
-    noMatches: {
-      flex: 1,
-      fontSize: 24,
-      color: '#444',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
     preview: {
       position: 'relative',
       flex: 4,
@@ -61,16 +55,6 @@ export default class CommanderResults {
     },
     highlight: {
       borderRadius: 5,
-    },
-    match: {
-      fontSize: 18,
-      fontWeight: 500,
-      padding: 20,
-      border: '1px solid #eee',
-      cursor: 'pointer',
-      height: 100,
-      width: '100%',
-      marginBottom: 10,
     },
     matches: {
       overflow: 'scroll',

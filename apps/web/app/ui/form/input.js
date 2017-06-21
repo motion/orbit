@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import { clr, inject } from '~/helpers'
+import type { Color } from 'gloss'
 
 export type Props = {
   getRef?: Function,
@@ -11,6 +12,7 @@ export type Props = {
   transparent?: boolean,
   borderRadius?: number,
   flex?: number | string,
+  borderColor?: Color,
 }
 
 @inject(context => context.ui)
@@ -30,6 +32,7 @@ export default class Input {
     borderRadius,
     flex,
     transparent,
+    borderColor,
     ...props
   }: Props) {
     if (sync) {
@@ -50,7 +53,11 @@ export default class Input {
   }
 
   static theme = {
-    theme: ({ fontSize, transparent, height, type }, context, theme) => {
+    theme: (
+      { borderColor, fontSize, transparent, height, type },
+      context,
+      theme
+    ) => {
       let styles = {}
 
       if (!type || type === 'password' || type === 'text') {
@@ -67,6 +74,7 @@ export default class Input {
         input: {
           fontSize,
           ...theme.base,
+          borderColor: borderColor || theme.base.borderColor,
           height,
           minHeight: height,
           ...styles,

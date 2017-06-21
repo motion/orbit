@@ -25,7 +25,6 @@ export default class DocumentPage {
     const { doc } = docStore
 
     if (!doc) {
-      console.log('docid', id)
       return <div>no doc found</div>
     }
 

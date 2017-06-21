@@ -7,7 +7,6 @@ import Commander from './commander'
 @view
 export default class Header {
   render({ layoutStore }) {
-    console.log(Commander.Input)
     return (
       <header
         $$draggable

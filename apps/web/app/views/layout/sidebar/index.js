@@ -88,11 +88,11 @@ class TeamStatus {
 class Projects {
   render({ store }) {
     const docs = store.docs || []
-    console.log('docs are', docs)
+    const hasDocs = docs.length !== 0
 
     return (
       <content $$scrollable $$flex={6}>
-        <noStars if={docs.length === 0}>No Stars</noStars>
+        <noStars if={!hasDocs}>No Stars</noStars>
 
         {docs.map((item, i) =>
           <section key={i}>
@@ -141,7 +141,7 @@ class Projects {
           </section>
         )}
 
-        <empty $$draggable />
+        <empty if={hasDocs} $$draggable />
       </content>
     )
   }

@@ -74,11 +74,17 @@ export default class TextPlugin {
 
   plugins = [
     {
-      onKeyPress(event: KeyboardEvent, data, state) {
-        if (event.which === 13) {
-          return onEnter(event, state)
+      onKeyDown(event: KeyboardEvent, data, state) {
+        if (event.which === 39) {
+          const { text } = state.startBlock
+          if (text.trim() === '') {
+            return state
+              .transform()
+              .setBlock({ type: BLOCKS.INSERT, data: {} })
+              .apply()
+          }
         }
-        return state
+        // return state
       },
     },
     TrailingBlock({

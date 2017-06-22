@@ -1,5 +1,6 @@
 export const BLOCKS = {
   TITLE: 'title',
+  INSERT: 'insert',
   PARAGRAPH: 'paragraph',
   HASHTAG: 'hashtag',
   QUOTE: 'quote',
@@ -19,6 +20,7 @@ export const BLOCKS = {
   DOC_LIST: 'docList',
   EMAIL: 'email',
   COUNTER: 'counter',
+  VIDEO: 'video',
 }
 
 export const MARKS = {

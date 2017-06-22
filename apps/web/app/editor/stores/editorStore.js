@@ -127,11 +127,11 @@ export default class EditorStore implements StoreType {
   // HELPERS
 
   focus = () => {
-    this.slate.focus()
+    this.slate && this.slate.focus()
   }
 
   blur = () => {
-    this.slate.blur()
+    this.slate && this.slate.blur()
   }
 
   pluginsByCategory = category =>

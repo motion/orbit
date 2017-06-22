@@ -25,6 +25,15 @@ export default class Input {
     borderRadius: 5,
   }
 
+  node = null
+  focus = () => this.node && this.node.focus()
+  blur = () => this.node && this.node.blur()
+
+  getRef = (ref: ?HTMLElement): void => {
+    this.node = ref
+    this.props.getRef && this.props.getRef(ref)
+  }
+
   render({
     getRef,
     sync,
@@ -43,7 +52,7 @@ export default class Input {
       props.onChange = e => sync.set(e.target.value)
     }
 
-    return <input $$borderRadius={borderRadius} ref={getRef} {...props} />
+    return <input $$borderRadius={borderRadius} ref={this.getRef} {...props} />
   }
 
   static style = {

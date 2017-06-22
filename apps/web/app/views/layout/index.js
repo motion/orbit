@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view } from '@jot/black'
 import { Shortcuts } from '~/helpers'
@@ -10,7 +11,6 @@ import Sidebar from './sidebar'
 import Header from './header'
 import Errors from './errors'
 import * as Commander from '~/views/commander'
-import KeyStore from '~/stores/keyStore'
 import LayoutStore from '~/stores/layoutStore'
 import CommanderStore from '~/stores/commanderStore'
 import RedBox from 'redbox-react'
@@ -44,16 +44,22 @@ class LayoutWrap {
   }
 }
 
+type Props = {
+  layoutStore: LayoutStore,
+  commanderStore: CommanderStore,
+}
+
 // stores attached here via provide give us nice ways
 // to share logic horizontally between any component
 // eg: @view.attach('layoutStore') in any sub-view
 
 @view.provide({
   layoutStore: LayoutStore,
-  keyStore: KeyStore,
   commanderStore: CommanderStore,
 })
 export default class Root {
+  props: Props
+
   static childContextTypes = {
     shortcuts: object,
   }
@@ -63,7 +69,7 @@ export default class Root {
   }
 
   getChildContext() {
-    return { shortcuts: this.props.keyStore.manager }
+    return { shortcuts: this.props.commanderStore.keyManager }
   }
 
   lastScrolledTo = 0
@@ -114,7 +120,7 @@ export default class Root {
     )
   }
 
-  render({ layoutStore, keyStore }, { error }) {
+  render({ layoutStore, commanderStore }: Props, { error }) {
     if (error) {
       return <RedBox error={error} />
     }
@@ -122,7 +128,11 @@ export default class Root {
     return (
       <Theme name="light">
         <SlotFill.Provider>
-          <Shortcuts $layout name="all" handler={keyStore.handleShortcuts}>
+          <Shortcuts
+            $layout
+            name="all"
+            handler={commanderStore.handleShortcuts}
+          >
             {IN_TRAY ? this.renderTray() : this.renderApp()}
           </Shortcuts>
         </SlotFill.Provider>

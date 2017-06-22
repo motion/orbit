@@ -1,11 +1,12 @@
 import React from 'react'
 import { object } from 'prop-types'
 import { pickBy } from 'lodash'
+import hoistStatics from 'hoist-non-react-statics'
 
 export default function attacher(options) {
   return {
     decorator: View => {
-      return class ContextAttacher extends React.Component {
+      class ContextAttacher extends React.Component {
         static contextTypes = {
           stores: object,
         }
@@ -22,6 +23,11 @@ export default function attacher(options) {
           )
         }
       }
+
+      // copy statics
+      hoistStatics(ContextAttacher, View)
+
+      return ContextAttacher
     },
   }
 }

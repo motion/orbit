@@ -3,11 +3,31 @@ import { watch } from '@jot/black'
 import { Document } from '@jot/models'
 import Router from '~/router'
 import { keycode } from '~/helpers'
+import { ShortcutManager } from 'react-shortcuts'
+
+const KEYMAP = {
+  all: {
+    left: 'left',
+    right: 'right',
+    up: 'up',
+    j: 'j', // down
+    k: 'k', // up
+    d: 'd', // doc
+    down: 'down',
+    enter: 'enter',
+    esc: 'esc',
+    commander: 'command+t',
+    cmdEnter: 'command+enter',
+    delete: ['delete', 'backspace'],
+    toggleSidebar: 'command+/',
+  },
+}
 
 const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
 
 export default class CommanderStore {
+  keyManager = new ShortcutManager(KEYMAP)
   currentDocument = watch(() => Document.get(Router.params.id))
   crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
   isOpen = true //bool(localStorage.getItem(OPEN)) || false
@@ -15,6 +35,7 @@ export default class CommanderStore {
   path = ''
   highlightIndex = 0
   searchResults: Array<Document> = []
+  input: ?React$Element = null
 
   start() {
     this.watch(async () => {
@@ -31,6 +52,19 @@ export default class CommanderStore {
         this.searchResults = await this.getChildDocsForPath(searchPath)
       }
     })
+  }
+
+  handleShortcuts = (action: string, event: KeyboardEvent) => {
+    if (!action) return
+    this.emit('action', { action, event })
+
+    switch (action) {
+      case 'commander':
+        console.log(this.input)
+        this.input && this.input.focus()
+        this.open()
+        break
+    }
   }
 
   get peek(): Array<Document> {

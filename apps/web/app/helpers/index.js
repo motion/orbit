@@ -1,11 +1,16 @@
 // @flow
+import React from 'react'
+import { inject as injector } from 'react-tunnel'
+import { Shortcuts as ReactShortcuts } from 'react-shortcuts'
+import { view } from '@jot/black'
+import { findDOMNode } from 'react-dom'
+
 export * from 'mobx'
 export { Component } from 'react'
 export $ from '@jot/black/lib/gloss'
 export clr from 'color'
 export debug from 'debug'
 
-import { inject as injector } from 'react-tunnel'
 // adds object fallback if not defined
 export const inject = (mapProvidedToProps: Function) =>
   injector(props => mapProvidedToProps(props) || {})
@@ -21,14 +26,12 @@ export const keycode = (event: Event) => {
   return code
 }
 
-// todo move into own thing
-import { Shortcuts as ReactShortcuts } from 'react-shortcuts'
-import { view } from '@jot/black'
-
 @view
 export class Shortcuts {
   render() {
-    return <ReactShortcuts $shortcuts isolate {...this.props} />
+    return (
+      <ReactShortcuts $shortcuts isolate alwaysFireHandler {...this.props} />
+    )
   }
   static style = {
     shortcuts: {
@@ -40,7 +43,6 @@ export class Shortcuts {
 
 type Target = string | (() => React$Children | React$Children)
 
-import { findDOMNode } from 'react-dom'
 export const getTarget = (target: Target) => {
   if (!target) {
     return null

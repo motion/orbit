@@ -1,6 +1,5 @@
 import React from 'react'
 import { view } from '@jot/black'
-import { Shortcuts } from '~/helpers'
 import { Input } from '~/ui'
 
 @view.attach('commanderStore')
@@ -18,6 +17,7 @@ export default class CommanderInput {
           placeholder={commanderStore.place}
           placeholderColor={[0, 0, 0, 0.1]}
           height={34}
+          ref={commanderStore.ref('input').set}
         />
       </bar>
     )

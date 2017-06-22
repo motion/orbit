@@ -4,6 +4,7 @@ import { Document } from '@jot/models'
 import Router from '~/router'
 import { keycode } from '~/helpers'
 import { ShortcutManager } from 'react-shortcuts'
+import App from '~/app'
 
 const KEYMAP = {
   all: {
@@ -54,15 +55,32 @@ export default class CommanderStore {
     })
   }
 
+  actions = {
+    esc: this.close,
+    enter: this.onEnter,
+    commander: () => {
+      this.input && this.input.focus()
+      this.open()
+    },
+    down: () => {
+      if (!this.searchResults || !this.isOpen) {
+        this.actions.focusEditor()
+        return
+      }
+      this.moveHighlight(1)
+    },
+    up: () => this.moveHighlight(-1),
+    focusEditor: () => {
+      App.editor.focus()
+    },
+  }
+
   handleShortcuts = (action: string, event: KeyboardEvent) => {
     if (!action) return
     this.emit('action', { action, event })
 
-    switch (action) {
-      case 'commander':
-        this.input && this.input.focus()
-        this.open()
-        break
+    if (this.actions[action]) {
+      this.actions[action](event)
     }
   }
 
@@ -160,23 +178,7 @@ export default class CommanderStore {
   onKeyDown = (event: KeyboardEvent) => {
     event.persist()
     const code = keycode(event)
-
-    switch (code) {
-      case 'enter':
-        this.onEnter()
-        break
-      case 'esc':
-        this.close()
-        break
-      case 'down':
-        this.moveHighlight(1)
-        break
-      case 'up':
-        this.moveHighlight(-1)
-        break
-      default:
-        this.open()
-    }
+    console.log('commander', code)
   }
 
   open = () => {
@@ -194,8 +196,10 @@ export default class CommanderStore {
 
   moveHighlight = (diff: number) => {
     this.highlightIndex += diff
-    if (this.highlightIndex === -1) this.highlightIndex = this.docs.length - 1
-    if (this.highlightIndex >= this.docs.length) this.highlightIndex = 0
+    if (this.highlightIndex === -1)
+      this.highlightIndex = this.searchResults.length - 1
+    if (this.highlightIndex >= this.searchResults.length)
+      this.highlightIndex = 0
   }
 
   navTo = doc => {

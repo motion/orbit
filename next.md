@@ -2,7 +2,8 @@
   - fix popovers on user dropdown
   - rxdb query sync
   - simple create team flow
-  - @query not necessary (?)
+  - commander features/polish
+    - can we mapreduce paths in couch?
 
 # high level prioritized list
   - commander/filter/bar
@@ -10,6 +11,7 @@
   - comments
 
 # next
+  - @query not necessary (?)
   - #brainstorm: features and user feedback strategy
   - #brainstorm: divvying up next two week
   - editor: performance/stability: general perf, less saving: save only on debounce(1000)

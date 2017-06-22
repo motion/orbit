@@ -47,6 +47,8 @@ export type Props = {
   noArrow?: boolean,
   // DEBUG: helps you see forgiveness zone
   showForgiveness?: boolean,
+  // padding from edge of window
+  edgePadding: number,
 }
 
 const INVERSE = {
@@ -56,21 +58,22 @@ const INVERSE = {
   right: 'left',
 }
 
-const calcForgiveness = (forgiveness, distance) =>
-  Math.min(forgiveness, distance) + 2
+const calcForgiveness = (forgiveness, distance) => forgiveness
+//Math.min(forgiveness, distance) + 2
 
 @view.ui
 export default class Popover {
   props: Props
 
   static defaultProps = {
+    edgePadding: 5,
     distance: 10,
     arrowSize: 11,
     forgiveness: 15,
     towards: 'auto',
     animation: 'slide 200ms',
     adjust: [0, 0],
-    delay: 0,
+    delay: 16,
   }
 
   static contextTypes = {
@@ -91,6 +94,7 @@ export default class Popover {
     arrowInnerTop: 0,
     isOpen: false,
     direction: null,
+    delay: 0,
   }
 
   // curProps is always up to date, so we dont have to thread props around a ton
@@ -251,7 +255,7 @@ export default class Popover {
 
   get popoverSize() {
     const { forgiveness } = this
-    const { width, height, distance } = this.curProps
+    const { width, height } = this.curProps
     const { popover } = this.refs
     const size = {
       height: isNumber(width) ? width : popover.clientHeight,
@@ -313,9 +317,9 @@ export default class Popover {
   edgePad = (currentPosition, windowSize, popoverSize) => {
     return Math.min(
       // upper limit
-      windowSize - this.curProps.distance - popoverSize,
+      windowSize - this.curProps.edgePadding - popoverSize,
       // lower limit
-      Math.max(this.curProps.distance, currentPosition)
+      Math.max(this.curProps.edgePadding, currentPosition)
     )
   }
 
@@ -341,22 +345,27 @@ export default class Popover {
         popoverSize.width
       )
 
-      // find arrowLeft
+      // arrow
       if (targetCenter < popoverHalfWidth) {
-        arrowLeft = -popoverHalfWidth - targetCenter
+        // adjust left
+        const edgeAdjustment = left
+        arrowLeft = -popoverHalfWidth - targetCenter + edgeAdjustment
       } else if (targetCenter > arrowCenter) {
-        arrowLeft = targetCenter - arrowCenter + distance
+        // adjust right
+        const edgeAdjustment = window.innerWidth - (left + popoverSize.width)
+        arrowLeft = targetCenter - arrowCenter + edgeAdjustment
       }
 
       // arrowLeft bounds
-      const max = Math.max(0, popoverHalfWidth - distance - arrowSize * 0.75)
+      const max = Math.max(0, popoverHalfWidth - arrowSize * 0.75)
       const min = -popoverHalfWidth + arrowSize * 0.5 + distance
       arrowLeft = Math.max(min, Math.min(max, arrowLeft))
       arrowLeft = -(arrowSize / 2) + arrowLeft
+
       // adjust arrows off in this case
       // TODO: this isnt quite right
       if (distance > forgiveness) {
-        arrowLeft = arrowLeft / 2 - forgiveness
+        arrowLeft = arrowLeft / 2
       }
     } else {
       if (direction === 'left') {
@@ -388,15 +397,17 @@ export default class Popover {
     let maxHeight
     let top = null
 
+    const arrowAdjust = Math.max(forgiveness, distance)
+
     // bottom half
     if (VERTICAL) {
       // determine arrow location
       if (direction === 'top') {
-        arrowTop = popoverSize.height + forgiveness
+        arrowTop = popoverSize.height + arrowAdjust
         top = targetTopReal - popoverSize.height - distance
         maxHeight = window.innerHeight - targetBounds.height
       } else {
-        arrowTop = -arrowSize + forgiveness
+        arrowTop = -arrowSize + arrowAdjust
         top = targetTopReal + targetBounds.height + distance
         maxHeight =
           window.innerHeight - (targetBounds.top + targetBounds.height)
@@ -424,44 +435,38 @@ export default class Popover {
 
   listenForHover = () => {
     this.addHoverListeners('target', this.target)
-    if (!this.props.noHover) {
+    if (!this.curProps.noHover) {
       this.addHoverListeners('menu', this.refs.popover)
     }
   }
 
   addHoverListeners = (name, node) => {
     if (!node) return
-
-    const setTrue = this.hoverStateSetter(name, true)
-    const onEnter = debounce(
-      () => this.isNodeHovered(node) && setTrue(),
-      this.props.delay
-    )
-
-    const setFalse = debounce(
-      this.hoverStateSetter(name, false),
-      name === 'target' ? 16 : 0 // race condition fix: target should close more slowly than menu opens
-    )
-    const onLeave = () => !this.isNodeHovered(node) && setFalse()
+    const { delay } = this.curProps
+    const open = () => this.hoverStateSet(name, true)
+    const close = () => this.hoverStateSet(name, false)
+    const openIfOver = () => this.isNodeHovered(node) && open()
+    const closeIfOut = () => !this.isNodeHovered(node) && close()
+    const onEnter = debounce(openIfOver)
+    const outDelay = name === 'target' ? delay + 16 : delay // 🐛 target should close slower than menu opens
+    const onLeave = debounce(closeIfOut, outDelay)
 
     this.on(node, 'mouseenter', () => {
       onEnter()
-      // insanity, but mouselave is horrible
+      // insanity, but mouseleave is horrible
       if (this.curProps.target) {
         this.setTimeout(onLeave, 16)
-        this.setTimeout(onLeave, 32)
         this.setTimeout(onLeave, 96)
       }
     })
 
-    this.on(node, 'mouseleave', setFalse)
+    this.on(node, 'mouseleave', onLeave)
   }
 
   // hover helpers
-  hoverStateSetter = (name, val) => () => {
+  hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => this.setState({ [`${name}Hovered`]: val })
-
     if (val) {
       if (openOnHover) {
         this.setPosition(setter)
@@ -474,10 +479,13 @@ export default class Popover {
         setter()
       }
     }
+    return val
   }
 
   isNodeHovered = node => {
-    return node.querySelector(':hover')
+    return (
+      node.querySelector(':hover') || node.parentNode.querySelector(':hover')
+    )
   }
 
   overlayRef = ref => {
@@ -518,6 +526,7 @@ export default class Popover {
     closeOnClickWithin,
     showForgiveness,
     delay,
+    edgePadding,
     ...props
   }: Props) {
     const {
@@ -688,7 +697,7 @@ export default class Popover {
       popover: {
         padding: calcForgiveness(forgiveness, distance),
         margin: -calcForgiveness(forgiveness, distance),
-        background: showForgiveness ? [50, 100, 150, 0.2] : 'auto',
+        background: showForgiveness ? [250, 250, 0, 0.2] : 'auto',
       },
     }),
     shadow: ({ shadow }) => ({

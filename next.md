@@ -1,5 +1,4 @@
 # nate
-  - fix popovers on user dropdown
   - rxdb query sync
   - simple create team flow
   - commander features/polish

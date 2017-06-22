@@ -55,6 +55,7 @@ export const styles: Object = {
   height: height => ({ height }),
   overflow: overflow => ({ overflow }),
   background: background => ({ background }),
+  transition: transition => ({ transition }),
   hidden: val => ({ display: val ? 'none' : 'auto' }),
   show: val => ({ opacity: val ? 1 : 0 }),
   alignSelf: alignSelf => ({ alignSelf }),

@@ -1,3 +1,4 @@
+import React from 'react'
 import { view } from '@jot/black'
 import { inject } from '~/helpers'
 import { Provider } from 'react-tunnel'

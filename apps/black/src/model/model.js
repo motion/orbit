@@ -27,7 +27,7 @@ export default class Model {
   // sync to
   remoteDb: ?string = null
   // for tracking which queries we are watching
-  queries: Object = {}
+  queryCache: Object = {}
   // hooks that run before/after operations
   hooks: Object<string, () => Promise<any>> = {}
 

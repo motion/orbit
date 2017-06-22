@@ -21,7 +21,7 @@ import Page from '~/page'
   },
 })
 export default class DocumentPage {
-  render({ id, docStore, insidePlace }) {
+  render({ docStore, insidePlace }) {
     const { doc } = docStore
 
     if (!doc) {

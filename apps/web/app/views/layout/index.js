@@ -20,8 +20,14 @@ import Draft from '~/views/document/draft'
 @view
 class LayoutWrap {
   render({ layoutStore, children }) {
+    console.log(layoutStore.sidebar.changing)
     return (
-      <wrap $$right={layoutStore.sidebar.trueWidth}>
+      <wrap
+        $$transition={
+          layoutStore.sidebar.changing ? 'right ease-in 250ms' : 'none'
+        }
+        $$right={layoutStore.sidebar.trueWidth}
+      >
         {children}
       </wrap>
     )
@@ -29,7 +35,6 @@ class LayoutWrap {
   static style = {
     wrap: {
       background: '#fff',
-      transition: 'right ease-in 250ms',
       position: 'absolute',
       left: 0,
       top: 0,

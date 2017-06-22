@@ -8,7 +8,7 @@ export default class SidebarRootStore {
   width = SIDEBAR_WIDTH
   active = true
   dragging = false
-  transitioning = false
+  changing = false
 
   get trueWidth() {
     return this.active ? this.width : 0
@@ -28,11 +28,11 @@ export default class SidebarRootStore {
 
   toggle = () => {
     const next = !this.active
-    this.transitioning = true
+    this.changing = true
+    this.active = next
     this.setTimeout(() => {
-      this.active = next
-      this.transitioning = false
-    })
+      this.changing = false
+    }, 200)
   }
 
   attachDragger = (node: HTMLElement) => {

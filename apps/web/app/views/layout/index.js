@@ -20,10 +20,11 @@ import Draft from '~/views/document/draft'
 @view
 class LayoutWrap {
   render({ layoutStore, children }) {
+    console.log(layoutStore.sidebar.changing)
     return (
       <wrap
         $$transition={
-          layoutStore.sidebar.transitioning ? 'right ease-in 250ms' : 'none'
+          layoutStore.sidebar.changing ? 'right ease-in 250ms' : 'none'
         }
         $$right={layoutStore.sidebar.trueWidth}
       >

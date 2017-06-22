@@ -40,7 +40,7 @@ class TeamStatus {
                 <name $$background={rc()}>{player.name}</name>
                 <Badge
                   fontFamily="monospace"
-                  color={rc()}
+                  color={rc({ luminosity: 'light' })}
                   label={sillyname().slice(0, 5).toLowerCase()}
                 >
                   {Math.round(Math.random() * 10)}

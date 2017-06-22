@@ -443,10 +443,11 @@ export default class Popover {
   addHoverListeners = (name, node) => {
     if (!node) return
     const { delay } = this.curProps
+    const checkParent = name === 'menu'
     const open = () => this.hoverStateSet(name, true)
     const close = () => this.hoverStateSet(name, false)
-    const openIfOver = () => this.isNodeHovered(node) && open()
-    const closeIfOut = () => !this.isNodeHovered(node) && close()
+    const openIfOver = () => this.isNodeHovered(node, checkParent) && open()
+    const closeIfOut = () => !this.isNodeHovered(node, checkParent) && close()
     const onEnter = debounce(openIfOver)
     const outDelay = name === 'target' ? delay + 16 : delay // 🐛 target should close slower than menu opens
     const onLeave = debounce(closeIfOut, outDelay)
@@ -483,9 +484,10 @@ export default class Popover {
     return val
   }
 
-  isNodeHovered = node => {
+  isNodeHovered = (node, parentToo = false) => {
     return (
-      node.querySelector(':hover') || node.parentNode.querySelector(':hover')
+      node.querySelector(':hover') ||
+      (parentToo && node.parentNode.querySelector(':hover'))
     )
   }
 

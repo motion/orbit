@@ -140,7 +140,7 @@ export default class CommanderStore {
   }
 
   onKeyDown = (event: KeyboardEvent) => {
-    console.log(event.which)
+    this.open()
     if (event.which === 13) {
       this.onEnter()
     }

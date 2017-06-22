@@ -6,99 +6,22 @@ import { flatMap } from 'lodash'
 import {
   Theme,
   Drawer,
-  Text,
   Pane,
-  ContextMenu,
-  List,
-  Glow,
   Icon,
-  Link,
   Input,
-  Segment,
-  Title,
-  Button,
   Dropdown,
   Progress,
   SlotFill,
 } from '~/ui'
-import { User, Place, Document } from '@jot/models'
+import { Document } from '@jot/models'
 import Login from '../login'
-import Team from './team'
 import SidebarStore from './store'
 import type LayoutStore from '~/stores/layoutStore'
 import { IN_TRAY, TRAY_WIDTH } from '~/constants'
-import Tasks from './tasks'
-import TaskItem from './taskItem'
 
 type Props = {
   layoutStore: LayoutStore,
   store: SidebarStore,
-}
-
-@view({
-  store: class {
-    inProgress = true
-  },
-})
-class TasksUI {
-  render({ store }) {
-    return (
-      <tasks if={false}>
-        <Pane if={store.inProgress} title="Current Task">
-          <activeItem>
-            <TaskItem
-              task={store.inProgress}
-              active={false}
-              onClick={() => {}}
-              inProgress
-              noDrag
-            />
-          </activeItem>
-        </Pane>
-        <Pane
-          collapsable
-          scrollable
-          title={`Your Tasks`}
-          titleProps={{
-            after: (
-              <Segment itemProps={{ chromeless: true }} $$flex={1}>
-                <Button
-                  active={store.hideArchived == false}
-                  onClick={() => (store.hideArchived = false)}
-                >
-                  All
-                </Button>
-                <Button
-                  active={store.hideArchived}
-                  onClick={() => (store.hideArchived = true)}
-                >
-                  Active
-                </Button>
-              </Segment>
-            ),
-          }}
-        >
-          <content $$draggable>
-            <ContextMenu
-              $context
-              options={[
-                {
-                  title: 'Delete',
-                  onSelect: place => place.delete(),
-                },
-              ]}
-            >
-              <Tasks store={store} />
-            </ContextMenu>
-          </content>
-        </Pane>
-
-        <Pane collapsable title="Team">
-          <Team store={store} />
-        </Pane>
-      </tasks>
-    )
-  }
 }
 
 @view
@@ -163,36 +86,6 @@ class TeamStatus {
   },
 })
 class Projects {
-  items = [
-    {
-      title: ['me', 'drafts'],
-      items: ['Lorem ipsum dolor sit amet', 'Segunda ipsum dolor sit amet'],
-    },
-    {
-      title: ['pundle', '2.0'],
-      items: [
-        '#brainstorm: features and user feedback strategy',
-        'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
-        'editor: formatting: #uxlove + #dev',
-      ],
-    },
-    {
-      title: ['ui'],
-      items: [
-        'release: deploy to iwritey.com get working',
-        'investigate multi-list drag/drop (dnd)',
-      ],
-    },
-    {
-      title: ['ideas', 'incoming'],
-      items: ['Lorem ipsum dolor sit amet', 'Segunda ipsum dolor sit amet'],
-    },
-    {
-      title: ['nick', 'emails'],
-      items: ['Whats gucci my bucci'],
-    },
-  ]
-
   render({ store }) {
     const docs = store.docs || []
     console.log('docs are', docs)
@@ -247,6 +140,8 @@ class Projects {
             </tasks>
           </section>
         )}
+
+        <empty $$draggable />
       </content>
     )
   }
@@ -254,6 +149,9 @@ class Projects {
   static style = {
     content: {
       padding: [10, 8],
+    },
+    empty: {
+      height: '100%',
     },
     section: {
       margin: [6, 0],
@@ -318,86 +216,7 @@ class PlayUI implements ViewType {
     }
     return (
       <ui>
-        <Segment if={false} controlled itemProps={{ $$flex: 1 }}>
-          <Button>tasks</Button>
-          <Button>docs</Button>
-        </Segment>
-
         <Projects />
-
-        <content if={false} $$scrollable $$flex={6}>
-          <Pane {...paneProps} title="Me">
-            <List
-              items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-              getItem={item => ({
-                primary: item,
-                date: '10m',
-                before: (
-                  <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-                ),
-                after: <Input type="checkbox" />,
-              })}
-            />
-          </Pane>
-
-          <Pane
-            $teamPane
-            {...paneProps}
-            title={
-              <tat $$row>
-                Team: &nbsp;
-                <Dropdown
-                  items={['Motion', 'Something', 'Else']}
-                  color={[255, 255, 255, 0.8]}
-                  onChange={store.ref('team').set}
-                >
-                  <span>{store.team}</span>
-                </Dropdown>
-              </tat>
-            }
-          >
-            <Pane $subPane sub collapsable title="Steel">
-              <List
-                items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-                getItem={item => ({
-                  primary: item,
-                  date: '10m',
-                  before: (
-                    <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-                  ),
-                  after: <input type="checkbox" />,
-                })}
-              />
-            </Pane>
-            <Pane $subPane sub collapsable title="Nick">
-              <List
-                items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-                getItem={item => ({
-                  primary: item,
-                  date: '10m',
-                  before: (
-                    <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-                  ),
-                  after: <input type="checkbox" />,
-                })}
-              />
-            </Pane>
-            <Pane $subPane sub collapsable title="Jacob">
-              <List
-                items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-                getItem={item => ({
-                  primary: item,
-                  date: '10m',
-                  before: (
-                    <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-                  ),
-                  after: <input type="checkbox" />,
-                })}
-              />
-            </Pane>
-          </Pane>
-        </content>
-
         <Pane
           padding={[0, 10]}
           shadow
@@ -431,19 +250,6 @@ class PlayUI implements ViewType {
                 time: '10m',
               },
             ]}
-          />
-
-          <List
-            if={false}
-            items={['lorem ipsum', 'dolor sit amet', 'pig latin']}
-            getItem={item => ({
-              primary: item,
-              date: '10m',
-              before: (
-                <Icon $icon size={6} name="menu" color={[255, 255, 255]} />
-              ),
-              after: <input type="checkbox" />,
-            })}
           />
         </Pane>
       </ui>
@@ -479,8 +285,7 @@ class Inner {
   render() {
     return (
       <inner $$flex>
-        <Login if={!IN_TRAY} />
-        <TasksUI />
+        <Login />
         <PlayUI />
         <SlotFill.Slot name="sidebar">
           {items =>

@@ -56,8 +56,8 @@ export default class CommanderStore {
   }
 
   actions = {
-    esc: this.close,
-    enter: this.onEnter,
+    esc: () => this.close(),
+    enter: () => this.onEnter(),
     commander: () => {
       this.input && this.input.focus()
       this.open()
@@ -78,7 +78,7 @@ export default class CommanderStore {
   handleShortcuts = (action: string, event: KeyboardEvent) => {
     if (!action) return
     this.emit('action', { action, event })
-
+    console.log('action', action, this.actions[action])
     if (this.actions[action]) {
       this.actions[action](event)
     }

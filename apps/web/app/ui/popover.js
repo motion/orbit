@@ -464,7 +464,7 @@ export default class Popover {
   }
 
   // hover helpers
-  hoverStateSet = log((name, val) => {
+  hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => this.setState({ [`${name}Hovered`]: val })
     if (val) {
@@ -480,7 +480,7 @@ export default class Popover {
       }
     }
     return val
-  })
+  }
 
   isNodeHovered = node => {
     return (

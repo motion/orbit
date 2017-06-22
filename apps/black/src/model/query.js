@@ -1,22 +1,12 @@
 // @flow
-import type { RxQuery } from 'rxdb'
-import type PouchDB from 'pouchdb-core'
+// import { RxQuery } from 'rxdb'
 import { observable, autorun } from 'mobx'
 import debug from 'debug'
-import sum from 'hash-sum'
+import hashsum from 'hash-sum'
 
 const out = debug('query')
 
 // TODO: instanceof RxQuery checks
-
-const getSelector = (query: RxQuery) => {
-  const selector = { ...query.mquery._conditions }
-  // need to delete id or else findAll queries dont sync
-  if (!selector._id || !Object.keys(selector._id).length) {
-    delete selector._id
-  }
-  return selector
-}
 
 // subscribe-aware helpers
 // @query value wrapper
@@ -43,18 +33,26 @@ function valueWrap(info, valueGet: Function) {
   })
 
   // autosync query
-  let pull = null
-  // query &&
-  // query.mquery &&
-  // this.collection.sync({
-  //   remote: this.remoteDb,
-  //   // waitForLeadership: true,
-  //   // direction: {
-  //   //   pull: true,
-  //   //   push: true,
-  //   // },
-  //   query,
-  // })
+  let stopSync = null
+
+  // TODO: once rxdb #207 check with (query instanceof RxQuery)
+  if (query && query.mquery) {
+    const selector = query.keyCompress().selector
+    const syncSettings = {
+      remote: this.remoteDB,
+      waitForLeadership: false,
+      query,
+    }
+    const key = hashsum({ db: this.remoteDB, selector })
+    if (!this.queryCache[key]) {
+      this.queryCache[key] = true
+      const syncer = this.collection.sync(syncSettings)
+      stopSync = () => {
+        delete this.queryCache[key]
+        syncer.cancel()
+      }
+    }
+  }
 
   const response = {}
 
@@ -96,8 +94,8 @@ function valueWrap(info, valueGet: Function) {
         out('disposing', info)
         finishSubscribe()
         stopAutorun()
-        if (pull) {
-          pull.cancel()
+        if (stopSync) {
+          stopSync()
         }
       },
     },

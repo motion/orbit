@@ -60,7 +60,6 @@ export default class CommanderStore {
 
     switch (action) {
       case 'commander':
-        console.log(this.input)
         this.input && this.input.focus()
         this.open()
         break

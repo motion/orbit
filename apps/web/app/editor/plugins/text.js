@@ -78,10 +78,15 @@ export default class TextPlugin {
         if (event.which === 39) {
           const { text } = state.startBlock
           if (text.trim() === '') {
-            return state
-              .transform()
-              .setBlock({ type: BLOCKS.INSERT, data: {} })
-              .apply()
+            const isRoot =
+              state.document.getPath(state.startBlock.key).length === 1
+
+            if (isRoot) {
+              return state
+                .transform()
+                .setBlock({ type: BLOCKS.INSERT, data: {} })
+                .apply()
+            }
           }
         }
         // return state

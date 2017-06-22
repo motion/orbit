@@ -94,6 +94,7 @@ export default class Children {
 
     doc: {
       marginRight: 20,
+      alignItems: 'center',
     },
     bar: {
       padding: [5, 10],

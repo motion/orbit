@@ -1,4 +1,5 @@
 // @flow
+import { watch } from '@jot/black'
 import { Document } from '@jot/models'
 import Router from '~/router'
 import { keycode } from '~/helpers'
@@ -7,6 +8,8 @@ const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
 
 export default class CommanderStore {
+  currentDocument = watch(() => Document.get(Router.params.id))
+  crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
   isOpen = true //bool(localStorage.getItem(OPEN)) || false
   value = ''
   path = ''
@@ -29,8 +32,9 @@ export default class CommanderStore {
       }
     })
 
-    this.watch(async () => {
-      this.docsAtPrefix = await this.getChildDocs(this.currentPathPrefix)
+    this.watch(() => {
+      console.log(Router.path)
+      // this.value =
     })
   }
 

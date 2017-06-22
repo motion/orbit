@@ -15,7 +15,9 @@ export default class CommanderInput {
           onKeyDown={commanderStore.onKeyDown}
           onFocus={commanderStore.open}
           borderColor="transparent"
-          placeholder="url..."
+          placeholder={commanderStore.place}
+          placeholderColor={[0, 0, 0, 0.1]}
+          height={34}
         />
       </bar>
     )
@@ -27,10 +29,12 @@ export default class CommanderInput {
     },
     query: {
       flex: 1,
-      fontSize: 16,
-      border: [1, '#ddd'],
-      borderRadius: 5,
+      fontSize: 18,
+      fontWeight: 600,
+      border: [1, 'transparent'],
+      borderRadius: 0,
       margin: 0,
+      borderBottom: [2, '#f2f2f2'],
     },
   }
 }

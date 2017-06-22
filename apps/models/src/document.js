@@ -120,7 +120,12 @@ class Document extends Model {
             return crumbs
           }
           crumbs = [doc, ...crumbs]
-          doc = await this.collection.findOne(doc.parentId).exec()
+          const next = await this.collection.findOne(doc.parentId).exec()
+          if (!next) {
+            console.error('weird, no doc at this crumb', next)
+            return crumbs
+          }
+          doc = next
         }
       }
 

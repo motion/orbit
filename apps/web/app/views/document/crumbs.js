@@ -1,8 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { Icon, Button, Segment } from '~/ui'
-import { IS_ELECTRON } from '~/constants'
+import { Icon } from '~/ui'
 import Router from '~/router'
 import type DocStore from './store'
 

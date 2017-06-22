@@ -13,6 +13,8 @@ export type Props = {
   borderRadius?: number,
   flex?: number | string,
   borderColor?: Color,
+  placeholder?: string,
+  placeholderColor?: Color,
 }
 
 @inject(context => context.ui)
@@ -33,6 +35,7 @@ export default class Input {
     flex,
     transparent,
     borderColor,
+    placeholderColor,
     ...props
   }: Props) {
     if (sync) {
@@ -54,7 +57,7 @@ export default class Input {
 
   static theme = {
     theme: (
-      { borderColor, fontSize, transparent, height, type },
+      { placeholderColor, borderColor, fontSize, transparent, height, type },
       context,
       theme
     ) => {
@@ -79,6 +82,9 @@ export default class Input {
           minHeight: height,
           ...styles,
           ...(transparent && { background: 'transparent' }),
+          '&::placeholder': {
+            color: placeholderColor,
+          },
           '&:hover': {
             borderColor: theme.hover.borderColor,
           },

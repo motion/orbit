@@ -3,6 +3,7 @@ import React from 'react'
 import { view } from '@jot/black'
 import { Button, TiltGlow } from '~/ui'
 import { Document } from '@jot/models'
+import { sortBy } from 'lodash'
 
 const WIDTH = 50
 const HEIGHT = 50
@@ -46,7 +47,7 @@ export default class Children {
 
         <docBar $$row if={hasDocs}>
           <docs>
-            {(docs || []).map(doc =>
+            {sortBy(docs || [], 'createdAt').map(doc =>
               <doc key={doc._id} onClick={() => Router.go(doc.url())}>
                 <TiltGlow width={WIDTH} height={HEIGHT}>
                   <box />

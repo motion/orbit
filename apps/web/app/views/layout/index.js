@@ -9,7 +9,7 @@ import Router from '~/router'
 import Sidebar from './sidebar'
 import Header from './header'
 import Errors from './errors'
-import Commander from './commander'
+import * as Commander from '~/views/commander'
 import KeyStore from '~/stores/keyStore'
 import LayoutStore from '~/stores/layoutStore'
 import CommanderStore from '~/stores/commanderStore'
@@ -89,12 +89,12 @@ export default class Root {
     return (
       <app>
         <LayoutWrap layoutStore={layoutStore}>
-          <Commander.Results />
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >
+            <Commander.Results />
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
           <Draft

@@ -1,3 +1,6 @@
+# nate
+  - @query not necessary
+
 # high level prioritized list
   - commander/filter/bar
   - node keyboard toggle item type

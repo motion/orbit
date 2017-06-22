@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@jot/black'
 import { SlotFill, Button } from '~/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
-import Commander from './commander'
+import * as Commander from '~/views/commander'
 
 @view
 export default class Header {
@@ -18,7 +18,7 @@ export default class Header {
         onMouseLeave={() => (layoutStore.headerHovered = false)}
       >
         <nav>
-          <Commander.Input />
+          <Commander.Bar />
         </nav>
         <rest $$row>
           <SlotFill.Slot name="documentActions">

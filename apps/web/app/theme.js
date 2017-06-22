@@ -44,5 +44,8 @@ export default {
       color: '#000',
       borderColor: 'purple',
     },
+    focus: {
+      ...LIGHT,
+    },
   },
 }

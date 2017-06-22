@@ -1,5 +1,8 @@
 # nate
-  - @query not necessary
+  - fix popovers on user dropdown
+  - rxdb query sync
+  - simple create team flow
+  - @query not necessary (?)
 
 # high level prioritized list
   - commander/filter/bar

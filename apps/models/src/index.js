@@ -25,8 +25,6 @@ declare class ModelsStore {
 
 export default class Models implements ModelsStore {
   constructor(database, models) {
-    console.log('#Models.new', database, models)
-
     if (!database || !models) {
       throw new Error(
         'No database or models given to App!',
@@ -73,7 +71,6 @@ export default class Models implements ModelsStore {
         // ignore base
         continue
       }
-      console.log('connecting', name, model)
       this[name] = model
 
       if (typeof model.connect !== 'function') {
@@ -81,7 +78,7 @@ export default class Models implements ModelsStore {
       }
 
       connections.push(
-        model.connect(this.database, this.databaseConfig, {
+        model.connect(this.database, {
           sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
         })
       )

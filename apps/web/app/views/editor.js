@@ -32,16 +32,7 @@ export default class JotEditor {
     if (!plugins) {
       return null
     }
-    return (
-      <Editor
-        plugins={plugins}
-        getRef={ref => {
-          console.log(ref)
-          getRef(ref)
-        }}
-        {...props}
-      />
-    )
+    return <Editor plugins={plugins} getRef={getRef} {...props} />
   }
 }
 

@@ -2,6 +2,7 @@
 import { store } from '@jot/black'
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
+import { Document } from './document'
 
 const COUCH_PROTOCOL = `${window.location.protocol}//`
 const COUCH_HOST = `couch.${window.location.host}`
@@ -39,11 +40,22 @@ class User {
     // sync
     this.superlogin.on('login', async (event, session) => {
       this.user = await this.getCurrentUser()
+      this.database.connect(this.database, {
+        sync: this.user.userDBs.documents,
+      })
+      console.log('got some shit')
     })
 
     this.superlogin.on('logout', () => {
       this.user = null
     })
+  }
+
+  get documents() {
+    if (!this.user) {
+      return null
+    }
+    return new Document()
   }
 
   get loggedIn() {

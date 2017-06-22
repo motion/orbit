@@ -36,7 +36,7 @@ const DEFAULT_CONTENT = title => ({
   ],
 })
 
-class Document extends Model {
+export class Document extends Model {
   static props = {
     title: str,
     content: object,
@@ -97,7 +97,6 @@ class Document extends Model {
       // const { lastUpdated, value: cacheValue } = this.tasksCache
       // if (lastUpdated >= this.updatedAt) return cacheValue
       const tasks = docToTasks(this)
-      console.log('title', this.getTitle(), 'tasks', tasks)
       return tasks
     },
     hasStar() {

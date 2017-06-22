@@ -3,7 +3,6 @@ import { view, store } from '@jot/black'
 import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
 import Models from '@jot/models'
-import type { Mode } from '@jot/models'
 
 declare class AppStore {
   images: PouchDB,
@@ -28,7 +27,10 @@ export default class App implements AppStore {
   }
 
   start = async () => {
-    console.log('Use App in your console to access models, stores, etc')
+    console.log(
+      '%cUse App in your console to access models, stores, etc',
+      'background: yellow'
+    )
     console.time('start')
     this.models = new Models(this.config, this.modelsObjects)
     await this.models.start()

@@ -8,8 +8,6 @@ const App = new AppStore({
   models: Models,
 })
 
-console.log('got models, app', Models, App)
-
 export default App
 
 // hmr

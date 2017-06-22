@@ -221,7 +221,6 @@ class Projects {
 })
 class PlayUI implements ViewType {
   render({ store }: { store: SidebarStore }) {
-    console.log('render playui')
     const color = '#fff'
     const borderColor = [255, 255, 255, 0.3]
     const paneProps = {

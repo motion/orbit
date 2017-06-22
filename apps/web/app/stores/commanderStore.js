@@ -31,11 +31,6 @@ export default class CommanderStore {
         this.searchResults = await this.getChildDocsForPath(searchPath)
       }
     })
-
-    this.watch(() => {
-      console.log(Router.path)
-      // this.value =
-    })
   }
 
   get peek(): Array<Document> {

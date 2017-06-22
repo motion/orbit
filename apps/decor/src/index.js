@@ -49,7 +49,7 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
 
     // avoid decorating twice
     if (Klass[DECOR_KEY]) {
-      console.log('avoid decorating twice', Klass)
+      console.log('avoid decorating twice', Klass.name)
       return Klass
     }
 

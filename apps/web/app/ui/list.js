@@ -182,7 +182,6 @@ class List {
     }
 
     if (!items && !children) {
-      console.log('no items or children passed to List')
       return null
     }
 

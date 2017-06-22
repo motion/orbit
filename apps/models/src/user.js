@@ -16,46 +16,41 @@ class User {
   localDb = null
   remoteDb = null
 
-  connect = () => {
+  connect = database => {
+    this.database = database
+    this.documents = new Document()
+    this.documents.settings.database = 'userdocuments'
+
     this.superlogin.configure({
       baseUrl: `${API_URL}/auth/`,
       endpoints: [API_HOST],
-      // Set this to true if you do not want the URL bar host automatically added to the list
-      noDefaultEndpoint: false,
-      // Where to save your session token: localStorage ('local') or sessionStorage ('session'), default: 'local'
+      // don't auto add url host to endpoints
+      noDefaultEndpoint: true,
+      //   'local' | 'session'
       storage: 'local',
       // The authentication providers that are supported by your SuperLogin host
-      // providers: ['facebook', 'twitter'],
-      // Sets when to check if the session is expired. 'stateChange', 'startup' or nothing.
-      // 'stateChange' checks every time $stateChangeStart or $routeChangeStart is fired
-      // 'startup' checks just on app startup. If this is blank it will never check.
-      checkExpired: 'startup',
-      // A float that determines the percentage of a session duration, after which SuperLogin will automatically refresh the
-      // token. For example if a token was issued at 1pm and expires at 2pm, and the threshold is 0.5, the token will
-      // automatically refresh after 1:30pm. When authenticated, the token expiration is automatically checked on every
-      // request. You can do this manually by calling superlogin.checkRefresh(). Default: 0.5
-      refreshThreshold: 0.5,
+      //   eg: ['facebook', 'twitter'],
+      // Sets when to check if the session is expired.
+      //   'stateChange' | 'startup' - checks every time $stateChangeStart or $routeChangeStart is fired, or startup
+      checkExpired: 'stateChange',
+      // Percentage of session duration after which to automatically refresh token
+      //   eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm
+      refreshThreshold: 0.2,
     })
 
     // sync
     this.superlogin.on('login', async (event, session) => {
       this.user = await this.getCurrentUser()
-      this.database.connect(this.database, {
+
+      console.log('connecting user document', this.user.userDBs.documents)
+      this.documents.connect(this.database, {
         sync: this.user.userDBs.documents,
       })
-      console.log('got some shit')
     })
 
     this.superlogin.on('logout', () => {
       this.user = null
     })
-  }
-
-  get documents() {
-    if (!this.user) {
-      return null
-    }
-    return new Document()
   }
 
   get loggedIn() {

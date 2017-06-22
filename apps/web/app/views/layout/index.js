@@ -114,12 +114,6 @@ export default class Root {
       return <RedBox error={error} />
     }
 
-    console.log(
-      'root.render',
-      Router.key,
-      layoutStore.isDragging && this.lastScrolledTo
-    )
-
     return (
       <Theme name="light">
         <SlotFill.Provider>

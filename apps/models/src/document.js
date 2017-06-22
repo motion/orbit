@@ -55,7 +55,6 @@ export class Document extends Model {
 
   static defaultProps = props => {
     const title = props.title || generateName()
-
     return {
       title,
       authorId: User.user ? User.authorId : 'anon',

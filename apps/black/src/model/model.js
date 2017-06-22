@@ -3,6 +3,7 @@ import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
 import type RxDB, { RxCollection } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
+import { cloneDeep } from 'lodash'
 
 type SettingsObject = {
   index?: Array<string>,
@@ -43,7 +44,8 @@ export default class Model {
     return {
       ...this.defaultSchema,
       ...this.settings,
-      ...compile(this.props),
+      // cloneDeep fixes bug when re-using a model (compiling twice)
+      ...compile(cloneDeep(this.props)),
       title: this.settings.database,
     }
   }
@@ -99,7 +101,7 @@ export default class Model {
     }
   }
 
-  async connect(database: RxDB, options: Object): Promise<void> {
+  connect = async (database: RxDB, options: Object): Promise<void> => {
     if (this.database) {
       console.log('hmr model')
       return
@@ -107,8 +109,6 @@ export default class Model {
 
     this.database = database
     this.remoteDB = options.sync
-
-    console.time('db:connect')
     this.collection = await database.collection({
       name: this.title,
       schema: this.compiledSchema,
@@ -119,7 +119,6 @@ export default class Model {
         skip_setup: true,
       },
     })
-    console.timeEnd('db:connect')
 
     // shim add pouchdb-validation
     this.collection.pouch.installValidationMethods()
@@ -152,26 +151,6 @@ export default class Model {
         this.collection[hook](this.hooks[hook])
       })
     }
-
-    this.replicateToRemote()
-
-    // rxdb watch for query changes
-    this.collection.watchForChanges()
-  }
-
-  // TODO until rxdb supports query sync
-  replicateToRemote = (): void => {
-    if (!this.remoteDB) {
-      return
-    }
-    if (this.replicatingToRemote) {
-      return
-    }
-    this.replicatingToRemote = true
-    this.collection.pouch.replicate.to(this.remoteDB, {
-      live: true,
-      retry: true,
-    })
   }
 
   createIndexes = async (): Promise<void> => {

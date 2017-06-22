@@ -12,12 +12,16 @@ import {
   Dropdown,
   Progress,
   SlotFill,
+  Badge,
+  TiltGlow,
 } from '~/ui'
 import { Document } from '@jot/models'
 import Login from '../login'
 import SidebarStore from './store'
 import type LayoutStore from '~/stores/layoutStore'
 import { IN_TRAY, TRAY_WIDTH } from '~/constants'
+import rc from 'randomcolor'
+import sillyname from 'sillyname'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -31,13 +35,22 @@ class TeamStatus {
       <team>
         {items.map(player =>
           <player key={player.name}>
-            <card>
-              <name>{player.name}</name>
+            <TiltGlow>
+              <title $$row>
+                <name $$background={rc()}>{player.name}</name>
+                <Badge
+                  fontFamily="monospace"
+                  color={rc()}
+                  label={sillyname().slice(0, 5).toLowerCase()}
+                >
+                  {Math.round(Math.random() * 10)}
+                </Badge>
+                <time>{player.time}</time>
+              </title>
               <info>
-                <status $$ellipse>{player.status}</status>
-                <time if={false}>{player.time}</time>
+                <status>{player.status}</status>
               </info>
-            </card>
+            </TiltGlow>
           </player>
         )}
       </team>
@@ -50,28 +63,30 @@ class TeamStatus {
       margin: [0, -4],
     },
     player: {
+      padding: [0, 2],
+      flex: 1,
       width: '50%',
-      padding: 2,
-    },
-    card: {
-      borderRadius: 8,
-      padding: [8, 12],
-      '&:hover': {
-        background: [0, 0, 0, 0.1],
-      },
+      minWidth: '50%',
     },
     name: {
-      margin: [0, 0, -2, 0],
-      fontWeight: 600,
+      margin: [-2, 5, -2, 0],
+      fontWeight: 900,
+      width: 30,
+      height: 30,
+      borderRadius: 100,
+      fontSize: 12,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     info: {
       flexFlow: 'row',
       justifyContent: 'space-between',
     },
     status: {
-      fontSize: 12,
-      opacity: 0.4,
-      maxWidth: '100%',
+      fontSize: 15,
+      padding: [4, 0],
+      flex: 1,
+      color: [200, 200, 200],
     },
     time: {
       fontSize: 10,
@@ -221,31 +236,30 @@ class PlayUI implements ViewType {
           padding={[0, 10]}
           shadow
           transparent
-          background={[0, 0, 0, 0.1]}
+          background={[0, 0, 0, 0.55]}
           {...paneProps}
           title={<title $$row>Team: <Dropdown>Motion</Dropdown></title>}
         >
-
           <TeamStatus
             items={[
               {
-                name: 'Steel',
+                name: 'SB',
                 status: '#brainstorm: features and user feedback strategy',
                 time: '10m',
               },
               {
-                name: 'Nate',
+                name: 'NW',
                 status:
                   'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
                 time: '10m',
               },
               {
-                name: 'Nick',
+                name: 'NC',
                 status: 'editor: formatting: #uxlove + #dev',
                 time: '10m',
               },
               {
-                name: 'Jacob',
+                name: 'JB',
                 status: '#brainstorm: features and user feedback strategy',
                 time: '10m',
               },

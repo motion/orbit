@@ -5,6 +5,8 @@ export * as SlotFill from './helpers/slot'
 export Portal from 'react-portal'
 
 // base
+export Arrow from './arrow'
+export Badge from './badge'
 export Button from './button'
 export DefinitionList from './definitionList'
 export Drawer from './drawer'

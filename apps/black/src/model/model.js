@@ -151,6 +151,9 @@ export default class Model {
         this.collection[hook](this.hooks[hook])
       })
     }
+
+    // this makes our userdb react properly to login, no idea why
+    this.collection.watchForChanges()
   }
 
   createIndexes = async (): Promise<void> => {

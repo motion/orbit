@@ -1,6 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import DocView from '~/views/document'
+import { HEADER_HEIGHT } from '~/constants'
 
 @view.attach('commanderStore')
 @view
@@ -43,7 +44,7 @@ export default class CommanderResults {
       zIndex: 10000,
       background: '#fff',
       position: 'absolute',
-      top: 0,
+      top: HEADER_HEIGHT,
       right: 0,
       bottom: 0,
       left: 0,

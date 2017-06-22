@@ -89,12 +89,12 @@ export default class Root {
     return (
       <app>
         <LayoutWrap layoutStore={layoutStore}>
+          <Commander.Results />
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >
-            <Commander.Results />
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
           <Draft
@@ -148,7 +148,7 @@ export default class Root {
       position: 'relative',
       overflowX: 'visible',
       overflowY: 'scroll',
-      zIndex: 10,
+      zIndex: 100,
     },
     dragStartedAt: pos => ({
       overflowX: 'visible',

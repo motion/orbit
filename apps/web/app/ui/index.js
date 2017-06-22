@@ -27,6 +27,7 @@ export Progress from './progress'
 export Glow from './effects/glow'
 export Grain from './effects/grain'
 export Poof from './effects/poof'
+export TiltGlow from './effects/tiltGlow'
 
 // form
 export Form from './form/form'

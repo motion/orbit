@@ -17,7 +17,15 @@ export default class Header {
         onMouseEnter={() => (layoutStore.headerHovered = true)}
         onMouseLeave={() => (layoutStore.headerHovered = false)}
       >
-        <Commander.Bar />
+        <bar>
+          <Commander.Bar />
+          <SlotFill.Slot name="crumbs">
+            {breadcrumbs =>
+              <crumbs>
+                {breadcrumbs}
+              </crumbs>}
+          </SlotFill.Slot>
+        </bar>
         <rest $$row>
           <SlotFill.Slot name="documentActions">
             {items =>
@@ -50,16 +58,18 @@ export default class Header {
   static style = {
     header: {
       background: [255, 255, 255, 0.1],
-      zIndex: 1000,
+      zIndex: 500,
       padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
-      overflow: 'hidden',
     },
-    nav: {
+    bar: {
       flex: 1,
+    },
+    crumbs: {
+      height: 0,
     },
     hovered: {
       opacity: 1,

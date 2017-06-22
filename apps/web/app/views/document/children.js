@@ -1,8 +1,11 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { Button } from '~/ui'
+import { Button, TiltGlow } from '~/ui'
 import { Document } from '@jot/models'
+
+const WIDTH = 50
+const HEIGHT = 50
 
 type Props = {
   id: number,
@@ -45,12 +48,16 @@ export default class Children {
           <docs>
             {(docs || []).map(doc =>
               <doc key={doc._id} onClick={() => Router.go(doc.url())}>
-                <box />
+                <TiltGlow width={WIDTH} height={HEIGHT}>
+                  <box />
+                </TiltGlow>
                 <name>{doc.getTitle()}</name>
               </doc>
             )}
             <doc if={store.newTitle !== null}>
-              <box />
+              <TiltGlow width={WIDTH} height={HEIGHT}>
+                <box />
+              </TiltGlow>
               <input
                 $name
                 autoFocus
@@ -78,13 +85,11 @@ export default class Children {
     children: {
       borderTop: '1px dotted #eee',
     },
-
     box: {
-      width: 65,
-      height: 80,
-      alignSelf: 'center',
-      border: '1px solid #ccc',
-      background: '#f1f1f1',
+      width: WIDTH,
+      height: HEIGHT,
+      border: '1px solid #999',
+      background: '#ccc',
     },
 
     doc: {

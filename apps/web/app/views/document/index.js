@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { Icon } from '~/ui'
+import { SlotFill } from '~/ui'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
 import Crumbs from './crumbs'
@@ -35,6 +35,9 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
+        <SlotFill.Fill name="crumbs">
+          <Crumbs if={!inline} docs={store.crumbs} />
+        </SlotFill.Fill>
         <Editor
           readOnly={readOnly}
           inline={inline}
@@ -42,7 +45,6 @@ export default class DocumentView {
           {...editorProps}
         />
         <Children if={!inline} id={store.document._id} />
-        <Crumbs if={!inline} docs={store.crumbs} />
       </docview>
     )
   }

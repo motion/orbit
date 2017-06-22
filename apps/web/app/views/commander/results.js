@@ -65,6 +65,7 @@ export default class CommanderResults {
     preview: {
       width: 300,
       height: 400,
+      alignSelf: 'flex-end',
       border: [1, '#ccc'],
     },
     highlight: {

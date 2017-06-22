@@ -10,13 +10,57 @@ export default class CommanderStore {
   value = ''
   path = ''
   highlightIndex = 0
-  docs = []
-  searchResults = []
+  searchResults: Array<Document> = []
 
   start() {
     this.watch(async () => {
-      this.searchResults = await this.getChildDocsForPath(this.value)
+      const searchPath = this.currentPathPrefix
+
+      // global! we havent typed any "/" yet
+      if (searchPath === this.value) {
+        this.searchResults = await Document.collection
+          .find()
+          .where('slug')
+          .regex(new RegExp(`^${this.value}`, 'i'))
+          .exec()
+      } else {
+        this.searchResults = await this.getChildDocsForPath(searchPath)
+      }
     })
+
+    this.watch(async () => {
+      this.docsAtPrefix = await this.getChildDocs(this.currentPathPrefix)
+    })
+  }
+
+  get peek(): Array<Document> {
+    if (!this.currentPathSuffix) {
+      return this.searchResults
+    }
+    return this.searchResults.filter(
+      doc => doc.slug.indexOf(this.currentPathSuffix) === 0
+    )
+  }
+
+  get currentPath(): Array<string> {
+    return this.getPath(this.value)
+  }
+
+  get currentPathPrefix(): string {
+    const all = this.getPath(this.value)
+    if (all.length === 1) {
+      return this.value
+    }
+    return all.slice(0, all.length - 1).join('/')
+  }
+
+  get currentPathSuffix(): ?string {
+    const paths = this.getPath(this.value)
+    return paths.length > 1 ? paths[paths.length - 1] : null
+  }
+
+  get highlightedDocument() {
+    return this.docs[this.highlightIndex]
   }
 
   getPath = (path: string): Array<string> => {
@@ -25,13 +69,6 @@ export default class CommanderStore {
 
   onChange = (event: Event) => {
     this.value = event.target.value
-  }
-
-  onEnter = async () => {
-    this.path = this.value
-    const found = await this.createDocAtPath(this.path)
-    console.log('found', found)
-    Router.go(found.url())
   }
 
   createDocAtPath = async (path: string): Document => {
@@ -87,20 +124,34 @@ export default class CommanderStore {
   actions = {
     up: () => this.moveHighlight(-1),
     down: () => this.moveHighlight(1),
-    esc: () => this.onClose(),
+    esc: () => this.close(),
     enter: this.onEnter,
   }
 
   onShortcut = (action: string, event: KeyboardEvent) => {
-    console.log('on shortcut')
     if (this.actions[action]) {
       console.log('COMMANDER', action, this.actions[action])
       this.actions[action]()
     }
   }
 
+  onEnter = async () => {
+    this.path = this.value
+    const found = await this.createDocAtPath(this.path)
+    console.log('found', found)
+    Router.go(found.url())
+  }
+
   onKeyDown = (event: KeyboardEvent) => {
     // todo
+  }
+
+  open = () => {
+    this.setOpen(true)
+  }
+
+  close = () => {
+    this.setOpen(false)
   }
 
   setOpen = val => {
@@ -116,7 +167,7 @@ export default class CommanderStore {
 
   navTo = doc => {
     console.log('navto', doc)
-    // this.onClose()
+    // this.close()
     // Router.go(doc.url())
   }
 }

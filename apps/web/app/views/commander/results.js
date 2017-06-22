@@ -6,7 +6,7 @@ import DocView from '~/views/document'
 @view
 export default class CommanderResults {
   render({ commanderStore: store }) {
-    const docs = store.searchResults || []
+    const docs = store.peek || []
 
     return (
       <results if={store.isOpen && docs.length}>

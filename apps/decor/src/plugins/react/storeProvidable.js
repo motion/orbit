@@ -5,10 +5,6 @@ import { object } from 'prop-types'
 import { pickBy } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 
-type InstanceOptions = {
-  module: Object,
-}
-
 export default function storeProvidable(options, emitter) {
   const cache = new Cache()
   const { instanceOpts } = options

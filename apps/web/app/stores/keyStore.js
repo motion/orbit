@@ -1,5 +1,4 @@
 // @flow
-import { store } from '@jot/black'
 import { ShortcutManager } from 'react-shortcuts'
 
 const keymap = {

@@ -2,7 +2,6 @@
   - rxdb query sync
   - simple create team flow
   - commander features/polish
-    - can we mapreduce paths in couch?
 
 # high level prioritized list
   - commander/filter/bar

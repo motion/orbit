@@ -1,6 +1,7 @@
 // @flow
 import { Document } from '@jot/models'
 import Router from '~/router'
+import { keycode } from '~/helpers'
 
 const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
@@ -60,7 +61,7 @@ export default class CommanderStore {
   }
 
   get highlightedDocument() {
-    return this.docs[this.highlightIndex]
+    return this.peek[this.highlightIndex]
   }
 
   getPath = (path: string): Array<string> => {
@@ -118,31 +119,31 @@ export default class CommanderStore {
     return await Document.collection.find({ parentId: document._id }).exec()
   }
 
-  actions = {
-    up: () => this.moveHighlight(-1),
-    down: () => this.moveHighlight(1),
-    esc: () => this.close(),
-    enter: this.onEnter,
-  }
-
-  onShortcut = (action: string, event: KeyboardEvent) => {
-    if (this.actions[action]) {
-      console.log('COMMANDER', action, this.actions[action])
-      this.actions[action]()
-    }
-  }
-
   onEnter = async () => {
     this.path = this.value
     const found = await this.createDocAtPath(this.path)
-    this.close()
-    Router.go(found.url())
+    this.navTo(found)
   }
 
   onKeyDown = (event: KeyboardEvent) => {
-    this.open()
-    if (event.which === 13) {
-      this.onEnter()
+    event.persist()
+    const code = keycode(event)
+
+    switch (code) {
+      case 'enter':
+        this.onEnter()
+        break
+      case 'esc':
+        this.close()
+        break
+      case 'down':
+        this.moveHighlight(1)
+        break
+      case 'up':
+        this.moveHighlight(-1)
+        break
+      default:
+        this.open()
     }
   }
 
@@ -159,15 +160,14 @@ export default class CommanderStore {
     this.isOpen = val
   }
 
-  moveHighlight = diff => {
+  moveHighlight = (diff: number) => {
     this.highlightIndex += diff
     if (this.highlightIndex === -1) this.highlightIndex = this.docs.length - 1
     if (this.highlightIndex >= this.docs.length) this.highlightIndex = 0
   }
 
   navTo = doc => {
-    console.log('navto', doc)
-    // this.close()
-    // Router.go(doc.url())
+    this.close()
+    Router.go(doc.url())
   }
 }

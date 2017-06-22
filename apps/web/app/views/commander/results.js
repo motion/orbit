@@ -24,10 +24,13 @@ export default class CommanderResults {
             </match>
           )}
         </matches>
-        <preview key={store.activeDoc._id} if={store.activeDoc}>
+        <preview
+          if={store.highlightedDocument}
+          key={store.highlightedDocument._id}
+        >
           <DocView
             readOnly
-            id={store.activeDoc._id}
+            id={store.highlightedDocument._id}
             editorProps={{ find: store.text }}
           />
         </preview>
@@ -45,23 +48,26 @@ export default class CommanderResults {
       bottom: 0,
       left: 0,
     },
-    preview: {
-      position: 'relative',
-      flex: 4,
-      maxWidth: 700,
-    },
-    highlight: {
-      borderRadius: 5,
-    },
     matches: {
+      padding: 10,
       overflow: 'scroll',
-      paddingLeft: 10,
-      paddingRight: 10,
       flex: 1,
-      maxWidth: 350,
-      overflow: 'hidden',
+      minHeight: 100,
       overflowY: 'scroll',
       textSelect: 'none',
+    },
+    match: {
+      padding: [4, 5],
+      borderRadius: 4,
+      fontSize: 16,
+    },
+    preview: {
+      width: 300,
+      height: 400,
+      border: [1, '#ccc'],
+    },
+    highlight: {
+      background: '#eee',
     },
   }
 }

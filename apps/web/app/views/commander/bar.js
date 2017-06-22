@@ -8,29 +8,29 @@ import { Input } from '~/ui'
 export default class CommanderInput {
   render({ commanderStore }) {
     return (
-      <Shortcuts name="all" handler={commanderStore.onShortcut}>
-        <bar $$align="center" $$row>
-          <Input
-            onChange={commanderStore.onChange}
-            onKeyDown={commanderStore.onKeyDown}
-            onFocus={commanderStore.open}
-            borderColor="transparent"
-            fontSize={18}
-            placeholder="url..."
-          />
-        </bar>
-      </Shortcuts>
+      <bar $$align="center" $$row>
+        <Input
+          $query
+          onChange={commanderStore.onChange}
+          onKeyDown={commanderStore.onKeyDown}
+          onFocus={commanderStore.open}
+          borderColor="transparent"
+          placeholder="url..."
+        />
+      </bar>
     )
   }
 
   static style = {
     bar: {
-      marginTop: 3,
-      marginLeft: -1,
+      flex: 1,
     },
     query: {
       flex: 1,
       fontSize: 16,
+      border: [1, '#ddd'],
+      borderRadius: 5,
+      margin: 0,
     },
   }
 }

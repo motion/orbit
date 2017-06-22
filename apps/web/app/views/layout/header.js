@@ -17,9 +17,7 @@ export default class Header {
         onMouseEnter={() => (layoutStore.headerHovered = true)}
         onMouseLeave={() => (layoutStore.headerHovered = false)}
       >
-        <nav>
-          <Commander.Bar />
-        </nav>
+        <Commander.Bar />
         <rest $$row>
           <SlotFill.Slot name="documentActions">
             {items =>

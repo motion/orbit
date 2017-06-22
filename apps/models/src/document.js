@@ -1,4 +1,5 @@
 // @flow
+
 import { Model, query, str, object, array, bool } from '@jot/black'
 import Image from './image'
 import User from './user'
@@ -55,6 +56,7 @@ export class Document extends Model {
 
   static defaultProps = props => {
     const title = props.title || generateName()
+
     return {
       title,
       authorId: User.user ? User.authorId : 'anon',
@@ -95,8 +97,7 @@ export class Document extends Model {
     tasks() {
       // const { lastUpdated, value: cacheValue } = this.tasksCache
       // if (lastUpdated >= this.updatedAt) return cacheValue
-      const tasks = docToTasks(this)
-      return tasks
+      return docToTasks(this)
     },
     hasStar() {
       return includes(this.starredBy, User.authorId)

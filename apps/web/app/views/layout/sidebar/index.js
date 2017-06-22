@@ -105,6 +105,9 @@ class Projects {
     const docs = store.docs || []
     const hasDocs = docs.length !== 0
 
+    const percentComplete = tasks =>
+      100 * tasks.filter(i => i.archive).length / tasks.length
+
     return (
       <content $$scrollable $$flex={6}>
         <noStars if={!hasDocs}>No Stars</noStars>
@@ -119,7 +122,7 @@ class Projects {
                   backgroundColor={[0, 0, 0, 0.15]}
                   lineWidth={2}
                   size={14}
-                  percent={Math.random() * 100}
+                  percent={percentComplete(item.tasks())}
                 />
                 <path if={false} $$row $$centered>
                   {flatMap(

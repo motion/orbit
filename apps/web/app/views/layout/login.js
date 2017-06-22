@@ -105,6 +105,8 @@ export default class Login {
               <username $$ellipse> {User.name}</username>
             </text>
             <Popover
+              distance={10}
+              forgiveness={20}
               theme="light"
               target={<Button circular icon="user" />}
               background

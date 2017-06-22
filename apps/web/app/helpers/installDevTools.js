@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '~/app'
@@ -18,6 +19,7 @@ import Immutable from 'immutable'
 mobxFormatters(Mobx)
 // the heavy hitters
 window.React = React
+window.ReactDOM = ReactDOM
 window.App = App
 window.Constants = Constants
 window.Router = Router
@@ -29,3 +31,30 @@ window.Immutable = Immutable
 window.PouchDB = PouchDB
 window.Constants = Constants
 window._ = _
+
+const colors = [
+  'green',
+  'purple',
+  'red',
+  'brown',
+  'orange',
+  'darkblue',
+  'darkred',
+]
+window.log = function(wrapFn: Function) {
+  const color = colors[Math.floor(Math.random() * colors.length - 1)]
+  return function(...args) {
+    const result = wrapFn.apply(wrapFn, args)
+    const state =
+      this.state &&
+      Object.keys(this.state).reduce(
+        (acc, key) => ` | ${key}: ${this.state[key]}\n${acc}`,
+        ''
+      )
+    console.log(
+      `%c${wrapFn.name}(${args.join(',')}) => ${result}\n${state}`,
+      `color: ${color}`
+    )
+    return result
+  }
+}

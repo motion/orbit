@@ -13,7 +13,7 @@ export default class CommanderInput {
           <Input
             onChange={commanderStore.onChange}
             onKeyDown={commanderStore.onKeyDown}
-            onFocus={commanderStore.onOpen}
+            onFocus={commanderStore.open}
             borderColor="transparent"
             fontSize={18}
             placeholder="url..."

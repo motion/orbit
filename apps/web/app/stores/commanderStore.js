@@ -88,22 +88,19 @@ export default class CommanderStore {
   getDocsAtPath = async (path: string, create = false): Array<Document> => {
     const result = []
     let last
-    for (const slug of path.split('/')) {
+    for (const slug of this.getPath(path)) {
       const query = { slug }
       if (last) {
         query.parentId = last._id
       }
-      last =
-        (await Document.collection.findOne(query).exec()) ||
-        (create &&
-          (await Document.create({
-            parentId: last._id,
-            title: slug,
-            slug,
-          })))
-      if (!last) {
+      let next = await Document.collection.findOne(query).exec()
+      if (!next && create) {
+        next = await Document.create({ ...query, title: slug })
+      }
+      if (!next) {
         return result
       }
+      last = next
       result.push(last)
     }
     return result
@@ -138,12 +135,15 @@ export default class CommanderStore {
   onEnter = async () => {
     this.path = this.value
     const found = await this.createDocAtPath(this.path)
-    console.log('found', found)
+    this.close()
     Router.go(found.url())
   }
 
   onKeyDown = (event: KeyboardEvent) => {
-    // todo
+    console.log(event.which)
+    if (event.which === 13) {
+      this.onEnter()
+    }
   }
 
   open = () => {

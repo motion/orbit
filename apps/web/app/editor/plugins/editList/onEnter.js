@@ -3,6 +3,7 @@ const splitListItem = require('./transforms/splitListItem')
 const splitChild = require('./transforms/splitChild')
 const decreaseItemDepth = require('./transforms/decreaseItemDepth')
 const archiveItem = require('./transforms/archiveItem')
+const processItem = require('./transforms/processItem')
 const getCurrentItem = require('./getCurrentItem')
 const getItemDepth = require('./getItemDepth')
 
@@ -45,11 +46,12 @@ function onEnter(event, data, state, opts) {
     }
   } else {
     const hasChildren = currentItem.getBlocksAsArray().length > 1
+    const transform = processItem(currentItem, opts, state.transform())
     // Split list item
     if (hasChildren) {
-      return splitChild(opts, state.transform()).apply()
+      return splitChild(opts, transform).apply()
     }
-    return splitListItem(opts, state.transform()).apply()
+    return splitListItem(opts, transform).apply()
   }
 }
 

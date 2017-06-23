@@ -18,6 +18,7 @@ function start() {
 // for hmr
 if (module.hot) {
   module.hot.accept(() => {
+    console.log('accept router')
     start()
     render()
   })

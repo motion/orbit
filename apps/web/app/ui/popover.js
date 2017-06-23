@@ -4,7 +4,7 @@ import { object, string } from 'prop-types'
 import { view } from '@jot/black'
 import { getTarget } from '~/helpers'
 import Portal from 'react-portal'
-import { isNumber, debounce } from 'lodash'
+import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'
 
 export type Props = {
@@ -94,7 +94,7 @@ export default class Popover {
     arrowInnerTop: 0,
     isOpen: false,
     direction: null,
-    delay: 0,
+    delay: 16,
   }
 
   // curProps is always up to date, so we dont have to thread props around a ton
@@ -443,17 +443,34 @@ export default class Popover {
   addHoverListeners = (name, node) => {
     if (!node) return
     const { delay } = this.curProps
-    const checkParent = name === 'menu'
+    const isMenu = name === 'menu'
     const open = () => this.hoverStateSet(name, true)
     const close = () => this.hoverStateSet(name, false)
-    const openIfOver = () => this.isNodeHovered(node, checkParent) && open()
-    const closeIfOut = () => !this.isNodeHovered(node, checkParent) && close()
-    const onEnter = debounce(openIfOver)
-    const outDelay = name === 'target' ? delay + 16 : delay // 🐛 target should close slower than menu opens
-    const onLeave = debounce(closeIfOut, outDelay)
+    const openIfOver = () => this.isNodeHovered(node, isMenu) && open()
+    const closeIfOut = () => !this.isNodeHovered(node, isMenu) && close()
+    const onEnter = openIfOver
+    const onLeave = debounce(closeIfOut, isMenu ? delay : delay + 16) // 🐛 target should close slower than menu opens
+
+    if (name === 'target') {
+      // if you move your mouse super slowly onto an element, it triggers this ridiculous bug where it doesnt open
+      // i think because checking `:hover` in css requires your mouse being >1px inside the element
+      // so we also listen for mousemove, super throttled, just to prevent that
+      this.on(
+        node,
+        'mousemove',
+        throttle(
+          () =>
+            !this.state.targetHovered &&
+            this.isNodeHovered(this.target) &&
+            this.hoverStateSet('target', true),
+          200
+        )
+      )
+    }
 
     this.on(node, 'mouseenter', () => {
       onEnter()
+      this.setTimeout(onEnter, 16)
       // insanity, but mouseleave is horrible
       if (this.curProps.target) {
         this.setTimeout(onLeave, 16)
@@ -484,10 +501,13 @@ export default class Popover {
     return val
   }
 
-  isNodeHovered = (node, parentToo = false) => {
-    return (
+  isNodeHovered = (
+    node: HTMLElement,
+    checkParent: boolean = false
+  ): boolean => {
+    return !!(
       node.querySelector(':hover') ||
-      (parentToo && node.parentNode.querySelector(':hover'))
+      (checkParent && node.parentNode.querySelector(':hover'))
     )
   }
 

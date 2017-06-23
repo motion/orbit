@@ -1,4 +1,6 @@
 // @flow
+// 🐛 note: dont import router here
+// it causes the entire app to be imported before boot
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '~/app'
@@ -6,12 +8,12 @@ import * as RxDB from 'rxdb'
 import Mobx from 'mobx'
 import MobxUtils from 'mobx-utils'
 import Rx from 'rxjs'
-import Router from '~/router'
 import PouchDB from 'pouchdb-core'
 import * as Constants from '~/constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
+import { log } from '@jot/black'
 
 // Mobx.useStrict(true)
 
@@ -22,7 +24,6 @@ window.React = React
 window.ReactDOM = ReactDOM
 window.App = App
 window.Constants = Constants
-window.Router = Router
 window.Mobx = Mobx
 window.MobxUtils = MobxUtils
 window.RxDB = RxDB
@@ -31,30 +32,6 @@ window.Immutable = Immutable
 window.PouchDB = PouchDB
 window.Constants = Constants
 window._ = _
+window.log = log
 
-const colors = [
-  'green',
-  'purple',
-  'red',
-  'brown',
-  'orange',
-  'darkblue',
-  'darkred',
-]
-window.log = function(wrapFn: Function) {
-  const color = colors[Math.floor(Math.random() * colors.length - 1)]
-  return function(...args) {
-    const result = wrapFn.apply(wrapFn, args)
-    const state =
-      this.state &&
-      Object.keys(this.state).reduce(
-        (acc, key) => ` | ${key}: ${this.state[key]}\n${acc}`,
-        ''
-      )
-    console.log(
-      `%c${wrapFn.name}(${args.join(',')}) => ${result}\n${state}`,
-      `color: ${color}`
-    )
-    return result
-  }
-}
+console.log('dev tools installed')

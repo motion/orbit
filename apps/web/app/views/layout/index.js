@@ -20,7 +20,6 @@ import Draft from '~/views/document/draft'
 @view
 class LayoutWrap {
   render({ layoutStore, children }) {
-    console.log(layoutStore.sidebar.changing)
     return (
       <wrap
         $$transition={

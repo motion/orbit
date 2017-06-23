@@ -20,9 +20,9 @@ export default function storeProvidable(options, emitter) {
       }
 
       // hmr restore
-      if (instanceOpts && instanceOpts.module) {
-        cache.revive(instanceOpts.module, allStores)
-      }
+      // if (instanceOpts && instanceOpts.module) {
+      //   cache.revive(instanceOpts.module, allStores)
+      // }
 
       let Stores = allStores
 
@@ -110,12 +110,14 @@ export default function storeProvidable(options, emitter) {
             }
           }
 
+          // line below used to be (hmr state preserve):
+          // stores: cache.restore(
+          //   this,
+          //   finalStores,
+          //   instanceOpts && instanceOpts.module
+          // )
           this.setState({
-            stores: cache.restore(
-              this,
-              finalStores,
-              instanceOpts && instanceOpts.module
-            ),
+            stores: finalStores,
           })
         }
 

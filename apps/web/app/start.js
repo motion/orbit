@@ -2,13 +2,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '~/app'
-import { IS_PROD } from './constants'
 import { ThemeProvide } from 'gloss'
 import themes from './theme'
-
-if (!IS_PROD) {
-  require('./helpers/installDevTools')
-}
+import { AppContainer } from 'react-hot-loader'
 
 export function render() {
   console.time('#render')
@@ -16,9 +12,11 @@ export function render() {
   const Layout = require('./views/layout').default
 
   ReactDOM.render(
-    <ThemeProvide {...themes}>
-      <Layout />
-    </ThemeProvide>,
+    <AppContainer>
+      <ThemeProvide {...themes}>
+        <Layout />
+      </ThemeProvide>
+    </AppContainer>,
     ROOT
   )
   console.timeEnd('#render')

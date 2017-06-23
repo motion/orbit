@@ -119,7 +119,7 @@ export default class Button {
           color={active ? '#000' : color || iconColor}
           {...iconProps}
         />
-        <glowWrap $minimal={chromeless} if={!active}>
+        <glowWrap $minimal={chromeless}>
           <Glow full scale={2} color={[0, 0, 0]} opacity={0.06} />
         </glowWrap>
         <children

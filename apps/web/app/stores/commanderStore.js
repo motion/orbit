@@ -1,5 +1,5 @@
 // @flow
-import { watch } from '@jot/black'
+import { watch, store } from '@jot/black'
 import { Document } from '@jot/models'
 import Router from '~/router'
 import { keycode } from '~/helpers'
@@ -17,7 +17,8 @@ const KEYMAP = {
     down: 'down',
     enter: 'enter',
     esc: 'esc',
-    commander: 'command+t',
+    commander: ['command+t'],
+    focus: 'command+l',
     cmdEnter: 'command+enter',
     delete: ['delete', 'backspace'],
     toggleSidebar: 'command+/',
@@ -27,11 +28,12 @@ const KEYMAP = {
 const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
 
+@store
 export default class CommanderStore {
   keyManager = new ShortcutManager(KEYMAP)
   currentDocument = watch(() => Document.get(Router.params.id))
   crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
-  isOpen = true //bool(localStorage.getItem(OPEN)) || false
+  isOpen = false //bool(localStorage.getItem(OPEN)) || false
   value = ''
   path = ''
   highlightIndex = 0
@@ -56,10 +58,17 @@ export default class CommanderStore {
   }
 
   actions = {
-    esc: () => this.close(),
+    esc: () => {
+      if (App.errors.length) {
+        App.clearErrors()
+      } else {
+        this.close()
+      }
+    },
     enter: () => this.onEnter(),
+    focus: () => this.focus(),
     commander: () => {
-      this.input && this.input.focus()
+      this.focus()
       this.open()
     },
     down: () => {
@@ -75,11 +84,17 @@ export default class CommanderStore {
     },
   }
 
+  focus = () => {
+    if (this.input) {
+      this.input.focus()
+    }
+  }
+
   handleShortcuts = (action: string, event: KeyboardEvent) => {
     if (!action) return
     this.emit('action', { action, event })
-    console.log('action', action, this.actions[action])
     if (this.actions[action]) {
+      console.log('action', action)
       this.actions[action](event)
     }
   }

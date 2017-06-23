@@ -44,7 +44,7 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
     let decoratedClass = Klass
 
     if (!Klass) {
-      throw `Didnt pass a valid class or function to decorator`
+      throw 'Didnt pass a valid class or function to decorator'
     }
 
     // avoid decorating twice

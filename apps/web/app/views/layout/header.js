@@ -39,6 +39,7 @@ export default class Header {
                 {items}
                 <Button
                   chromeless
+                  spaced
                   icon={
                     layoutStore.sidebar.active
                       ? 'arrow-min-right'

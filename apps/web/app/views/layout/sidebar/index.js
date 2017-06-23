@@ -180,6 +180,7 @@ class Projects {
       flex: 1,
       textAlign: 'center',
       justifyContent: 'center',
+      fontWeight: 'bold',
       color: '#888',
     },
     title: {

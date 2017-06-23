@@ -17,7 +17,7 @@ const KEYMAP = {
     down: 'down',
     enter: 'enter',
     esc: 'esc',
-    commander: 'command+t',
+    commander: ['command+t', 'command+l'],
     cmdEnter: 'command+enter',
     delete: ['delete', 'backspace'],
     toggleSidebar: 'command+/',
@@ -31,7 +31,7 @@ export default class CommanderStore {
   keyManager = new ShortcutManager(KEYMAP)
   currentDocument = watch(() => Document.get(Router.params.id))
   crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
-  isOpen = true //bool(localStorage.getItem(OPEN)) || false
+  isOpen = false //bool(localStorage.getItem(OPEN)) || false
   value = ''
   path = ''
   highlightIndex = 0
@@ -56,7 +56,13 @@ export default class CommanderStore {
   }
 
   actions = {
-    esc: () => this.close(),
+    esc: () => {
+      if (App.errors.length) {
+        App.clearErrors()
+      } else {
+        this.close()
+      }
+    },
     enter: () => this.onEnter(),
     commander: () => {
       this.input && this.input.focus()

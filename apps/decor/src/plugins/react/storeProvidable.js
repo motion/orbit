@@ -19,10 +19,16 @@ export default function storeProvidable(options, emitter) {
         return Klass
       }
 
-      // hmr restore
-      if (instanceOpts && instanceOpts.module) {
-        cache.revive(instanceOpts.module, allStores)
+      let s
+      if (allStores.commanderStore) {
+        s = new allStores.commanderStore()
+        console.log(`%c${s.hi}`, 'background:green')
       }
+
+      // hmr restore
+      // if (instanceOpts && instanceOpts.module) {
+      //   cache.revive(instanceOpts.module, allStores)
+      // }
 
       let Stores = allStores
 
@@ -67,6 +73,11 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillMount() {
+          console.log('mount', Klass.name)
+          if (Klass.name === 'Root') {
+            console.log(`%chi from root ${s.hi}`, 'background:red')
+          }
+
           // for reactive props in stores
           this._props = { ...this.props }
 
@@ -110,12 +121,14 @@ export default function storeProvidable(options, emitter) {
             }
           }
 
+          // line below used to be (hmr state preserve):
+          // stores: cache.restore(
+          //   this,
+          //   finalStores,
+          //   instanceOpts && instanceOpts.module
+          // )
           this.setState({
-            stores: cache.restore(
-              this,
-              finalStores,
-              instanceOpts && instanceOpts.module
-            ),
+            stores: finalStores,
           })
         }
 

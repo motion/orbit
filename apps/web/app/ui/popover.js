@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { object, string } from 'prop-types'
-import { view, log } from '@jot/black'
+import { view } from '@jot/black'
 import { getTarget } from '~/helpers'
 import Portal from 'react-portal'
 import { isNumber, debounce, throttle } from 'lodash'
@@ -483,7 +483,6 @@ export default class Popover {
   }
 
   // hover helpers
-  @log
   hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => this.setState({ [`${name}Hovered`]: val })
@@ -502,7 +501,6 @@ export default class Popover {
     return val
   }
 
-  @log
   isNodeHovered = (
     node: HTMLElement,
     checkParent: boolean = false

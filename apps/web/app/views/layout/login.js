@@ -186,7 +186,7 @@ export default class Login {
       flexFlow: 'row',
       justifyContent: 'space-between',
       padding: [5, 15],
-      margin: [0, -10, 5],
+      margin: [0, -10, 1],
       borderBottom: [1, [255, 255, 255, 0.05]],
     },
     team: {

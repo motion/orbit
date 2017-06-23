@@ -58,7 +58,7 @@ export default class CommanderStore {
     })
 
     this.watch(() => {
-      if (this.crumbs) {
+      if (this.crumbs && Array.isArray(this.crumbs)) {
         this.value = this.toPath(this.crumbs)
       }
     })
@@ -158,7 +158,7 @@ export default class CommanderStore {
     return this.peek[this.highlightIndex]
   }
 
-  toPath = (crumbs: Array<Document>) => {
+  toPath = (crumbs: Array<Document>): string => {
     return crumbs.map(document => document.slug).join(PATH_SEPARATOR)
   }
 

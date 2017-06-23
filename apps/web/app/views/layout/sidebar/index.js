@@ -14,6 +14,8 @@ import {
   SlotFill,
   Badge,
   TiltGlow,
+  Button,
+  Segment,
 } from '~/ui'
 import { Document } from '@jot/models'
 import Login from '../login'
@@ -109,57 +111,87 @@ class Projects {
 
     return (
       <content $$scrollable $$flex={6}>
-        <noStars if={!hasDocs}>No Stars</noStars>
+        <Segment
+          $$flex="none"
+          controlled
+          $$borderBottom={[1, [255, 255, 255, 0.1]]}
+          itemProps={{
+            chromeless: true,
+            $$flex: 1,
+            height: 26,
+            borderRadius: 0,
+            color: [255, 255, 255, 0.5],
+          }}
+        >
+          <Button active>
+            Following
+          </Button>
+          <Button>
+            Recent
+          </Button>
+        </Segment>
 
-        {docs.map((item, i) => {
-          const tasks = item.tasks()
-          return (
-            <section key={i}>
-              <title $$row $$spaceBetween>
-                <start $$row $$centered>
-                  <Progress.Circle
-                    style={{ marginRight: 4 }}
-                    lineColor="rgb(130, 248, 198)"
-                    backgroundColor={[0, 0, 0, 0.15]}
-                    lineWidth={2}
-                    size={14}
-                    percent={percentComplete(tasks)}
-                  />
-                  <path if={false} $$row $$centered>
-                    {flatMap(
-                      item.title.map((tit, index) =>
-                        <fade key={index}>{tit}</fade>
-                      ),
-                      (value, index, arr) =>
-                        arr.length !== index + 1
-                          ? [value, <sep key={Math.random()}>/</sep>]
-                          : value
-                    )}
-                  </path>
-                  <path onClick={() => Router.go(item.url())} $$row $$centered>
-                    {item.getTitle()}
-                  </path>
-                </start>
-                <end>
-                  <Icon name="favour3" onClick={item.toggleStar} color="#666" />
-                </end>
-              </title>
-              <tasks if={tasks && tasks.length}>
-                {tasks.map(({ archive, text, key }, index) =>
-                  <task key={key} $$row>
-                    <Input
-                      $check
-                      onChange={() => item.toggleTask(text)}
-                      type="checkbox"
-                      checked={archive}
-                    />{' '}
-                    <span $$ellipse>{text}</span>
-                  </task>
-                )}
-              </tasks>
-            </section>
-          )
-        })}
+        <tasks>
+          <noStars if={!hasDocs}>No Stars</noStars>
+
+          {docs.map((item, i) => {
+            const tasks = item.tasks()
+            return (
+              <section key={i}>
+                <title $$row $$spaceBetween>
+                  <start $$row $$centered>
+                    <Progress.Circle
+                      style={{ marginRight: 4 }}
+                      lineColor="rgb(130, 248, 198)"
+                      backgroundColor={[0, 0, 0, 0.15]}
+                      lineWidth={2}
+                      size={14}
+                      percent={percentComplete(tasks)}
+                    />
+                    <path if={false} $$row $$centered>
+                      {flatMap(
+                        item.title.map((tit, index) =>
+                          <fade key={index}>{tit}</fade>
+                        ),
+                        (value, index, arr) =>
+                          arr.length !== index + 1
+                            ? [value, <sep key={Math.random()}>/</sep>]
+                            : value
+                      )}
+                    </path>
+                    <path
+                      onClick={() => Router.go(item.url())}
+                      $$row
+                      $$centered
+                    >
+                      {item.getTitle()}
+                    </path>
+                  </start>
+                  <end>
+                    <Icon
+                      name="favour3"
+                      onClick={item.toggleStar}
+                      color="#666"
+                    />
+                  </end>
+                </title>
+                <tasks if={tasks && tasks.length}>
+                  {tasks.map(({ archive, text, key }, index) =>
+                    <task key={key} $$row>
+                      <Input
+                        $check
+                        onChange={() => item.toggleTask(text)}
+                        type="checkbox"
+                        checked={archive}
+                      />{' '}
+                      <span $$ellipse>{text}</span>
+                    </task>
+                  )}
+                </tasks>
+              </section>
+            )
+          })}
+        </tasks>
 
         <empty if={hasDocs} $$draggable />
       </content>
@@ -167,8 +199,8 @@ class Projects {
   }
 
   static style = {
-    content: {
-      padding: [10, 8],
+    tasks: {
+      padding: [0, 10],
     },
     empty: {
       flex: 1,

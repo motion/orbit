@@ -1,6 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
-import { SlotFill, Button } from '~/ui'
+import Router from '~/router'
+import { Segment, SlotFill, Button } from '~/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import * as Commander from '~/views/commander'
 
@@ -18,13 +19,23 @@ export default class Header {
         onMouseLeave={() => (layoutStore.headerHovered = false)}
       >
         <bar>
+          <Segment $$flex="none">
+            <Button
+              if={IS_ELECTRON}
+              icon="minimal-left"
+              chromeless
+              disabled={Router.atBack}
+              onClick={() => Router.back()}
+            />
+            <Button
+              if={IS_ELECTRON}
+              chromeless
+              disabled={Router.atFront}
+              icon="minimal-right"
+              onClick={() => Router.forward()}
+            />
+          </Segment>
           <Commander.Bar />
-          <SlotFill.Slot name="crumbs">
-            {breadcrumbs =>
-              <crumbs>
-                {breadcrumbs}
-              </crumbs>}
-          </SlotFill.Slot>
         </bar>
         <rest $$row>
           <SlotFill.Slot name="documentActions">
@@ -68,6 +79,8 @@ export default class Header {
     },
     bar: {
       flex: 1,
+      flexFlow: 'row',
+      alignItems: 'center',
     },
     crumbs: {
       height: 0,

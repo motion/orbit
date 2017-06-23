@@ -4,7 +4,7 @@ import { view } from '@jot/black'
 import { Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
 import { Theme, SlotFill } from '~/ui'
-import { IN_TRAY } from '~/constants'
+import { IN_TRAY, SIDEBAR_TRANSITION } from '~/constants'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
 import Sidebar from './sidebar'
@@ -23,7 +23,7 @@ class LayoutWrap {
     return (
       <wrap
         $$transition={
-          layoutStore.sidebar.changing ? 'right ease-in 250ms' : 'none'
+          layoutStore.sidebar.changing ? `right ${SIDEBAR_TRANSITION}` : 'none'
         }
         $$right={layoutStore.sidebar.trueWidth}
       >
@@ -107,6 +107,12 @@ export default class Root {
           >
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
+          <SlotFill.Slot name="crumbs">
+            {breadcrumbs =>
+              <crumbs>
+                {breadcrumbs}
+              </crumbs>}
+          </SlotFill.Slot>
           <Draft
             isActive={layoutStore.isCreatingDoc}
             onOpenDraft={() => (layoutStore.isCreatingDoc = true)}

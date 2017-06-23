@@ -43,7 +43,7 @@ export default class Drawer {
     from: 'left',
     zIndex: 10000,
     style: {},
-    transition: 'transform ease-in 200ms',
+    transition: 'ease-in 200ms',
   }
 
   render({
@@ -173,7 +173,7 @@ export default class Drawer {
           background: transparent
             ? 'transparent'
             : background || theme.base.background,
-          transition,
+          transition: `transform ${transition}`,
           borderColor: bordered && theme.base.borderColor,
           boxShadow:
             shadowed && (theme.base.shadow || '0 0 6px rgba(0,0,0,0.3)'),

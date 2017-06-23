@@ -90,9 +90,6 @@ export default class EditorView {
       maxWidth: '100%',
       cursor: 'text',
     },
-    fullPage: {
-      marginTop: 20,
-    },
     editor: {
       color: '#4c555a',
       fontSize: 16,

@@ -12,7 +12,7 @@ export default class CommanderInput {
           $query
           onChange={commanderStore.onChange}
           onKeyDown={commanderStore.onKeyDown}
-          onFocus={commanderStore.open}
+          onFocus={commanderStore.onFocus}
           borderColor="transparent"
           placeholder={commanderStore.place}
           placeholderColor={[0, 0, 0, 0.1]}

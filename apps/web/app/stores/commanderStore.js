@@ -22,7 +22,7 @@ const KEYMAP = {
     focus: 'command+l',
     cmdEnter: 'command+enter',
     delete: ['delete', 'backspace'],
-    toggleSidebar: 'command+/',
+    toggleSidebar: 'command+\\',
   },
 }
 
@@ -64,6 +64,9 @@ export default class CommanderStore {
   }
 
   actions = {
+    toggleSidebar: () => {
+      App.layoutStore.sidebar.toggle()
+    },
     esc: () => {
       if (App.errors.length) {
         App.clearErrors()
@@ -196,6 +199,10 @@ export default class CommanderStore {
 
   getChildDocs = async (document: Document): Array<Document> => {
     return await Document.collection.find({ parentId: document._id }).exec()
+  }
+
+  onFocus = () => {
+    console.log('focused commanderstore')
   }
 
   onEnter = async () => {

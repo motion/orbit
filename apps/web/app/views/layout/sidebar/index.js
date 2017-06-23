@@ -19,7 +19,7 @@ import { Document } from '@jot/models'
 import Login from '../login'
 import SidebarStore from './store'
 import type LayoutStore from '~/stores/layoutStore'
-import { IN_TRAY, TRAY_WIDTH } from '~/constants'
+import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '~/constants'
 import rc from 'randomcolor'
 import sillyname from 'sillyname'
 
@@ -338,6 +338,7 @@ export default class Sidebar {
       <Theme key={0} name="dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <Drawer
+            transition={SIDEBAR_TRANSITION}
             background={[20, 20, 20, 0.68]}
             key={2}
             open={active}

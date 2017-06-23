@@ -72,6 +72,11 @@ export default class App implements AppStore {
     }
   }
 
+  // TODO make this not hacky
+  get layoutStore() {
+    return this.stores && this.stores.LayoutStore && this.stores.LayoutStore[0]
+  }
+
   get commander() {
     return (
       this.stores && this.stores.CommanderStore && this.stores.CommanderStore[0]

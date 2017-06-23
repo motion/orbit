@@ -2,13 +2,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '~/app'
-import { IS_PROD } from './constants'
 import { ThemeProvide } from 'gloss'
 import themes from './theme'
-
-if (!IS_PROD) {
-  require('./helpers/installDevTools')
-}
 
 export function render() {
   console.time('#render')

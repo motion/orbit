@@ -46,6 +46,7 @@ export default class Models implements ModelsStore {
       RxDB.plugin(pValidate)
       RxDB.plugin(pSearch)
       PouchDB.plugin(pHTTP)
+      PouchDB.plugin(pIDB)
     }
   }
 

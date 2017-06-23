@@ -5,7 +5,6 @@ import { uniqBy } from 'lodash'
 import Models from '@jot/models'
 
 declare class AppStore {
-  images: PouchDB,
   config: Object,
   modelsList: Array<Models>,
   models?: Models,
@@ -36,16 +35,7 @@ export default class App implements AppStore {
     await this.models.start()
     this.catchErrors()
     this.trackMountedStores()
-    this.setupImages()
     console.timeEnd('start')
-  }
-
-  setupImages = () => {
-    // images
-    this.images = new PouchDB(`${this.config.couchUrl}/images`, {
-      skipSetup: true,
-      withCredentials: false,
-    })
   }
 
   // dev helpers

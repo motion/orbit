@@ -11,10 +11,10 @@
   - commander/filter/bar
   - document: images, links, dropdown menu + inline menu fixes
   - node keyboard toggle item type
-  - comments
   - signup: create team flow
   - deploy to prod
   - slack integration + avatars
+  - comments
 
 # next
   - @query not necessary (?)

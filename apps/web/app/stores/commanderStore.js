@@ -1,5 +1,5 @@
 // @flow
-import { watch, store } from '@jot/black'
+import { watch, store, log } from '@jot/black'
 import { Document } from '@jot/models'
 import Router from '~/router'
 import { keycode } from '~/helpers'
@@ -199,7 +199,11 @@ export default class CommanderStore {
       }
       let next = await Document.collection.findOne(query).exec()
       if (!next && create) {
-        next = await Document.create({ ...query, title: slug })
+        next = await Document.create({
+          ...query,
+          title: slug,
+          parentIds: result.map(doc => doc._id),
+        })
       }
       if (!next) {
         return result
@@ -227,6 +231,10 @@ export default class CommanderStore {
   }
 
   onEnter = async () => {
+    // correct attempt to make docs like: doc/is/here (ie: missing the initial /)
+    if (this.value.indexOf('/') !== 0 && this.value.indexOf(' ') === -1) {
+      this.value = `/${this.value}`
+    }
     this.path = this.value
     const found = await this.createDocAtPath(this.path)
     this.navTo(found)

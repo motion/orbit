@@ -46,6 +46,7 @@ export class Document extends Model {
     parentId: str.optional,
     members: array.items(str),
     hashtags: array.items(str),
+    parentIds: array.items(str),
     attachments: array.optional.items(str),
     starredBy: array.items(str),
     private: bool,

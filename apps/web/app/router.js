@@ -13,6 +13,8 @@ const getRoutes = () => ({
 
 function start() {
   AppRouter = new Router({ routes: getRoutes() })
+  // because doing in installDevTools would break import orders
+  window.Router = AppRouter
 }
 
 // for hmr

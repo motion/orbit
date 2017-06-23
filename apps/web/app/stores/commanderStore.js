@@ -28,7 +28,6 @@ const KEYMAP = {
 const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
 
-@store
 export default class CommanderStore {
   keyManager = new ShortcutManager(KEYMAP)
   currentDocument = watch(() => Document.get(Router.params.id))
@@ -42,7 +41,7 @@ export default class CommanderStore {
 
   start() {
     this.watch(async () => {
-      const searchPath = this.currentPathPrefix
+      const searchPath = this.typedPathPrefix
 
       // global! we havent typed any "/" yet
       if (searchPath === this.value) {
@@ -100,19 +99,23 @@ export default class CommanderStore {
   }
 
   get peek(): Array<Document> {
-    if (!this.currentPathSuffix) {
+    if (!this.typedPathSuffix) {
       return this.searchResults
     }
     return this.searchResults.filter(
-      doc => doc.slug.indexOf(this.currentPathSuffix) === 0
+      doc => doc.slug.indexOf(this.typedPathSuffix) === 0
     )
   }
 
-  get currentPath(): Array<string> {
+  get currentPath(): string {
+    return this.getPath(this.crumbs)
+  }
+
+  get typedPath(): Array<string> {
     return this.getPath(this.value)
   }
 
-  get currentPathPrefix(): string {
+  get typedPathPrefix(): string {
     const all = this.getPath(this.value)
     if (all.length === 1) {
       return this.value
@@ -120,7 +123,7 @@ export default class CommanderStore {
     return all.slice(0, all.length - 1).join('/')
   }
 
-  get currentPathSuffix(): ?string {
+  get typedPathSuffix(): ?string {
     const paths = this.getPath(this.value)
     return paths.length > 1 ? paths[paths.length - 1] : null
   }

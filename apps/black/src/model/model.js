@@ -15,6 +15,8 @@ type ModelArgs = {
 }
 
 export default class Model {
+  static isModel = true
+
   static props: Object
   static defaultProps: Function | Object
   methods: ?Object
@@ -122,6 +124,9 @@ export default class Model {
 
     // shim add pouchdb-validation
     this.collection.pouch.installValidationMethods()
+
+    // bump listeners
+    this.collection.pouch.setMaxListeners(100)
 
     // create index
     await this.createIndexes()

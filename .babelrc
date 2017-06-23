@@ -13,8 +13,7 @@
       {
         "rootPathSuffix": "app"
       }
-    ],
-    "react-hot-loader/babel"
+    ]
   ],
   "presets": [
     [
@@ -36,6 +35,8 @@
     "babel-preset-stage-1"
   ]
 }
+// "react-hot-loader/babel"
+//
 // [
 //       "babel-plugin-react-transform-motion",
 //       {

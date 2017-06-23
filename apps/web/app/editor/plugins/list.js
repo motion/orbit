@@ -4,6 +4,7 @@ import EditList from './editList'
 import { BLOCKS } from '~/editor/constants'
 import AutoReplace from 'slate-auto-replace'
 import { createButton } from './helpers'
+import moment from 'moment'
 import { every } from 'lodash'
 
 const { UL_LIST, OL_LIST, LIST_ITEM } = BLOCKS
@@ -68,8 +69,7 @@ class ListItemNode {
   }
 
   render(props) {
-    const archive = props.node.data.get('archive') || false
-    const minimize = props.node.data.get('minimize') || false
+    const { minimize = false, due, archive = false } = props.node.data.toJS()
     const text = props.children[0].props.node.text
     const hasChildren = props.children.length > 1
 
@@ -85,9 +85,14 @@ class ListItemNode {
         >
           {minimize ? '+' : '-'}
         </minMax>
-        <li $archive={archive} className={className} {...props.attributes}>
-          {minimize ? <p $$text>{text}</p> : props.children}
-        </li>
+        <item>
+          <li $archive={archive} className={className} {...props.attributes}>
+            {minimize ? <p $$text>{text}</p> : props.children}
+          </li>
+          <metaText if={due} $$row contentEditable={false}>
+            due {moment(due).fromNow()}
+          </metaText>
+        </item>
       </listItem>
     )
   }
@@ -95,6 +100,10 @@ class ListItemNode {
   static style = {
     archive: {
       opacity: 0.9,
+    },
+    metaText: {
+      opacity: 0.8,
+      fontSize: 13,
     },
     minMax: {
       height: 30,

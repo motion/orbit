@@ -16,15 +16,17 @@ function splitListItem(opts, transform) {
   */
   const { state } = transform
   const currentItem = getCurrentItem(opts, state)
-  const isArchived = currentItem.data.get('archive') || false
-  transform.setNodeByKey(currentItem.key, { data: { archive: false } })
+  const data = currentItem.data.toJS()
+  transform.setNodeByKey(currentItem.key, {
+    data: { archive: false, due: null },
+  })
 
   const splitOffset = currentItem.getOffsetAtRange(
     state.selection.collapseToStart()
   )
   transform.splitNodeByKey(currentItem.key, splitOffset)
   return transform.setNodeByKey(currentItem.key, {
-    data: { archive: isArchived },
+    data,
   })
 }
 

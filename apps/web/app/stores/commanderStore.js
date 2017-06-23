@@ -6,6 +6,7 @@ import { keycode } from '~/helpers'
 import { ShortcutManager } from 'react-shortcuts'
 import App from '~/app'
 
+const PATH_SEPARATOR = '/'
 const KEYMAP = {
   all: {
     left: 'left',
@@ -52,6 +53,12 @@ export default class CommanderStore {
           .exec()
       } else {
         this.searchResults = await this.getChildDocsForPath(searchPath)
+      }
+    })
+
+    this.watch(() => {
+      if (this.crumbs) {
+        this.value = this.toPath(this.crumbs)
       }
     })
   }
@@ -108,23 +115,23 @@ export default class CommanderStore {
   }
 
   get currentPath(): string {
-    return this.getPath(this.crumbs)
+    return this.splitPath(this.crumbs)
   }
 
   get typedPath(): Array<string> {
-    return this.getPath(this.value)
+    return this.splitPath(this.value)
   }
 
   get typedPathPrefix(): string {
-    const all = this.getPath(this.value)
+    const all = this.splitPath(this.value)
     if (all.length === 1) {
       return this.value
     }
-    return all.slice(0, all.length - 1).join('/')
+    return all.slice(0, all.length - 1).join(PATH_SEPARATOR)
   }
 
   get typedPathSuffix(): ?string {
-    const paths = this.getPath(this.value)
+    const paths = this.splitPath(this.value)
     return paths.length > 1 ? paths[paths.length - 1] : null
   }
 
@@ -132,8 +139,12 @@ export default class CommanderStore {
     return this.peek[this.highlightIndex]
   }
 
-  getPath = (path: string): Array<string> => {
-    return path.split('/')
+  toPath = (crumbs: Array<Document>) => {
+    return crumbs.map(document => document.slug).join(PATH_SEPARATOR)
+  }
+
+  splitPath = (path: string): Array<string> => {
+    return path.split(PATH_SEPARATOR)
   }
 
   onChange = (event: Event) => {
@@ -149,7 +160,7 @@ export default class CommanderStore {
   }
 
   getDocAtPath = async (path: string, create = false): ?Document => {
-    const pathLength = this.getPath(path).length
+    const pathLength = this.splitPath(path).length
     const docs = await this.getDocsAtPath(path, create)
     return docs[pathLength - 1] || null
   }
@@ -157,7 +168,7 @@ export default class CommanderStore {
   getDocsAtPath = async (path: string, create = false): Array<Document> => {
     const result = []
     let last
-    for (const slug of this.getPath(path)) {
+    for (const slug of this.splitPath(path)) {
       const query = { slug }
       if (last) {
         query.parentId = last._id

@@ -18,6 +18,7 @@ export default class CommanderInput {
           placeholderColor={[0, 0, 0, 0.1]}
           height={34}
           getRef={commanderStore.ref('input').set}
+          value={commanderStore.value}
         />
       </bar>
     )

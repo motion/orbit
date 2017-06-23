@@ -65,6 +65,7 @@ export class Document extends Model {
       starredBy: [],
       members: [],
       attachments: [],
+      parentIds: [],
       private: true,
       content: DEFAULT_CONTENT(title),
       slug: toSlug(title || Math.random()),

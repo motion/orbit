@@ -1,17 +1,24 @@
 # nate
   - rxdb query sync
-  - simple create team flow
   - commander features/polish
+  - popover: unhover and rehover again not working userdropdown
+  - sidebar favorites colors
+  - favorite icon
+  - share link dropdown
 
 # high level prioritized list
+  - team homepage: commander force opened + showing expanded stuff
   - commander/filter/bar
+  - document: images, links, dropdown menu + inline menu fixes
   - node keyboard toggle item type
   - comments
+  - signup: create team flow
+  - deploy to prod
+  - slack integration + avatars
 
 # next
   - @query not necessary (?)
   - #brainstorm: features and user feedback strategy
-  - #brainstorm: divvying up next two week
   - editor: performance/stability: general perf, less saving: save only on debounce(1000)
   - editor: realtime (see // TODO: for realtime sync)
   - editor: formatting: #uxlove + #dev
@@ -24,12 +31,11 @@
       - #hashtags, @due-dates, @users
     - doc lists:
       - #uxlove
-  - release: need a script to build electron for prod consistently
   - release: deploy to iwritey.com get working
-  - navigator: cmd-t needs #uxlove
   - sidebar: #uxlove
   - sidebar: drag and drop between lists #big
   - drafts: #uxlove
+  - sortable sidebar items
 
 # queue
   - investigate multi-list drag/drop (dnd)

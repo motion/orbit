@@ -104,7 +104,6 @@ class Projects {
   render({ store }) {
     const docs = store.docs || []
     const hasDocs = docs.length !== 0
-
     const percentComplete = tasks =>
       100 * tasks.filter(i => i.archive).length / tasks.length
 
@@ -112,52 +111,55 @@ class Projects {
       <content $$scrollable $$flex={6}>
         <noStars if={!hasDocs}>No Stars</noStars>
 
-        {docs.map((item, i) =>
-          <section key={i}>
-            <title $$row $$spaceBetween>
-              <start $$row $$centered>
-                <Progress.Circle
-                  style={{ marginRight: 4 }}
-                  lineColor="rgb(130, 248, 198)"
-                  backgroundColor={[0, 0, 0, 0.15]}
-                  lineWidth={2}
-                  size={14}
-                  percent={percentComplete(item.tasks())}
-                />
-                <path if={false} $$row $$centered>
-                  {flatMap(
-                    item.title.map((tit, index) =>
-                      <fade key={index}>{tit}</fade>
-                    ),
-                    (value, index, arr) =>
-                      arr.length !== index + 1
-                        ? [value, <sep key={Math.random()}>/</sep>]
-                        : value
-                  )}
-                </path>
-                <path onClick={() => Router.go(item.url())} $$row $$centered>
-                  {item.getTitle()}
-                </path>
-              </start>
-              <end>
-                <Icon name="favour3" onClick={item.toggleStar} color="#666" />
-              </end>
-            </title>
-            <tasks>
-              {item.tasks().map(({ archive, text, key }, index) =>
-                <task key={key} $$row>
-                  <Input
-                    $check
-                    onChange={() => item.toggleTask(text)}
-                    type="checkbox"
-                    checked={archive}
-                  />{' '}
-                  <span $$ellipse>{text}</span>
-                </task>
-              )}
-            </tasks>
-          </section>
-        )}
+        {docs.map((item, i) => {
+          const tasks = item.tasks()
+          return (
+            <section key={i}>
+              <title $$row $$spaceBetween>
+                <start $$row $$centered>
+                  <Progress.Circle
+                    style={{ marginRight: 4 }}
+                    lineColor="rgb(130, 248, 198)"
+                    backgroundColor={[0, 0, 0, 0.15]}
+                    lineWidth={2}
+                    size={14}
+                    percent={percentComplete(tasks)}
+                  />
+                  <path if={false} $$row $$centered>
+                    {flatMap(
+                      item.title.map((tit, index) =>
+                        <fade key={index}>{tit}</fade>
+                      ),
+                      (value, index, arr) =>
+                        arr.length !== index + 1
+                          ? [value, <sep key={Math.random()}>/</sep>]
+                          : value
+                    )}
+                  </path>
+                  <path onClick={() => Router.go(item.url())} $$row $$centered>
+                    {item.getTitle()}
+                  </path>
+                </start>
+                <end>
+                  <Icon name="favour3" onClick={item.toggleStar} color="#666" />
+                </end>
+              </title>
+              <tasks if={tasks && tasks.length}>
+                {tasks.map(({ archive, text, key }, index) =>
+                  <task key={key} $$row>
+                    <Input
+                      $check
+                      onChange={() => item.toggleTask(text)}
+                      type="checkbox"
+                      checked={archive}
+                    />{' '}
+                    <span $$ellipse>{text}</span>
+                  </task>
+                )}
+              </tasks>
+            </section>
+          )
+        })}
 
         <empty if={hasDocs} $$draggable />
       </content>
@@ -169,7 +171,7 @@ class Projects {
       padding: [10, 8],
     },
     empty: {
-      height: '100%',
+      flex: 1,
     },
     section: {
       margin: [6, 0],

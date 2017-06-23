@@ -16,6 +16,7 @@ export default class CommanderInput {
           borderColor="transparent"
           placeholder={commanderStore.place}
           placeholderColor={[0, 0, 0, 0.1]}
+          padding={[0]}
           height={34}
           getRef={commanderStore.ref('input').set}
           value={commanderStore.value}

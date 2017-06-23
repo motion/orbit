@@ -12,6 +12,7 @@ export type Props = {
   transparent?: boolean,
   borderRadius?: number,
   flex?: number | string,
+  padding?: number | Array<number>,
   borderColor?: Color,
   placeholder?: string,
   placeholderColor?: Color,
@@ -26,6 +27,7 @@ export default class Input {
   }
 
   render({
+    padding,
     getRef,
     sync,
     inSegment,
@@ -57,7 +59,15 @@ export default class Input {
 
   static theme = {
     theme: (
-      { placeholderColor, borderColor, fontSize, transparent, height, type },
+      {
+        padding,
+        placeholderColor,
+        borderColor,
+        fontSize,
+        transparent,
+        height,
+        type,
+      },
       context,
       theme
     ) => {
@@ -67,7 +77,7 @@ export default class Input {
         styles = {
           height: height || 30,
           minHeight: height || 30,
-          padding: [7, 8],
+          padding: padding || [7, 8],
           width: '100%',
           border: [1, theme.base.borderColor],
         }

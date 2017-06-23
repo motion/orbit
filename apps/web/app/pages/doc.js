@@ -34,7 +34,7 @@ export default class DocumentPage {
     return (
       <Page
         actions={
-          <Segment>
+          <Segment itemProps={{ chromeless: true }}>
             <Button if={!insidePlace} tooltip="share link">
               🔗
             </Button>
@@ -45,7 +45,6 @@ export default class DocumentPage {
               icon="fav31"
               color={starred ? Theme.light.base.highlightColor : '#000'}
               onClick={doc.toggleStar}
-              tooltip={starred ? 'un-favorite' : 'favorite'}
             />
           </Segment>
         }

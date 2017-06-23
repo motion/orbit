@@ -42,23 +42,30 @@ export default class CommanderStore {
 
   start() {
     this.watch(async () => {
-      const searchPath = this.typedPathPrefix
-
-      // global! we havent typed any "/" yet
-      if (searchPath === this.value) {
+      if (!this.isTypingPath) {
+        // search
         this.searchResults = await Document.collection
           .find()
           .where('slug')
           .regex(new RegExp(`^${this.value}`, 'i'))
           .exec()
       } else {
-        this.searchResults = await this.getChildDocsForPath(searchPath)
+        // path navigate
+        this.searchResults = await this.getChildDocsForPath(
+          this.typedPathPrefix
+        )
       }
     })
 
     this.watch(() => {
       if (this.crumbs) {
         this.value = this.toPath(this.crumbs)
+      }
+    })
+
+    this.watch(() => {
+      if (Router.path === '/') {
+        this.value = '/'
       }
     })
   }
@@ -121,21 +128,30 @@ export default class CommanderStore {
     return this.splitPath(this.crumbs)
   }
 
+  get isTypingPath(): boolean {
+    return this.value[0] === '/'
+  }
+
   get typedPath(): Array<string> {
     return this.splitPath(this.value)
   }
 
   get typedPathPrefix(): string {
+    if (!this.isTypingPath) {
+      return this.value
+    }
     const all = this.splitPath(this.value)
+    // if on root path
     if (all.length === 1) {
       return this.value
     }
+    // else, return up to current dir
     return all.slice(0, all.length - 1).join(PATH_SEPARATOR)
   }
 
   get typedPathSuffix(): ?string {
-    const paths = this.splitPath(this.value)
-    return paths.length > 1 ? paths[paths.length - 1] : null
+    const path = this.typedPath
+    return path.length > 1 ? path[path.length - 1] : null
   }
 
   get highlightedDocument() {
@@ -147,11 +163,16 @@ export default class CommanderStore {
   }
 
   splitPath = (path: string): Array<string> => {
-    return path.split(PATH_SEPARATOR)
+    if (path[0] !== '/') {
+      console.log('not a path')
+      return path
+    }
+    return path.split(PATH_SEPARATOR).slice(1)
   }
 
   onChange = (event: Event) => {
     this.value = event.target.value
+    this.open()
   }
 
   createDocAtPath = async (path: string): Document => {
@@ -239,6 +260,10 @@ export default class CommanderStore {
   }
 
   navTo = doc => {
+    if (!doc) {
+      console.log('navTo called without value')
+      return
+    }
     this.close()
     Router.go(doc.url())
   }

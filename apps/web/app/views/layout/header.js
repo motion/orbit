@@ -19,7 +19,11 @@ export default class Header {
         onMouseLeave={() => (layoutStore.headerHovered = false)}
       >
         <bar>
-          <Segment $$flex="none">
+          <Segment
+            $$margin={[0, 10, 0, 0]}
+            itemProps={{ iconSize: 12, padding: [0, 6] }}
+            $$flex="none"
+          >
             <Button
               if={IS_ELECTRON}
               icon="minimal-left"
@@ -34,6 +38,7 @@ export default class Header {
               icon="minimal-right"
               onClick={() => Router.forward()}
             />
+            <Button icon="home" chromeless onClick={() => Router.go('/')} />
           </Segment>
           <Commander.Bar />
         </bar>

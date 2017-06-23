@@ -102,6 +102,10 @@ export default class EditorStore implements StoreType {
 
   // contents are only for persisting things
   setContents = (nextState, serialize = false) => {
+    if (!nextState) {
+      console.error('called setContents with no state')
+      return
+    }
     if (!serialize) {
       this.state = nextState
     } else {

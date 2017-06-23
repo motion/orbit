@@ -15,10 +15,11 @@
     "check-dependencies": "lerna exec --ignore starter-native -- check-dependencies"
   },
   "dependencies": {
-    "lerna": "2.0.0-rc.5",
-    "minimatch": "^3.0.4"
+    "lerna": "2.0.0-rc.5"
   },
   "devDependencies": {
+    "minimatch": "^3.0.4",
+    "react-hot-loader": "next",
     "babel-cli": "^6.23.0",
     "babel-eslint": "^7.2.3",
     "babel-plugin-react-transform-motion": "^2.0.2",

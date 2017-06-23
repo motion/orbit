@@ -5,6 +5,7 @@ import Router from '~/router'
 import DocumentView from '~/views/document'
 import { User, Document } from '@jot/models'
 import Page from '~/page'
+import Theme from '~/theme'
 
 @view.provide({
   docStore: class DocPageStore {
@@ -32,19 +33,17 @@ export default class DocumentPage {
       <Page
         actions={
           <Segment>
-            <Button
-              if={!insidePlace}
-              tooltip="share link"
-              onClick={() => console.log(place.url())}
-            >
+            <Button if={!insidePlace} tooltip="share link">
               🔗
             </Button>
             <Button if={!insidePlace} onClick={doc.togglePrivate}>
               {doc.private ? '🙈' : '🌎'}
             </Button>
-            <Button onClick={doc.toggleStar}>
-              {doc.hasStar() ? '⭐' : '✩'}
-            </Button>
+            <Button
+              icon="fav31"
+              color={doc.hasStar() ? Theme.light.base.highlightColor : '#000'}
+              onClick={doc.toggleStar}
+            />
           </Segment>
         }
       >

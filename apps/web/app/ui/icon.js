@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view } from '@jot/black'
 import Popover from './popover'
@@ -17,7 +18,7 @@ const findMatch = (name: string) => {
 export type Props = {
   size: number,
   color: Array | string,
-  type: string,
+  type: 'mini' | 'outline',
   button?: Boolean,
 }
 

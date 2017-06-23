@@ -13,7 +13,8 @@
       {
         "rootPathSuffix": "app"
       }
-    ]
+    ],
+    "react-hot-loader/babel"
   ],
   "presets": [
     [
@@ -35,3 +36,20 @@
     "babel-preset-stage-1"
   ]
 }
+// [
+//       "babel-plugin-react-transform-motion",
+//       {
+//         "decoratorName": "view",
+//         "transforms": [
+//           {
+//             "transform": "react-transform-hmr-motion",
+//             "imports": [
+//               "react"
+//             ],
+//             "locals": [
+//               "module"
+//             ]
+//           }
+//         ]
+//       }
+//     ],

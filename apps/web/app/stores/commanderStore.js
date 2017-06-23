@@ -1,5 +1,5 @@
 // @flow
-import { watch } from '@jot/black'
+import { watch, store } from '@jot/black'
 import { Document } from '@jot/models'
 import Router from '~/router'
 import { keycode } from '~/helpers'
@@ -28,6 +28,7 @@ const KEYMAP = {
 const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
 
+@store
 export default class CommanderStore {
   keyManager = new ShortcutManager(KEYMAP)
   currentDocument = watch(() => Document.get(Router.params.id))

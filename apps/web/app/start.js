@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom'
 import App from '~/app'
 import { ThemeProvide } from 'gloss'
 import themes from './theme'
+import { AppContainer } from 'react-hot-loader'
 
 export function render() {
   console.time('#render')
@@ -11,9 +12,11 @@ export function render() {
   const Layout = require('./views/layout').default
 
   ReactDOM.render(
-    <ThemeProvide {...themes}>
-      <Layout />
-    </ThemeProvide>,
+    <AppContainer>
+      <ThemeProvide {...themes}>
+        <Layout />
+      </ThemeProvide>
+    </AppContainer>,
     ROOT
   )
   console.timeEnd('#render')

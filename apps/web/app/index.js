@@ -1,5 +1,6 @@
 // @flow
 import 'babel-polyfill'
+import 'react-hot-loader/patch'
 import Gloss from '@jot/black/lib/gloss'
 import React from 'react'
 import ReactDOM from 'react-dom'

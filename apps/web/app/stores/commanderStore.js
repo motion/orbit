@@ -17,7 +17,8 @@ const KEYMAP = {
     down: 'down',
     enter: 'enter',
     esc: 'esc',
-    commander: ['command+t', 'command+l'],
+    commander: ['command+t'],
+    focus: 'command+l',
     cmdEnter: 'command+enter',
     delete: ['delete', 'backspace'],
     toggleSidebar: 'command+/',
@@ -64,8 +65,9 @@ export default class CommanderStore {
       }
     },
     enter: () => this.onEnter(),
+    focus: () => this.focus(),
     commander: () => {
-      this.input && this.input.focus()
+      this.focus()
       this.open()
     },
     down: () => {
@@ -81,11 +83,17 @@ export default class CommanderStore {
     },
   }
 
+  focus = () => {
+    if (this.input) {
+      this.input.focus()
+    }
+  }
+
   handleShortcuts = (action: string, event: KeyboardEvent) => {
     if (!action) return
     this.emit('action', { action, event })
-    console.log('action', action, this.actions[action])
     if (this.actions[action]) {
+      console.log('action', action)
       this.actions[action](event)
     }
   }

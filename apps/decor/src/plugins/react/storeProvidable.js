@@ -19,12 +19,6 @@ export default function storeProvidable(options, emitter) {
         return Klass
       }
 
-      let s
-      if (allStores.commanderStore) {
-        s = new allStores.commanderStore()
-        console.log(`%c${s.hi}`, 'background:green')
-      }
-
       // hmr restore
       // if (instanceOpts && instanceOpts.module) {
       //   cache.revive(instanceOpts.module, allStores)
@@ -73,11 +67,6 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillMount() {
-          console.log('mount', Klass.name)
-          if (Klass.name === 'Root') {
-            console.log(`%chi from root ${s.hi}`, 'background:red')
-          }
-
           // for reactive props in stores
           this._props = { ...this.props }
 

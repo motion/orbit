@@ -29,6 +29,8 @@ export default class DocumentPage {
       return <err404>no doc found</err404>
     }
 
+    const starred = doc.hasStar()
+
     return (
       <Page
         actions={
@@ -41,8 +43,9 @@ export default class DocumentPage {
             </Button>
             <Button
               icon="fav31"
-              color={doc.hasStar() ? Theme.light.base.highlightColor : '#000'}
+              color={starred ? Theme.light.base.highlightColor : '#000'}
               onClick={doc.toggleStar}
+              tooltip={starred ? 'un-favorite' : 'favorite'}
             />
           </Segment>
         }

@@ -1,6 +1,7 @@
 import { Document } from '@jot/models'
 import { sortBy, last, flatMap, memoize, find, flatten, random } from 'lodash'
 import merge from 'deepmerge'
+import Router from '~/router'
 
 const liToText = ({ nodes }) =>
   nodes
@@ -83,7 +84,9 @@ export default class SidebarStore {
   handleShortcut = action => {
     if (action === 'up' || action === 'k') this.onHandleUpKey()
     if (action === 'down' || action === 'j') this.onHandleDownKey()
-    if (action === 'enter') Router.go(this.activeTask.doc.url())
+    if (action === 'enter') {
+      this.activeTask && Router.go(this.activeTask.doc.url())
+    }
   }
 
   get activeIndex() {

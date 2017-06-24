@@ -33,7 +33,9 @@ export default function log(...args) {
     return wrapLogger(wrapFn)
   } else
     console.log(
-      `%c${args.map(arg => `${arg}`).join(' ')}`,
+      `%c${args
+        .map(arg => `${typeof arg === 'object' ? JSON.stringify(arg) : arg}`)
+        .join(' ')}`,
       'background: orange'
     )
 }

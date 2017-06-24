@@ -27,18 +27,16 @@ export default class Header {
             <Button
               if={IS_ELECTRON}
               icon="minimal-left"
-              chromeless
               disabled={Router.atBack}
               onClick={() => Router.back()}
             />
             <Button
               if={IS_ELECTRON}
-              chromeless
               disabled={Router.atFront}
               icon="minimal-right"
               onClick={() => Router.forward()}
             />
-            <Button icon="home" chromeless onClick={() => Router.go('/')} />
+            <Button icon="home" onClick={() => Router.go('/')} />
           </Segment>
           <Commander.Bar />
         </bar>

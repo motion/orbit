@@ -78,6 +78,7 @@ export default class Button {
     stretch,
     tooltip,
     tooltipProps,
+    background,
     className,
     theme,
     circular,
@@ -180,23 +181,6 @@ export default class Button {
     minimal: {
       boxShadow: 'none',
     },
-    inSegment: ({
-      chromeless,
-      borderRadius,
-      circular,
-      inSegment,
-      inSegment: { first, last },
-    }) => ({
-      ...(inSegment && {
-        marginLeft: -1,
-      }),
-      ...(first && {
-        borderLeftRadius: circular ? 1000 : borderRadius,
-      }),
-      ...(last && {
-        borderRightRadius: circular ? 1000 : borderRadius,
-      }),
-    }),
     clickable: {
       cursor: 'pointer',
     },
@@ -233,26 +217,34 @@ export default class Button {
 
       // based on a vertical rythm
       const height = props.size * 30
+      const borderRadius = props.borderRadius || height / 5
+
+      const segmentStyles = !props.circular &&
+      props.inSegment && {
+        marginLeft: -1,
+        borderLeftRadius: props.inSegment.first ? borderRadius : 0,
+        borderRightRadius: props.inSegment.last ? borderRadius : 0,
+      }
 
       return {
         // $FlowIgnore
         button: {
           // ...$(props, theme),
           ...theme.base,
-          padding: props.padding || [0, height / 10],
+          padding: props.padding || [0, height / 5],
           height,
-          borderRadius: props.inSegment
-            ? null
-            : props.borderRadius || height / 10,
+          borderRadius: props.inSegment ? null : borderRadius || height / 10,
           color: props.highlight
             ? props.highlightColor || theme.highlight.color || props.color
             : props.color || theme.base.color,
-          background: props.background,
+          background:
+            props.background || theme.base.background || 'transparent',
           ...(props.circular && {
             padding: 0,
             borderRadius: height,
             width: height,
           }),
+          ...segmentStyles,
           '&:active': {
             position: 'relative',
             zIndex: 1000,
@@ -275,7 +267,8 @@ export default class Button {
           }),
         },
         isActive: {
-          background: '#f2f2f2',
+          background: theme.active.background,
+          borderColor: theme.active.borderColor,
         },
         clickable: {
           '&:hover': {
@@ -329,8 +322,6 @@ export default class Button {
       button: {
         opacity: 0.25,
         pointerEvents: 'none',
-        background: 'transparent',
-        color: [255, 255, 255, 0.2],
       },
     },
     dim: {

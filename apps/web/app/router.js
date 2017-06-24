@@ -1,5 +1,5 @@
 // @flow
-import Router from 'motion-mobx-router'
+import Router from 'mo-router'
 import { render } from './start'
 
 let AppRouter

@@ -1,0 +1,10 @@
+{
+  "name": "motion-css",
+  "private": true,
+  "version": "6.6.3",
+  "description": "",
+  "main": "lib/index.js",
+  "author": "Motion",
+  "license": "MIT",
+  "dependencies": {}
+}

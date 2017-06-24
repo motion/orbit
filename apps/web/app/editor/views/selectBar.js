@@ -1,5 +1,5 @@
 import { view } from '@jot/black'
-import { Theme, PassThrough, Popover, Segment, Button } from '~/ui'
+import { Theme, PassProps, Popover, Segment, Button } from '~/ui'
 import { BLOCKS, MARKS } from '../constants'
 
 @view
@@ -24,9 +24,9 @@ export default class SelectBar {
                 {editorStore.helpers
                   .contextButtonsFor(category)
                   .map((button, i) =>
-                    <PassThrough editorStore={editorStore} key={i}>
+                    <PassProps editorStore={editorStore} key={i}>
                       {button}
-                    </PassThrough>
+                    </PassProps>
                   )}
               </Segment>
             )}

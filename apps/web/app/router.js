@@ -22,7 +22,7 @@ if (module.hot) {
   module.hot.accept(() => {
     console.log('accept router')
     start()
-    render()
+    // render()
   })
 }
 

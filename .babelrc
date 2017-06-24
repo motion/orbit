@@ -13,6 +13,23 @@
       {
         "rootPathSuffix": "app"
       }
+    ],
+    [
+      "babel-plugin-react-transform-motion",
+      {
+        "decoratorName": "view",
+        "transforms": [
+          {
+            "transform": "react-transform-hmr-motion",
+            "imports": [
+              "react"
+            ],
+            "locals": [
+              "module"
+            ]
+          }
+        ]
+      }
     ]
   ],
   "presets": [
@@ -37,20 +54,3 @@
 }
 // "react-hot-loader/babel"
 //
-// [
-//       "babel-plugin-react-transform-motion",
-//       {
-//         "decoratorName": "view",
-//         "transforms": [
-//           {
-//             "transform": "react-transform-hmr-motion",
-//             "imports": [
-//               "react"
-//             ],
-//             "locals": [
-//               "module"
-//             ]
-//           }
-//         ]
-//       }
-//     ],

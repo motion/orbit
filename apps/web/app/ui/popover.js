@@ -444,33 +444,35 @@ export default class Popover {
     if (!node) return
     const { delay } = this.curProps
     const isMenu = name === 'menu'
+    const isTarget = name === 'target'
     const open = () => this.hoverStateSet(name, true)
     const close = () => this.hoverStateSet(name, false)
     const openIfOver = () => this.isNodeHovered(node, isMenu) && open()
     const closeIfOut = () => !this.isNodeHovered(node, isMenu) && close()
-    const onEnter = openIfOver
-    const onLeave = debounce(closeIfOut, isMenu ? delay : delay + 16) // 🐛 target should close slower than menu opens
+    const onEnter = debounce(openIfOver, isTarget ? delay : 0)
+    const onLeave = debounce(closeIfOut, isMenu ? 0 : 16) // 🐛 target should close slower than menu opens
 
-    if (name === 'target') {
+    if (isTarget) {
+      // seems to be fixed, leaving in case needs testing
       // if you move your mouse super slowly onto an element, it triggers this ridiculous bug where it doesnt open
       // i think because checking `:hover` in css requires your mouse being >1px inside the element
       // so we also listen for mousemove, super throttled, just to prevent that
-      this.on(
-        node,
-        'mousemove',
-        throttle(
-          () =>
-            !this.state.targetHovered &&
-            this.isNodeHovered(this.target) &&
-            this.hoverStateSet('target', true),
-          200
-        )
-      )
+      // this.on(
+      //   node,
+      //   'mousemove',
+      //   throttle(
+      //     () =>
+      //       !this.state.targetHovered &&
+      //       this.isNodeHovered(this.target) &&
+      //       this.hoverStateSet('target', true),
+      //     Math.max(200, delay),
+      //     { trailing: true }
+      //   )
+      // )
     }
 
     this.on(node, 'mouseenter', () => {
       onEnter()
-      this.setTimeout(onEnter, 16)
       // insanity, but mouseleave is horrible
       if (this.curProps.target) {
         this.setTimeout(onLeave, 16)
@@ -684,7 +686,7 @@ export default class Popover {
       },
     },
     withBackground: background => ({
-      borderRadius: 3,
+      borderRadius: 5,
       background,
     }),
     item: {
@@ -725,7 +727,7 @@ export default class Popover {
     }),
     shadow: ({ shadow }) => ({
       content: {
-        boxShadow: shadow === true ? '0 3px 10px rgba(0,0,0,0.1)' : shadow,
+        boxShadow: shadow === true ? '0 2px 10px rgba(0,0,0,0.3)' : shadow,
       },
     }),
     noHover: {

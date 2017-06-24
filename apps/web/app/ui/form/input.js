@@ -67,6 +67,7 @@ export default class Input {
         transparent,
         height,
         type,
+        style,
       },
       context,
       theme
@@ -98,7 +99,7 @@ export default class Input {
           '&:hover': {
             borderColor: theme.hover.borderColor,
           },
-          '&:focus': {
+          '&:focus': (style && style['&:focus']) || {
             borderColor: clr(theme.focus.borderColor).alpha(0.2),
             borderWidth: 1,
           },

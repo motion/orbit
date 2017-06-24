@@ -107,25 +107,32 @@ export default class Login {
             <Popover
               distance={10}
               forgiveness={20}
+              delay={500}
               theme="light"
               target={<Button circular icon="user" />}
               background
+              shadow
               openOnHover
             >
               <Theme name="light">
                 <List
                   width={150}
+                  itemProps={{ height: 35, fontSize: 14 }}
                   items={[
-                    <List.Item
-                      primary={User.name}
-                      after={
+                    {
+                      primary: User.name,
+                      after: (
                         <Button
                           chromeless
                           icon="power"
                           onClick={() => User.logout()}
                         />
-                      }
-                    />,
+                      ),
+                    },
+                    {
+                      primary: 'Settings',
+                      onClick: () => console.log(),
+                    },
                   ]}
                 />
               </Theme>

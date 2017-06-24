@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
-import { Icon, Button, Segment } from '~/ui'
+import { view, log } from '@jot/black'
+import { Icon } from '~/ui'
 import { IS_ELECTRON } from '~/constants'
 import Router from '~/router'
 import type DocStore from './store'
@@ -15,12 +15,15 @@ export default class Breadcrumbs {
   props: Props
 
   render({ docs }: Props) {
+    if (!Array.isArray(docs)) {
+      docs = []
+    }
     const crumbs = [
       {
         text: <Icon size={10} name="home" color="#222" hoverColor="red" />,
         url: '/',
       },
-      ...(docs || []).map(doc => ({ text: doc.title, url: doc.url() })),
+      ...docs.map(doc => ({ text: doc.title, url: doc.url() })),
     ]
 
     return (
@@ -66,10 +69,9 @@ export default class Breadcrumbs {
 
   static style = {
     crumbs: {
-      zIndex: 2,
-      background: '#fff',
-      padding: [5, 10, 6],
-      borderTop: [1, '#eee', 'dotted'],
+      fontSize: 22,
+      padding: [0, 0, 0, 10],
+      marginTop: -2,
       flexFlow: 'row',
     },
     items: {
@@ -86,8 +88,8 @@ export default class Breadcrumbs {
       },
     },
     slash: {
-      opacity: 0.1,
-      margin: [0, 4],
+      opacity: 0.05,
+      margin: [0, 2],
       fontWeight: 200,
       pointerEvents: 'none',
     },

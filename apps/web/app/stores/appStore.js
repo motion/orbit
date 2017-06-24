@@ -73,6 +73,7 @@ export default class App implements AppStore {
   }
 
   // TODO make this not hacky
+  // could actually just be a Proxy around this class that finds these
   get layoutStore() {
     return this.stores && this.stores.LayoutStore && this.stores.LayoutStore[0]
   }
@@ -89,6 +90,12 @@ export default class App implements AppStore {
         this.stores.EditorStore &&
         this.stores.EditorStore.find(store => store.focused === true)) ||
       this.stores.EditorStore[0]
+    )
+  }
+
+  get document() {
+    return (
+      this.stores && this.stores.DocumentStore && this.stores.DocumentStore[0]
     )
   }
 

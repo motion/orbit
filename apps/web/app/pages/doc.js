@@ -25,6 +25,10 @@ export default class DocumentPage {
   render({ docStore, insidePlace }) {
     const { doc } = docStore
 
+    if (doc === undefined) {
+      return <null>loading</null>
+    }
+
     if (!doc) {
       return <err404>no doc found</err404>
     }

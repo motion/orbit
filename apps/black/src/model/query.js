@@ -18,7 +18,8 @@ function valueWrap(info, valueGet: Function) {
 
   // subscribe and update
   let subscriber = null
-  const finishSubscribe = () => subscriber && subscriber.complete()
+  const finishSubscribe = () =>
+    subscriber && subscriber.complete && subscriber.complete()
 
   // this automatically re-runs the susbcription if it has observables
   const stopAutorun = autorun(() => {

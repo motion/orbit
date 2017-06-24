@@ -1,5 +1,5 @@
 // @flow
-import { watch, store } from '@jot/black'
+import { watch, store, log } from '@jot/black'
 import { Document } from '@jot/models'
 import Router from '~/router'
 import { keycode } from '~/helpers'
@@ -132,7 +132,7 @@ export default class CommanderStore {
   }
 
   get isEnterToCreate() {
-    return this.isTypingPath && this.peek.length === 0
+    return this.isTypingPath && this.peek && this.peek.length === 0
   }
 
   get currentPath(): string {
@@ -201,10 +201,8 @@ export default class CommanderStore {
   getDocsAtPath = async (path: string, create = false): Array<Document> => {
     const result = []
     let last
-    console.log('slugs are', this.splitPath(path))
 
     if (path === '/') {
-      console.log('returning root', await Document.root().exec())
       return await Document.root().exec()
     }
 
@@ -215,7 +213,11 @@ export default class CommanderStore {
       }
       let next = await Document.collection.findOne(query).exec()
       if (!next && create) {
-        next = await Document.create({ ...query, title: slug })
+        next = await Document.create({
+          ...query,
+          title: slug,
+          parentIds: result.map(doc => doc._id),
+        })
       }
       if (!next) {
         return result
@@ -245,7 +247,11 @@ export default class CommanderStore {
   }
 
   onEnter = async () => {
-    console.log('highlight index is', this.highlightIndex)
+    if (this.value.indexOf('/') !== 0 && this.value.indexOf(' ') === -1) {
+      this.value = `/${this.value}`
+    }
+    this.path = this.value
+
     if (this.highlightIndex > -1) {
       this.navTo(this.highlightedDocument)
     } else {

@@ -1,5 +1,5 @@
 # nate
-  - rxdb query sync
+  - rxdb query sync (pending: https://gitter.im/pubkey/rxdb | https://github.com/pubkey/rxdb/blob/master/src/RxCollection.js)
   - commander features/polish
   - popover: unhover and rehover again not working userdropdown
   - sidebar favorites colors
@@ -38,7 +38,7 @@
   - sortable sidebar items
 
 # queue
-  - investigate multi-list drag/drop (dnd)
+  - investigate multi-list drag/drop (react-sortable-hoc has this now in branch)
   - get to bootstrappability
     - hosted iwritey.com instance we can use to plan
     - OMP working on sidebar
@@ -106,6 +106,9 @@
     - { background: { color: 'red', lighten: 0.5, alpha: 0.1 } }
       - could have references?:
         - { background: { color: '.color', lighten: 0.5, alpha: 0.1 } }
+
+# fast pouch w workers
+- https://github.com/jkleinsc/telegraph
 
 # emojis
 https://raw.githubusercontent.com/omnidan/node-emoji/master/lib/emoji.json

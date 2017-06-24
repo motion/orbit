@@ -12,20 +12,30 @@ const colors = [
 ]
 
 export default function log(...args) {
-  if (args.length === 3) {
+  const [target, key, descriptor] = args
+
+  if (
+    args.length === 3 &&
+    typeof target === 'object' &&
+    typeof key === 'string' &&
+    typeof descriptor === 'object'
+  ) {
     // decorator
-    const [target, key, descriptor] = args
     const ogInit = descriptor.initializer
     descriptor.initializer = function() {
       const self = this
       return wrapLogger(ogInit.call(this), target, key)
     }
     return descriptor
-  } else {
+  } else if (typeof args[0] === 'function') {
     // regular fn
     const [wrapFn] = args
     return wrapLogger(wrapFn)
-  }
+  } else
+    console.log(
+      `%c${args.map(arg => `${arg}`).join(' ')}`,
+      'background: orange'
+    )
 }
 
 function wrapLogger(wrapFn: Function, parent, name?: string) {

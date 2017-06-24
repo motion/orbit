@@ -45,5 +45,6 @@ module.exports = {
     React$Element: true,
     React$Children: true,
     React$Component: true,
+    emit: true,
   },
 }

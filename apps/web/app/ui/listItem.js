@@ -32,6 +32,7 @@ export type ItemProps = {
   padding?: Array | number,
   light?: boolean,
   height?: number,
+  fontSize?: number,
   onItemMount?: Function,
 }
 
@@ -76,6 +77,7 @@ export default class ListItem {
     light,
     height,
     onItemMount,
+    fontSize,
     ...props
   }: ItemProps) {
     return (
@@ -124,7 +126,7 @@ export default class ListItem {
 
   static style = {
     item: {
-      padding: [2, 4],
+      padding: [2, 7],
       cursor: 'pointer',
       maxWidth: '100%',
       flexFlow: 'row',
@@ -139,6 +141,7 @@ export default class ListItem {
     content: {
       flex: 1,
       maxWidth: '100%',
+      justifyContent: 'center',
     },
     row: {
       flexFlow: 'row',
@@ -220,7 +223,7 @@ export default class ListItem {
   static theme = {
     theme: (props, context, theme) => ({
       item: {
-        fontSize: theme.base.fontSize,
+        fontSize: props.fontSize || theme.base.fontSize,
         color: theme.base.color,
         borderColor: theme.base.borderColor,
       },

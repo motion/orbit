@@ -30,6 +30,7 @@ export type Props = {
   controlled?: boolean,
   parentSize?: boolean,
   itemStyle?: Object,
+  itemProps?: Object,
   rowHeight?: number,
 }
 
@@ -153,6 +154,7 @@ class List {
     itemStyle,
     rowHeight: propRowHeight,
     onItemMount,
+    itemProps,
     ...props
   }: Props) {
     let rowHeight = propRowHeight
@@ -186,7 +188,7 @@ class List {
     }
 
     const total = items ? items.length : Children.count(children)
-    const itemProps = (i, rowProps, isListItem) => {
+    const getItemProps = (i, rowProps, isListItem) => {
       const positionProps = {
         isFirstElement: i === 0,
         isLastElement: i === total - 1,
@@ -194,6 +196,7 @@ class List {
 
       const props = {
         key: i,
+        ...itemProps,
         ...rowProps,
         ...(isListItem ? passThroughProps : null),
         ...(isListItem ? positionProps : null),
@@ -215,13 +218,13 @@ class List {
         return null
       }
       if (React.isValidElement(item)) {
-        return React.cloneElement(item, itemProps(i, rowProps))
+        return React.cloneElement(item, getItemProps(i, rowProps))
       }
       // pass object to ListItem
       return (
         <ListItem
           key={item.key || cur.id || cur._id || i}
-          {...itemProps(i, rowProps, true)}
+          {...getItemProps(i, rowProps, true)}
           {...item}
         />
       )

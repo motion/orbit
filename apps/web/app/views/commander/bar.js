@@ -13,11 +13,11 @@ export default class CommanderInput {
           onChange={commanderStore.onChange}
           onKeyDown={commanderStore.onKeyDown}
           onFocus={commanderStore.onFocus}
-          borderColor="transparent"
           placeholder={commanderStore.place}
           placeholderColor={[0, 0, 0, 0.1]}
-          padding={[0]}
-          height={34}
+          borderColor="transparent"
+          padding={[10, 5]}
+          height={36}
           getRef={commanderStore.ref('input').set}
           value={commanderStore.value}
         />
@@ -31,12 +31,14 @@ export default class CommanderInput {
     },
     query: {
       flex: 1,
-      fontSize: 18,
-      fontWeight: 600,
+      fontSize: 22,
+      fontWeight: 300,
       border: [1, 'transparent'],
       borderRadius: 0,
       margin: 0,
-      borderBottom: [2, '#f2f2f2'],
+      '&:focus': {
+        borderBottomColor: '#000',
+      },
     },
   }
 }

@@ -44,7 +44,7 @@ export default class Breadcrumbs {
   static style = {
     breadcrumbs: {
       fontSize: 22,
-      padding: [5, 10],
+      padding: [3, 10],
       marginTop: -2,
       flexFlow: 'row',
     },

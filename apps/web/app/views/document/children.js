@@ -115,7 +115,7 @@ export default class Children {
 
   static style = {
     children: {
-      borderTop: [1, '#eee'],
+      borderTop: [1, '#f6f6f6'],
       position: 'relative',
       padding: [8, 0, 4],
     },

@@ -101,7 +101,9 @@ export default class CommanderStore {
   }
 
   focus = () => {
-    if (this.input) {
+    if (!this.input) {
+      console.error('no commander input')
+    } else {
       this.input.focus()
     }
   }
@@ -110,6 +112,7 @@ export default class CommanderStore {
     if (!action) return
     if (document.activeElement !== this.input) {
       // not focused in commander
+      console.log(document.activeElement, this.input)
       return
     }
     this.emit('action', { action, event })

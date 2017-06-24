@@ -21,7 +21,7 @@ export default class Header {
         <bar>
           <Segment
             $$margin={[0, 10, 0, 0]}
-            itemProps={{ iconSize: 12, padding: [0, 6] }}
+            itemProps={{ iconSize: 12, padding: [0, 6], chromeless: true }}
             $$flex="none"
           >
             <Button

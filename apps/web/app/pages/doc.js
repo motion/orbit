@@ -42,7 +42,7 @@ export default class DocumentPage {
       <Page
         actions={
           <actions $$row>
-            <Segment itemProps={{ size: 1.5, chromeless: true }}>
+            <Segment itemProps={{ size: 1.5, chromeless: true, noGlow: true }}>
               <Button icon="dot" className={className} />
               <Button
                 icon="fav31"

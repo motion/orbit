@@ -18,7 +18,8 @@ import { log } from '@jot/black'
 // Mobx.useStrict(true)
 
 // install console formatters
-mobxFormatters(Mobx)
+// mobxFormatters(Mobx)
+
 // the heavy hitters
 window.React = React
 window.ReactDOM = ReactDOM

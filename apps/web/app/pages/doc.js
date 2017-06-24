@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/black'
+import { view, watch } from '@jot/black'
 import { Segment, Button } from '~/ui'
 import Router from '~/router'
 import DocumentView from '~/views/document'
@@ -7,19 +7,19 @@ import { User, Document } from '@jot/models'
 import Page from '~/page'
 import Theme from '~/theme'
 
+class DocPageStore {
+  doc = this.props.id ? Document.get(this.props.id) : Document.home()
+  forceEdit = false
+  get editing() {
+    return this.forceEdit || (User.loggedIn && !User.user.hatesToEdit)
+  }
+  toggleEdit = () => {
+    this.forceEdit = !this.forceEdit
+  }
+}
+
 @view.provide({
-  docStore: class DocPageStore {
-    doc = this.props.id ? Document.get(this.props.id) : Document.home()
-    forceEdit = false
-
-    get editing() {
-      return this.forceEdit || (User.loggedIn && !User.user.hatesToEdit)
-    }
-
-    toggleEdit = () => {
-      this.forceEdit = !this.forceEdit
-    }
-  },
+  docStore: DocPageStore,
 })
 export default class DocumentPage {
   render({ docStore, insidePlace }) {

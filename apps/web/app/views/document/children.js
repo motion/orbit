@@ -6,8 +6,8 @@ import { Document } from '@jot/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 
-const WIDTH = 50
-const HEIGHT = 50
+const WIDTH = 200
+const HEIGHT = 200
 
 type Props = {
   id: number,
@@ -16,8 +16,30 @@ type Props = {
 
 @view({
   store: class ChildrenStore {
+    children = {}
     docs = Document.child(this.props.id)
     newTitle = null
+
+    start() {
+      this.watch(async () => {
+        if (this.docs && this.docs.length) {
+          this.children = {}
+          const allChildren = await Promise.all(
+            this.docs.map(async doc => ({
+              id: doc._id,
+              children: await doc.getChildren(),
+            }))
+          )
+          this.children = allChildren.reduce(
+            (acc, { id, children }) => ({
+              ...acc,
+              [id]: children,
+            }),
+            {}
+          )
+        }
+      })
+    }
 
     add = () => {
       this.newTitle = ''
@@ -35,7 +57,6 @@ export default class Children {
 
   render({ id, store }: Props) {
     const { docs } = store
-
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
 
     return (
@@ -48,17 +69,28 @@ export default class Children {
 
         <docBar $$row if={hasDocs}>
           <docs>
-            {sortBy(docs || [], 'createdAt').map(doc =>
-              <doc key={doc._id} onClick={() => Router.go(doc.url())}>
-                <TiltGlow width={WIDTH} height={HEIGHT}>
-                  <box />
-                </TiltGlow>
-                <name>{doc.getTitle()}</name>
-              </doc>
-            )}
+            {sortBy(docs || [], 'createdAt').map(doc => {
+              const children = store.children[doc._id]
+              return (
+                <doc key={doc._id} onClick={() => Router.go(doc.url())}>
+                  <TiltGlow width={WIDTH} height={HEIGHT}>
+                    <card>
+                      <name>{doc.getTitle()}</name>
+                      <content if={children}>
+                        {children.map(child =>
+                          <child key={child._id}>
+                            {child.getTitle()}
+                          </child>
+                        )}
+                      </content>
+                    </card>
+                  </TiltGlow>
+                </doc>
+              )
+            })}
             <doc if={store.newTitle !== null}>
               <TiltGlow width={WIDTH} height={HEIGHT}>
-                <box />
+                <card />
               </TiltGlow>
               <input
                 $name
@@ -87,11 +119,11 @@ export default class Children {
     children: {
       borderTop: '1px dotted #eee',
     },
-    box: {
+    card: {
       width: WIDTH,
       height: HEIGHT,
-      border: '1px solid #999',
-      background: '#ccc',
+      background: 'lightblue',
+      borderRadius: 10,
     },
 
     doc: {

@@ -124,10 +124,12 @@ export default class Model {
                 @observable subscribe: a => b => b,
               }
 
-              autorun(() => {
+              const stop = autorun(() => {
                 if (self.connected) {
-                  // trigger re-query
-                  parent.subscribe = null
+                  if (stop) stop()
+                  setTimeout(() => {
+                    parent.subscribe = null // trigger re-query
+                  })
                 }
               })
 

@@ -19,7 +19,7 @@ export default class TiltGlow {
     return (
       <Tilt
         options={{
-          max: 30,
+          max: 15,
           perspective: 1000,
           reverse: true,
           scale: 1,

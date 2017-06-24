@@ -9,5 +9,5 @@ export default class LayoutStore {
   headerHovered = false
   isCreatingDoc = false
   sidebar = new SidebarStore()
-  showOnboard = true //watch(() => !User.org)
+  showOnboard = false //watch(() => !User.org)
 }

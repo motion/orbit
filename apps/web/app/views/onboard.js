@@ -1,10 +1,25 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { Drawer, Segment, Button } from '~/ui'
+import {
+  Theme,
+  Form,
+  Field,
+  TiltGlow,
+  Grain,
+  Glint,
+  Drawer,
+  Segment,
+  Button,
+  PassProps,
+} from '~/ui'
 import { User } from '@jot/models'
 import Router from '~/router'
 import Page from '~/page'
+
+// TODO
+// IDEA
+// <PassProps theme={['row', 'serif', 'chromeless']}>
 
 @view({
   store: class OnboardStore {
@@ -22,15 +37,39 @@ import Page from '~/page'
 export default class OnboardPage {
   render({ store }) {
     return (
-      <fml>
-        welcome to jot
+      <fml $$fullscreen $$draggable>
+        <Theme name="dark">
+          <modal>
+            <Form>
+              <PassProps row chromeless placeholderColor="#333">
+                <Field label="Name" placeholder="something" />
+                <Field label="Email" placeholder="something" />
+                <Field label="Password" placeholder="something" />
+              </PassProps>
+            </Form>
+            <Button>
+              Next
+            </Button>
+          </modal>
+        </Theme>
       </fml>
     )
   }
 
   static style = {
-    onboard: {
+    fml: {
+      background: 'rgba(0,0,0,0.1)',
+      backdropFilter: 'blur(0.8px)',
       zIndex: 10000,
+      alignItems: 'flex-end',
+      justifyContent: 'center',
+    },
+    modal: {
+      padding: 80,
+      background: '#000',
+      height: '100%',
+      borderRadius: 5,
+      color: '#fff',
     },
   }
 }

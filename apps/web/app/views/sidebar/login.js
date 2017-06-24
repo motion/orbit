@@ -68,7 +68,7 @@ export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <Form if={!User.loggedIn} $$undraggable onSubmit={store.onSubmit}>
+        <Form flex if={!User.loggedIn} $$undraggable onSubmit={store.onSubmit}>
           <Segment>
             <Input
               $input

@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@jot/black'
 import { Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
-import { Theme, SlotFill } from '~/ui'
+import { Glint, Theme, SlotFill } from '~/ui'
 import { IN_TRAY } from '~/constants'
 import { User } from '@jot/models'
 import NotFound from '~/pages/notfound'
@@ -70,9 +70,9 @@ export default class Root {
     const CurrentPage = Router.activeView || NotFound
     const { showOnboard } = layoutStore
 
-    log(showOnboard)
     return (
       <app>
+        <Glint borderRadius={6} />
         <Onboard if={showOnboard} />
         <LayoutWrap layoutStore={layoutStore}>
           <Commander.Results />

@@ -97,6 +97,10 @@
     - see react grid experiments from hn not long ago
 
 - gloss
+
+  - per-prop theme:
+    - borderBottom: theme => [1, theme.borderColor],
+  - $$background, $$border as way of attaching theme parent styles to els? and use theme={} props for almost all styles
   - turn theme="string" into theme={{ resolved: theme }}
     - lets you use theme inside render() for stuff like <Icon color={theme.color} />
   - allow passing theme objects directly to "tweak" styles theme={{ background: 'red' }} (works with ui niceStyle stuff)

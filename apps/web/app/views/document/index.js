@@ -33,7 +33,7 @@ export default class DocumentView {
       return <loading />
     }
 
-    log('crumbs is', store.crumbs)
+    log('>', store.crumbs)
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>

@@ -28,7 +28,7 @@ export async function start() {
   render()
 }
 
-if (module && module.hot) {
+if (module.hot) {
   module.hot.accept('./views/layout', start)
   module.hot.accept('./router', render)
 }

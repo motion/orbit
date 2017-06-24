@@ -9,8 +9,6 @@ type Props = {
   docs: DocStore,
 }
 
-log('crumbs')
-
 @view
 export default class Breadcrumbs {
   props: Props
@@ -46,7 +44,6 @@ export default class Breadcrumbs {
   static style = {
     crumbs: {
       fontSize: 22,
-      background: 'red',
       padding: [0, 0, 0, 10],
       marginTop: -2,
       flexFlow: 'row',
@@ -66,7 +63,7 @@ export default class Breadcrumbs {
       },
     },
     slash: {
-      opacity: 0.1,
+      opacity: 0.05,
       margin: [0, 2],
       fontWeight: 200,
       pointerEvents: 'none',

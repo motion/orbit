@@ -21,7 +21,7 @@ export default class DocumentStore implements StoreType {
   editor = null
   downAt = Date.now()
   crumbs = []
-  shouldLoadCrumbs = false
+  shouldLoadCrumbs = true
 
   get hasNewContent() {
     return (
@@ -30,13 +30,12 @@ export default class DocumentStore implements StoreType {
     )
   }
 
-  async start() {
+  start() {
     this.react(
       () => this.document && this.document._id && this.shouldLoadCrumbs,
       async () => {
         if (this.document && this.shouldLoadCrumbs) {
           const newCrumbs = await this.document.getCrumbs()
-          debugger
           console.log(newCrumbs)
           this.crumbs = newCrumbs
         }

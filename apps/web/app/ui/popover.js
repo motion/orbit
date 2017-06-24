@@ -448,8 +448,8 @@ export default class Popover {
     const close = () => this.hoverStateSet(name, false)
     const openIfOver = () => this.isNodeHovered(node, isMenu) && open()
     const closeIfOut = () => !this.isNodeHovered(node, isMenu) && close()
-    const onEnter = openIfOver
-    const onLeave = debounce(closeIfOut, isMenu ? delay : delay + 16) // 🐛 target should close slower than menu opens
+    const onEnter = debounce(openIfOver, delay)
+    const onLeave = debounce(closeIfOut, isMenu ? 1 : 16) // 🐛 target should close slower than menu opens
 
     if (name === 'target') {
       // if you move your mouse super slowly onto an element, it triggers this ridiculous bug where it doesnt open
@@ -463,14 +463,13 @@ export default class Popover {
             !this.state.targetHovered &&
             this.isNodeHovered(this.target) &&
             this.hoverStateSet('target', true),
-          200
+          200 + delay
         )
       )
     }
 
     this.on(node, 'mouseenter', () => {
       onEnter()
-      this.setTimeout(onEnter, 16)
       // insanity, but mouseleave is horrible
       if (this.curProps.target) {
         this.setTimeout(onLeave, 16)
@@ -684,7 +683,7 @@ export default class Popover {
       },
     },
     withBackground: background => ({
-      borderRadius: 3,
+      borderRadius: 5,
       background,
     }),
     item: {
@@ -725,7 +724,7 @@ export default class Popover {
     }),
     shadow: ({ shadow }) => ({
       content: {
-        boxShadow: shadow === true ? '0 3px 10px rgba(0,0,0,0.1)' : shadow,
+        boxShadow: shadow === true ? '0 2px 10px rgba(0,0,0,0.3)' : shadow,
       },
     }),
     noHover: {

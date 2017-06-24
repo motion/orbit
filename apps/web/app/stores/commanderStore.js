@@ -88,9 +88,11 @@ export default class CommanderStore {
       this.open()
     },
     right: () => {
+      if (!this.isOpen) return
       this.onRight()
     },
     down: e => {
+      if (!this.isOpen) return
       e.preventDefault()
       if (!this.searchResults || !this.isOpen) {
         this.actions.focusEditor()
@@ -99,6 +101,7 @@ export default class CommanderStore {
       this.moveHighlight(1)
     },
     up: e => {
+      if (!this.isOpen) return
       e.preventDefault()
       this.moveHighlight(-1)
     },

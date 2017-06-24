@@ -4,8 +4,15 @@ import { view } from '@jot/black'
 import { SIDEBAR_TRANSITION } from '~/constants'
 
 // optimized re-render for sidebar resize
+@view.attach('layoutStore')
 @view
 export default class LayoutWrap {
+  dragger = null
+
+  componentDidMount() {
+    this.props.layoutStore.sidebar.attachDragger(this.dragger)
+  }
+
   render({ layoutStore, children }) {
     return (
       <wrap
@@ -15,6 +22,10 @@ export default class LayoutWrap {
         $$right={layoutStore.sidebar.trueWidth}
       >
         {children}
+        <dragger
+          style={{ WebkitAppRegion: 'no-drag' }}
+          ref={this.ref('dragger').set}
+        />
       </wrap>
     )
   }
@@ -26,6 +37,15 @@ export default class LayoutWrap {
       top: 0,
       bottom: 0,
       zIndex: 10,
+    },
+    dragger: {
+      width: 8,
+      position: 'absolute',
+      top: 0,
+      right: -4,
+      bottom: 0,
+      zIndex: 10000,
+      cursor: 'ew-resize',
     },
   }
 }

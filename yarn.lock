@@ -1234,6 +1234,10 @@ eslint-config-prettier@^2.2.0:
   dependencies:
     get-stdin "^5.0.1"
 
+eslint-config-react-app@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/eslint-config-react-app/-/eslint-config-react-app-1.0.4.tgz#c0178f535a922236c53daafea4f397203db7d9af"
+
 eslint-plugin-class-property@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/eslint-plugin-class-property/-/eslint-plugin-class-property-1.0.6.tgz#c3bc3fc4207b283bf82e69e3dd1b6e2491a57623"

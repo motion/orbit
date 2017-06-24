@@ -25,6 +25,7 @@
     "check-dependencies": "^1.0.1",
     "eslint": "^3.19.0",
     "eslint-config-prettier": "^2.2.0",
+    "eslint-config-react-app": "^1.0.4",
     "eslint-plugin-class-property": "^1.0.6",
     "eslint-plugin-flowtype": "^2.34.0",
     "eslint-plugin-prettier": "^2.1.2",

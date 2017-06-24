@@ -58,9 +58,6 @@ export default class Breadcrumbs {
       margin: [0, 4],
       color: [0, 0, 0, 0.3],
       justifyContent: 'center',
-      '&:hover': {
-        color: 'red',
-      },
     },
     slash: {
       opacity: 0.05,

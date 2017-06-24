@@ -367,14 +367,6 @@ class Inner {
   store: SidebarStore,
 })
 export default class Sidebar {
-  dragger = null
-
-  componentDidMount() {
-    if (!IN_TRAY) {
-      this.props.layoutStore.sidebar.attachDragger(this.dragger)
-    }
-  }
-
   render({ layoutStore, store }: Props) {
     const active = IN_TRAY ? true : layoutStore.sidebar.active
     const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
@@ -391,11 +383,6 @@ export default class Sidebar {
             size={width}
             zIndex={9}
           >
-            <dragger
-              if={!IN_TRAY}
-              style={{ WebkitAppRegion: 'no-drag' }}
-              ref={this.ref('dragger').set}
-            />
             <sidebar>
               <Inner key={0} />
             </sidebar>
@@ -429,15 +416,6 @@ export default class Sidebar {
     },
     content: {
       flex: 1,
-    },
-    dragger: {
-      width: 8,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      zIndex: 10000,
-      cursor: 'ew-resize',
     },
     search: {
       border: 'none',

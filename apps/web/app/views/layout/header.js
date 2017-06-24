@@ -74,6 +74,7 @@ export default class Header {
 
   static style = {
     header: {
+      overflow: 'hidden',
       background: [255, 255, 255, 0.1],
       zIndex: 500,
       padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],

@@ -40,7 +40,7 @@ export default class TitleNode {
       fontSize: 22,
       fontWeight: 600,
       lineHeight: 1.2,
-      color: '#eee',
+      // color: '#eee',
     },
   }
 }

@@ -40,7 +40,10 @@ export default class Header {
             />
             <Button icon="home" chromeless onClick={() => Router.go('/')} />
           </Segment>
-          <Commander.Bar />
+          <Commander.Bar
+            onOpen={() => (layoutStore.commanderOpen = true)}
+            onClose={() => (layoutStore.commanderOpen = false)}
+          />
         </bar>
         <rest $$row>
           <SlotFill.Slot name="documentActions">
@@ -74,7 +77,7 @@ export default class Header {
 
   static style = {
     header: {
-      background: [255, 255, 255, 0.1],
+      background: [255, 255, 255, 1],
       zIndex: 500,
       padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
       flexFlow: 'row',

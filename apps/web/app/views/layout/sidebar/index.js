@@ -199,8 +199,8 @@ class Projects {
   }
 
   static style = {
-    tasks: {
-      padding: [0, 10],
+    content: {
+      flex: 1,
     },
     empty: {
       flex: 1,
@@ -234,6 +234,7 @@ class Projects {
       },
     },
     tasks: {
+      flex: 1,
       padding: [10, 5],
     },
     task: {
@@ -372,6 +373,7 @@ export default class Sidebar {
           <Drawer
             transition={SIDEBAR_TRANSITION}
             background={[20, 20, 20, 0.68]}
+            borderLeft={'1px solid white'}
             key={2}
             open={active}
             from="right"
@@ -400,6 +402,7 @@ export default class Sidebar {
       position: 'absolute',
       top: 0,
       right: 0,
+      borderLeft: `1px solid #666`,
       bottom: 0,
     },
     title: {

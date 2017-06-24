@@ -231,6 +231,8 @@ export class Document extends Model {
       // .sort({ createdAt: 'desc' })
       .limit(limit)
 
+  @query root = () => this.collection.find({ parentId: { $exists: false } })
+
   @query
   stars = () =>
     this.collection

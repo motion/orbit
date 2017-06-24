@@ -1,8 +1,4 @@
 # nate
-  - packages/
-    - gloss
-    - router
-    - hmr
   - alt ui: app vs tray, tray shows current sidebar, app has own sidebar with inbox style?
   - rxdb query sync (pending: https://gitter.im/pubkey/rxdb | https://github.com/pubkey/rxdb/blob/master/src/RxCollection.js)
   - commander features/polish

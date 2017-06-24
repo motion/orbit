@@ -93,7 +93,7 @@ export default class Drawer {
         </panel>
         <overlay
           $overlayOpen={open}
-          $overlayBg={{ blur: overlayBlur }}
+          $overlayBg={{ blur: overlayBlur === true ? 5 : overlayBlur }}
           onClick={e => {
             e.preventDefault()
             onClickOverlay(false, e)

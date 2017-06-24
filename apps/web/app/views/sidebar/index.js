@@ -18,7 +18,7 @@ import {
   Segment,
 } from '~/ui'
 import { Document } from '@jot/models'
-import Login from '../login'
+import Login from './login'
 import SidebarStore from './store'
 import type LayoutStore from '~/stores/layoutStore'
 import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '~/constants'

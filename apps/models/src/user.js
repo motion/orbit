@@ -75,6 +75,10 @@ class User {
     return this.user.user_id
   }
 
+  get org() {
+    return this.user.org || 'motion'
+  }
+
   setupDbSync = () => {
     if (!this.remoteDb && this.user) {
       this.remoteDb = new PouchDB(this.user.userDBs.documents, {

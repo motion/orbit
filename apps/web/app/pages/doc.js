@@ -26,7 +26,7 @@ export default class DocumentPage {
     const { doc } = docStore
 
     if (doc === undefined) {
-      return <null>loading222</null>
+      return <null />
     }
 
     if (!doc) {

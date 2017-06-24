@@ -17,7 +17,6 @@ import {
   SlotFill,
 } from '~/ui'
 import { User, Place } from '@jot/models'
-import Login from '../login'
 import Team from './team'
 import Router from '~/router'
 import randomcolor from 'randomcolor'

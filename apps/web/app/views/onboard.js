@@ -1,12 +1,17 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { Segment, Button } from '~/ui'
+import { Drawer, Segment, Button } from '~/ui'
+import { User } from '@jot/models'
 import Router from '~/router'
 import Page from '~/page'
 
 @view({
   store: class OnboardStore {
+    get show() {
+      return true //!User.org
+    }
+
     step = 0
 
     setStep = (val: number) => {
@@ -17,9 +22,15 @@ import Page from '~/page'
 export default class OnboardPage {
   render({ store }) {
     return (
-      <Page>
+      <fml>
         welcome to jot
-      </Page>
+      </fml>
     )
+  }
+
+  static style = {
+    onboard: {
+      zIndex: 10000,
+    },
   }
 }

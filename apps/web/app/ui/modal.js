@@ -5,11 +5,11 @@ import Portal from 'react-portal'
 @view.ui
 export default class Modal {
   render() {
-    const { portalOptions, children, ...props } = this.props
+    const { portalProps, bgProps, children, ...props } = this.props
 
     return (
-      <Portal {...portalOptions}>
-        <bg>
+      <Portal isOpened {...portalProps}>
+        <bg {...bgProps}>
           <modal {...props}>{children}</modal>
         </bg>
       </Portal>
@@ -27,11 +27,13 @@ export default class Modal {
       zIndex: 1000000,
       justifyContent: 'center',
       alignItems: 'center',
+      backdropFilter: 'blur(5px)',
     },
     modal: {
       background: '#f7f9fa',
       boxShadow: '0 0 0 1px rgba(0,0,0,0.1), 0 2px 20px rgba(0,0,0,0.2)',
       borderRadius: 5,
+      margin: 100,
     },
   }
 

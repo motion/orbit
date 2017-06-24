@@ -1,5 +1,7 @@
 // @flow
 import SidebarStore from '~/stores/sidebarStore'
+import { watch } from '@jot/black'
+import { User } from '@jot/models'
 
 export default class LayoutStore {
   title = ''
@@ -7,4 +9,5 @@ export default class LayoutStore {
   headerHovered = false
   isCreatingDoc = false
   sidebar = new SidebarStore()
+  showOnboard = true //watch(() => !User.org)
 }

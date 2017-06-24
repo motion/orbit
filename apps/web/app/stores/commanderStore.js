@@ -108,6 +108,10 @@ export default class CommanderStore {
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {
     if (!action) return
+    if (document.activeElement !== this.input) {
+      // not focused in commander
+      return
+    }
     this.emit('action', { action, event })
     if (this.actions[action]) {
       console.log('action', action)

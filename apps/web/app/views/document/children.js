@@ -68,7 +68,6 @@ export default class Children {
               $add
               if={store.newTitle === null}
               circular
-              noGlow
               iconSize={20}
               size={50}
               icon="siadd"

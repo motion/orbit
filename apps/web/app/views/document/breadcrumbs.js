@@ -19,7 +19,7 @@ export default class Breadcrumbs {
     }
     const crumbs = [
       {
-        text: <Icon size={8} name="home" color="#ccc" hoverColor="red" />,
+        text: <Icon size={8} name="url" color="#ccc" hoverColor="red" />,
         url: '/',
       },
       ...docs.map(doc => ({ text: doc.title, url: doc.url() })),

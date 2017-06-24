@@ -126,7 +126,7 @@ export default class ListItem {
 
   static style = {
     item: {
-      padding: [2, 7],
+      padding: [4, 7],
       cursor: 'pointer',
       maxWidth: '100%',
       flexFlow: 'row',

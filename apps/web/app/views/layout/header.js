@@ -56,6 +56,7 @@ export default class Header {
                 <Button
                   chromeless
                   spaced
+                  size={1}
                   icon={
                     layoutStore.sidebar.active
                       ? 'arrow-min-right'
@@ -63,7 +64,8 @@ export default class Header {
                   }
                   onClick={layoutStore.sidebar.toggle}
                   $$marginRight={-6}
-                  color={[0, 0, 0, 0.5]}
+                  color={[0, 0, 0, 0.3]}
+                  hoverColor={[0, 0, 0, 0.2]}
                 />
               </actions>}
           </SlotFill.Slot>

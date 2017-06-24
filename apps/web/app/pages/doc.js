@@ -1,6 +1,7 @@
+// @flow
 import React from 'react'
 import { view, watch } from '@jot/black'
-import { Segment, Button } from '~/ui'
+import { PassProps, Segment, Button, Popover, List } from '~/ui'
 import Router from '~/router'
 import DocumentView from '~/views/document'
 import { User, Document } from '@jot/models'
@@ -35,22 +36,46 @@ export default class DocumentPage {
 
     const starred = doc.hasStar()
 
+    const className = `btn-${Math.floor(Math.random() * 100000000000)}`
+
     return (
       <Page
         actions={
-          <Segment itemProps={{ chromeless: true }}>
-            <Button if={!insidePlace} tooltip="share link">
-              🔗
-            </Button>
-            <Button if={!insidePlace} onClick={doc.togglePrivate}>
-              {doc.private ? '🙈' : '🌎'}
-            </Button>
-            <Button
-              icon="fav31"
-              color={starred ? Theme.light.base.highlightColor : '#000'}
-              onClick={doc.toggleStar}
-            />
-          </Segment>
+          <actions $$row>
+            <Segment itemProps={{ size: 1.5, chromeless: true }}>
+              <Button icon="dot" className={className} />
+              <Button
+                icon="fav31"
+                highlight={starred}
+                onClick={doc.toggleStar}
+              />
+            </Segment>
+
+            <Popover
+              delay={0}
+              distance={10}
+              openOnHover
+              shadow
+              background
+              target={`.${className}`}
+            >
+              <List
+                items={[
+                  { icon: 'share', primary: 'Share Link', onClick: () => {} },
+                  {
+                    icon: doc.private ? 'lock' : 'open',
+                    primary: 'Locked',
+                    onClick: doc.togglePrivate,
+                  },
+                  {
+                    icon: doc.private ? 'eye' : 'closed',
+                    primary: 'Private',
+                    onClick: doc.togglePrivate,
+                  },
+                ]}
+              />
+            </Popover>
+          </actions>
         }
       >
         <DocumentView id={doc._id} onKeyDown={docStore.onKeyDown} />

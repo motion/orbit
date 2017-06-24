@@ -4,7 +4,7 @@ import { view } from '@jot/black'
 import { SlotFill } from '~/ui'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
-import Crumbs from './crumbs'
+import Breadcrumbs from './breadcrumbs'
 import Children from './children'
 
 type Props = {
@@ -25,7 +25,7 @@ export default class DocumentView {
 
   componentWillMount() {
     const { store, inline } = this.props
-    if (!inline) store.shouldLoadCrumbs = true
+    if (!inline) store.crumbs = true
   }
 
   render({ id, editorProps, inline, readOnly, store }: Props) {
@@ -33,11 +33,10 @@ export default class DocumentView {
       return <loading />
     }
 
+    log('crumbs is', store.crumbs)
+
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <SlotFill.Fill name="crumbs">
-          <Crumbs if={!inline} docs={store.crumbs} />
-        </SlotFill.Fill>
         <Editor
           readOnly={readOnly}
           inline={inline}
@@ -45,6 +44,7 @@ export default class DocumentView {
           {...editorProps}
         />
         <Children if={!inline} id={store.document._id} />
+        <Breadcrumbs docs={store.crumbs} />
       </docview>
     )
   }

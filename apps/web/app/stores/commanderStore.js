@@ -164,7 +164,6 @@ export default class CommanderStore {
 
   splitPath = (path: string): Array<string> => {
     if (path[0] !== '/') {
-      console.log('not a path')
       return path
     }
     return path.split(PATH_SEPARATOR).slice(1)

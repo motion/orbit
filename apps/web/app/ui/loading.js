@@ -4,7 +4,7 @@ import { view } from '@jot/black'
 @view
 export default class Loading {
   render() {
-    return <loading>loading</loading>
+    return <loading>loading...</loading>
   }
 
   static style = {

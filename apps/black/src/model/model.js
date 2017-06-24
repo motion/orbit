@@ -1,4 +1,5 @@
 // @flow
+import { autorun, observable } from 'mobx'
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
 import type RxDB, { RxCollection } from 'rxdb'
@@ -26,6 +27,7 @@ export default class Model {
   defaultSchema: Object
   collection: ?RxCollection & { pouch: PouchDB }
 
+  @observable connected = false
   // sync to
   remoteDb: ?string = null
   // for tracking which queries we are watching
@@ -103,6 +105,41 @@ export default class Model {
     }
   }
 
+  get collection() {
+    if (this._collection) {
+      return this._collection
+    }
+    // chain().until().exec().or().$
+    const self = this
+    const worm = () =>
+      new Proxy(
+        {
+          exec: () => Promise.resolve(false),
+          isProxy: true,
+        },
+        {
+          get(target: Object | Class, name: string) {
+            if (name === '$') {
+              const parent = {
+                @observable subscribe: a => b => b,
+              }
+
+              autorun(() => {
+                if (self.connected) {
+                  // trigger re-query
+                  parent.subscribe = null
+                }
+              })
+
+              return parent
+            }
+            return () => worm()
+          },
+        }
+      )
+    return worm()
+  }
+
   connect = async (database: RxDB, options: Object): Promise<void> => {
     // hmr:
     if (this.database) {
@@ -111,7 +148,7 @@ export default class Model {
 
     this.database = database
     this.remoteDB = options.sync
-    this.collection = await database.collection({
+    this._collection = await database.collection({
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
@@ -159,6 +196,9 @@ export default class Model {
 
     // this makes our userdb react properly to login, no idea why
     this.collection.watchForChanges()
+
+    // AND NOW
+    this.connected = true
   }
 
   createIndexes = async (): Promise<void> => {

@@ -34,4 +34,4 @@ window.Constants = Constants
 window._ = _
 window.log = log
 
-console.log('dev tools installed')
+log('dev tools installed')

@@ -20,7 +20,7 @@ export default class DocumentStore implements StoreType {
   shouldFocus = this.props.focusOnMount
   editor = null
   downAt = Date.now()
-  crumbs = null
+  crumbs = []
   shouldLoadCrumbs = false
 
   get hasNewContent() {
@@ -35,7 +35,10 @@ export default class DocumentStore implements StoreType {
       () => this.document && this.document._id && this.shouldLoadCrumbs,
       async () => {
         if (this.document && this.shouldLoadCrumbs) {
-          this.crumbs = await this.document.getCrumbs()
+          const newCrumbs = await this.document.getCrumbs()
+          debugger
+          console.log(newCrumbs)
+          this.crumbs = newCrumbs
         }
       }
     )

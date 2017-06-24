@@ -107,12 +107,13 @@ export default class Login {
             <Popover
               distance={10}
               forgiveness={20}
-              delay={500}
+              delay={150}
               theme="light"
               target={<Button circular icon="user" />}
               background
               shadow
               openOnHover
+              closeOnClick
             >
               <Theme name="light">
                 <List

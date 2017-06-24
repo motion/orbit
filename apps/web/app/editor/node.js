@@ -56,7 +56,7 @@ export default Node =>
           <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.1]} />
         }
         background="#fff"
-        closeOnClickWithin
+        closeOnClick
         openOnClick
         escapable
         noArrow

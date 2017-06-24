@@ -102,10 +102,6 @@ export default class Root {
   }
 
   render({ layoutStore, commanderStore }: Props, { error }) {
-    if (error) {
-      return <RedBox error={error} />
-    }
-
     return (
       <Theme name="light">
         <SlotFill.Provider>
@@ -126,7 +122,6 @@ export default class Root {
       position: 'absolute',
       bottom: 20,
       right: 20,
-      // backdropFilter: `blur(5px)`,
       zIndex: 1000000000,
     },
     layout: {

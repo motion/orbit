@@ -16,6 +16,11 @@ import {
   TiltGlow,
   Button,
   Segment,
+  Form,
+  Field,
+  Grain,
+  Glint,
+  PassProps,
 } from '~/ui'
 import { Document } from '@jot/models'
 import Login from './login'
@@ -112,6 +117,7 @@ class Projects {
     return (
       <content $$scrollable $$flex={6}>
         <Segment
+          $$draggable
           $$flex="none"
           controlled
           $$borderBottom={[1, [255, 255, 255, 0.1]]}
@@ -257,8 +263,8 @@ class Projects {
     team = 'Motion'
   },
 })
-class PlayUI implements ViewType {
-  render({ store }: { store: SidebarStore }) {
+class Inner {
+  render({ store }) {
     const color = '#fff'
     const borderColor = [255, 255, 255, 0.3]
     const paneProps = {
@@ -267,13 +273,31 @@ class PlayUI implements ViewType {
       titleProps: { color, borderColor },
     }
     return (
-      <ui>
+      <inner $$flex>
+        <Login />
+
+        <Theme if={!store.team} name="dark">
+          <modal>
+            <Form>
+              <PassProps row chromeless placeholderColor="#333">
+                <Field label="Name" placeholder="something" />
+                <Field label="Email" placeholder="something" />
+                <Field label="Password" placeholder="something" />
+              </PassProps>
+            </Form>
+            <Button>
+              Next
+            </Button>
+          </modal>
+        </Theme>
+
         <Projects />
+
         <Pane
           padding={[0, 10]}
           shadow
           transparent
-          background={[0, 0, 0, 0.55]}
+          background={[40, 40, 40, 0.65]}
           {...paneProps}
           title={<title $$row>Team: <Dropdown>Motion</Dropdown></title>}
         >
@@ -303,11 +327,17 @@ class PlayUI implements ViewType {
             ]}
           />
         </Pane>
-      </ui>
+        <SlotFill.Slot name="sidebar">
+          {items =>
+            <activeSidebar>
+              {items}
+            </activeSidebar>}
+        </SlotFill.Slot>
+      </inner>
     )
   }
   static style = {
-    ui: {
+    inner: {
       flex: 1,
     },
     icon: {
@@ -328,24 +358,6 @@ class PlayUI implements ViewType {
       // minWidth: 200,
       marginBottom: 20,
     },
-  }
-}
-
-@view
-class Inner {
-  render() {
-    return (
-      <inner $$flex>
-        <Login />
-        <PlayUI />
-        <SlotFill.Slot name="sidebar">
-          {items =>
-            <activeSidebar>
-              {items}
-            </activeSidebar>}
-        </SlotFill.Slot>
-      </inner>
-    )
   }
 }
 
@@ -371,7 +383,7 @@ export default class Sidebar {
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <Drawer
             transition={SIDEBAR_TRANSITION}
-            background={[20, 20, 20, 0.68]}
+            background="linear-gradient(rgba(30, 30, 30, 0.65), rgba(255,255,255, 0.45))"
             key={2}
             open={active}
             from="right"

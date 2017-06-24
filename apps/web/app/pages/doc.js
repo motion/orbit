@@ -30,7 +30,7 @@ export default class DocumentPage {
     }
 
     if (!doc) {
-      return <Button>no doc found</Button>
+      return <err>no doc found</err>
     }
 
     const starred = doc.hasStar()

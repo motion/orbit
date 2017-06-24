@@ -26,7 +26,7 @@ export default class Breadcrumbs {
     ]
 
     return (
-      <crumbs>
+      <breadcrumbs>
         <items $$row>
           {crumbs.map((item, index) =>
             <item key={item.url} $$row>
@@ -37,14 +37,14 @@ export default class Breadcrumbs {
             </item>
           )}
         </items>
-      </crumbs>
+      </breadcrumbs>
     )
   }
 
   static style = {
-    crumbs: {
+    breadcrumbs: {
       fontSize: 22,
-      padding: [0, 0, 0, 10],
+      padding: [5, 10],
       marginTop: -2,
       flexFlow: 'row',
     },

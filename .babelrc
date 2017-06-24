@@ -13,25 +13,24 @@
       {
         "rootPathSuffix": "app"
       }
+    ],
+    [
+      "babel-plugin-react-transform-motion",
+      {
+        "decoratorName": "view",
+        "transforms": [
+          {
+            "transform": "react-transform-hmr-motion",
+            "imports": [
+              "react"
+            ],
+            "locals": [
+              "module"
+            ]
+          }
+        ]
+      }
     ]
-    //,
-    // [
-    //   "babel-plugin-react-transform-motion",
-    //   {
-    //     "decoratorName": "view",
-    //     "transforms": [
-    //       {
-    //         "transform": "react-transform-hmr-motion",
-    //         "imports": [
-    //           "react"
-    //         ],
-    //         "locals": [
-    //           "module"
-    //         ]
-    //       }
-    //     ]
-    //   }
-    // ]
   ],
   "presets": [
     [

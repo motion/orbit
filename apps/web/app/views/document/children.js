@@ -42,7 +42,7 @@ export default class Children {
       <children $$row>
         <bar if={!hasDocs}>
           <Button if={store.newTitle === null} icon="siadd" onClick={store.add}>
-            add document
+            Page
           </Button>
         </bar>
 

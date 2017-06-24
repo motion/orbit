@@ -89,7 +89,7 @@ export default class Title {
             circular
             chromeless
             padding={8}
-            size={30}
+            size={1}
             margin={[-2, -2, -2, -7]}
             height="auto"
           />

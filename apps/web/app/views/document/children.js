@@ -68,8 +68,7 @@ export default class Children {
               $add
               if={store.newTitle === null}
               circular
-              iconSize={20}
-              size={50}
+              size={2}
               icon="siadd"
               onClick={store.add}
             />

@@ -116,7 +116,9 @@ export default class Button {
           $iconAfter={hasIconAfter}
           name={icon}
           size={iconSize}
-          color={highlight ? 'blue' : active ? '#000' : color || iconColor}
+          color={
+            highlight ? 'blue' : active ? '#000' : color || iconColor || '#ccc'
+          }
           {...iconProps}
         />
         <glowWrap if={!noGlow} $minimal={chromeless}>
@@ -293,13 +295,6 @@ export default class Button {
         flex: 1,
       },
     },
-    circular: ({ size }) => ({
-      button: {
-        borderRadius: 10000,
-        width: size,
-        height: size,
-      },
-    }),
     chromeless: {
       button: {
         background: 'transparent',

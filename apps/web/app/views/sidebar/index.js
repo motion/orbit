@@ -42,22 +42,21 @@ class TeamStatus {
       <team>
         {items.map(player =>
           <player key={player.name}>
-            <TiltGlow>
-              <title $$row>
-                <name $$background={rc()}>{player.name}</name>
-                <Badge
-                  fontFamily="monospace"
-                  color={rc({ luminosity: 'light' })}
-                  label={sillyname().slice(0, 5).toLowerCase()}
-                >
-                  {Math.round(Math.random() * 10)}
-                </Badge>
-                <time>{player.time}</time>
-              </title>
-              <info>
-                <status>{player.status}</status>
-              </info>
-            </TiltGlow>
+            <title>
+              <Badge
+                $badge
+                labelBefore
+                fontFamily="monospace"
+                color={rc({ luminosity: 'light' })}
+                label={sillyname().slice(0, 15).toLowerCase()}
+              >
+                {player.name}
+              </Badge>
+              <time>{player.time}</time>
+            </title>
+            <info>
+              {player.status}
+            </info>
           </player>
         )}
       </team>
@@ -67,33 +66,28 @@ class TeamStatus {
     team: {
       flexFlow: 'row',
       flexWrap: 'wrap',
-      margin: [0, -4],
     },
     player: {
-      padding: [0, 2],
+      padding: [5, 10],
       flex: 1,
-      width: '50%',
-      minWidth: '50%',
+      width: '100%',
+      minWidth: '100%',
+      borderTop: [1, [255, 255, 255, 0.05]],
     },
-    name: {
-      margin: [-2, 5, -2, 0],
-      fontWeight: 900,
-      width: 30,
-      height: 30,
-      borderRadius: 100,
-      fontSize: 12,
-      alignItems: 'center',
-      justifyContent: 'center',
+    title: {
+      flexFlow: 'row',
+    },
+    badge: {
+      marginRight: 5,
     },
     info: {
       flexFlow: 'row',
       justifyContent: 'space-between',
-    },
-    status: {
-      fontSize: 15,
-      padding: [4, 0],
+      padding: [5, 0],
+      fontSize: 12,
+      lineHeight: '17px',
       flex: 1,
-      color: [200, 200, 200],
+      color: [245, 245, 245],
     },
     time: {
       fontSize: 10,
@@ -116,8 +110,33 @@ class Projects {
 
     return (
       <content $$scrollable $$flex={6}>
+        <TeamStatus
+          items={[
+            {
+              name: 'SB',
+              status: '#brainstorm: features and user feedback strategy',
+              time: '10m',
+            },
+            {
+              name: 'NW',
+              status:
+                'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
+              time: '10m',
+            },
+            {
+              name: 'NC',
+              status: 'editor: formatting: #uxlove + #dev',
+              time: '10m',
+            },
+            {
+              name: 'JB',
+              status: '#brainstorm: features and user feedback strategy',
+              time: '10m',
+            },
+          ]}
+        />
+
         <Segment
-          if={false}
           $$draggable
           $$flex="none"
           controlled
@@ -138,9 +157,9 @@ class Projects {
           </Button>
         </Segment>
 
-        <tasks>
-          <noStars if={!hasDocs}>No Stars</noStars>
+        <noStars $$flex if={!hasDocs}>No Stars</noStars>
 
+        <tasks if={hasDocs}>
           {docs.map((item, i) => {
             const tasks = item.tasks()
             return (
@@ -207,7 +226,7 @@ class Projects {
 
   static style = {
     tasks: {
-      padding: [0, 10],
+      padding: [10, 5],
     },
     empty: {
       flex: 1,
@@ -217,11 +236,11 @@ class Projects {
       padding: [0, 5],
     },
     noStars: {
-      fontSize: 24,
+      fontWeight: 200,
+      fontSize: 16,
       flex: 1,
       textAlign: 'center',
       justifyContent: 'center',
-      fontWeight: 'bold',
       color: '#888',
     },
     title: {
@@ -239,9 +258,6 @@ class Projects {
       '&:hover': {
         opacity: 1,
       },
-    },
-    tasks: {
-      padding: [10, 5],
     },
     task: {
       padding: [3, 0, 2],
@@ -268,11 +284,6 @@ class Inner {
   render({ store }) {
     const color = '#fff'
     const borderColor = [255, 255, 255, 0.3]
-    const paneProps = {
-      $mainPane: true,
-      collapsable: true,
-      titleProps: { color, borderColor },
-    }
     return (
       <inner $$flex>
         <Login />
@@ -294,40 +305,6 @@ class Inner {
 
         <Projects />
 
-        <Pane
-          padding={[0, 10]}
-          shadow
-          transparent
-          background={[40, 40, 40, 0.65]}
-          {...paneProps}
-          title={<title $$row>Team: <Dropdown>Motion</Dropdown></title>}
-        >
-          <TeamStatus
-            items={[
-              {
-                name: 'SB',
-                status: '#brainstorm: features and user feedback strategy',
-                time: '10m',
-              },
-              {
-                name: 'NW',
-                status:
-                  'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
-                time: '10m',
-              },
-              {
-                name: 'NC',
-                status: 'editor: formatting: #uxlove + #dev',
-                time: '10m',
-              },
-              {
-                name: 'JB',
-                status: '#brainstorm: features and user feedback strategy',
-                time: '10m',
-              },
-            ]}
-          />
-        </Pane>
         <SlotFill.Slot name="sidebar">
           {items =>
             <activeSidebar>

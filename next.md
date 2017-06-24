@@ -6,6 +6,7 @@
   - sidebar favorites colors
   - favorite icon
   - share link dropdown
+  - gloss: <Button labelStyle={this.$labelStyle} /> syntax
 
 # high level prioritized list
   - team homepage: commander force opened + showing expanded stuff

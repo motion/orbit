@@ -444,28 +444,31 @@ export default class Popover {
     if (!node) return
     const { delay } = this.curProps
     const isMenu = name === 'menu'
+    const isTarget = name === 'target'
     const open = () => this.hoverStateSet(name, true)
     const close = () => this.hoverStateSet(name, false)
     const openIfOver = () => this.isNodeHovered(node, isMenu) && open()
     const closeIfOut = () => !this.isNodeHovered(node, isMenu) && close()
-    const onEnter = debounce(openIfOver, delay)
-    const onLeave = debounce(closeIfOut, isMenu ? 1 : 16) // 🐛 target should close slower than menu opens
+    const onEnter = debounce(openIfOver, isTarget ? delay : 0)
+    const onLeave = debounce(closeIfOut, isMenu ? 0 : 16) // 🐛 target should close slower than menu opens
 
-    if (name === 'target') {
+    if (isTarget) {
+      // seems to be fixed, leaving in case needs testing
       // if you move your mouse super slowly onto an element, it triggers this ridiculous bug where it doesnt open
       // i think because checking `:hover` in css requires your mouse being >1px inside the element
       // so we also listen for mousemove, super throttled, just to prevent that
-      this.on(
-        node,
-        'mousemove',
-        throttle(
-          () =>
-            !this.state.targetHovered &&
-            this.isNodeHovered(this.target) &&
-            this.hoverStateSet('target', true),
-          200 + delay
-        )
-      )
+      // this.on(
+      //   node,
+      //   'mousemove',
+      //   throttle(
+      //     () =>
+      //       !this.state.targetHovered &&
+      //       this.isNodeHovered(this.target) &&
+      //       this.hoverStateSet('target', true),
+      //     Math.max(200, delay),
+      //     { trailing: true }
+      //   )
+      // )
     }
 
     this.on(node, 'mouseenter', () => {

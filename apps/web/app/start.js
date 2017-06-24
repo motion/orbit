@@ -7,7 +7,6 @@ import themes from './theme'
 // import { AppContainer } from 'react-hot-loader'
 
 export function render() {
-  log('render')
   // console.time('#render')
   const ROOT = document.querySelector('#app')
   const Layout = require('./views/layout').default
@@ -22,7 +21,6 @@ export function render() {
 }
 
 export async function start() {
-  log('start')
   render()
   await App.start()
   render()

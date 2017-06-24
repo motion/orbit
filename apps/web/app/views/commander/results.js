@@ -20,7 +20,7 @@ export default class CommanderResults {
 
     return (
       <results transparent if={store.isOpen}>
-        <create if={store.isEnterToCreate}>
+        <create if={store.isEnterToCreate && last(store.typedPath).length > 0}>
           ↵ to create {last(store.typedPath)}
         </create>
         <matches if={docs.length > 0}>

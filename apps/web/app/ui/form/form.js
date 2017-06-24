@@ -6,7 +6,7 @@ import { Provider } from 'react-tunnel'
 @inject(context => ({ ui: context.ui }))
 @view.ui
 export default class Form {
-  render({ ui, ...props }) {
+  render({ ui, flex, ...props }) {
     return (
       <Provider
         provide={{
@@ -21,9 +21,11 @@ export default class Form {
     )
   }
 
-  static style = {
-    form: {
-      flex: 1,
+  static theme = {
+    flex: {
+      form: {
+        flex: 1,
+      },
     },
   }
 }

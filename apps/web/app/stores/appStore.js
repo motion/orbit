@@ -2,7 +2,7 @@
 import { view, store } from '@jot/black'
 import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
-import Models from '@jot/models'
+import Models, { User } from '@jot/models'
 
 declare class AppStore {
   config: Object,

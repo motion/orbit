@@ -5,6 +5,7 @@ import { clr, inject } from '~/helpers'
 import type { Color } from 'gloss'
 
 export type Props = {
+  chromeless?: boolean,
   getRef?: Function,
   sync?: Function,
   inForm?: boolean,
@@ -27,6 +28,7 @@ export default class Input {
   }
 
   render({
+    chromeless,
     padding,
     getRef,
     sync,
@@ -54,12 +56,14 @@ export default class Input {
       lineHeight: '1rem',
       alignSelf: 'center',
       outline: 0,
+      minWidth: 30,
     },
   }
 
   static theme = {
     theme: (
       {
+        chromeless,
         padding,
         placeholderColor,
         borderColor,
@@ -79,7 +83,7 @@ export default class Input {
           height: height || 30,
           minHeight: height || 30,
           padding: padding || [7, 8],
-          width: '100%',
+          // width: '100%',
           border: [1, theme.base.borderColor],
         }
       }
@@ -92,6 +96,10 @@ export default class Input {
           height,
           minHeight: height,
           ...styles,
+          ...(chromeless && {
+            background: 'none',
+            border: 'none',
+          }),
           ...(transparent && { background: 'transparent' }),
           '&::placeholder': {
             color: placeholderColor,
@@ -124,17 +132,22 @@ export default class Input {
     }),
     inSegment: ({ borderRadius, inSegment: { first, last } }, _, theme) => ({
       input: {
+        width: 0,
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderRightWidth: 1,
-        borderLeftWidth: first ? 1 : 0,
+        borderLeftWidth: 1,
+        marginLeft: first ? 0 : -1,
         borderRadius: 'auto',
         borderLeftRadius: first ? borderRadius : 0,
         borderRightRadius: last ? borderRadius : 0,
         borderColor: last
           ? theme.base.borderColor
           : theme.base.borderColorLight,
-        '&:focus': theme.focus,
+        '&:focus': {
+          ...theme.focus,
+          zIndex: 1000,
+        },
       },
     }),
   }

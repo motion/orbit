@@ -32,7 +32,7 @@ export type Props = {
   escapable?: boolean,
   // size of shown arrow
   arrowSize?: number,
-  closeOnClickWithin?: boolean,
+  closeOnClick?: boolean,
   // which direction it shows towards
   // default determine direction automatically
   towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
@@ -189,10 +189,7 @@ export default class Popover {
     // click away to close
     this.on(window, 'click', e => {
       // avoid closing when clicked inside popover
-      if (
-        this.refs.popover.contains(e.target) &&
-        !this.curProps.closeOnClickWithin
-      ) {
+      if (this.refs.popover.contains(e.target) && !this.curProps.closeOnClick) {
         return
       }
 
@@ -548,7 +545,7 @@ export default class Popover {
     left: _left,
     adjust,
     theme,
-    closeOnClickWithin,
+    closeOnClick,
     showForgiveness,
     delay,
     edgePadding,

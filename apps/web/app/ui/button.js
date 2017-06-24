@@ -259,17 +259,14 @@ export default class Button {
           '&:hover': theme.hover,
           // inForm
           ...(inForm && {
-            '&:active': theme.inputActive || theme.active,
-            '&:focus': {
-              borderColor: '#999',
-              borderWidth: 1, // ;)
-            },
+            '&:active': theme.active,
+            '&:focus': theme.focus,
           }),
           // inline
           ...(inline && {
             border: [1, 'solid', 'transparent'],
             '&:hover': {
-              border: [1, 'solid', theme.base.borderColor],
+              border: [1, 'solid', theme.hover.borderColor],
             },
           }),
         },

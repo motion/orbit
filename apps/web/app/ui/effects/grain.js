@@ -11,7 +11,7 @@ export default class Grain {
     grain: {
       background: 'url(/images/grain.png)',
       zIndex: 0,
-      opacity: 0.25,
+      opacity: 0.5,
       pointerEvents: 'none',
     },
   }

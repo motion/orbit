@@ -1,6 +1,6 @@
 // helpers
 export { Theme, ThemeProvide } from 'gloss'
-export PassThrough from './helpers/passThrough'
+export PassProps from './helpers/passProps'
 export * as SlotFill from './helpers/slot'
 export Portal from 'react-portal'
 
@@ -31,6 +31,7 @@ export Glow from './effects/glow'
 export Grain from './effects/grain'
 export Poof from './effects/poof'
 export TiltGlow from './effects/tiltGlow'
+export Glint from './effects/glint'
 
 // form
 export Form from './form/form'

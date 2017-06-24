@@ -68,7 +68,7 @@ export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <Form if={!User.loggedIn} $$undraggable onSubmit={store.onSubmit}>
+        <Form flex if={!User.loggedIn} $$undraggable onSubmit={store.onSubmit}>
           <Segment>
             <Input
               $input
@@ -107,12 +107,13 @@ export default class Login {
             <Popover
               distance={10}
               forgiveness={20}
-              delay={500}
+              delay={150}
               theme="light"
               target={<Button circular icon="user" />}
               background
               shadow
               openOnHover
+              closeOnClick
             >
               <Theme name="light">
                 <List

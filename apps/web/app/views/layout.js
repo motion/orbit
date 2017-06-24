@@ -3,17 +3,19 @@ import React from 'react'
 import { view } from '@jot/black'
 import { Shortcuts } from '~/helpers'
 import { object } from 'prop-types'
-import { Theme, SlotFill } from '~/ui'
-import { IN_TRAY, SIDEBAR_TRANSITION } from '~/constants'
+import { Glint, Theme, SlotFill } from '~/ui'
+import { IN_TRAY } from '~/constants'
+import { User } from '@jot/models'
 import NotFound from '~/pages/notfound'
 import Router from '~/router'
-import Sidebar from './sidebar'
-import Header from './header'
-import Errors from './errors'
+import Sidebar from '~/views/sidebar'
+import Header from '~/views/layout/header'
+import Errors from '~/views/layout/errors'
 import * as Commander from '~/views/commander'
 import LayoutStore from '~/stores/layoutStore'
 import CommanderStore from '~/stores/commanderStore'
 import RedBox from 'redbox-react'
+<<<<<<< HEAD:apps/web/app/views/layout/index.js
 import Draft from '~/views/document/draft'
 
 // optimized re-render for sidebar resize
@@ -41,16 +43,18 @@ class LayoutWrap {
     },
   }
 }
+=======
+import Draft from '~/views/draft'
+import Onboard from './onboard'
+import LayoutWrap from '~/views/layout/wrap'
+>>>>>>> bad2bb269d6c6e000fbfcecc0c65449e0aca5424:apps/web/app/views/layout.js
 
 type Props = {
   layoutStore: LayoutStore,
   commanderStore: CommanderStore,
 }
 
-// stores attached here via provide give us nice ways
-// to share logic horizontally between any component
-// eg: @view.attach('layoutStore') in any sub-view
-
+// @view.attach('layoutStore') in any sub-view
 @view.provide({
   layoutStore: LayoutStore,
   commanderStore: CommanderStore,
@@ -94,9 +98,12 @@ export default class Root {
   renderApp() {
     const { layoutStore } = this.props
     const CurrentPage = Router.activeView || NotFound
+    const { showOnboard } = layoutStore
 
     return (
       <app>
+        <Glint borderRadius={6} />
+        <Onboard if={showOnboard} />
         <LayoutWrap layoutStore={layoutStore}>
           <Commander.Results />
           <Header layoutStore={layoutStore} />
@@ -126,10 +133,6 @@ export default class Root {
   }
 
   render({ layoutStore, commanderStore }: Props, { error }) {
-    if (error) {
-      return <RedBox error={error} />
-    }
-
     return (
       <Theme name="light">
         <SlotFill.Provider>
@@ -150,7 +153,6 @@ export default class Root {
       position: 'absolute',
       bottom: 20,
       right: 20,
-      // backdropFilter: `blur(5px)`,
       zIndex: 1000000000,
     },
     hide: {

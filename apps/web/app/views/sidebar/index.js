@@ -383,8 +383,8 @@ export default class Sidebar {
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <Drawer
             transition={SIDEBAR_TRANSITION}
-            background="linear-gradient(rgba(30, 30, 30, 0.65), rgba(255,255,255, 0.45))"
             key={2}
+            background="transparent"
             open={active}
             from="right"
             size={width}
@@ -413,6 +413,7 @@ export default class Sidebar {
       top: 0,
       right: 0,
       bottom: 0,
+      background: [70, 70, 70, 0.55],
     },
     title: {
       marginTop: 0,

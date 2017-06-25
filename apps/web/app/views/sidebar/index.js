@@ -111,6 +111,7 @@ class Projects {
     return (
       <content $$scrollable $$flex={6}>
         <TeamStatus
+          if={false}
           items={[
             {
               name: 'SB',
@@ -137,6 +138,7 @@ class Projects {
         />
 
         <Segment
+          if={false}
           $$draggable
           $$flex="none"
           controlled

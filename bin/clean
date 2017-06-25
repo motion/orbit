@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm -rf apps/*/lib && rm -rf apps/*/node_modules

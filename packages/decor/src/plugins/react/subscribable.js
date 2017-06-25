@@ -1,3 +1,4 @@
+// @flow
 import { CompositeDisposable } from 'sb-event-kit'
 
 export type Subscribable = {

@@ -1,3 +1,4 @@
+// @flow
 import { watch, react } from 'motion-mobx-helpers'
 import {
   on,

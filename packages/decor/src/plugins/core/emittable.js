@@ -1,3 +1,4 @@
+// @flow
 import { Emitter, CompositeDisposable } from 'sb-event-kit'
 
 export type Emittable = {

@@ -6,9 +6,6 @@ set -e
 APP_OLD_PWD="$(pwd)"
 OLD_PATH=$PATH
 
-# cd ROOT
-cd $(dirname $0)/..
-
 # source env
 source .env
 
@@ -16,8 +13,10 @@ source .env
 PATH=/usr/local/bin:/usr/bin
 ROOT="$(pwd)"
 
-# cd back to original dir
+# add node_modules
 PATH=$OLD_PATH:$ROOT/node_modules/.bin
+
+# cd back to original dir
 cd $APP_OLD_PWD
 
 # run with echo

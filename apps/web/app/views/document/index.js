@@ -9,7 +9,6 @@ import Children from './children'
 
 type Props = {
   id?: string,
-  focusOnMount?: boolean,
   inline?: boolean,
   readOnly?: boolean,
   editorProps?: Object,

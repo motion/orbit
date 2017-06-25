@@ -1,6 +1,5 @@
 // @flow
-import { watch } from '@jot/black'
-import type { StoreType } from '@jot/black'
+import { store, watch } from '@jot/black'
 import { debug } from '~/helpers'
 import { Document } from '@jot/models'
 import type EditorStore from '~/editor/stores/editorStore'
@@ -15,24 +14,25 @@ type Props = {
   inline?: boolean,
 }
 
-export default class DocumentStore implements StoreType {
+@store
+export default class DocumentStore {
   props: Props
 
   id = this.props.id
   document: ?Document = watch(
     () => this.props.document || Document.get(this.props.id)
   )
-  lastSavedRev = null
+  lastSavedRev: ?string = null
   lastSavedState = null
   shouldFocus = this.props.focusOnMount
-  editor = null
+  editor: ?EditorStore = null
   downAt = Date.now()
   crumbs = []
 
-  get hasNewContent() {
+  get hasNewContent(): boolean {
     return (
       !this.lastSavedState ||
-      !this.lastSavedState.equals(this.editor.contentState)
+      !this.lastSavedState.equals(this.editor && this.editor.contentState)
     )
   }
 
@@ -43,7 +43,7 @@ export default class DocumentStore implements StoreType {
   mouseup = (event: MouseEvent) => {
     const isDirectClick = event.target === event.currentTarget
     const isShortClick = Date.now() - this.downAt < 200
-    if (isDirectClick && isShortClick) {
+    if (isDirectClick && isShortClick && this.editor) {
       this.editor.focus()
     }
   }
@@ -55,6 +55,7 @@ export default class DocumentStore implements StoreType {
     }
 
     this.editor = editor
+    this.editor.focus
 
     // init content
     this.watch(() => {

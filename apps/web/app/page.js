@@ -3,9 +3,16 @@ import React from 'react'
 import { view } from '@jot/black'
 import { SlotFill } from '~/ui'
 
+type Props = {
+  children?: React$Element<any>,
+  sidebar?: React$Element<any>,
+  actions?: React$Element<any>,
+  className?: string
+}
+
 @view
 export default class Page {
-  render({ children, sidebar, actions, className }) {
+  render({ children, sidebar, actions, className }: Props) {
     return (
       <page className={className}>
         <SlotFill.Fill if={actions} name="actions">{actions}</SlotFill.Fill>

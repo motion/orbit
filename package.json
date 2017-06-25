@@ -10,7 +10,7 @@
     "build": "lerna exec --parallel --ignore @jot/native  --ignore @jot/web --ignore babel-preset-motion -- babel src --out-dir lib -s true",
     "build-web": "cd apps/web && npm run build",
     "compile": "npm run clean && npm run build",
-    "watch": "npm run build -- --watch",
+    "watch": "echo use bin/watch",
     "api": "COUCHDB_USER=admin COUCHDB_PASSWORD=password docker-compose up --remove-orphans",
     "electron": "cd apps/web && npm run electron",
     "check-dependencies": "lerna exec -- check-dependencies"
@@ -28,6 +28,8 @@
     "eslint-config-react-app": "^1.0.4",
     "eslint-plugin-class-property": "^1.0.6",
     "eslint-plugin-flowtype": "^2.34.0",
+    "eslint-plugin-import": "^2.6.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "^7.0.1",
     "prettier": "^1.4.4"

@@ -10,23 +10,25 @@ type Props = {
 }
 
 @view({
-  store: class {
-    crumbs = watch(props => props.document && props.document.getCrumbs())
+  store: class BreadcrumbStore {
+    crumbs = watch(
+      props => (props.document && props.document.getCrumbs()) || []
+    )
   },
 })
 export default class Breadcrumbs {
   props: Props
 
-  render({ docs }: Props) {
-    if (!Array.isArray(docs)) {
-      docs = []
-    }
+  render({ store }: Props) {
     const crumbs = [
       {
         text: <Icon size={8} name="url" color="#ccc" hoverColor="red" />,
         url: '/',
       },
-      ...docs.map(doc => ({ text: doc.title, url: doc.url() })),
+      ...(Array.isArray(crumbs) ? crumbs : []).map(doc => ({
+        text: doc.title,
+        url: doc.url(),
+      })),
     ]
 
     return (

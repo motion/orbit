@@ -100,7 +100,7 @@ function automagicalValue(obj, method, descriptors = {}) {
     extendShallowObservable(obj, { [method]: null })
     const autorunner = autorun(() => {
       const previous = obj[method]
-      obj[method] = val()
+      obj[method] = val.call(obj)
       automagicalValue(obj, method)
       // unsubscribe from previous
       if (previous && previous !== null) {

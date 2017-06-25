@@ -117,6 +117,7 @@ class Projects {
     return (
       <content $$scrollable $$flex={6}>
         <Segment
+          if={false}
           $$draggable
           $$flex="none"
           controlled

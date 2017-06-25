@@ -27,32 +27,7 @@ export default class Breadcrumbs {
     ]
 
     return (
-      <crumbs if={false}>
-        <nav>
-          <Segment
-            itemProps={{
-              iconSize: 12,
-              padding: [0, 6],
-              height: 25,
-              chromeless: true,
-            }}
-          >
-            <Button
-              if={IS_ELECTRON}
-              icon="minimal-left"
-              disabled={Router.atBack}
-              onClick={() => Router.back()}
-            />
-            <Button
-              if={IS_ELECTRON}
-              disabled={Router.atFront}
-              icon="minimal-right"
-              onClick={() => Router.forward()}
-            />
-            <Button if={false} chromeless icon="simple-add" tooltip="new" />
-          </Segment>
-        </nav>
-
+      <breadcrumbs>
         <items $$row>
           {crumbs.map((item, index) =>
             <item key={item.url} $$row>
@@ -63,14 +38,14 @@ export default class Breadcrumbs {
             </item>
           )}
         </items>
-      </crumbs>
+      </breadcrumbs>
     )
   }
 
   static style = {
-    crumbs: {
+    breadcrumbs: {
       fontSize: 22,
-      padding: [0, 0, 0, 10],
+      padding: [5, 10],
       marginTop: -2,
       flexFlow: 'row',
     },

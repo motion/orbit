@@ -33,8 +33,6 @@ export default class DocumentView {
       return <loading />
     }
 
-    log('>', store.crumbs)
-
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
         <Editor
@@ -53,6 +51,7 @@ export default class DocumentView {
     docview: {
       flex: 1,
       maxWidth: '100%',
+      padding: [10, 0],
     },
     loading: {
       flex: 1,

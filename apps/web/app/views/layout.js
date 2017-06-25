@@ -15,39 +15,9 @@ import * as Commander from '~/views/commander'
 import LayoutStore from '~/stores/layoutStore'
 import CommanderStore from '~/stores/commanderStore'
 import RedBox from 'redbox-react'
-<<<<<<< HEAD:apps/web/app/views/layout/index.js
-import Draft from '~/views/document/draft'
-
-// optimized re-render for sidebar resize
-@view
-class LayoutWrap {
-  render({ layoutStore, children }) {
-    return (
-      <wrap
-        $$transition={
-          layoutStore.sidebar.changing ? `right ${SIDEBAR_TRANSITION}` : 'none'
-        }
-        $$right={layoutStore.sidebar.trueWidth}
-      >
-        {children}
-      </wrap>
-    )
-  }
-  static style = {
-    wrap: {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      bottom: 0,
-      zIndex: 10,
-    },
-  }
-}
-=======
 import Draft from '~/views/draft'
 import Onboard from './onboard'
 import LayoutWrap from '~/views/layout/wrap'
->>>>>>> bad2bb269d6c6e000fbfcecc0c65449e0aca5424:apps/web/app/views/layout.js
 
 type Props = {
   layoutStore: LayoutStore,

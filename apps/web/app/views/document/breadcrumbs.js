@@ -25,10 +25,11 @@ export default class Breadcrumbs {
         text: <Icon size={8} name="url" color="#ccc" hoverColor="red" />,
         url: '/',
       },
-      ...(Array.isArray(crumbs) ? crumbs : []).map(doc => ({
-        text: doc.title,
-        url: doc.url(),
-      })),
+      ...(Array.isArray(crumbs) &&
+        crumbs.map(doc => ({
+          text: doc.title,
+          url: doc.url(),
+        }))),
     ]
 
     return (

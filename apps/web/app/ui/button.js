@@ -100,6 +100,7 @@ export default class Button {
 
     return (
       <button
+        tagName="test"
         $inSegment={inSegment && this.props}
         $clickable={!!onClick || clickable}
         $isActive={active}
@@ -214,7 +215,6 @@ export default class Button {
       //
       // const $ = props => themeProps(getProps(props, CSS_PROPS), theme)
       //
-
       // based on a vertical rythm
       const height = props.size * 30
       const borderRadius = props.borderRadius || height / 5

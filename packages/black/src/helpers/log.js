@@ -43,8 +43,9 @@ export default function log(...args) {
 function wrapLogger(wrapFn: Function, parent, name?: string) {
   const color = colors[Math.floor(Math.random() * colors.length - 1)]
   return function(...args) {
-    const result = wrapFn(...args)
+    const result = wrapFn.call(this, ...args)
     const state =
+      this &&
       this.state &&
       Object.keys(this.state).reduce(
         (acc, key, i) =>

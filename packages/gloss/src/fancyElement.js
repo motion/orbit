@@ -218,7 +218,10 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
     const allStyleProps = propKeys.filter(
       key => key[0] === '$' || (hasStyleProp && key === 'style')
     )
-    const newProps = omit(props, allStyleProps, opts.tagName)
+    const newProps = omit(props, [
+      opts.tagName ? props && props.tagName : undefined,
+      ...allStyleProps,
+    ])
     const allStyleKeys = isTag ? [type, ...allStyleProps] : allStyleProps
 
     // this collects the styles in the right order
@@ -255,6 +258,7 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
 
     if (opts.tagName && props && props.tagName) {
       type = props.tagName
+      delete props.tagName
     }
 
     return ogCreateElement(type, newProps, ...children)

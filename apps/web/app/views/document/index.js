@@ -35,7 +35,11 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <Breadcrumbs if={store.shouldLoadCrumbs} document={store.document} />
+        <Breadcrumbs
+          if={store.shouldLoadCrumbs}
+          key={store.document._id}
+          document={store.document}
+        />
         <Editor
           readOnly={readOnly}
           inline={inline}

@@ -3,6 +3,7 @@ import type { StoreType } from '@jot/black'
 import { debug } from '~/helpers'
 import { Document } from '@jot/models'
 import type EditorStore from '~/editor/stores/editorStore'
+import { throttle, debounce } from 'lodash'
 
 const print = debug('documentStore')
 
@@ -78,7 +79,7 @@ export default class DocumentStore implements StoreType {
   }
 
   // you'll want this to be false if setting from other places (e.g. sidebar)
-  save = (setContentFromEditor = true) => {
+  save = debounce((setContentFromEditor = true) => {
     this.lastSavedRev = this.document._rev
     this.lastSavedState = this.editor.contentState
     if (setContentFromEditor) {
@@ -88,7 +89,8 @@ export default class DocumentStore implements StoreType {
     this.document.title = this.editor.state.document.nodes.first().text
     print('saving...', this.document._id, this.document._rev, this.document)
     this.document.save()
-  }
+    console.log('saved doc')
+  }, 2000)
 
   get canSave() {
     if (!this.editor.contentState) {

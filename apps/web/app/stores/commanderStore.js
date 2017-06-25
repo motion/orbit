@@ -4,6 +4,7 @@ import { Document } from '@jot/models'
 import Router from '~/router'
 import { keycode } from '~/helpers'
 import { ShortcutManager } from 'react-shortcuts'
+import { uniq } from 'lodash'
 import App from '~/app'
 
 const PATH_SEPARATOR = '/'
@@ -44,11 +45,19 @@ export default class CommanderStore {
     this.watch(async () => {
       if (!this.isTypingPath) {
         // search
-        this.searchResults = await Document.collection
-          .find()
-          .where('slug')
-          .regex(new RegExp(`^${this.value}`, 'i'))
-          .exec()
+        const [searchResults, pathSearchResults] = await Promise.all([
+          Document.search(this.value),
+          Document.collection
+            .find()
+            .where('slug')
+            .regex(new RegExp(`^${this.value}`, 'i'))
+            .exec(),
+        ])
+
+        this.searchResults = uniq(
+          [...searchResults, ...pathSearchResults],
+          x => x.id
+        )
       } else {
         // path navigate
         this.searchResults = await this.getChildDocsForPath(

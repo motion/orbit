@@ -42,7 +42,7 @@ export default class CommanderResults {
   static style = {
     results: {
       zIndex: 10000,
-      background: '#fff',
+      background: [255, 255, 255, 0.9],
       position: 'absolute',
       top: HEADER_HEIGHT,
       right: 0,

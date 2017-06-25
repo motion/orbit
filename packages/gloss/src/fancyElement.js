@@ -258,7 +258,6 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
 
     if (opts.tagName && props && props.tagName) {
       type = props.tagName
-      delete props.tagName
     }
 
     return ogCreateElement(type, newProps, ...children)

@@ -28,8 +28,8 @@ export default class Icon {
 
   static defaultProps = {
     size: 16,
-    color: [0, 0, 0, 0.5],
-    hoverColor: [0, 0, 0, 0.7],
+    // color: [0, 0, 0, 0.5],
+    // hoverColor: [0, 0, 0, 0.7],
     type: 'mini',
     margin: 0,
   }

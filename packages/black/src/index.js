@@ -7,6 +7,7 @@ export Model from './model/model'
 export query from './model/query'
 
 export log from './helpers/log'
+export watch from './helpers/watch'
 
 // mobx helpers
 export { computed, observable, autorun, react, isObservable } from 'mobx'
@@ -21,15 +22,6 @@ export {
   oneOf,
   compile,
 } from './model/properties'
-
-// use this in @stores to autorun autoruns
-export const watch = fn => {
-  function temp() {
-    return fn()
-  }
-  temp.autorunme = true
-  return temp
-}
 
 import type { ViewClass } from './view'
 export type ViewType = ViewClass

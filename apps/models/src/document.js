@@ -114,15 +114,14 @@ export class Document extends Model {
       let foundRoot = false
       let crumbs = []
       let doc = this
-
       while (!foundRoot) {
+        crumbs = [doc, ...crumbs]
         if (!doc.parentId) {
           foundRoot = true
         } else {
           if (!doc) {
             return crumbs
           }
-          crumbs = [doc, ...crumbs]
           const next = await this.collection.findOne(doc.parentId).exec()
           if (!next) {
             console.error('weird, no doc at this crumb', next)

@@ -20,6 +20,7 @@ export type Props = {
   dim?: boolean,
   stretch?: boolean,
   spaced?: boolean,
+  highlight?: boolean,
   circular?: boolean,
   iconAfter?: boolean,
   iconColor?: Color,
@@ -28,6 +29,7 @@ export type Props = {
   icon?: React$Element<any> | string,
   background?: Color,
   color?: Color,
+  hoverColor?: Color,
   className?: string,
   theme?: string,
   after?: Element | string,
@@ -48,13 +50,8 @@ export default class Button {
   props: Props
 
   static defaultProps = {
-    iconColor: '#999',
-    iconSize: 12,
     onClick: idFn,
-    borderRadius: 5,
-    padding: [0, 9],
-    height: 30,
-    size: 30,
+    size: 1,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -67,11 +64,12 @@ export default class Button {
     children,
     icon,
     iconProps,
-    iconSize,
+    iconSize: _iconSize,
     iconAfter,
     iconColor,
     color,
     active,
+    highlight,
     spaced,
     after,
     chromeless,
@@ -80,6 +78,7 @@ export default class Button {
     stretch,
     tooltip,
     tooltipProps,
+    background,
     className,
     theme,
     circular,
@@ -90,21 +89,21 @@ export default class Button {
     height,
     margin,
     noGlow,
+    hoverColor,
     ...props
   }: Props) {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
 
+    const iconSize = _iconSize || size * 16
+
     return (
       <button
-        $$borderRadius={borderRadius}
-        $$padding={padding}
-        $$margin={margin}
         $inSegment={inSegment && this.props}
-        $color={color}
         $clickable={!!onClick || clickable}
         $isActive={active}
+        $highlight={highlight}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
         {...props}
@@ -118,7 +117,9 @@ export default class Button {
           $iconAfter={hasIconAfter}
           name={icon}
           size={iconSize}
-          color={active ? '#000' : color || iconColor}
+          color={
+            highlight ? 'blue' : active ? '#000' : color || iconColor || '#ccc'
+          }
           {...iconProps}
         />
         <glowWrap if={!noGlow} $minimal={chromeless}>
@@ -156,7 +157,7 @@ export default class Button {
 
   static style = {
     button: {
-      background: '#fefefe',
+      background: 'transparent',
       overflow: 'hidden',
       lineHeight: '1rem',
       fontSize: 13,
@@ -180,26 +181,6 @@ export default class Button {
     minimal: {
       boxShadow: 'none',
     },
-    inSegment: ({
-      chromeless,
-      borderRadius,
-      circular,
-      inSegment,
-      inSegment: { first, last },
-    }) => ({
-      ...(inSegment && {
-        marginLeft: -1,
-      }),
-      ...(first && {
-        borderLeftRadius: circular ? 1000 : borderRadius,
-      }),
-      ...(last && {
-        borderRightRadius: circular ? 1000 : borderRadius,
-      }),
-    }),
-    color: color => ({
-      color,
-    }),
     clickable: {
       cursor: 'pointer',
     },
@@ -228,44 +209,57 @@ export default class Button {
 
   static theme = {
     theme: (props: Props, context, theme) => {
-      const {
-        inForm,
-        inline,
-        inSegment,
-        borderRadius,
-        background,
-        circular,
-        size,
-        height,
-      } = props
+      //
+      // TODO this is a great way to do our entire ui kit:
+      //
+      // const $ = props => themeProps(getProps(props, CSS_PROPS), theme)
+      //
+
+      // based on a vertical rythm
+      const height = props.size * 30
+      const borderRadius = props.borderRadius || height / 5
+
+      const segmentStyles = !props.circular &&
+      props.inSegment && {
+        marginLeft: -1,
+        borderLeftRadius: props.inSegment.first ? borderRadius : 0,
+        borderRightRadius: props.inSegment.last ? borderRadius : 0,
+      }
+
       return {
         // $FlowIgnore
         button: {
-          background,
-          ...(!inSegment && {
-            borderRadius,
-          }),
-          ...(circular && {
-            borderRadius: 1000,
-            height: size,
-            width: size,
-          }),
-          ...(!circular && {
-            height,
-          }),
+          // ...$(props, theme),
           ...theme.base,
+          padding: props.padding || [0, height / 5],
+          height,
+          borderRadius: props.inSegment ? null : borderRadius || height / 10,
+          color: props.highlight
+            ? props.highlightColor || theme.highlight.color || props.color
+            : props.color || theme.base.color,
+          background:
+            props.background || theme.base.background || 'transparent',
+          ...(props.circular && {
+            padding: 0,
+            borderRadius: height,
+            width: height,
+          }),
+          ...segmentStyles,
           '&:active': {
             position: 'relative',
             zIndex: 1000,
           },
-          '&:hover': theme.hover,
+          '&:hover': {
+            ...theme.hover,
+            color: props.hoverColor || theme.hover.color,
+          },
           // inForm
-          ...(inForm && {
+          ...(props.inForm && {
             '&:active': theme.active,
             '&:focus': theme.focus,
           }),
           // inline
-          ...(inline && {
+          ...(props.inline && {
             border: [1, 'solid', 'transparent'],
             '&:hover': {
               border: [1, 'solid', theme.hover.borderColor],
@@ -273,7 +267,8 @@ export default class Button {
           }),
         },
         isActive: {
-          background: '#f2f2f2',
+          background: theme.active.background,
+          borderColor: theme.active.borderColor,
         },
         clickable: {
           '&:hover': {
@@ -293,13 +288,6 @@ export default class Button {
         flex: 1,
       },
     },
-    circular: ({ size }) => ({
-      button: {
-        borderRadius: 10000,
-        width: size,
-        height: size,
-      },
-    }),
     chromeless: {
       button: {
         background: 'transparent',
@@ -334,8 +322,6 @@ export default class Button {
       button: {
         opacity: 0.25,
         pointerEvents: 'none',
-        background: 'transparent',
-        color: [255, 255, 255, 0.2],
       },
     },
     dim: {

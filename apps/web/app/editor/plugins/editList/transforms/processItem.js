@@ -3,6 +3,7 @@ const { List } = require('immutable')
 const isList = require('../isList')
 
 function processItem(currentItem, opts, transform, ordered) {
+  return transform
   const date = chrono.parse(currentItem.text)[0]
   if (!date) return transform
 

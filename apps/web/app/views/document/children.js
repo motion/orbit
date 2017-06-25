@@ -6,8 +6,8 @@ import { Document } from '@jot/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 
-const WIDTH = 160
-const HEIGHT = 200
+const WIDTH = 100
+const HEIGHT = 120
 
 type Props = {
   id: number,
@@ -68,9 +68,7 @@ export default class Children {
               $add
               if={store.newTitle === null}
               circular
-              noGlow
-              iconSize={20}
-              size={50}
+              size={2}
               icon="siadd"
               onClick={store.add}
             />
@@ -83,7 +81,11 @@ export default class Children {
               return (
                 <doc key={doc._id} onClick={() => Router.go(doc.url())}>
                   <TiltGlow width={WIDTH} height={HEIGHT}>
-                    <card $$background={doc.color}>
+                    <card
+                      $$style={{
+                        background: doc.color,
+                      }}
+                    >
                       <name>{doc.getTitle()}</name>
                       <content if={children}>
                         {children.map(child =>
@@ -117,7 +119,7 @@ export default class Children {
 
   static style = {
     children: {
-      borderTop: [1, '#eee'],
+      borderTop: [1, '#f6f6f6'],
       position: 'relative',
       padding: [8, 0, 4],
     },
@@ -152,7 +154,9 @@ export default class Children {
     card: {
       width: WIDTH,
       height: HEIGHT,
-      background: 'lightblue',
+      color: '#fff',
+      background: '#fff',
+      border: [1, '#eee'],
       borderRadius: 7,
       padding: [16, 12],
     },
@@ -164,8 +168,7 @@ export default class Children {
     },
     name: {
       fontWeight: 200,
-      fontSize: 32,
-      color: '#fff',
+      fontSize: 16,
     },
   }
 }

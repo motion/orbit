@@ -14,6 +14,7 @@ type Props = {
   attach?: Object,
   iconProps?: Object,
   label?: string | HTMLElement,
+  labelBefore?: boolean,
 }
 
 @view.ui
@@ -34,11 +35,19 @@ export default class Badge {
     iconProps,
     attach,
     className,
+    style,
+    labelBefore,
     ...props
   }: Props) {
     return (
-      <badge className={className} $$style={props} $$color={color} {...attach}>
-        <content if={icon || children || label}>
+      <badge
+        className={className}
+        $$style={props}
+        $$color={color}
+        style={style}
+        {...attach}
+      >
+        <content $labelBefore={labelBefore} if={icon || children || label}>
           <lbl if={label} $hasChildren={!!children}>{label}</lbl>
           <Icon if={icon} size={16} name={icon} color={color} {...iconProps} />
           <inner if={children} $hasLabel={!!label}>{children}</inner>
@@ -60,6 +69,9 @@ export default class Badge {
       flexFlow: 'row',
       alignItems: 'center',
     },
+    labelBefore: {
+      flexDirection: 'row-reverse',
+    },
     inner: {
       display: 'block',
       whiteSpace: 'nowrap',
@@ -73,8 +85,7 @@ export default class Badge {
       paddingLeft: 4,
     },
     lbl: {
-      background: [255, 255, 255, 0.1],
-      padding: [0, 6],
+      padding: [2, 6],
     },
     hasChildren: {
       paddingRight: 4,

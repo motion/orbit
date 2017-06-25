@@ -6,6 +6,11 @@
   - sidebar favorites colors
   - favorite icon
   - share link dropdown
+  - ui kit:
+    - sizing() some sort of size kit to handle all sizing
+    - <Surface size={1} rounded chromeless gloss clear />
+      - Button uses Surface
+  - gloss: <Button labelStyle={this.$labelStyle} /> syntax
 
 # high level prioritized list
   - team homepage: commander force opened + showing expanded stuff

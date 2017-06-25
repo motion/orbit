@@ -89,7 +89,7 @@ export default class Title {
             circular
             chromeless
             padding={8}
-            size={30}
+            size={1}
             margin={[-2, -2, -2, -7]}
             height="auto"
           />
@@ -116,7 +116,6 @@ export default class Title {
       userSelect: 'none',
       alignItems: 'center',
       fontSize: 12,
-      fontWeight: 700,
     },
     collapse: {
       marginRight: 4,

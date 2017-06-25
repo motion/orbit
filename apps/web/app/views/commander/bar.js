@@ -34,6 +34,7 @@ export default class CommanderInput {
       fontSize: 22,
       fontWeight: 300,
       border: [1, 'transparent'],
+      borderBottomColor: '#f2f2f2',
       borderRadius: 0,
       margin: 0,
       '&:focus': {

@@ -1,3 +1,5 @@
+// @flow
+import React from 'react'
 import TrailingBlock from 'slate-trailing-block'
 import { BLOCKS } from '~/editor/constants'
 import { Popover, Button } from '~/ui'
@@ -5,36 +7,43 @@ import Highlighter from './helpers/highlighter'
 import node from '~/editor/node'
 import { createButton } from './helpers'
 
-const paragraph = node(({ editorStore, children, inline, attributes }) => {
-  const text = children[0].props.node.text
-  const style = {
-    color: inline ? '#fff' : 'auto',
-    fontSize: 15,
-  }
+const PARAGRAPH_STYLE = {
+  fontSize: 19,
+  lineHeight: '27px',
+}
 
-  if (
-    editorStore.find &&
-    editorStore.find.length > 0 &&
-    text.trim().length > 0
-  ) {
+export const Paragraph = node(
+  ({ editorStore, children, inline, attributes }) => {
+    const text = children[0].props.node.text
+    const style = {
+      ...PARAGRAPH_STYLE,
+      color: inline ? '#fff' : 'auto',
+    }
+
+    if (
+      editorStore.find &&
+      editorStore.find.length > 0 &&
+      text.trim().length > 0
+    ) {
+      return (
+        <Highlighter
+          highlightClassName="word-highlight"
+          searchWords={[editorStore.find.toLowerCase()]}
+          sanitize={text => text.toLowerCase()}
+          highlightStyle={{ background: '#ffd54f' }}
+          textToHighlight={text}
+          style={style}
+        />
+      )
+    }
+
     return (
-      <Highlighter
-        highlightClassName="word-highlight"
-        searchWords={[editorStore.find.toLowerCase()]}
-        sanitize={text => text.toLowerCase()}
-        highlightStyle={{ background: '#ffd54f' }}
-        textToHighlight={text}
-        style={style}
-      />
+      <p style={style} {...attributes} $$text>
+        {children}
+      </p>
     )
   }
-
-  return (
-    <p style={style} {...attributes} $$text>
-      {children}
-    </p>
-  )
-})
+)
 
 const newParagraph = state =>
   state.transform().splitBlock().setBlock(BLOCKS.PARAGRAPH).apply()
@@ -98,6 +107,6 @@ export default class TextPlugin {
   ]
 
   nodes = {
-    [BLOCKS.PARAGRAPH]: paragraph,
+    [BLOCKS.PARAGRAPH]: Paragraph,
   }
 }

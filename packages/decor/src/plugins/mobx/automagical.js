@@ -102,7 +102,7 @@ function automagicalValue(obj, method, descriptors = {}) {
     const autorunner = autorun(() => {
       const previous = obj[method]
       obj[method] = val.call(obj)
-      console.log(`autorun ${method}`, obj[method])
+      console.log(`autorun ${method}`, obj[method], 'from', obj)
       automagicalValue(obj, method)
       // unsubscribe from previous
       if (previous && previous !== null) {

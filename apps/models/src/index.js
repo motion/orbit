@@ -51,7 +51,6 @@ export default class Models implements ModelsStore {
   }
 
   start = async () => {
-    console.time('#Models.start')
     this.database = await RxDB.create({
       adapter: 'idb',
       name: this.databaseConfig.name,
@@ -60,7 +59,6 @@ export default class Models implements ModelsStore {
       withCredentials: false,
     })
     await this.attachModels()
-    console.timeEnd('#Models.start')
   }
 
   attachModels = async () => {

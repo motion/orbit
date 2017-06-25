@@ -14,7 +14,6 @@ export default App
 if (module && module.hot) {
   module.hot.accept('@jot/models', async () => {
     console.log('got hmr for App, not restarting fully to avoid craziness')
-    await App.attachModels(require('@jot/models'))
     require('./start').render()
   })
 }

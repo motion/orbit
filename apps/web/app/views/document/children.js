@@ -6,8 +6,8 @@ import { Document } from '@jot/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 
-const WIDTH = 50
-const HEIGHT = 50
+const WIDTH = 160
+const HEIGHT = 200
 
 type Props = {
   id: number,
@@ -16,8 +16,30 @@ type Props = {
 
 @view({
   store: class ChildrenStore {
+    children = {}
     docs = Document.child(this.props.id)
     newTitle = null
+
+    start() {
+      this.watch(async () => {
+        if (this.docs && this.docs.length) {
+          this.children = {}
+          const allChildren = await Promise.all(
+            this.docs.map(async doc => ({
+              id: doc._id,
+              children: await doc.getChildren(),
+            }))
+          )
+          this.children = allChildren.reduce(
+            (acc, { id, children }) => ({
+              ...acc,
+              [id]: children,
+            }),
+            {}
+          )
+        }
+      })
+    }
 
     add = () => {
       this.newTitle = ''
@@ -35,30 +57,49 @@ export default class Children {
 
   render({ id, store }: Props) {
     const { docs } = store
-
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
 
     return (
-      <children $$row>
-        <bar if={!hasDocs}>
-          <Button if={store.newTitle === null} icon="siadd" onClick={store.add}>
-            Page
-          </Button>
-        </bar>
-
-        <docBar $$row if={hasDocs}>
-          <docs>
-            {sortBy(docs || [], 'createdAt').map(doc =>
-              <doc key={doc._id} onClick={() => Router.go(doc.url())}>
-                <TiltGlow width={WIDTH} height={HEIGHT}>
-                  <box />
-                </TiltGlow>
-                <name>{doc.getTitle()}</name>
-              </doc>
-            )}
+      <children>
+        <header>
+          <title>Pages</title>
+          <actions>
+            <Button
+              $add
+              if={store.newTitle === null}
+              circular
+              noGlow
+              iconSize={20}
+              size={50}
+              icon="siadd"
+              onClick={store.add}
+            />
+          </actions>
+        </header>
+        <content>
+          <docs if={hasDocs}>
+            {sortBy(docs || [], 'createdAt').map(doc => {
+              const children = store.children[doc._id]
+              return (
+                <doc key={doc._id} onClick={() => Router.go(doc.url())}>
+                  <TiltGlow width={WIDTH} height={HEIGHT}>
+                    <card $$background={doc.color}>
+                      <name>{doc.getTitle()}</name>
+                      <content if={children}>
+                        {children.map(child =>
+                          <child key={child._id}>
+                            {child.getTitle()}
+                          </child>
+                        )}
+                      </content>
+                    </card>
+                  </TiltGlow>
+                </doc>
+              )
+            })}
             <doc if={store.newTitle !== null}>
               <TiltGlow width={WIDTH} height={HEIGHT}>
-                <box />
+                <card />
               </TiltGlow>
               <input
                 $name
@@ -69,57 +110,62 @@ export default class Children {
               />
             </doc>
           </docs>
-          <Button
-            if={store.newTitle === null}
-            circular
-            iconSize={20}
-            size={50}
-            $circleButton
-            icon="siadd"
-            onClick={store.add}
-          />
-        </docBar>
+        </content>
       </children>
     )
   }
 
   static style = {
     children: {
-      borderTop: '1px dotted #eee',
+      borderTop: [1, '#eee'],
+      position: 'relative',
+      padding: [8, 0, 4],
     },
-    box: {
+    header: {
+      padding: [0, 10],
+    },
+    title: {
+      textTransform: 'uppercase',
+      fontSize: 12,
+      color: [0, 0, 0, 0.3],
+      fontWeight: 500,
+    },
+    actions: {
+      position: 'absolute',
+      top: -10,
+      right: 10,
+      zIndex: 1000,
+    },
+    content: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      padding: [10, 20],
+      overflowX: 'scroll',
+      overflowY: 'visible',
+    },
+    docs: {
+      flexFlow: 'row',
+    },
+    doc: {
+      marginRight: 12,
+    },
+    card: {
       width: WIDTH,
       height: HEIGHT,
-      border: '1px solid #999',
-      background: '#ccc',
-    },
-
-    doc: {
-      marginRight: 20,
-      alignItems: 'center',
+      background: 'lightblue',
+      borderRadius: 7,
+      padding: [16, 12],
     },
     bar: {
       padding: [5, 10],
     },
-
-    docBar: {
-      alignItems: 'center',
-      padding: [15, 20],
-    },
-
-    docs: {
-      flexFlow: 'row',
-    },
-
     input: {
       width: 100,
     },
-
     name: {
-      textAlign: 'center',
-      fontWeight: 600,
-      fontSize: 12,
-      marginTop: 10,
+      fontWeight: 200,
+      fontSize: 32,
+      color: '#fff',
     },
   }
 }

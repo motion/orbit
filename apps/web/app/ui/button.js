@@ -39,6 +39,7 @@ export type Props = {
   padding?: number | Array<number>,
   margin?: number | Array<number>,
   height?: number,
+  noGlow?: boolean,
 }
 
 @inject(context => context.ui)
@@ -88,6 +89,7 @@ export default class Button {
     padding,
     height,
     margin,
+    noGlow,
     ...props
   }: Props) {
     const hasIconBefore = icon && !iconAfter
@@ -119,7 +121,7 @@ export default class Button {
           color={active ? '#000' : color || iconColor}
           {...iconProps}
         />
-        <glowWrap $minimal={chromeless}>
+        <glowWrap if={!noGlow} $minimal={chromeless}>
           <Glow full scale={2} color={[0, 0, 0]} opacity={0.06} />
         </glowWrap>
         <children

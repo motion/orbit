@@ -1,11 +1,11 @@
 // @flow
-
 import { Model, query, str, object, array, bool } from '@jot/black'
 import Image from './image'
 import User from './user'
 import generateName from 'sillyname'
 import { memoize, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
+import randomcolor from 'randomcolor'
 
 const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
 const toID = str => `${str}`.replace(/-/g, ':').toLowerCase()
@@ -43,6 +43,7 @@ export class Document extends Model {
     content: object,
     text: str.optional,
     authorId: str,
+    color: str,
     parentId: str.optional,
     members: array.items(str),
     hashtags: array.items(str),
@@ -68,6 +69,7 @@ export class Document extends Model {
       parentIds: [],
       private: true,
       content: DEFAULT_CONTENT(title),
+      color: randomcolor(),
       slug: toSlug(title || Math.random()),
     }
   }
@@ -129,9 +131,24 @@ export class Document extends Model {
           doc = next
         }
       }
-
       return crumbs
     },
+    async getChildren({ max = 10 } = {}) {
+      const children = await this.collection
+        .find({ parentId: this._id })
+        .limit(max / 3)
+        .exec()
+      if (children.length < max) {
+        for (const child of children) {
+          child.children = await this.collection
+            .find({ parentId: child._id })
+            .limit(max / 3)
+            .exec()
+        }
+      }
+      return children
+    },
+    // TODO: use RxDB postCreate() to do this ourselves and enable getters
     getTitle() {
       try {
         if (this.content.nodes) {
@@ -243,13 +260,13 @@ export class Document extends Model {
       .limit(50)
 
   @query
-  get = memoize(query => {
+  get = query => {
     if (!query) {
       return null
     }
     const query_ = cleanGetQuery(query)
     return this.collection.findOne(query_)
-  });
+  };
 
   @query home = () => this.collection.findOne({ draft: { $ne: true } })
 

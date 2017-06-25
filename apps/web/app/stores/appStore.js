@@ -25,17 +25,21 @@ export default class App implements AppStore {
     view.on('store.unmount', this.unmountStore)
   }
 
-  start = async () => {
-    console.log(
-      '%cUse App in your console to access models, stores, etc',
-      'background: yellow'
-    )
-    console.time('start')
+  start = async quiet => {
+    if (!quiet) {
+      console.log(
+        '%cUse App in your console to access models, stores, etc',
+        'background: yellow'
+      )
+      console.time('start')
+    }
     this.models = new Models(this.config, this.modelsObjects)
     await this.models.start()
     this.catchErrors()
     this.trackMountedStores()
-    console.timeEnd('start')
+    if (!quiet) {
+      console.timeEnd('start')
+    }
   }
 
   // dev helpers

@@ -45,7 +45,7 @@ export default class Breadcrumbs {
   static style = {
     breadcrumbs: {
       fontSize: 22,
-      padding: [5, 10],
+      padding: [3, 10],
       marginTop: -2,
       flexFlow: 'row',
     },
@@ -58,9 +58,6 @@ export default class Breadcrumbs {
       margin: [0, 4],
       color: [0, 0, 0, 0.5],
       justifyContent: 'center',
-      '&:hover': {
-        color: 'red',
-      },
     },
     slash: {
       opacity: 0.05,

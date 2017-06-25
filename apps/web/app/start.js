@@ -20,14 +20,14 @@ export function render() {
   // console.timeEnd('#render')
 }
 
-export async function start() {
+export async function start(quiet) {
   render()
-  await App.start()
+  await App.start(quiet)
   render()
 }
 
 if (module.hot) {
-  module.hot.accept('./views/layout', start)
+  module.hot.accept('./views/layout', () => start(true))
   module.hot.accept('./router', render)
 }
 

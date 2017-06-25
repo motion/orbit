@@ -1,17 +1,16 @@
 // @flow
-import Router from 'motion-mobx-router'
-import { render } from './start'
+import Router from 'mo-router'
+import { start } from './start'
 
 let AppRouter
 
 const getRoutes = () => ({
-  // '/': require('./pages/home.js').default,
-  '/popovers': require('./pages/popovers.js').default,
   '/': require('./pages/doc.js').default,
   'd/:id': require('./pages/doc.js').default,
+  '/popovers': require('./pages/popovers.js').default,
 })
 
-function start() {
+function runRouter() {
   AppRouter = new Router({ routes: getRoutes() })
   // because doing in installDevTools would break import orders
   window.Router = AppRouter
@@ -21,11 +20,11 @@ function start() {
 if (module.hot) {
   module.hot.accept(() => {
     console.log('accept router')
-    start()
-    // render()
+    runRouter()
+    start(true)
   })
 }
 
-start()
+runRouter()
 
 export default AppRouter

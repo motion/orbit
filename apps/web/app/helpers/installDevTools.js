@@ -5,7 +5,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '~/app'
 import * as RxDB from 'rxdb'
-import Mobx from 'mobx'
+import * as Mobx from 'mobx'
 import MobxUtils from 'mobx-utils'
 import Rx from 'rxjs'
 import PouchDB from 'pouchdb-core'
@@ -18,7 +18,8 @@ import { log } from '@jot/black'
 // Mobx.useStrict(true)
 
 // install console formatters
-mobxFormatters(Mobx)
+// mobxFormatters(Mobx)
+
 // the heavy hitters
 window.React = React
 window.ReactDOM = ReactDOM

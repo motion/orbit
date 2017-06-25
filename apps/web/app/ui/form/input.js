@@ -17,13 +17,14 @@ export type Props = {
   borderColor?: Color,
   placeholder?: string,
   placeholderColor?: Color,
+  width: number | string,
 }
 
 @inject(context => context.ui)
 @view.ui
 export default class Input {
   static defaultProps = {
-    width: 'auto',
+    // width: 0,
     borderRadius: 5,
   }
 
@@ -40,6 +41,7 @@ export default class Input {
     transparent,
     borderColor,
     placeholderColor,
+    width,
     ...props
   }: Props) {
     if (sync) {
@@ -71,6 +73,7 @@ export default class Input {
         transparent,
         height,
         type,
+        width,
         style,
       },
       context,
@@ -83,13 +86,14 @@ export default class Input {
           height: height || 30,
           minHeight: height || 30,
           padding: padding || [7, 8],
-          // width: '100%',
+          width: '100%',
           border: [1, theme.base.borderColor],
         }
       }
 
       return {
         input: {
+          width,
           fontSize,
           ...theme.base,
           borderColor: borderColor || theme.base.borderColor,

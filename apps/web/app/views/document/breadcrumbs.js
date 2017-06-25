@@ -26,7 +26,7 @@ export default class Breadcrumbs {
 
     const crumbs = [
       {
-        text: <Icon size={8} name="url" color="#ccc" hoverColor="red" />,
+        text: <Icon size={12} name="home" color="#ccc" hoverColor="red" />,
         url: '/',
       },
       ...store.crumbs.map(doc => ({
@@ -53,10 +53,9 @@ export default class Breadcrumbs {
 
   static style = {
     breadcrumbs: {
-      height: 30,
       fontSize: 22,
-      padding: [3, 10],
-      marginTop: -2,
+      padding: [0, 20, 10],
+      marginTop: -8,
       flexFlow: 'row',
     },
     items: {

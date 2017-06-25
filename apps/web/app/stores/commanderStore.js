@@ -38,7 +38,7 @@ export default class CommanderStore {
   path = ''
   highlightIndex = 0
   searchResults: Array<Document> = []
-  input: ?React$Element = null
+  input: ?HTMLInputElement = null
 
   start() {
     this.watch(async () => {
@@ -70,6 +70,14 @@ export default class CommanderStore {
     })
   }
 
+  get isSelected() {
+    return this.input.selectionEnd > this.input.selectionStart
+  }
+
+  select = (start, end) => {
+    this.input.setSelectionRange(start, end)
+  }
+
   actions = {
     toggleSidebar: () => {
       App.layoutStore.sidebar.toggle()
@@ -77,7 +85,12 @@ export default class CommanderStore {
     esc: () => {
       if (App.errors.length) {
         App.clearErrors()
-      } else {
+      }
+      if (this.isSelected) {
+        this.select(this.input.selectionEnd, this.input.selectionEnd)
+        return
+      }
+      if (!this.value) {
         this.close()
       }
     },

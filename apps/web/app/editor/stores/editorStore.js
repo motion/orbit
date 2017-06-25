@@ -98,6 +98,7 @@ export default class EditorStore implements StoreType {
   // sync right back into <Editor state={} />
   onChange = nextState => {
     this.state = nextState
+    this.selection.clear()
   }
 
   // contents are only for persisting things

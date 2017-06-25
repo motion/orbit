@@ -1,3 +1,4 @@
+import React from 'react'
 import { Popover, Button } from '~/ui'
 
 export default class Alignment {

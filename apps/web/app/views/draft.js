@@ -11,7 +11,7 @@ class CreateButton {
   render(props) {
     return (
       <div>
-        <Button circular size={2} $circleButton icon="siadd" {...props} />
+        <Button circular size={1.5} $circleButton icon="siadd" {...props} />
       </div>
     )
   }

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, log } from '@jot/black'
+import { view, log, watch } from '@jot/black'
 import { Icon } from '~/ui'
 import Router from '~/router'
 import type DocStore from './store'
@@ -9,7 +9,11 @@ type Props = {
   docs: DocStore,
 }
 
-@view
+@view({
+  store: class {
+    crumbs = watch(props => props.document && props.document.getCrumbs())
+  },
+})
 export default class Breadcrumbs {
   props: Props
 

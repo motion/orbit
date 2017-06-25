@@ -116,7 +116,6 @@ export default class Title {
       userSelect: 'none',
       alignItems: 'center',
       fontSize: 12,
-      fontWeight: 700,
     },
     collapse: {
       marginRight: 4,

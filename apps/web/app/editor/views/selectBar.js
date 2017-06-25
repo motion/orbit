@@ -12,9 +12,9 @@ export default class SelectBar {
         if={selection.selectedNode && selection.mouseUp}
         open
         noArrow
-        animation="slide 300ms"
+        animation="slide 200ms"
         left={selection.mouseUp.x}
-        top={selection.mouseUp.y + 10}
+        top={selection.mouseUp.y + 30}
         escapable
       >
         <Theme name="dark">

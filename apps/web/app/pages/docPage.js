@@ -25,30 +25,29 @@ class DocPageStore {
 export default class DocumentPage {
   render({ docStore, insidePlace }) {
     const { doc } = docStore
-
     if (doc === undefined) {
       return <null />
     }
-
     if (!doc) {
       return <err>no doc found</err>
     }
 
     const starred = doc.hasStar()
-
     const className = `btn-${Math.floor(Math.random() * 100000000000)}`
 
     return (
       <Page
         actions={
           <actions $$row>
-            <Segment itemProps={{ size: 1.5, chromeless: true, noGlow: true }}>
-              <Button icon="dot" className={className} />
-              <Button
-                icon="fav31"
-                highlight={starred}
-                onClick={doc.toggleStar}
-              />
+            <Segment>
+              <PassProps size={1} chromeless noGlow>
+                <Button icon="dot" className={className} />
+                <Button
+                  icon="fav31"
+                  highlight={starred}
+                  onClick={doc.toggleStar}
+                />
+              </PassProps>
             </Segment>
 
             <Popover

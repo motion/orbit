@@ -106,15 +106,12 @@ function automagicalValue(obj, method, descriptors = {}) {
       automagicalValue(obj, method)
       // unsubscribe from previous
       if (previous && previous !== null) {
-        // hacky, remove old listener, should be done nicer
-        if (typeof previous === 'function') {
-          previous()
-        }
+        // auto dispose last thing
         if (typeof previous.dispose === 'function') {
           previous.dispose()
         }
-        if (typeof previous.remove === 'function') {
-          previous.remove()
+        if (typeof previous.cancel === 'function') {
+          previous.cancel()
         }
       }
       // need to run this to ensure it wraps autorun value magically

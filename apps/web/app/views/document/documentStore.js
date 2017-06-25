@@ -1,4 +1,5 @@
 // @flow
+import { watch } from '@jot/black'
 import type { StoreType } from '@jot/black'
 import { debug } from '~/helpers'
 import { Document } from '@jot/models'
@@ -8,7 +9,8 @@ import { throttle, debounce } from 'lodash'
 const print = debug('documentStore')
 
 type Props = {
-  id: string,
+  id?: string,
+  document?: Document,
   // this is for inline docs
   inline?: boolean,
 }
@@ -17,17 +19,15 @@ export default class DocumentStore implements StoreType {
   props: Props
 
   id = this.props.id
-  document: ?Document = Document.get(this.props.id)
+  document: ?Document = watch(
+    () => this.props.document || Document.get(this.props.id)
+  )
   lastSavedRev = null
   lastSavedState = null
   shouldFocus = this.props.focusOnMount
   editor = null
   downAt = Date.now()
   crumbs = []
-
-  get shouldLoadCrumbs() {
-    return !this.props.inline
-  }
 
   get hasNewContent() {
     return (
@@ -93,6 +93,9 @@ export default class DocumentStore implements StoreType {
   }, 2000)
 
   get canSave() {
+    if (this.props.readOnly) {
+      return false
+    }
     if (!this.editor.contentState) {
       print('no, no content...')
       return false

@@ -22,11 +22,12 @@ export default class CommanderResults {
               $highlight={index === store.highlightIndex}
             >
               {doc.getTitle()}
+              <DocView readOnly document={doc} />
             </match>
           )}
         </matches>
         <preview
-          if={store.highlightedDocument}
+          if={false && store.highlightedDocument}
           key={store.highlightedDocument._id}
         >
           <DocView

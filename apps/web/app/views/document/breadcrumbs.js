@@ -12,7 +12,7 @@ type Props = {
 @view({
   store: class BreadcrumbStore {
     crumbs = watch(
-      props => (props.document && props.document.getCrumbs()) || []
+      props => (props.document && props.document.getCrumbs()) || [] || []
     )
   },
 })
@@ -20,16 +20,19 @@ export default class Breadcrumbs {
   props: Props
 
   render({ store }: Props) {
+    if (!store.crumbs) {
+      return <breadcrumbs />
+    }
+
     const crumbs = [
       {
         text: <Icon size={8} name="url" color="#ccc" hoverColor="red" />,
         url: '/',
       },
-      ...(Array.isArray(crumbs) &&
-        crumbs.map(doc => ({
-          text: doc.title,
-          url: doc.url(),
-        }))),
+      ...store.crumbs.map(doc => ({
+        text: doc.title,
+        url: doc.url(),
+      })),
     ]
 
     return (
@@ -50,6 +53,7 @@ export default class Breadcrumbs {
 
   static style = {
     breadcrumbs: {
+      height: 30,
       fontSize: 22,
       padding: [3, 10],
       marginTop: -2,

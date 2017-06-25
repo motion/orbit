@@ -88,13 +88,17 @@ export default class CommanderStore {
       this.open()
     },
     down: () => {
+      if (!this.focused) return
       if (!this.searchResults || !this.isOpen) {
         this.actions.focusEditor()
         return
       }
       this.moveHighlight(1)
     },
-    up: () => this.moveHighlight(-1),
+    up: () => {
+      if (!this.focused) return
+      this.moveHighlight(-1)
+    },
     focusEditor: () => {
       App.editor.focus()
     },
@@ -105,15 +109,16 @@ export default class CommanderStore {
       console.error('no commander input')
     } else {
       this.input.focus()
+      this.input.select()
     }
+  }
+
+  get focused() {
+    return document.activeElement === this.input
   }
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {
     if (!action) return
-    if (document.activeElement !== this.input) {
-      // not focused in commander
-      return
-    }
     this.emit('action', { action, event })
     if (this.actions[action]) {
       console.log('action', action)
@@ -236,6 +241,10 @@ export default class CommanderStore {
   }
 
   onEnter = async () => {
+    if (!this.focused) {
+      return
+    }
+
     // correct attempt to make docs like: doc/is/here (ie: missing the initial /)
     if (this.value.indexOf('/') !== 0 && this.value.indexOf(' ') === -1) {
       this.value = `/${this.value}`
@@ -243,6 +252,7 @@ export default class CommanderStore {
     this.path = this.value
     const found = await this.createDocAtPath(this.path)
     this.navTo(found)
+    this.setTimeout(() => App.editor && App.editor.focus(), 200)
   }
 
   onKeyDown = (event: KeyboardEvent) => {

@@ -75,13 +75,13 @@ function automagic(obj) {
   }
 }
 
-// mutative
+// * => Mobx
 function automagicalValue(obj, method, descriptors = {}) {
   if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
     return
   }
 
-  // auto @computed get, do this before getting val
+  // get => @computed
   const descriptor = descriptors[method]
   if (descriptor && !!descriptor.get) {
     const getter = {
@@ -95,12 +95,14 @@ function automagicalValue(obj, method, descriptors = {}) {
   // not get, we can check value
   let val = obj[method]
 
-  // auto run autoruns ;)
+  // watch() => autorun(automagical(value))
   if (isAutorun(val)) {
+    // @observable.ref
     extendShallowObservable(obj, { [method]: null })
     const autorunner = autorun(() => {
       const previous = obj[method]
       obj[method] = val.call(obj)
+      console.log(`autorun ${method}`, obj[method])
       automagicalValue(obj, method)
       // unsubscribe from previous
       if (previous && previous !== null) {
@@ -121,7 +123,7 @@ function automagicalValue(obj, method, descriptors = {}) {
     return
   }
 
-  // auto resolve promise
+  // Promise => Mobx
   if (val instanceof Promise) {
     const observable = fromPromise(val)
     Object.defineProperty(obj, method, {
@@ -129,14 +131,14 @@ function automagicalValue(obj, method, descriptors = {}) {
         return observable.value
       },
     })
-    // TODO: make a query that contains a promsie work
+    // TODO: make a query that contains a promise work
     return
   }
 
   const isFunction = typeof val === 'function'
   const isQuery = val && val.$isQuery
 
-  // auto @query => observable
+  // @query => Mobx
   if (isQuery) {
     Object.defineProperty(obj, method, {
       get() {
@@ -147,24 +149,23 @@ function automagicalValue(obj, method, descriptors = {}) {
     return
   }
 
-  // if already Mobx observable, just let it be yo
+  // already Mobx observable, let it be yo
   if (isObservable(val)) {
     return
   }
 
-  // auto Rx => mobx
+  // Rx => mobx
   if (val instanceof Observable) {
     const observable = observableRxToObservableMobx(obj, method)
     obj.subscriptions.add(observable)
     return
   }
 
-  // auto actions
   if (isFunction) {
-    // @action functions
+    // @action
     obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
   } else {
-    // auto everything is an @observable.ref
+    // @observable.ref
     extendShallowObservable(obj, { [method]: val })
   }
 }

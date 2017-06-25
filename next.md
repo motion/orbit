@@ -1,13 +1,17 @@
 # nate
+  - why CommanderStore.crumbs is coming back as mobxarray not plain array
+  - why breadcrumbsstore log is happening on keystores
+  - why indexes still not working .sort('createdAt')
+  - why types not working on <Views /> still
+  - rxdb query sync broken https://gitter.im/pubkey/rxdb
+  - button needs icon/theme coloring love
   - draft page (distraction free + fullscreenish feeling)
-  - rxdb query sync https://gitter.im/pubkey/rxdb
-  - popover: unhover and rehover again not working userdropdown
-  - sidebar favorites colors
+  - doc color showing/select + sidebar favorites colors
   - share link dropdown
   - ui kit:
     - sizing() some sort of size kit to handle all sizing
-    - <Surface size={1} rounded chromeless gloss clear />
-      - Button uses Surface
+    - <Surface height={1} rounded chromeless gloss clear />
+      - Derive Button, Input, ListItem
   - gloss: <Button labelStyle={this.$labelStyle} /> syntax
 
 # high level prioritized list

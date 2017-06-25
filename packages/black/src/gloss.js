@@ -140,4 +140,4 @@ export const styles: Object = {
   },
 }
 
-export default gloss({ baseStyles: styles, themeKey: 'theme' })
+export default gloss({ baseStyles: styles, themeKey: 'theme', tagName: true })

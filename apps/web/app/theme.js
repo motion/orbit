@@ -20,6 +20,7 @@ const Theme = {
     base: DARK,
     hover: {
       ...DARK,
+      color: clr(DARK.color).lighten(1).toString(),
       background: clr(DARK.background).lighten(1).toString(),
       borderColor: clr(DARK.borderColor).alpha(0.2).toString(),
     },

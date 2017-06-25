@@ -77,7 +77,12 @@ export default class DocumentPage {
           </actions>
         }
       >
-        <DocumentView id={doc._id} onKeyDown={docStore.onKeyDown} />
+        <DocumentView
+          id={doc._id}
+          onKeyDown={docStore.onKeyDown}
+          showCrumbs
+          showChildren
+        />
       </Page>
     )
   }

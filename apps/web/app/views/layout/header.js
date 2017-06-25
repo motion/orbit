@@ -36,7 +36,7 @@ export default class Header {
               icon="minimal-right"
               onClick={() => Router.forward()}
             />
-            <Button icon="home" onClick={() => Router.go('/')} />
+            <Button if={false} icon="home" onClick={() => Router.go('/')} />
           </Segment>
           <Commander.Bar />
         </bar>

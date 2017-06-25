@@ -22,11 +22,12 @@ export default class CommanderResults {
               $highlight={index === store.highlightIndex}
             >
               {doc.getTitle()}
+              <DocView readOnly document={doc} />
             </match>
           )}
         </matches>
         <preview
-          if={store.highlightedDocument}
+          if={false && store.highlightedDocument}
           key={store.highlightedDocument._id}
         >
           <DocView
@@ -42,7 +43,7 @@ export default class CommanderResults {
   static style = {
     results: {
       zIndex: 10000,
-      background: '#fff',
+      background: [255, 255, 255, 0.9],
       position: 'absolute',
       top: HEADER_HEIGHT,
       right: 0,

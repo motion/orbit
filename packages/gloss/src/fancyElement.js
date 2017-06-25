@@ -48,6 +48,11 @@ function getSheet(dynamics, name: string) {
   }))
 }
 
+const TAG_NAME_MAP = {
+  title: 'x-title',
+  meta: 'x-meta',
+}
+
 // factory that returns fancyElement helper
 export default function fancyElementFactory(theme, parentStyles, styles, opts) {
   const shouldTheme = !opts.dontTheme
@@ -213,8 +218,11 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
     const allStyleProps = propKeys.filter(
       key => key[0] === '$' || (hasStyleProp && key === 'style')
     )
+    const newProps = omit(props, [
+      opts.tagName ? props && props.tagName : undefined,
+      ...allStyleProps,
+    ])
     const allStyleKeys = isTag ? [type, ...allStyleProps] : allStyleProps
-    const newProps = omit(props, allStyleProps)
 
     // this collects the styles in the right order
     const activeStyles = flatten(
@@ -246,6 +254,10 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
           activeStyles.map(style => style && style.style)
         )
       }
+    }
+
+    if (opts.tagName && props && props.tagName) {
+      type = props.tagName
     }
 
     return ogCreateElement(type, newProps, ...children)

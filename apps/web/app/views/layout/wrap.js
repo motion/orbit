@@ -32,6 +32,8 @@ export default class LayoutWrap {
   static style = {
     wrap: {
       background: '#fff',
+      borderRightRadius: 4,
+      boxShadow: [0, 0, 100, '#000'],
       position: 'absolute',
       left: 0,
       top: 0,

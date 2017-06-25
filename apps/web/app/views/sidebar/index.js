@@ -111,6 +111,7 @@ class Projects {
     return (
       <content $$scrollable $$flex={6}>
         <TeamStatus
+          if={false}
           items={[
             {
               name: 'SB',
@@ -137,6 +138,7 @@ class Projects {
         />
 
         <Segment
+          if={false}
           $$draggable
           $$flex="none"
           controlled
@@ -378,7 +380,6 @@ export default class Sidebar {
       top: 0,
       right: 0,
       bottom: 0,
-      background: [30, 30, 30, 0.7],
     },
     title: {
       marginTop: 0,

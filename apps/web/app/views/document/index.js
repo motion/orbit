@@ -10,11 +10,12 @@ import Children from './children'
 type Props = {
   id?: string,
   focusOnMount?: boolean,
-  insidePlace?: boolean,
   inline?: boolean,
   readOnly?: boolean,
   editorProps?: Object,
   store: DocumentStore,
+  showCrumbs?: boolean,
+  showChildren?: boolean,
 }
 
 @view({
@@ -28,21 +29,33 @@ export default class DocumentView {
     if (!inline) store.crumbs = true
   }
 
-  render({ id, editorProps, inline, readOnly, store }: Props) {
+  render({
+    id,
+    editorProps,
+    inline,
+    showCrumbs,
+    showChildren,
+    readOnly,
+    store,
+  }: Props) {
     if (!store.document) {
       return <loading />
     }
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <Breadcrumbs if={store.shouldLoadCrumbs} document={store.document} />
+        <Breadcrumbs
+          if={showCrumbs}
+          key={store.document._id}
+          document={store.document}
+        />
         <Editor
           readOnly={readOnly}
           inline={inline}
           getRef={store.onEditor}
           {...editorProps}
         />
-        <Children if={!inline} id={store.document._id} />
+        <Children if={!inline && showChildren} id={store.document._id} />
       </docview>
     )
   }

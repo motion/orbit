@@ -156,7 +156,7 @@ export default class Children {
       height: HEIGHT,
       color: '#fff',
       background: '#fff',
-      border: [1, '#eee'],
+      // border: [1, '#eee'],
       borderRadius: 7,
       padding: [16, 12],
     },

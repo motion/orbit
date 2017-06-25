@@ -11,8 +11,18 @@ type Props = {
 
 @view({
   store: class BreadcrumbStore {
+    last = null
     crumbs = watch(
-      props => (props.document && props.document.getCrumbs()) || [] || []
+      log(async props => {
+        if (!props.document) {
+          return false
+        }
+        if (this.crumbs && this.crumbs._id === props.document._id) {
+          return this.crumbs
+        }
+        this.last = await props.document.getCrumbs()
+        return this.last
+      })
     )
   },
 })
@@ -53,9 +63,10 @@ export default class Breadcrumbs {
 
   static style = {
     breadcrumbs: {
+      height: 38,
       fontSize: 22,
-      padding: [0, 20, 10],
-      marginTop: -8,
+      padding: [0, 20],
+      margin: [-15, 0, 10],
       flexFlow: 'row',
     },
     items: {

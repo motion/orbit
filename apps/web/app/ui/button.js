@@ -100,6 +100,7 @@ export default class Button {
 
     return (
       <button
+        tagName="test"
         $inSegment={inSegment && this.props}
         $clickable={!!onClick || clickable}
         $isActive={active}
@@ -117,9 +118,6 @@ export default class Button {
           $iconAfter={hasIconAfter}
           name={icon}
           size={iconSize}
-          color={
-            highlight ? 'blue' : active ? '#000' : color || iconColor || '#ccc'
-          }
           {...iconProps}
         />
         <glowWrap if={!noGlow} $minimal={chromeless}>
@@ -214,7 +212,6 @@ export default class Button {
       //
       // const $ = props => themeProps(getProps(props, CSS_PROPS), theme)
       //
-
       // based on a vertical rythm
       const height = props.size * 30
       const borderRadius = props.borderRadius || height / 5
@@ -245,6 +242,16 @@ export default class Button {
             width: height,
           }),
           ...segmentStyles,
+          '> icon': {
+            color: props.highlight
+              ? theme.highlight.color
+              : props.active
+                ? theme.active.color
+                : props.iconColor || props.color || theme.base.color,
+          },
+          '&:hover > icon': {
+            color: props.hoverColor || theme.hover.color,
+          },
           '&:active': {
             position: 'relative',
             zIndex: 1000,

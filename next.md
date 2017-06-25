@@ -1,10 +1,8 @@
 # nate
-  - alt ui: app vs tray, tray shows current sidebar, app has own sidebar with inbox style?
-  - rxdb query sync (pending: https://gitter.im/pubkey/rxdb | https://github.com/pubkey/rxdb/blob/master/src/RxCollection.js)
-  - commander features/polish
+  - draft page (distraction free + fullscreenish feeling)
+  - rxdb query sync https://gitter.im/pubkey/rxdb
   - popover: unhover and rehover again not working userdropdown
   - sidebar favorites colors
-  - favorite icon
   - share link dropdown
   - ui kit:
     - sizing() some sort of size kit to handle all sizing

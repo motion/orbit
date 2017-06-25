@@ -102,21 +102,31 @@ export default class Root {
 
   render({ layoutStore, commanderStore }: Props, { error }) {
     return (
-      <Theme name="light">
-        <SlotFill.Provider>
-          <Shortcuts
-            $layout
-            name="all"
-            handler={commanderStore.handleShortcuts}
-          >
-            {IN_TRAY ? this.renderTray() : this.renderApp()}
-          </Shortcuts>
-        </SlotFill.Provider>
-      </Theme>
+      <root>
+        <Theme name="light">
+          <SlotFill.Provider>
+            <Shortcuts
+              $layout
+              name="all"
+              handler={commanderStore.handleShortcuts}
+            >
+              {IN_TRAY ? this.renderTray() : this.renderApp()}
+            </Shortcuts>
+          </SlotFill.Provider>
+        </Theme>
+      </root>
     )
   }
 
   static style = {
+    root: {
+      background: [40, 40, 40, 0.5],
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    },
     circleButton: {
       position: 'absolute',
       bottom: 20,

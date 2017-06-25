@@ -378,7 +378,6 @@ export default class Sidebar {
       top: 0,
       right: 0,
       bottom: 0,
-      background: [30, 30, 30, 0.7],
     },
     title: {
       marginTop: 0,

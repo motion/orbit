@@ -72,6 +72,9 @@ function processArray(key: string, array: Array<number | string>): string {
 }
 
 function objectValue(key, value) {
+  if (Array.isArray(value)) {
+    return processArray(key, value)
+  }
   if (OBJECT_TRANSFORM[key]) {
     return OBJECT_TRANSFORM[key](value)
   }
@@ -83,9 +86,6 @@ function objectValue(key, value) {
   }
   if (typeof value === 'number') {
     return `${value}px`
-  }
-  if (Array.isArray(value)) {
-    return processArray(key, value)
   }
   return value
 }

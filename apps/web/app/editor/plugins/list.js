@@ -106,7 +106,8 @@ class ListItemNode {
       fontSize: 13,
     },
     minMax: {
-      height: 30,
+      // WARNING: dont set height to px it changes line height
+      height: '100%',
       userSelect: 'none',
       padding: 3,
       cursor: 'pointer',

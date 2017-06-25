@@ -214,7 +214,10 @@ export default class Button {
       //
       // based on a vertical rythm
       const height = props.size * 30
-      const borderRadius = props.borderRadius || height / 5
+      const baseBorderRadius = props.borderRadius || height / 5
+      const borderRadius = props.inSegment
+        ? null
+        : baseBorderRadius || height / 10
 
       const segmentStyles = !props.circular &&
       props.inSegment && {
@@ -223,19 +226,27 @@ export default class Button {
         borderRightRadius: props.inSegment.last ? borderRadius : 0,
       }
 
+      const background =
+        props.background || theme.base.background || 'transparent'
+      const padding = props.padding || [0, height / 5]
+      const color = props.highlight
+        ? props.highlightColor || theme.highlight.color || props.color
+        : props.active ? theme.active.color : props.color || theme.base.color
+
+      const hoverColor = props.hoverColor || theme.hover.color
+      const highlightColor = clr(color).lighten(0.1).toString()
+      const highlightHoverColor = clr(color).lighten(0.2).toString()
+
       return {
         // $FlowIgnore
         button: {
           // ...$(props, theme),
           ...theme.base,
-          padding: props.padding || [0, height / 5],
+          padding,
           height,
-          borderRadius: props.inSegment ? null : borderRadius || height / 10,
-          color: props.highlight
-            ? props.highlightColor || theme.highlight.color || props.color
-            : props.color || theme.base.color,
-          background:
-            props.background || theme.base.background || 'transparent',
+          borderRadius,
+          color,
+          background,
           ...(props.circular && {
             padding: 0,
             borderRadius: height,
@@ -243,22 +254,19 @@ export default class Button {
           }),
           ...segmentStyles,
           '> icon': {
-            color: props.highlight
-              ? theme.highlight.color
-              : props.active
-                ? theme.active.color
-                : props.iconColor || props.color || theme.base.color,
+            color: props.iconColor || color,
           },
           '&:hover > icon': {
             color: props.hoverColor || theme.hover.color,
           },
+          '&:hover': {
+            ...theme.hover,
+            color: hoverColor,
+          },
+          // this is just onmousedown
           '&:active': {
             position: 'relative',
             zIndex: 1000,
-          },
-          '&:hover': {
-            ...theme.hover,
-            color: props.hoverColor || theme.hover.color,
           },
           // inForm
           ...(props.inForm && {
@@ -276,6 +284,23 @@ export default class Button {
         isActive: {
           background: theme.active.background,
           borderColor: theme.active.borderColor,
+          '&:hover': {
+            color: hoverColor,
+            background: theme.active.background,
+            borderColor: theme.active.borderColor,
+          },
+          '&:hover > icon': {
+            color: hoverColor,
+          },
+        },
+        highlight: {
+          color: highlightColor,
+          '&:hover': {
+            color: highlightHoverColor,
+          },
+          '&:hover > icon': {
+            color: highlightHoverColor,
+          },
         },
         clickable: {
           '&:hover': {

@@ -1,4 +1,3 @@
-// @flow
 import { store } from '@jot/black'
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'

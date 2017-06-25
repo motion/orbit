@@ -1,4 +1,3 @@
-// @flow
 import { findParent } from '~/editor/helpers'
 
 function trackSelection(selection, state, editorStore) {

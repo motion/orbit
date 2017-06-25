@@ -12,6 +12,8 @@ type Props = {
   inline?: boolean,
   id?: string,
   getRef?: Function,
+  find?: string,
+  onlyNode?: boolean,
 }
 
 export default class EditorStore implements StoreType {

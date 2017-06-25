@@ -24,7 +24,6 @@ export default class DocumentStore {
   )
   lastSavedRev: ?string = null
   lastSavedState = null
-  shouldFocus = this.props.focusOnMount
   editor: ?EditorStore = null
   downAt = Date.now()
   crumbs = []

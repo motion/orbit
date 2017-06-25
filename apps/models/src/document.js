@@ -3,12 +3,12 @@ import { Model, query, str, object, array, bool } from '@jot/black'
 import Image from './image'
 import User from './user'
 import generateName from 'sillyname'
-import { memoize, includes, without } from 'lodash'
+import { some, memoize, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 
-const toSlug = str => `${str}`.replace(/ /g, '-').toLowerCase()
-const toID = str => `${str}`.replace(/-/g, ':').toLowerCase()
+const toSlug = (str: string) => `${str}`.replace(/ /g, '-').toLowerCase()
+const toID = (str: string) => `${str}`.replace(/-/g, ':').toLowerCase()
 const toggleInclude = (xs, val) =>
   includes(xs, val) ? without(xs, val) : [...xs, val]
 
@@ -19,7 +19,7 @@ const cleanGetQuery = (query: Object | string) => {
   return query
 }
 
-const DEFAULT_CONTENT = title => ({
+const DEFAULT_CONTENT = (title: string) => ({
   nodes: [
     {
       kind: 'block',
@@ -37,7 +37,122 @@ const DEFAULT_CONTENT = title => ({
   ],
 })
 
-export class Document extends Model {
+const methods = {
+  url(): string {
+    return `/d/${this._id.replace(':', '-')}`
+  },
+  tasks() {
+    // const { lastUpdated, value: cacheValue } = this.tasksCache
+    // if (lastUpdated >= this.updatedAt) return cacheValue
+    return docToTasks(this)
+  },
+  hasStar() {
+    return includes(this.starredBy, User.authorId)
+  },
+  async toggleStar() {
+    this.starredBy = toggleInclude(this.starredBy, User.authorId)
+    await this.save()
+  },
+  async getCrumbs() {
+    let foundRoot = false
+    let crumbs = []
+    let doc = this
+    while (!foundRoot) {
+      crumbs = [doc, ...crumbs]
+      if (!doc.parentId) {
+        foundRoot = true
+      } else {
+        if (!doc) {
+          return crumbs
+        }
+        const next = await this.collection.findOne(doc.parentId).exec()
+        if (!next) {
+          console.error('weird, no doc at this crumb', next)
+          return crumbs
+        }
+        doc = next
+      }
+    }
+    return crumbs
+  },
+  async getChildren({ max = 10 } = {}) {
+    const children = await this.collection
+      .find({ parentId: this._id })
+      .limit(max / 3)
+      .exec()
+    if (children.length < max) {
+      for (const child of children) {
+        child.children = await this.collection
+          .find({ parentId: child._id })
+          .limit(max / 3)
+          .exec()
+      }
+    }
+    return children
+  },
+  // TODO: use RxDB postCreate() to do this ourselves and enable getters
+  getTitle() {
+    try {
+      if (this.content.nodes) {
+        return this.content.nodes[0].nodes[0].text
+      }
+      return this.content.document.nodes[0].nodes[0].ranges[0].text
+    } catch (e) {
+      console.log('err no title node!', this._id)
+      return this.title
+    }
+  },
+  togglePrivate() {
+    this.private = !this.private
+    this.save()
+  },
+  async addImage(file) {
+    return await Image.create({
+      file,
+      name: ('image' + Math.random()).slice(0, 8),
+      docId: this._id,
+    })
+  },
+  // todo if two tasks have the same name, they'll switch together
+  async toggleTask(text) {
+    this.content = toggleTask(this.content, text)
+    await this.save()
+  },
+  toggleSubscribe() {
+    if (User.loggedIn) {
+      const exists = some(this.members, m => m === User.user.name)
+      if (exists) {
+        this.members = this.members.filter(m => m !== User.user.name)
+      } else {
+        this.members = [...this.members, User.user.name]
+      }
+      this.save()
+    }
+  },
+  subscribed() {
+    return User.loggedIn && this.members.indexOf(User.user.name) >= 0
+  },
+}
+
+export type Document = methods & {
+  title: str,
+  content: object,
+  text?: str,
+  authorId: str,
+  color: str,
+  parentId?: str,
+  members: Array<string>,
+  hashtags: Array<string>,
+  parentIds: Array<string>,
+  attachments?: Array<string>,
+  starredBy: Array<string>,
+  private: boolean,
+  slug: str,
+  draft?: boolean,
+  timestamps: true,
+}
+
+export class DocumentModel extends Model {
   static props = {
     title: str,
     content: object,
@@ -56,9 +171,8 @@ export class Document extends Model {
     timestamps: true,
   }
 
-  static defaultProps = props => {
+  static defaultProps = (props: Object) => {
     const title = props.title || generateName()
-
     return {
       title,
       authorId: User.user ? User.authorId : 'anon',
@@ -82,8 +196,8 @@ export class Document extends Model {
   }
 
   hooks = {
-    preSave: async ({ slug }) => {
-      if (await this.get(slug).exec()) {
+    preSave: async (document: Object) => {
+      if (await this.get(document.slug).exec()) {
         throw new Error(`Already exists a place with this slug! ${slug}`)
       }
     },
@@ -94,102 +208,7 @@ export class Document extends Model {
     value: [],
   }
 
-  methods = {
-    url() {
-      return `/d/${this._id.replace(':', '-')}`
-    },
-    tasks() {
-      // const { lastUpdated, value: cacheValue } = this.tasksCache
-      // if (lastUpdated >= this.updatedAt) return cacheValue
-      return docToTasks(this)
-    },
-    hasStar() {
-      return includes(this.starredBy, User.authorId)
-    },
-    async toggleStar() {
-      this.starredBy = toggleInclude(this.starredBy, User.authorId)
-      await this.save()
-    },
-    async getCrumbs() {
-      let foundRoot = false
-      let crumbs = []
-      let doc = this
-      while (!foundRoot) {
-        crumbs = [doc, ...crumbs]
-        if (!doc.parentId) {
-          foundRoot = true
-        } else {
-          if (!doc) {
-            return crumbs
-          }
-          const next = await this.collection.findOne(doc.parentId).exec()
-          if (!next) {
-            console.error('weird, no doc at this crumb', next)
-            return crumbs
-          }
-          doc = next
-        }
-      }
-      return crumbs
-    },
-    async getChildren({ max = 10 } = {}) {
-      const children = await this.collection
-        .find({ parentId: this._id })
-        .limit(max / 3)
-        .exec()
-      if (children.length < max) {
-        for (const child of children) {
-          child.children = await this.collection
-            .find({ parentId: child._id })
-            .limit(max / 3)
-            .exec()
-        }
-      }
-      return children
-    },
-    // TODO: use RxDB postCreate() to do this ourselves and enable getters
-    getTitle() {
-      try {
-        if (this.content.nodes) {
-          return this.content.nodes[0].nodes[0].text
-        }
-        return this.content.document.nodes[0].nodes[0].ranges[0].text
-      } catch (e) {
-        console.log('err no title node!', this._id)
-        return this.title
-      }
-    },
-    togglePrivate() {
-      this.private = !this.private
-      this.save()
-    },
-    async addImage(file) {
-      return await Image.create({
-        file,
-        name: ('image' + Math.random()).slice(0, 8),
-        docId: this._id,
-      })
-    },
-    // todo if two tasks have the same name, they'll switch together
-    async toggleTask(text) {
-      this.content = toggleTask(this.content, text)
-      await this.save()
-    },
-    toggleSubscribe() {
-      if (User.loggedIn) {
-        const exists = some(this.members, m => m === User.user.name)
-        if (exists) {
-          this.members = this.members.filter(m => m !== User.user.name)
-        } else {
-          this.members = [...this.members, User.user.name]
-        }
-        this.save()
-      }
-    },
-    subscribed() {
-      return User.loggedIn && this.members.indexOf(User.user.name) >= 0
-    },
-  }
+  methods = methods
 
   search = async text => {
     // return recent
@@ -257,7 +276,7 @@ export class Document extends Model {
       .limit(50)
 
   @query
-  get = query => {
+  get = (query: Object | string) => {
     if (!query) {
       return null
     }
@@ -268,7 +287,7 @@ export class Document extends Model {
   @query home = () => this.collection.findOne({ draft: { $ne: true } })
 
   @query
-  user = user => {
+  user = () => {
     if (!User.loggedIn) {
       return null
     }
@@ -276,4 +295,4 @@ export class Document extends Model {
   }
 }
 
-export default new Document()
+export default new DocumentModel()

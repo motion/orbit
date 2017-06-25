@@ -38,7 +38,7 @@ export default class EditorView {
     // needs to check equality probably
   }
 
-  onDocumentChange = (document, state) => {
+  onDocumentChange = (document: Document, state) => {
     this.props.editorStore.setContents(state)
   }
 

@@ -1,8 +1,8 @@
 import React from 'react'
 import { view } from '@jot/black'
-import node from '/editor/node'
-import { replacer } from '/editor/helpers'
-import { BLOCKS } from '/editor/constants'
+import node from '~/editor/node'
+import { replacer } from '~/editor/helpers'
+import { BLOCKS } from '~/editor/constants'
 import TodoNode from './todoNode'
 
 export default class TodoPlugin {

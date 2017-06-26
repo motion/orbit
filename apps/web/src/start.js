@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from '/app'
+import App from '~/app'
 import { ThemeProvide } from 'gloss'
 import themes from './theme'
 // import { AppContainer } from 'react-hot-loader'

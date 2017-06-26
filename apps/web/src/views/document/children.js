@@ -4,7 +4,7 @@ import { view } from '@jot/black'
 import { Button, TiltGlow } from '@jot/ui'
 import { Document } from '@jot/models'
 import { sortBy } from 'lodash'
-import Router from '/router'
+import Router from '~/router'
 
 const WIDTH = 100
 const HEIGHT = 120

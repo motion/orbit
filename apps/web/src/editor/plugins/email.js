@@ -1,9 +1,9 @@
-import { replacer } from '/editor/helpers'
+import { replacer } from '~/editor/helpers'
 import React from 'react'
 import { view } from '@jot/black'
-import node from '/editor/node'
+import node from '~/editor/node'
 import { Button } from '@jot/ui'
-import { BLOCKS } from '/editor/constants'
+import { BLOCKS } from '~/editor/constants'
 
 class EmailStore {
   address = 'forward@jot.dev'

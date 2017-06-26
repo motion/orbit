@@ -1,5 +1,5 @@
 // @flow
-import SidebarStore from '/stores/sidebarStore'
+import SidebarStore from '~/stores/sidebarStore'
 import { watch } from '@jot/black'
 import { User } from '@jot/models'
 

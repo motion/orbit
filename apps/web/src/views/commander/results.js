@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
-import DocView from '/views/document'
-import { HEADER_HEIGHT } from '/constants'
+import DocView from '~/views/document'
+import { HEADER_HEIGHT } from '~/constants'
 
 @view.attach('commanderStore')
 @view

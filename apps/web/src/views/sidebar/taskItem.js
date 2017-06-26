@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { Shortcuts } from '/helpers'
+import { Shortcuts } from '~/helpers'
 import { uniqBy, sortBy } from 'lodash'
 import {
   Drawer,
@@ -18,10 +18,10 @@ import {
 } from '@jot/ui'
 import { User, Place } from '@jot/models'
 import Team from './team'
-import Router from '/router'
+import Router from '~/router'
 import randomcolor from 'randomcolor'
 import SidebarStore from './store'
-import { IN_TRAY, TRAY_WIDTH } from '/constants'
+import { IN_TRAY, TRAY_WIDTH } from '~/constants'
 import timeAgo from 'time-ago'
 import DragHandle from './dragHandle'
 

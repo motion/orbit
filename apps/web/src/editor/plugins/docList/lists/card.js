@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import { TiltGlow, Icon, Button } from '@jot/ui'
-import DocItem from '/views/document/item'
+import DocItem from '~/views/document/item'
 import FlipMove from 'react-flip-move'
 
 const width = 250

@@ -7,7 +7,7 @@ import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
-import type { Model } from '/helpers'
+import type { Model } from '~/helpers'
 
 // export all models
 export Document from './document'
@@ -15,7 +15,7 @@ export Comment from './comment'
 export Image from './image'
 export User from './user'
 
-export type { Model } from '/helpers'
+export type { Model } from '~/helpers'
 
 declare class ModelsStore {
   databaseConfig: Object,

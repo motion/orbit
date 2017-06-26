@@ -1,7 +1,7 @@
 import { view } from '@jot/black'
-import { viewCache } from '/helpers'
+import { viewCache } from '~/helpers'
 import React from 'react'
-import Editor from '/editor'
+import Editor from '~/editor'
 
 @view.ui
 export default class JotEditor {

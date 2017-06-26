@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import { Button } from '@jot/ui'
-import node from '/editor/node'
+import node from '~/editor/node'
 
 @node
 @view

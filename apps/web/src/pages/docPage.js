@@ -2,11 +2,11 @@
 import React from 'react'
 import { view, watch } from '@jot/black'
 import { PassProps, Segment, Button, Popover, List } from '@jot/ui'
-import Router from '/router'
-import DocumentView from '/views/document'
+import Router from '~/router'
+import DocumentView from '~/views/document'
 import { User, Document } from '@jot/models'
-import Page from '/page'
-import Theme from '/theme'
+import Page from '~/page'
+import Theme from '~/theme'
 
 class DocPageStore {
   doc = this.props.id ? Document.get(this.props.id) : Document.home()

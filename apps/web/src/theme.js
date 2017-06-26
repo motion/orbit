@@ -1,5 +1,5 @@
 // @flow
-import { clr } from '/helpers'
+import { clr } from '~/helpers'
 
 const LIGHT = {
   highlightColor: 'rgb(89, 154, 244)',

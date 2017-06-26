@@ -119,10 +119,7 @@ export default function({ types: t, template }) {
     Class(path) {
       if (
         path.node[VISITED_KEY] ||
-        !(
-          matchesDecorator(path.node, this.decoratorName) ||
-          matchesPatterns(path.get('superClass'), this.superClasses)
-        ) ||
+        !matchesDecorator(path.node, this.decoratorName) ||
         !isReactLikeClass(path.node)
       ) {
         return

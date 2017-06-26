@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { keycode } from '/helpers'
+import { keycode } from '~/helpers'
 
 export type Props = {
   editable?: Boolean,

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { SIDEBAR_TRANSITION } from '/constants'
+import { SIDEBAR_TRANSITION } from '~/constants'
 
 // optimized re-render for sidebar resize
 @view.attach('layoutStore')

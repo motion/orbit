@@ -8,6 +8,7 @@ export query from './model/query'
 
 export log from './helpers/log'
 export watch from './helpers/watch'
+export inject from './helpers/inject'
 
 // mobx helpers
 export { computed, observable, autorun, react, isObservable } from 'mobx'

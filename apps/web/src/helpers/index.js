@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { inject as injector } from 'react-tunnel'
+
 import { Shortcuts as ReactShortcuts } from 'react-shortcuts'
 import { view } from '@jot/black'
 import { findDOMNode } from 'react-dom'
@@ -8,12 +8,7 @@ import { findDOMNode } from 'react-dom'
 export * from 'mobx'
 export { Component } from 'react'
 export $ from '@jot/black/lib/gloss'
-export clr from 'color'
 export debug from 'debug'
-
-// adds object fallback if not defined
-export const inject = (mapProvidedToProps: Function) =>
-  injector(props => mapProvidedToProps(props) || {})
 
 import _keyCode from 'keycode'
 // fix react synth event

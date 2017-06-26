@@ -1,6 +1,6 @@
 import React from 'react'
 import { view, computed } from '@jot/black'
-import { BLOCKS } from '/editor/constants'
+import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '@jot/ui'
 
 export default Node =>

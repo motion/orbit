@@ -1,7 +1,7 @@
 import { Document } from '@jot/models'
 import { sortBy, last, flatMap, memoize, find, flatten, random } from 'lodash'
 import merge from 'deepmerge'
-import Router from '/router'
+import Router from '~/router'
 
 const liToText = ({ nodes }) =>
   nodes

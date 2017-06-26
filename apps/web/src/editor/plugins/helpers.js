@@ -1,5 +1,5 @@
 import { view } from '@jot/black'
-import { BLOCKS } from '/editor/constants'
+import { BLOCKS } from '~/editor/constants'
 import { Button } from '@jot/ui'
 
 export const createButton = ({ icon, type, tooltip, wrap, unwrap, isActive }) =>

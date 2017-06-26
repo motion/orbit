@@ -24,10 +24,8 @@ module.exports = function(context, givenOpts) {
         },
       ],
       [
-        require.resolve('babel-root-slash-import'),
-        {
-          rootPathSuffix: 'src',
-        },
+        require.resolve('babel-plugin-root-import'),
+        [{ rootPathPrefix: '~', rootPathSuffix: 'src' }],
       ],
     ],
     presets: [
@@ -49,8 +47,6 @@ module.exports = function(context, givenOpts) {
       require.resolve('babel-preset-stage-1'),
     ],
   }
-
-  console.log(config)
 
   return config
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image } from '@jot/models'
 import { view } from '@jot/black'
-import node from '/editor/node'
+import node from '~/editor/node'
 
 const readFile = file =>
   new Promise((resolve, reject) => {

@@ -4,7 +4,7 @@
   "dependencies": {
     "motion-hmr": "*",
     "motion-hmr-view": "*",
-    "babel-root-slash-import": "1.1.0",
+    "babel-plugin-root-import": "5.1.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-env": "^1.5.2",
     "babel-preset-react": "^6.11.1",

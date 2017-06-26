@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
-import App from '/app'
-import { SIDEBAR_WIDTH } from '/constants'
+import App from '~/app'
+import { SIDEBAR_WIDTH } from '~/constants'
 
 @view
 export default class Errors {

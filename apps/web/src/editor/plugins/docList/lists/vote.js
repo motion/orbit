@@ -3,7 +3,7 @@ import { view, computed } from '@jot/black'
 import { User, Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '@jot/ui'
 import { isEqual, sortBy } from 'lodash'
-import Router from '/router'
+import Router from '~/router'
 // nice oxford commas for votes
 import listify from 'listify'
 import { without, includes } from 'lodash'

@@ -1,4 +1,4 @@
-import { TRAY_WIDTH, TRAY_HEIGHT } from '/constants'
+import { TRAY_WIDTH, TRAY_HEIGHT } from '~/constants'
 
 const baseUrl = window.location.host
 

@@ -1,4 +1,5 @@
 # nate
+  - watch should watch package.json files and re-run lerna bootstrap there
   - why CommanderStore.crumbs is coming back as mobxarray not plain array
   - why breadcrumbsstore log is happening on keystores
   - why indexes still not working .sort('createdAt')

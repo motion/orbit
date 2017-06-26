@@ -1,11 +1,11 @@
 import React, { Children, cloneElement } from 'react'
 import { view } from '@jot/black'
-import { Shortcuts } from '/helpers'
+import { Shortcuts } from '~/helpers'
 import FakeText from './fake/fakeText'
 import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
-import parentSize from '/views/helpers/parentSize'
+import parentSize from '~/views/helpers/parentSize'
 import type { ItemProps } from './listItem'
 
 const idFn = _ => _

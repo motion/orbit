@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, log, watch } from '@jot/black'
 import { Icon } from '@jot/ui'
-import Router from '/router'
+import Router from '~/router'
 import type DocStore from './store'
 
 type Props = {

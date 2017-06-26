@@ -2,9 +2,9 @@
 import React from 'react'
 import { view, computed } from '@jot/black'
 import { Portal, Drawer, Button, Icon } from '@jot/ui'
-import DocView from '/views/document'
+import DocView from '~/views/document'
 import { Document } from '@jot/models'
-import Router from '/router'
+import Router from '~/router'
 
 @view
 class CreateButton {

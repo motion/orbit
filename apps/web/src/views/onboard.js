@@ -14,8 +14,8 @@ import {
   PassProps,
 } from '@jot/ui'
 import { User } from '@jot/models'
-import Router from '/router'
-import Page from '/page'
+import Router from '~/router'
+import Page from '~/page'
 
 // TODO
 // IDEA

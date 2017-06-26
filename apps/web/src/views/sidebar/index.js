@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view, ViewType } from '@jot/black'
-import { Shortcuts } from '/helpers'
+import { Shortcuts } from '~/helpers'
 import { flatMap } from 'lodash'
 import {
   Theme,
@@ -25,8 +25,8 @@ import {
 import { Document } from '@jot/models'
 import Login from './login'
 import SidebarStore from './store'
-import type LayoutStore from '/stores/layoutStore'
-import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '/constants'
+import type LayoutStore from '~/stores/layoutStore'
+import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '~/constants'
 import rc from 'randomcolor'
 import sillyname from 'sillyname'
 

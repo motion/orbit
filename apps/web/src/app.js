@@ -1,7 +1,7 @@
 // @flow
-import AppStore from '/stores/appStore'
+import AppStore from '~/stores/appStore'
 import * as Models from '@jot/models'
-import { DB_CONFIG } from '/constants'
+import { DB_CONFIG } from '~/constants'
 
 const App = new AppStore({
   config: DB_CONFIG,

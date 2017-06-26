@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, observable } from '@jot/black'
-import Router from '/router'
-import { IS_ELECTRON } from '/constants'
+import Router from '~/router'
+import { IS_ELECTRON } from '~/constants'
 
 @view
 export default class Link {

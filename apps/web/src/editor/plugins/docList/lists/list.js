@@ -1,10 +1,10 @@
 import React from 'react'
 import { view, computed } from '@jot/black'
-import node from '/editor/node'
+import node from '~/editor/node'
 import { Document } from '@jot/models'
 import { Button, Glow, Loading, Icon } from '@jot/ui'
 import { isEqual } from 'lodash'
-import Router from '/router'
+import Router from '~/router'
 
 const lightBlue = '#e7f6ff'
 const darkBlue = `#0099e5`

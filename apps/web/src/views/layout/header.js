@@ -1,9 +1,9 @@
 import React from 'react'
 import { view } from '@jot/black'
-import Router from '/router'
+import Router from '~/router'
 import { Segment, SlotFill, Button } from '@jot/ui'
-import { HEADER_HEIGHT, IS_ELECTRON } from '/constants'
-import * as Commander from '/views/commander'
+import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
+import * as Commander from '~/views/commander'
 
 @view
 export default class Header {

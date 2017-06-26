@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import { SlotFill } from '@jot/ui'
-import Editor from '/views/editor'
+import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
 import Breadcrumbs from './breadcrumbs'
 import Children from './children'

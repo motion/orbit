@@ -87,7 +87,7 @@ exports.default = function (_ref) {
 
   var componentVisitor = {
     Class: function Class(path) {
-      if (path.node[VISITED_KEY] || !(matchesDecorator(path.node, this.decoratorName) || matchesPatterns(path.get('superClass'), this.superClasses)) || !isReactLikeClass(path.node)) {
+      if (path.node[VISITED_KEY] || !matchesDecorator(path.node, this.decoratorName) || !isReactLikeClass(path.node)) {
         return;
       }
 

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import node from '/editor/node'
+import node from '~/editor/node'
 import { Icon } from '@jot/ui'
 
 @node

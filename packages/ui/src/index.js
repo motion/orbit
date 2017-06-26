@@ -1,4 +1,5 @@
 // helpers
+export color from 'color'
 export { Theme, ThemeProvide } from 'gloss'
 export PassProps from './helpers/passProps'
 export * as SlotFill from './helpers/slot'

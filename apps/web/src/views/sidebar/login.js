@@ -2,7 +2,7 @@
 import { view } from '@jot/black'
 import { User } from '@jot/models'
 import React from 'react'
-import { keycode } from '/helpers'
+import { keycode } from '~/helpers'
 import {
   Dropdown,
   Theme,
@@ -14,7 +14,7 @@ import {
   Button,
   Link,
 } from '@jot/ui'
-import { HEADER_HEIGHT } from '/constants'
+import { HEADER_HEIGHT } from '~/constants'
 
 @view({
   store: class LoginStore {

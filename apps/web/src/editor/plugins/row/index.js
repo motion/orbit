@@ -1,11 +1,11 @@
 import React from 'react'
 import { view } from '@jot/black'
-import node from '/editor/node'
+import node from '~/editor/node'
 import { Icon } from '@jot/ui'
 import { range } from 'lodash'
 import { Range } from 'immutable'
 import Slate from 'slate'
-import { BLOCKS } from '/editor/constants'
+import { BLOCKS } from '~/editor/constants'
 import { createButton } from '../helpers'
 import { Column, Row } from './nodes'
 

@@ -1,8 +1,7 @@
-// @flow
 import { store } from '@jot/black'
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
-import { Document } from './document'
+import { DocumentModel } from './document'
 
 const COUCH_PROTOCOL = `${window.location.protocol}//`
 const COUCH_HOST = `couch.${window.location.host}`
@@ -18,7 +17,7 @@ class User {
 
   connect = database => {
     this.database = database
-    this.documents = new Document()
+    this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'
 
     this.superlogin.configure({

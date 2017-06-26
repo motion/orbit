@@ -1,0 +1,11 @@
+{
+  "main": "index.js",
+  "name": "playground",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@jot/black": "*",
+    "@jot/ui": "*",
+    "react": "^15.6.0"
+  }
+}

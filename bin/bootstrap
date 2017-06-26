@@ -27,7 +27,7 @@ function ensure-dep {
 
 xcode-select --install 2> /dev/null
 
-brew update
+echo "have you updated homebrew?"
 
 echo "deps"
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -62,11 +62,19 @@ else
   echo "12 ::1 jot.dev couch.jot.dev api.jot.dev" | sudo tee -a /etc/hosts
 fi
 
-echo "npm run bootstrap"
-npm run bootstrap
+echo "yerna install"
+yarn install --prod
+echo "link babel-preset-motion"
+(cd packages/preset-motion && yarn link && cd ../.. && yarn link babel-preset-motion)
+echo "lerna bootstrap"
+lerna bootstrap --npm-client yarn
 
 echo " welcome!"
 echo " to start the app:"
-echo "   $ minikube up"
-echo "   $ dev start"
-echo "   $ dev serve"
+echo " $ compose up"
+echo " $ watch"
+echo " $ npm run web"
+
+# echo "   $ minikube up"
+# echo "   $ dev start"
+# echo "   $ dev serve"

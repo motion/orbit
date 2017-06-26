@@ -11,7 +11,8 @@ import addContext from '@jot/decor/lib/plugins/react/addContext'
 import attach from '@jot/decor/lib/plugins/react/attach'
 import storeProvidable from '@jot/decor/lib/plugins/react/storeProvidable'
 import { storeOptions } from './store'
-import gloss, { Glossy } from './gloss'
+import gloss from './gloss'
+import type { Glossy } from './gloss'
 
 export type ViewClass = ExtendsReact &
   Subscribable &
@@ -57,7 +58,7 @@ function getViewDecorator() {
     attach(...stores: Array<string>): ViewClass,
   }
 
-  const view: ViewThing = (item: Object | Class | Function): ViewClass => {
+  const view: ViewThing = (item: Object | Class<any> | Function): ViewClass => {
     // @view({ ...stores }) shorthand
     if (typeof item === 'object') {
       return viewDecorator({ stores: item })

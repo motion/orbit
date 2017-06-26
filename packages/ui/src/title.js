@@ -1,8 +1,7 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { color, view } from '@jot/black'
 import Button from './button'
-import { clr } from '~/helpers'
 import type { Color } from 'gloss'
 
 export type TitleProps = {
@@ -84,7 +83,7 @@ export default class Title {
             icon={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
             iconProps={{
               size: 8,
-              color: clr(color).alpha(0.5).toString() || [255, 255, 255, 0.3],
+              color: color(color).alpha(0.5).toString() || [255, 255, 255, 0.3],
             }}
             circular
             chromeless
@@ -144,7 +143,9 @@ export default class Title {
           color: color || theme.base.color,
 
           '&:hover': {
-            background: hoverable ? clr(background).lighten(0.025) : background,
+            background: hoverable
+              ? color(background).lighten(0.025)
+              : background,
           },
         },
       }

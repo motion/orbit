@@ -6,6 +6,7 @@
   "scripts": {},
   "dependencies": {
     "@jot/decor": "*",
+    "react-shortcuts": "1.5.0",
     "mobx": "^3.1.0",
     "rxdb": "^5.0.0",
     "pouchdb-core": "^6.2.0",
@@ -13,7 +14,8 @@
     "prop-types": "^15.5.9",
     "hash-sum": "1.0.2",
     "kontur": "^0.2.0",
-    "react-tunnel": "0.1.0"
+    "react-tunnel": "0.1.0",
+    "color": "1.0.3"
   },
   "devDependencies": {}
 }

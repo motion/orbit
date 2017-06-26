@@ -1,23 +1,28 @@
 import React from 'react'
-import { view, observable } from '@jot/black'
-import Router from '~/router'
-import { IS_ELECTRON } from '~/constants'
+import { view, observable, IS_ELECTRON } from '@jot/black'
+
+type Props = {
+  router?: { path: string, go: Function },
+}
 
 @view
 export default class Link {
+  props: Props
+
   @observable isActive = false
 
   componentDidMount() {
     this.watch(() => {
       const isActive =
-        Router.path === this.props.to || Router.path === this.props.match
+        this.props.router.path === this.props.to ||
+        this.props.router.path === this.props.match
       this.ref('isActive').set(isActive)
     })
   }
 
   onClick = (e: Event) => {
     e.preventDefault()
-    Router.go(this.props.to)
+    this.props.router.go(this.props.to)
     if (this.props.onClick) {
       this.props.onClick(e)
     }

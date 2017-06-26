@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
-import { view, ViewType } from '@jot/black'
-import { Shortcuts } from '~/helpers'
+import { view, Shortcuts } from '@jot/black'
 import { flatMap } from 'lodash'
 import {
   Theme,

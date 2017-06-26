@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
-import { inject } from '~/helpers'
+import { view, inject } from '@jot/black'
 import Button from './button'
 import { Provider } from 'react-tunnel'
 import type { Color } from 'gloss'

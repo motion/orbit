@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
-import { Shortcuts } from '~/helpers'
+import { view, Shortcuts } from '@jot/black'
 import { object } from 'prop-types'
 import { Glint, Theme, SlotFill } from '@jot/ui'
 import { IN_TRAY } from '~/constants'

@@ -1,8 +1,7 @@
 // @flow
-import { view } from '@jot/black'
+import { view, keycode } from '@jot/black'
 import { User } from '@jot/models'
 import React from 'react'
-import { keycode } from '~/helpers'
 import {
   Dropdown,
   Theme,

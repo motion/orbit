@@ -1,4 +1,7 @@
 // @flow
+// export constants from @jot/black
+export * from '@jot/black/lib/constants'
+
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
 export const PROTOCOL = `${window.location.protocol}//`
@@ -18,26 +21,6 @@ export const DB_CONFIG = {
 export const HEADER_HEIGHT = 40
 export const SIDEBAR_WIDTH = 340
 export const SIDEBAR_TRANSITION = `ease-in 100ms`
-
-export const IS_ELECTRON = isElectron()
-
-function isElectron(): boolean {
-  if (
-    typeof window !== 'undefined' &&
-    window.process &&
-    window.process.type === 'renderer'
-  ) {
-    return true
-  }
-  if (
-    typeof process !== 'undefined' &&
-    process.versions &&
-    !!process.versions.electron
-  ) {
-    return true
-  }
-  return false
-}
 
 export const IN_TRAY =
   IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1

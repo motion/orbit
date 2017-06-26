@@ -221,14 +221,17 @@ export default class Button {
       const background =
         props.background || theme.base.background || 'transparent'
       const padding = props.padding || [0, height / 4]
+
+      const borderColor = props.borderColor || theme.base.borderColor
+
       const color = props.highlight
         ? props.highlightColor || theme.highlight.color || props.color
         : props.active ? theme.active.color : props.color || theme.base.color
-
       const hoverColor =
         props.hoverColor ||
         (props.color && $(props.color).lighten(0.2).toString()) ||
         theme.hover.color
+
       const highlightColor = $(color).lighten(0.1).toString()
       const highlightHoverColor = $(color).lighten(0.2).toString()
 
@@ -236,13 +239,11 @@ export default class Button {
       const iconHoverColor = props.iconHoverColor || hoverColor
 
       return {
-        // $FlowIgnore
         button: {
-          // ...$(props, theme),
-          ...theme.base,
           padding,
           height,
           borderRadius,
+          borderColor,
           color,
           background,
           ...(props.circular && {

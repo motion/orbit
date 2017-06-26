@@ -1,7 +1,7 @@
 // @flow
 import 'babel-polyfill'
 // import 'react-hot-loader/patch'
-import Gloss from '@jot/black/lib/gloss'
+import { createElement } from '@jot/black'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { IS_PROD, IS_ELECTRON, IN_TRAY } from './constants'
@@ -12,7 +12,7 @@ if (!IS_PROD) {
 }
 
 // all <tags /> can use $$parentStyles
-React.createElement = Gloss.createElement
+React.createElement = createElement
 
 // splash
 const Splash = require('./views/splash').default

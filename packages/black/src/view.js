@@ -11,7 +11,7 @@ import addContext from '@jot/decor/lib/plugins/react/addContext'
 import attach from '@jot/decor/lib/plugins/react/attach'
 import storeProvidable from '@jot/decor/lib/plugins/react/storeProvidable'
 import { storeOptions } from './store'
-import gloss from './gloss'
+import { decorator as glossDecorator } from './gloss'
 import type { Glossy } from './gloss'
 
 export type ViewClass = ExtendsReact &
@@ -39,7 +39,7 @@ function getViewDecorator() {
     reactRenderArgs,
     mobx && observer,
     // gloss after mobx
-    options => ({ decorator: gloss }),
+    options => ({ decorator: glossDecorator }),
     // autobind last because it seals things
     autobind && autobound,
     [storeProvidable, storeOptions],

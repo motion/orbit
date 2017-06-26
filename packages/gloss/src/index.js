@@ -107,6 +107,5 @@ class Gloss {
 }
 
 export default function glossFactory(options: Options): Function {
-  const { decorator } = new Gloss(options)
-  return decorator
+  return new Gloss(options)
 }

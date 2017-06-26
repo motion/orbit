@@ -17,6 +17,7 @@ const DARK = {
 
 const Theme = {
   dark: {
+    name: 'dark',
     base: DARK,
     hover: {
       ...DARK,
@@ -39,10 +40,12 @@ const Theme = {
     },
   },
   light: {
+    name: 'light',
     base: LIGHT,
     hover: {
       ...LIGHT,
-      background: color(LIGHT.background).lighten(1),
+      background: color(LIGHT.background).lighten(0.1),
+      color: color(LIGHT.color).lighten(0.1),
     },
     active: {
       ...LIGHT,

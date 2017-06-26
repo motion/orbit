@@ -191,11 +191,7 @@ export default function fancyElementFactory(
 
             if (hasProp) {
               // dynamic themes
-              const dynStyles = styles.theme[prop](
-                this.props,
-                this.context,
-                activeTheme
-              )
+              const dynStyles = styles.theme[prop](this.props, activeTheme)
               const dynKeys = Object.keys(dynStyles).filter(
                 tag => allKeys.indexOf(tag) > -1
               )

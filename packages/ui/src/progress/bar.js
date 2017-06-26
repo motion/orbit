@@ -28,7 +28,7 @@ export default class ProgressBar {
   }
 
   static theme = {
-    theme: ({ color, background }: Props, context, theme) => ({
+    theme: ({ color, background }: Props, theme) => ({
       outer: {
         background:
           background || color(theme.base.backgroundColor).darken(1).toString(),

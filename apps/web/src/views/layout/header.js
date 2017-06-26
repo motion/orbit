@@ -64,7 +64,6 @@ export default class Header {
                   onClick={layoutStore.sidebar.toggle}
                   $$marginRight={-6}
                   color={[0, 0, 0, 0.3]}
-                  hoverColor={[0, 0, 0, 0.2]}
                 />
               </actions>}
           </SlotFill.Slot>

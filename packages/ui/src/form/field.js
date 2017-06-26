@@ -118,7 +118,7 @@ export default class Field {
   }
 
   static theme = {
-    theme: (props, _, theme) => ({
+    theme: (props, theme) => ({
       element: {
         color: theme.base.color,
       },

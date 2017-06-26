@@ -162,7 +162,6 @@ export default class Drawer {
   static theme = {
     theme: (
       { transparent, background, transition, bordered, shadowed },
-      _,
       theme
     ) => {
       return {

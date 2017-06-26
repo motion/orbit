@@ -163,6 +163,7 @@ export default class Button {
       justifyContent: 'center',
       border: [1, '#f5f5f5'],
       position: 'relative',
+      boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.2)'],
     },
     glowWrap: {
       position: 'absolute',
@@ -172,7 +173,6 @@ export default class Button {
       right: 0,
       bottom: 0,
       zIndex: 10,
-      boxShadow: ['inset 0 1px 0 rgba(255,255,255,0.5)', ',inset 0 -1px 0 red'],
     },
     minimal: {
       boxShadow: 'none',
@@ -201,7 +201,7 @@ export default class Button {
   }
 
   static theme = {
-    theme: (props: Props, context, theme) => {
+    theme: (props: Props, theme) => {
       //
       // TODO this is a great way to do our entire ui kit:
       //
@@ -222,15 +222,18 @@ export default class Button {
         props.background || theme.base.background || 'transparent'
       const padding = props.padding || [0, height / 4]
       const borderColor = props.borderColor || theme.base.borderColor
+
+      console.log(theme.name, borderColor)
+
       const color = props.highlight
         ? props.highlightColor || theme.highlight.color || props.color
         : props.active ? theme.active.color : props.color || theme.base.color
       const hoverColor =
         props.hoverColor ||
         theme.hover.color ||
-        (props.color && $(props.color).lighten(0.2).toString())
-      const highlightColor = $(color).lighten(0.1).toString()
-      const highlightHoverColor = $(color).lighten(0.2).toString()
+        (props.color && $(props.color).lighten(0.2))
+      const highlightColor = $(color).lighten(0.1)
+      const highlightHoverColor = $(color).lighten(0.2)
       const iconColor = props.iconColor || color
       const iconHoverColor = props.iconHoverColor || hoverColor
 
@@ -248,7 +251,7 @@ export default class Button {
             width: height,
           }),
           ...segmentStyles,
-          '> icon': {
+          '& > icon': {
             color: iconColor,
           },
           '&:hover > icon': {
@@ -283,6 +286,9 @@ export default class Button {
         },
         highlight: {
           color: highlightColor,
+          '& > icon': {
+            color: highlightColor,
+          },
           '&:hover': {
             color: highlightHoverColor,
           },
@@ -349,14 +355,6 @@ export default class Button {
         opacity: 0.5,
         '&:hover': {
           opacity: 1,
-        },
-      },
-    },
-    material: {
-      button: {
-        boxShadow: [0, 2, 10, [0, 0, 0, 0.1]],
-        '&:hover': {
-          boxShadow: [0, 2, 15, [0, 0, 0, 0.15]],
         },
       },
     },

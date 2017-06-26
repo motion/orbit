@@ -1,5 +1,5 @@
 // @flow
-import { objectToColor, isCSSAble, getCSSVal } from './helpers'
+import { colorToString, isCSSAble } from './helpers'
 import type { Transform } from './types'
 
 // exports
@@ -34,10 +34,8 @@ const COMMA_SEPARATABLE = {
   transition: true,
 }
 
-window.motionStyle = motionStyle
-
 export default function motionStyle(options: Object = {}) {
-  const toColor = color => objectToColor(color, options.processColor)
+  const toColor = color => colorToString(color, options.processColor)
 
   const px = (x: number | string) => (/px$/.test(`${x}`) ? thing : `${thing}px`)
 
@@ -51,7 +49,7 @@ export default function motionStyle(options: Object = {}) {
           )} ${toColor(color)}`
         : toColor(v),
     background: v =>
-      v.color || v.image || v.position || v.repeat
+      isCSSAble(v.color) || v.image || v.position || v.repeat
         ? `${toColor(color)} ${image} ${position.join(' ')} ${repeat}`
         : toColor(v),
   }
@@ -62,12 +60,8 @@ export default function motionStyle(options: Object = {}) {
 
   function processArrayItem(style: any) {
     // recurse
-    if (Array.isArray(style)) {
+    if (Array.isArray(style) || isCSSAble(style)) {
       return toColor(style)
-    }
-    // toCSS support
-    if (isCSSAble(style)) {
-      return getCSSVal(style)
     }
     return typeof style === 'number' ? `${style}px` : style
   }
@@ -134,18 +128,27 @@ export default function motionStyle(options: Object = {}) {
       }
 
       let respond
+      const firstChar = key.substr(0, 1)
 
-      if (valueType === 'string' || valueType === 'number') {
-        toReturn[key] = value
-        respond = true
-      }
-      // complex styles
-      if (isCSSAble(value)) {
-        toReturn[key] = getCSSVal(value)
-        respond = true
-      }
       if (COLOR_KEYS.has(key)) {
         toReturn[key] = toColor(value)
+        respond = true
+      } else if (valueType === 'string' || valueType === 'number') {
+        toReturn[key] = value
+        respond = true
+      } else if (isCSSAble(value)) {
+        toReturn[key] = toColor(value)
+        respond = true
+      } else if (firstChar === '&' || firstChar === '@') {
+        // recurse into object (psuedo or media query)
+        toReturn[key] = processStyles(value, errorMessage)
+        respond = true
+      } else if (Array.isArray(value)) {
+        // objects
+        toReturn[key] = processArray(key, value)
+        respond = true
+      } else if (valueType === 'object') {
+        toReturn[key] = processObject(value)
         respond = true
       }
 
@@ -160,24 +163,6 @@ export default function motionStyle(options: Object = {}) {
       }
 
       if (respond) {
-        continue
-      }
-
-      // recurse into object (psuedo or media query)
-      // before object processing
-      const firstChar = key.substr(0, 1)
-
-      if (firstChar === '@' || firstChar === '&') {
-        toReturn[key] = processStyles(value)
-        continue
-      }
-
-      // objects
-      if (Array.isArray(value)) {
-        toReturn[key] = processArray(key, value)
-        continue
-      } else if (valueType === 'object') {
-        toReturn[key] = processObject(value)
         continue
       }
 

@@ -46,7 +46,7 @@ export default class Select {
   }
 
   static theme = {
-    theme: ({ height, width, background }, _, theme) => ({
+    theme: ({ height, width, background }, theme) => ({
       root: {
         height,
         width,

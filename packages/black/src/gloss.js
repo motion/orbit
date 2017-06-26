@@ -140,9 +140,12 @@ export const styles: Object = {
   },
 }
 
-export const { decorator, createElement } = gloss({
+const Gloss = gloss({
   baseStyles: styles,
   themeKey: 'theme',
   tagName: true,
-  processColor: color => (color.rgb && color.rgb().array()) || color,
 })
+
+window.Gloss = Gloss
+
+export const { decorator, createElement } = Gloss

@@ -127,11 +127,7 @@ export default class Pane {
   }
 
   static theme = {
-    theme: (
-      { background, shadow, padding, margin, height },
-      context,
-      theme
-    ) => ({
+    theme: ({ background, shadow, padding, margin, height }, theme) => ({
       section: {
         background,
         boxShadow: shadow && '0 0 70px rgba(0,0,0,0.2)',

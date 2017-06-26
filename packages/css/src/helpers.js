@@ -1,27 +1,23 @@
 // @flow
 import type { Color, CSSArray, ToCSSAble } from './types'
 
-export function objectToColor(color: Color, converter?: Function): string {
-  let result = color
-  const isObject = typeof color === 'object'
-
+function objectToColor(color: Color, converter?: Function): string {
   // final processing of objects and arrays
-  if (Array.isArray(result)) {
-    const length = result.length
+  if (Array.isArray(color)) {
+    const length = color.length
     if (length === 4) {
-      return `rgba(${result.join(', ')})`
+      return `rgba(${color.join(', ')})`
     }
     if (length === 3) {
-      return `rgb(${result.join(', ')})`
+      return `rgb(${color.join(', ')})`
     }
-  } else if (isObject) {
-    if (result.a) {
-      return `rgba(${result.r}, ${result.g}, ${result.b}, ${result.a})`
+  } else if (typeof color === 'object') {
+    if (color.a) {
+      return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
     }
-    return `rgb(${result.r}, ${result.g}, ${result.b})`
+    return `rgb(${color.r}, ${color.g}, ${color.b})`
   }
-
-  return result
+  return color
 }
 
 const arr3to4 = arr => [...arr, arr[1]]
@@ -50,6 +46,7 @@ export function expandCSSArray(given: number | Array<number>): CSSArray {
 export function isCSSAble(val: any): boolean {
   return (
     val !== null &&
+    !Array.isArray(val) &&
     typeof val === 'object' &&
     (typeof val.toCSS === 'function' ||
       typeof val.css === 'function' ||
@@ -74,15 +71,20 @@ export function getCSSVal(val: ToCSSAble) {
       return objectToColor(res.array())
     }
   }
-  return res.toString()
+  return res
 }
 
-export function colorToString(color: Color): string {
+export function colorToString(color: Color, options): string {
+  let res = color
+
   if (typeof color === 'string') {
     return color
   }
-  if (typeof color === 'object' && isCSSAble(color)) {
-    return getCSSVal(color)
+  if (options && options.isColor(color)) {
+    return options.processColor(color)
   }
-  return objectToColor(color)
+  if (isCSSAble(color)) {
+    res = getCSSVal(color)
+  }
+  return objectToColor(res)
 }

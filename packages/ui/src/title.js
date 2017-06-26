@@ -129,7 +129,6 @@ export default class Title {
   static theme = {
     theme: (
       { transparent, borderColor, color, background, hoverable, sub },
-      context,
       theme
     ) => {
       const transparentColor = transparent ? 'transparent' : false

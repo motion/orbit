@@ -299,7 +299,7 @@ class List {
   }
 
   static theme = {
-    theme: (props, context, theme) => ({
+    theme: (props, theme) => ({
       list: {
         ...theme.base,
       },

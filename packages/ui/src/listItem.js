@@ -221,7 +221,7 @@ export default class ListItem {
   }
 
   static theme = {
-    theme: (props, context, theme) => ({
+    theme: (props, theme) => ({
       item: {
         fontSize: props.fontSize || theme.base.fontSize,
         color: theme.base.color,

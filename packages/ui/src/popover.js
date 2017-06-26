@@ -622,7 +622,7 @@ export default class Popover {
                   shadow={getShadow(shadow)}
                 />
               </arrowContain>
-              <content $withBackground={background}>
+              <content>
                 {typeof children === 'function' ? children(isOpen) : children}
               </content>
             </popover>
@@ -687,10 +687,6 @@ export default class Popover {
         y: 0,
       },
     },
-    withBackground: background => ({
-      borderRadius: 7,
-      background,
-    }),
     item: {
       minWidth: 120,
     },
@@ -704,8 +700,12 @@ export default class Popover {
   }
 
   static theme = {
-    theme: (props, context, activeTheme) => ({
-      withBackground: activeTheme.base,
+    theme: (props, activeTheme) => ({
+      content: {
+        background: props.background === true
+          ? activeTheme.base
+          : props.background || 'transparent',
+      },
     }),
     popoverStyle: ({ popoverStyle }) => ({
       content: popoverStyle,

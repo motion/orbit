@@ -75,7 +75,6 @@ export default class Input {
         width,
         style,
       },
-      context,
       theme
     ) => {
       let styles = {}
@@ -133,7 +132,7 @@ export default class Input {
         maxWidth: width,
       },
     }),
-    inSegment: ({ borderRadius, inSegment: { first, last } }, _, theme) => ({
+    inSegment: ({ borderRadius, inSegment: { first, last } }, theme) => ({
       input: {
         width: 0,
         borderTopWidth: 1,

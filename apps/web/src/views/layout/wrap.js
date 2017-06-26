@@ -33,7 +33,7 @@ export default class LayoutWrap {
     wrap: {
       background: '#fff',
       borderRightRadius: 4,
-      boxShadow: [0, 0, 100, '#000'],
+      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
       position: 'absolute',
       left: 0,
       top: 0,

@@ -6,7 +6,7 @@ export store from './store'
 export Model from './model/model'
 export query from './model/query'
 
-export Shortcuts from './shortcuts'
+export { Shortcuts, ShortcutManager } from './shortcuts'
 
 export log from './helpers/log'
 export watch from './helpers/watch'

@@ -12,5 +12,8 @@ elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   npm run build
 else
+  # ensure linked in
+  yarn link babel-preset-motion
+  # lerna
   lerna exec --parallel --ignore @jot/native  --ignore @jot/web --ignore playground --ignore babel-preset-motion -- babel src --out-dir lib -s true $ARGS
 fi

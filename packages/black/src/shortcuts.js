@@ -1,8 +1,10 @@
-import { Shortcuts as ReactShortcuts } from 'react-shortcuts'
+import { Shortcuts as ReactShortcuts, ShortcutManager } from 'react-shortcuts'
 import view from './view'
 
+export { ShortcutManager } from 'react-shortcuts'
+
 @view.ui
-export default class Shortcuts {
+export class Shortcuts {
   render() {
     return (
       <ReactShortcuts $shortcuts isolate alwaysFireHandler {...this.props} />

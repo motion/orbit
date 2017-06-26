@@ -8,8 +8,10 @@ export const PROTOCOL = `${window.location.protocol}//`
 export const HOST = window.location.host
 export const API_HOST = `api.${HOST}`
 export const API_URL = `${PROTOCOL}${API_HOST}`
-export const COUCH_HOST = `couch.${HOST}`
-export const COUCH_URL = `${PROTOCOL}${COUCH_HOST}`
+export const COUCH_HOST = `api.${HOST}`
+export const COUCH_URL = `${PROTOCOL}${COUCH_HOST}/couch`
+
+log(COUCH_URL)
 
 export const DB_CONFIG = {
   name: 'username',

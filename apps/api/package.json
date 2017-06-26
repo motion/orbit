@@ -15,6 +15,7 @@
     "cors": "^2.8.3",
     "express": "^4.14.1",
     "express-pouchdb-replication-stream": "^1.0.6",
+    "express-couch-proxy": "0.1.0",
     "invariant": "^2.2.2",
     "morgan": "^1.8.1",
     "ms": "^2.0.0",

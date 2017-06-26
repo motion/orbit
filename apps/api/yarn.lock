@@ -689,6 +689,10 @@ expand-template@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/expand-template/-/expand-template-1.0.3.tgz#6c303323177a62b1b22c070279f7861287b69b1a"
 
+express-couch-proxy@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/express-couch-proxy/-/express-couch-proxy-0.1.0.tgz#b15862a208b4472d1e4ce3c4246350ecfccb15e0"
+
 express-pouchdb-replication-stream@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/express-pouchdb-replication-stream/-/express-pouchdb-replication-stream-1.0.6.tgz#0e8b597435142600897fe7a1538d374df5c4054d"

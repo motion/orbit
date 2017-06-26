@@ -24,16 +24,16 @@ declare class ModelsStore {
 }
 
 export default class Models implements ModelsStore {
-  constructor(database, models) {
-    if (!database || !models) {
+  constructor(databaseConfig, models) {
+    if (!databaseConfig || !models) {
       throw new Error(
         'No database or models given to App!',
-        typeof database,
+        typeof databaseConfig,
         typeof models
       )
     }
 
-    this.databaseConfig = database
+    this.databaseConfig = databaseConfig
     this.models = models
 
     // hmr fix
@@ -78,7 +78,7 @@ export default class Models implements ModelsStore {
 
       connections.push(
         model.connect(this.database, {
-          sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
+          sync: `${this.databaseConfig.couchUrl}${model.title}/`,
         })
       )
     }

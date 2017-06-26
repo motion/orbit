@@ -10,9 +10,9 @@ const LIGHT = {
 
 const DARK = {
   highlightColor: 'rgb(89, 154, 244)',
-  background: '#222',
+  background: '#333',
   color: '#f2f2f2',
-  borderColor: [30, 30, 30, 0.5],
+  borderColor: [100, 30, 30, 0.9],
 }
 
 const Theme = {

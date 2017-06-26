@@ -700,13 +700,23 @@ export default class Popover {
   }
 
   static theme = {
-    theme: (props, activeTheme) => ({
-      content: {
-        background: props.background === true
-          ? activeTheme.base
-          : props.background || 'transparent',
-      },
-    }),
+    theme: (props, theme) => {
+      let styles = {}
+
+      if (props.background === true) {
+        styles = {
+          background: theme.base.background,
+          borderRadius: 5,
+        }
+      }
+
+      return {
+        content: {
+          background: props.background || 'transparent',
+          ...styles,
+        },
+      }
+    },
     popoverStyle: ({ popoverStyle }) => ({
       content: popoverStyle,
     }),

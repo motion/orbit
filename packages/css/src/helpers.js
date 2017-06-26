@@ -80,11 +80,18 @@ export function colorToString(color: Color, options): string {
   if (typeof color === 'string') {
     return color
   }
-  if (options && options.isColor(color)) {
-    return options.processColor(color)
-  }
-  if (isCSSAble(color)) {
+
+  if (options && options.isColor && options.isColor(color)) {
+    res = options.processColor(color)
+  } else if (isCSSAble(color)) {
     res = getCSSVal(color)
   }
-  return objectToColor(res)
+
+  res = objectToColor(res)
+
+  if (res.model) {
+    debugger
+  }
+
+  return res
 }

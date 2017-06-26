@@ -6,7 +6,12 @@ import type { Transform } from './types'
 export type { Transform, Color } from './types'
 export * from './helpers'
 
-const COLOR_KEYS = new Set(['background', 'color', 'backgroundColor'])
+const COLOR_KEYS = new Set([
+  'background',
+  'color',
+  'backgroundColor',
+  'borderColor',
+])
 const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
   y: 'translateY',
@@ -34,28 +39,26 @@ const COMMA_SEPARATABLE = {
   transition: true,
 }
 
+// helpers
+const px = (x: number | string) => (/px$/.test(`${x}`) ? thing : `${thing}px`)
+const isFloat = n => n === +n && n !== (n | 0)
+
+// style transform creator
 export default function motionStyle(options: Object = {}) {
-  const toColor = color => colorToString(color, options.processColor)
-
-  const px = (x: number | string) => (/px$/.test(`${x}`) ? thing : `${thing}px`)
-
+  const toColor = color => colorToString(color, options)
   const OBJECT_TRANSFORM = {
     textShadow: ({ x, y, blur, color }) =>
       `${px(x)} ${px(y)} ${px(blur)} ${toColor(color)}`,
     boxShadow: v =>
       v.inset || v.x || v.y || v.blur || v.spread || v.color
-        ? `${inset ? 'inset' : ''} ${px(x)} ${px(y)} ${px(blur)} ${px(
-            spread
-          )} ${toColor(color)}`
+        ? `${v.inset ? 'inset' : ''} ${px(v.x)} ${px(v.y)} ${px(v.blur)} ${px(
+            v.spread
+          )} ${toColor(v.color)}`
         : toColor(v),
     background: v =>
       isCSSAble(v.color) || v.image || v.position || v.repeat
-        ? `${toColor(color)} ${image} ${position.join(' ')} ${repeat}`
+        ? `${toColor(v.color)} ${v.image} ${v.position.join(' ')} ${v.repeat}`
         : toColor(v),
-  }
-
-  function isFloat(n) {
-    return n === +n && n !== (n | 0)
   }
 
   function processArrayItem(style: any) {
@@ -106,6 +109,7 @@ export default function motionStyle(options: Object = {}) {
     return toReturn.join(' ')
   }
 
+  // style transformer
   return function processStyles(styles: Object, errorMessage?: string): Object {
     const toReturn = {}
     for (let key in styles) {
@@ -130,21 +134,20 @@ export default function motionStyle(options: Object = {}) {
       let respond
       const firstChar = key.substr(0, 1)
 
-      if (COLOR_KEYS.has(key)) {
-        toReturn[key] = toColor(value)
-        respond = true
-      } else if (valueType === 'string' || valueType === 'number') {
+      if (valueType === 'string' || valueType === 'number') {
         toReturn[key] = value
+        respond = true
+      } else if (COLOR_KEYS.has(key)) {
+        toReturn[key] = toColor(value)
         respond = true
       } else if (isCSSAble(value)) {
         toReturn[key] = toColor(value)
         respond = true
       } else if (firstChar === '&' || firstChar === '@') {
-        // recurse into object (psuedo or media query)
+        // recurse into psuedo or media query
         toReturn[key] = processStyles(value, errorMessage)
         respond = true
       } else if (Array.isArray(value)) {
-        // objects
         toReturn[key] = processArray(key, value)
         respond = true
       } else if (valueType === 'object') {

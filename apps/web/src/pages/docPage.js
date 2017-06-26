@@ -48,7 +48,7 @@ export default class DocumentPage {
               <Button {...btnProps} className="wop" icon="dot" />
               <Button
                 icon="fav31"
-                highlight={starred}
+                highlight={!!starred}
                 onClick={doc.toggleStar}
                 {...btnProps}
               />

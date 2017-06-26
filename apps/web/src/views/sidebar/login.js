@@ -107,7 +107,6 @@ export default class Login {
               distance={10}
               forgiveness={20}
               delay={150}
-              theme="light"
               target={<Button circular icon="user" />}
               background
               shadow

@@ -108,7 +108,6 @@ class List {
   // wrap weird signature
   select = (index: number) => {
     console.log('selecting', index)
-
     this.highlightItem(() => index)
   }
 

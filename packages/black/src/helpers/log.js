@@ -18,7 +18,10 @@ export default function log(...args) {
     console.log(
       `%c${things
         .map(arg =>
-          `${typeof arg === 'object' ? JSON.stringify(arg) : arg}`.slice(0, 150)
+          `${typeof arg === 'object' ? JSON.stringify(arg, 0, 2) : arg}`.slice(
+            0,
+            5000
+          )
         )
         .join(' ')}`,
       'background: orange'

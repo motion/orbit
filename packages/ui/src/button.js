@@ -161,7 +161,8 @@ export default class Button {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      border: [1, '#f5f5f5'],
+      borderWidth: 1,
+      borderStyle: 'solid',
       position: 'relative',
       boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.2)'],
     },
@@ -203,10 +204,9 @@ export default class Button {
   static theme = {
     theme: (props: Props, theme) => {
       //
-      // TODO this is a great way to do our entire ui kit:
+      // TODO get this right, then extract as base of UI kit
       //
-      // const $ = props => themeProps(getProps(props, CSS_PROPS), theme)
-      //
+
       // based on a vertical rythm
       const height = props.size * 30
       const baseBorderRadius = props.borderRadius || height / 5
@@ -222,22 +222,19 @@ export default class Button {
         props.background || theme.base.background || 'transparent'
       const padding = props.padding || [0, height / 4]
       const borderColor = props.borderColor || theme.base.borderColor
-
-      console.log(theme.name, borderColor)
-
       const color = props.highlight
         ? props.highlightColor || theme.highlight.color || props.color
         : props.active ? theme.active.color : props.color || theme.base.color
       const hoverColor =
+        (props.highlight && $(color).lighten(0.2)) ||
         props.hoverColor ||
         theme.hover.color ||
         (props.color && $(props.color).lighten(0.2))
-      const highlightColor = $(color).lighten(0.1)
-      const highlightHoverColor = $(color).lighten(0.2)
+
       const iconColor = props.iconColor || color
       const iconHoverColor = props.iconHoverColor || hoverColor
 
-      return {
+      const buttonStyle = {
         button: {
           padding,
           height,
@@ -284,24 +281,9 @@ export default class Button {
             color: hoverColor,
           },
         },
-        highlight: {
-          color: highlightColor,
-          '& > icon': {
-            color: highlightColor,
-          },
-          '&:hover': {
-            color: highlightHoverColor,
-          },
-          '&:hover > icon': {
-            color: highlightHoverColor,
-          },
-        },
-        clickable: {
-          '&:hover': {
-            background: theme.background,
-          },
-        },
       }
+
+      return buttonStyle
     },
     spaced: {
       button: {

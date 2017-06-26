@@ -229,8 +229,8 @@ export default class Button {
         : props.active ? theme.active.color : props.color || theme.base.color
       const hoverColor =
         props.hoverColor ||
-        (props.color && $(props.color).lighten(0.2).toString()) ||
-        theme.hover.color
+        theme.hover.color ||
+        (props.color && $(props.color).lighten(0.2).toString())
 
       const highlightColor = $(color).lighten(0.1).toString()
       const highlightHoverColor = $(color).lighten(0.2).toString()

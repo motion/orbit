@@ -32,6 +32,7 @@ export type Props = {
   itemStyle?: Object,
   itemProps?: Object,
   rowHeight?: number,
+  size?: number,
 }
 
 @parentSize
@@ -155,6 +156,7 @@ class List {
     rowHeight: propRowHeight,
     onItemMount,
     itemProps,
+    size,
     ...props
   }: Props) {
     let rowHeight = propRowHeight
@@ -181,6 +183,7 @@ class List {
       slim,
       onItemMount,
       itemStyle,
+      size,
     }
 
     if (!items && !children) {

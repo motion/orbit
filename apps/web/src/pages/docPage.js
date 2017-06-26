@@ -35,7 +35,7 @@ export default class DocumentPage {
     const starred = doc.hasStar()
 
     const btnProps = {
-      size: 1,
+      size: 1.2,
       chromeless: true,
       noGlow: true,
     }
@@ -45,28 +45,7 @@ export default class DocumentPage {
         actions={
           <actions $$row>
             <Segment>
-              <Popover
-                openOnHover
-                shadow
-                background
-                target={<Button {...btnProps} icon="dot" />}
-              >
-                <List
-                  items={[
-                    { icon: 'share', primary: 'Share Link', onClick: () => {} },
-                    {
-                      icon: doc.private ? 'lock' : 'open',
-                      primary: 'Locked',
-                      onClick: doc.togglePrivate,
-                    },
-                    {
-                      icon: doc.private ? 'eye' : 'closed',
-                      primary: 'Private',
-                      onClick: doc.togglePrivate,
-                    },
-                  ]}
-                />
-              </Popover>
+              <Button {...btnProps} className="wop" icon="dot" />
               <Button
                 icon="fav31"
                 highlight={starred}
@@ -77,6 +56,31 @@ export default class DocumentPage {
           </actions>
         }
       >
+        <Popover
+          openOnHover
+          openOnClick
+          width={120}
+          shadow
+          background
+          target=".wop"
+        >
+          <List
+            size={2}
+            items={[
+              { icon: 'share', primary: 'Share Link', onClick: () => {} },
+              {
+                icon: doc.private ? 'lock' : 'open',
+                primary: 'Locked',
+                onClick: doc.togglePrivate,
+              },
+              {
+                icon: doc.private ? 'eye' : 'closed',
+                primary: 'Private',
+                onClick: doc.togglePrivate,
+              },
+            ]}
+          />
+        </Popover>
         <DocumentView
           id={doc._id}
           onKeyDown={docStore.onKeyDown}

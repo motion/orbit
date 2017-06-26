@@ -114,28 +114,26 @@ export default class Login {
               openOnHover
               closeOnClick
             >
-              <Theme name="light">
-                <List
-                  width={150}
-                  itemProps={{ height: 35, fontSize: 14 }}
-                  items={[
-                    {
-                      primary: User.name,
-                      after: (
-                        <Button
-                          chromeless
-                          icon="power"
-                          onClick={() => User.logout()}
-                        />
-                      ),
-                    },
-                    {
-                      primary: 'Settings',
-                      onClick: () => console.log(),
-                    },
-                  ]}
-                />
-              </Theme>
+              <List
+                width={150}
+                itemProps={{ height: 35, fontSize: 14 }}
+                items={[
+                  {
+                    primary: User.name,
+                    after: (
+                      <Button
+                        chromeless
+                        icon="power"
+                        onClick={() => User.logout()}
+                      />
+                    ),
+                  },
+                  {
+                    primary: 'Settings',
+                    onClick: () => console.log(),
+                  },
+                ]}
+              />
             </Popover>
           </end>
         </step>

@@ -107,7 +107,6 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
       automagicalValue(obj, method)
       // unsubscribe from previous
       if (previous && previous !== null) {
-        log('prev', previous)
         // auto dispose last thing
         if (typeof previous.dispose === 'function') {
           previous.dispose()

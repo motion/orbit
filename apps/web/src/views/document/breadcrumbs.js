@@ -12,18 +12,17 @@ type Props = {
 @view({
   store: class BreadcrumbStore {
     last = null
-    crumbs = watch(
-      log(async props => {
-        if (!props.document) {
-          return false
-        }
-        if (this.crumbs && this.crumbs._id === props.document._id) {
-          return this.crumbs
-        }
-        this.last = await props.document.getCrumbs()
-        return this.last
-      })
-    )
+    crumbs = watch(async props => {
+      log('crumbs', props)
+      if (!props.document) {
+        return false
+      }
+      if (this.crumbs && this.crumbs._id === props.document._id) {
+        return this.crumbs
+      }
+      this.last = await props.document.getCrumbs()
+      return this.last
+    })
   },
 })
 export default class Breadcrumbs {

@@ -1,8 +1,8 @@
 // @flow
 // export constants from @jot/black
-export * from '@jot/black/lib/constants'
+import { IS_ELECTRON, IS_PROD } from '@jot/black'
 
-export const IS_PROD = process.env.NODE_ENV === 'production'
+export * from '@jot/black/lib/constants'
 
 export const PROTOCOL = `${window.location.protocol}//`
 export const HOST = window.location.host

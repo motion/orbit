@@ -15,8 +15,8 @@
     "motion-class-helpers": "^1.1.0",
     "motion-mobx-helpers": "^1.1.2",
     "prop-types": "^15.5.9",
-    "react": "^15.5.2",
-    "react-dom": "^15.5.4",
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0",
     "react-mixin": "^3.0.5",
     "sb-event-kit": "^3.0.0"
   },

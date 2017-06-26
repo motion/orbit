@@ -6,6 +6,6 @@
   "dependencies": {
     "@jot/black": "*",
     "@jot/ui": "*",
-    "react": "^15.5.0"
+    "react": "^15.6.0"
   }
 }

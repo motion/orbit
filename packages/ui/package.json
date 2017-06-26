@@ -13,6 +13,6 @@
     "element-resize-detector": "^1.1.12"
   },
   "peerDependencies": {
-    "react": ">= 15.0.0",
+    "react": "^15.6.0"
   }
 }

@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
-import { view, inject } from '@jot/black'
-import color from 'color'
+import { view, inject, color as $ } from '@jot/black'
 import Icon from './icon'
 import Glow from './effects/glow'
 import Popover from './popover'
@@ -234,8 +233,8 @@ export default class Button {
         : props.active ? theme.active.color : props.color || theme.base.color
 
       const hoverColor = props.hoverColor || theme.hover.color
-      const highlightColor = color(color).lighten(0.1).toString()
-      const highlightHoverColor = color(color).lighten(0.2).toString()
+      const highlightColor = $(color).lighten(0.1).toString()
+      const highlightHoverColor = $(color).lighten(0.2).toString()
 
       return {
         // $FlowIgnore

@@ -14,6 +14,14 @@ const colors = [
 export default function log(...args) {
   const [target, key, descriptor] = args
 
+  const logger = (...things) =>
+    console.log(
+      `%c${things
+        .map(arg => `${typeof arg === 'object' ? JSON.stringify(arg) : arg}`)
+        .join(' ')}`,
+      'background: orange'
+    )
+
   if (
     args.length === 3 &&
     typeof target === 'object' &&
@@ -30,14 +38,11 @@ export default function log(...args) {
   } else if (typeof args[0] === 'function') {
     // regular fn
     const [wrapFn] = args
+    logger(wrapFn)
     return wrapLogger(wrapFn)
-  } else
-    console.log(
-      `%c${args
-        .map(arg => `${typeof arg === 'object' ? JSON.stringify(arg) : arg}`)
-        .join(' ')}`,
-      'background: orange'
-    )
+  }
+
+  logger(...args)
 }
 
 function wrapLogger(wrapFn: Function, parent, name?: string) {

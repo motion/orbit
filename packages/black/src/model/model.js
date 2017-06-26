@@ -153,19 +153,12 @@ export default class Model {
       options.sync &&
       new PouchDB(options.sync, {
         skip_setup: true,
-        ajax: {
-          auth: {
-            username:
-              window.App &&
-                window.App.models &&
-                window.App.models.User &&
-                window.App.models.User.token,
-          },
-          headers: {
-            test: '123',
-            another: 'thing',
-            final: 'one',
-          },
+        // auth: {
+        //   username: 'test',
+        //   password: 'whatsmynae',
+        // },
+        headers: {
+          authorization: '12345',
         },
       })
 

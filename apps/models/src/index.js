@@ -78,7 +78,7 @@ export default class Models implements ModelsStore {
 
       connections.push(
         model.connect(this.database, {
-          sync: `${this.databaseConfig.couchUrl}${model.title}/`,
+          sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
         })
       )
     }

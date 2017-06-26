@@ -1,4 +1,5 @@
 import http from 'http'
+import https from 'https'
 import logger from 'morgan'
 import express from 'express'
 import cors from 'cors'
@@ -46,28 +47,34 @@ export default class Server {
     // express
     app.set('port', port)
     app.use(logger('dev'))
-    app.use(cors({ origin: Constants.APP_URL }))
+    // app.use(cors({ origin: Constants.APP_URL }))
+
+    app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*')
+      res.header('Access-Control-Allow-Credentials', 'true')
+      res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+      )
+      next()
+    })
 
     // must be before bodyParser.json
-    app.use('/couch/:db/*', (req, res) => {
-      const auth = getAuth(req.headers['authorization'])
-      console.log('got auth', auth)
+    app.use('/couch(/:db)?(/:db/*)?', (req, res) => {
+      const remoteURL = url.parse(Constants.COUCH_URL)
 
-      const headers = {}
-      for (const header in req.headers) {
-        if (req.headers.hasOwnProperty(header)) {
-          headers[header] = req.headers[header]
-        }
+      if (req.params) {
+        console.log(req.params.db, req.headers['authorization'])
+        // const auth = getAuth(req.headers['authorization'])
       }
 
-      const remoteURL = url.parse(Constants.COUCH_URL)
       const request = 'https:' == remoteURL.protocol
         ? https.request
         : http.request
 
       const remoteReq = request(
         {
-          headers,
+          headers: req.headers,
           method: req.method,
           hostname: remoteURL.hostname,
           port: remoteURL.port || ('https:' == remoteURL.protocol ? 443 : 80),
@@ -77,9 +84,26 @@ export default class Server {
         function(remoteRes) {
           // node's HTTP parser has already parsed any chunked encoding
           delete remoteRes.headers['transfer-encoding']
-          // CouchDB replication fails unless we use a properly-cased header
-          remoteRes.headers['Content-Type'] = remoteRes.headers['content-type']
-          delete remoteRes.headers['content-type']
+
+          const toTitleCase = s => `${s[0].toUpperCase()}${s.slice(1)}`
+
+          // 🐛 couch replication fails unless using a properly-cased header
+          const CASE_ME = [
+            'content-type',
+            'access-control-allow-credentials',
+            'access-control-allow-origin',
+            'access-control-expose-headers',
+          ]
+
+          for (const header of CASE_ME) {
+            if (remoteRes.headers[header]) {
+              const mapped = header.split('-').map(toTitleCase).join('-')
+              remoteRes.headers[mapped] = remoteRes.headers[header]
+              delete remoteRes.headers[header]
+            }
+          }
+
+          remoteRes.headers['Access-Control-Allow-Credentials'] = 'true'
           res.writeHead(remoteRes.statusCode, remoteRes.headers)
           remoteRes.pipe(res)
         }
@@ -92,14 +116,6 @@ export default class Server {
 
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
-    app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*')
-      res.header(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-      )
-      next()
-    })
 
     app.get('/', (req, res) => {
       res.send('hello world')

@@ -131,6 +131,7 @@ export default class Children {
       right: 0,
       // borderTop: [1, '#f6f6f6'],
       padding: [25, 0, 4],
+      cursor: 'default',
     },
     header: {
       padding: [0, 0],
@@ -165,19 +166,23 @@ export default class Children {
       background: '#fff',
       // border: [1, '#eee'],
       // borderRadius: 7,
-      padding: [2, 0],
-    },
-    bar: {
-      padding: [5, 10],
+      padding: [2, 0, 0],
     },
     input: {
-      width: 100,
+      width: '100%',
+      border: 'none',
+      padding: 8,
+      fontSize: 14,
     },
     name: {
       fontWeight: 500,
       fontSize: 14,
       flexFlow: 'row',
       alignItems: 'center',
+      borderBottom: [2, 'transparent'],
+      '&:hover': {
+        borderBottomColor: '#eee',
+      },
     },
   }
 }

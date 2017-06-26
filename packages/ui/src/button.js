@@ -95,7 +95,7 @@ export default class Button {
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
 
-    const iconSize = _iconSize || size * 16
+    const iconSize = _iconSize || size * 15
 
     return (
       <button

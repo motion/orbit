@@ -158,8 +158,8 @@ export default class Button {
       lineHeight: '1rem',
       fontSize: 13,
       fontWeight: 400,
-      alignItems: 'center',
       flexFlow: 'row',
+      alignItems: 'center',
       justifyContent: 'center',
       border: [1, '#f5f5f5'],
       position: 'relative',
@@ -225,9 +225,17 @@ export default class Button {
         ? props.highlightColor || theme.highlight.color || props.color
         : props.active ? theme.active.color : props.color || theme.base.color
 
-      const hoverColor = props.hoverColor || theme.hover.color
+      const hoverColor =
+        props.hoverColor ||
+        (props.color && $(props.color).lighten(0.2).toString()) ||
+        theme.hover.color
       const highlightColor = $(color).lighten(0.1).toString()
       const highlightHoverColor = $(color).lighten(0.2).toString()
+
+      const iconColor = props.iconColor || color
+      const iconHoverColor = props.iconHoverColor || hoverColor
+
+      console.log('icon', iconHoverColor)
 
       return {
         // $FlowIgnore
@@ -246,10 +254,10 @@ export default class Button {
           }),
           ...segmentStyles,
           '> icon': {
-            color: props.iconColor || color,
+            color: iconColor,
           },
           '&:hover > icon': {
-            color: props.hoverColor || theme.hover.color,
+            color: iconHoverColor,
           },
           '&:hover': {
             ...theme.hover,
@@ -264,13 +272,6 @@ export default class Button {
           ...(props.inForm && {
             '&:active': theme.active,
             '&:focus': theme.focus,
-          }),
-          // inline
-          ...(props.inline && {
-            border: [1, 'solid', 'transparent'],
-            '&:hover': {
-              border: [1, 'solid', theme.hover.borderColor],
-            },
           }),
         },
         isActive: {

@@ -47,18 +47,6 @@ export default class Root {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  unstable_handleError(error) {
-    // does this work?
-    // throw error
-    this.setState({
-      error,
-    })
-    // until we can clear on next hmr, just show for a second
-    this.setTimeout(() => {
-      this.setState({ error: null })
-    }, 2000)
-  }
-
   renderTray() {
     return <Sidebar />
   }

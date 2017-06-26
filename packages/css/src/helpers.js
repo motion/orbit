@@ -1,24 +1,33 @@
 // @flow
 import type { Color, CSSArray, ToCSSAble } from './types'
 
-export function objectToColor(color: Color): string {
-  if (Array.isArray(color)) {
-    const length = color.length
+export function objectToColor(color: Color, converter?: Function): string {
+  let result = color
+  const isObject = typeof color === 'object'
+
+  // use converter if its an object thats not simply color-like
+  // if (converter && isObject && !(color.r || color.g || color.b)) {
+  //   result = converter(color)
+  // }
+
+  // final processing of objects and arrays
+  if (isObject) {
+    if (result.a) {
+      return `rgba(${result.r}, ${result.g}, ${result.b}, ${result.a})`
+    }
+    return `rgb(${result.r}, ${result.g}, ${result.b})`
+  }
+  if (Array.isArray(result)) {
+    const length = result.length
     if (length === 4) {
-      return `rgba(${color.join(', ')})`
+      return `rgba(${result.join(', ')})`
     }
     if (length === 3) {
-      return `rgb(${color.join(', ')})`
+      return `rgb(${result.join(', ')})`
     }
     throw new Error('Invalid color provided')
   }
-  if (typeof color === 'object') {
-    if (color.a) {
-      return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
-    }
-    return `rgb(${color.r}, ${color.g}, ${color.b})`
-  }
-  return color
+  return result
 }
 
 const arr3to4 = arr => [...arr, arr[1]]
@@ -66,6 +75,10 @@ export function getCSSVal(val: ToCSSAble) {
     res = val.rgba()
   } else if (typeof val.rgb === 'function') {
     res = val.rgb()
+    // support npm color
+    if (typeof res.array === 'function') {
+      return objectToColor(res.array())
+    }
   }
   return res.toString()
 }

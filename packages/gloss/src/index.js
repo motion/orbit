@@ -1,8 +1,9 @@
 // @flow
-import fancyElFactory from './fancyElement'
+import glossyElFactory from './fancyElement'
+import motionStyle from 'motion-css'
 import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
-import { applyNiceStyles, flattenThemes, isFunc } from './helpers'
+import { flattenThemes, isFunc } from './helpers'
 
 // exports
 export { colorToString, objectToColor, expandCSSArray } from 'motion-css'
@@ -11,54 +12,59 @@ export type { Transform, Color } from 'motion-css'
 export ThemeProvide from './components/themeProvide'
 export Theme from './components/theme'
 
-function getStyles({ name, style }, theme: ?Object) {
-  const styles = { ...style, ...flattenThemes(theme) }
-  const dynamicStyles = pickBy(styles, isFunc)
-  const staticStyles = pickBy(styles, x => !isFunc(x))
-  const niceStatics = applyNiceStyles(staticStyles, `${name}:`)
-  const statics = StyleSheet.create(niceStatics)
-  // attach key to status objects so we can use later in fancyElement
-  for (const key of Object.keys(statics)) {
-    statics[key].key = key
-  }
-  return {
-    statics,
-    dynamics: dynamicStyles,
-    theme,
-  }
+export type Options = {
+  themeKey: string | boolean,
+  baseStyles?: Object,
+  tagName?: boolean,
+  processColor?: Function,
 }
 
 const DEFAULT_OPTS = {
   themeKey: 'theme',
 }
 
-export default function glossFactory(opts: Object = DEFAULT_OPTS): Function {
-  let baseStyles
-  if (opts.baseStyles) {
-    baseStyles = getStyles(
-      { name: 'Gloss Parent Styles', style: opts.baseStyles },
-      null
+class Gloss {
+  options: Options
+
+  constructor(options: Options = DEFAULT_OPTS) {
+    this.options = options
+    this.motionStyle = motionStyle(options)
+    this.baseStyles =
+      options.baseStyles &&
+      this.getStyles(
+        { name: 'Gloss Parent Styles', style: this.options.baseStyles },
+        null
+      )
+    this.glossyEl = (styles, theme) =>
+      glossyElFactory(
+        theme,
+        this.baseStyles,
+        styles,
+        this.options,
+        this.applyNiceStyles
+      )
+    this.createElement = this.glossyEl(
+      this.getStyles({ name: 'root', style: {} })
     )
+    // allow grabbing createElement off decorator
+    this.decorator.createElement = this.createElement
   }
 
-  const fancyEl = (styles, theme) =>
-    fancyElFactory(theme, baseStyles, styles, opts)
-
-  function gloss(ChildOrName: Function | string, style: ?Object) {
+  decorator = (Child: Function | string, style: ?Object) => {
     // shorthand
-    if (typeof ChildOrName === 'string') {
-      const name = ChildOrName
-      const createEl = fancyEl(getStyles({ name, style: { [name]: style } }))
+    if (typeof Child === 'string') {
+      const name = Child
+      const createEl = this.glossyEl(
+        this.getStyles({ name, style: { [name]: style } })
+      )
       return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
     }
 
-    // using as decorator for class
-    const Child = ChildOrName
-
-    // shim this.fancyElement
+    // class
     if (Child.prototype) {
-      Child.prototype.glossElement = fancyEl(
-        getStyles(Child, opts.dontTheme ? null : Child.theme),
+      // shim this.glossyElement
+      Child.prototype.glossElement = this.glossyEl(
+        this.getStyles(Child, this.options.dontTheme ? null : Child.theme),
         Child.theme
       )
     }
@@ -66,8 +72,41 @@ export default function glossFactory(opts: Object = DEFAULT_OPTS): Function {
     return Child
   }
 
-  // allow access directly to Gloss.createElement
-  gloss.createElement = fancyEl(getStyles({ name: 'root', style: {} }))
+  applyNiceStyles = (styles: Object, errorMessage: string) => {
+    for (const style in styles) {
+      if (!styles.hasOwnProperty(style)) {
+        continue
+      }
+      const value = styles[style]
+      if (value) {
+        styles[style] = this.motionStyle(value, errorMessage)
+      }
+    }
+    return styles
+  }
 
-  return gloss
+  getStyles = (
+    { name, style }: { name: string, style: Object },
+    theme: ?Object
+  ) => {
+    const styles = { ...style, ...flattenThemes(theme) }
+    const dynamicStyles = pickBy(styles, isFunc)
+    const staticStyles = pickBy(styles, x => !isFunc(x))
+    const niceStatics = this.applyNiceStyles(staticStyles, `${name}:`)
+    const statics = StyleSheet.create(niceStatics)
+    // attach key to status objects so we can use later in glossyElement
+    for (const key of Object.keys(statics)) {
+      statics[key].key = key
+    }
+    return {
+      statics,
+      dynamics: dynamicStyles,
+      theme,
+    }
+  }
+}
+
+export default function glossFactory(options: Options): Function {
+  const { decorator } = new Gloss(options)
+  return decorator
 }

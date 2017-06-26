@@ -2,15 +2,11 @@
 import React from 'react'
 import { StyleSheet, css } from './stylesheet'
 import { omit } from 'lodash'
-import {
-  applyNiceStyles,
-  filterStyleKeys,
-  filterParentStyleKeys,
-} from './helpers'
+import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 import deepExtend from 'deep-extend'
 
 const flatten = arr => [].concat.apply([], arr)
-const arrayOfObjectsToObject = arr => {
+const arrayOfObjectsToObject = (arr: Array<Object>) => {
   let res = {}
   for (let i = 0; i < arr.length; i++) {
     deepExtend(res, arr[i])
@@ -39,26 +35,36 @@ function getDynamics(
   return dynamics
 }
 
-function getSheet(dynamics, name: string) {
-  const sheet = StyleSheet.create(applyNiceStyles(dynamics, `${name}`))
-  return Object.keys(dynamics).map(key => ({
-    ...sheet[key],
-    isDynamic: true,
-    key,
-  }))
-}
-
 const TAG_NAME_MAP = {
   title: 'x-title',
   meta: 'x-meta',
 }
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(theme, parentStyles, styles, opts) {
-  const shouldTheme = !opts.dontTheme
+export default function fancyElementFactory(
+  theme: Object,
+  parentStyles: Object,
+  styles: Object,
+  options: Object,
+  applyNiceStyles: Function
+) {
+  const shouldTheme = !options.dontTheme
   const processTheme = shouldTheme && theme
 
-  return function fancyElement(type, props, ...children) {
+  function getSheet(dynamics: Object, name: string) {
+    const sheet = StyleSheet.create(applyNiceStyles(dynamics, `${name}`))
+    return Object.keys(dynamics).map(key => ({
+      ...sheet[key],
+      isDynamic: true,
+      key,
+    }))
+  }
+
+  return function fancyElement(
+    type: string | Function,
+    props?: Object,
+    ...children
+  ) {
     // <... $one $two /> keys
     const propKeys = props ? Object.keys(props) : []
     const styleKeys = filterStyleKeys(propKeys)
@@ -149,14 +155,14 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
         if (this.context.uiActiveTheme) {
           activeThemeKey = this.context.uiActiveTheme
           // theme comes first, so it can be overriden
-          themeKeys = [opts.themeKey, ...themeKeys]
+          themeKeys = [options.themeKey, ...themeKeys]
         }
-        if (opts.themeKey) {
-          if (this.props[opts.themeKey]) {
-            activeThemeKey = this.props[opts.themeKey]
+        if (options.themeKey) {
+          if (this.props[options.themeKey]) {
+            activeThemeKey = this.props[options.themeKey]
           }
           // allow disabling theme entirely
-          if (this.props[opts.themeKey] === false) {
+          if (this.props[options.themeKey] === false) {
             activeThemeKey = false
           }
         }
@@ -181,7 +187,7 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
             // dynamic theme
             const hasProp =
               typeof this.props[prop] !== 'undefined' ||
-              (opts.themeKey === prop && activeTheme)
+              (options.themeKey === prop && activeTheme)
 
             if (hasProp) {
               // dynamic themes
@@ -219,7 +225,7 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
       key => key[0] === '$' || (hasStyleProp && key === 'style')
     )
     const newProps = omit(props, [
-      opts.tagName ? props && props.tagName : undefined,
+      options.tagName ? props && props.tagName : undefined,
       ...allStyleProps,
     ])
     const allStyleKeys = isTag ? [type, ...allStyleProps] : allStyleProps
@@ -256,7 +262,7 @@ export default function fancyElementFactory(theme, parentStyles, styles, opts) {
       }
     }
 
-    if (opts.tagName && props && props.tagName) {
+    if (options.tagName && props && props.tagName) {
       type = props.tagName
     }
 

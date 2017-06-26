@@ -140,4 +140,13 @@ export const styles: Object = {
   },
 }
 
-export default gloss({ baseStyles: styles, themeKey: 'theme', tagName: true })
+const glossy = gloss({
+  baseStyles: styles,
+  themeKey: 'theme',
+  tagName: true,
+  processColor: color => (color.rgb && color.rgb().array()) || color,
+})
+
+console.log('GOTTTTTTTTTTTTTTTTTTT', glossy)
+
+export default glossy

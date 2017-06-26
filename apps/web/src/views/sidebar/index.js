@@ -191,7 +191,8 @@ class Projects {
                       )}
                     </path>
                     <path onClick={() => Router.go(doc.url())} $$row $$centered>
-                      {(store.crumbs[index] &&
+                      {(store.crumbs &&
+                        store.crumbs[index] &&
                         store.crumbs[index]
                           .map(doc => doc.getTitle())
                           .join(' / ')) ||

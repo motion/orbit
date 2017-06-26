@@ -66,7 +66,7 @@ export default class Breadcrumbs {
       height: 38,
       fontSize: 22,
       padding: [0, 20],
-      margin: [-15, 0, 10],
+      margin: [-5, 0, 0],
       flexFlow: 'row',
     },
     items: {

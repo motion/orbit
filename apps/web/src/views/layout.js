@@ -75,24 +75,21 @@ export default class Root {
         <LayoutWrap layoutStore={layoutStore}>
           <Commander.Results />
           <Header layoutStore={layoutStore} />
+          <SlotFill.Slot name="crumbs">
+            {breadcrumbs => {
+              return (
+                <crumbs>
+                  {breadcrumbs}
+                </crumbs>
+              )
+            }}
+          </SlotFill.Slot>
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
-          <SlotFill.Slot name="crumbs">
-            {breadcrumbs => {
-              const nextCrumbs = breadcrumbs || this.lastCrumbs
-              this.lastCrumbs = nextCrumbs
-              console.log('123', nextCrumbs, this.lastCrumbs)
-              return (
-                <crumbs>
-                  {nextCrumbs}
-                </crumbs>
-              )
-            }}
-          </SlotFill.Slot>
           <Draft
             isActive={layoutStore.isCreatingDoc}
             onOpenDraft={() => (layoutStore.isCreatingDoc = true)}

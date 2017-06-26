@@ -221,9 +221,7 @@ export default class Button {
       const background =
         props.background || theme.base.background || 'transparent'
       const padding = props.padding || [0, height / 4]
-
       const borderColor = props.borderColor || theme.base.borderColor
-
       const color = props.highlight
         ? props.highlightColor || theme.highlight.color || props.color
         : props.active ? theme.active.color : props.color || theme.base.color
@@ -231,10 +229,8 @@ export default class Button {
         props.hoverColor ||
         theme.hover.color ||
         (props.color && $(props.color).lighten(0.2).toString())
-
       const highlightColor = $(color).lighten(0.1).toString()
       const highlightHoverColor = $(color).lighten(0.2).toString()
-
       const iconColor = props.iconColor || color
       const iconHoverColor = props.iconHoverColor || hoverColor
 

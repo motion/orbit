@@ -20,18 +20,18 @@ const Theme = {
     base: DARK,
     hover: {
       ...DARK,
-      color: clr(DARK.color).lighten(2).toString(),
-      background: clr(DARK.background).lighten(1).toString(),
-      borderColor: clr(DARK.borderColor).alpha(0.2).toString(),
+      color: color(DARK.color).lighten(2).toString(),
+      background: color(DARK.background).lighten(1).toString(),
+      borderColor: color(DARK.borderColor).alpha(0.2).toString(),
     },
     active: {
       ...DARK,
-      highlightColor: clr(DARK.highlightColor).lighten(1).toString(),
+      highlightColor: color(DARK.highlightColor).lighten(1).toString(),
       color: '#fff',
     },
     focus: {
       ...DARK,
-      background: clr(DARK.background).lighten(0.25).toString(),
+      background: color(DARK.background).lighten(0.25).toString(),
       borderColor: DARK.highlightColor,
     },
     highlight: {
@@ -42,7 +42,7 @@ const Theme = {
     base: LIGHT,
     hover: {
       ...LIGHT,
-      background: clr(LIGHT.background).lighten(1).toString(),
+      background: color(LIGHT.background).lighten(1).toString(),
     },
     active: {
       ...LIGHT,

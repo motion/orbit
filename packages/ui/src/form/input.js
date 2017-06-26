@@ -111,7 +111,7 @@ export default class Input {
             borderColor: theme.hover.borderColor,
           },
           '&:focus': (style && style['&:focus']) || {
-            borderColor: clr(theme.focus.borderColor).alpha(0.2),
+            borderColor: color(theme.focus.borderColor).alpha(0.2),
             borderWidth: 1,
           },
         },

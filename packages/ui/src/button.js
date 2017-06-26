@@ -234,8 +234,8 @@ export default class Button {
         : props.active ? theme.active.color : props.color || theme.base.color
 
       const hoverColor = props.hoverColor || theme.hover.color
-      const highlightColor = clr(color).lighten(0.1).toString()
-      const highlightHoverColor = clr(color).lighten(0.2).toString()
+      const highlightColor = color(color).lighten(0.1).toString()
+      const highlightHoverColor = color(color).lighten(0.2).toString()
 
       return {
         // $FlowIgnore

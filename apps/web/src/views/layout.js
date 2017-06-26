@@ -84,7 +84,8 @@ export default class Root {
           <SlotFill.Slot name="crumbs">
             {breadcrumbs => {
               const nextCrumbs = breadcrumbs || this.lastCrumbs
-              this.lastCrumbs = breadcrumbs
+              this.lastCrumbs = nextCrumbs
+              console.log('123', nextCrumbs, this.lastCrumbs)
               return (
                 <crumbs>
                   {nextCrumbs}

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '@jot/black'
+import { view, watch, Shortcuts } from '@jot/black'
 import { flatMap } from 'lodash'
 import {
   Theme,
@@ -27,6 +27,7 @@ import SidebarStore from './store'
 import type LayoutStore from '~/stores/layoutStore'
 import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '~/constants'
 import rc from 'randomcolor'
+import Router from '~/router'
 import sillyname from 'sillyname'
 
 type Props = {
@@ -98,6 +99,9 @@ class TeamStatus {
 @view({
   store: class SidebarProjectStore {
     docs = Document.stars()
+    crumbs = watch(
+      () => this.docs && Promise.all(this.docs.map(doc => doc.getCrumbs()))
+    )
   },
 })
 class Projects {
@@ -161,10 +165,10 @@ class Projects {
         <noStars $$flex if={!hasDocs}>No Stars</noStars>
 
         <tasks if={hasDocs}>
-          {docs.map((item, i) => {
-            const tasks = item.tasks()
+          {docs.map((doc, index) => {
+            const tasks = doc.tasks()
             return (
-              <section key={i}>
+              <section key={index}>
                 <title $$row $$spaceBetween>
                   <start $$row $$centered>
                     <Progress.Circle
@@ -177,7 +181,7 @@ class Projects {
                     />
                     <path if={false} $$row $$centered>
                       {flatMap(
-                        item.title.map((tit, index) =>
+                        doc.title.map((tit, index) =>
                           <fade key={index}>{tit}</fade>
                         ),
                         (value, index, arr) =>
@@ -186,18 +190,18 @@ class Projects {
                             : value
                       )}
                     </path>
-                    <path
-                      onClick={() => Router.go(item.url())}
-                      $$row
-                      $$centered
-                    >
-                      {item.getTitle()}
+                    <path onClick={() => Router.go(doc.url())} $$row $$centered>
+                      {(store.crumbs[index] &&
+                        store.crumbs[index]
+                          .map(doc => doc.getTitle())
+                          .join(' / ')) ||
+                        doc.getTitle()}
                     </path>
                   </start>
                   <end>
                     <Icon
                       name="favour3"
-                      onClick={item.toggleStar}
+                      onClick={doc.toggleStar}
                       color="#666"
                     />
                   </end>
@@ -207,7 +211,7 @@ class Projects {
                     <task key={key} $$row>
                       <Input
                         $check
-                        onChange={() => item.toggleTask(text)}
+                        onChange={() => doc.toggleTask(text)}
                         type="checkbox"
                         checked={archive}
                       />{' '}
@@ -227,7 +231,7 @@ class Projects {
 
   static style = {
     tasks: {
-      padding: [10, 5],
+      padding: [10, 10],
     },
     empty: {
       flex: 1,

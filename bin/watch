@@ -3,30 +3,5 @@
 . $(dirname $0)/__common
 cd $ROOT
 
-find . -name *.js.flow | grep -v node_modules | xargs rm -f
-
-function link() {
-  cd $ROOT
-  for PACKAGE in $(ls $1); do
-    if [ ! -d "$ROOT/$1/$PACKAGE/src" ]; then
-      continue
-    fi
-    cd $ROOT/$1/$PACKAGE
-    mkdir -p lib
-
-    ENTRIES=$(cd src; find . -name "*.js")
-    for ENTRY in $ENTRIES; do
-      ENTRY_TRIMMED=${ENTRY:2}
-      mkdir -p lib/$(dirname $ENTRY_TRIMMED)
-      ln src/$ENTRY_TRIMMED lib/$ENTRY_TRIMMED.flow
-    done
-    echo "Linked $PACKAGE"
-  done
-}
-
-link "apps"
-link "packages"
-
-cd $ROOT
-
+link-flow
 build --watch

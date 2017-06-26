@@ -1,4 +1,4 @@
-export function offset(ev, target, out) {
+export default function offset(ev, target, out) {
   target = target || ev.currentTarget || ev.srcElement
   if (!Array.isArray(out)) {
     out = [0, 0]

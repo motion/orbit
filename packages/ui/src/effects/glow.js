@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { color, view, offset } from '@jot/black'
+import { color as $, view } from '@jot/black'
+import offset from '~/helpers/offset'
 import { throttle } from 'lodash'
 import resizer from 'element-resize-detector'
 import type { Color } from 'gloss'
@@ -178,7 +179,7 @@ export default class HoverGlow {
       return -coord
     }
 
-    const colorRGB = color(color).toString()
+    const colorRGB = $(color).toString()
     const translateX = inversed(
       bounded(resisted(x), width * scale, this.bounds.width)
     )
@@ -213,7 +214,7 @@ export default class HoverGlow {
               zIndex,
               WebkitFilter: blur ? `blur(${blur}px)` : '',
               background: background || gradient
-                ? `radial-gradient(${color(color).toString()}, transparent 70%)`
+                ? `radial-gradient(${$(color).toString()}, transparent 70%)`
                 : colorRGB,
               borderRadius,
               transition: `

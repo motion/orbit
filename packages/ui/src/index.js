@@ -2,6 +2,7 @@
 export color from 'color'
 export { Theme, ThemeProvide } from 'gloss'
 export PassProps from './helpers/passProps'
+export offset from './helpers/offset'
 export * as SlotFill from './helpers/slot'
 export Portal from 'react-portal'
 

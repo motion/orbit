@@ -8,6 +8,11 @@
   "license": "MIT",
   "dependencies": {
     "@jot/black": "*",
-    "color": "^1.0.3"
+    "color": "^1.0.3",
+    "react-slot-fill": "^1.0.0-alpha.12",
+    "element-resize-detector": "^1.1.12"
+  },
+  "peerDependencies": {
+    "react": ">= 15.0.0",
   }
 }

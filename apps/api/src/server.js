@@ -60,17 +60,17 @@ export default class Server {
     })
 
     // must be before bodyParser.json
-    app.use('/couch(/:db)?(/:db/*)?', (req, res) => {
-      const remoteURL = url.parse(Constants.COUCH_URL)
+    const subPath = '/couch'
+    const remoteURL = url.parse(Constants.COUCH_URL)
 
-      if (req.params) {
-        console.log(req.params.db, req.headers['authorization'])
-        // const auth = getAuth(req.headers['authorization'])
-      }
-
+    app.use(`${subPath}(/:db)?(/:db/*)?`, (req, res) => {
+      const db = req.params && req.params.db
       const request = 'https:' == remoteURL.protocol
         ? https.request
         : http.request
+      const path =
+        remoteURL.path +
+        req.originalUrl.slice(subPath.length + 1, req.originalUrl.length)
 
       const remoteReq = request(
         {
@@ -78,7 +78,7 @@ export default class Server {
           method: req.method,
           hostname: remoteURL.hostname,
           port: remoteURL.port || ('https:' == remoteURL.protocol ? 443 : 80),
-          path: remoteURL.path,
+          path,
           auth: remoteURL.auth,
         },
         function(remoteRes) {
@@ -103,7 +103,10 @@ export default class Server {
             }
           }
 
-          remoteRes.headers['Access-Control-Allow-Credentials'] = 'true'
+          if (db) {
+            remoteRes.headers['Access-Control-Allow-Credentials'] = 'true'
+          }
+
           res.writeHead(remoteRes.statusCode, remoteRes.headers)
           remoteRes.pipe(res)
         }

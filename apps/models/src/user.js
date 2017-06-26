@@ -78,6 +78,10 @@ class User {
     return this.user.org || 'motion'
   }
 
+  get token() {
+    return this.superlogin && this.superlogin.getSession().token
+  }
+
   setupDbSync = () => {
     if (!this.remoteDb && this.user) {
       this.remoteDb = new PouchDB(this.user.userDBs.documents, {

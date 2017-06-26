@@ -149,16 +149,31 @@ export default class Model {
     }
 
     this.database = database
-    this.remoteDB = options.sync
+    this.remoteDB =
+      options.sync &&
+      new PouchDB(options.sync, {
+        skip_setup: true,
+        ajax: {
+          auth: {
+            username:
+              window.App &&
+                window.App.models &&
+                window.App.models.User &&
+                window.App.models.User.token,
+          },
+          headers: {
+            test: '123',
+            another: 'thing',
+            final: 'one',
+          },
+        },
+      })
+
     this._collection = await database.collection({
       name: this.title,
       schema: this.compiledSchema,
       statics: this.statics,
-      autoMigrate: true,
       methods: this.compiledMethods,
-      pouchSettings: {
-        skip_setup: true,
-      },
     })
 
     // shim add pouchdb-validation

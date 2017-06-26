@@ -21,17 +21,17 @@ class ImageNodeStore {
 
   start() {
     this.watch(async () => {
-      this.src = await this.getSrc(this.props.node.data)
+      this.src = await this.getDataUrl(this.props.node.data)
     })
   }
 
-  getSrc = async data => {
+  getDataUrl = async data => {
     if (data.get('file')) {
       const file = data.get('file')
       this.saveImage(file)
       return await readFile(file)
     } else if (data.get('imageId')) {
-      const image: Image = await Image.get(data.get('imageId')).exec()
+      const image = await Image.get(data.get('imageId')).exec()
       const src = await image.getAttachment()
       return src
     }

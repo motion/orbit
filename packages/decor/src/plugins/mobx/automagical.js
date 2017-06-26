@@ -1,3 +1,4 @@
+// @flow
 import { fromStream, fromPromise } from 'mobx-utils'
 import { Observable } from 'rxjs'
 import {
@@ -8,9 +9,9 @@ import {
   autorun,
 } from 'mobx'
 
-export default function automagical(options) {
+export default function automagical(options: Object) {
   return {
-    decorator: Klass => {
+    decorator: (Klass: Class<any> | Function) => {
       if (!Klass.prototype) {
         return Klass
       }
@@ -31,7 +32,7 @@ export default function automagical(options) {
   }
 }
 
-const isAutorun = val => val && val.autorunme
+const isAutorun = (val: any) => val && val.autorunme
 const FILTER_KEYS = {
   dispose: true,
   constructor: true,
@@ -45,12 +46,12 @@ const FILTER_KEYS = {
   props: true,
 }
 
-function observableRxToObservableMobx(obj, method) {
+function observableRxToObservableMobx(obj: Object, method: string) {
   extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
   return obj[method]
 }
 
-function automagic(obj) {
+function automagic(obj: Object) {
   // automagic observables
   const proto = Object.getPrototypeOf(obj)
   const fproto = Object.getOwnPropertyNames(proto).filter(
@@ -76,7 +77,7 @@ function automagic(obj) {
 }
 
 // * => Mobx
-function automagicalValue(obj, method, descriptors = {}) {
+function automagicalValue(obj: Object, method: string, descriptors = {}) {
   if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
     return
   }

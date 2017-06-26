@@ -16,6 +16,7 @@
     "rxjs": "^5.3.0",
     "rxdb": "^5.0.0",
     "randomcolor": "0.5.3",
-    "sillyname": "0.1.0"
+    "sillyname": "0.1.0",
+    "lodash": "^4.17.4"
   }
 }

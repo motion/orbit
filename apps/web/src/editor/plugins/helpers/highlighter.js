@@ -1,4 +1,3 @@
-/* @flow */
 import { findAll } from './highlightCore'
 import React from 'react'
 
@@ -38,7 +37,10 @@ export default function Highlighter({
 
         if (chunk.highlight) {
           highlightCount++
-          highlightClassNames = `${highlightClassName} ${highlightCount === +activeIndex ? activeClassName : ''}`
+          highlightClassNames = `${highlightClassName} ${highlightCount ===
+            +activeIndex
+            ? activeClassName
+            : ''}`
 
           return (
             <HighlightTag

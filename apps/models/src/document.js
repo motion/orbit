@@ -75,7 +75,7 @@ const methods = {
     }
     return crumbs
   },
-  async getChildren({ max = 10 } = {}) {
+  async getChildren({ max = 10 }: { max: number } = {}) {
     const children = await this.collection
       .find({ parentId: this._id })
       .limit(max / 3)
@@ -106,7 +106,7 @@ const methods = {
     this.private = !this.private
     this.save()
   },
-  async addImage(file) {
+  async addImage(file: any) {
     return await Image.create({
       file,
       name: ('image' + Math.random()).slice(0, 8),
@@ -114,7 +114,7 @@ const methods = {
     })
   },
   // todo if two tasks have the same name, they'll switch together
-  async toggleTask(text) {
+  async toggleTask(text: string) {
     this.content = toggleTask(this.content, text)
     await this.save()
   },
@@ -134,7 +134,7 @@ const methods = {
   },
 }
 
-export type Document = methods & {
+export type Document = typeof methods & {
   title: str,
   content: object,
   text?: str,
@@ -184,7 +184,7 @@ export class DocumentModel extends Model {
       private: true,
       content: DEFAULT_CONTENT(title),
       color: randomcolor(),
-      slug: toSlug(title || Math.random()),
+      slug: toSlug(title),
     }
   }
 
@@ -197,8 +197,11 @@ export class DocumentModel extends Model {
 
   hooks = {
     preSave: async (document: Object) => {
-      if (await this.get(document.slug).exec()) {
-        throw new Error(`Already exists a place with this slug! ${slug}`)
+      const doc = this.get(document.slug)
+      if (doc && (await doc.exec())) {
+        throw new Error(
+          `Already exists a place with this slug! ${document.slug}`
+        )
       }
     },
   }
@@ -210,7 +213,7 @@ export class DocumentModel extends Model {
 
   methods = methods
 
-  search = async text => {
+  search = async (text: string) => {
     // return recent
     if (text === '') {
       return await this.collection
@@ -231,7 +234,7 @@ export class DocumentModel extends Model {
   }
 
   @query
-  userHomeDocs = userId => {
+  userHomeDocs = (userId: string) => {
     if (!userId) {
       return null
     }
@@ -242,7 +245,7 @@ export class DocumentModel extends Model {
   }
 
   @query
-  child = id => {
+  child = (id: string) => {
     if (!id) {
       return null
     }
@@ -262,7 +265,7 @@ export class DocumentModel extends Model {
       .sort({ createdAt: 'asc' })
 
   @query
-  recent = (limit = 10) =>
+  recent = (limit: number = 10) =>
     this.collection
       .find({ draft: { $ne: true } })
       // .sort({ createdAt: 'desc' })

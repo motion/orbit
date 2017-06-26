@@ -15,7 +15,9 @@ module.exports = function(context, givenOpts) {
           ],
         },
       ],
+      // order important here
       require.resolve('babel-plugin-transform-decorators-legacy'),
+      require.resolve('babel-plugin-class-properties'),
       [
         require.resolve('gloss/transform'),
         {

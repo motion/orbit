@@ -99,7 +99,6 @@ export default class Button {
 
     return (
       <button
-        tagName="test"
         $inSegment={inSegment && this.props}
         $clickable={!!onClick || clickable}
         $isActive={active}
@@ -211,20 +210,17 @@ export default class Button {
       // based on a vertical rythm
       const height = props.size * 30
       const baseBorderRadius = props.borderRadius || height / 5
-      const borderRadius = props.inSegment
-        ? null
+      const borderRadius = props.circular
+        ? height
         : baseBorderRadius || height / 10
-
-      const segmentStyles = !props.circular &&
-      props.inSegment && {
+      const segmentStyles = props.inSegment && {
         marginLeft: -1,
         borderLeftRadius: props.inSegment.first ? borderRadius : 0,
         borderRightRadius: props.inSegment.last ? borderRadius : 0,
       }
-
       const background =
         props.background || theme.base.background || 'transparent'
-      const padding = props.padding || [0, height / 5]
+      const padding = props.padding || [0, height / 4]
       const color = props.highlight
         ? props.highlightColor || theme.highlight.color || props.color
         : props.active ? theme.active.color : props.color || theme.base.color

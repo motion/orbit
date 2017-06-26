@@ -33,47 +33,47 @@ export default class DocumentPage {
     }
 
     const starred = doc.hasStar()
-    const className = `btn-${Math.floor(Math.random() * 100000000000)}`
+
+    const btnProps = {
+      size: 1,
+      chromeless: true,
+      noGlow: true,
+    }
 
     return (
       <Page
         actions={
           <actions $$row>
             <Segment>
-              <PassProps size={1} chromeless noGlow>
-                <Button icon="dot" className={className} />
-                <Button
-                  icon="fav31"
-                  highlight={starred}
-                  onClick={doc.toggleStar}
+              <Popover
+                openOnHover
+                shadow
+                background
+                target={<Button {...btnProps} icon="dot" />}
+              >
+                <List
+                  items={[
+                    { icon: 'share', primary: 'Share Link', onClick: () => {} },
+                    {
+                      icon: doc.private ? 'lock' : 'open',
+                      primary: 'Locked',
+                      onClick: doc.togglePrivate,
+                    },
+                    {
+                      icon: doc.private ? 'eye' : 'closed',
+                      primary: 'Private',
+                      onClick: doc.togglePrivate,
+                    },
+                  ]}
                 />
-              </PassProps>
-            </Segment>
-
-            <Popover
-              delay={0}
-              distance={10}
-              openOnHover
-              shadow
-              background
-              target={`.${className}`}
-            >
-              <List
-                items={[
-                  { icon: 'share', primary: 'Share Link', onClick: () => {} },
-                  {
-                    icon: doc.private ? 'lock' : 'open',
-                    primary: 'Locked',
-                    onClick: doc.togglePrivate,
-                  },
-                  {
-                    icon: doc.private ? 'eye' : 'closed',
-                    primary: 'Private',
-                    onClick: doc.togglePrivate,
-                  },
-                ]}
+              </Popover>
+              <Button
+                icon="fav31"
+                highlight={starred}
+                onClick={doc.toggleStar}
+                {...btnProps}
               />
-            </Popover>
+            </Segment>
           </actions>
         }
       >

@@ -1,5 +1,5 @@
 // @flow
-import { store, watch } from '@jot/black'
+import { watch } from '@jot/black'
 import { debug } from '~/helpers'
 import { Document } from '@jot/models'
 import type EditorStore from '~/editor/stores/editorStore'
@@ -14,7 +14,6 @@ type Props = {
   inline?: boolean,
 }
 
-@store
 export default class DocumentStore {
   props: Props
 

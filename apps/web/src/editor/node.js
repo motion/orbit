@@ -62,30 +62,32 @@ export default Node =>
         noArrow
         shadow
       >
-        <List
-          items={[
-            {
-              primary: 'Doc List',
-              onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
-            },
-            {
-              primary: 'Row',
-              onClick: () =>
-                this.editorStore.transform(t =>
-                  this.editorStore.allPlugins.row.insertRow(t)
-                ),
-            },
-            { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
-            {
-              primary: 'Bullet List',
-              onClick: this.insert(BLOCKS.UL_LIST),
-            },
-            {
-              primary: 'Ordered List',
-              onClick: this.insert(BLOCKS.OL_LIST),
-            },
-          ]}
-        />
+        {isOpen =>
+          isOpen &&
+          <List
+            items={[
+              {
+                primary: 'Doc List',
+                onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
+              },
+              {
+                primary: 'Row',
+                onClick: () =>
+                  this.editorStore.transform(t =>
+                    this.editorStore.allPlugins.row.insertRow(t)
+                  ),
+              },
+              { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
+              {
+                primary: 'Bullet List',
+                onClick: this.insert(BLOCKS.UL_LIST),
+              },
+              {
+                primary: 'Ordered List',
+                onClick: this.insert(BLOCKS.OL_LIST),
+              },
+            ]}
+          />}
       </Popover>
 
     componentProps = {

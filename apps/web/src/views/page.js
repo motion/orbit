@@ -7,7 +7,7 @@ type Props = {
   children?: React$Element<any>,
   sidebar?: React$Element<any>,
   actions?: React$Element<any>,
-  className?: string
+  className?: string,
 }
 
 @view
@@ -15,8 +15,12 @@ export default class Page {
   render({ children, sidebar, actions, className }: Props) {
     return (
       <page className={className}>
-        <SlotFill.Fill if={actions} name="actions">{actions}</SlotFill.Fill>
-        <SlotFill.Fill if={sidebar} name="sidebar">{sidebar}</SlotFill.Fill>
+        <SlotFill.Fill if={actions} key={Math.random()} name="actions">
+          {actions}
+        </SlotFill.Fill>
+        <SlotFill.Fill if={sidebar} key={Math.random()} name="sidebar">
+          {sidebar}
+        </SlotFill.Fill>
         {children}
       </page>
     )

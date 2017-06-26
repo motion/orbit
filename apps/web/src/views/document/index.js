@@ -43,11 +43,9 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <Breadcrumbs
-          if={showCrumbs}
-          key={store.document._id}
-          document={store.document}
-        />
+        <SlotFill.Fill if={showCrumbs} name="crumbs">
+          <Breadcrumbs document={store.document} />
+        </SlotFill.Fill>
         <Editor
           readOnly={readOnly}
           inline={inline}

@@ -7,7 +7,10 @@ import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'
 
 export type Props = {
-  target?: Function | string | Object,
+  // can pass function to get isOpen passed in
+  children?: React$Element<any> | Function,
+  // element or function that returns element, or querySelector to element
+  target?: React$Element<any> | (() => React$Element<any>) | string,
   open?: boolean,
   // the amount of space around popover you can move mouse
   // before it triggers it to close
@@ -69,7 +72,7 @@ export default class Popover {
   static defaultProps = {
     edgePadding: 5,
     distance: 10,
-    arrowSize: 11,
+    arrowSize: 16,
     forgiveness: 15,
     towards: 'auto',
     animation: 'slide 200ms',
@@ -620,7 +623,7 @@ export default class Popover {
                 />
               </arrowContain>
               <content $withBackground={background}>
-                {children}
+                {typeof children === 'function' ? children(isOpen) : children}
               </content>
             </popover>
           </container>
@@ -685,7 +688,7 @@ export default class Popover {
       },
     },
     withBackground: background => ({
-      borderRadius: 5,
+      borderRadius: 7,
       background,
     }),
     item: {

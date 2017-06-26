@@ -5,7 +5,7 @@ import { PassProps, Segment, Button, Popover, List } from '@jot/ui'
 import Router from '~/router'
 import DocumentView from '~/views/document'
 import { User, Document } from '@jot/models'
-import Page from '~/page'
+import Page from '~/views/page'
 import Theme from '~/theme'
 
 class DocPageStore {

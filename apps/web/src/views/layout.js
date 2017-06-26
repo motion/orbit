@@ -82,10 +82,15 @@ export default class Root {
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
           <SlotFill.Slot name="crumbs">
-            {breadcrumbs =>
-              <crumbs>
-                {breadcrumbs}
-              </crumbs>}
+            {breadcrumbs => {
+              const nextCrumbs = breadcrumbs || this.lastCrumbs
+              this.lastCrumbs = breadcrumbs
+              return (
+                <crumbs>
+                  {nextCrumbs}
+                </crumbs>
+              )
+            }}
           </SlotFill.Slot>
           <Draft
             isActive={layoutStore.isCreatingDoc}

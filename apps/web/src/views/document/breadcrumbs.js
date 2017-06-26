@@ -30,7 +30,7 @@ export default class Breadcrumbs {
   props: Props
 
   render({ store }: Props) {
-    if (!store.crumbs) {
+    if (!store.crumbs || !store.crumbs.map) {
       return <breadcrumbs />
     }
 

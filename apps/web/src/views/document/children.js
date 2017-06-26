@@ -6,8 +6,8 @@ import { Document } from '@jot/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 
-const WIDTH = 100
-const HEIGHT = 120
+const WIDTH = 170
+const HEIGHT = 70
 
 type Props = {
   id: number,
@@ -68,7 +68,7 @@ export default class Children {
               $add
               if={store.newTitle === null}
               circular
-              size={2}
+              size={1.5}
               icon="siadd"
               onClick={store.add}
             />
@@ -80,27 +80,34 @@ export default class Children {
               const children = store.children[doc._id]
               return (
                 <doc key={doc._id} onClick={() => Router.go(doc.url())}>
-                  <TiltGlow width={WIDTH} height={HEIGHT}>
-                    <card
-                      $$style={{
-                        background: doc.color,
-                      }}
-                    >
-                      <name>{doc.getTitle()}</name>
-                      <content if={children}>
-                        {children.map(child =>
-                          <child key={child._id}>
-                            {child.getTitle()}
-                          </child>
-                        )}
-                      </content>
-                    </card>
-                  </TiltGlow>
+                  <card>
+                    <div $$row $$align="center">
+                      <Button
+                        circular
+                        background={doc.color}
+                        size={0.3}
+                        $$margin={[0, 5, 0, 0]}
+                        color={doc.color}
+                      />
+                      <name>
+                        <span $$ellipse>
+                          {doc.getTitle()}
+                        </span>
+                      </name>
+                    </div>
+                    <content if={children}>
+                      {children.map(child =>
+                        <child key={child._id}>
+                          {child.getTitle()}
+                        </child>
+                      )}
+                    </content>
+                  </card>
                 </doc>
               )
             })}
             <doc if={store.newTitle !== null}>
-              <TiltGlow width={WIDTH} height={HEIGHT}>
+              <TiltGlow width={WIDTH}>
                 <card />
               </TiltGlow>
               <input
@@ -119,46 +126,46 @@ export default class Children {
 
   static style = {
     children: {
-      borderTop: [1, '#f6f6f6'],
-      position: 'relative',
-      padding: [8, 0, 4],
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      // borderTop: [1, '#f6f6f6'],
+      padding: [25, 0, 4],
     },
     header: {
-      padding: [0, 10],
+      padding: [0, 0],
     },
     title: {
       textTransform: 'uppercase',
       fontSize: 12,
       color: [0, 0, 0, 0.3],
+      margin: [0, 0, 10],
       fontWeight: 500,
     },
     actions: {
       position: 'absolute',
-      top: -10,
+      top: 10,
       right: 10,
       zIndex: 1000,
     },
     content: {
-      flexFlow: 'row',
-      alignItems: 'center',
-      padding: [10, 20],
-      overflowX: 'scroll',
-      overflowY: 'visible',
+      // padding: [0, 2],
     },
-    docs: {
-      flexFlow: 'row',
+    child: {
+      marginLeft: 20,
+      color: [0, 0, 0, 0.5],
     },
     doc: {
-      marginRight: 12,
+      margin: [0, 0, 10],
     },
     card: {
       width: WIDTH,
-      height: HEIGHT,
-      color: '#fff',
+      // height: HEIGHT,
+      // color: '#fff',
       background: '#fff',
       // border: [1, '#eee'],
-      borderRadius: 7,
-      padding: [16, 12],
+      // borderRadius: 7,
+      padding: [2, 0],
     },
     bar: {
       padding: [5, 10],
@@ -167,8 +174,10 @@ export default class Children {
       width: 100,
     },
     name: {
-      fontWeight: 200,
-      fontSize: 16,
+      fontWeight: 500,
+      fontSize: 14,
+      flexFlow: 'row',
+      alignItems: 'center',
     },
   }
 }

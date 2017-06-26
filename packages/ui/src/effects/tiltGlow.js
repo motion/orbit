@@ -47,9 +47,9 @@ export default class TiltGlow {
           />
           <Glow
             behind
-            resist={90}
-            width={width * 0.9}
-            height={height * 0.9}
+            resist={93}
+            width={width * 0.85}
+            height={height * 0.85}
             blur={10}
             inverse
             color={[0, 0, 0]}

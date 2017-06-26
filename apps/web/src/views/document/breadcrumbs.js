@@ -68,6 +68,7 @@ export default class Breadcrumbs {
       padding: [0, 20],
       margin: [-5, 0, 0],
       flexFlow: 'row',
+      // borderLeft: [4, '#ddd'],
     },
     items: {
       alignItems: 'center',

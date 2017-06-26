@@ -1,4 +1,4 @@
-import { fromPromise } from 'mobx-utils'
+import { fromStream, fromPromise } from 'mobx-utils'
 import { Observable } from 'rxjs'
 import {
   action,

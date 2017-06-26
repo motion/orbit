@@ -4,6 +4,7 @@ import { Document } from '@jot/models'
 import Router from '~/router'
 import { uniq } from 'lodash'
 import App from '~/app'
+import { Observable } from 'rxjs'
 
 const PATH_SEPARATOR = '/'
 const KEYMAP = {
@@ -29,6 +30,11 @@ const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
 
 export default class CommanderStore {
+  mouseMoving = Observable.fromEvent(window, 'mousemove')
+    .throttle(500)
+    .map(event => Date.now() - 500 > this.mouseMoving)
+    .reduce((acc, x) => acc && x && Date.now())
+
   keyManager = new ShortcutManager(KEYMAP)
   currentDocument = watch(() => Document.get(Router.params.id))
   crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())

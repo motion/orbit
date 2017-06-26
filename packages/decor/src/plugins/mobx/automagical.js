@@ -102,10 +102,11 @@ function automagicalValue(obj, method, descriptors = {}) {
     const autorunner = autorun(() => {
       const previous = obj[method]
       obj[method] = val.call(obj)
-      console.log(`autorun ${method}`, obj[method], 'from', obj)
+      console.log(`${obj.name || ''}${method} = watch((...`)
       automagicalValue(obj, method)
       // unsubscribe from previous
       if (previous && previous !== null) {
+        log('prev', previous)
         // auto dispose last thing
         if (typeof previous.dispose === 'function') {
           previous.dispose()

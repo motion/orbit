@@ -30,9 +30,10 @@ const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
 
 export default class CommanderStore {
+  v = 10
   mouseMoving = Observable.fromEvent(window, 'mousemove')
-    .throttle(500)
-    .map(event => Date.now() - 500 > this.mouseMoving)
+    .throttleTime(500)
+    .map(event => Date.now() - 500 > this.mouseMoving.current || 0)
     .reduce((acc, x) => acc && x && Date.now())
 
   keyManager = new ShortcutManager(KEYMAP)

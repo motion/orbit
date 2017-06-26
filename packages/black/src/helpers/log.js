@@ -17,7 +17,9 @@ export default function log(...args) {
   const logger = (...things) =>
     console.log(
       `%c${things
-        .map(arg => `${typeof arg === 'object' ? JSON.stringify(arg) : arg}`)
+        .map(arg =>
+          `${typeof arg === 'object' ? JSON.stringify(arg) : arg}`.slice(0, 150)
+        )
         .join(' ')}`,
       'background: orange'
     )

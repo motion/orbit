@@ -1,6 +1,6 @@
 module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
-  return {
+  const config = {
     plugins: [
       [
         require.resolve('motion-hmr'),
@@ -49,4 +49,8 @@ module.exports = function(context, givenOpts) {
       require.resolve('babel-preset-stage-1'),
     ],
   }
+
+  console.log(config)
+
+  return config
 }

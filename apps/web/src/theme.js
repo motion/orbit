@@ -12,7 +12,7 @@ const DARK = {
   highlightColor: 'rgb(89, 154, 244)',
   background: '#333',
   color: '#f2f2f2',
-  borderColor: [100, 30, 30, 0.9],
+  borderColor: [40, 40, 40, 0.9],
 }
 
 const Theme = {

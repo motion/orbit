@@ -20,13 +20,13 @@ const Theme = {
     base: DARK,
     hover: {
       ...DARK,
-      color: color(DARK.color).lighten(1),
-      background: color(DARK.background).lighten(1),
-      borderColor: color(DARK.borderColor).lighten(1),
+      color: color(DARK.color).lighten(0.2),
+      background: color(DARK.background).lighten(0.2),
+      borderColor: color(DARK.borderColor).lighten(0.2),
     },
     active: {
       ...DARK,
-      highlightColor: color(DARK.highlightColor).lighten(1),
+      highlightColor: color(DARK.highlightColor).lighten(0.2),
       color: '#fff',
     },
     focus: {

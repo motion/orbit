@@ -87,7 +87,6 @@ class TeamStatus {
       fontSize: 12,
       lineHeight: '17px',
       flex: 1,
-      color: [245, 245, 245],
     },
     time: {
       fontSize: 10,

@@ -34,6 +34,8 @@ const COMMA_SEPARATABLE = {
   transition: true,
 }
 
+window.motionStyle = motionStyle
+
 export default function motionStyle(options: Object = {}) {
   const toColor = color => objectToColor(color, options.processColor)
 
@@ -42,12 +44,16 @@ export default function motionStyle(options: Object = {}) {
   const OBJECT_TRANSFORM = {
     textShadow: ({ x, y, blur, color }) =>
       `${px(x)} ${px(y)} ${px(blur)} ${toColor(color)}`,
-    boxShadow: ({ inset, x, y, blur, spread, color }) =>
-      `${inset ? 'inset' : ''} ${px(x)} ${px(y)} ${px(blur)} ${px(
-        spread
-      )} ${toColor(color)}`,
-    background: ({ color, image, position, repeat = 'no-repeat' }) =>
-      `${toColor(color)} ${image} ${position.join(' ')} ${repeat}`,
+    boxShadow: v =>
+      v.inset || v.x || v.y || v.blur || v.spread || v.color
+        ? `${inset ? 'inset' : ''} ${px(x)} ${px(y)} ${px(blur)} ${px(
+            spread
+          )} ${toColor(color)}`
+        : toColor(v),
+    background: v =>
+      v.color || v.image || v.position || v.repeat
+        ? `${toColor(color)} ${image} ${position.join(' ')} ${repeat}`
+        : toColor(v),
   }
 
   function isFloat(n) {
@@ -60,7 +66,7 @@ export default function motionStyle(options: Object = {}) {
       return toColor(style)
     }
     // toCSS support
-    if (typeof style === 'object' && isCSSAble(style)) {
+    if (isCSSAble(style)) {
       return getCSSVal(style)
     }
     return typeof style === 'number' ? `${style}px` : style

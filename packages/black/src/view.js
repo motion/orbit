@@ -76,7 +76,7 @@ function getViewDecorator() {
     extendsReact,
     reactRenderArgs,
     observer,
-    opts => ({ decorator: gloss }),
+    opts => ({ decorator: glossDecorator }),
   ])
   view.provide = stores => viewDecorator({ stores, context: true })
   view.attach = names => decor([[attach, { names }]])

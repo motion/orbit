@@ -235,8 +235,6 @@ export default class Button {
       const iconColor = props.iconColor || color
       const iconHoverColor = props.iconHoverColor || hoverColor
 
-      console.log('icon', iconHoverColor)
-
       return {
         // $FlowIgnore
         button: {

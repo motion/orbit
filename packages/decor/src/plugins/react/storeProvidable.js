@@ -81,7 +81,6 @@ export default function storeProvidable(options, emitter) {
 
             const createStore = () => {
               Object.defineProperty(Store.prototype, 'props', getProps)
-              debugger
               const store = new Store()
               delete Store.prototype.props // safety, remove hack
               // then define directly

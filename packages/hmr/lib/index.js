@@ -364,10 +364,6 @@ var _find = require('lodash/find');
 
 var _find2 = _interopRequireDefault(_find);
 
-var _view = require('./view');
-
-var _view2 = _interopRequireDefault(_view);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }

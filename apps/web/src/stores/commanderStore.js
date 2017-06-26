@@ -1,9 +1,7 @@
 // @flow
-import { watch, store, log } from '@jot/black'
+import { watch, store, log, keycode, ShortcutManager } from '@jot/black'
 import { Document } from '@jot/models'
 import Router from '~/router'
-import { keycode } from '~/helpers'
-import { ShortcutManager } from 'react-shortcuts'
 import { uniq } from 'lodash'
 import App from '~/app'
 

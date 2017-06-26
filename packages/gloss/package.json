@@ -17,6 +17,7 @@
     "jss": "^6.0.1",
     "jss-preset-default": "^1.1.0",
     "lodash": "^4.17.4",
+    "babel-helper-builder-react-jsx": "^6.24.1",
     "motion-css": "^6.6.3"
   },
   "peerDependencies": {

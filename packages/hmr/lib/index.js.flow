@@ -1,5 +1,4 @@
 import find from 'lodash/find'
-import view from './view'
 
 export default function({ types: t, template }) {
   function matchesDecorator(node, decoratorName) {

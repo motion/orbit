@@ -21,7 +21,7 @@ import {
   Grain,
   Glint,
   PassProps,
-} from '~/ui'
+} from '@jot/ui'
 import { Document } from '@jot/models'
 import Login from './login'
 import SidebarStore from './store'

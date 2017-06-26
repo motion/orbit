@@ -15,7 +15,7 @@ import {
   Segment,
   Button,
   SlotFill,
-} from '~/ui'
+} from '@jot/ui'
 import { User, Place } from '@jot/models'
 import Team from './team'
 import Router from '~/router'

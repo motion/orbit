@@ -11,7 +11,7 @@ import {
   Segment,
   Button,
   SlotFill,
-} from '~/ui'
+} from '@jot/ui'
 import {
   SortableContainer,
   SortableElement,

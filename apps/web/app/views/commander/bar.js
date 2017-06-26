@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@jot/black'
-import { Input } from '~/ui'
+import { Input } from '@jot/ui'
 
 @view.attach('commanderStore')
 @view

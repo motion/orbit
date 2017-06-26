@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@jot/black'
-import { Grid, Button } from '~/ui'
+import { Grid, Button } from '@jot/ui'
 import DocItem from '~/views/document/item'
 
 @view({

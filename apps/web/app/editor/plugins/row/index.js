@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import node from '~/editor/node'
-import { Icon } from '~/ui'
+import { Icon } from '@jot/ui'
 import { range } from 'lodash'
 import { Range } from 'immutable'
 import Slate from 'slate'

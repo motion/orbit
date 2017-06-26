@@ -13,7 +13,7 @@ import {
   Input,
   Button,
   Link,
-} from '~/ui'
+} from '@jot/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 @view({

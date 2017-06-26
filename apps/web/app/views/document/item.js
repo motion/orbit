@@ -3,7 +3,7 @@ import { view, observable } from '@jot/black'
 import gradients from './helpers/gradients'
 import { sample, memoize } from 'lodash'
 import Router from '~/router'
-import { Icon, Button } from '~/ui'
+import { Icon, Button } from '@jot/ui'
 import DocumentView from './index'
 import sum from 'hash-sum'
 

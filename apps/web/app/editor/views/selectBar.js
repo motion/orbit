@@ -1,5 +1,5 @@
 import { view } from '@jot/black'
-import { Theme, PassProps, Popover, Segment, Button } from '~/ui'
+import { Theme, PassProps, Popover, Segment, Button } from '@jot/ui'
 import { BLOCKS, MARKS } from '../constants'
 
 @view

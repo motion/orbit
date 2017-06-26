@@ -12,7 +12,7 @@ import {
   Segment,
   Button,
   PassProps,
-} from '~/ui'
+} from '@jot/ui'
 import { User } from '@jot/models'
 import Router from '~/router'
 import Page from '~/page'

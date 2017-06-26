@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { SlotFill } from '~/ui'
+import { SlotFill } from '@jot/ui'
 
 type Props = {
   children?: React$Element<any>,

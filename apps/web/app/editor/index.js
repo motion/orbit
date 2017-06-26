@@ -5,7 +5,7 @@ import { view } from '@jot/black'
 import EditorStore from './stores/editorStore'
 import SelectBar from './views/selectBar'
 import Bar from './views/bar'
-import { SlotFill } from '~/ui'
+import { SlotFill } from '@jot/ui'
 
 export { Raw } from 'slate'
 

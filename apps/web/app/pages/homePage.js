@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, watch } from '@jot/black'
 import { User, Document } from '@jot/models'
-import { Grid, Button, SlotFill } from '~/ui'
+import { Grid, Button, SlotFill } from '@jot/ui'
 import DocumentView from '~/views/document'
 import { BLOCKS } from '~/editor/constants'
 import DocItem from '~/views/document/item'

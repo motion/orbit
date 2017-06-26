@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@jot/black": "*",
+    "@jot/ui": "*",
     "react": "^15.5.0"
   }
 }

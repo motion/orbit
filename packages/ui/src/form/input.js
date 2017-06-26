@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { clr, inject } from '~/helpers'
+import { clr, inject } from '/helpers'
 import type { Color } from 'gloss'
 
 export type Props = {

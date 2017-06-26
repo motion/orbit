@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@jot/black'
 import Button from './button'
-import { clr } from '~/helpers'
+import { clr } from '/helpers'
 import type { Color } from 'gloss'
 
 export type TitleProps = {

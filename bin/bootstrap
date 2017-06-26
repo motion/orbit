@@ -27,6 +27,7 @@ function ensure-dep {
 
 xcode-select --install 2> /dev/null
 
+echo "updating homebrew..."
 brew update
 
 echo "deps"

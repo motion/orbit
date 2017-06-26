@@ -2,7 +2,7 @@
 import React from 'react'
 import { object, string } from 'prop-types'
 import { view } from '@jot/black'
-import { getTarget } from '~/helpers'
+import { getTarget } from '/helpers'
 import Portal from 'react-portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'

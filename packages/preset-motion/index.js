@@ -24,9 +24,9 @@ module.exports = function(context, givenOpts) {
         },
       ],
       [
-        require.resolve('babel-plugin-root-import'),
+        require.resolve('babel-root-slash-import'),
         {
-          rootPathSuffix: 'app',
+          rootPathSuffix: 'src',
         },
       ],
     ],

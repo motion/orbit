@@ -32,6 +32,7 @@
   "dependencies": {
     "@jot/black": "*",
     "@jot/models": "*",
+    "@jot/ui": "*",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-steelbrain": "^5.0.2",

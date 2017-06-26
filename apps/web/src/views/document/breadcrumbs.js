@@ -73,12 +73,16 @@ export default class Breadcrumbs {
       alignItems: 'center',
     },
     text: {
-      cursor: 'pointer',
+      cursor: 'default',
       fontSize: 12,
       fontWeight: 400,
-      margin: [0, 4],
+      margin: [-5, -3],
+      padding: 5,
       color: [0, 0, 0, 0.3],
       justifyContent: 'center',
+      '&:hover': {
+        color: 'red',
+      },
     },
     slash: {
       opacity: 0.05,

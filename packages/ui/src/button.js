@@ -178,9 +178,6 @@ export default class Button {
     minimal: {
       boxShadow: 'none',
     },
-    clickable: {
-      cursor: 'pointer',
-    },
     isActive: {
       background: '#eee',
       '&:hover': {

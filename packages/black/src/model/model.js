@@ -212,14 +212,14 @@ export default class Model {
     // AND NOW
     this.connected = true
 
-    this.subscriptions.add(() => {
-      this._collection && this._collection.remove()
-    })
+    // this.subscriptions.add(() => {
+    //   this._collection && this._collection.remove()
+    // })
   }
 
-  dispose() {
-    this.subscriptions.dispose()
-  }
+  // dispose() {
+  //   this.subscriptions.dispose()
+  // }
 
   createIndexes = async (): Promise<void> => {
     const index = this.settings.index || []

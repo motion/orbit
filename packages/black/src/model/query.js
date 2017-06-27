@@ -39,14 +39,14 @@ function valueWrap(info, valueGet: Function) {
   // TODO: once rxdb #207 check with (query instanceof RxQuery)
   if (query && query.mquery && this.remoteDB) {
     const selector = query.keyCompress().selector
-    const syncSettings = {
-      remote: this.remoteDB,
-      waitForLeadership: false,
-      query,
-    }
-    const key = hashsum({ db: this.remoteDB, selector })
+    const key = hashsum({ db: this.remoteDB.name, selector })
     if (!this.queryCache[key]) {
       this.queryCache[key] = true
+      const syncSettings = {
+        remote: this.remoteDB,
+        waitForLeadership: false,
+        query,
+      }
       const syncer = this.collection.sync(syncSettings)
       stopSync = () => {
         delete this.queryCache[key]

@@ -40,6 +40,7 @@ class User {
     // sync
     this.superlogin.on('login', async (event, session) => {
       this.user = await this.getCurrentUser()
+      console.log('also got', session)
       this.documents.connect(this.database, {
         sync: this.user.userDBs.documents,
       })

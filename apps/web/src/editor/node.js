@@ -3,9 +3,7 @@ import { view, computed } from '@jot/black'
 import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '@jot/ui'
 
-export default Node => {
-  const View = view(Node)
-
+export default View => {
   @view.basics
   class DecoratedNode extends React.Component {
     static get name() {

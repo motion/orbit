@@ -33,7 +33,7 @@ export default class EditorStore implements StoreType {
   find = this.props.find
   onlyNode = this.props.onlyNode
 
-  start({ onEditor, getRef, rules, plugins }: Props) {
+  start({ commanderStore, onEditor, getRef, rules, plugins }: Props) {
     this.rules = rules
     this.setup(plugins)
 
@@ -52,7 +52,13 @@ export default class EditorStore implements StoreType {
       }
     })
 
-    this.on(commanderStore, 'action', (...args) => console.log(args))
+    if (commanderStore) {
+      this.on(this.props.commanderStore, 'action', (name: string) => {
+        if (name === 'focusEditor') {
+          this.focus()
+        }
+      })
+    }
   }
 
   // gather and instantiate

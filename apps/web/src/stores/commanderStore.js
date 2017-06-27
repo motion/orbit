@@ -126,9 +126,6 @@ export default class CommanderStore {
       if (!this.focused) return
       this.moveHighlight(-1)
     },
-    focusEditor: () => {
-      App.editor.focus()
-    },
   }
 
   focus = () => {
@@ -146,7 +143,7 @@ export default class CommanderStore {
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {
     if (!action) return
-    this.emit('action', { action, event })
+    this.emit('action', action)
     if (this.actions[action]) {
       console.log('action', action)
       this.actions[action](event)

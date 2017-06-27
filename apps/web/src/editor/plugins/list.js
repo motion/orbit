@@ -1,5 +1,6 @@
 import React from 'react'
 import node from '~/editor/node'
+import { view } from '@jot/black'
 import { Paragraph } from './text'
 import EditList from './editList'
 import { BLOCKS } from '~/editor/constants'
@@ -23,6 +24,7 @@ const ol_list = node(
 )
 
 @node
+@view.ui
 class ListNode {
   render({ isRoot, ...props }) {
     let done = false
@@ -54,6 +56,7 @@ class ListNode {
 }
 
 @node
+@view.ui
 class ListItemNode {
   toggleMinimize = () => {
     const { node: { data }, setData } = this.props

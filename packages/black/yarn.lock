@@ -216,6 +216,10 @@ jsonpointer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.0.1.tgz#4fd92cb34e0e9db3c89c8622ecf51f9b978c6cb9"
 
+keycode@^2.1.9:
+  version "2.1.9"
+  resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.1.9.tgz#964a23c54e4889405b4861a5c9f0480d45141dfa"
+
 kontur@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/kontur/-/kontur-0.2.0.tgz#90665fb2528da37430988ed2e98823ff20a285a0"

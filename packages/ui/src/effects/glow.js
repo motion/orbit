@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { color as $, view } from '@jot/black'
+import { view } from '@jot/black'
+import $ from 'color'
 import offset from '~/helpers/offset'
 import { throttle } from 'lodash'
 import resizer from 'element-resize-detector'

@@ -1,10 +1,13 @@
 // @flow
 import React from 'react'
-import { view, inject, color as $ } from '@jot/black'
+import { view, inject } from '@jot/black'
+import $ from 'color'
 import Icon from './icon'
 import Glow from './effects/glow'
 import Popover from './popover'
 import type { Color } from 'gloss'
+
+const LINE_HEIGHT = 30
 
 export type Props = {
   borderRadius: number,
@@ -204,7 +207,7 @@ export default class Surface {
   static theme = {
     theme: (props: Props, theme) => {
       // based on a vertical rythm
-      const height = props.size * 30
+      const height = props.size * LINE_HEIGHT
       const baseBorderRadius = props.borderRadius || height / 5
       const borderRadius = props.circular
         ? height

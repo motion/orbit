@@ -44,6 +44,10 @@ export default class App implements AppStore {
     this.started = true
   }
 
+  dispose = () => {
+    this.models.dispose()
+  }
+
   // dev helpers
 
   trackMountedStores = () => {

@@ -114,7 +114,11 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
       previous = automagicalValue(obj, method)
       // need to run this to ensure it wraps autorun value magically
     })
-    obj.subscriptions.add(stop)
+    obj.subscriptions.add(() => {
+      console.log('disposing automagical', method)
+      previous && previous.dipose && previous.dispose()
+      stop()
+    })
     return
   }
 

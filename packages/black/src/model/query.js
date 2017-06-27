@@ -22,7 +22,7 @@ function valueWrap(info, valueGet: Function) {
     if (subscriber && subscriber.complete) {
       subscriber.complete()
     } else {
-      console.log('subscriber', subscriber)
+      console.error('subscriber', subscriber)
     }
   }
 
@@ -97,7 +97,7 @@ function valueWrap(info, valueGet: Function) {
     },
     dispose: {
       value() {
-        out('disposing', info)
+        console.log('disposing', info)
         finishSubscribe()
         stopAutorun()
         if (stopSync) {

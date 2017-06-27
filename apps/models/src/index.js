@@ -32,6 +32,8 @@ declare class ModelsStore {
 }
 
 export default class Models implements ModelsStore {
+  modelsLoggedIn = false
+
   constructor(databaseConfig, models) {
     if (!databaseConfig || !models) {
       throw new Error(
@@ -58,8 +60,6 @@ export default class Models implements ModelsStore {
     }
   }
 
-  modelsLoggedIn = false
-
   start = async () => {
     // handles re-connecting models on login/out
     User.superlogin.on('login', () => {
@@ -85,6 +85,12 @@ export default class Models implements ModelsStore {
       withCredentials: false,
     })
     await this.attachModels()
+  }
+
+  dispose = () => {
+    for (const [name, model] of Object.entries(this.models)) {
+      model.dispose()
+    }
   }
 
   attachModels = async () => {

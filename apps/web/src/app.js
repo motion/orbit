@@ -8,6 +8,8 @@ const App = new AppStore({
   models: Models,
 })
 
+window.App = App
+
 export default App
 
 // hmr
@@ -16,5 +18,10 @@ if (module && module.hot) {
     log('accept: ./app:@jot/models')
     // log('got hmr for App, not restarting fully to avoid craziness')
     // require('./start').render()
+  })
+
+  module.hot.dispose(() => {
+    console.log('disposing app')
+    App.dispose()
   })
 }

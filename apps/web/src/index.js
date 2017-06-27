@@ -30,9 +30,9 @@ splash()
 require('./start')
 
 // accept hmr
-// if (module && module.hot) {
-//   module.hot.accept(() => {
-//     log('accept: ./index.js')
-//     require('./start').start(true)
-//   })
-// }
+if (module && module.hot) {
+  module.hot.accept(() => {
+    log('accept: ./index.js')
+    // require('./start').start(true)
+  })
+}

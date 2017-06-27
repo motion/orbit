@@ -1,11 +1,10 @@
 // @flow
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from '~/app'
-import { ThemeProvide } from 'gloss'
-import themes from './theme'
-
+import { ThemeProvide } from '@jot/ui'
 import { view } from '@jot/black'
+import App from '~/app'
+import themes from './theme'
 
 @view
 class Test {

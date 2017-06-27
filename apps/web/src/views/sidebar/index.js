@@ -23,6 +23,7 @@ import {
 } from '@jot/ui'
 import { Document } from '@jot/models'
 import Login from './login'
+import Signup from './signup'
 import SidebarStore from './store'
 import type LayoutStore from '~/stores/layoutStore'
 import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '~/constants'
@@ -292,8 +293,9 @@ class Inner {
     return (
       <inner $$flex>
         <Login />
+        <Signup />
 
-        <Theme if={!store.team} name="dark">
+        <Theme name="dark">
           <modal>
             <Form>
               <PassProps row chromeless placeholderColor="#333">
@@ -301,10 +303,10 @@ class Inner {
                 <Field label="Email" placeholder="something" />
                 <Field label="Password" placeholder="something" />
               </PassProps>
+              <Button>
+                Signup
+              </Button>
             </Form>
-            <Button>
-              Next
-            </Button>
           </modal>
         </Theme>
 
@@ -354,7 +356,7 @@ export default class Sidebar {
     const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
 
     return (
-      <Theme key={0} name="dark">
+      <Theme name="dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <Drawer
             transition={SIDEBAR_TRANSITION}

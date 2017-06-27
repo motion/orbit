@@ -4,6 +4,7 @@ export { Theme, ThemeProvide } from 'gloss'
 export PassProps from './helpers/passProps'
 export offset from './helpers/offset'
 export * as SlotFill from './helpers/slot'
+export * as Virtualized from 'react-virtualized'
 export Portal from 'react-portal'
 
 // base

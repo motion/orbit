@@ -1,7 +1,6 @@
 // @flow
 export * from 'mobx'
 export { Component } from 'react'
-export $ from '@jot/black/lib/gloss'
 export debug from 'debug'
 
 class Cache {

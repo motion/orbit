@@ -40,14 +40,14 @@ ensure-dep "minikube" -- brew cask install minikube
 ensure-dep "pip" -- brew install python
 ensure-dep "envtpl" -- pip install envtpl
 
-echo "docker boot"
-docker-machine inspect dev > /dev/null || docker-machine create dev -d xhyve
-dev boot
-
-echo "minikubes"
-minikube config set WantReportErrorPrompt false
-minikube config set vm-driver xyhve
-minikube addons enable ingress
+# TODO: revisit once we can use kubes locally nicely
+# echo "docker boot"
+# docker-machine inspect dev > /dev/null || docker-machine create dev -d xhyve
+# dev boot
+# echo "minikubes"
+# minikube config set WantReportErrorPrompt false
+# minikube config set vm-driver xyhve
+# minikube addons enable ingress
 
 # /etc/hosts
 if grep -q "staging.dev" /etc/hosts; then

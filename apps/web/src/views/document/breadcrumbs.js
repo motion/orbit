@@ -85,9 +85,10 @@ export default class Breadcrumbs {
       },
     },
     slash: {
-      opacity: 0.05,
+      opacity: 0.025,
       margin: [0, 2],
       fontWeight: 200,
+      fontSize: 12,
       pointerEvents: 'none',
     },
     nav: {

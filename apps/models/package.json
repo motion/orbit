@@ -16,6 +16,7 @@
     "rxdb": "^5.0.0",
     "randomcolor": "0.5.3",
     "sillyname": "0.1.0",
+    "deepmerge": "^1.3.2",
     "lodash": "^4.17.4"
   }
 }

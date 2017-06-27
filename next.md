@@ -15,7 +15,7 @@
 # high level prioritized list
   - signup: create team flow
   - @mentions / dates
-  - statuses / comments / attachments
+  - hashtags / statuses / comments / attachments
   - homepage
   - documents
     - inserting and editing a link
@@ -30,7 +30,6 @@
   - deploy to prod
   - slack integration + avatars
   - ideas
-    - hashtags
     - drag/drop on sidebar (todos and sections)
     - drafts
     - email forwarding

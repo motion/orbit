@@ -216,9 +216,11 @@ export default class Model {
     }
   }
 
-  dispose() {
+  async dispose() {
     this.subscriptions.dispose()
-    this._collection && this._collection.remove()
+    if (this._collection) {
+      await this._collection.remove()
+    }
   }
 
   createIndexes = async (): Promise<void> => {

@@ -1,6 +1,6 @@
 // @flow
-import React from 'react'
 import { view } from '@jot/black'
+import React from 'react'
 import Tilt from 'react-tilt'
 import Glow from './glow'
 

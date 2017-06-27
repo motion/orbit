@@ -1,5 +1,6 @@
-console.log('starting api', process.env.REDIS_HOSTNAME)
-
 import API from './api'
 
-new API({}).start()
+const Api = new API({ rootPath: __dirname })
+
+console.log('starting api')
+Api.start()

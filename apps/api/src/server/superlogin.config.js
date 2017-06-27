@@ -1,24 +1,14 @@
-import {
-  IS_PROD,
-  DB_PROTOCOL,
-  DB_HOST,
-  DB_USER,
-  DB_PASSWORD,
-  DB_PUBLIC_URL,
-  REDIS_URL,
-} from '../keys'
+import * as Constants from '~/constants'
 
 const dbServer = {
-  protocol: DB_PROTOCOL,
-  host: DB_HOST,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  publicURL: DB_PUBLIC_URL,
+  protocol: Constants.DB_PROTOCOL,
+  host: Constants.DB_HOST,
+  user: Constants.DB_USER,
+  password: Constants.DB_PASSWORD,
+  publicURL: Constants.DB_PUBLIC_URL,
   userDB: 'users',
   couchAuthDB: '_users',
 }
-
-console.log('dbServer', dbServer)
 
 export default {
   dbServer,
@@ -100,7 +90,7 @@ export default {
   session: {
     adapter: 'redis',
     redis: {
-      url: REDIS_URL,
+      url: Constants.REDIS_URL,
     },
   },
   //  emails: {

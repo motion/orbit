@@ -8,7 +8,7 @@ export query from './model/query'
 
 export { Shortcuts, ShortcutManager } from './shortcuts'
 
-export { createElement } from './gloss'
+export gloss, { createElement } from './gloss'
 export log from './helpers/log'
 export watch from './helpers/watch'
 export inject from './helpers/inject'
@@ -34,7 +34,5 @@ export type ViewType = ViewClass
 
 import type { StoreClass } from './store'
 export type StoreType = StoreClass
-
-export color from 'color'
 
 export * from './constants'

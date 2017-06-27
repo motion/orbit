@@ -205,6 +205,18 @@ export default class Surface {
   }
 
   static theme = {
+    size: props => ({
+      surface: {
+        height: props.size * LINE_HEIGHT,
+      },
+    }),
+    circular: props => ({
+      surface: {
+        padding: 0,
+        width: props.size * LINE_HEIGHT,
+        borderRadius: props.size * LINE_HEIGHT,
+      },
+    }),
     theme: (props: Props, theme) => {
       // based on a vertical rythm
       const height = props.size * LINE_HEIGHT
@@ -236,16 +248,10 @@ export default class Surface {
       const surfaceStyle = {
         surface: {
           padding,
-          height,
           borderRadius,
           borderColor,
           color,
           background,
-          ...(props.circular && {
-            padding: 0,
-            borderRadius: height,
-            width: height,
-          }),
           ...segmentStyles,
           '& > icon': {
             color: iconColor,

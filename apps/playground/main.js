@@ -3,13 +3,23 @@ import React from 'react'
 import { view } from '@jot/black'
 import { Theme, Button } from '@jot/ui'
 
-class Playground extends React.Component {
+@view
+class Playground {
   render() {
-    return <Button>Hello World</Button>
+    return (
+      <playground>
+        <section $buttons>
+          <Button icon="world">Hello World</Button>
+          <Button icon="world" size={2}>Hello World</Button>
+          <Button color="red" background="blue">Hello World</Button>
+        </section>
+      </playground>
+    )
   }
 }
 
-export default class Main extends React.Component {
+@view
+export default class Main {
   render() {
     return (
       <main>

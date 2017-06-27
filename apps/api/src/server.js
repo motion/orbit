@@ -41,13 +41,28 @@ export default class Server {
     this.setupLogin()
     this.setupRateLimiting()
     this.setupCouchStreamProxy()
-    this.verifySession('a@b.com', 'false')
+    this.test()
+  }
+
+  test = async () => {
+    const got = await this.verifySession('a@b.com', 'f27McJxKQneBfZb5n26nNg')
+    console.log('\n\n\n\n\n', got, '------------------------------')
   }
 
   verifySession = async (username, token) => {
     const user = await this.login.getUser(username)
-    // TODO check expires
-    return user.sessions[token]
+    if (!user) {
+      return false
+    }
+    const session = user.session[token]
+    if (!session) {
+      return false
+    }
+    if (typeof session.expires !== 'number') {
+      console.log('non-number session')
+      return false
+    }
+    return session.expires > Date.now()
   }
 
   setupServer() {
@@ -90,11 +105,12 @@ export default class Server {
       delete req.headers['access-control-request-headers']
 
       const token = req.headers['x-token']
+      let userInfo = null
+
       if (token) {
         delete req.headers['x-token']
+        userInfo = token.split('*|*')
       }
-
-      console.log('GOT TOKEN', token)
 
       const remoteReq = request(
         {
@@ -130,10 +146,6 @@ export default class Server {
 
           remoteRes.headers['Access-Control-Allow-Credentials'] = 'true'
           remoteRes.headers['Access-Control-Allow-Headers'] = HEADER_ALLOWED
-
-          // if (remoteRes.headers['Access-Control-Allow-Headers']) {
-          //   remoteRes.headers['Access-Control-Allow-Headers'] += ', x-token'
-          // }
 
           res.writeHead(remoteRes.statusCode, remoteRes.headers)
           remoteRes.pipe(res)

@@ -2,13 +2,18 @@
 import Main from './main'
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Theme, ThemeProvide } from '@jot/ui'
+import themes from './theme'
 
-if (typeof Main === 'function') {
-  ReactDOM.render(<Main />, document.getElementById('app'))
-} else {
-  console.error('No default view exported from the main file')
-}
+ReactDOM.render(
+  <ThemeProvide {...themes}>
+    <Theme name="dark">
+      <Main />
+    </Theme>
+  </ThemeProvide>,
+  document.getElementById('app')
+)
 
 if (process.env.NODE_ENV === 'development' && module.hot) {
-  module.hot.accept()
+  module.hot.accept(() => {})
 }

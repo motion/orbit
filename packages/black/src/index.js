@@ -35,6 +35,4 @@ export type ViewType = ViewClass
 import type { StoreClass } from './store'
 export type StoreType = StoreClass
 
-export color from 'color'
-
 export * from './constants'

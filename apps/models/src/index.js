@@ -89,7 +89,11 @@ export default class Models implements ModelsStore {
 
   dispose = () => {
     for (const [name, model] of Object.entries(this.models)) {
-      model.dispose()
+      if (model && model.dispose) {
+        model.dispose()
+      } else {
+        console.error('waht is this thing', model)
+      }
     }
   }
 

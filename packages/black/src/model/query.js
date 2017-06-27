@@ -21,8 +21,6 @@ function valueWrap(info, valueGet: Function) {
   const finishSubscribe = () => {
     if (subscriber && subscriber.complete) {
       subscriber.complete()
-    } else {
-      console.error('subscriber', subscriber)
     }
   }
 
@@ -97,7 +95,6 @@ function valueWrap(info, valueGet: Function) {
     },
     dispose: {
       value() {
-        console.log('disposing', info)
         finishSubscribe()
         stopAutorun()
         if (stopSync) {

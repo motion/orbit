@@ -160,10 +160,6 @@ export default class Model {
       return
     }
 
-    if (App.started) {
-      debugger
-    }
-
     // new connect
     this.database = database
 

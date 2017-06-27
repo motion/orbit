@@ -33,6 +33,6 @@ require('./start')
 if (module && module.hot) {
   module.hot.accept(() => {
     log('accept: ./index.js')
-    // require('./start').start(true)
+    require('./start').start(true)
   })
 }

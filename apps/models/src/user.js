@@ -52,6 +52,8 @@ class User {
     })
   }
 
+  dispose = () => {}
+
   get loggedIn() {
     return !!this.user
   }

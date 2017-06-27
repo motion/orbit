@@ -103,7 +103,7 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
     let previous
     const stop = autorun(() => {
       obj[method] = val.call(obj)
-      console.log(`watch.autorun ${obj.name || obj.constructor.name}.${method}`)
+      // console.log(`watch.autorun ${obj.name || obj.constructor.name}.${method}`)
       // auto dispose the previous thing
       if (previous && previous !== null) {
         if (previous.dispose) {
@@ -115,7 +115,6 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
       // need to run this to ensure it wraps autorun value magically
     })
     obj.subscriptions.add(() => {
-      console.log('disposing automagical', method)
       previous && previous.dipose && previous.dispose()
       stop()
     })

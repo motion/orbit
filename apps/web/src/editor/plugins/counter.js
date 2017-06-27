@@ -1,44 +1,34 @@
-import { view } from '@jot/black'
-import { replacer } from '~/editor/helpers'
+// @flow
 import React from 'react'
 import node from '~/editor/node'
+import { replacer } from '~/editor/helpers'
 import { BLOCKS } from '~/editor/constants'
 
-class CounterStore {
-  diff = num => {
+@node
+class CounterNode {
+  diff = (num: number) => {
     const { node: { data }, setData } = this.props
     const next = data.set('count', (data.get('count') || 0) + num)
     setData(next)
   }
-}
+  render = ({ node: { data } }) =>
+    <div contentEditable="false">
+      <input type="text" />
+      <h1>
+        count: {data.get('count') || 0}
+      </h1>
 
-@node
-@view({
-  store: CounterStore,
-})
-class CounterNode {
-  render({ store, node: { data } }) {
-    return (
-      <div contentEditable="false">
-        <input type="text" />
-        <h1>
-          count: {data.get('count') || 0}
-        </h1>
-
-        <a
-          onClick={() => {
-            this.props.onDestroy()
-          }}
-        >
-          close
-        </a>
-        <button onClick={() => store.diff(1)}>up</button>
-        <button onClick={() => store.diff(-1)}>down</button>
-      </div>
-    )
-  }
-
-  static style = {}
+      <a
+        onClick={() => {
+          this.props.onDestroy && this.props.onDestroy()
+        }}
+      >
+        close
+      </a>
+      <button onClick={() => this.diff(1)}>up</button>
+      <button onClick={() => this.diff(-1)}>down</button>
+    </div>
+  style = {}
 }
 
 export default class Counter {

@@ -11,8 +11,6 @@ export const API_URL = `${PROTOCOL}${API_HOST}`
 export const COUCH_HOST = `api.${HOST}`
 export const COUCH_URL = `${PROTOCOL}${COUCH_HOST}/couch`
 
-console.log(COUCH_URL)
-
 export const DB_CONFIG = {
   name: 'username',
   password: 'password',

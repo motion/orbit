@@ -163,6 +163,7 @@ export default class Model {
     // new connect
     this.database = database
 
+    // until figure out why its being called
     try {
       this._collection = await database.collection({
         name: this.title,
@@ -170,55 +171,55 @@ export default class Model {
         statics: this.statics,
         methods: this.compiledMethods,
       })
-    } catch (e) {
-      console.error('Model.connect error', e)
-    }
 
-    // shim add pouchdb-validation
-    this.collection.pouch.installValidationMethods()
+      // shim add pouchdb-validation
+      this.collection.pouch.installValidationMethods()
 
-    // bump listeners
-    this.collection.pouch.setMaxListeners(100)
+      // bump listeners
+      this.collection.pouch.setMaxListeners(100)
 
-    // create index
-    await this.createIndexes()
+      // create index
+      await this.createIndexes()
 
-    // auto timestamps
-    if (this.hasTimestamps) {
-      const ogInsert = this.hooks.preInsert
-      this.hooks.preInsert = doc => {
-        doc.createdAt = this.now
-        doc.updatedAt = this.now
-        if (ogInsert) {
-          return ogInsert.call(this, doc)
+      // auto timestamps
+      if (this.hasTimestamps) {
+        const ogInsert = this.hooks.preInsert
+        this.hooks.preInsert = doc => {
+          doc.createdAt = this.now
+          doc.updatedAt = this.now
+          if (ogInsert) {
+            return ogInsert.call(this, doc)
+          }
+        }
+
+        const ogSave = this.hooks.preSave
+        this.hooks.preSave = doc => {
+          doc.updatedAt = this.now
+          if (ogSave) {
+            return ogSave.call(this, doc)
+          }
         }
       }
 
-      const ogSave = this.hooks.preSave
-      this.hooks.preSave = doc => {
-        doc.updatedAt = this.now
-        if (ogSave) {
-          return ogSave.call(this, doc)
-        }
+      if (this.collection && this.hooks) {
+        Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
+          this.collection[hook](this.hooks[hook])
+        })
       }
-    }
 
-    if (this.collection && this.hooks) {
-      Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
-        this.collection[hook](this.hooks[hook])
+      // this makes our userdb react properly to login, no idea why
+      this.collection.watchForChanges()
+
+      // AND NOW
+      this.connected = true
+
+      this.subscriptions.add(() => {
+        console.log('dispose model', this)
+        this._collection && this._collection.remove()
       })
+    } catch (e) {
+      console.warn('Model.connect error', e)
     }
-
-    // this makes our userdb react properly to login, no idea why
-    this.collection.watchForChanges()
-
-    // AND NOW
-    this.connected = true
-
-    this.subscriptions.add(() => {
-      console.log('dispose model', this)
-      this._collection && this._collection.remove()
-    })
   }
 
   dispose() {
@@ -237,7 +238,7 @@ export default class Model {
       const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
         field => Object.keys(field)[0]
       )
-      // if we have not indexed every field
+      // if have not indexed every field
       if (intersection(index, alreadyIndexedFields).length !== index.length) {
         // need to await or you get error sorting by dates, etc
         console.log(
@@ -246,11 +247,6 @@ export default class Model {
         )
 
         await this.collection.pouch.createIndex({ fields: index })
-      } else {
-        console.log(
-          `%c[pouch] HAS INDEX ${this.title} ${JSON.stringify(index)}`,
-          'color: green'
-        )
       }
     }
   }

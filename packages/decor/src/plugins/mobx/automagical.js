@@ -37,6 +37,8 @@ const FILTER_KEYS = {
   dispose: true,
   constructor: true,
   start: true,
+  stop: true,
+  stat: true, // ?
   react: true,
   ref: true,
   setInterval: true,
@@ -44,6 +46,14 @@ const FILTER_KEYS = {
   addEvent: true,
   watch: true,
   props: true,
+  context: true,
+  componentWillMount: true,
+  componentDidMount: true,
+  render: true,
+  componentWillReceiveProps: true,
+  shouldComponentUpdate: true,
+  componentDidUpdate: true,
+  componentWillUnmount: true,
 }
 
 function observableRxToObservableMobx(obj: Object, method: string) {

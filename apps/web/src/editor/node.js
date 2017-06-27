@@ -3,9 +3,15 @@ import { view, computed } from '@jot/black'
 import { BLOCKS } from '~/editor/constants'
 import { Button, List, Popover } from '@jot/ui'
 
-export default Node =>
+export default Node => {
+  const View = view(Node)
+
   @view.basics
   class DecoratedNode extends React.Component {
+    static get name() {
+      return Node.name
+    }
+
     state = {
       context: null,
     }
@@ -103,7 +109,7 @@ export default Node =>
         node.key === this.editorStore.selection.hovered.key
 
       const component = (
-        <Node
+        <View
           {...this.props}
           setData={this.setData}
           onChange={editor.onChange}
@@ -182,3 +188,6 @@ export default Node =>
       },
     }
   }
+
+  return DecoratedNode
+}

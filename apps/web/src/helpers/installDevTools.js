@@ -32,5 +32,3 @@ window.PouchDB = PouchDB
 window.Constants = Constants
 window._ = _
 window.log = log
-
-log('dev tools installed')

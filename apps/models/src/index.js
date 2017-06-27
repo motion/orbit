@@ -57,10 +57,12 @@ export default class Models implements ModelsStore {
   start = async () => {
     // handles re-connecting models on login/out
     User.superlogin.on('login', () => {
-      if (!this.modelsLoggedIn && User.loggedIn) {
-        this.attachModels()
-        this.modelsLoggedIn = true
-      }
+      setTimeout(() => {
+        if (!this.modelsLoggedIn && User.loggedIn) {
+          this.attachModels()
+          this.modelsLoggedIn = true
+        }
+      }, 100)
     })
     User.superlogin.on('logout', () => {
       if (this.modelsLoggedIn) {
@@ -101,7 +103,7 @@ export default class Models implements ModelsStore {
             skip_setup: true,
             ajax: {
               headers: {
-                'X-Token': User.token,
+                'X-Token': `${User.name}*|*${User.token}`,
               },
             },
           },

@@ -33,11 +33,21 @@ function getAuth(authHeader) {
 }
 
 export default class Server {
+  // superlogin
+  login = null
+
   constructor() {
     this.setupServer()
+    this.setupLogin()
     this.setupRateLimiting()
     this.setupCouchStreamProxy()
-    this.setupLogin()
+    this.verifySession('a@b.com', 'false')
+  }
+
+  verifySession = async (username, token) => {
+    const user = await this.login.getUser(username)
+    // TODO check expires
+    return user.sessions[token]
   }
 
   setupServer() {
@@ -72,14 +82,19 @@ export default class Server {
         remoteURL.path +
         req.originalUrl.slice(subPath.length + 1, req.originalUrl.length)
 
-      console.log('\n\nIN HEADERS', req.headers)
-
       const auth = req.headers['authorization']
       const authInfo = getAuth(auth)
       delete req.headers['authorization']
 
-      const token = req.headers['access-control-request-headers']
+      // were controlling these so we can add/change stuff
       delete req.headers['access-control-request-headers']
+
+      const token = req.headers['x-token']
+      if (token) {
+        delete req.headers['x-token']
+      }
+
+      console.log('GOT TOKEN', token)
 
       const remoteReq = request(
         {
@@ -115,8 +130,6 @@ export default class Server {
 
           remoteRes.headers['Access-Control-Allow-Credentials'] = 'true'
           remoteRes.headers['Access-Control-Allow-Headers'] = HEADER_ALLOWED
-
-          console.log('OUT HEADERS', remoteRes.headers)
 
           // if (remoteRes.headers['Access-Control-Allow-Headers']) {
           //   remoteRes.headers['Access-Control-Allow-Headers'] += ', x-token'

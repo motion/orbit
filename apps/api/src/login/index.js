@@ -20,6 +20,10 @@ export default class Login {
     // })
   }
 
+  getUser(...args) {
+    return this.superlogin.getUser(...args)
+  }
+
   get router() {
     return this.superlogin.router
   }

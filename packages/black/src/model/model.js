@@ -157,7 +157,7 @@ export default class Model {
     }
 
     // re-connect or hmr
-    if (this.database) {
+    if (this.database || !database) {
       return
     }
 

@@ -61,11 +61,11 @@ class User {
   }
 
   get name() {
-    return this.user.user_id
+    return this.user && this.user.user_id
   }
 
   get email() {
-    return this.user.user_id
+    return this.user && this.user.user_id
   }
 
   get roles() {
@@ -73,7 +73,7 @@ class User {
   }
 
   get id() {
-    return this.user.user_id
+    return this.user && this.user.user_id
   }
 
   get org() {

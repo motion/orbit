@@ -52,7 +52,23 @@ export default class Models implements ModelsStore {
     }
   }
 
+  modelsLoggedIn = false
+
   start = async () => {
+    // handles re-connecting models on login/out
+    User.superlogin.on('login', () => {
+      if (!this.modelsLoggedIn) {
+        this.attachModels()
+        this.modelsLoggedIn = true
+      }
+    })
+    User.superlogin.on('logout', () => {
+      if (this.modelsLoggedIn) {
+        this.attachModels()
+        this.modelsLoggedIn = false
+      }
+    })
+
     this.database = await RxDB.create({
       adapter: 'idb',
       name: this.databaseConfig.name,
@@ -61,11 +77,6 @@ export default class Models implements ModelsStore {
       withCredentials: false,
     })
     await this.attachModels()
-
-    User.superlogin.on('login', () => {
-      console.log('login, reattach')
-      this.attachModels()
-    })
   }
 
   attachModels = async () => {

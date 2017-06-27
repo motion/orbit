@@ -39,14 +39,6 @@ function valueWrap(info, valueGet: Function) {
   // TODO: once rxdb #207 check with (query instanceof RxQuery)
   if (query && query.mquery && this.remoteDB) {
     const selector = query.keyCompress().selector
-
-    console.log('rdb', this.remoteDB)
-    this.remoteDB.__opts.ajax = {
-      headers: {
-        'X-Token': 'do re mi fa',
-      },
-    }
-
     const syncSettings = {
       remote: this.remoteDB,
       waitForLeadership: false,

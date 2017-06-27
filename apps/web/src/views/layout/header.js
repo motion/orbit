@@ -14,7 +14,6 @@ export default class Header {
     return (
       <header
         $$draggable
-        $$borderLeft={[4, '#ddd']}
         $hovered={layoutStore.headerHovered}
         onMouseEnter={() => (layoutStore.headerHovered = true)}
         onMouseLeave={() => (layoutStore.headerHovered = false)}

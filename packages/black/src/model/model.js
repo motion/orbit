@@ -146,29 +146,33 @@ export default class Model {
   }
 
   setupRemoteDB = (url, options: Object) => {
-    this.remoteDB = new PouchDB(url, options)
+    if (url) {
+      this.remoteDB = new PouchDB(url, options)
+    }
   }
 
   connect = async (database: RxDB, options: Object): Promise<void> => {
     this.options = options
-
-    if (options.remote) {
-      this.setupRemoteDB(options.remote, options.remoteOptions)
-    }
+    this.setupRemoteDB(options.remote, options.remoteOptions)
 
     // re-connect or hmr
-    if (this.database || !database) {
+    if (this.database) {
       return
     }
 
     // new connect
     this.database = database
-    this._collection = await database.collection({
-      name: this.title,
-      schema: this.compiledSchema,
-      statics: this.statics,
-      methods: this.compiledMethods,
-    })
+
+    try {
+      this._collection = await database.collection({
+        name: this.title,
+        schema: this.compiledSchema,
+        statics: this.statics,
+        methods: this.compiledMethods,
+      })
+    } catch (e) {
+      console.error('Model.connect error', error)
+    }
 
     // shim add pouchdb-validation
     this.collection.pouch.installValidationMethods()

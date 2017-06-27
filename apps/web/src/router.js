@@ -19,7 +19,7 @@ function runRouter() {
 // for hmr
 if (module.hot) {
   module.hot.accept(() => {
-    console.log('accept router')
+    log('accept: ./router.js')
     runRouter()
     start(true)
   })

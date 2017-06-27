@@ -98,7 +98,6 @@ const methods = {
       }
       return this.content.document.nodes[0].nodes[0].ranges[0].text
     } catch (e) {
-      console.log('err no title node!', this._id)
       return this.title
     }
   },

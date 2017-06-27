@@ -12,6 +12,7 @@ declare class AppStore {
 
 @store
 export default class App implements AppStore {
+  started = false
   errors = []
   mountedStores = {}
   mountedVersion = 0
@@ -40,6 +41,7 @@ export default class App implements AppStore {
     if (!quiet) {
       console.timeEnd('start')
     }
+    this.started = true
   }
 
   // dev helpers

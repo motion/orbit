@@ -35,8 +35,11 @@ export async function start(quiet) {
 }
 
 if (module.hot) {
-  module.hot.accept('./views/layout', () => start(true))
-  module.hot.accept('./router', render)
+  module.hot.accept('./views/layout', () => {
+    log('accept: ./start:./views/layout')
+    start(true)
+  })
 }
 
+log('render: start')
 start()

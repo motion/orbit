@@ -100,24 +100,21 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
   if (isAutorun(val)) {
     // @observable.ref
     extendShallowObservable(obj, { [method]: null })
-    const autorunner = autorun(() => {
-      const previous = obj[method]
+    let previous
+    const stop = autorun(() => {
       obj[method] = val.call(obj)
-      console.log(`${obj.name || ''}${method} = watch((...`)
-      automagicalValue(obj, method)
-      // unsubscribe from previous
+      console.log(`watch.autorun ${obj.name || obj.constructor.name}.${method}`)
+      // auto dispose the previous thing
       if (previous && previous !== null) {
-        // auto dispose last thing
-        if (typeof previous.dispose === 'function') {
+        if (previous.dispose) {
+          console.log('dispose last')
           previous.dispose()
         }
-        if (typeof previous.cancel === 'function') {
-          previous.cancel()
-        }
       }
+      previous = automagicalValue(obj, method)
       // need to run this to ensure it wraps autorun value magically
     })
-    obj.subscriptions.add(autorunner)
+    obj.subscriptions.add(stop)
     return
   }
 
@@ -144,19 +141,19 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
       },
     })
     obj.subscriptions.add(val)
-    return
+    return val
   }
 
   // already Mobx observable, let it be yo
   if (isObservable(val)) {
-    return
+    return null
   }
 
   // Rx => mobx
   if (val instanceof Observable) {
     const observable = observableRxToObservableMobx(obj, method)
     obj.subscriptions.add(observable)
-    return
+    return observable
   }
 
   if (isFunction) {
@@ -166,4 +163,6 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
     // @observable.ref
     extendShallowObservable(obj, { [method]: val })
   }
+
+  return null
 }

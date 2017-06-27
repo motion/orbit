@@ -171,7 +171,7 @@ export default class Model {
         methods: this.compiledMethods,
       })
     } catch (e) {
-      console.error('Model.connect error', error)
+      console.error('Model.connect error', e)
     }
 
     // shim add pouchdb-validation

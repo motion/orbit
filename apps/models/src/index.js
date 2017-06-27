@@ -14,10 +14,16 @@ export Document from './document'
 export Comment from './comment'
 export Image from './image'
 export User from './user'
+// exports
+export type { Model } from '~/helpers'
+
+if (module.hot) {
+  module.hot.accept('./document', () => {
+    log('accept: models/index.js:./document')
+  })
+}
 
 import User from './user'
-
-export type { Model } from '~/helpers'
 
 declare class ModelsStore {
   databaseConfig: Object,

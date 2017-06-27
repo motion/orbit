@@ -38,7 +38,13 @@ export default class CommanderStore {
 
   keyManager = new ShortcutManager(KEYMAP)
   currentDocument = watch(() => Document.get(Router.params.id))
-  crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
+  crumbs = watch(
+    () =>
+      [
+        console.log('run', this.currentDocument && this.currentDocument._id),
+        this.currentDocument && this.currentDocument.getCrumbs(),
+      ][1]
+  )
   isOpen = false //bool(localStorage.getItem(OPEN)) || false
   value = ''
   path = ''

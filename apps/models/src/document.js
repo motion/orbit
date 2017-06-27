@@ -212,6 +212,7 @@ export class DocumentModel extends Model {
 
   methods = methods
 
+  @query
   search = async (text: string) => {
     // return recent
     if (text === '') {

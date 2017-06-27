@@ -41,12 +41,6 @@ export default class Server {
     this.setupLogin()
     this.setupRateLimiting()
     this.setupCouchStreamProxy()
-    this.test()
-  }
-
-  test = async () => {
-    const got = await this.verifySession('a@b.com', 'f27McJxKQneBfZb5n26nNg')
-    console.log('\n\n\n\n\n', got, '------------------------------')
   }
 
   verifySession = async (username, token) => {
@@ -90,6 +84,12 @@ export default class Server {
 
     app.use(`${subPath}(/:db)?(/:db/*)?`, (req, res) => {
       const db = req.params && req.params.db
+
+      // read permissions to orgs
+      if (db === 'org') {
+        // todo
+      }
+
       const request = 'https:' == remoteURL.protocol
         ? https.request
         : http.request

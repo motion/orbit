@@ -1,4 +1,4 @@
-function(newDoc, oldDoc, userCtx, secObj) {
+function validateDocumentUpdate(newDoc, oldDoc, userCtx, secObj) {
   if (newDoc.title === 'poop') {
     throw { forbidden: 'heyo' }
   }

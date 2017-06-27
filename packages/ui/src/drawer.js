@@ -66,6 +66,7 @@ export default class Drawer {
     overlayBlur,
     theme,
     background,
+    closePortal,
     ...props
   }: Props) {
     const unit = percent ? '%' : 'px'

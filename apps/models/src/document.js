@@ -98,7 +98,6 @@ const methods = {
       }
       return this.content.document.nodes[0].nodes[0].ranges[0].text
     } catch (e) {
-      console.log('err no title node!', this._id)
       return this.title
     }
   },
@@ -258,11 +257,9 @@ export class DocumentModel extends Model {
     // .sort({ createdAt: 'desc' })
   }
 
-  @query
-  all = () =>
-    this.collection
-      .find({ createdAt: { $gt: null } })
-      .sort({ createdAt: 'asc' })
+  @query all = () => this.collection.find()
+  // .find({ createdAt: { $gt: null } })
+  // .sort({ createdAt: 'asc' })
 
   @query
   recent = (limit: number = 10) =>

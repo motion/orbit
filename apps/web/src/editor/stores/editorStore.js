@@ -4,6 +4,7 @@ import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
 import { computed, StoreType } from '@jot/black'
 import { getSpec } from './helpers'
+import type CommanderStore from '~/types'
 
 type Plugin = Class<Object>
 
@@ -14,6 +15,7 @@ type Props = {
   getRef?: Function,
   find?: string,
   onlyNode?: boolean,
+  commanderStore: CommanderStore,
 }
 
 export default class EditorStore implements StoreType {
@@ -31,7 +33,7 @@ export default class EditorStore implements StoreType {
   find = this.props.find
   onlyNode = this.props.onlyNode
 
-  start({ onEditor, getRef, rules, plugins }: Props) {
+  start({ commanderStore, onEditor, getRef, rules, plugins }: Props) {
     this.rules = rules
     this.setup(plugins)
 
@@ -49,6 +51,18 @@ export default class EditorStore implements StoreType {
         // this.setContents(this.props.newState, true)
       }
     })
+
+    // listen to commander
+    if (commanderStore) {
+      this.on(commanderStore, 'action', (name: string) => {
+        if (name === 'focusDown') {
+          this.focus()
+        }
+        if (name === 'up' && this.focused && this.focusedLine === 0) {
+          commanderStore.focus()
+        }
+      })
+    }
   }
 
   // gather and instantiate
@@ -64,6 +78,19 @@ export default class EditorStore implements StoreType {
         )
       }
     }
+  }
+
+  get focusedLine() {
+    const parentNode = this.state.document.getParent(
+      this.state.selection.startKey
+    )
+    return this.state.document.nodes.findIndex(
+      node => node.key === parentNode.key
+    )
+  }
+
+  get focusedChar() {
+    return this.state.selection.startOffset
   }
 
   // return slate-like schema

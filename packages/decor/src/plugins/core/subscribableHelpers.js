@@ -21,8 +21,8 @@ export default options => ({
   name: 'subscribable-helpers',
   mixin: {
     on: function(a, b, c) {
-      return a && a._emitter
-        ? on.call(this, a._emitter, b, c)
+      return a && a.emitter
+        ? on.call(this, a.emitter, b, c)
         : on.call(this, a, b, c)
     },
     addEvent,

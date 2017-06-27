@@ -1,19 +1,12 @@
 import React from 'react'
 import { view } from '@jot/black'
 import { Form, Input, Segment, Button, Popover } from '@jot/ui'
-import { Place } from '@jot/models'
+import { Document } from '@jot/models'
 
 @view
-export default class PopoversTest extends React.Component {
+export default class TestPage extends React.Component {
   state = {
     places: null,
-  }
-
-  componentDidMount() {
-    Place.all().$.subscribe(places => {
-      console.log('got places', places)
-      this.setState({ places })
-    })
   }
 
   render() {

@@ -6,6 +6,7 @@ import EditorStore from './stores/editorStore'
 import SelectBar from './views/selectBar'
 import Bar from './views/bar'
 import { SlotFill } from '@jot/ui'
+import type CommanderStore from '~/stores/commanderStore'
 
 export { Raw } from 'slate'
 
@@ -17,8 +18,10 @@ export type Props = {
   inline?: boolean,
   readOnly?: boolean,
   editorStore: EditorStore,
+  commanderStore?: CommanderStore,
 }
 
+@view.attach('commanderStore')
 @view.provide({
   editorStore: EditorStore,
 })

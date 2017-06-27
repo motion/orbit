@@ -4,7 +4,15 @@ import ReactDOM from 'react-dom'
 import App from '~/app'
 import { ThemeProvide } from 'gloss'
 import themes from './theme'
-// import { AppContainer } from 'react-hot-loader'
+
+import { view } from '@jot/black'
+
+@view
+class Test {
+  render() {
+    return <div>null</div>
+  }
+}
 
 export function render() {
   // console.time('#render')
@@ -27,8 +35,11 @@ export async function start(quiet) {
 }
 
 if (module.hot) {
-  module.hot.accept('./views/layout', () => start(true))
-  module.hot.accept('./router', render)
+  module.hot.accept('./views/layout', () => {
+    log('accept: ./start:./views/layout')
+    start(true)
+  })
 }
 
+log('render: start')
 start()

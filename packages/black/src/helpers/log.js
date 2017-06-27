@@ -14,7 +14,7 @@ const colors = [
 export default function log(...args) {
   const [target, key, descriptor] = args
 
-  const logger = (...things) =>
+  const logger = (...things) => {
     console.log(
       `%c${things
         .map(arg =>
@@ -26,6 +26,7 @@ export default function log(...args) {
         .join(' ')}`,
       'background: orange'
     )
+  }
 
   if (
     args.length === 3 &&

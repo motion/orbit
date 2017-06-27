@@ -13,7 +13,7 @@ type Props = {
   store: class BreadcrumbStore {
     last = null
     crumbs = watch(async props => {
-      log('crumbs', props)
+      // log('crumbs', props)
       if (!props.document) {
         return false
       }

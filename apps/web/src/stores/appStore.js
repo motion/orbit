@@ -12,6 +12,7 @@ declare class AppStore {
 
 @store
 export default class App implements AppStore {
+  started = false
   errors = []
   mountedStores = {}
   mountedVersion = 0
@@ -40,6 +41,11 @@ export default class App implements AppStore {
     if (!quiet) {
       console.timeEnd('start')
     }
+    this.started = true
+  }
+
+  dispose = () => {
+    this.models.dispose()
   }
 
   // dev helpers
@@ -78,26 +84,26 @@ export default class App implements AppStore {
 
   // TODO make this not hacky
   // could actually just be a Proxy around this class that finds these
-  get layoutStore() {
+  get layoutStore(): LayoutStore {
     return this.stores && this.stores.LayoutStore && this.stores.LayoutStore[0]
   }
 
-  get commander() {
+  get commander(): CommanderStore {
     return (
       this.stores && this.stores.CommanderStore && this.stores.CommanderStore[0]
     )
   }
 
-  get editor() {
+  get editor(): EditorStore {
     return (
-      (this.stores &&
-        this.stores.EditorStore &&
-        this.stores.EditorStore.find(store => store.focused === true)) ||
-      this.stores.EditorStore[0]
+      this.stores &&
+      this.stores.EditorStore &&
+      (this.stores.EditorStore.find(store => store.focused === true) ||
+        this.stores.EditorStore[0])
     )
   }
 
-  get document() {
+  get document(): DocumentStore {
     return (
       this.stores && this.stores.DocumentStore && this.stores.DocumentStore[0]
     )

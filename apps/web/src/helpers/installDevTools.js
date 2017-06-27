@@ -1,9 +1,8 @@
 // @flow
-// 🐛 note: dont import router here
+// 🐛 note: dont import router or app here
 // it causes the entire app to be imported before boot
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from '~/app'
 import * as RxDB from 'rxdb'
 import * as Mobx from 'mobx'
 import MobxUtils from 'mobx-utils'
@@ -23,7 +22,6 @@ import { log } from '@jot/black'
 // the heavy hitters
 window.React = React
 window.ReactDOM = ReactDOM
-window.App = App
 window.Constants = Constants
 window.Mobx = Mobx
 window.MobxUtils = MobxUtils
@@ -34,5 +32,3 @@ window.PouchDB = PouchDB
 window.Constants = Constants
 window._ = _
 window.log = log
-
-log('dev tools installed')

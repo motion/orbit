@@ -1,6 +1,7 @@
 // @flow
 import reactMixin from 'react-mixin'
 import { Emitter } from 'sb-event-kit'
+export { Emitter, CompositeDisposable } from 'sb-event-kit'
 
 type Plugin = () => { decorator?: Function, mixin?: Object }
 
@@ -49,9 +50,7 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
 
     // avoid decorating twice
     if (Klass[DECOR_KEY]) {
-      if (module && !module.hot) {
-        console.log('avoid decorating twice', Klass.name)
-      }
+      console.log('avoid decorating twice', Klass.name)
       return Klass
     }
 

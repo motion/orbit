@@ -1,8 +1,9 @@
 // @flow
-import decor from '@jot/decor'
+import decorator from '@jot/decor'
 import { object, string } from 'prop-types'
 import extendsReact, { ExtendsReact } from '@jot/decor/lib/plugins/react/extendsReact'
 import observer from '@jot/decor/lib/plugins/mobx/observer'
+import automagical from '@jot/decor/lib/plugins/mobx/automagical'
 import autobound from '@jot/decor/lib/plugins/core/autobound'
 import subscribableHelpers, { SubscribableHelpers } from '@jot/decor/lib/plugins/core/subscribableHelpers'
 import subscribable, { Subscribable } from '@jot/decor/lib/plugins/react/subscribable'
@@ -20,68 +21,64 @@ export type ViewClass = ExtendsReact &
   ReactRenderArgs &
   Glossy
 
-function getViewDecorator() {
-  const uiContext = [
-    addContext,
-    {
-      uiTheme: object,
-      uiActiveTheme: string,
-      ui: object,
-    },
-  ]
-
-  // applied top to bottom
-  const getPlugins = ({ mobx, ui, autobind } = {}) => [
-    extendsReact,
-    subscribable,
-    subscribableHelpers,
-    ui && uiContext,
-    reactRenderArgs,
-    mobx && observer,
-    // gloss after mobx
-    options => ({ decorator: glossDecorator }),
-    // autobind last because it seals things
-    autobind && autobound,
-    [storeProvidable, storeOptions],
-  ]
-
-  type DecoratorNested = () => ViewClass | (() => () => ViewClass)
-  const viewDecorator: DecoratorNested = decor(
-    getPlugins({ mobx: true, autobind: true })
-  )
-
-  type ViewThing = {
-    on(): ViewClass,
-    ui(): ViewClass,
-    basics(): ViewClass,
-    provide(stores: Object): ViewClass,
-    attach(...stores: Array<string>): ViewClass,
-  }
-
-  const view: ViewThing = (item: Object | Class<any> | Function): ViewClass => {
-    // @view({ ...stores }) shorthand
-    if (typeof item === 'object') {
-      return viewDecorator({ stores: item })
-    }
-    return viewDecorator(item)
-  }
-
-  // pass on emitter
-  view.on = viewDecorator.on
-
-  // other decorators
-  view.plain = decor(getPlugins())
-  view.ui = decor(getPlugins({ ui: true, autobind: true }))
-  view.basics = decor([
-    extendsReact,
-    reactRenderArgs,
-    observer,
-    opts => ({ decorator: glossDecorator }),
-  ])
-  view.provide = stores => viewDecorator({ stores, context: true })
-  view.attach = names => decor([[attach, { names }]])
-
-  return view
+export type ViewDec = Function & {
+  on(): ViewClass,
+  ui(): ViewClass,
+  basics(): ViewClass,
+  provide(stores: Object): ViewClass,
+  attach(...stores: Array<string>): ViewClass,
 }
 
-export default getViewDecorator()
+const uiContext = [
+  addContext,
+  {
+    uiTheme: object,
+    uiActiveTheme: string,
+    ui: object,
+  },
+]
+
+// applied top to bottom
+const decorations = ({ mobx, ui, autobind, magic } = {}) => [
+  extendsReact,
+  subscribable,
+  subscribableHelpers,
+  ui && uiContext,
+  reactRenderArgs,
+  mobx && observer,
+  // gloss after mobx
+  options => ({ decorator: glossDecorator }),
+  magic && automagical,
+  // autobind last because it seals things
+  autobind && autobound,
+  [storeProvidable, storeOptions],
+]
+
+const base: () => ViewClass | (() => () => ViewClass) = decorator(
+  decorations({ mobx: true, autobind: true, magic: false })
+)
+
+// @view
+const view: ViewDec = (item: Object | Class<any> | Function): ViewClass => {
+  // @view({ ...stores }) shorthand
+  if (typeof item === 'object') {
+    return base({ stores: item })
+  }
+  return base(item)
+}
+
+// pass on emitter
+view.on = base.on
+
+// other decorators
+view.ui = decorator(decorations({ ui: true, autobind: true }))
+view.basics = decorator([
+  extendsReact,
+  reactRenderArgs,
+  observer,
+  opts => ({ decorator: glossDecorator }),
+])
+view.provide = stores => base({ stores, context: true })
+view.attach = names => decorator([[attach, { names }]])
+
+export default view

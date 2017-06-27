@@ -52,10 +52,14 @@ export default class EditorStore implements StoreType {
       }
     })
 
+    // listen to commander
     if (commanderStore) {
-      this.on(this.props.commanderStore, 'action', (name: string) => {
-        if (name === 'focusEditor') {
+      this.on(commanderStore, 'action', (name: string) => {
+        if (name === 'focusDown') {
           this.focus()
+        }
+        if (name === 'up' && this.focused && this.focusedLine === 0) {
+          commanderStore.focus()
         }
       })
     }
@@ -74,6 +78,10 @@ export default class EditorStore implements StoreType {
         )
       }
     }
+  }
+
+  get focusedLine() {
+    return this.state.selection.startOffset
   }
 
   // return slate-like schema

@@ -98,7 +98,8 @@ export default class App implements AppStore {
     return (
       this.stores &&
       this.stores.EditorStore &&
-      this.stores.EditorStore.find(store => store.focused === true)
+      (this.stores.EditorStore.find(store => store.focused === true) ||
+        this.stores.EditorStore[0])
     )
   }
 

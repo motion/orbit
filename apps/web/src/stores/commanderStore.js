@@ -33,7 +33,10 @@ export default class CommanderStore {
   v = 10
   mouseMoving = Observable.fromEvent(window, 'mousemove')
     .throttleTime(500)
-    .map(event => Date.now() - 500 > this.mouseMoving.current || 0)
+    .map(event => {
+      console.log('mapping', Date.now() - 500 > this.mouseMoving.current || 0)
+      return Date.now() - 500 > this.mouseMoving.current || 0
+    })
     .reduce((acc, x) => acc && x && Date.now())
 
   keyManager = new ShortcutManager(KEYMAP)
@@ -92,6 +95,15 @@ export default class CommanderStore {
     this.input.setSelectionRange(start, end)
   }
 
+  action = (name: string) => {
+    // always emit
+    this.emit('action', name)
+    if (this.actions[name]) {
+      console.log('action', name)
+      this.actions[name](event)
+    }
+  }
+
   actions = {
     toggleSidebar: () => {
       App.layoutStore.sidebar.toggle()
@@ -117,7 +129,7 @@ export default class CommanderStore {
     down: () => {
       if (!this.focused) return
       if (!this.searchResults || !this.isOpen) {
-        this.actions.focusEditor()
+        this.action('focusDown')
         return
       }
       this.moveHighlight(1)
@@ -143,11 +155,7 @@ export default class CommanderStore {
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {
     if (!action) return
-    this.emit('action', action)
-    if (this.actions[action]) {
-      console.log('action', action)
-      this.actions[action](event)
-    }
+    this.action(action, event)
   }
 
   get peek(): Array<Document> {

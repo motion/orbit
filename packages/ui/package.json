@@ -21,6 +21,7 @@
     "react-grid-layout": "^0.14.6"
   },
   "peerDependencies": {
-    "react": "^15.6.0"
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0"
   }
 }

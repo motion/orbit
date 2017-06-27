@@ -1,9 +1,26 @@
 // @flow
 import React from 'react'
-import { Button } from '@jot/ui'
+import { view } from '@jot/black'
+import { Theme, Button } from '@jot/ui'
+
+class Playground extends React.Component {
+  render() {
+    return <Button>Hello World2</Button>
+  }
+}
 
 export default class Main extends React.Component {
   render() {
-    return <Button>Hello World</Button>
+    return (
+      <main>
+        <Playground />
+        <Theme name="light">
+          <Playground />
+        </Theme>
+        <Theme name="dark">
+          <Playground />
+        </Theme>
+      </main>
+    )
   }
 }

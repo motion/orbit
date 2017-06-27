@@ -21,8 +21,8 @@ function splash() {
 
 if (Constants.IS_ELECTRON && !Constants.IN_TRAY) {
   // // having issues requiring this in createTray. Passing it in instead
-  const { remote } = require('electron')
-  require('./tray').default(remote)
+  // const { remote } = require('electron')
+  // require('./tray').default(remote)
 }
 
 // start app

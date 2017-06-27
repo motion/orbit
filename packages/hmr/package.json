@@ -1,0 +1,8 @@
+{
+  "name": "motion-hmr",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "dependencies": {
+    "lodash": "^4.6.1"
+  }
+}

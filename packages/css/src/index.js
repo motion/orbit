@@ -37,8 +37,12 @@ const COMMA_SEPARATABLE = {
 const px = (x: number | string) => (/px$/.test(`${x}`) ? thing : `${thing}px`)
 
 const OBJECT_TRANSFORM = {
-  boxShadow: ({ x, y, blur, spread, color }) =>
-    `${px(x)} ${px(y)} ${px(blur)} ${px(spread)} ${objectToColor(color)}`,
+  textShadow: ({ x, y, blur, color }) =>
+    `${px(x)} ${px(y)} ${px(blur)} ${objectToColor(color)}`,
+  boxShadow: ({ inset, x, y, blur, spread, color }) =>
+    `${inset ? 'inset' : ''} ${px(x)} ${px(y)} ${px(blur)} ${px(
+      spread
+    )} ${objectToColor(color)}`,
   background: ({ color, image, position, repeat = 'no-repeat' }) =>
     `${objectToColor(color)} ${image} ${position.join(' ')} ${repeat}`,
 }

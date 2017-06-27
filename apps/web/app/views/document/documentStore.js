@@ -8,6 +8,8 @@ const print = debug('documentStore')
 
 type Props = {
   id: string,
+  // this is for inline docs
+  inline?: boolean,
 }
 
 export default class DocumentStore implements StoreType {
@@ -21,25 +23,15 @@ export default class DocumentStore implements StoreType {
   editor = null
   downAt = Date.now()
   crumbs = []
-  shouldLoadCrumbs = true
+
+  get shouldLoadCrumbs() {
+    return !this.props.inline
+  }
 
   get hasNewContent() {
     return (
       !this.lastSavedState ||
       !this.lastSavedState.equals(this.editor.contentState)
-    )
-  }
-
-  start() {
-    this.react(
-      () => this.document && this.document._id && this.shouldLoadCrumbs,
-      async () => {
-        if (this.document && this.shouldLoadCrumbs) {
-          const newCrumbs = await this.document.getCrumbs()
-          console.log(newCrumbs)
-          this.crumbs = newCrumbs
-        }
-      }
     )
   }
 

@@ -64,7 +64,7 @@ export default class CommanderResults {
   static style = {
     results: {
       zIndex: 10000,
-      background: IS_ELECTRON ? 'rgba(20, 20, 20, 0.68)' : '#222',
+      background: '#fff',
       position: 'absolute',
       top: HEADER_HEIGHT,
       right: 0,

@@ -35,6 +35,7 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
+        <Breadcrumbs if={store.shouldLoadCrumbs} document={store.document} />
         <Editor
           readOnly={readOnly}
           inline={inline}
@@ -42,7 +43,6 @@ export default class DocumentView {
           {...editorProps}
         />
         <Children if={!inline} id={store.document._id} />
-        <Breadcrumbs docs={store.crumbs} />
       </docview>
     )
   }

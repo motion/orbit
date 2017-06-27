@@ -1,5 +1,8 @@
+// @flow
+import React from 'react'
 import { view } from '@jot/black'
 import node from '~/editor/node'
+import { Paragraph } from './text'
 import EditList from './editList'
 import { BLOCKS } from '~/editor/constants'
 import AutoReplace from 'slate-auto-replace'
@@ -26,13 +29,11 @@ const ol_list = node(
 class ListNode {
   render({ isRoot, ...props }) {
     let done = false
-
     if (isRoot) {
       done = every(
         props.children.map(i => i.props.node.data.get('archive') || false)
       )
     }
-
     return (
       <tasks $done={done} $isRoot={isRoot}>
         <toolbar if={false && isRoot} contentEditable={false} />
@@ -42,16 +43,12 @@ class ListNode {
       </tasks>
     )
   }
-
   static style = {
     ul: {
       transition: 'background 150ms ease-in',
     },
     isRoot: {
-      margin: [15, 0],
-      padding: [15, 20],
-      borderTop: '1px solid #eee',
-      borderBottom: '1px solid #eee',
+      margin: [16, 0],
     },
     done: {
       background: 'rgba(255, 255, 255, 1)',
@@ -87,7 +84,7 @@ class ListItemNode {
         </minMax>
         <item>
           <li $archive={archive} className={className} {...props.attributes}>
-            {minimize ? <p $$text>{text}</p> : props.children}
+            {minimize ? <Paragraph $$text>{text}</Paragraph> : props.children}
           </li>
           <metaText if={due} $$row contentEditable={false}>
             due {moment(due).fromNow()}
@@ -97,6 +94,7 @@ class ListItemNode {
     )
   }
 
+  // BE CAREFUL NOT TO CHANGE HEIGHT
   static style = {
     archive: {
       opacity: 0.9,
@@ -106,11 +104,12 @@ class ListItemNode {
       fontSize: 13,
     },
     minMax: {
-      height: 30,
-      userSelect: 'none',
-      padding: 3,
-      cursor: 'pointer',
+      // WARNING: dont set height to px it changes line height
+      height: '100%',
+      width: 30,
       marginLeft: -30,
+      userSelect: 'none',
+      cursor: 'pointer',
       fontSize: 16,
     },
     hide: {
@@ -118,11 +117,9 @@ class ListItemNode {
       pointerEvents: 'none',
     },
     min: {
-      marginLeft: -33,
       paddingRight: 0,
     },
     li: {
-      marginLeft: 30,
       transition: 'opacity 100ms ease-in',
     },
   }

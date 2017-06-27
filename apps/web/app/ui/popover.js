@@ -58,8 +58,10 @@ const INVERSE = {
   right: 'left',
 }
 
+const DEFAULT_SHADOW = '0 0px 2px rgba(0,0,0,0.15)'
+
+const getShadow = shadow => (shadow === true ? DEFAULT_SHADOW : shadow)
 const calcForgiveness = (forgiveness, distance) => forgiveness
-//Math.min(forgiveness, distance) + 2
 
 @view.ui
 export default class Popover {
@@ -615,6 +617,7 @@ export default class Popover {
                   theme={theme}
                   size={arrowSize}
                   towards={INVERSE[direction]}
+                  shadow={getShadow(shadow)}
                 />
               </arrowContain>
               <content $withBackground={background}>
@@ -724,7 +727,7 @@ export default class Popover {
     }),
     shadow: ({ shadow }) => ({
       content: {
-        boxShadow: shadow === true ? '0 2px 10px rgba(0,0,0,0.3)' : shadow,
+        boxShadow: getShadow(shadow),
       },
     }),
     noHover: {

@@ -15,7 +15,7 @@ const DARK = {
   borderColor: [255, 255, 255, 0.06],
 }
 
-export default {
+const Theme = {
   dark: {
     base: DARK,
     hover: {
@@ -32,6 +32,9 @@ export default {
       background: clr(DARK.background).lighten(0.25).toString(),
       borderColor: DARK.highlightColor,
     },
+    highlight: {
+      color: DARK.highlightColor,
+    },
   },
   light: {
     base: LIGHT,
@@ -47,5 +50,12 @@ export default {
     focus: {
       ...LIGHT,
     },
+    highlight: {
+      color: LIGHT.highlightColor,
+    },
   },
 }
+
+window.Theme = Theme
+
+export default Theme

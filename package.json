@@ -19,7 +19,7 @@
     "lerna": "2.0.0-rc.5"
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
+    "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-preset-motion": "*",
     "check-dependencies": "^1.0.1",

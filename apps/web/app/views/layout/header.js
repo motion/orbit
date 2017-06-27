@@ -21,24 +21,22 @@ export default class Header {
         <bar>
           <Segment
             $$margin={[0, 10, 0, 0]}
-            itemProps={{ iconSize: 12, padding: [0, 6] }}
+            itemProps={{ iconSize: 12, padding: [0, 6], chromeless: true }}
             $$flex="none"
           >
             <Button
               if={IS_ELECTRON}
               icon="minimal-left"
-              chromeless
               disabled={Router.atBack}
               onClick={() => Router.back()}
             />
             <Button
               if={IS_ELECTRON}
-              chromeless
               disabled={Router.atFront}
               icon="minimal-right"
               onClick={() => Router.forward()}
             />
-            <Button icon="home" chromeless onClick={() => Router.go('/')} />
+            <Button icon="home" onClick={() => Router.go('/')} />
           </Segment>
           <Commander.Bar
             onOpen={() => (layoutStore.commanderOpen = true)}
@@ -59,6 +57,7 @@ export default class Header {
                 <Button
                   chromeless
                   spaced
+                  size={1}
                   icon={
                     layoutStore.sidebar.active
                       ? 'arrow-min-right'
@@ -66,7 +65,8 @@ export default class Header {
                   }
                   onClick={layoutStore.sidebar.toggle}
                   $$marginRight={-6}
-                  color={[0, 0, 0, 0.5]}
+                  color={[0, 0, 0, 0.3]}
+                  hoverColor={[0, 0, 0, 0.2]}
                 />
               </actions>}
           </SlotFill.Slot>

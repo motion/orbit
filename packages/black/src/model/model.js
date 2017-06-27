@@ -17,18 +17,17 @@ type ModelArgs = {
 }
 
 export default class Model {
-  subscriptions = new CompositeDisposable()
-
   static isModel = true
   static props: Object
   static defaultProps: Function | Object
-  options: ?Object = null
+
+  subscriptions = new CompositeDisposable()
+  options: ?Object
   methods: ?Object
   statics: ?Object
-  settings: SettingsObject
   database: ?RxDB
-  defaultSchema: Object
-  collection: ?RxCollection & { pouch: PouchDB }
+  settings: SettingsObject = {}
+  defaultSchema: Object = {}
 
   @observable connected = false
   // sync to
@@ -108,7 +107,7 @@ export default class Model {
     }
   }
 
-  get collection() {
+  get collection(): ?RxCollection & { pouch: PouchDB } {
     if (this._collection) {
       return this._collection
     }
@@ -212,11 +211,6 @@ export default class Model {
 
       // AND NOW
       this.connected = true
-
-      this.subscriptions.add(() => {
-        console.log('dispose model', this)
-        this._collection && this._collection.remove()
-      })
     } catch (e) {
       console.warn('Model.connect error', e)
     }
@@ -224,6 +218,7 @@ export default class Model {
 
   dispose() {
     this.subscriptions.dispose()
+    this._collection && this._collection.remove()
   }
 
   createIndexes = async (): Promise<void> => {

@@ -117,7 +117,6 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
       // auto dispose the previous thing
       if (previous && previous !== null) {
         if (previous.dispose) {
-          console.log('dispose last')
           previous.dispose()
         }
       }

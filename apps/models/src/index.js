@@ -8,6 +8,7 @@ import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
+import { omit } from 'lodash'
 
 // export all models
 export Document from './document'
@@ -44,7 +45,7 @@ export default class Models implements ModelsStore {
     }
 
     this.databaseConfig = databaseConfig
-    this.models = models
+    this.models = omit(models, ['default'])
 
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
@@ -102,10 +103,6 @@ export default class Models implements ModelsStore {
 
     // attach Models to app and connect if need be
     for (const [name, model] of Object.entries(this.models)) {
-      if (name === 'default') {
-        // ignore base
-        continue
-      }
       this[name] = model
 
       if (typeof model.connect !== 'function') {

@@ -21,7 +21,6 @@ if (module && module.hot) {
   })
 
   module.hot.dispose(() => {
-    console.log('disposing app')
     App.dispose()
   })
 }

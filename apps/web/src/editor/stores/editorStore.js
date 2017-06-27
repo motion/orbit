@@ -4,6 +4,7 @@ import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
 import { computed, StoreType } from '@jot/black'
 import { getSpec } from './helpers'
+import type CommanderStore from '~/types'
 
 type Plugin = Class<Object>
 
@@ -14,6 +15,7 @@ type Props = {
   getRef?: Function,
   find?: string,
   onlyNode?: boolean,
+  commanderStore: CommanderStore,
 }
 
 export default class EditorStore implements StoreType {
@@ -49,6 +51,8 @@ export default class EditorStore implements StoreType {
         // this.setContents(this.props.newState, true)
       }
     })
+
+    this.on(commanderStore, 'action', (...args) => console.log(args))
   }
 
   // gather and instantiate

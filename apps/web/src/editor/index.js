@@ -19,6 +19,7 @@ export type Props = {
   editorStore: EditorStore,
 }
 
+@view.attach('commanderStore')
 @view.provide({
   editorStore: EditorStore,
 })

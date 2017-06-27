@@ -5,7 +5,7 @@ import { Theme, Button } from '@jot/ui'
 
 class Playground extends React.Component {
   render() {
-    return <Button>Hello World2</Button>
+    return <Button>Hello World</Button>
   }
 }
 

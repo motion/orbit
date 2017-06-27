@@ -81,6 +81,15 @@ export default class EditorStore implements StoreType {
   }
 
   get focusedLine() {
+    const parentNode = this.state.document.getParent(
+      this.state.selection.startKey
+    )
+    return this.state.document.nodes.findIndex(
+      node => node.key === parentNode.key
+    )
+  }
+
+  get focusedChar() {
     return this.state.selection.startOffset
   }
 

@@ -1,8 +1,7 @@
-// @flow
 import { store } from '@jot/black'
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
-import { Document } from './document'
+import { DocumentModel } from './document'
 
 const COUCH_PROTOCOL = `${window.location.protocol}//`
 const COUCH_HOST = `couch.${window.location.host}`
@@ -18,7 +17,7 @@ class User {
 
   connect = database => {
     this.database = database
-    this.documents = new Document()
+    this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'
 
     this.superlogin.configure({
@@ -41,15 +40,19 @@ class User {
     // sync
     this.superlogin.on('login', async (event, session) => {
       this.user = await this.getCurrentUser()
-      this.documents.connect(this.database, {
-        sync: this.user.userDBs.documents,
-      })
+      if (this.user) {
+        this.documents.connect(this.database, {
+          sync: this.user.userDBs.documents,
+        })
+      }
     })
 
     this.superlogin.on('logout', () => {
       this.user = null
     })
   }
+
+  dispose = () => {}
 
   get loggedIn() {
     return !!this.user
@@ -60,11 +63,11 @@ class User {
   }
 
   get name() {
-    return this.user.user_id
+    return this.user && this.user.user_id
   }
 
   get email() {
-    return this.user.user_id
+    return this.user && this.user.user_id
   }
 
   get roles() {
@@ -72,11 +75,15 @@ class User {
   }
 
   get id() {
-    return this.user.user_id
+    return this.user && this.user.user_id
   }
 
   get org() {
     return this.user.org || 'motion'
+  }
+
+  get token() {
+    return this.user && this.user.token
   }
 
   setupDbSync = () => {

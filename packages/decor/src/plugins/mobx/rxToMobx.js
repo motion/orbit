@@ -1,3 +1,4 @@
+// @flow
 import { Observable } from 'rxjs'
 import { fromStream } from 'mobx-utils'
 

@@ -6,12 +6,11 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:flowtype/recommended',
-    'plugin:react/recommended',
     'prettier',
     'prettier/flowtype',
     'prettier/react',
   ],
-  plugins: ['react', 'flowtype', 'prettier'],
+  plugins: ['flowtype', 'prettier'],
   parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 8,
@@ -30,8 +29,6 @@ module.exports = {
     semi: ['error', 'never'],
     'no-console': 'off',
     'no-unused-vars': 'off',
-    'react/jsx-uses-react': 'error',
-    'react/jsx-uses-vars': 'error',
   },
   settings: {
     'import/resolver': {

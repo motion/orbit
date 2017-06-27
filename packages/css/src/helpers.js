@@ -1,7 +1,8 @@
 // @flow
 import type { Color, CSSArray, ToCSSAble } from './types'
 
-export function objectToColor(color: Color): string {
+function objectToColor(color: Color, converter?: Function): string {
+  // final processing of objects and arrays
   if (Array.isArray(color)) {
     const length = color.length
     if (length === 4) {
@@ -10,9 +11,7 @@ export function objectToColor(color: Color): string {
     if (length === 3) {
       return `rgb(${color.join(', ')})`
     }
-    throw new Error('Invalid color provided')
-  }
-  if (typeof color === 'object') {
+  } else if (typeof color === 'object') {
     if (color.a) {
       return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
     }
@@ -47,6 +46,7 @@ export function expandCSSArray(given: number | Array<number>): CSSArray {
 export function isCSSAble(val: any): boolean {
   return (
     val !== null &&
+    !Array.isArray(val) &&
     typeof val === 'object' &&
     (typeof val.toCSS === 'function' ||
       typeof val.css === 'function' ||
@@ -66,16 +66,32 @@ export function getCSSVal(val: ToCSSAble) {
     res = val.rgba()
   } else if (typeof val.rgb === 'function') {
     res = val.rgb()
+    // support npm color
+    if (typeof res.array === 'function') {
+      return objectToColor(res.array())
+    }
   }
-  return res.toString()
+  return res
 }
 
-export function colorToString(color: Color): string {
+export function colorToString(color: Color, options): string {
+  let res = color
+
   if (typeof color === 'string') {
     return color
   }
-  if (typeof color === 'object' && isCSSAble(color)) {
-    return getCSSVal(color)
+
+  if (options && options.isColor && options.isColor(color)) {
+    res = options.processColor(color)
+  } else if (isCSSAble(color)) {
+    res = getCSSVal(color)
   }
-  return objectToColor(color)
+
+  res = objectToColor(res)
+
+  if (res.model) {
+    debugger
+  }
+
+  return res
 }

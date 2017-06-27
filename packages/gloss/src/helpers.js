@@ -1,9 +1,7 @@
 // @flow
-import motionStyle from 'motion-css'
-
 // flatten theme key
-// { theme: { dark: { h1: { color: 'red' } } } }
-// => { dark-button: { h1: { color: 'red' } } }
+//   { theme: { dark: { h1: { color: 'red' } } } }
+//     => { dark-button: { h1: { color: 'red' } } }
 export function flattenThemes(themes: ?Object) {
   const themeObj = themes || {}
   let result = {}
@@ -31,20 +29,6 @@ export function flattenThemes(themes: ?Object) {
   })
 
   return result
-}
-
-export function applyNiceStyles(styles: Object, errorMessage: string) {
-  for (const style in styles) {
-    if (!styles.hasOwnProperty(style)) {
-      continue
-    }
-    const value = styles[style]
-    if (value) {
-      styles[style] = motionStyle(value, errorMessage)
-    }
-  }
-
-  return styles
 }
 
 export const isFunc = (x: any) => typeof x === 'function'

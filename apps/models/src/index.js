@@ -8,14 +8,23 @@ import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
+import { omit } from 'lodash'
 
 // export all models
 export Document from './document'
 export Comment from './comment'
 export Image from './image'
 export User from './user'
-
+// exports
 export type { Model } from '~/helpers'
+
+if (module.hot) {
+  module.hot.accept('./document', () => {
+    log('accept: models/index.js:./document')
+  })
+}
+
+import User from './user'
 
 declare class ModelsStore {
   databaseConfig: Object,
@@ -24,17 +33,19 @@ declare class ModelsStore {
 }
 
 export default class Models implements ModelsStore {
-  constructor(database, models) {
-    if (!database || !models) {
+  modelsLoggedIn = false
+
+  constructor(databaseConfig, models) {
+    if (!databaseConfig || !models) {
       throw new Error(
         'No database or models given to App!',
-        typeof database,
+        typeof databaseConfig,
         typeof models
       )
     }
 
-    this.databaseConfig = database
-    this.models = models
+    this.databaseConfig = databaseConfig
+    this.models = omit(models, ['default'])
 
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
@@ -51,7 +62,22 @@ export default class Models implements ModelsStore {
   }
 
   start = async () => {
-    console.time('#Models.start')
+    // handles re-connecting models on login/out
+    User.superlogin.on('login', () => {
+      setTimeout(() => {
+        if (!this.modelsLoggedIn && User.loggedIn) {
+          this.attachModels()
+          this.modelsLoggedIn = true
+        }
+      }, 100)
+    })
+    User.superlogin.on('logout', () => {
+      if (this.modelsLoggedIn) {
+        this.attachModels()
+        this.modelsLoggedIn = false
+      }
+    })
+
     this.database = await RxDB.create({
       adapter: 'idb',
       name: this.databaseConfig.name,
@@ -60,7 +86,16 @@ export default class Models implements ModelsStore {
       withCredentials: false,
     })
     await this.attachModels()
-    console.timeEnd('#Models.start')
+  }
+
+  dispose = () => {
+    for (const [name, model] of Object.entries(this.models)) {
+      if (model && model.dispose) {
+        model.dispose()
+      } else {
+        console.error('waht is this thing', model)
+      }
+    }
   }
 
   attachModels = async () => {
@@ -68,10 +103,6 @@ export default class Models implements ModelsStore {
 
     // attach Models to app and connect if need be
     for (const [name, model] of Object.entries(this.models)) {
-      if (name === 'default') {
-        // ignore base
-        continue
-      }
       this[name] = model
 
       if (typeof model.connect !== 'function') {
@@ -80,7 +111,15 @@ export default class Models implements ModelsStore {
 
       connections.push(
         model.connect(this.database, {
-          sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
+          remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
+          remoteOptions: {
+            skip_setup: true,
+            ajax: {
+              headers: {
+                'X-Token': `${User.name}*|*${User.token}`,
+              },
+            },
+          },
         })
       )
     }

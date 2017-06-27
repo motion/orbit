@@ -140,4 +140,14 @@ export const styles: Object = {
   },
 }
 
-export default gloss({ baseStyles: styles, themeKey: 'theme' })
+const Gloss = gloss({
+  baseStyles: styles,
+  themeKey: 'theme',
+  tagName: true,
+  isColor: color => !!color.rgb,
+  processColor: color => color.toString(),
+})
+
+window.Gloss = Gloss
+
+export const { decorator, createElement } = Gloss

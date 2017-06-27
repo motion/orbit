@@ -1,0 +1,7 @@
+#!/bin/bash
+
+. $(dirname $0)/__common
+cd $ROOT
+
+link-flow
+build --watch

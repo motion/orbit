@@ -42,6 +42,7 @@ services:
       - pad-couch
     depends_on:
       - pad-couch
+      - pad-redis
     environment:
       - PORT=3000
       - DB_HOSTNAME=${DB_HOSTNAME}

@@ -1,12 +1,13 @@
+// @flow
 import { CompositeDisposable } from 'sb-event-kit'
 
 export type Subscribable = {
   subscriptions: CompositeDisposable,
 }
 
-export default options => ({
+export default (options: Object) => ({
   name: 'subscribable',
-  decorator: Klass => {
+  decorator: (Klass: Class<any> | Function) => {
     if (!Klass.prototype) {
       return Klass
     }

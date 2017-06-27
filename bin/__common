@@ -6,9 +6,6 @@ set -e
 APP_OLD_PWD="$(pwd)"
 OLD_PATH=$PATH
 
-# cd ROOT
-cd $(dirname $0)/..
-
 # source env
 source .env
 
@@ -16,8 +13,10 @@ source .env
 PATH=/usr/local/bin:/usr/bin
 ROOT="$(pwd)"
 
-# cd back to original dir
+# add node_modules
 PATH=$OLD_PATH:$ROOT/node_modules/.bin
+
+# cd back to original dir
 cd $APP_OLD_PWD
 
 # run with echo
@@ -57,6 +56,38 @@ function save-config {
   fi
 
   echo "$ALL" > "$KUBES_CONFIG_FILE"
+}
+
+function link-flow() {
+  OG=$(pwd)
+  cd $ROOT
+  # link flow
+  find . -name *.js.flow | grep -v node_modules | xargs rm -f
+
+  function link() {
+    for PACKAGE in $(ls $1); do
+      if [ ! -d "$ROOT/$1/$PACKAGE/src" ]; then
+        continue
+      fi
+      cd $ROOT/$1/$PACKAGE
+      mkdir -p lib
+
+      ENTRIES=$(cd src; find . -name "*.js")
+      for ENTRY in $ENTRIES; do
+        ENTRY_TRIMMED=${ENTRY:2}
+        mkdir -p lib/$(dirname $ENTRY_TRIMMED)
+        ln src/$ENTRY_TRIMMED lib/$ENTRY_TRIMMED.flow
+      done
+
+      cd -
+      echo "Linked $PACKAGE"
+    done
+  }
+
+  # link flow in all
+  link "packages"
+  link "apps"
+  cd $OG
 }
 
 function bin-exists {

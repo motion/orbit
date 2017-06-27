@@ -1,4 +1,5 @@
 // @flow
+import { CompositeDisposable } from '@jot/decor'
 import { autorun, observable } from 'mobx'
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
@@ -17,19 +18,20 @@ type ModelArgs = {
 
 export default class Model {
   static isModel = true
-
   static props: Object
   static defaultProps: Function | Object
+
+  subscriptions = new CompositeDisposable()
+  options: ?Object
   methods: ?Object
   statics: ?Object
-  settings: SettingsObject
   database: ?RxDB
-  defaultSchema: Object
-  collection: ?RxCollection & { pouch: PouchDB }
+  settings: SettingsObject = {}
+  defaultSchema: Object = {}
 
   @observable connected = false
   // sync to
-  remoteDb: ?string = null
+  remoteDB: ?string = null
   // for tracking which queries we are watching
   queryCache: Object = {}
   // hooks that run before/after operations
@@ -105,7 +107,7 @@ export default class Model {
     }
   }
 
-  get collection() {
+  get collection(): ?RxCollection & { pouch: PouchDB } {
     if (this._collection) {
       return this._collection
     }
@@ -142,65 +144,81 @@ export default class Model {
     return worm()
   }
 
+  setupRemoteDB = (url, options: Object) => {
+    if (url) {
+      this.remoteDB = new PouchDB(url, options)
+    }
+  }
+
   connect = async (database: RxDB, options: Object): Promise<void> => {
-    // hmr:
+    this.options = options
+    this.setupRemoteDB(options.remote, options.remoteOptions)
+
+    // re-connect or hmr
     if (this.database) {
       return
     }
 
+    // new connect
     this.database = database
-    this.remoteDB = options.sync
-    this._collection = await database.collection({
-      name: this.title,
-      schema: this.compiledSchema,
-      statics: this.statics,
-      autoMigrate: true,
-      methods: this.compiledMethods,
-      pouchSettings: {
-        skip_setup: true,
-      },
-    })
 
-    // shim add pouchdb-validation
-    this.collection.pouch.installValidationMethods()
-
-    // bump listeners
-    this.collection.pouch.setMaxListeners(100)
-
-    // create index
-    await this.createIndexes()
-
-    // auto timestamps
-    if (this.hasTimestamps) {
-      const ogInsert = this.hooks.preInsert
-      this.hooks.preInsert = doc => {
-        doc.createdAt = this.now
-        doc.updatedAt = this.now
-        if (ogInsert) {
-          return ogInsert.call(this, doc)
-        }
-      }
-
-      const ogSave = this.hooks.preSave
-      this.hooks.preSave = doc => {
-        doc.updatedAt = this.now
-        if (ogSave) {
-          return ogSave.call(this, doc)
-        }
-      }
-    }
-
-    if (this.collection && this.hooks) {
-      Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
-        this.collection[hook](this.hooks[hook])
+    // until figure out why its being called
+    try {
+      this._collection = await database.collection({
+        name: this.title,
+        schema: this.compiledSchema,
+        statics: this.statics,
+        methods: this.compiledMethods,
       })
+
+      // shim add pouchdb-validation
+      this.collection.pouch.installValidationMethods()
+
+      // bump listeners
+      this.collection.pouch.setMaxListeners(100)
+
+      // create index
+      await this.createIndexes()
+
+      // auto timestamps
+      if (this.hasTimestamps) {
+        const ogInsert = this.hooks.preInsert
+        this.hooks.preInsert = doc => {
+          doc.createdAt = this.now
+          doc.updatedAt = this.now
+          if (ogInsert) {
+            return ogInsert.call(this, doc)
+          }
+        }
+
+        const ogSave = this.hooks.preSave
+        this.hooks.preSave = doc => {
+          doc.updatedAt = this.now
+          if (ogSave) {
+            return ogSave.call(this, doc)
+          }
+        }
+      }
+
+      if (this.collection && this.hooks) {
+        Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
+          this.collection[hook](this.hooks[hook])
+        })
+      }
+
+      // this makes our userdb react properly to login, no idea why
+      this.collection.watchForChanges()
+
+      // AND NOW
+      this.connected = true
+    } catch (e) {
+      console.warn('Model.connect error', e)
     }
+  }
 
-    // this makes our userdb react properly to login, no idea why
-    this.collection.watchForChanges()
-
-    // AND NOW
-    this.connected = true
+  dispose() {
+    this.subscriptions.dispose()
+    this._collection && this._collection.remove()
   }
 
   createIndexes = async (): Promise<void> => {
@@ -215,7 +233,7 @@ export default class Model {
       const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
         field => Object.keys(field)[0]
       )
-      // if we have not indexed every field
+      // if have not indexed every field
       if (intersection(index, alreadyIndexedFields).length !== index.length) {
         // need to await or you get error sorting by dates, etc
         console.log(
@@ -224,11 +242,6 @@ export default class Model {
         )
 
         await this.collection.pouch.createIndex({ fields: index })
-      } else {
-        console.log(
-          `%c[pouch] HAS INDEX ${this.title} ${JSON.stringify(index)}`,
-          'color: green'
-        )
       }
     }
   }

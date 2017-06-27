@@ -1,4 +1,5 @@
-import { fromPromise } from 'mobx-utils'
+// @flow
+import { fromStream, fromPromise } from 'mobx-utils'
 import { Observable } from 'rxjs'
 import {
   action,
@@ -8,9 +9,9 @@ import {
   autorun,
 } from 'mobx'
 
-export default function automagical(options) {
+export default function automagical(options: Object) {
   return {
-    decorator: Klass => {
+    decorator: (Klass: Class<any> | Function) => {
       if (!Klass.prototype) {
         return Klass
       }
@@ -31,11 +32,13 @@ export default function automagical(options) {
   }
 }
 
-const isAutorun = val => val && val.autorunme
+const isAutorun = (val: any) => val && val.autorunme
 const FILTER_KEYS = {
   dispose: true,
   constructor: true,
   start: true,
+  stop: true,
+  stat: true, // ?
   react: true,
   ref: true,
   setInterval: true,
@@ -43,14 +46,22 @@ const FILTER_KEYS = {
   addEvent: true,
   watch: true,
   props: true,
+  context: true,
+  componentWillMount: true,
+  componentDidMount: true,
+  render: true,
+  componentWillReceiveProps: true,
+  shouldComponentUpdate: true,
+  componentDidUpdate: true,
+  componentWillUnmount: true,
 }
 
-function observableRxToObservableMobx(obj, method) {
+function observableRxToObservableMobx(obj: Object, method: string) {
   extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
   return obj[method]
 }
 
-function automagic(obj) {
+function automagic(obj: Object) {
   // automagic observables
   const proto = Object.getPrototypeOf(obj)
   const fproto = Object.getOwnPropertyNames(proto).filter(
@@ -76,7 +87,7 @@ function automagic(obj) {
 }
 
 // * => Mobx
-function automagicalValue(obj, method, descriptors = {}) {
+function automagicalValue(obj: Object, method: string, descriptors = {}) {
   if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
     return
   }
@@ -99,27 +110,23 @@ function automagicalValue(obj, method, descriptors = {}) {
   if (isAutorun(val)) {
     // @observable.ref
     extendShallowObservable(obj, { [method]: null })
-    const autorunner = autorun(() => {
-      const previous = obj[method]
+    let previous
+    const stop = autorun(() => {
       obj[method] = val.call(obj)
-      console.log(`autorun ${method}`, obj[method])
-      automagicalValue(obj, method)
-      // unsubscribe from previous
+      // console.log(`watch.autorun ${obj.name || obj.constructor.name}.${method}`)
+      // auto dispose the previous thing
       if (previous && previous !== null) {
-        // hacky, remove old listener, should be done nicer
-        if (typeof previous === 'function') {
-          previous()
-        }
-        if (typeof previous.dispose === 'function') {
+        if (previous.dispose) {
           previous.dispose()
         }
-        if (typeof previous.remove === 'function') {
-          previous.remove()
-        }
       }
+      previous = automagicalValue(obj, method)
       // need to run this to ensure it wraps autorun value magically
     })
-    obj.subscriptions.add(autorunner)
+    obj.subscriptions.add(() => {
+      previous && previous.dipose && previous.dispose()
+      stop()
+    })
     return
   }
 
@@ -146,19 +153,19 @@ function automagicalValue(obj, method, descriptors = {}) {
       },
     })
     obj.subscriptions.add(val)
-    return
+    return val
   }
 
   // already Mobx observable, let it be yo
   if (isObservable(val)) {
-    return
+    return null
   }
 
   // Rx => mobx
   if (val instanceof Observable) {
     const observable = observableRxToObservableMobx(obj, method)
     obj.subscriptions.add(observable)
-    return
+    return observable
   }
 
   if (isFunction) {
@@ -168,4 +175,6 @@ function automagicalValue(obj, method, descriptors = {}) {
     // @observable.ref
     extendShallowObservable(obj, { [method]: val })
   }
+
+  return null
 }

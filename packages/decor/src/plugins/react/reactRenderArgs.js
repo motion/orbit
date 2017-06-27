@@ -1,17 +1,12 @@
 // @flow
-
-declare class ReactRenderArgs<DefaultProps, Props, State, Context> {
+declare class ReactRenderArgs<Props, State, Context> {
   props: $Abstract<Props>,
-  render(
-    props: $Abstract<Props>,
-    state: $Abstract<State>,
-    context: $Abstract<Context>
-  ): React$Element<any>,
+  render(props: Props, state: State, context: Context): React$Element<any>,
 }
 
-export default options => ({
+export default (options: Object) => ({
   name: 'react-render-args',
-  decorator: Klass => {
+  decorator: (Klass: Class<any> | Function) => {
     // avoid fn classes
     if (!Klass.prototype || !Klass.prototype.render) {
       return Klass

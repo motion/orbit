@@ -1,6 +1,6 @@
 module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
-  return {
+  const config = {
     plugins: [
       [
         require.resolve('motion-hmr'),
@@ -15,7 +15,9 @@ module.exports = function(context, givenOpts) {
           ],
         },
       ],
+      // order important here
       require.resolve('babel-plugin-transform-decorators-legacy'),
+      require.resolve('babel-plugin-transform-class-properties'),
       [
         require.resolve('gloss/transform'),
         {
@@ -25,9 +27,7 @@ module.exports = function(context, givenOpts) {
       ],
       [
         require.resolve('babel-plugin-root-import'),
-        {
-          rootPathSuffix: 'app',
-        },
+        [{ rootPathPrefix: '~', rootPathSuffix: 'src' }],
       ],
     ],
     presets: [
@@ -49,4 +49,6 @@ module.exports = function(context, givenOpts) {
       require.resolve('babel-preset-stage-1'),
     ],
   }
+
+  return config
 }

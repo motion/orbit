@@ -1,8 +1,8 @@
 import couchBootstrap from '@jot/couch'
-import { COUCH_URL } from './keys'
+import * as Constants from './constants'
 
 export default class Bootstrap {
   start() {
-    couchBootstrap(COUCH_URL)
+    couchBootstrap(Constants.COUCH_URL)
   }
 }

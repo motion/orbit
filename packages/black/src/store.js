@@ -1,10 +1,13 @@
 // @flow
 import decor from '@jot/decor'
 import autobound from '@jot/decor/lib/plugins/core/autobound'
-import emittable, { Emittable } from '@jot/decor/lib/plugins/core/emittable'
+import emittable from '@jot/decor/lib/plugins/core/emittable'
+import type { Emittable } from '@jot/decor/lib/plugins/core/emittable'
 import automagical from '@jot/decor/lib/plugins/mobx/automagical'
-import subscribable, { Subscribable } from '@jot/decor/lib/plugins/react/subscribable'
-import subscribableHelpers, { SubscribableHelpers } from '@jot/decor/lib/plugins/core/subscribableHelpers'
+import subscribable from '@jot/decor/lib/plugins/react/subscribable'
+import type { Subscribable } from '@jot/decor/lib/plugins/react/subscribable'
+import subscribableHelpers from '@jot/decor/lib/plugins/core/subscribableHelpers'
+import type { SubscribableHelpers } from '@jot/decor/lib/plugins/core/subscribableHelpers'
 
 export type StoreClass = Emittable & Subscribable & SubscribableHelpers
 

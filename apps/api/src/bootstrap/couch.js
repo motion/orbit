@@ -21,7 +21,7 @@ export default class Couch {
   }
 
   start({ write = true } = {}) {
-    console.log('Bootstrapping...', this.databaseUrl, write)
+    console.log('Bootstrapping...', this.designPath, this.databaseUrl, write)
 
     // ensure dbs created
     const dirs = path =>
@@ -45,12 +45,7 @@ export default class Couch {
         }
 
         const designDoc = JSON.stringify(doc, 0, 2)
-
-        // write it to fs
-        fs.writeFileSync(
-          Path.join(this.designPath, 'lastWrittenDesign.json'),
-          designDoc
-        )
+        console.log('wrote', designDoc)
       })
     }
   }

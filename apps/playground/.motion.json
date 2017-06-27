@@ -6,5 +6,5 @@
   "pathType": "filePath",
   "saveNpmModules": true,
   "webServerPort": 10547,
-  "outputDirectory": "./dist"
+  "outputDirectory": "../web/public"
 }

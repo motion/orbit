@@ -4,7 +4,15 @@ import ReactDOM from 'react-dom'
 import App from '~/app'
 import { ThemeProvide } from 'gloss'
 import themes from './theme'
-// import { AppContainer } from 'react-hot-loader'
+
+import { view } from '@jot/black'
+
+@view
+class Test {
+  render() {
+    return <div>null</div>
+  }
+}
 
 export function render() {
   // console.time('#render')

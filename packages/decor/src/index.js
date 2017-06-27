@@ -1,6 +1,7 @@
 // @flow
 import reactMixin from 'react-mixin'
 import { Emitter } from 'sb-event-kit'
+export { Emitter, CompositeDisposable } from 'sb-event-kit'
 
 type Plugin = () => { decorator?: Function, mixin?: Object }
 

@@ -1,4 +1,5 @@
 // @flow
+import { CompositeDisposable } from '@jot/decor'
 import { autorun, observable } from 'mobx'
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
@@ -16,10 +17,12 @@ type ModelArgs = {
 }
 
 export default class Model {
-  static isModel = true
+  subscriptions = new CompositeDisposable()
 
+  static isModel = true
   static props: Object
   static defaultProps: Function | Object
+  options: ?Object = null
   methods: ?Object
   statics: ?Object
   settings: SettingsObject
@@ -29,7 +32,7 @@ export default class Model {
 
   @observable connected = false
   // sync to
-  remoteDb: ?string = null
+  remoteDB: ?string = null
   // for tracking which queries we are watching
   queryCache: Object = {}
   // hooks that run before/after operations
@@ -142,26 +145,25 @@ export default class Model {
     return worm()
   }
 
+  setupRemoteDB = (url, options: Object) => {
+    this.remoteDB = new PouchDB(url, options)
+  }
+
   connect = async (database: RxDB, options: Object): Promise<void> => {
-    // hmr:
+    this.options = options
+
+    if (options.remote) {
+      this.setupRemoteDB(options.remote, options.remoteOptions)
+    }
+
+    console.log('connect', this.database)
+    // re-connect or hmr
     if (this.database) {
       return
     }
 
+    // new connect
     this.database = database
-    this.remoteDB =
-      options.sync &&
-      new PouchDB(options.sync, {
-        skip_setup: true,
-        // auth: {
-        //   username: 'test',
-        //   password: 'whatsmynae',
-        // },
-        headers: {
-          authorization: '12345',
-        },
-      })
-
     this._collection = await database.collection({
       name: this.title,
       schema: this.compiledSchema,
@@ -209,6 +211,14 @@ export default class Model {
 
     // AND NOW
     this.connected = true
+
+    this.subscriptions.add(() => {
+      this._collection && this._collection.remove()
+    })
+  }
+
+  dispose() {
+    this.subscriptions.dispose()
   }
 
   createIndexes = async (): Promise<void> => {

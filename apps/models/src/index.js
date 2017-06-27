@@ -15,6 +15,8 @@ export Comment from './comment'
 export Image from './image'
 export User from './user'
 
+import User from './user'
+
 export type { Model } from '~/helpers'
 
 declare class ModelsStore {
@@ -59,6 +61,11 @@ export default class Models implements ModelsStore {
       withCredentials: false,
     })
     await this.attachModels()
+
+    User.superlogin.on('login', () => {
+      console.log('login, reattach')
+      this.attachModels()
+    })
   }
 
   attachModels = async () => {
@@ -78,7 +85,15 @@ export default class Models implements ModelsStore {
 
       connections.push(
         model.connect(this.database, {
-          sync: `${this.databaseConfig.couchUrl}/${model.title}/`,
+          remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
+          remoteOptions: {
+            skip_setup: true,
+            ajax: {
+              headers: {
+                'X-Token': `${Math.random() * 10000000}`,
+              },
+            },
+          },
         })
       )
     }

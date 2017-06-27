@@ -15,20 +15,20 @@ import config from './login/superlogin.config'
 import url from 'url'
 
 function getAuth(authHeader) {
-  if (!authHeader) return null
-
-  var parts = authHeader.split(' ')
-
-  if (parts.length != 2 || parts[0] != 'Basic') return null
-
-  var creds = new Buffer(parts[1], 'base64').toString(),
-    i = creds.indexOf(':')
-
-  if (i == -1) return null
-
-  var username = creds.slice(0, i)
-  password = creds.slice(i + 1)
-
+  if (!authHeader) {
+    return null
+  }
+  const parts = authHeader.split(' ')
+  if (parts.length != 2 || parts[0] != 'Basic') {
+    return null
+  }
+  const creds = new Buffer(parts[1], 'base64').toString()
+  const i = creds.indexOf(':')
+  if (i == -1) {
+    return null
+  }
+  const username = creds.slice(0, i)
+  const password = creds.slice(i + 1)
   return [username, password]
 }
 
@@ -49,13 +49,13 @@ export default class Server {
     app.use(logger('dev'))
     // app.use(cors({ origin: Constants.APP_URL }))
 
+    const HEADER_ALLOWED =
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
+
     app.use((req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*')
       res.header('Access-Control-Allow-Credentials', 'true')
-      res.header(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-      )
+      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
       next()
     })
 
@@ -71,6 +71,15 @@ export default class Server {
       const path =
         remoteURL.path +
         req.originalUrl.slice(subPath.length + 1, req.originalUrl.length)
+
+      console.log('\n\nIN HEADERS', req.headers)
+
+      const auth = req.headers['authorization']
+      const authInfo = getAuth(auth)
+      delete req.headers['authorization']
+
+      const token = req.headers['access-control-request-headers']
+      delete req.headers['access-control-request-headers']
 
       const remoteReq = request(
         {
@@ -93,6 +102,7 @@ export default class Server {
             'access-control-allow-credentials',
             'access-control-allow-origin',
             'access-control-expose-headers',
+            'access-control-allow-headers',
           ]
 
           for (const header of CASE_ME) {
@@ -103,9 +113,14 @@ export default class Server {
             }
           }
 
-          if (db) {
-            remoteRes.headers['Access-Control-Allow-Credentials'] = 'true'
-          }
+          remoteRes.headers['Access-Control-Allow-Credentials'] = 'true'
+          remoteRes.headers['Access-Control-Allow-Headers'] = HEADER_ALLOWED
+
+          console.log('OUT HEADERS', remoteRes.headers)
+
+          // if (remoteRes.headers['Access-Control-Allow-Headers']) {
+          //   remoteRes.headers['Access-Control-Allow-Headers'] += ', x-token'
+          // }
 
           res.writeHead(remoteRes.statusCode, remoteRes.headers)
           remoteRes.pipe(res)

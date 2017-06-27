@@ -40,10 +40,11 @@ class User {
     // sync
     this.superlogin.on('login', async (event, session) => {
       this.user = await this.getCurrentUser()
-      console.log('also got', session)
-      this.documents.connect(this.database, {
-        sync: this.user.userDBs.documents,
-      })
+      if (this.user) {
+        this.documents.connect(this.database, {
+          sync: this.user.userDBs.documents,
+        })
+      }
     })
 
     this.superlogin.on('logout', () => {
@@ -80,7 +81,7 @@ class User {
   }
 
   get token() {
-    return this.superlogin && this.superlogin.getSession().token
+    return this.user && this.user.token
   }
 
   setupDbSync = () => {

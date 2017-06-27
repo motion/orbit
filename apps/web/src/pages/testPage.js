@@ -3,14 +3,6 @@ import { view } from '@jot/black'
 import { Form, Input, Segment, Button, Popover } from '@jot/ui'
 import { Document } from '@jot/models'
 
-console.log('go', Document)
-Document.all()
-  .exec()
-  .then(() => {
-    console.log('got')
-  })
-  .error(console.log)
-
 @view
 export default class TestPage extends React.Component {
   state = {

@@ -1,4 +1,6 @@
 # nate
+  - reason why app gets slow on hmr is its keeping old copies ot App, Models etc
+    - need to have clean dispose system built around it
   - watch should watch package.json files and re-run lerna bootstrap there
   - why CommanderStore.crumbs is coming back as mobxarray not plain array
   - why breadcrumbsstore log is happening on keystores

@@ -156,7 +156,6 @@ export default class Model {
       this.setupRemoteDB(options.remote, options.remoteOptions)
     }
 
-    console.log('connect', this.database, this)
     // re-connect or hmr
     if (this.database) {
       return

@@ -43,5 +43,6 @@ module.exports = {
     React$Children: true,
     React$Component: true,
     emit: true,
+    __dirname: true,
   },
 }

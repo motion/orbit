@@ -18,6 +18,7 @@ else
   lerna exec --parallel \
     --ignore @jot/native  \
     --ignore @jot/web \
+    --ignore @jot/couch \
     --ignore playground \
     --ignore babel-preset-motion \
       -- \

@@ -43,6 +43,16 @@ export default class Server {
     this.setupCouchStreamProxy()
   }
 
+  start() {
+    const port = this.server.get('port')
+    http.createServer(this.server).listen(port)
+    console.log('server started on port', port)
+  }
+
+  dispose() {
+    console.log('dispose server')
+  }
+
   verifySession = async (username, token) => {
     const user = await this.login.getUser(username)
     if (!user) {
@@ -66,7 +76,6 @@ export default class Server {
     // express
     app.set('port', port)
     app.use(logger('dev'))
-    // app.use(cors({ origin: Constants.APP_URL }))
 
     const HEADER_ALLOWED =
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
@@ -199,11 +208,5 @@ export default class Server {
         dbReq: true,
       })
     )
-  }
-
-  start() {
-    const port = this.server.get('port')
-    http.createServer(this.server).listen(port)
-    console.log('server started on port', port)
   }
 }

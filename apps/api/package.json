@@ -9,7 +9,6 @@
     "start-dev": "nodemon --legacy-watch --inspect=5858 lib"
   },
   "dependencies": {
-    "@jot/couch": "*",
     "@jot/models": "*",
     "body-parser": "^1.16.1",
     "cors": "^2.8.3",
@@ -24,7 +23,13 @@
     "passport-google-oauth": "^1.0.0",
     "ratelimit.js": "^1.8.0",
     "redis": "^2.7.1",
-    "superlogin": "^0.6.1"
+    "superlogin": "^0.6.1",
+    "couchdb-bootstrap": "^1.14.0",
+    "couchdb-compile": "^1.7.0",
+    "couchdb-configure": "^1.5.1",
+    "couchdb-ensure": "^1.3.3",
+    "couchdb-push": "^2.3.2",
+    "couchdb-secure": "^1.4.2"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

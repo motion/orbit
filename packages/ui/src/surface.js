@@ -43,7 +43,7 @@ export type Props = {
   padding?: number | Array<number>,
   margin?: number | Array<number>,
   height?: number,
-  noGlow?: boolean,
+  glow?: boolean,
 }
 
 @inject(context => context.ui)
@@ -76,6 +76,7 @@ export default class Surface {
     // based on a vertical rythm
     // sizes
     const height = props.size * LINE_HEIGHT
+    const width = props.width
     const padding = props.padding || [0, height / 4]
     const fontSize = props.fontSize || height * 0.5
 
@@ -107,13 +108,19 @@ export default class Surface {
     }
 
     const surfaceStyle = {
-      surface: {
+      element: {
         fontSize,
         lineHeight: '1px',
+        color,
+        '&:hover': {
+          color: hoverColor,
+        },
+      },
+      surface: {
+        width,
         padding,
         borderRadius,
         borderColor,
-        color,
         background,
         ...segmentStyles,
         '& > icon': {
@@ -124,7 +131,6 @@ export default class Surface {
         },
         '&:hover': {
           ...theme.hover,
-          color: hoverColor,
         },
         // this is just onmousedown
         '&:active': {
@@ -187,8 +193,9 @@ export default class Surface {
     padding,
     height,
     margin,
-    noGlow,
+    glow,
     hoverColor,
+    wrapElement,
     ...props
   }: Props) {
     const curTheme = this.getStyles()
@@ -206,14 +213,17 @@ export default class Surface {
 
     return (
       <surface
-        tagName={tagName}
+        tagName={!wrapElement && tagName}
         $inSegment={inSegment && this.props}
         $clickable={!!onClick || clickable}
         $isActive={active}
         $highlight={highlight}
-        className={`${className || ''} ${this.uniq}`}
-        onClick={onClick}
-        {...props}
+        className={this.uniq}
+        {...!wrapElement && {
+          onClick,
+          ...props,
+          className: `${className || ''} ${this.uniq}`,
+        }}
       >
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
@@ -226,7 +236,7 @@ export default class Surface {
           size={iconSize}
           {...iconProps}
         />
-        <glowWrap if={!noGlow} $minimal={chromeless}>
+        <glowWrap if={glow} $minimal={chromeless}>
           <Glow
             full
             scale={1.5}
@@ -234,14 +244,13 @@ export default class Surface {
             opacity={0.06}
           />
         </glowWrap>
-        <children
-          if={children}
+        <element
+          {...wrapElement && { tagName, ...props }}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}
-          style={{ color }}
         >
           {children}
-        </children>
+        </element>
         {after || null}
         <Popover
           if={tooltip}
@@ -297,8 +306,10 @@ export default class Surface {
         background: '#eee',
       },
     },
-    children: {
+    element: {
       userSelect: 'none',
+      height: '100%',
+      flex: 1,
     },
     icon: {
       pointerEvents: 'none',

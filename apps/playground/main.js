@@ -37,6 +37,14 @@ class Playground {
             </Z.Segment>
           </row>
         </section>
+
+        <section $form>
+          <row $$row>
+            <Z.Input icon="world" placeholder="you" />
+            <Z.Input icon="world" size={2} />
+            <Z.Input placeholder="hello" />
+          </row>
+        </section>
       </playground>
     )
   }

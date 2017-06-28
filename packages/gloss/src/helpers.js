@@ -32,7 +32,3 @@ export function flattenThemes(themes: ?Object) {
 }
 
 export const isFunc = (x: any) => typeof x === 'function'
-export const filterStyleKeys = (arr: Array<string>) =>
-  arr.filter(key => key[0] === '$' && key[1] !== '$')
-export const filterParentStyleKeys = (arr: Array<string>) =>
-  arr.filter(key => key[0] === '$' && key[1] === '$')

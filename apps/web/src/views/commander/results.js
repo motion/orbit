@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
+import { Title } from '@mcro/ui'
 import DocView from '~/views/document'
-import { Title } from '@jot/ui'
 import { HEADER_HEIGHT } from '~/constants'
 import { last } from 'lodash'
 import moment from 'moment'

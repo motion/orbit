@@ -26,48 +26,50 @@ const DEFAULT_OPTS = {
 class Gloss {
   options: Options
 
-  constructor(options: Options = DEFAULT_OPTS) {
-    this.options = options
-    this.motionStyle = motionStyle(options)
+  makeCreateElement = (styles, theme) =>
+    fancyElement(
+      theme,
+      this.baseStyles,
+      styles || {},
+      this.options,
+      this.applyNiceStyles
+    )
+
+  constructor(opts: Options = DEFAULT_OPTS) {
+    this.options = opts
+    this.niceStyle = motionStyle(opts)
     this.baseStyles =
-      options.baseStyles &&
-      this.getStyles('parentStyles', this.options.baseStyles)
-    this.glossyEl = (styles, theme) =>
-      fancyElement(
-        theme,
-        this.baseStyles,
-        styles,
-        this.options,
-        this.applyNiceStyles
-      )
-    // allow grabbing createElement off decorator
-    this.createElement = this.glossyEl()
-    this.decorator.createElement = this.createElement
+      opts.baseStyles && this.getStyles('parents', opts.baseStyles)
+    this.decorator.createElement = this.makeCreateElement()
   }
 
   decorator = (Child: Function | string, style: ?Object) => {
     // shorthand
     if (typeof Child === 'string') {
       const name = Child
-      const createEl = this.glossyEl(this.getStyles(name, { [name]: style }))
+      const createEl = this.makeCreateElement(
+        this.getStyles(name, { [name]: style })
+      )
       return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
     }
 
     let themes
     if (Child.theme) {
       themes = this.getStyles('theme', Child.theme)
+      console.log('themes', themes)
     }
 
     // class
     if (Child.prototype) {
-      // shim this.glossyElement
-      Child.prototype.glossElement = this.glossyEl(
+      // shim this.makeCreateElementement
+      Child.prototype.glossElement = this.makeCreateElement(
         this.getStyles(Child.name, Child.style)
       )
 
       const ogWillReceiveProps = Child.prototype.componentWillReceiveProps
       Child.prototype.componentWillReceiveProps = function(nextProps, ...args) {
         if (Child.theme) {
+          console.log('nextProps', nextProps, themes)
           // this.theme = getThemes(staticThemes, dynamicThemes)
         }
 
@@ -80,12 +82,10 @@ class Gloss {
 
   applyNiceStyles = (styles: Object, errorMessage: string) => {
     for (const style in styles) {
-      if (!styles.hasOwnProperty(style)) {
-        continue
-      }
+      if (!styles.hasOwnProperty(style)) continue
       const value = styles[style]
       if (value) {
-        styles[style] = this.motionStyle(value, errorMessage)
+        styles[style] = this.niceStyle(value, errorMessage)
       }
     }
     return styles
@@ -96,7 +96,7 @@ class Gloss {
     const staticStyles = pickBy(style, x => !isFunc(x))
     const niceStatics = this.applyNiceStyles(staticStyles, `${name}:`)
     const statics = StyleSheet.create(niceStatics)
-    // attach key to status objects so we can use later in glossyElement
+    // attach key to status objects so we can use later in makeCreateElementement
     for (const key of Object.keys(statics)) {
       statics[key].key = key
     }

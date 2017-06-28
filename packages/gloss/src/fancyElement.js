@@ -26,8 +26,8 @@ export default function fancyElementFactory(
   options: Object,
   applyNiceStyles: Function
 ) {
-  const STYLE_STATICS = (styles && styles.statics) || {}
-  const STYLE_DYNAMICS = (styles && styles.dynamics) || {}
+  const STYLE_STATICS = styles.statics || {}
+  const STYLE_DYNAMICS = styles.dynamics || {}
   const PARENT_DYNAMICS = (parentStyles && parentStyles.dynamics) || {}
   const PARENT_STATICS = (parentStyles && parentStyles.statics) || {}
   const $ = '$'
@@ -49,7 +49,7 @@ export default function fancyElementFactory(
       }
       if (STYLE_DYNAMICS[tagName]) {
         finalStyles.push(
-          StyleSheet.create(applyNiceStyles(STYLE_DYNAMICS[tagName](val)))
+          StyleSheet.create(applyNiceStyles(STYLE_DYNAMICS[tagName]()))
         )
       }
     }

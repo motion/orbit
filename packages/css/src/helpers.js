@@ -89,9 +89,5 @@ export function colorToString(color: Color, options): string {
 
   res = objectToColor(res)
 
-  if (res.model) {
-    debugger
-  }
-
   return res
 }

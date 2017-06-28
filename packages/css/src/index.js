@@ -40,7 +40,7 @@ const COMMA_SEPARATABLE = {
 }
 
 // helpers
-const px = (x: number | string) => (/px$/.test(`${x}`) ? thing : `${thing}px`)
+const px = (x: number | string) => (/px$/.test(`${x}`) ? x : `${x}px`)
 const isFloat = n => n === +n && n !== (n | 0)
 
 // style transform creator
@@ -57,7 +57,9 @@ export default function motionStyle(options: Object = {}) {
         : toColor(v),
     background: v =>
       isCSSAble(v.color) || v.image || v.position || v.repeat
-        ? `${toColor(v.color)} ${v.image} ${v.position.join(' ')} ${v.repeat}`
+        ? `${toColor(v.color)} ${v.image} ${v.position
+            ? v.position.join(' ')
+            : v.position} ${v.repeat}`
         : toColor(v),
   }
 

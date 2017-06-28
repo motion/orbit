@@ -52,7 +52,9 @@ export class Gloss {
 
     // class
     if (Child.prototype) {
-      Child.prototype.glossElement = this.createElement
+      Child.prototype.glossElement = this.makeCreateEl(
+        this.getStyles('style', Child.style)
+      )
 
       const ogRender = Child.prototype.render
       Child.prototype.render = function(nextProps, ...args) {
@@ -83,16 +85,20 @@ export class Gloss {
     if (!styles) {
       return null
     }
-    const finalStyles = {}
+    const functionalStyles = {}
+    const staticStyles = {}
     for (const [key, val] of Object.entries(styles)) {
-      console.log('kv', key, val)
       if (typeof val === 'function') {
-        finalStyles[key] = val // to be run later
+        functionalStyles[key] = val // to be run later
       } else {
-        finalStyles[key] = StyleSheet.create(this.niceStyle(val), key)
+        staticStyles[key] = val
       }
     }
-    return finalStyles
+    const stylesheet = {
+      ...StyleSheet.create(this.niceStyleSheet(staticStyles)),
+      ...functionalStyles,
+    }
+    return stylesheet
   }
 }
 

@@ -85,11 +85,12 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
       // finalStyles.push(StyleSheet.create(niceStyle(style)))
     }
 
+    console.log('finalStyles', type, finalStyles)
+
     // styles => props
     if (finalStyles.length) {
       if (isTag) {
         // tags get className
-        console.log('styles', finalStyles)
         finalProps.className = css(...finalStyles)
         // keep original classNames
         if (props && props.className) {

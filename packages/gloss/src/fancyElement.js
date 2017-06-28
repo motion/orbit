@@ -4,6 +4,7 @@ import { StyleSheet, css } from './stylesheet'
 import { omit } from 'lodash'
 import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 import deepExtend from 'deep-extend'
+import type { Gloss } from './index'
 
 const arrayOfObjectsToObject = (arr: Array<Object>) => {
   let res = {}
@@ -17,20 +18,11 @@ const TAG_NAME_MAP = {
   title: 'x-title',
   meta: 'x-meta',
 }
+const $ = '$'
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(
-  theme: Object,
-  parentStyles: Object,
-  styles: Object,
-  options: Object,
-  applyNiceStyles: Function
-) {
-  const STYLE_STATICS = styles.statics || {}
-  const STYLE_DYNAMICS = styles.dynamics || {}
-  const PARENT_DYNAMICS = (parentStyles && parentStyles.dynamics) || {}
-  const PARENT_STATICS = (parentStyles && parentStyles.statics) || {}
-  const $ = '$'
+export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
+  const { baseStyles, options, niceStyleSheet, niceStyle } = Gloss
 
   return function fancyElement(
     type: string | Function,
@@ -41,23 +33,29 @@ export default function fancyElementFactory(
     const isTag = typeof type === 'string'
     const finalProps = {}
     const finalStyles = []
+    let style
+
+    function addStyle(style, val) {
+      if (!style) return
+      if (typeof style === 'function') {
+        finalStyles.push(StyleSheet.create(niceStyleSheet(style(val))))
+      } else {
+        finalStyles.push(style)
+      }
+    }
 
     if (isTag || type.name) {
       const tagName = type.name || type
-      if (STYLE_STATICS[tagName]) {
-        finalStyles.push(STYLE_STATICS[tagName])
-      }
-      if (STYLE_DYNAMICS[tagName]) {
-        finalStyles.push(
-          StyleSheet.create(applyNiceStyles(STYLE_DYNAMICS[tagName]()))
-        )
-      }
+      addStyle(styles[tagName])
     }
 
     if (propNames) {
       for (const NAME of propNames) {
         const val = props && props[NAME]
-
+        if (NAME === 'style') {
+          style = val
+          continue
+        }
         if (NAME[0] !== $) {
           // pass props down if not style prop
           finalProps[NAME] = val
@@ -67,35 +65,22 @@ export default function fancyElementFactory(
           // ignore most falsy values (except 0)
           continue
         }
-
         // $$style
-        const isParentStyle = NAME[1] === $
-        if (isParentStyle) {
-          const key = NAME.slice(2)
-          console.log('parentstyle', key)
-          if (PARENT_DYNAMICS && PARENT_DYNAMICS[key]) {
-            finalStyles.push(
-              StyleSheet.create(applyNiceStyles(PARENT_DYNAMICS[key](val)))
-            )
-          } else if (PARENT_STATICS && PARENT_STATICS[key]) {
-            finalStyles.push(PARENT_STATICS[key])
+        if (baseStyles) {
+          const isParentStyle = NAME[1] === $
+          if (isParentStyle) {
+            addStyle(baseStyles[NAME.slice(2)], val)
+            continue
           }
-          continue
         }
-
         // $style
-        const key = NAME.slice(1)
-        if (STYLE_STATICS[key]) {
-          finalStyles.push(STYLE_STATICS[key])
-          continue
-        }
-        if (STYLE_DYNAMICS[key]) {
-          finalStyles.push(
-            StyleSheet.create(applyNiceStyles(STYLE_DYNAMICS[key](val)))
-          )
-          continue
-        }
+        addStyle(styles[NAME.slice(1)], val)
       }
+    }
+
+    // glossify and append style prop
+    if (style) {
+      finalStyles.push(StyleSheet.create(niceStyle(style)))
     }
 
     // styles => props

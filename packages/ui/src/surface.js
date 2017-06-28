@@ -110,6 +110,8 @@ export default class Surface {
       (theme && theme.surface.fontSize * 0.85) ||
       Math.log(size + 1) * 15
 
+    console.log('123', theme)
+
     return (
       <surface
         style={theme && theme.surface}

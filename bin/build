@@ -16,7 +16,7 @@ else
   (cd packages/preset-motion && yarn link)
   yarn link @mcro/preset-motion
   # lerna
-  lerna exec --parallel \
+  ./node_modules/lerna/bin/lerna.js exec --parallel \
     --ignore @mcro/native  \
     --ignore @mcro/web \
     --ignore @mcro/couch \

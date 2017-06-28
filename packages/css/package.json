@@ -1,6 +1,5 @@
 {
   "name": "@mcro/css",
-  "private": true,
   "version": "6.6.3",
   "description": "",
   "main": "lib/index.js",

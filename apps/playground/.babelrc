@@ -3,10 +3,8 @@
     [
       "@mcro/preset-motion",
       {
-        "disable": [
-          "motion-hmr"
-        ]
-      }
-    ]
-  ]
+        "disable": ["@mcro/hmr"],
+      },
+    ],
+  ],
 }

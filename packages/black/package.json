@@ -1,6 +1,5 @@
 {
   "name": "@mcro/black",
-  "private": true,
   "main": "lib/index.js",
   "version": "0.0.0",
   "scripts": {},

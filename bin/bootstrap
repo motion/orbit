@@ -67,7 +67,7 @@ yarn install --prod
 echo "link @mcro/preset-motion"
 (cd packages/preset-motion && yarn link && cd ../.. && yarn link @mcro/preset-motion)
 echo "lerna bootstrap"
-lerna bootstrap --npm-client yarn
+./node_modules/lerna/bin/lerna.js bootstrap --npm-client yarn
 
 echo " welcome!"
 echo " to start the app:"

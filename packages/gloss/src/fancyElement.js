@@ -56,6 +56,10 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           style = val
           continue
         }
+        if (NAME === 'tagName' && options.tagName && isTag) {
+          type = val
+          continue
+        }
         if (NAME[0] !== $) {
           // pass props down if not style prop
           finalProps[NAME] = val
@@ -105,11 +109,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           finalStyles.map(style => style && style.style)
         )
       }
-    }
-
-    // change tagname after applying styles so the original named element gets the right style
-    if (isTag && options.tagName && props && props.tagName) {
-      type = props.tagName
     }
 
     console.log('final', type.name || type, finalProps)

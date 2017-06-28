@@ -27,7 +27,8 @@ const DEFAULT_OPTS = {
 export class Gloss {
   options: Options
 
-  makeCreateEl = styles => fancyElement(this, styles)
+  makeCreateEl = (styles, name) =>
+    fancyElement(this, this.getStyles(styles, name))
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
@@ -42,9 +43,7 @@ export class Gloss {
     // shorthand
     if (typeof Child === 'string') {
       const name = Child
-      const createEl = this.makeCreateEl(
-        this.getStyles(name, { [name]: style })
-      )
+      const createEl = this.makeCreateEl({ [name]: style }, name)
       return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
     }
 
@@ -52,9 +51,7 @@ export class Gloss {
 
     // class
     if (Child.prototype) {
-      Child.prototype.glossElement = this.makeCreateEl(
-        this.getStyles('style', Child.style)
-      )
+      Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
 
       const ogRender = Child.prototype.render
       Child.prototype.render = function(nextProps, ...args) {

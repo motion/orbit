@@ -62,7 +62,7 @@ export default class Main {
     return (
       <main>
         <Z.Theme name="dark">
-          <Z.Button name="test" />
+          <Z.Button>test</Z.Button>
         </Z.Theme>
         <ok if={false}>
           <Playground />

@@ -52,7 +52,7 @@ export class Gloss {
     // class
     if (Child.prototype) {
       Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
-
+      Child.prototype.gloss = this.niceStyleSheet
       const ogRender = Child.prototype.render
       Child.prototype.render = function(nextProps, ...args) {
         if (themes) {
@@ -62,7 +62,6 @@ export class Gloss {
         return ogRender.call(this, nextProps, ...args)
       }
     }
-
     return Child
   }
 

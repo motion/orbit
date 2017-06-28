@@ -86,10 +86,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
 
     // glossify and append style prop
     if (style) {
-      // finalStyles.push(StyleSheet.create(niceStyle(style)))
+      const sheet = StyleSheet.create({ [type]: niceStyle(style) })
+      finalStyles.push(sheet[type])
     }
-
-    console.log('finalStyles', type, finalStyles)
 
     // styles => props
     if (finalStyles.length) {
@@ -111,7 +110,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
       }
     }
 
-    console.log('final', type.name || type, finalProps)
     return ogCreateElement(type, finalProps, ...children)
   }
 }

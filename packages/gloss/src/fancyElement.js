@@ -56,7 +56,12 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           style = val
           continue
         }
-        if (NAME === 'tagName' && options.tagName && isTag) {
+        if (
+          NAME === 'tagName' &&
+          options.tagName &&
+          isTag &&
+          typeof val === 'string'
+        ) {
           type = val
           continue
         }

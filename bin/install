@@ -1,0 +1,24 @@
+#!/bin/bash
+
+. $(dirname $0)/__/common
+
+PACKAGE=$1
+APP=basename $(pwd)
+
+if [ "$PACKAGE" ]; then
+  if [[ ! -f "./package.json ]]; then
+    exit 1
+  fi
+
+  packageWas=$(cat package.json)
+  cat $packageWas > package_backup.json
+  jotsAre=$(cat package.json | grep @jot)
+  sed -i '/@jot/c\' ./package.json # remove
+  yarn add $PACKAGE ${@:2}
+  sed -i /"dependencies":/c\n$jotsAre\n' ./package.json # restore
+fi
+
+rm yarn.lock
+
+cd $ROOT && \
+  $(pwd)/node_modules/lerna/bin/lerna.js install --scope $APP

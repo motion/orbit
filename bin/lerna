@@ -1,3 +1,0 @@
-#!/bin/bash
-
-$(pwd)/node_modules/lerna/bin/lerna.js ${@:1}

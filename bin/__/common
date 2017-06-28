@@ -6,6 +6,8 @@ set -e
 APP_OLD_PWD="$(pwd)"
 OLD_PATH=$PATH
 
+cd $(dirname $0)/..
+
 # source env
 source .env
 

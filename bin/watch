@@ -1,7 +1,8 @@
 #!/bin/bash
 
-. $(dirname $0)/__common
+. $(dirname $0)/__/common
 cd $ROOT
 
-link-flow
-build --watch
+build --watch ${@:1}
+sleep 20
+link-flow &

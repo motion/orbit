@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. $(dirname $0)/__common
+. $(dirname $0)/__/common
 
 APP=$1
 ARGS=${@:1}
@@ -13,14 +13,14 @@ elif [ "$APP" = "web" ]; then
   npm run build
 else
   # ensure linked in
-  yarn link babel-preset-motion
+  yarn link @jot/preset-motion
   # lerna
   lerna exec --parallel \
     --ignore @jot/native  \
     --ignore @jot/web \
     --ignore @jot/couch \
     --ignore playground \
-    --ignore babel-preset-motion \
+    --ignore @jot/preset-motion \
       -- \
       babel src --out-dir lib -s true $ARGS
 fi

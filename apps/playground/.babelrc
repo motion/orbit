@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "babel-preset-motion",
+      "@jot/preset-motion",
       {
         "disable": [
           "motion-hmr"

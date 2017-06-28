@@ -11,6 +11,7 @@ module.exports = function(context, givenOpts) {
 
   const config = {
     plugins: [
+      getPlugin('babel-plugin-transform-runtime'),
       getPlugin('motion-hmr', {
         decoratorName: opts.decorator || 'view',
         transforms: [
@@ -39,8 +40,7 @@ module.exports = function(context, givenOpts) {
           {
             useBuiltIns: true,
             targets: {
-              node: 'current',
-              chrome: '40',
+              node: '4',
             },
             exclude: ['transform-regenerator', 'transform-async-to-generator'],
           },

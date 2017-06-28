@@ -3,22 +3,29 @@
 . $(dirname $0)/__/common
 
 PACKAGE=$1
-APP=basename $(pwd)
+APP=$(basename $(pwd))
 
 if [ "$PACKAGE" ]; then
-  if [[ ! -f "./package.json ]]; then
+  if [[ ! -f "./package.json" ]]; then
     exit 1
   fi
 
-  packageWas=$(cat package.json)
-  cat $packageWas > package_backup.json
-  jotsAre=$(cat package.json | grep @jot)
-  sed -i '/@jot/c\' ./package.json # remove
+  JOT_PACKAGES=$(cat package.json | grep "@jot/.*:")
+  sed -i.bak '/@jot/c\ /' ./package.json # remove @jot/ and add .bak
+  # cp package.json package.json2
   yarn add $PACKAGE ${@:2}
-  sed -i /"dependencies":/c\n$jotsAre\n' ./package.json # restore
+  # newlyInstalledPackages=$(comm -23 package.json package.json2) && rm package.json2
+  sed -i.bak2 '//c' ./package.json
+  REPLACE="  \"dependencies\": {\n$JOT_PACKAGES\n"
+  echo $REPLACE
+  sed -i.bak2 "/\"dependencies\"/c $REPLACE" ./package.json
 fi
 
-rm yarn.lock
+rm -f yarn.lock
 
-cd $ROOT && \
-  $(pwd)/node_modules/lerna/bin/lerna.js install --scope $APP
+cd $ROOT
+cat ./node_modules/lerna/bin/lerna.js
+
+./node_modules/lerna/bin/lerna.js install --scope @jot/$APP
+
+cd -

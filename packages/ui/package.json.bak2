@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "author": "Motion (motion.io)",
   "license": "MIT",
+  "dependencies": {
     "color": "^1.0.3",
     "element-resize-detector": "^1.1.12",
     "fuzzy": "^0.1.3",

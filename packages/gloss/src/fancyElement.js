@@ -84,6 +84,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         }
         if (styles) {
           // $style
+          console.log('adding style', styles)
           addStyle(styles[NAME.slice(1)], val)
         }
       }

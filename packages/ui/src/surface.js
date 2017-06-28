@@ -107,7 +107,7 @@ export default class Surface {
     const stringIcon = typeof icon === 'string'
     const iconSize =
       _iconSize ||
-      (theme && theme.surface.fontSize * 0.85) ||
+      (theme.surface && theme.surface.fontSize * 0.85) ||
       Math.log(size + 1) * 15
 
     console.log('123', theme)
@@ -120,7 +120,7 @@ export default class Surface {
     //     }}
 
     return (
-      <surface style={theme && theme.surface} tagName={!wrapElement && tagName}>
+      <surface style={theme.surface} tagName={!wrapElement && tagName}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -136,11 +136,12 @@ export default class Surface {
           <Glow
             full
             scale={1.5}
-            color={(theme && theme.surface.color) || [0, 0, 0]}
+            color={(theme.surface && theme.surface.color) || [0, 0, 0]}
             opacity={0.06}
           />
         </glowWrap>
         <element
+          style={theme.element}
           {...wrapElement && { tagName, ...props }}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}
@@ -205,7 +206,7 @@ export default class Surface {
     element: {
       userSelect: 'none',
       height: '100%',
-      flex: 1,
+      // flex: 1,
     },
     icon: {
       pointerEvents: 'none',
@@ -222,10 +223,9 @@ export default class Surface {
   }
 
   get theme() {
-    const theme = this.context.uiTheme[this.context.uiActiveTheme]
-    // merge theme with this.props.theme?
+    const theme = this.context.uiTheme[this.context.uiActiveTheme || this.props.theme]
     if (!theme) {
-      return null
+      return {}
     }
     const { props } = this
 
@@ -268,6 +268,12 @@ export default class Surface {
       borderRightRadius: props.inSegment.last ? borderRadius : 0,
     }
 
+    const circularStyles = props.circular && {
+        padding: 0,
+        width: height,
+        borderRadius: props.size * LINE_HEIGHT,
+      }
+
     return {
       element: {
         fontSize,
@@ -278,11 +284,13 @@ export default class Surface {
         },
       },
       surface: {
+        height,
         width,
         padding,
         borderRadius,
         borderColor,
         background,
+        ...circularStyles,
         ...segmentStyles,
         '& > icon': {
           color: iconColor,
@@ -308,18 +316,6 @@ export default class Surface {
   }
 
   static theme = {
-    size: props => ({
-      surface: {
-        height: props.size * LINE_HEIGHT,
-      },
-    }),
-    circular: props => ({
-      surface: {
-        padding: 0,
-        width: props.size * LINE_HEIGHT,
-        borderRadius: props.size * LINE_HEIGHT,
-      },
-    }),
     spaced: {
       surface: {
         margin: [0, 5],

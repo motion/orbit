@@ -77,7 +77,7 @@ export class Gloss {
   }
 
   // runs niceStyleSheet on non-function styles
-  getStyles = (name, styles) => {
+  getStyles = (styles, name) => {
     if (!styles) {
       return null
     }

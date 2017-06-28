@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@jot/black'
-import { Theme, Button } from '@jot/ui'
+import * as Z from '@jot/ui'
 
 @view
 class Playground {
@@ -9,12 +9,42 @@ class Playground {
     return (
       <playground>
         <section $buttons>
-          <Button icon="world">Hello World</Button>
-          <Button icon="world" size={2}>Hello World</Button>
-          <Button color="red" background="blue">Hello World</Button>
+          <row $$row>
+            <Z.Button test icon="world">Hello World</Z.Button>
+            <Z.Button test icon="world" size={2}>Hello World</Z.Button>
+            <Z.Button test color="red" background="blue">Hello World</Z.Button>
+            <Z.Button test circular>Hello World</Z.Button>
+            <Z.Button test circular size={3}>Hello World</Z.Button>
+          </row>
+
+          <row $$row>
+            <Z.Segment>
+              <Z.Button icon="world">Hello World</Z.Button>
+              <Z.Button icon="world">Hello World</Z.Button>
+              <Z.Button icon="world">Hello World</Z.Button>
+            </Z.Segment>
+
+            <Z.Segment>
+              <Z.Button circular icon="eye" />
+              <Z.Button circular icon="eye" />
+              <Z.Button circular icon="eye" />
+            </Z.Segment>
+
+            <Z.Segment>
+              <Z.Button circular icon="eye" />
+              <Z.Button circular icon="eye" />
+              <Z.Button circular icon="eye" />
+            </Z.Segment>
+          </row>
         </section>
       </playground>
     )
+  }
+
+  static style = {
+    row: {
+      padding: [20, 0],
+    },
   }
 }
 
@@ -24,12 +54,12 @@ export default class Main {
     return (
       <main>
         <Playground />
-        <Theme name="light">
+        <Z.Theme name="light">
           <Playground />
-        </Theme>
-        <Theme name="dark">
+        </Z.Theme>
+        <Z.Theme name="dark">
           <Playground />
-        </Theme>
+        </Z.Theme>
       </main>
     )
   }

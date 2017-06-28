@@ -1,38 +1,40 @@
 module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
+  const disable = opts.disable || []
+  const getPlugin = (name, opts) => {
+    if (disable.indexOf(name) !== -1) {
+      return
+    }
+    const plugin = require.resolve(name)
+    return opts ? [plugin, opts] : plugin
+  }
+
   const config = {
     plugins: [
-      [
-        require.resolve('motion-hmr'),
-        {
-          decoratorName: opts.decorator || 'view',
-          transforms: [
-            {
-              transform: require.resolve('motion-hmr-view'),
-              imports: ['react'],
-              locals: ['module'],
-            },
-          ],
-        },
-      ],
+      getPlugin('motion-hmr', {
+        decoratorName: opts.decorator || 'view',
+        transforms: [
+          {
+            transform: require.resolve('motion-hmr-view'),
+            imports: ['react'],
+            locals: ['module'],
+          },
+        ],
+      }),
       // order important here
-      require.resolve('babel-plugin-transform-decorators-legacy'),
-      require.resolve('babel-plugin-transform-class-properties'),
-      [
-        require.resolve('gloss/transform'),
-        {
-          decoratorName: opts.decorator || 'view',
-          jsxIf: opts.jsxIf || true,
-        },
-      ],
-      [
-        require.resolve('babel-plugin-root-import'),
-        [{ rootPathPrefix: '~', rootPathSuffix: 'src' }],
-      ],
+      getPlugin('babel-plugin-transform-decorators-legacy'),
+      getPlugin('babel-plugin-transform-class-properties'),
+      getPlugin('gloss/transform', {
+        decoratorName: opts.decorator || 'view',
+        jsxIf: opts.jsxIf || true,
+      }),
+      getPlugin('babel-plugin-root-import', [
+        { rootPathPrefix: '~', rootPathSuffix: 'src' },
+      ]),
     ],
     presets: [
       [
-        require.resolve('babel-preset-env'),
+        getPlugin('babel-preset-env'),
         Object.assign(
           {
             useBuiltIns: true,
@@ -45,10 +47,13 @@ module.exports = function(context, givenOpts) {
           opts
         ),
       ],
-      require.resolve('babel-preset-react'),
-      require.resolve('babel-preset-stage-1'),
+      getPlugin('babel-preset-react'),
+      getPlugin('babel-preset-stage-1'),
     ],
   }
+
+  config.plugins = config.plugins.filter(Boolean)
+  config.presets = config.presets.filter(Boolean)
 
   return config
 }

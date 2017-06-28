@@ -1,9 +1,9 @@
 // @flow
 import React from 'react'
-import { view, computed } from '@jot/black'
-import { Portal, Drawer, Button, Icon } from '@jot/ui'
+import { view, computed } from '@mcro/black'
+import { Portal, Drawer, Button, Icon } from '@mcro/ui'
 import DocView from '~/views/document'
-import { Document } from '@jot/models'
+import { Document } from '@mcro/models'
 import Router from '~/router'
 
 @view

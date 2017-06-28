@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import Title from './title'
 import type { Color } from 'gloss'
 

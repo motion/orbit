@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. $(dirname $0)/__common
+. $(dirname $0)/__/common
 cd $ROOT
 
 docker-compose ${@:1}

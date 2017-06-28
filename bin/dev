@@ -6,7 +6,7 @@
 
 # set env then source
 export ENV="dev"
-. $(dirname $0)/__common
+. $(dirname $0)/__/common
 cd $ROOT
 
 MINIKUBE_MEMORY=4086
@@ -61,7 +61,7 @@ elif [ "$ACTION" = "open" ]; then
 elif [ "$ACTION" = "cleanup-docker" ]; then
   cleanup-docker
 else
-  bin/__kubes ${@:1}
+  bin/__/kubes ${@:1}
 fi
 
 # POST RUN

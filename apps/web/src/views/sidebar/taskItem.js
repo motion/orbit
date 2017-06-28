@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '@jot/black'
+import { view, Shortcuts } from '@mcro/black'
 import { uniqBy, sortBy } from 'lodash'
 import {
   Drawer,
@@ -14,8 +14,8 @@ import {
   Segment,
   Button,
   SlotFill,
-} from '@jot/ui'
-import { User, Place } from '@jot/models'
+} from '@mcro/ui'
+import { User, Place } from '@mcro/models'
 import Team from './team'
 import Router from '~/router'
 import randomcolor from 'randomcolor'

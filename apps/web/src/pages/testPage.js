@@ -1,7 +1,7 @@
 import React from 'react'
-import { view } from '@jot/black'
-import { Form, Input, Segment, Button, Popover } from '@jot/ui'
-import { Document } from '@jot/models'
+import { view } from '@mcro/black'
+import { Form, Input, Segment, Button, Popover } from '@mcro/ui'
+import { Document } from '@mcro/models'
 
 @view
 export default class TestPage extends React.Component {

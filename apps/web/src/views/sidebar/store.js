@@ -1,4 +1,4 @@
-import { Document } from '@jot/models'
+import { Document } from '@mcro/models'
 import { sortBy, last, flatMap, memoize, find, flatten, random } from 'lodash'
 // import merge from 'deepmerge'
 import Router from '~/router'

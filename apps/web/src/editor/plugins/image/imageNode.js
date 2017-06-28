@@ -1,6 +1,6 @@
 import React from 'react'
-import { Image } from '@jot/models'
-import { view } from '@jot/black'
+import { Image } from '@mcro/models'
+import { view } from '@mcro/black'
 import node from '~/editor/node'
 
 const readFile = file =>

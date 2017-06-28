@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, watch, Shortcuts } from '@jot/black'
+import { view, watch, Shortcuts } from '@mcro/black'
 import { flatMap } from 'lodash'
 import {
   Theme,
@@ -20,8 +20,8 @@ import {
   Grain,
   Glint,
   PassProps,
-} from '@jot/ui'
-import { Document } from '@jot/models'
+} from '@mcro/ui'
+import { Document } from '@mcro/models'
 import Login from './login'
 import Signup from './signup'
 import SidebarStore from './store'

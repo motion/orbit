@@ -1,5 +1,5 @@
 {
-  "name": "jot-electron-app",
+  "name": "@mcro/electron",
   "private": true,
   "description": "",
   "scripts": {
@@ -16,5 +16,6 @@
     "mac": {
       "category": "pro"
     }
-  }
+  },
+  "version": "1.0.1"
 }

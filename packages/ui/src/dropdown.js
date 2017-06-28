@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import List from './list'
 import Button from './button'
 import Popover from './popover'

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
-import { Button, TiltGlow } from '@jot/ui'
-import { Document } from '@jot/models'
+import { view } from '@mcro/black'
+import { Button, TiltGlow } from '@mcro/ui'
+import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 

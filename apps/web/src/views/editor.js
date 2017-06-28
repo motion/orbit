@@ -1,4 +1,4 @@
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import { viewCache } from '~/helpers'
 import React from 'react'
 import Editor from '~/editor'

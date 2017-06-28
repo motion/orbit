@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 
 @view.ui
 export default class Select {

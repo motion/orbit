@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { view, log, watch } from '@jot/black'
-import { Icon } from '@jot/ui'
+import { view, log, watch } from '@mcro/black'
+import { Icon } from '@mcro/ui'
 import Router from '~/router'
 import type DocStore from './store'
 

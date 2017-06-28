@@ -1,10 +1,10 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@jot/black'
-import { PassProps, Segment, Button, Popover, List } from '@jot/ui'
+import { view, watch } from '@mcro/black'
+import { PassProps, Segment, Button, Popover, List } from '@mcro/ui'
 import Router from '~/router'
 import DocumentView from '~/views/document'
-import { User, Document } from '@jot/models'
+import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
 import Theme from '~/theme'
 

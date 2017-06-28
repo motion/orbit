@@ -1,7 +1,7 @@
 import InsertImages from 'slate-drop-or-paste-images'
 import { BLOCKS } from '~/editor/constants'
 import React from 'react'
-import { Button } from '@jot/ui'
+import { Button } from '@mcro/ui'
 import { createButton } from '../helpers'
 import ImageNode from './imageNode'
 

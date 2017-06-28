@@ -1,6 +1,5 @@
 import React from 'react'
-import { react, view } from '@jot/black'
-import { IS_ELECTRON } from '~/constants'
+import { view } from '@mcro/black'
 import DocView from '~/views/document'
 import { Title } from '@jot/ui'
 import { HEADER_HEIGHT } from '~/constants'

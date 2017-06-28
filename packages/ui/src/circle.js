@@ -1,4 +1,4 @@
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 
 @view
 export default class Circle {

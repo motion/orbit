@@ -1,8 +1,8 @@
 import { replacer } from '~/editor/helpers'
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import node from '~/editor/node'
-import { Button } from '@jot/ui'
+import { Button } from '@mcro/ui'
 import { BLOCKS } from '~/editor/constants'
 
 class EmailStore {

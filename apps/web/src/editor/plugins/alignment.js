@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popover, Button } from '@jot/ui'
+import { Popover, Button } from '@mcro/ui'
 
 export default class Alignment {
   name = 'alignment'

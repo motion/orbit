@@ -1,4 +1,4 @@
-import { store } from '@jot/black'
+import { store } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
 import { DocumentModel } from './document'

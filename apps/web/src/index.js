@@ -1,7 +1,7 @@
 // @flow
 import 'babel-polyfill'
 // import 'react-hot-loader/patch'
-import { createElement } from '@jot/black'
+import { createElement } from '@mcro/black'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'

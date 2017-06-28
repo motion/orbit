@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 
 const BAR_HEIGHT = 8
 const BAR_WIDTH = 30

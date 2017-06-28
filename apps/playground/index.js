@@ -2,7 +2,7 @@
 import Main from './main'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Theme, ThemeProvide } from '@jot/ui'
+import { Theme, ThemeProvide } from '@mcro/ui'
 import themes from './theme'
 
 ReactDOM.render(

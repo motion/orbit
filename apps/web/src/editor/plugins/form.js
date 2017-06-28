@@ -2,7 +2,7 @@ import AutoReplace from 'slate-auto-replace'
 import { Block, Raw } from 'slate'
 import { BLOCKS } from '~/editor/constants'
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import node from '~/editor/node'
 
 @node

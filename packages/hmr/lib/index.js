@@ -81,12 +81,18 @@ exports.default = function (_ref) {
     return t.objectExpression(properties);
   }
 
-  var wrapperFunctionTemplate = template('\n    function WRAPPER_FUNCTION_ID(ID_PARAM) {\n      return function(COMPONENT_PARAM) {\n        return EXPRESSION;\n      };\n    }\n  ');
+  var wrapperFunctionTemplate = template(`
+    function WRAPPER_FUNCTION_ID(ID_PARAM) {
+      return function(COMPONENT_PARAM) {
+        return EXPRESSION;
+      };
+    }
+  `);
 
   var VISITED_KEY = 'react-transform-' + Date.now();
 
   var componentVisitor = {
-    Class: function Class(path) {
+    Class(path) {
       if (path.node[VISITED_KEY] || !matchesDecorator(path.node, this.decoratorName) || !isReactLikeClass(path.node)) {
         return;
       }
@@ -124,7 +130,8 @@ exports.default = function (_ref) {
         path.replaceWith(wrapped);
       }
     },
-    CallExpression: function CallExpression(path) {
+
+    CallExpression(path) {
       if (path.node[VISITED_KEY] || !matchesPatterns(path.get('callee'), this.factoryMethods) || !isReactLikeComponentObject(path.node.arguments[0])) {
         return;
       }
@@ -347,7 +354,7 @@ exports.default = function (_ref) {
 
   return {
     visitor: {
-      Program: function Program(path, _ref2) {
+      Program(path, _ref2) {
         var file = _ref2.file,
             opts = _ref2.opts;
 

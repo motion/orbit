@@ -1,6 +1,6 @@
 import React from 'react'
-import { view } from '@jot/black'
-import { PassThrough, Segment } from '@jot/ui'
+import { view } from '@mcro/black'
+import { PassThrough, Segment } from '@mcro/ui'
 
 @view
 export default class ContextBar {

@@ -1,5 +1,5 @@
 // @flow
-import { CompositeDisposable } from '@jot/decor'
+import { CompositeDisposable } from '@mcro/decor'
 import { autorun, observable } from 'mobx'
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'

@@ -63,103 +63,6 @@ export default class Surface {
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
-  get theme() {
-    return this.context.uiTheme[this.context.uiActiveTheme]
-  }
-
-  getStyles = () => {
-    const { props, theme } = this
-    if (!theme) {
-      return null
-    }
-
-    // based on a vertical rythm
-    // sizes
-    const height = props.size * LINE_HEIGHT
-    const width = props.width
-    const padding = props.padding || [0, height / 4]
-    const fontSize = props.fontSize || height * 0.5
-
-    // radius
-    const baseBorderRadius = props.borderRadius || height / 5
-    const borderRadius = props.circular
-      ? height
-      : baseBorderRadius || height / 10
-
-    // colors
-    const background =
-      props.background || theme.base.background || 'transparent'
-    const borderColor = props.borderColor || theme.base.borderColor
-    const color = props.highlight
-      ? props.highlightColor || theme.highlight.color || props.color
-      : props.active ? theme.active.color : props.color || theme.base.color
-    const hoverColor =
-      (props.highlight && $(color).lighten(0.2)) ||
-      props.hoverColor ||
-      theme.hover.color ||
-      (props.color && $(props.color).lighten(0.2))
-    const iconColor = props.iconColor || color
-    const iconHoverColor = props.iconHoverColor || hoverColor
-
-    const segmentStyles = props.inSegment && {
-      marginLeft: -1,
-      borderLeftRadius: props.inSegment.first ? borderRadius : 0,
-      borderRightRadius: props.inSegment.last ? borderRadius : 0,
-    }
-
-    const surfaceStyle = {
-      element: {
-        fontSize,
-        lineHeight: '1px',
-        color,
-        '&:hover': {
-          color: hoverColor,
-        },
-      },
-      surface: {
-        width,
-        padding,
-        borderRadius,
-        borderColor,
-        background,
-        ...segmentStyles,
-        '& > icon': {
-          color: iconColor,
-        },
-        '&:hover > icon': {
-          color: iconHoverColor,
-        },
-        '&:hover': {
-          ...theme.hover,
-        },
-        // this is just onmousedown
-        '&:active': {
-          position: 'relative',
-          zIndex: 1000,
-        },
-        // inForm
-        ...(props.inForm && {
-          '&:active': theme.active,
-          '&:focus': theme.focus,
-        }),
-      },
-      isActive: {
-        background: theme.active.background,
-        borderColor: theme.active.borderColor,
-        '&:hover': {
-          color: hoverColor,
-          background: theme.active.background,
-          borderColor: theme.active.borderColor,
-        },
-        '&:hover > icon': {
-          color: hoverColor,
-        },
-      },
-    }
-
-    return surfaceStyle
-  }
-
   render({
     inSegment,
     inForm,
@@ -185,7 +88,7 @@ export default class Surface {
     tooltipProps,
     background,
     className,
-    theme,
+    theme: _theme,
     circular,
     size,
     borderRadius,
@@ -198,26 +101,19 @@ export default class Surface {
     wrapElement,
     ...props
   }: Props) {
-    const curTheme = this.getStyles()
-    if (curTheme) {
-      this.constructor.theme.theme = () => curTheme
-    }
-
+    const { theme } = this
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
     const iconSize =
       _iconSize ||
-      (curTheme && curTheme.surface.fontSize * 0.85) ||
+      (theme && theme.surface.fontSize * 0.85) ||
       Math.log(size + 1) * 15
 
     return (
       <surface
+        style={theme.surface}
         tagName={!wrapElement && tagName}
-        $inSegment={inSegment && this.props}
-        $clickable={!!onClick || clickable}
-        $isActive={active}
-        $highlight={highlight}
         className={this.uniq}
         {...!wrapElement && {
           onClick,
@@ -240,7 +136,7 @@ export default class Surface {
           <Glow
             full
             scale={1.5}
-            color={(curTheme && curTheme.surface.color) || [0, 0, 0]}
+            color={(theme && theme.surface.color) || [0, 0, 0]}
             opacity={0.06}
           />
         </glowWrap>
@@ -323,6 +219,92 @@ export default class Surface {
     iconAfter: {
       order: 3,
     },
+  }
+
+  get theme() {
+    const theme = this.context.uiTheme[this.context.uiActiveTheme]
+    // merge theme with this.props.theme?
+    if (!theme) {
+      return null
+    }
+    const { props } = this
+
+    // TODO
+    // const clickable = !!props.onClick || props.clickable
+    // const active = props.active
+    // const highlight = props.highlight
+
+    // based on a vertical rythm
+    // sizes
+    const height = props.size * LINE_HEIGHT
+    const width = props.width
+    const padding = props.padding || [0, height / 4]
+    const fontSize = props.fontSize || height * 0.5
+
+    // radius
+    const baseBorderRadius = props.borderRadius || height / 5
+    const borderRadius = props.circular
+      ? height
+      : baseBorderRadius || height / 10
+
+    // colors
+    const background =
+      props.background || theme.base.background || 'transparent'
+    const borderColor = props.borderColor || theme.base.borderColor
+    const color = props.highlight
+      ? props.highlightColor || theme.highlight.color || props.color
+      : props.active ? theme.active.color : props.color || theme.base.color
+    const hoverColor =
+      (props.highlight && $(color).lighten(0.2)) ||
+      props.hoverColor ||
+      theme.hover.color ||
+      (props.color && $(props.color).lighten(0.2))
+    const iconColor = props.iconColor || color
+    const iconHoverColor = props.iconHoverColor || hoverColor
+
+    const segmentStyles = props.inSegment && {
+      marginLeft: -1,
+      borderLeftRadius: props.inSegment.first ? borderRadius : 0,
+      borderRightRadius: props.inSegment.last ? borderRadius : 0,
+    }
+
+    return {
+      element: {
+        fontSize,
+        lineHeight: '1px',
+        color,
+        '&:hover': {
+          color: hoverColor,
+        },
+      },
+      surface: {
+        width,
+        padding,
+        borderRadius,
+        borderColor,
+        background,
+        ...segmentStyles,
+        '& > icon': {
+          color: iconColor,
+        },
+        '&:hover > icon': {
+          color: iconHoverColor,
+        },
+        '&:hover': {
+          ...theme.hover,
+        },
+        // this is just onmousedown
+        '&:active': {
+          position: 'relative',
+          zIndex: 1000,
+        },
+        // inForm
+        ...(props.inForm && {
+          '&:active': theme.active,
+          '&:focus': theme.focus,
+        }),
+      },
+    }
   }
 
   static theme = {

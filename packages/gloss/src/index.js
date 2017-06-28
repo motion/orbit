@@ -67,6 +67,11 @@ class Gloss {
         this.getStyles(Child, this.options.dontTheme ? null : Child.theme),
         Child.theme
       )
+
+      // const ogRender = Child.prototype.render
+      // Child.prototype.render = function(...args) {
+      //   return ogRender.call(this, ...args)
+      // }
     }
 
     return Child

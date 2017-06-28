@@ -75,6 +75,7 @@ export default class Root {
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
+            $hide={layoutStore.isCommanderOpen}
           >
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
@@ -123,12 +124,17 @@ export default class Root {
       right: 20,
       zIndex: 1000000000,
     },
+    hide: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
     layout: {
       flex: 1,
       flexFlow: 'row',
     },
     content: {
       flex: 1,
+      background: 'white',
       position: 'relative',
       overflowX: 'visible',
       overflowY: 'scroll',

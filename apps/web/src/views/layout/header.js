@@ -38,7 +38,10 @@ export default class Header {
             />
             <Button if={false} icon="home" onClick={() => Router.go('/')} />
           </Segment>
-          <Commander.Bar />
+          <Commander.Bar
+            onOpen={() => (layoutStore.commanderOpen = true)}
+            onClose={() => (layoutStore.commanderOpen = false)}
+          />
         </bar>
         <rest $$row>
           <SlotFill.Slot name="documentActions">

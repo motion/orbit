@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "main": "lib/index.js",
   "dependencies": {
+    "babel-preset-steelbrain": "^5.0.2",
     "global": "^4.3.2",
     "react-proxy": "^1.1.8"
   }

@@ -8,6 +8,7 @@ export default class LayoutStore {
   isDragging = false
   headerHovered = false
   isCreatingDoc = false
+  isCommanderOpen = false
   sidebar = new SidebarStore()
   showOnboard = false //watch(() => !User.org)
 }

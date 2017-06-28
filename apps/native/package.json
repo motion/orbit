@@ -1,6 +1,6 @@
 {
-  "name": "@jot/native",
-  "version": "1.0.0",
+  "name": "@mcro/native",
+  "version": "1.0.1",
   "private": true,
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
@@ -14,8 +14,8 @@
     "preset": "jest-expo"
   },
   "devDependencies": {
-    "react-native-scripts": "0.0.29",
     "jest-expo": "^0.4.0",
+    "react-native-scripts": "0.0.29",
     "react-test-renderer": "16.0.0-alpha.6"
   },
   "dependencies": {

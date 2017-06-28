@@ -1,6 +1,6 @@
 import React from 'react'
-import { view } from '@jot/black'
-import { TiltGlow, Icon, Button } from '@jot/ui'
+import { view } from '@mcro/black'
+import { TiltGlow, Icon, Button } from '@mcro/ui'
 import DocItem from '~/views/document/item'
 import FlipMove from 'react-flip-move'
 

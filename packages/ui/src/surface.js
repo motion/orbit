@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import * as PropTypes from 'prop-types'
-import { view, inject } from '@jot/black'
+import { view, inject } from '@mcro/black'
 import $ from 'color'
 import Icon from './icon'
 import Glow from './effects/glow'

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
-import { SlotFill } from '@jot/ui'
+import { view } from '@mcro/black'
+import { SlotFill } from '@mcro/ui'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
 import Breadcrumbs from './breadcrumbs'

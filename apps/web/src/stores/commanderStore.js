@@ -1,6 +1,6 @@
 // @flow
-import { watch, store, log, keycode, ShortcutManager } from '@jot/black'
-import { Document } from '@jot/models'
+import { watch, store, log, keycode, ShortcutManager } from '@mcro/black'
+import { Document } from '@mcro/models'
 import Router from '~/router'
 import { uniq } from 'lodash'
 import App from '~/app'
@@ -45,7 +45,7 @@ export default class CommanderStore {
   isOpen = false //bool(localStorage.getItem(OPEN)) || false
   value = ''
   path = ''
-  highlightIndex = 0
+  highlightIndex = -1
   searchResults: Array<Document> = []
   input: ?HTMLInputElement = null
 
@@ -167,6 +167,10 @@ export default class CommanderStore {
     )
   }
 
+  get isEnterToCreate() {
+    return this.isTypingPath && this.peek && this.peek.length === 0
+  }
+
   get currentPath(): string {
     return this.splitPath(this.crumbs)
   }
@@ -198,6 +202,7 @@ export default class CommanderStore {
   }
 
   get highlightedDocument() {
+    if (this.highlightIndex === -1) return null
     return this.peek[this.highlightIndex]
   }
 
@@ -206,13 +211,11 @@ export default class CommanderStore {
   }
 
   splitPath = (path: string): Array<string> => {
-    if (path[0] !== '/') {
-      return path
-    }
-    return path.split(PATH_SEPARATOR).slice(1)
+    return path.split(PATH_SEPARATOR).slice(path[0] === '/' ? 1 : 0)
   }
 
   onChange = (event: Event) => {
+    this.highlightIndex = -1
     this.value = event.target.value
     this.open()
   }
@@ -234,6 +237,11 @@ export default class CommanderStore {
   getDocsAtPath = async (path: string, create = false): Array<Document> => {
     const result = []
     let last
+
+    if (path === '/') {
+      return await Document.root().exec()
+    }
+
     for (const slug of this.splitPath(path)) {
       const query = { slug }
       if (last) {
@@ -257,6 +265,7 @@ export default class CommanderStore {
   }
 
   getChildDocsForPath = async (path: string): Array<Document> => {
+    if (path === '/') return await Document.root().exec()
     const lastDoc = await this.getDocAtPath(path)
     if (!lastDoc) {
       return []
@@ -270,6 +279,7 @@ export default class CommanderStore {
 
   onFocus = () => {
     console.log('focused commanderstore')
+    this.open()
   }
 
   onEnter = async () => {
@@ -282,8 +292,13 @@ export default class CommanderStore {
       this.value = `/${this.value}`
     }
     this.path = this.value
-    const found = await this.createDocAtPath(this.path)
-    this.navTo(found)
+
+    if (this.highlightIndex > -1) {
+      this.navTo(this.highlightedDocument)
+    } else {
+      const found = await this.createDocAtPath(this.path)
+      this.navTo(found)
+    }
     this.setTimeout(() => App.editor && App.editor.focus(), 200)
   }
 
@@ -291,6 +306,24 @@ export default class CommanderStore {
     event.persist()
     const code = keycode(event)
     console.log('commander', code)
+  }
+
+  onRight = () => {
+    // only matters if you're navigating with arrow keys
+    if (this.highlightIndex === -1) return
+
+    const endPath =
+      PATH_SEPARATOR + this.highlightedDocument.title + PATH_SEPARATOR
+
+    if (this.typedPath.length === 1) {
+      this.value = endPath
+      return
+    }
+
+    this.value =
+      PATH_SEPARATOR +
+      this.typedPath.slice(0, -1).join(PATH_SEPARATOR) +
+      endPath
   }
 
   open = () => {

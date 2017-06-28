@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
-import { List, Popover } from '@jot/ui'
+import { view } from '@mcro/black'
+import { List, Popover } from '@mcro/ui'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
 

@@ -1,5 +1,5 @@
-import { watch } from '@jot/black'
-import { Document } from '@jot/models'
+import { watch } from '@mcro/black'
+import { Document } from '@mcro/models'
 
 export default class DocListStore {
   get doc() {

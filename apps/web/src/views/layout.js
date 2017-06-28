@@ -1,10 +1,10 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '@jot/black'
+import { view, Shortcuts } from '@mcro/black'
 import { object } from 'prop-types'
-import { Glint, Theme, SlotFill } from '@jot/ui'
+import { Glint, Theme, SlotFill } from '@mcro/ui'
 import { IN_TRAY } from '~/constants'
-import { User } from '@jot/models'
+import { User } from '@mcro/models'
 import NotFound from '~/pages/404Page'
 import Router from '~/router'
 import Sidebar from '~/views/sidebar'
@@ -75,6 +75,7 @@ export default class Root {
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
+            $hide={layoutStore.isCommanderOpen}
           >
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
@@ -123,12 +124,17 @@ export default class Root {
       right: 20,
       zIndex: 1000000000,
     },
+    hide: {
+      opacity: 0,
+      pointerEvents: 'none',
+    },
     layout: {
       flex: 1,
       flexFlow: 'row',
     },
     content: {
       flex: 1,
+      background: 'white',
       position: 'relative',
       overflowX: 'visible',
       overflowY: 'scroll',

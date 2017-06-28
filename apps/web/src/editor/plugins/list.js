@@ -1,6 +1,6 @@
 import React from 'react'
 import node from '~/editor/node'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import { Paragraph } from './text'
 import EditList from './editList'
 import { BLOCKS } from '~/editor/constants'

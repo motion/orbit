@@ -1,5 +1,5 @@
 // @flow
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pIDB from 'pouchdb-adapter-idb'

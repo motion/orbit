@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import node from '~/editor/node'
 
 @node
@@ -41,7 +41,7 @@ export default class TitleNode {
       fontSize: 22,
       fontWeight: 600,
       lineHeight: 1.2,
-      color: '#eee',
+      // color: '#eee',
     },
   }
 }

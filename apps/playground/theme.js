@@ -1,5 +1,5 @@
 // @flow
-import { color } from '@jot/ui'
+import { color } from '@mcro/ui'
 
 const LIGHT = {
   highlightColor: 'rgb(89, 154, 244)',

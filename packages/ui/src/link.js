@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, observable, IS_ELECTRON } from '@jot/black'
+import { view, observable, IS_ELECTRON } from '@mcro/black'
 
 type Props = {
   router?: { path: string, go: Function },

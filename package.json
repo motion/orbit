@@ -14,7 +14,6 @@
   "dependencies": {
     "babel-cli": "^6.23.0",
     "babel-eslint": "^7.2.3",
-    "babel-preset-motion": "*",
     "check-dependencies": "^1.0.1",
     "eslint": "^3.19.0",
     "eslint-config-prettier": "^2.2.0",
@@ -23,7 +22,7 @@
     "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-prettier": "^2.1.2",
     "lerna": "2.0.0-rc.5",
-    "prettier": "^1.4.4"
+    "prettier": "^1.5.0"
   },
   "devDependencies": {
     "babel-preset-steelbrain": "^5.0.2"

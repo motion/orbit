@@ -44,5 +44,6 @@ module.exports = {
     React$Component: true,
     emit: true,
     __dirname: true,
+    exports: true
   },
 }

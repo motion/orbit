@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import {
   Theme,
   Form,
@@ -12,8 +12,8 @@ import {
   Segment,
   Button,
   PassProps,
-} from '@jot/ui'
-import { User } from '@jot/models'
+} from '@mcro/ui'
+import { User } from '@mcro/models'
 import Router from '~/router'
 import Page from '~/views/page'
 

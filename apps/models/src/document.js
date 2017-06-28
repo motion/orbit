@@ -1,5 +1,5 @@
 // @flow
-import { Model, query, str, object, array, bool } from '@jot/black'
+import { Model, query, str, object, array, bool } from '@mcro/black'
 import Image from './image'
 import User from './user'
 import generateName from 'sillyname'
@@ -268,6 +268,8 @@ export class DocumentModel extends Model {
       .find({ draft: { $ne: true } })
       // .sort({ createdAt: 'desc' })
       .limit(limit)
+
+  @query root = () => this.collection.find({ parentId: { $exists: false } })
 
   @query
   stars = () =>

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
-import * as Z from '@jot/ui'
+import { view } from '@mcro/black'
+import * as Z from '@mcro/ui'
 
 @view
 class Playground {

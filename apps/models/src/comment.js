@@ -1,4 +1,4 @@
-import { Model, query, str } from '@jot/black'
+import { Model, query, str } from '@mcro/black'
 import User from './user'
 
 class Comment extends Model {

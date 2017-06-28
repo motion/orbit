@@ -1,6 +1,6 @@
 // @flow
-import { view, keycode } from '@jot/black'
-import { User } from '@jot/models'
+import { view, keycode } from '@mcro/black'
+import { User } from '@mcro/models'
 import React from 'react'
 import {
   Dropdown,
@@ -12,7 +12,7 @@ import {
   Input,
   Button,
   Link,
-} from '@jot/ui'
+} from '@mcro/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 @view({

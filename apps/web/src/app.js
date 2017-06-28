@@ -1,6 +1,6 @@
 // @flow
 import AppStore from '~/stores/appStore'
-import * as Models from '@jot/models'
+import * as Models from '@mcro/models'
 import { DB_CONFIG } from '~/constants'
 
 const App = new AppStore({
@@ -14,8 +14,8 @@ export default App
 
 // hmr
 if (module && module.hot) {
-  module.hot.accept('@jot/models', () => {
-    log('accept: ./app:@jot/models')
+  module.hot.accept('@mcro/models', () => {
+    log('accept: ./app:@mcro/models')
     // log('got hmr for App, not restarting fully to avoid craziness')
     // require('./start').render()
   })

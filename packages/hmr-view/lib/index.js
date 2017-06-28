@@ -50,7 +50,7 @@ function proxyReactComponents(_ref) {
   })) {
     hot.accept(function (err) {
       if (err) {
-        console.warn('[React Transform HMR] There was an error updating ' + filename + ':');
+        console.warn(`[React Transform HMR] There was an error updating ${filename}:`);
         console.error(err);
       }
     });

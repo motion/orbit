@@ -7,7 +7,7 @@
 # set env then source
 export ENV="prod"
 
-. $(dirname $0)/__common
+. $(dirname $0)/__/common
 cd $ROOT
 
 # set prod context
@@ -22,5 +22,5 @@ if [ "$ACTION" = "ui" ]; then
 elif [ "$ACTION" = "open" ]; then
   open http://iwritey.com
 else
-  bin/__kubes ${@:1}
+  bin/__/kubes ${@:1}
 fi

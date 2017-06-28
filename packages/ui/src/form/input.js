@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { color, inject, view } from '@mcro/black'
 import Surface from '../surface'
 
 @view

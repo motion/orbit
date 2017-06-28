@@ -1,6 +1,6 @@
 // @flow
 import React, { Children, cloneElement } from 'react'
-import { view, Shortcuts } from '@jot/black'
+import { view, Shortcuts } from '@mcro/black'
 import FakeText from './fake/fakeText'
 import { range } from 'lodash'
 import ListItem from './listItem'

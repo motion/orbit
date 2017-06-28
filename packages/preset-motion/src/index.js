@@ -1,4 +1,4 @@
-module.exports = function(context, givenOpts) {
+export default function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
   const getPlugin = (name, opts) => {
@@ -11,11 +11,12 @@ module.exports = function(context, givenOpts) {
 
   const config = {
     plugins: [
-      getPlugin('motion-hmr', {
+      // getPlugin('babel-plugin-transform-runtime'),
+      getPlugin('@mcro/hmr', {
         decoratorName: opts.decorator || 'view',
         transforms: [
           {
-            transform: require.resolve('motion-hmr-view'),
+            transform: require.resolve('@mcro/hmr-view'),
             imports: ['react'],
             locals: ['module'],
           },
@@ -39,8 +40,7 @@ module.exports = function(context, givenOpts) {
           {
             useBuiltIns: true,
             targets: {
-              node: 'current',
-              chrome: '40',
+              node: '4',
             },
             exclude: ['transform-regenerator', 'transform-async-to-generator'],
           },

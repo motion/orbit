@@ -1,5 +1,5 @@
 // @flow
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import React from 'react'
 import Tilt from 'react-tilt'
 import Glow from './glow'

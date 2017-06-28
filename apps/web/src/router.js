@@ -1,5 +1,5 @@
 // @flow
-import Router from 'mo-router'
+import Router from '@mcro/router'
 import { start } from './start'
 
 let AppRouter

@@ -1,7 +1,7 @@
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import Router from '~/router'
-import { Segment, SlotFill, Button } from '@jot/ui'
+import { Segment, SlotFill, Button } from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import * as Commander from '~/views/commander'
 
@@ -38,7 +38,10 @@ export default class Header {
             />
             <Button if={false} icon="home" onClick={() => Router.go('/')} />
           </Segment>
-          <Commander.Bar />
+          <Commander.Bar
+            onOpen={() => (layoutStore.commanderOpen = true)}
+            onClose={() => (layoutStore.commanderOpen = false)}
+          />
         </bar>
         <rest $$row>
           <SlotFill.Slot name="documentActions">

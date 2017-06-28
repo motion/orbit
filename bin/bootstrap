@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. $(dirname $0)/__common
+. $(dirname $0)/__/common
 cd $ROOT
 
 # allow errors
@@ -27,9 +27,6 @@ function ensure-dep {
 
 xcode-select --install 2> /dev/null
 
-echo "have you updated homebrew?"
-
-echo "deps"
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ensure-dep "npm" -- brew install node
 ensure-dep "docker" -- brew install docker
@@ -51,12 +48,10 @@ ensure-dep "envtpl" -- pip install envtpl
 
 # /etc/hosts
 if grep -q "staging.dev" /etc/hosts; then
-  echo "staging.dev in /etc/hosts"
 else
   echo "$(minikube ip) couch.staging.dev api.staging.dev staging.dev" | sudo tee -a /etc/hosts
 fi
 if grep -q "jot.dev" /etc/hosts; then
-  echo "jot.dev in /etc/hosts"
 else
   echo "127.0.0.1 couch.jot.dev api.jot.dev jot.dev" | sudo tee -a /etc/hosts
   echo "12 ::1 jot.dev couch.jot.dev api.jot.dev" | sudo tee -a /etc/hosts
@@ -64,10 +59,10 @@ fi
 
 echo "yerna install"
 yarn install --prod
-echo "link babel-preset-motion"
-(cd packages/preset-motion && yarn link && cd ../.. && yarn link babel-preset-motion)
+echo "link @mcro/preset-motion"
+(cd packages/preset-motion && yarn link && cd ../.. && yarn link @mcro/preset-motion)
 echo "lerna bootstrap"
-lerna bootstrap --npm-client yarn
+./node_modules/lerna/bin/lerna.js bootstrap --npm-client yarn
 
 echo " welcome!"
 echo " to start the app:"

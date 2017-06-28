@@ -49,97 +49,95 @@ export default function fancyElementFactory(
   applyNiceStyles: Function
 ) {
   const SHOULD_THEME = !options.dontTheme && theme
-
-  function getSheet(dynamics: Object, name: string) {
-    const sheet = StyleSheet.create(applyNiceStyles(dynamics, `${name}`))
-    return Object.keys(dynamics).map(key => ({
-      ...sheet[key],
-      isDynamic: true,
-      key,
-    }))
-  }
-
-  // const cache = new WeakMap()
-
-  const PARENT_DYNAMICS = parentStyles.dynamics
-  const PARENT_STATICS = parentStyles.statics
+  const STYLE_STATICS = styles.statics || {}
+  const STYLE_DYNAMICS = styles.dynamics || {}
+  const PARENT_DYNAMICS = parentStyles.dynamics || {}
+  const PARENT_STATICS = parentStyles.statics || {}
   const $ = '$'
-  let isTag = null
 
   return function fancyElement(
     type: string | Function,
     props?: Object,
     ...children
   ) {
-    const propNames = Object.keys(props)
-    isTag = typeof type === 'string'
-    // [tagname, ...props]
-    if (isTag) {
-      propNames.unshift(type)
-    } else {
-      console.log(
-        'add name of propercased component hehe',
-        type.name,
-        type.constructor.name
-      )
-      // propNames.unshift(type.constructor.name)
-    }
+    const propNames = props ? Object.keys(props) : null
+    const isTag = typeof type === 'string'
     const finalProps = {}
-    const finalStyles = {}
+    const finalStyles = []
 
-    for (const NAME of propNames) {
-      if (NAME[0] !== $) {
-        continue
+    if (isTag || type.name) {
+      const tagName = type.name || type
+      if (STYLE_STATICS[tagName]) {
+        finalStyles.push(STYLE_STATICS[tagName])
       }
-      const val = props[NAME]
-      if (val === false || val === null || val === undefined) {
-        continue
-      }
-      const isParentStyle = NAME[1] === $
-
-      let propStyle
-
-      if (isParentStyle) {
-        const key = NAME.slice(2)
-        console.log('parentstyle', key)
-        if (PARENT_DYNAMICS && PARENT_DYNAMICS[key]) {
-          const styles = PARENT_DYNAMICS[NAME.slice(2)]
-          finalStyles.push(StyleSheet.create(applyNiceStyles(styles(val))))
-        } else if (PARENT_STATICS && PARENT_STATICS[key]) {
-          finalStyles.push(PARENT_STATICS[key])
-        }
-      }
-
-      // static
-      if (styles.statics) {
-        for (const key of allKeys) {
-          finalStyles[key].push(styles.statics[key])
-        }
-      }
-
-      // dynamic
-      if (styles.dynamics && activeKeys.length) {
-        const dynamics = getSheet(
-          getDynamics(activeKeys, props, styles.dynamics)
+      if (STYLE_DYNAMICS[tagName]) {
+        finalStyles.push(
+          StyleSheet.create(applyNiceStyles(STYLE_DYNAMICS[tagName](val)))
         )
-        for (const sheet of dynamics) {
-          finalStyles[sheet.key].push(sheet)
+      }
+    }
+
+    if (propNames) {
+      for (const NAME of propNames) {
+        const val = props && props[NAME]
+
+        if (NAME[0] !== $) {
+          // pass props down if not style prop
+          finalProps[NAME] = val
+          continue
+        }
+        if (val === false || val === null || val === undefined) {
+          // ignore most falsy values (except 0)
+          continue
+        }
+
+        // $$style
+        const isParentStyle = NAME[1] === $
+        if (isParentStyle) {
+          const key = NAME.slice(2)
+          console.log('parentstyle', key)
+          if (PARENT_DYNAMICS && PARENT_DYNAMICS[key]) {
+            finalStyles.push(
+              StyleSheet.create(applyNiceStyles(PARENT_DYNAMICS[key](val)))
+            )
+          } else if (PARENT_STATICS && PARENT_STATICS[key]) {
+            finalStyles.push(PARENT_STATICS[key])
+          }
+          continue
+        }
+
+        // $style
+        const key = NAME.slice(1)
+        if (STYLE_STATICS[key]) {
+          finalStyles.push(STYLE_STATICS[key])
+          continue
+        }
+        if (STYLE_DYNAMICS[key]) {
+          finalStyles.push(
+            StyleSheet.create(applyNiceStyles(STYLE_DYNAMICS[key](val)))
+          )
+          continue
         }
       }
     }
 
-    if (activeStyles.length) {
+    // styles => props
+    if (finalStyles.length) {
+      console.log('got styles', finalStyles)
       if (isTag) {
-        // apply classname styles
-        finalProps.className = css(...activeStyles)
+        // tags get className
+        finalProps.className = css(...finalStyles)
         // keep original classNames
-        if (props && props.className && typeof props.className === 'string') {
-          finalProps.className += ` ${props.className}`
+        if (props && props.className) {
+          if (typeof props.className === 'string') {
+            finalProps.className += ` ${props.className}`
+          }
+          // TODO: handle objects?
         }
       } else {
-        // components get a style prop
+        // children get a style prop
         finalProps.style = arrayOfObjectsToObject(
-          activeStyles.map(style => style && style.style)
+          finalStyles.map(style => style && style.style)
         )
       }
     }

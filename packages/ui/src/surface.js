@@ -112,7 +112,7 @@ export default class Surface {
 
     return (
       <surface
-        style={theme.surface}
+        style={theme && theme.surface}
         tagName={!wrapElement && tagName}
         className={this.uniq}
         {...!wrapElement && {

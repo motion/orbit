@@ -22,8 +22,7 @@ const $ = '$'
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
-  const { baseStyles, options, niceStyleSheet, niceStyle } = Gloss
-
+  const { baseStyles, options, niceStyle } = Gloss
   return function fancyElement(
     type: string | Function,
     props?: Object,
@@ -38,13 +37,14 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     function addStyle(style, val) {
       if (!style) return
       if (typeof style === 'function') {
-        finalStyles.push(StyleSheet.create(niceStyleSheet(style(val))))
+        console.log('push', style(val))
+        finalStyles.push(StyleSheet.create(niceStyle(style(val))))
       } else {
         finalStyles.push(style)
       }
     }
 
-    if (isTag || type.name) {
+    if (styles && (isTag || type.name)) {
       const tagName = type.name || type
       addStyle(styles[tagName])
     }
@@ -73,20 +73,23 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
             continue
           }
         }
-        // $style
-        addStyle(styles[NAME.slice(1)], val)
+        if (styles) {
+          // $style
+          addStyle(styles[NAME.slice(1)], val)
+        }
       }
     }
 
     // glossify and append style prop
     if (style) {
-      finalStyles.push(StyleSheet.create(niceStyle(style)))
+      // finalStyles.push(StyleSheet.create(niceStyle(style)))
     }
 
     // styles => props
     if (finalStyles.length) {
       if (isTag) {
         // tags get className
+        console.log('styles', finalStyles)
         finalProps.className = css(...finalStyles)
         // keep original classNames
         if (props && props.className) {
@@ -108,6 +111,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
       type = props.tagName
     }
 
+    console.log('final', type.name || type, finalProps)
     return ogCreateElement(type, finalProps, ...children)
   }
 }

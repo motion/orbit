@@ -27,34 +27,32 @@ const DEFAULT_OPTS = {
 export class Gloss {
   options: Options
 
-  makeEL = (styles = {}) => fancyElement(this, styles)
+  makeCreateEl = styles => fancyElement(this, styles)
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
     this.niceStyle = motionStyle(opts)
     this.baseStyles =
       opts.baseStyles && this.getStyles('parents', opts.baseStyles)
-    this.decorator.createElement = this.makeEL()
+    this.createElement = this.makeCreateEl()
+    this.decorator.createElement = this.createElement
   }
 
   decorator = (Child: Function | string, style: ?Object) => {
     // shorthand
     if (typeof Child === 'string') {
       const name = Child
-      const createEl = this.makeEL(this.getStyles(name, { [name]: style }))
+      const createEl = this.makeCreateEl(
+        this.getStyles(name, { [name]: style })
+      )
       return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
     }
 
-    let themes
-    if (Child.theme) {
-      themes = this.getStyles('theme', Child.theme)
-    }
+    const themes = this.getStyles('theme', Child.theme)
 
     // class
     if (Child.prototype) {
-      Child.prototype.glossElement = this.makeEL(
-        this.getStyles(Child.name, Child.style)
-      )
+      Child.prototype.glossElement = this.createElement
 
       const ogRender = Child.prototype.render
       Child.prototype.render = function(nextProps, ...args) {
@@ -62,7 +60,6 @@ export class Gloss {
           // console.log('nextProps', nextProps, themes)
           // this.theme = getThemes(staticThemes, dynamicThemes)
         }
-
         return ogRender.call(this, nextProps, ...args)
       }
     }
@@ -82,16 +79,17 @@ export class Gloss {
   }
 
   // runs niceStyleSheet on non-function styles
-  getStyles = (name, style) => {
-    if (!style) {
+  getStyles = (name, styles) => {
+    if (!styles) {
       return null
     }
     const finalStyles = {}
-    for (const [key, val] of Object.entries(style)) {
+    for (const [key, val] of Object.entries(styles)) {
+      console.log('kv', key, val)
       if (typeof val === 'function') {
-        finalStyles[key] = val
+        finalStyles[key] = val // to be run later
       } else {
-        finalStyles[key] = StyleSheet.create(this.niceStyleSheet(val), key)
+        finalStyles[key] = StyleSheet.create(this.niceStyle(val), key)
       }
     }
     return finalStyles

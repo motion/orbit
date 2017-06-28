@@ -112,17 +112,15 @@ export default class Surface {
 
     console.log('123', theme)
 
+    // todo restore: className={this.uniq}
+    // {...!wrapElement && {
+    //       onClick,
+    //       ...props,
+    //       className: `${className || ''} ${this.uniq}`,
+    //     }}
+
     return (
-      <surface
-        style={theme && theme.surface}
-        tagName={!wrapElement && tagName}
-        className={this.uniq}
-        {...!wrapElement && {
-          onClick,
-          ...props,
-          className: `${className || ''} ${this.uniq}`,
-        }}
-      >
+      <surface style={theme && theme.surface} tagName={!wrapElement && tagName}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>

@@ -61,13 +61,18 @@ export default class Main {
   render() {
     return (
       <main>
-        <Playground />
-        <Z.Theme name="light">
-          <Playground />
-        </Z.Theme>
         <Z.Theme name="dark">
-          <Playground />
+          <Z.Button name="test" />
         </Z.Theme>
+        <ok if={false}>
+          <Playground />
+          <Z.Theme name="light">
+            <Playground />
+          </Z.Theme>
+          <Z.Theme name="dark">
+            <Playground />
+          </Z.Theme>
+        </ok>
       </main>
     )
   }

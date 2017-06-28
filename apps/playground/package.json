@@ -1,12 +1,11 @@
 {
   "main": "index.js",
-  "name": "playground",
+  "name": "@jot/playground",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@jot/black": "*",
     "@jot/ui": "*",
-    "@jot/models": "*",
     "react": "^15.6.0",
     "react-dom": "^15.6.1"
   }

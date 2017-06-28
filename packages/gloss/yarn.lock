@@ -57,8 +57,8 @@ is-in-browser@1.0.2, is-in-browser@^1.0.2:
   resolved "https://registry.yarnpkg.com/is-in-browser/-/is-in-browser-1.0.2.tgz#f688bea8f1e5aadc3244ebc870d188cfb9b613cf"
 
 js-tokens@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.1.tgz#08e9f132484a2c45a30907e9dc4d5567b7f114d7"
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
 jss-camel-case@^3.0.0:
   version "3.0.0"
@@ -199,6 +199,10 @@ loose-envify@^1.0.0:
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
   dependencies:
     js-tokens "^3.0.0"
+
+motion-css@^6.6.3:
+  version "6.6.3"
+  resolved "https://registry.yarnpkg.com/motion-css/-/motion-css-6.6.3.tgz#86ff9d9e5500ee7ae90e94e6d2f6d6aee35c0848"
 
 murmurhash-js@^1.0.0:
   version "1.0.0"

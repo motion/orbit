@@ -174,7 +174,7 @@ export default function fancyElementFactory(
 
         // loop over themes and apply
         for (const prop of themeKeys) {
-          const isDynamic = typeof styles.theme[prop] === 'function'
+          const isDynamic = typeof theme[prop] === 'function'
 
           // static theme
           if (!isDynamic) {
@@ -191,7 +191,7 @@ export default function fancyElementFactory(
 
             if (hasProp) {
               // dynamic themes
-              const dynStyles = styles.theme[prop](this.props, activeTheme)
+              const dynStyles = theme[prop](this.props, activeTheme)
               const dynKeys = Object.keys(dynStyles).filter(
                 tag => allKeys.indexOf(tag) > -1
               )
@@ -221,7 +221,7 @@ export default function fancyElementFactory(
       key => key[0] === '$' || (hasStyleProp && key === 'style')
     )
     const newProps = omit(props, [
-      options.tagName ? props && props.tagName : undefined,
+      (options.tagName && props && props.tagName && 'tagName') || undefined,
       ...allStyleProps,
     ])
     const allStyleKeys = isTag ? [type, ...allStyleProps] : allStyleProps

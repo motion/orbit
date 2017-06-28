@@ -1,4 +1,4 @@
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import { replacer } from '~/editor/helpers'
 import React from 'react'
 import node from '~/editor/node'

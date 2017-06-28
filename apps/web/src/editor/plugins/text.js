@@ -2,7 +2,7 @@
 import React from 'react'
 import TrailingBlock from 'slate-trailing-block'
 import { BLOCKS } from '~/editor/constants'
-import { Popover, Button } from '@jot/ui'
+import { Popover, Button } from '@mcro/ui'
 import Highlighter from './helpers/highlighter'
 import node from '~/editor/node'
 import { createButton } from './helpers'

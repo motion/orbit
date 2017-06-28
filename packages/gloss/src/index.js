@@ -1,13 +1,13 @@
 // @flow
 import glossyElFactory from './fancyElement'
-import motionStyle from 'motion-css'
+import motionStyle from '@mcro/css'
 import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
 import { flattenThemes, isFunc } from './helpers'
 
 // exports
-export { colorToString, objectToColor, expandCSSArray } from 'motion-css'
-export type { Transform, Color } from 'motion-css'
+export { colorToString, objectToColor, expandCSSArray } from '@mcro/css'
+export type { Transform, Color } from '@mcro/css'
 // export components
 export ThemeProvide from './components/themeProvide'
 export Theme from './components/theme'

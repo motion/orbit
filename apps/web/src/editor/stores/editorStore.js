@@ -2,7 +2,7 @@
 import { Raw } from 'slate'
 import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
-import { computed, StoreType } from '@jot/black'
+import { computed, StoreType } from '@mcro/black'
 import { getSpec } from './helpers'
 import type CommanderStore from '~/types'
 

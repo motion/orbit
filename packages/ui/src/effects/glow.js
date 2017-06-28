@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
 import { throttle } from 'lodash'

@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "@jot/preset-motion",
+      "@mcro/preset-motion",
       {
         "disable": [
           "motion-hmr"

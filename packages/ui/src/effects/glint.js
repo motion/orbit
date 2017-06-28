@@ -1,5 +1,5 @@
 // @flow
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import type { Color } from 'gloss'
 
 const isUndef = x => typeof x === 'undefined'

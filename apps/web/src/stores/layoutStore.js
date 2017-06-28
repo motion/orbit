@@ -1,7 +1,7 @@
 // @flow
 import SidebarStore from '~/stores/sidebarStore'
-import { watch } from '@jot/black'
-import { User } from '@jot/models'
+import { watch } from '@mcro/black'
+import { User } from '@mcro/models'
 
 export default class LayoutStore {
   title = ''

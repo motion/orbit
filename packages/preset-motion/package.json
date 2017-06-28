@@ -1,5 +1,5 @@
 {
-   "name": "@jot/preset-motion",
+   "name": "@mcro/preset-motion",
   "version": "1.0.0",
   "dependencies": {
     "motion-hmr": "*",

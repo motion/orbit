@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, keycode } from '@jot/black'
+import { view, keycode } from '@mcro/black'
 
 export type Props = {
   editable?: Boolean,

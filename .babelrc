@@ -1,5 +1,5 @@
 {
   "presets": [
-    "@jot/preset-motion"
+    "@mcro/preset-motion"
   ]
 }

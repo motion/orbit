@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import {
   Text,
   Pane,
@@ -11,7 +11,7 @@ import {
   Segment,
   Button,
   SlotFill,
-} from '@jot/ui'
+} from '@mcro/ui'
 import {
   SortableContainer,
   SortableElement,

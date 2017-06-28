@@ -1,11 +1,11 @@
 // @flow
 import React from 'react'
 import { Editor } from 'slate'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import EditorStore from './stores/editorStore'
 import SelectBar from './views/selectBar'
 import Bar from './views/bar'
-import { SlotFill } from '@jot/ui'
+import { SlotFill } from '@mcro/ui'
 import type CommanderStore from '~/stores/commanderStore'
 
 export { Raw } from 'slate'

@@ -1,7 +1,7 @@
 import React from 'react'
-import { view, computed } from '@jot/black'
-import { User, Document } from '@jot/models'
-import { Button, Glow, Loading, Icon } from '@jot/ui'
+import { view, computed } from '@mcro/black'
+import { User, Document } from '@mcro/models'
+import { Button, Glow, Loading, Icon } from '@mcro/ui'
 import { isEqual, sortBy } from 'lodash'
 import Router from '~/router'
 // nice oxford commas for votes

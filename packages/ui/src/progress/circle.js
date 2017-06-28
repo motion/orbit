@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import { colorToString } from 'gloss'
 import type { Color } from 'gloss'
 

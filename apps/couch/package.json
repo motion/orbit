@@ -1,8 +1,0 @@
-{
-  "name": "@jot/couch",
-  "version": "1.0.0",
-  "main": "lib/index.js",
-  "scripts": {
-    "bootstrap": "COUCHDB_URL=http://admin:password@localhost:5984 node lib/bootstrap.js"
-  }
-}

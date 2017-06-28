@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import DocView from '~/views/document'
 import { HEADER_HEIGHT } from '~/constants'
 

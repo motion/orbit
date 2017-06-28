@@ -10,8 +10,8 @@ if [ "$PACKAGE" ]; then
     exit 1
   fi
 
-  JOT_PACKAGES=$(cat package.json | grep "@jot/.*:")
-  sed -i.bak '/@jot/c\ /' ./package.json # remove @jot/ and add .bak
+  JOT_PACKAGES=$(cat package.json | grep "@mcro/.*:")
+  sed -i.bak '/@mcro/c\ /' ./package.json # remove @mcro/ and add .bak
   # cp package.json package.json2
   yarn add $PACKAGE ${@:2}
   # newlyInstalledPackages=$(comm -23 package.json package.json2) && rm package.json2
@@ -26,6 +26,6 @@ rm -f yarn.lock
 cd $ROOT
 cat ./node_modules/lerna/bin/lerna.js
 
-./node_modules/lerna/bin/lerna.js install --scope @jot/$APP
+./node_modules/lerna/bin/lerna.js install --scope @mcro/$APP
 
 cd -

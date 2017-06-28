@@ -1,10 +1,10 @@
 {
+  "name": "@mcro/models",
   "private": true,
-  "name": "@jot/models",
   "version": "1.0.0",
   "main": "lib/index.js",
   "dependencies": {
-    "@jot/black": "*",
+    "@mcro/black": "*",
     "pouchdb-core": "^6.2.0",
     "superlogin-client": "^0.5.3",
     "pouchdb-adapter-http": "^6.2.0",

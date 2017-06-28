@@ -1,10 +1,10 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '@jot/black'
+import { view, Shortcuts } from '@mcro/black'
 import { object } from 'prop-types'
-import { Glint, Theme, SlotFill } from '@jot/ui'
+import { Glint, Theme, SlotFill } from '@mcro/ui'
 import { IN_TRAY } from '~/constants'
-import { User } from '@jot/models'
+import { User } from '@mcro/models'
 import NotFound from '~/pages/404Page'
 import Router from '~/router'
 import Sidebar from '~/views/sidebar'

@@ -1,5 +1,5 @@
 // @flow
-import { Model, query, str, object, array, bool } from '@jot/black'
+import { Model, query, str, object, array, bool } from '@mcro/black'
 
 const toSlug = (str: string) => `${str}`.replace(/ /g, '-').toLowerCase()
 const methods = {}

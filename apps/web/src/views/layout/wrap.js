@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import { SIDEBAR_TRANSITION } from '~/constants'
 
 // optimized re-render for sidebar resize

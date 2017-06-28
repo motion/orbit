@@ -1,7 +1,7 @@
 import React from 'react'
-import { view } from '@jot/black'
+import { view } from '@mcro/black'
 import node from '~/editor/node'
-import { Icon } from '@jot/ui'
+import { Icon } from '@mcro/ui'
 
 @node
 @view

@@ -13,14 +13,15 @@ elif [ "$APP" = "web" ]; then
   npm run build
 else
   # ensure linked in
-  yarn link @jot/preset-motion
+  (cd packages/preset-motion && yarn link)
+  yarn link @mcro/preset-motion
   # lerna
   lerna exec --parallel \
-    --ignore @jot/native  \
-    --ignore @jot/web \
-    --ignore @jot/couch \
-    --ignore playground \
-    --ignore @jot/preset-motion \
+    --ignore @mcro/native  \
+    --ignore @mcro/web \
+    --ignore @mcro/couch \
+    --ignore @mcro/playground \
+    --ignore @mcro/preset-motion \
       -- \
       babel src --out-dir lib -s true $ARGS
 fi

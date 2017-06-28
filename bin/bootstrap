@@ -64,8 +64,8 @@ fi
 
 echo "yerna install"
 yarn install --prod
-echo "link @jot/preset-motion"
-(cd packages/preset-motion && yarn link && cd ../.. && yarn link @jot/preset-motion)
+echo "link @mcro/preset-motion"
+(cd packages/preset-motion && yarn link && cd ../.. && yarn link @mcro/preset-motion)
 echo "lerna bootstrap"
 lerna bootstrap --npm-client yarn
 

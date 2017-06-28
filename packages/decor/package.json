@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@jot/decor",
+  "name": "@mcro/decor",
   "main": "lib/index.js",
   "version": "0.0.0",
   "scripts": {},

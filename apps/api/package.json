@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "@mcro/api",
   "private": true,
   "version": "1.0.0",
   "main": "lib/index.js",
@@ -9,7 +9,7 @@
     "start-dev": "nodemon --legacy-watch --inspect=5858 lib"
   },
   "dependencies": {
-    "@jot/models": "*",
+    "@mcro/models": "*",
     "body-parser": "^1.16.1",
     "cors": "^2.8.3",
     "express": "^4.14.1",

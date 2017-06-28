@@ -1,8 +1,8 @@
 import React from 'react'
-import { view, computed } from '@jot/black'
+import { view, computed } from '@mcro/black'
 import node from '~/editor/node'
-import { Document } from '@jot/models'
-import { Button, Glow, Loading, Icon } from '@jot/ui'
+import { Document } from '@mcro/models'
+import { Button, Glow, Loading, Icon } from '@mcro/ui'
 import { isEqual } from 'lodash'
 import Router from '~/router'
 

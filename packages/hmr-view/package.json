@@ -1,5 +1,5 @@
 {
-  "name": "motion-hmr-view",
+  "name": "@mcro/hmr-view",
   "version": "1.0.0",
   "main": "lib/index.js",
   "dependencies": {

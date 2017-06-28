@@ -12,7 +12,7 @@ import * as Constants from '~/constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
-import { log } from '@jot/black'
+import { log } from '@mcro/black'
 
 // Mobx.useStrict(true)
 

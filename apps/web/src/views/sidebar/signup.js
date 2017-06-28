@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { view } from '@jot/black'
-import { User } from '@jot/models'
+import { view } from '@mcro/black'
+import { User } from '@mcro/models'
 import {
   Dropdown,
   Theme,
@@ -12,7 +12,7 @@ import {
   Input,
   Button,
   Link,
-} from '@jot/ui'
+} from '@mcro/ui'
 
 const idFn = _ => _
 

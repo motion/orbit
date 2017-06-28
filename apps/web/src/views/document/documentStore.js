@@ -1,7 +1,7 @@
 // @flow
-import { watch } from '@jot/black'
+import { watch } from '@mcro/black'
 import { debug } from '~/helpers'
-import { Document } from '@jot/models'
+import { Document } from '@mcro/models'
 import type EditorStore from '~/editor/stores/editorStore'
 import { throttle, debounce } from 'lodash'
 

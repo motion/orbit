@@ -1,12 +1,12 @@
 {
+  "name": "@mcro/playground",
   "main": "index.js",
-  "name": "playground",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@jot/black": "*",
-    "@jot/ui": "*",
-    "@jot/models": "*",
+    "@mcro/black": "*",
+    "@mcro/ui": "*",
+    "@mcro/models": "*",
     "react": "^15.6.0",
     "react-dom": "^15.6.1"
   }

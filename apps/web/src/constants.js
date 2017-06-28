@@ -1,8 +1,8 @@
 // @flow
-// export constants from @jot/black
-import { IS_ELECTRON, IS_PROD } from '@jot/black'
+// export constants from @mcro/black
+import { IS_ELECTRON, IS_PROD } from '@mcro/black'
 
-export * from '@jot/black/lib/constants'
+export * from '@mcro/black/lib/constants'
 
 export const PROTOCOL = `${window.location.protocol}//`
 export const HOST = window.location.host

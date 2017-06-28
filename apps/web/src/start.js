@@ -1,8 +1,8 @@
 // @flow
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { ThemeProvide } from '@jot/ui'
-import { view } from '@jot/black'
+import { ThemeProvide } from '@mcro/ui'
+import { view } from '@mcro/black'
 import App from '~/app'
 import themes from './theme'
 

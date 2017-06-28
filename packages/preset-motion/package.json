@@ -1,5 +1,6 @@
 {
   "name": "@mcro/preset-motion",
+  "main": "lib/index.js",
   "version": "1.0.1",
   "dependencies": {
     "@mcro/hmr": "^1.0.1",
@@ -14,6 +15,5 @@
     "gloss": "^6.6.2",
     "react-proxy": "^1.1.8"
   },
-  "main": "index.js",
   "license": "MIT"
 }

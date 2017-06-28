@@ -12,16 +12,12 @@ elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   npm run build
 else
-  # ensure linked in
-  (cd packages/preset-motion && yarn link)
-  yarn link @mcro/preset-motion
   # lerna
   ./node_modules/lerna/bin/lerna.js exec --parallel \
     --ignore @mcro/native  \
     --ignore @mcro/web \
     --ignore @mcro/couch \
     --ignore @mcro/playground \
-    --ignore @mcro/preset-motion \
       -- \
       babel src --out-dir lib -s true $ARGS
 fi

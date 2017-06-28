@@ -5,7 +5,6 @@ import { omit } from 'lodash'
 import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 import deepExtend from 'deep-extend'
 
-const flatten = arr => [].concat.apply([], arr)
 const arrayOfObjectsToObject = (arr: Array<Object>) => {
   let res = {}
   for (let i = 0; i < arr.length; i++) {
@@ -13,28 +12,7 @@ const arrayOfObjectsToObject = (arr: Array<Object>) => {
   }
   return res
 }
-
 const ogCreateElement = React.createElement.bind(React)
-
-// function getDynamics(
-//   activeKeys: Array<string>,
-//   props: Object,
-//   styles: Object,
-//   propPrefix = '$'
-// ) {
-//   const dynamicKeys = activeKeys.filter(
-//     k => styles[k] && typeof styles[k] === 'function'
-//   )
-//   const dynamics = dynamicKeys.reduce(
-//     (acc, key) => ({
-//       ...acc,
-//       [key]: styles[key](props[`${propPrefix}${key}`]),
-//     }),
-//     {}
-//   )
-//   return dynamics
-// }
-
 const TAG_NAME_MAP = {
   title: 'x-title',
   meta: 'x-meta',
@@ -48,11 +26,10 @@ export default function fancyElementFactory(
   options: Object,
   applyNiceStyles: Function
 ) {
-  const SHOULD_THEME = !options.dontTheme && theme
-  const STYLE_STATICS = styles.statics || {}
-  const STYLE_DYNAMICS = styles.dynamics || {}
-  const PARENT_DYNAMICS = parentStyles.dynamics || {}
-  const PARENT_STATICS = parentStyles.statics || {}
+  const STYLE_STATICS = (styles && styles.statics) || {}
+  const STYLE_DYNAMICS = (styles && styles.dynamics) || {}
+  const PARENT_DYNAMICS = (parentStyles && parentStyles.dynamics) || {}
+  const PARENT_STATICS = (parentStyles && parentStyles.statics) || {}
   const $ = '$'
 
   return function fancyElement(
@@ -123,7 +100,6 @@ export default function fancyElementFactory(
 
     // styles => props
     if (finalStyles.length) {
-      console.log('got styles', finalStyles)
       if (isTag) {
         // tags get className
         finalProps.className = css(...finalStyles)

@@ -1,5 +1,5 @@
 // @flow
-import glossyElFactory from './fancyElement'
+import fancyElement from './fancyElement'
 import motionStyle from 'motion-css'
 import { StyleSheet } from './stylesheet'
 import { pickBy } from 'lodash'
@@ -31,22 +31,17 @@ class Gloss {
     this.motionStyle = motionStyle(options)
     this.baseStyles =
       options.baseStyles &&
-      this.getStyles(
-        { name: 'Gloss Parent Styles', style: this.options.baseStyles },
-        null
-      )
+      this.getStyles('parentStyles', this.options.baseStyles)
     this.glossyEl = (styles, theme) =>
-      glossyElFactory(
+      fancyElement(
         theme,
         this.baseStyles,
         styles,
         this.options,
         this.applyNiceStyles
       )
-    this.createElement = this.glossyEl(
-      this.getStyles({ name: 'root', style: {} })
-    )
     // allow grabbing createElement off decorator
+    this.createElement = this.glossyEl()
     this.decorator.createElement = this.createElement
   }
 
@@ -54,24 +49,30 @@ class Gloss {
     // shorthand
     if (typeof Child === 'string') {
       const name = Child
-      const createEl = this.glossyEl(
-        this.getStyles({ name, style: { [name]: style } })
-      )
+      const createEl = this.glossyEl(this.getStyles(name, { [name]: style }))
       return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
+    }
+
+    let themes
+    if (Child.theme) {
+      themes = this.getStyles('theme', Child.theme)
     }
 
     // class
     if (Child.prototype) {
       // shim this.glossyElement
       Child.prototype.glossElement = this.glossyEl(
-        this.getStyles(Child, this.options.dontTheme ? null : Child.theme),
-        Child.theme
+        this.getStyles(Child.name, Child.style)
       )
 
-      // const ogRender = Child.prototype.render
-      // Child.prototype.render = function(...args) {
-      //   return ogRender.call(this, ...args)
-      // }
+      const ogWillReceiveProps = Child.prototype.componentWillReceiveProps
+      Child.prototype.componentWillReceiveProps = function(nextProps, ...args) {
+        if (Child.theme) {
+          // this.theme = getThemes(staticThemes, dynamicThemes)
+        }
+
+        return ogWillReceiveProps.call(this, nextProps, ...args)
+      }
     }
 
     return Child
@@ -90,13 +91,9 @@ class Gloss {
     return styles
   }
 
-  getStyles = (
-    { name, style }: { name: string, style: Object },
-    theme: ?Object
-  ) => {
-    const styles = { ...style, ...flattenThemes(theme) }
-    const dynamicStyles = pickBy(styles, isFunc)
-    const staticStyles = pickBy(styles, x => !isFunc(x))
+  getStyles = (name, style) => {
+    const dynamicStyles = pickBy(style, isFunc)
+    const staticStyles = pickBy(style, x => !isFunc(x))
     const niceStatics = this.applyNiceStyles(staticStyles, `${name}:`)
     const statics = StyleSheet.create(niceStatics)
     // attach key to status objects so we can use later in glossyElement
@@ -106,7 +103,6 @@ class Gloss {
     return {
       statics,
       dynamics: dynamicStyles,
-      theme,
     }
   }
 }

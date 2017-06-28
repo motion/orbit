@@ -11,7 +11,9 @@
     "build-debug": "DEBUG=true node scripts/build.js",
     "electron": "denode scripts/electron.js"
   },
-  "denodeOptions": ["DENODE_INSECURE"],
+  "denodeOptions": [
+    "DENODE_INSECURE"
+  ],
   "electronOptions": {
     "width": "1200",
     "height": "800",
@@ -28,10 +30,10 @@
     }
   },
   "dependencies": {
-    "@mcro/black": "*",
-    "@mcro/models": "*",
-    "@mcro/router": "^1.1.3",
-    "@mcro/ui": "*",
+    "@mcro/black": "^1.0.1",
+    "@mcro/models": "^1.0.1",
+    "@mcro/router": "^1.0.1",
+    "@mcro/ui": "^1.0.1",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
     "babel-preset-steelbrain": "^5.0.2",
@@ -80,5 +82,6 @@
     "webpack": "^2.4.1",
     "webpack-bundle-analyzer": "^2.4.0",
     "webpack-dev-server": "^2.4.2"
-  }
+  },
+  "version": "1.0.1"
 }

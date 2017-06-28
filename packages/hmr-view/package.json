@@ -1,6 +1,6 @@
 {
   "name": "@mcro/hmr-view",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib/index.js",
   "dependencies": {
     "global": "^4.3.2",

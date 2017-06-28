@@ -1,9 +1,8 @@
 {
   "name": "@mcro/css",
-  "version": "6.6.3",
+  "version": "1.0.1",
   "description": "",
   "main": "lib/index.js",
   "author": "Motion",
-  "license": "MIT",
-  "dependencies": {}
+  "license": "MIT"
 }

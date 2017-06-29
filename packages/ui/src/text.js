@@ -4,12 +4,13 @@ import { view, keycode } from '@mcro/black'
 import type { ViewType } from '@mcro/black'
 
 export type Props = {
-  editable?: Boolean,
-  autoselect?: Boolean,
-  selectable?: Boolean,
+  editable?: boolean,
+  autoselect?: boolean,
+  selectable?: boolean,
   onFinishEdit: Function,
   onCancelEdit: Function,
   getRef?: Function,
+  ellipse?: boolean,
 }
 
 // click away from edit clears it
@@ -101,6 +102,8 @@ export default class Text implements ViewType {
     onCancelEdit,
     onKeyDown,
     selectable,
+    ellipse,
+    children,
     ...props
   }: Props) {
     return (
@@ -113,7 +116,12 @@ export default class Text implements ViewType {
         ref={this.ref('node').set}
         $$marginLeft={props.active ? -2 : 0}
         {...props}
-      />
+      >
+        {!ellipse && children}
+        <ellipse if={ellipse} $$ellipse>
+          {children}
+        </ellipse>
+      </text>
     )
   }
 

@@ -181,17 +181,14 @@ export default class Surface implements ViewType<Props> {
 
   static style = {
     surface: {
-      height: LINE_HEIGHT,
-      background: 'transparent',
-      overflow: 'hidden',
       lineHeight: '1rem',
-      fontSize: 13,
       fontWeight: 400,
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 1,
       borderStyle: 'solid',
+      borderColor: 'transparent',
       position: 'relative',
       boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.2)'],
     },
@@ -291,6 +288,9 @@ export default class Surface implements ViewType<Props> {
     const iconColor = props.iconColor || color
     const iconHoverColor = props.iconHoverColor || hoverColor
 
+    // general
+    const overflow = props.glow ? 'hidden' : props.overflow
+
     const segmentStyles = props.inSegment && {
       marginLeft: -1,
       borderLeftRadius: props.inSegment.first ? borderRadius : 0,
@@ -300,6 +300,7 @@ export default class Surface implements ViewType<Props> {
       padding: 0,
       width: height,
       borderRadius: props.size * LINE_HEIGHT,
+      overflow: 'hidden',
     }
     return {
       element: {
@@ -312,6 +313,7 @@ export default class Surface implements ViewType<Props> {
         },
       },
       surface: {
+        overflow,
         height,
         width,
         flex,

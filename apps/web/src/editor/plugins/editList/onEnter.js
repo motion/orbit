@@ -28,13 +28,13 @@ function onEnter(event, data, state, opts) {
     return null
   }
 
-  const isEmpty = currentItem.nodes.size <= 1 && currentItem.length === 0
-
-  if (event.metaKey && !isEmpty) {
+  if (event.metaKey) {
     return archiveItem(currentItem, opts, state.transform()).apply()
   }
 
   event.preventDefault()
+
+  const isEmpty = currentItem.nodes.size <= 1 && currentItem.length === 0
 
   if (isEmpty) {
     // Block is empty, we exit the list

@@ -61,19 +61,21 @@ export default class Children {
 
     return (
       <children>
-        <header>
+        <header $$row if={hasDocs}>
           <title>Pages</title>
           <actions>
             <Button
               $add
               if={store.newTitle === null}
-              circular
-              size={1.5}
+              size={1}
               icon="siadd"
               onClick={store.add}
             />
           </actions>
         </header>
+        <noDocs if={!hasDocs} onClick={store.add}>
+          create page
+        </noDocs>
         <content>
           <docs if={hasDocs}>
             {sortBy(docs || [], 'createdAt').map(doc => {
@@ -128,49 +130,53 @@ export default class Children {
     children: {
       position: 'absolute',
       top: 0,
-      right: 0,
+      right: 10,
       // borderTop: [1, '#f6f6f6'],
-      padding: [25, 0, 4],
+      padding: [0],
       cursor: 'default',
     },
     header: {
-      padding: [0, 0],
+      padding: [0, 10],
+      justifyContent: 'space-between',
     },
     title: {
       textTransform: 'uppercase',
       fontSize: 12,
       color: [0, 0, 0, 0.3],
-      margin: [0, 0, 10],
+      margin: [7, 0, 10, 0],
       fontWeight: 500,
-    },
-    actions: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-      zIndex: 1000,
     },
     content: {
       // padding: [0, 2],
+    },
+    noDocs: {
+      padding: 20,
+      alignSelf: 'center',
+      textAlign: 'center',
     },
     child: {
       marginLeft: 20,
       color: [0, 0, 0, 0.5],
     },
     doc: {
-      margin: [0, 0, 10],
+      margin: [0],
+      padding: 10,
+      '&:hover': {
+        background: '#e1e8ed',
+        borderRadius: 5,
+      },
     },
     card: {
       width: WIDTH,
       // height: HEIGHT,
       // color: '#fff',
-      background: '#fff',
       // border: [1, '#eee'],
       // borderRadius: 7,
-      padding: [2, 0, 0],
     },
     input: {
-      width: '100%',
       border: 'none',
+      background: 'transparent',
+      width: 150,
       padding: 8,
       fontSize: 14,
     },

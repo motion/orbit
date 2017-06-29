@@ -144,7 +144,7 @@ const Gloss = gloss({
   baseStyles: styles,
   glossProp: 'css',
   themeProp: 'theme',
-  setTagNameProp: 'tagName',
+  tagName: 'tagName',
   isColor: color => color && !!color.rgb,
   processColor: color => color.toString(),
 })

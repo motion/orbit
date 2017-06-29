@@ -55,6 +55,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         const val = props && props[NAME]
         if (options.glossProp && NAME === options.glossProp) {
           cssStyles = val
+          continue
         } else if (
           options.tagName &&
           NAME === options.tagName &&
@@ -63,9 +64,11 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         ) {
           // change tagName
           type = val
+          continue
         } else if (NAME[0] !== $) {
           // pass props down if not style prop
           finalProps[NAME] = val
+          continue
         } else if (val === false || val === null || val === undefined) {
           // ignore most falsy values (except 0)
           continue

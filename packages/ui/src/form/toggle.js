@@ -88,29 +88,21 @@ export default class Toggle {
     },
   }
 
-  static theme = {
-    dotSize: ({ dotSize }) => ({
-      dot: {
-        width: dotSize,
-        height: dotSize,
-        marginTop: -((dotSize - BAR_HEIGHT) / 2) - BAR_INVISIBLE_PAD + 1,
+  static theme = ({ dotSize, color, barColor }) => ({
+    bar: {
+      background: barColor,
+    },
+    dot: {
+      background: color,
+      width: dotSize,
+      height: dotSize,
+      marginTop: -((dotSize - BAR_HEIGHT) / 2) - BAR_INVISIBLE_PAD + 1,
+    },
+    dotOn: {
+      background: '#000',
+      transform: {
+        x: BAR_WIDTH - dotSize - 5,
       },
-      dotOn: {
-        background: '#000',
-        transform: {
-          x: BAR_WIDTH - dotSize - 5,
-        },
-      },
-    }),
-    color: ({ color }) => ({
-      dot: {
-        background: color,
-      },
-    }),
-    barColor: ({ barColor }) => ({
-      bar: {
-        background: barColor,
-      },
-    }),
-  }
+    },
+  })
 }

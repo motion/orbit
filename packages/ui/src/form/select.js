@@ -45,19 +45,17 @@ export default class Select {
     },
   }
 
-  static theme = {
-    theme: ({ height, width, background }, theme) => ({
-      root: {
-        height,
-        width,
-        background,
-      },
-      select: {
-        ...theme.base,
-        background,
-        height,
-        width,
-      },
-    }),
-  }
+  static theme = ({ height, width, background }, theme) => ({
+    root: {
+      height,
+      width,
+      background,
+    },
+    select: {
+      ...theme.base,
+      background,
+      height,
+      width,
+    },
+  })
 }

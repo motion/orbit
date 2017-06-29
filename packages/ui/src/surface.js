@@ -2,6 +2,7 @@
 import React from 'react'
 import * as PropTypes from 'prop-types'
 import { view, inject } from '@mcro/black'
+import type { ViewType } from '@mcro/black'
 import $ from 'color'
 import Icon from './icon'
 import Glow from './effects/glow'
@@ -10,46 +11,48 @@ import type { Color } from '@mcro/gloss'
 
 const LINE_HEIGHT = 30
 
-export type Props = {
-  borderRadius: number,
-  inSegment?: boolean,
-  inForm?: boolean,
-  clickable?: boolean,
-  active?: boolean,
-  chromeless?: boolean,
-  inline?: boolean,
-  dim?: boolean,
-  stretch?: boolean,
-  spaced?: boolean,
-  highlight?: boolean,
-  circular?: boolean,
-  iconAfter?: boolean,
-  iconColor?: Color,
-  onClick?: Function,
-  tooltip?: string,
-  icon?: React$Element<any> | string,
-  background?: Color,
-  color?: Color,
-  hoverColor?: Color,
-  className?: string,
-  theme?: string,
-  after?: Element | string,
-  children?: Element | string,
-  iconProps?: Object,
-  tooltipProps?: Object,
-  tagName: string,
-  size?: number,
-  iconSize?: number,
-  padding?: number | Array<number>,
-  margin?: number | Array<number>,
-  height?: number,
-  noGlow?: boolean,
-}
-
-@inject(context => context.ui)
+@inject(context => context.segmentContext)
 @view.ui
-export default class Surface {
-  props: Props
+export default class Surface implements ViewType<Props> {
+  props: Props & {
+    flex?: boolean | number,
+    borderRadius: number,
+    inSegment?: boolean,
+    inForm?: boolean,
+    clickable?: boolean,
+    active?: boolean,
+    chromeless?: boolean,
+    inline?: boolean,
+    dim?: boolean,
+    stretch?: boolean,
+    spaced?: boolean,
+    highlight?: boolean,
+    circular?: boolean,
+    iconAfter?: boolean,
+    iconColor?: Color,
+    onClick?: Function,
+    tooltip?: string,
+    icon?: React$Element<any> | string,
+    background?: Color,
+    color?: Color,
+    hoverColor?: Color,
+    className?: string,
+    theme?: string,
+    after?: Element | string,
+    children?: Element | string,
+    elementStyles?: Object,
+    iconProps?: Object,
+    tooltipProps?: Object,
+    tagName: string,
+    size?: number,
+    iconSize?: number,
+    padding?: number | Array<number>,
+    margin?: number | Array<number>,
+    height?: number,
+    glow?: boolean,
+    noElement?: boolean,
+    getRef?: Function,
+  }
 
   static contextTypes = {
     uiTheme: PropTypes.object,
@@ -62,97 +65,6 @@ export default class Surface {
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
-
-  get theme() {
-    return this.context.uiTheme[this.context.uiActiveTheme]
-  }
-
-  getStyles = () => {
-    const { props, theme } = this
-    if (!theme) {
-      return null
-    }
-
-    // based on a vertical rythm
-    // sizes
-    const height = props.size * LINE_HEIGHT
-    const padding = props.padding || [0, height / 4]
-    const fontSize = props.fontSize || height * 0.5
-
-    // radius
-    const baseBorderRadius = props.borderRadius || height / 5
-    const borderRadius = props.circular
-      ? height
-      : baseBorderRadius || height / 10
-
-    // colors
-    const background =
-      props.background || theme.base.background || 'transparent'
-    const borderColor = props.borderColor || theme.base.borderColor
-    const color = props.highlight
-      ? props.highlightColor || theme.highlight.color || props.color
-      : props.active ? theme.active.color : props.color || theme.base.color
-    const hoverColor =
-      (props.highlight && $(color).lighten(0.2)) ||
-      props.hoverColor ||
-      theme.hover.color ||
-      (props.color && $(props.color).lighten(0.2))
-    const iconColor = props.iconColor || color
-    const iconHoverColor = props.iconHoverColor || hoverColor
-
-    const segmentStyles = props.inSegment && {
-      marginLeft: -1,
-      borderLeftRadius: props.inSegment.first ? borderRadius : 0,
-      borderRightRadius: props.inSegment.last ? borderRadius : 0,
-    }
-
-    const surfaceStyle = {
-      surface: {
-        fontSize,
-        lineHeight: '1px',
-        padding,
-        borderRadius,
-        borderColor,
-        color,
-        background,
-        ...segmentStyles,
-        '& > icon': {
-          color: iconColor,
-        },
-        '&:hover > icon': {
-          color: iconHoverColor,
-        },
-        '&:hover': {
-          ...theme.hover,
-          color: hoverColor,
-        },
-        // this is just onmousedown
-        '&:active': {
-          position: 'relative',
-          zIndex: 1000,
-        },
-        // inForm
-        ...(props.inForm && {
-          '&:active': theme.active,
-          '&:focus': theme.focus,
-        }),
-      },
-      isActive: {
-        background: theme.active.background,
-        borderColor: theme.active.borderColor,
-        '&:hover': {
-          color: hoverColor,
-          background: theme.active.background,
-          borderColor: theme.active.borderColor,
-        },
-        '&:hover > icon': {
-          color: hoverColor,
-        },
-      },
-    }
-
-    return surfaceStyle
-  }
 
   render({
     inSegment,
@@ -179,7 +91,7 @@ export default class Surface {
     tooltipProps,
     background,
     className,
-    theme,
+    theme: _theme,
     circular,
     size,
     borderRadius,
@@ -187,34 +99,37 @@ export default class Surface {
     padding,
     height,
     margin,
-    noGlow,
+    glow,
     hoverColor,
+    wrapElement,
+    elementStyles,
+    getRef,
+    noElement,
+    flex,
+    placeholderColor,
+    borderColor,
     ...props
   }: Props) {
-    const curTheme = this.getStyles()
-    if (curTheme) {
-      this.constructor.theme.theme = () => curTheme
-    }
-
+    const { theme } = this
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
     const iconSize =
       _iconSize ||
-      (curTheme && curTheme.surface.fontSize * 0.85) ||
+      (theme && theme.element.style.fontSize * 0.9) ||
       Math.log(size + 1) * 15
 
+    const finalClassName = `${this.uniq} ${className || ''}`
+    const passProps = {
+      className: finalClassName,
+      onClick,
+      tagName,
+      ref: getRef,
+      ...props,
+    }
+
     return (
-      <surface
-        tagName={tagName}
-        $inSegment={inSegment && this.props}
-        $clickable={!!onClick || clickable}
-        $isActive={active}
-        $highlight={highlight}
-        className={`${className || ''} ${this.uniq}`}
-        onClick={onClick}
-        {...props}
-      >
+      <surface {...!wrapElement && passProps}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -226,22 +141,22 @@ export default class Surface {
           size={iconSize}
           {...iconProps}
         />
-        <glowWrap if={!noGlow} $minimal={chromeless}>
+        <glowWrap if={glow} $minimal={chromeless}>
           <Glow
             full
             scale={1.5}
-            color={(curTheme && curTheme.surface.color) || [0, 0, 0]}
+            color={(theme && theme.surface.style.color) || [0, 0, 0]}
             opacity={0.06}
           />
         </glowWrap>
-        <children
-          if={children}
+        <element
+          if={!noElement}
+          {...wrapElement && passProps}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}
-          style={{ color }}
         >
           {children}
-        </children>
+        </element>
         {after || null}
         <Popover
           if={tooltip}
@@ -266,16 +181,14 @@ export default class Surface {
 
   static style = {
     surface: {
-      background: 'transparent',
-      overflow: 'hidden',
       lineHeight: '1rem',
-      fontSize: 13,
       fontWeight: 400,
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 1,
       borderStyle: 'solid',
+      borderColor: 'transparent',
       position: 'relative',
       boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.2)'],
     },
@@ -291,14 +204,13 @@ export default class Surface {
     minimal: {
       boxShadow: 'none',
     },
-    isActive: {
-      background: '#eee',
-      '&:hover': {
-        background: '#eee',
-      },
-    },
-    children: {
+    element: {
+      border: 'none',
+      background: 'transparent',
       userSelect: 'none',
+      height: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     icon: {
       pointerEvents: 'none',
@@ -314,73 +226,130 @@ export default class Surface {
     },
   }
 
-  static theme = {
-    size: props => ({
-      surface: {
-        height: props.size * LINE_HEIGHT,
-      },
-    }),
-    circular: props => ({
-      surface: {
-        padding: 0,
-        width: props.size * LINE_HEIGHT,
-        borderRadius: props.size * LINE_HEIGHT,
-      },
-    }),
-    spaced: {
-      surface: {
-        margin: [0, 5],
-        borderRightWidth: 1,
-      },
+  surfaceStyle = {
+    background: 'transparent',
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    margin: [-2, -3],
+    maxHeight: '1.45rem',
+    borderRadius: 1000,
+  }
+
+  disabledStyle = {
+    opacity: 0.25,
+    pointerEvents: 'none',
+  }
+
+  dimStyle = {
+    opacity: 0.5,
+    '&:hover': {
+      opacity: 1,
     },
-    stretch: {
-      surface: {
-        flex: 1,
-      },
-    },
-    chromeless: {
-      surface: {
-        background: 'transparent',
-        borderRightWidth: 0,
-        borderLeftWidth: 0,
-        borderTopWidth: 0,
-        borderBottomWidth: 0,
+  }
+
+  spacedStyles = {
+    margin: [0, 5],
+    borderRightWidth: 1,
+  }
+
+  static theme = (props, theme, self) => {
+    // sizes
+    const height = props.size * LINE_HEIGHT
+    const width = props.width
+    const padding =
+      typeof props.padding !== 'undefined'
+        ? props.padding
+        : props.wrapElement ? 0 : [0, height / 4]
+    const fontSize = props.fontSize || height * 0.5
+    const flex = props.flex === true ? 1 : props.flex
+
+    // radius
+    const baseBorderRadius = props.borderRadius
+      ? props.borderRadius
+      : height / 5
+    const borderRadius = props.circular
+      ? height
+      : baseBorderRadius || height / 10
+
+    // colors
+    const background =
+      props.background || theme.base.background || 'transparent'
+    const borderColor = props.borderColor || theme.base.borderColor
+    const color = props.highlight
+      ? props.highlightColor || theme.highlight.color || props.color
+      : props.active ? theme.active.color : props.color || theme.base.color
+    const hoverColor =
+      (props.highlight && $(color).lighten(0.2)) ||
+      props.hoverColor ||
+      theme.hover.color ||
+      (props.color && $(props.color).lighten(0.2))
+    const iconColor = props.iconColor || color
+    const iconHoverColor = props.iconHoverColor || hoverColor
+
+    // general
+    const overflow = props.glow ? 'hidden' : props.overflow
+
+    const segmentStyles = props.inSegment && {
+      marginLeft: -1,
+      borderLeftRadius: props.inSegment.first ? borderRadius : 0,
+      borderRightRadius: props.inSegment.last ? borderRadius : 0,
+    }
+    const circularStyles = props.circular && {
+      padding: 0,
+      width: height,
+      borderRadius: props.size * LINE_HEIGHT,
+      overflow: 'hidden',
+    }
+    return {
+      element: {
+        ...props.elementStyles,
+        fontSize,
+        lineHeight: '1px',
+        color,
         '&:hover': {
-          opacity: 0.8,
+          color: hoverColor,
         },
       },
-      isActive: {
-        background: [0, 0, 0, 0.1],
-        '&:hover': {
-          background: [0, 0, 0, 0.2],
+      surface: {
+        overflow,
+        height,
+        width,
+        flex,
+        padding,
+        borderRadius,
+        borderColor,
+        background,
+        ...circularStyles,
+        ...segmentStyles,
+        ...(props.inline && self.surfaceStyle),
+        ...(props.disabled && self.disabledStyle),
+        ...(props.dim && self.dimStyle),
+        ...(props.spaced && self.spacedStyle),
+        ...(props.chromeless && {
+          borderWidth: 0,
+        }),
+        '& > icon': {
+          color: iconColor,
         },
-      },
-    },
-    inline: {
-      surface: {
-        background: 'transparent',
-        borderRightWidth: 1,
-        borderLeftWidth: 1,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        margin: [-2, -3],
-        maxHeight: '1.45rem',
-        borderRadius: 1000,
-      },
-    },
-    disabled: {
-      surface: {
-        opacity: 0.25,
-        pointerEvents: 'none',
-      },
-    },
-    dim: {
-      surface: {
-        opacity: 0.5,
-        '&:hover': {
-          opacity: 1,
+        '&:hover > icon': {
+          color: iconHoverColor,
         },
+        '&:hover': {
+          ...theme.hover,
+        },
+        // this is just onmousedown
+        '&:active': {
+          position: 'relative',
+          zIndex: 1000,
+        },
+        // inForm
+        ...(props.inForm && {
+          '&:active': theme.active,
+          '&:focus': theme.focus,
+        }),
       },
-    },
+    }
   }
 }

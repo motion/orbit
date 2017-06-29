@@ -102,41 +102,30 @@ export default class Icon {
     },
   }
 
-  static theme = {
-    button: {
-      icon: {
-        borderRadius: 3,
-        alignItems: 'center',
-        padding: 5,
-        margin: -5,
+  static theme = (props, theme) => {
+    const buttonPad = props.button ? 5 : 0
+    const buttonStyles = props.button && {
+      borderRadius: 3,
+      alignItems: 'center',
+      padding: 5,
+      margin: -5,
+      background: [0, 0, 0, 0.02],
+      '&:hover': {
         background: [0, 0, 0, 0.02],
-        '&:hover': {
-          background: [0, 0, 0, 0.02],
-        },
       },
-    },
-    color: ({ color }) => ({
+    }
+
+    return {
       icon: {
-        color,
-      },
-    }),
-    hoverColor: ({ hoverColor }) => ({
-      icon: {
+        width: (props.width || props.size) + buttonPad * 2,
+        height: props.height || props.size + buttonPad * 2,
+        fontSize: props.size,
+        lineHeight: `${props.size / 12 - 0.1}rem`, // scale where 1 when 14
+        ...buttonStyles,
         '&:hover': {
-          color: hoverColor,
+          color: props.hoverColor,
         },
       },
-    }),
-    size: ({ size, width, height, button }) => {
-      const buttonPad = button ? 5 : 0
-      return {
-        icon: {
-          width: (width || size) + buttonPad * 2,
-          height: height || size + buttonPad * 2,
-          fontSize: size,
-          lineHeight: `${size / 12 - 0.1}rem`, // scale where 1 when 14
-        },
-      }
-    },
+    }
   }
 }

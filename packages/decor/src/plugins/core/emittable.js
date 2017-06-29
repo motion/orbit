@@ -12,6 +12,7 @@ export default function emittable(options) {
   const emitProp = options.emitProp || 'emit'
 
   return {
+    name: 'emittable',
     decorator: Klass => {
       if (!Klass.prototype) {
         return Klass

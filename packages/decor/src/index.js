@@ -28,7 +28,7 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
     let plugin = getPlugin(options, emitter)
 
     if (!plugin.decorator && !plugin.mixin) {
-      throw `Bad plugin, needs decorator or mixin: ${plugin}`
+      throw `Bad plugin, needs decorator or mixin ${plugin.name}`
     }
 
     allPlugins.push(plugin)

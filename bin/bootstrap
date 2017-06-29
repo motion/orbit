@@ -9,8 +9,6 @@ set +e
 file-exists ".env"
 file-exists ".env.dev"
 
-echo "Make sure to install dotenv and ensure it picks up your .env vars!"
-
 function ensure-dep {
   cmd=${@:1}
   if [ "$(bin-exists $1)" = "" ]; then
@@ -27,9 +25,6 @@ function ensure-dep {
 
 xcode-select --install 2> /dev/null
 
-echo "have you updated homebrew?"
-
-echo "deps"
 ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ensure-dep "npm" -- brew install node
 ensure-dep "docker" -- brew install docker
@@ -40,6 +35,7 @@ ensure-dep "minikube" -- brew cask install minikube
 ensure-dep "pip" -- brew install python
 ensure-dep "envtpl" -- pip install envtpl
 
+# echo "Make sure to install dotenv and ensure it picks up your .env vars!"
 # TODO: revisit once we can use kubes locally nicely
 # echo "docker boot"
 # docker-machine inspect dev > /dev/null || docker-machine create dev -d xhyve
@@ -51,12 +47,12 @@ ensure-dep "envtpl" -- pip install envtpl
 
 # /etc/hosts
 if grep -q "staging.dev" /etc/hosts; then
-  echo "staging.dev in /etc/hosts"
+  echo "ok" > /dev/null
 else
   echo "$(minikube ip) couch.staging.dev api.staging.dev staging.dev" | sudo tee -a /etc/hosts
 fi
 if grep -q "jot.dev" /etc/hosts; then
-  echo "jot.dev in /etc/hosts"
+  echo "ok" > /dev/null
 else
   echo "127.0.0.1 couch.jot.dev api.jot.dev jot.dev" | sudo tee -a /etc/hosts
   echo "12 ::1 jot.dev couch.jot.dev api.jot.dev" | sudo tee -a /etc/hosts
@@ -66,6 +62,10 @@ echo "yerna install"
 yarn install --prod
 echo "lerna bootstrap"
 ./node_modules/lerna/bin/lerna.js bootstrap --npm-client yarn
+
+echo "ensuring react isnt duped until pundle fix"
+rm -rf packages/ui/node_modules/react
+rm -rf packages/decor/node_modules/react
 
 echo " welcome!"
 echo " to start the app:"

@@ -3,6 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import FakeAvatar from './fake/fakeAvatar'
 import Glow from './effects/glow'
+import Text from './text'
 
 export type ItemProps = {
   children?: React$Element<any>,
@@ -103,18 +104,26 @@ export default class ListItem {
         </image>
         <content>
           <above if={primary || after || before || date}>
-            <before if={before}>{before}</before>
+            <before if={before}>
+              {before}
+            </before>
             <prop if={primary || secondary} $col $hasAvatar={!!avatar}>
-              <section $primary>{primary}</section>
-              <section if={secondary} $secondary>
-                <cutoff>{secondary}</cutoff>
-              </section>
+              <Text $primary ellipse>
+                {primary}
+              </Text>
+              <Text if={secondary} $secondary ellipse>
+                {secondary}
+              </Text>
             </prop>
-            <date if={date} style={{ fontSize: dateSize }} $meta>
-              <cutoff>{date}</cutoff>
-            </date>
-            <div if={meta} $meta>{meta}</div>
-            <after if={after}>{after}</after>
+            <Text if={date} $date $meta cutoff>
+              {date}
+            </Text>
+            <div if={meta} $meta>
+              {meta}
+            </div>
+            <after if={after}>
+              {after}
+            </after>
           </above>
           <children if={children} $row={row}>
             {children}

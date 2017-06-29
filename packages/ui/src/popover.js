@@ -86,6 +86,8 @@ export default class Popover {
   }
 
   curProps = {}
+  popoverRef = null
+  targetRef = null
 
   state = {
     targetHovered: null,
@@ -122,7 +124,6 @@ export default class Popover {
     const { openOnClick, open, escapable } = this.curProps
 
     this.on(window, 'resize', debounce(() => this.setPosition(), 32))
-
     this.setTarget()
     this.listenForHover()
 
@@ -133,7 +134,6 @@ export default class Popover {
     if (open) {
       this.open()
     }
-
     if (escapable) {
       this.on(window, 'keydown', e => {
         if (e.keyCode === 27 && (open || this.state.open)) {
@@ -174,7 +174,6 @@ export default class Popover {
 
   listenForClick = () => {
     if (!this.target) return
-
     // click away to close
     this.on(this.target, 'click', e => {
       e.stopPropagation()
@@ -193,10 +192,9 @@ export default class Popover {
     // click away to close
     this.on(window, 'click', e => {
       // avoid closing when clicked inside popover
-      if (this.refs.popover.contains(e.target) && !this.curProps.closeOnClick) {
+      if (this.popoverRef.contains(e.target) && !this.curProps.closeOnClick) {
         return
       }
-
       if (this.state.isOpen && !this.isClickingTarget) {
         e.preventDefault()
         this.close()
@@ -205,7 +203,7 @@ export default class Popover {
   }
 
   setTarget = () => {
-    this.target = getTarget(this.refs.target || this.curProps.target)
+    this.target = getTarget(this.targetRef || this.curProps.target)
   }
 
   get isHovered() {
@@ -225,16 +223,13 @@ export default class Popover {
     if (nextProps.open === this.props.open) {
       return
     }
-
     if (nextProps.open !== this.props.open) {
       if (nextProps.open) {
         this.setPosition()
       }
-
       if (!this.state.isOpen && nextProps.open) {
         this.open()
       }
-
       if (this.state.isOpen && !nextProps.open) {
         this.close()
       }
@@ -255,12 +250,11 @@ export default class Popover {
   }
 
   get popoverSize() {
-    const { forgiveness } = this
+    const { popoverRef, forgiveness } = this
     const { width, height } = this.curProps
-    const { popover } = this.refs
     const size = {
-      height: isNumber(width) ? width : popover.clientHeight,
-      width: isNumber(height) ? height : popover.clientWidth,
+      height: isNumber(width) ? width : popoverRef.clientHeight,
+      width: isNumber(height) ? height : popoverRef.clientWidth,
     }
     // adjust for forgiveness
     size.height -= forgiveness * 2
@@ -435,9 +429,9 @@ export default class Popover {
   }
 
   listenForHover = () => {
-    this.addHoverListeners('target', this.target)
+    this.addHoverListeners('target', this.targetRef)
     if (!this.curProps.noHover) {
-      this.addHoverListeners('menu', this.refs.popover)
+      this.addHoverListeners('menu', this.popoverRef)
     }
   }
 
@@ -574,7 +568,7 @@ export default class Popover {
         ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
 
     const childProps = {
-      ref: 'target',
+      getRef: this.ref('targetRef').set,
     }
 
     if (passActive) {
@@ -600,7 +594,7 @@ export default class Popover {
             <popover
               {...popoverProps}
               $popoverOpen={!closing && showPopover}
-              ref="popover"
+              ref={this.ref('popoverRef').set}
               style={{
                 ...style,
                 top: top || 'auto',
@@ -699,53 +693,29 @@ export default class Popover {
     },
   }
 
-  static theme = {
-    theme: (props, theme) => {
-      let styles = {}
-
-      if (props.background === true) {
-        styles = {
-          background: theme.base.background,
-          borderRadius: 5,
-        }
-      }
-
-      return {
-        content: {
-          background: props.background || 'transparent',
-          ...styles,
-        },
-      }
-    },
-    popoverStyle: ({ popoverStyle }) => ({
-      content: popoverStyle,
-    }),
-    padding: ({ padding }) => ({
+  static theme = (props, theme) => {
+    const backgroundStyles = props.background === true && {
+      background: theme.base.background,
+      borderRadius: 5,
+    }
+    return {
       content: {
-        padding,
+        background: props.background || 'transparent',
+        boxShadow: getShadow(props.shadow),
+        padding: props.padding,
+        ...backgroundStyles,
+        ...props.popoverStyle,
       },
-    }),
-    animation: ({ animation }) => ({
+      popover: {
+        padding: calcForgiveness(props.forgiveness, props.distance),
+        margin: -calcForgiveness(props.forgiveness, props.distance),
+        background: props.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
+      },
       popoverOpen: {
-        animation: animation === true ? 'bounce-down 200ms' : animation,
+        animation: props.animation === true
+          ? 'bounce-down 200ms'
+          : props.animation,
       },
-    }),
-    forgiveness: ({ forgiveness, distance, showForgiveness }) => ({
-      popover: {
-        padding: calcForgiveness(forgiveness, distance),
-        margin: -calcForgiveness(forgiveness, distance),
-        background: showForgiveness ? [250, 250, 0, 0.2] : 'auto',
-      },
-    }),
-    shadow: ({ shadow }) => ({
-      content: {
-        boxShadow: getShadow(shadow),
-      },
-    }),
-    noHover: {
-      popover: {
-        pointerEvents: 'none',
-      },
-    },
+    }
   }
 }

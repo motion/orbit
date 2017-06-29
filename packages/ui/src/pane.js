@@ -126,31 +126,25 @@ export default class Pane {
     },
   }
 
-  static theme = {
-    theme: ({ background, shadow, padding, margin, height }, theme) => ({
+  static theme = (props, theme) => {
+    const contentMaxHeightStyles = props.maxHeight && {
+      maxHeight: props.maxHeight,
+      overflowY: 'auto',
+      flex: 1,
+    }
+
+    return {
       section: {
-        background,
-        boxShadow: shadow && '0 0 70px rgba(0,0,0,0.2)',
+        background: props.background,
+        boxShadow: props.shadow && '0 0 70px rgba(0,0,0,0.2)',
+        flex: props.scrollable ? 1 : null,
       },
       content: {
-        padding: padding === true ? 8 : padding,
-        margin: margin === true ? 8 : margin,
+        overflowY: props.scrollable ? 'auto' : false,
+        padding: props.padding === true ? 8 : props.padding,
+        margin: props.margin === true ? 8 : props.margin,
+        ...contentMaxHeightStyles,
       },
-    }),
-    maxHeight: ({ maxHeight }) => ({
-      content: {
-        maxHeight: maxHeight,
-        overflowY: 'auto',
-        flex: 1,
-      },
-    }),
-    scrollable: {
-      section: {
-        flex: 1,
-      },
-      content: {
-        overflowY: 'auto',
-      },
-    },
+    }
   }
 }

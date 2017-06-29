@@ -2,29 +2,26 @@ import React from 'react'
 import { view, inject } from '@mcro/black'
 import { Provider } from 'react-tunnel'
 
-@inject(context => ({ ui: context.ui }))
+@inject(context => ({ segmentContext: context.segmentContext }))
 @view.ui
 export default class Form {
-  render({ ui, flex, ...props }) {
+  render({ ui, flex, segmentContext, ...props }) {
     return (
       <Provider
         provide={{
-          ui: {
-            ...ui,
+          segmentContext: {
+            ...segmentContext,
             inForm: true,
           },
         }}
       >
-        {() => <form {...props} />}
+        {() => <form $form {...props} />}
       </Provider>
     )
   }
-
-  static theme = {
-    flex: {
-      form: {
-        flex: 1,
-      },
+  static style = {
+    form: {
+      width: '100%',
     },
   }
 }

@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom'
 import { Theme, ThemeProvide } from '@mcro/ui'
 import themes from './theme'
 
+window.React = React
+
 ReactDOM.render(
   <ThemeProvide {...themes}>
     <Main />

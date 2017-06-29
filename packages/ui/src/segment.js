@@ -1,31 +1,30 @@
 // @flow
 import React from 'react'
 import { view, inject } from '@mcro/black'
+import type { ViewType } from '@mcro/black'
 import Button from './button'
 import { Provider } from 'react-tunnel'
 import type { Color } from '@mcro/gloss'
 
-export type Props = {
-  active?: number,
-  defaultActive?: number,
-  controlled?: boolean,
-  items: Array<React$Element<any> | Object>,
-  children: React$Element<any>,
-  onChange?: Function,
-  onlyIcons?: boolean,
-  title?: string,
-  stretch?: boolean,
-  sync?: { get(): number, set(value: number): void },
-  padded?: boolean,
-  color: Color,
-  ui?: Object,
-  itemProps?: Object,
-}
-
-@inject(context => ({ ui: context.ui }))
+@inject(context => ({ segmentContext: context.segmentContext }))
 @view.ui
-export default class Segment {
-  props: Props
+export default class Segment implements ViewType<Props> {
+  props: Props & {
+    active?: number,
+    defaultActive?: number,
+    controlled?: boolean,
+    items: Array<React$Element<any> | Object>,
+    children: React$Element<any>,
+    onChange?: Function,
+    onlyIcons?: boolean,
+    title?: string,
+    stretch?: boolean,
+    sync?: { get(): number, set(value: number): void },
+    padded?: boolean,
+    color: Color,
+    segmentContext?: Object,
+    itemProps?: Object,
+  }
 
   state = {
     active: null,
@@ -58,7 +57,7 @@ export default class Segment {
     stretch,
     sync,
     padded,
-    ui,
+    segmentContext,
     color,
     itemProps,
     ...props
@@ -66,8 +65,8 @@ export default class Segment {
     let children = children_
     const ACTIVE = typeof active === 'undefined' ? this.active : active
     const getContext = (index: number, length: number) => ({
-      ui: {
-        ...ui,
+      segmentContext: {
+        ...segmentContext,
         inSegment: {
           first: index === 0,
           last: index === length - 1,
@@ -137,21 +136,17 @@ export default class Segment {
     },
   }
 
-  static theme = {
-    reverse: {
-      segment: {
+  static theme = props => ({
+    segment: {
+      ...(props.reverse && {
         flexFlow: 'row-reverse',
-      },
-    },
-    padded: {
-      segment: {
+      }),
+      ...(props.padded && {
         margin: ['auto', 5],
-      },
-    },
-    vertical: {
-      segment: {
+      }),
+      ...(props.column && {
         flexFlow: 'column',
-      },
+      }),
     },
-  }
+  })
 }

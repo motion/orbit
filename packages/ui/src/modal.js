@@ -36,6 +36,4 @@ export default class Modal {
       margin: 100,
     },
   }
-
-  static theme = {}
 }

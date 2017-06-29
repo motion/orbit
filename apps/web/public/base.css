@@ -17,6 +17,22 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.2) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Strikethrough */
 
 .strikethrough > p > span {
@@ -114,20 +130,15 @@ body.dragging * {
   }
 }
 
-input, textarea, select {
-  font-family: -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    "Roboto",
-    "Oxygen",
-    "Ubuntu",
-    "Cantarell",
-    "Droid Sans",
-    "Helvetica Neue",
-    sans-serif;
+input,
+textarea,
+select {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
-body, body * {
+body,
+body * {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
@@ -142,7 +153,8 @@ body, body * {
 }
 
 /* prevent overscroll bounce */
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -161,38 +173,67 @@ a {
 
 /* reset elements from flex */
 
-a, input, textarea {
+a,
+input,
+textarea {
   align-self: flex-start;
 }
 
-a, span, em, b, strong, i {
+a,
+span,
+em,
+b,
+strong,
+i {
   white-space: pre-wrap;
   display: inline;
 }
 
-script, meta, link {
+script,
+meta,
+link {
   display: none;
 }
 
-a, input, textarea, select {
+a,
+input,
+textarea,
+select {
   outline: 0;
 }
 
-p, h1, h2, h3, h4, h5, h6, br {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+br {
   display: block;
 }
 
-ol, ul {
+ol,
+ul {
   margin: 0;
   padding: 0;
 }
 
-p, h1, h2, h3, h4, h5, h6, code, pre {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+code,
+pre {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-pre, code {
+pre,
+code {
   margin: 0;
   display: block;
 }
@@ -236,7 +277,8 @@ col {
 colgroup {
   display: table-column-group;
 }
-td, th {
+td,
+th {
   display: table-cell;
 }
 caption {
@@ -304,7 +346,12 @@ hr {
  * https://github.com/h5bp/html5-boilerplate/issues/440
  */
 
-audio, canvas, iframe, img, svg, video {
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
   vertical-align: middle;
 }
 

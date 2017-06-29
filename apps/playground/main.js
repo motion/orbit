@@ -10,11 +10,11 @@ class Playground {
       <playground>
         <section $buttons>
           <row $$row>
-            <Z.Button test icon="world">Hello World</Z.Button>
-            <Z.Button test icon="world" size={2}>Hello World</Z.Button>
-            <Z.Button test color="red" background="blue">Hello World</Z.Button>
-            <Z.Button test circular>Hello World</Z.Button>
-            <Z.Button test circular size={3}>Hello World</Z.Button>
+            <Z.Button icon="world">Hello World</Z.Button>
+            <Z.Button icon="world" size={2}>Hello World</Z.Button>
+            <Z.Button color="red" background="blue">Hello World</Z.Button>
+            <Z.Button circular>Hello World</Z.Button>
+            <Z.Button circular size={3}>Hello World</Z.Button>
           </row>
 
           <row $$row>
@@ -37,6 +37,14 @@ class Playground {
             </Z.Segment>
           </row>
         </section>
+
+        <section $form>
+          <row $$row>
+            <Z.Input icon="world" placeholder="you" />
+            <Z.Input icon="world" size={2} />
+            <Z.Input placeholder="hello" />
+          </row>
+        </section>
       </playground>
     )
   }
@@ -53,13 +61,26 @@ export default class Main {
   render() {
     return (
       <main>
-        <Playground />
-        <Z.Theme name="light">
-          <Playground />
+        <Z.Popover target={<Z.Button>test</Z.Button>}>
+          <is>open</is>
+        </Z.Popover>
+
+        <Z.Drawer if={false} from="right" open>
+          test stuff
+        </Z.Drawer>
+
+        <Z.Theme if={true} name="dark">
+          <Z.Button circular icon="eye" onClick={() => alert('hi')} />
         </Z.Theme>
-        <Z.Theme name="dark">
+        <ok if={true}>
           <Playground />
-        </Z.Theme>
+          <Z.Theme name="light">
+            <Playground />
+          </Z.Theme>
+          <Z.Theme name="dark">
+            <Playground />
+          </Z.Theme>
+        </ok>
       </main>
     )
   }

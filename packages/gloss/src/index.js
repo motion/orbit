@@ -1,9 +1,7 @@
 // @flow
-import glossyElFactory from './fancyElement'
+import fancyElement from './fancyElement'
 import motionStyle from '@mcro/css'
 import { StyleSheet } from './stylesheet'
-import { pickBy } from 'lodash'
-import { flattenThemes, isFunc } from './helpers'
 
 // exports
 export { colorToString, objectToColor, expandCSSArray } from '@mcro/css'
@@ -23,30 +21,16 @@ const DEFAULT_OPTS = {
   themeKey: 'theme',
 }
 
-class Gloss {
+export class Gloss {
   options: Options
 
-  constructor(options: Options = DEFAULT_OPTS) {
-    this.options = options
-    this.motionStyle = motionStyle(options)
-    this.baseStyles =
-      options.baseStyles &&
-      this.getStyles(
-        { name: 'Gloss Parent Styles', style: this.options.baseStyles },
-        null
-      )
-    this.glossyEl = (styles, theme) =>
-      glossyElFactory(
-        theme,
-        this.baseStyles,
-        styles,
-        this.options,
-        this.applyNiceStyles
-      )
-    this.createElement = this.glossyEl(
-      this.getStyles({ name: 'root', style: {} })
-    )
-    // allow grabbing createElement off decorator
+  makeCreateEl = styles => fancyElement(this, this.getStyles(styles))
+
+  constructor(opts: Options = DEFAULT_OPTS) {
+    this.options = opts
+    this.niceStyle = motionStyle(opts)
+    this.baseStyles = opts.baseStyles && this.getStyles(opts.baseStyles)
+    this.createElement = this.makeCreateEl()
     this.decorator.createElement = this.createElement
   }
 
@@ -54,55 +38,60 @@ class Gloss {
     // shorthand
     if (typeof Child === 'string') {
       const name = Child
-      const createEl = this.glossyEl(
-        this.getStyles({ name, style: { [name]: style } })
-      )
+      const createEl = this.makeCreateEl({ [name]: style }, name)
       return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
     }
 
-    // class
     if (Child.prototype) {
-      // shim this.glossyElement
-      Child.prototype.glossElement = this.glossyEl(
-        this.getStyles(Child, this.options.dontTheme ? null : Child.theme),
-        Child.theme
-      )
+      Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
+      Child.prototype.gloss = this.niceStyleSheet
+      if (Child.theme && typeof Child.theme === 'function') {
+        const getStyles = this.getStyles
+        const ogRender = Child.prototype.render
+        Child.prototype.render = function(...args) {
+          const activeTheme =
+            this.context.uiTheme &&
+            this.context.uiTheme[this.context.uiActiveTheme || this.props.theme]
+          if (activeTheme) {
+            this.theme = getStyles(Child.theme(this.props, activeTheme, this))
+          }
+          return ogRender.call(this, ...args)
+        }
+      }
     }
-
     return Child
   }
 
-  applyNiceStyles = (styles: Object, errorMessage: string) => {
+  niceStyleSheet = (styles: Object, errorMessage: string) => {
     for (const style in styles) {
-      if (!styles.hasOwnProperty(style)) {
-        continue
-      }
+      if (!styles.hasOwnProperty(style)) continue
       const value = styles[style]
       if (value) {
-        styles[style] = this.motionStyle(value, errorMessage)
+        styles[style] = this.niceStyle(value, errorMessage)
       }
     }
     return styles
   }
 
-  getStyles = (
-    { name, style }: { name: string, style: Object },
-    theme: ?Object
-  ) => {
-    const styles = { ...style, ...flattenThemes(theme) }
-    const dynamicStyles = pickBy(styles, isFunc)
-    const staticStyles = pickBy(styles, x => !isFunc(x))
-    const niceStatics = this.applyNiceStyles(staticStyles, `${name}:`)
-    const statics = StyleSheet.create(niceStatics)
-    // attach key to status objects so we can use later in glossyElement
-    for (const key of Object.keys(statics)) {
-      statics[key].key = key
+  // runs niceStyleSheet on non-function styles
+  getStyles = styles => {
+    if (!styles) {
+      return null
     }
-    return {
-      statics,
-      dynamics: dynamicStyles,
-      theme,
+    const functionalStyles = {}
+    const staticStyles = {}
+    for (const [key, val] of Object.entries(styles)) {
+      if (typeof val === 'function') {
+        functionalStyles[key] = val // to be run later
+      } else {
+        staticStyles[key] = val
+      }
     }
+    const stylesheet = {
+      ...StyleSheet.create(this.niceStyleSheet(staticStyles)),
+      ...functionalStyles,
+    }
+    return stylesheet
   }
 }
 

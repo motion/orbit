@@ -5,6 +5,7 @@ import hoistStatics from 'hoist-non-react-statics'
 
 export default function attacher(options) {
   return {
+    name: 'attach',
     decorator: View => {
       class ContextAttacher extends React.Component {
         static contextTypes = {

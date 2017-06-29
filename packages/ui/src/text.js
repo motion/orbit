@@ -1,13 +1,16 @@
 // @flow
 import React from 'react'
 import { view, keycode } from '@mcro/black'
+import type { ViewType } from '@mcro/black'
 
 export type Props = {
-  editable?: Boolean,
-  autoselect?: Boolean,
+  editable?: boolean,
+  autoselect?: boolean,
+  selectable?: boolean,
   onFinishEdit: Function,
   onCancelEdit: Function,
   getRef?: Function,
+  ellipse?: boolean,
 }
 
 // click away from edit clears it
@@ -33,7 +36,7 @@ export type Props = {
     }
   },
 })
-export default class Text {
+export default class Text implements ViewType {
   props: Props
 
   static defaultProps = {
@@ -98,17 +101,45 @@ export default class Text {
     onFinishEdit,
     onCancelEdit,
     onKeyDown,
+    selectable,
+    ellipse,
+    children,
     ...props
   }: Props) {
     return (
       <text
+        tagName="p"
         contentEditable={editable}
+        $selectable={selectable}
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
         ref={this.ref('node').set}
         $$marginLeft={props.active ? -2 : 0}
         {...props}
-      />
+      >
+        {!ellipse && children}
+        <ellipse if={ellipse} $$ellipse>
+          {children}
+        </ellipse>
+      </text>
     )
   }
+
+  static style = {
+    text: {
+      userSelect: 'none',
+    },
+    selectable: {
+      userSelect: 'auto',
+    },
+  }
+
+  static theme = (props, theme) => ({
+    text: {
+      color: props.color || theme.base.color,
+    },
+    ellipse: {
+      color: props.color || theme.base.color,
+    },
+  })
 }

@@ -1,8 +1,4 @@
 {
-  "pundle": {
-    "presets": [],
-    "components": []
-  },
   "pathType": "filePath",
   "saveNpmModules": true,
   "webServerPort": 10547,

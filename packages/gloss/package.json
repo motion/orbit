@@ -1,6 +1,6 @@
 {
   "name": "@mcro/gloss",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Higher order component for nicer component styles",
   "main": "lib/index.js",
   "repository": {
@@ -16,8 +16,7 @@
     "babel-helper-builder-react-jsx": "^6.24.1",
     "deep-extend": "^0.5.0",
     "jss": "^6.0.1",
-    "jss-preset-default": "^1.1.0",
-    "lodash": "^4.17.4"
+    "jss-preset-default": "^1.1.0"
   },
   "peerDependencies": {
     "react": "^15.6.0",

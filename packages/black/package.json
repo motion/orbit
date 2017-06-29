@@ -1,7 +1,7 @@
 {
   "name": "@mcro/black",
   "main": "lib/index.js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {},
   "dependencies": {
     "@mcro/decor": "^1.0.1",
@@ -17,5 +17,8 @@
     "react-tunnel": "0.1.0",
     "rxdb": "^5.0.0",
     "rxjs": "^5.4.1"
+  },
+  "peerDependencies": {
+    "react": "^15.6.0"
   }
 }

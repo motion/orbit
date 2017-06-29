@@ -162,25 +162,29 @@ class Projects {
                       percent={percentComplete(tasks)}
                     />
                     <path if={false} $$row $$centered>
-                      {flatMap(
-                        doc.title.map((tit, index) =>
-                          <UI.Text key={index}>
-                            {tit}
-                          </UI.Text>
-                        ),
-                        (value, index, arr) =>
-                          arr.length !== index + 1
-                            ? [value, <sep key={Math.random()}>/</sep>]
-                            : value
-                      )}
+                      <UI.Text>
+                        {flatMap(
+                          doc.title.map((tit, index) =>
+                            <piece key={index}>
+                              {tit}
+                            </piece>
+                          ),
+                          (value, index, arr) =>
+                            arr.length !== index + 1
+                              ? [value, <sep key={Math.random()}>/</sep>]
+                              : value
+                        )}
+                      </UI.Text>
                     </path>
                     <path onClick={() => Router.go(doc.url())} $$row $$centered>
-                      {(store.crumbs &&
-                        store.crumbs[index] &&
-                        store.crumbs[index]
-                          .map(doc => doc.getTitle())
-                          .join(' / ')) ||
-                        doc.getTitle()}
+                      <UI.Text>
+                        {(store.crumbs &&
+                          store.crumbs[index] &&
+                          store.crumbs[index]
+                            .map(doc => doc.getTitle())
+                            .join(' / ')) ||
+                          doc.getTitle()}
+                      </UI.Text>
                     </path>
                   </start>
                   <end>

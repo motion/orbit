@@ -14,10 +14,20 @@ class Test {
   }
 }
 
-export function render() {
+export function render(shouldReset) {
   // console.time('#render')
-  const ROOT = document.querySelector('#app')
+  let ROOT = document.querySelector('#app')
   const Layout = require('./views/layout').default
+
+  if (shouldReset && module.hot) {
+    log('resetting state fully')
+    // HMR: to recover from react bugs
+    const parent = ROOT.parentNode
+    parent.removeChild(ROOT)
+    ROOT = document.createElement('div')
+    ROOT.setAttribute('id', 'app')
+    document.body.appendChild(ROOT)
+  }
 
   ReactDOM.render(
     <ThemeProvide {...themes}>
@@ -29,16 +39,16 @@ export function render() {
 }
 
 export async function start(quiet) {
-  render()
+  render(true)
   await App.start(quiet)
   render()
 }
 
 if (module.hot) {
-  module.hot.accept('./views/layout', () => {
-    log('accept: ./start:./views/layout')
-    start(true)
-  })
+  // module.hot.accept('./views/layout', () => {
+  //   log('accept: ./start:./views/layout')
+  //   start(true)
+  // })
 }
 
 log('render: start')

@@ -17,7 +17,7 @@
     "react-mixin": "^3.0.5",
     "sb-event-kit": "^3.0.0"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "react": "^15.6.0",
     "react-dom": "^15.6.0"
   }

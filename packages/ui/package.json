@@ -21,7 +21,7 @@
     "react-tunnel": "^0.1.0",
     "react-virtualized": "^9.8.0"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "react": "^15.6.0",
     "react-dom": "^15.6.0"
   }

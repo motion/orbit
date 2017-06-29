@@ -101,7 +101,7 @@ export default class Login {
               distance={10}
               forgiveness={20}
               delay={150}
-              target={<Button circular icon="user" />}
+              target={<UI.Button circular icon="user" />}
               background
               shadow
               openOnHover
@@ -114,7 +114,7 @@ export default class Login {
                   {
                     primary: User.name,
                     after: (
-                      <Button
+                      <UI.Button
                         chromeless
                         icon="power"
                         onClick={() => User.logout()}

@@ -272,27 +272,27 @@ class Inner {
         <Login />
         <Signup />
 
-        <Theme name="dark">
+        <UI.Theme name="dark">
           <modal>
-            <Form>
-              <PassProps row chromeless placeholderColor="#333">
-                <Field label="Name" placeholder="something" />
-                <Field label="Email" placeholder="something" />
-                <Field label="Password" placeholder="something" />
-              </PassProps>
+            <UI.Form>
+              <UI.PassProps row chromeless placeholderColor="#333">
+                <UI.Field label="Name" placeholder="something" />
+                <UI.Field label="Email" placeholder="something" />
+                <UI.Field label="Password" placeholder="something" />
+              </UI.PassProps>
               <UI.Button>Signup</UI.Button>
-            </Form>
+            </UI.Form>
           </modal>
-        </Theme>
+        </UI.Theme>
 
         <Projects />
 
-        <SlotFill.Slot name="sidebar">
+        <UI.SlotFill.Slot name="sidebar">
           {items =>
             <activeSidebar>
               {items}
             </activeSidebar>}
-        </SlotFill.Slot>
+        </UI.SlotFill.Slot>
       </inner>
     )
   }
@@ -331,9 +331,9 @@ export default class Sidebar {
     const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
 
     return (
-      <Theme name="dark">
+      <UI.Theme name="dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
-          <Drawer
+          <UI.Drawer
             transition={SIDEBAR_TRANSITION}
             key={2}
             background="transparent"
@@ -345,9 +345,9 @@ export default class Sidebar {
             <sidebar>
               <Inner key={0} />
             </sidebar>
-          </Drawer>
+          </UI.Drawer>
         </Shortcuts>
-      </Theme>
+      </UI.Theme>
     )
   }
 

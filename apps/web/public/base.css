@@ -43,7 +43,7 @@ select:-webkit-autofill:focus {
 .strikethrough > p > span:after {
   transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
   position: absolute;
-  top: 9px;
+  top: 12px;
   transform-origin: center left;
   height: 2px;
   box-shadow: 0 1px rgba(255, 255, 255, 0.6);

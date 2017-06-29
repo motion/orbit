@@ -53,27 +53,32 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     if (propNames) {
       for (const NAME of propNames) {
         const val = props && props[NAME]
-        if (options.glossProp && NAME === options.glossProp) {
+
+        // non-style actions
+        if (options.glossProp && NAME === options.glossProp) { // css={}
           cssStyles = val
           continue
-        } else if (
+        }
+        if (
           options.tagName &&
           NAME === options.tagName &&
           isTag &&
           typeof val === 'string'
-        ) {
-          // change tagName
+        ) { // tagName={}
           type = val
           continue
-        } else if (NAME[0] !== $) {
+        }
+        if (NAME[0] !== $) {
           // pass props down if not style prop
           finalProps[NAME] = val
           continue
-        } else if (val === false || val === null || val === undefined) {
+        }
+
+        // style actions
+        if (val === false || val === null || val === undefined) {
           // ignore most falsy values (except 0)
           continue
         }
-
         if (baseStyles) {
           // $$style
           const isParentStyle = NAME[1] === $

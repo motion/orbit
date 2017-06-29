@@ -1,7 +1,7 @@
 {
   "name": "@mcro/decor",
   "main": "lib/index.js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {},
   "dependencies": {
     "autobind-decorator": "^1.3.4",
@@ -14,9 +14,11 @@
     "motion-class-helpers": "^1.1.0",
     "motion-mobx-helpers": "^1.1.2",
     "prop-types": "^15.5.9",
-    "react": "^15.6.0",
-    "react-dom": "^15.6.0",
     "react-mixin": "^3.0.5",
     "sb-event-kit": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0"
   }
 }

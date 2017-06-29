@@ -61,7 +61,7 @@ export default class Children {
 
     return (
       <children>
-        <header $$row if={hasDocs}>
+        <header $$row>
           <title>Pages</title>
           <actions>
             <Button
@@ -73,10 +73,8 @@ export default class Children {
             />
           </actions>
         </header>
-        <noDocs if={!hasDocs} onClick={store.add}>
-          create page
-        </noDocs>
         <content>
+          <empty if={!hasDocs}>no pages</empty>
           <docs if={hasDocs}>
             {sortBy(docs || [], 'createdAt').map(doc => {
               const children = store.children[doc._id]
@@ -134,6 +132,7 @@ export default class Children {
       // borderTop: [1, '#f6f6f6'],
       padding: [0],
       cursor: 'default',
+      width: 170,
     },
     header: {
       padding: [0, 10],
@@ -158,6 +157,13 @@ export default class Children {
       marginLeft: 20,
       color: [0, 0, 0, 0.5],
     },
+    empty: {
+      padding: 20,
+      justifyContent: 'center',
+      alignSelf: 'center',
+      fontSize: 16,
+      color: 'rgba(0,0,0,.6)',
+    },
     doc: {
       margin: [0],
       padding: 10,
@@ -176,8 +182,8 @@ export default class Children {
     input: {
       border: 'none',
       background: 'transparent',
-      width: 150,
-      padding: 8,
+      padding: 2,
+      paddingLeft: 13,
       fontSize: 14,
     },
     name: {

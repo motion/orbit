@@ -31,7 +31,7 @@
   dependencies:
     lodash "^4.6.1"
 
-"@mcro/preset-motion@^1.0.4":
+"@mcro/preset-motion@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mcro/preset-motion/-/preset-motion-1.0.5.tgz#11bb89d7c6ee5adabca084197eba915086f7dc59"
   dependencies:

@@ -12,7 +12,7 @@
     "check-dependencies": "lerna exec -- check-dependencies"
   },
   "dependencies": {
-    "@mcro/preset-motion": "^1.0.4",
+    "@mcro/preset-motion": "^1.0.5",
     "babel-cli": "^6.23.0",
     "babel-eslint": "^7.2.3",
     "check-dependencies": "^1.0.1",

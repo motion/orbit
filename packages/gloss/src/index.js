@@ -2,9 +2,6 @@
 import fancyElement from './fancyElement'
 import motionStyle from '@mcro/css'
 import { StyleSheet } from './stylesheet'
-import { pickBy } from 'lodash'
-import { flattenThemes, isFunc } from './helpers'
-import deepExtend from 'deep-extend'
 
 // exports
 export { colorToString, objectToColor, expandCSSArray } from '@mcro/css'
@@ -74,17 +71,6 @@ export class Gloss {
       }
     }
     return styles
-  }
-
-  getThemes = themes => {
-    if (!themes) {
-      return null
-    }
-    const finalThemes = {}
-    for (const [key, styles] of Object.entries(themes)) {
-      finalThemes[key] = this.getStyles(styles)
-    }
-    return finalThemes
   }
 
   // runs niceStyleSheet on non-function styles

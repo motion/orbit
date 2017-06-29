@@ -12,6 +12,7 @@ export default class Input {
         $input
         width={150}
         borderRadius={0}
+        padding={[0, 10]}
         {...this.props}
         tagName="input"
         wrapElement
@@ -21,7 +22,7 @@ export default class Input {
 
   static style = {
     input: {
-      background: 'transparent',
+      // background: 'transparent',
       border: 'none',
       width: '100%',
       height: '100%',

@@ -23,18 +23,19 @@ const $ = '$'
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
   const { baseStyles, options, niceStyle } = Gloss
+  const SHOULD_THEME = !options.dontTheme
   return function fancyElement(
     type: string | Function,
     props?: Object,
     ...children
   ) {
+    let cssStyles
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
     const finalProps = {}
     const finalStyles = []
-    let cssStyles
-
-    function addStyle(style, val) {
+    const addStyle = (obj, key, val, checkTheme) => {
+      const style = obj[key]
       if (!style) return
       if (typeof style === 'function') {
         const sheet = StyleSheet.create({ [type]: niceStyle(style(val)) })
@@ -42,11 +43,15 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
       } else {
         finalStyles.push(style)
       }
+      if (SHOULD_THEME && checkTheme && this.theme && this.theme[key]) {
+        console.log('adding theme', this.theme[key])
+        finalStyles.push(this.theme[key])
+      }
     }
 
     if (styles && (isTag || type.name)) {
       const tagName = type.name || type
-      addStyle(styles[tagName])
+      addStyle(styles, tagName, true)
     }
 
     if (propNames) {
@@ -54,7 +59,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         const val = props && props[NAME]
 
         // non-style actions
-        if (options.glossProp && NAME === options.glossProp) { // css={}
+        if (options.glossProp && NAME === options.glossProp) {
+          // css={}
           cssStyles = val
           continue
         }
@@ -63,7 +69,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           NAME === options.tagName &&
           isTag &&
           typeof val === 'string'
-        ) { // tagName={}
+        ) {
+          // tagName={}
           type = val
           continue
         }
@@ -82,13 +89,13 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           // $$style
           const isParentStyle = NAME[1] === $
           if (isParentStyle) {
-            addStyle(baseStyles[NAME.slice(2)], val)
+            addStyle(baseStyles, NAME.slice(2), val)
             continue
           }
         }
         if (styles) {
           // $style
-          addStyle(styles[NAME.slice(1)], val)
+          addStyle(styles, NAME.slice(1), val, true)
         }
       }
     }

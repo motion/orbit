@@ -55,7 +55,9 @@ export class Gloss {
           const activeTheme =
             this.context.uiTheme &&
             this.context.uiTheme[this.context.uiActiveTheme || this.props.theme]
-          this.theme = getThemes(Child.theme(this.props, activeTheme, this))
+          if (activeTheme) {
+            this.theme = getThemes(Child.theme(this.props, activeTheme, this))
+          }
           return ogRender.call(this, ...args)
         }
       }

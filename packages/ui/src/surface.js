@@ -111,7 +111,7 @@ export default class Surface {
     const stringIcon = typeof icon === 'string'
     const iconSize =
       _iconSize ||
-      (theme.element && theme.element.fontSize * 0.9) ||
+      (theme && theme.element.fontSize * 0.9) ||
       Math.log(size + 1) * 15
 
     const finalClassName = `${this.uniq} ${className || ''}`
@@ -123,7 +123,7 @@ export default class Surface {
     }
 
     return (
-      <surface ref={getRef} css={theme.surface} {...!wrapElement && passProps}>
+      <surface ref={getRef} {...!wrapElement && passProps}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -139,13 +139,12 @@ export default class Surface {
           <Glow
             full
             scale={1.5}
-            color={(theme.surface && theme.surface.color) || [0, 0, 0]}
+            color={(theme && theme.surface.color) || [0, 0, 0]}
             opacity={0.06}
           />
         </glowWrap>
         <element
           if={!noElement}
-          css={theme.element}
           {...wrapElement && passProps}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}

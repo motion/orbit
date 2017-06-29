@@ -2,8 +2,21 @@ const Slate = require('slate')
 const { List } = require('immutable')
 const isList = require('../isList')
 
+// chono doesn't support npm but is the best date library
+const loadScript = url => {
+  const s = document.createElement('script')
+  s.type = 'text/javascript'
+  s.src = url
+  document.body.appendChild(s)
+}
+
+const chronoUrl = `https://cdn.jsdelivr.net/chrono/1.3/chrono.min.js`
+
+loadScript(chronoUrl)
+
 function processItem(currentItem, opts, transform, ordered) {
-  return transform
+  if (typeof chrono === 'undefined') return transform
+  // return transform
   const date = chrono.parse(currentItem.text)[0]
   if (!date) return transform
 

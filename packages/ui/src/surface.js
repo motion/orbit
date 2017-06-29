@@ -284,8 +284,6 @@ export default class Surface implements ViewType<Props> {
     )
     const borderColor = props.borderColor || theme.base.borderColor
 
-    log(self.gloss({ background }))
-
     // hover
     const adjustDirection = isLight ? 'darken' : 'lighten'
     let hoverColor = $(props.hoverColor || theme.hover.color || props.color)

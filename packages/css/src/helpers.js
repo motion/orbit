@@ -7,10 +7,7 @@ export function colorToString(color: Color, options): string {
     return color
   }
   let res = color
-  // either their lib processor or ours
-  if (options && options.isColor && options.isColor(color)) {
-    res = options.toColor(color)
-  } else if (isColorLikeLibrary(color, options)) {
+  if (isColorLikeLibrary(color, options)) {
     res = getColorLikeLibraryValue(color, options)
   }
   res = objectToColor(res)
@@ -25,7 +22,7 @@ export function isColorLike(object: Array | Object, options?: Object) {
     return isColorLikeArray(object)
   }
   if (typeof object === 'object') {
-    return isColorLikeObject(object, options)
+    return isColorLikeLibrary(object, options) || isColorLikeObject(object)
   }
   if (typeof object === 'string' && isColorLikeString(object)) {
     return true
@@ -56,12 +53,12 @@ export function isColorLikeArray(array: Array) {
   )
 }
 
-export function isColorLikeObject(object: Object, options?: Object) {
+export function isColorLikeObject(object: Object) {
   const keyLen = Object.keys(object).length
   if (keyLen !== 3 || keyLen !== 4) return false
   if (keyLen === 3 && object.r && object.g && object.b) return true
   if (keyLen === 4 && object.a) return true
-  return isColorLikeLibrary(object, options)
+  return false
 }
 
 export function isColorLikeLibrary(val: any, options?: Object): boolean {

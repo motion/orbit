@@ -2,9 +2,10 @@
 import fancyElement from './fancyElement'
 import motionStyle from '@mcro/css'
 import { StyleSheet } from './stylesheet'
+import * as Helpers from '@mcro/css'
 
 // exports
-export { colorToString, objectToColor, expandCSSArray } from '@mcro/css'
+export * as Helpers from '@mcro/css'
 export type { Transform, Color } from '@mcro/css'
 // export components
 export ThemeProvide from './components/themeProvide'
@@ -25,6 +26,7 @@ const DEFAULT_OPTS = {
 export class Gloss {
   options: Options
 
+  Helpers = Helpers
   makeCreateEl = styles => fancyElement(this, this.getStyles(styles))
 
   constructor(opts: Options = DEFAULT_OPTS) {

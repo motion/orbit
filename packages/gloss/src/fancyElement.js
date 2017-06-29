@@ -32,7 +32,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     const isTag = typeof type === 'string'
     const finalProps = {}
     const finalStyles = []
-    let style
+    let cssStyles
 
     function addStyle(style, val) {
       if (!style) return
@@ -53,30 +53,26 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     if (propNames) {
       for (const NAME of propNames) {
         const val = props && props[NAME]
-        if (NAME === 'style') {
-          style = val
-          continue
-        }
-        if (
-          NAME === 'tagName' &&
+        if (options.glossProp && NAME === options.glossProp) {
+          cssStyles = val
+        } else if (
           options.tagName &&
+          NAME === options.tagName &&
           isTag &&
           typeof val === 'string'
         ) {
+          // change tagName
           type = val
-          continue
-        }
-        if (NAME[0] !== $) {
+        } else if (NAME[0] !== $) {
           // pass props down if not style prop
           finalProps[NAME] = val
-          continue
-        }
-        if (val === false || val === null || val === undefined) {
+        } else if (val === false || val === null || val === undefined) {
           // ignore most falsy values (except 0)
           continue
         }
-        // $$style
+
         if (baseStyles) {
+          // $$style
           const isParentStyle = NAME[1] === $
           if (isParentStyle) {
             addStyle(baseStyles[NAME.slice(2)], val)
@@ -85,14 +81,15 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         }
         if (styles) {
           // $style
+          console.log('GOT EM', NAME.slice(1))
           addStyle(styles[NAME.slice(1)], val)
         }
       }
     }
 
     // glossify and append style prop
-    if (style) {
-      const sheet = StyleSheet.create({ [type]: niceStyle(style) })
+    if (cssStyles) {
+      const sheet = StyleSheet.create({ [type]: niceStyle(cssStyles) })
       finalStyles.push(sheet[type])
     }
 

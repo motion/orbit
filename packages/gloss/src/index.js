@@ -27,14 +27,14 @@ const DEFAULT_OPTS = {
 export class Gloss {
   options: Options
 
-  makeCreateEl = (styles, name) =>
-    fancyElement(this, this.getStyles(styles, name))
+  makeCreateEl = (styles) =>
+    fancyElement(this, this.getStyles(styles))
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
     this.niceStyle = motionStyle(opts)
     this.baseStyles =
-      opts.baseStyles && this.getStyles(opts.baseStyles, 'parents')
+      opts.baseStyles && this.getStyles(opts.baseStyles)
     this.createElement = this.makeCreateEl()
     this.decorator.createElement = this.createElement
   }
@@ -47,20 +47,11 @@ export class Gloss {
       return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
     }
 
-    const themes = this.getStyles(Child.theme, 'theme')
-
-    // class
     if (Child.prototype) {
+      Child.theme = this.getThemes(Child.theme)
+      console.log(Child.theme)
       Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
       Child.prototype.gloss = this.niceStyleSheet
-      const ogRender = Child.prototype.render
-      Child.prototype.render = function(nextProps, ...args) {
-        if (themes) {
-          // console.log('nextProps', nextProps, themes)
-          // this.theme = getThemes(staticThemes, dynamicThemes)
-        }
-        return ogRender.call(this, nextProps, ...args)
-      }
     }
     return Child
   }
@@ -76,8 +67,19 @@ export class Gloss {
     return styles
   }
 
+  getThemes = (themes) => {
+    if (!themes) {
+      return null
+    }
+    const finalThemes = {}
+    for (const [key, styles] of Object.entries(themes)) {
+      finalThemes[key] = this.getStyles(styles)
+    }
+    return finalThemes
+  }
+
   // runs niceStyleSheet on non-function styles
-  getStyles = (styles, name) => {
+  getStyles = (styles) => {
     if (!styles) {
       return null
     }

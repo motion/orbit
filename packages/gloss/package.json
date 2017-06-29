@@ -1,6 +1,6 @@
 {
   "name": "@mcro/gloss",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Higher order component for nicer component styles",
   "main": "lib/index.js",
   "repository": {

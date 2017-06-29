@@ -11,6 +11,7 @@ import {
 
 export default function automagical(options: Object) {
   return {
+    name: 'automagical',
     decorator: (Klass: Class<any> | Function) => {
       if (!Klass.prototype) {
         return Klass

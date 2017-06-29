@@ -23,7 +23,6 @@ type Props = {
   style: Object,
   shadowed?: boolean,
   bordered?: boolean,
-  dark?: boolean,
   noOverlay?: boolean,
   theme?: string,
   className?: string,
@@ -57,7 +56,6 @@ export default class Drawer {
     style,
     onClickOverlay,
     noOverlay,
-    dark,
     shadowed,
     bordered,
     zIndex,
@@ -161,20 +159,20 @@ export default class Drawer {
   }
 
   static theme = {
-    theme: (
-      { transparent, background, transition, bordered, shadowed },
-      theme
-    ) => {
+    theme: (props, theme) => {
       return {
+        drawer: {
+          zIndex: props.zIndex,
+        },
         panel: {
           ...theme.base,
-          background: transparent
+          background: props.transparent
             ? 'transparent'
-            : background || theme.base.background,
-          transition: `transform ${transition}`,
-          borderColor: bordered && theme.base.borderColor,
+            : props.background || theme.base.background,
+          transition: `transform ${props.transition}`,
+          borderColor: props.bordered && theme.base.borderColor,
           boxShadow:
-            shadowed && (theme.base.shadow || '0 0 6px rgba(0,0,0,0.3)'),
+            props.shadowed && (theme.base.shadow || '0 0 6px rgba(0,0,0,0.3)'),
         },
       }
     },
@@ -183,10 +181,5 @@ export default class Drawer {
         display: 'block',
       },
     },
-    zIndex: ({ zIndex }) => ({
-      drawer: {
-        zIndex,
-      },
-    }),
   }
 }

@@ -10,6 +10,7 @@ export default function storeProvidable(options, emitter) {
   const { instanceOpts } = options
 
   return {
+    name: 'store-providable',
     decorator: (Klass, opts = {}) => {
       const allStores = opts.stores || options.stores
       const context = opts.context || options.context

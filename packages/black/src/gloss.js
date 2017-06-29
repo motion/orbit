@@ -142,6 +142,7 @@ export const styles: Object = {
 
 const Gloss = gloss({
   baseStyles: styles,
+  glossProp: 'css',
   themeProp: 'theme',
   setTagNameProp: 'tagName',
   isColor: color => color && !!color.rgb,

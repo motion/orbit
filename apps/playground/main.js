@@ -61,10 +61,14 @@ export default class Main {
   render() {
     return (
       <main>
+        <Z.Drawer from="right" open>
+          test stuff
+        </Z.Drawer>
+
         <Z.Theme if={false} name="dark">
             <Z.Button circular icon="eye" />
           </Z.Theme>
-        <ok if={true}>
+        <ok if={false}>
           <Playground />
           <Z.Theme name="light">
             <Playground />

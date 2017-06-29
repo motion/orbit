@@ -119,7 +119,7 @@ export default class Surface {
     }
 
     return (
-      <surface style={theme.surface} {...!wrapElement && passProps}>
+      <surface css={theme.surface} {...!wrapElement && passProps}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -140,7 +140,7 @@ export default class Surface {
           />
         </glowWrap>
         <element
-          style={theme.element}
+          css={theme.element}
           {...wrapElement && passProps}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}

@@ -14,7 +14,8 @@ export type Options = {
   themeKey: string | boolean,
   baseStyles?: Object,
   tagName?: boolean,
-  processColor?: Function,
+  toColor?: Function,
+  isColor?: Function,
 }
 
 const DEFAULT_OPTS = {

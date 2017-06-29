@@ -17,11 +17,10 @@ import Popover from './popover'
 const LINE_HEIGHT = 30
 
 const { decorator } = gloss({
-  baseStyles: styles,
   themeProp: 'theme',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,
-  processColor: color => color.toString(),
+  toColor: color => color.toString(),
 })
 
 ReactDOM.render(

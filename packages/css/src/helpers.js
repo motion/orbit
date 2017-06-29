@@ -9,7 +9,7 @@ export function colorToString(color: Color, options): string {
   let res = color
   // either their lib processor or ours
   if (options && options.isColor && options.isColor(color)) {
-    res = options.processColor(color)
+    res = options.toColor(color)
   } else if (isColorLikeLibrary(color, options)) {
     res = getColorLikeLibraryValue(color, options)
   }

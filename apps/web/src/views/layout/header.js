@@ -58,6 +58,7 @@ export default class Header {
                   chromeless
                   spaced
                   size={0.7}
+                  margin={[0, -5, 0, 0]}
                   icon={
                     layoutStore.sidebar.active
                       ? 'arrow-min-right'

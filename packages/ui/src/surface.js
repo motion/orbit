@@ -347,6 +347,7 @@ export default class Surface implements ViewType<Props> {
         },
       },
       surface: {
+        margin: props.margin,
         overflow,
         height,
         width,

@@ -9,7 +9,7 @@ export default class CommanderInput {
     return (
       <bar $$align="center" $$row $$flex>
         <Input
-          size={2}
+          size={1.2}
           height={200}
           onChange={commanderStore.onChange}
           onKeyDown={commanderStore.onKeyDown}

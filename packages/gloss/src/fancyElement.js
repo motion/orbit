@@ -38,7 +38,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
       if (!style) return
       if (typeof style === 'function') {
         console.log('push', style(val))
-        finalStyles.push(StyleSheet.create(niceStyle(style(val))))
+        const sheet = StyleSheet.create({ [type]: niceStyle(style(val)) })
+        finalStyles.push(sheet[type])
       } else {
         finalStyles.push(style)
       }

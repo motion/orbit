@@ -27,7 +27,7 @@ body {
 .strikethrough > p > span:after {
   transition: transform 0.25s cubic-bezier(.55, 0, .1, 1);
   position: absolute;
-  top: 9px;
+  top: 12px;
   transform-origin: center left;
   height: 2px;
   box-shadow: 0 1px rgba(255, 255, 255, 0.6);
@@ -114,20 +114,15 @@ body.dragging * {
   }
 }
 
-input, textarea, select {
-  font-family: -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    "Roboto",
-    "Oxygen",
-    "Ubuntu",
-    "Cantarell",
-    "Droid Sans",
-    "Helvetica Neue",
-    sans-serif;
+input,
+textarea,
+select {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
-body, body * {
+body,
+body * {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
@@ -142,7 +137,8 @@ body, body * {
 }
 
 /* prevent overscroll bounce */
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -161,38 +157,67 @@ a {
 
 /* reset elements from flex */
 
-a, input, textarea {
+a,
+input,
+textarea {
   align-self: flex-start;
 }
 
-a, span, em, b, strong, i {
+a,
+span,
+em,
+b,
+strong,
+i {
   white-space: pre-wrap;
   display: inline;
 }
 
-script, meta, link {
+script,
+meta,
+link {
   display: none;
 }
 
-a, input, textarea, select {
+a,
+input,
+textarea,
+select {
   outline: 0;
 }
 
-p, h1, h2, h3, h4, h5, h6, br {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+br {
   display: block;
 }
 
-ol, ul {
+ol,
+ul {
   margin: 0;
   padding: 0;
 }
 
-p, h1, h2, h3, h4, h5, h6, code, pre {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+code,
+pre {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-pre, code {
+pre,
+code {
   margin: 0;
   display: block;
 }
@@ -236,7 +261,8 @@ col {
 colgroup {
   display: table-column-group;
 }
-td, th {
+td,
+th {
   display: table-cell;
 }
 caption {
@@ -304,7 +330,12 @@ hr {
  * https://github.com/h5bp/html5-boilerplate/issues/440
  */
 
-audio, canvas, iframe, img, svg, video {
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
   vertical-align: middle;
 }
 

@@ -62,6 +62,7 @@ export default class Breadcrumbs {
 
   static style = {
     breadcrumbs: {
+      userSelect: 'none',
       height: 38,
       fontSize: 22,
       padding: [0, 20],

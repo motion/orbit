@@ -41,7 +41,7 @@ export default function log(...args) {
       return wrapLogger(ogInit.call(this), target, key)
     }
     return descriptor
-  } else if (typeof args[0] === 'function') {
+  } else if (args.length === 1 && typeof args[0] === 'function') {
     // regular fn
     const [wrapFn] = args
     logger(wrapFn)
@@ -49,6 +49,11 @@ export default function log(...args) {
   }
 
   logger(...args)
+
+  // pass through
+  if (args.length === 1) {
+    return args[0]
+  }
 }
 
 function wrapLogger(wrapFn: Function, parent, name?: string) {

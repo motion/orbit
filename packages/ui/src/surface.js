@@ -150,7 +150,7 @@ export default class Surface implements ViewType<Props> {
           />
         </glowWrap>
         <element
-          if={!noElement}
+          if={!noElement || (noElement && children)}
           {...wrapElement && passProps}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}
@@ -215,10 +215,10 @@ export default class Surface implements ViewType<Props> {
       pointerEvents: 'none',
     },
     hasIconBefore: {
-      marginLeft: '0.7vh',
+      marginLeft: '1vh',
     },
     hasIconAfter: {
-      marginRight: '0.7vh',
+      marginRight: '1vh',
     },
     iconAfter: {
       order: 3,
@@ -286,7 +286,11 @@ export default class Surface implements ViewType<Props> {
     const borderColor = $(props.borderColor || theme.base.borderColor)
 
     // hover
-    let hoverColor = $(props.hoverColor || theme.hover.color || props.color)
+    let hoverColor = $(
+      props.highlight
+        ? color.lighten(0.2)
+        : props.hoverColor || theme.hover.color || props.color
+    )
     const iconHoverColor = props.iconHoverColor || hoverColor
     // TODO this could be simpler/better
     if (props.lightenOnHover) {
@@ -303,14 +307,17 @@ export default class Surface implements ViewType<Props> {
       const adjustDirection = isLight ? 'darken' : 'lighten'
       hoverColor = hoverColor[adjustDirection](luminosity / 2)
     }
-    const hoverBorderColor = props.hoverBorderColor || theme.hover.borderColor || borderColor.lighten(1)
+    const hoverBorderColor =
+      props.hoverBorderColor ||
+      theme.hover.borderColor ||
+      borderColor.lighten(1)
 
     // shadow
     const boxShadow = props.shadow === true ? [0, 5, 0, [0, 0, 0, 0.2]] : []
 
     if (props.glint) {
       const glintColor =
-        props.glint === true ? background.lighten(3) : props.glint
+        props.glint === true ? background.lighten(1) : props.glint
       boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 
@@ -340,6 +347,7 @@ export default class Surface implements ViewType<Props> {
         },
       },
       surface: {
+        margin: props.margin,
         overflow,
         height,
         width,

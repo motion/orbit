@@ -6,7 +6,7 @@ import type { Transform } from './types'
 export type { Transform, Color } from './types'
 export * from './helpers'
 
-const COLOR_KEYS = new Set([ 'background', 'color', 'backgroundColor', 'borderColor'])
+const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor'])
 const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
   y: 'translateY',
@@ -52,9 +52,12 @@ export default function motionStyle(options: Object = {}) {
             v.spread
           )} ${toColor(v.color)}`
         : toColor(v),
-    background: v => isColor(v)
-      ? toColor(v)
-      : `${toColor(v.color)} ${v.image || ''} ${(v.position ? v.position.join(' ') : v.position) || ''} ${v.repeat || ''}`
+    background: v =>
+      isColor(v)
+        ? toColor(v)
+        : `${toColor(v.color)} ${v.image || ''} ${(v.position
+            ? v.position.join(' ')
+            : v.position) || ''} ${v.repeat || ''}`,
   }
 
   function processArrayItem(key: string, val: any) {
@@ -69,6 +72,11 @@ export default function motionStyle(options: Object = {}) {
   }
 
   function processArray(key: string, array: Array<number | string>): string {
+    if (key === 'background') {
+      if (isColor(array)) {
+        return toColor(array)
+      }
+    }
     // solid default option for borders
     if (key === 'border' && array.length === 2) {
       array.push('solid')
@@ -95,21 +103,31 @@ export default function motionStyle(options: Object = {}) {
     return value
   }
 
-  function processObject(transform: Transform): string {
+  function processObject(key: string, object: Object): string {
+    if (
+      key === 'background' ||
+      key === 'color' ||
+      key === 'borderColor' ||
+      key === 'backgroundColor'
+    ) {
+      if (isColor(object)) {
+        return toColor(object)
+      }
+    }
     const toReturn = []
-    for (const key in transform) {
-      if (!transform.hasOwnProperty(key)) {
+    for (const subKey in object) {
+      if (!object.hasOwnProperty(subKey)) {
         continue
       }
-      let value = transform[key]
-      value = objectValue(key, value)
-      toReturn.push(`${TRANSFORM_KEYS_MAP[key] || key}(${value})`)
+      let value = object[subKey]
+      value = objectValue(subKey, value)
+      toReturn.push(`${TRANSFORM_KEYS_MAP[subKey] || subKey}(${value})`)
     }
     return toReturn.join(' ')
   }
 
   // style transformer
-  return function processStyles(styles: Object, errorMessage?: string): Object {
+  function processStyles(styles: Object, errorMessage?: string): Object {
     const toReturn = {}
     for (let key in styles) {
       if (!styles.hasOwnProperty(key)) {
@@ -136,18 +154,18 @@ export default function motionStyle(options: Object = {}) {
       if (valueType === 'string' || valueType === 'number') {
         toReturn[key] = value
         respond = true
+      } else if (COLOR_KEYS.has(key)) {
+        toReturn[key] = toColor(value)
+        respond = true
       } else if (Array.isArray(value)) {
         toReturn[key] = processArray(key, value)
-        respond = true
-      } else if (isColor(value)) {
-        toReturn[key] = toColor(value)
         respond = true
       } else if (firstChar === '&' || firstChar === '@') {
         // recurse into psuedo or media query
         toReturn[key] = processStyles(value, errorMessage)
         respond = true
       } else if (valueType === 'object') {
-        toReturn[key] = processObject(value)
+        toReturn[key] = processObject(key, value)
         respond = true
       }
 
@@ -174,4 +192,14 @@ export default function motionStyle(options: Object = {}) {
 
     return toReturn
   }
+
+  // expose helpers
+  processStyles.helpers = {
+    toColor,
+    isColor,
+    processArray,
+    processObject,
+  }
+
+  return processStyles
 }

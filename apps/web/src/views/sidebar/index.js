@@ -3,7 +3,7 @@ import React from 'react'
 import { view, watch, Shortcuts } from '@mcro/black'
 import { flatMap } from 'lodash'
 import * as UI from '@mcro/ui'
-import { Document } from '@mcro/models'
+import { Document, User } from '@mcro/models'
 import Login from './login'
 import Signup from './signup'
 import SidebarStore from './store'
@@ -162,25 +162,29 @@ class Projects {
                       percent={percentComplete(tasks)}
                     />
                     <path if={false} $$row $$centered>
-                      {flatMap(
-                        doc.title.map((tit, index) =>
-                          <UI.Text key={index}>
-                            {tit}
-                          </UI.Text>
-                        ),
-                        (value, index, arr) =>
-                          arr.length !== index + 1
-                            ? [value, <sep key={Math.random()}>/</sep>]
-                            : value
-                      )}
+                      <UI.Text>
+                        {flatMap(
+                          doc.title.map((tit, index) =>
+                            <piece key={index}>
+                              {tit}
+                            </piece>
+                          ),
+                          (value, index, arr) =>
+                            arr.length !== index + 1
+                              ? [value, <sep key={Math.random()}>/</sep>]
+                              : value
+                        )}
+                      </UI.Text>
                     </path>
                     <path onClick={() => Router.go(doc.url())} $$row $$centered>
-                      {(store.crumbs &&
-                        store.crumbs[index] &&
-                        store.crumbs[index]
-                          .map(doc => doc.getTitle())
-                          .join(' / ')) ||
-                        doc.getTitle()}
+                      <UI.Text>
+                        {(store.crumbs &&
+                          store.crumbs[index] &&
+                          store.crumbs[index]
+                            .map(doc => doc.getTitle())
+                            .join(' / ')) ||
+                          doc.getTitle()}
+                      </UI.Text>
                     </path>
                   </start>
                   <end>
@@ -272,7 +276,7 @@ class Inner {
         <Login />
         <Signup />
 
-        <UI.Theme name="dark">
+        <UI.Theme name="dark" if={!User.loggedIn}>
           <modal>
             <UI.Form>
               <UI.PassProps row chromeless placeholderColor="#333">

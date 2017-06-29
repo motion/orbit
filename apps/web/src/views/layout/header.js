@@ -58,13 +58,13 @@ export default class Header {
                   chromeless
                   spaced
                   size={0.7}
+                  margin={[0, -5, 0, 0]}
                   icon={
                     layoutStore.sidebar.active
                       ? 'arrow-min-right'
                       : 'arrow-min-left'
                   }
                   onClick={layoutStore.sidebar.toggle}
-                  $$marginRight={-6}
                   color={[0, 0, 0, 0.3]}
                 />
               </actions>}

@@ -34,7 +34,6 @@ export default class CommanderStore {
   mouseMoving = Observable.fromEvent(window, 'mousemove')
     .throttleTime(500)
     .map(event => {
-      console.log('mapping', Date.now() - 500 > this.mouseMoving.current || 0)
       return Date.now() - 500 > this.mouseMoving.current || 0
     })
     .reduce((acc, x) => acc && x && Date.now())

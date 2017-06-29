@@ -693,14 +693,13 @@ export default class Popover {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = (props, theme, self) => {
     const backgroundStyles = props.background === true && {
       background: theme.base.background,
-      borderRadius: 5,
+      borderRadius: 6,
     }
     return {
       content: {
-        background: props.background || 'transparent',
         boxShadow: getShadow(props.shadow),
         padding: props.padding,
         ...backgroundStyles,
@@ -712,9 +711,8 @@ export default class Popover {
         background: props.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
       },
       popoverOpen: {
-        animation: props.animation === true
-          ? 'bounce-down 200ms'
-          : props.animation,
+        animation:
+          props.animation === true ? 'bounce-down 200ms' : props.animation,
       },
     }
   }

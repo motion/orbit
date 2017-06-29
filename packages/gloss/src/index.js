@@ -32,6 +32,7 @@ export class Gloss {
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
     this.niceStyle = motionStyle(opts)
+    this.helpers = this.niceStyle.helpers
     this.baseStyles = opts.baseStyles && this.getStyles(opts.baseStyles)
     this.createElement = this.makeCreateEl()
     this.decorator.createElement = this.createElement
@@ -47,7 +48,7 @@ export class Gloss {
 
     if (Child.prototype) {
       Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
-      Child.prototype.gloss = this.niceStyle
+      Child.prototype.gloss = this
       if (Child.theme && typeof Child.theme === 'function') {
         const getStyles = this.getStyles
         const ogRender = Child.prototype.render

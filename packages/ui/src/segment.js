@@ -82,14 +82,19 @@ export default class Segment implements ViewType<Props> {
 
       children = realChildren.map((child, index) =>
         <Provider key={index} provide={getContext(index, realChildren.length)}>
-          {() => (itemProps ? React.cloneElement(child, itemProps) : child)}
+          {() =>
+            itemProps
+              ? React.cloneElement(child, {
+                  ...itemProps,
+                  ...child.props,
+                }) /* merge child props so they can override */
+              : child}
         </Provider>
       )
     } else if (Array.isArray(items)) {
       children = items.map((seg, index) => {
-        const { text, id, icon, ...segmentProps } = typeof seg === 'object'
-          ? seg
-          : { text: seg, id: seg }
+        const { text, id, icon, ...segmentProps } =
+          typeof seg === 'object' ? seg : { text: seg, id: seg }
 
         return (
           <Provider key={index} provide={getContext(index, children.length)}>
@@ -115,7 +120,9 @@ export default class Segment implements ViewType<Props> {
 
     return (
       <segment {...props}>
-        <title if={title}>{title}</title>
+        <title if={title}>
+          {title}
+        </title>
         {children}
       </segment>
     )

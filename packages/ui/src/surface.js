@@ -215,10 +215,10 @@ export default class Surface implements ViewType<Props> {
       pointerEvents: 'none',
     },
     hasIconBefore: {
-      marginLeft: '0.7vh',
+      marginLeft: '1vh',
     },
     hasIconAfter: {
-      marginRight: '0.7vh',
+      marginRight: '1vh',
     },
     iconAfter: {
       order: 3,

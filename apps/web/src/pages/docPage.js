@@ -44,13 +44,15 @@ export default class DocumentPage {
       <Page
         actions={
           <actions $$row>
-            <Segment>
-              <Button {...btnProps} className="wop" icon="dot" />
+            <Segment itemProps={btnProps}>
+              <Button size={1} icon="mail" onClick={_ => _}>
+                Inbox
+              </Button>
+              <Button className="wop" icon="dot" />
               <Button
                 icon="fav31"
                 highlight={!!starred}
                 onClick={doc.toggleStar}
-                {...btnProps}
               />
             </Segment>
           </actions>

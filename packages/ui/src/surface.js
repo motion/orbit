@@ -10,7 +10,7 @@ import type { Color } from '@mcro/gloss'
 
 const LINE_HEIGHT = 30
 
-@inject(context => context.segmentContext)
+@inject(context => context.uiContext)
 @view.ui
 export default class Surface implements ViewType<Props> {
   props: Props & {
@@ -54,6 +54,7 @@ export default class Surface implements ViewType<Props> {
     lightenOnHover?: boolean,
     darkenOnHover?: boolean,
     getRef?: Function,
+    hoverable?: boolean,
   }
 
   static defaultProps = {
@@ -106,6 +107,7 @@ export default class Surface implements ViewType<Props> {
     placeholderColor,
     borderColor,
     glint,
+    hoverable,
     ...props
   }: Props) {
     const { theme } = this
@@ -276,36 +278,40 @@ export default class Surface implements ViewType<Props> {
         ? props.highlightColor || theme.highlight.color || props.color
         : props.active ? theme.active.color : props.color || theme.base.color
     )
-    const luminosity = color.luminosity()
-    const isLight = luminosity > 0.6
+
     const iconColor = props.iconColor || color
     const background = $(
       props.background || theme.base.background || 'transparent'
     )
-    const borderColor = props.borderColor || theme.base.borderColor
+    const borderColor = $(props.borderColor || theme.base.borderColor)
 
     // hover
-    const adjustDirection = isLight ? 'darken' : 'lighten'
     let hoverColor = $(props.hoverColor || theme.hover.color || props.color)
     const iconHoverColor = props.iconHoverColor || hoverColor
-
+    // TODO this could be simpler/better
     if (props.lightenOnHover) {
       hoverColor = hoverColor.lighten(
-        props.lightenOnHover === true ? 0.2 : props.lightenOnHover
+        props.lightenOnHover === true ? 3 : props.lightenOnHover
       )
     } else if (props.darkenOnHover) {
       hoverColor = hoverColor.darken(
-        props.darkenOnHover === true ? 0.2 : props.darkenOnHover
+        props.darkenOnHover === true ? 3 : props.darkenOnHover
       )
+    } else if (props.hoverable) {
+      const luminosity = color.luminosity()
+      const isLight = luminosity > 0.6
+      const adjustDirection = isLight ? 'darken' : 'lighten'
+      hoverColor = hoverColor[adjustDirection](luminosity / 2)
     }
+    const hoverBorderColor = props.hoverBorderColor || theme.hover.borderColor || borderColor.lighten(1)
 
     // shadow
     const boxShadow = props.shadow === true ? [0, 5, 0, [0, 0, 0, 0.2]] : []
 
     if (props.glint) {
       const glintColor =
-        props.glint === true ? background.lighten(0.5) : props.glint
-      boxShadow.push(['inset 0 0.5px 0', glintColor])
+        props.glint === true ? background.lighten(3) : props.glint
+      boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 
     // general
@@ -360,6 +366,8 @@ export default class Surface implements ViewType<Props> {
         },
         '&:hover': {
           ...theme.hover,
+          color: hoverColor,
+          borderColor: hoverBorderColor,
         },
         // this is just onmousedown
         '&:active': {

@@ -8,7 +8,7 @@ export default props =>
     borderRadius={0}
     wrapElement
     tagName="input"
-    glint={[0,0,0]}
+    glint={[255,255,255, 0.1]}
     elementStyles={{
       width: '100%',
       padding: [0, 10],

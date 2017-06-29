@@ -52,12 +52,9 @@ export default function motionStyle(options: Object = {}) {
             v.spread
           )} ${toColor(v.color)}`
         : toColor(v),
-    background: v =>
-      isColor(v.color) || v.image || v.position || v.repeat
-        ? `${toColor(v.color)} ${v.image || ''} ${(v.position
-            ? v.position.join(' ')
-            : v.position) || ''} ${v.repeat || ''}`
-        : toColor(v),
+    background: v => isColor(v)
+      ? toColor(v)
+      : `${toColor(v.color)} ${v.image || ''} ${(v.position ? v.position.join(' ') : v.position) || ''} ${v.repeat || ''}`
   }
 
   function processArrayItem(key: string, val: any) {
@@ -138,9 +135,6 @@ export default function motionStyle(options: Object = {}) {
 
       if (valueType === 'string' || valueType === 'number') {
         toReturn[key] = value
-        respond = true
-      } else if (COLOR_KEYS.has(key)) {
-        toReturn[key] = toColor(value)
         respond = true
       } else if (Array.isArray(value)) {
         toReturn[key] = processArray(key, value)

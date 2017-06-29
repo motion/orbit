@@ -6,7 +6,7 @@ import Button from './button'
 import { Provider } from 'react-tunnel'
 import type { Color } from '@mcro/gloss'
 
-@inject(context => ({ segmentContext: context.segmentContext }))
+@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Segment implements ViewType<Props> {
   props: Props & {
@@ -22,7 +22,7 @@ export default class Segment implements ViewType<Props> {
     sync?: { get(): number, set(value: number): void },
     padded?: boolean,
     color: Color,
-    segmentContext?: Object,
+    uiContext?: Object,
     itemProps?: Object,
   }
 
@@ -57,7 +57,7 @@ export default class Segment implements ViewType<Props> {
     stretch,
     sync,
     padded,
-    segmentContext,
+    uiContext,
     color,
     itemProps,
     ...props
@@ -65,8 +65,8 @@ export default class Segment implements ViewType<Props> {
     let children = children_
     const ACTIVE = typeof active === 'undefined' ? this.active : active
     const getContext = (index: number, length: number) => ({
-      segmentContext: {
-        ...segmentContext,
+      uiContext: {
+        ...uiContext,
         inSegment: {
           first: index === 0,
           last: index === length - 1,

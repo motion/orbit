@@ -2,15 +2,15 @@ import React from 'react'
 import { view, inject } from '@mcro/black'
 import { Provider } from 'react-tunnel'
 
-@inject(context => ({ segmentContext: context.segmentContext }))
+@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Form {
-  render({ ui, flex, segmentContext, ...props }) {
+  render({ ui, flex, uiContext, ...props }) {
     return (
       <Provider
         provide={{
-          segmentContext: {
-            ...segmentContext,
+          uiContext: {
+            ...uiContext,
             inForm: true,
           },
         }}

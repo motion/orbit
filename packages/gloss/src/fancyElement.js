@@ -78,14 +78,12 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         if (baseStyles) {
           const isParentStyle = NAME[1] === $
           if (isParentStyle) {
-            console.log('add it up', baseStyles, NAME, val)
             addStyle(baseStyles[NAME.slice(2)], val)
             continue
           }
         }
         if (styles) {
           // $style
-          console.log('adding style', styles)
           addStyle(styles[NAME.slice(1)], val)
         }
       }

@@ -107,20 +107,19 @@ export default class Surface {
     const stringIcon = typeof icon === 'string'
     const iconSize =
       _iconSize ||
-      (theme.surface && theme.surface.fontSize * 0.85) ||
+      (theme.element && theme.element.fontSize * 0.9) ||
       Math.log(size + 1) * 15
 
-    console.log('123', theme)
-
-    // todo restore: className={this.uniq}
-    // {...!wrapElement && {
-    //       onClick,
-    //       ...props,
-    //       className: `${className || ''} ${this.uniq}`,
-    //     }}
+    const finalClassName = `${this.uniq} ${className || ''}`
+    const passProps = {
+      className: finalClassName,
+      onClick,
+      tagName,
+      ...props
+    }
 
     return (
-      <surface style={theme.surface} tagName={!wrapElement && tagName}>
+      <surface style={theme.surface} {...!wrapElement && passProps}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -142,7 +141,7 @@ export default class Surface {
         </glowWrap>
         <element
           style={theme.element}
-          {...wrapElement && { tagName, ...props }}
+          {...wrapElement && passProps}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}
         >
@@ -207,6 +206,8 @@ export default class Surface {
     element: {
       userSelect: 'none',
       height: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
       // flex: 1,
     },
     icon: {

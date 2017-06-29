@@ -150,7 +150,7 @@ export default class Surface implements ViewType<Props> {
           />
         </glowWrap>
         <element
-          if={!noElement}
+          if={!noElement || (noElement && children)}
           {...wrapElement && passProps}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}

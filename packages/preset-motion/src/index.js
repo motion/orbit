@@ -25,7 +25,7 @@ export default function(context, givenOpts) {
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy'),
       getPlugin('babel-plugin-transform-class-properties'),
-      getPlugin('gloss/transform', {
+      getPlugin('@mcro/gloss/transform', {
         decoratorName: opts.decorator || 'view',
         jsxIf: opts.jsxIf || true,
       }),

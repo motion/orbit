@@ -5,8 +5,8 @@
   "scripts": {},
   "dependencies": {
     "@mcro/decor": "^1.0.1",
+    "@mcro/gloss": "^1.0.1",
     "color": "1.0.3",
-    "gloss": "^6.6.2",
     "hash-sum": "1.0.2",
     "keycode": "^2.1.9",
     "kontur": "^0.2.0",

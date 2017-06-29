@@ -2,7 +2,7 @@
 import React from 'react'
 import { color, view } from '@mcro/black'
 import Button from './button'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 export type TitleProps = {
   tag: string,

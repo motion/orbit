@@ -1,6 +1,6 @@
 // @flow
 import { view } from '@mcro/black'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 export type Props = {
   size: number,

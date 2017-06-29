@@ -1,8 +1,8 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { colorToString } from 'gloss'
-import type { Color } from 'gloss'
+import { colorToString } from '@mcro/gloss'
+import type { Color } from '@mcro/gloss'
 
 @view.ui
 export default class ProgressCircle {

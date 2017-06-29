@@ -61,13 +61,17 @@ export default class Main {
   render() {
     return (
       <main>
+        <Z.Popover target={<Z.Button>test</Z.Button>}>
+          <is>open</is>
+        </Z.Popover>
+
         <Z.Drawer if={false} from="right" open>
           test stuff
         </Z.Drawer>
 
         <Z.Theme if={true} name="dark">
-            <Z.Button circular icon="eye" onClick={() => alert('hi')} />
-          </Z.Theme>
+          <Z.Button circular icon="eye" onClick={() => alert('hi')} />
+        </Z.Theme>
         <ok if={false}>
           <Playground />
           <Z.Theme name="light">

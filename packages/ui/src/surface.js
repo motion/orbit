@@ -44,6 +44,8 @@ export type Props = {
   margin?: number | Array<number>,
   height?: number,
   glow?: boolean,
+  noElement?: boolean,
+  getRef?: Function,
 }
 
 @inject(context => context.ui)
@@ -99,6 +101,8 @@ export default class Surface {
     glow,
     hoverColor,
     wrapElement,
+    getRef,
+    noElement,
     ...props
   }: Props) {
     const { theme } = this
@@ -115,11 +119,11 @@ export default class Surface {
       className: finalClassName,
       onClick,
       tagName,
-      ...props
+      ...props,
     }
 
     return (
-      <surface css={theme.surface} {...!wrapElement && passProps}>
+      <surface ref={getRef} css={theme.surface} {...!wrapElement && passProps}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -140,6 +144,7 @@ export default class Surface {
           />
         </glowWrap>
         <element
+          if={!noElement}
           css={theme.element}
           {...wrapElement && passProps}
           $hasIconBefore={hasIconBefore}
@@ -225,7 +230,9 @@ export default class Surface {
   }
 
   get theme() {
-    const theme = this.context.uiTheme[this.context.uiActiveTheme || this.props.theme]
+    const theme = this.context.uiTheme[
+      this.context.uiActiveTheme || this.props.theme
+    ]
     if (!theme) {
       return {}
     }
@@ -269,12 +276,14 @@ export default class Surface {
       borderLeftRadius: props.inSegment.first ? borderRadius : 0,
       borderRightRadius: props.inSegment.last ? borderRadius : 0,
     }
-
     const circularStyles = props.circular && {
-        padding: 0,
-        width: height,
-        borderRadius: props.size * LINE_HEIGHT,
-      }
+      padding: 0,
+      width: height,
+      borderRadius: props.size * LINE_HEIGHT,
+    }
+    const chromelessStyles = props.chromeless && {
+      borderWidth: 0,
+    }
 
     return {
       element: {
@@ -294,6 +303,7 @@ export default class Surface {
         background,
         ...circularStyles,
         ...segmentStyles,
+        ...chromelessStyles,
         '& > icon': {
           color: iconColor,
         },
@@ -327,24 +337,6 @@ export default class Surface {
     stretch: {
       surface: {
         flex: 1,
-      },
-    },
-    chromeless: {
-      surface: {
-        background: 'transparent',
-        borderRightWidth: 0,
-        borderLeftWidth: 0,
-        borderTopWidth: 0,
-        borderBottomWidth: 0,
-        '&:hover': {
-          opacity: 0.8,
-        },
-      },
-      isActive: {
-        background: [0, 0, 0, 0.1],
-        '&:hover': {
-          background: [0, 0, 0, 0.2],
-        },
       },
     },
     inline: {

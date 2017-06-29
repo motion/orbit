@@ -3,7 +3,7 @@ import React from 'react'
 import { view, watch, Shortcuts } from '@mcro/black'
 import { flatMap } from 'lodash'
 import * as UI from '@mcro/ui'
-import { Document } from '@mcro/models'
+import { Document, User } from '@mcro/models'
 import Login from './login'
 import Signup from './signup'
 import SidebarStore from './store'
@@ -272,7 +272,7 @@ class Inner {
         <Login />
         <Signup />
 
-        <UI.Theme name="dark">
+        <UI.Theme name="dark" if={!User.loggedIn}>
           <modal>
             <UI.Form>
               <UI.PassProps row chromeless placeholderColor="#333">

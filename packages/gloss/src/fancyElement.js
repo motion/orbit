@@ -78,6 +78,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         if (baseStyles) {
           const isParentStyle = NAME[1] === $
           if (isParentStyle) {
+            console.log('add it up', baseStyles, NAME, val)
             addStyle(baseStyles[NAME.slice(2)], val)
             continue
           }

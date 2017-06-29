@@ -172,6 +172,7 @@ export default class Surface {
 
   static style = {
     surface: {
+      height: LINE_HEIGHT,
       background: 'transparent',
       overflow: 'hidden',
       lineHeight: '1rem',

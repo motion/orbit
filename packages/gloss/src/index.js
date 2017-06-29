@@ -34,7 +34,7 @@ export class Gloss {
     this.options = opts
     this.niceStyle = motionStyle(opts)
     this.baseStyles =
-      opts.baseStyles && this.getStyles('parents', opts.baseStyles)
+      opts.baseStyles && this.getStyles(opts.baseStyles, 'parents')
     this.createElement = this.makeCreateEl()
     this.decorator.createElement = this.createElement
   }
@@ -47,7 +47,7 @@ export class Gloss {
       return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
     }
 
-    const themes = this.getStyles('theme', Child.theme)
+    const themes = this.getStyles(Child.theme, 'theme')
 
     // class
     if (Child.prototype) {

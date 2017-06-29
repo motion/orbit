@@ -1,13 +1,21 @@
 // @flow
 import decorator from '@mcro/decor'
 import { object, string } from 'prop-types'
-import extendsReact, { ExtendsReact } from '@mcro/decor/lib/plugins/react/extendsReact'
+import extendsReact, {
+  ExtendsReact,
+} from '@mcro/decor/lib/plugins/react/extendsReact'
 import observer from '@mcro/decor/lib/plugins/mobx/observer'
 import automagical from '@mcro/decor/lib/plugins/mobx/automagical'
 import autobound from '@mcro/decor/lib/plugins/core/autobound'
-import subscribableHelpers, { SubscribableHelpers } from '@mcro/decor/lib/plugins/core/subscribableHelpers'
-import subscribable, { Subscribable } from '@mcro/decor/lib/plugins/react/subscribable'
-import reactRenderArgs, { ReactRenderArgs } from '@mcro/decor/lib/plugins/react/reactRenderArgs'
+import subscribableHelpers, {
+  SubscribableHelpers,
+} from '@mcro/decor/lib/plugins/core/subscribableHelpers'
+import subscribable, {
+  Subscribable,
+} from '@mcro/decor/lib/plugins/react/subscribable'
+import reactRenderArgs, {
+  ReactRenderArgs,
+} from '@mcro/decor/lib/plugins/react/reactRenderArgs'
 import addContext from '@mcro/decor/lib/plugins/react/addContext'
 import attach from '@mcro/decor/lib/plugins/react/attach'
 import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
@@ -55,7 +63,7 @@ const decorations = ({ mobx, ui, autobind, magic } = {}) => [
 ]
 
 const base: () => ViewClass | (() => () => ViewClass) = decorator(
-  decorations({ mobx: true, autobind: true, magic: false })
+  decorations({ mobx: true, autobind: true, magic: false, ui: true })
 )
 
 // @view

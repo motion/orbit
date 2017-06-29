@@ -19,7 +19,11 @@ editList.utils.isInListOfType = (state, type) => {
 
 const ol_list = node(
   view(props => {
-    return <ol $$ol {...props.attributes}>{props.children}</ol>
+    return (
+      <ol $$ol {...props.attributes}>
+        {props.children}
+      </ol>
+    )
   })
 )
 
@@ -58,13 +62,7 @@ class ListNode {
 @node
 @view.ui
 class ListItemNode {
-  toggleMinimize = () => {
-    const { node: { data }, setData } = this.props
-
-    setData(data.set('minimize', !(data.get('minimize') || false)))
-  }
-
-  render(props) {
+  render({ toggleData, ...props }) {
     const { minimize = false, due, archive = false } = props.node.data.toJS()
     const text = props.children[0].props.node.text
     const hasChildren = props.children.length > 1
@@ -77,13 +75,25 @@ class ListItemNode {
           $hide={!hasChildren}
           $min={minimize}
           contentEditable={false}
-          onClick={this.toggleMinimize}
+          onClick={() => toggleData('minimize')}
         >
           {minimize ? '+' : '-'}
         </minMax>
+        <input
+          $check
+          contentEditable={false}
+          if={!hasChildren}
+          type="checkbox"
+          onChange={e => toggleData('archive')}
+          checked={archive}
+        />
         <item>
           <li $archive={archive} className={className} {...props.attributes}>
-            {minimize ? <Paragraph $$text>{text}</Paragraph> : props.children}
+            {minimize
+              ? <Paragraph $$text>
+                  {text}
+                </Paragraph>
+              : props.children}
           </li>
           <metaText if={due} $$row contentEditable={false}>
             due {moment(due).fromNow()}
@@ -97,6 +107,15 @@ class ListItemNode {
   static style = {
     archive: {
       opacity: 0.9,
+    },
+    li: {
+      listStyleType: 'none',
+      transition: 'opacity 100ms ease-in',
+      minWidth: 5,
+    },
+    check: {
+      margin: [9, 10, 5, 5],
+      cursor: 'pointer',
     },
     metaText: {
       opacity: 0.8,
@@ -117,9 +136,6 @@ class ListItemNode {
     },
     min: {
       paddingRight: 0,
-    },
-    li: {
-      transition: 'opacity 100ms ease-in',
     },
   }
 }

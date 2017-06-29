@@ -33,6 +33,12 @@ export default View => {
       )
     }
 
+    toggleData = name => {
+      const { node: { data }, setData } = this.props
+
+      this.setData(data.set(name, !(data.get(name) || false)))
+    }
+
     onClick = () => {
       this.editorStore.selection.setClicked(this.props.node, this.node)
     }
@@ -110,6 +116,7 @@ export default View => {
         <View
           {...this.props}
           setData={this.setData}
+          toggleData={this.toggleData}
           onChange={editor.onChange}
           editorStore={this.editorStore}
           isRoot={isRoot}

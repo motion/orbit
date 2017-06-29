@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm -rf node_modules
 rm -rf apps/*/lib
 rm -rf apps/*/node_modules
 rm -rf packages/*/lib

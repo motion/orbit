@@ -49,14 +49,14 @@ export class Gloss {
       Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
       Child.prototype.gloss = this.niceStyleSheet
       if (Child.theme && typeof Child.theme === 'function') {
-        const getThemes = this.getThemes
+        const getStyles = this.getStyles
         const ogRender = Child.prototype.render
         Child.prototype.render = function(...args) {
           const activeTheme =
             this.context.uiTheme &&
             this.context.uiTheme[this.context.uiActiveTheme || this.props.theme]
           if (activeTheme) {
-            this.theme = getThemes(Child.theme(this.props, activeTheme, this))
+            this.theme = getStyles(Child.theme(this.props, activeTheme, this))
           }
           return ogRender.call(this, ...args)
         }

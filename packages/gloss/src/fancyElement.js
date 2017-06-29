@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import { StyleSheet, css } from './stylesheet'
-import { omit } from 'lodash'
 import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 import deepExtend from 'deep-extend'
 import type { Gloss } from './index'
@@ -34,6 +33,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     const isTag = typeof type === 'string'
     const finalProps = {}
     const finalStyles = []
+
     const addStyle = (obj, key, val, checkTheme) => {
       const style = obj[key]
       if (!style) return
@@ -44,14 +44,13 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         finalStyles.push(style)
       }
       if (SHOULD_THEME && checkTheme && this.theme && this.theme[key]) {
-        console.log('adding theme', this.theme[key])
         finalStyles.push(this.theme[key])
       }
     }
 
     if (styles && (isTag || type.name)) {
       const tagName = type.name || type
-      addStyle(styles, tagName, true)
+      addStyle(styles, tagName, null, true)
     }
 
     if (propNames) {

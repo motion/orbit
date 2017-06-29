@@ -10,11 +10,11 @@ class Playground {
       <playground>
         <section $buttons>
           <row $$row>
-            <Z.Button test icon="world">Hello World</Z.Button>
-            <Z.Button test icon="world" size={2}>Hello World</Z.Button>
-            <Z.Button test color="red" background="blue">Hello World</Z.Button>
-            <Z.Button test circular>Hello World</Z.Button>
-            <Z.Button test circular size={3}>Hello World</Z.Button>
+            <Z.Button icon="world">Hello World</Z.Button>
+            <Z.Button icon="world" size={2}>Hello World</Z.Button>
+            <Z.Button color="red" background="blue">Hello World</Z.Button>
+            <Z.Button circular>Hello World</Z.Button>
+            <Z.Button circular size={3}>Hello World</Z.Button>
           </row>
 
           <row $$row>
@@ -72,7 +72,7 @@ export default class Main {
         <Z.Theme if={true} name="dark">
           <Z.Button circular icon="eye" onClick={() => alert('hi')} />
         </Z.Theme>
-        <ok if={false}>
+        <ok if={true}>
           <Playground />
           <Z.Theme name="light">
             <Playground />

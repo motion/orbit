@@ -111,7 +111,7 @@ export default class Surface {
     const stringIcon = typeof icon === 'string'
     const iconSize =
       _iconSize ||
-      (theme && theme.element.fontSize * 0.9) ||
+      (theme && theme.element.style.fontSize * 0.9) ||
       Math.log(size + 1) * 15
 
     const finalClassName = `${this.uniq} ${className || ''}`
@@ -139,7 +139,7 @@ export default class Surface {
           <Glow
             full
             scale={1.5}
-            color={(theme && theme.surface.color) || [0, 0, 0]}
+            color={(theme && theme.surface.style.color) || [0, 0, 0]}
             opacity={0.06}
           />
         </glowWrap>

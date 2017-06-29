@@ -33,23 +33,10 @@ export default class Circle {
     },
   }
 
-  static theme = {
-    size: ({ size }) => ({
-      circle: {
-        width: size,
-        height: size,
-      },
-    }),
-    material: {
-      circle: {
-        boxShadow: [0, 2, 10, [0, 0, 0, 0.1]],
-        '&:hover': {
-          boxShadow: [0, 4, 15, [0, 0, 0, 0.15]],
-          transform: {
-            scale: '1.2',
-          },
-        },
-      },
+  static theme = ({ size }) => ({
+    circle: {
+      width: size,
+      height: size,
     },
-  }
+  })
 }

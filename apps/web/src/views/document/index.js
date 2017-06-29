@@ -46,13 +46,15 @@ export default class DocumentView {
         <SlotFill.Fill if={showCrumbs} name="crumbs">
           <Breadcrumbs document={store.document} />
         </SlotFill.Fill>
-        <Editor
-          readOnly={readOnly}
-          inline={inline}
-          getRef={store.onEditor}
-          {...editorProps}
-        />
-        <Children if={!inline && showChildren} id={store.document._id} />
+        <content $$row>
+          <Editor
+            readOnly={readOnly}
+            inline={inline}
+            getRef={store.onEditor}
+            {...editorProps}
+          />
+          <Children if={!inline && showChildren} id={store.document._id} />
+        </content>
       </docview>
     )
   }

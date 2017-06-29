@@ -74,7 +74,9 @@ export default class Children {
           </actions>
         </header>
         <content>
-          <empty if={!hasDocs}>no pages</empty>
+          <empty if={!hasDocs} $$noSelect>
+            no pages
+          </empty>
           <docs if={hasDocs}>
             {sortBy(docs || [], 'createdAt').map(doc => {
               const children = store.children[doc._id]
@@ -126,9 +128,6 @@ export default class Children {
 
   static style = {
     children: {
-      position: 'absolute',
-      top: 0,
-      right: 10,
       // borderTop: [1, '#f6f6f6'],
       padding: [0],
       cursor: 'default',

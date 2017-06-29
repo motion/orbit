@@ -138,6 +138,9 @@ export const styles: Object = {
   archive: {
     opacity: 0.4,
   },
+  noSelect: {
+    userSelect: 'none',
+  },
 }
 
 const Gloss = gloss({

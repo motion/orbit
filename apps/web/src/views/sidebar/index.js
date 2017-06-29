@@ -164,9 +164,9 @@ class Projects {
                     <path if={false} $$row $$centered>
                       {flatMap(
                         doc.title.map((tit, index) =>
-                          <Text key={index}>
+                          <UI.Text key={index}>
                             {tit}
-                          </Text>
+                          </UI.Text>
                         ),
                         (value, index, arr) =>
                           arr.length !== index + 1

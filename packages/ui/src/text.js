@@ -138,5 +138,8 @@ export default class Text implements ViewType {
     text: {
       color: props.color || theme.base.color,
     },
+    ellipse: {
+      color: props.color || theme.base.color,
+    },
   })
 }

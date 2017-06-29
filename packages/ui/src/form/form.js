@@ -5,12 +5,12 @@ import { Provider } from 'react-tunnel'
 @inject(context => ({ segmentContext: context.segmentContext }))
 @view.ui
 export default class Form {
-  render({ ui, flex, ...props }) {
+  render({ ui, flex, segmentContext, ...props }) {
     return (
       <Provider
         provide={{
-          ui: {
-            ...ui,
+          segmentContext: {
+            ...segmentContext,
             inForm: true,
           },
         }}

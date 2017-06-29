@@ -2,6 +2,7 @@ import React from 'react'
 import { view, observable } from '@mcro/black'
 import gradients from './helpers/gradients'
 import { sample, memoize } from 'lodash'
+import Router from '~/router'
 import { Icon, Button } from '@mcro/ui'
 import DocumentView from './index'
 import sum from 'hash-sum'
@@ -87,9 +88,7 @@ export default class DocItem {
         </content>
 
         <info if={!hideMeta}>
-          <item $author>
-            {doc.authorId}
-          </item>
+          <item $author>{doc.authorId}</item>
           <item onClick={this.navigate}>
             <Button chromeless icon="link" size={12} color="#fff" />
           </item>

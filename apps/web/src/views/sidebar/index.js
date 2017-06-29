@@ -10,6 +10,7 @@ import SidebarStore from './store'
 import type LayoutStore from '~/stores/layoutStore'
 import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '~/constants'
 import rc from 'randomcolor'
+import Router from '~/router'
 import sillyname from 'sillyname'
 
 type Props = {

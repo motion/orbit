@@ -4,6 +4,7 @@ import { view, computed } from '@mcro/black'
 import { Portal, Drawer, Button, Icon } from '@mcro/ui'
 import DocView from '~/views/document'
 import { Document } from '@mcro/models'
+import Router from '~/router'
 
 @view
 class CreateButton {

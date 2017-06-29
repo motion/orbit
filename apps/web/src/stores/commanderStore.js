@@ -1,6 +1,7 @@
 // @flow
 import { watch, store, log, keycode, ShortcutManager } from '@mcro/black'
 import { Document } from '@mcro/models'
+import Router from '~/router'
 import { uniq } from 'lodash'
 import App from '~/app'
 import { Observable } from 'rxjs'
@@ -304,6 +305,7 @@ export default class CommanderStore {
   onKeyDown = (event: KeyboardEvent) => {
     event.persist()
     const code = keycode(event)
+    console.log('commander', code)
   }
 
   onRight = () => {

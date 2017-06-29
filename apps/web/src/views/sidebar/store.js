@@ -1,6 +1,7 @@
 import { Document } from '@mcro/models'
 import { sortBy, last, flatMap, memoize, find, flatten, random } from 'lodash'
 // import merge from 'deep-extend'
+import Router from '~/router'
 
 const liToText = ({ nodes }) =>
   nodes

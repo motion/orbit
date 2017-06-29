@@ -17,6 +17,7 @@ import {
 } from '@mcro/ui'
 import { User, Place } from '@mcro/models'
 import Team from './team'
+import Router from '~/router'
 import randomcolor from 'randomcolor'
 import SidebarStore from './store'
 import { IN_TRAY, TRAY_WIDTH } from '~/constants'
@@ -67,11 +68,7 @@ export default class Item {
         <content>
           <Text $text {...props}>
             <div className={className}>
-              <p>
-                <span>
-                  {task.text}
-                </span>
-              </p>
+              <p><span>{task.text}</span></p>
             </div>
           </Text>
           <bottom if={false} $$row>

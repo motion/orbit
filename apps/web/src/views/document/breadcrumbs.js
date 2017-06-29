@@ -2,6 +2,7 @@
 import React from 'react'
 import { view, log, watch } from '@mcro/black'
 import { Icon } from '@mcro/ui'
+import Router from '~/router'
 import type DocStore from './store'
 
 type Props = {

@@ -1,5 +1,100 @@
 // @flow
 import type { Color, CSSArray, ToCSSAble } from './types'
+import colorNames from './colorNames'
+
+export function colorToString(color: Color, options): string {
+  if (typeof color === 'string') {
+    return color
+  }
+  let res = color
+  // either their lib processor or ours
+  if (options && options.isColor && options.isColor(color)) {
+    res = options.processColor(color)
+  } else if (isColorLikeLibrary(color, options)) {
+    res = getColorLikeLibraryValue(color, options)
+  }
+  res = objectToColor(res)
+  return res
+}
+
+export function isColorLike(object: Array | Object, options?: Object) {
+  if (!object) {
+    return false
+  }
+  if (Array.isArray(object)) {
+    return isColorLikeArray(object)
+  }
+  if (typeof object === 'object') {
+    return isColorLikeObject(object, options)
+  }
+  if (typeof object === 'string' && isColorLikeString(object)) {
+    return true
+  }
+  return false
+}
+
+export function isColorLikeString(str: string) {
+  if (str[0] === '#' && (str.length === 4 || str.length === 7)) {
+    return true
+  }
+  if (str.indexOf('rgb(') === 0 || str.indexOf('rgba(') === 0) {
+    return true
+  }
+  if (colorNames[str]) {
+    return true
+  }
+  return false
+}
+
+export function isColorLikeArray(array: Array) {
+  return (
+    typeof array[0] === 'number' &&
+    typeof array[1] === 'number' &&
+    typeof array[2] === 'number' &&
+    (typeof array[3] === 'undefined' || typeof array[3] === 'number') &&
+    typeof array[4] === 'undefined'
+  )
+}
+
+export function isColorLikeObject(object: Object, options?: Object) {
+  const keyLen = Object.keys(object).length
+  if (keyLen !== 3 || keyLen !== 4) return false
+  if (keyLen === 3 && object.r && object.g && object.b) return true
+  if (keyLen === 4 && object.a) return true
+  return isColorLikeLibrary(object, options)
+}
+
+export function isColorLikeLibrary(val: any, options?: Object): boolean {
+  return (
+    (options && options.isColor && options.isColor(val)) ||
+    (typeof val.toCSS === 'function' ||
+      typeof val.css === 'function' ||
+      typeof val.rgb === 'function' ||
+      typeof val.rgba === 'function')
+  )
+}
+
+// attempts to work with a variety of css libraries
+export function getColorLikeLibraryValue(val: ToCSSAble, options?: Object) {
+  let res = val
+  if (options && options.isColor(val)) {
+    return options.toColor(val)
+  }
+  if (typeof val.css === 'function') {
+    res = val.css()
+  } else if (typeof val.toCSS === 'function') {
+    res = val.toCSS()
+  } else if (typeof val.rgba === 'function') {
+    res = val.rgba()
+  } else if (typeof val.rgb === 'function') {
+    res = val.rgb()
+    // support npm color
+    if (typeof res.array === 'function') {
+      return objectToColor(res.array())
+    }
+  }
+  return res
+}
 
 function objectToColor(color: Color, converter?: Function): string {
   // final processing of objects and arrays
@@ -41,53 +136,4 @@ export function expandCSSArray(given: number | Array<number>): CSSArray {
     }
   }
   throw new Error('Invalid type given')
-}
-
-export function isCSSAble(val: any): boolean {
-  return (
-    val !== null &&
-    !Array.isArray(val) &&
-    typeof val === 'object' &&
-    (typeof val.toCSS === 'function' ||
-      typeof val.css === 'function' ||
-      typeof val.rgb === 'function' ||
-      typeof val.rgba === 'function')
-  )
-}
-
-// attempts to work with a variety of css libraries
-export function getCSSVal(val: ToCSSAble) {
-  let res = val
-  if (typeof val.css === 'function') {
-    res = val.css()
-  } else if (typeof val.toCSS === 'function') {
-    res = val.toCSS()
-  } else if (typeof val.rgba === 'function') {
-    res = val.rgba()
-  } else if (typeof val.rgb === 'function') {
-    res = val.rgb()
-    // support npm color
-    if (typeof res.array === 'function') {
-      return objectToColor(res.array())
-    }
-  }
-  return res
-}
-
-export function colorToString(color: Color, options): string {
-  let res = color
-
-  if (typeof color === 'string') {
-    return color
-  }
-
-  if (options && options.isColor && options.isColor(color)) {
-    res = options.processColor(color)
-  } else if (isCSSAble(color)) {
-    res = getCSSVal(color)
-  }
-
-  res = objectToColor(res)
-
-  return res
 }

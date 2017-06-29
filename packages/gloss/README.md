@@ -1,61 +1,40 @@
-// @flow
+# gloss 💅
+
+usage:
+
+
+
+example:
+
+```js
 import React from 'react'
-import { view, inject } from '@mcro/black'
-import type { ViewType } from '@mcro/black'
-import $ from 'color'
-import Icon from './icon'
-import Glow from './effects/glow'
-import Popover from './popover'
+import ReactDOM from 'react-dom'
+import gloss, { color as $, Theme, ThemeProvide } from '@mcro/gloss'
 import type { Color } from '@mcro/gloss'
+import Icon from './icon'
+import Popover from './popover'
 
 const LINE_HEIGHT = 30
 
-@inject(context => context.segmentContext)
-@view.ui
-export default class Surface implements ViewType<Props> {
-  props: Props & {
-    flex?: boolean | number,
-    borderRadius: number,
-    inSegment?: boolean,
-    inForm?: boolean,
-    clickable?: boolean,
-    active?: boolean,
-    chromeless?: boolean,
-    inline?: boolean,
-    dim?: boolean,
-    stretch?: boolean,
-    spaced?: boolean,
-    highlight?: boolean,
-    circular?: boolean,
-    iconAfter?: boolean,
-    iconColor?: Color,
-    onClick?: Function,
-    tooltip?: string,
-    icon?: React$Element<any> | string,
-    background?: Color,
-    color?: Color,
-    hoverColor?: Color,
-    className?: string,
-    theme?: string,
-    after?: Element | string,
-    children?: Element | string,
-    elementStyles?: Object,
-    iconProps?: Object,
-    tooltipProps?: Object,
-    tagName: string,
-    size?: number,
-    iconSize?: number,
-    padding?: number | Array<number>,
-    margin?: number | Array<number>,
-    height?: number,
-    glow?: boolean,
-    noElement?: boolean,
-    glint?: boolean,
-    lightenOnHover?: boolean,
-    darkenOnHover?: boolean,
-    getRef?: Function,
-  }
+const { decorator } = gloss({
+  baseStyles: styles,
+  themeProp: 'theme',
+  tagName: 'tagName',
+  isColor: color => color && !!color.rgb,
+  processColor: color => color.toString(),
+})
 
+ReactDOM.render(
+  <ThemeProvide bright={{ background: '#000' }}>
+    <Theme name="bright">
+      <Surface icon="name" />
+    </Theme>
+  </ThemeProvide>,
+  document.querySelector('#app')
+)
+
+@decorator
+export default class Surface implements ViewType<Props> {
   static defaultProps = {
     tagName: 'div',
     size: 1,
@@ -96,7 +75,6 @@ export default class Surface implements ViewType<Props> {
     padding,
     height,
     margin,
-    glow,
     hoverColor,
     wrapElement,
     elementStyles,
@@ -105,9 +83,8 @@ export default class Surface implements ViewType<Props> {
     flex,
     placeholderColor,
     borderColor,
-    glint,
     ...props
-  }: Props) {
+  }) {
     const { theme } = this
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
@@ -139,14 +116,6 @@ export default class Surface implements ViewType<Props> {
           size={iconSize}
           {...iconProps}
         />
-        <glowWrap if={glow} $minimal={chromeless}>
-          <Glow
-            full
-            scale={1.5}
-            color={(theme && theme.surface.style.color) || [0, 0, 0]}
-            opacity={0.06}
-          />
-        </glowWrap>
         <element
           if={!noElement}
           {...wrapElement && passProps}
@@ -188,15 +157,7 @@ export default class Surface implements ViewType<Props> {
       borderStyle: 'solid',
       borderColor: 'transparent',
       position: 'relative',
-    },
-    glowWrap: {
-      position: 'absolute',
-      overflow: 'hidden',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 10,
+      boxShadow: ['inset 0 0.5px 0 rgba(255,255,255,0.2)'],
     },
     minimal: {
       boxShadow: 'none',
@@ -271,47 +232,19 @@ export default class Surface implements ViewType<Props> {
       : baseBorderRadius || height / 10
 
     // colors
-    const color = $(
-      props.highlight
-        ? props.highlightColor || theme.highlight.color || props.color
-        : props.active ? theme.active.color : props.color || theme.base.color
-    )
-    const luminosity = color.luminosity()
-    const isLight = luminosity > 0.6
-    const iconColor = props.iconColor || color
-    const background = $(
+    const background =
       props.background || theme.base.background || 'transparent'
-    )
     const borderColor = props.borderColor || theme.base.borderColor
-
-    log(self.gloss({ background }))
-
-    // hover
-    const adjustDirection = isLight ? 'darken' : 'lighten'
-    let hoverColor = $(props.hoverColor || theme.hover.color || props.color)
+    const color = props.highlight
+      ? props.highlightColor || theme.highlight.color || props.color
+      : props.active ? theme.active.color : props.color || theme.base.color
+    const hoverColor =
+      (props.highlight && $(color).lighten(0.2)) ||
+      props.hoverColor ||
+      theme.hover.color ||
+      (props.color && $(props.color).lighten(0.2))
+    const iconColor = props.iconColor || color
     const iconHoverColor = props.iconHoverColor || hoverColor
-
-    if (props.lightenOnHover) {
-      hoverColor = hoverColor.lighten(
-        props.lightenOnHover === true ? 0.2 : props.lightenOnHover
-      )
-    } else if (props.darkenOnHover) {
-      hoverColor = hoverColor.darken(
-        props.darkenOnHover === true ? 0.2 : props.darkenOnHover
-      )
-    }
-
-    // shadow
-    const boxShadow = props.shadow === true ? [0, 5, 0, [0, 0, 0, 0.2]] : []
-
-    if (props.glint) {
-      const glintColor =
-        props.glint === true ? background.lighten(0.5) : props.glint
-      boxShadow.push(['inset 0 0.5px 0', glintColor])
-    }
-
-    // general
-    const overflow = props.glow ? 'hidden' : props.overflow
 
     const segmentStyles = props.inSegment && {
       marginLeft: -1,
@@ -324,7 +257,6 @@ export default class Surface implements ViewType<Props> {
       borderRadius: props.size * LINE_HEIGHT,
       overflow: 'hidden',
     }
-
     return {
       element: {
         ...props.elementStyles,
@@ -336,7 +268,6 @@ export default class Surface implements ViewType<Props> {
         },
       },
       surface: {
-        overflow,
         height,
         width,
         flex,
@@ -344,7 +275,6 @@ export default class Surface implements ViewType<Props> {
         borderRadius,
         borderColor,
         background,
-        boxShadow,
         ...circularStyles,
         ...segmentStyles,
         ...(props.inline && self.surfaceStyle),
@@ -377,3 +307,4 @@ export default class Surface implements ViewType<Props> {
     }
   }
 }
+```

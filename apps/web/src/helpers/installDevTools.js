@@ -12,7 +12,8 @@ import * as Constants from '~/constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
-import { log } from '@mcro/black'
+import * as Black from '@mcro/black'
+import * as UI from '@mcro/ui'
 
 // Mobx.useStrict(true)
 
@@ -31,4 +32,6 @@ window.Immutable = Immutable
 window.PouchDB = PouchDB
 window.Constants = Constants
 window._ = _
-window.log = log
+window.log = Black.log
+window.Black = Black
+window.UI = UI

@@ -1,22 +1,22 @@
 // @flow
-import { colorToString, isCSSAble } from './helpers'
+import { colorToString, isColorLike } from './helpers'
 import type { Transform } from './types'
 
 // exports
 export type { Transform, Color } from './types'
 export * from './helpers'
 
-const COLOR_KEYS = new Set([
-  'background',
-  'color',
-  'backgroundColor',
-  'borderColor',
-])
+const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor'])
 const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
   y: 'translateY',
   z: 'translateZ',
   dropShadow: 'drop-shadow',
+}
+
+const NESTABLE_ARRAY = {
+  boxShadow: true,
+  transition: true,
 }
 
 const SHORTHANDS = {
@@ -34,18 +34,15 @@ const FALSE_VALUES = {
   borderColor: 'transparent',
 }
 
-const COMMA_SEPARATABLE = {
-  boxShadow: true,
-  transition: true,
-}
-
 // helpers
 const px = (x: number | string) => (/px$/.test(`${x}`) ? x : `${x}px`)
 const isFloat = n => n === +n && n !== (n | 0)
 
 // style transform creator
 export default function motionStyle(options: Object = {}) {
+  const isColor = color => isColorLike(color, options)
   const toColor = color => colorToString(color, options)
+
   const OBJECT_TRANSFORM = {
     textShadow: ({ x, y, blur, color }) =>
       `${px(x)} ${px(y)} ${px(blur)} ${toColor(color)}`,
@@ -56,27 +53,30 @@ export default function motionStyle(options: Object = {}) {
           )} ${toColor(v.color)}`
         : toColor(v),
     background: v =>
-      isCSSAble(v.color) || v.image || v.position || v.repeat
-        ? `${toColor(v.color)} ${v.image} ${v.position
+      isColor(v.color) || v.image || v.position || v.repeat
+        ? `${toColor(v.color)} ${v.image || ''} ${(v.position
             ? v.position.join(' ')
-            : v.position} ${v.repeat}`
+            : v.position) || ''} ${v.repeat || ''}`
         : toColor(v),
   }
 
-  function processArrayItem(style: any) {
+  function processArrayItem(key: string, val: any) {
     // recurse
-    if (Array.isArray(style) || isCSSAble(style)) {
-      return toColor(style)
+    if (isColor(val)) {
+      return toColor(val)
     }
-    return typeof style === 'number' ? `${style}px` : style
+    if (Array.isArray(val)) {
+      return processArray(key, val)
+    }
+    return typeof val === 'number' ? `${val}px` : val
   }
 
   function processArray(key: string, array: Array<number | string>): string {
     // solid default option for borders
-    if (key.indexOf('border') === 0 && array.length === 2) {
+    if (key === 'border' && array.length === 2) {
       array.push('solid')
     }
-    return array.map(processArrayItem).join(COMMA_SEPARATABLE[key] ? ',' : ' ')
+    return array.map(val => processArrayItem(key, val)).join(' ')
   }
 
   function objectValue(key: string, value: any) {
@@ -142,15 +142,15 @@ export default function motionStyle(options: Object = {}) {
       } else if (COLOR_KEYS.has(key)) {
         toReturn[key] = toColor(value)
         respond = true
-      } else if (isCSSAble(value)) {
+      } else if (Array.isArray(value)) {
+        toReturn[key] = processArray(key, value)
+        respond = true
+      } else if (isColor(value)) {
         toReturn[key] = toColor(value)
         respond = true
       } else if (firstChar === '&' || firstChar === '@') {
         // recurse into psuedo or media query
         toReturn[key] = processStyles(value, errorMessage)
-        respond = true
-      } else if (Array.isArray(value)) {
-        toReturn[key] = processArray(key, value)
         respond = true
       } else if (valueType === 'object') {
         toReturn[key] = processObject(value)

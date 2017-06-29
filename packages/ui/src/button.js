@@ -1,4 +1,4 @@
 import React from 'react'
 import Surface from './surface'
 
-export default props => <Surface tagName="button" glow {...props} noElement />
+export default props => <Surface tagName="button" glint glow {...props} noElement />

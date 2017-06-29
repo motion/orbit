@@ -146,7 +146,7 @@ const Gloss = gloss({
   themeProp: 'theme',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,
-  processColor: color => color.toString(),
+  toColor: color => color.toString(),
 })
 
 window.Gloss = Gloss

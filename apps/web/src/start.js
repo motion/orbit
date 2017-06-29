@@ -9,6 +9,7 @@ import themes from './theme'
 @view
 class Test {
   render() {
+    log(this.gloss({ boxShadow: ['inset', 0, 10, 10, [0, 0, 0, 0.1]] }))
     return <div>null</div>
   }
 }

@@ -119,11 +119,12 @@ export default class Surface {
       className: finalClassName,
       onClick,
       tagName,
+      ref: getRef,
       ...props,
     }
 
     return (
-      <surface ref={getRef} {...!wrapElement && passProps}>
+      <surface {...!wrapElement && passProps}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -260,7 +261,7 @@ export default class Surface {
     // sizes
     const height = props.size * LINE_HEIGHT
     const width = props.width
-    const padding = props.padding || [0, height / 4]
+    const padding = props.padding || props.wrapElement ? 0 : [0, height / 4]
     const fontSize = props.fontSize || height * 0.5
     const flex = props.flex || 'auto'
 

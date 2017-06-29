@@ -257,12 +257,17 @@ export default class Surface implements ViewType<Props> {
     // sizes
     const height = props.size * LINE_HEIGHT
     const width = props.width
-    const padding = props.padding || props.wrapElement ? 0 : [0, height / 4]
+    const padding =
+      typeof props.padding !== 'undefined'
+        ? props.padding
+        : props.wrapElement ? 0 : [0, height / 4]
     const fontSize = props.fontSize || height * 0.5
-    const flex = props.flex === true ? 1 : props.flex || false
+    const flex = props.flex === true ? 1 : props.flex
 
     // radius
-    const baseBorderRadius = props.borderRadius || height / 5
+    const baseBorderRadius = props.borderRadius
+      ? props.borderRadius
+      : height / 5
     const borderRadius = props.circular
       ? height
       : baseBorderRadius || height / 10
@@ -292,7 +297,6 @@ export default class Surface implements ViewType<Props> {
       width: height,
       borderRadius: props.size * LINE_HEIGHT,
     }
-
     return {
       element: {
         ...props.elementStyles,

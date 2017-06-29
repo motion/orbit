@@ -15,6 +15,8 @@ const LINE_HEIGHT = 30
 export default class Surface implements ViewType<Props> {
   props: Props & {
     flex?: boolean | number,
+    width?: number,
+    height?: number,
     borderRadius: number,
     inSegment?: boolean,
     inForm?: boolean,
@@ -108,6 +110,7 @@ export default class Surface implements ViewType<Props> {
     borderColor,
     glint,
     hoverable,
+    width,
     ...props
   }: Props) {
     const { theme } = this
@@ -255,7 +258,7 @@ export default class Surface implements ViewType<Props> {
 
   static theme = (props, theme, self) => {
     // sizes
-    const height = props.size * LINE_HEIGHT
+    const height = props.height || props.size * LINE_HEIGHT
     const width = props.width
     const padding =
       typeof props.padding !== 'undefined'
@@ -344,7 +347,7 @@ export default class Surface implements ViewType<Props> {
       element: {
         ...props.elementStyles,
         fontSize,
-        lineHeight: '1px',
+        lineHeight: '0px',
         color,
         '&:hover': {
           color: hoverColor,

@@ -53,9 +53,9 @@ export default class DocumentPage {
 
             <Segment
               itemProps={{
-                size: 1.2,
+                size: 1,
+                iconSize: 18,
                 chromeless: true,
-                glow: false,
               }}
             >
               <Button className="wop" icon="dot" />

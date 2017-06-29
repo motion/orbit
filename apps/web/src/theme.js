@@ -50,7 +50,7 @@ const Theme = {
     },
     active: {
       ...LIGHT,
-      background: color(LIGHT.background).darken(1),
+      background: color(LIGHT.background).darken(0.1),
       color: '#000',
       borderColor: 'purple',
     },

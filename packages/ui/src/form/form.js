@@ -19,12 +19,4 @@ export default class Form {
       </Provider>
     )
   }
-
-  static theme = {
-    flex: {
-      form: {
-        flex: 1,
-      },
-    },
-  }
 }

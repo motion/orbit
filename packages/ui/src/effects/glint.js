@@ -65,30 +65,32 @@ export default class Glint {
     },
   }
 
-  static theme = {
-    radius: ({ radius, bottom }) => ({
+  static theme = ({ radius, bottom, rightRadius, leftRadius }) => {
+    const radiusStyle = radius && {
+      [isUndef(bottom)
+        ? 'borderTopRightRadius'
+        : 'borderBottomRightRadius']: radius,
+      [isUndef(bottom)
+        ? 'borderTopLeftRadius'
+        : 'borderBottomLeftRadius']: radius,
+    }
+    const rightRadiusStyle = rightRadius && {
+      [isUndef(bottom)
+        ? 'borderTopRightRadius'
+        : 'borderBottomRightRadius']: rightRadius,
+    }
+    const leftRadiusStyle = leftRadius && {
+      [isUndef(bottom)
+        ? 'borderTopLeftRadius'
+        : 'borderBottomLeftRadius']: leftRadius,
+    }
+
+    return {
       glint: {
-        [isUndef(bottom)
-          ? 'borderTopRightRadius'
-          : 'borderBottomRightRadius']: radius,
-        [isUndef(bottom)
-          ? 'borderTopLeftRadius'
-          : 'borderBottomLeftRadius']: radius,
+        ...radiusStyle,
+        ...rightRadiusStyle,
+        ...leftRadiusStyle,
       },
-    }),
-    rightRadius: ({ rightRadius, bottom }) => ({
-      glint: {
-        [isUndef(bottom)
-          ? 'borderTopRightRadius'
-          : 'borderBottomRightRadius']: rightRadius,
-      },
-    }),
-    leftRadius: ({ leftRadius, bottom }) => ({
-      glint: {
-        [isUndef(bottom)
-          ? 'borderTopLeftRadius'
-          : 'borderBottomLeftRadius']: leftRadius,
-      },
-    }),
+    }
   }
 }

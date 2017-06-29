@@ -117,58 +117,49 @@ export default class Field {
     width: width => ({ width }),
   }
 
-  static theme = {
-    theme: (props, theme) => ({
-      element: {
-        color: theme.base.color,
-      },
-      label: {
-        color: theme.base.color,
-      },
-    }),
-    row: {
-      field: {
-        padding: [5, 5],
-        flexFlow: 'row',
-        alignItems: 'flex-end',
-        // justifyContent: 'space-between',
-      },
-      label: {
-        margin: 0,
-        padding: 10,
-        width: '30%',
-        minWidth: 120,
-        borderBottom: 'none',
-        textAlign: 'right',
-      },
-      element: {
-        fontSize: 24,
-        height: 40,
-        border: 'none',
-        borderBottom: [1, '#eee'],
-        flex: 1,
-      },
+  rowStyle = {
+    field: {
+      padding: [5, 5],
+      flexFlow: 'row',
+      alignItems: 'flex-end',
+      // justifyContent: 'space-between',
     },
-    inactive: {
-      field: {
-        opacity: 0.5,
-        pointerEvents: 'none',
-      },
+    label: {
+      margin: 0,
+      padding: 10,
+      width: '30%',
+      minWidth: 120,
+      borderBottom: 'none',
+      textAlign: 'right',
     },
-    sub: {
-      field: {
-        paddingLeft: 10,
-      },
-      label: {
-        fontSize: 12,
-        opacity: 0.6,
-        flex: 1,
-      },
-    },
-    spaced: {
-      field: {
-        marginBottom: 10,
-      },
+    element: {
+      fontSize: 24,
+      height: 40,
+      border: 'none',
+      borderBottom: [1, '#eee'],
+      flex: 1,
     },
   }
+
+  inactiveStyle = {
+    field: {
+      opacity: 0.5,
+      pointerEvents: 'none',
+    },
+  }
+
+  static theme = (props, theme, self) => ({
+    field: {
+      ...(props.row && self.rowStyle.field),
+      ...(props.inactive && self.inactiveStyle.field),
+    },
+    element: {
+      color: theme.base.color,
+      ...(props.row && self.rowStyle.element),
+    },
+    label: {
+      color: theme.base.color,
+      ...(props.row && self.rowStyle.label),
+    },
+  })
 }

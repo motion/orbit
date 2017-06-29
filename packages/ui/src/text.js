@@ -1,10 +1,12 @@
 // @flow
 import React from 'react'
 import { view, keycode } from '@mcro/black'
+import type { ViewType } from '@mcro/black'
 
 export type Props = {
   editable?: Boolean,
   autoselect?: Boolean,
+  selectable?: Boolean,
   onFinishEdit: Function,
   onCancelEdit: Function,
   getRef?: Function,
@@ -33,7 +35,7 @@ export type Props = {
     }
   },
 })
-export default class Text {
+export default class Text implements ViewType {
   props: Props
 
   static defaultProps = {
@@ -98,11 +100,14 @@ export default class Text {
     onFinishEdit,
     onCancelEdit,
     onKeyDown,
+    selectable,
     ...props
   }: Props) {
     return (
       <text
+        tagName="p"
         contentEditable={editable}
+        $selectable={selectable}
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
         ref={this.ref('node').set}
@@ -111,4 +116,19 @@ export default class Text {
       />
     )
   }
+
+  static style = {
+    text: {
+      userSelect: 'none',
+    },
+    selectable: {
+      userSelect: 'auto',
+    },
+  }
+
+  static theme = (props, theme) => ({
+    text: {
+      color: props.color || theme.base.color,
+    },
+  })
 }

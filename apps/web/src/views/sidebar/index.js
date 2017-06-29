@@ -2,25 +2,7 @@
 import React from 'react'
 import { view, watch, Shortcuts } from '@mcro/black'
 import { flatMap } from 'lodash'
-import {
-  Theme,
-  Drawer,
-  Pane,
-  Icon,
-  Input,
-  Dropdown,
-  Progress,
-  SlotFill,
-  Badge,
-  TiltGlow,
-  Button,
-  Segment,
-  Form,
-  Field,
-  Grain,
-  Glint,
-  PassProps,
-} from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
 import Login from './login'
 import Signup from './signup'
@@ -44,7 +26,7 @@ class TeamStatus {
         {items.map(player =>
           <player key={player.name}>
             <title>
-              <Badge
+              <UI.Badge
                 $badge
                 labelBefore
                 fontFamily="monospace"
@@ -52,8 +34,10 @@ class TeamStatus {
                 label={sillyname().slice(0, 15).toLowerCase()}
               >
                 {player.name}
-              </Badge>
-              <time>{player.time}</time>
+              </UI.Badge>
+              <time>
+                {player.time}
+              </time>
             </title>
             <info>
               {player.status}
@@ -140,7 +124,7 @@ class Projects {
           ]}
         />
 
-        <Segment
+        <UI.Segment
           if={false}
           $$draggable
           $$flex="none"
@@ -154,15 +138,13 @@ class Projects {
             color: [255, 255, 255, 0.5],
           }}
         >
-          <Button active>
-            Following
-          </Button>
-          <Button>
-            Recent
-          </Button>
-        </Segment>
+          <UI.Button active>Following</UI.Button>
+          <UI.Button>Recent</UI.Button>
+        </UI.Segment>
 
-        <noStars $$flex if={!hasDocs}>No Stars</noStars>
+        <noStars $$flex if={!hasDocs}>
+          No Stars
+        </noStars>
 
         <tasks if={hasDocs}>
           {docs.map((doc, index) => {
@@ -171,7 +153,7 @@ class Projects {
               <section key={index}>
                 <title $$row $$spaceBetween>
                   <start $$row $$centered>
-                    <Progress.Circle
+                    <UI.Progress.Circle
                       style={{ marginRight: 4 }}
                       lineColor="rgb(130, 248, 198)"
                       backgroundColor={[0, 0, 0, 0.15]}
@@ -182,7 +164,9 @@ class Projects {
                     <path if={false} $$row $$centered>
                       {flatMap(
                         doc.title.map((tit, index) =>
-                          <fade key={index}>{tit}</fade>
+                          <Text key={index}>
+                            {tit}
+                          </Text>
                         ),
                         (value, index, arr) =>
                           arr.length !== index + 1
@@ -200,7 +184,7 @@ class Projects {
                     </path>
                   </start>
                   <end>
-                    <Icon
+                    <UI.Icon
                       name="favour3"
                       onClick={doc.toggleStar}
                       color="#666"
@@ -210,7 +194,7 @@ class Projects {
                 <tasks if={tasks && tasks.length}>
                   {tasks.map(({ archive, text, key }, index) =>
                     <task key={key} $$row>
-                      <Input
+                      <UI.Input
                         $check
                         onChange={() => doc.toggleTask(text)}
                         type="checkbox"
@@ -258,13 +242,6 @@ class Projects {
       fontSize: 17,
       lineHeight: 1,
     },
-    fade: {
-      opacity: 1,
-      pointer: 'pointer',
-      '&:hover': {
-        opacity: 1,
-      },
-    },
     task: {
       padding: [3, 0, 2],
       pointerEvents: 'auto',
@@ -303,9 +280,7 @@ class Inner {
                 <Field label="Email" placeholder="something" />
                 <Field label="Password" placeholder="something" />
               </PassProps>
-              <Button>
-                Signup
-              </Button>
+              <UI.Button>Signup</UI.Button>
             </Form>
           </modal>
         </Theme>
@@ -384,7 +359,7 @@ export default class Sidebar {
       position: 'absolute',
       top: 0,
       right: 0,
-      borderLeft: `1px solid #666`,
+      borderLeft: '1px solid #666',
       bottom: 0,
     },
     title: {

@@ -1,17 +1,7 @@
 import { view, keycode } from '@mcro/black'
 import { User } from '@mcro/models'
 import React from 'react'
-import {
-  Dropdown,
-  Theme,
-  Popover,
-  List,
-  Form,
-  Segment,
-  Input,
-  Button,
-  Link,
-} from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT } from '~/constants'
 
 @view({
@@ -66,9 +56,14 @@ export default class Login {
   render({ store }) {
     return (
       <login $$draggable>
-        <Form flex if={!User.loggedIn} $$undraggable onSubmit={store.onSubmit}>
-          <Segment>
-            <Input
+        <UI.Form
+          flex
+          if={!User.loggedIn}
+          $$undraggable
+          onSubmit={store.onSubmit}
+        >
+          <UI.Segment>
+            <UI.Input
               $error={store.error}
               disabled={store.loggingIn}
               name="email"
@@ -76,7 +71,7 @@ export default class Login {
               getRef={store.ref('email').set}
               placeholder="Email"
             />
-            <Input
+            <UI.Input
               disabled={store.loggingIn}
               name="password"
               type="password"
@@ -84,25 +79,25 @@ export default class Login {
               onKeyDown={store.onPasswordKey}
               getRef={store.ref('password').set}
             />
-            <Button
+            <UI.Button
               icon={store.loggingIn ? 'time' : 'lock'}
               onClick={store.finish}
             >
               Login
-            </Button>
-          </Segment>
-        </Form>
+            </UI.Button>
+          </UI.Segment>
+        </UI.Form>
 
         <step $loggedIn if={User.loggedIn}>
           <start $team $$row $$centered />
 
           <end $$row $$centered>
             <text>
-              <username $$ellipse>
-                {' '}{User.name}
-              </username>
+              <UI.Text $$ellipse>
+                {' '}{User.name} 123
+              </UI.Text>
             </text>
-            <Popover
+            <UI.Popover
               distance={10}
               forgiveness={20}
               delay={150}
@@ -112,7 +107,7 @@ export default class Login {
               openOnHover
               closeOnClick
             >
-              <List
+              <UI.List
                 width={150}
                 itemProps={{ height: 35, fontSize: 14 }}
                 items={[
@@ -132,7 +127,7 @@ export default class Login {
                   },
                 ]}
               />
-            </Popover>
+            </UI.Popover>
           </end>
         </step>
       </login>

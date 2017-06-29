@@ -10,7 +10,7 @@ import redis from 'redis'
 import Path from 'path'
 import repStream from 'express-pouchdb-replication-stream'
 import couchProxy from 'express-couch-proxy'
-import Login from './login'
+import SuperLogin from './login'
 import config from './superlogin.config'
 import url from 'url'
 
@@ -99,9 +99,8 @@ export default class Server {
         // todo
       }
 
-      const request = 'https:' == remoteURL.protocol
-        ? https.request
-        : http.request
+      const request =
+        'https:' == remoteURL.protocol ? https.request : http.request
       const path =
         remoteURL.path +
         req.originalUrl.slice(subPath.length + 1, req.originalUrl.length)
@@ -177,7 +176,7 @@ export default class Server {
   }
 
   setupLogin() {
-    this.login = new Login(config)
+    this.login = new SuperLogin(config)
     this.server.use('/auth', this.login.router)
   }
 

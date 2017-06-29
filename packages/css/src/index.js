@@ -127,7 +127,7 @@ export default function motionStyle(options: Object = {}) {
   }
 
   // style transformer
-  return function processStyles(styles: Object, errorMessage?: string): Object {
+  function processStyles(styles: Object, errorMessage?: string): Object {
     const toReturn = {}
     for (let key in styles) {
       if (!styles.hasOwnProperty(key)) {
@@ -192,4 +192,14 @@ export default function motionStyle(options: Object = {}) {
 
     return toReturn
   }
+
+  // expose helpers
+  processStyles.helpers = {
+    toColor,
+    isColor,
+    processArray,
+    processObject,
+  }
+
+  return processStyles
 }

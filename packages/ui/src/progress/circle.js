@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { colorToString } from '@mcro/gloss'
+import { Helpers } from '@mcro/gloss'
 import type { Color } from '@mcro/gloss'
 
 @view.ui
@@ -55,14 +55,14 @@ export default class ProgressCircle {
       >
         <path
           d={pathString}
-          stroke={colorToString(backgroundColor)}
+          stroke={this.gloss.helpers.toColor(backgroundColor)}
           strokeWidth={lineWidth}
           fillOpacity="0"
         />
         <path
           d={pathString}
           strokeLinecap={lineType}
-          stroke={colorToString(lineColor)}
+          stroke={this.gloss.helpers.toColor(lineColor)}
           strokeWidth={lineWidth}
           fillOpacity="0"
           ref="path"

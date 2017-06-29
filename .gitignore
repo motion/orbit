@@ -15,3 +15,4 @@ apps/electron/dist
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib
 !packages/hmr-view/lib
+packages/hmr-view/lib/*.js.flow

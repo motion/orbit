@@ -229,26 +229,41 @@ export default class Surface {
     },
   }
 
-  get theme() {
-    const theme = this.context.uiTheme[
-      this.context.uiActiveTheme || this.props.theme
-    ]
-    if (!theme) {
-      return {}
-    }
-    const { props } = this
+  surfaceStyle = {
+    background: 'transparent',
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    margin: [-2, -3],
+    maxHeight: '1.45rem',
+    borderRadius: 1000,
+  }
 
-    // TODO
-    // const clickable = !!props.onClick || props.clickable
-    // const active = props.active
-    // const highlight = props.highlight
+  disabledStyle = {
+    opacity: 0.25,
+    pointerEvents: 'none',
+  }
 
-    // based on a vertical rythm
+  dimStyle = {
+    opacity: 0.5,
+    '&:hover': {
+      opacity: 1,
+    },
+  }
+
+  spacedStyles = {
+    margin: [0, 5],
+    borderRightWidth: 1,
+  }
+
+  static theme = (props, theme, self) => {
     // sizes
     const height = props.size * LINE_HEIGHT
     const width = props.width
     const padding = props.padding || [0, height / 4]
     const fontSize = props.fontSize || height * 0.5
+    const flex = props.flex || 'auto'
 
     // radius
     const baseBorderRadius = props.borderRadius || height / 5
@@ -281,9 +296,6 @@ export default class Surface {
       width: height,
       borderRadius: props.size * LINE_HEIGHT,
     }
-    const chromelessStyles = props.chromeless && {
-      borderWidth: 0,
-    }
 
     return {
       element: {
@@ -297,13 +309,20 @@ export default class Surface {
       surface: {
         height,
         width,
+        flex,
         padding,
         borderRadius,
         borderColor,
         background,
         ...circularStyles,
         ...segmentStyles,
-        ...chromelessStyles,
+        ...(props.inline && self.surfaceStyle),
+        ...(props.disabled && self.disabledStyle),
+        ...(props.dim && self.dimStyle),
+        ...(props.spaced && self.spacedStyle),
+        ...(props.chromeless && {
+          borderWidth: 0,
+        }),
         '& > icon': {
           color: iconColor,
         },
@@ -325,45 +344,5 @@ export default class Surface {
         }),
       },
     }
-  }
-
-  static theme = {
-    spaced: {
-      surface: {
-        margin: [0, 5],
-        borderRightWidth: 1,
-      },
-    },
-    stretch: {
-      surface: {
-        flex: 1,
-      },
-    },
-    inline: {
-      surface: {
-        background: 'transparent',
-        borderRightWidth: 1,
-        borderLeftWidth: 1,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        margin: [-2, -3],
-        maxHeight: '1.45rem',
-        borderRadius: 1000,
-      },
-    },
-    disabled: {
-      surface: {
-        opacity: 0.25,
-        pointerEvents: 'none',
-      },
-    },
-    dim: {
-      surface: {
-        opacity: 0.5,
-        '&:hover': {
-          opacity: 1,
-        },
-      },
-    },
   }
 }

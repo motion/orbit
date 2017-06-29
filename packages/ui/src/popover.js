@@ -693,53 +693,29 @@ export default class Popover {
     },
   }
 
-  static theme = {
-    theme: (props, theme) => {
-      let styles = {}
-
-      if (props.background === true) {
-        styles = {
-          background: theme.base.background,
-          borderRadius: 5,
-        }
-      }
-
-      return {
-        content: {
-          background: props.background || 'transparent',
-          ...styles,
-        },
-      }
-    },
-    popoverStyle: ({ popoverStyle }) => ({
-      content: popoverStyle,
-    }),
-    padding: ({ padding }) => ({
+  static theme = (props, theme) => {
+    const backgroundStyles = props.background === true && {
+      background: theme.base.background,
+      borderRadius: 5,
+    }
+    return {
       content: {
-        padding,
+        background: props.background || 'transparent',
+        boxShadow: getShadow(props.shadow),
+        padding: props.padding,
+        ...backgroundStyles,
+        ...props.popoverStyle,
       },
-    }),
-    animation: ({ animation }) => ({
+      popover: {
+        padding: calcForgiveness(props.forgiveness, props.distance),
+        margin: -calcForgiveness(props.forgiveness, props.distance),
+        background: props.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
+      },
       popoverOpen: {
-        animation: animation === true ? 'bounce-down 200ms' : animation,
+        animation: props.animation === true
+          ? 'bounce-down 200ms'
+          : props.animation,
       },
-    }),
-    forgiveness: ({ forgiveness, distance, showForgiveness }) => ({
-      popover: {
-        padding: calcForgiveness(forgiveness, distance),
-        margin: -calcForgiveness(forgiveness, distance),
-        background: showForgiveness ? [250, 250, 0, 0.2] : 'auto',
-      },
-    }),
-    shadow: ({ shadow }) => ({
-      content: {
-        boxShadow: getShadow(shadow),
-      },
-    }),
-    noHover: {
-      popover: {
-        pointerEvents: 'none',
-      },
-    },
+    }
   }
 }

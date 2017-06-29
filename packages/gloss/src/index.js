@@ -27,14 +27,12 @@ const DEFAULT_OPTS = {
 export class Gloss {
   options: Options
 
-  makeCreateEl = (styles) =>
-    fancyElement(this, this.getStyles(styles))
+  makeCreateEl = styles => fancyElement(this, this.getStyles(styles))
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
     this.niceStyle = motionStyle(opts)
-    this.baseStyles =
-      opts.baseStyles && this.getStyles(opts.baseStyles)
+    this.baseStyles = opts.baseStyles && this.getStyles(opts.baseStyles)
     this.createElement = this.makeCreateEl()
     this.decorator.createElement = this.createElement
   }
@@ -48,9 +46,19 @@ export class Gloss {
     }
 
     if (Child.prototype) {
-      Child.theme = this.getThemes(Child.theme)
       Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
       Child.prototype.gloss = this.niceStyleSheet
+      if (Child.theme && typeof Child.theme === 'function') {
+        const getThemes = this.getThemes
+        const ogRender = Child.prototype.render
+        Child.prototype.render = function(...args) {
+          const activeTheme =
+            this.context.uiTheme &&
+            this.context.uiTheme[this.context.uiActiveTheme || this.props.theme]
+          this.theme = getThemes(Child.theme(this.props, activeTheme, this))
+          return ogRender.call(this, ...args)
+        }
+      }
     }
     return Child
   }
@@ -66,7 +74,7 @@ export class Gloss {
     return styles
   }
 
-  getThemes = (themes) => {
+  getThemes = themes => {
     if (!themes) {
       return null
     }
@@ -78,7 +86,7 @@ export class Gloss {
   }
 
   // runs niceStyleSheet on non-function styles
-  getStyles = (styles) => {
+  getStyles = styles => {
     if (!styles) {
       return null
     }

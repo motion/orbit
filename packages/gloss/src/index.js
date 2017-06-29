@@ -49,7 +49,6 @@ export class Gloss {
 
     if (Child.prototype) {
       Child.theme = this.getThemes(Child.theme)
-      console.log(Child.theme)
       Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
       Child.prototype.gloss = this.niceStyleSheet
     }

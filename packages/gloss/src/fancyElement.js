@@ -37,7 +37,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     function addStyle(style, val) {
       if (!style) return
       if (typeof style === 'function') {
-        console.log('push', style(val))
         const sheet = StyleSheet.create({ [type]: niceStyle(style(val)) })
         finalStyles.push(sheet[type])
       } else {
@@ -89,7 +88,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         }
         if (styles) {
           // $style
-          console.log('GOT EM', NAME.slice(1))
           addStyle(styles[NAME.slice(1)], val)
         }
       }

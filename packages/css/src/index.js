@@ -6,7 +6,7 @@ import type { Transform } from './types'
 export type { Transform, Color } from './types'
 export * from './helpers'
 
-const COLOR_KEYS = new Set(['color', 'backgroundColor', 'borderColor'])
+const COLOR_KEYS = new Set([ 'background', 'color', 'backgroundColor', 'borderColor'])
 const TRANSFORM_KEYS_MAP = {
   x: 'translateX',
   y: 'translateY',

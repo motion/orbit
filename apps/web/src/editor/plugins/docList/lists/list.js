@@ -4,7 +4,6 @@ import node from '~/editor/node'
 import { Document } from '@mcro/models'
 import { Button, Glow, Loading, Icon } from '@mcro/ui'
 import { isEqual } from 'lodash'
-import Router from '~/router'
 
 const lightBlue = '#e7f6ff'
 const darkBlue = `#0099e5`
@@ -25,7 +24,9 @@ export default class DocLinkList {
           </Button>
         </top>
         <list>
-          <loading if={!hasLoaded}><Loading $loading /></loading>
+          <loading if={!hasLoaded}>
+            <Loading $loading />
+          </loading>
           <noDocs if={showNoDocs}>
             <text>no documents</text>
             <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
@@ -47,7 +48,9 @@ export default class DocLinkList {
                   size={20}
                 />
 
-                <text>{doc.title}</text>
+                <text>
+                  {doc.title}
+                </text>
               </item>
             )}
           </docs>

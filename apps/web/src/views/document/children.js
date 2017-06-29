@@ -4,7 +4,6 @@ import { view } from '@mcro/black'
 import { Button, TiltGlow } from '@mcro/ui'
 import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
-import Router from '~/router'
 
 const WIDTH = 170
 const HEIGHT = 70

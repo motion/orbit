@@ -2,7 +2,6 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import { PassProps, Segment, Button, Popover, List } from '@mcro/ui'
-import Router from '~/router'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'

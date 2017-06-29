@@ -14,7 +14,6 @@ import {
   PassProps,
 } from '@mcro/ui'
 import { User } from '@mcro/models'
-import Router from '~/router'
 import Page from '~/views/page'
 
 // TODO
@@ -47,9 +46,7 @@ export default class OnboardPage {
                 <Field label="Password" placeholder="something" />
               </PassProps>
             </Form>
-            <Button>
-              Next
-            </Button>
+            <Button>Next</Button>
           </modal>
         </Theme>
       </fml>

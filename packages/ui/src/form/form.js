@@ -15,8 +15,13 @@ export default class Form {
           },
         }}
       >
-        {() => <form {...props} />}
+        {() => <form $form {...props} />}
       </Provider>
     )
+  }
+  static style = {
+    form: {
+      width: '100%',
+    },
   }
 }

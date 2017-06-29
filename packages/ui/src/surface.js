@@ -39,6 +39,7 @@ export default class Surface implements ViewType<Props> {
     theme?: string,
     after?: Element | string,
     children?: Element | string,
+    elementStyles?: Object,
     iconProps?: Object,
     tooltipProps?: Object,
     tagName: string,
@@ -100,6 +101,7 @@ export default class Surface implements ViewType<Props> {
     glow,
     hoverColor,
     wrapElement,
+    elementStyles,
     getRef,
     noElement,
     ...props
@@ -201,18 +203,13 @@ export default class Surface implements ViewType<Props> {
     minimal: {
       boxShadow: 'none',
     },
-    isActive: {
-      background: '#eee',
-      '&:hover': {
-        background: '#eee',
-      },
-    },
     element: {
+      border: 'none',
+      background: 'transparent',
       userSelect: 'none',
       height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      // flex: 1,
     },
     icon: {
       pointerEvents: 'none',
@@ -262,7 +259,7 @@ export default class Surface implements ViewType<Props> {
     const width = props.width
     const padding = props.padding || props.wrapElement ? 0 : [0, height / 4]
     const fontSize = props.fontSize || height * 0.5
-    const flex = props.flex || false
+    const flex = props.flex === true ? 1 : props.flex || false
 
     // radius
     const baseBorderRadius = props.borderRadius || height / 5
@@ -298,6 +295,7 @@ export default class Surface implements ViewType<Props> {
 
     return {
       element: {
+        ...props.elementStyles,
         fontSize,
         lineHeight: '1px',
         color,

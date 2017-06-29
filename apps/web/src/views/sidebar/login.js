@@ -1,4 +1,3 @@
-// @flow
 import { view, keycode } from '@mcro/black'
 import { User } from '@mcro/models'
 import React from 'react'
@@ -70,7 +69,6 @@ export default class Login {
         <Form flex if={!User.loggedIn} $$undraggable onSubmit={store.onSubmit}>
           <Segment>
             <Input
-              $input
               $error={store.error}
               disabled={store.loggingIn}
               name="email"
@@ -79,7 +77,6 @@ export default class Login {
               placeholder="Email"
             />
             <Input
-              $input
               disabled={store.loggingIn}
               name="password"
               type="password"
@@ -101,7 +98,9 @@ export default class Login {
 
           <end $$row $$centered>
             <text>
-              <username $$ellipse> {User.name}</username>
+              <username $$ellipse>
+                {' '}{User.name}
+              </username>
             </text>
             <Popover
               distance={10}
@@ -177,9 +176,6 @@ export default class Login {
     },
     showingPass: {
       width: '25%',
-    },
-    input: {
-      flex: 1,
     },
     button: {
       padding: [3, 8],

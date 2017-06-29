@@ -27,6 +27,7 @@ const Theme = {
     },
     active: {
       ...DARK,
+      background: color(DARK.background).darken(0.2),
       highlightColor: color(DARK.highlightColor).lighten(0.2),
       color: '#fff',
     },
@@ -49,6 +50,7 @@ const Theme = {
     },
     active: {
       ...LIGHT,
+      background: color(LIGHT.background).darken(1),
       color: '#000',
       borderColor: 'purple',
     },

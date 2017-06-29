@@ -11,6 +11,8 @@ import Theme from '~/theme'
 class DocPageStore {
   doc = this.props.id ? Document.get(this.props.id) : Document.home()
   forceEdit = false
+  showInbox = false
+
   get editing() {
     return this.forceEdit || (User.loggedIn && !User.user.hatesToEdit)
   }
@@ -19,11 +21,11 @@ class DocPageStore {
   }
 }
 
-@view.provide({
+@view({
   docStore: DocPageStore,
 })
 export default class DocumentPage {
-  render({ docStore, insidePlace }) {
+  render({ docStore, insidePlace }: { docStore: DocPageStore }) {
     const { doc } = docStore
     if (doc === undefined) {
       return <null />
@@ -34,20 +36,28 @@ export default class DocumentPage {
 
     const starred = doc.hasStar()
 
-    const btnProps = {
-      size: 1.2,
-      chromeless: true,
-      noGlow: true,
-    }
-
+    console.log(docStore.showInbox)
     return (
       <Page
         actions={
-          <actions $$row>
-            <Segment itemProps={btnProps}>
-              <Button size={1} icon="mail" onClick={_ => _}>
-                Inbox
-              </Button>
+          <actions key={Math.random()} $$row $$centered>
+            <Button
+              active={docStore.showInbox}
+              chromeless
+              margin={[0, 10]}
+              icon="paper"
+              onClick={docStore.ref('showInbox').toggle}
+            >
+              Inbox
+            </Button>
+
+            <Segment
+              itemProps={{
+                size: 1.2,
+                chromeless: true,
+                glow: false,
+              }}
+            >
               <Button className="wop" icon="dot" />
               <Button
                 icon="fav31"

@@ -280,8 +280,12 @@ export default class Surface implements ViewType<Props> {
     )
 
     const iconColor = props.iconColor || color
-    const background = $(
+    const baseBackground =
       props.background || theme.base.background || 'transparent'
+    const background = $(
+      props.active
+        ? props.activeBackground || theme.active.background || baseBackground
+        : baseBackground
     )
     const borderColor = $(props.borderColor || theme.base.borderColor)
 

@@ -15,6 +15,7 @@ const LINE_HEIGHT = 30
 @view.ui
 export default class Surface implements ViewType<Props> {
   props: Props & {
+    flex?: boolean | number,
     borderRadius: number,
     inSegment?: boolean,
     inForm?: boolean,
@@ -104,6 +105,9 @@ export default class Surface implements ViewType<Props> {
     elementStyles,
     getRef,
     noElement,
+    flex,
+    placeholderColor,
+    borderColor,
     ...props
   }: Props) {
     const { theme } = this

@@ -45,12 +45,11 @@ const Theme = {
     hover: {
       ...LIGHT,
       background: color(LIGHT.background).lighten(0.1),
-      color: color(LIGHT.color).lighten(0.1),
+      color: 'red',
     },
     active: {
       ...LIGHT,
       color: '#000',
-      borderColor: 'purple',
     },
     focus: {
       ...LIGHT,

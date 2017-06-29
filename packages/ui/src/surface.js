@@ -303,7 +303,10 @@ export default class Surface implements ViewType<Props> {
       const adjustDirection = isLight ? 'darken' : 'lighten'
       hoverColor = hoverColor[adjustDirection](luminosity / 2)
     }
-    const hoverBorderColor = props.hoverBorderColor || theme.hover.borderColor || borderColor.lighten(1)
+    const hoverBorderColor =
+      props.hoverBorderColor ||
+      theme.hover.borderColor ||
+      borderColor.lighten(1)
 
     // shadow
     const boxShadow = props.shadow === true ? [0, 5, 0, [0, 0, 0, 0.2]] : []
@@ -329,7 +332,7 @@ export default class Surface implements ViewType<Props> {
       overflow: 'hidden',
     }
 
-    return {
+    return log({
       element: {
         ...props.elementStyles,
         fontSize,
@@ -380,6 +383,6 @@ export default class Surface implements ViewType<Props> {
           '&:focus': theme.focus,
         }),
       },
-    }
+    })
   }
 }

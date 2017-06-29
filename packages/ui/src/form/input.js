@@ -1,8 +1,13 @@
 import React from 'react'
 import Surface from '../surface'
 
-export default props =>
-  <Surface
+export default ({ sync, ...props }) => {
+  if (sync) {
+    props.value = sync.get()
+    props.onChange = e => sync.set(e.target.value)
+  }
+
+  return <Surface
     $input
     flex
     borderRadius={0}
@@ -15,3 +20,4 @@ export default props =>
     }}
     {...props}
   />
+}

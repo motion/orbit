@@ -64,7 +64,6 @@ export default class Header {
                       : 'arrow-min-left'
                   }
                   onClick={layoutStore.sidebar.toggle}
-                  $$marginRight={-6}
                   color={[0, 0, 0, 0.3]}
                 />
               </actions>}

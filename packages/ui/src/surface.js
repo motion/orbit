@@ -286,7 +286,11 @@ export default class Surface implements ViewType<Props> {
     const borderColor = $(props.borderColor || theme.base.borderColor)
 
     // hover
-    let hoverColor = $(props.hoverColor || theme.hover.color || props.color)
+    let hoverColor = $(
+      props.highlight
+        ? color.lighten(0.2)
+        : props.hoverColor || theme.hover.color || props.color
+    )
     const iconHoverColor = props.iconHoverColor || hoverColor
     // TODO this could be simpler/better
     if (props.lightenOnHover) {
@@ -313,7 +317,7 @@ export default class Surface implements ViewType<Props> {
 
     if (props.glint) {
       const glintColor =
-        props.glint === true ? background.lighten(3) : props.glint
+        props.glint === true ? background.lighten(1) : props.glint
       boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 

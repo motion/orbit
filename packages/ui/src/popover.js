@@ -700,7 +700,6 @@ export default class Popover {
     }
     return {
       content: {
-        background: 'black',
         boxShadow: getShadow(props.shadow),
         padding: props.padding,
         ...backgroundStyles,

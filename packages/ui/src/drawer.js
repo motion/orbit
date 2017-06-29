@@ -1,6 +1,6 @@
 // @flow
 import { view } from '@mcro/black'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 const idFn = _ => _
 const opposite = direction =>

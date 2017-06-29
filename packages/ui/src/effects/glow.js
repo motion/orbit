@@ -5,7 +5,7 @@ import $ from 'color'
 import offset from '~/helpers/offset'
 import { throttle } from 'lodash'
 import resizer from 'element-resize-detector'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 const Resize = resizer({ strategy: 'scroll' })
 

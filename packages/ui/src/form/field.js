@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import Icon from '../icon'
 import Ellipse from '../ellipse'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 // fields
 import Input from './input'

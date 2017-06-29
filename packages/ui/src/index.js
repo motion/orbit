@@ -1,6 +1,6 @@
 // helpers
 export color from 'color'
-export { Theme, ThemeProvide } from 'gloss'
+export { Theme, ThemeProvide } from '@mcro/gloss'
 export PassProps from './helpers/passProps'
 export offset from './helpers/offset'
 export * as SlotFill from './helpers/slot'

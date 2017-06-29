@@ -2,6 +2,7 @@
 import React from 'react'
 import { color, inject, view } from '@mcro/black'
 import Surface from '../surface'
+import type { Color } from '@mcro/gloss'
 
 @view
 export default class Input {

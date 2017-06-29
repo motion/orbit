@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 import Icon from './icon'
 
 type Props = {

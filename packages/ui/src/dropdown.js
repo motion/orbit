@@ -5,7 +5,7 @@ import List from './list'
 import Button from './button'
 import Popover from './popover'
 import Arrow from './arrow'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 export type Props = {
   children: React$Element<any> | string,

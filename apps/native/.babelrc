@@ -7,7 +7,7 @@
       "plugins": [
         "transform-react-jsx-source",
         [
-          "gloss/transform",
+          "@mcro/gloss/transform",
           {
             "decoratorName": "view"
           }

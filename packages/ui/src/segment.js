@@ -3,7 +3,7 @@ import React from 'react'
 import { view, inject } from '@mcro/black'
 import Button from './button'
 import { Provider } from 'react-tunnel'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 export type Props = {
   active?: number,

@@ -6,7 +6,7 @@ import $ from 'color'
 import Icon from './icon'
 import Glow from './effects/glow'
 import Popover from './popover'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 const LINE_HEIGHT = 30
 

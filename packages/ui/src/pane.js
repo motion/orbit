@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import Title from './title'
-import type { Color } from 'gloss'
+import type { Color } from '@mcro/gloss'
 
 export type Props = {
   title?: string,

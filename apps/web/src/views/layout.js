@@ -12,6 +12,7 @@ import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
 import * as Commander from '~/views/commander'
 import LayoutStore from '~/stores/layoutStore'
+import SoundStore from '~/stores/soundStore'
 import CommanderStore from '~/stores/commanderStore'
 import Draft from '~/views/draft'
 import Onboard from './onboard'
@@ -20,11 +21,13 @@ import LayoutWrap from '~/views/layout/wrap'
 type Props = {
   layoutStore: LayoutStore,
   commanderStore: CommanderStore,
+  soundStore: SoundStore,
 }
 
 // @view.attach('layoutStore') in any sub-view
 @view.provide({
   layoutStore: LayoutStore,
+  soundStore: SoundStore,
   commanderStore: CommanderStore,
 })
 export default class Root {

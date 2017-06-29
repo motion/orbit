@@ -92,12 +92,10 @@ export default class Badge {
     },
   }
 
-  static theme = {
-    size: ({ size }) => ({
-      badge: {
-        width: size,
-        height: size,
-      },
-    }),
-  }
+  static theme = ({ size }) => ({
+    badge: {
+      width: size,
+      height: size,
+    },
+  })
 }

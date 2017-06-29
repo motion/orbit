@@ -150,7 +150,6 @@ export default class Drawer {
       transition: 'all ease-in-out 250ms',
       zIndex: -1,
       pointerEvents: 'none',
-      display: 'none',
     },
     overlayOpen: {
       opacity: 1,
@@ -161,6 +160,9 @@ export default class Drawer {
   static theme = {
     theme: (props, theme) => {
       return {
+        overlay: {
+          display: props.overlay ? 'block' : 'none',
+        },
         drawer: {
           zIndex: props.zIndex,
         },
@@ -175,11 +177,6 @@ export default class Drawer {
             props.shadowed && (theme.base.shadow || '0 0 6px rgba(0,0,0,0.3)'),
         },
       }
-    },
-    overlay: {
-      overlay: {
-        display: 'block',
-      },
     },
   }
 }

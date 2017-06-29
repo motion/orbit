@@ -126,48 +126,32 @@ export default class Title {
     },
   }
 
-  static theme = {
-    theme: (
-      { transparent, borderColor, color, background, hoverable, sub },
-      theme
-    ) => {
-      const transparentColor = transparent ? 'transparent' : false
-      return {
-        ptitle: {
-          background: transparentColor || background || theme.base.background,
-          borderBottom: !sub && [
-            1,
-            transparentColor || borderColor || color || theme.base.borderColor,
-          ],
-          color: color || theme.base.color,
+  static theme = (props, theme) => {
+    const transparentColor = props.transparent ? 'transparent' : false
+    const reduce = 1 / +props.tag.slice(1)
+    const fontSize = +props.size || 20 + reduce * 20
 
-          '&:hover': {
-            background: hoverable
-              ? color(background).lighten(0.025)
-              : background,
-          },
-        },
-      }
-    },
-    tag: ({ tag, size }) => {
-      const reduce = 1 / +tag.slice(1)
-      const fontSize = +size || 20 + reduce * 20
-      return {
-        title: {
-          fontSize,
-          lineHeight: `${1 + fontSize * 0.06}rem`,
-
-          '&:hover': {
-            color: tag === 'a' ? 'red' : 'auto',
-          },
-        },
-      }
-    },
-    sub: {
+    return {
       ptitle: {
-        fontWeight: 300,
-        opacity: 0.8,
+        fontSize,
+        lineHeight: `${1 + fontSize * 0.06}rem`,
+        background:
+          transparentColor || props.background || theme.base.background,
+        borderBottom: !props.sub && [
+          1,
+          transparentColor ||
+            props.borderColor ||
+            color ||
+            theme.base.borderColor,
+        ],
+        color: color || theme.base.color,
+        '&:hover': {
+          color: props.tag === 'a' ? 'red' : 'auto',
+          background: props.hoverable
+            ? color(props.background).lighten(0.025)
+            : props.background,
+        },
       },
-    },
+    }
   }
 }

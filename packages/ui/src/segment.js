@@ -137,21 +137,17 @@ export default class Segment {
     },
   }
 
-  static theme = {
-    reverse: {
-      segment: {
+  static theme = props => ({
+    segment: {
+      ...(props.reverse && {
         flexFlow: 'row-reverse',
-      },
-    },
-    padded: {
-      segment: {
+      }),
+      ...(props.padded && {
         margin: ['auto', 5],
-      },
-    },
-    vertical: {
-      segment: {
+      }),
+      ...(props.column && {
         flexFlow: 'column',
-      },
+      }),
     },
-  }
+  })
 }

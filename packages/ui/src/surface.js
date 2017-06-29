@@ -2,6 +2,7 @@
 import React from 'react'
 import * as PropTypes from 'prop-types'
 import { view, inject } from '@mcro/black'
+import type { ViewType } from '@mcro/black'
 import $ from 'color'
 import Icon from './icon'
 import Glow from './effects/glow'
@@ -10,48 +11,46 @@ import type { Color } from '@mcro/gloss'
 
 const LINE_HEIGHT = 30
 
-export type Props = {
-  borderRadius: number,
-  inSegment?: boolean,
-  inForm?: boolean,
-  clickable?: boolean,
-  active?: boolean,
-  chromeless?: boolean,
-  inline?: boolean,
-  dim?: boolean,
-  stretch?: boolean,
-  spaced?: boolean,
-  highlight?: boolean,
-  circular?: boolean,
-  iconAfter?: boolean,
-  iconColor?: Color,
-  onClick?: Function,
-  tooltip?: string,
-  icon?: React$Element<any> | string,
-  background?: Color,
-  color?: Color,
-  hoverColor?: Color,
-  className?: string,
-  theme?: string,
-  after?: Element | string,
-  children?: Element | string,
-  iconProps?: Object,
-  tooltipProps?: Object,
-  tagName: string,
-  size?: number,
-  iconSize?: number,
-  padding?: number | Array<number>,
-  margin?: number | Array<number>,
-  height?: number,
-  glow?: boolean,
-  noElement?: boolean,
-  getRef?: Function,
-}
-
-@inject(context => context.ui)
+@inject(context => context.segmentContext)
 @view.ui
-export default class Surface {
-  props: Props
+export default class Surface implements ViewType<Props> {
+  props: Props & {
+    borderRadius: number,
+    inSegment?: boolean,
+    inForm?: boolean,
+    clickable?: boolean,
+    active?: boolean,
+    chromeless?: boolean,
+    inline?: boolean,
+    dim?: boolean,
+    stretch?: boolean,
+    spaced?: boolean,
+    highlight?: boolean,
+    circular?: boolean,
+    iconAfter?: boolean,
+    iconColor?: Color,
+    onClick?: Function,
+    tooltip?: string,
+    icon?: React$Element<any> | string,
+    background?: Color,
+    color?: Color,
+    hoverColor?: Color,
+    className?: string,
+    theme?: string,
+    after?: Element | string,
+    children?: Element | string,
+    iconProps?: Object,
+    tooltipProps?: Object,
+    tagName: string,
+    size?: number,
+    iconSize?: number,
+    padding?: number | Array<number>,
+    margin?: number | Array<number>,
+    height?: number,
+    glow?: boolean,
+    noElement?: boolean,
+    getRef?: Function,
+  }
 
   static contextTypes = {
     uiTheme: PropTypes.object,

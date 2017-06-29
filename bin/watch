@@ -3,6 +3,6 @@
 . $(dirname $0)/__/common
 cd $ROOT
 
-build --watch ${@:1}
-sleep 20
 link-flow &
+build --watch ${@:1}
+fg

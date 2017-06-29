@@ -332,7 +332,7 @@ export default class Surface implements ViewType<Props> {
       overflow: 'hidden',
     }
 
-    return log({
+    return {
       element: {
         ...props.elementStyles,
         fontSize,
@@ -383,6 +383,6 @@ export default class Surface implements ViewType<Props> {
           '&:focus': theme.focus,
         }),
       },
-    })
+    }
   }
 }

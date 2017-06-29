@@ -106,7 +106,6 @@ export default class Login {
               shadow
               openOnHover
               closeOnClick
-              open
             >
               <UI.List
                 width={150}

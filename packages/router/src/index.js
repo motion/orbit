@@ -1,5 +1,4 @@
 import { observable, computed, action, autorun } from 'mobx'
-import Router from './router'
 import browserHistory from 'history/createBrowserHistory'
 
 export Router from './router'
@@ -42,43 +41,52 @@ export class ObservableRouter {
     })
   }
 
-  @action setRoute = (path, params) => {
+  @action
+  setRoute = (path, params) => {
     this.path = window.location.pathname
     this.route = path
     this.params = params || {}
   }
 
-  @computed get key() {
+  @computed
+  get key() {
     return `${this.version}${this.forceUpdate}${JSON.stringify(this.path)}`
   }
 
-  @computed get activeView() {
+  @computed
+  get activeView() {
     return this.routes[this.route]
   }
 
-  @computed get routeName() {
+  @computed
+  get routeName() {
     return this.path.split('/')[0]
   }
 
-  @computed get atFront() {
+  @computed
+  get atFront() {
     return this.position === this.max
   }
 
-  @computed get atBack() {
+  @computed
+  get atBack() {
     return this.position === 0
   }
 
-  @action back = () => {
+  @action
+  back = () => {
     this.position -= 1
     this.history.goBack()
   }
 
-  @action forward = () => {
+  @action
+  forward = () => {
     this.position += 1
     this.history.goForward()
   }
 
-  @action go = (...segments) => {
+  @action
+  go = (...segments) => {
     const path = segments.join('/')
     this.position += 1
     this.max = this.position
@@ -86,12 +94,12 @@ export class ObservableRouter {
   }
 
   // sets a part of the url
-  @action set = (key, val) => {
+  @action
+  set = (key, val) => {
     const Route = this.router.routeTable[`/${this.route}`]
 
-    const params = typeof key === 'object'
-      ? this.setObject(key)
-      : this.setParam(key, val)
+    const params =
+      typeof key === 'object' ? this.setObject(key) : this.setParam(key, val)
 
     const newPath = Route.stringify(params)
 
@@ -115,11 +123,13 @@ export class ObservableRouter {
 
   setParam = (key, val) => this.normalizeParams({ ...this.params, [key]: val })
 
-  @action unset = key => {
+  @action
+  unset = key => {
     this.set(key, false)
   }
 
-  @action redirect = path => {
+  @action
+  redirect = path => {
     window.location.href = path
   }
 

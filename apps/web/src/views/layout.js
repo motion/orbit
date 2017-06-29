@@ -6,13 +6,13 @@ import { Glint, Theme, SlotFill } from '@mcro/ui'
 import { IN_TRAY } from '~/constants'
 import { User } from '@mcro/models'
 import NotFound from '~/pages/404Page'
-import Router from '~/router'
 import Sidebar from '~/views/sidebar'
 import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
 import * as Commander from '~/views/commander'
 import LayoutStore from '~/stores/layoutStore'
 import CommanderStore from '~/stores/commanderStore'
+import SoundStore from '~/stores/soundStore'
 import Draft from '~/views/draft'
 import Onboard from './onboard'
 import LayoutWrap from '~/views/layout/wrap'
@@ -26,6 +26,7 @@ type Props = {
 @view.provide({
   layoutStore: LayoutStore,
   commanderStore: CommanderStore,
+  SoundStore: SoundStore,
 })
 export default class Root {
   props: Props

@@ -1,5 +1,5 @@
 import { random, flatten } from 'lodash'
-// import merge from 'deepmerge'
+import merge from 'deep-extend'
 
 const liToText = ({ nodes }) =>
   nodes
@@ -25,7 +25,7 @@ export const toggleTask = (content, name) => {
     return node
   })
   // doc.content = Object.assign({}, doc.content)
-  return merge(content, { document: { nodes: newNodes } })
+  return merge({}, content, { document: { nodes: newNodes } })
 }
 
 export const docToTasks = doc => {

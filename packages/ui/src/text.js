@@ -137,9 +137,11 @@ export default class Text implements ViewType {
   static style = {
     text: {
       userSelect: 'none',
+      cursor: 'default',
     },
     selectable: {
       userSelect: 'auto',
+      cursor: 'text',
     },
     ellipse: {
       height: '100%',

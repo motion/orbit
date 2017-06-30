@@ -5,6 +5,7 @@ import { view, getTarget } from '@mcro/black'
 import Portal from 'react-portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'
+import { Theme } from '@mcro/gloss'
 
 export type Props = {
   // can pass function to get isOpen passed in
@@ -78,11 +79,6 @@ export default class Popover {
     animation: 'slide 200ms',
     adjust: [0, 0],
     delay: 16,
-  }
-
-  static contextTypes = {
-    uiTheme: object,
-    uiActiveTheme: string,
   }
 
   curProps = {}
@@ -577,53 +573,56 @@ export default class Popover {
     }
 
     return (
-      <root {...props}>
-        {React.isValidElement(target) && React.cloneElement(target, childProps)}
-        <Portal isOpened>
-          <container
-            data-towards={direction}
-            $open={showPopover}
-            $closing={closing}
-          >
-            <background
-              if={overlay}
-              ref={this.overlayRef}
-              $overlay={overlay}
-              $overlayShown={showPopover}
-              onClick={this.handleOverlayClick}
-            />
-            <popover
-              {...popoverProps}
-              $popoverOpen={!closing && showPopover}
-              ref={this.ref('popoverRef').set}
-              style={{
-                ...style,
-                top: top || 'auto',
-                bottom: bottom || 'auto',
-                left,
-                width,
-                height,
-                maxHeight,
-              }}
+      <Theme name={theme}>
+        <root {...props}>
+          {React.isValidElement(target) &&
+            React.cloneElement(target, childProps)}
+          <Portal isOpened>
+            <container
+              data-towards={direction}
+              $open={showPopover}
+              $closing={closing}
             >
-              <arrowContain
-                if={!noArrow}
-                css={{ top: arrowTop, marginLeft: arrowLeft }}
+              <background
+                if={overlay}
+                ref={this.overlayRef}
+                $overlay={overlay}
+                $overlayShown={showPopover}
+                onClick={this.handleOverlayClick}
+              />
+              <popover
+                {...popoverProps}
+                $popoverOpen={!closing && showPopover}
+                ref={this.ref('popoverRef').set}
+                style={{
+                  ...style,
+                  top: top || 'auto',
+                  bottom: bottom || 'auto',
+                  left,
+                  width,
+                  height,
+                  maxHeight,
+                }}
               >
-                <Arrow
-                  theme={theme}
-                  size={arrowSize}
-                  towards={INVERSE[direction]}
-                  shadow={getShadow(shadow)}
-                />
-              </arrowContain>
-              <content>
-                {typeof children === 'function' ? children(isOpen) : children}
-              </content>
-            </popover>
-          </container>
-        </Portal>
-      </root>
+                <arrowContain
+                  if={!noArrow}
+                  css={{ top: arrowTop, marginLeft: arrowLeft }}
+                >
+                  <Arrow
+                    theme={theme}
+                    size={arrowSize}
+                    towards={INVERSE[direction]}
+                    shadow={getShadow(shadow)}
+                  />
+                </arrowContain>
+                <content>
+                  {typeof children === 'function' ? children(isOpen) : children}
+                </content>
+              </popover>
+            </container>
+          </Portal>
+        </root>
+      </Theme>
     )
   }
 
@@ -698,6 +697,7 @@ export default class Popover {
     const backgroundStyles = props.background === true && {
       background: theme.base.background,
       borderRadius: 6,
+      overflow: 'hidden',
     }
     return {
       content: {

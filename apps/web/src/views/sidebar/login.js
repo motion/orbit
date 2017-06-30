@@ -98,10 +98,12 @@ export default class Login {
               </UI.Text>
             </text>
             <UI.Popover
+              open
+              theme="light"
               distance={10}
               forgiveness={20}
               delay={150}
-              target={<UI.Button circular icon="user" />}
+              target={<UI.Button theme="dark" circular icon="body" />}
               background
               shadow
               openOnHover

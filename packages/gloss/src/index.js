@@ -55,7 +55,7 @@ export class Gloss {
         Child.prototype.render = function(...args) {
           const activeTheme =
             this.context.uiTheme &&
-            this.context.uiTheme[this.context.uiActiveTheme || this.props.theme]
+            this.context.uiTheme[this.props.theme || this.context.uiActiveTheme]
           if (activeTheme) {
             this.theme = getStyles(Child.theme(this.props, activeTheme, this))
           }

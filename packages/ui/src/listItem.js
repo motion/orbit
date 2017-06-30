@@ -59,14 +59,22 @@ export default class ListItem {
     row,
     onToggle,
     onItemMount,
+    size,
     ...props
   }: ItemProps) {
     const theme = this.context.uiTheme[this.context.uiActiveTheme]
+
     return (
       <Surface
+        $item
         border={false}
         borderBottom={[1, theme ? theme.base.borderColor : 'transparent']}
-        padding={[12, 12]}
+        borderRadius={8}
+        borderBottomRadius={!!isLastElement}
+        borderTopRadius={!!isFirstElement}
+        overflow="hidden"
+        padding={[12, 6]}
+        glow
         {...props}
       >
         <image if={avatar || fakeAvatar}>
@@ -79,24 +87,21 @@ export default class ListItem {
               {before}
             </before>
             <prop if={primary || secondary} $col $hasAvatar={!!avatar}>
-              <Text $primary size={1.2} ellipse>
+              <Text $primary size={size} ellipse>
                 {primary}
               </Text>
-              <Text if={secondary} size={1} $secondary ellipse>
+              <Text if={secondary} size={size * 0.8} $secondary ellipse>
                 {secondary}
               </Text>
             </prop>
-            <Text if={date} $date $meta cutoff>
+            <Text if={date} size={size * 0.6} $date $meta ellipse>
               {date}
             </Text>
-            <div if={meta} $meta>
-              {meta}
-            </div>
             <after if={after}>
               {after}
             </after>
           </above>
-          <children if={children} $row={row}>
+          <children if={children} $$row={row}>
             {children}
           </children>
         </content>
@@ -106,36 +111,28 @@ export default class ListItem {
 
   static style = {
     item: {
-      padding: [4, 6],
       cursor: 'pointer',
       maxWidth: '100%',
       flexFlow: 'row',
       position: 'relative',
       overflow: 'hidden',
       zIndex: 0,
-      fontWeight: 500,
-      '&:active': {
-        background: [0, 0, 0, 0.05],
-      },
     },
     content: {
       flex: 1,
       maxWidth: '100%',
       justifyContent: 'center',
     },
-    row: {
-      flexFlow: 'row',
-    },
     above: {
       maxWidth: '100%',
       flexFlow: 'row',
       flex: 'none',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
     section: {
       width: '100%',
       maxWidth: '100%',
-      userSelect: 'none',
     },
     prop: {
       flex: 1,
@@ -157,16 +154,6 @@ export default class ListItem {
       width: 40,
       height: 40,
       margin: [0, 10, 0, 0],
-    },
-    cutoff: {
-      display: 'block',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      maxWidth: '100%',
-    },
-    meta: {
-      margin: ['auto', 0],
-      opacity: 0.4,
     },
     after: {
       margin: ['auto', 0, 'auto', 5],

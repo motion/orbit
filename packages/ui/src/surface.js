@@ -9,16 +9,24 @@ import Popover from './popover'
 import type { Color } from '@mcro/gloss'
 
 const LINE_HEIGHT = 30
+const BORDER_RADIUS_SIDES = [
+  'borderBottomRadius',
+  'borderTopRadius',
+  'borderLeftRadius',
+  'borderRightRadius',
+]
 
 @inject(context => context.uiContext)
 @view.ui
 export default class Surface implements ViewType {
   props: {
+    overflow?: 'hidden' | 'visible' | 'scroll' | 'default',
     elementProps?: boolean,
     flex?: boolean | number,
     width?: number,
     height?: number,
     borderRadius: number,
+    elevation?: number,
     inSegment?: boolean,
     inForm?: boolean,
     clickable?: boolean,
@@ -63,6 +71,10 @@ export default class Surface implements ViewType {
     borderTop?: Array | Object,
     borderLeft?: Array | Object,
     borderRight?: Array | Object,
+    borderBottomRadius?: number,
+    borderTopRadius?: number,
+    borderLeftRadius?: number,
+    borderRightRadius?: number,
     marginBottom?: number,
     marginTop?: number,
     marginLeft?: number,
@@ -144,6 +156,10 @@ export default class Surface implements ViewType {
     wrapElement,
     borderStyle,
     elementProps,
+    borderBottomRadius,
+    borderTopRadius,
+    borderLeftRadius,
+    borderRightRadius,
     ...props
   }) {
     const { theme } = this
@@ -281,7 +297,6 @@ export default class Surface implements ViewType {
     const width = props.width
     const padding = props.padding
     const flex = props.flex === true ? 1 : props.flex
-    const borderRadius = props.circular ? height : props.borderRadius
 
     // colors
     const color = $(
@@ -324,20 +339,39 @@ export default class Surface implements ViewType {
       borderColor.lighten(1)
 
     // shadow
-    const boxShadow = props.shadow === true ? [0, 5, 0, [0, 0, 0, 0.2]] : []
+    const boxShadow =
+      props.boxShadow || props.elevation === true
+        ? [0, props.elevation * 2, props.elevation * 10, [0, 0, 0, 0.2]]
+        : []
 
     if (props.glint) {
       const glintColor =
-        props.glint === true
-          ? background.alpha(1).lighten(100).toString()
-          : props.glint
+        props.glint === true ? background.lighten(0.4).toString() : props.glint
       boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 
-    const segmentedBorderRadius = props.inSegment && {
-      borderLeftRadius: props.inSegment.first ? borderRadius : 0,
-      borderRightRadius: props.inSegment.last ? borderRadius : 0,
+    // borderRadius
+    const borderRadiusSize = props.circular ? height : props.borderRadius
+    const borderRadius = {}
+    if (props.inSegment) {
+      borderRadius.borderLeftRadius = props.inSegment.first
+        ? borderRadiusSize
+        : 0
+      borderRadius.borderRightRadius = props.inSegment.last
+        ? borderRadiusSize
+        : 0
     }
+    for (const side of BORDER_RADIUS_SIDES) {
+      if (props[side]) {
+        if (props[side] === true) {
+          borderRadius[side] = borderRadiusSize
+        } else {
+          borderRadius[side] = props[side]
+        }
+      }
+    }
+
+    // circular
     const circularStyles = props.circular && {
       padding: 0,
       width: height,
@@ -348,22 +382,21 @@ export default class Surface implements ViewType {
     return {
       element: {
         ...props.elementStyles,
-        borderRadius,
-        ...segmentedBorderRadius,
+        ...borderRadius,
         fontSize: props.fontSize,
         lineHeight: '0px',
       },
       surface: {
         color,
-        overflow: props.glow ? 'hidden' : props.overflow,
+        overflow: props.overflow || props.glow ? 'hidden' : props.overflow,
         height,
         width,
         flex,
         padding,
-        borderRadius,
         borderColor,
         background,
         boxShadow,
+        ...borderRadius,
         margin: props.margin,
         borderWidth: props.borderWidth,
         borderStyle: props.borderStyle,
@@ -380,6 +413,7 @@ export default class Surface implements ViewType {
         paddingTop: props.paddingTop,
         paddingLeft: props.paddingLeft,
         paddingRight: props.paddingRight,
+        ...circularStyles,
         ...(props.wrapElement &&
         props.inForm && {
           '& > :active': theme.active,
@@ -390,8 +424,6 @@ export default class Surface implements ViewType {
           '&:active': theme.active,
           '&:focus': theme.focus,
         }),
-        ...circularStyles,
-        ...segmentedBorderRadius,
         ...(props.inline && self.surfaceStyle),
         ...(props.disabled && self.disabledStyle),
         ...(props.dim && self.dimStyle),

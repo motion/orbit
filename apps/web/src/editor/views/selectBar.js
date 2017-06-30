@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-import { Theme, PassProps, Popover, Segment, Button } from '@mcro/ui'
+import { Theme, PassProps, Popover, Segment } from '@mcro/ui'
 import { BLOCKS, MARKS } from '../constants'
 
 @view

@@ -71,7 +71,7 @@ export default class TextPlugin {
     () =>
       <Popover target={<Button icon="textbackground" />} openOnHover background>
         <row style={{ flexFlow: 'row' }}>
-          <Button icon="textcolor" />
+          <Button theme="dark" icon="textcolor" />
           <Button icon="textbackground" />
         </row>
       </Popover>,

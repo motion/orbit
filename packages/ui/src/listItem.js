@@ -37,6 +37,10 @@ export default class ListItem {
     uiActiveTheme: string,
   }
 
+  static defaultProps = {
+    size: 1,
+  }
+
   componentDidMount() {
     if (this.props.onItemMount) {
       this.props.onItemMount(this)
@@ -90,7 +94,7 @@ export default class ListItem {
               <Text $primary size={size} ellipse>
                 {primary}
               </Text>
-              <Text if={secondary} size={size * 0.8} $secondary ellipse>
+              <Text if={secondary} size={size * 0.8} ellipse>
                 {secondary}
               </Text>
             </prop>

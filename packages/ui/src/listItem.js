@@ -73,13 +73,12 @@ export default class ListItem {
         $item
         border={false}
         borderBottom={[1, theme ? theme.base.borderColor : 'transparent']}
-        borderRadius={8}
-        borderBottomRadius={!!isLastElement}
-        borderTopRadius={!!isFirstElement}
+        borderRadius={isLastElement || isFirstElement ? 8 : 0}
+        borderBottomRadius={isLastElement}
+        borderTopRadius={isFirstElement}
         overflow="hidden"
         padding={[12, 6]}
         hoverable
-        glow={!secondary && !children}
         {...props}
       >
         <image if={avatar || fakeAvatar}>

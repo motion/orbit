@@ -294,12 +294,6 @@ export default class Surface implements ViewType {
     const padding = props.padding
     const flex = props.flex === true ? 1 : props.flex
 
-    // color helpers
-    const luminosity = background.luminosity()
-    const isDark = luminosity < 0.4
-    const addContrast = (color, amt) =>
-      color[isDark ? 'lighten' : 'darken'](amt)
-
     // colors
     const color = $(
       props.highlight
@@ -317,6 +311,12 @@ export default class Surface implements ViewType {
     const borderColor = $(
       props.borderColor || theme.base.borderColor || 'transparent'
     )
+
+    // color helpers
+    const luminosity = background.luminosity()
+    const isDark = luminosity < 0.4
+    const addContrast = (color, amt) =>
+      color[isDark ? 'lighten' : 'darken'](amt)
 
     // hover
     const hoverBackgroundColor =

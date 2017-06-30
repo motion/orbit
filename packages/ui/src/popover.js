@@ -72,7 +72,7 @@ export default class Popover {
   static defaultProps = {
     edgePadding: 5,
     distance: 10,
-    arrowSize: 16,
+    arrowSize: 20,
     forgiveness: 15,
     towards: 'auto',
     animation: 'slide 200ms',
@@ -467,6 +467,7 @@ export default class Popover {
     }
 
     this.on(node, 'mouseenter', () => {
+      log('enter')
       onEnter()
       // insanity, but mouseleave is horrible
       if (this.curProps.target) {
@@ -482,7 +483,10 @@ export default class Popover {
   // hover helpers
   hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
-    const setter = () => this.setState({ [`${name}Hovered`]: val })
+    const setter = () => {
+      this.setState({ [`${name}Hovered`]: val })
+    }
+
     if (val) {
       if (openOnHover) {
         this.setPosition(setter)
@@ -502,10 +506,7 @@ export default class Popover {
     node: HTMLElement,
     checkParent: boolean = false
   ): boolean => {
-    return !!(
-      node.querySelector(':hover') ||
-      (checkParent && node.parentNode.querySelector(':hover'))
-    )
+    return !!node.parentNode.querySelector(`${node.tagName}:hover`)
   }
 
   overlayRef = ref => {
@@ -607,7 +608,7 @@ export default class Popover {
             >
               <arrowContain
                 if={!noArrow}
-                style={{ top: arrowTop, marginLeft: arrowLeft }}
+                css={{ top: arrowTop, marginLeft: arrowLeft }}
               >
                 <Arrow
                   theme={theme}

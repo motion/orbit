@@ -55,7 +55,7 @@ const Theme = {
     highlightColor,
     background: [0, 0, 0, 0.4],
     color: '#f2f2f2',
-    borderColor: [0, 0, 0, 0.6],
+    borderColor: [0, 0, 0, 0.3],
   }),
   light: {
     base: LIGHT,

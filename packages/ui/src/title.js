@@ -63,7 +63,7 @@ export default class Title extends React.Component {
     const tagName = _tagName || `h${tagSize}`
 
     return (
-      <titleroot {...rootProps || {}} onDoubleClick={this.onDoubleClick}>
+      <titleroot {...rootProps} onDoubleClick={this.onDoubleClick}>
         {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
         <collapse
           if={collapsable}

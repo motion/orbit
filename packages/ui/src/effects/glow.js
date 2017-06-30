@@ -67,7 +67,7 @@ export default class HoverGlow {
       this.on(node, 'mouseenter', this.trackMouse(true))
       this.on(node, 'mousemove', this.move)
       this.on(node, 'mouseleave', this.trackMouse(false))
-      Resize.listenTo(node, this.setBounds)
+      // Resize.listenTo(node, this.setBounds)
 
       if (this.props.clickable) {
         this.on(node, 'click', this.click)
@@ -78,7 +78,7 @@ export default class HoverGlow {
   componentWillUnmount() {
     this.unmounted = true
     if (this.node) {
-      Resize.removeAllListeners(this.node)
+      // Resize.removeAllListeners(this.node)
     }
   }
 
@@ -214,9 +214,10 @@ export default class HoverGlow {
               marginTop: -height / 2,
               zIndex,
               WebkitFilter: blur ? `blur(${blur}px)` : '',
-              background: background || gradient
-                ? `radial-gradient(${$(color).toString()}, transparent 70%)`
-                : colorRGB,
+              background:
+                background || gradient
+                  ? `radial-gradient(${$(color).toString()}, transparent 70%)`
+                  : colorRGB,
               borderRadius,
               transition: `
                   transform linear ${clickDuration / 2}ms,

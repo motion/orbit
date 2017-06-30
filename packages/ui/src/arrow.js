@@ -33,7 +33,7 @@ export default class Arrow {
     const innerTop = size * (onBottom ? -1 : 1)
 
     return (
-      <arrowOuter>
+      <arrowOuter style={{ width: size, height: size }}>
         <arrow $rotate={this.getRotation(towards)} {...props}>
           <arrowInner
             style={{

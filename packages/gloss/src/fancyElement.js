@@ -74,7 +74,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           continue
         }
         if (NAME[0] !== $) {
-          // pass props down if not style prop
+          // pass props down if not glossProp style prop
           finalProps[NAME] = val
           continue
         }

@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
+import { object, string } from 'prop-types'
 import FakeAvatar from './fake/fakeAvatar'
 import Glow from './effects/glow'
 import Text from './text'
@@ -31,6 +32,11 @@ export default class ListItem {
 
   static isListItem = true
 
+  static contextTypes = {
+    uiTheme: object,
+    uiActiveTheme: string,
+  }
+
   componentDidMount() {
     if (this.props.onItemMount) {
       this.props.onItemMount(this)
@@ -55,10 +61,11 @@ export default class ListItem {
     onItemMount,
     ...props
   }: ItemProps) {
+    const theme = this.context.uiTheme[this.context.uiActiveTheme]
     return (
       <Surface
         border={false}
-        borderBottom={[1, '#eee']}
+        borderBottom={[1, theme ? theme.base.borderColor : 'transparent']}
         padding={[12, 12]}
         {...props}
       >

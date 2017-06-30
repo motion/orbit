@@ -327,7 +327,6 @@ export default class Surface implements ViewType {
     const boxShadow = props.shadow === true ? [0, 5, 0, [0, 0, 0, 0.2]] : []
 
     if (props.glint) {
-      log(background.alpha(1).lighten(1).toString(), background.toString())
       const glintColor =
         props.glint === true
           ? background.alpha(1).lighten(100).toString()
@@ -335,8 +334,7 @@ export default class Surface implements ViewType {
       boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 
-    const segmentStyles = props.inSegment && {
-      marginLeft: -1,
+    const segmentedBorderRadius = props.inSegment && {
       borderLeftRadius: props.inSegment.first ? borderRadius : 0,
       borderRightRadius: props.inSegment.last ? borderRadius : 0,
     }
@@ -347,18 +345,11 @@ export default class Surface implements ViewType {
       overflow: 'hidden',
     }
 
-    if (props.tagName === 'input' && props.inForm) {
-      log('good')
-    }
-
     return {
       element: {
         ...props.elementStyles,
-        // inForm
-        ...(props.inForm && {
-          '&:active': theme.active,
-          '&:focus': theme.focus,
-        }),
+        borderRadius,
+        ...segmentedBorderRadius,
         fontSize: props.fontSize,
         lineHeight: '0px',
       },
@@ -383,14 +374,24 @@ export default class Surface implements ViewType {
         borderRight: props.borderRight,
         marginBottom: props.marginBottom,
         marginTop: props.marginTop,
-        marginLeft: props.marginLeft,
+        marginLeft: props.inSegment ? -1 : props.marginLeft,
         marginRight: props.marginRight,
         paddingBottom: props.paddingBottom,
         paddingTop: props.paddingTop,
         paddingLeft: props.paddingLeft,
         paddingRight: props.paddingRight,
+        ...(props.wrapElement &&
+        props.inForm && {
+          '& > :active': theme.active,
+          '& > :focus': theme.focus,
+        }),
+        ...(!props.wrapElement &&
+        props.inForm && {
+          '&:active': theme.active,
+          '&:focus': theme.focus,
+        }),
         ...circularStyles,
-        ...segmentStyles,
+        ...segmentedBorderRadius,
         ...(props.inline && self.surfaceStyle),
         ...(props.disabled && self.disabledStyle),
         ...(props.dim && self.dimStyle),

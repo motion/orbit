@@ -142,9 +142,9 @@ class Projects {
           <UI.Button>Recent</UI.Button>
         </UI.Segment>
 
-        <noStars $$flex if={!hasDocs}>
+        <UI.Placeholder size={2} $$flex if={!hasDocs}>
           No Stars
-        </noStars>
+        </UI.Placeholder>
 
         <tasks if={hasDocs}>
           {docs.map((doc, index) => {

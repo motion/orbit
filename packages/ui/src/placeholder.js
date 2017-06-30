@@ -9,51 +9,29 @@ export type TitleProps = {
   size: number,
   tagName?: string,
   children: React$Children,
-  collapsable?: boolean,
-  collapsed?: boolean,
   before?: React$Children,
   after?: React$Children,
   sub?: boolean,
-  stat?: React$Children,
   color?: Color,
-  onDoubleClick?: Function,
-  onCollapse?: Function,
 }
 
 const MAX_SIZES = 4
 
 @view.ui
-export default class Title extends React.Component {
+export default class Placeholder extends React.Component {
   props: TitleProps
 
   static defaultProps = {
     size: MAX_SIZES,
   }
 
-  onDoubleClick = (event: MouseEvent) => {
-    if (this.props.onDoubleClick) {
-      this.props.onDoubleClick(event)
-    }
-    this.onCollapse(event)
-  }
-
-  onCollapse = (event: MouseEvent) => {
-    if (this.props.collapsable && this.props.onCollapse) {
-      this.props.onCollapse(event)
-    }
-  }
-
   render({
-    collapsable,
-    collapsed,
     before,
     after,
     sub,
-    stat,
     color,
     size,
     onCollapse,
-    rootProps,
     tagName: _tagName,
     ...props
   }: TitleProps) {
@@ -63,27 +41,7 @@ export default class Title extends React.Component {
     const tagName = _tagName || `h${tagSize}`
 
     return (
-      <titleroot {...rootProps || {}} onDoubleClick={this.onDoubleClick}>
-        {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
-        <collapse
-          if={collapsable}
-          onClick={this.onCollapse}
-          onDoubleClick={this.onCollapse}
-        >
-          <Button
-            icon={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
-            iconProps={{
-              size: 8,
-              color: color(color).alpha(0.5).toString() || [255, 255, 255, 0.3],
-            }}
-            circular
-            chromeless
-            padding={8}
-            size={1}
-            margin={[-2, -2, -2, -7]}
-            height="auto"
-          />
-        </collapse>
+      <titleroot onDoubleClick={this.onDoubleClick}>
         <before if={before}>
           {before}
         </before>
@@ -93,9 +51,6 @@ export default class Title extends React.Component {
           size={textSize}
           {...props}
         />
-        <stat if={stat}>
-          {stat}
-        </stat>
         <after if={after}>
           {after}
         </after>
@@ -108,8 +63,17 @@ export default class Title extends React.Component {
       padding: [2, 10],
       flexFlow: 'row',
       alignItems: 'center',
+      alignSelf: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      opacity: 0.7,
+      transition: 'opacity 200ms ease-in',
+      flex: 1,
       userSelect: 'none',
       cursor: 'default',
+      '&:hover': {
+        opacity: 1,
+      },
     },
     size2: {
       fontWeight: 300,

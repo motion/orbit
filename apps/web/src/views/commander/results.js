@@ -1,6 +1,5 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { Title } from '@mcro/ui'
 import DocView from '~/views/document'
 import { HEADER_HEIGHT } from '~/constants'
 import { last } from 'lodash'
@@ -26,27 +25,40 @@ export default class CommanderResults {
           store.highlightIndex = index
         }}
       >
-        <Title size={2.5}>
+        <UI.Title size={2.5}>
           {doc.getTitle()}
-        </Title>
+        </UI.Title>
         <DocView if={false} readOnly document={doc} />
       </match>
 
     return (
       <results transparent if={store.isOpen}>
-        <create if={store.isEnterToCreate && last(store.typedPath).length > 0}>
-          ↵ to create {last(store.typedPath)}
-        </create>
+        <UI.Placeholder
+          tag="div"
+          if={store.isEnterToCreate && last(store.typedPath).length > 0}
+        >
+          <UI.Title
+            rootProps={{ style: { justifyContent: 'center' } }}
+            size={3}
+          >
+            {store.typedPath[store.typedPath.length - 2]}
+          </UI.Title>
+          <UI.Title size={2}>
+            ↵ to create {last(store.typedPath)}
+          </UI.Title>
+        </UI.Placeholder>
         <matches if={docs.length > 0}>
-          <Title
+          <UI.Title
             color="rgba(191, 93, 88, 1)"
             $title
             transparent
             if={!store.isTypingPath}
             size={3}
           >
-            All Docs
-          </Title>
+            {store.value === ''
+              ? 'All Docs'
+              : `Searching for "${last(store.typedPath)}"`}
+          </UI.Title>
           {docs.map((doc, index) => getMatch(doc, index))}
         </matches>
         <preview
@@ -116,6 +128,7 @@ export default class CommanderResults {
       background: '#fff',
       right: 20,
       borderRadius: '4px',
+      border: '1px solid #eee',
       boxShadow: '1px 3px 3px rgba(255,255,255,0.3)',
     },
     highlight: {

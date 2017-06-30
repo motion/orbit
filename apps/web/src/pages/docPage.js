@@ -35,13 +35,23 @@ class DocPageStore {
   docStore: DocPageStore,
 })
 export default class DocumentPage {
-  render({ docStore, insidePlace }: { docStore: DocPageStore }) {
+  render({
+    docStore,
+    commanderStore,
+    insidePlace,
+  }: {
+    docStore: DocPageStore,
+  }) {
     const { doc } = docStore
+
+    // just to setup a mobx bind
+    commanderStore.focused
+
     if (doc === undefined) {
       return <null />
     }
     if (!doc) {
-      return <err>no doc found</err>
+      return <UI.Placeholder size={3}>Doc 404</UI.Placeholder>
     }
 
     const starred = doc.hasStar()
@@ -49,7 +59,12 @@ export default class DocumentPage {
     return (
       <Page
         actions={
-          <actions key={Math.random()} $$row $$centered>
+          <actions
+            if={!commanderStore.focused}
+            key={Math.random()}
+            $$row
+            $$centered
+          >
             <Button
               active={docStore.showInbox}
               chromeless

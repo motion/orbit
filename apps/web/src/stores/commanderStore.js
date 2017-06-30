@@ -50,7 +50,6 @@ export default class CommanderStore {
 
   start() {
     this.watch(async () => {
-      console.log('typing path?', this.isTypingPath)
       if (!this.isTypingPath) {
         // search
         const [searchResults, pathSearchResults] = await Promise.all([
@@ -316,7 +315,6 @@ export default class CommanderStore {
   onRight = () => {
     // only matters if you're navigating with arrow keys
     if (this.highlightIndex === -1) return
-    console.log('typed path', this.typedPath)
 
     const endPath = this.highlightedDocument.title
 

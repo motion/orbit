@@ -7,8 +7,9 @@ import Signup from './signup'
 import SidebarStore from './store'
 import Projects from './projects'
 import Menu from './menu'
+import UserBar from './userBar'
 import type LayoutStore from '~/stores/layoutStore'
-import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '~/constants'
+import * as Constants from '~/constants'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -20,6 +21,7 @@ class SidebarContent {
   render() {
     return (
       <inner $$flex>
+        <UserBar />
         <Signup login={<Login />} />
         <Menu />
         <Projects />
@@ -40,14 +42,16 @@ class SidebarContent {
 })
 export default class Sidebar {
   render({ layoutStore, store }: Props) {
-    const active = IN_TRAY ? true : layoutStore.sidebar.active
-    const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
+    const active = Constants.IN_TRAY ? true : layoutStore.sidebar.active
+    const width = Constants.IN_TRAY
+      ? Constants.TRAY_WIDTH
+      : layoutStore.sidebar.width
 
     return (
       <UI.Theme name="clear-dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <UI.Drawer
-            transition={SIDEBAR_TRANSITION}
+            transition={Constants.SIDEBAR_TRANSITION}
             key={2}
             background="transparent"
             open={active}

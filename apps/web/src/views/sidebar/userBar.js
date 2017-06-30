@@ -1,0 +1,61 @@
+import React from 'react'
+import { view } from '@mcro/black'
+import { User } from '@mcro/models'
+import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
+
+@view
+export default class UserBar {
+  render() {
+    return (
+      <userbar if={User.loggedIn}>
+        <UI.Text ellipse>
+          {' '}{User.name} 123
+        </UI.Text>
+        <UI.Popover
+          theme="light"
+          distance={10}
+          forgiveness={20}
+          delay={150}
+          target={<UI.Button theme="dark" circular icon="body" />}
+          background
+          shadow
+          openOnHover
+          closeOnClick
+        >
+          <UI.List
+            width={150}
+            itemProps={{ height: 35, fontSize: 14 }}
+            items={[
+              {
+                primary: User.name,
+                after: (
+                  <UI.Button
+                    chromeless
+                    icon="power"
+                    onClick={() => User.logout()}
+                  />
+                ),
+              },
+              {
+                primary: 'Settings',
+                onClick: () => console.log(),
+              },
+            ]}
+          />
+        </UI.Popover>
+      </userbar>
+    )
+  }
+
+  static style = {
+    userbar: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: [0, 6],
+      height: Constants.HEADER_HEIGHT,
+      position: 'relative',
+    },
+  }
+}

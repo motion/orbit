@@ -87,50 +87,6 @@ export default class Login {
             </UI.Button>
           </UI.Segment>
         </UI.Form>
-
-        <step $loggedIn if={User.loggedIn}>
-          <start $team $$row $$centered />
-
-          <end $$row $$centered>
-            <text>
-              <UI.Text $$ellipse>
-                {' '}{User.name} 123
-              </UI.Text>
-            </text>
-            <UI.Popover
-              theme="light"
-              distance={10}
-              forgiveness={20}
-              delay={150}
-              target={<UI.Button theme="dark" circular icon="body" />}
-              background
-              shadow
-              openOnHover
-              closeOnClick
-            >
-              <UI.List
-                width={150}
-                itemProps={{ height: 35, fontSize: 14 }}
-                items={[
-                  {
-                    primary: User.name,
-                    after: (
-                      <UI.Button
-                        chromeless
-                        icon="power"
-                        onClick={() => User.logout()}
-                      />
-                    ),
-                  },
-                  {
-                    primary: 'Settings',
-                    onClick: () => console.log(),
-                  },
-                ]}
-              />
-            </UI.Popover>
-          </end>
-        </step>
       </login>
     )
   }

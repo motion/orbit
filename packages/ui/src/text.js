@@ -11,6 +11,7 @@ export type Props = {
   onCancelEdit: Function,
   getRef?: Function,
   ellipse?: boolean,
+  tagName: string,
 }
 
 // click away from edit clears it
@@ -40,8 +41,8 @@ export default class Text implements ViewType {
   props: Props
 
   static defaultProps = {
-    onFinishEdit: _ => _,
-    onCancelEdit: _ => _,
+    tagName: 'p',
+    size: 1,
   }
 
   node = null
@@ -82,11 +83,11 @@ export default class Text implements ViewType {
 
       if (code === 'enter') {
         event.preventDefault()
-        onFinishEdit(this.value, event)
+        if (onFinishEdit) onFinishEdit(this.value, event)
       }
       if (code === 'esc') {
         event.preventDefault()
-        onCancelEdit(this.value, event)
+        if (onCancelEdit) onCancelEdit(this.value, event)
       }
     }
     if (onKeyDown) {
@@ -104,11 +105,12 @@ export default class Text implements ViewType {
     selectable,
     ellipse,
     children,
+    tagName,
     ...props
   }: Props) {
     return (
       <text
-        tagName="p"
+        tagName={tagName}
         contentEditable={editable}
         $selectable={selectable}
         suppressContentEditableWarning={editable}
@@ -136,6 +138,7 @@ export default class Text implements ViewType {
 
   static theme = (props, theme) => ({
     text: {
+      fontSize: props.size * 16,
       color: props.color || theme.base.color,
     },
     ellipse: {

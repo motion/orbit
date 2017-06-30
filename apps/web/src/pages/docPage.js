@@ -7,6 +7,7 @@ import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
 import Theme from '~/theme'
+import Inbox from '~/views/inbox'
 
 class DocPageStore {
   doc = this.props.id ? Document.get(this.props.id) : Document.home()
@@ -36,7 +37,6 @@ export default class DocumentPage {
 
     const starred = doc.hasStar()
 
-    console.log(docStore.showInbox)
     return (
       <Page
         actions={
@@ -58,47 +58,49 @@ export default class DocumentPage {
                 chromeless: true,
               }}
             >
-              <Button className="wop" icon="dot" />
+              <Button getRef={this.ref('extraRef').set} icon="dot" />
               <Button
                 icon="fav31"
                 highlight={!!starred}
                 onClick={doc.toggleStar}
               />
             </Segment>
+            <Popover
+              openOnHover
+              openOnClick
+              width={120}
+              shadow
+              background
+              target={() => this.extraRef}
+            >
+              <List
+                size={2}
+                items={[
+                  { icon: 'share', primary: 'Share Link', onClick: () => {} },
+                  {
+                    icon: doc.private ? 'lock' : 'open',
+                    primary: 'Locked',
+                    onClick: doc.togglePrivate,
+                  },
+                  {
+                    icon: doc.private ? 'eye' : 'closed',
+                    primary: 'Private',
+                    onClick: doc.togglePrivate,
+                  },
+                ]}
+              />
+            </Popover>
           </actions>
         }
       >
-        <Popover
-          openOnHover
-          openOnClick
-          width={120}
-          shadow
-          background
-          target=".wop"
-        >
-          <List
-            size={2}
-            items={[
-              { icon: 'share', primary: 'Share Link', onClick: () => {} },
-              {
-                icon: doc.private ? 'lock' : 'open',
-                primary: 'Locked',
-                onClick: doc.togglePrivate,
-              },
-              {
-                icon: doc.private ? 'eye' : 'closed',
-                primary: 'Private',
-                onClick: doc.togglePrivate,
-              },
-            ]}
-          />
-        </Popover>
         <DocumentView
+          if={!docStore.showInbox}
           id={doc._id}
           onKeyDown={docStore.onKeyDown}
           showCrumbs
           showChildren
         />
+        <Inbox if={docStore.showInbox} />
       </Page>
     )
   }

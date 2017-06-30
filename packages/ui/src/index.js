@@ -1,3 +1,4 @@
+// @flow
 // helpers
 export color from 'color'
 export { Theme, ThemeProvide } from '@mcro/gloss'

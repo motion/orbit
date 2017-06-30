@@ -17,6 +17,21 @@ export default class CommanderResults {
       this.props.layoutStore.isCommanderOpen = store.isOpen
     })
 
+    const getMatch = (doc, index) =>
+      <match
+        $highlight={index === store.highlightIndex}
+        onClick={() => store.navTo(doc)}
+        key={doc._id}
+        onMouseEnter={() => {
+          store.highlightIndex = index
+        }}
+      >
+        <Title size={2.5}>
+          {doc.getTitle()}
+        </Title>
+        <DocView if={false} readOnly document={doc} />
+      </match>
+
     return (
       <results transparent if={store.isOpen}>
         <create if={store.isEnterToCreate && last(store.typedPath).length > 0}>
@@ -32,31 +47,17 @@ export default class CommanderResults {
           >
             All Docs
           </Title>
-          {docs.map((doc, index) =>
-            <match
-              onClick={() => store.navTo(doc)}
-              key={doc._id}
-              onMouseEnter={() => {
-                store.highlightIndex = index
-              }}
-              $highlight={index === store.highlightIndex}
-            >
-              <Title size={2.5}>
-                {doc.getTitle()}
-              </Title>
-              <DocView if={false} readOnly document={doc} />
-            </match>
-          )}
+          {docs.map((doc, index) => getMatch(doc, index))}
         </matches>
         <preview
-          if={false && store.highlightedDocument}
+          if={store.highlightedDocument}
           key={store.highlightedDocument._id}
         >
           <DocView
             readOnly
             inline
             id={store.highlightedDocument._id}
-            editorProps={{ find: store.text }}
+            editorProps={{ find: store.value }}
           />
         </preview>
       </results>

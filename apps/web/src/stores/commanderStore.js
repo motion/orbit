@@ -50,10 +50,11 @@ export default class CommanderStore {
 
   start() {
     this.watch(async () => {
+      console.log('typing path?', this.isTypingPath)
       if (!this.isTypingPath) {
         // search
         const [searchResults, pathSearchResults] = await Promise.all([
-          Document.search(this.value),
+          Document.search(this.value).exec(),
           Document.collection
             .find()
             .where('slug')
@@ -62,7 +63,7 @@ export default class CommanderStore {
         ])
 
         this.searchResults = uniq(
-          [...searchResults, ...pathSearchResults],
+          [...(searchResults || []), ...pathSearchResults],
           x => x.id
         )
       } else {

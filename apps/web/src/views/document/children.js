@@ -62,7 +62,9 @@ export default class Children {
     return (
       <children>
         <header $$row>
-          <title>Pages</title>
+          <title>
+            {hasDocs ? '' : 'No '}Pages
+          </title>
           <actions>
             <Button
               $add
@@ -74,9 +76,6 @@ export default class Children {
           </actions>
         </header>
         <content>
-          <empty if={!hasDocs} $$noSelect>
-            no pages
-          </empty>
           <docs if={hasDocs}>
             {sortBy(docs || [], 'createdAt').map(doc => {
               const children = store.children[doc._id]

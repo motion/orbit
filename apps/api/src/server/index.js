@@ -10,7 +10,7 @@ import redis from 'redis'
 import Path from 'path'
 import repStream from 'express-pouchdb-replication-stream'
 import couchProxy from 'express-couch-proxy'
-import SuperLogin from './login'
+import SuperLogin from './superlogin'
 import config from './superlogin.config'
 import url from 'url'
 

@@ -5,3 +5,4 @@ rm -rf apps/*/lib
 rm -rf apps/*/node_modules
 rm -rf packages/*/lib
 rm -rf packages/*/node_modules
+rm -rf packages/*/shrinkwrap.json

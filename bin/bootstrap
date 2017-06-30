@@ -58,10 +58,9 @@ else
   echo "12 ::1 jot.dev couch.jot.dev api.jot.dev" | sudo tee -a /etc/hosts
 fi
 
-echo "yerna install"
-yarn install --prod
+yarn install
 echo "lerna bootstrap"
-./node_modules/lerna/bin/lerna.js bootstrap --npm-client yarn
+./node_modules/lerna/bin/lerna.js bootstrap
 
 echo "ensuring react isnt duped until pundle fix"
 rm -rf packages/ui/node_modules/react

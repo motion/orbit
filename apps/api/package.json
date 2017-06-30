@@ -9,7 +9,6 @@
     "start-dev": "nodemon --legacy-watch --inspect=5858 lib"
   },
   "dependencies": {
-    "@mcro/models": "^1.0.1",
     "body-parser": "^1.16.1",
     "cors": "^2.8.3",
     "couchdb-bootstrap": "^1.14.0",

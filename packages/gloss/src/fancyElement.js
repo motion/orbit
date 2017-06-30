@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import { StyleSheet, css } from './stylesheet'
-import { filterStyleKeys, filterParentStyleKeys } from './helpers'
 import deepExtend from 'deep-extend'
 import type { Gloss } from './index'
 

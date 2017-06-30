@@ -1,5 +1,5 @@
 import React from 'react'
-import Surface from '../surface'
+import SizedSurface from '../sizedSurface'
 
 export default ({ sync, ...props }) => {
   if (sync) {
@@ -7,17 +7,19 @@ export default ({ sync, ...props }) => {
     props.onChange = e => sync.set(e.target.value)
   }
 
-  return <Surface
-    $input
-    flex
-    borderRadius={0}
-    wrapElement
-    tagName="input"
-    glint={[255,255,255, 0.1]}
-    elementStyles={{
-      width: '100%',
-      padding: [0, 10],
-    }}
-    {...props}
-  />
+  return (
+    <SizedSurface
+      $input
+      flex
+      borderRadius={0}
+      wrapElement
+      tagName="input"
+      glint={[255, 255, 255, 0.1]}
+      elementStyles={{
+        width: '100%',
+        padding: [0, 10],
+      }}
+      {...props}
+    />
+  )
 }

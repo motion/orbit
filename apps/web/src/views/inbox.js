@@ -7,6 +7,15 @@ export default class Inbox {
     return (
       <inbox>
         <UI.Title size={4}>Inbox</UI.Title>
+
+        <UI.List
+          items={[
+            {
+              primary: 'Do something really quick',
+              secondary: 'Or just do it slowly',
+            },
+          ]}
+        />
       </inbox>
     )
   }

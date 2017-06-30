@@ -62,7 +62,6 @@ export default class Surface implements ViewType<Props> {
 
   static defaultProps = {
     tagName: 'div',
-    size: 1,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -213,8 +212,9 @@ export default class Surface implements ViewType<Props> {
       background: 'transparent',
       userSelect: 'none',
       height: '100%',
+      flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'stretch',
     },
     icon: {
       pointerEvents: 'none',
@@ -260,22 +260,11 @@ export default class Surface implements ViewType<Props> {
 
   static theme = (props, theme, self) => {
     // sizes
-    const height = props.height || props.size * LINE_HEIGHT
+    const height = props.height
     const width = props.width
-    const padding =
-      typeof props.padding !== 'undefined'
-        ? props.padding
-        : props.wrapElement ? 0 : [0, height / 4]
-    const fontSize = props.fontSize || height * 0.5
+    const padding = props.padding
     const flex = props.flex === true ? 1 : props.flex
-
-    // radius
-    const baseBorderRadius = props.borderRadius
-      ? props.borderRadius
-      : height / 5
-    const borderRadius = props.circular
-      ? height
-      : baseBorderRadius || height / 10
+    const borderRadius = props.circular ? height : props.borderRadius
 
     // colors
     const color = $(
@@ -348,7 +337,7 @@ export default class Surface implements ViewType<Props> {
     return {
       element: {
         ...props.elementStyles,
-        fontSize,
+        fontSize: props.fontSize,
         lineHeight: '0px',
         color,
         '&:hover': {

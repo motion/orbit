@@ -149,7 +149,7 @@ export default class Text implements ViewType {
   }
 
   static theme = (props, theme) => {
-    const fontSize = props.size * 16
+    const fontSize = props.size * 14
     return {
       text: {
         fontSize,

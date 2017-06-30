@@ -71,6 +71,7 @@ export default class DocumentPage {
               margin={[0, 10]}
               icon="paper"
               onClick={docStore.ref('showInbox').toggle}
+              tooltip="inbox"
             >
               Inbox
             </Button>

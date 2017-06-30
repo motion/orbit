@@ -284,7 +284,13 @@ export default class Popover {
 
   get positionState() {
     if (!this.target && !this.isManuallyPositioned) {
-      throw new Error('No top/left/bottom or target given to Popover!')
+      throw new Error(
+        `No top/left/bottom or target given to Popover:
+          Target: ${this.target
+            ? this.target.tagName || JSON.stringify(this.target.props)
+            : 'null'}
+          Popover.props: ${JSON.stringify(this.props)}`
+      )
     }
     return {
       ...this.x,

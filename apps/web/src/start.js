@@ -6,13 +6,7 @@ import { view } from '@mcro/black'
 import App from '~/app'
 import themes from './theme'
 
-@view
-class Test {
-  render() {
-    log(this.gloss({ boxShadow: ['inset', 0, 10, 10, [0, 0, 0, 0.1]] }))
-    return <div>null</div>
-  }
-}
+start(App.started, App.started)
 
 export function render(shouldReset) {
   // console.time('#render')
@@ -37,18 +31,9 @@ export function render(shouldReset) {
   // console.timeEnd('#render')
 }
 
-export async function start(quiet) {
-  render(true)
+export async function start(quiet, restart) {
+  log(`start(${quiet}, ${restart})`)
+  render(restart)
   await App.start(quiet)
   render()
 }
-
-// if (module.hot) {
-// module.hot.accept('./views/layout', () => {
-//   log('accept: ./start:./views/layout')
-//   start(true)
-// })
-// }
-
-log('render: start')
-start()

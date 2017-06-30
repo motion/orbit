@@ -98,7 +98,6 @@ export default class Login {
               </UI.Text>
             </text>
             <UI.Popover
-              open
               theme="light"
               distance={10}
               forgiveness={20}

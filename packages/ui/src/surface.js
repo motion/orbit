@@ -198,7 +198,7 @@ export default class Surface implements ViewType {
           full
           scale={1.5}
           color={(theme && theme.surface.style.color) || [0, 0, 0]}
-          opacity={0.06}
+          opacity={0.14}
         />
         <element
           if={!noElement || (noElement && children)}
@@ -361,14 +361,19 @@ export default class Surface implements ViewType {
         ? borderRadiusSize
         : 0
     }
+    let hasSidesDefined = false
     for (const side of BORDER_RADIUS_SIDES) {
       if (props[side]) {
+        hasSidesDefined = true
         if (props[side] === true) {
           borderRadius[side] = borderRadiusSize
         } else {
           borderRadius[side] = props[side]
         }
       }
+    }
+    if (!hasSidesDefined && borderRadiusSize) {
+      borderRadius.borderRadius = borderRadiusSize
     }
 
     // circular

@@ -129,7 +129,7 @@ export default class Children {
   static style = {
     children: {
       // borderTop: [1, '#f6f6f6'],
-      padding: [0],
+      padding: [5],
       cursor: 'default',
       width: 170,
     },

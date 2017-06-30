@@ -4,6 +4,8 @@ import { StyleSheet, css } from './stylesheet'
 import deepExtend from 'deep-extend'
 import type { Gloss } from './index'
 
+const IS_PROD = process.env.NODE_ENV === 'production'
+
 const arrayOfObjectsToObject = (arr: Array<Object>) => {
   let res = {}
   for (let i = 0; i < arr.length; i++) {
@@ -108,7 +110,16 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     if (finalStyles.length) {
       if (isTag) {
         // tags get className
-        finalProps.className = css(...finalStyles)
+        if (IS_PROD) {
+          finalProps.className = css(...finalStyles)
+        } else {
+          try {
+            finalProps.className = css(...finalStyles)
+          } catch (e) {
+            console.error('Error applying style to', type, finalStyles, this)
+          }
+        }
+
         // keep original classNames
         if (props && props.className) {
           if (typeof props.className === 'string') {

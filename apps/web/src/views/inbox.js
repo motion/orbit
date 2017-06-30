@@ -13,22 +13,27 @@ export default class Inbox {
             {
               primary: 'Support stable and update options with mango queries ',
               secondary: '#621 opened 3 days ago by garrensmith ',
+              icon: 'alerti',
             },
             {
               primary: 'POST and ETag header',
               secondary: '#620 opened 3 days ago by danielwertheim ',
+              icon: 'alerti',
             },
             {
               primary: 'Deploy to Heroku Button',
               secondary: '#619 opened 4 days ago by spencerthayer ',
+              icon: 'alerti',
             },
             {
               primary: 'CouchDB won\'t boot on OTP-20',
               secondary: '#619 opened 4 days ago by spencerthayer ',
+              icon: 'alerti',
             },
             {
               primary: 'Create a Helm chart to deploy CouchDB using Kubernetes',
               secondary: '#619 opened 4 days ago by spencerthayer ',
+              icon: 'alerti',
             },
           ]}
         />

@@ -77,8 +77,12 @@ export default class ListItem {
         borderBottomRadius={isLastElement}
         borderTopRadius={isFirstElement}
         overflow="hidden"
-        padding={[12, 6]}
-        hoverable
+        padding={[12, 8]}
+        glow
+        glowProps={{
+          scale: 1.8,
+          opacity: 0.025,
+        }}
         {...props}
       >
         <image if={avatar || fakeAvatar}>
@@ -120,7 +124,6 @@ export default class ListItem {
 
   static style = {
     item: {
-      cursor: 'pointer',
       maxWidth: '100%',
       flexFlow: 'row',
       position: 'relative',

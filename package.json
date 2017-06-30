@@ -23,6 +23,6 @@
     "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-prettier": "^2.1.2",
     "lerna": "2.0.0-rc.5",
-    "prettier": "^1.5.2"
+    "prettier": "^1.4.4"
   }
 }

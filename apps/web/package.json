@@ -10,7 +10,7 @@
     "start-debug": "motion --debug",
     "build": "node scripts/build.js",
     "build-debug": "DEBUG=true node scripts/build.js",
-    "electron": "denode electron.js &"
+    "electron": "denode electron.js &>/dev/null &"
   },
   "denodeOptions": ["DENODE_INSECURE"],
   "electronOptions": {

@@ -105,6 +105,9 @@ class ListItemNode {
 
   // BE CAREFUL NOT TO CHANGE HEIGHT
   static style = {
+    listItem: {
+      marginTop: 3,
+    },
     archive: {
       opacity: 0.9,
     },
@@ -114,7 +117,8 @@ class ListItemNode {
       minWidth: 5,
     },
     check: {
-      margin: [9, 10, 5, 5],
+      margin: [7, 10, 5, 5],
+      fontSize: 30,
       cursor: 'pointer',
     },
     metaText: {

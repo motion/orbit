@@ -168,8 +168,8 @@ class List {
     }
 
     const passThroughProps = {
+      css: itemStyle,
       onItemMount,
-      itemStyle,
       size,
     }
 

@@ -20,10 +20,34 @@ type Props = {
 
 @view
 class TeamStatus {
-  render({ items }) {
+  items = [
+    {
+      name: 'SB',
+      status: '#brainstorm: features and user feedback strategy',
+      time: '10m',
+    },
+    {
+      name: 'NW',
+      status:
+        'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
+      time: '10m',
+    },
+    {
+      name: 'NC',
+      status: 'editor: formatting: #uxlove + #dev',
+      time: '10m',
+    },
+    {
+      name: 'JB',
+      status: '#brainstorm: features and user feedback strategy',
+      time: '10m',
+    },
+  ]
+
+  render() {
     return (
       <team>
-        {items.map(player =>
+        {this.items.map(player =>
           <player key={player.name}>
             <title>
               <UI.Badge
@@ -35,13 +59,13 @@ class TeamStatus {
               >
                 {player.name}
               </UI.Badge>
-              <time>
+              <UI.Text size={0.8}>
                 {player.time}
-              </time>
+              </UI.Text>
             </title>
-            <info>
+            <UI.Text>
               {player.status}
-            </info>
+            </UI.Text>
           </player>
         )}
       </team>
@@ -97,35 +121,7 @@ class Projects {
 
     return (
       <content $$scrollable $$flex={6}>
-        <TeamStatus
-          if={false}
-          items={[
-            {
-              name: 'SB',
-              status: '#brainstorm: features and user feedback strategy',
-              time: '10m',
-            },
-            {
-              name: 'NW',
-              status:
-                'editor: performance/stability: general perf, less saving: save only on debounce(1000)',
-              time: '10m',
-            },
-            {
-              name: 'NC',
-              status: 'editor: formatting: #uxlove + #dev',
-              time: '10m',
-            },
-            {
-              name: 'JB',
-              status: '#brainstorm: features and user feedback strategy',
-              time: '10m',
-            },
-          ]}
-        />
-
         <UI.Segment
-          if={false}
           $$draggable
           $$flex="none"
           controlled
@@ -267,7 +263,7 @@ class Projects {
     team = 'Motion'
   },
 })
-class Inner {
+class SidebarInner {
   render({ store }) {
     const color = '#fff'
     const borderColor = [255, 255, 255, 0.3]
@@ -275,22 +271,7 @@ class Inner {
       <inner $$flex>
         <Login />
         <Signup />
-
-        <UI.Theme name="dark" if={!User.loggedIn}>
-          <modal>
-            <UI.Form>
-              <UI.PassProps row chromeless placeholderColor="#333">
-                <UI.Field label="Name" placeholder="something" />
-                <UI.Field label="Email" placeholder="something" />
-                <UI.Field label="Password" placeholder="something" />
-              </UI.PassProps>
-              <UI.Button>Signup</UI.Button>
-            </UI.Form>
-          </modal>
-        </UI.Theme>
-
         <Projects />
-
         <UI.SlotFill.Slot name="sidebar">
           {items =>
             <activeSidebar>
@@ -347,7 +328,7 @@ export default class Sidebar {
             zIndex={9}
           >
             <sidebar>
-              <Inner key={0} />
+              <SidebarInner key={0} />
             </sidebar>
           </UI.Drawer>
         </Shortcuts>

@@ -10,9 +10,9 @@ const LIGHT = {
 
 const DARK = {
   highlightColor: 'rgb(89, 154, 244)',
-  background: '#333',
+  background: [20, 20, 20, 0.4],
   color: '#f2f2f2',
-  borderColor: [60, 60, 60, 0.8],
+  borderColor: [120, 120, 120, 0.4],
 }
 
 const Theme = {
@@ -21,7 +21,7 @@ const Theme = {
     base: DARK,
     hover: {
       ...DARK,
-      color: color(DARK.color).lighten(0.2),
+      color: '#fff',
       background: color(DARK.background).lighten(0.2),
       borderColor: color(DARK.borderColor).lighten(0.2),
     },

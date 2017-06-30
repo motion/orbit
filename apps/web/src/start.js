@@ -19,9 +19,8 @@ export function render(shouldReset) {
   let ROOT = document.querySelector('#app')
   const Layout = require('./views/layout').default
 
+  // HMR: to recover from react bugs save this file
   if (shouldReset && module.hot) {
-    log('resetting state fully')
-    // HMR: to recover from react bugs
     const parent = ROOT.parentNode
     parent.removeChild(ROOT)
     ROOT = document.createElement('div')
@@ -44,12 +43,12 @@ export async function start(quiet) {
   render()
 }
 
-if (module.hot) {
-  // module.hot.accept('./views/layout', () => {
-  //   log('accept: ./start:./views/layout')
-  //   start(true)
-  // })
-}
+// if (module.hot) {
+// module.hot.accept('./views/layout', () => {
+//   log('accept: ./start:./views/layout')
+//   start(true)
+// })
+// }
 
 log('render: start')
 start()

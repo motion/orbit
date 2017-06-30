@@ -1,7 +1,7 @@
 import React from 'react'
 import node from '~/editor/node'
 import { view } from '@mcro/black'
-import { Paragraph } from './text'
+import { Paragraph } from './paragraph'
 import EditList from './editList'
 import { BLOCKS } from '~/editor/constants'
 import AutoReplace from 'slate-auto-replace'

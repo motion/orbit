@@ -56,7 +56,12 @@ export default class ListItem {
     ...props
   }: ItemProps) {
     return (
-      <Surface borderBottom={[1, '#eee']} padding={[12, 12]} {...props}>
+      <Surface
+        border={false}
+        borderBottom={[1, '#eee']}
+        padding={[12, 12]}
+        {...props}
+      >
         <image if={avatar || fakeAvatar}>
           <img if={avatar && !fakeAvatar} src={avatar} $avatar />
           <FakeAvatar if={fakeAvatar} size={50} $avatar $padavatar />

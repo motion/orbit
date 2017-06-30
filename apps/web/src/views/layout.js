@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import * as Constants from '~/constants'
 import { view, Shortcuts } from '@mcro/black'
 import { object } from 'prop-types'
 import { Glint, Theme, SlotFill } from '@mcro/ui'
@@ -61,7 +62,7 @@ export default class Root {
 
     return (
       <app>
-        <Glint borderRadius={6} />
+        <Glint color={[255, 255, 255, 0.2]} borderRadius={6} />
         <Onboard if={showOnboard} />
         <LayoutWrap layoutStore={layoutStore}>
           <Commander.Results />
@@ -114,7 +115,7 @@ export default class Root {
 
   static style = {
     root: {
-      background: [40, 40, 40, 0.5],
+      background: Constants.IS_ELECTRON ? [40, 40, 40, 0.2] : '#252525',
       position: 'absolute',
       top: 0,
       right: 0,

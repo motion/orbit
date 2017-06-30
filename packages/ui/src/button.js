@@ -5,7 +5,6 @@ export default props =>
   <SizedSurface
     tagName="button"
     borderWidth={1}
-    borderStyle="solid"
     hoverable
     glint
     glow

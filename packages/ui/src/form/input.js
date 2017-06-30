@@ -12,12 +12,15 @@ export default ({ sync, ...props }) => {
       $input
       flex
       borderRadius={0}
+      borderWidth={1}
       wrapElement
       tagName="input"
       glint={[255, 255, 255, 0.1]}
-      elementStyles={{
-        width: '100%',
-        padding: [0, 10],
+      elementProps={{
+        css: {
+          width: '100%',
+          padding: [0, 10],
+        },
       }}
       {...props}
     />

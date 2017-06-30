@@ -12,8 +12,9 @@ const LINE_HEIGHT = 30
 
 @inject(context => context.uiContext)
 @view.ui
-export default class Surface implements ViewType<Props> {
-  props: Props & {
+export default class Surface implements ViewType {
+  props: {
+    elementProps?: boolean,
     flex?: boolean | number,
     width?: number,
     height?: number,
@@ -41,7 +42,6 @@ export default class Surface implements ViewType<Props> {
     theme?: string,
     after?: Element | string,
     children?: Element | string,
-    elementStyles?: Object,
     iconProps?: Object,
     tooltipProps?: Object,
     tagName: string,
@@ -72,10 +72,13 @@ export default class Surface implements ViewType<Props> {
     paddingLeft?: number,
     paddingRight?: number,
     borderStyle?: 'solid' | 'dotted',
+    wrapElement?: boolean,
   }
 
   static defaultProps = {
     tagName: 'div',
+    borderStyle: 'solid',
+    borderWidth: 0,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -130,8 +133,6 @@ export default class Surface implements ViewType<Props> {
     margin,
     glow,
     hoverColor,
-    wrapElement,
-    elementStyles,
     getRef,
     noElement,
     flex,
@@ -140,9 +141,11 @@ export default class Surface implements ViewType<Props> {
     hoverable,
     width,
     style,
+    wrapElement,
     borderStyle,
+    elementProps,
     ...props
-  }: Props) {
+  }) {
     const { theme } = this
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
@@ -174,17 +177,17 @@ export default class Surface implements ViewType<Props> {
           size={iconSize}
           {...iconProps}
         />
-        <glowWrap if={glow} $minimal={chromeless}>
-          <Glow
-            full
-            scale={1.5}
-            color={(theme && theme.surface.style.color) || [0, 0, 0]}
-            opacity={0.06}
-          />
-        </glowWrap>
+        <Glow
+          if={glow}
+          full
+          scale={1.5}
+          color={(theme && theme.surface.style.color) || [0, 0, 0]}
+          opacity={0.06}
+        />
         <element
           if={!noElement || (noElement && children)}
           {...wrapElement && passProps}
+          {...elementProps}
           $hasIconBefore={hasIconBefore}
           $hasIconAfter={hasIconAfter}
         >
@@ -220,18 +223,6 @@ export default class Surface implements ViewType<Props> {
       alignItems: 'center',
       justifyContent: 'center',
       position: 'relative',
-    },
-    glowWrap: {
-      position: 'absolute',
-      overflow: 'hidden',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 10,
-    },
-    minimal: {
-      boxShadow: 'none',
     },
     element: {
       border: 'none',
@@ -307,7 +298,9 @@ export default class Surface implements ViewType<Props> {
         ? props.activeBackground || theme.active.background || baseBackground
         : baseBackground
     )
-    const borderColor = $(props.borderColor || theme.base.borderColor)
+    const borderColor = $(
+      props.borderColor || theme.base.borderColor || 'transparent'
+    )
 
     // hover
     let hoverColor = $(
@@ -315,7 +308,6 @@ export default class Surface implements ViewType<Props> {
         ? color.lighten(0.2)
         : props.hoverColor || theme.hover.color || props.color
     )
-    const iconHoverColor = props.iconHoverColor || hoverColor
     // TODO this could be simpler/better
     if (props.lightenOnHover) {
       hoverColor = hoverColor.lighten(
@@ -325,11 +317,6 @@ export default class Surface implements ViewType<Props> {
       hoverColor = hoverColor.darken(
         props.darkenOnHover === true ? 3 : props.darkenOnHover
       )
-    } else if (props.hoverable) {
-      const luminosity = color.luminosity()
-      const isLight = luminosity > 0.6
-      const adjustDirection = isLight ? 'darken' : 'lighten'
-      hoverColor = hoverColor[adjustDirection](luminosity / 2)
     }
     const hoverBorderColor =
       props.hoverBorderColor ||
@@ -345,9 +332,6 @@ export default class Surface implements ViewType<Props> {
       boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 
-    // general
-    const overflow = props.glow ? 'hidden' : props.overflow
-
     const segmentStyles = props.inSegment && {
       marginLeft: -1,
       borderLeftRadius: props.inSegment.first ? borderRadius : 0,
@@ -360,18 +344,29 @@ export default class Surface implements ViewType<Props> {
       overflow: 'hidden',
     }
 
+    if (props.tagName === 'input' && props.inForm) {
+      log('good')
+    }
+
+    const elementStyles = {
+      // inForm
+      ...(props.inForm && {
+        '&:active': theme.active,
+        '&:focus': theme.focus,
+      }),
+    }
+
     return {
       element: {
         ...props.elementStyles,
+        ...(props.wrapElement && elementStyles),
         fontSize: props.fontSize,
         lineHeight: '0px',
-        color,
-        '&:hover': {
-          color: hoverColor,
-        },
       },
       surface: {
-        overflow,
+        ...(!props.wrapElement && elementStyles),
+        color,
+        overflow: props.glow ? 'hidden' : props.overflow,
         height,
         width,
         flex,
@@ -409,7 +404,7 @@ export default class Surface implements ViewType<Props> {
           color: iconColor,
         },
         '&:hover > icon': {
-          color: iconHoverColor,
+          color: props.iconHoverColor || hoverColor,
         },
         '&:hover': {
           ...theme.hover,
@@ -421,11 +416,7 @@ export default class Surface implements ViewType<Props> {
           position: 'relative',
           zIndex: 1000,
         },
-        // inForm
-        ...(props.inForm && {
-          '&:active': theme.active,
-          '&:focus': theme.focus,
-        }),
+        // so you can override
         ...props.style,
       },
     }

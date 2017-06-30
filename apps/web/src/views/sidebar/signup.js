@@ -20,32 +20,20 @@ const idFn = _ => _
 export default class Signup {
   render() {
     return (
-      <login $$draggable>
-        <Form flex if={!User.loggedIn} $$undraggable onSubmit={idFn}>
-          <Segment>
-            <Input
-              $input
-              name="email"
-              onKeyDown={idFn}
-              getRef={idFn}
-              placeholder="Email"
-            />
-            <Input
-              $input
-              name="password"
-              type="password"
-              placeholder="Password"
-              onKeyDown={idFn}
-              getRef={idFn}
-            />
-            <Button icon={idFn} onClick={idFn}>
-              Signup
-            </Button>
-          </Segment>
-        </Form>
+      <login if={!User.loggedIn} $$draggable>
+        <UI.Theme name="dark" if={!User.loggedIn}>
+          <modal>
+            <UI.Form>
+              <UI.PassProps row chromeless placeholderColor="#333">
+                <UI.Field label="Name" placeholder="something" />
+                <UI.Field label="Email" placeholder="something" />
+                <UI.Field label="Password" placeholder="something" />
+              </UI.PassProps>
+              <UI.Button>Signup</UI.Button>
+            </UI.Form>
+          </modal>
+        </UI.Theme>
       </login>
     )
   }
-
-  static style = {}
 }

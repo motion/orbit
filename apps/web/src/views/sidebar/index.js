@@ -363,7 +363,6 @@ export default class Sidebar {
       position: 'absolute',
       top: 0,
       right: 0,
-      borderLeft: '1px solid #666',
       bottom: 0,
     },
     title: {

@@ -3,31 +3,31 @@ import React from 'react'
 import { color, view } from '@mcro/black'
 import Button from './button'
 import type { Color } from '@mcro/gloss'
+import Text from './text'
 
 export type TitleProps = {
-  tag: string,
+  size: number,
+  tagName?: string,
   children: React$Children,
   collapsable?: boolean,
   collapsed?: boolean,
-  transparent?: boolean,
   before?: React$Children,
   after?: React$Children,
   sub?: boolean,
-  hoverable?: React$Children,
-  background?: Color,
   stat?: React$Children,
   color?: Color,
-  borderColor?: Color,
   onDoubleClick?: Function,
   onCollapse?: Function,
 }
 
+const MAX_SIZES = 4
+
 @view.ui
-export default class Title {
+export default class Title extends React.Component {
   props: TitleProps
 
   static defaultProps = {
-    tag: 'h1',
+    size: MAX_SIZES,
   }
 
   onDoubleClick = (event: MouseEvent) => {
@@ -44,36 +44,26 @@ export default class Title {
   }
 
   render({
-    children,
     collapsable,
     collapsed,
     before,
     after,
     sub,
-    hoverable,
-    background,
     stat,
-    borderColor,
     color,
-    tag: _tag,
+    size,
     onCollapse,
-    transparent,
+    tagName: _tagName,
     ...props
   }: TitleProps) {
-    let tag = _tag
-
-    // auto downgrade tag for sub
-    if (sub && tag === 'h1') {
-      tag = 'h2'
-    }
-
-    const titleTag = this.glossElement(tag, { $tag: true }, [
-      children,
-      <stat if={stat}>{stat}</stat>,
-    ])
+    const maxedSize = Math.min(MAX_SIZES, size)
+    const textSize = Math.max(0.8, maxedSize / 2.2)
+    const tagSize = Math.floor(textSize)
+    const tagName = _tagName || `h${tagSize}`
 
     return (
-      <ptitle {...props} onDoubleClick={this.onDoubleClick}>
+      <titleroot onDoubleClick={this.onDoubleClick}>
+        {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
         <collapse
           if={collapsable}
           onClick={this.onCollapse}
@@ -93,28 +83,40 @@ export default class Title {
             height="auto"
           />
         </collapse>
-        <before if={before}>{before}</before>
-        {titleTag}
-        <after if={after}>{after}</after>
-        {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
-      </ptitle>
+        <before if={before}>
+          {before}
+        </before>
+        <Text
+          {...{ [`\$size${Math.floor(size)}`]: true }}
+          tagName={tagName}
+          size={textSize}
+          {...props}
+        />
+        <stat if={stat}>
+          {stat}
+        </stat>
+        <after if={after}>
+          {after}
+        </after>
+      </titleroot>
     )
   }
 
   static style = {
-    ptitle: {
+    titleroot: {
       padding: [2, 10],
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',
       cursor: 'default',
     },
-    tag: {
-      flex: 1,
-      flexFlow: 'row',
-      userSelect: 'none',
-      alignItems: 'center',
-      fontSize: 12,
+    size2: {
+      fontWeight: 300,
+    },
+    size1: {
+      textTransform: 'uppercase',
+      fontWeight: 300,
+      color: [0, 0, 0, 0.3],
     },
     collapse: {
       marginRight: 4,
@@ -124,34 +126,5 @@ export default class Title {
       marginLeft: 5,
       opacity: 0.3,
     },
-  }
-
-  static theme = (props, theme) => {
-    const transparentColor = props.transparent ? 'transparent' : false
-    const reduce = 1 / +props.tag.slice(1)
-    const fontSize = +props.size || 20 + reduce * 20
-
-    return {
-      ptitle: {
-        fontSize,
-        lineHeight: `${1 + fontSize * 0.06}rem`,
-        background:
-          transparentColor || props.background || theme.base.background,
-        borderBottom: !props.sub && [
-          1,
-          transparentColor ||
-            props.borderColor ||
-            color ||
-            theme.base.borderColor,
-        ],
-        color: color || theme.base.color,
-        '&:hover': {
-          color: props.tag === 'a' ? 'red' : 'auto',
-          background: props.hoverable
-            ? color(props.background).lighten(0.025)
-            : props.background,
-        },
-      },
-    }
   }
 }

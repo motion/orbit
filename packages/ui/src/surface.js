@@ -57,6 +57,7 @@ export default class Surface implements ViewType<Props> {
     darkenOnHover?: boolean,
     getRef?: Function,
     hoverable?: boolean,
+    borderWidth?: number | string,
   }
 
   static defaultProps = {
@@ -94,6 +95,8 @@ export default class Surface implements ViewType<Props> {
     theme: _theme,
     circular,
     size,
+    borderWidth,
+    borderColor,
     borderRadius,
     material,
     padding,
@@ -107,7 +110,6 @@ export default class Surface implements ViewType<Props> {
     noElement,
     flex,
     placeholderColor,
-    borderColor,
     glint,
     hoverable,
     width,
@@ -355,6 +357,7 @@ export default class Surface implements ViewType<Props> {
       },
       surface: {
         margin: props.margin,
+        borderWidth: props.borderWidth,
         overflow,
         height,
         width,

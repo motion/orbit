@@ -28,6 +28,7 @@ export default class CommanderResults {
             $title
             transparent
             if={!store.isTypingPath}
+            size={3}
           >
             All Docs
           </Title>
@@ -40,8 +41,10 @@ export default class CommanderResults {
               }}
               $highlight={index === store.highlightIndex}
             >
-              {doc.getTitle()}
-              <DocView readOnly document={doc} />
+              <Title size={2.5}>
+                {doc.getTitle()}
+              </Title>
+              <DocView if={false} readOnly document={doc} />
             </match>
           )}
         </matches>
@@ -89,6 +92,7 @@ export default class CommanderResults {
     match: {
       padding: [4, 5],
       marginTop: 10,
+      marginTop: 15,
       maxWidth: 200,
       color: 'white',
       transition: 'all 100ms ease-in',

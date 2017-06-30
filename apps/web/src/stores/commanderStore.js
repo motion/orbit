@@ -125,6 +125,10 @@ export default class CommanderStore {
       this.focus()
       this.open()
     },
+    right: () => {
+      if (!this.focused || !this.searchResults) return
+      this.onRight()
+    },
     down: () => {
       if (!this.focused) return
       if (!this.searchResults || !this.isOpen) {
@@ -175,7 +179,7 @@ export default class CommanderStore {
   }
 
   get isTypingPath(): boolean {
-    return this.value[0] === '/'
+    return this.value.indexOf('/') > -1
   }
 
   get typedPath(): Array<string> {
@@ -210,7 +214,7 @@ export default class CommanderStore {
   }
 
   splitPath = (path: string): Array<string> => {
-    return path.split(PATH_SEPARATOR).slice(path[0] === '/' ? 1 : 0)
+    return path.split(PATH_SEPARATOR)
   }
 
   onChange = (event: Event) => {
@@ -276,6 +280,9 @@ export default class CommanderStore {
     return await Document.collection.find({ parentId: document._id }).exec()
   }
 
+  getPathForDocs = (docs: Array<Document>): string =>
+    docs.map(doc => doc.getTitle()).join(PATH_SEPARATOR)
+
   onFocus = () => {
     console.log('focused commanderstore')
     this.open()
@@ -310,9 +317,9 @@ export default class CommanderStore {
   onRight = () => {
     // only matters if you're navigating with arrow keys
     if (this.highlightIndex === -1) return
+    console.log('typed path', this.typedPath)
 
-    const endPath =
-      PATH_SEPARATOR + this.highlightedDocument.title + PATH_SEPARATOR
+    const endPath = this.highlightedDocument.title
 
     if (this.typedPath.length === 1) {
       this.value = endPath
@@ -320,9 +327,13 @@ export default class CommanderStore {
     }
 
     this.value =
-      PATH_SEPARATOR +
       this.typedPath.slice(0, -1).join(PATH_SEPARATOR) +
+      PATH_SEPARATOR +
       endPath
+  }
+
+  setPath = async doc => {
+    this.value = this.getPathForDocs(await doc.getCrumbs())
   }
 
   open = () => {

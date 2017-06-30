@@ -24,7 +24,6 @@ export type Props = {
   style?: Object,
   placeholder?: any,
   horizontal?: boolean,
-  padded?: boolean,
   flex?: boolean | number,
   scrollable?: boolean,
   controlled?: boolean,
@@ -141,9 +140,6 @@ class List {
     getItem,
     style,
     placeholder,
-    horizontal,
-    padded,
-    slim,
     flex,
     scrollable,
     controlled,
@@ -162,24 +158,16 @@ class List {
     let height = userHeight
     let width = userWidth
 
-    if (slim && !rowHeight) {
-      rowHeight = 22
-    }
-
     if (rowHeight && !parentSize) {
       return null
     }
     if (rowHeight) {
-      height = typeof userHeight === 'undefined'
-        ? parentSize.height
-        : userHeight
+      height =
+        typeof userHeight === 'undefined' ? parentSize.height : userHeight
       width = typeof userWidth === 'undefined' ? parentSize.width : userWidth
     }
 
     const passThroughProps = {
-      horizontal,
-      padded,
-      slim,
       onItemMount,
       itemStyle,
       size,
@@ -288,48 +276,8 @@ class List {
 
   static style = {
     list: {
-      fontSize: 13,
       overflowY: 'auto',
       overflowX: 'visible',
-    },
-    loading: {
-      flex: 1,
-    },
-  }
-
-  static theme = {
-    theme: (props, theme) => ({
-      list: {
-        ...theme.base,
-      },
-    }),
-    horizontal: {
-      list: {
-        flexFlow: 'row',
-        flexWrap: 'wrap !important',
-        justifyContent: 'space-between',
-      },
-    },
-    padded: {
-      list: {
-        padding: 10,
-      },
-    },
-    wrap: {
-      list: {
-        flexFlow: 'row',
-        flexWrap: 'wrap !important',
-      },
-    },
-    scrollable: {
-      list: {
-        overflowY: 'scroll',
-      },
-    },
-    flex: {
-      list: {
-        flex: 1,
-      },
     },
   }
 }

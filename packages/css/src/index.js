@@ -34,6 +34,14 @@ const FALSE_VALUES = {
   borderColor: 'transparent',
 }
 
+const BORDER_KEY = {
+  border: true,
+  borderLeft: true,
+  borderRight: true,
+  borderBottom: true,
+  borderTop: true,
+}
+
 // helpers
 const px = (x: number | string) => (/px$/.test(`${x}`) ? x : `${x}px`)
 const isFloat = n => n === +n && n !== (n | 0)
@@ -78,7 +86,7 @@ export default function motionStyle(options: Object = {}) {
       }
     }
     // solid default option for borders
-    if (key === 'border' && array.length === 2) {
+    if (BORDER_KEY[key] && array.length === 2) {
       array.push('solid')
     }
     return array.map(val => processArrayItem(key, val)).join(' ')

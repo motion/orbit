@@ -115,9 +115,7 @@ export default class CommanderStore {
         this.select(this.input.selectionEnd, this.input.selectionEnd)
         return
       }
-      if (!this.value) {
-        this.close()
-      }
+      this.close()
     },
     enter: () => this.onEnter(),
     focus: () => this.focus(),

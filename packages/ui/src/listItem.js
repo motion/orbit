@@ -56,7 +56,7 @@ export default class ListItem {
     ...props
   }: ItemProps) {
     return (
-      <Surface borderWidth={0} padding={[5, 20]} {...props}>
+      <Surface borderBottom={[1, '#000']} padding={[5, 20]} {...props}>
         <image if={avatar || fakeAvatar}>
           <img if={avatar && !fakeAvatar} src={avatar} $avatar />
           <FakeAvatar if={fakeAvatar} size={50} $avatar $padavatar />
@@ -67,10 +67,10 @@ export default class ListItem {
               {before}
             </before>
             <prop if={primary || secondary} $col $hasAvatar={!!avatar}>
-              <Text $primary ellipse>
+              <Text $primary size={1.2} ellipse>
                 {primary}
               </Text>
-              <Text if={secondary} $secondary ellipse>
+              <Text if={secondary} size={1} $secondary ellipse>
                 {secondary}
               </Text>
             </prop>
@@ -124,15 +124,6 @@ export default class ListItem {
       width: '100%',
       maxWidth: '100%',
       userSelect: 'none',
-    },
-    primary: {
-      flex: 1,
-      whiteSpace: 'nowrap',
-      justifyContent: 'center',
-    },
-    secondary: {
-      fontSize: 12,
-      marginTop: 2,
     },
     prop: {
       flex: 1,

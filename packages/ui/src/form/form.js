@@ -1,22 +1,28 @@
 import React from 'react'
 import { view, inject } from '@mcro/black'
 import { Provider } from 'react-tunnel'
+import Surface from '../surface'
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Form {
-  render({ ui, flex, uiContext, ...props }) {
+  render({ uiContext, children, ...props }) {
     return (
-      <Provider
-        provide={{
-          uiContext: {
-            ...uiContext,
-            inForm: true,
-          },
-        }}
-      >
-        {() => <form $form {...props} />}
-      </Provider>
+      <Surface tagName="form" {...props}>
+        <Provider
+          provide={{
+            uiContext: {
+              ...uiContext,
+              inForm: true,
+            },
+          }}
+        >
+          {() =>
+            <formChildren>
+              {children}
+            </formChildren>}
+        </Provider>
+      </Surface>
     )
   }
   static style = {

@@ -2,19 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { User } from '@mcro/models'
-import {
-  Dropdown,
-  Theme,
-  Popover,
-  List,
-  Form,
-  Segment,
-  Input,
-  Button,
-  Link,
-} from '@mcro/ui'
-
-const idFn = _ => _
+import * as UI from '@mcro/ui'
 
 @view
 export default class Signup {
@@ -23,7 +11,7 @@ export default class Signup {
       <login if={!User.loggedIn} $$draggable>
         <UI.Theme name="dark" if={!User.loggedIn}>
           <modal>
-            <UI.Form>
+            <UI.Form padding={10}>
               <UI.PassProps row chromeless placeholderColor="#333">
                 <UI.Field label="Name" placeholder="something" />
                 <UI.Field label="Email" placeholder="something" />

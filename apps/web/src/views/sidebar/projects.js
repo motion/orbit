@@ -14,8 +14,8 @@ import Router from '~/router'
     )
   },
 })
-class Projects {
-  render({ store }) {
+export default class Projects {
+  render({ store }: { store: SidebarProjectStore }) {
     const docs = store.docs || []
     const hasDocs = docs.length !== 0
     const percentComplete = tasks =>

@@ -3,7 +3,6 @@ import React from 'react'
 import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
 import FakeAvatar from './fake/fakeAvatar'
-import Glow from './effects/glow'
 import Text from './text'
 import Surface from './surface'
 
@@ -24,6 +23,7 @@ export type ItemProps = {
   onClick?: Function,
   onToggle?: Function,
   onItemMount?: Function,
+  iconProps?: Object,
 }
 
 @view.ui
@@ -63,6 +63,7 @@ export default class ListItem {
     row,
     onToggle,
     onItemMount,
+    iconProps,
     size,
     ...props
   }: ItemProps) {
@@ -81,7 +82,7 @@ export default class ListItem {
         glow
         iconProps={{
           margin: 5,
-          color: 'green',
+          ...iconProps,
         }}
         glowProps={{
           scale: 1.8,

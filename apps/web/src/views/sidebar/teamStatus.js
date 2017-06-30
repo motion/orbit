@@ -2,12 +2,11 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Document, User } from '@mcro/models'
 import rc from 'randomcolor'
 import sillyname from 'sillyname'
 
 @view
-class TeamStatus {
+export default class TeamStatus {
   items = [
     {
       name: 'SB',

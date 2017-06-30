@@ -1,8 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import Icon from '../icon'
-import Ellipse from '../ellipse'
+import Text from '../text'
 import type { Color } from '@mcro/gloss'
 
 // fields
@@ -19,7 +18,6 @@ const fields = {
 type Props = {
   type: 'input' | 'select' | 'toggle',
   spacing: number,
-  spaced?: boolean,
   row?: boolean,
   placeholder?: string,
   placeholderColor?: Color,
@@ -49,9 +47,7 @@ export default class Field {
     defaultValue,
     sync,
     children,
-    sub,
     theme,
-    spaced,
     row,
     chromeless,
     placeholder,
@@ -62,25 +58,14 @@ export default class Field {
     const id = `${Math.random()}`
 
     if (!Element && !children) {
-      throw new Error(`Invalid field type or no children given to Field`)
+      throw new Error('Invalid field type or no children given to Field')
     }
 
     return (
       <field $width={width} {...props}>
-        <label if={label} htmlFor={id} {...labelProps}>
-          <Icon
-            if={icon}
-            name={icon}
-            size={14}
-            margin={[0, 5, 0, 0]}
-            color={[255, 255, 255, 0.3]}
-            theme={theme}
-            {...iconProps}
-          />
-          <Ellipse>
-            {label}
-          </Ellipse>
-        </label>
+        <Text if={label} $label tagName="label" htmlFor={id} {...labelProps}>
+          {label}
+        </Text>
         <Element
           if={Element}
           $element
@@ -100,66 +85,61 @@ export default class Field {
 
   static style = {
     field: {
-      padding: [10],
       textAlign: 'left',
+      alignItems: 'center',
+      padding: 500,
     },
     label: {
       overflow: 'hidden',
       width: '100%',
-      userSelect: 'none',
-      fontSize: 13,
       textTransform: 'uppercase',
-      color: [0, 0, 0, 0.5],
-      padding: [5, 10],
-      borderBottom: [1, '#333'],
-      margin: [0, 0, 10],
     },
     width: width => ({ width }),
   }
 
-  rowStyle = {
-    field: {
-      padding: [5, 5],
-      flexFlow: 'row',
-      alignItems: 'flex-end',
-      // justifyContent: 'space-between',
-    },
-    label: {
-      margin: 0,
-      padding: 10,
-      width: '30%',
-      minWidth: 120,
-      borderBottom: 'none',
-      textAlign: 'right',
-    },
-    element: {
-      fontSize: 24,
-      height: 40,
-      border: 'none',
-      borderBottom: [1, '#eee'],
-      flex: 1,
-    },
-  }
+  static theme = (props, theme) => {
+    const inactiveStyle = {
+      field: {
+        opacity: 0.5,
+        pointerEvents: 'none',
+      },
+    }
 
-  inactiveStyle = {
-    field: {
-      opacity: 0.5,
-      pointerEvents: 'none',
-    },
-  }
+    const rowStyle = {
+      field: {
+        padding: [6, 8],
+        flexFlow: 'row',
+        alignItems: 'center',
+      },
+      label: {
+        margin: 0,
+        width: '30%',
+        minWidth: 120,
+        padding: [0, 10],
+        textAlign: 'right',
+      },
+      element: {
+        fontSize: 24,
+        height: 40,
+        border: 'none',
+        borderBottom: [1, '#eee'],
+        flex: 1,
+      },
+    }
 
-  static theme = (props, theme, self) => ({
-    field: {
-      ...(props.row && self.rowStyle.field),
-      ...(props.inactive && self.inactiveStyle.field),
-    },
-    element: {
-      color: theme.base.color,
-      ...(props.row && self.rowStyle.element),
-    },
-    label: {
-      color: theme.base.color,
-      ...(props.row && self.rowStyle.label),
-    },
-  })
+    return {
+      field: {
+        ...(props.row && rowStyle.field),
+        ...(props.inactive && inactiveStyle.field),
+      },
+      element: {
+        color: theme.base.color,
+        ...(props.row && rowStyle.element),
+      },
+      label: {
+        color: theme.base.color,
+        ...(props.row && rowStyle.label),
+      },
+    }
+  }
 }

@@ -6,6 +6,7 @@ import Login from './login'
 import Signup from './signup'
 import SidebarStore from './store'
 import Projects from './projects'
+import Menu from './menu'
 import type LayoutStore from '~/stores/layoutStore'
 import { IN_TRAY, TRAY_WIDTH, SIDEBAR_TRANSITION } from '~/constants'
 
@@ -14,19 +15,14 @@ type Props = {
   store: SidebarStore,
 }
 
-@view({
-  store: class {
-    team = 'Motion'
-  },
-})
-class SidebarInner {
-  render({ store }) {
-    const color = '#fff'
-    const borderColor = [255, 255, 255, 0.3]
+@view
+class SidebarContent {
+  render() {
     return (
       <inner $$flex>
         <Login />
         <Signup />
+        <Menu />
         <Projects />
         <UI.SlotFill.Slot name="sidebar">
           {items =>
@@ -61,7 +57,7 @@ export default class Sidebar {
             zIndex={9}
           >
             <sidebar>
-              <SidebarInner key={0} />
+              <SidebarContent key={0} />
             </sidebar>
           </UI.Drawer>
         </Shortcuts>

@@ -327,8 +327,11 @@ export default class Surface implements ViewType {
     const boxShadow = props.shadow === true ? [0, 5, 0, [0, 0, 0, 0.2]] : []
 
     if (props.glint) {
+      log(background.alpha(1).lighten(1).toString(), background.toString())
       const glintColor =
-        props.glint === true ? background.lighten(1) : props.glint
+        props.glint === true
+          ? background.alpha(1).lighten(100).toString()
+          : props.glint
       boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 
@@ -348,23 +351,18 @@ export default class Surface implements ViewType {
       log('good')
     }
 
-    const elementStyles = {
-      // inForm
-      ...(props.inForm && {
-        '&:active': theme.active,
-        '&:focus': theme.focus,
-      }),
-    }
-
     return {
       element: {
         ...props.elementStyles,
-        ...(props.wrapElement && elementStyles),
+        // inForm
+        ...(props.inForm && {
+          '&:active': theme.active,
+          '&:focus': theme.focus,
+        }),
         fontSize: props.fontSize,
         lineHeight: '0px',
       },
       surface: {
-        ...(!props.wrapElement && elementStyles),
         color,
         overflow: props.glow ? 'hidden' : props.overflow,
         height,

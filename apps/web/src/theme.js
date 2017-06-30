@@ -1,23 +1,32 @@
 // @flow
 import { color } from '@mcro/ui'
 
-function darkTheme(obj) {
+const colorize = obj =>
+  Object.keys(obj).reduce(
+    (acc, cur) => ({ ...acc, [cur]: color(obj[cur]) }),
+    {}
+  )
+
+function theme(styles) {
+  const obj = colorize(styles)
+
   return {
+    base: obj,
     hover: {
       ...obj,
       color: '#fff',
-      background: color(obj.background).lighten(0.2),
-      borderColor: color(obj.borderColor).lighten(0.2),
+      background: obj.background.lighten(0.2),
+      borderColor: obj.borderColor.lighten(0.2),
     },
     active: {
       ...obj,
-      background: color(obj.background).objen(0.2),
-      highlightColor: color(obj.highlightColor).lighten(0.2),
+      background: obj.background.darken(0.2),
+      highlightColor: obj.highlightColor.lighten(0.2),
       color: '#fff',
     },
     focus: {
       ...obj,
-      background: color(obj.background).lighten(0.25),
+      background: obj.background.lighten(0.25),
       borderColor: obj.highlightColor,
     },
     highlight: {
@@ -36,26 +45,19 @@ const LIGHT = {
 }
 
 const Theme = {
-  dark: {
-    name: 'dark',
-    ...darkTheme({
-      highlightColor,
-      background: '#222',
-      color: '#eee',
-      borderColor: '#333',
-    }),
-  },
-  clearDark: {
-    name: 'clear-dark',
-    ...darkTheme({
-      highlightColor,
-      background: [20, 20, 20, 0.4],
-      color: '#f2f2f2',
-      borderColor: [120, 120, 120, 0.4],
-    }),
-  },
+  dark: theme({
+    highlightColor,
+    background: '#222',
+    color: '#eee',
+    borderColor: '#333',
+  }),
+  'clear-dark': theme({
+    highlightColor,
+    background: [0, 0, 0, 0.4],
+    color: '#f2f2f2',
+    borderColor: [0, 0, 0, 0.6],
+  }),
   light: {
-    name: 'light',
     base: LIGHT,
     hover: {
       ...LIGHT,

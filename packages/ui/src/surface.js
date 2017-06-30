@@ -164,10 +164,7 @@ export default class Surface implements ViewType {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
-    const iconSize =
-      _iconSize ||
-      (theme && theme.element.style.fontSize * 0.9) ||
-      Math.log(size + 1) * 15
+    const iconSize = _iconSize || (size || 1) * 15
 
     const finalClassName = `${this.uniq} ${className || ''}`
     const passProps = {

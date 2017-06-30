@@ -21,6 +21,12 @@ type Props = {
   row?: boolean,
   placeholder?: string,
   placeholderColor?: Color,
+  elementStyle?: Object,
+  fieldStyle?: Object,
+  labelStyle?: Object,
+  elementProps?: Object,
+  fieldProps?: Object,
+  labelProps?: Object,
 }
 
 @view.ui
@@ -41,8 +47,11 @@ export default class Field {
     icon,
     width,
     iconProps,
-    fieldProps,
+    elementProps,
     labelProps,
+    labelStyle,
+    fieldStyle,
+    elementStyle,
     onChange,
     defaultValue,
     sync,
@@ -63,7 +72,14 @@ export default class Field {
 
     return (
       <field $width={width} {...props}>
-        <Text if={label} $label tagName="label" htmlFor={id} {...labelProps}>
+        <Text
+          if={label}
+          $label
+          ellipse
+          tagName="label"
+          htmlFor={id}
+          {...labelProps}
+        >
           {label}
         </Text>
         <Element
@@ -76,7 +92,7 @@ export default class Field {
           chromeless={chromeless}
           placeholder={placeholder}
           placeholderColor={placeholderColor}
-          {...fieldProps}
+          {...elementProps}
         />
         {children}
       </field>
@@ -94,7 +110,6 @@ export default class Field {
       width: '100%',
       textTransform: 'uppercase',
     },
-    width: width => ({ width }),
   }
 
   static theme = (props, theme) => {
@@ -114,7 +129,6 @@ export default class Field {
       label: {
         margin: 0,
         width: '30%',
-        minWidth: 120,
         padding: [0, 10],
         textAlign: 'right',
       },
@@ -131,14 +145,17 @@ export default class Field {
       field: {
         ...(props.row && rowStyle.field),
         ...(props.inactive && inactiveStyle.field),
+        ...props.fieldStyle,
       },
       element: {
         color: theme.base.color,
         ...(props.row && rowStyle.element),
+        ...props.elementStyle,
       },
       label: {
         color: theme.base.color,
         ...(props.row && rowStyle.label),
+        ...props.labelStyle,
       },
     }
   }

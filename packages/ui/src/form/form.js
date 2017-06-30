@@ -8,7 +8,7 @@ import Surface from '../surface'
 export default class Form {
   render({ uiContext, children, ...props }) {
     return (
-      <Surface tagName="form" {...props}>
+      <Surface background="transparent" tagName="form" {...props}>
         <Provider
           provide={{
             uiContext: {

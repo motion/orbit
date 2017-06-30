@@ -20,8 +20,7 @@ class SidebarContent {
   render() {
     return (
       <inner $$flex>
-        <Login />
-        <Signup />
+        <Signup login={<Login />} />
         <Menu />
         <Projects />
         <UI.SlotFill.Slot name="sidebar">

@@ -29,7 +29,6 @@ export default class Surface implements ViewType {
     elevation?: number,
     inSegment?: boolean,
     inForm?: boolean,
-    clickable?: boolean,
     active?: boolean,
     chromeless?: boolean,
     inline?: boolean,
@@ -61,8 +60,6 @@ export default class Surface implements ViewType {
     glow?: boolean,
     noElement?: boolean,
     glint?: boolean,
-    lightenOnHover?: boolean,
-    darkenOnHover?: boolean,
     getRef?: Function,
     hoverable?: boolean,
     borderWidth?: number | string,
@@ -99,7 +96,6 @@ export default class Surface implements ViewType {
     inSegment,
     inForm,
     onClick,
-    clickable,
     children,
     icon,
     iconProps,
@@ -298,13 +294,18 @@ export default class Surface implements ViewType {
     const padding = props.padding
     const flex = props.flex === true ? 1 : props.flex
 
+    // color helpers
+    const luminosity = background.luminosity()
+    const isDark = luminosity < 0.4
+    const addContrast = (color, amt) =>
+      color[isDark ? 'lighten' : 'darken'](amt)
+
     // colors
     const color = $(
       props.highlight
         ? props.highlightColor || theme.highlight.color || props.color
         : props.active ? theme.active.color : props.color || theme.base.color
     )
-
     const iconColor = props.iconColor || color
     const baseBackground =
       props.background || theme.base.background || 'transparent'
@@ -318,21 +319,15 @@ export default class Surface implements ViewType {
     )
 
     // hover
+    const hoverBackgroundColor =
+      props.hoverBackgroundColor || props.hoverable
+        ? addContrast(background, luminosity / 30)
+        : background
     let hoverColor = $(
       props.highlight
         ? color.lighten(0.2)
         : props.hoverColor || theme.hover.color || props.color
     )
-    // TODO this could be simpler/better
-    if (props.lightenOnHover) {
-      hoverColor = hoverColor.lighten(
-        props.lightenOnHover === true ? 3 : props.lightenOnHover
-      )
-    } else if (props.darkenOnHover) {
-      hoverColor = hoverColor.darken(
-        props.darkenOnHover === true ? 3 : props.darkenOnHover
-      )
-    }
     const hoverBorderColor =
       props.hoverBorderColor ||
       theme.hover.borderColor ||
@@ -446,6 +441,7 @@ export default class Surface implements ViewType {
           ...theme.hover,
           color: hoverColor,
           borderColor: hoverBorderColor,
+          backgroundColor: hoverBackgroundColor,
         },
         // this is just onmousedown
         '&:active': {

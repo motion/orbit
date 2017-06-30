@@ -78,7 +78,8 @@ export default class ListItem {
         borderTopRadius={!!isFirstElement}
         overflow="hidden"
         padding={[12, 6]}
-        glow
+        hoverable
+        glow={!secondary && !children}
         {...props}
       >
         <image if={avatar || fakeAvatar}>
@@ -94,7 +95,12 @@ export default class ListItem {
               <Text $primary size={size} ellipse>
                 {primary}
               </Text>
-              <Text if={secondary} size={size * 0.8} ellipse>
+              <Text
+                if={secondary}
+                size={size * 0.85}
+                color={[0, 0, 0, 0.5]}
+                ellipse
+              >
                 {secondary}
               </Text>
             </prop>

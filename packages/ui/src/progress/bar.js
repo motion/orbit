@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { color, view } from '@mcro/black'
+import { view } from '@mcro/black'
+import $ from 'color'
 import type { Color } from '@mcro/gloss'
 
 type Props = {
@@ -49,7 +50,10 @@ export default class ProgressBar {
 
   static theme = ({ color, background }: Props, theme) => ({
     outer: {
-      background: background || theme.base.background.darken(1),
+      background:
+        background || theme.base.background
+          ? $(theme.base.background).darken(0.5)
+          : '#eee',
     },
     inner: {
       background: color || theme.base.highlightColor,

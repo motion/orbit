@@ -10,7 +10,7 @@ module.exports = {
     'prettier/flowtype',
     'prettier/react',
   ],
-  plugins: ['flowtype', 'prettier'],
+  plugins: ['react', 'flowtype', 'prettier'],
   parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 8,
@@ -28,7 +28,9 @@ module.exports = {
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
     'no-console': 'off',
-    'no-unused-vars': 'off',
+    'no-unused-vars': 'error',
+    'react/jsx-uses-vars': 2,
+    'react/jsx-uses-react': 'error',
   },
   settings: {
     'import/resolver': {
@@ -44,6 +46,6 @@ module.exports = {
     React$Component: true,
     emit: true,
     __dirname: true,
-    exports: true
+    exports: true,
   },
 }

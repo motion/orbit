@@ -15,7 +15,7 @@ export default class CommanderInput {
           onFocus={commanderStore.onFocus}
           placeholder={commanderStore.place}
           placeholderColor={[0, 0, 0, 0.1]}
-          borderColor="transparent"
+          borderWidth={0}
           getRef={commanderStore.ref('input').set}
           value={commanderStore.value}
         />

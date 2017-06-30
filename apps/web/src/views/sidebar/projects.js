@@ -23,23 +23,6 @@ export default class Projects {
 
     return (
       <content $$scrollable $$flex={6}>
-        <UI.Segment
-          $$draggable
-          $$flex="none"
-          controlled
-          $$borderBottom={[1, [255, 255, 255, 0.1]]}
-          itemProps={{
-            chromeless: true,
-            $$flex: 1,
-            height: 26,
-            borderRadius: 0,
-            color: [255, 255, 255, 0.5],
-          }}
-        >
-          <UI.Button active>Following</UI.Button>
-          <UI.Button>Recent</UI.Button>
-        </UI.Segment>
-
         <UI.Placeholder size={2} $$flex if={!hasDocs}>
           No Stars
         </UI.Placeholder>
@@ -59,21 +42,6 @@ export default class Projects {
                       size={14}
                       percent={percentComplete(tasks)}
                     />
-                    <path if={false} $$row $$centered>
-                      <UI.Text>
-                        {flatMap(
-                          doc.title.map((tit, index) =>
-                            <piece key={index}>
-                              {tit}
-                            </piece>
-                          ),
-                          (value, index, arr) =>
-                            arr.length !== index + 1
-                              ? [value, <sep key={Math.random()}>/</sep>]
-                              : value
-                        )}
-                      </UI.Text>
-                    </path>
                     <path onClick={() => Router.go(doc.url())} $$row $$centered>
                       <UI.Text>
                         {(store.crumbs &&

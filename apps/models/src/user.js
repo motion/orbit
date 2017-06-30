@@ -3,8 +3,6 @@ import PouchDB from 'pouchdb-core'
 import superlogin from 'superlogin-client'
 import { DocumentModel } from './document'
 
-const COUCH_PROTOCOL = `${window.location.protocol}//`
-const COUCH_HOST = `couch.${window.location.host}`
 const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
 

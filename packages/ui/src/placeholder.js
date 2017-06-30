@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
-import { color, view } from '@mcro/black'
-import Button from './button'
+import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
 import Text from './text'
 
@@ -18,7 +17,7 @@ export type TitleProps = {
 const MAX_SIZES = 4
 
 @view.ui
-export default class Placeholder extends React.Component {
+export default class Placeholder {
   props: TitleProps
 
   static defaultProps = {

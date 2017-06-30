@@ -316,7 +316,7 @@ export default class Sidebar {
     const width = IN_TRAY ? TRAY_WIDTH : layoutStore.sidebar.width
 
     return (
-      <UI.Theme name="dark">
+      <UI.Theme name="clear-dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <UI.Drawer
             transition={SIDEBAR_TRANSITION}

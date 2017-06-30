@@ -1,44 +1,58 @@
 // @flow
 import { color } from '@mcro/ui'
 
+function darkTheme(obj) {
+  return {
+    hover: {
+      ...obj,
+      color: '#fff',
+      background: color(obj.background).lighten(0.2),
+      borderColor: color(obj.borderColor).lighten(0.2),
+    },
+    active: {
+      ...obj,
+      background: color(obj.background).objen(0.2),
+      highlightColor: color(obj.highlightColor).lighten(0.2),
+      color: '#fff',
+    },
+    focus: {
+      ...obj,
+      background: color(obj.background).lighten(0.25),
+      borderColor: obj.highlightColor,
+    },
+    highlight: {
+      color: obj.highlightColor,
+    },
+  }
+}
+
+const highlightColor = [89, 154, 244]
+
 const LIGHT = {
-  highlightColor: 'rgb(89, 154, 244)',
+  highlightColor,
   background: '#fff',
   color: '#555',
   borderColor: '#eee',
 }
 
-const DARK = {
-  highlightColor: 'rgb(89, 154, 244)',
-  background: [20, 20, 20, 0.4],
-  color: '#f2f2f2',
-  borderColor: [120, 120, 120, 0.4],
-}
-
 const Theme = {
   dark: {
     name: 'dark',
-    base: DARK,
-    hover: {
-      ...DARK,
-      color: '#fff',
-      background: color(DARK.background).lighten(0.2),
-      borderColor: color(DARK.borderColor).lighten(0.2),
-    },
-    active: {
-      ...DARK,
-      background: color(DARK.background).darken(0.2),
-      highlightColor: color(DARK.highlightColor).lighten(0.2),
-      color: '#fff',
-    },
-    focus: {
-      ...DARK,
-      background: color(DARK.background).lighten(0.25),
-      borderColor: DARK.highlightColor,
-    },
-    highlight: {
-      color: DARK.highlightColor,
-    },
+    ...darkTheme({
+      highlightColor,
+      background: '#222',
+      color: '#eee',
+      borderColor: '#333',
+    }),
+  },
+  clearDark: {
+    name: 'clear-dark',
+    ...darkTheme({
+      highlightColor,
+      background: [20, 20, 20, 0.4],
+      color: '#f2f2f2',
+      borderColor: [120, 120, 120, 0.4],
+    }),
   },
   light: {
     name: 'light',

@@ -241,7 +241,7 @@ export default class Surface implements ViewType {
       background: 'transparent',
       userSelect: 'none',
       height: '100%',
-      width: '100%',
+      flex: 1,
       justifyContent: 'center',
       alignItems: 'stretch',
     },

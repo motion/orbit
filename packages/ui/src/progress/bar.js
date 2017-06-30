@@ -27,18 +27,6 @@ export default class ProgressBar {
     )
   }
 
-  static theme = {
-    theme: ({ color, background }: Props, theme) => ({
-      outer: {
-        background:
-          background || color(theme.base.backgroundColor).darken(1).toString(),
-      },
-      inner: {
-        background: color || theme.base.highlightColor,
-      },
-    }),
-  }
-
   static style = {
     outer: {
       height: 6,
@@ -58,4 +46,13 @@ export default class ProgressBar {
       width: `${percent}%`,
     }),
   }
+
+  static theme = ({ color, background }: Props, theme) => ({
+    outer: {
+      background: background || theme.base.background.darken(1),
+    },
+    inner: {
+      background: color || theme.base.highlightColor,
+    },
+  })
 }

@@ -48,9 +48,13 @@ export default class Badge {
         {...attach}
       >
         <content $labelBefore={labelBefore} if={icon || children || label}>
-          <lbl if={label} $hasChildren={!!children}>{label}</lbl>
+          <lbl if={label} $hasChildren={!!children}>
+            {label}
+          </lbl>
           <Icon if={icon} size={16} name={icon} color={color} {...iconProps} />
-          <inner if={children} $hasLabel={!!label}>{children}</inner>
+          <inner if={children} $hasLabel={!!label}>
+            {children}
+          </inner>
         </content>
       </badge>
     )
@@ -58,12 +62,14 @@ export default class Badge {
 
   static style = {
     badge: {
-      lineHeight: '1rem',
+      lineHeight: '0px',
       fontSize: 12,
       flexFlow: 'row',
+      alignSelf: 'center',
       alignItems: 'center',
       justifyContent: 'center',
       overflow: 'hidden',
+      marginRight: 5,
     },
     content: {
       flexFlow: 'row',
@@ -91,11 +97,4 @@ export default class Badge {
       paddingRight: 4,
     },
   }
-
-  static theme = ({ size }) => ({
-    badge: {
-      width: size,
-      height: size,
-    },
-  })
 }

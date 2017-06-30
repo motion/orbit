@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view } from '@mcro/black'
 import Bar from './bar'
@@ -21,6 +22,6 @@ export default class Progress {
       return <Bar {...props} />
     }
 
-    throw new Error(`Invalid progress type given`)
+    throw new Error('Invalid progress type given')
   }
 }

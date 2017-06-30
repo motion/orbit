@@ -79,6 +79,10 @@ export default class ListItem {
         overflow="hidden"
         padding={[12, 8]}
         glow
+        iconProps={{
+          margin: 5,
+          color: 'green',
+        }}
         glowProps={{
           scale: 1.8,
           opacity: 0.025,

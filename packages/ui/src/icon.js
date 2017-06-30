@@ -115,6 +115,7 @@ export default class Icon {
 
     return {
       icon: {
+        color: props.color ? `${props.color} !important` : '',
         width: (props.width || props.size) + buttonPad * 2,
         height: props.height || props.size + buttonPad * 2,
         fontSize: props.size,

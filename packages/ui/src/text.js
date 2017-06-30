@@ -77,10 +77,8 @@ export default class Text implements ViewType {
 
   handleKeydown = (event: Event) => {
     const { onFinishEdit, onCancelEdit, editable, onKeyDown } = this.props
-
     if (editable) {
       const code = keycode(event)
-
       if (code === 'enter') {
         event.preventDefault()
         if (onFinishEdit) onFinishEdit(this.value, event)
@@ -95,6 +93,15 @@ export default class Text implements ViewType {
     }
   }
 
+  getRef = (node: HTMLElement) => {
+    if (node) {
+      this.node = node
+      if (this.props.getRef) {
+        this.props.getRef(node)
+      }
+    }
+  }
+
   render({
     store,
     editable,
@@ -106,6 +113,7 @@ export default class Text implements ViewType {
     ellipse,
     children,
     tagName,
+    getRef,
     ...props
   }: Props) {
     return (
@@ -115,8 +123,7 @@ export default class Text implements ViewType {
         $selectable={selectable}
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
-        ref={this.ref('node').set}
-        $$marginLeft={props.active ? -2 : 0}
+        ref={this.getRef}
         {...props}
       >
         {!ellipse && children}
@@ -134,15 +141,22 @@ export default class Text implements ViewType {
     selectable: {
       userSelect: 'auto',
     },
+    ellipse: {
+      height: '100%',
+    },
   }
 
-  static theme = (props, theme) => ({
-    text: {
-      fontSize: props.size * 16,
-      color: props.color || theme.base.color,
-    },
-    ellipse: {
-      color: props.color || theme.base.color,
-    },
-  })
+  static theme = (props, theme) => {
+    const fontSize = props.size * 16
+    return {
+      text: {
+        fontSize,
+        lineHeight: `${fontSize + 8}px`,
+        color: props.color || theme.base.color,
+      },
+      ellipse: {
+        color: props.color || theme.base.color,
+      },
+    }
+  }
 }

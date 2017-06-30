@@ -1,5 +1,14 @@
 import React from 'react'
-import Surface from './surface'
+import SizedSurface from './sizedSurface'
 
 export default props =>
-  <Surface tagName="button" hoverable glint glow {...props} noElement />
+  <SizedSurface
+    tagName="button"
+    borderWidth={1}
+    borderStyle="solid"
+    hoverable
+    glint
+    glow
+    {...props}
+    noElement
+  />

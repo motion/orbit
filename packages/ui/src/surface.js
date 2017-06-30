@@ -58,11 +58,24 @@ export default class Surface implements ViewType<Props> {
     getRef?: Function,
     hoverable?: boolean,
     borderWidth?: number | string,
+    border?: Array | Object,
+    borderBottom?: Array | Object,
+    borderTop?: Array | Object,
+    borderLeft?: Array | Object,
+    borderRight?: Array | Object,
+    marginBottom?: number,
+    marginTop?: number,
+    marginLeft?: number,
+    marginRight?: number,
+    paddingBottom?: number,
+    paddingTop?: number,
+    paddingLeft?: number,
+    paddingRight?: number,
+    borderStyle?: 'solid' | 'dotted',
   }
 
   static defaultProps = {
     tagName: 'div',
-    size: 1,
   }
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
@@ -95,6 +108,19 @@ export default class Surface implements ViewType<Props> {
     theme: _theme,
     circular,
     size,
+    border,
+    borderBottom,
+    borderTop,
+    borderLeft,
+    borderRight,
+    paddingBottom,
+    paddingTop,
+    paddingLeft,
+    paddingRight,
+    marginBottom,
+    marginTop,
+    marginLeft,
+    marginRight,
     borderWidth,
     borderColor,
     borderRadius,
@@ -113,6 +139,8 @@ export default class Surface implements ViewType<Props> {
     glint,
     hoverable,
     width,
+    style,
+    borderStyle,
     ...props
   }: Props) {
     const { theme } = this
@@ -191,9 +219,6 @@ export default class Surface implements ViewType<Props> {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      borderWidth: 1,
-      borderStyle: 'solid',
-      borderColor: 'transparent',
       position: 'relative',
     },
     glowWrap: {
@@ -213,8 +238,9 @@ export default class Surface implements ViewType<Props> {
       background: 'transparent',
       userSelect: 'none',
       height: '100%',
+      flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'stretch',
     },
     icon: {
       pointerEvents: 'none',
@@ -260,22 +286,11 @@ export default class Surface implements ViewType<Props> {
 
   static theme = (props, theme, self) => {
     // sizes
-    const height = props.height || props.size * LINE_HEIGHT
+    const height = props.height
     const width = props.width
-    const padding =
-      typeof props.padding !== 'undefined'
-        ? props.padding
-        : props.wrapElement ? 0 : [0, height / 4]
-    const fontSize = props.fontSize || height * 0.5
+    const padding = props.padding
     const flex = props.flex === true ? 1 : props.flex
-
-    // radius
-    const baseBorderRadius = props.borderRadius
-      ? props.borderRadius
-      : height / 5
-    const borderRadius = props.circular
-      ? height
-      : baseBorderRadius || height / 10
+    const borderRadius = props.circular ? height : props.borderRadius
 
     // colors
     const color = $(
@@ -348,7 +363,7 @@ export default class Surface implements ViewType<Props> {
     return {
       element: {
         ...props.elementStyles,
-        fontSize,
+        fontSize: props.fontSize,
         lineHeight: '0px',
         color,
         '&:hover': {
@@ -356,8 +371,6 @@ export default class Surface implements ViewType<Props> {
         },
       },
       surface: {
-        margin: props.margin,
-        borderWidth: props.borderWidth,
         overflow,
         height,
         width,
@@ -367,6 +380,22 @@ export default class Surface implements ViewType<Props> {
         borderColor,
         background,
         boxShadow,
+        margin: props.margin,
+        borderWidth: props.borderWidth,
+        borderStyle: props.borderStyle,
+        border: props.border,
+        borderBottom: props.borderBottom,
+        borderTop: props.borderTop,
+        borderLeft: props.borderLeft,
+        borderRight: props.borderRight,
+        marginBottom: props.marginBottom,
+        marginTop: props.marginTop,
+        marginLeft: props.marginLeft,
+        marginRight: props.marginRight,
+        paddingBottom: props.paddingBottom,
+        paddingTop: props.paddingTop,
+        paddingLeft: props.paddingLeft,
+        paddingRight: props.paddingRight,
         ...circularStyles,
         ...segmentStyles,
         ...(props.inline && self.surfaceStyle),
@@ -397,6 +426,7 @@ export default class Surface implements ViewType<Props> {
           '&:active': theme.active,
           '&:focus': theme.focus,
         }),
+        ...props.style,
       },
     }
   }

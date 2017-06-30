@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import FakeAvatar from './fake/fakeAvatar'
 import Glow from './effects/glow'
 import Text from './text'
+import Surface from './surface'
 
 export type ItemProps = {
   children?: React$Element<any>,
@@ -17,23 +18,10 @@ export type ItemProps = {
   before?: React$Element<any>,
   after?: React$Element<any>,
   isLastElement?: boolean,
-  highlight?: boolean,
   isFirstElement?: boolean,
-  nohover?: boolean,
   row?: boolean,
   onClick?: Function,
-  slim?: boolean,
   onToggle?: Function,
-  active?: boolean,
-  horizontal?: boolean,
-  itemStyle?: Object,
-  style?: Object,
-  dark?: boolean,
-  padded?: boolean,
-  padding?: Array | number,
-  light?: boolean,
-  height?: number,
-  fontSize?: number,
   onItemMount?: Function,
 }
 
@@ -61,43 +49,14 @@ export default class ListItem {
     before,
     after,
     isLastElement,
-    highlight,
     isFirstElement,
-    nohover,
     row,
-    onClick,
-    slim,
     onToggle,
-    active,
-    horizontal,
-    itemStyle,
-    style,
-    dark,
-    padded,
-    padding,
-    light,
-    height,
     onItemMount,
-    fontSize,
     ...props
   }: ItemProps) {
     return (
-      <item
-        ref="item"
-        $isLast={isLastElement}
-        $highlight={highlight}
-        $isFirst={isFirstElement}
-        $nohover={nohover}
-        onClick={onClick}
-        {...props}
-      >
-        <Glow
-          if={onClick && !nohover}
-          color={dark ? [255, 255, 255] : [0, 0, 0]}
-          opacity={dark ? 0.04 : 0.06}
-          scale={0.2}
-          blur={100}
-        />
+      <Surface borderBottom={[1, '#eee']} padding={[12, 12]} {...props}>
         <image if={avatar || fakeAvatar}>
           <img if={avatar && !fakeAvatar} src={avatar} $avatar />
           <FakeAvatar if={fakeAvatar} size={50} $avatar $padavatar />
@@ -108,10 +67,10 @@ export default class ListItem {
               {before}
             </before>
             <prop if={primary || secondary} $col $hasAvatar={!!avatar}>
-              <Text $primary ellipse>
+              <Text $primary size={1.2} ellipse>
                 {primary}
               </Text>
-              <Text if={secondary} $secondary ellipse>
+              <Text if={secondary} size={1} $secondary ellipse>
                 {secondary}
               </Text>
             </prop>
@@ -129,7 +88,7 @@ export default class ListItem {
             {children}
           </children>
         </content>
-      </item>
+      </Surface>
     )
   }
 
@@ -166,22 +125,10 @@ export default class ListItem {
       maxWidth: '100%',
       userSelect: 'none',
     },
-    primary: {
-      flex: 1,
-      whiteSpace: 'nowrap',
-      justifyContent: 'center',
-    },
-    secondary: {
-      fontSize: 12,
-      marginTop: 2,
-    },
     prop: {
       flex: 1,
       maxWidth: '100%',
       overflow: 'hidden',
-    },
-    isLast: {
-      borderBottom: 'none',
     },
     date: {
       userSelect: 'none',
@@ -218,81 +165,6 @@ export default class ListItem {
     children: {
       flex: 1,
       overflowY: 'scroll',
-    },
-    nohover: {
-      '&:hover': {
-        background: 'transparent',
-      },
-      '&:active': {
-        background: 'transparent',
-      },
-    },
-  }
-
-  static theme = {
-    theme: (props, theme) => ({
-      item: {
-        fontSize: props.fontSize || theme.base.fontSize,
-        color: theme.base.color,
-        borderColor: theme.base.borderColor,
-      },
-    }),
-    itemStyle: ({ itemStyle }) => ({
-      item: itemStyle,
-    }),
-    padding: ({ padding }) => ({
-      item: {
-        padding,
-      },
-    }),
-    height: ({ height }) => ({
-      item: {
-        height,
-      },
-    }),
-    bordered: {
-      item: {
-        borderBottom: [1, [0, 0, 0, 0.03]],
-      },
-    },
-    slim: {
-      item: {
-        fontSize: 12,
-        padding: [4, 6],
-      },
-      primary: {
-        fontWeight: 300,
-      },
-      avatar: {
-        width: 30,
-        height: 30,
-      },
-    },
-    small: {
-      item: {
-        padding: [3, 8],
-      },
-    },
-    big: {
-      item: {
-        fontSize: 18,
-      },
-    },
-    placeholder: {
-      item: {
-        '&:hover': { background: 'auto' },
-        '&:active': { background: 'auto' },
-      },
-    },
-    highlight: {
-      item: {
-        background: [0, 0, 0, 0.08],
-      },
-    },
-    focused: {
-      item: {
-        background: [0, 0, 0, 0.02],
-      },
     },
   }
 }

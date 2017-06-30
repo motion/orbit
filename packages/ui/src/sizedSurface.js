@@ -15,7 +15,7 @@ export default class SizedSurface extends React.Component {
     // sizes
     const height = props.height || props.size * LINE_HEIGHT
     const fontSize = props.fontSize || height * 0.5
-    const borderRadius = props.borderRadius || height / 10
+    const borderRadius = props.borderRadius || height / 5
 
     const pass = {
       borderRadius,

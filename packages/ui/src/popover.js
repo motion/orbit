@@ -484,7 +484,7 @@ export default class Popover {
   }
 
   // hover helpers
-  @log
+  // @log
   hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {

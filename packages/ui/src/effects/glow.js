@@ -70,7 +70,7 @@ export default class HoverGlow {
       // Resize.listenTo(node, this.setBounds)
 
       if (this.props.clickable) {
-        this.on(node, 'click', this.click)
+        this.on(node, 'mousedown', this.mouseDown)
       }
     }
   }
@@ -98,7 +98,7 @@ export default class HoverGlow {
     })
   }, 16)
 
-  click = () => {
+  mouseDown = () => {
     this.setState({ clicked: true }, () => {
       this.setTimeout(() => {
         this.setState({ clicked: false })
@@ -139,7 +139,6 @@ export default class HoverGlow {
     blur,
   }) {
     const setRootRef = this.ref('rootRef').set
-
     const { track } = this.state
 
     if ((!track && !children) || !track) {
@@ -153,18 +152,13 @@ export default class HoverGlow {
       width = this.bounds.width
       height = this.bounds.height
     }
-
-    const shadowAmt = shadowSize === null ? width + height : shadowSize
-
     const { position: { x, y }, clicked } = this.state
-
     // resists being moved (towards center)
     const resisted = coord => {
       if (resist === 0) return coord
       const resistAmt = 1 - resist / 100
       return coord * resistAmt
     }
-
     // bounds it within box x% size of parent
     const bounded = (coord, glowSize, parentSize) => {
       if (boundPct === null || boundPct > 100) return coord
@@ -174,12 +168,10 @@ export default class HoverGlow {
       const cur = Math.abs(coord)
       return Math.min(max, cur) * direction
     }
-
     const inversed = coord => {
       if (!inverse) return coord
       return -coord
     }
-
     const colorRGB = $(color).toString()
     const translateX = inversed(
       bounded(resisted(x), width * scale, this.bounds.width)
@@ -187,6 +179,7 @@ export default class HoverGlow {
     const translateY = inversed(
       bounded(resisted(y), height * scale, this.bounds.height)
     )
+    const extraScale = clicked ? clickScale : 1
 
     const glow = (
       <overlay ref={setRootRef} style={style} {...itemProps}>
@@ -205,8 +198,7 @@ export default class HoverGlow {
             height={height}
             width={width}
             style={{
-              transform: `scale(${scale *
-                (clicked ? clickScale : 1)}) translateZ(0px)`,
+              transform: `scale(${scale * extraScale}) translateZ(0px)`,
               opacity: track ? opacity : 0,
               width,
               height,
@@ -249,7 +241,6 @@ export default class HoverGlow {
       right: 0,
       bottom: 0,
       transition: 'opacity ease-in 50ms',
-
       pointerEvents: 'none',
       '&:active': {
         pointerEvents: 'none',

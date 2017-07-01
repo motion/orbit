@@ -11,8 +11,9 @@ export default class SidebarMenu {
         <UI.Theme name="clear">
           <UI.List
             items={[
-              { primary: 'All Incoming', icon: 'inbox' },
-              { primary: 'Drafts', icon: 'mail' },
+              { primary: 'Me', icon: 'hum', onClick: _ => _ },
+              { primary: 'Drafts', icon: 'paper', onClick: _ => _ },
+              { primary: 'Browse', icon: 'list', onClick: _ => _ },
             ]}
           />
         </UI.Theme>

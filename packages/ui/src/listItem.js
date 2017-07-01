@@ -66,6 +66,7 @@ export default class ListItem {
     meta,
     onItemMount,
     onToggle,
+    onClick,
     primary,
     row,
     secondary,
@@ -89,15 +90,17 @@ export default class ListItem {
         borderBottomRadius={isLastElement}
         borderTopRadius={isFirstElement}
         overflow="hidden"
-        padding={[6, 6]}
+        padding={[6, 8]}
         glow
+        onClick={onClick}
         iconProps={{
           margin: 5,
           ...iconProps,
         }}
         glowProps={{
-          scale: 1.8,
+          scale: 1.5,
           opacity: 0.05,
+          clickable: !!onClick,
         }}
         style={{
           position: 'relative',

@@ -36,7 +36,6 @@ export type Props = {
   size?: number,
   borderRadius?: number,
   borderColor?: Color,
-  borderSize?: number,
 }
 
 @parentSize
@@ -139,7 +138,6 @@ class List {
   render({
     borderColor,
     borderRadius,
-    borderSize,
     children,
     controlled,
     getItem,
@@ -179,7 +177,6 @@ class List {
       size,
       borderRadius,
       borderColor,
-      borderSize,
     }
 
     if (!items && !children) {

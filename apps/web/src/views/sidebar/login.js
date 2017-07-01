@@ -102,7 +102,6 @@ export default class Login {
     },
     error: {
       borderColor: 'red',
-      borderSize: 2,
     },
     step: {
       flex: 1,

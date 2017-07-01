@@ -105,6 +105,7 @@ export default class CommanderStore {
 
   actions = {
     toggleSidebar: () => {
+      console.log('got')
       App.layoutStore.sidebar.toggle()
     },
     esc: () => {

@@ -13,7 +13,6 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
 import * as Black from '@mcro/black'
-import * as UI from '@mcro/ui'
 
 // Mobx.useStrict(true)
 
@@ -34,4 +33,3 @@ window.Constants = Constants
 window._ = _
 window.log = Black.log
 window.Black = Black
-window.UI = UI

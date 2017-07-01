@@ -59,6 +59,68 @@ export default class Children {
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
 
+    const dot = color =>
+      <Button
+        circular
+        background={color}
+        size={0.3}
+        $$margin={[0, 5, 0, 0]}
+        color={color}
+      />
+
+    const getDoc = doc => {
+      const children = store.children[doc._id]
+      return {
+        onClick() {
+          Router.go(doc.url())
+        },
+        primary: (
+          <div $$row $$align="center">
+            <name>
+              {dot(doc.color)}
+              <span $$ellipse>
+                {doc.getTitle()}
+              </span>
+            </name>
+          </div>
+        ),
+        secondary: (
+          <content if={children}>
+            {children.map(child =>
+              <child key={child._id}>
+                {child.getTitle()}
+              </child>
+            )}
+          </content>
+        ),
+      }
+    }
+    const newDoc =
+      store.newTitle === null
+        ? null
+        : {
+            primary: (
+              <div $$row $$align="center">
+                <name>
+                  {dot([0, 0, 0, 0.4])}
+                  <input
+                    $name
+                    autoFocus
+                    value={store.newTitle}
+                    onKeyDown={e => e.which === 13 && store.create()}
+                    onChange={e => (store.newTitle = e.target.value)}
+                    onBlur={e => (store.newTitle = null)}
+                  />
+                </name>
+              </div>
+            ),
+          }
+
+    const items = [
+      ...sortBy(docs || [], 'createdAt').map(getDoc),
+      ...(newDoc ? [newDoc] : []),
+    ]
+
     return (
       <children>
         <header $$row>
@@ -76,50 +138,7 @@ export default class Children {
           </actions>
         </header>
         <content>
-          <docs if={hasDocs}>
-            {sortBy(docs || [], 'createdAt').map(doc => {
-              const children = store.children[doc._id]
-              return (
-                <doc key={doc._id} onClick={() => Router.go(doc.url())}>
-                  <card>
-                    <div $$row $$align="center">
-                      <Button
-                        circular
-                        background={doc.color}
-                        size={0.3}
-                        $$margin={[0, 5, 0, 0]}
-                        color={doc.color}
-                      />
-                      <name>
-                        <span $$ellipse>
-                          {doc.getTitle()}
-                        </span>
-                      </name>
-                    </div>
-                    <content if={children}>
-                      {children.map(child =>
-                        <child key={child._id}>
-                          {child.getTitle()}
-                        </child>
-                      )}
-                    </content>
-                  </card>
-                </doc>
-              )
-            })}
-            <doc if={store.newTitle !== null}>
-              <TiltGlow width={WIDTH}>
-                <card />
-              </TiltGlow>
-              <input
-                $name
-                autoFocus
-                value={store.newTitle}
-                onKeyDown={e => e.which === 13 && store.create()}
-                onChange={e => (store.newTitle = e.target.value)}
-              />
-            </doc>
-          </docs>
+          <UI.List if={hasDocs} items={items} />
         </content>
       </children>
     )
@@ -162,26 +181,11 @@ export default class Children {
       fontSize: 16,
       color: 'rgba(0,0,0,.6)',
     },
-    doc: {
-      margin: [0],
-      padding: 10,
-      '&:hover': {
-        background: '#e1e8ed',
-        borderRadius: 5,
-      },
-    },
-    card: {
-      width: WIDTH,
-      // height: HEIGHT,
-      // color: '#fff',
-      // border: [1, '#eee'],
-      // borderRadius: 7,
-    },
     input: {
       border: 'none',
+      width: '100%',
+      padding: 0,
       background: 'transparent',
-      padding: 2,
-      paddingLeft: 13,
       fontSize: 14,
     },
     name: {

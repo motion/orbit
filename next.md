@@ -1,18 +1,18 @@
 # nate
+  - UI.Menu => UI.Popover + UI.List
   - watch should watch package.json files and re-run lerna bootstrap there
   - CommanderStore.crumbs is coming back as mobxarray not plain array
   - breadcrumbsstore log is happening on keystores
   - indexes still not working .sort('createdAt')
   - types not working on <Views /> still
   - rxdb query sync broken https://gitter.im/pubkey/rxdb
-  - draft page (distraction free + fullscreenish feeling)
-  - share link dropdown
   - ui kit:
     - sizing() some sort of size kit to handle all sizing
     - <Surface height={1} rounded chromeless gloss clear />
       - Derive Button, Input, ListItem
 
 # high level prioritized list
+  - inbox
   - signup: create team flow
   - @mentions / dates
   - hashtags / statuses / comments / attachments

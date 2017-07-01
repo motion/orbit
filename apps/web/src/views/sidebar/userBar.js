@@ -18,14 +18,20 @@ export default class UserBar {
           forgiveness={15}
           delay={130}
           target={<UI.Button theme="clear-dark" circular icon="body" />}
-          shadow
           openOnHover
           closeOnClick
         >
           <UI.List
             width={150}
-
-            itemProps={{ height: 35, fontSize: 14 }}
+            padding={3}
+            elevation={3}
+            borderRadius={8}
+            itemProps={{
+              height: 38,
+              fontSize: 14,
+              borderWidth: 0,
+              borderRadius: 8,
+            }}
             items={[
               {
                 primary: User.name,

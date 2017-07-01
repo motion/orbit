@@ -7,23 +7,25 @@ import Text from './text'
 import Surface from './surface'
 
 export type ItemProps = {
-  children?: React$Element<any>,
-  primary?: React$Element<any>,
-  secondary?: React$Element<any>,
+  after?: React$Element<any>,
   avatar?: React$Element<any>,
-  fakeAvatar?: boolean,
+  before?: React$Element<any>,
+  borderWidth?: number,
+  borderRadius?: number,
+  children?: React$Element<any>,
   date?: React$Element<any>,
   dateSize?: number,
-  meta?: React$Element<any>,
-  before?: React$Element<any>,
-  after?: React$Element<any>,
-  isLastElement?: boolean,
-  isFirstElement?: boolean,
-  row?: boolean,
-  onClick?: Function,
-  onToggle?: Function,
-  onItemMount?: Function,
+  fakeAvatar?: boolean,
   iconProps?: Object,
+  isFirstElement?: boolean,
+  isLastElement?: boolean,
+  meta?: React$Element<any>,
+  onClick?: Function,
+  onItemMount?: Function,
+  onToggle?: Function,
+  primary?: React$Element<any>,
+  row?: boolean,
+  secondary?: React$Element<any>,
 }
 
 @view.ui
@@ -52,6 +54,7 @@ export default class ListItem {
     avatar,
     before,
     borderRadius,
+    borderWidth,
     children,
     date,
     dateSize,
@@ -77,7 +80,10 @@ export default class ListItem {
         tagName="listitem"
         border={false}
         background="transparent"
-        borderBottom={[1, theme ? theme.base.borderColor : 'transparent']}
+        borderBottom={[
+          borderWidth,
+          theme ? theme.base.borderColor : 'transparent',
+        ]}
         borderRadius={isLastElement || isFirstElement ? borderRadius : 0}
         borderBottomRadius={isLastElement}
         borderTopRadius={isFirstElement}

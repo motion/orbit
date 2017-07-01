@@ -618,7 +618,11 @@ export default class Popover {
               >
                 <arrowContain
                   if={!noArrow}
-                  css={{ top: arrowTop, marginLeft: arrowLeft }}
+                  css={{
+                    top: arrowTop,
+                    marginLeft: arrowLeft,
+                    zIndex: 100000000000, // above any shadows
+                  }}
                 >
                   <Arrow
                     theme={theme}
@@ -627,7 +631,7 @@ export default class Popover {
                     shadow={getShadow(shadow)}
                   />
                 </arrowContain>
-                <Surface {...props}>
+                <Surface background="transparent" {...props}>
                   {typeof children === 'function' ? children(isOpen) : children}
                 </Surface>
               </popover>

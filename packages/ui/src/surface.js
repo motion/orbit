@@ -8,6 +8,8 @@ import Glow from './effects/glow'
 import Popover from './popover'
 import type { Color } from '@mcro/gloss'
 
+const IS_PROD = process.env.NODE_ENV === 'production'
+
 const LINE_HEIGHT = 30
 const BORDER_RADIUS_SIDES = [
   'borderBottomRadius',
@@ -86,7 +88,7 @@ export default class Surface implements ViewType {
   }
 
   static defaultProps = {
-    tagName: 'div',
+    tagName: IS_PROD ? 'div' : 'surface',
     borderStyle: 'solid',
     borderWidth: 0,
   }
@@ -335,9 +337,7 @@ export default class Surface implements ViewType {
 
     // shadow
     const boxShadow =
-      props.boxShadow || props.elevation === true
-        ? [0, props.elevation * 2, props.elevation * 10, [0, 0, 0, 0.2]]
-        : []
+      props.boxShadow || props.elevation ? '0 10px 10px rgba(0,0,0,1)' : []
 
     if (props.glint) {
       const glintColor =

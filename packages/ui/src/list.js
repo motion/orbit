@@ -7,6 +7,7 @@ import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { ItemProps } from './listItem'
+import Surface from './surface'
 
 const idFn = _ => _
 
@@ -140,12 +141,10 @@ class List {
     getItem,
     style,
     placeholder,
-    flex,
     scrollable,
     controlled,
     onHighlight,
     onSelect,
-    getRef,
     parentSize,
     itemStyle,
     rowHeight: propRowHeight,
@@ -252,9 +251,14 @@ class List {
 
     return (
       <Shortcuts name="all" handler={this.handleShortcuts}>
-        <list
-          style={{ minHeight: height, minWidth: width, ...style }}
-          ref={getRef}
+        <Surface
+          style={{
+            minHeight: height,
+            minWidth: width,
+            overflowY: scrollable ? 'scroll' : 'auto',
+            overflowX: 'visible',
+            ...style,
+          }}
           {...props}
         >
           <loading if={loading}>loading</loading>
@@ -269,16 +273,9 @@ class List {
               chillen[index]({ key, style })}
           />
           {!rowHeight && chillen}
-        </list>
+        </Surface>
       </Shortcuts>
     )
-  }
-
-  static style = {
-    list: {
-      overflowY: 'auto',
-      overflowX: 'visible',
-    },
   }
 }
 

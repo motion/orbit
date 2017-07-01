@@ -73,6 +73,7 @@ export default class ListItem {
       <Surface
         $item
         border={false}
+        background="transparent"
         borderBottom={[1, theme ? theme.base.borderColor : 'transparent']}
         borderRadius={isLastElement || isFirstElement ? 8 : 0}
         borderBottomRadius={isLastElement}
@@ -86,7 +87,7 @@ export default class ListItem {
         }}
         glowProps={{
           scale: 1.8,
-          opacity: 0.025,
+          opacity: 0.05,
         }}
         {...props}
       >

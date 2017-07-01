@@ -700,9 +700,12 @@ export default class Popover {
     },
   }
 
-  static theme = (props, theme, self) => {
-    const backgroundStyles = props.background === true && {
-      background: theme.base.background,
+  static theme = (props, theme) => {
+    const backgroundStyles = props.background && {
+      background:
+        props.background === true
+          ? theme.base.background
+          : props.background || theme.base.background,
       borderRadius: 6,
       overflow: 'hidden',
     }

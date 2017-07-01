@@ -1,12 +1,10 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@mcro/black'
-import { PassProps, Segment, Button, Popover, List } from '@mcro/ui'
-import Router from '~/router'
+import { view } from '@mcro/black'
+import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
-import Theme from '~/theme'
 import Inbox from '~/views/inbox'
 
 class DocPageStore {
@@ -35,13 +33,7 @@ class DocPageStore {
   docStore: DocPageStore,
 })
 export default class DocumentPage {
-  render({
-    docStore,
-    commanderStore,
-    insidePlace,
-  }: {
-    docStore: DocPageStore,
-  }) {
+  render({ docStore, commanderStore }: { docStore: DocPageStore }) {
     const { doc } = docStore
 
     // just to setup a mobx bind
@@ -65,7 +57,7 @@ export default class DocumentPage {
             $$row
             $$centered
           >
-            <Button
+            <UI.Button
               active={docStore.showInbox}
               chromeless
               margin={[0, 10]}
@@ -74,34 +66,34 @@ export default class DocumentPage {
               tooltip="inbox"
             >
               Inbox
-            </Button>
+            </UI.Button>
 
-            <Segment
+            <UI.Segment
               itemProps={{
                 size: 1,
                 iconSize: 18,
                 chromeless: true,
               }}
             >
-              <Button getRef={this.ref('extraRef').set} icon="dot" />
-              <Button
+              <UI.Button getRef={this.ref('extraRef').set} icon="dot" />
+              <UI.Button
                 icon="fav31"
                 highlight={!!starred}
                 onClick={doc.toggleStar}
               />
-            </Segment>
-            <Popover
+            </UI.Segment>
+            <UI.Popover
               openOnHover
               openOnClick
-              width={120}
-              shadow
-              background
+              open
+              width={160}
               target={() => this.extraRef}
             >
-              <List
-                size={2}
+              <UI.List
+                elevation={3}
+                background="yellow"
                 items={[
-                  { icon: 'share', primary: 'Share Link', onClick: () => {} },
+                  { icon: 'share', primary: 'Share', onClick: () => {} },
                   {
                     icon: doc.private ? 'lock' : 'open',
                     primary: 'Locked',
@@ -114,7 +106,7 @@ export default class DocumentPage {
                   },
                 ]}
               />
-            </Popover>
+            </UI.Popover>
           </actions>
         }
       >
@@ -128,11 +120,5 @@ export default class DocumentPage {
         <Inbox if={docStore.showInbox} />
       </Page>
     )
-  }
-
-  static style = {
-    err404: {
-      padding: 15,
-    },
   }
 }

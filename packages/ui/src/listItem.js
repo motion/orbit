@@ -72,6 +72,7 @@ export default class ListItem {
     return (
       <Surface
         $item
+        tagName="listitem"
         border={false}
         background="transparent"
         borderBottom={[1, theme ? theme.base.borderColor : 'transparent']}

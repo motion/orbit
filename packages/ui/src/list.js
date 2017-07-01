@@ -252,6 +252,7 @@ class List {
     return (
       <Shortcuts name="all" handler={this.handleShortcuts}>
         <Surface
+          tagName="list"
           style={{
             minHeight: height,
             minWidth: width,

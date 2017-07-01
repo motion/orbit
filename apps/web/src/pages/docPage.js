@@ -85,15 +85,19 @@ export default class DocumentPage {
             <UI.Popover
               openOnHover
               openOnClick
-              open
               width={160}
               target={() => this.extraRef}
             >
               <UI.List
                 elevation={3}
-                background="yellow"
+                background="red"
+                color="red"
                 items={[
-                  { icon: 'share', primary: 'Share', onClick: () => {} },
+                  {
+                    icon: 'share',
+                    primary: 'Share2',
+                    onClick: () => {},
+                  },
                   {
                     icon: doc.private ? 'lock' : 'open',
                     primary: 'Locked',

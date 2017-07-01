@@ -12,6 +12,7 @@ export type Props = {
   getRef?: Function,
   ellipse?: boolean,
   tagName: string,
+  fontWeight?: number,
 }
 
 // click away from edit clears it
@@ -112,6 +113,7 @@ export default class Text implements ViewType {
     selectable,
     ellipse,
     children,
+    fontWeight,
     tagName,
     getRef,
     ...props
@@ -149,10 +151,11 @@ export default class Text implements ViewType {
   }
 
   static theme = (props, theme) => {
-    const fontSize = props.size * 14
+    const fontSize = props.fontSize || props.size * 14
     return {
       text: {
         fontSize,
+        fontWeight: props.fontWeight,
         lineHeight: `${fontSize + 8}px`,
         color: props.color || theme.base.color,
       },

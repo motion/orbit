@@ -45,6 +45,12 @@ const LIGHT = {
 }
 
 const Theme = {
+  clear: theme({
+    highlightColor,
+    background: 'transparent',
+    color: '#fff',
+    borderColor: 'transparent'
+  }),
   dark: theme({
     highlightColor,
     background: '#222',

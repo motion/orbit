@@ -40,7 +40,8 @@ function valueWrap(info, valueGet: Function) {
   let stopSync = null
 
   // TODO: once rxdb #207 check with (query instanceof RxQuery)
-  if (query && query.mquery && this.remoteDB) {
+  // TODO re-enable
+  if (false && query && query.mquery && this.remoteDB) {
     const selector = query.keyCompress().selector
     const key = hashsum({ db: this.remoteDB.name, selector })
     if (!this.queryCache[key]) {

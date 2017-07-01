@@ -23,7 +23,7 @@ export default class Projects {
 
     return (
       <content $$scrollable $$flex={6}>
-        <UI.Placeholder size={2} $$flex if={!hasDocs}>
+        <UI.Placeholder if={!hasDocs} size={2}>
           No Stars
         </UI.Placeholder>
 

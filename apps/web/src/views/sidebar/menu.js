@@ -8,7 +8,14 @@ export default class SidebarMenu {
   render() {
     return (
       <sidebarmenu>
-        <UI.List items={[{ primary: 'Inbox', icon: 'mail' }]} />
+        <UI.Theme name="clear">
+          <UI.List
+            items={[
+              { primary: 'All Incoming', icon: 'inbox' },
+              { primary: 'Drafts', icon: 'mail' },
+            ]}
+          />
+        </UI.Theme>
       </sidebarmenu>
     )
   }

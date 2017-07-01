@@ -14,7 +14,7 @@ const TRANSFORM_KEYS_MAP = {
   dropShadow: 'drop-shadow',
 }
 
-const NESTABLE_ARRAY = {
+const COMMA_JOINED = {
   boxShadow: true,
   transition: true,
 }
@@ -25,8 +25,6 @@ const SHORTHANDS = {
   borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
   borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
 }
-
-const NULL_VALUES = {}
 
 const FALSE_VALUES = {
   background: 'transparent',
@@ -68,18 +66,22 @@ export default function motionStyle(options: Object = {}) {
             : v.position) || ''} ${v.repeat || ''}`,
   }
 
-  function processArrayItem(key: string, val: any) {
+  function processArrayItem(key: string, val: any, level) {
     // recurse
     if (isColor(val)) {
       return toColor(val)
     }
     if (Array.isArray(val)) {
-      return processArray(key, val)
+      return processArray(key, val, ++level)
     }
     return typeof val === 'number' ? `${val}px` : val
   }
 
-  function processArray(key: string, array: Array<number | string>): string {
+  function processArray(
+    key: string,
+    array: Array<number | string>,
+    level = 0
+  ): string {
     if (key === 'background') {
       if (isColor(array)) {
         return toColor(array)
@@ -89,7 +91,9 @@ export default function motionStyle(options: Object = {}) {
     if (BORDER_KEY[key] && array.length === 2) {
       array.push('solid')
     }
-    return array.map(val => processArrayItem(key, val)).join(' ')
+    return array
+      .map(val => processArrayItem(key, val))
+      .join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
   }
 
   function objectValue(key: string, value: any) {

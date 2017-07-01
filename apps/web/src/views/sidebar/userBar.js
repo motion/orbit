@@ -8,23 +8,23 @@ import * as Constants from '~/constants'
 export default class UserBar {
   render() {
     return (
-      <userbar if={User.loggedIn}>
-        <UI.Text ellipse>
-          {' '}{User.name} 123
+      <userbar $$draggable if={User.loggedIn}>
+        <UI.Text style={{ marginRight: 10 }} ellipse>
+          {User.name}
         </UI.Text>
         <UI.Popover
           theme="light"
           distance={10}
-          forgiveness={20}
-          delay={150}
-          target={<UI.Button theme="dark" circular icon="body" />}
-          background
+          forgiveness={15}
+          delay={130}
+          target={<UI.Button theme="clear-dark" circular icon="body" />}
           shadow
           openOnHover
           closeOnClick
         >
           <UI.List
             width={150}
+
             itemProps={{ height: 35, fontSize: 14 }}
             items={[
               {

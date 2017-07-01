@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import { Theme } from '@mcro/gloss'
 import { view, inject } from '@mcro/black'
 import type { ViewType } from '@mcro/black'
 import $ from 'color'
@@ -119,6 +120,7 @@ export default class Surface implements ViewType {
     color,
     dim,
     elementProps,
+    elevation,
     flex,
     getRef,
     glint,
@@ -155,14 +157,13 @@ export default class Surface implements ViewType {
     stretch,
     style,
     tagName,
-    theme: _theme,
+    theme,
     tooltip,
     tooltipProps,
     width,
     wrapElement,
     ...props
   }) {
-    const { theme } = this
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
@@ -171,14 +172,14 @@ export default class Surface implements ViewType {
     const finalClassName = `${this.uniq} ${className || ''}`
     const passProps = {
       className: finalClassName,
-      onClick,
       tagName,
       ref: getRef,
+      style,
       ...props,
     }
 
-    return (
-      <surface {...!wrapElement && passProps}>
+    const surface = (
+      <surface onClick={onClick} {...!wrapElement && passProps}>
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -194,7 +195,7 @@ export default class Surface implements ViewType {
           if={glow}
           full
           scale={1.5}
-          color={(theme && theme.surface.style.color) || [0, 0, 0]}
+          color={(this.theme && this.theme.surface.style.color) || [0, 0, 0]}
           opacity={0.14}
           {...glowProps}
         />
@@ -227,6 +228,12 @@ export default class Surface implements ViewType {
         </Popover>
       </surface>
     )
+
+    if (theme) {
+      return <Theme name={theme}>{surface}</Theme>
+    }
+
+    return surface
   }
 
   static style = {
@@ -261,7 +268,7 @@ export default class Surface implements ViewType {
     },
   }
 
-  surfaceStyle = {
+  static surfaceStyle = {
     background: 'transparent',
     borderRightWidth: 1,
     borderLeftWidth: 1,
@@ -272,19 +279,19 @@ export default class Surface implements ViewType {
     borderRadius: 1000,
   }
 
-  disabledStyle = {
+  static disabledStyle = {
     opacity: 0.25,
     pointerEvents: 'none',
   }
 
-  dimStyle = {
+  static dimStyle = {
     opacity: 0.5,
     '&:hover': {
       opacity: 1,
     },
   }
 
-  spacedStyles = {
+  static spacedStyles = {
     margin: [0, 5],
     borderRightWidth: 1,
   }
@@ -335,13 +342,19 @@ export default class Surface implements ViewType {
       theme.hover.borderColor ||
       borderColor.lighten(1)
 
-    // shadow
-    const boxShadow =
-      props.boxShadow || props.elevation ? '0 10px 10px rgba(0,0,0,1)' : []
-
+    // shadows
+    const boxShadow = props.boxShadow || []
+    if (props.elevation) {
+      boxShadow.push([
+        0,
+        props.elevation * 2.5,
+        props.elevation * 7.5,
+        [0, 0, 0, 0.16],
+      ])
+    }
     if (props.glint) {
       const glintColor =
-        props.glint === true ? background.lighten(0.4).toString() : props.glint
+        props.glint === true ? background.lighten(0.4) : props.glint
       boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 
@@ -381,6 +394,7 @@ export default class Surface implements ViewType {
 
     return {
       element: {
+        color,
         ...props.elementStyles,
         ...borderRadius,
         fontSize: props.fontSize,
@@ -424,10 +438,10 @@ export default class Surface implements ViewType {
           '&:active': theme.active,
           '&:focus': theme.focus,
         }),
-        ...(props.inline && self.surfaceStyle),
-        ...(props.disabled && self.disabledStyle),
-        ...(props.dim && self.dimStyle),
-        ...(props.spaced && self.spacedStyle),
+        ...(props.inline && self.constructor.surfaceStyle),
+        ...(props.disabled && self.constructor.disabledStyle),
+        ...(props.dim && self.constructor.dimStyle),
+        ...(props.spaced && self.constructor.spacedStyle),
         ...(props.chromeless && {
           borderWidth: 0,
         }),

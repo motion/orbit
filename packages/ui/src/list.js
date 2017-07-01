@@ -8,6 +8,7 @@ import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { ItemProps } from './listItem'
 import Surface from './surface'
+import type { Color } from '@mcro/gloss'
 
 const idFn = _ => _
 
@@ -33,6 +34,9 @@ export type Props = {
   itemProps?: Object,
   rowHeight?: number,
   size?: number,
+  borderRadius?: number,
+  borderColor?: Color,
+  borderSize?: number,
 }
 
 @parentSize
@@ -133,24 +137,27 @@ class List {
   }
 
   render({
+    borderColor,
+    borderRadius,
+    borderSize,
     children,
-    items,
-    loading,
-    height: userHeight,
-    width: userWidth,
-    getItem,
-    style,
-    placeholder,
-    scrollable,
     controlled,
+    getItem,
+    height: userHeight,
+    itemProps,
+    items,
+    itemStyle,
+    loading,
     onHighlight,
+    onItemMount,
     onSelect,
     parentSize,
-    itemStyle,
+    placeholder,
     rowHeight: propRowHeight,
-    onItemMount,
-    itemProps,
+    scrollable,
     size,
+    style,
+    width: userWidth,
     ...props
   }: Props) {
     let rowHeight = propRowHeight
@@ -170,6 +177,9 @@ class List {
       css: itemStyle,
       onItemMount,
       size,
+      borderRadius,
+      borderColor,
+      borderSize,
     }
 
     if (!items && !children) {
@@ -260,6 +270,7 @@ class List {
             overflowX: 'visible',
             ...style,
           }}
+          borderRadius={borderRadius}
           {...props}
         >
           <loading if={loading}>loading</loading>

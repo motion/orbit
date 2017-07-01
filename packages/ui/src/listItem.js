@@ -48,23 +48,25 @@ export default class ListItem {
   }
 
   render({
-    children,
-    primary,
-    secondary,
+    after,
     avatar,
-    fakeAvatar,
+    before,
+    borderRadius,
+    children,
     date,
     dateSize,
-    meta,
-    before,
-    after,
-    isLastElement,
-    isFirstElement,
-    row,
-    onToggle,
-    onItemMount,
+    fakeAvatar,
     iconProps,
+    isFirstElement,
+    isLastElement,
+    meta,
+    onItemMount,
+    onToggle,
+    primary,
+    row,
+    secondary,
     size,
+    style,
     ...props
   }: ItemProps) {
     const theme = this.context.uiTheme[this.context.uiActiveTheme]
@@ -76,11 +78,11 @@ export default class ListItem {
         border={false}
         background="transparent"
         borderBottom={[1, theme ? theme.base.borderColor : 'transparent']}
-        borderRadius={isLastElement || isFirstElement ? 8 : 0}
+        borderRadius={isLastElement || isFirstElement ? borderRadius : 0}
         borderBottomRadius={isLastElement}
         borderTopRadius={isFirstElement}
         overflow="hidden"
-        padding={[12, 8]}
+        padding={[6, 6]}
         glow
         iconProps={{
           margin: 5,
@@ -89,6 +91,11 @@ export default class ListItem {
         glowProps={{
           scale: 1.8,
           opacity: 0.05,
+        }}
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          ...style,
         }}
         {...props}
       >

@@ -34,7 +34,6 @@ export default class CommanderResults {
     return (
       <results transparent if={store.isOpen}>
         <UI.Placeholder
-          tag="div"
           if={store.isEnterToCreate && last(store.typedPath).length > 0}
         >
           <UI.Title
@@ -109,7 +108,7 @@ export default class CommanderResults {
       maxWidth: 200,
       color: 'white',
       transition: 'all 100ms ease-in',
-      borderLeft: `3px solid rgba(191, 93, 88, 0)`,
+      borderLeft: '3px solid rgba(191, 93, 88, 0)',
     },
     name: {
       fontWeight: 'bold',
@@ -133,7 +132,7 @@ export default class CommanderResults {
     },
     highlight: {
       paddingLeft: 10,
-      borderLeftColor: `rgba(191, 93, 88, 1)`,
+      borderLeftColor: 'rgba(191, 93, 88, 1)',
     },
   }
 }

@@ -1,11 +1,11 @@
 // @flow
 import React from 'react'
-import { object, string } from 'prop-types'
 import { view, getTarget } from '@mcro/black'
 import Portal from 'react-portal'
-import { isNumber, debounce, throttle } from 'lodash'
+import { isNumber, debounce } from 'lodash'
 import Arrow from './arrow'
 import { Theme } from '@mcro/gloss'
+import Surface from './surface'
 
 export type Props = {
   // can pass function to get isOpen passed in
@@ -469,6 +469,7 @@ export default class Popover {
       // )
     }
 
+    // logic for enter/leave
     this.on(node, 'mouseenter', () => {
       log('enter')
       onEnter()
@@ -480,7 +481,7 @@ export default class Popover {
       }
     })
 
-    this.on(node, 'mouseleave', onLeave)
+    // this.on(node, 'mouseleave', onLeave)
   }
 
   // hover helpers
@@ -509,7 +510,7 @@ export default class Popover {
     node: HTMLElement,
     checkParent: boolean = false
   ): boolean => {
-    return !!node.parentNode.querySelector(`${node.tagName}:hover`)
+    return !!node.parentNode.querySelector(`${node.tagName}:hover`) || checkParent && node.parentNode.querySelector(':hover')
   }
 
   overlayRef = ref => {
@@ -519,38 +520,38 @@ export default class Popover {
   }
 
   render({
-    noArrow,
-    children,
-    arrowSize,
-    overlay,
-    style,
-    background,
-    target,
-    openOnHover,
-    openOnClick,
-    passActive,
-    open,
-    width,
-    height,
-    popoverProps,
-    towards,
-    distance,
-    escapable,
-    onClose,
-    padding,
-    forgiveness,
-    noHover,
-    shadow,
-    animation,
-    popoverStyle,
-    top: _top,
-    left: _left,
     adjust,
-    theme,
+    animation,
+    arrowSize,
+    background,
+    children,
     closeOnClick,
-    showForgiveness,
     delay,
+    distance,
     edgePadding,
+    escapable,
+    forgiveness,
+    height,
+    left: _left,
+    noArrow,
+    noHover,
+    onClose,
+    open,
+    openOnClick,
+    openOnHover,
+    overlay,
+    padding,
+    passActive,
+    popoverProps,
+    popoverStyle,
+    shadow,
+    showForgiveness,
+    style,
+    target,
+    theme,
+    top: _top,
+    towards,
+    width,
     ...props
   }: Props) {
     const {
@@ -581,7 +582,7 @@ export default class Popover {
 
     return (
       <Theme name={theme}>
-        <root {...props}>
+        <root>
           {React.isValidElement(target) &&
             React.cloneElement(target, childProps)}
           <Portal isOpened>
@@ -622,9 +623,9 @@ export default class Popover {
                     shadow={getShadow(shadow)}
                   />
                 </arrowContain>
-                <content>
+                <Surface {...props}>
                   {typeof children === 'function' ? children(isOpen) : children}
-                </content>
+                </Surface>
               </popover>
             </container>
           </Portal>
@@ -645,7 +646,6 @@ export default class Popover {
     },
     content: {
       flex: 1,
-      overflowY: 'auto',
     },
     open: {
       zIndex: 100000,
@@ -701,21 +701,7 @@ export default class Popover {
   }
 
   static theme = (props, theme) => {
-    const backgroundStyles = props.background && {
-      background:
-        props.background === true
-          ? theme.base.background
-          : props.background || theme.base.background,
-      borderRadius: 6,
-      overflow: 'hidden',
-    }
     return {
-      content: {
-        boxShadow: getShadow(props.shadow),
-        padding: props.padding,
-        ...backgroundStyles,
-        ...props.popoverStyle,
-      },
       popover: {
         padding: calcForgiveness(props.forgiveness, props.distance),
         margin: -calcForgiveness(props.forgiveness, props.distance),

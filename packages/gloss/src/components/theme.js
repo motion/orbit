@@ -7,8 +7,10 @@ export default class Theme extends React.Component {
   }
 
   getChildContext() {
-    return {
-      uiActiveTheme: this.props.name,
+    if (this.props.name) {
+      return {
+        uiActiveTheme: this.props.name,
+      }
     }
   }
 

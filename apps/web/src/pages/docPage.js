@@ -43,7 +43,7 @@ export default class DocumentPage {
       return <null />
     }
     if (!doc) {
-      return <UI.Placeholder size={3}>Doc 404</UI.Placeholder>
+      return <UI.Placeholder size={2}>Doc 404</UI.Placeholder>
     }
 
     const starred = doc.hasStar()
@@ -82,38 +82,32 @@ export default class DocumentPage {
                 onClick={doc.toggleStar}
               />
             </UI.Segment>
-            <UI.Popover
-              openOnHover
-              openOnClick
-              width={160}
-              target={() => this.extraRef}
-            >
-              <UI.List
-                elevation={3}
-                background="red"
-                color="red"
-                items={[
-                  {
-                    icon: 'share',
-                    primary: 'Share2',
-                    onClick: () => {},
-                  },
-                  {
-                    icon: doc.private ? 'lock' : 'open',
-                    primary: 'Locked',
-                    onClick: doc.togglePrivate,
-                  },
-                  {
-                    icon: doc.private ? 'eye' : 'closed',
-                    primary: 'Private',
-                    onClick: doc.togglePrivate,
-                  },
-                ]}
-              />
-            </UI.Popover>
           </actions>
         }
       >
+        <UI.Popover open width={160} target={<UI.Button>test</UI.Button>}>
+          <UI.List
+            elevation={10}
+            borderRadius={8}
+            items={[
+              {
+                icon: 'share',
+                primary: 'Share2',
+                onClick: () => {},
+              },
+              {
+                icon: doc.private ? 'lock' : 'open',
+                primary: 'Locked',
+                onClick: doc.togglePrivate,
+              },
+              {
+                icon: doc.private ? 'eye' : 'closed',
+                primary: 'Private',
+                onClick: doc.togglePrivate,
+              },
+            ]}
+          />
+        </UI.Popover>
         <DocumentView
           if={!docStore.showInbox}
           id={doc._id}

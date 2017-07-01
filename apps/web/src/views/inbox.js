@@ -101,8 +101,15 @@ export default class Inbox {
           <UI.Title size={4}>Inbox</UI.Title>
 
           <actions>
-            <UI.Button size={1} icon="siadd" onClick={store.add}>
-              add item
+            <UI.Button
+              background="green"
+              borderColor="rgb(27, 145, 83)"
+              color="white"
+              size={1}
+              icon="siadd"
+              onClick={store.add}
+            >
+              New
             </UI.Button>
           </actions>
         </bar>

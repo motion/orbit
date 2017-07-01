@@ -1,4 +1,7 @@
 # nate
+  - theme="green" power helper
+    - if theme doesn't exist AND theme is valid color derive rest of theme from that
+      - super easy: just find luminosity, then darken/light borderColor and darken/lighten color
   - want to start keeping notes on things i want to see
     - visit/england (visit/england/london), visit/india, etc
   - UI.Menu => UI.Popover + UI.List

@@ -98,8 +98,9 @@ export default class ListItem {
           ...iconProps,
         }}
         glowProps={{
-          scale: 1.5,
+          scale: 1.4,
           opacity: 0.05,
+          resist: 40,
           clickable: !!onClick,
         }}
         style={{

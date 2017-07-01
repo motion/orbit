@@ -2,7 +2,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
-import { view } from '@mcro/black'
 import App from '~/app'
 import themes from './theme'
 

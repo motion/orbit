@@ -11,18 +11,21 @@ const colors = [
   'darkred',
 ]
 
+function prettyPrint(obj) {
+  try {
+    return JSON.stringify(obj, 0, 2)
+  } catch (e) {
+    return obj
+  }
+}
+
 export default function log(...args) {
   const [target, key, descriptor] = args
 
   const logger = (...things) => {
     console.log(
       `%c${things
-        .map(arg =>
-          `${typeof arg === 'object' ? JSON.stringify(arg, 0, 2) : arg}`.slice(
-            0,
-            5000
-          )
-        )
+        .map(arg => (typeof arg === 'object' ? prettyPrint(arg) : arg))
         .join(' ')}`,
       'background: orange'
     )

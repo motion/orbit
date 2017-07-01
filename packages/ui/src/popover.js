@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, getTarget } from '@mcro/black'
 import Portal from 'react-portal'
-import { isNumber, debounce } from 'lodash'
+import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'
 import { Theme } from '@mcro/gloss'
 import Surface from './surface'
@@ -432,23 +432,27 @@ export default class Popover {
   }
 
   listenForHover = () => {
-    this.addHoverListeners('target', this.targetRef)
+    this.addHoverListeners('target', this.target)
     if (!this.curProps.noHover) {
       this.addHoverListeners('menu', this.popoverRef)
     }
   }
 
   addHoverListeners = (name, node) => {
-    if (!node) return
-    const { delay } = this.curProps
-    const isMenu = name === 'menu'
+    if (!node) {
+      console.log('no node!', name)
+      return
+    }
+    const { delay, noHover } = this.curProps
+    const isPopover = name === 'menu'
     const isTarget = name === 'target'
-    const open = () => this.hoverStateSet(name, true)
-    const close = () => this.hoverStateSet(name, false)
-    const openIfOver = () => this.isNodeHovered(node, isMenu) && open()
-    const closeIfOut = () => !this.isNodeHovered(node, isMenu) && close()
+    const setHovered = () => this.hoverStateSet(name, true)
+    const setUnhovered = () => this.hoverStateSet(name, false)
+    const openIfOver = () => this.isNodeHovered(node, isPopover) && setHovered()
+    const closeIfOut = () =>
+      !this.isNodeHovered(node, isPopover) && setUnhovered()
     const onEnter = debounce(openIfOver, isTarget ? delay : 0)
-    const onLeave = debounce(closeIfOut, isMenu ? 0 : 16) // 🐛 target should close slower than menu opens
+    const onLeave = debounce(closeIfOut, isTarget ? 16 : delay) // 🐛 target should close slower than menu opens
 
     if (isTarget) {
       // seems to be fixed, leaving in case needs testing
@@ -464,7 +468,7 @@ export default class Popover {
       //       this.isNodeHovered(this.target) &&
       //       this.hoverStateSet('target', true),
       //     Math.max(200, delay),
-      //     { trailing: true }
+      //     { trailing: false }
       //   )
       // )
     }
@@ -480,11 +484,12 @@ export default class Popover {
       }
     })
 
-    this.on(node, 'mouseleave', onLeave)
+    // if noHover it reduces bugs to just not check hovered state
+    const onMouseLeave = noHover ? setUnhovered : onLeave
+    this.on(node, 'mouseleave', onMouseLeave)
   }
 
   // hover helpers
-  // @log
   hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
@@ -527,7 +532,6 @@ export default class Popover {
     adjust,
     animation,
     arrowSize,
-    background,
     children,
     closeOnClick,
     delay,
@@ -544,7 +548,6 @@ export default class Popover {
     openOnClick,
     openOnHover,
     overlay,
-    padding,
     passActive,
     popoverProps,
     popoverStyle,
@@ -572,6 +575,7 @@ export default class Popover {
 
     const openUndef = typeof open === 'undefined'
     const showPopover =
+      open ||
       isOpen ||
       (openUndef &&
         ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
@@ -631,7 +635,7 @@ export default class Popover {
                     shadow={getShadow(shadow)}
                   />
                 </arrowContain>
-                <Surface background="transparent" {...props}>
+                <Surface {...props}>
                   {typeof children === 'function' ? children(isOpen) : children}
                 </Surface>
               </popover>

@@ -14,8 +14,9 @@ export default class UserBar {
         </UI.Text>
         <UI.Popover
           theme="light"
+          background="transparent"
           distance={10}
-          forgiveness={15}
+          forgiveness={16}
           delay={130}
           target={<UI.Button theme="clear-dark" circular icon="body" />}
           openOnHover

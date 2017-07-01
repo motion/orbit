@@ -1,7 +1,7 @@
 import React from 'react'
 import SizedSurface from './sizedSurface'
 
-export default props =>
+export default ({ badge, children, ...props }) =>
   <SizedSurface
     tagName="button"
     borderWidth={1}
@@ -10,4 +10,10 @@ export default props =>
     glow
     {...props}
     noElement
-  />
+  >
+    {children}
+    {badge &&
+      <badge>
+        {badge}
+      </badge>}
+  </SizedSurface>

@@ -125,7 +125,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           if (typeof props.className === 'string') {
             finalProps.className += ` ${props.className}`
           }
-          // TODO: handle objects?
         }
       } else {
         // children get a style prop

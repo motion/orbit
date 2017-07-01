@@ -64,7 +64,6 @@ export default class DocumentPage {
               icon="paper"
               onClick={docStore.ref('showInbox').toggle}
               tooltip="inbox"
-              test
             >
               Inbox
             </UI.Button>

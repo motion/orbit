@@ -12,12 +12,7 @@ export default class Header {
     layoutStore.sidebar.active
 
     return (
-      <header
-        $$draggable
-        $hovered={layoutStore.headerHovered}
-        onMouseEnter={() => (layoutStore.headerHovered = true)}
-        onMouseLeave={() => (layoutStore.headerHovered = false)}
-      >
+      <header $$draggable>
         <bar>
           <Segment
             $$margin={[0, 10, 0, 0]}
@@ -92,11 +87,6 @@ export default class Header {
     },
     crumbs: {
       height: 0,
-    },
-    hovered: {
-      opacity: 1,
-      transition: 'all ease-in 100ms',
-      transitionDelay: '0',
     },
     rest: {
       justifyContent: 'center',

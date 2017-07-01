@@ -19,6 +19,11 @@ const BORDER_RADIUS_SIDES = [
   'borderRightRadius',
 ]
 
+const hasChildren = children =>
+  Array.isArray(children)
+    ? children.reduce((a, b) => a || !!b, false)
+    : !!children
+
 @inject(context => context.uiContext)
 @view.ui
 export default class Surface implements ViewType {
@@ -94,7 +99,7 @@ export default class Surface implements ViewType {
     borderWidth: 0,
   }
 
-  uniq = `icon-${Math.round(Math.random() * 1000000)}`
+  uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
 
   render({
     active,
@@ -169,9 +174,7 @@ export default class Surface implements ViewType {
     const stringIcon = typeof icon === 'string'
     const iconSize = _iconSize || (size || 1) * 14
 
-    const finalClassName = `${this.uniq} ${className || ''}`
     const passProps = {
-      className: finalClassName,
       tagName,
       ref: getRef,
       style,
@@ -179,7 +182,12 @@ export default class Surface implements ViewType {
     }
 
     const surface = (
-      <surface onClick={onClick} {...!wrapElement && passProps}>
+      <surface
+        className={`${this.uniq} ${className || ''}`}
+        ref={this.ref('surfaceRef').set}
+        onClick={onClick}
+        {...!wrapElement && passProps}
+      >
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -200,7 +208,7 @@ export default class Surface implements ViewType {
           {...glowProps}
         />
         <element
-          if={!noElement || (noElement && children)}
+          if={!noElement || (noElement && hasChildren(children))}
           {...wrapElement && passProps}
           {...elementProps}
           $hasIconBefore={hasIconBefore}
@@ -217,9 +225,11 @@ export default class Surface implements ViewType {
           noHover
           animation="bounce 150ms"
           target={`.${this.uniq}`}
-          padding={[0, 6]}
+          padding={[2, 7]}
+          borderRadius={5}
           distance={8}
-          arrowSize={8}
+          forgiveness={8}
+          arrowSize={10}
           delay={100}
           popoverProps={{ $$style: { fontSize: 11 } }}
           {...tooltipProps}
@@ -314,28 +324,33 @@ export default class Surface implements ViewType {
         : props.active ? theme.active.color : props.color || theme.base.color
     )
     const iconColor = props.iconColor || color
+
+    // background
     const baseBackground =
-      props.background || theme.base.background || 'transparent'
-    const background = $(
-      props.active
-        ? props.activeBackground || theme.active.background || baseBackground
-        : baseBackground
-    )
+      props.background === true
+        ? theme.base.background
+        : props.background || theme.base.background
+    let hoverBackground = props.hoverBackground
+    let background = props.active
+      ? props.activeBackground || theme.active.background || baseBackground
+      : baseBackground
+    const hasBackground = background && background !== 'transparent'
+    if (hasBackground) {
+      background = $(background)
+      const luminosity = background.luminosity()
+      const isDark = luminosity < 0.4
+      const addContrast = (color, amt) =>
+        color[isDark ? 'lighten' : 'darken'](amt)
+      // hover
+      hoverBackground =
+        hoverBackground || props.hoverable
+          ? addContrast(background, luminosity / 30)
+          : background
+    }
+
     const borderColor = $(
       props.borderColor || theme.base.borderColor || 'transparent'
     )
-
-    // color helpers
-    const luminosity = background.luminosity()
-    const isDark = luminosity < 0.4
-    const addContrast = (color, amt) =>
-      color[isDark ? 'lighten' : 'darken'](amt)
-
-    // hover
-    const hoverBackgroundColor =
-      props.hoverBackgroundColor || props.hoverable
-        ? addContrast(background, luminosity / 30)
-        : background
     let hoverColor = $(
       props.highlight
         ? color.lighten(0.2)
@@ -358,7 +373,9 @@ export default class Surface implements ViewType {
     }
     if (props.glint) {
       const glintColor =
-        props.glint === true ? background.lighten(0.4) : props.glint
+        props.glint === true
+          ? hasBackground ? background.lighten(0.4) : [255, 255, 255, 0.1]
+          : props.glint
       boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
     }
 
@@ -407,7 +424,7 @@ export default class Surface implements ViewType {
         height,
         ...borderRadius,
         fontSize: props.fontSize,
-        lineHeight: '0px',
+        lineHeight: 'inherit',
       },
       surface: {
         color,
@@ -464,7 +481,7 @@ export default class Surface implements ViewType {
           ...theme.hover,
           color: hoverColor,
           borderColor: hoverBorderColor,
-          backgroundColor: hoverBackgroundColor,
+          background: hoverBackground,
         },
         // this is just onmousedown
         '&:active': {

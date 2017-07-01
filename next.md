@@ -1,4 +1,6 @@
 # nate
+  - want to start keeping notes on things i want to see
+    - visit/england (visit/england/london), visit/india, etc
   - UI.Menu => UI.Popover + UI.List
   - watch should watch package.json files and re-run lerna bootstrap there
   - CommanderStore.crumbs is coming back as mobxarray not plain array

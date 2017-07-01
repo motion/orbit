@@ -3,6 +3,7 @@ import * as UI from '@mcro/ui'
 import rc from 'randomcolor'
 import { Document } from '@mcro/models'
 import { random } from 'lodash'
+import Router from '~/router'
 
 @view({
   store: class InboxStore {
@@ -41,7 +42,7 @@ export default class Inbox {
         icon: 'alerti',
       },
       {
-        primary: this.title("CouchDB won't boot on OTP-20"),
+        primary: this.title('CouchDB won\'t boot on OTP-20'),
         secondary: this.status('#619 opened 4 days ago by spencerthayer '),
         icon: 'alerti',
       },
@@ -78,9 +79,8 @@ export default class Inbox {
     )
   }
 
-  render({ store, doc }) {
+  render({ store }) {
     const docs = store.docs || []
-
     const useTestData = false
     const items = useTestData
       ? this.testData()

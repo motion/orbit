@@ -115,7 +115,7 @@ export default class DocumentPage {
           showCrumbs
           showChildren
         />
-        <Inbox if={docStore.showInbox} />
+        <Inbox doc={doc} if={docStore.showInbox} />
       </Page>
     )
   }

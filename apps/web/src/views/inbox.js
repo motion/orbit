@@ -7,6 +7,17 @@ import { random } from 'lodash'
 @view({
   store: class InboxStore {
     docs = Document.child(this.props.doc._id)
+
+    add = async () => {
+      const { doc } = this.props
+
+      const next = await Document.create({
+        title: 'new item',
+        parentId: doc._id,
+      })
+
+      Router.go(next.url())
+    }
   },
 })
 export default class Inbox {
@@ -68,10 +79,12 @@ export default class Inbox {
   }
 
   render({ store, doc }) {
+    const docs = store.docs || []
+
     const useTestData = false
     const items = useTestData
       ? this.testData()
-      : (store.docs || []).map(item => ({
+      : docs.map(item => ({
           primary: this.title(item.getTitle()),
           secondary: this.status(
             `#${random(0, 1000)} opened ${random(2, 8)} days ago by natebirdman`
@@ -84,8 +97,18 @@ export default class Inbox {
 
     return (
       <inbox>
-        <UI.Title size={4}>Inbox</UI.Title>
+        <bar>
+          <UI.Title size={4}>Inbox</UI.Title>
 
+          <actions>
+            <UI.Button size={1} icon="siadd" onClick={store.add}>
+              add item
+            </UI.Button>
+          </actions>
+        </bar>
+        <UI.Title size={2.5}>
+          {docs.length} items
+        </UI.Title>
         <UI.List items={items} />
       </inbox>
     )
@@ -94,6 +117,10 @@ export default class Inbox {
   static style = {
     inbox: {
       padding: 20,
+    },
+    bar: {
+      flexFlow: 'row',
+      justifyContent: 'space-between',
     },
   }
 }

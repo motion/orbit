@@ -230,7 +230,11 @@ export default class Surface implements ViewType {
     )
 
     if (theme) {
-      return <Theme name={theme}>{surface}</Theme>
+      return (
+        <Theme name={theme}>
+          {surface}
+        </Theme>
+      )
     }
 
     return surface

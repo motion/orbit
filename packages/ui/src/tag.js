@@ -7,6 +7,8 @@ export default props =>
     background="#e5ebf1"
     color="#7d8fa0"
     fontWeight={700}
+    borderWidth={1}
+    padding={3}
     glint
     glow
     {...props}

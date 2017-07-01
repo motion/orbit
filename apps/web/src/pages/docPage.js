@@ -85,29 +85,6 @@ export default class DocumentPage {
           </actions>
         }
       >
-        <UI.Popover width={160} target={<UI.Button>test</UI.Button>}>
-          <UI.List
-            elevation={3}
-            borderRadius={8}
-            items={[
-              {
-                icon: 'share',
-                primary: 'Share2',
-                onClick: () => {},
-              },
-              {
-                icon: doc.private ? 'lock' : 'open',
-                primary: 'Locked',
-                onClick: doc.togglePrivate,
-              },
-              {
-                icon: doc.private ? 'eye' : 'closed',
-                primary: 'Private',
-                onClick: doc.togglePrivate,
-              },
-            ]}
-          />
-        </UI.Popover>
         <DocumentView
           if={!docStore.showInbox}
           id={doc._id}

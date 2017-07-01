@@ -1,13 +1,10 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { Button, TiltGlow } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
-
-const WIDTH = 170
-const HEIGHT = 70
 
 type Props = {
   id: number,
@@ -55,12 +52,12 @@ type Props = {
 export default class Children {
   props: Props
 
-  render({ id, store }: Props) {
+  render({ store }: Props) {
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
 
     const dot = color =>
-      <Button
+      <UI.Button
         circular
         background={color}
         size={0.3}
@@ -128,7 +125,7 @@ export default class Children {
             {hasDocs ? '' : 'No '}Pages
           </title>
           <actions>
-            <Button
+            <UI.Button
               $add
               if={store.newTitle === null}
               size={1}

@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import DocView from '~/views/document'
 import { HEADER_HEIGHT } from '~/constants'
 import { last } from 'lodash'
-import moment from 'moment'
+import * as UI from '@mcro/ui'
 
 @view.attach('commanderStore')
 @view.attach('layoutStore')

@@ -24,7 +24,7 @@ export default class UserBar {
           <UI.List
             width={150}
             padding={3}
-            elevation={3}
+            elevation={5}
             borderRadius={8}
             itemProps={{
               height: 38,

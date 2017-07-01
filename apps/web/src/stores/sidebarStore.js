@@ -3,10 +3,12 @@ import { store } from '@mcro/black'
 import { SIDEBAR_WIDTH } from '~/constants'
 import { throttle } from 'lodash'
 
+const IS_SIDEBAR_OPEN = 'sidebarOpen'
+
 @store
 export default class SidebarRootStore {
   width = SIDEBAR_WIDTH
-  active = true
+  active = !(localStorage.getItem(IS_SIDEBAR_OPEN) === 'false')
   dragging = false
   changing = false
 
@@ -33,6 +35,7 @@ export default class SidebarRootStore {
     this.setTimeout(() => {
       this.changing = false
     }, 200)
+    localStorage.setItem(IS_SIDEBAR_OPEN, this.active + '')
   }
 
   attachDragger = (node: HTMLElement) => {

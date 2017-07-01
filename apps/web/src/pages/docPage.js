@@ -85,7 +85,7 @@ export default class DocumentPage {
           </actions>
         }
       >
-        <UI.Popover open width={160} target={<UI.Button>test</UI.Button>}>
+        <UI.Popover width={160} target={<UI.Button>test</UI.Button>}>
           <UI.List
             elevation={10}
             borderRadius={8}

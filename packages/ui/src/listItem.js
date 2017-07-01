@@ -41,7 +41,7 @@ export default class ListItem {
 
   static defaultProps = {
     size: 1,
-    borderWidth: 0,
+    borderWidth: 1,
   }
 
   componentDidMount() {

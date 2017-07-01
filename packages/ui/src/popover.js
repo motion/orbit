@@ -471,7 +471,6 @@ export default class Popover {
 
     // logic for enter/leave
     this.on(node, 'mouseenter', () => {
-      log('enter')
       onEnter()
       // insanity, but mouseleave is horrible
       if (this.curProps.target) {
@@ -481,10 +480,11 @@ export default class Popover {
       }
     })
 
-    // this.on(node, 'mouseleave', onLeave)
+    this.on(node, 'mouseleave', onLeave)
   }
 
   // hover helpers
+  @log
   hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
@@ -510,7 +510,11 @@ export default class Popover {
     node: HTMLElement,
     checkParent: boolean = false
   ): boolean => {
-    return !!node.parentNode.querySelector(`${node.tagName}:hover`) || checkParent && node.parentNode.querySelector(':hover')
+    return (
+      !!node.parentNode.querySelector(`${node.tagName}:hover`) ||
+      (checkParent && !!node.parentNode.querySelector(':hover')) ||
+      node.querySelector(':hover')
+    )
   }
 
   overlayRef = ref => {

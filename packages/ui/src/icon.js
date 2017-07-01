@@ -100,7 +100,7 @@ export default class Icon {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = props => {
     const buttonPad = props.button ? 5 : 0
     const buttonStyles = props.button && {
       borderRadius: 3,
@@ -116,8 +116,8 @@ export default class Icon {
     return {
       icon: {
         color: props.color ? `${props.color} !important` : '',
-        width: (props.width || props.size) + buttonPad * 2,
-        height: props.height || props.size + buttonPad * 2,
+        width: (props.width || props.size) + buttonPad * 2 + 1,
+        height: props.height || props.size + buttonPad * 2 + 1,
         fontSize: props.size,
         lineHeight: `${props.size / 12 - 0.1}rem`, // scale where 1 when 14
         ...buttonStyles,

@@ -167,7 +167,7 @@ export default class Surface implements ViewType {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
-    const iconSize = _iconSize || (size || 1) * 15
+    const iconSize = _iconSize || (size || 1) * 14
 
     const finalClassName = `${this.uniq} ${className || ''}`
     const passProps = {
@@ -372,34 +372,39 @@ export default class Surface implements ViewType {
       borderRadius.borderRightRadius = props.inSegment.last
         ? borderRadiusSize
         : 0
-    }
-    let hasSidesDefined = false
-    for (const side of BORDER_RADIUS_SIDES) {
-      if (props[side]) {
-        hasSidesDefined = true
-        if (props[side] === true) {
-          borderRadius[side] = borderRadiusSize
-        } else {
-          borderRadius[side] = props[side]
+    } else if (props.circular) {
+      borderRadius.borderRadius = props.size * LINE_HEIGHT
+    } else {
+      let hasSidesDefined = false
+      for (const side of BORDER_RADIUS_SIDES) {
+        if (props[side]) {
+          hasSidesDefined = true
+          if (props[side] === true) {
+            borderRadius[side] = borderRadiusSize
+          } else {
+            borderRadius[side] = props[side]
+          }
         }
       }
+      if (!hasSidesDefined && borderRadiusSize) {
+        borderRadius.borderRadius = borderRadiusSize
+      }
     }
-    if (!hasSidesDefined && borderRadiusSize) {
-      borderRadius.borderRadius = borderRadiusSize
+    if (Object.keys(borderRadius).length) {
+      // always add hidden for things with radius
+      borderRadius.overflow = 'hidden'
     }
 
     // circular
     const circularStyles = props.circular && {
       padding: 0,
       width: height,
-      borderRadius: props.size * LINE_HEIGHT,
-      overflow: 'hidden',
     }
 
     return {
       element: {
         color,
-        ...props.elementStyles,
+        height,
         ...borderRadius,
         fontSize: props.fontSize,
         lineHeight: '0px',

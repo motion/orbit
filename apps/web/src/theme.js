@@ -49,7 +49,7 @@ const Theme = {
     highlightColor,
     background: 'transparent',
     color: '#fff',
-    borderColor: 'transparent'
+    borderColor: 'transparent',
   }),
   dark: theme({
     highlightColor,
@@ -67,8 +67,8 @@ const Theme = {
     base: LIGHT,
     hover: {
       ...LIGHT,
-      background: color(LIGHT.background).lighten(0.1),
-      color: color(LIGHT.color).lighten(0.1),
+      background: color(LIGHT.background).darken(0.1),
+      color: color(LIGHT.color).darken(0.1),
     },
     active: {
       ...LIGHT,

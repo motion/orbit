@@ -218,7 +218,7 @@ export default class HoverGlow {
                 background || gradient
                   ? `radial-gradient(${$(color).toString()}, transparent 70%)`
                   : colorRGB,
-              borderRadius,
+              borderRadius: 10000,
               transition: `
                   transform linear ${clickDuration / 2}ms,
                   opacity linear ${transition}ms
@@ -248,8 +248,7 @@ export default class HoverGlow {
       left: 0,
       right: 0,
       bottom: 0,
-      // zIndex: -1,
-      // transition: 'opacity ease-in 20ms',
+      transition: 'opacity ease-in 50ms',
 
       pointerEvents: 'none',
       '&:active': {

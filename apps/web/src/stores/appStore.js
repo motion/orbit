@@ -2,7 +2,7 @@
 import { view, store } from '@mcro/black'
 import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
-import Models, { User } from '@mcro/models'
+import Models from '@mcro/models'
 
 declare class AppStore {
   config: Object,

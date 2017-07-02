@@ -30,7 +30,7 @@ const OPEN = 'commander_is_open'
 const bool = s => s === 'true'
 
 export default class CommanderStore {
-  v = 10
+  v = 11
   mouseMoving = Observable.fromEvent(window, 'mousemove')
     .throttleTime(500)
     .map(event => {

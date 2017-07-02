@@ -6,6 +6,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'
 
+// to start superlogin connection immediately
+import '@mcro/models/lib/User'
+
 if (!Constants.IS_PROD) {
   require('./helpers/installDevTools')
 }

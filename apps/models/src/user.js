@@ -1,6 +1,6 @@
 import { store } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
-import superlogin from 'superlogin-client'
+import superLogin from 'superlogin-client'
 import { DocumentModel } from './document'
 
 const API_HOST = `api.${window.location.host}`
@@ -9,34 +9,23 @@ const API_URL = `http://${API_HOST}`
 @store
 class User {
   user = null
-  superlogin = superlogin
   localDb = null
   remoteDb = null
+
+  constructor(options) {
+    this.superlogin = superLogin
+    this.options = options
+  }
 
   connect = database => {
     this.database = database
     this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'
 
-    this.superlogin.configure({
-      baseUrl: `${API_URL}/auth/`,
-      endpoints: [API_HOST],
-      // don't auto add url host to endpoints
-      noDefaultEndpoint: true,
-      //   'local' | 'session'
-      storage: 'local',
-      // The authentication providers that are supported by your SuperLogin host
-      //   eg: ['facebook', 'twitter'],
-      // Sets when to check if the session is expired.
-      //   'stateChange' | 'startup' - checks every time $stateChangeStart or $routeChangeStart is fired, or startup
-      checkExpired: 'stateChange',
-      // Percentage of session duration after which to automatically refresh token
-      //   eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm
-      refreshThreshold: 0.2,
-    })
+    this.superlogin.configure(this.options)
 
     // sync
-    this.superlogin.on('login', async (event, session) => {
+    this.superlogin.on('login', async () => {
       this.user = await this.getCurrentUser()
       if (this.user) {
         this.documents.connect(this.database, {
@@ -124,7 +113,7 @@ class User {
   signup = async (email, password) => {
     try {
       const username = email
-      const res = await superlogin.register({
+      const res = await this.superlogin.register({
         email,
         username,
         password,
@@ -147,7 +136,7 @@ class User {
   }
 
   login = async (email, password) => {
-    this.user = await superlogin.login({
+    this.user = await this.superlogin.login({
       username: email,
       password,
     })
@@ -159,14 +148,21 @@ class User {
     this.remoteSyncHandler && this.remoteSyncHandler.cancel()
     this.remoteDb = null
     this.localDb = null
-    await superlogin.logout()
+    await this.superlogin.logout()
   }
 
   getCurrentUser = async () => {
-    const session = await superlogin.getSession()
+    const session = await this.superlogin.getSession()
     this.setupDbSync()
     return session
   }
 }
 
-export default new User()
+export default new User({
+  baseUrl: `${API_URL}/auth/`,
+  endpoints: [API_HOST],
+  noDefaultEndpoint: true, // don't auto add url host to endpoints
+  storage: 'local', //   'local' | 'session'
+  checkExpired: 'stateChange', // 'stateChange' ($stateChangeStart or $routeChangeStart is fired) | 'startup'
+  refreshThreshold: 0.2, // eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm
+})

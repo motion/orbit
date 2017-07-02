@@ -219,7 +219,7 @@ export default class Model {
   async dispose() {
     this.subscriptions.dispose()
     if (this._collection) {
-      await this._collection.remove()
+      this._collection.destroy()
     }
   }
 

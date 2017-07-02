@@ -158,6 +158,10 @@ class List {
     width: userWidth,
     ...props
   }: Props) {
+    if (!items && !children) {
+      return null
+    }
+
     let rowHeight = propRowHeight
     let height = userHeight
     let width = userWidth
@@ -179,17 +183,12 @@ class List {
       borderColor,
     }
 
-    if (!items && !children) {
-      return null
-    }
-
     const total = items ? items.length : Children.count(children)
     const getItemProps = (i, rowProps, isListItem) => {
       const positionProps = {
         isFirstElement: i === 0,
         isLastElement: i === total - 1,
       }
-
       const props = {
         key: i,
         ...itemProps,
@@ -197,14 +196,12 @@ class List {
         ...(isListItem ? passThroughProps : null),
         ...(isListItem ? positionProps : null),
       }
-
       if (controlled) {
         props.onClick = () => {
           this.highlightItem(() => i, this.onSelect)
         }
         props.highlight = i === this.state.selected
       }
-
       return props
     }
 
@@ -260,6 +257,8 @@ class List {
       <Shortcuts name="all" handler={this.handleShortcuts}>
         <Surface
           tagName="list"
+          align="stretch"
+          height={height}
           style={{
             minHeight: height,
             minWidth: width,

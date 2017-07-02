@@ -90,8 +90,9 @@ export default class ListItem {
         borderBottomRadius={isLastElement}
         borderTopRadius={isFirstElement}
         overflow="hidden"
-        padding={[6, 8]}
+        padding={[0, 8]}
         glow
+        row
         onClick={onClick}
         iconProps={{
           margin: 5,
@@ -102,6 +103,17 @@ export default class ListItem {
           opacity: 0.05,
           resist: 40,
           clickable: !!onClick,
+        }}
+        elementProps={{
+          css: {
+            padding: [5, 0],
+          },
+        }}
+        iconProps={{
+          css: {
+            padding: [8, 0],
+            width: 28,
+          },
         }}
         style={{
           position: 'relative',
@@ -139,10 +151,17 @@ export default class ListItem {
               {after}
             </after>
           </above>
-          <children if={children} $$row={row}>
-            {children}
-          </children>
         </content>
+        <children if={children} $$row={row} $$margin={[0, -8]}>
+          {Array.isArray(children)
+            ? children.map(
+                (item, index) =>
+                  typeof item === 'object' && item.primary
+                    ? <ListItem key={item.key || index} {...item} />
+                    : item
+              )
+            : children}
+        </children>
       </Surface>
     )
   }
@@ -150,10 +169,7 @@ export default class ListItem {
   static style = {
     item: {
       maxWidth: '100%',
-      flexFlow: 'row',
       position: 'relative',
-      overflow: 'hidden',
-      zIndex: 0,
     },
     content: {
       flex: 1,

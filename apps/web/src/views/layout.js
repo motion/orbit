@@ -143,6 +143,7 @@ export default class Root {
       overflowX: 'visible',
       overflowY: 'scroll',
       zIndex: 100,
+      borderRightRadius: 8,
     },
     dragStartedAt: pos => ({
       overflowX: 'visible',

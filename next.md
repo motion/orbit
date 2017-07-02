@@ -1,4 +1,7 @@
 # nate
+  - nested things:
+    - ListItem: wraps them in Collapsable
+    - MenuItem: wraps them into Popovers
   - theme="green" power helper
     - if theme doesn't exist AND theme is valid color derive rest of theme from that
       - super easy: just find luminosity, then darken/light borderColor and darken/lighten color

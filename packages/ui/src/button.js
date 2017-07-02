@@ -6,6 +6,8 @@ export default ({ badge, children, ...props }) =>
     tagName="button"
     borderWidth={1}
     glint
+    row
+    align="center"
     glow
     {...props}
     noElement

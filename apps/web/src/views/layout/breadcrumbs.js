@@ -7,6 +7,7 @@ class BreadcrumbStore {
   last = null
   crumbs = watch(async () => {
     const { currentDocument } = this.props.commanderStore
+    console.log(currentDocument)
     if (!currentDocument) {
       return []
     }
@@ -32,6 +33,7 @@ export default class Breadcrumbs {
     ]
 
     if (store.crumbs) {
+      console.log('curmbs are', store.crumbs, typeof store.crumbs)
       crumbs.push(
         store.crumbs.map(doc => ({
           text: doc.title,

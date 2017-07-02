@@ -9,7 +9,12 @@ import {
   autorun,
 } from 'mobx'
 
-export default function automagical(options: Object) {
+const isFunction = val => typeof val === 'function'
+const isQuery = val => val && val.$isQuery
+const isRxObservable = val => val instanceof Observable
+const isPromise = val => val instanceof Promise
+
+export default function automagical() {
   return {
     name: 'automagical',
     decorator: (Klass: Class<any> | Function) => {
@@ -39,7 +44,6 @@ const FILTER_KEYS = {
   constructor: true,
   start: true,
   stop: true,
-  stat: true, // ?
   react: true,
   ref: true,
   setInterval: true,
@@ -60,6 +64,31 @@ const FILTER_KEYS = {
 function observableRxToObservableMobx(obj: Object, method: string) {
   extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
   return obj[method]
+}
+
+function wrapQuery(obj, method, val) {
+  Object.defineProperty(obj, method, {
+    get() {
+      return val.current
+    },
+  })
+  obj.subscriptions.add(val)
+  return val
+}
+
+function wrapPromise(obj, method, val) {
+  const observable = fromPromise(val)
+  Object.defineProperty(obj, method, {
+    get() {
+      return observable.value
+    },
+  })
+}
+
+function wrapRxObservable(obj, method) {
+  const observable = observableRxToObservableMobx(obj, method)
+  obj.subscriptions.add(observable)
+  return observable
 }
 
 function automagic(obj: Object) {
@@ -83,18 +112,22 @@ function automagic(obj: Object) {
 
   // mutate objects to be magical
   for (const method of Object.keys(descriptors)) {
-    automagicalValue(obj, method, descriptors)
+    automagicalValue(obj, method, { descriptors })
   }
 }
 
 // * => Mobx
-function automagicalValue(obj: Object, method: string, descriptors = {}) {
+function automagicalValue(
+  obj: Object,
+  method: string,
+  { descriptors, extendPlainValues = true, extendFunctions = true } = {}
+) {
   if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
     return
   }
 
   // get => @computed
-  const descriptor = descriptors[method]
+  const descriptor = descriptors && descriptors[method]
   if (descriptor && !!descriptor.get) {
     const getter = {
       [method]: null,
@@ -109,73 +142,65 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
 
   // watch() => autorun(automagical(value))
   if (isAutorun(val)) {
+    const checkConnected = type obj.connected === 'boolean'
     // @observable.ref
     extendShallowObservable(obj, { [method]: null })
     let previous
     const stop = autorun(() => {
+      if (checkConnected) {
+        obj.connected // do this to trigger re-run on connection
+      }
       obj[method] = val.call(obj)
-      // console.log(`watch.autorun ${obj.name || obj.constructor.name}.${method}`)
+      console.log(
+        `watch.autorun ${obj.name || obj.constructor.name}.${method}`,
+        obj[method]
+      )
       // auto dispose the previous thing
       if (previous && previous !== null) {
         if (previous.dispose) {
           previous.dispose()
         }
       }
-      previous = automagicalValue(obj, method)
-      // need to run this to ensure it wraps autorun value magically
+      // wrap new value so we auto handle returned promises and such
+      previous = automagicalValue(obj, method, {
+        extendPlainValues: false,
+        extendFunctions: false,
+      })
     })
     obj.subscriptions.add(() => {
-      previous && previous.dipose && previous.dispose()
+      if (previous && previous.dispose) {
+        previous.dispose()
+      }
       stop()
     })
     return
-  }
-
-  // Promise => Mobx
-  if (val instanceof Promise) {
-    const observable = fromPromise(val)
-    Object.defineProperty(obj, method, {
-      get() {
-        return observable.value
-      },
-    })
-    // TODO: make a query that contains a promise work
-    return
-  }
-
-  const isFunction = typeof val === 'function'
-  const isQuery = val && val.$isQuery
-
-  // @query => Mobx
-  if (isQuery) {
-    Object.defineProperty(obj, method, {
-      get() {
-        return val.current
-      },
-    })
-    obj.subscriptions.add(val)
-    return val
   }
 
   // already Mobx observable, let it be yo
   if (isObservable(val)) {
     return null
   }
-
-  // Rx => mobx
-  if (val instanceof Observable) {
-    const observable = observableRxToObservableMobx(obj, method)
-    obj.subscriptions.add(observable)
-    return observable
+  // Promise => Mobx
+  if (isPromise(val)) {
+    return wrapPromise(obj, method, val)
   }
-
-  if (isFunction) {
+  // @query => Mobx
+  if (isQuery(val)) {
+    return wrapQuery(obj, method, val)
+  }
+  // Rx => mobx
+  if (isRxObservable(val)) {
+    return wrapRxObservable(obj, method)
+  }
+  // else
+  if (extendFunctions && isFunction(val)) {
     // @action
     obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
-  } else {
+    return
+  }
+  if (extendPlainValues) {
     // @observable.ref
     extendShallowObservable(obj, { [method]: val })
   }
-
   return null
 }

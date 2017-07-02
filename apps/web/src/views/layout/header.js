@@ -1,6 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import Router from '~/router'
+import Commander from '~/views/commander'
 import { Segment, SlotFill, Button } from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import * as Commander from '~/views/commander'
@@ -39,12 +40,7 @@ export default class Header {
           />
         </bar>
         <rest $$row>
-          <SlotFill.Slot name="documentActions">
-            {items =>
-              <actions>
-                {items}
-              </actions>}
-          </SlotFill.Slot>
+          <Commander.Bar />
           <SlotFill.Slot name="actions">
             {items =>
               <actions>

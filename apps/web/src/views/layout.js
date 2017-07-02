@@ -56,7 +56,7 @@ export default class Root {
   }
 
   renderApp() {
-    const { layoutStore } = this.props
+    const { layoutStore, commanderStore } = this.props
     const CurrentPage = Router.activeView || NotFound
     const { showOnboard } = layoutStore
 
@@ -79,7 +79,7 @@ export default class Root {
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-            $hide={layoutStore.isCommanderOpen}
+            $hide={commanderStore.isOpen}
           >
             <CurrentPage key={Router.key} {...Router.params} />
           </content>

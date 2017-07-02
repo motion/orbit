@@ -5,24 +5,19 @@ import { HEADER_HEIGHT } from '~/constants'
 import { last } from 'lodash'
 import * as UI from '@mcro/ui'
 
-@view.attach('commanderStore')
-@view.attach('layoutStore')
+@view.attach('commanderStore', 'layoutStore')
 @view
 export default class CommanderResults {
-  render({ commanderStore: store }) {
-    const docs = store.peek || []
-
-    setTimeout(() => {
-      this.props.layoutStore.isCommanderOpen = store.isOpen
-    })
+  render({ commanderStore: cmdr }) {
+    const docs = cmdr.peek || []
 
     const getMatch = (doc, index) =>
       <match
-        $highlight={index === store.highlightIndex}
-        onClick={() => store.navTo(doc)}
+        $highlight={index === cmdr.highlightIndex}
+        onClick={() => cmdr.navTo(doc)}
         key={doc._id}
         onMouseEnter={() => {
-          store.highlightIndex = index
+          cmdr.highlightIndex = index
         }}
       >
         <UI.Title size={2.5}>
@@ -32,43 +27,39 @@ export default class CommanderResults {
       </match>
 
     return (
-      <results transparent if={store.isOpen}>
+      <results if={cmdr.isOpen}>
         <UI.Placeholder
-          if={store.isEnterToCreate && last(store.typedPath).length > 0}
+          if={cmdr.isEnterToCreate && last(cmdr.typedPath).length > 0}
         >
-          <UI.Title
-            rootProps={{ style: { justifyContent: 'center' } }}
-            size={3}
-          >
-            {store.typedPath[store.typedPath.length - 2]}
+          <UI.Title size={3}>
+            {cmdr.typedPath[cmdr.typedPath.length - 2]}
           </UI.Title>
           <UI.Title size={2}>
-            ↵ to create {last(store.typedPath)}
+            ↵ to create {last(cmdr.typedPath)}
           </UI.Title>
         </UI.Placeholder>
         <matches if={docs.length > 0}>
           <UI.Title
             color="rgba(191, 93, 88, 1)"
             $title
-            transparent
-            if={!store.isTypingPath}
+            if={!cmdr.isTypingPath}
             size={3}
           >
-            {store.value === ''
+            {cmdr.value === ''
               ? 'All Docs'
-              : `Searching for "${last(store.typedPath)}"`}
+              : `Searching for "${last(cmdr.typedPath)}"`}
           </UI.Title>
-          {docs.map((doc, index) => getMatch(doc, index))}
+          {docs.map(getMatch)}
         </matches>
         <preview
-          if={store.highlightedDocument}
-          key={store.highlightedDocument._id}
+          if={cmdr.highlightedDocument}
+          key={cmdr.highlightedDocument._id}
         >
           <DocView
             readOnly
             inline
-            id={store.highlightedDocument._id}
-            editorProps={{ find: store.value }}
+            id={cmdr.highlightedDocument._id}
+            editorProps={{ find: cmdr.value }}
           />
         </preview>
       </results>
@@ -85,14 +76,6 @@ export default class CommanderResults {
       bottom: 0,
       left: 0,
     },
-    create: {
-      flex: 1,
-      color: 'rgba(255,255,255,.9)',
-      fontSize: 24,
-      textAlign: 'center',
-      alignSelf: 'center',
-      justifyContent: 'center',
-    },
     matches: {
       padding: 10,
       overflow: 'scroll',
@@ -104,19 +87,10 @@ export default class CommanderResults {
     match: {
       padding: [4, 5],
       marginTop: 10,
-      marginTop: 15,
       maxWidth: 200,
       color: 'white',
       transition: 'all 100ms ease-in',
       borderLeft: '3px solid rgba(191, 93, 88, 0)',
-    },
-    name: {
-      fontWeight: 'bold',
-      fontSize: 18,
-    },
-    info: {
-      fontSize: 14,
-      opacity: 0.7,
     },
     preview: {
       position: 'absolute',

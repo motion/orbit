@@ -1,17 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import {
-  Text,
-  Pane,
-  ContextMenu,
-  List,
-  Icon,
-  Link,
-  Input,
-  Segment,
-  Button,
-  SlotFill,
-} from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import {
   SortableContainer,
   SortableElement,
@@ -25,7 +14,7 @@ const { ago } = timeAgo()
 
 /* sortable eats index, so add _index for item styling */
 const SortableItem = SortableElement(
-  ({ active, onStart, onClick, _index, value }) => (
+  ({ active, onStart, onClick, _index, value }) =>
     <div style={{ zIndex: 1000000 }}>
       <Item
         active={active}
@@ -35,14 +24,13 @@ const SortableItem = SortableElement(
         task={value}
       />
     </div>
-  )
 )
 
 const SortableList = SortableContainer(
   ({ active, onStart, onClick, items }) => {
     return (
       <ul>
-        {items.map((task, index) => (
+        {items.map((task, index) =>
           <SortableItem
             onClick={() => onClick(task)}
             onStart={() => onStart(task)}
@@ -52,7 +40,7 @@ const SortableList = SortableContainer(
             index={index}
             value={task}
           />
-        ))}
+        )}
       </ul>
     )
   }

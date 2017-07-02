@@ -10,13 +10,17 @@ export default class CommanderInput {
       <bar $$align="center" $$row $$flex>
         <Input
           $input
-          size={1.1}
+          size={1.3}
           onChange={commanderStore.onChange}
           onKeyDown={commanderStore.onKeyDown}
           onFocus={commanderStore.onFocus}
           placeholder={commanderStore.place}
           placeholderColor={[0, 0, 0, 0.1]}
           borderWidth={0}
+          borderRadius={0}
+          style={{
+            borderBottom: [1, '#eee'],
+          }}
           getRef={commanderStore.ref('input').set}
           value={commanderStore.value}
         />

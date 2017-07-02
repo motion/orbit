@@ -5,7 +5,6 @@ export default ({ badge, children, ...props }) =>
   <SizedSurface
     tagName="button"
     borderWidth={1}
-    hoverable
     glint
     glow
     {...props}

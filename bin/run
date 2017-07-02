@@ -1,0 +1,16 @@
+#!/bin/bash
+
+. $(dirname $0)/__/common
+cd $ROOT
+
+ACTION=$1
+
+if [ "$ACTION" = "electron" ]; then
+  cd apps/web
+  npm run electron
+elif [ "$ACTION" =  "web" ]; then
+  cd apps/web
+  npm start
+else
+  npm run $1
+fi

@@ -3,13 +3,10 @@
   "private": true,
   "scripts": {
     "bootstrap": "echo use bin/bootstrap",
-    "web": "npm run check-dependencies && cd apps/web && npm start",
-    "web-debug": "cd apps/web && npm run start-debug",
+    "web": "echo use bin/run web",
     "build": "echo use bin/build",
-    "build-web": "cd apps/web && npm run build",
     "watch": "echo use bin/watch",
-    "electron": "cd apps/web && npm run electron",
-    "check-dependencies": "lerna exec -- check-dependencies"
+    "electron": "echo use bin/run electron"
   },
   "dependencies": {
     "@mcro/preset-motion": "^1.0.5",

@@ -29,15 +29,9 @@ npm run bootstrap
 Run these side-by-side:
 
 ```sh
-dev start
-```
-
-```sh
-dev serve
-```
-
-```sh
-npm run watch
+compose up
+run web
+run watch
 ```
 
 then hit: http://jot.dev

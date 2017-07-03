@@ -141,35 +141,13 @@ function automagicalValue(
   // not get, we can check value
   let val = value || obj[method]
 
-  // watch() => autorun(automagical(value))
-  if (isWatch(val)) {
-    // @observable.ref
-    extendShallowObservable(obj, { [method]: null })
-    let previous
-    const stop = autorun(() => {
-      const newValue = val.call(obj)
-      // auto dispose the previous thing
-      if (previous && previous !== null && previous.dispose) {
-        previous.dispose()
-      }
-      // wrap new value so we auto handle returned promises and such
-      previous = automagicalValue(obj, method, {
-        value: newValue,
-        extendFunctions: false,
-      })
-    })
-    obj.subscriptions.add(() => {
-      if (previous && previous !== null && previous.dispose) {
-        previous.dispose()
-      }
-      stop()
-    })
-    return
-  }
-
   // already Mobx observable, let it be yo
   if (isObservable(val)) {
-    return null
+    return val
+  }
+  // watch() => autorun(automagical(value))
+  if (isWatch(val)) {
+    return wrapWatch(obj, method, val)
   }
   // Promise => Mobx
   if (isPromise(val)) {
@@ -187,11 +165,54 @@ function automagicalValue(
   if (extendFunctions && isFunction(val)) {
     // @action
     obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
-    return
+    return obj[method]
   }
   // @observable.ref
   if (extendPlainValues) {
     extendShallowObservable(obj, { [method]: val })
   }
-  return null
+  return val
+}
+
+function wrapWatch(obj, method, val) {
+  let current = null
+  const stop = autorun(() => {
+    // auto dispose the previous thing
+    if (current && current !== null && current.dispose) {
+      current.dispose()
+    }
+    current = thingToObservable(val.call(obj))
+  })
+  Object.defineProperty(obj, method, {
+    get() {
+      if (!current) return current
+      if (current.value) {
+        return current.value.value
+      }
+      if (current.get) {
+        return current.get()
+      }
+      return current
+    },
+  })
+  obj.subscriptions.add(() => {
+    if (current && current !== null && current.dispose) {
+      current.dispose()
+    }
+    stop()
+  })
+  return current
+}
+
+function thingToObservable(thing) {
+  if (isPromise(thing)) {
+    return fromPromise(thing)
+  }
+  if (isQuery(thing)) {
+    return thing.observable
+  }
+  if (isRxObservable(thing)) {
+    return fromStream(thing)
+  }
+  return thing
 }

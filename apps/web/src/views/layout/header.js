@@ -39,7 +39,6 @@ export default class Header {
           />
         </bar>
         <rest $$row>
-          <Commander.Bar />
           <SlotFill.Slot name="actions">
             {items =>
               <actions>

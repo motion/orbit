@@ -23,18 +23,21 @@ export default class UserBar {
           closeOnClick
         >
           <UI.List
+            background
+            elevation={3}
             width={150}
             padding={3}
-            elevation={5}
             borderRadius={8}
             itemProps={{
-              height: 38,
+              height: 32,
+              margin: [2, 0],
               fontSize: 14,
               borderWidth: 0,
               borderRadius: 8,
             }}
             items={[
               {
+                icon: 'body',
                 primary: User.name,
                 after: (
                   <UI.Button
@@ -45,6 +48,7 @@ export default class UserBar {
                 ),
               },
               {
+                icon: 'gear',
                 primary: 'Settings',
                 onClick: () => console.log(),
               },

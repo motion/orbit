@@ -1,7 +1,7 @@
 import React from 'react'
 import { view, computed } from '@mcro/black'
 import { BLOCKS } from '~/editor/constants'
-import { Button, List, Popover } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 
 export default View => {
   @view.basics
@@ -61,11 +61,15 @@ export default View => {
     }
 
     contextMenu = () =>
-      <Popover
+      <UI.Popover
         target={
-          <Button icon="add" iconSize={9} chromeless color={[0, 0, 0, 0.1]} />
+          <UI.Button
+            icon="add"
+            iconSize={9}
+            chromeless
+            color={[0, 0, 0, 0.1]}
+          />
         }
-        background="#fff"
         closeOnClick
         openOnClick
         escapable
@@ -74,7 +78,9 @@ export default View => {
       >
         {isOpen =>
           isOpen &&
-          <List
+          <UI.List
+            background
+            elevation={2}
             items={[
               {
                 primary: 'Doc List',
@@ -98,7 +104,7 @@ export default View => {
               },
             ]}
           />}
-      </Popover>
+      </UI.Popover>
 
     componentProps = {
       setContext: context => {

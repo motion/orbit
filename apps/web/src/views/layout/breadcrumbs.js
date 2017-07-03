@@ -3,27 +3,10 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
 
-class BreadcrumbStore {
-  last = null
-  crumbs = watch(async () => {
-    const { currentDocument } = this.props.commanderStore
-    if (!currentDocument) {
-      return []
-    }
-    if (this.crumbs && this.crumbs._id === currentDocument._id) {
-      return this.crumbs
-    }
-    this.last = await currentDocument.getCrumbs()
-    return this.last
-  })
-}
-
 @view.attach('commanderStore')
-@view({
-  store: BreadcrumbStore,
-})
+@view
 export default class Breadcrumbs {
-  render({ store, commanderStore }) {
+  render({ commanderStore }) {
     const crumbs = [
       {
         text: <UI.Icon size={12} name="home" color="#ccc" hoverColor="red" />,
@@ -31,6 +14,7 @@ export default class Breadcrumbs {
       },
     ]
 
+    log('crumbs', commanderStore.crumbs)
     if (commanderStore.crumbs) {
       crumbs.push(
         commanderStore.crumbs.map(doc => ({

@@ -2,6 +2,7 @@
 import { fromStream, fromPromise } from 'mobx-utils'
 import { Observable } from 'rxjs'
 import {
+  observable,
   action,
   isObservable,
   extendShallowObservable,
@@ -120,7 +121,7 @@ function automagic(obj: Object) {
 function automagicalValue(
   obj: Object,
   method: string,
-  { descriptors, extendPlainValues = true, extendFunctions = true } = {}
+  { value, descriptors, extendPlainValues = true, extendFunctions = true } = {}
 ) {
   if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
     return
@@ -138,7 +139,7 @@ function automagicalValue(
   }
 
   // not get, we can check value
-  let val = obj[method]
+  let val = value || obj[method]
 
   // watch() => autorun(automagical(value))
   if (isWatch(val)) {
@@ -146,25 +147,14 @@ function automagicalValue(
     extendShallowObservable(obj, { [method]: null })
     let previous
     const stop = autorun(() => {
-      if (method === 'currentDocument') {
-        console.log(val, obj)
-      }
-
-      obj[method] = val.call(obj)
-      if (method === 'currentDocument') {
-        console.log(val, obj)
-        console.log(
-          `watch.autorun ${obj.name || obj.constructor.name}.${method}`,
-          obj[method]
-        )
-      }
+      const newValue = val.call(obj)
       // auto dispose the previous thing
       if (previous && previous !== null && previous.dispose) {
         previous.dispose()
       }
       // wrap new value so we auto handle returned promises and such
       previous = automagicalValue(obj, method, {
-        extendPlainValues: false,
+        value: newValue,
         extendFunctions: false,
       })
     })
@@ -199,8 +189,8 @@ function automagicalValue(
     obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
     return
   }
+  // @observable.ref
   if (extendPlainValues) {
-    // @observable.ref
     extendShallowObservable(obj, { [method]: val })
   }
   return null

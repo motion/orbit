@@ -26,9 +26,6 @@ const KEYMAP = {
   },
 }
 
-const OPEN = 'commander_is_open'
-const bool = s => s === 'true'
-
 export default class CommanderStore {
   v = 11
   mouseMoving = Observable.fromEvent(window, 'mousemove')
@@ -39,12 +36,9 @@ export default class CommanderStore {
     .reduce((acc, x) => acc && x && Date.now())
 
   keyManager = new ShortcutManager(KEYMAP)
-  currentDocument = watch(() => {
-    console.log('watching curdoc', Document.get(Router.params.id))
-    return Document.get(Router.params.id)
-  })
+  currentDocument = watch(() => Document.get(Router.params.id))
   crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
-  isOpen = false //bool(localStorage.getItem(OPEN)) || false
+  isOpen = false
   value = ''
   path = ''
   highlightIndex = -1
@@ -346,7 +340,6 @@ export default class CommanderStore {
   }
 
   setOpen = val => {
-    localStorage.setItem(OPEN, val)
     this.isOpen = val
   }
 

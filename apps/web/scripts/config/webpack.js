@@ -2,7 +2,6 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
-const BabiliPlugin = require('babili-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const getClientEnvironment = require('./env')
@@ -10,18 +9,16 @@ const paths = require('./paths')
 const publicPath = '/'
 const publicUrl = ''
 const env = getClientEnvironment(publicUrl)
+const BabiliPlugin = require('babili-webpack-plugin')
 const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
+const PrepackPlugin = require('prepack-webpack-plugin').default
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const IS_PROD = process.env.NODE_ENV === 'production'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
 console.log('running webpack for:', process.env.NODE_ENV)
-
-// TODO
-// service workers
-//  requires: https
-//  https://github.com/goldhand/sw-precache-webpack-plugin
 
 let config
 
@@ -39,8 +36,6 @@ if (IS_PROD) {
 module.exports = Object.assign(config, {
   entry: {
     app: filtered([
-      // IS_DEV && require.resolve('react-dev-utils/webpackHotDevClient'),
-      IS_DEV && require.resolve('react-hot-loader/patch'),
       IS_DEV && require.resolve('webpack-dev-server/client') + '?/',
       IS_DEV && require.resolve('webpack/hot/only-dev-server'),
       paths.appIndexJs,
@@ -92,10 +87,9 @@ module.exports = Object.assign(config, {
     }),
     new webpack.DefinePlugin(env.stringified),
     // hmr
-    new webpack.HotModuleReplacementPlugin(),
+    IS_DEV && new webpack.HotModuleReplacementPlugin(),
     // new CaseSensitivePathsPlugin(),
-    // npm install
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    IS_DEV && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     // readable names
     new webpack.NamedModulesPlugin(),
     // vendor
@@ -110,8 +104,10 @@ module.exports = Object.assign(config, {
 
     // production
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    IS_PROD && new ButternutWebpackPlugin({}),
+    // IS_PROD && new ButternutWebpackPlugin({}),
     // IS_PROD && new BabiliPlugin(),
+    // IS_PROD && new PrepackPlugin(),
+    IS_PROD && new UglifyJSPlugin(),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

@@ -1,5 +1,10 @@
 {
-  "presets": [
-    "@mcro/preset-motion"
-  ]
+  "env": {
+    "development": {
+      "presets": ["@mcro/preset-motion"]
+    },
+    "production": {
+      "presets": [["@mcro/preset-motion", { "disable": ["@mcro/hmr"] }]]
+    }
+  }
 }

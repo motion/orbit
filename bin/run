@@ -12,5 +12,5 @@ elif [ "$ACTION" =  "web" ]; then
   cd apps/web
   motion watch
 else
-  npm run $1
+  npm run $1 ${@:2}
 fi

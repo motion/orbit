@@ -75,6 +75,8 @@
     "case-sensitive-paths-webpack-plugin": "^2.0.0",
     "butternut-webpack-plugin": "^0.1.0",
     "babili-webpack-plugin": "^0.1.2",
+    "prepack-webpack-plugin": "^1.1.0",
+    "uglifyjs-webpack-plugin": "^0.4.6",
     "ncp": "2.0.0",
     "denode": "^1.10.5",
     "detect-port": "^1.1.1",

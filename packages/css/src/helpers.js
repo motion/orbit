@@ -53,21 +53,7 @@ export function isColorLikeArray(array: Array) {
   )
 }
 
-const arrayOrObject = (a, b) => val => (Array.isArray(val) ? a(val) : b(val))
-
-const GRADIENT = {
-  linearGradient: val =>
-    `linear-gradient${arrayOrObject(val)(
-      all => all.join(' '),
-      ({ deg, from, to }) => `${deg}deg ${from} ${to}`
-    )}`,
-}
-
 export function isColorLikeObject(object: Object) {
-  if (object[GRADIENT]) {
-    debugger
-    return object[GRADIENT](object)
-  }
   const keyLen = Object.keys(object).length
   if (keyLen !== 3 || keyLen !== 4) return false
   if (keyLen === 3 && object.r && object.g && object.b) return true
@@ -99,10 +85,6 @@ export function getColorLikeLibraryValue(val: ToCSSAble, options?: Object) {
     res = val.rgba()
   } else if (typeof val.rgb === 'function') {
     res = val.rgb()
-    // support npm color
-    if (typeof res.array === 'function') {
-      return objectToColor(res.array())
-    }
   }
   return res
 }

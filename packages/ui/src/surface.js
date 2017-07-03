@@ -217,9 +217,9 @@ export default class Surface implements ViewType {
         <Glow
           if={glow}
           full
-          scale={1.2}
+          scale={1.4}
           color={(this.theme && this.theme.surface.style.color) || [0, 0, 0]}
-          opacity={0.08}
+          opacity={0.15}
           {...glowProps}
         />
         <element

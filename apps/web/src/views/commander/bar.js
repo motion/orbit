@@ -19,6 +19,7 @@ export default class CommanderInput {
           borderRadius={0}
           borderWidth={0}
           borderBottom={[1, '#eee']}
+          background="transparent"
           padding={0}
           getRef={commanderStore.ref('input').set}
           value={commanderStore.value}

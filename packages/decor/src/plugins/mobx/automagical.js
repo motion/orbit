@@ -38,7 +38,7 @@ export default function automagical() {
   }
 }
 
-const isAutorun = (val: any) => val && val.autorunme
+const isWatch = (val: any) => val && val.autorunme
 const FILTER_KEYS = {
   dispose: true,
   constructor: true,
@@ -141,25 +141,26 @@ function automagicalValue(
   let val = obj[method]
 
   // watch() => autorun(automagical(value))
-  if (isAutorun(val)) {
-    const checkConnected = type obj.connected === 'boolean'
+  if (isWatch(val)) {
     // @observable.ref
     extendShallowObservable(obj, { [method]: null })
     let previous
     const stop = autorun(() => {
-      if (checkConnected) {
-        obj.connected // do this to trigger re-run on connection
+      if (method === 'currentDocument') {
+        console.log(val, obj)
       }
+
       obj[method] = val.call(obj)
-      console.log(
-        `watch.autorun ${obj.name || obj.constructor.name}.${method}`,
-        obj[method]
-      )
+      if (method === 'currentDocument') {
+        console.log(val, obj)
+        console.log(
+          `watch.autorun ${obj.name || obj.constructor.name}.${method}`,
+          obj[method]
+        )
+      }
       // auto dispose the previous thing
-      if (previous && previous !== null) {
-        if (previous.dispose) {
-          previous.dispose()
-        }
+      if (previous && previous !== null && previous.dispose) {
+        previous.dispose()
       }
       // wrap new value so we auto handle returned promises and such
       previous = automagicalValue(obj, method, {
@@ -168,7 +169,7 @@ function automagicalValue(
       })
     })
     obj.subscriptions.add(() => {
-      if (previous && previous.dispose) {
+      if (previous && previous !== null && previous.dispose) {
         previous.dispose()
       }
       stop()

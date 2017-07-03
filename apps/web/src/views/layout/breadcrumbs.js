@@ -7,7 +7,6 @@ class BreadcrumbStore {
   last = null
   crumbs = watch(async () => {
     const { currentDocument } = this.props.commanderStore
-    console.log(currentDocument)
     if (!currentDocument) {
       return []
     }
@@ -24,7 +23,7 @@ class BreadcrumbStore {
   store: BreadcrumbStore,
 })
 export default class Breadcrumbs {
-  render({ store }) {
+  render({ store, commanderStore }) {
     const crumbs = [
       {
         text: <UI.Icon size={12} name="home" color="#ccc" hoverColor="red" />,
@@ -32,10 +31,9 @@ export default class Breadcrumbs {
       },
     ]
 
-    if (store.crumbs) {
-      console.log('curmbs are', store.crumbs, typeof store.crumbs)
+    if (commanderStore.crumbs) {
       crumbs.push(
-        store.crumbs.map(doc => ({
+        commanderStore.crumbs.map(doc => ({
           text: doc.title,
           url: doc.url(),
         }))
@@ -50,7 +48,7 @@ export default class Breadcrumbs {
               <UI.Text onClick={() => Router.go(item.url)}>
                 {item.text}
               </UI.Text>
-              <slash if={index !== crumbs.length - 1}>/</slash>
+              <slash if={index !== crumbs.length - 1 && index !== 0}>/</slash>
             </item>
           )}
         </items>

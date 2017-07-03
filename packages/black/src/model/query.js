@@ -1,5 +1,5 @@
 // @flow
-// import { RxQuery } from 'rxdb'
+import { Obse } from 'rxjs'
 import { observable, autorun } from 'mobx'
 import debug from 'debug'
 import hashsum from 'hash-sum'
@@ -12,9 +12,14 @@ const out = debug('query')
 // @query value wrapper
 function valueWrap(info, valueGet: Function) {
   const result = observable.shallowBox(undefined)
-  let query = valueGet() || {}
+  let query = valueGet()
+  // TODO should we handle this here?
+  const notConnected = query && query.isntConnected
 
-  out('query', info.model, info.property, info.args, query.mquery, query)
+  // log(
+  //   `@query ${info.model}.${info.property}(${info.args.join(', ')}) => `,
+  //   query
+  // )
 
   // subscribe and update
   let subscriber = null
@@ -24,11 +29,12 @@ function valueWrap(info, valueGet: Function) {
     }
   }
 
-  // this automatically re-runs the susbcription if it has observables
+  // this automatically re-runs if it has observables
+  // TODO this likely can be removed in favor of running watch() in stores
   const stopAutorun = autorun(() => {
     finishSubscribe()
-    query = valueGet() || {}
-    if (query.$) {
+    query = valueGet()
+    if (query && query.$) {
       // sub to values
       subscriber = query.$.subscribe(value => {
         result.set(observable.shallowBox(value))
@@ -80,7 +86,7 @@ function valueWrap(info, valueGet: Function) {
       },
     },
     $: {
-      value: query.$,
+      value: query && query.$,
     },
     current: {
       get: () => {

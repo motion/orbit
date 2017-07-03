@@ -39,7 +39,10 @@ export default class CommanderStore {
     .reduce((acc, x) => acc && x && Date.now())
 
   keyManager = new ShortcutManager(KEYMAP)
-  currentDocument = watch(() => log(Document.get(log(Router.params.id))))
+  currentDocument = watch(() => {
+    console.log('watching curdoc', Document.get(Router.params.id))
+    return Document.get(Router.params.id)
+  })
   crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
   isOpen = false //bool(localStorage.getItem(OPEN)) || false
   value = ''

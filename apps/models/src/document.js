@@ -16,7 +16,7 @@ const cleanGetQuery = (query: Object | string) => {
   if (typeof query === 'string') {
     return toID(query)
   }
-  return query
+  return query || {}
 }
 
 const DEFAULT_CONTENT = (title: string) => ({
@@ -133,7 +133,7 @@ const methods = {
   },
 }
 
-export type Document = typeof methods & {
+export type DocumentType = typeof methods & {
   title: str,
   content: object,
   text?: str,
@@ -298,4 +298,7 @@ export class DocumentModel extends Model {
   }
 }
 
-export default new DocumentModel()
+const Document = new DocumentModel()
+window.Document = Document
+
+export default Document

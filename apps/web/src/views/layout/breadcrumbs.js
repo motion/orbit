@@ -15,7 +15,7 @@ export default class Breadcrumbs {
     ]
 
     log('crumbs', commanderStore.crumbs)
-    if (commanderStore.crumbs) {
+    if (commanderStore.crumbs && commanderStore.crumbs.map) {
       crumbs.push(
         commanderStore.crumbs.map(doc => ({
           text: doc.title,

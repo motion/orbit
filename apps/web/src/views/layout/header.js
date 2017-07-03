@@ -41,7 +41,7 @@ export default class Header {
         <rest $$row>
           <SlotFill.Slot name="actions">
             {items =>
-              <actions>
+              <actions key={Math.random()}>
                 {items}
                 <Button
                   chromeless

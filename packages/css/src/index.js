@@ -103,9 +103,6 @@ export default function motionStyle(options: Object = {}) {
     if (OBJECT_TRANSFORM[key]) {
       return OBJECT_TRANSFORM[key](value)
     }
-    if (isFloat(value)) {
-      return value
-    }
     if (key === 'scale' || key === 'grayscale' || key === 'brightness') {
       return value
     }

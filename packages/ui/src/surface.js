@@ -13,6 +13,7 @@ import type { Color } from '@mcro/gloss'
 const IS_PROD = process.env.NODE_ENV === 'production'
 
 const LINE_HEIGHT = 30
+const DEFAULT_GLOW_COLOR = [0, 0, 0]
 const BORDER_RADIUS_SIDES = [
   'borderBottomRadius',
   'borderTopRadius',
@@ -196,8 +197,8 @@ export default class Surface implements ViewType {
         {...!wrapElement && passProps}
       >
         <Glint
-          if={glint}
-          color={this.theme.glintColor}
+          if={glint && this.theme}
+          color={this.theme.glintColor.style.color}
           borderRadius={
             (this.theme.element.style.borderRadius ||
               this.theme.element.style.borderTopLeftRadius) + 1
@@ -218,7 +219,10 @@ export default class Surface implements ViewType {
           if={glow}
           full
           scale={1.4}
-          color={(this.theme && this.theme.surface.style.color) || [0, 0, 0]}
+          color={
+            (this.theme && $(this.theme.surface.style.color).lighten(0.2)) ||
+            DEFAULT_GLOW_COLOR
+          }
           opacity={0.15}
           {...glowProps}
         />
@@ -397,7 +401,7 @@ export default class Surface implements ViewType {
         props.glint === true
           ? colorBackground ? background.lighten(0.1) : [255, 255, 255, 0.2]
           : props.glint
-      boxShadow.push(['inset', 0, 1, 0, glintColor])
+      // boxShadow.push(['inset', 0, 0, 0, glintColor])
     }
 
     // borderRadius

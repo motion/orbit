@@ -35,7 +35,7 @@ export default class Glint {
       left: 0,
       right: 0,
       height: 10,
-      zIndex: 10000000000000000000000,
+      zIndex: 10000,
     },
   }
 
@@ -67,7 +67,7 @@ export default class Glint {
       glint: {
         top: 0,
         height: '100%',
-        transform: { y: 0.5 * (bottom ? 1 : -1) },
+        transform: { y: 0.5 * (bottom ? 1 : -1), z: 0 },
         borderTop: isUndef(bottom) && [size, color],
         borderBottom: !isUndef(bottom) && [size, color],
         // retina border

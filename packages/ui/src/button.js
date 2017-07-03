@@ -10,6 +10,9 @@ export default injectTheme(({ badge, children, theme, ...props }) =>
     row
     align="center"
     glow
+    glowProps={{
+      scale: 2,
+    }}
     background={theme.base.buttonBackground}
     {...props}
     noElement

@@ -74,7 +74,7 @@ const Theme = {
       ...LIGHT,
       background: color(LIGHT.background).darken(0.1),
       color: '#000',
-      borderColor: 'purple',
+      borderColor: '#fff',
     },
     focus: {
       ...LIGHT,

@@ -24,7 +24,7 @@ export default class HoverGlow {
     width: 380,
     height: 200,
     color: [0, 0, 0],
-    zIndex: 100,
+    zIndex: 10,
     resist: 0,
     scale: 1,
     opacity: 0.025,

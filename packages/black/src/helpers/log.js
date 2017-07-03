@@ -11,11 +11,20 @@ const colors = [
   'darkred',
 ]
 
-function prettyPrint(obj) {
-  try {
-    return JSON.stringify(obj, 0, 2)
-  } catch (e) {
-    return obj
+function prettyPrint(thing: any) {
+  if (typeof thing === 'object') {
+    if (!thing) {
+      return 'null'
+    }
+    try {
+      return JSON.stringify(thing, 0, 2)
+    } catch (e) {
+      return thing
+    }
+  } else if (typeof thing === 'undefined') {
+    return 'undefined'
+  } else {
+    return thing
   }
 }
 
@@ -23,12 +32,7 @@ export default function log(...args) {
   const [target, key, descriptor] = args
 
   const logger = (...things) => {
-    console.log(
-      `%c${things
-        .map(arg => (typeof arg === 'object' ? prettyPrint(arg) : arg))
-        .join(' ')}`,
-      'background: orange'
-    )
+    console.log(`%c${things.map(prettyPrint).join(' ')}`, 'background: orange')
   }
 
   if (
@@ -40,7 +44,6 @@ export default function log(...args) {
     // decorator
     const ogInit = descriptor.initializer
     descriptor.initializer = function() {
-      const self = this
       return wrapLogger(ogInit.call(this), target, key)
     }
     return descriptor

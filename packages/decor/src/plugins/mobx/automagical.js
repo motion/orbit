@@ -2,6 +2,7 @@
 import { fromStream, fromPromise } from 'mobx-utils'
 import { Observable } from 'rxjs'
 import {
+  observable,
   action,
   isObservable,
   extendShallowObservable,
@@ -38,7 +39,7 @@ export default function automagical() {
   }
 }
 
-const isAutorun = (val: any) => val && val.autorunme
+const isWatch = (val: any) => val && val.autorunme
 const FILTER_KEYS = {
   dispose: true,
   constructor: true,
@@ -120,7 +121,7 @@ function automagic(obj: Object) {
 function automagicalValue(
   obj: Object,
   method: string,
-  { descriptors, extendPlainValues = true, extendFunctions = true } = {}
+  { value, descriptors, extendPlainValues = true, extendFunctions = true } = {}
 ) {
   if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
     return
@@ -138,47 +139,15 @@ function automagicalValue(
   }
 
   // not get, we can check value
-  let val = obj[method]
-
-  // watch() => autorun(automagical(value))
-  if (isAutorun(val)) {
-    const checkConnected = type obj.connected === 'boolean'
-    // @observable.ref
-    extendShallowObservable(obj, { [method]: null })
-    let previous
-    const stop = autorun(() => {
-      if (checkConnected) {
-        obj.connected // do this to trigger re-run on connection
-      }
-      obj[method] = val.call(obj)
-      console.log(
-        `watch.autorun ${obj.name || obj.constructor.name}.${method}`,
-        obj[method]
-      )
-      // auto dispose the previous thing
-      if (previous && previous !== null) {
-        if (previous.dispose) {
-          previous.dispose()
-        }
-      }
-      // wrap new value so we auto handle returned promises and such
-      previous = automagicalValue(obj, method, {
-        extendPlainValues: false,
-        extendFunctions: false,
-      })
-    })
-    obj.subscriptions.add(() => {
-      if (previous && previous.dispose) {
-        previous.dispose()
-      }
-      stop()
-    })
-    return
-  }
+  let val = value || obj[method]
 
   // already Mobx observable, let it be yo
   if (isObservable(val)) {
-    return null
+    return val
+  }
+  // watch() => autorun(automagical(value))
+  if (isWatch(val)) {
+    return wrapWatch(obj, method, val)
   }
   // Promise => Mobx
   if (isPromise(val)) {
@@ -196,11 +165,57 @@ function automagicalValue(
   if (extendFunctions && isFunction(val)) {
     // @action
     obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
-    return
+    return obj[method]
   }
+  // @observable.ref
   if (extendPlainValues) {
-    // @observable.ref
     extendShallowObservable(obj, { [method]: val })
   }
-  return null
+  return val
+}
+
+function wrapWatch(obj, method, val) {
+  let current = null
+  const stop = autorun(() => {
+    // auto dispose the previous thing
+    if (current && current !== null && current.dispose) {
+      current.dispose()
+    }
+    current = thingToObservable(val.call(obj))
+  })
+  Object.defineProperty(obj, method, {
+    get() {
+      if (!current) {
+        return current
+      }
+      if (current.get) {
+        const next = current.get()
+        return next && typeof next.get === 'function' ? next.get() : next
+      }
+      if (current.value) {
+        return current.value
+      }
+      return current
+    },
+  })
+  obj.subscriptions.add(() => {
+    if (current && current !== null && current.dispose) {
+      current.dispose()
+    }
+    stop()
+  })
+  return current
+}
+
+function thingToObservable(thing) {
+  if (isPromise(thing)) {
+    return fromPromise(thing)
+  }
+  if (isQuery(thing)) {
+    return thing.observable
+  }
+  if (isRxObservable(thing)) {
+    return fromStream(thing)
+  }
+  return thing
 }

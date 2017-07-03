@@ -16,11 +16,10 @@ export default class CommanderInput {
           onFocus={commanderStore.onFocus}
           placeholder={commanderStore.place}
           placeholderColor={[0, 0, 0, 0.1]}
-          borderWidth={0}
           borderRadius={0}
-          style={{
-            borderBottom: [1, '#eee'],
-          }}
+          borderWidth={0}
+          borderBottom={[1, '#eee']}
+          padding={0}
           getRef={commanderStore.ref('input').set}
           value={commanderStore.value}
         />
@@ -32,7 +31,6 @@ export default class CommanderInput {
     bar: {},
     input: {
       width: '100%',
-      marginLeft: 10,
       marginTop: 0,
     },
   }

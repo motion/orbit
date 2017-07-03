@@ -3,28 +3,10 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
 
-class BreadcrumbStore {
-  last = null
-  crumbs = watch(async () => {
-    const { currentDocument } = this.props.commanderStore
-    console.log(currentDocument)
-    if (!currentDocument) {
-      return []
-    }
-    if (this.crumbs && this.crumbs._id === currentDocument._id) {
-      return this.crumbs
-    }
-    this.last = await currentDocument.getCrumbs()
-    return this.last
-  })
-}
-
 @view.attach('commanderStore')
-@view({
-  store: BreadcrumbStore,
-})
+@view
 export default class Breadcrumbs {
-  render({ store }) {
+  render({ commanderStore }) {
     const crumbs = [
       {
         text: <UI.Icon size={12} name="home" color="#ccc" hoverColor="red" />,
@@ -32,10 +14,10 @@ export default class Breadcrumbs {
       },
     ]
 
-    if (store.crumbs) {
-      console.log('curmbs are', store.crumbs, typeof store.crumbs)
+    log('crumbs', commanderStore.crumbs)
+    if (commanderStore.crumbs && commanderStore.crumbs.map) {
       crumbs.push(
-        store.crumbs.map(doc => ({
+        commanderStore.crumbs.map(doc => ({
           text: doc.title,
           url: doc.url(),
         }))
@@ -50,7 +32,7 @@ export default class Breadcrumbs {
               <UI.Text onClick={() => Router.go(item.url)}>
                 {item.text}
               </UI.Text>
-              <slash if={index !== crumbs.length - 1}>/</slash>
+              <slash if={index !== crumbs.length - 1 && index !== 0}>/</slash>
             </item>
           )}
         </items>

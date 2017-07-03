@@ -1,6 +1,7 @@
 // @flow
 import { observable, isObservable } from 'mobx'
 import hashsum from 'hash-sum'
+import { memoize } from 'lodash'
 
 // TODO: instanceof RxQuery checks
 
@@ -114,7 +115,7 @@ export default function query(
   if (initializer) {
     descriptor.initializer = function() {
       const init = initializer.call(this)
-      return function(...args) {
+      return memoize(function(...args) {
         if (!this.collection) {
           console.log('no this.collection!')
           return null
@@ -124,7 +125,7 @@ export default function query(
           { model: this.constructor.name, property, args },
           () => init.apply(this, args)
         )
-      }
+      })
     }
   } else if (value) {
     descriptor.value = function(...args) {

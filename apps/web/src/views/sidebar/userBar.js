@@ -26,11 +26,11 @@ export default class UserBar {
             background
             elevation={3}
             width={150}
-            padding={3}
+            padding={[3, 2]}
             borderRadius={8}
             itemProps={{
               height: 32,
-              margin: [2, 0],
+              margin: [0, 0, 2],
               fontSize: 14,
               borderWidth: 0,
               borderRadius: 8,

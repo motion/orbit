@@ -59,7 +59,7 @@ const decorations = ({ mobx, ui, autobind, magic } = {}) => [
 ]
 
 const base: () => ViewClass | (() => () => ViewClass) = decorator(
-  decorations({ mobx: true, autobind: true, magic: false, ui: true })
+  decorations({ mobx: true, autobind: true, magic: true, ui: true })
 )
 
 // @view

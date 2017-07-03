@@ -33,10 +33,12 @@ class DocPageStore {
   docStore: DocPageStore,
 })
 export default class DocumentPage {
+  extraRef = null
+  uniq = `btn-${Math.floor(Math.random() * 10000000000)}`
+
   render({ docStore, commanderStore }: { docStore: DocPageStore }) {
     const { doc } = docStore
-
-    // just to setup a mobx bind
+    // setup a mobx bind
     commanderStore.focused
 
     if (doc === undefined) {
@@ -47,16 +49,16 @@ export default class DocumentPage {
     }
 
     const starred = doc.hasStar()
+    const itemProps = {
+      size: 1,
+      iconSize: 18,
+      chromeless: true,
+    }
 
     return (
       <Page
         actions={
-          <actions
-            if={!commanderStore.focused}
-            key={Math.random()}
-            $$row
-            $$centered
-          >
+          <actions if={!commanderStore.focused} $$row $$centered>
             <UI.Button
               active={docStore.showInbox}
               margin={[0, 10]}
@@ -67,14 +69,34 @@ export default class DocumentPage {
               Inbox
             </UI.Button>
 
-            <UI.Segment
-              itemProps={{
-                size: 1,
-                iconSize: 18,
-                chromeless: true,
-              }}
-            >
-              <UI.Button getRef={this.ref('extraRef').set} icon="dot" />
+            <UI.Segment itemProps={itemProps}>
+              <UI.Popover
+                openOnClick
+                width={160}
+                target={
+                  <UI.Button {...itemProps} className={this.uniq} icon="dot" />
+                }
+              >
+                <UI.List
+                  theme="light"
+                  elevation={3}
+                  borderRadius={8}
+                  items={[
+                    { icon: 'share', primary: 'Share', onClick: () => {} },
+                    {
+                      icon: doc.private ? 'lock' : 'open',
+                      primary: 'Locked',
+                      onClick: doc.togglePrivate,
+                    },
+                    {
+                      icon: doc.private ? 'eye' : 'closed',
+                      primary: 'Private',
+                      onClick: doc.togglePrivate,
+                    },
+                  ]}
+                />
+              </UI.Popover>
+
               <UI.Button
                 icon="fav31"
                 highlight={!!starred}

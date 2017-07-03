@@ -1,21 +1,17 @@
 // @flow
 import decorator from '@mcro/decor'
 import { object, string } from 'prop-types'
-import extendsReact, {
-  ExtendsReact,
-} from '@mcro/decor/lib/plugins/react/extendsReact'
+import extendsReact from '@mcro/decor/lib/plugins/react/extendsReact'
+import type { ExtendsReact } from '@mcro/decor/lib/plugins/react/extendsReact'
 import observer from '@mcro/decor/lib/plugins/mobx/observer'
 import automagical from '@mcro/decor/lib/plugins/mobx/automagical'
 import autobound from '@mcro/decor/lib/plugins/core/autobound'
-import subscribableHelpers, {
-  SubscribableHelpers,
-} from '@mcro/decor/lib/plugins/core/subscribableHelpers'
-import subscribable, {
-  Subscribable,
-} from '@mcro/decor/lib/plugins/react/subscribable'
-import reactRenderArgs, {
-  ReactRenderArgs,
-} from '@mcro/decor/lib/plugins/react/reactRenderArgs'
+import helpers from '@mcro/decor/lib/plugins/core/Helpers'
+import type { Helpers } from '@mcro/decor/lib/plugins/core/Helpers'
+import subscribable from '@mcro/decor/lib/plugins/react/subscribable'
+import type { Subscribable } from '@mcro/decor/lib/plugins/react/subscribable'
+import reactRenderArgs from '@mcro/decor/lib/plugins/react/reactRenderArgs'
+import type { ReactRenderArgs } from '@mcro/decor/lib/plugins/react/reactRenderArgs'
 import addContext from '@mcro/decor/lib/plugins/react/addContext'
 import attach from '@mcro/decor/lib/plugins/react/attach'
 import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
@@ -25,7 +21,7 @@ import type { Glossy } from './gloss'
 
 export type ViewClass = ExtendsReact &
   Subscribable &
-  SubscribableHelpers &
+  Helpers &
   ReactRenderArgs &
   Glossy
 
@@ -50,7 +46,7 @@ const uiContext = [
 const decorations = ({ mobx, ui, autobind, magic } = {}) => [
   extendsReact,
   subscribable,
-  subscribableHelpers,
+  helpers,
   ui && uiContext,
   reactRenderArgs,
   mobx && observer,

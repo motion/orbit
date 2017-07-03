@@ -6,14 +6,14 @@ import type { Emittable } from '@mcro/decor/lib/plugins/core/emittable'
 import automagical from '@mcro/decor/lib/plugins/mobx/automagical'
 import subscribable from '@mcro/decor/lib/plugins/react/subscribable'
 import type { Subscribable } from '@mcro/decor/lib/plugins/react/subscribable'
-import subscribableHelpers from '@mcro/decor/lib/plugins/core/subscribableHelpers'
-import type { SubscribableHelpers } from '@mcro/decor/lib/plugins/core/subscribableHelpers'
+import helpers from '@mcro/decor/lib/plugins/core/helpers'
+import type { Helpers } from '@mcro/decor/lib/plugins/core/helpers'
 
-export type StoreClass = Emittable & Subscribable & SubscribableHelpers
+export type StoreClass = Emittable & Subscribable & Helpers
 
 export const storeDecorator = decor([
   subscribable,
-  subscribableHelpers,
+  helpers,
   emittable,
   automagical,
   autobound,

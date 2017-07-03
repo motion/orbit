@@ -128,9 +128,10 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         }
       } else {
         // children get a style prop
-        finalProps.style = arrayOfObjectsToObject(
-          finalStyles.map(style => style && style.style)
-        )
+        finalProps.style = arrayOfObjectsToObject([
+          props.style,
+          ...finalStyles.map(style => style && style.style),
+        ])
       }
     }
 

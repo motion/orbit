@@ -81,7 +81,7 @@ export default class Draft {
           >
             <content if={isActive && doc}>
               <editor>
-                <DocView inline={false} id={doc._id} document={doc} />
+                <DocView id={doc._id} document={doc} />
               </editor>
               <submit>
                 <Button onClick={store.onSaveDraft} icon="simple-add">

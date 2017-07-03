@@ -1,6 +1,7 @@
 // @flow
 import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
+import Surface from './surface'
 
 const idFn = _ => _
 const opposite = direction =>
@@ -13,7 +14,7 @@ const opposite = direction =>
 
 type Props = {
   open?: boolean,
-  percent?: number,
+  percent?: number | string,
   attach?: Object,
   children?: React$Element<any>,
   from: 'top' | 'bottom' | 'left' | 'right',
@@ -67,20 +68,22 @@ export default class Drawer {
     closePortal,
     ...props
   }: Props) {
-    const unit = percent ? '%' : 'px'
+    const unit = +percent ? '%' : 'px'
     const flip = /right|bottom/.test(from) ? 1 : -1
     const translate = `${(open ? 0 : size) * flip}${unit}`
     const sizeKey = /left|right/.test(from) ? 'width' : 'height'
     const panelStyle = {
-      transform: sizeKey === 'width'
-        ? `translate(${translate})`
-        : `translate(0px, ${translate})`,
+      transform:
+        sizeKey === 'width'
+          ? `translate(${translate})`
+          : `translate(0px, ${translate})`,
       [sizeKey]: `${size}${unit}`,
     }
 
     return (
       <drawer {...props}>
-        <panel
+        <Surface
+          $panel
           $from={from}
           $panelOpen={open}
           $$style={style}
@@ -89,7 +92,7 @@ export default class Drawer {
           {...attach}
         >
           {children}
-        </panel>
+        </Surface>
         <overlay
           $overlayOpen={open}
           $overlayBg={{ blur: overlayBlur === true ? 5 : overlayBlur }}

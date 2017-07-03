@@ -7,7 +7,7 @@ import { isEqual } from 'lodash'
 import Router from '~/router'
 
 const lightBlue = '#e7f6ff'
-const darkBlue = `#0099e5`
+const darkBlue = '#0099e5'
 
 @view.attach('layoutStore')
 @view
@@ -25,7 +25,9 @@ export default class DocLinkList {
           </Button>
         </top>
         <list>
-          <loading if={!hasLoaded}><Loading $loading /></loading>
+          <loading if={!hasLoaded}>
+            <Loading $loading />
+          </loading>
           <noDocs if={showNoDocs}>
             <text>no documents</text>
             <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
@@ -47,7 +49,9 @@ export default class DocLinkList {
                   size={20}
                 />
 
-                <text>{doc.title}</text>
+                <text>
+                  {doc.title}
+                </text>
               </item>
             )}
           </docs>
@@ -63,10 +67,9 @@ export default class DocLinkList {
     },
     input: {
       padding: 0,
-      marginLeft: '1px !important',
       fontSize: 14,
       borderWidth: 0,
-      marginLeft: 2,
+      marginLeft: 20,
       marginTop: 1,
       width: 150,
       '&:focus': {},
@@ -84,7 +87,7 @@ export default class DocLinkList {
       marginTop: 8,
     },
     list: {
-      background: '#fafdff',
+      width: '100%',
       borderRadius: 5,
       border: `1px solid ${lightBlue}`,
     },

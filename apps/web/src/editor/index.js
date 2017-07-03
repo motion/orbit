@@ -59,7 +59,8 @@ export default class EditorView {
         onMouseUp={this.onDocumentMouseUp}
         $fullPage={!editorStore.inline}
       >
-        <SlotFill.Fill if={showToolbar} name="documentActions">
+        <Bar editorStore={editorStore} />
+        <SlotFill.Fill if={false && showToolbar} name="documentActions">
           <Bar editorStore={editorStore} />
         </SlotFill.Fill>
         <Editor

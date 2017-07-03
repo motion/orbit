@@ -6,19 +6,28 @@ import { Input } from '@mcro/ui'
 @view
 export default class CommanderInput {
   render({ commanderStore }) {
+    commanderStore.renderIndex
+    console.log('render index is', commanderStore.renderIndex)
+
     return (
       <bar $$align="center" $$row $$flex>
-        <Input
+        <content
           $input
+          contentEditable={true}
           size={1.1}
-          onChange={commanderStore.onChange}
           onKeyDown={commanderStore.onKeyDown}
+          onKeyUp={commanderStore.onKeyUp}
           onFocus={commanderStore.onFocus}
           placeholder={commanderStore.place}
           placeholderColor={[0, 0, 0, 0.1]}
           borderWidth={0}
-          getRef={commanderStore.ref('input').set}
+          ref={el => {
+            if (!commanderStore.input) {
+              commanderStore.input = el
+            }
+          }}
           value={commanderStore.value}
+          dangerouslySetInnerHTML={{ __html: commanderStore.pathContent() }}
         />
       </bar>
     )

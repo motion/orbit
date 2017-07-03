@@ -47,6 +47,7 @@ export default class CommanderStore {
   highlightIndex = -1
   searchResults: Array<Document> = []
   input: ?HTMLInputElement = null
+  renderIndex = 0
 
   start() {
     this.watch(async () => {
@@ -87,6 +88,7 @@ export default class CommanderStore {
   }
 
   get isSelected() {
+    return false
     return this.input.selectionEnd > this.input.selectionStart
   }
 
@@ -143,6 +145,7 @@ export default class CommanderStore {
   }
 
   focus = () => {
+    console.log('focused')
     if (!this.input) {
       console.error('no commander input')
     } else {
@@ -152,7 +155,7 @@ export default class CommanderStore {
   }
 
   get focused() {
-    return document.activeElement === this.input
+    return document.activeElement.tagName === 'CONTENT' // === this.input
   }
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {
@@ -216,9 +219,9 @@ export default class CommanderStore {
     return path.split(PATH_SEPARATOR)
   }
 
-  onChange = (event: Event) => {
+  onChange = value => {
     this.highlightIndex = -1
-    this.value = event.target.value
+    this.value = value
     this.open()
   }
 
@@ -283,6 +286,7 @@ export default class CommanderStore {
     docs.map(doc => doc.getTitle()).join(PATH_SEPARATOR)
 
   onFocus = () => {
+    this.renderIndex++
     console.log('focused commanderstore')
     this.open()
   }
@@ -307,10 +311,31 @@ export default class CommanderStore {
     this.setTimeout(() => App.editor && App.editor.focus(), 200)
   }
 
+  pathContent = () => {
+    console.log('getting content', this.focused)
+    if (this.focused) {
+      return this.value
+    } else {
+      return '(unfocused)'
+    }
+  }
+
   onKeyDown = (event: KeyboardEvent) => {
     event.persist()
     const code = keycode(event)
-    console.log('commander', code)
+    if (code === 13) {
+      event.preventDefault()
+      this.close()
+    }
+
+    if (code === 27) {
+      event.preventDefault()
+    }
+  }
+
+  onKeyUp = (event: KeyboardEvent) => {
+    const text = event.target.innerText
+    if (text !== '(unfocused)') this.onChange(text)
   }
 
   onRight = () => {
@@ -339,6 +364,8 @@ export default class CommanderStore {
   }
 
   close = () => {
+    this.renderIndex++
+    this.input.blur()
     this.setOpen(false)
   }
 

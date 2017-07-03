@@ -59,7 +59,6 @@ export default class DocumentPage {
           >
             <UI.Button
               active={docStore.showInbox}
-              chromeless
               margin={[0, 10]}
               icon="paper"
               onClick={docStore.ref('showInbox').toggle}

@@ -1,7 +1,8 @@
 import React from 'react'
 import SizedSurface from './sizedSurface'
+import injectTheme from './helpers/injectTheme'
 
-export default ({ badge, children, ...props }) =>
+export default injectTheme(({ badge, children, theme, ...props }) =>
   <SizedSurface
     tagName="button"
     borderWidth={1}
@@ -9,6 +10,7 @@ export default ({ badge, children, ...props }) =>
     row
     align="center"
     glow
+    background={theme.base.buttonBackground}
     {...props}
     noElement
   >
@@ -18,3 +20,4 @@ export default ({ badge, children, ...props }) =>
         {badge}
       </badge>}
   </SizedSurface>
+)

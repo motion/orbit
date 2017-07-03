@@ -24,55 +24,33 @@ export default class Glint {
     size: 1,
   }
 
-  render({
-    color,
-    size,
-    rightRadius,
-    leftRadius,
-    radius,
-    className,
-    attach,
-    top,
-    bottom,
-    ...props
-  }: Props) {
-    const realTop = isUndef(bottom) ? 0 : top
-    const borderStyle = {
-      [isUndef(bottom) ? '$$borderTop' : '$$borderBottom']: [size, color],
-    }
-
-    return (
-      <glint
-        className={className}
-        $$top={realTop}
-        $$bottom={bottom}
-        $$style={props}
-        {...borderStyle}
-        {...attach}
-      />
-    )
+  render({ className, attach, style }: Props) {
+    return <glint className={className} style={style} {...attach} />
   }
 
   static style = {
     glint: {
+      pointerEvents: 'none',
       position: 'absolute',
       left: 0,
       right: 0,
       height: 10,
-      // retina border
-      transform: { y: `-0.5px` },
-      zIndex: 0,
+      zIndex: 10000000000000000000000,
     },
   }
 
-  static theme = ({ radius, bottom, rightRadius, leftRadius }) => {
-    const radiusStyle = radius && {
-      [isUndef(bottom)
-        ? 'borderTopRightRadius'
-        : 'borderBottomRightRadius']: radius,
-      [isUndef(bottom)
-        ? 'borderTopLeftRadius'
-        : 'borderBottomLeftRadius']: radius,
+  static theme = ({
+    borderRadius,
+    bottom,
+    rightRadius,
+    leftRadius,
+    top,
+    color,
+    size,
+    ...props
+  }) => {
+    const radiusStyle = borderRadius && {
+      borderRadius,
     }
     const rightRadiusStyle = rightRadius && {
       [isUndef(bottom)
@@ -87,9 +65,16 @@ export default class Glint {
 
     return {
       glint: {
+        top: 0,
+        height: '100%',
+        transform: { y: 0.5 * (bottom ? 1 : -1) },
+        borderTop: isUndef(bottom) && [size, color],
+        borderBottom: !isUndef(bottom) && [size, color],
+        // retina border
         ...radiusStyle,
         ...rightRadiusStyle,
         ...leftRadiusStyle,
+        ...props,
       },
     }
   }

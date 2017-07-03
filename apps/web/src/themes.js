@@ -42,6 +42,7 @@ const LIGHT = {
   background: '#fff',
   color: '#555',
   borderColor: '#eee',
+  buttonBackground: 'linear-gradient(#fff, #fefefe)',
 }
 
 const Theme = {

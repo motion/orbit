@@ -4,6 +4,7 @@ import rc from 'randomcolor'
 import { Document } from '@mcro/models'
 import { random } from 'lodash'
 import Router from '~/router'
+import DocumentView from '~/views/document'
 
 @view({
   store: class InboxStore {
@@ -119,10 +120,10 @@ export default class Inbox {
         <UI.Drawer
           from="bottom"
           percent={80}
-          open={store.draft && store.draft._id && store.showDraft}
+          open={true && store.draft && store.draft._id && store.showDraft}
         >
           test
-          <DocView document={store.draft} />
+          <DocumentView document={store.draft} />
         </UI.Drawer>
       </inbox>
     )

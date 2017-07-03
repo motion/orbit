@@ -1,5 +1,5 @@
 import React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
 
@@ -7,22 +7,17 @@ import Router from '~/router'
 @view
 export default class Breadcrumbs {
   render({ commanderStore }) {
-    const crumbs = [
+    let crumbs = [
       {
         text: <UI.Icon size={12} name="home" color="#ccc" hoverColor="red" />,
         url: '/',
       },
     ]
 
-    log(
-      'crumbs',
-      commanderStore.crumbs && commanderStore.crumbs.length,
-      commanderStore.crumbs.map
-    )
-    if (commanderStore.crumbs && commanderStore.crumbs.map) {
-      crumbs.push(
+    if (commanderStore.crumbs && commanderStore.crumbs.length) {
+      crumbs = crumbs.concat(
         commanderStore.crumbs.map(doc => ({
-          text: doc.title,
+          text: doc.title || 'nulll',
           url: doc.url(),
         }))
       )
@@ -30,13 +25,13 @@ export default class Breadcrumbs {
 
     return (
       <breadcrumbs>
-        <items $$row>
+        <items $$row $$flex>
           {crumbs.map((item, index) =>
-            <item key={item.url || index} $$row>
+            <item key={index} $$row>
+              <slash if={index !== 0}>/</slash>
               <UI.Text onClick={() => Router.go(item.url)}>
                 {item.text}
               </UI.Text>
-              <slash if={index !== crumbs.length - 1 && index !== 0}>/</slash>
             </item>
           )}
         </items>
@@ -58,8 +53,8 @@ export default class Breadcrumbs {
       alignItems: 'center',
     },
     slash: {
-      opacity: 0.025,
-      margin: [0, 2],
+      opacity: 0.25,
+      margin: [0, 4],
       fontWeight: 200,
       fontSize: 12,
       pointerEvents: 'none',

@@ -12,6 +12,9 @@ const colors = [
 ]
 
 function prettyPrint(thing: any) {
+  if (Array.isArray(thing)) {
+    return thing.map(prettyPrint)
+  }
   if (typeof thing === 'object') {
     if (!thing) {
       return 'null'

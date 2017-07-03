@@ -185,12 +185,15 @@ function wrapWatch(obj, method, val) {
   })
   Object.defineProperty(obj, method, {
     get() {
-      if (!current) return current
-      if (current.value) {
-        return current.value.value
+      if (!current) {
+        return current
       }
       if (current.get) {
-        return current.get()
+        const next = current.get()
+        return next && typeof next.get === 'function' ? next.get() : next
+      }
+      if (current.value) {
+        return current.value
       }
       return current
     },

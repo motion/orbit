@@ -92,6 +92,9 @@ export default class DocumentStore {
   }, 2000)
 
   get canSave() {
+    if (!this.document) {
+      return false
+    }
     if (this.props.readOnly) {
       return false
     }

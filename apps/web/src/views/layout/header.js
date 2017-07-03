@@ -13,6 +13,13 @@ export default class Header {
 
     return (
       <header $$draggable>
+        <UI.Glow
+          color={[255, 255, 255]}
+          opacity={1}
+          full
+          resist={90}
+          offsetTop={20}
+        />
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
           <UI.Segment
@@ -68,14 +75,14 @@ export default class Header {
     header: {
       overflow: 'hidden',
       // background: [255, 255, 255, 0.1],
-      // 'inset 0 10px 0 rgba(0,0,0,0.1)'
-      boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.03]]],
+      boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.05]]],
       zIndex: 500,
       padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
+      position: 'relative',
     },
     bar: {
       flex: 1,

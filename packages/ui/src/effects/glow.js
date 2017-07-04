@@ -35,7 +35,7 @@ export default class HoverGlow {
     clickable: false,
     clickDuration: 150,
     clickScale: 2,
-    transition: 100,
+    transition: 0,
     blur: 10,
   }
 

@@ -44,9 +44,9 @@ function proxyReactComponents(_ref) {
   var _locals2 = _slicedToArray(locals, 1),
       hot = _locals2[0].hot;
 
-  console.log('locals', locals, module);
-  for (var component in components) {
-    console.log(component);
+  for (var key in Object.keys(components)) {
+    var component = components[key];
+    component.module = module;
   }
 
   if (!hot || typeof hot.accept !== 'function') {

@@ -204,7 +204,7 @@ function wrapWatch(obj, method, val) {
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
-        console.log(KEY, 'set to', currentObservable.current)
+        console.log(KEY, 'set to', currentObservable, currentObservable.current)
         current.set(currentObservable.current) // hit observable
       }
     })

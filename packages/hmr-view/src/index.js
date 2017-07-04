@@ -24,9 +24,9 @@ export default function proxyReactComponents({
   const [module] = locals
   const [{ hot }] = locals
 
-  console.log('locals', locals, module)
-  for (const component in components) {
-    console.log(component)
+  for (const key in Object.keys(components)) {
+    const component = components[key]
+    component.module = module
   }
 
   if (!hot || typeof hot.accept !== 'function') {

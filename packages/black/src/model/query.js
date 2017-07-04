@@ -13,7 +13,7 @@ function valueWrap(it, valueGet: Function) {
   // TODO can probably handle this here
   // const notConnected = query && query.isntConnected
 
-  // const INFO = `@query ${it.model}.${it.property}(${it.args.join(', ')}) => `
+  const INFO = `@query ${it.model}.${it.property}(${it.args.join(', ')}) => `
 
   // subscribe and update
   let subscriber = null
@@ -27,7 +27,7 @@ function valueWrap(it, valueGet: Function) {
   if (query && query.$) {
     // sub to values
     subscriber = query.$.subscribe(value => {
-      // log(INFO, '.subscribe( => ', value)
+      log(INFO, '.subscribe( => ', value)
       if (isObservable(value)) {
         result.set(value)
       } else {

@@ -41,7 +41,7 @@ export default class ListItem {
 
   static defaultProps = {
     size: 1,
-    borderWidth: 1,
+    borderWidth: 0,
   }
 
   componentDidMount() {
@@ -69,6 +69,7 @@ export default class ListItem {
     onClick,
     primary,
     row,
+    segmented,
     secondary,
     size,
     style,
@@ -76,9 +77,20 @@ export default class ListItem {
   }: ItemProps) {
     const theme = this.context.uiTheme[this.context.uiActiveTheme]
 
+    const radiusProps = segmented
+      ? {
+          borderRadius: isLastElement || isFirstElement ? borderRadius : 0,
+          borderBottomRadius: isLastElement,
+          borderTopRadius: isFirstElement,
+        }
+      : {
+          borderRadius,
+        }
+
     return (
       <Surface
         $item
+        {...radiusProps}
         tagName="listitem"
         border={false}
         background="transparent"
@@ -86,9 +98,6 @@ export default class ListItem {
           borderWidth,
           theme ? theme.base.borderColor : 'transparent',
         ]}
-        borderRadius={isLastElement || isFirstElement ? borderRadius : 0}
-        borderBottomRadius={isLastElement}
-        borderTopRadius={isFirstElement}
         overflow="hidden"
         padding={[0, 8]}
         glow
@@ -100,7 +109,7 @@ export default class ListItem {
         }}
         glowProps={{
           scale: 1.4,
-          opacity: 0.05,
+          opacity: 0.1,
           resist: 40,
           clickable: !!onClick,
         }}

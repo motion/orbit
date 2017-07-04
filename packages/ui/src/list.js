@@ -13,29 +13,30 @@ import type { Color } from '@mcro/gloss'
 const idFn = _ => _
 
 export type Props = {
-  onHighlight: Function,
-  onSelect: Function,
+  borderColor?: Color,
+  borderRadius?: number,
   children?: React$Element<any>,
-  items?: Array<ItemProps | React$Element<any>>,
-  loading?: boolean,
-  height?: number,
-  width?: number,
+  controlled?: boolean,
+  flex?: boolean | number,
   getItem?: Function,
   getRef?: Function,
-  onItemMount?: Function,
-  style?: Object,
-  placeholder?: any,
+  height?: number,
   horizontal?: boolean,
-  flex?: boolean | number,
-  scrollable?: boolean,
-  controlled?: boolean,
-  parentSize?: boolean,
-  itemStyle?: Object,
   itemProps?: Object,
+  items?: Array<ItemProps | React$Element<any>>,
+  itemStyle?: Object,
+  loading?: boolean,
+  onHighlight: Function,
+  onItemMount?: Function,
+  onSelect: Function,
+  parentSize?: boolean,
+  placeholder?: any,
   rowHeight?: number,
+  scrollable?: boolean,
+  segmented?: boolean,
   size?: number,
-  borderRadius?: number,
-  borderColor?: Color,
+  style?: Object,
+  width?: number,
 }
 
 @parentSize
@@ -153,6 +154,7 @@ class List {
     placeholder,
     rowHeight: propRowHeight,
     scrollable,
+    segmented,
     size,
     style,
     width: userWidth,
@@ -186,6 +188,7 @@ class List {
     const total = items ? items.length : Children.count(children)
     const getItemProps = (i, rowProps, isListItem) => {
       const positionProps = {
+        segmented,
         isFirstElement: i === 0,
         isLastElement: i === total - 1,
       }

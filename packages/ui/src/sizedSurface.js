@@ -30,7 +30,7 @@ export default class SizedSurface extends React.Component {
       padding:
         typeof props.padding !== 'undefined'
           ? props.padding
-          : props.wrapElement ? 0 : [0, height / 4],
+          : props.wrapElement ? 0 : [0, height / 3.4],
     }
 
     return <Surface {...props} {...pass} />

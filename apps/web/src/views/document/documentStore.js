@@ -89,7 +89,7 @@ export default class DocumentStore {
     print('saving...', this.document._id, this.document._rev, this.document)
     this.document.save()
     console.log('saved doc')
-  }, 2000)
+  }, 300)
 
   get canSave() {
     if (!this.document) {

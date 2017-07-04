@@ -103,9 +103,6 @@ export default function motionStyle(options: Object = {}) {
     if (OBJECT_TRANSFORM[key]) {
       return OBJECT_TRANSFORM[key](value)
     }
-    if (isFloat(value)) {
-      return value
-    }
     if (key === 'scale' || key === 'grayscale' || key === 'brightness') {
       return value
     }
@@ -115,6 +112,19 @@ export default function motionStyle(options: Object = {}) {
     return value
   }
 
+  const arrayOrObject = (arr, obj) => val =>
+    Array.isArray(val) ? arr(val) : obj(val)
+
+  const GRADIENT = {
+    linearGradient: (key, object) =>
+      `linear-gradient(${arrayOrObject(
+        all => processArray(key, all),
+        ({ deg, from, to }) =>
+          `${deg || 0}deg, ${from || 'transparent'}, ${to || 'transparent'}`
+      )(object)})`,
+    radialGradient: processArray,
+  }
+
   function processObject(key: string, object: Object): string {
     if (
       key === 'background' ||
@@ -122,6 +132,12 @@ export default function motionStyle(options: Object = {}) {
       key === 'borderColor' ||
       key === 'backgroundColor'
     ) {
+      if (object.linearGradient) {
+        return GRADIENT.linearGradient(key, object.linearGradient)
+      }
+      if (object.radialGradient) {
+        return GRADIENT.radialGradient(key, object.radialGradient)
+      }
       if (isColor(object)) {
         return toColor(object)
       }
@@ -138,6 +154,7 @@ export default function motionStyle(options: Object = {}) {
     return toReturn.join(' ')
   }
 
+  // RETURN THIS
   // style transformer
   function processStyles(styles: Object, errorMessage?: string): Object {
     const toReturn = {}

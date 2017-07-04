@@ -4,7 +4,7 @@ import { autorun, observable } from 'mobx'
 import { compile, str } from './properties'
 import { flatten, intersection } from 'lodash'
 import type RxDB, { RxCollection } from 'rxdb'
-import type PouchDB from 'pouchdb-core'
+import PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
 
 type SettingsObject = {

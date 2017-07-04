@@ -42,6 +42,7 @@ const LIGHT = {
   background: '#fff',
   color: '#555',
   borderColor: '#eee',
+  buttonBackground: 'linear-gradient(#fff, #fefefe)',
 }
 
 const Theme = {
@@ -73,7 +74,7 @@ const Theme = {
       ...LIGHT,
       background: color(LIGHT.background).darken(0.1),
       color: '#000',
-      borderColor: 'purple',
+      borderColor: '#fff',
     },
     focus: {
       ...LIGHT,

@@ -6,12 +6,14 @@ import type { ViewType } from '@mcro/black'
 import $ from 'color'
 import Icon from './icon'
 import Glow from './effects/glow'
+import Glint from './effects/glint'
 import Popover from './popover'
 import type { Color } from '@mcro/gloss'
 
 const IS_PROD = process.env.NODE_ENV === 'production'
 
 const LINE_HEIGHT = 30
+const DEFAULT_GLOW_COLOR = [0, 0, 0]
 const BORDER_RADIUS_SIDES = [
   'borderBottomRadius',
   'borderTopRadius',
@@ -178,7 +180,7 @@ export default class Surface implements ViewType {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
-    const iconSize = _iconSize || (size || 1) * 14
+    const iconSize = _iconSize || (size || 1) * 12
 
     const passProps = {
       tagName,
@@ -194,6 +196,14 @@ export default class Surface implements ViewType {
         onClick={onClick}
         {...!wrapElement && passProps}
       >
+        <Glint
+          if={glint && this.theme}
+          color={this.theme.glintColor.style.color}
+          borderRadius={
+            (this.theme.element.style.borderRadius ||
+              this.theme.element.style.borderTopLeftRadius) + 1
+          }
+        />
         <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
           {icon}
         </icon>
@@ -208,9 +218,12 @@ export default class Surface implements ViewType {
         <Glow
           if={glow}
           full
-          scale={1.2}
-          color={(this.theme && this.theme.surface.style.color) || [0, 0, 0]}
-          opacity={0.08}
+          scale={1.4}
+          color={
+            (this.theme && $(this.theme.surface.style.color).lighten(0.2)) ||
+            DEFAULT_GLOW_COLOR
+          }
+          opacity={0.15}
           {...glowProps}
         />
         <element
@@ -339,8 +352,12 @@ export default class Surface implements ViewType {
     let background = props.active
       ? props.activeBackground || theme.active.background || baseBackground
       : baseBackground
-    const hasBackground = background && background !== 'transparent'
-    if (hasBackground) {
+    const colorBackground =
+      background !== 'transparent' &&
+      (typeof background !== 'string' ||
+        (background.indexOf('linear-gradient') !== 0 &&
+          background.indexOf('radial-gradient') !== 0))
+    if (colorBackground) {
       background = $(background)
       const luminosity = background.luminosity()
       const isDark = luminosity < 0.4
@@ -376,12 +393,15 @@ export default class Surface implements ViewType {
         [0, 0, 0, 0.16],
       ])
     }
+
+    // glint
+    let glintColor
     if (props.glint) {
-      const glintColor =
+      glintColor =
         props.glint === true
-          ? hasBackground ? background.lighten(0.4) : [255, 255, 255, 0.1]
+          ? colorBackground ? background.lighten(0.1) : [255, 255, 255, 0.2]
           : props.glint
-      boxShadow.push(['inset', 0, '0.5px', 0, glintColor])
+      // boxShadow.push(['inset', 0, 0, 0, glintColor])
     }
 
     // borderRadius
@@ -424,6 +444,7 @@ export default class Surface implements ViewType {
     }
 
     return {
+      glintColor,
       element: {
         color,
         height,
@@ -478,6 +499,7 @@ export default class Surface implements ViewType {
         ...(props.spaced && self.constructor.spacedStyle),
         ...(props.chromeless && {
           borderWidth: 0,
+          background: 'transparent',
         }),
         '& > icon': {
           color: iconColor,

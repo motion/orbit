@@ -24,19 +24,18 @@ export default class HoverGlow {
     width: 380,
     height: 200,
     color: [0, 0, 0],
-    zIndex: 100,
+    zIndex: 10,
     resist: 0,
     scale: 1,
     opacity: 0.025,
     boundPct: null,
     borderRadius: 100,
-    shadowSize: null,
-    shadowOffsetTop: 0,
-    shadowOffsetLeft: 0,
+    offsetTop: 0,
+    offsetLeft: 0,
     clickable: false,
     clickDuration: 150,
     clickScale: 2,
-    transition: 1000,
+    transition: 100,
     blur: 10,
   }
 
@@ -120,9 +119,8 @@ export default class HoverGlow {
     opacity,
     inverse,
     borderRadius,
-    shadowSize,
-    shadowOffsetTop,
-    shadowOffsetLeft,
+    offsetTop,
+    offsetLeft,
     width: propWidth,
     height: propHeight,
     size,
@@ -141,7 +139,7 @@ export default class HoverGlow {
     const setRootRef = this.ref('rootRef').set
     const { track } = this.state
 
-    if ((!track && !children) || !track) {
+    if (!transition && ((!track && !children) || !track)) {
       return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
@@ -188,8 +186,8 @@ export default class HoverGlow {
             zIndex: behind ? -1 : 0,
             opacity: 1,
             transform: `
-                translateX(${translateX}px)
-                translateY(${translateY}px)
+                translateX(${translateX + offsetLeft}px)
+                translateY(${translateY + offsetTop}px)
                 translateZ(0px)
               `,
           }}

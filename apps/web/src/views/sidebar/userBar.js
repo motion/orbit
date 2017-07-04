@@ -18,23 +18,26 @@ export default class UserBar {
           distance={10}
           forgiveness={16}
           delay={130}
-          target={<UI.Button theme="clear-dark" circular icon="body" />}
+          target={<UI.Button theme="dark" circular icon="body" />}
           openOnHover
           closeOnClick
         >
           <UI.List
+            background
+            elevation={3}
             width={150}
-            padding={3}
-            elevation={5}
+            padding={[3, 2]}
             borderRadius={8}
             itemProps={{
-              height: 38,
+              height: 32,
+              margin: [0, 0, 2],
               fontSize: 14,
               borderWidth: 0,
               borderRadius: 8,
             }}
             items={[
               {
+                icon: 'body',
                 primary: User.name,
                 after: (
                   <UI.Button
@@ -45,6 +48,7 @@ export default class UserBar {
                 ),
               },
               {
+                icon: 'gear',
                 primary: 'Settings',
                 onClick: () => console.log(),
               },

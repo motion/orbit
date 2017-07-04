@@ -10,7 +10,7 @@ if [ "$ACTION" = "electron" ]; then
   npm run electron
 elif [ "$ACTION" =  "web" ]; then
   cd apps/web
-  npm start
+  motion watch
 else
-  npm run $1
+  npm run $1 ${@:2}
 fi

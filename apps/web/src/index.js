@@ -7,14 +7,16 @@ import ReactDOM from 'react-dom'
 import * as Constants from './constants'
 
 // to start superlogin connection immediately
-import '@mcro/models/lib/User'
+import '@mcro/models/lib/user'
 
-if (!Constants.IS_PROD) {
+if (Constants.IS_PROD) {
+  require('./helpers/installProd')
+} else {
   require('./helpers/installDevTools')
 }
 
-// all <tags /> can use $$parentStyles
-React.createElement = createElement
+window.React = React // fine for now
+React.createElement = createElement // any <tag /> can use $$style
 
 function splash() {
   const Splash = require('./views/splash').default

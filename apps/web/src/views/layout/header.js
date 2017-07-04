@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import Router from '~/router'
-import { Segment, SlotFill, Button } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import * as Commander from '~/views/commander'
 
@@ -13,37 +13,45 @@ export default class Header {
 
     return (
       <header $$draggable>
+        <UI.Glow
+          color={[255, 255, 255]}
+          opacity={1}
+          full
+          resist={90}
+          offsetTop={20}
+        />
+        <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
-          <Segment
+          <UI.Segment
             $$margin={[0, 10, 0, 0]}
             itemProps={{ iconSize: 12, padding: [0, 6], chromeless: true }}
             $$flex="none"
           >
-            <Button
+            <UI.Button
               if={IS_ELECTRON}
               icon="minimal-left"
               disabled={Router.atBack}
               onClick={() => Router.back()}
             />
-            <Button
+            <UI.Button
               if={IS_ELECTRON}
               disabled={Router.atFront}
               icon="minimal-right"
               onClick={() => Router.forward()}
             />
-            <Button if={false} icon="home" onClick={() => Router.go('/')} />
-          </Segment>
+            <UI.Button if={false} icon="home" onClick={() => Router.go('/')} />
+          </UI.Segment>
           <Commander.Bar
             onOpen={() => (layoutStore.commanderOpen = true)}
             onClose={() => (layoutStore.commanderOpen = false)}
           />
         </bar>
         <rest $$row>
-          <SlotFill.Slot name="actions">
+          <UI.SlotFill.Slot name="actions">
             {items =>
               <actions key={Math.random()}>
                 {items}
-                <Button
+                <UI.Button
                   chromeless
                   spaced
                   size={0.7}
@@ -57,7 +65,7 @@ export default class Header {
                   color={[0, 0, 0, 0.3]}
                 />
               </actions>}
-          </SlotFill.Slot>
+          </UI.SlotFill.Slot>
         </rest>
       </header>
     )
@@ -66,13 +74,15 @@ export default class Header {
   static style = {
     header: {
       overflow: 'hidden',
-      background: [255, 255, 255, 0.1],
+      // background: [255, 255, 255, 0.1],
+      boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.05]]],
       zIndex: 500,
       padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
+      position: 'relative',
     },
     bar: {
       flex: 1,

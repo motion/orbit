@@ -85,10 +85,6 @@ export function getColorLikeLibraryValue(val: ToCSSAble, options?: Object) {
     res = val.rgba()
   } else if (typeof val.rgb === 'function') {
     res = val.rgb()
-    // support npm color
-    if (typeof res.array === 'function') {
-      return objectToColor(res.array())
-    }
   }
   return res
 }

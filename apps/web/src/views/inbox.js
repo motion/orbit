@@ -1,24 +1,23 @@
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import rc from 'randomcolor'
 import { Document } from '@mcro/models'
 import { random } from 'lodash'
 import Router from '~/router'
+import DocumentView from '~/views/document'
 
 @view({
   store: class InboxStore {
     docs = Document.child(this.props.doc._id)
-
-    add = async () => {
-      const { doc } = this.props
-
-      const next = await Document.create({
-        title: 'new item',
-        parentId: doc._id,
+    showDraft = true
+    draftNumber = 0
+    draft = watch(() =>
+      Document.create({
+        title: '',
+        _tempId: this.draftNumber,
+        parentId: this.props.doc._id,
       })
-
-      Router.go(next.url())
-    }
+    )
   },
 })
 export default class Inbox {
@@ -107,7 +106,7 @@ export default class Inbox {
               color="white"
               size={1}
               icon="siadd"
-              onClick={store.add}
+              onClick={store.ref('draftNumber').increment(1)}
             >
               New
             </UI.Button>
@@ -117,6 +116,15 @@ export default class Inbox {
           {docs.length} items
         </UI.Title>
         <UI.List items={items} />
+
+        <UI.Drawer
+          from="bottom"
+          percent={80}
+          open={true && store.draft && store.draft._id && store.showDraft}
+        >
+          test
+          <DocumentView document={store.draft} />
+        </UI.Drawer>
       </inbox>
     )
   }

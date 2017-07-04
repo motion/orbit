@@ -24,7 +24,6 @@
 
 # high level prioritized list
   - inbox
-  - signup: create team flow
   - @mentions / dates
   - hashtags / statuses / comments / attachments
   - homepage

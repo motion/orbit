@@ -41,10 +41,10 @@ function proxyReactComponents(_ref) {
   var _locals = _slicedToArray(locals, 1),
       module = _locals[0];
 
-  var hot = module.hot;
+  var _locals2 = _slicedToArray(locals, 1),
+      hot = _locals2[0].hot;
 
-
-  console.log('module is', module);
+  console.log('locals', locals, module);
   for (var component in components) {
     console.log(component);
   }

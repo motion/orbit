@@ -44,11 +44,11 @@ const uiContext = [
 
 const catchesErrors = () => ({
   mixin: {
-    unstable_handleError() {
+    unstable_handleError(error) {
       console.error(`
         GOT YOU A ERROR THERE
       `)
-      this.setState({}) // to work
+      this.setState({ error }) // to work
     },
   },
 })

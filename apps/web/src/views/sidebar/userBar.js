@@ -1,14 +1,32 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '@mcro/models'
+import { User, Document } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
+import DocumentView from '~/views/document'
 
-@view
+@view({
+  store: class {
+    document = Document.create()
+  },
+})
 export default class UserBar {
-  render() {
+  render({ store }) {
     return (
       <userbar $$draggable if={User.loggedIn}>
+        <UI.Popover
+          theme="light"
+          openOnClick
+          background
+          distance={10}
+          forgiveness={16}
+          target={<UI.Button theme="dark">Status | 👋</UI.Button>}
+          openOnHover
+          closeOnClick
+        >
+          <DocumentView document={store.document} />
+        </UI.Popover>
+        <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>
           {User.name}
         </UI.Text>

@@ -22,9 +22,9 @@ export default function proxyReactComponents({
 }) {
   const [React] = imports
   const [module] = locals
-  const { hot } = module
+  const [{ hot }] = locals
 
-  console.log('module is', module)
+  console.log('locals', locals, module)
   for (const component in components) {
     console.log(component)
   }

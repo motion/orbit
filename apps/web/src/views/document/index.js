@@ -4,9 +4,11 @@ import { view } from '@mcro/black'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
 import Children from './children'
+import type { Document } from '@jot/models'
 
 type Props = {
   id?: string,
+  document?: Document,
   inline?: boolean,
   readOnly?: boolean,
   editorProps?: Object,

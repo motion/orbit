@@ -62,19 +62,7 @@ const FILTER_KEYS = {
   componentWillUnmount: true,
 }
 
-const DEFAULT_OPTS = {
-  extendPlainValues: true,
-  extendFunctions: true,
-}
-
-type Disposable = { dispose: Function }
-
-function rxToMobx(obj: Object, method: string): Disposable {
-  extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
-  return obj[method]
-}
-
-function wrapQuery(obj, method, val) {
+function mobxifyQuery(obj, method, val) {
   Object.defineProperty(obj, method, {
     get() {
       return val.current // hit observable
@@ -84,7 +72,7 @@ function wrapQuery(obj, method, val) {
   return val
 }
 
-function wrapPromise(obj, method, val) {
+function mobxifyPromise(obj, method, val) {
   const observable = fromPromise(val)
   Object.defineProperty(obj, method, {
     get() {
@@ -93,14 +81,12 @@ function wrapPromise(obj, method, val) {
   })
 }
 
-function wrapRxObservable(obj, method) {
-  const observable = rxToMobx(obj, method)
+function mobxifyRxObservable(obj, method) {
+  extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
   obj.subscriptions.add(observable)
-  return observable
 }
 
 function automagic(obj: Object) {
-  // automagic observables
   const proto = Object.getPrototypeOf(obj)
   const fproto = Object.getOwnPropertyNames(proto).filter(
     x => !FILTER_KEYS[x] && x[0] !== '_'
@@ -118,70 +104,66 @@ function automagic(obj: Object) {
     ),
   }
 
-  // mutate objects to be magical
+  // mutate to be mobx observables
   for (const method of Object.keys(descriptors)) {
-    automagicalValue(obj, method, { descriptors, ...DEFAULT_OPTS })
+    mobxify(obj, method, descriptors)
   }
 }
 
-// * => Mobx
-function automagicalValue(
-  obj: Object,
-  method: string,
-  options: Object = DEFAULT_OPTS
-) {
-  // get => @computed
-  const descriptor = options.descriptors && options.descriptors[method]
+// * => mobx
+function mobxify(target: Object, method: string, descriptors: Object) {
+  const descriptor = descriptors && descriptors[method]
+
+  // check first to avoid accidental get
   if (descriptor && !!descriptor.get) {
     const getter = {
       [method]: null,
     }
     Object.defineProperty(getter, method, descriptor)
-    extendObservable(obj, getter)
+    // @computed get
+    extendObservable(target, getter)
     return
   }
 
-  // not get, we can check value
-  let val = obj[method]
+  let value = target[method]
 
-  // already Mobx observable, let it be yo
   try {
-    if (isObservable(val)) {
-      return val
+    if (isObservable(value)) {
+      // let it be
+      return value
     }
   } catch (e) {
-    console.error('error getting obs for val', val)
+    console.error('weird error sometimes on hmr', value)
     throw e
   }
 
-  // watch() => autorun(automagical(value))
-  if (isWatch(val)) {
-    return wrapWatch(obj, method, val)
+  // @watch: autorun |> automagical (value)
+  if (isWatch(value)) {
+    return mobxifyWatch(target, method, value)
   }
-  // Promise => Mobx
-  if (isPromise(val)) {
-    return wrapPromise(obj, method, val)
+  if (isPromise(value)) {
+    mobxifyPromise(target, method, value)
+    return
   }
-  // @query => Mobx
-  if (isQuery(val)) {
-    return wrapQuery(obj, method, val)
+  if (isQuery(value)) {
+    mobxifyQuery(target, method, value)
+    return
   }
-  // Rx => mobx
-  if (isRxObservable(val)) {
-    return wrapRxObservable(obj, method)
+  if (isRxObservable(value)) {
+    mobxifyRxObservable(target, method)
+    return
   }
-  // else
-  if (options.extendFunctions && isFunction(val)) {
+  if (isFunction(value)) {
     // @action
-    obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
-    return obj[method]
+    target[method] = action(
+      `${target.constructor.name}.${method}`,
+      target[method]
+    )
+    return target[method]
   }
   // @observable.ref
-  if (options.extendPlainValues) {
-    extendShallowObservable(obj, { [method]: val })
-  }
-
-  return val
+  extendShallowObservable(target, { [method]: value })
+  return value
 }
 
 // * => Mobx
@@ -193,7 +175,7 @@ function resolve(value) {
 }
 
 // watches values in an autorun, and resolves their results
-function wrapWatch(obj, method, val) {
+function mobxifyWatch(obj, method, val) {
   const KEY = `${obj.constructor.name}.${method}`
   let current = observable.box(null)
   let currentDisposable = null
@@ -204,7 +186,7 @@ function wrapWatch(obj, method, val) {
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
-        console.log(KEY, 'set to', currentObservable.current, currentObservable)
+        log(KEY, 'set to', currentObservable.current, currentObservable)
         current.set(currentObservable.current) // hit observable
       }
     })
@@ -224,7 +206,7 @@ function wrapWatch(obj, method, val) {
     }
     if (result && (result.$isQuery || isObservable(result))) {
       currentObservable = result
-      console.log(KEY, 'runObservable', result)
+      log(KEY, 'runObservable', result)
       runObservable()
     } else {
       if (isPromise(result)) {

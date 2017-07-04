@@ -19,12 +19,14 @@ export default class DocumentStore {
 
   id = this.props.id
   @watch
-  document: ?Document = () => this.props.document || Document.get(this.props.id)
+  document: ?Document = () => {
+    console.log('running docStore.document', this)
+    return this.props.document || Document.get(this.props.id)
+  }
   lastSavedRev: ?string = null
   lastSavedState = null
   editor: ?EditorStore = null
   downAt = Date.now()
-  crumbs = []
 
   get hasNewContent(): boolean {
     return (

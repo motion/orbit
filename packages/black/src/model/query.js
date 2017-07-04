@@ -27,7 +27,7 @@ function valueWrap(it, valueGet: Function) {
   if (query && query.$) {
     // sub to values
     subscriber = query.$.subscribe(value => {
-      log(INFO, '.subscribe( => ', value)
+      log(INFO, '.subscribe( => ', typeof value)
       if (isObservable(value)) {
         result.set(value)
       } else {

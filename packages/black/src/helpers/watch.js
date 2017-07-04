@@ -15,7 +15,6 @@ export default function watch(
   // decorator
   if (descriptor.initializer) {
     const ogInit = descriptor.initializer
-    console.log('descriptor', descriptor)
     return {
       ...descriptor,
       configurable: true,
@@ -25,7 +24,6 @@ export default function watch(
           throw 'Expected a function to watch'
         }
         value.IS_AUTO_RUN = true
-        console.log('return', value)
         return value
       },
     }

@@ -61,7 +61,7 @@ export default class Root {
 
     return (
       <app>
-        <UI.Glint color={[255, 255, 255, 0.2]} borderRadius={6} />
+        <UI.Glint color={[255, 255, 255, 0.2]} borderRadius={4} />
         <Onboard if={showOnboard} />
         <LayoutWrap layoutStore={layoutStore}>
           <Commander.Results />

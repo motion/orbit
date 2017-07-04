@@ -194,23 +194,25 @@ function resolve(value) {
 
 // watches values in an autorun, and resolves their results
 function wrapWatch(obj, method, val) {
+  const KEY = `${obj.constructor.name}.${method}`
   let current = observable.box(null)
   let currentDisposable = null
   let currentObservable = null
-  let uid = 0
   let stopObservableAutorun
 
   function runObservable() {
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
+        console.log(KEY, 'set to', currentObservable.current)
         current.set(currentObservable.current) // hit observable
       }
     })
   }
 
+  let uid = 0
   const stopAutorun = autorun(async () => {
-    let mid = ++uid // lock
+    const mid = ++uid // lock
     const result = resolve(val.call(obj)) // hit user observables
     stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
@@ -222,6 +224,7 @@ function wrapWatch(obj, method, val) {
     }
     if (result && (result.$isQuery || isObservable(result))) {
       currentObservable = result
+      console.log(KEY, 'runObservable', result)
       runObservable()
     } else {
       if (isPromise(result)) {
@@ -235,11 +238,13 @@ function wrapWatch(obj, method, val) {
       }
     }
   })
+
   Object.defineProperty(obj, method, {
     get() {
       return toJS(current.get())
     },
   })
+
   obj.subscriptions.add(() => {
     if (currentDisposable) {
       currentDisposable()

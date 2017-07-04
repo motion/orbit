@@ -3,7 +3,7 @@ import { watch } from '@mcro/black'
 import { debug } from '~/helpers'
 import { Document } from '@mcro/models'
 import type EditorStore from '~/editor/stores/editorStore'
-import { throttle, debounce } from 'lodash'
+import { debounce } from 'lodash'
 
 const print = debug('documentStore')
 
@@ -18,9 +18,8 @@ export default class DocumentStore {
   props: Props
 
   id = this.props.id
-  document: ?Document = watch(
-    () => this.props.document || Document.get(this.props.id)
-  )
+  @watch
+  document: ?Document = () => this.props.document || Document.get(this.props.id)
   lastSavedRev: ?string = null
   lastSavedState = null
   editor: ?EditorStore = null

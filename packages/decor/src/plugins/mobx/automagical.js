@@ -156,7 +156,6 @@ function automagicalValue(
 
   // watch() => autorun(automagical(value))
   if (isWatch(val)) {
-    console.log('is watch', method, val)
     return wrapWatch(obj, method, val)
   }
   // Promise => Mobx
@@ -215,11 +214,9 @@ function wrapWatch(obj, method, val) {
     const result = resolve(val.call(obj)) // hit user observables
     stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
-      log('dispose', method)
       currentDisposable()
       currentDisposable = null
     }
-    console.log(method, result)
     if (result && result.dispose) {
       currentDisposable = result.dispose
     }

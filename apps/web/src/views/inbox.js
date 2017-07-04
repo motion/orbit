@@ -11,13 +11,14 @@ import DocumentView from '~/views/document'
     docs = Document.child(this.props.doc._id)
     showDraft = true
     draftNumber = 0
-    draft = watch(() =>
-      Document.create({
-        title: '',
-        _tempId: this.draftNumber,
-        parentId: this.props.doc._id,
-      })
-    )
+    draft = null
+    // draft = watch(() =>
+    //   Document.create({
+    //     title: '',
+    //     _tempId: this.draftNumber,
+    //     parentId: this.props.doc._id,
+    //   })
+    // )
   },
 })
 export default class Inbox {

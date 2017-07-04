@@ -46,7 +46,7 @@ const catchesErrors = () => ({
   mixin: {
     unstable_handleError(error) {
       console.error(`
-        GOT YOU A ERROR THERE
+        GOT YOU A ERROR THERE ${error.message} ${error.stack}
       `)
       this.setState({ error }) // to work
     },

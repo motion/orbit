@@ -7,6 +7,7 @@ import {
   isObservable,
   extendShallowObservable,
   extendObservable,
+  toJS,
   autorun,
 } from 'mobx'
 
@@ -27,7 +28,6 @@ export default function automagical() {
         static get name() {
           return Klass.name
         }
-
         constructor(...args) {
           super(...args)
           automagic(this)
@@ -39,7 +39,7 @@ export default function automagical() {
   }
 }
 
-const isWatch = (val: any) => val && val.autorunme
+const isWatch = (val: any) => val && val.IS_AUTO_RUN
 const FILTER_KEYS = {
   dispose: true,
   constructor: true,
@@ -62,7 +62,14 @@ const FILTER_KEYS = {
   componentWillUnmount: true,
 }
 
-function observableRxToObservableMobx(obj: Object, method: string) {
+const DEFAULT_OPTS = {
+  extendPlainValues: true,
+  extendFunctions: true,
+}
+
+type Disposable = { dispose: Function }
+
+function rxToMobx(obj: Object, method: string): Disposable {
   extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
   return obj[method]
 }
@@ -70,7 +77,7 @@ function observableRxToObservableMobx(obj: Object, method: string) {
 function wrapQuery(obj, method, val) {
   Object.defineProperty(obj, method, {
     get() {
-      return val.current
+      return val.current // hit observable
     },
   })
   obj.subscriptions.add(val)
@@ -87,7 +94,7 @@ function wrapPromise(obj, method, val) {
 }
 
 function wrapRxObservable(obj, method) {
-  const observable = observableRxToObservableMobx(obj, method)
+  const observable = rxToMobx(obj, method)
   obj.subscriptions.add(observable)
   return observable
 }
@@ -113,7 +120,7 @@ function automagic(obj: Object) {
 
   // mutate objects to be magical
   for (const method of Object.keys(descriptors)) {
-    automagicalValue(obj, method, { descriptors })
+    automagicalValue(obj, method, { descriptors, ...DEFAULT_OPTS })
   }
 }
 
@@ -121,14 +128,14 @@ function automagic(obj: Object) {
 function automagicalValue(
   obj: Object,
   method: string,
-  { value, descriptors, extendPlainValues = true, extendFunctions = true } = {}
+  options: Object = DEFAULT_OPTS
 ) {
   if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
     return
   }
 
   // get => @computed
-  const descriptor = descriptors && descriptors[method]
+  const descriptor = options.descriptors && options.descriptors[method]
   if (descriptor && !!descriptor.get) {
     const getter = {
       [method]: null,
@@ -139,7 +146,7 @@ function automagicalValue(
   }
 
   // not get, we can check value
-  let val = value || obj[method]
+  let val = obj[method]
 
   // already Mobx observable, let it be yo
   if (isObservable(val)) {
@@ -147,6 +154,7 @@ function automagicalValue(
   }
   // watch() => autorun(automagical(value))
   if (isWatch(val)) {
+    console.log('i see a watcher', val)
     return wrapWatch(obj, method, val)
   }
   // Promise => Mobx
@@ -162,40 +170,56 @@ function automagicalValue(
     return wrapRxObservable(obj, method)
   }
   // else
-  if (extendFunctions && isFunction(val)) {
+  if (options.extendFunctions && isFunction(val)) {
     // @action
     obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
     return obj[method]
   }
   // @observable.ref
-  if (extendPlainValues) {
+  if (options.extendPlainValues) {
     extendShallowObservable(obj, { [method]: val })
   }
   return val
 }
 
+// * => Mobx
+function resolve(value) {
+  if (isRxObservable(value)) {
+    return fromStream(value) // .current & .dispose
+  }
+  return value
+}
+
 function wrapWatch(obj, method, val) {
-  let current = null
-  const stop = autorun(() => {
-    // auto dispose the previous thing
-    if (current && current !== null && current.dispose) {
-      current.dispose()
+  let current = observable.box(null)
+  let currentDisposable = null
+  let uid = 0
+  const stop = autorun(async () => {
+    let mid = ++uid // lock
+    const result = resolve(val.call(obj)) // hit user observables
+    if (currentDisposable) {
+      currentDisposable()
+      currentDisposable = null
     }
-    current = thingToObservable(val.call(obj))
+    if (result && result.dispose) {
+      currentDisposable = result.dispose
+      const next = result.current // hit new value observable
+      current.set(next)
+    } else {
+      if (isPromise(result)) {
+        const value = await result
+        if (uid === mid) {
+          // if lock still valid
+          current.set(value)
+        }
+      } else {
+        current.set(result)
+      }
+    }
   })
   Object.defineProperty(obj, method, {
     get() {
-      if (!current) {
-        return current
-      }
-      if (current.get) {
-        const next = current.get()
-        return next && typeof next.get === 'function' ? next.get() : next
-      }
-      if (current.value) {
-        return current.value
-      }
-      return current
+      return toJS(current.get())
     },
   })
   obj.subscriptions.add(() => {
@@ -207,7 +231,7 @@ function wrapWatch(obj, method, val) {
   return current
 }
 
-function thingToObservable(thing) {
+function toObservable(thing) {
   if (isPromise(thing)) {
     return fromPromise(thing)
   }

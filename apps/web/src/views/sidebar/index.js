@@ -52,8 +52,8 @@ export default class Sidebar {
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <UI.Drawer
             transition={Constants.SIDEBAR_TRANSITION}
+            background
             key={2}
-            background="transparent"
             open={active}
             from="right"
             size={width}

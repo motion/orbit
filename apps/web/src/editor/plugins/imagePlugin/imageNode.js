@@ -18,7 +18,7 @@ const readFile = file =>
 class ImageNodeStore {
   src = null
   loading = false
-  src = watch(() => this.getDataUrl(this.props.node.data))
+  @watch src = () => this.getDataUrl(this.props.node.data)
 
   getDataUrl = async data => {
     if (data.get('file')) {

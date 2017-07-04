@@ -7,7 +7,7 @@ import DocumentView from '~/views/document'
 
 @view({
   store: class {
-    document = Document.create()
+    // document = Document.create()
   },
 })
 export default class UserBar {
@@ -24,7 +24,7 @@ export default class UserBar {
           openOnHover
           closeOnClick
         >
-          <DocumentView document={store.document} />
+          <DocumentView if={store.document} document={store.document} />
         </UI.Popover>
         <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>

@@ -1,5 +1,4 @@
 // @flow
-import { observable } from 'mobx'
 
 // @watch decorator
 export default function watch(
@@ -13,24 +12,22 @@ export default function watch(
     return target
   }
 
-  // decorate
+  // decorator
   if (descriptor.initializer) {
-    const { initializer, ...rest } = descriptor
-    const value = initializer.call(target)
-
-    if (typeof value !== 'function') {
-      throw 'Expected a function to watch'
-    }
-
-    value.IS_AUTO_RUN = true
-
+    const ogInit = descriptor.initializer
+    console.log('descriptor', descriptor)
     return {
-      ...rest,
-      value,
+      ...descriptor,
+      configurable: true,
+      initializer: function() {
+        const value = ogInit.call(this)
+        if (typeof value !== 'function') {
+          throw 'Expected a function to watch'
+        }
+        value.IS_AUTO_RUN = true
+        console.log('return', value)
+        return value
+      },
     }
-  }
-  if (descriptor.value) {
-    descriptor.value.IS_AUTO_RUN = true
-    return descriptor
   }
 }

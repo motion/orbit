@@ -130,10 +130,6 @@ function automagicalValue(
   method: string,
   options: Object = DEFAULT_OPTS
 ) {
-  if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
-    return
-  }
-
   // get => @computed
   const descriptor = options.descriptors && options.descriptors[method]
   if (descriptor && !!descriptor.get) {
@@ -160,6 +156,7 @@ function automagicalValue(
 
   // watch() => autorun(automagical(value))
   if (isWatch(val)) {
+    console.log('is watch', method, val)
     return wrapWatch(obj, method, val)
   }
   // Promise => Mobx
@@ -184,6 +181,7 @@ function automagicalValue(
   if (options.extendPlainValues) {
     extendShallowObservable(obj, { [method]: val })
   }
+
   return val
 }
 
@@ -199,18 +197,35 @@ function resolve(value) {
 function wrapWatch(obj, method, val) {
   let current = observable.box(null)
   let currentDisposable = null
+  let currentObservable = null
   let uid = 0
-  const stop = autorun(async () => {
+  let stopObservableAutorun
+
+  function runObservable() {
+    stopObservableAutorun && stopObservableAutorun()
+    stopObservableAutorun = autorun(() => {
+      if (currentObservable) {
+        current.set(currentObservable.current) // hit observable
+      }
+    })
+  }
+
+  const stopAutorun = autorun(async () => {
     let mid = ++uid // lock
     const result = resolve(val.call(obj)) // hit user observables
+    stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
+      log('dispose', method)
       currentDisposable()
       currentDisposable = null
     }
+    console.log(method, result)
     if (result && result.dispose) {
       currentDisposable = result.dispose
-      const next = result.current // hit new value observable
-      current.set(next)
+    }
+    if (result && (result.$isQuery || isObservable(result))) {
+      currentObservable = result
+      runObservable()
     } else {
       if (isPromise(result)) {
         const value = await result
@@ -229,23 +244,11 @@ function wrapWatch(obj, method, val) {
     },
   })
   obj.subscriptions.add(() => {
-    if (current && current !== null && current.dispose) {
-      current.dispose()
+    if (currentDisposable) {
+      currentDisposable()
     }
-    stop()
+    stopAutorun()
+    stopObservableAutorun && stopObservableAutorun()
   })
   return current
-}
-
-function toObservable(thing) {
-  if (isPromise(thing)) {
-    return fromPromise(thing)
-  }
-  if (isQuery(thing)) {
-    return thing.observable
-  }
-  if (isRxObservable(thing)) {
-    return fromStream(thing)
-  }
-  return thing
 }

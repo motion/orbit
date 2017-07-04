@@ -1,4 +1,7 @@
 # nate
+  - attach this.module = module to all views in hmr-transform
+    - unstable_handleError can use module data to recover
+    - stores can hmr
   - nested things:
     - ListItem: wraps them in Collapsable
     - MenuItem: wraps them into Popovers

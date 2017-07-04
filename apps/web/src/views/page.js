@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { SlotFill } from '@mcro/ui'
+import { debounce } from 'lodash'
 
 type Props = {
   children?: React$Element<any>,
@@ -11,17 +12,56 @@ type Props = {
 }
 
 @view
+class PageSidebar {
+  static isPageSidebar = true
+  render({ children, onChildren }) {
+    if (onChildren) onChildren(children)
+    return null
+  }
+}
+
+@view
+class PageActions {
+  static isPageActions = true
+  render({ children, onChildren }) {
+    if (onChildren) onChildren(children)
+    return null
+  }
+}
+
+@view
 export default class Page {
+  static Actions = PageActions
+  static Sidebar = PageSidebar
+
+  actions = null
+  sidebar = null
+  onChildren = type => debounce(children => (this[type] = children))
+
   render({ children, sidebar, actions, className }: Props) {
+    log(children)
     return (
       <page className={className}>
-        <SlotFill.Fill if={actions} key={Math.random()} name="actions">
-          {actions}
+        <SlotFill.Fill name="actions">
+          {this.actions || actions}
         </SlotFill.Fill>
-        <SlotFill.Fill if={sidebar} key={Math.random()} name="sidebar">
-          {sidebar}
+        <SlotFill.Fill if={this.sidebar || sidebar} name="sidebar">
+          {this.sidebar || sidebar}
         </SlotFill.Fill>
-        {children}
+        {React.Children.map(children, child => {
+          if (child) {
+            console.log('got a', child)
+            if (child.isPageActions || child.isPageSidebar) {
+              debugger
+              const type = child.isPageActions ? 'actions' : 'sidebar'
+              return React.cloneElement(child, {
+                onChildren: log(this.onChildren(type)),
+              })
+            }
+            return child
+          }
+          return child
+        })}
       </page>
     )
   }

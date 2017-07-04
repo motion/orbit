@@ -1,5 +1,5 @@
 // @flow
-import decorator from '@mcro/decor'
+import decor from '@mcro/decor'
 import { object, string } from 'prop-types'
 import extendsReact from '@mcro/decor/lib/plugins/react/extendsReact'
 import type { ExtendsReact } from '@mcro/decor/lib/plugins/react/extendsReact'
@@ -42,8 +42,20 @@ const uiContext = [
   },
 ]
 
+const catchesErrors = () => ({
+  mixin: {
+    unstable_handleError() {
+      console.error(`
+        GOT YOU A ERROR THERE
+      `)
+      this.setState({}) // to work
+    },
+  },
+})
+
 // applied top to bottom
 const decorations = ({ mobx, ui, autobind, magic } = {}) => [
+  catchesErrors,
   extendsReact,
   subscribable,
   helpers,
@@ -58,7 +70,7 @@ const decorations = ({ mobx, ui, autobind, magic } = {}) => [
   [storeProvidable, storeOptions],
 ]
 
-const base: () => ViewClass | (() => () => ViewClass) = decorator(
+const base: () => ViewClass | (() => () => ViewClass) = decor(
   decorations({ mobx: true, autobind: true, magic: true, ui: true })
 )
 
@@ -75,14 +87,15 @@ const view: ViewDec = (item: Object | Class<any> | Function): ViewClass => {
 view.on = base.on
 
 // other decorators
-view.ui = decorator(decorations({ ui: true, autobind: true }))
-view.basics = decorator([
+view.react = decor([extendsReact, reactRenderArgs])
+view.ui = decor(decorations({ ui: true, autobind: true }))
+view.basics = decor([
   extendsReact,
   reactRenderArgs,
   observer,
-  opts => ({ decorator: glossDecorator }),
+  () => ({ decorator: glossDecorator }),
 ])
 view.provide = stores => base({ stores, context: true })
-view.attach = (...names) => decorator([[attach, { names }]])
+view.attach = (...names) => decor([[attach, { names }]])
 
 export default view

@@ -6,6 +6,7 @@ import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
 import Inbox from '~/views/inbox'
+import Breadcrumbs from './breadcrumbs'
 
 class DocPageStore {
   doc = this.props.id ? Document.get(this.props.id) : Document.home()
@@ -56,56 +57,54 @@ export default class DocumentPage {
     }
 
     return (
-      <Page
-        actions={
-          <actions if={!commanderStore.focused} $$row $$centered>
-            <UI.Button
-              active={docStore.showInbox}
-              margin={[0, 10]}
-              icon="paper"
-              onClick={docStore.ref('showInbox').toggle}
-              tooltip="inbox"
+      <Page>
+        <Page.Actions if={!commanderStore.focused} $$row $$centered>
+          <UI.Button
+            active={docStore.showInbox}
+            margin={[0, 10]}
+            icon="paper"
+            onClick={docStore.ref('showInbox').toggle}
+            tooltip="inbox"
+          >
+            Inbox
+          </UI.Button>
+
+          <UI.Segment itemProps={itemProps}>
+            <UI.Popover
+              openOnClick
+              width={160}
+              target={
+                <UI.Button {...itemProps} className={this.uniq} icon="dot" />
+              }
             >
-              Inbox
-            </UI.Button>
-
-            <UI.Segment itemProps={itemProps}>
-              <UI.Popover
-                openOnClick
-                width={160}
-                target={
-                  <UI.Button {...itemProps} className={this.uniq} icon="dot" />
-                }
-              >
-                <UI.List
-                  theme="light"
-                  elevation={3}
-                  borderRadius={8}
-                  items={[
-                    { icon: 'share', primary: 'Share', onClick: () => {} },
-                    {
-                      icon: doc.private ? 'lock' : 'open',
-                      primary: 'Locked',
-                      onClick: doc.togglePrivate,
-                    },
-                    {
-                      icon: doc.private ? 'eye' : 'closed',
-                      primary: 'Private',
-                      onClick: doc.togglePrivate,
-                    },
-                  ]}
-                />
-              </UI.Popover>
-
-              <UI.Button
-                icon="fav31"
-                highlight={!!starred}
-                onClick={doc.toggleStar}
+              <UI.List
+                theme="light"
+                elevation={3}
+                borderRadius={8}
+                items={[
+                  { icon: 'share', primary: 'Share', onClick: () => {} },
+                  {
+                    icon: doc.private ? 'lock' : 'open',
+                    primary: 'Locked',
+                    onClick: doc.togglePrivate,
+                  },
+                  {
+                    icon: doc.private ? 'eye' : 'closed',
+                    primary: 'Private',
+                    onClick: doc.togglePrivate,
+                  },
+                ]}
               />
-            </UI.Segment>
-          </actions>
-        }
-      >
+            </UI.Popover>
+
+            <UI.Button
+              icon="fav31"
+              highlight={!!starred}
+              onClick={doc.toggleStar}
+            />
+          </UI.Segment>
+        </Page.Actions>
+        <Breadcrumbs />
         <DocumentView
           if={!docStore.showInbox}
           id={doc._id}

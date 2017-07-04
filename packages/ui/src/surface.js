@@ -64,6 +64,7 @@ export default class Surface implements ViewType {
     highlight?: boolean,
     hoverable?: boolean,
     hoverColor?: Color,
+    hovered?: boolean,
     icon?: React$Element<any> | string,
     iconAfter?: boolean,
     iconColor?: Color,
@@ -139,6 +140,7 @@ export default class Surface implements ViewType {
     glowProps,
     height,
     highlight,
+    hovered,
     hoverable,
     hoverColor,
     icon,
@@ -443,6 +445,17 @@ export default class Surface implements ViewType {
       width: height,
     }
 
+    const hoverStyle = {
+      ...theme.hover,
+      color: hoverColor,
+      borderColor: hoverBorderColor,
+      background: hoverBackground,
+    }
+
+    const hoverIconStyle = {
+      color: props.iconHoverColor || hoverColor,
+    }
+
     return {
       glintColor,
       element: {
@@ -452,6 +465,7 @@ export default class Surface implements ViewType {
         fontSize: props.fontSize,
         lineHeight: 'inherit',
       },
+      hover: hoverStyle,
       surface: {
         color,
         overflow: props.overflow || props.glow ? 'hidden' : props.overflow,
@@ -504,15 +518,8 @@ export default class Surface implements ViewType {
         '& > icon': {
           color: iconColor,
         },
-        '&:hover > icon': {
-          color: props.iconHoverColor || hoverColor,
-        },
-        '&:hover': {
-          ...theme.hover,
-          color: hoverColor,
-          borderColor: hoverBorderColor,
-          background: hoverBackground,
-        },
+        '&:hover > icon': hoverIconStyle,
+        '&:hover': hoverStyle,
         // this is just onmousedown
         '&:active': {
           position: 'relative',

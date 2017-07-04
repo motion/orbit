@@ -2,7 +2,7 @@ import React from 'react'
 import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
 
-export default injectTheme(({ badge, children, theme, ...props }) =>
+const Button = injectTheme(({ badge, children, theme, ...props }) =>
   <SizedSurface
     tagName="button"
     borderWidth={1}
@@ -24,3 +24,7 @@ export default injectTheme(({ badge, children, theme, ...props }) =>
       </badge>}
   </SizedSurface>
 )
+
+Button.acceptsHovered = true
+
+export default Button

@@ -21,7 +21,13 @@ export default function proxyReactComponents({
   locals,
 }) {
   const [React] = imports
-  const [{ hot }] = locals
+  const [module] = locals
+  const { hot } = module
+
+  console.log('module is', module)
+  for (const component in components) {
+    console.log(component)
+  }
 
   if (!hot || typeof hot.accept !== 'function') {
     throw new Error(
@@ -31,6 +37,8 @@ export default function proxyReactComponents({
         'example in README: https://github.com/gaearon/react-transform-hmr'
     )
   }
+
+  // module
 
   if (Object.keys(components).some(key => !components[key].isInFunction)) {
     hot.accept(err => {

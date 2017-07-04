@@ -588,6 +588,15 @@ export default class Popover {
       childProps.active = isOpen && !closing
     }
 
+    const wellAdjustedChildren = children => {
+      return React.Children.map(children, child => {
+        if (child.acceptsHovered) {
+          return React.cloneElement(child, { hovered: showPopover })
+        }
+        return child
+      })
+    }
+
     return (
       <Theme name={theme}>
         <root>
@@ -636,7 +645,9 @@ export default class Popover {
                   />
                 </arrowContain>
                 <Surface {...props}>
-                  {typeof children === 'function' ? children(isOpen) : children}
+                  {wellAdjustedChildren(
+                    typeof children === 'function' ? children(isOpen) : children
+                  )}
                 </Surface>
               </popover>
             </container>

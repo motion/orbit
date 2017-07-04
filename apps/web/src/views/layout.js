@@ -1,12 +1,10 @@
 // @flow
-import Breadcrumbs from './layout/breadcrumbs'
 import React from 'react'
 import * as Constants from '~/constants'
 import { view, Shortcuts } from '@mcro/black'
 import { object } from 'prop-types'
-import { Glint, Theme, SlotFill } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import { IN_TRAY } from '~/constants'
-import { User } from '@mcro/models'
 import NotFound from '~/pages/404Page'
 import Router from '~/router'
 import Sidebar from '~/views/sidebar'
@@ -63,12 +61,11 @@ export default class Root {
 
     return (
       <app>
-        <Glint color={[255, 255, 255, 0.2]} borderRadius={6} />
+        <UI.Glint color={[255, 255, 255, 0.2]} borderRadius={6} />
         <Onboard if={showOnboard} />
         <LayoutWrap layoutStore={layoutStore}>
           <Commander.Results />
           <Header layoutStore={layoutStore} />
-          <Breadcrumbs />
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
@@ -88,20 +85,30 @@ export default class Root {
     )
   }
 
-  render({ layoutStore, commanderStore }: Props, { error }) {
+  render({ commanderStore }: Props) {
     return (
       <root>
-        <Theme name="light">
-          <SlotFill.Provider>
-            <Shortcuts
-              $layout
-              name="all"
-              handler={commanderStore.handleShortcuts}
-            >
-              {IN_TRAY ? this.renderTray() : this.renderApp()}
-            </Shortcuts>
-          </SlotFill.Provider>
-        </Theme>
+        <UI.ContextMenu
+          inactive
+          options={[
+            {
+              title: 'Delete',
+              onSelect: place => place.delete(),
+            },
+          ]}
+        >
+          <UI.Theme name="light">
+            <UI.SlotFill.Provider>
+              <Shortcuts
+                $layout
+                name="all"
+                handler={commanderStore.handleShortcuts}
+              >
+                {IN_TRAY ? this.renderTray() : this.renderApp()}
+              </Shortcuts>
+            </UI.SlotFill.Provider>
+          </UI.Theme>
+        </UI.ContextMenu>
       </root>
     )
   }
@@ -114,12 +121,6 @@ export default class Root {
       right: 0,
       bottom: 0,
       left: 0,
-    },
-    circleButton: {
-      position: 'absolute',
-      bottom: 20,
-      right: 20,
-      zIndex: 1000000000,
     },
     hide: {
       opacity: 0,

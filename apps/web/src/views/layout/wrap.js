@@ -16,10 +16,12 @@ export default class LayoutWrap {
   render({ layoutStore, children }) {
     return (
       <wrap
-        $$transition={
-          layoutStore.sidebar.changing ? `right ${SIDEBAR_TRANSITION}` : 'none'
-        }
-        $$right={layoutStore.sidebar.trueWidth}
+        style={{
+          transition: layoutStore.sidebar.changing
+            ? `right ${SIDEBAR_TRANSITION}`
+            : 'none',
+          right: layoutStore.sidebar.trueWidth,
+        }}
       >
         {children}
         <dragger
@@ -39,6 +41,7 @@ export default class LayoutWrap {
       top: 0,
       bottom: 0,
       zIndex: 10,
+      transform: { z: 0 },
     },
     dragger: {
       width: 8,

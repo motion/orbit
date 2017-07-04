@@ -27,7 +27,7 @@ const KEYMAP = {
 }
 
 export default class CommanderStore {
-  v = 11
+  v = 12
   @watch document = () => Document.get(Router.params.id)
   @watch crumbs = () => this.document && this.document.getCrumbs()
   mouseMoving = Observable.fromEvent(window, 'mousemove')
@@ -331,15 +331,11 @@ export default class CommanderStore {
   }
 
   open = () => {
-    this.setOpen(true)
+    this.isOpen = true
   }
 
   close = () => {
-    this.setOpen(false)
-  }
-
-  setOpen = val => {
-    this.isOpen = val
+    this.isOpen = false
   }
 
   moveHighlight = (diff: number) => {

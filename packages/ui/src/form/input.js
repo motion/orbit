@@ -14,8 +14,10 @@ export default ({ sync, type, ...props }) => {
   return (
     <SizedSurface
       $input
+      sizeFont
+      sizeRadius
+      sizeHeight
       flex
-      borderRadius={0}
       borderWidth={1}
       wrapElement
       tagName="input"

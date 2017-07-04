@@ -60,7 +60,6 @@ export default class ListItem {
     date,
     dateSize,
     fakeAvatar,
-    iconProps,
     isFirstElement,
     isLastElement,
     meta,
@@ -104,20 +103,11 @@ export default class ListItem {
         row
         onClick={onClick}
         align="center"
-        iconProps={{
-          margin: 3,
-          ...iconProps,
-        }}
         glowProps={{
           scale: 1.4,
           opacity: 0.1,
           resist: 40,
           clickable: !!onClick,
-        }}
-        elementProps={{
-          css: {
-            padding: [5, 0],
-          },
         }}
         style={{
           position: 'relative',

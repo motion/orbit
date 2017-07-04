@@ -5,6 +5,9 @@ import injectTheme from './helpers/injectTheme'
 const Button = injectTheme(({ badge, children, theme, ...props }) =>
   <SizedSurface
     tagName="button"
+    sizeRadius
+    sizeFont
+    sizeHeight
     borderWidth={1}
     glint
     row

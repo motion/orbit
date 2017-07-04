@@ -1,4 +1,5 @@
 // @flow
+import React from 'react'
 import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
 

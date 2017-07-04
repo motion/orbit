@@ -1,3 +1,4 @@
+import React from 'react'
 import { object } from 'prop-types'
 import { Theme } from '@mcro/gloss'
 

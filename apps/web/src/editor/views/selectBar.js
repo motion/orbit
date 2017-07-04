@@ -1,6 +1,6 @@
+import React from 'react'
 import { view } from '@mcro/black'
-import { Theme, PassProps, Popover, Segment } from '@mcro/ui'
-import { BLOCKS, MARKS } from '../constants'
+import * as UI from '@mcro/ui'
 
 @view
 export default class SelectBar {
@@ -8,31 +8,30 @@ export default class SelectBar {
     const { selection, pluginCategories } = editorStore
 
     return (
-      <Popover
+      <UI.Popover
         if={selection.selectedNode && selection.mouseUp}
         open
         noArrow
-        animation="slide 200ms"
         left={selection.mouseUp.x}
-        top={selection.mouseUp.y + 30}
+        top={selection.mouseUp.y + 10}
         escapable
+        theme="dark"
+        background="transparent"
       >
-        <Theme name="dark">
-          <bar $$row>
-            {pluginCategories.map(category =>
-              <Segment padded key={category}>
-                {editorStore.helpers
-                  .contextButtonsFor(category)
-                  .map((button, i) =>
-                    <PassProps editorStore={editorStore} key={i}>
-                      {button}
-                    </PassProps>
-                  )}
-              </Segment>
-            )}
-          </bar>
-        </Theme>
-      </Popover>
+        <bar $$row>
+          {pluginCategories.map(category =>
+            <UI.Segment padded key={category}>
+              {editorStore.helpers
+                .contextButtonsFor(category)
+                .map((button, i) =>
+                  <UI.PassProps editorStore={editorStore} key={i}>
+                    {button}
+                  </UI.PassProps>
+                )}
+            </UI.Segment>
+          )}
+        </bar>
+      </UI.Popover>
     )
   }
 }

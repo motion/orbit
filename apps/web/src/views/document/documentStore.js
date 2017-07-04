@@ -59,6 +59,7 @@ export default class DocumentStore {
     // init content
     this.watch(() => {
       if (!this.editor.state) {
+        console.log('no state setting contents', this.document.content)
         this.editor.setContents(this.document.content, true)
       }
     })

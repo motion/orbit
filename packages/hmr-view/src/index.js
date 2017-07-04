@@ -14,6 +14,8 @@ if (window.__reactComponentProxies) {
   })
 }
 
+let reloaded = []
+
 export default function proxyReactComponents({
   filename,
   components,
@@ -47,6 +49,7 @@ export default function proxyReactComponents({
   }
 
   const forceUpdate = getForceUpdate(window.React)
+  window.forceUpdate = forceUpdate
 
   return function wrapWithProxy(ReactClass, uniqueId) {
     const { isInFunction = false, displayName = uniqueId } = components[
@@ -62,7 +65,7 @@ export default function proxyReactComponents({
 
     const globalUniqueId = filename + '$' + uniqueId
     if (componentProxies[globalUniqueId]) {
-      // console.info('[ReactHMR] ' + displayName)
+      reloaded.push(displayName)
       const instances = componentProxies[globalUniqueId].update(ReactClass)
       setTimeout(() => instances.forEach(forceUpdate))
     } else {
@@ -72,3 +75,10 @@ export default function proxyReactComponents({
     return componentProxies[globalUniqueId].get()
   }
 }
+
+setInterval(() => {
+  if (reloaded.length) {
+    console.log(`[HMR] views: ${reloaded.join(', ')}`)
+    reloaded = []
+  }
+}, 1000)

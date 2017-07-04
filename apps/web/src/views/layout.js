@@ -30,7 +30,7 @@ type Props = {
   soundStore: SoundStore,
   commanderStore: CommanderStore,
 })
-export default class Root {
+export default class Layout {
   props: Props
 
   static childContextTypes = {

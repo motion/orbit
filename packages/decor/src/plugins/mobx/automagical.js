@@ -155,10 +155,14 @@ function mobxify(target: Object, method: string, descriptors: Object) {
   }
   if (isFunction(value)) {
     // @action
-    target[method] = action(
-      `${target.constructor.name}.${method}`,
-      target[method]
-    )
+    const name = `${target.constructor.name}.${method}`
+    const ogFn = target[method]
+    target[method] = action(name, function(...args) {
+      if (window.log && window.log.debug === true) {
+        console.log(name, '(', ...args, ')')
+      }
+      return ogFn.call(this, ...args)
+    })
     return target[method]
   }
   // @observable.ref

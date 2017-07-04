@@ -29,6 +29,8 @@ if (_window2.default.__reactComponentProxies) {
   });
 }
 
+var reloaded = [];
+
 function proxyReactComponents(_ref) {
   var filename = _ref.filename,
       components = _ref.components,
@@ -62,6 +64,7 @@ function proxyReactComponents(_ref) {
   }
 
   var forceUpdate = (0, _reactProxy.getForceUpdate)(_window2.default.React);
+  _window2.default.forceUpdate = forceUpdate;
 
   return function wrapWithProxy(ReactClass, uniqueId) {
     var _components$uniqueId = components[uniqueId],
@@ -80,7 +83,7 @@ function proxyReactComponents(_ref) {
 
     var globalUniqueId = filename + '$' + uniqueId;
     if (componentProxies[globalUniqueId]) {
-      // console.info('[ReactHMR] ' + displayName)
+      reloaded.push(displayName);
       var instances = componentProxies[globalUniqueId].update(ReactClass);
       setTimeout(function () {
         return instances.forEach(forceUpdate);
@@ -92,4 +95,11 @@ function proxyReactComponents(_ref) {
     return componentProxies[globalUniqueId].get();
   };
 }
+
+setInterval(function () {
+  if (reloaded.length) {
+    console.log(`[HMR] views: ${reloaded.join(', ')}`);
+    reloaded = [];
+  }
+}, 1000);
 //# sourceMappingURL=index.js.map

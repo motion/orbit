@@ -35,7 +35,7 @@ export default class SidebarRootStore {
     this.setTimeout(() => {
       this.changing = false
     }, 200)
-    localStorage.setItem(IS_SIDEBAR_OPEN, this.active + '')
+    localStorage.setItem(IS_SIDEBAR_OPEN, log(`${this.active}`))
   }
 
   attachDragger = (node: HTMLElement) => {

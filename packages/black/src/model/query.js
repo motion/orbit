@@ -115,7 +115,7 @@ export default function query(
   if (initializer) {
     descriptor.initializer = function() {
       const init = initializer.call(this)
-      return memoize(function(...args) {
+      return function(...args) {
         if (!this.collection) {
           console.log('no this.collection!')
           return null
@@ -125,7 +125,7 @@ export default function query(
           { model: this.constructor.name, property, args },
           () => init.apply(this, args)
         )
-      })
+      }
     }
   } else if (value) {
     descriptor.value = function(...args) {

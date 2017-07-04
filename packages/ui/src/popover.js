@@ -590,7 +590,7 @@ export default class Popover {
 
     const wellAdjustedChildren = children => {
       return React.Children.map(children, child => {
-        if (child.acceptsHovered) {
+        if (child && child.type && child.type.acceptsHovered) {
           return React.cloneElement(child, { hovered: showPopover })
         }
         return child

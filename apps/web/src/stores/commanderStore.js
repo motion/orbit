@@ -28,11 +28,11 @@ const KEYMAP = {
 
 export default class CommanderStore {
   v = 11
-  currentDocument = watch(() => Document.get('y05ujzbsul:1499195154314'))
-  crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
+  @watch currentDocument = () => Document.get('y05ujzbsul:1499195154314')
+  @watch crumbs = () => this.currentDocument && this.currentDocument.getCrumbs()
   mouseMoving = Observable.fromEvent(window, 'mousemove')
     .throttleTime(500)
-    .map(event => {
+    .map(() => {
       return Date.now() - 500 > this.mouseMoving.current || 0
     })
     .reduce((acc, x) => acc && x && Date.now())

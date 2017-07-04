@@ -149,12 +149,17 @@ function automagicalValue(
   let val = obj[method]
 
   // already Mobx observable, let it be yo
-  if (isObservable(val)) {
-    return val
+  try {
+    if (isObservable(val)) {
+      return val
+    }
+  } catch (e) {
+    console.error('error getting obs for val', val)
+    throw e
   }
+
   // watch() => autorun(automagical(value))
   if (isWatch(val)) {
-    console.log('i see a watcher', val)
     return wrapWatch(obj, method, val)
   }
   // Promise => Mobx
@@ -190,6 +195,7 @@ function resolve(value) {
   return value
 }
 
+// watches values in an autorun, and resolves their results
 function wrapWatch(obj, method, val) {
   let current = observable.box(null)
   let currentDisposable = null

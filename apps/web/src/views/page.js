@@ -39,7 +39,6 @@ export default class Page {
   onChildren = type => debounce(children => (this[type] = children))
 
   render({ children, sidebar, actions, className }: Props) {
-    log(children)
     return (
       <page className={className}>
         <SlotFill.Fill name="actions">
@@ -50,15 +49,12 @@ export default class Page {
         </SlotFill.Fill>
         {React.Children.map(children, child => {
           if (child) {
-            console.log('got a', child)
-            if (child.isPageActions || child.isPageSidebar) {
-              debugger
+            if (child.type.isPageActions || child.type.isPageSidebar) {
               const type = child.isPageActions ? 'actions' : 'sidebar'
               return React.cloneElement(child, {
-                onChildren: log(this.onChildren(type)),
+                onChildren: this.onChildren(type),
               })
             }
-            return child
           }
           return child
         })}

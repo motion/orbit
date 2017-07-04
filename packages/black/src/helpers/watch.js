@@ -13,21 +13,24 @@ export default function watch(
     return target
   }
 
+  // decorate
   if (descriptor.initializer) {
-    const watchFn = descriptor.initializer.call(target)
+    const { initializer, ...rest } = descriptor
+    const value = initializer.call(target)
 
-    if (typeof watchFn !== 'function') {
+    if (typeof value !== 'function') {
       throw 'Expected a function to watch'
     }
 
-    watchFn.IS_AUTO_RUN = true
+    value.IS_AUTO_RUN = true
 
-    const current = observable.box(null)
-
-    Object.defineProperty(target, method, {
-      get() {
-        return current.get()
-      },
-    })
+    return {
+      ...rest,
+      value,
+    }
+  }
+  if (descriptor.value) {
+    descriptor.value.IS_AUTO_RUN = true
+    return descriptor
   }
 }

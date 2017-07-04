@@ -103,8 +103,9 @@ export default class ListItem {
         glow
         row
         onClick={onClick}
+        align="center"
         iconProps={{
-          margin: 5,
+          margin: 3,
           ...iconProps,
         }}
         glowProps={{
@@ -116,12 +117,6 @@ export default class ListItem {
         elementProps={{
           css: {
             padding: [5, 0],
-          },
-        }}
-        iconProps={{
-          css: {
-            padding: [8, 0],
-            width: 28,
           },
         }}
         style={{

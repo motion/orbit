@@ -191,6 +191,72 @@ export default class Surface implements ViewType {
       ...props,
     }
 
+    const contents = [
+      <Glint
+        key={0}
+        if={glint && this.theme}
+        color={this.theme.glintColor.style.color}
+        borderRadius={
+          (this.theme.element.style.borderRadius ||
+            this.theme.element.style.borderTopLeftRadius) + 1
+        }
+      />,
+      <icon key={1} if={icon && !stringIcon} $iconAfter={hasIconAfter}>
+        {icon}
+      </icon>,
+      <Icon
+        key={1}
+        if={icon && stringIcon}
+        $icon
+        $iconAfter={hasIconAfter}
+        name={icon}
+        size={iconSize}
+        {...iconProps}
+      />,
+      <Glow
+        key={2}
+        if={glow}
+        full
+        scale={1.4}
+        color={
+          (this.theme && $(this.theme.surface.style.color).lighten(0.2)) ||
+          DEFAULT_GLOW_COLOR
+        }
+        opacity={0.15}
+        {...glowProps}
+      />,
+      <element
+        key={3}
+        if={!noElement || (noElement && hasChildren(children))}
+        {...wrapElement && passProps}
+        {...elementProps}
+        $hasIconBefore={hasIconBefore}
+        $hasIconAfter={hasIconAfter}
+      >
+        {children}
+      </element>,
+      <Popover
+        key={4}
+        if={tooltip}
+        theme="dark"
+        background
+        openOnHover
+        noHover
+        animation="bounce 150ms"
+        target={`.${this.uniq}`}
+        padding={[2, 7]}
+        borderRadius={5}
+        distance={8}
+        forgiveness={8}
+        arrowSize={10}
+        delay={100}
+        popoverProps={{ $$style: { fontSize: 11 } }}
+        {...tooltipProps}
+      >
+        {tooltip}
+      </Popover>,
+    ]
+
     const surface = (
       <surface
         className={`${this.uniq} ${className || ''}`}
@@ -198,65 +264,16 @@ export default class Surface implements ViewType {
         onClick={onClick}
         {...!wrapElement && passProps}
       >
-        <Glint
-          if={glint && this.theme}
-          color={this.theme.glintColor.style.color}
-          borderRadius={
-            (this.theme.element.style.borderRadius ||
-              this.theme.element.style.borderTopLeftRadius) + 1
-          }
-        />
-        <icon if={icon && !stringIcon} $iconAfter={hasIconAfter}>
-          {icon}
-        </icon>
-        <Icon
-          if={icon && stringIcon}
-          $icon
-          $iconAfter={hasIconAfter}
-          name={icon}
-          size={iconSize}
-          {...iconProps}
-        />
-        <Glow
-          if={glow}
-          full
-          scale={1.4}
-          color={
-            (this.theme && $(this.theme.surface.style.color).lighten(0.2)) ||
-            DEFAULT_GLOW_COLOR
-          }
-          opacity={0.15}
-          {...glowProps}
-        />
-        <element
-          if={!noElement || (noElement && hasChildren(children))}
-          {...wrapElement && passProps}
-          {...elementProps}
-          $hasIconBefore={hasIconBefore}
-          $hasIconAfter={hasIconAfter}
-        >
-          {children}
-        </element>
-        {after || null}
-        <Popover
-          if={tooltip}
-          theme="dark"
-          background
-          openOnHover
-          noHover
-          animation="bounce 150ms"
-          target={`.${this.uniq}`}
-          padding={[2, 7]}
-          borderRadius={5}
-          distance={8}
-          forgiveness={8}
-          arrowSize={10}
-          delay={100}
-          popoverProps={{ $$style: { fontSize: 11 } }}
-          {...tooltipProps}
-        >
-          {tooltip}
-        </Popover>
+        {after &&
+          <wrap>
+            <before>
+              {contents}
+            </before>
+            <after>
+              {after}
+            </after>
+          </wrap>}
+        {!after && contents}
       </surface>
     )
 
@@ -452,6 +469,10 @@ export default class Surface implements ViewType {
       background: hoverBackground,
     }
 
+    // icon
+    const iconStyle = {
+      color: iconColor,
+    }
     const hoverIconStyle = {
       color: props.iconHoverColor || hoverColor,
     }
@@ -515,9 +536,7 @@ export default class Surface implements ViewType {
           borderWidth: 0,
           background: 'transparent',
         }),
-        '& > icon': {
-          color: iconColor,
-        },
+        '& > icon': iconStyle,
         '&:hover > icon': hoverIconStyle,
         '&:hover': hoverStyle,
         // this is just onmousedown

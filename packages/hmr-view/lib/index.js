@@ -44,11 +44,6 @@ function proxyReactComponents(_ref) {
   var _locals2 = _slicedToArray(locals, 1),
       hot = _locals2[0].hot;
 
-  for (var key in Object.keys(components)) {
-    var component = components[key];
-    component.module = module;
-  }
-
   if (!hot || typeof hot.accept !== 'function') {
     throw new Error('locals[0] does not appear to be a `module` object with Hot Module ' + 'replacement API enabled. You should disable react-transform-hmr in ' + 'production by using `env` section in Babel configuration. See the ' + 'example in README: https://github.com/gaearon/react-transform-hmr');
   }
@@ -75,6 +70,9 @@ function proxyReactComponents(_ref) {
         _components$uniqueId$2 = _components$uniqueId.displayName,
         displayName = _components$uniqueId$2 === undefined ? uniqueId : _components$uniqueId$2;
 
+    // attach module to class so it can do shit w it
+
+    ReactClass.module = module;
 
     if (isInFunction) {
       return ReactClass;

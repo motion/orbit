@@ -24,11 +24,6 @@ export default function proxyReactComponents({
   const [module] = locals
   const [{ hot }] = locals
 
-  for (const key in Object.keys(components)) {
-    const component = components[key]
-    component.module = module
-  }
-
   if (!hot || typeof hot.accept !== 'function') {
     throw new Error(
       'locals[0] does not appear to be a `module` object with Hot Module ' +
@@ -57,6 +52,9 @@ export default function proxyReactComponents({
     const { isInFunction = false, displayName = uniqueId } = components[
       uniqueId
     ]
+
+    // attach module to class so it can do shit w it
+    ReactClass.module = module
 
     if (isInFunction) {
       return ReactClass

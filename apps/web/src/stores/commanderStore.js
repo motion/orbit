@@ -1,8 +1,9 @@
 // @flow
-import { watch, store, log, keycode, ShortcutManager } from '@mcro/black'
+import { watch, log, keycode, ShortcutManager } from '@mcro/black'
 import { Document } from '@mcro/models'
 import Router from '~/router'
 import { uniq } from 'lodash'
+import { Plain } from 'slate'
 import App from '~/app'
 import { Observable } from 'rxjs'
 
@@ -26,11 +27,8 @@ const KEYMAP = {
   },
 }
 
-const OPEN = 'commander_is_open'
-const bool = s => s === 'true'
-
 export default class CommanderStore {
-  v = 10
+  v = 11
   mouseMoving = Observable.fromEvent(window, 'mousemove')
     .throttleTime(500)
     .map(event => {
@@ -41,13 +39,19 @@ export default class CommanderStore {
   keyManager = new ShortcutManager(KEYMAP)
   currentDocument = watch(() => Document.get(Router.params.id))
   crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
-  isOpen = false //bool(localStorage.getItem(OPEN)) || false
+  isOpen = false
   value = ''
+  editorState = Plain.deserialize(
+    'This is editable plain text, just like a <textarea>!'
+  )
   path = ''
   highlightIndex = -1
   searchResults: Array<Document> = []
   input: ?HTMLInputElement = null
   renderIndex = 0
+  focused = false
+  active = false
+  PATH_SEPARATOR = PATH_SEPARATOR
 
   start() {
     this.watch(async () => {
@@ -76,13 +80,13 @@ export default class CommanderStore {
 
     this.watch(() => {
       if (this.crumbs && Array.isArray(this.crumbs)) {
-        this.value = this.toPath(this.crumbs)
+        this.setValue(this.toPath(this.crumbs))
       }
     })
 
     this.watch(() => {
       if (Router.path === '/') {
-        this.value = '/'
+        this.setValue('/')
       }
     })
   }
@@ -93,6 +97,7 @@ export default class CommanderStore {
   }
 
   select = (start, end) => {
+    return
     this.input.setSelectionRange(start, end)
   }
 
@@ -152,10 +157,6 @@ export default class CommanderStore {
       this.input.focus()
       this.input.select()
     }
-  }
-
-  get focused() {
-    return document.activeElement.tagName === 'CONTENT' // === this.input
   }
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {
@@ -219,10 +220,15 @@ export default class CommanderStore {
     return path.split(PATH_SEPARATOR)
   }
 
-  onChange = value => {
+  onChange = state => {
     this.highlightIndex = -1
-    this.value = value
+    this.editorState = state
+    this.value = state.document.text
     this.open()
+  }
+
+  setValue = text => {
+    this.editorState = Plain.deserialize(text)
   }
 
   createDocAtPath = async (path: string): Document => {
@@ -286,9 +292,21 @@ export default class CommanderStore {
     docs.map(doc => doc.getTitle()).join(PATH_SEPARATOR)
 
   onFocus = () => {
+    this.focused = true
     this.renderIndex++
-    console.log('focused commanderstore')
     this.open()
+  }
+
+  onBlur = () => {
+    this.focused = false
+    this.active = false
+  }
+
+  onActivate = () => {
+    this.active = true
+    setTimeout(() => {
+      this.focus()
+    })
   }
 
   onEnter = async () => {
@@ -298,7 +316,7 @@ export default class CommanderStore {
 
     // correct attempt to make docs like: doc/is/here (ie: missing the initial /)
     if (this.value.indexOf('/') !== 0 && this.value.indexOf(' ') === -1) {
-      this.value = `/${this.value}`
+      this.setValue(`/${this.value}`)
     }
     this.path = this.value
 
@@ -320,22 +338,24 @@ export default class CommanderStore {
     }
   }
 
-  onKeyDown = (event: KeyboardEvent) => {
+  onKeyDown = (event: KeyboardEvent, data, state) => {
     event.persist()
+
     const code = keycode(event)
-    if (code === 13) {
+
+    if (code === 'enter') {
+      event.preventDefault()
+      this.onEnter()
+      return state
+    }
+
+    if (code === 'esc') {
       event.preventDefault()
       this.close()
+      return state
     }
 
-    if (code === 27) {
-      event.preventDefault()
-    }
-  }
-
-  onKeyUp = (event: KeyboardEvent) => {
-    const text = event.target.innerText
-    if (text !== '(unfocused)') this.onChange(text)
+    return state
   }
 
   onRight = () => {
@@ -345,18 +365,19 @@ export default class CommanderStore {
     const endPath = this.highlightedDocument.title
 
     if (this.typedPath.length === 1) {
-      this.value = endPath
+      this.setValue(endPath)
       return
     }
 
-    this.value =
+    this.setValue(
       this.typedPath.slice(0, -1).join(PATH_SEPARATOR) +
-      PATH_SEPARATOR +
-      endPath
+        PATH_SEPARATOR +
+        endPath
+    )
   }
 
   setPath = async doc => {
-    this.value = this.getPathForDocs(await doc.getCrumbs())
+    this.setValue(this.getPathForDocs(await doc.getCrumbs()))
   }
 
   open = () => {
@@ -365,12 +386,11 @@ export default class CommanderStore {
 
   close = () => {
     this.renderIndex++
-    this.input.blur()
+    // this.input.blur()
     this.setOpen(false)
   }
 
   setOpen = val => {
-    localStorage.setItem(OPEN, val)
     this.isOpen = val
   }
 

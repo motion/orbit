@@ -39,15 +39,9 @@ export default class Header {
           />
         </bar>
         <rest $$row>
-          <SlotFill.Slot name="documentActions">
-            {items =>
-              <actions>
-                {items}
-              </actions>}
-          </SlotFill.Slot>
           <SlotFill.Slot name="actions">
             {items =>
-              <actions>
+              <actions key={Math.random()}>
                 {items}
                 <Button
                   chromeless

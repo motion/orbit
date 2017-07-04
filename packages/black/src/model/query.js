@@ -1,20 +1,18 @@
 // @flow
-// import { RxQuery } from 'rxdb'
-import { observable, autorun } from 'mobx'
-import debug from 'debug'
+import { observable, isObservable } from 'mobx'
 import hashsum from 'hash-sum'
-
-const out = debug('query')
 
 // TODO: instanceof RxQuery checks
 
 // subscribe-aware helpers
 // @query value wrapper
-function valueWrap(info, valueGet: Function) {
+function valueWrap(it, valueGet: Function) {
   const result = observable.shallowBox(undefined)
-  let query = valueGet() || {}
+  let query = valueGet()
+  // TODO can probably handle this here
+  // const notConnected = query && query.isntConnected
 
-  out('query', info.model, info.property, info.args, query.mquery, query)
+  // const INFO = `@query ${it.model}.${it.property}(${it.args.join(', ')}) => `
 
   // subscribe and update
   let subscriber = null
@@ -24,17 +22,18 @@ function valueWrap(info, valueGet: Function) {
     }
   }
 
-  // this automatically re-runs the susbcription if it has observables
-  const stopAutorun = autorun(() => {
-    finishSubscribe()
-    query = valueGet() || {}
-    if (query.$) {
-      // sub to values
-      subscriber = query.$.subscribe(value => {
+  // this automatically re-runs queries if the use mobx observables, magical
+  if (query && query.$) {
+    // sub to values
+    subscriber = query.$.subscribe(value => {
+      // log(INFO, '.subscribe( => ', value)
+      if (isObservable(value)) {
+        result.set(value)
+      } else {
         result.set(observable.shallowBox(value))
-      })
-    }
-  })
+      }
+    })
+  }
 
   // autosync query
   let stopSync = null
@@ -80,14 +79,11 @@ function valueWrap(info, valueGet: Function) {
       },
     },
     $: {
-      value: query.$,
+      value: query && query.$,
     },
     current: {
       get: () => {
-        // ok, i know, i know, you're looking at me with that fuggin look
-        // look. this is real strange. but you try returning a single Document.get()
-        // and see if the double wrap isn't the only way you get it working.
-        // i dare you
+        // yea i know this is bad but it works for now
         return result.get() && result.get().get()
       },
     },
@@ -97,7 +93,7 @@ function valueWrap(info, valueGet: Function) {
     dispose: {
       value() {
         finishSubscribe()
-        stopAutorun()
+        // stopAutorun()
         if (stopSync) {
           stopSync()
         }

@@ -1,4 +1,5 @@
 // @flow
+import Breadcrumbs from './layout/breadcrumbs'
 import React from 'react'
 import * as Constants from '~/constants'
 import { view, Shortcuts } from '@mcro/black'
@@ -56,7 +57,7 @@ export default class Root {
   }
 
   renderApp() {
-    const { layoutStore } = this.props
+    const { layoutStore, commanderStore } = this.props
     const CurrentPage = Router.activeView || NotFound
     const { showOnboard } = layoutStore
 
@@ -67,19 +68,11 @@ export default class Root {
         <LayoutWrap layoutStore={layoutStore}>
           <Commander.Results />
           <Header layoutStore={layoutStore} />
-          <SlotFill.Slot name="crumbs">
-            {breadcrumbs => {
-              return (
-                <crumbs>
-                  {breadcrumbs}
-                </crumbs>
-              )
-            }}
-          </SlotFill.Slot>
+          <Breadcrumbs />
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-            $hide={layoutStore.isCommanderOpen}
+            $hide={commanderStore.isOpen}
           >
             <CurrentPage key={Router.key} {...Router.params} />
           </content>

@@ -1,10 +1,8 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { SlotFill } from '@mcro/ui'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
-import Breadcrumbs from './breadcrumbs'
 import Children from './children'
 
 type Props = {
@@ -28,24 +26,13 @@ export default class DocumentView {
     if (!inline) store.crumbs = true
   }
 
-  render({
-    id,
-    editorProps,
-    inline,
-    showCrumbs,
-    showChildren,
-    readOnly,
-    store,
-  }: Props) {
+  render({ editorProps, inline, showChildren, readOnly, store }: Props) {
     if (!store.document) {
       return <loading />
     }
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <SlotFill.Fill if={showCrumbs} name="crumbs">
-          <Breadcrumbs document={store.document} />
-        </SlotFill.Fill>
         <content $$row>
           <Editor
             readOnly={readOnly}

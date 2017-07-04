@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
 import { view, watch } from '@mcro/black'
-import { flatMap } from 'lodash'
 import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
 import Router from '~/router'
@@ -70,7 +69,7 @@ export default class Projects {
                         type="checkbox"
                         checked={archive}
                       />{' '}
-                      <span $$ellipse>{text}</span>
+                      <UI.Text ellipse>{text}</UI.Text>
                     </task>
                   )}
                 </tasks>

@@ -2,6 +2,7 @@
 import { fromStream, fromPromise } from 'mobx-utils'
 import { Observable } from 'rxjs'
 import {
+  observable,
   action,
   isObservable,
   extendShallowObservable,
@@ -9,7 +10,12 @@ import {
   autorun,
 } from 'mobx'
 
-export default function automagical(options: Object) {
+const isFunction = val => typeof val === 'function'
+const isQuery = val => val && val.$isQuery
+const isRxObservable = val => val instanceof Observable
+const isPromise = val => val instanceof Promise
+
+export default function automagical() {
   return {
     name: 'automagical',
     decorator: (Klass: Class<any> | Function) => {
@@ -33,13 +39,12 @@ export default function automagical(options: Object) {
   }
 }
 
-const isAutorun = (val: any) => val && val.autorunme
+const isWatch = (val: any) => val && val.autorunme
 const FILTER_KEYS = {
   dispose: true,
   constructor: true,
   start: true,
   stop: true,
-  stat: true, // ?
   react: true,
   ref: true,
   setInterval: true,
@@ -60,6 +65,31 @@ const FILTER_KEYS = {
 function observableRxToObservableMobx(obj: Object, method: string) {
   extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
   return obj[method]
+}
+
+function wrapQuery(obj, method, val) {
+  Object.defineProperty(obj, method, {
+    get() {
+      return val.current
+    },
+  })
+  obj.subscriptions.add(val)
+  return val
+}
+
+function wrapPromise(obj, method, val) {
+  const observable = fromPromise(val)
+  Object.defineProperty(obj, method, {
+    get() {
+      return observable.value
+    },
+  })
+}
+
+function wrapRxObservable(obj, method) {
+  const observable = observableRxToObservableMobx(obj, method)
+  obj.subscriptions.add(observable)
+  return observable
 }
 
 function automagic(obj: Object) {
@@ -83,18 +113,22 @@ function automagic(obj: Object) {
 
   // mutate objects to be magical
   for (const method of Object.keys(descriptors)) {
-    automagicalValue(obj, method, descriptors)
+    automagicalValue(obj, method, { descriptors })
   }
 }
 
 // * => Mobx
-function automagicalValue(obj: Object, method: string, descriptors = {}) {
+function automagicalValue(
+  obj: Object,
+  method: string,
+  { value, descriptors, extendPlainValues = true, extendFunctions = true } = {}
+) {
   if (/^(\$mobx|subscriptions|props|\_.*)$/.test(method)) {
     return
   }
 
   // get => @computed
-  const descriptor = descriptors[method]
+  const descriptor = descriptors && descriptors[method]
   if (descriptor && !!descriptor.get) {
     const getter = {
       [method]: null,
@@ -105,77 +139,83 @@ function automagicalValue(obj: Object, method: string, descriptors = {}) {
   }
 
   // not get, we can check value
-  let val = obj[method]
-
-  // watch() => autorun(automagical(value))
-  if (isAutorun(val)) {
-    // @observable.ref
-    extendShallowObservable(obj, { [method]: null })
-    let previous
-    const stop = autorun(() => {
-      obj[method] = val.call(obj)
-      // console.log(`watch.autorun ${obj.name || obj.constructor.name}.${method}`)
-      // auto dispose the previous thing
-      if (previous && previous !== null) {
-        if (previous.dispose) {
-          previous.dispose()
-        }
-      }
-      previous = automagicalValue(obj, method)
-      // need to run this to ensure it wraps autorun value magically
-    })
-    obj.subscriptions.add(() => {
-      previous && previous.dipose && previous.dispose()
-      stop()
-    })
-    return
-  }
-
-  // Promise => Mobx
-  if (val instanceof Promise) {
-    const observable = fromPromise(val)
-    Object.defineProperty(obj, method, {
-      get() {
-        return observable.value
-      },
-    })
-    // TODO: make a query that contains a promise work
-    return
-  }
-
-  const isFunction = typeof val === 'function'
-  const isQuery = val && val.$isQuery
-
-  // @query => Mobx
-  if (isQuery) {
-    Object.defineProperty(obj, method, {
-      get() {
-        return val.current
-      },
-    })
-    obj.subscriptions.add(val)
-    return val
-  }
+  let val = value || obj[method]
 
   // already Mobx observable, let it be yo
   if (isObservable(val)) {
-    return null
+    return val
   }
-
+  // watch() => autorun(automagical(value))
+  if (isWatch(val)) {
+    return wrapWatch(obj, method, val)
+  }
+  // Promise => Mobx
+  if (isPromise(val)) {
+    return wrapPromise(obj, method, val)
+  }
+  // @query => Mobx
+  if (isQuery(val)) {
+    return wrapQuery(obj, method, val)
+  }
   // Rx => mobx
-  if (val instanceof Observable) {
-    const observable = observableRxToObservableMobx(obj, method)
-    obj.subscriptions.add(observable)
-    return observable
+  if (isRxObservable(val)) {
+    return wrapRxObservable(obj, method)
   }
-
-  if (isFunction) {
+  // else
+  if (extendFunctions && isFunction(val)) {
     // @action
     obj[method] = action(`${obj.constructor.name}.${method}`, obj[method])
-  } else {
-    // @observable.ref
+    return obj[method]
+  }
+  // @observable.ref
+  if (extendPlainValues) {
     extendShallowObservable(obj, { [method]: val })
   }
+  return val
+}
 
-  return null
+function wrapWatch(obj, method, val) {
+  let current = null
+  const stop = autorun(() => {
+    // auto dispose the previous thing
+    if (current && current !== null && current.dispose) {
+      current.dispose()
+    }
+    current = thingToObservable(val.call(obj))
+  })
+  Object.defineProperty(obj, method, {
+    get() {
+      if (!current) {
+        return current
+      }
+      if (current.get) {
+        const next = current.get()
+        return next && typeof next.get === 'function' ? next.get() : next
+      }
+      if (current.value) {
+        return current.value
+      }
+      return current
+    },
+  })
+  obj.subscriptions.add(() => {
+    if (current && current !== null && current.dispose) {
+      current.dispose()
+    }
+    stop()
+  })
+  return current
+}
+
+function thingToObservable(thing) {
+  if (isPromise(thing)) {
+    return fromPromise(thing)
+  }
+  if (isQuery(thing)) {
+    return thing.observable
+  }
+  if (isRxObservable(thing)) {
+    return fromStream(thing)
+  }
+  return thing
 }

@@ -18,7 +18,7 @@ export default function attacher(options) {
               {...this.props}
               {...pickBy(
                 this.context.stores,
-                (value, key) => key.indexOf(options.names) >= 0
+                (value, key) => options.names.indexOf(key) >= 0
               )}
             />
           )

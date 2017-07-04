@@ -4,8 +4,6 @@ import { Editor } from 'slate'
 import { view } from '@mcro/black'
 import EditorStore from './stores/editorStore'
 import SelectBar from './views/selectBar'
-import Bar from './views/bar'
-import { SlotFill } from '@mcro/ui'
 import type CommanderStore from '~/stores/commanderStore'
 
 export { Raw } from 'slate'
@@ -59,10 +57,6 @@ export default class EditorView {
         onMouseUp={this.onDocumentMouseUp}
         $fullPage={!editorStore.inline}
       >
-        <Bar editorStore={editorStore} />
-        <SlotFill.Fill if={false && showToolbar} name="documentActions">
-          <Bar editorStore={editorStore} />
-        </SlotFill.Fill>
         <Editor
           if={editorStore.state}
           state={editorStore.state}

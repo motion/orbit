@@ -55,7 +55,7 @@ const decorations = ({ mobx, ui, autobind, magic } = {}) => [
   reactRenderArgs,
   mobx && observer,
   // gloss after mobx
-  options => ({ decorator: glossDecorator }),
+  () => ({ decorator: glossDecorator }),
   magic && automagical,
   // autobind last because it seals things
   autobind && autobound,
@@ -87,6 +87,6 @@ view.basics = decorator([
   opts => ({ decorator: glossDecorator }),
 ])
 view.provide = stores => base({ stores, context: true })
-view.attach = names => decorator([[attach, { names }]])
+view.attach = (...names) => decorator([[attach, { names }]])
 
 export default view

@@ -210,7 +210,7 @@ export default class Surface implements ViewType {
           full
           scale={1.2}
           color={(this.theme && this.theme.surface.style.color) || [0, 0, 0]}
-          opacity={0.06}
+          opacity={0.08}
           {...glowProps}
         />
         <element

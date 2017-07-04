@@ -117,10 +117,13 @@ export default class Model {
       new Proxy(
         {
           exec: () => Promise.resolve(false),
-          isProxy: true,
+          isntConnected: true,
         },
         {
           get(target: Object | Class, name: string) {
+            if (target[name]) {
+              return target[name]
+            }
             if (name === '$') {
               const parent = {
                 @observable subscribe: a => b => b,
@@ -219,7 +222,7 @@ export default class Model {
   async dispose() {
     this.subscriptions.dispose()
     if (this._collection) {
-      await this._collection.remove()
+      this._collection.destroy()
     }
   }
 

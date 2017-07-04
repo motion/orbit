@@ -17,6 +17,7 @@ export default ({ sync, type, ...props }) => {
       sizeFont
       sizeRadius
       sizeHeight
+      sizePadding
       flex
       borderWidth={1}
       wrapElement

@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
 import FakeAvatar from './fake/fakeAvatar'
 import Text from './text'
-import Surface from './surface'
+import SizedSurface from './sizedSurface'
 
 export type ItemProps = {
   after?: React$Element<any>,
@@ -87,7 +87,9 @@ export default class ListItem {
         }
 
     return (
-      <Surface
+      <SizedSurface
+        sizeHeight
+        sizePadding
         $item
         {...radiusProps}
         tagName="listitem"
@@ -97,8 +99,6 @@ export default class ListItem {
           borderWidth,
           theme ? theme.base.borderColor : 'transparent',
         ]}
-        overflow="hidden"
-        padding={[0, 8]}
         glow
         row
         onClick={onClick}
@@ -111,7 +111,6 @@ export default class ListItem {
         }}
         style={{
           position: 'relative',
-          overflow: 'hidden',
           ...style,
         }}
         {...props}
@@ -156,7 +155,7 @@ export default class ListItem {
               )
             : children}
         </children>
-      </Surface>
+      </SizedSurface>
     )
   }
 
@@ -184,7 +183,6 @@ export default class ListItem {
     prop: {
       flex: 1,
       maxWidth: '100%',
-      overflow: 'hidden',
     },
     date: {
       userSelect: 'none',
@@ -203,14 +201,13 @@ export default class ListItem {
       margin: [0, 10, 0, 0],
     },
     after: {
-      margin: ['auto', 0, 'auto', 5],
+      margin: ['auto', -5, 'auto', 5],
     },
     before: {
       margin: ['auto', 5, 'auto', 0],
     },
     children: {
       flex: 1,
-      overflowY: 'scroll',
     },
   }
 }

@@ -11,31 +11,21 @@ export default class SizedSurface extends React.Component {
 
   render() {
     const { props } = this
-    const { sizeHeight, sizeRadius, sizeFont, ...rest } = props
+    const { sizeHeight, sizeRadius, sizeFont, sizePadding, ...rest } = props
+
     // sizes
-    const height =
-      typeof props.height !== 'undefined'
-        ? props.height
-        : (sizeHeight && props.size * LINE_HEIGHT) || null
-    const fontSize =
-      typeof props.fontSize !== 'undefined'
-        ? props.fontSize
-        : (sizeFont && height * 0.45) || null
-    const borderRadius =
-      typeof props.borderRadius !== 'undefined'
-        ? props.borderRadius
-        : (sizeRadius && height / 4) || null
+    const height = sizeHeight && props.size * LINE_HEIGHT
+    const fontSize = sizeFont && height * 0.45
+    const borderRadius = sizeRadius && height / 4
+    const padding = sizePadding && (props.wrapElement ? 0 : [0, height / 3.4])
 
     const pass = {
       borderRadius,
       height,
       fontSize,
-      padding:
-        typeof props.padding !== 'undefined'
-          ? props.padding
-          : props.wrapElement ? 0 : [0, height / 3.4],
+      padding,
     }
 
-    return <Surface {...rest} {...pass} />
+    return <Surface {...pass} {...rest} />
   }
 }

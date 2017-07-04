@@ -44,11 +44,10 @@ export default class UserBar {
             background
             elevation={3}
             width={150}
-            padding={[3, 2]}
-            borderRadius={8}
+            padding={3}
+            borderRadius={6}
             itemProps={{
               height: 32,
-              margin: [0, 0, 2],
               fontSize: 14,
               borderWidth: 0,
               borderRadius: 8,
@@ -59,7 +58,7 @@ export default class UserBar {
                 primary: User.name,
                 after: (
                   <UI.Button
-                    chromeless
+                    size={0.8}
                     icon="power"
                     onClick={() => User.logout()}
                   />

@@ -8,6 +8,7 @@ const Button = injectTheme(({ badge, children, theme, ...props }) =>
     sizeRadius
     sizeFont
     sizeHeight
+    sizePadding
     borderWidth={1}
     glint
     row

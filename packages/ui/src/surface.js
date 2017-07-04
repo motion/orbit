@@ -198,7 +198,7 @@ export default class Surface implements ViewType {
         color={this.theme.glintColor.style.color}
         borderRadius={
           (this.theme.element.style.borderRadius ||
-            this.theme.element.style.borderTopLeftRadius) + 1
+            this.theme.element.style.borderTopLeftRadius) - 1
         }
       />,
       <icon key={1} if={icon && !stringIcon} $iconAfter={hasIconAfter}>

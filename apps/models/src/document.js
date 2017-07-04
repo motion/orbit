@@ -148,7 +148,8 @@ export type DocumentType = typeof methods & {
   private: boolean,
   slug: str,
   draft?: boolean,
-  timestamps: true,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export class DocumentModel extends Model {

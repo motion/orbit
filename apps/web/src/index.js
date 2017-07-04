@@ -9,7 +9,9 @@ import * as Constants from './constants'
 // to start superlogin connection immediately
 import '@mcro/models/lib/user'
 
-if (!Constants.IS_PROD) {
+if (Constants.IS_PROD) {
+  require('./helpers/installProd')
+} else {
   require('./helpers/installDevTools')
 }
 

@@ -18,6 +18,7 @@ export default class HoverGlow {
     children?: Function,
     blur: number,
     gradient?: boolean,
+    borderRadius?: number,
   }
 
   static defaultProps = {
@@ -29,7 +30,6 @@ export default class HoverGlow {
     scale: 1,
     opacity: 0.025,
     boundPct: null,
-    borderRadius: 100,
     offsetTop: 0,
     offsetLeft: 0,
     clickable: false,
@@ -114,11 +114,11 @@ export default class HoverGlow {
     full,
     scale,
     color,
+    borderRadius,
     zIndex,
     resist,
     opacity,
     inverse,
-    borderRadius,
     offsetTop,
     offsetLeft,
     width: propWidth,
@@ -128,13 +128,13 @@ export default class HoverGlow {
     clickScale,
     transition,
     parent,
-    itemProps,
     children,
-    style,
     behind,
     background,
     gradient,
     blur,
+    style,
+    ...props
   }) {
     const setRootRef = this.ref('rootRef').set
     const { track } = this.state
@@ -180,7 +180,7 @@ export default class HoverGlow {
     const extraScale = clicked ? clickScale : 1
 
     const glow = (
-      <overlay ref={setRootRef} style={style} {...itemProps}>
+      <overlay ref={setRootRef} style={{ ...style, borderRadius }} {...props}>
         <glow
           style={{
             zIndex: behind ? -1 : 0,
@@ -234,10 +234,10 @@ export default class HoverGlow {
   static style = {
     overlay: {
       position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+      top: 1,
+      left: 1,
+      right: 1,
+      bottom: 1,
       transition: 'opacity ease-in 50ms',
       pointerEvents: 'none',
       '&:active': {

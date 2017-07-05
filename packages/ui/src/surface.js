@@ -118,7 +118,7 @@ export default class Surface implements ViewType {
     borderColor,
     borderLeft,
     borderLeftRadius,
-    borderRadius,
+    borderRadius: _borderRadius,
     borderRight,
     borderRightRadius,
     borderStyle,
@@ -191,15 +191,16 @@ export default class Surface implements ViewType {
       ...props,
     }
 
+    const borderRadius =
+      this.theme.element.style.borderRadius ||
+      this.theme.element.style.borderTopLeftRadius
+
     const contents = [
       <Glint
         key={0}
         if={glint && this.theme}
         color={this.theme.glintColor.style.color}
-        borderRadius={
-          (this.theme.element.style.borderRadius ||
-            this.theme.element.style.borderTopLeftRadius) - 1
-        }
+        borderRadius={borderRadius - 1}
       />,
       <icon key={1} if={icon && !stringIcon} $iconAfter={hasIconAfter}>
         {icon}
@@ -223,6 +224,7 @@ export default class Surface implements ViewType {
           DEFAULT_GLOW_COLOR
         }
         opacity={0.15}
+        borderRadius={borderRadius - 2}
         {...glowProps}
       />,
       <element

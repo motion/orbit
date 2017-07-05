@@ -1,5 +1,10 @@
+import JSS from 'jss'
 import aphrodite from 'aphrodite-jss'
-import preset from 'jss-preset-default'
-import { create } from 'jss'
+import defaultPreset from 'jss-preset-default'
 
-export const { css, StyleSheet } = aphrodite(create(preset()))
+console.log(defaultPreset())
+JSS.use(defaultPreset())
+
+export const jss = JSS
+
+export const { css, StyleSheet } = aphrodite(jss)

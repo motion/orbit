@@ -20,6 +20,7 @@ export default class App implements AppStore {
   }
   mountedVersion = 0
   stores = null
+  views = null
 
   constructor({ config, models }) {
     this.config = config

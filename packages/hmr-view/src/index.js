@@ -48,7 +48,11 @@ export default function proxyReactComponents({
     })
   }
 
-  const forceUpdate = getForceUpdate(window.React)
+  const forceUpdater = getForceUpdate(window.React)
+  const forceUpdate = instance => {
+    window.App && window.App.clearErrors && window.App.clearErrors()
+    return forceUpdater(instance)
+  }
   window.forceUpdate = forceUpdate
 
   return function wrapWithProxy(ReactClass, uniqueId) {

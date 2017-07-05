@@ -16,7 +16,7 @@ import addContext from '@mcro/decor/lib/plugins/react/addContext'
 import attach from '@mcro/decor/lib/plugins/react/attach'
 import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
 import { storeOptions } from './store'
-import { decorator as glossDecorator } from './gloss'
+import { createElement, decorator as glossDecorator } from './gloss'
 import type { Glossy } from './gloss'
 
 export type ViewClass = ExtendsReact &
@@ -49,6 +49,20 @@ const catchesErrors = () => ({
         GOT YOU A ERROR THERE ${error.message} ${error.stack}
       `)
       this.setState({ error }) // to work
+      if (this.render && !this.render.handlesErrors) {
+        const ogRender = this.render.bind(this)
+        this.render = function(...args) {
+          if (this.state && this.state.errors) {
+            return createElement(
+              'div',
+              { $$fullscreen: true, style: { background: 'red' } },
+              JSON.stringify(this.state.errors)
+            )
+          }
+          return ogRender(...args)
+        }
+        this.render.handlesErrors = true
+      }
     },
   },
 })

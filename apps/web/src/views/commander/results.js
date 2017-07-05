@@ -11,6 +11,8 @@ export default class CommanderResults {
   render({ commanderStore: cmdr }) {
     const docs = cmdr.peek || []
 
+    // window.x()
+
     const getMatch = (doc, index) =>
       <match
         $highlight={index === cmdr.highlightIndex}

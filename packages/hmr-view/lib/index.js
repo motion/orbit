@@ -63,7 +63,11 @@ function proxyReactComponents(_ref) {
     });
   }
 
-  var forceUpdate = (0, _reactProxy.getForceUpdate)(_window2.default.React);
+  var forceUpdater = (0, _reactProxy.getForceUpdate)(_window2.default.React);
+  var forceUpdate = function forceUpdate(instance) {
+    _window2.default.App && _window2.default.App.clearErrors && _window2.default.App.clearErrors();
+    return forceUpdater(instance);
+  };
   _window2.default.forceUpdate = forceUpdate;
 
   return function wrapWithProxy(ReactClass, uniqueId) {

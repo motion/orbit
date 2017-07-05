@@ -13,7 +13,8 @@ export default class SelectBar {
         open
         noArrow
         left={selection.mouseUp.x}
-        top={selection.mouseUp.y + 10}
+        top={selection.mouseUp.y + 15}
+        swayX
         escapable
         theme="dark"
         background="transparent"

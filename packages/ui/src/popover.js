@@ -52,6 +52,8 @@ export type Props = {
   showForgiveness?: boolean,
   // padding from edge of window
   edgePadding: number,
+  // sway towards mouse
+  swayX?: boolean,
 }
 
 const INVERSE = {
@@ -117,7 +119,7 @@ export default class Popover {
   }
 
   componentDidMount() {
-    const { openOnClick, open, escapable } = this.curProps
+    const { openOnClick, open, escapable, swayX } = this.curProps
 
     this.on(window, 'resize', debounce(() => this.setPosition(), 32))
     this.setTarget()
@@ -143,9 +145,33 @@ export default class Popover {
     this.unmounted = true
   }
 
+  swayEvent = null
+
+  startSwaying = () => {
+    if (this.props.swayX) {
+      this.swayEvent = this.on(
+        window,
+        'mousemove',
+        throttle(event => {
+          if (this.showPopover) {
+            event.persist()
+            console.log(event)
+          }
+        }, 32)
+      )
+    }
+  }
+
+  stopSwaying = () => {
+    if (this.swayEvent) {
+      this.swayEvent.dispose()
+    }
+  }
+
   open = () => {
     this.setPosition(() => {
       this.setState({ isOpen: true }, () => {
+        this.startSwaying()
         if (this.curProps.onOpen) {
           this.curProps.onOpen()
         }
@@ -155,6 +181,7 @@ export default class Popover {
 
   close = (): Promise => {
     return new Promise(resolve => {
+      this.stopSwaying()
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {
           this.curProps.onClose()
@@ -528,6 +555,18 @@ export default class Popover {
     }
   }
 
+  get showPopover() {
+    const { isOpen } = this.state
+    const { openOnHover, open, openOnClick } = this.props
+    const openUndef = typeof open === 'undefined'
+    return (
+      open ||
+      isOpen ||
+      (openUndef &&
+        ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
+    )
+  }
+
   render({
     adjust,
     animation,
@@ -554,6 +593,7 @@ export default class Popover {
     shadow,
     showForgiveness,
     style,
+    swayX,
     target,
     theme,
     top: _top,
@@ -572,13 +612,7 @@ export default class Popover {
       maxHeight,
       direction,
     } = this.state
-
-    const openUndef = typeof open === 'undefined'
-    const showPopover =
-      open ||
-      isOpen ||
-      (openUndef &&
-        ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
+    const { showPopover } = this
 
     const childProps = {
       getRef: this.ref('targetRef').set,

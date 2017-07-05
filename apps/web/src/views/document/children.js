@@ -120,8 +120,8 @@ export default class Children {
         />
         <FlipMove>
           {items.map(doc =>
-            <UI.TiltGlow width={200} height={100} key={doc._id}>
-              <DocItem inline ref={node => this.docRef(node, i)} doc={doc} />
+            <UI.TiltGlow width={200} height={200} key={doc._id}>
+              <DocItem inline doc={doc} />
             </UI.TiltGlow>
           )}
         </FlipMove>

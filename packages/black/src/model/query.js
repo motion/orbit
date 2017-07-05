@@ -27,6 +27,9 @@ function valueWrap(it, valueGet: Function) {
   let stopAutorun
   if (query && query.$) {
     stopAutorun = autorun(() => {
+      console.log(
+        'autorunning, probably not necessary but checking to see if bugfixed'
+      )
       finishSubscribe()
       query = valueGet()
       if (query.$) {

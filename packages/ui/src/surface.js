@@ -221,6 +221,7 @@ export default class Surface implements ViewType {
         if={glow}
         full
         scale={1.3}
+        show={hovered}
         color={
           (this.theme && $(this.theme.surface.style.color).lighten(0.2)) ||
           DEFAULT_GLOW_COLOR
@@ -492,7 +493,6 @@ export default class Surface implements ViewType {
         fontSize: props.fontSize,
         lineHeight: 'inherit',
       },
-      hover: hoverStyle,
       surface: {
         color,
         overflow: props.overflow || props.glow ? 'hidden' : props.overflow,
@@ -534,6 +534,7 @@ export default class Surface implements ViewType {
           '&:active': theme.active,
           '&:focus': theme.focus,
         }),
+        ...(props.hovered && hoverStyle),
         ...(props.inline && self.constructor.surfaceStyle),
         ...(props.disabled && self.constructor.disabledStyle),
         ...(props.dim && self.constructor.dimStyle),
@@ -542,7 +543,7 @@ export default class Surface implements ViewType {
           borderWidth: 0,
           background: 'transparent',
         }),
-        '& > icon': iconStyle,
+        '& > icon': props.hovered ? hoverIconStyle : iconStyle,
         '&:hover > icon': hoverIconStyle,
         '&:hover': hoverStyle,
         // this is just onmousedown

@@ -20,7 +20,11 @@ export default class UserBar {
           background
           distance={10}
           forgiveness={16}
-          target={<UI.Button theme="dark">Status | 👋</UI.Button>}
+          target={
+            <UI.Button glowProps={{ show: true }} theme="dark">
+              Status | 👋
+            </UI.Button>
+          }
           openOnHover
           closeOnClick
         >

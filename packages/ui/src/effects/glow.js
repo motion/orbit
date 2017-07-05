@@ -19,6 +19,7 @@ export default class HoverGlow {
     blur: number,
     gradient?: boolean,
     borderRadius?: number,
+    show?: boolean,
   }
 
   static defaultProps = {
@@ -136,12 +137,13 @@ export default class HoverGlow {
     background,
     gradient,
     blur,
+    show,
     ...props
   }) {
     const setRootRef = this.ref('rootRef').set
     const { track } = this.state
 
-    if (!transition && ((!track && !children) || !track)) {
+    if (!show && !transition && ((!track && !children) || !track)) {
       return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
@@ -152,7 +154,11 @@ export default class HoverGlow {
       width = this.bounds.width
       height = this.bounds.height
     }
-    const { position: { x, y }, clicked } = this.state
+
+    const { position, clicked } = this.state
+    const x = position.x || 0
+    const y = position.y || 0
+
     // resists being moved (towards center)
     const resisted = coord => {
       if (resist === 0) return coord
@@ -206,7 +212,7 @@ export default class HoverGlow {
             width={width}
             style={{
               transform: `scale(${scale * extraScale}) translateZ(0px)`,
-              opacity: track ? opacity : 0,
+              opacity: track || show ? opacity : 0,
               width,
               height,
               marginLeft: -width / 2,

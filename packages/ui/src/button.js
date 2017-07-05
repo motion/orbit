@@ -2,7 +2,7 @@ import React from 'react'
 import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
 
-const Button = injectTheme(({ badge, children, theme, ...props }) =>
+const Button = injectTheme(({ badge, children, theme, glowProps, ...props }) =>
   <SizedSurface
     tagName="button"
     sizeRadius
@@ -16,6 +16,7 @@ const Button = injectTheme(({ badge, children, theme, ...props }) =>
     glow
     glowProps={{
       scale: 2,
+      ...glowProps,
     }}
     background={theme.base.buttonBackground}
     {...props}

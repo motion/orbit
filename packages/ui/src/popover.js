@@ -614,28 +614,24 @@ export default class Popover {
     } = this.state
     const { showPopover } = this
 
-    const childProps = {
-      getRef: this.ref('targetRef').set,
-    }
-
-    if (passActive) {
-      childProps.active = isOpen && !closing
-    }
-
-    const wellAdjustedChildren = children => {
-      return React.Children.map(children, child => {
-        if (child && child.type && child.type.acceptsHovered) {
-          return React.cloneElement(child, { hovered: showPopover })
-        }
-        return child
-      })
+    const controlledTarget = target => {
+      const targetProps = {
+        getRef: this.ref('targetRef').set,
+      }
+      if (passActive) {
+        targetProps.active = isOpen && !closing
+      }
+      if (target.type.acceptsHovered) {
+        targetProps.hovered = showPopover
+        log('hovered', showPopover)
+      }
+      return React.cloneElement(target, targetProps)
     }
 
     return (
       <Theme name={theme}>
         <root>
-          {React.isValidElement(target) &&
-            React.cloneElement(target, childProps)}
+          {React.isValidElement(target) && controlledTarget(target)}
           <Portal isOpened>
             <container
               data-towards={direction}
@@ -679,9 +675,7 @@ export default class Popover {
                   />
                 </arrowContain>
                 <Surface {...props}>
-                  {wellAdjustedChildren(
-                    typeof children === 'function' ? children(isOpen) : children
-                  )}
+                  {typeof children === 'function' ? children(isOpen) : children}
                 </Surface>
               </popover>
             </container>

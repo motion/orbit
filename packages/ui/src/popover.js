@@ -623,7 +623,6 @@ export default class Popover {
       }
       if (target.type.acceptsHovered) {
         targetProps.hovered = showPopover
-        log('hovered', showPopover)
       }
       return React.cloneElement(target, targetProps)
     }

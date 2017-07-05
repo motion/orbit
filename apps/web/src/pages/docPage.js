@@ -78,33 +78,6 @@ export default class DocumentPage {
             />
           </UI.Segment>
         </Page.Actions>
-
-        <UI.Segment itemProps={itemProps}>
-          <UI.Button icon="dot" />
-          <UI.Button icon="fav31" highlight={!!starred} />
-        </UI.Segment>
-
-        <UI.Popover openOnClick width={160} target={`.${this.uniq}`}>
-          <UI.List
-            theme="light"
-            elevation={3}
-            borderRadius={8}
-            items={[
-              { icon: 'share', primary: 'Share', onClick: () => {} },
-              {
-                icon: doc.private ? 'lock' : 'open',
-                primary: 'Locked',
-                onClick: doc.togglePrivate,
-              },
-              {
-                icon: doc.private ? 'eye' : 'closed',
-                primary: 'Private',
-                onClick: doc.togglePrivate,
-              },
-            ]}
-          />
-        </UI.Popover>
-
         <Breadcrumbs />
         <DocumentView
           if={!docStore.showInbox}

@@ -66,6 +66,9 @@ function proxyReactComponents(_ref) {
   var forceUpdater = (0, _reactProxy.getForceUpdate)(_window2.default.React);
   var forceUpdate = function forceUpdate(instance) {
     _window2.default.App && _window2.default.App.clearErrors && _window2.default.App.clearErrors();
+    console.log('forceupate', instance);
+    instance.module = module;
+    instance.clearErrors && instance.clearErrors();
     return forceUpdater(instance);
   };
   _window2.default.forceUpdate = forceUpdate;
@@ -78,8 +81,7 @@ function proxyReactComponents(_ref) {
         displayName = _components$uniqueId$2 === undefined ? uniqueId : _components$uniqueId$2;
 
     // attach module to class so it can do shit w it
-
-    ReactClass.module = module;
+    // ReactClass.module = module
 
     if (isInFunction) {
       return ReactClass;

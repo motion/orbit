@@ -80,7 +80,7 @@ export default View => {
           isOpen &&
           <UI.List
             background
-            elevation={2}
+            elevation={1}
             items={[
               {
                 primary: 'Doc List',

@@ -7,7 +7,7 @@ import DocumentView from '~/views/document'
 
 @view({
   store: class {
-    // document = Document.create({}, true)
+    document = Document.create({}, true)
   },
 })
 export default class UserBar {
@@ -20,11 +20,7 @@ export default class UserBar {
           background
           distance={10}
           forgiveness={16}
-          target={
-            <UI.Button glowProps={{ show: true }} theme="dark">
-              Status | 👋
-            </UI.Button>
-          }
+          target={<UI.Button theme="dark">Status | 👋</UI.Button>}
           openOnHover
           closeOnClick
         >

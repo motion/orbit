@@ -4,13 +4,13 @@ import { Observable } from 'rxjs'
 import {
   observable,
   action,
-  isObservable,
   extendShallowObservable,
   extendObservable,
   toJS,
   autorun,
 } from 'mobx'
 
+const isObservable = val => val && val.$mobx
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery
 const isRxObservable = val => val instanceof Observable

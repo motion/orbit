@@ -33,6 +33,8 @@ export type ViewDec = Function & {
   attach(...stores: Array<string>): ViewClass,
 }
 
+export type DecoratorType = () => ViewClass | (() => () => ViewClass)
+
 const uiContext = [
   addContext,
   {
@@ -42,34 +44,8 @@ const uiContext = [
   },
 ]
 
-const catchesErrors = () => ({
-  mixin: {
-    unstable_handleError(error) {
-      console.error(`
-        GOT YOU A ERROR THERE ${error.message} ${error.stack}
-      `)
-      this.setState({ error }) // to work
-      if (this.render && !this.render.handlesErrors) {
-        const ogRender = this.render.bind(this)
-        this.render = function(...args) {
-          if (this.state && this.state.errors) {
-            return createElement(
-              'div',
-              { $$fullscreen: true, style: { background: 'red' } },
-              JSON.stringify(this.state.errors)
-            )
-          }
-          return ogRender(...args)
-        }
-        this.render.handlesErrors = true
-      }
-    },
-  },
-})
-
 // applied top to bottom
-const decorations = ({ mobx, ui, autobind, magic } = {}) => [
-  catchesErrors,
+const decorations = ({ mobx, ui, magic } = {}) => [
   extendsReact,
   subscribable,
   helpers,
@@ -79,13 +55,11 @@ const decorations = ({ mobx, ui, autobind, magic } = {}) => [
   // gloss after mobx
   () => ({ decorator: glossDecorator }),
   magic && automagical,
-  // autobind last because it seals things
-  autobind && autobound,
   [storeProvidable, storeOptions],
 ]
 
-const base: () => ViewClass | (() => () => ViewClass) = decor(
-  decorations({ mobx: true, autobind: true, magic: true, ui: true })
+const base: DecoratorType = decor(
+  decorations({ mobx: true, magic: true, ui: true })
 )
 
 // @view
@@ -101,7 +75,7 @@ const view: ViewDec = (item: Object | Class<any> | Function): ViewClass => {
 view.on = base.on
 
 // other decorators
-view.ui = decor(decorations({ ui: true, autobind: true }))
+view.ui = decor(decorations({ ui: true }))
 view.basics = decor([
   extendsReact,
   reactRenderArgs,

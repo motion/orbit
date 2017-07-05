@@ -4,6 +4,7 @@ import Cache from './cache'
 import { object } from 'prop-types'
 import { pickBy } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
+import Redbox from 'redbox-react'
 
 export default function storeProvidable(options, emitter) {
   const cache = new Cache()
@@ -41,6 +42,10 @@ export default function storeProvidable(options, emitter) {
         }
 
         @observable _props = {}
+        state = {
+          error: null,
+          stores: null,
+        }
 
         getChildContext() {
           if (context && Stores) {
@@ -148,7 +153,20 @@ export default function storeProvidable(options, emitter) {
           }
         }
 
+        unstable_handleError(error) {
+          console.error('ERR', error)
+          this.setState({ error })
+        }
+
+        clearErrors() {
+          this.setState({ error: null })
+        }
+
         render() {
+          if (this.state.error) {
+            return <Redbox error={this.state.error} />
+          }
+
           return <Klass {...this.props} {...this.state.stores} />
         }
       }

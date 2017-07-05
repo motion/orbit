@@ -85,6 +85,7 @@ export default class DocumentPage {
           onKeyDown={docStore.onKeyDown}
           showCrumbs
           showChildren
+          isPrimaryDocument
         />
         <Inbox doc={doc} if={docStore.showInbox} />
       </Page>

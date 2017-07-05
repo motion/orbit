@@ -113,37 +113,34 @@ export default class Model {
     }
     // chain().until().exec().or().$
     const self = this
-    const worm = () =>
-      new Proxy(
+    const worm = () => {
+      const result = new Proxy(
         {
           exec: () => Promise.resolve(false),
           isntConnected: true,
+          onConnection: () => {
+            return new Promise(resolve => {
+              const stop = autorun(() => {
+                if (self.connected) {
+                  stop && stop()
+                  resolve({ connected: true })
+                }
+              })
+            })
+          },
         },
         {
           get(target: Object | Class, name: string) {
             if (target[name]) {
               return target[name]
             }
-            if (name === '$') {
-              const parent = {
-                @observable subscribe: a => b => b,
-              }
-
-              const stop = autorun(() => {
-                if (self.connected) {
-                  if (stop) stop()
-                  setTimeout(() => {
-                    parent.subscribe = null // trigger re-query
-                  })
-                }
-              })
-
-              return parent
-            }
             return () => worm()
           },
         }
       )
+      return result
+    }
+
     return worm()
   }
 

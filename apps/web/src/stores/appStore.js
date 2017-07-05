@@ -106,17 +106,18 @@ export default class App implements AppStore {
   }
 
   get editor(): EditorStore {
-    return (
-      this.stores &&
-      this.stores.EditorStore &&
-      (this.stores.EditorStore.find(store => store.focused === true) ||
-        this.stores.EditorStore[0])
-    )
+    if (!this.stores || !this.stores.EditorStore) {
+      return
+    }
+    return this.stores.EditorStore.find(store => !!store.focused)
   }
 
   get document(): DocumentStore {
-    return (
-      this.stores && this.stores.DocumentStore && this.stores.DocumentStore[0]
+    if (!this.stores || !this.stores.DocumentStore) {
+      return
+    }
+    return this.stores.DocumentStore.find(
+      store => !!store.props.isPrimaryDocument
     )
   }
 

@@ -23,15 +23,28 @@ function valueWrap(it, valueGet: Function) {
     }
   }
 
-  if (query && query.$) {
-    subscriber = query.$.subscribe(value => {
-      log(INFO, '.subscribe( => ', typeof value, isObservable(value))
-      if (isObservable(value)) {
-        result.set(value)
-      } else {
-        result.set(observable.shallowBox(value))
-      }
+  function runSubscribe() {
+    if (query && query.$) {
+      subscriber = query.$.subscribe(value => {
+        log(INFO, '.subscribe( => ', typeof value, isObservable(value))
+        if (isObservable(value)) {
+          result.set(value)
+        } else {
+          result.set(observable.shallowBox(value))
+        }
+      })
+    }
+  }
+
+  // handle not connected yet
+  if (query && query.isntConnected) {
+    query.onConnection().then(() => {
+      console.log('ok not lets re-run')
+      query = valueGet()
+      runSubscribe()
     })
+  } else {
+    runSubscribe()
   }
 
   // autosync query

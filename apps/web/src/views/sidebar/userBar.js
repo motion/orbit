@@ -18,8 +18,11 @@ export default class UserBar {
           theme="light"
           openOnClick
           background
+          borderRadius={8}
+          elevation={2}
           distance={10}
           forgiveness={16}
+          width={400}
           target={<UI.Button theme="dark">Status | 👋</UI.Button>}
           openOnHover
           closeOnClick

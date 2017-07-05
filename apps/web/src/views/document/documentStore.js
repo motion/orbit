@@ -10,7 +10,6 @@ const print = debug('documentStore')
 type Props = {
   id?: string,
   document?: Document,
-  // this is for inline docs
   inline?: boolean,
 }
 
@@ -20,11 +19,8 @@ export default class DocumentStore {
   id = this.props.id
   @watch
   document: ?Document = () => {
-    console.log('RUN documentStore.document')
     if (this.props.id) {
-      Document.get(this.props.id).exec().then(doc => {
-        console.log('RAN docStore.document', doc, this.props.id)
-      })
+      console.log('RUN documentStore.document', this.props.id)
     }
     return this.props.document || Document.get(this.props.id)
   }

@@ -29,16 +29,19 @@ export default class DocumentView {
   }
 
   render({ editorProps, inline, showChildren, readOnly, store }: Props) {
+    // window.x()
+
+    console.log('GOTEM', store.document)
+
     if (!store.document) {
       return <loading />
     }
-
-    // window.x()
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
         <content $$row>
           <Editor
+            key={store.document._id}
             readOnly={readOnly}
             inline={inline}
             getRef={store.onEditor}

@@ -1,13 +1,20 @@
 // @flow
 import { observable, isObservable, autorun } from 'mobx'
 import hashsum from 'hash-sum'
-import { memoize } from 'lodash'
+
+const Cache = {}
 
 // TODO: instanceof RxQuery checks
 
 // subscribe-aware helpers
 // @query value wrapper
 function valueWrap(it, valueGet: Function) {
+  const KEY = hashsum(it)
+  if (Cache[KEY]) {
+    log('cache hit')
+    return Cache[KEY]
+  }
+
   const result = observable.shallowBox(undefined)
   let query = valueGet()
   // TODO can probably handle this here
@@ -25,8 +32,13 @@ function valueWrap(it, valueGet: Function) {
 
   function runSubscribe() {
     if (query && query.$) {
+      finishSubscribe()
       subscriber = query.$.subscribe(value => {
-        log(INFO, '.subscribe( => ', typeof value, isObservable(value))
+        log(
+          INFO,
+          '.subscribe( => ',
+          (value && JSON.stringify(value).slice(0, 120)) || value
+        )
         if (isObservable(value)) {
           result.set(value)
         } else {
@@ -38,6 +50,7 @@ function valueWrap(it, valueGet: Function) {
 
   // handle not connected yet
   if (query && query.isntConnected) {
+    log('not connected yet')
     query.onConnection().then(() => {
       console.log('ok not lets re-run')
       query = valueGet()
@@ -90,11 +103,18 @@ function valueWrap(it, valueGet: Function) {
         })
       },
     },
+    id: {
+      value: Math.random(),
+    },
+    query: {
+      value: query,
+    },
     $: {
       value: query && query.$,
     },
     current: {
       get: () => {
+        console.log('get current', result)
         return result.get() && result.get().get()
       },
     },
@@ -111,6 +131,8 @@ function valueWrap(it, valueGet: Function) {
     },
   })
 
+  Cache[KEY] = response
+
   return response
 }
 
@@ -123,18 +145,24 @@ export default function query(
 
   if (initializer) {
     descriptor.initializer = function() {
+      this.__queryUniq = Math.random()
       const init = initializer.call(this)
-      return memoize(function(...args) {
+      return function(...args) {
         if (!this.collection) {
           console.log('no this.collection!')
           return null
         }
         return valueWrap.call(
           this,
-          { model: this.constructor.name, property, args },
+          {
+            model: this.constructor.name,
+            property,
+            args,
+            uniq: this.__queryUniq,
+          },
           () => init.apply(this, args)
         )
-      })
+      }
     }
   } else if (value) {
     descriptor.value = function(...args) {

@@ -194,18 +194,22 @@ function mobxifyWatch(obj, method, val) {
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
-        log(
-          KEY,
-          'set to keys',
-          currentObservable.current && Object.keys(currentObservable.current)
-        )
+        log(KEY, 'automagical.currentObservable', currentObservable.current)
+        console.log(' === ', currentObservable)
         current.set(currentObservable.current) // hit observable
       }
     })
   }
 
   let uid = 0
-  const stopAutorun = autorun(async () => {
+  let stopAutorun
+
+  function run() {
+    stopAutorun && stopAutorun()
+    stopAutorun = autorun(watchForNewValue)
+  }
+
+  async function watchForNewValue() {
     const mid = ++uid // lock
     const result = resolve(val.call(obj)) // hit user observables
     stopObservableAutorun && stopObservableAutorun()
@@ -217,6 +221,12 @@ function mobxifyWatch(obj, method, val) {
       currentDisposable = result.dispose
     }
     if (result && (result.$isQuery || isObservable(result))) {
+      if (result.isntConnected) {
+        log('NOT YET CONNECTED WAIT')
+        await result.onConnect()
+        log('RERUNNN')
+        watchForNewValue()
+      }
       currentObservable = result
       console.log(KEY, 'result = ', result)
       runObservable()
@@ -231,7 +241,10 @@ function mobxifyWatch(obj, method, val) {
         current.set(result)
       }
     }
-  })
+  }
+
+  // run
+  run()
 
   Object.defineProperty(obj, method, {
     get() {

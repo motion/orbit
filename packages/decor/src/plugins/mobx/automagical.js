@@ -159,7 +159,7 @@ function mobxify(target: Object, method: string, descriptors: Object) {
     const NAME = `${target.constructor.name}.${method}`
     const logWrappedMethod = (...args) => {
       if (window.log && window.log.debug) {
-        if (!window.log.filter || window.log.filter.test(NAME)) {
+        if (window.log.filter && window.log.filter.test(NAME)) {
           console.log(NAME, ...args)
         }
       }

@@ -11,7 +11,6 @@ const Cache = {}
 function valueWrap(it, valueGet: Function) {
   const KEY = hashsum(it)
   if (Cache[KEY]) {
-    log('cache hit')
     return Cache[KEY]
   }
 
@@ -84,6 +83,8 @@ function valueWrap(it, valueGet: Function) {
   }
 
   const response = {}
+  const id = Math.random()
+  log(INFO, '>>>>> id >>>>', id)
 
   // helpers
   Object.defineProperties(response, {
@@ -104,7 +105,7 @@ function valueWrap(it, valueGet: Function) {
       },
     },
     id: {
-      value: Math.random(),
+      value: id,
     },
     query: {
       value: query,
@@ -114,7 +115,6 @@ function valueWrap(it, valueGet: Function) {
     },
     current: {
       get: () => {
-        console.log('get current', result)
         return result.get() && result.get().get()
       },
     },
@@ -123,10 +123,11 @@ function valueWrap(it, valueGet: Function) {
     },
     dispose: {
       value() {
-        finishSubscribe()
-        if (stopSync) {
-          stopSync()
-        }
+        console.log('supposed to dispose')
+        // finishSubscribe()
+        // if (stopSync) {
+        //   stopSync()
+        // }
       },
     },
   })

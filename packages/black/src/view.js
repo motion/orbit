@@ -80,7 +80,7 @@ const decorations = ({ mobx, ui, autobind, magic } = {}) => [
   () => ({ decorator: glossDecorator }),
   magic && automagical,
   // autobind last because it seals things
-  // autobind && autobound,
+  autobind && autobound,
   [storeProvidable, storeOptions],
 ]
 
@@ -101,7 +101,6 @@ const view: ViewDec = (item: Object | Class<any> | Function): ViewClass => {
 view.on = base.on
 
 // other decorators
-view.react = decor([extendsReact, reactRenderArgs])
 view.ui = decor(decorations({ ui: true, autobind: true }))
 view.basics = decor([
   extendsReact,

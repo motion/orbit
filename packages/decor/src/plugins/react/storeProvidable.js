@@ -36,6 +36,10 @@ export default function storeProvidable(options, emitter) {
 
       // return HoC
       class StoreProvider extends React.Component {
+        static get name() {
+          return Klass.name
+        }
+
         @observable _props = {}
 
         getChildContext() {
@@ -123,6 +127,7 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentDidMount() {
+          emitter.emit('view.mount', this)
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]
             emitter.emit('store.mount', store)
@@ -133,6 +138,7 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillUnmount() {
+          emitter.emit('view.unmount', this)
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]
             emitter.emit('store.unmount', store)

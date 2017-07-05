@@ -14,16 +14,21 @@ declare class AppStore {
 export default class App implements AppStore {
   started = false
   errors = []
-  mountedStores = {}
+  mounted = {
+    stores: {},
+    views: {},
+  }
   mountedVersion = 0
   stores = null
 
   constructor({ config, models }) {
     this.config = config
     this.modelsObjects = models
-    // listen for stores, attach here
-    view.on('store.mount', this.mountStore)
-    view.on('store.unmount', this.unmountStore)
+    // listen for stuff, attach here
+    view.on('store.mount', this.mount('stores'))
+    view.on('store.unmount', this.unmount('stores'))
+    view.on('view.mount', this.mount('views'))
+    view.on('view.unmount', this.unmount('views'))
   }
 
   start = async quiet => {
@@ -37,7 +42,7 @@ export default class App implements AppStore {
     this.models = new Models(this.config, this.modelsObjects)
     await this.models.start()
     this.catchErrors()
-    this.trackMountedStores()
+    this.trackMounts()
     if (!quiet) {
       console.timeEnd('start')
     }
@@ -48,36 +53,41 @@ export default class App implements AppStore {
     this.models.dispose()
   }
 
-  // dev helpers
-
-  trackMountedStores = () => {
+  // private
+  trackMounts = () => {
     // auto Object<string, Set> => Object<string, []>
     autorunAsync(() => {
       this.mountedVersion
-      this.stores = Object.keys(this.mountedStores).reduce((acc, key) => {
-        const entries = []
-        this.mountedStores[key].forEach(store => {
-          entries.push(store)
-        })
-        return {
-          ...acc,
-          [key]: entries,
-        }
-      }, {})
+      const reduce = object =>
+        Object.keys(object).reduce((acc, key) => {
+          const entries = []
+          object[key].forEach(store => {
+            entries.push(store)
+          })
+          return {
+            ...acc,
+            [key]: entries,
+          }
+        }, {})
+
+      this.stores = reduce(this.mounted.stores)
+      this.views = reduce(this.mounted.views)
     }, 1)
   }
 
-  mountStore = store => {
-    const key = store.constructor.name
-    this.mountedStores[key] = this.mountedStores[key] || new Set()
-    this.mountedStores[key].add(store)
+  // private
+  mount = type => thing => {
+    const key = thing.constructor.name
+    this.mounted[type][key] = this.mounted[type][key] || new Set()
+    this.mounted[type][key].add(thing)
     this.mountedVersion++
   }
 
-  unmountStore = store => {
-    const key = store.constructor.name
-    if (this.mountedStores[key]) {
-      this.mountedStores[key].delete(store)
+  // private
+  unmount = type => thing => {
+    const key = thing.constructor.name
+    if (this.mounted[type][key]) {
+      this.mounted[type][key].delete(thing)
       this.mountedVersion++
     }
   }

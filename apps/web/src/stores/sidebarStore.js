@@ -60,7 +60,7 @@ export default class SidebarRootStore {
           )
         }
       },
-      16,
+      32,
       true
     ),
   }

@@ -20,7 +20,7 @@ type Props = {
   children?: React$Element<any>,
   className?: string,
   from: 'top' | 'bottom' | 'left' | 'right',
-  noOverlay?: boolean,
+  showOverlay?: boolean,
   onClickOverlay: Function,
   open?: boolean,
   overlayBlur?: number,
@@ -56,7 +56,7 @@ export default class Drawer {
     percent,
     style,
     onClickOverlay,
-    noOverlay,
+    showOverlay,
     shadowed,
     bordered,
     zIndex,
@@ -94,6 +94,7 @@ export default class Drawer {
           {children}
         </Surface>
         <overlay
+          if={showOverlay}
           $overlayOpen={open}
           $overlayBg={{ blur: overlayBlur === true ? 5 : overlayBlur }}
           onClick={e => {

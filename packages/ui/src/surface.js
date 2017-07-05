@@ -117,10 +117,10 @@ export default class Surface implements ViewType {
     borderBottomRadius,
     borderColor,
     borderLeft,
-    borderLeftRadius,
+    borderLeftRadius: _borderLeftRadius,
     borderRadius: _borderRadius,
     borderRight,
-    borderRightRadius,
+    borderRightRadius: _borderRightRadius,
     borderStyle,
     borderTop,
     borderTopRadius,
@@ -191,15 +191,18 @@ export default class Surface implements ViewType {
       ...props,
     }
 
-    const borderRadius =
-      this.theme.element.style.borderRadius ||
-      this.theme.element.style.borderTopLeftRadius
+    const elStyle = this.theme.element.style
+    const borderLeftRadius =
+      _borderLeftRadius || elStyle.borderRadius || elStyle.borderTopLeftRadius
+    const borderRightRadius =
+      _borderRightRadius || elStyle.borderRadius || elStyle.borderTopRightRadius
 
     const contents = [
       <Glint
         key={0}
         if={glint && this.theme}
-        borderRadius={borderRadius - 1}
+        borderLeftRadius={borderLeftRadius - 1}
+        borderRightRadius={borderRightRadius - 1}
       />,
       <icon key={1} if={icon && !stringIcon} $iconAfter={hasIconAfter}>
         {icon}
@@ -223,7 +226,8 @@ export default class Surface implements ViewType {
           DEFAULT_GLOW_COLOR
         }
         opacity={0.25}
-        borderRadius={borderRadius - 2}
+        borderLeftRadius={borderLeftRadius - 2}
+        borderRightRadius={borderRightRadius - 2}
         {...glowProps}
       />,
       <element
@@ -484,7 +488,6 @@ export default class Surface implements ViewType {
         color,
         height,
         ...borderRadius,
-        overflow: 'visible',
         fontSize: props.fontSize,
         lineHeight: 'inherit',
       },

@@ -13,7 +13,7 @@ type Props = {
 
 @view
 class PageSidebar {
-  static isPageSidebar = true
+  static pageType = 'sidebar'
   render({ children, onChildren }) {
     if (onChildren) onChildren(children)
     return null
@@ -22,7 +22,7 @@ class PageSidebar {
 
 @view
 class PageActions {
-  static isPageActions = true
+  static pageType = 'actions'
   render({ children, onChildren }) {
     if (onChildren) onChildren(children)
     return null
@@ -36,9 +36,13 @@ export default class Page {
 
   actions = null
   sidebar = null
-  onChildren = type => debounce(children => (this[type] = children))
+  onChildren = type =>
+    debounce(children => {
+      this[type] = children
+    })
 
   render({ children, sidebar, actions, className }: Props) {
+    console.log('Pagedot', this.actions, this.sidebar)
     return (
       <page className={className}>
         <SlotFill.Fill name="actions">
@@ -49,10 +53,9 @@ export default class Page {
         </SlotFill.Fill>
         {React.Children.map(children, child => {
           if (child) {
-            if (child.type.isPageActions || child.type.isPageSidebar) {
-              const type = child.isPageActions ? 'actions' : 'sidebar'
+            if (child.type.pageType) {
               return React.cloneElement(child, {
-                onChildren: this.onChildren(type),
+                onChildren: this.onChildren(child.type.pageType),
               })
             }
           }

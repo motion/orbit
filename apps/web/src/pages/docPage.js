@@ -70,33 +70,7 @@ export default class DocumentPage {
           </UI.Button>
 
           <UI.Segment itemProps={itemProps}>
-            <UI.Popover
-              openOnClick
-              width={160}
-              target={
-                <UI.Button {...itemProps} className={this.uniq} icon="dot" />
-              }
-            >
-              <UI.List
-                theme="light"
-                elevation={3}
-                borderRadius={8}
-                items={[
-                  { icon: 'share', primary: 'Share', onClick: () => {} },
-                  {
-                    icon: doc.private ? 'lock' : 'open',
-                    primary: 'Locked',
-                    onClick: doc.togglePrivate,
-                  },
-                  {
-                    icon: doc.private ? 'eye' : 'closed',
-                    primary: 'Private',
-                    onClick: doc.togglePrivate,
-                  },
-                ]}
-              />
-            </UI.Popover>
-
+            <UI.Button className={this.uniq} icon="dot" />
             <UI.Button
               icon="fav31"
               highlight={!!starred}
@@ -104,6 +78,33 @@ export default class DocumentPage {
             />
           </UI.Segment>
         </Page.Actions>
+
+        <UI.Segment itemProps={itemProps}>
+          <UI.Button icon="dot" />
+          <UI.Button icon="fav31" highlight={!!starred} />
+        </UI.Segment>
+
+        <UI.Popover openOnClick width={160} target={`.${this.uniq}`}>
+          <UI.List
+            theme="light"
+            elevation={3}
+            borderRadius={8}
+            items={[
+              { icon: 'share', primary: 'Share', onClick: () => {} },
+              {
+                icon: doc.private ? 'lock' : 'open',
+                primary: 'Locked',
+                onClick: doc.togglePrivate,
+              },
+              {
+                icon: doc.private ? 'eye' : 'closed',
+                primary: 'Private',
+                onClick: doc.togglePrivate,
+              },
+            ]}
+          />
+        </UI.Popover>
+
         <Breadcrumbs />
         <DocumentView
           if={!docStore.showInbox}

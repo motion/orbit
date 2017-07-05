@@ -226,8 +226,8 @@ export default class Surface implements ViewType {
           DEFAULT_GLOW_COLOR
         }
         opacity={0.25}
-        borderLeftRadius={borderLeftRadius - 2}
-        borderRightRadius={borderRightRadius - 2}
+        borderLeftRadius={borderLeftRadius - 1}
+        borderRightRadius={borderRightRadius - 1}
         {...glowProps}
       />,
       <element

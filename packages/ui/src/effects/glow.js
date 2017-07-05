@@ -115,6 +115,7 @@ export default class HoverGlow {
     full,
     scale,
     color,
+    clickable,
     borderRadius,
     borderLeftRadius,
     borderRightRadius,
@@ -253,11 +254,12 @@ export default class HoverGlow {
   static style = {
     overlay: {
       position: 'absolute',
+      transform: 'translateZ(0)',
+      overflow: 'hidden',
       top: 1,
       left: 1,
       right: 1,
       bottom: 1,
-      transition: 'opacity ease-in 50ms',
       pointerEvents: 'none',
       '&:active': {
         pointerEvents: 'none',

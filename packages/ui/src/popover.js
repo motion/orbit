@@ -121,7 +121,7 @@ export default class Popover {
   componentDidMount() {
     const { openOnClick, open, escapable, swayX } = this.curProps
 
-    this.on(window, 'resize', debounce(() => this.setPosition(), 32))
+    this.on(window, 'resize', debounce(() => this.setPosition(), 16))
     this.setTimeout(this.setTarget)
     this.listenForHover()
 

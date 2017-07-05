@@ -5,8 +5,6 @@ import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
-import FlipMove from 'react-flip-move'
-import DocItem from '~/views/document/item'
 
 type Props = {
   id: number,
@@ -118,13 +116,13 @@ export default class Children {
           icon="siadd"
           onClick={store.add}
         />
-        <FlipMove>
-          {items.map(doc =>
-            <UI.TiltGlow width={200} height={200} key={doc._id}>
-              <DocItem inline doc={doc} />
-            </UI.TiltGlow>
-          )}
-        </FlipMove>
+        <content>
+          <UI.List
+            if={hasDocs}
+            items={items}
+            itemProps={{ height: 'auto', padding: [10, 10] }}
+          />
+        </content>
       </children>
     )
   }
@@ -134,12 +132,10 @@ export default class Children {
       position: 'absolute',
       top: 0,
       right: 0,
-      flexFlow: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
       padding: 5,
       alignSelf: 'center',
       cursor: 'default',
+      width: 200,
     },
     header: {
       padding: [0, 10],

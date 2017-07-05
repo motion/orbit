@@ -23,25 +23,13 @@ function valueWrap(it, valueGet: Function) {
     }
   }
 
-  // this automatically re-runs queries if the use mobx observables, magical
-  let stopAutorun
   if (query && query.$) {
-    stopAutorun = autorun(() => {
-      console.log(
-        'autorunning, probably not necessary but checking to see if bugfixed'
-      )
-      finishSubscribe()
-      query = valueGet()
-      if (query.$) {
-        // sub to values
-        subscriber = query.$.subscribe(value => {
-          log(INFO, '.subscribe( => ', typeof value)
-          if (isObservable(value)) {
-            result.set(value)
-          } else {
-            result.set(observable.shallowBox(value))
-          }
-        })
+    subscriber = query.$.subscribe(value => {
+      log(INFO, '.subscribe( => ', typeof value, isObservable(value))
+      if (isObservable(value)) {
+        result.set(value)
+      } else {
+        result.set(observable.shallowBox(value))
       }
     })
   }
@@ -103,7 +91,6 @@ function valueWrap(it, valueGet: Function) {
     dispose: {
       value() {
         finishSubscribe()
-        stopAutorun && stopAutorun()
         if (stopSync) {
           stopSync()
         }

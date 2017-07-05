@@ -36,7 +36,7 @@ export default class HoverGlow {
     clickDuration: 150,
     clickScale: 2,
     transition: 0,
-    blur: 10,
+    blur: 30,
   }
 
   state = {

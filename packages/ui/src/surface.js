@@ -217,12 +217,12 @@ export default class Surface implements ViewType {
         key={2}
         if={glow}
         full
-        scale={1.4}
+        scale={1.3}
         color={
           (this.theme && $(this.theme.surface.style.color).lighten(0.2)) ||
           DEFAULT_GLOW_COLOR
         }
-        opacity={0.15}
+        opacity={0.25}
         borderRadius={borderRadius - 2}
         {...glowProps}
       />,

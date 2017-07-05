@@ -60,9 +60,9 @@ const Theme = {
   }),
   'clear-dark': theme({
     highlightColor,
-    background: [0, 0, 0, 0.4],
+    background: [20, 20, 20, 0.5],
     color: '#f2f2f2',
-    borderColor: [0, 0, 0, 0.3],
+    borderColor: [30, 30, 30, 1],
   }),
   light: {
     base: LIGHT,

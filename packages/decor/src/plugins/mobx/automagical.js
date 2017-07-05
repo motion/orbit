@@ -159,7 +159,9 @@ function mobxify(target: Object, method: string, descriptors: Object) {
     const NAME = `${target.constructor.name}.${method}`
     const logWrappedMethod = (...args) => {
       if (window.log && window.log.debug) {
-        console.log(NAME, ...args)
+        if (!window.log.filter || window.log.filter.test(NAME)) {
+          console.log(NAME, ...args)
+        }
       }
       return targetMethod(...args)
     }
@@ -216,7 +218,7 @@ function mobxifyWatch(obj, method, val) {
     }
     if (result && (result.$isQuery || isObservable(result))) {
       currentObservable = result
-      log(KEY, 'runObservable', result)
+      console.log(KEY, 'result = ', result)
       runObservable()
     } else {
       if (isPromise(result)) {

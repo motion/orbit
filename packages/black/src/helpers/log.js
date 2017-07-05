@@ -92,3 +92,4 @@ function wrapLogger(wrapFn: Function, parent, name?: string) {
 }
 
 log.debug = true
+log.filter = /^(CommanderStore|Document)/

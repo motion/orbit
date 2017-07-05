@@ -20,7 +20,11 @@ export default class DocumentStore {
   id = this.props.id
   @watch
   document: ?Document = () => {
-    console.log('running docStore.document', this)
+    console.log(
+      'running docStore.document',
+      Document.get(this.props.id),
+      this.props.id
+    )
     return this.props.document || Document.get(this.props.id)
   }
   lastSavedRev: ?string = null

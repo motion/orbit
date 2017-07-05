@@ -5,6 +5,8 @@ import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
+import FlipMove from 'react-flip-move'
+import DocItem from '~/views/document/item'
 
 type Props = {
   id: number,
@@ -56,15 +58,6 @@ export default class Children {
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
 
-    const dot = color =>
-      <UI.Button
-        circular
-        background={color}
-        size={0.3}
-        $$margin={[0, 5, 0, 0]}
-        color={color}
-      />
-
     const getDoc = doc => {
       const children = store.children[doc._id]
       return {
@@ -74,7 +67,6 @@ export default class Children {
         primary: (
           <div $$row $$align="center">
             <name>
-              {dot(doc.color)}
               <span $$ellipse>
                 {doc.getTitle()}
               </span>
@@ -99,7 +91,6 @@ export default class Children {
             primary: (
               <div $$row $$align="center">
                 <name>
-                  {dot([0, 0, 0, 0.4])}
                   <input
                     $name
                     autoFocus
@@ -120,33 +111,35 @@ export default class Children {
 
     return (
       <children>
-        <header $$row>
-          <title>
-            {hasDocs ? '' : 'No '}Pages
-          </title>
-          <actions>
-            <UI.Button
-              $add
-              if={store.newTitle === null}
-              size={1}
-              icon="siadd"
-              onClick={store.add}
-            />
-          </actions>
-        </header>
-        <content>
-          <UI.List if={hasDocs} items={items} />
-        </content>
+        <UI.Button
+          $add
+          if={store.newTitle === null}
+          size={1}
+          icon="siadd"
+          onClick={store.add}
+        />
+        <FlipMove>
+          {items.map(doc =>
+            <UI.TiltGlow width={200} height={100} key={doc._id}>
+              <DocItem inline ref={node => this.docRef(node, i)} doc={doc} />
+            </UI.TiltGlow>
+          )}
+        </FlipMove>
       </children>
     )
   }
 
   static style = {
     children: {
-      // borderTop: [1, '#f6f6f6'],
-      padding: [5],
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      flexFlow: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      padding: 5,
+      alignSelf: 'center',
       cursor: 'default',
-      width: 170,
     },
     header: {
       padding: [0, 10],
@@ -158,9 +151,6 @@ export default class Children {
       color: [0, 0, 0, 0.3],
       margin: [7, 0, 10, 0],
       fontWeight: 500,
-    },
-    content: {
-      // padding: [0, 2],
     },
     noDocs: {
       padding: 20,

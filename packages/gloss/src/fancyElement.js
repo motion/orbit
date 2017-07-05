@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
-import { jss } from './stylesheet'
-
+import { StyleSheet, css } from './stylesheet'
 import deepExtend from 'deep-extend'
 import type { Gloss } from './index'
 
@@ -21,10 +20,6 @@ const TAG_NAME_MAP = {
 }
 const $ = '$'
 
-const MasterSheet = jss.createStyleSheet({}).attach()
-
-window.MasterSheet = MasterSheet
-
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
   const { baseStyles, options, niceStyle } = Gloss
@@ -38,25 +33,24 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
     const finalProps = {}
-    const classNames = []
-    const tagName = type.name || type
+    const finalStyles = []
 
     const addStyle = (obj, key, val, checkTheme) => {
       const style = obj[key]
       if (!style) return
       if (typeof style === 'function') {
-        const styles = niceStyle(style(val))
-        const rule = MasterSheet.addRule(`${tagName}.${key}`, styles)
-        classNames.push(rule.className)
+        const sheet = StyleSheet.create({ [type]: niceStyle(style(val)) })
+        finalStyles.push(sheet[type])
       } else {
-        classNames.push(style.className)
+        finalStyles.push(style)
       }
       if (SHOULD_THEME && checkTheme && this.theme && this.theme[key]) {
-        classNames.push(this.theme[key].className)
+        finalStyles.push(this.theme[key])
       }
     }
 
     if (styles && (isTag || type.name)) {
+      const tagName = type.name || type
       addStyle(styles, tagName, null, true)
     }
 
@@ -108,23 +102,21 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
 
     // glossify and append style prop
     if (cssStyles) {
-      const styles = niceStyle(cssStyles)
-      const rule = MasterSheet.addRule(`${tagName}.css`, styles)
-      classNames.push(rule.className)
-      // console.log('add', styles, rule.className)
+      const sheet = StyleSheet.create({ [type]: niceStyle(cssStyles) })
+      finalStyles.push(sheet[type])
     }
 
     // styles => props
-    if (classNames.length) {
+    if (finalStyles.length) {
       if (isTag) {
         // tags get className
         if (IS_PROD) {
-          finalProps.className = `${classNames.join(' ')}`
+          finalProps.className = css(...finalStyles)
         } else {
           try {
-            finalProps.className = `${classNames.join(' ')}`
+            finalProps.className = css(...finalStyles)
           } catch (e) {
-            console.error('Error applying style to', type, classNames, this)
+            console.error('Error applying style to', type, finalStyles, this)
           }
         }
 
@@ -138,7 +130,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         // children get a style prop
         finalProps.style = arrayOfObjectsToObject([
           props.style,
-          ...classNames.map(style => style && style.style),
+          ...finalStyles.map(style => style && style.style),
         ])
       }
     }

@@ -19,7 +19,6 @@ export default class HoverGlow {
     blur: number,
     gradient?: boolean,
     borderRadius?: number,
-    css?: Object,
   }
 
   static defaultProps = {
@@ -137,7 +136,6 @@ export default class HoverGlow {
     background,
     gradient,
     blur,
-    css,
     ...props
   }) {
     const setRootRef = this.ref('rootRef').set
@@ -183,21 +181,12 @@ export default class HoverGlow {
     )
     const extraScale = clicked ? clickScale : 1
 
-    const autoOverflowHidden = (borderRadius ||
-      borderLeftRadius ||
-      borderRightRadius) && {
-      overflow: 'hidden',
-    }
-
     const glow = (
       <overlay
         ref={setRootRef}
         css={{
-          borderRadius,
-          borderLeftRadius,
-          borderRightRadius,
-          ...autoOverflowHidden,
-          ...css,
+          borderLeftRadius: borderLeftRadius || borderRadius,
+          borderRightRadius: borderRightRadius || borderRadius,
         }}
         {...props}
       >
@@ -256,14 +245,11 @@ export default class HoverGlow {
       position: 'absolute',
       transform: 'translateZ(0)',
       overflow: 'hidden',
-      top: 1,
-      left: 1,
-      right: 1,
-      bottom: 1,
-      pointerEvents: 'none',
-      '&:active': {
-        pointerEvents: 'none',
-      },
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      // pointerEvents: 'none',
     },
     glow: {
       pointerEvents: 'none',

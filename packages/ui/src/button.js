@@ -16,13 +16,6 @@ const Button = injectTheme(({ badge, children, theme, ...props }) =>
     glow
     glowProps={{
       scale: 2,
-      style: {
-        top: 1,
-        left: 1,
-        right: 1,
-        bottom: 1,
-        overflow: 'hidden',
-      },
     }}
     background={theme.base.buttonBackground}
     {...props}

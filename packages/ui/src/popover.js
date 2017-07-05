@@ -122,7 +122,7 @@ export default class Popover {
     const { openOnClick, open, escapable, swayX } = this.curProps
 
     this.on(window, 'resize', debounce(() => this.setPosition(), 16))
-    this.setTimeout(this.setTarget)
+    this.setTarget()
     this.listenForHover()
 
     if (openOnClick) {
@@ -478,8 +478,8 @@ export default class Popover {
     const openIfOver = () => this.isNodeHovered(node, isPopover) && setHovered()
     const closeIfOut = () =>
       !this.isNodeHovered(node, isPopover) && setUnhovered()
-    const onEnter = debounce(openIfOver, isTarget ? delay : 0)
-    const onLeave = debounce(closeIfOut, isTarget ? 16 : delay) // 🐛 target should close slower than menu opens
+    const onEnter = openIfOver
+    const onLeave = debounce(closeIfOut, isTarget ? 80 : 20) // 🐛 target should close slower than menu opens
 
     if (isTarget) {
       // seems to be fixed, leaving in case needs testing

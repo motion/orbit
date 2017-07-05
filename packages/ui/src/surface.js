@@ -488,6 +488,7 @@ export default class Surface implements ViewType {
         color,
         height,
         ...borderRadius,
+        overflow: 'visible',
         fontSize: props.fontSize,
         lineHeight: 'inherit',
       },

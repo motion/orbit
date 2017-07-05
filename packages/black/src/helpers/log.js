@@ -90,3 +90,5 @@ function wrapLogger(wrapFn: Function, parent, name?: string) {
     return result
   }
 }
+
+log.debug = true

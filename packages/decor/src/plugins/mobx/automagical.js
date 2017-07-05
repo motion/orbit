@@ -155,14 +155,16 @@ function mobxify(target: Object, method: string, descriptors: Object) {
   }
   if (isFunction(value)) {
     // @action
-    const name = `${target.constructor.name}.${method}`
-    const ogFn = target[method]
-    target[method] = action(name, function(...args) {
-      if (window.log && window.log.debug === true) {
-        console.log(name, '(', ...args, ')')
+    const targetMethod = target[method].bind(target)
+    const NAME = `${target.constructor.name}.${method}`
+    const logWrappedMethod = (...args) => {
+      if (window.log && window.log.debug) {
+        console.log(NAME, ...args)
       }
-      return ogFn.call(this, ...args)
-    })
+      return targetMethod(...args)
+    }
+
+    target[method] = action(NAME, logWrappedMethod)
     return target[method]
   }
   // @observable.ref
@@ -190,7 +192,11 @@ function mobxifyWatch(obj, method, val) {
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
-        log(KEY, 'set to', currentObservable.current, currentObservable)
+        log(
+          KEY,
+          'set to keys',
+          currentObservable.current && Object.keys(currentObservable.current)
+        )
         current.set(currentObservable.current) // hit observable
       }
     })

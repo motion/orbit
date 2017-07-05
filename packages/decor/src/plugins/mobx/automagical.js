@@ -185,7 +185,7 @@ function resolve(value) {
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
   const KEY = `${obj.constructor.name}.${method}`
-  let current = observable.box(null)
+  let current = observable.shallowBox(null)
   let currentDisposable = null
   let currentObservable = null
   let stopObservableAutorun

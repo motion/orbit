@@ -1,5 +1,5 @@
 // @flow
-import { observable, isObservable } from 'mobx'
+import { observable, isObservable, autorun } from 'mobx'
 import hashsum from 'hash-sum'
 import { memoize } from 'lodash'
 
@@ -24,14 +24,21 @@ function valueWrap(it, valueGet: Function) {
   }
 
   // this automatically re-runs queries if the use mobx observables, magical
+  let stopAutorun
   if (query && query.$) {
-    // sub to values
-    subscriber = query.$.subscribe(value => {
-      log(INFO, '.subscribe( => ', typeof value)
-      if (isObservable(value)) {
-        result.set(value)
-      } else {
-        result.set(observable.shallowBox(value))
+    stopAutorun = autorun(() => {
+      finishSubscribe()
+      query = valueGet()
+      if (query.$) {
+        // sub to values
+        subscriber = query.$.subscribe(value => {
+          log(INFO, '.subscribe( => ', typeof value)
+          if (isObservable(value)) {
+            result.set(value)
+          } else {
+            result.set(observable.shallowBox(value))
+          }
+        })
       }
     })
   }
@@ -84,7 +91,6 @@ function valueWrap(it, valueGet: Function) {
     },
     current: {
       get: () => {
-        // yea i know this is bad but it works for now
         return result.get() && result.get().get()
       },
     },
@@ -94,7 +100,7 @@ function valueWrap(it, valueGet: Function) {
     dispose: {
       value() {
         finishSubscribe()
-        // stopAutorun()
+        stopAutorun && stopAutorun()
         if (stopSync) {
           stopSync()
         }

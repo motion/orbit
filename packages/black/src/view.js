@@ -80,7 +80,7 @@ const decorations = ({ mobx, ui, autobind, magic } = {}) => [
   () => ({ decorator: glossDecorator }),
   magic && automagical,
   // autobind last because it seals things
-  autobind && autobound,
+  // autobind && autobound,
   [storeProvidable, storeOptions],
 ]
 

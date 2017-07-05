@@ -253,7 +253,7 @@ export default class Model {
 
   // helpers
 
-  create = (object: Object = {}): Promise<Object> => {
+  create = (object: Object = {}, temporary = false): Promise<Object> => {
     const properties = {
       ...this.getDefaultProps(object),
       ...object,
@@ -262,7 +262,7 @@ export default class Model {
       `'%c ${this.constructor.name}.create ${JSON.stringify(properties)}`,
       'color: green'
     )
-    return this.collection.insert(properties)
+    return this.collection[temporary ? 'newDocument' : 'insert'](properties)
   }
 
   findOrCreate = async (object: Object = {}): Promise<Object> => {

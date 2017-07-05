@@ -7,7 +7,7 @@ import DocumentView from '~/views/document'
 
 @view({
   store: class {
-    // document = Document.create()
+    document = Document.create({}, true)
   },
 })
 export default class UserBar {

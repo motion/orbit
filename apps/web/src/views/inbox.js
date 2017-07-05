@@ -99,7 +99,6 @@ export default class Inbox {
       <inbox>
         <bar>
           <UI.Title size={4}>Inbox</UI.Title>
-
           <actions>
             <UI.Button
               background="green"
@@ -113,18 +112,20 @@ export default class Inbox {
             </UI.Button>
           </actions>
         </bar>
+
         <UI.Title size={2.5}>
           {docs.length} items
         </UI.Title>
-        <UI.List items={items} />
+
+        <UI.List itemProps={{ height: 'auto', padding: 15 }} items={items} />
 
         <UI.Drawer
           from="bottom"
           percent={80}
           open={true && store.draft && store.draft._id && store.showDraft}
         >
-          test
-          <DocumentView document={store.draft} />
+          <test>test</test>
+          <DocumentView if={false} document={store.draft} />
         </UI.Drawer>
       </inbox>
     )

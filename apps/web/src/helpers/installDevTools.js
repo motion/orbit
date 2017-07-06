@@ -33,3 +33,14 @@ window.Constants = Constants
 window._ = _
 window.log = Black.log
 window.Black = Black
+
+// TODO check if this is needed and fix the global thing if so
+const ogErr = console.error.bind(console)
+console.error = function(...args) {
+  if (args[0] && typeof args[0] === 'string') {
+    if (args[0].indexOf('DeprecationWarning: ')) {
+      return
+    }
+  }
+  return ogErr.call(this, ...args)
+}

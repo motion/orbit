@@ -126,9 +126,9 @@ export default class Text {
         {...props}
       >
         {!ellipse && children}
-        <ellipse if={ellipse} $$ellipse>
+        <span if={ellipse} $$ellipse>
           {children}
-        </ellipse>
+        </span>
       </text>
     )
   }

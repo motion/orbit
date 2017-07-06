@@ -8,7 +8,7 @@ const CacheListeners = {}
 
 function execQuery(it, valueGet: Function) {
   const KEY = hashsum(it)
-  CacheListeners[KEY]++
+  CacheListeners[KEY] = (CacheListeners[KEY] || 0) + 1
 
   if (Cache[KEY]) {
     return Cache[KEY]
@@ -119,8 +119,8 @@ function execQuery(it, valueGet: Function) {
     },
     dispose: {
       value() {
-        console.log('supposed to dispose')
         CacheListeners[KEY]--
+        console.log('dispose? listeners:', CacheListeners[KEY])
 
         // delayed dispose to avoid lots of disconnect/reconnect actions on route changes
         if (CacheListeners[KEY] === 0) {

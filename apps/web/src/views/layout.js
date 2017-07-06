@@ -17,6 +17,7 @@ import CommanderStore from '~/stores/commanderStore'
 import Draft from '~/views/draft'
 import Onboard from './onboard'
 import LayoutWrap from '~/views/layout/wrap'
+import { start } from '../start'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -24,7 +25,12 @@ type Props = {
   soundStore: SoundStore,
 }
 
-log('run layout 123')
+if (module && module.hot) {
+  module.hot.accept(() => {
+    log('accept: ./layout.js')
+    start(false, true)
+  })
+}
 
 // @view.attach('layoutStore') in any sub-view
 @view.provide({

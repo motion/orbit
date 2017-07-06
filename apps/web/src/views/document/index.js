@@ -29,10 +29,6 @@ export default class DocumentView {
   }
 
   render({ editorProps, inline, showChildren, readOnly, store }: Props) {
-    // window.x()
-
-    console.log('GOTEM', store.document)
-
     if (!store.document) {
       return <loading />
     }

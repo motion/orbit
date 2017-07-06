@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import App from '~/app'
 import themes from './themes'
+import LayoutExtra from './views/layout'
 
 start(App.started, App.started)
 
@@ -31,7 +32,7 @@ export function render(shouldReset) {
 }
 
 export async function start(quiet, restart) {
-  // render(restart)
+  render(restart)
   await App.start(quiet)
   render()
 }

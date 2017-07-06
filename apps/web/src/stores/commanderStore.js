@@ -27,7 +27,7 @@ const KEYMAP = {
 }
 
 export default class CommanderStore {
-  v = 14
+  v = 20
   @watch document = () => Document.get(Router.params.id)
   @watch crumbs = () => this.document && this.document.getCrumbs()
   mouseMoving = Observable.fromEvent(window, 'mousemove')

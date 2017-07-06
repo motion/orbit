@@ -1,11 +1,12 @@
 // @flow
 // helper that logs functions, works as decorator or plain
+// passes through the first argument
 
 // Takes any string and converts it into a #RRGGBB color.
 class StringToColor {
-  stringToColorHash = {}
-  nextVeryDifferntColorIdx = 0
-  veryDifferentColors = [
+  hash = {}
+  colorId = 0
+  colors = [
     '#b19cd9',
     '#d9b19c',
     '#9cc4d9',
@@ -25,21 +26,20 @@ class StringToColor {
     '#81ecc4',
     '#c481ec',
   ]
-  getColor(str) {
-    if (!this.stringToColorHash[str]) {
-      this.stringToColorHash[str] = this.veryDifferentColors[
-        this.nextVeryDifferntColorIdx++
-      ]
+  getColor(thing) {
+    const str = cutoff(thing.toString(), 14)
+    if (!this.hash[str]) {
+      this.hash[str] = this.colors[this.colorId++]
     }
-    return this.stringToColorHash[str]
+    return this.hash[str]
   }
 }
 
 const Color = new StringToColor()
 
-function cutoff(thing: string) {
-  if (thing.length > 150) {
-    return thing.slice(0, 150) + '...'
+function cutoff(thing: string, amt = 150) {
+  if (thing.length > amt) {
+    return thing.slice(0, amt - 3) + '...'
   }
   return thing
 }
@@ -70,7 +70,7 @@ export default function log(...args) {
   const logger = (...things) => {
     console.log(
       `%c${things.map(prettyPrint).join(' ')}`,
-      `background: ${Color.getColor(things[0].toString())}`
+      `background: ${Color.getColor(things[0])}`
     )
   }
 

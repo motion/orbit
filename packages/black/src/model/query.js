@@ -53,9 +53,7 @@ function execQuery(it, valueGet: Function) {
     isObserving = true
     // handle not connected yet
     if (query && query.isntConnected) {
-      log('not connected yet')
       query.onConnection().then(() => {
-        console.log('ok not lets re-run')
         query = valueGet()
         runSubscribe()
       })

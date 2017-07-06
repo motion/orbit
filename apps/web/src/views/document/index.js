@@ -35,7 +35,7 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        {store.v}
+        {store.v} 123
         <content $$row>
           <Editor
             key={store.document._id}

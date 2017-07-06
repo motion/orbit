@@ -50,7 +50,6 @@ export default class CommanderStore {
     },
     { terse: true }
   )
-  // Plain.deserialize('/')
   path = ''
   highlightIndex = -1
   searchResults: Array<Document> = []
@@ -165,7 +164,6 @@ export default class CommanderStore {
   }
 
   focus = () => {
-    console.log('focused')
     if (!this.input) {
       console.error('no commander input')
     } else {
@@ -364,9 +362,7 @@ export default class CommanderStore {
     docs.map(doc => doc.getTitle()).join(PATH_SEPARATOR)
 
   onFocus = () => {
-    // this.editorState.transform().selectAll().apply()
     this.focused = true
-    // this.renderIndex++
     this.open()
   }
 
@@ -377,7 +373,7 @@ export default class CommanderStore {
 
   onActivate = () => {
     this.active = true
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       this.focus()
     })
   }
@@ -499,7 +495,7 @@ export default class CommanderStore {
   }
 
   close = () => {
-    this.renderIndex++
+    this.version++
     this.onBlur()
     // this.input.blur()
     this.setOpen(false)

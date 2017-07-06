@@ -32,12 +32,6 @@ const schema = {
   },
 }
 
-const between = (a, b, c) => {
-  if (a >= b) return c >= b && c <= a
-  if (a <= b) return c <= b && c >= a
-  return a === c
-}
-
 @view({
   store: class {
     rendered = false

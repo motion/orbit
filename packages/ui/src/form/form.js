@@ -6,23 +6,43 @@ import Surface from '../surface'
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Form {
-  render({ uiContext, children, ...props }) {
+  render({ uiContext, ...props }) {
     return (
-      <Surface background="transparent" tagName="form" {...props}>
-        <Provider
-          provide={{
-            uiContext: {
-              ...uiContext,
-              inForm: true,
-            },
-          }}
-        >
-          {() =>
-            <formChildren>
-              {children}
-            </formChildren>}
-        </Provider>
-      </Surface>
+      <Provider
+        provide={{
+          uiContext: {
+            ...uiContext,
+            inForm: true,
+            formValues: {},
+          },
+        }}
+      >
+        {() => <FormInner {...props} />}
+      </Provider>
+    )
+  }
+}
+
+@inject(context => ({ uiContext: context.uiContext }))
+@view.ui
+class FormInner {
+  onSubmit = e => {
+    e.preventDefault()
+    const { formValues } = this.props.uiContext
+    if (this.props.onSubmit) {
+      this.props.onSubmit(formValues, e)
+    }
+  }
+
+  render({ uiContext, ...props }) {
+    return (
+      <Surface
+        background="transparent"
+        tagName="form"
+        $form
+        {...props}
+        onSubmit={this.onSubmit}
+      />
     )
   }
   static style = {

@@ -19,6 +19,7 @@ type Props = {
   type: 'input' | 'select' | 'toggle',
   spacing: number,
   row?: boolean,
+  name?: string,
   placeholder?: string,
   placeholderColor?: Color,
   elementStyle?: Object,
@@ -49,6 +50,7 @@ export default class Field {
     width,
     iconProps,
     elementProps,
+    name,
     labelProps,
     labelStyle,
     fieldStyle,
@@ -89,6 +91,7 @@ export default class Field {
           if={!children && Element}
           $element
           onChange={onChange}
+          name={name || (label && label.toLowerCase()) || ''}
           defaultValue={defaultValue}
           sync={sync}
           theme={theme}

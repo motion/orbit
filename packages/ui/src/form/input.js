@@ -1,10 +1,19 @@
 import React from 'react'
 import SizedSurface from '../sizedSurface'
+import { inject } from '@mcro/black'
 
-export default ({ sync, type, ...props }) => {
+function Input({ sync, type, name, uiContext, ...props }) {
   if (sync) {
     props.value = sync.get()
     props.onChange = e => sync.set(e.target.value)
+  }
+
+  if (uiContext && uiContext.inForm && !sync) {
+    const ogOnChange = props.onChange
+    props.onChange = e => {
+      uiContext.formValues[name] = e.target.value
+      ogOnChange && ogOnChange(e)
+    }
   }
 
   if (type === 'checkbox') {
@@ -22,6 +31,7 @@ export default ({ sync, type, ...props }) => {
       borderWidth={1}
       wrapElement
       tagName="input"
+      name={name}
       type={type}
       elementProps={{
         css: {
@@ -33,3 +43,5 @@ export default ({ sync, type, ...props }) => {
     />
   )
 }
+
+export default inject(context => ({ uiContext: context.uiContext }))(Input)

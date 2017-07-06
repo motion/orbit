@@ -258,6 +258,7 @@ export default class HoverGlow {
       left: 0,
       right: 0,
       bottom: 0,
+      userSelect: 'none',
       // pointerEvents: 'none',
     },
     glow: {

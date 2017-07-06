@@ -59,7 +59,7 @@ const decorations = ({ mobx, ui, magic } = {}) => [
 ]
 
 const base: DecoratorType = decor(
-  decorations({ mobx: true, magic: true, ui: true })
+  decorations({ mobx: true, magic: false, ui: true })
 )
 
 // @view

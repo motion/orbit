@@ -125,7 +125,7 @@ export default class ListItem {
               {before}
             </before>
             <prop if={primary || secondary} $col $hasAvatar={!!avatar}>
-              <Text $primary size={size} ellipse>
+              <Text $primary size={size} ellipse color="inherit">
                 {primary}
               </Text>
               <Text

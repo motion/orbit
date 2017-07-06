@@ -68,7 +68,7 @@ const Theme = {
     base: LIGHT,
     hover: {
       ...LIGHT,
-      color: color(LIGHT.color).darken(0.1),
+      color: color(LIGHT.color).lighten(0.5),
     },
     active: {
       ...LIGHT,

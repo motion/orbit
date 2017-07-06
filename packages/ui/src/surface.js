@@ -486,7 +486,6 @@ export default class Surface implements ViewType {
     return {
       glintColor,
       element: {
-        color,
         height,
         ...borderRadius,
         overflow: 'visible',

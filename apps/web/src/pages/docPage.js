@@ -78,7 +78,6 @@ export default class DocumentPage {
             />
           </UI.Segment>
         </Page.Actions>
-        <Breadcrumbs />
         <DocumentView
           if={!docStore.showInbox}
           id={doc._id}

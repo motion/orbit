@@ -11,6 +11,13 @@ const colors = [
   'darkred',
 ]
 
+function cutoff(thing: string) {
+  if (thing.length > 150) {
+    return thing.slice(0, 150) + '...'
+  }
+  return thing
+}
+
 function prettyPrint(thing: any) {
   if (Array.isArray(thing)) {
     return thing.map(prettyPrint)
@@ -20,7 +27,7 @@ function prettyPrint(thing: any) {
       return 'null'
     }
     try {
-      return JSON.stringify(thing, 0, 2)
+      return cutoff(JSON.stringify(thing, 0, 2))
     } catch (e) {
       return thing
     }

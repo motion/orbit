@@ -1,17 +1,7 @@
 # nate
-  - attach this.module = module to all views in hmr-transform
-    - unstable_handleError can use module data to recover
-    - stores can hmr
-  - nested things:
-    - ListItem: wraps them in Collapsable
-    - MenuItem: wraps them into Popovers
-  - theme="green" power helper
-    - if theme doesn't exist AND theme is valid color derive rest of theme from that
-      - super easy: just find luminosity, then darken/light borderColor and darken/lighten color
   - want to start keeping notes on things i want to see
     - visit/england (visit/england/london), visit/india, etc
-  - UI.Menu => UI.Popover + UI.List
-  - watch should watch package.json files and re-run lerna bootstrap there
+  - installing from npm is a pain
   - CommanderStore.crumbs is coming back as mobxarray not plain array
   - breadcrumbsstore log is happening on keystores
   - indexes still not working .sort('createdAt')
@@ -25,7 +15,10 @@
 # high level prioritized list
   - inbox
   - @mentions / dates
-  - hashtags / statuses / comments / attachments
+  - hashtags ?
+  - statuses ?
+  - comments
+  - attachments
   - homepage
   - documents
     - inserting and editing a link
@@ -46,16 +39,9 @@
     - email forwarding
     - github sync
     - newsfeed
-    - attachmentsbox
     - grids
     - templates
   - integrations
-  - gloss
-    - allow passing theme objects directly to "tweak" styles theme={{ background: 'red' }} (works with ui niceStyle stuff)
-    - add color adjustment objects so no need for outside lib:
-      - { background: { color: 'red', lighten: 0.5, alpha: 0.1 } }
-        - could have references?:
-          - { background: { color: '.color', lighten: 0.5, alpha: 0.1 } }
 
 # fast pouch w workers
 - https://github.com/jkleinsc/telegraph

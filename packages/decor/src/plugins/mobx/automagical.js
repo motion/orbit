@@ -195,7 +195,6 @@ function mobxifyWatch(obj, method, val) {
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
         log(KEY, 'automagical.currentObservable', currentObservable.current)
-        console.log(' === ', currentObservable)
         current.set(currentObservable.current) // hit observable
       }
     })

@@ -8,7 +8,6 @@ export default class CommanderInput {
   render({ commanderStore }) {
     return (
       <bar $$align="center" $$row $$flex>
-        {commanderStore.v}
         <Input
           $input
           size={1.3}

@@ -15,28 +15,29 @@ export type Props = {
   fontWeight?: number,
 }
 
+class TextStore {
+  selected = false
+  start() {
+    this.react(
+      () => this.props.editable,
+      editable => {
+        console.log('text react editable', editable)
+        if (this.clickaway) {
+          this.clickaway.dispose()
+        }
+        if (editable) {
+          this.clickaway = this.addEvent(window, 'click', (event: Event) =>
+            this.props.onFinishEdit(this.value)
+          )
+        }
+      }
+    )
+  }
+}
+
 // click away from edit clears it
 @view({
-  store: class TextStore {
-    selected = false
-
-    start() {
-      this.react(
-        () => this.props.editable,
-        editable => {
-          console.log('text react editable', editable)
-          if (this.clickaway) {
-            this.clickaway.dispose()
-          }
-          if (editable) {
-            this.clickaway = this.addEvent(window, 'click', (event: Event) =>
-              this.props.onFinishEdit(this.value)
-            )
-          }
-        }
-      )
-    }
-  },
+  store: TextStore,
 })
 export default class Text implements ViewType {
   props: Props

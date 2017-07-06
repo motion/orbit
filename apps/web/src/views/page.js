@@ -42,7 +42,6 @@ export default class Page {
     })
 
   render({ children, sidebar, actions, className }: Props) {
-    console.log('Pagedot', this.actions, this.sidebar)
     return (
       <page className={className}>
         <SlotFill.Fill name="actions">

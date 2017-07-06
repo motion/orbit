@@ -42,12 +42,11 @@ export default class Breadcrumbs {
   static style = {
     breadcrumbs: {
       userSelect: 'none',
-      height: 38,
+      height: 25,
       fontSize: 22,
       padding: [0, 20],
-      margin: [-5, 0, 0],
+      margin: 0,
       flexFlow: 'row',
-      // borderLeft: [4, '#ddd'],
     },
     items: {
       alignItems: 'center',

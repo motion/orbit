@@ -2,9 +2,13 @@ import React from 'react'
 import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
 
-export default injectTheme(({ badge, children, theme, ...props }) =>
+const Button = injectTheme(({ badge, children, theme, glowProps, ...props }) =>
   <SizedSurface
     tagName="button"
+    sizeRadius
+    sizeFont
+    sizeHeight
+    sizePadding
     borderWidth={1}
     glint
     row
@@ -12,6 +16,7 @@ export default injectTheme(({ badge, children, theme, ...props }) =>
     glow
     glowProps={{
       scale: 2,
+      ...glowProps,
     }}
     background={theme.base.buttonBackground}
     {...props}
@@ -24,3 +29,7 @@ export default injectTheme(({ badge, children, theme, ...props }) =>
       </badge>}
   </SizedSurface>
 )
+
+Button.acceptsHovered = true
+
+export default Button

@@ -11,13 +11,14 @@ import DocumentView from '~/views/document'
     docs = Document.child(this.props.doc._id)
     showDraft = true
     draftNumber = 0
-    draft = watch(() =>
-      Document.create({
-        title: '',
-        _tempId: this.draftNumber,
-        parentId: this.props.doc._id,
-      })
-    )
+    draft = null
+    // draft = watch(() =>
+    //   Document.create({
+    //     title: '',
+    //     _tempId: this.draftNumber,
+    //     parentId: this.props.doc._id,
+    //   })
+    // )
   },
 })
 export default class Inbox {
@@ -97,8 +98,9 @@ export default class Inbox {
     return (
       <inbox>
         <bar>
-          <UI.Title size={4}>Inbox</UI.Title>
-
+          <UI.Title size={4} stat={`${docs.length} items`}>
+            Inbox
+          </UI.Title>
           <actions>
             <UI.Button
               background="green"
@@ -112,18 +114,16 @@ export default class Inbox {
             </UI.Button>
           </actions>
         </bar>
-        <UI.Title size={2.5}>
-          {docs.length} items
-        </UI.Title>
-        <UI.List items={items} />
+
+        <UI.List itemProps={{ height: 'auto', padding: 15 }} items={items} />
 
         <UI.Drawer
           from="bottom"
           percent={80}
           open={true && store.draft && store.draft._id && store.showDraft}
         >
-          test
-          <DocumentView document={store.draft} />
+          <test>test</test>
+          <DocumentView if={false} document={store.draft} />
         </UI.Drawer>
       </inbox>
     )
@@ -131,7 +131,7 @@ export default class Inbox {
 
   static style = {
     inbox: {
-      padding: 20,
+      padding: [15, 20],
     },
     bar: {
       flexFlow: 'row',

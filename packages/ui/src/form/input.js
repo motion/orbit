@@ -14,13 +14,15 @@ export default ({ sync, type, ...props }) => {
   return (
     <SizedSurface
       $input
+      sizeFont
+      sizeRadius
+      sizeHeight
+      sizePadding
       flex
-      borderRadius={0}
       borderWidth={1}
       wrapElement
       tagName="input"
       type={type}
-      glint={[255, 255, 255, 0.1]}
       elementProps={{
         css: {
           width: '100%',

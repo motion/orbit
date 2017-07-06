@@ -1,14 +1,36 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '@mcro/models'
+import { User, Document } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
+import DocumentView from '~/views/document'
 
-@view
+@view({
+  store: class {
+    document = Document.create({}, true)
+  },
+})
 export default class UserBar {
-  render() {
+  render({ store }) {
     return (
       <userbar $$draggable if={User.loggedIn}>
+        <UI.Popover
+          theme="light"
+          openOnClick
+          background
+          delay={150}
+          borderRadius={8}
+          elevation={2}
+          distance={10}
+          forgiveness={16}
+          width={400}
+          target={<UI.Button theme="dark">Status | 👋</UI.Button>}
+          openOnHover
+          closeOnClick
+        >
+          <DocumentView if={store.document} document={store.document} />
+        </UI.Popover>
+        <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>
           {User.name}
         </UI.Text>
@@ -17,7 +39,7 @@ export default class UserBar {
           background="transparent"
           distance={10}
           forgiveness={16}
-          delay={130}
+          delay={150}
           target={<UI.Button theme="dark" circular icon="body" />}
           openOnHover
           closeOnClick
@@ -26,11 +48,10 @@ export default class UserBar {
             background
             elevation={3}
             width={150}
-            padding={[3, 2]}
-            borderRadius={8}
+            padding={3}
+            borderRadius={6}
             itemProps={{
               height: 32,
-              margin: [0, 0, 2],
               fontSize: 14,
               borderWidth: 0,
               borderRadius: 8,
@@ -41,7 +62,7 @@ export default class UserBar {
                 primary: User.name,
                 after: (
                   <UI.Button
-                    chromeless
+                    size={0.8}
                     icon="power"
                     onClick={() => User.logout()}
                   />

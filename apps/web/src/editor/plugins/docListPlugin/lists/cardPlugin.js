@@ -26,7 +26,7 @@ export default class CardList {
 
         {listStore.docs.map((doc, i) =>
           <TiltGlow width={width} height={height} key={doc._id}>
-            <DocItem $doc inline ref={node => this.docRef(node, i)} doc={doc} />
+            <DocItem inline ref={node => this.docRef(node, i)} doc={doc} />
           </TiltGlow>
         )}
       </FlipMove>

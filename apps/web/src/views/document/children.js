@@ -56,15 +56,6 @@ export default class Children {
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
 
-    const dot = color =>
-      <UI.Button
-        circular
-        background={color}
-        size={0.3}
-        $$margin={[0, 5, 0, 0]}
-        color={color}
-      />
-
     const getDoc = doc => {
       const children = store.children[doc._id]
       return {
@@ -74,7 +65,6 @@ export default class Children {
         primary: (
           <div $$row $$align="center">
             <name>
-              {dot(doc.color)}
               <span $$ellipse>
                 {doc.getTitle()}
               </span>
@@ -99,7 +89,6 @@ export default class Children {
             primary: (
               <div $$row $$align="center">
                 <name>
-                  {dot([0, 0, 0, 0.4])}
                   <input
                     $name
                     autoFocus
@@ -120,22 +109,19 @@ export default class Children {
 
     return (
       <children>
-        <header $$row>
-          <title>
-            {hasDocs ? '' : 'No '}Pages
-          </title>
-          <actions>
-            <UI.Button
-              $add
-              if={store.newTitle === null}
-              size={1}
-              icon="siadd"
-              onClick={store.add}
-            />
-          </actions>
-        </header>
+        <UI.Button
+          $add
+          if={store.newTitle === null}
+          size={1}
+          icon="siadd"
+          onClick={store.add}
+        />
         <content>
-          <UI.List if={hasDocs} items={items} />
+          <UI.List
+            if={hasDocs}
+            items={items}
+            itemProps={{ height: 'auto', padding: [10, 10] }}
+          />
         </content>
       </children>
     )
@@ -143,10 +129,13 @@ export default class Children {
 
   static style = {
     children: {
-      // borderTop: [1, '#f6f6f6'],
-      padding: [5],
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      padding: 5,
+      alignSelf: 'center',
       cursor: 'default',
-      width: 170,
+      width: 200,
     },
     header: {
       padding: [0, 10],
@@ -158,9 +147,6 @@ export default class Children {
       color: [0, 0, 0, 0.3],
       margin: [7, 0, 10, 0],
       fontWeight: 500,
-    },
-    content: {
-      // padding: [0, 2],
     },
     noDocs: {
       padding: 20,

@@ -32,6 +32,7 @@ export default class TiltGlow {
             width,
             height,
             borderRadius: 5,
+            overflow: 'hidden',
             transition: 'transform 50ms ease-in',
           }}
         >

@@ -3,14 +3,13 @@ import { watch } from '@mcro/black'
 import { debug } from '~/helpers'
 import { Document } from '@mcro/models'
 import type EditorStore from '~/editor/stores/editorStore'
-import { throttle, debounce } from 'lodash'
+import { debounce } from 'lodash'
 
 const print = debug('documentStore')
 
 type Props = {
   id?: string,
   document?: Document,
-  // this is for inline docs
   inline?: boolean,
 }
 
@@ -18,14 +17,17 @@ export default class DocumentStore {
   props: Props
 
   id = this.props.id
-  document: ?Document = watch(
-    () => this.props.document || Document.get(this.props.id)
-  )
+  @watch
+  document: ?Document = () => {
+    if (this.props.id) {
+      console.log('RUN documentStore.document', this.props.id)
+    }
+    return this.props.document || Document.get(this.props.id)
+  }
   lastSavedRev: ?string = null
   lastSavedState = null
   editor: ?EditorStore = null
   downAt = Date.now()
-  crumbs = []
 
   get hasNewContent(): boolean {
     return (
@@ -58,6 +60,7 @@ export default class DocumentStore {
     // init content
     this.watch(() => {
       if (!this.editor.state) {
+        console.log('no state setting contents', this.document.content)
         this.editor.setContents(this.document.content, true)
       }
     })

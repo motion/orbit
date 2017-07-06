@@ -1,5 +1,5 @@
 // @flow
-import decorator from '@mcro/decor'
+import decor from '@mcro/decor'
 import { object, string } from 'prop-types'
 import extendsReact from '@mcro/decor/lib/plugins/react/extendsReact'
 import type { ExtendsReact } from '@mcro/decor/lib/plugins/react/extendsReact'
@@ -16,7 +16,7 @@ import addContext from '@mcro/decor/lib/plugins/react/addContext'
 import attach from '@mcro/decor/lib/plugins/react/attach'
 import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
 import { storeOptions } from './store'
-import { decorator as glossDecorator } from './gloss'
+import { createElement, decorator as glossDecorator } from './gloss'
 import type { Glossy } from './gloss'
 
 export type ViewClass = ExtendsReact &
@@ -33,6 +33,8 @@ export type ViewDec = Function & {
   attach(...stores: Array<string>): ViewClass,
 }
 
+export type DecoratorType = () => ViewClass | (() => () => ViewClass)
+
 const uiContext = [
   addContext,
   {
@@ -43,7 +45,7 @@ const uiContext = [
 ]
 
 // applied top to bottom
-const decorations = ({ mobx, ui, autobind, magic } = {}) => [
+const decorations = ({ mobx, ui, magic } = {}) => [
   extendsReact,
   subscribable,
   helpers,
@@ -53,13 +55,11 @@ const decorations = ({ mobx, ui, autobind, magic } = {}) => [
   // gloss after mobx
   () => ({ decorator: glossDecorator }),
   magic && automagical,
-  // autobind last because it seals things
-  autobind && autobound,
   [storeProvidable, storeOptions],
 ]
 
-const base: () => ViewClass | (() => () => ViewClass) = decorator(
-  decorations({ mobx: true, autobind: true, magic: true, ui: true })
+const base: DecoratorType = decor(
+  decorations({ mobx: true, magic: true, ui: true })
 )
 
 // @view
@@ -75,14 +75,14 @@ const view: ViewDec = (item: Object | Class<any> | Function): ViewClass => {
 view.on = base.on
 
 // other decorators
-view.ui = decorator(decorations({ ui: true, autobind: true }))
-view.basics = decorator([
+view.ui = decor(decorations({ ui: true }))
+view.basics = decor([
   extendsReact,
   reactRenderArgs,
   observer,
-  opts => ({ decorator: glossDecorator }),
+  () => ({ decorator: glossDecorator }),
 ])
 view.provide = stores => base({ stores, context: true })
-view.attach = (...names) => decorator([[attach, { names }]])
+view.attach = (...names) => decor([[attach, { names }]])
 
 export default view

@@ -1,9 +1,31 @@
 // @flow
-// use this in @stores to autorun autoruns
-export default function watch(fn: Function) {
-  function temp() {
-    return fn(this.props, this.context)
+
+// @watch decorator
+export default function watch(
+  target: Object,
+  method: string,
+  descriptor: Object
+) {
+  // non-decorator
+  if (typeof target === 'function') {
+    target.IS_AUTO_RUN = true
+    return target
   }
-  temp.autorunme = true
-  return temp
+
+  // decorator
+  if (descriptor.initializer) {
+    const ogInit = descriptor.initializer
+    return {
+      ...descriptor,
+      configurable: true,
+      initializer: function() {
+        const value = ogInit.call(this)
+        if (typeof value !== 'function') {
+          throw 'Expected a function to watch'
+        }
+        value.IS_AUTO_RUN = true
+        return value
+      },
+    }
+  }
 }

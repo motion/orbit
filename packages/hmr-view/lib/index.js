@@ -29,6 +29,8 @@ if (_window2.default.__reactComponentProxies) {
   });
 }
 
+var reloaded = [];
+
 function proxyReactComponents(_ref) {
   var filename = _ref.filename,
       components = _ref.components,
@@ -39,11 +41,16 @@ function proxyReactComponents(_ref) {
       React = _imports[0];
 
   var _locals = _slicedToArray(locals, 1),
-      hot = _locals[0].hot;
+      module = _locals[0];
+
+  var _locals2 = _slicedToArray(locals, 1),
+      hot = _locals2[0].hot;
 
   if (!hot || typeof hot.accept !== 'function') {
     throw new Error('locals[0] does not appear to be a `module` object with Hot Module ' + 'replacement API enabled. You should disable react-transform-hmr in ' + 'production by using `env` section in Babel configuration. See the ' + 'example in README: https://github.com/gaearon/react-transform-hmr');
   }
+
+  // module
 
   if (Object.keys(components).some(function (key) {
     return !components[key].isInFunction;
@@ -56,7 +63,14 @@ function proxyReactComponents(_ref) {
     });
   }
 
-  var forceUpdate = (0, _reactProxy.getForceUpdate)(_window2.default.React);
+  var forceUpdater = (0, _reactProxy.getForceUpdate)(_window2.default.React);
+  var forceUpdate = function forceUpdate(instance) {
+    _window2.default.App && _window2.default.App.clearErrors && _window2.default.App.clearErrors();
+    instance.module = module;
+    instance.clearErrors && instance.clearErrors();
+    return forceUpdater(instance);
+  };
+  _window2.default.forceUpdate = forceUpdate;
 
   return function wrapWithProxy(ReactClass, uniqueId) {
     var _components$uniqueId = components[uniqueId],
@@ -65,6 +79,8 @@ function proxyReactComponents(_ref) {
         _components$uniqueId$2 = _components$uniqueId.displayName,
         displayName = _components$uniqueId$2 === undefined ? uniqueId : _components$uniqueId$2;
 
+    // attach module to class so it can do shit w it
+    // ReactClass.module = module
 
     if (isInFunction) {
       return ReactClass;
@@ -72,7 +88,7 @@ function proxyReactComponents(_ref) {
 
     var globalUniqueId = filename + '$' + uniqueId;
     if (componentProxies[globalUniqueId]) {
-      // console.info('[ReactHMR] ' + displayName)
+      reloaded.push(displayName);
       var instances = componentProxies[globalUniqueId].update(ReactClass);
       setTimeout(function () {
         return instances.forEach(forceUpdate);
@@ -84,4 +100,11 @@ function proxyReactComponents(_ref) {
     return componentProxies[globalUniqueId].get();
   };
 }
+
+setInterval(function () {
+  if (reloaded.length) {
+    console.log(`[HMR] views: ${reloaded.join(', ')}`);
+    reloaded = [];
+  }
+}, 1000);
 //# sourceMappingURL=index.js.map

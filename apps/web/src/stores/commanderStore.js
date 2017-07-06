@@ -27,17 +27,16 @@ const KEYMAP = {
 }
 
 export default class CommanderStore {
-  v = 11
+  v = 12
+  @watch document = () => Document.get(Router.params.id)
+  @watch crumbs = () => this.document && this.document.getCrumbs()
   mouseMoving = Observable.fromEvent(window, 'mousemove')
     .throttleTime(500)
-    .map(event => {
+    .map(() => {
       return Date.now() - 500 > this.mouseMoving.current || 0
     })
     .reduce((acc, x) => acc && x && Date.now())
-
   keyManager = new ShortcutManager(KEYMAP)
-  currentDocument = watch(() => Document.get(Router.params.id))
-  crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
   isOpen = false
   value = ''
   path = ''
@@ -332,15 +331,11 @@ export default class CommanderStore {
   }
 
   open = () => {
-    this.setOpen(true)
+    this.isOpen = true
   }
 
   close = () => {
-    this.setOpen(false)
-  }
-
-  setOpen = val => {
-    this.isOpen = val
+    this.isOpen = false
   }
 
   moveHighlight = (diff: number) => {

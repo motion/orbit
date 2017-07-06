@@ -14,7 +14,8 @@
     "mobx-utils": "^2.0.1",
     "prop-types": "^15.5.9",
     "react-mixin": "^3.0.5",
-    "sb-event-kit": "^3.0.0"
+    "sb-event-kit": "^3.0.0",
+    "redbox-react": "^1.4.2"
   },
   "optionalDependencies": {
     "react": "^15.6.0",

@@ -8,8 +8,8 @@ type Props = {
   color: Color,
   size: number,
   radius?: number,
-  leftRadius?: number,
-  rightRadius?: number,
+  borderLeftRadius?: number,
+  borderRightRadius?: number,
   attach?: Object,
   top?: number,
   bottom?: number,
@@ -42,8 +42,8 @@ export default class Glint {
   static theme = ({
     borderRadius,
     bottom,
-    rightRadius,
-    leftRadius,
+    borderRightRadius,
+    borderLeftRadius,
     top,
     color,
     size,
@@ -52,15 +52,15 @@ export default class Glint {
     const radiusStyle = borderRadius && {
       borderRadius,
     }
-    const rightRadiusStyle = rightRadius && {
+    const rightRadiusStyle = borderRightRadius && {
       [isUndef(bottom)
         ? 'borderTopRightRadius'
-        : 'borderBottomRightRadius']: rightRadius,
+        : 'borderBottomRightRadius']: borderRightRadius,
     }
-    const leftRadiusStyle = leftRadius && {
+    const leftRadiusStyle = borderLeftRadius && {
       [isUndef(bottom)
         ? 'borderTopLeftRadius'
-        : 'borderBottomLeftRadius']: leftRadius,
+        : 'borderBottomLeftRadius']: borderLeftRadius,
     }
 
     return {

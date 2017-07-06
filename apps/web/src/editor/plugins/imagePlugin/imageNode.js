@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image } from '@mcro/models'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import node from '~/editor/node'
 
 const readFile = file =>
@@ -18,12 +18,7 @@ const readFile = file =>
 class ImageNodeStore {
   src = null
   loading = false
-
-  start() {
-    this.watch(async () => {
-      this.src = await this.getDataUrl(this.props.node.data)
-    })
-  }
+  @watch src = () => this.getDataUrl(this.props.node.data)
 
   getDataUrl = async data => {
     if (data.get('file')) {

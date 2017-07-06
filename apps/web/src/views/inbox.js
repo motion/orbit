@@ -98,7 +98,9 @@ export default class Inbox {
     return (
       <inbox>
         <bar>
-          <UI.Title size={4}>Inbox</UI.Title>
+          <UI.Title size={4} stat={`${docs.length} items`}>
+            Inbox
+          </UI.Title>
           <actions>
             <UI.Button
               background="green"
@@ -112,10 +114,6 @@ export default class Inbox {
             </UI.Button>
           </actions>
         </bar>
-
-        <UI.Title size={2.5}>
-          {docs.length} items
-        </UI.Title>
 
         <UI.List itemProps={{ height: 'auto', padding: 15 }} items={items} />
 
@@ -133,7 +131,7 @@ export default class Inbox {
 
   static style = {
     inbox: {
-      padding: 20,
+      padding: [15, 20],
     },
     bar: {
       flexFlow: 'row',

@@ -32,6 +32,7 @@ export Text from './text'
 export Popover from './popover'
 export Progress from './progress'
 export View from './view'
+export Circle from './circle'
 
 // effects
 export Glow from './effects/glow'

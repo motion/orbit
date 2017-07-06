@@ -4,40 +4,54 @@ import { view } from '@mcro/black'
 @view
 export default class Circle {
   static defaultProps = {
-    size: 45,
+    size: 30,
   }
 
-  render({ size, ...props }) {
-    return <circle {...props} />
+  render({
+    size,
+    background,
+    children,
+    style,
+    className,
+    onClick,
+    onFocus,
+    onMouseEnter,
+    onMouseLeave,
+    ...props
+  }) {
+    const elProps = {
+      style,
+      className,
+      onClick,
+      onFocus,
+      onMouseEnter,
+      onMouseLeave,
+      children,
+    }
+
+    return <circle {...elProps} css={props} />
   }
 
   static style = {
     circle: {
-      display: 'flex',
-      fontSize: 30,
-      borderRadius: 100,
+      borderRadius: 1000,
       lineHeight: '1rem',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 1000,
       background: '#fff',
-
       color: '#111',
       fontWeight: 400,
       cursor: 'pointer',
       userSelect: 'none',
-      transition: 'all ease-in 100ms',
-
-      '&:hover': {
-        background: '#efefef',
-      },
     },
   }
 
-  static theme = ({ size }) => ({
+  static theme = ({ size, background }) => ({
     circle: {
       width: size,
       height: size,
+      background,
+      borderRadius: size,
     },
   })
 }

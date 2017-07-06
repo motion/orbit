@@ -27,6 +27,7 @@ type Props = {
   elementProps?: Object,
   fieldProps?: Object,
   labelProps?: Object,
+  element?: React$Children<any>,
 }
 
 @view.ui
@@ -61,6 +62,7 @@ export default class Field {
     chromeless,
     placeholder,
     placeholderColor,
+    size,
     ...props
   }: Props) {
     const Element = fields[type]
@@ -78,12 +80,13 @@ export default class Field {
           ellipse
           tagName="label"
           htmlFor={id}
+          size={size}
           {...labelProps}
         >
           {label}
         </Text>
         <Element
-          if={Element}
+          if={!children && Element}
           $element
           onChange={onChange}
           defaultValue={defaultValue}
@@ -93,6 +96,7 @@ export default class Field {
           placeholder={placeholder}
           placeholderColor={placeholderColor}
           borderRadius={0}
+          size={size}
           {...elementProps}
         />
         {children}

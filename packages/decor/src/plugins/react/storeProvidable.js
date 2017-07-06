@@ -28,6 +28,19 @@ export default function storeProvidable(options, emitter) {
       // see setupStores()
       let Stores
 
+      function initStores() {
+        Stores = allStores
+
+        // call decorators
+        if (storeDecorator && allStores) {
+          for (const key of Object.keys(allStores)) {
+            Stores[key] = storeDecorator(allStores[key])
+          }
+        }
+      }
+
+      initStores()
+
       // return HoC
       class StoreProvider extends React.Component {
         static get name() {
@@ -101,15 +114,6 @@ export default function storeProvidable(options, emitter) {
         }
 
         setupStores() {
-          Stores = allStores
-
-          // call decorators
-          if (storeDecorator && allStores) {
-            for (const key of Object.keys(allStores)) {
-              Stores[key] = storeDecorator(allStores[key])
-            }
-          }
-
           const getProps = {
             get: () => this._props,
             configurable: true,
@@ -170,6 +174,7 @@ export default function storeProvidable(options, emitter) {
 
         handleHotReload(module) {
           log('i should handle this', module)
+          initStores()
           this.module = module
           this.setupStores()
         }

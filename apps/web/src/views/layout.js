@@ -24,6 +24,8 @@ type Props = {
   soundStore: SoundStore,
 }
 
+log('run layout 123')
+
 // @view.attach('layoutStore') in any sub-view
 @view.provide({
   layoutStore: LayoutStore,

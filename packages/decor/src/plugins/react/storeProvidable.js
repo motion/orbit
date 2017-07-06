@@ -8,7 +8,6 @@ import Redbox from 'redbox-react'
 
 export default function storeProvidable(options, emitter) {
   const cache = new Cache()
-  const { instanceOpts } = options
 
   return {
     name: 'store-providable',
@@ -26,14 +25,8 @@ export default function storeProvidable(options, emitter) {
       //   cache.revive(instanceOpts.module, allStores)
       // }
 
-      let Stores = allStores
-
-      // call decorators
-      if (storeDecorator && allStores) {
-        for (const key of Object.keys(allStores)) {
-          Stores[key] = storeDecorator(allStores[key])
-        }
-      }
+      // see setupStores()
+      let Stores
 
       // return HoC
       class StoreProvider extends React.Component {
@@ -82,55 +75,7 @@ export default function storeProvidable(options, emitter) {
           Mobx.extendShallowObservable(this, { _props: null })
           this._props = { ...this.props }
 
-          const getProps = {
-            get: () => this._props,
-            configurable: true,
-          }
-
-          // start stores
-          const finalStores = Object.keys(Stores).reduce((acc, cur) => {
-            const Store = Stores[cur]
-
-            const createStore = () => {
-              Object.defineProperty(Store.prototype, 'props', getProps)
-              const store = new Store()
-              delete Store.prototype.props // safety, remove hack
-              // then define directly
-              Object.defineProperty(store, 'props', getProps)
-              return store
-            }
-
-            return {
-              ...acc,
-              [cur]: createStore(),
-            }
-          }, {})
-
-          if (instanceOpts && instanceOpts.module && instanceOpts.module.hot) {
-            instanceOpts.module.hot.dispose(data => {
-              data.stores = this.state.stores
-            })
-          }
-
-          // optional mount function
-          if (options.onStoreMount) {
-            for (const name of Object.keys(finalStores)) {
-              // fallback to store if nothing returned
-              finalStores[name] =
-                options.onStoreMount(finalStores[name], this.props) ||
-                finalStores[name]
-            }
-          }
-
-          // line below used to be (hmr state preserve):
-          // stores: cache.restore(
-          //   this,
-          //   finalStores,
-          //   instanceOpts && instanceOpts.module
-          // )
-          this.setState({
-            stores: finalStores,
-          })
+          this.setupStores()
         }
 
         componentDidMount() {
@@ -155,6 +100,64 @@ export default function storeProvidable(options, emitter) {
           }
         }
 
+        setupStores() {
+          Stores = allStores
+
+          // call decorators
+          if (storeDecorator && allStores) {
+            for (const key of Object.keys(allStores)) {
+              Stores[key] = storeDecorator(allStores[key])
+            }
+          }
+
+          const getProps = {
+            get: () => this._props,
+            configurable: true,
+          }
+
+          // start stores
+          const stores = Object.keys(Stores).reduce((acc, cur) => {
+            const Store = Stores[cur]
+
+            const createStore = () => {
+              Object.defineProperty(Store.prototype, 'props', getProps)
+              const store = new Store()
+              delete Store.prototype.props // safety, remove hack
+              // then define directly
+              Object.defineProperty(store, 'props', getProps)
+              return store
+            }
+
+            return {
+              ...acc,
+              [cur]: createStore(),
+            }
+          }, {})
+
+          // if (instanceOpts && instanceOpts.module && instanceOpts.module.hot) {
+          //   instanceOpts.module.hot.dispose(data => {
+          //     data.stores = this.state.stores
+          //   })
+          // }
+
+          // optional mount function
+          if (options.onStoreMount) {
+            for (const name of Object.keys(stores)) {
+              // fallback to store if nothing returned
+              stores[name] =
+                options.onStoreMount(stores[name], this.props) || stores[name]
+            }
+          }
+
+          // line below used to be (hmr state preserve):
+          // stores: cache.restore(
+          //   this,
+          //   stores,
+          //   instanceOpts && instanceOpts.module
+          // )
+          this.setState({ stores })
+        }
+
         unstable_handleError(error) {
           console.error('ERR', error)
           this.setState({ error })
@@ -163,6 +166,12 @@ export default function storeProvidable(options, emitter) {
 
         clearErrors() {
           this.setState({ error: null })
+        }
+
+        handleHotReload(module) {
+          log('i should handle this', module)
+          this.module = module
+          this.setupStores()
         }
 
         render() {

@@ -8,6 +8,7 @@ const CacheListeners = {}
 
 function execQuery(it, valueGet: Function) {
   const KEY = hashsum(it)
+  log('@query', it)
   CacheListeners[KEY] = (CacheListeners[KEY] || 0) + 1
 
   if (Cache[KEY]) {
@@ -44,16 +45,24 @@ function execQuery(it, valueGet: Function) {
     }
   }
 
-  // handle not connected yet
-  if (query && query.isntConnected) {
-    log('not connected yet')
-    query.onConnection().then(() => {
-      console.log('ok not lets re-run')
-      query = valueGet()
+  let isObserving = false
+  function observe() {
+    if (isObserving) {
+      return
+    }
+    isObserving = true
+    log('observe @query', it)
+    // handle not connected yet
+    if (query && query.isntConnected) {
+      log('not connected yet')
+      query.onConnection().then(() => {
+        console.log('ok not lets re-run')
+        query = valueGet()
+        runSubscribe()
+      })
+    } else {
       runSubscribe()
-    })
-  } else {
-    runSubscribe()
+    }
   }
 
   // autosync query
@@ -111,6 +120,7 @@ function execQuery(it, valueGet: Function) {
     },
     current: {
       get: () => {
+        observe() // start observe
         return result.get() && result.get().get()
       },
     },

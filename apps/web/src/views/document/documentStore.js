@@ -16,6 +16,7 @@ type Props = {
 export default class DocumentStore {
   props: Props
 
+  v = 4
   id = this.props.id
   @watch
   document: ?Document = () => this.props.document || Document.get(this.props.id)

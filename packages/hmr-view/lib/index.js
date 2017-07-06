@@ -66,8 +66,8 @@ function proxyReactComponents(_ref) {
   var forceUpdater = (0, _reactProxy.getForceUpdate)(_window2.default.React);
   var forceUpdate = function forceUpdate(instance) {
     _window2.default.App && _window2.default.App.clearErrors && _window2.default.App.clearErrors();
-    instance.module = module;
     instance.clearErrors && instance.clearErrors();
+    instance.handleHotReload && instance.handleHotReload(module);
     return forceUpdater(instance);
   };
   _window2.default.forceUpdate = forceUpdate;

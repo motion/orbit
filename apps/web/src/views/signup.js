@@ -66,9 +66,24 @@ export default class Signup {
               </UI.Button>
             </UI.Form>
 
-            <Login
-              css={{ position: 'absolute', bottom: 0, right: 0, opacity: 0.5 }}
-            />
+            <UI.Theme name="clear">
+              <login
+                $$row
+                $$centered
+                css={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 10,
+                  opacity: 0.5,
+                  '&:hover': {
+                    opacity: 1,
+                  },
+                }}
+              >
+                Or login to your account:&nbsp;
+                <Login />
+              </login>
+            </UI.Theme>
           </inner>
         </UI.Theme>
       </signup>

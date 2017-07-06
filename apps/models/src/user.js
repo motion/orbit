@@ -18,7 +18,7 @@ class User {
   }
 
   connect = database => {
-    if (!this.database) {
+    if (this.database) {
       return // hmr
     }
 

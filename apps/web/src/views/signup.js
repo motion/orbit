@@ -6,22 +6,23 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class Signup {
-  render({ login }) {
+  render() {
     return (
       <signup $$fullscreen if={!User.loggedIn} $$draggable>
         <UI.Glow
           color={[255, 255, 255]}
-          opacity={0.5}
+          opacity={0.3}
           full
-          blur={90}
+          blur={40}
+          scale={1.15}
           show
-          resist={90}
+          resist={95}
           backdropFilter="contrast(150%) saturation(150%) brightness(150%)"
         />
         <UI.Theme name="light" if={!User.loggedIn}>
           <inner $$flex>
-            {login}
             <UI.Form $$draggable $form padding={15}>
+              <UI.Title>welcome</UI.Title>
               <UI.PassProps
                 row
                 placeholderColor="#444"
@@ -33,7 +34,7 @@ export default class Signup {
                 <UI.Field label="Password" placeholder="" />
               </UI.PassProps>
               <space $$height={20} />
-              <UI.Button background="green" size={1.5}>
+              <UI.Button theme="dark" size={1.5}>
                 Signup
               </UI.Button>
             </UI.Form>
@@ -45,8 +46,8 @@ export default class Signup {
 
   static style = {
     signup: {
-      background: '#999',
-      zIndex: 10000000,
+      background: '#ccc',
+      zIndex: 11,
     },
     form: {
       flex: 1,

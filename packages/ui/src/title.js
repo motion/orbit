@@ -53,7 +53,8 @@ export default class Title extends React.Component {
     color,
     size,
     onCollapse,
-    rootProps,
+    textProps,
+    children,
     tagName: _tagName,
     ...props
   }: TitleProps) {
@@ -63,7 +64,7 @@ export default class Title extends React.Component {
     const tagName = _tagName || `h${tagSize}`
 
     return (
-      <titleroot {...rootProps} onDoubleClick={this.onDoubleClick}>
+      <titleroot {...props} onDoubleClick={this.onDoubleClick}>
         {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
         <collapse
           if={collapsable}
@@ -91,8 +92,10 @@ export default class Title extends React.Component {
           {...{ [`\$size${Math.floor(size)}`]: true }}
           tagName={tagName}
           size={textSize}
-          {...props}
-        />
+          {...textProps}
+        >
+          {children}
+        </Text>
         <stat if={stat}>
           {stat}
         </stat>

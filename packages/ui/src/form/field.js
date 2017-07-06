@@ -92,6 +92,7 @@ export default class Field {
           chromeless={chromeless}
           placeholder={placeholder}
           placeholderColor={placeholderColor}
+          borderRadius={0}
           {...elementProps}
         />
         {children}
@@ -108,7 +109,6 @@ export default class Field {
     label: {
       overflow: 'hidden',
       width: '100%',
-      textTransform: 'uppercase',
     },
   }
 

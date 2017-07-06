@@ -154,7 +154,7 @@ export default class Popover {
         'mousemove',
         throttle(event => {
           if (this.showPopover) {
-            log('sawy event', event)
+            // log('sawy event', event)
           }
         }, 32)
       )

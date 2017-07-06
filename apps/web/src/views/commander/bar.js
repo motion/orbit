@@ -5,7 +5,7 @@ import { Editor } from 'slate'
 
 const $para = {
   fontSize: 14,
-  color: `rgba(0,0,0,.8)`,
+  color: 'rgba(0,0,0,.8)',
 }
 
 @view.attach('commanderStore')
@@ -71,7 +71,7 @@ class Arrow {
 @view.attach('commanderStore')
 @view
 class Item {
-  render({ commanderStore: cmdr, node, state }) {
+  render({ commanderStore: cmdr, node }) {
     const inline = { userSelect: 'initial', display: 'inline' }
     const name = node.data.get('name')
     const doc = cmdr.editorState.document
@@ -144,7 +144,7 @@ export default class CommanderInput {
     },
     blurred: {
       border: '1px solid rgba(0, 0, 0, 0)',
-      borderBottom: `1px solid #eee`,
+      borderBottom: '1px solid #eee',
     },
     highlight: {
       fontWeight: 'bold',

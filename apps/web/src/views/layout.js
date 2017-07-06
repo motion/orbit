@@ -15,9 +15,9 @@ import LayoutStore from '~/stores/layoutStore'
 import SoundStore from '~/stores/soundStore'
 import CommanderStore from '~/stores/commanderStore'
 import Draft from '~/views/draft'
-import Onboard from './onboard'
 import LayoutWrap from '~/views/layout/wrap'
 import { start } from '../start'
+import Signup from './signup'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -65,12 +65,11 @@ export default class Layout {
   renderApp() {
     const { layoutStore, commanderStore } = this.props
     const CurrentPage = Router.activeView || NotFound
-    const { showOnboard } = layoutStore
 
     return (
       <app>
         <UI.Glint color={[255, 255, 255, 0.2]} borderRadius={4} />
-        <Onboard if={showOnboard} />
+        <Signup />
         <LayoutWrap layoutStore={layoutStore}>
           <Commander.Results />
           <Header layoutStore={layoutStore} />

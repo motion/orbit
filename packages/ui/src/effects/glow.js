@@ -20,13 +20,14 @@ export default class HoverGlow {
     gradient?: boolean,
     borderRadius?: number,
     show?: boolean,
+    backdropFilter?: string,
   }
 
   static defaultProps = {
     width: 380,
     height: 200,
     color: [0, 0, 0],
-    zIndex: 10,
+    zIndex: 0,
     resist: 0,
     scale: 1,
     opacity: 0.025,
@@ -136,6 +137,7 @@ export default class HoverGlow {
     behind,
     background,
     gradient,
+    backdropFilter,
     blur,
     show,
     ...props
@@ -217,8 +219,9 @@ export default class HoverGlow {
               height,
               marginLeft: -width / 2,
               marginTop: -height / 2,
-              zIndex,
               WebkitFilter: blur ? `blur(${blur}px)` : '',
+              backdropFilter,
+              zIndex,
               background:
                 background || gradient
                   ? `radial-gradient(${$(color).toString()}, transparent 70%)`

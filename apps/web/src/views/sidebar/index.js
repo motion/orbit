@@ -3,7 +3,6 @@ import React from 'react'
 import { view, Shortcuts } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Login from './login'
-import Signup from './signup'
 import SidebarStore from './store'
 import Projects from './projects'
 import Menu from './menu'
@@ -22,7 +21,7 @@ class SidebarContent {
     return (
       <inner $$flex>
         <UserBar />
-        <Signup login={<Login />} />
+        <Login />
         <Menu />
         <Projects />
       </inner>

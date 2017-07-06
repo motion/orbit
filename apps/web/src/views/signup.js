@@ -9,10 +9,19 @@ export default class Signup {
   render({ login }) {
     return (
       <signup $$fullscreen if={!User.loggedIn} $$draggable>
-        <UI.Theme name="dark" if={!User.loggedIn}>
+        <UI.Glow
+          color={[255, 255, 255]}
+          opacity={0.5}
+          full
+          blur={90}
+          show
+          resist={90}
+          backdropFilter="contrast(150%) saturation(150%) brightness(150%)"
+        />
+        <UI.Theme name="light" if={!User.loggedIn}>
           <inner $$flex>
             {login}
-            <UI.Form $form padding={15}>
+            <UI.Form $$draggable $form padding={15}>
               <UI.PassProps
                 row
                 placeholderColor="#444"
@@ -36,7 +45,7 @@ export default class Signup {
 
   static style = {
     signup: {
-      background: ['radial-gradient(rgba(0,0,0,0.5), #000)'],
+      background: '#999',
       zIndex: 10000000,
     },
     form: {

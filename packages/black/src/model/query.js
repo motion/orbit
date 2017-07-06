@@ -51,7 +51,6 @@ function execQuery(it, valueGet: Function) {
       return
     }
     isObserving = true
-    log('observe @query', it)
     // handle not connected yet
     if (query && query.isntConnected) {
       log('not connected yet')

@@ -18,6 +18,10 @@ class User {
   }
 
   connect = database => {
+    if (!this.database) {
+      return // hmr
+    }
+
     this.database = database
     this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'

@@ -152,12 +152,13 @@ export default class Model {
 
   connect = async (database: RxDB, options: Object): Promise<void> => {
     this.options = options
-    this.setupRemoteDB(options.remote, options.remoteOptions)
 
     // re-connect or hmr
     if (this.database) {
       return
     }
+
+    this.setupRemoteDB(options.remote, options.remoteOptions)
 
     // new connect
     this.database = database

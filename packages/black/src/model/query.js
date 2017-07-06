@@ -2,7 +2,8 @@
 import { observable, isObservable, autorun } from 'mobx'
 import hashsum from 'hash-sum'
 
-const short = value => (value && JSON.stringify(value).slice(0, 20)) || value
+const short = value =>
+  (value && JSON.stringify(value).slice(0, 15) + '..') || value
 const Cache = {}
 const CacheListeners = {}
 
@@ -35,7 +36,7 @@ function execQuery(it, valueGet: Function) {
     if (query && query.$) {
       finishSubscribe()
       subscriber = query.$.subscribe(value => {
-        log(INFO, '.subscribe() =>', short(value))
+        log(INFO, short(value))
         if (isObservable(value)) {
           result.set(value)
         } else {
@@ -132,7 +133,6 @@ function execQuery(it, valueGet: Function) {
         if (CacheListeners[KEY] === 0) {
           setTimeout(() => {
             if (CacheListeners[KEY] === 0) {
-              log('actually disposing')
               finishSubscribe()
               stopSync && stopSync()
             }

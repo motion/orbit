@@ -5,8 +5,7 @@ export default class SoundStore {
   sounds = {}
 
   start() {
-    console.log('in start')
-    const base = `/sounds`
+    const base = '/sounds'
     const sources = {
       success: 'success/success2.m4a',
       newTask: 'success/complete1.m4a',

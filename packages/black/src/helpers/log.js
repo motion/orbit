@@ -27,7 +27,7 @@ class StringToColor {
     '#c481ec',
   ]
   getColor(thing) {
-    const str = cutoff(thing.toString(), 14)
+    const str = cutoff(thing.toString(), 7)
     if (!this.hash[str]) {
       this.hash[str] = this.colors[this.colorId++]
     }

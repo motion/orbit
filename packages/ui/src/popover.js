@@ -78,7 +78,7 @@ export default class Popover {
     arrowSize: 20,
     forgiveness: 15,
     towards: 'auto',
-    animation: 'slide 200ms',
+    animation: 'slide 300ms',
     adjust: [0, 0],
     delay: 16,
   }
@@ -294,11 +294,15 @@ export default class Popover {
       bounds.left = left
       bounds.top = top
     } else {
-      const targetBounds = this.target.getBoundingClientRect()
-      bounds.width = targetBounds.width
-      bounds.height = targetBounds.height
-      bounds.left = targetBounds.left
-      bounds.top = targetBounds.top
+      if (!this.target) {
+        console.error('no target')
+      } else {
+        const targetBounds = this.target.getBoundingClientRect()
+        bounds.width = targetBounds.width
+        bounds.height = targetBounds.height
+        bounds.left = targetBounds.left
+        bounds.top = targetBounds.top
+      }
     }
     return bounds
   }

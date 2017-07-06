@@ -1,5 +1,5 @@
 import React from 'react'
-import { observable } from 'mobx'
+import * as Mobx from 'mobx'
 import Cache from './cache'
 import { object } from 'prop-types'
 import { pickBy } from 'lodash'
@@ -41,7 +41,6 @@ export default function storeProvidable(options, emitter) {
           return Klass.name
         }
 
-        @observable _props = {}
         state = {
           error: null,
           stores: null,
@@ -78,6 +77,9 @@ export default function storeProvidable(options, emitter) {
 
         componentWillMount() {
           // for reactive props in stores
+          // 🐛 if you define this as normal observable on class
+          //    it will break with never before seen mobx bug on next line
+          Mobx.extendShallowObservable(this, { _props: null })
           this._props = { ...this.props }
 
           const getProps = {
@@ -156,6 +158,7 @@ export default function storeProvidable(options, emitter) {
         unstable_handleError(error) {
           console.error('ERR', error)
           this.setState({ error })
+          throw error
         }
 
         clearErrors() {

@@ -31,7 +31,7 @@ export function render(shouldReset) {
 }
 
 export async function start(quiet, restart) {
-  render(restart)
+  // render(restart)
   await App.start(quiet)
   render()
 }

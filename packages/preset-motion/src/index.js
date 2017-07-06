@@ -2,8 +2,8 @@ export default function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
   const getPlugin = (name, opts) => {
-    if (disable.indexOf(name) !== -1) {
-      return
+    if (disable.find(x => x === name)) {
+      return null
     }
     const plugin = require.resolve(name)
     return opts ? [plugin, opts] : plugin

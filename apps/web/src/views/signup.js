@@ -3,6 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import { User, Org } from '@mcro/models'
 import * as UI from '@mcro/ui'
+import Login from './sidebar/login'
 
 @view
 export default class Signup {
@@ -64,6 +65,10 @@ export default class Signup {
                 Signup
               </UI.Button>
             </UI.Form>
+
+            <Login
+              css={{ position: 'absolute', bottom: 0, right: 0, opacity: 0.5 }}
+            />
           </inner>
         </UI.Theme>
       </signup>

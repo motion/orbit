@@ -53,9 +53,9 @@ import { HEADER_HEIGHT } from '~/constants'
   },
 })
 export default class Login {
-  render({ store }) {
+  render({ store, ...props }) {
     return (
-      <login $$draggable>
+      <login $$draggable {...props}>
         <UI.Form
           flex
           if={!User.loggedIn}

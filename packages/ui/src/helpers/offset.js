@@ -5,9 +5,7 @@ export default function offset(ev, target, out) {
   }
   const cx = ev.clientX || 0
   const cy = ev.clientY || 0
-  target.lastdimensions =
-    target.lastdimensions || target.getBoundingClientRect()
-  const rect = target.lastdimensions
+  const rect = target.getBoundingClientRect()
   out[0] = cx - rect.left
   out[1] = cy - rect.top
   return out

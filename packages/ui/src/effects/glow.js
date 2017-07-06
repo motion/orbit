@@ -4,10 +4,10 @@ import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
 import { throttle } from 'lodash'
-import resizer from 'element-resize-detector'
+// import resizer from 'element-resize-detector'
 import type { Color } from '@mcro/gloss'
 
-const Resize = resizer({ strategy: 'scroll' })
+// const Resize = resizer({ strategy: 'scroll' })
 
 @view.ui
 export default class HoverGlow {

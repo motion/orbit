@@ -52,6 +52,8 @@ export type Props = {
   showForgiveness?: boolean,
   // padding from edge of window
   edgePadding: number,
+  // sway towards mouse
+  swayX?: boolean,
 }
 
 const INVERSE = {
@@ -76,7 +78,7 @@ export default class Popover {
     arrowSize: 20,
     forgiveness: 15,
     towards: 'auto',
-    animation: 'slide 200ms',
+    animation: 'slide 300ms',
     adjust: [0, 0],
     delay: 16,
   }
@@ -117,9 +119,9 @@ export default class Popover {
   }
 
   componentDidMount() {
-    const { openOnClick, open, escapable } = this.curProps
+    const { openOnClick, open, escapable, swayX } = this.curProps
 
-    this.on(window, 'resize', debounce(() => this.setPosition(), 32))
+    this.on(window, 'resize', debounce(() => this.setPosition(), 16))
     this.setTarget()
     this.listenForHover()
 
@@ -143,9 +145,32 @@ export default class Popover {
     this.unmounted = true
   }
 
+  swayEvent = null
+
+  startSwaying = () => {
+    if (this.props.swayX) {
+      this.swayEvent = this.on(
+        window,
+        'mousemove',
+        throttle(event => {
+          if (this.showPopover) {
+            log('sawy event', event)
+          }
+        }, 32)
+      )
+    }
+  }
+
+  stopSwaying = () => {
+    if (this.swayEvent) {
+      this.swayEvent.dispose()
+    }
+  }
+
   open = () => {
     this.setPosition(() => {
       this.setState({ isOpen: true }, () => {
+        this.startSwaying()
         if (this.curProps.onOpen) {
           this.curProps.onOpen()
         }
@@ -155,6 +180,7 @@ export default class Popover {
 
   close = (): Promise => {
     return new Promise(resolve => {
+      this.stopSwaying()
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {
           this.curProps.onClose()
@@ -268,11 +294,15 @@ export default class Popover {
       bounds.left = left
       bounds.top = top
     } else {
-      const targetBounds = this.target.getBoundingClientRect()
-      bounds.width = targetBounds.width
-      bounds.height = targetBounds.height
-      bounds.left = targetBounds.left
-      bounds.top = targetBounds.top
+      if (!this.target) {
+        console.error('no target')
+      } else {
+        const targetBounds = this.target.getBoundingClientRect()
+        bounds.width = targetBounds.width
+        bounds.height = targetBounds.height
+        bounds.left = targetBounds.left
+        bounds.top = targetBounds.top
+      }
     }
     return bounds
   }
@@ -451,27 +481,11 @@ export default class Popover {
     const openIfOver = () => this.isNodeHovered(node, isPopover) && setHovered()
     const closeIfOut = () =>
       !this.isNodeHovered(node, isPopover) && setUnhovered()
-    const onEnter = debounce(openIfOver, isTarget ? delay : 0)
-    const onLeave = debounce(closeIfOut, isTarget ? 16 : delay) // 🐛 target should close slower than menu opens
-
-    if (isTarget) {
-      // seems to be fixed, leaving in case needs testing
-      // if you move your mouse super slowly onto an element, it triggers this ridiculous bug where it doesnt open
-      // i think because checking `:hover` in css requires your mouse being >1px inside the element
-      // so we also listen for mousemove, super throttled, just to prevent that
-      // this.on(
-      //   node,
-      //   'mousemove',
-      //   throttle(
-      //     () =>
-      //       !this.state.targetHovered &&
-      //       this.isNodeHovered(this.target) &&
-      //       this.hoverStateSet('target', true),
-      //     Math.max(200, delay),
-      //     { trailing: false }
-      //   )
-      // )
-    }
+    const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
+    // this will avoid the delay open if its already open
+    const onEnter = () =>
+      isTarget && this.state.menuHovered ? openIfOver() : delayOpenIfHover()
+    const onLeave = debounce(closeIfOut, isTarget ? 80 : 20) // 🐛 target should close slower than menu opens
 
     // logic for enter/leave
     this.on(node, 'mouseenter', () => {
@@ -528,6 +542,18 @@ export default class Popover {
     }
   }
 
+  get showPopover() {
+    const { isOpen } = this.state
+    const { openOnHover, open, openOnClick } = this.props
+    const openUndef = typeof open === 'undefined'
+    return (
+      open ||
+      isOpen ||
+      (openUndef &&
+        ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
+    )
+  }
+
   render({
     adjust,
     animation,
@@ -554,6 +580,7 @@ export default class Popover {
     shadow,
     showForgiveness,
     style,
+    swayX,
     target,
     theme,
     top: _top,
@@ -572,27 +599,25 @@ export default class Popover {
       maxHeight,
       direction,
     } = this.state
+    const { showPopover } = this
 
-    const openUndef = typeof open === 'undefined'
-    const showPopover =
-      open ||
-      isOpen ||
-      (openUndef &&
-        ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
-
-    const childProps = {
-      getRef: this.ref('targetRef').set,
-    }
-
-    if (passActive) {
-      childProps.active = isOpen && !closing
+    const controlledTarget = target => {
+      const targetProps = {
+        getRef: this.ref('targetRef').set,
+      }
+      if (passActive) {
+        targetProps.active = isOpen && !closing
+      }
+      if (target.type.acceptsHovered) {
+        targetProps.hovered = showPopover
+      }
+      return React.cloneElement(target, targetProps)
     }
 
     return (
       <Theme name={theme}>
         <root>
-          {React.isValidElement(target) &&
-            React.cloneElement(target, childProps)}
+          {React.isValidElement(target) && controlledTarget(target)}
           <Portal isOpened>
             <container
               data-towards={direction}

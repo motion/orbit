@@ -85,7 +85,7 @@ class ContextMenu {
     })
   }
 
-  render({ width, children, inactive, options, store, ...props }: Props) {
+  render({ inactive, width, children, options, store, ...props }: Props) {
     return (
       <contextmenu ref={this.ref('node').set} {...props}>
         {children}

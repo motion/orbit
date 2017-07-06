@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { view, observable, IS_ELECTRON } from '@mcro/black'
 
@@ -9,14 +10,14 @@ type Props = {
 export default class Link {
   props: Props
 
-  @observable isActive = false
+  isActive = false
 
   componentDidMount() {
     this.watch(() => {
       const isActive =
         this.props.router.path === this.props.to ||
         this.props.router.path === this.props.match
-      this.ref('isActive').set(isActive)
+      this.isActive = isActive
     })
   }
 

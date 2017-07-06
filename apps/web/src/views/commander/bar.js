@@ -8,52 +8,82 @@ const $para = {
   color: `rgba(0,0,0,.8)`,
 }
 
+@view.attach('commanderStore')
+@view
+class Para {
+  render({ commanderStore, ...props }) {
+    const first = commanderStore.value.indexOf('/') === -1
+
+    // if we're in the first path, add margin to match button styles
+    const styles = Object.assign({}, $para, first && { marginLeft: 10 })
+
+    return (
+      <p style={styles}>
+        {props.children}
+      </p>
+    )
+  }
+}
+
 const schema = {
   nodes: {
-    paragraph: props => {
-      if (!App.stores) return <p />
-      const cmdr = App.stores.CommanderStore[0]
-      const first = cmdr.value.indexOf('/') === -1
-
-      // if we're in the first path, add margin to match button styles
-      const styles = Object.assign({}, $para, first && { marginLeft: 10 })
-
-      return (
-        <p style={styles}>
-          {props.children}
-        </p>
-      )
-    },
-    item: ({ node }) => {
-      const { data } = node
-      return <Item node={node} />
-    },
+    paragraph: props => <Para {...props} />,
+    item: props => <Item {...props} />,
   },
 }
+
 const between = (a, b, c) => {
   if (a >= b) return c >= b && c <= a
   if (a <= b) return c <= b && c >= a
   return a === c
 }
 
+@view({
+  store: class {
+    rendered = false
+
+    start() {
+      setTimeout(() => (this.rendered = true), 0)
+    }
+  },
+})
+class Arrow {
+  render({ store, animate }) {
+    return (
+      <arrow $animate={animate} $animateAfter={animate && store.rendered}>
+        <Icon size={10} style={{ display: 'inline' }} name="arrow-min-right" />
+      </arrow>
+    )
+  }
+
+  static style = {
+    arrow: {
+      display: 'inline',
+    },
+    animate: {
+      transition: 'all 100ms ease-in',
+      transform: { scale: 0.5 },
+      opacity: 0.3,
+      marginLeft: -5,
+    },
+    animateAfter: {
+      opacity: 1,
+      marginLeft: 0,
+      transform: { scale: 1 },
+    },
+  }
+}
+
+@view.attach('commanderStore')
 @view
 class Item {
-  render({ node }) {
-    const name = node.data.get('name')
+  render({ commanderStore: cmdr, node, state }) {
     const inline = { userSelect: 'initial', display: 'inline' }
-    if (!App.stores) return <h1>test</h1>
-    const cmdr = App.stores.CommanderStore[0]
+    const name = node.data.get('name')
     const doc = cmdr.editorState.document
-    const prevKey = doc.getPreviousSibling(node.key).key
     const nextKey = doc.getNextSibling(node.key).key
-
     const isLast = doc.nodes.last().nodes.last().key === nextKey
-    const offset = doc.getOffset(node.key)
-    const { focusOffset, focusKey, anchorOffset } = cmdr.editorState.selection
-    const hasSelection = !cmdr.editorState.selection.isBlurred
-    const selected =
-      cmdr.editorState.focusInline &&
-      cmdr.editorState.focusInline.key === node.key
+    const selected = cmdr.selectedItemKey === node.key
 
     return (
       <span $last={isLast} contentEditable={false}>
@@ -69,21 +99,14 @@ class Item {
         >
           {name}
         </Button>
-        <Icon style={inline} size={10} name="arrow-min-right" />
+        <Arrow animate={isLast} />
       </span>
     )
   }
 
   static style = {
     last: {
-      marginRight: 10,
-    },
-    slash: {
-      display: 'inline',
-      userSelect: 'none',
-      pointerEvents: 'none',
-      opacity: 0,
-      width: 0,
+      marginRight: 8,
     },
   }
 }
@@ -103,7 +126,6 @@ export default class CommanderInput {
         $$flex
       >
         <Editor
-          if={true || store.active}
           placeholder={'search or create docs'}
           state={store.editorState}
           ref={input => (store.input = input)}
@@ -114,14 +136,6 @@ export default class CommanderInput {
           schema={schema}
           style={{ width: '100%' }}
         />
-        <button
-          if={false}
-          onClick={() => {
-            store.onCommitItem('test')
-          }}
-        >
-          add
-        </button>
       </bar>
     )
   }
@@ -137,10 +151,6 @@ export default class CommanderInput {
     blurred: {
       border: '1px solid rgba(0, 0, 0, 0)',
       borderBottom: `1px solid #eee`,
-    },
-    input: {
-      width: '100%',
-      marginTop: 0,
     },
     highlight: {
       fontWeight: 'bold',

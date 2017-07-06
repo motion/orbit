@@ -4,10 +4,10 @@ import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
 import { throttle } from 'lodash'
-import resizer from 'element-resize-detector'
+// import resizer from 'element-resize-detector'
 import type { Color } from '@mcro/gloss'
 
-const Resize = resizer({ strategy: 'scroll' })
+// const Resize = resizer({ strategy: 'scroll' })
 
 @view.ui
 export default class HoverGlow {
@@ -18,6 +18,8 @@ export default class HoverGlow {
     children?: Function,
     blur: number,
     gradient?: boolean,
+    borderRadius?: number,
+    show?: boolean,
   }
 
   static defaultProps = {
@@ -29,14 +31,13 @@ export default class HoverGlow {
     scale: 1,
     opacity: 0.025,
     boundPct: null,
-    borderRadius: 100,
     offsetTop: 0,
     offsetLeft: 0,
     clickable: false,
     clickDuration: 150,
     clickScale: 2,
-    transition: 100,
-    blur: 10,
+    transition: 0,
+    blur: 15,
   }
 
   state = {
@@ -114,11 +115,14 @@ export default class HoverGlow {
     full,
     scale,
     color,
+    clickable,
+    borderRadius,
+    borderLeftRadius,
+    borderRightRadius,
     zIndex,
     resist,
     opacity,
     inverse,
-    borderRadius,
     offsetTop,
     offsetLeft,
     width: propWidth,
@@ -128,18 +132,18 @@ export default class HoverGlow {
     clickScale,
     transition,
     parent,
-    itemProps,
     children,
-    style,
     behind,
     background,
     gradient,
     blur,
+    show,
+    ...props
   }) {
     const setRootRef = this.ref('rootRef').set
     const { track } = this.state
 
-    if (!transition && ((!track && !children) || !track)) {
+    if (!show && !transition && ((!track && !children) || !track)) {
       return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
@@ -150,7 +154,11 @@ export default class HoverGlow {
       width = this.bounds.width
       height = this.bounds.height
     }
-    const { position: { x, y }, clicked } = this.state
+
+    const { position, clicked } = this.state
+    const x = position.x || 0
+    const y = position.y || 0
+
     // resists being moved (towards center)
     const resisted = coord => {
       if (resist === 0) return coord
@@ -180,7 +188,14 @@ export default class HoverGlow {
     const extraScale = clicked ? clickScale : 1
 
     const glow = (
-      <overlay ref={setRootRef} style={style} {...itemProps}>
+      <overlay
+        ref={setRootRef}
+        css={{
+          borderLeftRadius: borderLeftRadius || borderRadius,
+          borderRightRadius: borderRightRadius || borderRadius,
+        }}
+        {...props}
+      >
         <glow
           style={{
             zIndex: behind ? -1 : 0,
@@ -197,7 +212,7 @@ export default class HoverGlow {
             width={width}
             style={{
               transform: `scale(${scale * extraScale}) translateZ(0px)`,
-              opacity: track ? opacity : 0,
+              opacity: track || show ? opacity : 0,
               width,
               height,
               marginLeft: -width / 2,
@@ -234,15 +249,13 @@ export default class HoverGlow {
   static style = {
     overlay: {
       position: 'absolute',
+      transform: 'translateZ(0)',
+      overflow: 'hidden',
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      transition: 'opacity ease-in 50ms',
-      pointerEvents: 'none',
-      '&:active': {
-        pointerEvents: 'none',
-      },
+      // pointerEvents: 'none',
     },
     glow: {
       pointerEvents: 'none',

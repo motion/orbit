@@ -25,12 +25,6 @@ class SidebarContent {
         <Signup login={<Login />} />
         <Menu />
         <Projects />
-        <UI.SlotFill.Slot name="sidebar">
-          {items =>
-            <activeSidebar>
-              {items}
-            </activeSidebar>}
-        </UI.SlotFill.Slot>
       </inner>
     )
   }
@@ -48,19 +42,19 @@ export default class Sidebar {
       : layoutStore.sidebar.width
 
     return (
-      <UI.Theme name="clear-dark">
+      <UI.Theme key={0} name="clear-dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <UI.Drawer
             transition={Constants.SIDEBAR_TRANSITION}
+            background
             key={2}
-            background="transparent"
             open={active}
             from="right"
             size={width}
             zIndex={9}
           >
             <sidebar>
-              <SidebarContent key={0} />
+              <SidebarContent key={2} />
             </sidebar>
           </UI.Drawer>
         </Shortcuts>

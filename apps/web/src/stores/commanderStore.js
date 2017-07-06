@@ -28,9 +28,10 @@ const KEYMAP = {
 }
 
 export default class CommanderStore {
+  @watch document = () => Document.get(Router.params.id)
+  @watch crumbs = () => this.document && this.document.getCrumbs()
+
   keyManager = new ShortcutManager(KEYMAP)
-  currentDocument = watch(() => Document.get(Router.params.id))
-  crumbs = watch(() => this.currentDocument && this.currentDocument.getCrumbs())
   isOpen = false
   editorState = Raw.deserialize(
     {
@@ -221,6 +222,24 @@ export default class CommanderStore {
     return path.length > 1 ? path[path.length - 1] : null
   }
 
+  get selectedItem() {
+    const inline = this.editorState.focusInline
+    if (!inline || inline.type !== 'item') return null
+    return inline
+  }
+
+  get selectedItemKey() {
+    return this.selectedItem && this.selectedItem.key
+  }
+
+  get itemNodes() {
+    return this.firstLine.nodes.filter(i => i.type === 'item')
+  }
+
+  get selectedItemIndex() {
+    return this.itemNodes.map(i => i.key).indexOf(this.selectedItemKey)
+  }
+
   get highlightedDocument() {
     if (this.highlightIndex === -1) return null
     return this.peek[this.highlightIndex]
@@ -263,6 +282,7 @@ export default class CommanderStore {
   }
 
   setValue = text => {
+    if (this.value === text) return
     const paths = text.split(PATH_SEPARATOR)
     const pathNodes = paths.slice(0, -1).map(name => ({
       kind: 'inline',
@@ -344,9 +364,9 @@ export default class CommanderStore {
     docs.map(doc => doc.getTitle()).join(PATH_SEPARATOR)
 
   onFocus = () => {
-    this.editorState.transform().selectAll().apply()
+    // this.editorState.transform().selectAll().apply()
     this.focused = true
-    this.renderIndex++
+    // this.renderIndex++
     this.open()
   }
 
@@ -369,6 +389,8 @@ export default class CommanderStore {
 
     if (this.highlightIndex > -1) {
       this.navTo(this.highlightedDocument)
+    } else if (this.selectedItem) {
+      this.onItemClick(this.selectedItemKey)
     } else {
       const found = await this.createDocAtPath(this.value)
       this.navTo(found)
@@ -404,7 +426,7 @@ export default class CommanderStore {
     const gtSign = event.shiftKey && code === '.'
 
     // don't move cursor for these
-    if (code === 'up' && code === 'down') {
+    if (code === 'up' || code === 'down') {
       event.preventDefault()
       return state
     }
@@ -427,6 +449,35 @@ export default class CommanderStore {
       return state
     }
 
+    if (code === 'left' && this.selectedItem) {
+      // don't move cursor
+      if (this.selectedItemIndex === 0) {
+        event.preventDefault()
+        return state
+      }
+
+      event.preventDefault()
+      return state
+        .transform()
+        .collapseToStartOfPreviousText()
+        .collapseToEndOfPreviousText()
+        .apply()
+    }
+
+    // if going right and there's more items in front of us
+    if (
+      code === 'right' &&
+      this.selectedItem &&
+      this.selectedItemIndex !== this.itemNodes.count() - 1
+    ) {
+      event.preventDefault()
+      return state
+        .transform()
+        .collapseToEndOfNextText()
+        .collapseToEndOfNextText()
+        .apply()
+    }
+
     // return state
   }
 
@@ -444,7 +495,7 @@ export default class CommanderStore {
   }
 
   open = () => {
-    this.setOpen(true)
+    this.isOpen = true
   }
 
   close = () => {

@@ -1,19 +1,25 @@
 // @flow
-import { observable, isObservable } from 'mobx'
+import { observable, isObservable, autorun } from 'mobx'
 import hashsum from 'hash-sum'
-import { memoize } from 'lodash'
+
+const Cache = {}
 
 // TODO: instanceof RxQuery checks
 
 // subscribe-aware helpers
 // @query value wrapper
 function valueWrap(it, valueGet: Function) {
+  const KEY = hashsum(it)
+  if (Cache[KEY]) {
+    return Cache[KEY]
+  }
+
   const result = observable.shallowBox(undefined)
   let query = valueGet()
   // TODO can probably handle this here
   // const notConnected = query && query.isntConnected
 
-  // const INFO = `@query ${it.model}.${it.property}(${it.args.join(', ')}) => `
+  const INFO = `@query ${it.model}.${it.property}(${it.args.join(', ')}) => `
 
   // subscribe and update
   let subscriber = null
@@ -23,17 +29,34 @@ function valueWrap(it, valueGet: Function) {
     }
   }
 
-  // this automatically re-runs queries if the use mobx observables, magical
-  if (query && query.$) {
-    // sub to values
-    subscriber = query.$.subscribe(value => {
-      // log(INFO, '.subscribe( => ', value)
-      if (isObservable(value)) {
-        result.set(value)
-      } else {
-        result.set(observable.shallowBox(value))
-      }
+  function runSubscribe() {
+    if (query && query.$) {
+      finishSubscribe()
+      subscriber = query.$.subscribe(value => {
+        log(
+          INFO,
+          '.subscribe( => ',
+          (value && JSON.stringify(value).slice(0, 120)) || value
+        )
+        if (isObservable(value)) {
+          result.set(value)
+        } else {
+          result.set(observable.shallowBox(value))
+        }
+      })
+    }
+  }
+
+  // handle not connected yet
+  if (query && query.isntConnected) {
+    log('not connected yet')
+    query.onConnection().then(() => {
+      console.log('ok not lets re-run')
+      query = valueGet()
+      runSubscribe()
     })
+  } else {
+    runSubscribe()
   }
 
   // autosync query
@@ -60,6 +83,8 @@ function valueWrap(it, valueGet: Function) {
   }
 
   const response = {}
+  const id = Math.random()
+  log(INFO, '>>>>> id >>>>', id)
 
   // helpers
   Object.defineProperties(response, {
@@ -79,12 +104,17 @@ function valueWrap(it, valueGet: Function) {
         })
       },
     },
+    id: {
+      value: id,
+    },
+    query: {
+      value: query,
+    },
     $: {
       value: query && query.$,
     },
     current: {
       get: () => {
-        // yea i know this is bad but it works for now
         return result.get() && result.get().get()
       },
     },
@@ -93,14 +123,15 @@ function valueWrap(it, valueGet: Function) {
     },
     dispose: {
       value() {
-        finishSubscribe()
-        // stopAutorun()
-        if (stopSync) {
-          stopSync()
-        }
+        // finishSubscribe()
+        // if (stopSync) {
+        //   stopSync()
+        // }
       },
     },
   })
+
+  Cache[KEY] = response
 
   return response
 }
@@ -114,18 +145,24 @@ export default function query(
 
   if (initializer) {
     descriptor.initializer = function() {
+      this.__queryUniq = Math.random()
       const init = initializer.call(this)
-      return memoize(function(...args) {
+      return function(...args) {
         if (!this.collection) {
           console.log('no this.collection!')
           return null
         }
         return valueWrap.call(
           this,
-          { model: this.constructor.name, property, args },
+          {
+            model: this.constructor.name,
+            property,
+            args,
+            uniq: this.__queryUniq,
+          },
           () => init.apply(this, args)
         )
-      })
+      }
     }
   } else if (value) {
     descriptor.value = function(...args) {

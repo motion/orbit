@@ -54,17 +54,21 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
       return Klass
     }
 
-    for (const plugin of allPlugins) {
-      if (plugin.mixin && Klass.prototype) {
-        reactMixin(Klass.prototype, plugin.mixin)
+    try {
+      for (const plugin of allPlugins) {
+        if (plugin.mixin && Klass.prototype) {
+          reactMixin(Klass.prototype, plugin.mixin)
+        }
+        if (plugin.decorator) {
+          decoratedClass =
+            plugin.decorator(decoratedClass, opts) || decoratedClass
+        }
       }
-      if (plugin.decorator) {
-        decoratedClass =
-          plugin.decorator(decoratedClass, opts) || decoratedClass
-      }
-    }
 
-    Klass[DECOR_KEY] = true
+      Klass[DECOR_KEY] = true
+    } catch (e) {
+      console.log('dev mode catching error', e)
+    }
 
     return decoratedClass
   }

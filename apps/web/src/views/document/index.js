@@ -4,9 +4,11 @@ import { view } from '@mcro/black'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
 import Children from './children'
+import type { Document } from '@jot/models'
 
 type Props = {
   id?: string,
+  document?: Document,
   inline?: boolean,
   readOnly?: boolean,
   editorProps?: Object,
@@ -27,6 +29,8 @@ export default class DocumentView {
   }
 
   render({ editorProps, inline, showChildren, readOnly, store }: Props) {
+    // window.x()
+
     if (!store.document) {
       return <loading />
     }
@@ -35,6 +39,7 @@ export default class DocumentView {
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
         <content $$row>
           <Editor
+            key={store.document._id}
             readOnly={readOnly}
             inline={inline}
             getRef={store.onEditor}

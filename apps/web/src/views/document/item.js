@@ -1,9 +1,9 @@
 import React from 'react'
-import { view, observable } from '@mcro/black'
+import { view } from '@mcro/black'
 import gradients from './helpers/gradients'
-import { sample, memoize } from 'lodash'
+import { memoize } from 'lodash'
 import Router from '~/router'
-import { Icon, Button } from '@mcro/ui'
+import { Button } from '@mcro/ui'
 import DocumentView from './index'
 import sum from 'hash-sum'
 
@@ -77,7 +77,6 @@ export default class DocItem {
         <title if={list}>
           {doc.title}
         </title>
-
         <content>
           <DocumentView
             readOnly={readOnly}
@@ -86,9 +85,10 @@ export default class DocItem {
             id={doc._id}
           />
         </content>
-
         <info if={!hideMeta}>
-          <item $author>{doc.authorId}</item>
+          <item $author>
+            {doc.authorId}
+          </item>
           <item onClick={this.navigate}>
             <Button chromeless icon="link" size={12} color="#fff" />
           </item>
@@ -96,7 +96,6 @@ export default class DocItem {
             <Button chromeless icon="simple-remove" color="#fff" />
           </item>
         </info>
-
         {children}
       </doc>
     )
@@ -138,7 +137,7 @@ export default class DocItem {
           boxShadow: 'inset 0 0 0 1px #ddd',
           transform: {
             // rotate: `-0.5deg`,
-            scale: `1.01`,
+            scale: '1.01',
           },
         },
       },

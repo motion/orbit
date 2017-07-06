@@ -14,24 +14,25 @@ const opposite = direction =>
   }[direction])
 
 type Props = {
-  open?: boolean,
-  percent?: number | string,
   attach?: Object,
-  children?: React$Element<any>,
-  from: 'top' | 'bottom' | 'left' | 'right',
-  size: number,
-  onClickOverlay: Function,
-  zIndex: number,
-  style: Object,
-  shadowed?: boolean,
-  bordered?: boolean,
-  noOverlay?: boolean,
-  theme?: string,
-  className?: string,
-  overlayBlur?: number,
-  transition: string,
-  transparent?: boolean,
   background?: Color,
+  bordered?: boolean,
+  children?: React$Element<any>,
+  className?: string,
+  from: 'top' | 'bottom' | 'left' | 'right',
+  showOverlay?: boolean,
+  onClickOverlay: Function,
+  open?: boolean,
+  overlayBlur?: number,
+  percent?: number | string,
+  shadowed?: boolean,
+  size: number,
+  style: Object,
+  theme?: string,
+  transition?: boolean,
+  transitionDuration?: number,
+  transparent?: boolean,
+  zIndex: number,
 }
 
 @view.ui
@@ -40,16 +41,14 @@ export default class Drawer {
 
   static defaultProps = {
     size: 400,
-    onClickOverlay: idFn,
     from: 'left',
     zIndex: 10000,
-    style: {},
-    transition: 'ease-in 200ms',
   }
 
   render({
     transparent,
     transition,
+    transitionDuration,
     open,
     children,
     from,
@@ -57,7 +56,7 @@ export default class Drawer {
     percent,
     style,
     onClickOverlay,
-    noOverlay,
+    showOverlay,
     shadowed,
     bordered,
     zIndex,
@@ -95,11 +94,14 @@ export default class Drawer {
           {children}
         </Surface>
         <overlay
+          if={showOverlay}
           $overlayOpen={open}
           $overlayBg={{ blur: overlayBlur === true ? 5 : overlayBlur }}
           onClick={e => {
             e.preventDefault()
-            onClickOverlay(false, e)
+            if (onClickOverlay) {
+              onClickOverlay(false, e)
+            }
           }}
         />
       </drawer>
@@ -175,7 +177,8 @@ export default class Drawer {
           background: props.transparent
             ? 'transparent'
             : props.background || theme.base.background,
-          transition: `transform ${props.transition}`,
+          transition:
+            props.transition && `transform ${props.transitionDuration}`,
           borderColor: props.bordered && theme.base.borderColor,
           boxShadow:
             props.shadowed && (theme.base.shadow || '0 0 6px rgba(0,0,0,0.3)'),

@@ -4,6 +4,10 @@ mark {
   white-space: pre-wrap;
 }
 
+div[data-slate-editor="true"] div {
+  display: block;
+}
+
 body {
   font-family: -apple-system, Helvetica, sans-serif;
   margin: 0;

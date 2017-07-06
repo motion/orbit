@@ -1,37 +1,98 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { Input } from '@mcro/ui'
+import { Input, Icon, Button } from '@mcro/ui'
 import { Editor } from 'slate'
+
+const $para = {
+  fontSize: 14,
+  color: `rgba(0,0,0,.8)`,
+}
+
+const schema = {
+  nodes: {
+    paragraph: props => {
+      if (!App.stores) return <p />
+      const cmdr = App.stores.CommanderStore[0]
+      const first = cmdr.value.indexOf('/') === -1
+
+      // if we're in the first path, add margin to match button styles
+      const styles = Object.assign({}, $para, first && { marginLeft: 10 })
+
+      return (
+        <p style={styles}>
+          {props.children}
+        </p>
+      )
+    },
+    item: ({ node }) => {
+      const { data } = node
+      return <Item node={node} />
+    },
+  },
+}
+const between = (a, b, c) => {
+  if (a >= b) return c >= b && c <= a
+  if (a <= b) return c <= b && c >= a
+  return a === c
+}
+
+@view
+class Item {
+  render({ node }) {
+    const name = node.data.get('name')
+    const inline = { userSelect: 'initial', display: 'inline' }
+    if (!App.stores) return <h1>test</h1>
+    const cmdr = App.stores.CommanderStore[0]
+    const doc = cmdr.editorState.document
+    const prevKey = doc.getPreviousSibling(node.key).key
+    const nextKey = doc.getNextSibling(node.key).key
+
+    const isLast = doc.nodes.last().nodes.last().key === nextKey
+    const offset = doc.getOffset(node.key)
+    const { focusOffset, focusKey, anchorOffset } = cmdr.editorState.selection
+    const hasSelection = !cmdr.editorState.selection.isBlurred
+    const selected =
+      cmdr.editorState.focusInline &&
+      cmdr.editorState.focusInline.key === node.key
+
+    return (
+      <span $last={isLast} contentEditable={false}>
+        <Button
+          chromeless
+          onClick={() => cmdr.onItemClick(node.key)}
+          spaced
+          size={0.7}
+          fontSize={14}
+          highlight={selected}
+          style={inline}
+          color={[0, 0, 0, 0.8]}
+        >
+          {name}
+        </Button>
+        <Icon style={inline} size={10} name="arrow-min-right" />
+      </span>
+    )
+  }
+
+  static style = {
+    last: {
+      marginRight: 10,
+    },
+    slash: {
+      display: 'inline',
+      userSelect: 'none',
+      pointerEvents: 'none',
+      opacity: 0,
+      width: 0,
+    },
+  }
+}
 
 @view.attach('commanderStore')
 @view
 export default class CommanderInput {
-  renderBlurred() {
-    const { commanderStore: store } = this.props
-    const items = store.value.split(store.PATH_SEPARATOR)
-
-    const highlight = text => {
-      return text === 'inbox'
-    }
-
-    return (
-      <items $$row>
-        {items.map(item =>
-          <item $$row $highlight={highlight(item)}>
-            <sep>
-              {store.PATH_SEPARATOR}
-            </sep>
-            <text>
-              {item}
-            </text>
-          </item>
-        )}
-      </items>
-    )
-  }
-
   render({ commanderStore: store }) {
-    store.renderIndex
+    store.version
 
     return (
       <bar
@@ -42,7 +103,7 @@ export default class CommanderInput {
         $$flex
       >
         <Editor
-          if={store.active}
+          if={true || store.active}
           placeholder={'search or create docs'}
           state={store.editorState}
           ref={input => (store.input = input)}
@@ -50,11 +111,17 @@ export default class CommanderInput {
           onFocus={store.onFocus}
           onBlur={store.onBlur}
           onChange={store.onChange}
+          schema={schema}
+          style={{ width: '100%' }}
         />
-
-        <blurredContent onClick={store.onActivate} if={!store.active}>
-          {this.renderBlurred()}
-        </blurredContent>
+        <button
+          if={false}
+          onClick={() => {
+            store.onCommitItem('test')
+          }}
+        >
+          add
+        </button>
       </bar>
     )
   }
@@ -68,10 +135,8 @@ export default class CommanderInput {
       borderRadius: 5,
     },
     blurred: {
+      border: '1px solid rgba(0, 0, 0, 0)',
       borderBottom: `1px solid #eee`,
-    },
-    blurredContent: {
-      width: '100%',
     },
     input: {
       width: '100%',

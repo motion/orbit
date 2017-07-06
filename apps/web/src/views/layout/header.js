@@ -14,6 +14,7 @@ export default class Header {
     return (
       <header $$draggable>
         <UI.Glow
+          if={false}
           color={[255, 255, 255]}
           opacity={1}
           full

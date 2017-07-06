@@ -16,6 +16,7 @@ type Props = {
 export default class DocumentStore {
   props: Props
 
+  v = 10
   id = this.props.id
   @watch
   document: ?Document = () => this.props.document || Document.get(this.props.id)
@@ -55,7 +56,6 @@ export default class DocumentStore {
     // init content
     this.watch(() => {
       if (!this.editor.state) {
-        console.log('no state setting contents', this.document.content)
         this.editor.setContents(this.document.content, true)
       }
     })

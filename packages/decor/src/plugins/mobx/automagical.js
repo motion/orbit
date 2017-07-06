@@ -194,7 +194,7 @@ function mobxifyWatch(obj, method, val) {
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
-        log(KEY, 'automagical.currentObservable', currentObservable.current)
+        // log(KEY, 'automagical.currentObservable', currentObservable.current)
         current.set(currentObservable.current) // hit observable
       }
     })
@@ -221,13 +221,9 @@ function mobxifyWatch(obj, method, val) {
     }
     if (result && (result.$isQuery || isObservable(result))) {
       if (result.isntConnected) {
-        log('NOT YET CONNECTED WAIT')
-        await result.onConnect()
-        log('RERUNNN')
-        watchForNewValue()
+        return
       }
       currentObservable = result
-      console.log(KEY, 'result = ', result)
       runObservable()
     } else {
       if (isPromise(result)) {

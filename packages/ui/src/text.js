@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
-import { view, keycode } from '@mcro/black'
-import type { ViewType } from '@mcro/black'
+import { view, keycode, observable } from '@mcro/black'
 
 export type Props = {
   editable?: boolean,
@@ -15,13 +14,24 @@ export type Props = {
   fontWeight?: number,
 }
 
-class TextStore {
-  selected = false
-  start() {
+// click away from edit clears it
+@view
+export default class Text {
+  props: Props
+
+  static defaultProps = {
+    tagName: 'p',
+    size: 1,
+  }
+
+  @observable selected = false
+  @observable editable = false
+  node = null
+
+  componentWillMount() {
     this.react(
-      () => this.props.editable,
+      () => this.editable,
       editable => {
-        console.log('text react editable', editable)
         if (this.clickaway) {
           this.clickaway.dispose()
         }
@@ -32,27 +42,14 @@ class TextStore {
         }
       }
     )
+    this.editable = this.props.editable
   }
-}
-
-// click away from edit clears it
-@view({
-  store: TextStore,
-})
-export default class Text implements ViewType {
-  props: Props
-
-  static defaultProps = {
-    tagName: 'p',
-    size: 1,
-  }
-
-  node = null
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.editing) {
-      this.props.store.selected = false
+      this.selected = false
     }
+    this.editable = nextProps.editable
   }
 
   componentDidUpdate() {
@@ -64,7 +61,7 @@ export default class Text implements ViewType {
     ) {
       this.node.focus()
       document.execCommand('selectAll', false, null)
-      this.props.store.selected = true
+      this.selected = true
     }
   }
 
@@ -105,7 +102,6 @@ export default class Text implements ViewType {
   }
 
   render({
-    store,
     editable,
     autoselect,
     onFinishEdit,

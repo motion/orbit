@@ -87,7 +87,6 @@ export default function storeProvidable(options, emitter) {
           //    it will break with never before seen mobx bug on next line
           Mobx.extendShallowObservable(this, { _props: null })
           this._props = { ...this.props }
-
           this.setupStores()
         }
 
@@ -103,14 +102,7 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillUnmount() {
-          emitter.emit('view.unmount', this)
-          for (const name of Object.keys(this.state.stores)) {
-            const store = this.state.stores[name]
-            emitter.emit('store.unmount', store)
-            if (options.onStoreUnmount) {
-              options.onStoreUnmount(store)
-            }
-          }
+          this.disposeStores()
         }
 
         setupStores() {
@@ -173,10 +165,24 @@ export default function storeProvidable(options, emitter) {
         }
 
         handleHotReload(module) {
-          log('i should handle this', module)
-          initStores()
+          log(`[handleHmr] ${module.id}`)
+          window.App && window.App.clearErrors && window.App.clearErrors()
+          this.clearErrors()
+          // initStores()
           this.module = module
+          this.disposeStores()
           this.setupStores()
+        }
+
+        disposeStores() {
+          emitter.emit('view.unmount', this)
+          for (const name of Object.keys(this.state.stores)) {
+            const store = this.state.stores[name]
+            emitter.emit('store.unmount', store)
+            if (options.onStoreUnmount) {
+              options.onStoreUnmount(store)
+            }
+          }
         }
 
         render() {

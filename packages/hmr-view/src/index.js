@@ -50,8 +50,6 @@ export default function proxyReactComponents({
 
   const forceUpdater = getForceUpdate(window.React)
   const forceUpdate = instance => {
-    window.App && window.App.clearErrors && window.App.clearErrors()
-    instance.clearErrors && instance.clearErrors()
     instance.handleHotReload && instance.handleHotReload(module)
     return forceUpdater(instance)
   }

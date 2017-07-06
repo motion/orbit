@@ -477,27 +477,11 @@ export default class Popover {
     const openIfOver = () => this.isNodeHovered(node, isPopover) && setHovered()
     const closeIfOut = () =>
       !this.isNodeHovered(node, isPopover) && setUnhovered()
-    const onEnter = openIfOver
+    const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
+    // this will avoid the delay open if its already open
+    const onEnter = () =>
+      isTarget && this.state.menuHovered ? openIfOver() : delayOpenIfHover()
     const onLeave = debounce(closeIfOut, isTarget ? 80 : 20) // 🐛 target should close slower than menu opens
-
-    if (isTarget) {
-      // seems to be fixed, leaving in case needs testing
-      // if you move your mouse super slowly onto an element, it triggers this ridiculous bug where it doesnt open
-      // i think because checking `:hover` in css requires your mouse being >1px inside the element
-      // so we also listen for mousemove, super throttled, just to prevent that
-      // this.on(
-      //   node,
-      //   'mousemove',
-      //   throttle(
-      //     () =>
-      //       !this.state.targetHovered &&
-      //       this.isNodeHovered(this.target) &&
-      //       this.hoverStateSet('target', true),
-      //     Math.max(200, delay),
-      //     { trailing: false }
-      //   )
-      // )
-    }
 
     // logic for enter/leave
     this.on(node, 'mouseenter', () => {

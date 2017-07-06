@@ -18,6 +18,7 @@ export default class UserBar {
           theme="light"
           openOnClick
           background
+          delay={150}
           borderRadius={8}
           elevation={2}
           distance={10}
@@ -38,7 +39,7 @@ export default class UserBar {
           background="transparent"
           distance={10}
           forgiveness={16}
-          delay={130}
+          delay={150}
           target={<UI.Button theme="dark" circular icon="body" />}
           openOnHover
           closeOnClick

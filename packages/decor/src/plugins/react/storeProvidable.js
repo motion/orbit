@@ -8,7 +8,6 @@ import Redbox from 'redbox-react'
 
 export default function storeProvidable(options, emitter) {
   const cache = new Cache()
-  const { instanceOpts } = options
 
   return {
     name: 'store-providable',
@@ -26,14 +25,21 @@ export default function storeProvidable(options, emitter) {
       //   cache.revive(instanceOpts.module, allStores)
       // }
 
-      let Stores = allStores
+      // see setupStores()
+      let Stores
 
-      // call decorators
-      if (storeDecorator && allStores) {
-        for (const key of Object.keys(allStores)) {
-          Stores[key] = storeDecorator(allStores[key])
+      function initStores() {
+        Stores = allStores
+
+        // call decorators
+        if (storeDecorator && allStores) {
+          for (const key of Object.keys(allStores)) {
+            Stores[key] = storeDecorator(allStores[key])
+          }
         }
       }
+
+      initStores()
 
       // return HoC
       class StoreProvider extends React.Component {
@@ -81,14 +87,32 @@ export default function storeProvidable(options, emitter) {
           //    it will break with never before seen mobx bug on next line
           Mobx.extendShallowObservable(this, { _props: null })
           this._props = { ...this.props }
+          this.setupStores()
+        }
 
+        componentDidMount() {
+          emitter.emit('view.mount', this)
+          for (const name of Object.keys(this.state.stores)) {
+            const store = this.state.stores[name]
+            emitter.emit('store.mount', store)
+            if (options.onStoreDidMount) {
+              options.onStoreDidMount(store, this.props)
+            }
+          }
+        }
+
+        componentWillUnmount() {
+          this.disposeStores()
+        }
+
+        setupStores() {
           const getProps = {
             get: () => this._props,
             configurable: true,
           }
 
           // start stores
-          const finalStores = Object.keys(Stores).reduce((acc, cur) => {
+          const stores = Object.keys(Stores).reduce((acc, cur) => {
             const Store = Stores[cur]
 
             const createStore = () => {
@@ -106,53 +130,28 @@ export default function storeProvidable(options, emitter) {
             }
           }, {})
 
-          if (instanceOpts && instanceOpts.module && instanceOpts.module.hot) {
-            instanceOpts.module.hot.dispose(data => {
-              data.stores = this.state.stores
-            })
-          }
+          // if (instanceOpts && instanceOpts.module && instanceOpts.module.hot) {
+          //   instanceOpts.module.hot.dispose(data => {
+          //     data.stores = this.state.stores
+          //   })
+          // }
 
           // optional mount function
           if (options.onStoreMount) {
-            for (const name of Object.keys(finalStores)) {
+            for (const name of Object.keys(stores)) {
               // fallback to store if nothing returned
-              finalStores[name] =
-                options.onStoreMount(finalStores[name], this.props) ||
-                finalStores[name]
+              stores[name] =
+                options.onStoreMount(stores[name], this.props) || stores[name]
             }
           }
 
           // line below used to be (hmr state preserve):
           // stores: cache.restore(
           //   this,
-          //   finalStores,
+          //   stores,
           //   instanceOpts && instanceOpts.module
           // )
-          this.setState({
-            stores: finalStores,
-          })
-        }
-
-        componentDidMount() {
-          emitter.emit('view.mount', this)
-          for (const name of Object.keys(this.state.stores)) {
-            const store = this.state.stores[name]
-            emitter.emit('store.mount', store)
-            if (options.onStoreDidMount) {
-              options.onStoreDidMount(store, this.props)
-            }
-          }
-        }
-
-        componentWillUnmount() {
-          emitter.emit('view.unmount', this)
-          for (const name of Object.keys(this.state.stores)) {
-            const store = this.state.stores[name]
-            emitter.emit('store.unmount', store)
-            if (options.onStoreUnmount) {
-              options.onStoreUnmount(store)
-            }
-          }
+          this.setState({ stores })
         }
 
         unstable_handleError(error) {
@@ -163,6 +162,27 @@ export default function storeProvidable(options, emitter) {
 
         clearErrors() {
           this.setState({ error: null })
+        }
+
+        handleHotReload(module) {
+          log(`[handleHmr] ${module.id}`)
+          window.App && window.App.clearErrors && window.App.clearErrors()
+          this.clearErrors()
+          // initStores()
+          this.module = module
+          this.disposeStores()
+          this.setupStores()
+        }
+
+        disposeStores() {
+          emitter.emit('view.unmount', this)
+          for (const name of Object.keys(this.state.stores)) {
+            const store = this.state.stores[name]
+            emitter.emit('store.unmount', store)
+            if (options.onStoreUnmount) {
+              options.onStoreUnmount(store)
+            }
+          }
         }
 
         render() {

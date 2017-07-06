@@ -1,7 +1,6 @@
 // @flow
 import React from 'react'
-import { view, keycode } from '@mcro/black'
-import type { ViewType } from '@mcro/black'
+import { view, keycode, observable } from '@mcro/black'
 
 export type Props = {
   editable?: boolean,
@@ -16,29 +15,8 @@ export type Props = {
 }
 
 // click away from edit clears it
-@view({
-  store: class TextStore {
-    selected = false
-
-    start() {
-      this.react(
-        () => this.props.editable,
-        editable => {
-          console.log('text react editable', editable)
-          if (this.clickaway) {
-            this.clickaway.dispose()
-          }
-          if (editable) {
-            this.clickaway = this.addEvent(window, 'click', (event: Event) =>
-              this.props.onFinishEdit(this.value)
-            )
-          }
-        }
-      )
-    }
-  },
-})
-export default class Text implements ViewType {
+@view
+export default class Text {
   props: Props
 
   static defaultProps = {
@@ -46,12 +24,32 @@ export default class Text implements ViewType {
     size: 1,
   }
 
+  @observable selected = false
+  @observable editable = false
   node = null
+
+  componentWillMount() {
+    this.react(
+      () => this.editable,
+      editable => {
+        if (this.clickaway) {
+          this.clickaway.dispose()
+        }
+        if (editable) {
+          this.clickaway = this.addEvent(window, 'click', (event: Event) =>
+            this.props.onFinishEdit(this.value)
+          )
+        }
+      }
+    )
+    this.editable = this.props.editable
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.editing) {
-      this.props.store.selected = false
+      this.selected = false
     }
+    this.editable = nextProps.editable
   }
 
   componentDidUpdate() {
@@ -63,7 +61,7 @@ export default class Text implements ViewType {
     ) {
       this.node.focus()
       document.execCommand('selectAll', false, null)
-      this.props.store.selected = true
+      this.selected = true
     }
   }
 
@@ -104,7 +102,6 @@ export default class Text implements ViewType {
   }
 
   render({
-    store,
     editable,
     autoselect,
     onFinishEdit,
@@ -129,9 +126,9 @@ export default class Text implements ViewType {
         {...props}
       >
         {!ellipse && children}
-        <ellipse if={ellipse} $$ellipse>
+        <span if={ellipse} $$ellipse>
           {children}
-        </ellipse>
+        </span>
       </text>
     )
   }

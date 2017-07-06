@@ -1,19 +1,45 @@
 // @flow
 // helper that logs functions, works as decorator or plain
+// passes through the first argument
 
-const colors = [
-  'green',
-  'purple',
-  'red',
-  'brown',
-  'orange',
-  'darkblue',
-  'darkred',
-]
+// Takes any string and converts it into a #RRGGBB color.
+class StringToColor {
+  hash = {}
+  colorId = 0
+  colors = [
+    '#b19cd9',
+    '#d9b19c',
+    '#9cc4d9',
+    '#c4d99c',
+    '#87d086',
+    '#d08687',
+    '#8687d0',
+    '#cf86d0',
+    '#d0cf86',
+    '#64cbcb',
+    '#cb9864',
+    '#cb6498',
+    '#cb6464',
+    '#ecc481',
+    '#81a9ec',
+    '#dfec81',
+    '#81ecc4',
+    '#c481ec',
+  ]
+  getColor(thing) {
+    const str = cutoff(thing.toString(), 7)
+    if (!this.hash[str]) {
+      this.hash[str] = this.colors[this.colorId++]
+    }
+    return this.hash[str]
+  }
+}
 
-function cutoff(thing: string) {
-  if (thing.length > 150) {
-    return thing.slice(0, 150) + '...'
+const Color = new StringToColor()
+
+function cutoff(thing: string, amt = 150) {
+  if (thing.length > amt) {
+    return thing.slice(0, amt - 3) + '...'
   }
   return thing
 }
@@ -42,7 +68,10 @@ export default function log(...args) {
   const [target, key, descriptor] = args
 
   const logger = (...things) => {
-    console.log(`%c${things.map(prettyPrint).join(' ')}`, 'background: orange')
+    console.log(
+      `%c${things.map(prettyPrint).join(' ')}`,
+      `background: ${Color.getColor(things[0])}`
+    )
   }
 
   if (
@@ -73,7 +102,10 @@ export default function log(...args) {
 }
 
 function wrapLogger(wrapFn: Function, parent, name?: string) {
-  const color = colors[Math.floor(Math.random() * colors.length - 1)]
+  const parentName = parent ? parent.name || parent.constructor.name : ''
+  const methodName = wrapFn.name || name
+  const color = Color.getColor(`${parentName}${methodName}`)
+
   return function(...args) {
     const result = wrapFn.call(this, ...args)
     const state =
@@ -87,9 +119,7 @@ function wrapLogger(wrapFn: Function, parent, name?: string) {
         ''
       )
     console.log(
-      `%c${parent
-        ? `${parent.name || parent.constructor.name}.`
-        : ''}${wrapFn.name || name}(${args.join(
+      `%c${parent ? `${parentName}.` : ''}${methodName}(${args.join(
         ','
       )}) => ${result}\nSTATE:\n${state}`,
       `color: ${color}`

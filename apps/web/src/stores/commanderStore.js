@@ -28,6 +28,10 @@ const KEYMAP = {
 }
 
 export default class CommanderStore {
+<<<<<<< HEAD
+=======
+  v = 20
+>>>>>>> e3053623ad6341601af268b113d65aed3b4a6b8b
   @watch document = () => Document.get(Router.params.id)
   @watch crumbs = () => this.document && this.document.getCrumbs()
 

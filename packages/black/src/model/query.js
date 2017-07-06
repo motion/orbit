@@ -2,20 +2,23 @@
 import { observable, isObservable, autorun } from 'mobx'
 import hashsum from 'hash-sum'
 
+const short = value =>
+  (value && JSON.stringify(value).slice(0, 15) + '..') || value
 const Cache = {}
+const CacheListeners = {}
 
-// TODO: instanceof RxQuery checks
-
-// subscribe-aware helpers
-// @query value wrapper
-function valueWrap(it, valueGet: Function) {
+function execQuery(it, valueGet: Function) {
   const KEY = hashsum(it)
+  // log('@query', it)
+  CacheListeners[KEY] = (CacheListeners[KEY] || 0) + 1
+
   if (Cache[KEY]) {
     return Cache[KEY]
   }
 
   const result = observable.shallowBox(undefined)
   let query = valueGet()
+
   // TODO can probably handle this here
   // const notConnected = query && query.isntConnected
 
@@ -33,11 +36,7 @@ function valueWrap(it, valueGet: Function) {
     if (query && query.$) {
       finishSubscribe()
       subscriber = query.$.subscribe(value => {
-        log(
-          INFO,
-          '.subscribe( => ',
-          (value && JSON.stringify(value).slice(0, 120)) || value
-        )
+        log(INFO, short(value))
         if (isObservable(value)) {
           result.set(value)
         } else {
@@ -47,16 +46,21 @@ function valueWrap(it, valueGet: Function) {
     }
   }
 
-  // handle not connected yet
-  if (query && query.isntConnected) {
-    log('not connected yet')
-    query.onConnection().then(() => {
-      console.log('ok not lets re-run')
-      query = valueGet()
+  let isObserving = false
+  function observe() {
+    if (isObserving) {
+      return
+    }
+    isObserving = true
+    // handle not connected yet
+    if (query && query.isntConnected) {
+      query.onConnection().then(() => {
+        query = valueGet()
+        runSubscribe()
+      })
+    } else {
       runSubscribe()
-    })
-  } else {
-    runSubscribe()
+    }
   }
 
   // autosync query
@@ -84,7 +88,6 @@ function valueWrap(it, valueGet: Function) {
 
   const response = {}
   const id = Math.random()
-  log(INFO, '>>>>> id >>>>', id)
 
   // helpers
   Object.defineProperties(response, {
@@ -115,6 +118,7 @@ function valueWrap(it, valueGet: Function) {
     },
     current: {
       get: () => {
+        observe() // start observe
         return result.get() && result.get().get()
       },
     },
@@ -123,10 +127,17 @@ function valueWrap(it, valueGet: Function) {
     },
     dispose: {
       value() {
-        // finishSubscribe()
-        // if (stopSync) {
-        //   stopSync()
-        // }
+        CacheListeners[KEY]--
+
+        // delayed dispose to avoid lots of disconnect/reconnect actions on route changes
+        if (CacheListeners[KEY] === 0) {
+          setTimeout(() => {
+            if (CacheListeners[KEY] === 0) {
+              finishSubscribe()
+              stopSync && stopSync()
+            }
+          }, 1000)
+        }
       },
     },
   })
@@ -152,7 +163,7 @@ export default function query(
           console.log('no this.collection!')
           return null
         }
-        return valueWrap.call(
+        return execQuery.call(
           this,
           {
             model: this.constructor.name,
@@ -166,7 +177,7 @@ export default function query(
     }
   } else if (value) {
     descriptor.value = function(...args) {
-      return valueWrap.call(
+      return execQuery.call(
         this,
         { model: this.constructor.name, property, args },
         () => value.apply(this, args)

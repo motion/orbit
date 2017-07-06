@@ -29,14 +29,13 @@ export default class DocumentView {
   }
 
   render({ editorProps, inline, showChildren, readOnly, store }: Props) {
-    // window.x()
-
     if (!store.document) {
       return <loading />
     }
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
+        {store.v} 123
         <content $$row>
           <Editor
             key={store.document._id}

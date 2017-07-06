@@ -255,10 +255,17 @@ export default class Model {
       ...this.getDefaultProps(object),
       ...object,
     }
-    console.log(
-      `'%c ${this.constructor.name}.create ${JSON.stringify(properties)}`,
-      'color: green'
-    )
+
+    if (!temporary) {
+      console.log(
+        `%c${this.constructor.name}.create(${JSON.stringify(properties).slice(
+          0,
+          100
+        )}...)`,
+        'color: green'
+      )
+    }
+
     return this.collection[temporary ? 'newDocument' : 'insert'](properties)
   }
 

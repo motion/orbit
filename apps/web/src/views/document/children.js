@@ -61,8 +61,6 @@ export default class Children {
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
     const allDocs = sortBy(docs || [], 'createdAt')
 
-    log('docs is', store)
-
     return (
       <children>
         <actions>

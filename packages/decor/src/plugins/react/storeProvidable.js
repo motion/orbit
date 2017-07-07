@@ -174,7 +174,7 @@ export default function storeProvidable(options, emitter) {
         }
 
         handleHotReload = module => {
-          console.log(module, Stores, this.state.stores)
+          // console.log(module, Stores, this.state.stores)
 
           // debounce
           if (hmrd[module.id]) {

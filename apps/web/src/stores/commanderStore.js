@@ -166,7 +166,7 @@ export default class CommanderStore {
   focus = () => {
     if (!this.input) return
     this.input.focus()
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       this.editorState = this.editorState
         .transform()
         .collapseToEndOf(this.editorState.document.nodes.last())

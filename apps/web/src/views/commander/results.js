@@ -27,7 +27,7 @@ export default class CommanderResults {
       </match>
 
     return (
-      <results if={cmdr.focused}>
+      <results if={cmdr.showResults}>
         <UI.Placeholder
           if={cmdr.isEnterToCreate && last(cmdr.typedPath).length > 0}
         >

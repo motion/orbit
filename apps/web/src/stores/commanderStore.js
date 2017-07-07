@@ -54,7 +54,7 @@ export default class CommanderStore {
   searchResults: Array<Document> = []
   input: ?HTMLInputElement = null
   focused = false
-  active = false
+  showResults = false
   // bump this to rerender element
   version = 0
 
@@ -134,11 +134,10 @@ export default class CommanderStore {
       }
       /*
       if (this.isSelected) {
-        this.select(this.input.selectionEnd, this.input.selectionEnd)
+        //this.select(this.input.selectionEnd, this.input.selectionEnd)
         return
       }
       */
-      this.blur()
     },
     enter: () => this.onEnter(),
     focus: () => this.focus(),
@@ -371,6 +370,7 @@ export default class CommanderStore {
     docs.map(doc => doc.getTitle()).join(PATH_SEPARATOR)
 
   onFocus = () => {
+    this.showResults = true
     this.focused = true
   }
 
@@ -449,7 +449,7 @@ export default class CommanderStore {
 
     if (code === 'esc') {
       event.preventDefault()
-      this.blur()
+      this.showResults = false
       return state
     }
 

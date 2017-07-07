@@ -33,7 +33,7 @@ export const Paragraph = node(({ editorStore, children, attributes }) => {
   }
 
   return (
-    <p style={PARAGRAPH_STYLE} {...attributes} $$text>
+    <p style={PARAGRAPH_STYLE} {...attributes}>
       {children}
     </p>
   )

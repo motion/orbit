@@ -690,7 +690,7 @@ export default class Popover {
     open: {
       zIndex: 100000,
       '& > *': {
-        pointerEvents: 'inherit !important',
+        pointerEvents: 'all !important',
       },
     },
     closing: {

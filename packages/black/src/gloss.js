@@ -132,9 +132,6 @@ export const styles: Object = {
     padding: 0,
     transition: 'opacity 150ms ease-in',
   },
-  text: {
-    fontSize: 18,
-  },
   archive: {
     opacity: 0.4,
   },

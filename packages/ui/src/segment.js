@@ -130,7 +130,6 @@ export default class Segment implements ViewType<Props> {
 
   static style = {
     segment: {
-      pointerEvents: 'auto',
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',

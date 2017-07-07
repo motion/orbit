@@ -6,6 +6,7 @@ import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 import * as Commander from '~/views/commander'
+import { watch } from '@mcro/black'
 
 type Props = {
   id: number,
@@ -15,10 +16,12 @@ type Props = {
 @view({
   store: class ChildrenStore {
     children = {}
-    docs = Document.child(this.props.id)
+    @watch docs = () => Document.child(this.props.id)
     newTitle = null
 
     start() {
+      window.x = this
+
       this.watch(async () => {
         if (this.docs && this.docs.length) {
           this.children = {}
@@ -57,6 +60,8 @@ export default class Children {
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
     const allDocs = sortBy(docs || [], 'createdAt')
+
+    log('docs is', store)
 
     return (
       <children>
@@ -137,12 +142,13 @@ export default class Children {
       fontWeight: 400,
     },
     children: {
+      marginTop: 20,
+      padding: 20,
       borderTopRadius: 8,
       borderTop: [1, '#eee'],
       borderRight: [1, '#eee'],
-      boxShadow: [[0, -3, 3, [0, 0, 0, 0.025]]],
+      // boxShadow: [[0, -3, 3, [0, 0, 0, 0.025]]],
       background: '#fff',
-      // padding: 16,
       position: 'relative',
       overflow: 'hidden',
       flex: 1,
@@ -161,6 +167,7 @@ export default class Children {
     doc: {
       maxWidth: 300,
       minWidth: 200,
+      minHeight: 100,
       flex: 1,
       margin: [0, 12, 16, 0],
       zIndex: 1,

@@ -34,7 +34,7 @@ export default class TitleNode {
       fontWeight: 500,
       color: [0, 0, 0, 0.9],
       marginBottom: 15,
-      marginLeft: 60,
+      // marginLeft: 60,
       marginTop: -5,
     },
     inline: {

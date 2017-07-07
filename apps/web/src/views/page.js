@@ -18,8 +18,8 @@ class PageSidebar {
   componentDidMount() {
     this.update(this.props)
   }
-  componentDidUpdate(nextProps) {
-    this.update(nextProps)
+  componentDidUpdate() {
+    this.update(this.props)
   }
   render() {
     return null

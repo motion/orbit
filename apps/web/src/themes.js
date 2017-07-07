@@ -1,39 +1,5 @@
 // @flow
-import { color } from '@mcro/ui'
-
-const colorize = obj =>
-  Object.keys(obj).reduce(
-    (acc, cur) => ({ ...acc, [cur]: color(obj[cur]) }),
-    {}
-  )
-
-function theme(styles) {
-  const obj = colorize(styles)
-
-  return {
-    base: obj,
-    hover: {
-      ...obj,
-      color: '#fff',
-      background: obj.background.lighten(0.2),
-      borderColor: obj.borderColor.lighten(0.2),
-    },
-    active: {
-      ...obj,
-      background: obj.background.darken(0.2),
-      highlightColor: obj.highlightColor.lighten(0.2),
-      color: '#fff',
-    },
-    focus: {
-      ...obj,
-      background: obj.background.lighten(0.25),
-      borderColor: obj.highlightColor,
-    },
-    highlight: {
-      color: obj.highlightColor,
-    },
-  }
-}
+import { color, makeTheme } from '@mcro/ui'
 
 const highlightColor = [89, 154, 244]
 
@@ -55,20 +21,20 @@ const Theme = {
     glow: {
       color: [255, 255, 255, 0.1],
     },
-    ...theme({
+    ...makeTheme({
       highlightColor,
       background: [255, 255, 255, 0.1],
       color: '#333',
       borderColor: [0, 0, 0, 0.1],
     }),
   },
-  dark: theme({
+  dark: makeTheme({
     highlightColor,
     background: '#222',
     color: '#eee',
     borderColor: '#333',
   }),
-  'clear-dark': theme({
+  'clear-dark': makeTheme({
     highlightColor,
     background: [20, 20, 20, 0],
     color: '#f2f2f2',

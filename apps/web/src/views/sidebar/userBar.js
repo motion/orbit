@@ -24,7 +24,7 @@ export default class UserBar {
           distance={10}
           forgiveness={16}
           width={400}
-          target={<UI.Button theme="dark">Status | 👋</UI.Button>}
+          target={<UI.Button theme="green">Status | 👋</UI.Button>}
           openOnHover
           closeOnClick
         >

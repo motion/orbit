@@ -88,7 +88,11 @@ export default function storeProvidable(options, emitter) {
           //    it will break with never before seen mobx bug on next line
           Mobx.extendShallowObservable(this, { _props: null })
           this._props = { ...this.props }
-          this.setupStores()
+          try {
+            this.setupStores()
+          } catch (e) {
+            console.log('hmr bugfix TODO fix')
+          }
         }
 
         componentDidMount() {
@@ -134,9 +138,13 @@ export default function storeProvidable(options, emitter) {
           // optional mount function
           if (options.onStoreMount) {
             for (const name of Object.keys(stores)) {
+              if (stores[name].__IS_STORE_MOUNTED) {
+                continue
+              }
               // fallback to store if nothing returned
               stores[name] =
                 options.onStoreMount(stores[name], this.props) || stores[name]
+              stores[name].__IS_STORE_MOUNTED = true
             }
           }
 
@@ -183,19 +191,23 @@ export default function storeProvidable(options, emitter) {
 
         disposeStores() {
           this.disposed = true
-          emitter.emit('view.unmount', this)
-          for (const name of Object.keys(this.state.stores)) {
-            const store = this.state.stores[name]
-            emitter.emit('store.unmount', store)
-            if (options.onStoreUnmount) {
-              options.onStoreUnmount(store)
+          try {
+            emitter.emit('view.unmount', this)
+            for (const name of Object.keys(this.state.stores)) {
+              const store = this.state.stores[name]
+              emitter.emit('store.unmount', store)
+              if (options.onStoreUnmount) {
+                options.onStoreUnmount(store)
+              }
             }
+          } catch (e) {
+            console.log(e)
           }
         }
 
         render() {
           if (this.state.error) {
-            return <Redbox error={this.state.error} />
+            return <Redbox $$draggable error={this.state.error} />
           }
 
           return <Klass {...this.props} {...this.state.stores} />

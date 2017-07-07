@@ -58,52 +58,6 @@ export default class Children {
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
     const allDocs = sortBy(docs || [], 'createdAt')
 
-    // const getDoc = doc => {
-    //   return {
-    //     onClick() {
-    //       Router.go(doc.url())
-    //     },
-    //     primary: (
-    //       <div $$row $$align="center">
-    //         <name>
-    //           <span $$ellipse>
-    //             {doc.getTitle()}
-    //           </span>
-    //         </name>
-    //       </div>
-    //     ),
-    //     secondary: (
-    //       <content if={children}>
-
-    //       </content>
-    //     ),
-    //   }
-    // }
-    // const newDoc =
-    //   store.newTitle === null
-    //     ? null
-    //     : {
-    //         primary: (
-    //           <div $$row $$align="center">
-    //             <name>
-    //               <input
-    //                 $name
-    //                 autoFocus
-    //                 value={store.newTitle}
-    //                 onKeyDown={e => e.which === 13 && store.create()}
-    //                 onChange={e => (store.newTitle = e.target.value)}
-    //                 onBlur={e => (store.newTitle = null)}
-    //               />
-    //             </name>
-    //           </div>
-    //         ),
-    //       }
-
-    // const items = [
-    //   ...sortBy(docs || [], 'createdAt').map(getDoc),
-    //   ...(newDoc ? [newDoc] : []),
-    // ]
-
     return (
       <children>
         <actions>

@@ -10,6 +10,7 @@ function Input({ sync, type, name, uiContext, ...props }) {
 
   if (uiContext && uiContext.inForm && !sync) {
     const ogOnChange = props.onChange
+    uiContext.formValues[name] = props.initialValue || '' // set to initial value
     props.onChange = e => {
       uiContext.formValues[name] = e.target.value
       ogOnChange && ogOnChange(e)

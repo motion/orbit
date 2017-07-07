@@ -13,22 +13,26 @@ import Login from './sidebar/login'
       log('hi')
     }
 
-    validator = schema({
-      company: string.minlen(2),
-      name: string.minlen(2),
-      email: string
-        .minlen(5)
-        .match(
-          /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-        ),
-      password: string.minlen(7),
-    })
+    // wrap to avoid mobx action wrap because validator has weird api
+    helpers = {
+      validator: schema({
+        company: string.minlen(2),
+        name: string.minlen(2),
+        email: string
+          .minlen(5)
+          .match(
+            /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+          ),
+        password: string.minlen(7),
+      }),
+    }
 
     handleSubmit = async fields => {
       console.log('submitting', fields)
-      const passes = this.validator(fields)
+      const passes = this.helpers.validator(fields)
       if (!passes) {
-        this.errors = this.validator.errors
+        log('what')
+        this.errors = this.helpers.validator.errors
         return
       }
 

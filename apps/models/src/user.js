@@ -124,7 +124,7 @@ class User {
         confirmPassword: password,
       })
       console.log('registerNewUser: ', res, 'logging in...')
-      await this.login(username, password)
+      // await this.login(username, password) // this should be auto done
     } catch (error) {
       console.error('registerNewUser error: ', error)
       if (error && error.validationErrors) {

@@ -33,7 +33,9 @@ export default class TitleNode {
       fontSize: 19,
       fontWeight: 500,
       color: [0, 0, 0, 0.9],
-      marginBottom: 5,
+      marginBottom: 15,
+      marginLeft: 60,
+      marginTop: -5,
     },
     inline: {
       // fontFamily: 'Abril Fatface',

@@ -70,7 +70,7 @@ const Theme = {
   }),
   'clear-dark': theme({
     highlightColor,
-    background: [20, 20, 20, 0.5],
+    background: [20, 20, 20, 0],
     color: '#f2f2f2',
     borderColor: [30, 30, 30, 1],
   }),

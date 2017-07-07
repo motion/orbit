@@ -51,7 +51,7 @@ class ListNode {
       transition: 'background 150ms ease-in',
     },
     isRoot: {
-      margin: [16, 0],
+      margin: [10, 0],
     },
     done: {
       background: 'rgba(255, 255, 255, 1)',

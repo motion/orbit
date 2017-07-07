@@ -79,6 +79,7 @@ export default class Login {
               onKeyDown={store.onPasswordKey}
               getRef={store.ref('password').set}
             />
+            <UI.Button icon="raft" tooltip="Forgot password?" />
             <UI.Button
               icon={store.loggingIn ? 'time' : 'lock'}
               onClick={store.finish}

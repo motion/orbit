@@ -5,6 +5,7 @@ import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
+import * as Commander from '~/views/commander'
 
 type Props = {
   id: number,
@@ -105,27 +106,25 @@ export default class Children {
 
     return (
       <children>
-        <actions
-          $$row
-          $$centered
-          css={{
-            position: 'absolute',
-            top: -22,
-            right: 10,
-          }}
-        >
-          <UI.Button marginRight={10} size={0.9} icon="down" elevation={0.25}>
-            Sort
-          </UI.Button>
-          <UI.Button
-            if={store.newTitle === null}
-            size={1}
-            icon="siadd"
-            circular
-            size={1.5}
-            elevation={1}
-            onClick={store.add}
-          />
+        <actions>
+          asdadas
+          <Commander.Bar />
+          <div $$flex />
+          <post $$row $$centered>
+            <UI.Button marginRight={10} size={0.9} icon="down" elevation={0.25}>
+              Sort
+            </UI.Button>
+            <UI.Button
+              if={store.newTitle === null}
+              size={1}
+              icon="siadd"
+              circular
+              size={1.5}
+              elevation={1}
+              onClick={store.add}
+              borderWidth={0}
+            />
+          </post>
         </actions>
         <docs if={hasDocs}>
           {allDocs.map((doc, index) => {
@@ -162,6 +161,14 @@ export default class Children {
   }
 
   static style = {
+    actions: {
+      padding: 10,
+      flexFlow: 'row',
+      alignItems: 'center',
+      position: 'absolute',
+      top: 0,
+      right: 0,
+    },
     title: {
       margin: 0,
       padding: 0,
@@ -179,10 +186,15 @@ export default class Children {
       fontWeight: 400,
     },
     children: {
+      borderTopRadius: 8,
       borderTop: [1, '#eee'],
+      borderRight: [1, '#eee'],
+      boxShadow: [[0, -3, 3, [0, 0, 0, 0.025]]],
       background: '#fff',
-      padding: 16,
+      // padding: 16,
       position: 'relative',
+      overflow: 'hidden',
+      flex: 1,
     },
     paths: {
       flexFlow: 'row',

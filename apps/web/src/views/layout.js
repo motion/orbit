@@ -71,12 +71,10 @@ export default class Layout {
         <UI.Glint color={[255, 255, 255, 0.2]} borderRadius={4} />
         <Signup />
         <LayoutWrap layoutStore={layoutStore}>
-          <Commander.Results />
           <Header layoutStore={layoutStore} />
           <content
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-            $hide={commanderStore.isOpen}
           >
             <CurrentPage key={Router.key} {...Router.params} />
           </content>

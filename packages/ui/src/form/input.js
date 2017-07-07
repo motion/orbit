@@ -20,6 +20,11 @@ function Input({ sync, type, name, uiContext, ...props }) {
     return <input type="checkbox" {...props} />
   }
 
+  // glow
+  // glowProps={{
+  //   color: [255, 255, 255],
+  // }}
+
   return (
     <SizedSurface
       $input

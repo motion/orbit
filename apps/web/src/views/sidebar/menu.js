@@ -8,7 +8,7 @@ export default class SidebarMenu {
   render() {
     return (
       <sidebarmenu>
-        <UI.Theme name="clear">
+        <UI.Theme name="clear-dark">
           <UI.List
             items={[
               // { primary: 'Me', icon: 'hum', onClick: _ => _ },

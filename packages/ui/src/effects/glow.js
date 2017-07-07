@@ -26,7 +26,7 @@ export default class HoverGlow {
   static defaultProps = {
     width: 380,
     height: 200,
-    color: [0, 0, 0],
+    color: [255, 255, 255],
     zIndex: 0,
     resist: 0,
     scale: 1,

@@ -7,42 +7,63 @@ import makeTheme from './makeTheme'
 // resolves the theme object into props.theme
 // and passes the named theme down
 // if given theme="name"
-export default View => {
-  function InjectTheme(props, context) {
-    let theme = (props.theme && context.uiTheme[props.theme]) || context.theme
-    let themeName = props.theme || context.uiActiveTheme
+export default View =>
+  class InjectTheme extends React.Component {
+    static contextTypes = {
+      uiTheme: object,
+      theme: object,
+    }
+    static childContextTypes = {
+      uiTheme: object,
+      theme: object,
+    }
 
-    try {
-      if (!theme && typeof props.theme === 'string') {
-        const base = color('orange')
-        const opposite = base.mix(color('blue'))
-        themeName = props.theme
-        theme = makeTheme({
-          highlightColor: base,
-          background: base,
-          color: opposite,
-          borderColor: opposite.darken(1),
-        })
-        context.uiTheme[props.theme] = theme // add to context
-      }
-    } catch (e) {
-      if (e.message.indexOf('parse color from string') === -1) {
-        // recover only from parse
-        throw e
+    getChildContext() {
+      const { themeName, theme } = this.theme
+      return {
+        uiTheme: {
+          ...this.context.uiTheme,
+          [themeName]: theme,
+        },
       }
     }
 
-    return (
-      <Theme name={themeName}>
-        <View {...props} theme={theme} />
-      </Theme>
-    )
-  }
+    get theme() {
+      const { props, context } = this
+      let theme = (props.theme && context.uiTheme[props.theme]) || context.theme
+      let themeName = props.theme || context.uiActiveTheme
+      let isCustom = false
 
-  InjectTheme.contextTypes = {
-    uiTheme: object,
-    theme: object,
-  }
+      try {
+        if (!theme && typeof props.theme === 'string') {
+          isCustom = true
+          const base = color('orange')
+          const opposite = base.mix(color('blue'))
+          themeName = props.theme
+          theme = makeTheme({
+            highlightColor: base,
+            background: base,
+            color: opposite,
+            borderColor: opposite.darken(1),
+          })
+        }
+      } catch (e) {
+        if (e.message.indexOf('parse color from string') === -1) {
+          // recover only from parse
+          throw e
+        }
+      }
 
-  return InjectTheme
-}
+      return { theme, themeName, isCustom }
+    }
+
+    render() {
+      const { theme, themeName } = this.theme
+
+      return (
+        <Theme name={themeName}>
+          <View {...this.props} theme={theme} />
+        </Theme>
+      )
+    }
+  }

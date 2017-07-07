@@ -92,6 +92,7 @@ export default function storeProvidable(options, emitter) {
             this.setupStores()
           } catch (e) {
             console.log('hmr bugfix TODO fix')
+            this.failed = true
           }
         }
 
@@ -206,6 +207,11 @@ export default function storeProvidable(options, emitter) {
         }
 
         render() {
+          if (this.failed) {
+            console.log('failed view')
+            return null
+          }
+
           if (this.state.error) {
             return <Redbox $$draggable error={this.state.error} />
           }

@@ -21,22 +21,21 @@ import { HEADER_HEIGHT } from '~/constants'
       this.loggingIn = false
     }
 
-    onSubmit = (event: Event) => {
-      event.preventDefault()
-      this.finish()
+    onSubmit = values => {
+      console.log('got', values)
+      // this.finish()
     }
 
-    onEmailKey = (event: Event) => {
+    onEmailKey = event => {
       switch (keycode(event)) {
         case 'enter':
           event.preventDefault()
           event.stopPropagation()
-          console.log('focus')
           this.password.focus()
       }
     }
 
-    onPasswordKey = (event: Event) => {
+    onPasswordKey = event => {
       switch (keycode(event)) {
         case 'enter':
           event.preventDefault()
@@ -68,7 +67,6 @@ export default class Login {
               disabled={store.loggingIn}
               name="email"
               onKeyDown={store.onEmailKey}
-              getRef={store.ref('email').set}
               placeholder="Email"
             />
             <UI.Input
@@ -77,13 +75,9 @@ export default class Login {
               type="password"
               placeholder="Password"
               onKeyDown={store.onPasswordKey}
-              getRef={store.ref('password').set}
             />
             <UI.Button icon="raft" tooltip="Forgot password?" />
-            <UI.Button
-              icon={store.loggingIn ? 'time' : 'lock'}
-              onClick={store.finish}
-            >
+            <UI.Button type="submit" icon={store.loggingIn ? 'time' : 'lock'}>
               {store.loggingIn ? 'Logging in...' : 'Login'}
             </UI.Button>
           </UI.Segment>

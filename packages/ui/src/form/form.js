@@ -13,6 +13,10 @@ export default class Form {
           uiContext: {
             ...uiContext,
             inForm: true,
+            form: {
+              submit: () =>
+                props.onSubmit(log(this.context.uiContext.formValues)),
+            },
             formValues: {},
           },
         }}

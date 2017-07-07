@@ -26,7 +26,7 @@ const hasChildren = children =>
     ? children.reduce((a, b) => a || !!b, false)
     : !!children
 
-@inject(context => context.uiContext)
+@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Surface implements ViewType {
   props: {
@@ -70,9 +70,8 @@ export default class Surface implements ViewType {
     iconColor?: Color,
     iconProps?: Object,
     iconSize?: number,
-    inForm?: boolean,
+    uiContext?: boolean,
     inline?: boolean,
-    inSegment?: boolean,
     justify?: string,
     margin?: number | Array<number>,
     marginBottom?: number,
@@ -148,9 +147,8 @@ export default class Surface implements ViewType {
     iconColor,
     iconProps,
     iconSize: _iconSize,
-    inForm,
+    uiContext,
     inline,
-    inSegment,
     justify,
     margin,
     marginBottom,
@@ -434,11 +432,11 @@ export default class Surface implements ViewType {
     // borderRadius
     const borderRadiusSize = props.circular ? height : props.borderRadius
     const borderRadius = {}
-    if (props.inSegment) {
-      borderRadius.borderLeftRadius = props.inSegment.first
+    if (props.uiContext && props.uiContext.inSegment) {
+      borderRadius.borderLeftRadius = props.uiContext.inSegment.first
         ? borderRadiusSize
         : 0
-      borderRadius.borderRightRadius = props.inSegment.last
+      borderRadius.borderRightRadius = props.uiContext.inSegment.last
         ? borderRadiusSize
         : 0
     } else if (props.circular) {
@@ -519,7 +517,8 @@ export default class Surface implements ViewType {
         borderRight: props.borderRight,
         marginBottom: props.marginBottom,
         marginTop: props.marginTop,
-        marginLeft: props.inSegment ? -1 : props.marginLeft,
+        marginLeft:
+          props.uiContext && props.uiContext.inSegment ? -1 : props.marginLeft,
         marginRight: props.marginRight,
         paddingBottom: props.paddingBottom,
         paddingTop: props.paddingTop,
@@ -527,12 +526,14 @@ export default class Surface implements ViewType {
         paddingRight: props.paddingRight,
         ...circularStyles,
         ...(props.wrapElement &&
-        props.inForm && {
+        props.uiContext &&
+        props.uiContext.inForm && {
           '& > :active': theme.active,
           '& > :focus': theme.focus,
         }),
         ...(!props.wrapElement &&
-        props.inForm && {
+        props.uiContext &&
+        props.uiContext.inForm && {
           '&:active': theme.active,
           '&:focus': theme.focus,
         }),

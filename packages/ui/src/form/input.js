@@ -2,7 +2,7 @@ import React from 'react'
 import SizedSurface from '../sizedSurface'
 import { inject } from '@mcro/black'
 
-function Input({ sync, type, name, uiContext, ...props }) {
+function Input({ sync, type, name, uiContext, form, ...props }) {
   if (sync) {
     props.value = sync.get()
     props.onChange = e => sync.set(e.target.value)
@@ -17,14 +17,11 @@ function Input({ sync, type, name, uiContext, ...props }) {
     }
   }
 
+  log('form is', form)
+
   if (type === 'checkbox') {
     return <input type="checkbox" {...props} />
   }
-
-  // glow
-  // glowProps={{
-  //   color: [255, 255, 255],
-  // }}
 
   return (
     <SizedSurface

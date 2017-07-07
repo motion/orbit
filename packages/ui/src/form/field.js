@@ -68,7 +68,7 @@ export default class Field {
     ...props
   }: Props) {
     const Element = fields[type]
-    const id = `${Math.random()}`
+    const id = name || `element-${Math.floor(Math.random() * 10000000)}`
 
     if (!Element && !children) {
       throw new Error('Invalid field type or no children given to Field')
@@ -78,9 +78,9 @@ export default class Field {
       <field $width={width} {...props}>
         <Text
           if={label}
+          tagName="label"
           $label
           ellipse
-          tagName="label"
           htmlFor={id}
           size={size}
           {...labelProps}
@@ -91,7 +91,7 @@ export default class Field {
           if={!children && Element}
           $element
           onChange={onChange}
-          name={name || (label && label.toLowerCase()) || ''}
+          name={id}
           defaultValue={defaultValue}
           sync={sync}
           theme={theme}

@@ -8,66 +8,46 @@ import node from '~/editor/node'
 import { createButton } from './helpers'
 
 const PARAGRAPH_STYLE = {
-  fontSize: 19,
-  lineHeight: '27px',
+  fontSize: 18,
+  lineHeight: '26px',
 }
 
-export const Paragraph = node(
-  ({ editorStore, children, inline, attributes }) => {
-    const text = children[0].props.node.text
-    const style = {
-      ...PARAGRAPH_STYLE,
-      color: inline ? '#fff' : 'auto',
-    }
+export const Paragraph = node(({ editorStore, children, attributes }) => {
+  const text = children[0].props.node.text
 
-    if (
-      editorStore.find &&
-      editorStore.find.length > 0 &&
-      text.trim().length > 0
-    ) {
-      return (
-        <Highlighter
-          highlightClassName="word-highlight"
-          searchWords={[editorStore.find.toLowerCase()]}
-          sanitize={text => text.toLowerCase()}
-          highlightStyle={{ background: '#ffd54f' }}
-          textToHighlight={text}
-          style={style}
-        />
-      )
-    }
-
+  if (
+    editorStore.find &&
+    editorStore.find.length > 0 &&
+    text.trim().length > 0
+  ) {
     return (
-      <p style={style} {...attributes} $$text>
-        <span
-          style={{ userSelect: 'none', marginLeft: '-4px' }}
-          contentEditable={false}
-        >
-          &nbsp;
-        </span>
-        {children}
-      </p>
+      <Highlighter
+        highlightClassName="word-highlight"
+        searchWords={[editorStore.find.toLowerCase()]}
+        sanitize={text => text.toLowerCase()}
+        highlightStyle={{ background: '#ffd54f' }}
+        textToHighlight={text}
+        style={PARAGRAPH_STYLE}
+      />
     )
   }
-)
 
-const newParagraph = state =>
-  state.transform().splitBlock().setBlock(BLOCKS.PARAGRAPH).apply()
-
-const onEnter = (event: KeyboardEvent, state) => {
-  const { startBlock } = state
-  const enterNewPara = [
-    BLOCKS.HEADER,
-    BLOCKS.QUOTE,
-    BLOCKS.TITLE,
-    BLOCKS.DOC_LIST,
-  ]
-  if (enterNewPara.filter(x => startsWith(startBlock.type, x)).length > 0) {
-    e.preventDefault()
-    return newParagraph(state)
-  }
-  return state
-}
+  return (
+    <p style={PARAGRAPH_STYLE} {...attributes} $$text>
+      <span
+        style={{
+          pointerEvents: 'none',
+          userSelect: 'none',
+          marginLeft: '-5px',
+        }}
+        contentEditable={false}
+      >
+        &nbsp;
+      </span>
+      {children}
+    </p>
+  )
+})
 
 export default class TextPlugin {
   name = 'text'

@@ -30,12 +30,12 @@ export default class TitleNode {
     }),
     title1: {
       // display: 'none',
-      fontSize: 19,
-      fontWeight: 500,
+      fontSize: 24,
+      fontWeight: 400,
       color: [0, 0, 0, 0.9],
-      marginBottom: 15,
+      marginBottom: 5,
       // marginLeft: 60,
-      marginTop: -5,
+      marginTop: 5,
     },
     inline: {
       // fontFamily: 'Abril Fatface',

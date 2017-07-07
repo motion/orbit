@@ -39,7 +39,7 @@ export const Paragraph = node(
 
     return (
       <p style={style} {...attributes} $$text>
-        {children}
+        &nbsp;{children}
       </p>
     )
   }

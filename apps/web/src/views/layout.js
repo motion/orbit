@@ -72,6 +72,7 @@ export default class Layout {
         <UI.Glint color={[255, 255, 255, 0.2]} borderRadius={4} />
         <Signup />
         <LayoutWrap layoutStore={layoutStore}>
+          <Commander.Results />
           <Header layoutStore={layoutStore} />
           <content
             if={User.loggedIn}

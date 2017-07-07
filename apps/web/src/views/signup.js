@@ -11,9 +11,33 @@ export default class Signup {
     console.log('submitting', values)
   }
 
+  play = node => {
+    if (node) {
+      node.play()
+    }
+  }
+
   render() {
     return (
       <signup if={!User.loggedIn} $$fullscreen $$draggable>
+        <video
+          src="https://cash-f.squarecdn.com/videos/cash_site_loop.mp4"
+          playsInline
+          ref={this.play}
+          muted
+          controls="false"
+          loop
+          css={{
+            position: 'absolute',
+            top: '-15%',
+            left: '-15%',
+            right: 0,
+            bottom: 0,
+            width: '150%',
+            alignSelf: 'center',
+            opacity: 0.1,
+          }}
+        />
         <UI.Glow
           color={[255, 255, 255]}
           opacity={0.35}
@@ -73,7 +97,8 @@ export default class Signup {
                 css={{
                   position: 'absolute',
                   bottom: 10,
-                  right: 10,
+                  right: 0,
+                  left: 0,
                   opacity: 0.5,
                   '&:hover': {
                     opacity: 1,

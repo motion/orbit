@@ -44,26 +44,34 @@ const schema = {
 class Arrow {
   render({ store, animate }) {
     return (
-      <arrow $animate={animate} $animateAfter={animate && store.rendered}>
-        <Icon size={10} style={{ display: 'inline' }} name="arrow-min-right" />
+      <arrow>
+        <Icon
+          $animate={animate}
+          $animateAfter={animate && store.rendered}
+          $icon
+          size={10}
+          name="arrow-min-right"
+        />
       </arrow>
     )
   }
 
   static style = {
     arrow: {
-      display: 'inline',
+      display: 'inline-block',
+    },
+    icon: {
+      display: 'inline-block',
+      marginTop: 10,
     },
     animate: {
       transition: 'all 100ms ease-in',
-      transform: { scale: 0.5 },
-      opacity: 0.3,
-      marginLeft: -5,
+      transform: `scale(0.6) translateX(-5px)`,
+      opacity: 0.2,
     },
     animateAfter: {
       opacity: 1,
-      marginLeft: 0,
-      transform: { scale: 1 },
+      transform: `scale(1) translateX(0px)`,
     },
   }
 }
@@ -80,21 +88,30 @@ class Item {
     const selected = cmdr.selectedItemKey === node.key
 
     return (
-      <span $last={isLast} contentEditable={false}>
-        <Button
-          chromeless
-          onClick={() => cmdr.onItemClick(node.key)}
-          spaced
-          size={0.7}
-          fontSize={14}
-          highlight={selected}
-          style={inline}
-          color={[0, 0, 0, 0.8]}
+      <div>
+        <span
+          style={{ display: 'inline' }}
+          $last={isLast}
+          contentEditable={false}
         >
-          {name}
-        </Button>
-        <Arrow animate={isLast} />
-      </span>
+          test
+          <Button
+            chromeless
+            onClick={() => cmdr.onItemClick(node.key)}
+            spaced
+            style={{ margin: 0, height: 20 }}
+            size={0.7}
+            fontSize={14}
+            highlight={selected}
+            style={inline}
+            color={[0, 0, 0, 0.8]}
+          >
+            {name}
+          </Button>
+          <Arrow if={false} animate={isLast} />
+        </span>
+        <span style={{ height: 1 }} />
+      </div>
     )
   }
 

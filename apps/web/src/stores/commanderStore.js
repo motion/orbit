@@ -92,7 +92,7 @@ export default class CommanderStore {
 
     this.watch(() => {
       if (Router.path === '/') {
-        this.setValue('/')
+        this.setValue('')
       }
     })
   }
@@ -257,6 +257,8 @@ export default class CommanderStore {
       name = suffix.text
     }
 
+    if (name.trim().length === 0) return
+
     const value = [
       ...this.value.split(PATH_SEPARATOR).slice(0, -1),
       name,
@@ -294,6 +296,7 @@ export default class CommanderStore {
     }
 
     const nodes = [...pathNodes, suffixNode]
+    console.log('nodes are', nodes)
 
     this.editorState = Raw.deserialize(
       { nodes: [{ kind: 'block', type: 'paragraph', nodes }] },

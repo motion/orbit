@@ -33,8 +33,6 @@ export default class DocumentView {
       return <loading />
     }
 
-    console.log(store, 'hi')
-
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
         <content>

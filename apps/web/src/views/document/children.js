@@ -61,9 +61,6 @@ export default class Children {
     return (
       <children>
         <actions>
-          asdadas
-          <Commander.Bar />
-          <div $$flex />
           <post $$row $$centered>
             <UI.Button marginRight={10} size={0.9} icon="down" elevation={0.25}>
               Sort

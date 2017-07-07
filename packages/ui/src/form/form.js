@@ -56,18 +56,22 @@ class FormInner extends React.Component {
         uiContext: {
           ...this.context.provided.uiContext,
           form: {
-            submit: () => this.props.onSubmit(this.context.provided.formValues),
+            submit: () => this.props.onSubmit(this.formValues),
           },
         },
       },
     }
   }
 
+  get formValues() {
+    return this.context.provided.uiContext.formValues
+  }
+
   onSubmit = e => {
     e.preventDefault()
     if (this.props.onSubmit) {
       log('ONSUBMIT YEA')
-      this.props.onSubmit(this.context.uiContext.formValues, e)
+      this.props.onSubmit(this.formValues, e)
     }
   }
 

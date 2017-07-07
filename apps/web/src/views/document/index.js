@@ -45,7 +45,7 @@ export default class DocumentView {
             getRef={store.onEditor}
             {...editorProps}
           />
-          <Children if={!inline && showChildren} id={store.document._id} />
+          <Children id={store.document._id} />
         </content>
       </docview>
     )

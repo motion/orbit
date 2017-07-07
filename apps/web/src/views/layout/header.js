@@ -11,7 +11,6 @@ export default class Header {
     // use sidebar.active so it binds to variable and rerenders
     layoutStore.sidebar.active
 
-    return null
     return (
       <header $$draggable>
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />

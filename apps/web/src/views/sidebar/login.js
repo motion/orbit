@@ -11,10 +11,10 @@ import { HEADER_HEIGHT } from '~/constants'
     password = null
     error = false
 
-    finish = async () => {
+    finish = async ({ email, password }) => {
       this.loggingIn = true
       try {
-        await User.loginOrSignup(this.email.value, this.password.value)
+        await User.loginOrSignup(email, password)
       } catch (e) {
         console.error(e)
       }
@@ -22,13 +22,13 @@ import { HEADER_HEIGHT } from '~/constants'
     }
 
     onSubmit = values => {
-      console.log('got', values)
-      // this.finish()
+      this.finish(values)
     }
 
     onEmailKey = event => {
       switch (keycode(event)) {
         case 'enter':
+          console.log('enter email')
         // event.preventDefault()
         // event.stopPropagation()
         // this.password.focus()
@@ -38,6 +38,7 @@ import { HEADER_HEIGHT } from '~/constants'
     onPasswordKey = event => {
       switch (keycode(event)) {
         case 'enter':
+          console.log('enter enter')
           // event.stopPropagation()
           // this.finish()
           break

@@ -34,16 +34,6 @@ export const Paragraph = node(({ editorStore, children, attributes }) => {
 
   return (
     <p style={PARAGRAPH_STYLE} {...attributes} $$text>
-      <span
-        style={{
-          pointerEvents: 'none',
-          userSelect: 'none',
-          marginLeft: '-5px',
-        }}
-        contentEditable={false}
-      >
-        &nbsp;
-      </span>
       {children}
     </p>
   )

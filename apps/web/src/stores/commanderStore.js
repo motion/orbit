@@ -32,7 +32,6 @@ export default class CommanderStore {
   @watch crumbs = () => this.document && this.document.getCrumbs()
 
   keyManager = new ShortcutManager(KEYMAP)
-  isOpen = false
   editorState = Raw.deserialize(
     {
       nodes: [
@@ -133,17 +132,18 @@ export default class CommanderStore {
       if (App.errors.length) {
         App.clearErrors()
       }
+      /*
       if (this.isSelected) {
         this.select(this.input.selectionEnd, this.input.selectionEnd)
         return
       }
-      this.close()
+      */
+      this.blur()
     },
     enter: () => this.onEnter(),
     focus: () => this.focus(),
     commander: () => {
       this.focus()
-      this.open()
     },
     right: () => {
       if (!this.focused || !this.searchResults) return
@@ -151,7 +151,7 @@ export default class CommanderStore {
     },
     down: () => {
       if (!this.focused) return
-      if (!this.searchResults || !this.isOpen) {
+      if (!this.searchResults || !this.focused) {
         this.action('focusDown')
         return
       }
@@ -161,6 +161,11 @@ export default class CommanderStore {
       if (!this.focused) return
       this.moveHighlight(-1)
     },
+  }
+
+  blur = () => {
+    if (!this.input) return
+    this.input.blur()
   }
 
   focus = () => {
@@ -280,7 +285,6 @@ export default class CommanderStore {
   onChange = state => {
     this.highlightIndex = -1
     this.editorState = state
-    this.open()
   }
 
   setValue = text => {
@@ -368,7 +372,6 @@ export default class CommanderStore {
 
   onFocus = () => {
     this.focused = true
-    this.open()
   }
 
   onBlur = () => {
@@ -446,7 +449,7 @@ export default class CommanderStore {
 
     if (code === 'esc') {
       event.preventDefault()
-      this.close()
+      this.blur()
       return state
     }
 
@@ -495,21 +498,6 @@ export default class CommanderStore {
     this.setValue(this.getPathForDocs(await doc.getCrumbs()))
   }
 
-  open = () => {
-    this.isOpen = true
-  }
-
-  close = () => {
-    this.version++
-    this.onBlur()
-    // this.input.blur()
-    this.setOpen(false)
-  }
-
-  setOpen = val => {
-    this.isOpen = val
-  }
-
   moveHighlight = (diff: number) => {
     this.highlightIndex += diff
     if (this.highlightIndex === -1)
@@ -523,7 +511,7 @@ export default class CommanderStore {
       console.log('navTo called without value')
       return
     }
-    this.close()
+    this.blur()
     Router.go(doc.url())
   }
 }

@@ -4,7 +4,7 @@ mark {
   white-space: pre-wrap;
 }
 
-div[data-slate-editor="true"] div {
+div[data-slate-editor="true"] > div {
   display: block;
 }
 

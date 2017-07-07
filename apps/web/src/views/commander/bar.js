@@ -15,7 +15,7 @@ class Para {
     const first = commanderStore.value.indexOf('/') === -1
 
     // if we're in the first path, add margin to match button styles
-    const styles = Object.assign({}, $para, first && { marginLeft: 10 })
+    const styles = Object.assign({}, $para, first && { marginLeft: 8 })
 
     return (
       <p style={styles}>
@@ -62,7 +62,7 @@ class Arrow {
     },
     icon: {
       display: 'inline-block',
-      marginTop: 10,
+      marginTop: 7,
     },
     animate: {
       transition: 'all 100ms ease-in',
@@ -88,13 +88,8 @@ class Item {
     const selected = cmdr.selectedItemKey === node.key
 
     return (
-      <div>
-        <span
-          style={{ display: 'inline' }}
-          $last={isLast}
-          contentEditable={false}
-        >
-          test
+      <span>
+        <inner contentEditable={false}>
           <Button
             chromeless
             onClick={() => cmdr.onItemClick(node.key)}
@@ -104,20 +99,47 @@ class Item {
             fontSize={14}
             highlight={selected}
             style={inline}
+            $active={selected}
             color={[0, 0, 0, 0.8]}
           >
             {name}
           </Button>
-          <Arrow if={false} animate={isLast} />
-        </span>
-        <span style={{ height: 1 }} />
-      </div>
+          <Arrow animate={isLast} />
+        </inner>
+        <block contentEditable={false} $last={isLast}>
+          {name}
+        </block>
+      </span>
     )
   }
 
   static style = {
+    span: {
+      display: 'inline',
+      position: 'relative',
+    },
     last: {
       marginRight: 8,
+    },
+    div: {
+      position: 'relative',
+    },
+    block: {
+      opacity: 0,
+      background: 'green',
+      pointerEvents: 'none',
+      display: 'inline',
+      paddingRight: 21,
+      paddingLeft: 5,
+    },
+    active: {
+      background: `rgba(0,0,255,.05)`,
+    },
+    inner: {
+      position: 'absolute',
+      flexFlow: 'row',
+      left: 0,
+      top: -3,
     },
   }
 }

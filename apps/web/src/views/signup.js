@@ -1,30 +1,63 @@
 // @flow
 import React from 'react'
-import { view } from '@mcro/black'
+import { view, schema, string } from '@mcro/black'
 import { User, Org } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import Login from './sidebar/login'
 
-@view
-export default class Signup {
-  handleSubmit = values => {
-    console.log('submitting', values)
-  }
+@view({
+  store: class SignupStore {
+    errors = null
 
-  play = node => {
-    if (node) {
-      node.play()
+    validator = schema({
+      company: string.between(2, 250),
+      name: string.between(2, 250),
+      email: string.between(5, 250).match(/^[^@]+@[^@]+{2,}\.[^@]+{2,}$/),
+      password: string.between(7, 250),
+    })
+
+    handleSubmit = async fields => {
+      console.log('submitting', fields)
+      const validation = this.validator(fields)
+      console.log('validating', validation)
+      if (validation.errors) {
+        this.errors = validation.errors
+      } else {
+        try {
+          await User.signup(fields.email, fields.password)
+        } catch (e) {
+          this.errors = [{ message: `Error signing up user: ${e.message}` }]
+        }
+
+        try {
+          const org = await Org.create({
+            title: fields.name,
+            admins: [User.id],
+          })
+
+          console.log('done signed up', org)
+        } catch (e) {
+          this.errors = [{ message: `Error creating company: ${e.message}` }]
+        }
+      }
     }
-  }
 
-  render() {
+    play = node => {
+      if (node) {
+        node.play()
+      }
+    }
+  },
+})
+export default class Signup {
+  render({ store }) {
     return (
       <signup if={!User.loggedIn} $$fullscreen $$draggable>
         <video
           if={false}
           src="https://cash-f.squarecdn.com/videos/cash_site_loop.mp4"
           playsInline
-          ref={this.play}
+          ref={store.play}
           muted
           controls="false"
           loop
@@ -42,24 +75,25 @@ export default class Signup {
         <UI.Glow
           draggable
           color={[255, 255, 255]}
-          opacity={0.35}
+          opacity={0.38}
           full
-          blur={40}
+          blur={50}
           scale={1.125}
           show
-          resist={92}
+          resist={82}
           backdropFilter="contrast(150%) saturation(150%) brightness(150%)"
         />
         <UI.Theme name="clear">
           <inner $$margin="auto">
             <UI.Form
-              onSubmit={this.handleSubmit}
+              onSubmit={store.handleSubmit}
               $$draggable
               $$centered
               $form
               padding={15}
               margin="auto"
             >
+              {store.errors && JSON.stringify(store.errors)}
               <UI.Title $$centered>Welcome to Jot</UI.Title>
               <UI.Text size={1.2} color={[0, 0, 0, 0.4]}>
                 Lets get you signed up
@@ -119,7 +153,7 @@ export default class Signup {
 
   static style = {
     signup: {
-      background: 'linear-gradient(#fff, #eee)',
+      background: 'linear-gradient(#ccc, #eee)',
       zIndex: 11,
     },
     form: {

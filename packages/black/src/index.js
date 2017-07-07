@@ -18,7 +18,7 @@ export keycode from './helpers/keycode'
 // mobx helpers
 export { computed, observable, autorun, react, isObservable } from 'mobx'
 
-// model helpers
+// schema helpers
 export {
   bool,
   array,
@@ -28,11 +28,17 @@ export {
   oneOf,
   compile,
 } from './model/properties'
+import { compile } from 'kontur'
+import validator from 'is-my-json-valid'
+export const schema = obj => validator(compile(obj))
 
+// ViewType
 import type { ViewClass } from './view'
 export type ViewType = ViewClass
 
+// StoreType
 import type { StoreClass } from './store'
 export type StoreType = StoreClass
 
+// constants
 export * from './constants'

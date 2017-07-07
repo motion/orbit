@@ -196,6 +196,9 @@ export default function storeProvidable(options, emitter) {
 
         disposeStores() {
           this.disposed = true
+          if (!this.state.stores) {
+            return
+          }
           try {
             emitter.emit('view.unmount', this)
             for (const name of Object.keys(this.state.stores)) {
@@ -211,7 +214,7 @@ export default function storeProvidable(options, emitter) {
         }
 
         render() {
-          if (this.failed) {
+          if (this.failed || !this.state) {
             console.log('failed view')
             return null
           }

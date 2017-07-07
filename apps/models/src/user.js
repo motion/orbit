@@ -123,8 +123,8 @@ class User {
         password,
         confirmPassword: password,
       })
-      console.log('registerNewUser: ', res)
-      return await this.login(username, password)
+      console.log('registerNewUser: ', res, 'logging in...')
+      await this.login(username, password)
     } catch (error) {
       console.error('registerNewUser error: ', error)
       if (error && error.validationErrors) {

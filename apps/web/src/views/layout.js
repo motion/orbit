@@ -18,6 +18,7 @@ import Draft from '~/views/draft'
 import LayoutWrap from '~/views/layout/wrap'
 import { start } from '../start'
 import Signup from './signup'
+import { User } from '@mcro/models'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -63,7 +64,7 @@ export default class Layout {
   }
 
   renderApp() {
-    const { layoutStore, commanderStore } = this.props
+    const { layoutStore } = this.props
     const CurrentPage = Router.activeView || NotFound
 
     return (
@@ -73,6 +74,7 @@ export default class Layout {
         <LayoutWrap layoutStore={layoutStore}>
           <Header layoutStore={layoutStore} />
           <content
+            if={User.loggedIn}
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >

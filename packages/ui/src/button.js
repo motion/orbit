@@ -6,10 +6,9 @@ import { inject } from 'react-tunnel'
 const Button = injectTheme(
   ({ uiContext, badge, children, theme, type, glowProps, ...props }) => {
     if (type === 'submit' && uiContext && uiContext.inForm) {
-      log('in form warp click')
       const ogClick = props.onClick
       props.onClick = () => {
-        this.context.form.submit()
+        uiContext.form.submit()
         ogClick && ogClick()
       }
     }

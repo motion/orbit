@@ -29,18 +29,17 @@ import { HEADER_HEIGHT } from '~/constants'
     onEmailKey = event => {
       switch (keycode(event)) {
         case 'enter':
-          event.preventDefault()
-          event.stopPropagation()
-          this.password.focus()
+        // event.preventDefault()
+        // event.stopPropagation()
+        // this.password.focus()
       }
     }
 
     onPasswordKey = event => {
       switch (keycode(event)) {
         case 'enter':
-          event.preventDefault()
-          event.stopPropagation()
-          this.finish()
+          // event.stopPropagation()
+          // this.finish()
           break
         case 'esc':
           if (this.password.value === '') {
@@ -67,6 +66,7 @@ export default class Login {
               disabled={store.loggingIn}
               name="email"
               onKeyDown={store.onEmailKey}
+              getRef={store.ref('email').set}
               placeholder="Email"
             />
             <UI.Input
@@ -75,6 +75,7 @@ export default class Login {
               type="password"
               placeholder="Password"
               onKeyDown={store.onPasswordKey}
+              getRef={store.ref('password').set}
             />
             <UI.Button icon="raft" tooltip="Forgot password?" />
             <UI.Button type="submit" icon={store.loggingIn ? 'time' : 'lock'}>

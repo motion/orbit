@@ -58,6 +58,7 @@ export default class EditorStore implements StoreType {
         if (name === 'focusDown') {
           this.focus()
         }
+
         if (name === 'up' && this.focused && this.focusedLine === 0) {
           commanderStore.focus()
         }

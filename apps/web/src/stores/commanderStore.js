@@ -164,12 +164,14 @@ export default class CommanderStore {
   }
 
   focus = () => {
-    if (!this.input) {
-      console.error('no commander input')
-    } else {
-      // this.input.focus()
-      // this.input.select()
-    }
+    if (!this.input) return
+    this.input.focus()
+    requestAnimationFrame(() => {
+      this.editorState = this.editorState
+        .transform()
+        .collapseToEndOf(this.editorState.document.nodes.last())
+        .apply()
+    })
   }
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {

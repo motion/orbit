@@ -37,10 +37,8 @@ export default class DocumentPage {
   extraRef = null
   uniq = `btn-${Math.floor(Math.random() * 10000000000)}`
 
-  render({ docStore, commanderStore }: { docStore: DocPageStore }) {
+  render({ docStore }: { docStore: DocPageStore }) {
     const { doc } = docStore
-    // setup a mobx bind
-    commanderStore.focused
 
     if (doc === undefined) {
       return <null />
@@ -55,6 +53,8 @@ export default class DocumentPage {
       iconSize: 18,
       chromeless: true,
     }
+
+    log('renderpage')
 
     return (
       <Page>

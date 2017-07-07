@@ -22,23 +22,26 @@ export default class Header {
         </bar>
         <rest $$row>
           <UI.SlotFill.Slot name="actions">
-            {items =>
-              <actions key={Math.random()}>
-                {items}
-                <UI.Button
-                  chromeless
-                  spaced
-                  size={0.7}
-                  margin={[0, -5, 0, 0]}
-                  icon={
-                    layoutStore.sidebar.active
-                      ? 'arrow-min-right'
-                      : 'arrow-min-left'
-                  }
-                  onClick={layoutStore.sidebar.toggle}
-                  color={[0, 0, 0, 0.3]}
-                />
-              </actions>}
+            {items => {
+              return (
+                <actions>
+                  {items}
+                  <UI.Button
+                    chromeless
+                    spaced
+                    size={0.7}
+                    margin={[0, -5, 0, 0]}
+                    icon={
+                      layoutStore.sidebar.active
+                        ? 'arrow-min-right'
+                        : 'arrow-min-left'
+                    }
+                    onClick={layoutStore.sidebar.toggle}
+                    color={[0, 0, 0, 0.3]}
+                  />
+                </actions>
+              )
+            }}
           </UI.SlotFill.Slot>
         </rest>
       </header>

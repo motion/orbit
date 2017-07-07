@@ -17,8 +17,6 @@ function Input({ sync, type, name, uiContext, form, ...props }) {
     }
   }
 
-  log('form is', form)
-
   if (type === 'checkbox') {
     return <input type="checkbox" {...props} />
   }

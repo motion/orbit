@@ -24,7 +24,7 @@ const Theme = {
     ...makeTheme({
       highlightColor,
       background: [255, 255, 255, 0.1],
-      color: '#333',
+      color: '#555',
       borderColor: [0, 0, 0, 0.1],
     }),
   },

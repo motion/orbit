@@ -49,7 +49,7 @@ export default View =>
               highlightColor: base,
               background: base,
               color: opposite.lighten(0.4),
-              borderColor: opposite.darken(0.7),
+              borderColor: opposite.darken(0.6),
             })
             Themes[themeName] = theme // cache
           }

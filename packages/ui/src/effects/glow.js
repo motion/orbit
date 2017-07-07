@@ -131,6 +131,7 @@ export default class HoverGlow {
     size,
     clickDuration,
     clickScale,
+    draggable,
     transition,
     parent,
     children,
@@ -192,6 +193,7 @@ export default class HoverGlow {
     const glow = (
       <overlay
         ref={setRootRef}
+        $$draggable={draggable}
         css={{
           borderLeftRadius: borderLeftRadius || borderRadius,
           borderRightRadius: borderRightRadius || borderRadius,

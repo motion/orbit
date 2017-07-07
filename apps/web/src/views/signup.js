@@ -40,6 +40,7 @@ export default class Signup {
           }}
         />
         <UI.Glow
+          draggable
           color={[255, 255, 255]}
           opacity={0.35}
           full
@@ -118,7 +119,7 @@ export default class Signup {
 
   static style = {
     signup: {
-      background: '#ccc',
+      background: 'linear-gradient(#fff, #eee)',
       zIndex: 11,
     },
     form: {

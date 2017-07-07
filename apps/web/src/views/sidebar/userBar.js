@@ -28,7 +28,7 @@ export default class UserBar {
           openOnHover
           closeOnClick
         >
-          <DocumentView if={store.document} document={store.document} />
+          <DocumentView if={store.document} document={store.document} inline />
         </UI.Popover>
         <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>

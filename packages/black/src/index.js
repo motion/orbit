@@ -24,6 +24,7 @@ export {
   array,
   object,
   str,
+  string,
   nil,
   oneOf,
   compile,

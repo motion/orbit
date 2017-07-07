@@ -9,11 +9,19 @@ import Login from './sidebar/login'
   store: class SignupStore {
     errors = null
 
+    start() {
+      log('hi')
+    }
+
     validator = schema({
-      company: string.between(2, 250),
-      name: string.between(2, 250),
-      email: string.between(5, 250).match(/^[^@]+@[^@]+{2,}\.[^@]+{2,}$/),
-      password: string.between(7, 250),
+      company: string.minlen(2),
+      name: string.minlen(2),
+      email: string
+        .minlen(5)
+        .match(
+          /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+        ),
+      password: string.minlen(7),
     })
 
     handleSubmit = async fields => {
@@ -27,6 +35,10 @@ import Login from './sidebar/login'
           await User.signup(fields.email, fields.password)
         } catch (e) {
           this.errors = [{ message: `Error signing up user: ${e.message}` }]
+        }
+
+        if (this.errors) {
+          return
         }
 
         try {
@@ -51,6 +63,7 @@ import Login from './sidebar/login'
 })
 export default class Signup {
   render({ store }) {
+    console.log('should render')
     return (
       <signup if={!User.loggedIn} $$fullscreen $$draggable>
         <video
@@ -121,7 +134,7 @@ export default class Signup {
                 <UI.Field label="Password" placeholder="" />
               </UI.PassProps>
               <space $$height={20} />
-              <UI.Button theme="dark" size={1.2}>
+              <UI.Button type="submit" theme="dark" size={1.2}>
                 Signup
               </UI.Button>
             </UI.Form>

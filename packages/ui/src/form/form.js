@@ -7,15 +7,6 @@ import Surface from '../surface'
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Form {
-  child = null
-
-  submit = values => {
-    if (this.props.onSubmit) {
-      console.log('SUBMIT AY', this.child)
-      this.props.onSubmit(values || this.child.formValues())
-    }
-  }
-
   render({ uiContext, ...props }) {
     return (
       <Provider
@@ -27,18 +18,12 @@ export default class Form {
           },
         }}
       >
-        {() =>
-          <FormInner
-            ref={ref => (this.child = ref)}
-            onSubmit={this.submit}
-            {...props}
-          />}
+        {() => <FormInner {...props} />}
       </Provider>
     )
   }
 }
 
-// @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 class FormInner extends React.Component {
   static contextTypes = {
@@ -55,6 +40,7 @@ class FormInner extends React.Component {
         ...this.context.provided,
         uiContext: {
           ...this.context.provided.uiContext,
+          // adds a helper to submit forms from below, useful for buttons
           form: {
             submit: () => this.props.onSubmit(this.formValues),
           },
@@ -68,9 +54,9 @@ class FormInner extends React.Component {
   }
 
   onSubmit = e => {
+    log('ONSUBMIT YEA', this.formValues)
     e.preventDefault()
     if (this.props.onSubmit) {
-      log('ONSUBMIT YEA')
       this.props.onSubmit(this.formValues, e)
     }
   }

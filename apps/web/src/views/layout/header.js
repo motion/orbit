@@ -15,6 +15,25 @@ export default class Header {
       <header $$draggable>
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
+          <UI.Segment
+            $$margin={[0, 10, 0, 0]}
+            itemProps={{ iconSize: 12, padding: [0, 6], chromeless: true }}
+            $$flex="none"
+          >
+            <UI.Button
+              if={IS_ELECTRON}
+              icon="minimal-left"
+              disabled={Router.atBack}
+              onClick={() => Router.back()}
+            />
+            <UI.Button
+              if={false && IS_ELECTRON}
+              disabled={Router.atFront}
+              icon="minimal-right"
+              onClick={() => Router.forward()}
+            />
+            <UI.Button if={false} icon="home" onClick={() => Router.go('/')} />
+          </UI.Segment>
           <Commander.Bar
             onOpen={() => (layoutStore.commanderOpen = true)}
             onClose={() => (layoutStore.commanderOpen = false)}

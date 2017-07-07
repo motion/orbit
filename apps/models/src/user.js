@@ -70,7 +70,7 @@ class User {
   }
 
   get org() {
-    return this.user.org || 'motion'
+    return this.user.org
   }
 
   get token() {

@@ -9,10 +9,6 @@ import Login from './sidebar/login'
   store: class SignupStore {
     errors = null
 
-    start() {
-      log('hi')
-    }
-
     // wrap to avoid mobx action wrap because validator has weird api
     helpers = {
       validator: schema({
@@ -31,7 +27,6 @@ import Login from './sidebar/login'
       console.log('submitting', fields)
       const passes = this.helpers.validator(fields)
       if (!passes) {
-        log('what')
         this.errors = this.helpers.validator.errors
         return
       }
@@ -54,6 +49,7 @@ import Login from './sidebar/login'
 
         console.log('done signed up', org)
       } catch (e) {
+        console.log('err', e)
         this.errors = [{ message: `Error creating company: ${e.message}` }]
       }
 
@@ -71,9 +67,8 @@ import Login from './sidebar/login'
 })
 export default class Signup {
   render({ store }) {
-    console.log('should render')
     return (
-      <signup if={!User.loggedIn} $$fullscreen $$draggable>
+      <signup if={!User.loggedIn || !User.org} $$fullscreen $$draggable>
         <video
           if={false}
           src="https://cash-f.squarecdn.com/videos/cash_site_loop.mp4"

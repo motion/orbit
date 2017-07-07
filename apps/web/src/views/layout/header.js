@@ -19,10 +19,10 @@ export default class Header {
         <bar>
           <UI.Segment $$margin={[0, 10, 0, 0]} $$flex="none">
             <UI.Popover
-              theme="dark"
               openOnHover
-              delay={500}
+              delay={1000}
               borderRadius={8}
+              distance={2}
               towards="right"
               target={
                 <UI.Button

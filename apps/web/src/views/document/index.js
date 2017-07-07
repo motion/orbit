@@ -33,9 +33,11 @@ export default class DocumentView {
       return <loading />
     }
 
+    console.log(store, 'hi')
+
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <content $$row>
+        <content>
           <Editor
             key={store.document._id}
             readOnly={readOnly}

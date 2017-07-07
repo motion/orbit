@@ -142,9 +142,6 @@ export default class Text {
       userSelect: 'auto',
       cursor: 'text',
     },
-    ellipse: {
-      height: '100%',
-    },
   }
 
   static theme = (props, theme) => {

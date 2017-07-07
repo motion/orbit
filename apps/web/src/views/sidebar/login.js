@@ -83,7 +83,7 @@ export default class Login {
               icon={store.loggingIn ? 'time' : 'lock'}
               onClick={store.finish}
             >
-              Login
+              {store.loggingIn ? 'Logging in...' : 'Login'}
             </UI.Button>
           </UI.Segment>
         </UI.Form>

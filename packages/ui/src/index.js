@@ -33,6 +33,8 @@ export Popover from './popover'
 export Progress from './progress'
 export View from './view'
 export Circle from './circle'
+export Surface from './surface'
+export SizedSurface from './sizedSurface'
 
 // effects
 export Glow from './effects/glow'

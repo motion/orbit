@@ -19,10 +19,10 @@ export default class TiltGlow {
     return (
       <Tilt
         options={{
-          max: 15,
-          perspective: 1000,
-          reverse: true,
+          max: 10,
+          perspective: 500,
           scale: 1,
+          reverse: true,
           ...tiltOptions,
         }}
       >
@@ -50,12 +50,12 @@ export default class TiltGlow {
             behind
             resist={93}
             width={width * 0.85}
-            height={height * 0.85}
+            height={height * 0.65}
             blur={10}
             inverse
             color={[0, 0, 0]}
             zIndex={1000}
-            opacity={0.3}
+            opacity={0.05}
             borderRadius={10}
           />
         </doc>

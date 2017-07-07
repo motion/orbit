@@ -46,12 +46,22 @@ const LIGHT = {
 }
 
 const Theme = {
-  clear: theme({
-    highlightColor,
-    background: 'transparent',
-    color: '#fff',
-    borderColor: 'transparent',
-  }),
+  clear: {
+    button: {
+      borderTopWidth: 0,
+      borderLeftWidth: 0,
+      borderRightWidth: 0,
+    },
+    glow: {
+      color: [255, 255, 255, 0.1],
+    },
+    ...theme({
+      highlightColor,
+      background: [255, 255, 255, 0.1],
+      color: '#333',
+      borderColor: [0, 0, 0, 0.1],
+    }),
+  },
   dark: theme({
     highlightColor,
     background: '#222',

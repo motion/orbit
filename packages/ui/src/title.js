@@ -56,6 +56,7 @@ export default class Title extends React.Component {
     textProps,
     children,
     tagName: _tagName,
+    fontSize,
     ...props
   }: TitleProps) {
     const maxedSize = Math.min(MAX_SIZES, size)
@@ -92,6 +93,8 @@ export default class Title extends React.Component {
           {...{ [`\$size${Math.floor(size)}`]: true }}
           tagName={tagName}
           size={textSize}
+          color={color}
+          fontSize={fontSize}
           {...textProps}
         >
           {children}

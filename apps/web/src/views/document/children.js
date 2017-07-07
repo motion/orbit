@@ -55,130 +55,136 @@ export default class Children {
   render({ store }: Props) {
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
+    const allDocs = sortBy(docs || [], 'createdAt')
 
-    const getDoc = doc => {
-      const children = store.children[doc._id]
-      return {
-        onClick() {
-          Router.go(doc.url())
-        },
-        primary: (
-          <div $$row $$align="center">
-            <name>
-              <span $$ellipse>
-                {doc.getTitle()}
-              </span>
-            </name>
-          </div>
-        ),
-        secondary: (
-          <content if={children}>
-            {children.map(child =>
-              <child key={child._id}>
-                {child.getTitle()}
-              </child>
-            )}
-          </content>
-        ),
-      }
-    }
-    const newDoc =
-      store.newTitle === null
-        ? null
-        : {
-            primary: (
-              <div $$row $$align="center">
-                <name>
-                  <input
-                    $name
-                    autoFocus
-                    value={store.newTitle}
-                    onKeyDown={e => e.which === 13 && store.create()}
-                    onChange={e => (store.newTitle = e.target.value)}
-                    onBlur={e => (store.newTitle = null)}
-                  />
-                </name>
-              </div>
-            ),
-          }
+    // const getDoc = doc => {
+    //   const children = store.children[doc._id]
+    //   return {
+    //     onClick() {
+    //       Router.go(doc.url())
+    //     },
+    //     primary: (
+    //       <div $$row $$align="center">
+    //         <name>
+    //           <span $$ellipse>
+    //             {doc.getTitle()}
+    //           </span>
+    //         </name>
+    //       </div>
+    //     ),
+    //     secondary: (
+    //       <content if={children}>
+    //         {children.map(child =>
+    //           <child key={child._id}>
+    //             {child.getTitle()}
+    //           </child>
+    //         )}
+    //       </content>
+    //     ),
+    //   }
+    // }
+    // const newDoc =
+    //   store.newTitle === null
+    //     ? null
+    //     : {
+    //         primary: (
+    //           <div $$row $$align="center">
+    //             <name>
+    //               <input
+    //                 $name
+    //                 autoFocus
+    //                 value={store.newTitle}
+    //                 onKeyDown={e => e.which === 13 && store.create()}
+    //                 onChange={e => (store.newTitle = e.target.value)}
+    //                 onBlur={e => (store.newTitle = null)}
+    //               />
+    //             </name>
+    //           </div>
+    //         ),
+    //       }
 
-    const items = [
-      ...sortBy(docs || [], 'createdAt').map(getDoc),
-      ...(newDoc ? [newDoc] : []),
-    ]
+    // const items = [
+    //   ...sortBy(docs || [], 'createdAt').map(getDoc),
+    //   ...(newDoc ? [newDoc] : []),
+    // ]
 
     return (
       <children>
-        <UI.Button
-          $add
-          if={store.newTitle === null}
-          size={1}
-          icon="siadd"
-          onClick={store.add}
-        />
-        <content>
-          <UI.List
-            if={hasDocs}
-            items={items}
-            itemProps={{ height: 'auto', padding: [10, 10] }}
+        <actions
+          $$row
+          $$centered
+          css={{
+            position: 'absolute',
+            top: -22,
+            right: 10,
+          }}
+        >
+          <UI.Button marginRight={10} size={0.9} icon="down" elevation={0.25}>
+            Sort
+          </UI.Button>
+          <UI.Button
+            if={store.newTitle === null}
+            size={1}
+            icon="siadd"
+            circular
+            size={1.5}
+            elevation={1}
+            onClick={store.add}
           />
-        </content>
+        </actions>
+        <docs if={hasDocs}>
+          {allDocs.map((doc, index) =>
+            <surface justify="flex-start" $doc key={index}>
+              <title>
+                {doc.title}
+              </title>
+              <UI.Text size={0.95} color={[120, 120, 120]}>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio
+                repudiandae illum praesentium deleniti nostrum.
+              </UI.Text>
+            </surface>
+          )}
+        </docs>
       </children>
     )
   }
 
   static style = {
-    children: {
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      padding: 5,
-      alignSelf: 'center',
-      cursor: 'default',
-      width: 200,
-    },
-    header: {
-      padding: [0, 10],
-      justifyContent: 'space-between',
-    },
     title: {
-      textTransform: 'uppercase',
-      fontSize: 12,
-      color: [0, 0, 0, 0.3],
-      margin: [7, 0, 10, 0],
-      fontWeight: 500,
-    },
-    noDocs: {
-      padding: 20,
-      alignSelf: 'center',
-      textAlign: 'center',
-    },
-    child: {
-      marginLeft: 20,
-      color: [0, 0, 0, 0.5],
-    },
-    empty: {
-      padding: 20,
-      justifyContent: 'center',
-      alignSelf: 'center',
-      fontSize: 16,
-      color: 'rgba(0,0,0,.6)',
-    },
-    input: {
-      border: 'none',
-      width: '100%',
+      margin: 0,
       padding: 0,
-      background: 'transparent',
-      fontSize: 14,
+      fontWeight: 600,
+      fontSize: 18,
+      lineHeight: '30px',
+      color: '#555',
     },
-    name: {
-      fontWeight: 500,
-      fontSize: 14,
+    text: {
+      lineHeight: '1.4rem',
+    },
+    children: {
+      borderTop: [1, '#eee'],
+      background: '#fff',
+      padding: 20,
+      position: 'relative',
+    },
+    docs: {
       flexFlow: 'row',
-      alignItems: 'center',
-      borderBottom: [2, 'transparent'],
-      '&:hover': {
-        borderBottomColor: '#eee',
+      flexWrap: 'wrap',
+      marginRight: -12,
+    },
+    doc: {
+      maxWidth: 300,
+      minWidth: 200,
+      minHeight: 120,
+      flex: 1,
+      margin: [0, 12, 16, 0],
+      zIndex: 1,
+      padding: [10, 12],
+      '&:hover title': {
+        color: [0, 0, 0],
+      },
+      '&:hover p': {
+        color: [50, 50, 50],
       },
     },
   }

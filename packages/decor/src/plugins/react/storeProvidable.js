@@ -2,12 +2,13 @@ import React from 'react'
 import * as Mobx from 'mobx'
 import Cache from './cache'
 import { object } from 'prop-types'
-import { pickBy } from 'lodash'
+import { pickBy, debounce } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 
 export default function storeProvidable(options, emitter) {
-  const cache = new Cache()
+  const cache = new WeakMap()
+  const hmrd = {}
 
   return {
     name: 'store-providable',
@@ -130,12 +131,6 @@ export default function storeProvidable(options, emitter) {
             }
           }, {})
 
-          // if (instanceOpts && instanceOpts.module && instanceOpts.module.hot) {
-          //   instanceOpts.module.hot.dispose(data => {
-          //     data.stores = this.state.stores
-          //   })
-          // }
-
           // optional mount function
           if (options.onStoreMount) {
             for (const name of Object.keys(stores)) {
@@ -152,6 +147,7 @@ export default function storeProvidable(options, emitter) {
           //   instanceOpts && instanceOpts.module
           // )
           this.setState({ stores })
+          this.disposed = false
         }
 
         unstable_handleError(error) {
@@ -164,17 +160,29 @@ export default function storeProvidable(options, emitter) {
           this.setState({ error: null })
         }
 
-        handleHotReload(module) {
-          log(`[handleHmr] ${module.id}`)
-          window.App && window.App.clearErrors && window.App.clearErrors()
-          this.clearErrors()
-          // initStores()
-          this.module = module
-          this.disposeStores()
-          this.setupStores()
+        handleHotReload = module => {
+          console.log(module, Stores, this.state.stores)
+
+          // debounce
+          if (hmrd[module.id]) {
+            clearTimeout(hmrd[module.id])
+          }
+          hmrd[module.id] = setTimeout(() => {
+            console.log(`[HMR] file: ${module.id}`)
+            window.App && window.App.clearErrors && window.App.clearErrors()
+            this.clearErrors()
+            // initStores()
+            this.module = module
+            if (!this.disposed) {
+              this.disposeStores()
+            }
+            // initStores()
+            this.setupStores()
+          }, 150)
         }
 
         disposeStores() {
+          this.disposed = true
           emitter.emit('view.unmount', this)
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]

@@ -13,7 +13,7 @@ import type { Color } from '@mcro/gloss'
 const IS_PROD = process.env.NODE_ENV === 'production'
 
 const LINE_HEIGHT = 30
-const DEFAULT_GLOW_COLOR = [0, 0, 0]
+const DEFAULT_GLOW_COLOR = [255, 255, 255]
 const BORDER_RADIUS_SIDES = [
   'borderBottomRadius',
   'borderTopRadius',
@@ -413,9 +413,9 @@ export default class Surface implements ViewType {
     if (props.elevation) {
       boxShadow.push([
         0,
-        props.elevation * 2.5,
-        props.elevation * 7.5,
-        [0, 0, 0, 0.16],
+        props.elevation * 1.5,
+        props.elevation * 3.5,
+        [0, 0, 0, 0.1],
       ])
     }
 
@@ -491,6 +491,7 @@ export default class Surface implements ViewType {
         overflow: 'visible',
         fontSize: props.fontSize,
         lineHeight: 'inherit',
+        justifyContent: props.justify,
       },
       surface: {
         color,

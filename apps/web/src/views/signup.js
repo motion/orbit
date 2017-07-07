@@ -21,6 +21,7 @@ export default class Signup {
     return (
       <signup if={!User.loggedIn} $$fullscreen $$draggable>
         <video
+          if={false}
           src="https://cash-f.squarecdn.com/videos/cash_site_loop.mp4"
           playsInline
           ref={this.play}
@@ -48,7 +49,7 @@ export default class Signup {
           resist={92}
           backdropFilter="contrast(150%) saturation(150%) brightness(150%)"
         />
-        <UI.Theme name="light">
+        <UI.Theme name="clear">
           <inner $$margin="auto">
             <UI.Form
               onSubmit={this.handleSubmit}

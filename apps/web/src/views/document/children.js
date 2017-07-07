@@ -64,8 +64,17 @@ export default class Children {
     return (
       <children>
         <actions>
+          <UI.Title $mainTitle size={1}>
+            Children
+          </UI.Title>
           <post $$row $$centered>
-            <UI.Button marginRight={10} size={0.9} icon="down" elevation={0.25}>
+            <UI.Button
+              if={false}
+              marginRight={10}
+              size={0.9}
+              icon="down"
+              elevation={0.25}
+            >
               Sort
             </UI.Button>
             <UI.Button
@@ -86,14 +95,14 @@ export default class Children {
 
             return (
               <surface
+                if={doc.title}
                 justify="flex-start"
                 $doc
                 key={index}
                 onClick={() => Router.go(doc.url())}
               >
                 <title $$row>
-                  {doc.title}&nbsp;{' '}
-                  <span $rest>Lorem ipsum dolor sit amet...</span>
+                  {doc.title}
                 </title>
                 <paths if={children}>
                   {children.map(child =>
@@ -115,47 +124,37 @@ export default class Children {
   }
 
   static style = {
-    actions: {
-      padding: 10,
-      flexFlow: 'row',
-      alignItems: 'center',
-      position: 'absolute',
-      top: 0,
-      right: 0,
-    },
-    title: {
-      margin: 0,
-      padding: 0,
-      fontWeight: 600,
-      fontSize: 18,
-      lineHeight: '30px',
-      color: '#555',
-    },
-    text: {
-      lineHeight: '1.4rem',
-    },
-    rest: {
-      color: [0, 0, 0, 0.2],
-      fontSize: 14,
-      fontWeight: 400,
-    },
     children: {
       marginTop: 20,
-      padding: 20,
-      borderTopRadius: 8,
-      borderTop: [1, '#eee'],
-      borderRight: [1, '#eee'],
+      padding: [10, 20],
+      // borderTopRadius: 8,
+      borderTop: [1, '#eee', 'dotted'],
+      // borderRight: [1, '#eee'],
       // boxShadow: [[0, -3, 3, [0, 0, 0, 0.025]]],
       background: '#fff',
-      position: 'relative',
-      overflow: 'hidden',
+      // overflow: 'hidden',
       flex: 1,
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
+    mainTitle: {
+      marginTop: 20,
+    },
+    actions: {
+      marginTop: -20,
+      padding: [0, 10, 10],
+      flexFlow: 'row',
+      flex: 1,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    post: {
+      marginTop: -20,
     },
     paths: {
       flexFlow: 'row',
-    },
-    child: {
-      fontSize: 16,
     },
     docs: {
       flexFlow: 'row',
@@ -163,9 +162,9 @@ export default class Children {
       marginRight: -12,
     },
     doc: {
-      maxWidth: 300,
       minWidth: 200,
-      minHeight: 100,
+      // minHeight: 100,
+      border: [1, '#eee'],
       flex: 1,
       margin: [0, 12, 16, 0],
       zIndex: 1,
@@ -176,6 +175,17 @@ export default class Children {
       '&:hover p': {
         color: [50, 50, 50],
       },
+    },
+    title: {
+      margin: 0,
+      padding: 0,
+      fontWeight: 500,
+      fontSize: 16,
+      lineHeight: '30px',
+      color: '#555',
+    },
+    text: {
+      lineHeight: '1.4rem',
     },
   }
 }

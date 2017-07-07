@@ -39,6 +39,12 @@ export const Paragraph = node(
 
     return (
       <p style={style} {...attributes} $$text>
+        <span
+          style={{ userSelect: 'none', marginLeft: '-4px' }}
+          contentEditable={false}
+        >
+          &nbsp;
+        </span>
         {children}
       </p>
     )

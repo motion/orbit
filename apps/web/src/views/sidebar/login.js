@@ -54,13 +54,8 @@ import { HEADER_HEIGHT } from '~/constants'
 export default class Login {
   render({ store, ...props }) {
     return (
-      <login $$draggable {...props}>
-        <UI.Form
-          flex
-          if={!User.loggedIn}
-          $$undraggable
-          onSubmit={store.onSubmit}
-        >
+      <login if={!User.loggedIn} $$draggable {...props}>
+        <UI.Form flex $$undraggable onSubmit={store.onSubmit}>
           <UI.Segment>
             <UI.Input
               $error={store.error}

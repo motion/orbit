@@ -14,8 +14,14 @@ type Props = {
 @view
 class PageSidebar {
   static pageType = 'sidebar'
-  render({ children, onChildren }) {
-    if (onChildren) onChildren(children)
+  update = ({ children, onChildren }) => onChildren && onChildren(children)
+  componentDidMount() {
+    this.update(this.props)
+  }
+  componentDidUpdate() {
+    this.update(this.props)
+  }
+  render() {
     return null
   }
 }
@@ -23,38 +29,68 @@ class PageSidebar {
 @view
 class PageActions {
   static pageType = 'actions'
-  render({ children, onChildren }) {
-    if (onChildren) onChildren(children)
+  update = ({ children, onChildren }) => onChildren && onChildren(children)
+  componentDidMount() {
+    this.update(this.props)
+  }
+  componentDidUpdate() {
+    this.update(this.props)
+  }
+  render() {
     return null
   }
 }
 
 @view
+class SlotManager {
+  render({ store }) {
+    return (
+      <manager>
+        <SlotFill.Fill
+          if={store.actions}
+          key={store.actionsVersion}
+          name="actions"
+        >
+          {store.actions}
+        </SlotFill.Fill>
+        <SlotFill.Fill
+          if={store.sidebar}
+          key={store.sidebarVersion}
+          name="sidebar"
+        >
+          {store.sidebar}
+        </SlotFill.Fill>
+      </manager>
+    )
+  }
+}
+
+@view({
+  store: class PageStore {
+    actions = null
+    actionsVersion = 0
+    sidebar = null
+    sidebarVersion = 0
+    onChildren = type =>
+      debounce(children => {
+        this[type] = children
+        this[`${type}Version`]++
+      })
+  },
+})
 export default class Page {
   static Actions = PageActions
   static Sidebar = PageSidebar
 
-  actions = null
-  sidebar = null
-  onChildren = type =>
-    debounce(children => {
-      this[type] = children
-    })
-
-  render({ children, sidebar, actions, className }: Props) {
+  render({ children, store, className }: Props) {
     return (
       <page className={className}>
-        <SlotFill.Fill name="actions">
-          {this.actions || actions}
-        </SlotFill.Fill>
-        <SlotFill.Fill if={this.sidebar || sidebar} name="sidebar">
-          {this.sidebar || sidebar}
-        </SlotFill.Fill>
+        <SlotManager store={store} />
         {React.Children.map(children, child => {
           if (child) {
             if (child.type.pageType) {
               return React.cloneElement(child, {
-                onChildren: this.onChildren(child.type.pageType),
+                onChildren: store.onChildren(child.type.pageType),
               })
             }
           }

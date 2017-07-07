@@ -24,11 +24,11 @@ export default class UserBar {
           distance={10}
           forgiveness={16}
           width={400}
-          target={<UI.Button theme="rgb(173, 26, 113)">Status | 👋</UI.Button>}
+          target={<UI.Button theme="clear-dark">Status | 👋</UI.Button>}
           openOnHover
           closeOnClick
         >
-          <DocumentView if={store.document} document={store.document} />
+          <DocumentView if={store.document} document={store.document} inline />
         </UI.Popover>
         <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>

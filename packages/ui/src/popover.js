@@ -680,15 +680,21 @@ export default class Popover {
       bottom: 0,
       zIndex: 101,
       pointerEvents: 'none',
+      '& > *': {
+        pointerEvents: 'none !important',
+      },
     },
     content: {
       flex: 1,
     },
     open: {
       zIndex: 100000,
+      '& > *': {
+        pointerEvents: 'inherit',
+      },
     },
     closing: {
-      // zIndex: 100000 - 1,
+      zIndex: 100000 - 1,
     },
     background: {
       position: 'absolute',

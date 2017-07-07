@@ -11,10 +11,46 @@ export default class Header {
     // use sidebar.active so it binds to variable and rerenders
     layoutStore.sidebar.active
 
+    const btnProps = { iconSize: 12, padding: [0, 6], chromeless: true }
+
     return (
       <header $$draggable>
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
+          <UI.Segment $$margin={[0, 10, 0, 0]} $$flex="none">
+            <UI.Popover
+              openOnHover
+              delay={1000}
+              borderRadius={8}
+              distance={2}
+              towards="right"
+              target={
+                <UI.Button
+                  if={IS_ELECTRON}
+                  {...btnProps}
+                  theme="light"
+                  icon="minimal-left"
+                  disabled={Router.atBack}
+                  onClick={() => Router.back()}
+                />
+              }
+            >
+              <UI.Segment>
+                <UI.Button
+                  if={IS_ELECTRON}
+                  {...btnProps}
+                  disabled={Router.atFront}
+                  icon="minimal-right"
+                  onClick={() => Router.forward()}
+                />
+                <UI.Button
+                  {...btnProps}
+                  icon="home"
+                  onClick={() => Router.go('/')}
+                />
+              </UI.Segment>
+            </UI.Popover>
+          </UI.Segment>
           <Commander.Bar
             onOpen={() => (layoutStore.commanderOpen = true)}
             onClose={() => (layoutStore.commanderOpen = false)}
@@ -22,23 +58,26 @@ export default class Header {
         </bar>
         <rest $$row>
           <UI.SlotFill.Slot name="actions">
-            {items =>
-              <actions key={Math.random()}>
-                {items}
-                <UI.Button
-                  chromeless
-                  spaced
-                  size={0.7}
-                  margin={[0, -5, 0, 0]}
-                  icon={
-                    layoutStore.sidebar.active
-                      ? 'arrow-min-right'
-                      : 'arrow-min-left'
-                  }
-                  onClick={layoutStore.sidebar.toggle}
-                  color={[0, 0, 0, 0.3]}
-                />
-              </actions>}
+            {items => {
+              return (
+                <actions>
+                  {items}
+                  <UI.Button
+                    chromeless
+                    spaced
+                    size={0.7}
+                    margin={[0, -5, 0, 0]}
+                    icon={
+                      layoutStore.sidebar.active
+                        ? 'arrow-min-right'
+                        : 'arrow-min-left'
+                    }
+                    onClick={layoutStore.sidebar.toggle}
+                    color={[0, 0, 0, 0.3]}
+                  />
+                </actions>
+              )
+            }}
           </UI.SlotFill.Slot>
         </rest>
       </header>

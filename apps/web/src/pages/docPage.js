@@ -35,12 +35,9 @@ class DocPageStore {
 })
 export default class DocumentPage {
   extraRef = null
-  uniq = `btn-${Math.floor(Math.random() * 10000000000)}`
 
-  render({ docStore, commanderStore }: { docStore: DocPageStore }) {
+  render({ docStore }: { docStore: DocPageStore }) {
     const { doc } = docStore
-    // setup a mobx bind
-    commanderStore.focused
 
     if (doc === undefined) {
       return <null />
@@ -59,19 +56,37 @@ export default class DocumentPage {
     return (
       <Page>
         <Page.Actions $$row $$centered>
-          <UI.Button
-            active={docStore.showInbox}
-            margin={[0, 10]}
-            icon="paper"
-            onClick={docStore.ref('showInbox').toggle}
-            tooltip="inbox"
-            theme="red"
-          >
-            Inbox
-          </UI.Button>
-
           <UI.Segment itemProps={itemProps}>
-            <UI.Button className={this.uniq} icon="dot" />
+            <UI.Popover
+              background
+              elevation={3}
+              borderRadius={8}
+              background="transparent"
+              distance={10}
+              forgiveness={16}
+              delay={150}
+              target={<UI.Button chromeless icon="dot" />}
+              openOnHover
+              closeOnClick
+            >
+              <UI.List
+                width={150}
+                padding={3}
+                itemProps={{
+                  height: 32,
+                  fontSize: 14,
+                  borderWidth: 0,
+                  borderRadius: 8,
+                }}
+                items={[
+                  {
+                    icon: 'gear',
+                    primary: 'Settings',
+                    onClick: () => console.log(),
+                  },
+                ]}
+              />
+            </UI.Popover>
             <UI.Button
               icon="fav31"
               highlight={!!starred}

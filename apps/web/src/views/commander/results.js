@@ -11,8 +11,6 @@ export default class CommanderResults {
   render({ commanderStore: cmdr }) {
     const docs = cmdr.peek || []
 
-    // window.x()
-
     const getMatch = (doc, index) =>
       <match
         $highlight={index === cmdr.highlightIndex}
@@ -29,7 +27,7 @@ export default class CommanderResults {
       </match>
 
     return (
-      <results if={false && cmdr.isOpen}>
+      <results if={cmdr.isOpen}>
         <UI.Placeholder
           if={cmdr.isEnterToCreate && last(cmdr.typedPath).length > 0}
         >
@@ -71,11 +69,13 @@ export default class CommanderResults {
   static style = {
     results: {
       zIndex: 10000,
+      background: '#fff',
       position: 'absolute',
       top: HEADER_HEIGHT,
       right: 0,
-      bottom: 0,
       left: 0,
+      boxShadow: [[0, 5, 8, [0, 0, 0, 0.05]]],
+      maxHeight: '60%',
     },
     matches: {
       padding: 15,
@@ -97,6 +97,8 @@ export default class CommanderResults {
       bottom: 20,
       padding: 20,
       height: 300,
+      maxHeight: 'calc(100% - 35px)',
+      overflow: 'hidden',
       width: 250,
       background: '#fff',
       right: 20,

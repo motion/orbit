@@ -337,7 +337,7 @@ export default class Surface implements ViewType {
 
   static disabledStyle = {
     opacity: 0.25,
-    pointerEvents: 'none',
+    // pointerEvents: 'none',
   }
 
   static dimStyle = {

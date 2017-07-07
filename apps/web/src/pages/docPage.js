@@ -54,22 +54,9 @@ export default class DocumentPage {
       chromeless: true,
     }
 
-    log('renderpage')
-
     return (
       <Page>
         <Page.Actions $$row $$centered>
-          <UI.Button
-            active={docStore.showInbox}
-            margin={[0, 10]}
-            icon="paper"
-            onClick={docStore.ref('showInbox').toggle}
-            tooltip="inbox"
-            theme="red"
-          >
-            Inbox
-          </UI.Button>
-
           <UI.Segment itemProps={itemProps}>
             <UI.Button className={this.uniq} icon="dot" />
             <UI.Button

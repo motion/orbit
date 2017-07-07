@@ -111,7 +111,7 @@ export default class Title extends React.Component {
 
   static style = {
     titleroot: {
-      padding: [2, 10],
+      padding: [2, 0],
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',

@@ -67,8 +67,10 @@ import Login from './sidebar/login'
 })
 export default class Signup {
   render({ store }) {
+    // !User.org
+
     return (
-      <signup if={!User.loggedIn || !User.org} $$fullscreen $$draggable>
+      <signup if={!User.loggedIn} $$fullscreen $$draggable>
         <video
           if={false}
           src="https://cash-f.squarecdn.com/videos/cash_site_loop.mp4"

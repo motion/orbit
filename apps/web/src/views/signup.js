@@ -26,31 +26,35 @@ import Login from './sidebar/login'
 
     handleSubmit = async fields => {
       console.log('submitting', fields)
-      const validation = this.validator(fields)
-      console.log('validating', validation)
-      if (validation.errors) {
-        this.errors = validation.errors
-      } else {
-        try {
-          await User.signup(fields.email, fields.password)
-        } catch (e) {
-          this.errors = [{ message: `Error signing up user: ${e.message}` }]
-        }
+      const passes = this.validator(fields)
+      if (!passes) {
+        this.errors = this.validator.errors
+        return
+      }
 
-        if (this.errors) {
-          return
-        }
+      try {
+        await User.signup(fields.email, fields.password)
+      } catch (e) {
+        this.errors = [{ message: `Error signing up user: ${e.message}` }]
+      }
 
-        try {
-          const org = await Org.create({
-            title: fields.name,
-            admins: [User.id],
-          })
+      if (this.errors) {
+        return
+      }
 
-          console.log('done signed up', org)
-        } catch (e) {
-          this.errors = [{ message: `Error creating company: ${e.message}` }]
-        }
+      try {
+        const org = await Org.create({
+          title: fields.name,
+          admins: [User.id],
+        })
+
+        console.log('done signed up', org)
+      } catch (e) {
+        this.errors = [{ message: `Error creating company: ${e.message}` }]
+      }
+
+      if (!this.errors) {
+        console.log('NICE JOB DUDE')
       }
     }
 

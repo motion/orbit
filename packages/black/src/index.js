@@ -19,6 +19,7 @@ export keycode from './helpers/keycode'
 export { computed, observable, autorun, react, isObservable } from 'mobx'
 
 // schema helpers
+export validator from 'is-my-json-valid'
 export {
   bool,
   array,
@@ -29,7 +30,7 @@ export {
   oneOf,
   compile,
 } from './model/properties'
-import { compile } from 'kontur'
+import { compile } from './model/properties'
 import validator from 'is-my-json-valid'
 export const schema = obj => validator(compile(obj))
 

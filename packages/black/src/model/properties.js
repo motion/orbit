@@ -19,6 +19,7 @@ const Properties = Object.keys(Kontur).reduce(
 )
 
 export const { bool, array, object, str, nil } = Properties
+export const string = Properties.str
 
 export const oneOf = klass =>
   class ref {

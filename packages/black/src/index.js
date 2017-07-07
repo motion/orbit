@@ -18,21 +18,29 @@ export keycode from './helpers/keycode'
 // mobx helpers
 export { computed, observable, autorun, react, isObservable } from 'mobx'
 
-// model helpers
+// schema helpers
+export validator from 'is-my-json-valid'
 export {
   bool,
   array,
   object,
   str,
+  string,
   nil,
   oneOf,
   compile,
 } from './model/properties'
+import { compile } from './model/properties'
+import validator from 'is-my-json-valid'
+export const schema = obj => validator(compile(obj))
 
+// ViewType
 import type { ViewClass } from './view'
 export type ViewType = ViewClass
 
+// StoreType
 import type { StoreClass } from './store'
 export type StoreType = StoreClass
 
+// constants
 export * from './constants'

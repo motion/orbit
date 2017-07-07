@@ -1,5 +1,4 @@
 // @flow
-import { view } from '@mcro/black'
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pIDB from 'pouchdb-adapter-idb'
@@ -12,9 +11,11 @@ import { omit } from 'lodash'
 
 // export all models
 export Document from './document'
+export Org from './org'
 export Comment from './comment'
 export Image from './image'
 export User from './user'
+
 // exports
 export type { Model } from '~/helpers'
 

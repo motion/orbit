@@ -58,13 +58,14 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Actions if={!commanderStore.focused} $$row $$centered>
+        <Page.Actions $$row $$centered>
           <UI.Button
             active={docStore.showInbox}
             margin={[0, 10]}
             icon="paper"
             onClick={docStore.ref('showInbox').toggle}
             tooltip="inbox"
+            theme="red"
           >
             Inbox
           </UI.Button>

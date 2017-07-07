@@ -23,7 +23,7 @@ const Theme = {
     },
     ...makeTheme({
       highlightColor,
-      background: [255, 255, 255, 0.1],
+      background: [255, 255, 255, 1],
       color: '#555',
       borderColor: [0, 0, 0, 0.1],
     }),

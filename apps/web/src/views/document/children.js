@@ -58,7 +58,6 @@ export default class Children {
     const allDocs = sortBy(docs || [], 'createdAt')
 
     // const getDoc = doc => {
-    //   const children = store.children[doc._id]
     //   return {
     //     onClick() {
     //       Router.go(doc.url())
@@ -74,11 +73,7 @@ export default class Children {
     //     ),
     //     secondary: (
     //       <content if={children}>
-    //         {children.map(child =>
-    //           <child key={child._id}>
-    //             {child.getTitle()}
-    //           </child>
-    //         )}
+
     //       </content>
     //     ),
     //   }
@@ -133,17 +128,34 @@ export default class Children {
           />
         </actions>
         <docs if={hasDocs}>
-          {allDocs.map((doc, index) =>
-            <surface justify="flex-start" $doc key={index}>
-              <title>
-                {doc.title}
-              </title>
-              <UI.Text size={0.95} color={[120, 120, 120]}>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio
-                repudiandae illum praesentium deleniti nostrum.
-              </UI.Text>
-            </surface>
-          )}
+          {allDocs.map((doc, index) => {
+            const children = store.children[doc._id]
+
+            return (
+              <surface
+                justify="flex-start"
+                $doc
+                key={index}
+                onClick={() => Router.go(doc.url())}
+              >
+                <title $$row>
+                  {doc.title}&nbsp;{' '}
+                  <span $rest>Lorem ipsum dolor sit amet...</span>
+                </title>
+                <paths if={children}>
+                  {children.map(child =>
+                    <UI.Button
+                      chromeless
+                      key={child._id}
+                      onClick={() => Router.go(child.url())}
+                    >
+                      {child.getTitle()}
+                    </UI.Button>
+                  )}
+                </paths>
+              </surface>
+            )
+          })}
         </docs>
       </children>
     )
@@ -161,11 +173,22 @@ export default class Children {
     text: {
       lineHeight: '1.4rem',
     },
+    rest: {
+      color: [0, 0, 0, 0.2],
+      fontSize: 14,
+      fontWeight: 400,
+    },
     children: {
       borderTop: [1, '#eee'],
       background: '#fff',
-      padding: 20,
+      padding: 16,
       position: 'relative',
+    },
+    paths: {
+      flexFlow: 'row',
+    },
+    child: {
+      fontSize: 16,
     },
     docs: {
       flexFlow: 'row',
@@ -175,7 +198,6 @@ export default class Children {
     doc: {
       maxWidth: 300,
       minWidth: 200,
-      minHeight: 120,
       flex: 1,
       margin: [0, 12, 16, 0],
       zIndex: 1,

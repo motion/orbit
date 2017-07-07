@@ -7,6 +7,8 @@ import makeTheme from './makeTheme'
 // resolves the theme object into props.theme
 // and passes the named theme down
 // if given theme="name"
+const Themes = {}
+
 export default View =>
   class InjectTheme extends React.Component {
     static contextTypes = {
@@ -30,22 +32,27 @@ export default View =>
 
     get theme() {
       const { props, context } = this
-      let theme = (props.theme && context.uiTheme[props.theme]) || context.theme
+      let theme = props.theme && context.uiTheme[props.theme]
       let themeName = props.theme || context.uiActiveTheme
       let isCustom = false
 
       try {
         if (!theme && typeof props.theme === 'string') {
           isCustom = true
-          const base = color('orange')
-          const opposite = base.mix(color('blue'))
+          const base = color(props.theme)
+          const opposite = base.mix(base.lighten(10))
           themeName = props.theme
-          theme = makeTheme({
-            highlightColor: base,
-            background: base,
-            color: opposite,
-            borderColor: opposite.darken(1),
-          })
+          if (Themes[themeName]) {
+            theme = Themes[themeName]
+          } else {
+            theme = makeTheme({
+              highlightColor: base,
+              background: base,
+              color: opposite.lighten(0.4),
+              borderColor: opposite.darken(0.7),
+            })
+            Themes[themeName] = theme // cache
+          }
         }
       } catch (e) {
         if (e.message.indexOf('parse color from string') === -1) {
@@ -53,6 +60,9 @@ export default View =>
           throw e
         }
       }
+
+      // so we can check if non-existant earlier
+      theme = theme || context.theme
 
       return { theme, themeName, isCustom }
     }

@@ -38,7 +38,7 @@ const Theme = {
     highlightColor,
     background: [20, 20, 20, 0],
     color: '#f2f2f2',
-    borderColor: [30, 30, 30, 1],
+    borderColor: [255, 255, 255, 0.4],
   }),
   light: {
     base: LIGHT,

@@ -201,6 +201,7 @@ export default class Surface implements ViewType {
       <Glint
         key={0}
         if={glint && this.theme}
+        size={size}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
       />,
@@ -377,6 +378,7 @@ export default class Surface implements ViewType {
     let background = props.active
       ? props.activeBackground || theme.active.background || baseBackground
       : baseBackground
+
     const colorBackground =
       background !== 'transparent' &&
       (typeof background !== 'string' ||

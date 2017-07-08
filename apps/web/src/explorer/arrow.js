@@ -11,9 +11,9 @@ import * as UI from '@mcro/ui'
   },
 })
 export default class Arrow {
-  render({ store, animate }) {
+  render({ store, animate, ...props }) {
     return (
-      <arrow>
+      <arrow {...props}>
         <UI.Icon
           $animate={animate}
           $animateAfter={animate && store.rendered}
@@ -31,7 +31,7 @@ export default class Arrow {
     },
     icon: {
       display: 'inline-block',
-      marginTop: 7,
+      // marginTop: 7,
     },
     animate: {
       transition: 'all 100ms ease-in',

@@ -16,9 +16,10 @@ type Props = {
 class ExplorerChildrenStore {
   children = {}
   @watch
-  docs = () =>
-    this.props.explorerStore.document &&
-    this.props.explorerStore.document.getChildren()
+  docs = ({ explorerStore: { document } }) =>
+    document &&
+    typeof document.getChildren === 'function' &&
+    document.getChildren()
   newTitle = null
 
   start() {

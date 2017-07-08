@@ -1,3 +1,15 @@
+# next week
+  - working signup
+  - content
+  - @mentions
+  - nicer inline due dates
+  - discussions
+  - auto-follow on create
+  - fix keyboard nav
+  - fix sync todos doc/sidebar
+  - pullout of notifications
+  - feed
+
 # nate
   - want to start keeping notes on things i want to see
     - visit/england (visit/england/london), visit/india, etc

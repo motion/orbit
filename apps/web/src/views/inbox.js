@@ -11,7 +11,7 @@ class InboxStore {
   draftNumber = 0
   draft = null
   highlightIndex = 0
-  activeIndex = 2
+  activeIndex = null
 
   get items() {
     return [

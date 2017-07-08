@@ -20,7 +20,7 @@ export default class Text {
   props: Props
 
   static defaultProps = {
-    tagName: 'p',
+    tagName: 'text', // TODO: prod p mode
     size: 1,
   }
 

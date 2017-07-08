@@ -11,7 +11,21 @@ const LIGHT = {
   buttonBackground: 'linear-gradient(#fff, #fefefe)',
 }
 
+const blank = {
+  highlightColor: 'transparent',
+  background: 'transparent',
+  color: '#fff',
+  borderColor: 'transparent',
+  buttonBackground: 'transparent',
+}
+
 const Theme = {
+  blank: {
+    base: blank,
+    hover: blank,
+    active: blank,
+    focus: blank,
+  },
   clear: {
     button: {
       borderTopWidth: 0,

@@ -4,6 +4,8 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
 import Router from '~/router'
+import { flatMap } from 'lodash'
+import Arrow from '~/explorer/arrow'
 
 @view({
   store: class SidebarProjectStore {
@@ -30,34 +32,52 @@ export default class Projects {
           {docs.map((doc, index) => {
             const tasks = doc.tasks()
             return (
-              <section key={index}>
+              <section key={`${doc._id}${index}`}>
                 <title $$row $$spaceBetween>
                   <start $$row $$centered>
                     <UI.Progress.Circle
                       style={{ marginRight: 4 }}
-                      lineColor="rgb(130, 248, 198)"
+                      lineColor="rgba(130, 248, 198, 0.6)"
                       backgroundColor={[0, 0, 0, 0.15]}
-                      lineWidth={2}
-                      size={14}
+                      lineWidth={4}
+                      size={18}
                       percent={percentComplete(tasks)}
                     />
                     <path onClick={() => Router.go(doc.url())} $$row $$centered>
-                      <UI.Text>
-                        {(store.crumbs &&
+                      {flatMap(
+                        store.crumbs &&
                           store.crumbs[index] &&
-                          store.crumbs[index]
-                            .map(doc => doc.getTitle())
-                            .join(' / ')) ||
-                          doc.getTitle()}
-                      </UI.Text>
+                          store.crumbs[index].map(doc => [
+                            <Arrow $arrow />,
+                            <UI.Button
+                              glow={true}
+                              glint={false}
+                              theme="blank"
+                              size={0.9}
+                              chromeless
+                              onClick={() => Router.go(doc.url())}
+                            >
+                              {doc.getTitle()}
+                            </UI.Button>,
+                          ])
+                      ).slice(1)}
                     </path>
                   </start>
                   <end>
-                    <UI.Icon
-                      name="favour3"
-                      color="rgba(255, 255, 255, 0.15)"
+                    <UI.Button
+                      glow={false}
+                      glint={false}
+                      theme="blank"
+                      size={1.2}
+                      margin={-5}
+                      icon="pin-remove"
+                      color="rgba(255, 255, 255, 0.015)"
                       hoverColor="yellow"
                       onClick={doc.toggleStar}
+                      tooltip="remove"
+                      tooltipProps={{
+                        towards: 'left',
+                      }}
                     />
                   </end>
                 </title>
@@ -85,6 +105,12 @@ export default class Projects {
   }
 
   static style = {
+    arrow: {
+      color: [255, 255, 255, 0.2],
+    },
+    btn: {
+      padding: [2, 6],
+    },
     tasks: {
       padding: [10, 10],
     },
@@ -108,9 +134,15 @@ export default class Projects {
       marginLeft: -5,
     },
     path: {
+      justifyContent: 'center',
+      alignItems: 'center',
       marginLeft: 4,
       fontSize: 17,
       lineHeight: 1,
+      cursor: 'default',
+      '&:hover icon': {
+        color: [255, 255, 255, 0.4],
+      },
     },
     task: {
       padding: [3, 0, 2],

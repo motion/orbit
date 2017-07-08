@@ -15,19 +15,9 @@ export default class SidebarMenu {
             background="transparent"
             items={[
               {
-                primary: 'Home',
-                icon: 'in',
+                primary: '',
+                icon: 's-d',
                 onClick: () => Router.go('/'),
-              },
-              {
-                primary: 'Feed',
-                icon: 'list',
-                onClick: _ => _,
-                children: false && [
-                  { primary: 'Example 1' },
-                  { primary: 'Example 2' },
-                  { primary: 'Example 3' },
-                ],
               },
               // { primary: 'Me', icon: 'hum', onClick: _ => _ },
               { primary: 'Drafts', icon: 'paper', onClick: _ => _ },

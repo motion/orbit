@@ -50,6 +50,9 @@ export default class DocumentPage {
     const itemProps = {
       size: 1.6,
       chromeless: true,
+      tooltipProps: {
+        towards: 'left',
+      },
     }
 
     return (
@@ -63,11 +66,17 @@ export default class DocumentPage {
         <actions $$draggable>
           <UI.Button
             {...itemProps}
-            icon="fav31"
-            highlight={!!starred}
+            icon="door"
+            tooltip={starred ? 'Unfollow' : 'Follow'}
+            highlight={starred}
             onClick={doc.toggleStar}
           />
-          <UI.Button {...itemProps} chromeless icon="chat4" />
+          <UI.Button
+            {...itemProps}
+            chromeless
+            icon="design-f"
+            tooltip="Discuss"
+          />
           <UI.Popover
             background
             elevation={3}
@@ -77,7 +86,9 @@ export default class DocumentPage {
             forgiveness={16}
             towards="left"
             delay={150}
-            target={<UI.Button {...itemProps} chromeless icon="dot" />}
+            target={
+              <UI.Button {...itemProps} opacity={0.5} chromeless icon="dot" />
+            }
             openOnHover
             closeOnClick
           >

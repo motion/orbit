@@ -50,7 +50,7 @@ const Theme = {
   }),
   dark: makeTheme({
     highlightColor,
-    background: '#222',
+    background: '#444',
     color: '#eee',
     borderColor: '#333',
   }),

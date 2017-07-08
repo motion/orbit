@@ -30,6 +30,7 @@ const hasChildren = children =>
 @view.ui
 export default class Surface implements ViewType {
   props: {
+    opacity?: number,
     active?: boolean,
     after?: Element | string,
     align?: string,
@@ -163,6 +164,7 @@ export default class Surface implements ViewType {
     paddingBottom,
     paddingLeft,
     alignSelf,
+    opacity,
     paddingRight,
     paddingTop,
     placeholderColor,
@@ -257,7 +259,7 @@ export default class Surface implements ViewType {
         forgiveness={8}
         arrowSize={10}
         delay={100}
-        popoverProps={{ $$style: { fontSize: 11 } }}
+        popoverProps={{ $$style: { fontSize: 12 } }}
         {...tooltipProps}
       >
         {tooltip}
@@ -496,6 +498,7 @@ export default class Surface implements ViewType {
         justifyContent: props.justify,
       },
       surface: {
+        opacity: props.opacity,
         color,
         overflow: props.overflow || props.glow ? 'hidden' : props.overflow,
         height,

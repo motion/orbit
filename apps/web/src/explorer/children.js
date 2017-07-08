@@ -98,14 +98,15 @@ export default class ExplorerChildren {
             const children = store.children[doc._id]
 
             return (
-              <doc
-                if={doc.title}
-                justify="flex-start"
-                key={index}
-                onClick={() => Router.go(doc.url())}
-              >
-                <title $$row $$ellipse>
-                  {doc.title}
+              <doc if={doc.title} justify="flex-start" key={index}>
+                <title>
+                  <UI.Button
+                    $subDocItem
+                    chromeless
+                    onClick={() => Router.go(doc.url())}
+                  >
+                    {doc.getTitle()}
+                  </UI.Button>
                 </title>
                 <subdocs if={children && children.length}>
                   <Arrow />
@@ -136,6 +137,7 @@ export default class ExplorerChildren {
       // right: 0,
       zIndex: 10000,
       marginTop: 30,
+      marginRight: -30,
       padding: [10, 20],
       // borderTopRadius: 8,
       borderTop: [1, '#eee', 'dotted'],

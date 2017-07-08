@@ -34,16 +34,14 @@ export default class DocumentView {
 
     return (
       <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
-        <content>
-          <Editor
-            key={store.document._id}
-            readOnly={readOnly}
-            inline={inline}
-            getRef={store.onEditor}
-            {...editorProps}
-          />
-          <Explorer />
-        </content>
+        <Editor
+          key={store.document._id}
+          readOnly={readOnly}
+          inline={inline}
+          getRef={store.onEditor}
+          {...editorProps}
+        />
+        <Explorer />
       </docview>
     )
   }
@@ -52,6 +50,7 @@ export default class DocumentView {
     docview: {
       flex: 1,
       maxWidth: '100%',
+      minHeight: 230,
       padding: [10, 0],
     },
     loading: {

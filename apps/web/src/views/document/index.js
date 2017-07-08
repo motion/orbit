@@ -4,7 +4,6 @@ import { view } from '@mcro/black'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
 import type { Document } from '@jot/models'
-import Explorer from '~/explorer'
 
 type Props = {
   id?: string,
@@ -41,7 +40,6 @@ export default class DocumentView {
           getRef={store.onEditor}
           {...editorProps}
         />
-        <Explorer />
       </docview>
     )
   }

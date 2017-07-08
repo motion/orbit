@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Constants from '~/constants'
+import Explorer from '~/explorer'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
@@ -111,6 +111,8 @@ export default class DocumentPage {
             isPrimaryDocument
           />
         </docpagecontent>
+
+        <Explorer />
 
         <Inbox doc={doc} if={docStore.showInbox} />
       </Page>

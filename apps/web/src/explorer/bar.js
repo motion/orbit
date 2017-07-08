@@ -21,10 +21,11 @@ export default class ExplorerBar {
           <UI.Segment $$margin={[0, 10, 0, 0]} $$flex="none">
             <UI.Popover
               openOnHover
-              delay={1000}
+              delay={800}
               elevation={2}
               borderRadius={8}
-              distance={2}
+              distance={0}
+              forgiveness={2}
               towards="right"
               target={
                 <UI.Button

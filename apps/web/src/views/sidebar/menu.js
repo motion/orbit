@@ -12,6 +12,7 @@ export default class SidebarMenu {
         <UI.Theme name="clear-dark">
           <UI.List
             size={1.3}
+            background="transparent"
             items={[
               {
                 primary: 'Home',

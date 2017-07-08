@@ -8,7 +8,7 @@ import Router from '~/router'
 export default class SidebarMenu {
   render() {
     return (
-      <sidebarmenu css={{ padding: [7, 0, 0] }}>
+      <sidebarmenu $$draggable css={{ padding: [20, 0, 0] }}>
         <UI.Theme name="clear-dark">
           <UI.List
             size={1.3}

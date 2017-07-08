@@ -130,11 +130,12 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      right: 0,
+      // position: 'fixed',
+      // bottom: 0,
+      // left: 0,
+      // right: 0,
       zIndex: 10000,
+      marginTop: 30,
       padding: [10, 20],
       // borderTopRadius: 8,
       borderTop: [1, '#eee', 'dotted'],

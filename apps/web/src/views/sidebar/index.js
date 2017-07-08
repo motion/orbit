@@ -20,10 +20,10 @@ class SidebarContent {
   render() {
     return (
       <inner $$flex>
-        <UserBar />
         <Login />
         <Menu />
         <Projects />
+        <UserBar />
       </inner>
     )
   }

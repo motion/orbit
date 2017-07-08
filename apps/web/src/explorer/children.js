@@ -67,8 +67,8 @@ export default class ExplorerChildren {
     const allDocs = sortBy(docs || [], 'createdAt')
 
     return (
-      <children>
-        <actions>
+      <children $$opacity={0.5}>
+        <actions if={false}>
           <UI.Title $mainTitle size={1}>
             Children
           </UI.Title>

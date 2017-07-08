@@ -161,7 +161,11 @@ export default class ExplorerInput {
         <Editor
           placeholder={'search or create docs'}
           state={store.editorState}
-          ref={input => (store.input = input)}
+          ref={ref => {
+            log('now')
+            console.log(ref)
+            store.ref('inputNode').set(ref)
+          }}
           onKeyDown={store.onKeyDown}
           onFocus={store.onFocus}
           onBlur={store.onBlur}

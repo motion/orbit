@@ -51,7 +51,7 @@ export default class ExplorerStore {
   path = ''
   highlightIndex = -1
   searchResults: Array<Document> = []
-  input: ?HTMLInputElement = null
+  inputNode: ?HTMLInputElement = null
   focused = false
   showResults = false
   // bump this to rerender element
@@ -105,12 +105,12 @@ export default class ExplorerStore {
 
   get isSelected() {
     return false
-    return this.input.selectionEnd > this.input.selectionStart
+    return this.inputNode.selectionEnd > this.inputNode.selectionStart
   }
 
   select = (start, end) => {
     return
-    this.input.setSelectionRange(start, end)
+    this.inputNode.setSelectionRange(start, end)
   }
 
   action = (name: string) => {
@@ -133,16 +133,14 @@ export default class ExplorerStore {
       }
       /*
       if (this.isSelected) {
-        //this.select(this.input.selectionEnd, this.input.selectionEnd)
+        //this.select(this.inputNode.selectionEnd, this.inputNode.selectionEnd)
         return
       }
       */
     },
     enter: () => this.onEnter(),
     focus: () => this.focus(),
-    explorer: () => {
-      this.focus()
-    },
+    explorer: () => this.focus(),
     right: () => {
       if (!this.focused || !this.searchResults) return
       this.onRight()
@@ -162,13 +160,15 @@ export default class ExplorerStore {
   }
 
   blur = () => {
-    if (!this.input) return
-    this.input.blur()
+    if (!this.inputNode) return
+    this.inputNode.blur()
   }
 
   focus = () => {
-    if (!this.input) return
-    this.input.focus()
+    if (!this.inputNode) {
+      return
+    }
+    this.inputNode.focus()
     setTimeout(() => {
       this.editorState = this.editorState
         .transform()

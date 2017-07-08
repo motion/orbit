@@ -54,7 +54,7 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Actions>
+        <Page.Actions if={false}>
           <UI.Button chromeless icon="drop">
             Inbox
           </UI.Button>

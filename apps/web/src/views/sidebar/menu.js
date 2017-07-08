@@ -7,22 +7,30 @@ import * as UI from '@mcro/ui'
 export default class SidebarMenu {
   render() {
     return (
-      <sidebarmenu>
+      <sidebarmenu css={{ padding: [7, 0, 0] }}>
         <UI.Theme name="clear-dark">
           <UI.List
+            size={1.3}
+            itemProps={{
+              padding: 15,
+            }}
             items={[
-              // { primary: 'Me', icon: 'hum', onClick: _ => _ },
-              { primary: 'Drafts', icon: 'paper', onClick: _ => _ },
               {
-                primary: 'Browse',
+                primary: 'Home',
+                icon: 'home',
+              },
+              {
+                primary: 'Feed',
                 icon: 'list',
                 onClick: _ => _,
-                //                children: [
-                //                  { primary: 'Example 1' },
-                //                  { primary: 'Example 2' },
-                //                  { primary: 'Example 3' },
-                //                ],
+                children: false && [
+                  { primary: 'Example 1' },
+                  { primary: 'Example 2' },
+                  { primary: 'Example 3' },
+                ],
               },
+              // { primary: 'Me', icon: 'hum', onClick: _ => _ },
+              { primary: 'Drafts', icon: 'paper', onClick: _ => _ },
             ]}
           />
         </UI.Theme>

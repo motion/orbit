@@ -113,6 +113,7 @@ export default class ListItem {
           position: 'relative',
           ...style,
         }}
+        size={size}
         {...props}
       >
         <image if={avatar || fakeAvatar}>

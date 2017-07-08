@@ -8,7 +8,7 @@ const properRoute = path => (path.indexOf('/') === 0 ? path : `/${path}`)
 
 const LENGTH_KEY = 'router.historyLength'
 
-const historyLength = Number(localStorage.getItem(LENGTH_KEY)) || 0
+const historyLength = 0 //Number(localStorage.getItem(LENGTH_KEY)) || 0
 const historyDirection = val =>
   localStorage.setItem(
     LENGTH_KEY,

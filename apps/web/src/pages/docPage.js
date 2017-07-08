@@ -116,7 +116,7 @@ export default class DocumentPage {
   static style = {
     actions: {
       position: 'absolute',
-      top: -15,
+      top: 10,
       right: 10,
       left: 0,
       justifyContent: 'flex-end',

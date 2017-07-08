@@ -56,7 +56,7 @@ const Theme = {
   }),
   'clear-dark': makeTheme({
     highlightColor,
-    background: [20, 20, 20, 0.2],
+    background: [80, 80, 80, 0.7],
     color: '#f2f2f2',
     borderColor: [255, 255, 255, 0.3],
   }),

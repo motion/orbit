@@ -93,6 +93,7 @@ export default class ExplorerBar {
       borderTop: [1, '#eee'],
       zIndex: 500,
       padding: [0, 10],
+      paddingLeft: IS_ELECTRON ? 78 : 10,
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',

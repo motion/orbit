@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import * as Constants from '~/constants'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
@@ -60,7 +61,7 @@ export default class DocumentPage {
           </UI.Button>
         </Page.Actions>
 
-        <actions $$draggable>
+        <actions $$draggable css={{ height: Constants.HEADER_HEIGHT }}>
           <UI.Segment itemProps={itemProps}>
             <UI.Popover
               background

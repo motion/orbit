@@ -18,6 +18,7 @@ import LayoutWrap from '~/views/layout/wrap'
 import { start } from '../start'
 import Signup from './signup'
 import { User } from '@mcro/models'
+import { Bar } from '~/explorer'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -70,14 +71,15 @@ export default class Layout {
       <app>
         <Signup />
         <LayoutWrap layoutStore={layoutStore}>
+          <Bar />
           <content
             if={User.loggedIn}
             onScroll={this.onScroll}
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >
             <CurrentPage key={Router.key} {...Router.params} />
+            <Explorer />
           </content>
-          <Explorer />
           <Draft
             isActive={layoutStore.isCreatingDoc}
             onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
@@ -120,6 +122,7 @@ export default class Layout {
 
   static style = {
     root: {
+      boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.04]]],
       background: Constants.IS_ELECTRON ? [40, 40, 40, 0.2] : '#252525',
       position: 'absolute',
       top: 0,
@@ -143,7 +146,6 @@ export default class Layout {
       overflowY: 'scroll',
       zIndex: 100,
       borderRightRadius: 8,
-      boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.04]]],
       paddingTop: 20,
     },
     dragStartedAt: pos => ({

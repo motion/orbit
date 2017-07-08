@@ -1,17 +1,22 @@
 import { view } from '@mcro/black'
-import Bar from './bar'
-import Results from './results'
 import Children from './children'
+
+export Bar from './bar'
 
 @view
 export default class Explorer {
   render() {
     return (
-      <explorer $$flex>
-        <Bar />
-        <Results />
+      <explorer>
         <Children />
       </explorer>
     )
+  }
+
+  static style = {
+    explorer: {
+      maxHeight: '50%',
+      position: 'relative',
+    },
   }
 }

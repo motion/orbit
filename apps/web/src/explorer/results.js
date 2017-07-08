@@ -26,7 +26,7 @@ export default class ExplorerResults {
       </match>
 
     return (
-      <results if={explorerStore.showResults}>
+      <results $show={explorerStore.showResults}>
         <UI.Placeholder
           if={
             explorerStore.isEnterToCreate &&
@@ -72,9 +72,17 @@ export default class ExplorerResults {
     results: {
       zIndex: 10000,
       background: '#fff',
-      boxShadow: [[0, 5, 8, [0, 0, 0, 0.05]]],
-      maxHeight: '60%',
+      // boxShadow: [[0, -5, 8, [0, 0, 0, 0.05]]],
+      height: 80,
       position: 'relative',
+      transition: 'all ease-in 800ms',
+      // position: 'absolute',
+      // top: 'calc(-100% + 14px)',
+      // left: 0,
+      // right: 0,
+    },
+    show: {
+      height: 'auto',
     },
     matches: {
       padding: 15,

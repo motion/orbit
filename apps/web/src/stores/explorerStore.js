@@ -21,6 +21,7 @@ const KEYMAP = {
     explorer: ['command+t'],
     focus: 'command+l',
     cmdEnter: 'command+enter',
+    cmdUp: 'command+up',
     delete: ['delete', 'backspace'],
     toggleSidebar: 'command+\\',
   },
@@ -155,6 +156,10 @@ export default class ExplorerStore {
     up: () => {
       if (!this.focused) return
       this.moveHighlight(-1)
+    },
+    cmdUp: () => {
+      console.log('gmcup')
+      Router.go(this.crumbs[this.crumbs.length - 2].url())
     },
   }
 

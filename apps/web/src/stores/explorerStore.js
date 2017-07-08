@@ -109,7 +109,6 @@ export default class ExplorerStore {
   }
 
   select = (start, end) => {
-    return
     this.inputNode.setSelectionRange(start, end)
   }
 
@@ -272,7 +271,7 @@ export default class ExplorerStore {
     this.setValue(value)
 
     requestAnimationFrame(() => {
-      this.input.focus()
+      this.inputNode.focus()
       this.editorState = this.editorState
         .transform()
         .collapseToEndOf(this.firstLine.nodes.last())

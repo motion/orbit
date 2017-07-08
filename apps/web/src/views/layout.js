@@ -68,7 +68,6 @@ export default class Layout {
 
     return (
       <app>
-        <UI.Glint color={[255, 255, 255, 0.2]} borderRadius={4} />
         <Signup />
         <LayoutWrap layoutStore={layoutStore}>
           <content
@@ -144,6 +143,7 @@ export default class Layout {
       overflowY: 'scroll',
       zIndex: 100,
       borderRightRadius: 8,
+      boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.04]]],
     },
     dragStartedAt: pos => ({
       overflowX: 'visible',

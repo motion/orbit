@@ -89,9 +89,9 @@ export default class ExplorerBar {
     explorerbar: {
       overflow: 'hidden',
       // background: [255, 255, 255, 0.1],
-      boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.04]]],
+      borderTop: [1, '#eee'],
       zIndex: 500,
-      padding: [0, 10, 0, IS_ELECTRON ? 80 : 10],
+      padding: [0, 10],
       flexFlow: 'row',
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',

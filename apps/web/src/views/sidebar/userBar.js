@@ -15,7 +15,6 @@ export default class UserBar {
     return (
       <userbar $$draggable if={User.loggedIn}>
         <UI.Popover
-          theme="light"
           openOnClick
           background
           delay={150}
@@ -35,7 +34,6 @@ export default class UserBar {
           {User.name}
         </UI.Text>
         <UI.Popover
-          theme="light"
           background="transparent"
           distance={10}
           forgiveness={16}

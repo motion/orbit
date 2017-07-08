@@ -104,7 +104,7 @@ class Item {
           >
             {name}
           </UI.Button>
-          <UI.Arrow animate={isLast} />
+          <Arrow animate={isLast} />
         </inner>
         <block contentEditable={false} $last={isLast}>
           {name}

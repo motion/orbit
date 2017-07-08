@@ -129,9 +129,9 @@ export default class Title extends React.Component {
       marginRight: 4,
     },
     stat: {
-      fontSize: 11,
-      marginLeft: 5,
-      opacity: 0.3,
+      fontSize: 12,
+      marginLeft: 8,
+      opacity: 0.7,
     },
   }
 }

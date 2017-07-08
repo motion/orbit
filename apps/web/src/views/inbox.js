@@ -6,20 +6,43 @@ import { random } from 'lodash'
 import Router from '~/router'
 import DocumentView from '~/views/document'
 
+class InboxStore {
+  docs = Document.child(this.props.doc._id)
+  showDraft = true
+  draftNumber = 0
+  draft = null
+  highlightIndex = 0
+
+  start() {
+    const { explorerStore } = this.props
+    console.log('exp', explorerStore)
+
+    this.on(explorerStore, 'action', (name: string) => {
+      if (name === 'up' && this.highlightIndex > 0) {
+        this.highlightIndex--
+      }
+
+      if (name === 'down' && this.highlightIndex < this.docs.length - 1) {
+        this.highlightIndex++
+      }
+
+      if (name === 'enter') {
+        console.log('enta')
+      }
+    })
+  }
+}
+
+@view.attach('explorerStore')
 @view({
-  store: class InboxStore {
-    docs = Document.child(this.props.doc._id)
-    showDraft = true
-    draftNumber = 0
-    draft = null
-    // draft = watch(() =>
-    //   Document.create({
-    //     title: '',
-    //     _tempId: this.draftNumber,
-    //     parentId: this.props.doc._id,
-    //   })
-    // )
-  },
+  // draft = watch(() =>
+  //   Document.create({
+  //     title: '',
+  //     _tempId: this.draftNumber,
+  //     parentId: this.props.doc._id,
+  //   })
+  // )
+  store: InboxStore,
 })
 export default class Inbox {
   testData = () => {
@@ -42,7 +65,7 @@ export default class Inbox {
         icon: 'alerti',
       },
       {
-        primary: this.title('CouchDB won\'t boot on OTP-20'),
+        primary: this.title("CouchDB won't boot on OTP-20"),
         secondary: this.status('#619 opened 4 days ago by spencerthayer '),
         icon: 'alerti',
       },
@@ -61,12 +84,14 @@ export default class Inbox {
       <title $$row>
         {text}
         &nbsp;&nbsp;
-        <UI.Badge background={rc()} color="#fff" height={20}>
-          hi
-        </UI.Badge>
-        <UI.Badge background={rc()} color="#fff" height={20}>
-          hi
-        </UI.Badge>
+        {false &&
+          <UI.Badge background={rc()} color="#fff" height={20}>
+            hi
+          </UI.Badge>}
+        {false &&
+          <UI.Badge if={false} background={rc()} color="#fff" height={20}>
+            hi
+          </UI.Badge>}
       </title>
     )
   }
@@ -80,8 +105,11 @@ export default class Inbox {
   }
 
   render({ store }) {
+    // subscribe to variable
+    store.highlightIndex
+
     const docs = store.docs || []
-    const useTestData = false
+    const useTestData = true
     const items = useTestData
       ? this.testData()
       : docs.map(item => ({
@@ -98,15 +126,11 @@ export default class Inbox {
     return (
       <inbox>
         <bar>
-          <UI.Title size={4} stat={`${docs.length} items`}>
+          <UI.Title size={3} stat={`${docs.length} items`}>
             Inbox
           </UI.Title>
           <actions>
             <UI.Button
-              background="green"
-              borderColor="rgb(27, 145, 83)"
-              color="white"
-              size={1}
               icon="siadd"
               onClick={store.ref('draftNumber').increment(1)}
             >
@@ -115,7 +139,15 @@ export default class Inbox {
           </actions>
         </bar>
 
-        <UI.List itemProps={{ height: 'auto', padding: 15 }} items={items} />
+        <UI.List
+          $list
+          itemProps={{ paddingLeft: 20, height: 'auto', padding: 15 }}
+          items={items}
+          getItem={(val, index) =>
+            <item $highlight={store.highlightIndex === index}>
+              {val.primary}
+            </item>}
+        />
 
         <UI.Drawer
           from="bottom"
@@ -130,11 +162,28 @@ export default class Inbox {
   }
 
   static style = {
+    list: {
+      marginLeft: -20,
+      marginRight: -20,
+    },
+    title: {
+      fontWeight: 'bold',
+    },
+    item: {
+      padding: 10,
+      paddingLeft: 20,
+      height: 40,
+    },
+    highlight: {
+      background: '#eee',
+      borderLeft: '3px solid #999',
+    },
     inbox: {
       padding: [15, 20],
     },
     bar: {
       flexFlow: 'row',
+      marginBottom: 5,
       justifyContent: 'space-between',
     },
   }

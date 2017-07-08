@@ -78,7 +78,7 @@ export default class Layout {
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >
             <CurrentPage key={Router.key} {...Router.params} />
-            <Explorer />
+            <Explorer if={false} />
           </content>
           <Draft
             isActive={layoutStore.isCreatingDoc}

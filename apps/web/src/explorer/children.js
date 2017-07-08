@@ -60,14 +60,12 @@ export default class ExplorerChildren {
   props: Props
 
   render({ store }: Props) {
-    console.log('saasaass', store)
-
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
     const allDocs = sortBy(docs || [], 'createdAt')
 
     return (
-      <children>
+      <children if={false}>
         <actions>
           <UI.Title $mainTitle size={1}>
             Children

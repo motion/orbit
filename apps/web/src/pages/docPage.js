@@ -55,12 +55,17 @@ export default class DocumentPage {
     return (
       <Page>
         <Page.Actions>
-          <UI.Button chromeless icon="drop">
-            Inbox
+          <UI.Button
+            onClick={docStore.ref('showInbox').toggle}
+            highlight={docStore.showInbox}
+            chromeless
+            icon="message"
+          >
+            Threads
           </UI.Button>
         </Page.Actions>
 
-        <actions $$draggable>
+        <actions if={!docStore.showInbox} $$draggable>
           <UI.Button
             {...itemProps}
             icon="fav31"

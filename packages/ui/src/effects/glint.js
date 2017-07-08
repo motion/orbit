@@ -7,7 +7,7 @@ const isUndef = x => typeof x === 'undefined'
 type Props = {
   color: Color,
   size: number,
-  radius?: number,
+  borderRadius?: number,
   borderLeftRadius?: number,
   borderRightRadius?: number,
   attach?: Object,

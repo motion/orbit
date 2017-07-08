@@ -90,15 +90,16 @@ export default class Signup {
             opacity: 0.1,
           }}
         />
+        <UI.Glint size={3} borderRadius={5} />
         <UI.Glow
           draggable
           color={[255, 255, 255]}
-          opacity={0.38}
+          opacity={0.3}
           full
-          blur={50}
-          scale={1.125}
+          blur={80}
+          scale={1.2}
           show
-          resist={82}
+          resist={62}
           backdropFilter="contrast(150%) saturation(150%) brightness(150%)"
         />
         <UI.Theme name="clear">
@@ -171,7 +172,7 @@ export default class Signup {
 
   static style = {
     signup: {
-      background: 'linear-gradient(#ccc, #eee)',
+      background: 'radial-gradient(#eee, #ddd)',
       zIndex: 11,
     },
     form: {

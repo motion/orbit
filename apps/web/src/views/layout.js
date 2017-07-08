@@ -8,12 +8,11 @@ import { IN_TRAY } from '~/constants'
 import NotFound from '~/pages/404Page'
 import Router from '~/router'
 import Sidebar from '~/views/sidebar'
-import Header from '~/views/layout/header'
 import Errors from '~/views/layout/errors'
-import * as Commander from '~/views/commander'
+import Explorer from '~/explorer'
+import ExplorerStore from '~/stores/explorerStore'
 import LayoutStore from '~/stores/layoutStore'
 import SoundStore from '~/stores/soundStore'
-import CommanderStore from '~/stores/commanderStore'
 import Draft from '~/views/draft'
 import LayoutWrap from '~/views/layout/wrap'
 import { start } from '../start'
@@ -22,7 +21,7 @@ import { User } from '@mcro/models'
 
 type Props = {
   layoutStore: LayoutStore,
-  commanderStore: CommanderStore,
+  explorerStore: ExplorerStore,
   soundStore: SoundStore,
 }
 
@@ -37,7 +36,7 @@ if (module && module.hot) {
 @view.provide({
   layoutStore: LayoutStore,
   soundStore: SoundStore,
-  commanderStore: CommanderStore,
+  explorerStore: ExplorerStore,
 })
 export default class Layout {
   props: Props
@@ -51,7 +50,7 @@ export default class Layout {
   }
 
   getChildContext() {
-    return { shortcuts: this.props.commanderStore.keyManager }
+    return { shortcuts: this.props.explorerStore.keyManager }
   }
 
   lastScrolledTo = 0
@@ -72,8 +71,6 @@ export default class Layout {
         <UI.Glint color={[255, 255, 255, 0.2]} borderRadius={4} />
         <Signup />
         <LayoutWrap layoutStore={layoutStore}>
-          <Commander.Results />
-          <Header layoutStore={layoutStore} />
           <content
             if={User.loggedIn}
             onScroll={this.onScroll}
@@ -81,6 +78,7 @@ export default class Layout {
           >
             <CurrentPage key={Router.key} {...Router.params} />
           </content>
+          <Explorer />
           <Draft
             isActive={layoutStore.isCreatingDoc}
             onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
@@ -93,7 +91,7 @@ export default class Layout {
     )
   }
 
-  render({ commanderStore }: Props) {
+  render({ explorerStore }: Props) {
     return (
       <root>
         <UI.ContextMenu
@@ -110,7 +108,7 @@ export default class Layout {
               <Shortcuts
                 $layout
                 name="all"
-                handler={commanderStore.handleShortcuts}
+                handler={explorerStore.handleShortcuts}
               >
                 {IN_TRAY ? this.renderTray() : this.renderApp()}
               </Shortcuts>

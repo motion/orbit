@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { Input, Icon, Button } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
 
 const $para = {
@@ -8,11 +8,11 @@ const $para = {
   color: 'rgba(0,0,0,.8)',
 }
 
-@view.attach('commanderStore')
+@view.attach('explorerStore')
 @view
 class Para {
-  render({ commanderStore, ...props }) {
-    const first = commanderStore.value.indexOf('/') === -1
+  render({ explorerStore, ...props }) {
+    const first = explorerStore.value.indexOf('/') === -1
 
     // if we're in the first path, add margin to match button styles
     const styles = Object.assign({}, $para, first && { marginLeft: 8 })
@@ -45,7 +45,7 @@ class Arrow {
   render({ store, animate }) {
     return (
       <arrow>
-        <Icon
+        <UI.Icon
           $animate={animate}
           $animateAfter={animate && store.rendered}
           $icon
@@ -66,20 +66,20 @@ class Arrow {
     },
     animate: {
       transition: 'all 100ms ease-in',
-      transform: `scale(0.6) translateX(-5px)`,
+      transform: 'scale(0.6) translateX(-5px)',
       opacity: 0.2,
     },
     animateAfter: {
       opacity: 1,
-      transform: `scale(1) translateX(0px)`,
+      transform: 'scale(1) translateX(0px)',
     },
   }
 }
 
-@view.attach('commanderStore')
+@view.attach('explorerStore')
 @view
 class Item {
-  render({ commanderStore: cmdr, node }) {
+  render({ explorerStore: cmdr, node }) {
     const inline = { userSelect: 'initial', display: 'inline' }
     const name = node.data.get('name')
     const doc = cmdr.editorState.document
@@ -90,7 +90,7 @@ class Item {
     return (
       <span>
         <inner contentEditable={false}>
-          <Button
+          <UI.Button
             chromeless
             onClick={() => cmdr.onItemClick(node.key)}
             spaced
@@ -103,8 +103,8 @@ class Item {
             color={[0, 0, 0, 0.8]}
           >
             {name}
-          </Button>
-          <Arrow animate={isLast} />
+          </UI.Button>
+          <UI.Arrow animate={isLast} />
         </inner>
         <block contentEditable={false} $last={isLast}>
           {name}
@@ -133,7 +133,7 @@ class Item {
       paddingLeft: 5,
     },
     active: {
-      background: `rgba(0,0,255,.05)`,
+      background: 'rgba(0,0,255,.05)',
     },
     inner: {
       position: 'absolute',
@@ -144,10 +144,10 @@ class Item {
   }
 }
 
-@view.attach('commanderStore')
+@view.attach('explorerStore')
 @view
 export default class CommanderInput {
-  render({ commanderStore: store }) {
+  render({ explorerStore: store }) {
     store.version
 
     return (

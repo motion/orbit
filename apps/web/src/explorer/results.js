@@ -5,19 +5,19 @@ import { HEADER_HEIGHT } from '~/constants'
 import { last } from 'lodash'
 import * as UI from '@mcro/ui'
 
-@view.attach('commanderStore', 'layoutStore')
+@view.attach('explorerStore', 'layoutStore')
 @view
 export default class CommanderResults {
-  render({ commanderStore: cmdr }) {
-    const docs = cmdr.peek || []
+  render({ explorerStore }) {
+    const docs = explorerStore.peek || []
 
     const getMatch = (doc, index) =>
       <match
-        $highlight={index === cmdr.highlightIndex}
-        onClick={() => cmdr.navTo(doc)}
+        $highlight={index === explorerStore.highlightIndex}
+        onClick={() => explorerStore.navTo(doc)}
         key={doc._id}
         onMouseEnter={() => {
-          cmdr.highlightIndex = index
+          explorerStore.highlightIndex = index
         }}
       >
         <UI.Title size={2.5}>
@@ -27,39 +27,42 @@ export default class CommanderResults {
       </match>
 
     return (
-      <results if={cmdr.showResults}>
+      <results if={explorerStore.showResults}>
         <UI.Placeholder
-          if={cmdr.isEnterToCreate && last(cmdr.typedPath).length > 0}
+          if={
+            explorerStore.isEnterToCreate &&
+            last(explorerStore.typedPath).length > 0
+          }
         >
           <UI.Title size={3}>
-            {cmdr.typedPath[cmdr.typedPath.length - 2]}
+            {explorerStore.typedPath[explorerStore.typedPath.length - 2]}
           </UI.Title>
           <UI.Title size={2}>
-            ↵ to create {last(cmdr.typedPath)}
+            ↵ to create {last(explorerStore.typedPath)}
           </UI.Title>
         </UI.Placeholder>
         <matches if={docs.length > 0}>
           <UI.Title
             color="rgba(191, 93, 88, 1)"
             $title
-            if={!cmdr.isTypingPath}
+            if={!explorerStore.isTypingPath}
             size={3}
           >
-            {cmdr.value === ''
+            {explorerStore.value === ''
               ? 'All Docs'
-              : `Searching for "${last(cmdr.typedPath)}"`}
+              : `Searching for "${last(explorerStore.typedPath)}"`}
           </UI.Title>
           {docs.map(getMatch)}
         </matches>
         <preview
-          if={cmdr.highlightedDocument}
-          key={cmdr.highlightedDocument._id}
+          if={explorerStore.highlightedDocument}
+          key={explorerStore.highlightedDocument._id}
         >
           <DocView
             readOnly
             inline
-            id={cmdr.highlightedDocument._id}
-            editorProps={{ find: cmdr.value }}
+            id={explorerStore.highlightedDocument._id}
+            editorProps={{ find: explorerStore.value }}
           />
         </preview>
       </results>

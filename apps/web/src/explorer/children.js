@@ -5,7 +5,6 @@ import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
-import * as Commander from '~/views/commander'
 import { watch } from '@mcro/black'
 
 type Props = {
@@ -14,7 +13,7 @@ type Props = {
 }
 
 @view({
-  store: class ChildrenStore {
+  store: class ExplorerChildrenStore {
     children = {}
     @watch docs = () => Document.child(this.props.id)
     newTitle = null
@@ -53,7 +52,7 @@ type Props = {
     }
   },
 })
-export default class Children {
+export default class ExplorerChildren {
   props: Props
 
   render({ store }: Props) {

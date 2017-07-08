@@ -99,9 +99,9 @@ export default class App implements AppStore {
     return this.stores && this.stores.LayoutStore && this.stores.LayoutStore[0]
   }
 
-  get commander(): CommanderStore {
+  get explorer() {
     return (
-      this.stores && this.stores.CommanderStore && this.stores.CommanderStore[0]
+      this.stores && this.stores.ExplorerStore && this.stores.ExplorerStore[0]
     )
   }
 

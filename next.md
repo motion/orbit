@@ -2,7 +2,7 @@
   - want to start keeping notes on things i want to see
     - visit/england (visit/england/london), visit/india, etc
   - installing from npm is a pain
-  - CommanderStore.crumbs is coming back as mobxarray not plain array
+  - explorerStore.crumbs is coming back as mobxarray not plain array
   - breadcrumbsstore log is happening on keystores
   - indexes still not working .sort('createdAt')
   - types not working on <Views /> still

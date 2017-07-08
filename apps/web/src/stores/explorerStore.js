@@ -1,11 +1,10 @@
 // @flow
-import { watch, log, keycode, ShortcutManager } from '@mcro/black'
+import { watch, keycode, ShortcutManager } from '@mcro/black'
 import { Document } from '@mcro/models'
 import Router from '~/router'
 import { uniq, last, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
 import App from '~/app'
-import { Observable } from 'rxjs'
 
 const PATH_SEPARATOR = '/'
 const KEYMAP = {
@@ -27,7 +26,7 @@ const KEYMAP = {
   },
 }
 
-export default class CommanderStore {
+export default class ExplorerStore {
   @watch document = () => Document.get(Router.params.id)
   @watch crumbs = () => this.document && this.document.getCrumbs()
 

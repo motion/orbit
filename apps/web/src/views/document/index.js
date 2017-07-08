@@ -3,7 +3,6 @@ import React from 'react'
 import { view } from '@mcro/black'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
-import Children from './children'
 import type { Document } from '@jot/models'
 
 type Props = {
@@ -14,7 +13,6 @@ type Props = {
   editorProps?: Object,
   store: DocumentStore,
   showCrumbs?: boolean,
-  showChildren?: boolean,
 }
 
 @view({
@@ -28,7 +26,7 @@ export default class DocumentView {
     if (!inline) store.crumbs = true
   }
 
-  render({ editorProps, inline, showChildren, readOnly, store }: Props) {
+  render({ editorProps, inline, readOnly, store }: Props) {
     if (!store.document) {
       return <loading />
     }
@@ -43,7 +41,6 @@ export default class DocumentView {
             getRef={store.onEditor}
             {...editorProps}
           />
-          <Children if={!inline} id={store.document._id} />
         </content>
       </docview>
     )

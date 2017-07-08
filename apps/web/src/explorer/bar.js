@@ -3,10 +3,11 @@ import { view } from '@mcro/black'
 import Router from '~/router'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
-import * as Commander from '~/views/commander'
+import Input from './input'
 
+@view.attach('layoutStore')
 @view
-export default class Header {
+export default class ExplorerBar {
   render({ layoutStore }) {
     // use sidebar.active so it binds to variable and rerenders
     layoutStore.sidebar.active
@@ -14,7 +15,7 @@ export default class Header {
     const btnProps = { iconSize: 12, padding: [0, 6], chromeless: true }
 
     return (
-      <header $$draggable>
+      <explorerbar $$draggable>
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
           <UI.Segment $$margin={[0, 10, 0, 0]} $$flex="none">
@@ -51,7 +52,7 @@ export default class Header {
               </UI.Segment>
             </UI.Popover>
           </UI.Segment>
-          <Commander.Bar
+          <Input
             onOpen={() => (layoutStore.commanderOpen = true)}
             onClose={() => (layoutStore.commanderOpen = false)}
           />
@@ -80,12 +81,12 @@ export default class Header {
             }}
           </UI.SlotFill.Slot>
         </rest>
-      </header>
+      </explorerbar>
     )
   }
 
   static style = {
-    header: {
+    explorerbar: {
       overflow: 'hidden',
       // background: [255, 255, 255, 0.1],
       boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.04]]],

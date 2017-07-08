@@ -6,7 +6,6 @@ import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
 import Inbox from '~/views/inbox'
-import Breadcrumbs from './breadcrumbs'
 
 class DocPageStore {
   doc = this.props.id ? Document.get(this.props.id) : Document.home()
@@ -16,7 +15,7 @@ class DocPageStore {
   start() {
     this.watch(() => {
       if (this.doc) {
-        this.props.commanderStore.setPath(this.doc)
+        this.props.explorerStore.setPath(this.doc)
       }
     })
   }
@@ -29,7 +28,7 @@ class DocPageStore {
   }
 }
 
-@view.attach('commanderStore')
+@view.attach('explorerStore')
 @view({
   docStore: DocPageStore,
 })

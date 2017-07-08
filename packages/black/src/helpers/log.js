@@ -129,4 +129,4 @@ function wrapLogger(wrapFn: Function, parent, name?: string) {
 }
 
 log.debug = true
-log.filter = false && /^(CommanderStore|Document)/
+log.filter = false && /^(ExplorerStore|Document)/

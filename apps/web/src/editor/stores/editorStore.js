@@ -4,7 +4,6 @@ import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
 import { computed, StoreType } from '@mcro/black'
 import { getSpec } from './helpers'
-import type CommanderStore from '~/types'
 
 type Plugin = Class<Object>
 
@@ -15,7 +14,7 @@ type Props = {
   getRef?: Function,
   find?: string,
   onlyNode?: boolean,
-  commanderStore: CommanderStore,
+  // explorerStore: ExplorerStore,
 }
 
 export default class EditorStore implements StoreType {
@@ -33,7 +32,7 @@ export default class EditorStore implements StoreType {
   find = this.props.find
   onlyNode = this.props.onlyNode
 
-  start({ commanderStore, onEditor, getRef, rules, plugins }: Props) {
+  start({ explorerStore, onEditor, getRef, rules, plugins }: Props) {
     this.rules = rules
     this.setup(plugins)
 
@@ -53,14 +52,14 @@ export default class EditorStore implements StoreType {
     })
 
     // listen to commander
-    if (commanderStore) {
-      this.on(commanderStore, 'action', (name: string) => {
+    if (explorerStore) {
+      this.on(explorerStore, 'action', (name: string) => {
         if (name === 'focusDown') {
           this.focus()
         }
 
         if (name === 'up' && this.focused && this.focusedLine === 0) {
-          commanderStore.focus()
+          explorerStore.focus()
         }
       })
     }

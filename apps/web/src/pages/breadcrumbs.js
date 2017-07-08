@@ -3,10 +3,10 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
 
-@view.attach('commanderStore')
+@view.attach('explorerStore')
 @view
 export default class Breadcrumbs {
-  render({ commanderStore }) {
+  render({ explorerStore }) {
     let crumbs = [
       {
         text: <UI.Icon size={12} name="home" color="#ccc" hoverColor="red" />,
@@ -14,9 +14,9 @@ export default class Breadcrumbs {
       },
     ]
 
-    if (commanderStore.crumbs && commanderStore.crumbs.length) {
+    if (explorerStore.crumbs && explorerStore.crumbs.length) {
       crumbs = crumbs.concat(
-        commanderStore.crumbs.map(doc => ({
+        explorerStore.crumbs.map(doc => ({
           text: doc.title || 'nulll',
           url: doc.url(),
         }))

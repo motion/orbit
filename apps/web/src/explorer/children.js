@@ -6,6 +6,7 @@ import { Document } from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
+import Arrow from './arrow'
 
 type Props = {
   id: number,
@@ -60,8 +61,6 @@ export default class ExplorerChildren {
   props: Props
 
   render({ store }: Props) {
-    console.log('saasaass', store)
-
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
     const allDocs = sortBy(docs || [], 'createdAt')
@@ -99,19 +98,20 @@ export default class ExplorerChildren {
             const children = store.children[doc._id]
 
             return (
-              <surface
+              <doc
                 if={doc.title}
                 justify="flex-start"
-                $doc
                 key={index}
                 onClick={() => Router.go(doc.url())}
               >
-                <title $$row>
+                <title $$row $$ellipse>
                   {doc.title}
                 </title>
-                <paths if={children}>
+                <subdocs if={children && children.length}>
+                  <Arrow />
                   {children.map(child =>
                     <UI.Button
+                      $subDocItem
                       chromeless
                       key={child._id}
                       onClick={() => Router.go(child.url())}
@@ -119,8 +119,8 @@ export default class ExplorerChildren {
                       {child.getTitle()}
                     </UI.Button>
                   )}
-                </paths>
-              </surface>
+                </subdocs>
+              </doc>
             )
           })}
         </docs>
@@ -130,7 +130,11 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      marginTop: 20,
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: 10000,
       padding: [10, 20],
       // borderTopRadius: 8,
       borderTop: [1, '#eee', 'dotted'],
@@ -145,7 +149,7 @@ export default class ExplorerChildren {
     },
     actions: {
       marginTop: -20,
-      padding: [0, 10, 10],
+      padding: [0, 10, 0],
       flexFlow: 'row',
       flex: 1,
       justifyContent: 'space-between',
@@ -158,18 +162,14 @@ export default class ExplorerChildren {
       flexFlow: 'row',
     },
     docs: {
-      flexFlow: 'row',
-      flexWrap: 'wrap',
-      marginRight: -12,
+      flex: 1,
     },
     doc: {
-      minWidth: 200,
-      // minHeight: 100,
-      border: [1, '#eee'],
+      flexFlow: 'row',
+      borderBottom: [1, '#f2f2f2'],
       flex: 1,
-      margin: [0, 12, 16, 0],
       zIndex: 1,
-      padding: [10, 12],
+      padding: [6, 12],
       '&:hover title': {
         color: [0, 0, 0],
       },
@@ -178,12 +178,21 @@ export default class ExplorerChildren {
       },
     },
     title: {
+      flex: 1,
+      maxWidth: '50%',
       margin: 0,
       padding: 0,
       fontWeight: 500,
-      fontSize: 16,
-      lineHeight: '30px',
+      fontSize: 15,
+      lineHeight: '26px',
       color: '#555',
+    },
+    subdocs: {
+      flexFlow: 'row',
+      overflow: 'hidden',
+    },
+    subDocItem: {
+      flex: 1,
     },
     text: {
       lineHeight: '1.4rem',

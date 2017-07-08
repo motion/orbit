@@ -100,14 +100,18 @@ export default class DocumentPage {
             />
           </UI.Popover>
         </actions>
-        <DocumentView
-          if={!docStore.showInbox}
-          id={doc._id}
-          onKeyDown={docStore.onKeyDown}
-          showCrumbs
-          showChildren
-          isPrimaryDocument
-        />
+
+        <docpagecontent>
+          <DocumentView
+            if={!docStore.showInbox}
+            id={doc._id}
+            onKeyDown={docStore.onKeyDown}
+            showCrumbs
+            showChildren
+            isPrimaryDocument
+          />
+        </docpagecontent>
+
         <Inbox doc={doc} if={docStore.showInbox} />
       </Page>
     )
@@ -122,6 +126,9 @@ export default class DocumentPage {
       alignItems: 'flex-end',
       zIndex: 1000,
       justifyContent: 'space-between',
+    },
+    docpagecontent: {
+      paddingRight: 30,
     },
   }
 }

@@ -53,7 +53,12 @@ export default class Projects {
                     </path>
                   </start>
                   <end>
-                    <UI.Icon name="favour3" onClick={doc.toggleStar} />
+                    <UI.Icon
+                      name="favour3"
+                      color="rgba(255, 255, 255, 0.15)"
+                      hoverColor="yellow"
+                      onClick={doc.toggleStar}
+                    />
                   </end>
                 </title>
                 <tasks if={tasks && tasks.length}>

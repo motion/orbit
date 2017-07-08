@@ -54,7 +54,7 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Actions $$row $$centered>
+        <actions $$row $$centered>
           <UI.Segment itemProps={itemProps}>
             <UI.Popover
               background
@@ -92,7 +92,7 @@ export default class DocumentPage {
               onClick={doc.toggleStar}
             />
           </UI.Segment>
-        </Page.Actions>
+        </actions>
         <DocumentView
           if={!docStore.showInbox}
           id={doc._id}
@@ -104,5 +104,13 @@ export default class DocumentPage {
         <Inbox doc={doc} if={docStore.showInbox} />
       </Page>
     )
+  }
+
+  static style = {
+    actions: {
+      position: 'absolute',
+      top: -15,
+      right: 10,
+    },
   }
 }

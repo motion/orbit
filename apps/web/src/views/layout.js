@@ -144,6 +144,7 @@ export default class Layout {
       zIndex: 100,
       borderRightRadius: 8,
       boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.04]]],
+      paddingTop: 20,
     },
     dragStartedAt: pos => ({
       overflowX: 'visible',

@@ -23,7 +23,7 @@ export default class Projects {
       100 * tasks.filter(i => i.archive).length / tasks.length
 
     return (
-      <content $$scrollable $$flex={6}>
+      <content $$draggable $$scrollable $$flex={6}>
         <UI.Placeholder if={!hasDocs} size={2}>
           No Stars
         </UI.Placeholder>
@@ -52,7 +52,6 @@ export default class Projects {
                             <UI.Button
                               glow={true}
                               glint={false}
-                              theme="blank"
                               size={0.9}
                               chromeless
                               onClick={() => Router.go(doc.url())}

@@ -42,6 +42,12 @@ const Theme = {
       borderColor: [0, 0, 0, 0.1],
     }),
   },
+  gray: makeTheme({
+    highlightColor,
+    background: '#eee',
+    color: '#999',
+    borderColor: '#eee',
+  }),
   dark: makeTheme({
     highlightColor,
     background: '#222',

@@ -48,8 +48,7 @@ export default class DocumentPage {
 
     const starred = doc.hasStar()
     const itemProps = {
-      size: 1,
-      iconSize: 18,
+      size: 1.6,
       chromeless: true,
     }
 
@@ -61,44 +60,45 @@ export default class DocumentPage {
           </UI.Button>
         </Page.Actions>
 
-        <actions $$draggable css={{ height: Constants.HEADER_HEIGHT }}>
-          <UI.Segment itemProps={itemProps}>
-            <UI.Popover
-              background
-              elevation={3}
-              borderRadius={8}
-              background="transparent"
-              distance={10}
-              forgiveness={16}
-              delay={150}
-              target={<UI.Button chromeless icon="dot" />}
-              openOnHover
-              closeOnClick
-            >
-              <UI.List
-                width={150}
-                padding={3}
-                itemProps={{
-                  height: 32,
-                  fontSize: 14,
-                  borderWidth: 0,
-                  borderRadius: 8,
-                }}
-                items={[
-                  {
-                    icon: 'gear',
-                    primary: 'Settings',
-                    onClick: () => console.log(),
-                  },
-                ]}
-              />
-            </UI.Popover>
-            <UI.Button
-              icon="fav31"
-              highlight={!!starred}
-              onClick={doc.toggleStar}
+        <actions $$draggable>
+          <UI.Button
+            {...itemProps}
+            icon="fav31"
+            highlight={!!starred}
+            onClick={doc.toggleStar}
+          />
+          <UI.Button {...itemProps} chromeless icon="chat4" />
+          <UI.Popover
+            background
+            elevation={3}
+            borderRadius={8}
+            background="transparent"
+            distance={10}
+            forgiveness={16}
+            towards="left"
+            delay={150}
+            target={<UI.Button {...itemProps} chromeless icon="dot" />}
+            openOnHover
+            closeOnClick
+          >
+            <UI.List
+              width={150}
+              padding={3}
+              itemProps={{
+                height: 32,
+                fontSize: 14,
+                borderWidth: 0,
+                borderRadius: 8,
+              }}
+              items={[
+                {
+                  icon: 'gear',
+                  primary: 'Settings',
+                  onClick: () => console.log(),
+                },
+              ]}
             />
-          </UI.Segment>
+          </UI.Popover>
         </actions>
         <DocumentView
           if={!docStore.showInbox}
@@ -118,9 +118,10 @@ export default class DocumentPage {
       position: 'absolute',
       top: 10,
       right: 10,
-      left: 0,
-      justifyContent: 'flex-end',
-      flexFlow: 'row',
+      height: 110,
+      alignItems: 'flex-end',
+      zIndex: 1000,
+      justifyContent: 'space-between',
     },
   }
 }

@@ -90,7 +90,6 @@ export default class ExplorerBar {
     explorerbar: {
       overflow: 'hidden',
       // background: [255, 255, 255, 0.1],
-      borderTop: [1, '#eee'],
       zIndex: 500,
       padding: [0, 10],
       paddingLeft: IS_ELECTRON ? 78 : 10,

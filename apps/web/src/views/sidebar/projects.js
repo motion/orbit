@@ -23,7 +23,7 @@ export default class Projects {
       100 * tasks.filter(i => i.archive).length / tasks.length
 
     return (
-      <content $$scrollable $$flex={6}>
+      <content $$draggable $$scrollable $$flex={6}>
         <UI.Placeholder if={!hasDocs} size={2}>
           No Stars
         </UI.Placeholder>
@@ -38,7 +38,7 @@ export default class Projects {
                     <UI.Progress.Circle
                       style={{ marginRight: 4 }}
                       lineColor="rgba(130, 248, 198, 0.6)"
-                      backgroundColor={[0, 0, 0, 0.15]}
+                      backgroundColor={[0, 0, 0, 0.55]}
                       lineWidth={4}
                       size={18}
                       percent={percentComplete(tasks)}
@@ -52,7 +52,6 @@ export default class Projects {
                             <UI.Button
                               glow={true}
                               glint={false}
-                              theme="blank"
                               size={0.9}
                               chromeless
                               onClick={() => Router.go(doc.url())}
@@ -70,9 +69,9 @@ export default class Projects {
                       theme="blank"
                       size={1.2}
                       margin={-5}
-                      icon="pin-remove"
-                      color="rgba(255, 255, 255, 0.015)"
-                      hoverColor="yellow"
+                      icon="remove"
+                      color="rgba(255, 255, 255, 0.1)"
+                      hoverColor="red"
                       onClick={doc.toggleStar}
                       tooltip="remove"
                       tooltipProps={{
@@ -83,7 +82,7 @@ export default class Projects {
                 </title>
                 <tasks if={tasks && tasks.length}>
                   {tasks.map(({ archive, text, key }, index) =>
-                    <task key={key} $$row>
+                    <task key={key} $$row $$align="center">
                       <UI.Input
                         $check
                         onChange={() => doc.toggleTask(text)}
@@ -150,7 +149,7 @@ export default class Projects {
       overflow: 'hidden',
     },
     check: {
-      margin: [0, 8, 0, 0],
+      margin: ['auto', 12, 'auto', 0],
     },
     sep: {
       margin: [0, 2],

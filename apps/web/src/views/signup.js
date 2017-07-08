@@ -140,7 +140,14 @@ export default class Signup {
                 <UI.Field label="Password" placeholder="" />
               </UI.PassProps>
               <space $$height={20} />
-              <UI.Button type="submit" theme="dark" size={1.2}>
+              <UI.Button
+                iconAfter
+                icon="arrowri"
+                type="submit"
+                theme="rgb(48, 130, 224)"
+                alignSelf="flex-end"
+                size={1.2}
+              >
                 Signup
               </UI.Button>
             </UI.Form>
@@ -179,6 +186,7 @@ export default class Signup {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
+      marginBottom: 40,
     },
   }
 }

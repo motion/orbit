@@ -299,7 +299,6 @@ export default class ExplorerStore {
     }
 
     const nodes = [...pathNodes, suffixNode]
-    console.log('nodes are', nodes)
 
     this.editorState = Raw.deserialize(
       { nodes: [{ kind: 'block', type: 'paragraph', nodes }] },

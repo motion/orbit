@@ -54,6 +54,12 @@ export default class DocumentPage {
 
     return (
       <Page>
+        <Page.Actions>
+          <UI.Button chromeless icon="drop">
+            Inbox
+          </UI.Button>
+        </Page.Actions>
+
         <actions $$draggable>
           <UI.Segment itemProps={itemProps}>
             <UI.Popover

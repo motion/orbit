@@ -12,50 +12,56 @@ type Props = {
   store: object,
 }
 
+class ExplorerChildrenStore {
+  children = {}
+  @watch
+  docs = () =>
+    this.props.explorerStore.document &&
+    this.props.explorerStore.document.getChildren()
+  newTitle = null
+
+  start() {
+    this.watch(async () => {
+      if (this.docs && this.docs.length) {
+        this.children = {}
+        const allChildren = await Promise.all(
+          this.docs.map(async doc => ({
+            id: doc._id,
+            children: await doc.getChildren(),
+          }))
+        )
+        this.children = allChildren.reduce(
+          (acc, { id, children }) => ({
+            ...acc,
+            [id]: children,
+          }),
+          {}
+        )
+      }
+    })
+  }
+
+  add = () => {
+    this.newTitle = ''
+  }
+
+  create = async () => {
+    const { id } = this.props
+    await Document.create({ parentId: id, title: this.newTitle })
+    this.newTitle = null
+  }
+}
+
+@view.attach('explorerStore')
 @view({
-  store: class ExplorerChildrenStore {
-    children = {}
-    @watch docs = () => Document.child(this.props.id)
-    newTitle = null
-
-    start() {
-      window.x = this
-
-      this.watch(async () => {
-        if (this.docs && this.docs.length) {
-          this.children = {}
-          const allChildren = await Promise.all(
-            this.docs.map(async doc => ({
-              id: doc._id,
-              children: await doc.getChildren(),
-            }))
-          )
-          this.children = allChildren.reduce(
-            (acc, { id, children }) => ({
-              ...acc,
-              [id]: children,
-            }),
-            {}
-          )
-        }
-      })
-    }
-
-    add = () => {
-      this.newTitle = ''
-    }
-
-    create = async () => {
-      const { id } = this.props
-      await Document.create({ parentId: id, title: this.newTitle })
-      this.newTitle = null
-    }
-  },
+  store: ExplorerChildrenStore,
 })
 export default class ExplorerChildren {
   props: Props
 
   render({ store }: Props) {
+    console.log('saasaass', store)
+
     const { docs } = store
     const hasDocs = store.newTitle !== null || (docs || []).length > 0
     const allDocs = sortBy(docs || [], 'createdAt')
@@ -133,10 +139,6 @@ export default class ExplorerChildren {
       background: '#fff',
       // overflow: 'hidden',
       flex: 1,
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      right: 0,
     },
     mainTitle: {
       marginTop: 20,

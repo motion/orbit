@@ -11,11 +11,11 @@ const KEYMAP = {
   all: {
     left: 'left',
     right: 'right',
+    down: 'down',
     up: 'up',
     j: 'j', // down
     k: 'k', // up
     d: 'd', // doc
-    down: 'down',
     enter: 'enter',
     esc: 'esc',
     explorer: ['command+t'],

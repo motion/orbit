@@ -54,11 +54,11 @@ export default class EditorStore implements StoreType {
     // listen to explorer
     if (explorerStore) {
       this.on(explorerStore, 'action', (name: string) => {
-        if (name === 'focusDown') {
+        if (name === 'up') {
           this.focus()
         }
 
-        if (name === 'up' && this.focused && this.focusedLine === 0) {
+        if (name === 'down' && this.focused && this.focusedLine === 3) {
           explorerStore.focus()
         }
       })

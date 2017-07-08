@@ -53,10 +53,6 @@ export default class DocumentStore {
     this.editor = editor
     this.editor.focus
 
-    this.on(editor, 'action', val => {
-      console.log('got ittt123', val)
-    })
-
     // init content
     this.watch(() => {
       if (!this.editor.state) {

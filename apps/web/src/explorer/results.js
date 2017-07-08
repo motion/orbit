@@ -1,7 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import DocView from '~/views/document'
-import { HEADER_HEIGHT } from '~/constants'
 import { last } from 'lodash'
 import * as UI from '@mcro/ui'
 
@@ -73,10 +72,6 @@ export default class CommanderResults {
     results: {
       zIndex: 10000,
       background: '#fff',
-      position: 'absolute',
-      top: HEADER_HEIGHT,
-      right: 0,
-      left: 0,
       boxShadow: [[0, 5, 8, [0, 0, 0, 0.05]]],
       maxHeight: '60%',
     },

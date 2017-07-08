@@ -144,7 +144,7 @@ export default class Signup {
                 iconAfter
                 icon="arrowri"
                 type="submit"
-                theme="dark"
+                theme="rgb(48, 130, 224)"
                 alignSelf="flex-end"
                 size={1.2}
               >

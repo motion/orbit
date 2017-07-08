@@ -9,7 +9,6 @@ import NotFound from '~/pages/404Page'
 import Router from '~/router'
 import Sidebar from '~/views/sidebar'
 import Errors from '~/views/layout/errors'
-import Explorer from '~/explorer'
 import ExplorerStore from '~/stores/explorerStore'
 import LayoutStore from '~/stores/layoutStore'
 import SoundStore from '~/stores/soundStore'
@@ -78,7 +77,6 @@ export default class Layout {
             $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
           >
             <CurrentPage key={Router.key} {...Router.params} />
-            <Explorer if={false} />
           </content>
           <Draft
             isActive={layoutStore.isCreatingDoc}

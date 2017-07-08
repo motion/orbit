@@ -55,8 +55,9 @@ export default class Projects {
                   <end>
                     <UI.Icon
                       name="favour3"
+                      color="rgba(255, 255, 255, 0.15)"
+                      hoverColor="yellow"
                       onClick={doc.toggleStar}
-                      color="#666"
                     />
                   </end>
                 </title>

@@ -36,9 +36,9 @@ const Theme = {
   }),
   'clear-dark': makeTheme({
     highlightColor,
-    background: [20, 20, 20, 0],
+    background: [20, 20, 20, 0.2],
     color: '#f2f2f2',
-    borderColor: [255, 255, 255, 0.4],
+    borderColor: [255, 255, 255, 0.3],
   }),
   light: {
     base: LIGHT,

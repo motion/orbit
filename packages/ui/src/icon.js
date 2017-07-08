@@ -121,8 +121,8 @@ export default class Icon {
         fontSize: props.size,
         lineHeight: `${props.size / 12 - 0.1}rem`, // scale where 1 when 14
         ...buttonStyles,
-        '&:hover': {
-          color: props.hoverColor,
+        '&:hover': props.hoverColor && {
+          color: `${props.hoverColor.toString()} !important`,
         },
       },
     }

@@ -15,8 +15,8 @@ export default class Explorer {
 
   static style = {
     explorer: {
-      maxHeight: '50%',
-      position: 'relative',
+      // maxHeight: '50%',
+      // position: 'relative',
     },
   }
 }

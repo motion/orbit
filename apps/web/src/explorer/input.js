@@ -2,6 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
+import Arrow from './arrow'
 
 const $para = {
   fontSize: 14,
@@ -30,50 +31,6 @@ const schema = {
     paragraph: props => <Para {...props} />,
     item: props => <Item {...props} />,
   },
-}
-
-@view({
-  store: class {
-    rendered = false
-
-    start() {
-      setTimeout(() => (this.rendered = true), 0)
-    }
-  },
-})
-class Arrow {
-  render({ store, animate }) {
-    return (
-      <arrow>
-        <UI.Icon
-          $animate={animate}
-          $animateAfter={animate && store.rendered}
-          $icon
-          size={10}
-          name="arrow-min-right"
-        />
-      </arrow>
-    )
-  }
-
-  static style = {
-    arrow: {
-      display: 'inline-block',
-    },
-    icon: {
-      display: 'inline-block',
-      marginTop: 7,
-    },
-    animate: {
-      transition: 'all 100ms ease-in',
-      transform: 'scale(0.6) translateX(-5px)',
-      opacity: 0.2,
-    },
-    animateAfter: {
-      opacity: 1,
-      transform: 'scale(1) translateX(0px)',
-    },
-  }
 }
 
 @view.attach('explorerStore')

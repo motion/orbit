@@ -89,7 +89,7 @@ export default class ListItem {
     return (
       <SizedSurface
         sizeHeight
-        sizePadding
+        sizePadding={1.5}
         $item
         {...radiusProps}
         tagName="listitem"
@@ -113,6 +113,7 @@ export default class ListItem {
           position: 'relative',
           ...style,
         }}
+        size={size}
         {...props}
       >
         <image if={avatar || fakeAvatar}>

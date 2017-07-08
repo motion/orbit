@@ -377,6 +377,7 @@ export default class CommanderStore {
   onBlur = () => {
     this.focused = false
     this.active = false
+    this.showResults = false
   }
 
   onActivate = () => {

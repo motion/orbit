@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import Router from '~/router'
 
 @view
 export default class SidebarMenu {
@@ -11,13 +12,11 @@ export default class SidebarMenu {
         <UI.Theme name="clear-dark">
           <UI.List
             size={1.3}
-            itemProps={{
-              padding: 15,
-            }}
             items={[
               {
                 primary: 'Home',
-                icon: 'home',
+                icon: 'in',
+                onClick: () => Router.go('/'),
               },
               {
                 primary: 'Feed',

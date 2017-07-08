@@ -54,7 +54,7 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <actions $$row $$centered>
+        <actions $$draggable>
           <UI.Segment itemProps={itemProps}>
             <UI.Popover
               background
@@ -111,6 +111,9 @@ export default class DocumentPage {
       position: 'absolute',
       top: -15,
       right: 10,
+      left: 0,
+      justifyContent: 'flex-end',
+      flexFlow: 'row',
     },
   }
 }

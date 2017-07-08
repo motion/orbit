@@ -133,7 +133,7 @@ export default class Segment implements ViewType<Props> {
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',
-      flex: 1,
+      // flex: 1,
     },
     title: {
       margin: ['auto', 5],

@@ -32,7 +32,7 @@ export default class Projects {
           {docs.map((doc, index) => {
             const tasks = doc.tasks()
             return (
-              <section key={index}>
+              <section key={`${doc._id}${index}`}>
                 <title $$row $$spaceBetween>
                   <start $$row $$centered>
                     <UI.Progress.Circle

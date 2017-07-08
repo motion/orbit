@@ -74,6 +74,7 @@ export default class ExplorerResults {
       background: '#fff',
       boxShadow: [[0, 5, 8, [0, 0, 0, 0.05]]],
       maxHeight: '60%',
+      position: 'relative',
     },
     matches: {
       padding: 15,
@@ -94,7 +95,7 @@ export default class ExplorerResults {
       position: 'absolute',
       bottom: 20,
       padding: 20,
-      height: 300,
+      height: '100%',
       maxHeight: 'calc(100% - 35px)',
       overflow: 'hidden',
       width: 250,

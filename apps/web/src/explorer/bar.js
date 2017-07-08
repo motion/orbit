@@ -22,6 +22,7 @@ export default class ExplorerBar {
             <UI.Popover
               openOnHover
               delay={1000}
+              elevation={2}
               borderRadius={8}
               distance={2}
               towards="right"

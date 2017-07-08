@@ -183,7 +183,9 @@ export default class ExplorerInput {
     },
     blurred: {
       border: '1px solid rgba(0, 0, 0, 0)',
-      borderBottom: '1px solid #eee',
+      background: '#f2f2f2',
+      borderRadius: 5,
+      // borderBottom: '1px solid #eee',
     },
     highlight: {
       fontWeight: 'bold',

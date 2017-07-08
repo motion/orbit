@@ -146,7 +146,7 @@ class Item {
 
 @view.attach('explorerStore')
 @view
-export default class CommanderInput {
+export default class ExplorerInput {
   render({ explorerStore: store }) {
     store.version
 

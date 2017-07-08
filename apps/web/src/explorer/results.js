@@ -6,7 +6,7 @@ import * as UI from '@mcro/ui'
 
 @view.attach('explorerStore', 'layoutStore')
 @view
-export default class CommanderResults {
+export default class ExplorerResults {
   render({ explorerStore }) {
     const docs = explorerStore.peek || []
 

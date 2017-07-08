@@ -18,7 +18,7 @@ const KEYMAP = {
     down: 'down',
     enter: 'enter',
     esc: 'esc',
-    commander: ['command+t'],
+    explorer: ['command+t'],
     focus: 'command+l',
     cmdEnter: 'command+enter',
     delete: ['delete', 'backspace'],
@@ -140,7 +140,7 @@ export default class ExplorerStore {
     },
     enter: () => this.onEnter(),
     focus: () => this.focus(),
-    commander: () => {
+    explorer: () => {
       this.focus()
     },
     right: () => {

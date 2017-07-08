@@ -53,8 +53,8 @@ export default class ExplorerBar {
             </UI.Popover>
           </UI.Segment>
           <Input
-            onOpen={() => (layoutStore.commanderOpen = true)}
-            onClose={() => (layoutStore.commanderOpen = false)}
+            onOpen={() => (layoutStore.explorerOpen = true)}
+            onClose={() => (layoutStore.explorerOpen = false)}
           />
         </bar>
         <rest $$row>

@@ -51,7 +51,7 @@ export default class EditorStore implements StoreType {
       }
     })
 
-    // listen to commander
+    // listen to explorer
     if (explorerStore) {
       this.on(explorerStore, 'action', (name: string) => {
         if (name === 'focusDown') {

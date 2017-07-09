@@ -66,6 +66,8 @@ export default View => {
           <UI.Button
             icon="add"
             iconSize={9}
+            size={0.75}
+            glow={false}
             chromeless
             color={[0, 0, 0, 0.1]}
           />
@@ -184,7 +186,7 @@ export default View => {
       },
       rootLevel: {
         // [line-height, margin]
-        padding: [0, 30],
+        padding: [0, 25],
       },
       hoverable: {
         '&:hover': {

@@ -11,6 +11,10 @@ import Page from '~/views/page'
 @view
 class Actions {
   render({ explorerStore, explorerStore: { document } }) {
+    if (!document {
+      return null
+    }
+
     const starred = document.hasStar()
     const itemProps = {
       size: 1.6,

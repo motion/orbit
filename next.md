@@ -1,11 +1,12 @@
 # next week
-  - working signup
-  - content demo
-  - homepage
+  - query sync down
+  - new page auto follow + team follow
+  - signup: asks for your team names + emails, then makes root pages for them
+  - content prefill for new org
   - @mentions
-  - nicer inline due dates
   - discussions
-  - auto-follow doc on create
+  - homepage
+  - nicer inline due dates
   - fix keyboard nav
   - fix sync todos doc/sidebar
   - pullout of notifications

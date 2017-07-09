@@ -23,11 +23,21 @@ export default class UserBar {
           distance={10}
           forgiveness={16}
           width={400}
-          target={<UI.Button chromeless icon="gear" />}
+          target={<UI.Button chromeless icon="hotelbell" />}
           openOnHover
           closeOnClick
+          theme="dark"
         >
-          <DocumentView if={store.document} document={store.document} inline />
+          <notification>
+            <author>Matt</author> said{' '}
+            <quote>"something about something else"</quote>{' '}
+            <date>3 min ago</date>
+          </notification>
+          <DocumentView
+            if={false && store.document}
+            document={store.document}
+            inline
+          />
         </UI.Popover>
         <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>
@@ -87,6 +97,10 @@ export default class UserBar {
       height: Constants.HEADER_HEIGHT,
       position: 'relative',
       // background: [0, 0, 0, 0.1],
+    },
+    notification: {
+      padding: 10,
+      flexFlow: 'row',
     },
   }
 }

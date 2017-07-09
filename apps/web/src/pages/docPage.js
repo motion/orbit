@@ -6,12 +6,12 @@ import Explorer from '~/explorer'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
-import Inbox from '~/views/inbox'
 
+@view.attach('explorerStore')
 @view
 class Actions {
-  render({ docStore, docStore: { doc } }) {
-    const starred = doc.hasStar()
+  render({ explorerStore, explorerStore: { document } }) {
+    const starred = document.hasStar()
     const itemProps = {
       size: 1.6,
       chromeless: true,
@@ -27,15 +27,15 @@ class Actions {
           icon="door"
           tooltip={starred ? 'Unfollow' : 'Follow'}
           highlight={starred}
-          onClick={doc.toggleStar}
+          onClick={document.toggleStar}
         />
         <UI.Button
           {...itemProps}
           chromeless
           icon="design-f"
           tooltip="Threads"
-          highlight={docStore.showDiscussions}
-          onClick={docStore.ref('showDiscussions').toggle}
+          highlight={explorerStore.showDiscussions}
+          onClick={explorerStore.ref('showDiscussions').toggle}
         />
         <UI.Popover
           elevation={3}
@@ -139,7 +139,7 @@ export default class DocumentPage {
           </UI.Button>
         </Page.Actions>
 
-        <Actions docStore={docStore} />
+        <Actions />
 
         <docpagecontent>
           <DocumentView
@@ -151,23 +151,6 @@ export default class DocumentPage {
             isPrimaryDocument
           />
         </docpagecontent>
-
-        <UI.Drawer
-          open={docStore.showDiscussions}
-          boxShadow
-          from="right"
-          percent="80%"
-          zIndex={100}
-          css={{
-            marginRight: -10,
-          }}
-          transition
-          scrollable
-        >
-          <docdrawer css={{ paddingRight: 72 }}>
-            <Inbox doc={doc} />
-          </docdrawer>
-        </UI.Drawer>
 
         <Explorer />
       </Page>

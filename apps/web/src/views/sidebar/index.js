@@ -9,6 +9,7 @@ import Menu from './menu'
 import UserBar from './userBar'
 import type LayoutStore from '~/stores/layoutStore'
 import * as Constants from '~/constants'
+import Inbox from '~/views/inbox'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -29,12 +30,12 @@ class SidebarContent {
   }
 }
 
-@view.attach('layoutStore')
+@view.attach('layoutStore', 'explorerStore')
 @view({
   store: SidebarStore,
 })
 export default class Sidebar {
-  render({ layoutStore, store }: Props) {
+  render({ explorerStore, layoutStore, store }: Props) {
     const active = Constants.IN_TRAY ? true : layoutStore.sidebar.active
     const width = Constants.IN_TRAY
       ? Constants.TRAY_WIDTH
@@ -54,6 +55,23 @@ export default class Sidebar {
           >
             <sidebar>
               <SidebarContent key={2} />
+
+              <UI.Drawer
+                open={explorerStore.showDiscussions}
+                boxShadow
+                from="right"
+                percent="100%"
+                zIndex={100}
+                css={{
+                  marginRight: -10,
+                }}
+                transition
+                scrollable
+              >
+                <docdrawer css={{ paddingRight: 72 }}>
+                  <Inbox document={explorerStore.document} />
+                </docdrawer>
+              </UI.Drawer>
             </sidebar>
           </UI.Drawer>
         </Shortcuts>

@@ -1,9 +1,6 @@
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import rc from 'randomcolor'
-import { Document } from '@mcro/models'
 import { random } from 'lodash'
-import Router from '~/router'
 import DocumentView from '~/views/document'
 
 class InboxStore {

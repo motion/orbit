@@ -55,6 +55,7 @@ export default class ExplorerStore {
   searchResults: Array<Document> = []
   inputNode: ?HTMLInputElement = null
   focused = false
+  showDiscussions = false
   showResults = false
   // bump this to rerender element
   version = 0

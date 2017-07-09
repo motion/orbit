@@ -51,27 +51,30 @@ export default class Sidebar {
             key={2}
             open={active}
             from="right"
-            size={width}
+            size={width + 20}
           >
             <sidebar>
-              <SidebarContent key={2} />
+              <sidebarcontent>
+                <SidebarContent key={2} />
+              </sidebarcontent>
 
-              <UI.Drawer
-                open={explorerStore.showDiscussions}
-                boxShadow
-                from="right"
-                percent="100%"
-                zIndex={100}
-                css={{
-                  marginRight: -10,
-                }}
-                transition
-                scrollable
-              >
-                <docdrawer css={{ paddingRight: 72 }}>
-                  <Inbox document={explorerStore.document} />
-                </docdrawer>
-              </UI.Drawer>
+              <UI.Theme name="light">
+                <UI.Drawer
+                  open={explorerStore.showDiscussions}
+                  from="right"
+                  size={width + 20}
+                  css={{
+                    paddingLeft: 20,
+                  }}
+                  zIndex={100}
+                  transition
+                  scrollable
+                >
+                  <docdrawer css={{ paddingRight: 10 }}>
+                    <Inbox document={explorerStore.document} />
+                  </docdrawer>
+                </UI.Drawer>
+              </UI.Theme>
             </sidebar>
           </UI.Drawer>
         </Shortcuts>
@@ -81,13 +84,16 @@ export default class Sidebar {
 
   static style = {
     sidebar: {
-      width: '100%',
       overflow: 'hidden',
       userSelect: 'none',
       position: 'absolute',
       top: 0,
       right: 0,
       bottom: 0,
+      left: 0,
+    },
+    sidebarcontent: {
+      marginLeft: 20,
     },
   }
 }

@@ -46,14 +46,15 @@ export default class ExplorerBar {
                   icon="minimal-right"
                   onClick={() => Router.forward()}
                 />
-                <UI.Button
-                  {...btnProps}
-                  icon="home"
-                  onClick={() => Router.go('/')}
-                />
               </UI.Segment>
             </UI.Popover>
           </UI.Segment>
+          <UI.Button
+            if={false}
+            {...btnProps}
+            icon="home"
+            onClick={() => Router.go('/')}
+          />
           <Input
             onOpen={() => (layoutStore.explorerOpen = true)}
             onClose={() => (layoutStore.explorerOpen = false)}

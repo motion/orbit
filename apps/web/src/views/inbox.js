@@ -281,11 +281,12 @@ class Thread {
         <bar $$row>
           <UI.Button
             chromeless
+            glow={false}
             spaced
             size={1.2}
             icon={'arrow-min-left'}
             onClick={() => (store.activeIndex = null)}
-            color={[0, 0, 0, 0.6]}
+            color={[0, 0, 0, 0.2]}
           />
 
           <UI.Title centered flex size={1.2} stat={''}>

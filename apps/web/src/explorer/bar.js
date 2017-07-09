@@ -15,7 +15,7 @@ export default class ExplorerBar {
     const btnProps = { iconSize: 12, padding: [0, 6], chromeless: true }
 
     return (
-      <explorerbar>
+      <explorerbar $$draggable>
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
           <UI.Segment $$margin={[0, 10, 0, 0]} $$flex="none">

@@ -44,13 +44,13 @@ export default class Sidebar {
       <UI.Theme key={0} name="clear-dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <UI.Drawer
+            zIndex={1}
             transition={Constants.SIDEBAR_TRANSITION}
-            background
+            background={[40, 40, 40, 0.5]}
             key={2}
             open={active}
             from="right"
             size={width}
-            zIndex={9}
           >
             <sidebar>
               <SidebarContent key={2} />

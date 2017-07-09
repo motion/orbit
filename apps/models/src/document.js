@@ -3,7 +3,7 @@ import { Model, query, str, object, array, bool } from '@mcro/black'
 import Image from './image'
 import User from './user'
 import generateName from 'sillyname'
-import { some, memoize, includes, without } from 'lodash'
+import { some, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 
@@ -47,7 +47,7 @@ const methods = {
     return docToTasks(this)
   },
   hasStar() {
-    return includes(this.starredBy, User.authorId)
+    return this.starredBy.find(id => id === User.authorId)
   },
   async toggleStar() {
     this.starredBy = toggleInclude(this.starredBy, User.authorId)

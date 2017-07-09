@@ -31,7 +31,7 @@ class InboxStore {
         icon: 'alerti',
       },
       {
-        title: "CouchDB won't boot on OTP-20",
+        title: 'CouchDB won\'t boot on OTP-20',
         status: '#619 opened 4 days ago by spencerthayer ',
         icon: 'alerti',
       },
@@ -49,7 +49,6 @@ class InboxStore {
 
   start() {
     const { explorerStore } = this.props
-    console.log('exp', explorerStore)
 
     this.on(explorerStore, 'action', (name: string) => {
       if (name === 'up' && this.highlightIndex > 0) {
@@ -76,7 +75,7 @@ class Message {
     return (
       <draft>
         <top $$row>
-          <UI.Title size={2}>
+          <UI.Title size={0.9}>
             <b>
               {name}
             </b>
@@ -153,7 +152,7 @@ class Draft {
     return (
       <draft>
         <top $$row>
-          <UI.Title size={2}>
+          <UI.Title size={1}>
             <b>Nick</b>
           </UI.Title>
           <time>June 12</time>
@@ -292,16 +291,16 @@ class Thread {
             color={[0, 0, 0, 0.6]}
           />
 
-          <UI.Title centered $title size={3} stat={``}>
+          <UI.Title centered flex size={1.2} stat={''}>
             {item.title}
           </UI.Title>
           <UI.Button chromeless size={1.2} icon="fav31" />
           <actions />
         </bar>
-        <thread>
+        <content>
           {messages.map(message => <Message {...message} />)}
           <Draft />
-        </thread>
+        </content>
       </item>
     )
   }
@@ -319,11 +318,14 @@ class Thread {
       justifyContent: 'space-between',
       top: 0,
       borderBottom: '1px solid #ddd',
-      background: `rgba(255,255,255,.9)`,
+      background: 'rgba(255,255,255,.9)',
       paddingBottom: 5,
     },
     title: {
       flex: 5,
+    },
+    content: {
+      padding: 20,
     },
   }
 }
@@ -340,23 +342,6 @@ class Thread {
   store: InboxStore,
 })
 export default class Inbox {
-  title = text => {
-    return (
-      <title $$row>
-        {text}
-        &nbsp;&nbsp;
-        {false &&
-          <UI.Badge background={rc()} color="#fff" height={20}>
-            hi
-          </UI.Badge>}
-        {false &&
-          <UI.Badge if={false} background={rc()} color="#fff" height={20}>
-            hi
-          </UI.Badge>}
-      </title>
-    )
-  }
-
   status = text => {
     return (
       <status $$row>
@@ -369,10 +354,8 @@ export default class Inbox {
     // subscribe to variable
     store.highlightIndex
 
-    const docs = store.docs || []
-    const useTestData = true
     const items = store.items.map((item, index) => ({
-      primary: this.title(item.title),
+      primary: item.title,
       secondary: this.status(item.status),
       icon: item.icon,
       onClick() {
@@ -383,18 +366,19 @@ export default class Inbox {
 
     return (
       <inbox>
-        <all if={store.activeItem === null}>
+        <content if={store.activeItem === null}>
           <bar>
-            <UI.Title size={3} stat={`${store.items.length} items`}>
-              Inbox
+            <UI.Title size={1} stat={`${store.items.length} new`}>
+              Threads
             </UI.Title>
             <actions>
               <UI.Button
                 icon="siadd"
+                circular
+                size={1.2}
+                chromeless
                 onClick={store.ref('draftNumber').increment(1)}
-              >
-                New
-              </UI.Button>
+              />
             </actions>
           </bar>
 
@@ -402,16 +386,24 @@ export default class Inbox {
             $list
             itemProps={{ paddingLeft: 20, height: 'auto', padding: 15 }}
             items={items}
-            getItem={(val, index) =>
-              <item
-                onClick={() => (store.activeIndex = index)}
-                onMouseEnter={() => (store.highlightIndex = index)}
-                $highlight={store.highlightIndex === index}
-              >
-                {val.primary}
-              </item>}
+            getItem={(val, index) => ({
+              primary: val.primary,
+              ellipse: false,
+              glowProps: {
+                color: 'red',
+                scale: 1.6,
+                offsetLeft: -200,
+                resist: 70,
+                opacity: 0.08,
+              },
+              paddingRight: 80,
+              onClick: () => (store.activeIndex = index),
+              onMouseEnter: () => (store.highlightIndex = index),
+              $highlight: store.highlightIndex === index,
+            })}
           />
-        </all>
+        </content>
+
         <Thread if={store.activeItem !== null} store={store} />
 
         <UI.Drawer
@@ -420,7 +412,6 @@ export default class Inbox {
           percent={80}
           open={true && store.draft && store.draft._id && store.showDraft}
         >
-          <test>test</test>
           <DocumentView if={false} document={store.draft} />
         </UI.Drawer>
       </inbox>
@@ -428,12 +419,19 @@ export default class Inbox {
   }
 
   static style = {
+    inbox: {
+      padding: 0,
+    },
+    content: {
+      padding: 20,
+    },
     list: {
       marginLeft: -20,
-      marginRight: -20,
+      marginRight: -(20 + 72),
     },
     title: {
       fontWeight: 'bold',
+      lineHeight: 100,
     },
     item: {
       padding: 10,
@@ -447,13 +445,11 @@ export default class Inbox {
     all: {
       marginTop: 15,
     },
-    inbox: {
-      padding: [0, 20],
-    },
     bar: {
       flexFlow: 'row',
       marginBottom: 5,
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
   }
 }

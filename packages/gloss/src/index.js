@@ -56,12 +56,11 @@ export class Gloss {
           let activeTheme
           if (typeof this.props.theme === 'object') {
             activeTheme = { base: this.props.theme }
-            console.log('got object theme', activeTheme)
           } else {
             activeTheme =
-              this.context.uiTheme &&
-              this.context.uiTheme[
-                this.props.theme || this.context.uiActiveTheme
+              this.context.uiThemes &&
+              this.context.uiThemes[
+                this.props.theme || this.context.uiActiveThemeName
               ]
           }
           if (activeTheme) {

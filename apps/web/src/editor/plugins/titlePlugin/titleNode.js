@@ -30,7 +30,7 @@ export default class TitleNode {
     }),
     title1: {
       // display: 'none',
-      fontSize: 24,
+      fontSize: 21,
       fontWeight: 400,
       color: [0, 0, 0, 0.9],
       marginBottom: 5,

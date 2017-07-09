@@ -31,16 +31,17 @@ export default class Projects {
         <tasks if={hasDocs}>
           {docs.map((doc, index) => {
             const tasks = doc.tasks()
+            const hasTasks = tasks && tasks.length
             return (
               <section key={`${doc._id}${index}`}>
                 <title $$row $$spaceBetween>
                   <start $$row $$centered>
                     <UI.Progress.Circle
-                      style={{ marginRight: 4 }}
+                      if={hasTasks}
                       lineColor="rgba(130, 248, 198, 0.6)"
                       backgroundColor={[0, 0, 0, 0.55]}
                       lineWidth={4}
-                      size={18}
+                      size={16}
                       percent={percentComplete(tasks)}
                     />
                     <path onClick={() => Router.go(doc.url())} $$row $$centered>
@@ -50,8 +51,7 @@ export default class Projects {
                           store.crumbs[index].map(doc => [
                             <Arrow $arrow />,
                             <UI.Button
-                              glow={true}
-                              glint={false}
+                              $button
                               size={0.9}
                               chromeless
                               onClick={() => Router.go(doc.url())}
@@ -67,8 +67,8 @@ export default class Projects {
                       glow={false}
                       glint={false}
                       theme="blank"
-                      size={1.2}
                       margin={-5}
+                      marginRight={-15}
                       icon="remove"
                       color="rgba(255, 255, 255, 0.1)"
                       hoverColor="red"
@@ -80,7 +80,7 @@ export default class Projects {
                     />
                   </end>
                 </title>
-                <tasks if={tasks && tasks.length}>
+                <tasks if={hasTasks}>
                   {tasks.map(({ archive, text, key }, index) =>
                     <task key={key} $$row $$align="center">
                       <UI.Input
@@ -142,6 +142,9 @@ export default class Projects {
       '&:hover icon': {
         color: [255, 255, 255, 0.4],
       },
+    },
+    button: {
+      margin: [0, -2],
     },
     task: {
       padding: [3, 0, 2],

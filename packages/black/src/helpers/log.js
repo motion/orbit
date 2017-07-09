@@ -2,6 +2,8 @@
 // helper that logs functions, works as decorator or plain
 // passes through the first argument
 
+let doCutoff = true
+
 // Takes any string and converts it into a #RRGGBB color.
 class StringToColor {
   hash = {}
@@ -27,7 +29,7 @@ class StringToColor {
     '#c481ec',
   ]
   getColor(thing) {
-    const str = cutoff(thing.toString(), 7)
+    const str = cutoff((thing || '').toString(), 7)
     if (!this.hash[str]) {
       this.hash[str] = this.colors[this.colorId++]
     }
@@ -38,7 +40,7 @@ class StringToColor {
 const Color = new StringToColor()
 
 function cutoff(thing: string, amt = 150) {
-  if (thing.length > amt) {
+  if (doCutoff && thing.length > amt) {
     return thing.slice(0, amt - 3) + '...'
   }
   return thing
@@ -64,7 +66,7 @@ function prettyPrint(thing: any) {
   }
 }
 
-export default function log(...args) {
+function doLog(...args) {
   const [target, key, descriptor] = args
 
   const logger = (...things) => {
@@ -101,6 +103,16 @@ export default function log(...args) {
   }
 }
 
+export default function log(...args) {
+  doCutoff = true
+  return doLog(...args)
+}
+
+log.full = function(...args) {
+  doCutoff = false
+  return doLog(...args)
+}
+
 function wrapLogger(wrapFn: Function, parent, name?: string) {
   const parentName = parent ? parent.name || parent.constructor.name : ''
   const methodName = wrapFn.name || name
@@ -129,4 +141,4 @@ function wrapLogger(wrapFn: Function, parent, name?: string) {
 }
 
 log.debug = true
-log.filter = false && /^(ExplorerStore|Document)/
+log.filter = /^(DocPage)/

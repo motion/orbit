@@ -5,7 +5,16 @@ import { inject } from 'react-tunnel'
 
 const Button = inject(context => ({ uiContext: context.uiContext }))(
   injectTheme(
-    ({ uiContext, badge, children, theme, type, glowProps, ...props }) => {
+    ({
+      uiContext,
+      badge,
+      children,
+      theme,
+      chromeless,
+      type,
+      glowProps,
+      ...props
+    }) => {
       if (type === 'submit' && uiContext && uiContext.inForm) {
         const ogClick = props.onClick
         props.onClick = () => {
@@ -18,21 +27,24 @@ const Button = inject(context => ({ uiContext: context.uiContext }))(
         <SizedSurface
           tagName="button"
           type={type}
+          clickable
+          hoverable
           sizeRadius
           sizeFont
           sizeHeight
-          sizePadding
+          sizePadding={1.1}
           borderWidth={1}
-          glint
+          glint={!chromeless}
+          chromeless={chromeless}
           row
           align="center"
+          justify="center"
           glow
           glowProps={{
             scale: 2,
-            transition: 100,
+            draggable: false,
             ...glowProps,
           }}
-          background={theme.base.buttonBackground}
           {...props}
           noElement
         >

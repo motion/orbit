@@ -3,13 +3,13 @@ import { object } from 'prop-types'
 
 export default class ThemeProvide extends React.Component {
   static childContextTypes = {
-    uiTheme: object,
+    uiThemes: object,
     provided: object,
   }
 
   getChildContext() {
     return {
-      uiTheme: this.props,
+      uiThemes: this.props,
       provided: {},
     }
   }

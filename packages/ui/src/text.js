@@ -111,6 +111,9 @@ export default class Text {
     ellipse,
     children,
     fontWeight,
+    fontSize,
+    color,
+    size,
     tagName,
     getRef,
     ...props
@@ -145,7 +148,8 @@ export default class Text {
   }
 
   static theme = (props, theme) => {
-    const fontSize = props.fontSize || props.size * 14
+    const fontSize =
+      (typeof props.fontSize === 'number' && props.fontSize) || props.size * 14
     return {
       text: {
         fontSize,

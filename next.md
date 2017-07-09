@@ -1,31 +1,26 @@
 # next week
   - working signup
-  - content
+  - content demo
+  - homepage
   - @mentions
   - nicer inline due dates
   - discussions
-  - auto-follow on create
+  - auto-follow doc on create
   - fix keyboard nav
   - fix sync todos doc/sidebar
   - pullout of notifications
   - feed
+  - prod
 
 # nate
   - want to start keeping notes on things i want to see
     - visit/england (visit/england/london), visit/india, etc
   - installing from npm is a pain
-  - explorerStore.crumbs is coming back as mobxarray not plain array
-  - breadcrumbsstore log is happening on keystores
   - indexes still not working .sort('createdAt')
   - types not working on <Views /> still
   - rxdb query sync broken https://gitter.im/pubkey/rxdb
-  - ui kit:
-    - sizing() some sort of size kit to handle all sizing
-    - <Surface height={1} rounded chromeless gloss clear />
-      - Derive Button, Input, ListItem
 
 # high level prioritized list
-  - inbox
   - @mentions / dates
   - hashtags ?
   - statuses ?
@@ -44,16 +39,19 @@
   - keyboard shortcuts
   - deploy to prod
   - slack integration + avatars
-  - drag/drop list items or just doc nodes
-  - ideas
-    - drag/drop on sidebar (todos and sections)
-    - drafts
-    - email forwarding
-    - github sync
-    - newsfeed
-    - grids
-    - templates
+  - drag/drop: list items + sidebar
+  - drafts
+  - email forwarding
+  - github sync
+  - newsfeed
+  - templates
   - integrations
+
+# bugs
+  - needs to be a universal dragcancel thing that prevents clicks once you started dragging electron
+
+# ideas
+  - pop out discussions into a new window so you can view side-by-side
 
 # fast pouch w workers
 - https://github.com/jkleinsc/telegraph

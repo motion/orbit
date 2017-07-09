@@ -37,8 +37,9 @@ export type DecoratorType = () => ViewClass | (() => () => ViewClass)
 const uiContext = [
   addContext,
   {
-    uiTheme: object,
-    uiActiveTheme: string,
+    uiActiveThemeName: string,
+    uiActiveTheme: object,
+    uiThemes: object,
     ui: object,
   },
 ]

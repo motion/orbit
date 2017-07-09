@@ -4,7 +4,6 @@ import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
 import Surface from './surface'
 
-const idFn = _ => _
 const opposite = direction =>
   ({
     left: 'right',
@@ -25,7 +24,7 @@ type Props = {
   open?: boolean,
   overlayBlur?: number,
   percent?: number | string,
-  shadowed?: boolean,
+  boxShadow?: boolean | 'string',
   size: number,
   style: Object,
   theme?: string,
@@ -33,6 +32,7 @@ type Props = {
   transitionDuration?: number,
   transparent?: boolean,
   zIndex: number,
+  scrollable?: boolean,
 }
 
 @view.ui
@@ -43,6 +43,7 @@ export default class Drawer {
     size: 400,
     from: 'left',
     zIndex: 10000,
+    transitionDuration: 500,
   }
 
   render({
@@ -57,14 +58,13 @@ export default class Drawer {
     style,
     onClickOverlay,
     showOverlay,
-    shadowed,
+    boxShadow,
     bordered,
     zIndex,
-    attach,
     className,
     overlayBlur,
     theme,
-    background,
+    scrollable,
     closePortal,
     ...props
   }: Props) {
@@ -81,7 +81,7 @@ export default class Drawer {
     }
 
     return (
-      <drawer {...props}>
+      <drawer>
         <Surface
           $panel
           $from={from}
@@ -89,7 +89,7 @@ export default class Drawer {
           $$style={style}
           style={panelStyle}
           className={className}
-          {...attach}
+          {...props}
         >
           {children}
         </Surface>
@@ -137,6 +137,7 @@ export default class Drawer {
       bottom: 0,
       left: 0,
       right: 0,
+      transition: 'transform ease-in-out 150ms',
     },
     panelOpen: {
       pointerEvents: 'all',
@@ -163,27 +164,24 @@ export default class Drawer {
     },
   }
 
-  static theme = {
-    theme: (props, theme) => {
-      return {
-        overlay: {
-          display: props.overlay ? 'block' : 'none',
-        },
-        drawer: {
-          zIndex: props.zIndex,
-        },
-        panel: {
-          ...theme.base,
-          background: props.transparent
-            ? 'transparent'
-            : props.background || theme.base.background,
-          transition:
-            props.transition && `transform ${props.transitionDuration}`,
-          borderColor: props.bordered && theme.base.borderColor,
-          boxShadow:
-            props.shadowed && (theme.base.shadow || '0 0 6px rgba(0,0,0,0.3)'),
-        },
-      }
-    },
+  static theme = (props, theme) => {
+    return {
+      overlay: {
+        display: props.overlay ? 'block' : 'none',
+      },
+      drawer: {
+        zIndex: props.zIndex,
+      },
+      panel: {
+        overflowY: props.scrollable ? 'scroll' : 'inherit',
+        // transition:
+        //   (props.transition && `all ease-in ${props.transitionDuration}`) || '',
+        borderColor: (props.bordered && theme.base.borderColor) || '',
+        boxShadow:
+          props.boxShadow === true
+            ? '0 0 6px rgba(0,0,0,0.3)'
+            : props.boxShadow,
+      },
+    }
   }
 }

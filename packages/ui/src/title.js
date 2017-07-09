@@ -27,7 +27,8 @@ export default class Title extends React.Component {
   props: TitleProps
 
   static defaultProps = {
-    size: MAX_SIZES,
+    size: 1,
+    tagName: 'title',
   }
 
   onDoubleClick = (event: MouseEvent) => {
@@ -55,17 +56,13 @@ export default class Title extends React.Component {
     onCollapse,
     textProps,
     children,
-    tagName: _tagName,
+    tagName,
     fontSize,
+    flex,
     ...props
   }: TitleProps) {
-    const maxedSize = Math.min(MAX_SIZES, size)
-    const textSize = Math.max(0.8, maxedSize / 2.2)
-    const tagSize = Math.floor(textSize)
-    const tagName = _tagName || `h${tagSize}`
-
     return (
-      <titleroot {...props} onDoubleClick={this.onDoubleClick}>
+      <titleroot $$flex={flex} {...props} onDoubleClick={this.onDoubleClick}>
         {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
         <collapse
           if={collapsable}
@@ -90,18 +87,19 @@ export default class Title extends React.Component {
           {before}
         </before>
         <Text
-          {...{ [`\$size${Math.floor(size)}`]: true }}
+          $title
+          {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
           tagName={tagName}
-          size={textSize}
+          size={size * 1.02}
           color={color}
           fontSize={fontSize}
           {...textProps}
         >
           {children}
+          <stat if={stat}>
+            {stat}
+          </stat>
         </Text>
-        <stat if={stat}>
-          {stat}
-        </stat>
         <after if={after}>
           {after}
         </after>
@@ -117,16 +115,24 @@ export default class Title extends React.Component {
       userSelect: 'none',
       cursor: 'default',
     },
-    size2: {
-      fontWeight: 300,
-    },
     size1: {
       textTransform: 'uppercase',
       fontWeight: 300,
       color: [0, 0, 0, 0.3],
     },
+    size2: {
+      fontWeight: 700,
+    },
+    size3: {
+      fontWeight: 200,
+    },
     collapse: {
       marginRight: 4,
+    },
+    title: {
+      flexFlow: 'row',
+      // display: 'block',
+      width: '100%',
     },
     stat: {
       fontSize: 12,

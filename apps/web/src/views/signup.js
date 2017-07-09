@@ -113,7 +113,9 @@ export default class Signup {
               margin="auto"
             >
               {store.errors && JSON.stringify(store.errors)}
-              <UI.Title $$centered>Welcome to Jot</UI.Title>
+              <UI.Title if={false} $$centered>
+                Welcome to Jot
+              </UI.Title>
               <UI.Text size={1.2} color={[0, 0, 0, 0.4]}>
                 Lets get you signed up
               </UI.Text>
@@ -187,6 +189,9 @@ export default class Signup {
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: 40,
+      width: '40%',
+      minWidth: 300,
+      overflow: 'hidden',
     },
   }
 }

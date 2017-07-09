@@ -52,11 +52,13 @@ export default class Surface implements ViewType {
     chromeless?: boolean,
     circular?: boolean,
     className?: string,
+    clickable?: boolean,
     color?: Color,
     dim?: boolean,
     elementProps?: Object,
     elevation?: number,
     flex?: boolean | number,
+    focusable?: boolean,
     getRef?: Function,
     glint?: boolean,
     glow?: boolean,
@@ -130,11 +132,13 @@ export default class Surface implements ViewType {
     chromeless,
     circular,
     className,
+    clickable,
     color,
     dim,
     elementProps,
     elevation,
     flex,
+    focusable,
     getRef,
     glint,
     glow,
@@ -184,7 +188,7 @@ export default class Surface implements ViewType {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
-    const iconSize = _iconSize || (size || 1) * 12
+    const iconSize = _iconSize || (size || 1) * 11
 
     const passProps = {
       tagName,
@@ -301,8 +305,6 @@ export default class Surface implements ViewType {
     surface: {
       lineHeight: '1rem',
       fontWeight: 400,
-      alignItems: 'flex-start',
-      justifyContent: 'center',
       position: 'relative',
     },
     element: {
@@ -311,17 +313,16 @@ export default class Surface implements ViewType {
       userSelect: 'none',
       height: '100%',
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'stretch',
     },
     icon: {
       pointerEvents: 'none',
     },
     hasIconBefore: {
-      marginLeft: '1vh',
+      // this adjusts for height
+      marginLeft: 'calc(5px + 1.5%)',
     },
     hasIconAfter: {
-      marginRight: '1vh',
+      marginRight: 'calc(5px + 1.5%)',
     },
     iconAfter: {
       order: 3,
@@ -376,7 +377,7 @@ export default class Surface implements ViewType {
       props.background === true
         ? theme.base.background
         : props.background || theme.base.background
-    let hoverBackground = props.hoverBackground
+    let hoverBackground = props.hoverBackground || theme.hover.background
     let background = props.active
       ? props.activeBackground || theme.active.background || baseBackground
       : baseBackground
@@ -472,19 +473,32 @@ export default class Surface implements ViewType {
       width: height,
     }
 
-    const hoverStyle = {
-      ...theme.hover,
-      color: hoverColor,
-      borderColor: hoverBorderColor,
-      background: hoverBackground,
-    }
-
     // icon
     const iconStyle = {
       color: iconColor,
     }
     const hoverIconStyle = {
       color: props.iconHoverColor || hoverColor,
+    }
+
+    // psuedo styles
+    const hoverStyle = props.hoverable && {
+      ...theme.hover,
+      color: hoverColor,
+      borderColor: hoverBorderColor,
+      background: hoverBackground,
+    }
+    const activeStyle = {
+      position: 'relative',
+      zIndex: 1000,
+      ...(props.clickable && theme.active),
+    }
+
+    const focusable =
+      props.focusable || (props.uiContext && props.uiContext.inForm)
+    const focusStyle = {
+      ...theme.focus,
+      boxShadow: [...boxShadow, [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)]],
     }
 
     return {
@@ -531,17 +545,16 @@ export default class Surface implements ViewType {
         paddingLeft: props.paddingLeft,
         paddingRight: props.paddingRight,
         ...circularStyles,
-        ...(props.wrapElement &&
-        props.uiContext &&
-        props.uiContext.inForm && {
-          '& > :active': theme.active,
-          '& > :focus': theme.focus,
+        '& > icon': props.hovered ? hoverIconStyle : iconStyle,
+        '&:hover > icon': hoverIconStyle,
+        '&:hover': hoverStyle,
+        ...(props.wrapElement && {
+          '& > :focus': focusable && focusStyle,
+          '& > :active': activeStyle,
         }),
-        ...(!props.wrapElement &&
-        props.uiContext &&
-        props.uiContext.inForm && {
-          '&:active': theme.active,
-          '&:focus': theme.focus,
+        ...(!props.wrapElement && {
+          '&:focus': focusable && focusStyle,
+          '&:active': activeStyle,
         }),
         ...(props.hovered && hoverStyle),
         ...(props.inline && self.constructor.surfaceStyle),
@@ -552,14 +565,6 @@ export default class Surface implements ViewType {
           borderWidth: 0,
           background: 'transparent',
         }),
-        '& > icon': props.hovered ? hoverIconStyle : iconStyle,
-        '&:hover > icon': hoverIconStyle,
-        '&:hover': hoverStyle,
-        // this is just onmousedown
-        '&:active': {
-          position: 'relative',
-          zIndex: 1000,
-        },
         // so you can override
         ...props.style,
       },

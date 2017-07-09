@@ -23,7 +23,7 @@ export default class UserBar {
           distance={10}
           forgiveness={16}
           width={400}
-          target={<UI.Button>Status | 👋</UI.Button>}
+          target={<UI.Button chromeless icon="gear" />}
           openOnHover
           closeOnClick
         >
@@ -86,6 +86,7 @@ export default class UserBar {
       padding: [0, 6],
       height: Constants.HEADER_HEIGHT,
       position: 'relative',
+      // background: [0, 0, 0, 0.1],
     },
   }
 }

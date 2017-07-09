@@ -58,39 +58,34 @@ export default class Layout {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  renderTray() {
-    return <Sidebar />
-  }
+  render({ explorerStore, layoutStore }: Props) {
+    const renderTray = () => <Sidebar />
+    const renderApp = () => {
+      const CurrentPage = Router.activeView || NotFound
+      return (
+        <app>
+          <Signup />
+          <LayoutWrap layoutStore={layoutStore}>
+            <Bar />
+            <content
+              if={User.loggedIn}
+              onScroll={this.onScroll}
+              $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
+            >
+              <CurrentPage key={Router.key} {...Router.params} />
+            </content>
+            <Draft
+              isActive={layoutStore.isCreatingDoc}
+              onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
+              onClose={() => (layoutStore.isCreatingDoc = false)}
+            />
+          </LayoutWrap>
+          <Errors />
+          <Sidebar />
+        </app>
+      )
+    }
 
-  renderApp() {
-    const { layoutStore } = this.props
-    const CurrentPage = Router.activeView || NotFound
-
-    return (
-      <app>
-        <Signup />
-        <LayoutWrap layoutStore={layoutStore}>
-          <Bar />
-          <content
-            if={User.loggedIn}
-            onScroll={this.onScroll}
-            $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-          >
-            <CurrentPage key={Router.key} {...Router.params} />
-          </content>
-          <Draft
-            isActive={layoutStore.isCreatingDoc}
-            onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
-            onClose={() => (layoutStore.isCreatingDoc = false)}
-          />
-        </LayoutWrap>
-        <Errors />
-        <Sidebar />
-      </app>
-    )
-  }
-
-  render({ explorerStore }: Props) {
     return (
       <root>
         <UI.ContextMenu
@@ -109,7 +104,7 @@ export default class Layout {
                 name="all"
                 handler={explorerStore.handleShortcuts}
               >
-                {IN_TRAY ? this.renderTray() : this.renderApp()}
+                {IN_TRAY ? renderTray() : renderApp()}
               </Shortcuts>
             </UI.SlotFill.Provider>
           </UI.Theme>
@@ -120,8 +115,7 @@ export default class Layout {
 
   static style = {
     root: {
-      boxShadow: [['inset', 0, 10, 20, [0, 0, 0, 0.04]]],
-      background: Constants.IS_ELECTRON ? [40, 40, 40, 0.2] : '#252525',
+      background: Constants.IS_ELECTRON ? [40, 40, 40, 0.2] : [110, 110, 110],
       position: 'absolute',
       top: 0,
       right: 0,
@@ -138,12 +132,11 @@ export default class Layout {
     },
     content: {
       flex: 1,
-      background: 'white',
       position: 'relative',
       overflowX: 'visible',
       overflowY: 'scroll',
       zIndex: 100,
-      borderRightRadius: 8,
+      // borderRightRadius: 8,
     },
     dragStartedAt: pos => ({
       overflowX: 'visible',

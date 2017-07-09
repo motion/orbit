@@ -76,7 +76,7 @@ class Actions {
   static style = {
     actions: {
       position: 'absolute',
-      top: 10,
+      top: 5,
       right: 10,
       height: 110,
       alignItems: 'flex-end',
@@ -176,7 +176,10 @@ export default class DocumentPage {
 
   static style = {
     docpagecontent: {
+      flex: 1,
+      overflow: 'hidden',
       paddingRight: 30,
+      paddingTop: 32,
     },
   }
 }

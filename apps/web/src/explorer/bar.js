@@ -66,6 +66,7 @@ export default class ExplorerBar {
                 <actions>
                   {items}
                   <UI.Button
+                    if={false}
                     chromeless
                     spaced
                     size={0.7}
@@ -89,8 +90,12 @@ export default class ExplorerBar {
 
   static style = {
     explorerbar: {
-      overflow: 'hidden',
-      // background: [255, 255, 255, 0.1],
+      position: 'absolute',
+      top: 0,
+      right: 80,
+      left: 0,
+      // overflow: 'hidden',
+      // // background: [255, 255, 255, 0.1],
       zIndex: 500,
       padding: [0, 10],
       paddingLeft: IS_ELECTRON ? 78 : 10,
@@ -98,7 +103,6 @@ export default class ExplorerBar {
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
-      position: 'relative',
     },
     bar: {
       flex: 1,

@@ -46,7 +46,7 @@ export default class Sidebar {
           <UI.Drawer
             zIndex={1}
             transition={Constants.SIDEBAR_TRANSITION}
-            background={[40, 40, 40, 0.5]}
+            background="transparent"
             key={2}
             open={active}
             from="right"

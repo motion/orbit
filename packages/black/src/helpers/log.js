@@ -47,6 +47,9 @@ function cutoff(thing: string, amt = 150) {
 }
 
 function prettyPrint(thing: any) {
+  if (typeof thing === 'function') {
+    return thing.toString()
+  }
   if (Array.isArray(thing)) {
     return `[ \n${thing.map(prettyPrint)}\n ] `
   }

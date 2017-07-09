@@ -15,7 +15,10 @@ class Actions {
       return null
     }
 
-    log.full('doc is', document)
+    if (typeof document.hasStar !== 'function') {
+      log('doc is', document)
+      return null
+    }
 
     const starred = document.hasStar()
     const itemProps = {

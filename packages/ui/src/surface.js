@@ -548,6 +548,7 @@ export default class Surface implements ViewType {
         '& > icon': props.hovered ? hoverIconStyle : iconStyle,
         '&:hover > icon': hoverIconStyle,
         '&:hover': hoverStyle,
+        '&:focus-within': focusable && focusStyle,
         ...(props.wrapElement && {
           '& > :focus': focusable && focusStyle,
           '& > :active': activeStyle,

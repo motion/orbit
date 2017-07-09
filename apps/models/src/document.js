@@ -37,7 +37,7 @@ const DEFAULT_CONTENT = (title: string) => ({
   ],
 })
 
-const methods = {
+export const methods = {
   url(): string {
     return `/d/${this._id.replace(':', '-')}`
   },

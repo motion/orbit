@@ -164,6 +164,7 @@ export default class Signup {
                   right: 0,
                   left: 0,
                   opacity: 0.5,
+                  transition: 'opacity ease-in 100ms',
                   '&:hover': {
                     opacity: 1,
                   },

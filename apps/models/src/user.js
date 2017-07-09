@@ -11,6 +11,7 @@ class User {
   user = null
   localDb = null
   remoteDb = null
+  org = null
 
   constructor(options) {
     this.superlogin = superLogin
@@ -67,10 +68,6 @@ class User {
 
   get id() {
     return this.user && this.user.user_id
-  }
-
-  get org() {
-    return this.user.org
   }
 
   get token() {

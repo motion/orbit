@@ -4,23 +4,34 @@ import { Provider } from 'react-tunnel'
 import { object } from 'prop-types'
 import Surface from '../surface'
 
+const resolveFormValues = obj =>
+  Object.keys(obj).reduce((acc, key) => ({ ...acc, [key]: obj[key]() }), {})
+
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Form {
+  static contextTypes = {
+    provided: object,
+  }
+
+  static childContextTypes = {
+    provided: object,
+  }
+
+  getChildContext() {
+    return {
+      provided: {
+        ...this.context.provided,
+        uiContext: {
+          inForm: true,
+          formValues: {},
+        },
+      },
+    }
+  }
+
   render({ uiContext, ...props }) {
-    return (
-      <Provider
-        provide={{
-          uiContext: {
-            ...uiContext,
-            inForm: true,
-            formValues: {},
-          },
-        }}
-      >
-        {() => <FormInner {...props} />}
-      </Provider>
-    )
+    return <FormInner {...props} />
   }
 }
 
@@ -50,7 +61,7 @@ class FormInner extends React.Component {
   }
 
   get formValues() {
-    return this.context.provided.uiContext.formValues
+    return resolveFormValues(this.context.provided.uiContext.formValues)
   }
 
   onSubmit = e => {

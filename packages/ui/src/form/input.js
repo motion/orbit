@@ -8,8 +8,12 @@ import { view, inject } from '@mcro/black'
 export default class Input {
   node = null
 
-  updateVal = val => {
-    this.props.uiContext.formValues[this.props.name] = val || ''
+  componentDidMount() {
+    this.setValues(this.props)
+  }
+
+  componentDidUpdate() {
+    this.setValues(this.props)
   }
 
   get shouldSyncToForm() {
@@ -17,28 +21,30 @@ export default class Input {
     return uiContext && uiContext.inForm && !sync
   }
 
+  setValues = () => {
+    if (this.shouldSyncToForm) {
+      this.props.uiContext.formValues[this.props.name] = () => {
+        if (!this.node) {
+          debugger
+        }
+        return this.node.value
+      }
+    }
+  }
+
   onNode = node => {
     this.node = node
-    if (node && node.value) {
-      this.updateVal(node.value) // picks up autocomplete
-    }
+    this.props.getRef && this.props.getRef(node)
   }
 
-  onChange = (e: Event) => {
-    if (this.shouldSyncToForm) {
-      this.updateVal(e.target.value)
-    }
-    this.props.onChange && this.props.onChange(e)
-  }
-
-  render({ sync, type, name, uiContext, form, ...props }) {
+  render({ sync, type, name, uiContext, form, elementProps, ...props }) {
     if (sync) {
       props.value = sync.get()
       props.onChange = e => sync.set(e.target.value)
     }
 
     if (type === 'checkbox') {
-      return <input type="checkbox" onChange={this.onChange} {...props} />
+      return <input type="checkbox" {...props} />
     }
 
     return (
@@ -51,16 +57,16 @@ export default class Input {
         flex
         borderWidth={1}
         wrapElement
-        getRef={this.onNode}
         tagName="input"
         name={name}
         type={type}
         elementProps={{
-          onChange: this.onChange,
           css: {
             width: '100%',
             padding: [0, 10],
           },
+          ref: this.onNode,
+          ...elementProps,
         }}
         {...props}
       />

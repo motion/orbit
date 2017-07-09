@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
-import { view, schema, string } from '@mcro/black'
-// import { User, Org } from '@mcro/models'
+import { view } from '@mcro/black'
+import { User } from '@mcro/models'
 import * as UI from '@mcro/ui'
 
 @view({
@@ -28,7 +28,10 @@ import * as UI from '@mcro/ui'
     //   }),
     // }
 
-    @log handleSubmit = async fields => {}
+    @log
+    handleSubmit = async fields => {
+      User.org = 'done'
+    }
   },
 })
 export default class SignupStep2 {
@@ -75,15 +78,26 @@ export default class SignupStep2 {
             </UI.Field>
           </content>
           <space $$height={20} />
-          <UI.Button
-            icon="check"
-            type="Done"
-            theme="rgb(48, 130, 224)"
-            alignSelf="flex-end"
-            size={1.2}
-          >
-            Finish
-          </UI.Button>
+          <end $$row $$justify="space-between">
+            <UI.Button
+              icon="min-ar"
+              chromeless
+              color={[0, 0, 0, 0.2]}
+              theme="rgb(48, 130, 224)"
+              alignSelf="flex-end"
+              size={1.2}
+              onClick={User.logout}
+            />
+            <UI.Button
+              icon="check"
+              type="submit"
+              theme="rgb(48, 130, 224)"
+              alignSelf="flex-end"
+              size={1.2}
+            >
+              Done
+            </UI.Button>
+          </end>
         </UI.Form>
       </inner>
     )

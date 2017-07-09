@@ -26,7 +26,7 @@ class Actions {
 
     const starred = document.hasStar()
     const itemProps = {
-      size: 1.6,
+      size: 1.5,
       chromeless: true,
       tooltipProps: {
         towards: 'left',

@@ -247,6 +247,7 @@ function mobxifyWatch(obj, method, val) {
 
   Object.defineProperty(obj, method, {
     get() {
+      log('gettttttt', current.get())
       return toJS(current.get())
     },
   })

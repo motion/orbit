@@ -22,7 +22,7 @@ import Login from './login'
 export default class Signup {
   render({ store: { step } }) {
     return (
-      <signup $$fullscreen $$draggable $$centered>
+      <signup if={step} $$fullscreen $$draggable $$centered>
         <UI.Glint size={3} borderRadius={5} />
         <UI.Glow
           draggable

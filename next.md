@@ -1,4 +1,5 @@
-# next week
+# next
+  - follow thread vs edits vs tasks (toggle?)
   - double space === >
   - query sync down
   - new page auto follow + team follow

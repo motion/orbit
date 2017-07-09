@@ -108,7 +108,9 @@ function doLog(...args) {
 
 export default function log(...args) {
   doCutoff = true
-  return doLog(...args)
+  const res = doLog(...args)
+  doCutoff = false
+  return res
 }
 
 log.full = function(...args) {
@@ -134,9 +136,9 @@ function wrapLogger(wrapFn: Function, parent, name?: string) {
         ''
       )
     console.log(
-      `%c${parent ? `${parentName}.` : ''}${methodName}(${args.join(
-        ','
-      )}) => ${result}\nSTATE:\n${state}`,
+      `%c${parent ? `${parentName}.` : ''}${methodName}(${args
+        .map(prettyPrint)
+        .join(',')}) => ${result}\nSTATE:\n${state}`,
       `color: ${color}`
     )
     return result

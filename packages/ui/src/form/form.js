@@ -54,7 +54,6 @@ class FormInner extends React.Component {
   }
 
   onSubmit = e => {
-    log('ONSUBMIT YEA', this.formValues)
     e.preventDefault()
     if (this.props.onSubmit) {
       this.props.onSubmit(this.formValues, e)

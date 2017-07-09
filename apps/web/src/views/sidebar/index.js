@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, Shortcuts } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Login from './login'
+import Login from '../login'
 import SidebarStore from './store'
 import Projects from './projects'
 import Menu from './menu'

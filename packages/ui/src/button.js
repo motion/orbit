@@ -15,14 +15,6 @@ const Button = inject(context => ({ uiContext: context.uiContext }))(
       glowProps,
       ...props
     }) => {
-      if (type === 'submit' && uiContext && uiContext.inForm) {
-        const ogClick = props.onClick
-        props.onClick = () => {
-          uiContext.form.submit()
-          ogClick && ogClick()
-        }
-      }
-
       return (
         <SizedSurface
           tagName="button"

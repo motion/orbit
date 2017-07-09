@@ -15,8 +15,12 @@ const fields = {
   toggle: Toggle,
 }
 
+const TYPE_TO_ELEMENT_MAP = {
+  password: 'input',
+}
+
 type Props = {
-  type: 'input' | 'select' | 'toggle',
+  type: 'input' | 'select' | 'toggle' | 'password',
   spacing: number,
   row?: boolean,
   name?: string,
@@ -67,8 +71,11 @@ export default class Field {
     size,
     ...props
   }: Props) {
-    const Element = fields[type]
-    const id = name || `element-${Math.floor(Math.random() * 10000000)}`
+    const Element = fields[TYPE_TO_ELEMENT_MAP[type] || type]
+    const id =
+      name ||
+      (label && typeof label === 'string' && label.toLowerCase()) ||
+      `element-${Math.floor(Math.random() * 10000000)}`
 
     if (!Element && !children) {
       throw new Error('Invalid field type or no children given to Field')
@@ -85,11 +92,12 @@ export default class Field {
           size={size}
           {...labelProps}
         >
-          {label}
+          {label === true ? '&nbsp;' : ''}
         </Text>
         <Element
           if={!children && Element}
           $element
+          type={type}
           onChange={onChange}
           name={id}
           defaultValue={defaultValue}

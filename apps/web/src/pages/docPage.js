@@ -94,6 +94,7 @@ class DocPageStore {
 
   start() {
     this.watch(() => {
+      log('watch running for doc')
       if (this.doc) {
         this.props.explorerStore.setPath(this.doc)
       }

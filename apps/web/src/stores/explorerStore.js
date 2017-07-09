@@ -5,6 +5,7 @@ import Router from '~/router'
 import { uniq, last, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
 import App from '~/app'
+import { debounce } from 'lodash'
 
 const PATH_SEPARATOR = '/'
 const KEYMAP = {
@@ -497,9 +498,9 @@ export default class ExplorerStore {
     this.onCommitItem(endPath)
   }
 
-  setPath = async doc => {
+  setPath = debounce(async doc => {
     this.setValue(this.getPathForDocs(await doc.getCrumbs()))
-  }
+  }, 32)
 
   moveHighlight = (diff: number) => {
     this.highlightIndex += diff

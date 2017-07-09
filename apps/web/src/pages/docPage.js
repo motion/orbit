@@ -11,9 +11,11 @@ import Page from '~/views/page'
 @view
 class Actions {
   render({ explorerStore, explorerStore: { document } }) {
-    if (!document) {
+    if (!document || document === null) {
       return null
     }
+
+    log.full('doc is', document)
 
     const starred = document.hasStar()
     const itemProps = {

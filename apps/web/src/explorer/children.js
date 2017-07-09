@@ -67,21 +67,12 @@ export default class ExplorerChildren {
     const allDocs = sortBy(docs || [], 'createdAt')
 
     return (
-      <children $$opacity={0.5}>
-        <actions if={false}>
+      <children>
+        <actions>
           <UI.Title $mainTitle size={1}>
             Children
           </UI.Title>
-          <post $$row $$centered>
-            <UI.Button
-              if={false}
-              marginRight={10}
-              size={0.9}
-              icon="down"
-              elevation={0.25}
-            >
-              Sort
-            </UI.Button>
+          <post $$row $$centered if={false}>
             <UI.Button
               if={store.newTitle === null}
               size={1}
@@ -110,7 +101,7 @@ export default class ExplorerChildren {
                   </UI.Button>
                 </title>
                 <subdocs if={children && children.length}>
-                  <Arrow />
+                  <Arrow $arrow />
                   {children.map(child =>
                     <UI.Button
                       $subDocItem
@@ -132,20 +123,12 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      // position: 'fixed',
-      // bottom: 0,
-      // left: 0,
-      // right: 0,
       marginTop: 30,
       marginRight: -30,
       padding: [10, 20],
-      // borderTopRadius: 8,
-      borderTop: [1, '#eee', 'dotted'],
-      // borderRight: [1, '#eee'],
-      // boxShadow: [[0, -3, 3, [0, 0, 0, 0.025]]],
-      background: '#fff',
-      // overflow: 'hidden',
+      // borderTop: [1, '#eee', 'dotted'],
       flex: 1,
+      width: '100%',
     },
     mainTitle: {
       marginTop: 20,
@@ -158,19 +141,18 @@ export default class ExplorerChildren {
       justifyContent: 'space-between',
       alignItems: 'center',
     },
+    arrow: {
+      height: 20,
+      margin: ['auto', 0],
+    },
     post: {
       marginTop: -20,
     },
     paths: {
       flexFlow: 'row',
     },
-    docs: {
-      flex: 1,
-    },
     doc: {
       flexFlow: 'row',
-      borderBottom: [1, '#f2f2f2'],
-      flex: 1,
       zIndex: 1,
       padding: [6, 12],
       '&:hover title': {
@@ -181,7 +163,7 @@ export default class ExplorerChildren {
       },
     },
     title: {
-      flex: 1,
+      alignItems: 'center',
       maxWidth: '50%',
       margin: 0,
       padding: 0,

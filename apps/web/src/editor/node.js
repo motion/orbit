@@ -155,7 +155,7 @@ export default View => {
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >
-          <context if={isHovered} contentEditable={false}>
+          <context if={isHovered && !isTitle} contentEditable={false}>
             {context || this.contextMenu()}
           </context>
           {component}

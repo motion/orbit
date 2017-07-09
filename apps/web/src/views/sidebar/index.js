@@ -94,6 +94,7 @@ export default class Sidebar {
     },
     sidebarcontent: {
       marginLeft: 20,
+      flex: 1,
     },
   }
 }

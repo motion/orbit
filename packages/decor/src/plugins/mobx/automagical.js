@@ -185,16 +185,18 @@ function resolve(value) {
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
   const KEY = `${obj.constructor.name}.${method}`
+  log('mobxifyWatch', KEY)
   let current = observable.shallowBox(null)
   let currentDisposable = null
   let currentObservable = null
   let stopObservableAutorun
 
   function runObservable() {
+    log('runObservable', KEY)
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
-        // log(KEY, 'automagical.currentObservable', currentObservable.current)
+        log('automagical.currentObservable', KEY, currentObservable.current)
         current.set(currentObservable.current) // hit observable
       }
     })
@@ -211,6 +213,7 @@ function mobxifyWatch(obj, method, val) {
   async function watchForNewValue() {
     const mid = ++uid // lock
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
+    log('watchForNewValue', KEY, result)
     stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
       currentDisposable()
@@ -220,6 +223,7 @@ function mobxifyWatch(obj, method, val) {
       currentDisposable = result.dispose
     }
     if (result && (result.$isQuery || isObservable(result))) {
+      log('watchforNewValue isQuery isntConnected?', result.isntConnected)
       if (result.isntConnected) {
         return
       }
@@ -243,6 +247,7 @@ function mobxifyWatch(obj, method, val) {
 
   Object.defineProperty(obj, method, {
     get() {
+      log('get', current.get())
       return toJS(current.get())
     },
   })

@@ -35,6 +35,8 @@ export default class Surface implements ViewType {
     after?: Element | string,
     align?: string,
     alignSelf?: string,
+    badge?: React$Element<any>,
+    badgeProps?: Object,
     background?: Color,
     border?: Array | Object,
     borderBottom?: Array | Object,
@@ -114,6 +116,8 @@ export default class Surface implements ViewType {
     active,
     after,
     align,
+    badge,
+    badgeProps,
     background,
     border,
     borderBottom,
@@ -211,6 +215,9 @@ export default class Surface implements ViewType {
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
       />,
+      <badge if={badge} {...badgeProps}>
+        {typeof badge !== 'boolean' ? badge : ''}
+      </badge>,
       <icon key={1} if={icon && !stringIcon} $iconAfter={hasIconAfter}>
         {icon}
       </icon>,

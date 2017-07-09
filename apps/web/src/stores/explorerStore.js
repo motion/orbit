@@ -29,7 +29,7 @@ const KEYMAP = {
 }
 
 export default class ExplorerStore {
-  document = Document.get(Router.params.id)
+  @watch document = () => Document.get(Router.params.id)
   @watch crumbs = () => this.document && this.document.getCrumbs()
 
   keyManager = new ShortcutManager(KEYMAP)

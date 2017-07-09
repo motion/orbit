@@ -11,6 +11,8 @@ import Page from '~/views/page'
 @view
 class Actions {
   render({ explorerStore, explorerStore: { document } }) {
+    log('doccccc', document)
+
     if (!document || document === null) {
       return null
     }
@@ -19,6 +21,8 @@ class Actions {
       log('doc is', document)
       return null
     }
+
+    log('render')
 
     const starred = document.hasStar()
     const itemProps = {
@@ -45,6 +49,7 @@ class Actions {
           tooltip="Threads"
           highlight={explorerStore.showDiscussions}
           onClick={explorerStore.ref('showDiscussions').toggle}
+          badge={1}
         />
         <UI.Popover
           elevation={3}

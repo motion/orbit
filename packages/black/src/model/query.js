@@ -9,7 +9,7 @@ const CacheListeners = {}
 
 function execQuery(it, valueGet: Function) {
   const KEY = hashsum(it)
-  // log('@query', it)
+  log('@query', it)
   CacheListeners[KEY] = (CacheListeners[KEY] || 0) + 1
 
   if (Cache[KEY]) {
@@ -36,7 +36,7 @@ function execQuery(it, valueGet: Function) {
     if (query && query.$) {
       finishSubscribe()
       subscriber = query.$.subscribe(value => {
-        log(INFO, short(value))
+        log('SUBSCRIBE', INFO, short(value))
         if (isObservable(value)) {
           result.set(value)
         } else {
@@ -48,6 +48,7 @@ function execQuery(it, valueGet: Function) {
 
   let isObserving = false
   function observe() {
+    log('observe', isObserving, query && query.isntConnected)
     if (isObserving) {
       return
     }

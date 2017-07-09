@@ -41,7 +41,7 @@ export default class Signup {
             <Step2 if={step === 2} />
           </centered>
         </UI.Theme>
-        <UI.Theme name="clear">
+        <UI.Theme name="clear" if={!User.loggedIn}>
           <login
             $$row
             $$centered

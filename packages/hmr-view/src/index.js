@@ -14,6 +14,8 @@ if (window.__reactComponentProxies) {
   })
 }
 
+window.componentProxies = componentProxies
+
 let reloaded = []
 
 export default function proxyReactComponents({

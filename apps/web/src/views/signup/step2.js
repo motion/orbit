@@ -31,7 +31,7 @@ import * as UI from '@mcro/ui'
     @log handleSubmit = async fields => {}
   },
 })
-export default class SignupStep1 {
+export default class SignupStep2 {
   render({ store }) {
     const fieldProps = {
       row: true,
@@ -52,12 +52,8 @@ export default class SignupStep1 {
           <content>
             {store.members.map((_, index) =>
               <row key={index}>
-                <UI.Field
-                  row
-                  label={`Member ${index + 1}`}
-                  labelStyle={{ width: 110 }}
-                >
-                  <UI.Segment>
+                <UI.Field row label={`Member ${index + 1}`}>
+                  <UI.Segment flex>
                     <UI.Input
                       {...fieldProps}
                       placeholder="Name"
@@ -80,14 +76,13 @@ export default class SignupStep1 {
           </content>
           <space $$height={20} />
           <UI.Button
-            iconAfter
             icon="check"
             type="Done"
             theme="rgb(48, 130, 224)"
             alignSelf="flex-end"
             size={1.2}
           >
-            Signup
+            Finish
           </UI.Button>
         </UI.Form>
       </inner>

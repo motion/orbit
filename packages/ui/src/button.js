@@ -13,6 +13,7 @@ const Button = inject(context => ({ uiContext: context.uiContext }))(
       chromeless,
       type,
       glowProps,
+      css,
       ...props
     }) => {
       return (
@@ -32,6 +33,11 @@ const Button = inject(context => ({ uiContext: context.uiContext }))(
           align="center"
           justify="center"
           glow
+          css={{
+            flexWrap: 'nowrap',
+            whiteSpace: 'pre',
+            ...css,
+          }}
           glowProps={{
             scale: 2,
             draggable: false,

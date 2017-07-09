@@ -92,7 +92,7 @@ export default class Field {
           size={size}
           {...labelProps}
         >
-          {label === true ? '&nbsp;' : ''}
+          {label === true ? ' ' : label}
         </Text>
         <Element
           if={!children && Element}

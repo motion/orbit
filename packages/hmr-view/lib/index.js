@@ -29,6 +29,8 @@ if (_window2.default.__reactComponentProxies) {
   });
 }
 
+_window2.default.componentProxies = componentProxies;
+
 var reloaded = [];
 
 function proxyReactComponents(_ref) {

@@ -110,13 +110,7 @@ export default class ExplorerInput {
     store.version
 
     return (
-      <bar
-        $$align="center"
-        $blurred={!store.focused}
-        $focused={store.focused}
-        $$row
-        $$flex
-      >
+      <bar $blurred={!store.focused} $focused={store.focused}>
         <Editor
           placeholder={'search or create docs'}
           state={store.editorState}
@@ -135,6 +129,10 @@ export default class ExplorerInput {
   static style = {
     bar: {
       padding: 5,
+      flexFlow: 'row',
+      flex: 1,
+      alignItems: 'center',
+      borderBottom: [1, '#eee'],
     },
     focused: {
       // border: '1px solid rgba(82, 139, 211, 1)',

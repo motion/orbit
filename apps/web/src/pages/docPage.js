@@ -22,8 +22,6 @@ class Actions {
       return null
     }
 
-    log('render')
-
     const starred = document.hasStar()
     const itemProps = {
       size: 1.5,

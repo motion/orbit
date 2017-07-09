@@ -6,40 +6,71 @@ import { Document } from '@mcro/models'
 
 window.Document = Document
 
-@view({
-  store: class DataStore {
-    reactive = Document.findOrCreate({ title: 'new' })
-    @watch all = () => Document.all()
+const Doc = ({ doc }) =>
+  <doc>
+    {doc.title}
+    <UI.Button
+      onClick={() => {
+        doc.title = Math.random() + ''
+        doc.save()
+      }}
+    >
+      {' '}do it
+    </UI.Button>
+  </doc>
+
+@view.attach('dataStore')
+@view
+class DataList {
+  render({ dataStore }) {
+    log('dataStore', dataStore.items)
+    return (
+      <dataItems if={dataStore.items}>
+        {dataStore.items.map(item => <Doc doc={item} key={item._id} />)}
+      </dataItems>
+    )
+  }
+}
+
+@view.provide({
+  dataStore: class DataStore {
+    // reactive = Document.findOrCreate({ title: 'new' })
+    @watch items = () => Document.all()
     create = () => Document.create()
   },
 })
-export default class DataPlayground {
-  render({ store }) {
-    window.store = store
+class DataPlayground {
+  render({ show, dataStore }) {
+    if (!show) {
+      return null
+    }
+
     return (
       <data>
-        <current if={store.reactive}>
-          {store.reactive.title}
+        <current if={dataStore.reactive}>
+          {dataStore.reactive.title}
         </current>
 
-        <all if={store.all}>
-          {store.all.map(doc =>
-            <doc key={doc._id}>
-              {doc.title}
+        <DataList />
 
-              <UI.Button
-                onClick={() => {
-                  doc.title = Math.random() + ''
-                  doc.save()
-                }}
-              >
-                {' '}do it
-              </UI.Button>
-            </doc>
-          )}
-        </all>
+        <UI.Button onClick={dataStore.create}>create doc</UI.Button>
+      </data>
+    )
+  }
+}
 
-        <UI.Button onClick={store.create}>create doc</UI.Button>
+@view({
+  store: class {
+    show = false
+  },
+})
+export default class DataPlaygroundView {
+  render({ store }) {
+    return (
+      <data>
+        <DataPlayground show={store.show} />
+        <DataPlayground show={!store.show} />
+        <UI.Button onClick={store.ref('show').toggle}>button</UI.Button>
       </data>
     )
   }

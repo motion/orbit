@@ -4,9 +4,12 @@ import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
 import Arrow from './arrow'
 
+const FONT_SIZE = 16
+
 const $para = {
-  fontSize: 14,
+  fontSize: FONT_SIZE,
   color: 'rgba(0,0,0,.8)',
+  fontWeight: 400,
 }
 
 @view.attach('explorerStore')
@@ -37,7 +40,6 @@ const schema = {
 @view
 class Item {
   render({ explorerStore: cmdr, node }) {
-    const inline = { userSelect: 'initial', display: 'inline' }
     const name = node.data.get('name')
     const doc = cmdr.editorState.document
     const nextKey = doc.getNextSibling(node.key).key
@@ -51,11 +53,11 @@ class Item {
             chromeless
             onClick={() => cmdr.onItemClick(node.key)}
             spaced
-            style={{ margin: 0, height: 20 }}
-            size={0.7}
-            fontSize={14}
+            size={1}
+            height={24}
+            padding={[0, 5]}
+            fontSize={FONT_SIZE}
             highlight={selected}
-            style={inline}
             $active={selected}
             color={[0, 0, 0, 0.8]}
           >
@@ -76,7 +78,7 @@ class Item {
       position: 'relative',
     },
     last: {
-      marginRight: 8,
+      // marginRight: 8,
     },
     div: {
       position: 'relative',
@@ -96,7 +98,7 @@ class Item {
       position: 'absolute',
       flexFlow: 'row',
       left: 0,
-      top: -3,
+      top: -2,
     },
   }
 }
@@ -135,17 +137,14 @@ export default class ExplorerInput {
       padding: 5,
     },
     focused: {
-      border: '1px solid rgba(82, 139, 211, 1)',
+      // border: '1px solid rgba(82, 139, 211, 1)',
       borderRadius: 5,
     },
     blurred: {
       border: '1px solid rgba(0, 0, 0, 0)',
-      background: '#f2f2f2',
+      // background: '#f2f2f2',
       borderRadius: 5,
       // borderBottom: '1px solid #eee',
-    },
-    highlight: {
-      fontWeight: 'bold',
     },
   }
 }

@@ -31,11 +31,10 @@ export default class Arrow {
     },
     icon: {
       display: 'inline-block',
-      // marginTop: 7,
     },
     animate: {
       transition: 'all 100ms ease-in',
-      transform: 'scale(0.6) translateX(-5px)',
+      transform: 'scale(0) translateX(-5px)',
       opacity: 0.2,
     },
     animateAfter: {

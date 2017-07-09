@@ -1,4 +1,5 @@
 # next week
+  - double space === >
   - query sync down
   - new page auto follow + team follow
   - signup: asks for your team names + emails, then makes root pages for them

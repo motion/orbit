@@ -30,7 +30,7 @@ class Actions {
       <actions $$draggable>
         <UI.Button
           {...itemProps}
-          icon="door"
+          icon="fav3"
           tooltip={starred ? 'Unfollow' : 'Follow'}
           highlight={starred}
           onClick={document.toggleStar}

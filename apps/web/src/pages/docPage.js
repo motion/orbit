@@ -11,7 +11,7 @@ import Page from '~/views/page'
 @view
 class Actions {
   render({ explorerStore, explorerStore: { document } }) {
-    if (!document {
+    if (!document) {
       return null
     }
 
@@ -65,6 +65,11 @@ class Actions {
               borderRadius: 8,
             }}
             items={[
+              {
+                icon: 'bell',
+                primary: 'Ping +3',
+                onClick: () => console.log(),
+              },
               {
                 icon: 'gear',
                 primary: 'Settings',

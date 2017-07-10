@@ -32,7 +32,12 @@ if (module && module.hot) {
   })
 }
 
-// @view.attach('layoutStore') in any sub-view
+console.log('stores are', {
+  layoutStore: LayoutStore,
+  soundStore: SoundStore,
+  explorerStore: ExplorerStore,
+})
+
 @view.provide({
   layoutStore: LayoutStore,
   soundStore: SoundStore,

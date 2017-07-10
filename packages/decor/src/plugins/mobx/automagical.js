@@ -7,9 +7,17 @@ import {
   extendShallowObservable,
   extendObservable,
   autorun,
+  isObservable as ISO,
 } from 'mobx'
 
-const isObservable = x => x && x.$mobx
+const isObservable = x => {
+  try {
+    return ISO(x)
+  } catch (e) {
+    console.log('mobxer', e)
+    return x && x.observersIndexes
+  }
+}
 const log = _ => _ | window.log
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery

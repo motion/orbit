@@ -518,7 +518,8 @@ export default class ExplorerStore {
 
   setPath = debounce(async doc => {
     if (!doc || !doc.getCrumbs) {
-      log('got a weird doc', doc)
+      log('got a weird doc')
+      console.log(doc, this.document)
       return
     }
     this.setValue(this.getPathForDocs(await doc.getCrumbs()))

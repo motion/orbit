@@ -94,7 +94,7 @@ class Actions {
   static style = {
     actions: {
       position: 'absolute',
-      top: 5,
+      top: 50,
       right: 10,
       height: 110,
       alignItems: 'flex-end',

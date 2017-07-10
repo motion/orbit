@@ -93,7 +93,7 @@ export default class ExplorerBar {
     explorerbar: {
       position: 'absolute',
       top: 0,
-      right: 80,
+      right: 0,
       left: 0,
       // overflow: 'hidden',
       // // background: [255, 255, 255, 0.1],

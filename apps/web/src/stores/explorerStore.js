@@ -20,7 +20,7 @@ const KEYMAP = {
     enter: 'enter',
     esc: 'esc',
     explorer: ['command+t'],
-    focus: 'command+l',
+    cmdL: 'command+l',
     cmdEnter: 'command+enter',
     cmdUp: 'command+up',
     delete: ['delete', 'backspace'],
@@ -141,6 +141,10 @@ export default class ExplorerStore {
       */
     },
     enter: () => this.onEnter(),
+    cmdL: () => {
+      this.focus()
+      this.selectAll()
+    },
     focus: () => this.focus(),
     explorer: () => this.focus(),
     right: () => {
@@ -181,6 +185,11 @@ export default class ExplorerStore {
         .collapseToEndOf(this.editorState.document.nodes.last())
         .apply()
     })
+  }
+
+  selectAll = () => {
+    // this.editorState = this.editorState.transform().
+    log('selectall')
   }
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {

@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
 import Arrow from './arrow'
 
-const FONT_SIZE = 16
+const FONT_SIZE = 18
 
 const $para = {
   fontSize: FONT_SIZE,
@@ -128,20 +128,20 @@ export default class ExplorerInput {
 
   static style = {
     bar: {
-      padding: 5,
+      // padding: 5,
+      height: 38,
       flexFlow: 'row',
       flex: 1,
       alignItems: 'center',
-      borderBottom: [1, '#eee'],
+      borderBottom: [1, '#e0e0e0', 'dotted'],
+      // background: '#f2f2f2',
+      // borderRadius: 6,
     },
     focused: {
-      // border: '1px solid rgba(82, 139, 211, 1)',
-      borderRadius: 5,
+      borderColor: '#ddd',
     },
     blurred: {
-      border: '1px solid rgba(0, 0, 0, 0)',
       // background: '#f2f2f2',
-      borderRadius: 5,
       // borderBottom: '1px solid #eee',
     },
   }

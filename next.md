@@ -63,7 +63,8 @@
 # ideas
   - pop out discussions into a new window so you can view side-by-side
 
-# fast pouch w workers
+# fast pouch
+- https://github.com/redgeoff/delta-pouch
 - https://github.com/jkleinsc/telegraph
 
 motion_/extractStatics.js at 5d534f71d92048f0afaa1e2632d5727739490619 · motion/motion_

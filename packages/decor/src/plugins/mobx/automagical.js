@@ -6,11 +6,10 @@ import {
   action,
   extendShallowObservable,
   extendObservable,
-  isObservable,
-  toJS,
   autorun,
 } from 'mobx'
 
+const isObservable = x => x && x.$mobx
 const log = _ => _ | window.log
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery

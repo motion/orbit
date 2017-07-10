@@ -46,7 +46,9 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
 
     if (!Klass) {
       console.log(Klass)
-      throw 'Didnt pass a valid class or function to decorator, see above'
+      throw new Error(
+        'Didnt pass a valid class or function to decorator, see above'
+      )
     }
 
     // avoid decorating twice

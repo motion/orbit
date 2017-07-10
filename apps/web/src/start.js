@@ -38,3 +38,4 @@ export async function start(quiet, restart) {
 }
 
 start(App.started, App.started)
+window.start = start

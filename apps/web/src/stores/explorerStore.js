@@ -32,7 +32,9 @@ export default class ExplorerStore {
   version = 1
 
   @watch document = () => Document.get(Router.params.id)
-  @watch crumbs = () => this.document && this.document.getCrumbs()
+  @watch
+  crumbs = () =>
+    this.document && this.document.getCrumbs && this.document.getCrumbs()
 
   keyManager = new ShortcutManager(KEYMAP)
   editorState = Raw.deserialize(
@@ -515,6 +517,10 @@ export default class ExplorerStore {
   }
 
   setPath = debounce(async doc => {
+    if (!doc || !doc.getCrumbs) {
+      log('got a weird doc', doc)
+      return
+    }
     this.setValue(this.getPathForDocs(await doc.getCrumbs()))
   }, 32)
 

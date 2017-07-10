@@ -107,4 +107,19 @@ setInterval(function () {
     reloaded = [];
   }
 }, 1000);
+;
+
+var _temp = function () {
+  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+    return;
+  }
+
+  __REACT_HOT_LOADER__.register(componentProxies, 'componentProxies', 'src/index.js');
+
+  __REACT_HOT_LOADER__.register(reloaded, 'reloaded', 'src/index.js');
+
+  __REACT_HOT_LOADER__.register(proxyReactComponents, 'proxyReactComponents', 'src/index.js');
+}();
+
+;
 //# sourceMappingURL=index.js.map

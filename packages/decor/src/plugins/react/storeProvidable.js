@@ -88,12 +88,7 @@ export default function storeProvidable(options, emitter) {
           //    it will break with never before seen mobx bug on next line
           Mobx.extendShallowObservable(this, { _props: null })
           this._props = { ...this.props }
-          try {
-            this.setupStores()
-          } catch (e) {
-            console.log('hmr bugfix TODO fix')
-            this.failed = true
-          }
+          this.setupStores()
         }
 
         componentDidMount() {
@@ -207,7 +202,7 @@ export default function storeProvidable(options, emitter) {
 
         render() {
           if (this.failed || !this.state) {
-            console.log('failed view')
+            console.log('failed view', this)
             return null
           }
 

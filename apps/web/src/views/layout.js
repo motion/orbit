@@ -33,12 +33,6 @@ if (module) {
   })
 }
 
-console.log({
-  layoutStore: LayoutStore,
-  soundStore: SoundStore,
-  explorerStore: ExplorerStore,
-})
-
 @view.provide({
   layoutStore: LayoutStore,
   soundStore: SoundStore,

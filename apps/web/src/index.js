@@ -1,6 +1,6 @@
 // @flow
 import 'babel-polyfill'
-// import '@mcro/black/patch'
+import '@mcro/black/patch'
 import { createElement } from '@mcro/black'
 import React from 'react'
 import ReactDOM from 'react-dom'

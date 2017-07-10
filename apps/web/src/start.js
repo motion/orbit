@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import App from '~/app'
 import themes from './themes'
+import { AppContainer } from 'react-hot-loader'
 
 export function render(shouldReset) {
   // console.time('#render')
@@ -20,9 +21,11 @@ export function render(shouldReset) {
   }
 
   ReactDOM.render(
-    <ThemeProvide {...themes}>
-      <Layout />
-    </ThemeProvide>,
+    <AppContainer>
+      <ThemeProvide {...themes}>
+        <Layout />
+      </ThemeProvide>
+    </AppContainer>,
     ROOT
   )
   // console.timeEnd('#render')

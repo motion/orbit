@@ -71,7 +71,7 @@ export default class Sidebar {
                   transition
                   scrollable
                 >
-                  <docdrawer css={{ paddingRight: 10 }}>
+                  <docdrawer>
                     <Inbox document={explorerStore.document} />
                   </docdrawer>
                 </UI.Drawer>

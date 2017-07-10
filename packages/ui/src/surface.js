@@ -496,7 +496,7 @@ export default class Surface implements ViewType {
       borderColor: hoverBorderColor,
       background: hoverBackground,
     }
-    const activeStyle = {
+    const activeStyle = !props.chromeless && {
       position: 'relative',
       zIndex: 1000,
       ...(props.clickable && theme.active),
@@ -504,7 +504,7 @@ export default class Surface implements ViewType {
 
     const focusable =
       props.focusable || (props.uiContext && props.uiContext.inForm)
-    const focusStyle = {
+    const focusStyle = !props.chromeless && {
       ...theme.focus,
       boxShadow: [...boxShadow, [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)]],
     }

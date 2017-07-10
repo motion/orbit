@@ -3,6 +3,14 @@ import * as UI from '@mcro/ui'
 import { random } from 'lodash'
 import DocumentView from '~/views/document'
 
+const GLOW_PROPS = {
+  color: 'salmon',
+  scale: 1.6,
+  offsetLeft: -200,
+  resist: 70,
+  opacity: 0.048,
+}
+
 class InboxStore {
   showDraft = true
   draftNumber = 0
@@ -277,50 +285,74 @@ class Thread {
     ]
 
     return (
-      <item>
-        <bar $$row>
-          <UI.Glow color="red" full show opacity={1} />
-          <UI.Button
-            chromeless
-            glow={false}
-            spaced
-            size={1.2}
-            icon={'arrow-min-left'}
-            onClick={() => (store.activeIndex = null)}
-            color={[0, 0, 0, 0.2]}
-          />
+      <thread>
+        <bar>
+          <barblur>
+            <UI.Glow {...GLOW_PROPS} show />
+            <UI.Button
+              chromeless
+              glow={false}
+              spaced
+              size={1.2}
+              icon={'arrow-min-left'}
+              onClick={() => (store.activeIndex = null)}
+              color={[0, 0, 0, 0.2]}
+              hoverColor={[0, 0, 0, 0.6]}
+              margin={[0, 0, 0, -5]}
+            />
 
-          <UI.Title centered flex size={1.2} stat={''}>
-            {item.title}
-          </UI.Title>
-          <UI.Button chromeless size={1.2} icon="fav31" />
-          <actions />
+            <title>
+              {item.title}
+            </title>
+            <UI.Button
+              glow={false}
+              chromeless
+              size={1.2}
+              icon="fav31"
+              color={[0, 0, 0, 0.4]}
+              hoverColor={[0, 0, 0, 0.6]}
+            />
+            <actions />
+          </barblur>
         </bar>
         <content>
           {messages.map(message => <Message {...message} />)}
           <Draft />
         </content>
-      </item>
+      </thread>
     )
   }
 
   static style = {
     // so it scrolls nicely
-    item: {
+    thread: {
       paddingBottom: 30,
     },
     bar: {
       position: 'sticky',
-      marginTop: 15,
       zIndex: 1000,
-      paddingTop: 0,
-      justifyContent: 'space-between',
       top: 0,
+      left: -20,
       borderBottom: '1px solid #ddd',
-      paddingBottom: 5,
+      boxShadow: ['0 0 5px rgba(0,0,0,0.15)'],
+      overflow: 'hidden',
+    },
+    barblur: {
+      margin: -20,
+      padding: 30,
+      backdropFilter: 'blur(10px)',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexFlow: 'row',
+      // boxShadow: ['inset 0 0 100px rgba(240,240,255, 1)'],
+      background: 'rgba(255, 255,255, 0.9)',
     },
     title: {
       flex: 5,
+      color: '#444',
+      fontWeight: 300,
+      fontSize: 16,
+      lineHeight: '1.4rem',
     },
     content: {
       padding: 20,
@@ -353,9 +385,14 @@ export default class Inbox {
             </UI.Title>
             <actions>
               <UI.Button
+                css={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                }}
                 icon="siadd"
                 circular
-                size={1.2}
+                size={1.4}
                 chromeless
                 onClick={store.ref('draftNumber').increment(1)}
               />
@@ -372,13 +409,7 @@ export default class Inbox {
               secondary: item.status,
               date: '1 day ago',
               ellipse: false,
-              glowProps: {
-                color: 'salmon',
-                scale: 1.6,
-                offsetLeft: -200,
-                resist: 70,
-                opacity: 0.048,
-              },
+              glowProps: GLOW_PROPS,
               //icon: item.icon,
               paddingRight: 80,
               onClick: () => (store.activeIndex = index),

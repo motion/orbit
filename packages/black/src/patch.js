@@ -64,10 +64,13 @@ class ComponentMap {
   }
 }
 
-let proxiesByID
-let didWarnAboutID
-let hasCreatedElementsByType
-let idsByType
+const hmrState = {
+  proxiesByID: null,
+  didWarnAboutID: null,
+  hasCreatedElementsByType: null,
+  idsByType: null,
+}
+window.hmrState = hmrState
 
 const hooks = {
   register(type, uniqueLocalName, fileName) {
@@ -81,9 +84,12 @@ const hooks = {
       return
     }
     const id = fileName + '#' + uniqueLocalName // eslint-disable-line prefer-template
-    if (!idsByType.has(type) && hasCreatedElementsByType.has(type)) {
-      if (!didWarnAboutID[id]) {
-        didWarnAboutID[id] = true
+    if (
+      !hmrState.idsByType.has(type) &&
+      hmrState.hasCreatedElementsByType.has(type)
+    ) {
+      if (!hmrState.didWarnAboutID[id]) {
+        hmrState.didWarnAboutID[id] = true
         const baseName = fileName.replace(/^.*[\\\/]/, '')
         console.error(
           `React Hot Loader: ${uniqueLocalName} in ${fileName} will not hot reload ` +
@@ -96,23 +102,23 @@ const hooks = {
     }
 
     // Remember the ID.
-    idsByType.set(type, id)
+    hmrState.idsByType.set(type, id)
 
     // We use React Proxy to generate classes that behave almost
     // the same way as the original classes but are updatable with
     // new versions without destroying original instances.
-    if (!proxiesByID[id]) {
-      proxiesByID[id] = createProxy(type)
+    if (!hmrState.proxiesByID[id]) {
+      hmrState.proxiesByID[id] = createProxy(type)
     } else {
-      proxiesByID[id].update(type)
+      hmrState.proxiesByID[id].update(type)
     }
   },
 
   reset(useWeakMap) {
-    proxiesByID = {}
-    didWarnAboutID = {}
-    hasCreatedElementsByType = new ComponentMap(useWeakMap)
-    idsByType = new ComponentMap(useWeakMap)
+    hmrState.proxiesByID = {}
+    hmrState.didWarnAboutID = {}
+    hmrState.hasCreatedElementsByType = new ComponentMap(useWeakMap)
+    hmrState.idsByType = new ComponentMap(useWeakMap)
   },
 }
 
@@ -124,15 +130,15 @@ function resolveType(type) {
     return type
   }
 
-  hasCreatedElementsByType.set(type, true)
+  hmrState.hasCreatedElementsByType.set(type, true)
 
   // When available, give proxy class to React instead of the real class.
-  const id = idsByType.get(type)
+  const id = hmrState.idsByType.get(type)
   if (!id) {
     return type
   }
 
-  const proxy = proxiesByID[id]
+  const proxy = hmrState.proxiesByID[id]
   if (!proxy) {
     return type
   }

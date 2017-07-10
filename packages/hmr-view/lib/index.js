@@ -4,7 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _slicedToArray2 = require('babel-runtime/helpers/slicedToArray');
+
+var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
 
 exports.default = proxyReactComponents;
 
@@ -39,13 +45,13 @@ function proxyReactComponents(_ref) {
       imports = _ref.imports,
       locals = _ref.locals;
 
-  var _imports = _slicedToArray(imports, 1),
+  var _imports = (0, _slicedToArray3.default)(imports, 1),
       React = _imports[0];
 
-  var _locals = _slicedToArray(locals, 1),
+  var _locals = (0, _slicedToArray3.default)(locals, 1),
       module = _locals[0];
 
-  var _locals2 = _slicedToArray(locals, 1),
+  var _locals2 = (0, _slicedToArray3.default)(locals, 1),
       hot = _locals2[0].hot;
 
   if (!hot || typeof hot.accept !== 'function') {
@@ -54,7 +60,7 @@ function proxyReactComponents(_ref) {
 
   // module
 
-  if (Object.keys(components).some(function (key) {
+  if ((0, _keys2.default)(components).some(function (key) {
     return !components[key].isInFunction;
   })) {
     hot.accept(function (err) {
@@ -107,19 +113,4 @@ setInterval(function () {
     reloaded = [];
   }
 }, 1000);
-;
-
-var _temp = function () {
-  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
-    return;
-  }
-
-  __REACT_HOT_LOADER__.register(componentProxies, 'componentProxies', 'src/index.js');
-
-  __REACT_HOT_LOADER__.register(reloaded, 'reloaded', 'src/index.js');
-
-  __REACT_HOT_LOADER__.register(proxyReactComponents, 'proxyReactComponents', 'src/index.js');
-}();
-
-;
 //# sourceMappingURL=index.js.map

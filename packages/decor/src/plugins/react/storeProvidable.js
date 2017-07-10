@@ -19,18 +19,11 @@ export default function storeProvidable(options, emitter) {
         return Klass
       }
 
-      // hmr restore
-      // if (instanceOpts && instanceOpts.module) {
-      //   cache.revive(instanceOpts.module, allStores)
-      // }
-
       // see setupStores()
       let Stores
 
-      function initStores() {
+      function decorateStores() {
         Stores = allStores
-
-        // call decorators
         if (storeDecorator && allStores) {
           for (const key of Object.keys(allStores)) {
             Stores[key] = storeDecorator(allStores[key])
@@ -38,7 +31,7 @@ export default function storeProvidable(options, emitter) {
         }
       }
 
-      initStores()
+      decorateStores()
 
       // return HoC
       class StoreProvider {
@@ -97,6 +90,8 @@ export default function storeProvidable(options, emitter) {
           emitter.emit('view.mount', this)
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]
+            log('store.mount', name)
+            console.log(store)
             emitter.emit('store.mount', store)
             if (options.onStoreDidMount) {
               options.onStoreDidMount(store, this.props)
@@ -172,14 +167,14 @@ export default function storeProvidable(options, emitter) {
             console.log(`[HMR] file: ${module.id}`)
             window.App && window.App.clearErrors && window.App.clearErrors()
             this.clearErrors()
-            // initStores()
+            // decorateStores()
             this.module = module
             this.disposeStores()
             this.setupStores()
           }, 150)
         }
 
-        disposeStores() {
+        disposeStores = () => {
           if (!this.state.stores) {
             log('bad dismount, this is an old store')
             return
@@ -204,7 +199,13 @@ export default function storeProvidable(options, emitter) {
             return <Redbox $$draggable error={this.state.error} />
           }
 
-          return <Klass {...this.props} {...this.state.stores} />
+          return (
+            <Klass
+              {...this.props}
+              {...this.state.stores}
+              disposeStores={this.disposeStores}
+            />
+          )
         }
       }
 

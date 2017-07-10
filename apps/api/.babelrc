@@ -1,10 +1,10 @@
 {
   "presets": [
-    "@mcro/preset-motion",
-    {
-      "env": {
-        "modules": true
+    [
+      "@mcro/preset-motion",
+      {
+        "disable": ["@mcro/view"]
       }
-    }
+    ]
   ]
 }

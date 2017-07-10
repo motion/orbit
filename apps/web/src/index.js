@@ -1,6 +1,6 @@
 // @flow
 import 'babel-polyfill'
-import '@mcro/black/patch'
+// import '@mcro/black/patch'
 import { createElement } from '@mcro/black'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -37,6 +37,7 @@ require('./start')
 // accept hmr
 if (module && module.hot) {
   module.hot.accept(() => {
+    log('accept: ./index.js')
     require('./start').start(true)
   })
 }

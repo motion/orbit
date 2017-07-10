@@ -28,8 +28,11 @@ const KEYMAP = {
   },
 }
 
+const VERSION = 92
+
 export default class ExplorerStore {
-  version = 3
+  static version = VERSION
+  version = VERSION
 
   @watch document = () => Document.get(Router.params.id)
   @watch

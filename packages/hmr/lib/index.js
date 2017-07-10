@@ -4,17 +4,19 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
-var _find = require('lodash/find');
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _find2 = _interopRequireDefault(_find);
+var _createClass2 = require('babel-runtime/helpers/createClass');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _createClass3 = _interopRequireDefault(_createClass2);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _keys = require('babel-runtime/core-js/object/keys');
 
-var _default = function _default(_ref) {
+var _keys2 = _interopRequireDefault(_keys);
+
+exports.default = function (_ref) {
   var t = _ref.types,
       template = _ref.template;
 
@@ -82,7 +84,7 @@ var _default = function _default(_ref) {
 
   // `{ name: foo }` => Node { type: "ObjectExpression", properties: [...] }
   function toObjectExpression(object) {
-    var properties = Object.keys(object).map(function (key) {
+    var properties = (0, _keys2.default)(object).map(function (key) {
       return t.objectProperty(t.identifier(key), object[key]);
     });
 
@@ -163,7 +165,7 @@ var _default = function _default(_ref) {
 
   var ReactTransformBuilder = function () {
     function ReactTransformBuilder(file, options) {
-      _classCallCheck(this, ReactTransformBuilder);
+      (0, _classCallCheck3.default)(this, ReactTransformBuilder);
 
       this.file = file;
       this.program = file.path;
@@ -171,7 +173,7 @@ var _default = function _default(_ref) {
       this.configuredTransformsIds = [];
     }
 
-    _createClass(ReactTransformBuilder, [{
+    (0, _createClass3.default)(ReactTransformBuilder, [{
       key: 'normalizeOptions',
       value: function normalizeOptions(options) {
         return {
@@ -356,7 +358,6 @@ var _default = function _default(_ref) {
         }
       }
     }]);
-
     return ReactTransformBuilder;
   }();
 
@@ -375,16 +376,9 @@ var _default = function _default(_ref) {
   };
 };
 
-exports.default = _default;
-;
+var _find = require('lodash/find');
 
-var _temp = function () {
-  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
-    return;
-  }
+var _find2 = _interopRequireDefault(_find);
 
-  __REACT_HOT_LOADER__.register(_default, 'default', 'src/index.js');
-}();
-
-;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 //# sourceMappingURL=index.js.map

@@ -261,6 +261,7 @@ export default class Surface implements ViewType {
         theme="dark"
         background
         openOnHover
+        closeOnClick
         noHover
         animation="bounce 150ms"
         target={`.${this.uniq}`}

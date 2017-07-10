@@ -61,7 +61,7 @@ export default class Sidebar {
               <UI.Theme name="light">
                 <UI.Drawer
                   open={explorerStore.showDiscussions}
-                  from="right"
+                  from="left"
                   size={width + 20}
                   background="#fefefe"
                   css={{

@@ -1,0 +1,22 @@
+{
+  "env": {
+    "production": {
+      "presets": [["@mcro/preset-motion", { "disable": ["react-hot-loader/babel"], {
+          "env": {
+            "modules": false
+          }
+        }
+      }]]
+    },
+    "development": {
+      "presets": [
+        "@mcro/preset-motion",
+        {
+          "env": {
+            "modules": false
+          }
+        }
+      ]
+    }
+  }
+}

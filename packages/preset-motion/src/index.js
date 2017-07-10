@@ -1,4 +1,4 @@
-export default function(context, givenOpts) {
+module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
   const getPlugin = (name, opts) => {
@@ -39,14 +39,13 @@ export default function(context, givenOpts) {
         getPlugin('babel-preset-env'),
         Object.assign(
           {
-            modules: false,
             useBuiltIns: true,
             targets: {
               node: '4',
             },
             exclude: ['transform-regenerator', 'transform-async-to-generator'],
           },
-          opts
+          opts.env
         ),
       ],
       getPlugin('babel-preset-react'),

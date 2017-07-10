@@ -1,0 +1,10 @@
+{
+  "presets": [
+    "@mcro/preset-motion",
+    {
+      "env": {
+        "modules": true
+      }
+    }
+  ]
+}

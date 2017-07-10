@@ -33,27 +33,30 @@ export default class Projects {
           {docs.map((doc, index) => {
             const tasks = doc.tasks()
             const hasTasks = tasks && tasks.length
+            const percentDone = percentComplete(tasks)
             return (
               <section key={`${doc._id}${index}`}>
                 <title $$row $$spaceBetween>
                   <start $$row $$centered>
                     <UI.Progress.Circle
                       if={hasTasks}
+                      key={percentDone}
                       lineColor="rgba(130, 248, 198, 0.6)"
                       backgroundColor={[0, 0, 0, 0.55]}
                       lineWidth={4}
                       size={16}
-                      percent={percentComplete(tasks)}
+                      percent={percentDone}
                     />
                     <path $$row $$centered>
                       {flatMap(
                         crumbs &&
                           crumbs[index] &&
-                          crumbs[index].map(crumbDoc => {
-                            log('crumbdoc', crumbDoc)
+                          crumbs[index].map((crumbDoc, crumbIndex) => {
+                            const ID = `${crumbDoc._id}${crumbIndex}`
                             return [
-                              <Arrow $arrow />,
+                              <Arrow $arrow key={ID + '-1'} />,
                               <UI.Button
+                                key={ID + '-2'}
                                 $button
                                 size={0.9}
                                 borderRadius={20}

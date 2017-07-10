@@ -191,6 +191,10 @@ export default function storeProvidable(options, emitter) {
         }
 
         disposeStores() {
+          if (!this.state.stores) {
+            log('bad dismount, this is an old store')
+            return
+          }
           emitter.emit('view.unmount', this)
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]

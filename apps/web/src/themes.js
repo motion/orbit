@@ -3,7 +3,7 @@ import { ThemeMaker, color } from '@mcro/ui'
 
 const Theme = new ThemeMaker()
 
-const highlightColor = [89, 154, 244]
+const highlightColor = 'rgb(95, 82, 159)'
 
 const LIGHT = {
   highlightColor,

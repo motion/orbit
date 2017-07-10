@@ -55,7 +55,7 @@ export default class Sidebar {
           >
             <sidebar>
               <sidebarcontent>
-                <SidebarContent key={2} />
+                <SidebarContent />
               </sidebarcontent>
 
               <UI.Theme name="light">

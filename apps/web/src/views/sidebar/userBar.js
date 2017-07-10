@@ -42,6 +42,8 @@ export default class UserBar {
         <UI.Popover
           background="transparent"
           distance={10}
+          elevation={5}
+          borderRadius={8}
           forgiveness={16}
           delay={150}
           target={<UI.Button circular icon="body" />}
@@ -50,7 +52,9 @@ export default class UserBar {
         >
           <UI.List
             background
-            elevation={3}
+            css={{
+              backdropFilter: 'blur(2px)',
+            }}
             width={150}
             padding={3}
             borderRadius={6}

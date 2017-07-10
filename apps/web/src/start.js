@@ -10,7 +10,7 @@ start(App.started, App.started)
 export function render(shouldReset) {
   // console.time('#render')
   let ROOT = document.querySelector('#app')
-  const Layout = require('./views/sidebar/projects').default
+  const Layout = require('./views/layout').default
 
   // HMR: to recover from react bugs save this file
   if (shouldReset && module.hot) {

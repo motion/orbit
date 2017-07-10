@@ -191,14 +191,13 @@ function mobxifyWatch(obj, method, val) {
   let currentObservable = null
   let stopObservableAutorun
 
-  const update = val => observable.box(val)
+  const update = val => current.set(observable.box(val))
 
   function runObservable() {
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
         const value = currentObservable.get()
-        log('set', KEY, value)
         update(value) // set + wrap
       }
     })

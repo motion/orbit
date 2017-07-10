@@ -3,7 +3,7 @@
     [
       "@mcro/preset-motion",
       {
-        "disable": ["@mcro/view"]
+        "disable": ["react-hot-loader/patch"]
       }
     ]
   ]

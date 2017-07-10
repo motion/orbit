@@ -27,8 +27,7 @@ type Props = {
 
 if (module) {
   module.hot.accept(() => {
-    log('accept layou')
-    console.log(window.lastInstance)
+    log('accept layou', window.lastInstance)
     window.lastInstance && window.lastInstance.props.disposeStores()
     start(true, true)
   })

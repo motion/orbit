@@ -89,6 +89,10 @@ function execQuery(it, valueGet: Function) {
 
   const response = {}
   const id = Math.random()
+  const getValue = () => {
+    observe() // start observe
+    return result.get() && result.get().get()
+  }
 
   // helpers
   Object.defineProperties(response, {
@@ -118,10 +122,10 @@ function execQuery(it, valueGet: Function) {
       value: query && query.$,
     },
     current: {
-      get: () => {
-        observe() // start observe
-        return result.get() && result.get().get()
-      },
+      get: getValue,
+    },
+    get: {
+      value: getValue,
     },
     observable: {
       value: result,

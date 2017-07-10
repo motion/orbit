@@ -23,7 +23,6 @@ const Doc = ({ doc }) =>
 @view
 class DataList {
   render({ dataStore }) {
-    log('dataStore', dataStore.items)
     return (
       <dataItems if={dataStore.items}>
         {dataStore.items.map(item => <Doc doc={item} key={item._id} />)}
@@ -34,25 +33,21 @@ class DataList {
 
 @view.provide({
   dataStore: class DataStore {
-    // reactive = Document.findOrCreate({ title: 'new' })
-    @watch items = () => Document.all()
+    @watch
+    items = () => (this.props.show ? Document.all() : [{ title: 'testmeout' }])
     create = () => Document.create()
   },
 })
 class DataPlayground {
   render({ show, dataStore }) {
-    if (!show) {
-      return null
-    }
+    log(show, dataStore.items)
 
     return (
       <data>
         <current if={dataStore.reactive}>
           {dataStore.reactive.title}
         </current>
-
         <DataList />
-
         <UI.Button onClick={dataStore.create}>create doc</UI.Button>
       </data>
     )

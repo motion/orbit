@@ -10,9 +10,9 @@ import Arrow from '~/explorer/arrow'
 @view({
   store: class SidebarProjectStore {
     docs = Document.stars()
-    crumbs = watch(
-      () => this.docs && Promise.all(this.docs.map(doc => doc.getCrumbs()))
-    )
+    @watch
+    crumbs = () =>
+      this.docs && Promise.all(this.docs.map(doc => doc.getCrumbs()))
   },
 })
 export default class Projects {
@@ -21,6 +21,7 @@ export default class Projects {
     const hasDocs = docs.length !== 0
     const percentComplete = tasks =>
       100 * tasks.filter(i => i.archive).length / tasks.length
+    const { crumbs } = store
 
     return (
       <content $$draggable $$scrollable $$flex={6}>
@@ -46,9 +47,9 @@ export default class Projects {
                     />
                     <path onClick={() => Router.go(doc.url())} $$row $$centered>
                       {flatMap(
-                        store.crumbs &&
-                          store.crumbs[index] &&
-                          store.crumbs[index].map(doc => [
+                        crumbs &&
+                          crumbs[index] &&
+                          crumbs[index].map(doc => [
                             <Arrow $arrow />,
                             <UI.Button
                               $button

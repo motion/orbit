@@ -10,8 +10,9 @@ import Page from '~/views/page'
 @view.attach('explorerStore')
 @view
 class Actions {
-  render({ explorerStore, explorerStore: { document } }) {
-    log('doccccc', document)
+  render({ explorerStore }) {
+    const document = explorerStore.document
+    log('RENDER', document)
 
     if (!document || document === null) {
       return null
@@ -158,7 +159,7 @@ export default class DocumentPage {
 
         <Actions />
 
-        <docpagecontent>
+        <docpagecontent if={false}>
           <DocumentView
             if={!docStore.showInbox}
             id={doc._id}

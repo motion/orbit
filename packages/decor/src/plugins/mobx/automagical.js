@@ -6,11 +6,11 @@ import {
   action,
   extendShallowObservable,
   extendObservable,
+  isObservable,
   toJS,
   autorun,
 } from 'mobx'
 
-const isObservable = val => val && val.$mobx
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery
 const isRxObservable = val => val instanceof Observable
@@ -184,20 +184,19 @@ function resolve(value) {
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
-  const KEY = `${obj.constructor.name}.${method}`
-  log('mobxifyWatch', KEY)
-  let current = observable.shallowBox(null)
+  let id = Math.random()
+  const KEY = `${obj.constructor.name}.${method}--${id}--`
+  let current = observable.box(null)
   let currentDisposable = null
   let currentObservable = null
   let stopObservableAutorun
 
   function runObservable() {
-    log('runObservable', KEY)
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
-        log('automagical.currentObservable', KEY, currentObservable.current)
-        current.set(currentObservable.current) // hit observable
+        const value = currentObservable.get()
+        current.set(observable.box(value)) // hit observable
       }
     })
   }
@@ -213,7 +212,6 @@ function mobxifyWatch(obj, method, val) {
   async function watchForNewValue() {
     const mid = ++uid // lock
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
-    log('watchForNewValue', KEY, result)
     stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
       currentDisposable()
@@ -223,8 +221,8 @@ function mobxifyWatch(obj, method, val) {
       currentDisposable = result.dispose
     }
     if (result && (result.$isQuery || isObservable(result))) {
-      log('watchforNewValue isQuery isntConnected?', result.isntConnected)
       if (result.isntConnected) {
+        log('watchforNewValue isQuery isntConnected?', result.isntConnected)
         return
       }
       currentObservable = result
@@ -247,8 +245,11 @@ function mobxifyWatch(obj, method, val) {
 
   Object.defineProperty(obj, method, {
     get() {
-      log('gettttttt', current.get() && current.get().starredBy)
-      return toJS(current.get())
+      const result = current.get()
+      if (isObservable(result)) {
+        return result.get()
+      }
+      return result
     },
   })
 
@@ -259,5 +260,6 @@ function mobxifyWatch(obj, method, val) {
     stopAutorun()
     stopObservableAutorun && stopObservableAutorun()
   })
+
   return current
 }

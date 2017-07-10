@@ -22,6 +22,7 @@ export default class Projects {
     const percentComplete = tasks =>
       100 * tasks.filter(i => i.archive).length / tasks.length
     const { crumbs } = store
+    const hasCrumbs = crumbs && crumbs.length
 
     return (
       <content $$draggable $$scrollable $$flex={6}>
@@ -29,82 +30,84 @@ export default class Projects {
           No Stars
         </UI.Placeholder>
 
-        <tasks if={hasDocs}>
-          {docs.map((doc, index) => {
-            const tasks = doc.tasks()
-            const hasTasks = tasks && tasks.length
-            const percentDone = percentComplete(tasks)
-            return (
-              <section key={`${doc._id}${index}`}>
-                <title $$row $$spaceBetween>
-                  <start $$row $$centered>
-                    <UI.Progress.Circle
-                      if={hasTasks}
-                      key={percentDone}
-                      lineColor="rgba(130, 248, 198, 0.6)"
-                      backgroundColor={[0, 0, 0, 0.55]}
-                      lineWidth={4}
-                      size={16}
-                      percent={percentDone}
-                    />
-                    <path $$row $$centered>
-                      {flatMap(
-                        crumbs &&
-                          crumbs[index] &&
-                          crumbs[index].map((crumbDoc, crumbIndex) => {
-                            const ID = `${crumbDoc._id}${crumbIndex}`
-                            return [
-                              <Arrow $arrow key={ID + '-1'} />,
-                              <UI.Button
-                                key={ID + '-2'}
-                                $button
-                                size={0.9}
-                                borderRadius={20}
-                                chromeless
-                                onClick={() => Router.go(log(crumbDoc.url()))}
-                              >
-                                {crumbDoc.getTitle()}
-                              </UI.Button>,
-                            ]
-                          })
-                      ).slice(1)}
-                    </path>
-                  </start>
-                  <end>
-                    <UI.Button
-                      glow={false}
-                      glint={false}
-                      theme="blank"
-                      margin={-5}
-                      marginRight={-15}
-                      icon="remove"
-                      color="rgba(255, 255, 255, 0.1)"
-                      hoverColor="red"
-                      onClick={doc.toggleStar}
-                      tooltip="remove"
-                      tooltipProps={{
-                        towards: 'left',
-                      }}
-                    />
-                  </end>
-                </title>
-                <tasks if={hasTasks}>
-                  {tasks.map(({ archive, text, key }, index) =>
-                    <task key={key} $$row $$align="center">
-                      <UI.Input
-                        $check
-                        onChange={() => doc.toggleTask(text)}
-                        type="checkbox"
-                        checked={archive}
-                      />{' '}
-                      <UI.Text ellipse>{text}</UI.Text>
-                    </task>
-                  )}
-                </tasks>
-              </section>
-            )
-          })}
-        </tasks>
+        <UI.StableContainer stableDuration={200}>
+          <tasks if={hasDocs && hasCrumbs}>
+            {docs.map((doc, index) => {
+              const tasks = doc.tasks()
+              const hasTasks = tasks && tasks.length
+              const percentDone = percentComplete(tasks)
+              return (
+                <section key={doc._id}>
+                  <title $$row $$spaceBetween>
+                    <start $$row $$centered>
+                      <UI.Progress.Circle
+                        if={hasTasks}
+                        key={percentDone}
+                        lineColor="rgba(130, 248, 198, 0.6)"
+                        backgroundColor={[0, 0, 0, 0.55]}
+                        lineWidth={4}
+                        size={16}
+                        percent={percentDone}
+                      />
+                      <path $$row $$centered>
+                        {flatMap(
+                          crumbs &&
+                            crumbs[index] &&
+                            crumbs[index].map((crumbDoc, crumbIndex) => {
+                              const ID = `${crumbDoc._id}${crumbIndex}`
+                              return [
+                                <Arrow $arrow key={ID + '-1'} />,
+                                <UI.Button
+                                  key={ID + '-2'}
+                                  $button
+                                  size={0.9}
+                                  borderRadius={20}
+                                  chromeless
+                                  onClick={() => Router.go(log(crumbDoc.url()))}
+                                >
+                                  {crumbDoc.getTitle()}
+                                </UI.Button>,
+                              ]
+                            })
+                        ).slice(1)}
+                      </path>
+                    </start>
+                    <end>
+                      <UI.Button
+                        glow={false}
+                        glint={false}
+                        theme="blank"
+                        margin={-5}
+                        marginRight={-15}
+                        icon="remove"
+                        color="rgba(255, 255, 255, 0.1)"
+                        hoverColor="red"
+                        onClick={doc.toggleStar}
+                        tooltip="remove"
+                        tooltipProps={{
+                          towards: 'left',
+                        }}
+                      />
+                    </end>
+                  </title>
+                  <tasks if={hasTasks}>
+                    {tasks.map(({ archive, text, key }, index) =>
+                      <task key={key} $$row $$align="center">
+                        <UI.Input
+                          $check
+                          onChange={() => doc.toggleTask(text)}
+                          type="checkbox"
+                          checked={archive}
+                        />{' '}
+                        <UI.Text ellipse>{text}</UI.Text>
+                      </task>
+                    )}
+                  </tasks>
+                </section>
+              )
+            })}
+          </tasks>
+        </UI.StableContainer>
 
         <empty if={hasDocs} $$draggable />
       </content>

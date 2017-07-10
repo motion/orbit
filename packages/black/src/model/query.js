@@ -19,6 +19,10 @@ function execQuery(it, valueGet: Function) {
   const result = observable.shallowBox(undefined)
   let query = valueGet()
 
+  if (!query) {
+    return query
+  }
+
   // TODO can probably handle this here
   // const notConnected = query && query.isntConnected
 
@@ -33,7 +37,7 @@ function execQuery(it, valueGet: Function) {
   }
 
   function runSubscribe() {
-    if (query && query.$) {
+    if (query.$) {
       finishSubscribe()
       subscriber = query.$.subscribe(value => {
         // log('SUBSCRIBE', INFO, short(value))
@@ -54,7 +58,7 @@ function execQuery(it, valueGet: Function) {
     }
     isObserving = true
     // handle not connected yet
-    if (query && query.isntConnected) {
+    if (query.isntConnected) {
       query.onConnection().then(() => {
         query = valueGet()
         runSubscribe()
@@ -101,7 +105,7 @@ function execQuery(it, valueGet: Function) {
     },
     exec: {
       value: () => {
-        return (query && query.exec
+        return (query.exec
           ? query.exec()
           : Promise.resolve(query)).then(val => {
           // helper: queries return empty objects on null findOne(), this returns null
@@ -119,7 +123,7 @@ function execQuery(it, valueGet: Function) {
       value: query,
     },
     $: {
-      value: query && query.$,
+      value: query.$,
     },
     current: {
       get: getValue,

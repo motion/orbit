@@ -61,6 +61,12 @@ export default class ExplorerStore {
   showResults = false
 
   start() {
+    this.watch(() => {
+      if (this.document) {
+        this.setPath(this.document)
+      }
+    })
+
     this.watch(async () => {
       if (!this.isTypingPath) {
         // search

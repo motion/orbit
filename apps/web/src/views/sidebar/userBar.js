@@ -12,6 +12,7 @@ import DocumentView from '~/views/document'
 })
 export default class UserBar {
   render({ store }) {
+    log('user logged in?', User.loggedIn)
     return (
       <userbar $$draggable if={User.loggedIn}>
         <UI.Popover

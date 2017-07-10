@@ -9,6 +9,7 @@ export offset from './helpers/offset'
 export * as SlotFill from './helpers/slot'
 export * as Virtualized from 'react-virtualized'
 export Portal from 'react-portal'
+export StableContainer from './helpers/stableContainer'
 
 // base
 export Arrow from './arrow'

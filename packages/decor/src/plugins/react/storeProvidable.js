@@ -183,7 +183,7 @@ export default function storeProvidable(options, emitter) {
             console.log(`[HMR] file: ${module.id}`)
             window.App && window.App.clearErrors && window.App.clearErrors()
             this.clearErrors()
-            initStores()
+            // initStores()
             this.module = module
             this.disposeStores()
             this.setupStores()

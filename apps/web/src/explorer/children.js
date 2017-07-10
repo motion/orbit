@@ -25,7 +25,6 @@ class ExplorerChildrenStore {
   start() {
     this.watch(async () => {
       if (this.docs && this.docs.length) {
-        this.children = {}
         const allChildren = await Promise.all(
           this.docs.map(async doc => ({
             id: doc._id,
@@ -85,38 +84,43 @@ export default class ExplorerChildren {
             />
           </post>
         </actions>
-        <docs if={hasDocs}>
-          {allDocs.map((doc, index) => {
-            const children = store.children[doc._id]
-
-            return (
-              <doc if={doc.title} justify="flex-start" key={index}>
-                <title>
-                  <UI.Button
-                    $subDocItem
-                    chromeless
-                    onClick={() => Router.go(doc.url())}
-                  >
-                    {doc.getTitle()}
-                  </UI.Button>
-                </title>
-                <subdocs if={children && children.length}>
-                  <Arrow $arrow />
-                  {children.map(child =>
+        <UI.StableContainer stableDuration={500}>
+          <docs if={hasDocs && Object.keys(store.children).length}>
+            {allDocs.map((doc, index) => {
+              const children = store.children[doc._id]
+              return (
+                <doc
+                  if={doc.title}
+                  justify="flex-start"
+                  key={`${doc._id}${index}`}
+                >
+                  <title>
                     <UI.Button
                       $subDocItem
                       chromeless
-                      key={child._id}
-                      onClick={() => Router.go(child.url())}
+                      onClick={() => Router.go(doc.url())}
                     >
-                      {child.getTitle()}
+                      {doc.getTitle()}
                     </UI.Button>
-                  )}
-                </subdocs>
-              </doc>
-            )
-          })}
-        </docs>
+                  </title>
+                  <subdocs if={children && children.length}>
+                    <Arrow $arrow />
+                    {children.map(child =>
+                      <UI.Button
+                        $subDocItem
+                        chromeless
+                        key={child._id}
+                        onClick={() => Router.go(child.url())}
+                      >
+                        {child.getTitle()}
+                      </UI.Button>
+                    )}
+                  </subdocs>
+                </doc>
+              )
+            })}
+          </docs>
+        </UI.StableContainer>
       </children>
     )
   }

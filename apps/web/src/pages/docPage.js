@@ -6,22 +6,24 @@ import Explorer from '~/explorer'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
+import Overdrive from 'react-overdrive'
 
 @view.attach('explorerStore')
 @view
 class Actions {
   render({ explorerStore }) {
     const document = explorerStore.document
-    log('RENDER', document)
 
     if (!document || document === null) {
       return null
     }
 
     if (typeof document.hasStar !== 'function') {
-      log('doc is', document)
+      log('hmr caused a bad thing')
       return null
     }
+
+    log('render actions')
 
     const starred = document.hasStar()
     const itemProps = {
@@ -105,19 +107,8 @@ class Actions {
 }
 
 class DocPageStore {
-  @watch
-  doc = () => (this.props.id ? Document.get(this.props.id) : Document.home())
   forceEdit = false
   showDiscussions = false
-
-  start() {
-    this.watch(() => {
-      log('watch running for doc')
-      if (this.doc) {
-        this.props.explorerStore.setPath(this.doc)
-      }
-    })
-  }
 
   get editing() {
     return this.forceEdit || (User.loggedIn && !User.user.hatesToEdit)
@@ -134,13 +125,13 @@ class DocPageStore {
 export default class DocumentPage {
   extraRef = null
 
-  render({ docStore }: { docStore: DocPageStore }) {
-    const { doc } = docStore
+  render({ docStore, explorerStore }: { docStore: DocPageStore }) {
+    const { document } = explorerStore
 
-    if (doc === undefined) {
+    if (document === undefined) {
       return <null />
     }
-    if (!doc) {
+    if (!document) {
       return <UI.Placeholder size={2}>Doc 404</UI.Placeholder>
     }
 
@@ -162,7 +153,7 @@ export default class DocumentPage {
         <docpagecontent>
           <DocumentView
             if={!docStore.showInbox}
-            id={doc._id}
+            document={document}
             onKeyDown={docStore.onKeyDown}
             showCrumbs
             showChildren

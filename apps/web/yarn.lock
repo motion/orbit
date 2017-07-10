@@ -3319,6 +3319,10 @@ react-flip-move@^2.9.14:
   version "2.9.14"
   resolved "https://registry.yarnpkg.com/react-flip-move/-/react-flip-move-2.9.14.tgz#3b60e44493a4bbe115a8c3d678b844776bbab453"
 
+react-overdrive@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/react-overdrive/-/react-overdrive-0.0.7.tgz#17be9ba43b75b92037182e0a2db07beecf87a4de"
+
 react-portal@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-portal/-/react-portal-3.1.0.tgz#865c44fb72a1da106c649206936559ce891ee899"

@@ -74,7 +74,7 @@ function doLog(...args) {
 
   const logger = (...things) => {
     console.log(
-      `%c${cutoff(things.map(prettyPrint).join(' '))}`,
+      `%c${things.map(prettyPrint).join(' ')}`,
       `background: ${Color.getColor(things[0])}`
     )
   }

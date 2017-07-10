@@ -4,14 +4,13 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import App from '~/app'
 import themes from './themes'
-import LayoutExtra from './views/layout'
 
 start(App.started, App.started)
 
 export function render(shouldReset) {
   // console.time('#render')
   let ROOT = document.querySelector('#app')
-  const Layout = require('./views/layout').default
+  const Layout = require('./views/sidebar/projects').default
 
   // HMR: to recover from react bugs save this file
   if (shouldReset && module.hot) {

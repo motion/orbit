@@ -191,27 +191,26 @@ function mobxifyWatch(obj, method, val) {
   let currentObservable = null
   let stopObservableAutorun
 
+  const update = val => observable.box(val)
+
   function runObservable() {
     stopObservableAutorun && stopObservableAutorun()
     stopObservableAutorun = autorun(() => {
       if (currentObservable) {
         const value = currentObservable.get()
-        current.set(observable.box(value)) // hit observable
+        log('set', KEY, value)
+        update(value) // set + wrap
       }
     })
   }
 
   let uid = 0
-  let stopAutorun
-
-  function run() {
-    stopAutorun && stopAutorun()
-    stopAutorun = autorun(watchForNewValue)
-  }
+  const stopAutorun = autorun(watchForNewValue)
 
   async function watchForNewValue() {
-    const mid = ++uid // lock
+    const mid = ++uid // 🔒
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
+    console.log('result', result)
     stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
       currentDisposable()
@@ -229,26 +228,25 @@ function mobxifyWatch(obj, method, val) {
       runObservable()
     } else {
       if (isPromise(result)) {
-        const value = await result
-        if (uid === mid) {
-          // if lock still valid
-          current.set(value)
-        }
+        current.set(fromPromise(result))
       } else {
-        current.set(result)
+        update(result)
       }
     }
   }
 
-  // run
-  run()
-
   Object.defineProperty(obj, method, {
     get() {
       const result = current.get()
+      if (result && result.promise) {
+        log('get', result.value)
+        return result.value
+      }
       if (isObservable(result)) {
+        log('get', result.get())
         return result.get()
       }
+      log('get', result)
       return result
     },
   })

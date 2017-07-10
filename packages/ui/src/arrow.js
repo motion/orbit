@@ -69,7 +69,10 @@ export default class Arrow {
 
   static theme = ({ size, background, shadow }, theme) => ({
     arrowInner: {
-      background: background || theme.base.background,
+      background:
+        background === true
+          ? theme.base.background
+          : background || theme.base.background,
       boxShadow: shadow,
     },
     arrow: {

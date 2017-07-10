@@ -87,11 +87,8 @@ export default class App implements AppStore {
   // private
   unmount = type => thing => {
     const key = thing.constructor.name
-    log('unmount', key)
     if (this.mounted[type][key]) {
-      console.log('before', this.mounted[type][key])
       this.mounted[type][key].delete(thing)
-      console.log('after', this.mounted[type][key])
       this.mountedVersion++
     }
   }

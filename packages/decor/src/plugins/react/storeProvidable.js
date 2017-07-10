@@ -84,14 +84,11 @@ export default function storeProvidable(options, emitter) {
 
         componentDidMount() {
           if (this.state.stores === null) {
-            console.log('temp fix stores debug')
             return
           }
           emitter.emit('view.mount', this)
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]
-            log('store.mount', name)
-            console.log(store)
             emitter.emit('store.mount', store)
             if (options.onStoreDidMount) {
               options.onStoreDidMount(store, this.props)

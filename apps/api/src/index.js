@@ -1,6 +1,7 @@
+// import 'babel-polyfill'
 import API from './api'
 
+console.log('starting api')
 const Api = new API({ rootPath: __dirname })
 
-console.log('starting api')
 Api.start()

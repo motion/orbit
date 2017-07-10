@@ -4,17 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require('babel-runtime/helpers/createClass');
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 exports.default = function (_ref) {
   var t = _ref.types,
@@ -84,7 +74,7 @@ exports.default = function (_ref) {
 
   // `{ name: foo }` => Node { type: "ObjectExpression", properties: [...] }
   function toObjectExpression(object) {
-    var properties = (0, _keys2.default)(object).map(function (key) {
+    var properties = Object.keys(object).map(function (key) {
       return t.objectProperty(t.identifier(key), object[key]);
     });
 
@@ -165,7 +155,7 @@ exports.default = function (_ref) {
 
   var ReactTransformBuilder = function () {
     function ReactTransformBuilder(file, options) {
-      (0, _classCallCheck3.default)(this, ReactTransformBuilder);
+      _classCallCheck(this, ReactTransformBuilder);
 
       this.file = file;
       this.program = file.path;
@@ -173,7 +163,7 @@ exports.default = function (_ref) {
       this.configuredTransformsIds = [];
     }
 
-    (0, _createClass3.default)(ReactTransformBuilder, [{
+    _createClass(ReactTransformBuilder, [{
       key: 'normalizeOptions',
       value: function normalizeOptions(options) {
         return {
@@ -358,6 +348,7 @@ exports.default = function (_ref) {
         }
       }
     }]);
+
     return ReactTransformBuilder;
   }();
 
@@ -381,4 +372,6 @@ var _find = require('lodash/find');
 var _find2 = _interopRequireDefault(_find);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 //# sourceMappingURL=index.js.map

@@ -11,7 +11,7 @@ module.exports = function(context, givenOpts) {
 
   const config = {
     plugins: [
-      getPlugin('babel-plugin-transform-runtime'),
+      // getPlugin('babel-plugin-transform-runtime'),
       getPlugin('@mcro/hmr', {
         decoratorName: opts.decorator || 'view',
         transforms: [

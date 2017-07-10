@@ -1,0 +1,10 @@
+{
+  "presets": [
+    [
+      "@mcro/preset-motion",
+      {
+        "disable": ["react-hot-loader/patch"]
+      }
+    ]
+  ]
+}

@@ -1,6 +1,5 @@
 # housekeeping sunday
   - hmr bugs are still pretty bad, try and fix dup views and stale stores
-  - @watch and @query both have different subtle bugs that are frustrating in Actions area
   - popovers in actions area get "stuck" open
   - on signup create org + invite team + create home doc and onboard
   - see about pouch revisions

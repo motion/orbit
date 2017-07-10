@@ -559,6 +559,7 @@ export default class Popover {
     adjust,
     animation,
     arrowSize,
+    background,
     children,
     closeOnClick,
     delay,
@@ -655,12 +656,13 @@ export default class Popover {
               >
                 <Arrow
                   theme={theme}
+                  background={background}
                   size={arrowSize}
                   towards={INVERSE[direction]}
                   shadow={getShadow(shadow)}
                 />
               </arrowContain>
-              <Surface {...props}>
+              <Surface {...props} background={background}>
                 {typeof children === 'function' ? children(isOpen) : children}
               </Surface>
             </popover>

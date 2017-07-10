@@ -24,7 +24,6 @@ export default class StableContainer extends React.Component {
       clearTimeout(this.setNextChildren)
     }
     if (!nextProps.children) {
-      log('set children delayed', this.props.stableDuration)
       this.setNextChildren = this.setTimeout(() => {
         this.setState({
           children: nextProps.children,

@@ -1,4 +1,4 @@
-export default function(context, givenOpts) {
+module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
   const getPlugin = (name, opts) => {
@@ -12,16 +12,6 @@ export default function(context, givenOpts) {
   const config = {
     plugins: [
       // getPlugin('babel-plugin-transform-runtime'),
-      getPlugin('@mcro/hmr', {
-        decoratorName: opts.decorator || 'view',
-        transforms: [
-          {
-            transform: require.resolve('@mcro/hmr-view'),
-            imports: ['react'],
-            locals: ['module'],
-          },
-        ],
-      }),
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy'),
       getPlugin('babel-plugin-transform-class-properties'),
@@ -32,6 +22,17 @@ export default function(context, givenOpts) {
       getPlugin('babel-plugin-root-import', [
         { rootPathPrefix: '~', rootPathSuffix: 'src' },
       ]),
+      getPlugin('react-hot-loader/patch'),
+      // getPlugin('@mcro/hmr', {
+      //   decoratorName: opts.decorator || 'view',
+      //   transforms: [
+      //     {
+      //       transform: require.resolve('@mcro/hmr-view'),
+      //       imports: ['react'],
+      //       locals: ['module'],
+      //     },
+      //   ],
+      // }),
     ],
     presets: [
       [
@@ -44,7 +45,7 @@ export default function(context, givenOpts) {
             },
             exclude: ['transform-regenerator', 'transform-async-to-generator'],
           },
-          opts
+          opts.env
         ),
       ],
       getPlugin('babel-preset-react'),

@@ -57,7 +57,7 @@ export default class Signup {
               },
             }}
           >
-            Or login to your account:&nbsp;
+            2Or login to your account:&nbsp;
             <Login />
           </login>
         </UI.Theme>

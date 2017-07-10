@@ -4,8 +4,7 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import App from '~/app'
 import themes from './themes'
-
-start(App.started, App.started)
+import { AppContainer } from 'react-hot-loader'
 
 export function render(shouldReset) {
   // console.time('#render')
@@ -22,9 +21,11 @@ export function render(shouldReset) {
   }
 
   ReactDOM.render(
-    <ThemeProvide {...themes}>
-      <Layout />
-    </ThemeProvide>,
+    <AppContainer>
+      <ThemeProvide {...themes}>
+        <Layout />
+      </ThemeProvide>
+    </AppContainer>,
     ROOT
   )
   // console.timeEnd('#render')
@@ -34,4 +35,14 @@ export async function start(quiet, restart) {
   render(restart)
   await App.start(quiet)
   render()
+}
+
+start(App.started, App.started)
+window.start = start
+
+if (module && module.hot) {
+  module.hot.accept('./views/layout', () => {
+    log('accepted layout')
+    // start(true, true)
+  })
 }

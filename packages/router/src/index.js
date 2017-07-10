@@ -46,6 +46,7 @@ export class ObservableRouter {
     autorun(() => {
       if (this.path !== window.location.pathname || this.forceUpdate) {
         historyDirection(1)
+        log && log('Router.go', this.path)
         this.history.push(this.path)
         this.forceUpdate = false
       }

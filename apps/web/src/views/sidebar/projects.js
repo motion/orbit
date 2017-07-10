@@ -45,21 +45,25 @@ export default class Projects {
                       size={16}
                       percent={percentComplete(tasks)}
                     />
-                    <path onClick={() => Router.go(doc.url())} $$row $$centered>
+                    <path $$row $$centered>
                       {flatMap(
                         crumbs &&
                           crumbs[index] &&
-                          crumbs[index].map(doc => [
-                            <Arrow $arrow />,
-                            <UI.Button
-                              $button
-                              size={0.9}
-                              chromeless
-                              onClick={() => Router.go(doc.url())}
-                            >
-                              {doc.getTitle()}
-                            </UI.Button>,
-                          ])
+                          crumbs[index].map(crumbDoc => {
+                            log('crumbdoc', crumbDoc)
+                            return [
+                              <Arrow $arrow />,
+                              <UI.Button
+                                $button
+                                size={0.9}
+                                borderRadius={20}
+                                chromeless
+                                onClick={() => Router.go(log(crumbDoc.url()))}
+                              >
+                                {crumbDoc.getTitle()}
+                              </UI.Button>,
+                            ]
+                          })
                       ).slice(1)}
                     </path>
                   </start>

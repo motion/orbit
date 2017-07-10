@@ -29,6 +29,8 @@ const KEYMAP = {
 }
 
 export default class ExplorerStore {
+  version = 1
+
   @watch document = () => Document.get(Router.params.id)
   @watch crumbs = () => this.document && this.document.getCrumbs()
 
@@ -57,8 +59,6 @@ export default class ExplorerStore {
   focused = false
   showDiscussions = false
   showResults = false
-  // bump this to rerender element
-  version = 0
 
   start() {
     this.watch(async () => {

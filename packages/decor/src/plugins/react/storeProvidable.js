@@ -160,7 +160,6 @@ export default function storeProvidable(options, emitter) {
           //   instanceOpts && instanceOpts.module
           // )
           this.setState({ stores })
-          this.disposed = false
         }
 
         unstable_handleError(error) {
@@ -186,30 +185,23 @@ export default function storeProvidable(options, emitter) {
             this.clearErrors()
             // initStores()
             this.module = module
-            if (!this.disposed) {
-              this.disposeStores()
-            }
-            // initStores()
+            this.disposeStores()
             this.setupStores()
           }, 150)
         }
 
         disposeStores() {
-          this.disposed = true
           if (!this.state.stores) {
+            log('bad dismount, this is an old store')
             return
           }
-          try {
-            emitter.emit('view.unmount', this)
-            for (const name of Object.keys(this.state.stores)) {
-              const store = this.state.stores[name]
-              emitter.emit('store.unmount', store)
-              if (options.onStoreUnmount) {
-                options.onStoreUnmount(store)
-              }
+          emitter.emit('view.unmount', this)
+          for (const name of Object.keys(this.state.stores)) {
+            const store = this.state.stores[name]
+            emitter.emit('store.unmount', store)
+            if (options.onStoreUnmount) {
+              options.onStoreUnmount(store)
             }
-          } catch (e) {
-            console.log(e)
           }
         }
 

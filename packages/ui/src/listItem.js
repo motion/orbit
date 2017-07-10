@@ -5,6 +5,7 @@ import { object, string } from 'prop-types'
 import FakeAvatar from './fake/fakeAvatar'
 import Text from './text'
 import SizedSurface from './sizedSurface'
+import injectTheme from './helpers/injectTheme'
 
 export type ItemProps = {
   after?: React$Element<any>,
@@ -26,8 +27,11 @@ export type ItemProps = {
   primary?: React$Element<any>,
   row?: boolean,
   secondary?: React$Element<any>,
+  ellipse?: boolean,
+  glowProps?: Object,
 }
 
+@injectTheme
 @view.ui
 export default class ListItem {
   props: ItemProps
@@ -42,6 +46,7 @@ export default class ListItem {
   static defaultProps = {
     size: 1,
     borderWidth: 0,
+    ellipse: true,
   }
 
   componentDidMount() {
@@ -72,10 +77,11 @@ export default class ListItem {
     secondary,
     size,
     style,
+    ellipse,
+    glowProps,
+    theme,
     ...props
   }: ItemProps) {
-    const theme = this.context.uiTheme[this.context.uiActiveTheme]
-
     const radiusProps = segmented
       ? {
           borderRadius: isLastElement || isFirstElement ? borderRadius : 0,
@@ -88,6 +94,7 @@ export default class ListItem {
 
     return (
       <SizedSurface
+        size={size}
         sizeHeight
         sizePadding={1.5}
         $item
@@ -105,15 +112,15 @@ export default class ListItem {
         align="center"
         glowProps={{
           scale: 1.4,
-          opacity: 0.1,
+          opacity: 0.09,
           resist: 40,
           clickable: !!onClick,
+          ...glowProps,
         }}
         style={{
           position: 'relative',
           ...style,
         }}
-        size={size}
         {...props}
       >
         <image if={avatar || fakeAvatar}>
@@ -121,12 +128,17 @@ export default class ListItem {
           <FakeAvatar if={fakeAvatar} size={50} $avatar $padavatar />
         </image>
         <content>
-          <above if={primary || after || before || date}>
+          <above if={primary || secondary || after || before || date}>
             <before if={before}>
               {before}
             </before>
             <prop if={primary || secondary} $col $hasAvatar={!!avatar}>
-              <Text $primary size={size} ellipse color="inherit">
+              <Text
+                $primary
+                fontSize="inherit"
+                ellipse={ellipse}
+                color="inherit"
+              >
                 {primary}
               </Text>
               <Text
@@ -184,10 +196,15 @@ export default class ListItem {
     prop: {
       flex: 1,
       maxWidth: '100%',
+      fontWeight: 200,
     },
     date: {
+      alignSelf: 'flex-start',
+      marginTop: 3,
       userSelect: 'none',
       fontSize: 12,
+      fontWeight: 200,
+      opacity: 0.6,
     },
     col: {
       flexDirection: 'column',

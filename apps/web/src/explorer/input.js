@@ -4,9 +4,12 @@ import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
 import Arrow from './arrow'
 
+const FONT_SIZE = 18
+
 const $para = {
-  fontSize: 14,
+  fontSize: FONT_SIZE,
   color: 'rgba(0,0,0,.8)',
+  fontWeight: 400,
 }
 
 @view.attach('explorerStore')
@@ -37,7 +40,6 @@ const schema = {
 @view
 class Item {
   render({ explorerStore: cmdr, node }) {
-    const inline = { userSelect: 'initial', display: 'inline' }
     const name = node.data.get('name')
     const doc = cmdr.editorState.document
     const nextKey = doc.getNextSibling(node.key).key
@@ -51,11 +53,11 @@ class Item {
             chromeless
             onClick={() => cmdr.onItemClick(node.key)}
             spaced
-            style={{ margin: 0, height: 20 }}
-            size={0.7}
-            fontSize={14}
+            size={1}
+            height={24}
+            padding={[0, 5]}
+            fontSize={FONT_SIZE}
             highlight={selected}
-            style={inline}
             $active={selected}
             color={[0, 0, 0, 0.8]}
           >
@@ -76,7 +78,7 @@ class Item {
       position: 'relative',
     },
     last: {
-      marginRight: 8,
+      // marginRight: 8,
     },
     div: {
       position: 'relative',
@@ -96,7 +98,7 @@ class Item {
       position: 'absolute',
       flexFlow: 'row',
       left: 0,
-      top: -3,
+      top: -2,
     },
   }
 }
@@ -108,13 +110,7 @@ export default class ExplorerInput {
     store.version
 
     return (
-      <bar
-        $$align="center"
-        $blurred={!store.focused}
-        $focused={store.focused}
-        $$row
-        $$flex
-      >
+      <bar $blurred={!store.focused} $focused={store.focused}>
         <Editor
           placeholder={'search or create docs'}
           state={store.editorState}
@@ -132,20 +128,21 @@ export default class ExplorerInput {
 
   static style = {
     bar: {
-      padding: 5,
+      // padding: 5,
+      height: 38,
+      flexFlow: 'row',
+      flex: 1,
+      alignItems: 'center',
+      borderBottom: [1, '#e0e0e0', 'dotted'],
+      // background: '#f2f2f2',
+      // borderRadius: 6,
     },
     focused: {
-      border: '1px solid rgba(82, 139, 211, 1)',
-      borderRadius: 5,
+      borderColor: '#ddd',
     },
     blurred: {
-      border: '1px solid rgba(0, 0, 0, 0)',
-      background: '#f2f2f2',
-      borderRadius: 5,
+      // background: '#f2f2f2',
       // borderBottom: '1px solid #eee',
-    },
-    highlight: {
-      fontWeight: 'bold',
     },
   }
 }

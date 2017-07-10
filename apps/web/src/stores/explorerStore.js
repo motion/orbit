@@ -2,9 +2,10 @@
 import { watch, keycode, ShortcutManager } from '@mcro/black'
 import { Document } from '@mcro/models'
 import Router from '~/router'
-import { uniq, last, dropRightWhile } from 'lodash'
+import { uniq, last, includes, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
 import App from '~/app'
+import { debounce } from 'lodash'
 
 const PATH_SEPARATOR = '/'
 const KEYMAP = {
@@ -19,7 +20,7 @@ const KEYMAP = {
     enter: 'enter',
     esc: 'esc',
     explorer: ['command+t'],
-    focus: 'command+l',
+    cmdL: 'command+l',
     cmdEnter: 'command+enter',
     cmdUp: 'command+up',
     delete: ['delete', 'backspace'],
@@ -28,6 +29,8 @@ const KEYMAP = {
 }
 
 export default class ExplorerStore {
+  version = 1
+
   @watch document = () => Document.get(Router.params.id)
   @watch crumbs = () => this.document && this.document.getCrumbs()
 
@@ -54,11 +57,16 @@ export default class ExplorerStore {
   searchResults: Array<Document> = []
   inputNode: ?HTMLInputElement = null
   focused = false
+  showDiscussions = false
   showResults = false
-  // bump this to rerender element
-  version = 0
 
   start() {
+    this.watch(() => {
+      if (this.document) {
+        this.setPath(this.document)
+      }
+    })
+
     this.watch(async () => {
       if (!this.isTypingPath) {
         // search
@@ -75,6 +83,7 @@ export default class ExplorerStore {
           [...(searchResults || []), ...pathSearchResults],
           x => x.id
         )
+        console.log('results are', this.searchResults)
       } else {
         // path navigate
         this.searchResults = await this.getChildDocsForPath(
@@ -139,6 +148,10 @@ export default class ExplorerStore {
       */
     },
     enter: () => this.onEnter(),
+    cmdL: () => {
+      this.focus()
+      this.selectAll()
+    },
     focus: () => this.focus(),
     explorer: () => this.focus(),
     right: () => {
@@ -147,7 +160,8 @@ export default class ExplorerStore {
     },
     down: () => {
       if (!this.focused) return
-      if (!this.searchResults || !this.focused) {
+      if (!this.showResults || !this.focused) {
+        console.log('focusing')
         this.action('focusDown')
         return
       }
@@ -179,6 +193,11 @@ export default class ExplorerStore {
         .collapseToEndOf(this.editorState.document.nodes.last())
         .apply()
     })
+  }
+
+  selectAll = () => {
+    // this.editorState = this.editorState.transform().
+    log('selectall')
   }
 
   handleShortcuts = (action: string, event: KeyboardEvent) => {
@@ -433,7 +452,8 @@ export default class ExplorerStore {
     const gtSign = event.shiftKey && code === '.'
 
     // don't move cursor for these
-    if (code === 'up' || code === 'down') {
+    const doNothing = ['enter', 'up', 'down']
+    if (includes(doNothing, code)) {
       event.preventDefault()
       return state
     }
@@ -441,12 +461,6 @@ export default class ExplorerStore {
     if (code === '/' || gtSign) {
       event.preventDefault()
       this.onCommitItem()
-      return state
-    }
-
-    if (code === 'enter') {
-      event.preventDefault()
-      this.onEnter()
       return state
     }
 
@@ -497,9 +511,9 @@ export default class ExplorerStore {
     this.onCommitItem(endPath)
   }
 
-  setPath = async doc => {
+  setPath = debounce(async doc => {
     this.setValue(this.getPathForDocs(await doc.getCrumbs()))
-  }
+  }, 32)
 
   moveHighlight = (diff: number) => {
     this.highlightIndex += diff
@@ -514,6 +528,7 @@ export default class ExplorerStore {
       console.log('navTo called without value')
       return
     }
+    this.showResults = false
     this.blur()
     Router.go(doc.url())
   }

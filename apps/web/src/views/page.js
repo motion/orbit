@@ -104,6 +104,7 @@ export default class Page {
     page: {
       // dont play with overflow here or react-grid will clip
       flex: 1,
+      maxWidth: '100%',
       // dont add padding so we can add bottom bars
       overflow: 'visible',
       position: 'relative',

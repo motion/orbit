@@ -15,7 +15,7 @@ export default class ExplorerBar {
     const btnProps = { iconSize: 12, padding: [0, 6], chromeless: true }
 
     return (
-      <explorerbar>
+      <explorerbar $$draggable>
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
           <UI.Segment $$margin={[0, 10, 0, 0]} $$flex="none">
@@ -46,14 +46,15 @@ export default class ExplorerBar {
                   icon="minimal-right"
                   onClick={() => Router.forward()}
                 />
-                <UI.Button
-                  {...btnProps}
-                  icon="home"
-                  onClick={() => Router.go('/')}
-                />
               </UI.Segment>
             </UI.Popover>
           </UI.Segment>
+          <UI.Button
+            if={false}
+            {...btnProps}
+            icon="home"
+            onClick={() => Router.go('/')}
+          />
           <Input
             onOpen={() => (layoutStore.explorerOpen = true)}
             onClose={() => (layoutStore.explorerOpen = false)}
@@ -66,6 +67,7 @@ export default class ExplorerBar {
                 <actions>
                   {items}
                   <UI.Button
+                    if={false}
                     chromeless
                     spaced
                     size={0.7}
@@ -89,8 +91,12 @@ export default class ExplorerBar {
 
   static style = {
     explorerbar: {
-      overflow: 'hidden',
-      // background: [255, 255, 255, 0.1],
+      // position: 'absolute',
+      // top: 0,
+      // right: 0,
+      // left: 0,
+      // overflow: 'hidden',
+      // // background: [255, 255, 255, 0.1],
       zIndex: 500,
       padding: [0, 10],
       paddingLeft: IS_ELECTRON ? 78 : 10,
@@ -98,7 +104,6 @@ export default class ExplorerBar {
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
-      position: 'relative',
     },
     bar: {
       flex: 1,

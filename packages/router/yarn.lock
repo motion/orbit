@@ -39,9 +39,9 @@ loose-envify@^1.0.0, loose-envify@^1.2.0:
   dependencies:
     js-tokens "^3.0.0"
 
-mobx@^3.1.0:
-  version "3.1.16"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.1.16.tgz#7ef06b6de7cba31d2ca872484d47ee36265d7768"
+mobx@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.2.0.tgz#5efb3280bc7f6eb9299a252c9ff9b4403cbd8c5a"
 
 regenerator-runtime@^0.10.0:
   version "0.10.5"

@@ -1,7 +1,9 @@
 // @flow
-import { color, makeTheme } from '@mcro/ui'
+import { ThemeMaker, color } from '@mcro/ui'
 
-const highlightColor = [89, 154, 244]
+const Theme = new ThemeMaker()
+
+const highlightColor = 'rgb(95, 82, 159)'
 
 const LIGHT = {
   highlightColor,
@@ -19,7 +21,7 @@ const blank = {
   buttonBackground: 'transparent',
 }
 
-const Theme = {
+const Themes = {
   blank: {
     base: blank,
     hover: blank,
@@ -35,26 +37,26 @@ const Theme = {
     glow: {
       color: [255, 255, 255, 0.1],
     },
-    ...makeTheme({
+    ...Theme.fromStyles({
       highlightColor,
       background: [255, 255, 255, 1],
       color: '#555',
       borderColor: [0, 0, 0, 0.1],
     }),
   },
-  gray: makeTheme({
+  gray: Theme.fromStyles({
     highlightColor,
     background: '#eee',
     color: '#999',
     borderColor: '#eee',
   }),
-  dark: makeTheme({
+  dark: Theme.fromStyles({
     highlightColor,
-    background: '#222',
+    background: '#444',
     color: '#eee',
     borderColor: '#333',
   }),
-  'clear-dark': makeTheme({
+  'clear-dark': Theme.fromStyles({
     highlightColor,
     background: [80, 80, 80, 0.7],
     color: '#f2f2f2',
@@ -81,6 +83,6 @@ const Theme = {
   },
 }
 
-window.Theme = Theme
+window.Themes = Themes
 
-export default Theme
+export default Themes

@@ -8,17 +8,17 @@ import Router from '~/router'
 export default class SidebarMenu {
   render() {
     return (
-      <sidebarmenu $$draggable css={{ padding: [20, 0, 0] }}>
+      <sidebarmenu if={false} $$draggable css={{ padding: [10, 0, 0] }}>
         <UI.List
-          size={1.3}
+          size={1.2}
           background="transparent"
           items={[
             {
-              primary: '',
-              icon: 's-d',
+              primary: 'Home',
+              icon: 'home',
               onClick: () => Router.go('/'),
             },
-            // { primary: 'Me', icon: 'hum', onClick: _ => _ },
+            { primary: 'Feed', icon: 'hum', onClick: _ => _ },
             { primary: 'Drafts', icon: 'paper', onClick: _ => _ },
           ]}
         />

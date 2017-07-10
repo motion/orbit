@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import Children from './children'
 
 export Bar from './bar'
+export Results from './results'
 
 @view
 export default class Explorer {

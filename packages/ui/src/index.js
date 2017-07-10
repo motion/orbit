@@ -1,13 +1,15 @@
 // @flow
 // helpers
 export color from 'color'
-export { Theme, ThemeProvide } from '@mcro/gloss'
-export makeTheme from './helpers/makeTheme'
+export { ThemeProvide } from '@mcro/gloss'
+export ThemeMaker from './helpers/themeMaker'
+export Theme from './helpers/theme'
 export PassProps from './helpers/passProps'
 export offset from './helpers/offset'
 export * as SlotFill from './helpers/slot'
 export * as Virtualized from 'react-virtualized'
 export Portal from 'react-portal'
+export StableContainer from './helpers/stableContainer'
 
 // base
 export Arrow from './arrow'

@@ -7,6 +7,7 @@
     "@mcro/black": "^1.0.1",
     "@mcro/models": "^1.0.1",
     "@mcro/ui": "^1.0.1",
+    "@mcro/web": "*",
     "react": "^15.6.0",
     "react-dom": "^15.6.1",
     "babel-preset-steelbrain": "*"

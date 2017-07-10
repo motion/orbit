@@ -1,19 +1,36 @@
+# housekeeping sunday
+  - hmr bugs are still pretty bad, try and fix dup views and stale stores
+  - @watch and @query both have different subtle bugs that are frustrating in Actions area
+  - popovers in actions area get "stuck" open
+  - on signup create org + invite team + create home doc and onboard
+  - see about pouch revisions
+
+# next
+  - follow thread vs edits vs tasks (toggle?)
+  - double space === >
+  - query sync down
+  - new page auto follow + team follow
+  - signup: asks for your team names + emails, then makes root pages for them
+  - content prefill for new org
+  - @mentions
+  - discussions
+  - homepage
+  - nicer inline due dates
+  - fix keyboard nav
+  - fix sync todos doc/sidebar
+  - pullout of notifications
+  - feed
+  - prod
+
 # nate
   - want to start keeping notes on things i want to see
     - visit/england (visit/england/london), visit/india, etc
   - installing from npm is a pain
-  - explorerStore.crumbs is coming back as mobxarray not plain array
-  - breadcrumbsstore log is happening on keystores
   - indexes still not working .sort('createdAt')
   - types not working on <Views /> still
   - rxdb query sync broken https://gitter.im/pubkey/rxdb
-  - ui kit:
-    - sizing() some sort of size kit to handle all sizing
-    - <Surface height={1} rounded chromeless gloss clear />
-      - Derive Button, Input, ListItem
 
 # high level prioritized list
-  - inbox
   - @mentions / dates
   - hashtags ?
   - statuses ?
@@ -32,18 +49,22 @@
   - keyboard shortcuts
   - deploy to prod
   - slack integration + avatars
-  - drag/drop list items or just doc nodes
-  - ideas
-    - drag/drop on sidebar (todos and sections)
-    - drafts
-    - email forwarding
-    - github sync
-    - newsfeed
-    - grids
-    - templates
+  - drag/drop: list items + sidebar
+  - drafts
+  - email forwarding
+  - github sync
+  - newsfeed
+  - templates
   - integrations
 
-# fast pouch w workers
+# bugs
+  - needs to be a universal dragcancel thing that prevents clicks once you started dragging electron
+
+# ideas
+  - pop out discussions into a new window so you can view side-by-side
+
+# fast pouch
+- https://github.com/redgeoff/delta-pouch
 - https://github.com/jkleinsc/telegraph
 
 motion_/extractStatics.js at 5d534f71d92048f0afaa1e2632d5727739490619 · motion/motion_

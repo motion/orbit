@@ -1,25 +1,114 @@
 // @flow
 import React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Explorer from '~/explorer'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
-import Inbox from '~/views/inbox'
+import Overdrive from 'react-overdrive'
+
+@view.attach('explorerStore')
+@view
+class Actions {
+  render({ explorerStore }) {
+    const document = explorerStore.document
+
+    if (!document || document === null) {
+      return null
+    }
+
+    if (typeof document.hasStar !== 'function') {
+      log('hmr caused a bad thing')
+      return null
+    }
+
+    log('render actions')
+
+    const starred = document.hasStar()
+    const itemProps = {
+      size: 1.5,
+      chromeless: true,
+      tooltipProps: {
+        towards: 'left',
+      },
+    }
+
+    return (
+      <actions $$draggable>
+        <UI.Button
+          {...itemProps}
+          icon="fav3"
+          tooltip={starred ? 'Unfollow' : 'Follow'}
+          highlight={starred}
+          onClick={document.toggleStar}
+        />
+        <UI.Button
+          {...itemProps}
+          chromeless
+          icon="design-f"
+          tooltip="Threads"
+          highlight={explorerStore.showDiscussions}
+          onClick={explorerStore.ref('showDiscussions').toggle}
+          badge={1}
+        />
+        <UI.Popover
+          elevation={3}
+          borderRadius={8}
+          background="transparent"
+          distance={10}
+          forgiveness={16}
+          towards="left"
+          delay={150}
+          target={
+            <UI.Button {...itemProps} opacity={0.5} chromeless icon="dot" />
+          }
+          openOnHover
+          closeOnClick
+        >
+          <UI.List
+            width={150}
+            padding={3}
+            itemProps={{
+              height: 32,
+              fontSize: 14,
+              borderWidth: 0,
+              borderRadius: 8,
+            }}
+            items={[
+              {
+                icon: 'bell',
+                primary: 'Ping +3',
+                onClick: () => console.log(),
+              },
+              {
+                icon: 'gear',
+                primary: 'Settings',
+                onClick: () => console.log(),
+              },
+            ]}
+          />
+        </UI.Popover>
+      </actions>
+    )
+  }
+
+  static style = {
+    actions: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      height: 110,
+      alignItems: 'flex-end',
+      zIndex: 1000,
+      justifyContent: 'space-between',
+    },
+  }
+}
 
 class DocPageStore {
-  doc = this.props.id ? Document.get(this.props.id) : Document.home()
   forceEdit = false
-  showInbox = false
-
-  start() {
-    this.watch(() => {
-      if (this.doc) {
-        this.props.explorerStore.setPath(this.doc)
-      }
-    })
-  }
+  showDiscussions = false
 
   get editing() {
     return this.forceEdit || (User.loggedIn && !User.user.hatesToEdit)
@@ -36,25 +125,19 @@ class DocPageStore {
 export default class DocumentPage {
   extraRef = null
 
-  render({ docStore }: { docStore: DocPageStore }) {
-    const { doc } = docStore
+  render({ docStore, explorerStore }: { docStore: DocPageStore }) {
+    const { document } = explorerStore
 
-    if (doc === undefined) {
+    if (document === undefined) {
       return <null />
     }
-    if (!doc) {
+    if (!document) {
       return <UI.Placeholder size={2}>Doc 404</UI.Placeholder>
-    }
-
-    const starred = doc.hasStar()
-    const itemProps = {
-      size: 1.6,
-      chromeless: true,
     }
 
     return (
       <Page>
-        <Page.Actions>
+        <Page.Actions if={false}>
           <UI.Button
             onClick={docStore.ref('showInbox').toggle}
             highlight={docStore.showInbox}
@@ -65,51 +148,12 @@ export default class DocumentPage {
           </UI.Button>
         </Page.Actions>
 
-        <actions if={!docStore.showInbox} $$draggable>
-          <UI.Button
-            {...itemProps}
-            icon="fav31"
-            highlight={!!starred}
-            onClick={doc.toggleStar}
-          />
-          <UI.Button {...itemProps} chromeless icon="chat4" />
-          <UI.Popover
-            background
-            elevation={3}
-            borderRadius={8}
-            background="transparent"
-            distance={10}
-            forgiveness={16}
-            towards="left"
-            delay={150}
-            target={<UI.Button {...itemProps} chromeless icon="dot" />}
-            openOnHover
-            closeOnClick
-          >
-            <UI.List
-              width={150}
-              padding={3}
-              itemProps={{
-                height: 32,
-                fontSize: 14,
-                borderWidth: 0,
-                borderRadius: 8,
-              }}
-              items={[
-                {
-                  icon: 'gear',
-                  primary: 'Settings',
-                  onClick: () => console.log(),
-                },
-              ]}
-            />
-          </UI.Popover>
-        </actions>
+        <Actions />
 
         <docpagecontent>
           <DocumentView
             if={!docStore.showInbox}
-            id={doc._id}
+            document={document}
             onKeyDown={docStore.onKeyDown}
             showCrumbs
             showChildren
@@ -118,23 +162,14 @@ export default class DocumentPage {
         </docpagecontent>
 
         <Explorer />
-
-        <Inbox doc={doc} if={docStore.showInbox} />
       </Page>
     )
   }
 
   static style = {
-    actions: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-      height: 110,
-      alignItems: 'flex-end',
-      zIndex: 1000,
-      justifyContent: 'space-between',
-    },
     docpagecontent: {
+      flex: 1,
+      overflow: 'hidden',
       paddingRight: 30,
     },
   }

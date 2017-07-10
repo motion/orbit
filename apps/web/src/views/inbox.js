@@ -1,10 +1,15 @@
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import rc from 'randomcolor'
-import { Document } from '@mcro/models'
 import { random } from 'lodash'
-import Router from '~/router'
 import DocumentView from '~/views/document'
+
+const GLOW_PROPS = {
+  color: 'salmon',
+  scale: 1.6,
+  offsetLeft: -200,
+  resist: 70,
+  opacity: 0.048,
+}
 
 class InboxStore {
   showDraft = true
@@ -49,7 +54,6 @@ class InboxStore {
 
   start() {
     const { explorerStore } = this.props
-    console.log('exp', explorerStore)
 
     this.on(explorerStore, 'action', (name: string) => {
       if (name === 'up' && this.highlightIndex > 0) {
@@ -76,7 +80,7 @@ class Message {
     return (
       <draft>
         <top $$row>
-          <UI.Title size={2}>
+          <UI.Title size={0.9}>
             <b>
               {name}
             </b>
@@ -153,7 +157,7 @@ class Draft {
     return (
       <draft>
         <top $$row>
-          <UI.Title size={2}>
+          <UI.Title size={1}>
             <b>Nick</b>
           </UI.Title>
           <time>June 12</time>
@@ -234,6 +238,7 @@ class Draft {
 class Thread {
   render({ store }) {
     const { activeItem: item } = store
+    console.log('item is', item)
     const messages = [
       {
         name: 'Steel Brain',
@@ -281,49 +286,77 @@ class Thread {
     ]
 
     return (
-      <item>
-        <bar $$row>
-          <UI.Button
-            chromeless
-            spaced
-            size={1.2}
-            icon={'arrow-min-left'}
-            onClick={() => (store.activeIndex = null)}
-            color={[0, 0, 0, 0.6]}
-          />
+      <thread>
+        <bar>
+          <barblur>
+            <UI.Glow {...GLOW_PROPS} show />
+            <UI.Button
+              chromeless
+              glow={false}
+              spaced
+              size={1.2}
+              icon={'arrow-min-left'}
+              onClick={() => (store.activeIndex = null)}
+              color={[0, 0, 0, 0.2]}
+              hoverColor={[0, 0, 0, 0.6]}
+              margin={[0, 0, 0, -5]}
+            />
 
-          <UI.Title centered $title size={3} stat={``}>
-            {item.title}
-          </UI.Title>
-          <UI.Button chromeless size={1.2} icon="fav31" />
-          <actions />
+            <title>
+              {item.title}
+            </title>
+            <UI.Button
+              glow={false}
+              chromeless
+              size={1.2}
+              icon="fav31"
+              color={[0, 0, 0, 0.4]}
+              hoverColor={[0, 0, 0, 0.6]}
+            />
+            <actions />
+          </barblur>
         </bar>
-        <thread>
+        <content>
           {messages.map(message => <Message {...message} />)}
           <Draft />
-        </thread>
-      </item>
+        </content>
+      </thread>
     )
   }
 
   static style = {
     // so it scrolls nicely
-    item: {
+    thread: {
       paddingBottom: 30,
     },
     bar: {
       position: 'sticky',
-      marginTop: 15,
       zIndex: 1000,
-      paddingTop: 0,
-      justifyContent: 'space-between',
       top: 0,
+      left: -20,
       borderBottom: '1px solid #ddd',
-      background: `rgba(255,255,255,.9)`,
-      paddingBottom: 5,
+      boxShadow: ['0 0 5px rgba(0,0,0,0.15)'],
+      overflow: 'hidden',
+    },
+    barblur: {
+      margin: -20,
+      padding: 30,
+      backdropFilter: 'blur(10px)',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexFlow: 'row',
+      // boxShadow: ['inset 0 0 100px rgba(240,240,255, 1)'],
+      background: 'rgba(255, 255,255, 0.9)',
     },
     title: {
       flex: 5,
+      color: '#444',
+      fontWeight: 300,
+      fontSize: 16,
+      lineHeight: '1.4rem',
+    },
+    content: {
+      padding: 20,
     },
   }
 }
@@ -340,79 +373,54 @@ class Thread {
   store: InboxStore,
 })
 export default class Inbox {
-  title = text => {
-    return (
-      <title $$row>
-        {text}
-        &nbsp;&nbsp;
-        {false &&
-          <UI.Badge background={rc()} color="#fff" height={20}>
-            hi
-          </UI.Badge>}
-        {false &&
-          <UI.Badge if={false} background={rc()} color="#fff" height={20}>
-            hi
-          </UI.Badge>}
-      </title>
-    )
-  }
-
-  status = text => {
-    return (
-      <status $$row>
-        {text} <UI.Progress.Bar percent={Math.random() * 100} />
-      </status>
-    )
-  }
-
   render({ store }) {
     // subscribe to variable
     store.highlightIndex
 
-    const docs = store.docs || []
-    const useTestData = true
-    const items = store.items.map((item, index) => ({
-      primary: this.title(item.title),
-      secondary: this.status(item.status),
-      icon: item.icon,
-      onClick() {
-        console.log('setting index to', index)
-        store.activeIndex = index
-      },
-    }))
-
     return (
       <inbox>
-        <all if={store.activeItem === null}>
+        <content if={!store.activeItem}>
           <bar>
-            <UI.Title size={3} stat={`${store.items.length} items`}>
-              Inbox
+            <UI.Title size={1} stat={`${store.items.length} new`}>
+              Threads
             </UI.Title>
             <actions>
               <UI.Button
+                css={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                }}
                 icon="siadd"
+                circular
+                size={1.4}
+                chromeless
                 onClick={store.ref('draftNumber').increment(1)}
-              >
-                New
-              </UI.Button>
+              />
             </actions>
           </bar>
 
           <UI.List
+            background="transparent"
             $list
             itemProps={{ paddingLeft: 20, height: 'auto', padding: 15 }}
-            items={items}
-            getItem={(val, index) =>
-              <item
-                onClick={() => (store.activeIndex = index)}
-                onMouseEnter={() => (store.highlightIndex = index)}
-                $highlight={store.highlightIndex === index}
-              >
-                {val.primary}
-              </item>}
+            items={store.items}
+            getItem={(item, index) => ({
+              primary: item.title,
+              secondary: item.status,
+              date: '1 day ago',
+              ellipse: false,
+              glowProps: GLOW_PROPS,
+              //icon: item.icon,
+              paddingRight: 80,
+              onClick: () => (store.activeIndex = index),
+              onMouseEnter: () => (store.highlightIndex = index),
+              $highlight: store.highlightIndex === index,
+            })}
           />
-        </all>
-        <Thread if={store.activeItem !== null} store={store} />
+        </content>
+
+        <Thread if={store.activeItem} store={store} />
 
         <UI.Drawer
           if={false}
@@ -420,7 +428,6 @@ export default class Inbox {
           percent={80}
           open={true && store.draft && store.draft._id && store.showDraft}
         >
-          <test>test</test>
           <DocumentView if={false} document={store.draft} />
         </UI.Drawer>
       </inbox>
@@ -448,12 +455,36 @@ export default class Inbox {
       marginTop: 15,
     },
     inbox: {
-      padding: [0, 20],
+      padding: 0,
+    },
+    content: {
+      padding: 20,
+    },
+    list: {
+      marginLeft: -20,
+      marginRight: -(20 + 72),
+    },
+    title: {
+      fontWeight: 'bold',
+      lineHeight: 100,
+    },
+    item: {
+      padding: 10,
+      paddingLeft: 20,
+      height: 40,
+    },
+    highlight: {
+      background: '#eee',
+      borderLeft: '3px solid #999',
+    },
+    all: {
+      marginTop: 15,
     },
     bar: {
       flexFlow: 'row',
       marginBottom: 5,
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
   }
 }

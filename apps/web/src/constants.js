@@ -18,9 +18,9 @@ export const DB_CONFIG = {
   couchHost: COUCH_HOST,
 }
 
-export const HEADER_HEIGHT = 40
+export const HEADER_HEIGHT = 46
 export const SIDEBAR_WIDTH = 340
-export const SIDEBAR_TRANSITION = `ease-in 100ms`
+export const SIDEBAR_TRANSITION = 'ease-in 100ms'
 
 export const IN_TRAY =
   IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1

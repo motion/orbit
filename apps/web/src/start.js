@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import App from '~/app'
 import themes from './themes'
-import LayoutExtra from './views/layout'
 
 start(App.started, App.started)
 

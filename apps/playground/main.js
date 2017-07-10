@@ -1,86 +1,16 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import * as Z from '@mcro/ui'
-
-@view
-class Playground {
-  render() {
-    return (
-      <playground>
-        <section $buttons>
-          <row $$row>
-            <Z.Button icon="world">Hello World</Z.Button>
-            <Z.Button icon="world" size={2}>Hello World</Z.Button>
-            <Z.Button color="red" background="blue">Hello World</Z.Button>
-            <Z.Button circular>Hello World</Z.Button>
-            <Z.Button circular size={3}>Hello World</Z.Button>
-          </row>
-
-          <row $$row>
-            <Z.Segment>
-              <Z.Button icon="world">Hello World</Z.Button>
-              <Z.Button icon="world">Hello World</Z.Button>
-              <Z.Button icon="world">Hello World</Z.Button>
-            </Z.Segment>
-
-            <Z.Segment>
-              <Z.Button circular icon="eye" />
-              <Z.Button circular icon="eye" />
-              <Z.Button circular icon="eye" />
-            </Z.Segment>
-
-            <Z.Segment>
-              <Z.Button circular icon="eye" />
-              <Z.Button circular icon="eye" />
-              <Z.Button circular icon="eye" />
-            </Z.Segment>
-          </row>
-        </section>
-
-        <section $form>
-          <row $$row>
-            <Z.Input icon="world" placeholder="you" />
-            <Z.Input icon="world" size={2} />
-            <Z.Input placeholder="hello" />
-          </row>
-        </section>
-      </playground>
-    )
-  }
-
-  static style = {
-    row: {
-      padding: [20, 0],
-    },
-  }
-}
+import Interface from './interface'
+import Data from './data'
 
 @view
 export default class Main {
   render() {
     return (
       <main>
-        <Z.Popover target={<Z.Button>test</Z.Button>}>
-          <is>open</is>
-        </Z.Popover>
-
-        <Z.Drawer if={false} from="right" open>
-          test stuff
-        </Z.Drawer>
-
-        <Z.Theme if={true} name="dark">
-          <Z.Button circular icon="eye" onClick={() => alert('hi')} />
-        </Z.Theme>
-        <ok if={true}>
-          <Playground />
-          <Z.Theme name="light">
-            <Playground />
-          </Z.Theme>
-          <Z.Theme name="dark">
-            <Playground />
-          </Z.Theme>
-        </ok>
+        <Data />
+        <Interface if={false} />
       </main>
     )
   }

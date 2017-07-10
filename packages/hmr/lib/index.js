@@ -1,12 +1,10 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-exports.default = function (_ref) {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+import find from 'lodash/find';
+
+var _default = function _default(_ref) {
   var t = _ref.types,
       template = _ref.template;
 
@@ -36,26 +34,26 @@ exports.default = function (_ref) {
   }
 
   function matchesPatterns(path, patterns) {
-    return !!(0, _find2.default)(patterns, function (pattern) {
+    return !!find(patterns, function (pattern) {
       return t.isIdentifier(path.node, { name: pattern }) || path.matchesPattern(pattern);
     });
   }
 
   function isReactLikeClass(node) {
-    return !!(0, _find2.default)(node.body.body, function (classMember) {
+    return !!find(node.body.body, function (classMember) {
       return t.isClassMethod(classMember) && t.isIdentifier(classMember.key, { name: 'render' });
     });
   }
 
   function isReactLikeComponentObject(node) {
-    return t.isObjectExpression(node) && !!(0, _find2.default)(node.properties, function (objectMember) {
+    return t.isObjectExpression(node) && !!find(node.properties, function (objectMember) {
       return (t.isObjectProperty(objectMember) || t.isObjectMethod(objectMember)) && (t.isIdentifier(objectMember.key, { name: 'render' }) || t.isStringLiteral(objectMember.key, { value: 'render' }));
     });
   }
 
   // `foo({ displayName: 'NAME' });` => 'NAME'
   function getDisplayName(node) {
-    var property = (0, _find2.default)(node.arguments[0].properties, function (node) {
+    var property = find(node.arguments[0].properties, function (node) {
       return node.key.name === 'displayName';
     });
     return property && property.value.value;
@@ -367,11 +365,16 @@ exports.default = function (_ref) {
   };
 };
 
-var _find = require('lodash/find');
+export default _default;
+;
 
-var _find2 = _interopRequireDefault(_find);
+var _temp = function () {
+  if (typeof __REACT_HOT_LOADER__ === 'undefined') {
+    return;
+  }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  __REACT_HOT_LOADER__.register(_default, 'default', 'src/index.js');
+}();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+;
 //# sourceMappingURL=index.js.map

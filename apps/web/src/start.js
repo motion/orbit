@@ -6,8 +6,6 @@ import App from '~/app'
 import themes from './themes'
 import { AppContainer } from 'react-hot-loader'
 
-start(App.started, App.started)
-
 export function render(shouldReset) {
   // console.time('#render')
   let ROOT = document.querySelector('#app')
@@ -38,3 +36,5 @@ export async function start(quiet, restart) {
   await App.start(quiet)
   render()
 }
+
+start(App.started, App.started)

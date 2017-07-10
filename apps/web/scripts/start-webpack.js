@@ -107,11 +107,12 @@ function runDevServer(host, port) {
     if (err) {
       return console.log(err)
     }
-    console.log('Starting the development server...')
+    console.log('Starting the development server...', port)
   })
 }
 
 function run(port) {
+  console.log('running on', port)
   var protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
   var host = process.env.HOST || 'localhost'
   setupCompiler(host, port, protocol)
@@ -120,4 +121,5 @@ function run(port) {
 
 detect(DEFAULT_PORT).then(port => {
   run(port)
+  console.log('running on port', port)
 })

@@ -279,6 +279,7 @@ class Thread {
     return (
       <item>
         <bar $$row>
+          <UI.Glow color="red" full show opacity={1} />
           <UI.Button
             chromeless
             glow={false}
@@ -316,7 +317,6 @@ class Thread {
       justifyContent: 'space-between',
       top: 0,
       borderBottom: '1px solid #ddd',
-      background: 'rgba(255,255,255,.9)',
       paddingBottom: 5,
     },
     title: {
@@ -340,27 +340,9 @@ class Thread {
   store: InboxStore,
 })
 export default class Inbox {
-  status = text => {
-    return (
-      <status $$row>
-        {text} <UI.Progress.Bar percent={Math.random() * 100} />
-      </status>
-    )
-  }
-
   render({ store }) {
     // subscribe to variable
     store.highlightIndex
-
-    const items = store.items.map((item, index) => ({
-      primary: item.title,
-      secondary: this.status(item.status),
-      icon: item.icon,
-      onClick() {
-        console.log('setting index to', index)
-        store.activeIndex = index
-      },
-    }))
 
     return (
       <inbox>
@@ -381,19 +363,23 @@ export default class Inbox {
           </bar>
 
           <UI.List
+            background="transparent"
             $list
             itemProps={{ paddingLeft: 20, height: 'auto', padding: 15 }}
-            items={items}
-            getItem={(val, index) => ({
-              primary: val.primary,
+            items={store.items}
+            getItem={(item, index) => ({
+              primary: item.title,
+              secondary: item.status,
+              date: '1 day ago',
               ellipse: false,
               glowProps: {
-                color: 'red',
+                color: 'salmon',
                 scale: 1.6,
                 offsetLeft: -200,
                 resist: 70,
-                opacity: 0.08,
+                opacity: 0.048,
               },
+              //icon: item.icon,
               paddingRight: 80,
               onClick: () => (store.activeIndex = index),
               onMouseEnter: () => (store.highlightIndex = index),

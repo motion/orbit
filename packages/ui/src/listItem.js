@@ -112,7 +112,7 @@ export default class ListItem {
         align="center"
         glowProps={{
           scale: 1.4,
-          opacity: 0.1,
+          opacity: 0.09,
           resist: 40,
           clickable: !!onClick,
           ...glowProps,
@@ -128,7 +128,7 @@ export default class ListItem {
           <FakeAvatar if={fakeAvatar} size={50} $avatar $padavatar />
         </image>
         <content>
-          <above if={primary || after || before || date}>
+          <above if={primary || secondary || after || before || date}>
             <before if={before}>
               {before}
             </before>
@@ -199,8 +199,12 @@ export default class ListItem {
       fontWeight: 200,
     },
     date: {
+      alignSelf: 'flex-start',
+      marginTop: 3,
       userSelect: 'none',
       fontSize: 12,
+      fontWeight: 200,
+      opacity: 0.6,
     },
     col: {
       flexDirection: 'column',

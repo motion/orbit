@@ -74,6 +74,11 @@ export default class HoverGlow {
         this.on(node, 'mousedown', this.mouseDown)
       }
     }
+
+    if (this.props.show) {
+      // trigger it to show
+      this.setState({})
+    }
   }
 
   componentWillUnmount() {
@@ -85,7 +90,7 @@ export default class HoverGlow {
 
   setBounds = throttle(() => {
     this.bounds = this.node.getBoundingClientRect()
-  }, 100)
+  }, 32)
 
   // offset gives us offset without scroll, just based on parent
   move = throttle(e => {
@@ -204,6 +209,9 @@ export default class HoverGlow {
           style={{
             zIndex: behind ? -1 : 0,
             opacity: 1,
+            transition: `
+              transform ease-out ${transition}ms
+            `,
             transform: `
                 translateX(${translateX + offsetLeft}px)
                 translateY(${translateY + offsetTop}px)
@@ -228,9 +236,8 @@ export default class HoverGlow {
                 background || gradient
                   ? `radial-gradient(${$(color).toString()}, transparent 70%)`
                   : colorRGB,
-              borderRadius: 10000,
+              borderRadius: 10000000,
               transition: `
-                  transform linear ${clickDuration / 2}ms,
                   opacity linear ${transition}ms
                 `,
             }}

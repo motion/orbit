@@ -63,6 +63,7 @@ export default class Sidebar {
                   open={explorerStore.showDiscussions}
                   from="right"
                   size={width + 20}
+                  background="#fefefe"
                   css={{
                     paddingLeft: 20,
                   }}

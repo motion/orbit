@@ -159,7 +159,7 @@ export default class DocumentPage {
 
         <Actions />
 
-        <docpagecontent if={false}>
+        <docpagecontent>
           <DocumentView
             if={!docStore.showInbox}
             id={doc._id}

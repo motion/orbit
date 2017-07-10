@@ -33,11 +33,7 @@ export default class UserBar {
             <quote>"something about something else"</quote>{' '}
             <date>3 min ago</date>
           </notification>
-          <DocumentView
-            if={false && store.document}
-            document={store.document}
-            inline
-          />
+          <DocumentView if={store.document} document={store.document} inline />
         </UI.Popover>
         <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>

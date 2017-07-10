@@ -8,7 +8,7 @@ export default class Explorer {
   render() {
     return (
       <explorer>
-        <Children if={false} />
+        <Children />
       </explorer>
     )
   }

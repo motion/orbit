@@ -1,13 +1,11 @@
 import React from 'react'
 import * as Mobx from 'mobx'
-import Cache from './cache'
 import { object } from 'prop-types'
-import { pickBy, debounce } from 'lodash'
+import { pickBy } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 
 export default function storeProvidable(options, emitter) {
-  const cache = new WeakMap()
   const hmrd = {}
 
   return {
@@ -138,13 +136,9 @@ export default function storeProvidable(options, emitter) {
           // optional mount function
           if (options.onStoreMount) {
             for (const name of Object.keys(stores)) {
-              if (stores[name].__IS_STORE_MOUNTED) {
-                continue
-              }
               // fallback to store if nothing returned
               stores[name] =
                 options.onStoreMount(stores[name], this.props) || stores[name]
-              stores[name].__IS_STORE_MOUNTED = true
             }
           }
 

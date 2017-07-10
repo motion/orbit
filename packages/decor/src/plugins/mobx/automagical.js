@@ -215,7 +215,7 @@ function mobxifyWatch(obj, method, val) {
 
   async function watchForNewValue() {
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
-    console.log('result', KEY, result)
+    // console.log('result', KEY, result)
     stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
       currentDisposable()

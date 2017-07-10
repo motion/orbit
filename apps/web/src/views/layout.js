@@ -32,12 +32,6 @@ if (module && module.hot) {
   })
 }
 
-console.log('stores are', {
-  layoutStore: LayoutStore,
-  soundStore: SoundStore,
-  explorerStore: ExplorerStore,
-})
-
 @view.provide({
   layoutStore: LayoutStore,
   soundStore: SoundStore,

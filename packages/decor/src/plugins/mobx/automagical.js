@@ -11,6 +11,7 @@ import {
   autorun,
 } from 'mobx'
 
+const log = _ => _ | window.log
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery
 const isRxObservable = val => val instanceof Observable
@@ -203,11 +204,9 @@ function mobxifyWatch(obj, method, val) {
     })
   }
 
-  let uid = 0
   const stopAutorun = autorun(watchForNewValue)
 
   async function watchForNewValue() {
-    const mid = ++uid // 🔒
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
     console.log('result', result)
     stopObservableAutorun && stopObservableAutorun()
@@ -238,11 +237,11 @@ function mobxifyWatch(obj, method, val) {
     get() {
       const result = current.get()
       if (result && result.promise) {
-        log('get', result.value)
+        log('get.promise', result.value)
         return result.value
       }
       if (isObservable(result)) {
-        log('get', result.get())
+        log('get.observable', result.get())
         return result.get()
       }
       log('get', result)

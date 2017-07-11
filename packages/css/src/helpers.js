@@ -6,6 +6,9 @@ export function colorToString(color: Color, options): string {
   if (typeof color === 'string') {
     return color
   }
+  if (!color) {
+    return 'transparent'
+  }
   let res = color
   if (isColorLikeLibrary(color, options)) {
     res = getColorLikeLibraryValue(color, options)

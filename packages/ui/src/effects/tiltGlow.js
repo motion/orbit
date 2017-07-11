@@ -19,7 +19,7 @@ export default class TiltGlow {
     return 1
   }
 
-  render({ width, height, tiltOptions, children, ...css }: Props) {
+  render({ width, height, tiltOptions, children, css }: Props) {
     return (
       <Tilt
         options={{
@@ -30,7 +30,7 @@ export default class TiltGlow {
           ...tiltOptions,
         }}
       >
-        <doc
+        <tiltglow
           css={{
             cursor: 'default',
             width,
@@ -69,7 +69,7 @@ export default class TiltGlow {
             opacity={0.15}
             borderRadius={5}
           />
-        </doc>
+        </tiltglow>
       </Tilt>
     )
   }

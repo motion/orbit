@@ -98,9 +98,8 @@ export default class ExplorerChildren {
             {allDocs.map(doc => {
               const children = store.children[doc._id]
               const gradient = idToGradient(doc._id)
-              const background = `linear-gradient(${gradient.deg}deg, ${gradient
+              const backgroundColor = `linear-gradient(${gradient.deg}deg, ${gradient
                 .colors[0]}, ${gradient.colors[1]})`
-              log(background)
               return (
                 <doccontainer>
                   <UI.TiltGlow
@@ -109,7 +108,7 @@ export default class ExplorerChildren {
                     height={90}
                     key={doc._id}
                     css={{
-                      background,
+                      backgroundColor,
                     }}
                   >
                     <doc justify="flex-start">

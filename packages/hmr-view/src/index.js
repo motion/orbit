@@ -14,30 +14,18 @@ function createProxy(Klass) {
 
   function update(Thing) {
     // wrap
-    Current = class X {
-      static get name() {
-        return Thing.name
-      }
-    }
-
-    Object.keys(Thing).forEach(key => {
-      Current[key] = Thing[key]
-    })
+    Current = Thing
 
     const thingProto = Thing.prototype
     Current.prototype = new Proxy(thingProto, {
-      get(target, name) {
-        console.log('gets', name)
+      get(target, name, receiver) {
         if (name === 'componentDidMount') {
-          log('wrapping mount')
           mountedInstances[target] = target
         }
         if (name === 'componentWillUnmount') {
           delete mountedInstances[target]
         }
-        return typeof target[name] === 'function'
-          ? target[name].bind(target)
-          : target[name]
+        return Reflect.get(target, name, receiver)
       },
     })
 

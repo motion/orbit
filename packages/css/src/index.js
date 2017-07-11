@@ -178,7 +178,7 @@ export default function motionStyle(options: Object = {}) {
       }
 
       let respond
-      const firstChar = key.substr(0, 1)
+      const firstChar = key[0]
 
       if (valueType === 'string' || valueType === 'number') {
         toReturn[key] = value

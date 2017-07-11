@@ -39,7 +39,7 @@ export default class HoverGlow {
     clickScale: 2,
     transition: 0,
     blur: 15,
-    backdropFilter: 'contrast(100%) blur(5px)',
+    backdropFilter: 'contrast(100%)',
   }
 
   state = {
@@ -205,13 +205,13 @@ export default class HoverGlow {
           borderLeftRadius: borderLeftRadius || borderRadius,
           borderRightRadius: borderRightRadius || borderRadius,
           overflow,
-          zIndex: behind ? -1 : 10000,
+          zIndex: behind ? -1 : 1,
         }}
         {...props}
       >
         <glow
           style={{
-            zIndex: behind ? -1 : 100000,
+            zIndex: behind ? -1 : 1,
             opacity: 1,
             transition: `
               transform ease-out ${transition}ms
@@ -234,7 +234,7 @@ export default class HoverGlow {
               marginLeft: -width / 2,
               marginTop: -height / 2,
               filter: blur ? `blur(${blur}px)` : '',
-              backdropFilter: 'blur(10px)',
+              backdropFilter,
               zIndex,
               background:
                 background || gradient

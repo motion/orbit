@@ -15,7 +15,12 @@ type Props = {
 export default class TiltGlow {
   props: Props
 
+  version() {
+    return 1
+  }
+
   render({ width, height, tiltOptions, children }: Props) {
+    console.log('render me just to check22')
     return (
       <Tilt
         options={{
@@ -39,10 +44,11 @@ export default class TiltGlow {
           {children}
           <Glow
             full
-            scale={2}
+            show
+            scale={1}
             resist={20}
-            color={[255, 255, 255]}
-            zIndex={1000}
+            color="red"
+            zIndex={100000}
             opacity={1}
             gradient
           />
@@ -51,6 +57,7 @@ export default class TiltGlow {
             resist={93}
             width={width * 0.95}
             height={height * 0.95}
+            scale={1}
             offsetTop={5}
             offsetLeft={-10}
             blur={5}

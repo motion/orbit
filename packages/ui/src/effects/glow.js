@@ -50,7 +50,6 @@ export default class HoverGlow {
   bounds = {}
 
   componentDidMount() {
-    log('calling glow')
     this.setTimeout(this.follow)
   }
 

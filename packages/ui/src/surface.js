@@ -418,7 +418,7 @@ export default class Surface implements ViewType {
     )
     const hoverBorderColor =
       props.hoverBorderColor ||
-      (props.borderColor && props.borderColor.lighten(0.2)) ||
+      (props.borderColor && $(props.borderColor).lighten(0.2)) ||
       theme.hover.borderColor ||
       borderColor.lighten(0.2)
 

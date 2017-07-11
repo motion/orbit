@@ -35,6 +35,18 @@ class Actions {
 
     const starred = document.hasStar()
 
+    const popoverProps = {
+      elevation: 3,
+      borderRadius: 8,
+      background: 'transparent',
+      distance: 10,
+      forgiveness: 16,
+      towards: 'right',
+      delay: 150,
+      openOnHover: true,
+      closeOnClick: true,
+    }
+
     return (
       <actions $$draggable>
         <UI.Button
@@ -46,13 +58,7 @@ class Actions {
         />
 
         <UI.Popover
-          elevation={3}
-          borderRadius={8}
-          background="transparent"
-          distance={10}
-          forgiveness={16}
-          towards="right"
-          delay={150}
+          {...popoverProps}
           target={
             <UI.Button {...itemProps} opacity={0.5} chromeless icon="dot6">
               <UI.Text size={1}>+ 3 people</UI.Text>
@@ -61,8 +67,6 @@ class Actions {
               </UI.Text>
             </UI.Button>
           }
-          openOnHover
-          closeOnClick
         >
           <UI.List
             width={150}
@@ -73,19 +77,30 @@ class Actions {
               borderWidth: 0,
               borderRadius: 8,
             }}
-            items={[
-              {
-                icon: 'bell',
-                primary: 'Ping +3',
-                onClick: () => console.log(),
-              },
-              {
-                icon: 'gear',
-                primary: 'Settings',
-                onClick: () => console.log(),
-              },
-            ]}
-          />
+          >
+            <UI.List.Item icon="gear" primary="Settings" />
+            <UI.Popover
+              {...popoverProps}
+              target={<UI.List.Item icon="bell" primary="Ping +3" />}
+              towards="right"
+            >
+              <UI.List
+                width={150}
+                padding={3}
+                itemProps={{
+                  height: 32,
+                  fontSize: 14,
+                  borderWidth: 0,
+                  borderRadius: 8,
+                }}
+              >
+                <UI.List.Item icon="all" primary="All" color="black" />
+                <UI.List.Item icon="girl" primary="Jamie S." />
+                <UI.List.Item icon="boy" primary="Angela M." />
+                <UI.List.Item icon="boy" primary="Theresa M." />
+              </UI.List>
+            </UI.Popover>
+          </UI.List>
         </UI.Popover>
       </actions>
     )

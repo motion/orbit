@@ -23,7 +23,7 @@ var reloaded = [];
 
 function createProxy(Klass) {
   var mountedInstances = new Set();
-  var BaseProto = Object.assign({}, Klass.prototype);
+  var BaseProto = Klass.prototype;
   var Current = wrap(Klass);
 
   function wrap(Thing) {
@@ -33,6 +33,10 @@ function createProxy(Klass) {
       get(target, method, receiver) {
         if (method === 'constructor') {
           return target[method];
+        }
+        var desc = Object.getOwnPropertyDescriptor(BaseProto, method);
+        if (desc && desc.get) {
+          return desc.get.call(receiver);
         }
         if (method === 'componentDidMount') {
           return function () {
@@ -63,7 +67,7 @@ function createProxy(Klass) {
   }
 
   function update(Thing) {
-    BaseProto = Object.assign({}, Thing.prototype);
+    BaseProto = Thing.prototype;
     var all = [];
     mountedInstances.forEach(function (instance) {
       all.push(instance);

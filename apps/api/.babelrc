@@ -3,7 +3,7 @@
     [
       "@mcro/preset-motion",
       {
-        "disable": ["react-hot-loader/patch"]
+        "disable": ["react-hot-loader/babel"]
       }
     ]
   ]

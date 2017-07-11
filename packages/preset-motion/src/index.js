@@ -22,7 +22,7 @@ module.exports = function(context, givenOpts) {
       getPlugin('babel-plugin-root-import', [
         { rootPathPrefix: '~', rootPathSuffix: 'src' },
       ]),
-      getPlugin('react-hot-loader/patch'),
+      getPlugin('react-hot-loader/babel'),
       // getPlugin('@mcro/hmr', {
       //   decoratorName: opts.decorator || 'view',
       //   transforms: [

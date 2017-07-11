@@ -752,8 +752,7 @@ export default class Popover {
         background: props.showForgiveness ? [250, 250, 0, 0.2] : 'auto',
       },
       popoverOpen: {
-        animation:
-          props.animation === true ? 'bounce-down 200ms' : props.animation,
+        animation: props.animation === true ? 'bounce 200ms' : props.animation,
       },
     }
   }

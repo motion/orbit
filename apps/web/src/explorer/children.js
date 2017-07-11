@@ -99,7 +99,7 @@ export default class ExplorerChildren {
                 const children = store.children[doc._id]
                 const gradient = idToGradient(doc._id)
                 return (
-                  <UI.TiltGlow width={220} height={130} key={doc._id}>
+                  <UI.TiltGlow width={220} height={120} key={doc._id}>
                     <doc
                       if={doc.title}
                       justify="flex-start"

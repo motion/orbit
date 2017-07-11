@@ -24,6 +24,13 @@ var viewProxies = {};
 var reloaded = [];
 var reloadedInstances = [];
 
+module.hot.accept(function () {
+  viewProxies = module.hot.data.viewProxies || {};
+});
+module.hot.dispose(function (data) {
+  data.viewProxies = viewProxies;
+});
+
 function proxyReactComponents(_ref) {
   var filename = _ref.filename,
       components = _ref.components,

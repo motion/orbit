@@ -105,8 +105,12 @@ export default class ExplorerChildren {
                     width={190}
                     height={90}
                     key={doc._id}
+                    css={{
+                      background: `linear-gradient(${gradient.deg}deg, ${gradient
+                        .colors[0]}, ${gradient.colors[1]})`,
+                    }}
                   >
-                    <doc justify="flex-start" $gradient={gradient}>
+                    <doc justify="flex-start">
                       <title onClick={() => Router.go(doc.url())}>
                         {doc.getTitle()}
                       </title>
@@ -183,10 +187,6 @@ export default class ExplorerChildren {
         color: [50, 50, 50],
       },
     },
-    gradient: gradient => ({
-      background: `linear-gradient(${gradient.deg}deg, ${gradient
-        .colors[0]}, ${gradient.colors[1]})`,
-    }),
     title: {
       alignItems: 'center',
       maxWidth: '50%',

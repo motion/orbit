@@ -19,8 +19,7 @@ export default class TiltGlow {
     return 1
   }
 
-  render({ width, height, tiltOptions, children }: Props) {
-    console.log('render me just to check22')
+  render({ width, height, tiltOptions, children, ...css }: Props) {
     return (
       <Tilt
         options={{
@@ -32,13 +31,14 @@ export default class TiltGlow {
         }}
       >
         <doc
-          $$style={{
+          css={{
             cursor: 'default',
             width,
             height,
             borderRadius: 5,
             overflow: 'hidden',
             transition: 'transform 50ms ease-in',
+            ...css,
           }}
         >
           {children}
@@ -47,19 +47,22 @@ export default class TiltGlow {
             show
             scale={1}
             resist={20}
-            color="red"
+            color={[255, 255, 255]}
+            overflow="hidden"
+            borderRadius={8}
             zIndex={100000}
             opacity={1}
+            transition={100}
             gradient
           />
           <Glow
+            show
             behind
             resist={93}
-            width={width * 0.95}
-            height={height * 0.95}
-            scale={1}
+            width={width * 1}
+            height={height * 1}
             offsetTop={5}
-            offsetLeft={-10}
+            offsetLeft={-15}
             blur={5}
             inverse
             color={[0, 0, 0]}

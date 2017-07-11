@@ -6,6 +6,13 @@ let viewProxies = {}
 let reloaded = []
 let reloadedInstances = []
 
+module.hot.accept(() => {
+  viewProxies = module.hot.data.viewProxies || {}
+})
+module.hot.dispose(data => {
+  data.viewProxies = viewProxies
+})
+
 export default function proxyReactComponents({
   filename,
   components,

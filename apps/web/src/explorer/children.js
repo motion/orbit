@@ -97,22 +97,23 @@ export default class ExplorerChildren {
           >
             {allDocs.map(doc => {
               const children = store.children[doc._id]
-              const gradient = idToGradient(doc._id)
-              const background = `linear-gradient(${gradient.deg}deg, ${gradient
-                .colors[0]}, ${gradient.colors[1]})`
+              const colors = idToGradient(doc._id)
+              const gradient = `linear-gradient(${colors.deg}deg, ${colors
+                .colors[0]}, ${colors.colors[1]})`
               return (
                 <doccontainer>
                   <UI.TiltGlow
                     if={doc.title}
                     width={190}
-                    height={90}
+                    height={75}
                     key={doc._id}
                     css={{
-                      background,
+                      border: [2, colors.colors[0]],
                     }}
+                    onClick={() => Router.go(doc.url())}
                   >
                     <doc justify="flex-start">
-                      <title onClick={() => Router.go(doc.url())}>
+                      <title>
                         {doc.getTitle()}
                       </title>
                       <subdocs if={children && children.length}>
@@ -134,11 +135,13 @@ export default class ExplorerChildren {
             })}
           </FlipMove>
         </UI.StableContainer>
-        <UI.TiltGlow width={220} height={120}>
-          <doc $$justify="flex-start">
-            <title>New Doc</title>
-          </doc>
-        </UI.TiltGlow>
+        <doccontainer>
+          <UI.TiltGlow width={190} height={75}>
+            <doc $$justify="flex-start">
+              <title>+</title>
+            </doc>
+          </UI.TiltGlow>
+        </doccontainer>
       </children>
     )
   }
@@ -146,7 +149,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       marginTop: 170,
-      marginRight: -40,
+      marginRight: -50,
       padding: [10, 10],
       // borderTop: [1, '#eee', 'dotted'],
       flex: 1,
@@ -174,7 +177,7 @@ export default class ExplorerChildren {
       flexFlow: 'row',
     },
     doccontainer: {
-      marginBottom: 5,
+      marginBottom: 10,
       position: 'relative',
     },
     doc: {
@@ -189,14 +192,12 @@ export default class ExplorerChildren {
       },
     },
     title: {
-      alignItems: 'center',
-      maxWidth: '50%',
       margin: 0,
       padding: 0,
       fontWeight: 500,
-      fontSize: 20,
+      fontSize: 18,
       lineHeight: '26px',
-      color: '#fff',
+      color: '#333',
     },
     subdocs: {
       flexFlow: 'row',

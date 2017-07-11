@@ -61,14 +61,14 @@ export default class TiltGlow {
             show
             behind
             resist={93}
-            width={width * 1}
-            height={height * 1}
-            offsetTop={5}
-            offsetLeft={-15}
+            width={width * 0.98}
+            height={height * 0.98}
+            offsetTop={4}
+            offsetLeft={-12}
             blur={5}
             inverse
             color={[0, 0, 0]}
-            opacity={0.15}
+            opacity={0.1}
             borderRadius={5}
           />
         </tiltglow>

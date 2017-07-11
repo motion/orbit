@@ -153,7 +153,8 @@ export default function storeProvidable(options, emitter) {
           this.setState({ error: null })
         }
 
-        handleHotReload = module => {
+        handleHotReload = (module, update) => {
+          log('LETS HMR', module, update)
           // console.log(module, Stores, this.state.stores)
 
           // debounce
@@ -163,11 +164,11 @@ export default function storeProvidable(options, emitter) {
           hmrd[module.id] = setTimeout(() => {
             console.log(`[HMR] file: ${module.id}`)
             window.App && window.App.clearErrors && window.App.clearErrors()
-            this.clearErrors()
-            // decorateStores()
-            this.module = module
-            this.disposeStores()
-            this.setupStores()
+            // this.clearErrors()
+            // // decorateStores()
+            // this.module = module
+            // this.disposeStores()
+            // this.setupStores()
           }, 150)
         }
 

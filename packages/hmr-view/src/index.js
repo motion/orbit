@@ -1,22 +1,49 @@
-import { getForceUpdate, createProxy } from 'react-proxy'
 import window from 'global/window'
+import { getForceUpdate } from 'react-proxy'
 
-let componentProxies
-if (window.__reactComponentProxies) {
-  componentProxies = window.__reactComponentProxies
-} else {
-  componentProxies = {}
-  Object.defineProperty(window, '__reactComponentProxies', {
-    configurable: true,
-    enumerable: false,
-    writable: false,
-    value: componentProxies,
-  })
-}
-
-window.componentProxies = componentProxies
+const viewProxies = {}
+window.viewProxies = viewProxies
 
 let reloaded = []
+
+function createProxy(Klass) {
+  const mountedInstances = new WeakMap()
+  let Current
+
+  update(Klass)
+
+  function update(Thing) {
+    // wrap
+    Current = new Proxy(Thing, {
+      get(target, name) {
+        if (name === 'componentDidMount') {
+          mountedInstances[target] = target
+        }
+        if (name === 'componentWillUnmount') {
+          delete mountedInstances[target]
+        }
+        return target[name]
+      },
+    })
+    // copy statics
+    Object.keys(Thing).forEach(key => {
+      Current[key] = Thing[key]
+    })
+    Current.toString = () => ''
+
+    // update
+    return Object.keys(mountedInstances).map(k => {
+      mountedInstances[k] = Current
+      return mountedInstances[k]
+    })
+  }
+
+  return {
+    update,
+    get: () => Current,
+    instances: () => mountedInstances,
+  }
+}
 
 export default function proxyReactComponents({
   filename,
@@ -37,48 +64,40 @@ export default function proxyReactComponents({
     )
   }
 
-  // module
-
-  if (Object.keys(components).some(key => !components[key].isInFunction)) {
-    hot.accept(err => {
-      if (err) {
-        console.warn(
-          `[React Transform HMR] There was an error updating ${filename}:`
-        )
-        console.error(err)
-      }
-    })
-  }
-
-  const forceUpdater = getForceUpdate(window.React)
-  const forceUpdate = instance => {
-    instance.handleHotReload && instance.handleHotReload(module)
-    return forceUpdater(instance)
-  }
-  window.forceUpdate = forceUpdate
+  const forceUpdater = getForceUpdate(React || window.React)
 
   return function wrapWithProxy(ReactClass, uniqueId) {
     const { isInFunction = false, displayName = uniqueId } = components[
       uniqueId
     ]
-
-    // attach module to class so it can do shit w it
-    // ReactClass.module = module
+    const uid = filename + '$' + uniqueId
+    log('HMR', uid)
 
     if (isInFunction) {
       return ReactClass
     }
 
-    const globalUniqueId = filename + '$' + uniqueId
-    if (componentProxies[globalUniqueId]) {
+    module.hot.accept(() => {
+      console.log('just accepting', uid)
+    })
+
+    // if existing proxy
+    if (viewProxies[uid]) {
       reloaded.push(displayName)
-      const instances = componentProxies[globalUniqueId].update(ReactClass)
-      setTimeout(() => instances.forEach(forceUpdate))
+      const instances = viewProxies[uid].update(ReactClass)
+      setTimeout(() =>
+        instances.forEach(instance => {
+          log('HANDLE HMR', instance)
+          if (instance.handleHotReload) {
+            instance.handleHotReload(module, forceUpdater(instance))
+          }
+        })
+      )
     } else {
-      componentProxies[globalUniqueId] = createProxy(ReactClass)
+      viewProxies[uid] = createProxy(ReactClass)
     }
 
-    return componentProxies[globalUniqueId].get()
+    return viewProxies[uid].get()
   }
 }
 

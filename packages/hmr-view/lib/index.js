@@ -8,30 +8,63 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 exports.default = proxyReactComponents;
 
-var _reactProxy = require('react-proxy');
-
 var _window = require('global/window');
 
 var _window2 = _interopRequireDefault(_window);
 
+var _reactProxy = require('react-proxy');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var componentProxies = void 0;
-if (_window2.default.__reactComponentProxies) {
-  componentProxies = _window2.default.__reactComponentProxies;
-} else {
-  componentProxies = {};
-  Object.defineProperty(_window2.default, '__reactComponentProxies', {
-    configurable: true,
-    enumerable: false,
-    writable: false,
-    value: componentProxies
-  });
-}
-
-_window2.default.componentProxies = componentProxies;
+var viewProxies = {};
+_window2.default.viewProxies = viewProxies;
 
 var reloaded = [];
+
+function createProxy(Klass) {
+  var mountedInstances = new WeakMap();
+  var Current = void 0;
+
+  update(Klass);
+
+  function update(Thing) {
+    // wrap
+    Current = new Proxy(Thing, {
+      get(target, name) {
+        if (name === 'componentDidMount') {
+          mountedInstances[target] = target;
+        }
+        if (name === 'componentWillUnmount') {
+          delete mountedInstances[target];
+        }
+        return target[name];
+      }
+    });
+    // copy statics
+    Object.keys(Thing).forEach(function (key) {
+      Current[key] = Thing[key];
+    });
+    Current.toString = function () {
+      return '';
+    };
+
+    // update
+    return Object.keys(mountedInstances).map(function (k) {
+      mountedInstances[k] = Current;
+      return mountedInstances[k];
+    });
+  }
+
+  return {
+    update,
+    get: function get() {
+      return Current;
+    },
+    instances: function instances() {
+      return mountedInstances;
+    }
+  };
+}
 
 function proxyReactComponents(_ref) {
   var filename = _ref.filename,
@@ -52,25 +85,7 @@ function proxyReactComponents(_ref) {
     throw new Error('locals[0] does not appear to be a `module` object with Hot Module ' + 'replacement API enabled. You should disable react-transform-hmr in ' + 'production by using `env` section in Babel configuration. See the ' + 'example in README: https://github.com/gaearon/react-transform-hmr');
   }
 
-  // module
-
-  if (Object.keys(components).some(function (key) {
-    return !components[key].isInFunction;
-  })) {
-    hot.accept(function (err) {
-      if (err) {
-        console.warn(`[React Transform HMR] There was an error updating ${filename}:`);
-        console.error(err);
-      }
-    });
-  }
-
-  var forceUpdater = (0, _reactProxy.getForceUpdate)(_window2.default.React);
-  var forceUpdate = function forceUpdate(instance) {
-    instance.handleHotReload && instance.handleHotReload(module);
-    return forceUpdater(instance);
-  };
-  _window2.default.forceUpdate = forceUpdate;
+  var forceUpdater = (0, _reactProxy.getForceUpdate)(React || _window2.default.React);
 
   return function wrapWithProxy(ReactClass, uniqueId) {
     var _components$uniqueId = components[uniqueId],
@@ -79,25 +94,34 @@ function proxyReactComponents(_ref) {
         _components$uniqueId$2 = _components$uniqueId.displayName,
         displayName = _components$uniqueId$2 === undefined ? uniqueId : _components$uniqueId$2;
 
-    // attach module to class so it can do shit w it
-    // ReactClass.module = module
+    var uid = filename + '$' + uniqueId;
+    log('HMR', uid);
 
     if (isInFunction) {
       return ReactClass;
     }
 
-    var globalUniqueId = filename + '$' + uniqueId;
-    if (componentProxies[globalUniqueId]) {
+    module.hot.accept(function () {
+      console.log('just accepting', uid);
+    });
+
+    // if existing proxy
+    if (viewProxies[uid]) {
       reloaded.push(displayName);
-      var instances = componentProxies[globalUniqueId].update(ReactClass);
+      var instances = viewProxies[uid].update(ReactClass);
       setTimeout(function () {
-        return instances.forEach(forceUpdate);
+        return instances.forEach(function (instance) {
+          log('HANDLE HMR', instance);
+          if (instance.handleHotReload) {
+            instance.handleHotReload(module, forceUpdater(instance));
+          }
+        });
       });
     } else {
-      componentProxies[globalUniqueId] = (0, _reactProxy.createProxy)(ReactClass);
+      viewProxies[uid] = createProxy(ReactClass);
     }
 
-    return componentProxies[globalUniqueId].get();
+    return viewProxies[uid].get();
   };
 }
 

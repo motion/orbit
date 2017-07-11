@@ -49,7 +49,7 @@ export default class Button {
         {...props}
         noElement
       >
-        {children}
+        {children} 1234222
         {badge &&
           <badge $badgeSize={props.size}>
             {badge}

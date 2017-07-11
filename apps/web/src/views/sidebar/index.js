@@ -21,10 +21,38 @@ class SidebarContent {
   render() {
     return (
       <inner $$flex>
-        <UserBar />
         <Login />
         <Menu />
-        <Projects />
+        <contents $$flex $$paddingTop={45}>
+          <UI.Segment
+            css={{
+              margin: 10,
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              left: 20,
+            }}
+          >
+            {['Favorites', 'Latest'].map((text, i) =>
+              <UI.Button
+                key={i}
+                active={i === 0}
+                borderWidth={1}
+                borderColor={[0, 0, 0, 0.2]}
+                glowProps={{ opacity: 0.1 }}
+                flex
+                background="transparent"
+                css={{
+                  //backdropFilter: 'blur(5px)',
+                }}
+              >
+                {text}
+              </UI.Button>
+            )}
+          </UI.Segment>
+          <Projects />
+        </contents>
+        <UserBar />
       </inner>
     )
   }

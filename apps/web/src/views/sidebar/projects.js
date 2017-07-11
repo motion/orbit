@@ -115,6 +115,10 @@ export default class Projects {
   }
 
   static style = {
+    content: {
+      flex: 1,
+      overflowY: 'scroll',
+    },
     arrow: {
       color: [255, 255, 255, 0.2],
     },
@@ -122,7 +126,7 @@ export default class Projects {
       padding: [2, 6],
     },
     tasks: {
-      padding: [10, 10],
+      padding: [0, 10],
     },
     empty: {
       flex: 1,

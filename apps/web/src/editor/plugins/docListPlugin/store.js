@@ -3,24 +3,25 @@ import { Document } from '@mcro/models'
 
 export default class DocListStore {
   get doc() {
-    if (!this.props.docStore) {
+    if (!this.props.documentStore) {
       return false
     }
-    return this.props.docStore.doc
+    return this.props.documentStore.document
   }
 
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
   docs = watch(
-    () => !this.props.inline && Document.child(this.doc && this.doc._id)
+    () =>
+      !this.props.inline && Document.child(this.document && this.document._id)
   )
   shouldFocus = false
 
   createDoc = async () => {
-    if (!this.doc) {
+    if (!this.document) {
       await Document.create()
     } else {
-      await Document.create({ parentId: this.doc._id })
+      await Document.create({ parentId: this.document._id })
     }
 
     this.setTimeout(() => {

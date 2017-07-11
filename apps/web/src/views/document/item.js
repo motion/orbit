@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import gradients from './helpers/gradients'
+import gradients from '~/helpers/gradients'
 import { memoize } from 'lodash'
 import Router from '~/router'
 import { Button } from '@mcro/ui'
@@ -46,17 +46,10 @@ export default class DocItem {
   render({
     doc,
     children,
-    feed,
-    onSaveTitle,
-    list,
-    slanty,
+    showTitle,
     readOnly,
     hideMeta,
-    draggable,
     inline,
-    after,
-    height,
-    bordered,
     style,
     ...props
   }) {
@@ -74,7 +67,7 @@ export default class DocItem {
         }}
         {...props}
       >
-        <title if={list}>
+        <title if={showTitle}>
           {doc.title}
         </title>
         <content>

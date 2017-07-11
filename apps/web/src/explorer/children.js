@@ -3,10 +3,18 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
-import { sortBy } from 'lodash'
+import { sortBy, sum } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
 import Arrow from './arrow'
+import FlipMove from 'react-flip-move'
+import gradients from '~/helpers/gradients'
+
+const idToGradient = id => {
+  const num = Math.abs(+sum(id || '').replace(/[^0-9]/g, '') || 5)
+  const deg = Math.floor(Math.random() * 120)
+  return { deg, colors: gradients[num % gradients.length].colors }
+}
 
 type Props = {
   id: number,
@@ -85,41 +93,46 @@ export default class ExplorerChildren {
           </post>
         </actions>
         <UI.StableContainer stableDuration={500}>
-          <docs if={hasDocs && Object.keys(store.children).length}>
-            {allDocs.map((doc, index) => {
-              const children = store.children[doc._id]
-              return (
-                <doc
-                  if={doc.title}
-                  justify="flex-start"
-                  key={`${doc._id}${index}`}
-                >
-                  <title>
-                    <UI.Button
-                      $subDocItem
-                      chromeless
-                      onClick={() => Router.go(doc.url())}
+          <FlipMove $docs duration={300} easing="ease-out">
+            <docs if={hasDocs && Object.keys(store.children).length}>
+              {allDocs.map(doc => {
+                const children = store.children[doc._id]
+                const gradient = idToGradient(doc._id)
+                return (
+                  <UI.TiltGlow width={220} height={130} key={doc._id}>
+                    <doc
+                      if={doc.title}
+                      justify="flex-start"
+                      $gradient={gradient}
                     >
-                      {doc.getTitle()}
-                    </UI.Button>
-                  </title>
-                  <subdocs if={children && children.length}>
-                    <Arrow $arrow />
-                    {children.map(child =>
-                      <UI.Button
-                        $subDocItem
-                        chromeless
-                        key={child._id}
-                        onClick={() => Router.go(child.url())}
-                      >
-                        {child.getTitle()}
-                      </UI.Button>
-                    )}
-                  </subdocs>
-                </doc>
-              )
-            })}
-          </docs>
+                      <title>
+                        <UI.Button
+                          $subDocItem
+                          chromeless
+                          onClick={() => Router.go(doc.url())}
+                        >
+                          {doc.getTitle()}
+                        </UI.Button>
+                      </title>
+                      <subdocs if={children && children.length}>
+                        <Arrow $arrow />
+                        {children.map(child =>
+                          <UI.Button
+                            $subDocItem
+                            chromeless
+                            key={child._id}
+                            onClick={() => Router.go(child.url())}
+                          >
+                            {child.getTitle()}
+                          </UI.Button>
+                        )}
+                      </subdocs>
+                    </doc>
+                  </UI.TiltGlow>
+                )
+              })}
+            </docs>
+          </FlipMove>
         </UI.StableContainer>
       </children>
     )
@@ -156,7 +169,7 @@ export default class ExplorerChildren {
       flexFlow: 'row',
     },
     doc: {
-      flexFlow: 'row',
+      height: '100%',
       zIndex: 1,
       padding: [6, 12],
       '&:hover title': {
@@ -166,6 +179,10 @@ export default class ExplorerChildren {
         color: [50, 50, 50],
       },
     },
+    gradient: gradient => ({
+      background: `linear-gradient(${gradient.deg}deg, ${gradient
+        .colors[0]}, ${gradient.colors[1]})`,
+    }),
     title: {
       alignItems: 'center',
       maxWidth: '50%',

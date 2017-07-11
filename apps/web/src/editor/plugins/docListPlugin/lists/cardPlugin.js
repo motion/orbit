@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { TiltGlow, Icon, Button } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import DocItem from '~/views/document/item'
 import FlipMove from 'react-flip-move'
 
@@ -20,14 +20,18 @@ export default class CardList {
     const hasDocs = (listStore.docs || []).length > 0
     return (
       <FlipMove $docs duration={300} easing="ease-out">
-        <Button if={!hasDocs} icon="simple-add" onClick={listStore.createDoc}>
+        <UI.Button
+          if={!hasDocs}
+          icon="simple-add"
+          onClick={listStore.createDoc}
+        >
           create document
-        </Button>
+        </UI.Button>
 
         {listStore.docs.map((doc, i) =>
-          <TiltGlow width={width} height={height} key={doc._id}>
+          <UI.TiltGlow width={width} height={height} key={doc._id}>
             <DocItem inline ref={node => this.docRef(node, i)} doc={doc} />
-          </TiltGlow>
+          </UI.TiltGlow>
         )}
       </FlipMove>
     )

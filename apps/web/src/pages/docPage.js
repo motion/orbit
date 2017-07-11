@@ -2,11 +2,11 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Explorer from '~/explorer'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
-import Overdrive from 'react-overdrive'
+import Inbox from '~/views/inbox'
+import Children from '~/explorer/children'
 
 @view.attach('explorerStore')
 @view
@@ -147,21 +147,23 @@ export default class DocumentPage {
             Threads
           </UI.Button>
         </Page.Actions>
-
         <Actions />
-
+        <Inbox
+          if={explorerStore.showDiscussions}
+          document={explorerStore.document}
+        />
         <docpagecontent>
           <DocumentView
-            if={!docStore.showInbox}
             document={document}
             onKeyDown={docStore.onKeyDown}
             showCrumbs
             showChildren
             isPrimaryDocument
           />
+          <children>
+            <Children documentStore={docStore} />
+          </children>
         </docpagecontent>
-
-        <Explorer />
       </Page>
     )
   }
@@ -172,6 +174,10 @@ export default class DocumentPage {
       overflow: 'hidden',
       paddingRight: 30,
       paddingTop: 32,
+      flexFlow: 'row',
+    },
+    children: {
+      width: '30%',
     },
   }
 }

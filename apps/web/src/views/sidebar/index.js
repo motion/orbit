@@ -58,7 +58,7 @@ export default class Sidebar {
                 <SidebarContent />
               </sidebarcontent>
 
-              <UI.Theme name="light">
+              <UI.Theme name="light" if={false}>
                 <UI.Drawer
                   open={explorerStore.showDiscussions}
                   from="left"
@@ -71,9 +71,7 @@ export default class Sidebar {
                   transition
                   scrollable
                 >
-                  <docdrawer>
-                    <Inbox document={explorerStore.document} />
-                  </docdrawer>
+                  <docdrawer>hi</docdrawer>
                 </UI.Drawer>
               </UI.Theme>
             </sidebar>

@@ -7,33 +7,59 @@ window.viewProxies = viewProxies
 let reloaded = []
 
 function createProxy(Klass) {
-  const mountedInstances = new WeakMap()
-  let Current
+  const mountedInstances = new Set()
+  let Current = wrap(Klass)
+  let Base = Klass
 
-  update(Klass)
+  function wrap(Thing) {
+    class Next {
+      static get name() {
+        return Thing.name
+      }
+      constructor(...args) {
+        const thing = new Thing(...args)
+        Object.keys(thing).forEach(key => {
+          this[key] = thing[key]
+        })
+      }
+    }
+    Object.setPrototypeOf(
+      Next.prototype,
+      new Proxy(Thing.prototype, {
+        get(target, key, receiver) {
+          if (key === 'componentDidMount') {
+            return function(...args) {
+              mountedInstances.add(this)
+              return (
+                Base.prototype[key] && Base.prototype[key].call(this, ...args)
+              )
+            }
+          }
+          if (key === 'componentWillUnmount') {
+            return function(...args) {
+              mountedInstances.delete(this)
+              return (
+                Base.prototype[key] && Base.prototype[key].call(this, ...args)
+              )
+            }
+          }
+          return Base.prototype[key] || Reflect.get(target, key, receiver)
+        },
+      })
+    )
+    Object.keys(Thing).forEach(key => {
+      Next[key] = Thing[key]
+    })
+    return Next
+  }
 
   function update(Thing) {
-    // wrap
-    Current = Thing
-
-    const thingProto = Thing.prototype
-    Current.prototype = new Proxy(thingProto, {
-      get(target, name, receiver) {
-        if (name === 'componentDidMount') {
-          mountedInstances[target] = target
-        }
-        if (name === 'componentWillUnmount') {
-          delete mountedInstances[target]
-        }
-        return Reflect.get(target, name, receiver)
-      },
+    Base = Thing
+    const all = []
+    mountedInstances.forEach(instance => {
+      all.push(instance)
     })
-
-    // update
-    return Object.keys(mountedInstances).map(k => {
-      mountedInstances[k] = Current
-      return mountedInstances[k]
-    })
+    return all
   }
 
   return {
@@ -64,12 +90,16 @@ export default function proxyReactComponents({
 
   const forceUpdater = getForceUpdate(React || window.React)
 
+  const hotReload = instance => {
+    console.log('GOT AN', instance)
+    forceUpdater(instance)
+  }
+
   return function wrapWithProxy(ReactClass, uniqueId) {
     const { isInFunction = false, displayName = uniqueId } = components[
       uniqueId
     ]
     const uid = filename + '$' + uniqueId
-    log('HMR', uid)
 
     if (isInFunction) {
       return ReactClass
@@ -83,14 +113,8 @@ export default function proxyReactComponents({
     if (viewProxies[uid]) {
       reloaded.push(displayName)
       const instances = viewProxies[uid].update(ReactClass)
-      setTimeout(() =>
-        instances.forEach(instance => {
-          log('HANDLE HMR', instance)
-          if (instance.handleHotReload) {
-            instance.handleHotReload(module, forceUpdater(instance))
-          }
-        })
-      )
+      log('got instances', instances)
+      setTimeout(() => instances.forEach(hotReload))
     } else {
       viewProxies[uid] = createProxy(ReactClass)
     }

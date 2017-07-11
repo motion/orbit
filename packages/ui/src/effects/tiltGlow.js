@@ -19,7 +19,7 @@ export default class TiltGlow {
     return 1
   }
 
-  render({ width, height, tiltOptions, children, css }: Props) {
+  render({ width, height, tiltOptions, children, css, ...props }: Props) {
     return (
       <Tilt
         options={{
@@ -38,21 +38,23 @@ export default class TiltGlow {
             borderRadius: 5,
             overflow: 'hidden',
             transition: 'transform 50ms ease-in',
+            background: '#fff',
             ...css,
           }}
+          {...props}
         >
           {children}
           <Glow
             full
             show
-            scale={1}
+            scale={2}
             resist={20}
             color={[255, 255, 255]}
             overflow="hidden"
             borderRadius={8}
             zIndex={100000}
-            opacity={1}
-            transition={100}
+            opacity={0.4}
+            transition={30}
             gradient
           />
           <Glow

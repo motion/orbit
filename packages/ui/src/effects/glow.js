@@ -39,7 +39,7 @@ export default class HoverGlow {
     clickScale: 2,
     transition: 0,
     blur: 15,
-    backdropFilter: 'contrast(100%)',
+    // backdropFilter: 'contrast(100%)',
   }
 
   state = {
@@ -214,7 +214,7 @@ export default class HoverGlow {
             zIndex: behind ? -1 : 1,
             opacity: 1,
             transition: `
-              transform ease-out ${transition}ms
+              transform linear ${transition}ms
             `,
             transform: `
                 translateX(${translateX + offsetLeft}px)

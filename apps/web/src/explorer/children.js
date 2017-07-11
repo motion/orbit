@@ -98,7 +98,7 @@ export default class ExplorerChildren {
             {allDocs.map(doc => {
               const children = store.children[doc._id]
               const gradient = idToGradient(doc._id)
-              const backgroundColor = `linear-gradient(${gradient.deg}deg, ${gradient
+              const background = `linear-gradient(${gradient.deg}deg, ${gradient
                 .colors[0]}, ${gradient.colors[1]})`
               return (
                 <doccontainer>
@@ -108,7 +108,7 @@ export default class ExplorerChildren {
                     height={90}
                     key={doc._id}
                     css={{
-                      backgroundColor,
+                      background,
                     }}
                   >
                     <doc justify="flex-start">

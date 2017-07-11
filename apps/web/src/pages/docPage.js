@@ -45,19 +45,21 @@ class Actions {
           onClick={document.toggleStar}
         />
 
-        <badge>+ 3 people</badge>
-        <date>Jan 3rd</date>
-
         <UI.Popover
           elevation={3}
           borderRadius={8}
           background="transparent"
           distance={10}
           forgiveness={16}
-          towards="left"
+          towards="right"
           delay={150}
           target={
-            <UI.Button {...itemProps} opacity={0.5} chromeless icon="dot" />
+            <UI.Button {...itemProps} opacity={0.5} chromeless icon="dot6">
+              <UI.Text size={1}>+ 3 people</UI.Text>
+              <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
+                Jan 3rd
+              </UI.Text>
+            </UI.Button>
           }
           openOnHover
           closeOnClick
@@ -150,6 +152,7 @@ export default class DocumentPage {
           chromeless
           icon="design-f"
           tooltip="Threads"
+          tooltipProps={{ towards: 'right' }}
           highlight={explorerStore.showDiscussions}
           onClick={explorerStore.ref('showDiscussions').toggle}
           badge={1}

@@ -38,7 +38,6 @@ export default class TiltGlow {
         >
           {children}
           <Glow
-            show
             full
             scale={2}
             resist={20}
@@ -48,7 +47,6 @@ export default class TiltGlow {
             gradient
           />
           <Glow
-            show
             behind
             resist={93}
             width={width * 0.95}

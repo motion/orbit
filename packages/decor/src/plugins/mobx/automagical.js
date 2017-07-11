@@ -7,11 +7,16 @@ import {
   extendShallowObservable,
   extendObservable,
   autorun,
-  isObservable as mobxIsObservable,
+  isObservable as ISO,
 } from 'mobx'
 
 const isObservable = x => {
-  return x && x.__mobxLazyInitializers && mobxIsObservable(x)
+  try {
+    return ISO(x)
+  } catch (e) {
+    console.log('mobxer')
+    return x && x.observersIndexes
+  }
 }
 const log = _ => _ | window.log
 const isFunction = val => typeof val === 'function'

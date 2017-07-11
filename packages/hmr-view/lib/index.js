@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 exports.default = proxyReactComponents;
 
 var _window = require('global/window');
@@ -18,8 +16,6 @@ var _reactProxy = require('react-proxy');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 var viewProxies = {};
 _window2.default.viewProxies = viewProxies;
 
@@ -27,75 +23,47 @@ var reloaded = [];
 
 function createProxy(Klass) {
   var mountedInstances = new Set();
+  var BaseProto = Object.assign({}, Klass.prototype);
   var Current = wrap(Klass);
-  var Base = Klass;
 
   function wrap(Thing) {
-    var Next = function () {
-      _createClass(Next, null, [{
-        key: 'name',
-        get: function get() {
-          return Thing.name;
+    var ogMount = BaseProto.componentDidMount;
+    var ogWillUnmount = BaseProto.componentWillUnmount;
+    Thing.prototype = new Proxy(Thing.prototype, {
+      get(target, method, receiver) {
+        if (method === 'constructor') {
+          return target[method];
         }
-      }]);
-
-      function Next() {
-        var _this = this;
-
-        _classCallCheck(this, Next);
-
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-          args[_key] = arguments[_key];
-        }
-
-        var thing = new (Function.prototype.bind.apply(Thing, [null].concat(args)))();
-        Object.keys(thing).forEach(function (key) {
-          _this[key] = thing[key];
-        });
-      }
-
-      return Next;
-    }();
-
-    Object.setPrototypeOf(Next.prototype, new Proxy(Thing.prototype, {
-      get(target, key, receiver) {
-        if (key === 'componentDidMount') {
+        if (method === 'componentDidMount') {
           return function () {
-            var _Base$prototype$key;
-
             mountedInstances.add(this);
+
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
+
+            return ogMount && ogMount.call.apply(ogMount, [this].concat(args));
+          };
+        }
+        if (method === 'componentWillUnmount') {
+          return function () {
+            mountedInstances.delete(this);
 
             for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
               args[_key2] = arguments[_key2];
             }
 
-            return Base.prototype[key] && (_Base$prototype$key = Base.prototype[key]).call.apply(_Base$prototype$key, [this].concat(args));
+            return ogWillUnmount && ogWillUnmount.call.apply(ogWillUnmount, [this].concat(args));
           };
         }
-        if (key === 'componentWillUnmount') {
-          return function () {
-            var _Base$prototype$key2;
-
-            mountedInstances.delete(this);
-
-            for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-              args[_key3] = arguments[_key3];
-            }
-
-            return Base.prototype[key] && (_Base$prototype$key2 = Base.prototype[key]).call.apply(_Base$prototype$key2, [this].concat(args));
-          };
-        }
-        return Base.prototype[key] || Reflect.get(target, key, receiver);
+        return BaseProto[method] || Reflect.get(target, method, receiver);
       }
-    }));
-    Object.keys(Thing).forEach(function (key) {
-      Next[key] = Thing[key];
     });
-    return Next;
+    return Thing;
   }
 
   function update(Thing) {
-    Base = Thing;
+    BaseProto = Object.assign({}, Thing.prototype);
     var all = [];
     mountedInstances.forEach(function (instance) {
       all.push(instance);
@@ -136,7 +104,6 @@ function proxyReactComponents(_ref) {
   var forceUpdater = (0, _reactProxy.getForceUpdate)(React || _window2.default.React);
 
   var hotReload = function hotReload(instance) {
-    console.log('GOT AN', instance);
     forceUpdater(instance);
   };
 

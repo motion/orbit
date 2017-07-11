@@ -34,7 +34,7 @@ export default function storeProvidable(options, emitter) {
       decorateStores()
 
       // return HoC
-      class StoreProvider {
+      class StoreProvider extends React.Component {
         static get name() {
           return Klass.name
         }
@@ -209,10 +209,6 @@ export default function storeProvidable(options, emitter) {
 
       // copy statics
       hoistStatics(StoreProvider, Klass)
-
-      // copy non-statics
-      Object.setPrototypeOf(Klass.prototype, React.Component.prototype)
-      Object.setPrototypeOf(StoreProvider.prototype, Klass.prototype)
 
       // add stores to context
       if (context) {

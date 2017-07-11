@@ -8,53 +8,37 @@ let reloaded = []
 
 function createProxy(Klass) {
   const mountedInstances = new Set()
+  let BaseProto = Object.assign({}, Klass.prototype)
   let Current = wrap(Klass)
-  let Base = Klass
 
   function wrap(Thing) {
-    class Next {
-      static get name() {
-        return Thing.name
-      }
-      constructor(...args) {
-        const thing = new Thing(...args)
-        Object.keys(thing).forEach(key => {
-          this[key] = thing[key]
-        })
-      }
-    }
-    Object.setPrototypeOf(
-      Next.prototype,
-      new Proxy(Thing.prototype, {
-        get(target, key, receiver) {
-          if (key === 'componentDidMount') {
-            return function(...args) {
-              mountedInstances.add(this)
-              return (
-                Base.prototype[key] && Base.prototype[key].call(this, ...args)
-              )
-            }
+    const ogMount = BaseProto.componentDidMount
+    const ogWillUnmount = BaseProto.componentWillUnmount
+    Thing.prototype = new Proxy(Thing.prototype, {
+      get(target, method, receiver) {
+        if (method === 'constructor') {
+          return target[method]
+        }
+        if (method === 'componentDidMount') {
+          return function(...args) {
+            mountedInstances.add(this)
+            return ogMount && ogMount.call(this, ...args)
           }
-          if (key === 'componentWillUnmount') {
-            return function(...args) {
-              mountedInstances.delete(this)
-              return (
-                Base.prototype[key] && Base.prototype[key].call(this, ...args)
-              )
-            }
+        }
+        if (method === 'componentWillUnmount') {
+          return function(...args) {
+            mountedInstances.delete(this)
+            return ogWillUnmount && ogWillUnmount.call(this, ...args)
           }
-          return Base.prototype[key] || Reflect.get(target, key, receiver)
-        },
-      })
-    )
-    Object.keys(Thing).forEach(key => {
-      Next[key] = Thing[key]
+        }
+        return BaseProto[method] || Reflect.get(target, method, receiver)
+      },
     })
-    return Next
+    return Thing
   }
 
   function update(Thing) {
-    Base = Thing
+    BaseProto = Object.assign({}, Thing.prototype)
     const all = []
     mountedInstances.forEach(instance => {
       all.push(instance)
@@ -91,7 +75,6 @@ export default function proxyReactComponents({
   const forceUpdater = getForceUpdate(React || window.React)
 
   const hotReload = instance => {
-    console.log('GOT AN', instance)
     forceUpdater(instance)
   }
 

@@ -8,6 +8,14 @@ import Page from '~/views/page'
 import Inbox from '~/views/inbox'
 import Children from '~/explorer/children'
 
+const itemProps = {
+  size: 1.5,
+  chromeless: true,
+  tooltipProps: {
+    towards: 'left',
+  },
+}
+
 @view.attach('explorerStore')
 @view
 class Actions {
@@ -26,13 +34,6 @@ class Actions {
     log('render actions')
 
     const starred = document.hasStar()
-    const itemProps = {
-      size: 1.5,
-      chromeless: true,
-      tooltipProps: {
-        towards: 'left',
-      },
-    }
 
     return (
       <actions $$draggable>
@@ -43,15 +44,10 @@ class Actions {
           highlight={starred}
           onClick={document.toggleStar}
         />
-        <UI.Button
-          {...itemProps}
-          chromeless
-          icon="design-f"
-          tooltip="Threads"
-          highlight={explorerStore.showDiscussions}
-          onClick={explorerStore.ref('showDiscussions').toggle}
-          badge={1}
-        />
+
+        <badge>+ 3 people</badge>
+        <date>Jan 3rd</date>
+
         <UI.Popover
           elevation={3}
           borderRadius={8}
@@ -148,11 +144,30 @@ export default class DocumentPage {
             Threads
           </UI.Button>
         </Page.Actions>
+
+        <UI.Button
+          {...itemProps}
+          chromeless
+          icon="design-f"
+          tooltip="Threads"
+          highlight={explorerStore.showDiscussions}
+          onClick={explorerStore.ref('showDiscussions').toggle}
+          badge={1}
+          css={{
+            position: 'absolute',
+            bottom: 10,
+            left: 10,
+            zIndex: 1000,
+          }}
+        />
+
         <Actions />
+
         <Inbox
           if={explorerStore.showDiscussions}
           document={explorerStore.document}
         />
+
         <docpagecontent>
           <DocumentView
             document={document}
@@ -179,6 +194,7 @@ export default class DocumentPage {
     },
     children: {
       width: '30%',
+      marginRight: -60,
     },
   }
 }

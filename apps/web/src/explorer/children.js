@@ -141,6 +141,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       marginTop: 170,
+      marginRight: -40,
       padding: [10, 10],
       // borderTop: [1, '#eee', 'dotted'],
       flex: 1,
@@ -169,6 +170,7 @@ export default class ExplorerChildren {
     },
     doccontainer: {
       marginBottom: 5,
+      position: 'relative',
     },
     doc: {
       height: '100%',

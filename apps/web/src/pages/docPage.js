@@ -102,6 +102,7 @@ class Actions {
       alignItems: 'flex-end',
       zIndex: 1000,
       justifyContent: 'space-between',
+      // flexFlow: 'row',
     },
   }
 }

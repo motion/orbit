@@ -75,17 +75,14 @@ export default class ExplorerChildren {
 
     return (
       <children>
-        <actions>
-          <UI.Title $mainTitle size={1}>
-            Children
-          </UI.Title>
+        <actions if={false}>
           <post $$row $$centered if={false}>
             <UI.Button
               if={store.newTitle === null}
               size={1}
               icon="siadd"
               circular
-              size={1.5}
+              size={1.2}
               elevation={1}
               onClick={store.add}
               borderWidth={0}
@@ -93,32 +90,30 @@ export default class ExplorerChildren {
           </post>
         </actions>
         <UI.StableContainer stableDuration={500}>
-          <FlipMove $docs duration={300} easing="ease-out">
-            <docs if={hasDocs && Object.keys(store.children).length}>
-              {allDocs.map(doc => {
-                const children = store.children[doc._id]
-                const gradient = idToGradient(doc._id)
-                return (
-                  <UI.TiltGlow width={220} height={120} key={doc._id}>
-                    <doc
-                      if={doc.title}
-                      justify="flex-start"
-                      $gradient={gradient}
-                    >
-                      <title>
-                        <UI.Button
-                          $subDocItem
-                          chromeless
-                          onClick={() => Router.go(doc.url())}
-                        >
-                          {doc.getTitle()}
-                        </UI.Button>
+          <FlipMove
+            if={hasDocs && Object.keys(store.children).length}
+            duration={300}
+            easing="ease-out"
+          >
+            {allDocs.map(doc => {
+              const children = store.children[doc._id]
+              const gradient = idToGradient(doc._id)
+              return (
+                <doccontainer>
+                  <UI.TiltGlow
+                    if={doc.title}
+                    width={190}
+                    height={90}
+                    key={doc._id}
+                  >
+                    <doc justify="flex-start" $gradient={gradient}>
+                      <title onClick={() => Router.go(doc.url())}>
+                        {doc.getTitle()}
                       </title>
                       <subdocs if={children && children.length}>
                         <Arrow $arrow />
                         {children.map(child =>
                           <UI.Button
-                            $subDocItem
                             chromeless
                             key={child._id}
                             onClick={() => Router.go(child.url())}
@@ -129,23 +124,27 @@ export default class ExplorerChildren {
                       </subdocs>
                     </doc>
                   </UI.TiltGlow>
-                )
-              })}
-            </docs>
+                </doccontainer>
+              )
+            })}
           </FlipMove>
         </UI.StableContainer>
+        <UI.TiltGlow width={220} height={120}>
+          <doc $$justify="flex-start">
+            <title>New Doc</title>
+          </doc>
+        </UI.TiltGlow>
       </children>
     )
   }
 
   static style = {
     children: {
-      marginTop: 30,
-      marginRight: -30,
-      padding: [10, 20],
+      marginTop: 170,
+      padding: [10, 10],
       // borderTop: [1, '#eee', 'dotted'],
       flex: 1,
-      width: '100%',
+      width: 240,
     },
     mainTitle: {
       marginTop: 20,
@@ -168,6 +167,9 @@ export default class ExplorerChildren {
     paths: {
       flexFlow: 'row',
     },
+    doccontainer: {
+      marginBottom: 5,
+    },
     doc: {
       height: '100%',
       zIndex: 1,
@@ -189,16 +191,13 @@ export default class ExplorerChildren {
       margin: 0,
       padding: 0,
       fontWeight: 500,
-      fontSize: 15,
+      fontSize: 20,
       lineHeight: '26px',
-      color: '#555',
+      color: '#fff',
     },
     subdocs: {
       flexFlow: 'row',
       overflow: 'hidden',
-    },
-    subDocItem: {
-      flex: 1,
     },
     text: {
       lineHeight: '1.4rem',

@@ -21,7 +21,7 @@ export default class TiltGlow {
         options={{
           max: 10,
           perspective: 500,
-          scale: 1,
+          scale: 1.01,
           reverse: true,
           ...tiltOptions,
         }}
@@ -38,25 +38,28 @@ export default class TiltGlow {
         >
           {children}
           <Glow
+            show
             full
             scale={2}
             resist={20}
             color={[255, 255, 255]}
             zIndex={1000}
-            opacity={0.4}
+            opacity={1}
             gradient
           />
           <Glow
+            show
             behind
             resist={93}
-            width={width * 0.85}
-            height={height * 0.85}
-            blur={10}
+            width={width * 0.95}
+            height={height * 0.95}
+            offsetTop={5}
+            offsetLeft={-10}
+            blur={5}
             inverse
             color={[0, 0, 0]}
-            zIndex={1000}
-            opacity={0.05}
-            borderRadius={10}
+            opacity={0.15}
+            borderRadius={5}
           />
         </doc>
       </Tilt>

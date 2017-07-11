@@ -1,4 +1,8 @@
 # housekeeping sunday
+  - gloss already patches this.fancyElement
+    - make that be the proxy getter duh
+    - then just add module to class?
+    - see black/patch.js
   - hmr bugs are still pretty bad, try and fix dup views and stale stores
   - popovers in actions area get "stuck" open
   - on signup create org + invite team + create home doc and onboard

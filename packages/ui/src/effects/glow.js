@@ -236,7 +236,7 @@ export default class HoverGlow {
                 background || gradient
                   ? `radial-gradient(${$(color).toString()}, transparent 70%)`
                   : colorRGB,
-              borderRadius: 10000000,
+              borderRadius,
               transition: `
                   opacity linear ${transition}ms
                 `,
@@ -262,7 +262,7 @@ export default class HoverGlow {
     overlay: {
       position: 'absolute',
       transform: 'translateZ(0)',
-      overflow: 'hidden',
+      // overflow: 'hidden',
       top: 0,
       left: 0,
       right: 0,

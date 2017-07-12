@@ -172,7 +172,7 @@ export default class DocumentPage {
           onClick={explorerStore.ref('showDiscussions').toggle}
           badge={1}
           css={{
-            position: 'absolute',
+            position: 'fixed',
             bottom: 10,
             left: 10,
             zIndex: 1000,

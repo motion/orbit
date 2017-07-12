@@ -238,7 +238,6 @@ class Draft {
 class Thread {
   render({ store }) {
     const { activeItem: item } = store
-    console.log('item is', item)
     const messages = [
       {
         name: 'Steel Brain',
@@ -289,7 +288,7 @@ class Thread {
       <thread>
         <bar>
           <barblur>
-            <UI.Glow {...GLOW_PROPS} show />
+            <UI.Glow $glow {...GLOW_PROPS} show />
             <UI.Button
               chromeless
               glow={false}
@@ -328,6 +327,9 @@ class Thread {
     // so it scrolls nicely
     thread: {
       paddingBottom: 30,
+    },
+    glow: {
+      pointerEvents: 'none',
     },
     bar: {
       position: 'sticky',

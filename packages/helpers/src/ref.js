@@ -10,6 +10,7 @@ export type Cursor = {
   set: Function,
   toggle: Function,
   clear: Function,
+  setter: Function,
   increment(x: number): () => undefined,
 }
 

@@ -212,10 +212,9 @@ export default class DocumentPage {
       position: 'relative',
     },
     children: {
-      width: '30%',
-      maxWidth: 200,
       position: 'absolute',
-      zIndex: 15,
+      overflow: 'hidden',
+      zIndex: 21,
       top: 0,
       right: 0,
       bottom: 0,

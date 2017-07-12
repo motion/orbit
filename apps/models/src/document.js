@@ -90,17 +90,6 @@ export const methods = {
     }
     return children
   },
-  // TODO: use RxDB postCreate() to do this ourselves and enable getters
-  getTitle() {
-    try {
-      if (this.content.nodes) {
-        return this.content.nodes[0].nodes[0].text
-      }
-      return this.content.document.nodes[0].nodes[0].ranges[0].text
-    } catch (e) {
-      return this.title
-    }
-  },
   togglePrivate() {
     this.private = !this.private
     this.save()
@@ -202,6 +191,17 @@ export class DocumentModel extends Model {
         throw new Error(
           `Already exists a place with this slug! ${document.slug}`
         )
+      }
+
+      // set title to first content node
+      try {
+        if (this.content.nodes) {
+          doc.title = this.content.nodes[0].nodes[0].text
+        } else {
+          doc.title = this.content.document.nodes[0].nodes[0].ranges[0].text
+        }
+      } catch (e) {
+        console.log('error extracting title', e)
       }
     },
   }

@@ -394,7 +394,7 @@ export default class ExplorerStore {
   }
 
   getPathForDocs = (docs: Array<Document>): string =>
-    docs.map(doc => doc.getTitle()).join(PATH_SEPARATOR)
+    docs.map(doc => doc.title).join(PATH_SEPARATOR)
 
   onFocus = () => {
     this.showResults = true

@@ -14,14 +14,80 @@ type Props = {
   store: object,
 }
 
+@view.ui
+class Item {
+  render({ editable, children, title, onSave, ...props }) {
+    return (
+      <doccontainer {...props}>
+        <UI.TiltGlow
+          css={{
+            border: [1, '#eee'],
+          }}
+          width={160}
+          height={60}
+        >
+          <doc $$justify="flex-start">
+            <UI.Text
+              $title
+              if={title || editable}
+              editable={editable}
+              onFinishEdit={onSave}
+            >
+              {title}
+            </UI.Text>
+            {children}
+          </doc>
+        </UI.TiltGlow>
+      </doccontainer>
+    )
+  }
+  static style = {
+    doccontainer: {
+      marginBottom: 10,
+      position: 'relative',
+    },
+    doc: {
+      height: '100%',
+      zIndex: 1,
+      padding: [6, 12],
+      '&:hover title': {
+        color: [0, 0, 0],
+      },
+      '&:hover p': {
+        color: [50, 50, 50],
+      },
+    },
+    title: {
+      margin: 0,
+      padding: 0,
+      fontWeight: 400,
+      fontSize: 16,
+      lineHeight: '22px',
+      color: '#555',
+    },
+  }
+}
+
 class ExplorerChildrenStore {
   children = {}
+  version = 1
+
   @watch
   docs = ({ explorerStore: { document } }) =>
-    document &&
-    typeof document.getChildren === 'function' &&
-    document.getChildren()
-  newTitle = null
+    this.version && document && document.getChildren && document.getChildren()
+
+  creatingDoc = false
+  @watch
+  newDoc = () =>
+    this.creatingDoc && this.props.explorerStore.document
+      ? Document.create(
+          {
+            parentId: this.props.explorerStore.document._id,
+            parentIds: [this.props.explorerStore.document._id],
+          },
+          true
+        )
+      : null
 
   start() {
     this.watch(async () => {
@@ -43,14 +109,13 @@ class ExplorerChildrenStore {
     })
   }
 
-  add = () => {
-    this.newTitle = ''
-  }
-
-  create = async () => {
-    const { id } = this.props
-    await Document.create({ parentId: id, title: this.newTitle })
-    this.newTitle = null
+  saveCreatingDoc = async title => {
+    log('save new child, title:', title)
+    this.newDoc.title = title
+    await this.newDoc.save()
+    console.log('got em', this.newDoc)
+    this.creatingDoc = false
+    this.version++
   }
 }
 
@@ -68,20 +133,6 @@ export default class ExplorerChildren {
 
     return (
       <children>
-        <actions if={false}>
-          <post $$row $$centered if={false}>
-            <UI.Button
-              if={store.newTitle === null}
-              size={1}
-              icon="siadd"
-              circular
-              size={1.2}
-              elevation={1}
-              onClick={store.add}
-              borderWidth={0}
-            />
-          </post>
-        </actions>
         <UI.StableContainer stableDuration={500}>
           <FlipMove
             if={hasDocs && Object.keys(store.children).length}
@@ -91,54 +142,38 @@ export default class ExplorerChildren {
             {allDocs.map(doc => {
               const children = store.children[doc._id]
               return (
-                <doccontainer>
-                  <UI.TiltGlow
-                    if={doc.title}
-                    width={160}
-                    height={60}
-                    key={doc._id}
-                    css={{
-                      border: [1, '#eee'],
-                    }}
-                    onClick={() => Router.go(doc.url())}
-                  >
-                    <doc justify="flex-start">
-                      <title>
-                        {doc.getTitle()}
-                      </title>
-                      <subdocs if={children && children.length}>
-                        <Arrow $arrow />
-                        {children.map(child =>
-                          <UI.Button
-                            chromeless
-                            key={child._id}
-                            onClick={() => Router.go(child.url())}
-                          >
-                            {child.getTitle()}
-                          </UI.Button>
-                        )}
-                      </subdocs>
-                    </doc>
-                  </UI.TiltGlow>
-                </doccontainer>
+                <Item
+                  key={doc._id}
+                  onClick={() => Router.go(doc.url())}
+                  title={doc.title}
+                >
+                  <subdocs if={children && children.length}>
+                    <Arrow $arrow />
+                    {children.map(child =>
+                      <UI.Button
+                        chromeless
+                        key={child._id}
+                        onClick={() => Router.go(child.url())}
+                      >
+                        {child.title}
+                      </UI.Button>
+                    )}
+                  </subdocs>
+                </Item>
               )
             })}
           </FlipMove>
         </UI.StableContainer>
-        <doccontainer>
-          <UI.TiltGlow width={160} height={60}>
-            <doc $$justify="flex-start">
-              <title>+</title>
-            </doc>
-          </UI.TiltGlow>
-        </doccontainer>
+        <Item if={store.creatingDoc} editable onSave={store.saveCreatingDoc} />
+        <Item onClick={store.ref('creatingDoc').setter(true)} title="Create" />
       </children>
     )
   }
 
   static style = {
     children: {
-      width: 120,
+      width: 180,
+      paddingLeft: 20,
       overflow: 'hidden',
       marginTop: 135,
       transform: {
@@ -174,29 +209,6 @@ export default class ExplorerChildren {
     },
     paths: {
       flexFlow: 'row',
-    },
-    doccontainer: {
-      marginBottom: 10,
-      position: 'relative',
-    },
-    doc: {
-      height: '100%',
-      zIndex: 1,
-      padding: [6, 12],
-      '&:hover title': {
-        color: [0, 0, 0],
-      },
-      '&:hover p': {
-        color: [50, 50, 50],
-      },
-    },
-    title: {
-      margin: 0,
-      padding: 0,
-      fontWeight: 400,
-      fontSize: 16,
-      lineHeight: '22px',
-      color: '#555',
     },
     subdocs: {
       flexFlow: 'row',

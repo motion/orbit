@@ -36,9 +36,11 @@ export default class Text {
           this.clickaway.dispose()
         }
         if (editable) {
-          this.clickaway = this.addEvent(window, 'click', (event: Event) =>
-            this.props.onFinishEdit(this.value)
-          )
+          // this.clickaway = this.addEvent(window, 'click', (event: Event) => {
+          //   if (this.props.onFinishEdit) {
+          //     this.props.onFinishEdit(this.value)
+          //   }
+          // })
         }
       }
     )

@@ -81,6 +81,7 @@ export default class ExplorerStore {
             .find()
             .where('slug')
             .regex(new RegExp(`^${this.value}`, 'i'))
+            .limit(20)
             .exec(),
         ])
 

@@ -51,7 +51,7 @@ export default class Model {
       ...this.defaultSchema,
       ...this.settings,
       // cloneDeep fixes bug when re-using a model (compiling twice)
-      ...compile(cloneDeep(this.props)),
+      ...this.props,
       title: this.settings.database,
     }
   }
@@ -70,14 +70,24 @@ export default class Model {
 
   get props(): Object {
     const { timestamps, ...props } = this.constructor.props
+    let result = props
+
     if (timestamps) {
-      return {
+      result = {
         ...props,
         createdAt: str.datetime,
         updatedAt: str.datetime,
       }
     }
-    return props
+
+    result = compile(cloneDeep(result))
+
+    if (timestamps) {
+      // result.createdAt.properties.index = true
+      // result.updatedAtAt.properties.index = true
+    }
+
+    return result
   }
 
   getDefaultProps(props: Object): Object {
@@ -226,6 +236,9 @@ export default class Model {
 
   createIndexes = async (): Promise<void> => {
     const index = this.settings.index || []
+
+    const { indexes } = await this.collection.pouch.getIndexes()
+    console.log('indexes ARE', indexes, 'vs', index)
 
     // TODO see if we can remove but fixes bug for now
     await this.collection.pouch.createIndex({ fields: index })

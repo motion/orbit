@@ -5,9 +5,11 @@ const prox = obj =>
     get(target, property) {
       switch (property) {
         case 'unique':
-          target.unique = true
-          return prox(target)
-          break
+          target.isUnique = true
+          return target
+        case 'indexed':
+          target.isIndexed = true
+          return target
       }
       return target[property]
     },
@@ -54,5 +56,26 @@ export const oneOf = klass =>
   }
 
 export function compile(obj) {
-  return Kontur.compile(obj)
+  const orig = { ...obj }
+  const kontured = Kontur.compile(obj)
+
+  // // monkey patch poorly to add indexed and unique
+  // for (const key of Object.keys(obj)) {
+  //   if (orig[key].isIndexed) {
+  //     kontured.properties[key].index = true
+  //   }
+  //   if (orig[key].isUnique) {
+  //     kontured.properties[key].uniqueItems = true
+  //   }
+  // }
+
+  return kontured
 }
+
+// TEST :)
+// module.hot.accept(() => {})
+// console.log(
+//   compile({
+//     draft: str.indexed,
+//   })
+// )

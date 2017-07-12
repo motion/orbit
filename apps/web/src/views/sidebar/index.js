@@ -73,14 +73,12 @@ class SidebarContent {
                 size={44}
                 marginRight={-10}
                 zIndex={100 - i}
-                boxShadow={[[0, 0, 10, 'rgba(0,0,0,0.1)']]}
+                boxShadow={[[0, 0, 2, 'rgba(0,0,0,0.1)']]}
                 background={idToGradient(i)}
                 fontSize={20}
                 color="white"
                 overflow="hidden"
-              >
-                {text}
-              </UI.Circle>
+              />
             )}
           </above>
           <UserBar />

@@ -22,7 +22,8 @@ export default function emittable(options) {
         get() {
           const KEY = `__${emitterProp}`
 
-          if (!this[KEY]) {
+          if (!this[KEY] || this[KEY].disposed) {
+            // bugfix: auto remake emitters
             const emitter = new Emitter()
             this[KEY] = emitter
 

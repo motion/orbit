@@ -9,6 +9,7 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
   const allPlugins = []
   // unique key per decorator instance
   const DECOR_KEY = `__IS_DECOR_DECORATED${Math.random()}`
+  const DECOR_GLOBAL_KEY = '__IS_DECOR_DECORATED'
   const emitter = new Emitter()
 
   for (const curPlugin of plugins.filter(Boolean)) {
@@ -46,7 +47,9 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
 
     if (!Klass) {
       console.log(Klass)
-      throw 'Didnt pass a valid class or function to decorator, see above'
+      throw new Error(
+        'Didnt pass a valid class or function to decorator, see above'
+      )
     }
 
     // avoid decorating twice
@@ -67,6 +70,7 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
       }
 
       Klass[DECOR_KEY] = true
+      Klass[DECOR_GLOBAL_KEY] = true
     } catch (e) {
       console.log('dev mode catching error', e)
     }

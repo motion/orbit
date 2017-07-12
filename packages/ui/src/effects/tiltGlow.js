@@ -15,50 +15,63 @@ type Props = {
 export default class TiltGlow {
   props: Props
 
-  render({ width, height, tiltOptions, children }: Props) {
+  version() {
+    return 1
+  }
+
+  render({ width, height, tiltOptions, children, css, ...props }: Props) {
     return (
       <Tilt
         options={{
           max: 10,
           perspective: 500,
-          scale: 1,
+          scale: 1.01,
           reverse: true,
           ...tiltOptions,
         }}
       >
-        <doc
-          $$style={{
+        <tiltglow
+          css={{
             cursor: 'default',
             width,
             height,
             borderRadius: 5,
             overflow: 'hidden',
             transition: 'transform 50ms ease-in',
+            background: '#fff',
+            ...css,
           }}
+          {...props}
         >
           {children}
           <Glow
             full
+            show
             scale={2}
             resist={20}
             color={[255, 255, 255]}
-            zIndex={1000}
+            overflow="hidden"
+            borderRadius={8}
+            zIndex={100000}
             opacity={0.4}
+            transition={30}
             gradient
           />
           <Glow
+            show
             behind
             resist={93}
-            width={width * 0.85}
-            height={height * 0.65}
-            blur={10}
+            width={width * 0.98}
+            height={height * 0.98}
+            offsetTop={4}
+            offsetLeft={-12}
+            blur={5}
             inverse
             color={[0, 0, 0]}
-            zIndex={1000}
-            opacity={0.05}
-            borderRadius={10}
+            opacity={0.1}
+            borderRadius={5}
           />
-        </doc>
+        </tiltglow>
       </Tilt>
     )
   }

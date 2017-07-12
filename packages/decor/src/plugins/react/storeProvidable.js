@@ -1,13 +1,11 @@
 import React from 'react'
 import * as Mobx from 'mobx'
-import Cache from './cache'
 import { object } from 'prop-types'
-import { pickBy, debounce } from 'lodash'
+import { pickBy } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 
 export default function storeProvidable(options, emitter) {
-  const cache = new WeakMap()
   const hmrd = {}
 
   return {
@@ -21,18 +19,11 @@ export default function storeProvidable(options, emitter) {
         return Klass
       }
 
-      // hmr restore
-      // if (instanceOpts && instanceOpts.module) {
-      //   cache.revive(instanceOpts.module, allStores)
-      // }
-
       // see setupStores()
       let Stores
 
-      function initStores() {
+      function decorateStores() {
         Stores = allStores
-
-        // call decorators
         if (storeDecorator && allStores) {
           for (const key of Object.keys(allStores)) {
             Stores[key] = storeDecorator(allStores[key])
@@ -40,10 +31,10 @@ export default function storeProvidable(options, emitter) {
         }
       }
 
-      initStores()
+      decorateStores()
 
       // return HoC
-      class StoreProvider {
+      class StoreProvider extends React.Component {
         static get name() {
           return Klass.name
         }
@@ -88,17 +79,11 @@ export default function storeProvidable(options, emitter) {
           //    it will break with never before seen mobx bug on next line
           Mobx.extendShallowObservable(this, { _props: null })
           this._props = { ...this.props }
-          try {
-            this.setupStores()
-          } catch (e) {
-            console.log('hmr bugfix TODO fix')
-            this.failed = true
-          }
+          this.setupStores()
         }
 
         componentDidMount() {
           if (this.state.stores === null) {
-            console.log('temp fix stores debug')
             return
           }
           emitter.emit('view.mount', this)
@@ -143,13 +128,9 @@ export default function storeProvidable(options, emitter) {
           // optional mount function
           if (options.onStoreMount) {
             for (const name of Object.keys(stores)) {
-              if (stores[name].__IS_STORE_MOUNTED) {
-                continue
-              }
               // fallback to store if nothing returned
               stores[name] =
                 options.onStoreMount(stores[name], this.props) || stores[name]
-              stores[name].__IS_STORE_MOUNTED = true
             }
           }
 
@@ -172,7 +153,8 @@ export default function storeProvidable(options, emitter) {
           this.setState({ error: null })
         }
 
-        handleHotReload = module => {
+        handleHotReload = (module, update) => {
+          log('LETS HMR', module, update)
           // console.log(module, Stores, this.state.stores)
 
           // debounce
@@ -182,15 +164,15 @@ export default function storeProvidable(options, emitter) {
           hmrd[module.id] = setTimeout(() => {
             console.log(`[HMR] file: ${module.id}`)
             window.App && window.App.clearErrors && window.App.clearErrors()
-            this.clearErrors()
-            // initStores()
-            this.module = module
-            this.disposeStores()
-            this.setupStores()
+            // this.clearErrors()
+            // // decorateStores()
+            // this.module = module
+            // this.disposeStores()
+            // this.setupStores()
           }, 150)
         }
 
-        disposeStores() {
+        disposeStores = () => {
           if (!this.state.stores) {
             log('bad dismount, this is an old store')
             return
@@ -207,7 +189,7 @@ export default function storeProvidable(options, emitter) {
 
         render() {
           if (this.failed || !this.state) {
-            console.log('failed view')
+            console.log('failed view', this)
             return null
           }
 
@@ -215,16 +197,18 @@ export default function storeProvidable(options, emitter) {
             return <Redbox $$draggable error={this.state.error} />
           }
 
-          return <Klass {...this.props} {...this.state.stores} />
+          return (
+            <Klass
+              {...this.props}
+              {...this.state.stores}
+              disposeStores={this.disposeStores}
+            />
+          )
         }
       }
 
       // copy statics
       hoistStatics(StoreProvider, Klass)
-
-      // copy non-statics
-      Object.setPrototypeOf(Klass.prototype, React.Component.prototype)
-      Object.setPrototypeOf(StoreProvider.prototype, Klass.prototype)
 
       // add stores to context
       if (context) {

@@ -3,10 +3,18 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'
-import { sortBy } from 'lodash'
+import { sortBy, sum } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
 import Arrow from './arrow'
+import FlipMove from 'react-flip-move'
+import gradients from '~/helpers/gradients'
+
+const idToGradient = id => {
+  const num = Math.abs(+sum(id || '').replace(/[^0-9]/g, '') || 5)
+  const deg = Math.floor(Math.random() * 120)
+  return { deg, colors: gradients[num % gradients.length].colors }
+}
 
 type Props = {
   id: number,
@@ -67,17 +75,14 @@ export default class ExplorerChildren {
 
     return (
       <children>
-        <actions>
-          <UI.Title $mainTitle size={1}>
-            Children
-          </UI.Title>
+        <actions if={false}>
           <post $$row $$centered if={false}>
             <UI.Button
               if={store.newTitle === null}
               size={1}
               icon="siadd"
               circular
-              size={1.5}
+              size={1.2}
               elevation={1}
               onClick={store.add}
               borderWidth={0}
@@ -85,54 +90,70 @@ export default class ExplorerChildren {
           </post>
         </actions>
         <UI.StableContainer stableDuration={500}>
-          <docs if={hasDocs && Object.keys(store.children).length}>
-            {allDocs.map((doc, index) => {
+          <FlipMove
+            if={hasDocs && Object.keys(store.children).length}
+            duration={300}
+            easing="ease-out"
+          >
+            {allDocs.map(doc => {
               const children = store.children[doc._id]
+              const colors = idToGradient(doc._id)
+              const gradient = `linear-gradient(${colors.deg}deg, ${colors
+                .colors[0]}, ${colors.colors[1]})`
               return (
-                <doc
-                  if={doc.title}
-                  justify="flex-start"
-                  key={`${doc._id}${index}`}
-                >
-                  <title>
-                    <UI.Button
-                      $subDocItem
-                      chromeless
-                      onClick={() => Router.go(doc.url())}
-                    >
-                      {doc.getTitle()}
-                    </UI.Button>
-                  </title>
-                  <subdocs if={children && children.length}>
-                    <Arrow $arrow />
-                    {children.map(child =>
-                      <UI.Button
-                        $subDocItem
-                        chromeless
-                        key={child._id}
-                        onClick={() => Router.go(child.url())}
-                      >
-                        {child.getTitle()}
-                      </UI.Button>
-                    )}
-                  </subdocs>
-                </doc>
+                <doccontainer>
+                  <UI.TiltGlow
+                    if={doc.title}
+                    width={190}
+                    height={75}
+                    key={doc._id}
+                    css={{
+                      border: [2, colors.colors[0]],
+                    }}
+                    onClick={() => Router.go(doc.url())}
+                  >
+                    <doc justify="flex-start">
+                      <title>
+                        {doc.getTitle()}
+                      </title>
+                      <subdocs if={children && children.length}>
+                        <Arrow $arrow />
+                        {children.map(child =>
+                          <UI.Button
+                            chromeless
+                            key={child._id}
+                            onClick={() => Router.go(child.url())}
+                          >
+                            {child.getTitle()}
+                          </UI.Button>
+                        )}
+                      </subdocs>
+                    </doc>
+                  </UI.TiltGlow>
+                </doccontainer>
               )
             })}
-          </docs>
+          </FlipMove>
         </UI.StableContainer>
+        <doccontainer>
+          <UI.TiltGlow width={190} height={75}>
+            <doc $$justify="flex-start">
+              <title>+</title>
+            </doc>
+          </UI.TiltGlow>
+        </doccontainer>
       </children>
     )
   }
 
   static style = {
     children: {
-      marginTop: 30,
-      marginRight: -30,
-      padding: [10, 20],
+      marginTop: 170,
+      marginRight: -50,
+      padding: [10, 10],
       // borderTop: [1, '#eee', 'dotted'],
       flex: 1,
-      width: '100%',
+      width: 240,
     },
     mainTitle: {
       marginTop: 20,
@@ -155,8 +176,12 @@ export default class ExplorerChildren {
     paths: {
       flexFlow: 'row',
     },
+    doccontainer: {
+      marginBottom: 10,
+      position: 'relative',
+    },
     doc: {
-      flexFlow: 'row',
+      height: '100%',
       zIndex: 1,
       padding: [6, 12],
       '&:hover title': {
@@ -167,21 +192,16 @@ export default class ExplorerChildren {
       },
     },
     title: {
-      alignItems: 'center',
-      maxWidth: '50%',
       margin: 0,
       padding: 0,
       fontWeight: 500,
-      fontSize: 15,
+      fontSize: 18,
       lineHeight: '26px',
-      color: '#555',
+      color: '#333',
     },
     subdocs: {
       flexFlow: 'row',
       overflow: 'hidden',
-    },
-    subDocItem: {
-      flex: 1,
     },
     text: {
       lineHeight: '1.4rem',

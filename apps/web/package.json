@@ -34,7 +34,7 @@
     "@mcro/router": "^1.0.1",
     "@mcro/ui": "^1.0.1",
     "@mcro/gloss": "^1.0.1",
-    "howler": "*",
+    "react-hot-loader": "next",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
     "buffer": "^5.0.6",
@@ -73,7 +73,7 @@
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
-    "case-sensitive-paths-webpack-plugin": "^2.0.0",
+    "case-sensitive-paths-webpack-plugin": "^2.1.1",
     "butternut-webpack-plugin": "^0.1.0",
     "babili-webpack-plugin": "^0.1.2",
     "prepack-webpack-plugin": "^1.1.0",
@@ -83,9 +83,9 @@
     "detect-port": "^1.1.1",
     "electron": "^1.7.3",
     "html-webpack-plugin": "^2.28.0",
-    "react-dev-utils": "^0.5.2",
-    "webpack": "^2.4.1",
-    "webpack-bundle-analyzer": "^2.4.0",
-    "webpack-dev-server": "^2.4.2"
+    "react-dev-utils": "^3.0.2",
+    "webpack": "^3.1.0",
+    "webpack-bundle-analyzer": "^2.8.2",
+    "webpack-dev-server": "^2.5.1"
   }
 }

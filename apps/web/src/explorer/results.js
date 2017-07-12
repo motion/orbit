@@ -117,6 +117,7 @@ export default class ExplorerResults {
       // boxShadow: [[0, -5, 8, [0, 0, 0, 0.05]]],
       position: 'relative',
       transition: 'all ease-in 800ms',
+      flex: 1,
       // position: 'absolute',
       // top: 'calc(-100% + 14px)',
       // left: 0,

@@ -6,6 +6,9 @@ export function colorToString(color: Color, options): string {
   if (typeof color === 'string') {
     return color
   }
+  if (!color) {
+    return 'transparent'
+  }
   let res = color
   if (isColorLikeLibrary(color, options)) {
     res = getColorLikeLibraryValue(color, options)
@@ -18,14 +21,14 @@ export function isColorLike(object: Array | Object, options?: Object) {
   if (!object) {
     return false
   }
+  if (typeof object === 'string' && isColorLikeString(object)) {
+    return true
+  }
   if (Array.isArray(object)) {
     return isColorLikeArray(object)
   }
   if (typeof object === 'object') {
     return isColorLikeLibrary(object, options) || isColorLikeObject(object)
-  }
-  if (typeof object === 'string' && isColorLikeString(object)) {
-    return true
   }
   return false
 }
@@ -63,7 +66,10 @@ export function isColorLikeObject(object: Object) {
 
 export function isColorLikeLibrary(val: any, options?: Object): boolean {
   return (
-    (options && options.isColor && options.isColor(val)) ||
+    (options &&
+      options.isColor &&
+      typeof val === 'object' &&
+      options.isColor(val)) ||
     (typeof val.toCSS === 'function' ||
       typeof val.css === 'function' ||
       typeof val.rgb === 'function' ||

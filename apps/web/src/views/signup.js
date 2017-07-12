@@ -26,6 +26,7 @@ export default class Signup {
         <UI.Glint size={3} borderRadius={5} />
         <UI.Glow
           draggable
+          behind
           color={[255, 255, 255]}
           opacity={0.3}
           full
@@ -57,7 +58,7 @@ export default class Signup {
               },
             }}
           >
-            Or login to your account:&nbsp;
+            2Or login to your account:&nbsp;
             <Login />
           </login>
         </UI.Theme>

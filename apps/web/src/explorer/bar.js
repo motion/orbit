@@ -27,6 +27,7 @@ export default class ExplorerBar {
               distance={0}
               forgiveness={2}
               towards="right"
+              animation="turnaway 200ms"
               target={
                 <UI.Button
                   if={IS_ELECTRON}

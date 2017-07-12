@@ -25,14 +25,14 @@ type Props = {
   soundStore: SoundStore,
 }
 
-if (module && module.hot) {
+if (module) {
   module.hot.accept(() => {
-    log('accept: ./layout.js')
-    start(false, true)
+    log('accept layou', window.lastInstance)
+    window.lastInstance && window.lastInstance.props.disposeStores()
+    start(true, true)
   })
 }
 
-// @view.attach('layoutStore') in any sub-view
 @view.provide({
   layoutStore: LayoutStore,
   soundStore: SoundStore,
@@ -53,12 +53,18 @@ export default class Layout {
     return { shortcuts: this.props.explorerStore.keyManager }
   }
 
+  componentDidMount() {
+    window.lastInstance = this
+  }
+
   lastScrolledTo = 0
   onScroll = e => {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
   render({ explorerStore, layoutStore }: Props) {
+    log('RENDER', explorerStore.version)
+
     const renderTray = () => <Sidebar />
     const renderApp = () => {
       const CurrentPage = Router.activeView || NotFound
@@ -120,7 +126,7 @@ export default class Layout {
 
   static style = {
     root: {
-      background: Constants.IS_ELECTRON ? [40, 40, 40, 0.5] : [110, 110, 110],
+      background: Constants.IS_ELECTRON ? [45, 45, 45, 0.6] : [110, 110, 110],
       position: 'absolute',
       top: 0,
       right: 0,

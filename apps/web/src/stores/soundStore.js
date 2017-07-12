@@ -1,5 +1,5 @@
 // @flow
-import { Howl } from 'howler'
+// import { Howl } from 'howler'
 
 export default class SoundStore {
   sounds = {}
@@ -12,10 +12,10 @@ export default class SoundStore {
     }
 
     Object.keys(sources).map(name => {
-      this.sounds[name] = new Howl({
-        src: [`${base}/${sources[name]}`],
-        volume: 0.2,
-      })
+      // this.sounds[name] = new Howl({
+      //   src: [`${base}/${sources[name]}`],
+      //   volume: 0.2,
+      // })
     })
 
     // make available globally for easy access (particularly within list plugin)

@@ -12,7 +12,6 @@ import DocumentView from '~/views/document'
 })
 export default class UserBar {
   render({ store }) {
-    log('user logged in?', User.loggedIn)
     return (
       <userbar $$draggable if={User.loggedIn}>
         <UI.Popover
@@ -41,7 +40,7 @@ export default class UserBar {
           {User.name}
         </UI.Text>
         <UI.Popover
-          background="transparent"
+          background={[0, 0, 0, 0.5]}
           distance={10}
           elevation={5}
           borderRadius={8}
@@ -52,9 +51,8 @@ export default class UserBar {
           closeOnClick
         >
           <UI.List
-            background
             css={{
-              backdropFilter: 'blur(2px)',
+              // backdropFilter: 'blur(2px)', // causes glitchy bg
             }}
             width={150}
             padding={3}

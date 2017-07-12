@@ -6,11 +6,18 @@ import {
   action,
   extendShallowObservable,
   extendObservable,
-  isObservable,
-  toJS,
   autorun,
+  isObservable as ISO,
 } from 'mobx'
 
+const isObservable = x => {
+  try {
+    return ISO(x)
+  } catch (e) {
+    console.log('mobxer')
+    return x && x.observersIndexes
+  }
+}
 const log = _ => _ | window.log
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery
@@ -208,6 +215,7 @@ function mobxifyWatch(obj, method, val) {
 
   async function watchForNewValue() {
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
+    // console.log('result', KEY, result)
     stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
       currentDisposable()

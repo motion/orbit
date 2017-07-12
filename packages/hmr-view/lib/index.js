@@ -8,30 +8,28 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 exports.default = proxyReactComponents;
 
-var _reactProxy = require('react-proxy');
-
 var _window = require('global/window');
 
 var _window2 = _interopRequireDefault(_window);
 
+var _proxyClass = require('./proxyClass');
+
+var _proxyClass2 = _interopRequireDefault(_proxyClass);
+
+var _reactProxy = require('react-proxy');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var componentProxies = void 0;
-if (_window2.default.__reactComponentProxies) {
-  componentProxies = _window2.default.__reactComponentProxies;
-} else {
-  componentProxies = {};
-  Object.defineProperty(_window2.default, '__reactComponentProxies', {
-    configurable: true,
-    enumerable: false,
-    writable: false,
-    value: componentProxies
-  });
-}
-
-_window2.default.componentProxies = componentProxies;
-
+var viewProxies = {};
 var reloaded = [];
+var reloadedInstances = [];
+
+module.hot.accept(function () {
+  viewProxies = module.hot.data.viewProxies || {};
+});
+module.hot.dispose(function (data) {
+  data.viewProxies = viewProxies;
+});
 
 function proxyReactComponents(_ref) {
   var filename = _ref.filename,
@@ -49,62 +47,52 @@ function proxyReactComponents(_ref) {
       hot = _locals2[0].hot;
 
   if (!hot || typeof hot.accept !== 'function') {
-    throw new Error('locals[0] does not appear to be a `module` object with Hot Module ' + 'replacement API enabled. You should disable react-transform-hmr in ' + 'production by using `env` section in Babel configuration. See the ' + 'example in README: https://github.com/gaearon/react-transform-hmr');
+    throw new Error('locals[0] does not appear to be a `module` object with Hot Module replacement API enabled. You should disable @mcro/view-hmr');
   }
 
-  // module
+  var forceUpdater = (0, _reactProxy.getForceUpdate)(React || _window2.default.React);
 
-  if (Object.keys(components).some(function (key) {
-    return !components[key].isInFunction;
-  })) {
-    hot.accept(function (err) {
-      if (err) {
-        console.warn(`[React Transform HMR] There was an error updating ${filename}:`);
-        console.error(err);
-      }
-    });
-  }
-
-  var forceUpdater = (0, _reactProxy.getForceUpdate)(_window2.default.React);
-  var forceUpdate = function forceUpdate(instance) {
-    instance.handleHotReload && instance.handleHotReload(module);
-    return forceUpdater(instance);
+  var hotReload = function hotReload(instance) {
+    forceUpdater(instance);
+    reloadedInstances.push(1);
   };
-  _window2.default.forceUpdate = forceUpdate;
 
-  return function wrapWithProxy(ReactClass, uniqueId) {
-    var _components$uniqueId = components[uniqueId],
-        _components$uniqueId$ = _components$uniqueId.isInFunction,
-        isInFunction = _components$uniqueId$ === undefined ? false : _components$uniqueId$,
-        _components$uniqueId$2 = _components$uniqueId.displayName,
-        displayName = _components$uniqueId$2 === undefined ? uniqueId : _components$uniqueId$2;
+  return function wrapWithProxy(ReactClass, uid) {
+    var _components$uid = components[uid],
+        isInFunction = _components$uid.isInFunction,
+        _components$uid$displ = _components$uid.displayName,
+        displayName = _components$uid$displ === undefined ? uid : _components$uid$displ;
 
-    // attach module to class so it can do shit w it
-    // ReactClass.module = module
+    var path = filename + '$' + uid;
 
     if (isInFunction) {
       return ReactClass;
     }
 
-    var globalUniqueId = filename + '$' + uniqueId;
-    if (componentProxies[globalUniqueId]) {
+    module.hot.accept(function () {
+      console.log('accepted', path);
+    }); // to make it a fast hmr
+
+    // if existing proxy
+    if (viewProxies[path]) {
       reloaded.push(displayName);
-      var instances = componentProxies[globalUniqueId].update(ReactClass);
+      var instances = viewProxies[path].update(ReactClass);
       setTimeout(function () {
-        return instances.forEach(forceUpdate);
+        return instances.forEach(hotReload);
       });
     } else {
-      componentProxies[globalUniqueId] = (0, _reactProxy.createProxy)(ReactClass);
+      viewProxies[path] = (0, _proxyClass2.default)(ReactClass);
     }
 
-    return componentProxies[globalUniqueId].get();
+    return viewProxies[path].get();
   };
 }
 
 setInterval(function () {
   if (reloaded.length) {
-    console.log(`[HMR] views: ${reloaded.join(', ')}`);
+    console.log(`[HMR] views: ${reloaded.join(', ')}, ${reloadedInstances.length} instances`);
     reloaded = [];
+    reloadedInstances = [];
   }
 }, 1000);
 //# sourceMappingURL=index.js.map

@@ -10,6 +10,7 @@ const $para = {
   fontSize: FONT_SIZE,
   color: 'rgba(0,0,0,.8)',
   fontWeight: 400,
+  fontFamily: ['Exo 2.0', 'monospace'],
 }
 
 @view.attach('explorerStore')

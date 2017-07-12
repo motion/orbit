@@ -178,7 +178,7 @@ export default function motionStyle(options: Object = {}) {
       }
 
       let respond
-      const firstChar = key.substr(0, 1)
+      const firstChar = key[0]
 
       if (valueType === 'string' || valueType === 'number') {
         toReturn[key] = value
@@ -187,7 +187,13 @@ export default function motionStyle(options: Object = {}) {
         toReturn[key] = toColor(value)
         respond = true
       } else if (Array.isArray(value)) {
-        toReturn[key] = processArray(key, value)
+        if (key === 'fontFamily') {
+          toReturn[key] = value
+            .map(x => (x.indexOf(' ') ? `"${x}"` : x))
+            .join(', ')
+        } else {
+          toReturn[key] = processArray(key, value)
+        }
         respond = true
       } else if (firstChar === '&' || firstChar === '@') {
         // recurse into psuedo or media query

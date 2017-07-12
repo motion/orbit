@@ -2,11 +2,19 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Explorer from '~/explorer'
 import DocumentView from '~/views/document'
 import { User, Document } from '@mcro/models'
 import Page from '~/views/page'
-import Overdrive from 'react-overdrive'
+import Inbox from '~/views/inbox'
+import Children from '~/explorer/children'
+
+const itemProps = {
+  size: 1.5,
+  chromeless: true,
+  tooltipProps: {
+    towards: 'left',
+  },
+}
 
 @view.attach('explorerStore')
 @view
@@ -26,12 +34,17 @@ class Actions {
     log('render actions')
 
     const starred = document.hasStar()
-    const itemProps = {
-      size: 1.5,
-      chromeless: true,
-      tooltipProps: {
-        towards: 'left',
-      },
+
+    const popoverProps = {
+      elevation: 3,
+      borderRadius: 8,
+      background: 'transparent',
+      distance: 10,
+      forgiveness: 16,
+      towards: 'right',
+      delay: 150,
+      openOnHover: true,
+      closeOnClick: true,
     }
 
     return (
@@ -43,28 +56,17 @@ class Actions {
           highlight={starred}
           onClick={document.toggleStar}
         />
-        <UI.Button
-          {...itemProps}
-          chromeless
-          icon="design-f"
-          tooltip="Threads"
-          highlight={explorerStore.showDiscussions}
-          onClick={explorerStore.ref('showDiscussions').toggle}
-          badge={1}
-        />
+
         <UI.Popover
-          elevation={3}
-          borderRadius={8}
-          background="transparent"
-          distance={10}
-          forgiveness={16}
-          towards="left"
-          delay={150}
+          {...popoverProps}
           target={
-            <UI.Button {...itemProps} opacity={0.5} chromeless icon="dot" />
+            <UI.Button {...itemProps} opacity={0.5} chromeless icon="dot6">
+              <UI.Text size={1}>+ 3 people</UI.Text>
+              <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
+                Jan 3rd
+              </UI.Text>
+            </UI.Button>
           }
-          openOnHover
-          closeOnClick
         >
           <UI.List
             width={150}
@@ -75,19 +77,30 @@ class Actions {
               borderWidth: 0,
               borderRadius: 8,
             }}
-            items={[
-              {
-                icon: 'bell',
-                primary: 'Ping +3',
-                onClick: () => console.log(),
-              },
-              {
-                icon: 'gear',
-                primary: 'Settings',
-                onClick: () => console.log(),
-              },
-            ]}
-          />
+          >
+            <UI.List.Item icon="gear" primary="Settings" />
+            <UI.Popover
+              {...popoverProps}
+              target={<UI.List.Item icon="bell" primary="Ping +3" />}
+              towards="right"
+            >
+              <UI.List
+                width={150}
+                padding={3}
+                itemProps={{
+                  height: 32,
+                  fontSize: 14,
+                  borderWidth: 0,
+                  borderRadius: 8,
+                }}
+              >
+                <UI.List.Item icon="all" primary="All" color="black" />
+                <UI.List.Item icon="girl" primary="Jamie S." />
+                <UI.List.Item icon="boy" primary="Angela M." />
+                <UI.List.Item icon="boy" primary="Theresa M." />
+              </UI.List>
+            </UI.Popover>
+          </UI.List>
         </UI.Popover>
       </actions>
     )
@@ -102,6 +115,7 @@ class Actions {
       alignItems: 'flex-end',
       zIndex: 1000,
       justifyContent: 'space-between',
+      // flexFlow: 'row',
     },
   }
 }
@@ -148,20 +162,42 @@ export default class DocumentPage {
           </UI.Button>
         </Page.Actions>
 
+        <UI.Button
+          {...itemProps}
+          chromeless
+          icon="design-f"
+          tooltip="Threads"
+          tooltipProps={{ towards: 'right' }}
+          highlight={explorerStore.showDiscussions}
+          onClick={explorerStore.ref('showDiscussions').toggle}
+          badge={1}
+          css={{
+            position: 'absolute',
+            bottom: 10,
+            left: 10,
+            zIndex: 1000,
+          }}
+        />
+
         <Actions />
+
+        <Inbox
+          if={explorerStore.showDiscussions}
+          document={explorerStore.document}
+        />
 
         <docpagecontent>
           <DocumentView
-            if={!docStore.showInbox}
             document={document}
             onKeyDown={docStore.onKeyDown}
             showCrumbs
             showChildren
             isPrimaryDocument
           />
+          <children>
+            <Children documentStore={docStore} />
+          </children>
         </docpagecontent>
-
-        <Explorer />
       </Page>
     )
   }
@@ -171,6 +207,12 @@ export default class DocumentPage {
       flex: 1,
       overflow: 'hidden',
       paddingRight: 30,
+      paddingTop: 32,
+      flexFlow: 'row',
+    },
+    children: {
+      width: '30%',
+      marginRight: -60,
     },
   }
 }

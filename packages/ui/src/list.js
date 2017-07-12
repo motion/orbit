@@ -246,7 +246,10 @@ class List {
     let chillen = children
       ? Children.map(children, (item, i) => rowProps =>
           item
-            ? cloneElement(item, itemProps(i, rowProps, item.type.isListItem))
+            ? cloneElement(
+                item,
+                getItemProps(i, rowProps, item.type.isListItem)
+              )
             : null
         )
       : items.map(getListItem)

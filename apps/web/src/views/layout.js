@@ -17,7 +17,7 @@ import LayoutWrap from '~/views/layout/wrap'
 import { start } from '../start'
 import Signup from './signup'
 import { User } from '@mcro/models'
-import { Bar } from '~/explorer'
+import { Bar, Results } from '~/explorer'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -78,7 +78,12 @@ export default class Layout {
               onScroll={this.onScroll}
               $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
             >
-              <CurrentPage key={Router.key} {...Router.params} />
+              <Results />
+              <CurrentPage
+                if={!explorerStore.showResults}
+                key={Router.key}
+                {...Router.params}
+              />
             </content>
             <Draft
               isActive={layoutStore.isCreatingDoc}

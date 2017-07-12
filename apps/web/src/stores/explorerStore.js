@@ -2,7 +2,7 @@
 import { watch, keycode, ShortcutManager } from '@mcro/black'
 import { Document } from '@mcro/models'
 import Router from '~/router'
-import { uniq, last, dropRightWhile } from 'lodash'
+import { uniq, last, includes, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
 import App from '~/app'
 import { debounce } from 'lodash'
@@ -88,6 +88,7 @@ export default class ExplorerStore {
           [...(searchResults || []), ...pathSearchResults],
           x => x.id
         )
+        console.log('results are', this.searchResults)
       } else {
         // path navigate
         this.searchResults = await this.getChildDocsForPath(
@@ -164,7 +165,8 @@ export default class ExplorerStore {
     },
     down: () => {
       if (!this.focused) return
-      if (!this.searchResults || !this.focused) {
+      if (!this.showResults || !this.focused) {
+        console.log('focusing')
         this.action('focusDown')
         return
       }
@@ -455,7 +457,8 @@ export default class ExplorerStore {
     const gtSign = event.shiftKey && code === '.'
 
     // don't move cursor for these
-    if (code === 'up' || code === 'down') {
+    const doNothing = ['enter', 'up', 'down']
+    if (includes(doNothing, code)) {
       event.preventDefault()
       return state
     }
@@ -463,12 +466,6 @@ export default class ExplorerStore {
     if (code === '/' || gtSign) {
       event.preventDefault()
       this.onCommitItem()
-      return state
-    }
-
-    if (code === 'enter') {
-      event.preventDefault()
-      this.onEnter()
       return state
     }
 
@@ -541,6 +538,7 @@ export default class ExplorerStore {
       console.log('navTo called without value')
       return
     }
+    this.showResults = false
     this.blur()
     Router.go(doc.url())
   }

@@ -49,7 +49,7 @@ export default class DocumentView {
       flex: 1,
       maxWidth: '100%',
       minHeight: 230,
-      padding: [10, 0],
+      padding: [0],
     },
     loading: {
       flex: 1,

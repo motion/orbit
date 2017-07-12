@@ -36,7 +36,7 @@ class InboxStore {
         icon: 'alerti',
       },
       {
-        title: 'CouchDB won\'t boot on OTP-20',
+        title: "CouchDB won't boot on OTP-20",
         status: '#619 opened 4 days ago by spencerthayer ',
         icon: 'alerti',
       },
@@ -238,6 +238,7 @@ class Draft {
 class Thread {
   render({ store }) {
     const { activeItem: item } = store
+    console.log('item is', item)
     const messages = [
       {
         name: 'Steel Brain',
@@ -378,7 +379,7 @@ export default class Inbox {
 
     return (
       <inbox>
-        <content if={store.activeItem === null}>
+        <content if={!store.activeItem}>
           <bar>
             <UI.Title size={1} stat={`${store.items.length} new`}>
               Threads
@@ -419,7 +420,7 @@ export default class Inbox {
           />
         </content>
 
-        <Thread if={store.activeItem !== null} store={store} />
+        <Thread if={store.activeItem} store={store} />
 
         <UI.Drawer
           if={false}
@@ -434,6 +435,25 @@ export default class Inbox {
   }
 
   static style = {
+    list: {
+      marginLeft: -20,
+      marginRight: -20,
+    },
+    title: {
+      fontWeight: 'bold',
+    },
+    item: {
+      padding: 10,
+      paddingLeft: 20,
+      height: 40,
+    },
+    highlight: {
+      background: '#eee',
+      borderLeft: '3px solid #999',
+    },
+    all: {
+      marginTop: 15,
+    },
     inbox: {
       padding: 0,
     },

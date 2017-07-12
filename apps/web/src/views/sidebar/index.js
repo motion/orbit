@@ -40,7 +40,7 @@ class SidebarContent {
           }}
         >
           <UI.Segment>
-            {['Docs', 'Tasks', 'News'].map((text, i) =>
+            {['Docs', 'Tasks'].map((text, i) =>
               <UI.Button
                 key={i}
                 active={i === 0}

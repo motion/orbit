@@ -71,25 +71,24 @@ function execQuery(it, valueGet: Function) {
   // autosync query
   let stopSync = null
 
-  // TODO: once rxdb #207 check with (query instanceof RxQuery)
   // TODO re-enable
-  // if (query && query.mquery && this.remoteDB) {
-  //   const selector = query.keyCompress().selector
-  //   const key = hashsum({ db: this.remoteDB.name, selector })
-  //   if (!this.queryCache[key]) {
-  //     this.queryCache[key] = true
-  //     const syncSettings = {
-  //       remote: this.remoteDB,
-  //       waitForLeadership: false,
-  //       query,
-  //     }
-  //     const syncer = this.collection.sync(syncSettings)
-  //     stopSync = () => {
-  //       delete this.queryCache[key]
-  //       syncer.cancel()
-  //     }
-  //   }
-  // }
+  if (false && query && query.mquery && this.remoteDB) {
+    const selector = query.keyCompress().selector
+    const key = hashsum({ db: this.remoteDB.name, selector })
+    if (!this.queryCache[key]) {
+      this.queryCache[key] = true
+      const syncSettings = {
+        remote: this.remoteDB,
+        waitForLeadership: false,
+        query,
+      }
+      const syncer = this.collection.sync(syncSettings)
+      stopSync = () => {
+        delete this.queryCache[key]
+        syncer.cancel()
+      }
+    }
+  }
 
   const response = {}
   const id = Math.random()

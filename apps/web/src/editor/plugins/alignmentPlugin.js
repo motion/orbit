@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popover, Button } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 
 export default class Alignment {
   name = 'alignment'
@@ -7,14 +7,18 @@ export default class Alignment {
 
   contextButtons = [
     () =>
-      <Popover target={<Button icon="align-justify" />} openOnHover background>
-        <row style={{ flexFlow: 'row' }}>
-          <Button icon="align-left" />
-          <Button icon="align-right" />
-          <Button icon="align-center" />
-          <Button icon="align-justify" />
-        </row>
-      </Popover>,
+      <UI.Popover
+        target={<UI.Button icon="align-justify" />}
+        openOnHover
+        background="transparent"
+      >
+        <UI.Segment>
+          <UI.Button icon="align-left" />
+          <UI.Button icon="align-right" />
+          <UI.Button icon="align-center" />
+          <UI.Button icon="align-justify" />
+        </UI.Segment>
+      </UI.Popover>,
   ]
 
   // barButtons = [

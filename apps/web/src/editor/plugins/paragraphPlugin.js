@@ -2,7 +2,7 @@
 import React from 'react'
 import TrailingBlock from 'slate-trailing-block'
 import { BLOCKS } from '~/editor/constants'
-import { Popover, Button } from '@mcro/ui'
+import * as UI from '@mcro/ui'
 import Highlighter from './helpers/highlighter'
 import node from '~/editor/node'
 import { createButton } from './helpers'
@@ -45,12 +45,16 @@ export default class TextPlugin {
 
   contextButtons = [
     () =>
-      <Popover target={<Button icon="textbackground" />} openOnHover background>
-        <row style={{ flexFlow: 'row' }}>
-          <Button theme="dark" icon="textcolor" />
-          <Button icon="textbackground" />
-        </row>
-      </Popover>,
+      <UI.Popover
+        target={<UI.Button icon="textbackground" />}
+        openOnHover
+        background="transparent"
+      >
+        <UI.Segment>
+          <UI.Button theme="dark" icon="textcolor" />
+          <UI.Button icon="textbackground" />
+        </UI.Segment>
+      </UI.Popover>,
   ]
 
   barButtons = [

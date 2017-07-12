@@ -232,7 +232,7 @@ export default class Surface implements ViewType {
       />,
       <Glow
         key={2}
-        if={glow}
+        if={glow && !active}
         full
         scale={1.3}
         show={hovered}

@@ -13,11 +13,12 @@ export default class SelectBar {
         open
         noArrow
         left={selection.mouseUp.x}
-        top={selection.mouseUp.y + 15}
+        top={selection.mouseUp.y + 18}
         swayX
         escapable
         theme="dark"
         background="transparent"
+        delay={500}
       >
         <bar $$row>
           {pluginCategories.map(category =>

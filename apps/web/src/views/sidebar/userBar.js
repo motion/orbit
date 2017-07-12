@@ -40,7 +40,6 @@ export default class UserBar {
           {User.name}
         </UI.Text>
         <UI.Popover
-          background={[0, 0, 0, 0.5]}
           distance={10}
           elevation={5}
           borderRadius={8}
@@ -49,11 +48,11 @@ export default class UserBar {
           target={<UI.Button circular icon="body" />}
           openOnHover
           closeOnClick
+          theme="dark"
+          debug
         >
           <UI.List
-            css={{
-              // backdropFilter: 'blur(2px)', // causes glitchy bg
-            }}
+            background="transparent"
             width={150}
             padding={3}
             borderRadius={6}

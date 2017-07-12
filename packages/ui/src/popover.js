@@ -655,7 +655,7 @@ export default class Popover {
                 }}
               >
                 <Arrow
-                  theme={theme}
+                  theme={theme && theme.base}
                   background={background}
                   size={arrowSize}
                   towards={INVERSE[direction]}

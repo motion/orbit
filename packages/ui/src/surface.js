@@ -187,6 +187,7 @@ export default class Surface implements ViewType {
     tooltipProps,
     width,
     wrapElement,
+    disabled,
     ...props
   }) {
     const hasIconBefore = icon && !iconAfter
@@ -232,7 +233,7 @@ export default class Surface implements ViewType {
       />,
       <Glow
         key={2}
-        if={glow && !active}
+        if={glow && !active && !disabled}
         full
         scale={1.3}
         show={hovered}
@@ -349,7 +350,7 @@ export default class Surface implements ViewType {
   }
 
   static disabledStyle = {
-    opacity: 0.25,
+    opacity: 0.2,
     // pointerEvents: 'none',
   }
 
@@ -492,6 +493,7 @@ export default class Surface implements ViewType {
 
     // state styles
     const hoverStyle = !props.chromeless &&
+    !props.disabled &&
     props.hoverable && {
       ...theme.hover,
       color: hoverColor,

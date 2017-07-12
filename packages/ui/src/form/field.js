@@ -82,7 +82,7 @@ export default class Field {
     }
 
     return (
-      <field $width={width} {...props}>
+      <field $width={width} css={props}>
         <Text
           if={label}
           tagName="label"
@@ -137,7 +137,7 @@ export default class Field {
 
     const rowStyle = {
       field: {
-        padding: [6, 8],
+        padding: [6, 0],
         flexFlow: 'row',
         alignItems: 'center',
       },

@@ -5,20 +5,12 @@ import { User } from '@mcro/models'
 @view.attach('explorerStore')
 @view
 export default class HomePage {
-  componentWillMount() {
-    this.props.explorerStore.isOpen = true
-  }
-
-  componentWillUnmount() {
-    this.props.explorerStore.isOpen = false
-  }
-
   render() {
     if (!User.loggedIn) {
       return <center $$centered>login plz</center>
     }
 
-    return null
+    return <home>welcome home</home>
   }
 
   static style = {

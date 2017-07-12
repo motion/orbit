@@ -155,6 +155,7 @@ export class DocumentModel extends Model {
     attachments: array.optional.items(str),
     starredBy: array.items(str),
     private: bool,
+    home: bool.optional,
     slug: str,
     draft: bool.optional,
     timestamps: true,

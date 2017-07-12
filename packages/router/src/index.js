@@ -101,9 +101,14 @@ export class ObservableRouter {
   @action
   go = (...segments) => {
     const path = segments.join('/')
+    const nextPath = path[0] === '/' ? path : `/${path}`
+    if (nextPath === this.path) {
+      // avoid going to same url
+      return
+    }
     this.position += 1
     this.max = this.position
-    this.path = path[0] === '/' ? path : `/${path}`
+    this.path = nextPath
   }
 
   // sets a part of the url

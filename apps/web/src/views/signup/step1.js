@@ -44,6 +44,7 @@ import * as UI from '@mcro/ui'
         const org = await Org.create({
           title: fields.name,
           admins: [User.id],
+          members: [User.id],
         })
 
         console.log('done signed up', org)

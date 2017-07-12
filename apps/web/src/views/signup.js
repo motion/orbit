@@ -16,7 +16,6 @@ import Login from './login'
       if (!User.org) {
         return 2
       }
-      return 2
     }
   },
 })

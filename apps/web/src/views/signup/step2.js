@@ -74,7 +74,7 @@ export default class SignupStep2 {
                   </UI.Field>
                 </row>
               )}
-              <UI.Field row label>
+              <UI.Field row alignSelf="flex-end">
                 <UI.Button icon="add" onClick={store.addMember}>
                   Add member
                 </UI.Button>
@@ -116,7 +116,7 @@ export default class SignupStep2 {
     },
     content: {
       marginLeft: 20,
-      padding: 10,
+      padding: [10, 0],
     },
   }
 }

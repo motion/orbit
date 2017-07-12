@@ -132,10 +132,8 @@ class ExplorerChildrenStore {
   }
 
   saveCreatingDoc = async title => {
-    log('save new child, title:', title)
     this.newDoc.title = title
     await this.newDoc.save()
-    console.log('got em', this.newDoc)
     this.creatingDoc = false
     this.version++
   }
@@ -155,7 +153,6 @@ export default class ExplorerChildren {
   }
 
   render({ store, store: { hasDocs, allDocs } }: Props) {
-    log('NOW2', allDocs)
     return (
       <children>
         <FlipMove

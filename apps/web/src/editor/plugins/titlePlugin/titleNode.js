@@ -29,10 +29,11 @@ export default class TitleNode {
       fontSize: Math.floor(Math.log(200 / level) * 5.5),
     }),
     title1: {
-      // display: 'none',
-      fontSize: 28,
-      color: [0, 0, 0, 0.8],
-      margin: [10, 0, 0, -1],
+      fontSize: 18,
+      height: 35,
+      fontWeight: 500,
+      color: [0, 0, 0, 0.4],
+      margin: [10, 0, 0],
     },
     inline: {
       // fontFamily: 'Abril Fatface',

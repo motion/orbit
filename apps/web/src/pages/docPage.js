@@ -206,8 +206,7 @@ export default class DocumentPage {
     docpagecontent: {
       flex: 1,
       overflow: 'hidden',
-      paddingRight: 30,
-      paddingTop: 32,
+      paddingRight: 20,
       flexFlow: 'row',
     },
     children: {

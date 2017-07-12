@@ -60,8 +60,8 @@ class Actions {
         <UI.Popover
           {...popoverProps}
           target={
-            <UI.Button {...itemProps} opacity={0.5} chromeless icon="dot6">
-              <UI.Text size={1}>+ 3 people</UI.Text>
+            <UI.Button {...itemProps} opacity={0.5} chromeless>
+              <UI.Text size={1}>+3 people</UI.Text>
               <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
                 Jan 3rd
               </UI.Text>
@@ -111,7 +111,7 @@ class Actions {
       position: 'absolute',
       top: 50,
       right: 10,
-      height: 110,
+      height: 98,
       alignItems: 'flex-end',
       zIndex: 1000,
       justifyContent: 'space-between',

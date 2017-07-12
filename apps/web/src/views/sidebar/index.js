@@ -9,7 +9,14 @@ import Menu from './menu'
 import UserBar from './userBar'
 import type LayoutStore from '~/stores/layoutStore'
 import * as Constants from '~/constants'
-import Inbox from '~/views/inbox'
+import gradients from '~/helpers/gradients'
+
+const idToGradient = id => {
+  const num = Math.abs(+`${+id}`.replace(/[^0-9]/g, ''))
+  const deg = Math.floor(Math.random() * 120)
+  const { colors } = gradients[num % gradients.length]
+  return `linear-gradient(${deg}deg, ${colors[0]}, ${colors[1]})`
+}
 
 type Props = {
   layoutStore: LayoutStore,
@@ -23,16 +30,15 @@ class SidebarContent {
       <inner $$flex>
         <Login />
         <Menu />
-        <contents $$flex $$paddingTop={45}>
-          <UI.Segment
-            css={{
-              margin: 10,
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              left: 20,
-            }}
-          >
+        <contents
+          css={{
+            margin: 10,
+            top: 0,
+            right: 0,
+            left: 20,
+          }}
+        >
+          <UI.Segment>
             {['Favorites', 'Latest'].map((text, i) =>
               <UI.Button
                 key={i}
@@ -50,9 +56,34 @@ class SidebarContent {
               </UI.Button>
             )}
           </UI.Segment>
-          <Projects />
         </contents>
-        <UserBar />
+        <rest $$flex>
+          <Projects />
+          <above $$row $$padding={10}>
+            {[
+              'Allie',
+              'Jackie',
+              'Stephanie',
+              'Malorie',
+              'Evenie',
+            ].map((text, i) =>
+              <UI.Circle
+                key={i}
+                size={44}
+                marginRight={-10}
+                zIndex={100 - i}
+                boxShadow={[[0, 0, 10, 'rgba(0,0,0,0.1)']]}
+                background={idToGradient(i)}
+                fontSize={20}
+                color="white"
+                overflow="hidden"
+              >
+                {text}
+              </UI.Circle>
+            )}
+          </above>
+          <UserBar />
+        </rest>
       </inner>
     )
   }

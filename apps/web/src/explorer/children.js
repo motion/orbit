@@ -8,13 +8,6 @@ import Router from '~/router'
 import { watch } from '@mcro/black'
 import Arrow from './arrow'
 import FlipMove from 'react-flip-move'
-import gradients from '~/helpers/gradients'
-
-const idToGradient = id => {
-  const num = Math.abs(+sum(id || '').replace(/[^0-9]/g, '') || 5)
-  const deg = Math.floor(Math.random() * 120)
-  return { deg, colors: gradients[num % gradients.length].colors }
-}
 
 type Props = {
   id: number,
@@ -97,9 +90,6 @@ export default class ExplorerChildren {
           >
             {allDocs.map(doc => {
               const children = store.children[doc._id]
-              const colors = idToGradient(doc._id)
-              const gradient = `linear-gradient(${colors.deg}deg, ${colors
-                .colors[0]}, ${colors.colors[1]})`
               return (
                 <doccontainer>
                   <UI.TiltGlow
@@ -108,7 +98,7 @@ export default class ExplorerChildren {
                     height={75}
                     key={doc._id}
                     css={{
-                      border: [2, colors.colors[0]],
+                      border: [2, 'green'],
                     }}
                     onClick={() => Router.go(doc.url())}
                   >
@@ -148,7 +138,7 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      marginTop: 170,
+      marginTop: 140,
       marginRight: -50,
       padding: [10, 10],
       // borderTop: [1, '#eee', 'dotted'],

@@ -174,7 +174,7 @@ export default class DocumentPage {
           css={{
             position: 'absolute',
             bottom: 10,
-            left: 10,
+            right: 10,
             zIndex: 1000,
           }}
         />

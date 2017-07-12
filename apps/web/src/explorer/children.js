@@ -98,7 +98,7 @@ export default class ExplorerChildren {
                     height={60}
                     key={doc._id}
                     css={{
-                      border: [1, '#e2e2e2'],
+                      border: [1, '#eee'],
                     }}
                     onClick={() => Router.go(doc.url())}
                   >
@@ -138,12 +138,20 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
+      width: 200,
       marginTop: 135,
-      marginRight: -85,
-      marginLeft: 20,
+      transform: {
+        x: 24,
+      },
       padding: [10, 0],
       // borderTop: [1, '#eee', 'dotted'],
       flex: 1,
+      transition: 'transform ease-in 200ms',
+      '&:hover': {
+        transform: {
+          x: 20,
+        },
+      },
     },
     mainTitle: {
       marginTop: 20,

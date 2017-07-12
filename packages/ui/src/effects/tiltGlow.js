@@ -23,10 +23,11 @@ export default class TiltGlow {
     return (
       <Tilt
         options={{
-          max: 10,
+          max: 15,
           perspective: 500,
-          scale: 1.01,
-          reverse: true,
+          scale: 1.05,
+          speed: 400,
+          //reverse: true,
           ...tiltOptions,
         }}
       >
@@ -45,6 +46,7 @@ export default class TiltGlow {
         >
           {children}
           <Glow
+            if={false}
             full
             show
             scale={2}
@@ -61,11 +63,11 @@ export default class TiltGlow {
             show
             behind
             resist={93}
-            width={width * 0.9}
-            height={height * 0.9}
+            width={width * 0.88}
+            height={height * 0.88}
             offsetTop={2}
             offsetLeft={-12}
-            blur={5}
+            blur={3}
             inverse
             color={[0, 0, 0]}
             opacity={0.08}

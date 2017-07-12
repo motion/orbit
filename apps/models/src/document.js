@@ -216,22 +216,23 @@ export class DocumentModel extends Model {
   @query
   search = async (text: string) => {
     // return recent
-    if (text === '') {
-      return await this.collection
-        .find({ draft: { $ne: true } })
-        // .sort({ createdAt: 'desc' })
-        .limit(20)
-        .exec()
-    }
+    return null
+    // if (text === '') {
+    //   return await this.collection
+    //     .find({ draft: { $ne: true } })
+    //     // .sort({ createdAt: 'desc' })
+    //     .limit(20)
+    //     .exec()
+    // }
 
-    const ids = (await this.pouch.search({
-      query: text,
-      fields: ['text', 'title'],
-      include_docs: false,
-      highlighting: false,
-    })).rows.map(row => row.id)
+    // const ids = (await this.pouch.search({
+    //   query: text,
+    //   fields: ['text', 'title'],
+    //   include_docs: false,
+    //   highlighting: false,
+    // })).rows.map(row => row.id)
 
-    return await this.collection.find({ _id: { $in: ids } }).exec()
+    // return await this.collection.find({ _id: { $in: ids } }).exec()
   }
 
   @query
@@ -275,8 +276,11 @@ export class DocumentModel extends Model {
   @query
   stars = () =>
     this.collection
-      .find({ starredBy: { $elemMatch: { $eq: User.authorId } } })
-      // .sort({ createdAt: 'desc' })
+      .find({
+        starredBy: { $elemMatch: { $eq: User.authorId } },
+        createdAt: { $gt: null },
+      })
+      // .sort({ createdAt: 'asc' })
       .limit(50)
 
   @query

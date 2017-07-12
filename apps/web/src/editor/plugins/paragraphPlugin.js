@@ -8,9 +8,8 @@ import node from '~/editor/node'
 import { createButton } from './helpers'
 
 const PARAGRAPH_STYLE = {
-  fontSize: 14,
-  lineHeight: '25px',
-  marginTop: 8,
+  fontSize: 16,
+  lineHeight: '24px',
 }
 
 export const Paragraph = node(({ editorStore, children, attributes }) => {

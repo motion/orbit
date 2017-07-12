@@ -36,8 +36,8 @@ export default class LayoutWrap {
       background: '#fff',
       borderRadius: '0 6px 6px 0',
       boxShadow: [
-        'inset 5px 10px 20px rgba(0,0,0,0.03)',
-        '0 0 10px rgba(0,0,0,0.2)',
+        // 'inset 5px 10px 20px rgba(0,0,0,0.03)',
+        '0 0 6px rgba(0,0,0,0.3)',
       ],
       overflow: 'hidden',
       position: 'absolute',

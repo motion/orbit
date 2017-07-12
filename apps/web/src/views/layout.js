@@ -63,8 +63,6 @@ export default class Layout {
   }
 
   render({ explorerStore, layoutStore }: Props) {
-    log('RENDER', explorerStore.version)
-
     const renderTray = () => <Sidebar />
     const renderApp = () => {
       const CurrentPage = Router.activeView || NotFound

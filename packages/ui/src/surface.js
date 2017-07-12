@@ -490,7 +490,7 @@ export default class Surface implements ViewType {
       color: props.iconHoverColor || hoverColor,
     }
 
-    // psuedo styles
+    // state styles
     const hoverStyle = !props.chromeless &&
     props.hoverable && {
       ...theme.hover,
@@ -500,7 +500,7 @@ export default class Surface implements ViewType {
     }
     const activeStyle = !props.chromeless && {
       position: 'relative',
-      zIndex: 1000,
+      zIndex: props.zIndex || 1000,
       ...(props.clickable && theme.active),
     }
 
@@ -576,6 +576,7 @@ export default class Surface implements ViewType {
           borderWidth: 0,
           background: 'transparent',
         }),
+        ...(props.active && activeStyle),
         // so you can override
         ...props.style,
       },

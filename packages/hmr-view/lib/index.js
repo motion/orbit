@@ -78,7 +78,8 @@ function proxyReactComponents(_ref) {
       reloaded.push(displayName);
       var instances = viewProxies[path].update(ReactClass);
       setTimeout(function () {
-        return instances.forEach(hotReload);
+        instances.forEach(hotReload);
+        Black.view.emit('hmr');
       });
     } else {
       viewProxies[path] = (0, _proxyClass2.default)(ReactClass);

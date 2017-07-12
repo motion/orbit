@@ -9,6 +9,7 @@ import helpers from '@mcro/decor/lib/plugins/core/helpers'
 import type { Helpers } from '@mcro/decor/lib/plugins/core/helpers'
 import subscribable from '@mcro/decor/lib/plugins/react/subscribable'
 import type { Subscribable } from '@mcro/decor/lib/plugins/react/subscribable'
+import emitsMount from '@mcro/decor/lib/plugins/react/emitsMount'
 import reactRenderArgs from '@mcro/decor/lib/plugins/react/reactRenderArgs'
 import type { ReactRenderArgs } from '@mcro/decor/lib/plugins/react/reactRenderArgs'
 import addContext from '@mcro/decor/lib/plugins/react/addContext'
@@ -46,6 +47,7 @@ const uiContext = [
 
 // applied top to bottom
 const decorations = ({ mobx, ui, magic } = {}) => [
+  !ui && emitsMount,
   extendsReact,
   subscribable,
   helpers,
@@ -73,6 +75,8 @@ const view: ViewDec = (item: Object | Class<any> | Function): ViewClass => {
 
 // pass on emitter
 view.on = base.on
+view.off = base.off
+view.emit = base.emit
 
 // other decorators
 view.ui = decor(decorations({ ui: true }))

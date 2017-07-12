@@ -57,6 +57,9 @@ const Themes = {
     borderColor: '#333',
   }),
   'clear-dark': Theme.fromStyles({
+    glow: {
+      opacity: 1,
+    },
     highlightColor,
     background: [80, 80, 80, 0.7],
     color: '#f2f2f2',

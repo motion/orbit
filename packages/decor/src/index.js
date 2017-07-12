@@ -79,7 +79,9 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
   }
 
   // to listen to plugin events
+  decorDecorator.off = emitter.off.bind(emitter)
   decorDecorator.on = emitter.on.bind(emitter)
+  decorDecorator.emit = emitter.emit.bind(emitter)
 
   return decorDecorator
 }

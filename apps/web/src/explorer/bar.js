@@ -68,7 +68,6 @@ export default class ExplorerBar {
                 <actions>
                   {items}
                   <UI.Button
-                    if={false}
                     chromeless
                     spaced
                     size={0.7}

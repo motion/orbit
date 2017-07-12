@@ -98,7 +98,7 @@ export default class ExplorerChildren {
                     height={75}
                     key={doc._id}
                     css={{
-                      border: [2, 'green'],
+                      border: [1, '#ddd'],
                     }}
                     onClick={() => Router.go(doc.url())}
                   >
@@ -138,7 +138,7 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      marginTop: 140,
+      marginTop: 135,
       marginRight: -50,
       padding: [10, 10],
       // borderTop: [1, '#eee', 'dotted'],
@@ -184,9 +184,9 @@ export default class ExplorerChildren {
     title: {
       margin: 0,
       padding: 0,
-      fontWeight: 500,
-      fontSize: 18,
-      lineHeight: '26px',
+      fontWeight: 600,
+      fontSize: 16,
+      lineHeight: '22px',
       color: '#333',
     },
     subdocs: {

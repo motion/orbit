@@ -68,7 +68,7 @@ export default class TiltGlow {
             blur={5}
             inverse
             color={[0, 0, 0]}
-            opacity={0.1}
+            opacity={0.08}
             borderRadius={5}
           />
         </tiltglow>

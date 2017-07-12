@@ -138,10 +138,11 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      width: 200,
+      width: 120,
+      overflow: 'hidden',
       marginTop: 135,
       transform: {
-        x: 24,
+        x: 54,
       },
       padding: [10, 0],
       // borderTop: [1, '#eee', 'dotted'],
@@ -149,7 +150,7 @@ export default class ExplorerChildren {
       transition: 'transform ease-in 200ms',
       '&:hover': {
         transform: {
-          x: 20,
+          x: 50,
         },
       },
     },

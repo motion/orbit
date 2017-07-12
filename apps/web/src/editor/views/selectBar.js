@@ -18,7 +18,6 @@ export default class SelectBar {
         escapable
         theme="dark"
         background="transparent"
-        delay={500}
       >
         <bar $$row>
           {pluginCategories.map(category =>

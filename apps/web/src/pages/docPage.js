@@ -217,7 +217,6 @@ export default class DocumentPage {
       zIndex: 21,
       top: 0,
       right: 0,
-      bottom: 0,
     },
   }
 }

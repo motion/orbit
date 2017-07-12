@@ -25,6 +25,7 @@ const KEYMAP = {
     cmdUp: 'command+up',
     delete: ['delete', 'backspace'],
     toggleSidebar: 'command+\\',
+    togglePane: 'shift+tab',
   },
 }
 
@@ -64,6 +65,12 @@ export default class ExplorerStore {
   focused = false
   showDiscussions = false
   showResults = false
+  focusPaneIndex = 0
+  panes = ['editor', 'children']
+
+  get focusedPane() {
+    return this.panes[this.focusPaneIndex]
+  }
 
   start() {
     this.watch(() => {
@@ -180,6 +187,10 @@ export default class ExplorerStore {
     cmdUp: () => {
       console.log('gmcup')
       Router.go(this.crumbs[this.crumbs.length - 2].url())
+    },
+    togglePane: () => {
+      console.log('toggle pane')
+      this.focusPaneIndex = this.focusPaneIndex + 1 % this.panes.length
     },
   }
 

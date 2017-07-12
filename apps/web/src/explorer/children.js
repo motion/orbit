@@ -16,7 +16,7 @@ type Props = {
 
 @view.ui
 class Item {
-  render({ editable, children, title, onSave, ...props }) {
+  render({ editable, children, title, onSave, textRef, ...props }) {
     return (
       <doccontainer {...props}>
         <UI.TiltGlow
@@ -32,6 +32,7 @@ class Item {
               if={title || editable}
               editable={editable}
               onFinishEdit={onSave}
+              ref={textRef}
             >
               {title}
             </UI.Text>
@@ -72,6 +73,8 @@ class ExplorerChildrenStore {
   children = {}
   version = 1
 
+  lastDocs = null // temp until queries returning blank for a frame is fixed
+
   @watch
   docs = ({ explorerStore: { document } }) =>
     this.version && document && document.getChildren && document.getChildren()
@@ -89,7 +92,26 @@ class ExplorerChildrenStore {
         )
       : null
 
+  get allDocs() {
+    let { docs, lastDocs } = this
+    if ((!docs || !docs.length) && lastDocs) {
+      return lastDocs
+    }
+    const result = sortBy(docs || [], 'createdAt')
+    return result
+  }
+
+  get hasDocs() {
+    return this.allDocs.length
+  }
+
   start() {
+    this.watch(() => {
+      if (this.docs && this.docs.length) {
+        this.lastDocs = this.docs
+      }
+    })
+
     this.watch(async () => {
       if (this.docs && this.docs.length) {
         const allChildren = await Promise.all(
@@ -126,45 +148,51 @@ class ExplorerChildrenStore {
 export default class ExplorerChildren {
   props: Props
 
-  render({ store }: Props) {
-    const { docs } = store
-    const hasDocs = store.newTitle !== null || (docs || []).length > 0
-    const allDocs = sortBy(docs || [], 'createdAt')
+  onNewItemText = ref => {
+    if (ref) {
+      ref.focus()
+    }
+  }
 
+  render({ store, store: { hasDocs, allDocs } }: Props) {
+    log('NOW2', allDocs)
     return (
       <children>
-        <UI.StableContainer stableDuration={500}>
-          <FlipMove
-            if={hasDocs && Object.keys(store.children).length}
-            duration={300}
-            easing="ease-out"
-          >
-            {allDocs.map(doc => {
-              const children = store.children[doc._id]
-              return (
-                <Item
-                  key={doc._id}
-                  onClick={() => Router.go(doc.url())}
-                  title={doc.title}
-                >
-                  <subdocs if={children && children.length}>
-                    <Arrow $arrow />
-                    {children.map(child =>
-                      <UI.Button
-                        chromeless
-                        key={child._id}
-                        onClick={() => Router.go(child.url())}
-                      >
-                        {child.title}
-                      </UI.Button>
-                    )}
-                  </subdocs>
-                </Item>
-              )
-            })}
-          </FlipMove>
-        </UI.StableContainer>
-        <Item if={store.creatingDoc} editable onSave={store.saveCreatingDoc} />
+        <FlipMove
+          if={hasDocs && Object.keys(store.children).length}
+          duration={300}
+          easing="ease-out"
+        >
+          {allDocs.map(doc => {
+            const children = store.children[doc._id]
+            return (
+              <Item
+                key={doc._id}
+                onClick={() => Router.go(doc.url())}
+                title={doc.title}
+              >
+                <subdocs if={children && children.length}>
+                  <Arrow $arrow />
+                  {children.map(child =>
+                    <UI.Button
+                      chromeless
+                      key={child._id}
+                      onClick={() => Router.go(child.url())}
+                    >
+                      {child.title}
+                    </UI.Button>
+                  )}
+                </subdocs>
+              </Item>
+            )
+          })}
+        </FlipMove>
+        <Item
+          if={store.creatingDoc}
+          editable
+          onSave={store.saveCreatingDoc}
+          textRef={this.onNewItemText}
+        />
         <Item onClick={store.ref('creatingDoc').setter(true)} title="Create" />
       </children>
     )

@@ -94,11 +94,11 @@ export default class ExplorerChildren {
                 <doccontainer>
                   <UI.TiltGlow
                     if={doc.title}
-                    width={190}
-                    height={75}
+                    width={160}
+                    height={60}
                     key={doc._id}
                     css={{
-                      border: [1, '#ddd'],
+                      border: [1, '#e2e2e2'],
                     }}
                     onClick={() => Router.go(doc.url())}
                   >
@@ -126,7 +126,7 @@ export default class ExplorerChildren {
           </FlipMove>
         </UI.StableContainer>
         <doccontainer>
-          <UI.TiltGlow width={190} height={75}>
+          <UI.TiltGlow width={160} height={60}>
             <doc $$justify="flex-start">
               <title>+</title>
             </doc>
@@ -139,11 +139,11 @@ export default class ExplorerChildren {
   static style = {
     children: {
       marginTop: 135,
-      marginRight: -50,
-      padding: [10, 10],
+      marginRight: -85,
+      marginLeft: 20,
+      padding: [10, 0],
       // borderTop: [1, '#eee', 'dotted'],
       flex: 1,
-      width: 240,
     },
     mainTitle: {
       marginTop: 20,
@@ -184,10 +184,10 @@ export default class ExplorerChildren {
     title: {
       margin: 0,
       padding: 0,
-      fontWeight: 600,
+      fontWeight: 400,
       fontSize: 16,
       lineHeight: '22px',
-      color: '#333',
+      color: '#555',
     },
     subdocs: {
       flexFlow: 'row',

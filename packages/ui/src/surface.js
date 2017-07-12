@@ -490,7 +490,7 @@ export default class Surface implements ViewType {
       color: props.iconHoverColor || hoverColor,
     }
 
-    // psuedo styles
+    // state styles
     const hoverStyle = !props.chromeless &&
     props.hoverable && {
       ...theme.hover,

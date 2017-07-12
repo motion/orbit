@@ -45,8 +45,9 @@ class SidebarContent {
                 key={i}
                 active={i === 0}
                 borderWidth={1}
-                borderColor={[0, 0, 0, 0.2]}
+                borderColor={[255, 255, 255, 0.15]}
                 glowProps={{ opacity: 0.1 }}
+                glint={false}
                 flex
                 background="transparent"
                 css={{

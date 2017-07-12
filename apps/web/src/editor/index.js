@@ -91,6 +91,7 @@ export default class EditorView {
       fontSize: 16,
       lineHeight: 1.5,
       fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
+      overflowY: 'scroll',
     },
   }
 

@@ -656,7 +656,7 @@ export default class Popover {
               >
                 <Arrow
                   theme={theme && theme.base}
-                  background={background}
+                  background={background !== 'transparent' ? background : null}
                   size={arrowSize}
                   towards={INVERSE[direction]}
                   shadow={getShadow(shadow)}

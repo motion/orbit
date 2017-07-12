@@ -1,9 +1,6 @@
 import React from 'react'
-import { view, computed } from '@mcro/black'
-import node from '~/editor/node'
-import { Document } from '@mcro/models'
-import { Button, Glow, Loading, Icon } from '@mcro/ui'
-import { isEqual } from 'lodash'
+import { view } from '@mcro/black'
+import * as UI from '@mcro/ui'
 import Router from '~/router'
 
 const lightBlue = '#e7f6ff'
@@ -20,9 +17,9 @@ export default class DocLinkList {
     return (
       <docLinkList contentEditable={false}>
         <top $$row>
-          <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
+          <UI.Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
             create document
-          </Button>
+          </UI.Button>
         </top>
         <list>
           <loading if={!hasLoaded}>
@@ -30,9 +27,12 @@ export default class DocLinkList {
           </loading>
           <noDocs if={showNoDocs}>
             <text>no documents</text>
-            <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
+            <UI.Button
+              icon="simple-add"
+              onClick={() => layoutStore.createDoc()}
+            >
               create document
-            </Button>
+            </UI.Button>
           </noDocs>
           <docs if={hasLoaded && hasDocs}>
             {(listStore.docs || []).map((doc, index) =>
@@ -41,8 +41,13 @@ export default class DocLinkList {
                 onClick={() => Router.go(doc.url())}
                 $notFirst={index > 0}
               >
-                <Glow full scale={0.7} color={[255, 255, 255]} opacity={0.04} />
-                <Icon
+                <UI.Glow
+                  full
+                  scale={0.7}
+                  color={[255, 255, 255]}
+                  opacity={0.04}
+                />
+                <UI.Icon
                   name="arrows-1_circle-right-37"
                   $icon
                   color={darkBlue}

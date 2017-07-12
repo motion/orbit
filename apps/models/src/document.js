@@ -275,8 +275,11 @@ export class DocumentModel extends Model {
   @query
   stars = () =>
     this.collection
-      .find({ starredBy: { $elemMatch: { $eq: User.authorId } } })
-      // .sort({ createdAt: 'desc' })
+      .find({
+        starredBy: { $elemMatch: { $eq: User.authorId } },
+        createdAt: { $gt: null },
+      })
+      .sort({ createdAt: 'desc' })
       .limit(50)
 
   @query

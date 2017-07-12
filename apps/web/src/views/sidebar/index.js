@@ -28,6 +28,7 @@ class SidebarContent {
   render() {
     return (
       <inner $$flex>
+        <UI.Glint borderRadius={5} />
         <Login />
         <Menu />
         <contents

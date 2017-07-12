@@ -1,13 +1,12 @@
 import React from 'react'
 import * as Mobx from 'mobx'
+import { view } from '@mcro/black'
 import { object } from 'prop-types'
 import { pickBy } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 
 export default function storeProvidable(options, emitter) {
-  const hmrd = {}
-
   return {
     name: 'store-providable',
     decorator: (Klass, opts = {}) => {
@@ -86,7 +85,6 @@ export default function storeProvidable(options, emitter) {
           if (this.state.stores === null) {
             return
           }
-          emitter.emit('view.mount', this)
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]
             emitter.emit('store.mount', store)
@@ -94,10 +92,21 @@ export default function storeProvidable(options, emitter) {
               options.onStoreDidMount(store, this.props)
             }
           }
+          view.on('hmr', this.clearError)
+        }
+
+        clearError = () => {
+          this.setState({ error: null })
         }
 
         componentWillUnmount() {
           this.disposeStores()
+          view.off('hmr', this.clearError)
+        }
+
+        unstable_handleError(error) {
+          console.error('ERR', error)
+          this.setState({ error })
         }
 
         setupStores() {
@@ -143,41 +152,11 @@ export default function storeProvidable(options, emitter) {
           this.setState({ stores })
         }
 
-        unstable_handleError(error) {
-          console.error('ERR', error)
-          this.setState({ error })
-          throw error
-        }
-
-        clearErrors() {
-          this.setState({ error: null })
-        }
-
-        handleHotReload = (module, update) => {
-          log('LETS HMR', module, update)
-          // console.log(module, Stores, this.state.stores)
-
-          // debounce
-          if (hmrd[module.id]) {
-            clearTimeout(hmrd[module.id])
-          }
-          hmrd[module.id] = setTimeout(() => {
-            console.log(`[HMR] file: ${module.id}`)
-            window.App && window.App.clearErrors && window.App.clearErrors()
-            // this.clearErrors()
-            // // decorateStores()
-            // this.module = module
-            // this.disposeStores()
-            // this.setupStores()
-          }, 150)
-        }
-
         disposeStores = () => {
           if (!this.state.stores) {
             log('bad dismount, this is an old store')
             return
           }
-          emitter.emit('view.unmount', this)
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]
             emitter.emit('store.unmount', store)
@@ -188,13 +167,12 @@ export default function storeProvidable(options, emitter) {
         }
 
         render() {
+          if (this.state.error) {
+            return <Redbox $$draggable error={this.state.error} />
+          }
           if (this.failed || !this.state) {
             console.log('failed view', this)
             return null
-          }
-
-          if (this.state.error) {
-            return <Redbox $$draggable error={this.state.error} />
           }
 
           return (

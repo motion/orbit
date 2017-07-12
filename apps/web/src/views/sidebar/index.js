@@ -40,7 +40,7 @@ class SidebarContent {
           }}
         >
           <UI.Segment>
-            {['Favorites', 'Latest'].map((text, i) =>
+            {['Docs', 'Tasks', 'News'].map((text, i) =>
               <UI.Button
                 key={i}
                 active={i === 0}
@@ -74,8 +74,7 @@ class SidebarContent {
                 size={44}
                 marginRight={-10}
                 zIndex={100 - i}
-                boxShadow={[[0, 0, 2, 'rgba(0,0,0,0.1)']]}
-                background={idToGradient(i)}
+                background="rgba(0,0,0,0.1)"
                 fontSize={20}
                 color="white"
                 overflow="hidden"

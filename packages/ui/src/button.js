@@ -45,6 +45,7 @@ export default class Button {
           scale: 2,
           draggable: false,
           ...glowProps,
+          ...(theme && theme.glow),
         }}
         {...props}
         noElement

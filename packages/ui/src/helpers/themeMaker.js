@@ -41,9 +41,16 @@ export default class ThemeMaker {
   }
 
   fromStyles = (styles: Object): Object => {
-    const obj = this.colorize(styles)
+    const { highlightColor, background, color, borderColor, ...rest } = styles
+    const obj = this.colorize({
+      highlightColor,
+      background,
+      color,
+      borderColor,
+    })
 
     return {
+      ...rest,
       base: obj,
       hover: {
         ...obj,

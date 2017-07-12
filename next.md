@@ -24,6 +24,29 @@
   - pullout of notifications
   - feed
   - prod
+  - lightweight gdocs style inline comments too?
+
+# polish
+  - docs dont scroll down properly
+  - cant paste in rich content
+  - no numbered lists
+  - cant invite people with a link
+  - todo indentation broken
+  - no pasting/editing/adding links
+  - images break on paste
+  - save doesnt happen after many actions
+  - outline of a doc view that shows just headers and links to them
+  - no code blocks
+  - blockquotes break on enter
+  - lists dont auto-join together
+  - doesnt always keep empty paragraph line at end of doc
+  - sub-headings visibility
+  - selectbar broken stuff
+  - super basic tables
+  - alignment
+  - list and concept of who has joined a doc
+  - font size choice
+  - keyboard shortcuts
 
 # nate
   - want to start keeping notes on things i want to see

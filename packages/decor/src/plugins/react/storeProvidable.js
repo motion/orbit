@@ -85,13 +85,7 @@ export default function storeProvidable(options, emitter) {
           if (this.state.stores === null) {
             return
           }
-          for (const name of Object.keys(this.state.stores)) {
-            const store = this.state.stores[name]
-            emitter.emit('store.mount', store)
-            if (options.onStoreDidMount) {
-              options.onStoreDidMount(store, this.props)
-            }
-          }
+          this.mountStores()
           view.on('hmr', this.clearError)
         }
 
@@ -143,18 +137,22 @@ export default function storeProvidable(options, emitter) {
             }
           }
 
-          // line below used to be (hmr state preserve):
-          // stores: cache.restore(
-          //   this,
-          //   stores,
-          //   instanceOpts && instanceOpts.module
-          // )
           this.setState({ stores })
+        }
+
+        mountStores() {
+          for (const name of Object.keys(this.state.stores)) {
+            const store = this.state.stores[name]
+            emitter.emit('store.mount', store)
+            if (options.onStoreDidMount) {
+              options.onStoreDidMount(store, this.props)
+            }
+          }
         }
 
         disposeStores = () => {
           if (!this.state.stores) {
-            log('bad dismount, this is an old store')
+            log('no stores to dispose')
             return
           }
           for (const name of Object.keys(this.state.stores)) {
@@ -164,6 +162,12 @@ export default function storeProvidable(options, emitter) {
               options.onStoreUnmount(store)
             }
           }
+        }
+
+        hotReload() {
+          this.disposeStores()
+          this.setupStores()
+          this.mountStores()
         }
 
         render() {

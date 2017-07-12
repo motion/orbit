@@ -32,6 +32,9 @@ export default function proxyReactComponents({
   const forceUpdater = getForceUpdate(React || window.React)
 
   const hotReload = instance => {
+    if (instance.hotReload) {
+      instance.hotReload(module)
+    }
     forceUpdater(instance)
     reloadedInstances.push(1)
   }
@@ -44,9 +47,7 @@ export default function proxyReactComponents({
       return ReactClass
     }
 
-    module.hot.accept(() => {
-      console.log('accepted', path)
-    }) // to make it a fast hmr
+    module.hot.accept(() => {}) // to make it a fast hmr
 
     // if existing proxy
     if (viewProxies[path]) {

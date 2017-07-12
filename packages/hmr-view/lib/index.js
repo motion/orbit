@@ -53,6 +53,9 @@ function proxyReactComponents(_ref) {
   var forceUpdater = (0, _reactProxy.getForceUpdate)(React || _window2.default.React);
 
   var hotReload = function hotReload(instance) {
+    if (instance.hotReload) {
+      instance.hotReload(module);
+    }
     forceUpdater(instance);
     reloadedInstances.push(1);
   };
@@ -69,9 +72,7 @@ function proxyReactComponents(_ref) {
       return ReactClass;
     }
 
-    module.hot.accept(function () {
-      console.log('accepted', path);
-    }); // to make it a fast hmr
+    module.hot.accept(function () {}); // to make it a fast hmr
 
     // if existing proxy
     if (viewProxies[path]) {

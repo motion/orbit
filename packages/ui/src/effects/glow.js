@@ -38,6 +38,7 @@ export default class HoverGlow {
     clickDuration: 150,
     clickScale: 2,
     transition: 0,
+    overlayZIndex: 0,
     blur: 15,
     // backdropFilter: 'contrast(100%)',
   }
@@ -146,6 +147,7 @@ export default class HoverGlow {
     gradient,
     backdropFilter,
     overflow,
+    overlayZIndex,
     blur,
     show,
     ...props
@@ -205,7 +207,7 @@ export default class HoverGlow {
           borderLeftRadius: borderLeftRadius || borderRadius,
           borderRightRadius: borderRightRadius || borderRadius,
           overflow,
-          zIndex: behind ? -1 : 1,
+          zIndex: behind ? -1 : overlayZIndex,
         }}
         {...props}
       >

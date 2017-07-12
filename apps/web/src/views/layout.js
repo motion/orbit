@@ -25,14 +25,6 @@ type Props = {
   soundStore: SoundStore,
 }
 
-if (module) {
-  module.hot.accept(() => {
-    log('accept layou', window.lastInstance)
-    window.lastInstance && window.lastInstance.props.disposeStores()
-    start(true, true)
-  })
-}
-
 @view.provide({
   layoutStore: LayoutStore,
   soundStore: SoundStore,

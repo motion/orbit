@@ -29,7 +29,7 @@ const KEYMAP = {
   },
 }
 
-const VERSION = 9
+const VERSION = 10
 
 export default class ExplorerStore {
   static version = VERSION
@@ -96,7 +96,6 @@ export default class ExplorerStore {
           [...(searchResults || []), ...pathSearchResults],
           x => x.id
         )
-        console.log('results are', this.searchResults)
       } else {
         // path navigate
         this.searchResults = await this.getChildDocsForPath(
@@ -146,7 +145,6 @@ export default class ExplorerStore {
 
   actions = {
     toggleSidebar: () => {
-      console.log('got')
       App.layoutStore.sidebar.toggle()
     },
     esc: () => {
@@ -174,7 +172,6 @@ export default class ExplorerStore {
     down: () => {
       if (!this.focused) return
       if (!this.showResults || !this.focused) {
-        console.log('focusing')
         this.action('focusDown')
         return
       }

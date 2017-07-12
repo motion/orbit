@@ -16,11 +16,12 @@ import Login from './login'
       if (!User.org) {
         return 2
       }
+      return 2
     }
   },
 })
 export default class Signup {
-  render({ store: { step } }) {
+  render({ store, store: { step } }) {
     return (
       <signup if={step} $$fullscreen $$draggable $$centered>
         <UI.Glint size={3} borderRadius={5} />

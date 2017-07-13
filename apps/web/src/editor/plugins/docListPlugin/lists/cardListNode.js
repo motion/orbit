@@ -19,17 +19,21 @@ export default class CardList {
   render({ listStore }) {
     const hasDocs = listStore.docs && listStore.docs.length > 0
     return (
-      <FlipMove if={hasDocs} $docs duration={300} easing="ease-out">
+      <cardList>
         <UI.Button icon="simple-add" onClick={listStore.createDoc}>
           create document
         </UI.Button>
 
-        {listStore.docs.map((doc, i) =>
-          <UI.TiltGlow width={width} height={height} key={doc._id}>
-            <DocItem inline ref={node => this.docRef(node, i)} doc={doc} />
-          </UI.TiltGlow>
-        )}
-      </FlipMove>
+        <docs if={hasDocs}>
+          <FlipMove $docs duration={300} easing="ease-out">
+            {listStore.docs.map((doc, i) =>
+              <UI.TiltGlow width={width} height={height} key={doc._id}>
+                <DocItem inline ref={node => this.docRef(node, i)} doc={doc} />
+              </UI.TiltGlow>
+            )}
+          </FlipMove>
+        </docs>
+      </cardList>
     )
   }
 

@@ -2,11 +2,8 @@ import { watch } from '@mcro/black'
 import { Document } from '@mcro/models'
 
 export default class DocListStore {
-  get doc() {
-    if (!this.props.documentStore) {
-      return false
-    }
-    return this.props.documentStore.document
+  get document() {
+    return this.props.docStore && this.props.docStore.document
   }
 
   // checking for inline prevents infinite recursion!

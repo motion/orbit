@@ -151,17 +151,6 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Actions if={false}>
-          <UI.Button
-            onClick={docStore.ref('showInbox').toggle}
-            highlight={docStore.showInbox}
-            chromeless
-            icon="message"
-          >
-            Threads
-          </UI.Button>
-        </Page.Actions>
-
         <UI.Button
           {...itemProps}
           chromeless
@@ -179,14 +168,14 @@ export default class DocumentPage {
           }}
         />
 
-        <Actions />
+        <Actions if={!explorerStore.showDiscussions} />
 
         <Inbox
           if={explorerStore.showDiscussions}
           document={explorerStore.document}
         />
 
-        <docpagecontent>
+        <docpagecontent if={!explorerStore.showDiscussions}>
           <DocumentView
             document={document}
             onKeyDown={docStore.onKeyDown}

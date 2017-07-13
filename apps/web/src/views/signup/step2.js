@@ -12,6 +12,12 @@ import * as UI from '@mcro/ui'
       this.members = [...this.members, true]
     }
 
+    /* remove to show form by default */
+
+    start() {
+      User.org = 'hi'
+    }
+
     errors = null
 
     // wrap to avoid mobx action wrap because validator has weird api

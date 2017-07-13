@@ -13,6 +13,7 @@ import { omit } from 'lodash'
 export Document from './document'
 export Org from './org'
 export Comment from './comment'
+export Thread from './thread'
 export Image from './image'
 export User from './user'
 

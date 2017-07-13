@@ -1,6 +1,5 @@
-import window from 'global/window'
 import createProxy from './proxyClass'
-import getForceUpdate from 'react-deep-force-update'
+import deepForceUpdate from 'react-deep-force-update'
 
 let viewProxies = {}
 let reloaded = []
@@ -29,13 +28,11 @@ export default function proxyReactComponents({
     )
   }
 
-  const forceUpdater = getForceUpdate(React || window.React)
-
   const hotReload = instance => {
     if (instance.hotReload) {
       instance.hotReload(module)
     }
-    forceUpdater(instance)
+    deepForceUpdate(instance)
     reloadedInstances.push(1)
   }
 

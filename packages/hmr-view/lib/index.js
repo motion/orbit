@@ -8,10 +8,6 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 exports.default = proxyReactComponents;
 
-var _window = require('global/window');
-
-var _window2 = _interopRequireDefault(_window);
-
 var _proxyClass = require('./proxyClass');
 
 var _proxyClass2 = _interopRequireDefault(_proxyClass);
@@ -52,13 +48,11 @@ function proxyReactComponents(_ref) {
     throw new Error('locals[0] does not appear to be a `module` object with Hot Module replacement API enabled. You should disable @mcro/view-hmr');
   }
 
-  var forceUpdater = (0, _reactDeepForceUpdate2.default)(React || _window2.default.React);
-
   var hotReload = function hotReload(instance) {
     if (instance.hotReload) {
       instance.hotReload(module);
     }
-    forceUpdater(instance);
+    (0, _reactDeepForceUpdate2.default)(instance);
     reloadedInstances.push(1);
   };
 

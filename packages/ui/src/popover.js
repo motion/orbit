@@ -469,6 +469,11 @@ export default class Popover {
     }
   }
 
+  lastEvent = {
+    leave: { target: null, menu: null },
+    enter: { target: null, menu: null },
+  }
+
   addHoverListeners = (name, node) => {
     if (!node) {
       console.log('no node!', name)
@@ -480,8 +485,15 @@ export default class Popover {
     const setHovered = () => this.hoverStateSet(name, true)
     const setUnhovered = () => this.hoverStateSet(name, false)
     const openIfOver = () => this.isNodeHovered(node, isPopover) && setHovered()
-    const closeIfOut = () =>
-      !this.isNodeHovered(node, isPopover) && setUnhovered()
+    const closeIfOut = () => {
+      if (!this.isNodeHovered(node, isPopover)) {
+        setUnhovered()
+        console.log(delayOpenIfHover)
+        if (delayOpenIfHover.cancel) {
+          delayOpenIfHover.cancel()
+        }
+      }
+    }
     const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
     // this will avoid the delay open if its already open
     const onEnter = () =>
@@ -493,9 +505,7 @@ export default class Popover {
       onEnter()
       // insanity, but mouseleave is horrible
       if (this.curProps.target) {
-        this.setTimeout(onLeave, 16)
-        this.setTimeout(onLeave, 32)
-        this.setTimeout(onLeave, 96)
+        this.setTimeout(onLeave, 150)
       }
     })
 
@@ -508,6 +518,7 @@ export default class Popover {
   hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
+      // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
       this.setState({ [`${name}Hovered`]: val })
     }
 

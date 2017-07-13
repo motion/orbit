@@ -33,8 +33,6 @@ class Actions {
 
     log('render actions')
 
-    const starred = document.hasStar()
-
     const popoverProps = {
       elevation: 3,
       borderRadius: 8,
@@ -49,14 +47,6 @@ class Actions {
 
     return (
       <actions $$draggable>
-        <UI.Button
-          {...itemProps}
-          icon="fav3"
-          tooltip={starred ? 'Unfollow' : 'Follow'}
-          highlight={starred}
-          onClick={document.toggleStar}
-        />
-
         <UI.Button
           if={false}
           {...itemProps}
@@ -201,6 +191,14 @@ export default class DocumentPage {
         <children>
           <Children documentStore={docStore} />
         </children>
+
+        <UI.Button
+          {...itemProps}
+          icon="fav3"
+          tooltip={document.hasStar ? 'Unfollow' : 'Follow'}
+          highlight={document.hasStar}
+          onClick={document.toggleStar}
+        />
       </Page>
     )
   }

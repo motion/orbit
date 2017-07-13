@@ -14,27 +14,52 @@ export default class UserBar {
   render({ store }) {
     return (
       <userbar $$draggable if={User.loggedIn}>
-        <UI.Popover
-          openOnClick
-          background
-          delay={150}
-          borderRadius={8}
-          elevation={2}
-          distance={10}
-          forgiveness={16}
-          width={400}
-          target={<UI.Button chromeless icon="hotelbell" />}
-          openOnHover
-          closeOnClick
-          theme="dark"
+        <above
+          css={{
+            position: 'absolute',
+            bottom: 10,
+            left: 10,
+            flexFlow: 'row',
+          }}
         >
-          <notification>
-            <author>Matt</author> said{' '}
-            <quote>"something about something else"</quote>{' '}
-            <date>3 min ago</date>
-          </notification>
-          <DocumentView if={store.document} document={store.document} inline />
-        </UI.Popover>
+          {['Allie', 'Jackie', 'Evenie'].map((text, i) =>
+            <UI.Popover
+              key={i}
+              openOnHover
+              background
+              target={
+                <UI.Circle
+                  size={24}
+                  marginRight={5}
+                  zIndex={100 - i}
+                  background="linear-gradient(#eee, #fff 50%)"
+                  fontSize={20}
+                  color="white"
+                  overflow="hidden"
+                  boxShadow={[
+                    [0, 0, 2, [0, 0, 0, 0.1]],
+                    ['inset', 0, 0, 0, 1, [0, 0, 0, 0.05]],
+                  ]}
+                  transition="transform ease-in 30ms"
+                  transform={{
+                    scale: 1.0,
+                  }}
+                  {...{
+                    '&:hover': {
+                      transform: {
+                        scale: 1.1,
+                      },
+                    },
+                  }}
+                >
+                  <UI.Glint borderRadius={1000} />
+                </UI.Circle>
+              }
+            >
+              fake news
+            </UI.Popover>
+          )}
+        </above>
         <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>
           {User.name}

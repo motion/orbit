@@ -75,55 +75,8 @@ export default class Layout {
                 key={Router.key}
                 {...Router.params}
               />
-              <above
-                css={{
-                  position: 'absolute',
-                  bottom: 10,
-                  right: 10,
-                  flexFlow: 'row',
-                }}
-              >
-                {['Allie', 'Jackie', 'Evenie'].map((text, i) =>
-                  <UI.Popover
-                    key={i}
-                    openOnHover
-                    background
-                    target={
-                      <UI.Circle
-                        size={44}
-                        marginLeft={-15}
-                        zIndex={100 - i}
-                        background="linear-gradient(#eee, #fff 50%)"
-                        fontSize={20}
-                        color="white"
-                        overflow="hidden"
-                        boxShadow={[
-                          [0, 0, 2, [0, 0, 0, 0.1]],
-                          ['inset', 0, 0, 0, 1, [0, 0, 0, 0.05]],
-                        ]}
-                        transition="transform ease-in 30ms"
-                        transform={{
-                          scale: 1.0,
-                        }}
-                        {...{
-                          '&:hover': {
-                            transform: {
-                              scale: 1.1,
-                            },
-                          },
-                        }}
-                      >
-                        <UI.Glint borderRadius={1000} />
-                      </UI.Circle>
-                    }
-                  >
-                    fake news
-                  </UI.Popover>
-                )}
-              </above>
 
               <UI.Popover
-                open={false}
                 showForgiveness={false}
                 openOnHover
                 background

@@ -105,9 +105,9 @@ export default class Model {
   get compiledMethods(): Object {
     return {
       ...(this.methods || {}),
-      // get id() {
-      //   return this._id
-      // },
+      get id() {
+        return this._id
+      },
       delete() {
         return this.collection
           .findOne(this._id)
@@ -179,7 +179,7 @@ export default class Model {
         name: this.title,
         schema: this.compiledSchema,
         statics: this.statics,
-        methods: this.compiledMethods,
+        // methods: this.compiledMethods,
       })
 
       // shim add pouchdb-validation
@@ -208,6 +208,24 @@ export default class Model {
           if (ogSave) {
             return ogSave.call(this, doc)
           }
+        }
+
+        // decorate
+        const ogPostCreate = this.hooks.postCreate
+        const { compiledMethods } = this
+        const methods = Object.keys(compiledMethods)
+        this.hooks.postCreate = doc => {
+          log('HELOO')
+          for (const key of methods) {
+            if (doc[key]) {
+              throw new Error('Already exists prop on doc: ' + key)
+            }
+            doc[key] = compiledMethods[key]
+          }
+          if (ogPostCreate) {
+            return ogPostCreate.call(this, doc)
+          }
+          return doc
         }
       }
 

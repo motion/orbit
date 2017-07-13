@@ -20,7 +20,11 @@ export default class CardList {
     const hasDocs = listStore.docs && listStore.docs.length > 0
     return (
       <cardList>
-        <UI.Button icon="simple-add" onClick={listStore.createDoc}>
+        <UI.Button
+          if={!hasDocs}
+          icon="simple-add"
+          onClick={listStore.createDoc}
+        >
           create document
         </UI.Button>
 

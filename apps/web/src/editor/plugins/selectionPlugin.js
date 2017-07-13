@@ -36,7 +36,7 @@ export default class Selection {
             style={{
               flex: 1,
               overflowY: 'scroll',
-              paddingRight: 200,
+              paddingRight: editorStore.inline ? 0 : 200,
             }}
             onMouseUp={event => {
               event.persist()

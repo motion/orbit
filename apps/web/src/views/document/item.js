@@ -101,6 +101,7 @@ export default class DocItem {
       color: '#fff',
       overflow: 'hidden',
       padding: 20,
+      width: '100%',
     },
     content: {
       flex: 1,

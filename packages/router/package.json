@@ -1,6 +1,6 @@
 {
   "name": "@mcro/router",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "",
   "main": "lib/index.js",
   "author": "Motion (motion.io)",

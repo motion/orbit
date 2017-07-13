@@ -4,5 +4,6 @@
     "apps/*",
     "packages/*"
   ],
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "version": "1.0.7"
 }

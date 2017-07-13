@@ -1,12 +1,13 @@
 {
   "name": "@mcro/black",
   "main": "lib/index.js",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "scripts": {},
   "dependencies": {
-    "@mcro/decor": "^1.0.1",
+    "@mcro/decor": "^1.0.7",
     "@mcro/gloss": "^1.0.1",
     "color": "1.0.3",
+    "global": "^4.3.0",
     "hash-sum": "1.0.2",
     "keycode": "^2.1.9",
     "kontur": "^0.2.0",
@@ -16,8 +17,7 @@
     "react-shortcuts": "1.5.0",
     "react-tunnel": "0.1.0",
     "rxdb": "^5.0.0",
-    "rxjs": "^5.4.1",
-    "global": "^4.3.0"
+    "rxjs": "^5.4.1"
   },
   "peerDependencies": {
     "react": "^15.6.0"

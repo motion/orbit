@@ -15,6 +15,7 @@ export default class UserBar {
     return (
       <userbar $$draggable if={User.loggedIn}>
         <above
+          if={User.favoriteDocuments}
           css={{
             position: 'absolute',
             bottom: 10,
@@ -22,7 +23,7 @@ export default class UserBar {
             flexFlow: 'row',
           }}
         >
-          {['Allie', 'Jackie', 'Evenie'].map((text, i) =>
+          {User.favoriteDocuments.map((text, i) =>
             <UI.Popover
               key={i}
               openOnHover

@@ -9,7 +9,7 @@ import Inbox from '~/views/inbox'
 import Children from '~/explorer/children'
 
 const itemProps = {
-  size: 1.5,
+  size: 1.25,
   chromeless: true,
   tooltipProps: {
     towards: 'left',

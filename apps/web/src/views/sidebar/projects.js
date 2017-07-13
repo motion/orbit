@@ -2,14 +2,14 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Document } from '@mcro/models'
+import { User } from '@mcro/models'
 import Router from '~/router'
 import { flatMap } from 'lodash'
 import Arrow from '~/explorer/arrow'
 
 @view({
   store: class SidebarProjectStore {
-    docs = Document.stars()
+    docs = User.favoriteDocuments
     @watch
     crumbs = () =>
       this.docs && Promise.all(this.docs.map(doc => doc.getCrumbs()))

@@ -14,6 +14,7 @@ class User {
   remoteDb = null
   activeOrg = 0
   @watch orgs = () => Org.forUser(this.id)
+  @watch favoriteDocuments = () => Document.favoritedBy(this.id)
 
   get org() {
     return this.orgs && this.orgs[this.activeOrg]

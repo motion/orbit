@@ -47,7 +47,7 @@ export const methods = {
     return docToTasks(this)
   },
   get hasStar() {
-    return this.starredBy.find(id => id === User.authorId)
+    return this.starredBy.find(id => id === User.id)
   },
   async toggleStar() {
     this.starredBy = toggleInclude(this.starredBy, User.authorId)
@@ -275,14 +275,20 @@ export class DocumentModel extends Model {
   @query root = () => this.collection.find({ parentId: { $exists: false } })
 
   @query
-  stars = () =>
-    this.collection
-      .find({
-        starredBy: { $elemMatch: { $eq: User.authorId } },
-        createdAt: { $gt: null },
-      })
-      // .sort({ createdAt: 'asc' })
-      .limit(50)
+  favoritedBy = id => {
+    if (!id) {
+      return null
+    }
+    return (
+      this.collection
+        .find({
+          starredBy: { $elemMatch: { $eq: id } },
+          createdAt: { $gt: null },
+        })
+        // .sort({ createdAt: 'asc' })
+        .limit(50)
+    )
+  }
 
   @query
   get = (query: Object | string) => {

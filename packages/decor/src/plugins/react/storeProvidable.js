@@ -99,7 +99,7 @@ export default function storeProvidable(options, emitter) {
         }
 
         unstable_handleError(error) {
-          console.error('ERR', error)
+          console.error('ERROR IS', error)
           this.setState({ error })
         }
 

@@ -155,42 +155,49 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, allDocs } }: Props) {
     return (
       <children>
-        <FlipMove
-          if={hasDocs && Object.keys(store.children).length}
-          duration={300}
-          easing="ease-out"
-        >
-          {allDocs.map(doc => {
-            const children = store.children[doc._id]
-            return (
-              <Item
-                key={doc._id}
-                onClick={() => Router.go(doc.url())}
-                title={doc.title}
-              >
-                <subdocs if={children && children.length}>
-                  <Arrow $arrow />
-                  {children.map(child =>
-                    <UI.Button
-                      chromeless
-                      key={child._id}
-                      onClick={() => Router.go(child.url())}
-                    >
-                      {child.title}
-                    </UI.Button>
-                  )}
-                </subdocs>
-              </Item>
-            )
-          })}
-        </FlipMove>
-        <Item
-          if={store.creatingDoc}
-          editable
-          onSave={store.saveCreatingDoc}
-          textRef={this.onNewItemText}
-        />
-        <Item onClick={store.ref('creatingDoc').setter(true)} title="Create" />
+        <docs>
+          <FlipMove
+            if={hasDocs && Object.keys(store.children).length}
+            duration={300}
+            easing="ease-out"
+          >
+            {allDocs.map(doc => {
+              const children = store.children[doc._id]
+              return (
+                <Item
+                  key={doc._id}
+                  onClick={() => Router.go(doc.url())}
+                  title={doc.title}
+                >
+                  <subdocs if={children && children.length}>
+                    <Arrow $arrow />
+                    {children.map(child =>
+                      <UI.Button
+                        chromeless
+                        key={child._id}
+                        onClick={() => Router.go(child.url())}
+                      >
+                        {child.title}
+                      </UI.Button>
+                    )}
+                  </subdocs>
+                </Item>
+              )
+            })}
+          </FlipMove>
+          <Item
+            if={store.creatingDoc}
+            editable
+            onSave={store.saveCreatingDoc}
+            textRef={this.onNewItemText}
+          />
+          <Item
+            onClick={store.ref('creatingDoc').setter(true)}
+            title="Create"
+          />
+        </docs>
+        <shadow $glow />
+        <background $glow />
       </children>
     )
   }
@@ -198,42 +205,26 @@ export default class ExplorerChildren {
   static style = {
     children: {
       width: 180,
-      paddingLeft: 20,
-      overflow: 'hidden',
       marginTop: 135,
+      padding: [10, 0, 40, 10],
+      flex: 1,
+      '&:hover > glow': {},
+      position: 'relative',
+    },
+    docs: {
+      transition: 'transform ease-in 200ms',
       transform: {
         x: 54,
       },
-      padding: [10, 0],
-      // borderTop: [1, '#eee', 'dotted'],
-      flex: 1,
-      transition: 'transform ease-in 200ms',
       '&:hover': {
         transform: {
           x: 50,
         },
       },
     },
-    mainTitle: {
-      marginTop: 20,
-    },
-    actions: {
-      marginTop: -20,
-      padding: [0, 10, 0],
-      flexFlow: 'row',
-      flex: 1,
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
     arrow: {
       height: 20,
       margin: ['auto', 0],
-    },
-    post: {
-      marginTop: -20,
-    },
-    paths: {
-      flexFlow: 'row',
     },
     subdocs: {
       flexFlow: 'row',
@@ -241,6 +232,33 @@ export default class ExplorerChildren {
     },
     text: {
       lineHeight: '1.4rem',
+    },
+    glow: {
+      position: 'absolute',
+      right: 0,
+      left: 0,
+      borderRadius: 1000,
+    },
+    shadow: {
+      background: '#000',
+      zIndex: 1,
+      top: -35,
+      bottom: 10,
+      filter: 'blur(15px)',
+      opacity: 0.12,
+      transform: {
+        x: '91%',
+      },
+    },
+    background: {
+      top: 0,
+      filter: 'blur(40px)',
+      bottom: 40,
+      zIndex: -1,
+      background: 'white',
+      transform: {
+        x: '20%',
+      },
     },
   }
 }

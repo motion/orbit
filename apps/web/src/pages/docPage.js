@@ -186,6 +186,8 @@ export default class DocumentPage {
           document={explorerStore.document}
         />
 
+        <fade />
+
         <docpagecontent>
           <DocumentView
             document={document}
@@ -214,9 +216,18 @@ export default class DocumentPage {
     children: {
       position: 'absolute',
       overflow: 'hidden',
-      zIndex: 21,
+      zIndex: 50,
       top: 0,
       right: 0,
+    },
+    fade: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      background: 'linear-gradient(to left, white, transparent)',
+      width: 100,
+      zIndex: 30,
     },
   }
 }

@@ -442,12 +442,9 @@ export default class Popover {
       if (direction === 'top') {
         arrowTop = popoverSize.height + arrowAdjust
         top = targetTopReal - popoverSize.height - distance
-        maxHeight = window.innerHeight - targetBounds.height
       } else {
         arrowTop = -arrowSize + arrowAdjust
         top = targetTopReal + targetBounds.height + distance
-        maxHeight =
-          window.innerHeight - (targetBounds.top + targetBounds.height)
       }
 
       // final top
@@ -461,6 +458,16 @@ export default class Popover {
 
     // adjustments
     top += adjust[1]
+
+    // max height
+    if (VERTICAL) {
+      if (direction === 'top') {
+        maxHeight = targetBounds.top - top + arrowAdjust
+      } else {
+        maxHeight =
+          window.innerHeight - (targetBounds.top + targetBounds.height)
+      }
+    }
 
     return { arrowTop, top, maxHeight }
   }
@@ -682,7 +689,12 @@ export default class Popover {
                   boxShadow={getShadow(shadow, elevation)}
                 />
               </arrowContain>
-              <Surface {...props} elevation={elevation} background={background}>
+              <Surface
+                flex={1}
+                {...props}
+                elevation={elevation}
+                background={background}
+              >
                 {typeof children === 'function' ? children(isOpen) : children}
               </Surface>
             </popover>

@@ -25,7 +25,7 @@ export default class TiltGlow {
         options={{
           max: 15,
           perspective: 500,
-          scale: 1.05,
+          scale: 1.025,
           speed: 400,
           //reverse: true,
           ...tiltOptions,

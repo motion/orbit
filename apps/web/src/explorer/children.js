@@ -21,10 +21,9 @@ class Item {
       <doccontainer {...props}>
         <UI.TiltGlow
           css={{
-            border: [1, '#eee'],
+            borderBottom: [1, '#eee'],
           }}
           width={160}
-          height={60}
         >
           <doc $$justify="flex-start">
             <UI.Text
@@ -62,7 +61,7 @@ class Item {
       margin: 0,
       padding: 0,
       fontWeight: 400,
-      fontSize: 16,
+      fontSize: 14,
       lineHeight: '22px',
       color: '#555',
     },
@@ -193,10 +192,10 @@ export default class ExplorerChildren {
           />
           <Item
             onClick={store.ref('creatingDoc').setter(true)}
-            title="Create"
+            title="Insert child"
           />
         </docs>
-        <shadow $glow />
+        <shadow if={false} $glow />
         <background $glow />
       </children>
     )
@@ -212,9 +211,9 @@ export default class ExplorerChildren {
       position: 'relative',
     },
     docs: {
-      transition: 'transform ease-in 200ms',
+      transition: 'transform ease-in 250ms',
       transform: {
-        x: 54,
+        x: 53,
       },
       '&:hover': {
         transform: {

@@ -50,7 +50,7 @@ export const methods = {
     return this.starredBy.find(id => id === User.id)
   },
   async toggleStar() {
-    this.starredBy = toggleInclude(this.starredBy, User.authorId)
+    this.starredBy = toggleInclude(this.starredBy, User.id)
     await this.save()
   },
   async getCrumbs() {

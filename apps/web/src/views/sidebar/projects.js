@@ -9,15 +9,15 @@ import Arrow from '~/explorer/arrow'
 
 @view({
   store: class SidebarProjectStore {
-    docs = User.favoriteDocuments
     @watch
     crumbs = () =>
-      this.docs && Promise.all(this.docs.map(doc => doc.getCrumbs()))
+      User.favoriteDocuments &&
+      Promise.all(User.favoriteDocuments.map(doc => doc.getCrumbs()))
   },
 })
 export default class Projects {
   render({ store }: { store: SidebarProjectStore }) {
-    const docs = store.docs || []
+    const docs = User.favoriteDocuments || []
     const hasDocs = docs.length !== 0
     const percentComplete = tasks =>
       100 * tasks.filter(i => i.archive).length / tasks.length

@@ -58,6 +58,7 @@ class Actions {
         />
 
         <UI.Button
+          if={false}
           {...itemProps}
           chromeless
           icon="design-f"
@@ -71,8 +72,13 @@ class Actions {
         <UI.Popover
           {...popoverProps}
           target={
-            <UI.Button {...itemProps} opacity={0.5} chromeless>
-              <UI.Text size={1}>+3 people</UI.Text>
+            <UI.Button
+              {...itemProps}
+              opacity={0.5}
+              chromeless
+              css={{ textAlign: 'right' }}
+            >
+              <UI.Text size={0.8}>+3 people</UI.Text>
               <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
                 Jan 3rd
               </UI.Text>

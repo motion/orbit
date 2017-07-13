@@ -169,12 +169,13 @@ export default class ExplorerChildren {
                   title={doc.title}
                 >
                   <subdocs if={children && children.length}>
-                    <Arrow $arrow />
+                    <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
                     {children.map(child =>
                       <UI.Button
                         chromeless
                         key={child._id}
                         onClick={() => Router.go(child.url())}
+                        size={0.8}
                       >
                         {child.title}
                       </UI.Button>
@@ -204,7 +205,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       width: 180,
-      marginTop: 160,
+      marginTop: 140,
       padding: [10, 0, 40, 10],
       flex: 1,
       '&:hover > glow': {},
@@ -213,11 +214,11 @@ export default class ExplorerChildren {
     docs: {
       transition: 'transform ease-in 250ms',
       transform: {
-        x: 53,
+        x: 60,
       },
       '&:hover': {
         transform: {
-          x: 50,
+          x: 60,
         },
       },
     },
@@ -228,6 +229,7 @@ export default class ExplorerChildren {
     subdocs: {
       flexFlow: 'row',
       overflow: 'hidden',
+      opacity: 0.5,
     },
     text: {
       lineHeight: '1.4rem',

@@ -1,7 +1,7 @@
 {
   "name": "@mcro/preset-motion",
   "main": "lib/index.js",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "dependencies": {
     "@mcro/hmr": "^1.0.1",
     "@mcro/hmr-view": "^1.0.1",

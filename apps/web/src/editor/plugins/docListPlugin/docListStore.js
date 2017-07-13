@@ -11,10 +11,9 @@ export default class DocListStore {
 
   // checking for inline prevents infinite recursion!
   //  <Editor inline /> === showing inside a document
-  docs = watch(
-    () =>
-      !this.props.inline && Document.child(this.document && this.document._id)
-  )
+  @watch
+  docs = () =>
+    !this.props.inline && Document.child(this.document && this.document._id)
   shouldFocus = false
 
   createDoc = async () => {

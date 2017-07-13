@@ -17,14 +17,10 @@ export default class CardList {
   }
 
   render({ listStore }) {
-    const hasDocs = (listStore.docs || []).length > 0
+    const hasDocs = listStore.docs && listStore.docs.length > 0
     return (
-      <FlipMove $docs duration={300} easing="ease-out">
-        <UI.Button
-          if={!hasDocs}
-          icon="simple-add"
-          onClick={listStore.createDoc}
-        >
+      <FlipMove if={hasDocs} $docs duration={300} easing="ease-out">
+        <UI.Button icon="simple-add" onClick={listStore.createDoc}>
           create document
         </UI.Button>
 

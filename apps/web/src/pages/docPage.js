@@ -185,13 +185,17 @@ export default class DocumentPage {
           <Children documentStore={docStore} />
         </children>
 
-        <UI.Button
-          {...itemProps}
-          icon="fav3"
-          tooltip={document.hasStar ? 'Unfollow' : 'Follow'}
-          highlight={document.hasStar}
-          onClick={document.toggleStar}
-        />
+        <bottomright
+          css={{ position: 'absolute', bottom: 10, right: 10, zIndex: 100000 }}
+        >
+          <UI.Button
+            {...itemProps}
+            icon="fav3"
+            tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
+            highlight={document.hasStar}
+            onClick={() => document.toggleStar()}
+          />
+        </bottomright>
       </Page>
     )
   }

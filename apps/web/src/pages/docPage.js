@@ -57,6 +57,17 @@ class Actions {
           onClick={document.toggleStar}
         />
 
+        <UI.Button
+          {...itemProps}
+          chromeless
+          icon="design-f"
+          tooltip="Threads"
+          tooltipProps={{ towards: 'right' }}
+          highlight={explorerStore.showDiscussions}
+          onClick={explorerStore.ref('showDiscussions').toggle}
+          badge={1}
+        />
+
         <UI.Popover
           {...popoverProps}
           target={
@@ -161,23 +172,6 @@ export default class DocumentPage {
             Threads
           </UI.Button>
         </Page.Actions>
-
-        <UI.Button
-          {...itemProps}
-          chromeless
-          icon="design-f"
-          tooltip="Threads"
-          tooltipProps={{ towards: 'right' }}
-          highlight={explorerStore.showDiscussions}
-          onClick={explorerStore.ref('showDiscussions').toggle}
-          badge={1}
-          css={{
-            position: 'absolute',
-            bottom: 10,
-            right: 10,
-            zIndex: 1000,
-          }}
-        />
 
         <Actions />
 

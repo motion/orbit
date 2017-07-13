@@ -205,7 +205,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       width: 180,
-      marginTop: 135,
+      marginTop: 160,
       padding: [10, 0, 40, 10],
       flex: 1,
       '&:hover > glow': {},
@@ -244,10 +244,10 @@ export default class ExplorerChildren {
       zIndex: 1,
       top: -35,
       bottom: 10,
-      filter: 'blur(15px)',
+      filter: 'blur(10px)',
       opacity: 0.12,
       transform: {
-        x: '91%',
+        x: '93%',
       },
     },
     background: {

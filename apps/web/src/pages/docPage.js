@@ -131,14 +131,14 @@ class DocPageStore {
   }
 }
 
-@view.attach('explorerStore')
+@view.attach('explorerStore', 'layoutStore')
 @view({
   docStore: DocPageStore,
 })
 export default class DocumentPage {
   extraRef = null
 
-  render({ docStore, explorerStore }: { docStore: DocPageStore }) {
+  render({ docStore, explorerStore, layoutStore }: { docStore: DocPageStore }) {
     const { document } = explorerStore
 
     if (document === undefined) {
@@ -150,15 +150,14 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Actions if={false}>
+        <Page.Actions>
           <UI.Button
-            onClick={docStore.ref('showInbox').toggle}
-            highlight={docStore.showInbox}
-            chromeless
-            icon="message"
-          >
-            Threads
-          </UI.Button>
+            {...itemProps}
+            icon="fav3"
+            tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
+            highlight={document.hasStar}
+            onClick={() => document.toggleStar()}
+          />
         </Page.Actions>
 
         <Actions />
@@ -188,11 +187,15 @@ export default class DocumentPage {
           css={{ position: 'absolute', bottom: 10, right: 10, zIndex: 100000 }}
         >
           <UI.Button
-            {...itemProps}
-            icon="fav3"
-            tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
-            highlight={document.hasStar}
-            onClick={() => document.toggleStar()}
+            chromeless
+            spaced
+            size={0.7}
+            margin={[0, -5, 0, 0]}
+            icon={
+              layoutStore.sidebar.active ? 'arrow-min-right' : 'arrow-min-left'
+            }
+            onClick={layoutStore.sidebar.toggle}
+            color={[0, 0, 0, 0.3]}
           />
         </bottomright>
       </Page>

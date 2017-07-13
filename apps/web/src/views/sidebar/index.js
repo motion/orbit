@@ -77,7 +77,6 @@ class SidebarContent {
         </contents>
         <rest $$flex>
           <Projects />
-          <UserBar />
         </rest>
       </inner>
     )

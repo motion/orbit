@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import { User, Document } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
-import DocumentView from '~/views/document'
+import Inbox from '~/views/inbox'
 
 @view({
   store: class {
@@ -27,6 +27,9 @@ export default class UserBar {
               key={i}
               openOnHover
               background
+              theme="dark"
+              borderRadius={5}
+              elevation={3}
               target={
                 <UI.Circle
                   size={24}
@@ -56,7 +59,7 @@ export default class UserBar {
                 </UI.Circle>
               }
             >
-              fake news
+              <Inbox />
             </UI.Popover>
           )}
         </above>

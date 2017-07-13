@@ -1,9 +1,9 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
-import { User, Document } from '@mcro/models'
+import { User } from '@mcro/models'
 import Page from '~/views/page'
 import Inbox from '~/views/inbox'
 import Children from '~/explorer/children'

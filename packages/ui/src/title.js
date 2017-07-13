@@ -118,7 +118,7 @@ export default class Title extends React.Component {
     size1: {
       textTransform: 'uppercase',
       fontWeight: 300,
-      color: [0, 0, 0, 0.3],
+      opacity: 0.5,
     },
     size2: {
       fontWeight: 700,

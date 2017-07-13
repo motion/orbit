@@ -103,6 +103,10 @@ export default class Model {
   }
 
   get compiledMethods(): Object {
+    if (!this.methods) {
+      return null
+    }
+
     const descriptors = Object.getOwnPropertyDescriptors(this.methods)
     const extraDescriptors = Object.getOwnPropertyDescriptors({
       get id() {
@@ -131,7 +135,10 @@ export default class Model {
     const worm = () => {
       const result = new Proxy(
         {
-          exec: () => Promise.resolve(false),
+          exec: () => {
+            console.warn('This model isn\'t connected!')
+            return Promise.resolve(false)
+          },
           isntConnected: true,
           onConnection: () => {
             return new Promise(resolve => {
@@ -178,47 +185,45 @@ export default class Model {
     // new connect
     this.database = database
 
-    // until figure out why its being called
-    try {
-      this._collection = await database.collection({
-        name: this.title,
-        schema: this.compiledSchema,
-        statics: this.statics,
-      })
+    this._collection = await database.collection({
+      name: this.title,
+      schema: this.compiledSchema,
+      statics: this.statics,
+    })
 
-      // shim add pouchdb-validation
-      this.collection.pouch.installValidationMethods()
+    // shim add pouchdb-validation
+    this.collection.pouch.installValidationMethods()
 
-      // bump listeners
-      this.collection.pouch.setMaxListeners(100)
+    // bump listeners
+    this.collection.pouch.setMaxListeners(100)
 
-      // create index
-      await this.createIndexes()
+    // create index
+    await this.createIndexes()
 
-      // auto timestamps
-      if (this.hasTimestamps) {
-        const ogInsert = this.hooks.preInsert
-        this.hooks.preInsert = doc => {
-          console.log('i am pre insert')
-          doc.createdAt = this.now
-          doc.updatedAt = this.now
-          if (ogInsert) {
-            return ogInsert.call(this, doc)
-          }
+    // auto timestamps
+    if (this.hasTimestamps) {
+      const ogInsert = this.hooks.preInsert
+      this.hooks.preInsert = doc => {
+        console.log('i am pre insert')
+        doc.createdAt = this.now
+        doc.updatedAt = this.now
+        if (ogInsert) {
+          return ogInsert.call(this, doc)
         }
+      }
 
-        const ogSave = this.hooks.preSave
-        this.hooks.preSave = doc => {
-          doc.updatedAt = this.now
-          if (ogSave) {
-            return ogSave.call(this, doc)
-          }
+      const ogSave = this.hooks.preSave
+      this.hooks.preSave = doc => {
+        doc.updatedAt = this.now
+        if (ogSave) {
+          return ogSave.call(this, doc)
         }
+      }
 
-        // decorate
+      // decorate each instance with this.methods
+      const { compiledMethods } = this
+      if (compiledMethods) {
         const ogPostCreate = this.hooks.postCreate
-
-        const { compiledMethods } = this
         this.hooks.postCreate = doc => {
           Object.defineProperties(doc, compiledMethods)
           if (ogPostCreate) {
@@ -226,21 +231,19 @@ export default class Model {
           }
         }
       }
-
-      if (this.collection && this.hooks) {
-        Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
-          this.collection[hook](this.hooks[hook])
-        })
-      }
-
-      // this makes our userdb react properly to login, no idea why
-      this.collection.watchForChanges()
-
-      // AND NOW
-      this.connected = true
-    } catch (e) {
-      console.error('Model.connect error', e)
     }
+
+    if (this.collection && this.hooks) {
+      Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
+        this.collection[hook](this.hooks[hook])
+      })
+    }
+
+    // this makes our userdb react properly to login, no idea why
+    this.collection.watchForChanges()
+
+    // AND NOW
+    this.connected = true
   }
 
   async dispose() {
@@ -254,7 +257,7 @@ export default class Model {
     const index = this.settings.index || []
 
     const { indexes } = await this.collection.pouch.getIndexes()
-    console.log('indexes ARE', indexes, 'vs', index)
+    // console.log('indexes ARE', indexes, 'vs', index)
 
     // TODO see if we can remove but fixes bug for now
     await this.collection.pouch.createIndex({ fields: index })

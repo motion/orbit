@@ -1,6 +1,5 @@
 // @flow
 import { Model, query, str, object, array, bool } from '@mcro/black'
-import User from './user'
 import Document from './document'
 
 const toSlug = (str: string) => `${str}`.replace(/ /g, '-').toLowerCase()
@@ -26,7 +25,7 @@ export class OrgModel extends Model {
     admins: array.items(str),
     private: bool,
     slug: str,
-    homeDocument: str,
+    homeDocument: str.optional,
     timestamps: true,
   }
 
@@ -57,10 +56,8 @@ export class OrgModel extends Model {
         title: 'Welcome',
       })
       org.homeDocument = homeDoc._id
-      console.log('make new org', org, homeDoc)
     },
     postInsert: async (org: Object) => {
-      console.log('post insert, update home doc to have mutual reference', org)
       const homeDoc = await Document.get(org.homeDocument).exec()
       homeDoc.parentId = org._id
       homeDoc.save()
@@ -70,12 +67,12 @@ export class OrgModel extends Model {
   methods = methods
 
   @query
-  forUser() {
-    if (!User.loggedIn) {
+  forUser(id) {
+    if (!id) {
       return null
     }
     return this.collection.find({
-      members: { $elemMatch: { $eq: User.id } },
+      members: { $elemMatch: { $eq: id } },
     })
   }
 }

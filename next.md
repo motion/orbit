@@ -1,8 +1,10 @@
+# fuzzy areas
+  - teams vs /team/pages/in/commander
 
 # next
-  - follow thread vs edits vs tasks (toggle?)
-  - double space === >
-  - query sync down
+  - doc type on create (document / inbox / summary)
+    - doc is default if you keep typing it collapses type chooser
+  - homepage is summary
   - new page auto follow + team follow
   - signup: asks for your team names + emails, then makes root pages for them
   - content prefill for new org
@@ -14,10 +16,10 @@
   - fix sync todos doc/sidebar
   - pullout of notifications
   - feed
-  - prod
   - lightweight gdocs style inline comments too?
 
 # polish
+  - query sync down
   - cant paste in rich content
   - no numbered lists
   - cant invite people with a link

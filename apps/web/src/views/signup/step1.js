@@ -34,11 +34,10 @@ import * as UI from '@mcro/ui'
         await User.signup(fields.email, fields.password)
       } catch (e) {
         this.errors = [{ message: `Error signing up user: ${e.message}` }]
-      }
-
-      if (this.errors) {
         return
       }
+
+      console.log('created user now')
 
       try {
         const org = await Org.create({

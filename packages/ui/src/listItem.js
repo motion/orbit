@@ -141,12 +141,7 @@ export default class ListItem {
               >
                 {primary}
               </Text>
-              <Text
-                if={secondary}
-                size={size * 0.85}
-                color={[0, 0, 0, 0.5]}
-                ellipse
-              >
+              <Text if={secondary} size={size * 0.85} opacity={0.35} ellipse>
                 {secondary}
               </Text>
             </prop>

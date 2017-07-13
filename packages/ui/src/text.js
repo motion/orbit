@@ -115,6 +115,7 @@ export default class Text {
     fontWeight,
     fontSize,
     color,
+    opacity,
     size,
     tagName,
     getRef,
@@ -158,6 +159,7 @@ export default class Text {
         fontWeight: props.fontWeight,
         lineHeight: `${fontSize + 8}px`,
         color: props.color || theme.base.color,
+        opacity: props.opacity,
       },
       ellipse: {
         color: props.color || theme.base.color,

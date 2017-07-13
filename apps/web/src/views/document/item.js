@@ -17,6 +17,7 @@ const idToGradient = memoize(id => {
 export default class DocItem {
   static defaultProps = {
     onSaveTitle: _ => _,
+    inline: true,
   }
 
   editor = null
@@ -100,6 +101,7 @@ export default class DocItem {
       color: '#fff',
       overflow: 'hidden',
       padding: 20,
+      width: '100%',
     },
     content: {
       flex: 1,

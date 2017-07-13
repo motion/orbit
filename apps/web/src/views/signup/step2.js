@@ -54,35 +54,39 @@ export default class SignupStep2 {
         <UI.Form onSubmit={store.handleSubmit}>
           {store.errors && JSON.stringify(store.errors)}
           <UI.Text size={1.2} color={[0, 0, 0, 0.4]}>
-            Setup your team
+            Setup teams
           </UI.Text>
           <br />
+          <team>
+            <UI.Input size={1.2} placeholder="Team name" />
 
-          <content>
-            {store.members.map((_, index) =>
-              <row key={index}>
-                <UI.Field row label={`Member ${index + 1}`}>
-                  <UI.Segment flex>
-                    <UI.Input
-                      {...fieldProps}
-                      placeholder="Name"
-                      name={`name${index}`}
-                    />
-                    <UI.Input
-                      {...fieldProps}
-                      placeholder="Email"
-                      name={`email${index}`}
-                    />
-                  </UI.Segment>
-                </UI.Field>
-              </row>
-            )}
-            <UI.Field row label>
-              <UI.Button icon="add" onClick={store.addMember}>
-                Add member
-              </UI.Button>
-            </UI.Field>
-          </content>
+            <content>
+              <UI.Title size={1}>Members</UI.Title>
+              {store.members.map((_, index) =>
+                <row key={index}>
+                  <UI.Field row>
+                    <UI.Segment flex>
+                      <UI.Input
+                        {...fieldProps}
+                        placeholder="Name"
+                        name={`name${index}`}
+                      />
+                      <UI.Input
+                        {...fieldProps}
+                        placeholder="Email"
+                        name={`email${index}`}
+                      />
+                    </UI.Segment>
+                  </UI.Field>
+                </row>
+              )}
+              <UI.Field row alignSelf="flex-end">
+                <UI.Button icon="add" onClick={store.addMember}>
+                  Add member
+                </UI.Button>
+              </UI.Field>
+            </content>
+          </team>
           <space $$height={20} />
           <end $$row $$justify="space-between">
             <UI.Button
@@ -111,8 +115,14 @@ export default class SignupStep2 {
   }
 
   static style = {
+    team: {
+      padding: 10,
+      border: [1, [0, 0, 0, 0.1]],
+      borderRadius: 10,
+    },
     content: {
-      marginLeft: -80,
+      marginLeft: 20,
+      padding: [10, 0],
     },
   }
 }

@@ -1,15 +1,12 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import node from '~/editor/node'
-import { Document } from '@mcro/models'
 import { Popover, Segment, Button } from '@mcro/ui'
-import { isEqual } from 'lodash'
-import Router from '~/router'
-import CardList from './lists/cardPlugin'
-import GridList from './lists/gridPlugin'
-import VoteList from './lists/votePlugin'
-import List from './lists/listPlugin'
-import DocListStore from './store'
+import CardList from './lists/cardListNode'
+import GridList from './lists/gridListNode'
+import VoteList from './lists/voteListNode'
+import List from './lists/listNode'
+import DocListStore from './docListStore'
 
 @view.attach('docStore')
 @node

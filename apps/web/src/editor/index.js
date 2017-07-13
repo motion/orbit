@@ -87,11 +87,10 @@ export default class EditorView {
       cursor: 'text',
     },
     editor: {
-      color: '#4c555a',
+      color: '#444',
       fontSize: 16,
       lineHeight: 1.5,
       fontFamily: 'Whitney SSm A,Whitney SSm B,Helvetica,Arial',
-      overflowY: 'scroll',
     },
   }
 

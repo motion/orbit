@@ -1,4 +1,5 @@
 import { findParent } from '~/editor/helpers'
+import { debounce } from 'lodash'
 
 function trackSelection(selection, state, editorStore) {
   // not highlighted
@@ -32,8 +33,12 @@ export default class Selection {
       render({ children, editorStore }) {
         return (
           <pane
-            style={{ flex: 1 }}
-            onMouseUp={(event: MouseEvent) => {
+            style={{
+              flex: 1,
+              overflowY: 'scroll',
+              paddingRight: editorStore.inline ? 0 : 200,
+            }}
+            onMouseUp={event => {
               event.persist()
               editorStore.selection.mouseUp = {
                 x: event.clientX,

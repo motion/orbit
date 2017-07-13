@@ -183,10 +183,11 @@ export default class DocumentPage {
             showChildren
             isPrimaryDocument
           />
-          <children>
-            <Children documentStore={docStore} />
-          </children>
         </docpagecontent>
+
+        <children>
+          <Children documentStore={docStore} />
+        </children>
       </Page>
     )
   }
@@ -195,12 +196,25 @@ export default class DocumentPage {
     docpagecontent: {
       flex: 1,
       overflow: 'hidden',
-      paddingRight: 20,
       flexFlow: 'row',
+      zIndex: 20,
+      position: 'relative',
     },
     children: {
-      width: '30%',
-      marginRight: -60,
+      position: 'absolute',
+      overflow: 'hidden',
+      zIndex: 50,
+      top: 0,
+      right: 0,
+    },
+    fade: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      background: 'linear-gradient(to left, white, transparent)',
+      width: 100,
+      zIndex: 30,
     },
   }
 }

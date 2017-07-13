@@ -49,6 +49,12 @@ export default class ExplorerBar {
                 />
               </UI.Segment>
             </UI.Popover>
+            <UI.Button
+              {...btnProps}
+              disabled={Router.path === '/'}
+              icon="home"
+              onClick={() => Router.go('/')}
+            />
           </UI.Segment>
           <UI.Button
             if={false}

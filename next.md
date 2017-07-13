@@ -1,12 +1,3 @@
-# housekeeping sunday
-  - gloss already patches this.fancyElement
-    - make that be the proxy getter duh
-    - then just add module to class?
-    - see black/patch.js
-  - hmr bugs are still pretty bad, try and fix dup views and stale stores
-  - popovers in actions area get "stuck" open
-  - on signup create org + invite team + create home doc and onboard
-  - see about pouch revisions
 
 # next
   - follow thread vs edits vs tasks (toggle?)
@@ -27,7 +18,6 @@
   - lightweight gdocs style inline comments too?
 
 # polish
-  - docs dont scroll down properly
   - cant paste in rich content
   - no numbered lists
   - cant invite people with a link
@@ -41,7 +31,6 @@
   - lists dont auto-join together
   - doesnt always keep empty paragraph line at end of doc
   - sub-headings visibility
-  - selectbar broken stuff
   - super basic tables
   - alignment
   - list and concept of who has joined a doc
@@ -49,6 +38,8 @@
   - keyboard shortcuts
 
 # nate
+  - on signup create org + invite team + create home doc and onboard
+  - see about pouch revisions
   - want to start keeping notes on things i want to see
     - visit/england (visit/england/london), visit/india, etc
   - installing from npm is a pain

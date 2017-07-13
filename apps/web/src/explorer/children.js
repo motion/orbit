@@ -14,166 +14,35 @@ type Props = {
   store: object,
 }
 
-class ExplorerChildrenStore {
-  children = {}
-  @watch
-  docs = ({ explorerStore: { document } }) =>
-    document &&
-    typeof document.getChildren === 'function' &&
-    document.getChildren()
-  newTitle = null
-
-  start() {
-    this.watch(async () => {
-      if (this.docs && this.docs.length) {
-        const allChildren = await Promise.all(
-          this.docs.map(async doc => ({
-            id: doc._id,
-            children: await doc.getChildren(),
-          }))
-        )
-        this.children = allChildren.reduce(
-          (acc, { id, children }) => ({
-            ...acc,
-            [id]: children,
-          }),
-          {}
-        )
-      }
-    })
-  }
-
-  add = () => {
-    this.newTitle = ''
-  }
-
-  create = async () => {
-    const { id } = this.props
-    await Document.create({ parentId: id, title: this.newTitle })
-    this.newTitle = null
-  }
-}
-
-@view.attach('explorerStore')
-@view({
-  store: ExplorerChildrenStore,
-})
-export default class ExplorerChildren {
-  props: Props
-
-  render({ store }: Props) {
-    const { docs } = store
-    const hasDocs = store.newTitle !== null || (docs || []).length > 0
-    const allDocs = sortBy(docs || [], 'createdAt')
-
+@view.ui
+class Item {
+  render({ editable, children, title, onSave, textRef, ...props }) {
     return (
-      <children>
-        <actions if={false}>
-          <post $$row $$centered if={false}>
-            <UI.Button
-              if={store.newTitle === null}
-              size={1}
-              icon="siadd"
-              circular
-              size={1.2}
-              elevation={1}
-              onClick={store.add}
-              borderWidth={0}
-            />
-          </post>
-        </actions>
-        <UI.StableContainer stableDuration={500}>
-          <FlipMove
-            if={hasDocs && Object.keys(store.children).length}
-            duration={300}
-            easing="ease-out"
-          >
-            {allDocs.map(doc => {
-              const children = store.children[doc._id]
-              return (
-                <doccontainer>
-                  <UI.TiltGlow
-                    if={doc.title}
-                    width={160}
-                    height={60}
-                    key={doc._id}
-                    css={{
-                      border: [1, '#eee'],
-                    }}
-                    onClick={() => Router.go(doc.url())}
-                  >
-                    <doc justify="flex-start">
-                      <title>
-                        {doc.getTitle()}
-                      </title>
-                      <subdocs if={children && children.length}>
-                        <Arrow $arrow />
-                        {children.map(child =>
-                          <UI.Button
-                            chromeless
-                            key={child._id}
-                            onClick={() => Router.go(child.url())}
-                          >
-                            {child.getTitle()}
-                          </UI.Button>
-                        )}
-                      </subdocs>
-                    </doc>
-                  </UI.TiltGlow>
-                </doccontainer>
-              )
-            })}
-          </FlipMove>
-        </UI.StableContainer>
-        <doccontainer>
-          <UI.TiltGlow width={160} height={60}>
-            <doc $$justify="flex-start">
-              <title>+</title>
-            </doc>
-          </UI.TiltGlow>
-        </doccontainer>
-      </children>
+      <doccontainer {...props}>
+        <UI.TiltGlow
+          css={{
+            border: [1, '#eee'],
+          }}
+          width={160}
+          height={60}
+        >
+          <doc $$justify="flex-start">
+            <UI.Text
+              $title
+              if={title || editable}
+              editable={editable}
+              onFinishEdit={onSave}
+              ref={textRef}
+            >
+              {title}
+            </UI.Text>
+            {children}
+          </doc>
+        </UI.TiltGlow>
+      </doccontainer>
     )
   }
-
   static style = {
-    children: {
-      width: 200,
-      marginTop: 135,
-      transform: {
-        x: 24,
-      },
-      padding: [10, 0],
-      // borderTop: [1, '#eee', 'dotted'],
-      flex: 1,
-      transition: 'transform ease-in 200ms',
-      '&:hover': {
-        transform: {
-          x: 20,
-        },
-      },
-    },
-    mainTitle: {
-      marginTop: 20,
-    },
-    actions: {
-      marginTop: -20,
-      padding: [0, 10, 0],
-      flexFlow: 'row',
-      flex: 1,
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    arrow: {
-      height: 20,
-      margin: ['auto', 0],
-    },
-    post: {
-      marginTop: -20,
-    },
-    paths: {
-      flexFlow: 'row',
-    },
     doccontainer: {
       marginBottom: 10,
       position: 'relative',
@@ -197,12 +66,199 @@ export default class ExplorerChildren {
       lineHeight: '22px',
       color: '#555',
     },
+  }
+}
+
+class ExplorerChildrenStore {
+  children = {}
+  version = 1
+
+  lastDocs = null // temp until queries returning blank for a frame is fixed
+
+  @watch
+  docs = ({ explorerStore: { document } }) =>
+    this.version && document && document.getChildren && document.getChildren()
+
+  creatingDoc = false
+  @watch
+  newDoc = () =>
+    this.creatingDoc && this.props.explorerStore.document
+      ? Document.create(
+          {
+            parentId: this.props.explorerStore.document._id,
+            parentIds: [this.props.explorerStore.document._id],
+          },
+          true
+        )
+      : null
+
+  get allDocs() {
+    let { docs, lastDocs } = this
+    if ((!docs || !docs.length) && lastDocs) {
+      return lastDocs
+    }
+    const result = sortBy(docs || [], 'createdAt')
+    return result
+  }
+
+  get hasDocs() {
+    return this.allDocs.length
+  }
+
+  start() {
+    this.watch(() => {
+      if (this.docs && this.docs.length) {
+        this.lastDocs = this.docs
+      }
+    })
+
+    this.watch(async () => {
+      if (this.docs && this.docs.length) {
+        const allChildren = await Promise.all(
+          this.docs.map(async doc => ({
+            id: doc._id,
+            children: await doc.getChildren(),
+          }))
+        )
+        this.children = allChildren.reduce(
+          (acc, { id, children }) => ({
+            ...acc,
+            [id]: children,
+          }),
+          {}
+        )
+      }
+    })
+  }
+
+  saveCreatingDoc = async title => {
+    this.newDoc.title = title
+    await this.newDoc.save()
+    this.creatingDoc = false
+    this.version++
+  }
+}
+
+@view.attach('explorerStore')
+@view({
+  store: ExplorerChildrenStore,
+})
+export default class ExplorerChildren {
+  props: Props
+
+  onNewItemText = ref => {
+    if (ref) {
+      ref.focus()
+    }
+  }
+
+  render({ store, store: { hasDocs, allDocs } }: Props) {
+    return (
+      <children>
+        <docs>
+          <FlipMove
+            if={hasDocs && Object.keys(store.children).length}
+            duration={300}
+            easing="ease-out"
+          >
+            {allDocs.map(doc => {
+              const children = store.children[doc._id]
+              return (
+                <Item
+                  key={doc._id}
+                  onClick={() => Router.go(doc.url())}
+                  title={doc.title}
+                >
+                  <subdocs if={children && children.length}>
+                    <Arrow $arrow />
+                    {children.map(child =>
+                      <UI.Button
+                        chromeless
+                        key={child._id}
+                        onClick={() => Router.go(child.url())}
+                      >
+                        {child.title}
+                      </UI.Button>
+                    )}
+                  </subdocs>
+                </Item>
+              )
+            })}
+          </FlipMove>
+          <Item
+            if={store.creatingDoc}
+            editable
+            onSave={store.saveCreatingDoc}
+            textRef={this.onNewItemText}
+          />
+          <Item
+            onClick={store.ref('creatingDoc').setter(true)}
+            title="Create"
+          />
+        </docs>
+        <shadow $glow />
+        <background $glow />
+      </children>
+    )
+  }
+
+  static style = {
+    children: {
+      width: 180,
+      marginTop: 135,
+      padding: [10, 0, 40, 10],
+      flex: 1,
+      '&:hover > glow': {},
+      position: 'relative',
+    },
+    docs: {
+      transition: 'transform ease-in 200ms',
+      transform: {
+        x: 54,
+      },
+      '&:hover': {
+        transform: {
+          x: 50,
+        },
+      },
+    },
+    arrow: {
+      height: 20,
+      margin: ['auto', 0],
+    },
     subdocs: {
       flexFlow: 'row',
       overflow: 'hidden',
     },
     text: {
       lineHeight: '1.4rem',
+    },
+    glow: {
+      position: 'absolute',
+      right: 0,
+      left: 0,
+      borderRadius: 1000,
+    },
+    shadow: {
+      background: '#000',
+      zIndex: 1,
+      top: -35,
+      bottom: 10,
+      filter: 'blur(15px)',
+      opacity: 0.12,
+      transform: {
+        x: '91%',
+      },
+    },
+    background: {
+      top: 0,
+      filter: 'blur(40px)',
+      bottom: 40,
+      zIndex: -1,
+      background: 'white',
+      transform: {
+        x: '20%',
+      },
     },
   }
 }

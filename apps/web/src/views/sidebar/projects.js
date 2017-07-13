@@ -65,7 +65,7 @@ export default class Projects {
                                   chromeless
                                   onClick={() => Router.go(log(crumbDoc.url()))}
                                 >
-                                  {crumbDoc.getTitle()}
+                                  {crumbDoc.title}
                                 </UI.Button>,
                               ]
                             })

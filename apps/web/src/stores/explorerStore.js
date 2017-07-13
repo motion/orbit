@@ -25,10 +25,11 @@ const KEYMAP = {
     cmdUp: 'command+up',
     delete: ['delete', 'backspace'],
     toggleSidebar: 'command+\\',
+    togglePane: 'shift+tab',
   },
 }
 
-const VERSION = 9
+const VERSION = 10
 
 export default class ExplorerStore {
   static version = VERSION
@@ -64,6 +65,12 @@ export default class ExplorerStore {
   focused = false
   showDiscussions = false
   showResults = false
+  focusPaneIndex = 0
+  panes = ['editor', 'children']
+
+  get focusedPane() {
+    return this.panes[this.focusPaneIndex]
+  }
 
   start() {
     this.watch(() => {
@@ -89,7 +96,6 @@ export default class ExplorerStore {
           [...(searchResults || []), ...pathSearchResults],
           x => x.id
         )
-        console.log('results are', this.searchResults)
       } else {
         // path navigate
         this.searchResults = await this.getChildDocsForPath(
@@ -139,7 +145,6 @@ export default class ExplorerStore {
 
   actions = {
     toggleSidebar: () => {
-      console.log('got')
       App.layoutStore.sidebar.toggle()
     },
     esc: () => {
@@ -167,7 +172,6 @@ export default class ExplorerStore {
     down: () => {
       if (!this.focused) return
       if (!this.showResults || !this.focused) {
-        console.log('focusing')
         this.action('focusDown')
         return
       }
@@ -180,6 +184,10 @@ export default class ExplorerStore {
     cmdUp: () => {
       console.log('gmcup')
       Router.go(this.crumbs[this.crumbs.length - 2].url())
+    },
+    togglePane: () => {
+      console.log('toggle pane')
+      this.focusPaneIndex = this.focusPaneIndex + 1 % this.panes.length
     },
   }
 
@@ -394,7 +402,7 @@ export default class ExplorerStore {
   }
 
   getPathForDocs = (docs: Array<Document>): string =>
-    docs.map(doc => doc.getTitle()).join(PATH_SEPARATOR)
+    docs.map(doc => doc.title).join(PATH_SEPARATOR)
 
   onFocus = () => {
     this.showResults = true

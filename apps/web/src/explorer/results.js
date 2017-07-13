@@ -20,7 +20,7 @@ class Match {
       >
         <top $$row>
           <UI.Title size={1.5}>
-            {doc.getTitle()}
+            {doc.title}
           </UI.Title>
           <UI.Icon
             $star

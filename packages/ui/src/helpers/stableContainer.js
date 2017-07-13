@@ -35,6 +35,10 @@ export default class StableContainer extends React.Component {
   }
 
   render() {
-    return this.state.children || null
+    return (
+      <container>
+        {this.state.children || null}
+      </container>
+    )
   }
 }

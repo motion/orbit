@@ -15,29 +15,24 @@ type Props = {
   showCrumbs?: boolean,
 }
 
-@view({
-  store: DocumentStore,
+@view.provide({
+  docStore: DocumentStore,
 })
 export default class DocumentView {
   props: Props
 
-  componentWillMount() {
-    const { store, inline } = this.props
-    if (!inline) store.crumbs = true
-  }
-
-  render({ editorProps, inline, readOnly, store }: Props) {
-    if (!store.document) {
+  render({ editorProps, inline, readOnly, docStore }: Props) {
+    if (!docStore.document) {
       return <loading />
     }
 
     return (
-      <docview onMouseDown={store.mousedown} onMouseUp={store.mouseup}>
+      <docview onMouseDown={docStore.mousedown} onMouseUp={docStore.mouseup}>
         <Editor
-          key={store.document._id}
+          key={docStore.document._id}
           readOnly={readOnly}
           inline={inline}
-          getRef={store.onEditor}
+          getRef={docStore.onEditor}
           {...editorProps}
         />
       </docview>

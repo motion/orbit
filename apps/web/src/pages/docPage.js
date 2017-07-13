@@ -7,6 +7,7 @@ import { User } from '@mcro/models'
 import Page from '~/views/page'
 import Inbox from '~/views/inbox'
 import Children from '~/explorer/children'
+import Trianglify from 'trianglify'
 
 const itemProps = {
   size: 1.25,
@@ -40,27 +41,10 @@ class Actions {
 
     return (
       <actions $$draggable>
-        <UI.Button
-          if={false}
-          {...itemProps}
-          chromeless
-          icon="design-f"
-          tooltip="Threads"
-          tooltipProps={{ towards: 'right' }}
-          highlight={explorerStore.showDiscussions}
-          onClick={explorerStore.ref('showDiscussions').toggle}
-          badge={1}
-        />
-
         <UI.Popover
           {...popoverProps}
           target={
-            <UI.Button
-              {...itemProps}
-              opacity={0.5}
-              chromeless
-              css={{ textAlign: 'right' }}
-            >
+            <UI.Button opacity={0.5} chromeless css={{ textAlign: 'right' }}>
               <UI.Text size={0.8}>+3 people</UI.Text>
               <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
                 Jan 3rd
@@ -138,6 +122,22 @@ class DocPageStore {
 export default class DocumentPage {
   extraRef = null
 
+  componentDidMount() {
+    // this.watch(() => {
+    //   const { document } = this.props.explorerStore
+    //   if (!document) {
+    //     return
+    //   }
+    //   const trang = new Trianglify({
+    //     width: 40,
+    //     height: 40,
+    //     seed: log(document.color),
+    //   })
+    //   console.log(trang.canvas())
+    //   document.querySelector('#hi').appendChild(trang.canvas())
+    // })
+  }
+
   render({ docStore, explorerStore, layoutStore }: { docStore: DocPageStore }) {
     const { document } = explorerStore
 
@@ -152,11 +152,14 @@ export default class DocumentPage {
       <Page>
         <Page.Actions>
           <UI.Button
-            {...itemProps}
+            size={1.25}
+            borderWidth={0}
             icon="fav3"
             tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
+            tooltipProps={{ towards: 'left' }}
             highlight={document.hasStar}
             onClick={() => document.toggleStar()}
+            after={<div>hi222222222</div>}
           />
         </Page.Actions>
 

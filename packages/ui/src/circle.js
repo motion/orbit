@@ -17,6 +17,7 @@ export default class Circle {
     onFocus,
     onMouseEnter,
     onMouseLeave,
+    getRef,
     ...props
   }) {
     const elProps = {
@@ -29,11 +30,12 @@ export default class Circle {
       children,
     }
 
-    return <circle {...elProps} css={props} />
+    return <circle ref={getRef} {...elProps} css={props} />
   }
 
   static style = {
     circle: {
+      position: 'relative',
       borderRadius: 1000,
       lineHeight: '1rem',
       alignItems: 'center',

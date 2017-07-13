@@ -103,17 +103,22 @@ export default class Model {
   }
 
   get compiledMethods(): Object {
-    return {
-      ...(this.methods || {}),
-      // get id() {
-      //   return this._id
-      // },
+    const descriptors = Object.getOwnPropertyDescriptors(this.methods)
+    const extraDescriptors = Object.getOwnPropertyDescriptors({
+      get id() {
+        return this._id
+      },
       delete() {
         return this.collection
           .findOne(this._id)
           .exec()
           .then(doc => doc && doc.remove())
       },
+    })
+
+    return {
+      ...extraDescriptors,
+      ...descriptors,
     }
   }
 
@@ -179,7 +184,6 @@ export default class Model {
         name: this.title,
         schema: this.compiledSchema,
         statics: this.statics,
-        methods: this.compiledMethods,
       })
 
       // shim add pouchdb-validation
@@ -195,6 +199,7 @@ export default class Model {
       if (this.hasTimestamps) {
         const ogInsert = this.hooks.preInsert
         this.hooks.preInsert = doc => {
+          console.log('i am pre insert')
           doc.createdAt = this.now
           doc.updatedAt = this.now
           if (ogInsert) {
@@ -207,6 +212,17 @@ export default class Model {
           doc.updatedAt = this.now
           if (ogSave) {
             return ogSave.call(this, doc)
+          }
+        }
+
+        // decorate
+        const ogPostCreate = this.hooks.postCreate
+
+        const { compiledMethods } = this
+        this.hooks.postCreate = doc => {
+          Object.defineProperties(doc, compiledMethods)
+          if (ogPostCreate) {
+            return ogPostCreate.call(this, doc)
           }
         }
       }
@@ -223,7 +239,7 @@ export default class Model {
       // AND NOW
       this.connected = true
     } catch (e) {
-      console.warn('Model.connect error', e)
+      console.error('Model.connect error', e)
     }
   }
 

@@ -26,15 +26,6 @@ class Actions {
       return null
     }
 
-    if (typeof document.hasStar !== 'function') {
-      log('hmr caused a bad thing')
-      return null
-    }
-
-    log('render actions')
-
-    const starred = document.hasStar()
-
     const popoverProps = {
       elevation: 3,
       borderRadius: 8,
@@ -50,18 +41,27 @@ class Actions {
     return (
       <actions $$draggable>
         <UI.Button
+          if={false}
           {...itemProps}
-          icon="fav3"
-          tooltip={starred ? 'Unfollow' : 'Follow'}
-          highlight={starred}
-          onClick={document.toggleStar}
+          chromeless
+          icon="design-f"
+          tooltip="Threads"
+          tooltipProps={{ towards: 'right' }}
+          highlight={explorerStore.showDiscussions}
+          onClick={explorerStore.ref('showDiscussions').toggle}
+          badge={1}
         />
 
         <UI.Popover
           {...popoverProps}
           target={
-            <UI.Button {...itemProps} opacity={0.5} chromeless>
-              <UI.Text size={1}>+3 people</UI.Text>
+            <UI.Button
+              {...itemProps}
+              opacity={0.5}
+              chromeless
+              css={{ textAlign: 'right' }}
+            >
+              <UI.Text size={0.8}>+3 people</UI.Text>
               <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
                 Jan 3rd
               </UI.Text>
@@ -151,24 +151,18 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <UI.Button
-          {...itemProps}
-          chromeless
-          icon="design-f"
-          tooltip="Threads"
-          tooltipProps={{ towards: 'right' }}
-          highlight={explorerStore.showDiscussions}
-          onClick={explorerStore.ref('showDiscussions').toggle}
-          badge={1}
-          css={{
-            position: 'fixed',
-            bottom: 10,
-            right: 10,
-            zIndex: 1000,
-          }}
-        />
+        <Page.Actions>
+          <UI.Button
+            onClick={explorerStore.ref('showDiscussions').toggle}
+            highlight={explorerStore.showDiscussions}
+            chromeless
+            icon="message"
+          >
+            Threads
+          </UI.Button>
+        </Page.Actions>
 
-        <Actions if={!explorerStore.showDiscussions} />
+        <Actions />
 
         <Inbox
           if={explorerStore.showDiscussions}
@@ -188,6 +182,14 @@ export default class DocumentPage {
         <children>
           <Children documentStore={docStore} />
         </children>
+
+        <UI.Button
+          {...itemProps}
+          icon="fav3"
+          tooltip={document.hasStar ? 'Unfollow' : 'Follow'}
+          highlight={document.hasStar}
+          onClick={document.toggleStar}
+        />
       </Page>
     )
   }

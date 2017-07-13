@@ -18,6 +18,7 @@ import { start } from '../start'
 import Signup from './signup'
 import { User } from '@mcro/models'
 import { Bar, Results } from '~/explorer'
+import Inbox from '~/views/inbox'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -74,6 +75,40 @@ export default class Layout {
                 key={Router.key}
                 {...Router.params}
               />
+
+              <UI.Popover
+                showForgiveness={false}
+                openOnHover
+                background
+                width={480}
+                borderRadius={8}
+                elevation={2}
+                target={
+                  <UI.Button
+                    circular
+                    size={2}
+                    icon="chat3"
+                    css={{
+                      position: 'absolute',
+                      bottom: 20,
+                      left: 20,
+                      zIndex: 1000,
+                      transform: {
+                        scale: 1.0,
+                      },
+                      '&:hover': {
+                        transform: {
+                          scale: 1.1,
+                        },
+                      },
+                    }}
+                  />
+                }
+              >
+                <content>
+                  <Inbox />
+                </content>
+              </UI.Popover>
             </content>
             <Draft
               isActive={layoutStore.isCreatingDoc}
@@ -116,7 +151,7 @@ export default class Layout {
 
   static style = {
     root: {
-      background: Constants.IS_ELECTRON ? [45, 45, 45, 0.6] : [110, 110, 110],
+      background: Constants.IS_ELECTRON ? [60, 68, 75, 0.8] : [110, 110, 110],
       position: 'absolute',
       top: 0,
       right: 0,

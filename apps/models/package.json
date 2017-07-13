@@ -1,10 +1,10 @@
 {
   "name": "@mcro/models",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.7",
   "main": "lib/index.js",
   "dependencies": {
-    "@mcro/black": "^1.0.1",
+    "@mcro/black": "^1.0.7",
     "lodash": "^4.17.4",
     "pouchdb-adapter-http": "^6.2.0",
     "pouchdb-adapter-idb": "^6.2.0",

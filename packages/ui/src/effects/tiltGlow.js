@@ -24,8 +24,8 @@ export default class TiltGlow {
       <Tilt
         options={{
           max: 15,
-          perspective: 500,
-          scale: 1.05,
+          perspective: 1000,
+          scale: 1.025,
           speed: 400,
           //reverse: true,
           ...tiltOptions,
@@ -36,7 +36,7 @@ export default class TiltGlow {
             cursor: 'default',
             width,
             height,
-            borderRadius: 5,
+            borderRadius: 0,
             overflow: 'hidden',
             transition: 'transform 50ms ease-in',
             background: '#fff',

@@ -4,13 +4,13 @@ import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
 import Arrow from './arrow'
 
-const FONT_SIZE = 18
+const FONT_SIZE = 16
 
 const $para = {
   fontSize: FONT_SIZE,
   color: 'rgba(0,0,0,.8)',
   fontWeight: 400,
-  fontFamily: ['Exo 2.0', 'monospace'],
+  fontFamily: ['"Exo 2.0"', 'Helvetica', 'monospace'],
 }
 
 @view.attach('explorerStore')
@@ -61,10 +61,11 @@ class Item {
             highlight={selected}
             $active={selected}
             color={[0, 0, 0, 0.8]}
+            style={$para}
           >
             {name}
           </UI.Button>
-          <Arrow animate={isLast} />
+          <Arrow $arrow animate={isLast} />
         </inner>
         <block contentEditable={false} $last={isLast}>
           {name}
@@ -80,6 +81,14 @@ class Item {
     },
     last: {
       // marginRight: 8,
+    },
+    arrow: {
+      marginTop: 1,
+      opacity: 0.4,
+      transform: {
+        scale: 0.85,
+        x: 2,
+      },
     },
     div: {
       position: 'relative',
@@ -99,7 +108,7 @@ class Item {
       position: 'absolute',
       flexFlow: 'row',
       left: 0,
-      top: -2,
+      top: -3,
     },
   }
 }
@@ -121,7 +130,7 @@ export default class ExplorerInput {
           onBlur={store.onBlur}
           onChange={store.onChange}
           schema={schema}
-          style={{ width: '100%' }}
+          style={{ width: '100%', marginBottom: 1 }}
         />
       </bar>
     )

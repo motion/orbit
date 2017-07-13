@@ -27,7 +27,7 @@ class Match {
             size={14}
             name="fav3"
             color={'#666'}
-            if={doc.hasStar()}
+            if={doc.hasStar}
           />
         </top>
         <info $$row>

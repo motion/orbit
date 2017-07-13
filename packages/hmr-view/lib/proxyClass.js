@@ -54,8 +54,6 @@ function getDisplayName(Component) {
   return displayName && displayName !== 'ReactComponent' ? displayName : 'Unknown';
 }
 
-// This was originally a WeakMap but we had issues with React Native:
-// https://github.com/gaearon/react-proxy/issues/50#issuecomment-192928066
 var allProxies = [];
 function findProxy(Component) {
   var pair = (0, _lodash.find)(allProxies, function (_ref) {

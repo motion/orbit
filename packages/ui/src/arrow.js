@@ -7,7 +7,7 @@ export type Props = {
   size: number,
   towards: 'top' | 'right' | 'bottom' | 'left',
   color?: Color,
-  shadow?: string,
+  boxShadow?: string,
 }
 
 @view.ui
@@ -29,12 +29,22 @@ export default class Arrow {
     return '0deg'
   }
 
-  render({ size, towards, theme, shadow, ...props }: Props) {
+  render({ size, towards, theme, boxShadow, ...props }: Props) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
+    // add padding so big shadows work
     return (
-      <arrowOuter style={{ width: size, height: size }}>
+      <arrowOuter
+        style={{
+          width: size + 40,
+          height: size,
+          paddingRight: 20,
+          paddingLeft: 20,
+          marginLeft: -20,
+          marginRight: -20,
+        }}
+      >
         <arrow $rotate={this.getRotation(towards)} {...props}>
           <arrowInner
             style={{
@@ -67,13 +77,13 @@ export default class Arrow {
     }),
   }
 
-  static theme = ({ size, background, shadow }, theme) => ({
+  static theme = ({ size, background, boxShadow }, theme) => ({
     arrowInner: {
       background:
         background === true
           ? theme.base.background
           : background || theme.base.background,
-      boxShadow: shadow,
+      boxShadow: boxShadow,
     },
     arrow: {
       width: size,

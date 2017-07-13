@@ -4,28 +4,17 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import App from '~/app'
 import themes from './themes'
-import Container from './views/container'
+// import Container from './views/container'
+import Layout from './views/layout'
 
 export function render() {
   // console.time('#render')
   let ROOT = document.querySelector('#app')
-  const Layout = require('./views/layout').default
-
-  // HMR: to recover from react bugs save this file
-  // if (shouldReset && module.hot) {
-  //   const parent = ROOT.parentNode
-  //   parent.removeChild(ROOT)
-  //   ROOT = document.createElement('div')
-  //   ROOT.setAttribute('id', 'app')
-  //   document.body.appendChild(ROOT)
-  // }
 
   ReactDOM.render(
-    <Container>
-      <ThemeProvide {...themes}>
-        <Layout />
-      </ThemeProvide>
-    </Container>,
+    <ThemeProvide {...themes}>
+      <Layout />
+    </ThemeProvide>,
     ROOT
   )
   // console.timeEnd('#render')
@@ -43,6 +32,5 @@ window.start = start
 if (module && module.hot) {
   module.hot.accept('./views/layout', () => {
     log('accepted layout')
-    // render()
   })
 }

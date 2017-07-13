@@ -64,8 +64,16 @@ const INVERSE = {
 }
 
 const DEFAULT_SHADOW = '0 0px 2px rgba(0,0,0,0.15)'
+const ELEVATION_SHADOW = x => [0, x * 1.5, x * 3.5, [0, 0, 0, 0.1]]
 
-const getShadow = shadow => (shadow === true ? DEFAULT_SHADOW : shadow)
+const getShadow = (shadow, elevation) => {
+  let base = shadow === true ? [DEFAULT_SHADOW] : shadow || []
+  if (!Array.isArray(base)) base = [base]
+  if (elevation) {
+    base.push(ELEVATION_SHADOW(elevation))
+  }
+  return base
+}
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @injectTheme
@@ -434,12 +442,9 @@ export default class Popover {
       if (direction === 'top') {
         arrowTop = popoverSize.height + arrowAdjust
         top = targetTopReal - popoverSize.height - distance
-        maxHeight = window.innerHeight - targetBounds.height
       } else {
         arrowTop = -arrowSize + arrowAdjust
         top = targetTopReal + targetBounds.height + distance
-        maxHeight =
-          window.innerHeight - (targetBounds.top + targetBounds.height)
       }
 
       // final top
@@ -453,6 +458,16 @@ export default class Popover {
 
     // adjustments
     top += adjust[1]
+
+    // max height
+    if (VERTICAL) {
+      if (direction === 'top') {
+        maxHeight = targetBounds.top - top + arrowHeight + 7
+      } else {
+        maxHeight =
+          window.innerHeight - (targetBounds.top + targetBounds.height)
+      }
+    }
 
     return { arrowTop, top, maxHeight }
   }
@@ -469,6 +484,11 @@ export default class Popover {
     }
   }
 
+  lastEvent = {
+    leave: { target: null, menu: null },
+    enter: { target: null, menu: null },
+  }
+
   addHoverListeners = (name, node) => {
     if (!node) {
       console.log('no node!', name)
@@ -480,8 +500,15 @@ export default class Popover {
     const setHovered = () => this.hoverStateSet(name, true)
     const setUnhovered = () => this.hoverStateSet(name, false)
     const openIfOver = () => this.isNodeHovered(node, isPopover) && setHovered()
-    const closeIfOut = () =>
-      !this.isNodeHovered(node, isPopover) && setUnhovered()
+    const closeIfOut = () => {
+      if (!this.isNodeHovered(node, isPopover)) {
+        setUnhovered()
+        console.log(delayOpenIfHover)
+        if (delayOpenIfHover.cancel) {
+          delayOpenIfHover.cancel()
+        }
+      }
+    }
     const delayOpenIfHover = isTarget ? debounce(openIfOver, delay) : openIfOver
     // this will avoid the delay open if its already open
     const onEnter = () =>
@@ -493,9 +520,7 @@ export default class Popover {
       onEnter()
       // insanity, but mouseleave is horrible
       if (this.curProps.target) {
-        this.setTimeout(onLeave, 16)
-        this.setTimeout(onLeave, 32)
-        this.setTimeout(onLeave, 96)
+        this.setTimeout(onLeave, 150)
       }
     })
 
@@ -508,6 +533,7 @@ export default class Popover {
   hoverStateSet = (name, val) => {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
+      // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
       this.setState({ [`${name}Hovered`]: val })
     }
 
@@ -588,6 +614,7 @@ export default class Popover {
     top: _top,
     towards,
     width,
+    elevation,
     ...props
   }: Props) {
     const {
@@ -659,10 +686,15 @@ export default class Popover {
                   background={background !== 'transparent' ? background : null}
                   size={arrowSize}
                   towards={INVERSE[direction]}
-                  shadow={getShadow(shadow)}
+                  boxShadow={getShadow(shadow, elevation)}
                 />
               </arrowContain>
-              <Surface {...props} background={background}>
+              <Surface
+                flex={1}
+                {...props}
+                elevation={elevation}
+                background={background}
+              >
                 {typeof children === 'function' ? children(isOpen) : children}
               </Surface>
             </popover>

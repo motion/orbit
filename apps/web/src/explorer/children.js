@@ -21,10 +21,9 @@ class Item {
       <doccontainer {...props}>
         <UI.TiltGlow
           css={{
-            border: [1, '#eee'],
+            borderBottom: [1, '#eee'],
           }}
           width={160}
-          height={60}
         >
           <doc $$justify="flex-start">
             <UI.Text
@@ -62,7 +61,7 @@ class Item {
       margin: 0,
       padding: 0,
       fontWeight: 400,
-      fontSize: 16,
+      fontSize: 14,
       lineHeight: '22px',
       color: '#555',
     },
@@ -170,12 +169,13 @@ export default class ExplorerChildren {
                   title={doc.title}
                 >
                   <subdocs if={children && children.length}>
-                    <Arrow $arrow />
+                    <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
                     {children.map(child =>
                       <UI.Button
                         chromeless
                         key={child._id}
                         onClick={() => Router.go(child.url())}
+                        size={0.8}
                       >
                         {child.title}
                       </UI.Button>
@@ -193,10 +193,10 @@ export default class ExplorerChildren {
           />
           <Item
             onClick={store.ref('creatingDoc').setter(true)}
-            title="Create"
+            title="Insert child"
           />
         </docs>
-        <shadow $glow />
+        <shadow if={false} $glow />
         <background $glow />
       </children>
     )
@@ -205,20 +205,20 @@ export default class ExplorerChildren {
   static style = {
     children: {
       width: 180,
-      marginTop: 135,
+      marginTop: 140,
       padding: [10, 0, 40, 10],
       flex: 1,
       '&:hover > glow': {},
       position: 'relative',
     },
     docs: {
-      transition: 'transform ease-in 200ms',
+      transition: 'transform ease-in 250ms',
       transform: {
-        x: 54,
+        x: 60,
       },
       '&:hover': {
         transform: {
-          x: 50,
+          x: 60,
         },
       },
     },
@@ -229,6 +229,7 @@ export default class ExplorerChildren {
     subdocs: {
       flexFlow: 'row',
       overflow: 'hidden',
+      opacity: 0.5,
     },
     text: {
       lineHeight: '1.4rem',
@@ -244,10 +245,10 @@ export default class ExplorerChildren {
       zIndex: 1,
       top: -35,
       bottom: 10,
-      filter: 'blur(15px)',
+      filter: 'blur(10px)',
       opacity: 0.12,
       transform: {
-        x: '91%',
+        x: '93%',
       },
     },
     background: {

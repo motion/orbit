@@ -29,10 +29,10 @@ export default class TitleNode {
       fontSize: Math.floor(Math.log(200 / level) * 5.5),
     }),
     title1: {
-      fontSize: 18,
-      height: 35,
-      fontWeight: 500,
-      color: [0, 0, 0, 0.4],
+      fontSize: 26,
+      height: 50,
+      fontWeight: 300,
+      color: [0, 0, 0, 0.55],
       margin: [10, 0, 0],
     },
     inline: {

@@ -1,15 +1,15 @@
 {
   "name": "@mcro/playground",
   "main": "index.js",
-  "version": "1.0.1",
+  "version": "1.0.7",
   "private": true,
   "dependencies": {
-    "@mcro/black": "^1.0.1",
-    "@mcro/models": "^1.0.1",
-    "@mcro/ui": "^1.0.1",
-    "@mcro/web": "*",
+    "@mcro/black": "^1.0.7",
+    "@mcro/models": "^1.0.7",
+    "@mcro/ui": "^1.0.7",
+    "@mcro/web": "^1.0.7",
+    "babel-preset-steelbrain": "*",
     "react": "^15.6.0",
-    "react-dom": "^15.6.1",
-    "babel-preset-steelbrain": "*"
+    "react-dom": "^15.6.1"
   }
 }

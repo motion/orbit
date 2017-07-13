@@ -38,7 +38,7 @@ const DEFAULT_CONTENT = (title: string) => ({
 })
 
 export const methods = {
-  url(): string {
+  url() {
     return `/d/${this._id.replace(':', '-')}`
   },
   tasks() {
@@ -46,7 +46,8 @@ export const methods = {
     // if (lastUpdated >= this.updatedAt) return cacheValue
     return docToTasks(this)
   },
-  hasStar() {
+  // hasStar: true,
+  get hasStar() {
     return this.starredBy.find(id => id === User.authorId)
   },
   async toggleStar() {
@@ -75,7 +76,7 @@ export const methods = {
     }
     return crumbs
   },
-  async getChildren({ max = 10 }: { max: number } = {}) {
+  async getChildren({ max = 10 } = {}) {
     const children = await this.collection
       .find({ parentId: this._id })
       .limit(max / 3)
@@ -94,7 +95,7 @@ export const methods = {
     this.private = !this.private
     this.save()
   },
-  async addImage(file: any) {
+  async addImage(file) {
     return await Image.create({
       file,
       name: ('image' + Math.random()).slice(0, 8),
@@ -102,7 +103,7 @@ export const methods = {
     })
   },
   // todo if two tasks have the same name, they'll switch together
-  async toggleTask(text: string) {
+  async toggleTask(text) {
     this.content = toggleTask(this.content, text)
     await this.save()
   },

@@ -1,6 +1,6 @@
 {
   "name": "@mcro/hmr",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "main": "lib/index.js",
   "dependencies": {
     "lodash": "^4.6.1"

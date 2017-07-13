@@ -111,7 +111,6 @@ class Actions {
       position: 'absolute',
       top: 10,
       right: 10,
-      height: 98,
       alignItems: 'flex-end',
       zIndex: 1000,
       justifyContent: 'space-between',

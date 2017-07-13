@@ -31,7 +31,22 @@ class SidebarContent {
         <UI.Glint borderRadius={5} />
         <Login />
         <Menu />
+
+        <title
+          $$draggable
+          css={{
+            color: '#fff',
+            fontSize: 22,
+            fontWeight: 200,
+            padding: [20, 0],
+            margin: [0, 20],
+            borderBottom: [1, [0, 0, 0, 0.1]],
+          }}
+        >
+          My tasks
+        </title>
         <contents
+          if={false}
           css={{
             margin: 10,
             top: 0,

@@ -29,7 +29,7 @@ const KEYMAP = {
   },
 }
 
-const VERSION = 10
+const VERSION = 12
 
 export default class ExplorerStore {
   static version = VERSION

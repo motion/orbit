@@ -125,6 +125,10 @@ export default class Layout {
               <UI.Popover
                 openOnHover
                 background
+                elevation={2}
+                width={480}
+                borderRadius={8}
+                elevation={2}
                 target={
                   <UI.Button
                     circular
@@ -134,6 +138,7 @@ export default class Layout {
                       position: 'absolute',
                       bottom: 20,
                       left: 20,
+                      zIndex: 1000,
                       transform: {
                         scale: 1.0,
                       },

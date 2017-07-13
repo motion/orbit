@@ -64,8 +64,16 @@ const INVERSE = {
 }
 
 const DEFAULT_SHADOW = '0 0px 2px rgba(0,0,0,0.15)'
+const ELEVATION_SHADOW = x => [0, x * 1.5, x * 3.5, [0, 0, 0, 0.1]]
 
-const getShadow = shadow => (shadow === true ? DEFAULT_SHADOW : shadow)
+const getShadow = (shadow, elevation) => {
+  let base = shadow === true ? [DEFAULT_SHADOW] : shadow || []
+  if (!Array.isArray(base)) base = [base]
+  if (elevation) {
+    base.push(ELEVATION_SHADOW(elevation))
+  }
+  return base
+}
 const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @injectTheme
@@ -599,6 +607,7 @@ export default class Popover {
     top: _top,
     towards,
     width,
+    elevation,
     ...props
   }: Props) {
     const {
@@ -670,10 +679,10 @@ export default class Popover {
                   background={background !== 'transparent' ? background : null}
                   size={arrowSize}
                   towards={INVERSE[direction]}
-                  shadow={getShadow(shadow)}
+                  boxShadow={getShadow(shadow, elevation)}
                 />
               </arrowContain>
-              <Surface {...props} background={background}>
+              <Surface {...props} elevation={elevation} background={background}>
                 {typeof children === 'function' ? children(isOpen) : children}
               </Surface>
             </popover>

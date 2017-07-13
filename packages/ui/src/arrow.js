@@ -7,7 +7,7 @@ export type Props = {
   size: number,
   towards: 'top' | 'right' | 'bottom' | 'left',
   color?: Color,
-  shadow?: string,
+  boxShadow?: string,
 }
 
 @view.ui
@@ -29,7 +29,7 @@ export default class Arrow {
     return '0deg'
   }
 
-  render({ size, towards, theme, shadow, ...props }: Props) {
+  render({ size, towards, theme, boxShadow, ...props }: Props) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
@@ -67,13 +67,13 @@ export default class Arrow {
     }),
   }
 
-  static theme = ({ size, background, shadow }, theme) => ({
+  static theme = ({ size, background, boxShadow }, theme) => ({
     arrowInner: {
       background:
         background === true
           ? theme.base.background
           : background || theme.base.background,
-      boxShadow: shadow,
+      boxShadow: boxShadow,
     },
     arrow: {
       width: size,

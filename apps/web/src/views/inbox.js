@@ -36,7 +36,7 @@ class InboxStore {
         icon: 'alerti',
       },
       {
-        title: "CouchDB won't boot on OTP-20",
+        title: 'CouchDB won\'t boot on OTP-20',
         status: '#619 opened 4 days ago by spencerthayer ',
         icon: 'alerti',
       },
@@ -403,14 +403,13 @@ export default class Inbox {
           <UI.List
             background="transparent"
             $list
-            itemProps={{ paddingLeft: 20, height: 'auto', padding: 15 }}
+            itemProps={{ paddingLeft: 20, height: 'auto', padding: 15, glow: false, ellipse: false, }}
             items={store.items}
             getItem={(item, index) => ({
               primary: item.title,
               secondary: item.status,
               date: '1 day ago',
-              ellipse: false,
-              glowProps: GLOW_PROPS,
+              //glowProps: GLOW_PROPS,
               //icon: item.icon,
               paddingRight: 80,
               onClick: () => (store.activeIndex = index),

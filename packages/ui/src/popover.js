@@ -462,7 +462,7 @@ export default class Popover {
     // max height
     if (VERTICAL) {
       if (direction === 'top') {
-        maxHeight = targetBounds.top - top + arrowAdjust
+        maxHeight = targetBounds.top - top + arrowHeight + 7
       } else {
         maxHeight =
           window.innerHeight - (targetBounds.top + targetBounds.height)

@@ -33,8 +33,18 @@ export default class Arrow {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
+    // add padding so big shadows work
     return (
-      <arrowOuter style={{ width: size, height: size }}>
+      <arrowOuter
+        style={{
+          width: size + 40,
+          height: size,
+          paddingRight: 20,
+          paddingLeft: 20,
+          marginLeft: -20,
+          marginRight: -20,
+        }}
+      >
         <arrow $rotate={this.getRotation(towards)} {...props}>
           <arrowInner
             style={{

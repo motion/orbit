@@ -428,8 +428,8 @@ export default class Surface implements ViewType {
     if (props.elevation) {
       boxShadow.push([
         0,
-        props.elevation * 1.5,
-        props.elevation * 3.5,
+        props.elevation * 1,
+        props.elevation * 4,
         [0, 0, 0, 0.1],
       ])
     }

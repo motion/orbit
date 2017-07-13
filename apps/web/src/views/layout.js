@@ -123,9 +123,10 @@ export default class Layout {
               </above>
 
               <UI.Popover
+                open={false}
+                showForgiveness={false}
                 openOnHover
                 background
-                elevation={2}
                 width={480}
                 borderRadius={8}
                 elevation={2}

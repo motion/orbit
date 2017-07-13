@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. $(dirname $0)/__/common
+
 # this keeps accidental bad lerna versions out
 
 $(pwd)/node_modules/lerna/bin/lerna.js ${@:1}

@@ -16,7 +16,6 @@ export default class Button {
     chromeless,
     type,
     glowProps,
-    css,
     ...props
   }) {
     return (
@@ -39,7 +38,6 @@ export default class Button {
         css={{
           flexWrap: 'nowrap',
           whiteSpace: 'pre',
-          ...css,
         }}
         glowProps={{
           scale: 2,

@@ -103,8 +103,8 @@ export default class Model {
   }
 
   get compiledMethods(): Object {
-    return {
-      ...(this.methods || {}),
+    const descriptors = Object.getOwnPropertyDescriptors(this.methods)
+    const extraDescriptors = Object.getOwnPropertyDescriptors({
       get id() {
         return this._id
       },
@@ -114,6 +114,11 @@ export default class Model {
           .exec()
           .then(doc => doc && doc.remove())
       },
+    })
+
+    return {
+      ...extraDescriptors,
+      ...descriptors,
     }
   }
 
@@ -179,7 +184,6 @@ export default class Model {
         name: this.title,
         schema: this.compiledSchema,
         statics: this.statics,
-        // methods: this.compiledMethods,
       })
 
       // shim add pouchdb-validation
@@ -195,6 +199,7 @@ export default class Model {
       if (this.hasTimestamps) {
         const ogInsert = this.hooks.preInsert
         this.hooks.preInsert = doc => {
+          console.log('i am pre insert')
           doc.createdAt = this.now
           doc.updatedAt = this.now
           if (ogInsert) {
@@ -212,20 +217,13 @@ export default class Model {
 
         // decorate
         const ogPostCreate = this.hooks.postCreate
+
         const { compiledMethods } = this
-        const methods = Object.keys(compiledMethods)
         this.hooks.postCreate = doc => {
-          log('HELOO')
-          for (const key of methods) {
-            if (doc[key]) {
-              throw new Error('Already exists prop on doc: ' + key)
-            }
-            doc[key] = compiledMethods[key]
-          }
+          Object.defineProperties(doc, compiledMethods)
           if (ogPostCreate) {
             return ogPostCreate.call(this, doc)
           }
-          return doc
         }
       }
 
@@ -241,7 +239,7 @@ export default class Model {
       // AND NOW
       this.connected = true
     } catch (e) {
-      console.warn('Model.connect error', e)
+      console.error('Model.connect error', e)
     }
   }
 

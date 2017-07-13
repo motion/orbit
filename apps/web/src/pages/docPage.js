@@ -26,13 +26,6 @@ class Actions {
       return null
     }
 
-    if (typeof document.hasStar !== 'function') {
-      log('hmr caused a bad thing')
-      return null
-    }
-
-    log('render actions')
-
     const popoverProps = {
       elevation: 3,
       borderRadius: 8,

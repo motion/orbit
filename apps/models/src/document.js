@@ -46,6 +46,7 @@ export const methods = {
     // if (lastUpdated >= this.updatedAt) return cacheValue
     return docToTasks(this)
   },
+  // hasStar: true,
   get hasStar() {
     return this.starredBy.find(id => id === User.authorId)
   },

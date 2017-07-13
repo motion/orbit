@@ -83,10 +83,12 @@ export default class Layout {
                 width={480}
                 borderRadius={8}
                 elevation={2}
+                edgePadding={12}
                 target={
                   <UI.Button
                     circular
-                    size={2}
+                    size={1.8}
+                    badge={2}
                     icon="chat3"
                     css={{
                       position: 'absolute',

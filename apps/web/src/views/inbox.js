@@ -289,7 +289,6 @@ class Thread {
       <thread>
         <bar>
           <barblur>
-            <UI.Glow {...GLOW_PROPS} show />
             <UI.Button
               chromeless
               glow={false}
@@ -334,8 +333,8 @@ class Thread {
       zIndex: 1000,
       top: 0,
       left: -20,
-      borderBottom: '1px solid #ddd',
-      boxShadow: ['0 0 5px rgba(0,0,0,0.15)'],
+      borderBottom: '1px solid #eee',
+      // boxShadow: ['0 0 5px rgba(0,0,0,0.15)'],
       overflow: 'hidden',
     },
     barblur: {
@@ -347,6 +346,7 @@ class Thread {
       flexFlow: 'row',
       // boxShadow: ['inset 0 0 100px rgba(240,240,255, 1)'],
       background: 'rgba(255, 255,255, 0.9)',
+      borderTop: 5,
     },
     title: {
       flex: 5,
@@ -403,13 +403,18 @@ export default class Inbox {
           <UI.List
             background="transparent"
             $list
-            itemProps={{ paddingLeft: 20, height: 'auto', padding: 15, glow: false, ellipse: false, }}
+            itemProps={{
+              paddingLeft: 20,
+              height: 'auto',
+              padding: 15,
+              ellipse: false,
+            }}
             items={store.items}
             getItem={(item, index) => ({
               primary: item.title,
               secondary: item.status,
               date: '1 day ago',
-              //glowProps: GLOW_PROPS,
+              glowProps: GLOW_PROPS,
               //icon: item.icon,
               paddingRight: 80,
               onClick: () => (store.activeIndex = index),

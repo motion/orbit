@@ -74,6 +74,70 @@ export default class Layout {
                 key={Router.key}
                 {...Router.params}
               />
+              <above
+                css={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 20,
+                  flexFlow: 'row',
+                }}
+              >
+                {[
+                  'Allie',
+                  'Jackie',
+                  'Stephanie',
+                  'Malorie',
+                  'Evenie',
+                ].map((text, i) =>
+                  <UI.Circle
+                    key={i}
+                    size={44}
+                    marginRight={-10}
+                    zIndex={100 - i}
+                    background="#eee"
+                    fontSize={20}
+                    color="white"
+                    overflow="hidden"
+                    boxShadow={[
+                      [0, 0, 2, [0, 0, 0, 0.1]],
+                      ['inset', 0, 0, 0, 1, [0, 0, 0, 0.05]],
+                    ]}
+                    transition="transform ease-in 30ms"
+                    transform={{
+                      scale: 1.0,
+                    }}
+                    {...{
+                      '&:hover': {
+                        transform: {
+                          scale: 1.1,
+                        },
+                      },
+                    }}
+                  >
+                    <UI.Glint borderRadius={1000} />
+                  </UI.Circle>
+                )}
+              </above>
+
+              <UI.Button
+                circular
+                size={2}
+                icon="inbox"
+                elevation={2}
+                css={{
+                  position: 'absolute',
+                  bottom: 20,
+                  left: 20,
+                  transform: {
+                    scale: 1.0,
+                  },
+                  '&:hover': {
+                    transform: {
+                      scale: 1.1,
+                    },
+                  },
+                }}
+              />
             </content>
             <Draft
               isActive={layoutStore.isCreatingDoc}

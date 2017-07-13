@@ -76,26 +76,6 @@ class SidebarContent {
         </contents>
         <rest $$flex>
           <Projects />
-          <above $$row $$padding={10}>
-            {[
-              'Allie',
-              'Jackie',
-              'Stephanie',
-              'Malorie',
-              'Evenie',
-            ].map((text, i) =>
-              <UI.Circle
-                key={i}
-                size={44}
-                marginRight={-10}
-                zIndex={100 - i}
-                background="rgba(0,0,0,0.1)"
-                fontSize={20}
-                color="white"
-                overflow="hidden"
-              />
-            )}
-          </above>
           <UserBar />
         </rest>
       </inner>

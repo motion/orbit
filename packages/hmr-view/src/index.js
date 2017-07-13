@@ -1,6 +1,6 @@
 import window from 'global/window'
 import createProxy from './proxyClass'
-import { getForceUpdate } from 'react-proxy'
+import getForceUpdate from 'react-deep-force-update'
 
 let viewProxies = {}
 let reloaded = []

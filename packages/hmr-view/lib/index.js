@@ -16,7 +16,9 @@ var _proxyClass = require('./proxyClass');
 
 var _proxyClass2 = _interopRequireDefault(_proxyClass);
 
-var _reactProxy = require('react-proxy');
+var _reactDeepForceUpdate = require('react-deep-force-update');
+
+var _reactDeepForceUpdate2 = _interopRequireDefault(_reactDeepForceUpdate);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50,7 +52,7 @@ function proxyReactComponents(_ref) {
     throw new Error('locals[0] does not appear to be a `module` object with Hot Module replacement API enabled. You should disable @mcro/view-hmr');
   }
 
-  var forceUpdater = (0, _reactProxy.getForceUpdate)(React || _window2.default.React);
+  var forceUpdater = (0, _reactDeepForceUpdate2.default)(React || _window2.default.React);
 
   var hotReload = function hotReload(instance) {
     if (instance.hotReload) {

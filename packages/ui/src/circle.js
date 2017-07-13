@@ -34,6 +34,7 @@ export default class Circle {
 
   static style = {
     circle: {
+      position: 'relative',
       borderRadius: 1000,
       lineHeight: '1rem',
       alignItems: 'center',

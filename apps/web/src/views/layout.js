@@ -84,7 +84,7 @@ export default class Layout {
                 borderRadius={8}
                 elevation={2}
                 edgePadding={12}
-                adjust={[150, 0]}
+                adjust={[140, 0]}
                 target={
                   <UI.Button
                     circular

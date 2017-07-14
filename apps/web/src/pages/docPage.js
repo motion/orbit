@@ -7,7 +7,7 @@ import { User } from '@mcro/models'
 import Page from '~/views/page'
 import Inbox from '~/views/inbox'
 import Children from '~/explorer/children'
-import Trianglify from 'trianglify'
+// import Trianglify from 'trianglify'
 
 const itemProps = {
   size: 1.25,

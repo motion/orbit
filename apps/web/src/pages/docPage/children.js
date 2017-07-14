@@ -55,7 +55,7 @@ class Item {
       position: 'relative',
     },
     doc: {
-      padding: [5, 10],
+      padding: [5, 0],
       minWidth: 50,
       textAlign: 'right',
     },
@@ -200,6 +200,15 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs, allDocs } }: Props) {
     return (
       <children>
+        <UI.Title
+          css={{
+            borderBottom: [1, '#eee', 'dotted'],
+            marginBottom: 10,
+            opacity: 0.5,
+          }}
+        >
+          Children
+        </UI.Title>
         <SortableChildren
           if={hasDocs}
           items={sortedDocs || allDocs}
@@ -247,7 +256,7 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      padding: [10, 0, 40, 10],
+      padding: [10, 10, 40, 10],
       flex: 1,
       alignItems: 'flex-end',
       position: 'relative',

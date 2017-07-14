@@ -405,6 +405,7 @@ export default class Popover {
         arrowLeft = arrowLeft / 2
       }
     } else {
+      // HORIZONTAL
       if (direction === 'left') {
         arrowLeft = popoverHalfWidth
         left = targetBounds.left - popoverSize.width - distance

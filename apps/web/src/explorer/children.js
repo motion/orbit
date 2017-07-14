@@ -7,7 +7,6 @@ import { sortBy, sum } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
 import Arrow from './arrow'
-import FlipMove from 'react-flip-move'
 
 type Props = {
   id: number,
@@ -19,12 +18,7 @@ class Item {
   render({ editable, children, title, onSave, textRef, ...props }) {
     return (
       <doccontainer {...props}>
-        <UI.TiltGlow
-          css={{
-            borderBottom: [1, '#eee'],
-          }}
-          width={160}
-        >
+        <UI.TiltGlow>
           <doc $$justify="flex-start">
             <UI.Text
               $title
@@ -43,27 +37,17 @@ class Item {
   }
   static style = {
     doccontainer: {
-      marginBottom: 10,
       position: 'relative',
     },
     doc: {
-      height: '100%',
-      zIndex: 1,
-      padding: [6, 12],
-      '&:hover title': {
-        color: [0, 0, 0],
-      },
-      '&:hover p': {
-        color: [50, 50, 50],
-      },
+      padding: [5, 20],
+      textAlign: 'right',
     },
     title: {
-      margin: 0,
-      padding: 0,
       fontWeight: 400,
       fontSize: 14,
-      lineHeight: '22px',
-      color: '#555',
+      lineHeight: '1.1rem',
+      color: '#777',
     },
   }
 }
@@ -133,8 +117,10 @@ class ExplorerChildrenStore {
   saveCreatingDoc = async title => {
     this.newDoc.title = title
     await this.newDoc.save()
-    this.creatingDoc = false
-    this.version++
+    this.setTimeout(() => {
+      this.creatingDoc = false
+      this.version++
+    })
   }
 }
 
@@ -154,37 +140,31 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, allDocs } }: Props) {
     return (
       <children>
-        <docs>
-          <FlipMove
-            if={hasDocs && Object.keys(store.children).length}
-            duration={300}
-            easing="ease-out"
-          >
-            {allDocs.map(doc => {
-              const children = store.children[doc._id]
-              return (
-                <Item
-                  key={doc._id}
-                  onClick={() => Router.go(doc.url())}
-                  title={doc.title}
-                >
-                  <subdocs if={children && children.length}>
-                    <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
-                    {children.map(child =>
-                      <UI.Button
-                        chromeless
-                        key={child._id}
-                        onClick={() => Router.go(child.url())}
-                        size={0.8}
-                      >
-                        {child.title}
-                      </UI.Button>
-                    )}
-                  </subdocs>
-                </Item>
-              )
-            })}
-          </FlipMove>
+        <docs if={hasDocs && Object.keys(store.children).length}>
+          {allDocs.map(doc => {
+            const children = store.children[doc._id]
+            return (
+              <Item
+                key={doc._id}
+                onClick={() => Router.go(doc.url())}
+                title={doc.title}
+              >
+                <subdocs if={children && children.length}>
+                  <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
+                  {children.map(child =>
+                    <UI.Button
+                      chromeless
+                      key={child._id}
+                      onClick={() => Router.go(child.url())}
+                      size={0.8}
+                    >
+                      {child.title}
+                    </UI.Button>
+                  )}
+                </subdocs>
+              </Item>
+            )
+          })}
           <Item
             if={store.creatingDoc}
             editable
@@ -193,7 +173,10 @@ export default class ExplorerChildren {
           />
           <Item
             onClick={store.ref('creatingDoc').setter(true)}
-            title="Insert child"
+            title="+1"
+            css={{
+              opacity: 0.2,
+            }}
           />
         </docs>
         <shadow if={false} $glow />
@@ -204,7 +187,7 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      width: 180,
+      width: 160,
       marginTop: 70,
       padding: [10, 0, 40, 10],
       flex: 1,
@@ -214,11 +197,11 @@ export default class ExplorerChildren {
     docs: {
       transition: 'transform ease-in 250ms',
       transform: {
-        x: 60,
+        x: 0,
       },
       '&:hover': {
         transform: {
-          x: 60,
+          x: 0,
         },
       },
     },

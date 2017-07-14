@@ -44,7 +44,12 @@ class Actions {
         <UI.Popover
           {...popoverProps}
           target={
-            <UI.Button opacity={0.5} chromeless css={{ textAlign: 'right' }}>
+            <UI.Button
+              size={1.5}
+              opacity={0.5}
+              chromeless
+              css={{ textAlign: 'right' }}
+            >
               <UI.Text size={0.8}>+3 people</UI.Text>
               <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
                 Jan 3rd
@@ -211,6 +216,8 @@ export default class DocumentPage {
       overflow: 'hidden',
       flexFlow: 'row',
       zIndex: 20,
+      overflowY: 'scroll',
+      paddingRight: 120,
       position: 'relative',
     },
     children: {

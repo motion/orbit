@@ -44,21 +44,23 @@ class Item {
             size={12}
             css={{ marginLeft: 10 }}
           />
-          {(subItems &&
-            subItems.length &&
-            <subdocs>
-              <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
-              {subItems.map(child =>
-                <UI.Text
-                  key={child._id}
-                  onClick={() => Router.go(child.url())}
-                  size={0.8}
-                >
-                  {child.title}
-                </UI.Text>
-              )}
-            </subdocs>) ||
-            null}
+          <subitems if={false}>
+            {(subItems &&
+              subItems.length &&
+              <subdocs>
+                <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
+                {subItems.map(child =>
+                  <UI.Text
+                    key={child._id}
+                    onClick={() => Router.go(child.url())}
+                    size={0.8}
+                  >
+                    {child.title}
+                  </UI.Text>
+                )}
+              </subdocs>) ||
+              null}
+          </subitems>
           <DragHandle if={false} css={{ margin: ['auto', -12, 'auto', 12] }} />
         </doc>
       </doccontainer>

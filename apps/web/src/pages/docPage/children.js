@@ -25,7 +25,7 @@ const DragHandle = SortableHandle(props =>
 
 @view.ui
 class Item {
-  render({ editable, children, title, onSave, textRef, ...props }) {
+  render({ editable, title, onSave, textRef, subItems, ...props }) {
     return (
       <doccontainer {...props}>
         <doc $$justify="flex-end" $$row>
@@ -44,7 +44,21 @@ class Item {
             size={12}
             css={{ marginLeft: 10 }}
           />
-          {children}
+          {(subItems &&
+            subItems.length &&
+            <subdocs>
+              <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
+              {subItems.map(child =>
+                <UI.Text
+                  key={child._id}
+                  onClick={() => Router.go(child.url())}
+                  size={0.8}
+                >
+                  {child.title}
+                </UI.Text>
+              )}
+            </subdocs>) ||
+            null}
           <DragHandle if={false} css={{ margin: ['auto', -12, 'auto', 12] }} />
         </doc>
       </doccontainer>
@@ -162,23 +176,8 @@ const SortableChildren = SortableContainer(({ items, store }) =>
           key={doc._id}
           onClick={() => Router.go(doc.url())}
           title={doc.title}
-        >
-          {(subItems &&
-            subItems.length &&
-            <subdocs>
-              <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
-              {subItems.map(child =>
-                <UI.Text
-                  key={child._id}
-                  onClick={() => Router.go(child.url())}
-                  size={0.8}
-                >
-                  {child.title}
-                </UI.Text>
-              )}
-            </subdocs>) ||
-            null}
-        </SortableItem>
+          subItems={subItems}
+        />
       )
     })}
   </docs>

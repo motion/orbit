@@ -417,6 +417,7 @@ export default class Popover {
 
     // adjustments
     left += adjust[0]
+    arrowLeft -= adjust[0]
 
     return { arrowLeft, left }
   }

@@ -93,7 +93,7 @@ export default class Layout {
                     css={{
                       position: 'absolute',
                       bottom: 20,
-                      left: 20,
+                      right: 20,
                       zIndex: 1000,
                       transform: {
                         scale: 1.0,

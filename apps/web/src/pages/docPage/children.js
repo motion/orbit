@@ -214,18 +214,32 @@ export default class ExplorerChildren {
           onSave={store.saveCreatingDoc}
           textRef={this.onNewItemText}
         />
-        <UI.Segment label="Create" marginTop={10}>
-          <UI.Button
-            onClick={store.ref('creatingDoc').setter(true)}
-            icon="note"
-            tooltip="Document"
-          />
-          <UI.Button
-            onClick={store.ref('creatingDoc').setter(true)}
-            icon="paper"
-            tooltip="Discussion"
-          />
-        </UI.Segment>
+
+        <UI.Popover
+          openOnHover
+          background
+          elevation={3}
+          borderRadius={8}
+          target={
+            <UI.Button icon="add" marginTop={10}>
+              Create
+            </UI.Button>
+          }
+        >
+          <UI.Segment itemProps={{ chromeless: true }}>
+            <UI.Button
+              onClick={store.ref('creatingDoc').setter(true)}
+              icon="note"
+              tooltip="Document"
+            />
+            <UI.Button
+              onClick={store.ref('creatingDoc').setter(true)}
+              icon="paper"
+              tooltip="Discussion"
+            />
+          </UI.Segment>
+        </UI.Popover>
+
         <shadow if={false} $glow />
         <background $glow />
       </children>

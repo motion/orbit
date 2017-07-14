@@ -10,7 +10,7 @@ import * as UI from '@mcro/ui'
     }
   },
 })
-export default class Arrow {
+export default class RightArrow {
   render({ store, animate, ...props }) {
     return (
       <arrow {...props}>

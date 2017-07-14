@@ -6,7 +6,7 @@ import { Document } from '@mcro/models'
 import { sortBy, sum } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
-import Arrow from './arrow'
+import RightArrow from '~/views/rightArrow'
 
 type Props = {
   id: number,
@@ -40,7 +40,7 @@ class Item {
       position: 'relative',
     },
     doc: {
-      padding: [5, 20],
+      padding: [5, 10],
       textAlign: 'right',
     },
     title: {
@@ -98,10 +98,12 @@ class ExplorerChildrenStore {
     this.watch(async () => {
       if (this.docs && this.docs.length) {
         const allChildren = await Promise.all(
-          this.docs.map(async doc => ({
-            id: doc._id,
-            children: await doc.getChildren(),
-          }))
+          this.docs.map(async doc => {
+            return {
+              id: doc._id,
+              children: doc.getChildren && (await doc.getChildren()),
+            }
+          })
         )
         this.children = allChildren.reduce(
           (acc, { id, children }) => ({
@@ -150,7 +152,7 @@ export default class ExplorerChildren {
                 title={doc.title}
               >
                 <subdocs if={children && children.length}>
-                  <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
+                  <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
                   {children.map(child =>
                     <UI.Text
                       key={child._id}
@@ -186,8 +188,6 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      width: 160,
-      marginTop: 70,
       padding: [10, 0, 40, 10],
       flex: 1,
       '&:hover > glow': {},
@@ -221,7 +221,7 @@ export default class ExplorerChildren {
       filter: 'blur(10px)',
       opacity: 0.12,
       transform: {
-        x: '93%',
+        x: '23%',
       },
     },
     background: {

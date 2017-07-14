@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
-import Arrow from './arrow'
+import RightArrow from '~/views/rightArrow'
 
 const FONT_SIZE = 16
 
@@ -65,7 +65,7 @@ class Item {
           >
             {name}
           </UI.Button>
-          <Arrow $arrow animate={isLast} />
+          <RightArrow $arrow animate={isLast} />
         </inner>
         <block contentEditable={false} $last={isLast}>
           {name}

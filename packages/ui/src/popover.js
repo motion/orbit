@@ -405,6 +405,7 @@ export default class Popover {
         arrowLeft = arrowLeft / 2
       }
     } else {
+      // HORIZONTAL
       if (direction === 'left') {
         arrowLeft = popoverHalfWidth
         left = targetBounds.left - popoverSize.width - distance
@@ -416,6 +417,7 @@ export default class Popover {
 
     // adjustments
     left += adjust[0]
+    arrowLeft -= adjust[0]
 
     return { arrowLeft, left }
   }
@@ -503,8 +505,8 @@ export default class Popover {
     const closeIfOut = () => {
       if (!this.isNodeHovered(node, isPopover)) {
         setUnhovered()
-        console.log(delayOpenIfHover)
         if (delayOpenIfHover.cancel) {
+          // cancel previous
           delayOpenIfHover.cancel()
         }
       }

@@ -12,7 +12,6 @@ export default class HomePage {
     }
 
     if (!User.org) {
-      return <NickTest />
       return <null>weird no org</null>
     }
 

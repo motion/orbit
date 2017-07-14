@@ -24,9 +24,16 @@ export default class Arrow {
       case 'left':
         return '-90deg'
       case 'right':
-        return '90deg'
+        return '0deg'
     }
     return '0deg'
+  }
+
+  getOuterRotation = towards => {
+    switch (towards) {
+      case 'right':
+        return '90deg'
+    }
   }
 
   render({ size, towards, theme, boxShadow, ...props }: Props) {
@@ -36,16 +43,18 @@ export default class Arrow {
     // add padding so big shadows work
     return (
       <arrowOuter
+        css={{ transform: { rotate: this.getOuterRotation(towards) } }}
         style={{
-          width: size + 40,
+          width: size,
           height: size,
-          paddingRight: 20,
-          paddingLeft: 20,
-          marginLeft: -20,
-          marginRight: -20,
         }}
       >
-        <arrow $rotate={this.getRotation(towards)} {...props}>
+        <arrow
+          css={{
+            transform: { rotate: this.getRotation(towards) },
+          }}
+          {...props}
+        >
           <arrowInner
             style={{
               top: innerTop * 0.75,
@@ -70,11 +79,6 @@ export default class Arrow {
       borderRadius: 1,
       transform: 'rotate(45deg)',
     },
-    rotate: amount => ({
-      transform: {
-        rotate: amount,
-      },
-    }),
   }
 
   static theme = ({ size, background, boxShadow }, theme) => ({

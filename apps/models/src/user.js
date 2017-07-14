@@ -13,8 +13,10 @@ class User {
   localDb = null
   remoteDb = null
   activeOrg = 0
-  @watch orgs = () => Org.forUser(this.id)
-  @watch favoriteDocuments = () => Document.favoritedBy(this.id)
+  orgs = []
+  favoriteDocuments = []
+  //@watch orgs = () => Org.forUser(this.id)
+  //@watch favoriteDocuments = () => Document.favoritedBy(this.id)
 
   get org() {
     return this.orgs && this.orgs[this.activeOrg]
@@ -26,6 +28,7 @@ class User {
   }
 
   connect = database => {
+    console.log('waht?')
     if (this.database) {
       return // hmr
     }
@@ -34,10 +37,11 @@ class User {
     this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'
 
-    this.setupSuperLogin()
+    this.setTimeout(this.setupSuperLogin, 1000)
   }
 
   setupSuperLogin() {
+    console.log('setting up', this.options)
     this.superlogin.configure(this.options)
 
     // sync

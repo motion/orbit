@@ -21,6 +21,7 @@ import { Bar, Results } from '~/explorer'
 import Inbox from '~/views/inbox'
 import InboxEmbed from '~/views/inbox/embed'
 
+/*
 @view
 class NickTest {
   render() {
@@ -53,6 +54,7 @@ class NickTest {
     },
   }
 }
+*/
 
 type Props = {
   layoutStore: LayoutStore,
@@ -95,7 +97,7 @@ export default class Layout {
       const CurrentPage = Router.activeView || NotFound
       return (
         <app>
-          <Signup if={false} />
+          <Signup />
           <LayoutWrap layoutStore={layoutStore}>
             <Bar />
             <content
@@ -103,8 +105,8 @@ export default class Layout {
               onScroll={this.onScroll}
               $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
             >
-              <Results />
-              <NickTest />
+              <Results if={false} />
+              <NickTest if={false} />
               <CurrentPage
                 if={!explorerStore.showResults}
                 key={Router.key}
@@ -119,6 +121,7 @@ export default class Layout {
                 borderRadius={8}
                 elevation={2}
                 edgePadding={12}
+                adjust={[140, 0]}
                 target={
                   <UI.Button
                     circular
@@ -128,7 +131,7 @@ export default class Layout {
                     css={{
                       position: 'absolute',
                       bottom: 20,
-                      left: 20,
+                      right: 20,
                       zIndex: 1000,
                       transform: {
                         scale: 1.0,

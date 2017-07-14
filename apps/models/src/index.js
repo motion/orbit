@@ -100,13 +100,14 @@ export default class Models implements ModelsStore {
     }
   }
 
-  @log
   attachModels = async () => {
     const connections = []
 
     // attach Models to app and connect if need be
     for (const [name, model] of Object.entries(this.models)) {
       this[name] = model
+
+      console.log('attach models')
 
       if (typeof model.connect !== 'function') {
         throw `No connect found for model ${model.name} connect = ${typeof model.connect}`

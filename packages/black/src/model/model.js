@@ -225,8 +225,8 @@ export default class Model {
       if (compiledMethods) {
         const ogPostCreate = this.hooks.postCreate
         this.hooks.postCreate = doc => {
-          console.log('creating', compiledMethods)
           Object.defineProperties(doc, compiledMethods)
+          console.log('doc now', doc)
           if (ogPostCreate) {
             return ogPostCreate.call(this, doc)
           }

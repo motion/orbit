@@ -16,6 +16,7 @@ export default class Button {
     chromeless,
     type,
     glowProps,
+    badgeProps,
     ...props
   }) {
     return (
@@ -48,7 +49,7 @@ export default class Button {
         {...props}
         noElement
         after={
-          <badge if={badge} $badgeSize={props.size}>
+          <badge if={badge} $badgeSize={props.size} {...badgeProps}>
             {badge}
           </badge>
         }

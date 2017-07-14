@@ -23,6 +23,18 @@ export default class UserBar {
             flexFlow: 'row',
           }}
         >
+          <fade if={false} $$fullscreen css={{ left: 'auto', width: 50 }}>
+            <fadeout $fadeamt={1} />
+            <fadeout $fadeamt={2} />
+            <fadeout $fadeamt={3} />
+            <fadeout $fadeamt={4} />
+            <fadeout $fadeamt={5} />
+            <fadeout $fadeamt={6} />
+            <fadeout $fadeamt={7} />
+            <fadeout $fadeamt={8} />
+            <fadeout $fadeamt={9} />
+            <fadeout $fadeamt={10} />
+          </fade>
           {User.favoriteDocuments.map((text, i) =>
             <UI.Popover
               key={i}
@@ -30,34 +42,21 @@ export default class UserBar {
               background
               theme="dark"
               borderRadius={5}
-              elevation={3}
+              elevation={2}
               target={
                 <UI.Circle
                   size={24}
-                  marginRight={5}
+                  marginRight={3}
                   zIndex={100 - i}
-                  background="linear-gradient(#eee, #fff 50%)"
+                  background={[0, 0, 0, 0.1]}
                   fontSize={20}
                   color="white"
                   overflow="hidden"
-                  boxShadow={[
-                    [0, 0, 2, [0, 0, 0, 0.1]],
-                    ['inset', 0, 0, 0, 1, [0, 0, 0, 0.05]],
-                  ]}
                   transition="transform ease-in 30ms"
                   transform={{
                     scale: 1.0,
                   }}
-                  {...{
-                    '&:hover': {
-                      transform: {
-                        scale: 1.1,
-                      },
-                    },
-                  }}
-                >
-                  <UI.Glint borderRadius={1000} />
-                </UI.Circle>
+                />
               }
             >
               <Inbox />
@@ -70,14 +69,13 @@ export default class UserBar {
         </UI.Text>
         <UI.Popover
           distance={10}
-          elevation={5}
+          elevation={2}
           borderRadius={8}
           forgiveness={16}
           delay={150}
           target={<UI.Button circular icon="body" />}
           openOnHover
           closeOnClick
-          theme="dark"
           debug
         >
           <UI.List
@@ -129,5 +127,16 @@ export default class UserBar {
       padding: 10,
       flexFlow: 'row',
     },
+    fadeout: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      zIndex: 1000,
+    },
+    fadeamt: step => ({
+      backdropFilter: `opacity(${step * 10}%)`,
+      right: step * 3,
+      width: 3,
+    }),
   }
 }

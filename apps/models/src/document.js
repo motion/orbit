@@ -75,10 +75,10 @@ export const methods = {
     }
     return crumbs
   },
-  async getChildren({ max = 10 } = {}) {
+  async getChildren({ max = 30 } = {}) {
     const children = await this.collection
       .find({ parentId: this._id })
-      .limit(max / 3)
+      .limit(max / 2)
       .exec()
     if (children.length < max) {
       for (const child of children) {

@@ -264,6 +264,7 @@ export default class Surface implements ViewType {
         openOnHover
         closeOnClick
         noHover
+        noArrow
         animation="bounce 150ms"
         target={`.${this.uniq}`}
         padding={[2, 7]}

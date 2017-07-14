@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 import { User } from '@mcro/models'
 import Router from '~/router'
 import { flatMap } from 'lodash'
-import Arrow from '~/explorer/arrow'
+import RightArrow from '~/views/rightArrow'
 
 @view({
   store: class SidebarProjectStore {
@@ -56,7 +56,7 @@ export default class Projects {
                             crumbs[index].map((crumbDoc, crumbIndex) => {
                               const ID = `${crumbDoc._id}${crumbIndex}`
                               return [
-                                <Arrow $arrow key={ID + '-1'} />,
+                                <RightArrow $arrow key={ID + '-1'} />,
                                 <UI.Button
                                   key={ID + '-2'}
                                   $button

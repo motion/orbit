@@ -38,6 +38,12 @@ class Item {
           >
             {title}
           </UI.Text>
+          <UI.Icon
+            if={Math.random() > 0.8}
+            name="paper"
+            size={12}
+            css={{ marginLeft: 10 }}
+          />
           {children}
           <DragHandle css={{ margin: ['auto', -12, 'auto', 12] }} />
         </doc>

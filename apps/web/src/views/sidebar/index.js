@@ -31,11 +31,13 @@ class SidebarContent {
         <UI.Glint borderRadius={5} />
 
         <heading $$draggable $$row css={{ padding: 10 }}>
-          <UI.Input circular flex={2} />
+          <UI.Input circular flex={1} />
           <div $$flex />
-          <UI.Segment itemProps={{ circular: true }}>
-            <UI.Button icon="check" />
-            <UI.Button icon="mail" />
+          <UI.Segment itemProps={{ borderRadius: 15 }}>
+            <UI.Button active icon="check">
+              Todo
+            </UI.Button>
+            <UI.Button icon="mail">Incoming</UI.Button>
           </UI.Segment>
         </heading>
 
@@ -102,7 +104,7 @@ export default class Sidebar {
       : layoutStore.sidebar.width
 
     return (
-      <UI.Theme key={0} name="clear-dark">
+      <UI.Theme name="clear-dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <UI.Drawer
             zIndex={1}
@@ -117,23 +119,6 @@ export default class Sidebar {
               <sidebarcontent>
                 <SidebarContent />
               </sidebarcontent>
-
-              <UI.Theme name="light" if={false}>
-                <UI.Drawer
-                  open={explorerStore.showDiscussions}
-                  from="left"
-                  size={width + 20}
-                  background="#fefefe"
-                  css={{
-                    paddingLeft: 20,
-                  }}
-                  zIndex={100}
-                  transition
-                  scrollable
-                >
-                  <docdrawer>hi</docdrawer>
-                </UI.Drawer>
-              </UI.Theme>
             </sidebar>
           </UI.Drawer>
         </Shortcuts>

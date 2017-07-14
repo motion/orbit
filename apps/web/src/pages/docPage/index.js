@@ -47,7 +47,9 @@ export default class DocumentPage {
             borderRadius={8}
             elevation={2}
             adjust={[140, 0]}
-            target={<UI.Button circular size={1} badge={2} icon="bell" />}
+            target={
+              <UI.Button circular chromeless size={1.2} badge={2} icon="bell" />
+            }
           >
             <content />
           </UI.Popover>
@@ -86,7 +88,7 @@ export default class DocumentPage {
           css={{ position: 'absolute', bottom: 10, right: 10, zIndex: 100000 }}
         >
           <UI.Button
-            size={1.25}
+            size={1.5}
             borderWidth={0}
             icon="fav3"
             tooltip={document.hasStar ? 'Stop watching' : 'Watch'}

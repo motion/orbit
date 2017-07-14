@@ -62,6 +62,7 @@ export default class Surface implements ViewType {
     flex?: boolean | number,
     focusable?: boolean,
     getRef?: Function,
+    noWrap?: boolean,
     glint?: boolean,
     glow?: boolean,
     glowProps?: Object,
@@ -184,6 +185,7 @@ export default class Surface implements ViewType {
     tagName,
     theme,
     tooltip,
+    noWrap,
     tooltipProps,
     width,
     wrapElement,
@@ -248,7 +250,7 @@ export default class Surface implements ViewType {
       />,
       <element
         key={3}
-        if={!noElement}
+        if={!noElement || (noElement && !noWrap && hasChildren(children))}
         {...wrapElement && passProps}
         {...elementProps}
         $hasIconBefore={hasIconBefore}
@@ -256,7 +258,7 @@ export default class Surface implements ViewType {
       >
         {children}
       </element>,
-      noElement && hasChildren(children) && children,
+      noElement && noWrap && hasChildren(children) && children,
       <Popover
         key={4}
         if={tooltip}

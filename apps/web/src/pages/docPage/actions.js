@@ -36,10 +36,12 @@ export default class DocPageActions {
               chromeless
               css={{ textAlign: 'right' }}
             >
-              <UI.Text size={0.8}>+3 people</UI.Text>
-              <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
-                Jan 3rd
-              </UI.Text>
+              <wrap>
+                <UI.Text size={0.8}>+3 people</UI.Text>
+                <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
+                  Jan 3rd
+                </UI.Text>
+              </wrap>
             </UI.Button>
           }
         >

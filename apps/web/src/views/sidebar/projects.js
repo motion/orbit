@@ -39,7 +39,7 @@ export default class Projects {
               return (
                 <section key={doc._id}>
                   <title $$row $$spaceBetween>
-                    <start $$row>
+                    <start $$row $$centered>
                       <UI.Progress.Circle
                         if={hasTasks}
                         key={percentDone}

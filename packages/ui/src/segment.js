@@ -118,7 +118,7 @@ export default class Segment implements ViewType<Props> {
     }
 
     return (
-      <Surface noElement background="transparent" $segment {...props}>
+      <Surface noElement noWrap background="transparent" $segment {...props}>
         <label if={label}>
           {label}
         </label>

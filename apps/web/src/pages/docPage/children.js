@@ -229,7 +229,7 @@ export default class ExplorerChildren {
           elevation={3}
           borderRadius={8}
           target={
-            <UI.Button icon="add" marginTop={10}>
+            <UI.Button chromeless icon="add" marginTop={10} marginRight={-10}>
               Create
             </UI.Button>
           }

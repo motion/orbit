@@ -178,10 +178,11 @@ class ExplorerChildrenStore {
     this.newDoc.title = title
     this.newDoc.type = this.docType
     await this.newDoc.save()
-    this.setTimeout(() => {
-      this.creatingDoc = false
-      this.version++
-    })
+    this.version++
+    this.creatingDoc = false
+    // this.setTimeout(() => {
+
+    // }, 500)
   }
 }
 

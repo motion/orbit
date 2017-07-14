@@ -415,7 +415,6 @@ export default class Inbox {
               date: '1 day ago',
               glowProps: GLOW_PROPS,
               //icon: item.icon,
-              paddingRight: 80,
               onClick: () => (store.activeIndex = index),
               onMouseEnter: () => (store.highlightIndex = index),
               $highlight: store.highlightIndex === index,
@@ -438,34 +437,17 @@ export default class Inbox {
   }
 
   static style = {
-    list: {
-      marginLeft: -20,
-      marginRight: -20,
-    },
-    title: {
-      fontWeight: 'bold',
-    },
-    item: {
-      padding: 10,
-      paddingLeft: 20,
-      height: 40,
-    },
-    highlight: {
-      background: '#eee',
-      borderLeft: '3px solid #999',
-    },
-    all: {
-      marginTop: 15,
-    },
-    inbox: {
-      padding: 0,
-    },
     content: {
+      flex: 1,
       padding: 20,
     },
     list: {
       marginLeft: -20,
-      marginRight: -(20 + 72),
+    },
+    inbox: {
+      padding: 0,
+      position: 'relative',
+      flex: 1,
     },
     title: {
       fontWeight: 'bold',

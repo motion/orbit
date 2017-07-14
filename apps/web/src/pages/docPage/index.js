@@ -7,6 +7,7 @@ import { User } from '@mcro/models'
 import Page from '~/views/page'
 import Children from './children'
 import Actions from './actions'
+import Inbox from '~/views/inbox'
 
 class DocPageStore {
   forceEdit = false
@@ -37,6 +38,8 @@ export default class DocumentPage {
       return <UI.Placeholder size={2}>Doc 404</UI.Placeholder>
     }
 
+    const isDoc = !document.type || document.type === 'document'
+
     return (
       <Page>
         <Page.Actions>
@@ -65,10 +68,11 @@ export default class DocumentPage {
           />
         </Page.Actions>
 
-        <fade />
-
         <docpagecontent>
+          <Inbox if={document.type === 'thread'} />
           <DocumentView
+            if={isDoc}
+            $$paddingRight={120}
             document={document}
             onKeyDown={docStore.onKeyDown}
             showCrumbs
@@ -77,7 +81,7 @@ export default class DocumentPage {
           />
         </docpagecontent>
 
-        <sidebar>
+        <sidebar if={isDoc}>
           <Actions />
           <Children documentStore={docStore} />
         </sidebar>
@@ -107,7 +111,6 @@ export default class DocumentPage {
       flexFlow: 'row',
       zIndex: 20,
       overflowY: 'scroll',
-      paddingRight: 120,
       position: 'relative',
     },
     sidebar: {

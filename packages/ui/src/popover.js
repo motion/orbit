@@ -221,17 +221,14 @@ export default class Popover {
     })
   }
 
-  get isClickingPopover() {
-    return this.popoverRef.contains(e.target)
-  }
-
   listenForClickAway = () => {
     this.on(window, 'click', e => {
-      const { showPopover, isClickingPopover, isClickingTarget } = this
+      const { showPopover, isClickingTarget } = this
       const { closeOnClick } = this.curProps
       if (!showPopover) {
         return
       }
+      const isClickingPopover = this.popoverRef.contains(e.target)
       // closeOnClickPopover
       if (closeOnClick && isClickingPopover) {
         this.close()

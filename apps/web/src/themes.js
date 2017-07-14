@@ -52,9 +52,9 @@ const Themes = {
   }),
   dark: Theme.fromStyles({
     highlightColor,
-    background: '#444',
-    color: '#eee',
-    borderColor: '#333',
+    background: '#333',
+    color: '#fff',
+    borderColor: '#222',
   }),
   'clear-dark': Theme.fromStyles({
     glow: {

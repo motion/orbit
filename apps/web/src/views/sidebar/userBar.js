@@ -30,7 +30,7 @@ export default class UserBar {
               background
               theme="dark"
               borderRadius={5}
-              elevation={3}
+              elevation={2}
               target={
                 <UI.Circle
                   size={24}
@@ -48,13 +48,6 @@ export default class UserBar {
                   transform={{
                     scale: 1.0,
                   }}
-                  {...{
-                    '&:hover': {
-                      transform: {
-                        scale: 1.1,
-                      },
-                    },
-                  }}
                 >
                   <UI.Glint borderRadius={1000} />
                 </UI.Circle>
@@ -70,14 +63,13 @@ export default class UserBar {
         </UI.Text>
         <UI.Popover
           distance={10}
-          elevation={5}
+          elevation={2}
           borderRadius={8}
           forgiveness={16}
           delay={150}
           target={<UI.Button circular icon="body" />}
           openOnHover
           closeOnClick
-          theme="dark"
           debug
         >
           <UI.List

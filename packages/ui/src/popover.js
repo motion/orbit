@@ -128,7 +128,7 @@ export default class Popover {
   }
 
   componentDidMount() {
-    const { openOnClick, open, escapable, swayX } = this.curProps
+    const { openOnClick, closeOnClick, open, escapable, swayX } = this.curProps
 
     this.on(window, 'resize', debounce(() => this.setPosition(), 16))
     this.setTarget()
@@ -136,6 +136,8 @@ export default class Popover {
 
     if (openOnClick) {
       this.listenForClick()
+    }
+    if (openOnClick || closeOnClick) {
       this.listenForClickAway()
     }
     if (open) {
@@ -219,20 +221,26 @@ export default class Popover {
     })
   }
 
+  get isClickingPopover() {
+    return this.popoverRef.contains(e.target)
+  }
+
   listenForClickAway = () => {
-    // click away to close
     this.on(window, 'click', e => {
-      // avoid closing when clicked inside popover
-      if (this.popoverRef.contains(e.target) && !this.curProps.closeOnClick) {
+      const { showPopover, isClickingPopover, isClickingTarget } = this
+      const { closeOnClick } = this.curProps
+      if (!showPopover) {
         return
       }
-      if (this.state.isOpen && !this.isClickingTarget) {
-        e.preventDefault()
+      // closeOnClickPopover
+      if (closeOnClick && isClickingPopover) {
         this.close()
+        e.stopPropagation()
       }
-      if (this.curProps.closeOnClick && this.isClickingTarget) {
-        e.preventDefault()
+      // closeOnClickTarget
+      if (isClickingTarget) {
         this.close()
+        e.stopPropagation()
       }
     })
   }

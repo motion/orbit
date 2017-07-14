@@ -45,7 +45,7 @@ class Item {
             css={{ marginLeft: 10 }}
           />
           {children}
-          <DragHandle css={{ margin: ['auto', -12, 'auto', 12] }} />
+          <DragHandle if={false} css={{ margin: ['auto', -12, 'auto', 12] }} />
         </doc>
       </doccontainer>
     )
@@ -160,18 +160,17 @@ const SortableChildren = SortableContainer(({ items, store }) =>
       return (
         <SortableItem
           key={doc._id}
-          onClick={() => false && Router.go(doc.url())}
+          onClick={() => Router.go(doc.url())}
           title={doc.title}
         >
-          {(false &&
-            subItems &&
+          {(subItems &&
             subItems.length &&
             <subdocs>
               <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
               {subItems.map(child =>
                 <UI.Text
                   key={child._id}
-                  onClick={() => false && Router.go(child.url())}
+                  onClick={() => Router.go(child.url())}
                   size={0.8}
                 >
                   {child.title}
@@ -206,7 +205,7 @@ export default class ExplorerChildren {
           items={sortedDocs || allDocs}
           store={store}
           onSortEnd={store.onSortEnd}
-          useDragHandle
+          pressDelay={500}
         />
         <Item
           if={store.creatingDoc}

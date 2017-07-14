@@ -33,11 +33,11 @@ class SidebarContent {
         <heading $$draggable $$row css={{ padding: 10 }}>
           <UI.Input circular flex={1} />
           <div $$flex />
-          <UI.Segment itemProps={{ borderRadius: 15 }}>
+          <UI.Segment itemProps={{ borderRadius: 15, size: 0.9 }}>
             <UI.Button active icon="check">
               Todo
             </UI.Button>
-            <UI.Button icon="mail">Incoming</UI.Button>
+            <UI.Button icon="chat">Discussions</UI.Button>
           </UI.Segment>
         </heading>
 

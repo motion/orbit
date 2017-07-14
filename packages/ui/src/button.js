@@ -28,7 +28,7 @@ export default class Button {
         sizeRadius
         sizeFont
         sizeHeight
-        sizePadding={1}
+        sizePadding={1.5}
         borderWidth={1}
         glint={!chromeless}
         chromeless={chromeless}

@@ -37,6 +37,9 @@ export default class Projects {
           <tasks if={hasDocs && hasCrumbs}>
             <FlipMove>
               {docs.map((doc, index) => {
+                if (!doc.tasks) {
+                  debugger
+                }
                 const tasks = doc.tasks()
                 const hasTasks = tasks && tasks.length
                 const percentDone = percentComplete(tasks)

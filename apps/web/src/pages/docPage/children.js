@@ -25,21 +25,21 @@ const DragHandle = SortableHandle(props =>
 
 @view.ui
 class Item {
-  render({ editable, title, onSave, textRef, subItems, ...props }) {
+  render({ doc, editable, onSave, textRef, subItems, ...props }) {
     return (
-      <doccontainer {...props}>
-        <doc $$justify="flex-end" $$row>
+      <doccontainer onClick={() => doc.url && Router.go(doc.url())} {...props}>
+        <doc $$justify="flex-end" $$align="center" $$row>
           <UI.Text
             $title
-            if={title || editable}
+            if={doc.title || editable}
             editable={editable}
             onFinishEdit={onSave}
             ref={textRef}
           >
-            {title}
+            {doc.title}
           </UI.Text>
           <UI.Icon
-            if={Math.random() > 0.8}
+            if={doc.type === 'thread'}
             name="paper"
             size={12}
             css={{ marginLeft: 10 }}
@@ -69,6 +69,10 @@ class Item {
   static style = {
     doccontainer: {
       position: 'relative',
+      opacity: 0.8,
+      '&:hover': {
+        opacity: 1,
+      },
     },
     doc: {
       padding: [5, 0],
@@ -107,6 +111,7 @@ class ExplorerChildrenStore {
           {
             parentId: this.props.explorerStore.document._id,
             parentIds: [this.props.explorerStore.document._id],
+            type: this.docType,
           },
           true
         )
@@ -159,8 +164,19 @@ class ExplorerChildrenStore {
     })
   }
 
+  createDoc = () => {
+    this.docType = 'document'
+    this.creatingDoc = true
+  }
+
+  createThread = () => {
+    this.docType = 'thread'
+    this.creatingDoc = true
+  }
+
   saveCreatingDoc = async title => {
     this.newDoc.title = title
+    this.newDoc.type = this.docType
     await this.newDoc.save()
     this.setTimeout(() => {
       this.creatingDoc = false
@@ -173,14 +189,7 @@ const SortableChildren = SortableContainer(({ items, store }) =>
   <docs>
     {items.map(doc => {
       const subItems = store.children[doc._id]
-      return (
-        <SortableItem
-          key={doc._id}
-          onClick={() => Router.go(doc.url())}
-          title={doc.title}
-          subItems={subItems}
-        />
-      )
+      return <SortableItem key={doc._id} doc={doc} subItems={subItems} />
     })}
   </docs>
 )
@@ -218,9 +227,10 @@ export default class ExplorerChildren {
           pressDelay={500}
         />
         <Item
-          if={store.creatingDoc}
+          if={store.newDoc}
           editable
           onSave={store.saveCreatingDoc}
+          doc={store.newDoc}
           textRef={this.onNewItemText}
         />
 
@@ -229,6 +239,7 @@ export default class ExplorerChildren {
           background
           elevation={3}
           borderRadius={8}
+          closeOnClick
           target={
             <UI.Button chromeless icon="add" marginTop={10} marginRight={-10}>
               Create
@@ -236,16 +247,12 @@ export default class ExplorerChildren {
           }
         >
           <UI.Segment itemProps={{ chromeless: true }}>
-            <UI.Button
-              onClick={store.ref('creatingDoc').setter(true)}
-              icon="note"
-              tooltip="Document"
-            />
-            <UI.Button
-              onClick={store.ref('creatingDoc').setter(true)}
-              icon="paper"
-              tooltip="Discussion"
-            />
+            <UI.Button onClick={store.createDoc} icon="note">
+              Document
+            </UI.Button>
+            <UI.Button onClick={store.createThread} icon="paper">
+              Thread
+            </UI.Button>
           </UI.Segment>
         </UI.Popover>
 

@@ -230,6 +230,10 @@ export default class Popover {
         e.preventDefault()
         this.close()
       }
+      if (this.curProps.closeOnClick && this.isClickingTarget) {
+        e.preventDefault()
+        this.close()
+      }
     })
   }
 

@@ -35,9 +35,9 @@ class SidebarContent {
           <div $$flex />
           <UI.Segment itemProps={{ borderRadius: 15, size: 0.9 }}>
             <UI.Button active icon="check">
-              Todo
+              Tasks
             </UI.Button>
-            <UI.Button icon="chat">Discussions</UI.Button>
+            <UI.Button icon="chat">Threads</UI.Button>
           </UI.Segment>
         </heading>
 

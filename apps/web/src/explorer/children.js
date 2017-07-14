@@ -140,46 +140,44 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, allDocs } }: Props) {
     return (
       <children>
-        <docs>
-          {hasDocs &&
-            allDocs.map(doc => {
-              const children = store.children[doc._id]
-              return (
-                <Item
-                  key={doc._id}
-                  onClick={() => Router.go(doc.url())}
-                  title={doc.title}
-                >
-                  <subdocs if={children && children.length}>
-                    <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
-                    {children.map(child =>
-                      <UI.Button
-                        chromeless
-                        key={child._id}
-                        onClick={() => Router.go(child.url())}
-                        size={0.8}
-                      >
-                        {child.title}
-                      </UI.Button>
-                    )}
-                  </subdocs>
-                </Item>
-              )
-            })}
-          <Item
-            if={store.creatingDoc}
-            editable
-            onSave={store.saveCreatingDoc}
-            textRef={this.onNewItemText}
-          />
-          <Item
-            onClick={store.ref('creatingDoc').setter(true)}
-            title="+1"
-            css={{
-              opacity: 0.2,
-            }}
-          />
+        <docs if={hasDocs}>
+          {allDocs.map(doc => {
+            const children = store.children[doc._id]
+            return (
+              <Item
+                key={doc._id}
+                onClick={() => Router.go(doc.url())}
+                title={doc.title}
+              >
+                <subdocs if={children && children.length}>
+                  <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
+                  {children.map(child =>
+                    <UI.Text
+                      key={child._id}
+                      onClick={() => Router.go(child.url())}
+                      size={0.8}
+                    >
+                      {child.title}
+                    </UI.Text>
+                  )}
+                </subdocs>
+              </Item>
+            )
+          })}
         </docs>
+        <Item
+          if={store.creatingDoc}
+          editable
+          onSave={store.saveCreatingDoc}
+          textRef={this.onNewItemText}
+        />
+        <Item
+          onClick={store.ref('creatingDoc').setter(true)}
+          title="+1"
+          css={{
+            opacity: 0.2,
+          }}
+        />
         <shadow if={false} $glow />
         <background $glow />
       </children>
@@ -195,25 +193,16 @@ export default class ExplorerChildren {
       '&:hover > glow': {},
       position: 'relative',
     },
-    docs: {
-      transition: 'transform ease-in 250ms',
-      transform: {
-        x: 0,
-      },
-      '&:hover': {
-        transform: {
-          x: 0,
-        },
-      },
-    },
     arrow: {
       height: 20,
       margin: ['auto', 0],
     },
     subdocs: {
       flexFlow: 'row',
+      justifyContent: 'flex-end',
       overflow: 'hidden',
       opacity: 0.5,
+      textAlign: 'right',
     },
     text: {
       lineHeight: '1.4rem',

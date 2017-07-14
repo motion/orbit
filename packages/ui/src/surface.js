@@ -248,7 +248,7 @@ export default class Surface implements ViewType {
       />,
       <element
         key={3}
-        if={!noElement || (noElement && hasChildren(children))}
+        if={!noElement}
         {...wrapElement && passProps}
         {...elementProps}
         $hasIconBefore={hasIconBefore}
@@ -256,6 +256,7 @@ export default class Surface implements ViewType {
       >
         {children}
       </element>,
+      noElement && hasChildren(children) && children,
       <Popover
         key={4}
         if={tooltip}
@@ -314,7 +315,6 @@ export default class Surface implements ViewType {
   static style = {
     surface: {
       lineHeight: '1rem',
-      fontWeight: 400,
       position: 'relative',
     },
     element: {

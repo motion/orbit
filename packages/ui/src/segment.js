@@ -5,6 +5,7 @@ import type { ViewType } from '@mcro/black'
 import Button from './button'
 import { Provider } from 'react-tunnel'
 import type { Color } from '@mcro/gloss'
+import Surface from './surface'
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
@@ -15,12 +16,11 @@ export default class Segment implements ViewType<Props> {
     controlled?: boolean,
     items: Array<React$Element<any> | Object>,
     children: React$Element<any>,
+    label: React$Element<any>,
     onChange?: Function,
     onlyIcons?: boolean,
-    title?: string,
     stretch?: boolean,
     sync?: { get(): number, set(value: number): void },
-    padded?: boolean,
     color: Color,
     uiContext?: Object,
     itemProps?: Object,
@@ -53,10 +53,9 @@ export default class Segment implements ViewType<Props> {
     onlyIcons,
     children: children_,
     active,
-    title,
+    label,
     stretch,
     sync,
-    padded,
     uiContext,
     color,
     itemProps,
@@ -119,12 +118,12 @@ export default class Segment implements ViewType<Props> {
     }
 
     return (
-      <segment {...props}>
-        <title if={title}>
-          {title}
-        </title>
+      <Surface noElement background="transparent" $segment {...props}>
+        <label if={label}>
+          {label}
+        </label>
         {children}
-      </segment>
+      </Surface>
     )
   }
 
@@ -134,7 +133,7 @@ export default class Segment implements ViewType<Props> {
       alignItems: 'center',
       userSelect: 'none',
     },
-    title: {
+    label: {
       margin: ['auto', 5],
       opacity: 0.8,
       fontSize: 11,
@@ -146,9 +145,6 @@ export default class Segment implements ViewType<Props> {
       flex: props.flex === true ? 1 : props.flex,
       ...(props.reverse && {
         flexFlow: 'row-reverse',
-      }),
-      ...(props.padded && {
-        margin: ['auto', 5],
       }),
       ...(props.column && {
         flexFlow: 'column',

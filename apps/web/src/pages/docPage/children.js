@@ -19,14 +19,16 @@ type Props = {
   store: object,
 }
 
-const DragHandle = SortableHandle(() => <span>::</span>)
+const DragHandle = SortableHandle(props =>
+  <UI.Icon name="menu" size={6} opacity={0.2} {...props} />
+)
 
 @view.ui
 class Item {
   render({ editable, children, title, onSave, textRef, ...props }) {
     return (
       <doccontainer {...props}>
-        <doc $$justify="flex-start">
+        <doc $$justify="flex-end" $$row>
           <UI.Text
             $title
             if={title || editable}
@@ -37,8 +39,8 @@ class Item {
             {title}
           </UI.Text>
           {children}
+          <DragHandle css={{ margin: ['auto', -12, 'auto', 12] }} />
         </doc>
-        <DragHandle />
       </doccontainer>
     )
   }
@@ -48,12 +50,14 @@ class Item {
     },
     doc: {
       padding: [5, 10],
+      minWidth: 50,
       textAlign: 'right',
     },
     title: {
       fontWeight: 400,
       fontSize: 14,
       lineHeight: '1.1rem',
+      width: '100%',
       color: '#777',
     },
   }
@@ -196,7 +200,7 @@ export default class ExplorerChildren {
           items={sortedDocs || allDocs}
           store={store}
           onSortEnd={store.onSortEnd}
-          userDragHandle
+          useDragHandle
         />
         <Item
           if={store.creatingDoc}
@@ -204,13 +208,18 @@ export default class ExplorerChildren {
           onSave={store.saveCreatingDoc}
           textRef={this.onNewItemText}
         />
-        <UI.Button
-          onClick={store.ref('creatingDoc').setter(true)}
-          icon="add"
-          marginTop={10}
-        >
-          Create new
-        </UI.Button>
+        <UI.Segment label="Create" marginTop={10}>
+          <UI.Button
+            onClick={store.ref('creatingDoc').setter(true)}
+            icon="note"
+            tooltip="Document"
+          />
+          <UI.Button
+            onClick={store.ref('creatingDoc').setter(true)}
+            icon="paper"
+            tooltip="Discussion"
+          />
+        </UI.Segment>
         <shadow if={false} $glow />
         <background $glow />
       </children>

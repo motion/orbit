@@ -40,8 +40,6 @@ export default class Arrow {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 
-    log(towards, innerTop)
-
     // add padding so big shadows work
     return (
       <arrowOuter

@@ -4,7 +4,7 @@ declare class ReactRenderArgs<Props, State, Context> {
   render(props: Props, state: State, context: Context): React$Element<any>,
 }
 
-export default (options: Object) => ({
+export default () => ({
   name: 'react-render-args',
   decorator: (Klass: Class<any> | Function) => {
     // avoid fn classes

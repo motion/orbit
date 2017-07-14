@@ -504,8 +504,8 @@ export default class Popover {
     const closeIfOut = () => {
       if (!this.isNodeHovered(node, isPopover)) {
         setUnhovered()
-        console.log(delayOpenIfHover)
         if (delayOpenIfHover.cancel) {
+          // cancel previous
           delayOpenIfHover.cancel()
         }
       }

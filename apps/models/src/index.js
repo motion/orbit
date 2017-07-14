@@ -99,7 +99,6 @@ export default class Models implements ModelsStore {
     }
   }
 
-  @log
   attachModels = async () => {
     const connections = []
 

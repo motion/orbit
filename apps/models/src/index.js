@@ -11,11 +11,11 @@ import { omit } from 'lodash'
 
 // export all models
 export Document from './document'
-export Org from './org'
 export Comment from './comment'
 export Thread from './thread'
 export Image from './image'
 export User from './user'
+export Org from './org'
 
 // exports
 export type { Model } from '~/helpers'
@@ -64,21 +64,20 @@ export default class Models implements ModelsStore {
   }
 
   start = async () => {
-    // handles re-connecting models on login/out
-    User.superlogin.on('login', () => {
-      setTimeout(() => {
-        if (!this.modelsLoggedIn && User.loggedIn) {
-          this.attachModels()
-          this.modelsLoggedIn = true
-        }
-      }, 100)
-    })
-    User.superlogin.on('logout', () => {
-      if (this.modelsLoggedIn) {
-        this.attachModels()
-        this.modelsLoggedIn = false
-      }
-    })
+    // User.superlogin.on('login', () => {
+    //   setTimeout(() => {
+    //     if (!this.modelsLoggedIn && User.loggedIn) {
+    //       this.attachModels()
+    //       this.modelsLoggedIn = true
+    //     }
+    //   }, 100)
+    // })
+    // User.superlogin.on('logout', () => {
+    //   if (this.modelsLoggedIn) {
+    //     this.attachModels()
+    //     this.modelsLoggedIn = false
+    //   }
+    // })
 
     this.database = await RxDB.create({
       adapter: 'idb',
@@ -87,6 +86,7 @@ export default class Models implements ModelsStore {
       multiInstance: true,
       withCredentials: false,
     })
+
     await this.attachModels()
   }
 
@@ -100,6 +100,7 @@ export default class Models implements ModelsStore {
     }
   }
 
+  @log
   attachModels = async () => {
     const connections = []
 
@@ -127,6 +128,7 @@ export default class Models implements ModelsStore {
     }
 
     const result = await Promise.all(connections)
+    console.log('connecting', connections)
     return result
   }
 }

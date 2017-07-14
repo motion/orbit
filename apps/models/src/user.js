@@ -1,7 +1,8 @@
-import { store } from '@mcro/black'
+import { store, watch } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
 import superLogin from 'superlogin-client'
 import { DocumentModel } from './document'
+import Org from './org'
 
 const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
@@ -11,7 +12,13 @@ class User {
   user = null
   localDb = null
   remoteDb = null
-  org = null
+  activeOrg = 0
+  @watch orgs = () => Org.forUser(this.id)
+  @watch favoriteDocuments = () => Document.favoritedBy(this.id)
+
+  get org() {
+    return this.orgs && this.orgs[this.activeOrg]
+  }
 
   constructor(options) {
     this.superlogin = superLogin
@@ -27,6 +34,10 @@ class User {
     this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'
 
+    this.setupSuperLogin()
+  }
+
+  setupSuperLogin() {
     this.superlogin.configure(this.options)
 
     // sync

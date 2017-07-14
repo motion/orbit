@@ -2,22 +2,22 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Document } from '@mcro/models'
+import { User } from '@mcro/models'
 import Router from '~/router'
 import { flatMap } from 'lodash'
 import Arrow from '~/explorer/arrow'
 
 @view({
   store: class SidebarProjectStore {
-    docs = Document.stars()
     @watch
     crumbs = () =>
-      this.docs && Promise.all(this.docs.map(doc => doc.getCrumbs()))
+      User.favoriteDocuments &&
+      Promise.all(User.favoriteDocuments.map(doc => doc.getCrumbs()))
   },
 })
 export default class Projects {
   render({ store }: { store: SidebarProjectStore }) {
-    const docs = store.docs || []
+    const docs = User.favoriteDocuments || []
     const hasDocs = docs.length !== 0
     const percentComplete = tasks =>
       100 * tasks.filter(i => i.archive).length / tasks.length

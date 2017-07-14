@@ -205,7 +205,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       width: 180,
-      marginTop: 140,
+      marginTop: 70,
       padding: [10, 0, 40, 10],
       flex: 1,
       '&:hover > glow': {},

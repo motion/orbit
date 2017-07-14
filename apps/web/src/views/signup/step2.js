@@ -36,7 +36,8 @@ import * as UI from '@mcro/ui'
 
     @log
     handleSubmit = async fields => {
-      User.org = 'done'
+      // User.org = 'done'
+      console.log('submit it up')
     }
   },
 })
@@ -104,7 +105,6 @@ export default class SignupStep2 {
               theme="rgb(48, 130, 224)"
               alignSelf="flex-end"
               size={1.2}
-              onClick={() => (User.org = 'hi')}
             >
               Done
             </UI.Button>

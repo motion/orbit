@@ -1,8 +1,9 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { User } from '@mcro/models'
+import DocPage from './docPage'
+import * as UI from '@mcro/ui'
 
-@view.attach('explorerStore')
 @view
 export default class HomePage {
   render() {
@@ -10,12 +11,11 @@ export default class HomePage {
       return <center $$centered>login plz</center>
     }
 
-    return <home>welcome home</home>
-  }
+    if (!User.org) {
+      return <NickTest />
+      return <null>weird no org</null>
+    }
 
-  static style = {
-    home: {
-      flex: 1,
-    },
+    return <DocPage {...this.props} />
   }
 }

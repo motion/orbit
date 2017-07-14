@@ -27,7 +27,7 @@ export default class Button {
         sizeRadius
         sizeFont
         sizeHeight
-        sizePadding={1.1}
+        sizePadding={1}
         borderWidth={1}
         glint={!chromeless}
         chromeless={chromeless}
@@ -47,12 +47,13 @@ export default class Button {
         }}
         {...props}
         noElement
+        after={
+          <badge if={badge} $badgeSize={props.size}>
+            {badge}
+          </badge>
+        }
       >
         {children}
-        {badge &&
-          <badge $badgeSize={props.size}>
-            {badge}
-          </badge>}
       </SizedSurface>
     )
   }
@@ -72,6 +73,7 @@ export default class Button {
       background: 'red',
       color: '#fff',
       overflow: 'hidden',
+      pointerEvents: 'none',
       border: [2, '#fff'],
     },
     badgeSize: size => ({

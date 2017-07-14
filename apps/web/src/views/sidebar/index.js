@@ -29,6 +29,7 @@ class SidebarContent {
     return (
       <inner $$flex>
         <UI.Glint borderRadius={5} />
+        <UserBar />
         <Login />
         <Menu />
 
@@ -76,7 +77,6 @@ class SidebarContent {
         </contents>
         <rest $$flex>
           <Projects />
-          <UserBar />
         </rest>
       </inner>
     )

@@ -384,11 +384,11 @@ export default class Popover {
 
       // arrow
       if (targetCenter < popoverHalfWidth) {
-        // adjust left
+        // ON LEFT SIDE
         const edgeAdjustment = left
-        arrowLeft = -popoverHalfWidth - targetCenter + edgeAdjustment
+        arrowLeft = -popoverHalfWidth + targetCenter - edgeAdjustment
       } else if (targetCenter > arrowCenter) {
-        // adjust right
+        // ON RIGHT SIDE
         const edgeAdjustment = window.innerWidth - (left + popoverSize.width)
         arrowLeft = targetCenter - arrowCenter + edgeAdjustment
       }
@@ -462,7 +462,7 @@ export default class Popover {
     // max height
     if (VERTICAL) {
       if (direction === 'top') {
-        maxHeight = targetBounds.top - top + arrowHeight + 7
+        maxHeight = targetBounds.top - top + forgiveness * 2 - arrowSize / 2
       } else {
         maxHeight =
           window.innerHeight - (targetBounds.top + targetBounds.height)
@@ -669,7 +669,10 @@ export default class Popover {
                 bottom: bottom || 'auto',
                 left,
                 width,
-                height,
+                // because things that extend downwards wont always fill all the way
+                // so arrow will be floating, so lets make it always expand fully down
+                // when the popover arrow is at bottom
+                height: direction === 'top' ? height || maxHeight : height,
                 maxHeight,
               }}
             >

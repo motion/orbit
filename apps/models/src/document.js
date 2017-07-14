@@ -46,12 +46,11 @@ export const methods = {
     // if (lastUpdated >= this.updatedAt) return cacheValue
     return docToTasks(this)
   },
-  // hasStar: true,
   get hasStar() {
-    return this.starredBy.find(id => id === User.authorId)
+    return this.starredBy.find(id => id === User.id)
   },
   async toggleStar() {
-    this.starredBy = toggleInclude(this.starredBy, User.authorId)
+    this.starredBy = toggleInclude(this.starredBy, User.id)
     await this.save()
   },
   async getCrumbs() {
@@ -282,15 +281,20 @@ export class DocumentModel extends Model {
   @query root = () => this.collection.find({ parentId: { $exists: false } })
 
   @query
-  stars = () =>
-    this.collection
-      .find({
-        threadId: { $exists: false },
-        starredBy: { $elemMatch: { $eq: User.authorId } },
-        createdAt: { $gt: null },
-      })
-      // .sort({ createdAt: 'asc' })
-      .limit(50)
+  favoritedBy = id => {
+    if (!id) {
+      return null
+    }
+    return (
+      this.collection
+        .find({
+          starredBy: { $elemMatch: { $eq: id } },
+          createdAt: { $gt: null },
+        })
+        // .sort({ createdAt: 'asc' })
+        .limit(50)
+    )
+  }
 
   @query
   forThread = (id: string) =>

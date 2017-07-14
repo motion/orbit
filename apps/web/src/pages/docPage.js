@@ -1,15 +1,15 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
-import { User, Document } from '@mcro/models'
+import { User } from '@mcro/models'
 import Page from '~/views/page'
 import Inbox from '~/views/inbox'
 import Children from '~/explorer/children'
 
 const itemProps = {
-  size: 1.5,
+  size: 1.25,
   chromeless: true,
   tooltipProps: {
     towards: 'left',
@@ -111,7 +111,6 @@ class Actions {
       position: 'absolute',
       top: 10,
       right: 10,
-      height: 98,
       alignItems: 'flex-end',
       zIndex: 1000,
       justifyContent: 'space-between',
@@ -132,14 +131,14 @@ class DocPageStore {
   }
 }
 
-@view.attach('explorerStore')
+@view.attach('explorerStore', 'layoutStore')
 @view({
   docStore: DocPageStore,
 })
 export default class DocumentPage {
   extraRef = null
 
-  render({ docStore, explorerStore }: { docStore: DocPageStore }) {
+  render({ docStore, explorerStore, layoutStore }: { docStore: DocPageStore }) {
     const { document } = explorerStore
 
     if (document === undefined) {
@@ -153,13 +152,12 @@ export default class DocumentPage {
       <Page>
         <Page.Actions>
           <UI.Button
-            onClick={explorerStore.ref('showDiscussions').toggle}
-            highlight={explorerStore.showDiscussions}
-            chromeless
-            icon="message"
-          >
-            Threads
-          </UI.Button>
+            {...itemProps}
+            icon="fav3"
+            tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
+            highlight={document.hasStar}
+            onClick={() => document.toggleStar()}
+          />
         </Page.Actions>
 
         <Actions />
@@ -183,13 +181,21 @@ export default class DocumentPage {
           <Children documentStore={docStore} />
         </children>
 
-        <UI.Button
-          {...itemProps}
-          icon="fav3"
-          tooltip={document.hasStar ? 'Unfollow' : 'Follow'}
-          highlight={document.hasStar}
-          onClick={document.toggleStar}
-        />
+        <bottomright
+          css={{ position: 'absolute', bottom: 10, right: 10, zIndex: 100000 }}
+        >
+          <UI.Button
+            chromeless
+            spaced
+            size={0.7}
+            margin={[0, -5, 0, 0]}
+            icon={
+              layoutStore.sidebar.active ? 'arrow-min-right' : 'arrow-min-left'
+            }
+            onClick={layoutStore.sidebar.toggle}
+            color={[0, 0, 0, 0.3]}
+          />
+        </bottomright>
       </Page>
     )
   }

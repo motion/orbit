@@ -2,35 +2,46 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
 import { random } from 'lodash'
+import { messages } from './fakeData'
 
 @view
 export default class Message {
-  render({ doc, name }) {
+  render({ doc, name, embed }) {
+    const fakeMsg = messages[0]
+
     return (
-      <draft>
+      <message $embed={embed}>
         <top $$row>
           <UI.Title size={0.9}>
-            <b>Nick Cammarata</b>
+            <b>
+              {fakeMsg.name}
+            </b>
           </UI.Title>
           <time>
             June {random(1, 25)}
           </time>
         </top>
         <doc>
-          <DocumentView readOnly document={doc} />
+          <DocumentView if={!embed} readOnly document={doc} />
+          <fake if={embed}>
+            {fakeMsg.message}
+          </fake>
         </doc>
-      </draft>
+      </message>
     )
   }
 
   static style = {
-    draft: {
+    message: {
       padding: [10, 18],
-      border: '1px solid #efefef',
-      borderRadius: 5,
+      //border: '1px solid #efefef',
+      backdropFilter: 'blur(5px)',
+      borderRadius: 3,
       marginTop: 10,
       boxShadow: '0px 1px 0px #eee',
+      background: 'rgba(255,255,255,0.8)',
     },
+    embed: {},
     top: {
       justifyContent: 'space-between',
     },
@@ -51,6 +62,11 @@ export default class Message {
     // leaves room for left bar
     doc: {
       marginLeft: -10,
+    },
+    fake: {
+      color: '#333',
+      padding: [5, 20],
+      lineHeight: 1.2,
     },
     b: {
       marginLeft: 4,

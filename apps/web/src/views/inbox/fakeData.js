@@ -1,16 +1,21 @@
+import * as UI from '@mcro/ui'
+
 export const messages = [
   {
     name: 'Steel Brain',
     message: (
-      <span>
-        Hey! <br />
-        <br />We really appreciate you taking the time to report an issue. The
-        collaborators on this project attempt to help as many people as
-        possible, but we're a limited number of volunteers, so it's possible
-        this won't be addressed swiftly.<br />
-        <br />If you need any help, or just have general Babel or JavaScript
-        questions, we have a vibrant Slack community that typically always has
-        someone willing to help. You can sign-up here for an invite.
+      <span style={{ lineHeight: 1.8 }} $$row>
+        <b style={{ opacity: 0.8, marginBottom: 10 }}>
+          Version 1.2.4: Raging Eagle
+        </b>
+        <br />
+        Yesterday we shipped a new fraud launch, using TSNE to segment users and
+        capture those who are selling adwords to get free gym memberships using
+        referrals. <br />
+        You can see the update in the fraud panel on all platforms.
+        <UI.Button style={{ display: 'inline', marginLeft: 5 }} chromeless>
+          (more)
+        </UI.Button>
       </span>
     ),
   },

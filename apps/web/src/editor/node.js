@@ -141,7 +141,6 @@ export default View => {
       }
 
       const { selection } = this.editorStore
-      const isEditable = selection.isEditable(node)
       const isTitle = selection.isDocTitle(node)
 
       return (
@@ -155,8 +154,8 @@ export default View => {
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >
-          <context if={isHovered && !isTitle} contentEditable={false}>
-            {context || this.contextMenu()}
+          <context contentEditable={false}>
+            {isHovered && !isTitle && (context || this.contextMenu())}
           </context>
           {component}
         </node>
@@ -170,13 +169,14 @@ export default View => {
         padding: [0, 15],
         borderLeft: [3, 'transparent'],
         borderRight: [3, 'transparent'],
-
         '&:hover > context': {
           opacity: 1,
         },
       },
       context: {
         opacity: 0,
+        transition: 'opacity ease-in 200ms',
+        transitionDelay: '300ms',
         position: 'absolute',
         left: -5,
         top: 0,
@@ -188,17 +188,8 @@ export default View => {
         // [line-height, margin]
         padding: [0, 25],
       },
-      hoverable: {
-        '&:hover': {
-          borderLeftColor: '#eee',
-        },
-      },
-      focused: {
-        borderLeftColor: '#ddd',
-        '&:hover': {
-          borderLeftColor: '#ddd',
-        },
-      },
+      hoverable: {},
+      focused: {},
     }
   }
 

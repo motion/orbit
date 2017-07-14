@@ -238,7 +238,6 @@ class Draft {
 class Thread {
   render({ store }) {
     const { activeItem: item } = store
-    console.log('item is', item)
     const messages = [
       {
         name: 'Steel Brain',

@@ -7,31 +7,38 @@ import { sortBy, sum } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
 import RightArrow from '~/views/rightArrow'
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+  arrayMove,
+} from 'react-sortable-hoc'
 
 type Props = {
   id: number,
   store: object,
 }
 
+const DragHandle = SortableHandle(() => <span>::</span>)
+
 @view.ui
 class Item {
   render({ editable, children, title, onSave, textRef, ...props }) {
     return (
       <doccontainer {...props}>
-        <UI.TiltGlow>
-          <doc $$justify="flex-start">
-            <UI.Text
-              $title
-              if={title || editable}
-              editable={editable}
-              onFinishEdit={onSave}
-              ref={textRef}
-            >
-              {title}
-            </UI.Text>
-            {children}
-          </doc>
-        </UI.TiltGlow>
+        <doc $$justify="flex-start">
+          <UI.Text
+            $title
+            if={title || editable}
+            editable={editable}
+            onFinishEdit={onSave}
+            ref={textRef}
+          >
+            {title}
+          </UI.Text>
+          {children}
+        </doc>
+        <DragHandle />
       </doccontainer>
     )
   }
@@ -51,6 +58,10 @@ class Item {
     },
   }
 }
+
+const SortableItem = SortableElement(props =>
+  <Item style={{ zIndex: 1000000 }} {...props} />
+)
 
 class ExplorerChildrenStore {
   children = {}
@@ -82,6 +93,12 @@ class ExplorerChildrenStore {
     }
     const result = sortBy(docs || [], 'createdAt')
     return result
+  }
+
+  sortedDocs = null
+
+  onSortEnd = ({ oldIndex, newIndex }) => {
+    this.sortedDocs = arrayMove(this.allDocs, oldIndex, newIndex)
   }
 
   get hasDocs() {
@@ -126,6 +143,38 @@ class ExplorerChildrenStore {
   }
 }
 
+const SortableChildren = SortableContainer(({ items, store }) =>
+  <docs>
+    {items.map(doc => {
+      const subItems = store.children[doc._id]
+      return (
+        <SortableItem
+          key={doc._id}
+          onClick={() => false && Router.go(doc.url())}
+          title={doc.title}
+        >
+          {(false &&
+            subItems &&
+            subItems.length &&
+            <subdocs>
+              <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
+              {subItems.map(child =>
+                <UI.Text
+                  key={child._id}
+                  onClick={() => false && Router.go(child.url())}
+                  size={0.8}
+                >
+                  {child.title}
+                </UI.Text>
+              )}
+            </subdocs>) ||
+            null}
+        </SortableItem>
+      )
+    })}
+  </docs>
+)
+
 @view.attach('explorerStore')
 @view({
   store: ExplorerChildrenStore,
@@ -139,34 +188,16 @@ export default class ExplorerChildren {
     }
   }
 
-  render({ store, store: { hasDocs, allDocs } }: Props) {
+  render({ store, store: { hasDocs, sortedDocs, allDocs } }: Props) {
     return (
       <children>
-        <docs if={hasDocs}>
-          {allDocs.map(doc => {
-            const children = store.children[doc._id]
-            return (
-              <Item
-                key={doc._id}
-                onClick={() => Router.go(doc.url())}
-                title={doc.title}
-              >
-                <subdocs if={children && children.length}>
-                  <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
-                  {children.map(child =>
-                    <UI.Text
-                      key={child._id}
-                      onClick={() => Router.go(child.url())}
-                      size={0.8}
-                    >
-                      {child.title}
-                    </UI.Text>
-                  )}
-                </subdocs>
-              </Item>
-            )
-          })}
-        </docs>
+        <SortableChildren
+          if={hasDocs}
+          items={sortedDocs || allDocs}
+          store={store}
+          onSortEnd={store.onSortEnd}
+          userDragHandle
+        />
         <Item
           if={store.creatingDoc}
           editable

@@ -31,7 +31,7 @@ class SidebarContent {
         <UI.Glint borderRadius={5} />
 
         <heading $$draggable $$row css={{ padding: 10 }}>
-          <UI.Input circular />
+          <UI.Input circular flex={2} />
           <div $$flex />
           <UI.Segment itemProps={{ circular: true }}>
             <UI.Button icon="check" />
@@ -45,8 +45,8 @@ class SidebarContent {
             color: '#fff',
             fontSize: 22,
             fontWeight: 200,
-            padding: [20, 0],
-            margin: [0, 20],
+            padding: [14, 0],
+            margin: [0, 20, 8],
             borderBottom: [1, [0, 0, 0, 0.1]],
           }}
         >

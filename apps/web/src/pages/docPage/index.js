@@ -5,7 +5,6 @@ import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
 import { User } from '@mcro/models'
 import Page from '~/views/page'
-import Inbox from '~/views/inbox'
 import Children from './children'
 import Actions from './actions'
 
@@ -40,7 +39,31 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Actions />
+        <Page.Actions>
+          <UI.Popover
+            openOnHover
+            background
+            width={480}
+            borderRadius={8}
+            elevation={2}
+            adjust={[140, 0]}
+            target={<UI.Button circular size={1} badge={2} icon="bell" />}
+          >
+            <content />
+          </UI.Popover>
+
+          <UI.Button
+            chromeless
+            spaced
+            size={0.7}
+            margin={[0, -5, 0, 0]}
+            icon={
+              layoutStore.sidebar.active ? 'arrow-min-right' : 'arrow-min-left'
+            }
+            onClick={layoutStore.sidebar.toggle}
+            color={[0, 0, 0, 0.3]}
+          />
+        </Page.Actions>
 
         <fade />
 
@@ -71,17 +94,6 @@ export default class DocumentPage {
             highlight={document.hasStar}
             onClick={() => document.toggleStar()}
             after={<div>hi222222222</div>}
-          />
-          <UI.Button
-            chromeless
-            spaced
-            size={0.7}
-            margin={[0, -5, 0, 0]}
-            icon={
-              layoutStore.sidebar.active ? 'arrow-min-right' : 'arrow-min-left'
-            }
-            onClick={layoutStore.sidebar.toggle}
-            color={[0, 0, 0, 0.3]}
           />
         </bottomright>
       </Page>

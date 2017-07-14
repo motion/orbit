@@ -221,15 +221,19 @@ export default class Model {
       }
 
       // decorate each instance with this.methods
-      const { compiledMethods } = this
-      if (compiledMethods) {
-        const ogPostCreate = this.hooks.postCreate
-        this.hooks.postCreate = doc => {
-          console.log('acknowledge')
-          Object.defineProperties(doc, compiledMethods)
-          if (ogPostCreate) {
-            return ogPostCreate.call(this, doc)
+      const ogPostCreate = this.hooks.postCreate
+      this.hooks.postCreate = doc => {
+        const { compiledMethods } = this
+        for (const method of Object.keys(compiledMethods)) {
+          const descriptor = compiledMethods[method]
+          if (typeof descriptor.get === 'function') {
+            descriptor.get = descriptor.get.bind(doc)
           }
+        }
+        Object.defineProperties(doc, compiledMethods)
+
+        if (ogPostCreate) {
+          return ogPostCreate.call(this, doc)
         }
       }
     }

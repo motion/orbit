@@ -44,6 +44,7 @@ class SidebarContent {
         </heading>
 
         <title
+          if={false}
           $$draggable
           css={{
             color: '#fff',

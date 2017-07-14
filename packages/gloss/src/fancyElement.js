@@ -17,6 +17,7 @@ const ogCreateElement = React.createElement.bind(React)
 const TAG_NAME_MAP = {
   title: 'x-title',
   meta: 'x-meta',
+  head: 'x-head',
 }
 const $ = '$'
 
@@ -25,10 +26,11 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
   const { baseStyles, options, niceStyle } = Gloss
   const SHOULD_THEME = !options.dontTheme
   return function fancyElement(
-    type: string | Function,
+    type_: string | Function,
     props?: Object,
     ...children
   ) {
+    let type = type_
     let cssStyles
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
@@ -133,6 +135,10 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           ...finalStyles.map(style => style && style.style),
         ])
       }
+    }
+
+    if (isTag) {
+      type = TAG_NAME_MAP[type] || type
     }
 
     return ogCreateElement(type, finalProps, ...children)

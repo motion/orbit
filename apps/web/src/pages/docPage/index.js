@@ -40,18 +40,7 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Actions>
-          <UI.Button
-            size={1.25}
-            borderWidth={0}
-            icon="fav3"
-            tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
-            tooltipProps={{ towards: 'left' }}
-            highlight={document.hasStar}
-            onClick={() => document.toggleStar()}
-            after={<div>hi222222222</div>}
-          />
-        </Page.Actions>
+        <Page.Actions />
 
         <fade />
 
@@ -73,6 +62,16 @@ export default class DocumentPage {
         <bottomright
           css={{ position: 'absolute', bottom: 10, right: 10, zIndex: 100000 }}
         >
+          <UI.Button
+            size={1.25}
+            borderWidth={0}
+            icon="fav3"
+            tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
+            tooltipProps={{ towards: 'left' }}
+            highlight={document.hasStar}
+            onClick={() => document.toggleStar()}
+            after={<div>hi222222222</div>}
+          />
           <UI.Button
             chromeless
             spaced

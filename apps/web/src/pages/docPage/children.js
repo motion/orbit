@@ -173,13 +173,9 @@ export default class ExplorerChildren {
           onSave={store.saveCreatingDoc}
           textRef={this.onNewItemText}
         />
-        <Item
-          onClick={store.ref('creatingDoc').setter(true)}
-          title="+1"
-          css={{
-            opacity: 0.2,
-          }}
-        />
+        <UI.Button onClick={store.ref('creatingDoc').setter(true)} icon="add">
+          Create new
+        </UI.Button>
         <shadow if={false} $glow />
         <background $glow />
       </children>

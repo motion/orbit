@@ -30,14 +30,14 @@ class SidebarContent {
       <inner $$flex>
         <UI.Glint borderRadius={5} />
 
-        <header $$row css={{ padding: 10 }}>
+        <heading $$draggable $$row css={{ padding: 10 }}>
           <UI.Input circular />
           <div $$flex />
           <UI.Segment itemProps={{ circular: true }}>
             <UI.Button icon="check" />
             <UI.Button icon="mail" />
           </UI.Segment>
-        </header>
+        </heading>
 
         <title
           $$draggable

@@ -446,7 +446,7 @@ export default class Surface implements ViewType {
     }
 
     // borderRadius
-    const borderRadiusSize = props.circular ? height : props.borderRadius
+    const borderRadiusSize = props.circular ? height / 2 : props.borderRadius
     const borderRadius = {}
     if (props.uiContext && props.uiContext.inSegment) {
       borderRadius.borderLeftRadius = props.uiContext.inSegment.first
@@ -515,6 +515,7 @@ export default class Surface implements ViewType {
     }
 
     return {
+      borderRadiusSize,
       glintColor,
       element: {
         height,

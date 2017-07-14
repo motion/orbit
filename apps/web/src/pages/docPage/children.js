@@ -173,7 +173,11 @@ export default class ExplorerChildren {
           onSave={store.saveCreatingDoc}
           textRef={this.onNewItemText}
         />
-        <UI.Button onClick={store.ref('creatingDoc').setter(true)} icon="add">
+        <UI.Button
+          onClick={store.ref('creatingDoc').setter(true)}
+          icon="add"
+          marginTop={10}
+        >
           Create new
         </UI.Button>
         <shadow if={false} $glow />
@@ -186,7 +190,7 @@ export default class ExplorerChildren {
     children: {
       padding: [10, 0, 40, 10],
       flex: 1,
-      '&:hover > glow': {},
+      alignItems: 'flex-end',
       position: 'relative',
     },
     arrow: {

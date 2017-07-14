@@ -140,31 +140,32 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, allDocs } }: Props) {
     return (
       <children>
-        <docs if={hasDocs && Object.keys(store.children).length}>
-          {allDocs.map(doc => {
-            const children = store.children[doc._id]
-            return (
-              <Item
-                key={doc._id}
-                onClick={() => Router.go(doc.url())}
-                title={doc.title}
-              >
-                <subdocs if={children && children.length}>
-                  <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
-                  {children.map(child =>
-                    <UI.Button
-                      chromeless
-                      key={child._id}
-                      onClick={() => Router.go(child.url())}
-                      size={0.8}
-                    >
-                      {child.title}
-                    </UI.Button>
-                  )}
-                </subdocs>
-              </Item>
-            )
-          })}
+        <docs>
+          {hasDocs &&
+            allDocs.map(doc => {
+              const children = store.children[doc._id]
+              return (
+                <Item
+                  key={doc._id}
+                  onClick={() => Router.go(doc.url())}
+                  title={doc.title}
+                >
+                  <subdocs if={children && children.length}>
+                    <Arrow $arrow css={{ transform: { scale: 0.5 } }} />
+                    {children.map(child =>
+                      <UI.Button
+                        chromeless
+                        key={child._id}
+                        onClick={() => Router.go(child.url())}
+                        size={0.8}
+                      >
+                        {child.title}
+                      </UI.Button>
+                    )}
+                  </subdocs>
+                </Item>
+              )
+            })}
           <Item
             if={store.creatingDoc}
             editable

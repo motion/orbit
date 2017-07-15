@@ -136,7 +136,7 @@ export default class Model {
       const result = new Proxy(
         {
           exec: () => {
-            console.warn('This model isn\'t connected!')
+            console.warn("This model isn't connected!")
             return Promise.resolve(false)
           },
           isntConnected: true,
@@ -224,6 +224,7 @@ export default class Model {
       const ogPostCreate = this.hooks.postCreate
       this.hooks.postCreate = doc => {
         const { compiledMethods } = this
+
         for (const method of Object.keys(compiledMethods)) {
           const descriptor = compiledMethods[method]
           if (typeof descriptor.get === 'function') {

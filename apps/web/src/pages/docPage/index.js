@@ -69,7 +69,7 @@ export default class DocumentPage {
         </Page.Actions>
 
         <docpagecontent>
-          <Inbox if={document.type === 'thread'} />
+          <Inbox document={document} if={true || document.type === 'thread'} />
           <DocumentView
             if={isDoc}
             $$paddingRight={120}

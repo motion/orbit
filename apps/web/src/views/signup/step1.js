@@ -81,7 +81,7 @@ export default class SignupStep1 {
             Welcome to Jot
           </UI.Title>
           <UI.Text size={1.2} color={[0, 0, 0, 0.4]}>
-            Lets get you signed up
+            Let's get you signed up
           </UI.Text>
           <br />
           <UI.PassProps

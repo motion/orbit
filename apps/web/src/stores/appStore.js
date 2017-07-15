@@ -41,6 +41,7 @@ export default class App implements AppStore {
       console.time('start')
     }
     this.models = new Models(this.config, this.modelsObjects)
+    console.log('start models')
     await this.models.start()
     this.catchErrors()
     this.trackMounts()
@@ -51,7 +52,7 @@ export default class App implements AppStore {
   }
 
   dispose = () => {
-    this.models.dispose()
+    this.models && this.models.dispose()
   }
 
   // private

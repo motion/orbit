@@ -21,6 +21,8 @@ class Thread extends Model {
     },
   }
 
+  methods = {}
+
   @query
   all = () => {
     return this.collection.find

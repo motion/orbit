@@ -37,6 +37,7 @@ class InboxStore {
     })
     this.draft = await Document.create({
       draft: true,
+      title: '',
       threadId: this.draftThread._id,
     })
   }

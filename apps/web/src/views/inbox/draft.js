@@ -12,7 +12,7 @@ class ThreadDraftStore {
 
   create = () => {
     const { inboxStore } = this.props
-    Document.create({ draft: true, threadId: this.threadId })
+    Document.create({ draft: true, title: '', threadId: this.threadId })
   }
 
   send = () => {

@@ -137,6 +137,7 @@ export type DocumentType = typeof methods & {
   private: boolean,
   slug: str,
   draft?: boolean,
+  threadId?: str,
   createdAt: string,
   updatedAt: string,
   type: 'document' | 'thread' | 'summary',
@@ -147,6 +148,7 @@ export class DocumentModel extends Model {
     title: str,
     content: object,
     text: str.optional,
+    threadId: str.optional,
     authorId: str,
     color: str,
     orgId: str.optional,
@@ -191,6 +193,7 @@ export class DocumentModel extends Model {
   hooks = {
     preSave: async (document: Object) => {
       const doc = this.get(document.slug)
+
       if (doc && (await doc.exec())) {
         throw new Error(
           `Already exists a place with this slug! ${document.slug}`
@@ -256,20 +259,21 @@ export class DocumentModel extends Model {
     return this.collection
       .find({
         draft: { $ne: true },
+        threadId: { $exists: false },
       })
       .where('parentId')
       .eq(id)
     // .sort({ createdAt: 'desc' })
   }
 
-  @query all = () => this.collection.find()
+  @query all = () => this.collection.find({ threadId: { $exists: false } })
   // .find({ createdAt: { $gt: null } })
   // .sort({ createdAt: 'asc' })
 
   @query
   recent = (limit: number = 10) =>
     this.collection
-      .find({ draft: { $ne: true } })
+      .find({ draft: { $ne: true }, threadId: { $exists: false } })
       // .sort({ createdAt: 'desc' })
       .limit(limit)
 
@@ -290,6 +294,14 @@ export class DocumentModel extends Model {
   }
 
   @query
+  forThread = (id: string) =>
+    this.collection.find({ draft: false, threadId: { $eq: id } })
+
+  @query
+  threadDraft = (id: string) =>
+    this.collection.findOne({ draft: true, threadId: { $eq: id } })
+
+  @query
   get = (query: Object | string) => {
     if (!query) {
       return null
@@ -298,7 +310,12 @@ export class DocumentModel extends Model {
     return this.collection.findOne(query_)
   };
 
-  @query home = () => this.collection.findOne({ draft: { $ne: true } })
+  @query
+  home = () =>
+    this.collection.findOne({
+      threadId: { $exists: false },
+      draft: { $ne: true },
+    })
 
   @query
   user = () => {

@@ -19,6 +19,7 @@ import Signup from './signup'
 import { User } from '@mcro/models'
 import { Bar, Results } from '~/explorer'
 import Inbox from '~/views/inbox'
+import InboxEmbed from '~/views/inbox/embed'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -69,7 +70,7 @@ export default class Layout {
               onScroll={this.onScroll}
               $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
             >
-              <Results />
+              <Results if={false} />
               <CurrentPage
                 if={!explorerStore.showResults}
                 key={Router.key}

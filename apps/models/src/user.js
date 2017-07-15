@@ -27,6 +27,7 @@ class User {
   }
 
   connect = database => {
+    console.log('waht?')
     if (this.database) {
       return // hmr
     }
@@ -35,10 +36,11 @@ class User {
     this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'
 
-    this.setupSuperLogin()
+    this.setTimeout(this.setupSuperLogin, 1000)
   }
 
   setupSuperLogin() {
+    console.log('setting up', this.options)
     this.superlogin.configure(this.options)
 
     // sync

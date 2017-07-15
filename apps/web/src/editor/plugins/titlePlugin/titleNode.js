@@ -48,17 +48,6 @@ export default class TitleNode {
       fontWeight: 300,
       color: [0, 0, 0, 0.85],
       margin: [16, 0, -10],
-      transition: 'all ease-in-out 180ms',
-      opacity: 0.7,
-      transform: {
-        y: -2,
-      },
-    },
-    shown: {
-      opacity: 1,
-      transform: {
-        y: 0,
-      },
     },
     inline: {
       // fontFamily: 'Abril Fatface',

@@ -7,91 +7,50 @@ import { sortBy, sum } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
 import RightArrow from '~/views/rightArrow'
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-  arrayMove,
-} from 'react-sortable-hoc'
 
 type Props = {
   id: number,
   store: object,
 }
 
-const DragHandle = SortableHandle(props =>
-  <UI.Icon name="menu" size={6} opacity={0.2} {...props} />
-)
-
 @view.ui
 class Item {
-  render({ doc, editable, onSave, textRef, subItems, ...props }) {
+  render({ editable, children, title, onSave, textRef, ...props }) {
     return (
-      <doccontainer onClick={() => doc.url && Router.go(doc.url())} {...props}>
-        <doc $$justify="flex-end" $$align="center" $$row>
-          <UI.Text
-            $title
-            if={doc.title || editable}
-            editable={editable}
-            onFinishEdit={onSave}
-            ref={textRef}
-          >
-            {doc.title}
-          </UI.Text>
-          <UI.Icon
-            if={doc.type === 'thread'}
-            name="paper"
-            size={12}
-            css={{ marginLeft: 10 }}
-          />
-          <subitems if={false}>
-            {(subItems &&
-              subItems.length &&
-              <subdocs>
-                <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
-                {subItems.map(child =>
-                  <UI.Text
-                    key={child._id}
-                    onClick={() => Router.go(child.url())}
-                    size={0.8}
-                  >
-                    {child.title}
-                  </UI.Text>
-                )}
-              </subdocs>) ||
-              null}
-          </subitems>
-          <DragHandle if={false} css={{ margin: ['auto', -12, 'auto', 12] }} />
-        </doc>
+      <doccontainer {...props}>
+        <UI.TiltGlow>
+          <doc $$justify="flex-start">
+            <UI.Text
+              $title
+              if={title || editable}
+              editable={editable}
+              onFinishEdit={onSave}
+              ref={textRef}
+            >
+              {title}
+            </UI.Text>
+            {children}
+          </doc>
+        </UI.TiltGlow>
       </doccontainer>
     )
   }
   static style = {
     doccontainer: {
       position: 'relative',
-      opacity: 0.8,
-      '&:hover': {
-        opacity: 1,
-      },
     },
     doc: {
-      padding: [5, 0],
-      minWidth: 50,
+      padding: [5, 10],
       textAlign: 'right',
     },
     title: {
       fontWeight: 400,
       fontSize: 14,
       lineHeight: '1.1rem',
-      width: '100%',
       color: '#777',
     },
   }
 }
-
-const SortableItem = SortableElement(props =>
-  <Item style={{ zIndex: 1000000 }} {...props} />
-)
 
 class ExplorerChildrenStore {
   children = {}
@@ -121,12 +80,6 @@ class ExplorerChildrenStore {
     }
     const result = sortBy(docs || [], 'createdAt')
     return result
-  }
-
-  sortedDocs = null
-
-  onSortEnd = ({ oldIndex, newIndex }) => {
-    this.sortedDocs = arrayMove(this.allDocs, oldIndex, newIndex)
   }
 
   get hasDocs() {
@@ -161,37 +114,13 @@ class ExplorerChildrenStore {
     })
   }
 
-  createDoc = () => {
-    this.docType = 'document'
-    this.creatingDoc = true
-  }
-
-  createThread = () => {
-    this.docType = 'thread'
-    this.creatingDoc = true
-  }
-
   saveCreatingDoc = async title => {
     this.newDoc.title = title
-    this.newDoc.type = this.docType
     await this.newDoc.save()
-    log('saved', this.newDoc.id)
     this.version++
     this.creatingDoc = false
-    // this.setTimeout(() => {
-
-    // }, 500)
   }
 }
-
-const SortableChildren = SortableContainer(({ items, store }) =>
-  <docs>
-    {items.map(doc => {
-      const subItems = store.children[doc._id]
-      return <SortableItem key={doc._id} doc={doc} subItems={subItems} />
-    })}
-  </docs>
-)
 
 @view.attach('explorerStore')
 @view({
@@ -206,7 +135,7 @@ export default class ExplorerChildren {
     }
   }
 
-  render({ store, store: { hasDocs, sortedDocs, allDocs } }: Props) {
+  render({ store, store: { hasDocs, allDocs } }: Props) {
     return (
       <children>
         <SortableChildren
@@ -217,13 +146,11 @@ export default class ExplorerChildren {
           pressDelay={500}
         />
         <Item
-          if={store.newDoc}
+          if={store.creatingDoc}
           editable
           onSave={store.saveCreatingDoc}
-          doc={store.newDoc}
           textRef={this.onNewItemText}
         />
-
         <UI.Popover
           openOnClick
           background
@@ -246,7 +173,6 @@ export default class ExplorerChildren {
             </UI.Button>
           </UI.Segment>
         </UI.Popover>
-
         <shadow if={false} $glow />
         <background $glow />
       </children>
@@ -258,7 +184,7 @@ export default class ExplorerChildren {
       borderTop: [1, '#eee', 'dotted'],
       padding: [10, 10, 40, 0],
       flex: 1,
-      alignItems: 'flex-end',
+      '&:hover > glow': {},
       position: 'relative',
     },
     arrow: {

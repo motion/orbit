@@ -57,6 +57,9 @@ const Themes = {
     borderColor: '#222',
   }),
   'clear-dark': Theme.fromStyles({
+    glint: {
+      opacity: 0,
+    },
     glow: {
       opacity: 1,
     },

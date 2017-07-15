@@ -1,7 +1,50 @@
 // @flow
 import React from 'react'
 import SizedSurface from '../sizedSurface'
-import { view, inject } from '@mcro/black'
+import { view, inject, observable } from '@mcro/black'
+import Icon from '../icon'
+
+@view
+class Checkbox {
+  @observable isChecked = this.props.defaultValue || false
+
+  onChange = (e: Event) => {
+    this.isChecked = e.target.checked
+    return this.isChecked
+  }
+
+  render({ onChange, ...props }) {
+    const { isChecked } = this
+    return (
+      <SizedSurface
+        background={isChecked ? [0, 0, 0, 0.2] : [0, 0, 0, 0.1]}
+        color={isChecked ? 'green' : 'white'}
+        hoverColor={isChecked ? 'green' : 'white'}
+        opacity={isChecked ? 1 : 0.2}
+        borderRadius={3}
+        icon="check"
+        glow={false}
+        padding={4}
+        size={1.1}
+        {...props}
+      >
+        <input type="checkbox" onChange={this.onChange} />
+      </SizedSurface>
+    )
+  }
+
+  static style = {
+    input: {
+      position: 'absolute',
+      opacity: 0.0001,
+      transform: {
+        scale: 2,
+        x: '-33%',
+        y: '-60%',
+      },
+    },
+  }
+}
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
@@ -39,7 +82,7 @@ export default class Input {
     }
 
     if (type === 'checkbox') {
-      return <input type="checkbox" {...props} />
+      return <Checkbox type="checkbox" {...props} />
     }
 
     return (

@@ -56,18 +56,6 @@ export default class DocumentPage {
           >
             <content />
           </UI.Popover>
-
-          <UI.Button
-            chromeless
-            spaced
-            size={0.7}
-            margin={[0, -5, 0, 0]}
-            icon={
-              layoutStore.sidebar.active ? 'arrow-min-right' : 'arrow-min-left'
-            }
-            onClick={layoutStore.sidebar.toggle}
-            color={[0, 0, 0, 0.3]}
-          />
         </Page.Actions>
 
         <docpagecontent>
@@ -125,7 +113,7 @@ export default class DocumentPage {
       position: 'relative',
     },
     sidebar: {
-      width: 160,
+      width: 125,
       position: 'absolute',
       overflow: 'hidden',
       zIndex: 50,

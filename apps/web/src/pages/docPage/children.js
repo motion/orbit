@@ -47,7 +47,8 @@ class Item {
       fontWeight: 400,
       fontSize: 14,
       lineHeight: '1.1rem',
-      color: '#777',
+      width: '100%',
+      color: '#666',
     },
   }
 }
@@ -152,14 +153,15 @@ export default class ExplorerChildren {
           textRef={this.onNewItemText}
         />
         <UI.Popover
-          openOnClick
+          openOnHover
+          delay={100}
           background
           elevation={3}
           borderRadius={10}
-          padding={[3, 2, 3, 4]}
+          padding={[2, 2, 2, 3]}
           closeOnClick
           target={
-            <UI.Button chromeless icon="add" marginTop={10} marginRight={-10}>
+            <UI.Button chromeless icon="add" marginTop={10} marginRight={-1}>
               Create
             </UI.Button>
           }
@@ -182,7 +184,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       borderTop: [1, '#eee', 'dotted'],
-      padding: [10, 10, 40, 0],
+      padding: [10, 2, 40, 0],
       flex: 1,
       '&:hover > glow': {},
       position: 'relative',

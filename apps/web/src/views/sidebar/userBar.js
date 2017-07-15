@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User, Document } from '@mcro/models'
+import { User, Document, Org, Image } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import Inbox from '~/views/inbox'
@@ -68,12 +68,15 @@ export default class UserBar {
           {User.name}
         </UI.Text>
         <UI.Popover
+          theme="dark"
           distance={10}
           elevation={2}
           borderRadius={8}
           forgiveness={16}
           delay={150}
-          target={<UI.Button circular icon="body" />}
+          target={
+            <UI.Button circular chromeless icon="circle-09" sizeIcon={1.7} />
+          }
           openOnHover
           closeOnClick
           debug
@@ -86,13 +89,13 @@ export default class UserBar {
             itemProps={{
               height: 32,
               fontSize: 14,
-              borderWidth: 0,
               borderRadius: 8,
             }}
             items={[
               {
                 icon: 'body',
                 primary: User.name,
+                ellipse: true,
                 after: (
                   <UI.Button
                     size={0.8}
@@ -105,6 +108,19 @@ export default class UserBar {
                 icon: 'gear',
                 primary: 'Settings',
                 onClick: () => console.log(),
+              },
+              {
+                icon: 'fire',
+                primary: 'Destroy All',
+                onClick: () => {
+                  ;[Document, Org, Image].forEach(async model => {
+                    const all = await model.find().exec()
+                    log('removing', model.title)
+                    if (all && all.length) {
+                      all.map(item => item.remove())
+                    }
+                  })
+                },
               },
             ]}
           />

@@ -2,10 +2,10 @@
 import { CompositeDisposable } from '@mcro/decor'
 import { autorun, observable } from 'mobx'
 import { compile, str } from './properties'
-import { flatten, intersection } from 'lodash'
 import type RxDB, { RxCollection } from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
+import query from './query'
 
 type SettingsObject = {
   index?: Array<string>,
@@ -50,8 +50,7 @@ export default class Model {
     return {
       ...this.defaultSchema,
       ...this.settings,
-      // cloneDeep fixes bug when re-using a model (compiling twice)
-      ...this.props,
+      ...cloneDeep(this.props), // cloneDeep fixes bug when re-using a model (compiling twice)
       title: this.settings.database,
     }
   }
@@ -260,32 +259,36 @@ export default class Model {
   createIndexes = async (): Promise<void> => {
     const index = this.settings.index || []
 
-    const { indexes } = await this.collection.pouch.getIndexes()
+    // const { indexes } = await this.collection.pouch.getIndexes()
     // console.log('indexes ARE', indexes, 'vs', index)
 
     // TODO see if we can remove but fixes bug for now
     await this.collection.pouch.createIndex({ fields: index })
 
-    if (index.length) {
-      // TODO: pouchdb supposedly does this for you, but it was slow in profiling
-      const { indexes } = await this.collection.pouch.getIndexes()
-      const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
-        field => Object.keys(field)[0]
-      )
-      // if have not indexed every field
-      if (intersection(index, alreadyIndexedFields).length !== index.length) {
-        // need to await or you get error sorting by dates, etc
-        console.log(
-          `%c[pouch] CREATE INDEX ${this.title} ${JSON.stringify(index)}`,
-          'color: green'
-        )
+    // this was a faster way to make indexes if need be
+    // if (index.length) {
+    //   // TODO: pouchdb supposedly does this for you, but it was slow in profiling
+    //   const { indexes } = await this.collection.pouch.getIndexes()
+    //   const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
+    //     field => Object.keys(field)[0]
+    //   )
+    //   // if have not indexed every field
+    //   if (intersection(index, alreadyIndexedFields).length !== index.length) {
+    //     // need to await or you get error sorting by dates, etc
+    //     console.log(
+    //       `%c[pouch] CREATE INDEX ${this.title} ${JSON.stringify(index)}`,
+    //       'color: green'
+    //     )
 
-        await this.collection.pouch.createIndex({ fields: index })
-      }
-    }
+    //     await this.collection.pouch.createIndex({ fields: index })
+    //   }
+    // }
   }
 
   // helpers
+
+  @query find = (...args) => this.collection.find(...args)
+  @query findOne = (...args) => this.collection.findOne(...args)
 
   createTemporary = object => this.create(object, true)
 

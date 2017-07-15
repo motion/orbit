@@ -129,7 +129,7 @@ export default class ExplorerInput {
           icon="home"
           onClick={() => Router.go('/')}
         />
-        <RightArrow css={$arrow} />
+        <RightArrow if={Router.path !== '/'} css={$arrow} />
         <space css={{ width: 10 }} />
         <Editor
           placeholder={'search or create docs'}

@@ -50,7 +50,9 @@ export default class DocumentPage {
             borderRadius={8}
             elevation={2}
             adjust={[140, 0]}
-            target={<UI.Button chromeless size={1.2} badge={2} icon="bell" />}
+            target={
+              <UI.Button chromeless size={1.2} badge={2} icon="circle-09" />
+            }
           >
             <content />
           </UI.Popover>

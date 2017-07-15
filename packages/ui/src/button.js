@@ -29,6 +29,7 @@ export default class Button {
         sizeFont
         sizeHeight
         sizePadding={1}
+        sizeIcon={1.1}
         borderWidth={1}
         glint={!chromeless}
         chromeless={chromeless}
@@ -64,24 +65,25 @@ export default class Button {
   static style = {
     badge: {
       position: 'absolute',
-      top: '8%',
-      right: '8%',
-      textShadow: '1px 1px 0 rgba(0,0,0,0.2)',
-      lineHeight: '0px',
-      fontWeight: 900,
-      borderRadius: 3,
+      top: '5%',
+      right: '5%',
+      textShadow: '1px 1px 0 rgba(0,0,0,0.15)',
+      lineHeight: '1px',
+      fontWeight: 600,
+      borderRadius: 12,
       alignItems: 'center',
       justifyContent: 'center',
       background: 'red',
       color: '#fff',
       overflow: 'hidden',
       pointerEvents: 'none',
+      letterSpacing: 1,
       border: [1, '#fff'],
     },
     badgeSize: size => ({
-      width: size * 9 + 3,
-      height: size * 9 + 3,
-      fontSize: size * 7,
+      width: size * 9 + 2,
+      height: size * 9 + 2,
+      fontSize: size * 6,
     }),
     contents: {
       position: 'absolute',

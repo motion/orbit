@@ -18,38 +18,14 @@ export default class ExplorerBar {
       <explorerbar $$draggable>
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
-          <UI.Segment $$margin={[0, 10, 0, 0]} $$flex="none">
-            <UI.Popover
-              openOnHover
-              delay={800}
-              elevation={2}
-              borderRadius={8}
-              distance={0}
-              forgiveness={2}
-              towards="right"
-              animation="turnaway 200ms"
-              target={
-                <UI.Button
-                  if={IS_ELECTRON}
-                  {...btnProps}
-                  theme="light"
-                  icon="minimal-left"
-                  disabled={Router.atBack}
-                  onClick={() => Router.back()}
-                />
-              }
-            >
-              <UI.Segment>
-                <UI.Button
-                  if={IS_ELECTRON}
-                  {...btnProps}
-                  disabled={Router.atFront}
-                  icon="minimal-right"
-                  onClick={() => Router.forward()}
-                />
-              </UI.Segment>
-            </UI.Popover>
-          </UI.Segment>
+          <UI.Button
+            if={IS_ELECTRON}
+            {...btnProps}
+            theme="light"
+            icon="minimal-left"
+            disabled={Router.atBack}
+            onClick={() => Router.back()}
+          />
           <Input
             onOpen={() => (layoutStore.explorerOpen = true)}
             onClose={() => (layoutStore.explorerOpen = false)}

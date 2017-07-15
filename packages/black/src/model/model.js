@@ -199,40 +199,56 @@ export default class Model {
     // create index
     await this.createIndexes()
 
-    // auto timestamps
-    if (this.hasTimestamps) {
-      const ogInsert = this.hooks.preInsert
-      this.hooks.preInsert = doc => {
-        console.log('i am pre insert')
+    // PRE-INSERT
+    const ogInsert = this.hooks.preInsert
+    this.hooks.preInsert = doc => {
+      const defaults = this.getDefaultProps(doc)
+      for (const prop of Object.keys(defaults)) {
+        if (typeof doc[prop] === 'undefined') {
+          doc[prop] = defaults[prop]
+        }
+      }
+      if (this.hasTimestamps) {
         doc.createdAt = this.now
         doc.updatedAt = this.now
-        if (ogInsert) {
-          return ogInsert.call(this, doc)
-        }
       }
+      console.log(
+        `%cINSERT ${this.constructor.name}.create(${JSON.stringify(doc).slice(
+          0,
+          100
+        )}...)`,
+        'color: green'
+      )
+      if (ogInsert) {
+        return ogInsert.call(this, doc)
+      }
+    }
 
-      const ogSave = this.hooks.preSave
-      this.hooks.preSave = doc => {
+    // PRE-SAVE
+    const ogSave = this.hooks.preSave
+    this.hooks.preSave = doc => {
+      if (this.hasTimestamps) {
         doc.updatedAt = this.now
-        if (ogSave) {
-          return ogSave.call(this, doc)
+      }
+      if (ogSave) {
+        return ogSave.call(this, doc)
+      }
+    }
+
+    // POST-CREATE
+    // decorate each instance with this.methods
+    const ogPostCreate = this.hooks.postCreate
+    this.hooks.postCreate = doc => {
+      const { compiledMethods } = this
+      for (const method of Object.keys(compiledMethods)) {
+        const descriptor = compiledMethods[method]
+        if (typeof descriptor.get === 'function') {
+          descriptor.get = descriptor.get.bind(doc)
         }
       }
-
-      // decorate each instance with this.methods
-      const ogPostCreate = this.hooks.postCreate
-      this.hooks.postCreate = doc => {
-        const { compiledMethods } = this
-        for (const method of Object.keys(compiledMethods)) {
-          const descriptor = compiledMethods[method]
-          if (typeof descriptor.get === 'function') {
-            descriptor.get = descriptor.get.bind(doc)
-          }
-        }
-        Object.defineProperties(doc, compiledMethods)
-        if (ogPostCreate) {
-          return ogPostCreate.call(this, doc)
-        }
+      Object.defineProperties(doc, compiledMethods)
+      if (ogPostCreate) {
+        return ogPostCreate.call(this, doc)
       }
     }
 
@@ -290,26 +306,13 @@ export default class Model {
   @query find = (...args) => this.collection.find(...args)
   @query findOne = (...args) => this.collection.findOne(...args)
 
-  createTemporary = object => this.create(object, true)
-
-  create = (object: Object = {}, temporary = false): Promise<Object> => {
-    const properties = {
-      ...this.getDefaultProps(object),
-      ...object,
-    }
-
-    if (!temporary) {
-      console.log(
-        `%c${this.constructor.name}.create(${JSON.stringify(properties).slice(
-          0,
-          100
-        )}...)`,
-        'color: green'
-      )
-    }
-
-    return this.collection[temporary ? 'newDocument' : 'insert'](properties)
+  createTemporary = async object => {
+    const doc = await this.collection.newDocument(object)
+    doc.__is_temp = true
+    return doc
   }
+
+  create = (object: Object = {}) => this.collection.insert(object)
 
   findOrCreate = async (object: Object = {}): Promise<Object> => {
     const found = await this.collection.findOne(object).exec()

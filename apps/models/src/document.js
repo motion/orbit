@@ -30,7 +30,7 @@ const DEFAULT_CONTENT = (title: string) => ({
       nodes: [
         {
           kind: 'text',
-          text: title,
+          text: title || 'Hello World',
         },
       ],
     },
@@ -166,6 +166,7 @@ export class DocumentModel extends Model {
 
   static defaultProps = ({ title }) => {
     return {
+      title,
       authorId: User.user ? User.authorId : 'anon',
       hashtags: [],
       starredBy: [],
@@ -173,7 +174,7 @@ export class DocumentModel extends Model {
       attachments: [],
       parentIds: [],
       private: true,
-      content: DEFAULT_CONTENT(title),
+      content: DEFAULT_CONTENT(title || ''),
       color: randomcolor(),
       slug: toSlug(title),
       type: 'document',

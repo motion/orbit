@@ -140,6 +140,7 @@ export type DocumentType = typeof methods & {
   threadId?: str,
   createdAt: string,
   updatedAt: string,
+  type: 'document' | 'thread' | 'summary',
 }
 
 export class DocumentModel extends Model {
@@ -160,15 +161,19 @@ export class DocumentModel extends Model {
     home: bool.optional,
     slug: str,
     draft: bool.optional,
+    type: str,
     timestamps: true,
   }
 
+<<<<<<< HEAD
   static defaultProps = (props: Object) => {
     // const title = props.title || generateName()
     const title = props.title || ''
 
+=======
+  static defaultProps = ({ title }) => {
+>>>>>>> 34bbc339ffd780c25f162749e02aa9b589a0e66e
     return {
-      title,
       authorId: User.user ? User.authorId : 'anon',
       hashtags: [],
       starredBy: [],
@@ -179,6 +184,7 @@ export class DocumentModel extends Model {
       content: DEFAULT_CONTENT(title),
       color: randomcolor(),
       slug: toSlug(title),
+      type: 'document',
     }
   }
 

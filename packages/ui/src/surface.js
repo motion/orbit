@@ -62,6 +62,7 @@ export default class Surface implements ViewType {
     flex?: boolean | number,
     focusable?: boolean,
     getRef?: Function,
+    noWrap?: boolean,
     glint?: boolean,
     glow?: boolean,
     glowProps?: Object,
@@ -184,6 +185,7 @@ export default class Surface implements ViewType {
     tagName,
     theme,
     tooltip,
+    noWrap,
     tooltipProps,
     width,
     wrapElement,
@@ -248,7 +250,7 @@ export default class Surface implements ViewType {
       />,
       <element
         key={3}
-        if={!noElement || (noElement && hasChildren(children))}
+        if={!noElement || (noElement && !noWrap && hasChildren(children))}
         {...wrapElement && passProps}
         {...elementProps}
         $hasIconBefore={hasIconBefore}
@@ -256,6 +258,7 @@ export default class Surface implements ViewType {
       >
         {children}
       </element>,
+      noElement && noWrap && hasChildren(children) && children,
       <Popover
         key={4}
         if={tooltip}
@@ -314,7 +317,6 @@ export default class Surface implements ViewType {
   static style = {
     surface: {
       lineHeight: '1rem',
-      fontWeight: 400,
       position: 'relative',
     },
     element: {
@@ -446,7 +448,7 @@ export default class Surface implements ViewType {
     }
 
     // borderRadius
-    const borderRadiusSize = props.circular ? height : props.borderRadius
+    const borderRadiusSize = props.circular ? height / 2 : props.borderRadius
     const borderRadius = {}
     if (props.uiContext && props.uiContext.inSegment) {
       borderRadius.borderLeftRadius = props.uiContext.inSegment.first
@@ -515,6 +517,7 @@ export default class Surface implements ViewType {
     }
 
     return {
+      borderRadiusSize,
       glintColor,
       element: {
         height,

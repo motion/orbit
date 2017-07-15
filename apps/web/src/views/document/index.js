@@ -21,13 +21,17 @@ type Props = {
 export default class DocumentView {
   props: Props
 
-  render({ editorProps, inline, readOnly, docStore }: Props) {
+  render({ editorProps, inline, readOnly, docStore, ...props }: Props) {
     if (!docStore.document) {
       return <loading />
     }
 
     return (
-      <docview onMouseDown={docStore.mousedown} onMouseUp={docStore.mouseup}>
+      <docview
+        onMouseDown={docStore.mousedown}
+        onMouseUp={docStore.mouseup}
+        {...props}
+      >
         <Editor
           key={docStore.document._id}
           readOnly={readOnly}

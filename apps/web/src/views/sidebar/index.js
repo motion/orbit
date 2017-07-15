@@ -29,18 +29,29 @@ class SidebarContent {
     return (
       <inner $$flex>
         <UI.Glint borderRadius={5} />
-        <UserBar />
-        <Login />
-        <Menu />
+
+        <heading $$draggable $$row css={{ padding: 10 }}>
+          <UI.Input circular flex={1} />
+          <div $$flex />
+          <UI.Segment
+            itemProps={{ borderRadius: 15, size: 0.9, sizePadding: 1.5 }}
+          >
+            <UI.Button active icon="check">
+              Doing
+            </UI.Button>
+            <UI.Button icon="chat">Threads</UI.Button>
+          </UI.Segment>
+        </heading>
 
         <title
+          if={false}
           $$draggable
           css={{
             color: '#fff',
             fontSize: 22,
             fontWeight: 200,
-            padding: [20, 0],
-            margin: [0, 20],
+            padding: [14, 0],
+            margin: [0, 20, 8],
             borderBottom: [1, [0, 0, 0, 0.1]],
           }}
         >
@@ -78,6 +89,7 @@ class SidebarContent {
         <rest $$flex>
           <Projects />
         </rest>
+        <UserBar />
       </inner>
     )
   }
@@ -95,7 +107,7 @@ export default class Sidebar {
       : layoutStore.sidebar.width
 
     return (
-      <UI.Theme key={0} name="clear-dark">
+      <UI.Theme name="clear-dark">
         <Shortcuts key={1} name="all" handler={store.handleShortcut}>
           <UI.Drawer
             zIndex={1}
@@ -110,23 +122,6 @@ export default class Sidebar {
               <sidebarcontent>
                 <SidebarContent />
               </sidebarcontent>
-
-              <UI.Theme name="light" if={false}>
-                <UI.Drawer
-                  open={explorerStore.showDiscussions}
-                  from="left"
-                  size={width + 20}
-                  background="#fefefe"
-                  css={{
-                    paddingLeft: 20,
-                  }}
-                  zIndex={100}
-                  transition
-                  scrollable
-                >
-                  <docdrawer>hi</docdrawer>
-                </UI.Drawer>
-              </UI.Theme>
             </sidebar>
           </UI.Drawer>
         </Shortcuts>

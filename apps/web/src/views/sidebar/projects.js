@@ -6,13 +6,16 @@ import { User } from '@mcro/models'
 import Router from '~/router'
 import { flatMap } from 'lodash'
 import RightArrow from '~/views/rightArrow'
+import FlipMove from 'react-flip-move'
 
 @view({
   store: class SidebarProjectStore {
     @watch
     crumbs = () =>
       User.favoriteDocuments &&
-      Promise.all(User.favoriteDocuments.map(doc => doc.getCrumbs()))
+      Promise.all(
+        User.favoriteDocuments.map(doc => doc.getCrumbs && doc.getCrumbs())
+      )
   },
 })
 export default class Projects {
@@ -30,82 +33,88 @@ export default class Projects {
           No Stars
         </UI.Placeholder>
 
-        <UI.StableContainer stableDuration={200}>
+        <UI.StableContainer>
           <tasks if={hasDocs && hasCrumbs}>
-            {docs.map((doc, index) => {
-              const tasks = doc.tasks()
-              const hasTasks = tasks && tasks.length
-              const percentDone = percentComplete(tasks)
-              return (
-                <section key={doc._id}>
-                  <title $$row $$spaceBetween>
-                    <start $$row $$centered>
-                      <UI.Progress.Circle
-                        if={hasTasks}
-                        key={percentDone}
-                        lineColor="rgba(130, 248, 198, 0.6)"
-                        backgroundColor={[0, 0, 0, 0.55]}
-                        lineWidth={4}
-                        size={16}
-                        percent={percentDone}
-                      />
-                      <path $$row $$centered>
-                        {flatMap(
-                          crumbs &&
-                            crumbs[index] &&
-                            crumbs[index].map((crumbDoc, crumbIndex) => {
-                              const ID = `${crumbDoc._id}${crumbIndex}`
-                              return [
-                                <RightArrow $arrow key={ID + '-1'} />,
-                                <UI.Button
-                                  key={ID + '-2'}
-                                  $button
-                                  size={0.9}
-                                  borderRadius={20}
-                                  chromeless
-                                  onClick={() => Router.go(log(crumbDoc.url()))}
-                                >
-                                  {crumbDoc.title}
-                                </UI.Button>,
-                              ]
-                            })
-                        ).slice(1)}
-                      </path>
-                    </start>
-                    <end>
-                      <UI.Button
-                        glow={false}
-                        glint={false}
-                        theme="blank"
-                        margin={-5}
-                        marginRight={-15}
-                        icon="remove"
-                        color="rgba(255, 255, 255, 0.1)"
-                        hoverColor="red"
-                        onClick={doc.toggleStar}
-                        tooltip="remove"
-                        tooltipProps={{
-                          towards: 'left',
-                        }}
-                      />
-                    </end>
-                  </title>
-                  <tasks if={hasTasks}>
-                    {tasks.map(({ archive, text, key }, index) =>
-                      <task key={key} $$row $$align="center">
-                        <UI.Input
-                          $check
-                          onChange={() => doc.toggleTask(text)}
-                          type="checkbox"
-                          checked={archive}
-                        />{' '}
-                        <UI.Text ellipse>{text}</UI.Text>
-                      </task>
-                    )}
-                  </tasks>
-                </section>
-              )
-            })}
+            <FlipMove>
+              {docs.map((doc, index) => {
+                if (!doc.tasks) {
+                  debugger
+                }
+                const tasks = doc.tasks()
+                const hasTasks = tasks && tasks.length
+                const percentDone = percentComplete(tasks)
+                return (
+                  <section key={doc._id}>
+                    <title $$row $$spaceBetween>
+                      <start $$row $$centered>
+                        <UI.Progress.Circle
+                          if={hasTasks}
+                          key={percentDone}
+                          lineColor="rgba(130, 248, 198, 0.6)"
+                          backgroundColor={[0, 0, 0, 0.55]}
+                          lineWidth={4}
+                          size={16}
+                          percent={percentDone}
+                        />
+                        <path $$row $$centered>
+                          {flatMap(
+                            crumbs &&
+                              crumbs[index] &&
+                              crumbs[index].map((crumbDoc, crumbIndex) => {
+                                const ID = `${crumbDoc._id}${crumbIndex}`
+                                return [
+                                  <RightArrow $arrow key={ID + '-1'} />,
+                                  <UI.Button
+                                    key={ID + '-2'}
+                                    $button
+                                    size={0.9}
+                                    borderRadius={20}
+                                    chromeless
+                                    onClick={() =>
+                                      Router.go(log(crumbDoc.url()))}
+                                  >
+                                    {crumbDoc.title}
+                                  </UI.Button>,
+                                ]
+                              })
+                          ).slice(1)}
+                        </path>
+                      </start>
+                      <end>
+                        <UI.Button
+                          glow={false}
+                          glint={false}
+                          theme="blank"
+                          margin={-5}
+                          marginRight={-15}
+                          icon="remove"
+                          color="rgba(255, 255, 255, 0.1)"
+                          hoverColor="red"
+                          onClick={doc.toggleStar}
+                          tooltip="remove"
+                          tooltipProps={{
+                            towards: 'left',
+                          }}
+                        />
+                      </end>
+                    </title>
+                    <tasks if={hasTasks}>
+                      {tasks.map(({ archive, text, key }, index) =>
+                        <task key={key} $$row $$align="center">
+                          <UI.Input
+                            $check
+                            onChange={() => doc.toggleTask(text)}
+                            type="checkbox"
+                            checked={archive}
+                          />{' '}
+                          <UI.Text ellipse>{text}</UI.Text>
+                        </task>
+                      )}
+                    </tasks>
+                  </section>
+                )
+              })}
+            </FlipMove>
           </tasks>
         </UI.StableContainer>
 

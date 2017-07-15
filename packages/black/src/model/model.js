@@ -136,7 +136,7 @@ export default class Model {
       const result = new Proxy(
         {
           exec: () => {
-            console.warn('This model isn\'t connected!')
+            console.warn("This model isn't connected!")
             return Promise.resolve(false)
           },
           isntConnected: true,
@@ -221,15 +221,19 @@ export default class Model {
       }
 
       // decorate each instance with this.methods
-      const { compiledMethods } = this
-      if (compiledMethods) {
-        const ogPostCreate = this.hooks.postCreate
-        this.hooks.postCreate = doc => {
-          Object.defineProperties(doc, compiledMethods)
-          console.log('doc now', doc)
-          if (ogPostCreate) {
-            return ogPostCreate.call(this, doc)
+      const ogPostCreate = this.hooks.postCreate
+      this.hooks.postCreate = doc => {
+        const { compiledMethods } = this
+        for (const method of Object.keys(compiledMethods)) {
+          const descriptor = compiledMethods[method]
+          if (typeof descriptor.get === 'function') {
+            descriptor.get = descriptor.get.bind(doc)
           }
+        }
+        Object.defineProperties(doc, compiledMethods)
+
+        if (ogPostCreate) {
+          return ogPostCreate.call(this, doc)
         }
       }
     }
@@ -283,6 +287,8 @@ export default class Model {
   }
 
   // helpers
+
+  createTemporary = object => this.create(object, true)
 
   create = (object: Object = {}, temporary = false): Promise<Object> => {
     const properties = {

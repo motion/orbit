@@ -20,6 +20,7 @@ export type Props = {
   color: Array | string,
   type: 'mini' | 'outline',
   button?: Boolean,
+  opacity?: number,
 }
 
 @view.ui
@@ -48,6 +49,7 @@ export default class Icon {
     children,
     button,
     margin,
+    opacity,
     style,
     ...props
   }: Props) {
@@ -115,11 +117,12 @@ export default class Icon {
 
     return {
       icon: {
-        color: props.color ? `${props.color} !important` : '',
+        opacity: props.opacity,
+        color: props.color ? `${props.color.toString()} !important` : '',
         width: (props.width || props.size) + buttonPad * 2 + 1,
-        height: (props.height || props.size) + buttonPad * 2 + 1,
+        height: (props.height || props.size) + buttonPad * 2,
         fontSize: props.size,
-        lineHeight: `${props.size / 12 - 0.1}rem`, // scale where 1 when 14
+        lineHeight: `${props.size / 12 - 1}rem`, // scale where 1 when 14
         ...buttonStyles,
         '&:hover': props.hoverColor && {
           color: `${props.hoverColor.toString()} !important`,

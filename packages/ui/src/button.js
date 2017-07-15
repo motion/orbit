@@ -50,7 +50,9 @@ export default class Button {
         noElement
         after={
           <badge if={badge} $badgeSize={props.size} {...badgeProps}>
-            {badge}
+            <contents>
+              {badge}
+            </contents>
           </badge>
         }
       >
@@ -62,25 +64,34 @@ export default class Button {
   static style = {
     badge: {
       position: 'absolute',
-      top: '10%',
-      right: '10%',
-      fontSize: '1.4vh',
+      top: '8%',
+      right: '8%',
       textShadow: '1px 1px 0 rgba(0,0,0,0.2)',
-      lineHeight: '1px',
+      lineHeight: '0px',
       fontWeight: 900,
-      borderRadius: 10000,
+      borderRadius: 3,
       alignItems: 'center',
       justifyContent: 'center',
       background: 'red',
       color: '#fff',
       overflow: 'hidden',
       pointerEvents: 'none',
-      border: [2, '#fff'],
+      border: [1, '#fff'],
     },
     badgeSize: size => ({
-      width: size * 9 + 4,
-      height: size * 9 + 4,
+      width: size * 9 + 3,
+      height: size * 9 + 3,
+      fontSize: size * 7,
     }),
+    contents: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   }
 }
 

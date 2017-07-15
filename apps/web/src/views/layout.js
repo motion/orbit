@@ -76,43 +76,6 @@ export default class Layout {
                 key={Router.key}
                 {...Router.params}
               />
-
-              <UI.Popover
-                showForgiveness={false}
-                openOnHover
-                background
-                width={480}
-                borderRadius={8}
-                elevation={2}
-                edgePadding={12}
-                adjust={[140, 0]}
-                target={
-                  <UI.Button
-                    circular
-                    size={1.8}
-                    badge={2}
-                    icon="chat3"
-                    css={{
-                      position: 'absolute',
-                      bottom: 20,
-                      right: 20,
-                      zIndex: 1000,
-                      transform: {
-                        scale: 1.0,
-                      },
-                      '&:hover': {
-                        transform: {
-                          scale: 1.1,
-                        },
-                      },
-                    }}
-                  />
-                }
-              >
-                <content>
-                  <Inbox if={false} />
-                </content>
-              </UI.Popover>
             </content>
             <Draft
               isActive={layoutStore.isCreatingDoc}

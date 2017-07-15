@@ -36,7 +36,7 @@ import * as UI from '@mcro/ui'
 
     @log
     handleSubmit = async fields => {
-      // User.org = 'done'
+      User.org = 'done'
       console.log('submit it up')
     }
   },

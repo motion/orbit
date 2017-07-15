@@ -9,10 +9,6 @@ export default class StableContainer extends React.Component {
     children?: React$Element<any>,
   }
 
-  static defaultProps = {
-    stableDuration: 500,
-  }
-
   componentWillMount() {
     this.setState({
       children: this.props.children,
@@ -24,6 +20,9 @@ export default class StableContainer extends React.Component {
       clearTimeout(this.setNextChildren)
     }
     if (!nextProps.children) {
+      if (!this.props.stableDuration) {
+        return
+      }
       this.setNextChildren = this.setTimeout(() => {
         this.setState({
           children: nextProps.children,

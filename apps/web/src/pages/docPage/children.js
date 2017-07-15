@@ -161,7 +161,7 @@ export default class ExplorerChildren {
           padding={[2, 2, 2, 3]}
           closeOnClick
           target={
-            <UI.Button chromeless icon="add" marginTop={10} marginRight={-1}>
+            <UI.Button chromeless icon="add" marginTop={10}>
               Create
             </UI.Button>
           }
@@ -184,7 +184,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       borderTop: [1, '#eee', 'dotted'],
-      padding: [10, 2, 40, 0],
+      padding: [10, 1, 40, 0],
       flex: 1,
       '&:hover > glow': {},
       position: 'relative',

@@ -231,7 +231,6 @@ export default class Model {
           }
         }
         Object.defineProperties(doc, compiledMethods)
-
         if (ogPostCreate) {
           return ogPostCreate.call(this, doc)
         }

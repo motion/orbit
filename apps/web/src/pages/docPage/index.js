@@ -96,8 +96,17 @@ export default class DocumentPage {
             tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
             tooltipProps={{ towards: 'left' }}
             highlight={document.hasStar}
+            iconSize={document.hasStar ? 20 : null}
             onClick={() => document.toggleStar()}
             after={<div>hi222222222</div>}
+            width={44}
+            padding={0}
+            iconProps={{
+              css: {
+                transition: 'transform ease-in 80ms',
+                scale: document.hasStar ? 1.1 : 1,
+              },
+            }}
           />
         </bottomright>
       </Page>

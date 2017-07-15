@@ -130,7 +130,7 @@ export default class Popover {
   componentDidMount() {
     const { openOnClick, closeOnClick, open, escapable, swayX } = this.curProps
 
-    this.on(window, 'resize', debounce(() => this.setPosition(), 16))
+    this.listenForResize()
     this.setTarget()
     this.listenForHover()
 
@@ -154,6 +154,18 @@ export default class Popover {
 
   componentWillUnmount() {
     this.unmounted = true
+  }
+
+  listenForResize = () => {
+    const updatePosition = throttle(this.setPosition, 32)
+    const updatePositionInactive = debounce(this.setPosition, 300)
+    this.on(window, 'resize', () => {
+      if (this.showPopover) {
+        updatePosition()
+      } else {
+        updatePositionInactive()
+      }
+    })
   }
 
   swayEvent = null
@@ -228,12 +240,12 @@ export default class Popover {
       if (!showPopover) {
         return
       }
-      const isClickingPopover = this.popoverRef.contains(e.target)
       // closeOnClickPopover
-      if (closeOnClick && isClickingPopover) {
+      if (closeOnClick) {
         this.stopListeningUntilNextMouseEnter()
         this.close()
         e.stopPropagation()
+        return
       }
       // closeOnClickTarget
       if (isClickingTarget) {

@@ -198,11 +198,7 @@ export class DocumentModel extends Model {
 
       // set title to first content node
       try {
-        if (this.content.nodes) {
-          doc.title = this.content.nodes[0].nodes[0].text
-        } else {
-          doc.title = this.content.document.nodes[0].nodes[0].ranges[0].text
-        }
+        doc.title = this.content.document.nodes[0].nodes[0].ranges[0].text
       } catch (e) {
         console.log('error extracting title', e)
       }

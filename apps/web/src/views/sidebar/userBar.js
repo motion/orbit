@@ -5,13 +5,9 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import Inbox from '~/views/inbox'
 
-@view({
-  store: class {
-    document = Document.create({}, true)
-  },
-})
+@view
 export default class UserBar {
-  render({ store }) {
+  render() {
     return (
       <userbar $$draggable if={User.loggedIn}>
         <above

@@ -368,7 +368,9 @@ export default class ExplorerStore {
     let last
 
     if (path === '/') {
-      return await Document.root().exec()
+      log('await')
+      const root = await Document.root()
+      return log(root)
     }
 
     for (const slug of this.splitPath(path)) {

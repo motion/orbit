@@ -15,6 +15,7 @@ class User {
   activeOrg = 0
   @watch orgs = () => Org.forUser(this.id)
   @watch favoriteDocuments = () => Document.favoritedBy(this.id)
+  @watch homepage = () => Document.get(this.org && this.org.homeDocument)
 
   get org() {
     return this.orgs && this.orgs[this.activeOrg]

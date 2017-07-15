@@ -107,14 +107,11 @@ class ExplorerChildrenStore {
   @watch
   newDoc = () =>
     this.creatingDoc && this.props.explorerStore.document
-      ? Document.create(
-          {
-            parentId: this.props.explorerStore.document._id,
-            parentIds: [this.props.explorerStore.document._id],
-            type: this.docType,
-          },
-          true
-        )
+      ? Document.createTemporary({
+          parentId: this.props.explorerStore.document._id,
+          parentIds: [this.props.explorerStore.document._id],
+          type: this.docType,
+        })
       : null
 
   get allDocs() {
@@ -178,6 +175,7 @@ class ExplorerChildrenStore {
     this.newDoc.title = title
     this.newDoc.type = this.docType
     await this.newDoc.save()
+    log('saved', this.newDoc.id)
     this.version++
     this.creatingDoc = false
     // this.setTimeout(() => {
@@ -211,15 +209,6 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs, allDocs } }: Props) {
     return (
       <children>
-        <UI.Title
-          css={{
-            borderBottom: [1, '#eee', 'dotted'],
-            marginBottom: 10,
-            opacity: 0.5,
-          }}
-        >
-          Children
-        </UI.Title>
         <SortableChildren
           if={hasDocs}
           items={sortedDocs || allDocs}
@@ -236,10 +225,11 @@ export default class ExplorerChildren {
         />
 
         <UI.Popover
-          openOnHover
+          openOnClick
           background
           elevation={3}
-          borderRadius={8}
+          borderRadius={10}
+          padding={[3, 2, 3, 4]}
           closeOnClick
           target={
             <UI.Button chromeless icon="add" marginTop={10} marginRight={-10}>
@@ -247,11 +237,11 @@ export default class ExplorerChildren {
             </UI.Button>
           }
         >
-          <UI.Segment itemProps={{ chromeless: true }}>
+          <UI.Segment itemProps={{ chromeless: true, glow: true }}>
             <UI.Button onClick={store.createDoc} icon="note">
               Document
             </UI.Button>
-            <UI.Button onClick={store.createThread} icon="paper">
+            <UI.Button onClick={store.createThread} icon="list">
               Thread
             </UI.Button>
           </UI.Segment>
@@ -265,7 +255,8 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      padding: [10, 10, 40, 10],
+      borderTop: [1, '#eee', 'dotted'],
+      padding: [10, 10, 40, 0],
       flex: 1,
       alignItems: 'flex-end',
       position: 'relative',

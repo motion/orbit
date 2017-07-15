@@ -53,6 +53,7 @@ class Item {
           <UI.Button
             chromeless
             onClick={() => explorerStore.onItemClick(node.key)}
+            icon={node.data.get('type') === 'thread' ? 'paper' : ''}
             spaced
             size={1}
             height={24}

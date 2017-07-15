@@ -152,6 +152,7 @@ export class DocumentModel extends Model {
     orgId: str.optional,
     members: array.items(str),
     hashtags: array.items(str),
+    parentId: str.optional,
     parentIds: array.items(str),
     attachments: array.optional.items(str),
     starredBy: array.items(str),
@@ -215,6 +216,8 @@ export class DocumentModel extends Model {
 
   methods = methods
 
+  root = () => this.collection.find(User.org.homeDocument).exec()
+
   @query
   search = async (text: string) => {
     // return recent
@@ -272,8 +275,6 @@ export class DocumentModel extends Model {
       .find({ draft: { $ne: true } })
       // .sort({ createdAt: 'desc' })
       .limit(limit)
-
-  @query root = () => this.collection.find({ parentId: { $exists: false } })
 
   @query
   favoritedBy = id => {

@@ -48,10 +48,10 @@ export default class TitleNode {
       fontWeight: 300,
       color: [0, 0, 0, 0.85],
       margin: [16, 0, -10],
-      opacity: 0,
-      transition: 'all ease-in 200ms',
+      transition: 'all ease-in-out 180ms',
+      opacity: 0.7,
       transform: {
-        y: -5,
+        y: -2,
       },
     },
     shown: {

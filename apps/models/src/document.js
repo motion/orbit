@@ -39,7 +39,7 @@ const DEFAULT_CONTENT = (title: string) => ({
 
 export const methods = {
   url() {
-    return `/d/${this._id.replace(':', '-')}`
+    return `/d/${this._id && this._id.replace(':', '-')}`
   },
   tasks() {
     // const { lastUpdated, value: cacheValue } = this.tasksCache

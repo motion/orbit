@@ -231,6 +231,7 @@ export default class Popover {
       const isClickingPopover = this.popoverRef.contains(e.target)
       // closeOnClickPopover
       if (closeOnClick && isClickingPopover) {
+        this.stopListeningUntilNextMouseEnter()
         this.close()
         e.stopPropagation()
       }
@@ -240,6 +241,11 @@ export default class Popover {
         e.stopPropagation()
       }
     })
+  }
+
+  stopListeningUntilNextMouseEnter = () => {
+    this.removeListenForHover()
+    this.listenForHover()
   }
 
   setTarget = () => {
@@ -488,11 +494,23 @@ export default class Popover {
     this.close()
   }
 
+  listeners = []
+
   listenForHover = () => {
-    this.addHoverListeners('target', this.target)
+    this.listeners = this.addHoverListeners('target', this.target)
     if (!this.curProps.noHover) {
-      this.addHoverListeners('menu', this.popoverRef)
+      this.listeners = [
+        ...this.listeners,
+        ...this.addHoverListeners('menu', this.popoverRef),
+      ]
     }
+  }
+
+  removeListenForHover = () => {
+    for (const listener of this.listeners) {
+      listener.dispose()
+    }
+    this.listeners = []
   }
 
   lastEvent = {
@@ -505,6 +523,9 @@ export default class Popover {
       console.log('no node!', name)
       return
     }
+
+    const listeners = []
+
     const { delay, noHover } = this.curProps
     const isPopover = name === 'menu'
     const isTarget = name === 'target'
@@ -527,17 +548,21 @@ export default class Popover {
     const onLeave = debounce(closeIfOut, isTarget ? 80 : 20) // 🐛 target should close slower than menu opens
 
     // logic for enter/leave
-    this.on(node, 'mouseenter', () => {
-      onEnter()
-      // insanity, but mouseleave is horrible
-      if (this.curProps.target) {
-        this.setTimeout(onLeave, 150)
-      }
-    })
+    listeners.push(
+      this.on(node, 'mouseenter', () => {
+        onEnter()
+        // insanity, but mouseleave is horrible
+        if (this.curProps.target) {
+          this.setTimeout(onLeave, 150)
+        }
+      })
+    )
 
     // if noHover it reduces bugs to just not check hovered state
     const onMouseLeave = noHover ? setUnhovered : onLeave
-    this.on(node, 'mouseleave', onMouseLeave)
+    listeners.push(this.on(node, 'mouseleave', onMouseLeave))
+
+    return listeners
   }
 
   // hover helpers

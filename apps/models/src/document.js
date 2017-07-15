@@ -165,14 +165,7 @@ export class DocumentModel extends Model {
     timestamps: true,
   }
 
-<<<<<<< HEAD
-  static defaultProps = (props: Object) => {
-    // const title = props.title || generateName()
-    const title = props.title || ''
-
-=======
   static defaultProps = ({ title }) => {
->>>>>>> 34bbc339ffd780c25f162749e02aa9b589a0e66e
     return {
       authorId: User.user ? User.authorId : 'anon',
       hashtags: [],

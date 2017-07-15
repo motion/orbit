@@ -107,8 +107,6 @@ export default class Models implements ModelsStore {
     for (const [name, model] of Object.entries(this.models)) {
       this[name] = model
 
-      console.log('attach models')
-
       if (typeof model.connect !== 'function') {
         throw `No connect found for model ${model.name} connect = ${typeof model.connect}`
       }

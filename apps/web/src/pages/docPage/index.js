@@ -5,15 +5,9 @@ import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
 import { User } from '@mcro/models'
 import Page from '~/views/page'
-<<<<<<< HEAD
-import Inbox from '~/views/inbox'
-import Children from './children'
-import Actions from './actions'
-=======
 import Children from './children'
 import Actions from './actions'
 import Inbox from '~/views/inbox'
->>>>>>> 34bbc339ffd780c25f162749e02aa9b589a0e66e
 
 class DocPageStore {
   forceEdit = false
@@ -44,28 +38,6 @@ export default class DocumentPage {
       return <UI.Placeholder size={2}>Doc 404</UI.Placeholder>
     }
 
-<<<<<<< HEAD
-    return (
-      <Page>
-        <Page.Actions>
-          <UI.Button
-            size={1.25}
-            borderWidth={0}
-            icon="fav3"
-            tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
-            tooltipProps={{ towards: 'left' }}
-            highlight={document.hasStar}
-            onClick={() => document.toggleStar()}
-            after={<div>hi222222222</div>}
-          />
-        </Page.Actions>
-
-        <fade />
-        <Inbox document={document} />
-
-        <docpagecontent>
-          <DocumentView
-=======
     const isDoc = !document.type || document.type === 'document'
 
     return (
@@ -101,7 +73,6 @@ export default class DocumentPage {
           <DocumentView
             if={isDoc}
             $$paddingRight={120}
->>>>>>> 34bbc339ffd780c25f162749e02aa9b589a0e66e
             document={document}
             onKeyDown={docStore.onKeyDown}
             showCrumbs
@@ -110,11 +81,7 @@ export default class DocumentPage {
           />
         </docpagecontent>
 
-<<<<<<< HEAD
-        <sidebar>
-=======
         <sidebar if={isDoc}>
->>>>>>> 34bbc339ffd780c25f162749e02aa9b589a0e66e
           <Actions />
           <Children documentStore={docStore} />
         </sidebar>
@@ -123,18 +90,6 @@ export default class DocumentPage {
           css={{ position: 'absolute', bottom: 10, right: 10, zIndex: 100000 }}
         >
           <UI.Button
-<<<<<<< HEAD
-            if={false}
-            chromeless
-            spaced
-            size={0.7}
-            margin={[0, -5, 0, 0]}
-            icon={
-              layoutStore.sidebar.active ? 'arrow-min-right' : 'arrow-min-left'
-            }
-            onClick={layoutStore.sidebar.toggle}
-            color={[0, 0, 0, 0.3]}
-=======
             size={1.5}
             borderWidth={0}
             icon="fav3"
@@ -143,7 +98,6 @@ export default class DocumentPage {
             highlight={document.hasStar}
             onClick={() => document.toggleStar()}
             after={<div>hi222222222</div>}
->>>>>>> 34bbc339ffd780c25f162749e02aa9b589a0e66e
           />
         </bottomright>
       </Page>
@@ -157,10 +111,6 @@ export default class DocumentPage {
       flexFlow: 'row',
       zIndex: 20,
       overflowY: 'scroll',
-<<<<<<< HEAD
-      paddingRight: 120,
-=======
->>>>>>> 34bbc339ffd780c25f162749e02aa9b589a0e66e
       position: 'relative',
     },
     sidebar: {

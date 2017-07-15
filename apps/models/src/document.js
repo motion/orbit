@@ -149,7 +149,7 @@ export class DocumentModel extends Model {
     text: str.optional,
     authorId: str,
     color: str,
-    parentId: str.optional,
+    orgId: str.optional,
     members: array.items(str),
     hashtags: array.items(str),
     parentIds: array.items(str),

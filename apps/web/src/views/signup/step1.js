@@ -92,13 +92,7 @@ export default class SignupStep1 {
           >
             <UI.Field label="Company" placeholder="" />
             <UI.Field label="Icon">
-              {[1, 2, 3, 4, 5].map(i =>
-                <UI.Circle
-                  background="linear-gradient(-20deg, red, yellow)"
-                  marginRight={5}
-                  key={i}
-                />
-              )}
+              {[1, 2, 3, 4, 5].map(i => <UI.Circle marginRight={5} key={i} />)}
             </UI.Field>
             <hr />
             <UI.Field label="Name" placeholder="" />

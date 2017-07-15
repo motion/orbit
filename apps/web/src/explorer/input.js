@@ -40,19 +40,19 @@ const schema = {
 @view.attach('explorerStore')
 @view
 class Item {
-  render({ explorerStore: cmdr, node }) {
+  render({ explorerStore, node }) {
     const name = node.data.get('name')
-    const doc = cmdr.editorState.document
+    const doc = explorerStore.editorState.document
     const nextKey = doc.getNextSibling(node.key).key
     const isLast = doc.nodes.last().nodes.last().key === nextKey
-    const selected = cmdr.selectedItemKey === node.key
+    const selected = explorerStore.selectedItemKey === node.key
 
     return (
       <span>
         <inner contentEditable={false}>
           <UI.Button
             chromeless
-            onClick={() => cmdr.onItemClick(node.key)}
+            onClick={() => explorerStore.onItemClick(node.key)}
             spaced
             size={1}
             height={24}

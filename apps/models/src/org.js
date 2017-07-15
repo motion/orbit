@@ -59,7 +59,7 @@ export class OrgModel extends Model {
     },
     postInsert: async (org: Object) => {
       const homeDoc = await Document.get(org.homeDocument).exec()
-      homeDoc.parentId = org._id
+      homeDoc.orgId = org._id
       homeDoc.save()
     },
   }

@@ -38,6 +38,9 @@ const DEFAULT_CONTENT = (title: string) => ({
 })
 
 export const methods = {
+  get titleShort() {
+    return this.title.length > 20 ? this.title.slice(0, 18) + '...' : this.title
+  },
   url() {
     return `/d/${this._id && this._id.replace(':', '-')}`
   },
@@ -202,7 +205,7 @@ export class DocumentModel extends Model {
 
       // set title to first content node
       try {
-        doc.title = this.content.document.nodes[0].nodes[0].ranges[0].text
+        doc.title = this.content.document.nodes[0].nodes[0].text || doc.title
       } catch (e) {
         console.log('error extracting title', e)
       }

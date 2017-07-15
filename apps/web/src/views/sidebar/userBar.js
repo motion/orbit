@@ -3,7 +3,6 @@ import { view } from '@mcro/black'
 import { User, Document, Org, Image } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
-import Inbox from '~/views/inbox'
 
 @view
 export default class UserBar {
@@ -55,7 +54,7 @@ export default class UserBar {
                 />
               }
             >
-              <Inbox />
+              helo
             </UI.Popover>
           )}
         </above>

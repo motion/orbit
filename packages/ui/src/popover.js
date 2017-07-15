@@ -54,6 +54,8 @@ export type Props = {
   edgePadding: number,
   // sway towards mouse
   swayX?: boolean,
+  // pretty much what it says, for use with closeOnClick
+  keepOpenOnClickTarget?: boolean,
 }
 
 const INVERSE = {
@@ -235,20 +237,20 @@ export default class Popover {
 
   listenForClickAway = () => {
     this.on(window, 'click', e => {
-      const { showPopover, isClickingTarget } = this
+      const { showPopover, isClickingTarget, keepOpenOnClickTarget } = this
       const { closeOnClick } = this.curProps
       if (!showPopover) {
         return
       }
       // closeOnClickPopover
-      if (closeOnClick) {
+      if (closeOnClick && !isClickingTarget) {
         this.stopListeningUntilNextMouseEnter()
         this.close()
         e.stopPropagation()
         return
       }
       // closeOnClickTarget
-      if (isClickingTarget) {
+      if (!keepOpenOnClickTarget && isClickingTarget) {
         this.close()
         e.stopPropagation()
       }
@@ -340,11 +342,13 @@ export default class Popover {
       if (!this.target) {
         console.error('no target')
       } else {
-        const targetBounds = this.target.getBoundingClientRect()
-        bounds.width = targetBounds.width
-        bounds.height = targetBounds.height
-        bounds.left = targetBounds.left
-        bounds.top = targetBounds.top
+        if (this.target.getBoundingClientRect) {
+          const targetBounds = this.target.getBoundingClientRect()
+          bounds.width = targetBounds.width
+          bounds.height = targetBounds.height
+          bounds.left = targetBounds.left
+          bounds.top = targetBounds.top
+        }
       }
     }
     return bounds
@@ -670,6 +674,7 @@ export default class Popover {
     towards,
     width,
     elevation,
+    keepOpenOnClickTarget,
     ...props
   }: Props) {
     const {

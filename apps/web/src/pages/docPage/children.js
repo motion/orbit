@@ -40,10 +40,10 @@ class Item {
           </UI.Text>
           <UI.Icon
             if={doc.type === 'thread'}
-            name="paper"
-            color={[0, 0, 0, 0.1]}
-            size={12}
-            css={{ marginLeft: 10 }}
+            name="arpaper"
+            color={[0, 0, 0, 0.45]}
+            size={11}
+            css={{ marginLeft: 8 }}
           />
           <subitems if={false}>
             {(subItems &&
@@ -71,19 +71,26 @@ class Item {
     doccontainer: {
       position: 'relative',
       opacity: 0.8,
+      transform: {
+        scale: 1,
+      },
       '&:hover': {
         opacity: 1,
+        transform: {
+          scale: 1.03,
+          x: -1,
+        },
       },
     },
     doc: {
-      padding: [5, 0],
+      padding: [6, 0],
       minWidth: 50,
       textAlign: 'right',
     },
     title: {
-      fontWeight: 400,
-      fontSize: 14,
-      lineHeight: '1.1rem',
+      fontWeight: 200,
+      fontSize: 16,
+      lineHeight: '1.15rem',
       width: '100%',
       color: '#000',
     },
@@ -232,6 +239,7 @@ export default class ExplorerChildren {
           elevation={3}
           borderRadius={10}
           closeOnClick
+          keepOpenOnClickTarget
           arrowSize={11}
           distance={0}
           target={

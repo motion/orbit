@@ -163,8 +163,7 @@ export default class Inbox {
     inbox: {
       padding: 0,
       position: 'relative',
-      marginTop: 30,
-      width: 700,
+      width: '100%',
     },
     list: {
       marginLeft: -20,

@@ -243,9 +243,10 @@ export default class Popover {
     })
   }
 
+  @log
   stopListeningUntilNextMouseEnter = () => {
     this.removeListenForHover()
-    this.listenForHover()
+    // this.listenForHover()
   }
 
   setTarget = () => {

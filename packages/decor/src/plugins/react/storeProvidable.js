@@ -94,8 +94,11 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillUnmount() {
-          this.disposeStores()
-          view.off('hmr', this.clearError)
+          // if you remove @view({ store: ... }) it tries to remove it here but its gone
+          if (this.disposeStores) {
+            this.disposeStores()
+            view.off('hmr', this.clearError)
+          }
         }
 
         unstable_handleError(error) {

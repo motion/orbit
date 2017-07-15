@@ -66,13 +66,11 @@ class ExplorerChildrenStore {
   @watch
   newDoc = () =>
     this.creatingDoc && this.props.explorerStore.document
-      ? Document.create(
-          {
-            parentId: this.props.explorerStore.document._id,
-            parentIds: [this.props.explorerStore.document._id],
-          },
-          true
-        )
+      ? Document.createTemporary({
+          parentId: this.props.explorerStore.document._id,
+          parentIds: [this.props.explorerStore.document._id],
+          type: this.docType,
+        })
       : null
 
   get allDocs() {
@@ -119,10 +117,8 @@ class ExplorerChildrenStore {
   saveCreatingDoc = async title => {
     this.newDoc.title = title
     await this.newDoc.save()
-    this.setTimeout(() => {
-      this.creatingDoc = false
-      this.version++
-    })
+    this.version++
+    this.creatingDoc = false
   }
 }
 
@@ -142,44 +138,41 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, allDocs } }: Props) {
     return (
       <children>
-        <docs if={hasDocs}>
-          {allDocs.map(doc => {
-            const children = store.children[doc._id]
-            return (
-              <Item
-                key={doc._id}
-                onClick={() => Router.go(doc.url())}
-                title={doc.title}
-              >
-                <subdocs if={children && children.length}>
-                  <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
-                  {children.map(child =>
-                    <UI.Text
-                      key={child._id}
-                      onClick={() => Router.go(child.url())}
-                      size={0.8}
-                    >
-                      {child.title}
-                    </UI.Text>
-                  )}
-                </subdocs>
-              </Item>
-            )
-          })}
-        </docs>
+        <SortableChildren
+          if={hasDocs}
+          items={sortedDocs || allDocs}
+          store={store}
+          onSortEnd={store.onSortEnd}
+          pressDelay={500}
+        />
         <Item
           if={store.creatingDoc}
           editable
           onSave={store.saveCreatingDoc}
           textRef={this.onNewItemText}
         />
-        <Item
-          onClick={store.ref('creatingDoc').setter(true)}
-          title="+1"
-          css={{
-            opacity: 0.2,
-          }}
-        />
+        <UI.Popover
+          openOnClick
+          background
+          elevation={3}
+          borderRadius={10}
+          padding={[3, 2, 3, 4]}
+          closeOnClick
+          target={
+            <UI.Button chromeless icon="add" marginTop={10} marginRight={-10}>
+              Create
+            </UI.Button>
+          }
+        >
+          <UI.Segment itemProps={{ chromeless: true, glow: true }}>
+            <UI.Button onClick={store.createDoc} icon="note">
+              Document
+            </UI.Button>
+            <UI.Button onClick={store.createThread} icon="list">
+              Thread
+            </UI.Button>
+          </UI.Segment>
+        </UI.Popover>
         <shadow if={false} $glow />
         <background $glow />
       </children>
@@ -188,7 +181,8 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      padding: [10, 0, 40, 10],
+      borderTop: [1, '#eee', 'dotted'],
+      padding: [10, 10, 40, 0],
       flex: 1,
       '&:hover > glow': {},
       position: 'relative',

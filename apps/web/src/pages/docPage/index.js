@@ -50,7 +50,9 @@ export default class DocumentPage {
             borderRadius={8}
             elevation={2}
             adjust={[140, 0]}
-            target={<UI.Button chromeless size={1.2} badge={2} icon="bell" />}
+            target={
+              <UI.Button chromeless size={1.2} badge={2} icon="circle-09" />
+            }
           >
             <content />
           </UI.Popover>
@@ -96,8 +98,17 @@ export default class DocumentPage {
             tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
             tooltipProps={{ towards: 'left' }}
             highlight={document.hasStar}
+            iconSize={document.hasStar ? 20 : null}
             onClick={() => document.toggleStar()}
             after={<div>hi222222222</div>}
+            width={44}
+            padding={0}
+            iconProps={{
+              css: {
+                transition: 'transform ease-in 80ms',
+                scale: document.hasStar ? 1.1 : 1,
+              },
+            }}
           />
         </bottomright>
       </Page>

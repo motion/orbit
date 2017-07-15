@@ -27,10 +27,10 @@ export default class RightArrow {
 
   static style = {
     arrow: {
-      display: 'inline-block',
+      margin: ['auto', 0],
     },
     icon: {
-      display: 'inline-block',
+      margin: ['auto', 0],
     },
     animate: {
       transition: 'all 100ms ease-in',

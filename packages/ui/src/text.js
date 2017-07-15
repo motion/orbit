@@ -143,6 +143,7 @@ export default class Text {
     text: {
       userSelect: 'none',
       cursor: 'default',
+      maxWidth: '100%',
     },
     selectable: {
       userSelect: 'auto',

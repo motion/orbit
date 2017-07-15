@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
 import RightArrow from '~/views/rightArrow'
+import Router from '~/router'
 
 const FONT_SIZE = 16
 
@@ -10,21 +11,22 @@ const $para = {
   fontSize: FONT_SIZE,
   color: 'rgba(0,0,0,.8)',
   fontWeight: 400,
-  fontFamily: ['"Exo 2.0"', 'Helvetica', 'monospace'],
+}
+
+const $arrow = {
+  opacity: 0.4,
+  transform: {
+    scale: 0.7,
+  },
 }
 
 @view.attach('explorerStore')
 @view
 class Para {
-  render({ explorerStore, ...props }) {
-    const first = explorerStore.value.indexOf('/') === -1
-
-    // if we're in the first path, add margin to match button styles
-    const styles = Object.assign({}, $para, first && { marginLeft: 8 })
-
+  render({ children }) {
     return (
-      <p style={styles}>
-        {props.children}
+      <p style={$para}>
+        {children}
       </p>
     )
   }
@@ -40,23 +42,25 @@ const schema = {
 @view.attach('explorerStore')
 @view
 class Item {
-  render({ explorerStore: cmdr, node }) {
+  render({ explorerStore, node }) {
     const name = node.data.get('name')
-    const doc = cmdr.editorState.document
+    const doc = explorerStore.editorState.document
     const nextKey = doc.getNextSibling(node.key).key
     const isLast = doc.nodes.last().nodes.last().key === nextKey
-    const selected = cmdr.selectedItemKey === node.key
+    const selected = explorerStore.selectedItemKey === node.key
 
     return (
       <span>
         <inner contentEditable={false}>
           <UI.Button
             chromeless
-            onClick={() => cmdr.onItemClick(node.key)}
+            onClick={() => explorerStore.onItemClick(node.key)}
+            icon={node.data.get('type') === 'thread' ? 'paper' : ''}
             spaced
             size={1}
             height={24}
             padding={[0, 5]}
+            margin={[0, 2, 0, -4]}
             fontSize={FONT_SIZE}
             highlight={selected}
             $active={selected}
@@ -65,7 +69,7 @@ class Item {
           >
             {name}
           </UI.Button>
-          <RightArrow $arrow animate={isLast} />
+          <RightArrow css={$arrow} animate={isLast} />
         </inner>
         <block contentEditable={false} $last={isLast}>
           {name}
@@ -78,17 +82,11 @@ class Item {
     span: {
       display: 'inline',
       position: 'relative',
+      marginLeft: -4,
     },
     last: {
-      // marginRight: 8,
-    },
-    arrow: {
-      marginTop: 1,
-      opacity: 0.4,
-      transform: {
-        scale: 0.85,
-        x: 2,
-      },
+      marginLeft: -1,
+      // marginBottom: 1,
     },
     div: {
       position: 'relative',
@@ -121,6 +119,18 @@ export default class ExplorerInput {
 
     return (
       <bar $blurred={!store.focused} $focused={store.focused}>
+        <UI.Button
+          iconSize={15}
+          padding={[0, 6]}
+          chromeless
+          disabled={Router.path === '/'}
+          color={[0, 0, 0, 0.4]}
+          height={24}
+          icon="home"
+          onClick={() => Router.go('/')}
+        />
+        <RightArrow if={Router.path !== '/'} css={$arrow} />
+        <space css={{ width: 10 }} />
         <Editor
           placeholder={'search or create docs'}
           state={store.editorState}

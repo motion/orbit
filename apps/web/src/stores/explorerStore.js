@@ -366,13 +366,9 @@ export default class ExplorerStore {
   getDocsAtPath = async (path: string, create = false): Array<Document> => {
     const result = []
     let last
-
     if (path === '/') {
-      log('await')
-      const root = await Document.root()
-      return log(root)
+      return User.homeDocument
     }
-
     for (const slug of this.splitPath(path)) {
       const query = { slug }
       if (last) {
@@ -396,7 +392,9 @@ export default class ExplorerStore {
   }
 
   getChildDocsForPath = async (path: string): Array<Document> => {
-    if (path === '/') return await Document.root().exec()
+    if (path === '/') {
+      return User.homeDocument
+    }
     const lastDoc = await this.getDocAtPath(path)
     if (!lastDoc) {
       return []

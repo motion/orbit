@@ -64,8 +64,8 @@ const Themes = {
       opacity: 1,
     },
     highlightColor,
-    background: [80, 80, 80, 0.5],
-    color: '#fff',
+    background: [0, 0, 0, 0],
+    color: [255, 255, 255, 0.6],
     borderColor: [255, 255, 255, 0.3],
   }),
   light: {

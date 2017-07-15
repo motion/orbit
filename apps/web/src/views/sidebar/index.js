@@ -37,7 +37,7 @@ class SidebarContent {
             itemProps={{ borderRadius: 15, size: 0.9, sizePadding: 1.5 }}
           >
             <UI.Button active icon="check">
-              Tasks
+              Doing
             </UI.Button>
             <UI.Button icon="chat">Threads</UI.Button>
           </UI.Segment>

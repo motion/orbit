@@ -243,11 +243,17 @@ export default class Popover {
     })
   }
 
-  @log
-  stopListeningUntilNextMouseEnter = () => {
+  stopListeningUntilNextMouseEnter = async () => {
     this.removeListenForHover()
-    // this.listenForHover()
+    this.close()
+    await this.clearHovered()
+    this.setTimeout(this.listenForHover, 100)
   }
+
+  clearHovered = async () =>
+    new Promise(resolve =>
+      this.setState({ menuHovered: false, targetHovered: false }, resolve)
+    )
 
   setTarget = () => {
     this.target = getTarget(this.targetRef || this.curProps.target)

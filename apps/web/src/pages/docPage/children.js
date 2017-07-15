@@ -41,6 +41,7 @@ class Item {
           <UI.Icon
             if={doc.type === 'thread'}
             name="paper"
+            color={[0, 0, 0, 0.1]}
             size={12}
             css={{ marginLeft: 10 }}
           />
@@ -84,7 +85,7 @@ class Item {
       fontSize: 14,
       lineHeight: '1.1rem',
       width: '100%',
-      color: '#777',
+      color: '#000',
     },
   }
 }
@@ -230,16 +231,22 @@ export default class ExplorerChildren {
           background
           elevation={3}
           borderRadius={10}
-          padding={[2, 2, 2, 3]}
           closeOnClick
+          arrowSize={11}
+          distance={0}
           target={
             <UI.Button chromeless icon="add" marginTop={10}>
               Create
             </UI.Button>
           }
         >
-          <UI.Segment itemProps={{ chromeless: true, glow: true }}>
-            <UI.Button onClick={store.createDoc} icon="note">
+          <UI.Segment
+            chromeless
+            itemProps={{
+              chromeless: true,
+            }}
+          >
+            <UI.Button onClick={store.createDoc} icon="1_circle-add">
               Document
             </UI.Button>
             <UI.Button onClick={store.createThread} icon="list">

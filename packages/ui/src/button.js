@@ -42,7 +42,7 @@ export default class Button {
           whiteSpace: 'pre',
         }}
         glowProps={{
-          scale: 2,
+          scale: 1.8,
           draggable: false,
           ...glowProps,
           ...(theme && theme.glow),

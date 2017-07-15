@@ -166,7 +166,7 @@ export class DocumentModel extends Model {
     timestamps: true,
   }
 
-  static defaultProps = ({ title }) => {
+  static defaultProps = ({ title, parentId }) => {
     return {
       title,
       authorId: User.user ? User.authorId : 'anon',
@@ -174,7 +174,7 @@ export class DocumentModel extends Model {
       starredBy: [],
       members: [],
       attachments: [],
-      parentIds: [],
+      parentIds: parentId ? [parentId] : [],
       private: true,
       content: DEFAULT_CONTENT(title || ''),
       color: randomcolor(),

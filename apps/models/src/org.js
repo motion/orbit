@@ -51,11 +51,18 @@ export class OrgModel extends Model {
       }
     },
     preInsert: async (org: Object) => {
+      // make homepage
       const homeDoc = await Document.create({
         home: true,
         title: 'Welcome',
       })
-      org.homeDocument = homeDoc._id
+      org.homeDocument = homeDoc.id
+      // attach discussion to homepage
+      await Document.create({
+        title: 'Issues',
+        type: 'thread',
+        parentId: homeDoc.id,
+      })
     },
     postInsert: async (org: Object) => {
       const homeDoc = await Document.get(org.homeDocument).exec()

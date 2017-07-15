@@ -242,7 +242,7 @@ export default class Surface implements ViewType {
           (this.theme && this.themeValues.color.lighten(0.2)) ||
           DEFAULT_GLOW_COLOR
         }
-        opacity={0.25}
+        opacity={0.2}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
         {...glowProps}
@@ -317,6 +317,7 @@ export default class Surface implements ViewType {
     surface: {
       lineHeight: '1rem',
       position: 'relative',
+      borderStyle: 'solid',
     },
     element: {
       border: 'none',

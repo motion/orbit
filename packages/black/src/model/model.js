@@ -135,7 +135,7 @@ export default class Model {
       const result = new Proxy(
         {
           exec: () => {
-            console.warn("This model isn't connected!")
+            console.warn('This model isn\'t connected!')
             return Promise.resolve(false)
           },
           isntConnected: true,

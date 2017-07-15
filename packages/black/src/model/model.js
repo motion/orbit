@@ -288,6 +288,8 @@ export default class Model {
 
   // helpers
 
+  createTemporary = object => this.create(object, true)
+
   create = (object: Object = {}, temporary = false): Promise<Object> => {
     const properties = {
       ...this.getDefaultProps(object),

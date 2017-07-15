@@ -3,6 +3,7 @@ import React from 'react'
 import { view, schema, string } from '@mcro/black'
 import { User, Org } from '@mcro/models'
 import * as UI from '@mcro/ui'
+import Router from '~/router'
 
 @view({
   store: class SignupStep1Store {
@@ -47,6 +48,9 @@ import * as UI from '@mcro/ui'
         })
 
         console.log('done signed up', org)
+
+        // ensure they are at home
+        Router.go('/')
       } catch (e) {
         console.log('err', e)
         this.errors = [{ message: `Error creating company: ${e.message}` }]

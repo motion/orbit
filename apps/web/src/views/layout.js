@@ -21,41 +21,6 @@ import { Bar, Results } from '~/explorer'
 import Inbox from '~/views/inbox'
 import InboxEmbed from '~/views/inbox/embed'
 
-/*
-@view
-class NickTest {
-  render() {
-    return (
-      <fraud>
-        <UI.Title size={2}>Fraud</UI.Title>
-        <p>
-          The fraud team is responsible for malicious users and building
-          applications to judge whether to limit or terminate their account.
-          Fraud uses a mixture of machine learning and humans to achieve this.
-        </p>
-        <InboxEmbed title="Change Log" />
-        <UI.Title size={1.3}>Hiring</UI.Title>
-        <p>
-          We're planning to hire six people in the next four months, primarily
-          machine learning engineers with a focus in convolutional neural
-          networks.
-        </p>
-        <InboxEmbed title="Hiring" />
-      </fraud>
-    )
-  }
-
-  static style = {
-    fraud: {
-      padding: 20,
-    },
-    p: {
-      marginTop: 5,
-    },
-  }
-}
-*/
-
 type Props = {
   layoutStore: LayoutStore,
   explorerStore: ExplorerStore,
@@ -101,12 +66,11 @@ export default class Layout {
           <LayoutWrap layoutStore={layoutStore}>
             <Bar />
             <content
-              if={true || User.loggedIn}
+              if={User.loggedIn}
               onScroll={this.onScroll}
               $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
             >
               <Results if={false} />
-              <NickTest if={false} />
               <CurrentPage
                 if={!explorerStore.showResults}
                 key={Router.key}
@@ -146,7 +110,7 @@ export default class Layout {
                 }
               >
                 <content>
-                  <Inbox />
+                  <Inbox if={false} />
                 </content>
               </UI.Popover>
             </content>

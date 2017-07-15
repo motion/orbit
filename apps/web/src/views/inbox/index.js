@@ -59,6 +59,7 @@ class InboxStore {
   }
 
   start() {
+    /*
     const { explorerStore } = this.props
 
     this.on(explorerStore, 'action', (name: string) => {
@@ -78,6 +79,7 @@ class InboxStore {
         this.activeIndex = null
       }
     })
+    */
   }
 }
 
@@ -157,6 +159,12 @@ export default class Inbox {
   }
 
   static style = {
+    inbox: {
+      padding: 0,
+      position: 'relative',
+      marginTop: 30,
+      width: 700,
+    },
     list: {
       marginLeft: -20,
       marginRight: -20,
@@ -194,9 +202,6 @@ export default class Inbox {
     },
     all: {
       marginTop: 15,
-    },
-    inbox: {
-      padding: 0,
     },
     content: {
       padding: 20,

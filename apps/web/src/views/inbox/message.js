@@ -4,6 +4,10 @@ import DocumentView from '~/views/document'
 import { random } from 'lodash'
 import { messages } from './fakeData'
 
+import timeAgo from 'time-ago'
+
+const { ago } = timeAgo()
+
 @view
 export default class Message {
   render({ doc, name, embed }) {
@@ -18,7 +22,7 @@ export default class Message {
             </b>
           </UI.Title>
           <time>
-            June {random(1, 25)}
+            {ago(doc.createdAt)}
           </time>
         </top>
         <doc>

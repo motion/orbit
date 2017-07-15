@@ -12,12 +12,16 @@ class ThreadDraftStore {
 
   create = () => {
     const { inboxStore } = this.props
-    this.doc = Document.create({ draft: true, threadId: this.threadId })
+    Document.create({ draft: true, threadId: this.threadId })
   }
 
   send = () => {
     this.doc.draft = false
     this.doc.save()
+  }
+
+  destroy = () => {
+    this.doc.remove()
   }
 }
 
@@ -34,7 +38,6 @@ export default class Draft {
           <UI.Title size={1}>
             <b>Nick</b>
           </UI.Title>
-          <time>June 12</time>
         </top>
         <p if={!doc} $placeholder onClick={store.create}>
           Your Response
@@ -47,7 +50,7 @@ export default class Draft {
             </remind>
           </status>
           <buttons $$row>
-            <UI.Button $discard chromeless>
+            <UI.Button $discard onClick={store.destroy} chromeless>
               Discard
             </UI.Button>
             <UI.Button width={70} icon="send" chromeless onClick={store.send}>

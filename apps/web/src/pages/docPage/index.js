@@ -54,6 +54,7 @@ export default class DocumentPage {
         </Page.Actions>
 
         <fade />
+        <Inbox document={document} />
 
         <docpagecontent>
           <DocumentView
@@ -74,6 +75,7 @@ export default class DocumentPage {
           css={{ position: 'absolute', bottom: 10, right: 10, zIndex: 100000 }}
         >
           <UI.Button
+            if={false}
             chromeless
             spaced
             size={0.7}

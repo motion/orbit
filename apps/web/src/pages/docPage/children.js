@@ -219,14 +219,48 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs, allDocs } }: Props) {
     return (
       <children>
+        <UI.Popover
+          openOnHover
+          delay={100}
+          background
+          elevation={3}
+          borderRadius={10}
+          closeOnClick
+          keepOpenOnClickTarget
+          arrowSize={11}
+          distance={0}
+          target={
+            <UI.Button chromeless icon="add" margin={[0, 0, 5]}>
+              Create
+            </UI.Button>
+          }
+        >
+          <UI.Segment
+            chromeless
+            itemProps={{
+              chromeless: true,
+            }}
+          >
+            <UI.Button
+              onClick={store.createDoc}
+              icon="filesg"
+              size={0.9}
+              color={[0, 0, 0, 0.5]}
+            >
+              Doc
+            </UI.Button>
+            <UI.Button
+              onClick={store.createThread}
+              icon="paper"
+              size={0.9}
+              color={[0, 0, 0, 0.5]}
+            >
+              Thread
+            </UI.Button>
+          </UI.Segment>
+        </UI.Popover>
+
         <contents>
-          <SortableChildren
-            if={hasDocs}
-            items={sortedDocs || allDocs}
-            store={store}
-            onSortEnd={store.onSortEnd}
-            pressDelay={500}
-          />
           <Item
             if={store.newDoc}
             editable
@@ -234,47 +268,13 @@ export default class ExplorerChildren {
             doc={store.newDoc}
             textRef={this.onNewItemText}
           />
-
-          <UI.Popover
-            openOnHover
-            delay={100}
-            background
-            elevation={3}
-            borderRadius={10}
-            closeOnClick
-            keepOpenOnClickTarget
-            arrowSize={11}
-            distance={0}
-            target={
-              <UI.Button chromeless icon="add" margin={[10, 10]}>
-                Create
-              </UI.Button>
-            }
-          >
-            <UI.Segment
-              chromeless
-              itemProps={{
-                chromeless: true,
-              }}
-            >
-              <UI.Button
-                onClick={store.createDoc}
-                icon="filesg"
-                size={0.9}
-                color={[0, 0, 0, 0.5]}
-              >
-                Doc
-              </UI.Button>
-              <UI.Button
-                onClick={store.createThread}
-                icon="paper"
-                size={0.9}
-                color={[0, 0, 0, 0.5]}
-              >
-                Thread
-              </UI.Button>
-            </UI.Segment>
-          </UI.Popover>
+          <SortableChildren
+            if={hasDocs}
+            items={sortedDocs || allDocs}
+            store={store}
+            onSortEnd={store.onSortEnd}
+            pressDelay={500}
+          />
         </contents>
 
         <shadow if={false} $glow />

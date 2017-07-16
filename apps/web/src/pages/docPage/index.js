@@ -9,7 +9,6 @@ import Children from './children'
 import Actions from './actions'
 import Inbox from '~/views/inbox'
 import { SidebarContent } from '~/views/sidebar'
-import GeoPattern from 'geopattern'
 import Gemstone from '~/views/gemstone'
 
 class DocPageStore {

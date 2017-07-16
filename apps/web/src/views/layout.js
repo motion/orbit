@@ -70,12 +70,8 @@ export default class Layout {
               onScroll={this.onScroll}
               $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
             >
-              <Results if={false} />
-              <CurrentPage
-                if={!explorerStore.showResults}
-                key={Router.key}
-                {...Router.params}
-              />
+              <Results />
+              <CurrentPage key={Router.key} {...Router.params} />
             </content>
             <Draft
               isActive={layoutStore.isCreatingDoc}

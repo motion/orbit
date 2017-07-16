@@ -410,7 +410,7 @@ export default class ExplorerStore {
     docs.map(doc => doc.title).join(PATH_SEPARATOR)
 
   onFocus = () => {
-    this.showResults = true
+    // this.showResults = true
     this.focused = true
   }
 
@@ -464,6 +464,8 @@ export default class ExplorerStore {
   }
 
   onKeyDown = (event: KeyboardEvent, data, state) => {
+    this.showResults = true
+
     // event.persist()
 
     const code = keycode(event)

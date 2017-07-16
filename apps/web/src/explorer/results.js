@@ -19,9 +19,9 @@ class Match {
         }}
       >
         <top $$row>
-          <UI.Title size={1.5}>
+          <UI.Text>
             {doc.title}
-          </UI.Title>
+          </UI.Text>
           <UI.Icon
             $star
             size={14}
@@ -30,10 +30,6 @@ class Match {
             if={doc.hasStar}
           />
         </top>
-        <info $$row>
-          <text>jp/bugs/zaid</text>
-          <text>13 open threads</text>
-        </info>
       </match>
     )
   }
@@ -41,9 +37,7 @@ class Match {
   static style = {
     match: {
       padding: [3, 10],
-      marginLeft: -15,
       maxWidth: 350,
-      marginBottom: 15,
       borderLeft: [3, 'transparent'],
       transition: 'border-left-color 100ms ease-in',
     },
@@ -113,15 +107,15 @@ export default class ExplorerResults {
   static style = {
     results: {
       zIndex: 10000,
-      background: '#fff',
-      // boxShadow: [[0, -5, 8, [0, 0, 0, 0.05]]],
-      position: 'relative',
+      background: [255, 255, 255, 0.8],
+      backdropFilter: 'blur(5px)',
+      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
       transition: 'all ease-in 800ms',
       flex: 1,
-      // position: 'absolute',
-      // top: 'calc(-100% + 14px)',
-      // left: 0,
-      // right: 0,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      maxHeight: '50%',
     },
     show: {
       height: 'auto',

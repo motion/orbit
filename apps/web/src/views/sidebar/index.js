@@ -24,7 +24,7 @@ export default class Sidebar {
           from="right"
           size={width + 20}
         >
-          <sidebar>
+          <sidebar $$draggable>
             <Inbox />
           </sidebar>
         </UI.Drawer>

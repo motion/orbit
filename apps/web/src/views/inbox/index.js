@@ -1,12 +1,10 @@
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { random } from 'lodash'
 import DocumentView from '~/views/document'
 import { Thread, Document } from '@mcro/models'
 import ThreadView from './thread'
-import Message from './message'
-import Draft from './draft'
 import timeAgo from 'time-ago'
+import Draft from './draft'
 
 const { ago } = timeAgo()
 
@@ -106,19 +104,31 @@ export default class Inbox {
               Threads
             </UI.Title>
             <actions>
-              <UI.Button
-                if={!store.draft}
-                css={{
-                  position: 'absolute',
-                  top: 10,
-                  right: 10,
-                }}
-                icon="siadd"
-                circular
-                size={1.4}
-                chromeless
-                onClick={store.createDraft}
-              />
+              <UI.Popover
+                openOnClick
+                closeOnEscape
+                background
+                width={480}
+                borderRadius={8}
+                elevation={2}
+                target={
+                  <UI.Button
+                    if={!store.draft}
+                    css={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 10,
+                    }}
+                    icon="siadd"
+                    circular
+                    size={1.4}
+                    chromeless
+                    onClick={store.createDraft}
+                  />
+                }
+              >
+                <Draft inboxStore={store} />
+              </UI.Popover>
             </actions>
           </bar>
 

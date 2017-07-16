@@ -6,8 +6,12 @@ import DocView from '~/views/document'
 class ThreadDraftStore {
   doc = Document.threadDraft(this.threadId)
 
+  get activeItem() {
+    return this.props.inboxStore.activeItem
+  }
+
   get threadId() {
-    return this.props.inboxStore.activeItem._id
+    return (this.activeItem && this.activeItem.id) || 'null'
   }
 
   create = () => {

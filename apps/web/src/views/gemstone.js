@@ -3,7 +3,7 @@ import GeoPattern from 'geopattern'
 
 export default ({ document, ...props }) =>
   <UI.Circle
-    size={36}
+    size={30}
     marginRight={4}
     zIndex={100}
     background={GeoPattern.generate(document.id).toDataUrl()}
@@ -14,5 +14,6 @@ export default ({ document, ...props }) =>
     transform={{
       scale: 1.0,
     }}
+    contentEditable={false}
     {...props}
   />

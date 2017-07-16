@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import Gemstone from '~/views/gemstone'
 
 @view.attach('explorerStore')
 @view
@@ -19,14 +20,14 @@ export default class DocPageActions {
       background: 'transparent',
       distance: 10,
       forgiveness: 16,
-      towards: 'right',
+      towards: 'left',
       delay: 150,
       openOnHover: true,
       closeOnClick: true,
     }
 
     return (
-      <actions $$draggable>
+      <actions $$draggable css={{ flexFlow: 'row' }}>
         <UI.Popover
           {...popoverProps}
           target={
@@ -59,7 +60,7 @@ export default class DocPageActions {
             <UI.Popover
               {...popoverProps}
               target={<UI.List.Item icon="bell" primary="Ping +3" />}
-              towards="right"
+              towards="left"
             >
               <UI.List
                 width={150}
@@ -79,6 +80,15 @@ export default class DocPageActions {
             </UI.Popover>
           </UI.List>
         </UI.Popover>
+
+        <Gemstone
+          if={explorerStore && explorerStore.document}
+          document={explorerStore.document}
+          size={20}
+          css={{
+            margin: 'auto',
+          }}
+        />
       </actions>
     )
   }

@@ -137,6 +137,7 @@ export type DocumentType = typeof methods & {
   parentIds: Array<string>,
   attachments?: Array<string>,
   starredBy: Array<string>,
+  childrenSort?: Array<string>,
   private: boolean,
   slug: str,
   draft?: boolean,
@@ -167,6 +168,7 @@ export class DocumentModel extends Model {
     draft: bool.optional,
     type: str,
     timestamps: true,
+    childrenSort: array.optional.items(str),
   }
 
   static defaultProps = ({ title, parentId }) => {
@@ -177,6 +179,7 @@ export class DocumentModel extends Model {
       starredBy: [],
       members: [],
       attachments: [],
+      childrenSort: [],
       parentIds: parentId ? [parentId] : [],
       private: true,
       content: DEFAULT_CONTENT(title || ''),

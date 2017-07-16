@@ -116,6 +116,10 @@ class ExplorerChildrenStore {
   children = {}
   version = 1
 
+  get document() {
+    return this.props.explorerStore.document
+  }
+
   lastDocs = null // temp until queries returning blank for a frame is fixed
 
   @watch
@@ -133,23 +137,38 @@ class ExplorerChildrenStore {
         })
       : null
 
-  get allDocs() {
-    let { docs, lastDocs } = this
-    if ((!docs || !docs.length) && lastDocs) {
-      return lastDocs
-    }
-    const result = sortBy(docs || [], 'createdAt')
-    return result
+  get docsById(): Object {
+    return (
+      this.docs &&
+      this.docs.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {})
+    )
   }
 
-  sortedDocs = null
+  get sortedDocs() {
+    if (
+      this.docs &&
+      this.document &&
+      this.document.childrenSort &&
+      this.document.childrenSort.length
+    ) {
+      return this.document.childrenSort.map(id => this.docsById[id])
+    }
+    return sortBy(this.docs || [], 'createdAt').reverse()
+  }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
-    this.sortedDocs = arrayMove(this.allDocs, oldIndex, newIndex)
+    const sortedChildren = arrayMove(
+      this.sortedDocs.map(doc => doc.id),
+      oldIndex,
+      newIndex
+    )
+    log(sortedChildren)
+    this.document.childrenSort = sortedChildren
+    this.document.save()
   }
 
   get hasDocs() {
-    return this.allDocs.length
+    return this.docs && this.docs.length
   }
 
   start() {
@@ -225,7 +244,7 @@ export default class ExplorerChildren {
     }
   }
 
-  render({ store, store: { hasDocs, sortedDocs, allDocs } }: Props) {
+  render({ store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children $$draggable>
         <UI.Popover
@@ -253,11 +272,11 @@ export default class ExplorerChildren {
           >
             <UI.Button
               onClick={store.createThread}
-              icon="shopping_list"
+              icon="chat46"
               size={0.9}
               color={[0, 0, 0, 0.7]}
             >
-              List
+              Inbox
             </UI.Button>
             <UI.Button
               onClick={store.createDoc}
@@ -280,7 +299,7 @@ export default class ExplorerChildren {
           />
           <SortableChildren
             if={hasDocs}
-            items={sortedDocs || allDocs}
+            items={sortedDocs}
             store={store}
             onSortEnd={store.onSortEnd}
             pressDelay={500}

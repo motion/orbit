@@ -27,7 +27,6 @@ class User {
   }
 
   connect = database => {
-    console.log('waht?')
     if (this.database) {
       return // hmr
     }

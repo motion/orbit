@@ -38,9 +38,9 @@ export default class DocPageActions {
               css={{ textAlign: 'right' }}
             >
               <wrap>
-                <UI.Text size={0.8}>+3 people</UI.Text>
+                <UI.Text size={1}>Share</UI.Text>
                 <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
-                  Jan 3rd
+                  +3 people
                 </UI.Text>
               </wrap>
             </UI.Button>
@@ -57,27 +57,11 @@ export default class DocPageActions {
             }}
           >
             <UI.List.Item icon="gear" primary="Settings" />
-            <UI.Popover
-              {...popoverProps}
-              target={<UI.List.Item icon="bell" primary="Ping +3" />}
-              towards="left"
-            >
-              <UI.List
-                width={150}
-                padding={3}
-                itemProps={{
-                  height: 32,
-                  fontSize: 14,
-                  borderWidth: 0,
-                  borderRadius: 8,
-                }}
-              >
-                <UI.List.Item icon="all" primary="All" color="black" />
-                <UI.List.Item icon="girl" primary="Jamie S." />
-                <UI.List.Item icon="boy" primary="Angela M." />
-                <UI.List.Item icon="boy" primary="Theresa M." />
-              </UI.List>
-            </UI.Popover>
+            <UI.List.Item
+              icon="link"
+              primary={<UI.Input value={Router.path} />}
+            />
+            <UI.List.Item icon="bell" primary="Ping +3" />
           </UI.List>
         </UI.Popover>
 

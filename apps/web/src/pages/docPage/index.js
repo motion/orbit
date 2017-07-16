@@ -144,7 +144,7 @@ export default class DocumentPage {
       overflow: 'hidden',
       zIndex: 50,
       top: 0,
-      right: 10,
+      right: 0,
       bottom: 60,
     },
     fade: {

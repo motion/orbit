@@ -20,7 +20,14 @@ type Props = {
 }
 
 const DragHandle = SortableHandle(props =>
-  <UI.Icon name="menu" size={6} opacity={0.2} {...props} />
+  <UI.Icon
+    $$undraggable
+    onMouseDown={e => e.stopPropagation() && e.preventDefault()}
+    name="menu"
+    size={8}
+    opacity={0.25}
+    {...props}
+  />
 )
 
 @view.ui
@@ -45,7 +52,7 @@ class Item {
           flexFlow="row"
           iconAfter
           textAlign="right"
-          padding={[4, 5]}
+          padding={[4, 8]}
         >
           <UI.Text
             $title
@@ -75,7 +82,9 @@ class Item {
             </subdocs>) ||
             null}
         </subitems>
-        <DragHandle if={false} css={{ margin: ['auto', -12, 'auto', 12] }} />
+        <DragHandle
+          css={{ position: 'absolute', top: 11, right: -10, cursor: 'move' }}
+        />
       </doccontainer>
     )
   }
@@ -223,7 +232,7 @@ class ExplorerChildrenStore {
 }
 
 const SortableChildren = SortableContainer(({ items, store }) =>
-  <docs>
+  <docs $$undraggable>
     {items.map(doc => {
       const subItems = store.children[doc._id]
       return <SortableItem key={doc._id} doc={doc} subItems={subItems} />
@@ -246,7 +255,7 @@ export default class ExplorerChildren {
 
   render({ store, store: { hasDocs, sortedDocs } }: Props) {
     return (
-      <children $$draggable>
+      <children>
         <UI.Popover
           openOnHover
           delay={100}
@@ -258,7 +267,7 @@ export default class ExplorerChildren {
           arrowSize={11}
           distance={0}
           towards="left"
-          target={<UI.Button chromeless icon="add" margin={[0, 0, 5]} />}
+          target={<UI.Button chromeless icon="add" margin={[0, 8, 5]} />}
         >
           <UI.Segment
             chromeless
@@ -316,7 +325,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       borderTop: [1, '#eee', 'dotted'],
-      padding: [10, 1, 10, 0],
+      padding: [10, 0],
       flex: 1,
       alignItems: 'flex-end',
       position: 'relative',
@@ -324,6 +333,8 @@ export default class ExplorerChildren {
     contents: {
       flex: 1,
       overflowY: 'scroll',
+      overflowX: 'visible',
+      paddingRight: 10,
     },
     arrow: {
       height: 20,
@@ -332,7 +343,6 @@ export default class ExplorerChildren {
     subdocs: {
       flexFlow: 'row',
       justifyContent: 'flex-end',
-      overflow: 'hidden',
       opacity: 0.5,
       textAlign: 'right',
     },

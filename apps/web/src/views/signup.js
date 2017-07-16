@@ -23,19 +23,368 @@ export default class Signup {
   render({ store: { step } }) {
     return (
       <signup if={step === 1} $$fullscreen $$draggable $$centered>
-        <UI.Glint size={3} borderRadius={5} />
+        <UI.Glint size={1.1} borderRadius={5} />
         <UI.Glow
           draggable
           behind
           color={[255, 255, 255]}
-          opacity={0.3}
+          opacity={0.5}
           full
           blur={80}
-          scale={1.2}
+          scale={1}
           show
-          resist={62}
+          resist={82}
+          offsetTop={300}
           backdropFilter="contrast(150%) saturation(150%) brightness(150%)"
         />
+
+        <header css={{ position: 'absolute', top: 20, zIndex: 10 }}>
+          <logo
+            css={{
+              fontWeight: 900,
+              fontSize: 18,
+              letterSpacing: -0.25,
+              textShadow: '0 0 0 -1px rgba(255,255,255, 1)',
+            }}
+          >
+            padpen
+          </logo>
+        </header>
+
+        <shape
+          css={{
+            position: 'absolute',
+            background: 'linear-gradient(transparent, rgb(119, 233, 94))',
+            top: -180,
+            left: -120,
+            width: 200,
+            height: 300,
+            borderRadius: 120,
+            transform: { rotate: '-50deg' },
+            opacity: 0.05,
+          }}
+        />
+        <shape
+          css={{
+            position: 'absolute',
+            zIndex: 0,
+            background: 'linear-gradient(transparent, rgb(212, 94, 233))',
+            right: -120,
+            top: -210,
+            width: 400,
+            height: 300,
+            borderRadius: 180,
+            transform: { rotate: '50deg' },
+            opacity: 0.04,
+          }}
+        />
+        <shape
+          css={{
+            position: 'absolute',
+            background: 'linear-gradient(transparent, rgb(233, 194, 94))',
+            bottom: -200,
+            right: '25%',
+            width: 400,
+            height: 200,
+            borderRadius: 20,
+            transform: { rotate: '60deg' },
+            opacity: 0.2,
+          }}
+        />
+        <shape
+          css={{
+            position: 'absolute',
+            zIndex: 0,
+            background: 'linear-gradient(transparent, rgb(94, 191, 233))',
+            left: '50%',
+            bottom: -250,
+            width: 200,
+            height: 300,
+            transform: { rotate: '-50deg' },
+            opacity: 0.1,
+          }}
+        />
+
+        <shape $$fullscreen css={{ transform: { rotate: '-50deg' } }}>
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(119, 233, 94))',
+              top: -180,
+              left: -120,
+              width: 200,
+              height: 300,
+              borderRadius: 120,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(212, 94, 233))',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(233, 194, 94))',
+              bottom: -200,
+              right: '25%',
+              width: 400,
+              height: 200,
+              borderRadius: 20,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(94, 191, 233))',
+              left: '50%',
+              bottom: -250,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
+
+        <shape $$fullscreen css={{ transform: { rotate: '20deg' } }}>
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(119, 233, 94))',
+              top: -180,
+              left: -120,
+              width: 200,
+              height: 300,
+              borderRadius: 120,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(212, 94, 233))',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(233, 194, 94))',
+              bottom: -200,
+              right: '25%',
+              width: 400,
+              height: 200,
+              borderRadius: 20,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(94, 191, 233))',
+              left: '50%',
+              bottom: -250,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
+
+        <shape $$fullscreen css={{ transform: { rotate: '150deg' } }}>
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(119, 233, 94))',
+              top: -180,
+              left: -120,
+              width: 200,
+              height: 300,
+              borderRadius: 120,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(212, 94, 233))',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(233, 194, 94))',
+              bottom: -200,
+              right: '25%',
+              width: 400,
+              height: 200,
+              borderRadius: 20,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(94, 191, 233))',
+              left: '50%',
+              bottom: -250,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
+
+        <shape $$fullscreen css={{ transform: { rotate: '-100deg' } }}>
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(119, 233, 94))',
+              top: -180,
+              left: -120,
+              width: 200,
+              height: 300,
+              borderRadius: 120,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(212, 94, 233))',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(233, 194, 94))',
+              bottom: -200,
+              right: '25%',
+              width: 400,
+              height: 200,
+              borderRadius: 20,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(94, 191, 233))',
+              left: '50%',
+              bottom: -250,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
+
+        <shape $$fullscreen css={{ transform: { rotate: '80deg' } }}>
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(rgb(119, 233, 94), transparent)',
+              top: -180,
+              left: -120,
+              width: 200,
+              height: 300,
+              borderRadius: 120,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(rgb(212, 94, 233), transparent)',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(rgb(233, 194, 94), transparent)',
+              bottom: -200,
+              right: '25%',
+              width: 400,
+              height: 200,
+              borderRadius: 20,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(rgb(94, 191, 233), transparent)',
+              left: '50%',
+              bottom: -250,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
+
         <UI.Theme name="clear">
           <centered $$centered>
             <Step1 if={step === 1} />
@@ -58,7 +407,7 @@ export default class Signup {
               },
             }}
           >
-            2Or login to your account:&nbsp;
+            Or login:&nbsp;
             <Login />
           </login>
         </UI.Theme>

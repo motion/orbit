@@ -75,7 +75,7 @@ export default class Login {
             />
             <UI.Button icon="raft" tooltip="Forgot password?" />
             <UI.Button type="submit" icon={store.loggingIn ? 'time' : 'lock'}>
-              {store.loggingIn ? 'Logging in...' : 'Login2'}
+              {store.loggingIn ? 'Logging in...' : 'Login'}
             </UI.Button>
           </UI.Segment>
         </UI.Form>

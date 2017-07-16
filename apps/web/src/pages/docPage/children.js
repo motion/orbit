@@ -90,6 +90,7 @@ class Item {
   }
   static style = {
     doccontainer: {
+      minWidth: 50,
       position: 'relative',
       opacity: 0.8,
       transition: 'transform ease-in 50ms',
@@ -326,11 +327,13 @@ export default class ExplorerChildren {
     children: {
       borderTop: [1, '#eee', 'dotted'],
       padding: [10, 0],
+      width: '100%',
       flex: 1,
       alignItems: 'flex-end',
       position: 'relative',
     },
     contents: {
+      width: '100%',
       flex: 1,
       overflowY: 'scroll',
       overflowX: 'visible',

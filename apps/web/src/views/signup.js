@@ -28,26 +28,29 @@ export default class Signup {
           draggable
           behind
           color={[255, 255, 255]}
-          opacity={0.5}
+          opacity={0.8}
           full
           blur={80}
           scale={1}
           show
           resist={82}
-          offsetTop={300}
+          offsetTop={200}
           backdropFilter="contrast(150%) saturation(150%) brightness(150%)"
         />
 
         <header css={{ position: 'absolute', top: 20, zIndex: 10 }}>
           <logo
             css={{
-              fontWeight: 900,
-              fontSize: 18,
+              fontWeight: 800,
+              fontSize: 17,
               letterSpacing: -0.25,
-              textShadow: '0 0 0 -1px rgba(255,255,255, 1)',
+              color: '#111',
             }}
           >
-            padpen
+            Covfefe
+            <span css={{ fontSize: 12, fontWeight: 200, opacity: 0.15 }}>
+              moving docs forward
+            </span>
           </logo>
         </header>
 
@@ -55,11 +58,10 @@ export default class Signup {
           css={{
             position: 'absolute',
             background: 'linear-gradient(transparent, rgb(119, 233, 94))',
-            top: -180,
+            top: -190,
             left: -120,
             width: 200,
             height: 300,
-            borderRadius: 120,
             transform: { rotate: '-50deg' },
             opacity: 0.05,
           }}
@@ -82,11 +84,10 @@ export default class Signup {
           css={{
             position: 'absolute',
             background: 'linear-gradient(transparent, rgb(233, 194, 94))',
-            bottom: -200,
+            bottom: -290,
             right: '25%',
             width: 400,
             height: 200,
-            borderRadius: 20,
             transform: { rotate: '60deg' },
             opacity: 0.2,
           }}
@@ -97,7 +98,7 @@ export default class Signup {
             zIndex: 0,
             background: 'linear-gradient(transparent, rgb(94, 191, 233))',
             left: '50%',
-            bottom: -250,
+            bottom: -290,
             width: 200,
             height: 300,
             transform: { rotate: '-50deg' },
@@ -110,7 +111,7 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(transparent, rgb(119, 233, 94))',
-              top: -180,
+              top: -190,
               left: -120,
               width: 200,
               height: 300,
@@ -137,11 +138,10 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(transparent, rgb(233, 194, 94))',
-              bottom: -200,
+              bottom: -290,
               right: '25%',
               width: 400,
               height: 200,
-              borderRadius: 20,
               transform: { rotate: '60deg' },
               opacity: 0.2,
             }}
@@ -152,7 +152,7 @@ export default class Signup {
               zIndex: 0,
               background: 'linear-gradient(transparent, rgb(94, 191, 233))',
               left: '50%',
-              bottom: -250,
+              bottom: -290,
               width: 200,
               height: 300,
               transform: { rotate: '-50deg' },
@@ -166,7 +166,7 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(transparent, rgb(119, 233, 94))',
-              top: -180,
+              top: -190,
               left: -120,
               width: 200,
               height: 300,
@@ -193,7 +193,7 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(transparent, rgb(233, 194, 94))',
-              bottom: -200,
+              bottom: -290,
               right: '25%',
               width: 400,
               height: 200,
@@ -208,7 +208,7 @@ export default class Signup {
               zIndex: 0,
               background: 'linear-gradient(transparent, rgb(94, 191, 233))',
               left: '50%',
-              bottom: -250,
+              bottom: -290,
               width: 200,
               height: 300,
               transform: { rotate: '-50deg' },
@@ -222,7 +222,7 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(transparent, rgb(119, 233, 94))',
-              top: -180,
+              top: -190,
               left: -120,
               width: 200,
               height: 300,
@@ -249,11 +249,10 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(transparent, rgb(233, 194, 94))',
-              bottom: -200,
+              bottom: -290,
               right: '25%',
               width: 400,
               height: 200,
-              borderRadius: 20,
               transform: { rotate: '60deg' },
               opacity: 0.2,
             }}
@@ -264,7 +263,7 @@ export default class Signup {
               zIndex: 0,
               background: 'linear-gradient(transparent, rgb(94, 191, 233))',
               left: '50%',
-              bottom: -250,
+              bottom: -290,
               width: 200,
               height: 300,
               transform: { rotate: '-50deg' },
@@ -278,7 +277,7 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(transparent, rgb(119, 233, 94))',
-              top: -180,
+              top: -190,
               left: -120,
               width: 200,
               height: 300,
@@ -305,11 +304,10 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(transparent, rgb(233, 194, 94))',
-              bottom: -200,
+              bottom: -290,
               right: '25%',
               width: 400,
               height: 200,
-              borderRadius: 20,
               transform: { rotate: '60deg' },
               opacity: 0.2,
             }}
@@ -320,7 +318,7 @@ export default class Signup {
               zIndex: 0,
               background: 'linear-gradient(transparent, rgb(94, 191, 233))',
               left: '50%',
-              bottom: -250,
+              bottom: -290,
               width: 200,
               height: 300,
               transform: { rotate: '-50deg' },
@@ -334,7 +332,7 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(rgb(119, 233, 94), transparent)',
-              top: -180,
+              top: -190,
               left: -120,
               width: 200,
               height: 300,
@@ -361,11 +359,10 @@ export default class Signup {
             css={{
               position: 'absolute',
               background: 'linear-gradient(rgb(233, 194, 94), transparent)',
-              bottom: -200,
+              bottom: -290,
               right: '25%',
               width: 400,
               height: 200,
-              borderRadius: 20,
               transform: { rotate: '60deg' },
               opacity: 0.2,
             }}
@@ -376,7 +373,172 @@ export default class Signup {
               zIndex: 0,
               background: 'linear-gradient(rgb(94, 191, 233), transparent)',
               left: '50%',
-              bottom: -250,
+              bottom: -290,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
+
+        <shape $$fullscreen css={{ transform: { rotate: '50deg' } }}>
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(rgb(119, 233, 94), transparent)',
+              top: -190,
+              left: -120,
+              width: 200,
+              height: 300,
+              borderRadius: 120,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(rgb(212, 94, 233), transparent)',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(rgb(233, 194, 94), transparent)',
+              bottom: -290,
+              right: '25%',
+              width: 400,
+              height: 200,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(rgb(94, 191, 233), transparent)',
+              left: '50%',
+              bottom: -290,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
+
+        <shape $$fullscreen css={{ transform: { rotate: '-70deg' } }}>
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(rgb(119, 233, 94), transparent)',
+              top: -190,
+              left: -120,
+              width: 200,
+              height: 300,
+              borderRadius: 120,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(rgb(212, 94, 233), transparent)',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(rgb(233, 194, 94), transparent)',
+              bottom: -290,
+              right: '25%',
+              width: 400,
+              height: 200,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(rgb(94, 191, 233), transparent)',
+              left: '50%',
+              bottom: -290,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
+
+        <shape $$fullscreen css={{ transform: { rotate: '-170deg' } }}>
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(rgb(119, 233, 94), transparent)',
+              top: -190,
+              left: -120,
+              width: 200,
+              height: 300,
+              borderRadius: 120,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(rgb(212, 94, 233), transparent)',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(rgb(233, 194, 94), transparent)',
+              bottom: -290,
+              right: '25%',
+              width: 400,
+              height: 200,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(rgb(94, 191, 233), transparent)',
+              left: '50%',
+              bottom: -290,
               width: 200,
               height: 300,
               transform: { rotate: '-50deg' },
@@ -400,11 +562,7 @@ export default class Signup {
               bottom: 10,
               right: 0,
               left: 0,
-              opacity: 0.5,
-              transition: 'opacity ease-in 100ms',
-              '&:hover': {
-                opacity: 1,
-              },
+              opacity: 0.8,
             }}
           >
             Or login:&nbsp;
@@ -417,7 +575,7 @@ export default class Signup {
 
   static style = {
     signup: {
-      background: 'radial-gradient(#eee, #ddd)',
+      background: 'radial-gradient(#fff, #eee)',
       zIndex: 11,
     },
     centered: {

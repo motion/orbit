@@ -98,7 +98,6 @@ export default class SignupStep1 {
             <UI.Field label="Icon">
               {[1, 2, 3, 4, 5].map(i => <UI.Circle marginRight={5} key={i} />)}
             </UI.Field>
-            <hr />
             <UI.Field label="Name" placeholder="" />
             <UI.Field label="Email" placeholder="" />
             <UI.Field label="Password" type="password" placeholder="" />
@@ -108,9 +107,9 @@ export default class SignupStep1 {
             iconAfter
             icon="arrowri"
             type="submit"
-            theme="rgb(48, 130, 224)"
+            theme="#ccc"
             alignSelf="flex-end"
-            size={1.2}
+            size={1.1}
           >
             Signup
           </UI.Button>

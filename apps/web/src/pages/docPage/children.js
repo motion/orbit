@@ -27,7 +27,11 @@ const DragHandle = SortableHandle(props =>
 class Item {
   render({ doc, editable, onSave, textRef, subItems, ...props }) {
     return (
-      <doccontainer onClick={() => doc.url && Router.go(doc.url())} {...props}>
+      <doccontainer
+        $$undraggable
+        onClick={() => doc.url && Router.go(doc.url())}
+        {...props}
+      >
         <UI.Surface
           icon={doc.type === 'thread' ? 'paper' : null}
           align="center"
@@ -218,7 +222,7 @@ export default class ExplorerChildren {
 
   render({ store, store: { hasDocs, sortedDocs, allDocs } }: Props) {
     return (
-      <children>
+      <children $$draggable>
         <UI.Popover
           openOnHover
           delay={100}

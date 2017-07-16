@@ -111,7 +111,7 @@ export default class ExplorerStore {
 
     this.watch(() => {
       if (this.crumbs && Array.isArray(this.crumbs)) {
-        this.setValue(this.toPath(this.crumbs))
+        this.setValue(this.toPath(this.crumbs.slice(1)))
       }
     })
 

@@ -9,6 +9,8 @@ import Children from './children'
 import Actions from './actions'
 import Inbox from '~/views/inbox'
 import { SidebarContent } from '~/views/sidebar'
+import GeoPattern from 'geopattern'
+import Gemstone from '~/views/gemstone'
 
 class DocPageStore {
   forceEdit = false
@@ -91,7 +93,7 @@ export default class DocumentPage {
             if={User.favoriteDocuments}
             css={{ flexFlow: 'row', margin: [0, 10] }}
           >
-            {User.favoriteDocuments.map((text, i) =>
+            {User.favoriteDocuments.map((doc, i) =>
               <UI.Popover
                 key={i}
                 openOnHover
@@ -99,21 +101,7 @@ export default class DocumentPage {
                 theme="dark"
                 borderRadius={5}
                 elevation={2}
-                target={
-                  <UI.Circle
-                    size={24}
-                    marginRight={3}
-                    zIndex={100 - i}
-                    background={[0, 0, 0, 0.1]}
-                    fontSize={20}
-                    color="white"
-                    overflow="hidden"
-                    transition="transform ease-in 30ms"
-                    transform={{
-                      scale: 1.0,
-                    }}
-                  />
-                }
+                target={<Gemstone document={doc} />}
               >
                 helo
               </UI.Popover>

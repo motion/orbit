@@ -47,7 +47,7 @@ class Item {
               css={{ marginLeft: 8 }}
             />
             <UI.Icon
-              if={doc.type === 'document'}
+              if={false && doc.type === 'document'}
               name="filesg"
               color={[0, 0, 0, 0.3]}
               size={14}
@@ -96,13 +96,13 @@ class Item {
       padding: [5, 0, 0],
     },
     doc: {
-      padding: [9, 0],
+      padding: [7.5, 0],
       minWidth: 50,
       textAlign: 'right',
     },
     title: {
       fontWeight: 300,
-      fontSize: 21,
+      fontSize: 20,
       lineHeight: '1.3rem',
       width: '100%',
       color: '#000',

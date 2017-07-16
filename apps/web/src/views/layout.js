@@ -139,7 +139,6 @@ export default class Layout {
       overflowX: 'visible',
       overflowY: 'scroll',
       zIndex: 100,
-      // borderRightRadius: 8,
     },
     dragStartedAt: pos => ({
       overflowX: 'visible',

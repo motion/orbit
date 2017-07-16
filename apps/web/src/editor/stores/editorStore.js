@@ -31,6 +31,7 @@ export default class EditorStore implements StoreType {
   focused = false
   find = this.props.find
   onlyNode = this.props.onlyNode
+  explorerStore = this.props.explorerStore
 
   start({ explorerStore, onEditor, getRef, rules, plugins }: Props) {
     this.rules = rules

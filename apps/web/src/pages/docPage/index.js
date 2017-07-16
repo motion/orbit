@@ -8,7 +8,7 @@ import Page from '~/views/page'
 import Children from './children'
 import Actions from './actions'
 import Inbox from '~/views/inbox'
-import { SidebarContent } from '~/views/sidebar'
+import Notifications from '~/notifications'
 import Gemstone from '~/views/gemstone'
 
 class DocPageStore {
@@ -23,19 +23,16 @@ class DocPageStore {
   }
 }
 
-@view.attach('explorerStore', 'layoutStore')
+@view.attach('explorerStore')
 @view({
   docStore: DocPageStore,
 })
 export default class DocumentPage {
   extraRef = null
 
-  render({ docStore, explorerStore, layoutStore }: { docStore: DocPageStore }) {
+  render({ docStore, explorerStore }: { docStore: DocPageStore }) {
     const { document } = explorerStore
 
-    if (document === undefined) {
-      return <null />
-    }
     if (!document) {
       return <UI.Placeholder size={2}>Doc 404</UI.Placeholder>
     }
@@ -56,7 +53,7 @@ export default class DocumentPage {
               <UI.Button chromeless size={1.2} badge={2} icon="circle-09" />
             }
           >
-            <SidebarContent />
+            <Notifications />
           </UI.Popover>
         </Page.Actions>
 

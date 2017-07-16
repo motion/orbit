@@ -19,7 +19,7 @@ const GLOW_PROPS = {
 }
 
 class InboxStore {
-  threads = Thread.forDoc(this.props.document._id)
+  threads = Thread.forDoc(this.props.document && this.props.document.id)
   highlightIndex = 0
   activeIndex = null
   newThreadTitle = ''
@@ -30,15 +30,20 @@ class InboxStore {
   createDraft = async () => {
     const { document } = this.props
 
+    if (!document) {
+      console.error('no doc')
+      return
+    }
+
     this.draftThread = await Thread.create({
       draft: true,
       title: this.newThreadTitle,
-      docId: document._id,
+      docId: document.id,
     })
     this.draft = await Document.create({
       draft: true,
       title: '',
-      threadId: this.draftThread._id,
+      threadId: this.draftThread.id,
     })
   }
 

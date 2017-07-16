@@ -20,8 +20,8 @@ export default class Container extends React.Component {
   }
 
   unstable_handleError(error) {
-    console.error('ERR', error)
     this.setState({ error })
+    console.error('ERR', error)
   }
 
   clearErrors() {

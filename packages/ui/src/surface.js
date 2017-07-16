@@ -537,6 +537,7 @@ export default class Surface implements ViewType {
         lineHeight: 'inherit',
         justifyContent: props.justify,
         maxWidth: `calc(100% - ${props.icon ? iconSize + 5 : 0}px)`,
+        textAlign: props.textAlign,
       },
       surface: {
         opacity: props.opacity,

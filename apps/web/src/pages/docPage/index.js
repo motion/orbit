@@ -146,6 +146,7 @@ export default class DocumentPage {
       zIndex: 50,
       top: 0,
       right: 10,
+      bottom: 60,
     },
     fade: {
       position: 'absolute',

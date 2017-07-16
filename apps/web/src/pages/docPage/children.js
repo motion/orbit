@@ -28,7 +28,16 @@ class Item {
   render({ doc, editable, onSave, textRef, subItems, ...props }) {
     return (
       <doccontainer onClick={() => doc.url && Router.go(doc.url())} {...props}>
-        <doc $$justify="flex-end" $$align="flex-start" $$row>
+        <UI.Surface
+          icon={doc.type === 'thread' ? 'paper' : null}
+          align="center"
+          justify="flex-end"
+          flexFlow="row"
+          iconAfter
+          textAlign="right"
+          fontSize={18}
+          padding={[7, 5]}
+        >
           <UI.Text
             $title
             if={doc.title || editable}
@@ -38,41 +47,26 @@ class Item {
           >
             {doc.title}
           </UI.Text>
-          <icon>
-            <UI.Icon
-              if={doc.type === 'thread'}
-              name="paper"
-              color={[0, 0, 0, 0.3]}
-              size={14}
-              css={{ marginLeft: 8 }}
-            />
-            <UI.Icon
-              if={false && doc.type === 'document'}
-              name="filesg"
-              color={[0, 0, 0, 0.3]}
-              size={14}
-              css={{ marginLeft: 8 }}
-            />
-          </icon>
-          <subitems if={false}>
-            {(subItems &&
-              subItems.length &&
-              <subdocs>
-                <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
-                {subItems.map(child =>
-                  <UI.Text
-                    key={child._id}
-                    onClick={() => Router.go(child.url())}
-                    size={0.8}
-                  >
-                    {child.title}
-                  </UI.Text>
-                )}
-              </subdocs>) ||
-              null}
-          </subitems>
-          <DragHandle if={false} css={{ margin: ['auto', -12, 'auto', 12] }} />
-        </doc>
+        </UI.Surface>
+
+        <subitems if={false}>
+          {(subItems &&
+            subItems.length &&
+            <subdocs>
+              <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
+              {subItems.map(child =>
+                <UI.Text
+                  key={child._id}
+                  onClick={() => Router.go(child.url())}
+                  size={0.8}
+                >
+                  {child.title}
+                </UI.Text>
+              )}
+            </subdocs>) ||
+            null}
+        </subitems>
+        <DragHandle if={false} css={{ margin: ['auto', -12, 'auto', 12] }} />
       </doccontainer>
     )
   }
@@ -94,11 +88,6 @@ class Item {
     },
     icon: {
       padding: [5, 0, 0],
-    },
-    doc: {
-      padding: [7.5, 0],
-      minWidth: 50,
-      textAlign: 'right',
     },
     title: {
       fontWeight: 300,
@@ -230,64 +219,67 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs, allDocs } }: Props) {
     return (
       <children>
-        <SortableChildren
-          if={hasDocs}
-          items={sortedDocs || allDocs}
-          store={store}
-          onSortEnd={store.onSortEnd}
-          pressDelay={500}
-        />
-        <Item
-          if={store.newDoc}
-          editable
-          onSave={store.saveCreatingDoc}
-          doc={store.newDoc}
-          textRef={this.onNewItemText}
-        />
+        <contents>
+          <SortableChildren
+            if={hasDocs}
+            items={sortedDocs || allDocs}
+            store={store}
+            onSortEnd={store.onSortEnd}
+            pressDelay={500}
+          />
+          <Item
+            if={store.newDoc}
+            editable
+            onSave={store.saveCreatingDoc}
+            doc={store.newDoc}
+            textRef={this.onNewItemText}
+          />
 
-        <UI.Popover
-          openOnHover
-          delay={100}
-          background
-          elevation={3}
-          borderRadius={10}
-          closeOnClick
-          keepOpenOnClickTarget
-          arrowSize={11}
-          distance={0}
-          target={
-            <UI.Button chromeless icon="add" margin={[10, 10]}>
-              Create
-            </UI.Button>
-          }
-        >
-          <UI.Segment
-            chromeless
-            itemProps={{
-              chromeless: true,
-            }}
+          <UI.Popover
+            openOnHover
+            delay={100}
+            background
+            elevation={3}
+            borderRadius={10}
+            closeOnClick
+            keepOpenOnClickTarget
+            arrowSize={11}
+            distance={0}
+            target={
+              <UI.Button chromeless icon="add" margin={[10, 10]}>
+                Create
+              </UI.Button>
+            }
           >
-            <UI.Button
-              onClick={store.createDoc}
-              icon="filesg"
-              size={0.9}
-              color={[0, 0, 0, 0.5]}
+            <UI.Segment
+              chromeless
+              itemProps={{
+                chromeless: true,
+              }}
             >
-              Doc
-            </UI.Button>
-            <UI.Button
-              onClick={store.createThread}
-              icon="paper"
-              size={0.9}
-              color={[0, 0, 0, 0.5]}
-            >
-              Thread
-            </UI.Button>
-          </UI.Segment>
-        </UI.Popover>
+              <UI.Button
+                onClick={store.createDoc}
+                icon="filesg"
+                size={0.9}
+                color={[0, 0, 0, 0.5]}
+              >
+                Doc
+              </UI.Button>
+              <UI.Button
+                onClick={store.createThread}
+                icon="paper"
+                size={0.9}
+                color={[0, 0, 0, 0.5]}
+              >
+                Thread
+              </UI.Button>
+            </UI.Segment>
+          </UI.Popover>
+        </contents>
 
         <shadow if={false} $glow />
         <background $glow />
+        <fade $bottom />
       </children>
     )
   }
@@ -295,10 +287,14 @@ export default class ExplorerChildren {
   static style = {
     children: {
       borderTop: [1, '#eee', 'dotted'],
-      padding: [10, 1, 40, 0],
+      padding: [10, 1, 10, 0],
       flex: 1,
       alignItems: 'flex-end',
       position: 'relative',
+    },
+    contents: {
+      flex: 1,
+      overflowY: 'scroll',
     },
     arrow: {
       height: 20,
@@ -340,6 +336,18 @@ export default class ExplorerChildren {
       transform: {
         x: '20%',
       },
+    },
+    fade: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      height: 50,
+      zIndex: 10000000,
+      pointerEvents: 'none',
+    },
+    bottom: {
+      bottom: 0,
+      background: 'linear-gradient(transparent, #fff)',
     },
   }
 }

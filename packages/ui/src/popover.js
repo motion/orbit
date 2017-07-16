@@ -520,6 +520,10 @@ export default class Popover {
   listeners = []
 
   listenForHover = () => {
+    if (!this.target) {
+      console.log('no target')
+      return
+    }
     this.listeners = this.addHoverListeners('target', this.target)
     if (!this.curProps.noHover) {
       this.listeners = [

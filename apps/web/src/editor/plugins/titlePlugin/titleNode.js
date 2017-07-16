@@ -1,6 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import node from '~/editor/node'
+import Gemstone from '~/views/gemstone'
 
 @node
 @view.ui
@@ -32,6 +33,10 @@ export default class TitleNode {
         $shown={this.state.shown}
         {...attributes}
       >
+        <Gemstone
+          if={editorStore.explorerStore && editorStore.explorerStore.document}
+          document={editorStore.explorerStore.document}
+        />
         {children}
       </tag>
     )

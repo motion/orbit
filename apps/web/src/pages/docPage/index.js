@@ -10,6 +10,7 @@ import Actions from './actions'
 import Inbox from '~/views/inbox'
 import { SidebarContent } from '~/views/sidebar'
 import GeoPattern from 'geopattern'
+import Gemstone from '~/views/gemstone'
 
 class DocPageStore {
   forceEdit = false
@@ -100,21 +101,7 @@ export default class DocumentPage {
                 theme="dark"
                 borderRadius={5}
                 elevation={2}
-                target={
-                  <UI.Circle
-                    size={36}
-                    marginRight={4}
-                    zIndex={100 - i}
-                    background={GeoPattern.generate(doc.id).toDataUrl()}
-                    fontSize={20}
-                    color="white"
-                    overflow="hidden"
-                    transition="transform ease-in 30ms"
-                    transform={{
-                      scale: 1.0,
-                    }}
-                  />
-                }
+                target={<Gemstone document={doc} />}
               >
                 helo
               </UI.Popover>

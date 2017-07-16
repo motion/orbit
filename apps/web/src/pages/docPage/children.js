@@ -248,11 +248,11 @@ export default class ExplorerChildren {
           >
             <UI.Button
               onClick={store.createThread}
-              icon="paper"
+              icon="shopping_list"
               size={0.9}
               color={[0, 0, 0, 0.7]}
             >
-              Thread
+              List
             </UI.Button>
             <UI.Button
               onClick={store.createDoc}
@@ -260,7 +260,7 @@ export default class ExplorerChildren {
               size={0.9}
               color={[0, 0, 0, 0.7]}
             >
-              Doc
+              Page
             </UI.Button>
           </UI.Segment>
         </UI.Popover>

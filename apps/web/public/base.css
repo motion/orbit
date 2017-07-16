@@ -135,6 +135,15 @@ body.dragging * {
   }
 }
 
+@keyframes rotate-backwards {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-359deg);
+  }
+}
+
 @keyframes turnaway {
   0% {
     transform: rotate(0deg);

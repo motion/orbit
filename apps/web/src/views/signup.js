@@ -28,10 +28,10 @@ export default class Signup {
           draggable
           behind
           color={[255, 255, 255]}
-          opacity={0.8}
+          opacity={1}
           full
           blur={80}
-          scale={1}
+          scale={0.8}
           show
           resist={82}
           offsetTop={200}
@@ -217,7 +217,13 @@ export default class Signup {
           />
         </shape>
 
-        <shape $$fullscreen css={{ transform: { rotate: '150deg' } }}>
+        <shape
+          $$fullscreen
+          css={{
+            transform: { rotate: '150deg' },
+            animation: 'rotate linear 800s infinite',
+          }}
+        >
           <shape
             css={{
               position: 'absolute',
@@ -327,7 +333,13 @@ export default class Signup {
           />
         </shape>
 
-        <shape $$fullscreen css={{ transform: { rotate: '80deg' } }}>
+        <shape
+          $$fullscreen
+          css={{
+            transform: { rotate: '80deg' },
+            animation: 'rotate-backwards linear 900s infinite',
+          }}
+        >
           <shape
             css={{
               position: 'absolute',
@@ -437,7 +449,13 @@ export default class Signup {
           />
         </shape>
 
-        <shape $$fullscreen css={{ transform: { rotate: '-70deg' } }}>
+        <shape
+          $$fullscreen
+          css={{
+            transform: { rotate: '-70deg' },
+            animation: 'rotate linear 1000s infinite',
+          }}
+        >
           <shape
             css={{
               position: 'absolute',
@@ -492,7 +510,13 @@ export default class Signup {
           />
         </shape>
 
-        <shape $$fullscreen css={{ transform: { rotate: '-170deg' } }}>
+        <shape
+          $$fullscreen
+          css={{
+            transform: { rotate: '-170deg' },
+            animation: 'rotate linear 1000s infinite',
+          }}
+        >
           <shape
             css={{
               position: 'absolute',

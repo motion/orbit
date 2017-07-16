@@ -73,7 +73,7 @@ export default class Button {
       borderRadius: 12,
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'red',
+      background: 'linear-gradient(left, red, purple)',
       color: '#fff',
       overflow: 'hidden',
       pointerEvents: 'none',

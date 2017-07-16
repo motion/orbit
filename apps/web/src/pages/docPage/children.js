@@ -33,14 +33,19 @@ class Item {
         {...props}
       >
         <UI.Surface
-          icon={doc.type === 'thread' ? 'paper' : null}
+          icon={doc.type === 'thread' ? 'chat46' : null}
+          iconProps={{
+            css: {
+              alignSelf: 'flex-start',
+              marginTop: 6,
+            },
+          }}
           align="center"
           justify="flex-end"
           flexFlow="row"
           iconAfter
           textAlign="right"
-          fontSize={18}
-          padding={[7, 5]}
+          padding={[4, 5]}
         >
           <UI.Text
             $title
@@ -95,8 +100,8 @@ class Item {
     },
     title: {
       fontWeight: 300,
-      fontSize: 20,
-      lineHeight: '1.3rem',
+      fontSize: 16,
+      lineHeight: '1.2rem',
       width: '100%',
       color: '#000',
     },

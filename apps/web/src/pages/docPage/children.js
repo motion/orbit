@@ -28,7 +28,7 @@ class Item {
   render({ doc, editable, onSave, textRef, subItems, ...props }) {
     return (
       <doccontainer onClick={() => doc.url && Router.go(doc.url())} {...props}>
-        <doc $$justify="flex-end" $$align="center" $$row>
+        <doc $$justify="flex-end" $$align="flex-start" $$row>
           <UI.Text
             $title
             if={doc.title || editable}
@@ -38,13 +38,22 @@ class Item {
           >
             {doc.title}
           </UI.Text>
-          <UI.Icon
-            if={doc.type === 'thread'}
-            name="arpaper"
-            color={[0, 0, 0, 0.45]}
-            size={11}
-            css={{ marginLeft: 8 }}
-          />
+          <icon>
+            <UI.Icon
+              if={doc.type === 'thread'}
+              name="paper"
+              color={[0, 0, 0, 0.3]}
+              size={14}
+              css={{ marginLeft: 8 }}
+            />
+            <UI.Icon
+              if={doc.type === 'document'}
+              name="filesg"
+              color={[0, 0, 0, 0.3]}
+              size={14}
+              css={{ marginLeft: 8 }}
+            />
+          </icon>
           <subitems if={false}>
             {(subItems &&
               subItems.length &&
@@ -71,6 +80,7 @@ class Item {
     doccontainer: {
       position: 'relative',
       opacity: 0.8,
+      transition: 'transform ease-in 50ms',
       transform: {
         scale: 1,
       },
@@ -78,19 +88,22 @@ class Item {
         opacity: 1,
         transform: {
           scale: 1.03,
-          x: -1,
+          x: -2,
         },
       },
     },
+    icon: {
+      padding: [5, 0, 0],
+    },
     doc: {
-      padding: [6, 0],
+      padding: [9, 0],
       minWidth: 50,
       textAlign: 'right',
     },
     title: {
-      fontWeight: 200,
-      fontSize: 16,
-      lineHeight: '1.15rem',
+      fontWeight: 300,
+      fontSize: 21,
+      lineHeight: '1.3rem',
       width: '100%',
       color: '#000',
     },
@@ -243,7 +256,7 @@ export default class ExplorerChildren {
           arrowSize={11}
           distance={0}
           target={
-            <UI.Button chromeless icon="add" marginTop={10}>
+            <UI.Button chromeless icon="add" margin={[10, 10]}>
               Create
             </UI.Button>
           }
@@ -254,10 +267,20 @@ export default class ExplorerChildren {
               chromeless: true,
             }}
           >
-            <UI.Button onClick={store.createDoc} icon="1_circle-add">
-              Document
+            <UI.Button
+              onClick={store.createDoc}
+              icon="filesg"
+              size={0.9}
+              color={[0, 0, 0, 0.5]}
+            >
+              Doc
             </UI.Button>
-            <UI.Button onClick={store.createThread} icon="list">
+            <UI.Button
+              onClick={store.createThread}
+              icon="paper"
+              size={0.9}
+              color={[0, 0, 0, 0.5]}
+            >
               Thread
             </UI.Button>
           </UI.Segment>

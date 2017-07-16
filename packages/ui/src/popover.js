@@ -31,11 +31,10 @@ export type Props = {
   delay: number,
   // prevent popover itself from catching pointer events
   noHover?: boolean,
-  // exit with `esc` key
-  escapable?: boolean,
   // size of shown arrow
   arrowSize?: number,
   closeOnClick?: boolean,
+  closeOnEsc?: boolean,
   // which direction it shows towards
   // default determine direction automatically
   towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
@@ -130,7 +129,7 @@ export default class Popover {
   }
 
   componentDidMount() {
-    const { openOnClick, closeOnClick, open, escapable, swayX } = this.curProps
+    const { openOnClick, closeOnClick, closeOnEsc, open, swayX } = this.curProps
 
     this.listenForResize()
     this.setTarget()
@@ -145,8 +144,9 @@ export default class Popover {
     if (open) {
       this.open()
     }
-    if (escapable) {
-      this.on(window, 'keydown', e => {
+    if (closeOnEsc) {
+      this.on(window, 'keyup', e => {
+        log(e.keyCode)
         if (e.keyCode === 27 && (open || this.state.open)) {
           this.close()
         }
@@ -258,9 +258,9 @@ export default class Popover {
   }
 
   stopListeningUntilNextMouseEnter = async () => {
+    await this.clearHovered()
     this.removeListenForHover()
     this.close()
-    await this.clearHovered()
     this.setTimeout(this.listenForHover, 100)
   }
 
@@ -650,7 +650,6 @@ export default class Popover {
     delay,
     distance,
     edgePadding,
-    escapable,
     forgiveness,
     height,
     left: _left,
@@ -813,6 +812,7 @@ export default class Popover {
     popover: {
       position: 'absolute',
       pointerEvents: 'none',
+      zIndex: -2,
       opacity: 0,
       transition: 'opacity ease-in 60ms, transform ease-out 100ms',
       transform: {

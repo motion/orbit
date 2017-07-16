@@ -9,61 +9,11 @@ export default class UserBar {
   render() {
     return (
       <userbar $$draggable if={User.loggedIn}>
-        <above
-          if={User.favoriteDocuments}
-          css={{
-            position: 'absolute',
-            bottom: 10,
-            left: 10,
-            flexFlow: 'row',
-          }}
-        >
-          <fade if={false} $$fullscreen css={{ left: 'auto', width: 50 }}>
-            <fadeout $fadeamt={1} />
-            <fadeout $fadeamt={2} />
-            <fadeout $fadeamt={3} />
-            <fadeout $fadeamt={4} />
-            <fadeout $fadeamt={5} />
-            <fadeout $fadeamt={6} />
-            <fadeout $fadeamt={7} />
-            <fadeout $fadeamt={8} />
-            <fadeout $fadeamt={9} />
-            <fadeout $fadeamt={10} />
-          </fade>
-          {User.favoriteDocuments.map((text, i) =>
-            <UI.Popover
-              key={i}
-              openOnHover
-              background
-              theme="dark"
-              borderRadius={5}
-              elevation={2}
-              target={
-                <UI.Circle
-                  size={24}
-                  marginRight={3}
-                  zIndex={100 - i}
-                  background={[0, 0, 0, 0.1]}
-                  fontSize={20}
-                  color="white"
-                  overflow="hidden"
-                  transition="transform ease-in 30ms"
-                  transform={{
-                    scale: 1.0,
-                  }}
-                />
-              }
-            >
-              helo
-            </UI.Popover>
-          )}
-        </above>
         <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>
           {User.name}
         </UI.Text>
         <UI.Popover
-          theme="dark"
           distance={10}
           elevation={2}
           borderRadius={8}

@@ -41,12 +41,7 @@ import Router from '~/router'
       console.log('created user now')
 
       try {
-        const org = await Org.create({
-          title: fields.name,
-          admins: [User.id],
-          members: [User.id],
-        })
-
+        const org = await User.createOrg(fields.name)
         console.log('done signed up', org)
 
         // ensure they are at home
@@ -105,9 +100,9 @@ export default class SignupStep1 {
           <space $$height={20} />
           <UI.Button
             iconAfter
-            icon="arrowri"
+            icon="arrowminri"
             type="submit"
-            theme="#ccc"
+            theme="rgb(113, 97, 172)"
             alignSelf="flex-end"
             size={1.1}
           >

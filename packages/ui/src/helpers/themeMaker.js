@@ -34,7 +34,7 @@ export default class ThemeMaker {
       highlightColor: base,
       background: base,
       color: opposite.lighten(0.4),
-      borderColor: opposite.darken(0.5),
+      borderColor: opposite.darken(0.2),
     })
     this.cache[colorName] = theme // cache
     return theme

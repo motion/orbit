@@ -171,6 +171,14 @@ class User {
     this.setupDbSync()
     return session
   }
+
+  createOrg = async name => {
+    return await Org.create({
+      title: name,
+      admins: [this.id],
+      members: [this.id],
+    })
+  }
 }
 
 const user = new User({

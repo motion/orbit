@@ -70,7 +70,8 @@
     "slate-paste-linkify": "^0.2.1",
     "slate-trailing-block": "^0.2.4",
     "time-ago": "^0.1.0",
-    "trianglify": "^1.0.1"
+    "trianglify": "^1.0.1",
+    "geopattern": "1.2.3"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

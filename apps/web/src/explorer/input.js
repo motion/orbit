@@ -15,6 +15,7 @@ const $para = {
 
 const $arrow = {
   opacity: 0.4,
+  margin: [0, -2],
   transform: {
     scale: 0.7,
   },
@@ -121,12 +122,18 @@ export default class ExplorerInput {
       <bar $blurred={!store.focused} $focused={store.focused}>
         <UI.Button
           iconSize={15}
-          padding={[0, 6]}
+          margin={8}
           chromeless
+          circular
           disabled={Router.path === '/'}
           color={[0, 0, 0, 0.4]}
           height={24}
-          icon="home"
+          icon="loader_circle"
+          css={{
+            transform: {
+              rotate: '-52deg',
+            },
+          }}
           onClick={() => Router.go('/')}
         />
         <RightArrow if={Router.path !== '/'} css={$arrow} />

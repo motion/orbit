@@ -227,39 +227,40 @@ export default class ExplorerChildren {
           openOnHover
           delay={100}
           background
-          elevation={3}
+          elevation={4}
           borderRadius={10}
           closeOnClick
           keepOpenOnClickTarget
           arrowSize={11}
           distance={0}
-          target={
-            <UI.Button chromeless icon="add" margin={[0, 0, 5]}>
-              Create
-            </UI.Button>
-          }
+          towards="left"
+          target={<UI.Button chromeless icon="add" margin={[0, 0, 5]} />}
         >
           <UI.Segment
             chromeless
+            css={{
+              padding: 1,
+              paddingLeft: 2,
+            }}
             itemProps={{
               chromeless: true,
             }}
           >
             <UI.Button
-              onClick={store.createDoc}
-              icon="filesg"
-              size={0.9}
-              color={[0, 0, 0, 0.5]}
-            >
-              Doc
-            </UI.Button>
-            <UI.Button
               onClick={store.createThread}
               icon="paper"
               size={0.9}
-              color={[0, 0, 0, 0.5]}
+              color={[0, 0, 0, 0.7]}
             >
               Thread
+            </UI.Button>
+            <UI.Button
+              onClick={store.createDoc}
+              icon="filesg"
+              size={0.9}
+              color={[0, 0, 0, 0.7]}
+            >
+              Doc
             </UI.Button>
           </UI.Segment>
         </UI.Popover>

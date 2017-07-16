@@ -21,7 +21,7 @@ export default class SelectBar {
       >
         <bar $$row>
           {pluginCategories.map(category =>
-            <UI.Segment padded key={category}>
+            <UI.Segment margin={[0, 5]} key={category}>
               {editorStore.helpers
                 .contextButtonsFor(category)
                 .map((button, i) =>

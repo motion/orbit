@@ -46,7 +46,7 @@ export default class TitleNode {
       fontSize: Math.floor(Math.log(200 / level) * 5.5),
     }),
     title1: {
-      fontSize: 26,
+      fontSize: 23,
       height: 50,
       fontWeight: 300,
       color: [0, 0, 0, 0.85],

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { color, view } from '@mcro/black'
+import { view } from '@mcro/black'
 import Button from './button'
 import type { Color } from '@mcro/gloss'
 import Text from './text'

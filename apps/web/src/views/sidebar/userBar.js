@@ -1,68 +1,14 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User, Document } from '@mcro/models'
+import { User, Document, Org, Image } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
-import Inbox from '~/views/inbox'
 
-@view({
-  store: class {
-    document = Document.create({}, true)
-  },
-})
+@view
 export default class UserBar {
-  render({ store }) {
+  render() {
     return (
       <userbar $$draggable if={User.loggedIn}>
-        <above
-          if={User.favoriteDocuments}
-          css={{
-            position: 'absolute',
-            bottom: 10,
-            left: 10,
-            flexFlow: 'row',
-          }}
-        >
-          <fade if={false} $$fullscreen css={{ left: 'auto', width: 50 }}>
-            <fadeout $fadeamt={1} />
-            <fadeout $fadeamt={2} />
-            <fadeout $fadeamt={3} />
-            <fadeout $fadeamt={4} />
-            <fadeout $fadeamt={5} />
-            <fadeout $fadeamt={6} />
-            <fadeout $fadeamt={7} />
-            <fadeout $fadeamt={8} />
-            <fadeout $fadeamt={9} />
-            <fadeout $fadeamt={10} />
-          </fade>
-          {User.favoriteDocuments.map((text, i) =>
-            <UI.Popover
-              key={i}
-              openOnHover
-              background
-              theme="dark"
-              borderRadius={5}
-              elevation={2}
-              target={
-                <UI.Circle
-                  size={24}
-                  marginRight={3}
-                  zIndex={100 - i}
-                  background={[0, 0, 0, 0.1]}
-                  fontSize={20}
-                  color="white"
-                  overflow="hidden"
-                  transition="transform ease-in 30ms"
-                  transform={{
-                    scale: 1.0,
-                  }}
-                />
-              }
-            >
-              <Inbox />
-            </UI.Popover>
-          )}
-        </above>
         <div $$flex />
         <UI.Text style={{ marginRight: 10 }} ellipse>
           {User.name}
@@ -73,7 +19,9 @@ export default class UserBar {
           borderRadius={8}
           forgiveness={16}
           delay={150}
-          target={<UI.Button circular icon="body" />}
+          target={
+            <UI.Button circular chromeless icon="circle-09" sizeIcon={1.7} />
+          }
           openOnHover
           closeOnClick
           debug
@@ -86,13 +34,13 @@ export default class UserBar {
             itemProps={{
               height: 32,
               fontSize: 14,
-              borderWidth: 0,
               borderRadius: 8,
             }}
             items={[
               {
                 icon: 'body',
                 primary: User.name,
+                ellipse: true,
                 after: (
                   <UI.Button
                     size={0.8}
@@ -105,6 +53,19 @@ export default class UserBar {
                 icon: 'gear',
                 primary: 'Settings',
                 onClick: () => console.log(),
+              },
+              {
+                icon: 'fire',
+                primary: 'Destroy All',
+                onClick: () => {
+                  ;[Document, Org, Image].forEach(async model => {
+                    const all = await model.find().exec()
+                    log('removing', model.title)
+                    if (all && all.length) {
+                      all.map(item => item.remove())
+                    }
+                  })
+                },
               },
             ]}
           />

@@ -8,6 +8,7 @@ import Page from '~/views/page'
 import Children from './children'
 import Actions from './actions'
 import Inbox from '~/views/inbox'
+import { SidebarContent } from '~/views/sidebar'
 
 class DocPageStore {
   forceEdit = false
@@ -44,32 +45,22 @@ export default class DocumentPage {
       <Page>
         <Page.Actions>
           <UI.Popover
-            openOnHover
+            openOnClick
+            closeOnEscape
             background
             width={480}
             borderRadius={8}
             elevation={2}
-            adjust={[140, 0]}
-            target={<UI.Button chromeless size={1.2} badge={2} icon="bell" />}
-          >
-            <content />
-          </UI.Popover>
-
-          <UI.Button
-            chromeless
-            spaced
-            size={0.7}
-            margin={[0, -5, 0, 0]}
-            icon={
-              layoutStore.sidebar.active ? 'arrow-min-right' : 'arrow-min-left'
+            target={
+              <UI.Button chromeless size={1.2} badge={2} icon="circle-09" />
             }
-            onClick={layoutStore.sidebar.toggle}
-            color={[0, 0, 0, 0.3]}
-          />
+          >
+            <SidebarContent />
+          </UI.Popover>
         </Page.Actions>
 
         <docpagecontent>
-          <Inbox document={document} if={true || document.type === 'thread'} />
+          <Inbox if={document.type === 'thread'} document={document} />
           <DocumentView
             if={isDoc}
             $$paddingRight={120}
@@ -87,17 +78,64 @@ export default class DocumentPage {
         </sidebar>
 
         <bottomright
-          css={{ position: 'absolute', bottom: 10, right: 10, zIndex: 100000 }}
+          css={{
+            position: 'absolute',
+            bottom: 10,
+            right: 10,
+            zIndex: 100000,
+            flexFlow: 'row',
+            alignItems: 'center',
+          }}
         >
+          <above
+            if={User.favoriteDocuments}
+            css={{ flexFlow: 'row', margin: [0, 10] }}
+          >
+            {User.favoriteDocuments.map((text, i) =>
+              <UI.Popover
+                key={i}
+                openOnHover
+                background
+                theme="dark"
+                borderRadius={5}
+                elevation={2}
+                target={
+                  <UI.Circle
+                    size={24}
+                    marginRight={3}
+                    zIndex={100 - i}
+                    background={[0, 0, 0, 0.1]}
+                    fontSize={20}
+                    color="white"
+                    overflow="hidden"
+                    transition="transform ease-in 30ms"
+                    transform={{
+                      scale: 1.0,
+                    }}
+                  />
+                }
+              >
+                helo
+              </UI.Popover>
+            )}
+          </above>
+
           <UI.Button
             size={1.5}
             borderWidth={0}
             icon="fav3"
             tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
-            tooltipProps={{ towards: 'left' }}
             highlight={document.hasStar}
+            iconSize={document.hasStar ? 20 : null}
             onClick={() => document.toggleStar()}
-            after={<div>hi222222222</div>}
+            width={44}
+            padding={0}
+            iconProps={{
+              css: {
+                transition: 'transform ease-in 80ms',
+                scale: document.hasStar ? 1.1 : 1,
+              },
+            }}
           />
         </bottomright>
       </Page>
@@ -114,7 +152,7 @@ export default class DocumentPage {
       position: 'relative',
     },
     sidebar: {
-      width: 160,
+      width: 125,
       position: 'absolute',
       overflow: 'hidden',
       zIndex: 50,

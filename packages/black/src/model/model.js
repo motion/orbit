@@ -2,10 +2,10 @@
 import { CompositeDisposable } from '@mcro/decor'
 import { autorun, observable } from 'mobx'
 import { compile, str } from './properties'
-import { flatten, intersection } from 'lodash'
 import type RxDB, { RxCollection } from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
+import query from './query'
 
 type SettingsObject = {
   index?: Array<string>,
@@ -50,8 +50,7 @@ export default class Model {
     return {
       ...this.defaultSchema,
       ...this.settings,
-      // cloneDeep fixes bug when re-using a model (compiling twice)
-      ...this.props,
+      ...cloneDeep(this.props), // cloneDeep fixes bug when re-using a model (compiling twice)
       title: this.settings.database,
     }
   }
@@ -136,7 +135,7 @@ export default class Model {
       const result = new Proxy(
         {
           exec: () => {
-            console.warn("This model isn't connected!")
+            console.warn('This model isn\'t connected!')
             return Promise.resolve(false)
           },
           isntConnected: true,
@@ -200,42 +199,56 @@ export default class Model {
     // create index
     await this.createIndexes()
 
-    // auto timestamps
-    if (this.hasTimestamps) {
-      const ogInsert = this.hooks.preInsert
-      this.hooks.preInsert = doc => {
-        console.log('i am pre insert')
+    // PRE-INSERT
+    const ogInsert = this.hooks.preInsert
+    this.hooks.preInsert = doc => {
+      const defaults = this.getDefaultProps(doc)
+      for (const prop of Object.keys(defaults)) {
+        if (typeof doc[prop] === 'undefined') {
+          doc[prop] = defaults[prop]
+        }
+      }
+      if (this.hasTimestamps) {
         doc.createdAt = this.now
         doc.updatedAt = this.now
-        if (ogInsert) {
-          return ogInsert.call(this, doc)
-        }
       }
+      console.log(
+        `%cINSERT ${this.constructor.name}.create(${JSON.stringify(doc).slice(
+          0,
+          100
+        )}...)`,
+        'color: green'
+      )
+      if (ogInsert) {
+        return ogInsert.call(this, doc)
+      }
+    }
 
-      const ogSave = this.hooks.preSave
-      this.hooks.preSave = doc => {
+    // PRE-SAVE
+    const ogSave = this.hooks.preSave
+    this.hooks.preSave = doc => {
+      if (this.hasTimestamps) {
         doc.updatedAt = this.now
-        if (ogSave) {
-          return ogSave.call(this, doc)
+      }
+      if (ogSave) {
+        return ogSave.call(this, doc)
+      }
+    }
+
+    // POST-CREATE
+    // decorate each instance with this.methods
+    const ogPostCreate = this.hooks.postCreate
+    this.hooks.postCreate = doc => {
+      const { compiledMethods } = this
+      for (const method of Object.keys(compiledMethods)) {
+        const descriptor = compiledMethods[method]
+        if (typeof descriptor.get === 'function') {
+          descriptor.get = descriptor.get.bind(doc)
         }
       }
-
-      // decorate each instance with this.methods
-      const ogPostCreate = this.hooks.postCreate
-      this.hooks.postCreate = doc => {
-        const { compiledMethods } = this
-
-        for (const method of Object.keys(compiledMethods)) {
-          const descriptor = compiledMethods[method]
-          if (typeof descriptor.get === 'function') {
-            descriptor.get = descriptor.get.bind(doc)
-          }
-        }
-        Object.defineProperties(doc, compiledMethods)
-
-        if (ogPostCreate) {
-          return ogPostCreate.call(this, doc)
-        }
+      Object.defineProperties(doc, compiledMethods)
+      if (ogPostCreate) {
+        return ogPostCreate.call(this, doc)
       }
     }
 
@@ -262,53 +275,44 @@ export default class Model {
   createIndexes = async (): Promise<void> => {
     const index = this.settings.index || []
 
-    const { indexes } = await this.collection.pouch.getIndexes()
+    // const { indexes } = await this.collection.pouch.getIndexes()
     // console.log('indexes ARE', indexes, 'vs', index)
 
     // TODO see if we can remove but fixes bug for now
     await this.collection.pouch.createIndex({ fields: index })
 
-    if (index.length) {
-      // TODO: pouchdb supposedly does this for you, but it was slow in profiling
-      const { indexes } = await this.collection.pouch.getIndexes()
-      const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
-        field => Object.keys(field)[0]
-      )
-      // if have not indexed every field
-      if (intersection(index, alreadyIndexedFields).length !== index.length) {
-        // need to await or you get error sorting by dates, etc
-        console.log(
-          `%c[pouch] CREATE INDEX ${this.title} ${JSON.stringify(index)}`,
-          'color: green'
-        )
+    // this was a faster way to make indexes if need be
+    // if (index.length) {
+    //   // TODO: pouchdb supposedly does this for you, but it was slow in profiling
+    //   const { indexes } = await this.collection.pouch.getIndexes()
+    //   const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
+    //     field => Object.keys(field)[0]
+    //   )
+    //   // if have not indexed every field
+    //   if (intersection(index, alreadyIndexedFields).length !== index.length) {
+    //     // need to await or you get error sorting by dates, etc
+    //     console.log(
+    //       `%c[pouch] CREATE INDEX ${this.title} ${JSON.stringify(index)}`,
+    //       'color: green'
+    //     )
 
-        await this.collection.pouch.createIndex({ fields: index })
-      }
-    }
+    //     await this.collection.pouch.createIndex({ fields: index })
+    //   }
+    // }
   }
 
   // helpers
 
-  createTemporary = object => this.create(object, true)
+  @query find = (...args) => this.collection.find(...args)
+  @query findOne = (...args) => this.collection.findOne(...args)
 
-  create = (object: Object = {}, temporary = false): Promise<Object> => {
-    const properties = {
-      ...this.getDefaultProps(object),
-      ...object,
-    }
-
-    if (!temporary) {
-      console.log(
-        `%c${this.constructor.name}.create(${JSON.stringify(properties).slice(
-          0,
-          100
-        )}...)`,
-        'color: green'
-      )
-    }
-
-    return this.collection[temporary ? 'newDocument' : 'insert'](properties)
+  createTemporary = async object => {
+    const doc = await this.collection.newDocument(object)
+    doc.__is_temp = true
+    return doc
   }
+
+  create = (object: Object = {}) => this.collection.insert(object)
 
   findOrCreate = async (object: Object = {}): Promise<Object> => {
     const found = await this.collection.findOne(object).exec()

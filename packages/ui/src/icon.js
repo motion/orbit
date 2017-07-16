@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
+import color from 'color'
 import Popover from './popover'
 import names from './iconNames'
 import fuzzy from 'fuzzy'
@@ -118,7 +119,7 @@ export default class Icon {
     return {
       icon: {
         opacity: props.opacity,
-        color: props.color ? `${props.color.toString()} !important` : '',
+        color: props.color ? `${color(props.color).toString()} !important` : '',
         width: (props.width || props.size) + buttonPad * 2 + 1,
         height: (props.height || props.size) + buttonPad * 2,
         fontSize: props.size,

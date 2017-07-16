@@ -30,7 +30,7 @@ const DEFAULT_CONTENT = (title: string) => ({
       nodes: [
         {
           kind: 'text',
-          text: title,
+          text: title || 'Hello World',
         },
       ],
     },
@@ -38,6 +38,9 @@ const DEFAULT_CONTENT = (title: string) => ({
 })
 
 export const methods = {
+  get titleShort() {
+    return this.title.length > 20 ? this.title.slice(0, 18) + '...' : this.title
+  },
   url() {
     return `/d/${this._id && this._id.replace(':', '-')}`
   },
@@ -151,9 +154,10 @@ export class DocumentModel extends Model {
     threadId: str.optional,
     authorId: str,
     color: str,
-    parentId: str.optional,
+    orgId: str.optional,
     members: array.items(str),
     hashtags: array.items(str),
+    parentId: str.optional,
     parentIds: array.items(str),
     attachments: array.optional.items(str),
     starredBy: array.items(str),
@@ -165,16 +169,17 @@ export class DocumentModel extends Model {
     timestamps: true,
   }
 
-  static defaultProps = ({ title }) => {
+  static defaultProps = ({ title, parentId }) => {
     return {
+      title,
       authorId: User.user ? User.authorId : 'anon',
       hashtags: [],
       starredBy: [],
       members: [],
       attachments: [],
-      parentIds: [],
+      parentIds: parentId ? [parentId] : [],
       private: true,
-      content: DEFAULT_CONTENT(title),
+      content: DEFAULT_CONTENT(title || ''),
       color: randomcolor(),
       slug: toSlug(title),
       type: 'document',
@@ -200,11 +205,7 @@ export class DocumentModel extends Model {
 
       // set title to first content node
       try {
-        if (this.content.nodes) {
-          doc.title = this.content.nodes[0].nodes[0].text
-        } else {
-          doc.title = this.content.document.nodes[0].nodes[0].ranges[0].text
-        }
+        doc.title = this.content.document.nodes[0].nodes[0].text || doc.title
       } catch (e) {
         console.log('error extracting title', e)
       }
@@ -217,6 +218,8 @@ export class DocumentModel extends Model {
   }
 
   methods = methods
+
+  root = () => this.collection.find(User.org.homeDocument).exec()
 
   @query
   search = async (text: string) => {
@@ -276,8 +279,6 @@ export class DocumentModel extends Model {
       .find({ draft: { $ne: true }, threadId: { $exists: false } })
       // .sort({ createdAt: 'desc' })
       .limit(limit)
-
-  @query root = () => this.collection.find({ parentId: { $exists: false } })
 
   @query
   favoritedBy = id => {

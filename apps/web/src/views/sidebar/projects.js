@@ -172,7 +172,7 @@ export default class Projects {
     },
     task: {
       padding: [3, 0, 2],
-      pointerEvents: 'auto',
+      // pointerEvents: 'auto',
       overflow: 'hidden',
     },
     check: {

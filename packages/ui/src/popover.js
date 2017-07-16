@@ -31,11 +31,10 @@ export type Props = {
   delay: number,
   // prevent popover itself from catching pointer events
   noHover?: boolean,
-  // exit with `esc` key
-  escapable?: boolean,
   // size of shown arrow
   arrowSize?: number,
   closeOnClick?: boolean,
+  closeOnEsc?: boolean,
   // which direction it shows towards
   // default determine direction automatically
   towards: 'auto' | 'left' | 'right' | 'bottom' | 'top',
@@ -54,6 +53,8 @@ export type Props = {
   edgePadding: number,
   // sway towards mouse
   swayX?: boolean,
+  // pretty much what it says, for use with closeOnClick
+  keepOpenOnClickTarget?: boolean,
 }
 
 const INVERSE = {
@@ -128,9 +129,9 @@ export default class Popover {
   }
 
   componentDidMount() {
-    const { openOnClick, closeOnClick, open, escapable, swayX } = this.curProps
+    const { openOnClick, closeOnClick, closeOnEsc, open, swayX } = this.curProps
 
-    this.on(window, 'resize', debounce(() => this.setPosition(), 16))
+    this.listenForResize()
     this.setTarget()
     this.listenForHover()
 
@@ -143,8 +144,9 @@ export default class Popover {
     if (open) {
       this.open()
     }
-    if (escapable) {
-      this.on(window, 'keydown', e => {
+    if (closeOnEsc) {
+      this.on(window, 'keyup', e => {
+        log(e.keyCode)
         if (e.keyCode === 27 && (open || this.state.open)) {
           this.close()
         }
@@ -154,6 +156,18 @@ export default class Popover {
 
   componentWillUnmount() {
     this.unmounted = true
+  }
+
+  listenForResize = () => {
+    const updatePosition = throttle(this.setPosition, 32)
+    const updatePositionInactive = debounce(this.setPosition, 300)
+    this.on(window, 'resize', () => {
+      if (this.showPopover) {
+        updatePosition()
+      } else {
+        updatePositionInactive()
+      }
+    })
   }
 
   swayEvent = null
@@ -223,31 +237,37 @@ export default class Popover {
 
   listenForClickAway = () => {
     this.on(window, 'click', e => {
-      const { showPopover, isClickingTarget } = this
+      const { showPopover, isClickingTarget, keepOpenOnClickTarget } = this
       const { closeOnClick } = this.curProps
       if (!showPopover) {
         return
       }
-      const isClickingPopover = this.popoverRef.contains(e.target)
       // closeOnClickPopover
-      if (closeOnClick && isClickingPopover) {
+      if (closeOnClick && !isClickingTarget) {
         this.stopListeningUntilNextMouseEnter()
         this.close()
         e.stopPropagation()
+        return
       }
       // closeOnClickTarget
-      if (isClickingTarget) {
+      if (!keepOpenOnClickTarget && isClickingTarget) {
         this.close()
         e.stopPropagation()
       }
     })
   }
 
-  @log
-  stopListeningUntilNextMouseEnter = () => {
+  stopListeningUntilNextMouseEnter = async () => {
+    await this.clearHovered()
     this.removeListenForHover()
-    // this.listenForHover()
+    this.close()
+    this.setTimeout(this.listenForHover, 100)
   }
+
+  clearHovered = async () =>
+    new Promise(resolve =>
+      this.setState({ menuHovered: false, targetHovered: false }, resolve)
+    )
 
   setTarget = () => {
     this.target = getTarget(this.targetRef || this.curProps.target)
@@ -322,11 +342,13 @@ export default class Popover {
       if (!this.target) {
         console.error('no target')
       } else {
-        const targetBounds = this.target.getBoundingClientRect()
-        bounds.width = targetBounds.width
-        bounds.height = targetBounds.height
-        bounds.left = targetBounds.left
-        bounds.top = targetBounds.top
+        if (this.target.getBoundingClientRect) {
+          const targetBounds = this.target.getBoundingClientRect()
+          bounds.width = targetBounds.width
+          bounds.height = targetBounds.height
+          bounds.left = targetBounds.left
+          bounds.top = targetBounds.top
+        }
       }
     }
     return bounds
@@ -628,7 +650,6 @@ export default class Popover {
     delay,
     distance,
     edgePadding,
-    escapable,
     forgiveness,
     height,
     left: _left,
@@ -652,6 +673,7 @@ export default class Popover {
     towards,
     width,
     elevation,
+    keepOpenOnClickTarget,
     ...props
   }: Props) {
     const {
@@ -790,6 +812,7 @@ export default class Popover {
     popover: {
       position: 'absolute',
       pointerEvents: 'none',
+      zIndex: -2,
       opacity: 0,
       transition: 'opacity ease-in 60ms, transform ease-out 100ms',
       transform: {

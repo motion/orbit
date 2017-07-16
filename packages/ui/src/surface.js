@@ -95,6 +95,7 @@ export default class Surface implements ViewType {
     paddingTop?: number,
     row?: boolean,
     size?: number,
+    sizeIcon?: number,
     spaced?: boolean,
     stretch?: boolean,
     tagName: string,
@@ -181,6 +182,7 @@ export default class Surface implements ViewType {
     size,
     spaced,
     stretch,
+    sizeIcon,
     style,
     tagName,
     theme,
@@ -195,7 +197,7 @@ export default class Surface implements ViewType {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
-    const iconSize = _iconSize || (size || 1) * 11
+    const { themeValues } = this
 
     const passProps = {
       tagName,
@@ -204,11 +206,8 @@ export default class Surface implements ViewType {
       ...props,
     }
 
-    const elStyle = this.theme.element.style
-    const borderLeftRadius =
-      _borderLeftRadius || elStyle.borderRadius || elStyle.borderTopLeftRadius
-    const borderRightRadius =
-      _borderRightRadius || elStyle.borderRadius || elStyle.borderTopRightRadius
+    const borderLeftRadius = _borderLeftRadius || themeValues.borderRadius
+    const borderRightRadius = _borderRightRadius || themeValues.borderRadius
 
     const contents = [
       <Glint
@@ -230,7 +229,7 @@ export default class Surface implements ViewType {
         $icon
         $iconAfter={hasIconAfter}
         name={icon}
-        size={iconSize}
+        size={this.themeValues.iconSize}
         {...iconProps}
       />,
       <Glow
@@ -240,10 +239,10 @@ export default class Surface implements ViewType {
         scale={1.3}
         show={hovered}
         color={
-          (this.theme && $(this.theme.surface.style.color).lighten(0.2)) ||
+          (this.theme && this.themeValues.color.lighten(0.2)) ||
           DEFAULT_GLOW_COLOR
         }
-        opacity={0.25}
+        opacity={0.2}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
         {...glowProps}
@@ -318,6 +317,7 @@ export default class Surface implements ViewType {
     surface: {
       lineHeight: '1rem',
       position: 'relative',
+      borderStyle: 'solid',
     },
     element: {
       border: 'none',
@@ -516,9 +516,19 @@ export default class Surface implements ViewType {
       boxShadow: [...boxShadow, [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)]],
     }
 
-    return {
+    const iconSize =
+      props.iconSize ||
+      Math.ceil((props.size || 1) * 11) * (props.sizeIcon || 1)
+
+    // TODO figure out better pattern for this
+    self.themeValues = {
+      iconSize,
       borderRadiusSize,
       glintColor,
+      color,
+    }
+
+    return {
       element: {
         height,
         ...borderRadius,
@@ -526,6 +536,7 @@ export default class Surface implements ViewType {
         fontSize: props.fontSize,
         lineHeight: 'inherit',
         justifyContent: props.justify,
+        maxWidth: `calc(100% - ${props.icon ? iconSize + 5 : 0}px)`,
       },
       surface: {
         opacity: props.opacity,

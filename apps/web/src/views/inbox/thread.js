@@ -6,6 +6,7 @@ import Message from './message'
 import Draft from './draft'
 import { sortBy } from 'lodash'
 import FakeData from './fakeData'
+import RightArrow from '~/views/rightArrow'
 
 const GLOW_PROPS = {
   color: 'salmon',
@@ -19,11 +20,12 @@ class ThreadStore {
   docs = Document.forThread(this.props.inboxStore.activeItem._id)
 }
 
+@view.attach('explorerStore')
 @view({
   store: ThreadStore,
 })
 export default class Thread {
-  render({ inboxStore, store }) {
+  render({ explorerStore, inboxStore, store }) {
     const { activeItem: item } = inboxStore
     const { docs } = store
     const sorted = sortBy(docs || [], 'createdAt')
@@ -32,7 +34,6 @@ export default class Thread {
       <thread>
         <bar>
           <barblur>
-            <UI.Glow $glow {...GLOW_PROPS} show />
             <UI.Button
               chromeless
               glow={false}
@@ -45,8 +46,9 @@ export default class Thread {
               margin={[0, 0, 0, -5]}
             />
 
-            <title>
-              {item.title}
+            <title $$row>
+              {explorerStore.document.title}{' '}
+              <RightArrow css={{ opacity: 0.2, margin: [0, 8] }} /> {item.title}
             </title>
             <UI.Button
               glow={false}

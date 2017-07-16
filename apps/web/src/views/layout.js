@@ -84,7 +84,7 @@ export default class Layout {
             />
           </LayoutWrap>
           <Errors />
-          <Sidebar />
+          <Sidebar hidden={!layoutStore.sidebar.active} />
         </app>
       )
     }

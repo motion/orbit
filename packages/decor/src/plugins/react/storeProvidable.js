@@ -79,6 +79,7 @@ export default function storeProvidable(options, emitter) {
           Mobx.extendShallowObservable(this, { _props: null })
           this._props = { ...this.props }
           this.setupStores()
+          this.unmounted = false
         }
 
         componentDidMount() {
@@ -94,11 +95,15 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillUnmount() {
-          this.disposeStores()
-          view.off('hmr', this.clearError)
+          // if you remove @view({ store: ... }) it tries to remove it here but its gone
+          if (this.disposeStores) {
+            this.disposeStores()
+            view.off('hmr', this.clearError)
+            this.unmounted = true
+          }
         }
 
-        unstable_handleError(error) {
+        unstable_handleError = error => {
           console.error('ERROR IS', error)
           this.setState({ error })
         }
@@ -164,7 +169,11 @@ export default function storeProvidable(options, emitter) {
           }
         }
 
-        hotReload() {
+        hotReload = () => {
+          if (this.unmounted) {
+            // waiting to see if this is why unmountCOmponent errs happen
+            debugger
+          }
           this.disposeStores()
           this.setupStores()
           this.mountStores()

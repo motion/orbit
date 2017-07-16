@@ -24,7 +24,7 @@ type Props = {
 }
 
 @view
-class SidebarContent {
+export class SidebarContent {
   render() {
     return (
       <inner $$flex>
@@ -40,6 +40,7 @@ class SidebarContent {
               Doing
             </UI.Button>
             <UI.Button icon="chat">Threads</UI.Button>
+            <UI.Button icon="bell">Following</UI.Button>
           </UI.Segment>
         </heading>
 
@@ -95,13 +96,12 @@ class SidebarContent {
   }
 }
 
-@view.attach('layoutStore', 'explorerStore')
+@view.attach('layoutStore')
 @view({
   store: SidebarStore,
 })
 export default class Sidebar {
-  render({ explorerStore, layoutStore, store }: Props) {
-    const active = Constants.IN_TRAY ? true : layoutStore.sidebar.active
+  render({ hidden, layoutStore, store, ...props }: Props) {
     const width = Constants.IN_TRAY
       ? Constants.TRAY_WIDTH
       : layoutStore.sidebar.width
@@ -114,7 +114,7 @@ export default class Sidebar {
             transition={Constants.SIDEBAR_TRANSITION}
             background="transparent"
             key={2}
-            open={active}
+            open={!hidden}
             from="right"
             size={width + 20}
           >

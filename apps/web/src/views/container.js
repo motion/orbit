@@ -19,7 +19,7 @@ export default class Container extends React.Component {
     view.off('hmr', this.clearErr)
   }
 
-  unstable_handleError(error) {
+  unstable_handleError = error => {
     console.error('ERR', error)
     this.setState({ error })
   }

@@ -265,9 +265,8 @@ class List {
           tagName="list"
           align="stretch"
           height={height}
+          width={width}
           style={{
-            minHeight: height,
-            minWidth: width,
             overflowY: scrollable ? 'scroll' : 'auto',
             overflowX: 'visible',
             ...style,

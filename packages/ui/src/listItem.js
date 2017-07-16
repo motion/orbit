@@ -96,7 +96,7 @@ export default class ListItem {
       <SizedSurface
         size={size}
         sizeHeight
-        sizePadding={1.5}
+        sizePadding={1.2}
         $item
         {...radiusProps}
         tagName="listitem"
@@ -190,6 +190,7 @@ export default class ListItem {
     },
     prop: {
       flex: 1,
+      overflow: 'hidden',
       maxWidth: '100%',
       fontWeight: 200,
     },

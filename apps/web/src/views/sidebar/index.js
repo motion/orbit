@@ -82,7 +82,7 @@ export default class Sidebar {
 
                 <UI.Popover
                   openOnClick
-                  closeOnEscape
+                  closeOnEsc
                   background="#fff"
                   width={480}
                   borderRadius={8}

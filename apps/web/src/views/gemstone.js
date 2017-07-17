@@ -1,9 +1,9 @@
 import * as UI from '@mcro/ui'
 import GeoPattern from 'geopattern'
 
-export default ({ id, ...props }) =>
+export default ({ id, size = 30, ...props }) =>
   <UI.Circle
-    size={30}
+    size={size}
     zIndex={100}
     background={GeoPattern.generate(`${id}` || Math.random()).toDataUrl()}
     fontSize={20}

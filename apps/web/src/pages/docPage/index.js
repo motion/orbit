@@ -86,12 +86,11 @@ export default class DocumentPage {
           css={{
             position: 'absolute',
             bottom: 10,
-            right: 10,
+            right: 15,
             zIndex: 100000,
             alignItems: 'flex-end',
           }}
         >
-          <UI.Title>Bookmarks</UI.Title>
           <above
             if={User.favoriteDocuments}
             css={{ flexFlow: 'row', margin: 0 }}
@@ -101,15 +100,21 @@ export default class DocumentPage {
                 key={i}
                 openOnHover
                 background
-                theme="dark"
                 borderRadius={5}
                 elevation={2}
                 target={
-                  <Gemstone
-                    marginLeft={5}
-                    id={doc.id}
-                    onClick={() => Router.go(doc.url())}
-                  />
+                  <item>
+                    <Gemstone
+                      marginLeft={5}
+                      id={doc.id}
+                      size={34}
+                      onClick={() => Router.go(doc.url())}
+                    >
+                      <UI.Text color="#fff" size={0.9} ellipse>
+                        {doc.titleShort}
+                      </UI.Text>
+                    </Gemstone>
+                  </item>
                 }
               >
                 helo

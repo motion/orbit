@@ -238,8 +238,12 @@ export default class Model {
       const { compiledMethods } = this
       for (const method of Object.keys(compiledMethods)) {
         const descriptor = compiledMethods[method]
+        // autobind
         if (typeof descriptor.get === 'function') {
           descriptor.get = descriptor.get.bind(doc)
+        }
+        if (typeof descriptor.value === 'function') {
+          descriptor.value = descriptor.value.bind(doc)
         }
       }
       Object.defineProperties(doc, compiledMethods)

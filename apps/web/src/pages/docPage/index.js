@@ -69,7 +69,7 @@ export default class DocumentPage {
           <Inbox if={document.type === 'thread'} document={document} />
           <DocumentView
             if={isDoc}
-            $$paddingRight={150}
+            $$paddingRight={140}
             document={document}
             onKeyDown={docStore.onKeyDown}
             showCrumbs

@@ -53,6 +53,7 @@ export default class Icon {
     opacity,
     style,
     contentEditable,
+    alignSelf,
     ...props
   }: Props) {
     const iconName = findMatch(name)
@@ -121,6 +122,7 @@ export default class Icon {
 
     return {
       icon: {
+        alignSelf: props.alignSelf,
         opacity: props.opacity,
         color: props.color ? `${color(props.color).toString()} !important` : '',
         width: (props.width || props.size) + buttonPad * 2 + 1,

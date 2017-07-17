@@ -71,25 +71,35 @@ class ListItemNode {
     const className = 'strikethrough ' + (archive ? 'active' : '')
 
     return (
-      <listItem $$row $$centered>
+      <listItem $$row>
         <UI.Icon
           $hide={!hasChildren}
           $min={minimize}
           contentEditable={false}
           name={minimize ? 'smalltriright' : 'smalltrdown'}
+          color={[0, 0, 0, 0.2]}
+          size={14}
           onClick={() => toggleData('minimize')}
+          css={{
+            transform: { y: 3, x: -2 },
+            width: 20,
+            marginLeft: -20,
+          }}
         />
-        <input
-          $check
+        <UI.Input
+          type="checkbox"
           contentEditable={false}
           type="checkbox"
           onChange={e => toggleData('archive')}
           checked={archive}
+          css={{
+            transform: { y: 3, x: -3 },
+          }}
         />
-        <item>
+        <contents>
           <li $archive={archive} className={className} {...props.attributes}>
             {minimize
-              ? <Paragraph $$text>
+              ? <Paragraph>
                   {text}
                 </Paragraph>
               : props.children}
@@ -97,15 +107,18 @@ class ListItemNode {
           <metaText if={due} $$row contentEditable={false}>
             due {moment(due).fromNow()}
           </metaText>
-        </item>
+        </contents>
       </listItem>
     )
   }
 
   // BE CAREFUL NOT TO CHANGE HEIGHT
   static style = {
+    contents: {
+      flex: 1,
+    },
     listItem: {
-      // marginTop: 3,
+      margin: [3, 0],
     },
     archive: {
       opacity: 0.9,

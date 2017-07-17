@@ -17,15 +17,24 @@ class Checkbox {
     const { isChecked } = this
     return (
       <SizedSurface
-        background={isChecked ? [0, 0, 0, 0.2] : [0, 0, 0, 0.1]}
-        color={isChecked ? 'green' : 'white'}
-        hoverColor={isChecked ? 'green' : 'white'}
-        opacity={isChecked ? 1 : 0.2}
-        borderRadius={3}
+        margin={[0, 3]}
+        background={isChecked ? '#eee' : '#eee'}
+        color={isChecked ? 'rgb(51, 184, 22)' : '#ddd'}
+        hoverColor={isChecked ? 'rgb(51, 184, 22)' : '#ddd'}
+        borderRadius={5}
         icon="check"
+        iconSize={12}
         glow={false}
-        padding={4}
-        size={1.1}
+        padding={3}
+        height={18}
+        flex={false}
+        iconProps={{
+          css: {
+            transform: {
+              scale: isChecked ? 1.2 : 1,
+            },
+          },
+        }}
         {...props}
       >
         <input type="checkbox" onChange={this.onChange} />

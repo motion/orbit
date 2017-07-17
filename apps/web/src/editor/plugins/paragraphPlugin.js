@@ -9,7 +9,7 @@ import { createButton } from './helpers'
 
 const PARAGRAPH_STYLE = {
   fontSize: 18,
-  lineHeight: '23px',
+  lineHeight: '21px',
 }
 
 export const Paragraph = node(({ editorStore, children, attributes }) => {

@@ -202,12 +202,7 @@ export default class Model {
     // PRE-INSERT
     const ogInsert = this.hooks.preInsert
     this.hooks.preInsert = doc => {
-      const defaults = this.getDefaultProps(doc)
-      for (const prop of Object.keys(defaults)) {
-        if (typeof doc[prop] === 'undefined') {
-          doc[prop] = defaults[prop]
-        }
-      }
+      this.applyDefaults(doc)
       if (this.hasTimestamps) {
         doc.createdAt = this.now
         doc.updatedAt = this.now
@@ -301,6 +296,15 @@ export default class Model {
     // }
   }
 
+  applyDefaults = doc => {
+    const defaults = this.getDefaultProps(doc)
+    for (const prop of Object.keys(defaults)) {
+      if (typeof doc[prop] === 'undefined') {
+        doc[prop] = defaults[prop]
+      }
+    }
+  }
+
   // helpers
 
   @query find = (...args) => this.collection.find(...args)
@@ -308,6 +312,7 @@ export default class Model {
 
   createTemporary = async object => {
     const doc = await this.collection.newDocument(object)
+    this.applyDefaults(doc)
     doc.__is_temp = true
     return doc
   }

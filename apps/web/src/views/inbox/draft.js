@@ -4,7 +4,11 @@ import { random } from 'lodash'
 import DocView from '~/views/document'
 
 class ThreadDraftStore {
-  doc = Document.threadDraft(this.threadId)
+  document = Document.createTemporary({
+    title: 'Draft',
+    threadId: this.threadId,
+    draft: true,
+  })
 
   get activeItem() {
     return this.props.inboxStore.activeItem
@@ -14,14 +18,8 @@ class ThreadDraftStore {
     return (this.activeItem && this.activeItem.id) || 'null'
   }
 
-  create = () => {
-    const { inboxStore } = this.props
-    Document.create({ draft: true, title: '', threadId: this.threadId })
-  }
-
   send = () => {
-    this.doc.draft = false
-    this.doc.save()
+    this.document.save()
   }
 
   destroy = () => {
@@ -33,9 +31,7 @@ class ThreadDraftStore {
   store: ThreadDraftStore,
 })
 export default class Draft {
-  render({ store }) {
-    const { doc, creating } = store
-
+  render({ store, store: { document } }) {
     return (
       <draft>
         <top $$row>
@@ -43,11 +39,8 @@ export default class Draft {
             <b>Nick</b>
           </UI.Title>
         </top>
-        <p if={!doc} $placeholder onClick={store.create}>
-          Your Response
-        </p>
-        <DocView if={doc} id={doc._id} document={doc} />
-        <actions $$row if={doc}>
+        <DocView if={document} id={document.id} document={document} />
+        <actions $$row if={document}>
           <status>
             <remind $$row>
               Remind me &nbsp;<b>in 2 days</b>&nbsp; if &nbsp;<b>no reply</b>&nbsp;
@@ -69,9 +62,7 @@ export default class Draft {
   static style = {
     draft: {
       padding: [10, 18],
-      border: '1px solid #ddd',
       borderRadius: 5,
-      marginTop: 10,
       boxShadow: '0px 1px 0px #aaa',
     },
     name: {

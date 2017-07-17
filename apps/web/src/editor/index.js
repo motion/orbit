@@ -33,11 +33,6 @@ export default class EditorView {
     onKeyDown: empty,
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    // todo on receive new document from server, update it here
-    // needs to check equality probably
-  }
-
   onDocumentChange = (document: Document, state: Object) => {
     this.props.editorStore.setContents(state)
   }
@@ -49,7 +44,6 @@ export default class EditorView {
 
   render({ readOnly, editorStore }: Props) {
     const { spec } = editorStore
-    const showToolbar = !editorStore.inline && readOnly !== true
 
     return (
       <document

@@ -33,7 +33,7 @@ export default class DocumentView {
         {...props}
       >
         <Editor
-          key={docStore.document._id}
+          key={docStore.document.id}
           readOnly={readOnly}
           inline={inline}
           getRef={docStore.onEditor}

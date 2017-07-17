@@ -75,7 +75,7 @@ export default class ExplorerStore {
 
   get focusedPane() {
     return this.panes[this.focusPaneIndex]
-  }
+}
 
   start() {
     this.watch(() => {

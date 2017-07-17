@@ -11,7 +11,7 @@ class ThreadDraftStore {
   })
 
   get document() {
-    return this.props.inboxStore.document
+    return this.props.document || this.props.inboxStore.document
   }
 
   get threadId() {

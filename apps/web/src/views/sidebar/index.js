@@ -6,6 +6,7 @@ import * as Constants from '~/constants'
 import Inbox from '~/views/inbox'
 import { User } from '@mcro/models'
 import { throttle } from 'lodash'
+import Draft from '~/views/inbox/draft'
 
 @view.attach('layoutStore')
 @view
@@ -50,27 +51,55 @@ export default class Sidebar {
           >
             <bar>
               <barbg $shown={this.state.scrolling} />
-              <UI.Title>All</UI.Title>
+              <UI.Dropdown
+                width={140}
+                popoverProps={{
+                  background: [50, 50, 50, 0.9],
+                  openOnHover: false,
+                }}
+                items={[
+                  '🎩 Crypto Lords',
+                  'BaySide Mafia',
+                  'Fatwana Secret Society',
+                ]}
+                buttonProps={{ chromeless: true }}
+              >
+                <UI.Title>Motion</UI.Title>
+              </UI.Dropdown>
 
               <end $$row>
                 <UI.Dropdown
-                  theme="clear-dark"
-                  popoverProps={{ background: [50, 50, 50, 0.9] }}
+                  popoverProps={{
+                    background: [50, 50, 50, 0.9],
+                    openOnHover: false,
+                  }}
                   items={['All', 'Other']}
                 >
                   Filter
                 </UI.Dropdown>
 
-                <UI.Button
-                  inline
-                  chromeless
-                  icon="circleadd"
-                  size={1.2}
-                  marginLeft={8}
-                  marginRight={-10}
-                  marginTop={-5}
-                  marginBottom={-5}
-                />
+                <UI.Popover
+                  openOnClick
+                  closeOnEscape
+                  background="#fff"
+                  width={480}
+                  borderRadius={8}
+                  elevation={2}
+                  target={
+                    <UI.Button
+                      inline
+                      chromeless
+                      icon="circleadd"
+                      size={1.2}
+                      marginLeft={8}
+                      marginRight={-10}
+                      marginTop={-5}
+                      marginBottom={-5}
+                    />
+                  }
+                >
+                  <Draft document={{}} />
+                </UI.Popover>
               </end>
             </bar>
             <Inbox hideTitle />
@@ -95,7 +124,7 @@ export default class Sidebar {
       flexFlow: 'row',
       justifyContent: 'space-between',
       padding: [10, 20],
-      margin: [-10, -20, 10],
+      margin: [-10, -20, 10, -30],
       position: 'sticky',
       top: 0,
       background: [0, 0, 0, 0.1],

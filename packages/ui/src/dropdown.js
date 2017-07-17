@@ -22,6 +22,7 @@ export default class Dropdown {
 
   static defaultProps = {
     width: 100,
+    color: [255, 255, 255, 0.5],
   }
 
   render({
@@ -31,6 +32,7 @@ export default class Dropdown {
     width,
     items,
     popoverProps,
+    buttonProps,
     theme,
     ...props
   }: Props) {
@@ -51,11 +53,12 @@ export default class Dropdown {
               inline
               iconAfter
               icon={
-                <icon>
-                  <Arrow $arrow theme="light" size={6} color={color} />
+                <icon $arrow>
+                  <Arrow theme="light" size={8} color={color} />
                 </icon>
               }
               $$color={color}
+              {...buttonProps}
             >
               {children}
             </Button>
@@ -63,13 +66,13 @@ export default class Dropdown {
           {...popoverProps}
         >
           <List
-            {...props}
             controlled
             width={width}
             items={items}
             getItem={item => ({
               primary: item,
             })}
+            {...props}
           />
         </Popover>
       </dropdown>
@@ -85,7 +88,10 @@ export default class Dropdown {
       marginLeft: 5,
     },
     arrow: {
-      opacity: 0.9,
+      transform: {
+        y: 1,
+      },
+      opacity: 0.4,
       '&:hover': {
         opacity: 1,
       },

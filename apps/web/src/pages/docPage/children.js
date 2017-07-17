@@ -72,7 +72,7 @@ class Item {
               <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
               {subItems.map(child =>
                 <UI.Text
-                  key={child._id}
+                  key={child.id}
                   onClick={() => Router.go(child.url())}
                   size={0.8}
                 >
@@ -142,8 +142,8 @@ class ExplorerChildrenStore {
   newDoc = () =>
     this.creatingDoc && this.props.explorerStore.document
       ? Document.createTemporary({
-          parentId: this.props.explorerStore.document._id,
-          parentIds: [this.props.explorerStore.document._id],
+          parentId: this.props.explorerStore.document.id,
+          parentIds: [this.props.explorerStore.document.id],
           type: this.docType,
         })
       : null
@@ -206,7 +206,7 @@ class ExplorerChildrenStore {
         const allChildren = await Promise.all(
           this.docs.map(async doc => {
             return {
-              id: doc._id,
+              id: doc.id,
               children: doc.getChildren && (await doc.getChildren()),
             }
           })
@@ -248,8 +248,8 @@ class ExplorerChildrenStore {
 const SortableChildren = SortableContainer(({ items, store }) =>
   <docs $$undraggable>
     {items.map(doc => {
-      const subItems = store.children[doc._id]
-      return <SortableItem key={doc._id} doc={doc} subItems={subItems} />
+      const subItems = store.children[doc.id]
+      return <SortableItem key={doc.id} doc={doc} subItems={subItems} />
     })}
   </docs>
 )

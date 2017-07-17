@@ -566,7 +566,11 @@ export default class Surface implements ViewType {
         marginBottom: props.marginBottom,
         marginTop: props.marginTop,
         marginLeft:
-          props.uiContext && props.uiContext.inSegment ? -1 : props.marginLeft,
+          props.uiContext &&
+          props.uiContext.inSegment &&
+          !props.uiContext.inSegment.first
+            ? -1
+            : props.marginLeft,
         marginRight: props.marginRight,
         paddingBottom: props.paddingBottom,
         paddingTop: props.paddingTop,

@@ -131,7 +131,7 @@ export default class Text {
         {...props}
       >
         {!ellipse && children}
-        <span if={ellipse}>
+        <span if={ellipse} $ellipse $$ellipse>
           {children}
         </span>
       </text>
@@ -164,6 +164,7 @@ export default class Text {
       },
       ellipse: {
         color: props.color || theme.base.color,
+        wordBreak: 'inherit',
       },
     }
   }

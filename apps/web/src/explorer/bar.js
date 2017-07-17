@@ -37,7 +37,7 @@ export default class ExplorerBar {
             onClose={() => (layoutStore.explorerOpen = false)}
           />
         </bar>
-        <rest $$row>
+        <rest $$row $$centered>
           <UI.SlotFill.Slot name="actions">
             {items => {
               return (
@@ -58,10 +58,10 @@ export default class ExplorerBar {
               <UI.Button
                 chromeless
                 iconSize={20}
+                circular
                 size={1.333}
                 badge={2}
                 icon="circle-09"
-                margin={[0, -10]}
               />
             }
           >

@@ -72,6 +72,7 @@ class Item {
               <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
               {subItems.map(child =>
                 <UI.Text
+                  if={child}
                   key={child.id}
                   onClick={() => Router.go(child.url())}
                   size={0.8}
@@ -181,7 +182,7 @@ class ExplorerChildrenStore {
 
   onSortEnd = ({ oldIndex, newIndex }) => {
     const sortedChildren = arrayMove(
-      this.sortedDocs.map(doc => doc.id),
+      this.sortedDocs.map(doc => doc && doc.id),
       oldIndex,
       newIndex
     )
@@ -248,6 +249,9 @@ class ExplorerChildrenStore {
 const SortableChildren = SortableContainer(({ items, store }) =>
   <docs $$undraggable>
     {items.map(doc => {
+      if (!doc) {
+        return null
+      }
       const subItems = store.children[doc.id]
       return <SortableItem key={doc.id} doc={doc} subItems={subItems} />
     })}

@@ -10,7 +10,7 @@ import type { Color } from '@mcro/gloss'
 // const Resize = resizer({ strategy: 'scroll' })
 
 @view.ui
-export default class HoverGlow {
+class HoverGlow {
   props: {
     color: Color,
     background?: Color,
@@ -20,14 +20,17 @@ export default class HoverGlow {
     gradient?: boolean,
     borderRadius?: number,
     show?: boolean,
+    hovered?: boolean,
     backdropFilter?: string,
   }
+
+  static acceptsHovered = true
 
   static defaultProps = {
     width: 380,
     height: 200,
     color: [255, 255, 255],
-    zIndex: 0,
+    zIndex: 1,
     resist: 0,
     scale: 1,
     opacity: 0.025,
@@ -38,7 +41,7 @@ export default class HoverGlow {
     clickDuration: 150,
     clickScale: 2,
     transition: 0,
-    overlayZIndex: 0,
+    overlayZIndex: 1,
     blur: 15,
     // backdropFilter: 'contrast(100%)',
   }
@@ -77,7 +80,7 @@ export default class HoverGlow {
       }
     }
 
-    if (this.props.show) {
+    if (this.visible) {
       // trigger it to show
       this.setState({})
     }
@@ -118,6 +121,10 @@ export default class HoverGlow {
     this.setState({ track })
   }
 
+  get visible() {
+    return this.props.show || this.props.hovered
+  }
+
   render({
     boundPct,
     full,
@@ -150,12 +157,14 @@ export default class HoverGlow {
     overlayZIndex,
     blur,
     show,
+    hovered,
     ...props
   }) {
     const setRootRef = this.ref('rootRef').set
     const { track } = this.state
+    const { visible } = this
 
-    if (!show && !transition && ((!track && !children) || !track)) {
+    if (!visible && !transition && ((!track && !children) || !track)) {
       return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
@@ -230,7 +239,7 @@ export default class HoverGlow {
             width={width}
             style={{
               transform: `scale(${scale * extraScale}) translateZ(0px)`,
-              opacity: track || show ? opacity : 0,
+              opacity: track || visible ? opacity : 0,
               width,
               height,
               marginLeft: -width / 2,
@@ -284,3 +293,7 @@ export default class HoverGlow {
     },
   }
 }
+
+HoverGlow.acceptsHovered = true
+
+export default HoverGlow

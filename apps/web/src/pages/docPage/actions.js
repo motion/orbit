@@ -41,15 +41,16 @@ export default class DocPageActions {
         <UI.Popover
           {...popoverProps}
           target={
-            <Gemstone
-              if={explorerStore && explorerStore.document}
-              id={explorerStore.document.id}
-              size={20}
-              css={{
-                margin: 'auto',
-                marginLeft: 10,
-              }}
-            />
+            <UI.Button chromeless circular padding={0} size={1.2} glow>
+              <Gemstone
+                if={explorerStore && explorerStore.document}
+                id={explorerStore.document.id}
+                size={30}
+                css={{
+                  margin: 'auto',
+                }}
+              />
+            </UI.Button>
           }
         >
           <UI.Popover

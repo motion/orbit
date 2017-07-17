@@ -4,7 +4,6 @@ import GeoPattern from 'geopattern'
 export default ({ id, size = 30, ...props }) =>
   <UI.Circle
     size={size}
-    zIndex={100}
     background={GeoPattern.generate(`${id}` || Math.random()).toDataUrl()}
     fontSize={20}
     color="white"

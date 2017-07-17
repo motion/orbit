@@ -23,6 +23,7 @@ export class OrgModel extends Model {
     title: str,
     members: array.items(str),
     admins: array.items(str),
+    invites: array.items(str),
     private: bool,
     slug: str,
     homeDocument: str.optional,
@@ -33,6 +34,7 @@ export class OrgModel extends Model {
     return {
       admins: [],
       members: [],
+      invites: [],
       private: true,
       slug: toSlug(props.title),
     }
@@ -72,6 +74,14 @@ export class OrgModel extends Model {
   }
 
   methods = methods
+
+  inviteMember = (email: string) => {
+    console.log('inviting', email)
+    if (!this.invites.find(x => x.email === email)) {
+      this.invites.push(email)
+      this.save()
+    }
+  }
 
   @query
   forUser(id) {

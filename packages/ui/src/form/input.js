@@ -85,6 +85,15 @@ export default class Input {
   onNode = node => {
     this.node = node
     this.props.getRef && this.props.getRef(node)
+
+    this.on(node, 'keydown', e => {
+      if (this.props.onEnter) {
+        const isEnter = e.keyCode === 13
+        if (isEnter) {
+          this.props.onEnter(e)
+        }
+      }
+    })
   }
 
   render({ sync, type, name, uiContext, form, elementProps, ...props }) {

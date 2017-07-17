@@ -3,11 +3,21 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Gemstone from '~/views/gemstone'
+import { User } from '@mcro/models'
 
-@view.attach('explorerStore')
-@view
+@view({
+  store: @view.attach('explorerStore')
+  class {
+    value = ''
+
+    submit = () => {
+      console.log('submit', this.value)
+      // User.org.inviteMember(this.value)
+    }
+  },
+})
 export default class DocPageActions {
-  render({ explorerStore }) {
+  render({ store, explorerStore }) {
     const { document } = explorerStore
 
     if (!document || document === null) {
@@ -56,42 +66,45 @@ export default class DocPageActions {
           <UI.Popover
             {...popoverProps}
             target={
-              <UI.List>
-                <UI.Button
-                  borderWidth={0}
-                  icon="fav3"
-                  tooltip={document.hasStar ? 'Remove bookmark' : 'Bookmark'}
-                  tooltipProps={{
-                    towards: 'right',
-                  }}
-                  highlight={document.hasStar}
-                  iconSize={document.hasStar ? 20 : null}
-                  onClick={() => document.toggleStar()}
-                  width={36}
-                  padding={0}
-                  iconProps={{
-                    css: {
-                      transition: 'transform ease-in 80ms',
-                      scale: document.hasStar ? 1.1 : 1,
-                    },
-                  }}
-                >
-                  Add to dock
-                </UI.Button>
-                <UI.Button
-                  size={1.5}
-                  opacity={0.5}
-                  chromeless
-                  css={{ textAlign: 'right' }}
-                >
-                  <wrap>
-                    <UI.Text size={1}>Share</UI.Text>
-                    <UI.Text size={0.8} color={[0, 0, 0, 0.5]}>
-                      +3 people
-                    </UI.Text>
-                  </wrap>
-                </UI.Button>
-              </UI.List>
+              <div>
+                <top $$row>
+                  <left>Updated 2m ago</left>
+
+                  <UI.Button
+                    borderWidth={0}
+                    icon="fav3"
+                    tooltip={document.hasStar ? 'Remove bookmark' : 'Bookmark'}
+                    tooltipProps={{
+                      towards: 'right',
+                    }}
+                    highlight={document.hasStar}
+                    iconSize={document.hasStar ? 20 : null}
+                    onClick={() => document.toggleStar()}
+                    width={36}
+                    padding={0}
+                    iconProps={{
+                      css: {
+                        transition: 'transform ease-in 80ms',
+                        scale: document.hasStar ? 1.1 : 1,
+                      },
+                    }}
+                  />
+                </top>
+
+                <UI.Form onSubmit={store.submit}>
+                  <UI.Title>Invite:</UI.Title>
+                  <UI.Input
+                    name="email"
+                    type="email"
+                    placeholder="my@friend.com"
+                    onChange={e => store.ref('value').set(e.target.value)}
+                    onEnter={store.submit}
+                  />
+                  <row $$row $$justify="flex-end">
+                    <UI.Button type="submit" icon="3send" />
+                  </row>
+                </UI.Form>
+              </div>
             }
           >
             <UI.List

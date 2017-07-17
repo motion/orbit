@@ -145,7 +145,7 @@ export type DocumentType = typeof methods & {
   threadId?: str,
   createdAt: string,
   updatedAt: string,
-  type: 'document' | 'thread' | 'summary',
+  type: 'document' | 'thread' | 'inbox',
 }
 
 export class DocumentModel extends Model {

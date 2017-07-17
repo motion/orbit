@@ -1,7 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Thread, Document } from '@mcro/models'
-import ThreadView from './thread'
+import { Thread } from '@mcro/models'
 import timeAgo from 'time-ago'
 import Draft from './draft'
 import Router from '~/router'
@@ -20,33 +19,7 @@ class InboxStore {
   document = this.props.document
   threads = Thread.forDoc(this.document && this.document.id)
   highlightIndex = 0
-  activeIndex = null
-  newThreadTitle = ''
   activeItem = null
-
-  start() {
-    /*
-    const { explorerStore } = this.props
-
-    this.on(explorerStore, 'action', (name: string) => {
-      if (name === 'up' && this.highlightIndex > 0) {
-        this.highlightIndex--
-      }
-
-      if (name === 'down') {
-        this.highlightIndex++
-      }
-
-      if (name === 'enter') {
-        this.activeIndex = this.highlightIndex
-      }
-
-      if (name === 'esc') {
-        this.activeIndex = null
-      }
-    })
-    */
-  }
 }
 
 @view.attach('explorerStore')
@@ -119,8 +92,6 @@ export default class Inbox {
             })}
           />
         </content>
-
-        <ThreadView if={store.activeItem} inboxStore={store} />
       </inbox>
     )
   }

@@ -8,6 +8,7 @@ class ThreadDraftStore {
     title: 'Draft',
     threadId: this.threadId,
     draft: true,
+    type: 'thread',
   })
 
   get document() {
@@ -43,12 +44,18 @@ class ThreadDraftStore {
   store: ThreadDraftStore,
 })
 export default class Draft {
-  render({ store, store: { draft } }) {
+  render({ store, isReply, store: { draft }, ...props }) {
     return (
       <UI.Theme name="light">
-        <draft>
+        <draft {...props}>
           <draftdoc>
-            <DocView if={draft} id={draft.id} document={draft} inline />
+            <DocView
+              if={draft}
+              id={draft.id}
+              document={draft}
+              inline
+              noTitle={isReply}
+            />
           </draftdoc>
           <actions if={draft} $$row>
             <status $$row $$centered>
@@ -74,8 +81,6 @@ export default class Draft {
   static style = {
     draft: {
       padding: [0, 15],
-      borderRadius: 5,
-      boxShadow: '0px 1px 0px #aaa',
     },
     draftdoc: {
       // padding: [0, 10],

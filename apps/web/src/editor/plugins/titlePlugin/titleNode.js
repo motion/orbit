@@ -22,6 +22,14 @@ export default class TitleNode {
   render({ editorStore, children, node, attributes, ...props }) {
     const level = node.data.get('level')
 
+    if (editorStore.props.noTitle) {
+      return (
+        <notitle contentEditable={false}>
+          {children}
+        </notitle>
+      )
+    }
+
     return (
       <tag
         tagName={`h${level}`}

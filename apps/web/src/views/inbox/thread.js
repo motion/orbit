@@ -1,12 +1,13 @@
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import { Document } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import Message from './message'
 import { sortBy } from 'lodash'
-import RightArrow from '~/views/rightArrow'
+import Draft from './draft'
 
 class ThreadStore {
-  docs = Document.forThread(this.props.inboxStore.activeItem._id)
+  docs = Document.forThread(this.props.document.id)
+  showReply = false
 }
 
 @view.attach('explorerStore')
@@ -14,73 +15,48 @@ class ThreadStore {
   store: ThreadStore,
 })
 export default class Thread {
-  render({ explorerStore, inboxStore, store }) {
-    const { activeItem: item } = inboxStore
+  render({ store, document }) {
     const { docs } = store
     const sorted = sortBy(docs || [], 'createdAt')
 
     return (
       <thread>
-        <bar>
-          <UI.Button
-            chromeless
-            glow={false}
-            spaced
-            size={1.2}
-            icon={'arrow-min-left'}
-            onClick={() => (inboxStore.activeItem = null)}
-            color={[0, 0, 0, 0.2]}
-            hoverColor={[0, 0, 0, 0.6]}
-            margin={[0, 0, 0, -5]}
-          />
+        {sorted.map(doc => <Message doc={doc} />)}
 
-          <title $$row>
-            {explorerStore.document.title}{' '}
-            <RightArrow css={{ opacity: 0.2, margin: [0, 8] }} /> {item.title}
-          </title>
+        <reply>
           <UI.Button
-            glow={false}
-            chromeless
-            size={1.2}
-            icon="fav31"
-            color={[0, 0, 0, 0.4]}
-            hoverColor={[0, 0, 0, 0.6]}
-          />
-          <actions />
-        </bar>
-        <content>
-          {sorted.map(doc => <Message doc={doc} />)}
-        </content>
+            if={!store.showReply}
+            onClick={store.ref('showReply').toggle}
+          >
+            Add reply
+          </UI.Button>
+          <container $show={store.showReply}>
+            <UI.Title>Response</UI.Title>
+            <Draft $draft isReply document={document} />
+          </container>
+        </reply>
       </thread>
     )
   }
 
   static style = {
-    // so it scrolls nicely
     thread: {
-      paddingBottom: 30,
+      flex: 1,
     },
-    glow: {
-      pointerEvents: 'none',
+    reply: {
+      borderTop: [1, '#eee'],
+      padding: [20, 20],
     },
-    bar: {
-      position: 'sticky',
-      zIndex: 1000,
-      top: 0,
-      left: -20,
-      borderBottom: '1px solid #ddd',
-      boxShadow: ['0 0 5px rgba(0,0,0,0.15)'],
+    draft: {
+      margin: [0, -20],
+    },
+    container: {
+      display: 'none',
       overflow: 'hidden',
+      transition: 'all ease-in 150ms',
     },
-    title: {
-      flex: 5,
-      color: '#444',
-      fontWeight: 300,
-      fontSize: 16,
-      lineHeight: '1.4rem',
-    },
-    content: {
-      padding: 20,
+    show: {
+      display: 'flex',
     },
   }
 }

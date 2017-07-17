@@ -91,7 +91,9 @@ export default class Sidebar {
                   target={
                     <UI.Button
                       inline
+                      circular
                       chromeless
+                      paddingTop={2}
                       icon="circleadd"
                       size={1.2}
                       marginLeft={8}

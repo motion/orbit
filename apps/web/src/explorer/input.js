@@ -121,19 +121,15 @@ export default class ExplorerInput {
     return (
       <bar $blurred={!store.focused} $focused={store.focused}>
         <UI.Button
-          iconSize={15}
-          margin={8}
+          iconSize={14}
+          margin={6}
+          marginTop={5}
           chromeless
           circular
           disabled={Router.path === '/'}
           color={[0, 0, 0, 0.4]}
           height={24}
-          icon="loader_circle"
-          css={{
-            transform: {
-              rotate: '-52deg',
-            },
-          }}
+          icon="home"
           onClick={() => Router.go('/')}
         />
         <RightArrow if={Router.path !== '/'} css={$arrow} />

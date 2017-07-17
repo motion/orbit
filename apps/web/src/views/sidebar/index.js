@@ -41,10 +41,7 @@ export default class Sidebar {
       right: 0,
       bottom: 0,
       left: 0,
-    },
-    sidebarcontent: {
-      marginLeft: 20,
-      flex: 1,
+      padding: [0, 20],
     },
   }
 }

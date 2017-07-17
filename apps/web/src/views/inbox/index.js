@@ -68,7 +68,7 @@ export default class Inbox {
               <UI.Popover
                 openOnClick
                 closeOnEscape
-                background
+                background="#fff"
                 width={480}
                 borderRadius={8}
                 elevation={2}
@@ -99,6 +99,12 @@ export default class Inbox {
             getItem={(item, index) => ({
               primary: item.title,
               secondary: item.status,
+              children: (
+                <div>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Ullam provident minus inventore exerc...
+                </div>
+              ),
               date: ago(item.createdAt),
               ellipse: false,
               glowProps: GLOW_PROPS,

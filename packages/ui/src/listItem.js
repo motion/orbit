@@ -222,6 +222,9 @@ export default class ListItem {
     },
     children: {
       flex: 1,
+      opacity: 0.5,
+      lineHeight: '1.4rem',
+      padding: [0, 8],
     },
   }
 }

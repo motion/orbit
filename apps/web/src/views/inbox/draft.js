@@ -39,11 +39,6 @@ export default class Draft {
   render({ store, store: { draft } }) {
     return (
       <draft>
-        <top $$row>
-          <UI.Title size={1}>
-            <b>Nick</b>
-          </UI.Title>
-        </top>
         <DocView if={draft} id={draft.id} document={draft} />
         <actions $$row if={draft}>
           <status>

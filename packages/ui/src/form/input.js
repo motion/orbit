@@ -18,20 +18,23 @@ class Checkbox {
     return (
       <SizedSurface
         margin={[0, 3]}
-        background={isChecked ? '#eee' : '#eee'}
-        color={isChecked ? 'rgb(51, 184, 22)' : '#ddd'}
-        hoverColor={isChecked ? 'rgb(51, 184, 22)' : '#ddd'}
-        borderRadius={5}
-        icon="check"
+        background={isChecked ? 'rgb(92, 107, 123)' : '#f2f2f2'}
+        color={isChecked ? '#fff' : '#ddd'}
+        hoverColor={isChecked ? '#fff' : '#ddd'}
+        borderRadius={6}
+        icon="check-simple"
         iconSize={12}
         glow={false}
-        padding={3}
-        height={18}
+        padding={2}
+        height={17}
+        alignItems="center"
+        justifyContent="center"
         flex={false}
         iconProps={{
           css: {
             transform: {
-              scale: isChecked ? 1.2 : 1,
+              y: 1,
+              scale: isChecked ? 1 : 1,
             },
           },
         }}

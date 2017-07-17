@@ -52,7 +52,7 @@ class ListNode {
       transition: 'background 150ms ease-in',
     },
     isRoot: {
-      margin: [10, 0],
+      margin: [10, 0, 20, 20],
     },
     done: {
       background: 'rgba(255, 255, 255, 1)',
@@ -93,7 +93,7 @@ class ListItemNode {
           onChange={e => toggleData('archive')}
           checked={archive}
           css={{
-            transform: { y: 3, x: -3 },
+            transform: { y: 2, x: -3 },
           }}
         />
         <contents>
@@ -118,7 +118,7 @@ class ListItemNode {
       flex: 1,
     },
     listItem: {
-      margin: [3, 0],
+      margin: [8, 0, 0],
     },
     archive: {
       opacity: 0.9,

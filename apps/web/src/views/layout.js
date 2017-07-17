@@ -12,7 +12,6 @@ import Errors from '~/views/layout/errors'
 import ExplorerStore from '~/stores/explorerStore'
 import LayoutStore from '~/stores/layoutStore'
 import SoundStore from '~/stores/soundStore'
-import Draft from '~/views/draft'
 import LayoutWrap from '~/views/layout/wrap'
 import Signup from './signup'
 import { User } from '@mcro/models'
@@ -71,11 +70,6 @@ export default class Layout {
               <Results />
               <CurrentPage key={Router.key} {...Router.params} />
             </content>
-            <Draft
-              isActive={layoutStore.isCreatingDoc}
-              onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
-              onClose={() => (layoutStore.isCreatingDoc = false)}
-            />
             <BottomBar />
           </LayoutWrap>
           <Errors />

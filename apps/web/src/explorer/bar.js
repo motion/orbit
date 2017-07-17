@@ -49,6 +49,7 @@ export default class ExplorerBar {
           </UI.SlotFill.Slot>
           <UI.Popover
             openOnClick
+            closeOnClick
             closeOnEscape
             background
             width={480}

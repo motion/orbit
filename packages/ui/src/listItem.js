@@ -115,6 +115,7 @@ export default class ListItem {
           opacity: 0.09,
           resist: 40,
           clickable: !!onClick,
+          overlayZIndex: 0,
           ...glowProps,
         }}
         style={{

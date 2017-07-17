@@ -79,8 +79,10 @@ const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @injectTheme
 @view.ui
-export default class Popover {
+class Popover {
   props: Props
+
+  static acceptsHovered = 'open'
 
   static defaultProps = {
     edgePadding: 5,
@@ -700,8 +702,11 @@ export default class Popover {
       if (passActive) {
         targetProps.active = isOpen && !closing
       }
-      if (target.type.acceptsHovered) {
-        targetProps.hovered = showPopover
+      const { acceptsHovered } = target.type
+      if (acceptsHovered) {
+        targetProps[
+          acceptsHovered === true ? 'hovered' : acceptsHovered
+        ] = showPopover
       }
       return React.cloneElement(target, targetProps)
     }
@@ -856,3 +861,7 @@ export default class Popover {
     }
   }
 }
+
+Popover.acceptsHovered = 'open'
+
+export default Popover

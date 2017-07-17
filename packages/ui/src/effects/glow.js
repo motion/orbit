@@ -20,11 +20,10 @@ class HoverGlow {
     gradient?: boolean,
     borderRadius?: number,
     show?: boolean,
-    hovered?: boolean,
     backdropFilter?: string,
   }
 
-  static acceptsHovered = true
+  static acceptsHovered = 'show'
 
   static defaultProps = {
     width: 380,
@@ -122,7 +121,7 @@ class HoverGlow {
   }
 
   get visible() {
-    return this.props.show || this.props.hovered
+    return this.props.show
   }
 
   render({
@@ -157,7 +156,6 @@ class HoverGlow {
     overlayZIndex,
     blur,
     show,
-    hovered,
     ...props
   }) {
     const setRootRef = this.ref('rootRef').set
@@ -294,6 +292,6 @@ class HoverGlow {
   }
 }
 
-HoverGlow.acceptsHovered = true
+HoverGlow.acceptsHovered = 'show'
 
 export default HoverGlow

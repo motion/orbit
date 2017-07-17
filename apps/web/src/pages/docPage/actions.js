@@ -31,7 +31,8 @@ export default class DocPageActions {
         $$draggable
         css={{
           flexFlow: 'row',
-          alignItems: 'space-around',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
           padding: 15,
           marginLeft: -35,
           alignSelf: 'flex-end',
@@ -75,17 +76,17 @@ export default class DocPageActions {
         </UI.Popover>
 
         <UI.Button
-          size={1.5}
+          size={1.25}
           borderWidth={0}
           icon="fav3"
-          tooltip={document.hasStar ? 'Remove' : 'Add'}
+          tooltip={document.hasStar ? 'Remove bookmark' : 'Bookmark'}
           tooltipProps={{
             towards: 'right',
           }}
           highlight={document.hasStar}
           iconSize={document.hasStar ? 20 : null}
           onClick={() => document.toggleStar()}
-          width={44}
+          width={36}
           padding={0}
           iconProps={{
             css: {

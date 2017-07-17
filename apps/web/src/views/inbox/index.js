@@ -31,6 +31,8 @@ export default class Inbox {
     // subscribe to variable
     store.highlightIndex
 
+    const badgeProps = {}
+
     return (
       <inbox>
         <content>
@@ -68,18 +70,39 @@ export default class Inbox {
           <UI.List
             background="transparent"
             $list
-            itemProps={{ paddingLeft: 20, height: 'auto', padding: 15 }}
+            itemProps={{ height: 'auto', padding: [10, 15, 10, 16] }}
             items={store.threads || []}
             getItem={(item, index) => ({
-              primary: item.title,
-              secondary: item.status,
-              children: (
-                <div>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Ullam provident minus inventore exerc...
-                </div>
+              primary: (
+                <head $$row $$centered $$justify="space-between" $$flex>
+                  {item.title}
+
+                  <date $$row $$justify="flex-end">
+                    <UI.Badge
+                      if={Math.random() > 0.2}
+                      {...badgeProps}
+                      color="red"
+                    >
+                      Enhancement
+                    </UI.Badge>
+                    <UI.Badge
+                      if={Math.random() > 0.4}
+                      {...badgeProps}
+                      color="yellow"
+                    >
+                      Needs help
+                    </UI.Badge>
+                    <UI.Badge>+2</UI.Badge>
+                  </date>
+                </head>
               ),
-              date: ago(item.createdAt),
+              secondary: item.status || `Nate replied ${ago(item.createdAt)}`,
+              children: (
+                <UI.Text>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Ullam provident minus...
+                </UI.Text>
+              ),
               ellipse: false,
               glowProps,
               //icon: item.icon,

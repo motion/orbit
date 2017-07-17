@@ -135,6 +135,7 @@ export default class ListItem {
             </before>
             <prop if={primary || secondary} $col $hasAvatar={!!avatar}>
               <Text
+                $text
                 $primary
                 fontSize="inherit"
                 ellipse={ellipse}
@@ -142,7 +143,13 @@ export default class ListItem {
               >
                 {primary}
               </Text>
-              <Text if={secondary} size={size * 0.85} opacity={0.35} ellipse>
+              <Text
+                if={secondary}
+                $text
+                size={size * 0.85}
+                opacity={0.35}
+                ellipse
+              >
                 {secondary}
               </Text>
             </prop>
@@ -195,13 +202,14 @@ export default class ListItem {
       maxWidth: '100%',
       fontWeight: 200,
     },
+    text: {
+      width: '100%',
+    },
     date: {
       alignSelf: 'flex-start',
-      marginTop: 3,
       userSelect: 'none',
       fontSize: 12,
       fontWeight: 200,
-      opacity: 0.6,
     },
     col: {
       flexDirection: 'column',

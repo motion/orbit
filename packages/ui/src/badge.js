@@ -42,7 +42,7 @@ export default class Badge {
     return (
       <badge
         className={className}
-        $$style={props}
+        css={props}
         $$color={color}
         style={style}
         {...attach}
@@ -62,14 +62,15 @@ export default class Badge {
 
   static style = {
     badge: {
+      height: 18,
       lineHeight: '0px',
-      fontSize: 12,
+      fontSize: 11.5,
       flexFlow: 'row',
       alignSelf: 'center',
       alignItems: 'center',
       justifyContent: 'center',
       overflow: 'hidden',
-      marginRight: 5,
+      marginLeft: 3,
     },
     content: {
       flexFlow: 'row',
@@ -84,7 +85,6 @@ export default class Badge {
       textOverflow: 'ellipsis',
       margin: 'auto',
       textAlign: 'center',
-      fontWeight: 500,
       padding: [0, 6],
     },
     hasLabel: {

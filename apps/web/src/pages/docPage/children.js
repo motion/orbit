@@ -83,6 +83,7 @@ class Item {
             null}
         </subitems>
         <DragHandle
+          if={false}
           css={{ position: 'absolute', top: 11, right: -10, cursor: 'move' }}
         />
       </doccontainer>

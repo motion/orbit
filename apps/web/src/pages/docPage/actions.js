@@ -27,7 +27,14 @@ export default class DocPageActions {
     }
 
     return (
-      <actions $$draggable css={{ flexFlow: 'row' }}>
+      <actions
+        $$draggable
+        css={{
+          flexFlow: 'row',
+          alignItems: 'space-around',
+          padding: [10, 0],
+        }}
+      >
         <UI.Popover
           {...popoverProps}
           target={
@@ -75,12 +82,5 @@ export default class DocPageActions {
         />
       </actions>
     )
-  }
-
-  static style = {
-    actions: {
-      alignItems: 'flex-end',
-      padding: [10, 0],
-    },
   }
 }

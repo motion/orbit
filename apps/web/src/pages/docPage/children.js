@@ -270,47 +270,28 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children>
-        <UI.Popover
-          openOnHover
-          delay={100}
-          background
-          elevation={4}
-          borderRadius={10}
-          closeOnClick
-          keepOpenOnClickTarget
-          arrowSize={11}
-          distance={0}
-          towards="left"
-          target={<UI.Button chromeless icon="add" margin={[0, 8, 5]} />}
+        <UI.Title css={{ padding: [0, 10, 5] }}>Children</UI.Title>
+        <UI.Segment
+          chromeless
+          css={{
+            paddingBottom: 5,
+          }}
+          itemProps={{
+            chromeless: true,
+            iconAfter: true,
+            size: 0.9,
+            color: [0, 0, 0, 0.4],
+            hoverColor: [0, 0, 0, 0.6],
+          }}
         >
-          <UI.Segment
-            chromeless
-            css={{
-              padding: 1,
-              paddingLeft: 2,
-            }}
-            itemProps={{
-              chromeless: true,
-            }}
-          >
-            <UI.Button
-              onClick={store.createThread}
-              icon="chat46"
-              size={0.9}
-              color={[0, 0, 0, 0.7]}
-            >
-              Inbox
-            </UI.Button>
-            <UI.Button
-              onClick={store.createDoc}
-              icon="filesg"
-              size={0.9}
-              color={[0, 0, 0, 0.7]}
-            >
-              Page
-            </UI.Button>
-          </UI.Segment>
-        </UI.Popover>
+          <UI.Button onClick={store.createThread} icon="chat46">
+            +
+          </UI.Button>
+          <slant css={{ borderRight: [1, '#ccc'], height: '100%' }} />
+          <UI.Button onClick={store.createDoc} icon="filesg">
+            +
+          </UI.Button>
+        </UI.Segment>
 
         <contents>
           <Item
@@ -339,7 +320,7 @@ export default class ExplorerChildren {
   static style = {
     children: {
       borderTop: [1, '#eee', 'dotted'],
-      padding: [10, 0],
+      padding: 10,
       width: '100%',
       flex: 1,
       alignItems: 'flex-end',
@@ -350,7 +331,6 @@ export default class ExplorerChildren {
       flex: 1,
       overflowY: 'scroll',
       overflowX: 'visible',
-      paddingRight: 10,
     },
     arrow: {
       height: 20,

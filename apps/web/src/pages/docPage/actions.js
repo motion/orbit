@@ -8,7 +8,7 @@ import Gemstone from '~/views/gemstone'
 @view
 export default class DocPageActions {
   render({ explorerStore }) {
-    const document = explorerStore.document
+    const { document } = explorerStore
 
     if (!document || document === null) {
       return null
@@ -32,7 +32,9 @@ export default class DocPageActions {
         css={{
           flexFlow: 'row',
           alignItems: 'space-around',
-          padding: [10, 0],
+          padding: 15,
+          marginLeft: -35,
+          alignSelf: 'flex-end',
         }}
       >
         <UI.Popover
@@ -72,12 +74,33 @@ export default class DocPageActions {
           </UI.List>
         </UI.Popover>
 
+        <UI.Button
+          size={1.5}
+          borderWidth={0}
+          icon="fav3"
+          tooltip={document.hasStar ? 'Remove' : 'Add'}
+          tooltipProps={{
+            towards: 'right',
+          }}
+          highlight={document.hasStar}
+          iconSize={document.hasStar ? 20 : null}
+          onClick={() => document.toggleStar()}
+          width={44}
+          padding={0}
+          iconProps={{
+            css: {
+              transition: 'transform ease-in 80ms',
+              scale: document.hasStar ? 1.1 : 1,
+            },
+          }}
+        />
         <Gemstone
-          if={explorerStore && explorerStore.document}
+          if={false && explorerStore && explorerStore.document}
           document={explorerStore.document}
           size={20}
           css={{
             margin: 'auto',
+            marginLeft: 10,
           }}
         />
       </actions>

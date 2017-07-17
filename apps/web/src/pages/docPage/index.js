@@ -87,13 +87,13 @@ export default class DocumentPage {
             bottom: 10,
             right: 10,
             zIndex: 100000,
-            flexFlow: 'row',
-            alignItems: 'center',
+            alignItems: 'flex-end',
           }}
         >
+          <UI.Title>Bookmarks</UI.Title>
           <above
             if={User.favoriteDocuments}
-            css={{ flexFlow: 'row', margin: [0, 10] }}
+            css={{ flexFlow: 'row', margin: 0 }}
           >
             {User.favoriteDocuments.map((doc, i) =>
               <UI.Popover
@@ -103,30 +103,12 @@ export default class DocumentPage {
                 theme="dark"
                 borderRadius={5}
                 elevation={2}
-                target={<Gemstone document={doc} />}
+                target={<Gemstone marginLeft={5} document={doc} />}
               >
                 helo
               </UI.Popover>
             )}
           </above>
-
-          <UI.Button
-            size={1.5}
-            borderWidth={0}
-            icon="fav3"
-            tooltip={document.hasStar ? 'Stop watching' : 'Watch'}
-            highlight={document.hasStar}
-            iconSize={document.hasStar ? 20 : null}
-            onClick={() => document.toggleStar()}
-            width={44}
-            padding={0}
-            iconProps={{
-              css: {
-                transition: 'transform ease-in 80ms',
-                scale: document.hasStar ? 1.1 : 1,
-              },
-            }}
-          />
         </bottomright>
       </Page>
     )

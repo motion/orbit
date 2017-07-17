@@ -50,7 +50,13 @@ export default class DocumentPage {
             borderRadius={8}
             elevation={2}
             target={
-              <UI.Button chromeless size={1.2} badge={2} icon="circle-09" />
+              <UI.Button
+                chromeless
+                iconSize={20}
+                size={1.333}
+                badge={2}
+                icon="circle-09"
+              />
             }
           >
             <Notifications />

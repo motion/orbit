@@ -155,15 +155,27 @@ class ExplorerChildrenStore {
   }
 
   get sortedDocs() {
+    const recentDocs = sortBy(this.docs || [], 'createdAt').reverse()
+
     if (
       this.docs &&
       this.document &&
       this.document.childrenSort &&
       this.document.childrenSort.length
     ) {
-      return this.document.childrenSort.map(id => this.docsById[id])
+      const final = this.document.childrenSort.map(id => this.docsById[id])
+
+      if (this.docs.length > final.length) {
+        for (const doc of recentDocs) {
+          if (!final.find(x => x.id === doc.id)) {
+            final.push(doc)
+          }
+        }
+      }
+
+      return final
     }
-    return sortBy(this.docs || [], 'createdAt').reverse()
+    return recentDocs
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {

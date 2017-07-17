@@ -7,7 +7,8 @@ import { some, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 
-const toSlug = (str: string) => `${str}`.replace(/ /g, '-').toLowerCase()
+const toSlug = (str: string) =>
+  `${str}`.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
 const toID = (str: string) => `${str}`.replace(/-/g, ':').toLowerCase()
 const toggleInclude = (xs, val) =>
   includes(xs, val) ? without(xs, val) : [...xs, val]

@@ -55,58 +55,74 @@ export default class Signup {
         </header>
 
         <shape
+          $$fullscreen
           css={{
-            position: 'absolute',
-            background: 'linear-gradient(transparent, rgb(119, 233, 94))',
-            top: -190,
-            left: -120,
-            width: 200,
-            height: 300,
-            transform: { rotate: '-50deg' },
-            opacity: 0.05,
+            transform: { rotate: '0deg' },
+            animation: 'rotate linear 700s infinite',
           }}
-        />
-        <shape
-          css={{
-            position: 'absolute',
-            zIndex: 0,
-            background: 'linear-gradient(transparent, rgb(212, 94, 233))',
-            right: -120,
-            top: -210,
-            width: 400,
-            height: 300,
-            borderRadius: 180,
-            transform: { rotate: '50deg' },
-            opacity: 0.04,
-          }}
-        />
-        <shape
-          css={{
-            position: 'absolute',
-            background: 'linear-gradient(transparent, rgb(233, 194, 94))',
-            bottom: -290,
-            right: '25%',
-            width: 400,
-            height: 200,
-            transform: { rotate: '60deg' },
-            opacity: 0.2,
-          }}
-        />
-        <shape
-          css={{
-            position: 'absolute',
-            zIndex: 0,
-            background: 'linear-gradient(transparent, rgb(94, 191, 233))',
-            left: '50%',
-            bottom: -290,
-            width: 200,
-            height: 300,
-            transform: { rotate: '-50deg' },
-            opacity: 0.1,
-          }}
-        />
+        >
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(119, 233, 94))',
+              top: -190,
+              left: -120,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.05,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(212, 94, 233))',
+              right: -120,
+              top: -210,
+              width: 400,
+              height: 300,
+              borderRadius: 180,
+              transform: { rotate: '50deg' },
+              opacity: 0.04,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              background: 'linear-gradient(transparent, rgb(233, 194, 94))',
+              bottom: -290,
+              right: '25%',
+              width: 400,
+              height: 200,
+              transform: { rotate: '60deg' },
+              opacity: 0.2,
+            }}
+          />
+          <shape
+            css={{
+              position: 'absolute',
+              zIndex: 0,
+              background: 'linear-gradient(transparent, rgb(94, 191, 233))',
+              left: '50%',
+              bottom: -290,
+              width: 200,
+              height: 300,
+              transform: { rotate: '-50deg' },
+              opacity: 0.1,
+            }}
+          />
+        </shape>
 
-        <shape $$fullscreen css={{ transform: { rotate: '-50deg' } }}>
+        <shape
+          $$fullscreen
+          css={{
+            transform: {
+              rotate: '-50deg',
+              animation: 'rotate linear 700s infinite',
+            },
+          }}
+        >
           <shape
             css={{
               position: 'absolute',
@@ -221,7 +237,7 @@ export default class Signup {
           $$fullscreen
           css={{
             transform: { rotate: '150deg' },
-            animation: 'rotate linear 800s infinite',
+            animation: 'rotate linear 700s infinite',
           }}
         >
           <shape
@@ -337,7 +353,7 @@ export default class Signup {
           $$fullscreen
           css={{
             transform: { rotate: '80deg' },
-            animation: 'rotate-backwards linear 900s infinite',
+            animation: 'rotate-backwards linear 500s infinite',
           }}
         >
           <shape

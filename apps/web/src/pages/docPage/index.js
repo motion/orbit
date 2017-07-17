@@ -107,7 +107,7 @@ export default class DocumentPage {
                 target={
                   <Gemstone
                     marginLeft={5}
-                    document={doc}
+                    id={doc.id}
                     onClick={() => Router.go(doc.url())}
                   />
                 }

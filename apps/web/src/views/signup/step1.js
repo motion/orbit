@@ -1,9 +1,10 @@
 // @flow
 import React from 'react'
 import { view, schema, string } from '@mcro/black'
-import { User, Org } from '@mcro/models'
+import { User } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
+import Gemstone from '~/views/gemstone'
 
 @view({
   store: class SignupStep1Store {
@@ -91,7 +92,9 @@ export default class SignupStep1 {
           >
             <UI.Field label="Company" placeholder="" />
             <UI.Field label="Icon">
-              {[1, 2, 3, 4, 5].map(i => <UI.Circle marginRight={5} key={i} />)}
+              {[1, 2, 3, 4, 5].map(i =>
+                <Gemstone marginRight={5} id={i} key={i} />
+              )}
             </UI.Field>
             <UI.Field label="Name" placeholder="" />
             <UI.Field label="Email" placeholder="" />

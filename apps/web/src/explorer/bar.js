@@ -12,7 +12,12 @@ export default class ExplorerBar {
     // use sidebar.active so it binds to variable and rerenders
     layoutStore.sidebar.active
 
-    const btnProps = { iconSize: 12, padding: [0, 6], chromeless: true }
+    const btnProps = {
+      iconSize: 12,
+      padding: [0, 6],
+      chromeless: true,
+      glow: false,
+    }
 
     return (
       <explorerbar $$draggable>

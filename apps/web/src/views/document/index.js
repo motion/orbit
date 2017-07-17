@@ -55,7 +55,7 @@ export default class DocumentView {
     docview: {
       flex: 1,
       maxWidth: '100%',
-      minHeight: 150,
+      minHeight: 100,
       padding: [0],
     },
     loading: {

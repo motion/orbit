@@ -69,9 +69,10 @@ export default class DocPageActions {
 
               <UI.Button
                 size={1.5}
+                circular
                 borderWidth={0}
                 icon="fav3"
-                tooltip={document.hasStar ? 'Remove bookmark' : 'Bookmark'}
+                tooltip={document.hasStar ? 'Remove bookmark' : ''}
                 tooltipProps={{
                   towards: 'top',
                 }}

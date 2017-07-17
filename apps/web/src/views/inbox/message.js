@@ -1,7 +1,6 @@
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
-import { random } from 'lodash'
 import { messages } from './fakeData'
 
 import timeAgo from 'time-ago'
@@ -10,7 +9,7 @@ const { ago } = timeAgo()
 
 @view
 export default class Message {
-  render({ doc, name, embed }) {
+  render({ doc, embed }) {
     const fakeMsg = messages[0]
 
     return (
@@ -37,13 +36,8 @@ export default class Message {
 
   static style = {
     message: {
-      padding: [10, 18],
-      //border: '1px solid #efefef',
-      backdropFilter: 'blur(5px)',
-      borderRadius: 3,
-      marginTop: 10,
-      boxShadow: '0px 1px 0px #eee',
-      background: 'rgba(255,255,255,0.8)',
+      padding: [20, 18],
+      borderTop: [1, '#eee'],
     },
     embed: {},
     top: {

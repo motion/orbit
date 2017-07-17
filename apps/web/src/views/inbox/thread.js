@@ -6,7 +6,7 @@ import { sortBy } from 'lodash'
 import Draft from './draft'
 
 class ThreadStore {
-  docs = Document.forThread(this.props.document.id)
+  docs = Document.forThread(this.props.document.threadId)
   showReply = false
 }
 

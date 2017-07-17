@@ -10,6 +10,7 @@ import Actions from './actions'
 import Inbox from '~/views/inbox'
 import Notifications from '~/notifications'
 import Gemstone from '~/views/gemstone'
+import Router from '~/router'
 
 class DocPageStore {
   forceEdit = false
@@ -103,7 +104,13 @@ export default class DocumentPage {
                 theme="dark"
                 borderRadius={5}
                 elevation={2}
-                target={<Gemstone marginLeft={5} document={doc} />}
+                target={
+                  <Gemstone
+                    marginLeft={5}
+                    document={doc}
+                    onClick={() => Router.go(doc.url())}
+                  />
+                }
               >
                 helo
               </UI.Popover>

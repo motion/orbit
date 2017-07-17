@@ -280,15 +280,23 @@ export default class ExplorerChildren {
             chromeless: true,
             iconAfter: true,
             size: 0.9,
-            color: [0, 0, 0, 0.4],
+            color: [0, 0, 0, 0.2],
             hoverColor: [0, 0, 0, 0.6],
           }}
         >
-          <UI.Button onClick={store.createThread} icon="chat46">
+          <UI.Button
+            onClick={store.createThread}
+            icon="chat46"
+            tooltip="Create Inbox"
+          >
             +
           </UI.Button>
           <slant css={{ borderRight: [1, '#ccc'], height: '100%' }} />
-          <UI.Button onClick={store.createDoc} icon="filesg">
+          <UI.Button
+            tooltip="Create Document"
+            onClick={store.createDoc}
+            icon="filesg"
+          >
             +
           </UI.Button>
         </UI.Segment>

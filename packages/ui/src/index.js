@@ -49,6 +49,7 @@ export Glint from './effects/glint'
 // form
 export Form from './form/form'
 export Input from './form/input'
+export Checkbox from './form/checkbox'
 export Toggle from './form/toggle'
 export Field from './form/field'
 export Select from './form/select'

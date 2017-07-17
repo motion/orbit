@@ -52,7 +52,7 @@ class ListNode {
       transition: 'background 150ms ease-in',
     },
     isRoot: {
-      margin: [10, 0, 20, 20],
+      margin: [8, 0, 18, 10],
     },
     done: {
       background: 'rgba(255, 255, 255, 1)',
@@ -81,7 +81,7 @@ class ListItemNode {
           size={14}
           onClick={() => toggleData('minimize')}
           css={{
-            transform: { y: 3, x: -2 },
+            transform: { y: 3 },
             width: 20,
             marginLeft: -20,
           }}
@@ -89,12 +89,12 @@ class ListItemNode {
         <UI.Input
           type="checkbox"
           contentEditable={false}
-          type="checkbox"
           onChange={e => toggleData('archive')}
           checked={archive}
           css={{
             transform: { y: 2, x: -3 },
           }}
+          marginRight={6}
         />
         <contents>
           <li $archive={archive} className={className} {...props.attributes}>

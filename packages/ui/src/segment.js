@@ -24,6 +24,7 @@ export default class Segment implements ViewType<Props> {
     color: Color,
     uiContext?: Object,
     itemProps?: Object,
+    spaced?: boolean,
   }
 
   state = {
@@ -59,20 +60,34 @@ export default class Segment implements ViewType<Props> {
     uiContext,
     color,
     itemProps,
+    spaced,
     ...props
   }: Props) {
     let children = children_
     const ACTIVE = typeof active === 'undefined' ? this.active : active
-    const getContext = (index: number, length: number) => ({
-      uiContext: {
-        ...uiContext,
-        inSegment: {
-          first: index === 0,
-          last: index === length - 1,
-          index,
-        },
-      },
-    })
+    const getContext = (index: number, length: number) =>
+      spaced
+        ? {}
+        : {
+            uiContext: {
+              ...uiContext,
+              inSegment: {
+                first: index === 0,
+                last: index === length - 1,
+                index,
+              },
+            },
+          }
+
+    if (spaced) {
+      itemProps = itemProps || {}
+      itemProps.margin = [
+        0,
+        0,
+        0,
+        typeof props.spaced === 'number' ? spaced : 5,
+      ]
+    }
 
     if (children) {
       const realChildren = React.Children

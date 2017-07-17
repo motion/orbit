@@ -115,7 +115,8 @@ export default View => {
     }
 
     render({ node, editor, onFocus }, { context }) {
-      const isRoot = !this.editorStore.inline && this.isRootNode
+      const isInline = this.editorStore.inline
+      const isRoot = this.isRootNode
       const isHovered =
         this.editorStore.selection.hovered &&
         node.key === this.editorStore.selection.hovered.key
@@ -145,7 +146,7 @@ export default View => {
 
       return (
         <node
-          $rootLevel={isRoot}
+          $rootLevel={isRoot && !isInline}
           $hoverable={!isTitle}
           $focused={!isTitle && this.isFocused}
           // commenting out because this wasn't used anywhere
@@ -154,7 +155,7 @@ export default View => {
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         >
-          <context contentEditable={false}>
+          <context if={!isInline} contentEditable={false}>
             {isHovered && !isTitle && (context || this.contextMenu())}
           </context>
           {component}

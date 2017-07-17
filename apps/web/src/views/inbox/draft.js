@@ -47,21 +47,24 @@ export default class Draft {
     return (
       <UI.Theme name="light">
         <draft>
-          <DocView if={draft} id={draft.id} document={draft} inline />
+          <draftdoc>
+            <DocView if={draft} id={draft.id} document={draft} inline />
+          </draftdoc>
           <actions if={draft} $$row>
-            <status>
-              <remind $$row>
-                Remind me &nbsp;<b>in 2 days</b>&nbsp; if &nbsp;<b>no reply</b>&nbsp;
-              </remind>
+            <status $$row $$centered>
+              <UI.Checkbox marginRight={10} />
+              <UI.Text size={0.8}>
+                Remind me <b>in 2 days</b> if no reply
+              </UI.Text>
             </status>
-            <buttons $$row>
+            <UI.Segment spaced>
               <UI.Button $discard onClick={store.destroy} chromeless>
-                Discard
+                Cancel
               </UI.Button>
-              <UI.Button width={70} icon="send" chromeless onClick={store.send}>
+              <UI.Button icon="send" onClick={store.send}>
                 Send
               </UI.Button>
-            </buttons>
+            </UI.Segment>
           </actions>
         </draft>
       </UI.Theme>
@@ -70,9 +73,13 @@ export default class Draft {
 
   static style = {
     draft: {
-      padding: [10, 25],
+      padding: [0, 15],
       borderRadius: 5,
       boxShadow: '0px 1px 0px #aaa',
+    },
+    draftdoc: {
+      // padding: [0, 10],
+      margin: [0, -15],
     },
     name: {
       fontWeight: 'bold',
@@ -89,12 +96,11 @@ export default class Draft {
       opacity: 0.7,
     },
     actions: {
-      marginTop: 15,
+      padding: [10, 0],
       justifyContent: 'space-between',
     },
     buttons: {
-      width: 150,
-      justifyContent: 'space-between',
+      justifyContent: 'flex-end',
     },
   }
 }

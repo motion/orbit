@@ -3,18 +3,21 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Gemstone from '~/views/gemstone'
+import Router from '~/router'
 import { User } from '@mcro/models'
 
-@view({
-  store: @view.attach('explorerStore')
-  class {
-    value = ''
+class ActionsStore {
+  value = ''
 
-    submit = () => {
-      console.log('submit', this.value)
-      // User.org.inviteMember(this.value)
-    }
-  },
+  submit = values => {
+    console.log('submit', this.value, values)
+    // User.org.inviteMember(this.value)
+  }
+}
+
+@view.attach('explorerStore')
+@view({
+  store: ActionsStore,
 })
 export default class DocPageActions {
   render({ store, explorerStore }) {
@@ -25,15 +28,15 @@ export default class DocPageActions {
     }
 
     const popoverProps = {
-      elevation: 3,
+      elevation: 1,
       borderRadius: 8,
       background: 'transparent',
       distance: 10,
       forgiveness: 16,
       towards: 'left',
-      delay: 150,
+      adjust: [0, 70],
+      delay: 50,
       openOnHover: true,
-      closeOnClick: true,
     }
 
     return (
@@ -63,68 +66,58 @@ export default class DocPageActions {
             </UI.Button>
           }
         >
-          <UI.Popover
-            {...popoverProps}
-            target={
-              <div>
-                <top $$row>
-                  <left>Updated 2m ago</left>
+          <UI.Surface width={200} padding={10}>
+            <top $$row>
+              <left css={{ flex: 1 }}>
+                <UI.Text size={0.9}>
+                  <strong>Updated</strong> 2m ago
+                </UI.Text>
+                <UI.Text size={0.9}>
+                  <strong>Viewed</strong> 1m ago
+                </UI.Text>
+              </left>
 
-                  <UI.Button
-                    borderWidth={0}
-                    icon="fav3"
-                    tooltip={document.hasStar ? 'Remove bookmark' : 'Bookmark'}
-                    tooltipProps={{
-                      towards: 'right',
-                    }}
-                    highlight={document.hasStar}
-                    iconSize={document.hasStar ? 20 : null}
-                    onClick={() => document.toggleStar()}
-                    width={36}
-                    padding={0}
-                    iconProps={{
-                      css: {
-                        transition: 'transform ease-in 80ms',
-                        scale: document.hasStar ? 1.1 : 1,
-                      },
-                    }}
-                  />
-                </top>
-
-                <UI.Form onSubmit={store.submit}>
-                  <UI.Title>Invite:</UI.Title>
-                  <UI.Input
-                    name="email"
-                    type="email"
-                    placeholder="my@friend.com"
-                    onChange={e => store.ref('value').set(e.target.value)}
-                    onEnter={store.submit}
-                  />
-                  <row $$row $$justify="flex-end">
-                    <UI.Button type="submit" icon="3send" />
-                  </row>
-                </UI.Form>
-              </div>
-            }
-          >
-            <UI.List
-              width={150}
-              padding={3}
-              itemProps={{
-                height: 32,
-                fontSize: 14,
-                borderWidth: 0,
-                borderRadius: 8,
-              }}
-            >
-              <UI.List.Item icon="gear" primary="Settings" />
-              <UI.List.Item
-                icon="link"
-                primary={<UI.Input value={Router.path} />}
+              <UI.Button
+                size={1.5}
+                borderWidth={0}
+                icon="fav3"
+                tooltip={document.hasStar ? 'Remove bookmark' : 'Bookmark'}
+                tooltipProps={{
+                  towards: 'top',
+                }}
+                highlight={document.hasStar}
+                iconSize={document.hasStar ? 20 : null}
+                onClick={() => document.toggleStar()}
+                iconProps={{
+                  css: {
+                    transition: 'transform ease-in 80ms',
+                    scale: document.hasStar ? 1.1 : 1,
+                  },
+                }}
               />
-              <UI.List.Item icon="bell" primary="Ping +3" />
-            </UI.List>
-          </UI.Popover>
+            </top>
+
+            <space css={{ height: 8 }} />
+
+            <UI.List.Item if={false} icon="back" primary="Revisions" />
+
+            <UI.Form onSubmit={store.submit}>
+              <UI.Title>Invite:</UI.Title>
+              <UI.Segment>
+                <UI.Input
+                  name="email"
+                  type="email"
+                  placeholder="my@friend.com"
+                />
+                <UI.Input type="submit" icon="3send" />
+              </UI.Segment>
+            </UI.Form>
+
+            <space css={{ height: 8 }} />
+
+            <UI.Title>Share link</UI.Title>
+            <UI.Input value={Router.path} />
+          </UI.Surface>
         </UI.Popover>
       </actions>
     )

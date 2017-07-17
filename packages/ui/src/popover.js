@@ -500,6 +500,7 @@ class Popover {
 
     // adjustments
     top += adjust[1]
+    arrowTop -= adjust[1]
 
     // max height
     if (VERTICAL) {

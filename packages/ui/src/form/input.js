@@ -2,7 +2,7 @@
 import React from 'react'
 import SizedSurface from '../sizedSurface'
 import { view, inject, observable } from '@mcro/black'
-import Icon from '../icon'
+import Button from '../button'
 
 @view
 class Checkbox {
@@ -77,7 +77,7 @@ export default class Input {
   }
 
   setValues = () => {
-    if (this.shouldSyncToForm) {
+    if (this.shouldSyncToForm && this.props.uiContext.formValues) {
       this.props.uiContext.formValues[this.props.name] = () => this.node.value
     }
   }
@@ -86,14 +86,28 @@ export default class Input {
     this.node = node
     this.props.getRef && this.props.getRef(node)
 
-    this.on(node, 'keydown', e => {
-      if (this.props.onEnter) {
+    if (node) {
+      this.on(node, 'keydown', e => {
         const isEnter = e.keyCode === 13
         if (isEnter) {
-          this.props.onEnter(e)
+          if (this.props.onEnter) {
+            if (isEnter) {
+              this.props.onEnter(e)
+            }
+          }
         }
-      }
-    })
+      })
+    }
+  }
+
+  onClick = e => {
+    if (this.shouldSyncToForm) {
+      e.preventDefault()
+      this.props.uiContext.form.submit()
+    }
+    if (this.props.onClick) {
+      this.props.onClick(e)
+    }
   }
 
   render({ sync, type, name, uiContext, form, elementProps, ...props }) {
@@ -104,6 +118,12 @@ export default class Input {
 
     if (type === 'checkbox') {
       return <Checkbox type="checkbox" {...props} />
+    }
+
+    if (type === 'submit') {
+      return (
+        <Button type="submit" noElement {...props} onClick={this.onClick} />
+      )
     }
 
     return (

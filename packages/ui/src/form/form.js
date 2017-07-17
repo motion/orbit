@@ -1,11 +1,13 @@
 import React from 'react'
 import { view, inject } from '@mcro/black'
-import { Provider } from 'react-tunnel'
 import { object } from 'prop-types'
 import Surface from '../surface'
 
 const resolveFormValues = obj =>
-  Object.keys(obj).reduce((acc, key) => ({ ...acc, [key]: obj[key]() }), {})
+  Object.keys(obj).reduce(
+    (acc, key) => ({ ...acc, [key]: obj[key] && obj[key]() }),
+    {}
+  )
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
@@ -66,8 +68,12 @@ class FormInner extends React.Component {
 
   onSubmit = e => {
     e.preventDefault()
-    if (this.props.onSubmit) {
-      this.props.onSubmit(this.formValues, e)
+    this.props.onSubmit(this.formValues, e)
+  }
+
+  onKeyDown = e => {
+    if (e.which === 13 && !this.props.preventEnterSubmit) {
+      this.onSubmit(e)
     }
   }
 
@@ -78,7 +84,7 @@ class FormInner extends React.Component {
         tagName="form"
         $form
         {...props}
-        onSubmit={this.onSubmit}
+        onKeyDown={this.onKeyDown}
       />
     )
   }

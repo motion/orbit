@@ -140,6 +140,7 @@ export default class Text {
 
   static style = {
     text: {
+      display: 'block',
       userSelect: 'none',
       cursor: 'default',
       maxWidth: '100%',

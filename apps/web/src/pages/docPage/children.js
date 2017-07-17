@@ -270,7 +270,9 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children>
-        <UI.Title css={{ padding: [0, 10, 5] }}>Children</UI.Title>
+        <UI.Title if={false} css={{ padding: [0, 10, 5] }}>
+          Children
+        </UI.Title>
         <UI.Segment
           chromeless
           css={{
@@ -287,18 +289,20 @@ export default class ExplorerChildren {
           <UI.Button
             onClick={store.createThread}
             icon="chat46"
-            tooltip="Create Inbox"
-          >
-            +
-          </UI.Button>
+            tooltip="create inbox"
+            tooltipProps={{
+              towards: 'left',
+            }}
+          />
           <slant css={{ borderRight: [1, '#ccc'], height: '100%' }} />
           <UI.Button
-            tooltip="Create Document"
+            tooltip="create page"
             onClick={store.createDoc}
             icon="filesg"
-          >
-            +
-          </UI.Button>
+            tooltipProps={{
+              towards: 'right',
+            }}
+          />
         </UI.Segment>
 
         <contents>

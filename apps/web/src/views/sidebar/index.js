@@ -26,7 +26,8 @@ export default class Sidebar {
           size={width + 20}
         >
           <sidebar $$draggable>
-            <Inbox />
+            <UI.Title>Discussions</UI.Title>
+            <Inbox hideTitle />
           </sidebar>
         </UI.Drawer>
       </UI.Theme>
@@ -41,7 +42,7 @@ export default class Sidebar {
       right: 0,
       bottom: 0,
       left: 0,
-      padding: [0, 20],
+      padding: [20, 40],
     },
   }
 }

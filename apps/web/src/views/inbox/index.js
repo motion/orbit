@@ -53,16 +53,16 @@ class InboxStore {
   store: InboxStore,
 })
 export default class Inbox {
-  render({ store }) {
+  render({ store, hideTitle }) {
     // subscribe to variable
     store.highlightIndex
 
     return (
       <inbox>
         <content>
-          <bar>
+          <bar if={!hideTitle}>
             <UI.Title size={1} stat={`${(store.threads || []).length} new`}>
-              Threads
+              Discussions
             </UI.Title>
             <actions>
               <UI.Popover
@@ -109,7 +109,6 @@ export default class Inbox {
               ellipse: false,
               glowProps: GLOW_PROPS,
               //icon: item.icon,
-              paddingRight: 80,
               onClick: () => (store.activeItem = item),
               onMouseEnter: () => (store.highlightIndex = index),
               $highlight: store.highlightIndex === index,
@@ -128,24 +127,8 @@ export default class Inbox {
       position: 'relative',
       width: '100%',
     },
-    list: {
-      marginLeft: -20,
-      marginRight: -20,
-    },
     create: {
       width: 400,
-    },
-    title: {
-      fontWeight: 'bold',
-    },
-    item: {
-      padding: 10,
-      paddingLeft: 20,
-      height: 40,
-    },
-    highlight: {
-      background: '#eee',
-      borderLeft: '3px solid #999',
     },
     draft: {
       padding: [10, 18, 10, 0],
@@ -163,24 +146,12 @@ export default class Inbox {
     draftSubmit: {
       width: 60,
     },
-    all: {
-      marginTop: 15,
-    },
-    content: {
-      padding: 20,
-    },
     list: {
-      marginLeft: -20,
-      marginRight: -(20 + 72),
+      margin: [0, -20],
     },
     title: {
       fontWeight: 'bold',
       lineHeight: 100,
-    },
-    item: {
-      padding: 10,
-      paddingLeft: 20,
-      height: 40,
     },
     highlight: {
       background: '#eee',

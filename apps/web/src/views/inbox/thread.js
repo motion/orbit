@@ -48,7 +48,7 @@ export default class Thread {
       padding: [20, 20],
     },
     draft: {
-      margin: [0, -20],
+      margin: [0, -15],
     },
     container: {
       display: 'none',

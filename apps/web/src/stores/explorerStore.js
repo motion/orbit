@@ -143,7 +143,7 @@ export default class ExplorerStore {
     // always emit
     this.emit('action', name)
     if (this.actions[name]) {
-      console.log('action', name)
+      console.log('explorerStore.action', name)
       this.actions[name](event)
     }
   }

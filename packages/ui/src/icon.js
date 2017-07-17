@@ -52,6 +52,7 @@ export default class Icon {
     margin,
     opacity,
     style,
+    contentEditable,
     ...props
   }: Props) {
     const iconName = findMatch(name)
@@ -67,10 +68,12 @@ export default class Icon {
           ...style,
         }}
         {...props}
+        contentEditable={contentEditable}
       >
         <inner
           contentEditable={false}
           className={`nc-icon-${type} ${iconName}`}
+          contentEditable={contentEditable}
         >
           {children || backupIcon}
         </inner>

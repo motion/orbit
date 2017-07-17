@@ -8,6 +8,7 @@ import AutoReplace from 'slate-auto-replace'
 import { createButton } from './helpers'
 import moment from 'moment'
 import { every } from 'lodash'
+import * as UI from '@mcro/ui'
 
 const { UL_LIST, OL_LIST, LIST_ITEM } = BLOCKS
 const editList = EditList()
@@ -70,19 +71,17 @@ class ListItemNode {
     const className = 'strikethrough ' + (archive ? 'active' : '')
 
     return (
-      <listItem $$row>
-        <minMax
+      <listItem $$row $$centered>
+        <UI.Icon
           $hide={!hasChildren}
           $min={minimize}
           contentEditable={false}
+          name={minimize ? 'smalltriright' : 'smalltrdown'}
           onClick={() => toggleData('minimize')}
-        >
-          {minimize ? '+' : '-'}
-        </minMax>
+        />
         <input
           $check
           contentEditable={false}
-          if={!hasChildren}
           type="checkbox"
           onChange={e => toggleData('archive')}
           checked={archive}
@@ -129,7 +128,7 @@ class ListItemNode {
       // WARNING: dont set height to px it changes line height
       height: '100%',
       width: 30,
-      marginLeft: -30,
+      // marginLeft: -30,
       userSelect: 'none',
       cursor: 'pointer',
       fontSize: 16,

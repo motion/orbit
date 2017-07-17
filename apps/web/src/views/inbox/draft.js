@@ -19,12 +19,13 @@ class ThreadDraftStore {
   }
 
   send = async () => {
+    await this.draft.save()
     const thread = await Thread.create({
       title: this.draft.title,
       docId: this.document.id,
     })
     this.draft.threadId = thread.id
-    this.draft.save()
+    await this.draft.save()
   }
 
   destroy = () => {

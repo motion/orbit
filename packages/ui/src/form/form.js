@@ -48,6 +48,8 @@ class FormInner extends React.Component {
   }
 
   getChildContext() {
+    const submit = this.props.onSubmit || (_ => _)
+
     return {
       provided: {
         ...this.context.provided,
@@ -55,7 +57,7 @@ class FormInner extends React.Component {
           ...this.context.provided.uiContext,
           // adds a helper to submit forms from below, useful for buttons
           form: {
-            submit: () => this.props.onSubmit(this.formValues),
+            submit: () => submit(this.formValues),
           },
         },
       },
@@ -68,7 +70,9 @@ class FormInner extends React.Component {
 
   onSubmit = e => {
     e.preventDefault()
-    this.props.onSubmit(this.formValues, e)
+    if (this.props.onSubmit) {
+      this.props.onSubmit(this.formValues, e)
+    }
   }
 
   onKeyDown = e => {

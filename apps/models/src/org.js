@@ -8,6 +8,13 @@ const methods = {
   async url() {
     return `/d/${this.docId}`
   },
+  inviteMember({ email }) {
+    console.log('inviting', email)
+    if (!this.invites.find(x => x.email === email)) {
+      this.invites.push(email)
+      this.save()
+    }
+  },
 }
 
 export type Org = typeof methods & {
@@ -74,14 +81,6 @@ export class OrgModel extends Model {
   }
 
   methods = methods
-
-  inviteMember = (email: string) => {
-    console.log('inviting', email)
-    if (!this.invites.find(x => x.email === email)) {
-      this.invites.push(email)
-      this.save()
-    }
-  }
 
   @query
   forUser(id) {

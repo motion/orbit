@@ -331,7 +331,6 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      borderTop: [1, '#eee', 'dotted'],
       padding: 10,
       width: '100%',
       flex: 1,

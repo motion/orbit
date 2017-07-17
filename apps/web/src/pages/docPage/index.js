@@ -57,6 +57,7 @@ export default class DocumentPage {
                 size={1.333}
                 badge={2}
                 icon="circle-09"
+                margin={[0, -10]}
               />
             }
           >

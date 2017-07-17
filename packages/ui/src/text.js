@@ -72,7 +72,6 @@ export default class Text {
   }
 
   get value() {
-    console.log('val', (this.node && this.node.innerText) || '')
     return (this.node && this.node.innerText) || ''
   }
 
@@ -132,7 +131,7 @@ export default class Text {
         {...props}
       >
         {!ellipse && children}
-        <span if={ellipse} $$ellipse>
+        <span if={ellipse}>
           {children}
         </span>
       </text>
@@ -144,6 +143,7 @@ export default class Text {
       userSelect: 'none',
       cursor: 'default',
       maxWidth: '100%',
+      wordBreak: 'break-all',
     },
     selectable: {
       userSelect: 'auto',

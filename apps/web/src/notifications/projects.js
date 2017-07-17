@@ -28,7 +28,7 @@ export default class Projects {
     const hasCrumbs = crumbs && crumbs.length
 
     return (
-      <content $$draggable $$scrollable $$flex={6}>
+      <content $$scrollable $$flex={6}>
         <UI.Placeholder if={!hasDocs} size={2}>
           No Stars
         </UI.Placeholder>

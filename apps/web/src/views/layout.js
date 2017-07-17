@@ -14,12 +14,10 @@ import LayoutStore from '~/stores/layoutStore'
 import SoundStore from '~/stores/soundStore'
 import Draft from '~/views/draft'
 import LayoutWrap from '~/views/layout/wrap'
-import { start } from '../start'
 import Signup from './signup'
 import { User } from '@mcro/models'
 import { Bar, Results } from '~/explorer'
-import Inbox from '~/views/inbox'
-import InboxEmbed from '~/views/inbox/embed'
+import BottomBar from '~/views/bottomBar'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -78,6 +76,7 @@ export default class Layout {
               onOpenDraft={() => (layoutStore.isCreatingDoc = true)}
               onClose={() => (layoutStore.isCreatingDoc = false)}
             />
+            <BottomBar />
           </LayoutWrap>
           <Errors />
           <Sidebar hidden={!layoutStore.sidebar.active} />

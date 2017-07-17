@@ -8,9 +8,6 @@ import Page from '~/views/page'
 import Children from './children'
 import Actions from './actions'
 import Inbox from '~/views/inbox'
-import Notifications from '~/notifications'
-import Gemstone from '~/views/gemstone'
-import Router from '~/router'
 
 class DocPageStore {
   forceEdit = false
@@ -47,29 +44,6 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <Page.Actions>
-          <UI.Popover
-            openOnClick
-            closeOnEscape
-            background
-            width={480}
-            borderRadius={8}
-            elevation={2}
-            target={
-              <UI.Button
-                chromeless
-                iconSize={20}
-                size={1.333}
-                badge={2}
-                icon="circle-09"
-                margin={[0, -10]}
-              />
-            }
-          >
-            <Notifications />
-          </UI.Popover>
-        </Page.Actions>
-
         <docpagecontent>
           <Inbox if={document.type === 'thread'} document={document} />
           <DocumentView
@@ -87,45 +61,6 @@ export default class DocumentPage {
           <Actions />
           <Children documentStore={docStore} />
         </sidebar>
-
-        <bottomright
-          css={{
-            position: 'absolute',
-            bottom: 10,
-            right: 15,
-            zIndex: 100000,
-            alignItems: 'flex-end',
-          }}
-        >
-          <above
-            if={User.favoriteDocuments}
-            css={{ flexFlow: 'row', margin: 0 }}
-          >
-            {User.favoriteDocuments.map((doc, i) =>
-              <UI.Popover
-                key={i}
-                openOnHover
-                background
-                borderRadius={5}
-                elevation={2}
-                target={
-                  <Gemstone
-                    marginLeft={5}
-                    id={doc.id}
-                    size={34}
-                    onClick={() => Router.go(doc.url())}
-                  >
-                    <UI.Text color="#fff" size={0.9} ellipse>
-                      {doc.titleShort}
-                    </UI.Text>
-                  </Gemstone>
-                }
-              >
-                helo
-              </UI.Popover>
-            )}
-          </above>
-        </bottomright>
       </Page>
     )
   }

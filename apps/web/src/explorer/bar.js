@@ -4,6 +4,7 @@ import Router from '~/router'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import Input from './input'
+import Notifications from '~/notifications'
 
 @view.attach('layoutStore')
 @view
@@ -46,6 +47,26 @@ export default class ExplorerBar {
               )
             }}
           </UI.SlotFill.Slot>
+          <UI.Popover
+            openOnClick
+            closeOnEscape
+            background
+            width={480}
+            borderRadius={8}
+            elevation={2}
+            target={
+              <UI.Button
+                chromeless
+                iconSize={20}
+                size={1.333}
+                badge={2}
+                icon="circle-09"
+                margin={[0, -10]}
+              />
+            }
+          >
+            <Notifications />
+          </UI.Popover>
         </rest>
       </explorerbar>
     )

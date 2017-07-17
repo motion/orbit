@@ -90,7 +90,7 @@ export default class DocPageActions {
 
             <UI.List.Item if={false} icon="back" primary="Revisions" />
 
-            <UI.Form onSubmit={User.org.inviteMember}>
+            <UI.Form onSubmit={User.org && User.org.inviteMember}>
               <UI.Title>Invite:</UI.Title>
               <UI.Segment>
                 <UI.Input

@@ -25,7 +25,7 @@ export default class Message {
           </time>
         </top>
         <doc>
-          <DocumentView if={!embed} readOnly document={doc} />
+          <DocumentView if={!embed} readOnly noTitle document={doc} />
           <fake if={embed}>
             {fakeMsg.message}
           </fake>

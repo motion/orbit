@@ -10,7 +10,7 @@ export default class BottomBar {
     return (
       <bottomright
         css={{
-          position: 'absolute',
+          position: 'fixed',
           bottom: 10,
           right: 15,
           zIndex: 100000,

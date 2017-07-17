@@ -9,7 +9,7 @@ export default class SelectBar {
 
     return (
       <UI.Popover
-        if={selection.selectedNode && selection.mouseUp}
+        if={selection.selectedNode && selection.mouseUp && !editorStore.inline}
         open
         noArrow
         left={selection.mouseUp.x}

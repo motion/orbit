@@ -144,7 +144,7 @@ export default class Text {
       userSelect: 'none',
       cursor: 'default',
       maxWidth: '100%',
-      wordBreak: 'break-all',
+      wordBreak: 'break-word',
     },
     selectable: {
       userSelect: 'auto',

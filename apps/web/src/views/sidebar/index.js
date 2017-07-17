@@ -85,6 +85,7 @@ export default class Sidebar {
                   width={480}
                   borderRadius={8}
                   elevation={2}
+                  ref={this.ref('popover').set}
                   target={
                     <UI.Button
                       inline
@@ -98,7 +99,10 @@ export default class Sidebar {
                     />
                   }
                 >
-                  <Draft document={{}} />
+                  <Draft
+                    document={{}}
+                    closePopover={() => this.popover.close()}
+                  />
                 </UI.Popover>
               </end>
             </bar>

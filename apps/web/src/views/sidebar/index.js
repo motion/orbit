@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 import Inbox from '~/views/inbox'
+import { User } from '@mcro/models'
 
 @view.attach('layoutStore')
 @view
@@ -25,7 +26,7 @@ export default class Sidebar {
           size={width + 20}
         >
           <sidebar $$draggable>
-            <Inbox />
+            <Inbox document={User.homeDocument} />
           </sidebar>
         </UI.Drawer>
       </UI.Theme>

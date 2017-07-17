@@ -1,6 +1,7 @@
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
+import { Document, Thread } from '@mcro/models'
 
 class ThreadDraftStore {
   draft = Document.createTemporary({
@@ -17,7 +18,12 @@ class ThreadDraftStore {
     return (this.document && this.document.id) || 'null'
   }
 
-  send = () => {
+  send = async () => {
+    const thread = await Thread.create({
+      title: this.draft.title,
+      docId: this.document.id,
+    })
+    this.draft.threadId = thread.id
     this.draft.save()
   }
 

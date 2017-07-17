@@ -10,6 +10,11 @@ class Thread extends Model {
     timestamps: true,
   }
 
+  static defaultProps = () => ({
+    draft: false,
+    authorId: User.id,
+  })
+
   settings = {
     database: 'threads',
     index: ['createdAt'],

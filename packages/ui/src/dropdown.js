@@ -21,7 +21,7 @@ export default class Dropdown {
   props: Props
 
   static defaultProps = {
-    width: 200,
+    width: 100,
   }
 
   render({
@@ -31,6 +31,7 @@ export default class Dropdown {
     width,
     items,
     popoverProps,
+    theme,
     ...props
   }: Props) {
     return (
@@ -38,12 +39,22 @@ export default class Dropdown {
         <Popover
           openOnClick
           openOnHover
-          escapable
+          closeOnEsc
+          background
+          theme={theme}
+          borderRadius={6}
+          elevation={3}
+          arrowSize={12}
+          distance={4}
           target={
             <Button
               inline
               iconAfter
-              icon={<Arrow $arrow theme="light" size={6} color={color} />}
+              icon={
+                <icon>
+                  <Arrow $arrow theme="light" size={6} color={color} />
+                </icon>
+              }
               $$color={color}
             >
               {children}
@@ -69,6 +80,9 @@ export default class Dropdown {
     target: {
       flexFlow: 'row',
       alignItems: 'center',
+    },
+    icon: {
+      marginLeft: 5,
     },
     arrow: {
       opacity: 0.9,

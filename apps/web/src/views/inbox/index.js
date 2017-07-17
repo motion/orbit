@@ -7,10 +7,10 @@ import Draft from './draft'
 
 const { ago } = timeAgo()
 
-const GLOW_PROPS = {
-  color: 'salmon',
+const glowProps = {
+  color: '#000',
   scale: 1.6,
-  offsetLeft: -200,
+  offsetTop: 100,
   resist: 70,
   opacity: 0.048,
 }
@@ -62,7 +62,7 @@ export default class Inbox {
         <content>
           <bar if={!hideTitle}>
             <UI.Title size={1} stat={`${(store.threads || []).length} new`}>
-              Discussions
+              Threads
             </UI.Title>
             <actions>
               <UI.Popover
@@ -107,11 +107,14 @@ export default class Inbox {
               ),
               date: ago(item.createdAt),
               ellipse: false,
-              glowProps: GLOW_PROPS,
+              glowProps,
               //icon: item.icon,
               onClick: () => (store.activeItem = item),
               onMouseEnter: () => (store.highlightIndex = index),
               $highlight: store.highlightIndex === index,
+              css: {
+                borderBottom: [1, [0, 0, 0, 0.1]],
+              },
             })}
           />
         </content>

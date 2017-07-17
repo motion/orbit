@@ -341,14 +341,9 @@ export default class Surface implements ViewType {
     },
   }
 
-  static surfaceStyle = {
+  static inlineStyle = {
     background: 'transparent',
-    borderRightWidth: 1,
-    borderLeftWidth: 1,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
     margin: [-2, -3],
-    maxHeight: '1.45rem',
     borderRadius: 1000,
   }
 
@@ -590,7 +585,7 @@ export default class Surface implements ViewType {
           '&:active': activeStyle,
         }),
         ...(props.hovered && hoverStyle),
-        ...(props.inline && self.constructor.surfaceStyle),
+        ...(props.inline && self.constructor.inlineStyle),
         ...(props.disabled && self.constructor.disabledStyle),
         ...(props.dim && self.constructor.dimStyle),
         ...(props.spaced && self.constructor.spacedStyle),

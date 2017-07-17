@@ -114,7 +114,7 @@ export default class Layout {
 
   static style = {
     root: {
-      background: Constants.IS_ELECTRON ? [60, 68, 75, 0.8] : [110, 110, 110],
+      background: Constants.IS_ELECTRON ? [60, 68, 75, 0.75] : [110, 110, 110],
       position: 'absolute',
       top: 0,
       right: 0,

@@ -1,6 +1,5 @@
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import DocumentView from '~/views/document'
 import { Thread, Document } from '@mcro/models'
 import ThreadView from './thread'
 import timeAgo from 'time-ago'
@@ -17,7 +16,8 @@ const GLOW_PROPS = {
 }
 
 class InboxStore {
-  threads = Thread.forDoc(this.props.document && this.props.document.id)
+  document = this.props.document
+  threads = Thread.forDoc(this.document && this.document.id)
   highlightIndex = 0
   activeIndex = null
   newThreadTitle = ''
@@ -98,7 +98,7 @@ export default class Inbox {
 
     return (
       <inbox>
-        <content if={!store.activeItem}>
+        <content>
           <bar>
             <UI.Title size={1} stat={`${(store.threads || []).length} new`}>
               Threads
@@ -131,23 +131,6 @@ export default class Inbox {
               </UI.Popover>
             </actions>
           </bar>
-
-          <draft if={store.draft && store.draft._id}>
-            <DocumentView document={store.draft} />
-            <buttons $$row>
-              <UI.Button onClick={store.discardDraft} $discard chromeless>
-                Discard
-              </UI.Button>
-              <UI.Button
-                width={70}
-                icon="send"
-                chromeless
-                onClick={store.saveDraft}
-              >
-                Post
-              </UI.Button>
-            </buttons>
-          </draft>
 
           <UI.List
             background="transparent"

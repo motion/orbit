@@ -208,9 +208,10 @@ export default class Model {
         doc.updatedAt = this.now
       }
       console.log(
-        `%cINSERT ${this.constructor.name}.create(${JSON.stringify(doc).slice(
+        `%cINSERT ${this.constructor.name}.create(${JSON.stringify(
+          doc,
           0,
-          100
+          2
         )}...)`,
         'color: green'
       )

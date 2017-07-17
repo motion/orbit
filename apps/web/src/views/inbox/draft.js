@@ -1,25 +1,24 @@
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { random } from 'lodash'
 import DocView from '~/views/document'
 
 class ThreadDraftStore {
-  document = Document.createTemporary({
+  draft = Document.createTemporary({
     title: 'Draft',
     threadId: this.threadId,
     draft: true,
   })
 
-  get activeItem() {
-    return this.props.inboxStore.activeItem
+  get document() {
+    return this.props.inboxStore.document
   }
 
   get threadId() {
-    return (this.activeItem && this.activeItem.id) || 'null'
+    return (this.document && this.document.id) || 'null'
   }
 
   send = () => {
-    this.document.save()
+    this.draft.save()
   }
 
   destroy = () => {
@@ -31,7 +30,7 @@ class ThreadDraftStore {
   store: ThreadDraftStore,
 })
 export default class Draft {
-  render({ store, store: { document } }) {
+  render({ store, store: { draft } }) {
     return (
       <draft>
         <top $$row>
@@ -39,8 +38,8 @@ export default class Draft {
             <b>Nick</b>
           </UI.Title>
         </top>
-        <DocView if={document} id={document.id} document={document} />
-        <actions $$row if={document}>
+        <DocView if={draft} id={draft.id} document={draft} />
+        <actions $$row if={draft}>
           <status>
             <remind $$row>
               Remind me &nbsp;<b>in 2 days</b>&nbsp; if &nbsp;<b>no reply</b>&nbsp;

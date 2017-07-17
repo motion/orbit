@@ -85,7 +85,7 @@ export default class Popover {
   static defaultProps = {
     edgePadding: 5,
     distance: 10,
-    arrowSize: 20,
+    arrowSize: 24,
     forgiveness: 15,
     towards: 'auto',
     animation: 'slide 300ms',

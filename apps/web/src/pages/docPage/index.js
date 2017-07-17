@@ -103,18 +103,16 @@ export default class DocumentPage {
                 borderRadius={5}
                 elevation={2}
                 target={
-                  <item>
-                    <Gemstone
-                      marginLeft={5}
-                      id={doc.id}
-                      size={34}
-                      onClick={() => Router.go(doc.url())}
-                    >
-                      <UI.Text color="#fff" size={0.9} ellipse>
-                        {doc.titleShort}
-                      </UI.Text>
-                    </Gemstone>
-                  </item>
+                  <Gemstone
+                    marginLeft={5}
+                    id={doc.id}
+                    size={34}
+                    onClick={() => Router.go(doc.url())}
+                  >
+                    <UI.Text color="#fff" size={0.9} ellipse>
+                      {doc.titleShort}
+                    </UI.Text>
+                  </Gemstone>
                 }
               >
                 helo

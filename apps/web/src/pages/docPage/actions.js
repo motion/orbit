@@ -45,7 +45,7 @@ export default class DocPageActions {
               <Gemstone
                 if={explorerStore && explorerStore.document}
                 id={explorerStore.document.id}
-                size={30}
+                size={28}
                 css={{
                   margin: 'auto',
                 }}

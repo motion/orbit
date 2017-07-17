@@ -75,7 +75,7 @@ export default class DocumentPage {
       position: 'relative',
     },
     sidebar: {
-      width: 125,
+      width: 135,
       position: 'absolute',
       overflow: 'hidden',
       zIndex: 50,

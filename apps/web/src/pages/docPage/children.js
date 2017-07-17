@@ -52,7 +52,7 @@ class Item {
           flexFlow="row"
           iconAfter
           textAlign="right"
-          padding={[4, 8]}
+          padding={[4, 0, 10]}
         >
           <UI.Text
             $title
@@ -113,7 +113,7 @@ class Item {
     title: {
       fontWeight: 300,
       fontSize: 16,
-      lineHeight: '1.2rem',
+      lineHeight: '1.1rem',
       width: '100%',
       color: '#000',
     },
@@ -274,9 +274,6 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children>
-        <UI.Title if={false} css={{ padding: [0, 10, 5] }}>
-          Children
-        </UI.Title>
         <UI.Segment
           chromeless
           css={{
@@ -342,7 +339,7 @@ export default class ExplorerChildren {
       position: 'relative',
     },
     contents: {
-      width: '100%',
+      marginRight: 5,
       flex: 1,
       overflowY: 'scroll',
       overflowX: 'visible',

@@ -26,7 +26,7 @@ export default class Sidebar {
           size={width + 20}
         >
           <sidebar $$draggable>
-            <Inbox document={User.homeDocument} />
+            <Inbox />
           </sidebar>
         </UI.Drawer>
       </UI.Theme>

@@ -33,7 +33,11 @@ class Thread extends Model {
     return this.collection.find
   }
 
-  @query forDoc = docId => this.collection.find({ docId, draft: false })
+  @query
+  forDoc = docId =>
+    docId
+      ? this.collection.find({ docId, draft: false })
+      : this.collection.find({ draft: false })
 }
 
 export default new Thread()

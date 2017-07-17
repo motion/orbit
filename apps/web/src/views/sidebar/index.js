@@ -51,13 +51,27 @@ export default class Sidebar {
             <bar>
               <barbg $shown={this.state.scrolling} />
               <UI.Title>All</UI.Title>
-              <UI.Dropdown
-                theme="clear-dark"
-                popoverProps={{ background: [50, 50, 50, 0.9] }}
-                items={['All', 'Other']}
-              >
-                Filter
-              </UI.Dropdown>
+
+              <end $$row>
+                <UI.Dropdown
+                  theme="clear-dark"
+                  popoverProps={{ background: [50, 50, 50, 0.9] }}
+                  items={['All', 'Other']}
+                >
+                  Filter
+                </UI.Dropdown>
+
+                <UI.Button
+                  inline
+                  chromeless
+                  icon="circleadd"
+                  size={1.2}
+                  marginLeft={8}
+                  marginRight={-10}
+                  marginTop={-5}
+                  marginBottom={-5}
+                />
+              </end>
             </bar>
             <Inbox hideTitle />
           </sidebar>

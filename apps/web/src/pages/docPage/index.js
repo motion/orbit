@@ -34,6 +34,11 @@ export default class DocumentPage {
   render({ docStore, explorerStore }: { docStore: DocPageStore }) {
     const { document } = explorerStore
 
+    // this is the "loading" state
+    if (document === undefined) {
+      return null
+    }
+
     if (!document) {
       return <UI.Placeholder size={2}>Doc 404</UI.Placeholder>
     }

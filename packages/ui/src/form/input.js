@@ -77,7 +77,7 @@ export default class Input {
   }
 
   setValues = () => {
-    if (this.shouldSyncToForm && this.props.uiContext.formValues) {
+    if (this.shouldSyncToForm && this.node) {
       this.props.uiContext.formValues[this.props.name] = () => this.node.value
     }
   }

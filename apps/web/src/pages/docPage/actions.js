@@ -6,21 +6,10 @@ import Gemstone from '~/views/gemstone'
 import Router from '~/router'
 import { User } from '@mcro/models'
 
-class ActionsStore {
-  value = ''
-
-  submit = values => {
-    console.log('submit', this.value, values)
-    // User.org.inviteMember(this.value)
-  }
-}
-
 @view.attach('explorerStore')
-@view({
-  store: ActionsStore,
-})
+@view
 export default class DocPageActions {
-  render({ store, explorerStore }) {
+  render({ explorerStore }) {
     const { document } = explorerStore
 
     if (!document || document === null) {
@@ -101,7 +90,7 @@ export default class DocPageActions {
 
             <UI.List.Item if={false} icon="back" primary="Revisions" />
 
-            <UI.Form onSubmit={store.submit}>
+            <UI.Form onSubmit={User.org.inviteMember}>
               <UI.Title>Invite:</UI.Title>
               <UI.Segment>
                 <UI.Input

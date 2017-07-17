@@ -85,6 +85,7 @@ export default class DocumentPage {
       top: 0,
       right: 0,
       bottom: 60,
+      pointerEvents: 'none',
     },
     fade: {
       position: 'absolute',

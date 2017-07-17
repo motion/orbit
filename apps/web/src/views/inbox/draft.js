@@ -12,24 +12,28 @@ class ThreadDraftStore {
   })
 
   get document() {
-    return this.props.document || this.props.inboxStore.document
+    return this.props.document
   }
 
   get threadId() {
-    return (this.document && this.document.id) || 'null'
+    return this.document && this.document.id
   }
 
   send = async () => {
-    // link back and forth
-    // TODO put into model
-    const thread = await Thread.create({
-      title: this.draft.title,
-      docId: 'null',
-    })
-    this.draft.threadId = thread.id
+    const thread =
+      this.props.thread ||
+      (await Thread.create({
+        title: this.draft.title,
+        docId: 'null',
+      }))
+    this.draft.threadId = thread.id // link
+    this.draft.draft = false // no draft
     await this.draft.save()
-    thread.docId = this.draft.id
-    await thread.save()
+    // making first item in a thread
+    if (!this.props.thread) {
+      thread.docId = this.draft.id
+      await thread.save()
+    }
     if (this.props.closePopover) {
       this.props.closePopover()
     }

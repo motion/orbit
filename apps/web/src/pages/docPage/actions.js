@@ -38,6 +38,7 @@ export default class DocPageActions {
           padding: 15,
           marginLeft: -35,
           alignSelf: 'flex-end',
+          pointerEvents: 'auto',
         }}
       >
         <UI.Popover

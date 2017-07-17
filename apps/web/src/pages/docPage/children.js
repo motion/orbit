@@ -337,6 +337,7 @@ export default class ExplorerChildren {
       flex: 1,
       alignItems: 'flex-end',
       position: 'relative',
+      pointerEvents: 'auto',
     },
     contents: {
       marginRight: 5,

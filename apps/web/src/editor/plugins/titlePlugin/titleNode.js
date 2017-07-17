@@ -23,11 +23,7 @@ export default class TitleNode {
     const level = node.data.get('level')
 
     if (editorStore.props.noTitle) {
-      return (
-        <notitle contentEditable={false}>
-          {children}
-        </notitle>
-      )
+      return <notitle contentEditable={false} />
     }
 
     return (

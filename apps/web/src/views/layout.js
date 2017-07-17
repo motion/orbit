@@ -70,10 +70,11 @@ export default class Layout {
               <Results />
               <CurrentPage key={Router.key} {...Router.params} />
             </content>
-            <BottomBar />
           </LayoutWrap>
           <Errors />
-          <Sidebar hidden={!layoutStore.sidebar.active} />
+          <Sidebar hidden={!layoutStore.sidebar.active}>
+            <BottomBar />
+          </Sidebar>
         </app>
       )
     }

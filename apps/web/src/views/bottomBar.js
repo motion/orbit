@@ -27,13 +27,18 @@ export default class BottomBar {
               elevation={2}
               target={
                 <Gemstone
-                  marginLeft={5}
+                  marginLeft={-12}
                   id={doc.id}
-                  size={34}
+                  size={42}
                   onClick={() => Router.go(doc.url())}
+                  css={{
+                    boxShadow: [[0, 1, 4, [0, 0, 0, 0.15]]],
+                    padding: [0, 8],
+                  }}
                 >
-                  <UI.Text color="#fff" size={0.9} ellipse>
-                    {doc.titleShort}
+                  <UI.Text color="#fff" size={1.2} ellipse>
+                    {doc.title[0]}
+                    {doc.title[1]}
                   </UI.Text>
                 </Gemstone>
               }

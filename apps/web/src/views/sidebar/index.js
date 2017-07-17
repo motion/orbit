@@ -30,7 +30,7 @@ export default class Sidebar {
     }
   }, 32)
 
-  render({ hidden, layoutStore, store, ...props }) {
+  render({ hidden, layoutStore, store, children, ...props }) {
     const width = Constants.IN_TRAY
       ? Constants.TRAY_WIDTH
       : layoutStore.sidebar.width
@@ -109,6 +109,8 @@ export default class Sidebar {
               </end>
             </bar>
             <Inbox hideTitle />
+
+            {children}
           </sidebar>
         </UI.Drawer>
       </UI.Theme>

@@ -15,6 +15,8 @@ export default class Sidebar {
     scrolling: false,
   }
 
+  popover = null
+
   handleScroll = throttle(() => {
     const { scrollTop } = this.sidebar
     if (scrollTop > 0) {
@@ -101,7 +103,7 @@ export default class Sidebar {
                 >
                   <Draft
                     document={{}}
-                    closePopover={() => this.popover.close()}
+                    closePopover={() => this.popover && this.popover.close()}
                   />
                 </UI.Popover>
               </end>

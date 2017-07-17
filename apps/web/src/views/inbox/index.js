@@ -4,6 +4,7 @@ import { Thread, Document } from '@mcro/models'
 import ThreadView from './thread'
 import timeAgo from 'time-ago'
 import Draft from './draft'
+import Router from '~/router'
 
 const { ago } = timeAgo()
 
@@ -109,7 +110,7 @@ export default class Inbox {
               ellipse: false,
               glowProps,
               //icon: item.icon,
-              onClick: () => (store.activeItem = item),
+              onClick: () => Router.go(item.url()),
               onMouseEnter: () => (store.highlightIndex = index),
               $highlight: store.highlightIndex === index,
               css: {

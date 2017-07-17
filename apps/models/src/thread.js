@@ -26,7 +26,11 @@ class Thread extends Model {
     },
   }
 
-  methods = {}
+  methods = {
+    url() {
+      return `/d/${this.docId.replace(':', '-')}`
+    },
+  }
 
   @query
   all = () => {

@@ -21,46 +21,7 @@ class InboxStore {
   highlightIndex = 0
   activeIndex = null
   newThreadTitle = ''
-  draft = null
-  draftThread = null
   activeItem = null
-
-  createDraft = async () => {
-    const { document } = this.props
-
-    if (!document) {
-      console.error('no doc')
-      return
-    }
-
-    this.draftThread = await Thread.create({
-      draft: true,
-      title: this.newThreadTitle,
-      docId: document.id,
-    })
-    this.draft = await Document.create({
-      draft: true,
-      title: '',
-      threadId: this.draftThread.id,
-    })
-  }
-
-  discardDraft = () => {
-    console.log('discarding')
-    this.draftThread = null
-    this.draft = null
-  }
-
-  saveDraft = async () => {
-    this.draft.draft = false
-    await this.draft.save()
-    this.draftThread.title = this.draft.title
-    this.draftThread.draft = false
-    await this.draftThread.save()
-    this.activeItem = this.draftThread
-    this.draftThread = null
-    this.draft = null
-  }
 
   start() {
     /*
@@ -113,7 +74,6 @@ export default class Inbox {
                 elevation={2}
                 target={
                   <UI.Button
-                    if={!store.draft}
                     css={{
                       position: 'absolute',
                       top: 10,
@@ -123,7 +83,6 @@ export default class Inbox {
                     circular
                     size={1.4}
                     chromeless
-                    onClick={store.createDraft}
                   />
                 }
               >

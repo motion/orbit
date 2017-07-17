@@ -19,7 +19,6 @@ class ThreadDraftStore {
   }
 
   send = async () => {
-    await this.draft.save()
     const thread = await Thread.create({
       title: this.draft.title,
       docId: this.document.id,

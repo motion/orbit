@@ -21,6 +21,14 @@
     - BUG press "down" arrow from end of document title (cursor disappears)
     - Moving from commander/doc
   - Polish
+    - Improve document saving so it saves more consistent
+    - Document breaks with quotes etc
+  - Technical
+    - Query sync down needs to be fixed
+  - Documents
+    - Insert + button needs some love
+    - Remove the alternative right arrow insert
+    - Code blocks?
 
 # next
   - inbox pages
@@ -38,11 +46,9 @@
   - lightweight gdocs style inline comments too?
 
 # polish
-  - query sync down
   - cant paste in rich content
   - no numbered lists
   - cant invite people with a link
-  - todo indentation broken
   - no pasting/editing/adding links
   - images break on paste
   - save doesnt happen after many actions

@@ -46,11 +46,7 @@ export default class Sidebar {
           from="right"
           size={width}
         >
-          <sidebar
-            $$draggable
-            onScroll={this.handleScroll}
-            ref={this.ref('sidebar').set}
-          >
+          <sidebar $$draggable ref={this.ref('sidebar').set}>
             <bar>
               <barbg $shown={this.state.scrolling} />
               <UI.Dropdown
@@ -140,7 +136,7 @@ export default class Sidebar {
       margin: [-10, -20, 10, -30],
       position: 'sticky',
       top: 0,
-      background: [0, 0, 0, 0.1],
+      background: [50, 50, 50, 0.92],
       zIndex: 10000,
       transform: { y: 0 },
     },

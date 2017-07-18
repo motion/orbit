@@ -51,13 +51,33 @@ export default class DocumentPage {
           <Inbox if={isInbox} document={document} />
           <DocumentView
             if={isDoc || isThread}
-            $$paddingRight={140}
+            $isDoc={isDoc}
+            $isThread={isThread}
             document={document}
             onKeyDown={docStore.onKeyDown}
             showCrumbs
             showChildren
             isPrimaryDocument
           />
+          <actions if={isThread} css={{ padding: [0, 30, 20] }}>
+            <item $$row>
+              <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
+                Assign To:&nbsp;&nbsp;
+              </UI.Text>
+              <UI.Button inline>Nick</UI.Button>
+              &nbsp;&nbsp;&nbsp;
+              <UI.Button inline>Nate</UI.Button>
+            </item>
+            <space css={{ height: 10 }} />
+            <item $$row>
+              <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
+                Label:&nbsp;&nbsp;
+              </UI.Text>
+              <UI.Button inline>Enhancement</UI.Button>
+              &nbsp;&nbsp;&nbsp;
+              <UI.Button inline>New issue</UI.Button>
+            </item>
+          </actions>
           <Thread if={isThread} document={document} />
         </docpagecontent>
 
@@ -95,6 +115,13 @@ export default class DocumentPage {
       background: 'linear-gradient(to left, white, transparent)',
       width: 100,
       zIndex: 30,
+    },
+    isDoc: {
+      paddingRight: 140,
+    },
+    isThread: {
+      flex: 'none',
+      paddingBottom: 20,
     },
   }
 }

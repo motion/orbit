@@ -716,7 +716,7 @@ class Popover {
       return React.cloneElement(target, targetProps)
     }
 
-    console.log('render', this.props)
+    console.log('render popover', this.props)
 
     return (
       <root>

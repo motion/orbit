@@ -119,7 +119,6 @@ export default class Field {
     field: {
       textAlign: 'left',
       alignItems: 'center',
-      padding: 500,
     },
     label: {
       overflow: 'hidden',

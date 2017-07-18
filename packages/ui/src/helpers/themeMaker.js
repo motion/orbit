@@ -29,6 +29,7 @@ export default class ThemeMaker {
       }
       throw e
     }
+
     const opposite = base.mix(base.lighten(10))
     const theme = this.fromStyles({
       highlightColor: base,
@@ -49,25 +50,30 @@ export default class ThemeMaker {
       borderColor,
     })
 
+    const smallAmt = color => Math.max(0, Math.log(4 / color.lightness())) // goes 0 #fff to 0.3 #000
+    const largeAmt = color => smallAmt(color) * 1.25
+    const adjust = (color, direction, adjuster) =>
+      color[direction](adjuster(color))
+
     return {
       ...rest,
       base: obj,
       hover: {
         ...obj,
         color: '#fff',
-        background: obj.background.lighten(0.2),
-        borderColor: obj.borderColor.lighten(0.2),
+        background: adjust(obj.background, 'lighten', smallAmt),
+        borderColor: adjust(obj.borderColor, 'lighten', smallAmt),
       },
       active: {
         ...obj,
-        background: obj.background.darken(0.3),
-        highlightColor: obj.highlightColor.lighten(0.3),
+        background: adjust(obj.background, 'darken', smallAmt),
+        highlightColor: adjust(obj.highlightColor, 'lighten', smallAmt),
         color: '#fff',
       },
       focus: {
         ...obj,
-        background: obj.background.lighten(0.25),
-        borderColor: obj.highlightColor,
+        background: adjust(obj.background, 'darken', largeAmt),
+        borderColor: adjust(obj.highlightColor, 'darken', smallAmt),
       },
       highlight: {
         color: obj.highlightColor,

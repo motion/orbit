@@ -58,6 +58,7 @@ export default class Title extends React.Component {
     children,
     tagName,
     fontSize,
+    fontWeight,
     flex,
     ...props
   }: TitleProps) {
@@ -93,6 +94,7 @@ export default class Title extends React.Component {
           size={size * 1.02}
           color={color}
           fontSize={fontSize}
+          fontWeight={fontWeight}
           {...textProps}
         >
           {children}
@@ -117,7 +119,6 @@ export default class Title extends React.Component {
     },
     size1: {
       textTransform: 'uppercase',
-      fontWeight: 300,
     },
     size2: {
       fontWeight: 700,

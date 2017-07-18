@@ -40,7 +40,6 @@ export default class Sidebar {
         <UI.Drawer
           zIndex={1}
           transition={Constants.SIDEBAR_TRANSITION}
-          background="transparent"
           key={2}
           open={!hidden}
           from="right"
@@ -146,7 +145,7 @@ export default class Sidebar {
       left: 0,
       right: 0,
       bottom: 0,
-      background: [60, 68, 75],
+      // background: [60, 68, 75],
       opacity: 0,
       zIndex: -1,
       transition: 'all ease-in 200ms',

@@ -78,18 +78,10 @@ export default class Inbox {
                   {item.title}
 
                   <date $$row $$justify="flex-end">
-                    <UI.Badge
-                      if={Math.random() > 0.2}
-                      {...badgeProps}
-                      color="red"
-                    >
+                    <UI.Badge if={index % 3} {...badgeProps} color="red">
                       Enhancement
                     </UI.Badge>
-                    <UI.Badge
-                      if={Math.random() > 0.4}
-                      {...badgeProps}
-                      color="yellow"
-                    >
+                    <UI.Badge if={index % 2} {...badgeProps} color="yellow">
                       Needs help
                     </UI.Badge>
                     <UI.Badge>+2</UI.Badge>
@@ -111,14 +103,11 @@ export default class Inbox {
                 </UI.Text>
               ),
               ellipse: false,
-              glowProps,
+              glow: false,
               //icon: item.icon,
               onClick: () => Router.go(item.url()),
               onMouseEnter: () => (store.highlightIndex = index),
-              $highlight: store.highlightIndex === index,
-              css: {
-                borderBottom: [1, [0, 0, 0, 0.1]],
-              },
+              active: index === 0,
             })}
           />
         </content>
@@ -157,10 +146,6 @@ export default class Inbox {
     title: {
       fontWeight: 'bold',
       lineHeight: 100,
-    },
-    highlight: {
-      background: '#eee',
-      borderLeft: '3px solid #999',
     },
     all: {
       marginTop: 15,

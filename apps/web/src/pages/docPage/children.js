@@ -274,6 +274,7 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children>
+        <UI.Title fontWeight={200}>Pages</UI.Title>
         <UI.Segment
           chromeless
           css={{

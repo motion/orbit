@@ -38,9 +38,9 @@ color-string@^1.4.0:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/color/-/color-1.0.3.tgz#e48e832d85f14ef694fb468811c2d5cfe729b55d"
+color@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/color/-/color-2.0.0.tgz#e0c9972d1e969857004b101eaa55ceab5961d67d"
   dependencies:
     color-convert "^1.8.2"
     color-string "^1.4.0"
@@ -252,9 +252,9 @@ react-tunnel@^0.1.0:
   dependencies:
     invariant "2.x.x"
 
-react-virtualized@^9.8.0:
-  version "9.8.0"
-  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.8.0.tgz#7c1fe9b723ce39a1c4916cabe1c4f1bda5dbc04b"
+react-virtualized@^9.9.0:
+  version "9.9.0"
+  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.9.0.tgz#799a6f23819eeb82860d59b82fad33d1d420325e"
   dependencies:
     babel-runtime "^6.11.6"
     classnames "^2.2.3"

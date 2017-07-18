@@ -59,8 +59,8 @@ const Themes = {
   'clear-light': Theme.fromStyles({
     highlightColor,
     background: [0, 0, 0, 0],
-    color: [0,0,0, 0.6],
-    borderColor: [0,0,0, 0.3],
+    color: [0, 0, 0, 0.6],
+    borderColor: [0, 0, 0, 0.3],
   }),
   'clear-dark': Theme.fromStyles({
     glint: {
@@ -71,7 +71,7 @@ const Themes = {
     },
     highlightColor,
     background: [0, 0, 0, 0],
-    color: [255, 255, 255, 0.6],
+    color: [255, 255, 255, 0.9],
     borderColor: [255, 255, 255, 0.3],
   }),
   light: {

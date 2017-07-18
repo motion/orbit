@@ -9,6 +9,7 @@ export default class BottomBar {
   render() {
     return (
       <bottomright
+        if={false}
         css={{
           position: 'fixed',
           bottom: 10,

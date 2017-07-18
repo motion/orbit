@@ -39,7 +39,7 @@ export type Props = {
   width?: number,
 }
 
-@parentSize
+@parentSize('virtualized')
 @view.ui
 class List {
   props: Props
@@ -150,31 +150,29 @@ class List {
     onHighlight,
     onItemMount,
     onSelect,
-    parentSize,
+    virtualized,
     placeholder,
-    rowHeight: propRowHeight,
     scrollable,
     segmented,
     size,
     style,
     width: userWidth,
+    virtualProps,
     ...props
   }: Props) {
     if (!items && !children) {
       return null
     }
 
-    let rowHeight = propRowHeight
     let height = userHeight
     let width = userWidth
 
-    if (rowHeight && !parentSize) {
+    if (virtualized && !parentSize) {
       return null
     }
-    if (rowHeight) {
-      height =
-        typeof userHeight === 'undefined' ? parentSize.height : userHeight
-      width = typeof userWidth === 'undefined' ? parentSize.width : userWidth
+    if (virtualized) {
+      height = parentSize.height || userHeight
+      width = parentSize.width || userWidth
     }
 
     const passThroughProps = {
@@ -255,7 +253,7 @@ class List {
       : items.map(getListItem)
 
     // if no need, just get them right away
-    if (!rowHeight) {
+    if (!virtualized) {
       chillen = chillen.map(child => child())
     }
 
@@ -275,16 +273,16 @@ class List {
       >
         <loading if={loading}>loading</loading>
         <VirtualList
-          if={!loading && rowHeight}
+          if={!loading && virtualized}
           height={height}
           width={width}
-          overscanRowCount={5}
           rowCount={total}
-          rowHeight={rowHeight}
+          rowHeight={100}
           rowRenderer={({ index, key, style }) =>
             chillen[index]({ key, style })}
+          {...virtualized}
         />
-        {!rowHeight && chillen}
+        {!virtualized && chillen}
       </Surface>
     )
   }

@@ -71,9 +71,15 @@ export default class Inbox {
         <UI.List
           background="transparent"
           $list
-          measure
-          rowHeight={120}
-          itemProps={{ height: 'auto', padding: [10, 15, 10, 16] }}
+          virtualized={{
+            rowHeight: 115,
+            overscanRowCount: 5,
+          }}
+          itemProps={{
+            height: 'auto',
+            padding: [10, 15, 10, 16],
+            overflow: 'hidden',
+          }}
           items={store.threads || []}
           getItem={(item, index) => {
             const active = Router.path === item.url()

@@ -118,10 +118,7 @@ export default class ListItem {
           overlayZIndex: 0,
           ...glowProps,
         }}
-        style={{
-          position: 'relative',
-          ...style,
-        }}
+        style={{ ...style, position: (style && style.position) || 'relative' }}
         {...props}
       >
         <image if={avatar || fakeAvatar}>
@@ -178,7 +175,6 @@ export default class ListItem {
   static style = {
     item: {
       maxWidth: '100%',
-      position: 'relative',
     },
     content: {
       flex: 1,

@@ -3,21 +3,21 @@ import resizer from 'element-resize-detector'
 
 const Resize = resizer({ strategy: 'scroll' })
 
-export default Child => {
+export default prop => Child => {
   class ParentSize extends React.Component {
     state = {
       dimensions: null,
     }
 
     componentDidMount() {
-      if (this.props.measure) {
+      if (this.props[prop]) {
         Resize.listenTo(this.parent, this.measure)
         this.measure(this.parent)
       }
     }
 
     componentWillUnmount() {
-      if (this.props.measure) {
+      if (this.props[prop]) {
         Resize.removeAllListeners(this.parent)
         this.unmounted = true
       }
@@ -56,7 +56,10 @@ export default Child => {
         }
       }
 
-      const { measure, className, style, ...props } = this.props
+      const { className, style, ...props } = this.props
+
+      // remove the parentSize prop
+      delete props[prop]
 
       return (
         <parent

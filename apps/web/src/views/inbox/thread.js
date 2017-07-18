@@ -31,7 +31,6 @@ export default class Thread {
             Add reply
           </UI.Button>
           <container $show={store.showReply}>
-            <UI.Title>Response</UI.Title>
             <Draft $draft isReply document={document} />
           </container>
         </reply>

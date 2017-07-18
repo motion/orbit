@@ -56,6 +56,12 @@ const Themes = {
     color: '#fff',
     borderColor: '#222',
   }),
+  'clear-light': Theme.fromStyles({
+    highlightColor,
+    background: [0, 0, 0, 0],
+    color: [0,0,0, 0.6],
+    borderColor: [0,0,0, 0.3],
+  }),
   'clear-dark': Theme.fromStyles({
     glint: {
       opacity: 0,

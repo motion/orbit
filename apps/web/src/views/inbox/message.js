@@ -14,22 +14,21 @@ export default class Message {
 
     return (
       <message $embed={embed}>
-        <top $$row>
-          <UI.Title size={0.9}>
-            <b>
-              {fakeMsg.name}
-            </b>
-          </UI.Title>
-          <time>
-            {ago(doc.createdAt)}
-          </time>
-        </top>
         <doc>
           <DocumentView if={!embed} readOnly noTitle document={doc} />
           <fake if={embed}>
             {fakeMsg.message}
           </fake>
         </doc>
+        <meta>
+          <blank $$flex />
+          <time>
+            {ago(doc.createdAt)}
+          </time>
+          <UI.Title size={0.9}>
+            {fakeMsg.name}
+          </UI.Title>
+        </meta>
       </message>
     )
   }
@@ -38,11 +37,11 @@ export default class Message {
     message: {
       padding: [20, 18],
       borderTop: [1, '#eee'],
+      flexFlow: 'row',
+      alignItems: 'flex-start',
     },
     embed: {},
-    top: {
-      justifyContent: 'space-between',
-    },
+    meta: {},
     reactions: {
       justifyContent: 'space-between',
       width: 100,
@@ -59,7 +58,8 @@ export default class Message {
     },
     // leaves room for left bar
     doc: {
-      marginLeft: -10,
+      marginLeft: -25,
+      flex: 1,
     },
     fake: {
       color: '#333',

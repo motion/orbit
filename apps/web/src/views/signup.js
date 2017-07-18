@@ -42,15 +42,12 @@ export default class Signup {
           <logo
             css={{
               fontWeight: 800,
-              fontSize: 17,
+              fontSize: 30,
               letterSpacing: -0.25,
               color: '#111',
             }}
           >
-            Covfefe
-            <span css={{ fontSize: 12, fontWeight: 200, opacity: 0.15 }}>
-              moving docs forward
-            </span>
+            Jot
           </logo>
         </header>
 
@@ -587,13 +584,13 @@ export default class Signup {
           />
         </shape>
 
-        <UI.Theme name="clear">
+        <UI.Theme name="clear-light">
           <centered $$centered>
             <Step1 if={step === 1} />
             <Step2 if={step === 2} />
           </centered>
         </UI.Theme>
-        <UI.Theme name="clear" if={!User.loggedIn}>
+        <UI.Theme name="clear-light" if={!User.loggedIn}>
           <login
             $$row
             $$centered

@@ -4,12 +4,16 @@ import DocView from '~/views/document'
 import { Document, Thread } from '@mcro/models'
 
 class ThreadDraftStore {
-  draft = Document.createTemporary({
-    title: 'Draft',
-    threadId: this.threadId,
-    draft: true,
-    type: 'thread',
-  })
+  draftVersion = 1
+  @watch
+  draft = () =>
+    this.draftVersion &&
+    Document.createTemporary({
+      title: 'Draft',
+      threadId: this.threadId,
+      draft: true,
+      type: 'thread',
+    })
 
   get document() {
     return this.props.document || {}
@@ -35,6 +39,9 @@ class ThreadDraftStore {
     this.draft.threadId = threadId
     this.draft.draft = false // no draft
     await this.draft.save()
+
+    // quick, reset draft
+    this.draftVersion++
 
     if (isNewThread) {
       thread.docId = this.draft.id

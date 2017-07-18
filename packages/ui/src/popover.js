@@ -716,6 +716,8 @@ class Popover {
       return React.cloneElement(target, targetProps)
     }
 
+    console.log('render', this.props)
+
     return (
       <root>
         {React.isValidElement(target) && controlledTarget(target)}

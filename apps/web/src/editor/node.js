@@ -60,53 +60,55 @@ export default View => {
       this.editorStore.transform(t => t.insertBlock({ type, data }))
     }
 
+    // <UI.Popover
+    //     target={
+
+    //     }
+    //     closeOnClick
+    //     openOnClick
+    //     escapable
+    //     noArrow
+    //     shadow
+    //   >
+    //     {isOpen =>
+    //       isOpen &&
+    //       <UI.List
+    //         background
+    //         elevation={1}
+    //         items={[
+    //           {
+    //             primary: 'Doc List',
+    //             onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
+    //           },
+    //           {
+    //             primary: 'Row',
+    //             onClick: () =>
+    //               this.editorStore.transform(t =>
+    //                 this.editorStore.allPlugins.row.insertRow(t)
+    //               ),
+    //           },
+    //           { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
+    //           {
+    //             primary: 'Bullet List',
+    //             onClick: this.insert(BLOCKS.UL_LIST),
+    //           },
+    //           {
+    //             primary: 'Ordered List',
+    //             onClick: this.insert(BLOCKS.OL_LIST),
+    //           },
+    //         ]}
+    //       />}
+    //   </UI.Popover>
+
     contextMenu = () =>
-      <UI.Popover
-        target={
-          <UI.Button
-            icon="add"
-            iconSize={9}
-            size={0.75}
-            glow={false}
-            chromeless
-            color={[0, 0, 0, 0.1]}
-          />
-        }
-        closeOnClick
-        openOnClick
-        escapable
-        noArrow
-        shadow
-      >
-        {isOpen =>
-          isOpen &&
-          <UI.List
-            background
-            elevation={1}
-            items={[
-              {
-                primary: 'Doc List',
-                onClick: this.insert(BLOCKS.DOC_LIST, { type: 'card' }),
-              },
-              {
-                primary: 'Row',
-                onClick: () =>
-                  this.editorStore.transform(t =>
-                    this.editorStore.allPlugins.row.insertRow(t)
-                  ),
-              },
-              { primary: 'Image', onClick: this.insert(BLOCKS.IMAGE) },
-              {
-                primary: 'Bullet List',
-                onClick: this.insert(BLOCKS.UL_LIST),
-              },
-              {
-                primary: 'Ordered List',
-                onClick: this.insert(BLOCKS.OL_LIST),
-              },
-            ]}
-          />}
-      </UI.Popover>
+      <UI.Button
+        icon="add"
+        iconSize={9}
+        size={0.75}
+        glow={false}
+        chromeless
+        color={[0, 0, 0, 0.1]}
+      />
 
     componentProps = {
       setContext: context => {

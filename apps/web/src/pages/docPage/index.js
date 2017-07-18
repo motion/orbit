@@ -47,7 +47,7 @@ export default class DocumentPage {
 
     return (
       <Page>
-        <docpagecontent>
+        <docpagecontent id="content">
           <Inbox if={isInbox} document={document} />
           <DocumentView
             if={isDoc || isThread}

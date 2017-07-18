@@ -1,13 +1,29 @@
+# needs to work for countdown to v0
+  - Assign to
+  - Label as
+  - Inboxes in the tree
+    - show inbox icon in commander
+    - show inbox in left side when you visit it
+    - router.go to its threads
+  - Commander
+    - show inbox icons next to inbox items
+    - clicking item takes to different name
+    - doesnt always update to latest route
+    - is a bit slow
+  - Thread
+    - Show dates on threads/replies
+    - Create from draft + dropdown (does it open/close create nicely)
+    - Replies
+      - Show proper user
+  - Keyboard basic fixes
+    - Moving from commander/doc
+  - Polish
+
 # next
   - inbox pages
   - keyboard movement
-  - avatar gem
-  - doc type on create (document / inbox / summary)
-    - doc is default if you keep typing it collapses type chooser
-  - homepage is summary
-  - new page auto follow + team follow
   - signup: asks for your team names + emails, then makes root pages for them
-  - content prefill for new org
+  - content prefilled with Welcome/etc for new org
   - @mentions
   - discussions
   - homepage

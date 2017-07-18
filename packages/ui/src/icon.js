@@ -108,28 +108,15 @@ export default class Icon {
   }
 
   static theme = props => {
-    const buttonPad = props.button ? 5 : 0
-    const buttonStyles = props.button && {
-      borderRadius: 3,
-      alignItems: 'center',
-      padding: 5,
-      margin: -5,
-      background: [0, 0, 0, 0.02],
-      '&:hover': {
-        background: [0, 0, 0, 0.02],
-      },
-    }
-
     return {
       icon: {
         alignSelf: props.alignSelf,
         opacity: props.opacity,
         color: props.color ? `${color(props.color).toString()} !important` : '',
-        width: (props.width || props.size) + buttonPad * 2 + 1,
-        height: (props.height || props.size) + buttonPad * 2,
+        width: props.width || props.size,
+        height: props.height || props.size,
         fontSize: props.size,
         lineHeight: `${props.size / 12 - 1}rem`, // scale where 1 when 14
-        ...buttonStyles,
         '&:hover': props.hoverColor && {
           color: `${props.hoverColor.toString()} !important`,
         },

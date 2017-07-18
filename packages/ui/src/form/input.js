@@ -22,16 +22,19 @@ class Checkbox {
         color={isChecked ? '#fff' : '#ddd'}
         hoverColor={isChecked ? '#fff' : '#ddd'}
         borderRadius={6}
-        icon="check-simple"
+        borderWidth={1}
+        borderColor={isChecked ? 'rgb(92, 107, 123)' : '#ccc'}
+        icon={isChecked ? 'check-simple' : 'check-simple'}
         iconSize={12}
         glow={false}
         padding={2}
-        height={17}
+        height={18}
         alignItems="center"
         justifyContent="center"
         flex={false}
         iconProps={{
           css: {
+            opacity: isChecked ? 1 : 0.15,
             transform: {
               y: 1,
               scale: isChecked ? 1 : 1,

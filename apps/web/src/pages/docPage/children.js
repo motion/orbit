@@ -186,7 +186,6 @@ class ExplorerChildrenStore {
       oldIndex,
       newIndex
     )
-    log(sortedChildren)
     this.document.childrenSort = sortedChildren
     this.document.save()
   }

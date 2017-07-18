@@ -85,7 +85,7 @@ export default class Sidebar {
                   openOnClick
                   closeOnEsc
                   background="#fff"
-                  width={480}
+                  width={540}
                   borderRadius={8}
                   elevation={2}
                   ref={this.ref('popover').set}

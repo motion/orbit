@@ -148,8 +148,8 @@ class Popover {
     }
     if (closeOnEsc) {
       this.on(window, 'keyup', e => {
-        log(e.keyCode)
         if (e.keyCode === 27 && (open || this.state.open)) {
+          log('close popover')
           this.close()
         }
       })

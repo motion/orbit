@@ -178,19 +178,17 @@ export default class Message {
           </fake>
         </doc>
         <meta>
-          <StickyNode restrictorNode={document.querySelector('#content')}>
-            <metacontents>
-              <before>
-                <UI.Title size={0.9} color="#000">
-                  {fakeMsg.name}
-                </UI.Title>
-                <UI.Text size={0.9} color="#999">
-                  {ago(doc.createdAt)}
-                </UI.Text>
-              </before>
-              <Gemstone id={fakeMsg.name} marginLeft={10} />
-            </metacontents>
-          </StickyNode>
+          <metacontents>
+            <before>
+              <UI.Title size={0.9} color="#000">
+                {fakeMsg.name}
+              </UI.Title>
+              <UI.Text size={0.9} color="#999">
+                {ago(doc.createdAt)}
+              </UI.Text>
+            </before>
+            <Gemstone id={fakeMsg.name} marginLeft={10} />
+          </metacontents>
         </meta>
       </message>
     )
@@ -208,7 +206,6 @@ export default class Message {
       textAlign: 'right',
       flexFlow: 'row',
       width: 120,
-      marginRight: 20,
     },
     // leaves room for left bar
     doc: {

@@ -138,6 +138,7 @@ export default class Sidebar {
       top: 0,
       background: [0, 0, 0, 0.1],
       zIndex: 10000,
+      transform: { y: 0 },
     },
     barbg: {
       position: 'absolute',
@@ -145,10 +146,11 @@ export default class Sidebar {
       left: 0,
       right: 0,
       bottom: 0,
-      // background: [60, 68, 75],
+      background: '#111',
       opacity: 0,
       zIndex: -1,
       transition: 'all ease-in 200ms',
+      transform: { y: 0 },
     },
     shown: {
       opacity: 1,

@@ -108,8 +108,8 @@ export default class Inbox {
                   </status>,
                 children: (
                   <UI.Text>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Ullam provident minus...
+                    {item.text ||
+                      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. '}
                   </UI.Text>
                 ),
                 ellipse: false,

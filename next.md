@@ -9,12 +9,16 @@
     - clicking item takes to different name
     - doesnt always update to latest route
     - is a bit slow
+    - focus doc after navigate
+  - Draft
+    - focus document on open
   - Thread
     - Show dates on threads/replies
     - Create from draft + dropdown (does it open/close create nicely)
     - Replies
       - Show proper user
   - Keyboard basic fixes
+    - BUG press "down" arrow from end of document title (cursor disappears)
     - Moving from commander/doc
   - Polish
 

@@ -33,6 +33,8 @@ export default class Inbox {
 
     const badgeProps = {}
 
+    Router.path // trigger change
+
     return (
       <inbox>
         <content>
@@ -72,43 +74,53 @@ export default class Inbox {
             $list
             itemProps={{ height: 'auto', padding: [10, 15, 10, 16] }}
             items={store.threads || []}
-            getItem={(item, index) => ({
-              primary: (
-                <head $$row $$centered $$justify="space-between" $$flex>
-                  {item.title}
+            getItem={(item, index) => {
+              const active = Router.path === item.url()
+              return {
+                primary: (
+                  <head $$row $$centered $$justify="space-between" $$flex>
+                    {item.title}
 
-                  <date $$row $$justify="flex-end">
-                    <UI.Badge if={index % 3} {...badgeProps} color="red">
-                      Enhancement
-                    </UI.Badge>
-                    <UI.Badge if={index % 2} {...badgeProps} color="yellow">
-                      Needs help
-                    </UI.Badge>
-                    <UI.Badge>+2</UI.Badge>
-                  </date>
-                </head>
-              ),
-              secondary:
-                item.status ||
-                <status $$row>
-                  <UI.Button chromeless inline margin={[0, -2]}>
-                    Nate
-                  </UI.Button>{' '}
-                  replied {ago(item.createdAt)}
-                </status>,
-              children: (
-                <UI.Text>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Ullam provident minus...
-                </UI.Text>
-              ),
-              ellipse: false,
-              glow: false,
-              //icon: item.icon,
-              onClick: () => Router.go(item.url()),
-              onMouseEnter: () => (store.highlightIndex = index),
-              active: index === 0,
-            })}
+                    <date $$row $$justify="flex-end">
+                      <UI.Badge if={index % 3} {...badgeProps} color="red">
+                        Enhancement
+                      </UI.Badge>
+                      <UI.Badge if={index % 2} {...badgeProps} color="yellow">
+                        Needs help
+                      </UI.Badge>
+                      <UI.Badge>+2</UI.Badge>
+                    </date>
+                  </head>
+                ),
+                secondary:
+                  item.status ||
+                  <status $$row $$marginLeft={-3} $$align="center">
+                    <UI.Button
+                      chromeless
+                      inline
+                      margin={[0, -2]}
+                      marginBottom={-1}
+                      padding={[0, 6]}
+                    >
+                      Nate
+                    </UI.Button>{' '}
+                    <UI.Text size={0.9}>replied {ago(item.createdAt)}</UI.Text>
+                  </status>,
+                children: (
+                  <UI.Text>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Ullam provident minus...
+                  </UI.Text>
+                ),
+                ellipse: false,
+                glow: false,
+                hoverBackground: !active && [255, 255, 255, 0.025],
+                //icon: item.icon,
+                onClick: () => Router.go(item.url()),
+                onMouseEnter: () => (store.highlightIndex = index),
+                active,
+              }
+            }}
           />
         </content>
       </inbox>

@@ -70,8 +70,8 @@ const Themes = {
       opacity: 1,
     },
     highlightColor,
-    background: [0, 0, 0, 0],
-    color: [255, 255, 255, 0.9],
+    background: [25, 25, 25, 0.4],
+    color: [255, 255, 255, 0.78],
     borderColor: [255, 255, 255, 0.3],
   }),
   light: {

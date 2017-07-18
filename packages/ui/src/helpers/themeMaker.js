@@ -50,10 +50,23 @@ export default class ThemeMaker {
       borderColor,
     })
 
-    const smallAmt = color => Math.max(0, Math.log(4 / color.lightness())) // goes 0 #fff to 0.3 #000
+    const lighten = {
+      true: 'darken',
+      false: 'lighten',
+    }
+    const darken = {
+      true: 'lighten',
+      false: 'darken',
+    }
+
+    const str = x => `${x}`
+    const smallAmt = color => Math.max(0, 5 * Math.log(4 / color.lightness())) // goes 0 #fff to 0.3 #000
     const largeAmt = color => smallAmt(color) * 1.25
-    const adjust = (color, direction, adjuster) =>
-      color[direction](adjuster(color))
+    const adjust = (color, adjuster, opposite = false) => {
+      const isLight = color.lightness() > 50
+      const direction = isLight ? darken[str(opposite)] : lighten[str(opposite)]
+      return color[direction](adjuster(color))
+    }
 
     return {
       ...rest,
@@ -61,19 +74,19 @@ export default class ThemeMaker {
       hover: {
         ...obj,
         color: '#fff',
-        background: adjust(obj.background, 'lighten', smallAmt),
-        borderColor: adjust(obj.borderColor, 'lighten', smallAmt),
+        background: adjust(obj.background, smallAmt),
+        borderColor: adjust(obj.borderColor, smallAmt),
       },
       active: {
         ...obj,
-        background: adjust(obj.background, 'darken', smallAmt),
-        highlightColor: adjust(obj.highlightColor, 'lighten', smallAmt),
+        background: adjust(obj.background, largeAmt, true),
+        highlightColor: adjust(obj.highlightColor, largeAmt),
         color: '#fff',
       },
       focus: {
         ...obj,
-        background: adjust(obj.background, 'darken', largeAmt),
-        borderColor: adjust(obj.highlightColor, 'darken', smallAmt),
+        background: adjust(obj.background, largeAmt, true),
+        borderColor: adjust(obj.highlightColor, smallAmt, true),
       },
       highlight: {
         color: obj.highlightColor,

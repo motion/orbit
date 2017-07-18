@@ -345,7 +345,7 @@ export default class Surface implements ViewType {
 
   static inlineStyle = {
     background: 'transparent',
-    margin: [-2, -3],
+    margin: [-3, -3],
     borderRadius: 1000,
   }
 
@@ -398,14 +398,14 @@ export default class Surface implements ViewType {
           background.indexOf('radial-gradient') !== 0))
     if (colorBackground) {
       background = $(background)
-      const luminosity = background.luminosity()
-      const isDark = luminosity < 0.4
+      const lightness = background.lightness()
+      const isDark = lightness < 40
       const addContrast = (color, amt) =>
         color[isDark ? 'lighten' : 'darken'](amt)
       // hover
       hoverBackground =
         hoverBackground || props.hoverable
-          ? addContrast(background, luminosity / 30)
+          ? addContrast(background, lightness / 30)
           : background
     }
 
@@ -494,7 +494,7 @@ export default class Surface implements ViewType {
     // state styles
     const hoverStyle = !props.chromeless &&
     !props.disabled &&
-    props.hoverable && {
+    (props.hoverable || props.hoverBackground) && {
       ...theme.hover,
       color: hoverColor,
       borderColor: hoverBorderColor,

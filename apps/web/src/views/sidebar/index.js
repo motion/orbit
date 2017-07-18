@@ -39,6 +39,7 @@ export default class Sidebar {
       <UI.Theme name="clear-dark">
         <UI.Drawer
           zIndex={1}
+          background="transparent"
           transition={Constants.SIDEBAR_TRANSITION}
           key={2}
           open={!hidden}

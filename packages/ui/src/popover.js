@@ -222,7 +222,10 @@ class Popover {
   }
 
   listenForClick = () => {
-    if (!this.target) return
+    if (!(this.target instanceof HTMLElement)) {
+      console.log('bad target', this.target, this.props)
+      return
+    }
     // click away to close
     this.on(this.target, 'click', e => {
       e.stopPropagation()
@@ -524,7 +527,7 @@ class Popover {
   listeners = []
 
   listenForHover = () => {
-    if (!this.target) {
+    if (!(this.target instanceof HTMLElement)) {
       console.log('no target')
       return
     }
@@ -550,7 +553,7 @@ class Popover {
   }
 
   addHoverListeners = (name, node) => {
-    if (!node) {
+    if (!(node instanceof HTMLElement)) {
       console.log('no node!', name)
       return
     }
@@ -725,7 +728,6 @@ class Popover {
             <background
               if={overlay}
               ref={this.overlayRef}
-              $overlay={overlay}
               $overlayShown={showPopover}
               onClick={this.handleOverlayClick}
             />
@@ -812,10 +814,8 @@ class Popover {
       pointerEvents: 'none',
       opacity: 0,
       transition: 'all ease-in 300ms',
+      zIndex: -2,
     },
-    overlay: color => ({
-      background: typeof color === 'string' ? color : 'rgba(0,0,0,0.2)',
-    }),
     overlayShown: {
       opacity: 1,
       pointerEvents: 'all',
@@ -823,7 +823,7 @@ class Popover {
     popover: {
       position: 'absolute',
       pointerEvents: 'none',
-      zIndex: -2,
+      zIndex: -1,
       opacity: 0,
       transition: 'opacity ease-in 60ms, transform ease-out 100ms',
       transform: {
@@ -859,6 +859,9 @@ class Popover {
       },
       popoverOpen: {
         animation: props.animation === true ? 'bounce 200ms' : props.animation,
+      },
+      background: {
+        background: props.overlay === true ? 'rgba(0,0,0,0.2)' : props.overlay,
       },
     }
   }

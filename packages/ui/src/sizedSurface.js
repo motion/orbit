@@ -2,7 +2,7 @@
 import React from 'react'
 import Surface from './surface'
 
-const LINE_HEIGHT = 30
+const LINE_HEIGHT = 32
 const adj = x => (x === true ? 1 : x)
 
 export default class SizedSurface extends React.Component {

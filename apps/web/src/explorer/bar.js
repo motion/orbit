@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import Router from '~/router'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
-import Input from './input'
+import ExplorerInput from './explorerInput'
 import Notifications from '~/notifications'
 
 @view.attach('layoutStore')
@@ -32,7 +32,7 @@ export default class ExplorerBar {
             disabled={Router.atBack}
             onClick={() => Router.back()}
           />
-          <Input
+          <ExplorerInput
             onOpen={() => (layoutStore.explorerOpen = true)}
             onClose={() => (layoutStore.explorerOpen = false)}
           />
@@ -49,7 +49,7 @@ export default class ExplorerBar {
           </UI.SlotFill.Slot>
           <UI.Popover
             openOnClick
-            closeOnClick
+            overlay={[0, 0, 0, 0.05]}
             closeOnEscape
             background
             width={480}

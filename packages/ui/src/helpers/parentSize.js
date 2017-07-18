@@ -10,8 +10,17 @@ export default Child => {
     }
 
     componentDidMount() {
-      Resize.listenTo(this.parent, this.measure)
-      this.measure(this.parent)
+      if (this.props.measure) {
+        Resize.listenTo(this.parent, this.measure)
+        this.measure(this.parent)
+      }
+    }
+
+    componentWillUnmount() {
+      if (this.props.measure) {
+        Resize.removeAllListeners(this.parent)
+        this.unmounted = true
+      }
     }
 
     measure = parent => {
@@ -31,11 +40,6 @@ export default Child => {
       return dimensions
     }
 
-    componentWillUnmount() {
-      Resize.removeAllListeners(this.parent)
-      this.unmounted = true
-    }
-
     setParent = ref => {
       this.parent = ref
     }
@@ -45,16 +49,22 @@ export default Child => {
       let parentSize
 
       if (dimensions) {
-        // allow re-measurement
-        parentSize = this.measure
-        // as well as current measurements
-        parentSize.height = this.state.dimensions.height
-        parentSize.width = this.state.dimensions.width
+        parentSize = {
+          measure: this.measure,
+          height: this.state.dimensions.height,
+          width: this.state.dimensions.width,
+        }
       }
 
+      const { measure, className, style, ...props } = this.props
+
       return (
-        <parent className={this.props.className} ref={this.setParent}>
-          <Child {...this.props} parentSize={parentSize} />
+        <parent
+          className={className}
+          style={{ ...style, height: '100%' }}
+          ref={this.setParent}
+        >
+          <Child {...props} parentSize={parentSize} />
         </parent>
       )
     }

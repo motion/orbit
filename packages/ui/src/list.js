@@ -67,7 +67,7 @@ class List {
       this.totalItems = totalItems
       // resize to fit
       if (nextProps.parentSize) {
-        nextProps.parentSize()
+        nextProps.parentSize.measure()
       }
     }
   }
@@ -260,34 +260,32 @@ class List {
     }
 
     return (
-      <Shortcuts name="all" handler={this.handleShortcuts}>
-        <Surface
-          tagName="list"
-          align="stretch"
+      <Surface
+        tagName="list"
+        align="stretch"
+        height={height}
+        width={width}
+        style={{
+          overflowY: scrollable ? 'scroll' : 'auto',
+          overflowX: 'visible',
+          ...style,
+        }}
+        borderRadius={borderRadius}
+        {...props}
+      >
+        <loading if={loading}>loading</loading>
+        <VirtualList
+          if={!loading && rowHeight}
           height={height}
           width={width}
-          style={{
-            overflowY: scrollable ? 'scroll' : 'auto',
-            overflowX: 'visible',
-            ...style,
-          }}
-          borderRadius={borderRadius}
-          {...props}
-        >
-          <loading if={loading}>loading</loading>
-          <VirtualList
-            if={!loading && rowHeight}
-            height={height}
-            width={width}
-            overscanRowCount={5}
-            rowCount={total}
-            rowHeight={rowHeight}
-            rowRenderer={({ index, key, style }) =>
-              chillen[index]({ key, style })}
-          />
-          {!rowHeight && chillen}
-        </Surface>
-      </Shortcuts>
+          overscanRowCount={5}
+          rowCount={total}
+          rowHeight={rowHeight}
+          rowRenderer={({ index, key, style }) =>
+            chillen[index]({ key, style })}
+        />
+        {!rowHeight && chillen}
+      </Surface>
     )
   }
 }

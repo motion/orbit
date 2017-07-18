@@ -55,6 +55,7 @@ export default class Sidebar {
               <barbg $shown={this.state.scrolling} />
               <UI.Dropdown
                 width={140}
+                noWrap
                 popoverProps={{
                   background: [50, 50, 50, 0.9],
                   openOnHover: false,
@@ -66,10 +67,10 @@ export default class Sidebar {
                 ]}
                 buttonProps={{ chromeless: true }}
               >
-                <UI.Title>Motion</UI.Title>
+                <UI.Input color="#fff" borderRadius={100} size={1} />
               </UI.Dropdown>
 
-              <end $$row>
+              <end $$row $$align="center">
                 <UI.Dropdown
                   popoverProps={{
                     background: [50, 50, 50, 0.9],
@@ -95,8 +96,8 @@ export default class Sidebar {
                       chromeless
                       paddingTop={2}
                       icon="circleadd"
-                      size={1.2}
-                      marginLeft={8}
+                      size={1.4}
+                      marginLeft={10}
                       marginRight={-10}
                       marginTop={-5}
                       marginBottom={-5}
@@ -110,6 +111,7 @@ export default class Sidebar {
                 </UI.Popover>
               </end>
             </bar>
+
             <Inbox hideTitle />
 
             {children}
@@ -133,6 +135,7 @@ export default class Sidebar {
     bar: {
       flexFlow: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       padding: [10, 20],
       margin: [-10, -20, 10, -30],
       position: 'sticky',

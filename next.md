@@ -1,7 +1,7 @@
-# fuzzy areas
-  - teams vs /team/pages/in/commander
-
 # next
+  - inbox pages
+  - keyboard movement
+  - avatar gem
   - doc type on create (document / inbox / summary)
     - doc is default if you keep typing it collapses type chooser
   - homepage is summary

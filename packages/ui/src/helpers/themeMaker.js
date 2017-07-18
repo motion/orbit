@@ -60,7 +60,9 @@ export default class ThemeMaker {
     }
 
     const str = x => `${x}`
-    const smallAmt = color => Math.max(0, 5 * Math.log(4 / color.lightness())) // goes 0 #fff to 0.3 #000
+    const MIN_ADJUST = 0.2
+    const smallAmt = color =>
+      Math.max(MIN_ADJUST, 5 * Math.log(20 / color.lightness())) // goes 0 #fff to 0.3 #000
     const largeAmt = color => smallAmt(color) * 1.25
     const adjust = (color, adjuster, opposite = false) => {
       const isLight = color.lightness() > 50

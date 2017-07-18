@@ -14,6 +14,7 @@ export type Props = {
   width?: number,
   items?: Array<string>,
   popoverProps?: Object,
+  noWrap?: boolean,
 }
 
 @view
@@ -34,6 +35,7 @@ export default class Dropdown {
     popoverProps,
     buttonProps,
     theme,
+    noWrap,
     ...props
   }: Props) {
     return (
@@ -49,19 +51,23 @@ export default class Dropdown {
           arrowSize={12}
           distance={4}
           target={
-            <Button
-              inline
-              iconAfter
-              icon={
-                <icon $arrow>
-                  <Arrow theme="light" size={8} color={color} />
-                </icon>
-              }
-              $$color={color}
-              {...buttonProps}
-            >
-              {children}
-            </Button>
+            <target>
+              {noWrap && children}
+              <Button
+                if={!noWrap}
+                inline
+                iconAfter
+                icon={
+                  <icon $arrow>
+                    <Arrow theme="light" size={8} color={color} />
+                  </icon>
+                }
+                $$color={color}
+                {...buttonProps}
+              >
+                {children}
+              </Button>
+            </target>
           }
           {...popoverProps}
         >

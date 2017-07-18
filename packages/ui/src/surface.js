@@ -327,6 +327,7 @@ export default class Surface implements ViewType {
       userSelect: 'none',
       height: '100%',
       flex: 1,
+      color: 'inherit',
     },
     icon: {
       pointerEvents: 'none',

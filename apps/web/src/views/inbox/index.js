@@ -37,92 +37,92 @@ export default class Inbox {
 
     return (
       <inbox>
-        <content>
-          <bar if={!hideTitle}>
-            <UI.Title size={1} stat={`${(store.threads || []).length} new`}>
-              Threads
-            </UI.Title>
-            <actions>
-              <UI.Popover
-                openOnClick
-                closeOnEscape
-                background="#fff"
-                width={480}
-                borderRadius={8}
-                elevation={2}
-                target={
-                  <UI.Button
-                    css={{
-                      position: 'absolute',
-                      top: 10,
-                      right: 10,
-                    }}
-                    icon="siadd"
-                    circular
-                    size={1.4}
-                    chromeless
-                  />
-                }
-              >
-                <Draft inboxStore={store} />
-              </UI.Popover>
-            </actions>
-          </bar>
-
-          <UI.List
-            background="transparent"
-            $list
-            itemProps={{ height: 'auto', padding: [10, 15, 10, 16] }}
-            items={store.threads || []}
-            getItem={(item, index) => {
-              const active = Router.path === item.url()
-              return {
-                primary: (
-                  <head $$row $$centered $$justify="space-between" $$flex>
-                    {item.title}
-
-                    <date $$row $$justify="flex-end">
-                      <UI.Badge if={index % 3} {...badgeProps} color="red">
-                        Enhancement
-                      </UI.Badge>
-                      <UI.Badge if={index % 2} {...badgeProps} color="yellow">
-                        Needs help
-                      </UI.Badge>
-                      <UI.Badge>+2</UI.Badge>
-                    </date>
-                  </head>
-                ),
-                secondary:
-                  item.status ||
-                  <status $$row $$marginLeft={-3} $$align="center">
-                    <UI.Button
-                      chromeless
-                      inline
-                      margin={[0, -2]}
-                      marginBottom={-1}
-                      padding={[0, 6]}
-                    >
-                      Nate
-                    </UI.Button>{' '}
-                    <UI.Text size={0.9}>replied {ago(item.createdAt)}</UI.Text>
-                  </status>,
-                children: (
-                  <UI.Text>
-                    {item.text ||
-                      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. '}
-                  </UI.Text>
-                ),
-                ellipse: false,
-                glow: false,
-                hoverBackground: !active && [255, 255, 255, 0.025],
-                //icon: item.icon,
-                onClick: () => Router.go(item.url()),
-                onMouseEnter: () => (store.highlightIndex = index),
-                active,
+        <bar if={!hideTitle}>
+          <UI.Title size={1} stat={`${(store.threads || []).length} new`}>
+            Threads
+          </UI.Title>
+          <actions>
+            <UI.Popover
+              openOnClick
+              closeOnEscape
+              background="#fff"
+              width={480}
+              borderRadius={8}
+              elevation={2}
+              target={
+                <UI.Button
+                  css={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                  }}
+                  icon="siadd"
+                  circular
+                  size={1.4}
+                  chromeless
+                />
               }
-            }}
-          />
-        </content>
+            >
+              <Draft inboxStore={store} />
+            </UI.Popover>
+          </actions>
+        </bar>
+
+        <UI.List
+          background="transparent"
+          $list
+          measure
+          rowHeight={120}
+          itemProps={{ height: 'auto', padding: [10, 15, 10, 16] }}
+          items={store.threads || []}
+          getItem={(item, index) => {
+            const active = Router.path === item.url()
+            return {
+              primary: (
+                <head $$row $$centered $$justify="space-between" $$flex>
+                  {item.title}
+
+                  <date $$row $$justify="flex-end">
+                    <UI.Badge if={index % 3} {...badgeProps} color="red">
+                      Enhancement
+                    </UI.Badge>
+                    <UI.Badge if={index % 2} {...badgeProps} color="yellow">
+                      Needs help
+                    </UI.Badge>
+                    <UI.Badge>+2</UI.Badge>
+                  </date>
+                </head>
+              ),
+              secondary:
+                item.status ||
+                <status $$row $$marginLeft={-3} $$align="center">
+                  <UI.Button
+                    chromeless
+                    inline
+                    margin={[0, -2]}
+                    marginBottom={-1}
+                    padding={[0, 6]}
+                  >
+                    Nate
+                  </UI.Button>{' '}
+                  <UI.Text size={0.9}>replied {ago(item.createdAt)}</UI.Text>
+                </status>,
+              children: (
+                <UI.Text>
+                  {item.text ||
+                    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. '}
+                </UI.Text>
+              ),
+              ellipse: false,
+              glow: false,
+              hoverBackground: !active && [255, 255, 255, 0.025],
+              //icon: item.icon,
+              onClick: () => Router.go(item.url()),
+              onMouseEnter: () => (store.highlightIndex = index),
+              active,
+            }
+          }}
+        />
       </inbox>
     )
   }
@@ -132,6 +132,7 @@ export default class Inbox {
       padding: 0,
       position: 'relative',
       width: '100%',
+      height: '100%',
     },
     create: {
       width: 400,

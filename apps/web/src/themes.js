@@ -5,14 +5,6 @@ const Theme = new ThemeMaker()
 
 const highlightColor = 'rgb(95, 82, 159)'
 
-const LIGHT = {
-  highlightColor,
-  background: '#fff',
-  color: '#555',
-  borderColor: '#eee',
-  buttonBackground: 'linear-gradient(#fff, #fefefe)',
-}
-
 const blank = {
   highlightColor: 'transparent',
   background: 'transparent',
@@ -22,6 +14,13 @@ const blank = {
 }
 
 const Themes = {
+  light: Theme.fromStyles({
+    highlightColor,
+    background: '#fff',
+    color: '#555',
+    borderColor: '#eee',
+    buttonBackground: 'linear-gradient(#fff, #fefefe)',
+  }),
   blank: {
     base: blank,
     hover: blank,
@@ -74,25 +73,6 @@ const Themes = {
     color: [255, 255, 255, 0.78],
     borderColor: [255, 255, 255, 0.3],
   }),
-  light: {
-    base: LIGHT,
-    hover: {
-      ...LIGHT,
-      color: color(LIGHT.color).lighten(0.5),
-    },
-    active: {
-      ...LIGHT,
-      background: color(LIGHT.background).darken(0.1),
-      color: '#000',
-      borderColor: '#fff',
-    },
-    focus: {
-      ...LIGHT,
-    },
-    highlight: {
-      color: LIGHT.highlightColor,
-    },
-  },
 }
 
 window.Themes = Themes

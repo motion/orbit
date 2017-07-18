@@ -21,13 +21,12 @@ export default class Message {
           </fake>
         </doc>
         <meta>
-          <blank $$flex />
-          <time>
-            {ago(doc.createdAt)}
-          </time>
-          <UI.Title size={0.9}>
+          <UI.Title size={0.9} color="#000">
             {fakeMsg.name}
           </UI.Title>
+          <UI.Text size={0.9} color="#999">
+            {ago(doc.createdAt)}
+          </UI.Text>
         </meta>
       </message>
     )
@@ -41,16 +40,14 @@ export default class Message {
       alignItems: 'flex-start',
     },
     embed: {},
-    meta: {},
+    meta: {
+      textAlign: 'right',
+    },
     reactions: {
       justifyContent: 'space-between',
       width: 100,
       opacity: 0.5,
       fontSize: 16,
-    },
-    time: {
-      color: '#666',
-      fontSize: 13,
     },
     status: {
       justifyContent: 'center',

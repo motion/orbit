@@ -136,7 +136,7 @@ export default class Sidebar {
       margin: [-10, -20, 10, -30],
       position: 'sticky',
       top: 0,
-      background: [50, 50, 50, 0.92],
+      background: [40, 40, 40, 0.92],
       zIndex: 10000,
       transform: { y: 0 },
     },

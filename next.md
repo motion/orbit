@@ -2,7 +2,6 @@
   - Assign to
   - Label as
   - Inboxes in the tree
-    - show inbox icon in commander
     - show inbox in left side when you visit it
     - router.go to its threads
   - Commander

@@ -240,8 +240,9 @@ class Popover {
   listenForClickAway = () => {
     this.on(window, 'click', e => {
       const { showPopover, isClickingTarget, keepOpenOnClickTarget } = this
-      const { closeOnClick } = this.curProps
-      if (!showPopover) {
+      const { open, closeOnClick } = this.curProps
+      // forced open or hidden
+      if (open || !showPopover) {
         return
       }
       // closeOnClickPopover

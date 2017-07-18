@@ -8,11 +8,7 @@ import * as Constants from '~/constants'
 export default class UserBar {
   render() {
     return (
-      <userbar $$draggable if={User.loggedIn}>
-        <div $$flex />
-        <UI.Text style={{ marginRight: 10 }} ellipse>
-          {User.name}
-        </UI.Text>
+      <userbar if={User.loggedIn}>
         <UI.Popover
           distance={10}
           elevation={2}
@@ -20,11 +16,12 @@ export default class UserBar {
           forgiveness={16}
           delay={150}
           target={
-            <UI.Button circular chromeless icon="circle-09" sizeIcon={1.7} />
+            <UI.Button chromeless icon="gear" iconAfter>
+              {User.name}
+            </UI.Button>
           }
           openOnHover
           closeOnClick
-          debug
         >
           <UI.List
             background="transparent"

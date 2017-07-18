@@ -147,7 +147,7 @@ export default class ListItem {
                 if={secondary}
                 $text
                 size={size * 0.85}
-                opacity={0.35}
+                opacity={0.75}
                 ellipse
               >
                 {secondary}
@@ -231,7 +231,7 @@ export default class ListItem {
     },
     children: {
       flex: 1,
-      opacity: 0.5,
+      // opacity: 0.5,
       lineHeight: '1.38rem',
       padding: [0, 8],
     },

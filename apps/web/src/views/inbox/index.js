@@ -96,7 +96,14 @@ export default class Inbox {
                   </date>
                 </head>
               ),
-              secondary: item.status || `Nate replied ${ago(item.createdAt)}`,
+              secondary:
+                item.status ||
+                <status $$row>
+                  <UI.Button chromeless inline margin={[0, -2]}>
+                    Nate
+                  </UI.Button>{' '}
+                  replied {ago(item.createdAt)}
+                </status>,
               children: (
                 <UI.Text>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit.

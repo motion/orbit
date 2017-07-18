@@ -20,17 +20,15 @@ export default class Notifications {
       <inner $$flex>
         <UI.Glint borderRadius={5} />
 
-        <heading $$draggable $$row css={{ padding: 10 }}>
-          <UI.Input circular flex={1} />
-          <div $$flex />
-          <UI.Segment
-            itemProps={{ borderRadius: 15, size: 0.9, sizePadding: 1.5 }}
-          >
+        <heading $$draggable $$row css={{ padding: [0, 10] }}>
+          <UI.Segment itemProps={{ borderRadius: 15, size: 0.9 }}>
             <UI.Button active icon="chat">
               Threads
             </UI.Button>
             <UI.Button icon="bell">Following</UI.Button>
           </UI.Segment>
+          <div $$flex />
+          <UserBar />
         </heading>
 
         <title
@@ -79,7 +77,6 @@ export default class Notifications {
         <rest $$flex>
           <Projects />
         </rest>
-        <UserBar />
       </inner>
     )
   }

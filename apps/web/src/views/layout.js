@@ -72,9 +72,8 @@ export default class Layout {
             </content>
           </LayoutWrap>
           <Errors />
-          <Sidebar hidden={!layoutStore.sidebar.active}>
-            <BottomBar />
-          </Sidebar>
+          <Sidebar hidden={!layoutStore.sidebar.active} />
+          <BottomBar />
         </app>
       )
     }
@@ -108,7 +107,7 @@ export default class Layout {
 
   static style = {
     root: {
-      background: Constants.IS_ELECTRON ? [60, 68, 75, 0.75] : [110, 110, 110],
+      background: Constants.IS_ELECTRON ? [40, 40, 45, 0.9] : [110, 110, 110],
       position: 'absolute',
       top: 0,
       right: 0,

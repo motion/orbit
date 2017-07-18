@@ -49,22 +49,12 @@ export default class Sidebar {
           <sidebar $$draggable ref={this.ref('sidebar').set}>
             <bar>
               <barbg $shown={this.state.scrolling} />
-              <UI.Dropdown
-                width={140}
-                noWrap
-                popoverProps={{
-                  background: [50, 50, 50, 0.9],
-                  openOnHover: false,
-                }}
-                items={[
-                  '🎩 Crypto Lords',
-                  'BaySide Mafia',
-                  'Fatwana Secret Society',
-                ]}
-                buttonProps={{ chromeless: true }}
-              >
-                <UI.Input color="#fff" borderRadius={100} size={1} />
-              </UI.Dropdown>
+              <UI.Input
+                color="#fff"
+                borderRadius={100}
+                size={1}
+                marginRight={30}
+              />
 
               <end $$row $$align="center">
                 <UI.Dropdown
@@ -74,7 +64,7 @@ export default class Sidebar {
                   }}
                   items={['All', 'Other']}
                 >
-                  Filter
+                  <span>Filter</span>
                 </UI.Dropdown>
 
                 <UI.Popover

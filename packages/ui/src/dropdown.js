@@ -38,6 +38,12 @@ export default class Dropdown {
     noWrap,
     ...props
   }: Props) {
+    const arrow = (
+      <icon $arrow>
+        <Arrow theme="light" size={8} color={color} />
+      </icon>
+    )
+
     return (
       <dropdown>
         <Popover
@@ -52,16 +58,15 @@ export default class Dropdown {
           distance={4}
           target={
             <target>
-              {noWrap && children}
+              {noWrap &&
+                <children>
+                  {children} {arrow}
+                </children>}
               <Button
                 if={!noWrap}
                 inline
                 iconAfter
-                icon={
-                  <icon $arrow>
-                    <Arrow theme="light" size={8} color={color} />
-                  </icon>
-                }
+                icon={arrow}
                 $$color={color}
                 {...buttonProps}
               >

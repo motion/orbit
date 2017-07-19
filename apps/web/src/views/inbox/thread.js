@@ -8,6 +8,7 @@ import timeAgo from 'time-ago'
 const { ago } = timeAgo()
 
 class ThreadStore {
+  thread = this.props.thread
   replies = this.props.thread.replies()
   showReply = false
 
@@ -85,11 +86,12 @@ export default class ThreadView {
         <actions css={{ padding: [0, 30, 20] }}>
           <action $$row>
             <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-              Assign To:&nbsp;&nbsp;
+              Assigned:&nbsp;
             </UI.Text>
             {assignTo.map(name =>
               <UI.Button
-                chromeless
+                active={store.thread.assignedTo === name}
+                inline
                 $button
                 onClick={() => store.assignTo(name)}
               >
@@ -100,10 +102,15 @@ export default class ThreadView {
           <space css={{ height: 10 }} />
           <action $$row>
             <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-              Label:&nbsp;&nbsp;
+              Labels:&nbsp;
             </UI.Text>
             {tags.map(name =>
-              <UI.Button inline $button onClick={() => store.addTag(name)}>
+              <UI.Button
+                active={thread.tags.indexOf(name) > -1}
+                inline
+                $button
+                onClick={() => store.addTag(name)}
+              >
                 {capitalize(name)}
               </UI.Button>
             )}

@@ -55,10 +55,6 @@ export default class DocPage {
           <inbox if={isInbox} css={{ padding: [0, 10] }}>
             <Inbox document={document} />
           </inbox>
-          <meta if={isThread}>
-            assigned to {document.assignedTo}
-            tags {JSON.stringify(document.tags)}
-          </meta>
           <DocumentView
             if={isDoc || isThread}
             $isDoc={isDoc}

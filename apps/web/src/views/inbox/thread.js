@@ -29,7 +29,7 @@ class ThreadStore {
   get items() {
     const { document } = this.props
     const all = [...(this.docs || []), ...(document.updates || [])]
-    return sortBy(all, 'createdAt')
+    return sortBy(all, i => +new Date(i.createdAt))
   }
 }
 
@@ -54,6 +54,7 @@ class Update {
   static style = {
     update: {
       width: '80%',
+      maxWidth: 400,
       padding: 8,
       fontSize: 14,
       alignSelf: 'center',
@@ -87,31 +88,35 @@ export default class ThreadView {
     return (
       <thread>
         <actions css={{ padding: [0, 30, 20] }}>
-          <item $$row>
+          <action $$row>
             <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
               Assign To:&nbsp;&nbsp;
             </UI.Text>
             {assignTo.map(name =>
-              <UI.Button onClick={() => store.assignTo(name)}>
+              <UI.Button
+                chromeless
+                $button
+                onClick={() => store.assignTo(name)}
+              >
                 {capitalize(name)}
               </UI.Button>
             )}
-          </item>
+          </action>
           <space css={{ height: 10 }} />
-          <item $$row>
+          <action $$row>
             <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
               Label:&nbsp;&nbsp;
             </UI.Text>
             {tags.map(name =>
-              <UI.Button onClick={() => store.addTag(name)}>
+              <UI.Button chromeless $button onClick={() => store.addTag(name)}>
                 {capitalize(name)}
               </UI.Button>
             )}
-          </item>
+          </action>
         </actions>
         {store.items.map(
           item =>
-            isDoc(item) ? <Message doc={doc} /> : <Update update={item} />
+            isDoc(item) ? <Message doc={item} /> : <Update update={item} />
         )}
 
         <reply>
@@ -133,12 +138,18 @@ export default class ThreadView {
     thread: {
       flex: 1,
     },
+    button: {
+      marginLeft: 10,
+    },
     reply: {
       borderTop: [1, '#eee'],
       padding: [20, 20],
     },
     draft: {
       margin: [0, -15],
+    },
+    action: {
+      alignItems: 'center',
     },
     container: {
       display: 'none',

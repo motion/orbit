@@ -49,6 +49,10 @@ export default class DocumentPage {
       <Page>
         <docpagecontent id="content">
           <Inbox if={isInbox} document={document} />
+          <meta if={isThread}>
+            assigned to {document.assignedTo}
+            tags {JSON.stringify(document.tags)}
+          </meta>
           <DocumentView
             if={isDoc || isThread}
             $isDoc={isDoc}

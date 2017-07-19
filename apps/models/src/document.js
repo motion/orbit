@@ -39,6 +39,14 @@ const DEFAULT_CONTENT = (title: string) => ({
 })
 
 export const methods = {
+  get tags() {
+    return this.updateType('tag').map(tag => tag.name)
+  },
+
+  get assignedTo() {
+    return last(this.updateType('assign').map(({ to }) => to))
+  },
+
   get titleShort() {
     return this.title.length > 20 ? this.title.slice(0, 18) + '...' : this.title
   },
@@ -238,14 +246,6 @@ export class DocumentModel extends Model {
   methods = methods
 
   root = () => this.collection.find(User.org.homeDocument).exec()
-
-  get tags() {
-    return this.updateType('tag').map(tag => tag.name)
-  }
-
-  get assignedTo() {
-    return last(this.updateType('assign').map(({ to }) => to))
-  }
 
   @query
   search = async (text: string) => {

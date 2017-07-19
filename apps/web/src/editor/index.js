@@ -50,6 +50,7 @@ export default class EditorView {
         onClick={editorStore.handleDocumentClick}
         onMouseUp={this.onDocumentMouseUp}
         $fullPage={!editorStore.inline}
+        $editable={!readOnly}
       >
         <Editor
           if={editorStore.state}
@@ -78,7 +79,9 @@ export default class EditorView {
       // or drag n drop wont go over sidebar
       flex: 1,
       maxWidth: '100%',
-      cursor: 'text',
+    },
+    editable: {
+      cursor: 'text !important',
     },
     editor: {
       color: '#444',

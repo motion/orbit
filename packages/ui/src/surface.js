@@ -407,15 +407,6 @@ export default class Surface implements ViewType {
           background.indexOf('radial-gradient') !== 0))
     if (colorBackground) {
       background = $(background)
-      const lightness = background.lightness()
-      const isDark = lightness < 40
-      const addContrast = (color, amt) =>
-        color[isDark ? 'lighten' : 'darken'](amt)
-      // hover
-      hoverBackground =
-        hoverBackground || props.hoverable
-          ? addContrast(background, lightness / 30)
-          : background
     }
 
     const borderColor = $(
@@ -426,6 +417,7 @@ export default class Surface implements ViewType {
         ? color.lighten(0.2)
         : props.hoverColor || theme.hover.color || props.color
     )
+
     const hoverBorderColor =
       props.hoverBorderColor ||
       (props.borderColor && $(props.borderColor).lighten(0.2)) ||

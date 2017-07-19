@@ -35,4 +35,5 @@ if (module && module.hot) {
   module.hot.accept('./views/layout', () => {
     log('accepted layout')
   })
+  module.hot.accept('./themes', render)
 }

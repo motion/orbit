@@ -1,5 +1,5 @@
 // @flow
-import { ThemeMaker, color } from '@mcro/ui'
+import { ThemeMaker } from '@mcro/ui'
 
 const Theme = new ThemeMaker()
 

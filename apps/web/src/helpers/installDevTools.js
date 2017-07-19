@@ -13,7 +13,7 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
 import * as Black from '@mcro/black'
-import { color } from '@mcro/gloss'
+import { color } from '@mcro/ui'
 
 // Mobx.useStrict(true)
 

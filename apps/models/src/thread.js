@@ -1,5 +1,6 @@
-import { Model, query, bool, str } from '@mcro/black'
+import { Model, array, query, bool, str, object } from '@mcro/black'
 import User from './user'
+import { last } from 'lodash'
 
 class Thread extends Model {
   static props = {
@@ -8,6 +9,7 @@ class Thread extends Model {
     draft: bool,
     authorId: str,
     timestamps: true,
+    updates: array.optional.items(object),
   }
 
   static defaultProps = () => ({
@@ -30,12 +32,32 @@ class Thread extends Model {
     url() {
       return `/d/${this.docId.replace(':', '-')}`
     },
+    updateType(type) {
+      return this.updates.filter(update => update.type === type)
+    },
+    addUpdate(update) {
+      update.createdAt = +Date.now()
+      this.updates = [...this.updates, update]
+    },
+  }
+
+  get tags() {
+    return this.updateType('tag').map(tag => tag.name)
+  }
+
+  get assignedTo() {
+    return last(this.updateType('assign').map(({ to }) => to))
   }
 
   @query
   all = () => {
     return this.collection.find
   }
+
+  @query
+  get = _id => {
+    return this.collection.findOne({ _id })
+  };
 
   @query
   forDoc = docId =>

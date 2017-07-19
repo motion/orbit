@@ -3,7 +3,7 @@ import { Model, query, str, object, array, bool } from '@mcro/black'
 import Image from './image'
 import User from './user'
 import generateName from 'sillyname'
-import { some, includes, without } from 'lodash'
+import { some, last, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 
@@ -53,6 +53,13 @@ export const methods = {
   setDefaultContent({ title }) {
     this.content = DEFAULT_CONTENT(title)
     this.title = title
+  },
+  updateType(type) {
+    return this.updates.filter(update => update.type === type)
+  },
+  addUpdate(update) {
+    update.createdAt = +Date.now()
+    this.updates = [...this.updates, update]
   },
   get hasStar() {
     return this.starredBy.find(id => id === User.id)
@@ -143,6 +150,7 @@ export type DocumentType = typeof methods & {
   attachments?: Array<string>,
   starredBy: Array<string>,
   childrenSort?: Array<string>,
+  updates: Array<object>,
   private: boolean,
   slug: str,
   draft?: boolean,
@@ -162,6 +170,7 @@ export class DocumentModel extends Model {
     color: str,
     orgId: str.optional,
     members: array.items(str),
+    updates: array.items(object),
     hashtags: array.items(str),
     parentId: str.optional,
     parentIds: array.items(str),
@@ -182,6 +191,7 @@ export class DocumentModel extends Model {
       authorId: User.user ? User.authorId : 'anon',
       hashtags: [],
       starredBy: [],
+      updates: [],
       members: [],
       attachments: [],
       childrenSort: [],
@@ -228,6 +238,14 @@ export class DocumentModel extends Model {
   methods = methods
 
   root = () => this.collection.find(User.org.homeDocument).exec()
+
+  get tags() {
+    return this.updateType('tag').map(tag => tag.name)
+  }
+
+  get assignedTo() {
+    return last(this.updateType('assign').map(({ to }) => to))
+  }
 
   @query
   search = async (text: string) => {

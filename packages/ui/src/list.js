@@ -75,35 +75,40 @@ class List {
   getTotalItems = props =>
     props.items ? props.items.length : Children.count(props.children)
 
+  actions = {
+    down: () => {
+      this.highlightItem(
+        cur => Math.min(this.totalItems, cur + 1),
+        this.onSelect
+      )
+    },
+    cmdEnter: () => {
+      this.props.onCmdEnter && this.props.onCmdEnter(this.selected)
+    },
+    up: () => {
+      this.highlightItem(cur => Math.max(0, cur - 1), this.onSelect)
+    },
+    enter: () => {
+      this.highlightItem(() => this.state.selected, this.onSelect)
+    },
+  }
+
   handleShortcuts = (action, event) => {
-    console.log('key', action, this.state.selected)
     if (this.state.selected === null) {
       return
     }
-    switch (action) {
-      case 'down':
-        this.highlightItem(
-          cur => Math.min(this.totalItems, cur + 1),
-          this.onSelect
-        )
-        event.preventDefault()
-        break
-      case 'cmdEnter':
-        this.props.onCmdEnter && this.props.onCmdEnter(this.getSelected())
-        break
-      case 'up':
-        this.highlightItem(cur => Math.max(0, cur - 1), this.onSelect)
-        event.preventDefault()
-        break
-      case 'enter':
-        this.highlightItem(() => this.state.selected, this.onSelect)
-        event.preventDefault()
-        break
+    if (this.actions[action]) {
+      console.log('List.action', action)
+      event.preventDefault()
+      event.stopPropagation()
+      this.actions[action](event)
     }
   }
 
   onSelect = () => {
-    this.props.onSelect(this.getSelected(), this.state.selected)
+    if (this.props.onSelect) {
+      this.props.onSelect(this.selected, this.state.selected)
+    }
   }
 
   totalItems = () => {
@@ -120,12 +125,12 @@ class List {
   highlightItem = (setter: () => number | null, cb: Function) => {
     const selected = setter(this.state.selected)
     this.setState({ selected }, () => {
-      this.props.onHighlight(this.getSelected(), selected)
+      this.props.onHighlight(this.selected, selected)
       if (cb) cb()
     })
   }
 
-  getSelected = () => {
+  get selected() {
     const { selected } = this.state
     if (selected === null) {
       return null

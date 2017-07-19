@@ -53,7 +53,14 @@ class DraftStore {
 export default class Draft {
   editor = null
 
-  render({ editorRef, store, isReply, store: { draft }, ...props }) {
+  render({
+    editorRef,
+    placeholder,
+    store,
+    isReply,
+    store: { draft },
+    ...props
+  }) {
     return (
       <Shortcuts name="all" handler={store.onShortcut}>
         <UI.Theme name="light">
@@ -66,6 +73,7 @@ export default class Draft {
                 inline
                 noTitle={isReply}
                 editorRef={editorRef}
+                placeholder={placeholder}
               />
             </draftdoc>
             <actions if={draft} $$row>

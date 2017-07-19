@@ -42,7 +42,7 @@ export default class EditorView {
     this.props.editorStore.selection.mouseUpEvent = event
   }
 
-  render({ readOnly, editorStore }: Props) {
+  render({ placeholder, readOnly, editorStore }: Props) {
     const { spec } = editorStore
 
     return (
@@ -67,6 +67,7 @@ export default class EditorView {
           onFocus={editorStore.onFocus}
           onBlur={editorStore.onBlur}
           onKeyDown={editorStore.onKeyDown}
+          placeholder={placeholder}
         />
         <SelectBar editorStore={editorStore} />
       </document>

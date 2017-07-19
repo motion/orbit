@@ -10,7 +10,6 @@ const { ago } = timeAgo()
 class ThreadStore {
   thread = this.props.thread
   replies = this.props.thread.replies()
-  showReply = false
 
   assignTo = name => {
     const { thread } = this.props
@@ -122,14 +121,13 @@ export default class ThreadView {
         )}
 
         <reply>
-          <UI.Button
-            if={!store.showReply}
-            onClick={store.ref('showReply').toggle}
-          >
-            Add reply
-          </UI.Button>
-          <container $show={store.showReply}>
-            <Draft $draft isReply document={thread} />
+          <container>
+            <Draft
+              $draft
+              isReply
+              document={thread}
+              placeholder="Add your reply..."
+            />
           </container>
         </reply>
       </thread>
@@ -154,12 +152,8 @@ export default class ThreadView {
       alignItems: 'center',
     },
     container: {
-      display: 'none',
       overflow: 'hidden',
       transition: 'all ease-in 150ms',
-    },
-    show: {
-      display: 'flex',
     },
   }
 }

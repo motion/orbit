@@ -13,6 +13,7 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import Immutable from 'immutable'
 import * as Black from '@mcro/black'
+import { color } from '@mcro/gloss'
 
 // Mobx.useStrict(true)
 
@@ -32,6 +33,7 @@ window.PouchDB = PouchDB
 window.Constants = Constants
 window._ = _
 window.log = Black.log
+window.$ = color
 window.Black = Black
 
 // TODO check if this is needed and fix the global thing if so

@@ -35,6 +35,7 @@ export default class DocumentView {
     docStore,
     noTitle,
     editorRef,
+    placeholder,
     ...props
   }: Props) {
     if (!docStore.document) {
@@ -53,6 +54,7 @@ export default class DocumentView {
           inline={inline}
           getRef={this.onEditor}
           noTitle={noTitle}
+          placeholder={placeholder}
           {...editorProps}
         />
       </docview>

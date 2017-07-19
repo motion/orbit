@@ -246,7 +246,7 @@ class ExplorerChildrenStore {
 }
 
 const SortableChildren = SortableContainer(({ items, store }) =>
-  <docs $$undraggable>
+  <docs style={{ width: 200 }} $$undraggable>
     {items.map(doc => {
       if (!doc) {
         return null

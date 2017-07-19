@@ -101,17 +101,10 @@ export default class Inbox {
               ),
               secondary:
                 item.status ||
-                <status $$row $$marginLeft={-3} $$align="center">
-                  <UI.Button
-                    chromeless
-                    inline
-                    margin={[0, -2]}
-                    marginBottom={-1}
-                    padding={[0, 6]}
-                  >
-                    Nate
-                  </UI.Button>{' '}
-                  <UI.Text size={0.9}>replied {ago(item.createdAt)}</UI.Text>
+                <status $$row $$align="center">
+                  <UI.Text size={0.9}>
+                    <strong>Nate</strong> replied {ago(item.createdAt)}
+                  </UI.Text>
                 </status>,
               children: (
                 <UI.Text>
@@ -158,9 +151,6 @@ export default class Inbox {
     },
     draftSubmit: {
       width: 60,
-    },
-    list: {
-      margin: [0, -20],
     },
     title: {
       fontWeight: 'bold',

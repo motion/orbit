@@ -86,7 +86,6 @@ export default class Sidebar {
                       icon="circleadd"
                       size={1.4}
                       marginLeft={10}
-                      marginRight={-10}
                       marginTop={-5}
                       marginBottom={-5}
                     />
@@ -119,14 +118,14 @@ export default class Sidebar {
       right: 0,
       bottom: 0,
       left: 0,
-      padding: [0, 20],
+      // padding: [0, 20],
     },
     bar: {
       flexFlow: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: [10, 20],
-      margin: [-10, -20, 10, -30],
+      padding: 10,
+      margin: [-10, 0, 10, 0],
       position: 'sticky',
       top: 0,
       background: [40, 40, 40, 0.92],

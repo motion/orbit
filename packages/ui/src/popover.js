@@ -728,7 +728,7 @@ class Popover {
             <background
               if={overlay}
               ref={this.overlayRef}
-              $overlayShown={showPopover}
+              $overlayShown={showPopover && !closing}
               onClick={this.handleOverlayClick}
             />
             <popover
@@ -813,7 +813,7 @@ class Popover {
       background: 'transparent',
       pointerEvents: 'none',
       opacity: 0,
-      transition: 'all ease-in 300ms',
+      transition: 'all ease-in 100ms',
       zIndex: -2,
     },
     overlayShown: {

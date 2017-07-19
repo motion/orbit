@@ -70,6 +70,7 @@ export default class Sidebar {
                 <UI.Popover
                   openOnClick
                   closeOnEsc
+                  overlay
                   background="#fff"
                   width={540}
                   borderRadius={8}

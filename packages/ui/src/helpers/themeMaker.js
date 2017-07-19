@@ -62,7 +62,7 @@ export default class ThemeMaker {
     const str = x => `${x}`
     const MIN_ADJUST = 0.1
     const smallAmt = color =>
-      Math.min(0.5, Math.max(MIN_ADJUST, 5 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
+      Math.min(0.5, Math.max(MIN_ADJUST, 2 * Math.log(20 / color.lightness()))) // goes 0 #fff to 0.3 #000
     const largeAmt = color => smallAmt(color) * 1.25
     const adjust = (color, adjuster, opposite = false) => {
       const isLight = color.lightness() > 50
@@ -82,8 +82,8 @@ export default class ThemeMaker {
       },
       active: {
         ...obj,
-        background: adjust(obj.background, largeAmt, true),
-        highlightColor: adjust(obj.highlightColor, largeAmt),
+        background: adjust(obj.highlightColor, largeAmt),
+        highlightColor: adjust(obj.background, largeAmt, true),
         color: adjust(obj.color, largeAmt),
         ...rest.active,
       },

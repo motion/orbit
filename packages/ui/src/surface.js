@@ -395,7 +395,10 @@ export default class Surface implements ViewType {
       props.background === true
         ? theme.base.background
         : props.background || theme.base.background
-    let hoverBackground = props.hoverBackground || theme.hover.background
+    let hoverBackground =
+      props.hoverBackground || props.active
+        ? theme.active.background
+        : theme.hover.background
     let background = props.active
       ? props.activeBackground || theme.active.background || baseBackground
       : baseBackground

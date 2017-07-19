@@ -69,25 +69,6 @@ export default class DocPage {
             showChildren
             isPrimaryDocument
           />
-          <actions if={isThread} css={{ padding: [0, 30, 20] }}>
-            <item $$row>
-              <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-                Assign To:&nbsp;&nbsp;
-              </UI.Text>
-              <UI.Button inline>Nick</UI.Button>
-              &nbsp;&nbsp;&nbsp;
-              <UI.Button inline>Nate</UI.Button>
-            </item>
-            <space css={{ height: 10 }} />
-            <item $$row>
-              <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-                Label:&nbsp;&nbsp;
-              </UI.Text>
-              <UI.Button inline>Enhancement</UI.Button>
-              &nbsp;&nbsp;&nbsp;
-              <UI.Button inline>New issue</UI.Button>
-            </item>
-          </actions>
           <Thread if={isThread} thread={document} />
         </docpagecontent>
 

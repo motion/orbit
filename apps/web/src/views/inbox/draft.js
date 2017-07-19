@@ -1,21 +1,25 @@
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
-import { Thread } from '@mcro/models'
+import { Reply, Thread } from '@mcro/models'
 
 class DraftStore {
   draftVersion = 1
   @watch
   draft = () =>
     this.draftVersion &&
-    Thread.createTemporary({
+    this.replyModel.createTemporary({
       title: 'Draft',
-      parentId: this.document.parentId,
+      parentId: (this.document && this.document.parentId) || undefined,
       draft: true,
     })
 
   get document() {
-    return this.props.document || {}
+    return this.props.document
+  }
+
+  get replyModel() {
+    return this.document ? Reply : Thread
   }
 
   send = async () => {

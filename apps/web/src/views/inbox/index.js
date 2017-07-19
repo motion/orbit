@@ -123,11 +123,10 @@ export default class Inbox {
 
   static style = {
     inbox: {
-      padding: 0,
+      padding: [0, 20],
       position: 'relative',
       width: '100%',
       height: '100%',
-      padding: 20,
     },
     content: {
       margin: [0, -20],

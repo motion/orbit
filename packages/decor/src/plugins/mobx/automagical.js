@@ -89,8 +89,13 @@ function mobxifyPromise(obj, method, val) {
   })
 }
 
-function mobxifyRxObservable(obj, method) {
-  extendShallowObservable(obj, { [method]: fromStream(obj[method]) })
+// TODO use rxdb api
+function isRxDbQuery(query) {
+  return query && query.mquery
+}
+
+function mobxifyRxObservable(obj, method, val) {
+  extendShallowObservable(obj, { [method]: fromStream(val || obj[method]) })
   obj.subscriptions.add(observable)
 }
 
@@ -161,11 +166,17 @@ function mobxify(target: Object, method: string, descriptors: Object) {
     mobxifyRxObservable(target, method)
     return
   }
-  // if (value && value.$ && isRxObservable(value.$)) {
-  //   target[method] = target[method].$
-  //   mobxifyRxObservable(target, method)
-  //   return
-  // }
+  if (isRxDbQuery(value)) {
+    const watchedMethod = `__${method}_stream`
+    target[watchedMethod] = target[method].$
+    mobxifyRxObservable(target, watchedMethod)
+    Object.defineProperty(target, method, {
+      get() {
+        return target[watchedMethod].current
+      },
+    })
+    return
+  }
   if (isFunction(value)) {
     // @action
     const targetMethod = target[method].bind(target)

@@ -8,21 +8,23 @@ import timeAgo from 'time-ago'
 const { ago } = timeAgo()
 
 class ThreadStore {
-  // replies = this.props.thread.replies()
+  replies = this.props.thread.replies()
   showReply = false
 
   assignTo = name => {
     const { thread } = this.props
-
     thread.addUpdate({ type: 'assign', to: name })
     thread.save()
   }
 
   addTag = name => {
     const { thread } = this.props
-
     thread.addUpdate({ type: 'tag', name })
     thread.save()
+  }
+
+  hasTag = name => {
+    return false
   }
 
   get items() {
@@ -52,18 +54,12 @@ class Update {
 
   static style = {
     update: {
-      width: '80%',
-      maxWidth: 400,
-      padding: 8,
-      fontSize: 14,
-      alignSelf: 'center',
-      borderRadius: 5,
-      marginTop: 5,
-      marginBottom: 5,
-      paddingRight: 20,
-      paddingLeft: 20,
-      opacity: 0.7,
+      borderTop: [1, 'dotted', '#eee'],
       justifyContent: 'space-between',
+      padding: [10, 25],
+      fontSize: 14,
+      borderRadius: 5,
+      opacity: 0.7,
     },
     highlight: {
       fontWeight: 600,
@@ -80,8 +76,6 @@ class Update {
 })
 export default class ThreadView {
   render({ store, thread }) {
-    const { replies } = store
-    const sorted = sortBy(replies || [], 'createdAt')
     const isDoc = item => !!item.content
     const tags = ['Enhancement', 'New Issue', 'Bug']
     const assignTo = ['Nick', 'Nate', 'Sam']
@@ -109,7 +103,7 @@ export default class ThreadView {
               Label:&nbsp;&nbsp;
             </UI.Text>
             {tags.map(name =>
-              <UI.Button chromeless $button onClick={() => store.addTag(name)}>
+              <UI.Button inline $button onClick={() => store.addTag(name)}>
                 {capitalize(name)}
               </UI.Button>
             )}

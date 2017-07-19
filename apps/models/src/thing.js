@@ -164,14 +164,18 @@ export class Thing extends Model {
       },
     ],
   })
-  static getTitle = doc => {
+  static getTitle = document => {
     // set title to first content node
     try {
-      return document.content.document.nodes[0].nodes[0].text || document.title
+      if (document.content) {
+        return (
+          document.content.document.nodes[0].nodes[0].text || document.title
+        )
+      }
     } catch (e) {
       console.log('error extracting title', e, document.content)
-      return doc.title || 'null'
     }
+    return document.title || 'empty'
   }
 
   static props = {

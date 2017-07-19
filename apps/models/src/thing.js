@@ -6,24 +6,6 @@ import { some, last, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 
-const DEFAULT_CONTENT = (title: string) => ({
-  nodes: [
-    {
-      kind: 'block',
-      type: 'title',
-      data: {
-        level: 1,
-      },
-      nodes: [
-        {
-          kind: 'text',
-          text: title || 'Hello World',
-        },
-      ],
-    },
-  ],
-})
-
 const toSlug = (str: string) =>
   `${str}`.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
 const toID = (str: string) => `${str}`.replace(/-/g, ':').toLowerCase()
@@ -165,7 +147,23 @@ export type ThingType = typeof methods & {
 }
 
 export class Thing extends Model {
-  static getContent = DEFAULT_CONTENT
+  static getContent = ({ title }) => ({
+    nodes: [
+      {
+        kind: 'block',
+        type: 'title',
+        data: {
+          level: 1,
+        },
+        nodes: [
+          {
+            kind: 'text',
+            text: title || 'Hello World',
+          },
+        ],
+      },
+    ],
+  })
   static getTitle = doc => {
     // set title to first content node
     try {

@@ -61,6 +61,7 @@ class List {
   }
 
   componentWillReceiveProps = nextProps => {
+    this.lastDidReceivePropsDate = Date.now()
     const totalItems = this.getTotalItems(nextProps)
     if (totalItems !== this.totalItems) {
       this.totalItems = totalItems
@@ -99,7 +100,6 @@ class List {
 
   // wrap weird signature
   select = (selector: number | Function) => {
-    console.log('selecting', selector)
     if (typeof selector === 'number') {
       this.highlightItem(() => selector)
     } else if (typeof selector === 'function') {
@@ -109,7 +109,7 @@ class List {
 
   highlightItem = (setter: () => number | null, cb: Function) => {
     const selected = setter(this.state.selected)
-    log('set selected')
+    this.lastSelectionDate = Date.now()
     this.setState({ selected }, () => {
       this.props.onSelect(this.selected, selected)
       if (cb) cb()
@@ -128,6 +128,10 @@ class List {
 
   clearSelected = () => {
     this.highlightItem(() => null)
+  }
+
+  get showInternalSelection() {
+    return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
   render({
@@ -198,9 +202,9 @@ class List {
             ogClick.call(this, e)
           }
         }
-        if (index === this.state.selected) log('selected', index)
-        props.highlight = index === this.state.selected || false
-        //(this.props.isSelected && this.props.isSelected(items[index]))
+        props.highlight = this.showInternalSelection
+          ? index === this.state.selected
+          : this.props.isSelected && this.props.isSelected(items[index])
       }
       return props
     }

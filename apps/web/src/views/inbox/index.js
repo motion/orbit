@@ -71,8 +71,9 @@ export default class Inbox {
               overflow: 'hidden',
             }}
             items={store.threads || []}
-            onSelect={item => Router.go(item.url())}
-            isSelected={item => false && item.url() === Router.path}
+            // setTimeout speeds up navigation
+            onSelect={item => this.setTimeout(() => Router.go(item.url()))}
+            isSelected={item => item.url() === Router.path}
             getItem={(item, index) => {
               return {
                 glow: false,

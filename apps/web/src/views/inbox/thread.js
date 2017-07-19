@@ -9,7 +9,7 @@ import Draft from './draft'
 const { ago } = timeAgo()
 
 class ThreadStore {
-  docs = Document.forThread(this.props.document.threadId)
+  docs = Document.replies(this.props.document)
   showReply = false
 
   assignTo = name => {

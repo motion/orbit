@@ -9,7 +9,7 @@ const { ago } = timeAgo()
 
 class InboxStore {
   document = this.props.document
-  threads = this.document && this.document.getChildren()
+  threads = Thread.find()
   highlightIndex = 0
   activeItem = null
 }

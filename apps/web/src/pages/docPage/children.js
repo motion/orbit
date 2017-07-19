@@ -207,8 +207,7 @@ class ExplorerChildrenStore {
           this.docs.map(async doc => {
             return {
               id: doc.id,
-              children: [],
-              //doc.getChildren && (await doc.getChildren().toPromise()),
+              children: doc.getChildren && (await doc.getChildren()),
             }
           })
         )

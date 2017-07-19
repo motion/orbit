@@ -10,17 +10,13 @@ class ThreadDraftStore {
     this.draftVersion &&
     Document.createTemporary({
       title: 'Draft',
-      threadId: this.threadId,
+      parentId: this.document.parentId,
       draft: true,
       type: 'thread',
     })
 
   get document() {
     return this.props.document || {}
-  }
-
-  get threadId() {
-    return this.document && this.document.id
   }
 
   send = async () => {

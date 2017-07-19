@@ -98,35 +98,20 @@ export const methods = {
     }
     return crumbs
   },
-  getChildren({ maxDepth = 1, max = 100, ...conditions } = {}) {
-    let limit = max
-    const next = (parentId, depth = 0) => {
-      log('next up yo', {
-        parentId,
-        ...conditions,
-      })
-      return this.collection
-        .find({
-          parentId,
-          ...conditions,
-        })
-        .limit(limit)
-        .$.flatMap(children => {
-          log('mapping over', children)
-          if (depth === maxDepth) {
-            return children
-          }
-
-          return children.map(child => {
-            return next(child.id, depth + 1).map(child => {
-              child.children = child.children || []
-              child.children.push(child)
-              return child
-            })
-          })
-        })
+  async getChildren({ max = 30 } = {}) {
+    const children = await this.collection
+      .find({ parentId: this._id })
+      .limit(max / 2)
+      .exec()
+    if (children.length < max) {
+      for (const child of children) {
+        child.children = await this.collection
+          .find({ parentId: child._id })
+          .limit(max / 3)
+          .exec()
+      }
     }
-    return next(this._id)
+    return children
   },
   togglePrivate() {
     this.private = !this.private
@@ -303,7 +288,7 @@ export class Document extends Model {
     return this.collection
       .find({
         draft: { $ne: true },
-        threadId: { $exists: false },
+        type: { $ne: 'reply' },
       })
       .where('parentId')
       .eq(id)
@@ -338,12 +323,8 @@ export class Document extends Model {
   }
 
   @query
-  forThread = (id: string) =>
-    this.collection.find({ draft: false, threadId: { $eq: id } })
-
-  @query
-  threadDraft = (id: string) =>
-    this.collection.findOne({ draft: true, threadId: { $eq: id } })
+  replies = (document: Document) =>
+    this.collection.find({ draft: false, parentId: document.id, type: 'reply' })
 
   @query
   get = (query: Object | string) => {

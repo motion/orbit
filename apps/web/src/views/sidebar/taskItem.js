@@ -1,26 +1,8 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '@mcro/black'
-import { uniqBy, sortBy } from 'lodash'
-import {
-  Drawer,
-  Text,
-  Pane,
-  ContextMenu,
-  List,
-  Icon,
-  Link,
-  Input,
-  Segment,
-  Button,
-  SlotFill,
-} from '@mcro/ui'
-import { User, Place } from '@mcro/models'
-import Team from './team'
+import { view } from '@mcro/black'
+import * as UI from '@mcro/ui'
 import Router from '~/router'
-import randomcolor from 'randomcolor'
-import SidebarStore from './store'
-import { IN_TRAY, TRAY_WIDTH } from '~/constants'
 import timeAgo from 'time-ago'
 import DragHandle from './dragHandle'
 
@@ -52,13 +34,13 @@ export default class Item {
         $inProgress={inProgress}
         $notInProgress={!inProgress}
       >
-        <Button
+        <UI.Button
           if={inProgress}
           $startIcon
           onClick={onStart}
           icon="ui-1_check-curve"
         />
-        <Button
+        <UI.Button
           chromeless
           if={!inProgress}
           $startIcon
@@ -66,24 +48,28 @@ export default class Item {
           icon="media-1_button-play"
         />
         <content>
-          <Text $text {...props}>
+          <UI.Text $text {...props}>
             <div className={className}>
-              <p><span>{task.text}</span></p>
+              <p>
+                <span>
+                  {task.text}
+                </span>
+              </p>
             </div>
-          </Text>
+          </UI.Text>
           <bottom if={false} $$row>
             <tags>
               {time} · Nate
             </tags>
           </bottom>
         </content>
-        <Button
+        <UI.Button
           $button
           $activeDoc={window.location.pathname.indexOf(task.doc.url()) === 0}
           onMouseDown={() => Router.go(task.doc.url())}
         >
           {task.doc.title}
-        </Button>
+        </UI.Button>
 
         <DragHandle if={!noDrag} />
       </item>
@@ -115,7 +101,7 @@ export default class Item {
       height: 10,
       borderRadius: 10,
       margin: 10,
-      border: `1px solid #24cc24`,
+      border: '1px solid #24cc24',
     },
     inProgress: {
       borderTop: '1px solid #ddd',
@@ -127,7 +113,7 @@ export default class Item {
       borderTop: '1px solid #ddd',
     },
     tags: {
-      color: `rgba(0, 0, 0, 0.6)`,
+      color: 'rgba(0, 0, 0, 0.6)',
       fontSize: 12,
     },
     text: {
@@ -141,8 +127,6 @@ export default class Item {
       flexFlow: 'row',
       padding: [7, 5],
       background: '#fefefe',
-      justifyContent: 'center',
-      alignItems: 'center',
       borderBottom: '1px solid #ddd',
       fontSize: 14,
       alignItems: 'center',

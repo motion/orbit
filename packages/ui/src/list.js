@@ -1,6 +1,6 @@
 // @flow
 import React, { Children, cloneElement } from 'react'
-import { view, Shortcuts } from '@mcro/black'
+import { view, HotKeys } from '@mcro/black'
 import FakeText from './fake/fakeText'
 import { range } from 'lodash'
 import ListItem from './listItem'
@@ -75,34 +75,25 @@ class List {
   getTotalItems = props =>
     props.items ? props.items.length : Children.count(props.children)
 
+  isSelected = fn => (...args) =>
+    typeof this.state.selected === 'number' ? fn(...args) : null
+
   actions = {
-    down: () => {
+    down: this.isSelected(() => {
       this.highlightItem(
         cur => Math.min(this.totalItems, cur + 1),
         this.onSelect
       )
-    },
-    cmdEnter: () => {
+    }),
+    cmdEnter: this.isSelected(() => {
       this.props.onCmdEnter && this.props.onCmdEnter(this.selected)
-    },
-    up: () => {
+    }),
+    up: this.isSelected(() => {
       this.highlightItem(cur => Math.max(0, cur - 1), this.onSelect)
-    },
-    enter: () => {
+    }),
+    enter: this.isSelected(() => {
       this.highlightItem(() => this.state.selected, this.onSelect)
-    },
-  }
-
-  handleShortcuts = (action, event) => {
-    if (this.state.selected === null) {
-      return
-    }
-    if (this.actions[action]) {
-      console.log('List.action', action)
-      event.preventDefault()
-      event.stopPropagation()
-      this.actions[action](event)
-    }
+    }),
   }
 
   onSelect = () => {
@@ -269,7 +260,7 @@ class List {
     }
 
     return (
-      <Shortcuts name="all" handler={this.handleShortcuts}>
+      <HotKeys handlers={this.actions}>
         <Surface
           tagName="list"
           align="stretch"
@@ -296,7 +287,7 @@ class List {
           />
           {!virtualized && chillen}
         </Surface>
-      </Shortcuts>
+      </HotKeys>
     )
   }
 }

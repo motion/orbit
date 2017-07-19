@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import * as Constants from '~/constants'
-import { view, Shortcuts } from '@mcro/black'
+import { view, HotKeys } from '@mcro/black'
 import { object } from 'prop-types'
 import * as UI from '@mcro/ui'
 import { IN_TRAY } from '~/constants'
@@ -32,16 +32,8 @@ type Props = {
 export default class Layout {
   props: Props
 
-  static childContextTypes = {
-    shortcuts: object,
-  }
-
   state = {
     error: null,
-  }
-
-  getChildContext() {
-    return { shortcuts: this.props.explorerStore.keyManager }
   }
 
   componentDidMount() {
@@ -79,29 +71,29 @@ export default class Layout {
     }
 
     return (
-      <root>
-        <UI.ContextMenu
-          inactive
-          options={[
-            {
-              title: 'Delete',
-              onSelect: place => place.delete(),
-            },
-          ]}
-        >
-          <UI.Theme name="light">
-            <UI.SlotFill.Provider>
-              <Shortcuts
-                $layout
-                name="all"
-                handler={explorerStore.handleShortcuts}
-              >
-                {IN_TRAY ? renderTray() : renderApp()}
-              </Shortcuts>
-            </UI.SlotFill.Provider>
-          </UI.Theme>
-        </UI.ContextMenu>
-      </root>
+      <HotKeys keyMap={explorerStore.shortcuts}>
+        <HotKeys attach={window} focused handlers={explorerStore.actions}>
+          <root>
+            <UI.ContextMenu
+              inactive
+              options={[
+                {
+                  title: 'Delete',
+                  onSelect: place => place.delete(),
+                },
+              ]}
+            >
+              <UI.Theme name="light">
+                <UI.SlotFill.Provider>
+                  <layout>
+                    {IN_TRAY ? renderTray() : renderApp()}
+                  </layout>
+                </UI.SlotFill.Provider>
+              </UI.Theme>
+            </UI.ContextMenu>
+          </root>
+        </HotKeys>
+      </HotKeys>
     )
   }
 

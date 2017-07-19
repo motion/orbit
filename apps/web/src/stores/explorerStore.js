@@ -8,28 +8,26 @@ import App from '~/app'
 import { debounce } from 'lodash'
 
 const PATH_SEPARATOR = '/'
-const KEYMAP = {
-  all: {
-    left: 'left',
-    right: 'right',
-    down: 'down',
-    up: 'up',
-    j: 'j', // down
-    k: 'k', // up
-    d: 'd', // doc
-    enter: 'enter',
-    esc: 'esc',
-    explorer: ['command+t'],
-    cmdL: 'command+l',
-    cmdEnter: 'command+enter',
-    cmdUp: 'command+up',
-    delete: ['delete', 'backspace'],
-    toggleSidebar: 'command+\\',
-    togglePane: 'shift+tab',
-  },
-}
-
 const VERSION = 12
+
+const SHORTCUTS = {
+  left: 'left',
+  right: 'right',
+  down: 'down',
+  up: 'up',
+  j: 'j', // down
+  k: 'k', // up
+  d: 'd', // doc
+  enter: 'enter',
+  esc: 'esc',
+  explorer: ['command+t'],
+  cmdL: 'command+l',
+  cmdEnter: 'command+enter',
+  cmdUp: 'command+up',
+  delete: ['delete', 'backspace'],
+  toggleSidebar: 'command+\\',
+  togglePane: 'shift+tab',
+}
 
 export default class ExplorerStore {
   static version = VERSION
@@ -45,7 +43,6 @@ export default class ExplorerStore {
   crumbs = () =>
     this.document && this.document.getCrumbs && this.document.getCrumbs()
 
-  keyManager = new ShortcutManager(KEYMAP)
   editorState = Raw.deserialize(
     {
       nodes: [
@@ -141,14 +138,7 @@ export default class ExplorerStore {
     this.inputNode.setSelectionRange(start, end)
   }
 
-  action = (name: string) => {
-    // always emit
-    this.emit('action', name)
-    if (this.actions[name]) {
-      console.log('explorerStore.action', name)
-      this.actions[name](event)
-    }
-  }
+  shortcuts = SHORTCUTS
 
   actions = {
     toggleSidebar: () => {
@@ -158,12 +148,6 @@ export default class ExplorerStore {
       if (App.errors.length) {
         App.clearErrors()
       }
-      /*
-      if (this.isSelected) {
-        //this.select(this.inputNode.selectionEnd, this.inputNode.selectionEnd)
-        return
-      }
-      */
     },
     enter: () => this.onEnter(),
     cmdL: () => {
@@ -219,11 +203,6 @@ export default class ExplorerStore {
   selectAll = () => {
     // this.editorState = this.editorState.transform().
     log('selectall')
-  }
-
-  handleShortcuts = (action: string, event: KeyboardEvent) => {
-    if (!action) return
-    this.action(action, event)
   }
 
   get peek(): Array<Document> {

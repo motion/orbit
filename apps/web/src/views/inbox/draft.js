@@ -1,4 +1,4 @@
-import { view, watch, Shortcuts } from '@mcro/black'
+import { view, watch, HotKeys } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
 import { Reply, Thread } from '@mcro/models'
@@ -38,12 +38,8 @@ class DraftStore {
     this.doc.remove()
   }
 
-  onShortcut = action => {
-    switch (action) {
-      case 'cmdEnter':
-        this.send()
-        return
-    }
+  shortcuts = {
+    cmdEnter: this.send,
   }
 }
 
@@ -62,7 +58,7 @@ export default class Draft {
     ...props
   }) {
     return (
-      <Shortcuts name="all" handler={store.onShortcut}>
+      <HotKeys handlers={store.shortcuts}>
         <UI.Theme name="light">
           <draft {...props}>
             <draftdoc>
@@ -94,7 +90,7 @@ export default class Draft {
             </actions>
           </draft>
         </UI.Theme>
-      </Shortcuts>
+      </HotKeys>
     )
   }
 

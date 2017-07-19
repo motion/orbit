@@ -396,9 +396,7 @@ export default class Surface implements ViewType {
         ? theme.base.background
         : props.background || theme.base.background
     let hoverBackground =
-      props.hoverBackground || props.active
-        ? theme.active.background
-        : theme.hover.background
+      props.hoverBackground || $(theme.hover.background).lighten(0.3)
     let background = props.active
       ? props.activeBackground || theme.active.background || baseBackground
       : baseBackground
@@ -508,6 +506,7 @@ export default class Surface implements ViewType {
       position: 'relative',
       zIndex: props.zIndex || 1000,
       ...(props.clickable && theme.active),
+      ...(props.clickable && { '&:hover': theme.active }),
     }
 
     const focusable =

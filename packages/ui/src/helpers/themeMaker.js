@@ -82,9 +82,9 @@ export default class ThemeMaker {
       },
       active: {
         ...obj,
-        background: adjust(obj.highlightColor, largeAmt),
-        highlightColor: adjust(obj.background, largeAmt, true),
-        color: adjust(obj.color, largeAmt),
+        background: obj.highlightColor,
+        highlightColor: adjust(obj.color, largeAmt, true),
+        color: obj.background,
         ...rest.active,
       },
       focus: {

@@ -3,47 +3,16 @@ import { query } from '@mcro/black'
 import User from './user'
 import { Thing } from './thing'
 
-const DEFAULT_CONTENT = (title: string) => ({
-  nodes: [
-    {
-      kind: 'block',
-      type: 'title',
-      data: {
-        level: 1,
-      },
-      nodes: [
-        {
-          kind: 'text',
-          text: title || 'Hello World',
-        },
-      ],
-    },
-  ],
-})
-
 export class Document extends Thing {
   static props = Thing.props
   static defaultProps = doc => ({
     ...Thing.defaultProps(doc),
     type: 'document',
+    title: Thing.getTitle(doc),
+    content: Thing.getContent(doc),
   })
+
   static defaultFilter = doc => ({ ...doc, type: 'document' })
-
-  hooks = {
-    preSave: async (document: Object) => {
-      // set title to first content node
-      try {
-        document.title =
-          document.content.document.nodes[0].nodes[0].text || document.title
-      } catch (e) {
-        console.log('error extracting title', e, document.content)
-      }
-
-      if (!document.content) {
-        document.content = DEFAULT_CONTENT(document.title)
-      }
-    },
-  }
 
   root = () => this.collection.find(User.org.homeDocument).exec()
 

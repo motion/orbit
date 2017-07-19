@@ -6,6 +6,24 @@ import { some, last, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 
+const DEFAULT_CONTENT = (title: string) => ({
+  nodes: [
+    {
+      kind: 'block',
+      type: 'title',
+      data: {
+        level: 1,
+      },
+      nodes: [
+        {
+          kind: 'text',
+          text: title || 'Hello World',
+        },
+      ],
+    },
+  ],
+})
+
 const toSlug = (str: string) =>
   `${str}`.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
 const toID = (str: string) => `${str}`.replace(/-/g, ':').toLowerCase()
@@ -147,6 +165,17 @@ export type ThingType = typeof methods & {
 }
 
 export class Thing extends Model {
+  static getContent = DEFAULT_CONTENT
+  static getTitle = doc => {
+    // set title to first content node
+    try {
+      return document.content.document.nodes[0].nodes[0].text || document.title
+    } catch (e) {
+      console.log('error extracting title', e, document.content)
+      return doc.title || 'null'
+    }
+  }
+
   static props = {
     title: str,
     content: object.optional,

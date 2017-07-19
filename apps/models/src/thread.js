@@ -7,6 +7,8 @@ class Thread extends Thing {
   static defaultProps = doc => ({
     ...Thing.defaultProps(doc),
     type: 'thread',
+    title: Thing.getTitle(doc),
+    content: Thing.getContent(doc),
   })
 
   static defaultFilter = doc => ({ ...doc, type: 'thread' })

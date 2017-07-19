@@ -1,7 +1,7 @@
 // @flow
 import { watch } from '@mcro/black'
 import { debug } from '~/helpers'
-import { Document } from '@mcro/models'
+import { Thing } from '@mcro/models'
 import type EditorStore from '~/editor/stores/editorStore'
 import { debounce } from 'lodash'
 
@@ -18,7 +18,7 @@ export default class DocumentStore {
 
   id = this.props.id
   @watch
-  document: ?Document = () => this.props.document || Document.get(this.props.id)
+  document: ?Document = () => this.props.document || Thing.get(this.props.id)
   lastSavedRev: ?string = null
   lastSavedState = null
   editor: ?EditorStore = null

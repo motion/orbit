@@ -1,14 +1,14 @@
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
-import * as Models from '@mcro/models'
+import { Thread } from '@mcro/models'
 
 class DraftStore {
   draftVersion = 1
   @watch
   draft = () =>
     this.draftVersion &&
-    Models[this.props.isReply ? 'Thread' : 'Thread'].createTemporary({
+    Thread.createTemporary({
       title: 'Draft',
       parentId: this.document.parentId,
       draft: true,

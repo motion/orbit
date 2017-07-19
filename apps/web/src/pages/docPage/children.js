@@ -236,7 +236,7 @@ class ExplorerChildrenStore {
     this.creatingDoc = true
   }
 
-  saveCreatingDoc = async () => {
+  saveCreatingDoc = async title => {
     this.newDoc.title = title
     await this.newDoc.save()
     this.version++

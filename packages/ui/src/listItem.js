@@ -97,11 +97,13 @@ export default class ListItem {
         size={size}
         sizeHeight
         sizePadding={1.2}
+        hoverable
         $item
         {...radiusProps}
         tagName="listitem"
         border={false}
         background="transparent"
+        hoverBackground
         borderBottom={[
           borderWidth,
           theme ? theme.base.borderColor : 'transparent',

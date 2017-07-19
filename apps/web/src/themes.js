@@ -70,12 +70,6 @@ const Themes = {
     borderColor: [0, 0, 0, 0.3],
   }),
   'clear-dark': Theme.fromStyles({
-    glint: {
-      opacity: 0,
-    },
-    glow: {
-      opacity: 1,
-    },
     highlightBackground,
     highlightColor,
     background: [25, 25, 25, 0.4],

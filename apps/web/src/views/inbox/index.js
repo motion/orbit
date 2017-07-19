@@ -75,6 +75,7 @@ export default class Inbox {
             isSelected={item => false && item.url() === Router.path}
             getItem={(item, index) => {
               return {
+                glow: false,
                 primary: (
                   <head $$row $$centered $$justify="space-between" $$flex>
                     {item.title}

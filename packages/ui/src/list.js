@@ -24,7 +24,6 @@ export type Props = {
   horizontal?: boolean,
   itemProps?: Object,
   items?: Array<ItemProps | React$Element<any>>,
-  itemStyle?: Object,
   loading?: boolean,
   onHighlight: Function,
   onItemMount?: Function,
@@ -140,7 +139,6 @@ class List {
     height: userHeight,
     itemProps,
     items,
-    itemStyle,
     loading,
     onHighlight,
     onItemMount,
@@ -155,8 +153,6 @@ class List {
     virtualProps,
     ...props
   }: Props) {
-    log('render', this.state.selected)
-
     if (!items && !children) {
       return null
     }
@@ -173,7 +169,7 @@ class List {
     }
 
     const passThroughProps = {
-      css: itemStyle,
+      ...itemProps,
       onItemMount,
       size,
       borderRadius,
@@ -190,7 +186,6 @@ class List {
       }
       const props = {
         key: index,
-        ...itemProps,
         ...rowProps,
         ...(isListItem ? passThroughProps : null),
         ...(isListItem ? positionProps : null),

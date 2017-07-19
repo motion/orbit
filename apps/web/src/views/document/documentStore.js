@@ -50,7 +50,6 @@ export default class DocumentStore {
     }
 
     this.editor = editor
-    this.editor.focus
 
     // init content
     this.watch(() => {

@@ -21,12 +21,20 @@ type Props = {
 export default class DocumentView {
   props: Props
 
+  onEditor = node => {
+    this.props.docStore.onEditor(node)
+    if (this.props.editorRef) {
+      this.props.editorRef(node)
+    }
+  }
+
   render({
     editorProps,
     inline,
     readOnly,
     docStore,
     noTitle,
+    editorRef,
     ...props
   }: Props) {
     if (!docStore.document) {
@@ -43,7 +51,7 @@ export default class DocumentView {
           key={docStore.document.id}
           readOnly={readOnly}
           inline={inline}
-          getRef={docStore.onEditor}
+          getRef={this.onEditor}
           noTitle={noTitle}
           {...editorProps}
         />

@@ -76,6 +76,7 @@ export default class Sidebar {
                   borderRadius={8}
                   elevation={2}
                   ref={this.ref('popover').set}
+                  onDidOpen={() => this.draftEditor && this.draftEditor.focus()}
                   target={
                     <UI.Button
                       inline
@@ -94,6 +95,7 @@ export default class Sidebar {
                   <Draft
                     document={{}}
                     closePopover={() => this.popover && this.popover.close()}
+                    editorRef={this.ref('draftEditor').set}
                   />
                 </UI.Popover>
               </end>

@@ -62,7 +62,9 @@ class ThreadDraftStore {
   store: ThreadDraftStore,
 })
 export default class Draft {
-  render({ store, isReply, store: { draft }, ...props }) {
+  editor = null
+
+  render({ editorRef, store, isReply, store: { draft }, ...props }) {
     return (
       <UI.Theme name="light">
         <draft {...props}>
@@ -73,6 +75,7 @@ export default class Draft {
               document={draft}
               inline
               noTitle={isReply}
+              editorRef={editorRef}
             />
           </draftdoc>
           <actions if={draft} $$row>

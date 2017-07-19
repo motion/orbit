@@ -55,6 +55,10 @@ export type Props = {
   swayX?: boolean,
   // pretty much what it says, for use with closeOnClick
   keepOpenOnClickTarget?: boolean,
+  // callback after close
+  onDidClose?: Function,
+  // callback after open
+  onDidOpen?: Function,
 }
 
 const INVERSE = {
@@ -160,6 +164,19 @@ class Popover {
     this.unmounted = true
   }
 
+  shouldSendDidOpen = true
+
+  componentDidUpdate() {
+    if (this.props.onDidOpen) {
+      if (this.shouldSendDidOpen && this.showPopover) {
+        this.props.onDidOpen()
+        this.shouldSendDidOpen = false
+      } else if (!this.shouldSendDidOpen && !this.showPopover) {
+        this.shouldSendDidOpen = true
+      }
+    }
+  }
+
   listenForResize = () => {
     const updatePosition = throttle(this.setPosition, 32)
     const updatePositionInactive = debounce(this.setPosition, 300)
@@ -214,7 +231,10 @@ class Popover {
         }
 
         this.closingTimeout = this.setTimeout(() => {
-          this.setState({ closing: false, isOpen: false })
+          this.setState(
+            { closing: false, isOpen: false },
+            this.props.onDidClose
+          )
           resolve()
         }, 300)
       })

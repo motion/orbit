@@ -77,12 +77,6 @@ export default class SignupStep1 {
           margin="auto"
         >
           {store.errors && JSON.stringify(store.errors)}
-          <UI.Title if={false} $$centered>
-            Welcome to Jot
-          </UI.Title>
-          <UI.Text size={1.2} color={[0, 0, 0, 0.4]}>
-            Let's get you signed up
-          </UI.Text>
           <br />
           <UI.PassProps
             row

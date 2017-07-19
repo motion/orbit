@@ -115,6 +115,14 @@ export default class Surface implements ViewType {
 
   uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
 
+  onClick = e => {
+    e.preventDefault()
+    e.persist()
+    if (this.props.onClick) {
+      this.props.onClick(e)
+    }
+  }
+
   render({
     active,
     after,
@@ -288,7 +296,7 @@ export default class Surface implements ViewType {
       <surface
         className={`${this.uniq} ${className || ''}`}
         ref={this.ref('surfaceRef').set}
-        onClick={onClick}
+        onClick={this.onClick}
         {...!wrapElement && passProps}
       >
         {after &&

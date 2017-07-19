@@ -59,7 +59,6 @@ export default class Inbox {
             </UI.Popover>
           </actions>
         </bar>
-
         <UI.List
           background="transparent"
           $list

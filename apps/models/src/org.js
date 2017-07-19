@@ -1,6 +1,7 @@
 // @flow
 import { Model, query, str, object, array, bool } from '@mcro/black'
 import Document from './document'
+import Inbox from './inbox'
 
 const toSlug = (str: string) => `${str}`.replace(/ /g, '-').toLowerCase()
 
@@ -67,9 +68,8 @@ export class OrgModel extends Model {
       })
       org.homeDocument = homeDoc.id
       // attach discussion to homepage
-      await Document.create({
+      await Inbox.create({
         title: 'Issues',
-        type: 'thread',
         parentId: homeDoc.id,
       })
     },

@@ -54,7 +54,7 @@ class Item {
 
     const btnProps = {
       chromeless: true,
-      icon: doc && doc.type === 'thread' ? 'paper' : '',
+      icon: doc && doc.type === 'inbox' ? 'paper' : '',
       spaced: true,
       size: 1,
       height: 24,

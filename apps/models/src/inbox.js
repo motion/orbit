@@ -1,10 +1,10 @@
 import { Document } from './document'
 
-class Thread extends Document {
+class Inbox extends Document {
   static props = Document.props
   static defaultProps = Document.defaultProps
   static defaultFind = {
-    type: 'thread',
+    type: 'inbox',
   }
 
   constructor(...args) {
@@ -12,9 +12,9 @@ class Thread extends Document {
 
     this.hooks = {
       ...this.hooks,
-      preInsert(thread) {
-        thread.type = 'thread'
-        super.hooks.preInsert.call(this, thread)
+      preInsert(inbox) {
+        inbox.type = 'inbox'
+        super.hooks.preInsert.call(this, inbox)
       },
     }
 
@@ -26,12 +26,12 @@ class Thread extends Document {
     // }
   }
 
-  // this filters it down to type === 'thread'
+  // this filters it down to type === 'inbox'
   get collection() {
     return new Proxy(super.collection, {
       get(target, method) {
         if (method === 'find' || method === 'findOne') {
-          return query => target[method]({ type: 'thread', ...query })
+          return query => target[method]({ type: 'inbox', ...query })
         }
         return target[method]
       },
@@ -39,4 +39,4 @@ class Thread extends Document {
   }
 }
 
-export default new Thread()
+export default new Inbox()

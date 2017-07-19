@@ -20,10 +20,23 @@ export default class Input {
 
   get shouldSyncToForm() {
     const { uiContext, sync } = this.props
-    return uiContext && uiContext.inForm && !sync
+    return log(
+      uiContext && uiContext.inForm && !sync,
+      'shouldSyncToForm',
+      'this.props.debug=',
+      this.props.debug
+    )
+  }
+
+  onChange = (...args) => {
+    this.setValues()
+    if (this.props.onChange) {
+      this.props.onChange(...args)
+    }
   }
 
   setValues = () => {
+    console.log('set value', this.node.value)
     if (this.shouldSyncToForm && this.node) {
       this.props.uiContext.formValues[this.props.name] = () => this.node.value
     }
@@ -48,8 +61,8 @@ export default class Input {
   }
 
   onClick = e => {
+    e.preventDefault()
     if (this.shouldSyncToForm) {
-      e.preventDefault()
       this.props.uiContext.form.submit()
     }
     if (this.props.onClick) {
@@ -86,6 +99,8 @@ export default class Input {
         name={name}
         type={type}
         elementProps={{
+          onChange: this.onChange,
+          placeholder: this.shouldSyncToForm + '',
           css: {
             width: '100%',
             padding: [0, 10],

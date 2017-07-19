@@ -335,9 +335,11 @@ export default class ExplorerStore {
     const paths = text.split(PATH_SEPARATOR)
     const allNodes = this.isCreatingNew ? paths.slice(0, -1) : paths
     const pathNodes = allNodes.map(name => {
-      const doc = this.crumbs.find(
-        crumb => crumb.title.toLowerCase() === name.toLowerCase()
-      )
+      const doc =
+        this.crumbs &&
+        this.crumbs.find(
+          crumb => crumb.title.toLowerCase() === name.toLowerCase()
+        )
       return {
         kind: 'inline',
         type: 'item',

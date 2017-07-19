@@ -31,7 +31,7 @@ export default class Checkbox {
         flex={false}
         iconProps={{
           css: {
-            opacity: isChecked ? 1 : 0.15,
+            opacity: isChecked ? 1 : 0,
             transform: {
               y: 1,
               scale: isChecked ? 1 : 1,

@@ -141,7 +141,11 @@ class ExplorerChildrenStore {
 
   @watch
   docs = ({ explorerStore: { document } }) =>
-    this.version && document && document.getChildren()
+    this.version &&
+    document &&
+    document
+      .getChildren()
+      .then(children => children.filter(child => child.type !== 'thread'))
 
   creatingDoc = false
   @watch

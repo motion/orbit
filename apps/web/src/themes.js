@@ -15,18 +15,6 @@ const blank = {
   buttonBackground: 'transparent',
 }
 
-console.log(
-  'got em',
-  Theme.fromStyles({
-    highlightBackground,
-    highlightColor,
-    background: '#fff',
-    color: '#555',
-    borderColor: '#eee',
-    buttonBackground: 'linear-gradient(#fff, #fefefe)',
-  })
-)
-
 const Themes = {
   light: Theme.fromStyles({
     highlightBackground,

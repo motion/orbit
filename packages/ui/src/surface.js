@@ -68,7 +68,6 @@ export default class Surface implements ViewType {
     glow?: boolean,
     glowProps?: Object,
     height?: number,
-    height?: number,
     highlight?: boolean,
     hoverable?: boolean,
     hoverColor?: Color,

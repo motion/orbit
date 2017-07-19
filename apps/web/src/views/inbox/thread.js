@@ -89,7 +89,7 @@ export default class ThreadView {
             </UI.Text>
             {assignTo.map(name =>
               <UI.Button
-                active={store.thread.assignedTo === name}
+                highlight={store.thread.assignedTo === name}
                 inline
                 $button
                 onClick={() => store.assignTo(name)}
@@ -105,7 +105,7 @@ export default class ThreadView {
             </UI.Text>
             {tags.map(name =>
               <UI.Button
-                active={thread.tags.indexOf(name) > -1}
+                highlight={thread.tags.indexOf(name) > -1}
                 inline
                 $button
                 onClick={() => store.addTag(name)}

@@ -42,9 +42,17 @@ export default class ThemeMaker {
   }
 
   fromStyles = (styles: Object): Object => {
-    const { highlightColor, background, color, borderColor, ...rest } = styles
+    const {
+      highlightColor,
+      highlightBackground,
+      background,
+      color,
+      borderColor,
+      ...rest
+    } = styles
     const obj = this.colorize({
       highlightColor,
+      highlightBackground,
       background,
       color,
       borderColor,
@@ -70,6 +78,20 @@ export default class ThemeMaker {
       return color[direction](adjuster(color))
     }
 
+    const focused = {
+      background: adjust(obj.background, largeAmt, true),
+      borderColor: adjust(obj.borderColor, largeAmt, true),
+    }
+
+    const highlightColorFinal = obj.highlightColor || $('#fff')
+    const highlightBgFinal =
+      obj.highlightBackground || highlightColorFinal.negate()
+    const highlight = {
+      color: highlightColorFinal,
+      background: highlightBgFinal,
+      borderColor: adjust(highlightBgFinal, largeAmt, true),
+    }
+
     return {
       ...rest,
       base: obj,
@@ -82,20 +104,17 @@ export default class ThemeMaker {
       },
       active: {
         ...obj,
-        background: obj.highlightColor,
-        borderColor: adjust(obj.highlightColor, largeAmt, true),
-        highlightColor: adjust(obj.color, largeAmt, true),
-        color: '#fff',
+        ...focused,
         ...rest.active,
       },
       focus: {
         ...obj,
-        background: adjust(obj.background, largeAmt, true),
-        borderColor: adjust(obj.highlightColor, smallAmt, true),
+        ...focused,
         ...rest.focus,
       },
       highlight: {
-        color: obj.highlightColor,
+        ...obj,
+        ...highlight,
         ...rest.highlight,
       },
     }

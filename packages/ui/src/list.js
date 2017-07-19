@@ -77,7 +77,9 @@ class List {
 
   handleShortcuts = (action, event) => {
     console.log('key', action, this.state.selected)
-    if (this.state.selected === null) return
+    if (this.state.selected === null) {
+      return
+    }
     switch (action) {
       case 'down':
         this.highlightItem(
@@ -198,8 +200,12 @@ class List {
         ...(isListItem ? positionProps : null),
       }
       if (controlled) {
-        props.onClick = () => {
+        const ogClick = props.onClick
+        props.onClick = e => {
           this.highlightItem(() => i, this.onSelect)
+          if (ogClick) {
+            ogClick.call(this, e)
+          }
         }
         props.highlight = i === this.state.selected
       }
@@ -258,32 +264,34 @@ class List {
     }
 
     return (
-      <Surface
-        tagName="list"
-        align="stretch"
-        height={height}
-        width={width}
-        style={{
-          overflowY: scrollable ? 'scroll' : 'auto',
-          overflowX: 'visible',
-          ...style,
-        }}
-        borderRadius={borderRadius}
-        {...props}
-      >
-        <loading if={loading}>loading</loading>
-        <VirtualList
-          if={!loading && virtualized}
+      <Shortcuts name="all" handler={this.handleShortcuts}>
+        <Surface
+          tagName="list"
+          align="stretch"
           height={height}
           width={width}
-          rowCount={total}
-          rowHeight={100}
-          rowRenderer={({ index, key, style }) =>
-            chillen[index]({ key, style })}
-          {...virtualized}
-        />
-        {!virtualized && chillen}
-      </Surface>
+          style={{
+            overflowY: scrollable ? 'scroll' : 'auto',
+            overflowX: 'visible',
+            ...style,
+          }}
+          borderRadius={borderRadius}
+          {...props}
+        >
+          <loading if={loading}>loading</loading>
+          <VirtualList
+            if={!loading && virtualized}
+            height={height}
+            width={width}
+            rowCount={total}
+            rowHeight={100}
+            rowRenderer={({ index, key, style }) =>
+              chillen[index]({ key, style })}
+            {...virtualized}
+          />
+          {!virtualized && chillen}
+        </Surface>
+      </Shortcuts>
     )
   }
 }

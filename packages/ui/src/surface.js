@@ -352,7 +352,6 @@ export default class Surface implements ViewType {
   }
 
   static inlineStyle = {
-    background: 'transparent',
     margin: [-3, -3],
     borderRadius: 1000,
   }
@@ -380,37 +379,40 @@ export default class Surface implements ViewType {
     const width = props.width
     const padding = props.padding
     const flex = props.flex === true ? 1 : props.flex
+    const STATE =
+      (props.highlight && 'highlight') || (props.active && 'active') || 'base'
 
     // colors
     const color = $(
-      props.highlight
-        ? props.highlightColor || theme.highlight.color || props.color
-        : props.active ? theme.active.color : props.color || theme.base.color
+      (props.highlight && props.highlightColor) || theme[STATE].color
     )
     const iconColor = props.iconColor || color
 
     // background
     const baseBackground =
       props.background === true
-        ? theme.base.background
-        : props.background || theme.base.background
-    let hoverBackground =
-      props.hoverBackground || $(theme.hover.background).lighten(0.3)
-    let background = props.active
-      ? props.activeBackground || theme.active.background || baseBackground
-      : baseBackground
+        ? theme[STATE].background
+        : props.background || theme[STATE].background
+    let background = props.highlight
+      ? props.highlightBackground || theme.highlight.background
+      : props.active
+        ? props.activeBackground || theme.active.background || baseBackground
+        : baseBackground
+    let hoverBackground = props.hoverBackground || $(background).lighten(0.3)
 
-    const colorBackground =
-      background !== 'transparent' &&
-      (typeof background !== 'string' ||
-        (background.indexOf('linear-gradient') !== 0 &&
-          background.indexOf('radial-gradient') !== 0))
-    if (colorBackground) {
+    const notGradient =
+      typeof background === 'string' &&
+      background.indexOf('linear-gradient') !== 0 &&
+      background.indexOf('radial-gradient') !== 0
+    const notTransparent = background !== 'transparent'
+    const isColorString = typeof notGradient && notTransparent
+
+    if (isColorString) {
       background = $(background)
     }
 
     const borderColor = $(
-      props.borderColor || theme.base.borderColor || 'transparent'
+      props.borderColor || theme[STATE].borderColor || 'transparent'
     )
     let hoverColor = $(
       props.highlight
@@ -421,6 +423,7 @@ export default class Surface implements ViewType {
     const hoverBorderColor =
       props.hoverBorderColor ||
       (props.borderColor && $(props.borderColor).lighten(0.2)) ||
+      theme[STATE].borderColor ||
       theme.hover.borderColor ||
       borderColor.lighten(0.2)
 
@@ -440,7 +443,7 @@ export default class Surface implements ViewType {
     if (props.glint) {
       glintColor =
         props.glint === true
-          ? colorBackground ? background.lighten(0.1) : [255, 255, 255, 0.2]
+          ? isColorString ? background.lighten(0.1) : [255, 255, 255, 0.2]
           : props.glint
       // boxShadow.push(['inset', 0, 0, 0, glintColor])
     }
@@ -504,8 +507,13 @@ export default class Surface implements ViewType {
     const activeStyle = !props.chromeless && {
       position: 'relative',
       zIndex: props.zIndex || 1000,
-      ...(props.clickable && theme.active),
-      ...(props.clickable && { '&:hover': theme.active }),
+      ...(props.clickable && theme[STATE]),
+      ...(props.clickable && { '&:hover': theme[STATE] }),
+    }
+
+    const chromelessStyle = props.chromeless && {
+      borderWidth: 0,
+      background: 'transparent',
     }
 
     const focusable =
@@ -593,10 +601,7 @@ export default class Surface implements ViewType {
         ...(props.disabled && self.constructor.disabledStyle),
         ...(props.dim && self.constructor.dimStyle),
         ...(props.spaced && self.constructor.spacedStyle),
-        ...(props.chromeless && {
-          borderWidth: 0,
-          background: 'transparent',
-        }),
+        ...chromelessStyle,
         ...(props.active && activeStyle),
         // so you can override
         ...props.style,

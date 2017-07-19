@@ -65,6 +65,7 @@ export default class Inbox {
           <UI.List
             background="transparent"
             $list
+            controlled
             virtualized={{
               rowHeight: 115,
               overscanRowCount: 5,

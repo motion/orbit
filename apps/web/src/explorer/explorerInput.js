@@ -40,6 +40,8 @@ const schema = {
   },
 }
 
+const short = x => (x.length > 17 ? x.slice(0, 15) + '...' : x)
+
 @view.attach('explorerStore')
 @view
 class Item {
@@ -75,7 +77,7 @@ class Item {
             onClick={() =>
               doc ? Router.go(doc.url()) : explorerStore.onItemClick(node.key)}
           >
-            {name}
+            {short(name)}
           </UI.Button>
           <RightArrow if={!hideArrow} css={$arrow} animate={isLast} />
         </inner>

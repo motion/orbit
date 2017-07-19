@@ -1,4 +1,4 @@
-import { view, keycode } from '@mcro/black'
+import { view } from '@mcro/black'
 import { User } from '@mcro/models'
 import React from 'react'
 import * as UI from '@mcro/ui'
@@ -20,48 +20,18 @@ import { HEADER_HEIGHT } from '~/constants'
       }
       this.loggingIn = false
     }
-
-    onSubmit = values => {
-      this.finish(values)
-    }
-
-    onEmailKey = event => {
-      switch (keycode(event)) {
-        case 'enter':
-          console.log('enter email')
-        // event.preventDefault()
-        // event.stopPropagation()
-        // this.password.focus()
-      }
-    }
-
-    onPasswordKey = event => {
-      switch (keycode(event)) {
-        case 'enter':
-          console.log('enter enter')
-          // event.stopPropagation()
-          // this.finish()
-          break
-        case 'esc':
-          if (this.password.value === '') {
-          } else {
-            this.password.value = ''
-          }
-      }
-    }
   },
 })
 export default class Login {
   render({ store, ...props }) {
     return (
       <login if={!User.loggedIn} $$draggable {...props}>
-        <UI.Form flex $$undraggable onSubmit={store.onSubmit}>
+        <UI.Form flex $$undraggable onSubmit={store.finish}>
           <UI.Segment>
             <UI.Input
               $error={store.error}
               disabled={store.loggingIn}
               name="email"
-              onKeyDown={store.onEmailKey}
               getRef={store.ref('email').set}
               placeholder="Email"
             />
@@ -70,7 +40,6 @@ export default class Login {
               name="password"
               type="password"
               placeholder="Password"
-              onKeyDown={store.onPasswordKey}
               getRef={store.ref('password').set}
             />
             <UI.Button icon="raft" tooltip="Forgot password?" />

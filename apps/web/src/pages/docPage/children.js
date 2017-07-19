@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Document } from '@mcro/models'
+import { Document, Inbox } from '@mcro/models'
 import { sortBy, sum } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
@@ -30,6 +30,11 @@ const DragHandle = SortableHandle(props =>
   />
 )
 
+const ICONS = {
+  inbox: 'chat46',
+  thread: 'chat',
+}
+
 @view.ui
 class Item {
   render({ doc, editable, onSave, textRef, subItems, ...props }) {
@@ -40,7 +45,7 @@ class Item {
         {...props}
       >
         <UI.Surface
-          icon={doc.type === 'thread' ? 'chat46' : null}
+          icon={ICONS[doc.type]}
           iconProps={{
             css: {
               alignSelf: 'flex-start',
@@ -134,6 +139,11 @@ class ExplorerChildrenStore {
 
   lastDocs = null // temp until queries returning blank for a frame is fixed
 
+  models = {
+    inbox: Inbox,
+    document: Document,
+  }
+
   @watch
   docs = ({ explorerStore: { document } }) =>
     this.version && document && document.getChildren()
@@ -141,11 +151,10 @@ class ExplorerChildrenStore {
   creatingDoc = false
   @watch
   newDoc = () =>
-    this.creatingDoc && this.props.explorerStore.document
-      ? Document.createTemporary({
-          parentId: this.props.explorerStore.document.id,
-          parentIds: [this.props.explorerStore.document.id],
-          type: this.docType,
+    this.creatingDoc && this.document
+      ? this.models[this.docType].createTemporary({
+          parentId: this.document.id,
+          parentIds: [this.document.id],
         })
       : null
 
@@ -227,12 +236,16 @@ class ExplorerChildrenStore {
     this.creatingDoc = true
   }
 
-  createThread = () => {
-    this.docType = 'thread'
+  createInbox = () => {
+    this.docType = 'inbox'
     this.creatingDoc = true
   }
 
   saveCreatingDoc = async title => {
+    if (!this.newDoc.setDefaultContent) {
+      console.log('wht the fuck', this.newDoc)
+      return
+    }
     this.newDoc.setDefaultContent({ title })
     this.newDoc.type = this.docType
     await this.newDoc.save()
@@ -288,7 +301,7 @@ export default class ExplorerChildren {
           }}
         >
           <UI.Button
-            onClick={store.createThread}
+            onClick={store.createInbox}
             icon="chat46"
             tooltip="create inbox"
             tooltipProps={{

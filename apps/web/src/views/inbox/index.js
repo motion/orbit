@@ -9,7 +9,9 @@ const { ago } = timeAgo()
 
 class InboxStore {
   document = this.props.document
-  threads = Thread.find()
+  threads = Thread.find({
+    parentId: this.document ? this.document.id : undefined,
+  })
   highlightIndex = 0
   activeItem = null
 }
@@ -30,8 +32,8 @@ export default class Inbox {
     return (
       <inbox>
         <bar if={!hideTitle}>
-          <UI.Title size={1} stat={`${(store.threads || []).length} new`}>
-            Threads
+          <UI.Title size={3} stat={`${(store.threads || []).length} new`}>
+            {store.document.title}
           </UI.Title>
           <actions>
             <UI.Popover
@@ -59,60 +61,62 @@ export default class Inbox {
             </UI.Popover>
           </actions>
         </bar>
-        <UI.List
-          background="transparent"
-          $list
-          virtualized={{
-            rowHeight: 115,
-            overscanRowCount: 5,
-          }}
-          itemProps={{
-            height: 'auto',
-            padding: [10, 15, 10, 16],
-            overflow: 'hidden',
-          }}
-          items={store.threads || []}
-          getItem={(item, index) => {
-            const active = Router.path === item.url()
-            return {
-              primary: (
-                <head $$row $$centered $$justify="space-between" $$flex>
-                  {item.title}
+        <content>
+          <UI.List
+            background="transparent"
+            $list
+            virtualized={{
+              rowHeight: 115,
+              overscanRowCount: 5,
+            }}
+            itemProps={{
+              height: 'auto',
+              padding: [10, 15, 10, 16],
+              overflow: 'hidden',
+            }}
+            items={store.threads || []}
+            getItem={(item, index) => {
+              const active = Router.path === item.url()
+              return {
+                primary: (
+                  <head $$row $$centered $$justify="space-between" $$flex>
+                    {item.title}
 
-                  <date $$row $$justify="flex-end">
-                    <UI.Badge if={index % 3} {...badgeProps} color="red">
-                      Enhancement
-                    </UI.Badge>
-                    <UI.Badge if={index % 2} {...badgeProps} color="yellow">
-                      Needs help
-                    </UI.Badge>
-                    <UI.Badge>+2</UI.Badge>
-                  </date>
-                </head>
-              ),
-              secondary:
-                item.status ||
-                <status $$row $$align="center">
-                  <UI.Text size={0.9}>
-                    <strong>Nate</strong> replied {ago(item.createdAt)}
+                    <date $$row $$justify="flex-end">
+                      <UI.Badge if={index % 3} {...badgeProps} color="red">
+                        Enhancement
+                      </UI.Badge>
+                      <UI.Badge if={index % 2} {...badgeProps} color="yellow">
+                        Needs help
+                      </UI.Badge>
+                      <UI.Badge>+2</UI.Badge>
+                    </date>
+                  </head>
+                ),
+                secondary:
+                  item.status ||
+                  <status $$row $$align="center">
+                    <UI.Text size={0.9}>
+                      <strong>Nate</strong> replied {ago(item.createdAt)}
+                    </UI.Text>
+                  </status>,
+                children: (
+                  <UI.Text>
+                    {item.text ||
+                      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. '}
                   </UI.Text>
-                </status>,
-              children: (
-                <UI.Text>
-                  {item.text ||
-                    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. '}
-                </UI.Text>
-              ),
-              ellipse: false,
-              glow: false,
-              hoverBackground: !active && [255, 255, 255, 0.025],
-              //icon: item.icon,
-              onClick: () => Router.go(item.url()),
-              onMouseEnter: () => (store.highlightIndex = index),
-              active,
-            }
-          }}
-        />
+                ),
+                ellipse: false,
+                glow: false,
+                hoverBackground: !active && [255, 255, 255, 0.025],
+                //icon: item.icon,
+                onClick: () => Router.go(item.url()),
+                onMouseEnter: () => (store.highlightIndex = index),
+                active,
+              }
+            }}
+          />
+        </content>
       </inbox>
     )
   }
@@ -123,6 +127,10 @@ export default class Inbox {
       position: 'relative',
       width: '100%',
       height: '100%',
+      padding: 20,
+    },
+    content: {
+      margin: [0, -20],
     },
     create: {
       width: 400,

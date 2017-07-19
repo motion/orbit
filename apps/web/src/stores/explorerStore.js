@@ -1,6 +1,6 @@
 // @flow
 import { watch, keycode, ShortcutManager } from '@mcro/black'
-import { Document, User } from '@mcro/models'
+import { Document, User, Thing } from '@mcro/models'
 import Router from '~/router'
 import { uniq, last, includes, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
@@ -39,7 +39,7 @@ export default class ExplorerStore {
   document = () =>
     Router.path === '/'
       ? User.org && Document.get(User.org.homeDocument)
-      : Document.get(Router.params.id)
+      : Thing.get(Router.params.id)
 
   @watch
   crumbs = () =>

@@ -1,18 +1,17 @@
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
-import { Document } from '@mcro/models'
+import * as Models from '@mcro/models'
 
-class ThreadDraftStore {
+class DraftStore {
   draftVersion = 1
   @watch
   draft = () =>
     this.draftVersion &&
-    Document.createTemporary({
+    Models[this.props.isReply ? 'Thread' : 'Thread'].createTemporary({
       title: 'Draft',
       parentId: this.document.parentId,
       draft: true,
-      type: this.props.isReply ? 'reply' : 'thread',
     })
 
   get document() {
@@ -36,7 +35,7 @@ class ThreadDraftStore {
 }
 
 @view({
-  store: ThreadDraftStore,
+  store: DraftStore,
 })
 export default class Draft {
   editor = null

@@ -1,41 +1,22 @@
-import { Document } from './document'
+import { Thing } from './thing'
+import Thread from './thread'
 
-class Inbox extends Document {
-  static props = Document.props
-  static defaultProps = Document.defaultProps
-  static defaultFind = {
+class Inbox extends Thing {
+  static props = Thing.props
+  static defaultProps = doc => ({
+    ...Thing.defaultProps(doc),
     type: 'inbox',
-  }
+  })
+  static defaultFilter = doc => ({ ...doc, type: 'inbox' })
 
-  constructor(...args) {
-    super(...args)
-
-    this.hooks = {
-      ...this.hooks,
-      preInsert(inbox) {
-        inbox.type = 'inbox'
-        super.hooks.preInsert.call(this, inbox)
-      },
-    }
-
-    // this.methods = {
-    //   ...this.methods,
-    //   replies() {
-    //     return this.collection.find({ parentId: this.id, type: 'reply' })
-    //   },
-    // }
-  }
-
-  // this filters it down to type === 'inbox'
-  get collection() {
-    return new Proxy(super.collection, {
-      get(target, method) {
-        if (method === 'find' || method === 'findOne') {
-          return query => target[method]({ type: 'inbox', ...query })
-        }
-        return target[method]
-      },
-    })
+  hooks = {
+    async postInsert(inbox) {
+      await Thread.create({
+        title: `Welcome to your inbox: ${inbox.title}`,
+        parentId: inbox.id,
+        parentIds: [...inbox.parentIds, inbox.id],
+      })
+    },
   }
 }
 

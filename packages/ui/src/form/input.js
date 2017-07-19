@@ -20,23 +20,10 @@ export default class Input {
 
   get shouldSyncToForm() {
     const { uiContext, sync } = this.props
-    return log(
-      uiContext && uiContext.inForm && !sync,
-      'shouldSyncToForm',
-      'this.props.debug=',
-      this.props.debug
-    )
-  }
-
-  onChange = (...args) => {
-    this.setValues()
-    if (this.props.onChange) {
-      this.props.onChange(...args)
-    }
+    return uiContext && uiContext.inForm && !sync
   }
 
   setValues = () => {
-    console.log('set value', this.node.value)
     if (this.shouldSyncToForm && this.node) {
       this.props.uiContext.formValues[this.props.name] = () => this.node.value
     }
@@ -72,8 +59,8 @@ export default class Input {
 
   render({ sync, type, name, uiContext, form, elementProps, ...props }) {
     if (sync) {
-      props.value = sync.get()
-      props.onChange = e => sync.set(e.target.value)
+      elementProps.value = sync.get()
+      elementProps.onChange = e => sync.set(e.target.value)
     }
 
     if (type === 'checkbox') {
@@ -99,8 +86,6 @@ export default class Input {
         name={name}
         type={type}
         elementProps={{
-          onChange: this.onChange,
-          placeholder: this.shouldSyncToForm + '',
           css: {
             width: '100%',
             padding: [0, 10],

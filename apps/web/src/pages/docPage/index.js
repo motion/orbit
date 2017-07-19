@@ -38,7 +38,11 @@ export default class DocPage {
     }
 
     if (!document) {
-      return <UI.Placeholder size={2}>Doc 404</UI.Placeholder>
+      return (
+        <UI.Placeholder $$margin="auto" size={2}>
+          Doc 404
+        </UI.Placeholder>
+      )
     }
 
     const isDoc = !document.type || document.type === 'document'
@@ -48,7 +52,9 @@ export default class DocPage {
     return (
       <Page>
         <docpagecontent id="content">
-          <Inbox if={isInbox} document={document} />
+          <inbox if={isInbox} css={{ padding: [0, 10] }}>
+            <Inbox document={document} />
+          </inbox>
           <meta if={isThread}>
             assigned to {document.assignedTo}
             tags {JSON.stringify(document.tags)}

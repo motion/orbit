@@ -26,6 +26,7 @@ import Gemstone from '~/views/gemstone'
 
     handleSubmit = async fields => {
       console.log('submitting', fields)
+
       const passes = this.helpers.validator(fields)
       if (!passes) {
         this.errors = this.helpers.validator.errors

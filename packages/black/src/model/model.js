@@ -125,9 +125,35 @@ export default class Model {
     }
   }
 
+  _filteredProxy = null
+
+  // apply static defaultFilter
+  get _filteredCollection() {
+    const { defaultFilter } = this.constructor
+    if (!defaultFilter) {
+      return this._collection
+    }
+    if (this._filteredProxy) {
+      return this._filteredProxy
+    }
+    const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
+    this._filteredProxy = new Proxy(this._collection, {
+      get(target, method) {
+        if (method === 'find' || method === 'findOne') {
+          return query => {
+            // log('calling', method, defaultFilter(queryObject(query)))
+            return target[method](defaultFilter(queryObject(query)))
+          }
+        }
+        return target[method]
+      },
+    })
+    return this._filteredProxy
+  }
+
   get collection(): ?RxCollection & { pouch: PouchDB } {
     if (this._collection) {
-      return this._collection
+      return this._filteredCollection
     }
     // chain().until().exec().or().$
     const self = this
@@ -316,13 +342,13 @@ export default class Model {
   @query findOne = (...args) => this.collection.findOne(...args)
 
   createTemporary = async object => {
-    const doc = await this.collection.newDocument(object)
-    this.applyDefaults(doc)
+    this.applyDefaults(object)
+    const doc = await this._collection.newDocument(object)
     doc.__is_temp = true
     return doc
   }
 
-  create = (object: Object = {}) => this.collection.insert(object)
+  create = (object: Object = {}) => this._collection.insert(object)
 
   findOrCreate = async (object: Object = {}): Promise<Object> => {
     const found = await this.collection.findOne(object).exec()

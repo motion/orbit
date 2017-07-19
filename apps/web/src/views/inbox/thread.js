@@ -1,7 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Reply from './reply'
-import { sortBy } from 'lodash'
 import Draft from './draft'
 import { sortBy, capitalize } from 'lodash'
 import timeAgo from 'time-ago'
@@ -13,22 +12,22 @@ class ThreadStore {
   showReply = false
 
   assignTo = name => {
-    const { document } = this.props
+    const { thread } = this.props
 
-    document.addUpdate({ type: 'assign', to: name })
-    document.save()
+    thread.addUpdate({ type: 'assign', to: name })
+    thread.save()
   }
 
   addTag = name => {
-    const { document } = this.props
+    const { thread } = this.props
 
-    document.addUpdate({ type: 'tag', name })
-    document.save()
+    thread.addUpdate({ type: 'tag', name })
+    thread.save()
   }
 
   get items() {
-    const { document } = this.props
-    const all = [...(this.replies || []), ...(document.updates || [])]
+    const { thread } = this.props
+    const all = [...(this.replies || []), ...(thread.updates || [])]
     return sortBy(all, i => +new Date(i.createdAt))
   }
 }
@@ -80,7 +79,7 @@ class Update {
   store: ThreadStore,
 })
 export default class ThreadView {
-  render({ store, document }) {
+  render({ store, thread }) {
     const { replies } = store
     const sorted = sortBy(replies || [], 'createdAt')
     const isDoc = item => !!item.content
@@ -129,7 +128,7 @@ export default class ThreadView {
             Add reply
           </UI.Button>
           <container $show={store.showReply}>
-            <Draft $draft isReply document={document} />
+            <Draft $draft isReply document={thread} />
           </container>
         </reply>
       </thread>

@@ -23,7 +23,7 @@ export function render() {
 }
 
 export async function start(quiet) {
-  // render()
+  render()
   await App.start(quiet)
   render()
 }

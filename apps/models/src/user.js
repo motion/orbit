@@ -179,6 +179,7 @@ class User {
       admins: [this.id],
       members: [this.id],
     })
+    log('made org', org)
   }
 }
 

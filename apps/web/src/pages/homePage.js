@@ -12,7 +12,8 @@ export default class HomePage {
     }
 
     if (User.orgs && User.orgs.length === 0) {
-      User.createOrg('welcome')
+      log('MAKE TAHT FUCKING ORG')
+      User.createOrg('Welcome')
       return <null>weird no org</null>
     }
 

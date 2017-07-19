@@ -23,7 +23,9 @@ export default class SizedSurface extends React.Component {
     } = props
 
     // sizes
-    let height = sizeHeight && props.size * LINE_HEIGHT * adj(sizeHeight)
+    let height = Math.floor(
+      sizeHeight && props.size * LINE_HEIGHT * adj(sizeHeight)
+    )
     const fontSize = sizeFont && height * 0.45 * adj(sizeFont)
     if (props.inline) {
       height = Math.floor(height * 0.8)

@@ -62,7 +62,6 @@
   - alignment
   - list and concept of who has joined a doc
   - font size choice
-  - keyboard shortcuts
 
 # nate
   - on signup create org + invite team + create home doc and onboard
@@ -90,7 +89,6 @@
     - focused nodes (image, doclist) cursor fixes
     - realtime
     - history/revisions
-  - keyboard shortcuts
   - deploy to prod
   - slack integration + avatars
   - drag/drop: list items + sidebar

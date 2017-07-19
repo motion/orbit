@@ -398,26 +398,30 @@ export default class Surface implements ViewType {
       : props.active
         ? props.activeBackground || theme.active.background || baseBackground
         : baseBackground
-    let hoverBackground = props.hoverBackground || $(background).lighten(0.3)
 
-    const notGradient =
+    const isGradient =
       typeof background === 'string' &&
-      background.indexOf('linear-gradient') !== 0 &&
-      background.indexOf('radial-gradient') !== 0
-    const notTransparent = background !== 'transparent'
-    const isColorString = typeof notGradient && notTransparent
+      (background.indexOf('linear-gradient') === 0 ||
+        background.indexOf('radial-gradient') === 0)
+    const isTransparent = background === 'transparent'
+    const colorfulBg = !isGradient && !isTransparent
 
-    if (isColorString) {
+    if (colorfulBg && background && !background.model) {
       background = $(background)
     }
+
+    const hoverBackground =
+      !props.highlight &&
+      (props.hoverBackground === true
+        ? theme[STATE].background
+        : props.hoverBackground ||
+          (colorfulBg ? background.negate().alpha(0.1) : background))
 
     const borderColor = $(
       props.borderColor || theme[STATE].borderColor || 'transparent'
     )
     let hoverColor = $(
-      props.highlight
-        ? color.lighten(0.2)
-        : props.hoverColor || theme.hover.color || props.color
+      props.hoverColor || theme[STATE].color.lighten(0.2) || props.color
     )
 
     const hoverBorderColor =
@@ -443,7 +447,7 @@ export default class Surface implements ViewType {
     if (props.glint) {
       glintColor =
         props.glint === true
-          ? isColorString ? background.lighten(0.1) : [255, 255, 255, 0.2]
+          ? colorfulBg ? background.lighten(0.1) : [255, 255, 255, 0.2]
           : props.glint
       // boxShadow.push(['inset', 0, 0, 0, glintColor])
     }

@@ -1,8 +1,8 @@
 // @flow
 import React, { Children, cloneElement } from 'react'
-import { view, Shortcuts } from '@mcro/black'
+import { view, HotKeys } from '@mcro/black'
 import FakeText from './fake/fakeText'
-import { range } from 'lodash'
+import { range, omit } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
@@ -24,7 +24,6 @@ export type Props = {
   horizontal?: boolean,
   itemProps?: Object,
   items?: Array<ItemProps | React$Element<any>>,
-  itemStyle?: Object,
   loading?: boolean,
   onHighlight: Function,
   onItemMount?: Function,
@@ -62,6 +61,7 @@ class List {
   }
 
   componentWillReceiveProps = nextProps => {
+    this.lastDidReceivePropsDate = Date.now()
     const totalItems = this.getTotalItems(nextProps)
     if (totalItems !== this.totalItems) {
       this.totalItems = totalItems
@@ -75,35 +75,22 @@ class List {
   getTotalItems = props =>
     props.items ? props.items.length : Children.count(props.children)
 
-  handleShortcuts = (action, event) => {
-    console.log('key', action, this.state.selected)
-    if (this.state.selected === null) {
-      return
-    }
-    switch (action) {
-      case 'down':
-        this.highlightItem(
-          cur => Math.min(this.totalItems, cur + 1),
-          this.onSelect
-        )
-        event.preventDefault()
-        break
-      case 'cmdEnter':
-        this.props.onCmdEnter && this.props.onCmdEnter(this.getSelected())
-        break
-      case 'up':
-        this.highlightItem(cur => Math.max(0, cur - 1), this.onSelect)
-        event.preventDefault()
-        break
-      case 'enter':
-        this.highlightItem(() => this.state.selected, this.onSelect)
-        event.preventDefault()
-        break
-    }
-  }
+  isSelected = fn => (...args) =>
+    typeof this.state.selected === 'number' ? fn(...args) : null
 
-  onSelect = () => {
-    this.props.onSelect(this.getSelected(), this.state.selected)
+  actions = {
+    down: this.isSelected(() => {
+      this.highlightItem(cur => Math.min(this.totalItems, cur + 1))
+    }),
+    cmdEnter: this.isSelected(() => {
+      this.props.onCmdEnter && this.props.onCmdEnter(this.selected)
+    }),
+    up: this.isSelected(() => {
+      this.highlightItem(cur => Math.max(0, cur - 1))
+    }),
+    enter: this.isSelected(() => {
+      this.highlightItem(() => this.state.selected)
+    }),
   }
 
   totalItems = () => {
@@ -112,20 +99,25 @@ class List {
   }
 
   // wrap weird signature
-  select = (index: number) => {
-    console.log('selecting', index)
-    this.highlightItem(() => index)
+  select = (selector: number | Function) => {
+    if (typeof selector === 'number') {
+      this.highlightItem(() => selector)
+    } else if (typeof selector === 'function') {
+      this.highlightItem(() => this.props.items.findIndex(selector))
+    }
   }
 
   highlightItem = (setter: () => number | null, cb: Function) => {
     const selected = setter(this.state.selected)
+    this.lastSelectionDate = Date.now()
     this.setState({ selected }, () => {
-      this.props.onHighlight(this.getSelected(), selected)
+      this.props.onSelect(this.selected, selected)
       if (cb) cb()
     })
+    return selected
   }
 
-  getSelected = () => {
+  get selected() {
     const { selected } = this.state
     if (selected === null) {
       return null
@@ -138,6 +130,10 @@ class List {
     this.highlightItem(() => null)
   }
 
+  get showInternalSelection() {
+    return this.lastSelectionDate > this.lastDidReceivePropsDate
+  }
+
   render({
     borderColor,
     borderRadius,
@@ -147,7 +143,6 @@ class List {
     height: userHeight,
     itemProps,
     items,
-    itemStyle,
     loading,
     onHighlight,
     onItemMount,
@@ -178,7 +173,7 @@ class List {
     }
 
     const passThroughProps = {
-      css: itemStyle,
+      ...itemProps,
       onItemMount,
       size,
       borderRadius,
@@ -186,15 +181,15 @@ class List {
     }
 
     const total = items ? items.length : Children.count(children)
-    const getItemProps = (i, rowProps, isListItem) => {
+
+    const getItemProps = (index, rowProps, isListItem) => {
       const positionProps = {
         segmented,
-        isFirstElement: i === 0,
-        isLastElement: i === total - 1,
+        isFirstElement: index === 0,
+        isLastElement: index === total - 1,
       }
       const props = {
-        key: i,
-        ...itemProps,
+        key: index,
         ...rowProps,
         ...(isListItem ? passThroughProps : null),
         ...(isListItem ? positionProps : null),
@@ -202,30 +197,32 @@ class List {
       if (controlled) {
         const ogClick = props.onClick
         props.onClick = e => {
-          this.highlightItem(() => i, this.onSelect)
+          this.highlightItem(() => index)
           if (ogClick) {
             ogClick.call(this, e)
           }
         }
-        props.highlight = i === this.state.selected
+        props.highlight = this.showInternalSelection
+          ? index === this.state.selected
+          : this.props.isSelected && this.props.isSelected(items[index])
       }
       return props
     }
 
-    const getListItem = (cur, i) => rowProps => {
-      const item = getItem(cur, i)
+    const getListItem = (cur, index) => rowProps => {
+      const item = getItem(cur, index)
       if (item === null) {
         return null
       }
       if (React.isValidElement(item)) {
-        return React.cloneElement(item, getItemProps(i, rowProps))
+        return React.cloneElement(item, getItemProps(index, rowProps))
       }
       // pass object to ListItem
       return (
         <ListItem
-          key={item.key || cur.id || cur._id || i}
-          {...getItemProps(i, rowProps, true)}
-          {...item}
+          key={item.key || cur.id || index}
+          {...getItemProps(index, rowProps, true)}
+          {...omit(item, ['onClick', 'highlight'])}
         />
       )
     }
@@ -248,11 +245,11 @@ class List {
 
     // allow passing of rowProps by wrapping each in function
     let chillen = children
-      ? Children.map(children, (item, i) => rowProps =>
+      ? Children.map(children, (item, index) => rowProps =>
           item
             ? cloneElement(
                 item,
-                getItemProps(i, rowProps, item.type.isListItem)
+                getItemProps(index, rowProps, item.type.isListItem)
               )
             : null
         )
@@ -264,7 +261,7 @@ class List {
     }
 
     return (
-      <Shortcuts name="all" handler={this.handleShortcuts}>
+      <HotKeys handlers={this.actions}>
         <Surface
           tagName="list"
           align="stretch"
@@ -291,7 +288,7 @@ class List {
           />
           {!virtualized && chillen}
         </Surface>
-      </Shortcuts>
+      </HotKeys>
     )
   }
 }

@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import { range } from 'lodash'
 
-@view
+@view.ui
 export default class FakeText {
   static defaultProps = {
     minWidth: 40,

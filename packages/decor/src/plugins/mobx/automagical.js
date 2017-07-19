@@ -161,6 +161,11 @@ function mobxify(target: Object, method: string, descriptors: Object) {
     mobxifyRxObservable(target, method)
     return
   }
+  // if (value && value.$ && isRxObservable(value.$)) {
+  //   target[method] = target[method].$
+  //   mobxifyRxObservable(target, method)
+  //   return
+  // }
   if (isFunction(value)) {
     // @action
     const targetMethod = target[method].bind(target)

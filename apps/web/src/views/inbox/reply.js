@@ -165,7 +165,7 @@ import timeAgo from 'time-ago'
 const { ago } = timeAgo()
 
 @view
-export default class Message {
+export default class Reply {
   render({ doc, embed }) {
     const fakeMsg = messages[0]
 

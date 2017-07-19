@@ -1,15 +1,15 @@
 import { view } from '@mcro/black'
-import { Thread, Document } from '@mcro/models'
 import * as UI from '@mcro/ui'
-import Message from './message'
+import Reply from './reply'
+import { sortBy } from 'lodash'
+import Draft from './draft'
 import { sortBy, capitalize } from 'lodash'
 import timeAgo from 'time-ago'
-import Draft from './draft'
 
 const { ago } = timeAgo()
 
 class ThreadStore {
-  docs = Document.replies(this.props.document)
+  // replies = this.props.thread.replies()
   showReply = false
 
   assignTo = name => {
@@ -28,7 +28,7 @@ class ThreadStore {
 
   get items() {
     const { document } = this.props
-    const all = [...(this.docs || []), ...(document.updates || [])]
+    const all = [...(this.replies || []), ...(document.updates || [])]
     return sortBy(all, i => +new Date(i.createdAt))
   }
 }
@@ -81,6 +81,8 @@ class Update {
 })
 export default class ThreadView {
   render({ store, document }) {
+    const { replies } = store
+    const sorted = sortBy(replies || [], 'createdAt')
     const isDoc = item => !!item.content
     const tags = ['Enhancement', 'New Issue', 'Bug']
     const assignTo = ['Nick', 'Nate', 'Sam']
@@ -116,7 +118,7 @@ export default class ThreadView {
         </actions>
         {store.items.map(
           item =>
-            isDoc(item) ? <Message doc={item} /> : <Update update={item} />
+            isDoc(item) ? <Reply doc={item} /> : <Update update={item} />
         )}
 
         <reply>

@@ -12,7 +12,7 @@ class ThreadDraftStore {
       title: 'Draft',
       parentId: this.document.parentId,
       draft: true,
-      type: 'thread',
+      type: this.props.isReply ? 'reply' : 'thread',
     })
 
   get document() {

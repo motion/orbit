@@ -48,7 +48,7 @@ export const methods = {
   },
 
   get titleShort() {
-    return this.title.length > 20 ? this.title.slice(0, 18) + '...' : this.title
+    return this.title && this.title.length > 20 ? this.title.slice(0, 18) + '...' : this.title
   },
   url() {
     return `/d/${this._id && this._id.replace(':', '-')}`
@@ -147,7 +147,7 @@ export const methods = {
 
 export type DocumentType = typeof methods & {
   title: str,
-  content: object,
+  content?: object,
   text?: str,
   authorId: str,
   color: str,
@@ -170,7 +170,7 @@ export type DocumentType = typeof methods & {
 export class Document extends Model {
   static props = {
     title: str,
-    content: object,
+    content: object.optional,
     text: str.optional,
     authorId: str,
     color: str,
@@ -193,7 +193,7 @@ export class Document extends Model {
     childrenSort: array.optional.items(str),
   }
 
-  static defaultProps = ({ title, parentId }) => {
+  static defaultProps = ({ title, parentId, type }) => {
     return {
       title,
       authorId: User.user ? User.authorId : 'anon',
@@ -205,7 +205,7 @@ export class Document extends Model {
       childrenSort: [],
       parentIds: parentId ? [parentId] : [],
       private: true,
-      content: DEFAULT_CONTENT(title || ''),
+      content: type === 'document' ? DEFAULT_CONTENT(title || '') : undefined,
       color: randomcolor(),
       slug: toSlug(title),
       type: 'document',

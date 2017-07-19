@@ -7,12 +7,25 @@ class Thread extends Document {
     type: 'thread',
   }
 
-  hooks = {
-    ...super.hooks,
-    preInsert(thread) {
-      thread.type = 'thread'
-      super.hooks.preInsert.call(this, thread)
-    },
+  constructor(...args) {
+    super(...args)
+
+    console.log('methods', this.methods, this.hooks)
+
+    this.hooks = {
+      ...this.hooks,
+      preInsert(thread) {
+        thread.type = 'thread'
+        super.hooks.preInsert.call(this, thread)
+      },
+    }
+
+    this.methods = {
+      ...this.methods,
+      replies() {
+        return this.collection.find({ parentId: this.id, type: 'reply' })
+      },
+    }
   }
 
   // this filters it down to type === 'thread'

@@ -98,20 +98,35 @@ export const methods = {
     }
     return crumbs
   },
-  async getChildren({ max = 30 } = {}) {
-    const children = await this.collection
-      .find({ parentId: this._id })
-      .limit(max / 2)
-      .exec()
-    if (children.length < max) {
-      for (const child of children) {
-        child.children = await this.collection
-          .find({ parentId: child._id })
-          .limit(max / 3)
-          .exec()
-      }
+  getChildren({ maxDepth = 1, max = 100, ...conditions } = {}) {
+    let limit = max
+    const next = (parentId, depth = 0) => {
+      log('next up yo', {
+        parentId,
+        ...conditions,
+      })
+      return this.collection
+        .find({
+          parentId,
+          ...conditions,
+        })
+        .limit(limit)
+        .$.flatMap(children => {
+          log('mapping over', children)
+          if (depth === maxDepth) {
+            return children
+          }
+
+          return children.map(child => {
+            return next(child.id, depth + 1).map(child => {
+              child.children = child.children || []
+              child.children.push(child)
+              return child
+            })
+          })
+        })
     }
-    return children
+    return next(this._id)
   },
   togglePrivate() {
     this.private = !this.private
@@ -162,18 +177,16 @@ export type DocumentType = typeof methods & {
   private: boolean,
   slug: str,
   draft?: boolean,
-  threadId?: str,
   createdAt: string,
   updatedAt: string,
-  type: 'document' | 'thread' | 'inbox',
+  type: 'document' | 'inbox' | 'thread' | 'reply',
 }
 
-export class DocumentModel extends Model {
+export class Document extends Model {
   static props = {
     title: str,
     content: object,
     text: str.optional,
-    threadId: str.optional,
     authorId: str,
     color: str,
     orgId: str.optional,
@@ -183,6 +196,8 @@ export class DocumentModel extends Model {
     parentId: str.optional,
     parentIds: array.items(str),
     attachments: array.optional.items(str),
+    labels: array.optional.items(str),
+    assignees: array.optional.items(str),
     starredBy: array.items(str),
     private: bool,
     home: bool.optional,
@@ -233,7 +248,7 @@ export class DocumentModel extends Model {
       try {
         doc.title = this.content.document.nodes[0].nodes[0].text || doc.title
       } catch (e) {
-        console.log('error extracting title', e)
+        console.log('error extracting title', e, this.content)
       }
     },
   }
@@ -355,7 +370,7 @@ export class DocumentModel extends Model {
   }
 }
 
-const Document = new DocumentModel()
-window.Document = Document
+const DocumentInstance = new Document()
+window.Document = DocumentInstance
 
-export default Document
+export default DocumentInstance

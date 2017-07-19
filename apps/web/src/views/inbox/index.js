@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Thread } from '@mcro/models'
 import timeAgo from 'time-ago'
@@ -7,17 +7,9 @@ import Router from '~/router'
 
 const { ago } = timeAgo()
 
-const glowProps = {
-  color: '#000',
-  scale: 1.6,
-  offsetTop: 100,
-  resist: 70,
-  opacity: 0.048,
-}
-
 class InboxStore {
   document = this.props.document
-  threads = Thread.forDoc(this.document && this.document.id)
+  threads = this.document && this.document.getChildren()
   highlightIndex = 0
   activeItem = null
 }

@@ -83,7 +83,7 @@ export class OrgModel extends Model {
   methods = methods
 
   @query
-  forUser(id) {
+  forUser = id => {
     if (!id) {
       return null
     }

@@ -26,7 +26,7 @@ class DocPageStore {
 @view({
   docStore: DocPageStore,
 })
-export default class DocumentPage {
+export default class DocPage {
   extraRef = null
 
   render({ docStore, explorerStore }: { docStore: DocPageStore }) {

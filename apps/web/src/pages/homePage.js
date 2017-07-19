@@ -11,7 +11,7 @@ export default class HomePage {
       return <center $$centered>login plz</center>
     }
 
-    if (!User.org) {
+    if (User.orgs && User.orgs.length === 0) {
       User.createOrg('welcome')
       return <null>weird no org</null>
     }

@@ -136,7 +136,7 @@ class ExplorerChildrenStore {
 
   @watch
   docs = ({ explorerStore: { document } }) =>
-    this.version && document && document.getChildren && document.getChildren()
+    this.version && document && document.getChildren()
 
   creatingDoc = false
   @watch
@@ -207,7 +207,8 @@ class ExplorerChildrenStore {
           this.docs.map(async doc => {
             return {
               id: doc.id,
-              children: doc.getChildren && (await doc.getChildren()),
+              children: [],
+              //doc.getChildren && (await doc.getChildren().toPromise()),
             }
           })
         )

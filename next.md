@@ -26,7 +26,7 @@
   - Technical
     - Query sync down needs to be fixed
   - Documents
-    - Insert + button needs some love
+    - the + button to side should become a "type switcher", so you can switch todo list to bullet, etc
     - Remove the alternative right arrow insert
     - Code blocks?
 

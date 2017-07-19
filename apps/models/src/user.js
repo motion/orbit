@@ -1,7 +1,7 @@
 import { store, watch } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
 import superLogin from 'superlogin-client'
-import { DocumentModel } from './document'
+import DocumentInstance, { Document } from './document'
 import Org from './org'
 
 const API_HOST = `api.${window.location.host}`
@@ -14,8 +14,9 @@ class User {
   remoteDb = null
   activeOrg = 0
   @watch orgs = () => Org.forUser(this.id)
-  @watch favoriteDocuments = () => Document.favoritedBy(this.id)
-  @watch homeDocument = () => Document.get(this.org && this.org.homeDocument)
+  @watch favoriteDocuments = () => DocumentInstance.favoritedBy(this.id)
+  @watch
+  homeDocument = () => DocumentInstance.get(this.org && this.org.homeDocument)
   // @watch teammates = () => this.collection.find()
 
   get org() {
@@ -33,7 +34,7 @@ class User {
     }
 
     this.database = database
-    this.documents = new DocumentModel()
+    this.documents = new Document()
     this.documents.settings.database = 'userdocuments'
 
     this.setTimeout(this.setupSuperLogin, 1000)
@@ -173,7 +174,7 @@ class User {
   }
 
   createOrg = async name => {
-    return await Org.create({
+    const org = await Org.create({
       title: name,
       admins: [this.id],
       members: [this.id],

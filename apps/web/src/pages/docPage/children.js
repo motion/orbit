@@ -2,8 +2,8 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Document, Inbox } from '@mcro/models'
-import { sortBy, sum } from 'lodash'
+import * as Models from '@mcro/models'
+import { sortBy } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
 import RightArrow from '~/views/rightArrow'
@@ -31,8 +31,8 @@ const DragHandle = SortableHandle(props =>
 )
 
 const ICONS = {
-  inbox: 'chat46',
-  thread: 'chat',
+  inbox: 'paper',
+  thread: 'chat46',
 }
 
 @view.ui
@@ -139,11 +139,6 @@ class ExplorerChildrenStore {
 
   lastDocs = null // temp until queries returning blank for a frame is fixed
 
-  models = {
-    inbox: Inbox,
-    document: Document,
-  }
-
   @watch
   docs = ({ explorerStore: { document } }) =>
     this.version && document && document.getChildren()
@@ -152,7 +147,7 @@ class ExplorerChildrenStore {
   @watch
   newDoc = () =>
     this.creatingDoc && this.document
-      ? this.models[this.docType].createTemporary({
+      ? Models[this.docType].createTemporary({
           parentId: this.document.id,
           parentIds: [this.document.id],
         })
@@ -232,29 +227,20 @@ class ExplorerChildrenStore {
   }
 
   createDoc = () => {
-    this.docType = 'document'
+    this.docType = 'Document'
     this.creatingDoc = true
   }
 
   createInbox = () => {
-    this.docType = 'inbox'
+    this.docType = 'Inbox'
     this.creatingDoc = true
   }
 
-  saveCreatingDoc = async title => {
-    if (!this.newDoc.setDefaultContent) {
-      console.log('wht the fuck', this.newDoc)
-      return
-    }
-    this.newDoc.setDefaultContent({ title })
-    this.newDoc.type = this.docType
+  saveCreatingDoc = async () => {
+    this.newDoc.title = title
     await this.newDoc.save()
-    log('saved', this.newDoc.id)
     this.version++
     this.creatingDoc = false
-    // this.setTimeout(() => {
-
-    // }, 500)
   }
 }
 

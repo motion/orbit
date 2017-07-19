@@ -19,24 +19,6 @@ const cleanGetQuery = (query: Object | string) => {
   return query || {}
 }
 
-const DEFAULT_CONTENT = (title: string) => ({
-  nodes: [
-    {
-      kind: 'block',
-      type: 'title',
-      data: {
-        level: 1,
-      },
-      nodes: [
-        {
-          kind: 'text',
-          text: title || 'Hello World',
-        },
-      ],
-    },
-  ],
-})
-
 export const methods = {
   get tags() {
     return this.updateType('tag').map(tag => tag.name)
@@ -58,10 +40,6 @@ export const methods = {
     // const { lastUpdated, value: cacheValue } = this.tasksCache
     // if (lastUpdated >= this.updatedAt) return cacheValue
     return docToTasks(this)
-  },
-  setDefaultContent({ title }) {
-    this.content = DEFAULT_CONTENT(title)
-    this.title = title
   },
   updateType(type) {
     return (this.updates || []).filter(update => update.type === type)
@@ -207,14 +185,11 @@ export class Thing extends Model {
       childrenSort: [],
       parentIds: parentId ? [parentId] : [],
       private: true,
-      content: type === 'document' ? DEFAULT_CONTENT(title || '') : undefined,
       color: randomcolor(),
       slug: toSlug(title),
       type,
     }
   }
-
-  DEFAULT_CONTENT = DEFAULT_CONTENT
 
   settings = {
     database: 'documents',

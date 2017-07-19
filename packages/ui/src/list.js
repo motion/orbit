@@ -119,6 +119,7 @@ class List {
       this.props.onHighlight(this.selected, selected)
       if (cb) cb()
     })
+    return selected
   }
 
   get selected() {
@@ -182,6 +183,7 @@ class List {
     }
 
     const total = items ? items.length : Children.count(children)
+
     const getItemProps = (i, rowProps, isListItem) => {
       const positionProps = {
         segmented,

@@ -76,8 +76,9 @@ export default class Inbox {
               overflow: 'hidden',
             }}
             items={store.threads || []}
+            onSelect={item => Router.go(item.url())}
             getItem={(item, index) => {
-              const active = Router.path === item.url()
+              const highlight = Router.path === item.url()
               return {
                 primary: (
                   <head $$row $$centered $$justify="space-between" $$flex>
@@ -109,11 +110,11 @@ export default class Inbox {
                 ),
                 ellipse: false,
                 glow: false,
-                hoverBackground: !active && [255, 255, 255, 0.025],
                 //icon: item.icon,
-                onClick: () => Router.go(item.url()),
+                hoverBackground: !highlight && [255, 255, 255, 0.025],
+                highlightBackground: !highlight && [255, 255, 255, 0.05],
                 onMouseEnter: () => (store.highlightIndex = index),
-                active,
+                highlight,
               }
             }}
           />

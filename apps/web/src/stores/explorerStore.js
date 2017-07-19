@@ -1,5 +1,5 @@
 // @flow
-import { watch, keycode, ShortcutManager } from '@mcro/black'
+import { watch, keycode } from '@mcro/black'
 import { Document, User, Thing } from '@mcro/models'
 import Router from '~/router'
 import { uniq, last, includes, dropRightWhile } from 'lodash'

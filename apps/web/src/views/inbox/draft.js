@@ -1,4 +1,4 @@
-import { view, watch } from '@mcro/black'
+import { view, watch, Shortcuts } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
 import { Reply, Thread } from '@mcro/models'
@@ -23,6 +23,7 @@ class DraftStore {
   }
 
   send = async () => {
+    this.draft.draft = false
     await this.draft.save()
 
     // quick, reset draft
@@ -36,6 +37,14 @@ class DraftStore {
   destroy = () => {
     this.doc.remove()
   }
+
+  onShortcut = action => {
+    switch (action) {
+      case 'cmdEnter':
+        this.send()
+        return
+    }
+  }
 }
 
 @view({
@@ -46,36 +55,38 @@ export default class Draft {
 
   render({ editorRef, store, isReply, store: { draft }, ...props }) {
     return (
-      <UI.Theme name="light">
-        <draft {...props}>
-          <draftdoc>
-            <DocView
-              if={draft}
-              id={draft.id}
-              document={draft}
-              inline
-              noTitle={isReply}
-              editorRef={editorRef}
-            />
-          </draftdoc>
-          <actions if={draft} $$row>
-            <status $$row $$centered>
-              <UI.Checkbox marginRight={10} />
-              <UI.Text size={0.8}>
-                Remind me <b>in 2 days</b> if no reply
-              </UI.Text>
-            </status>
-            <UI.Segment spaced>
-              <UI.Button $discard onClick={store.destroy} chromeless>
-                Cancel
-              </UI.Button>
-              <UI.Button icon="send" onClick={store.send}>
-                Send
-              </UI.Button>
-            </UI.Segment>
-          </actions>
-        </draft>
-      </UI.Theme>
+      <Shortcuts name="all" handler={store.onShortcut}>
+        <UI.Theme name="light">
+          <draft {...props}>
+            <draftdoc>
+              <DocView
+                if={draft}
+                id={draft.id}
+                document={draft}
+                inline
+                noTitle={isReply}
+                editorRef={editorRef}
+              />
+            </draftdoc>
+            <actions if={draft} $$row>
+              <status $$row $$centered>
+                <UI.Checkbox marginRight={10} />
+                <UI.Text size={0.8}>
+                  Remind me <b>in 2 days</b> if no reply
+                </UI.Text>
+              </status>
+              <UI.Segment spaced>
+                <UI.Button $discard onClick={store.destroy} chromeless>
+                  Cancel
+                </UI.Button>
+                <UI.Button icon="send" onClick={store.send}>
+                  Send
+                </UI.Button>
+              </UI.Segment>
+            </actions>
+          </draft>
+        </UI.Theme>
+      </Shortcuts>
     )
   }
 

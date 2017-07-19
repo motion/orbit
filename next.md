@@ -12,7 +12,6 @@
     - Replies
       - Show proper user
   - Keyboard basic fixes
-    - BUG press "down" arrow from end of document title (cursor disappears)
     - Moving from commander/doc
   - Polish
     - Improve document saving so it saves more consistent

@@ -20,12 +20,12 @@ class Thread extends Document {
       },
     }
 
-    this.methods = {
-      ...this.methods,
-      replies() {
-        return this.collection.find({ parentId: this.id, type: 'reply' })
-      },
-    }
+    // this.methods = {
+    //   ...this.methods,
+    //   replies() {
+    //     return this.collection.find({ parentId: this.id, type: 'reply' })
+    //   },
+    // }
   }
 
   // this filters it down to type === 'thread'

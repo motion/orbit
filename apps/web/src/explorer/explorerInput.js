@@ -45,32 +45,39 @@ const schema = {
 class Item {
   render({ explorerStore, node }) {
     const name = node.data.get('name')
-    const doc = explorerStore.editorState.document
-    const nextKey = doc.getNextSibling(node.key).key
-    const isLast = doc.nodes.last().nodes.last().key === nextKey
+    const doc = node.data.get('doc')
+    const { document } = explorerStore.editorState
+    const nextKey = document.getNextSibling(node.key).key
+    const isLast = document.nodes.last().nodes.last().key === nextKey
     const selected = explorerStore.selectedItemKey === node.key
+    const hideArrow = !explorerStore.isCreatingNew && isLast
+
+    const btnProps = {
+      chromeless: true,
+      icon: doc && doc.type === 'thread' ? 'paper' : '',
+      spaced: true,
+      size: 1,
+      height: 24,
+      padding: [0, 5],
+      margin: [0, 2, 0, -4],
+      fontSize: FONT_SIZE,
+      highlight: selected,
+      $active: selected,
+      color: [0, 0, 0, 0.8],
+      style: $para,
+    }
 
     return (
       <span>
         <inner contentEditable={false}>
           <UI.Button
-            chromeless
-            onClick={() => explorerStore.onItemClick(node.key)}
-            icon={node.data.get('type') === 'thread' ? 'paper' : ''}
-            spaced
-            size={1}
-            height={24}
-            padding={[0, 5]}
-            margin={[0, 2, 0, -4]}
-            fontSize={FONT_SIZE}
-            highlight={selected}
-            $active={selected}
-            color={[0, 0, 0, 0.8]}
-            style={$para}
+            {...btnProps}
+            onClick={() =>
+              doc ? Router.go(doc.url()) : explorerStore.onItemClick(node.key)}
           >
             {name}
           </UI.Button>
-          <RightArrow css={$arrow} animate={isLast} />
+          <RightArrow if={!hideArrow} css={$arrow} animate={isLast} />
         </inner>
         <block contentEditable={false} $last={isLast}>
           {name}
@@ -86,7 +93,7 @@ class Item {
       marginLeft: -4,
     },
     last: {
-      marginLeft: -1,
+      marginLeft: -4,
       // marginBottom: 1,
     },
     div: {

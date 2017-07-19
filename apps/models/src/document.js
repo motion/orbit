@@ -48,7 +48,9 @@ export const methods = {
   },
 
   get titleShort() {
-    return this.title && this.title.length > 20 ? this.title.slice(0, 18) + '...' : this.title
+    return this.title && this.title.length > 20
+      ? this.title.slice(0, 18) + '...'
+      : this.title
   },
   url() {
     return `/d/${this._id && this._id.replace(':', '-')}`
@@ -193,7 +195,8 @@ export class Document extends Model {
     childrenSort: array.optional.items(str),
   }
 
-  static defaultProps = ({ title, parentId, type }) => {
+  static defaultProps = ({ title, parentId, ...props }) => {
+    const type = props.type || 'document'
     return {
       title,
       authorId: User.user ? User.authorId : 'anon',
@@ -208,7 +211,7 @@ export class Document extends Model {
       content: type === 'document' ? DEFAULT_CONTENT(title || '') : undefined,
       color: randomcolor(),
       slug: toSlug(title),
-      type: 'document',
+      type,
     }
   }
 

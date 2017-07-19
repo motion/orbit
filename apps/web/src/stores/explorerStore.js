@@ -71,6 +71,7 @@ export default class ExplorerStore {
   showDiscussions = false
   showResults = false
   focusPaneIndex = 0
+  isCreatingNew = false
   panes = ['editor', 'children']
 
   get focusedPane() {
@@ -81,6 +82,7 @@ export default class ExplorerStore {
     this.watch(() => {
       if (this.document) {
         this.setPath(this.document)
+        this.isCreatingNew = false
       }
     })
 
@@ -315,6 +317,7 @@ export default class ExplorerStore {
 
     requestAnimationFrame(() => {
       this.inputNode.focus()
+      this.isCreatingNew = true
       this.editorState = this.editorState
         .transform()
         .collapseToEndOf(this.firstLine.nodes.last())
@@ -330,18 +333,24 @@ export default class ExplorerStore {
   setValue = text => {
     if (this.value === text) return
     const paths = text.split(PATH_SEPARATOR)
-    const pathNodes = paths.slice(0, -1).map(name => ({
-      kind: 'inline',
-      type: 'item',
-      isVoid: true,
-      data: { name },
-    }))
+    const allNodes = this.isCreatingNew ? paths.slice(0, -1) : paths
+    const pathNodes = allNodes.map(name => {
+      const doc = this.crumbs.find(
+        crumb => crumb.title.toLowerCase() === name.toLowerCase()
+      )
+      return {
+        kind: 'inline',
+        type: 'item',
+        isVoid: true,
+        data: { name, doc },
+      }
+    })
     const suffixNode = {
       kind: 'text',
       text: last(paths),
     }
 
-    const nodes = [...pathNodes, suffixNode]
+    const nodes = this.isCreatingNew ? [...pathNodes, suffixNode] : pathNodes
 
     this.editorState = Raw.deserialize(
       { nodes: [{ kind: 'block', type: 'paragraph', nodes }] },
@@ -477,6 +486,10 @@ export default class ExplorerStore {
     if (includes(doNothing, code)) {
       event.preventDefault()
       return state
+    }
+
+    if (code === 'backspace') {
+      this.isCreatingNew = true
     }
 
     if (code === '/' || gtSign) {

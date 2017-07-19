@@ -233,7 +233,7 @@ class ExplorerChildrenStore {
   }
 
   saveCreatingDoc = async title => {
-    this.newDoc.title = title
+    this.newDoc.setDefaultContent({ title })
     this.newDoc.type = this.docType
     await this.newDoc.save()
     log('saved', this.newDoc.id)

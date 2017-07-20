@@ -9,7 +9,7 @@ import timeAgo from 'time-ago'
 const { ago } = timeAgo()
 
 class ThreadStore {
-  @watch thread = () => this.props.thread
+  @watch thread = () => Thread.get(this.props.thread.id)
   replies = this.props.thread.replies()
 
   assignTo = name => {
@@ -85,7 +85,7 @@ export default class ThreadView {
         <actions css={{ padding: [0, 30, 20] }}>
           <action $$row>
             <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-              Assigned:&nbsp;
+              On it&nbsp;
             </UI.Text>
             {assignTo.map(name =>
               <UI.Button
@@ -101,7 +101,7 @@ export default class ThreadView {
           <space css={{ height: 10 }} />
           <action $$row>
             <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-              Labels:&nbsp;
+              Label&nbsp;
             </UI.Text>
             {tags.map(name =>
               <UI.Button

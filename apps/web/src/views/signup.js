@@ -40,15 +40,16 @@ export default class Signup {
         />
 
         <header
+          if={false}
           css={{
             position: 'absolute',
             top: '30%',
             marginTop: -140,
             zIndex: -1,
-            background: 'yellow',
+            background: 'white',
             transform: {
               rotate: '-20deg',
-              scale: 2,
+              scale: 0.52,
             },
           }}
         >

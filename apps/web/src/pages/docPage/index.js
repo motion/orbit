@@ -91,7 +91,6 @@ export default class DocPage {
       zIndex: 50,
       top: 0,
       right: 0,
-      bottom: 60,
       pointerEvents: 'none',
     },
     fade: {

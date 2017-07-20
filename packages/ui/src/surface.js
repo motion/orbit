@@ -384,7 +384,9 @@ export default class Surface implements ViewType {
 
     // colors
     const color = $(
-      (props.highlight && props.highlightColor) || theme[STATE].color
+      props.color ||
+        (props.highlight && props.highlightColor) ||
+        theme[STATE].color
     )
     const iconColor = props.iconColor || color
 
@@ -529,7 +531,7 @@ export default class Surface implements ViewType {
 
     const iconSize =
       props.iconSize ||
-      Math.ceil((props.size || 1) * 11) * (props.sizeIcon || 1)
+      Math.round((props.size || 1) * 11 * (props.sizeIcon || 1))
 
     // TODO figure out better pattern for this
     self.themeValues = {

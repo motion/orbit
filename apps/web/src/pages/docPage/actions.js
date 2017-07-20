@@ -35,8 +35,8 @@ export default class DocPageActions {
           flexFlow: 'row',
           alignItems: 'center',
           justifyContent: 'flex-end',
-          padding: 15,
-          marginLeft: -35,
+          padding: [12, 15],
+          marginLeft: -25,
           alignSelf: 'flex-end',
           pointerEvents: 'auto',
         }}

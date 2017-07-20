@@ -47,7 +47,7 @@ export default class TitleNode {
     },
     title: level => ({
       fontWeight: level < 5 ? 400 : 600,
-      fontSize: Math.floor(Math.log(200 / level) * 5.5),
+      fontSize: Math.round(Math.log(200 / level) * 5.5),
     }),
     title1: {
       fontSize: 20,

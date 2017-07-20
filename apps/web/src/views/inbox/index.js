@@ -82,13 +82,11 @@ export default class Inbox {
                     {item.title}
 
                     <date $$row $$justify="flex-end">
-                      <UI.Badge if={index % 3} {...badgeProps} color="red">
-                        Enhancement
-                      </UI.Badge>
-                      <UI.Badge if={index % 2} {...badgeProps} color="yellow">
-                        Needs help
-                      </UI.Badge>
-                      <UI.Badge>+2</UI.Badge>
+                      {item.tags.map(tag =>
+                        <UI.Badge {...badgeProps} color="#efefef">
+                          {tag}
+                        </UI.Badge>
+                      )}
                     </date>
                   </head>
                 ),

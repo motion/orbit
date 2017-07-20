@@ -8,7 +8,7 @@ class DraftStore {
   @watch
   draft = () =>
     this.draftVersion &&
-    this.replyModel.createTemporary({
+    this.model.createTemporary({
       title: 'Draft',
       parentId: (this.document && this.document.parentId) || undefined,
       draft: true,
@@ -18,7 +18,7 @@ class DraftStore {
     return this.props.document
   }
 
-  get replyModel() {
+  get model() {
     return this.document ? Reply : Thread
   }
 

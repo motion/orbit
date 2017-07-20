@@ -129,25 +129,18 @@ const SortableItem = SortableElement(props =>
   <Item style={{ zIndex: 1000000 }} {...props} />
 )
 
-class ExplorerChildrenStore {
+class ChildrenStore {
   children = {}
   version = 1
+  creatingDoc = false
 
   get document() {
     return this.props.explorerStore.document
   }
 
-  lastDocs = null // temp until queries returning blank for a frame is fixed
-
   @watch
-  docs = ({ explorerStore: { document } }) =>
-    this.version &&
-    document &&
-    document
-      .getChildren()
-      .then(children => children.filter(child => child.type !== 'thread'))
+  children = () => this.version && this.document && this.document.getChildren()
 
-  creatingDoc = false
   @watch
   newDoc = () =>
     this.creatingDoc && this.document
@@ -159,33 +152,34 @@ class ExplorerChildrenStore {
 
   get docsById(): Object {
     return (
-      this.docs &&
-      this.docs.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {})
+      this.children &&
+      this.children.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {})
     )
   }
 
   get sortedDocs() {
-    const recentDocs = sortBy(this.docs || [], 'createdAt').reverse()
-
+    const recentDocs = sortBy(this.children || [], 'createdAt').reverse()
     if (
-      this.docs &&
+      this.children &&
       this.document &&
       this.document.childrenSort &&
       this.document.childrenSort.length
     ) {
       const final = this.document.childrenSort.map(id => this.docsById[id])
-
-      if (this.docs.length > final.length) {
+      if (this.children.length > final.length) {
         for (const doc of recentDocs) {
           if (!final.find(x => x.id === doc.id)) {
             final.push(doc)
           }
         }
       }
-
       return final
     }
     return recentDocs
+  }
+
+  get hasDocs() {
+    return this.children && this.children.length
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
@@ -196,38 +190,6 @@ class ExplorerChildrenStore {
     )
     this.document.childrenSort = sortedChildren
     this.document.save()
-  }
-
-  get hasDocs() {
-    return this.docs && this.docs.length
-  }
-
-  start() {
-    this.watch(() => {
-      if (this.docs && this.docs.length) {
-        this.lastDocs = this.docs
-      }
-    })
-
-    this.watch(async () => {
-      if (this.docs && this.docs.length) {
-        const allChildren = await Promise.all(
-          this.docs.map(async doc => {
-            return {
-              id: doc.id,
-              children: doc.getChildren && (await doc.getChildren()),
-            }
-          })
-        )
-        this.children = allChildren.reduce(
-          (acc, { id, children }) => ({
-            ...acc,
-            [id]: children,
-          }),
-          {}
-        )
-      }
-    })
   }
 
   createDoc = () => {
@@ -262,9 +224,9 @@ const SortableChildren = SortableContainer(({ items, store }) =>
 
 @view.attach('explorerStore')
 @view({
-  store: ExplorerChildrenStore,
+  store: ChildrenStore,
 })
-export default class ExplorerChildren {
+export default class Children {
   props: Props
 
   onNewItemText = ref => {
@@ -339,9 +301,6 @@ export default class ExplorerChildren {
             pressDelay={500}
           />
         </contents>
-
-        <shadow if={false} $glow />
-        <background $glow />
         <fade $bottom />
       </children>
     )
@@ -362,46 +321,6 @@ export default class ExplorerChildren {
       flex: 1,
       overflowY: 'scroll',
       overflowX: 'visible',
-    },
-    arrow: {
-      height: 20,
-      margin: ['auto', 0],
-    },
-    subdocs: {
-      flexFlow: 'row',
-      justifyContent: 'flex-end',
-      opacity: 0.5,
-      textAlign: 'right',
-    },
-    text: {
-      lineHeight: '1.4rem',
-    },
-    glow: {
-      position: 'absolute',
-      right: 0,
-      left: 0,
-      borderRadius: 1000,
-    },
-    shadow: {
-      background: '#000',
-      zIndex: 1,
-      top: -35,
-      bottom: 10,
-      filter: 'blur(10px)',
-      opacity: 0.12,
-      transform: {
-        x: '23%',
-      },
-    },
-    background: {
-      top: 0,
-      filter: 'blur(40px)',
-      bottom: 40,
-      zIndex: -1,
-      background: 'white',
-      transform: {
-        x: '20%',
-      },
     },
     fade: {
       position: 'absolute',

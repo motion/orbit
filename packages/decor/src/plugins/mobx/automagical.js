@@ -10,6 +10,12 @@ import {
   isObservable as ISO,
 } from 'mobx'
 
+if (module.hot) {
+  module.hot.accept(() => {
+    console.log('please manually refresh')
+  })
+}
+
 const isObservable = x => {
   try {
     return ISO(x)
@@ -215,7 +221,14 @@ function mobxifyWatch(obj, method, val) {
   let currentObservable = null
   let stopObservableAutorun
 
-  const update = val => current.set(observable.box(val))
+  const update = val => {
+    if (isRxObservable(val)) {
+      console.log('got observable stream', val)
+      debugger
+      obj.subscriptions.add(val.subscribe(update))
+    }
+    current.set(observable.box(val))
+  }
 
   function runObservable() {
     stopObservableAutorun && stopObservableAutorun()
@@ -231,7 +244,7 @@ function mobxifyWatch(obj, method, val) {
 
   async function watchForNewValue() {
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
-    // console.log('result', KEY, result)
+    console.log('result', KEY, result)
     stopObservableAutorun && stopObservableAutorun()
     if (currentDisposable) {
       currentDisposable()
@@ -240,19 +253,20 @@ function mobxifyWatch(obj, method, val) {
     if (result && result.dispose) {
       currentDisposable = result.dispose
     }
-    if (result && (result.$isQuery || isObservable(result))) {
+    log('get here?')
+    if (result && (isQuery(result) || isObservable(result))) {
+      log('got a query or observable')
       if (result.isntConnected) {
         log('watchforNewValue isQuery isntConnected?', result.isntConnected)
         return
       }
       currentObservable = result
       runObservable()
+    } else if (isPromise(result)) {
+      current.set(fromPromise(result))
     } else {
-      if (isPromise(result)) {
-        current.set(fromPromise(result))
-      } else {
-        update(result)
-      }
+      log('doing update')
+      update(result)
     }
   }
 

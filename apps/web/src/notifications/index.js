@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, Shortcuts } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import SidebarStore from './store'
 import Projects from './projects'

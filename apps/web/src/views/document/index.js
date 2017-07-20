@@ -12,7 +12,6 @@ type Props = {
   readOnly?: boolean,
   editorProps?: Object,
   store: DocumentStore,
-  showCrumbs?: boolean,
 }
 
 @view.provide({

@@ -49,7 +49,7 @@ class Item {
           iconProps={{
             css: {
               alignSelf: 'flex-start',
-              marginTop: 6,
+              marginTop: 3,
             },
           }}
           align="center"
@@ -276,38 +276,52 @@ export default class ExplorerChildren {
   render({ store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children>
-        <UI.Title fontWeight={200}>Pages</UI.Title>
-        <UI.Segment
-          chromeless
-          css={{
-            paddingBottom: 5,
-          }}
-          itemProps={{
-            chromeless: true,
-            iconAfter: true,
-            size: 0.9,
-            color: [0, 0, 0, 0.2],
-            hoverColor: [0, 0, 0, 0.6],
-          }}
-        >
-          <UI.Button
-            onClick={store.createInbox}
-            icon="chat46"
-            tooltip="create inbox"
-            tooltipProps={{
-              towards: 'left',
-            }}
-          />
-          <slant css={{ borderRight: [1, '#ccc'], height: '100%' }} />
-          <UI.Button
-            tooltip="create page"
-            onClick={store.createDoc}
-            icon="filesg"
-            tooltipProps={{
-              towards: 'right',
-            }}
-          />
-        </UI.Segment>
+        <title $$row $$centered $$marginBottom={10}>
+          <UI.Title fontWeight={200} color={[0, 0, 0, 0.4]}>
+            Pages
+          </UI.Title>
+
+          <UI.Popover
+            openOnClick
+            closeOnClick
+            towards="right"
+            target={
+              <UI.Button marginLeft={10} circular size={0.8} icon="add" />
+            }
+          >
+            <UI.Segment
+              chromeless
+              css={{
+                paddingBottom: 5,
+              }}
+              itemProps={{
+                chromeless: true,
+                iconAfter: true,
+                size: 0.9,
+                color: [0, 0, 0, 0.2],
+                hoverColor: [0, 0, 0, 0.6],
+              }}
+            >
+              <UI.Button
+                onClick={store.createInbox}
+                icon="paper"
+                tooltip="create inbox"
+                tooltipProps={{
+                  towards: 'top',
+                }}
+              />
+              <slant css={{ borderRight: [1, '#ccc'], height: '100%' }} />
+              <UI.Button
+                tooltip="create page"
+                onClick={store.createDoc}
+                icon="filesg"
+                tooltipProps={{
+                  towards: 'top',
+                }}
+              />
+            </UI.Segment>
+          </UI.Popover>
+        </title>
 
         <contents>
           <Item
@@ -335,7 +349,7 @@ export default class ExplorerChildren {
 
   static style = {
     children: {
-      padding: 10,
+      padding: [10, 18],
       width: '100%',
       flex: 1,
       alignItems: 'flex-end',
@@ -344,6 +358,7 @@ export default class ExplorerChildren {
     },
     contents: {
       marginRight: 5,
+      paddingBottom: 20,
       flex: 1,
       overflowY: 'scroll',
       overflowX: 'visible',

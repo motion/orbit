@@ -75,7 +75,7 @@ export default class Field {
     const id =
       name ||
       (label && typeof label === 'string' && label.toLowerCase()) ||
-      `element-${Math.floor(Math.random() * 10000000)}`
+      `element-${Math.round(Math.random() * 10000000)}`
 
     if (!Element && !children) {
       throw new Error('Invalid field type or no children given to Field')

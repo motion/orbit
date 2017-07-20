@@ -110,15 +110,17 @@ class ContextMenu {
             controlled
             width={width}
             items={options}
-            itemStyle={{
-              padding: [0, 7, 0, 16],
-              margin: [3, 0],
-              fontWeight: 300,
-              fontSize: 15,
-              color: '#444',
-              '&:hover': {
-                background: '#5E95F7',
-                color: 'white',
+            itemProps={{
+              css: {
+                padding: [0, 7, 0, 16],
+                margin: [3, 0],
+                fontWeight: 300,
+                fontSize: 15,
+                color: '#444',
+                '&:hover': {
+                  background: '#5E95F7',
+                  color: 'white',
+                },
               },
             }}
             onSelect={item => item.onSelect(store.data, store.event)}

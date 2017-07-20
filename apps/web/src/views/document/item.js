@@ -9,7 +9,7 @@ import sum from 'hash-sum'
 
 const idToGradient = memoize(id => {
   const num = Math.abs(+sum(id || '').replace(/[^0-9]/g, '') || 5)
-  const deg = Math.floor(Math.random() * 120)
+  const deg = Math.round(Math.random() * 120)
   return { deg, colors: gradients[num % gradients.length].colors }
 })
 

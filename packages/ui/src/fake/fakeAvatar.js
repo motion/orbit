@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 
-@view
+@view.ui
 export default class Avatar {
   static defaultProps = {
     size: 75,

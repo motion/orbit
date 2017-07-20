@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, observable } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Thread } from '@mcro/models'
 import timeAgo from 'time-ago'
@@ -12,8 +12,6 @@ class InboxStore {
   threads = Thread.find({
     parentId: this.document ? this.document.id : undefined,
   })
-  highlightIndex = 0
-  activeItem = null
 }
 
 @view.attach('explorerStore')
@@ -22,9 +20,6 @@ class InboxStore {
 })
 export default class Inbox {
   render({ store, hideTitle }) {
-    // subscribe to variable
-    store.highlightIndex
-
     const badgeProps = {}
 
     Router.path // trigger change
@@ -76,9 +71,12 @@ export default class Inbox {
               overflow: 'hidden',
             }}
             items={store.threads || []}
+            // setTimeout speeds up navigation
+            onSelect={item => this.setTimeout(() => Router.go(item.url()))}
+            isSelected={item => item.url() === Router.path}
             getItem={(item, index) => {
-              const active = Router.path === item.url()
               return {
+                glow: false,
                 primary: (
                   <head $$row $$centered $$justify="space-between" $$flex>
                     {item.title}
@@ -103,17 +101,10 @@ export default class Inbox {
                   </status>,
                 children: (
                   <UI.Text>
-                    {item.text ||
+                    {(item.text && item.text.slice(0, 100)) ||
                       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. '}
                   </UI.Text>
                 ),
-                ellipse: false,
-                glow: false,
-                hoverBackground: !active && [255, 255, 255, 0.025],
-                //icon: item.icon,
-                onClick: () => Router.go(item.url()),
-                onMouseEnter: () => (store.highlightIndex = index),
-                active,
               }
             }}
           />

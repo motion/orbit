@@ -182,7 +182,7 @@ export class Thing extends Model {
     } catch (e) {
       console.log('error extracting title', e, document.content)
     }
-    return document.title || 'empty'
+    return document.title || ''
   }
 
   static props = {

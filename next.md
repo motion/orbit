@@ -1,24 +1,17 @@
 # needs to work for countdown to v0
-  - Assign to
-  - Label as
-  - Inboxes in the tree
-    - show inbox in left side when you visit it
-    - router.go to its threads
+  - Fix automagic getting stuck and not updating sometimes
   - Commander
-    - show inbox icons next to inbox items
-    - clicking item takes to different name
+    - variety of bugs and polish needed
     - doesnt always update to latest route
-    - is a bit slow
     - focus doc after navigate
   - Draft
-    - focus document on open
+    - placeholder "Enter your reply..."
   - Thread
     - Show dates on threads/replies
     - Create from draft + dropdown (does it open/close create nicely)
     - Replies
       - Show proper user
   - Keyboard basic fixes
-    - BUG press "down" arrow from end of document title (cursor disappears)
     - Moving from commander/doc
   - Polish
     - Improve document saving so it saves more consistent
@@ -28,21 +21,23 @@
   - Documents
     - the + button to side should become a "type switcher", so you can switch todo list to bullet, etc
     - Remove the alternative right arrow insert
+    - Links to other docs
     - Code blocks?
 
 # next
-  - inbox pages
-  - keyboard movement
+  - not be edit mode by default in threads unless you are author
+  - archive/delete things
+    - context menu for sidebar?
+  - indexes still not working .sort('createdAt')
   - signup: asks for your team names + emails, then makes root pages for them
-  - content prefilled with Welcome/etc for new org
   - @mentions
-  - discussions
-  - homepage
+    - @doc mention
+    - @user mention
+    - @thread mention
   - nicer inline due dates
   - fix keyboard nav
   - fix sync todos doc/sidebar
   - pullout of notifications
-  - feed
   - lightweight gdocs style inline comments too?
 
 # polish
@@ -62,25 +57,17 @@
   - alignment
   - list and concept of who has joined a doc
   - font size choice
-  - keyboard shortcuts
+  - cant move things to other locations
+  - revisions/history
+  - pop out discussions into a new window so you can view side-by-side
 
-# nate
-  - on signup create org + invite team + create home doc and onboard
+# tech
+  - needs to be a universal dragcancel thing that prevents clicks once you started dragging electron
   - see about pouch revisions
-  - want to start keeping notes on things i want to see
-    - visit/england (visit/england/london), visit/india, etc
-  - installing from npm is a pain
-  - indexes still not working .sort('createdAt')
-  - types not working on <Views /> still
-  - rxdb query sync broken https://gitter.im/pubkey/rxdb
+  - types not working on <Views prop={array | string} /> still
 
 # high level prioritized list
-  - @mentions / dates
-  - hashtags ?
-  - statuses ?
-  - comments
   - attachments
-  - homepage
   - documents
     - inserting and editing a link
     - linking between docs
@@ -90,35 +77,14 @@
     - focused nodes (image, doclist) cursor fixes
     - realtime
     - history/revisions
-  - keyboard shortcuts
   - deploy to prod
   - slack integration + avatars
-  - drag/drop: list items + sidebar
-  - drafts
+  - drag/drop: list items
   - email forwarding
   - github sync
-  - newsfeed
-  - templates
   - integrations
 
-# bugs
-  - needs to be a universal dragcancel thing that prevents clicks once you started dragging electron
-
-# ideas
-  - pop out discussions into a new window so you can view side-by-side
-
-# fast pouch
-- https://github.com/redgeoff/delta-pouch
-- https://github.com/jkleinsc/telegraph
-
-motion_/extractStatics.js at 5d534f71d92048f0afaa1e2632d5727739490619 · motion/motion_
-https://github.com/motion/motion_/blob/5d534f71d92048f0afaa1e2632d5727739490619/packages/transform/src/lib/extractStatics.js
-
-motion_/Statement.js at 5d534f71d92048f0afaa1e2632d5727739490619 · motion/motion_
-https://github.com/motion/motion_/blob/5d534f71d92048f0afaa1e2632d5727739490619/packages/transform/src/nodes/Statement.js
-
-Drag and Drop between two different containers with different elements · Issue #542 · react-dnd/react-dnd
-https://github.com/react-dnd/react-dnd/issues/542
-
-experiments/sortable-target at master · rafaelquintanilha/experiments
-https://github.com/rafaelquintanilha/experiments/tree/master/sortable-target
+# bookmarks
+  -fast pouch
+    - https://github.com/redgeoff/delta-pouch
+    - https://github.com/jkleinsc/telegraph

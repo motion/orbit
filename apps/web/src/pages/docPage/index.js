@@ -17,6 +17,7 @@ class DocPageStore {
   get editing() {
     return this.forceEdit || (User.loggedIn && !User.user.hatesToEdit)
   }
+
   toggleEdit = () => {
     this.forceEdit = !this.forceEdit
   }
@@ -55,23 +56,22 @@ export default class DocPage {
           <inbox if={isInbox} css={{ padding: [0, 10] }}>
             <Inbox document={document} />
           </inbox>
-          <DocumentView
-            if={isDoc || isThread}
-            $isDoc={isDoc}
-            $isThread={isThread}
-            document={document}
-            onKeyDown={docStore.onKeyDown}
-            showCrumbs
-            showChildren
-            isPrimaryDocument
-          />
+          <top>
+            <DocumentView
+              if={isDoc || isThread}
+              $isDoc={isDoc}
+              $isThread={isThread}
+              document={document}
+              onKeyDown={docStore.onKeyDown}
+              isPrimaryDocument
+            />
+            <sidebar if={isDoc || isThread}>
+              <Actions />
+              <Children if={!isThread} documentStore={docStore} />
+            </sidebar>
+          </top>
           <Thread if={isThread} thread={document} />
         </docpagecontent>
-
-        <sidebar if={isDoc || isThread}>
-          <Actions />
-          <Children if={!isThread} documentStore={docStore} />
-        </sidebar>
       </Page>
     )
   }

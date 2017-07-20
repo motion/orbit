@@ -49,7 +49,7 @@ class Item {
           iconProps={{
             css: {
               alignSelf: 'flex-start',
-              marginTop: 6,
+              marginTop: 3,
             },
           }}
           align="center"

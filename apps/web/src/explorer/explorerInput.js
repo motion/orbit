@@ -15,9 +15,9 @@ const $para = {
 
 const $arrow = {
   opacity: 0.4,
-  margin: [0, -2],
+  margin: [0, -1],
   transform: {
-    scale: 0.7,
+    scale: 1,
   },
 }
 

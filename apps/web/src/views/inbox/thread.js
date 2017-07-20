@@ -1,4 +1,5 @@
-import { view } from '@mcro/black'
+import { Thread } from '@mcro/models'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Reply from './reply'
 import Draft from './draft'
@@ -8,7 +9,7 @@ import timeAgo from 'time-ago'
 const { ago } = timeAgo()
 
 class ThreadStore {
-  thread = this.props.thread
+  @watch thread = () => this.props.thread
   replies = this.props.thread.replies()
 
   assignTo = name => {
@@ -28,8 +29,8 @@ class ThreadStore {
   }
 
   get items() {
-    const { thread } = this.props
-    const all = [...(this.replies || []), ...(thread.updates || [])]
+    const { thread } = this
+    const all = [...(this.replies || []), ...((thread && thread.updates) || [])]
     return sortBy(all, i => +new Date(i.createdAt))
   }
 }
@@ -75,13 +76,12 @@ class Update {
   store: ThreadStore,
 })
 export default class ThreadView {
-  render({ store, thread }) {
-    const isDoc = item => !!item.content
+  render({ store }) {
     const tags = ['Enhancement', 'New Issue', 'Bug']
     const assignTo = ['Nick', 'Nate', 'Sam']
 
     return (
-      <thread>
+      <thread if={store.thread}>
         <actions css={{ padding: [0, 30, 20] }}>
           <action $$row>
             <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
@@ -105,7 +105,7 @@ export default class ThreadView {
             </UI.Text>
             {tags.map(name =>
               <UI.Button
-                highlight={thread.tags.indexOf(name) > -1}
+                highlight={store.thread.tags.indexOf(name) > -1}
                 inline
                 $button
                 onClick={() => store.addTag(name)}
@@ -117,7 +117,9 @@ export default class ThreadView {
         </actions>
         {store.items.map(
           item =>
-            isDoc(item) ? <Reply doc={item} /> : <Update update={item} />
+            item.type === 'reply'
+              ? <Reply doc={item} />
+              : <Update update={item} />
         )}
 
         <reply>
@@ -125,7 +127,7 @@ export default class ThreadView {
             <Draft
               $draft
               isReply
-              document={thread}
+              document={store.thread}
               placeholder="Add your reply..."
             />
           </container>

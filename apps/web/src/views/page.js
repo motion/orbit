@@ -82,9 +82,9 @@ export default class Page {
   static Actions = PageActions
   static Sidebar = PageSidebar
 
-  render({ children, store, className }: Props) {
+  render({ children, store, ...props }: Props) {
     return (
-      <page className={className}>
+      <page {...props}>
         <SlotManager store={store} />
         {React.Children.map(children, child => {
           if (child) {

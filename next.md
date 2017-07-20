@@ -25,7 +25,7 @@
     - Code blocks?
 
 # next
-  - not be edit mode by default in threads
+  - not be edit mode by default in threads unless you are author
   - archive/delete things
     - context menu for sidebar?
   - indexes still not working .sort('createdAt')

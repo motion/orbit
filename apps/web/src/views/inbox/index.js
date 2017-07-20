@@ -101,7 +101,7 @@ export default class Inbox {
                   </status>,
                 children: (
                   <UI.Text>
-                    {item.text ||
+                    {(item.text && item.text.slice(0, 100)) ||
                       'Lorem ipsum dolor sit amet, consectetur adipisicing elit. '}
                   </UI.Text>
                 ),

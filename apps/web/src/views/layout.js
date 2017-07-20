@@ -12,6 +12,7 @@ import Errors from '~/views/layout/errors'
 import ExplorerStore from '~/stores/explorerStore'
 import LayoutStore from '~/stores/layoutStore'
 import SoundStore from '~/stores/soundStore'
+import RecStore from '~/stores/recStore'
 import LayoutWrap from '~/views/layout/wrap'
 import Signup from './signup'
 import { User } from '@mcro/models'
@@ -26,6 +27,7 @@ type Props = {
 
 @view.provide({
   layoutStore: LayoutStore,
+  recStore: RecStore,
   soundStore: SoundStore,
   explorerStore: ExplorerStore,
 })

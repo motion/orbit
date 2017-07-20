@@ -55,6 +55,7 @@ export default class Signup {
           <logo
             css={{
               fontWeight: 800,
+              userSelect: 'none',
               fontSize: '6vh',
               transform: {
                 rotate: '20deg',

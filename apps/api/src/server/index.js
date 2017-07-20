@@ -13,6 +13,7 @@ import couchProxy from 'express-couch-proxy'
 import SuperLogin from './superlogin'
 import config from './superlogin.config'
 import url from 'url'
+import smartTag from './smartTag'
 
 function getAuth(authHeader) {
   if (!authHeader) {
@@ -170,6 +171,14 @@ export default class Server {
 
     app.get('/', (req, res) => {
       res.send('hello world')
+    })
+
+    app.get('/rec', (req, res) => {
+      res.send(
+        JSON.stringify(
+          smartTag(JSON.parse(req.query.phrases), req.query.phrase)
+        )
+      )
     })
 
     this.server = app

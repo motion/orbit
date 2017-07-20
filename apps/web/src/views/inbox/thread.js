@@ -2,7 +2,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Reply from './reply'
 import Draft from './draft'
-import { sortBy, capitalize } from 'lodash'
+import { sortBy, includes, capitalize } from 'lodash'
 import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()
@@ -23,8 +23,22 @@ class ThreadStore {
     thread.save()
   }
 
+  removeTag = name => {
+    const { thread } = this.props
+    thread.addUpdate({ type: 'tagRemove', name })
+    thread.save()
+  }
+
+  toggleTag = name => {
+    if (this.hasTag(name)) {
+      this.removeTag(name)
+    } else {
+      this.addTag(name)
+    }
+  }
+
   hasTag = name => {
-    return false
+    return includes(this.thread.tags, name)
   }
 
   get items() {
@@ -41,6 +55,9 @@ class Update {
       <update $$row>
         <tag $$row if={update.type === 'tag'}>
           Nick added the tag <highlight>&nbsp;{update.name}</highlight>
+        </tag>
+        <tag $$row if={update.type === 'tagRemove'}>
+          Nick removed the tag <highlight>&nbsp;{update.name}</highlight>
         </tag>
         <assign $$row if={update.type === 'assign'}>
           Nick assigned <highlight>&nbsp;{update.to}</highlight>
@@ -105,10 +122,10 @@ export default class ThreadView {
             </UI.Text>
             {tags.map(name =>
               <UI.Button
-                highlight={thread.tags.indexOf(name) > -1}
+                highlight={store.hasTag(name)}
                 inline
                 $button
-                onClick={() => store.addTag(name)}
+                onClick={() => store.toggleTag(name)}
               >
                 {capitalize(name)}
               </UI.Button>

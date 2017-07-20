@@ -21,7 +21,14 @@ const cleanGetQuery = (query: Object | string) => {
 
 export const methods = {
   get tags() {
-    return this.updateType('tag').map(tag => tag.name)
+    return this.updates.reduce((acc, item) => {
+      if (item.type === 'tagRemove') {
+        return without(acc, item.name)
+      }
+
+      if (item.type === 'tag') return [...acc, item.name]
+      return acc
+    }, [])
   },
 
   get assignedTo() {

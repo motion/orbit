@@ -124,6 +124,12 @@ anymatch@^1.3.0:
     arrify "^1.0.0"
     micromatch "^2.1.5"
 
+"apparatus@>= 0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/apparatus/-/apparatus-0.0.9.tgz#37dcd25834ad0b651076596291db823eeb1908bd"
+  dependencies:
+    sylvester ">= 0.0.8"
+
 aproba@^1.0.3:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/aproba/-/aproba-1.1.2.tgz#45c6629094de4e96f693ef7eab74ae079c240fc1"
@@ -605,6 +611,10 @@ big.js@^3.1.3:
 binary-extensions@^1.0.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.8.0.tgz#48ec8d16df4377eae5fa5884682480af4d95c774"
+
+bindings@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.2.1.tgz#14ad6113812d2d37d72e67b4cacb4bb726505f11"
 
 block-stream@*:
   version "0.0.9"
@@ -2852,6 +2862,10 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
+js-regression@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/js-regression/-/js-regression-1.0.7.tgz#432f7abf0f7b72e8c814512c585905c02164566f"
+
 js-tokens@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -3461,6 +3475,16 @@ nan@^2.3.0, nan@^2.4.0:
 natives@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/natives/-/natives-1.1.0.tgz#e9ff841418a6b2ec7a495e939984f78f163e6e31"
+
+natural@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/natural/-/natural-0.5.4.tgz#ace41c1655daca2912dfbf99ad7b05314e205f54"
+  dependencies:
+    apparatus ">= 0.0.9"
+    sylvester ">= 0.0.12"
+    underscore ">=1.3.1"
+  optionalDependencies:
+    webworker-threads ">=0.6.2"
 
 ncname@1.0.x:
   version "1.0.0"
@@ -5021,6 +5045,10 @@ supports-color@^3.1.0, supports-color@^3.1.1:
   dependencies:
     has-flag "^1.0.0"
 
+"sylvester@>= 0.0.12", "sylvester@>= 0.0.8":
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/sylvester/-/sylvester-0.0.21.tgz#2987b1ce2bd2f38b0dce2a34388884bfa4400ea7"
+
 symbol-observable@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
@@ -5265,6 +5293,10 @@ ultron@~1.1.0:
 unc-path-regex@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/unc-path-regex/-/unc-path-regex-0.1.2.tgz#e73dd3d7b0d7c5ed86fbac6b0ae7d8c6a69d50fa"
+
+underscore@>=1.3.1:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
 
 unique-stream@^1.0.0:
   version "1.0.0"
@@ -5543,6 +5575,13 @@ websocket-driver@>=0.5.1:
 websocket-extensions@>=0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.1.tgz#76899499c184b6ef754377c2dbb0cd6cb55d29e7"
+
+webworker-threads@>=0.6.2:
+  version "0.7.12"
+  resolved "https://registry.yarnpkg.com/webworker-threads/-/webworker-threads-0.7.12.tgz#65755480be30b72c8311e9d4e9f29cbe80eb361e"
+  dependencies:
+    bindings "^1.2.1"
+    nan "^2.4.0"
 
 whatwg-fetch@>=0.10.0:
   version "2.0.3"

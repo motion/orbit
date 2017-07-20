@@ -1,3 +1,4 @@
+import React from 'react'
 import AutoReplace from 'slate-auto-replace'
 import { BLOCKS } from '~/editor/constants'
 import TitleNode from './titleNode'
@@ -32,7 +33,7 @@ export default class TitlePlugin {
 
         if (startBlock.type !== BLOCKS.TITLE || !isEnter) return
 
-        return state.transform().insertBlock('paragraph').apply()
+        return state.transform().collapseToStartOfNextBlock().apply()
       },
     },
   ]

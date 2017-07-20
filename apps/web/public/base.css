@@ -8,6 +8,18 @@ div[data-slate-editor="true"] > div {
   display: block;
 }
 
+.showPlaceholder {
+  position: relative;
+}
+.showPlaceholder:before {
+  pointer-events: none;
+  position: absolute;
+  opacity: 0.6;
+  left: 0;
+  top: 0;
+  content: attr(placeholder);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Droid Sans", "Helvetica Neue", sans-serif;

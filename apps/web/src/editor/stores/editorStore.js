@@ -90,6 +90,16 @@ export default class EditorStore implements StoreType {
     )
   }
 
+  get showPlaceholder() {
+    const { nodes } = this.state.document
+    return (
+      nodes.size === 2 &&
+      nodes.get(1) &&
+      nodes.get(1).type === 'paragraph' &&
+      nodes.get(1).text === ''
+    )
+  }
+
   get focusedChar() {
     return this.state.selection.startOffset
   }

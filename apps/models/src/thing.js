@@ -34,6 +34,17 @@ const getContent = ({ title }) => ({
         },
       ],
     },
+    {
+      kind: 'block',
+      type: 'paragraph',
+      data: {},
+      nodes: [
+        {
+          kind: 'text',
+          text: '',
+        },
+      ],
+    },
   ],
 })
 
@@ -220,6 +231,7 @@ export class Thing extends Model {
 
   static defaultProps = ({ title, parentId, ...props }) => {
     const type = props.type || 'document'
+
     return {
       title,
       authorId: User.user ? User.id : 'anon',

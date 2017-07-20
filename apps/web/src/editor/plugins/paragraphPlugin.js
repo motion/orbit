@@ -5,6 +5,7 @@ import { BLOCKS } from '~/editor/constants'
 import * as UI from '@mcro/ui'
 import Highlighter from './helpers/highlighter'
 import node from '~/editor/node'
+import { Placeholder } from 'slate'
 import { createButton } from './helpers'
 
 const PARAGRAPH_STYLE = {
@@ -12,8 +13,10 @@ const PARAGRAPH_STYLE = {
   lineHeight: '21px',
 }
 
-export const Paragraph = node(({ editorStore, children, attributes }) => {
+export const Paragraph = node(({ editorStore, children, node, attributes }) => {
   const text = children[0].props.node.text
+
+  const isPlaceholder = editorStore.showPlaceholder
 
   if (
     editorStore.find &&
@@ -33,7 +36,12 @@ export const Paragraph = node(({ editorStore, children, attributes }) => {
   }
 
   return (
-    <p style={PARAGRAPH_STYLE} {...attributes}>
+    <p
+      className={isPlaceholder ? 'showPlaceholder' : ''}
+      placeholder="I have measured out my life with coffee spoons"
+      style={PARAGRAPH_STYLE}
+      {...attributes}
+    >
       {children}
     </p>
   )

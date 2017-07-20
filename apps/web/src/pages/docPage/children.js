@@ -241,7 +241,7 @@ class ExplorerChildrenStore {
   }
 
   saveCreatingDoc = async title => {
-    this.newDoc.title = title
+    this.newDoc.setDefaultContent({ title })
     await this.newDoc.save()
     this.version++
     this.creatingDoc = false

@@ -19,6 +19,24 @@ const cleanGetQuery = (query: Object | string) => {
   return query || {}
 }
 
+const getContent = ({ title }) => ({
+  nodes: [
+    {
+      kind: 'block',
+      type: 'title',
+      data: {
+        level: 1,
+      },
+      nodes: [
+        {
+          kind: 'text',
+          text: title || 'Hello World',
+        },
+      ],
+    },
+  ],
+})
+
 export const methods = {
   get tags() {
     return this.updates.reduce((acc, item) => {
@@ -33,6 +51,11 @@ export const methods = {
 
   get assignedTo() {
     return last(this.updateType('assign').map(({ to }) => to))
+  },
+
+  setDefaultContent({ title }) {
+    this.content = getContent({ title })
+    this.title = title
   },
 
   get titleShort() {
@@ -154,23 +177,8 @@ export type ThingType = typeof methods & {
 }
 
 export class Thing extends Model {
-  static getContent = ({ title }) => ({
-    nodes: [
-      {
-        kind: 'block',
-        type: 'title',
-        data: {
-          level: 1,
-        },
-        nodes: [
-          {
-            kind: 'text',
-            text: title || 'Hello World',
-          },
-        ],
-      },
-    ],
-  })
+  static getContent = getContent
+
   static getTitle = document => {
     // set title to first content node
     try {

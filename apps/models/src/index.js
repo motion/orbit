@@ -11,7 +11,6 @@ import { omit } from 'lodash'
 
 // export all models
 export Document from './document'
-export Comment from './comment'
 export Thread from './thread'
 export Reply from './reply'
 export Inbox from './inbox'

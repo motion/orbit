@@ -553,6 +553,8 @@ export default class Surface implements ViewType {
         textAlign: props.textAlign,
       },
       surface: {
+        position: props.position,
+        zIndex: props.zIndex,
         opacity: props.opacity,
         color,
         overflow: props.overflow || props.glow ? 'hidden' : props.overflow,

@@ -3,12 +3,16 @@ import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
 import { Reply, Thread } from '@mcro/models'
 
+const REC_SPEED = 3000
+
 class DraftStore {
   draftVersion = 1
+  recs = []
+
   @watch
   draft = () =>
     this.draftVersion &&
-    this.replyModel.createTemporary({
+    this.model.createTemporary({
       title: 'Draft',
       parentId: (this.document && this.document.parentId) || undefined,
       draft: true,
@@ -18,8 +22,24 @@ class DraftStore {
     return this.props.document
   }
 
-  get replyModel() {
+  get model() {
     return this.document ? Reply : Thread
+  }
+
+  get isReply() {
+    return !!this.document
+  }
+
+  getRec = async () => {
+    const text = this.draft.previewText
+    const res = await App.stores.RecStore[0].getTag(text)
+    this.recs = res.map(i => i.label)
+
+    setTimeout(this.getRec, REC_SPEED)
+  }
+
+  start() {
+    if (!this.isReply) setTimeout(this.getRec, REC_SPEED)
   }
 
   send = async () => {
@@ -73,6 +93,13 @@ export default class Draft {
               />
             </draftdoc>
             <actions if={draft} $$row>
+              <badges $$row>
+                {store.recs.slice(0, 2).map(rec =>
+                  <UI.Badge>
+                    {rec}
+                  </UI.Badge>
+                )}
+              </badges>
               <status $$row $$centered>
                 <UI.Checkbox marginRight={10} />
                 <UI.Text size={0.8}>

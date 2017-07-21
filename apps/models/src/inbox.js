@@ -1,4 +1,4 @@
-import { Thing } from './thing'
+import { Thing, methods, extend } from './thing'
 import Thread from './thread'
 
 class Inbox extends Thing {
@@ -18,6 +18,8 @@ class Inbox extends Thing {
       })
     },
   }
+
+  methods = extend(methods, {})
 }
 
 export default new Inbox()

@@ -1,27 +1,24 @@
 // @flow
 import { fromStream, fromPromise } from 'mobx-utils'
-import { Observable } from 'rxjs'
-import {
-  observable,
-  action,
-  extendShallowObservable,
-  extendObservable,
-  autorun,
-  isObservable as ISO,
-} from 'mobx'
+import * as Mobx from 'mobx'
+
+if (module.hot) {
+  module.hot.accept(() => {
+    console.log('please manually refresh')
+  })
+}
 
 const isObservable = x => {
   try {
-    return ISO(x)
+    return x && (x.isObservable || Mobx.isObservable(x))
   } catch (e) {
-    console.log('mobxer')
+    console.log('mobxer', e)
     return x && x.observersIndexes
   }
 }
-const log = _ => _ | window.log
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery
-const isRxObservable = val => val instanceof Observable
+const isRxObservable = val => window.Rx && val instanceof window.Rx.Observable
 const isPromise = val => val instanceof Promise
 
 export default function automagical() {
@@ -95,8 +92,9 @@ function isRxDbQuery(query) {
 }
 
 function mobxifyRxObservable(obj, method, val) {
-  extendShallowObservable(obj, { [method]: fromStream(val || obj[method]) })
-  obj.subscriptions.add(observable)
+  const stream = fromStream(val || obj[method])
+  Mobx.extendShallowObservable(obj, { [method]: stream })
+  obj.subscriptions.add(stream)
 }
 
 function automagic(obj: Object) {
@@ -134,22 +132,16 @@ function mobxify(target: Object, method: string, descriptors: Object) {
     }
     Object.defineProperty(getter, method, descriptor)
     // @computed get
-    extendObservable(target, getter)
+    Mobx.extendObservable(target, getter)
     return
   }
 
   let value = target[method]
 
-  try {
-    if (isObservable(value)) {
-      // let it be
-      return value
-    }
-  } catch (e) {
-    console.error('weird error sometimes on hmr', value)
-    throw e
+  // let it be
+  if (isObservable(value)) {
+    return value
   }
-
   // @watch: autorun |> automagical (value)
   if (isWatch(value)) {
     return mobxifyWatch(target, method, value)
@@ -190,36 +182,42 @@ function mobxify(target: Object, method: string, descriptors: Object) {
       return targetMethod(...args)
     }
 
-    target[method] = action(NAME, logWrappedMethod)
+    target[method] = Mobx.action(NAME, logWrappedMethod)
     return target[method]
   }
   // @observable.ref
-  extendShallowObservable(target, { [method]: value })
+  Mobx.extendShallowObservable(target, { [method]: value })
   return value
 }
 
 // * => Mobx
 function resolve(value) {
   if (isRxObservable(value)) {
-    return fromStream(value) // .current & .dispose
+    const stream = fromStream(value)
+    return {
+      get: () => stream.current,
+      dispose: stream.dispose,
+      isObservable: true,
+    }
   }
   return value
 }
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
-  let id = Math.random()
-  const KEY = `${obj.constructor.name}.${method}--${id}--`
-  let current = observable.box(null)
+  const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
+  let current = Mobx.observable.box(null)
   let currentDisposable = null
   let currentObservable = null
-  let stopObservableAutorun
+  let stopAutoObserve
 
-  const update = val => current.set(observable.box(val))
+  const update = val => {
+    current.set(Mobx.observable.box(val))
+  }
 
   function runObservable() {
-    stopObservableAutorun && stopObservableAutorun()
-    stopObservableAutorun = autorun(() => {
+    stopAutoObserve && stopAutoObserve()
+    stopAutoObserve = Mobx.autorun(() => {
       if (currentObservable) {
         const value = currentObservable.get()
         update(value) // set + wrap
@@ -227,32 +225,28 @@ function mobxifyWatch(obj, method, val) {
     })
   }
 
-  const stopAutorun = autorun(watchForNewValue)
+  const stop = Mobx.autorun(watchForNewValue)
 
   async function watchForNewValue() {
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
-    // console.log('result', KEY, result)
-    stopObservableAutorun && stopObservableAutorun()
+    stopAutoObserve && stopAutoObserve()
     if (currentDisposable) {
       currentDisposable()
       currentDisposable = null
     }
     if (result && result.dispose) {
-      currentDisposable = result.dispose
+      currentDisposable = result.dispose.bind(result)
     }
-    if (result && (result.$isQuery || isObservable(result))) {
+    if (result && (isQuery(result) || isObservable(result))) {
       if (result.isntConnected) {
-        log('watchforNewValue isQuery isntConnected?', result.isntConnected)
         return
       }
       currentObservable = result
       runObservable()
+    } else if (isPromise(result)) {
+      current.set(fromPromise(result))
     } else {
-      if (isPromise(result)) {
-        current.set(fromPromise(result))
-      } else {
-        update(result)
-      }
+      update(result)
     }
   }
 
@@ -260,14 +254,15 @@ function mobxifyWatch(obj, method, val) {
     get() {
       const result = current.get()
       if (result && result.promise) {
-        log('get.promise', result.value)
         return result.value
       }
       if (isObservable(result)) {
-        log('get.observable', result.get())
-        return result.get()
+        const value = result.get()
+        if (Mobx.isObservableArray(value) || Mobx.isObservableMap(value)) {
+          return Mobx.toJS(value)
+        }
+        return value
       }
-      log('get', result)
       return result
     },
   })
@@ -276,8 +271,8 @@ function mobxifyWatch(obj, method, val) {
     if (currentDisposable) {
       currentDisposable()
     }
-    stopAutorun()
-    stopObservableAutorun && stopObservableAutorun()
+    stop()
+    stopAutoObserve && stopAutoObserve()
   })
 
   return current

@@ -5,7 +5,9 @@ import User from './user'
 import { some, last, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
+import { Observable } from 'rxjs'
 
+const urlify = id => id && id.replace(':', '-')
 const toSlug = (str: string) =>
   `${str}`.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
 const toID = (str: string) => `${str}`.replace(/-/g, ':').toLowerCase()
@@ -17,6 +19,15 @@ const cleanGetQuery = (query: Object | string) => {
     return toID(query)
   }
   return query || {}
+}
+
+export const extend = (a, b) => {
+  const result = {}
+  const ad = Object.getOwnPropertyDescriptors(a)
+  const bd = Object.getOwnPropertyDescriptors(b)
+  Object.defineProperties(result, ad)
+  Object.defineProperties(result, bd)
+  return result
 }
 
 const getContent = ({ title }) => ({
@@ -49,21 +60,25 @@ const getContent = ({ title }) => ({
 })
 
 export const methods = {
-  get tags() {
-    return this.updates.reduce((acc, item) => {
-      if (item.type === 'tagRemove') {
-        return without(acc, item.name)
-      }
-
-      if (item.type === 'tag') return [...acc, item.name]
-      return acc
-    }, [])
+  url() {
+    return `/${this.type}/${urlify(this.id)}`
   },
+  get tags() {
+    return (
+      this.updates &&
+      this.updates.reduce((acc, item) => {
+        if (item.type === 'tagRemove') {
+          return without(acc, item.name)
+        }
 
+        if (item.type === 'tag') return [...acc, item.name]
+        return acc
+      }, [])
+    )
+  },
   get assignedTo() {
     return last(this.updateType('assign').map(({ to }) => to))
   },
-
   setDefaultContent({ title }) {
     this.content = getContent({ title })
     this.title = title
@@ -71,6 +86,7 @@ export const methods = {
 
   get previewText() {
     return (
+      //color: '#666',
       this.content.document &&
       this.content.document.nodes
         .filter(n => n.type === 'paragraph')
@@ -84,9 +100,6 @@ export const methods = {
     return this.title && this.title.length > 20
       ? this.title.slice(0, 18) + '...'
       : this.title
-  },
-  url() {
-    return `/d/${this._id && this._id.replace(':', '-')}`
   },
   tasks() {
     // const { lastUpdated, value: cacheValue } = this.tasksCache
@@ -129,20 +142,22 @@ export const methods = {
     }
     return crumbs
   },
-  async getChildren({ max = 30 } = {}) {
-    const children = await this.collection
-      .find({ parentId: this._id })
-      .limit(max / 2)
-      .exec()
-    if (children.length < max) {
-      for (const child of children) {
-        child.children = await this.collection
-          .find({ parentId: child._id })
-          .limit(max / 3)
-          .exec()
-      }
+  getChildren({ depth = 1 } = {}) {
+    const next = (curDepth, isRoot) => parent => {
+      return this.collection
+        .find({ parentId: parent.id })
+        .$.take(1)
+        .mergeMap(documents => {
+          if (curDepth - 1 === 0) {
+            return [documents]
+          }
+          return Observable.from(documents)
+            .mergeMap(next(curDepth - 1))
+            .toArray()
+        })
+        .map(children => (isRoot ? children : { ...parent, children }))
     }
-    return children
+    return next(depth, true)(this)
   },
   togglePrivate() {
     this.private = !this.private
@@ -260,12 +275,12 @@ export class Thing extends Model {
     }
   }
 
+  methods = methods
+
   settings = {
     database: 'documents',
     index: ['createdAt', 'updatedAt'],
   }
-
-  methods = methods
 
   @query
   get = (query: Object | string) => {
@@ -273,7 +288,6 @@ export class Thing extends Model {
       return null
     }
     const query_ = cleanGetQuery(query)
-    log('querying with', query_)
     return this.collection.findOne(query_)
   };
 

@@ -5,11 +5,13 @@ import Reply from './reply'
 import Draft from './draft'
 import { sortBy, includes, capitalize } from 'lodash'
 import timeAgo from 'time-ago'
+import DocumentView from '~/views/document'
+import Page from '~/views/page'
 
 const { ago } = timeAgo()
 
 class ThreadStore {
-  @watch thread = () => Thread.get(this.props.thread.id)
+  @watch thread = () => Thread.get(this.props.id)
   replies = this.props.thread.replies()
 
   assignTo = name => {
@@ -92,14 +94,16 @@ class Update {
 @view({
   store: ThreadStore,
 })
-export default class ThreadView {
-  render({ store }) {
+export default class ThreadPage {
+  render({ store, explorerStore }) {
     const tags = ['Enhancement', 'New Issue', 'Bug']
     const assignTo = ['Nick', 'Nate', 'Sam']
 
     return (
-      <thread if={store.thread}>
-        <actions css={{ padding: [0, 30, 20] }}>
+      <Page>
+        <DocumentView document={explorerStore.document} isPrimaryDocument />
+
+        <actions if={store.thread}>
           <action $$row>
             <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
               On it&nbsp;
@@ -139,17 +143,15 @@ export default class ThreadView {
               : <Update update={item} />
         )}
 
-        <reply>
-          <container>
-            <Draft
-              $draft
-              isReply
-              document={store.thread}
-              placeholder="Add your reply..."
-            />
-          </container>
+        <reply if={store.thread}>
+          <Draft
+            $draft
+            isReply
+            document={store.thread}
+            placeholder="Add your reply..."
+          />
         </reply>
-      </thread>
+      </Page>
     )
   }
 
@@ -169,10 +171,7 @@ export default class ThreadView {
     },
     action: {
       alignItems: 'center',
-    },
-    container: {
-      overflow: 'hidden',
-      transition: 'all ease-in 150ms',
+      padding: [0, 30, 20],
     },
   }
 }

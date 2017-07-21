@@ -75,9 +75,6 @@ export const methods = {
       ? this.title.slice(0, 18) + '...'
       : this.title
   },
-  url() {
-    return `/d/${this._id && this._id.replace(':', '-')}`
-  },
   tasks() {
     // const { lastUpdated, value: cacheValue } = this.tasksCache
     // if (lastUpdated >= this.updatedAt) return cacheValue
@@ -207,6 +204,8 @@ export class Thing extends Model {
     return document.title || ''
   }
 
+  static urlify = id => id && id.replace(':', '-')
+
   static props = {
     title: str,
     content: object.optional,
@@ -256,8 +255,6 @@ export class Thing extends Model {
     database: 'documents',
     index: ['createdAt', 'updatedAt'],
   }
-
-  methods = methods
 
   @query
   get = (query: Object | string) => {

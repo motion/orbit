@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Gemstone from '~/views/gemstone'
+import Gemstone from '~/views/kit/gemstone'
 import Router from '~/router'
 import { User } from '@mcro/models'
 

@@ -1,5 +1,5 @@
 // @flow
-import { Thing } from './thing'
+import { Thing, methods } from './thing'
 
 const type = 'reply'
 
@@ -12,6 +12,8 @@ class Reply extends Thing {
   })
 
   static defaultFilter = doc => ({ ...doc, type })
+
+  methods = methods
 }
 
 export default new Reply()

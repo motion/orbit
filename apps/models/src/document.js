@@ -1,7 +1,7 @@
 // @flow
 import { query } from '@mcro/black'
 import User from './user'
-import { Thing } from './thing'
+import { Thing, methods } from './thing'
 
 export class Document extends Thing {
   static props = Thing.props
@@ -13,6 +13,13 @@ export class Document extends Thing {
   })
 
   static defaultFilter = doc => ({ ...doc, type: 'document' })
+
+  methods = {
+    ...methods,
+    url() {
+      return `/doc/${Thing.urlify(this.id)}`
+    },
+  }
 
   root = () => this.collection.find(User.org.homeDocument).exec()
 

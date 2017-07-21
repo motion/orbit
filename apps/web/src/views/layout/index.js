@@ -16,7 +16,7 @@ import RecStore from '~/stores/recStore'
 import LayoutWrap from '~/views/layout/wrap'
 import Signup from './signup'
 import { User } from '@mcro/models'
-import { Bar, Results } from '~/explorer'
+import { Bar, Results } from './explorer'
 import BottomBar from '~/views/bottomBar'
 
 type Props = {

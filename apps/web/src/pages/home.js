@@ -1,8 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { User } from '@mcro/models'
-import DocPage from './docPage'
-import * as UI from '@mcro/ui'
+import DocPage from './document'
 
 @view
 export default class HomePage {

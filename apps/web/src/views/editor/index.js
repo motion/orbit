@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import { viewCache } from '~/helpers'
 import React from 'react'
-import Editor from '~/editor'
+import PlainEditor from './plainEdtor'
 
 @view.ui
 export default class JotEditor {
@@ -10,7 +10,7 @@ export default class JotEditor {
   }
 
   start = () => {
-    const NewPlugins = require('../editor/plugins') // for hmr
+    const NewPlugins = require('./plugins') // for hmr
     const plugins = Object.keys(NewPlugins).map(key => NewPlugins[key])
     this.setState({ plugins })
   }
@@ -33,13 +33,13 @@ export default class JotEditor {
       return null
     }
 
-    return <Editor plugins={plugins} getRef={getRef} {...props} />
+    return <PlainEditor plugins={plugins} getRef={getRef} {...props} />
   }
 }
 
 const resetAll = () => viewCache.all.forEach(value => value.reset())
 
 if (module.hot) {
-  module.hot.accept('../editor/plugins', resetAll)
-  module.hot.accept('../editor/rules', resetAll)
+  module.hot.accept('./plugins', resetAll)
+  module.hot.accept('./rules', resetAll)
 }

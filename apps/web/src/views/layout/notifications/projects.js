@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 import { User } from '@mcro/models'
 import Router from '~/router'
 import { flatMap } from 'lodash'
-import RightArrow from '~/views/rightArrow'
+import RightArrow from '~/views/kit/rightArrow'
 import FlipMove from 'react-flip-move'
 
 @view({

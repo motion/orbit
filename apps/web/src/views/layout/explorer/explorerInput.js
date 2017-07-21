@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
-import RightArrow from '~/views/rightArrow'
+import RightArrow from '~/views/kit/rightArrow'
 import Router from '~/router'
 
 const FONT_SIZE = 16

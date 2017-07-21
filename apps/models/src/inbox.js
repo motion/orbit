@@ -1,4 +1,4 @@
-import { Thing } from './thing'
+import { Thing, methods } from './thing'
 import Thread from './thread'
 
 class Inbox extends Thing {
@@ -16,6 +16,13 @@ class Inbox extends Thing {
         parentId: inbox.id,
         parentIds: [...inbox.parentIds, inbox.id],
       })
+    },
+  }
+
+  methods = {
+    ...methods,
+    url() {
+      return `/inbox/${Thing.urlify(this.id)}`
     },
   }
 }

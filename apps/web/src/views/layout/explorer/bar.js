@@ -4,7 +4,7 @@ import Router from '~/router'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import ExplorerInput from './explorerInput'
-import Notifications from '~/notifications'
+import Notifications from '../notifications'
 
 @view.attach('layoutStore')
 @view

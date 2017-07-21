@@ -1,4 +1,4 @@
-import { view, observable } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Thread } from '@mcro/models'
 import timeAgo from 'time-ago'

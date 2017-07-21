@@ -17,17 +17,13 @@ type Props = {
 export default class Notifications {
   render() {
     return (
-      <inner $$flex>
+      <inner css={{ padding: [13, 0, 23, 10] }} $$flex>
         <UI.Glint borderRadius={5} />
 
         <heading $$draggable $$row css={{ padding: [0, 10] }}>
-          <UI.Segment itemProps={{ borderRadius: 15, size: 0.9 }}>
-            <UI.Button active icon="chat">
-              Threads
-            </UI.Button>
-            <UI.Button icon="bell">Following</UI.Button>
-          </UI.Segment>
-          <div $$flex />
+          <UI.Title opacity={0.5} $$flex>
+            Following
+          </UI.Title>
           <UserBar />
         </heading>
 

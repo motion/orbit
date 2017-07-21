@@ -375,6 +375,7 @@ export default class Surface implements ViewType {
 
   static theme = (props, theme, self) => {
     // sizes
+    const size = props.size === true ? 1 : props.size || 1
     const height = props.height
     const width = props.width
     const padding = props.padding
@@ -438,9 +439,9 @@ export default class Surface implements ViewType {
     if (props.elevation) {
       boxShadow.push([
         0,
-        props.elevation * 3,
-        props.elevation * 15,
-        [0, 0, 0, 0.15],
+        (Math.log(props.elevation) + 1) * 3 + 1,
+        (Math.log(props.elevation) + 1) * 10,
+        [0, 0, 0, 1 / Math.log(props.elevation) * 0.15],
       ])
     }
 
@@ -455,34 +456,34 @@ export default class Surface implements ViewType {
     }
 
     // borderRadius
-    const radius = props.circular ? height / 2 : props.borderRadius
-    const borderRadiusSize =
-      radius === true ? height / 3.4 * props.size : radius
+    let radius = props.circular ? height / 2 : props.borderRadius
+    radius = radius === true ? height / 3.4 * size : radius
+    radius = typeof radius === 'number' ? Math.round(radius) : radius
 
     const borderRadius = {}
     if (props.uiContext && props.uiContext.inSegment) {
       borderRadius.borderLeftRadius = props.uiContext.inSegment.first
-        ? borderRadiusSize
+        ? radius
         : 0
       borderRadius.borderRightRadius = props.uiContext.inSegment.last
-        ? borderRadiusSize
+        ? radius
         : 0
     } else if (props.circular) {
-      borderRadius.borderRadius = props.size * LINE_HEIGHT
+      borderRadius.borderRadius = size * LINE_HEIGHT
     } else {
       let hasSidesDefined = false
       for (const side of BORDER_RADIUS_SIDES) {
         if (props[side]) {
           hasSidesDefined = true
           if (props[side] === true) {
-            borderRadius[side] = borderRadiusSize
+            borderRadius[side] = radius
           } else {
             borderRadius[side] = props[side]
           }
         }
       }
-      if (!hasSidesDefined && borderRadiusSize) {
-        borderRadius.borderRadius = borderRadiusSize
+      if (!hasSidesDefined && radius) {
+        borderRadius.borderRadius = radius
       }
     }
     if (Object.keys(borderRadius).length) {
@@ -533,13 +534,12 @@ export default class Surface implements ViewType {
     }
 
     const iconSize =
-      props.iconSize ||
-      Math.round((props.size || 1) * 11 * (props.sizeIcon || 1))
+      props.iconSize || Math.round(size * 11 * (props.sizeIcon || 1))
 
     // TODO figure out better pattern for this
     self.themeValues = {
       iconSize,
-      borderRadiusSize,
+      borderRadiusSize: radius,
       glintColor,
       color,
     }

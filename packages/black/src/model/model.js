@@ -262,15 +262,20 @@ export default class Model {
     const ogPostCreate = this.hooks.postCreate
     this.hooks.postCreate = doc => {
       const { compiledMethods } = this
-      for (const method of Object.keys(compiledMethods)) {
-        const descriptor = compiledMethods[method]
-        // autobind
-        if (typeof descriptor.get === 'function') {
-          descriptor.get = descriptor.get.bind(doc)
+      console.log('postCreate', doc, compiledMethods)
+      if (compiledMethods) {
+        for (const method of Object.keys(compiledMethods)) {
+          const descriptor = compiledMethods[method]
+          // autobind
+          if (typeof descriptor.get === 'function') {
+            descriptor.get = descriptor.get.bind(doc)
+          }
+          if (typeof descriptor.value === 'function') {
+            descriptor.value = descriptor.value.bind(doc)
+          }
         }
-        if (typeof descriptor.value === 'function') {
-          descriptor.value = descriptor.value.bind(doc)
-        }
+      } else {
+        console.warn('no methods')
       }
       Object.defineProperties(doc, compiledMethods)
       if (ogPostCreate) {

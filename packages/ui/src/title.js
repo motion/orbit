@@ -51,6 +51,7 @@ export default class Title extends React.Component {
     sub,
     stat,
     color,
+    opacity,
     size,
     onCollapse,
     textProps,
@@ -92,6 +93,7 @@ export default class Title extends React.Component {
           tagName={tagName}
           size={size * 1.02}
           color={color}
+          opacity={opacity}
           fontSize={fontSize}
           fontWeight={fontWeight}
           {...textProps}

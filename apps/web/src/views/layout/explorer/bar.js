@@ -49,6 +49,7 @@ export default class ExplorerBar {
           </UI.SlotFill.Slot>
           <UI.Popover
             openOnClick
+            delay={500}
             overlay={[0, 0, 0, 0.05]}
             closeOnEscape
             background

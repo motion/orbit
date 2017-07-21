@@ -7,7 +7,7 @@ import type { Document } from '@jot/models'
 import Actions from './actions'
 import Children from './children'
 
-const SIDEBAR_WIDTH = 140
+const SIDEBAR_WIDTH = '30%'
 
 type Props = {
   id?: string,
@@ -84,18 +84,18 @@ export default class DocumentView {
       maxWidth: '100%',
       minHeight: 200,
       padding: [0],
-    },
-    showSidebar: {
-      paddingRight: SIDEBAR_WIDTH - 5,
+      flexFlow: 'row',
     },
     loading: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
     },
+    showSidebar: {
+      width: `calc(100% - ${SIDEBAR_WIDTH}px)`,
+    },
     sidebar: {
       width: SIDEBAR_WIDTH,
-      position: 'absolute',
       overflow: 'hidden',
       zIndex: 50,
       top: 0,
@@ -104,8 +104,8 @@ export default class DocumentView {
     },
     line: {
       position: 'absolute',
-      top: 0,
-      right: 38.5,
+      top: -20,
+      right: 31,
       bottom: 0,
       width: 1,
       background: '#eee',
@@ -113,7 +113,7 @@ export default class DocumentView {
     },
     fade: {
       position: 'absolute',
-      top: 0,
+      top: -20,
       left: 0,
       right: 0,
       height: 60,

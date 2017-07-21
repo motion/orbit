@@ -32,7 +32,7 @@ const DragHandle = SortableHandle(props =>
 
 const ICONS = {
   inbox: 'paper',
-  thread: 'chat46',
+  document: 'filesg',
 }
 
 @view.ui
@@ -46,10 +46,14 @@ class Item {
       >
         <UI.Surface
           icon={ICONS[doc.type]}
+          iconSize={32}
           iconProps={{
             css: {
               alignSelf: 'flex-start',
               marginTop: 3,
+              transform: {
+                scale: 0.35,
+              },
             },
           }}
           align="center"
@@ -57,7 +61,7 @@ class Item {
           flexFlow="row"
           iconAfter
           textAlign="right"
-          padding={[4, 0, 10]}
+          padding={0}
         >
           <UI.Text
             $title
@@ -82,7 +86,8 @@ class Item {
   }
   static style = {
     doccontainer: {
-      minWidth: 50,
+      marginRight: -8,
+      minWidth: 80,
       position: 'relative',
       opacity: 0.8,
       transition: 'transform ease-in 50ms',
@@ -229,58 +234,7 @@ export default class Children {
   render({ explorerStore, store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children>
-        <title $$row $$centered $$marginBottom={10}>
-          <UI.Title
-            tagName="h2"
-            fontWeight={200}
-            color={[0, 0, 0, 0.4]}
-            css={{ opacity: 0 }}
-          >
-            Pages
-          </UI.Title>
-
-          <UI.Popover
-            open
-            openOnHover
-            closeOnClick
-            borderRadius
-            towards="left"
-            target={<UI.Button circular size={0.8} icon="add" />}
-          >
-            <UI.List
-              background
-              elevation={2}
-              chromeless
-              width={120}
-              itemProps={{
-                chromeless: true,
-                size: 0.9,
-                color: [0, 0, 0, 0.4],
-                hoverColor: [0, 0, 0, 0.7],
-              }}
-            >
-              <UI.ListItem
-                primary="page"
-                onClick={store.createDoc}
-                icon="filesg"
-              />
-              <UI.ListItem
-                onClick={store.createInbox}
-                icon="paper"
-                primary="inbox"
-              />
-            </UI.List>
-          </UI.Popover>
-        </title>
-
         <contents>
-          <Item
-            if={store.newDoc}
-            editable
-            onSave={store.saveCreatingDoc}
-            doc={store.newDoc}
-            textRef={this.onNewItemText}
-          />
           <SortableChildren
             if={hasDocs}
             items={sortedDocs}
@@ -288,7 +242,46 @@ export default class Children {
             onSortEnd={store.onSortEnd}
             pressDelay={500}
           />
+          <Item
+            if={store.newDoc}
+            editable
+            onSave={store.saveCreatingDoc}
+            doc={store.newDoc}
+            textRef={this.onNewItemText}
+          />
         </contents>
+        <space />
+        <UI.Popover
+          openOnHover
+          closeOnClick
+          towards="left"
+          target={<UI.Button circular size={0.8} icon="add" />}
+        >
+          <UI.List
+            background
+            elevation={5}
+            chromeless
+            borderRadius={5}
+            width={80}
+            itemProps={{
+              size: 0.9,
+              color: [0, 0, 0, 0.4],
+              hoverColor: [0, 0, 0, 0.7],
+            }}
+          >
+            <UI.ListItem
+              primary="Page"
+              onClick={store.createDoc}
+              icon="filesg"
+            />
+            <UI.ListItem
+              onClick={store.createInbox}
+              icon="paper"
+              primary="List"
+            />
+          </UI.List>
+        </UI.Popover>
+        <space />
         <UI.Button
           onClick={explorerStore.ref('showBrowse').toggle}
           css={{ position: 'relative', zIndex: 100 }}
@@ -302,7 +295,7 @@ export default class Children {
 
   static style = {
     children: {
-      padding: [10, 18],
+      padding: [0, 18],
       width: '100%',
       flex: 1,
       alignItems: 'flex-end',
@@ -314,10 +307,13 @@ export default class Children {
         opacity: 1,
       },
     },
+    space: {
+      paddingBottom: 15,
+    },
     contents: {
       marginRight: 5,
-      paddingBottom: 20,
       flex: 1,
+      width: '100%',
       overflowY: 'scroll',
       overflowX: 'visible',
     },

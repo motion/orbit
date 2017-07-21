@@ -262,7 +262,6 @@ export default class Model {
     const ogPostCreate = this.hooks.postCreate
     this.hooks.postCreate = doc => {
       const { compiledMethods } = this
-      console.log('postCreate', doc, compiledMethods)
       if (compiledMethods) {
         for (const method of Object.keys(compiledMethods)) {
           const descriptor = compiledMethods[method]

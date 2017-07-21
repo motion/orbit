@@ -87,13 +87,14 @@ export default class Page {
   static Sidebar = PageSidebar
 
   get showSidebar() {
-    return this.props.showActions || this.props.showChildren
+    return this.props.sidebar || this.props.actions || this.props.children
   }
 
   render({ sidebar, actions, children, store, ...props }: Props) {
+    const { showSidebar } = this
     return (
       <page {...props}>
-        <pagecontents $showSidebar={sidebar}>
+        <pagecontents $showSidebar={showSidebar}>
           <SlotManager store={store} />
           {React.Children.map(children, child => {
             if (child) {
@@ -107,7 +108,7 @@ export default class Page {
           })}
         </pagecontents>
 
-        <sidebar if={sidebar || actions || children}>
+        <sidebar if={showSidebar}>
           <Actions if={actions} />
           <Children if={children} />
           <line />

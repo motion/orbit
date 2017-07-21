@@ -35,19 +35,14 @@ export default class DocumentView {
     noTitle,
     editorRef,
     placeholder,
-    showActions,
-    showChildren,
     ...props
   }: Props) {
     if (!docStore.document) {
       return <loading />
     }
 
-    const { showSidebar } = this
-
     return (
       <docview
-        $showSidebar={showSidebar}
         onMouseDown={docStore.mousedown}
         onMouseUp={docStore.mouseup}
         {...props}

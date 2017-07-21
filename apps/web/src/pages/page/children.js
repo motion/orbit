@@ -6,7 +6,6 @@ import * as Models from '@mcro/models'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
-import RightArrow from '~/views/kit/rightArrow'
 import {
   SortableContainer,
   SortableElement,

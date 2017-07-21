@@ -9,10 +9,10 @@ import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()
 
-@view.attach('docStore')
+@view.attach('explorerStore')
 @view
 export default class DocPageActions {
-  render({ docStore: { document } }) {
+  render({ explorerStore: { document } }) {
     if (!document || document === null) {
       return null
     }

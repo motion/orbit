@@ -6,8 +6,7 @@ import Draft from '~/views/inbox/draft'
 import { sortBy, includes, capitalize } from 'lodash'
 import timeAgo from 'time-ago'
 import DocumentView from '~/views/document'
-import Page from '~/views/page'
-import Actions from '~/views/document/actions'
+import Page from './page'
 
 const { ago } = timeAgo()
 
@@ -102,9 +101,11 @@ export default class ThreadPage {
 
     return (
       <Page>
-        <DocumentView document={explorerStore.document} isPrimaryDocument />
-
-        <Actions />
+        <DocumentView
+          showActions
+          document={explorerStore.document}
+          isPrimaryDocument
+        />
 
         <actions if={store.thread}>
           <action $$row>

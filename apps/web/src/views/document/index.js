@@ -4,6 +4,10 @@ import { view } from '@mcro/black'
 import Editor from '~/views/editor'
 import DocumentStore from './documentStore'
 import type { Document } from '@jot/models'
+import Actions from './actions'
+import Children from './children'
+
+const SIDEBAR_WIDTH = 140
 
 type Props = {
   id?: string,
@@ -27,6 +31,10 @@ export default class DocumentView {
     }
   }
 
+  get showSidebar() {
+    return this.props.showActions || this.props.showChildren
+  }
+
   render({
     editorProps,
     inline,
@@ -35,14 +43,19 @@ export default class DocumentView {
     noTitle,
     editorRef,
     placeholder,
+    showActions,
+    showChildren,
     ...props
   }: Props) {
     if (!docStore.document) {
       return <loading />
     }
 
+    const { showSidebar } = this
+
     return (
       <docview
+        $showSidebar={showSidebar}
         onMouseDown={docStore.mousedown}
         onMouseUp={docStore.mouseup}
         {...props}
@@ -56,21 +69,36 @@ export default class DocumentView {
           placeholder={placeholder}
           {...editorProps}
         />
+        <sidebar if={showSidebar}>
+          <Actions if={showActions} />
+          <Children if={showChildren} />
+        </sidebar>
       </docview>
     )
   }
 
   static style = {
     docview: {
-      flex: 1,
       maxWidth: '100%',
-      minHeight: 100,
+      minHeight: 200,
       padding: [0],
+    },
+    showSidebar: {
+      paddingRight: SIDEBAR_WIDTH - 5,
     },
     loading: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    sidebar: {
+      width: SIDEBAR_WIDTH,
+      position: 'absolute',
+      overflow: 'hidden',
+      zIndex: 50,
+      top: 0,
+      right: 0,
+      pointerEvents: 'none',
     },
   }
 }

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import Page from '~/views/page'
+import Page from './page'
 import InboxList from '~/views/inbox/list'
 
 @view.attach('explorerStore')

@@ -342,13 +342,23 @@ export default class Model {
   @query findOne = (...args) => this.collection.findOne(...args)
 
   createTemporary = async object => {
+    if (!this._collection) {
+      console.error('trying to create a document before having connected')
+      return null
+    }
     this.applyDefaults(object)
     const doc = await this._collection.newDocument(object)
     doc.__is_temp = true
     return doc
   }
 
-  create = (object: Object = {}) => this._collection.insert(object)
+  create = (object: Object = {}) => {
+    if (!this._collection) {
+      console.error('trying to create a document before having connected')
+      return null
+    }
+    return this._collection.insert(object)
+  }
 
   findOrCreate = async (object: Object = {}): Promise<Object> => {
     const found = await this.collection.findOne(object).exec()

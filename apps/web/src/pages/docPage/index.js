@@ -30,8 +30,29 @@ class DocPageStore {
 export default class DocPage {
   extraRef = null
 
+  getChild = child => {
+    return (
+      <thing key={child.id}>
+        <title>
+          {child.title}
+        </title>
+        <children $$paddingLeft={20}>
+          {(child.children.length && child.children.map(this.getChild)) || null}
+        </children>
+      </thing>
+    )
+  }
+
   render({ docStore, explorerStore }: { docStore: DocPageStore }) {
     const { document } = explorerStore
+
+    if (explorerStore.children) {
+      return (
+        <div $$fullscreen $$backgorund="#fff" $$padding={30}>
+          {explorerStore.children.map(this.getChild)}
+        </div>
+      )
+    }
 
     // this is the "loading" state
     if (document === undefined) {

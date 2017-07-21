@@ -43,6 +43,12 @@ export default class ExplorerStore {
   crumbs = () =>
     this.document && this.document.getCrumbs && this.document.getCrumbs()
 
+  @watch
+  children = () =>
+    this.showBrowse &&
+    this.document &&
+    this.document.getChildren({ depth: 1000 })
+
   editorState = Raw.deserialize(
     {
       nodes: [
@@ -67,6 +73,7 @@ export default class ExplorerStore {
   focused = false
   showDiscussions = false
   showResults = false
+  showBrowse = false
   focusPaneIndex = 0
   isCreatingNew = false
   panes = ['editor', 'children']

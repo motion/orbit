@@ -5,6 +5,7 @@ import User from './user'
 import { some, last, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
+import { Observable } from 'rxjs'
 
 const toSlug = (str: string) =>
   `${str}`.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
@@ -118,20 +119,22 @@ export const methods = {
     }
     return crumbs
   },
-  async getChildren({ max = 30 } = {}) {
-    const children = await this.collection
-      .find({ parentId: this._id })
-      .limit(max / 2)
-      .exec()
-    if (children.length < max) {
-      for (const child of children) {
-        child.children = await this.collection
-          .find({ parentId: child._id })
-          .limit(max / 3)
-          .exec()
-      }
+  getChildren({ depth = 1 } = {}) {
+    const next = (curDepth, isRoot) => parent => {
+      return this.collection
+        .find({ parentId: parent.id })
+        .$.take(1)
+        .mergeMap(documents => {
+          if (curDepth - 1 === 0) {
+            return [documents]
+          }
+          return Observable.from(documents)
+            .mergeMap(next(curDepth - 1))
+            .toArray()
+        })
+        .map(children => (isRoot ? children : { ...parent, children }))
     }
-    return children
+    return next(depth, true)(this)
   },
   togglePrivate() {
     this.private = !this.private

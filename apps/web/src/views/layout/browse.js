@@ -17,22 +17,28 @@ export default class Browse {
     )
   }
 
-  render({ explorerStore: { showBrowse, children } }) {
+  render({ explorerStore, explorerStore: { showBrowse, children } }) {
     return (
-      <UI.Surface $browse elevation={2} if={showBrowse && children}>
-        {children.map(this.getChild)}
-      </UI.Surface>
+      <overlay
+        if={showBrowse && children}
+        $$fullscreen
+        onClick={explorerStore.ref('showBrowse').toggle}
+      >
+        <UI.Surface $surface width="50%" height="50%" elevation={2}>
+          {children.map(this.getChild)}
+        </UI.Surface>
+      </overlay>
     )
   }
 
   static style = {
-    browse: {
+    overlay: {
       position: 'absolute',
-      top: '20%',
-      right: '20%',
-      bottom: '20%',
-      left: '20%',
-      zIndex: 1000,
+      zIndex: 10000000,
+      background: [0, 0, 0, 0.1],
+    },
+    surface: {
+      margin: 'auto',
     },
   }
 }

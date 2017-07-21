@@ -6,12 +6,10 @@ import Gemstone from '~/views/kit/gemstone'
 import Router from '~/router'
 import { User } from '@mcro/models'
 
-@view.attach('explorerStore')
+@view.attach('docStore')
 @view
 export default class DocPageActions {
-  render({ explorerStore }) {
-    const { document } = explorerStore
-
+  render({ docStore: { document } }) {
     if (!document || document === null) {
       return null
     }
@@ -46,8 +44,8 @@ export default class DocPageActions {
           target={
             <UI.Button chromeless circular padding={0} size={1.2} glow>
               <Gemstone
-                if={explorerStore && explorerStore.document}
-                id={explorerStore.document.id}
+                if={document}
+                id={document.id}
                 size={28}
                 css={{
                   margin: 'auto',

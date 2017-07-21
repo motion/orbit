@@ -55,7 +55,6 @@ export default class Drawer {
     from,
     size,
     percent,
-    style,
     onClickOverlay,
     showOverlay,
     boxShadow,
@@ -86,7 +85,6 @@ export default class Drawer {
           $panel
           $from={from}
           $panelOpen={open}
-          $$style={style}
           style={panelStyle}
           className={className}
           {...props}

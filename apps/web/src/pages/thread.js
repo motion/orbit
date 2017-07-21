@@ -7,7 +7,6 @@ import { sortBy, includes, capitalize } from 'lodash'
 import timeAgo from 'time-ago'
 import DocumentView from '~/views/document'
 import Page from './page'
-import Actions from '~/views/document/actions'
 
 const { ago } = timeAgo()
 
@@ -101,8 +100,12 @@ export default class ThreadPage {
     const assignTo = ['Nick', 'Nate', 'Sam']
 
     return (
-      <Page sidebar={<Actions />}>
-        <DocumentView document={explorerStore.document} isPrimaryDocument />
+      <Page>
+        <DocumentView
+          showActions
+          document={explorerStore.document}
+          isPrimaryDocument
+        />
 
         <actions if={store.thread}>
           <action $$row>

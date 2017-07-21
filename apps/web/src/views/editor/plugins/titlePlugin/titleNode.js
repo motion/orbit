@@ -42,9 +42,7 @@ export default class TitleNode {
   }
 
   static style = {
-    tag: {
-      position: 'sticky',
-    },
+    tag: {},
     title: level => ({
       fontWeight: level < 5 ? 400 : 600,
       fontSize: Math.round(Math.log(200 / level) * 5.5),

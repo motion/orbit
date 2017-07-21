@@ -82,8 +82,7 @@ export default class Page {
   static Actions = PageActions
   static Sidebar = PageSidebar
 
-  render({ sidebar, children, store, ...props }: Props) {
-    log(sidebar)
+  render({ children, store, ...props }: Props) {
     return (
       <page {...props}>
         <SlotManager store={store} />
@@ -97,9 +96,6 @@ export default class Page {
           }
           return child
         })}
-        <sidebar if={sidebar}>
-          {sidebar}
-        </sidebar>
       </page>
     )
   }

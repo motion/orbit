@@ -98,7 +98,7 @@ export default class Sidebar {
               </end>
             </bar>
 
-            <InboxList hideTitle />
+            <InboxList />
 
             {children}
           </sidebar>

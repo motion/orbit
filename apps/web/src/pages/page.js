@@ -127,7 +127,7 @@ export default class Page {
       position: 'relative',
       flexFlow: 'row',
     },
-    pageContents: {
+    pagecontents: {
       width: '100%',
       flex: 1,
       overflowX: 'visible',

@@ -1,35 +1,34 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Thread } from '@mcro/models'
 import timeAgo from 'time-ago'
 import Draft from './draft'
 import Router from '~/router'
+import { Thread } from '@mcro/models'
 
 const { ago } = timeAgo()
 
-class InboxStore {
-  document = this.props.document
-  threads = Thread.find({
-    parentId: this.document ? this.document.id : undefined,
-  })
-}
-
-@view.attach('explorerStore')
 @view({
-  store: InboxStore,
+  store: @view.attach('explorerStore')
+  class InboxStore {
+    document = this.props.document
+    threads = Thread.find({
+      parentId: this.document ? this.document.id : undefined,
+    })
+  },
 })
 export default class Inbox {
-  render({ store, hideTitle }) {
+  render({ store, large }) {
     const badgeProps = {}
 
     Router.path // trigger change
 
     return (
       <inbox>
-        <bar if={!hideTitle}>
-          <UI.Title size={3} stat={`${(store.threads || []).length} new`}>
-            {store.document.title}
-          </UI.Title>
+        <bar if={!large && store.document}>
+          <bartitle $$flex>
+            <UI.Title size={3}>{store.document.title}</UI.Title>
+            {(store.threads || []).length} new
+          </bartitle>
           <actions>
             <UI.Popover
               openOnClick

@@ -69,6 +69,17 @@ export const methods = {
     this.title = title
   },
 
+  get previewText() {
+    return (
+      this.content.document &&
+      this.content.document.nodes
+        .filter(n => n.type === 'paragraph')
+        .map(n => n.nodes[0].ranges.map(r => r.text).join(' '))
+        .join('\n')
+        .slice(0, 200)
+    )
+  },
+
   get titleShort() {
     return this.title && this.title.length > 20
       ? this.title.slice(0, 18) + '...'

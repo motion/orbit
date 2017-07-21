@@ -79,28 +79,32 @@ export default class Inbox {
                 glow: false,
                 primary: (
                   <head $$row $$centered $$justify="space-between" $$flex>
-                    {item.title}
-
-                    <date $$row $$justify="flex-end">
+                    <top $$row>
+                      <titleText>
+                        {item.title}
+                      </titleText>
+                      {false && '&nbsp;by Nate'}
                       {item.tags.map(tag =>
-                        <UI.Badge {...badgeProps} color="#efefef">
+                        <UI.Badge {...badgeProps}>
                           {tag}
                         </UI.Badge>
                       )}
+                    </top>
+                    <date $$row $$justify="flex-end">
+                      {ago(item.createdAt)}
                     </date>
                   </head>
                 ),
                 secondary:
                   item.status ||
-                  <status $$row $$align="center">
+                  <status if={false} $$row $$align="center">
                     <UI.Text size={0.9}>
                       <strong>Nate</strong> replied {ago(item.createdAt)}
                     </UI.Text>
                   </status>,
                 children: (
                   <UI.Text>
-                    {(item.text && item.text.slice(0, 100)) ||
-                      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. '}
+                    {item.previewText}
                   </UI.Text>
                 ),
               }
@@ -137,12 +141,14 @@ export default class Inbox {
     discard: {
       opacity: 0.6,
     },
+    list: {
+      maxWidth: 600,
+    },
     draftSubmit: {
       width: 60,
     },
-    title: {
+    titleText: {
       fontWeight: 'bold',
-      lineHeight: 100,
     },
     all: {
       marginTop: 15,

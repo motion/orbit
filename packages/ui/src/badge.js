@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
+import Surface from './surface'
 import Icon from './icon'
 
 type Props = {
@@ -23,7 +24,6 @@ export default class Badge {
 
   static defaultProps = {
     background: [0, 0, 0, 0.1],
-    color: '#666',
     borderRadius: 30,
   }
 
@@ -40,10 +40,10 @@ export default class Badge {
     ...props
   }: Props) {
     return (
-      <badge
+      <Surface
+        $badge
         className={className}
         css={props}
-        $$color={color}
         style={style}
         {...attach}
       >
@@ -56,21 +56,19 @@ export default class Badge {
             {children}
           </inner>
         </content>
-      </badge>
+      </Surface>
     )
   }
 
   static style = {
     badge: {
       height: 18,
-      lineHeight: '0px',
+      padding: [2, 3],
       fontSize: 11.5,
-      flexFlow: 'row',
+      marginLeft: 5,
       alignSelf: 'center',
+      flexFlow: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden',
-      marginLeft: 3,
     },
     content: {
       flexFlow: 'row',

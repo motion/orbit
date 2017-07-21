@@ -96,10 +96,12 @@ export default class Title extends React.Component {
           fontWeight={fontWeight}
           {...textProps}
         >
-          {children}
-          <stat if={stat}>
-            {stat}
-          </stat>
+          <el $$row>
+            {children}
+            <stat if={stat}>
+              {stat}
+            </stat>
+          </el>
         </Text>
         <after if={after}>
           {after}

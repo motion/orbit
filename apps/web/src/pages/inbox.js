@@ -9,7 +9,7 @@ import InboxList from '~/views/inbox/list'
 export default class InboxPage {
   render({ explorerStore: { document } }) {
     return (
-      <Page>
+      <Page actions children>
         <InboxList if={document} document={document} />
       </Page>
     )

@@ -23,13 +23,8 @@ export default class DocumentPage {
     }
 
     return (
-      <Page>
-        <DocumentView
-          showActions
-          showChildren
-          document={document}
-          isPrimaryDocument
-        />
+      <Page actions children>
+        <DocumentView document={document} isPrimaryDocument />
       </Page>
     )
   }

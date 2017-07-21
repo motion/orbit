@@ -19,12 +19,11 @@ class Inbox extends Thing {
     },
   }
 
-  methods = {
-    ...methods,
+  methods = Object.assign({}, methods, {
     url() {
       return `/inbox/${Thing.urlify(this.id)}`
     },
-  }
+  })
 }
 
 export default new Inbox()

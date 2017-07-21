@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 import { Button } from '@mcro/ui'
 
 export const createButton = ({ icon, type, tooltip, wrap, unwrap, isActive }) =>

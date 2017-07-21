@@ -1,6 +1,6 @@
 import React from 'react'
 import AutoReplace from 'slate-auto-replace'
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 import TitleNode from './titleNode'
 
 export default class TitlePlugin {

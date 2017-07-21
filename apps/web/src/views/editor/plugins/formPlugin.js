@@ -1,9 +1,9 @@
 import AutoReplace from 'slate-auto-replace'
 import { Block, Raw } from 'slate'
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 import React from 'react'
 import { view } from '@mcro/black'
-import node from '~/editor/node'
+import node from '~/views/editor/node'
 
 @node
 @view

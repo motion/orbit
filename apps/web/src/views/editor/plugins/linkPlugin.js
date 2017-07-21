@@ -1,6 +1,6 @@
 import PasteLinkify from 'slate-paste-linkify'
 import React from 'react'
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 import { createButton } from './helpers'
 
 const LinkNode = props => {

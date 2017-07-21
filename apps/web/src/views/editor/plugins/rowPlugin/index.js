@@ -1,11 +1,11 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import node from '~/editor/node'
+import node from '~/views/editor/node'
 import { Icon } from '@mcro/ui'
 import { range } from 'lodash'
 import { Range } from 'immutable'
 import Slate from 'slate'
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 import { createButton } from '../helpers'
 import { Column, Row } from './nodes'
 

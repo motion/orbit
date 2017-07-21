@@ -1,5 +1,5 @@
 import React from 'react'
-import { MARKS } from '~/editor/constants'
+import { MARKS } from '~/views/editor/constants'
 import { createButton } from './helpers'
 
 const { ITALIC, BOLD, UNDERLINE } = MARKS

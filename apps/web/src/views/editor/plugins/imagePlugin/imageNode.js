@@ -1,7 +1,7 @@
 import React from 'react'
 import { Image } from '@mcro/models'
 import { view, watch } from '@mcro/black'
-import node from '~/editor/node'
+import node from '~/views/editor/node'
 
 const readFile = file =>
   new Promise((resolve, reject) => {

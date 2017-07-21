@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { Button } from '@mcro/ui'
-import node from '~/editor/node'
+import node from '~/views/editor/node'
 
 @node
 @view

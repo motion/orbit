@@ -1,4 +1,4 @@
-import { findParent } from '~/editor/helpers'
+import { findParent } from '~/views/editor/helpers'
 import { debounce } from 'lodash'
 
 function trackSelection(selection, state, editorStore) {

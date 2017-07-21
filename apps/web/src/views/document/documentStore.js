@@ -2,7 +2,7 @@
 import { watch } from '@mcro/black'
 import { debug } from '~/helpers'
 import { Thing } from '@mcro/models'
-import type EditorStore from '~/editor/stores/editorStore'
+import type EditorStore from '~/views/editor/stores/editorStore'
 import { debounce } from 'lodash'
 
 const print = debug('documentStore')

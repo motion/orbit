@@ -1,10 +1,10 @@
 // @flow
 import React from 'react'
 import TrailingBlock from 'slate-trailing-block'
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 import * as UI from '@mcro/ui'
 import Highlighter from './helpers/highlighter'
-import node from '~/editor/node'
+import node from '~/views/editor/node'
 import { Placeholder } from 'slate'
 import { createButton } from './helpers'
 

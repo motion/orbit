@@ -1,9 +1,9 @@
-import { replacer } from '~/editor/helpers'
+import { replacer } from '~/views/editor/helpers'
 import React from 'react'
 import { view } from '@mcro/black'
-import node from '~/editor/node'
+import node from '~/views/editor/node'
 import { Button } from '@mcro/ui'
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 
 class EmailStore {
   address = 'forward@jot.dev'
@@ -34,7 +34,7 @@ class EmailStore {
       {
         ...nate,
         content:
-          "I don't know, there's really too much blur for me to see anything",
+          'I don\'t know, there\'s really too much blur for me to see anything',
       },
     ]
 
@@ -60,7 +60,9 @@ class EmailNode {
     return (
       <emailNode contentEditable="false">
         <none if={contents === null}>
-          <noneText>Forward to {store.address}</noneText>
+          <noneText>
+            Forward to {store.address}
+          </noneText>
           <Button $button onClick={store.onFill}>
             Fake it till you make it
           </Button>
@@ -70,14 +72,22 @@ class EmailNode {
             {contents.map(email =>
               <email>
                 <from $$row>
-                  <name>{email.from.name}</name>
-                  <address>{email.from.email}</address>
+                  <name>
+                    {email.from.name}
+                  </name>
+                  <address>
+                    {email.from.email}
+                  </address>
                 </from>
-                <content>{email.content}</content>
+                <content>
+                  {email.content}
+                </content>
               </email>
             )}
           </inner>
-          <Button $button onClick={store.onReset}>reset</Button>
+          <Button $button onClick={store.onReset}>
+            reset
+          </Button>
         </emails>
       </emailNode>
     )

@@ -14,12 +14,11 @@ export class Document extends Thing {
 
   static defaultFilter = doc => ({ ...doc, type: 'document' })
 
-  methods = {
-    ...methods,
+  methods = Object.assign({}, methods, {
     url() {
       return `/doc/${Thing.urlify(this.id)}`
     },
-  }
+  })
 
   root = () => this.collection.find(User.org.homeDocument).exec()
 

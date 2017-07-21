@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { viewCache } from '~/helpers'
-import PlainEditor from './plainEdtor'
+import PlainEditor from './plainEditor'
 
 @view.ui
 export default class JotEditor {

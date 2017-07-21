@@ -51,14 +51,17 @@ const getContent = ({ title }) => ({
 
 export const methods = {
   get tags() {
-    return this.updates.reduce((acc, item) => {
-      if (item.type === 'tagRemove') {
-        return without(acc, item.name)
-      }
+    return (
+      this.updates &&
+      this.updates.reduce((acc, item) => {
+        if (item.type === 'tagRemove') {
+          return without(acc, item.name)
+        }
 
-      if (item.type === 'tag') return [...acc, item.name]
-      return acc
-    }, [])
+        if (item.type === 'tag') return [...acc, item.name]
+        return acc
+      }, [])
+    )
   },
 
   get assignedTo() {

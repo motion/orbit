@@ -1,8 +1,8 @@
 import { view } from '@mcro/black'
-import { replacer } from '~/editor/helpers'
+import { replacer } from '~/views/editor/helpers'
 import React from 'react'
-import node from '~/editor/node'
-import { BLOCKS } from '~/editor/constants'
+import node from '~/views/editor/node'
+import { BLOCKS } from '~/views/editor/constants'
 
 class VideoStore {}
 

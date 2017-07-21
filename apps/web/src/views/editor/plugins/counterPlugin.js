@@ -1,8 +1,8 @@
 // @flow
 import React from 'react'
-import node from '~/editor/node'
-import { replacer } from '~/editor/helpers'
-import { BLOCKS } from '~/editor/constants'
+import node from '~/views/editor/node'
+import { replacer } from '~/views/editor/helpers'
+import { BLOCKS } from '~/views/editor/constants'
 
 @node
 class CounterNode {

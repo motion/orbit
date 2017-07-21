@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import node from '~/editor/node'
+import node from '~/views/editor/node'
 import { Icon } from '@mcro/ui'
 
 @node

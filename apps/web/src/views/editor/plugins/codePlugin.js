@@ -1,4 +1,4 @@
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 import { createButton } from './helpers'
 
 export default class Code {

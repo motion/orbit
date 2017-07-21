@@ -1,6 +1,6 @@
 import React from 'react'
 import { view, computed } from '@mcro/black'
-import { BLOCKS } from '~/editor/constants'
+import { BLOCKS } from '~/views/editor/constants'
 import * as UI from '@mcro/ui'
 
 export default View => {

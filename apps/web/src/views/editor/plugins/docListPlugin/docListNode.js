@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import node from '~/editor/node'
+import node from '~/views/editor/node'
 import { Popover, Segment, Button } from '@mcro/ui'
 import CardList from './lists/cardListNode'
 import GridList from './lists/gridListNode'

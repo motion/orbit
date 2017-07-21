@@ -1,5 +1,5 @@
-import { BLOCKS } from '~/editor/constants'
-import node from '~/editor/node'
+import { BLOCKS } from '~/views/editor/constants'
+import node from '~/views/editor/node'
 import AutoReplace from 'slate-auto-replace'
 
 const hr = props =>

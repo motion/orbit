@@ -230,49 +230,43 @@ export default class Children {
     return (
       <children>
         <title $$row $$centered $$marginBottom={10}>
-          <UI.Title fontWeight={200} color={[0, 0, 0, 0.4]}>
+          <UI.Title
+            tagName="h2"
+            fontWeight={200}
+            color={[0, 0, 0, 0.4]}
+            css={{ opacity: 0 }}
+          >
             Pages
           </UI.Title>
 
           <UI.Popover
-            openOnClick
+            openOnHover
             closeOnClick
-            towards="right"
-            target={
-              <UI.Button marginLeft={10} circular size={0.8} icon="add" />
-            }
+            towards="left"
+            target={<UI.Button circular size={0.8} icon="add" />}
           >
-            <UI.Segment
+            <UI.List
+              background
+              elevation={2}
               chromeless
-              css={{
-                paddingBottom: 5,
-              }}
               itemProps={{
                 chromeless: true,
-                iconAfter: true,
                 size: 0.9,
-                color: [0, 0, 0, 0.2],
-                hoverColor: [0, 0, 0, 0.6],
+                color: [0, 0, 0, 0.4],
+                hoverColor: [0, 0, 0, 0.7],
               }}
             >
-              <UI.Button
-                onClick={store.createInbox}
-                icon="paper"
-                tooltip="create inbox"
-                tooltipProps={{
-                  towards: 'top',
-                }}
-              />
-              <slant css={{ borderRight: [1, '#ccc'], height: '100%' }} />
-              <UI.Button
-                tooltip="create page"
+              <UI.ListItem
+                primary="page"
                 onClick={store.createDoc}
                 icon="filesg"
-                tooltipProps={{
-                  towards: 'top',
-                }}
               />
-            </UI.Segment>
+              <UI.ListItem
+                onClick={store.createInbox}
+                icon="paper"
+                primary="inbox"
+              />
+            </UI.List>
           </UI.Popover>
         </title>
 
@@ -311,6 +305,11 @@ export default class Children {
       alignItems: 'flex-end',
       position: 'relative',
       pointerEvents: 'auto',
+    },
+    title: {
+      '&:hover > h2': {
+        opacity: 1,
+      },
     },
     contents: {
       marginRight: 5,

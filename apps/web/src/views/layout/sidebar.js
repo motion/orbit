@@ -81,7 +81,6 @@ export default class Sidebar {
                       inline
                       circular
                       chromeless
-                      paddingTop={2}
                       icon="circleadd"
                       size={1.4}
                       marginLeft={10}

@@ -31,6 +31,13 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     ...children
   ) {
     let type = type_
+    if (!type) {
+      throw new Error(
+        `Didn't get a valid type: ${type}, props: ${props}, children: ${children
+          ? children.toString()
+          : children}`
+      )
+    }
     let cssStyles
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'

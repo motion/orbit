@@ -6,10 +6,14 @@ import * as UI from '@mcro/ui'
 import Step1 from './signup/step1'
 import Step2 from './signup/step2'
 import Login from './login'
+import App from '~/app'
 
 @view({
   store: class SignupStore {
     get step() {
+      if (!App.connected) {
+        return 0
+      }
       if (!User.loggedIn) {
         return 1
       }

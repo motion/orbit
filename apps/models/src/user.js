@@ -37,10 +37,15 @@ class User {
     this.documents = new Document()
     this.documents.settings.database = 'userdocuments'
 
-    this.setTimeout(this.setupSuperLogin, 1000)
+    return new Promise(resolve => {
+      this.setTimeout(async () => {
+        await this.setupSuperLogin()
+        resolve()
+      })
+    })
   }
 
-  setupSuperLogin() {
+  async setupSuperLogin() {
     console.log('setting up', this.options)
     this.superlogin.configure(this.options)
 

@@ -6,7 +6,7 @@ let AppRouter
 
 const getRoutes = () => ({
   '/': require('./pages/home').default,
-  'doc/:id': require('./pages/document').default,
+  'document/:id': require('./pages/document').default,
   'thread/:id': require('./pages/thread').default,
   'inbox/:id': require('./pages/inbox').default,
 })

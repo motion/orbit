@@ -10,7 +10,7 @@ export default class InboxPage {
   render({ explorerStore: { document } }) {
     return (
       <Page>
-        <InboxList document={document} />
+        <InboxList if={document} document={document} />
       </Page>
     )
   }

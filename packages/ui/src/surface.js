@@ -455,7 +455,10 @@ export default class Surface implements ViewType {
     }
 
     // borderRadius
-    const borderRadiusSize = props.circular ? height / 2 : props.borderRadius
+    const radius = props.circular ? height / 2 : props.borderRadius
+    const borderRadiusSize =
+      radius === true ? height / 3.4 * props.size : radius
+
     const borderRadius = {}
     if (props.uiContext && props.uiContext.inSegment) {
       borderRadius.borderLeftRadius = props.uiContext.inSegment.first

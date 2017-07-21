@@ -240,8 +240,10 @@ export default class Children {
           </UI.Title>
 
           <UI.Popover
+            open
             openOnHover
             closeOnClick
+            borderRadius
             towards="left"
             target={<UI.Button circular size={0.8} icon="add" />}
           >
@@ -249,6 +251,7 @@ export default class Children {
               background
               elevation={2}
               chromeless
+              width={120}
               itemProps={{
                 chromeless: true,
                 size: 0.9,

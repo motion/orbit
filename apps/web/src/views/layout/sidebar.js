@@ -99,7 +99,7 @@ export default class Sidebar {
               </end>
             </bar>
 
-            <InboxList hideTitle />
+            <InboxList inSidebar hideTitle />
 
             {children}
           </sidebar>

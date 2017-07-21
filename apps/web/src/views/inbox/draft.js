@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
 import { Reply, Thread } from '@mcro/models'
 
-const REC_SPEED = 3000
+const REC_SPEED = 800
 
 class DraftStore {
   draftVersion = 1
@@ -30,11 +30,16 @@ class DraftStore {
     return !!this.document
   }
 
+  lastText = ''
   getRec = async () => {
-    const text = this.draft.previewText
-    const res = await App.stores.RecStore[0].getTag(text)
-    this.recs = res.map(i => i.label)
+    const text = this.draft.title + ' ' + this.draft.previewText
+    if (text && text.length > 10 && this.lastText !== text) {
+      const res = await App.stores.RecStore[0].getTag(text)
+      if (res) this.recs = res.map(i => i.label)
+      console.log('res is', res)
+    }
 
+    this.lastText = text
     setTimeout(this.getRec, REC_SPEED)
   }
 
@@ -93,14 +98,14 @@ export default class Draft {
               />
             </draftdoc>
             <actions if={draft} $$row>
-              <badges $$row>
+              <badges if={!store.isReply} $$row>
                 {store.recs.slice(0, 2).map(rec =>
                   <UI.Badge>
                     {rec}
                   </UI.Badge>
                 )}
               </badges>
-              <status $$row $$centered>
+              <status if={store.isReply} $$row $$centered>
                 <UI.Checkbox marginRight={10} />
                 <UI.Text size={0.8}>
                   Remind me <b>in 2 days</b> if no reply

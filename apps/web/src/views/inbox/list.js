@@ -19,7 +19,7 @@ class InboxStore {
   store: InboxStore,
 })
 export default class Inbox {
-  render({ store, hideTitle }) {
+  render({ store, inSidebar, hideTitle }) {
     const badgeProps = {}
 
     Router.path // trigger change
@@ -56,7 +56,7 @@ export default class Inbox {
             </UI.Popover>
           </actions>
         </bar>
-        <content>
+        <content $condenseContent={inSidebar}>
           <UI.List
             background="transparent"
             $list
@@ -83,7 +83,7 @@ export default class Inbox {
                       <titleText>
                         {item.title}
                       </titleText>
-                      {false && '&nbsp;by Nate'}
+                      {!inSidebar && <span>&nbsp;by Nate</span>}
                       {item.tags.map(tag =>
                         <UI.Badge {...badgeProps}>
                           {tag}
@@ -122,7 +122,7 @@ export default class Inbox {
       width: '100%',
       height: '100%',
     },
-    content: {
+    condenseContent: {
       margin: [0, -20],
     },
     create: {

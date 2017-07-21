@@ -96,7 +96,7 @@ class Update {
 })
 export default class ThreadPage {
   render({ store, explorerStore }) {
-    const tags = ['Enhancement', 'New Issue', 'Bug']
+    const tags = ['Enhancement', 'Animals', 'Coffee', 'Bug']
     const assignTo = ['Nick', 'Nate', 'Sam']
 
     return (

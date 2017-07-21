@@ -44,6 +44,7 @@ class Item {
         {...props}
       >
         <UI.Surface
+          background="transparent"
           icon={ICONS[doc.type]}
           iconSize={32}
           iconProps={{
@@ -53,6 +54,7 @@ class Item {
               transform: {
                 scale: 0.35,
               },
+              boxShadow: ['inset  0 0 100px 100px #fff'],
             },
           }}
           align="center"
@@ -110,6 +112,9 @@ class Item {
       lineHeight: '1.1rem',
       width: '100%',
       color: '#000',
+      transform: {
+        x: 5,
+      },
     },
   }
 }
@@ -257,7 +262,6 @@ export default class Children {
           target={<UI.Button circular size={0.8} icon="add" />}
         >
           <UI.List
-            background
             elevation={5}
             chromeless
             borderRadius={5}

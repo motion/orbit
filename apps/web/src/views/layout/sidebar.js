@@ -7,8 +7,17 @@ import InboxList from '~/views/inbox/list'
 import { throttle } from 'lodash'
 import Draft from '~/views/inbox/draft'
 
+class SidebarStore {
+  filter = ''
+  setFilter = e => {
+    this.filter = e.target.value
+  }
+}
+
 @view.attach('layoutStore')
-@view
+@view({
+  store: SidebarStore,
+})
 export default class Sidebar {
   state = {
     scrolling: false,
@@ -29,7 +38,7 @@ export default class Sidebar {
     }
   }, 32)
 
-  render({ hidden, layoutStore, store, children, ...props }) {
+  render({ store, hidden, layoutStore, children, ...props }) {
     const width = Constants.IN_TRAY
       ? Constants.TRAY_WIDTH
       : layoutStore.sidebar.width
@@ -53,6 +62,7 @@ export default class Sidebar {
                 borderRadius={100}
                 size={1}
                 marginRight={30}
+                onChange={store.setFilter}
               />
 
               <end $$row $$align="center">
@@ -99,7 +109,7 @@ export default class Sidebar {
             </bar>
 
             <inbox>
-              <InboxList />
+              <InboxList filter={store.filter} />
             </inbox>
 
             {children}

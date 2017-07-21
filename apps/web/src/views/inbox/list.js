@@ -4,6 +4,7 @@ import timeAgo from 'time-ago'
 import Draft from './draft'
 import Router from '~/router'
 import { Thread } from '~/app'
+import fuzzy from 'fuzzy'
 
 const { ago } = timeAgo()
 
@@ -12,6 +13,22 @@ class InboxStore {
   threads = Thread.find({
     parentId: this.document ? this.document.id : undefined,
   })
+
+  get filteredThreads() {
+    if (!this.threads) {
+      return []
+    }
+    if (!this.props.filter) {
+      return this.threads
+    }
+    return fuzzy
+      .filter(this.props.filter, this.threads, {
+        extract: el => el.title,
+        pre: '<',
+        post: '>',
+      })
+      .map(item => item.original)
+  }
 }
 
 @view.attach('explorerStore')
@@ -70,7 +87,7 @@ export default class Inbox {
               padding: [10, 15, 10, 16],
               overflow: 'hidden',
             }}
-            items={store.threads || []}
+            items={store.filteredThreads}
             // setTimeout speeds up navigation
             onSelect={item => this.setTimeout(() => Router.go(item.url()))}
             isSelected={item => item.url() === Router.path}

@@ -14,11 +14,7 @@ export class Document extends Thing {
 
   static defaultFilter = doc => ({ ...doc, type: 'document' })
 
-  methods = extend(methods, {
-    url() {
-      return `/doc/${Thing.urlify(this.id)}`
-    },
-  })
+  methods = extend(methods, {})
 
   root = () => this.collection.find(User.org.homeDocument).exec()
 

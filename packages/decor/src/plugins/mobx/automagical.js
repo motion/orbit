@@ -205,35 +205,31 @@ function resolve(value) {
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
-  let id = Math.random()
-  const KEY = `${obj.constructor.name}.${method}--${id}--`
+  const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
   let current = Mobx.observable.box(null)
   let currentDisposable = null
   let currentObservable = null
-  let stopObservableAutorun
+  let stopAutoObserve
 
   const update = val => {
     current.set(Mobx.observable.box(val))
   }
 
   function runObservable() {
-    stopObservableAutorun && stopObservableAutorun()
-    stopObservableAutorun = Mobx.autorun(() => {
+    stopAutoObserve && stopAutoObserve()
+    stopAutoObserve = Mobx.autorun(() => {
       if (currentObservable) {
-        if (method === 'children') {
-          console.log('got', currentObservable)
-        }
         const value = currentObservable.get()
         update(value) // set + wrap
       }
     })
   }
 
-  const stopAutorun = Mobx.autorun(watchForNewValue)
+  const stop = Mobx.autorun(watchForNewValue)
 
   async function watchForNewValue() {
     const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
-    stopObservableAutorun && stopObservableAutorun()
+    stopAutoObserve && stopAutoObserve()
     if (currentDisposable) {
       currentDisposable()
       currentDisposable = null
@@ -241,6 +237,7 @@ function mobxifyWatch(obj, method, val) {
     if (result && result.dispose) {
       currentDisposable = result.dispose.bind(result)
     }
+    console.log(KEY, result)
     if (result && (isQuery(result) || isObservable(result))) {
       if (result.isntConnected) {
         return
@@ -261,10 +258,11 @@ function mobxifyWatch(obj, method, val) {
         return result.value
       }
       if (isObservable(result)) {
-        if (Mobx.isObservableArray(result) || Mobx.isObservableMap(result)) {
-          return Mobx.toJS(result)
+        const value = result.get()
+        if (Mobx.isObservableArray(value) || Mobx.isObservableMap(value)) {
+          return Mobx.toJS(value)
         }
-        return result.get()
+        return value
       }
       return result
     },
@@ -274,8 +272,8 @@ function mobxifyWatch(obj, method, val) {
     if (currentDisposable) {
       currentDisposable()
     }
-    stopAutorun()
-    stopObservableAutorun && stopObservableAutorun()
+    stop()
+    stopAutoObserve && stopAutoObserve()
   })
 
   return current

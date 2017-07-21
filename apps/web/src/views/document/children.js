@@ -120,6 +120,13 @@ class ChildrenStore {
   showBrowse = false
 
   get document() {
+    log(this.props.explorerStore.document)
+    if (
+      this.props.explorerStore.document &&
+      !this.props.explorerStore.document.getChildren
+    ) {
+      debugger
+    }
     return this.props.explorerStore.document
   }
 

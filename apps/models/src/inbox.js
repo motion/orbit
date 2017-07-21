@@ -19,11 +19,7 @@ class Inbox extends Thing {
     },
   }
 
-  methods = extend(methods, {
-    url() {
-      return `/inbox/${Thing.urlify(this.id)}`
-    },
-  })
+  methods = extend(methods, {})
 }
 
 export default new Inbox()

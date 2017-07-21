@@ -13,9 +13,6 @@ class Thread extends Thing {
   static defaultFilter = doc => ({ ...doc, type: 'thread' })
 
   methods = extend(methods, {
-    url() {
-      return `/thread/${Thing.urlify(this.id)}`
-    },
     replies(parentId) {
       return this.collection.find({ draft: false, parentId, type: 'reply' })
     },

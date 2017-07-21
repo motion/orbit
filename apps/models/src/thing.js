@@ -7,6 +7,7 @@ import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 import { Observable } from 'rxjs'
 
+const urlify = id => id && id.replace(':', '-')
 const toSlug = (str: string) =>
   `${str}`.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
 const toID = (str: string) => `${str}`.replace(/-/g, ':').toLowerCase()
@@ -59,6 +60,9 @@ const getContent = ({ title }) => ({
 })
 
 export const methods = {
+  url() {
+    return `/${this.type}/${urlify(this.id)}`
+  },
   get tags() {
     return (
       this.updates &&
@@ -72,16 +76,13 @@ export const methods = {
       }, [])
     )
   },
-
   get assignedTo() {
     return last(this.updateType('assign').map(({ to }) => to))
   },
-
   setDefaultContent({ title }) {
     this.content = getContent({ title })
     this.title = title
   },
-
   get titleShort() {
     return this.title && this.title.length > 20
       ? this.title.slice(0, 18) + '...'
@@ -216,8 +217,6 @@ export class Thing extends Model {
     return document.title || ''
   }
 
-  static urlify = id => id && id.replace(':', '-')
-
   static props = {
     title: str,
     content: object.optional,
@@ -262,6 +261,8 @@ export class Thing extends Model {
       type,
     }
   }
+
+  methods = methods
 
   settings = {
     database: 'documents',

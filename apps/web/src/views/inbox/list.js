@@ -7,14 +7,16 @@ import { Thread } from '@mcro/models'
 
 const { ago } = timeAgo()
 
+class InboxStore {
+  document = this.props.document
+  threads = Thread.find({
+    parentId: this.document ? this.document.id : undefined,
+  })
+}
+
+@view.attach('explorerStore')
 @view({
-  store: @view.attach('explorerStore')
-  class InboxStore {
-    document = this.props.document
-    threads = Thread.find({
-      parentId: this.document ? this.document.id : undefined,
-    })
-  },
+  store: InboxStore,
 })
 export default class Inbox {
   render({ store, large }) {

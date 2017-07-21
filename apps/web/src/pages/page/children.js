@@ -283,10 +283,11 @@ export default class Children {
         <space />
         <UI.Button
           onClick={explorerStore.ref('showBrowse').toggle}
+          circular
+          size={0.8}
+          icon="list"
           css={{ position: 'relative', zIndex: 100 }}
-        >
-          Browse
-        </UI.Button>
+        />
         <fade $bottom />
       </children>
     )
@@ -311,7 +312,6 @@ export default class Children {
     },
     contents: {
       marginRight: 5,
-      flex: 1,
       width: '100%',
       overflowY: 'scroll',
       overflowX: 'visible',

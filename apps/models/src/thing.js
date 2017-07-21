@@ -7,6 +7,7 @@ import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 import { Observable } from 'rxjs'
 
+const urlify = id => id && id.replace(':', '-')
 const toSlug = (str: string) =>
   `${str}`.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()
 const toID = (str: string) => `${str}`.replace(/-/g, ':').toLowerCase()
@@ -18,6 +19,15 @@ const cleanGetQuery = (query: Object | string) => {
     return toID(query)
   }
   return query || {}
+}
+
+export const extend = (a, b) => {
+  const result = {}
+  const ad = Object.getOwnPropertyDescriptors(a)
+  const bd = Object.getOwnPropertyDescriptors(b)
+  Object.defineProperties(result, ad)
+  Object.defineProperties(result, bd)
+  return result
 }
 
 const getContent = ({ title }) => ({
@@ -50,33 +60,33 @@ const getContent = ({ title }) => ({
 })
 
 export const methods = {
-  get tags() {
-    return this.updates.reduce((acc, item) => {
-      if (item.type === 'tagRemove') {
-        return without(acc, item.name)
-      }
-
-      if (item.type === 'tag') return [...acc, item.name]
-      return acc
-    }, [])
+  url() {
+    return `/${this.type}/${urlify(this.id)}`
   },
+  get tags() {
+    return (
+      this.updates &&
+      this.updates.reduce((acc, item) => {
+        if (item.type === 'tagRemove') {
+          return without(acc, item.name)
+        }
 
+        if (item.type === 'tag') return [...acc, item.name]
+        return acc
+      }, [])
+    )
+  },
   get assignedTo() {
     return last(this.updateType('assign').map(({ to }) => to))
   },
-
   setDefaultContent({ title }) {
     this.content = getContent({ title })
     this.title = title
   },
-
   get titleShort() {
     return this.title && this.title.length > 20
       ? this.title.slice(0, 18) + '...'
       : this.title
-  },
-  url() {
-    return `/d/${this._id && this._id.replace(':', '-')}`
   },
   tasks() {
     // const { lastUpdated, value: cacheValue } = this.tasksCache
@@ -252,12 +262,12 @@ export class Thing extends Model {
     }
   }
 
+  methods = methods
+
   settings = {
     database: 'documents',
     index: ['createdAt', 'updatedAt'],
   }
-
-  methods = methods
 
   @query
   get = (query: Object | string) => {
@@ -265,7 +275,6 @@ export class Thing extends Model {
       return null
     }
     const query_ = cleanGetQuery(query)
-    log('querying with', query_)
     return this.collection.findOne(query_)
   };
 

@@ -1,5 +1,5 @@
 // @flow
-import { Thing } from './thing'
+import { Thing, extend, methods } from './thing'
 
 class Thread extends Thing {
   static props = Thing.props
@@ -12,15 +12,11 @@ class Thread extends Thing {
 
   static defaultFilter = doc => ({ ...doc, type: 'thread' })
 
-  constructor() {
-    super()
-
-    Object.assign(this.methods, {
-      replies(parentId) {
-        return this.collection.find({ draft: false, parentId, type: 'reply' })
-      },
-    })
-  }
+  methods = extend(methods, {
+    replies(parentId) {
+      return this.collection.find({ draft: false, parentId, type: 'reply' })
+    },
+  })
 }
 
 export default new Thread()

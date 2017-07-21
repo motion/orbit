@@ -4,7 +4,7 @@ import { view, schema, string } from '@mcro/black'
 import { User } from '@mcro/models'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
-import Gemstone from '~/views/gemstone'
+import Gemstone from '~/views/kit/gemstone'
 
 @view({
   store: class SignupStep1Store {

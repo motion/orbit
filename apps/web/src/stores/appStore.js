@@ -6,7 +6,7 @@ import Models from '@mcro/models'
 
 if (module.hot) {
   module.hot.accept('@mcro/models', () => {
-    log('no accept')
+    log('no accept @mcro/models')
   })
 }
 

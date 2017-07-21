@@ -30,10 +30,14 @@ const SHORTCUTS = {
 
 export default class ExplorerStore {
   @watch
-  document = () =>
-    Router.path === '/'
-      ? User.org && Document.get(User.org.homeDocument)
-      : Thing.get(Router.params.id)
+  document = () => {
+    if (Router.path === '/') {
+      return User.home && Document.get(User.home.id)
+    }
+    if (Router.params.id) {
+      return Thing.get(Router.params.id)
+    }
+  }
 
   @watch crumbs = () => this.document && this.document.getCrumbs()
 
@@ -358,7 +362,7 @@ export default class ExplorerStore {
     const result = []
     let last
     if (path === '/') {
-      return User.homeDocument
+      return User.home
     }
     for (const slug of this.splitPath(path)) {
       const query = { slug }
@@ -384,7 +388,7 @@ export default class ExplorerStore {
 
   getChildDocsForPath = async (path: string): Array<Document> => {
     if (path === '/') {
-      return User.homeDocument
+      return User.home
     }
     const lastDoc = await this.getDocAtPath(path)
     if (!lastDoc) {

@@ -15,7 +15,7 @@ export default class SelectBar {
         left={selection.mouseUp.x}
         top={selection.mouseUp.y + 18}
         swayX
-        escapable
+        closeOnEsc
         theme="dark"
         background="transparent"
       >

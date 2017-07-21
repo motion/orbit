@@ -60,23 +60,19 @@ export class OrgModel extends Model {
         throw new Error(`Already exists a org with this slug! ${org.slug}`)
       }
     },
-    preInsert: async (org: Object) => {
+    postInsert: async (org: Object) => {
       // make homepage
       const homeDoc = await Document.create({
         home: true,
         title: 'Welcome',
+        parentId: org.id,
       })
-      org.homeDocument = homeDoc.id
       // attach discussion to homepage
       await Inbox.create({
         title: 'Issues',
         parentId: homeDoc.id,
+        parentIds: [homeDoc.id],
       })
-    },
-    postInsert: async (org: Object) => {
-      const homeDoc = await Document.get(org.homeDocument).exec()
-      homeDoc.orgId = org._id
-      homeDoc.save()
     },
   }
 

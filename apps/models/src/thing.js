@@ -63,7 +63,7 @@ export const methods = {
   url() {
     return `/${this.type}/${urlify(this.id)}`
   },
-  get tags() {
+  tags() {
     return (
       this.updates &&
       this.updates.reduce((acc, item) => {
@@ -76,14 +76,14 @@ export const methods = {
       }, [])
     )
   },
-  get assignedTo() {
+  assignedTo() {
     return last(this.updateType('assign').map(({ to }) => to))
   },
   setDefaultContent({ title }) {
     this.content = getContent({ title })
     this.title = title
   },
-  get titleShort() {
+  titleShort() {
     return this.title && this.title.length > 20
       ? this.title.slice(0, 18) + '...'
       : this.title
@@ -100,11 +100,12 @@ export const methods = {
     update.createdAt = +Date.now()
     this.updates = [...this.updates, update]
   },
-  get hasStar() {
+  hasStar() {
     return this.starredBy.find(id => id === User.id)
   },
   async toggleStar() {
     this.starredBy = toggleInclude(this.starredBy, User.id)
+    console.log('toggle starred by')
     await this.save()
   },
   async getCrumbs() {
@@ -250,6 +251,7 @@ export class Thing extends Model {
       authorId: User.user ? User.id : 'anon',
       hashtags: [],
       starredBy: [],
+      orgId: User.org && User.org.id,
       updates: [],
       members: [],
       attachments: [],
@@ -275,6 +277,7 @@ export class Thing extends Model {
       return null
     }
     const query_ = cleanGetQuery(query)
+    log('get query', query)
     return this.collection.findOne(query_)
   };
 

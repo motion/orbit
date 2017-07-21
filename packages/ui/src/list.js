@@ -155,6 +155,8 @@ class List {
     style,
     width: userWidth,
     virtualProps,
+    isSelected,
+    parentSize,
     ...props
   }: Props) {
     if (!items && !children) {
@@ -222,7 +224,7 @@ class List {
         <ListItem
           key={item.key || cur.id || index}
           {...getItemProps(index, rowProps, true)}
-          {...omit(item, ['onClick', 'highlight'])}
+          {...item}
         />
       )
     }

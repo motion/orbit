@@ -51,7 +51,7 @@ export default class ExplorerBar {
             openOnClick
             delay={500}
             overlay={[0, 0, 0, 0.05]}
-            closeOnEscape
+            closeOnEsc
             background
             width={480}
             borderRadius={8}

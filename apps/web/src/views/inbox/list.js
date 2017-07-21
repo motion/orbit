@@ -51,7 +51,7 @@ export default class Inbox {
           <actions>
             <UI.Popover
               openOnClick
-              closeOnEscape
+              closeOnEsc
               background="#fff"
               width={480}
               borderRadius={8}
@@ -99,7 +99,7 @@ export default class Inbox {
                     {item.title}
 
                     <date $$row $$justify="flex-end">
-                      {item.tags.map(tag =>
+                      {item.tags().map(tag =>
                         <UI.Badge {...badgeProps} color="#efefef">
                           {tag}
                         </UI.Badge>

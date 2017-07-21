@@ -76,7 +76,7 @@ export default class Input {
     return (
       <SizedSurface
         sizeFont
-        sizeRadius
+        borderRadius
         sizeHeight
         sizePadding
         flex

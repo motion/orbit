@@ -27,7 +27,6 @@ if (module && module.hot) {
     start()
   })
 
-  log('accept yourself')
   module.hot.accept(() => {
     log('accepted ~/app')
   })

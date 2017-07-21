@@ -23,7 +23,8 @@ export function render() {
 }
 
 export async function start(quiet) {
-  render()
+  // render()
+  log('start')
   await App.start(quiet)
   render()
 }
@@ -35,5 +36,4 @@ if (module && module.hot) {
   module.hot.accept('./views/layout', () => {
     log('accepted layout')
   })
-  module.hot.accept('./themes', render)
 }

@@ -75,7 +75,7 @@ export default View => {
         }
         closeOnClick
         openOnClick
-        escapable
+        closeOnEsc
         noArrow
         shadow
         delay={300}

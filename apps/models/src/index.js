@@ -31,7 +31,7 @@ declare class ModelsStore {
 }
 
 export default class Models implements ModelsStore {
-  modelsLoggedIn = false
+  connected = false
 
   constructor(databaseConfig, models) {
     if (!databaseConfig || !models) {
@@ -60,21 +60,6 @@ export default class Models implements ModelsStore {
   }
 
   start = async () => {
-    // User.superlogin.on('login', () => {
-    //   setTimeout(() => {
-    //     if (!this.modelsLoggedIn && User.loggedIn) {
-    //       this.attachModels()
-    //       this.modelsLoggedIn = true
-    //     }
-    //   }, 100)
-    // })
-    // User.superlogin.on('logout', () => {
-    //   if (this.modelsLoggedIn) {
-    //     this.attachModels()
-    //     this.modelsLoggedIn = false
-    //   }
-    // })
-
     this.database = await RxDB.create({
       adapter: 'idb',
       name: this.databaseConfig.name,
@@ -84,10 +69,12 @@ export default class Models implements ModelsStore {
     })
 
     await this.attachModels()
+    this.connected = true
   }
 
   dispose = () => {
     for (const [name, model] of Object.entries(this.models)) {
+      console.log('dispose model', name)
       if (model && model.dispose) {
         model.dispose()
       } else {

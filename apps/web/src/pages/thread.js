@@ -41,7 +41,7 @@ class ThreadStore {
   }
 
   hasTag = name => {
-    return includes(this.thread.tags, name)
+    return includes(this.thread.tags(), name)
   }
 
   get items() {
@@ -90,18 +90,21 @@ class Update {
   }
 }
 
-@view.attach('explorerStore')
 @view({
   store: ThreadStore,
 })
 export default class ThreadPage {
-  render({ store, explorerStore }) {
+  render({ store }) {
     const tags = ['Enhancement', 'New Issue', 'Bug']
     const assignTo = ['Nick', 'Nate', 'Sam']
 
+    if (!store.thread) {
+      return null
+    }
+
     return (
       <Page showActions>
-        <DocumentView document={explorerStore.document} isPrimaryDocument />
+        <DocumentView document={store.thread} isPrimaryDocument />
 
         <actions if={store.thread}>
           <action $$row>
@@ -110,7 +113,8 @@ export default class ThreadPage {
             </UI.Text>
             {assignTo.map(name =>
               <UI.Button
-                highlight={store.thread.assignedTo === name}
+                key={name}
+                highlight={store.thread.assignedTo() === name}
                 inline
                 $button
                 onClick={() => store.assignTo(name)}
@@ -126,6 +130,7 @@ export default class ThreadPage {
             </UI.Text>
             {tags.map(name =>
               <UI.Button
+                key={name}
                 highlight={store.hasTag(name)}
                 inline
                 $button
@@ -139,8 +144,8 @@ export default class ThreadPage {
         {store.items.map(
           item =>
             item.type === 'reply'
-              ? <Reply doc={item} />
-              : <Update update={item} />
+              ? <Reply key={item.id} doc={item} />
+              : <Update key={item.id} update={item} />
         )}
 
         <reply if={store.thread}>

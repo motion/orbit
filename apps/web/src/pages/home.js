@@ -10,9 +10,9 @@ export default class HomePage {
       return <center $$centered>login plz</center>
     }
 
-    if (User.orgs && User.orgs.length === 0) {
+    if (User.home === null) {
       log('MAKE TAHT FUCKING ORG')
-      User.createOrg('Welcome')
+      User.createOrg('myneworg')
       return <null>weird no org</null>
     }
 

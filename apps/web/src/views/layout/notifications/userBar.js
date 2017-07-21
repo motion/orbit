@@ -52,9 +52,10 @@ export default class UserBar {
                 onClick: () => console.log(),
               },
               {
-                icon: 'fire',
+                icon: 'ice',
                 primary: 'Destroy All',
                 onClick: () => {
+                  console.log('destroying all')
                   ;[Document, Org, Image].forEach(async model => {
                     const all = await model.find().exec()
                     log('removing', model.title)

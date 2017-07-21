@@ -1,6 +1,5 @@
 // @flow
 import { query } from '@mcro/black'
-import User from './user'
 import { Thing, methods, extend } from './thing'
 
 export class Document extends Thing {
@@ -19,8 +18,6 @@ export class Document extends Thing {
       return 1
     },
   })
-
-  root = () => this.collection.find(User.org.homeDocument).exec()
 
   @query
   search = async (text: string) => {
@@ -103,7 +100,3 @@ const DocumentInstance = new Document()
 window.Document = DocumentInstance
 
 export default DocumentInstance
-
-if (!DocumentInstance.hooks) {
-  debugger
-}

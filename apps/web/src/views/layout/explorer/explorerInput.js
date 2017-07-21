@@ -5,7 +5,7 @@ import { Editor } from 'slate'
 import RightArrow from '~/views/kit/rightArrow'
 import Router from '~/router'
 
-const FONT_SIZE = 16
+const FONT_SIZE = 15
 
 const $text = {
   fontSize: FONT_SIZE,
@@ -18,9 +18,10 @@ const $text = {
 
 const $arrow = {
   opacity: 0.4,
-  margin: [0, -1],
+  margin: [0, -4],
   transform: {
-    scale: 1,
+    scale: 0.8,
+    y: -1,
   },
 }
 
@@ -70,6 +71,12 @@ class Item {
       $active: selected,
       color: [0, 0, 0, 0.8],
       style: $text,
+      glowProps: {
+        color: [255, 255, 255, 0.5],
+        opacity: 1,
+        zIndex: -1,
+        backdropFilter: 'contrast(200%)',
+      },
     }
 
     return (
@@ -109,8 +116,8 @@ class Item {
       background: 'green',
       pointerEvents: 'none',
       display: 'inline',
-      paddingRight: 21,
-      paddingLeft: 5,
+      paddingRight: 15,
+      // paddingLeft: 5,
     },
     active: {
       background: 'rgba(0,0,255,.05)',
@@ -137,6 +144,7 @@ export default class ExplorerInput {
           margin={6}
           marginTop={5}
           chromeless
+          glow={false}
           circular
           disabled={Router.path === '/'}
           color={[0, 0, 0, 0.4]}

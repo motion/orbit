@@ -1,7 +1,7 @@
 import { store, watch } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
 import superLogin from 'superlogin-client'
-import DocumentInstance, { Document } from './document'
+import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 
 const API_HOST = `api.${window.location.host}`
@@ -9,15 +9,16 @@ const API_URL = `http://${API_HOST}`
 
 @store
 class User {
+  connected = false
   user = null
   localDb = null
   remoteDb = null
   activeOrg = 0
-  @watch orgs = () => Org.forUser(this.id)
-  @watch favoriteDocuments = () => DocumentInstance.favoritedBy(this.id)
+  @watch orgs = () => this.connected && Org.forUser(this.id)
+  @watch favorites = () => this.connected && Document.favoritedBy(this.id)
   @watch
-  homeDocument = () => DocumentInstance.get(this.org && this.org.homeDocument)
-  // @watch teammates = () => this.collection.find()
+  home = () =>
+    this.connected && this.org && Document.get({ parentId: this.org.id })
 
   get org() {
     return this.orgs && this.orgs[this.activeOrg]
@@ -28,21 +29,24 @@ class User {
     this.options = options
   }
 
-  connect = database => {
+  connect = async database => {
     if (this.database) {
       return // hmr
     }
 
     this.database = database
-    this.documents = new Document()
+    this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'
 
-    return new Promise(resolve => {
+    await new Promise(resolve => {
       this.setTimeout(async () => {
         await this.setupSuperLogin()
         resolve()
       })
     })
+
+    console.log('SET TO CONNECTED')
+    this.connected = true
   }
 
   async setupSuperLogin() {
@@ -178,12 +182,11 @@ class User {
   }
 
   createOrg = async name => {
-    const org = await Org.create({
+    await Org.create({
       title: name,
       admins: [this.id],
       members: [this.id],
     })
-    log('made org', org)
   }
 }
 

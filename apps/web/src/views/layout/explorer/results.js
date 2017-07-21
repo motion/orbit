@@ -27,7 +27,7 @@ class Match {
             size={14}
             name="fav3"
             color={'#666'}
-            if={doc.hasStar}
+            if={doc.hasStar()}
           />
         </top>
       </match>
@@ -62,7 +62,8 @@ export default class ExplorerResults {
   render({ explorerStore: store }) {
     const docs = store.peek || []
 
-    const getMatch = (doc, index) => <Match {...{ store, doc, index }} />
+    const getMatch = (doc, index) =>
+      <Match key={doc.id} {...{ store, doc, index }} />
 
     return (
       <results if={store.showResults}>
@@ -122,10 +123,9 @@ export default class ExplorerResults {
     },
     matches: {
       padding: 15,
-      overflow: 'scroll',
       flex: 1,
       minHeight: 100,
-      overflowY: 'scroll',
+      overflowY: 'auto',
       textSelect: 'none',
     },
     preview: {

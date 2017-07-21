@@ -41,16 +41,19 @@ export default class ThemeMaker {
     return theme
   }
 
-  fromStyles = (styles: Object): Object => {
+  fromStyles = ({
+    highlightColor,
+    highlightBackground,
+    background,
+    color,
+    borderColor,
+    ...rest
+  }): Object => {
     const {
-      highlightColor,
-      highlightBackground,
-      background,
-      color,
-      borderColor,
-      ...rest
-    } = styles
-    const obj = this.colorize({
+      highlightColor: hlColor,
+      highlightBackground: hlBackgorund,
+      ...styles
+    } = this.colorize({
       highlightColor,
       highlightBackground,
       background,
@@ -79,13 +82,12 @@ export default class ThemeMaker {
     }
 
     const focused = {
-      background: adjust(obj.background, largeAmt, true),
-      borderColor: adjust(obj.borderColor, largeAmt, true),
+      background: adjust(styles.background, largeAmt, true),
+      borderColor: adjust(styles.borderColor, largeAmt, true),
     }
 
-    const highlightColorFinal = obj.highlightColor || $('#fff')
-    const highlightBgFinal =
-      obj.highlightBackground || highlightColorFinal.negate()
+    const highlightColorFinal = hlColor || $('#fff')
+    const highlightBgFinal = hlBackgorund || highlightColorFinal.negate()
     const highlight = {
       color: highlightColorFinal,
       background: highlightBgFinal,
@@ -94,26 +96,26 @@ export default class ThemeMaker {
 
     return {
       ...rest,
-      base: obj,
+      base: styles,
       hover: {
-        ...obj,
-        color: adjust(obj.color, smallAmt),
-        background: adjust(obj.background, smallAmt),
-        borderColor: adjust(obj.borderColor, smallAmt),
+        ...styles,
+        color: adjust(styles.color, smallAmt),
+        background: adjust(styles.background, smallAmt),
+        borderColor: adjust(styles.borderColor, smallAmt),
         ...rest.hover,
       },
       active: {
-        ...obj,
+        ...styles,
         ...focused,
         ...rest.active,
       },
       focus: {
-        ...obj,
+        ...styles,
         ...focused,
         ...rest.focus,
       },
       highlight: {
-        ...obj,
+        ...styles,
         ...highlight,
         ...rest.highlight,
       },

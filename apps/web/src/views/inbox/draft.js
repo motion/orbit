@@ -55,6 +55,8 @@ export default class Draft {
     store,
     isReply,
     store: { draft },
+    document,
+    closePopover,
     ...props
   }) {
     return (

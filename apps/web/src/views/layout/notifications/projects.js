@@ -5,22 +5,27 @@ import * as UI from '@mcro/ui'
 import { User } from '~/app'
 import Router from '~/router'
 import { flatMap } from 'lodash'
+import { Document } from '~/app'
 import RightArrow from '~/views/kit/rightArrow'
 import FlipMove from 'react-flip-move'
 
 @view({
   store: class SidebarProjectStore {
     @watch
-    crumbs = () =>
-      User.favoriteDocuments &&
-      Promise.all(
-        User.favoriteDocuments.map(doc => doc.getCrumbs && doc.getCrumbs())
+    crumbs = () => {
+      if (!User.favorites) {
+        return null
+      }
+      console.log('about to', User.favorites)
+      return Promise.all(
+        User.favorites.map(doc => doc.getCrumbs && doc.getCrumbs())
       )
+    }
   },
 })
 export default class Projects {
   render({ store }: { store: SidebarProjectStore }) {
-    const docs = User.favoriteDocuments || []
+    const docs = User.favorites || []
     const hasDocs = docs.length !== 0
     const percentComplete = tasks =>
       100 * tasks.filter(i => i.archive).length / tasks.length
@@ -38,7 +43,8 @@ export default class Projects {
             <FlipMove>
               {docs.map((doc, index) => {
                 if (!doc.tasks) {
-                  debugger
+                  console.error('UNDECORATED DOC')
+                  console.log(Document.hooks, Document, 'wtf')
                 }
                 const tasks = doc.tasks()
                 const hasTasks = tasks && tasks.length
@@ -126,7 +132,7 @@ export default class Projects {
   static style = {
     content: {
       flex: 1,
-      overflowY: 'scroll',
+      overflowY: 'auto',
     },
     arrow: {
       color: [255, 255, 255, 0.2],

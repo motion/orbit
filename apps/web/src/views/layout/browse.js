@@ -99,7 +99,7 @@ export default class Browse {
     },
     content: {
       flex: 1,
-      overflowY: 'scroll',
+      overflowY: 'auto',
     },
   }
 }

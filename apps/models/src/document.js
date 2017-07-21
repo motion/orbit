@@ -1,7 +1,7 @@
 // @flow
 import { query } from '@mcro/black'
 import User from './user'
-import { Thing, methods } from './thing'
+import { Thing, methods, extend } from './thing'
 
 export class Document extends Thing {
   static props = Thing.props
@@ -14,7 +14,7 @@ export class Document extends Thing {
 
   static defaultFilter = doc => ({ ...doc, type: 'document' })
 
-  methods = Object.assign({}, methods, {
+  methods = extend(methods, {
     url() {
       return `/doc/${Thing.urlify(this.id)}`
     },

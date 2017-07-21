@@ -13,7 +13,7 @@ const { ago } = timeAgo()
 
 class ThreadStore {
   @watch thread = () => Thread.get(this.props.id)
-  replies = this.props.thread.replies()
+  replies = this.thread && this.thread.replies()
 
   assignTo = name => {
     const { thread } = this.props

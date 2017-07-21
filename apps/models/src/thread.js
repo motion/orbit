@@ -1,5 +1,5 @@
 // @flow
-import { Thing, methods } from './thing'
+import { Thing, extend, methods } from './thing'
 
 class Thread extends Thing {
   static props = Thing.props
@@ -12,7 +12,7 @@ class Thread extends Thing {
 
   static defaultFilter = doc => ({ ...doc, type: 'thread' })
 
-  methods = Object.assign({}, methods, {
+  methods = extend(methods, {
     url() {
       return `/thread/${Thing.urlify(this.id)}`
     },

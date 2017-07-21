@@ -1,4 +1,4 @@
-import { Thing, methods } from './thing'
+import { Thing, methods, extend } from './thing'
 import Thread from './thread'
 
 class Inbox extends Thing {
@@ -19,7 +19,7 @@ class Inbox extends Thing {
     },
   }
 
-  methods = Object.assign({}, methods, {
+  methods = extend(methods, {
     url() {
       return `/inbox/${Thing.urlify(this.id)}`
     },

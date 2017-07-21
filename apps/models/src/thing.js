@@ -20,6 +20,15 @@ const cleanGetQuery = (query: Object | string) => {
   return query || {}
 }
 
+export const extend = (a, b) => {
+  const result = {}
+  const ad = Object.getOwnPropertyDescriptors(a)
+  const bd = Object.getOwnPropertyDescriptors(b)
+  Object.defineProperties(result, ad)
+  Object.defineProperties(result, bd)
+  return result
+}
+
 const getContent = ({ title }) => ({
   nodes: [
     {

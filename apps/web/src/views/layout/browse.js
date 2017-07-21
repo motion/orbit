@@ -20,12 +20,14 @@ export default class Browse {
   render({ explorerStore, explorerStore: { showBrowse, children } }) {
     return (
       <overlay
-        if={showBrowse && children}
+        if={showBrowse}
         $$fullscreen
         onClick={explorerStore.ref('showBrowse').toggle}
       >
         <UI.Surface $surface width="50%" height="50%" elevation={2}>
-          {children.map(this.getChild)}
+          <content if={children}>
+            {children.map(this.getChild)}
+          </content>
         </UI.Surface>
       </overlay>
     )

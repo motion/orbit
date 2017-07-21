@@ -2,16 +2,8 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import SidebarStore from './store'
 import Projects from './projects'
 import UserBar from './userBar'
-import type LayoutStore from '~/stores/layoutStore'
-import * as Constants from '~/constants'
-
-type Props = {
-  layoutStore: LayoutStore,
-  store: SidebarStore,
-}
 
 @view
 export default class Notifications {

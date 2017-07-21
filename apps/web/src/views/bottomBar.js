@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import Gemstone from '~/views/kit/gemstone'
 import Router from '~/router'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import * as UI from '@mcro/ui'
 
 @view

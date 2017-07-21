@@ -63,7 +63,7 @@ export default class Sidebar {
                   }}
                   items={['All', 'Other']}
                 >
-                  <span>Filter</span>
+                  Filter
                 </UI.Dropdown>
 
                 <UI.Popover

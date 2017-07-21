@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User, Document, Org, Image } from '@mcro/models'
+import { User, Document, Org, Image } from '~/app'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 

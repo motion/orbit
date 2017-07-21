@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import Router from '~/router'
 import { flatMap } from 'lodash'
 import RightArrow from '~/views/kit/rightArrow'

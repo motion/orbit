@@ -1,4 +1,4 @@
-import { Thread } from '@mcro/models'
+import { Thread } from '~/app'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Reply from '~/views/document/reply'

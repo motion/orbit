@@ -10,7 +10,7 @@ class Thread extends Thing {
     content: Thing.getContent(doc),
   })
 
-  static defaultFilter = doc => ({ ...doc, type: 'thread' })
+  static defaultFilter = doc => ({ type: 'thread', ...doc })
 
   methods = extend(methods, {
     replies(parentId) {

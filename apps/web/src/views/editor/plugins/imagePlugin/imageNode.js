@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image } from '@mcro/models'
+import { Image } from '~/app'
 import { view, watch } from '@mcro/black'
 import node from '~/views/editor/node'
 

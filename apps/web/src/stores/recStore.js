@@ -1,8 +1,8 @@
 // @flow
 import { store } from '@mcro/black'
 import { API_URL } from '~/constants'
-import { Thread } from '@mcro/models'
-import { flatten } from 'lodash'
+import { Thread } from '~/app'
+
 @store
 export default class RecStore {
   docs = Thread.find()

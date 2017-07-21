@@ -1,5 +1,5 @@
 import { watch } from '@mcro/black'
-import { Document } from '@mcro/models'
+import { Document } from '~/app'
 
 export default class DocListStore {
   get document() {

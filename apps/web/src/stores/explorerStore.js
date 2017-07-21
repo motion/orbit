@@ -1,6 +1,6 @@
 // @flow
 import { watch, keycode } from '@mcro/black'
-import { Document, User, Thing } from '@mcro/models'
+import { Document, User, Thing } from '~/app'
 import Router from '~/router'
 import { uniq, last, includes, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
@@ -41,7 +41,7 @@ export default class ExplorerStore {
   children = () =>
     this.showBrowse &&
     this.document &&
-    this.document.getChildren({ depth: 1000 })
+    this.document.getChildren({ depth: Infinity })
 
   editorState = Raw.deserialize(
     {

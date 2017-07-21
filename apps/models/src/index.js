@@ -22,12 +22,6 @@ export Org from './org'
 // exports
 export type { Model } from '~/helpers'
 
-if (module.hot) {
-  module.hot.accept('./document', () => {
-    log('accept: models/index.js:./document')
-  })
-}
-
 import User from './user'
 
 declare class ModelsStore {
@@ -54,7 +48,7 @@ export default class Models implements ModelsStore {
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
       RxDB.QueryChangeDetector.enable()
-      // RxDB.QueryChangeDetector.enableDebugging()
+      // RxDB.QueryChangeDetector.enableDebugging(false)
       RxDB.plugin(pHTTP)
       RxDB.plugin(pIDB)
       RxDB.plugin(pREPL)
@@ -129,7 +123,6 @@ export default class Models implements ModelsStore {
     }
 
     const result = await Promise.all(connections)
-    console.log('connecting', connections)
     return result
   }
 }

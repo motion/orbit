@@ -129,17 +129,17 @@ export const methods = {
     }
     return crumbs
   },
-  getChildren({ depth = 1 } = {}) {
+  getChildren({ depth = 1, find } = {}) {
     const next = (curDepth, isRoot) => parent => {
       return this.collection
-        .find({ parentId: parent.id })
+        .find({ parentId: parent.id, type: { $gt: null }, ...find })
         .$.take(1)
         .mergeMap(documents => {
           if (curDepth - 1 === 0) {
             return [documents]
           }
           return Observable.from(documents)
-            .mergeMap(next(curDepth - 1))
+            .mergeMap(next(curDepth - 1, false))
             .toArray()
         })
         .map(children => (isRoot ? children : { ...parent, children }))

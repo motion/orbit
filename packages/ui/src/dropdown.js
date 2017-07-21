@@ -51,28 +51,21 @@ export default class Dropdown {
           openOnHover
           closeOnEsc
           background
-          theme={theme}
           borderRadius={6}
           elevation={3}
           arrowSize={12}
           distance={4}
           target={
-            <target>
-              {noWrap &&
-                <children>
-                  {children} {arrow}
-                </children>}
-              <Button
-                if={!noWrap}
-                inline
-                iconAfter
-                icon={arrow}
-                $$color={color}
-                {...buttonProps}
-              >
-                {children}
-              </Button>
-            </target>
+            <Button
+              if={!noWrap}
+              inline
+              iconAfter
+              icon={arrow}
+              color={color}
+              {...buttonProps}
+            >
+              test
+            </Button>
           }
           {...popoverProps}
         >

@@ -1,7 +1,7 @@
 import { view, watch, HotKeys } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
-import { Reply, Thread } from '@mcro/models'
+import { Reply, Thread } from '~/app'
 
 class DraftStore {
   draftVersion = 1

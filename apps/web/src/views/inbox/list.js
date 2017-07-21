@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import timeAgo from 'time-ago'
 import Draft from './draft'
 import Router from '~/router'
-import { Thread } from '@mcro/models'
+import { Thread } from '~/app'
 
 const { ago } = timeAgo()
 

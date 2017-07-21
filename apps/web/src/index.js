@@ -40,4 +40,7 @@ if (module && module.hot) {
     log('accept: ./index.js')
     require('./start').start(true)
   })
+  module.hot.accept('@mcro/models/lib/user', () => {
+    log('accept user')
+  })
 }

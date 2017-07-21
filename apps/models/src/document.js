@@ -12,9 +12,13 @@ export class Document extends Thing {
     content: Thing.getContent(doc),
   })
 
-  static defaultFilter = doc => ({ ...doc, type: 'document' })
+  static defaultFilter = doc => ({ type: 'document', ...doc })
 
-  methods = extend(methods, {})
+  methods = extend(methods, {
+    test() {
+      return 1
+    },
+  })
 
   root = () => this.collection.find(User.org.homeDocument).exec()
 
@@ -93,7 +97,13 @@ export class Document extends Thing {
   }
 }
 
+window.DocumentModel = Document
+
 const DocumentInstance = new Document()
 window.Document = DocumentInstance
 
 export default DocumentInstance
+
+if (!DocumentInstance.hooks) {
+  debugger
+}

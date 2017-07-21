@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import DocumentPage from './document'
 
 @view

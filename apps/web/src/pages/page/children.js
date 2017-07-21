@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Models from '@mcro/models'
+import * as Models from '~/app'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
@@ -326,7 +326,7 @@ export default class Children {
     },
     bottom: {
       bottom: 0,
-      background: 'linear-gradient(transparent, #fff)',
+      // background: 'linear-gradient(transparent, #fff)',
     },
   }
 }

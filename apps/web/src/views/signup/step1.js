@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view, schema, string } from '@mcro/black'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
 import Gemstone from '~/views/kit/gemstone'

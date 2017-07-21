@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Gemstone from '~/views/kit/gemstone'
 import Router from '~/router'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()

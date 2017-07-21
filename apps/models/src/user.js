@@ -46,7 +46,6 @@ class User {
   }
 
   async setupSuperLogin() {
-    console.log('setting up', this.options)
     this.superlogin.configure(this.options)
 
     // sync

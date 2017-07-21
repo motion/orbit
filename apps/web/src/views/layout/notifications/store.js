@@ -1,4 +1,4 @@
-import { Document } from '@mcro/models'
+import { Document } from '~/app'
 import { sortBy, last, flatMap, memoize, find, flatten, random } from 'lodash'
 // import merge from 'deep-extend'
 import Router from '~/router'

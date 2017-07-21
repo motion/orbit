@@ -86,12 +86,7 @@ export default class Page {
   static Actions = PageActions
   static Sidebar = PageSidebar
 
-  get showSidebar() {
-    return this.props.sidebar || this.props.actions || this.props.children
-  }
-
-  render({ sidebar, actions, children, store, ...props }: Props) {
-    const { showSidebar } = this
+  render({ showChildren, showActions, children, store, ...props }: Props) {
     return (
       <page {...props}>
         <pagecontents $showSidebar={showSidebar}>
@@ -108,12 +103,11 @@ export default class Page {
           })}
         </pagecontents>
 
-        <sidebar if={showSidebar}>
-          <Actions if={actions} />
-          <Children if={children} />
+        <sidebar if={showChildren || showActions}>
+          <Actions if={showActions} />
+          <Children if={showChildren} />
           <line />
           <fade />
-          {typeof sidebar !== 'boolean' ? sidebar : null}
         </sidebar>
       </page>
     )
@@ -133,11 +127,8 @@ export default class Page {
       overflowX: 'visible',
       overflowY: 'scroll',
     },
-    showSidebar: {
-      width: `calc(100% - ${SIDEBAR_WIDTH}px)`,
-    },
     sidebar: {
-      width: SIDEBAR_WIDTH,
+      maxWidth: SIDEBAR_WIDTH,
       overflow: 'hidden',
       zIndex: 50,
       top: 0,

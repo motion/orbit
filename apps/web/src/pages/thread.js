@@ -100,7 +100,7 @@ export default class ThreadPage {
     const assignTo = ['Nick', 'Nate', 'Sam']
 
     return (
-      <Page actions>
+      <Page showActions>
         <DocumentView document={explorerStore.document} isPrimaryDocument />
 
         <actions if={store.thread}>

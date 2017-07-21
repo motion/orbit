@@ -98,7 +98,9 @@ export default class Sidebar {
               </end>
             </bar>
 
-            <InboxList />
+            <inbox>
+              <InboxList />
+            </inbox>
 
             {children}
           </sidebar>
@@ -144,6 +146,9 @@ export default class Sidebar {
     },
     shown: {
       opacity: 1,
+    },
+    inbox: {
+      margin: [0, -20],
     },
   }
 }

@@ -89,7 +89,7 @@ export default class Page {
   render({ showChildren, showActions, children, store, ...props }: Props) {
     return (
       <page {...props}>
-        <pagecontents $showSidebar={showSidebar}>
+        <pagecontents>
           <SlotManager store={store} />
           {React.Children.map(children, child => {
             if (child) {

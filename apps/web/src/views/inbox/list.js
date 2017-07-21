@@ -26,7 +26,7 @@ export default class Inbox {
 
     return (
       <inbox>
-        <bar if={!large && store.document}>
+        <bar if={large && store.document}>
           <bartitle $$flex>
             <UI.Title size={3}>{store.document.title}</UI.Title>
             {(store.threads || []).length} new
@@ -60,7 +60,6 @@ export default class Inbox {
         <content>
           <UI.List
             background="transparent"
-            $list
             controlled
             virtualized={{
               rowHeight: 115,
@@ -119,9 +118,6 @@ export default class Inbox {
       width: '100%',
       height: '100%',
     },
-    content: {
-      margin: [0, -20],
-    },
     create: {
       width: 400,
     },
@@ -153,6 +149,7 @@ export default class Inbox {
       marginBottom: 5,
       justifyContent: 'space-between',
       alignItems: 'center',
+      padding: [20, 0],
     },
   }
 }

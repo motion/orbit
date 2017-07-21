@@ -37,7 +37,7 @@ const ICONS = {
 
 @view.ui
 class Item {
-  render({ doc, editable, onSave, textRef, subItems, ...props }) {
+  render({ doc, editable, onSave, textRef, subItems, children, ...props }) {
     return (
       <doccontainer
         $$undraggable
@@ -70,23 +70,8 @@ class Item {
           </UI.Text>
         </UI.Surface>
 
-        <subitems if={false}>
-          {(subItems &&
-            subItems.length &&
-            <subdocs>
-              <RightArrow $arrow css={{ transform: { scale: 0.5 } }} />
-              {subItems.map(child =>
-                <UI.Text
-                  if={child}
-                  key={child.id}
-                  onClick={() => Router.go(child.url())}
-                  size={0.8}
-                >
-                  {child.title}
-                </UI.Text>
-              )}
-            </subdocs>) ||
-            null}
+        <subitems if={children}>
+          {children}
         </subitems>
         <DragHandle
           if={false}
@@ -130,9 +115,9 @@ const SortableItem = SortableElement(props =>
 )
 
 class ChildrenStore {
-  children = {}
   version = 1
   creatingDoc = false
+  showBrowse = false
 
   get document() {
     return this.props.explorerStore.document
@@ -211,7 +196,7 @@ class ChildrenStore {
 }
 
 const SortableChildren = SortableContainer(({ items, store }) =>
-  <docs style={{ width: 200 }} $$undraggable>
+  <docs $$undraggable>
     {items.map(doc => {
       if (!doc) {
         return null
@@ -235,7 +220,7 @@ export default class Children {
     }
   }
 
-  render({ store, store: { hasDocs, sortedDocs } }: Props) {
+  render({ explorerStore, store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children>
         <title $$row $$centered $$marginBottom={10}>
@@ -301,6 +286,12 @@ export default class Children {
             pressDelay={500}
           />
         </contents>
+        <UI.Button
+          onClick={explorerStore.ref('showBrowse').toggle}
+          css={{ position: 'relative', zIndex: 100 }}
+        >
+          Browse
+        </UI.Button>
         <fade $bottom />
       </children>
     )
@@ -327,7 +318,7 @@ export default class Children {
       left: 0,
       right: 0,
       height: 50,
-      zIndex: 10000000,
+      zIndex: 10,
       pointerEvents: 'none',
     },
     bottom: {

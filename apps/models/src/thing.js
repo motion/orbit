@@ -78,7 +78,7 @@ export const methods = {
     }
     return crumbs
   },
-  getChildren({ depth = Infinity } = {}) {
+  getChildren({ depth = 1 } = {}) {
     const next = (curDepth, isRoot) => parent => {
       return this.collection
         .find({ parentId: parent.id })

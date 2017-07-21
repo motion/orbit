@@ -72,7 +72,7 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
       Klass[DECOR_KEY] = true
       Klass[DECOR_GLOBAL_KEY] = true
     } catch (e) {
-      console.log('dev mode catching error', e)
+      console.error('dev mode catching error', e)
     }
 
     return decoratedClass

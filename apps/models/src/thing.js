@@ -79,21 +79,21 @@ export const methods = {
     return crumbs
   },
   getChildren({ depth = Infinity } = {}) {
-    const next = curDepth => parent => {
+    const next = (curDepth, isRoot) => parent => {
       return this.collection
         .find({ parentId: parent.id })
         .$.take(1)
         .mergeMap(documents => {
           if (curDepth - 1 === 0) {
-            return documents
+            return [documents]
           }
           return Observable.from(documents)
             .mergeMap(next(curDepth - 1))
             .toArray()
         })
-        .map(children => ({ id: parent.id, children }))
+        .map(children => (isRoot ? children : { ...parent, children }))
     }
-    return next(depth)(this)
+    return next(depth, true)(this)
   },
   togglePrivate() {
     this.private = !this.private

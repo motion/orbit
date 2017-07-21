@@ -275,7 +275,6 @@ export class Thing extends Model {
       return null
     }
     const query_ = cleanGetQuery(query)
-    log('querying with', query_)
     return this.collection.findOne(query_)
   };
 

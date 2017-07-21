@@ -237,7 +237,6 @@ function mobxifyWatch(obj, method, val) {
     if (result && result.dispose) {
       currentDisposable = result.dispose.bind(result)
     }
-    console.log(KEY, result)
     if (result && (isQuery(result) || isObservable(result))) {
       if (result.isntConnected) {
         return

@@ -16,8 +16,6 @@ const PARAGRAPH_STYLE = {
 export const Paragraph = node(({ editorStore, children, node, attributes }) => {
   const text = children[0].props.node.text
 
-  const isPlaceholder = editorStore.showPlaceholder
-
   if (
     editorStore.find &&
     editorStore.find.length > 0 &&
@@ -37,8 +35,8 @@ export const Paragraph = node(({ editorStore, children, node, attributes }) => {
 
   return (
     <p
-      className={isPlaceholder ? 'showPlaceholder' : ''}
-      placeholder="I have measured out my life with coffee spoons"
+      className={editorStore.placeholder ? 'showPlaceholder' : ''}
+      placeholder={editorStore.placeholder}
       style={PARAGRAPH_STYLE}
       {...attributes}
     >

@@ -1,6 +1,6 @@
+import React from 'react'
 import { view } from '@mcro/black'
 import { viewCache } from '~/helpers'
-import React from 'react'
 import PlainEditor from './plainEdtor'
 
 @view.ui

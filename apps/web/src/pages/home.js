@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { User } from '@mcro/models'
-import DocPage from './document'
+import DocumentPage from './document'
 
 @view
 export default class HomePage {
@@ -16,6 +16,6 @@ export default class HomePage {
       return <null>weird no org</null>
     }
 
-    return <DocPage {...this.props} />
+    return <DocumentPage {...this.props} />
   }
 }

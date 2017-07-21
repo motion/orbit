@@ -3,8 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
-import Inbox from '~/views/inbox'
-import { User } from '@mcro/models'
+import InboxList from '~/views/inbox/list'
 import { throttle } from 'lodash'
 import Draft from '~/views/inbox/draft'
 
@@ -100,7 +99,7 @@ export default class Sidebar {
               </end>
             </bar>
 
-            <Inbox hideTitle />
+            <InboxList hideTitle />
 
             {children}
           </sidebar>

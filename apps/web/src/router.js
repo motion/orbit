@@ -5,10 +5,10 @@ import { start } from './start'
 let AppRouter
 
 const getRoutes = () => ({
-  '/': require('./views/homePage').default,
-  'doc/:id': require('./views/document').default,
-  'thread/:id': require('./views/thread').default,
-  'inbox/:id': require('./views/inbox').default,
+  '/': require('./pages/home').default,
+  'doc/:id': require('./pages/document').default,
+  'thread/:id': require('./pages/thread').default,
+  'inbox/:id': require('./pages/inbox').default,
 })
 
 function runRouter() {

@@ -1,12 +1,13 @@
 import { Thread } from '@mcro/models'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Reply from './reply'
-import Draft from './draft'
+import Reply from '~/views/document/reply'
+import Draft from '~/views/inbox/draft'
 import { sortBy, includes, capitalize } from 'lodash'
 import timeAgo from 'time-ago'
 import DocumentView from '~/views/document'
 import Page from '~/views/page'
+import Actions from '~/views/document/actions'
 
 const { ago } = timeAgo()
 
@@ -102,6 +103,8 @@ export default class ThreadPage {
     return (
       <Page>
         <DocumentView document={explorerStore.document} isPrimaryDocument />
+
+        <Actions />
 
         <actions if={store.thread}>
           <action $$row>

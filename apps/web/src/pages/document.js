@@ -9,7 +9,7 @@ import Actions from '~/views/document/actions'
 
 @view.attach('explorerStore')
 @view
-export default class DocPage {
+export default class DocumentPage {
   render({ explorerStore: { document } }) {
     // this is the "loading" state
     if (document === undefined) {

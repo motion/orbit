@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Page from '~/views/page'
+import Page from './page'
 import DocumentView from '~/views/document'
 import Children from '~/views/document/children'
 import Actions from '~/views/document/actions'

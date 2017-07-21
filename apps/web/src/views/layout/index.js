@@ -18,6 +18,7 @@ import Signup from '~/views/signup'
 import { User } from '@mcro/models'
 import { Bar, Results } from './explorer'
 import BottomBar from '~/views/bottomBar'
+import Browse from './browse'
 
 type Props = {
   layoutStore: LayoutStore,
@@ -53,6 +54,7 @@ export default class Layout {
       const CurrentPage = Router.activeView || NotFound
       return (
         <app>
+          <Browse />
           <Signup />
           <LayoutWrap layoutStore={layoutStore}>
             <Bar />
@@ -119,8 +121,6 @@ export default class Layout {
     content: {
       flex: 1,
       position: 'relative',
-      overflowX: 'visible',
-      overflowY: 'scroll',
       zIndex: 100,
     },
     dragStartedAt: pos => ({

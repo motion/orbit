@@ -8,7 +8,6 @@ import App from '~/app'
 import { debounce } from 'lodash'
 
 const PATH_SEPARATOR = '/'
-const VERSION = 12
 
 const SHORTCUTS = {
   left: 'left',
@@ -30,18 +29,13 @@ const SHORTCUTS = {
 }
 
 export default class ExplorerStore {
-  static version = VERSION
-  version = VERSION
-
   @watch
   document = () =>
     Router.path === '/'
       ? User.org && Document.get(User.org.homeDocument)
       : Thing.get(Router.params.id)
 
-  @watch
-  crumbs = () =>
-    this.document && this.document.getCrumbs && this.document.getCrumbs()
+  @watch crumbs = () => this.document && this.document.getCrumbs()
 
   @watch
   children = () =>

@@ -62,9 +62,8 @@ export default class DocumentView {
 
   static style = {
     docview: {
-      flex: 1,
       maxWidth: '100%',
-      minHeight: 100,
+      minHeight: 200,
       padding: [0],
     },
     loading: {

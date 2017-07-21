@@ -82,7 +82,8 @@ export default class Page {
   static Actions = PageActions
   static Sidebar = PageSidebar
 
-  render({ children, store, ...props }: Props) {
+  render({ sidebar, children, store, ...props }: Props) {
+    log(sidebar)
     return (
       <page {...props}>
         <SlotManager store={store} />
@@ -96,17 +97,19 @@ export default class Page {
           }
           return child
         })}
+        <sidebar if={sidebar}>
+          {sidebar}
+        </sidebar>
       </page>
     )
   }
 
   static style = {
     page: {
-      // dont play with overflow here or react-grid will clip
+      overflowX: 'visible',
+      overflowY: 'scroll',
       flex: 1,
       maxWidth: '100%',
-      // dont add padding so we can add bottom bars
-      overflow: 'visible',
       position: 'relative',
     },
   }

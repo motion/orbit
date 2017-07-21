@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-import Page from '~/views/page'
+import * as UI from '@mcro/ui'
 
 @view.attach('explorerStore')
 @view
@@ -17,11 +17,22 @@ export default class Browse {
     )
   }
 
-  render({ explorerStore }) {
+  render({ explorerStore: { showBrowse, children } }) {
     return (
-      <Page>
-        {explorerStore.children && explorerStore.children.map(this.getChild)}
-      </Page>
+      <UI.Surface $browse elevation={2} if={showBrowse && children}>
+        {children.map(this.getChild)}
+      </UI.Surface>
     )
+  }
+
+  static style = {
+    browse: {
+      position: 'absolute',
+      top: '20%',
+      right: '20%',
+      bottom: '20%',
+      left: '20%',
+      zIndex: 1000,
+    },
   }
 }

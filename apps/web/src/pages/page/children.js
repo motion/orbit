@@ -88,6 +88,7 @@ class Item {
                     background="#eee"
                     transform={{
                       y: -8.5,
+                      x: -5,
                     }}
                   />
                 </UI.Button>
@@ -151,16 +152,14 @@ class Item {
         transform: {
           y: 0,
           z: 0,
-        },
-      },
-      '&:hover icon': {
-        transform: {
-          scale: 1.05,
+          x: -1,
+          scale: 1.03,
         },
       },
     },
     title: {
       marginBottom: 20,
+      paddingRight: 0,
       fontWeight: 300,
       fontSize: 15,
       lineHeight: '1.2rem',

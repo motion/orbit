@@ -159,7 +159,6 @@ class Item {
     },
     title: {
       marginBottom: 20,
-      paddingRight: 0,
       fontWeight: 300,
       fontSize: 15,
       lineHeight: '1.2rem',

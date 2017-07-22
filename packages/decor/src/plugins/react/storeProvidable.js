@@ -74,7 +74,7 @@ export default function storeProvidable(options, emitter) {
           // update
           for (const prop of nextPropsKeys) {
             if (this._props[prop] !== nextProps[prop]) {
-              this._props[prop] = nextProps
+              this._props[prop] = nextProps[prop]
             }
           }
           // clean

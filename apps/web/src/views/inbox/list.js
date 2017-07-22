@@ -1,4 +1,4 @@
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import timeAgo from 'time-ago'
 import Draft from './draft'
@@ -10,11 +10,14 @@ const { ago } = timeAgo()
 
 class InboxStore {
   document = this.props.document
-  threads = Thread.find({
-    parentId: this.document ? this.document.id : undefined,
-  })
+  @watch
+  threads = () =>
+    Thread.find({
+      parentId: this.document ? this.document.id : undefined,
+    })
 
   get filteredThreads() {
+    console.log('filtering', this.props.filter, this.threads)
     if (!this.threads) {
       return []
     }
@@ -40,6 +43,8 @@ export default class Inbox {
     const badgeProps = {}
 
     Router.path // trigger change
+
+    const { filteredThreads } = store
 
     return (
       <inbox>
@@ -74,7 +79,7 @@ export default class Inbox {
             </UI.Popover>
           </actions>
         </bar>
-        <content>
+        <content if={filteredThreads}>
           <UI.List
             background="transparent"
             controlled
@@ -87,11 +92,15 @@ export default class Inbox {
               padding: [10, 15, 10, 16],
               overflow: 'hidden',
             }}
-            items={store.filteredThreads}
+            items={filteredThreads}
             // setTimeout speeds up navigation
             onSelect={item => this.setTimeout(() => Router.go(item.url()))}
             isSelected={item => item.url() === Router.path}
-            getItem={(item, index) => {
+            getItem={item => {
+              console.log('item is', item)
+              if (!item) {
+                return { primary: 'undefined' }
+              }
               return {
                 glow: false,
                 primary: (

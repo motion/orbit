@@ -125,6 +125,9 @@ export const methods = {
           console.error('weird, no doc at this crumb', next)
           return crumbs
         }
+        if (next && !next.tasks) {
+          debugger
+        }
         doc = next
       }
     }

@@ -56,7 +56,7 @@ class User {
     this.superlogin.on('login', async () => {
       this.user = await this.getCurrentUser()
       if (this.user) {
-        this.documents.connect(this.database, {
+        await this.documents.connect(this.database, {
           sync: this.user.userDBs.documents,
         })
       }

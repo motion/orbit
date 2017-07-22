@@ -31,8 +31,9 @@ const SHORTCUTS = {
 export default class ExplorerStore {
   @watch
   document = () => {
+    console.log('running document', Router.path, Router.params.id)
     if (Router.path === '/') {
-      return User.home && Document.get(User.home.id)
+      return User.home
     }
     if (Router.params.id) {
       return Thing.get(Router.params.id)

@@ -17,7 +17,6 @@ class InboxStore {
     })
 
   get filteredThreads() {
-    console.log('filtering', this.props.filter, this.threads)
     if (!this.threads) {
       return []
     }
@@ -97,10 +96,6 @@ export default class Inbox {
             onSelect={item => this.setTimeout(() => Router.go(item.url()))}
             isSelected={item => item.url() === Router.path}
             getItem={item => {
-              console.log('item is', item)
-              if (!item) {
-                return { primary: 'undefined' }
-              }
               return {
                 glow: false,
                 primary: (

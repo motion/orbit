@@ -84,9 +84,9 @@ export default class Layout {
         >
           <UI.Theme name="light">
             <UI.SlotFill.Provider>
-              <layout>
+              <content>
                 {IN_TRAY ? renderTray() : renderApp()}
-              </layout>
+              </content>
             </UI.SlotFill.Provider>
           </UI.Theme>
         </UI.ContextMenu>
@@ -107,14 +107,9 @@ export default class Layout {
       opacity: 0,
       pointerEvents: 'none',
     },
-    layout: {
-      flex: 1,
-      flexFlow: 'row',
-    },
     content: {
       flex: 1,
-      position: 'relative',
-      zIndex: 100,
+      flexFlow: 'row',
     },
     dragStartedAt: pos => ({
       overflowX: 'visible',

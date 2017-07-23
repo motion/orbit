@@ -70,11 +70,9 @@ class User {
     }
 
     // for now
-    log('should be')
     this.setTimeout(() => {
       this.queries = new Queries()
       this.watch(() => {
-        log('settgin id')
         if (this.id && !this.queries.id) {
           this.queries.id = this.id
         }
@@ -92,7 +90,6 @@ class User {
       })
     })
 
-    console.log('SET TO CONNECTED')
     this.connected = true
   }
 
@@ -101,7 +98,6 @@ class User {
 
     // sync
     this.superlogin.on('login', async () => {
-      log('onlogin set user')
       this.user = await this.getCurrentUser()
       if (this.user) {
         await this.documents.connect(this.database, {

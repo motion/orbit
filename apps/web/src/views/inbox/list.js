@@ -9,11 +9,11 @@ import fuzzy from 'fuzzy'
 const { ago } = timeAgo()
 
 class InboxStore {
-  document = this.props.document
+  inbox = this.props.document
   @watch
   threads = () =>
     Thread.find({
-      parentId: this.document ? this.document.id : undefined,
+      parentId: this.inbox ? this.inbox.id : undefined,
     })
 
   get filteredThreads() {
@@ -47,9 +47,9 @@ export default class Inbox {
 
     return (
       <inbox>
-        <bar if={large && store.document}>
+        <bar if={large && store.inbox}>
           <bartitle $$flex>
-            <UI.Title size={3}>{store.document.title}</UI.Title>
+            <UI.Title size={3}>{store.inbox.title}</UI.Title>
             {(store.threads || []).length} new
           </bartitle>
           <actions>
@@ -74,7 +74,7 @@ export default class Inbox {
                 />
               }
             >
-              <Draft inboxStore={store} />
+              <Draft parentId={store.inbox.id} />
             </UI.Popover>
           </actions>
         </bar>

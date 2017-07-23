@@ -10,16 +10,12 @@ class DraftStore {
     this.draftVersion &&
     this.model.createTemporary({
       title: 'Draft',
-      parentId: (this.document && this.document.parentId) || undefined,
+      parentId: this.props.parentId || undefined,
       draft: true,
     })
 
-  get document() {
-    return this.props.document
-  }
-
   get model() {
-    return this.document ? Reply : Thread
+    return this.props.isReply ? Reply : Thread
   }
 
   send = async () => {
@@ -54,8 +50,8 @@ export default class Draft {
     placeholder,
     store,
     isReply,
+    parentId,
     store: { draft },
-    document,
     closePopover,
     ...props
   }) {

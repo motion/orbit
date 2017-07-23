@@ -6,6 +6,7 @@ import * as Constants from '~/constants'
 import InboxList from '~/views/inbox/list'
 import { throttle } from 'lodash'
 import Draft from '~/views/inbox/draft'
+import { User } from '~/app'
 
 class SidebarStore {
   filter = ''
@@ -100,7 +101,7 @@ export default class Sidebar {
                   }
                 >
                   <Draft
-                    document={{}}
+                    parentId={User.defaultInbox && User.defaultInbox.id}
                     closePopover={() => this.popover && this.popover.close()}
                     editorRef={this.ref('draftEditor').set}
                   />

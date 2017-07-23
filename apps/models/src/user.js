@@ -3,6 +3,7 @@ import PouchDB from 'pouchdb-core'
 import superLogin from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'
 import Org from './org'
+import Inbox from './inbox'
 
 const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
@@ -20,12 +21,17 @@ class Queries {
   @watch favorites = () => Document.favoritedBy(this.id)
   @watch
   home = () => {
-    log('homehome')
-    console.log('home', this.org)
     if (this.org) {
       return Document.get({ parentId: this.org.id })
     }
     return null
+  }
+
+  @watch
+  defaultInbox = () => {
+    if (this.org) {
+      return Inbox.get({ parentId: this.org.id })
+    }
   }
 }
 
@@ -47,6 +53,10 @@ class User {
 
   get home() {
     return this.queries.home
+  }
+
+  get defaultInbox() {
+    return this.queries.defaultInbox
   }
 
   constructor(options) {

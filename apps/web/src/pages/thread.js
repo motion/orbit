@@ -152,7 +152,7 @@ export default class ThreadPage {
           <Draft
             $draft
             isReply
-            document={store.thread}
+            parentId={store.thread.parentId}
             placeholder="Add your reply..."
           />
         </reply>

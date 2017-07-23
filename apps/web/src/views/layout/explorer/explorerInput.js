@@ -57,10 +57,14 @@ class Item {
     const isLast = document.nodes.last().nodes.last().key === nextKey
     const selected = explorerStore.selectedItemKey === node.key
     const hideArrow = !explorerStore.isCreatingNew && isLast
+    const hasIcon = doc && doc.type === 'inbox'
+    const icon = 'paper'
 
     const btnProps = {
+      $btn: true,
+      $active: selected,
       chromeless: true,
-      icon: doc && doc.type === 'inbox' ? 'paper' : '',
+      icon: hasIcon ? icon : '',
       spaced: true,
       size: 1,
       height: 24,
@@ -68,7 +72,6 @@ class Item {
       margin: [0, 2, 0, -4],
       fontSize: FONT_SIZE,
       highlight: selected,
-      $active: selected,
       color: [0, 0, 0, 0.8],
       style: $text,
       glowProps: {
@@ -91,7 +94,7 @@ class Item {
           </UI.Button>
           <RightArrow if={!hideArrow} css={$arrow} animate={isLast} />
         </inner>
-        <block contentEditable={false} $last={isLast}>
+        <block contentEditable={false} $last={isLast} $hasIcon={hasIcon}>
           {name}
         </block>
       </span>
@@ -104,20 +107,26 @@ class Item {
       position: 'relative',
       marginLeft: -4,
     },
-    last: {
-      marginLeft: -4,
-      // marginBottom: 1,
-    },
     div: {
       position: 'relative',
+    },
+    btn: {
+      marginLeft: -10,
+      marginRight: 10,
     },
     block: {
       opacity: 0,
       background: 'green',
       pointerEvents: 'none',
       display: 'inline',
-      paddingRight: 15,
+      paddingRight: 26,
       // paddingLeft: 5,
+    },
+    last: {
+      // marginLeft: -4,
+    },
+    hasIcon: {
+      paddingRight: 40,
     },
     active: {
       background: 'rgba(0,0,255,.05)',

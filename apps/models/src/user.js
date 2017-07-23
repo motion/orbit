@@ -1,4 +1,4 @@
-import { store, watch } from '@mcro/black'
+import { store, watch, log } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
 import superLogin from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'
@@ -8,20 +8,45 @@ const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
 @store
+class Queries {
+  id = null
+  activeOrg = 0
+
+  get org() {
+    return this.orgs && this.orgs[this.activeOrg]
+  }
+
+  @watch orgs = () => this.id && Org.forUser(this.id)
+  @watch favorites = () => Document.favoritedBy(this.id)
+  @watch
+  home = () => {
+    log('homehome')
+    console.log('home', this.org)
+    if (this.org) {
+      return Document.get({ parentId: this.org.id })
+    }
+    return null
+  }
+}
+
+@store
 class User {
   connected = false
   user = null
   localDb = null
   remoteDb = null
-  activeOrg = 0
-  @watch orgs = () => this.connected && Org.forUser(this.id)
-  @watch favorites = () => this.connected && Document.favoritedBy(this.id)
-  @watch
-  home = () =>
-    this.connected && this.org && Document.get({ parentId: this.org.id })
+  queries = {}
 
   get org() {
-    return this.orgs && this.orgs[this.activeOrg]
+    return this.queries.org
+  }
+
+  get favorites() {
+    return this.queries.favorites
+  }
+
+  get home() {
+    return this.queries.home
   }
 
   constructor(options) {
@@ -33,6 +58,18 @@ class User {
     if (this.database) {
       return // hmr
     }
+
+    // for now
+    log('should be')
+    this.setTimeout(() => {
+      this.queries = new Queries()
+      this.watch(() => {
+        log('settgin id')
+        if (this.id && !this.queries.id) {
+          this.queries.id = this.id
+        }
+      })
+    }, 1000)
 
     this.database = database
     this.documents = new DocumentModel()
@@ -54,6 +91,7 @@ class User {
 
     // sync
     this.superlogin.on('login', async () => {
+      log('onlogin set user')
       this.user = await this.getCurrentUser()
       if (this.user) {
         await this.documents.connect(this.database, {

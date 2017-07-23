@@ -66,12 +66,13 @@ export class OrgModel extends Model {
         home: true,
         title: 'Welcome',
         parentId: org.id,
+        parentIds: [org.id],
       })
       // attach discussion to homepage
       await Inbox.create({
         title: 'Issues',
         parentId: homeDoc.id,
-        parentIds: [homeDoc.id],
+        parentIds: [org.id, homeDoc.id],
       })
     },
   }

@@ -5,14 +5,19 @@ import DocumentPage from './document'
 
 @view
 export default class HomePage {
+  async componentDidMount() {
+    if (User.home === null) {
+      await User.createOrg('myneworg')
+      console.log('created new org for user')
+    }
+  }
+
   render() {
     if (!User.loggedIn) {
       return <center $$centered>login plz</center>
     }
 
     if (User.home === null) {
-      log('MAKE TAHT FUCKING ORG')
-      User.createOrg('myneworg')
       return <null>weird no org</null>
     }
 

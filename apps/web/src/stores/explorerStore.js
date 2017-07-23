@@ -33,6 +33,7 @@ export default class ExplorerStore {
   document = () => {
     console.log('running document', Router.path, Router.params.id)
     if (Router.path === '/') {
+      console.log('User.home', User.home)
       return User.home
     }
     if (Router.params.id) {
@@ -40,7 +41,15 @@ export default class ExplorerStore {
     }
   }
 
-  @watch crumbs = () => this.document && this.document.getCrumbs()
+  @watch
+  crumbs = () => {
+    console.log(
+      'crumbs',
+      this.document,
+      this.document && this.document.getCrumbs
+    )
+    return this.document && this.document.getCrumbs()
+  }
 
   @watch
   children = () =>
@@ -533,9 +542,8 @@ export default class ExplorerStore {
   }
 
   setPath = debounce(async doc => {
-    if (!doc || !doc.getCrumbs) {
-      log('got a weird doc')
-      console.log(doc, this.document)
+    if (!doc) {
+      log('no doc for setPath')
       return
     }
     this.setValue(this.getPathForDocs(await doc.getCrumbs()))

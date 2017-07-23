@@ -16,9 +16,7 @@ import FlipMove from 'react-flip-move'
       if (!User.favorites) {
         return null
       }
-      return Promise.all(
-        User.favorites.map(doc => doc.getCrumbs && doc.getCrumbs())
-      )
+      return Promise.all(User.favorites.map(doc => doc.getCrumbs()))
     }
   },
 })

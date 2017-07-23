@@ -254,7 +254,7 @@ export class Thing extends Model {
       authorId: User.user ? User.id : 'anon',
       hashtags: [],
       starredBy: [],
-      orgId: User.org && User.org.id,
+      orgId: User.org && User.org.id || '',
       updates: [],
       members: [],
       attachments: [],

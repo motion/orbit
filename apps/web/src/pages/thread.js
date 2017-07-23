@@ -104,58 +104,65 @@ export default class ThreadPage {
 
     return (
       <Page showActions>
-        <DocumentView document={store.thread} isPrimaryDocument />
+        <content>
+          <DocumentView document={store.thread} isPrimaryDocument />
 
-        <actions if={store.thread}>
-          <action $$row>
-            <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-              On it&nbsp;
-            </UI.Text>
-            {assignTo.map(name =>
-              <UI.Button
-                key={name}
-                highlight={store.thread.assignedTo() === name}
-                inline
-                $button
-                onClick={() => store.assignTo(name)}
-              >
-                {capitalize(name)}
-              </UI.Button>
-            )}
-          </action>
-          <space css={{ height: 10 }} />
-          <action $$row>
-            <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-              Label&nbsp;
-            </UI.Text>
-            {tags.map(name =>
-              <UI.Button
-                key={name}
-                highlight={store.hasTag(name)}
-                inline
-                $button
-                onClick={() => store.toggleTag(name)}
-              >
-                {capitalize(name)}
-              </UI.Button>
-            )}
-          </action>
-        </actions>
-        {store.items.map(
-          item =>
-            item.type === 'reply'
-              ? <Reply key={item.id} doc={item} />
-              : <Update key={item.id} update={item} />
-        )}
+          <actions if={store.thread}>
+            <action $$row>
+              <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
+                On it&nbsp;
+              </UI.Text>
+              {assignTo.map(name =>
+                <UI.Button
+                  key={name}
+                  highlight={store.thread.assignedTo() === name}
+                  inline
+                  $button
+                  onClick={() => store.assignTo(name)}
+                >
+                  {capitalize(name)}
+                </UI.Button>
+              )}
+            </action>
+            <action $$row>
+              <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
+                Label&nbsp;
+              </UI.Text>
+              {tags.map(name =>
+                <UI.Button
+                  key={name}
+                  highlight={store.hasTag(name)}
+                  inline
+                  $button
+                  onClick={() => store.toggleTag(name)}
+                >
+                  {capitalize(name)}
+                </UI.Button>
+              )}
+            </action>
+          </actions>
+        </content>
 
-        <reply if={store.thread}>
-          <Draft
-            $draft
-            isReply
-            parentId={store.thread.parentId}
-            placeholder="Add your reply..."
-          />
-        </reply>
+        <replies>
+          {store.items.map(item =>
+            <item>
+              <separator />
+              {item.type === 'reply'
+                ? <Reply key={item.id} doc={item} />
+                : <Update key={item.id} update={item} />}
+            </item>
+          )}
+
+          <draft $item if={store.thread}>
+            <separator />
+            <Draft
+              $draft
+              isReply
+              parentId={store.thread.parentId}
+              placeholder="Add your reply..."
+            />
+          </draft>
+        </replies>
       </Page>
     )
   }
@@ -164,19 +171,29 @@ export default class ThreadPage {
     thread: {
       flex: 1,
     },
+    content: {
+      padding: [0, 0, 20],
+    },
     button: {
       marginLeft: 10,
     },
-    reply: {
-      borderTop: [1, '#eee'],
-      padding: [20, 20],
-    },
     draft: {
-      margin: [0, -15],
+      padding: [15, 0, 15, 15],
     },
     action: {
       alignItems: 'center',
-      padding: [0, 30, 20],
+      padding: [0, 30, 15],
+    },
+    item: {
+      position: 'relative',
+    },
+    separator: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 1,
+      background: 'linear-gradient(left, #eee 80%, #fff)',
     },
   }
 }

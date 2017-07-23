@@ -132,7 +132,7 @@ export default class Page {
     sidebar: {
       position: 'relative',
       maxWidth: SIDEBAR_WIDTH,
-      minWidth: 150,
+      minWidth: 60,
       zIndex: 50,
       top: 0,
       right: 0,

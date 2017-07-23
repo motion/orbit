@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 import { Editor } from 'slate'
 import RightArrow from '~/views/kit/rightArrow'
 import Router from '~/router'
+import ExplorerStore from './explorerStore'
 
 const FONT_SIZE = 15
 
@@ -25,7 +26,6 @@ const $arrow = {
   },
 }
 
-@view.attach('explorerStore')
 @view
 class Para {
   render({ children }) {
@@ -140,14 +140,16 @@ class Item {
   }
 }
 
-@view.attach('explorerStore')
-@view
-export default class ExplorerInput {
-  render({ explorerStore: store }) {
-    store.version
+@view.attach('rootStore')
+@view.provide({
+  explorerStore: ExplorerStore,
+})
+export default class Explorer {
+  render({ explorerStore }) {
+    explorerStore.version
 
     return (
-      <bar $blurred={!store.focused} $focused={store.focused}>
+      <bar $blurred={!explorerStore.focused} $focused={explorerStore.focused}>
         <UI.Button
           iconSize={14}
           margin={6}
@@ -165,12 +167,12 @@ export default class ExplorerInput {
         <space css={{ width: 10 }} />
         <Editor
           placeholder={'search or create docs'}
-          state={store.editorState}
-          ref={store.ref('inputNode').set}
-          onKeyDown={store.onKeyDown}
-          onFocus={store.onFocus}
-          onBlur={store.onBlur}
-          onChange={store.onChange}
+          state={explorerStore.editorState}
+          ref={explorerStore.ref('inputNode').set}
+          onKeyDown={explorerStore.onKeyDown}
+          onFocus={explorerStore.onFocus}
+          onBlur={explorerStore.onBlur}
+          onChange={explorerStore.onChange}
           schema={schema}
           style={{ width: '100%', marginBottom: 1 }}
         />

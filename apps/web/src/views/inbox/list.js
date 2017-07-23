@@ -33,7 +33,7 @@ class InboxStore {
   }
 }
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view({
   store: InboxStore,
 })

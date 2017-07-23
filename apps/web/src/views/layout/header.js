@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import Router from '~/router'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
-import ExplorerInput from './explorer/explorerInput'
+import Explorer from './explorer/explorer'
 import Notifications from './notifications'
 
 @view.attach('layoutStore')
@@ -32,7 +32,7 @@ export default class Header {
             disabled={Router.atBack}
             onClick={() => Router.back()}
           />
-          <ExplorerInput
+          <Explorer
             onOpen={() => (layoutStore.explorerOpen = true)}
             onClose={() => (layoutStore.explorerOpen = false)}
           />

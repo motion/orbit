@@ -177,10 +177,10 @@ class ChildrenStore {
   version = 1
   creatingDoc = false
   showBrowse = false
-  id = this.props.explorerStore.document.id || this.id
+  id = this.props.rootStore.document.id || this.id
 
   get document() {
-    return this.props.explorerStore.document
+    return this.props.rootStore.document
   }
 
   @watch
@@ -285,7 +285,7 @@ class SortableChildren {
   }
 }
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view({
   store: ChildrenStore,
 })
@@ -298,7 +298,7 @@ export default class Children {
     }
   }
 
-  render({ explorerStore, store, store: { hasDocs, sortedDocs } }: Props) {
+  render({ rootStore, store, store: { hasDocs, sortedDocs } }: Props) {
     log('render')
     return (
       <children>
@@ -351,7 +351,7 @@ export default class Children {
         </UI.Popover>
         <space />
         <UI.Button
-          onClick={explorerStore.ref('showBrowse').toggle}
+          onClick={rootStore.ref('showBrowse').toggle}
           circular
           size={0.8}
           icon="list"

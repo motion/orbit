@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import { ThemeProvide } from '@mcro/ui'
 import App from '~/app'
 import themes from './themes'
-import Container from './views/container'
+import Root from './views/root'
 import Layout from './views/layout'
 
 export function render() {
@@ -12,11 +12,11 @@ export function render() {
   let ROOT = document.querySelector('#app')
 
   ReactDOM.render(
-    <Container>
+    <Root>
       <ThemeProvide {...themes}>
         <Layout />
       </ThemeProvide>
-    </Container>,
+    </Root>,
     ROOT
   )
   // console.timeEnd('#render')

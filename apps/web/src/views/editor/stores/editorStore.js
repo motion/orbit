@@ -14,7 +14,7 @@ type Props = {
   getRef?: Function,
   find?: string,
   onlyNode?: boolean,
-  // explorerStore: ExplorerStore,
+  // rootStore: rootStore,
 }
 
 export default class EditorStore implements StoreType {
@@ -31,9 +31,9 @@ export default class EditorStore implements StoreType {
   focused = false
   find = this.props.find
   onlyNode = this.props.onlyNode
-  explorerStore = this.props.explorerStore
+  rootStore = this.props.rootStore
 
-  start({ explorerStore, onEditor, getRef, rules, plugins }: Props) {
+  start({ rootStore, onEditor, getRef, rules, plugins }: Props) {
     this.rules = rules
     this.setup(plugins)
 
@@ -53,14 +53,14 @@ export default class EditorStore implements StoreType {
     })
 
     // listen to explorer
-    if (explorerStore) {
-      this.on(explorerStore, 'action', (name: string) => {
+    if (rootStore) {
+      this.on(rootStore, 'action', (name: string) => {
         if (name === 'down') {
           this.focus()
         }
 
         if (name === 'up' && this.focused && this.focusedLine === 0) {
-          explorerStore.focus()
+          rootStore.focus()
         }
       })
     }

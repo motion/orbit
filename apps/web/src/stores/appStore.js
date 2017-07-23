@@ -104,7 +104,7 @@ export default class AppStore {
 
   get explorer() {
     return (
-      this.stores && this.stores.ExplorerStore && this.stores.ExplorerStore[0]
+      this.stores && this.stores.rootStore && this.stores.rootStore[0]
     )
   }
 

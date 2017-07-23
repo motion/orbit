@@ -1,6 +1,6 @@
 // @flow
-import { watch, keycode } from '@mcro/black'
-import { Document, User, Thing } from '~/app'
+import { keycode } from '@mcro/black'
+import { Document, User } from '~/app'
 import Router from '~/router'
 import { uniq, last, includes, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
@@ -9,53 +9,14 @@ import { debounce } from 'lodash'
 
 const PATH_SEPARATOR = '/'
 
-const SHORTCUTS = {
-  left: 'left',
-  right: 'right',
-  down: 'down',
-  up: 'up',
-  j: 'j', // down
-  k: 'k', // up
-  d: 'd', // doc
-  enter: 'enter',
-  esc: 'esc',
-  explorer: ['command+t'],
-  cmdL: 'command+l',
-  cmdEnter: 'command+enter',
-  cmdUp: 'command+up',
-  delete: ['delete', 'backspace'],
-  toggleSidebar: 'command+\\',
-  togglePane: 'shift+tab',
-}
-
 export default class ExplorerStore {
-  @watch
-  document = () => {
-    console.log('running document', Router.path, Router.params.id)
-    if (Router.path === '/') {
-      console.log('User.home', User.home)
-      return User.home
-    }
-    if (Router.params.id) {
-      return Thing.get(Router.params.id)
-    }
+  get document() {
+    return this.props.rootStore.document
   }
 
-  @watch
-  crumbs = () => {
-    console.log(
-      'crumbs',
-      this.document,
-      this.document && this.document.getCrumbs
-    )
-    return this.document && this.document.getCrumbs()
+  get crumbs() {
+    return this.props.rootStore.crumbs
   }
-
-  @watch
-  children = () =>
-    this.showBrowse &&
-    this.document &&
-    this.document.getChildren({ depth: Infinity })
 
   editorState = Raw.deserialize(
     {
@@ -74,21 +35,16 @@ export default class ExplorerStore {
     },
     { terse: true }
   )
+
   path = ''
   highlightIndex = -1
   searchResults: Array<Document> = []
   inputNode: ?HTMLInputElement = null
   focused = false
-  showDiscussions = false
   showResults = false
   showBrowse = false
   focusPaneIndex = 0
   isCreatingNew = false
-  panes = ['editor', 'children']
-
-  get focusedPane() {
-    return this.panes[this.focusPaneIndex]
-  }
 
   start() {
     this.watch(() => {
@@ -152,8 +108,6 @@ export default class ExplorerStore {
   select = (start, end) => {
     this.inputNode.setSelectionRange(start, end)
   }
-
-  shortcuts = SHORTCUTS
 
   actions = {
     toggleSidebar: () => {

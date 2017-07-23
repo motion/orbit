@@ -5,10 +5,10 @@ import * as UI from '@mcro/ui'
 import Page from './page'
 import DocumentView from '~/views/document'
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view
 export default class DocumentPage {
-  render({ explorerStore: { document } }) {
+  render({ rootStore: { document } }) {
     // this is the "loading" state
     if (document === undefined) {
       return null

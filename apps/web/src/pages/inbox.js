@@ -4,10 +4,10 @@ import { view } from '@mcro/black'
 import Page from './page'
 import InboxList from '~/views/inbox/list'
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view
 export default class InboxPage {
-  render({ explorerStore: { document } }) {
+  render({ rootStore: { document } }) {
     return (
       <Page>
         <InboxList if={document} document={document} large />

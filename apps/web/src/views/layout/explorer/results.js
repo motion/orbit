@@ -56,10 +56,10 @@ class Match {
   }
 }
 
-@view.attach('explorerStore', 'layoutStore')
+@view.attach('rootStore', 'layoutStore')
 @view
 export default class ExplorerResults {
-  render({ explorerStore: store }) {
+  render({ rootStore: store }) {
     const docs = store.peek || []
 
     const getMatch = (doc, index) =>

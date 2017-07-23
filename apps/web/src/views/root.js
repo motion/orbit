@@ -1,8 +1,12 @@
 import React from 'react'
-import { view } from '@mcro/black'
+import { view, HotKeys } from '@mcro/black'
 import Redbox from 'redbox-react'
+import RootStore from './rootStore'
 
-export default class Container extends React.Component {
+@view.provide({
+  rootStore: RootStore,
+})
+export default class Root extends React.Component {
   state = {
     error: null,
   }
@@ -28,10 +32,16 @@ export default class Container extends React.Component {
     this.setState({ error: null })
   }
 
-  render() {
+  render({ rootStore }) {
     if (this.state.error) {
       return <Redbox $$draggable error={this.state.error} />
     }
-    return this.props.children
+    return (
+      <HotKeys keyMap={rootStore.shortcuts}>
+        <HotKeys attach={window} focused handlers={rootStore.actions}>
+          {this.props.children}
+        </HotKeys>
+      </HotKeys>
+    )
   }
 }

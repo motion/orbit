@@ -7,7 +7,7 @@ class BrowseStore {
   filter = ''
 
   get children() {
-    return this.props.explorerStore.children
+    return this.props.rootStore.children
   }
 
   get filteredChildren() {
@@ -24,14 +24,14 @@ class BrowseStore {
   }
 }
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view({
   store: BrowseStore,
 })
 export default class Browse {
   onClick = child => () => {
     Router.go(child.url())
-    this.props.explorerStore.ref('showBrowse').toggle()
+    this.props.rootStore.ref('showBrowse').toggle()
   }
 
   getChild = child => {
@@ -63,12 +63,12 @@ export default class Browse {
     )
   }
 
-  render({ explorerStore, store }) {
+  render({ rootStore, store }) {
     return (
-      <browse $$fullscreen if={explorerStore.showBrowse}>
+      <browse $$fullscreen if={rootStore.showBrowse}>
         <overlay
           $$fullscreen
-          onClick={explorerStore.ref('showBrowse').toggle}
+          onClick={rootStore.ref('showBrowse').toggle}
         />
         <UI.Surface $surface width="50%" height="50%" elevation={2}>
           <UI.Input

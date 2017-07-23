@@ -134,7 +134,8 @@ export default class Page {
       maxWidth: SIDEBAR_WIDTH,
       minWidth: 60,
       zIndex: 50,
-      top: 0,
+      top: -20,
+      paddingTop: 15,
       right: 0,
       pointerEvents: 'none',
     },
@@ -153,7 +154,7 @@ export default class Page {
       left: 0,
       right: 0,
       height: 60,
-      background: 'linear-gradient(#fff, transparent)',
+      background: 'linear-gradient(#fff 30%, transparent)',
       zIndex: -1,
     },
     bottom: {

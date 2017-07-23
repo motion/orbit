@@ -47,7 +47,7 @@ export default class DocPageActions {
           margin={[0, -9, 0]}
           circular
           borderWidth={1}
-          icon="sport_user-run"
+          icon="objbear"
           tooltip={document.hasStar() ? 'unfollow' : 'follow'}
           tooltipProps={{
             towards: 'left',

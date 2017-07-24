@@ -77,7 +77,7 @@ class User {
           this.queries.id = this.id
         }
       })
-    }, 50)
+    }, 150)
 
     this.database = database
     this.documents = new DocumentModel()

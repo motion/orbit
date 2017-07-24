@@ -30,19 +30,17 @@ export const extend = (a, b) => {
   return result
 }
 
-export const document => {
-    // set title to first content node
-    try {
-      if (document.content) {
-        return (
-          document.content.document.nodes[0].nodes[0].text || document.title
-        )
-      }
-    } catch (e) {
-      console.log('error extracting title', e, document.content)
+export const getTitle = document => {
+  // set title to first content node
+  try {
+    if (document.content) {
+      return document.content.document.nodes[0].nodes[0].text || document.title
     }
-    return document.title || ''
+  } catch (e) {
+    console.log('error extracting title', e, document.content)
   }
+  return document.title || ''
+}
 
 export const getContent = ({ title }) => ({
   nodes: [
@@ -255,7 +253,7 @@ export class Thing extends Model {
       authorId: User.user ? User.id : 'anon',
       hashtags: [],
       starredBy: [],
-      orgId: User.org && User.org.id || '',
+      orgId: (User.org && User.org.id) || '',
       updates: [],
       members: [],
       attachments: [],

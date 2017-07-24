@@ -308,7 +308,7 @@ export default class Children {
   render({ rootStore, store, store: { hasDocs, sortedDocs } }: Props) {
     log('render')
     return (
-      <children>
+      <children $hasChildren={hasDocs}>
         <contents>
           <SortableChildren
             if={hasDocs}
@@ -372,13 +372,16 @@ export default class Children {
 
   static style = {
     children: {
-      padding: [0, 18],
+      padding: [0, 18, 0, 4],
       maxWidth: '100%',
       width: '100%',
       alignItems: 'flex-end',
       position: 'relative',
       pointerEvents: 'auto',
       overflow: 'hidden',
+    },
+    hasChildren: {
+      minWidth: 135,
     },
     title: {
       '&:hover > h2': {

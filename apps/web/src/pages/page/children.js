@@ -176,8 +176,6 @@ const SortableItem = SortableElement(props =>
 class ChildrenStore {
   version = 1
   creatingDoc = false
-  showBrowse = false
-  id = this.props.rootStore.document.id || this.id
 
   get document() {
     return this.props.rootStore.document

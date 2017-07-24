@@ -61,7 +61,7 @@ export default class Header {
                 chromeless
                 iconSize={20}
                 circular
-                size={1.2}
+                margin={[0, 4]}
                 badge={2}
                 icon="circle-09"
               />

@@ -50,7 +50,11 @@ export default class Button {
         {...props}
         noElement
         after={
-          <badge if={badge} $badgeSize={props.size} {...badgeProps}>
+          <badge
+            if={badge}
+            $badgeSize={props.size === true ? 1 : props.size || 1}
+            {...badgeProps}
+          >
             <contents>
               {badge}
             </contents>

@@ -19,13 +19,13 @@ export default class Reply {
           <metacontents>
             <before>
               <UI.Title size={0.9} color="#000">
-                fakename
+                {doc.authorId}
               </UI.Title>
               <UI.Text size={0.9} color="#999">
                 {ago(doc.createdAt)}
               </UI.Text>
             </before>
-            <Gemstone id="1" marginLeft={10} />
+            <Gemstone id={doc.authorId} marginLeft={10} />
           </metacontents>
         </meta>
       </message>

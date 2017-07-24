@@ -125,9 +125,11 @@ export default class Page {
     },
     pagecontents: {
       width: '100%',
+      margin: [0, 'auto'],
+      maxWidth: 960,
       maxHeight: '100%',
       flex: 1,
-      overflowX: 'visible',
+      overflowX: 'hidden',
       overflowY: 'auto',
     },
     sidebar: {
@@ -135,7 +137,7 @@ export default class Page {
       maxWidth: SIDEBAR_WIDTH,
       minWidth: 60,
       zIndex: 50,
-      top: -20,
+      top: -12,
       paddingTop: 15,
       right: 0,
       pointerEvents: 'none',

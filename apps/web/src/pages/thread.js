@@ -12,7 +12,11 @@ const { ago } = timeAgo()
 
 class ThreadStore {
   @watch thread = () => Thread.get(this.props.id)
-  @watch replies = () => this.thread && this.thread.replies()
+  @watch
+  replies = [
+    () => this.thread && this.thread.id,
+    () => this.thread && this.thread.replies(),
+  ]
 
   get items() {
     const { thread } = this
@@ -118,6 +122,7 @@ export default class ThreadPage {
                   highlight={store.thread.assignedTo() === name}
                   inline
                   $button
+                  glow={false}
                   onClick={() => store.assignTo(name)}
                 >
                   {capitalize(name)}
@@ -133,6 +138,7 @@ export default class ThreadPage {
                   key={name}
                   highlight={store.hasTag(name)}
                   inline
+                  glow={false}
                   $button
                   onClick={() => store.toggleTag(name)}
                 >

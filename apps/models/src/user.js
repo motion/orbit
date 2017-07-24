@@ -17,8 +17,13 @@ class Queries {
     return this.orgs && this.orgs[this.activeOrg]
   }
 
-  @watch orgs = () => this.id && Org.forUser(this.id)
+  @watch
+  orgs = () => {
+    return this.id && Org.forUser(this.id)
+  }
+
   @watch favorites = () => Document.favoritedBy(this.id)
+
   @watch
   home = () => {
     if (this.org) {
@@ -74,6 +79,7 @@ class User {
       this.queries = new Queries()
       this.watch(() => {
         if (this.id && !this.queries.id) {
+          console.log('starting user')
           this.queries.id = this.id
         }
       })

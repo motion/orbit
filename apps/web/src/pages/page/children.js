@@ -184,10 +184,10 @@ class ChildrenStore {
   }
 
   @watch
-  children = () => {
-    console.log('get children', this.version, this.document)
-    return this.version && this.document && this.document.getChildren()
-  }
+  children = [
+    () => this.document && this.document.id + this.version,
+    () => this.document && this.document.getChildren(),
+  ]
 
   @watch
   newDoc = () =>

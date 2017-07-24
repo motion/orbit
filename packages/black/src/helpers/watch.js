@@ -1,5 +1,14 @@
 // @flow
 
+function validWatch(val) {
+  return Array.isArray(val) || typeof val === 'function'
+}
+
+function attachWatch(val) {
+  val.IS_AUTO_RUN = true
+  return val
+}
+
 // @watch decorator
 export default function watch(
   target: Object,
@@ -7,9 +16,8 @@ export default function watch(
   descriptor: Object
 ) {
   // non-decorator
-  if (typeof target === 'function') {
-    target.IS_AUTO_RUN = true
-    return target
+  if (validWatch(target)) {
+    return attachWatch(target)
   }
 
   // decorator
@@ -20,11 +28,12 @@ export default function watch(
       configurable: true,
       initializer: function() {
         const value = ogInit.call(this)
-        if (typeof value !== 'function') {
-          throw 'Expected a function to watch'
+        if (validWatch(value)) {
+          return attachWatch(value)
+        } else {
+          console.log('got a', descriptor, value)
+          throw 'Expected a function or array to watch'
         }
-        value.IS_AUTO_RUN = true
-        return value
       },
     }
   }

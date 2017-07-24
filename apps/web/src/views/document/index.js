@@ -35,6 +35,8 @@ export default class DocumentView {
     noTitle,
     editorRef,
     placeholder,
+    isPrimaryDocument,
+    document,
     ...props
   }: Props) {
     if (!docStore.document) {

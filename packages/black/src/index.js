@@ -6,9 +6,6 @@ export store from './store'
 export Model from './model/model'
 export query from './model/query'
 
-import { HotKeys } from 'react-hotkeys'
-console.log('keysa re', HotKeys)
-
 export { HotKeys } from 'react-hotkeys'
 
 export gloss, { createElement } from './gloss'

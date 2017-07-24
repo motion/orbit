@@ -7,7 +7,7 @@ class Inbox extends Thing {
     ...Thing.defaultProps(doc),
     type: 'inbox',
   })
-  static defaultFilter = doc => ({ ...doc, type: 'inbox' })
+  static defaultFilter = doc => ({ type: 'inbox', ...doc })
 
   hooks = {
     async postInsert(inbox) {

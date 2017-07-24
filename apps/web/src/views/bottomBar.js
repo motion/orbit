@@ -1,7 +1,7 @@
 import { view } from '@mcro/black'
 import Gemstone from '~/views/kit/gemstone'
 import Router from '~/router'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import * as UI from '@mcro/ui'
 
 @view
@@ -18,8 +18,8 @@ export default class BottomBar {
           alignItems: 'flex-end',
         }}
       >
-        <above if={User.favoriteDocuments} css={{ flexFlow: 'row', margin: 0 }}>
-          {User.favoriteDocuments.map((doc, i) =>
+        <above if={User.favorites} css={{ flexFlow: 'row', margin: 0 }}>
+          {User.favorites.map((doc, i) =>
             <UI.Popover
               key={i}
               openOnHover

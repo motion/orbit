@@ -1,4 +1,4 @@
-import { Thread } from '@mcro/models'
+import { Thread } from '~/app'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Reply from '~/views/document/reply'
@@ -12,9 +12,13 @@ const { ago } = timeAgo()
 
 class ThreadStore {
   @watch thread = () => Thread.get(this.props.id)
+  @watch replies = () => this.thread && this.thread.replies()
 
-  @watch
-  replies = () => this.thread && this.thread.replies && this.thread.replies()
+  get items() {
+    const { thread } = this
+    const all = [...(this.replies || []), ...((thread && thread.updates) || [])]
+    return sortBy(all, i => +new Date(i.createdAt))
+  }
 
   assignTo = name => {
     this.thread.addUpdate({ type: 'assign', to: name })
@@ -40,14 +44,7 @@ class ThreadStore {
   }
 
   hasTag = name => {
-    return includes(this.thread.tags, name)
-  }
-
-  get items() {
-    const { thread } = this
-    console.log('replies are', this.replies)
-    const all = [...(this.replies || []), ...((thread && thread.updates) || [])]
-    return sortBy(all, i => +new Date(i.createdAt))
+    return includes(this.thread.tags(), name)
   }
 }
 
@@ -90,67 +87,79 @@ class Update {
   }
 }
 
-@view.attach('explorerStore')
 @view({
   store: ThreadStore,
 })
 export default class ThreadPage {
-  render({ store, explorerStore }) {
-    const tags = ['Enhancement', 'Animals', 'Coffee', 'Bug']
+  render({ store }) {
+    const tags = ['Enhancement', 'New Issue', 'Bug']
     const assignTo = ['Nick', 'Nate', 'Sam']
+
+    if (!store.thread) {
+      return null
+    }
 
     return (
       <Page showActions>
-        <DocumentView document={explorerStore.document} isPrimaryDocument />
+        <content>
+          <DocumentView document={store.thread} isPrimaryDocument />
 
-        <actions if={store.thread}>
-          <action $$row>
-            <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-              On it&nbsp;
-            </UI.Text>
-            {assignTo.map(name =>
-              <UI.Button
-                highlight={store.thread.assignedTo === name}
-                inline
-                $button
-                onClick={() => store.assignTo(name)}
-              >
-                {capitalize(name)}
-              </UI.Button>
-            )}
-          </action>
-          <space css={{ height: 10 }} />
-          <action $$row>
-            <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
-              Label&nbsp;
-            </UI.Text>
-            {tags.map(name =>
-              <UI.Button
-                highlight={store.hasTag(name)}
-                inline
-                $button
-                onClick={() => store.toggleTag(name)}
-              >
-                {capitalize(name)}
-              </UI.Button>
-            )}
-          </action>
-        </actions>
-        {store.items.map(
-          item =>
-            item.type === 'reply'
-              ? <Reply doc={item} />
-              : <Update update={item} />
-        )}
+          <actions if={store.thread}>
+            <action $$row>
+              <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
+                On it&nbsp;
+              </UI.Text>
+              {assignTo.map(name =>
+                <UI.Button
+                  key={name}
+                  highlight={store.thread.assignedTo() === name}
+                  inline
+                  $button
+                  onClick={() => store.assignTo(name)}
+                >
+                  {capitalize(name)}
+                </UI.Button>
+              )}
+            </action>
+            <action $$row>
+              <UI.Text size={0.95} color={[0, 0, 0, 0.5]}>
+                Label&nbsp;
+              </UI.Text>
+              {tags.map(name =>
+                <UI.Button
+                  key={name}
+                  highlight={store.hasTag(name)}
+                  inline
+                  $button
+                  onClick={() => store.toggleTag(name)}
+                >
+                  {capitalize(name)}
+                </UI.Button>
+              )}
+            </action>
+          </actions>
+        </content>
 
-        <reply if={store.thread}>
-          <Draft
-            $draft
-            isReply
-            parent={store.thread}
-            placeholder="Add your reply..."
-          />
-        </reply>
+        <replies>
+          {store.items.map(item =>
+            <item key={item.id}>
+              <separator />
+              {item.type === 'reply'
+                ? <Reply key={item.id} doc={item} />
+                : <Update key={item.id} update={item} />}
+            </item>
+          )}
+
+          <draft $item if={store.thread}>
+            <separator />
+            <Draft
+              $draft
+              isReply
+              parentId={store.thread.id}
+              placeholder="Add your reply..."
+            />
+          </draft>
+        </replies>
       </Page>
     )
   }
@@ -159,19 +168,29 @@ export default class ThreadPage {
     thread: {
       flex: 1,
     },
+    content: {
+      padding: [0, 0, 20],
+    },
     button: {
       marginLeft: 10,
     },
-    reply: {
-      borderTop: [1, '#eee'],
-      padding: [20, 20],
-    },
     draft: {
-      margin: [0, -15],
+      padding: [15, 0, 15, 15],
     },
     action: {
       alignItems: 'center',
-      padding: [0, 30, 20],
+      padding: [0, 30, 15],
+    },
+    item: {
+      position: 'relative',
+    },
+    separator: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 1,
+      background: 'linear-gradient(left, #eee 80%, #fff)',
     },
   }
 }

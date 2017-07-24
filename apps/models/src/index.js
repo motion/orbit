@@ -22,12 +22,6 @@ export Org from './org'
 // exports
 export type { Model } from '~/helpers'
 
-if (module.hot) {
-  module.hot.accept('./document', () => {
-    log('accept: models/index.js:./document')
-  })
-}
-
 import User from './user'
 
 declare class ModelsStore {
@@ -37,7 +31,7 @@ declare class ModelsStore {
 }
 
 export default class Models implements ModelsStore {
-  modelsLoggedIn = false
+  connected = false
 
   constructor(databaseConfig, models) {
     if (!databaseConfig || !models) {
@@ -54,7 +48,7 @@ export default class Models implements ModelsStore {
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
       RxDB.QueryChangeDetector.enable()
-      // RxDB.QueryChangeDetector.enableDebugging()
+      // RxDB.QueryChangeDetector.enableDebugging(false)
       RxDB.plugin(pHTTP)
       RxDB.plugin(pIDB)
       RxDB.plugin(pREPL)
@@ -66,21 +60,6 @@ export default class Models implements ModelsStore {
   }
 
   start = async () => {
-    // User.superlogin.on('login', () => {
-    //   setTimeout(() => {
-    //     if (!this.modelsLoggedIn && User.loggedIn) {
-    //       this.attachModels()
-    //       this.modelsLoggedIn = true
-    //     }
-    //   }, 100)
-    // })
-    // User.superlogin.on('logout', () => {
-    //   if (this.modelsLoggedIn) {
-    //     this.attachModels()
-    //     this.modelsLoggedIn = false
-    //   }
-    // })
-
     this.database = await RxDB.create({
       adapter: 'idb',
       name: this.databaseConfig.name,
@@ -90,10 +69,12 @@ export default class Models implements ModelsStore {
     })
 
     await this.attachModels()
+    this.connected = true
   }
 
   dispose = () => {
     for (const [name, model] of Object.entries(this.models)) {
+      console.log('dispose model', name)
       if (model && model.dispose) {
         model.dispose()
       } else {
@@ -129,7 +110,6 @@ export default class Models implements ModelsStore {
     }
 
     const result = await Promise.all(connections)
-    console.log('connecting', connections)
     return result
   }
 }

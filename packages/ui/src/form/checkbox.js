@@ -26,8 +26,8 @@ export default class Checkbox {
         glow={false}
         padding={2}
         height={18}
-        alignItems="center"
-        justifyContent="center"
+        align="center"
+        justify="center"
         flex={false}
         iconProps={{
           css: {

@@ -1,6 +1,6 @@
 // @flow
-import { watch, keycode } from '@mcro/black'
-import { Document, User, Thing } from '@mcro/models'
+import { keycode } from '@mcro/black'
+import { Document, User } from '~/app'
 import Router from '~/router'
 import { uniq, last, includes, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
@@ -9,39 +9,14 @@ import { debounce } from 'lodash'
 
 const PATH_SEPARATOR = '/'
 
-const SHORTCUTS = {
-  left: 'left',
-  right: 'right',
-  down: 'down',
-  up: 'up',
-  j: 'j', // down
-  k: 'k', // up
-  d: 'd', // doc
-  enter: 'enter',
-  esc: 'esc',
-  explorer: ['command+t'],
-  cmdL: 'command+l',
-  cmdEnter: 'command+enter',
-  cmdUp: 'command+up',
-  delete: ['delete', 'backspace'],
-  toggleSidebar: 'command+\\',
-  togglePane: 'shift+tab',
-}
-
 export default class ExplorerStore {
-  @watch
-  document = () =>
-    Router.path === '/'
-      ? User.org && Document.get(User.org.homeDocument)
-      : Thing.get(Router.params.id)
+  get document() {
+    return this.props.rootStore.document
+  }
 
-  @watch crumbs = () => this.document && this.document.getCrumbs()
-
-  @watch
-  children = () =>
-    this.showBrowse &&
-    this.document &&
-    this.document.getChildren({ depth: 1000 })
+  get crumbs() {
+    return this.props.rootStore.crumbs
+  }
 
   editorState = Raw.deserialize(
     {
@@ -60,21 +35,16 @@ export default class ExplorerStore {
     },
     { terse: true }
   )
+
   path = ''
   highlightIndex = -1
   searchResults: Array<Document> = []
   inputNode: ?HTMLInputElement = null
   focused = false
-  showDiscussions = false
   showResults = false
   showBrowse = false
   focusPaneIndex = 0
   isCreatingNew = false
-  panes = ['editor', 'children']
-
-  get focusedPane() {
-    return this.panes[this.focusPaneIndex]
-  }
 
   start() {
     this.watch(() => {
@@ -138,8 +108,6 @@ export default class ExplorerStore {
   select = (start, end) => {
     this.inputNode.setSelectionRange(start, end)
   }
-
-  shortcuts = SHORTCUTS
 
   actions = {
     toggleSidebar: () => {
@@ -358,7 +326,7 @@ export default class ExplorerStore {
     const result = []
     let last
     if (path === '/') {
-      return User.homeDocument
+      return User.home
     }
     for (const slug of this.splitPath(path)) {
       const query = { slug }
@@ -384,7 +352,7 @@ export default class ExplorerStore {
 
   getChildDocsForPath = async (path: string): Array<Document> => {
     if (path === '/') {
-      return User.homeDocument
+      return User.home
     }
     const lastDoc = await this.getDocAtPath(path)
     if (!lastDoc) {
@@ -528,9 +496,8 @@ export default class ExplorerStore {
   }
 
   setPath = debounce(async doc => {
-    if (!doc || !doc.getCrumbs) {
-      log('got a weird doc')
-      console.log(doc, this.document)
+    if (!doc) {
+      log('no doc for setPath')
       return
     }
     this.setValue(this.getPathForDocs(await doc.getCrumbs()))

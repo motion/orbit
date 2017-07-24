@@ -1,8 +1,8 @@
 // @flow
 import { store } from '@mcro/black'
 import { API_URL } from '~/constants'
-import { Thread } from '@mcro/models'
-import { flatten } from 'lodash'
+import { Thread } from '~/app'
+
 @store
 export default class RecStore {
   docs = Thread.find()
@@ -14,7 +14,7 @@ export default class RecStore {
     const docs = this.docs || []
 
     docs.forEach(doc => {
-      const { tags } = doc
+      const tags = doc.tags()
 
       if (tags.length > 0) {
         if (!phrases[tags[0]]) phrases[tags[0]] = []

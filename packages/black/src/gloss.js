@@ -114,7 +114,7 @@ export const styles: Object = {
   },
   scrollable: {
     flex: 1,
-    overflowY: 'scroll',
+    overflowY: 'auto',
   },
   padded: {
     padding: 20,

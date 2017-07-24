@@ -4,7 +4,7 @@ import { Editor } from 'slate'
 import { view } from '@mcro/black'
 import EditorStore from './stores/editorStore'
 import SelectBar from './views/selectBar'
-import type { ExplorerStore } from '~/stores/explorerStore'
+import type { rootStore } from '~/stores/rootStore'
 
 export { Raw } from 'slate'
 
@@ -16,10 +16,10 @@ export type Props = {
   inline?: boolean,
   readOnly?: boolean,
   editorStore: EditorStore,
-  explorerStore?: ExplorerStore,
+  rootStore?: rootStore,
 }
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view.provide({
   editorStore: EditorStore,
 })

@@ -30,7 +30,19 @@ export const extend = (a, b) => {
   return result
 }
 
-const getContent = ({ title }) => ({
+export const getTitle = document => {
+  // set title to first content node
+  try {
+    if (document.content) {
+      return document.content.document.nodes[0].nodes[0].text || document.title
+    }
+  } catch (e) {
+    console.log('error extracting title', e, document.content)
+  }
+  return document.title || ''
+}
+
+export const getContent = ({ title }) => ({
   nodes: [
     {
       kind: 'block',
@@ -63,7 +75,7 @@ export const methods = {
   url() {
     return `/${this.type}/${urlify(this.id)}`
   },
-  get tags() {
+  tags() {
     return (
       this.updates &&
       this.updates.reduce((acc, item) => {
@@ -76,14 +88,13 @@ export const methods = {
       }, [])
     )
   },
-  get assignedTo() {
+  assignedTo() {
     return last(this.updateType('assign').map(({ to }) => to))
   },
   setDefaultContent({ title }) {
     this.content = getContent({ title })
     this.title = title
   },
-
   get previewText() {
     return (
       //color: '#666',
@@ -96,7 +107,7 @@ export const methods = {
     )
   },
 
-  get titleShort() {
+  titleShort() {
     return this.title && this.title.length > 20
       ? this.title.slice(0, 18) + '...'
       : this.title
@@ -113,11 +124,12 @@ export const methods = {
     update.createdAt = +Date.now()
     this.updates = [...this.updates, update]
   },
-  get hasStar() {
+  hasStar() {
     return this.starredBy.find(id => id === User.id)
   },
   async toggleStar() {
     this.starredBy = toggleInclude(this.starredBy, User.id)
+    console.log('toggle starred by')
     await this.save()
   },
   async getCrumbs() {
@@ -137,22 +149,25 @@ export const methods = {
           console.error('weird, no doc at this crumb', next)
           return crumbs
         }
+        if (next && !next.tasks) {
+          debugger
+        }
         doc = next
       }
     }
     return crumbs
   },
-  getChildren({ depth = 1 } = {}) {
+  getChildren({ depth = 1, find } = {}) {
     const next = (curDepth, isRoot) => parent => {
       return this.collection
-        .find({ parentId: parent.id })
+        .find({ parentId: parent.id, type: { $gt: null }, ...find })
         .$.take(1)
         .mergeMap(documents => {
           if (curDepth - 1 === 0) {
             return [documents]
           }
           return Observable.from(documents)
-            .mergeMap(next(curDepth - 1))
+            .mergeMap(next(curDepth - 1, false))
             .toArray()
         })
         .map(children => (isRoot ? children : { ...parent, children }))
@@ -215,20 +230,7 @@ export type ThingType = typeof methods & {
 
 export class Thing extends Model {
   static getContent = getContent
-
-  static getTitle = document => {
-    // set title to first content node
-    try {
-      if (document.content) {
-        return (
-          document.content.document.nodes[0].nodes[0].text || document.title
-        )
-      }
-    } catch (e) {
-      console.log('error extracting title', e, document.content)
-    }
-    return document.title || ''
-  }
+  static getTitle = getTitle
 
   static props = {
     title: str,
@@ -263,6 +265,7 @@ export class Thing extends Model {
       authorId: User.user ? User.id : 'anon',
       hashtags: [],
       starredBy: [],
+      orgId: (User.org && User.org.id) || '',
       updates: [],
       members: [],
       attachments: [],
@@ -288,6 +291,7 @@ export class Thing extends Model {
       return null
     }
     const query_ = cleanGetQuery(query)
+    log('get query', query)
     return this.collection.findOne(query_)
   };
 

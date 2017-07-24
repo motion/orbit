@@ -108,6 +108,7 @@ export default class Page {
           <Children if={showChildren} />
           <line />
           <fade />
+          <fade $bottom />
         </sidebar>
       </page>
     )
@@ -120,24 +121,28 @@ export default class Page {
       maxWidth: '100%',
       position: 'relative',
       flexFlow: 'row',
+      alignItems: 'flex-start',
     },
     pagecontents: {
       width: '100%',
+      maxHeight: '100%',
       flex: 1,
       overflowX: 'visible',
-      overflowY: 'scroll',
+      overflowY: 'auto',
     },
     sidebar: {
+      position: 'relative',
       maxWidth: SIDEBAR_WIDTH,
-      overflow: 'hidden',
+      minWidth: 60,
       zIndex: 50,
-      top: 0,
+      top: -20,
+      paddingTop: 15,
       right: 0,
       pointerEvents: 'none',
     },
     line: {
       position: 'absolute',
-      top: -20,
+      top: 0,
       right: 31,
       bottom: 0,
       width: 1,
@@ -146,12 +151,17 @@ export default class Page {
     },
     fade: {
       position: 'absolute',
-      top: -20,
+      top: 0,
       left: 0,
       right: 0,
       height: 60,
-      background: 'linear-gradient(#fff, transparent)',
+      background: 'linear-gradient(#fff 30%, transparent)',
       zIndex: -1,
+    },
+    bottom: {
+      top: 'auto',
+      bottom: 0,
+      background: 'linear-gradient(transparent,#fff)',
     },
   }
 }

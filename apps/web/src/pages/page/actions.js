@@ -4,15 +4,15 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Gemstone from '~/views/kit/gemstone'
 import Router from '~/router'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view
 export default class DocPageActions {
-  render({ explorerStore: { document } }) {
+  render({ rootStore: { document } }) {
     if (!document || document === null) {
       return null
     }
@@ -25,7 +25,7 @@ export default class DocPageActions {
       forgiveness: 16,
       towards: 'left',
       adjust: [0, 70],
-      delay: 50,
+      delay: 290,
       openOnHover: true,
     }
 
@@ -44,25 +44,25 @@ export default class DocPageActions {
       >
         <UI.Button
           size={1.25}
-          margin={[0, -10, 0]}
+          margin={[0, -9, 0]}
           circular
-          borderWidth={0}
-          icon="sport_user-run"
-          tooltip={document.hasStar ? 'unfollow' : 'follow'}
+          borderWidth={1}
+          icon="objbear"
+          tooltip={document.hasStar() ? 'unfollow' : 'follow'}
           tooltipProps={{
             towards: 'left',
           }}
-          highlight={document.hasStar}
-          iconSize={document.hasStar ? 20 : null}
+          highlight={document.hasStar()}
+          iconSize={document.hasStar() ? 20 : null}
           onClick={() => document.toggleStar()}
           iconProps={{
             css: {
               transition: 'transform ease-in 80ms',
-              scale: document.hasStar ? 1.1 : 1,
+              scale: document.hasStar() ? 1.1 : 1,
             },
           }}
         />
-        <space css={{ paddingTop: 10 }} />
+        <space css={{ paddingTop: 12 }} />
         <UI.Popover
           {...popoverProps}
           target={
@@ -70,7 +70,7 @@ export default class DocPageActions {
               <Gemstone
                 if={document}
                 id={document.id}
-                size={16}
+                size={18}
                 css={{
                   margin: 'auto',
                 }}
@@ -109,9 +109,10 @@ export default class DocPageActions {
             <space css={{ height: 8 }} />
 
             <UI.Title>Share link</UI.Title>
-            <UI.Input value={Router.path} />
+            <UI.Input value={Router.path} readOnly />
           </UI.Surface>
         </UI.Popover>
+        <space css={{ paddingTop: 12 }} />
       </actions>
     )
   }

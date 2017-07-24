@@ -99,7 +99,7 @@ class ContextMenu {
             boxShadow: '2px 4px 11px rgba(0,0,0,0.25)',
             borderRadius: 4,
           }}
-          escapable
+          closeOnEsc
           animation="slide 100ms"
           onClose={store.clearMenu}
           noArrow

@@ -21,8 +21,8 @@ function runRouter() {
 if (module.hot) {
   module.hot.accept(() => {
     log('accept: ./router.js')
-    runRouter()
-    start(true)
+    // runRouter()
+    // start(true)
   })
 }
 

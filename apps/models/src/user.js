@@ -1,26 +1,67 @@
-import { store, watch } from '@mcro/black'
+import { store, watch, log } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
 import superLogin from 'superlogin-client'
-import DocumentInstance, { Document } from './document'
+import Document, { Document as DocumentModel } from './document'
 import Org from './org'
+import Inbox from './inbox'
 
 const API_HOST = `api.${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
 @store
-class User {
-  user = null
-  localDb = null
-  remoteDb = null
+class Queries {
+  id = null
   activeOrg = 0
-  @watch orgs = () => Org.forUser(this.id)
-  @watch favoriteDocuments = () => DocumentInstance.favoritedBy(this.id)
-  @watch
-  homeDocument = () => DocumentInstance.get(this.org && this.org.homeDocument)
-  // @watch teammates = () => this.collection.find()
 
   get org() {
     return this.orgs && this.orgs[this.activeOrg]
+  }
+
+  @watch
+  orgs = () => {
+    return this.id && Org.forUser(this.id)
+  }
+
+  @watch favorites = () => Document.favoritedBy(this.id)
+
+  @watch
+  home = () => {
+    if (this.org) {
+      return Document.get({ parentId: this.org.id })
+    }
+    return null
+  }
+
+  @watch
+  defaultInbox = () => {
+    if (this.org) {
+      return Inbox.get({ parentId: this.org.id })
+    }
+  }
+}
+
+@store
+class User {
+  connected = false
+  user = false
+  localDb = false
+  remoteDb = false
+  queries = {}
+
+  get org() {
+    return this.queries.org
+  }
+
+  get favorites() {
+    return this.queries.favorites
+  }
+
+  get home() {
+    return this.queries.home
+  }
+
+  get defaultInbox() {
+    return this.queries.defaultInbox
   }
 
   constructor(options) {
@@ -28,32 +69,44 @@ class User {
     this.options = options
   }
 
-  connect = database => {
+  connect = async database => {
     if (this.database) {
       return // hmr
     }
 
+    // for now
+    this.setTimeout(() => {
+      this.queries = new Queries()
+      this.watch(() => {
+        if (this.id && !this.queries.id) {
+          console.log('starting user')
+          this.queries.id = this.id
+        }
+      })
+    }, 500)
+
     this.database = database
-    this.documents = new Document()
+    this.documents = new DocumentModel()
     this.documents.settings.database = 'userdocuments'
 
-    return new Promise(resolve => {
+    await new Promise(resolve => {
       this.setTimeout(async () => {
         await this.setupSuperLogin()
         resolve()
       })
     })
+
+    this.connected = true
   }
 
   async setupSuperLogin() {
-    console.log('setting up', this.options)
     this.superlogin.configure(this.options)
 
     // sync
     this.superlogin.on('login', async () => {
       this.user = await this.getCurrentUser()
       if (this.user) {
-        this.documents.connect(this.database, {
+        await this.documents.connect(this.database, {
           sync: this.user.userDBs.documents,
         })
       }
@@ -179,12 +232,11 @@ class User {
   }
 
   createOrg = async name => {
-    const org = await Org.create({
+    await Org.create({
       title: name,
       admins: [this.id],
       members: [this.id],
     })
-    log('made org', org)
   }
 }
 

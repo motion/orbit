@@ -1,20 +1,39 @@
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import timeAgo from 'time-ago'
 import Draft from './draft'
 import Router from '~/router'
-import { Thread } from '@mcro/models'
+import { Thread } from '~/app'
+import fuzzy from 'fuzzy'
 
 const { ago } = timeAgo()
 
 class InboxStore {
-  document = this.props.document
-  threads = Thread.find({
-    parentId: this.document ? this.document.id : undefined,
-  })
+  inbox = this.props.document
+  @watch
+  threads = () =>
+    Thread.find({
+      parentId: this.inbox ? this.inbox.id : undefined,
+    })
+
+  get filteredThreads() {
+    if (!this.threads) {
+      return []
+    }
+    if (!this.props.filter) {
+      return this.threads
+    }
+    return fuzzy
+      .filter(this.props.filter, this.threads, {
+        extract: el => el.title,
+        pre: '<',
+        post: '>',
+      })
+      .map(item => item.original)
+  }
 }
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view({
   store: InboxStore,
 })
@@ -24,17 +43,19 @@ export default class Inbox {
 
     Router.path // trigger change
 
+    const { filteredThreads } = store
+
     return (
       <inbox>
-        <bar if={large && store.document}>
+        <bar if={large && store.inbox}>
           <bartitle $$flex>
-            <UI.Title size={3}>{store.document.title}</UI.Title>
+            <UI.Title size={3}>{store.inbox.title}</UI.Title>
             {(store.threads || []).length} new
           </bartitle>
           <actions>
             <UI.Popover
               openOnClick
-              closeOnEscape
+              closeOnEsc
               background="#fff"
               width={480}
               borderRadius={8}
@@ -53,11 +74,11 @@ export default class Inbox {
                 />
               }
             >
-              <Draft parent={store.document} />
+              <Draft parentId={store.inbox && store.inbox.id} />
             </UI.Popover>
           </actions>
         </bar>
-        <content>
+        <content if={filteredThreads}>
           <UI.List
             background="transparent"
             controlled
@@ -69,29 +90,25 @@ export default class Inbox {
               height: 'auto',
               padding: [10, 15, 10, 16],
               overflow: 'hidden',
+              highlightBackground: [0, 0, 0, 0.25],
             }}
-            items={store.threads || []}
+            items={filteredThreads}
             // setTimeout speeds up navigation
             onSelect={item => this.setTimeout(() => Router.go(item.url()))}
             isSelected={item => item.url() === Router.path}
-            getItem={(item, index) => {
+            getItem={item => {
               return {
                 glow: false,
                 primary: (
                   <head $$row $$centered $$justify="space-between" $$flex>
-                    <top $$row>
-                      <titleText>
-                        {item.title}
-                      </titleText>
-                      {!inSidebar && <span>&nbsp;by Nate</span>}
-                      {item.tags.map(tag =>
-                        <UI.Badge {...badgeProps}>
+                    {item.title}
+
+                    <date $$row $$justify="flex-end">
+                      {item.tags().map(tag =>
+                        <UI.Badge {...badgeProps} color="#efefef">
                           {tag}
                         </UI.Badge>
                       )}
-                    </top>
-                    <date $$row $$justify="flex-end">
-                      {ago(item.createdAt)}
                     </date>
                   </head>
                 ),
@@ -121,34 +138,6 @@ export default class Inbox {
       position: 'relative',
       width: '100%',
       height: '100%',
-    },
-    create: {
-      width: 400,
-    },
-    draft: {
-      padding: [10, 18, 10, 0],
-      border: '1px solid #efefef',
-      borderRadius: 5,
-      marginTop: 10,
-      boxShadow: '0px 1px 0px #eee',
-    },
-    buttons: {
-      justifyContent: 'flex-end',
-    },
-    discard: {
-      opacity: 0.6,
-    },
-    list: {
-      maxWidth: 600,
-    },
-    draftSubmit: {
-      width: 60,
-    },
-    titleText: {
-      fontWeight: 'bold',
-    },
-    all: {
-      marginTop: 15,
     },
     bar: {
       flexFlow: 'row',

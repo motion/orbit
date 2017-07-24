@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Models from '@mcro/models'
+import * as Models from '~/app'
 import { sortBy } from 'lodash'
 import Router from '~/router'
 import { watch } from '@mcro/black'
@@ -12,6 +12,7 @@ import {
   SortableHandle,
   arrayMove,
 } from 'react-sortable-hoc'
+import Gemstone from '~/views/kit/gemstone'
 
 type Props = {
   id: number,
@@ -36,31 +37,82 @@ const ICONS = {
 
 @view.ui
 class Item {
-  render({ doc, editable, onSave, textRef, subItems, children, ...props }) {
+  render({
+    doc,
+    temporary,
+    editable,
+    onSave,
+    textRef,
+    subItems,
+    children,
+    ...props
+  }) {
     return (
       <doccontainer
         $$undraggable
-        onClick={() => doc.url && Router.go(doc.url())}
+        onClick={() => {
+          if (!temporary) {
+            Router.go(doc.url())
+          }
+        }}
         {...props}
       >
         <UI.Surface
-          icon={ICONS[doc.type]}
-          iconSize={32}
+          overflow="hidden"
+          background="transparent"
+          icon={
+            doc.type === 'document'
+              ? <UI.Button
+                  margin={[0, -3, 0, 0]}
+                  chromeless
+                  circular
+                  padding={0}
+                  size={1.2}
+                  glow
+                >
+                  <Gemstone
+                    if={doc && doc.id}
+                    id={doc.id}
+                    size={8}
+                    css={{
+                      transform: {
+                        y: -8.5,
+                        x: 10.5,
+                      },
+                    }}
+                  />
+                  <UI.Circle
+                    if={!doc || !doc.id}
+                    size={8}
+                    margin={[0, 'auto']}
+                    background="#eee"
+                    transform={{
+                      y: -8.5,
+                      x: -5,
+                    }}
+                  />
+                </UI.Button>
+              : ICONS[doc.type]
+          }
+          iconSize={30}
           iconProps={{
             css: {
               alignSelf: 'flex-start',
-              marginTop: 3,
               transform: {
-                scale: 0.35,
+                scale: 0.3,
+                y: -15,
+                x: -18,
               },
+              boxShadow: ['inset  0 0 100px 100px #fff'],
             },
           }}
-          align="center"
+          align="flex-start"
           justify="flex-end"
           flexFlow="row"
           iconAfter
           textAlign="right"
           padding={0}
+          marginBottom={-5}
         >
           <UI.Text
             $title
@@ -85,31 +137,34 @@ class Item {
   }
   static style = {
     doccontainer: {
-      marginRight: -8,
+      marginRight: -12,
       minWidth: 80,
       position: 'relative',
       opacity: 0.8,
-      transition: 'transform ease-in 50ms',
+      transition: 'transform ease-in 80ms',
+      overflow: 'hidden',
       transform: {
         scale: 1,
+        z: 0,
       },
       '&:hover': {
         opacity: 1,
         transform: {
+          y: 0,
+          z: 0,
+          x: -1,
           scale: 1.03,
-          x: -2,
         },
       },
     },
-    icon: {
-      padding: [5, 0, 0],
-    },
     title: {
+      marginBottom: 20,
       fontWeight: 300,
-      fontSize: 16,
-      lineHeight: '1.1rem',
+      fontSize: 15,
+      lineHeight: '1.2rem',
       width: '100%',
       color: '#000',
+      overflow: 'hidden',
     },
   }
 }
@@ -122,19 +177,17 @@ class ChildrenStore {
   version = 1
   creatingDoc = false
   showBrowse = false
+  id = this.props.rootStore.document.id || this.id
 
   get document() {
-    if (
-      this.props.explorerStore.document &&
-      !this.props.explorerStore.document.getChildren
-    ) {
-      console.error('no children')
-    }
-    return this.props.explorerStore.document
+    return this.props.rootStore.document
   }
 
   @watch
-  children = () => this.version && this.document && this.document.getChildren()
+  children = [
+    () => this.document && this.document.id + this.version,
+    () => this.document && this.document.getChildren(),
+  ]
 
   @watch
   newDoc = () =>
@@ -153,15 +206,16 @@ class ChildrenStore {
   }
 
   get sortedDocs() {
-    const recentDocs = sortBy(this.children || [], 'createdAt').reverse()
+    const { children } = this
+    const recentDocs = sortBy(children || [], 'createdAt').reverse()
     if (
-      this.children &&
+      children &&
       this.document &&
       this.document.childrenSort &&
       this.document.childrenSort.length
     ) {
       const final = this.document.childrenSort.map(id => this.docsById[id])
-      if (this.children.length > final.length) {
+      if (children.length > final.length) {
         for (const doc of recentDocs) {
           if (!final.find(x => x.id === doc.id)) {
             final.push(doc)
@@ -174,7 +228,8 @@ class ChildrenStore {
   }
 
   get hasDocs() {
-    return this.children && this.children.length
+    const { children } = this
+    return children && children.length
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
@@ -205,19 +260,32 @@ class ChildrenStore {
   }
 }
 
-const SortableChildren = SortableContainer(({ items, store }) =>
-  <docs $$undraggable>
-    {items.map(doc => {
-      if (!doc) {
-        return null
-      }
-      const subItems = store.children[doc.id]
-      return <SortableItem key={doc.id} doc={doc} subItems={subItems} />
-    })}
-  </docs>
-)
+@SortableContainer
+@view.ui
+class SortableChildren {
+  render({ items, store }) {
+    return (
+      <docs $$undraggable>
+        {items.map((doc, index) => {
+          if (!doc) {
+            return null
+          }
+          const subItems = store.children[doc.id]
+          return (
+            <SortableItem
+              key={doc.id}
+              index={index}
+              doc={doc}
+              subItems={subItems}
+            />
+          )
+        })}
+      </docs>
+    )
+  }
+}
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view({
   store: ChildrenStore,
 })
@@ -230,7 +298,8 @@ export default class Children {
     }
   }
 
-  render({ explorerStore, store, store: { hasDocs, sortedDocs } }: Props) {
+  render({ rootStore, store, store: { hasDocs, sortedDocs } }: Props) {
+    log('render')
     return (
       <children>
         <contents>
@@ -244,6 +313,7 @@ export default class Children {
           <Item
             if={store.newDoc}
             editable
+            temporary
             onSave={store.saveCreatingDoc}
             doc={store.newDoc}
             textRef={this.onNewItemText}
@@ -257,7 +327,6 @@ export default class Children {
           target={<UI.Button circular size={0.8} icon="add" />}
         >
           <UI.List
-            background
             elevation={5}
             chromeless
             borderRadius={5}
@@ -282,7 +351,7 @@ export default class Children {
         </UI.Popover>
         <space />
         <UI.Button
-          onClick={explorerStore.ref('showBrowse').toggle}
+          onClick={rootStore.ref('showBrowse').toggle}
           circular
           size={0.8}
           icon="list"
@@ -296,11 +365,12 @@ export default class Children {
   static style = {
     children: {
       padding: [0, 18],
+      maxWidth: '100%',
       width: '100%',
-      flex: 1,
       alignItems: 'flex-end',
       position: 'relative',
       pointerEvents: 'auto',
+      overflow: 'hidden',
     },
     title: {
       '&:hover > h2': {
@@ -313,8 +383,8 @@ export default class Children {
     contents: {
       marginRight: 5,
       width: '100%',
-      overflowY: 'scroll',
-      overflowX: 'visible',
+      overflowY: 'auto',
+      overflowX: 'hidden',
     },
     fade: {
       position: 'absolute',
@@ -326,7 +396,7 @@ export default class Children {
     },
     bottom: {
       bottom: 0,
-      background: 'linear-gradient(transparent, #fff)',
+      // background: 'linear-gradient(transparent, #fff)',
     },
   }
 }

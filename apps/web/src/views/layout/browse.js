@@ -1,12 +1,61 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import Router from '~/router'
+import fuzzy from 'fuzzy'
 
-@view.attach('explorerStore')
-@view
+class BrowseStore {
+  filter = ''
+
+  get children() {
+    return this.props.rootStore.children
+  }
+
+  get filteredChildren() {
+    if (!this.children) {
+      return []
+    }
+    return fuzzy
+      .filter(this.filter, this.children, {
+        extract: el => el.title,
+        pre: '<',
+        post: '>',
+      })
+      .map(item => item.original)
+  }
+}
+
+@view.attach('rootStore')
+@view({
+  store: BrowseStore,
+})
 export default class Browse {
+  onClick = child => () => {
+    Router.go(child.url())
+    this.props.rootStore.ref('showBrowse').toggle()
+  }
+
   getChild = child => {
     return (
-      <UI.ListItem size={1} primary={child.title || ''} key={child.id}>
+      <UI.ListItem
+        size={1}
+        primary={
+          <item
+            css={{
+              padding: [5, 10],
+              '&:hover': {
+                background: '#eee',
+              },
+            }}
+            onClick={this.onClick(child)}
+          >
+            {child.title || ''}
+          </item>
+        }
+        key={child.id}
+        height="auto"
+        padding={0}
+        glow={false}
+      >
         <children $$paddingLeft={20}>
           {(child.children.length && child.children.map(this.getChild)) || null}
         </children>
@@ -14,30 +63,43 @@ export default class Browse {
     )
   }
 
-  render({ explorerStore, explorerStore: { showBrowse, children } }) {
+  render({ rootStore, store }) {
     return (
-      <overlay
-        if={showBrowse}
-        $$fullscreen
-        onClick={explorerStore.ref('showBrowse').toggle}
-      >
+      <browse $$fullscreen if={rootStore.showBrowse}>
+        <overlay
+          $$fullscreen
+          onClick={rootStore.ref('showBrowse').toggle}
+        />
         <UI.Surface $surface width="50%" height="50%" elevation={2}>
-          <content if={children}>
-            {children.map(this.getChild)}
+          <UI.Input
+            height={30}
+            flex="none"
+            onChange={e => store.ref('filter').set(e.target.value)}
+          />
+          <content if={store.filteredChildren}>
+            {store.filteredChildren.map(this.getChild)}
           </content>
         </UI.Surface>
-      </overlay>
+      </browse>
     )
   }
 
   static style = {
-    overlay: {
+    browse: {
       position: 'absolute',
       zIndex: 10000000,
+    },
+    overlay: {
       background: [0, 0, 0, 0.1],
     },
     surface: {
       margin: 'auto',
+      padding: 10,
+      borderRadius: 5,
+    },
+    content: {
+      flex: 1,
+      overflowY: 'auto',
     },
   }
 }

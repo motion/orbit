@@ -2,7 +2,7 @@ import React from 'react'
 import * as Mobx from 'mobx'
 import { view } from '@mcro/black'
 import { object } from 'prop-types'
-import { pickBy } from 'lodash'
+import { pickBy, difference } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 
@@ -69,14 +69,25 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillReceiveProps(nextProps) {
-          this._props = nextProps
+          const curPropKeys = Object.keys(this._props)
+          const nextPropsKeys = Object.keys(nextProps)
+          // update
+          for (const prop of nextPropsKeys) {
+            if (this._props[prop] !== nextProps[prop]) {
+              this._props[prop] = nextProps[prop]
+            }
+          }
+          // clean
+          for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
+            this._props[extraProp] = undefined
+          }
         }
 
         componentWillMount() {
           // for reactive props in stores
           // 🐛 if you define this as normal observable on class
           //    it will break with never before seen mobx bug on next line
-          Mobx.extendShallowObservable(this, { _props: null })
+          Mobx.extendObservable(this, { _props: null })
           this._props = { ...this.props }
           this.setupStores()
           this.unmounted = false
@@ -170,10 +181,6 @@ export default function storeProvidable(options, emitter) {
         }
 
         hotReload = () => {
-          if (this.unmounted) {
-            // waiting to see if this is why unmountCOmponent errs happen
-            debugger
-          }
           this.disposeStores()
           this.setupStores()
           this.mountStores()
@@ -188,13 +195,7 @@ export default function storeProvidable(options, emitter) {
             return null
           }
 
-          return (
-            <Klass
-              {...this.props}
-              {...this.state.stores}
-              disposeStores={this.disposeStores}
-            />
-          )
+          return <Klass {...this.props} {...this.state.stores} />
         }
       }
 

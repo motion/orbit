@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import Step1 from './signup/step1'
 import Step2 from './signup/step2'

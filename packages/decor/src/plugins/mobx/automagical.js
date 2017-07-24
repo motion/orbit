@@ -2,10 +2,11 @@
 import { fromStream, fromPromise } from 'mobx-utils'
 import * as Mobx from 'mobx'
 
-if (module.hot) {
-  module.hot.accept(() => {
-    console.log('please manually refresh')
-  })
+// turned off for now
+const debug = () => {}
+
+if (module && module.hot) {
+  module.hot.accept(() => {})
 }
 
 const isObservable = x => {
@@ -20,6 +21,7 @@ const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery
 const isRxObservable = val => window.Rx && val instanceof window.Rx.Observable
 const isPromise = val => val instanceof Promise
+const isWatch = (val: any) => val && val.IS_AUTO_RUN
 
 export default function automagical() {
   return {
@@ -44,7 +46,6 @@ export default function automagical() {
   }
 }
 
-const isWatch = (val: any) => val && val.IS_AUTO_RUN
 const FILTER_KEYS = {
   dispose: true,
   constructor: true,
@@ -192,6 +193,10 @@ function mobxify(target: Object, method: string, descriptors: Object) {
 
 // * => Mobx
 function resolve(value) {
+  // convert RxQuery to RxObservable
+  if (isRxDbQuery(value)) {
+    value = value.$
+  }
   if (isRxObservable(value)) {
     const stream = fromStream(value)
     return {
@@ -203,16 +208,27 @@ function resolve(value) {
   return value
 }
 
+const AID = '__AUTOMATICAL_ID__'
+const uid = () => `__ID_${Math.random()}__`
+
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
-  const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
+  // const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
   let current = Mobx.observable.box(null)
   let currentDisposable = null
   let currentObservable = null
+  let swappingOutSameObservable = false
   let stopAutoObserve
 
-  const update = val => {
-    current.set(Mobx.observable.box(val))
+  const update = newValue => {
+    let value = newValue
+    if (Mobx.isObservableArray(value) || Mobx.isObservableMap(value)) {
+      value = Mobx.toJS(value)
+    }
+    if (method === 'children') {
+      debug('update ===', value)
+    }
+    current.set(Mobx.observable.box(value))
   }
 
   function runObservable() {
@@ -220,34 +236,65 @@ function mobxifyWatch(obj, method, val) {
     stopAutoObserve = Mobx.autorun(() => {
       if (currentObservable) {
         const value = currentObservable.get()
+        if (method === 'children') {
+          debug(swappingOutSameObservable, 'runObservable.value = ', value)
+        }
         update(value) // set + wrap
       }
     })
   }
 
-  const stop = Mobx.autorun(watchForNewValue)
+  let stop
 
-  async function watchForNewValue() {
-    const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
-    stopAutoObserve && stopAutoObserve()
-    if (currentDisposable) {
-      currentDisposable()
-      currentDisposable = null
-    }
-    if (result && result.dispose) {
-      currentDisposable = result.dispose.bind(result)
-    }
-    if (result && (isQuery(result) || isObservable(result))) {
-      if (result.isntConnected) {
-        return
+  function watcher(val) {
+    return () => {
+      const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
+      stopAutoObserve && stopAutoObserve()
+      if (currentDisposable) {
+        currentDisposable()
+        currentDisposable = null
       }
-      currentObservable = result
-      runObservable()
-    } else if (isPromise(result)) {
-      current.set(fromPromise(result))
-    } else {
-      update(result)
+      if (result && result.dispose) {
+        currentDisposable = result.dispose.bind(result)
+      }
+      if (result && (isQuery(result) || isObservable(result))) {
+        if (result.isntConnected) {
+          return
+        }
+        if (method === 'children') {
+          debug('change up', currentObservable, result)
+        }
+        if (currentObservable && currentObservable[AID] === result[AID]) {
+          debug('SAME OBSERVABLE, SWAP ONLY')
+          swappingOutSameObservable = true
+          update(currentObservable.get())
+          return
+        }
+        currentObservable = result
+        currentObservable[AID] = currentObservable[AID] || uid()
+        runObservable()
+      } else if (isPromise(result)) {
+        current.set(fromPromise(result))
+      } else {
+        if (method === 'children') {
+          debug('watchForNewValue ===', result)
+        }
+        update(result)
+      }
     }
+  }
+
+  if (method === 'children') {
+    debug('getting children', val)
+  }
+
+  // autorun vs reaction
+  if (Array.isArray(val)) {
+    // reaction
+    stop = Mobx.reaction(val[0], watcher(val[1]), true)
+  } else {
+    //autorun
+    stop = Mobx.autorun(watcher(val))
   }
 
   Object.defineProperty(obj, method, {
@@ -257,9 +304,12 @@ function mobxifyWatch(obj, method, val) {
         return result.value
       }
       if (isObservable(result)) {
-        const value = result.get()
-        if (Mobx.isObservableArray(value) || Mobx.isObservableMap(value)) {
-          return Mobx.toJS(value)
+        let value = result.get()
+        if (
+          value &&
+          (Mobx.isObservableArray(value) || Mobx.isObservableMap(value))
+        ) {
+          value = Mobx.toJS(value)
         }
         return value
       }

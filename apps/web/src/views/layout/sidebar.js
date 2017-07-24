@@ -6,9 +6,19 @@ import * as Constants from '~/constants'
 import InboxList from '~/views/inbox/list'
 import { throttle } from 'lodash'
 import Draft from '~/views/inbox/draft'
+import { User } from '~/app'
+
+class SidebarStore {
+  filter = ''
+  setFilter = e => {
+    this.filter = e.target.value
+  }
+}
 
 @view.attach('layoutStore')
-@view
+@view({
+  store: SidebarStore,
+})
 export default class Sidebar {
   state = {
     scrolling: false,
@@ -29,7 +39,7 @@ export default class Sidebar {
     }
   }, 32)
 
-  render({ hidden, layoutStore, store, children, ...props }) {
+  render({ store, hidden, layoutStore, children, ...props }) {
     const width = Constants.IN_TRAY
       ? Constants.TRAY_WIDTH
       : layoutStore.sidebar.width
@@ -53,6 +63,7 @@ export default class Sidebar {
                 borderRadius={100}
                 size={1}
                 marginRight={30}
+                onChange={store.setFilter}
               />
 
               <end $$row $$align="center">
@@ -63,7 +74,7 @@ export default class Sidebar {
                   }}
                   items={['All', 'Other']}
                 >
-                  <span>Filter</span>
+                  Filter
                 </UI.Dropdown>
 
                 <UI.Popover
@@ -90,7 +101,7 @@ export default class Sidebar {
                   }
                 >
                   <Draft
-                    document={{}}
+                    parentId={User.defaultInbox && User.defaultInbox.id}
                     closePopover={() => this.popover && this.popover.close()}
                     editorRef={this.ref('draftEditor').set}
                   />
@@ -99,7 +110,7 @@ export default class Sidebar {
             </bar>
 
             <inbox>
-              <InboxList inSidebar />
+              <InboxList filter={store.filter} />
             </inbox>
 
             {children}
@@ -113,12 +124,11 @@ export default class Sidebar {
     sidebar: {
       userSelect: 'none',
       position: 'absolute',
-      overflowY: 'scroll',
+      overflowY: 'auto',
       top: 0,
       right: 0,
       bottom: 0,
       left: 0,
-      // padding: [0, 20],
     },
     bar: {
       flexFlow: 'row',

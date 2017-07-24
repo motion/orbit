@@ -1,6 +1,5 @@
 // @flow
 import { query } from '@mcro/black'
-import User from './user'
 import { Thing, methods, extend } from './thing'
 
 export class Document extends Thing {
@@ -12,11 +11,13 @@ export class Document extends Thing {
     content: Thing.getContent(doc),
   })
 
-  static defaultFilter = doc => ({ ...doc, type: 'document' })
+  static defaultFilter = doc => ({ type: 'document', ...doc })
 
-  methods = extend(methods, {})
-
-  root = () => this.collection.find(User.org.homeDocument).exec()
+  methods = extend(methods, {
+    test() {
+      return 1
+    },
+  })
 
   @query
   search = async (text: string) => {
@@ -92,6 +93,8 @@ export class Document extends Thing {
     )
   }
 }
+
+window.DocumentModel = Document
 
 const DocumentInstance = new Document()
 window.Document = DocumentInstance

@@ -164,7 +164,7 @@ export default class ListItem {
           {Array.isArray(children)
             ? children.map(
                 (item, index) =>
-                  typeof item === 'object' && item.primary
+                  item && typeof item === 'object' && item.primary
                     ? <ListItem key={item.key || index} {...item} />
                     : item
               )

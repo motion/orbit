@@ -238,7 +238,7 @@ export default class Model {
           doc,
           0,
           2
-        )}...)`,
+        )})`,
         'color: green'
       )
       if (ogInsert) {
@@ -293,6 +293,7 @@ export default class Model {
 
     // AND NOW
     this.connected = true
+    console.log('connected', this.title)
   }
 
   async dispose() {

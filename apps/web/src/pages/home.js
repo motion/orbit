@@ -1,18 +1,23 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '@mcro/models'
+import { User } from '~/app'
 import DocumentPage from './document'
 
 @view
 export default class HomePage {
+  async componentDidMount() {
+    if (User.home === null) {
+      await User.createOrg('myneworg')
+      console.log('created new org for user')
+    }
+  }
+
   render() {
     if (!User.loggedIn) {
       return <center $$centered>login plz</center>
     }
 
-    if (User.orgs && User.orgs.length === 0) {
-      log('MAKE TAHT FUCKING ORG')
-      User.createOrg('Welcome')
+    if (User.home === null) {
       return <null>weird no org</null>
     }
 

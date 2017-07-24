@@ -116,7 +116,6 @@ export default class Surface implements ViewType {
 
   onClick = e => {
     e.preventDefault()
-    e.persist()
     if (this.props.onClick) {
       this.props.onClick(e)
     }
@@ -145,6 +144,8 @@ export default class Surface implements ViewType {
     children,
     chromeless,
     circular,
+    hoverBackground,
+    highlightBackground,
     className,
     clickable,
     color,
@@ -201,6 +202,8 @@ export default class Surface implements ViewType {
     width,
     wrapElement,
     disabled,
+    flexFlow,
+    textAlign,
     ...props
   }) {
     const hasIconBefore = icon && !iconAfter
@@ -416,9 +419,10 @@ export default class Surface implements ViewType {
     const hoverBackground =
       !props.highlight &&
       (props.hoverBackground === true
-        ? theme[STATE].background
+        ? theme.hover.background
         : props.hoverBackground ||
-          (colorfulBg ? background.negate().alpha(0.1) : background))
+          theme.hover.background ||
+          (colorfulBg ? background.lighten(0.5) : background))
 
     const borderColor = $(
       props.borderColor || theme[STATE].borderColor || 'transparent'
@@ -598,7 +602,6 @@ export default class Surface implements ViewType {
         '& > icon': props.hovered ? hoverIconStyle : iconStyle,
         '&:hover > icon': hoverIconStyle,
         '&:hover': hoverStyle,
-        '&:focus-within': focusable && focusStyle,
         ...(props.wrapElement && {
           '& > :focus': focusable && focusStyle,
           '& > :active': activeStyle,

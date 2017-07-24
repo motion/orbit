@@ -1,8 +1,8 @@
 import React from 'react'
-import { view, computed } from '@mcro/black'
-import { User, Document } from '@mcro/models'
-import { Button, Glow, Loading, Icon } from '@mcro/ui'
-import { isEqual, sortBy } from 'lodash'
+import { view } from '@mcro/black'
+import { User } from '~/app'
+import { Button, Glow, Loading } from '@mcro/ui'
+import { sortBy } from 'lodash'
 import Router from '~/router'
 // nice oxford commas for votes
 import listify from 'listify'
@@ -40,7 +40,7 @@ class VoteStore {
 }
 
 const lightBlue = '#e7f6ff'
-const darkBlue = `#0099e5`
+const darkBlue = '#0099e5'
 
 @view.attach('layoutStore')
 @view({
@@ -77,7 +77,9 @@ export default class VotesList {
           </Button>
         </top>
         <list>
-          <loading if={!hasLoaded}><Loading $loading /></loading>
+          <loading if={!hasLoaded}>
+            <Loading $loading />
+          </loading>
           <noDocs if={showNoDocs}>
             <text>no documents</text>
             <Button icon="simple-add" onClick={() => layoutStore.createDoc()}>
@@ -108,7 +110,9 @@ export default class VotesList {
                       color={[255, 255, 255]}
                       opacity={0.04}
                     />
-                    <text>{doc.title}</text>
+                    <text>
+                      {doc.title}
+                    </text>
 
                     <icon>
                       <Button

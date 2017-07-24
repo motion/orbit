@@ -3,12 +3,12 @@ import { view } from '@mcro/black'
 import Router from '~/router'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
-import ExplorerInput from './explorerInput'
-import Notifications from '../notifications'
+import Explorer from './explorer/explorer'
+import Notifications from './notifications'
 
 @view.attach('layoutStore')
 @view
-export default class ExplorerBar {
+export default class Header {
   render({ layoutStore }) {
     // use sidebar.active so it binds to variable and rerenders
     layoutStore.sidebar.active
@@ -21,7 +21,7 @@ export default class ExplorerBar {
     }
 
     return (
-      <explorerbar $$draggable>
+      <header $$draggable>
         <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
         <bar>
           <UI.Button
@@ -32,7 +32,7 @@ export default class ExplorerBar {
             disabled={Router.atBack}
             onClick={() => Router.back()}
           />
-          <ExplorerInput
+          <Explorer
             onOpen={() => (layoutStore.explorerOpen = true)}
             onClose={() => (layoutStore.explorerOpen = false)}
           />
@@ -51,7 +51,7 @@ export default class ExplorerBar {
             openOnClick
             delay={500}
             overlay={[0, 0, 0, 0.05]}
-            closeOnEscape
+            closeOnEsc
             background
             width={480}
             borderRadius={8}
@@ -61,7 +61,7 @@ export default class ExplorerBar {
                 chromeless
                 iconSize={20}
                 circular
-                size={1.333}
+                size={1.2}
                 badge={2}
                 icon="circle-09"
               />
@@ -70,12 +70,12 @@ export default class ExplorerBar {
             <Notifications />
           </UI.Popover>
         </rest>
-      </explorerbar>
+      </header>
     )
   }
 
   static style = {
-    explorerbar: {
+    header: {
       // position: 'absolute',
       // top: 0,
       // right: 0,

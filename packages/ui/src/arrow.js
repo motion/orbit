@@ -36,7 +36,7 @@ export default class Arrow {
     }
   }
 
-  render({ size, towards, theme, boxShadow, ...props }: Props) {
+  render({ size, towards, theme, boxShadow, background, ...props }: Props) {
     const onBottom = towards === 'bottom'
     const innerTop = size * (onBottom ? -1 : 1)
 

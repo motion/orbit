@@ -5,10 +5,10 @@ import Page from './page'
 import * as UI from '@mcro/ui'
 import InboxList from '~/views/inbox/list'
 
-@view.attach('explorerStore')
+@view.attach('rootStore')
 @view
 export default class InboxPage {
-  render({ explorerStore: { document } }) {
+  render({ rootStore: { document } }) {
     return (
       <UI.Theme name="light">
         <Page>

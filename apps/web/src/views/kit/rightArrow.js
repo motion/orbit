@@ -12,17 +12,7 @@ import * as UI from '@mcro/ui'
 })
 export default class RightArrow {
   render({ store, animate, ...props }) {
-    return (
-      <arrow {...props}>
-        <UI.Icon
-          $animate={animate}
-          $animateAfter={animate && store.rendered}
-          $icon
-          size={10}
-          name="arrow-min-right"
-        />
-      </arrow>
-    )
+    return <arrow {...props}>/</arrow>
   }
 
   static style = {

@@ -1,7 +1,7 @@
 import { view, watch, HotKeys } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
-import { Reply, Thread } from '@mcro/models'
+import { Reply, Thread } from '~/app'
 
 const REC_SPEED = 800
 
@@ -10,30 +10,20 @@ class DraftStore {
   recs = []
 
   @watch
-  draft = () => {
-    const { parent } = this.props
-
-    return (
-      this.draftVersion &&
-      this.model.createTemporary({
-        title: 'Draft',
-        parentId: (parent && parent.id) || undefined,
-        draft: true,
-      })
-    )
-  }
-
-  get document() {
-    return this.props.document
-  }
+  draft = () =>
+    this.draftVersion &&
+    this.model.createTemporary({
+      title: 'Draft',
+      parentId: this.props.parentId || undefined,
+      draft: true,
+    })
 
   get model() {
-    return this.document ? Reply : Thread
+    return this.props.isReply ? Reply : Thread
   }
 
   get isReply() {
-    const { parent } = this.props
-    return parent && parent.type === 'thread'
+    return !!this.props.isReply
   }
 
   lastText = ''
@@ -90,7 +80,9 @@ export default class Draft {
     placeholder,
     store,
     isReply,
+    parentId,
     store: { draft },
+    closePopover,
     ...props
   }) {
     return (

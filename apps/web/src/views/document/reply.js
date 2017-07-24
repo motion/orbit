@@ -35,7 +35,6 @@ export default class Reply {
   static style = {
     message: {
       padding: [25, 20],
-      borderTop: [1, '#eee'],
       flexFlow: 'row',
       alignItems: 'flex-start',
       position: 'relative',

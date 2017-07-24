@@ -47,7 +47,7 @@ export default class DocPageActions {
           margin={[0, -9, 0]}
           circular
           borderWidth={1}
-          icon="objbear"
+          icon="ui-1_flame"
           tooltip={document.hasStar() ? 'unfollow' : 'follow'}
           tooltipProps={{
             towards: 'left',

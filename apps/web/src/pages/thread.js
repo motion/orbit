@@ -12,7 +12,7 @@ const { ago } = timeAgo()
 
 class ThreadStore {
   @watch thread = () => Thread.get(this.props.id)
-  replies = this.thread && this.thread.replies && this.thread.replies()
+  @watch replies = () => this.thread && this.thread.replies()
 
   get items() {
     const { thread } = this
@@ -145,7 +145,7 @@ export default class ThreadPage {
 
         <replies>
           {store.items.map(item =>
-            <item>
+            <item key={item.id}>
               <separator />
               {item.type === 'reply'
                 ? <Reply key={item.id} doc={item} />

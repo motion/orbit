@@ -125,6 +125,7 @@ export default class Page {
     },
     pagecontents: {
       width: '100%',
+      maxHeight: '100%',
       flex: 1,
       overflowX: 'visible',
       overflowY: 'auto',

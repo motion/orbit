@@ -190,6 +190,10 @@ function mobxify(target: Object, method: string, descriptors: Object) {
 
 // * => Mobx
 function resolve(value) {
+  // convert RxQuery to RxObservable
+  if (isRxDbQuery(value)) {
+    value = value.$
+  }
   if (isRxObservable(value)) {
     const stream = fromStream(value)
     return {

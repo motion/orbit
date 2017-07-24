@@ -9,6 +9,7 @@ import Models from '@mcro/models'
 @store
 class AppStore {
   started = false
+  connected = false
   errors = []
   mounted = {
     stores: {},
@@ -39,6 +40,7 @@ class AppStore {
     this.models = new Models(this.config, this.modelsObjects)
     console.log('start models')
     await this.models.start()
+    this.connected = true
     this.catchErrors()
     this.trackMounts()
     if (!quiet) {

@@ -6,14 +6,11 @@ import * as UI from '@mcro/ui'
 export default class Browse {
   getChild = child => {
     return (
-      <thing key={child.id}>
-        <title>
-          {child.title}
-        </title>
+      <UI.ListItem size={1} primary={child.title || ''} key={child.id}>
         <children $$paddingLeft={20}>
           {(child.children.length && child.children.map(this.getChild)) || null}
         </children>
-      </thing>
+      </UI.ListItem>
     )
   }
 

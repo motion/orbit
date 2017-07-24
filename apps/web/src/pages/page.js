@@ -3,6 +3,10 @@ import React from 'react'
 import { view } from '@mcro/black'
 import { SlotFill } from '@mcro/ui'
 import { debounce } from 'lodash'
+import Actions from './page/actions'
+import Children from './page/children'
+
+const SIDEBAR_WIDTH = '30%'
 
 type Props = {
   children?: React$Element<any>,
@@ -82,31 +86,72 @@ export default class Page {
   static Actions = PageActions
   static Sidebar = PageSidebar
 
-  render({ children, store, ...props }: Props) {
+  render({ showChildren, showActions, children, store, ...props }: Props) {
     return (
       <page {...props}>
-        <SlotManager store={store} />
-        {React.Children.map(children, child => {
-          if (child) {
-            if (child.type.pageType) {
-              return React.cloneElement(child, {
-                onChildren: store.onChildren(child.type.pageType),
-              })
+        <pagecontents>
+          <SlotManager store={store} />
+          {React.Children.map(children, child => {
+            if (child) {
+              if (child.type.pageType) {
+                return React.cloneElement(child, {
+                  onChildren: store.onChildren(child.type.pageType),
+                })
+              }
             }
-          }
-          return child
-        })}
+            return child
+          })}
+        </pagecontents>
+
+        <sidebar if={showChildren || showActions}>
+          <Actions if={showActions} />
+          <Children if={showChildren} />
+          <line />
+          <fade />
+        </sidebar>
       </page>
     )
   }
 
   static style = {
     page: {
-      overflowX: 'visible',
-      overflowY: 'scroll',
       flex: 1,
+      width: '100%',
       maxWidth: '100%',
       position: 'relative',
+      flexFlow: 'row',
+    },
+    pagecontents: {
+      width: '100%',
+      flex: 1,
+      overflowX: 'visible',
+      overflowY: 'scroll',
+    },
+    sidebar: {
+      maxWidth: SIDEBAR_WIDTH,
+      overflow: 'hidden',
+      zIndex: 50,
+      top: 0,
+      right: 0,
+      pointerEvents: 'none',
+    },
+    line: {
+      position: 'absolute',
+      top: -20,
+      right: 31,
+      bottom: 0,
+      width: 1,
+      background: '#eee',
+      zIndex: -2,
+    },
+    fade: {
+      position: 'absolute',
+      top: -20,
+      left: 0,
+      right: 0,
+      height: 60,
+      background: 'linear-gradient(#fff, transparent)',
+      zIndex: -1,
     },
   }
 }

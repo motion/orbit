@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import Page from './page'
+import * as UI from '@mcro/ui'
 import InboxList from '~/views/inbox/list'
 
 @view.attach('explorerStore')
@@ -9,9 +10,11 @@ import InboxList from '~/views/inbox/list'
 export default class InboxPage {
   render({ explorerStore: { document } }) {
     return (
-      <Page>
-        <InboxList if={document} document={document} />
-      </Page>
+      <UI.Theme name="light">
+        <Page>
+          <InboxList controlled if={document} document={document} large />
+        </Page>
+      </UI.Theme>
     )
   }
 }

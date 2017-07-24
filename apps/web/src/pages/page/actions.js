@@ -5,17 +5,20 @@ import * as UI from '@mcro/ui'
 import Gemstone from '~/views/kit/gemstone'
 import Router from '~/router'
 import { User } from '@mcro/models'
+import timeAgo from 'time-ago'
 
-@view.attach('docStore')
+const { ago } = timeAgo()
+
+@view.attach('explorerStore')
 @view
 export default class DocPageActions {
-  render({ docStore: { document } }) {
+  render({ explorerStore: { document } }) {
     if (!document || document === null) {
       return null
     }
 
     const popoverProps = {
-      elevation: 1,
+      elevation: 2,
       borderRadius: 8,
       background: 'transparent',
       distance: 10,
@@ -30,15 +33,36 @@ export default class DocPageActions {
       <actions
         $$draggable
         css={{
-          flexFlow: 'row',
+          flexFlow: 'column',
           alignItems: 'center',
-          justifyContent: 'flex-end',
-          padding: [12, 15],
-          marginLeft: -25,
+          justifyContent: 'center',
+          padding: [18, 0, 0],
+          marginRight: 12,
           alignSelf: 'flex-end',
           pointerEvents: 'auto',
         }}
       >
+        <UI.Button
+          size={1.25}
+          margin={[0, -10, 0]}
+          circular
+          borderWidth={0}
+          icon="sport_user-run"
+          tooltip={document.hasStar ? 'unfollow' : 'follow'}
+          tooltipProps={{
+            towards: 'left',
+          }}
+          highlight={document.hasStar}
+          iconSize={document.hasStar ? 20 : null}
+          onClick={() => document.toggleStar()}
+          iconProps={{
+            css: {
+              transition: 'transform ease-in 80ms',
+              scale: document.hasStar ? 1.1 : 1,
+            },
+          }}
+        />
+        <space css={{ paddingTop: 10 }} />
         <UI.Popover
           {...popoverProps}
           target={
@@ -46,7 +70,7 @@ export default class DocPageActions {
               <Gemstone
                 if={document}
                 id={document.id}
-                size={28}
+                size={16}
                 css={{
                   margin: 'auto',
                 }}
@@ -58,32 +82,12 @@ export default class DocPageActions {
             <top $$row>
               <left css={{ flex: 1 }}>
                 <UI.Text size={0.9}>
-                  <strong>Updated</strong> 2m ago
+                  <strong>Created</strong> {document.createdAt}
                 </UI.Text>
                 <UI.Text size={0.9}>
-                  <strong>Viewed</strong> 1m ago
+                  <strong>Updated</strong> {ago(document.updatedAt)}
                 </UI.Text>
               </left>
-
-              <UI.Button
-                size={1.5}
-                circular
-                borderWidth={0}
-                icon="fav3"
-                tooltip={document.hasStar ? 'Remove bookmark' : ''}
-                tooltipProps={{
-                  towards: 'top',
-                }}
-                highlight={document.hasStar}
-                iconSize={document.hasStar ? 20 : null}
-                onClick={() => document.toggleStar()}
-                iconProps={{
-                  css: {
-                    transition: 'transform ease-in 80ms',
-                    scale: document.hasStar ? 1.1 : 1,
-                  },
-                }}
-              />
             </top>
 
             <space css={{ height: 8 }} />

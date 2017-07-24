@@ -10,13 +10,18 @@ class DraftStore {
   recs = []
 
   @watch
-  draft = () =>
-    this.draftVersion &&
-    this.model.createTemporary({
-      title: 'Draft',
-      parentId: (this.document && this.document.parentId) || undefined,
-      draft: true,
-    })
+  draft = () => {
+    const { parent } = this.props
+
+    return (
+      this.draftVersion &&
+      this.model.createTemporary({
+        title: 'Draft',
+        parentId: (parent && parent.id) || undefined,
+        draft: true,
+      })
+    )
+  }
 
   get document() {
     return this.props.document
@@ -27,19 +32,22 @@ class DraftStore {
   }
 
   get isReply() {
-    return !!this.document
+    const { parent } = this.props
+    return parent && parent.type === 'thread'
   }
 
   lastText = ''
   getRec = async () => {
-    const text = this.draft.title + ' ' + this.draft.previewText
-    if (text && text.length > 10 && this.lastText !== text) {
-      const res = await App.stores.RecStore[0].getTag(text)
-      if (res) this.recs = res.map(i => i.label)
-      console.log('res is', res)
-    }
+    if (this.draft) {
+      const { recStore } = this.props
+      const text = this.draft.title + ' ' + this.draft.previewText
+      if (text && text.length > 10 && this.lastText !== text) {
+        const res = await recStore.getTag(text)
+        if (res) this.recs = res.map(i => i.label)
+      }
 
-    this.lastText = text
+      this.lastText = text
+    }
     setTimeout(this.getRec, REC_SPEED)
   }
 
@@ -48,8 +56,10 @@ class DraftStore {
   }
 
   send = async () => {
+    console.log('in send')
     this.draft.draft = false
     await this.draft.save()
+    if (!this.isReply) Router.go(this.draft.url())
 
     // quick, reset draft
     this.draftVersion++
@@ -68,6 +78,7 @@ class DraftStore {
   }
 }
 
+@view.attach('recStore')
 @view({
   store: DraftStore,
 })

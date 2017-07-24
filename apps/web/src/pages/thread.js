@@ -12,24 +12,23 @@ const { ago } = timeAgo()
 
 class ThreadStore {
   @watch thread = () => Thread.get(this.props.id)
-  replies = this.thread && this.thread.replies && this.thread.replies()
+
+  @watch
+  replies = () => this.thread && this.thread.replies && this.thread.replies()
 
   assignTo = name => {
-    const { thread } = this.props
-    thread.addUpdate({ type: 'assign', to: name })
-    thread.save()
+    this.thread.addUpdate({ type: 'assign', to: name })
+    this.thread.save()
   }
 
   addTag = name => {
-    const { thread } = this.props
-    thread.addUpdate({ type: 'tag', name })
-    thread.save()
+    this.thread.addUpdate({ type: 'tag', name })
+    this.thread.save()
   }
 
   removeTag = name => {
-    const { thread } = this.props
-    thread.addUpdate({ type: 'tagRemove', name })
-    thread.save()
+    this.thread.addUpdate({ type: 'tagRemove', name })
+    this.thread.save()
   }
 
   toggleTag = name => {
@@ -46,6 +45,7 @@ class ThreadStore {
 
   get items() {
     const { thread } = this
+    console.log('replies are', this.replies)
     const all = [...(this.replies || []), ...((thread && thread.updates) || [])]
     return sortBy(all, i => +new Date(i.createdAt))
   }
@@ -100,12 +100,8 @@ export default class ThreadPage {
     const assignTo = ['Nick', 'Nate', 'Sam']
 
     return (
-      <Page>
-        <DocumentView
-          showActions
-          document={explorerStore.document}
-          isPrimaryDocument
-        />
+      <Page showActions>
+        <DocumentView document={explorerStore.document} isPrimaryDocument />
 
         <actions if={store.thread}>
           <action $$row>
@@ -151,7 +147,7 @@ export default class ThreadPage {
           <Draft
             $draft
             isReply
-            document={store.thread}
+            parent={store.thread}
             placeholder="Add your reply..."
           />
         </reply>

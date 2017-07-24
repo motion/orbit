@@ -25,7 +25,7 @@ export default class Button {
         type={type}
         clickable
         hoverable
-        sizeRadius
+        borderRadius
         sizeFont
         sizeHeight
         sizePadding={1.3}

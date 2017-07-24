@@ -81,7 +81,6 @@ export default class Sidebar {
                       inline
                       circular
                       chromeless
-                      paddingTop={2}
                       icon="circleadd"
                       size={1.4}
                       marginLeft={10}
@@ -99,7 +98,9 @@ export default class Sidebar {
               </end>
             </bar>
 
-            <InboxList inSidebar hideTitle />
+            <inbox>
+              <InboxList inSidebar />
+            </inbox>
 
             {children}
           </sidebar>
@@ -145,6 +146,9 @@ export default class Sidebar {
     },
     shown: {
       opacity: 1,
+    },
+    inbox: {
+      margin: [0, -20],
     },
   }
 }

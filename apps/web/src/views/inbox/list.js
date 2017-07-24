@@ -1,9 +1,9 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Thread } from '@mcro/models'
 import timeAgo from 'time-ago'
 import Draft from './draft'
 import Router from '~/router'
+import { Thread } from '@mcro/models'
 
 const { ago } = timeAgo()
 
@@ -19,17 +19,18 @@ class InboxStore {
   store: InboxStore,
 })
 export default class Inbox {
-  render({ store, inSidebar, hideTitle }) {
+  render({ store, inSidebar, large }) {
     const badgeProps = {}
 
     Router.path // trigger change
 
     return (
       <inbox>
-        <bar if={!hideTitle}>
-          <UI.Title size={3} stat={`${(store.threads || []).length} new`}>
-            {store.document.title}
-          </UI.Title>
+        <bar if={large && store.document}>
+          <bartitle $$flex>
+            <UI.Title size={3}>{store.document.title}</UI.Title>
+            {(store.threads || []).length} new
+          </bartitle>
           <actions>
             <UI.Popover
               openOnClick
@@ -52,14 +53,13 @@ export default class Inbox {
                 />
               }
             >
-              <Draft inboxStore={store} />
+              <Draft parent={store.document} />
             </UI.Popover>
           </actions>
         </bar>
-        <content $condenseContent={inSidebar}>
+        <content>
           <UI.List
             background="transparent"
-            $list
             controlled
             virtualized={{
               rowHeight: 115,
@@ -122,9 +122,6 @@ export default class Inbox {
       width: '100%',
       height: '100%',
     },
-    condenseContent: {
-      margin: [0, -20],
-    },
     create: {
       width: 400,
     },
@@ -158,6 +155,7 @@ export default class Inbox {
       marginBottom: 5,
       justifyContent: 'space-between',
       alignItems: 'center',
+      padding: [20, 0],
     },
   }
 }

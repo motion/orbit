@@ -7,10 +7,13 @@ import Router from '~/router'
 
 const FONT_SIZE = 16
 
-const $para = {
+const $text = {
   fontSize: FONT_SIZE,
   color: 'rgba(0,0,0,.8)',
   fontWeight: 400,
+  display: 'flex',
+  flexFlow: 'row',
+  alignItems: 'center',
 }
 
 const $arrow = {
@@ -26,9 +29,9 @@ const $arrow = {
 class Para {
   render({ children }) {
     return (
-      <p style={$para}>
+      <text style={$text}>
         {children}
-      </p>
+      </text>
     )
   }
 }
@@ -66,7 +69,7 @@ class Item {
       highlight: selected,
       $active: selected,
       color: [0, 0, 0, 0.8],
-      style: $para,
+      style: $text,
     }
 
     return (
@@ -154,20 +157,28 @@ export default class ExplorerInput {
           schema={schema}
           style={{ width: '100%', marginBottom: 1 }}
         />
+
+        <fade
+          $$fullscreen
+          css={{
+            left: 'auto',
+            width: 50,
+            background: 'linear-gradient(left, transparent, #fff)',
+          }}
+        />
       </bar>
     )
   }
 
   static style = {
     bar: {
-      // padding: 5,
+      overflow: 'hidden',
+      position: 'relative',
       height: 38,
       flexFlow: 'row',
       flex: 1,
       alignItems: 'center',
       borderBottom: [1, '#e0e0e0', 'dotted'],
-      // background: '#f2f2f2',
-      // borderRadius: 6,
     },
     focused: {
       borderColor: '#ddd',

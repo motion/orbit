@@ -138,21 +138,13 @@ export const methods = {
     let doc = this
     while (!foundRoot) {
       crumbs = [doc, ...crumbs]
-      if (!doc.parentId) {
+      if (!doc.parentId || doc.parentId === User.org.id) {
         foundRoot = true
       } else {
         if (!doc) {
           return crumbs
         }
-        const next = await this.collection.findOne(doc.parentId).exec()
-        if (!next) {
-          console.error('weird, no doc at this crumb', next)
-          return crumbs
-        }
-        if (next && !next.tasks) {
-          debugger
-        }
-        doc = next
+        doc = await this.collection.findOne(doc.parentId).exec()
       }
     }
     return crumbs

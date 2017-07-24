@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User, Document, Org, Image } from '~/app'
+import { User, Thing, Org, Image } from '~/app'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
@@ -56,7 +56,7 @@ export default class UserBar {
                 primary: 'Destroy All',
                 onClick: () => {
                   console.log('destroying all')
-                  ;[Document, Org, Image].forEach(async model => {
+                  ;[Thing, Org, Image].forEach(async model => {
                     const all = await model.find().exec()
                     log('removing', model.title)
                     if (all && all.length) {

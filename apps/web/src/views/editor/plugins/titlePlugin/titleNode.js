@@ -48,11 +48,11 @@ export default class TitleNode {
       fontSize: Math.round(Math.log(200 / level) * 5.5),
     }),
     title1: {
-      fontSize: 20,
-      height: 50,
+      fontSize: 19,
       fontWeight: 800,
+      height: 38,
       color: [0, 0, 0, 0.95],
-      margin: [16, 0, -10],
+      margin: [16, 0, 0],
     },
     inline: {
       // fontFamily: 'Abril Fatface',

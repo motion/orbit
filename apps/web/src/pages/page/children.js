@@ -63,7 +63,7 @@ class Item {
           icon={
             doc.type === 'document'
               ? <UI.Button
-                  margin={[0, -3, 0, 0]}
+                  margin={[0, -3, 0, doc && doc.id ? -5 : 0]}
                   chromeless
                   circular
                   padding={0}
@@ -73,11 +73,11 @@ class Item {
                   <Gemstone
                     if={doc && doc.id}
                     id={doc.id}
-                    size={8}
+                    size={9}
                     css={{
                       transform: {
-                        y: -8.5,
-                        x: 10.5,
+                        y: -9,
+                        x: 10,
                       },
                     }}
                   />
@@ -141,7 +141,7 @@ class Item {
       minWidth: 80,
       position: 'relative',
       opacity: 0.8,
-      transition: 'transform ease-in 80ms',
+      // transition: 'transform ease-in 80ms',
       overflow: 'hidden',
       transform: {
         scale: 1,
@@ -152,16 +152,16 @@ class Item {
         transform: {
           y: 0,
           z: 0,
-          x: -1,
-          scale: 1.03,
+          // x: -1,
+          // scale: 1.03,
         },
       },
     },
     title: {
       marginBottom: 20,
       fontWeight: 300,
-      fontSize: 15,
-      lineHeight: '1.2rem',
+      fontSize: 16,
+      lineHeight: '1.12rem',
       width: '100%',
       color: '#000',
       overflow: 'hidden',
@@ -251,10 +251,25 @@ class ChildrenStore {
   }
 
   saveCreatingDoc = async title => {
-    this.newDoc.setDefaultContent({ title })
-    await this.newDoc.save()
-    this.version++
+    if (title) {
+      this.newDoc.title = title
+      await this.newDoc.save()
+      this.version++
+    }
     this.creatingDoc = false
+  }
+
+  blurNewDoc = () => {
+    if (!this.newItemRef.innerText) {
+      this.creatingDoc = false
+    }
+  }
+
+  onNewItemText = ref => {
+    this.newItemRef = ref
+    if (ref) {
+      ref.focus()
+    }
   }
 }
 
@@ -290,12 +305,6 @@ class SortableChildren {
 export default class Children {
   props: Props
 
-  onNewItemText = ref => {
-    if (ref) {
-      ref.focus()
-    }
-  }
-
   render({ rootStore, store, store: { hasDocs, sortedDocs } }: Props) {
     log('render')
     return (
@@ -311,10 +320,11 @@ export default class Children {
           <Item
             if={store.newDoc}
             editable
+            onBlur={store.blurNewDoc}
             temporary
             onSave={store.saveCreatingDoc}
             doc={store.newDoc}
-            textRef={this.onNewItemText}
+            textRef={store.onNewItemText}
           />
         </contents>
         <space />

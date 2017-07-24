@@ -158,7 +158,11 @@ export default View => {
           onMouseLeave={this.onMouseLeave}
         >
           <context if={!isInline} contentEditable={false}>
-            {isHovered && !isTitle && (context || this.contextMenu())}
+            {isHovered &&
+              !isTitle &&
+              !isInline &&
+              !this.props.readOnly &&
+              (context || this.contextMenu())}
           </context>
           {component}
         </node>

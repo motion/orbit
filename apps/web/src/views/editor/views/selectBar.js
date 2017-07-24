@@ -9,12 +9,11 @@ export default class SelectBar {
 
     return (
       <UI.Popover
-        if={selection.selectedNode && selection.mouseUp && !editorStore.inline}
-        open
+        if={!editorStore.inline}
+        open={selection.selectedNode && selection.mouseUp}
         noArrow
-        left={selection.mouseUp.x}
-        top={selection.mouseUp.y + 18}
-        swayX
+        left={selection.mouseUp ? selection.mouseUp.x : 0}
+        top={selection.mouseUp ? selection.mouseUp.y + 18 : 0}
         closeOnEsc
         theme="dark"
         background="transparent"

@@ -66,17 +66,7 @@ export default class Sidebar {
                 onChange={store.setFilter}
               />
 
-              <end $$row $$align="center">
-                <UI.Dropdown
-                  popoverProps={{
-                    background: [50, 50, 50, 0.9],
-                    openOnHover: false,
-                  }}
-                  items={['All', 'Other']}
-                >
-                  Filter
-                </UI.Dropdown>
-
+              <end $$marginLeft={20} $$row $$align="center">
                 <UI.Popover
                   openOnClick
                   closeOnEsc

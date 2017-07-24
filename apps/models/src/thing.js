@@ -30,7 +30,21 @@ export const extend = (a, b) => {
   return result
 }
 
-const getContent = ({ title }) => ({
+export const document => {
+    // set title to first content node
+    try {
+      if (document.content) {
+        return (
+          document.content.document.nodes[0].nodes[0].text || document.title
+        )
+      }
+    } catch (e) {
+      console.log('error extracting title', e, document.content)
+    }
+    return document.title || ''
+  }
+
+export const getContent = ({ title }) => ({
   nodes: [
     {
       kind: 'block',
@@ -206,20 +220,7 @@ export type ThingType = typeof methods & {
 
 export class Thing extends Model {
   static getContent = getContent
-
-  static getTitle = document => {
-    // set title to first content node
-    try {
-      if (document.content) {
-        return (
-          document.content.document.nodes[0].nodes[0].text || document.title
-        )
-      }
-    } catch (e) {
-      console.log('error extracting title', e, document.content)
-    }
-    return document.title || ''
-  }
+  static getTitle = getTitle
 
   static props = {
     title: str,

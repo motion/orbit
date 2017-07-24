@@ -102,9 +102,13 @@ export default class AppStore {
     return this.stores && this.stores.LayoutStore && this.stores.LayoutStore[0]
   }
 
+  get root() {
+    return this.stores && this.stores.RootStore && this.stores.RootStore[0]
+  }
+
   get explorer() {
     return (
-      this.stores && this.stores.rootStore && this.stores.rootStore[0]
+      this.stores && this.stores.ExplorerStore && this.stores.ExplorerStore[0]
     )
   }
 

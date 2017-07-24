@@ -145,6 +145,7 @@ export default class Surface implements ViewType {
     chromeless,
     circular,
     hoverBackground,
+    highlightBackground,
     className,
     clickable,
     color,

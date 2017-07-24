@@ -14,6 +14,12 @@ class ThreadStore {
   @watch thread = () => Thread.get(this.props.id)
   replies = this.thread && this.thread.replies && this.thread.replies()
 
+  get items() {
+    const { thread } = this
+    const all = [...(this.replies || []), ...((thread && thread.updates) || [])]
+    return sortBy(all, i => +new Date(i.createdAt))
+  }
+
   assignTo = name => {
     const { thread } = this.props
     thread.addUpdate({ type: 'assign', to: name })
@@ -42,12 +48,6 @@ class ThreadStore {
 
   hasTag = name => {
     return includes(this.thread.tags(), name)
-  }
-
-  get items() {
-    const { thread } = this
-    const all = [...(this.replies || []), ...((thread && thread.updates) || [])]
-    return sortBy(all, i => +new Date(i.createdAt))
   }
 }
 
@@ -158,7 +158,7 @@ export default class ThreadPage {
             <Draft
               $draft
               isReply
-              parentId={store.thread.parentId}
+              parentId={store.thread.id}
               placeholder="Add your reply..."
             />
           </draft>

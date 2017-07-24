@@ -90,6 +90,7 @@ export default class Inbox {
               height: 'auto',
               padding: [10, 15, 10, 16],
               overflow: 'hidden',
+              highlightBackground: [0, 0, 0, 0.25],
             }}
             items={filteredThreads}
             // setTimeout speeds up navigation
@@ -138,32 +139,6 @@ export default class Inbox {
       position: 'relative',
       width: '100%',
       height: '100%',
-    },
-    create: {
-      width: 400,
-    },
-    draft: {
-      padding: [10, 18, 10, 0],
-      border: '1px solid #efefef',
-      borderRadius: 5,
-      marginTop: 10,
-      boxShadow: '0px 1px 0px #eee',
-    },
-    buttons: {
-      justifyContent: 'flex-end',
-    },
-    discard: {
-      opacity: 0.6,
-    },
-    draftSubmit: {
-      width: 60,
-    },
-    title: {
-      fontWeight: 'bold',
-      lineHeight: 100,
-    },
-    all: {
-      marginTop: 15,
     },
     bar: {
       flexFlow: 'row',

@@ -38,9 +38,9 @@ class Queries {
 @store
 class User {
   connected = false
-  user = null
-  localDb = null
-  remoteDb = null
+  user = false
+  localDb = false
+  remoteDb = false
   queries = {}
 
   get org() {
@@ -77,7 +77,7 @@ class User {
           this.queries.id = this.id
         }
       })
-    }, 1000)
+    }, 50)
 
     this.database = database
     this.documents = new DocumentModel()

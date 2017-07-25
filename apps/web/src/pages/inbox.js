@@ -40,7 +40,13 @@ export default class InboxPage {
                 {inbox.title}
               </UI.Title>
 
-              <UI.Button theme="green" color="#fff" icon="add" iconAfter>
+              <UI.Button
+                onClick={() => Router.go(Router.path + '/draft')}
+                theme="green"
+                color="#fff"
+                icon="add"
+                iconAfter
+              >
                 Create New
               </UI.Button>
             </title>

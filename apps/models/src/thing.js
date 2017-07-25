@@ -138,7 +138,7 @@ export const methods = {
     let doc = this
     while (!foundRoot) {
       crumbs = [doc, ...crumbs]
-      if (!doc.parentId || doc.parentId === User.org.id) {
+      if (doc && (!doc.parentId || doc.parentId === User.org.id)) {
         foundRoot = true
       } else {
         if (!doc) {

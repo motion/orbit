@@ -1,19 +1,24 @@
 // @flow
 import Router from '@mcro/router'
-import { start } from './start'
+import HomePage from './pages/home'
+import DocumentPage from './pages/document'
+import ThreadPage from './pages/thread'
+import InboxPage from './pages/inbox'
+import DraftPage from './pages/draft'
 
 let AppRouter
 
-const getRoutes = () => ({
-  '/': require('./pages/home').default,
-  'document/:id': require('./pages/document').default,
-  'thread/:id': require('./pages/thread').default,
-  'inbox/:id': require('./pages/inbox').default,
-})
-
 function runRouter() {
-  AppRouter = new Router({ routes: getRoutes() })
-  // because doing in installDevTools would break import orders
+  AppRouter = new Router({
+    routes: {
+      '/': HomePage,
+      'document/:id': DocumentPage,
+      'thread/:id': ThreadPage,
+      'inbox/:id': InboxPage,
+      '(document)(thread)(inbox)/:id/draft': DraftPage,
+    },
+  })
+  // because doing in installDevTools would break import order
   window.Router = AppRouter
 }
 
@@ -21,8 +26,7 @@ function runRouter() {
 if (module.hot) {
   module.hot.accept(() => {
     log('accept: ./router.js')
-    // runRouter()
-    // start(true)
+    runRouter()
   })
 }
 

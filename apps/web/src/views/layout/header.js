@@ -47,28 +47,15 @@ export default class Header {
               )
             }}
           </UI.SlotFill.Slot>
-          <UI.Popover
-            openOnClick
-            delay={500}
-            overlay={[0, 0, 0, 0.05]}
-            closeOnEsc
-            background
-            width={480}
-            borderRadius={8}
-            elevation={2}
-            target={
-              <UI.Button
-                chromeless
-                iconSize={20}
-                circular
-                margin={[0, 4]}
-                badge={2}
-                icon="circle-09"
-              />
-            }
-          >
-            <Notifications />
-          </UI.Popover>
+          <UI.Button
+            chromeless
+            iconSize={20}
+            circular
+            margin={[0, 4]}
+            badge={2}
+            icon="circle-09"
+            onClick={layoutStore.sidebar.ref('active').toggle}
+          />
         </rest>
       </header>
     )

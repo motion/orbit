@@ -360,14 +360,6 @@ export default class Children {
             />
           </UI.List>
         </UI.Popover>
-        <space />
-        <UI.Button
-          onClick={rootStore.ref('showBrowse').toggle}
-          circular
-          size={0.8}
-          icon="list"
-          css={{ position: 'relative', zIndex: 100 }}
-        />
         <fade $bottom />
       </children>
     )

@@ -9,6 +9,7 @@ import Draft from '~/views/inbox/draft'
 import { User } from '~/app'
 
 class SidebarStore {
+  show = 'list'
   filter = ''
   setFilter = e => {
     this.filter = e.target.value
@@ -72,11 +73,12 @@ export default class Sidebar {
                   closeOnEsc
                   overlay
                   background="#fff"
-                  width={540}
+                  width={store.show === 'list' ? 300 : 540}
                   borderRadius={8}
                   elevation={2}
                   ref={this.ref('popover').set}
                   onDidOpen={() => this.draftEditor && this.draftEditor.focus()}
+                  onClose={store.ref('show').setter('list')}
                   target={
                     <UI.Button
                       inline
@@ -90,11 +92,25 @@ export default class Sidebar {
                     />
                   }
                 >
-                  <Draft
-                    parentId={User.defaultInbox && User.defaultInbox.id}
-                    closePopover={() => this.popover && this.popover.close()}
-                    editorRef={this.ref('draftEditor').set}
-                  />
+                  <content>
+                    <UI.Theme if={store.show === 'list'} name="light">
+                      <UI.List itemProps={{ size: 2 }}>
+                        <UI.ListItem
+                          icon="paper"
+                          primary="Discussion"
+                          onClick={store.ref('show').setter('draft')}
+                        />
+                        <UI.ListItem icon="filesg" primary="Page" />
+                      </UI.List>
+                    </UI.Theme>
+
+                    <Draft
+                      if={store.show === 'draft'}
+                      parentId={User.defaultInbox && User.defaultInbox.id}
+                      closePopover={() => this.popover && this.popover.close()}
+                      editorRef={this.ref('draftEditor').set}
+                    />
+                  </content>
                 </UI.Popover>
               </end>
             </bar>

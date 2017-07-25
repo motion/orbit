@@ -194,7 +194,7 @@ class List {
       const props = {
         key: index,
         ...rowProps,
-        ...(isListItem ? passThroughProps : null),
+        ...(isListItem ? passThroughProps : itemProps),
         ...(isListItem ? positionProps : null),
       }
       if (controlled) {

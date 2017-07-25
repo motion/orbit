@@ -64,6 +64,7 @@ export default class Title extends React.Component {
     onMouseLeave,
     onFocus,
     onBlur,
+    style,
     css,
     ...props
   }: TitleProps) {
@@ -76,6 +77,7 @@ export default class Title extends React.Component {
     }
     return (
       <titleroot
+        style={style}
         css={{ ...props, ...css }}
         {...eventProps}
         onDoubleClick={this.onDoubleClick}

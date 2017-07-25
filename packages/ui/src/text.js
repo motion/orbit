@@ -124,6 +124,7 @@ export default class Text {
     onFocus,
     onBlur,
     getRef,
+    style,
     ...props
   }: Props) {
     const eventProps = {
@@ -141,6 +142,7 @@ export default class Text {
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
         ref={this.getRef}
+        style={style}
         css={{ ...props, ...css }}
         {...eventProps}
       >

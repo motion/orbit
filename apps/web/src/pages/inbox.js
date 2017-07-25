@@ -112,7 +112,7 @@ export default class InboxPage {
 
                         <date $$row $$justify="flex-end">
                           {item.tags().map(tag =>
-                            <UI.Badge color="#efefef">
+                            <UI.Badge key={tag} color="#efefef">
                               {tag}
                             </UI.Badge>
                           )}

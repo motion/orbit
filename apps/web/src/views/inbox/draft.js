@@ -124,12 +124,7 @@ export default class Draft {
                 </UI.Text>
               </status>
               <UI.Row spaced>
-                <UI.Button
-                  $discard
-                  onClick={store.destroy}
-                  chromeless
-                  opacity={0.5}
-                >
+                <UI.Button onClick={store.destroy} chromeless opacity={0.5}>
                   Cancel
                 </UI.Button>
                 <UI.Button icon="send" onClick={store.send}>

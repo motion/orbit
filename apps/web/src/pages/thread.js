@@ -128,6 +128,7 @@ export default class ThreadPage {
           <thread $$row>
             <doc $$flex>
               <DocumentView document={store.thread} isPrimaryDocument />
+              <space css={{ height: 10 }} />
             </doc>
             <Actions css={{ alignSelf: 'flex-start' }} />
           </thread>

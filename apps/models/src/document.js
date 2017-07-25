@@ -63,18 +63,20 @@ export class Document extends Thing {
       })
       .where('parentId')
       .eq(id)
-    // .sort({ createdAt: 'desc' })
+      .sort({ createdAt: 'desc' })
   }
 
-  @query all = () => this.collection.find({ threadId: { $exists: false } })
-  // .find({ createdAt: { $gt: null } })
-  // .sort({ createdAt: 'asc' })
+  @query
+  all = () =>
+    this.collection
+      .find({ threadId: { $exists: false } })
+      .sort({ createdAt: 'asc' })
 
   @query
   recent = (limit: number = 10) =>
     this.collection
       .find({ draft: { $ne: true }, threadId: { $exists: false } })
-      // .sort({ createdAt: 'desc' })
+      .sort({ createdAt: 'desc' })
       .limit(limit)
 
   @query
@@ -82,15 +84,13 @@ export class Document extends Thing {
     if (!id) {
       return null
     }
-    return (
-      this.collection
-        .find({
-          starredBy: { $elemMatch: { $eq: id } },
-          createdAt: { $gt: null },
-        })
-        // .sort({ createdAt: 'asc' })
-        .limit(50)
-    )
+    return this.collection
+      .find({
+        starredBy: { $elemMatch: { $eq: id } },
+        createdAt: { $gt: null },
+      })
+      .sort({ createdAt: 'asc' })
+      .limit(50)
   }
 }
 

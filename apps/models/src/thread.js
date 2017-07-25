@@ -15,14 +15,17 @@ class Thread extends Thing {
 
   methods = extend(methods, {
     replies() {
-      return Reply.find({ draft: false, parentId: this.id, sort: 'createdAt' })
+      return Reply.collection
+        .find({ draft: false, parentId: this.id })
+        .sort('createdAt')
     },
     lastReply() {
-      return Reply.findOne({
-        draft: false,
-        parentId: this.id,
-        sort: 'createdAt',
-      })
+      return Reply.collection
+        .findOne({
+          draft: false,
+          parentId: this.id,
+        })
+        .sort('createdAt')
     },
   })
 }

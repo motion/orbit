@@ -322,7 +322,7 @@ export default class Children {
           closeOnClick
           towards="left"
           target={
-            <UI.Button circular size={1} margin={[0, -3]} icon="simple-add" />
+            <UI.Button circular size={1.2} margin={[0, -5]} icon="simple-add" />
           }
         >
           <UI.List
@@ -330,7 +330,7 @@ export default class Children {
             chromeless
             borderRadius={5}
             padding={2}
-            width={120}
+            width={140}
             itemProps={{
               size: 0.9,
               color: [0, 0, 0, 0.4],
@@ -353,11 +353,7 @@ export default class Children {
               icon="google"
               primary="GDoc"
             />
-            <UI.ListItem
-              onClick={store.createInbox}
-              icon="attach"
-              primary="Attachment"
-            />
+            <UI.Input icon="attach" />
           </UI.List>
         </UI.Popover>
         <fade $bottom />

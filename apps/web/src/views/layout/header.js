@@ -48,10 +48,11 @@ export default class Header {
             }}
           </UI.SlotFill.Slot>
           <UI.Button
+            size={1}
             chromeless
             iconSize={20}
             circular
-            margin={[0, 4]}
+            margin={[0, 6]}
             badge={2}
             icon="circle-09"
             onClick={layoutStore.sidebar.ref('active').toggle}

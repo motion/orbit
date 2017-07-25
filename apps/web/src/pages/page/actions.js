@@ -43,7 +43,7 @@ export default class DocPageActions {
         {...props}
       >
         <UI.Button
-          size={1.25}
+          size={1}
           margin={[0, -9, 0]}
           circular
           borderWidth={1}

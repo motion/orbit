@@ -9,7 +9,7 @@ import Surface from './surface'
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Segment implements ViewType<Props> {
+export default class row implements ViewType<Props> {
   props: Props & {
     active?: number,
     defaultActive?: number,
@@ -133,7 +133,14 @@ export default class Segment implements ViewType<Props> {
     }
 
     return (
-      <Surface noElement noWrap background="transparent" $segment {...props}>
+      <Surface
+        tagName="row"
+        noElement
+        noWrap
+        background="transparent"
+        $row
+        {...props}
+      >
         <label if={label}>
           {label}
         </label>
@@ -143,7 +150,7 @@ export default class Segment implements ViewType<Props> {
   }
 
   static style = {
-    segment: {
+    row: {
       flexFlow: 'row',
       alignItems: 'center',
       userSelect: 'none',
@@ -156,7 +163,7 @@ export default class Segment implements ViewType<Props> {
   }
 
   static theme = props => ({
-    segment: {
+    row: {
       flex: props.flex === true ? 1 : props.flex,
       ...(props.reverse && {
         flexFlow: 'row-reverse',

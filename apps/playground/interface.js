@@ -24,23 +24,23 @@ class Playground {
           </row>
 
           <row $$row>
-            <UI.Segment>
+            <UI.Row>
               <UI.Button icon="world">Hello World</UI.Button>
               <UI.Button icon="world">Hello World</UI.Button>
               <UI.Button icon="world">Hello World</UI.Button>
-            </UI.Segment>
+            </UI.Row>
 
-            <UI.Segment>
+            <UI.Row>
               <UI.Button circular icon="eye" />
               <UI.Button circular icon="eye" />
               <UI.Button circular icon="eye" />
-            </UI.Segment>
+            </UI.Row>
 
-            <UI.Segment>
+            <UI.Row>
               <UI.Button circular icon="eye" />
               <UI.Button circular icon="eye" />
               <UI.Button circular icon="eye" />
-            </UI.Segment>
+            </UI.Row>
           </row>
         </section>
 

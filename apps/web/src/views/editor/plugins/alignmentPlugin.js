@@ -12,12 +12,12 @@ export default class Alignment {
         openOnHover
         background="transparent"
       >
-        <UI.Segment>
+        <UI.Row>
           <UI.Button icon="align-left" />
           <UI.Button icon="align-right" />
           <UI.Button icon="align-center" />
           <UI.Button icon="align-justify" />
-        </UI.Segment>
+        </UI.Row>
       </UI.Popover>,
   ]
 

@@ -66,7 +66,7 @@ export default class SignupStep2 {
               {store.members.map((_, index) =>
                 <row key={index}>
                   <UI.Field row>
-                    <UI.Segment flex>
+                    <UI.Row flex>
                       <UI.Input
                         {...fieldProps}
                         placeholder="Name"
@@ -77,7 +77,7 @@ export default class SignupStep2 {
                         placeholder="Email"
                         name={`email${index}`}
                       />
-                    </UI.Segment>
+                    </UI.Row>
                   </UI.Field>
                 </row>
               )}

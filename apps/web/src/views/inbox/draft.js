@@ -123,14 +123,19 @@ export default class Draft {
                   Remind me <b>in 2 days</b> if no reply
                 </UI.Text>
               </status>
-              <UI.Segment spaced>
-                <UI.Button $discard onClick={store.destroy} chromeless>
+              <UI.Row spaced>
+                <UI.Button
+                  $discard
+                  onClick={store.destroy}
+                  chromeless
+                  opacity={0.5}
+                >
                   Cancel
                 </UI.Button>
                 <UI.Button icon="send" onClick={store.send}>
                   Send
                 </UI.Button>
-              </UI.Segment>
+              </UI.Row>
             </actions>
           </draft>
         </UI.Theme>

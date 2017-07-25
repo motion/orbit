@@ -20,7 +20,7 @@ export default class SelectBar {
       >
         <bar $$row>
           {pluginCategories.map(category =>
-            <UI.Segment margin={[0, 5]} key={category}>
+            <UI.Row margin={[0, 5]} key={category}>
               {editorStore.helpers
                 .contextButtonsFor(category)
                 .map((button, i) =>
@@ -28,7 +28,7 @@ export default class SelectBar {
                     {button}
                   </UI.PassProps>
                 )}
-            </UI.Segment>
+            </UI.Row>
           )}
         </bar>
       </UI.Popover>

@@ -12,7 +12,7 @@ import Actions from './page/actions'
 const { ago } = timeAgo()
 
 class ThreadStore {
-  showReply = false
+  showReply = true
 
   @watch thread = () => Thread.get(this.props.id)
   @watch
@@ -106,6 +106,22 @@ export default class ThreadPage {
       return null
     }
 
+    const btnProps = {
+      size: 0.9,
+      spaced: true,
+      height: 24,
+      padding: [0, 5],
+      hoverBackground: 'transparent',
+      glowProps: {
+        scale: 1,
+        color: [0, 0, 0, 0.1],
+        blur: 20,
+        opacity: 1,
+        zIndex: -1,
+        backdropFilter: 'contrast(200%)',
+      },
+    }
+
     return (
       <Page>
         <content>
@@ -125,9 +141,8 @@ export default class ThreadPage {
                 <UI.Button
                   key={name}
                   highlight={store.thread.assignedTo() === name}
-                  inline
+                  {...btnProps}
                   $button
-                  glow={false}
                   onClick={() => store.assignTo(name)}
                 >
                   {capitalize(name)}
@@ -142,8 +157,7 @@ export default class ThreadPage {
                 <UI.Button
                   key={name}
                   highlight={store.hasTag(name)}
-                  inline
-                  glow={false}
+                  {...btnProps}
                   $button
                   onClick={() => store.toggleTag(name)}
                 >
@@ -197,16 +211,18 @@ export default class ThreadPage {
     },
     content: {
       padding: [0, 0, 20],
+      minHeight: 300,
     },
     button: {
       marginLeft: 10,
     },
     draft: {
-      padding: 15,
+      padding: [15, 10],
     },
+    actions: {},
     action: {
       alignItems: 'center',
-      padding: [0, 30, 15],
+      padding: [8, 30, 0, 20],
     },
     item: {
       position: 'relative',

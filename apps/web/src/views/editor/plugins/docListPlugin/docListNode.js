@@ -1,7 +1,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import node from '~/views/editor/node'
-import { Popover, Segment, Button } from '@mcro/ui'
+import { Popover, Row, Button } from '@mcro/ui'
 import CardList from './lists/cardListNode'
 import GridList from './lists/gridListNode'
 import VoteList from './lists/voteListNode'
@@ -35,7 +35,7 @@ export default class DocList {
         <wrap>
           <Button onMouseDown={listStore.createDoc} icon="add" />
           <Popover target={<Button icon="card" />} openOnHover>
-            <Segment>
+            <Row>
               <Button
                 active={listType === 'grid'}
                 icon="grid"
@@ -56,7 +56,7 @@ export default class DocList {
                 icon="list"
                 onClick={() => listStore.setType(node, 'list')}
               />
-            </Segment>
+            </Row>
           </Popover>
         </wrap>
       )

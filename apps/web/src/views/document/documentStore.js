@@ -68,14 +68,14 @@ export default class DocumentStore {
       ],
       () => {
         if (this.canSave) {
-          this.save()
+          this.debouncedSave()
         }
       }
     )
   }
 
   // you'll want this to be false if setting from other places (e.g. sidebar)
-  save = debounce((setContentFromEditor = true) => {
+  save = (setContentFromEditor = true) => {
     this.lastSavedRev = this.document._rev
     this.lastSavedState = this.editor.contentState
     if (setContentFromEditor) {
@@ -86,9 +86,14 @@ export default class DocumentStore {
     print('saving...', this.document._id, this.document._rev, this.document)
     this.document.save()
     console.log('saved doc')
-  }, 300)
+  }
+
+  debouncedSave = debounce(this.save, 300)
 
   get canSave() {
+    if (this.props.manualSave) {
+      return false
+    }
     if (!this.document) {
       return false
     }

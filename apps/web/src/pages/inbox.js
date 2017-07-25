@@ -45,21 +45,21 @@ export default class InboxPage {
             <filterbar $$row $$spaceBetween>
               <begin $$row $$centered>
                 <UI.Checkbox opacity={0.5} margin={[0, 10, 0, 5]} />
-                <UI.Segment>
+                <UI.Row>
                   <UI.Button chromeless inline icon="book-open">
                     6 Open
                   </UI.Button>
                   <UI.Button chromeless opacity={0.5} inline icon="check">
                     36 Done
                   </UI.Button>
-                </UI.Segment>
+                </UI.Row>
               </begin>
 
               <end $$row $$centered>
-                <UI.Segment>
+                <UI.Row>
                   <UI.Dropdown>Filter</UI.Dropdown>
                   <UI.Dropdown>Sort</UI.Dropdown>
-                </UI.Segment>
+                </UI.Row>
 
                 <UI.Button
                   circular

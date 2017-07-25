@@ -27,6 +27,10 @@ export default class DocumentView {
     }
   }
 
+  get docStore() {
+    return this.props.docStore
+  }
+
   render({
     editorProps,
     inline,
@@ -37,11 +41,17 @@ export default class DocumentView {
     placeholder,
     isPrimaryDocument,
     document,
+    manualSave,
     focus,
+    getRef,
     ...props
   }: Props) {
     if (!docStore.document) {
       return <loading />
+    }
+
+    if (getRef) {
+      getRef(this)
     }
 
     return (
@@ -67,7 +77,6 @@ export default class DocumentView {
   static style = {
     docview: {
       maxWidth: '100%',
-      minHeight: 200,
     },
     loading: {
       flex: 1,

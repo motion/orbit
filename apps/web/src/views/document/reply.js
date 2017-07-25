@@ -4,28 +4,69 @@ import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
 import Gemstone from '~/views/kit/gemstone'
 import timeAgo from 'time-ago'
+import { User } from '~/app'
 
 const { ago } = timeAgo()
 
-@view
+@view({
+  store: class ReplyStore {
+    editing = false
+    docStore = null
+
+    save = () => {
+      this.docStore.save()
+      this.editing = false
+    }
+  },
+})
 export default class Reply {
-  render({ doc, embed }) {
+  render({ store, doc, embed }) {
     return (
       <message $embed={embed}>
+        <title $$centered $$row>
+          <UI.Title size={0.9} color="#000" marginRight={10}>
+            {doc.authorId}
+          </UI.Title>
+          <UI.Title size={0.9} color="#000" opacity={0.2}>
+            {ago(doc.createdAt)}
+          </UI.Title>
+        </title>
         <doc>
-          <DocumentView if={!embed} readOnly noTitle document={doc} />
+          <DocumentView
+            if={!embed}
+            readOnly={!store.editing}
+            focus={store.editing}
+            noTitle
+            document={doc}
+            getRef={view => (store.docStore = view.docStore)}
+            manualSave
+          />
         </doc>
         <meta>
           <metacontents>
-            <before>
-              <UI.Title size={0.9} color="#000">
-                {doc.authorId}
-              </UI.Title>
-              <UI.Text size={0.9} color="#999">
-                {ago(doc.createdAt)}
+            <UI.Text size={0.9} color="#999" />
+            <actions>
+              <UI.Text
+                if={!store.editing && User.id === doc.authorId}
+                onClick={store.ref('editing').toggle}
+              >
+                Edit
               </UI.Text>
-            </before>
-            <Gemstone id={doc.authorId} marginLeft={10} />
+
+              <UI.Row spaced itemProps={{ glow: false }} if={store.editing}>
+                <UI.Button
+                  chromeless
+                  onClick={store.ref('editing').toggle}
+                  opacity={0.4}
+                >
+                  Delete
+                </UI.Button>
+                <UI.Button chromeless onClick={store.ref('editing').toggle}>
+                  Cancel
+                </UI.Button>
+                <UI.Button onClick={store.save}>Save</UI.Button>
+              </UI.Row>
+            </actions>
           </metacontents>
         </meta>
       </message>
@@ -34,19 +75,26 @@ export default class Reply {
 
   static style = {
     message: {
-      padding: [25, 20],
-      flexFlow: 'row',
+      padding: [20, 25],
+      // flexFlow: 'row',
       alignItems: 'flex-start',
       position: 'relative',
     },
+    meta: {
+      width: '100%',
+    },
     metacontents: {
-      textAlign: 'right',
+      flex: 1,
+      justifyContent: 'space-between',
       flexFlow: 'row',
-      width: 120,
+    },
+    user: {
+      flexFlow: 'row',
     },
     // leaves room for left bar
     doc: {
-      marginLeft: -25,
+      marginLeft: -28,
+      padding: [20, 0],
       flex: 1,
     },
     fake: {
@@ -56,6 +104,7 @@ export default class Reply {
     },
     actions: {
       justifyContent: 'space-between',
+      flexFlow: 'row',
     },
   }
 }

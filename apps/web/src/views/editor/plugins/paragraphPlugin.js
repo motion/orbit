@@ -56,10 +56,10 @@ export default class TextPlugin {
         openOnHover
         background="transparent"
       >
-        <UI.Segment>
+        <UI.Row>
           <UI.Button theme="dark" icon="textcolor" />
           <UI.Button icon="textbackground" />
-        </UI.Segment>
+        </UI.Row>
       </UI.Popover>,
   ]
 

@@ -95,14 +95,14 @@ export default class DocPageActions {
 
             <UI.Form onSubmit={User.org && User.org.inviteMember}>
               <UI.Title>Invite:</UI.Title>
-              <UI.Segment>
+              <UI.Row>
                 <UI.Input
                   name="email"
                   type="email"
                   placeholder="my@friend.com"
                 />
                 <UI.Input type="submit" icon="3send" />
-              </UI.Segment>
+              </UI.Row>
             </UI.Form>
 
             <space css={{ height: 8 }} />

@@ -42,7 +42,7 @@ export default class Notifications {
             left: 20,
           }}
         >
-          <UI.Segment>
+          <UI.Row>
             {['Docs', 'Tasks'].map((text, i) =>
               <UI.Button
                 key={i}
@@ -60,7 +60,7 @@ export default class Notifications {
                 {text}
               </UI.Button>
             )}
-          </UI.Segment>
+          </UI.Row>
         </contents>
         <rest $$flex>
           <Projects />

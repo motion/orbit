@@ -60,10 +60,28 @@ export default class Title extends React.Component {
     fontSize,
     fontWeight,
     flex,
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
+    onHover,
+    onFocus,
+    onBlur,
+    css,
     ...props
   }: TitleProps) {
+    const eventProps = {
+      onClick,
+      onMouseEnter,
+      onMouseLeave,
+      onFocus,
+      onBlur,
+    }
     return (
-      <titleroot $$flex={flex} {...props} onDoubleClick={this.onDoubleClick}>
+      <titleroot
+        css={{ flex, ...props, ...css }}
+        {...eventProps}
+        onDoubleClick={this.onDoubleClick}
+      >
         {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
         <collapse
           if={collapsable}

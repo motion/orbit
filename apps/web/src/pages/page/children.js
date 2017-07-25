@@ -58,7 +58,6 @@ class Item {
         {...props}
       >
         <UI.Surface
-          overflow="hidden"
           background="transparent"
           icon={
             doc.type === 'document'
@@ -148,6 +147,7 @@ class Item {
     },
     title: {
       marginBottom: 20,
+      marginRight: -5,
       fontWeight: 300,
       fontSize: 16,
       lineHeight: '1.12rem',
@@ -322,7 +322,7 @@ export default class Children {
           closeOnClick
           towards="left"
           target={
-            <UI.Button circular size={1.2} margin={[0, -5]} icon="simple-add" />
+            <UI.Button circular size={1} margin={[0, -3]} icon="simple-add" />
           }
         >
           <UI.List
@@ -330,11 +330,9 @@ export default class Children {
             chromeless
             borderRadius={5}
             padding={2}
-            width={140}
+            width={90}
             itemProps={{
               size: 0.9,
-              color: [0, 0, 0, 0.4],
-              hoverColor: [0, 0, 0, 0.7],
             }}
           >
             <UI.ListItem
@@ -347,13 +345,6 @@ export default class Children {
               icon="paper"
               primary="Inbox"
             />
-            <UI.ListItem
-              if={false}
-              onClick={store.createInbox}
-              icon="google"
-              primary="GDoc"
-            />
-            <UI.Input icon="attach" />
           </UI.List>
         </UI.Popover>
         <fade $bottom />

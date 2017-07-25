@@ -27,7 +27,7 @@ export default class Login {
     return (
       <login if={!User.loggedIn} $$draggable {...props}>
         <UI.Form flex $$undraggable onSubmit={store.finish}>
-          <UI.Segment>
+          <UI.Row>
             <UI.Input
               $error={store.error}
               disabled={store.loggingIn}
@@ -46,7 +46,7 @@ export default class Login {
             <UI.Button type="submit" icon={store.loggingIn ? 'time' : 'lock'}>
               {store.loggingIn ? 'Logging in...' : 'Login'}
             </UI.Button>
-          </UI.Segment>
+          </UI.Row>
         </UI.Form>
       </login>
     )

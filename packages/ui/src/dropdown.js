@@ -23,7 +23,6 @@ export default class Dropdown {
 
   static defaultProps = {
     width: 100,
-    color: [255, 255, 255, 0.5],
   }
 
   render({
@@ -40,7 +39,7 @@ export default class Dropdown {
   }: Props) {
     const arrow = (
       <icon $arrow>
-        <Arrow theme="light" size={8} color={color} />
+        <Arrow size={8} />
       </icon>
     )
 
@@ -58,13 +57,12 @@ export default class Dropdown {
           target={
             <Button
               if={!noWrap}
-              inline
+              glow={false}
               iconAfter
               icon={arrow}
-              color={color}
               {...buttonProps}
             >
-              test
+              {children}
             </Button>
           }
           {...popoverProps}

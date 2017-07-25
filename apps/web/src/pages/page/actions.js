@@ -12,7 +12,7 @@ const { ago } = timeAgo()
 @view.attach('rootStore')
 @view
 export default class DocPageActions {
-  render({ rootStore: { document } }) {
+  render({ rootStore: { document }, ...props }) {
     if (!document || document === null) {
       return null
     }
@@ -38,9 +38,9 @@ export default class DocPageActions {
           justifyContent: 'center',
           padding: [18, 0, 0],
           marginRight: 13,
-          alignSelf: 'flex-end',
           pointerEvents: 'auto',
         }}
+        {...props}
       >
         <UI.Button
           size={1.25}

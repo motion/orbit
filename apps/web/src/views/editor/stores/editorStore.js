@@ -33,15 +33,12 @@ export default class EditorStore implements StoreType {
   onlyNode = this.props.onlyNode
   rootStore = this.props.rootStore
 
-  start({ rootStore, onEditor, getRef, rules, plugins }: Props) {
+  start({ rootStore, onEditor, rules, plugins }: Props) {
     this.rules = rules
     this.setup(plugins)
 
     if (onEditor) {
       onEditor(this)
-    }
-    if (getRef) {
-      getRef(this)
     }
 
     this.watch(() => {

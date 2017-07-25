@@ -37,6 +37,7 @@ export default class DocumentView {
     placeholder,
     isPrimaryDocument,
     document,
+    focus,
     ...props
   }: Props) {
     if (!docStore.document) {
@@ -53,9 +54,10 @@ export default class DocumentView {
           key={docStore.document.id}
           readOnly={readOnly}
           inline={inline}
-          getRef={this.onEditor}
+          onEditor={this.onEditor}
           noTitle={noTitle}
           placeholder={placeholder}
+          focus={focus}
           {...editorProps}
         />
       </docview>

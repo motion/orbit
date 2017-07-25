@@ -7,10 +7,13 @@ import { sortBy, includes, capitalize } from 'lodash'
 import timeAgo from 'time-ago'
 import DocumentView from '~/views/document'
 import Page from './page'
+import Actions from './page/actions'
 
 const { ago } = timeAgo()
 
 class ThreadStore {
+  showReply = false
+
   @watch thread = () => Thread.get(this.props.id)
   @watch
   replies = [
@@ -104,9 +107,14 @@ export default class ThreadPage {
     }
 
     return (
-      <Page showActions>
+      <Page>
         <content>
-          <DocumentView document={store.thread} isPrimaryDocument />
+          <thread $$row>
+            <doc $$flex>
+              <DocumentView document={store.thread} isPrimaryDocument />
+            </doc>
+            <Actions css={{ alignSelf: 'flex-start' }} />
+          </thread>
 
           <actions if={store.thread}>
             <action $$row>
@@ -156,13 +164,24 @@ export default class ThreadPage {
             </item>
           )}
 
-          <draft $item if={store.thread}>
+          <draft if={store.thread} $item>
             <separator />
+            <draft if={!store.showReply}>
+              <UI.Button
+                onClick={store.ref('showReply').toggle}
+                theme="green"
+                alignSelf="flex-end"
+              >
+                Reply
+              </UI.Button>
+            </draft>
             <Draft
+              if={store.showReply}
               $draft
               isReply
               parentId={store.thread.id}
               placeholder="Add your reply..."
+              focus
             />
           </draft>
         </replies>
@@ -181,7 +200,7 @@ export default class ThreadPage {
       marginLeft: 10,
     },
     draft: {
-      padding: [15, 0, 15, 15],
+      padding: 15,
     },
     action: {
       alignItems: 'center',

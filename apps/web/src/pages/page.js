@@ -104,7 +104,12 @@ export default class Page {
         </pagecontents>
 
         <sidebar if={showChildren || showActions}>
-          <Actions if={showActions} />
+          <Actions
+            if={showActions}
+            style={{
+              alignSelf: 'flex-end',
+            }}
+          />
           <Children if={showChildren} />
           <line />
           <fade />

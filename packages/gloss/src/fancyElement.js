@@ -16,6 +16,7 @@ const arrayOfObjectsToObject = (arr: Array<Object>) => {
 const ogCreateElement = React.createElement.bind(React)
 const TAG_NAME_MAP = {
   title: 'xtitle',
+  body: 'xbody',
   meta: 'xmeta',
   head: 'xhead',
 }

@@ -90,6 +90,7 @@ export default class Draft {
     store: { draft },
     closePopover,
     recStore,
+    focus,
     ...props
   }) {
     return (
@@ -105,6 +106,7 @@ export default class Draft {
                 noTitle={isReply}
                 editorRef={editorRef}
                 placeholder={placeholder}
+                focus={focus}
               />
             </draftdoc>
             <actions if={draft} $$row>
@@ -142,7 +144,7 @@ export default class Draft {
     },
     draftdoc: {
       // padding: [0, 10],
-      margin: [0, -15],
+      marginLeft: -15,
     },
     name: {
       fontWeight: 'bold',

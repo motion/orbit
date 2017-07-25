@@ -303,7 +303,6 @@ export default class Model {
 
     // AND NOW
     this.connected = true
-    console.log('connected', this.title)
   }
 
   async dispose() {

@@ -100,7 +100,7 @@ class Item {
               alignSelf: 'flex-start',
               transform: {
                 scale: 0.3,
-                y: -18,
+                y: -19,
                 x: -18,
               },
               boxShadow: ['inset  0 0 100px 100px #fff'],

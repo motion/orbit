@@ -5,9 +5,10 @@ const { ago } = timeAgo()
 
 export default ({ author, date, staticDate, doc, ...props }) =>
   <title $$row css={props}>
-    <UI.Title size={0.9} color="#000" marginRight={10}>
+    <UI.Title size={0.9} color="#888" marginRight={10}>
       {author || doc.authorId}
     </UI.Title>
+    <thing $$flex />
     <UI.Title size={0.9} color="#000" opacity={0.2}>
       {staticDate || ago(date || doc.updatedAt)}
     </UI.Title>

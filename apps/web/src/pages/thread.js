@@ -62,10 +62,10 @@ class Update {
     return (
       <update $$row>
         <tag $$row if={update.type === 'tag'}>
-          Nick added the tag <highlight>&nbsp;{update.name}</highlight>
+          Nick tagged <highlight>&nbsp;{update.name}</highlight>
         </tag>
         <tag $$row if={update.type === 'tagRemove'}>
-          Nick removed the tag <highlight>&nbsp;{update.name}</highlight>
+          Nick untagged <highlight>&nbsp;{update.name}</highlight>
         </tag>
         <assign $$row if={update.type === 'assign'}>
           Nick assigned <highlight>&nbsp;{update.to}</highlight>
@@ -79,12 +79,12 @@ class Update {
 
   static style = {
     update: {
-      borderTop: [1, 'dotted', '#eee'],
+      borderTop: [1, 'dotted', '#f2f2f2'],
       justifyContent: 'space-between',
-      padding: [10, 25],
-      fontSize: 14,
+      padding: [12, 25],
+      fontSize: 13,
       borderRadius: 5,
-      opacity: 0.7,
+      opacity: 0.5,
     },
     highlight: {
       fontWeight: 600,
@@ -195,7 +195,13 @@ export default class ThreadPage {
             </draft>
 
             <showndraft if={store.showReply}>
-              <ReplyTitle marginLeft={15} doc={store.thread} staticDate="now" />
+              <title css={{ marginRight: 15 }}>
+                <ReplyTitle
+                  marginLeft={15}
+                  doc={store.thread}
+                  staticDate="now"
+                />
+              </title>
               <Draft
                 $draft
                 isReply

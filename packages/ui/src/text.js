@@ -117,9 +117,22 @@ export default class Text {
     opacity,
     size,
     tagName,
+    css,
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
+    onFocus,
+    onBlur,
     getRef,
     ...props
   }: Props) {
+    const eventProps = {
+      onClick,
+      onMouseEnter,
+      onMouseLeave,
+      onFocus,
+      onBlur,
+    }
     return (
       <text
         tagName={tagName}
@@ -128,7 +141,8 @@ export default class Text {
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
         ref={this.getRef}
-        {...props}
+        css={{ ...props, ...css }}
+        {...eventProps}
       >
         {!ellipse && children}
         <span if={ellipse} $ellipse $$ellipse>

@@ -141,6 +141,7 @@ export default class Draft {
   static style = {
     draft: {
       padding: [0, 15],
+      width: '100%',
     },
     draftdoc: {
       // padding: [0, 10],
@@ -161,6 +162,7 @@ export default class Draft {
       opacity: 0.7,
     },
     actions: {
+      marginTop: 10,
       padding: [10, 0],
       justifyContent: 'space-between',
     },

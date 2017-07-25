@@ -8,6 +8,7 @@ import timeAgo from 'time-ago'
 import DocumentView from '~/views/document'
 import Page from './page'
 import Actions from './page/actions'
+import ReplyTitle from '~/views/document/replyTitle'
 
 const { ago } = timeAgo()
 
@@ -192,14 +193,17 @@ export default class ThreadPage {
                 Reply
               </UI.Button>
             </draft>
-            <Draft
-              if={store.showReply}
-              $draft
-              isReply
-              parentId={store.thread.id}
-              placeholder="Add your reply..."
-              focus
-            />
+
+            <showndraft if={store.showReply}>
+              <ReplyTitle marginLeft={15} doc={store.thread} staticDate="now" />
+              <Draft
+                $draft
+                isReply
+                parentId={store.thread.id}
+                placeholder="Your reply..."
+                focus
+              />
+            </showndraft>
           </draft>
         </replies>
       </Page>
@@ -224,6 +228,9 @@ export default class ThreadPage {
     action: {
       alignItems: 'center',
       padding: [8, 30, 0, 20],
+    },
+    showndraft: {
+      alignItems: 'stretch',
     },
     item: {
       position: 'relative',

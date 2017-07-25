@@ -2,11 +2,8 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
-import Gemstone from '~/views/kit/gemstone'
-import timeAgo from 'time-ago'
 import { User } from '~/app'
-
-const { ago } = timeAgo()
+import ReplyTitle from './replyTitle'
 
 @view({
   store: class ReplyStore {
@@ -23,14 +20,7 @@ export default class Reply {
   render({ store, doc, embed }) {
     return (
       <message $embed={embed}>
-        <title $$centered $$row>
-          <UI.Title size={0.9} color="#000" marginRight={10}>
-            {doc.authorId}
-          </UI.Title>
-          <UI.Title size={0.9} color="#000" opacity={0.2}>
-            {ago(doc.createdAt)}
-          </UI.Title>
-        </title>
+        <ReplyTitle doc={doc} />
         <doc>
           <DocumentView
             if={!embed}
@@ -77,7 +67,7 @@ export default class Reply {
     message: {
       padding: [20, 25],
       // flexFlow: 'row',
-      alignItems: 'flex-start',
+      alignItems: 'stretch',
       position: 'relative',
     },
     meta: {

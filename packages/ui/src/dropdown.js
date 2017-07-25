@@ -39,7 +39,7 @@ export default class Dropdown {
   }: Props) {
     const arrow = (
       <icon $arrow>
-        <Arrow size={8} />
+        <Arrow color="#000" size={8} />
       </icon>
     )
 
@@ -60,6 +60,7 @@ export default class Dropdown {
               glow={false}
               iconAfter
               icon={arrow}
+              borderRadius={100}
               {...buttonProps}
             >
               {children}
@@ -92,10 +93,6 @@ export default class Dropdown {
     arrow: {
       transform: {
         y: 1,
-      },
-      opacity: 0.4,
-      '&:hover': {
-        opacity: 1,
       },
     },
   }

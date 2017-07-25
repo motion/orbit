@@ -355,7 +355,7 @@ export default class Surface implements ViewType {
   }
 
   static inlineStyle = {
-    margin: [-3, -3],
+    margin: [-3, 0],
     borderRadius: 1000,
   }
 

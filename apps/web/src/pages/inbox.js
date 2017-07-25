@@ -39,35 +39,36 @@ export default class InboxPage {
               <UI.Title size={2}>
                 {inbox.title}
               </UI.Title>
-
-              <UI.Button
-                onClick={() => Router.go(Router.path + '/draft')}
-                theme="green"
-                color="#fff"
-                icon="add"
-                iconAfter
-              >
-                Create New
-              </UI.Button>
             </title>
 
             <filterbar $$row $$spaceBetween>
               <begin $$row $$centered>
                 <UI.Checkbox margin={[0, 10, 0, 5]} />
                 <UI.Segment>
-                  <UI.Button highlight icon="book-open">
+                  <UI.Button chromeless inline icon="book-open">
                     6 Open
                   </UI.Button>
-                  <UI.Button icon="check">36 Closed</UI.Button>
+                  <UI.Button chromeless opacity={0.5} inline icon="check">
+                    36 Closed
+                  </UI.Button>
                 </UI.Segment>
               </begin>
 
-              <UI.Segment>
-                <UI.Dropdown>Author</UI.Dropdown>
-                <UI.Dropdown>Labels</UI.Dropdown>
-                <UI.Dropdown>Assignee</UI.Dropdown>
-                <UI.Dropdown>Sort</UI.Dropdown>
-              </UI.Segment>
+              <end $$row $$centered>
+                <UI.Segment>
+                  <UI.Dropdown>Filter</UI.Dropdown>
+                  <UI.Dropdown>Sort</UI.Dropdown>
+                </UI.Segment>
+
+                <UI.Button
+                  circular
+                  onClick={() => Router.go(Router.path + '/draft')}
+                  icon="add"
+                  iconAfter
+                  size={1.5}
+                  margin={[-20, 0, -20, 15]}
+                />
+              </end>
             </filterbar>
           </heading>
 

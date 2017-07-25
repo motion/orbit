@@ -18,6 +18,7 @@ class InboxPageStore {
   threads = () =>
     Thread.find({
       parentId: this.inbox ? this.inbox.id : undefined,
+      draft: { $ne: true },
     })
 }
 

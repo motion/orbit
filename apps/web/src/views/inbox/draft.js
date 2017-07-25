@@ -2,6 +2,7 @@ import { view, watch, HotKeys } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
 import { Reply, Thread } from '~/app'
+import Router from '~/router'
 
 const REC_SPEED = 800
 
@@ -42,14 +43,19 @@ class DraftStore {
   }
 
   start() {
-    if (!this.isReply) setTimeout(this.getRec, REC_SPEED)
+    if (!this.isReply) {
+      setTimeout(this.getRec, REC_SPEED)
+    }
   }
 
   send = async () => {
     console.log('in send')
     this.draft.draft = false
     await this.draft.save()
-    if (!this.isReply) Router.go(this.draft.url())
+
+    if (!this.isReply) {
+      Router.go(this.draft.url())
+    }
 
     // quick, reset draft
     this.draftVersion++

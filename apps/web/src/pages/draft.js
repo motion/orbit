@@ -13,12 +13,7 @@ export default class HomePage {
 
     return (
       <Page>
-        <Draft
-          $draft
-          isReply
-          parentId={rootStore.document.id}
-          placeholder="Add your reply..."
-        />
+        <Draft parentId={rootStore.document.id} />
       </Page>
     )
   }

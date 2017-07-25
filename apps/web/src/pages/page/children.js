@@ -76,7 +76,7 @@ class Item {
                     size={9}
                     css={{
                       transform: {
-                        y: -9,
+                        y: -10,
                         x: 10,
                       },
                     }}

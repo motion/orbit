@@ -548,11 +548,14 @@ export default class Surface implements ViewType {
       color,
     }
 
+    const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
+
     return {
       element: {
         height,
         ...borderRadius,
         overflow: 'visible',
+        flexFlow: props.noElement ? 'column' : flexFlow,
         fontSize: props.fontSize,
         lineHeight: props.lineHeight || 'inherit',
         justifyContent: props.justify,
@@ -575,7 +578,7 @@ export default class Surface implements ViewType {
         justifyContent: props.justify,
         alignItems: props.align,
         alignSelf: props.alignSelf,
-        flexFlow: props.flexFlow || props.row ? 'row' : 'column',
+        flexFlow,
         ...borderRadius,
         margin: props.margin,
         borderWidth: props.borderWidth,

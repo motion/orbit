@@ -2,21 +2,18 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
-import FakeAvatar from './fake/fakeAvatar'
 import Text from './text'
 import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
 
 export type ItemProps = {
   after?: React$Element<any>,
-  avatar?: React$Element<any>,
   before?: React$Element<any>,
   borderWidth?: number,
   borderRadius?: number,
   children?: React$Element<any>,
   date?: React$Element<any>,
   dateSize?: number,
-  fakeAvatar?: boolean,
   iconProps?: Object,
   isFirstElement?: boolean,
   isLastElement?: boolean,
@@ -57,14 +54,12 @@ export default class ListItem {
 
   render({
     after,
-    avatar,
     before,
     borderRadius,
     borderWidth,
     children,
     date,
     dateSize,
-    fakeAvatar,
     isFirstElement,
     isLastElement,
     meta,
@@ -123,16 +118,12 @@ export default class ListItem {
         style={{ ...style, position: (style && style.position) || 'relative' }}
         {...props}
       >
-        <image if={avatar || fakeAvatar}>
-          <img if={avatar && !fakeAvatar} src={avatar} $avatar />
-          <FakeAvatar if={fakeAvatar} size={50} $avatar $padavatar />
-        </image>
+        <before if={before}>
+          {before}
+        </before>
         <content>
-          <above if={primary || secondary || after || before || date}>
-            <before if={before}>
-              {before}
-            </before>
-            <prop if={primary || secondary} $col $hasAvatar={!!avatar}>
+          <above if={primary || secondary || date}>
+            <prop if={primary || secondary} $col>
               <Text
                 $text
                 $primary
@@ -155,21 +146,21 @@ export default class ListItem {
             <Text if={date} size={size * 0.6} $date $meta ellipse>
               {date}
             </Text>
-            <after if={after}>
-              {after}
-            </after>
           </above>
+          <children if={children} $$row={row} $$margin={[0, -8]}>
+            {Array.isArray(children)
+              ? children.map(
+                  (item, index) =>
+                    item && typeof item === 'object' && item.primary
+                      ? <ListItem key={item.key || index} {...item} />
+                      : item
+                )
+              : children}
+          </children>
         </content>
-        <children if={children} $$row={row} $$margin={[0, -8]}>
-          {Array.isArray(children)
-            ? children.map(
-                (item, index) =>
-                  item && typeof item === 'object' && item.primary
-                    ? <ListItem key={item.key || index} {...item} />
-                    : item
-              )
-            : children}
-        </children>
+        <after if={after}>
+          {after}
+        </after>
       </SizedSurface>
     )
   }
@@ -215,11 +206,6 @@ export default class ListItem {
     },
     flex: {
       flexGrow: 1,
-    },
-    avatar: {
-      width: 40,
-      height: 40,
-      margin: [0, 10, 0, 0],
     },
     after: {
       margin: ['auto', -5, 'auto', 5],

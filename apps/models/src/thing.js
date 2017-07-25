@@ -151,6 +151,9 @@ export const methods = {
   },
   getChildren({ depth = 1, find } = {}) {
     const next = (curDepth, isRoot) => parent => {
+      if (!parent) {
+        return null
+      }
       return this.collection
         .find({ parentId: parent.id, type: { $gt: null }, ...find })
         .$.take(1)

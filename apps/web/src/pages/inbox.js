@@ -36,20 +36,20 @@ export default class InboxPage {
         <content>
           <heading>
             <title $$row $$spaceBetween>
-              <UI.Title size={2}>
+              <UI.Title size={2.2}>
                 {inbox.title}
               </UI.Title>
             </title>
 
             <filterbar $$row $$spaceBetween>
               <begin $$row $$centered>
-                <UI.Checkbox margin={[0, 10, 0, 5]} />
+                <UI.Checkbox opacity={0.5} margin={[0, 10, 0, 5]} />
                 <UI.Segment>
                   <UI.Button chromeless inline icon="book-open">
                     6 Open
                   </UI.Button>
                   <UI.Button chromeless opacity={0.5} inline icon="check">
-                    36 Closed
+                    36 Done
                   </UI.Button>
                 </UI.Segment>
               </begin>
@@ -66,7 +66,11 @@ export default class InboxPage {
                   icon="add"
                   iconAfter
                   size={1.5}
-                  margin={[-20, 0, -20, 15]}
+                  tooltip="Create new"
+                  tooltipProps={{
+                    towards: 'top',
+                  }}
+                  margin={[-20, 0, -20, 10]}
                 />
               </end>
             </filterbar>
@@ -94,7 +98,11 @@ export default class InboxPage {
                 getItem={item => {
                   return {
                     glow: false,
-                    before: <UI.Checkbox />,
+                    before: (
+                      <before css={{ marginRight: 10 }}>
+                        <UI.Checkbox />
+                      </before>
+                    ),
                     primary: (
                       <head $$row $$centered $$justify="space-between" $$flex>
                         <UI.Title size={1.2}>
@@ -141,13 +149,14 @@ export default class InboxPage {
       borderBottom: [1, '#eee'],
     },
     title: {
+      marginTop: 5,
       marginBottom: 10,
     },
     threads: {
-      padding: [10, 10],
+      padding: [0, 10],
     },
     filterbar: {
-      margin: [0, -10],
+      margin: [0, -11],
       padding: [4, 5],
       // borderRadius: 12,
     },

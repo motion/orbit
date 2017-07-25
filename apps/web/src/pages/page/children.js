@@ -100,7 +100,7 @@ class Item {
               alignSelf: 'flex-start',
               transform: {
                 scale: 0.3,
-                y: -15,
+                y: -18,
                 x: -18,
               },
               boxShadow: ['inset  0 0 100px 100px #fff'],
@@ -389,7 +389,7 @@ export default class Children {
       },
     },
     space: {
-      paddingBottom: 15,
+      paddingBottom: 10,
     },
     contents: {
       marginRight: 5,

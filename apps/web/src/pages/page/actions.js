@@ -37,7 +37,7 @@ export default class DocPageActions {
           alignItems: 'center',
           justifyContent: 'center',
           padding: [18, 0, 0],
-          marginRight: 12,
+          marginRight: 13,
           alignSelf: 'flex-end',
           pointerEvents: 'auto',
         }}
@@ -70,7 +70,7 @@ export default class DocPageActions {
               <Gemstone
                 if={document}
                 id={document.id}
-                size={18}
+                size={17}
                 css={{
                   margin: 'auto',
                 }}

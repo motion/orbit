@@ -128,7 +128,7 @@ export default class Sidebar {
       margin: [-10, 0, 10, 0],
       position: 'sticky',
       top: 0,
-      background: [40, 40, 40, 0.92],
+      background: [42, 42, 45, 0.92],
       zIndex: 10000,
       transform: { y: 0 },
     },

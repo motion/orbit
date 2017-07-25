@@ -170,6 +170,8 @@ export default class ThreadPage {
               <UI.Button
                 onClick={store.ref('showReply').toggle}
                 theme="green"
+                color="white"
+                hoverColor="white"
                 alignSelf="flex-end"
               >
                 Reply

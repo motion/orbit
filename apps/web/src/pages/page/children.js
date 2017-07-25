@@ -304,7 +304,7 @@ export default class Children {
             items={sortedDocs}
             store={store}
             onSortEnd={store.onSortEnd}
-            pressDelay={500}
+            pressDelay={350}
           />
           <Item
             if={store.newDoc}

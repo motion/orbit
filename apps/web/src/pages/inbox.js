@@ -64,9 +64,9 @@ export default class InboxPage {
                 <UI.Button
                   circular
                   onClick={() => Router.go(Router.path + '/draft')}
-                  icon="add"
+                  icon="simple-add"
                   iconAfter
-                  size={1.5}
+                  size={1.25}
                   tooltip="Create new"
                   tooltipProps={{
                     towards: 'top',

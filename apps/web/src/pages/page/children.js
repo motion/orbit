@@ -332,13 +332,16 @@ export default class Children {
           openOnHover
           closeOnClick
           towards="left"
-          target={<UI.Button circular size={0.8} icon="add" />}
+          target={
+            <UI.Button circular size={1} margin={[0, -3]} icon="simple-add" />
+          }
         >
           <UI.List
             elevation={5}
             chromeless
             borderRadius={5}
-            width={80}
+            padding={2}
+            width={120}
             itemProps={{
               size: 0.9,
               color: [0, 0, 0, 0.4],
@@ -353,7 +356,18 @@ export default class Children {
             <UI.ListItem
               onClick={store.createInbox}
               icon="paper"
-              primary="List"
+              primary="Inbox"
+            />
+            <UI.ListItem
+              if={false}
+              onClick={store.createInbox}
+              icon="google"
+              primary="GDoc"
+            />
+            <UI.ListItem
+              onClick={store.createInbox}
+              icon="attach"
+              primary="Attachment"
             />
           </UI.List>
         </UI.Popover>

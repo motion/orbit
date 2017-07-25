@@ -47,18 +47,17 @@ export default class DocPageActions {
           margin={[0, -9, 0]}
           circular
           borderWidth={1}
-          icon="ui-1_flame"
+          icon="2_heart"
           tooltip={document.hasStar() ? 'unfollow' : 'follow'}
           tooltipProps={{
             towards: 'left',
           }}
           highlight={document.hasStar()}
-          iconSize={document.hasStar() ? 20 : null}
           onClick={() => document.toggleStar()}
           iconProps={{
             css: {
-              transition: 'transform ease-in 80ms',
-              scale: document.hasStar() ? 1.1 : 1,
+              transition: 'transform linear 50ms',
+              transform: `scale(${document.hasStar() ? 1.2 : 1})`,
             },
           }}
         />

@@ -1,5 +1,6 @@
 // @flow
 import { Thing, extend, methods, getTitle, getContent } from './thing'
+import Reply from './reply'
 
 class Thread extends Thing {
   static props = Thing.props
@@ -13,8 +14,15 @@ class Thread extends Thing {
   static defaultFilter = doc => ({ type: 'thread', ...doc })
 
   methods = extend(methods, {
-    replies(parentId) {
-      return this.collection.find({ draft: false, parentId, type: 'reply' })
+    replies() {
+      return Reply.find({ draft: false, parentId: this.id, sort: 'createdAt' })
+    },
+    lastReply() {
+      return Reply.findOne({
+        draft: false,
+        parentId: this.id,
+        sort: 'createdAt',
+      })
     },
   })
 }

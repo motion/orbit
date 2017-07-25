@@ -75,6 +75,7 @@ export default class ListItem {
     ellipse,
     glowProps,
     theme,
+    iconProps,
     ...props
   }: ItemProps) {
     const radiusProps = segmented
@@ -106,7 +107,6 @@ export default class ListItem {
         glow
         row
         onClick={onClick}
-        align="center"
         glowProps={{
           scale: 1.4,
           opacity: 0.09,
@@ -114,6 +114,10 @@ export default class ListItem {
           clickable: !!onClick,
           overlayZIndex: 0,
           ...glowProps,
+        }}
+        iconProps={{
+          alignSelf: 'center',
+          ...iconProps,
         }}
         style={{ ...style, position: (style && style.position) || 'relative' }}
         {...props}

@@ -83,12 +83,12 @@ export default class Inbox {
             background="transparent"
             controlled
             virtualized={{
-              rowHeight: 115,
+              rowHeight: 110,
               overscanRowCount: 5,
             }}
             itemProps={{
-              height: 'auto',
-              padding: [10, 15, 10, 16],
+              height: 110,
+              padding: 15,
               overflow: 'hidden',
               highlightBackground: [0, 0, 0, 0.25],
             }}

@@ -160,7 +160,7 @@ export default class Explorer {
           disabled={Router.path === '/'}
           color={[0, 0, 0, 0.4]}
           height={24}
-          icon="home"
+          icon="envir_home"
           onClick={() => Router.go('/')}
         />
         <RightArrow if={Router.path !== '/'} css={$arrow} />

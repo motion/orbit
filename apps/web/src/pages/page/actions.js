@@ -48,7 +48,7 @@ export default class DocPageActions {
           circular
           borderWidth={1}
           icon="_signal"
-          tooltip={document.hasStar() ? 'unfollow' : 'follow'}
+          tooltip={document.hasStar() ? 'unsubscribe' : 'subscribe'}
           tooltipProps={{
             towards: 'left',
           }}

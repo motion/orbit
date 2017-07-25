@@ -16,6 +16,13 @@ type ModelArgs = {
   defaultSchema?: Object,
 }
 
+const chain = (object, method, value) => {
+  if (!value) {
+    return object
+  }
+  return object[method](value)
+}
+
 export default class Model {
   static isModel = true
   static props: Object
@@ -343,8 +350,13 @@ export default class Model {
 
   // helpers
 
-  @query find = (...args) => this.collection.find(...args)
-  @query findOne = (...args) => this.collection.findOne(...args)
+  @query
+  find = ({ sort, ...query } = {}) =>
+    chain(this.collection.find(query), 'sort', sort)
+
+  @query
+  findOne = ({ sort, ...query } = {}) =>
+    chain(this.collection.findOne(query), 'sort', sort)
 
   createTemporary = async object => {
     if (!this._collection) {

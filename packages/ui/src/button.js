@@ -83,7 +83,7 @@ export default class Button {
       pointerEvents: 'none',
       border: [5, '#fff'],
       transform: {
-        scale: 0.11,
+        scale: 0.14,
         x: '0%',
         y: '0%',
       },

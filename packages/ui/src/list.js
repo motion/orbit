@@ -175,6 +175,7 @@ class List {
     }
 
     const passThroughProps = {
+      height: virtualized ? virtualized.rowHeight : undefined,
       ...itemProps,
       onItemMount,
       size,

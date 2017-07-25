@@ -70,24 +70,13 @@ class Item {
                   size={1.2}
                   glow
                 >
-                  <Gemstone
-                    if={doc && doc.id}
-                    id={doc.id}
-                    size={9}
-                    css={{
-                      transform: {
-                        y: -10,
-                        x: 10,
-                      },
-                    }}
-                  />
                   <UI.Circle
-                    if={!doc || !doc.id}
-                    size={8}
+                    if={doc && doc.id}
+                    size={7}
                     margin={[0, 'auto']}
-                    background="#eee"
+                    background="#ccc"
                     transform={{
-                      y: -8.5,
+                      y: -10,
                       x: -5,
                     }}
                   />

@@ -126,6 +126,7 @@ export default class Page {
     pagecontents: {
       width: '100%',
       margin: [0, 'auto'],
+      padding: [5, 0, 0],
       maxWidth: 960,
       maxHeight: '100%',
       flex: 1,

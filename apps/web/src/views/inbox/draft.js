@@ -89,6 +89,7 @@ export default class Draft {
     parentId,
     store: { draft },
     closePopover,
+    recStore,
     ...props
   }) {
     return (

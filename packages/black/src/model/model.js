@@ -78,19 +78,22 @@ export default class Model {
     const { timestamps, ...props } = this.constructor.props
     let result = props
 
-    if (timestamps) {
-      result = {
-        ...props,
-        createdAt: str.datetime,
-        updatedAt: str.datetime,
-      }
-    }
-
     result = compile(cloneDeep(result))
 
     if (timestamps) {
-      // result.createdAt.properties.index = true
-      // result.updatedAtAt.properties.index = true
+      result.properties = {
+        ...result.properties,
+        createdAt: {
+          format: 'date-time',
+          type: 'string',
+          index: true,
+        },
+        updatedAt: {
+          format: 'date-time',
+          type: 'string',
+          index: true,
+        },
+      }
     }
 
     return result

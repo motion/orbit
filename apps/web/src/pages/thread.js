@@ -111,7 +111,7 @@ export default class ThreadPage {
 
     const btnProps = {
       size: 0.9,
-      spaced: true,
+      marginLeft: 5,
       height: 24,
       padding: [0, 5],
       hoverBackground: 'transparent',
@@ -233,9 +233,6 @@ export default class ThreadPage {
     content: {
       padding: [0, 0, 20],
       minHeight: 300,
-    },
-    button: {
-      marginLeft: 10,
     },
     draft: {
       padding: [15, 10],

@@ -52,7 +52,7 @@ export default function proxyReactComponents({
       const instances = viewProxies[path].update(ReactClass)
       setTimeout(() => {
         instances.forEach(hotReload)
-        Black.view.emit('hmr')
+        // Black.view.emit('hmr')
       })
     } else {
       viewProxies[path] = createProxy(ReactClass)

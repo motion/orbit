@@ -4,7 +4,7 @@ import { ThemeMaker } from '@mcro/ui'
 const Theme = new ThemeMaker()
 
 const highlightColor = '#fff'
-const highlightBackground = 'rgb(95, 82, 159)'
+const highlightBackground = 'rgb(114, 121, 167)'
 
 const blank = {
   highlightBackground: 'transparent',

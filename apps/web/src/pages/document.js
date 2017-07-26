@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Page from './page'
 import DocumentView from '~/views/document'
+import Children from './page/children'
 
 @view.attach('rootStore')
 @view

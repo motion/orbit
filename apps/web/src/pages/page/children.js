@@ -12,7 +12,6 @@ import {
   SortableHandle,
   arrayMove,
 } from 'react-sortable-hoc'
-import Gemstone from '~/views/kit/gemstone'
 
 type Props = {
   id: number,
@@ -32,11 +31,32 @@ const DragHandle = SortableHandle(props =>
 
 const ICONS = {
   inbox: 'paper',
-  document: 'filesg',
+  document: 'circle-left',
+}
+
+const STYLES = {
+  alignRight: {
+    buttonMargin: doc => [0, -3, 0, doc && doc.id ? -5 : 0],
+    iconTransform: {
+      y: -19,
+      x: -18,
+    },
+    surfaceProps: {
+      iconAfter: true,
+      textAlign: 'right',
+    },
+  },
+  alignLeft: {
+    buttonMargin: doc => [0],
+    iconTransform: {
+      y: -19,
+      x: 18,
+    },
+  },
 }
 
 @view.ui
-class Item {
+export class Child {
   render({
     doc,
     temporary,
@@ -45,8 +65,11 @@ class Item {
     textRef,
     subItems,
     children,
+    alignLeft,
     ...props
   }) {
+    const style = STYLES[alignLeft ? 'alignLeft' : 'alignRight']
+
     return (
       <doccontainer
         $$undraggable
@@ -60,26 +83,8 @@ class Item {
         <UI.Surface
           background="transparent"
           icon={
-            doc.type === 'document'
-              ? <UI.Button
-                  margin={[0, -3, 0, doc && doc.id ? -5 : 0]}
-                  chromeless
-                  circular
-                  padding={0}
-                  size={1.2}
-                  glow
-                >
-                  <UI.Circle
-                    if={doc && doc.id}
-                    size={7}
-                    margin={[0, 'auto']}
-                    background="#ccc"
-                    transform={{
-                      y: -10,
-                      x: -5,
-                    }}
-                  />
-                </UI.Button>
+            alignLeft && doc.type === 'document'
+              ? 'circle-right'
               : ICONS[doc.type]
           }
           iconSize={30}
@@ -88,8 +93,7 @@ class Item {
               alignSelf: 'flex-start',
               transform: {
                 scale: 0.3,
-                y: -19,
-                x: -18,
+                ...style.iconTransform,
               },
               boxShadow: ['inset  0 0 100px 100px #fff'],
             },
@@ -97,10 +101,9 @@ class Item {
           align="flex-start"
           justify="flex-end"
           flexFlow="row"
-          iconAfter
-          textAlign="right"
           padding={0}
           marginBottom={-5}
+          {...style.surfaceProps}
         >
           <UI.Text
             $title
@@ -113,9 +116,6 @@ class Item {
           </UI.Text>
         </UI.Surface>
 
-        <subitems if={children}>
-          {children}
-        </subitems>
         <DragHandle
           if={false}
           css={{ position: 'absolute', top: 11, right: -10, cursor: 'move' }}
@@ -135,19 +135,9 @@ class Item {
         scale: 1,
         z: 0,
       },
-      '&:hover': {
-        opacity: 1,
-        transform: {
-          y: 0,
-          z: 0,
-          // x: -1,
-          // scale: 1.03,
-        },
-      },
     },
     title: {
       marginBottom: 20,
-      marginRight: -5,
       fontWeight: 300,
       fontSize: 15,
       lineHeight: '1.1rem',
@@ -156,10 +146,32 @@ class Item {
       overflow: 'hidden',
     },
   }
+
+  static theme = props => {
+    if (props.alignLeft) {
+      return {}
+    }
+
+    // alignRight === default
+    return {
+      doccontainer: {
+        marginRight: -12,
+        '&:hover': {
+          transform: {
+            y: 0,
+            z: 0,
+          },
+        },
+        title: {
+          marginRight: -5,
+        },
+      },
+    }
+  }
 }
 
-const SortableItem = SortableElement(props =>
-  <Item style={{ zIndex: 1000000 }} {...props} />
+export const SortableChild = SortableElement(props =>
+  <Child style={{ zIndex: 1000000 }} {...props} />
 )
 
 class ChildrenStore {
@@ -167,7 +179,7 @@ class ChildrenStore {
   creatingDoc = false
 
   get document() {
-    return this.props.rootStore.document
+    return this.props.document || this.props.rootStore.document
   }
 
   @watch
@@ -264,21 +276,20 @@ class ChildrenStore {
 
 @SortableContainer
 @view.ui
-class SortableChildren {
-  render({ items, store }) {
+export class Children {
+  render({ items, store, alignLeft }) {
     return (
       <docs $$undraggable>
         {items.map((doc, index) => {
           if (!doc) {
             return null
           }
-          const subItems = store.children[doc.id]
           return (
-            <SortableItem
+            <SortableChild
               key={doc.id}
               index={index}
               doc={doc}
-              subItems={subItems}
+              alignLeft={alignLeft}
             />
           )
         })}
@@ -291,21 +302,21 @@ class SortableChildren {
 @view({
   store: ChildrenStore,
 })
-export default class Children {
+export default class ChildrenRoot {
   props: Props
 
-  render({ rootStore, store, store: { hasDocs, sortedDocs } }: Props) {
-    log('render')
+  render({ alignLeft, store, store: { hasDocs, sortedDocs } }: Props) {
     return (
       <children $hasChildren={hasDocs}>
         <contents>
-          <SortableChildren
+          <Children
             if={hasDocs}
             items={sortedDocs}
             store={store}
             onSortEnd={store.onSortEnd}
             pressDelay={350}
             pressThreshold={35}
+            alignLeft={alignLeft}
           />
           <Item
             if={store.newDoc}

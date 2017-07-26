@@ -23,6 +23,20 @@ export default class DocumentPage {
       )
     }
 
+    // TODO hi nick
+    // return (
+    //   <Page>
+    //     <div $$row>
+    //       <div $$width={300}>
+    //         <Children alignLeft size={2} document={document} />
+    //       </div>
+    //       <div $$width={200}>
+    //         <Children alignLeft document={document} />
+    //       </div>
+    //     </div>
+    //   </Page>
+    // )
+
     return (
       <Page showActions showChildren>
         <DocumentView document={document} isPrimaryDocument />

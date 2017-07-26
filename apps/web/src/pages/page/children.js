@@ -66,6 +66,7 @@ export class Child {
     subItems,
     children,
     alignLeft,
+    size = 1,
     ...props
   }) {
     const style = STYLES[alignLeft ? 'alignLeft' : 'alignRight']
@@ -87,7 +88,7 @@ export class Child {
               ? 'circle-right'
               : ICONS[doc.type]
           }
-          iconSize={30}
+          iconSize={30 * size}
           iconProps={{
             css: {
               alignSelf: 'flex-start',
@@ -103,10 +104,13 @@ export class Child {
           flexFlow="row"
           padding={0}
           marginBottom={-5}
+          size={size}
           {...style.surfaceProps}
         >
           <UI.Text
             $title
+            fontSize={15 * size}
+            lineHeight={`${1.1 * size}rem`}
             if={doc.title || editable}
             editable={editable}
             onFinishEdit={onSave}
@@ -139,8 +143,6 @@ export class Child {
     title: {
       marginBottom: 20,
       fontWeight: 300,
-      fontSize: 15,
-      lineHeight: '1.1rem',
       width: '100%',
       color: '#000',
       overflow: 'hidden',
@@ -190,7 +192,7 @@ class ChildrenStore {
 
   @watch
   newDoc = () =>
-    this.creatingDoc && this.document
+    this.props.allowInsert && this.creatingDoc && this.document
       ? Models[this.docType].createTemporary({
           parentId: this.document.id,
           parentIds: [this.document.id],
@@ -277,7 +279,7 @@ class ChildrenStore {
 @SortableContainer
 @view.ui
 export class Children {
-  render({ items, store, alignLeft }) {
+  render({ size, items, store, alignLeft }) {
     return (
       <docs $$undraggable>
         {items.map((doc, index) => {
@@ -290,6 +292,7 @@ export class Children {
               index={index}
               doc={doc}
               alignLeft={alignLeft}
+              size={size}
             />
           )
         })}
@@ -305,7 +308,13 @@ export class Children {
 export default class ChildrenRoot {
   props: Props
 
-  render({ alignLeft, store, store: { hasDocs, sortedDocs } }: Props) {
+  render({
+    size,
+    allowInsert,
+    alignLeft,
+    store,
+    store: { hasDocs, sortedDocs },
+  }: Props) {
     return (
       <children $hasChildren={hasDocs}>
         <contents>
@@ -317,6 +326,7 @@ export default class ChildrenRoot {
             pressDelay={350}
             pressThreshold={35}
             alignLeft={alignLeft}
+            size={size}
           />
           <Item
             if={store.newDoc}
@@ -330,6 +340,7 @@ export default class ChildrenRoot {
         </contents>
         <space />
         <UI.Popover
+          if={allowInsert}
           openOnHover
           closeOnClick
           towards="left"

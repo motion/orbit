@@ -110,7 +110,7 @@ export default class Page {
               alignSelf: 'flex-end',
             }}
           />
-          <Children if={showChildren} />
+          <Children allowInsert if={showChildren} />
           <line />
           <fade />
           <fade $bottom />

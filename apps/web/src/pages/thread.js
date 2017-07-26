@@ -181,7 +181,7 @@ export default class ThreadPage {
             lastItem = item
 
             return (
-              <item key={item.id}>
+              <item key={item.id || Math.random()}>
                 <separator if={!isMultiUpdate} />
                 {item.type === 'reply'
                   ? <Reply key={item.id} doc={item} />

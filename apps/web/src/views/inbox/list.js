@@ -105,7 +105,7 @@ export default class Inbox {
 
                     <date $$row $$justify="flex-end">
                       {item.tags().map(tag =>
-                        <UI.Badge {...badgeProps} color="#efefef">
+                        <UI.Badge key={tag} {...badgeProps} color="#efefef">
                           {tag}
                         </UI.Badge>
                       )}

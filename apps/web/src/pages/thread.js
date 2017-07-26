@@ -23,8 +23,10 @@ class ThreadStore {
   ]
 
   get items() {
-    const { thread } = this
-    const all = [...(this.replies || []), ...((thread && thread.updates) || [])]
+    if (!this.thread) {
+      return null
+    }
+    const all = [...(this.replies || []), ...(this.thread.updates || [])]
     return sortBy(all, i => +new Date(i.createdAt))
   }
 
@@ -123,6 +125,8 @@ export default class ThreadPage {
       },
     }
 
+    let lastItem
+
     return (
       <Page>
         <content>
@@ -171,14 +175,20 @@ export default class ThreadPage {
         </content>
 
         <replies>
-          {store.items.map(item =>
-            <item key={item.id}>
-              <separator />
-              {item.type === 'reply'
-                ? <Reply key={item.id} doc={item} />
-                : <Update key={item.id} update={item} />}
-            </item>
-          )}
+          {store.items.map(item => {
+            const isMultiUpdate =
+              item.type !== 'reply' && lastItem && lastItem.type !== 'reply'
+            lastItem = item
+
+            return (
+              <item key={item.id}>
+                <separator if={!isMultiUpdate} />
+                {item.type === 'reply'
+                  ? <Reply key={item.id} doc={item} />
+                  : <Update key={item.id} update={item} />}
+              </item>
+            )
+          })}
 
           <draft if={store.thread} $item>
             <separator />

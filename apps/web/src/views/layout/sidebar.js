@@ -131,6 +131,7 @@ export default class Sidebar {
       userSelect: 'none',
       position: 'absolute',
       overflowY: 'auto',
+      overflowX: 'hidden',
       top: 0,
       right: 0,
       bottom: 0,

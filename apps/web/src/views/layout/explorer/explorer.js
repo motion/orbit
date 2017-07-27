@@ -19,9 +19,9 @@ const $text = {
 
 const $arrow = {
   opacity: 0.5,
-  margin: [0, -2],
+  margin: [0, 6],
   transform: {
-    scale: 1.5,
+    scale: 1,
     y: -1,
   },
 }
@@ -152,25 +152,40 @@ export default class Explorer {
       <bar $blurred={!explorerStore.focused} $focused={explorerStore.focused}>
         <UI.Button
           iconSize={18}
-          margin={6}
-          marginTop={5}
+          margin={[6, 0, 6, 8]}
           chromeless
           glow={false}
           circular
-          color={[0, 0, 0, 0.4]}
+          color={[0, 0, 0, 0.34]}
           height={24}
           icon="home"
           onClick={() => Router.go('/')}
         />
-        <RightArrow if={Router.path !== '/'} css={$arrow} />
-        <space css={{ width: 10 }} />
-
-        <crumbs if={Router.path !== '/' && explorerStore.crumbs}>
+        <crumbs
+          if={Router.path !== '/' && explorerStore.crumbs}
+          css={{ flexFlow: 'row', alignItems: 'center' }}
+        >
           {explorerStore.crumbs.map(crumb =>
-            <path key={crumb.id} css={{ fontSize: 20 }}>
-              {crumb.title.length > 30
-                ? crumb.title.slice(0, 27) + '...'
-                : crumb.title}
+            <path
+              key={crumb.id}
+              css={{ fontSize: 20, flexFlow: 'row', alignItems: 'center' }}
+            >
+              <RightArrow css={$arrow} />
+              <crumb
+                onClick={() => Router.go(crumb.url())}
+                css={{
+                  padding: [2, 4],
+                  margin: [-2, -4],
+                  borderRadius: 5,
+                  '&:hover': {
+                    background: '#eee',
+                  },
+                }}
+              >
+                {crumb.title.length > 30
+                  ? crumb.title.slice(0, 27) + '...'
+                  : crumb.title}
+              </crumb>
             </path>
           )}
         </crumbs>

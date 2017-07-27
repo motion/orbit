@@ -133,23 +133,11 @@ export const methods = {
     await this.save()
   },
   async getCrumbs() {
-    let foundRoot = false
-    let crumbs = []
-    let doc = this
-    while (!foundRoot) {
-      crumbs = [doc, ...crumbs]
-      if (
-        doc &&
-        (!doc.parentId || doc.parentId === User.org ? User.org.id : -1)
-      ) {
-        foundRoot = true
-      } else {
-        if (!doc) {
-          return crumbs
-        }
-        doc = await this.collection.findOne(doc.parentId).exec()
-      }
-    }
+    // because the root is an Org not Thing
+    const thingIds = this.parentIds.slice(1)
+    const crumbs = await Promise.all(
+      thingIds.map(parentId => this.collection.findOne(parentId).exec())
+    )
     return crumbs
   },
   getChildren({ depth = 1, find } = {}) {
@@ -301,7 +289,7 @@ export class Thing extends Model {
     return this.collection.find().where('authorId').eq(User.name)
   }
 
-  create = async ({ parentId, parentIds, ...rest } = {}, isTemp) => {
+  async create({ parentId, parentIds, ...rest } = {}, isTemp) {
     console.log('attempting create')
     let fParentIds = parentIds
 
@@ -311,7 +299,7 @@ export class Thing extends Model {
     }
     if (!parentIds) {
       console.log('getting parent ids from', parentId)
-      const parent = await this.get(parentId).exec()
+      const parent = await this._collection.findOne(parentId).exec()
       console.log('got parent', parent)
       fParentIds = [...parent.parentIds, parentId]
     }

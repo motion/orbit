@@ -375,7 +375,7 @@ export default class Model {
   findOne = ({ sort, ...query } = {}) =>
     chain(this.collection.findOne(query), 'sort', sort)
 
-  createTemporary = async object => {
+  async createTemporary(object) {
     if (!this._collection) {
       await this.onConnection()
     }
@@ -385,7 +385,7 @@ export default class Model {
     return doc
   }
 
-  create = async (object: Object = {}) => {
+  async create(object: Object = {}) {
     if (!this._collection) {
       await this.onConnection()
     }

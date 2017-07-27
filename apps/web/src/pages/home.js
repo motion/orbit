@@ -5,11 +5,14 @@ import DocumentPage from './document'
 
 @view
 export default class HomePage {
-  async componentDidMount() {
-    if (User.home === null) {
-      await User.createOrg('myneworg')
-      console.log('created new org for user')
-    }
+  componentDidMount() {
+    this.watch(async () => {
+      if (User.home === null) {
+        console.log('creating org')
+        await User.createOrg('myneworg')
+        console.log('created new org for user')
+      }
+    })
   }
 
   render() {

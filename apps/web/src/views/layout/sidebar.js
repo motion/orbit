@@ -150,8 +150,10 @@ export default class Sidebar {
             {children}
 
             <bottom>
+              <hi $$flex />
               <UI.Input
                 if={false}
+                opacity={0}
                 color="#fff"
                 borderColor={[255, 255, 255, 0.1]}
                 size={1.05}

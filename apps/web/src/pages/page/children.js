@@ -212,7 +212,6 @@ class ChildrenStore {
     this.props.allowInsert && this.creatingDoc && this.document
       ? Models[this.docType].createTemporary({
           parentId: this.document.id,
-          parentIds: [this.document.id],
         })
       : null
 

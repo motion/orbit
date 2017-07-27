@@ -338,7 +338,7 @@ export default class ExplorerStore {
         next = await Document.create({
           ...query,
           title: slug,
-          parentIds: result.map(doc => doc._id),
+          parentIds: result.map(doc => doc.id),
         })
       }
       if (!next) {

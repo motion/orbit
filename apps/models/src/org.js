@@ -73,7 +73,6 @@ export class OrgModel extends Model {
       await Inbox.create({
         title: 'Issues',
         parentId: homeDoc.id,
-        parentIds: [org.id, homeDoc.id],
       })
       log('finished post insert org sub stuff')
     },

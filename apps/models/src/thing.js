@@ -300,6 +300,32 @@ export class Thing extends Model {
     }
     return this.collection.find().where('authorId').eq(User.name)
   }
+
+  create = async ({ parentId, parentIds, ...rest } = {}, isTemp) => {
+    console.log('attempting create')
+    let fParentIds = parentIds
+
+    // ensure parentIds
+    if (!parentId) {
+      throw new Error('No parentId given!')
+    }
+    if (!parentIds) {
+      console.log('getting parent ids from', parentId)
+      const parent = await this.get(parentId).exec()
+      console.log('got parent', parent)
+      fParentIds = [...parent.parentIds, parentId]
+    }
+
+    console.log('calling super create')
+    return super.create(
+      {
+        parentId,
+        parentIds: fParentIds,
+        ...rest,
+      },
+      isTemp
+    )
+  }
 }
 
 const ThingInstance = new Thing()

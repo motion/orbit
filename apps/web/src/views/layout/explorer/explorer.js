@@ -18,10 +18,10 @@ const $text = {
 }
 
 const $arrow = {
-  opacity: 0.4,
-  margin: [0, -4],
+  opacity: 0.5,
+  margin: [0, -2],
   transform: {
-    scale: 0.8,
+    scale: 1.5,
     y: -1,
   },
 }
@@ -151,31 +151,29 @@ export default class Explorer {
     return (
       <bar $blurred={!explorerStore.focused} $focused={explorerStore.focused}>
         <UI.Button
-          iconSize={14}
+          iconSize={18}
           margin={6}
           marginTop={5}
           chromeless
           glow={false}
           circular
-          disabled={Router.path === '/'}
           color={[0, 0, 0, 0.4]}
           height={24}
-          icon="envir_home"
+          icon="home"
           onClick={() => Router.go('/')}
         />
         <RightArrow if={Router.path !== '/'} css={$arrow} />
         <space css={{ width: 10 }} />
-        <Editor
-          placeholder={'search or create docs'}
-          state={explorerStore.editorState}
-          ref={explorerStore.ref('inputNode').set}
-          onKeyDown={explorerStore.onKeyDown}
-          onFocus={explorerStore.onFocus}
-          onBlur={explorerStore.onBlur}
-          onChange={explorerStore.onChange}
-          schema={schema}
-          style={{ width: '100%', marginBottom: 1 }}
-        />
+
+        <crumbs if={Router.path !== '/' && explorerStore.crumbs}>
+          {explorerStore.crumbs.map(crumb =>
+            <path key={crumb.id} css={{ fontSize: 20 }}>
+              {crumb.title.length > 30
+                ? crumb.title.slice(0, 27) + '...'
+                : crumb.title}
+            </path>
+          )}
+        </crumbs>
 
         <fade
           $$fullscreen

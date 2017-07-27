@@ -1,7 +1,7 @@
 // @flow
 import { CompositeDisposable } from '@mcro/decor'
 import { autorun, observable } from 'mobx'
-import { compile, str } from './properties'
+import { compile } from './properties'
 import type RxDB, { RxCollection } from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
@@ -305,6 +305,21 @@ export default class Model {
     this.connected = true
   }
 
+  onConnection = () => {
+    return new Promise((resolve, reject) => {
+      const off = autorun(() => {
+        if (this.connected) {
+          console.log('watch connected')
+          resolve()
+          off()
+        }
+      })
+      setTimeout(() => {
+        reject('Timed out connecting!')
+      }, 4000)
+    })
+  }
+
   async dispose() {
     this.subscriptions.dispose()
     if (this._collection) {
@@ -362,8 +377,7 @@ export default class Model {
 
   createTemporary = async object => {
     if (!this._collection) {
-      console.error('trying to create a document before having connected')
-      return null
+      await this.onConnection()
     }
     this.applyDefaults(object)
     const doc = await this._collection.newDocument(object)
@@ -371,10 +385,9 @@ export default class Model {
     return doc
   }
 
-  create = (object: Object = {}) => {
+  create = async (object: Object = {}) => {
     if (!this._collection) {
-      console.error('trying to create a document before having connected')
-      return null
+      await this.onConnection()
     }
     return this._collection.insert(object)
   }

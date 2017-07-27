@@ -14,7 +14,6 @@ class Inbox extends Thing {
       await Thread.create({
         title: `Welcome to your inbox: ${inbox.title}`,
         parentId: inbox.id,
-        parentIds: [...inbox.parentIds, inbox.id],
       })
     },
   }

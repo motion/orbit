@@ -51,7 +51,9 @@ export default class DocPageActions {
           badge={Math.floor(Math.random() * 100)}
           badgeProps={{
             css: {
-              background: 'linear-gradient(left, #999, #777)',
+              background: document.hasStar()
+                ? 'linear-gradient(left, #333, #000)'
+                : 'linear-gradient(left, #999, #777)',
               top: '10%',
               right: '15%',
             },

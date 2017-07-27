@@ -82,7 +82,7 @@ export default class Button {
       color: '#fff',
       overflow: 'hidden',
       pointerEvents: 'none',
-      border: [5, '#fff'],
+      border: [8, '#fff'],
       zIndex: 100000000,
       transform: {
         scale: 0.14,
@@ -100,7 +100,7 @@ export default class Button {
     contents: {
       alignItems: 'center',
       justifyContent: 'center',
-      margin: [0, 14],
+      margin: [0, 18],
     },
   }
 }

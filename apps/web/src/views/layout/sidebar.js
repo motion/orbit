@@ -190,7 +190,7 @@ export default class Sidebar {
       flexFlow: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: 10,
+      padding: [5, 10],
       margin: [-10, 0, 8, 0],
       position: 'sticky',
       top: 0,

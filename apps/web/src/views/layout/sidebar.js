@@ -16,6 +16,59 @@ class SidebarStore {
   }
 }
 
+@view
+class AddButton {
+  render({ store, ...props }) {
+    return (
+      <UI.Popover
+        openOnClick
+        closeOnEsc
+        overlay
+        background="#fff"
+        width={store.show === 'list' ? 300 : 540}
+        borderRadius={8}
+        elevation={2}
+        ref={this.ref('popover').set}
+        onDidOpen={() => this.draftEditor && this.draftEditor.focus()}
+        onClose={store.ref('show').setter('list')}
+        target={
+          <UI.Button
+            circular
+            theme="light"
+            elevation={3}
+            icon="simadd"
+            size={1.4}
+            marginLeft={10}
+            marginTop={-5}
+            marginBottom={-5}
+            {...props}
+          />
+        }
+      >
+        <content>
+          <UI.Theme if={store.show === 'list'} name="light">
+            <UI.List itemProps={{ size: 2 }}>
+              <UI.ListItem
+                icon="paper"
+                primary="Discussion"
+                onClick={store.ref('show').setter('draft')}
+              />
+              <UI.ListItem icon="filesg" primary="Page" />
+            </UI.List>
+          </UI.Theme>
+
+          <Draft
+            if={store.show === 'draft'}
+            parentId={User.defaultInbox && User.defaultInbox.id}
+            closePopover={() => this.popover && this.popover.close()}
+            editorRef={this.ref('draftEditor').set}
+          />
+        </content>
+      </UI.Popover>
+    )
+  }
+}
+
 @view.attach('layoutStore')
 @view({
   store: SidebarStore,
@@ -61,58 +114,13 @@ export default class Sidebar {
               <barbg $shown={this.state.scrolling} />
               <UI.Input
                 color="#fff"
-                borderRadius={100}
+                borderColor={[255, 255, 255, 0.1]}
                 size={1}
                 marginRight={30}
                 onChange={store.setFilter}
               />
 
-              <end $$marginLeft={20} $$row $$align="center">
-                <UI.Popover
-                  openOnClick
-                  closeOnEsc
-                  overlay
-                  background="#fff"
-                  width={store.show === 'list' ? 300 : 540}
-                  borderRadius={8}
-                  elevation={2}
-                  ref={this.ref('popover').set}
-                  onDidOpen={() => this.draftEditor && this.draftEditor.focus()}
-                  onClose={store.ref('show').setter('list')}
-                  target={
-                    <UI.Button
-                      inline
-                      circular
-                      chromeless
-                      icon="circleadd"
-                      size={1.4}
-                      marginLeft={10}
-                      marginTop={-5}
-                      marginBottom={-5}
-                    />
-                  }
-                >
-                  <content>
-                    <UI.Theme if={store.show === 'list'} name="light">
-                      <UI.List itemProps={{ size: 2 }}>
-                        <UI.ListItem
-                          icon="paper"
-                          primary="Discussion"
-                          onClick={store.ref('show').setter('draft')}
-                        />
-                        <UI.ListItem icon="filesg" primary="Page" />
-                      </UI.List>
-                    </UI.Theme>
-
-                    <Draft
-                      if={store.show === 'draft'}
-                      parentId={User.defaultInbox && User.defaultInbox.id}
-                      closePopover={() => this.popover && this.popover.close()}
-                      editorRef={this.ref('draftEditor').set}
-                    />
-                  </content>
-                </UI.Popover>
-              </end>
+              <end $$marginLeft={20} $$row $$align="center" />
             </bar>
 
             <inbox>
@@ -120,6 +128,8 @@ export default class Sidebar {
             </inbox>
 
             {children}
+
+            <AddButton $addButton store={store} />
           </sidebar>
         </UI.Drawer>
       </UI.Theme>
@@ -166,6 +176,12 @@ export default class Sidebar {
     },
     inbox: {
       margin: [0, -20],
+    },
+    addButton: {
+      position: 'fixed',
+      bottom: 20,
+      right: 20,
+      zIndex: 1000,
     },
   }
 }

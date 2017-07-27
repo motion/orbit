@@ -69,13 +69,14 @@ export default class Button {
   static style = {
     badge: {
       position: 'absolute',
-      top: '25%',
-      left: '70%',
+      top: '23%',
+      right: '30%',
+      textAlign: 'right',
+      alignSelf: 'flex-end',
       textShadow: '1px 1px 0 rgba(0,0,0,0.15)',
       lineHeight: '1px',
       fontWeight: 600,
       borderRadius: 120000,
-      alignItems: 'center',
       justifyContent: 'center',
       background: 'linear-gradient(left, red, purple)',
       color: '#fff',
@@ -84,25 +85,21 @@ export default class Button {
       border: [5, '#fff'],
       transform: {
         scale: 0.14,
-        x: '0%',
-        y: '0%',
+        x: '345%',
+        y: 0,
+        z: 0,
       },
     },
     badgeSize: size => ({
-      width: size * 90 + 2,
+      minWidth: size * 90 + 2,
       height: size * 90 + 2,
       fontSize: size * 60,
-      marginLeft: -((size * 90 + 2) / 2),
       marginTop: -((size * 90 + 2) / 2),
     }),
     contents: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
       alignItems: 'center',
       justifyContent: 'center',
+      margin: [0, 14],
     },
   }
 }

@@ -218,8 +218,8 @@ export default class Surface implements ViewType {
       ...props,
     }
 
-    const borderLeftRadius = _borderLeftRadius || themeValues.borderRadius
-    const borderRightRadius = _borderRightRadius || themeValues.borderRadius
+    const borderLeftRadius = _borderLeftRadius || themeValues.borderRadiusSize
+    const borderRightRadius = _borderRightRadius || themeValues.borderRadiusSize
 
     const contents = [
       <Glint
@@ -492,7 +492,7 @@ export default class Surface implements ViewType {
     }
     if (Object.keys(borderRadius).length) {
       // always add hidden for things with radius
-      borderRadius.overflow = 'hidden'
+      borderRadius.overflow = props.overflow || 'hidden'
     }
 
     // circular
@@ -563,6 +563,10 @@ export default class Surface implements ViewType {
         textAlign: props.textAlign,
       },
       surface: {
+        transform: {
+          z: 0,
+          ...props.transform,
+        },
         position: props.position,
         zIndex: props.zIndex,
         opacity: props.opacity,

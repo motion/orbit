@@ -554,12 +554,13 @@ export default class Surface implements ViewType {
       element: {
         height,
         ...borderRadius,
-        overflow: 'visible',
+        overflow: props.overflow || 'visible',
         flexFlow: props.noElement ? 'column' : flexFlow,
         fontSize: props.fontSize,
         lineHeight: props.lineHeight || 'inherit',
         justifyContent: props.justify,
         maxWidth: `calc(100% - ${props.icon ? iconSize + 5 : 0}px)`,
+        maxHeight: '100%',
         textAlign: props.textAlign,
       },
       surface: {

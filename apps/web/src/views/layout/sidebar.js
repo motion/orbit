@@ -116,9 +116,6 @@ export default class Sidebar {
               <barbg $shown={this.state.scrolling} />
               <VirtualizedSelect
                 multi
-                css={{
-                  width: 200,
-                }}
                 options={[
                   { label: 'Me', value: 1 },
                   { label: 'Motion', value: 2 },
@@ -133,12 +130,20 @@ export default class Sidebar {
                 color="#fff"
                 borderColor={[255, 255, 255, 0.1]}
                 size={1}
-                marginRight={30}
+                marginRight={50}
                 onChange={store.setFilter}
               />
 
-              <end $$marginLeft={20} $$row $$align="center">
-                <UI.Dropdown>Me</UI.Dropdown>
+              <end $$marginLeft={50} $$row $$align="center">
+                <UI.Button
+                  circular
+                  chromeless
+                  size={1}
+                  iconSize={20}
+                  background="#000"
+                  icon="circle-09"
+                  opacity={0.5}
+                />
               </end>
             </bar>
 

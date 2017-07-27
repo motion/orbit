@@ -328,7 +328,7 @@ export default class ChildrenRoot {
             alignLeft={alignLeft}
             size={size}
           />
-          <Item
+          <Child
             if={store.newDoc}
             editable
             onBlur={store.blurNewDoc}

@@ -83,12 +83,12 @@ export default class Inbox {
             background="transparent"
             controlled
             virtualized={{
-              rowHeight: 110,
+              rowHeight: 112,
               overscanRowCount: 5,
             }}
             itemProps={{
-              height: 110,
-              padding: 15,
+              height: 112,
+              padding: [12, 15],
               overflow: 'hidden',
               highlightBackground: [0, 0, 0, 0.25],
             }}
@@ -99,28 +99,43 @@ export default class Inbox {
             getItem={item => {
               return {
                 glow: false,
+                borderColor: [0, 0, 0, 0.1],
+                borderBottom: [1, [0, 0, 0, 0.1]],
                 primary: (
-                  <head $$row $$centered $$justify="space-between" $$flex>
+                  <head
+                    css={{
+                      flex: 1,
+                      color: '#ddd',
+                      flexFlow: 'row',
+                      justify: 'space-between',
+                      fontWeight: 400,
+                    }}
+                  >
                     {item.title}
+                  </head>
+                ),
+                secondary:
+                  item.status ||
+                  <status
+                    $$row
+                    $$align="center"
+                    $$justify="space-between"
+                    $$margin={[2, 0]}
+                  >
+                    <UI.Text size={0.9} color={[255, 255, 255, 0.7]}>
+                      <strong>Nate</strong> {ago(item.createdAt)}
+                    </UI.Text>
 
-                    <date $$row $$justify="flex-end">
+                    <date css={{ flexFlow: 'row', maxWidth: '50%' }}>
                       {item.tags().map(tag =>
                         <UI.Badge key={tag} {...badgeProps} color="#efefef">
                           {tag}
                         </UI.Badge>
                       )}
                     </date>
-                  </head>
-                ),
-                secondary:
-                  item.status ||
-                  <status if={false} $$row $$align="center">
-                    <UI.Text size={0.9}>
-                      <strong>Nate</strong> replied {ago(item.createdAt)}
-                    </UI.Text>
                   </status>,
                 children: (
-                  <UI.Text>
+                  <UI.Text color={[255, 255, 255, 0.4]} lineHeight="1.25rem">
                     {item.previewText}
                   </UI.Text>
                 ),

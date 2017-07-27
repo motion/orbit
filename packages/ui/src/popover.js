@@ -724,7 +724,7 @@ class Popover {
 
     const controlledTarget = target => {
       const targetProps = {
-        getRef: this.ref('targetRef').set,
+        ref: this.ref('targetRef').set,
       }
       if (passActive) {
         targetProps.active = isOpen && !closing
@@ -792,7 +792,9 @@ class Popover {
                 elevation={elevation}
                 background={background}
               >
-                {typeof children === 'function' ? children(isOpen) : children}
+                {typeof children === 'function'
+                  ? children(showPopover)
+                  : children}
               </Surface>
             </popover>
           </container>

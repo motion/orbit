@@ -5,6 +5,7 @@ import { Editor } from 'slate'
 import RightArrow from '~/views/kit/rightArrow'
 import Router from '~/router'
 import ExplorerStore from './explorerStore'
+import Children from '~/pages/page/children'
 
 const FONT_SIZE = 15
 
@@ -171,21 +172,35 @@ export default class Explorer {
               css={{ fontSize: 20, flexFlow: 'row', alignItems: 'center' }}
             >
               <RightArrow css={$arrow} />
-              <crumb
-                onClick={() => Router.go(crumb.url())}
-                css={{
-                  padding: [2, 4],
-                  margin: [-2, -4],
-                  borderRadius: 5,
-                  '&:hover': {
-                    background: '#eee',
-                  },
-                }}
+              <UI.Popover
+                openOnHover
+                background
+                borderRadius
+                elevation={3}
+                delay={600}
+                target={
+                  <crumb
+                    onClick={() => Router.go(crumb.url())}
+                    css={{
+                      padding: [2, 4],
+                      margin: [-2, -4],
+                      borderRadius: 5,
+                      '&:hover': {
+                        background: '#eee',
+                      },
+                    }}
+                  >
+                    {crumb.title.length > 30
+                      ? crumb.title.slice(0, 27) + '...'
+                      : crumb.title}
+                  </crumb>
+                }
               >
-                {crumb.title.length > 30
-                  ? crumb.title.slice(0, 27) + '...'
-                  : crumb.title}
-              </crumb>
+                {isOpen =>
+                  <wrap if={isOpen}>
+                    <Children document={crumb} />
+                  </wrap>}
+              </UI.Popover>
             </path>
           )}
         </crumbs>

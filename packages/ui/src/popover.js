@@ -693,7 +693,6 @@ class Popover {
     overlay,
     passActive,
     popoverProps,
-    popoverStyle,
     shadow,
     showForgiveness,
     style,

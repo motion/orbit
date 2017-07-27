@@ -1,9 +1,10 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { List, Popover } from '@mcro/ui'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
+import List from './list'
+import Popover from './popover'
 
 @view.ui
 class ContextMenuTarget {
@@ -93,12 +94,6 @@ class ContextMenu {
           if={store.event}
           open
           overlay="transparent"
-          popoverStyle={{
-            border: '1px solid #bbb',
-            background: [240, 240, 240, 0.98],
-            boxShadow: '2px 4px 11px rgba(0,0,0,0.25)',
-            borderRadius: 4,
-          }}
           closeOnEsc
           animation="slide 100ms"
           onClose={store.clearMenu}
@@ -108,9 +103,18 @@ class ContextMenu {
         >
           <List
             controlled
+            borderWidth={0}
             width={width}
             items={options}
+            css={{
+              borderWidth: 1,
+              borderColor: '#bbb',
+              background: [240, 240, 240, 0.98],
+              boxShadow: '2px 4px 11px rgba(0,0,0,0.25)',
+              borderRadius: 4,
+            }}
             itemProps={{
+              borderWidth: 0,
               css: {
                 padding: [0, 7, 0, 16],
                 margin: [3, 0],

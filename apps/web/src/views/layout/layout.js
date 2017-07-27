@@ -74,7 +74,7 @@ export default class Layout {
     return (
       <layout>
         <UI.ContextMenu
-          inactive
+          inactive={true}
           options={[
             {
               title: 'Delete',

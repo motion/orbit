@@ -209,7 +209,7 @@ export default class Surface implements ViewType {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
-    const { themeValues } = this
+    const { themeValues = {} } = this
 
     const passProps = {
       tagName,
@@ -241,7 +241,7 @@ export default class Surface implements ViewType {
         $icon
         $iconAfter={hasIconAfter}
         name={icon}
-        size={this.themeValues.iconSize}
+        size={themeValues.iconSize}
         {...iconProps}
       />,
       <Glow
@@ -251,8 +251,7 @@ export default class Surface implements ViewType {
         scale={1.3}
         show={hovered}
         color={
-          (this.theme && this.themeValues.color.lighten(0.2)) ||
-          DEFAULT_GLOW_COLOR
+          (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
         }
         opacity={0.2}
         borderLeftRadius={borderLeftRadius - 1}

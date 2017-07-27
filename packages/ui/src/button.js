@@ -83,6 +83,7 @@ export default class Button {
       overflow: 'hidden',
       pointerEvents: 'none',
       border: [5, '#fff'],
+      zIndex: 100000000,
       transform: {
         scale: 0.14,
         x: '345%',

@@ -43,12 +43,21 @@ export default class DocPageActions {
         {...props}
       >
         <UI.Button
-          size={1}
+          size={1.2}
           margin={[0, -9, 0]}
           circular
-          borderWidth={1}
+          borderWidth={0}
+          overflow="visible"
+          badge={Math.floor(Math.random() * 100)}
+          badgeProps={{
+            css: {
+              background: 'linear-gradient(left, #999, #777)',
+              top: '10%',
+              right: '15%',
+            },
+          }}
           icon="_signal"
-          tooltip={document.hasStar() ? 'unsubscribe' : 'subscribe'}
+          tooltip={document.hasStar() ? 'leave' : 'join'}
           tooltipProps={{
             towards: 'left',
           }}
@@ -78,23 +87,10 @@ export default class DocPageActions {
           }
         >
           <UI.Surface width={200} padding={10}>
-            <top $$row>
-              <left css={{ flex: 1 }}>
-                <UI.Text size={0.9}>
-                  <strong>Created</strong> {document.createdAt}
-                </UI.Text>
-                <UI.Text size={0.9}>
-                  <strong>Updated</strong> {ago(document.updatedAt)}
-                </UI.Text>
-              </left>
-            </top>
-
-            <space css={{ height: 8 }} />
-
             <UI.List.Item if={false} icon="back" primary="Revisions" />
 
             <UI.Form onSubmit={User.org && User.org.inviteMember}>
-              <UI.Title>Invite:</UI.Title>
+              <UI.Title>Invite</UI.Title>
               <UI.Row>
                 <UI.Input
                   name="email"
@@ -109,6 +105,19 @@ export default class DocPageActions {
 
             <UI.Title>Share link</UI.Title>
             <UI.Input value={Router.path} readOnly />
+
+            <space css={{ height: 8 }} />
+
+            <section $$row>
+              <left css={{ flex: 1 }}>
+                <UI.Text size={0.9}>
+                  <strong>Created</strong> {ago(document.createdAt)}
+                </UI.Text>
+                <UI.Text size={0.9}>
+                  <strong>Updated</strong> {ago(document.updatedAt)}
+                </UI.Text>
+              </left>
+            </section>
           </UI.Surface>
         </UI.Popover>
         <space css={{ paddingTop: 12 }} />

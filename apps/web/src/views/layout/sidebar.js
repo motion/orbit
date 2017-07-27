@@ -125,15 +125,6 @@ export default class Sidebar {
                 onChange={store.ref('filters').set}
               />
 
-              <UI.Input
-                if={false}
-                color="#fff"
-                borderColor={[255, 255, 255, 0.1]}
-                size={1}
-                marginRight={50}
-                onChange={store.setFilter}
-              />
-
               <end $$marginLeft={50} $$row $$align="center">
                 <UI.Button
                   circular
@@ -153,7 +144,17 @@ export default class Sidebar {
 
             {children}
 
-            <AddButton $addButton store={store} />
+            <bottom>
+              <UI.Input
+                color="#fff"
+                borderColor={[255, 255, 255, 0.1]}
+                size={1.05}
+                marginRight={-30}
+                onChange={store.setFilter}
+                placeholder="Quick add"
+              />
+              <AddButton $addButton store={store} />
+            </bottom>
           </sidebar>
         </UI.Drawer>
       </UI.Theme>
@@ -201,11 +202,13 @@ export default class Sidebar {
     inbox: {
       margin: [0, -20],
     },
-    addButton: {
+    bottom: {
       position: 'fixed',
       bottom: 20,
       right: 20,
+      left: 20,
       zIndex: 1000,
+      flexFlow: 'row',
     },
   }
 }

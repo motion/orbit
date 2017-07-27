@@ -131,15 +131,17 @@ export default class Sidebar {
               />
 
               <end $$marginLeft={50} $$row $$align="center">
-                <UI.Button
-                  circular
-                  chromeless
-                  size={1}
-                  iconSize={20}
-                  background="#000"
-                  icon="circle-09"
-                  opacity={0.5}
-                />
+                <UserMenu>
+                  <UI.Button
+                    circular
+                    chromeless
+                    size={1}
+                    iconSize={20}
+                    background="#000"
+                    icon="circle-09"
+                    opacity={1}
+                  />
+                </UserMenu>
               </end>
             </bar>
 

@@ -6,7 +6,7 @@ import * as Constants from '~/constants'
 
 @view
 export default class UserMenu {
-  render({ button }) {
+  render({ children }) {
     return (
       <usermenu if={User.loggedIn}>
         <UI.Popover
@@ -15,8 +15,9 @@ export default class UserMenu {
           borderRadius={8}
           forgiveness={16}
           delay={150}
+          theme="light"
           target={
-            button ||
+            children ||
             <UI.Button chromeless icon="gear" iconAfter>
               {User.name}
             </UI.Button>
@@ -25,7 +26,6 @@ export default class UserMenu {
           closeOnClick
         >
           <UI.List
-            background="transparent"
             width={150}
             padding={3}
             borderRadius={6}

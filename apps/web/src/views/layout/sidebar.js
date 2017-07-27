@@ -64,7 +64,7 @@ class AddButton {
 
 class SidebarStore {
   show = 'list'
-  filters = []
+  filters = [{ label: 'Me', value: 1 }, { label: 'Motion', value: 2 }]
   filter = ''
   setFilter = e => {
     this.filter = e.target.value
@@ -120,9 +120,9 @@ export default class Sidebar {
                   width: 200,
                 }}
                 options={[
-                  { label: 'One', value: 1 },
-                  { label: 'Two', value: 2 },
-                  { label: 'Three', value: 3, disabled: true },
+                  { label: 'Me', value: 1 },
+                  { label: 'Motion', value: 2 },
+                  { label: 'Company', value: 3, disabled: true },
                 ]}
                 value={store.filters}
                 onChange={store.ref('filters').set}

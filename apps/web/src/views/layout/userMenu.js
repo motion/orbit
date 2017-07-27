@@ -5,10 +5,10 @@ import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
 @view
-export default class UserBar {
-  render() {
+export default class UserMenu {
+  render({ button }) {
     return (
-      <userbar if={User.loggedIn}>
+      <usermenu if={User.loggedIn}>
         <UI.Popover
           distance={10}
           elevation={2}
@@ -16,6 +16,7 @@ export default class UserBar {
           forgiveness={16}
           delay={150}
           target={
+            button ||
             <UI.Button chromeless icon="gear" iconAfter>
               {User.name}
             </UI.Button>
@@ -68,12 +69,12 @@ export default class UserBar {
             ]}
           />
         </UI.Popover>
-      </userbar>
+      </usermenu>
     )
   }
 
   static style = {
-    userbar: {
+    usermenu: {
       flexFlow: 'row',
       alignItems: 'center',
       justifyContent: 'flex-end',

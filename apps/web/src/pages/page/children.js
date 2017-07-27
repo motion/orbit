@@ -30,16 +30,16 @@ const DragHandle = SortableHandle(props =>
 )
 
 const ICONS = {
-  inbox: 'paper',
-  document: 'circle-left',
+  inbox: 'list',
+  document: 'filesg',
 }
 
 const STYLES = {
   alignRight: {
     buttonMargin: doc => [0, -3, 0, doc && doc.id ? -5 : 0],
     iconTransform: {
-      y: -19,
-      x: -18,
+      y: -21,
+      x: -35,
     },
     surfaceProps: {
       iconAfter: true,
@@ -70,6 +70,7 @@ export class Child {
     ...props
   }) {
     const style = STYLES[alignLeft ? 'alignLeft' : 'alignRight']
+    const isInbox = doc.type === 'inbox'
 
     return (
       <doccontainer
@@ -81,6 +82,16 @@ export class Child {
         }}
         {...props}
       >
+        <line
+          css={{
+            position: 'absolute',
+            top: 8,
+            right: 36,
+            width: 3,
+            height: 1,
+            borderBottom: [1, 'dotted', '#ccc'],
+          }}
+        />
         <UI.Surface
           background="transparent"
           icon={
@@ -90,7 +101,9 @@ export class Child {
           }
           iconSize={30 * size}
           iconProps={{
+            className: doc.type,
             css: {
+              opacity: isInbox ? 0.35 : 0,
               alignSelf: 'flex-start',
               transform: {
                 scale: 0.3,
@@ -129,7 +142,6 @@ export class Child {
   }
   static style = {
     doccontainer: {
-      marginRight: -12,
       minWidth: 80,
       position: 'relative',
       opacity: 0.8,
@@ -138,6 +150,9 @@ export class Child {
       transform: {
         scale: 1,
         z: 0,
+      },
+      '&:hover icon.inbox': {
+        opacity: '0.6 !important',
       },
     },
     title: {
@@ -345,7 +360,13 @@ export default class ChildrenRoot {
           closeOnClick
           towards="left"
           target={
-            <UI.Button circular size={1} margin={[0, -3]} icon="simple-add" />
+            <UI.Button
+              circular
+              size={0.85}
+              margin={[0, 0]}
+              icon="simple-add"
+              borderStyle="dotted"
+            />
           }
         >
           <UI.List
@@ -365,7 +386,7 @@ export default class ChildrenRoot {
             />
             <UI.ListItem
               onClick={store.createInbox}
-              icon="paper"
+              icon="list"
               primary="Inbox"
             />
           </UI.List>
@@ -397,7 +418,7 @@ export default class ChildrenRoot {
       paddingBottom: 10,
     },
     contents: {
-      marginRight: 5,
+      marginRight: -9,
       width: '100%',
       overflowY: 'auto',
       overflowX: 'hidden',

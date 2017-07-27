@@ -154,7 +154,7 @@ export default class Page {
       right: 31,
       bottom: 0,
       width: 1,
-      background: '#eee',
+      borderRight: [1, 'dotted', '#ddd'],
       zIndex: -2,
     },
     fade: {

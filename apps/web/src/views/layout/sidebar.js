@@ -8,6 +8,7 @@ import { throttle } from 'lodash'
 import Draft from '~/views/inbox/draft'
 import { User } from '~/app'
 import VirtualizedSelect from 'react-virtualized-select'
+import UserMenu from './userMenu'
 
 @view
 class AddButton {
@@ -16,9 +17,8 @@ class AddButton {
       <UI.Popover
         openOnClick
         closeOnEsc
-        overlay
         background="#fff"
-        width={store.show === 'list' ? 300 : 540}
+        width={440}
         borderRadius={8}
         elevation={2}
         ref={this.ref('popover').set}
@@ -39,7 +39,7 @@ class AddButton {
         }
       >
         <content>
-          <UI.Theme if={store.show === 'list'} name="light">
+          <UI.Theme if={false && store.show === 'list'} name="light">
             <UI.List itemProps={{ size: 2 }}>
               <UI.ListItem
                 icon="paper"
@@ -51,7 +51,10 @@ class AddButton {
           </UI.Theme>
 
           <Draft
-            if={store.show === 'draft'}
+            css={{
+              height: 300,
+            }}
+            if={true || store.show === 'draft'}
             parentId={User.defaultInbox && User.defaultInbox.id}
             closePopover={() => this.popover && this.popover.close()}
             editorRef={this.ref('draftEditor').set}
@@ -76,21 +79,19 @@ class SidebarStore {
   store: SidebarStore,
 })
 export default class Sidebar {
-  state = {
-    scrolling: false,
-  }
+  scrolling = false
 
   popover = null
 
   handleScroll = throttle(() => {
     const { scrollTop } = this.sidebar
     if (scrollTop > 0) {
-      if (!this.state.scrolling) {
-        this.setState({ scrolling: true })
+      if (!this.scrolling) {
+        this.scrolling = true
       }
     } else {
-      if (this.state.scrolling) {
-        this.setState({ scrolling: false })
+      if (this.scrolling) {
+        this.scrolling = false
       }
     }
   }, 32)
@@ -111,9 +112,13 @@ export default class Sidebar {
           from="right"
           size={width}
         >
-          <sidebar $$draggable ref={this.ref('sidebar').set}>
+          <sidebar
+            onScroll={this.handleScroll}
+            $$draggable
+            ref={this.ref('sidebar').set}
+          >
             <bar>
-              <barbg $shown={this.state.scrolling} />
+              <barbg $shown={this.scrolling} />
               <VirtualizedSelect
                 multi
                 options={[
@@ -146,6 +151,7 @@ export default class Sidebar {
 
             <bottom>
               <UI.Input
+                if={false}
                 color="#fff"
                 borderColor={[255, 255, 255, 0.1]}
                 size={1.05}
@@ -180,7 +186,6 @@ export default class Sidebar {
       margin: [-10, 0, 10, 0],
       position: 'sticky',
       top: 0,
-      background: [42, 42, 45, 0.92],
       zIndex: 10000,
       transform: { y: 0 },
     },
@@ -194,6 +199,7 @@ export default class Sidebar {
       opacity: 0,
       zIndex: -1,
       transition: 'all ease-in 200ms',
+      background: [42, 42, 45, 0.92],
       transform: { y: 0 },
     },
     shown: {

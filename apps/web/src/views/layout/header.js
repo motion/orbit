@@ -4,7 +4,6 @@ import Router from '~/router'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import Explorer from './explorer/explorer'
-import Notifications from './notifications'
 
 @view.attach('layoutStore')
 @view
@@ -52,8 +51,8 @@ export default class Header {
             chromeless
             circular
             margin={[0, 4]}
-            badge={10}
-            icon="paper"
+            badge={layoutStore.sidebar.active ? false : 10}
+            icon={layoutStore.sidebar.active ? 'arrright' : 'solleft'}
             onClick={layoutStore.sidebar.ref('active').toggle}
           />
         </rest>

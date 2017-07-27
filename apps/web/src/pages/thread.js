@@ -237,7 +237,9 @@ export default class ThreadPage {
     draft: {
       padding: [15, 10],
     },
-    actions: {},
+    actions: {
+      marginTop: 30,
+    },
     action: {
       alignItems: 'center',
       padding: [8, 30, 0, 20],

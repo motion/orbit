@@ -48,7 +48,8 @@ export default class DocPageActions {
           circular
           borderWidth={0}
           overflow="visible"
-          badge={Math.floor(Math.random() * 100)}
+          glow={false}
+          badge={document.starredBy.length}
           badgeProps={{
             css: {
               background: document.hasStar()

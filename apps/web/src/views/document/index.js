@@ -22,8 +22,8 @@ export default class DocumentView {
 
   onEditor = node => {
     this.props.docStore.onEditor(node)
-    if (this.props.editorRef) {
-      this.props.editorRef(node)
+    if (this.props.onEditorStore) {
+      this.props.onEditorStore(node)
     }
   }
 
@@ -37,7 +37,7 @@ export default class DocumentView {
     readOnly,
     docStore,
     noTitle,
-    editorRef,
+    onEditorStore,
     placeholder,
     isPrimaryDocument,
     document,

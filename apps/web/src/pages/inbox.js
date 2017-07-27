@@ -45,11 +45,11 @@ export default class InboxPage {
             <filterbar $$row $$spaceBetween>
               <begin $$row $$centered>
                 <UI.Checkbox opacity={0.5} margin={[0, 10, 0, 5]} />
-                <UI.Row>
-                  <UI.Button chromeless inline icon="book-open">
-                    6 Open
-                  </UI.Button>
-                  <UI.Button chromeless opacity={0.5} inline icon="check">
+                <UI.Row
+                  itemProps={{ size: 0.9, chromeless: true, inline: true }}
+                >
+                  <UI.Button icon="book-open">6 Open</UI.Button>
+                  <UI.Button opacity={0.5} icon="check">
                     36 Done
                   </UI.Button>
                 </UI.Row>
@@ -97,41 +97,48 @@ export default class InboxPage {
                 onSelect={item => this.setTimeout(() => Router.go(item.url()))}
                 isSelected={item => item.url() === Router.path}
                 getItem={item => {
-                  return {
-                    glow: false,
-                    before: (
-                      <before css={{ marginRight: 10 }}>
-                        <UI.Checkbox />
-                      </before>
-                    ),
-                    primary: (
-                      <head $$row $$centered $$justify="space-between" $$flex>
-                        <UI.Title size={1.2}>
-                          {item.title}
-                        </UI.Title>
+                  return (
+                    <UI.ListItem
+                      css={{
+                        padding: [18, 10],
+                      }}
+                      glow={false}
+                      hoverBackground="#f2f2f2"
+                      before={
+                        <before css={{ marginRight: 10 }}>
+                          <UI.Checkbox opacity={0.5} />
+                        </before>
+                      }
+                      primary={
+                        <head $$row $$centered $$justify="space-between" $$flex>
+                          <UI.Text size={1.2} fontWeight={500}>
+                            {item.title}
+                          </UI.Text>
 
-                        <date $$row $$justify="flex-end">
-                          {item.tags().map(tag =>
-                            <UI.Badge key={tag} color="#efefef">
-                              {tag}
-                            </UI.Badge>
-                          )}
-                        </date>
-                      </head>
-                    ),
-                    secondary:
-                      item.status ||
-                      <status $$row $$align="center">
-                        <UI.Text size={0.9}>
-                          <strong>Nate</strong> replied {ago(item.createdAt)}
+                          <date $$row $$justify="flex-end">
+                            {item.tags().map(tag =>
+                              <UI.Badge key={tag} color="#efefef">
+                                {tag}
+                              </UI.Badge>
+                            )}
+                          </date>
+                        </head>
+                      }
+                      secondary={
+                        item.status ||
+                        <status $$row $$align="center">
+                          <UI.Text size={0.9}>
+                            <strong>Nate</strong> replied {ago(item.createdAt)}
+                          </UI.Text>
+                        </status>
+                      }
+                      children={
+                        <UI.Text>
+                          {item.text && item.text.slice(0, 100)}
                         </UI.Text>
-                      </status>,
-                    children: (
-                      <UI.Text>
-                        {item.text && item.text.slice(0, 100)}
-                      </UI.Text>
-                    ),
-                  }
+                      }
+                    />
+                  )
                 }}
               />
             </list>
@@ -143,15 +150,15 @@ export default class InboxPage {
 
   static style = {
     content: {
-      padding: [10, 0],
+      padding: [0, 0],
     },
     heading: {
-      padding: [0, 30, 10],
+      padding: [0, 25, 10],
       borderBottom: [1, '#eee'],
     },
     title: {
-      marginTop: 5,
-      marginBottom: 10,
+      marginTop: 8,
+      marginBottom: 2,
     },
     threads: {
       padding: [0, 10],

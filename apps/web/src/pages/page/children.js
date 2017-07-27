@@ -388,7 +388,7 @@ export default class ChildrenRoot {
             />
             <UI.ListItem
               onClick={store.createInbox}
-              icon="list"
+              icon="chat-round-c"
               primary="Inbox"
             />
           </UI.List>

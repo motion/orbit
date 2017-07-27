@@ -50,9 +50,9 @@ export default class Header {
             size={1.2}
             chromeless
             circular
-            margin={[0, 4]}
+            margin={[0, 2]}
             badge={layoutStore.sidebar.active ? false : 10}
-            icon={layoutStore.sidebar.active ? 'arrright' : 'solleft'}
+            icon={layoutStore.sidebar.active ? 'arrminright' : 'aminleft'}
             onClick={layoutStore.sidebar.ref('active').toggle}
           />
         </rest>

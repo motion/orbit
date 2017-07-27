@@ -82,7 +82,7 @@ export default class Draft {
   editor = null
 
   render({
-    editorRef,
+    onEditorStore,
     placeholder,
     store,
     isReply,
@@ -104,9 +104,12 @@ export default class Draft {
                 document={draft}
                 inline
                 noTitle={isReply}
-                editorRef={editorRef}
+                onEditorStore={onEditorStore}
                 placeholder={placeholder}
                 focus={focus}
+                css={{
+                  minHeight: 100,
+                }}
               />
             </draftdoc>
             <actions if={draft} $$row>
@@ -118,13 +121,20 @@ export default class Draft {
                 )}
               </badges>
               <status if={store.isReply} $$row $$centered>
-                <UI.Checkbox marginRight={10} />
-                <UI.Text size={0.8}>
-                  Remind me <b>in 2 days</b> if no reply
-                </UI.Text>
+                <reminder if={false}>
+                  <UI.Checkbox marginRight={10} />
+                  <UI.Text size={0.8}>
+                    Remind me <b>in 2 days</b> if no reply
+                  </UI.Text>
+                </reminder>
               </status>
               <UI.Row spaced>
-                <UI.Button onClick={store.destroy} chromeless opacity={0.5}>
+                <UI.Button
+                  if={store.hasContent}
+                  onClick={store.destroy}
+                  chromeless
+                  opacity={0.5}
+                >
                   Cancel
                 </UI.Button>
                 <UI.Button icon="send" onClick={store.send}>

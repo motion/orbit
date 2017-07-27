@@ -12,6 +12,10 @@ import UserMenu from './userMenu'
 
 @view
 class AddButton {
+  editorStore = null
+
+  onDidOpen = () => this.editorStore && this.editorStore.focus()
+
   render({ store, ...props }) {
     return (
       <UI.Popover
@@ -22,7 +26,7 @@ class AddButton {
         borderRadius={8}
         elevation={2}
         ref={this.ref('popover').set}
-        onDidOpen={() => this.draftEditor && this.draftEditor.focus()}
+        onDidOpen={this.onDidOpen}
         onClose={store.ref('show').setter('list')}
         target={
           <UI.Button
@@ -57,7 +61,7 @@ class AddButton {
             if={true || store.show === 'draft'}
             parentId={User.defaultInbox && User.defaultInbox.id}
             closePopover={() => this.popover && this.popover.close()}
-            editorRef={this.ref('draftEditor').set}
+            onEditorStore={this.ref('editorStore').set}
           />
         </content>
       </UI.Popover>

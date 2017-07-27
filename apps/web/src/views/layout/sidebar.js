@@ -187,7 +187,7 @@ export default class Sidebar {
       justifyContent: 'space-between',
       alignItems: 'center',
       padding: 10,
-      margin: [-10, 0, 10, 0],
+      margin: [-10, 0, 8, 0],
       position: 'sticky',
       top: 0,
       zIndex: 10000,

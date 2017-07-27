@@ -30,7 +30,7 @@ const DragHandle = SortableHandle(props =>
 )
 
 const ICONS = {
-  inbox: 'list',
+  inbox: 'chat-round-content',
   document: 'filesg',
 }
 
@@ -38,8 +38,8 @@ const STYLES = {
   alignRight: {
     buttonMargin: doc => [0, -3, 0, doc && doc.id ? -5 : 0],
     iconTransform: {
-      y: -21,
-      x: -35,
+      y: -13,
+      x: -20,
     },
     surfaceProps: {
       iconAfter: true,
@@ -103,10 +103,10 @@ export class Child {
           iconProps={{
             className: doc.type,
             css: {
-              opacity: isInbox ? 0.35 : 0,
+              opacity: isInbox ? 0.8 : 0,
               alignSelf: 'flex-start',
               transform: {
-                scale: 0.3,
+                scale: 0.4,
                 ...style.iconTransform,
               },
               boxShadow: ['inset  0 0 100px 100px #fff'],
@@ -142,7 +142,7 @@ export class Child {
   }
   static style = {
     doccontainer: {
-      minWidth: 80,
+      minWidth: 90,
       position: 'relative',
       opacity: 0.8,
       // transition: 'transform ease-in 80ms',
@@ -152,11 +152,13 @@ export class Child {
         z: 0,
       },
       '&:hover icon.inbox': {
-        opacity: '0.6 !important',
+        opacity: '1 !important',
+        color: 'blue !important',
       },
     },
     title: {
       marginBottom: 20,
+      marginRight: 4,
       fontWeight: 300,
       width: '100%',
       color: '#000',

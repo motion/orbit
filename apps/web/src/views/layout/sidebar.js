@@ -7,14 +7,7 @@ import InboxList from '~/views/inbox/list'
 import { throttle } from 'lodash'
 import Draft from '~/views/inbox/draft'
 import { User } from '~/app'
-
-class SidebarStore {
-  show = 'list'
-  filter = ''
-  setFilter = e => {
-    this.filter = e.target.value
-  }
-}
+import VirtualizedSelect from 'react-virtualized-select'
 
 @view
 class AddButton {
@@ -69,6 +62,15 @@ class AddButton {
   }
 }
 
+class SidebarStore {
+  show = 'list'
+  filters = []
+  filter = ''
+  setFilter = e => {
+    this.filter = e.target.value
+  }
+}
+
 @view.attach('layoutStore')
 @view({
   store: SidebarStore,
@@ -112,7 +114,22 @@ export default class Sidebar {
           <sidebar $$draggable ref={this.ref('sidebar').set}>
             <bar>
               <barbg $shown={this.state.scrolling} />
+              <VirtualizedSelect
+                multi
+                css={{
+                  width: 200,
+                }}
+                options={[
+                  { label: 'One', value: 1 },
+                  { label: 'Two', value: 2 },
+                  { label: 'Three', value: 3, disabled: true },
+                ]}
+                value={store.filters}
+                onChange={store.ref('filters').set}
+              />
+
               <UI.Input
+                if={false}
                 color="#fff"
                 borderColor={[255, 255, 255, 0.1]}
                 size={1}
@@ -120,7 +137,9 @@ export default class Sidebar {
                 onChange={store.setFilter}
               />
 
-              <end $$marginLeft={20} $$row $$align="center" />
+              <end $$marginLeft={20} $$row $$align="center">
+                <UI.Dropdown>Me</UI.Dropdown>
+              </end>
             </bar>
 
             <inbox>

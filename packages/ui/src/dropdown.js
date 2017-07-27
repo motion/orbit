@@ -60,7 +60,7 @@ export default class Dropdown {
               glow={false}
               iconAfter
               icon={arrow}
-              borderRadius={100}
+              borderRadius={16}
               {...buttonProps}
             >
               {children}

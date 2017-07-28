@@ -4,7 +4,29 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Page from './page'
 import DocumentView from '~/views/document'
-import Children from './page/children'
+
+@view
+class FakeDocument {
+  render() {
+    return (
+      <Page>
+        <fakedoc
+          css={{
+            padding: 20,
+          }}
+        >
+          <fakeTitle
+            css={{
+              width: 120,
+              height: 28,
+              background: '#f5f5f5',
+            }}
+          />
+        </fakedoc>
+      </Page>
+    )
+  }
+}
 
 @view.attach('rootStore')
 @view
@@ -12,7 +34,7 @@ export default class DocumentPage {
   render({ rootStore: { document } }) {
     // this is the "loading" state
     if (document === undefined) {
-      return <hi>hi</hi>
+      return <FakeDocument />
     }
 
     if (!document) {

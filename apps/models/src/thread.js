@@ -1,14 +1,13 @@
 // @flow
-import { Thing, extend, methods, getTitle, getContent } from './thing'
+import { Thing, extend, methods, withContent } from './thing'
 import Reply from './reply'
 
 class Thread extends Thing {
   static props = Thing.props
   static defaultProps = doc => ({
     ...Thing.defaultProps(doc),
+    ...withContent(doc),
     type: 'thread',
-    title: getTitle(doc),
-    content: getContent(doc),
   })
 
   static defaultFilter = doc => ({ type: 'thread', ...doc })

@@ -82,7 +82,7 @@ export default class SignupStep1 {
           <UI.PassProps
             row
             placeholderColor="#444"
-            labelStyle={{ width: 110 }}
+            labelProps={{ css: { width: 110 } }}
             size={1.2}
           >
             <UI.Field label="Company" placeholder="" />

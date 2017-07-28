@@ -1,16 +1,14 @@
 // @flow
 import { query } from '@mcro/black'
-import { Thing, methods, extend } from './thing'
+import { Thing, methods, extend, withContent } from './thing'
 
 export class Document extends Thing {
   static props = Thing.props
-  static defaultProps = doc =>
-    log({
-      ...Thing.defaultProps(doc),
-      type: 'document',
-      title: Thing.getTitle(doc),
-      content: Thing.getContent(doc),
-    })
+  static defaultProps = doc => ({
+    ...Thing.defaultProps(doc),
+    ...withContent(doc),
+    type: 'document',
+  })
 
   static defaultFilter = doc => ({ type: 'document', ...doc })
 

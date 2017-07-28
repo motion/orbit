@@ -30,7 +30,13 @@ export const extend = (a, b) => {
   return result
 }
 
-export const getTitle = document => {
+export const withContent = document => {
+  document.title = getTitle(document)
+  document.content = getContent(document)
+  return document
+}
+
+const getTitle = document => {
   // set title to first content node
   try {
     if (document.content && document.content.document) {
@@ -42,34 +48,37 @@ export const getTitle = document => {
   return document.title || ''
 }
 
-export const getContent = ({ title }) => ({
-  nodes: [
-    {
-      kind: 'block',
-      type: 'title',
-      data: {
-        level: 1,
+const getContent = doc => {
+  const { title } = doc
+
+  return {
+    nodes: [
+      {
+        kind: 'block',
+        type: 'title',
+        data: {
+          level: 1,
+        },
+        nodes: [
+          {
+            kind: 'text',
+            text: title || 'Hello World',
+          },
+        ],
       },
-      nodes: [
-        {
-          kind: 'text',
-          text: title || 'Hello World',
-        },
-      ],
-    },
-    {
-      kind: 'block',
-      type: 'paragraph',
-      data: {},
-      nodes: [
-        {
-          kind: 'text',
-          text: '',
-        },
-      ],
-    },
-  ],
-})
+      {
+        kind: 'block',
+        type: 'paragraph',
+        nodes: [
+          {
+            kind: 'text',
+            text: '',
+          },
+        ],
+      },
+    ],
+  }
+}
 
 export const methods = {
   url() {

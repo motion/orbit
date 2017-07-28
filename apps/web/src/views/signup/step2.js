@@ -43,7 +43,6 @@ export default class SignupStep2 {
     const fieldProps = {
       row: true,
       placeholderColor: '#444',
-      labelStyle: { width: 110 },
       size: 1.2,
     }
 

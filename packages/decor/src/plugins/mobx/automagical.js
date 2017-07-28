@@ -19,6 +19,8 @@ const isQuery = val => val && val.$isQuery
 const isRxObservable = val => window.Rx && val instanceof window.Rx.Observable
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
+const isObservableLike = val =>
+  val && (isQuery(val) || isObservable(val) || val.isObservable)
 
 const DEFAULT_VALUE = undefined
 
@@ -198,17 +200,20 @@ function resolve(value) {
     value = value.$
   }
   if (isRxObservable(value)) {
-    const stream = fromStream(value)
+    const observable = value
+    const mobxStream = fromStream(value)
     return {
-      get: () => stream.current,
-      dispose: stream.dispose,
+      get: () => mobxStream.current,
+      mobxStream,
+      observable,
+      dispose: mobxStream.dispose,
       isObservable: true,
     }
   }
   return value
 }
 
-const AID = '__AUTOMATICAL_ID__'
+const AID = '__AUTOMAGICAL_ID__'
 const uid = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
@@ -223,8 +228,8 @@ function mobxifyWatch(obj, method, val) {
   let current = Mobx.observable.box(DEFAULT_VALUE)
   let currentDisposable = null
   let currentObservable = null
-  let swappingOutSameObservable = false
-  let stopAutoObserve
+  let autoObserver = null
+  const stopAutoObserve = () => autoObserver && autoObserver()
 
   const update = newValue => {
     let value = newValue
@@ -236,11 +241,10 @@ function mobxifyWatch(obj, method, val) {
   }
 
   function runObservable() {
-    stopAutoObserve && stopAutoObserve()
-    stopAutoObserve = Mobx.autorun(() => {
+    stopAutoObserve()
+    autoObserver = Mobx.autorun(() => {
       if (currentObservable) {
         const value = currentObservable.get()
-        debug(swappingOutSameObservable, 'runObservable.value = ', value)
         update(value) // set + wrap
       }
     })
@@ -251,33 +255,41 @@ function mobxifyWatch(obj, method, val) {
   function watcher(val) {
     return () => {
       const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
-      stopAutoObserve && stopAutoObserve()
-      if (currentDisposable) {
-        currentDisposable()
-        currentDisposable = null
+      const observableLike = isObservableLike(result)
+      stopAutoObserve()
+
+      const replaceDisposable = () => {
+        if (currentDisposable) {
+          currentDisposable()
+          currentDisposable = null
+        }
+        if (result && result.dispose) {
+          currentDisposable = result.dispose.bind(result)
+        }
       }
-      if (result && result.dispose) {
-        currentDisposable = result.dispose.bind(result)
-      }
-      if (result && (isQuery(result) || isObservable(result))) {
+
+      if (observableLike) {
         if (result.isntConnected) {
           return
         }
-        debug('change up', currentObservable, result)
-        if (currentObservable && currentObservable[AID] === result[AID]) {
-          debug('SAME OBSERVABLE, SWAP ONLY')
-          swappingOutSameObservable = true
+        const isSameObservable =
+          currentObservable && currentObservable[AID] === result[AID]
+        if (isSameObservable) {
           update(currentObservable.get())
           return
         }
+        replaceDisposable()
         currentObservable = result
         currentObservable[AID] = currentObservable[AID] || uid()
         runObservable()
-      } else if (isPromise(result)) {
-        current.set(fromPromise(result))
       } else {
-        debug('watchForNewValue ===', result)
-        update(result)
+        replaceDisposable()
+        if (isPromise(result)) {
+          current.set(fromPromise(result))
+        } else {
+          debug('watchForNewValue ===', result)
+          update(result)
+        }
       }
     }
   }
@@ -309,6 +321,12 @@ function mobxifyWatch(obj, method, val) {
         return value
       }
       return result
+    },
+  })
+
+  Object.defineProperty(obj, `${method}__automagic_source`, {
+    get() {
+      return { current, currentObservable }
     },
   })
 

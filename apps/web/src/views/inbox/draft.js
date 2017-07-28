@@ -10,21 +10,20 @@ class DraftStore {
   draftVersion = 1
   recs = []
 
-  // @watch
-  // draft = () => {
-  //   log('draftetmp')
-  //   return null
-  //   return (
-  //     this.draftVersion &&
-  //     this.model.createTemporary({
-  //       title: 'Draft',
-  //       parentId: this.props.parentId || undefined,
-  //       draft: true,
-  //     })
-  //   )
-  // }
+  @watch
+  draft = () => {
+    return (
+      this.draftVersion &&
+      this.model.createTemporary({
+        title: 'Draft',
+        parentId: this.props.parentId || undefined,
+        draft: true,
+      })
+    )
+  }
 
   get model() {
+    log('get model')
     return this.props.isReply ? Reply : Thread
   }
 
@@ -34,6 +33,7 @@ class DraftStore {
 
   lastText = ''
   getRec = async () => {
+    log('getRec')
     if (this.draft) {
       const { recStore } = this.props
       const text = this.draft.title + ' ' + this.draft.previewText
@@ -44,12 +44,12 @@ class DraftStore {
 
       this.lastText = text
     }
-    setTimeout(this.getRec, REC_SPEED)
   }
 
   start() {
     if (!this.isReply) {
-      setTimeout(this.getRec, REC_SPEED)
+      // this is a ridiculous loop
+      // this.setTimeout(this.getRec, REC_SPEED)
     }
   }
 
@@ -98,6 +98,7 @@ export default class Draft {
     focus,
     ...props
   }) {
+    log('render draft')
     return (
       <HotKeys handlers={store.shortcuts}>
         <UI.Theme name="light">

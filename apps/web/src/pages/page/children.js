@@ -209,8 +209,6 @@ class ChildrenStore {
 
   @watch
   newDoc = () => {
-    return null
-    log('newDoc')
     return this.props.allowInsert && this.creatingDoc && this.document
       ? Models[this.docType].createTemporary({
           parentId: this.document.id,

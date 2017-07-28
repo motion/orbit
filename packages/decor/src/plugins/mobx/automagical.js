@@ -2,9 +2,6 @@
 import { fromStream, fromPromise } from 'mobx-utils'
 import * as Mobx from 'mobx'
 
-// turned off for now
-const debug = () => {}
-
 if (module && module.hot) {
   module.hot.accept(() => {})
 }
@@ -216,7 +213,13 @@ const uid = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
-  // const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
+  const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
+  const debug = (...args) => {
+    if (method === 'draft') {
+      console.log(KEY, ...args)
+    }
+  }
+
   let current = Mobx.observable.box(DEFAULT_VALUE)
   let currentDisposable = null
   let currentObservable = null
@@ -228,9 +231,7 @@ function mobxifyWatch(obj, method, val) {
     if (Mobx.isObservableArray(value) || Mobx.isObservableMap(value)) {
       value = Mobx.toJS(value)
     }
-    if (method === 'children') {
-      debug('update ===', value)
-    }
+    debug('update ===', value)
     current.set(Mobx.observable.box(value))
   }
 
@@ -239,9 +240,7 @@ function mobxifyWatch(obj, method, val) {
     stopAutoObserve = Mobx.autorun(() => {
       if (currentObservable) {
         const value = currentObservable.get()
-        if (method === 'children') {
-          debug(swappingOutSameObservable, 'runObservable.value = ', value)
-        }
+        debug(swappingOutSameObservable, 'runObservable.value = ', value)
         update(value) // set + wrap
       }
     })
@@ -264,9 +263,7 @@ function mobxifyWatch(obj, method, val) {
         if (result.isntConnected) {
           return
         }
-        if (method === 'children') {
-          debug('change up', currentObservable, result)
-        }
+        debug('change up', currentObservable, result)
         if (currentObservable && currentObservable[AID] === result[AID]) {
           debug('SAME OBSERVABLE, SWAP ONLY')
           swappingOutSameObservable = true
@@ -279,16 +276,10 @@ function mobxifyWatch(obj, method, val) {
       } else if (isPromise(result)) {
         current.set(fromPromise(result))
       } else {
-        if (method === 'children') {
-          debug('watchForNewValue ===', result)
-        }
+        debug('watchForNewValue ===', result)
         update(result)
       }
     }
-  }
-
-  if (method === 'children') {
-    debug('getting children', val)
   }
 
   // autorun vs reaction
@@ -303,6 +294,7 @@ function mobxifyWatch(obj, method, val) {
   Object.defineProperty(obj, method, {
     get() {
       const result = current.get()
+      debug('getttttttt', result)
       if (result && result.promise) {
         return result.value
       }

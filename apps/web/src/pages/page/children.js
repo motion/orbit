@@ -130,6 +130,7 @@ export class Child {
             ref={textRef}
           >
             {doc.title}
+            <underline />
           </UI.Text>
         </UI.Surface>
 
@@ -155,14 +156,33 @@ export class Child {
         opacity: '1 !important',
         color: 'blue !important',
       },
+      '&:hover underline': {
+        opacity: 1,
+        transform: {
+          x: 0,
+        },
+      },
     },
     title: {
-      marginBottom: 20,
+      marginBottom: 16,
+      paddingBottom: 4,
       marginRight: 4,
       fontWeight: 300,
-      width: '100%',
       color: '#000',
       overflow: 'hidden',
+    },
+    underline: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 2,
+      transition: 'all ease-in 100ms',
+      opacity: 0,
+      transform: {
+        x: '100%',
+      },
+      background: '#ccc',
     },
   }
 

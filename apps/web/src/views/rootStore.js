@@ -36,18 +36,16 @@ export default class RootStore {
   }
 
   @watch
-  crumbs = () => {
-    return this.document && this.document.getCrumbs()
-  }
+  crumbs = [
+    () => this.document && this.document.id,
+    () => this.document && this.document.getCrumbs(),
+  ]
 
   @watch
-  children = () => {
-    return (
-      this.showBrowse &&
-      this.document &&
-      this.document.getChildren({ depth: Infinity })
-    )
-  }
+  children = [
+    () => [this.document && this.document.id, this.showBrowse],
+    () => this.document && this.document.getChildren({ depth: Infinity }),
+  ]
 
   shortcuts = SHORTCUTS
 }

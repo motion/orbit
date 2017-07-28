@@ -201,14 +201,11 @@ class ChildrenStore {
     return this.props.document || this.props.rootStore.document
   }
 
-  lastChildren = null
   @watch
-  children = () => {
-    const children =
-      (this.document && this.document.getChildren()) || this.lastChildren
-    this.lastChildren = children
-    return children
-  }
+  children = [
+    () => this.document && this.document.id + this.version,
+    () => this.document && this.document.getChildren(),
+  ]
 
   @watch
   newDoc = () => {

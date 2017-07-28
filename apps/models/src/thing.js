@@ -256,7 +256,6 @@ export class Thing extends Model {
       members: [],
       attachments: [],
       childrenSort: [],
-      parentIds: parentId ? [parentId] : [],
       private: true,
       color: randomcolor(),
       slug: toSlug(title),
@@ -271,13 +270,18 @@ export class Thing extends Model {
     index: ['createdAt', 'updatedAt'],
   }
 
+  hooks = {
+    preInsert: async doc => {
+      await this.ensureParentIds(doc)
+    },
+  }
+
   @query
   get = (query: Object | string) => {
     if (!query) {
       return null
     }
     const query_ = cleanGetQuery(query)
-    log('get query', query)
     return this.collection.findOne(query_)
   };
 
@@ -289,26 +293,15 @@ export class Thing extends Model {
     return this.collection.find().where('authorId').eq(User.name)
   }
 
-  async create({ parentId, parentIds, ...rest } = {}, isTemp) {
-    let fParentIds = parentIds
-
-    // ensure parentIds
-    if (!parentId) {
+  async ensureParentIds(doc) {
+    if (!doc.parentId) {
       throw new Error('No parentId given!')
     }
-    if (!parentIds) {
-      const parent = await this._collection.findOne(parentId).exec()
-      fParentIds = [...parent.parentIds, parentId]
+    if (!doc.parentIds) {
+      const parent = await this._collection.findOne(doc.parentId).exec()
+      doc.parentIds = [...parent.parentIds, doc.parentId]
+      log('setting parent ids for doc', doc.parentIds)
     }
-
-    return super.create(
-      {
-        parentId,
-        parentIds: fParentIds,
-        ...rest,
-      },
-      isTemp
-    )
   }
 }
 

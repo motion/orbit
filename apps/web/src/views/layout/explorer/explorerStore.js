@@ -332,14 +332,14 @@ export default class ExplorerStore {
     for (const slug of this.splitPath(path)) {
       const query = { slug }
       if (last) {
-        query.parentId = last._id
+        query.parentId = last.id
       }
       let next = await Document.collection.findOne(query).exec()
       if (!next && create) {
         next = await Document.create({
           ...query,
           title: slug,
-          parentIds: result.map(doc => doc.id),
+          parentId: last.id,
         })
       }
       if (!next) {

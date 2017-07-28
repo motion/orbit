@@ -9,7 +9,7 @@ export default class HomePage {
     this.watch(async () => {
       if (User.home === null) {
         console.log('creating org')
-        await User.createOrg('myneworg')
+        // await User.createOrg('myneworg')
         console.log('created new org for user')
       }
     })

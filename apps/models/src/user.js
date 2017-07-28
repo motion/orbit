@@ -10,22 +10,21 @@ const API_URL = `http://${API_HOST}`
 
 @store
 class Queries {
-  id = null
+  id = false
   activeOrg = 0
 
   get org() {
     return this.orgs && this.orgs[this.activeOrg]
   }
 
-  @watch
-  orgs = () => {
-    return this.id && Org.forUser(this.id)
-  }
-
+  @watch orgs = () => this.id && Org.forUser(this.id)
   @watch favorites = () => Document.favoritedBy(this.id)
 
   @watch
   home = () => {
+    if (this.org === false) {
+      return false
+    }
     if (this.org) {
       return Document.get({ parentId: this.org.id })
     }

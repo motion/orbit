@@ -29,9 +29,10 @@ export default class Header {
             theme="light"
             icon="minimal-left"
             disabled={Router.atBack}
-            onClick={() => Router.back()}
+            onClick={() => !Router.atBack && Router.back()}
           />
           <Explorer
+            if={false}
             onOpen={() => (layoutStore.explorerOpen = true)}
             onClose={() => (layoutStore.explorerOpen = false)}
           />

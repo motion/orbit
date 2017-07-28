@@ -11,10 +11,11 @@ const { ago } = timeAgo()
 class InboxStore {
   inbox = this.props.document
   @watch
-  threads = () =>
-    Thread.find({
+  threads = () => {
+    return Thread.find({
       parentId: this.inbox ? this.inbox.id : undefined,
     })
+  }
 
   get filteredThreads() {
     if (!this.threads) {

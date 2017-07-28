@@ -10,14 +10,19 @@ class DraftStore {
   draftVersion = 1
   recs = []
 
-  @watch
-  draft = () =>
-    this.draftVersion &&
-    this.model.createTemporary({
-      title: 'Draft',
-      parentId: this.props.parentId || undefined,
-      draft: true,
-    })
+  // @watch
+  // draft = () => {
+  //   log('draftetmp')
+  //   return null
+  //   return (
+  //     this.draftVersion &&
+  //     this.model.createTemporary({
+  //       title: 'Draft',
+  //       parentId: this.props.parentId || undefined,
+  //       draft: true,
+  //     })
+  //   )
+  // }
 
   get model() {
     return this.props.isReply ? Reply : Thread

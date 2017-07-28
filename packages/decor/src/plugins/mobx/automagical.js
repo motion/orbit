@@ -23,6 +23,8 @@ const isRxObservable = val => window.Rx && val instanceof window.Rx.Observable
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
 
+const DEFAULT_VALUE = undefined
+
 export default function automagical() {
   return {
     name: 'automagical',
@@ -130,7 +132,7 @@ function mobxify(target: Object, method: string, descriptors: Object) {
   // check first to avoid accidental get
   if (descriptor && !!descriptor.get) {
     const getter = {
-      [method]: null,
+      [method]: DEFAULT_VALUE,
     }
     Object.defineProperty(getter, method, descriptor)
     // @computed get
@@ -215,7 +217,7 @@ const uid = () => `__ID_${Math.random()}__`
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
   // const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
-  let current = Mobx.observable.box(null)
+  let current = Mobx.observable.box(DEFAULT_VALUE)
   let currentDisposable = null
   let currentObservable = null
   let swappingOutSameObservable = false

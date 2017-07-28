@@ -3,43 +3,40 @@ import React from 'react'
 import { view } from '@mcro/black'
 import { User } from '~/app'
 import * as UI from '@mcro/ui'
+import Router from '~/router'
+
+class SignupStep2Store {
+  members = [true]
+
+  addMember = () => {
+    this.members = [...this.members, true]
+  }
+
+  errors = null
+
+  // wrap to avoid mobx action wrap because validator has weird api
+  // helpers = {
+  //   validator: schema({
+  //     company: string.minlen(2),
+  //     name: string.minlen(2),
+  //     email: string
+  //       .minlen(5)
+  //       .match(
+  //         /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+  //       ),
+  //     password: string.minlen(7),
+  //   }),
+  // }
+
+  handleSubmit = async fields => {
+    log('handle submit')
+    await User.createOrg('testorg')
+    Router.go('/')
+  }
+}
 
 @view({
-  store: class SignupStep2Store {
-    members = [true]
-
-    addMember = () => {
-      this.members = [...this.members, true]
-    }
-
-    /* remove to show form by default */
-
-    start() {
-      User.org = 'hi'
-    }
-
-    errors = null
-
-    // wrap to avoid mobx action wrap because validator has weird api
-    // helpers = {
-    //   validator: schema({
-    //     company: string.minlen(2),
-    //     name: string.minlen(2),
-    //     email: string
-    //       .minlen(5)
-    //       .match(
-    //         /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-    //       ),
-    //     password: string.minlen(7),
-    //   }),
-    // }
-
-    @log
-    handleSubmit = async fields => {
-      User.org = 'done'
-      console.log('submit it up')
-    }
-  },
+  store: SignupStep2Store,
 })
 export default class SignupStep2 {
   render({ store }) {

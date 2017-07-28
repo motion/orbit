@@ -89,4 +89,7 @@ export class OrgModel extends Model {
   }
 }
 
-export default new OrgModel()
+const OrgInstance = new OrgModel()
+window.Org = OrgInstance
+
+export default OrgInstance

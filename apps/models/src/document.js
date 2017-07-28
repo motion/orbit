@@ -4,12 +4,13 @@ import { Thing, methods, extend } from './thing'
 
 export class Document extends Thing {
   static props = Thing.props
-  static defaultProps = doc => ({
-    ...Thing.defaultProps(doc),
-    type: 'document',
-    title: Thing.getTitle(doc),
-    content: Thing.getContent(doc),
-  })
+  static defaultProps = doc =>
+    log({
+      ...Thing.defaultProps(doc),
+      type: 'document',
+      title: Thing.getTitle(doc),
+      content: Thing.getContent(doc),
+    })
 
   static defaultFilter = doc => ({ type: 'document', ...doc })
 

@@ -1,5 +1,5 @@
 // @flow
-import { Model, query, str, object, array, bool } from '@mcro/black'
+import { Model, query, str, object, array, bool, number } from '@mcro/black'
 import Image from './image'
 import User from './user'
 import { some, last, includes, without } from 'lodash'
@@ -33,7 +33,7 @@ export const extend = (a, b) => {
 export const getTitle = document => {
   // set title to first content node
   try {
-    if (document.content) {
+    if (document.content && document.content.document) {
       return document.content.document.nodes[0].nodes[0].text || document.title
     }
   } catch (e) {
@@ -221,6 +221,7 @@ export class Thing extends Model {
 
   static props = {
     title: str,
+    uid: number,
     content: object.optional,
     text: str.optional,
     authorId: str,
@@ -244,9 +245,8 @@ export class Thing extends Model {
     childrenSort: array.optional.items(str),
   }
 
-  static defaultProps = ({ title, parentId, ...props }) => {
+  static defaultProps = ({ title, ...props }) => {
     const type = props.type || 'document'
-
     return {
       title,
       authorId: User.user ? User.id : 'anon',
@@ -274,6 +274,7 @@ export class Thing extends Model {
   hooks = {
     preInsert: async doc => {
       await this.ensureParentIds(doc)
+      await this.ensureUid(doc)
     },
   }
 
@@ -301,7 +302,17 @@ export class Thing extends Model {
     if (!doc.parentIds) {
       const parent = await this._collection.findOne(doc.parentId).exec()
       doc.parentIds = [...parent.parentIds, doc.parentId]
-      log('setting parent ids for doc', doc.parentIds)
+    }
+  }
+
+  async ensureUid(doc) {
+    if (!doc.uid) {
+      const last = await this._collection.findOne().sort('createdAt').exec()
+      if (!last) {
+        doc.uid = 1
+      } else {
+        doc.uid = last.uid + 1
+      }
     }
   }
 }

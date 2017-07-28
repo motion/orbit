@@ -12,7 +12,7 @@ import App from '~/app'
   store: class SignupStore {
     get step() {
       if (!App.connected) {
-        return 0
+        return 1
       }
       if (!User.loggedIn) {
         return 1
@@ -20,13 +20,14 @@ import App from '~/app'
       if (!User.org) {
         return 2
       }
+      return false
     }
   },
 })
 export default class Signup {
   render({ store: { step } }) {
     return (
-      <signup if={step === 1} $$fullscreen $$draggable $$centered>
+      <signup if={step} $$fullscreen $$draggable $$centered>
         <UI.Glint size={1.1} borderRadius={5} />
         <UI.Glow
           if={false}
@@ -44,7 +45,6 @@ export default class Signup {
         />
 
         <header
-          if={false}
           css={{
             position: 'absolute',
             top: '30%',

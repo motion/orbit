@@ -29,6 +29,8 @@ export {
   nil,
   oneOf,
   compile,
+  number,
+  int,
 } from './model/properties'
 import { compile } from './model/properties'
 import validator from 'is-my-json-valid'

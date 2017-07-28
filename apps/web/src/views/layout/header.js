@@ -32,7 +32,6 @@ export default class Header {
             onClick={() => !Router.atBack && Router.back()}
           />
           <Explorer
-            if={false}
             onOpen={() => (layoutStore.explorerOpen = true)}
             onClose={() => (layoutStore.explorerOpen = false)}
           />

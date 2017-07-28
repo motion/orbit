@@ -5,6 +5,7 @@ import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
 import List from './list'
 import Popover from './popover'
+import Theme from './helpers/theme'
 
 @view.ui
 class ContextMenuTarget {
@@ -94,6 +95,10 @@ class ContextMenu {
           if={store.event}
           open
           overlay="transparent"
+          theme="none"
+          overflow="visible"
+          borderWidth={0}
+          borderRadius={7}
           closeOnEsc
           animation="slide 100ms"
           onClose={store.clearMenu}
@@ -103,18 +108,17 @@ class ContextMenu {
         >
           <List
             controlled
+            background="#F0F0F0"
+            boxShadow={[
+              '1px 5px 16px rgba(0,0,0,0.2)',
+              'inset 0 0 0 0.5px #b5b5b5',
+            ]}
+            borderRadius={7}
+            width={width}
             items={options}
-            css={{
-              width,
-              borderRadius: 7,
-              background: '#F0F0F0',
-              boxShadow: [
-                '1px 5px 16px rgba(0,0,0,0.2)',
-                'inset 0 0 0 0.5px #b5b5b5',
-              ],
-            }}
             itemProps={{
               glint: true,
+              borderRadius: 0,
               css: {
                 padding: [3, 7, 3, 28],
                 margin: [3, 0],
@@ -127,8 +131,7 @@ class ContextMenu {
             getItem={item => ({
               primary: item.title,
               glow: false,
-              debug: true,
-              hover: { background: 'red' },
+              hover: { background: 'blue', color: '#fff !important' },
             })}
           />
         </Popover>

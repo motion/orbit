@@ -176,11 +176,11 @@ class List {
 
     const passThroughProps = {
       height: virtualized ? virtualized.rowHeight : undefined,
-      ...itemProps,
       onItemMount,
       size,
       borderRadius,
       borderColor,
+      ...itemProps,
     }
 
     const total = items ? items.length : Children.count(children)

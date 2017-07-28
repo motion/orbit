@@ -104,6 +104,8 @@ export default class Surface implements ViewType {
     tooltipProps?: Object,
     width?: number,
     wrapElement?: boolean,
+    minWidth?: number,
+    maxWidth?: number,
   }
 
   static defaultProps = {
@@ -203,7 +205,10 @@ export default class Surface implements ViewType {
     wrapElement,
     disabled,
     flexFlow,
+    minWidth,
+    maxWidth,
     textAlign,
+    hover,
     ...props
   }) {
     const hasIconBefore = icon && !iconAfter
@@ -328,7 +333,6 @@ export default class Surface implements ViewType {
     surface: {
       lineHeight: '1rem',
       position: 'relative',
-      borderStyle: 'solid',
     },
     element: {
       border: 'none',
@@ -376,6 +380,11 @@ export default class Surface implements ViewType {
   }
 
   static theme = (props, theme, self) => {
+    if (props.debug) {
+      log('debugging')
+      log(props.hover)
+    }
+
     // sizes
     const size = props.size === true ? 1 : props.size || 1
     const height = props.height
@@ -509,14 +518,17 @@ export default class Surface implements ViewType {
     }
 
     // state styles
-    const hoverStyle = !props.chromeless &&
-    !props.disabled &&
-    (props.hoverable || props.hoverBackground) && {
+    const hoverStyle = (props.hover ||
+      (!props.chromeless &&
+        !props.disabled &&
+        (props.hoverable || props.hoverBackground))) && {
       ...theme.hover,
       color: hoverColor,
       borderColor: hoverBorderColor,
       background: hoverBackground,
+      ...props.hover,
     }
+
     const activeStyle = !props.chromeless && {
       position: 'relative',
       zIndex: props.zIndex || 1000,
@@ -570,6 +582,8 @@ export default class Surface implements ViewType {
         position: props.position,
         zIndex: props.zIndex,
         opacity: props.opacity,
+        minWidth: props.minWidth,
+        maxWidth: props.maxWidth,
         color,
         overflow: props.overflow || props.glow ? 'hidden' : props.overflow,
         height,
@@ -586,7 +600,8 @@ export default class Surface implements ViewType {
         ...borderRadius,
         margin: props.margin,
         borderWidth: props.borderWidth,
-        borderStyle: props.borderStyle,
+        borderStyle:
+          props.borderStyle || props.borderWidth ? 'solid' : undefined,
         border: props.border,
         borderBottom: props.borderBottom,
         borderTop: props.borderTop,

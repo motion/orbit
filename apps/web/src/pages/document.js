@@ -9,10 +9,15 @@ import Children from './page/children'
 @view.attach('rootStore')
 @view
 export default class DocumentPage {
+  componentWillMount() {
+    log('willmount document page')
+  }
+
   render({ rootStore: { document } }) {
+    log('render', document)
     // this is the "loading" state
     if (document === undefined) {
-      return null
+      return <hi>hi</hi>
     }
 
     if (!document) {

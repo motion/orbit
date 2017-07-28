@@ -73,23 +73,13 @@ export default class Layout {
 
     return (
       <layout>
-        <UI.ContextMenu
-          inactive={true}
-          options={[
-            {
-              title: 'Delete',
-              onSelect: place => place.delete(),
-            },
-          ]}
-        >
-          <UI.Theme name="light">
-            <UI.SlotFill.Provider>
-              <content>
-                {IN_TRAY ? renderTray() : renderApp()}
-              </content>
-            </UI.SlotFill.Provider>
-          </UI.Theme>
-        </UI.ContextMenu>
+        <UI.Theme name="light">
+          <UI.SlotFill.Provider>
+            <content>
+              {IN_TRAY ? renderTray() : renderApp()}
+            </content>
+          </UI.SlotFill.Provider>
+        </UI.Theme>
       </layout>
     )
   }

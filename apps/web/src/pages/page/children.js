@@ -224,17 +224,19 @@ class ChildrenStore {
   }
 
   get sortedDocs() {
-    const { children } = this
-    const recentDocs = sortBy(children || [], 'createdAt').reverse()
+    const { children, document } = this
     if (
       children &&
-      this.document &&
-      this.document.childrenSort &&
-      this.document.childrenSort.length
+      document &&
+      document.childrenSort &&
+      document.childrenSort.length
     ) {
-      const final = this.document.childrenSort.map(id => this.docsById[id])
+      const { docsById } = this
+      const final = document.childrenSort
+        .map(id => docsById[id])
+        .filter(x => !!x) // after deleting a doc, may be empty
       if (children.length > final.length) {
-        for (const doc of recentDocs) {
+        for (const doc of children) {
           if (!final.find(x => x.id === doc.id)) {
             final.push(doc)
           }
@@ -242,7 +244,7 @@ class ChildrenStore {
       }
       return final
     }
-    return recentDocs
+    return children
   }
 
   get hasDocs() {
@@ -298,22 +300,32 @@ class ChildrenStore {
 export class Children {
   render({ size, items, store, alignLeft }) {
     return (
-      <docs $$undraggable>
-        {items.map((doc, index) => {
-          if (!doc) {
-            return null
-          }
-          return (
-            <SortableChild
-              key={doc.id}
-              index={index}
-              doc={doc}
-              alignLeft={alignLeft}
-              size={size}
-            />
-          )
-        })}
-      </docs>
+      <UI.ContextMenu
+        options={[
+          {
+            title: 'Delete',
+            onSelect: doc => doc.remove(),
+          },
+        ]}
+      >
+        <docs $$undraggable>
+          {items.map((doc, index) => {
+            if (!doc) {
+              return null
+            }
+            return (
+              <UI.ContextMenu.Target data={doc} key={doc.id}>
+                <SortableChild
+                  index={index}
+                  doc={doc}
+                  alignLeft={alignLeft}
+                  size={size}
+                />
+              </UI.ContextMenu.Target>
+            )
+          })}
+        </docs>
+      </UI.ContextMenu>
     )
   }
 }

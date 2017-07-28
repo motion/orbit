@@ -366,7 +366,7 @@ class Popover {
       bounds.top = top
     } else {
       if (!this.target) {
-        console.error('no target')
+        return false
       } else {
         if (this.target.getBoundingClientRect) {
           const targetBounds = this.target.getBoundingClientRect()
@@ -394,6 +394,9 @@ class Popover {
         'this.props:',
         this.props
       )
+      return {}
+    }
+    if (this.targetBounds === false) {
       return {}
     }
     return {
@@ -548,7 +551,6 @@ class Popover {
 
   listenForHover = () => {
     if (!(this.target instanceof HTMLElement)) {
-      console.log('no target')
       return
     }
     this.listeners = this.addHoverListeners('target', this.target)

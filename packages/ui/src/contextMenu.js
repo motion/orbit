@@ -99,37 +99,36 @@ class ContextMenu {
           onClose={store.clearMenu}
           noArrow
           top={store.event.clientY - 8}
-          left={store.event.clientX - width / 2}
+          left={store.event.clientX + width / 2 - 8}
         >
           <List
             controlled
-            borderWidth={0}
-            width={width}
             items={options}
             css={{
-              borderWidth: 1,
-              borderColor: '#bbb',
-              background: [240, 240, 240, 0.98],
-              boxShadow: '2px 4px 11px rgba(0,0,0,0.25)',
-              borderRadius: 4,
+              width,
+              borderRadius: 7,
+              background: '#F0F0F0',
+              boxShadow: [
+                '1px 5px 16px rgba(0,0,0,0.2)',
+                'inset 0 0 0 0.5px #b5b5b5',
+              ],
             }}
             itemProps={{
-              borderWidth: 0,
+              glint: true,
               css: {
-                padding: [0, 7, 0, 16],
+                padding: [3, 7, 3, 28],
                 margin: [3, 0],
-                fontWeight: 300,
+                fontWeight: 900,
                 fontSize: 15,
                 color: '#444',
-                '&:hover': {
-                  background: '#5E95F7',
-                  color: 'white',
-                },
               },
             }}
             onSelect={item => item.onSelect(store.data, store.event)}
             getItem={item => ({
               primary: item.title,
+              glow: false,
+              debug: true,
+              hover: { background: 'red' },
             })}
           />
         </Popover>

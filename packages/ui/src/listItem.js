@@ -90,13 +90,13 @@ export default class ListItem {
 
     return (
       <SizedSurface
+        tagName="listitem"
         size={size}
         sizeHeight
         sizePadding={1.2}
         hoverable
         $item
         {...radiusProps}
-        tagName="listitem"
         border={false}
         background="transparent"
         hoverBackground
@@ -119,7 +119,10 @@ export default class ListItem {
           alignSelf: 'center',
           ...iconProps,
         }}
-        style={{ ...style, position: (style && style.position) || 'relative' }}
+        style={{
+          ...style,
+          position: (style && style.position) || 'relative',
+        }}
         {...props}
       >
         <before if={before}>

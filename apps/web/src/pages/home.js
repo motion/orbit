@@ -8,9 +8,7 @@ export default class HomePage {
   componentDidMount() {
     this.watch(async () => {
       if (User.home === null) {
-        console.log('creating org')
-        // await User.createOrg('myneworg')
-        console.log('created new org for user')
+        await User.createOrg('myneworg')
       }
     })
   }

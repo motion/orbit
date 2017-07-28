@@ -61,11 +61,10 @@ export class OrgModel extends Model {
       }
     },
     postInsert: async (org: Object) => {
-      log('post insert org creating sub stuff')
       // make homepage
       const homeDoc = await Document.create({
         home: true,
-        title: 'Welcome',
+        title: org.title || 'Welcome',
         parentId: org.id,
         parentIds: [org.id],
       })
@@ -74,7 +73,6 @@ export class OrgModel extends Model {
         title: 'Issues',
         parentId: homeDoc.id,
       })
-      log('finished post insert org sub stuff')
     },
   }
 

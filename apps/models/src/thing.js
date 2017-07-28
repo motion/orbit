@@ -290,7 +290,6 @@ export class Thing extends Model {
   }
 
   async create({ parentId, parentIds, ...rest } = {}, isTemp) {
-    console.log('attempting create')
     let fParentIds = parentIds
 
     // ensure parentIds
@@ -298,13 +297,10 @@ export class Thing extends Model {
       throw new Error('No parentId given!')
     }
     if (!parentIds) {
-      console.log('getting parent ids from', parentId)
       const parent = await this._collection.findOne(parentId).exec()
-      console.log('got parent', parent)
       fParentIds = [...parent.parentIds, parentId]
     }
 
-    console.log('calling super create')
     return super.create(
       {
         parentId,

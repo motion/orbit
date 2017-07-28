@@ -138,7 +138,7 @@ export const methods = {
     const crumbs = await Promise.all(
       thingIds.map(parentId => this.collection.findOne(parentId).exec())
     )
-    return crumbs
+    return [...crumbs, this]
   },
   getChildren({ depth = 1, find } = {}) {
     const next = (curDepth, isRoot) => parent => {

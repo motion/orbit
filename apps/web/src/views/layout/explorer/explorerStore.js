@@ -15,7 +15,8 @@ export default class ExplorerStore {
   }
 
   get crumbs() {
-    return this.props.rootStore.crumbs
+    // remove the home doc
+    return this.props.rootStore.crumbs && this.props.rootStore.crumbs.slice(1)
   }
 
   editorState = Raw.deserialize(

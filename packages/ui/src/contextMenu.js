@@ -83,6 +83,7 @@ class ContextMenu {
     this.on(this.node, 'contextmenu', (event: Event) => {
       if (this.props.inactive) return
       event.preventDefault()
+      event.stopPropagation()
       this.props.store.handleContext(event)
     })
   }

@@ -125,7 +125,7 @@ export class Child {
             fontSize={15 * size}
             lineHeight={`${1.1 * size}rem`}
             if={doc.title || editable}
-            editable={editable}
+            editable={editable || doc.editing}
             onFinishEdit={onSave}
             ref={textRef}
           >
@@ -309,6 +309,12 @@ export class Children {
             title: 'Delete',
             onSelect: doc => doc.remove(),
           },
+          {
+            title: 'Edit',
+            onSelect: doc => {
+              doc.editing = true
+            },
+          },
         ]}
       >
         <docs $$undraggable>
@@ -323,6 +329,11 @@ export class Children {
                   doc={doc}
                   alignLeft={alignLeft}
                   size={size}
+                  onSave={newTitle => {
+                    doc.title = newTitle
+                    delete doc.editing
+                    doc.save()
+                  }}
                 />
               </UI.ContextMenu.Target>
             )

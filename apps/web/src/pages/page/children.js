@@ -122,6 +122,7 @@ export class Child {
         >
           <UI.Text
             $title
+            $isEditing={editable || doc.editing}
             fontSize={15 * size}
             lineHeight={`${1.1 * size}rem`}
             if={doc.title || editable}
@@ -130,7 +131,7 @@ export class Child {
             ref={textRef}
           >
             {doc.title}
-            <underline />
+            <underline if={!(editable || doc.editing)} />
           </UI.Text>
         </UI.Surface>
 
@@ -170,6 +171,9 @@ export class Child {
       fontWeight: 300,
       color: '#000',
       overflow: 'hidden',
+    },
+    isEditing: {
+      width: '100%',
     },
     underline: {
       position: 'absolute',

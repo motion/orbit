@@ -21,6 +21,7 @@ class AddButton {
       <UI.Popover
         openOnClick
         closeOnEsc
+        overlay="transparent"
         background="#fff"
         width={440}
         borderRadius={8}

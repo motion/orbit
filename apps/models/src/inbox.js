@@ -10,6 +10,7 @@ class Inbox extends Thing {
   static defaultFilter = doc => ({ type: 'inbox', ...doc })
 
   hooks = {
+    ...this.hooks,
     async postInsert(inbox) {
       await Thread.create({
         title: `Welcome to your inbox: ${inbox.title}`,

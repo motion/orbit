@@ -355,6 +355,8 @@ export default class ChildrenRoot {
             pressDelay={350}
             pressThreshold={35}
             alignLeft={alignLeft}
+            lockAxis="y"
+            lockToContainerEdges
             size={size}
           />
           <Child

@@ -23,7 +23,6 @@ class DraftStore {
   }
 
   get model() {
-    log('get model')
     return this.props.isReply ? Reply : Thread
   }
 
@@ -98,7 +97,6 @@ export default class Draft {
     focus,
     ...props
   }) {
-    log('render draft')
     return (
       <HotKeys handlers={store.shortcuts}>
         <UI.Theme name="light">

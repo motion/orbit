@@ -213,11 +213,11 @@ const uid = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
-  const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
   const debug = (...args) => {
-    if (method === 'draft') {
-      console.log(KEY, ...args)
-    }
+    // const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
+    // if (method === 'draft') {
+    //   console.log(KEY, ...args)
+    // }
   }
 
   let current = Mobx.observable.box(DEFAULT_VALUE)

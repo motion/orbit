@@ -44,17 +44,6 @@ class AddButton {
         }
       >
         <content>
-          <UI.Theme if={false && store.show === 'list'} name="light">
-            <UI.List itemProps={{ size: 2 }}>
-              <UI.ListItem
-                icon="paper"
-                primary="Discussion"
-                onClick={store.ref('show').setter('draft')}
-              />
-              <UI.ListItem icon="filesg" primary="Page" />
-            </UI.List>
-          </UI.Theme>
-
           <Draft
             css={{
               height: 300,

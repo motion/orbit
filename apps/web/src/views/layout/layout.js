@@ -3,7 +3,6 @@ import React from 'react'
 import * as Constants from '~/constants'
 import { view, HotKeys } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { IN_TRAY } from '~/constants'
 import NotFound from '~/pages/error/404'
 import Router from '~/router'
 import Sidebar from './sidebar'
@@ -46,6 +45,11 @@ export default class Layout {
   }
 
   render({ layoutStore }: Props) {
+    if (Constants.IS_BAR) {
+      const CurrentPage = Router.activeView || <null>no way</null>
+      return <CurrentPage />
+    }
+
     const renderTray = () => <Sidebar />
     const renderApp = () => {
       const CurrentPage = Router.activeView || NotFound
@@ -76,7 +80,7 @@ export default class Layout {
         <UI.Theme name="light">
           <UI.SlotFill.Provider>
             <content>
-              {IN_TRAY ? renderTray() : renderApp()}
+              {Constants.IN_TRAY ? renderTray() : renderApp()}
             </content>
           </UI.SlotFill.Provider>
         </UI.Theme>

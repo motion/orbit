@@ -66,15 +66,10 @@ class ExampleApp extends React.Component {
   onWindow = ref => {
     if (ref) {
       this.windowRef = ref
-      setTimeout(() => {
-        this.show()
-        this.listenToApp()
-        this.listenForBlur()
-      })
-
-      setTimeout(() => {
-        this.registerShortcuts()
-      }, 2000)
+      this.show()
+      this.listenToApp()
+      this.listenForBlur()
+      this.registerShortcuts()
     }
   }
 
@@ -116,7 +111,7 @@ class ExampleApp extends React.Component {
   listenForBlur = () => {
     this.windowRef.on('blur', () => {
       console.log('got a blur')
-      // this.blur()
+      this.blur()
     })
   }
 

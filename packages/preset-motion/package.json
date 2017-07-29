@@ -3,7 +3,7 @@
   "main": "lib/index.js",
   "version": "1.0.8",
   "dependencies": {
-    "@mcro/gloss": "^1.0.1",
+    "@mcro/gloss": "^1.0.8",
     "@mcro/hmr": "^1.0.8",
     "@mcro/hmr-view": "^1.0.8",
     "babel-plugin-root-import": "5.1.0",

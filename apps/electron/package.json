@@ -8,11 +8,11 @@
     "start": "electron lib/ionize.js"
   },
   "dependencies": {
-    "@mcro/black": "*",
-    "@mcro/ionize": "^1.5.0",
+    "@mcro/black": "^1.0.8",
+    "@mcro/ionize": "^1.0.8",
+    "electron": "^1.6.11",
     "react": "16.0.0-alpha.5",
-    "react-dom": "16.0.0-alpha.5",
-    "electron": "^1.6.11"
+    "react-dom": "16.0.0-alpha.5"
   },
   "build": {
     "appId": "jot.id",
@@ -20,5 +20,5 @@
       "category": "pro"
     }
   },
-  "version": "1.0.1"
+  "version": "1.0.8"
 }

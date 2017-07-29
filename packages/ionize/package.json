@@ -4,11 +4,9 @@
   "description": "An experimental React renderer for Electron apps",
   "main": "lib/index.js",
   "license": "MIT",
-  "dependencies": {
-    "electron": "^1.6.2",
-    "react-dom": "16.0.0-alpha.5"
-  },
   "peerDependencies": {
+    "electron": "^1.6.2",
+    "react-dom": "16.0.0-alpha.5",
     "react": "16.0.0-alpha.5"
   },
   "devDependencies": {

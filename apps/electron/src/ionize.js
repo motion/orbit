@@ -70,8 +70,11 @@ class ExampleApp extends React.Component {
         this.show()
         this.listenToApp()
         this.listenForBlur()
-        this.registerShortcuts()
       })
+
+      setTimeout(() => {
+        this.registerShortcuts()
+      }, 2000)
     }
   }
 

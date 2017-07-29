@@ -24,7 +24,9 @@ export default class Root extends React.Component {
 
     // listen to Ionize
     if (Constants.KEY) {
+      log('WERE AN APP WINDOW')
       this.on(window, 'focus', () => {
+        console.log('ask where to go')
         ipcRenderer.send('where-to', Constants.KEY)
       })
 

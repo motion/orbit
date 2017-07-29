@@ -17,7 +17,7 @@ function runRouter() {
       'thread/:id': ThreadPage,
       'inbox/:id': InboxPage,
       '(document)(thread)(inbox)/:id/draft': DraftPage,
-      bar2: BarPage,
+      bar3: BarPage,
     },
   })
   // because doing in installDevTools would break import order

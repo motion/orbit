@@ -28,5 +28,5 @@ export const IN_TRAY =
 export const TRAY_WIDTH = 400
 export const TRAY_HEIGHT = 500
 
-export const IS_BAR = window.location.href.slice(-4) === 'bar2'
+export const IS_BAR = window.location.href.slice(-4, -1) === 'bar'
 console.log('IS_BAR', IS_BAR)

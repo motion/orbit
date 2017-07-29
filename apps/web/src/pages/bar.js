@@ -23,7 +23,6 @@ class BarStore {
   }
 }
 
-@view.attach('rootStore')
 @view({
   store: BarStore,
 })
@@ -34,7 +33,8 @@ export default class BarPage {
     console.log('sent')
   }
 
-  render({ rootStore, store }) {
+  render({ store }) {
+    console.log('bar render')
     return (
       <UI.Theme name="clear-dark">
         <bar>

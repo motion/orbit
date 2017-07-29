@@ -45,6 +45,7 @@ export default class Layout {
   }
 
   render({ layoutStore }: Props) {
+    console.log('Constants.IS_BAR', Constants.IS_BAR)
     if (Constants.IS_BAR) {
       const CurrentPage = Router.activeView || <null>no way</null>
       return <CurrentPage />

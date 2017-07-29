@@ -4,6 +4,31 @@ import { app, globalShortcut, BrowserWindow, ipcMain } from 'electron'
 
 console.log('app', app)
 
+class Window {
+  key = Math.random()
+  constructor({ path = '/' } = {}) {
+    this.path = path
+  }
+}
+
+class Windows {
+  windows = [new Window(), new Window()] // zoom
+
+  next(path) {
+    this.windows[0].path = path
+    this.windows = [new Window(), ...this.windows]
+    console.log('next this.windows', this.windows, path)
+    return this.windows
+  }
+
+  remove(path) {
+    this.windows = this.windows.filter(window => window.path === path)
+    return this.windows
+  }
+}
+
+const WindowsXP = new Windows()
+
 class ExampleApp extends React.Component {
   state = {
     show: false,
@@ -11,7 +36,7 @@ class ExampleApp extends React.Component {
     position: [450, 300],
     disableAutohide: false,
     // preloads
-    windows: ['/', '/', '/'],
+    windows: WindowsXP.windows,
   }
 
   onReadyToShow() {
@@ -27,11 +52,17 @@ class ExampleApp extends React.Component {
   }
 
   listenToApp() {
-    ipcMain.on('goto', (event, url) => {
-      console.log('goto', url)
+    ipcMain.on('goto', (event, path) => {
+      console.log('goto', path)
       event.sender.send('asynchronous-reply', 'cool')
       this.setState({
-        windows: [url, ...this.state.windows],
+        windows: WindowsXP.next(path),
+      })
+    })
+
+    ipcMain.on('close', (event, path) => {
+      this.setState({
+        windows: WindowsXP.remove(path),
       })
     })
   }
@@ -76,28 +107,23 @@ class ExampleApp extends React.Component {
     }
   }
 
-  const appWindow = {
-    show: true,
-    size: [500, 500],
-    showDevTools: true,
-    titleBarStyle: "hidden-inset",
-    vibrancy: "dark",
-    transparent: true,
-    webPreferences: {
-      experimentalFeatures: true,
-      transparentVisuals: true,
-    }
-  }
-
-  onPreloaded = index = (...args) => {
-    console.log('onpreloaded', ...args)
+  onPreloaded = index => (...args) => {
+    console.log('onpreloaded', index, ...args)
   }
 
   render() {
     const { windows } = this.state
 
-      const preloadWindow = index =>
-        windows[index] === '/' && <window key={index} file="http://jot.dev" ref={this.onPreloaded(index)} />
+    const appWindow = {
+      size: [500, 500],
+      titleBarStyle: 'hidden-inset',
+      vibrancy: 'dark',
+      transparent: true,
+      webPreferences: {
+        experimentalFeatures: true,
+        transparentVisuals: true,
+      },
+    }
 
     return (
       <app>
@@ -115,7 +141,9 @@ class ExampleApp extends React.Component {
         </menu>
         <window
           {...appWindow}
-          file="http://jot.dev/bar2"
+          show
+          showDevTools
+          file="http://jot.dev/bar3"
           titleBarStyle="hidden"
           show={this.state.show}
           size={this.state.size}
@@ -124,20 +152,13 @@ class ExampleApp extends React.Component {
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
         />
-        {windows.map((path, index) => {
+        {windows.map(({ path, key }) => {
           const url = `http://jot.dev${path}`
+          console.log(path, key)
           return (
-            <window
-              key={index}
-              {...appWindow}
-              file={url}
-              show={path !== '/'}
-            />
+            <window key={key} {...appWindow} file={url} show={path !== '/'} />
           )
         })}
-        {preloadWindow(window.length)}
-        {preloadWindow(window.length + 1)}
-        {preloadWindow(window.length + 2)}
       </app>
     )
   }

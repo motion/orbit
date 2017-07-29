@@ -107,7 +107,7 @@ class ExampleApp extends React.Component {
   listenForBlur = () => {
     this.windowRef.on('blur', () => {
       console.log('got a blur')
-      this.store.blur()
+      this.blur()
     })
   }
 
@@ -118,7 +118,7 @@ class ExampleApp extends React.Component {
       'Option+Space': () => {
         console.log('command option+space')
         this.windowRef.focus()
-        this.store.show = true
+        this.setState({ show: true })
       },
     }
     for (const shortcut of Object.keys(SHORTCUTS)) {

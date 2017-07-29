@@ -81,9 +81,12 @@ class ExampleApp extends React.Component {
 
   listenToApp = () => {
     ipcMain.on('where-to', (event, key) => {
+      console.log('find', key, this.state.windows)
       const win = this.state.windows.find(x => x.key === key)
-      console.log('where to?', win.path)
-      event.sender.send('app-goto', win.path)
+      if (win) {
+        console.log('where to?', win.path)
+        event.sender.send('app-goto', win.path)
+      }
     })
 
     ipcMain.on('bar-goto', (event, path) => {

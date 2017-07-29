@@ -1,7 +1,7 @@
 {
   "name": "@mcro/web",
   "private": true,
-  "version": "1.0.8",
+  "version": "1.1.0",
   "main": "index.js",
   "scripts": {
     "start": "motion",
@@ -31,11 +31,11 @@
     }
   },
   "dependencies": {
-    "@mcro/black": "^1.0.8",
-    "@mcro/gloss": "^1.0.8",
-    "@mcro/models": "^1.0.8",
-    "@mcro/router": "^1.0.7",
-    "@mcro/ui": "^1.0.8",
+    "@mcro/black": "^1.1.0",
+    "@mcro/gloss": "^1.1.0",
+    "@mcro/models": "^1.1.0",
+    "@mcro/router": "^1.1.0",
+    "@mcro/ui": "^1.1.0",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
     "buffer": "^5.0.6",

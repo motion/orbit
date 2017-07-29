@@ -1,6 +1,6 @@
 {
   "name": "@mcro/gloss",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "Higher order component for nicer component styles",
   "main": "lib/index.js",
   "repository": {
@@ -11,7 +11,7 @@
   "license": "MIT",
   "homepage": "https://github.com/motion/gloss",
   "dependencies": {
-    "@mcro/css": "^1.0.8",
+    "@mcro/css": "^1.1.0",
     "aphrodite-jss": "^1.0.0",
     "babel-helper-builder-react-jsx": "^6.24.1",
     "deep-extend": "^0.5.0",

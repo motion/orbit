@@ -1,14 +1,14 @@
 {
   "name": "@mcro/ui",
   "private": true,
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "",
   "main": "lib/index.js",
   "author": "Motion (motion.io)",
   "license": "MIT",
   "dependencies": {
-    "@mcro/black": "^1.0.8",
-    "@mcro/gloss": "^1.0.8",
+    "@mcro/black": "^1.1.0",
+    "@mcro/gloss": "^1.1.0",
     "color": "^2.0.0",
     "element-resize-detector": "^1.1.12",
     "flubber": "^0.3.0",

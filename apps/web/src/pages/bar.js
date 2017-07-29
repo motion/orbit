@@ -3,6 +3,8 @@ import React from 'react'
 import { view, watch } from '@mcro/black'
 import { User } from '~/app'
 import * as UI from '@mcro/ui'
+const { ipcRenderer } = window.require('electron')
+console.log('ipcRenderer', ipcRenderer)
 
 // import DocumentView from '~/views/document'
 // <DocumentView document={document} isPrimaryDocument />
@@ -26,12 +28,23 @@ class BarStore {
   store: BarStore,
 })
 export default class BarPage {
+  onClick = result => () => {
+    console.log('goto22', result.url())
+    ipcRenderer.send('goto', result.url())
+    console.log('sent')
+  }
+
   render({ rootStore, store }) {
     return (
-      <UI.Theme name="gray">
+      <UI.Theme name="clear-dark">
         <bar>
           <div>
-            <UI.Input size={3} borderRadius={5} onChange={store.onChange} />
+            <UI.Input
+              size={3}
+              borderRadius={5}
+              onChange={store.onChange}
+              borderWidth={0}
+            />
           </div>
           <results>
             <UI.List
@@ -39,7 +52,7 @@ export default class BarPage {
               itemProps={{ size: 3 }}
               items={store.children}
               getItem={result =>
-                <item key={result.id}>
+                <item key={result.id} onClick={this.onClick(result)}>
                   {result.title}
                 </item>}
             />
@@ -59,7 +72,7 @@ export default class BarPage {
       transform: {
         z: 0,
       },
-      background: 'rgba(255, 255, 255, 0.75)',
+      // background: 'rgba(255, 255, 255, 0.75)',
     },
     results: {
       flex: 2,

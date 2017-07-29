@@ -1,6 +1,6 @@
 import React from 'react'
 import Ionize from '@mcro/ionize'
-import { app, globalShortcut, BrowserWindow } from 'electron'
+import { app, globalShortcut, BrowserWindow, ipcMain } from 'electron'
 
 console.log('app', app)
 
@@ -9,6 +9,8 @@ class ExampleApp extends React.Component {
     show: false,
     size: [650, 500],
     position: [450, 300],
+    disableAutohide: false,
+    windows: [],
   }
 
   onReadyToShow() {
@@ -19,14 +21,27 @@ class ExampleApp extends React.Component {
       this.windowRef = BrowserWindow.getAllWindows()[0]
       this.listenForBlur()
       this.registerShortcuts()
+      this.listenToApp()
+    })
+  }
+
+  listenToApp() {
+    ipcMain.on('goto', (event, url) => {
+      console.log('goto', url)
+      event.sender.send('asynchronous-reply', 'cool')
+      this.setState({
+        windows: [...this.state.windows, url],
+      })
     })
   }
 
   listenForBlur() {
     this.windowRef.on('blur', () => {
-      this.setState({
-        show: false,
-      })
+      if (!this.state.disableAutohide) {
+        this.setState({
+          show: false,
+        })
+      }
     })
   }
 
@@ -78,8 +93,8 @@ class ExampleApp extends React.Component {
         <window
           showDevTools
           file="http://jot.dev/bar2"
-          titleBarStyle="hidden-inset"
-          vibrancy="light"
+          titleBarStyle="hidden"
+          vibrancy="dark"
           transparent
           webPreferences={{
             experimentalFeatures: true,
@@ -92,6 +107,25 @@ class ExampleApp extends React.Component {
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
         />
+        {this.state.windows.map(url => {
+          console.log('file', `http://jot.dev${url}`)
+          return (
+            <window
+              key={url}
+              show
+              file={`http://jot.dev${url}`}
+              size={[500, 500]}
+              showDevTools
+              titleBarStyle="hidden-inset"
+              vibrancy="dark"
+              transparent
+              webPreferences={{
+                experimentalFeatures: true,
+                transparentVisuals: true,
+              }}
+            />
+          )
+        })}
       </app>
     )
   }

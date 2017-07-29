@@ -72,7 +72,7 @@ const Themes = {
   'clear-dark': Theme.fromStyles({
     highlightBackground,
     highlightColor,
-    background: [25, 25, 25, 0.4],
+    background: [25, 25, 25, 0],
     color: [255, 255, 255, 0.78],
     borderColor: [255, 255, 255, 0.3],
   }),

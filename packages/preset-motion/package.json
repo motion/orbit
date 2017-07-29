@@ -15,5 +15,8 @@
     "babel-preset-stage-1": "^6.24.1",
     "react-hot-loader": "next"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

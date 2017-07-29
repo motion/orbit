@@ -4,5 +4,8 @@
   "description": "",
   "main": "lib/index.js",
   "author": "Motion",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

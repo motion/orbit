@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { view, watch, HotKeys } from '@mcro/black'
+import { view, watch } from '@mcro/black'
+import { HotKeys } from 'react-hotkeys'
 import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import { uniq } from 'lodash'

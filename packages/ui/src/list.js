@@ -1,8 +1,9 @@
 // @flow
 import React, { Children, cloneElement } from 'react'
-import { view, HotKeys } from '@mcro/black'
+import { view } from '@mcro/black'
+import { HotKeys } from 'react-hotkeys'
 import FakeText from './fake/fakeText'
-import { range, omit } from 'lodash'
+import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import * as Constants from '~/constants'
-import { view, HotKeys } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import NotFound from '~/pages/error/404'
 import Router from '~/router'

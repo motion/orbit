@@ -6,8 +6,6 @@ export store from './store'
 export Model from './model/model'
 export query from './model/query'
 
-export { HotKeys } from 'react-hotkeys'
-
 export gloss, { createElement } from './gloss'
 export log from './helpers/log'
 export watch from './helpers/watch'

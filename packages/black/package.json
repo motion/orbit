@@ -14,14 +14,12 @@
     "mobx": "^3.2.0",
     "pouchdb-core": "^6.2.0",
     "prop-types": "^15.5.9",
-    "react-hotkeys": "^0.10.0",
-    "react-shortcuts": "1.5.0",
     "react-tunnel": "0.1.0",
     "rxdb": "^5.0.0",
     "rxjs": "^5.4.1"
   },
   "peerDependencies": {
-    "react": "^15.6.0"
+    "react": ">= ^15.6.0 < 17"
   },
   "publishConfig": {
     "access": "public"

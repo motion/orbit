@@ -1,4 +1,5 @@
-import { view, watch, HotKeys } from '@mcro/black'
+import { view, watch } from '@mcro/black'
+import { HotKeys } from 'react-hotkeys'
 import * as UI from '@mcro/ui'
 import DocView from '~/views/document'
 import { Reply, Thread } from '~/app'

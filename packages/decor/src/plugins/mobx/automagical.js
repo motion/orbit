@@ -2,7 +2,7 @@
 import { fromStream, fromPromise } from 'mobx-utils'
 import * as Mobx from 'mobx'
 
-if (module && module.hot) {
+if (module && module.hot && module.hot.accept) {
   module.hot.accept(() => {})
 }
 

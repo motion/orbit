@@ -1,4 +1,5 @@
 import React from 'react'
+import { store, view } from '@mcro/black'
 import Ionize from '@mcro/ionize'
 import { app, globalShortcut, BrowserWindow, ipcMain } from 'electron'
 
@@ -33,14 +34,35 @@ class Windows {
 
 const WindowsXP = new Windows()
 
-class ExampleApp extends React.Component {
-  state = {
-    show: false,
-    size: [650, 500],
-    position: [450, 300],
-    disableAutohide: false,
-    // preloads
-    windows: WindowsXP.windows,
+@view({
+  store: class IonizeStore {
+    show = false
+    size = [650, 500]
+    position = [450, 300]
+    windows = WindowsXP.windows
+
+    hide = () => {
+      this.show = false
+    }
+
+    blur = () => {
+      if (!this.disableAutohide) {
+        this.store.hide()
+      }
+    }
+
+    get disableAutohide() {
+      return localStorage.getItem('disableAutohide') === 'true'
+    }
+
+    set disableAutohide(value) {
+      localStorage.setItem('disableAutohide', value ? 'true' : 'false')
+    }
+  },
+})
+class ExampleApp {
+  get store() {
+    return this.props.store
   }
 
   onWindow = ref => {
@@ -50,14 +72,14 @@ class ExampleApp extends React.Component {
   }
 
   onReadyToShow = () => {
-    this.setState({ show: true })
+    this.store.show = true
     this.listenToApp()
     this.listenForBlur()
     this.registerShortcuts()
   }
 
   onAppWindow = (key, ref) => {
-    const win = this.state.windows.find(x => x.key === key)
+    const win = this.store.windows.find(x => x.key === key)
     if (win) {
       win.ref = ref
     }
@@ -65,7 +87,7 @@ class ExampleApp extends React.Component {
 
   listenToApp = () => {
     ipcMain.on('where-to', (event, key) => {
-      const win = this.state.windows.find(x => x.key === key)
+      const win = this.store.windows.find(x => x.key === key)
       console.log('where to?', win.path)
       event.sender.send('app-goto', win.path)
     })
@@ -75,35 +97,23 @@ class ExampleApp extends React.Component {
     })
 
     ipcMain.on('bar-hide', () => {
-      this.close()
+      this.store.hide()
     })
 
     ipcMain.on('close', (event, path) => {
-      this.setState({
-        windows: WindowsXP.remove(path),
-      })
+      this.store.windows = WindowsXP.remove(path)
     })
   }
 
   goTo = path => {
-    this.setState({
-      show: false,
-      windows: WindowsXP.next(path),
-    })
-  }
-
-  close = () => {
-    this.setState({
-      show: false,
-    })
+    this.store.hide()
+    this.store.window = WindowsXP.next(path)
   }
 
   listenForBlur = () => {
     this.windowRef.on('blur', () => {
       console.log('got a blur')
-      if (!this.state.disableAutohide) {
-        this.close()
-      }
+      this.store.blur()
     })
   }
 
@@ -114,9 +124,7 @@ class ExampleApp extends React.Component {
       'Option+Space': () => {
         console.log('command option+space')
         this.windowRef.focus()
-        this.setState({
-          show: true,
-        })
+        this.store.show = true
       },
     }
     for (const shortcut of Object.keys(SHORTCUTS)) {
@@ -128,7 +136,7 @@ class ExampleApp extends React.Component {
   }
 
   render() {
-    const { windows } = this.state
+    const { windows } = this.store
     const appWindow = {
       frame: false,
       defaultSize: [700, 500],
@@ -162,12 +170,12 @@ class ExampleApp extends React.Component {
           showDevTools
           file="http://jot.dev/bar"
           titleBarStyle="customButtonsOnHover"
-          show={this.state.show}
-          size={this.state.size}
-          position={this.state.position}
+          show={this.store.show}
+          size={this.store.size}
+          position={this.store.position}
           onReadyToShow={this.onReadyToShow}
-          onResize={size => this.setState({ size })}
-          onMoved={position => this.setState({ position })}
+          onResize={this.store.ref('size').set}
+          onMoved={this.store.ref('position').set}
         />
         {windows.map(({ key, active }) => {
           return (

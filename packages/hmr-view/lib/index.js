@@ -22,12 +22,14 @@ var viewProxies = {};
 var reloaded = [];
 var reloadedInstances = [];
 
-module.hot.accept(function () {
-  viewProxies = module.hot.data.viewProxies || {};
-});
-module.hot.dispose(function (data) {
-  data.viewProxies = viewProxies;
-});
+if (module && module.hot && module.hot.accept) {
+  module.hot.accept(function () {
+    viewProxies = module.hot.data.viewProxies || {};
+  });
+  module.hot.dispose(function (data) {
+    data.viewProxies = viewProxies;
+  });
+}
 
 function proxyReactComponents(_ref) {
   var filename = _ref.filename,
@@ -68,7 +70,9 @@ function proxyReactComponents(_ref) {
       return ReactClass;
     }
 
-    module.hot.accept(function () {}); // to make it a fast hmr
+    if (module && module.hot && module.hot.accept) {
+      module.hot.accept(function () {}); // to make it a fast hmr
+    }
 
     // if existing proxy
     if (viewProxies[path]) {

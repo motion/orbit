@@ -8,6 +8,7 @@
     "start": "electron lib/ionize.js"
   },
   "dependencies": {
+    "@mcro/black": "*",
     "@mcro/ionize": "^1.5.0",
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5",

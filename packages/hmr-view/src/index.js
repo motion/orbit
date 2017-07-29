@@ -5,12 +5,14 @@ let viewProxies = {}
 let reloaded = []
 let reloadedInstances = []
 
-module.hot.accept(() => {
-  viewProxies = module.hot.data.viewProxies || {}
-})
-module.hot.dispose(data => {
-  data.viewProxies = viewProxies
-})
+if (module && module.hot && module.hot.accept) {
+  module.hot.accept(() => {
+    viewProxies = module.hot.data.viewProxies || {}
+  })
+  module.hot.dispose(data => {
+    data.viewProxies = viewProxies
+  })
+}
 
 export default function proxyReactComponents({
   filename,
@@ -44,7 +46,9 @@ export default function proxyReactComponents({
       return ReactClass
     }
 
-    module.hot.accept(() => {}) // to make it a fast hmr
+    if (module && module.hot && module.hot.accept) {
+      module.hot.accept(() => {}) // to make it a fast hmr
+    }
 
     // if existing proxy
     if (viewProxies[path]) {

@@ -8,7 +8,6 @@ import { uniq } from 'lodash'
 const PATH_SEPARATOR = '/'
 
 const { ipcRenderer } = window.require('electron')
-console.log('ipcRenderer', ipcRenderer)
 
 // import DocumentView from '~/views/document'
 // <DocumentView document={document} isPrimaryDocument />
@@ -221,6 +220,10 @@ class BarStore {
       if (!this.focused) return
       this.moveHighlight(-1)
     },
+    esc: () => {
+      console.log('got esc')
+      ipcRenderer.send('bar-hide')
+    },
   }
 }
 
@@ -229,9 +232,7 @@ class BarStore {
 })
 export default class BarPage {
   onClick = result => {
-    console.log('goto22', result.url())
-    ipcRenderer.send('goto', result.url())
-    console.log('sent')
+    ipcRenderer.send('bar-goto', result.url())
   }
 
   render({ store }) {

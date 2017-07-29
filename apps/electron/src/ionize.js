@@ -6,6 +6,10 @@ console.log('app', app)
 
 class Window {
   key = Math.random()
+  get active() {
+    return this.path !== '/'
+  }
+
   constructor({ path = '/' } = {}) {
     this.path = path
   }
@@ -39,25 +43,33 @@ class ExampleApp extends React.Component {
     windows: WindowsXP.windows,
   }
 
-  onReadyToShow() {
+  onReadyToShow = () => {
     // hacky for now
-    this.setState({ show: true }, () => {
-      console.log('this.state', this.state)
-      console.log('allwindows', BrowserWindow.getAllWindows())
-      this.windowRef = BrowserWindow.getAllWindows()[0]
-      this.listenForBlur()
-      this.registerShortcuts()
-      this.listenToApp()
-    })
+    this.setState({ show: true })
+    console.log('this.state', this.state)
+    console.log('allwindows', BrowserWindow.getAllWindows())
+    this.windowRef = BrowserWindow.getAllWindows()[0]
+    this.listenForBlur()
+    this.registerShortcuts()
+    this.listenToApp()
   }
 
-  listenToApp() {
-    ipcMain.on('goto', (event, path) => {
-      console.log('goto', path)
-      event.sender.send('asynchronous-reply', 'cool')
-      this.setState({
-        windows: WindowsXP.next(path),
-      })
+  onWindowRef = (key, ref) => {
+    console.log('got a window ref', key, ref)
+    const win = this.state.windows.find(x => x.key === key)
+    console.log('found win', win)
+    if (win) {
+      win.ref = ref
+    }
+  }
+
+  listenToApp = () => {
+    ipcMain.on('bar-goto', (event, path) => {
+      this.goTo(path)
+    })
+
+    ipcMain.on('bar-hide', () => {
+      this.close()
     })
 
     ipcMain.on('close', (event, path) => {
@@ -67,12 +79,22 @@ class ExampleApp extends React.Component {
     })
   }
 
+  goTo = path => {
+    this.setState({
+      windows: WindowsXP.next(path),
+    })
+  }
+
+  close = () => {
+    this.setState({
+      show: false,
+    })
+  }
+
   listenForBlur() {
     this.windowRef.on('blur', () => {
       if (!this.state.disableAutohide) {
-        this.setState({
-          show: false,
-        })
+        this.close()
       }
     })
   }
@@ -84,12 +106,6 @@ class ExampleApp extends React.Component {
         this.windowRef.focus()
         this.setState({
           show: true,
-        })
-      },
-      Escape: () => {
-        console.log('escape')
-        this.setState({
-          show: false,
         })
       },
     }
@@ -115,7 +131,7 @@ class ExampleApp extends React.Component {
     const { windows } = this.state
 
     const appWindow = {
-      size: [500, 500],
+      defaultSize: [500, 500],
       titleBarStyle: 'hidden-inset',
       vibrancy: 'dark',
       transparent: true,
@@ -148,15 +164,19 @@ class ExampleApp extends React.Component {
           show={this.state.show}
           size={this.state.size}
           position={this.state.position}
-          onReadyToShow={() => this.onReadyToShow()}
+          onReadyToShow={this.onReadyToShow}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
         />
-        {windows.map(({ path, key }) => {
-          const url = `http://jot.dev${path}`
-          console.log(path, key)
+        {windows.map(({ key, active }) => {
           return (
-            <window key={key} {...appWindow} file={url} show={path !== '/'} />
+            <window
+              key={key}
+              {...appWindow}
+              file={'http://jot.dev'}
+              show={active}
+              ref={ref => this.onWindowRef(key, ref)}
+            />
           )
         })}
       </app>

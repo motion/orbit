@@ -12,7 +12,7 @@ class Window {
 }
 
 class Windows {
-  windows = [new Window(), new Window()] // zoom
+  windows = [new Window()] // preloaded windows
 
   next(path) {
     this.windows[0].path = path

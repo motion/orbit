@@ -228,7 +228,7 @@ class BarStore {
   store: BarStore,
 })
 export default class BarPage {
-  onClick = result => () => {
+  onClick = result => {
     console.log('goto22', result.url())
     ipcRenderer.send('goto', result.url())
     console.log('sent')
@@ -253,10 +253,11 @@ export default class BarPage {
                 if={store.results}
                 controlled
                 isSelected={(item, index) => index === store.highlightIndex}
+                onSelect={result => this.onClick(result)}
                 itemProps={{ size: 3 }}
                 items={store.results}
                 getItem={result =>
-                  <item key={result.id} onClick={this.onClick(result)}>
+                  <item key={result.id}>
                     {result.title}
                   </item>}
               />

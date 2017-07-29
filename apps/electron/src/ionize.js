@@ -17,10 +17,10 @@ class Windows {
   windows = [new Window()] // preloaded windows
 
   next(path) {
-    this.windows[0].path = path
-
-    console.log('go to', path, this.windows[0].ref)
-
+    console.log('Windows.next', path)
+    const next = this.windows[0]
+    next.path = path
+    this.windows[0].ref.focus() // focuses it
     this.windows = [new Window(), ...this.windows]
     return this.windows
   }
@@ -64,6 +64,12 @@ class ExampleApp extends React.Component {
   }
 
   listenToApp = () => {
+    ipcMain.on('where-to', (event, key) => {
+      const win = this.state.windows.find(x => x.key === key)
+      console.log('where to?', win.path)
+      event.sender.send('app-goto', win.path)
+    })
+
     ipcMain.on('bar-goto', (event, path) => {
       this.goTo(path)
     })
@@ -154,7 +160,7 @@ class ExampleApp extends React.Component {
           ref={this.onWindow}
           show
           showDevTools
-          file="http://jot.dev/bar3"
+          file="http://jot.dev/bar"
           titleBarStyle="hidden"
           show={this.state.show}
           size={this.state.size}
@@ -168,7 +174,7 @@ class ExampleApp extends React.Component {
             <window
               key={key}
               {...appWindow}
-              file={'http://jot.dev'}
+              file={`http://jot.dev?key=${key}`}
               show={active}
               ref={ref => this.onAppWindow(key, ref)}
             />

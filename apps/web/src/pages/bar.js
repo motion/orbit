@@ -4,8 +4,12 @@ import { view, watch, HotKeys } from '@mcro/black'
 import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import { uniq } from 'lodash'
+import Router from '~/router'
 
 const PATH_SEPARATOR = '/'
+const keysearch = window.location.search.match(/key=(.*)/)
+const KEY = keysearch ? keysearch[1] : ''
+console.log('KEY', KEY)
 
 const { ipcRenderer } = window.require('electron')
 
@@ -23,6 +27,15 @@ class BarStore {
   }
 
   start() {
+    this.on(window, 'focus', () => {
+      ipcRenderer.send('where-to', KEY)
+    })
+
+    ipcRenderer.on('app-goto', (event, arg) => {
+      console.log('appgoto', arg)
+      Router.go(arg)
+    })
+
     this.watch(async () => {
       if (!this.isTypingPath) {
         // search
@@ -254,7 +267,7 @@ export default class BarPage {
                 if={store.results}
                 controlled
                 isSelected={(item, index) => index === store.highlightIndex}
-                onSelect={result => this.onClick(result)}
+                onSelect={this.onClick}
                 itemProps={{ size: 3 }}
                 items={store.results}
                 getItem={result =>

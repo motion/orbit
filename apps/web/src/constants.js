@@ -1,6 +1,6 @@
 // @flow
 // export constants from @mcro/black
-import { IS_ELECTRON, IS_PROD } from '@mcro/black'
+import { IS_ELECTRON } from '@mcro/black'
 
 export * from '@mcro/black/lib/constants'
 

@@ -2,8 +2,6 @@ import React from 'react'
 import Ionize from '@mcro/ionize'
 import { app, globalShortcut, BrowserWindow, ipcMain } from 'electron'
 
-console.log('app', app)
-
 class Window {
   key = Math.random()
   get active() {
@@ -20,8 +18,10 @@ class Windows {
 
   next(path) {
     this.windows[0].path = path
+
+    console.log('go to', path, this.windows[0].ref)
+
     this.windows = [new Window(), ...this.windows]
-    console.log('next this.windows', this.windows, path)
     return this.windows
   }
 
@@ -43,21 +43,21 @@ class ExampleApp extends React.Component {
     windows: WindowsXP.windows,
   }
 
-  onReadyToShow = () => {
-    // hacky for now
-    this.setState({ show: true })
-    console.log('this.state', this.state)
-    console.log('allwindows', BrowserWindow.getAllWindows())
-    this.windowRef = BrowserWindow.getAllWindows()[0]
-    this.listenForBlur()
-    this.registerShortcuts()
-    this.listenToApp()
+  onWindow = ref => {
+    if (ref) {
+      this.windowRef = ref
+    }
   }
 
-  onWindowRef = (key, ref) => {
-    console.log('got a window ref', key, ref)
+  onReadyToShow = () => {
+    this.setState({ show: true })
+    this.listenToApp()
+    this.listenForBlur()
+    this.registerShortcuts()
+  }
+
+  onAppWindow = (key, ref) => {
     const win = this.state.windows.find(x => x.key === key)
-    console.log('found win', win)
     if (win) {
       win.ref = ref
     }
@@ -81,6 +81,7 @@ class ExampleApp extends React.Component {
 
   goTo = path => {
     this.setState({
+      show: false,
       windows: WindowsXP.next(path),
     })
   }
@@ -91,47 +92,39 @@ class ExampleApp extends React.Component {
     })
   }
 
-  listenForBlur() {
+  listenForBlur = () => {
     this.windowRef.on('blur', () => {
+      console.log('got a blur')
       if (!this.state.disableAutohide) {
         this.close()
       }
     })
   }
 
-  registerShortcuts() {
+  registerShortcuts = () => {
+    console.log('registerShortcuts')
+    globalShortcut.unregisterAll()
     const SHORTCUTS = {
       'Option+Space': () => {
-        console.log('focusme')
+        console.log('command option+space')
         this.windowRef.focus()
         this.setState({
           show: true,
         })
       },
     }
-
-    globalShortcut.unregisterAll()
-
     for (const shortcut of Object.keys(SHORTCUTS)) {
-      console.log('regsitering shortut', shortcut, typeof SHORTCUTS[shortcut])
       const ret = globalShortcut.register(shortcut, SHORTCUTS[shortcut])
       if (!ret) {
         console.log('couldnt register shortcut')
-      } else {
-        console.log('registered')
       }
     }
   }
 
-  onPreloaded = index => (...args) => {
-    console.log('onpreloaded', index, ...args)
-  }
-
   render() {
     const { windows } = this.state
-
     const appWindow = {
-      defaultSize: [500, 500],
+      defaultSize: [700, 500],
       titleBarStyle: 'hidden-inset',
       vibrancy: 'dark',
       transparent: true,
@@ -157,6 +150,8 @@ class ExampleApp extends React.Component {
         </menu>
         <window
           {...appWindow}
+          defaultSize={[600, 500]}
+          ref={this.onWindow}
           show
           showDevTools
           file="http://jot.dev/bar3"
@@ -175,7 +170,7 @@ class ExampleApp extends React.Component {
               {...appWindow}
               file={'http://jot.dev'}
               show={active}
-              ref={ref => this.onWindowRef(key, ref)}
+              ref={ref => this.onAppWindow(key, ref)}
             />
           )
         })}

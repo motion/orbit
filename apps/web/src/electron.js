@@ -1,13 +1,13 @@
 const { app, globalShortcut, BrowserWindow } = window.require('electron').remote
 
 const SHORTCUTS = {
-  'Option+Space': () => {
-    const windows = BrowserWindow.getAllWindows()
-    console.log('focus', windows)
-    if (windows && windows.length) {
-      windows[0].focus()
-    }
-  },
+  // 'Option+Space': () => {
+  //   const windows = BrowserWindow.getAllWindows()
+  //   console.log('focus', windows)
+  //   if (windows && windows.length) {
+  //     windows[0].focus()
+  //   }
+  // },
 }
 
 globalShortcut.unregisterAll()

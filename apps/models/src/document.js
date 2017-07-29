@@ -20,24 +20,25 @@ export class Document extends Thing {
 
   @query
   search = async (text: string) => {
-    // return recent
-    return null
-    // if (text === '') {
-    //   return await this.collection
-    //     .find({ draft: { $ne: true } })
-    //     // .sort({ createdAt: 'desc' })
-    //     .limit(20)
-    //     .exec()
-    // }
+    if (text === '') {
+      return await this.collection
+        .find({ draft: { $ne: true } })
+        .sort('createdAt')
+        .limit(20)
+        .exec()
+    }
 
-    // const ids = (await this.pouch.search({
-    //   query: text,
-    //   fields: ['text', 'title'],
-    //   include_docs: false,
-    //   highlighting: false,
-    // })).rows.map(row => row.id)
+    const { rows } = await this.pouch.search({
+      query: text,
+      fields: ['text', 'title'],
+      include_docs: false,
+      highlighting: false,
+    })
 
-    // return await this.collection.find({ _id: { $in: ids } }).exec()
+    return await this.collection
+      .find({ _id: { $in: rows.map(row => row.id) }, title: { $gt: null } })
+      .sort('title')
+      .exec()
   }
 
   @query

@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "pack": "build --mac --dir",
-    "dist": "build --mac"
+    "dist": "build --mac",
+    "start": "electron lib/ionize.js"
   },
   "dependencies": {
     "@mcro/ionize": "^1.5.0",

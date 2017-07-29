@@ -120,6 +120,10 @@ export default class WindowElement extends BaseElement {
     this.window = new BrowserWindow({
       show: false,
       acceptFirstMouse: !!props.acceptFirstMouse,
+      titleBarStyle: props.titleBarStyle,
+      vibrancy: props.vibrancy,
+      transparent: !!props.transparent,
+      webPreferences: props.webPreferences,
     })
     this.parentWindow = null
     this.attachedHandlers = {}
@@ -278,7 +282,6 @@ export default class WindowElement extends BaseElement {
 
 function configureFile({ file }: Object) {
   if (file) {
-    console.log('loading url', file)
     this.window.loadURL(`${file}`)
   }
 }

@@ -19,7 +19,7 @@
     "eslint-plugin-flowtype": "^2.34.0",
     "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-prettier": "^2.1.2",
-    "lerna": "2.0.0-rc.5",
+    "lerna": "2.0.0",
     "prettier": "^1.5.0"
   },
   "devDependencies": {

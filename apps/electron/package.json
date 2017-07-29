@@ -6,10 +6,11 @@
     "pack": "build --mac --dir",
     "dist": "build --mac"
   },
-  "devDependencies": {
-    "7zip-bin-mac": "^1.0.1",
-    "electron": "^1.7.3",
-    "electron-builder": "^7.14.2"
+  "dependencies": {
+    "react-ionize": "^1.5.0",
+    "react": "16.0.0-alpha.5",
+    "react-dom": "16.0.0-alpha.5",
+    "electron": "^1.6.11"
   },
   "build": {
     "appId": "jot.id",

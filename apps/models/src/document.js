@@ -31,13 +31,16 @@ export class Document extends Thing {
     const { rows } = await this.pouch.search({
       query: text,
       fields: ['text', 'title'],
-      include_docs: false,
+      include_docs: true,
       highlighting: false,
     })
 
-    return await this.collection
-      .find({ _id: { $in: rows.map(row => row.id) }, title: { $gt: null } })
-      .sort('title')
+    const ids = rows.map(row => row.id)
+    console.log('ids', ids)
+
+    return await this._collection
+      .find({ _id: { $in: ids }, title: { $gt: null } })
+      .sort('createdAt')
       .exec()
   }
 

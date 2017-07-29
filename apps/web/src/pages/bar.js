@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@mcro/black'
+import { view, watch, HotKeys } from '@mcro/black'
 import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import { uniq } from 'lodash'
@@ -18,6 +18,10 @@ class BarStore {
   highlightIndex = -1
   value = ''
   @watch children = () => this.currentDoc && this.currentDoc.getChildren()
+
+  get results() {
+    return this.searchResults.length ? this.searchResults : this.children
+  }
 
   start() {
     this.watch(async () => {
@@ -116,6 +120,66 @@ class BarStore {
     return this.peek[this.highlightIndex]
   }
 
+  createDocAtPath = async (path: string): Document => {
+    return await this.getDocAtPath(path, true)
+  }
+
+  createDocsAtPath = async (path: string): Array<Document> => {
+    return await this.getDocsAtPath(path, true)
+  }
+
+  getDocAtPath = async (path: string, create = false): ?Document => {
+    const pathLength = this.splitPath(path).length
+    const docs = await this.getDocsAtPath(path, create)
+    return docs[pathLength - 1] || null
+  }
+
+  getDocsAtPath = async (path: string, create = false): Array<Document> => {
+    const result = []
+    let last
+    if (path === '/') {
+      return User.home
+    }
+    for (const slug of this.splitPath(path)) {
+      const query = { slug }
+      if (last) {
+        query.parentId = last.id
+      }
+      let next = await Document.collection.findOne(query).exec()
+      if (!next && create) {
+        next = await Document.create({
+          ...query,
+          title: slug,
+          parentId: last.id,
+        })
+      }
+      if (!next) {
+        return result
+      }
+      last = next
+      result.push(last)
+    }
+    return result
+  }
+
+  getChildDocsForPath = async (path: string): Array<Document> => {
+    if (path === '/') {
+      return User.home
+    }
+    const lastDoc = await this.getDocAtPath(path)
+    if (!lastDoc) {
+      return []
+    }
+    return await this.getChildDocs(lastDoc)
+  }
+
+  getChildDocs = async (document: Document): Array<Document> => {
+    return await Document.collection.find({ parentId: document._id }).exec()
+  }
+
+  getPathForDocs = (docs: Array<Document>): string =>
+    docs.map(doc => doc.title).join(PATH_SEPARATOR)
+
   toPath = (crumbs: Array<Document>): string => {
     return crumbs.map(document => document.slug).join(PATH_SEPARATOR)
   }
@@ -124,8 +188,39 @@ class BarStore {
     return path.split(PATH_SEPARATOR)
   }
 
+  onEnter = async () => {
+    if (this.highlightIndex > -1) {
+      this.navTo(this.highlightedDocument)
+    } else if (this.selectedItem) {
+      this.onItemClick(this.selectedItemKey)
+    } else {
+      const found = await this.createDocAtPath(this.value)
+      this.navTo(found)
+    }
+    this.setTimeout(() => App.editor && App.editor.focus(), 200)
+  }
+
   onChange = ({ target: { value } }) => {
     this.value = value
+  }
+
+  actions = {
+    right: () => {
+      if (!this.focused || !this.searchResults) return
+      this.onRight()
+    },
+    down: () => {
+      if (!this.focused) return
+      if (!this.showResults || !this.focused) {
+        this.action('focusDown')
+        return
+      }
+      this.moveHighlight(1)
+    },
+    up: () => {
+      if (!this.focused) return
+      this.moveHighlight(-1)
+    },
   }
 }
 
@@ -142,29 +237,33 @@ export default class BarPage {
   render({ store }) {
     console.log('bar render')
     return (
-      <UI.Theme name="clear-dark">
-        <bar $$draggable>
-          <div>
-            <UI.Input
-              size={3}
-              borderRadius={5}
-              onChange={store.onChange}
-              borderWidth={0}
-            />
-          </div>
-          <results>
-            <UI.List
-              if={store.children}
-              itemProps={{ size: 3 }}
-              items={store.children}
-              getItem={result =>
-                <item key={result.id} onClick={this.onClick(result)}>
-                  {result.title}
-                </item>}
-            />
-          </results>
-        </bar>
-      </UI.Theme>
+      <HotKeys handlers={store.actions}>
+        <UI.Theme name="clear-dark">
+          <bar $$draggable>
+            <div>
+              <UI.Input
+                size={3}
+                borderRadius={5}
+                onChange={store.onChange}
+                borderWidth={0}
+              />
+            </div>
+            <results>
+              <UI.List
+                if={store.results}
+                controlled
+                isSelected={(item, index) => index === store.highlightIndex}
+                itemProps={{ size: 3 }}
+                items={store.results}
+                getItem={result =>
+                  <item key={result.id} onClick={this.onClick(result)}>
+                    {result.title}
+                  </item>}
+              />
+            </results>
+          </bar>
+        </UI.Theme>
+      </HotKeys>
     )
   }
 

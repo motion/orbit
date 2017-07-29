@@ -207,7 +207,7 @@ class List {
         }
         props.highlight = this.showInternalSelection
           ? index === this.state.selected
-          : this.props.isSelected && this.props.isSelected(items[index])
+          : this.props.isSelected && this.props.isSelected(items[index], index)
       }
       return props
     }

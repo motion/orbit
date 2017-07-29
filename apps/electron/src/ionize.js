@@ -130,8 +130,8 @@ class ExampleApp extends React.Component {
   render() {
     const { windows } = this.state
     const appWindow = {
+      frame: false,
       defaultSize: [700, 500],
-      titleBarStyle: 'hidden-inset',
       vibrancy: 'dark',
       transparent: true,
       webPreferences: {
@@ -161,7 +161,7 @@ class ExampleApp extends React.Component {
           show
           showDevTools
           file="http://jot.dev/bar"
-          titleBarStyle="hidden"
+          titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
           position={this.state.position}
@@ -174,6 +174,7 @@ class ExampleApp extends React.Component {
             <window
               key={key}
               {...appWindow}
+              titleBarStyle="hidden-inset"
               file={`http://jot.dev?key=${key}`}
               show={active}
               ref={ref => this.onAppWindow(key, ref)}

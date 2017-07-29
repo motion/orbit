@@ -20,14 +20,12 @@ class Windows {
     console.log('Windows.next', path)
     const next = this.windows[0]
     next.path = path
-    this.windows[0].ref.focus() // focuses it
     this.windows = [new Window(), ...this.windows]
-    return this.windows
+    return next
   }
 
   remove(path) {
     this.windows = this.windows.filter(window => window.path === path)
-    return this.windows
   }
 }
 
@@ -99,13 +97,22 @@ class ExampleApp extends React.Component {
     })
 
     ipcMain.on('close', (event, path) => {
-      this.setState({ windows: WindowsXP.remove(path) })
+      WindowsXP.remove(path)
+      this.updateWindows()
     })
   }
 
-  goTo = path => {
+  updateWindows = () => {
+    return new Promise(resolve => {
+      this.setState({ windows: WindowsXP.windows }, resolve)
+    })
+  }
+
+  goTo = async path => {
     this.hide()
-    this.setState({ windows: WindowsXP.next(path) })
+    const next = WindowsXP.next(path)
+    await this.updateWindows()
+    next.ref.focus()
   }
 
   listenForBlur = () => {
@@ -117,7 +124,7 @@ class ExampleApp extends React.Component {
 
   registerShortcuts = () => {
     console.log('registerShortcuts')
-    // globalShortcut.unregisterAll()
+    globalShortcut.unregisterAll()
 
     const SHORTCUTS = {
       'Option+Space': () => {

@@ -3,6 +3,9 @@ import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
 import Redbox from 'redbox-react'
 import RootStore from './rootStore'
+import Router from '~/router'
+const { ipcRenderer } = window.require('electron')
+import * as Constants from '~/constants'
 
 @view.provide({
   rootStore: RootStore,
@@ -18,6 +21,18 @@ export default class Root extends React.Component {
 
   componentDidMount() {
     view.on('hmr', this.clearErr)
+
+    // listen to Ionize
+    if (Constants.KEY) {
+      this.on(window, 'focus', () => {
+        ipcRenderer.send('where-to', Constants.KEY)
+      })
+
+      ipcRenderer.on('app-goto', (event, arg) => {
+        console.log('appgoto', arg)
+        Router.go(arg)
+      })
+    }
   }
 
   componentWillUnmount() {

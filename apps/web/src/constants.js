@@ -30,3 +30,6 @@ export const TRAY_HEIGHT = 500
 
 export const IS_BAR = window.location.pathname.indexOf('/bar') > -1
 console.log('IS_BAR', IS_BAR)
+
+const keysearch = window.location.search.match(/key=(.*)/)
+export const KEY = keysearch ? keysearch[1] : ''

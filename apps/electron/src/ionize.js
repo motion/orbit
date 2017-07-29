@@ -35,7 +35,7 @@ const WindowsXP = new Windows()
 
 class ExampleApp extends React.Component {
   state = {
-    show: false,
+    show: true,
     size: [650, 500],
     position: [450, 300],
     windows: WindowsXP.windows,
@@ -43,6 +43,10 @@ class ExampleApp extends React.Component {
 
   hide = () => {
     this.setState({ show: false })
+  }
+
+  show = () => {
+    this.setState({ show: true, position: [450, 300] })
   }
 
   blur = () => {
@@ -62,14 +66,13 @@ class ExampleApp extends React.Component {
   onWindow = ref => {
     if (ref) {
       this.windowRef = ref
+      setTimeout(() => {
+        this.show()
+        this.listenToApp()
+        this.listenForBlur()
+        this.registerShortcuts()
+      })
     }
-  }
-
-  onReadyToShow = () => {
-    this.setState({ show: true })
-    this.listenToApp()
-    this.listenForBlur()
-    this.registerShortcuts()
   }
 
   onAppWindow = (key, ref) => {
@@ -110,18 +113,19 @@ class ExampleApp extends React.Component {
   listenForBlur = () => {
     this.windowRef.on('blur', () => {
       console.log('got a blur')
-      this.blur()
+      // this.blur()
     })
   }
 
   registerShortcuts = () => {
     console.log('registerShortcuts')
-    globalShortcut.unregisterAll()
+    // globalShortcut.unregisterAll()
+
     const SHORTCUTS = {
       'Option+Space': () => {
         console.log('command option+space')
         this.windowRef.focus()
-        this.setState({ show: true })
+        this.show()
       },
     }
     for (const shortcut of Object.keys(SHORTCUTS)) {
@@ -130,6 +134,10 @@ class ExampleApp extends React.Component {
         console.log('couldnt register shortcut')
       }
     }
+  }
+
+  onReadyToShow = () => {
+    console.log('READY TO SHOW')
   }
 
   render() {
@@ -160,16 +168,16 @@ class ExampleApp extends React.Component {
           </submenu>
         </menu>
         <window
+          key={-100}
           {...appWindow}
           defaultSize={[600, 500]}
           ref={this.onWindow}
-          show
           showDevTools
           file="http://jot.dev/bar"
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
-          position={this.state.position}
+          position={this.state.show ? this.state.position : [5000, 5000]}
           onReadyToShow={this.onReadyToShow}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
@@ -179,6 +187,7 @@ class ExampleApp extends React.Component {
             <window
               key={key}
               {...appWindow}
+              showDevTools
               titleBarStyle="hidden-inset"
               file={`http://jot.dev?key=${key}`}
               show={active}

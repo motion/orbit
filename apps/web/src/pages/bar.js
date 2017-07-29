@@ -5,12 +5,8 @@ import { HotKeys } from 'react-hotkeys'
 import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import { uniq } from 'lodash'
-import Router from '~/router'
 
 const PATH_SEPARATOR = '/'
-const keysearch = window.location.search.match(/key=(.*)/)
-const KEY = keysearch ? keysearch[1] : ''
-console.log('KEY', KEY)
 
 const { ipcRenderer } = window.require('electron')
 
@@ -28,15 +24,6 @@ class BarStore {
   }
 
   start() {
-    this.on(window, 'focus', () => {
-      ipcRenderer.send('where-to', KEY)
-    })
-
-    ipcRenderer.on('app-goto', (event, arg) => {
-      console.log('appgoto', arg)
-      Router.go(arg)
-    })
-
     this.watch(async () => {
       if (!this.isTypingPath) {
         // search

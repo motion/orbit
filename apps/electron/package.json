@@ -7,7 +7,7 @@
     "dist": "build --mac"
   },
   "dependencies": {
-    "react-ionize": "^1.5.0",
+    "@mcro/ionize": "^1.5.0",
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5",
     "electron": "^1.6.11"

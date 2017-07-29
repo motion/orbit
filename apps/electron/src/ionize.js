@@ -52,11 +52,11 @@ class ExampleApp extends React.Component {
   }
 
   get disableAutohide() {
-    return localStorage.getItem('disableAutohide') === 'true'
+    return false
   }
 
   set disableAutohide(value) {
-    localStorage.setItem('disableAutohide', value ? 'true' : 'false')
+    // todo
   }
 
   onWindow = ref => {

@@ -1,5 +1,4 @@
 import React from 'react'
-import { store, view } from '@mcro/black'
 import Ionize from '@mcro/ionize'
 import { app, globalShortcut, BrowserWindow, ipcMain } from 'electron'
 
@@ -34,35 +33,30 @@ class Windows {
 
 const WindowsXP = new Windows()
 
-@view({
-  store: class IonizeStore {
-    show = false
-    size = [650, 500]
-    position = [450, 300]
-    windows = WindowsXP.windows
+class ExampleApp extends React.Component {
+  state = {
+    show: false,
+    size: [650, 500],
+    position: [450, 300],
+    windows: WindowsXP.windows,
+  }
 
-    hide = () => {
-      this.show = false
-    }
+  hide = () => {
+    this.setState({ show: false })
+  }
 
-    blur = () => {
-      if (!this.disableAutohide) {
-        this.store.hide()
-      }
+  blur = () => {
+    if (!this.disableAutohide) {
+      this.hide()
     }
+  }
 
-    get disableAutohide() {
-      return localStorage.getItem('disableAutohide') === 'true'
-    }
+  get disableAutohide() {
+    return localStorage.getItem('disableAutohide') === 'true'
+  }
 
-    set disableAutohide(value) {
-      localStorage.setItem('disableAutohide', value ? 'true' : 'false')
-    }
-  },
-})
-class ExampleApp {
-  get store() {
-    return this.props.store
+  set disableAutohide(value) {
+    localStorage.setItem('disableAutohide', value ? 'true' : 'false')
   }
 
   onWindow = ref => {
@@ -72,14 +66,14 @@ class ExampleApp {
   }
 
   onReadyToShow = () => {
-    this.store.show = true
+    this.setState({ show: true })
     this.listenToApp()
     this.listenForBlur()
     this.registerShortcuts()
   }
 
   onAppWindow = (key, ref) => {
-    const win = this.store.windows.find(x => x.key === key)
+    const win = this.state.windows.find(x => x.key === key)
     if (win) {
       win.ref = ref
     }
@@ -87,7 +81,7 @@ class ExampleApp {
 
   listenToApp = () => {
     ipcMain.on('where-to', (event, key) => {
-      const win = this.store.windows.find(x => x.key === key)
+      const win = this.state.windows.find(x => x.key === key)
       console.log('where to?', win.path)
       event.sender.send('app-goto', win.path)
     })
@@ -97,17 +91,17 @@ class ExampleApp {
     })
 
     ipcMain.on('bar-hide', () => {
-      this.store.hide()
+      this.hide()
     })
 
     ipcMain.on('close', (event, path) => {
-      this.store.windows = WindowsXP.remove(path)
+      this.setState({ windows: WindowsXP.remove(path) })
     })
   }
 
   goTo = path => {
-    this.store.hide()
-    this.store.window = WindowsXP.next(path)
+    this.hide()
+    this.setState({ windows: WindowsXP.next(path) })
   }
 
   listenForBlur = () => {
@@ -136,7 +130,7 @@ class ExampleApp {
   }
 
   render() {
-    const { windows } = this.store
+    const { windows } = this.state
     const appWindow = {
       frame: false,
       defaultSize: [700, 500],
@@ -170,12 +164,12 @@ class ExampleApp {
           showDevTools
           file="http://jot.dev/bar"
           titleBarStyle="customButtonsOnHover"
-          show={this.store.show}
-          size={this.store.size}
-          position={this.store.position}
+          show={this.state.show}
+          size={this.state.size}
+          position={this.state.position}
           onReadyToShow={this.onReadyToShow}
-          onResize={this.store.ref('size').set}
-          onMoved={this.store.ref('position').set}
+          onResize={size => this.setState({ size })}
+          onMoved={position => this.setState({ position })}
         />
         {windows.map(({ key, active }) => {
           return (

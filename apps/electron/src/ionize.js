@@ -39,6 +39,12 @@ class ExampleApp extends React.Component {
           show: true,
         })
       },
+      Escape: () => {
+        console.log('escape')
+        this.setState({
+          show: false,
+        })
+      },
     }
 
     globalShortcut.unregisterAll()

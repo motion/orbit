@@ -10,7 +10,8 @@ class ExampleApp extends React.Component {
     size: [650, 500],
     position: [450, 300],
     disableAutohide: false,
-    windows: [],
+    // preloads
+    windows: ['/', '/', '/'],
   }
 
   onReadyToShow() {
@@ -30,7 +31,7 @@ class ExampleApp extends React.Component {
       console.log('goto', url)
       event.sender.send('asynchronous-reply', 'cool')
       this.setState({
-        windows: [...this.state.windows, url],
+        windows: [url, ...this.state.windows],
       })
     })
   }
@@ -75,7 +76,29 @@ class ExampleApp extends React.Component {
     }
   }
 
+  const appWindow = {
+    show: true,
+    size: [500, 500],
+    showDevTools: true,
+    titleBarStyle: "hidden-inset",
+    vibrancy: "dark",
+    transparent: true,
+    webPreferences: {
+      experimentalFeatures: true,
+      transparentVisuals: true,
+    }
+  }
+
+  onPreloaded = index = (...args) => {
+    console.log('onpreloaded', ...args)
+  }
+
   render() {
+    const { windows } = this.state
+
+      const preloadWindow = index =>
+        windows[index] === '/' && <window key={index} file="http://jot.dev" ref={this.onPreloaded(index)} />
+
     return (
       <app>
         <menu>
@@ -91,15 +114,9 @@ class ExampleApp extends React.Component {
           </submenu>
         </menu>
         <window
-          showDevTools
+          {...appWindow}
           file="http://jot.dev/bar2"
           titleBarStyle="hidden"
-          vibrancy="dark"
-          transparent
-          webPreferences={{
-            experimentalFeatures: true,
-            transparentVisuals: true,
-          }}
           show={this.state.show}
           size={this.state.size}
           position={this.state.position}
@@ -107,25 +124,20 @@ class ExampleApp extends React.Component {
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
         />
-        {this.state.windows.map(url => {
-          console.log('file', `http://jot.dev${url}`)
+        {windows.map((path, index) => {
+          const url = `http://jot.dev${path}`
           return (
             <window
-              key={url}
-              show
-              file={`http://jot.dev${url}`}
-              size={[500, 500]}
-              showDevTools
-              titleBarStyle="hidden-inset"
-              vibrancy="dark"
-              transparent
-              webPreferences={{
-                experimentalFeatures: true,
-                transparentVisuals: true,
-              }}
+              key={index}
+              {...appWindow}
+              file={url}
+              show={path !== '/'}
             />
           )
         })}
+        {preloadWindow(window.length)}
+        {preloadWindow(window.length + 1)}
+        {preloadWindow(window.length + 2)}
       </app>
     )
   }

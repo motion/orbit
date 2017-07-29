@@ -182,7 +182,11 @@ class ExampleApp extends React.Component {
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
-          position={this.state.show ? this.state.position : [5000, 5000]}
+          position={
+            this.state.show
+              ? this.state.position
+              : this.state.size.map(x => -x - 100)
+          }
           onReadyToShow={this.onReadyToShow}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}

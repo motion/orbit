@@ -97,20 +97,6 @@ class BarStore {
     return path.length > 1 ? path[path.length - 1] : null
   }
 
-  get selectedItem() {
-    const inline = this.editorState.focusInline
-    if (!inline || inline.type !== 'item') return null
-    return inline
-  }
-
-  get selectedItemKey() {
-    return this.selectedItem && this.selectedItem.key
-  }
-
-  get itemNodes() {
-    return this.firstLine.nodes.filter(i => i.type === 'item')
-  }
-
   get selectedItemIndex() {
     return this.itemNodes.map(i => i.key).indexOf(this.selectedItemKey)
   }
@@ -191,13 +177,10 @@ class BarStore {
   onEnter = async () => {
     if (this.highlightIndex > -1) {
       this.navTo(this.highlightedDocument)
-    } else if (this.selectedItem) {
-      this.onItemClick(this.selectedItemKey)
     } else {
       const found = await this.createDocAtPath(this.value)
       this.navTo(found)
     }
-    this.setTimeout(() => App.editor && App.editor.focus(), 200)
   }
 
   onChange = ({ target: { value } }) => {
@@ -210,6 +193,7 @@ class BarStore {
       this.onRight()
     },
     down: () => {
+      console.log('action down', this.focused)
       if (!this.focused) return
       if (!this.showResults || !this.focused) {
         this.action('focusDown')
@@ -226,18 +210,17 @@ class BarStore {
       ipcRenderer.send('bar-hide')
     },
   }
+
+  onClick = result => {
+    ipcRenderer.send('bar-goto', result.url())
+  }
 }
 
 @view({
   store: BarStore,
 })
 export default class BarPage {
-  onClick = result => {
-    ipcRenderer.send('bar-goto', result.url())
-  }
-
   render({ store }) {
-    console.log('bar render')
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
@@ -255,7 +238,7 @@ export default class BarPage {
                 if={store.results}
                 controlled
                 isSelected={(item, index) => index === store.highlightIndex}
-                onSelect={this.onClick}
+                onSelect={store.onClick}
                 itemProps={{ size: 3 }}
                 items={store.results}
                 getItem={result =>

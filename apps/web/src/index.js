@@ -7,8 +7,7 @@ import * as Constants from './constants'
 import '@mcro/models/lib/user' // start superlogin connect immediately
 
 if (Constants.IS_ELECTRON) {
-  // window.electron = require('electron')
-  // require('./electron')
+  require('./electron')
 }
 
 if (Constants.IS_PROD) {

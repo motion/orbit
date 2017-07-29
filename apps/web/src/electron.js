@@ -1,20 +1,20 @@
-import { app, globalShortcut } from 'electron'
+const { app, globalShortcut, BrowserWindow } = window.require('electron').remote
 
 const SHORTCUTS = {
-  'Control+Space': () => {
-    console.log('pressed that shiz')
+  'Option+Space': () => {
+    const windows = BrowserWindow.getAllWindows()
+    console.log('focus', windows)
+    if (windows && windows.length) {
+      windows[0].focus()
+    }
   },
 }
 
-app.on('ready', () => {
-  for (const shortcut of Object.keys(SHORTCUTS)) {
-    const ret = globalShortcut.register(shortcut, SHORTCUTS[shortcut])
-    if (!ret) {
-      console.log('registration failed', shortcut)
-    }
-  }
-})
+globalShortcut.unregisterAll()
 
-app.on('will-quit', () => {
-  globalShortcut.unregisterAll()
-})
+for (const shortcut of Object.keys(SHORTCUTS)) {
+  const ret = globalShortcut.register(shortcut, SHORTCUTS[shortcut])
+  if (!ret) {
+    console.log('couldnt register shortcut')
+  }
+}

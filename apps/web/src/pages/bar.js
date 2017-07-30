@@ -203,7 +203,7 @@ export default class BarPage {
 
   static style = {
     bar: {
-      // background: [0, 0, 0, 0.1],
+      background: [80, 80, 80, 0.5],
       flex: 1,
       transform: {
         z: 0,
@@ -211,6 +211,7 @@ export default class BarPage {
       // background: 'rgba(255, 255, 255, 0.75)',
     },
     results: {
+      borderTop: [1, [0, 0, 0, 0.1]],
       flex: 2,
       flexFlow: 'row',
     },

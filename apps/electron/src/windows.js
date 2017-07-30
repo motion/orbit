@@ -51,7 +51,7 @@ const WindowStore = new Windows()
 
 export default class ExampleApp extends React.Component {
   state = {
-    show: false,
+    show: true,
     size: [0, 0],
     position: [0, 0],
     windows: WindowStore.windows,
@@ -265,6 +265,9 @@ export default class ExampleApp extends React.Component {
                 onResize={x => {
                   setSize(x)
                   this.updateWindows()
+                }}
+                onClose={() => {
+                  console.log('got a close event')
                 }}
                 showDevTools={false}
                 titleBarStyle="hidden-inset"

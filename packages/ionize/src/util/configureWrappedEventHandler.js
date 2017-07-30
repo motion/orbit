@@ -1,3 +1,4 @@
+// @flow
 import EventEmitter from 'events'
 import BaseElement from '../elements/BaseElement'
 

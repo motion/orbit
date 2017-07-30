@@ -109,6 +109,12 @@ const PROP_TO_APP_EVENT_NAME = {
   onMoved: 'moved',
 }
 
+const BASIC_PROPS = {
+  onReadyToShow: 'ready-to-show',
+  onClose: 'close',
+  onClosed: 'closed',
+}
+
 export default class WindowElement extends BaseElement {
   parentWindow: null | BrowserWindow
   window: BrowserWindow
@@ -130,23 +136,18 @@ export default class WindowElement extends BaseElement {
   }
 
   appendChildBeforeMount(child: BaseElement | TextElement): void {
-    if (child instanceof DialogElement || child instanceof WindowElement) {
+    if (child instanceof WindowElement) {
       child.parentWindow = this.window
     }
   }
 
   // Hook up event handlers, if they exist
   finalizeBeforeMount(type: string, props: Object): boolean {
-    if (props.onReadyToShow !== undefined) {
-      configureWrappedEventHandler(
-        this.window,
-        this.attachedHandlers,
-        'onReadyToShow',
-        'ready-to-show',
-        props.onReadyToShow,
-        rawHandler => rawHandler()
-      )
-    }
+    Object.keys(props).forEach(propName => {
+      if (BASIC_PROPS[propName]) {
+        this.configureEvent(propName, BASIC_PROPS[propName], props[propName])
+      }
+    })
 
     if (props.showDevTools) {
       this.window.webContents.openDevTools()
@@ -187,21 +188,23 @@ export default class WindowElement extends BaseElement {
     return SUPPORTED_PROPS
   }
 
+  configureEvent = (propName, eventName, value, handler = cb => cb()) => {
+    console.log('configureEvent', propName, eventName, value, handler)
+    configureWrappedEventHandler(
+      this.window,
+      this.attachedHandlers,
+      propName,
+      eventName,
+      value,
+      handler
+    )
+  }
+
   commitUpdate(
     updatePayload: Array<mixed>,
     oldProps: Object,
     newProps: Object
   ): void {
-    const windowEventCb = (propName, eventName, value, handler = cb => cb()) =>
-      configureWrappedEventHandler(
-        this.window,
-        this.attachedHandlers,
-        propName,
-        eventName,
-        value,
-        handler
-      )
-
     for (let i = 0; i < updatePayload.length; i += 2) {
       let propKey = ((updatePayload[i]: any): string)
       let propVal = updatePayload[i + 1]
@@ -210,15 +213,15 @@ export default class WindowElement extends BaseElement {
       // any checking. Just update to the new value.
       switch (propKey) {
         case 'onReadyToShow': {
-          windowEventCb('onReadyToShow', 'ready-to-show', propVal)
+          this.configureEvent('onReadyToShow', 'ready-to-show', propVal)
           break
         }
         case 'onClose': {
-          windowEventCb('onClose', 'close', propVal)
+          this.configureEvent('onClose', 'close', propVal)
           break
         }
         case 'onClosed': {
-          windowEventCb('onClosed', 'closed', propVal)
+          this.configureEvent('onClosed', 'closed', propVal)
           break
         }
         case 'show': {
@@ -262,12 +265,6 @@ export default class WindowElement extends BaseElement {
     }
   }
 
-  appendChildBeforeMount(child: BaseElement | TextElement): void {
-    if (child instanceof WindowElement) {
-      child.parentWindow = this.window
-    }
-  }
-
   appendChild(child: BaseElement | TextElement): void {
     if (child instanceof WindowElement) {
       child.parentWindow = this.window
@@ -297,17 +294,10 @@ function configureFile({ file }: Object) {
 }
 
 function configureSize({ size, onResize, defaultSize }: Object) {
-  configureWrappedEventHandler(
-    this.window,
-    this.attachedHandlers,
-    'onResize',
-    'resize',
-    onResize,
-    rawHandler => {
-      const size = this.window.getSize()
-      rawHandler(size)
-    }
-  )
+  this.configureEvent('onResize', 'resize', onResize, rawHandler => {
+    const size = this.window.getSize()
+    rawHandler(size)
+  })
 
   if (!size && defaultSize) {
     this.window.setSize(...defaultSize)
@@ -336,29 +326,15 @@ function configurePosition({
   onMoved,
   defaultPosition,
 }: Object) {
-  configureWrappedEventHandler(
-    this.window,
-    this.attachedHandlers,
-    'onMove',
-    'move',
-    onMove,
-    rawHandler => {
-      const position = this.window.getPosition()
-      rawHandler(position)
-    }
-  )
+  this.configureEvent('onMove', 'move', onMove, rawHandler => {
+    const position = this.window.getPosition()
+    rawHandler(position)
+  })
 
-  configureWrappedEventHandler(
-    this.window,
-    this.attachedHandlers,
-    'onMoved',
-    'moved',
-    onMoved,
-    rawHandler => {
-      const position = this.window.getPosition()
-      rawHandler(position)
-    }
-  )
+  this.configureEvent('onMoved', 'moved', onMoved, rawHandler => {
+    const position = this.window.getPosition()
+    rawHandler(position)
+  })
 
   if (!position && defaultPosition) {
     this.window.setPosition(...defaultPosition)

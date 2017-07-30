@@ -118,7 +118,7 @@ class ExampleApp extends React.Component {
   listenForBlur = () => {
     this.windowRef.on('blur', () => {
       console.log('got a blur')
-      this.blur()
+      // this.blur()
     })
   }
 

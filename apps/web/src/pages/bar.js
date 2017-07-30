@@ -5,6 +5,7 @@ import { HotKeys } from 'react-hotkeys'
 import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import { uniq } from 'lodash'
+import InboxList from '~/views/inbox/list'
 
 const PATH_SEPARATOR = '/'
 
@@ -106,6 +107,17 @@ class BarStore {
     return this.peek[this.highlightIndex]
   }
 
+  moveHighlight = (diff: number) => {
+    this.highlightIndex += diff
+    if (this.highlightIndex === -1) {
+      this.highlightIndex = this.results.length - 1
+    }
+    if (this.highlightIndex >= this.results.length) {
+      this.highlightIndex = 0
+    }
+    log('hlindex', this.highlightIndex)
+  }
+
   createDocAtPath = async (path: string): Document => {
     return await this.getDocAtPath(path, true)
   }
@@ -189,21 +201,17 @@ class BarStore {
 
   actions = {
     right: () => {
-      if (!this.focused || !this.searchResults) return
-      this.onRight()
+      console.log('right')
+      // this.onRight()
     },
     down: () => {
-      console.log('action down', this.focused)
-      if (!this.focused) return
-      if (!this.showResults || !this.focused) {
-        this.action('focusDown')
-        return
-      }
       this.moveHighlight(1)
     },
     up: () => {
-      if (!this.focused) return
       this.moveHighlight(-1)
+    },
+    left: () => {
+      console.log('left')
     },
     esc: () => {
       console.log('got esc')
@@ -212,7 +220,9 @@ class BarStore {
   }
 
   onClick = result => {
-    ipcRenderer.send('bar-goto', result.url())
+    if (result) {
+      ipcRenderer.send('bar-goto', result.url())
+    }
   }
 }
 
@@ -234,18 +244,35 @@ export default class BarPage {
               />
             </div>
             <results>
-              <UI.List
-                if={store.results}
-                controlled
-                isSelected={(item, index) => index === store.highlightIndex}
-                onSelect={store.onClick}
-                itemProps={{ size: 3 }}
-                items={store.results}
-                getItem={result =>
-                  <item key={result.id}>
-                    {result.title}
-                  </item>}
-              />
+              <section
+                $list
+                css={{
+                  width: '50%',
+                }}
+              >
+                <UI.List
+                  if={store.results}
+                  controlled
+                  isSelected={(item, index) => index === store.highlightIndex}
+                  onSelect={store.onClick}
+                  itemProps={{ size: 2.5 }}
+                  items={store.results}
+                  getItem={result =>
+                    <item key={result.id}>
+                      {result.title}
+                    </item>}
+                />
+              </section>
+
+              <preview
+                css={{
+                  width: '50%',
+                  height: '100%',
+                  borderLeft: [1, [0, 0, 0, 0.1]],
+                }}
+              >
+                <InboxList filter={store.value} />
+              </preview>
             </results>
           </bar>
         </UI.Theme>
@@ -267,11 +294,12 @@ export default class BarPage {
     },
     results: {
       flex: 2,
+      flexFlow: 'row',
     },
     item: {
-      fontSize: 42,
+      fontSize: 38,
       opacity: 0.6,
-      padding: [20, 10],
+      padding: [18, 10],
     },
   }
 }

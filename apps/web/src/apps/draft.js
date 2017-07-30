@@ -5,8 +5,9 @@ import Draft from '~/views/inbox/draft'
 
 @view.attach('rootStore')
 @view
-export default class HomePage {
+export default class DraftPage {
   render({ rootStore }) {
+    log('render draft page')
     if (!rootStore.document) {
       return <null>not found</null>
     }

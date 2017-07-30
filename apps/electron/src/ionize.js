@@ -14,10 +14,9 @@ class Window {
 }
 
 class Windows {
-  windows = [new Window()] // preloaded windows
+  windows = []
 
   next(path) {
-    console.log('Windows.next', path)
     const next = this.windows[0]
     next.path = path
     this.windows = [new Window(), ...this.windows]
@@ -37,6 +36,12 @@ class ExampleApp extends React.Component {
     size: [650, 500],
     position: [450, 300],
     windows: WindowsXP.windows,
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.next() // preload app window a second after initial load
+    }, 1000)
   }
 
   hide = () => {
@@ -108,10 +113,15 @@ class ExampleApp extends React.Component {
     })
   }
 
-  goTo = async path => {
-    this.hide()
+  next = async path => {
     const next = WindowsXP.next(path)
     await this.updateWindows()
+    return next
+  }
+
+  goTo = async path => {
+    this.hide()
+    const next = await this.next(path)
     next.ref.focus()
   }
 

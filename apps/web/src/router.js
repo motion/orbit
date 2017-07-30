@@ -1,11 +1,11 @@
 // @flow
 import Router from '@mcro/router'
-import HomePage from './pages/home'
-import DocumentPage from './pages/document'
-import ThreadPage from './pages/thread'
-import InboxPage from './pages/inbox'
-import DraftPage from './pages/draft'
-import BarPage from './pages/bar'
+import HomePage from './apps/home'
+import DocumentPage from './apps/document'
+import ThreadPage from './apps/thread'
+import InboxPage from './apps/inbox'
+import DraftPage from './apps/draft'
+import BarPage from './apps/bar'
 
 let AppRouter
 

@@ -14,8 +14,9 @@ const { ipcRenderer } = window.require('electron')
 // <DocumentView document={document} isPrimaryDocument />
 
 class BarStore {
+  column = 0
   searchResults: Array<Document> = []
-  highlightIndex = -1
+  highlightIndex = 0
   value = ''
 
   get currentDoc() {
@@ -26,7 +27,7 @@ class BarStore {
 
   get results() {
     const { children = [], searchResults } = this
-    const hayStack = [...children, ...searchResults]
+    const hayStack = [{ title: 'Notifications' }, ...children, ...searchResults]
     return fuzzy
       .filter(this.value, hayStack, {
         extract: el => el.title,
@@ -94,8 +95,7 @@ class BarStore {
 
   actions = {
     right: () => {
-      console.log('right')
-      // this.onRight()
+      this.column++
     },
     down: () => {
       this.moveHighlight(1)
@@ -161,7 +161,7 @@ export default class BarPage {
                   itemProps={{ size: 2.5 }}
                   items={store.results}
                   getItem={result =>
-                    <UI.List.Item key={result.id} padding={0}>
+                    <UI.List.Item key={result.id} padding={0} height={60}>
                       <item>
                         {result.title}
                       </item>
@@ -176,7 +176,11 @@ export default class BarPage {
                   borderLeft: [1, [0, 0, 0, 0.1]],
                 }}
               >
-                <InboxList filter={store.value} />
+                <InboxList
+                  isSelected={(item, index) =>
+                    store.column === 1 && index === this.highlightIndex}
+                  filter={store.value}
+                />
               </preview>
             </results>
           </bar>

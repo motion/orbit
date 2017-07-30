@@ -39,7 +39,7 @@ class InboxStore {
   store: InboxStore,
 })
 export default class Inbox {
-  render({ store, inSidebar, large }) {
+  render({ store, inSidebar, large, isSelected }) {
     const badgeProps = {}
 
     Router.path // trigger change
@@ -84,56 +84,73 @@ export default class Inbox {
             background="transparent"
             controlled
             virtualized={{
-              rowHeight: 112,
+              rowHeight: 100,
               overscanRowCount: 5,
             }}
             itemProps={{
-              height: 112,
-              padding: [12, 15],
+              //height: 100,
+              padding: [18, 15],
               overflow: 'hidden',
               highlightBackground: [0, 0, 0, 0.25],
             }}
             items={filteredThreads}
             // setTimeout speeds up navigation
             onSelect={item => this.setTimeout(() => Router.go(item.url()))}
-            isSelected={item => item.url() === Router.path}
+            isSelected={(item, index) =>
+              (isSelected && isSelected(item, index)) ||
+              item.url() === Router.path}
             getItem={item => {
               return {
                 glow: false,
                 borderColor: [0, 0, 0, 0.1],
-                borderBottom: [1, [0, 0, 0, 0.1]],
+                //borderBottom: [1, [0, 0, 0, 0.05]],
                 primary: (
                   <head
                     css={{
                       flex: 1,
-                      color: '#ddd',
                       flexFlow: 'row',
                       justify: 'space-between',
-                      fontWeight: 400,
                     }}
                   >
-                    {item.title}
+                    <title
+                      $$ellipse
+                      css={{
+                        maxWidth: '100%',
+                        color: '#eee',
+                        display: 'inline-block',
+                        fontWeight: 400,
+                        fontSize: 18,
+                      }}
+                    >
+                      {item.title}
+                    </title>
+
+                    <date css={{ flexFlow: 'row', maxWidth: '50%' }}>
+                      {item.tags().map(tag =>
+                        <UI.Badge key={tag} {...badgeProps} color="#efefef">
+                          {tag.slice(0, 1)}
+                        </UI.Badge>
+                      )}
+                    </date>
                   </head>
                 ),
                 secondary:
                   item.status ||
                   <status
-                    $$row
-                    $$align="center"
-                    $$justify="space-between"
-                    $$margin={[2, 0]}
+                    css={{
+                      flexFlow: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      margin: [2, 0],
+                    }}
                   >
-                    <UI.Text size={0.9} color={[255, 255, 255, 0.7]}>
-                      <strong>Nate</strong> {ago(item.createdAt)}
+                    <UI.Text size={1.1} color={[255, 255, 255, 0.7]}>
+                      <strong>Nate</strong>
                     </UI.Text>
 
-                    <date css={{ flexFlow: 'row', maxWidth: '50%' }}>
-                      {item.tags().map(tag =>
-                        <UI.Badge key={tag} {...badgeProps} color="#efefef">
-                          {tag}
-                        </UI.Badge>
-                      )}
-                    </date>
+                    <UI.Text size={1.1} color={[255, 255, 255, 0.7]}>
+                      {ago(item.createdAt)}
+                    </UI.Text>
                   </status>,
                 children: (
                   <UI.Text color={[255, 255, 255, 0.4]} lineHeight="1.25rem">
@@ -150,7 +167,7 @@ export default class Inbox {
 
   static style = {
     inbox: {
-      padding: [0, 20],
+      // padding: [0, 20],
       position: 'relative',
       width: '100%',
       height: '100%',

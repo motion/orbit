@@ -166,7 +166,12 @@ export default class BarPage {
                   controlled={store.column === 0}
                   isSelected={(item, index) => index === store.highlightIndex}
                   onSelect={store.onClick}
-                  itemProps={{ size: 2.5, ...itemProps }}
+                  itemProps={{
+                    size: 2.5,
+                    glow: false,
+                    hoverable: true,
+                    ...itemProps,
+                  }}
                   items={store.results}
                   getItem={result =>
                     <UI.List.Item key={result.id} padding={0} height={60}>
@@ -176,12 +181,17 @@ export default class BarPage {
                     </UI.List.Item>}
                 />
               </section>
-
+              <line
+                css={{
+                  width: 0,
+                  marginTop: 1,
+                  borderLeft: [1, 'dotted', [0, 0, 0, 0.1]],
+                }}
+              />
               <preview
                 css={{
                   width: '50%',
                   height: '100%',
-                  borderLeft: [1, [0, 0, 0, 0.1]],
                 }}
               >
                 <InboxList
@@ -211,7 +221,7 @@ export default class BarPage {
       // background: 'rgba(255, 255, 255, 0.75)',
     },
     results: {
-      borderTop: [1, [0, 0, 0, 0.1]],
+      borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
       flex: 2,
       flexFlow: 'row',
     },

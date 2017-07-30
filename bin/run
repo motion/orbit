@@ -8,7 +8,7 @@ ARG1=$2
 
 if [ "$ACTION" = "electron" ]; then
   cd apps/electron
-  npm run watch
+  npm start
 elif [ "$ACTION" =  "web" ]; then
   cd apps/web
   if [ "$ARG1" = "--clean" ]; then

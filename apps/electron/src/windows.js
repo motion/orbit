@@ -1,51 +1,49 @@
 import React from 'react'
 import { app, globalShortcut, screen, ipcMain } from 'electron'
 
+const measure = () => {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+  const size = [Math.round(width / 3), Math.round(height / 2)]
+  return {
+    size,
+    position: [
+      Math.round(width / 2 - size[0] / 2),
+      Math.round(height / 2 - size[1] / 2),
+    ],
+  }
+}
+
 class Window {
+  path = '/'
   key = Math.random()
+  position = measure().position
+  size = measure().size
   get active() {
     return this.path !== '/'
   }
-
-  constructor({ path = '/' } = {}) {
-    this.path = path
-  }
+  setPosition = x => (this.position = x)
+  setSize = x => (this.size = x)
 }
 
 class Windows {
   windows = []
-
-  get byKey() {
-    return this.windows.reduce(
-      (acc, cur) => ({
-        [cur.key]: cur,
-      }),
-      {}
-    )
-  }
-
   addWindow = () => {
     this.windows = [new Window(), ...this.windows]
   }
-
   next(path) {
     if (!this.windows[0]) {
       this.addWindow()
     }
     const next = this.windows[0]
     if (next) {
-      next.path = path
+      if (path) {
+        next.path = path
+      }
       return next
     }
   }
-
   remove(path) {
     this.windows = this.windows.filter(window => window.path === path)
-  }
-
-  setPosition(key, position) {
-    const window = this.windows.find(window => window.key === key)
-    window.position = position
   }
 }
 
@@ -80,13 +78,9 @@ export default class ExampleApp extends React.Component {
   }
 
   measure = () => {
-    const { width, height } = screen.getPrimaryDisplay().workAreaSize
-    console.log({ width, height })
-    this.size = [Math.round(width / 3), Math.round(height / 2)]
-    this.position = [
-      Math.round(width / 2 - this.size[0] / 2),
-      Math.round(height / 2 - this.size[1] / 2),
-    ]
+    const { position, size } = measure()
+    this.size = size
+    this.position = position
     this.initialSize = this.initialSize || this.size
   }
 
@@ -193,12 +187,6 @@ export default class ExampleApp extends React.Component {
     console.log('READY TO SHOW')
   }
 
-  setPosition = key => position => {
-    console.log('setposition', key, position)
-    WindowStore.setPosition(key, position)
-    this.updateWindows()
-  }
-
   unstable_handleError(error) {
     console.error(error)
     this.setState({ error })
@@ -225,9 +213,7 @@ export default class ExampleApp extends React.Component {
       )
     }
 
-    console.log('render', this.state, WindowStore)
-
-    const { byKey } = WindowStore
+    console.log('render', this.state, windows, WindowStore)
 
     return (
       <app>
@@ -263,23 +249,32 @@ export default class ExampleApp extends React.Component {
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
         />
-        {windows.map(({ key, active }) => {
-          console.log('window at position', byKey[key].position)
-          return (
-            <window
-              key={key}
-              {...appWindow}
-              defaultSize={[700, 600]}
-              position={byKey[key].position}
-              onMoved={this.setPosition(key)}
-              showDevTools={false}
-              titleBarStyle="hidden-inset"
-              file={`http://jot.dev?key=${key}`}
-              show={active}
-              ref={ref => this.onAppWindow(key, ref)}
-            />
-          )
-        })}
+        {windows.map(
+          ({ key, active, position, size, setPosition, setSize }) => {
+            return (
+              <window
+                key={key}
+                {...appWindow}
+                defaultSize={size}
+                size={size}
+                position={position}
+                onMoved={x => {
+                  setPosition(x)
+                  this.updateWindows()
+                }}
+                onResize={x => {
+                  setSize(x)
+                  this.updateWindows()
+                }}
+                showDevTools={false}
+                titleBarStyle="hidden-inset"
+                file={`http://jot.dev?key=${key}`}
+                show={active}
+                ref={ref => this.onAppWindow(key, ref)}
+              />
+            )
+          }
+        )}
       </app>
     )
   }

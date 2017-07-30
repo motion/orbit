@@ -14,6 +14,7 @@ const SHORTCUTS = {
   enter: 'enter',
   esc: 'esc',
   explorer: ['command+t'],
+  cmdA: 'command+a',
   cmdL: 'command+l',
   cmdEnter: 'command+enter',
   cmdUp: 'command+up',

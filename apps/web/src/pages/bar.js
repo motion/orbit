@@ -6,8 +6,7 @@ import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import { uniq } from 'lodash'
 import InboxList from '~/views/inbox/list'
-
-const PATH_SEPARATOR = '/'
+import fuzzy from 'fuzzy'
 
 const { ipcRenderer } = window.require('electron')
 
@@ -18,10 +17,23 @@ class BarStore {
   searchResults: Array<Document> = []
   highlightIndex = -1
   value = ''
+
+  get currentDoc() {
+    return User.home
+  }
+
   @watch children = () => this.currentDoc && this.currentDoc.getChildren()
 
   get results() {
-    return this.searchResults.length ? this.searchResults : this.children
+    const { children = [], searchResults } = this
+    const hayStack = [...children, ...searchResults]
+    return fuzzy
+      .filter(this.value, hayStack, {
+        extract: el => el.title,
+        pre: '<',
+        post: '>',
+      })
+      .map(item => item.original)
   }
 
   start() {
@@ -51,60 +63,9 @@ class BarStore {
     })
   }
 
-  get currentDoc() {
-    return User.home
-  }
-
-  get peek(): Array<Document> {
-    if (!this.typedPathSuffix) {
-      return this.searchResults
-    }
-    return this.searchResults.filter(
-      doc => doc.slug.indexOf(this.typedPathSuffix) === 0
-    )
-  }
-
-  get isEnterToCreate() {
-    return this.isTypingPath && this.peek && this.peek.length === 0
-  }
-
-  get currentPath(): string {
-    return this.splitPath(this.crumbs)
-  }
-
-  get isTypingPath(): boolean {
-    return this.value.indexOf('/') > -1
-  }
-
-  get typedPath(): Array<string> {
-    return this.splitPath(this.value)
-  }
-
-  get typedPathPrefix(): string {
-    if (!this.isTypingPath) {
-      return this.value
-    }
-    const all = this.splitPath(this.value)
-    // if on root path
-    if (all.length === 1) {
-      return this.value
-    }
-    // else, return up to current dir
-    return all.slice(0, all.length - 1).join(PATH_SEPARATOR)
-  }
-
-  get typedPathSuffix(): ?string {
-    const path = this.typedPath
-    return path.length > 1 ? path[path.length - 1] : null
-  }
-
-  get selectedItemIndex() {
-    return this.itemNodes.map(i => i.key).indexOf(this.selectedItemKey)
-  }
-
   get highlightedDocument() {
     if (this.highlightIndex === -1) return null
-    return this.peek[this.highlightIndex]
+    return this.results[this.highlightIndex]
   }
 
   moveHighlight = (diff: number) => {
@@ -116,74 +77,6 @@ class BarStore {
       this.highlightIndex = 0
     }
     log('hlindex', this.highlightIndex)
-  }
-
-  createDocAtPath = async (path: string): Document => {
-    return await this.getDocAtPath(path, true)
-  }
-
-  createDocsAtPath = async (path: string): Array<Document> => {
-    return await this.getDocsAtPath(path, true)
-  }
-
-  getDocAtPath = async (path: string, create = false): ?Document => {
-    const pathLength = this.splitPath(path).length
-    const docs = await this.getDocsAtPath(path, create)
-    return docs[pathLength - 1] || null
-  }
-
-  getDocsAtPath = async (path: string, create = false): Array<Document> => {
-    const result = []
-    let last
-    if (path === '/') {
-      return User.home
-    }
-    for (const slug of this.splitPath(path)) {
-      const query = { slug }
-      if (last) {
-        query.parentId = last.id
-      }
-      let next = await Document.collection.findOne(query).exec()
-      if (!next && create) {
-        next = await Document.create({
-          ...query,
-          title: slug,
-          parentId: last.id,
-        })
-      }
-      if (!next) {
-        return result
-      }
-      last = next
-      result.push(last)
-    }
-    return result
-  }
-
-  getChildDocsForPath = async (path: string): Array<Document> => {
-    if (path === '/') {
-      return User.home
-    }
-    const lastDoc = await this.getDocAtPath(path)
-    if (!lastDoc) {
-      return []
-    }
-    return await this.getChildDocs(lastDoc)
-  }
-
-  getChildDocs = async (document: Document): Array<Document> => {
-    return await Document.collection.find({ parentId: document._id }).exec()
-  }
-
-  getPathForDocs = (docs: Array<Document>): string =>
-    docs.map(doc => doc.title).join(PATH_SEPARATOR)
-
-  toPath = (crumbs: Array<Document>): string => {
-    return crumbs.map(document => document.slug).join(PATH_SEPARATOR)
-  }
-
-  splitPath = (path: string): Array<string> => {
-    return path.split(PATH_SEPARATOR)
   }
 
   onEnter = async () => {
@@ -217,6 +110,10 @@ class BarStore {
       console.log('got esc')
       ipcRenderer.send('bar-hide')
     },
+    cmdA: () => {
+      console.log('cmdA')
+      this.inputRef.select()
+    },
   }
 
   onClick = result => {
@@ -231,16 +128,22 @@ class BarStore {
 })
 export default class BarPage {
   render({ store }) {
+    store.highlightIndex // reactive
+    log('renderbar')
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
-          <bar $$draggable>
+          <bar $$fullscreen $$draggable>
             <div>
               <UI.Input
                 size={3}
+                getRef={store.ref('inputRef').set}
                 borderRadius={5}
                 onChange={store.onChange}
                 borderWidth={0}
+                css={{
+                  padding: [0, 10],
+                }}
               />
             </div>
             <results>
@@ -258,9 +161,11 @@ export default class BarPage {
                   itemProps={{ size: 2.5 }}
                   items={store.results}
                   getItem={result =>
-                    <item key={result.id}>
-                      {result.title}
-                    </item>}
+                    <UI.List.Item key={result.id} padding={0}>
+                      <item>
+                        {result.title}
+                      </item>
+                    </UI.List.Item>}
                 />
               </section>
 
@@ -282,11 +187,8 @@ export default class BarPage {
 
   static style = {
     bar: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+      // background: [0, 0, 0, 0.1],
+      flex: 1,
       transform: {
         z: 0,
       },

@@ -129,8 +129,12 @@ class ExampleApp extends React.Component {
     const SHORTCUTS = {
       'Option+Space': () => {
         console.log('command option+space')
-        this.windowRef.focus()
-        this.show()
+        if (this.state.show) {
+          this.hide()
+        } else {
+          this.show()
+          this.windowRef.focus()
+        }
       },
     }
     for (const shortcut of Object.keys(SHORTCUTS)) {

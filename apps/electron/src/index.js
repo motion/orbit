@@ -1,226 +1,268 @@
-'use strict'
+import React from 'react'
+import Ionize from '@mcro/ionize'
+import { app, globalShortcut, screen, ipcMain } from 'electron'
 
-const electron = require('electron')
-const app = electron.app
-const GHReleases = require('electron-gh-releases')
+class Window {
+  key = Math.random()
+  get active() {
+    return this.path !== '/'
+  }
 
-const updater = new GHReleases({
-  repo: 'motion/macro-app',
-  currentVersion: app.getVersion(),
-})
-
-// adds debug features like hotkeys for triggering dev tools and reload
-require('electron-debug')()
-
-// disable aggressive caching
-app.commandLine.appendSwitch('--disable-http-cache')
-
-// prevent window being garbage collected
-let mainWindow
-
-function onClosed() {
-  // dereference the window
-  // for multiple windows store them in an array
-  mainWindow = null
+  constructor({ path = '/' } = {}) {
+    this.path = path
+  }
 }
 
-/** Updater */
+class Windows {
+  windows = []
 
-function checkUpdate(focusedWindow) {
-  updater.check((err, status) => {
-    if (!err && status) {
-      updater.download()
-      return
-    }
-    electron.dialog.showMessageBox(focusedWindow, {
-      type: 'info',
-      buttons: ['ok'],
-      title: 'Congratulations',
-      message: "You're all up to date!",
-    })
-  })
+  get byKey() {
+    return this.windows.reduce(
+      (acc, cur) => ({
+        [cur.key]: cur,
+      }),
+      {}
+    )
+  }
+
+  next(path) {
+    const next = this.windows[0]
+    next.path = path
+    this.windows = [new Window(), ...this.windows]
+    return next
+  }
+
+  remove(path) {
+    this.windows = this.windows.filter(window => window.path === path)
+  }
+
+  setPosition(key, position) {
+    const window = this.windows.find(window => window.key === key)
+    window.position = position
+  }
 }
 
-updater.on('update-downloaded', info => {
-  electron.dialog('Installing update. This should only take a moment.')
+const WindowStore = new Windows()
 
-  updater.install()
-})
-
-/** Create new menu */
-function createMenu() {
-  const name = app.getName()
-
-  const template = [
-    {
-      label: name,
-      submenu: [
-        {
-          role: 'about',
-        },
-        {
-          label: 'Restart and install update',
-          click(item, focusedWindow) {
-            checkUpdate(focusedWindow)
-          },
-        },
-        {
-          type: 'separator',
-        },
-        {
-          role: 'services',
-          submenu: [],
-        },
-        {
-          type: 'separator',
-        },
-        {
-          role: 'hide',
-        },
-        {
-          role: 'hideothers',
-        },
-        {
-          role: 'unhide',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          role: 'quit',
-        },
-      ],
-    },
-    {
-      label: 'Edit',
-      submenu: [
-        {
-          role: 'undo',
-        },
-        {
-          role: 'redo',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          role: 'cut',
-        },
-        {
-          role: 'copy',
-        },
-        {
-          role: 'paste',
-        },
-        {
-          role: 'delete',
-        },
-        {
-          role: 'selectall',
-        },
-      ],
-    },
-    {
-      label: 'View',
-      submenu: [
-        {
-          label: 'Reload',
-          accelerator: 'CmdOrCtrl+R',
-          click(item, focusedWindow) {
-            if (focusedWindow) focusedWindow.reload()
-          },
-        },
-        {
-          label: 'Toggle Developer Tools',
-          accelerator: process.platform === 'darwin'
-            ? 'Alt+Command+I'
-            : 'Ctrl+Shift+I',
-          click(item, focusedWindow) {
-            if (focusedWindow) focusedWindow.webContents.toggleDevTools()
-          },
-        },
-        {
-          role: 'togglefullscreen',
-        },
-      ],
-    },
-    {
-      label: 'Window',
-      submenu: [
-        {
-          label: 'Close',
-          accelerator: 'CmdOrCtrl+W',
-          role: 'close',
-        },
-        {
-          label: 'Minimize',
-          accelerator: 'CmdOrCtrl+M',
-          role: 'minimize',
-        },
-        {
-          label: 'Zoom',
-          role: 'zoom',
-        },
-        {
-          type: 'separator',
-        },
-        {
-          label: 'Bring All to Front',
-          role: 'front',
-        },
-      ],
-    },
-    {
-      role: 'help',
-      submenu: [
-        {
-          label: 'Learn More',
-        },
-      ],
-    },
-  ]
-
-  const menu = electron.Menu.buildFromTemplate(template)
-  electron.Menu.setApplicationMenu(menu)
-}
-
-function createMainWindow() {
-  const win = new electron.BrowserWindow({
-    width: 1200,
-    height: 800,
-    titleBarStyle: 'hidden-inset',
-    minWidth: 780,
-    minHeight: 600,
-    backgroundColor: '#1F1F1F',
+class ExampleApp extends React.Component {
+  state = {
     show: false,
-  })
+    size: [0, 0],
+    position: [0, 0],
+    windows: WindowStore.windows,
+  }
 
-  win.loadURL(`file://${__dirname}/index.html`)
-  win.on('closed', onClosed)
+  componentDidMount() {
+    setTimeout(() => {
+      this.next() // preload app window a second after initial load
+    }, 1000)
+  }
 
-  win.on('ready-to-show', () => {
-    checkUpdate()
-    createMenu()
-    if (win.getURL().includes('usemacro.com')) {
-      win.show()
+  hide = () => {
+    this.setState({ show: false })
+  }
+
+  show = () => {
+    this.setState({ show: true, position: this.position, size: this.size })
+  }
+
+  blur = () => {
+    if (!this.disableAutohide) {
+      this.hide()
     }
-  })
+  }
 
-  return win
+  measure = () => {
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize
+    console.log({ width, height })
+    this.size = [Math.round(width / 3), Math.round(height / 2)]
+    this.position = [
+      Math.round(width / 2 - this.size[0] / 2),
+      Math.round(height / 2 - this.size[1] / 2),
+    ]
+    this.initialSize = this.initialSize || this.size
+  }
+
+  get disableAutohide() {
+    return false
+  }
+
+  set disableAutohide(value) {
+    // todo
+  }
+
+  onWindow = ref => {
+    if (ref) {
+      this.windowRef = ref
+      this.measure()
+      this.show()
+      this.listenToApp()
+      this.listenForBlur()
+      this.registerShortcuts()
+    }
+  }
+
+  onAppWindow = (key, ref) => {
+    const win = this.state.windows.find(x => x.key === key)
+    if (win) {
+      win.ref = ref
+    }
+  }
+
+  listenToApp = () => {
+    ipcMain.on('where-to', (event, key) => {
+      console.log('find', key, this.state.windows)
+      const win = this.state.windows.find(x => `${x.key}` === `${key}`)
+      if (win) {
+        console.log('where to?', win.path)
+        event.sender.send('app-goto', win.path)
+      }
+    })
+
+    ipcMain.on('bar-goto', (event, path) => {
+      this.goTo(path)
+    })
+
+    ipcMain.on('bar-hide', () => {
+      this.hide()
+    })
+
+    ipcMain.on('close', (event, path) => {
+      WindowStore.remove(path)
+      this.updateWindows()
+    })
+  }
+
+  updateWindows = () => {
+    return new Promise(resolve => {
+      this.setState({ windows: WindowStore.windows }, resolve)
+    })
+  }
+
+  next = async path => {
+    const next = WindowStore.next(path)
+    await this.updateWindows()
+    return next
+  }
+
+  goTo = async path => {
+    this.hide()
+    const next = await this.next(path)
+    next.ref.focus()
+  }
+
+  listenForBlur = () => {
+    this.windowRef.on('blur', () => {
+      console.log('got a blur')
+      // this.blur()
+    })
+  }
+
+  registerShortcuts = () => {
+    console.log('registerShortcuts')
+    globalShortcut.unregisterAll()
+
+    const SHORTCUTS = {
+      'Option+Space': () => {
+        console.log('command option+space')
+        if (this.state.show) {
+          this.hide()
+        } else {
+          this.measure()
+          this.show()
+          this.windowRef.focus()
+        }
+      },
+    }
+    for (const shortcut of Object.keys(SHORTCUTS)) {
+      const ret = globalShortcut.register(shortcut, SHORTCUTS[shortcut])
+      if (!ret) {
+        console.log('couldnt register shortcut')
+      }
+    }
+  }
+
+  onReadyToShow = () => {
+    console.log('READY TO SHOW')
+  }
+
+  setPosition = key => position => {
+    console.log('setposition', key, position)
+    WindowStore.setPosition(key, position)
+    this.updateWindows()
+  }
+
+  render() {
+    const { windows } = this.state
+    const appWindow = {
+      frame: false,
+      defaultSize: [700, 500],
+      vibrancy: 'dark',
+      transparent: true,
+      webPreferences: {
+        experimentalFeatures: true,
+        transparentVisuals: true,
+      },
+    }
+
+    console.log('render', this.state, WindowStore)
+
+    const { byKey } = WindowStore
+
+    return (
+      <app>
+        <menu>
+          <submenu label="Electron">
+            <about />
+            <sep />
+            <quit />
+          </submenu>
+          <submenu label="Custom Menu">
+            <item label="Foo the bars" />
+            <sep />
+            <item label="Baz the quuxes" />
+          </submenu>
+        </menu>
+        <window
+          key={-100}
+          {...appWindow}
+          defaultSize={this.initialSize || this.state.size}
+          size={this.state.size}
+          ref={this.onWindow}
+          showDevTools
+          file="http://jot.dev/bar"
+          titleBarStyle="customButtonsOnHover"
+          show={this.state.show}
+          size={this.state.size}
+          position={
+            this.state.show
+              ? this.state.position
+              : this.state.size.map(x => -x - 100)
+          }
+          onReadyToShow={this.onReadyToShow}
+          onResize={size => this.setState({ size })}
+          onMoved={position => this.setState({ position })}
+        />
+        {windows.map(({ key, active }) => {
+          console.log('window at position', byKey[key].position)
+          return (
+            <window
+              key={key}
+              {...appWindow}
+              defaultSize={[700, 600]}
+              position={byKey[key].position}
+              onMoved={this.setPosition(key)}
+              showDevTools={false}
+              titleBarStyle="hidden-inset"
+              file={`http://jot.dev?key=${key}`}
+              show={active}
+              ref={ref => this.onAppWindow(key, ref)}
+            />
+          )
+        })}
+      </app>
+    )
+  }
 }
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-
-app.on('activate', () => {
-  if (!mainWindow) {
-    mainWindow = createMainWindow()
-  }
-})
-
-app.on('ready', () => {
-  mainWindow = createMainWindow()
-})
+Ionize.start(<ExampleApp />)

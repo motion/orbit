@@ -1,8 +1,0 @@
-#!/bin/bash
-
-. $(dirname $0)/__/common
-cd $ROOT
-
-link-flow &
-build --watch ${@:1}
-fg

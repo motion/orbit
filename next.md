@@ -1,21 +1,20 @@
-# needs to work for countdown to v0
-  - Fix automagic getting stuck and not updating sometimes
-  - Commander
-    - variety of bugs and polish needed
-    - doesnt always update to latest route
-    - focus doc after navigate
-  - Keyboard basic fixes
-    - Moving from commander/doc
-  - Polish
-    - Improve document saving so it saves more consistent
-    - Document breaks with quotes etc
-  - Technical
-    - Query sync down needs to be fixed
-  - Documents
-    - the + button to side should become a "type switcher", so you can switch todo list to bullet, etc
-    - Remove the alternative right arrow insert
-    - Links to other docs
-    - Code blocks?
+- opening apps
+  - control position/size
+  - test animate in app windows
+  - working close app windows
+  - teams with @nick in explorer
+  - basic gdocs paste into app
+
+- Fix automagic getting stuck and not updating sometimes
+- Polish
+  - Improve document saving so it saves more consistent
+  - Document breaks with quotes etc
+- Technical
+  - Query sync down needs to be fixed
+- Documents
+  - Remove the alternative right arrow insert
+  - Links to other docs
+  - Code blocks?
 
 - speed up pouchdb, split Content into its own db
   - gives you quick reads when using lists

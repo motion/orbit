@@ -5,7 +5,6 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import NotFound from '~/apps/error/404'
 import Router from '~/router'
-import Sidebar from './sidebar'
 import Errors from '~/views/layout/errors'
 import LayoutStore from '~/stores/layoutStore'
 import SoundStore from '~/stores/soundStore'
@@ -45,43 +44,38 @@ export default class Layout {
   }
 
   render({ layoutStore }: Props) {
-    console.log('Constants.IS_BAR', Constants.IS_BAR)
     if (Constants.IS_BAR) {
+      console.log('Constants.IS_BAR')
       const CurrentPage = Router.activeView || <null>no way</null>
       return <CurrentPage />
     }
 
-    const renderTray = () => <Sidebar />
-    const renderApp = () => {
-      const CurrentPage = Router.activeView || NotFound
-      return (
-        <app>
-          <Browse />
-          <Signup />
-          <LayoutWrap layoutStore={layoutStore}>
-            <Header />
-            <content
-              if={User.loggedIn}
-              onScroll={this.onScroll}
-              $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-            >
-              <ExplorerResults />
-              <CurrentPage key={Router.key} {...Router.params} />
-            </content>
-          </LayoutWrap>
-          <Errors />
-          <Sidebar hidden={!layoutStore.sidebar.active} />
-          <BottomBar />
-        </app>
-      )
-    }
+    const CurrentPage = Router.activeView || NotFound
 
     return (
       <layout>
         <UI.Theme name="light">
           <UI.SlotFill.Provider>
             <content>
-              {Constants.IN_TRAY ? renderTray() : renderApp()}
+              <app>
+                <Browse />
+                <Signup />
+                <LayoutWrap layoutStore={layoutStore}>
+                  <Header />
+                  <content
+                    if={User.loggedIn}
+                    onScroll={this.onScroll}
+                    $dragStartedAt={
+                      layoutStore.isDragging && this.lastScrolledTo
+                    }
+                  >
+                    <ExplorerResults />
+                    <CurrentPage key={Router.key} {...Router.params} />
+                  </content>
+                </LayoutWrap>
+                <Errors />
+                <BottomBar />
+              </app>
             </content>
           </UI.SlotFill.Provider>
         </UI.Theme>
@@ -91,7 +85,7 @@ export default class Layout {
 
   static style = {
     layout: {
-      background: Constants.IS_ELECTRON ? [42, 42, 45, 0.9] : [110, 110, 110],
+      background: Constants.IS_ELECTRON ? [42, 42, 45, 0.9] : 'transparent',
       position: 'absolute',
       top: 0,
       right: 0,

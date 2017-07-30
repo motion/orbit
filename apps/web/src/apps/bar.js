@@ -64,6 +64,12 @@ class BarStore {
         )
       }
     })
+
+    this.on(window, 'focus', () => {
+      console.log('focus bar window')
+      this.inputRef.focus()
+      this.inputRef.select()
+    })
   }
 
   get highlightedDocument() {
@@ -109,6 +115,7 @@ class BarStore {
       this.column = Math.max(0, this.column - 1)
     },
     esc: () => {
+      console.log('got esc')
       ipcRenderer.send('bar-hide')
     },
     cmdA: () => {

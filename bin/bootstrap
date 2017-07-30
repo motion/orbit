@@ -65,6 +65,8 @@ echo "lerna bootstrap"
 echo "ensuring react isnt duped until pundle fix"
 rm -rf packages/ui/node_modules/react
 rm -rf packages/decor/node_modules/react
+rm -rf packages/black/node_modules/react
+rm -rf packages/gloss/node_modules/react
 
 echo " welcome!"
 echo " to start the app:"

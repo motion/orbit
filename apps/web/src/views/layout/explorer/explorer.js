@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 import RightArrow from '~/views/kit/rightArrow'
 import Router from '~/router'
 import ExplorerStore from './explorerStore'
-import Children from '~/pages/page/children'
+import Children from '~/apps/page/children'
 
 const $arrow = {
   opacity: 0.5,

@@ -8,7 +8,7 @@ import { uniq } from 'lodash'
 import InboxList from '~/views/inbox/list'
 import fuzzy from 'fuzzy'
 
-const { ipcRenderer } = window.require('electron')
+const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 // import DocumentView from '~/views/document'
 // <DocumentView document={document} isPrimaryDocument />
@@ -26,8 +26,12 @@ class BarStore {
   @watch children = () => this.currentDoc && this.currentDoc.getChildren()
 
   get results() {
-    const { children = [], searchResults } = this
-    const hayStack = [{ title: 'Notifications' }, ...children, ...searchResults]
+    const { children, searchResults } = this
+    const hayStack = [
+      { title: 'Notifications' },
+      ...(children || []),
+      ...(searchResults || []),
+    ]
     return fuzzy
       .filter(this.value, hayStack, {
         extract: el => el.title,

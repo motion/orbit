@@ -122,8 +122,8 @@ class BarStore {
       this.inputRef.select()
     },
     enter: () => {
-      console.log('enter', this.selectedItem)
-      if (this.selectedItem) {
+      console.log('enter', this.column, this.highlightIndex, this.selectedItem)
+      if (this.selectedItem && this.selectedItem.url) {
         ipcRenderer.send('bar-goto', this.selectedItem.url())
       }
     },

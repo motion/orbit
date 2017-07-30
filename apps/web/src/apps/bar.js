@@ -97,7 +97,6 @@ class BarStore {
 
   actions = {
     right: () => {
-      console.log('right')
       this.column = this.column + 1
     },
     down: () => {
@@ -107,22 +106,33 @@ class BarStore {
       this.moveHighlight(-1)
     },
     left: () => {
-      console.log('left')
       this.column = Math.max(0, this.column - 1)
     },
     esc: () => {
-      console.log('got esc')
       ipcRenderer.send('bar-hide')
     },
     cmdA: () => {
-      console.log('cmdA')
       this.inputRef.select()
+    },
+    enter: () => {
+      console.log('enter', this.selectedItem)
+      if (this.selectedItem) {
+        ipcRenderer.send('bar-goto', this.selectedItem.url())
+      }
     },
   }
 
-  onClick = result => {
-    if (result) {
-      ipcRenderer.send('bar-goto', result.url())
+  setInboxItems = items => {
+    this.inboxItems = items
+  }
+
+  get selectedItem() {
+    switch (this.column) {
+      case 0:
+        return this.results[this.highlightIndex]
+      case 1:
+      case 2:
+        return this.inboxItems[this.highlightIndex]
     }
   }
 }
@@ -169,7 +179,6 @@ export default class BarPage {
                   if={store.results}
                   controlled={store.column === 0}
                   isSelected={(item, index) => index === store.highlightIndex}
-                  onSelect={store.onClick}
                   itemProps={{
                     size: 2.5,
                     glow: false,
@@ -201,6 +210,7 @@ export default class BarPage {
                 <InboxList
                   controlled={store.column === 1 || store.column === 2}
                   isSelected={(item, index) => index === store.highlightIndex}
+                  getItems={store.setInboxItems}
                   filter={store.value}
                   itemProps={{
                     ...itemProps,

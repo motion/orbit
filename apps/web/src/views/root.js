@@ -4,7 +4,7 @@ import { HotKeys } from 'react-hotkeys'
 import Redbox from 'redbox-react'
 import RootStore from './rootStore'
 import Router from '~/router'
-const { ipcRenderer } = window.require && window.require('electron')
+const { ipcRenderer } = (window.require && window.require('electron')) || {}
 import * as Constants from '~/constants'
 
 @view.provide({

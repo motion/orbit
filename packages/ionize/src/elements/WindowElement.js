@@ -192,6 +192,16 @@ export default class WindowElement extends BaseElement {
     oldProps: Object,
     newProps: Object
   ): void {
+    const windowEventCb = (propName, eventName, value, handler = cb => cb()) =>
+      configureWrappedEventHandler(
+        this.window,
+        this.attachedHandlers,
+        propName,
+        eventName,
+        value,
+        handler
+      )
+
     for (let i = 0; i < updatePayload.length; i += 2) {
       let propKey = ((updatePayload[i]: any): string)
       let propVal = updatePayload[i + 1]
@@ -200,15 +210,15 @@ export default class WindowElement extends BaseElement {
       // any checking. Just update to the new value.
       switch (propKey) {
         case 'onReadyToShow': {
-          propVal = ((propVal: any): Function)
-          configureWrappedEventHandler(
-            this.window,
-            this.attachedHandlers,
-            'onReadyToShow',
-            'ready-to-show',
-            propVal,
-            rawHandler => rawHandler()
-          )
+          windowEventCb('onReadyToShow', 'ready-to-show', propVal)
+          break
+        }
+        case 'onClose': {
+          windowEventCb('onClose', 'close', propVal)
+          break
+        }
+        case 'onClosed': {
+          windowEventCb('onClosed', 'closed', propVal)
           break
         }
         case 'show': {

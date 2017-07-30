@@ -18,6 +18,16 @@ class InboxStore {
     })
   }
 
+  start() {
+    this.watch(() => {
+      if (this.threads) {
+        if (this.props.getItems) {
+          this.props.getItems(this.threads)
+        }
+      }
+    })
+  }
+
   get filteredThreads() {
     if (!this.threads) {
       return []

@@ -16,6 +16,15 @@ class Window {
 class Windows {
   windows = []
 
+  get byKey() {
+    return this.windows.reduce(
+      (acc, cur) => ({
+        [cur.key]: cur,
+      }),
+      {}
+    )
+  }
+
   next(path) {
     const next = this.windows[0]
     next.path = path
@@ -25,6 +34,11 @@ class Windows {
 
   remove(path) {
     this.windows = this.windows.filter(window => window.path === path)
+  }
+
+  setPosition(key, position) {
+    const window = this.windows.find(window => window.key === key)
+    window.position = position
   }
 }
 
@@ -61,11 +75,12 @@ class ExampleApp extends React.Component {
   measure = () => {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize
     console.log({ width, height })
-    this.size = [Math.round(width / 2), Math.round(height / 1.5)]
+    this.size = [Math.round(width / 3), Math.round(height / 2)]
     this.position = [
       Math.round(width / 2 - this.size[0] / 2),
       Math.round(height / 2 - this.size[1] / 2),
     ]
+    this.initialSize = this.initialSize || this.size
   }
 
   get disableAutohide() {
@@ -170,6 +185,12 @@ class ExampleApp extends React.Component {
     console.log('READY TO SHOW')
   }
 
+  setPosition = key => position => {
+    console.log('setposition', key, position)
+    WindowsXP.setPosition(key, position)
+    this.updateWindows()
+  }
+
   render() {
     const { windows } = this.state
     const appWindow = {
@@ -184,6 +205,8 @@ class ExampleApp extends React.Component {
     }
 
     console.log('render', this.state.size)
+
+    const { byKey } = WindowsXP
 
     return (
       <app>
@@ -202,7 +225,7 @@ class ExampleApp extends React.Component {
         <window
           key={-100}
           {...appWindow}
-          defaultSize={this.state.size}
+          defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
@@ -220,10 +243,14 @@ class ExampleApp extends React.Component {
           onMoved={position => this.setState({ position })}
         />
         {windows.map(({ key, active }) => {
+          console.log('window at position', byKey[key].position)
           return (
             <window
               key={key}
               {...appWindow}
+              defaultSize={[700, 600]}
+              position={byKey[key].position}
+              onMoved={this.setPosition(key)}
               showDevTools={false}
               titleBarStyle="hidden-inset"
               file={`http://jot.dev?key=${key}`}

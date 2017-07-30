@@ -1,6 +1,6 @@
 import React from 'react'
 import Ionize from '@mcro/ionize'
-import { app, globalShortcut, BrowserWindow, ipcMain } from 'electron'
+import { app, globalShortcut, screen, ipcMain } from 'electron'
 
 class Window {
   key = Math.random()
@@ -32,9 +32,9 @@ const WindowsXP = new Windows()
 
 class ExampleApp extends React.Component {
   state = {
-    show: true,
-    size: [650, 500],
-    position: [450, 300],
+    show: false,
+    size: [0, 0],
+    position: [0, 0],
     windows: WindowsXP.windows,
   }
 
@@ -49,13 +49,23 @@ class ExampleApp extends React.Component {
   }
 
   show = () => {
-    this.setState({ show: true, position: [450, 300] })
+    this.setState({ show: true, position: this.position, size: this.size })
   }
 
   blur = () => {
     if (!this.disableAutohide) {
       this.hide()
     }
+  }
+
+  measure = () => {
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize
+    console.log({ width, height })
+    this.size = [Math.round(width / 2), Math.round(height / 1.5)]
+    this.position = [
+      Math.round(width / 2 - this.size[0] / 2),
+      Math.round(height / 2 - this.size[1] / 2),
+    ]
   }
 
   get disableAutohide() {
@@ -69,6 +79,7 @@ class ExampleApp extends React.Component {
   onWindow = ref => {
     if (ref) {
       this.windowRef = ref
+      this.measure()
       this.show()
       this.listenToApp()
       this.listenForBlur()
@@ -172,6 +183,8 @@ class ExampleApp extends React.Component {
       },
     }
 
+    console.log('render', this.state.size)
+
     return (
       <app>
         <menu>
@@ -189,7 +202,8 @@ class ExampleApp extends React.Component {
         <window
           key={-100}
           {...appWindow}
-          defaultSize={[600, 500]}
+          defaultSize={this.state.size}
+          size={this.state.size}
           ref={this.onWindow}
           showDevTools
           file="http://jot.dev/bar"
@@ -210,7 +224,7 @@ class ExampleApp extends React.Component {
             <window
               key={key}
               {...appWindow}
-              showDevTools
+              showDevTools={false}
               titleBarStyle="hidden-inset"
               file={`http://jot.dev?key=${key}`}
               show={active}

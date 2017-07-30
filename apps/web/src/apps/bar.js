@@ -7,11 +7,9 @@ import * as UI from '@mcro/ui'
 import { uniq } from 'lodash'
 import InboxList from '~/views/inbox/list'
 import fuzzy from 'fuzzy'
+import DocumentView from '~/views/document'
 
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
-
-// import DocumentView from '~/views/document'
-// <DocumentView document={document} isPrimaryDocument />
 
 class BarStore {
   column = 0
@@ -142,6 +140,8 @@ export default class BarPage {
       highlightColor: [255, 255, 255, 1],
     }
 
+    console.log('store.highlighted', store.highlighted)
+
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
@@ -158,7 +158,7 @@ export default class BarPage {
                 }}
               />
             </div>
-            <results>
+            <results $column={store.column}>
               <section
                 $list
                 css={{
@@ -199,14 +199,28 @@ export default class BarPage {
                 }}
               >
                 <InboxList
-                  key={`${store.column}-${store.highlightIndex}`}
-                  controlled={store.column === 1}
+                  controlled={store.column === 1 || store.column === 2}
                   isSelected={(item, index) => index === store.highlightIndex}
                   filter={store.value}
                   itemProps={{
                     ...itemProps,
                   }}
                 />
+              </preview>
+              <line
+                css={{
+                  width: 0,
+                  marginTop: 1,
+                  borderLeft: [1, 'dotted', [0, 0, 0, 0.1]],
+                }}
+              />
+              <preview
+                css={{
+                  width: '50%',
+                  height: '100%',
+                }}
+              >
+                <DocumentView document={User.home} />
               </preview>
             </results>
           </bar>
@@ -217,18 +231,21 @@ export default class BarPage {
 
   static style = {
     bar: {
-      background: [80, 80, 80, 0.5],
+      background: [150, 150, 150, 0.5],
       flex: 1,
-      transform: {
-        z: 0,
-      },
-      // background: 'rgba(255, 255, 255, 0.75)',
     },
     results: {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
       flex: 2,
       flexFlow: 'row',
+      // transition: 'transform ease-in 32ms',
     },
+    column: column => ({
+      transform: {
+        x: column > 1 ? '-50%' : 0,
+        z: 0,
+      },
+    }),
     item: {
       fontSize: 38,
       padding: [18, 10],

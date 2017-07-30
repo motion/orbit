@@ -44,7 +44,7 @@ export default class Inbox {
     controlled: true,
   }
 
-  render({ controlled, store, inSidebar, large, isSelected }) {
+  render({ controlled, store, inSidebar, large, isSelected, itemProps }) {
     const badgeProps = {}
 
     Router.path // trigger change
@@ -96,14 +96,17 @@ export default class Inbox {
               //height: 100,
               padding: [18, 15],
               overflow: 'hidden',
-              highlightBackground: [0, 0, 0, 0.25],
+              ...itemProps,
             }}
             items={filteredThreads}
             // setTimeout speeds up navigation
             onSelect={item => this.setTimeout(() => Router.go(item.url()))}
-            isSelected={(item, index) =>
-              (isSelected && isSelected(item, log(index, 'index is'))) ||
-              item.url() === Router.path}
+            isSelected={(item, index) => {
+              if (isSelected && isSelected(item, index)) {
+                return true
+              }
+              return item.url() === Router.path
+            }}
             getItem={item => {
               return {
                 glow: false,

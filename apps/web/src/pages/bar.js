@@ -132,6 +132,12 @@ export default class BarPage {
   render({ store }) {
     // reactive values
     console.log('renderbar', store.column, store.highlightIndex)
+
+    const itemProps = {
+      highlightBackground: [0, 0, 0, 0.15],
+      highlightColor: [255, 255, 255, 1],
+    }
+
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
@@ -160,7 +166,7 @@ export default class BarPage {
                   controlled={store.column === 0}
                   isSelected={(item, index) => index === store.highlightIndex}
                   onSelect={store.onClick}
-                  itemProps={{ size: 2.5 }}
+                  itemProps={{ size: 2.5, ...itemProps }}
                   items={store.results}
                   getItem={result =>
                     <UI.List.Item key={result.id} padding={0} height={60}>
@@ -183,6 +189,9 @@ export default class BarPage {
                   controlled={store.column === 1}
                   isSelected={(item, index) => index === store.highlightIndex}
                   filter={store.value}
+                  itemProps={{
+                    ...itemProps,
+                  }}
                 />
               </preview>
             </results>
@@ -207,7 +216,6 @@ export default class BarPage {
     },
     item: {
       fontSize: 38,
-      opacity: 0.6,
       padding: [18, 10],
     },
   }

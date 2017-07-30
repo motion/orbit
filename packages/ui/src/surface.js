@@ -166,6 +166,7 @@ export default class Surface implements ViewType {
     height,
     highlight,
     highlightBackground,
+    highlightColor,
     hover,
     hoverable,
     hoverBackground,

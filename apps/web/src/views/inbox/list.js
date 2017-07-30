@@ -10,6 +10,7 @@ const { ago } = timeAgo()
 
 class InboxStore {
   inbox = this.props.document
+
   @watch
   threads = () => {
     return Thread.find({
@@ -39,7 +40,11 @@ class InboxStore {
   store: InboxStore,
 })
 export default class Inbox {
-  render({ store, inSidebar, large, isSelected }) {
+  static defaultProps = {
+    controlled: true,
+  }
+
+  render({ controlled, store, inSidebar, large, isSelected }) {
     const badgeProps = {}
 
     Router.path // trigger change
@@ -82,7 +87,7 @@ export default class Inbox {
         <content if={filteredThreads}>
           <UI.List
             background="transparent"
-            controlled
+            controlled={controlled}
             virtualized={{
               rowHeight: 100,
               overscanRowCount: 5,
@@ -97,7 +102,7 @@ export default class Inbox {
             // setTimeout speeds up navigation
             onSelect={item => this.setTimeout(() => Router.go(item.url()))}
             isSelected={(item, index) =>
-              (isSelected && isSelected(item, index)) ||
+              (isSelected && isSelected(item, log(index, 'index is'))) ||
               item.url() === Router.path}
             getItem={item => {
               return {

@@ -95,7 +95,8 @@ class BarStore {
 
   actions = {
     right: () => {
-      this.column++
+      console.log('right')
+      this.column = this.column + 1
     },
     down: () => {
       this.moveHighlight(1)
@@ -105,6 +106,7 @@ class BarStore {
     },
     left: () => {
       console.log('left')
+      this.column = Math.max(0, this.column - 1)
     },
     esc: () => {
       console.log('got esc')
@@ -128,8 +130,8 @@ class BarStore {
 })
 export default class BarPage {
   render({ store }) {
-    store.highlightIndex // reactive
-    log('renderbar')
+    // reactive values
+    console.log('renderbar', store.column, store.highlightIndex)
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
@@ -155,7 +157,7 @@ export default class BarPage {
               >
                 <UI.List
                   if={store.results}
-                  controlled
+                  controlled={store.column === 0}
                   isSelected={(item, index) => index === store.highlightIndex}
                   onSelect={store.onClick}
                   itemProps={{ size: 2.5 }}
@@ -177,8 +179,9 @@ export default class BarPage {
                 }}
               >
                 <InboxList
-                  isSelected={(item, index) =>
-                    store.column === 1 && index === this.highlightIndex}
+                  key={`${store.column}-${store.highlightIndex}`}
+                  controlled={store.column === 1}
+                  isSelected={(item, index) => index === store.highlightIndex}
                   filter={store.value}
                 />
               </preview>

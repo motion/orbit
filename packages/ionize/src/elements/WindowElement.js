@@ -189,7 +189,6 @@ export default class WindowElement extends BaseElement {
   }
 
   configureEvent = (propName, eventName, value, handler = cb => cb()) => {
-    console.log('configureEvent', propName, eventName, value, handler)
     configureWrappedEventHandler(
       this.window,
       this.attachedHandlers,

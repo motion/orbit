@@ -154,8 +154,6 @@ class BarStore {
   store: BarStore,
 })
 export default class BarPage {
-  randomId = Math.random()
-
   render({ store }) {
     log(store.highlightIndex)
     store.highlightIndex
@@ -202,7 +200,7 @@ export default class BarPage {
             </div>
             <results $pushRight={store.pushRight}>
               {store.panes.map((Pane, index) =>
-                <section key={Pane.name || this.randomId + index}>
+                <section key={Pane.name || Math.random()}>
                   <content $list>
                     <Pane
                       itemProps={itemProps}

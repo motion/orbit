@@ -192,6 +192,8 @@ export default class ExampleApp extends React.Component {
     this.setState({ error })
   }
 
+  randomKey = Math.random()
+
   render() {
     const { windows, error } = this.state
     const appWindow = {
@@ -236,7 +238,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`http://jot.dev/bar?randomId=${Math.random()}`}
+          file={`http://jot.dev/bar?randomId=${this.randomKey}`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}

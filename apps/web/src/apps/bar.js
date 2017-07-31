@@ -1,69 +1,29 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
-import { User } from '~/app'
 import * as UI from '@mcro/ui'
-import { uniq } from 'lodash'
-import InboxList from '~/views/inbox/list'
-import fuzzy from 'fuzzy'
-import DocumentView from '~/views/document'
+import * as Panes from './panes'
 
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 class BarStore {
   column = 0
-  searchResults: Array<Document> = []
   highlightIndex = 0
   value = ''
+  panes = []
+  paneRefs = []
 
-  get currentDoc() {
-    return User.home
+  get activePane() {
+    return this.pane[this.column]
   }
 
-  @watch children = () => this.currentDoc && this.currentDoc.getChildren()
-
-  get results() {
-    const { children, searchResults } = this
-    const hayStack = [
-      { title: 'Notifications' },
-      ...(children || []),
-      ...(searchResults || []),
-    ]
-    return fuzzy
-      .filter(this.value, hayStack, {
-        extract: el => el.title,
-        pre: '<',
-        post: '>',
-      })
-      .map(item => item.original)
+  get activePaneRef() {
+    return this.paneRefs[this.column]
   }
 
   start() {
-    this.watch(async () => {
-      if (!this.isTypingPath) {
-        // search
-        const [searchResults, pathSearchResults] = await Promise.all([
-          Document.search(this.value).exec(),
-          Document.collection
-            .find()
-            .where('slug')
-            .regex(new RegExp(`^${this.value}`, 'i'))
-            .limit(20)
-            .exec(),
-        ])
-
-        this.searchResults = uniq(
-          [...(searchResults || []), ...pathSearchResults],
-          x => x.id
-        )
-      } else {
-        // path navigate
-        this.searchResults = await this.getChildDocsForPath(
-          this.typedPathPrefix
-        )
-      }
-    })
+    this.pushPane(Panes.Main)
 
     this.on(window, 'focus', () => {
       console.log('focus bar window')
@@ -72,9 +32,8 @@ class BarStore {
     })
   }
 
-  get highlightedDocument() {
-    if (this.highlightIndex === -1) return null
-    return this.results[this.highlightIndex]
+  pushPane = pane => {
+    this.panes.push(pane)
   }
 
   moveHighlight = (diff: number) => {
@@ -85,16 +44,16 @@ class BarStore {
     if (this.highlightIndex >= this.results.length) {
       this.highlightIndex = 0
     }
-    log('hlindex', this.highlightIndex)
   }
 
   onEnter = async () => {
     if (this.highlightIndex > -1) {
-      this.navTo(this.highlightedDocument)
-    } else {
-      const found = await this.createDocAtPath(this.value)
-      this.navTo(found)
+      this.select()
     }
+  }
+
+  select = () => {
+    this.activePaneRef.select(this.highlightIndex)
   }
 
   onChange = ({ target: { value } }) => {
@@ -122,24 +81,16 @@ class BarStore {
       this.inputRef.select()
     },
     enter: () => {
-      console.log('enter', this.column, this.highlightIndex, this.selectedItem)
-      if (this.selectedItem && this.selectedItem.url) {
-        ipcRenderer.send('bar-goto', this.selectedItem.url())
-      }
+      this.select()
     },
   }
 
-  setInboxItems = items => {
-    this.inboxItems = items
-  }
-
-  get selectedItem() {
-    switch (this.column) {
-      case 0:
-        return this.results[this.highlightIndex]
-      case 1:
-      case 2:
-        return this.inboxItems[this.highlightIndex]
+  navigate = thing => {
+    if (thing && thing.url) {
+      ipcRenderer.send('bar-goto', thing.url())
+    } else if (typeof thing === 'string') {
+      console.log('got a navigate weird thing', thing)
+      ipcRenderer.send('bar-goto', thing)
     }
   }
 }
@@ -149,15 +100,10 @@ class BarStore {
 })
 export default class BarPage {
   render({ store }) {
-    // reactive values
-    console.log('renderbar', store.column, store.highlightIndex)
-
     const itemProps = {
       highlightBackground: [0, 0, 0, 0.15],
       highlightColor: [255, 255, 255, 1],
     }
-
-    console.log('store.highlighted', store.highlighted)
 
     return (
       <HotKeys handlers={store.actions}>
@@ -176,69 +122,34 @@ export default class BarPage {
               />
             </div>
             <results $column={store.column}>
-              <section
-                $list
-                css={{
-                  width: '50%',
-                }}
-              >
-                <UI.List
-                  if={store.results}
-                  controlled={store.column === 0}
-                  isSelected={(item, index) => index === store.highlightIndex}
-                  itemProps={{
-                    size: 2.5,
-                    glow: false,
-                    hoverable: true,
-                    ...itemProps,
-                  }}
-                  items={store.results}
-                  getItem={result =>
-                    <UI.List.Item key={result.id} padding={0} height={60}>
-                      <item>
-                        {result.title}
-                      </item>
-                    </UI.List.Item>}
-                />
-              </section>
-              <line
-                css={{
-                  width: 0,
-                  marginTop: 1,
-                  borderLeft: [1, 'dotted', [0, 0, 0, 0.1]],
-                }}
-              />
-              <preview
-                css={{
-                  width: '50%',
-                  height: '100%',
-                }}
-              >
-                <InboxList
-                  controlled={store.column === 1 || store.column === 2}
-                  isSelected={(item, index) => index === store.highlightIndex}
-                  getItems={store.setInboxItems}
-                  filter={store.value}
-                  itemProps={{
-                    ...itemProps,
-                  }}
-                />
-              </preview>
-              <line
-                css={{
-                  width: 0,
-                  marginTop: 1,
-                  borderLeft: [1, 'dotted', [0, 0, 0, 0.1]],
-                }}
-              />
-              <preview
-                css={{
-                  width: '50%',
-                  height: '100%',
-                }}
-              >
-                <DocumentView document={User.home} />
-              </preview>
+              {store.panes.map((Pane, index) =>
+                <section key={Pane.name || Math.random()}>
+                  <content
+                    $list
+                    css={{
+                      width: '50%',
+                      height: '100%',
+                    }}
+                  >
+                    <Pane
+                      itemProps={itemProps}
+                      highlightIndex={store.highlightIndex}
+                      column={store.column}
+                      active={store.column === index}
+                      ref={ref => {
+                        this.paneRefs[index] = ref
+                      }}
+                    />
+                  </content>
+                  <line
+                    css={{
+                      width: 0,
+                      marginTop: 1,
+                      borderLeft: [1, 'dotted', [0, 0, 0, 0.1]],
+                    }}
+                  />
+                </section>
+              )}
             </results>
           </bar>
         </UI.Theme>

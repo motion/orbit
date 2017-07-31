@@ -10,6 +10,20 @@ class BarMainStore {
   searchResults: Array<Document> = []
   @watch children = () => this.root && this.root.getChildren()
 
+  get subDocs() {
+    return (
+      this.children &&
+      this.children.map(doc => {
+        return {
+          doc,
+          type: 'doc',
+          title: doc.title,
+          category: 'Browse',
+        }
+      })
+    )
+  }
+
   get root() {
     return User.home
   }
@@ -52,7 +66,10 @@ class BarMainStore {
         type: 'setup',
         icon: 'github',
       },
-    ]
+    ].map(x => ({
+      ...x,
+      category: 'Setup Integrations',
+    }))
   }
 
   get browse() {
@@ -63,22 +80,21 @@ class BarMainStore {
       },
       { title: 'Home', type: 'browse' },
       { title: 'Team', type: 'feed' },
-    ]
+    ].map(x => ({
+      ...x,
+      category: 'Favorites',
+    }))
   }
 
   get results() {
     if (!User.loggedIn) {
-      return [{ title: 'Login', type: 'pane', pane: 'Login' }]
+      return [{ title: 'Login', type: 'login' }]
     }
 
-    // if (User.integrations && User.integrations.length === 0) {
-    //   return this.integrations
-    // }
-
-    const { children, searchResults, integrations, browse } = this
+    const { subDocs, searchResults, integrations, browse } = this
     const hayStack = [
       ...browse,
-      ...(children || []),
+      ...(subDocs || []),
       ...(searchResults || []),
       ...integrations,
     ]
@@ -104,8 +120,7 @@ class BarMainStore {
             .find()
             .where('slug')
             .regex(new RegExp(`^${this.props.search}`, 'i'))
-            .where('home')
-            .neq(true)
+            .where({ home: { $ne: true } })
             .limit(20)
             .exec(),
         ])
@@ -113,7 +128,14 @@ class BarMainStore {
         this.searchResults = uniq(
           [...(searchResults || []), ...pathSearchResults],
           x => x.id
-        )
+        ).map(doc => {
+          return {
+            doc,
+            title: doc.title,
+            type: 'doc',
+            category: 'Search Results',
+          }
+        })
       }
     })
   }
@@ -138,6 +160,7 @@ export default class BarMain {
         controlled={isActive}
         isSelected={(item, index) => index === highlightIndex}
         itemProps={itemProps}
+        groupKey="category"
         items={store.results}
         getItem={result =>
           <UI.ListItem

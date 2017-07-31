@@ -68,6 +68,7 @@ class BarStore {
     browse: Panes.Browse,
     feed: Panes.Feed,
     notifications: Panes.Notifications,
+    login: Panes.Login,
   }
 
   setColumn = (column, activeItem) => {

@@ -2,8 +2,6 @@
 import React, { Children, cloneElement } from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
-import FakeText from './fake/fakeText'
-import { range } from 'lodash'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
@@ -30,13 +28,13 @@ export type Props = {
   onItemMount?: Function,
   onSelect: Function,
   parentSize?: boolean,
-  placeholder?: any,
   rowHeight?: number,
   scrollable?: boolean,
   segmented?: boolean,
   size?: number,
   style?: Object,
   width?: number,
+  groupKey?: string,
 }
 
 @parentSize('virtualized')
@@ -149,7 +147,6 @@ class List {
     onItemMount,
     onSelect,
     virtualized,
-    placeholder,
     scrollable,
     segmented,
     size,
@@ -157,6 +154,7 @@ class List {
     width: userWidth,
     virtualProps,
     isSelected,
+    groupKey,
     parentSize,
     ...props
   }: Props) {
@@ -231,22 +229,6 @@ class List {
       )
     }
 
-    if (placeholder) {
-      return (
-        <list {...props}>
-          {range(10).map(i =>
-            <ListItem
-              key={i}
-              fakeAvatar
-              placeholder
-              primary={<FakeText lines={1} fontSize={12} />}
-              secondary={<FakeText lines={1} fontSize={10} />}
-            />
-          )}
-        </list>
-      )
-    }
-
     // allow passing of rowProps by wrapping each in function
     let chillen = children
       ? Children.map(children, (item, index) => rowProps =>
@@ -264,14 +246,39 @@ class List {
       chillen = chillen.map(child => child())
     }
 
+    if (groupKey) {
+      const groups = []
+      let lastGroup = null
+
+      items.forEach((item, index) => {
+        if (lastGroup !== item[groupKey]) {
+          lastGroup = item[groupKey]
+          if (lastGroup) {
+            groups.push({ index, name: lastGroup })
+          }
+        }
+      })
+
+      for (const { index, name } of groups) {
+        chillen.splice(
+          index,
+          0,
+          <separator key={Math.random()}>
+            {name}
+          </separator>
+        )
+      }
+    }
+
     return (
-      <HotKeys handlers={this.actions}>
+      <HotKeys handlers={this.actions} style={{ height: '100%' }}>
         <Surface
           tagName="list"
           align="stretch"
           height={height}
           width={width}
           style={{
+            height: '100%',
             overflowY: scrollable ? 'scroll' : 'auto',
             overflowX: 'visible',
             ...style,
@@ -294,6 +301,14 @@ class List {
         </Surface>
       </HotKeys>
     )
+  }
+
+  static style = {
+    separator: {
+      display: 'sticky',
+      padding: [2, 10],
+      background: [0, 0, 0, 0.05],
+    },
   }
 }
 

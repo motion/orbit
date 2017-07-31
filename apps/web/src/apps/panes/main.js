@@ -66,9 +66,9 @@ class BarMainStore {
       return [{ title: 'Login', type: 'pane', pane: 'Login' }]
     }
 
-    if (User.integrations && User.integrations.length === 0) {
-      return this.integrations
-    }
+    // if (User.integrations && User.integrations.length === 0) {
+    //   return this.integrations
+    // }
 
     const { children, searchResults, integrations } = this
     const hayStack = [

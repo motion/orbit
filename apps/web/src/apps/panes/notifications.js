@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import InboxList from '~/views/inbox/list'
 
-class BarMainStore {
+class BarNotificationsStore {
   results = []
 
   start() {
@@ -12,10 +12,11 @@ class BarMainStore {
 }
 
 @view({
-  store: BarMainStore,
+  store: BarNotificationsStore,
 })
-export default class BarMainPane {
+export default class BarNotificationsPane {
   render({ store, isActive, highlightIndex }) {
+    console.log('render notifications')
     return (
       <InboxList
         controlled={isActive}

@@ -12,11 +12,14 @@ class BarStore {
   highlightIndex = 0
   value = ''
   panes = []
-  paneRefs = []
   pushRight = false
 
+  state = {
+    paneRefs: [],
+  }
+
   get activePane() {
-    return this.paneRefs[this.column]
+    return this.state.paneRefs[this.column]
   }
 
   get activeItem() {
@@ -201,7 +204,9 @@ export default class BarPage {
                       isActive={store.column === index}
                       activeItem={store.activeItem}
                       search={store.value}
-                      getRef={store.ref(`paneRefs.${index}`).set}
+                      getRef={ref => {
+                        store.state.paneRefs[index] = ref
+                      }}
                       onSelect={store.onSelect}
                       itemProps={{
                         size: 1.75,

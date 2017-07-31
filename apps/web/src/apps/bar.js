@@ -48,36 +48,43 @@ class BarStore {
     this.watchForFocus()
   }
 
+  lastSet = []
+
   watchPaneSelections = () => {
     this.watch(() => {
-      console.log('watch pane select')
       const { activeItem, column, highlightIndex } = this
+      const [lastCol, lastRow] = this.lastSet
       const nextColumn = column + 1
-
-      if (activeItem) {
-        if (activeItem.type === 'pane') {
-          const nextPane = Panes[activeItem.pane]
-          if (nextPane) {
-            console.log('setting to', nextPane)
-            this.setColumn(nextColumn, nextPane)
-          } else {
-            console.error('no pane', activeItem)
-          }
-        } else {
-          // is a Thing
-          console.log('waht the f', Panes.Preview)
-          this.setColumn(nextColumn, Panes.Preview)
-        }
+      if (nextColumn === lastCol && highlightIndex === lastRow) {
+        return
       }
+      this.setColumn(nextColumn, activeItem)
+      this.lastSet = [nextColumn, highlightIndex]
     })
   }
 
-  setColumn = (column, pane) => {
+  setColumn = (column, activeItem) => {
+    console.log('setColumn', column, !!activeItem)
+    if (activeItem) {
+      if (activeItem.type === 'pane') {
+        const nextPane = Panes[activeItem.pane]
+        if (nextPane) {
+          this.setColumnTo(column, nextPane)
+        } else {
+          console.error('no pane', activeItem)
+        }
+      } else {
+        // is a Thing
+        this.setColumnTo(column, Panes.Preview)
+      }
+    }
+  }
+
+  setColumnTo = (column, pane) => {
     if (!pane) {
       console.error('no pane', pane)
       return null
     }
-    console.log('setColumn', column, pane)
     this.panes[column] = pane
     this.panes = this.panes.slice(0, column + 1) // remove anything below
   }
@@ -159,7 +166,6 @@ class BarStore {
   navigate = thing => {
     log('navigate yo', thing)
     if (thing && thing.url) {
-      log('going to ', thing.url())
       ipcRenderer.send('bar-goto', thing.url())
     } else if (typeof thing === 'string') {
       console.log('got a navigate weird thing', thing)

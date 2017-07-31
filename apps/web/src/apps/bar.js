@@ -13,6 +13,7 @@ class BarStore {
   value = ''
   panes = []
   paneRefs = []
+  pushRight = false
 
   get activePane() {
     return this.paneRefs[this.column]
@@ -45,6 +46,7 @@ class BarStore {
   }
 
   setColumn = (column, pane) => {
+    console.log('setColumn', column, pane.name)
     this.panes[column] = pane
     this.panes = this.panes.slice(0, column + 1) // remove anything below
   }
@@ -91,7 +93,11 @@ class BarStore {
 
   actions = {
     right: () => {
-      this.column = this.column + 1
+      if (this.column === 1) {
+        this.pushRight = true
+      } else {
+        this.column = this.column + 1
+      }
     },
     down: () => {
       log('down')
@@ -101,7 +107,11 @@ class BarStore {
       this.moveHighlight(-1)
     },
     left: () => {
-      this.column = Math.max(0, this.column - 1)
+      if (this.pushRight) {
+        this.pushRight = false
+      } else {
+        this.column = Math.max(0, this.column - 1)
+      }
     },
     esc: () => {
       console.log('got esc')
@@ -167,7 +177,7 @@ export default class BarPage {
                 Selected: {JSON.stringify(store.activeItem)}
               </selected>
             </div>
-            <results $column={store.column}>
+            <results $pushRight={store.pushRight}>
               {store.panes.map((Pane, index) =>
                 <section key={Pane.name || Math.random()}>
                   <content $list>
@@ -215,13 +225,17 @@ export default class BarPage {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
       flex: 2,
       flexFlow: 'row',
-    },
-    column: column => ({
+      transition: 'transform 80ms linear',
       transform: {
-        x: column > 1 ? '-50%' : 0,
         z: 0,
+        x: 0,
       },
-    }),
+    },
+    pushRight: {
+      transform: {
+        x: '-50%',
+      },
+    },
     section: {
       width: '50%',
       height: '100%',

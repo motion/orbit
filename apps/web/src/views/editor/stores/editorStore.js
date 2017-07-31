@@ -66,6 +66,7 @@ export default class EditorStore implements StoreType {
   // gather and instantiate
   setup(plugins: Array<Plugin>) {
     this.plugins = []
+    console.log('editor plugins', plugins)
     for (const Plugin of plugins) {
       try {
         this.plugins.push(new Plugin({ editorStore: this }))

@@ -4,10 +4,10 @@ import { view } from '@mcro/black'
 import InboxList from '~/views/inbox/list'
 
 class BarMainStore {
-  items = []
+  results = []
 
-  setInboxItems = items => {
-    this.items = items
+  start() {
+    this.props.getRef && this.props.getRef(this)
   }
 }
 
@@ -15,12 +15,12 @@ class BarMainStore {
   store: BarMainStore,
 })
 export default class BarMainPane {
-  render({ store, isActive, highlightIndex, itemProps }) {
+  render({ store, isActive, highlightIndex }) {
     return (
       <InboxList
         controlled={isActive}
         isSelected={(item, index) => index === highlightIndex}
-        getItems={store.setInboxItems}
+        getItems={store.ref('results').set}
         filter={store.value}
       />
     )

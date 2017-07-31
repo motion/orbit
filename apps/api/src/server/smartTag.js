@@ -1,8 +1,8 @@
 // @flow
 import { flatten } from 'lodash'
-import natural from 'natural'
+// import natural from 'natural'
 
-const classifier = new natural.BayesClassifier()
+// const classifier = new natural.BayesClassifier()
 
 export default (phrases, phrase) => {
   let count = 0

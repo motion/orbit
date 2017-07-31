@@ -181,6 +181,9 @@ export default class BarPage {
                   padding: [0, 10],
                 }}
               />
+              <pasteIcon>
+                <UI.Icon size={50} type="detailed" name="paper" />
+              </pasteIcon>
               <selected
                 css={{
                   position: 'absolute',
@@ -265,6 +268,13 @@ export default class BarPage {
     content: {
       flex: 1,
       height: '100%',
+    },
+    pasteIcon: {
+      position: 'absolute',
+      top: -30,
+      right: -20,
+      width: 128,
+      height: 128,
     },
   }
 }

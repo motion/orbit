@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import color from 'color'
 import Popover from './popover'
 import names from './iconNames'
+import iconsDetailed from './iconsDetailed'
 import fuzzy from 'fuzzy'
 
 const cache = {}
@@ -57,7 +58,15 @@ export default class Icon {
     ...props
   }: Props) {
     const iconName = findMatch(name)
-    const backupIcon = !iconName ? name : ''
+    let content = children || !iconName ? name : ''
+
+    if (type === 'detailed') {
+      content = (
+        <detailIcon css={{ transform: { scale: 0.01 * size } }}>
+          {iconsDetailed[name]}
+        </detailIcon>
+      )
+    }
 
     return (
       <icon
@@ -76,7 +85,7 @@ export default class Icon {
           className={`nc-icon-${type} ${iconName}`}
           contentEditable={contentEditable}
         >
-          {children || backupIcon}
+          {content}
         </inner>
         <Popover
           if={tooltip}

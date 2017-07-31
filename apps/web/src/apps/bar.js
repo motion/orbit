@@ -9,22 +9,17 @@ const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 class BarStore {
   column = 0
-  highlightIndex = 0
+  highlightIndex = 1
   value = ''
   panes = []
   paneRefs = []
 
   get activePane() {
-    return this.pane[this.column]
-  }
-
-  get activePaneRef() {
     return this.paneRefs[this.column]
   }
 
   start() {
     this.pushPane(Panes.Main)
-
     this.on(window, 'focus', () => {
       console.log('focus bar window')
       this.inputRef.focus()
@@ -39,9 +34,9 @@ class BarStore {
   moveHighlight = (diff: number) => {
     this.highlightIndex += diff
     if (this.highlightIndex === -1) {
-      this.highlightIndex = this.results.length - 1
+      this.highlightIndex = this.activePane.length - 1
     }
-    if (this.highlightIndex >= this.results.length) {
+    if (this.highlightIndex >= this.activePane.length) {
       this.highlightIndex = 0
     }
   }
@@ -53,7 +48,7 @@ class BarStore {
   }
 
   select = () => {
-    this.activePaneRef.select(this.highlightIndex)
+    this.activePane.select(this.highlightIndex)
   }
 
   onChange = ({ target: { value } }) => {
@@ -65,6 +60,7 @@ class BarStore {
       this.column = this.column + 1
     },
     down: () => {
+      log('down')
       this.moveHighlight(1)
     },
     up: () => {
@@ -100,6 +96,10 @@ class BarStore {
 })
 export default class BarPage {
   render({ store }) {
+    log(store.highlightIndex)
+    store.highlightIndex
+    store.column
+
     const itemProps = {
       highlightBackground: [0, 0, 0, 0.15],
       highlightColor: [255, 255, 255, 1],
@@ -123,21 +123,29 @@ export default class BarPage {
             </div>
             <results $column={store.column}>
               {store.panes.map((Pane, index) =>
-                <section key={Pane.name || Math.random()}>
-                  <content
-                    $list
-                    css={{
-                      width: '50%',
-                      height: '100%',
-                    }}
-                  >
+                <section
+                  css={{
+                    width: '50%',
+                    height: '100%',
+                  }}
+                  key={Pane.name || Math.random()}
+                >
+                  <content $list>
                     <Pane
                       itemProps={itemProps}
                       highlightIndex={store.highlightIndex}
                       column={store.column}
                       active={store.column === index}
-                      ref={ref => {
-                        this.paneRefs[index] = ref
+                      search={store.value}
+                      getRef={ref => {
+                        store.paneRefs[index] = ref
+                      }}
+                      itemProps={{
+                        size: 2.5,
+                        glow: false,
+                        hoverable: true,
+                        fontSize: 32,
+                        padding: [18, 10],
                       }}
                     />
                   </content>
@@ -166,7 +174,6 @@ export default class BarPage {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
       flex: 2,
       flexFlow: 'row',
-      // transition: 'transform ease-in 32ms',
     },
     column: column => ({
       transform: {
@@ -174,9 +181,5 @@ export default class BarPage {
         z: 0,
       },
     }),
-    item: {
-      fontSize: 38,
-      padding: [18, 10],
-    },
   }
 }

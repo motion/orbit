@@ -8,9 +8,9 @@ import { uniq } from 'lodash'
 
 class BarMainStore {
   searchResults: Array<Document> = []
-  @watch children = () => this.currentDoc && this.currentDoc.getChildren()
+  @watch children = () => this.root && this.root.getChildren()
 
-  get currentDoc() {
+  get root() {
     return User.home
   }
 
@@ -22,7 +22,7 @@ class BarMainStore {
       ...(searchResults || []),
     ]
     return fuzzy
-      .filter(this.value, hayStack, {
+      .filter(this.props.search, hayStack, {
         extract: el => el.title,
         pre: '<',
         post: '>',
@@ -31,21 +31,18 @@ class BarMainStore {
       .filter(x => !!x)
   }
 
-  get highlightedDocument() {
-    if (this.highlightIndex === -1) return null
-    return this.results[this.highlightIndex]
-  }
-
   start() {
+    this.props.getRef && this.props.getRef(this)
+
     this.watch(async () => {
       if (!this.isTypingPath) {
         // search
         const [searchResults, pathSearchResults] = await Promise.all([
-          Document.search(this.value).exec(),
+          Document.search(this.props.search).exec(),
           Document.collection
             .find()
             .where('slug')
-            .regex(new RegExp(`^${this.value}`, 'i'))
+            .regex(new RegExp(`^${this.props.search}`, 'i'))
             .limit(20)
             .exec(),
         ])
@@ -58,6 +55,10 @@ class BarMainStore {
     })
   }
 
+  get length() {
+    return (this.results && this.results.length) || 0
+  }
+
   select = index => {
     this.props.navigate(this.results[index])
   }
@@ -67,19 +68,13 @@ class BarMainStore {
   store: BarMainStore,
 })
 export default class BarMain {
-  render({ store, highlightIndex, itemProps }) {
-    log('got results', store.results)
+  render({ store, getRef, highlightIndex, itemProps }) {
     return (
       <UI.List
         if={store.results}
         controlled={store.column === 0}
         isSelected={(item, index) => index === highlightIndex}
-        itemProps={{
-          size: 2.5,
-          glow: false,
-          hoverable: true,
-          ...itemProps,
-        }}
+        itemProps={itemProps}
         items={store.results}
         getItem={result =>
           <UI.ListItem key={result.id} padding={0} height={60}>

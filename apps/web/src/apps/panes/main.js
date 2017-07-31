@@ -62,7 +62,7 @@ class BarMainStore {
   }
 
   get results() {
-    if (User.home === null) {
+    if (!User.loggedIn) {
       return [{ title: 'Login', type: 'pane', pane: 'Login' }]
     }
 
@@ -133,11 +133,11 @@ export default class BarMain {
         itemProps={itemProps}
         items={store.results}
         getItem={result =>
-          <UI.ListItem key={result.id} icon={result.icon}>
-            <item>
-              {result.title}
-            </item>
-          </UI.ListItem>}
+          <UI.ListItem
+            key={result.id}
+            icon={result.icon}
+            primary={result.title}
+          />}
       />
     )
   }

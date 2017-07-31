@@ -9,7 +9,7 @@ const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 class BarStore {
   column = 0
-  highlightIndex = 1
+  highlightIndex = 0
   value = ''
   panes = []
   paneRefs = []
@@ -36,9 +36,15 @@ class BarStore {
 
       if (activeItem) {
         if (activeItem.type === 'pane') {
-          this.setColumn(nextColumn, Panes[activeItem.pane])
+          const nextPane = Panes[activeItem.pane]
+          if (nextPane) {
+            this.setColumn(nextColumn, nextPane)
+          } else {
+            console.error('no pane', activeItem)
+          }
         } else {
           // is a Thing
+          console.log('waht the f', Panes.Preview)
           this.setColumn(nextColumn, Panes.Preview)
         }
       }
@@ -46,7 +52,11 @@ class BarStore {
   }
 
   setColumn = (column, pane) => {
-    console.log('setColumn', column, pane.name)
+    if (!pane) {
+      console.error('no pane', pane)
+      return null
+    }
+    console.log('setColumn', column, pane)
     this.panes[column] = pane
     this.panes = this.panes.slice(0, column + 1) // remove anything below
   }
@@ -194,7 +204,7 @@ export default class BarPage {
                       getRef={store.ref(`paneRefs.${index}`).set}
                       onSelect={store.onSelect}
                       itemProps={{
-                        size: 2.5,
+                        size: 1.75,
                         glow: false,
                         hoverable: true,
                         fontSize: 32,

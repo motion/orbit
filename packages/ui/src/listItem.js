@@ -136,6 +136,7 @@ export default class ListItem {
                 $primary
                 fontSize="inherit"
                 ellipse={ellipse}
+                size={size}
                 color="inherit"
               >
                 {primary}

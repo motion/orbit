@@ -236,7 +236,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file="http://jot.dev/bar"
+          file={`http://jot.dev/bar?randomId=${Math.random()}`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}

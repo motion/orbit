@@ -167,11 +167,14 @@ export default class BarPage {
               <selected
                 css={{
                   position: 'absolute',
-                  bottom: 10,
-                  right: 10,
-                  width: 200,
-                  height: 200,
-                  fontSize: 16,
+                  top: 80,
+                  left: 0,
+                  right: 0,
+                  height: 20,
+                  fontSize: 12,
+                  overflow: 'hidden',
+                  opacity: 0.8,
+                  color: '#fff',
                 }}
               >
                 Selected: {JSON.stringify(store.activeItem)}

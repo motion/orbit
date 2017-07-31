@@ -169,13 +169,7 @@ export default class BarPage {
             </div>
             <results $column={store.column}>
               {store.panes.map((Pane, index) =>
-                <section
-                  css={{
-                    width: '50%',
-                    height: '100%',
-                  }}
-                  key={Pane.name || Math.random()}
-                >
+                <section key={Pane.name || Math.random()}>
                   <content $list>
                     <Pane
                       itemProps={itemProps}
@@ -228,5 +222,13 @@ export default class BarPage {
         z: 0,
       },
     }),
+    section: {
+      width: '50%',
+      height: '100%',
+    },
+    content: {
+      flex: 1,
+      height: '100%',
+    },
   }
 }

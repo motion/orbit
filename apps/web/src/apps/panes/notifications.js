@@ -22,9 +22,6 @@ export default class BarMainPane {
         isSelected={(item, index) => index === highlightIndex}
         getItems={store.setInboxItems}
         filter={store.value}
-        itemProps={{
-          ...itemProps,
-        }}
       />
     )
   }

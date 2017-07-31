@@ -34,13 +34,15 @@ class BarStore {
 
   watchPaneSelections = () => {
     this.watch(() => {
-      const { activeItem, column } = this
+      console.log('watch pane select')
+      const { activeItem, column, highlightIndex } = this
       const nextColumn = column + 1
 
       if (activeItem) {
         if (activeItem.type === 'pane') {
           const nextPane = Panes[activeItem.pane]
           if (nextPane) {
+            console.log('setting to', nextPane)
             this.setColumn(nextColumn, nextPane)
           } else {
             console.error('no pane', activeItem)

@@ -14,12 +14,68 @@ class BarMainStore {
     return User.home
   }
 
+  get integrations() {
+    return [
+      {
+        title: 'Setup Google Docs',
+        pane: 'Setup',
+        data: 'google-docs',
+        type: 'pane',
+        icon: 'google',
+      },
+      {
+        title: 'Setup Google Drive',
+        pane: 'Setup',
+        data: 'google-drive',
+        type: 'pane',
+        icon: 'disk',
+      },
+      {
+        title: 'Setup Dropbox Paper',
+        pane: 'Setup',
+        data: 'dropbox-paper',
+        type: 'pane',
+        icon: 'dropbox',
+      },
+      {
+        title: 'Setup Trello',
+        pane: 'Setup',
+        data: 'trello',
+        type: 'pane',
+        icon: 'trello',
+      },
+      {
+        title: 'Setup Jira',
+        pane: 'Setup',
+        data: 'jira',
+        type: 'pane',
+        icon: 'jira',
+      },
+      {
+        title: 'Setup Github',
+        pane: 'Setup',
+        data: 'github',
+        type: 'pane',
+        icon: 'github',
+      },
+    ]
+  }
+
   get results() {
-    const { children, searchResults } = this
+    if (User.home === null) {
+      return [{ title: 'Login', type: 'pane', pane: 'Login' }]
+    }
+
+    if (User.integrations && User.integrations.length === 0) {
+      return this.integrations
+    }
+
+    const { children, searchResults, integrations } = this
     const hayStack = [
-      { title: 'Notifications', type: 'pane' },
+      { title: 'Notifications', type: 'pane', pane: 'Notifications' },
       ...(children || []),
       ...(searchResults || []),
+      ...integrations,
     ]
     return fuzzy
       .filter(this.props.search, hayStack, {
@@ -77,7 +133,7 @@ export default class BarMain {
         itemProps={itemProps}
         items={store.results}
         getItem={result =>
-          <UI.ListItem key={result.id}>
+          <UI.ListItem key={result.id} icon={result.icon}>
             <item>
               {result.title}
             </item>

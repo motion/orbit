@@ -36,7 +36,7 @@ class BarStore {
 
       if (activeItem) {
         if (activeItem.type === 'pane') {
-          this.setColumn(nextColumn, Panes[activeItem.title])
+          this.setColumn(nextColumn, Panes[activeItem.pane])
         } else {
           // is a Thing
           this.setColumn(nextColumn, Panes.Preview)

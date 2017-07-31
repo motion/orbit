@@ -46,6 +46,7 @@ class User {
   localDb = false
   remoteDb = false
   queries = {}
+  integrations = []
 
   get org() {
     return this.queries.org

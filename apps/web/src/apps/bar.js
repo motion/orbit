@@ -9,13 +9,21 @@ const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 class BarStore {
   column = 0
-  highlightIndex = 0
+  highlightedRow = [0]
   value = ''
   panes = []
   pushRight = false
-
   state = {
     paneRefs: [],
+  }
+
+  get highlightIndex() {
+    return this.highlightedRow[this.column] || 0
+  }
+
+  set highlightIndex(value) {
+    this.highlightedRow[this.column] = value
+    this.highlightedRow = [...this.highlightedRow]
   }
 
   get activePane() {
@@ -24,6 +32,14 @@ class BarStore {
 
   get activeItem() {
     return this.activePane && this.activePane.results[this.highlightIndex]
+  }
+
+  get parent() {
+    return this.state.paneRefs[this.column - 1]
+  }
+
+  get parentItem() {
+    return this.parent && this.parent[this.highlightedRow[this.column - 1]]
   }
 
   start() {
@@ -209,6 +225,7 @@ export default class BarPage {
                       isActive={store.column === index}
                       activeItem={store.activeItem}
                       search={store.value}
+                      parent={store.parentItem}
                       getRef={ref => {
                         store.state.paneRefs[index] = ref
                       }}

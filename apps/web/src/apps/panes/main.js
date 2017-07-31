@@ -61,6 +61,19 @@ class BarMainStore {
     ]
   }
 
+  get browse() {
+    return [
+      {
+        title: 'Notifications',
+        type: 'pane',
+        pane: 'Notifications',
+        parent: 'me',
+      },
+      { title: 'Home', type: 'pane', pane: 'Browse', parent: 'me' },
+      { title: 'Team', type: 'pane', pane: 'Feed', parent: 'me' },
+    ]
+  }
+
   get results() {
     if (!User.loggedIn) {
       return [{ title: 'Login', type: 'pane', pane: 'Login' }]
@@ -70,9 +83,9 @@ class BarMainStore {
     //   return this.integrations
     // }
 
-    const { children, searchResults, integrations } = this
+    const { children, searchResults, integrations, browse } = this
     const hayStack = [
-      { title: 'Notifications', type: 'pane', pane: 'Notifications' },
+      ...browse,
       ...(children || []),
       ...(searchResults || []),
       ...integrations,

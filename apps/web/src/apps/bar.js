@@ -157,7 +157,9 @@ class BarStore {
   }
 
   navigate = thing => {
+    log('navigate yo', thing)
     if (thing && thing.url) {
+      log('going to ', thing.url())
       ipcRenderer.send('bar-goto', thing.url())
     } else if (typeof thing === 'string') {
       console.log('got a navigate weird thing', thing)
@@ -226,6 +228,7 @@ export default class BarPage {
                       activeItem={store.activeItem}
                       search={store.value}
                       parent={store.parentItem}
+                      navigate={store.navigate}
                       getRef={ref => {
                         store.state.paneRefs[index] = ref
                       }}

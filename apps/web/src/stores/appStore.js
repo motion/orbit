@@ -106,6 +106,10 @@ export default class AppStore {
     return this.stores && this.stores.RootStore && this.stores.RootStore[0]
   }
 
+  get bar() {
+    return this.stores && this.stores.BarStore && this.stores.BarStore[0]
+  }
+
   get explorer() {
     return (
       this.stores && this.stores.ExplorerStore && this.stores.ExplorerStore[0]

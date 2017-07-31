@@ -18,8 +18,30 @@ class BarStore {
     return this.paneRefs[this.column]
   }
 
+  get activeItem() {
+    return this.activePane && this.activePane.results[this.highlightIndex]
+  }
+
   start() {
     this.pushPane(Panes.Main)
+    this.watchPaneSelections()
+    this.watchForFocus()
+  }
+
+  watchPaneSelections = () => {
+    this.watch(() => {
+      if (this.activeItem && this.activeItem.type === 'pane') {
+        this.setColumn(this.column + 1, Panes[this.activeItem.title])
+      }
+    })
+  }
+
+  setColumn = (column, pane) => {
+    this.panes[column] = pane
+    this.panes = this.panes.slice(0, column + 1) // remove anything below
+  }
+
+  watchForFocus = () => {
     this.on(window, 'focus', () => {
       console.log('focus bar window')
       this.inputRef.focus()
@@ -45,6 +67,10 @@ class BarStore {
     if (this.highlightIndex > -1) {
       this.select()
     }
+  }
+
+  onSelect = item => {
+    console.log('select', item)
   }
 
   select = () => {
@@ -120,6 +146,18 @@ export default class BarPage {
                   padding: [0, 10],
                 }}
               />
+              <selected
+                css={{
+                  position: 'absolute',
+                  bottom: 10,
+                  right: 10,
+                  width: 200,
+                  height: 200,
+                  fontSize: 16,
+                }}
+              >
+                Selected: {JSON.stringify(store.activeItem)}
+              </selected>
             </div>
             <results $column={store.column}>
               {store.panes.map((Pane, index) =>
@@ -137,9 +175,8 @@ export default class BarPage {
                       column={store.column}
                       active={store.column === index}
                       search={store.value}
-                      getRef={ref => {
-                        store.paneRefs[index] = ref
-                      }}
+                      getRef={store.ref(`paneRefs.${index}`).set}
+                      onSelect={store.onSelect}
                       itemProps={{
                         size: 2.5,
                         glow: false,

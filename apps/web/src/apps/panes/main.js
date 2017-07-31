@@ -17,7 +17,7 @@ class BarMainStore {
   get results() {
     const { children, searchResults } = this
     const hayStack = [
-      { title: 'Notifications' },
+      { title: 'Notifications', type: 'pane' },
       ...(children || []),
       ...(searchResults || []),
     ]
@@ -68,11 +68,11 @@ class BarMainStore {
   store: BarMainStore,
 })
 export default class BarMain {
-  render({ store, getRef, highlightIndex, itemProps }) {
+  render({ store, getRef, isActive, highlightIndex, itemProps }) {
     return (
       <UI.List
         if={store.results}
-        controlled={store.column === 0}
+        controlled={isActive}
         isSelected={(item, index) => index === highlightIndex}
         itemProps={itemProps}
         items={store.results}

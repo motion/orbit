@@ -15,10 +15,10 @@ class BarMainStore {
   store: BarMainStore,
 })
 export default class BarMainPane {
-  render({ store, active, highlightIndex, itemProps }) {
+  render({ store, isActive, highlightIndex, itemProps }) {
     return (
       <InboxList
-        controlled={active}
+        controlled={isActive}
         isSelected={(item, index) => index === highlightIndex}
         getItems={store.setInboxItems}
         filter={store.value}

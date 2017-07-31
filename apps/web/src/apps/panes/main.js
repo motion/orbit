@@ -18,44 +18,38 @@ class BarMainStore {
     return [
       {
         title: 'Setup Google Docs',
-        pane: 'Setup',
         data: 'google-docs',
-        type: 'pane',
+        type: 'setup',
         icon: 'google',
       },
       {
         title: 'Setup Google Drive',
-        pane: 'Setup',
         data: 'google-drive',
-        type: 'pane',
+        type: 'setup',
         icon: 'disk',
       },
       {
         title: 'Setup Dropbox Paper',
-        pane: 'Setup',
         data: 'dropbox-paper',
-        type: 'pane',
+        type: 'setup',
         icon: 'dropbox',
       },
       {
         title: 'Setup Trello',
-        pane: 'Setup',
         data: 'trello',
-        type: 'pane',
+        type: 'setup',
         icon: 'trello',
       },
       {
         title: 'Setup Jira',
-        pane: 'Setup',
         data: 'jira',
-        type: 'pane',
+        type: 'setup',
         icon: 'jira',
       },
       {
         title: 'Setup Github',
-        pane: 'Setup',
         data: 'github',
-        type: 'pane',
+        type: 'setup',
         icon: 'github',
       },
     ]
@@ -65,12 +59,10 @@ class BarMainStore {
     return [
       {
         title: 'Notifications',
-        type: 'pane',
-        pane: 'Notifications',
-        parent: 'me',
+        type: 'notifications',
       },
-      { title: 'Home', type: 'pane', pane: 'Browse', parent: 'me' },
-      { title: 'Team', type: 'pane', pane: 'Feed', parent: 'me' },
+      { title: 'Home', type: 'browse' },
+      { title: 'Team', type: 'feed' },
     ]
   }
 
@@ -112,6 +104,8 @@ class BarMainStore {
             .find()
             .where('slug')
             .regex(new RegExp(`^${this.props.search}`, 'i'))
+            .where('home')
+            .neq(true)
             .limit(20)
             .exec(),
         ])

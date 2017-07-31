@@ -9,10 +9,7 @@ export default props =>
     fontWeight={600}
     color={[0, 0, 0, 0.3]}
     style={{
-      width: '100%',
-      height: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
+      margin: 'auto',
     }}
     {...props}
   />

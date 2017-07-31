@@ -3,12 +3,13 @@ import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import fuzzy from 'fuzzy'
+import { User } from '~/app'
 
 class BarBrowseStore {
   @watch children = () => this.root && this.root.getChildren()
 
   get root() {
-    return this.props.root
+    return this.props.parent || User.home
   }
 
   get results() {
@@ -41,6 +42,10 @@ class BarBrowseStore {
 })
 export default class BarBrowse {
   render({ store, isActive, highlightIndex, itemProps }) {
+    if (!store.results || !store.results.length) {
+      return <UI.Placeholder>Empty</UI.Placeholder>
+    }
+
     return (
       <UI.List
         if={store.results}

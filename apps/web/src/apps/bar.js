@@ -63,20 +63,19 @@ class BarStore {
     })
   }
 
+  PANE_TYPES = {
+    setup: Panes.Setup,
+    browse: Panes.Browse,
+    feed: Panes.Feed,
+    notifications: Panes.Notifications,
+  }
+
   setColumn = (column, activeItem) => {
     console.log('setColumn', column, !!activeItem)
     if (activeItem) {
-      if (activeItem.type === 'pane') {
-        const nextPane = Panes[activeItem.pane]
-        if (nextPane) {
-          this.setColumnTo(column, nextPane)
-        } else {
-          console.error('no pane', activeItem)
-        }
-      } else {
-        // is a Thing
-        this.setColumnTo(column, Panes.Preview)
-      }
+      const Pane = this.PANE_TYPES[activeItem.type] || Panes.Preview
+      this.setColumnTo(column, Pane)
+      console.log('set to column', activeItem.type)
     }
   }
 

@@ -11,7 +11,7 @@ const createMarkButton = ({ icon, type }) => {
     type,
     wrap: toggle,
     unwrap: toggle,
-    isActive: state => state.marks.some(mark => mark.type === type),
+    isActive: state => state && state.marks.some(mark => mark.type === type),
   })
 }
 
@@ -31,8 +31,17 @@ export default class EmphasisPlugin {
   // contextButtons = buttons
 
   marks = {
-    [ITALIC]: props => <em style={{ display: 'inline' }}>{props.children}</em>,
-    [BOLD]: props => <strong>{props.children}</strong>,
-    [UNDERLINE]: props => <u style={{ display: 'inline' }}>{props.children}</u>,
+    [ITALIC]: props =>
+      <em style={{ display: 'inline' }}>
+        {props.children}
+      </em>,
+    [BOLD]: props =>
+      <strong>
+        {props.children}
+      </strong>,
+    [UNDERLINE]: props =>
+      <u style={{ display: 'inline' }}>
+        {props.children}
+      </u>,
   }
 }

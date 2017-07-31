@@ -68,7 +68,7 @@ class BarMainStore {
   store: BarMainStore,
 })
 export default class BarMain {
-  render({ store, getRef, isActive, highlightIndex, itemProps }) {
+  render({ store, isActive, highlightIndex, itemProps }) {
     return (
       <UI.List
         if={store.results}
@@ -77,7 +77,7 @@ export default class BarMain {
         itemProps={itemProps}
         items={store.results}
         getItem={result =>
-          <UI.ListItem key={result.id} padding={0} height={60}>
+          <UI.ListItem key={result.id}>
             <item>
               {result.title}
             </item>

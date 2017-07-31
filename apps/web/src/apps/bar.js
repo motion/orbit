@@ -30,8 +30,16 @@ class BarStore {
 
   watchPaneSelections = () => {
     this.watch(() => {
-      if (this.activeItem && this.activeItem.type === 'pane') {
-        this.setColumn(this.column + 1, Panes[this.activeItem.title])
+      const { activeItem, column } = this
+      const nextColumn = column + 1
+
+      if (activeItem) {
+        if (activeItem.type === 'pane') {
+          this.setColumn(nextColumn, Panes[activeItem.title])
+        } else {
+          // is a Thing
+          this.setColumn(nextColumn, Panes.Preview)
+        }
       }
     })
   }
@@ -173,7 +181,8 @@ export default class BarPage {
                       itemProps={itemProps}
                       highlightIndex={store.highlightIndex}
                       column={store.column}
-                      active={store.column === index}
+                      isActive={store.column === index}
+                      activeItem={store.activeItem}
                       search={store.value}
                       getRef={store.ref(`paneRefs.${index}`).set}
                       onSelect={store.onSelect}
@@ -183,6 +192,7 @@ export default class BarPage {
                         hoverable: true,
                         fontSize: 32,
                         padding: [18, 10],
+                        height: 60,
                       }}
                     />
                   </content>

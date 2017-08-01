@@ -7,7 +7,7 @@ import { User } from '~/app'
 
 class BarBrowseStore {
   get root() {
-    return this.props.parent || User.home
+    return (this.props.parent && this.props.parent.doc) || User.home
   }
 
   @watch children = () => this.root && this.root.getChildren()

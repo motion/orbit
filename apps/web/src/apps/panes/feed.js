@@ -78,20 +78,16 @@ class BarFeedStore {
       {
         id: 0,
         title: 'Item 1',
-        name: 'Nate',
         action: 'edited',
         date: '2m ago',
-        avatar: 'me',
         content: 'Some small amount of editing went into this one.',
         icon: 'gmail',
       },
       {
         id: 1,
         title: 'Item 1',
-        name: 'Nate',
         action: 'edited',
         date: '2m ago',
-        avatar: 'me',
         content:
           'This is a much longer edit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
         icon: 'drive',
@@ -99,19 +95,15 @@ class BarFeedStore {
       {
         id: 3,
         title: 'Item 1',
-        name: 'Nate',
         action: 'uploaded a new document',
         date: '2m ago',
-        avatar: 'me',
         icon: 'drive',
       },
       {
         id: 2,
         title: 'Item 1',
-        name: 'Nate',
         action: 'edited',
         date: '2m ago',
-        avatar: 'me',
         content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
         icon: 'gmail',
       },
@@ -123,7 +115,8 @@ class BarFeedStore {
   store: BarFeedStore,
 })
 export default class BarFeed {
-  render({ store, highlightIndex, isActive }) {
+  render({ store, highlightIndex, isActive, parent }) {
+    console.log('aparent', parent)
     return (
       <feed>
         {store.results.map((result, index) =>

@@ -81,11 +81,6 @@ class BarMainStore {
         icon: 'alert',
       },
       {
-        title: 'Nate',
-        type: 'feed',
-        icon: 'user',
-      },
-      {
         title: 'Home',
         type: 'browse',
         icon: (
@@ -108,16 +103,40 @@ class BarMainStore {
     }))
   }
 
+  get people() {
+    return [
+      {
+        title: 'Stephanie',
+        type: 'feed',
+        image: 'steph',
+        category: 'People',
+      },
+      {
+        title: 'Nate',
+        type: 'feed',
+        image: 'me',
+        category: 'People',
+      },
+      {
+        title: 'Nick',
+        type: 'feed',
+        image: 'nick',
+        category: 'People',
+      },
+    ]
+  }
+
   get results() {
     if (!User.loggedIn) {
       return [{ title: 'Login', type: 'login' }]
     }
 
-    const { subDocs, searchResults, integrations, browse } = this
+    const { subDocs, searchResults, integrations, browse, people } = this
     const hayStack = [
       ...browse,
       ...(subDocs || []),
       ...(searchResults || []),
+      ...people,
       ...integrations,
     ]
     return fuzzy
@@ -134,31 +153,33 @@ class BarMainStore {
     this.props.getRef && this.props.getRef(this)
 
     this.watch(async () => {
-      if (!this.isTypingPath) {
-        // search
-        const [searchResults, pathSearchResults] = await Promise.all([
-          Thing.search(this.props.search).exec(),
-          Thing.collection
-            .find()
-            .where('slug')
-            .regex(new RegExp(`^${this.props.search}$`, 'i'))
-            .where({ home: { $ne: true } })
-            .limit(20)
-            .exec(),
-        ])
-
-        this.searchResults = uniq(
-          [...(searchResults || []), ...pathSearchResults],
-          x => x.id
-        ).map(doc => {
-          return {
-            doc,
-            title: doc.title,
-            type: 'browse',
-            category: 'Search Results',
-          }
-        })
+      if (!this.props.search) {
+        return []
       }
+
+      // search
+      const [searchResults, pathSearchResults] = await Promise.all([
+        Thing.search(this.props.search).exec(),
+        Thing.collection
+          .find()
+          .where('slug')
+          .regex(new RegExp(`^${this.props.search}$`, 'i'))
+          .where({ home: { $ne: true } })
+          .limit(20)
+          .exec(),
+      ])
+
+      this.searchResults = uniq(
+        [...(searchResults || []), ...pathSearchResults],
+        x => x.id
+      ).map(doc => {
+        return {
+          doc,
+          title: doc.title,
+          type: 'browse',
+          category: 'Search Results',
+        }
+      })
     })
   }
 
@@ -187,10 +208,23 @@ export default class BarMain {
         getItem={result =>
           <UI.ListItem
             key={result.id}
-            icon={result.icon}
+            icon={
+              result.image
+                ? <img $image src={`/images/${result.image}.jpg`} />
+                : result.icon
+            }
             primary={result.title}
           />}
       />
     )
+  }
+
+  static style = {
+    image: {
+      width: 20,
+      height: 20,
+      borderRadius: 1000,
+      margin: 'auto',
+    },
   }
 }

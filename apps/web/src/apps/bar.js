@@ -84,7 +84,8 @@ class BarStore {
   get parentItem() {
     return (
       this.activePaneParent &&
-      this.activePaneParent[this.columnsByRow[this.previousColumn]]
+      this.activePaneParent.results &&
+      this.activePaneParent.results[this.columnsByRow[this.previousColumn]]
     )
   }
 

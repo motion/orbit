@@ -122,9 +122,9 @@ export default class BarFeed {
         {store.results.map((result, index) =>
           <item $active={isActive && highlightIndex === index} key={result.id}>
             <meta>
-              <avatar $img={`/images/${result.avatar}.jpg`} />
+              <avatar $img={`/images/${parent.image}.jpg`} />
               <span $name>
-                {result.name}
+                {parent.title}
               </span>
               <span $action>
                 {result.action}

@@ -15,10 +15,10 @@ class BarMainStore {
       this.children &&
       this.children.map(doc => {
         return {
-          doc,
-          type: 'doc',
+          type: 'browse',
           title: doc.title,
           category: 'Browse',
+          doc,
         }
       })
     )
@@ -119,7 +119,7 @@ class BarMainStore {
           Document.collection
             .find()
             .where('slug')
-            .regex(new RegExp(`^${this.props.search}`, 'i'))
+            .regex(new RegExp(`^${this.props.search}$`, 'i'))
             .where({ home: { $ne: true } })
             .limit(20)
             .exec(),
@@ -132,7 +132,7 @@ class BarMainStore {
           return {
             doc,
             title: doc.title,
-            type: 'doc',
+            type: 'browse',
             category: 'Search Results',
           }
         })

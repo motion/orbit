@@ -9,7 +9,7 @@ const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 class BarStore {
   column = 0
-  highlightedRow = [0]
+  columnsByRow = [0]
   value = ''
   panes = []
   pushRight = false
@@ -18,12 +18,12 @@ class BarStore {
   }
 
   get highlightIndex() {
-    return this.highlightedRow[this.column] || 0
+    return this.columnsByRow[this.column] || 0
   }
 
   set highlightIndex(value) {
-    this.highlightedRow[this.column] = value
-    this.highlightedRow = [...this.highlightedRow]
+    this.columnsByRow[this.column] = value
+    this.columnsByRow = [...this.columnsByRow]
   }
 
   get activePane() {
@@ -34,12 +34,20 @@ class BarStore {
     return this.activePane && this.activePane.results[this.highlightIndex]
   }
 
-  get parent() {
-    return this.state.paneRefs[this.column - 1]
+  get previousColumn() {
+    return Math.max(0, this.column - 1)
+  }
+
+  get activePaneParent() {
+    console.log('active', this.state.paneRefs[this.previousColumn])
+    return this.state.paneRefs[this.previousColumn]
   }
 
   get parentItem() {
-    return this.parent && this.parent[this.highlightedRow[this.column - 1]]
+    return (
+      this.activePaneParent &&
+      this.activePaneParent[this.columnsByRow[this.previousColumn]]
+    )
   }
 
   start() {

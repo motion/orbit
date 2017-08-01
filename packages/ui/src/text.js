@@ -125,6 +125,7 @@ export default class Text {
     onBlur,
     getRef,
     style,
+    placeholder,
     ...props
   }: Props) {
     const eventProps = {

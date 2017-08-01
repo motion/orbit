@@ -26,6 +26,8 @@ export type ItemProps = {
   secondary?: React$Element<any>,
   ellipse?: boolean,
   glowProps?: Object,
+  editable?: boolean,
+  onFinishEdit?: Function,
 }
 
 @injectTheme
@@ -60,6 +62,7 @@ export default class ListItem {
     children,
     date,
     dateSize,
+    autoselect,
     isFirstElement,
     isLastElement,
     meta,
@@ -75,6 +78,8 @@ export default class ListItem {
     ellipse,
     glowProps,
     theme,
+    editable,
+    onFinishEdit,
     iconProps,
     ...props
   }: ItemProps) {
@@ -138,6 +143,9 @@ export default class ListItem {
                 ellipse={ellipse}
                 size={size}
                 color="inherit"
+                editable={editable}
+                autoselect={autoselect}
+                onFinishEdit={onFinishEdit}
               >
                 {primary}
               </Text>

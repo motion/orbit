@@ -2,26 +2,36 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import fuzzy from 'fuzzy'
+import { filterItem } from './helpers'
 import { User } from '~/app'
 
 class BarBrowseStore {
-  @watch children = () => this.root && this.root.getChildren()
-
   get root() {
     return this.props.parent || User.home
   }
 
+  @watch children = () => this.root && this.root.getChildren()
+
+  get filterItem() {
+    return this.props.filterItem || filterItem
+  }
+
   get results() {
-    const hayStack = this.children
-    return fuzzy
-      .filter(this.props.search, hayStack, {
-        extract: el => el.title,
-        pre: '<',
-        post: '>',
-      })
-      .map(item => item.original)
-      .filter(x => !!x)
+    const filtered = this.filterItem(this.children, this.props.search)
+
+    return [
+      ...filtered,
+      {
+        title: 'Create',
+        props: {
+          editable: true,
+          autoselect: true,
+          css: {
+            opacity: 0.5,
+          },
+        },
+      },
+    ]
   }
 
   start() {
@@ -58,6 +68,7 @@ export default class BarBrowse {
             key={result.id}
             icon={result.icon}
             primary={result.title}
+            {...result.props}
           />}
       />
     )

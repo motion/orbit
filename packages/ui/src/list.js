@@ -61,10 +61,11 @@ class List {
 
   componentDidUpdate() {
     if (this.state.selected > -1) {
-      if (this.refs[this.state.selected]) {
+      console.log('didupdate', this.itemRefs, this.state.selected)
+      if (this.itemRefs[this.state.selected]) {
         console.log(
           'check if ref',
-          this.refs[this.state.selected],
+          this.itemRefs[this.state.selected],
           'is off screen'
         )
       }

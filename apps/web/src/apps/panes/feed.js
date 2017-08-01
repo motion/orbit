@@ -24,19 +24,21 @@ class BarFeedStore {
 export default class BarFeed {
   render({ store, isActive, highlightIndex, itemProps }) {
     return (
-      <UI.List
-        if={store.results}
-        controlled={isActive}
-        isSelected={(item, index) => index === highlightIndex}
-        itemProps={itemProps}
-        items={store.results}
-        getItem={result =>
-          <UI.ListItem
-            key={result.id}
-            icon={result.icon}
-            primary={result.title}
-          />}
-      />
+      <feed>
+        <item>
+          <avatar>
+            <img src="/images/me.jpg" />
+          </avatar>
+          <meta>
+            <name>Nate</name>
+            <action>edited</action>
+            <date>2m ago</date>
+          </meta>
+          <content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          </content>
+        </item>
+      </feed>
     )
   }
 }

@@ -15,6 +15,27 @@ const safeString = thing => {
 }
 
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
+const actions = [
+  'remind',
+  'send',
+  'attach',
+  'discuss',
+  'assign',
+  'update',
+  'new',
+  'calendar',
+  'busy',
+  'free',
+  'wait',
+  'ping',
+  'everyone',
+  'open',
+  'close',
+  'forward',
+  'notifications',
+  'issues',
+  'docs',
+].sort()
 
 class BarStore {
   column = 0
@@ -26,11 +47,12 @@ class BarStore {
     paneRefs: [],
   }
 
-  actions = ['remind', 'send', 'attach', 'discuss', 'assign', 'update'].sort()
-
-  get peekItems() {
-    return this.actions[
-      this.actions.findIndex(action => action.indexOf(this.value) === 0)
+  get peekItem() {
+    if (!this.value) {
+      return ''
+    }
+    return actions[
+      actions.findIndex(action => action.indexOf(this.value) === 0)
     ]
   }
 
@@ -205,6 +227,12 @@ class BarStore {
   }
 }
 
+const inputStyle = {
+  fontWeight: 300,
+  color: '#fff',
+  fontSize: 38,
+}
+
 @view({
   store: BarStore,
 })
@@ -231,13 +259,19 @@ export default class BarPage {
                 onChange={store.onChange}
                 borderWidth={0}
                 css={{
+                  margin: [-2, 0, 0],
                   padding: [0, 10],
+                  ...inputStyle,
                 }}
               />
+              <forwardComplete>
+                {store.peekItem}
+              </forwardComplete>
               <pasteIcon>
                 <UI.Icon size={50} type="detailed" name="paper" />
               </pasteIcon>
               <selected
+                if={false}
                 css={{
                   position: 'absolute',
                   top: 80,
@@ -330,6 +364,15 @@ export default class BarPage {
       right: -20,
       width: 128,
       height: 128,
+    },
+    forwardComplete: {
+      position: 'absolute',
+      top: 35,
+      left: 20,
+      opacity: 0.3,
+      ...inputStyle,
+      zIndex: -1,
+      pointerEvents: 'none',
     },
   }
 }

@@ -81,6 +81,11 @@ class BarMainStore {
         icon: 'alert',
       },
       {
+        title: 'Nate',
+        type: 'feed',
+        icon: 'user',
+      },
+      {
         title: 'Home',
         type: 'browse',
         icon: (

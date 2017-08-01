@@ -28,7 +28,9 @@ export const IN_TRAY =
 export const TRAY_WIDTH = 400
 export const TRAY_HEIGHT = 500
 
-export const IS_BAR = window.location.pathname.indexOf('/bar') > -1
+export const IS_BAR =
+  window.location.pathname.indexOf('/bar') > -1 ||
+  window.location.pathname.indexOf('/master') > -1
 console.log('IS_BAR', IS_BAR)
 
 const keysearch = window.location.search.match(/key=(.*)/)

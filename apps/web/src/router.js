@@ -6,6 +6,7 @@ import ThreadPage from './apps/thread'
 import InboxPage from './apps/inbox'
 import DraftPage from './apps/draft'
 import BarPage from './apps/bar'
+import MasterDetailPage from './apps/masterDetail'
 
 let AppRouter
 
@@ -18,6 +19,7 @@ function runRouter() {
       'inbox/:id': InboxPage,
       '(document)(thread)(inbox)/:id/draft': DraftPage,
       bar: BarPage,
+      master: MasterDetailPage,
     },
   })
   // because doing in installDevTools would break import order

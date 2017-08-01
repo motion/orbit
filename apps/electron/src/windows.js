@@ -4,12 +4,14 @@ import { app, globalShortcut, screen, ipcMain } from 'electron'
 const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   const size = [Math.round(width / 3), Math.round(height / 2)]
+  const middleX = Math.round(width / 2 - size[0] / 2)
+  const middleX = Math.round(height / 2 - size[1] / 2)
+  const endX = width - size[0] - 20
+  const endY = height - size[1] - 20
+
   return {
     size,
-    position: [
-      Math.round(width / 2 - size[0] / 2),
-      Math.round(height / 2 - size[1] / 2),
-    ],
+    position: [middleX, middleY],
   }
 }
 
@@ -35,6 +37,8 @@ class Windows {
       this.addWindow()
     }
     const next = this.windows[0]
+    this.addWindow()
+
     if (next) {
       if (path) {
         next.path = path
@@ -42,8 +46,15 @@ class Windows {
       return next
     }
   }
-  remove(path) {
-    this.windows = this.windows.filter(window => window.path === path)
+  removeBy(key, val) {
+    this.windows = this.windows.filter(window => window[key] === val)
+  }
+
+  removeByPath(path) {
+    this.removeBy('path', path)
+  }
+  removeByKey(key) {
+    this.removeBy('key', key)
   }
 }
 
@@ -129,7 +140,7 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('close', (event, path) => {
-      WindowStore.remove(path)
+      WindowStore.removeByPath(path)
       this.updateWindows()
     })
   }
@@ -215,7 +226,7 @@ export default class ExampleApp extends React.Component {
       )
     }
 
-    console.log('render', this.state, windows, WindowStore)
+    // console.log('render', this.state, windows, WindowStore)
 
     return (
       <app>
@@ -269,7 +280,8 @@ export default class ExampleApp extends React.Component {
                   this.updateWindows()
                 }}
                 onClose={() => {
-                  console.log('got a close event')
+                  WindowStore.removeByKey(key)
+                  this.updateWindows()
                 }}
                 showDevTools={false}
                 titleBarStyle="hidden-inset"

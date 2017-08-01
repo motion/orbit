@@ -43,7 +43,7 @@ class BarStore {
   }
 
   start() {
-    this.pushPane(Panes.Main)
+    this.pushPane(Panes.Threads)
     this.watchPaneSelections()
     this.watchForFocus()
   }
@@ -63,20 +63,21 @@ class BarStore {
     })
   }
 
-  PANE_TYPES = {
-    setup: Panes.Setup,
-    inbox: Panes.Threads,
-    browse: Panes.Browse,
-    feed: Panes.Feed,
-    notifications: Panes.Notifications,
-    login: Panes.Login,
-  }
-
   setColumn = (column, activeItem) => {
-    const paneType =
-      activeItem.type === 'doc' ? activeItem.doc.type : activeItem.type
-    const Pane = this.PANE_TYPES[paneType] || Panes.Preview
-    this.setColumnTo(column, Pane)
+    console.log('setColumn', column, !!activeItem)
+    if (activeItem) {
+      if (activeItem.type === 'pane') {
+        const nextPane = Panes[activeItem.pane]
+        if (nextPane) {
+          this.setColumnTo(column, nextPane)
+        } else {
+          console.error('no pane', activeItem)
+        }
+      } else {
+        // is a Thing
+        this.setColumnTo(column, Panes.Preview)
+      }
+    }
   }
 
   setColumnTo = (column, pane) => {
@@ -189,38 +190,8 @@ export default class BarPage {
 
     return (
       <HotKeys handlers={store.actions}>
-        <UI.Theme name="clear-dark">
+        <UI.Theme name="light">
           <bar $$fullscreen $$draggable>
-            <div>
-              <UI.Input
-                size={3}
-                getRef={store.ref('inputRef').set}
-                borderRadius={5}
-                onChange={store.onChange}
-                borderWidth={0}
-                css={{
-                  padding: [0, 10],
-                }}
-              />
-              <pasteIcon>
-                <UI.Icon size={50} type="detailed" name="paper" />
-              </pasteIcon>
-              <selected
-                css={{
-                  position: 'absolute',
-                  top: 80,
-                  left: 0,
-                  right: 0,
-                  height: 20,
-                  fontSize: 12,
-                  overflow: 'hidden',
-                  opacity: 0.8,
-                  color: '#fff',
-                }}
-              >
-                Selected: {JSON.stringify(store.activeItem)}
-              </selected>
-            </div>
             <results $pushRight={store.pushRight}>
               {store.panes.map((Pane, index) =>
                 <section key={Pane.name || Math.random()}>

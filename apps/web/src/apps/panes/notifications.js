@@ -16,7 +16,6 @@ class BarNotificationsStore {
 })
 export default class BarNotificationsPane {
   render({ store, isActive, highlightIndex }) {
-    console.log('render notifications')
     return (
       <InboxList
         controlled={isActive}

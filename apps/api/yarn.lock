@@ -2413,14 +2413,21 @@ passport-oauth2@1.x.x:
     uid2 "0.0.x"
     utils-merge "1.x.x"
 
-passport-oauth@1.0.0:
+passport-oauth@1.0.0, passport-oauth@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-oauth/-/passport-oauth-1.0.0.tgz#90aff63387540f02089af28cdad39ea7f80d77df"
   dependencies:
     passport-oauth1 "1.x.x"
     passport-oauth2 "1.x.x"
 
-passport-strategy@1.x.x:
+passport-slack-ponycode@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/passport-slack-ponycode/-/passport-slack-ponycode-0.0.2.tgz#a855adf1136b274344e63384496f0b8c6b00e29a"
+  dependencies:
+    passport-oauth "^1.0.0"
+    passport-strategy "1.0.0"
+
+passport-strategy@1.0.0, passport-strategy@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
 
@@ -2997,17 +3004,17 @@ semver-diff@^2.0.0:
   dependencies:
     semver "^5.0.3"
 
-"semver@2.x || 3.x || 4 || 5", semver@^5.3.0:
+"semver@2.x || 3.x || 4 || 5", semver@^5.0.3, semver@^5.3.0:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.4.1.tgz#e059c09d8571f0540823733433505d3a2f00b18e"
-
-semver@^5.0.3, semver@~5.1.0:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.1.1.tgz#a3292a373e6f3e0798da0b20641b9a9c5bc47e19"
 
 semver@~2.3.1:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-2.3.2.tgz#b9848f25d6cf36333073ec9ef8856d42f1233e52"
+
+semver@~5.1.0:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.1.1.tgz#a3292a373e6f3e0798da0b20641b9a9c5bc47e19"
 
 semver@~5.3.0:
   version "5.3.0"
@@ -3313,7 +3320,7 @@ tar@^2.0.0, tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-through2@2.0.1:
+through2@2.0.1, through2@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.1.tgz#384e75314d49f32de12eebb8136b8eb6b5d59da9"
   dependencies:
@@ -3334,7 +3341,7 @@ through2@^0.6.2, through2@^0.6.5, through2@~0.6.3:
     readable-stream ">=1.0.33-1 <1.1.0-0"
     xtend ">=4.0.0 <4.1.0-0"
 
-through2@^2.0.0, through2@^2.0.2, through2@^2.0.3:
+through2@^2.0.2, through2@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.3.tgz#0004569b37c7c74ba39c43f3ced78d1ad94140be"
   dependencies:

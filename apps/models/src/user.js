@@ -249,7 +249,6 @@ const user = new User({
     providers: ['slack'],
     baseUrl: `${API_URL}/auth/`,
     endpoints: [API_HOST],
-    noDefaultEndpoint: true, // don't auto add url host to endpoints
     storage: 'local', //   'local' | 'session'
     checkExpired: 'stateChange', // 'stateChange' ($stateChangeStart or $routeChangeStart is fired) | 'startup'
     refreshThreshold: 0.2, // eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm

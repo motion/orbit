@@ -111,11 +111,14 @@ export default {
 
   providers: {
     slack: {
+      callbackURL: 'http://api.jot.dev/auth/slack/callback',
       credentials: {
+        callbackURL: 'http://api.jot.dev/auth/slack/callback',
         clientID: '19222037265.219986189088',
         clientSecret: '281011e25d0c473136b4caa5807ada6d',
       },
       options: {
+        callbackURL: 'http://api.jot.dev/auth/slack/callback',
         scope: [
           'identity.basic',
           'identity.email',

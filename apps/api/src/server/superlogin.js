@@ -4,6 +4,8 @@ import SL from 'superlogin'
 // import { FacebookStrategy } from 'passport-facebook'
 import SlackStrategy from './passportSlack'
 
+console.log('strategy is', SlackStrategy)
+
 export default class SuperLogin {
   constructor(config) {
     this.superlogin = new SL(config)

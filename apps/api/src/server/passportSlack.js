@@ -54,7 +54,10 @@ util.inherits(Strategy, OAuth2Strategy)
  * @api protected
  */
 Strategy.prototype.userProfile = function(accessToken, done) {
-  console.log('first get', accessToken)
+  if (!accessToken) {
+    throw new Error('error')
+  }
+  console.log('first get', accessToken, arguments)
   // this._oauth2.setAccessTokenName('token')
 
   this.get(this.profileUrl + accessToken, function(err, body, res) {

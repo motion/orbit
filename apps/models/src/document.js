@@ -13,8 +13,8 @@ export class Document extends Thing {
   static defaultFilter = doc => ({ type: 'document', ...doc })
 
   methods = extend(methods, {
-    test() {
-      return 1
+    get icon() {
+      return 'filesg'
     },
   })
 

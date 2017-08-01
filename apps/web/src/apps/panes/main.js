@@ -18,6 +18,7 @@ class BarMainStore {
           type: 'browse',
           title: doc.title,
           category: 'Browse',
+          icon: doc.icon,
           doc,
         }
       })

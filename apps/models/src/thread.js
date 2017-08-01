@@ -13,6 +13,9 @@ class Thread extends Thing {
   static defaultFilter = doc => ({ type: 'thread', ...doc })
 
   methods = extend(methods, {
+    get icon() {
+      return 'list'
+    },
     replies() {
       return Reply.collection
         .find({ draft: false, parentId: this.id })

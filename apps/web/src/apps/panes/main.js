@@ -78,9 +78,25 @@ class BarMainStore {
       {
         title: 'Notifications',
         type: 'notifications',
+        icon: 'alert',
       },
-      { title: 'Home', type: 'browse' },
-      { title: 'Team', type: 'feed' },
+      {
+        title: 'Home',
+        type: 'browse',
+        icon: (
+          <abc
+            css={{
+              margin: 'auto',
+              width: 19,
+              alignItems: 'center',
+              fontSize: 26,
+              opacity: 0.65,
+            }}
+          >
+            /
+          </abc>
+        ),
+      },
     ].map(x => ({
       ...x,
       category: 'Favorites',

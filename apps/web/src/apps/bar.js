@@ -4,13 +4,13 @@ import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
-import fuzzy from 'fuzzy'
 
 const safeString = thing => {
   try {
     return JSON.stringify(thing)
   } catch (e) {
-    return (thing && thing.toString && this.toString()) || 'what'
+    console.log('non safe object', thing)
+    return `${thing}`
   }
 }
 
@@ -26,10 +26,12 @@ class BarStore {
     paneRefs: [],
   }
 
-  actions = ['remind', 'send', 'attach', 'discuss', 'assign', 'update']
+  actions = ['remind', 'send', 'attach', 'discuss', 'assign', 'update'].sort()
 
   get peekItems() {
-    return fuzzy.filter(this.value, this.actions)
+    return this.actions[
+      this.actions.findIndex(action => action.indexOf(this.value) === 0)
+    ]
   }
 
   get highlightIndex() {
@@ -54,7 +56,6 @@ class BarStore {
   }
 
   get activePaneParent() {
-    console.log('active', this.state.paneRefs[this.previousColumn])
     return this.state.paneRefs[this.previousColumn]
   }
 
@@ -96,6 +97,12 @@ class BarStore {
   }
 
   setColumn = (column, activeItem) => {
+    console.log('setcolumn', column, activeItem)
+
+    if (!activeItem) {
+      return null
+    }
+
     const paneType =
       activeItem.type === 'doc'
         ? (activeItem.doc && activeItem.doc.type) || 'doc'

@@ -54,6 +54,11 @@ export default class ListItem {
     }
   }
 
+  getRef = ref => {
+    this.props.getRef && this.props.getRef(ref)
+    this.node = ref
+  }
+
   render({
     after,
     before,
@@ -81,6 +86,7 @@ export default class ListItem {
     editable,
     onFinishEdit,
     iconProps,
+    getRef,
     ...props
   }: ItemProps) {
     const radiusProps = segmented
@@ -128,6 +134,7 @@ export default class ListItem {
           ...style,
           position: (style && style.position) || 'relative',
         }}
+        getRef={this.getRef}
         {...props}
       >
         <before if={before}>

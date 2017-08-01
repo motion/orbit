@@ -59,6 +59,26 @@ class List {
     this.totalItems = this.getTotalItems(this.props)
   }
 
+  componentDidUpdate() {
+    if (this.state.selected > -1) {
+      if (this.refs[this.state.selected]) {
+        console.log(
+          'check if ref',
+          this.refs[this.state.selected],
+          'is off screen'
+        )
+      }
+    }
+  }
+
+  itemRefs = []
+
+  gatherRefs = index => ref => {
+    if (ref) {
+      this.itemRefs[index] = ref
+    }
+  }
+
   componentWillReceiveProps = nextProps => {
     this.lastDidReceivePropsDate = Date.now()
     const totalItems = this.getTotalItems(nextProps)
@@ -168,6 +188,7 @@ class List {
     if (virtualized && !parentSize) {
       return null
     }
+
     if (virtualized) {
       height = parentSize.height || userHeight
       width = parentSize.width || userWidth
@@ -195,6 +216,7 @@ class List {
         ...rowProps,
         ...(isListItem ? passThroughProps : itemProps),
         ...(isListItem ? positionProps : null),
+        ref: this.gatherRefs(index),
       }
       if (controlled) {
         const ogClick = props.onClick
@@ -204,9 +226,16 @@ class List {
             ogClick.call(this, e)
           }
         }
+
+        // set highlight if necessary
         props.highlight = this.showInternalSelection
           ? index === this.state.selected
           : this.props.isSelected && this.props.isSelected(items[index], index)
+
+        // if they provide a prop-based isSelected, still track the right index internally
+        if (props.highlight && this.state.selected !== index) {
+          this.state.selected = index
+        }
       }
       return props
     }

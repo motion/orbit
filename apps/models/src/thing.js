@@ -80,6 +80,13 @@ const getContent = doc => {
   }
 }
 
+export const TYPE_TO_ICON = {
+  document: 'paper',
+  inbox: 'filesg',
+  thread: 'chat43',
+}
+
+// keep here so we can use as generic
 export const methods = {
   url() {
     return `/${this.type}/${urlify(this.id)}`
@@ -103,6 +110,9 @@ export const methods = {
   setDefaultContent({ title }) {
     this.content = getContent({ title })
     this.title = title
+  },
+  get icon() {
+    return TYPE_TO_ICON[this.type] || this.type
   },
   get previewText() {
     return (

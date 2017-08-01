@@ -12,11 +12,7 @@ export class Document extends Thing {
 
   static defaultFilter = doc => ({ type: 'document', ...doc })
 
-  methods = extend(methods, {
-    get icon() {
-      return 'filesg'
-    },
-  })
+  methods = extend(methods, {})
 
   @query
   search = async (text: string) => {

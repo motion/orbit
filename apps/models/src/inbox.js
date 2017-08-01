@@ -19,11 +19,7 @@ class Inbox extends Thing {
     },
   }
 
-  methods = extend(methods, {
-    get icon() {
-      return 'paper'
-    },
-  })
+  methods = extend(methods, {})
 }
 
 export default new Inbox()

@@ -5,7 +5,7 @@ const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   const size = [Math.round(width / 3), Math.round(height / 2)]
   const middleX = Math.round(width / 2 - size[0] / 2)
-  const middleX = Math.round(height / 2 - size[1] / 2)
+  const middleY = Math.round(height / 2 - size[1] / 2)
   const endX = width - size[0] - 20
   const endY = height - size[1] - 20
 

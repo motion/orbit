@@ -5,6 +5,14 @@ import { HotKeys } from 'react-hotkeys'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 
+const safeString = thing => {
+  try {
+    return JSON.stringify(thing)
+  } catch (e) {
+    return (thing && thing.toString && this.toString()) || 'what'
+  }
+}
+
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 class BarStore {
@@ -226,7 +234,7 @@ export default class BarPage {
                   color: '#fff',
                 }}
               >
-                Selected: {JSON.stringify(store.activeItem)}
+                Selected: {safeString(store.activeItem)}
               </selected>
             </div>
             <results $pushRight={store.pushRight}>

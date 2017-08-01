@@ -219,11 +219,8 @@ export default class ExampleApp extends React.Component {
     }
 
     if (error) {
-      return (
-        <null>
-          {JSON.stringify(error)}
-        </null>
-      )
+      console.log('recover render')
+      return null
     }
 
     // console.log('render', this.state, windows, WindowStore)

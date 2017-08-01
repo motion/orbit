@@ -306,6 +306,32 @@ export class Thing extends Model {
   };
 
   @query
+  search = async (text: string) => {
+    if (text === '') {
+      return await this.collection
+        .find({ draft: { $ne: true } })
+        .sort('createdAt')
+        .limit(20)
+        .exec()
+    }
+
+    const { rows } = await this.pouch.search({
+      query: text,
+      fields: ['text', 'title'],
+      include_docs: true,
+      highlighting: false,
+    })
+
+    const ids = rows.map(row => row.id)
+    console.log('ids', ids)
+
+    return await this._collection
+      .find({ _id: { $in: ids }, title: { $gt: null } })
+      .sort('createdAt')
+      .exec()
+  }
+
+  @query
   user = () => {
     if (!User.loggedIn) {
       return null

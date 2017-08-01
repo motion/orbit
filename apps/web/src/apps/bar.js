@@ -4,6 +4,7 @@ import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
+import fuzzy from 'fuzzy'
 
 const safeString = thing => {
   try {
@@ -23,6 +24,12 @@ class BarStore {
   pushRight = false
   state = {
     paneRefs: [],
+  }
+
+  actions = ['remind', 'send', 'attach', 'discuss', 'assign', 'update']
+
+  get peekItems() {
+    return fuzzy.filter(this.value, this.actions)
   }
 
   get highlightIndex() {
@@ -90,7 +97,9 @@ class BarStore {
 
   setColumn = (column, activeItem) => {
     const paneType =
-      activeItem.type === 'doc' ? activeItem.doc.type : activeItem.type
+      activeItem.type === 'doc'
+        ? (activeItem.doc && activeItem.doc.type) || 'doc'
+        : activeItem.type
     const Pane = this.PANE_TYPES[paneType] || Panes.Preview
     this.setColumnTo(column, Pane)
   }

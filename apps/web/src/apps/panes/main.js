@@ -3,7 +3,7 @@ import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import fuzzy from 'fuzzy'
-import { User, Document } from '~/app'
+import { User, Document, Thing } from '~/app'
 import { uniq } from 'lodash'
 
 class BarMainStore {
@@ -132,8 +132,8 @@ class BarMainStore {
       if (!this.isTypingPath) {
         // search
         const [searchResults, pathSearchResults] = await Promise.all([
-          Document.search(this.props.search).exec(),
-          Document.collection
+          Thing.search(this.props.search).exec(),
+          Thing.collection
             .find()
             .where('slug')
             .regex(new RegExp(`^${this.props.search}$`, 'i'))

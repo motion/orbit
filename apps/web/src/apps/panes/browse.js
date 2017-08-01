@@ -21,16 +21,16 @@ class BarBrowseStore {
 
     return [
       ...filtered,
-      {
-        title: 'Create',
-        props: {
-          editable: true,
-          autoselect: true,
-          css: {
-            opacity: 0.5,
-          },
-        },
-      },
+      // {
+      //   title: 'Create',
+      //   props: {
+      //     editable: true,
+      //     autoselect: true,
+      //     css: {
+      //       opacity: 0.5,
+      //     },
+      //   },
+      // },
     ]
   }
 

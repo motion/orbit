@@ -254,7 +254,8 @@ class List {
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
           if (lastGroup) {
-            groups.push({ index, name: lastGroup })
+            // add groups.length because we make list bigger as we add separators
+            groups.push({ index: index + groups.length, name: lastGroup })
           }
         }
       })

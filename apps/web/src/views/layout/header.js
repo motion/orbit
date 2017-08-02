@@ -35,7 +35,17 @@ export default class Header {
             />
           </leftside>
 
-          <centerside $$row $$centered>
+          <centerside
+            css={{
+              position: 'absolute',
+              width: '40%',
+              overflow: 'hidden',
+              marginLeft: '-20%',
+              top: 0,
+              bottom: 0,
+              left: '50%',
+            }}
+          >
             <Explorer
               onOpen={() => (layoutStore.explorerOpen = true)}
               onClose={() => (layoutStore.explorerOpen = false)}
@@ -70,6 +80,7 @@ export default class Header {
 
   static style = {
     header: {
+      position: 'relative',
       background: 'transparent',
       color: '#fff',
       // position: 'absolute',

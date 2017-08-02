@@ -21,10 +21,6 @@ class BarBrowseStore {
     return this.props.filterItem || filterItem
   }
 
-  get filterItem() {
-    return this.props.filterItem || filterItem
-  }
-
   get results() {
     const filtered = this.filterItem(this.children, this.props.search)
 

@@ -9,6 +9,7 @@
     "start-dev": "nodemon --legacy-watch --inspect=5858 lib"
   },
   "dependencies": {
+    "@mcro/passport-slack": "*",
     "babel-polyfill": "^6.23.0",
     "babel-runtime": "^6.23.0",
     "body-parser": "^1.16.1",
@@ -27,9 +28,12 @@
     "morgan": "^1.8.2",
     "ms": "^2.0.0",
     "natural": "^0.5.4",
+    "needle": "^1.6.0",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",
     "passport-google-oauth": "^1.0.0",
+    "passport-oauth": "1.0.0",
+    "passport-slack-ponycode": "0.0.2",
     "ratelimit.js": "^1.8.0",
     "redis": "^2.7.1",
     "superlogin": "^0.6.1"

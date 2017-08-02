@@ -1,6 +1,6 @@
 import { store, watch, log } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
-import superLogin from 'superlogin-client'
+import SuperLoginClient from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 import Inbox from './inbox'
@@ -64,9 +64,9 @@ class User {
     return this.queries.defaultInbox
   }
 
-  constructor(options) {
-    this.superlogin = superLogin
-    this.options = options
+  constructor({ superlogin }) {
+    this.superlogin = SuperLoginClient
+    this.options = superlogin
   }
 
   connect = async database => {
@@ -225,6 +225,10 @@ class User {
     await this.superlogin.logout()
   }
 
+  link = provider => {
+    return this.superlogin.link(provider)
+  }
+
   getCurrentUser = async () => {
     const session = await this.superlogin.getSession()
     this.setupDbSync()
@@ -241,12 +245,14 @@ class User {
 }
 
 const user = new User({
-  baseUrl: `${API_URL}/auth/`,
-  endpoints: [API_HOST],
-  noDefaultEndpoint: true, // don't auto add url host to endpoints
-  storage: 'local', //   'local' | 'session'
-  checkExpired: 'stateChange', // 'stateChange' ($stateChangeStart or $routeChangeStart is fired) | 'startup'
-  refreshThreshold: 0.2, // eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm
+  superlogin: {
+    providers: ['slack'],
+    baseUrl: `${API_URL}/auth/`,
+    endpoints: [API_HOST],
+    storage: 'local', //   'local' | 'session'
+    checkExpired: 'stateChange', // 'stateChange' ($stateChangeStart or $routeChangeStart is fired) | 'startup'
+    refreshThreshold: 0.2, // eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm
+  },
 })
 
 // because

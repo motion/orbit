@@ -22,6 +22,12 @@ export default class Root extends React.Component {
   componentDidMount() {
     view.on('hmr', this.clearErr)
 
+    this.watch(() => {
+      if (User.org === null) {
+        console.log('CREATE AN ORG WITH User.createOrg(\'yourorgname\')')
+      }
+    })
+
     // listen to Ionize
     if (Constants.KEY) {
       log('WERE AN APP WINDOW')

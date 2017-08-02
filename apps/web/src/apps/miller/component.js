@@ -82,6 +82,7 @@ class Pane {
     state,
     onMeasureWidth,
     data,
+    search,
     onSelect,
     clientWidth,
     col,
@@ -102,7 +103,7 @@ class Pane {
             onRef(ref)
             this.pane = ref
           }}
-          search={''}
+          search={paneActive && search}
           highlightIndex={highlightIndex}
           activeIndex={activeIndex}
         />
@@ -115,10 +116,9 @@ class Pane {
   store: MillerStore,
 })
 export default class Miller {
-  render({ store, paneProps, panes, animate, state }) {
+  render({ store, paneProps, search, panes, animate, state }) {
     const { schema } = state
     const transX = animate ? store.translateX : 0
-    window.millerStore = store
 
     return (
       <HotKeys handlers={store.actions}>
@@ -135,6 +135,7 @@ export default class Miller {
                 // if it's the next preview, always rerender
                 pane={panes[pane.kind]}
                 data={pane.data}
+                search={search}
                 paneProps={paneProps}
                 onMeasureWidth={width => (store.colWidths[index] = width)}
                 col={index}

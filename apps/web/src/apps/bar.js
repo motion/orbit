@@ -7,11 +7,43 @@ import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
 import { range, random } from 'lodash'
 
+const safeString = thing => {
+  try {
+    return JSON.stringify(thing)
+  } catch (e) {
+    console.log('non safe object', thing)
+    return `${thing}`
+  }
+}
+
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
+const actions = [
+  'remind',
+  'send',
+  'attach',
+  'discuss',
+  'assign',
+  'update',
+  'new',
+  'calendar',
+  'busy',
+  'free',
+  'wait',
+  'ping',
+  'everyone',
+  'open',
+  'close',
+  'forward',
+  'notifications',
+  'issues',
+  'docs',
+].sort()
 
 class BarStore {
   millerState = MillerState.serialize([{ kind: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
+
+  search = ''
 
   onMillerStateChange = state => {
     this.millerState = state
@@ -36,6 +68,9 @@ class BarStore {
     cmdA: () => {
       this.inputRef.select()
     },
+    enter: () => {
+      ipcRenderer.send('bar-goto', '/master')
+    },
   }
 
   newWindow = url => {
@@ -53,13 +88,18 @@ class BarStore {
   }
 }
 
+const inputStyle = {
+  fontWeight: 300,
+  color: '#fff',
+  fontSize: 38,
+}
+
 @view({
   store: BarStore,
 })
 export default class BarPage {
   render({ store }) {
     log(store.highlightIndex)
-    store.millerStateVersion
 
     const paneProps = {
       highlightBackground: [0, 0, 0, 0.15],
@@ -75,16 +115,23 @@ export default class BarPage {
                 size={3}
                 getRef={store.ref('inputRef').set}
                 borderRadius={5}
-                onChange={store.onChange}
+                onChange={e => (store.search = e.target.value)}
+                value={store.search}
                 borderWidth={0}
                 css={{
+                  margin: [-2, 0, 0],
                   padding: [0, 10],
+                  ...inputStyle,
                 }}
               />
+              <forwardComplete>
+                {store.peekItem}
+              </forwardComplete>
               <pasteIcon>
                 <UI.Icon size={50} type="detailed" name="paper" />
               </pasteIcon>
               <selected
+                if={false}
                 css={{
                   position: 'absolute',
                   top: 80,
@@ -97,11 +144,12 @@ export default class BarPage {
                   color: '#fff',
                 }}
               >
-                Selected: {JSON.stringify(store.activeItem)}
+                Selected: {safeString(store.activeItem)}
               </selected>
             </div>
             <Miller
               animate
+              search={store.search}
               version={store.millerStateVersion}
               state={store.millerState}
               panes={store.PANE_TYPES}
@@ -148,6 +196,15 @@ export default class BarPage {
       right: -20,
       width: 128,
       height: 128,
+    },
+    forwardComplete: {
+      position: 'absolute',
+      top: 35,
+      left: 20,
+      opacity: 0.3,
+      ...inputStyle,
+      zIndex: -1,
+      pointerEvents: 'none',
     },
   }
 }

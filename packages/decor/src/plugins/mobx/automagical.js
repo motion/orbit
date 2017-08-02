@@ -244,7 +244,9 @@ function mobxifyWatch(obj, method, val) {
     stopAutoObserve()
     autoObserver = Mobx.autorun(() => {
       if (currentObservable) {
-        const value = currentObservable.get()
+        const value = currentObservable.get
+          ? currentObservable.get()
+          : currentObservable
         update(value) // set + wrap
       }
     })
@@ -275,6 +277,7 @@ function mobxifyWatch(obj, method, val) {
         const isSameObservable =
           currentObservable && currentObservable[AID] === result[AID]
         if (isSameObservable) {
+          console.log('get', currentObservable)
           update(currentObservable.get())
           return
         }

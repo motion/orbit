@@ -16,7 +16,7 @@ class BarThreadsStore {
 })
 export default class BarThreadsPane {
   render({ store, activeItem, isActive, highlightIndex }) {
-    console.log('active item is', activeItem.doc.title)
+    console.log('active item is', activeItem)
     return (
       <threads>
         <InboxList

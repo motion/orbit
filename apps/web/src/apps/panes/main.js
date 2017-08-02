@@ -3,7 +3,7 @@ import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import fuzzy from 'fuzzy'
-import { User, Document } from '~/app'
+import { User, Document, Thing } from '~/app'
 import { uniq } from 'lodash'
 
 class BarMainStore {
@@ -15,10 +15,11 @@ class BarMainStore {
       this.children &&
       this.children.map(doc => {
         return {
-          doc,
-          type: 'doc',
+          type: 'browse',
           title: doc.title,
           category: 'Browse',
+          icon: doc.icon,
+          doc,
         }
       })
     )
@@ -77,13 +78,54 @@ class BarMainStore {
       {
         title: 'Notifications',
         type: 'notifications',
+        icon: 'alert',
       },
-      { title: 'Home', type: 'browse' },
-      { title: 'Team', type: 'feed' },
+      {
+        title: 'Home',
+        type: 'browse',
+        icon: (
+          <abc
+            css={{
+              margin: 'auto',
+              width: 19,
+              alignItems: 'center',
+              fontSize: 26,
+              opacity: 0.65,
+            }}
+          >
+            /
+          </abc>
+        ),
+      },
     ].map(x => ({
       ...x,
       category: 'Favorites',
     }))
+  }
+
+  get people() {
+    return [
+      {
+        title: 'Stephanie',
+        type: 'feed',
+        data: {
+          image: 'steph',
+        },
+        category: 'People',
+      },
+      {
+        title: 'Nate',
+        type: 'feed',
+        data: { image: 'me' },
+        category: 'People',
+      },
+      {
+        title: 'Nick',
+        type: 'feed',
+        data: { image: 'nick' },
+        category: 'People',
+      },
+    ]
   }
 
   get results() {
@@ -91,11 +133,12 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login' }]
     }
 
-    const { subDocs, searchResults, integrations, browse } = this
+    const { subDocs, searchResults, integrations, browse, people } = this
     const hayStack = [
       ...browse,
       ...(subDocs || []),
       ...(searchResults || []),
+      ...people,
       ...integrations,
     ]
     return fuzzy
@@ -112,31 +155,33 @@ class BarMainStore {
     this.props.getRef && this.props.getRef(this)
 
     this.watch(async () => {
-      if (!this.isTypingPath) {
-        // search
-        const [searchResults, pathSearchResults] = await Promise.all([
-          Document.search(this.props.search).exec(),
-          Document.collection
-            .find()
-            .where('slug')
-            .regex(new RegExp(`^${this.props.search}`, 'i'))
-            .where({ home: { $ne: true } })
-            .limit(20)
-            .exec(),
-        ])
-
-        this.searchResults = uniq(
-          [...(searchResults || []), ...pathSearchResults],
-          x => x.id
-        ).map(doc => {
-          return {
-            doc,
-            title: doc.title,
-            type: 'doc',
-            category: 'Search Results',
-          }
-        })
+      if (!this.props.search) {
+        return []
       }
+
+      // search
+      const [searchResults, pathSearchResults] = await Promise.all([
+        Thing.search(this.props.search).exec(),
+        Thing.collection
+          .find()
+          .where('slug')
+          .regex(new RegExp(`^${this.props.search}$`, 'i'))
+          .where({ home: { $ne: true } })
+          .limit(20)
+          .exec(),
+      ])
+
+      this.searchResults = uniq(
+        [...(searchResults || []), ...pathSearchResults],
+        x => x.id
+      ).map(doc => {
+        return {
+          doc,
+          title: doc.title,
+          type: 'browse',
+          category: 'Search Results',
+        }
+      })
     })
   }
 
@@ -158,27 +203,47 @@ export default class BarMain {
   getChildSchema = row => {
     const { store } = this.props
 
-    return { kind: store.results[row].type }
+    const item = store.results[row]
+    return { kind: item.type, data: item.data || {} }
   }
 
   render({ store, onRef, activeIndex, highlightIndex, paneProps }) {
     onRef(this)
 
     return (
-      <UI.List
-        if={store.results}
-        controlled={false}
-        selected={activeIndex}
-        itemProps={paneProps}
-        groupKey="category"
-        items={store.results}
-        getItem={result =>
-          <UI.ListItem
-            key={result.id}
-            icon={result.icon}
-            primary={result.title}
-          />}
-      />
+      <pane>
+        <UI.List
+          if={store.results}
+          controlled={false}
+          selected={activeIndex}
+          itemProps={paneProps}
+          groupKey="category"
+          items={store.results}
+          getItem={(result, index) =>
+            <UI.ListItem
+              highlight={index === activeIndex}
+              key={result.id}
+              icon={
+                result.image
+                  ? <img $image src={`/images/${result.image}.jpg`} />
+                  : result.icon
+              }
+              primary={result.title}
+            />}
+        />
+      </pane>
     )
+  }
+
+  static style = {
+    pane: {
+      minWidth: 150,
+    },
+    image: {
+      width: 20,
+      height: 20,
+      borderRadius: 1000,
+      margin: 'auto',
+    },
   }
 }

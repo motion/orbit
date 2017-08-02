@@ -26,6 +26,8 @@ export type ItemProps = {
   secondary?: React$Element<any>,
   ellipse?: boolean,
   glowProps?: Object,
+  editable?: boolean,
+  onFinishEdit?: Function,
 }
 
 @injectTheme
@@ -52,6 +54,11 @@ export default class ListItem {
     }
   }
 
+  getRef = ref => {
+    this.props.getRef && this.props.getRef(ref)
+    this.node = ref
+  }
+
   render({
     after,
     before,
@@ -60,6 +67,7 @@ export default class ListItem {
     children,
     date,
     dateSize,
+    autoselect,
     isFirstElement,
     isLastElement,
     meta,
@@ -75,7 +83,10 @@ export default class ListItem {
     ellipse,
     glowProps,
     theme,
+    editable,
+    onFinishEdit,
     iconProps,
+    getRef,
     ...props
   }: ItemProps) {
     const radiusProps = segmented
@@ -123,6 +134,7 @@ export default class ListItem {
           ...style,
           position: (style && style.position) || 'relative',
         }}
+        getRef={this.getRef}
         {...props}
       >
         <before if={before}>
@@ -138,6 +150,9 @@ export default class ListItem {
                 ellipse={ellipse}
                 size={size}
                 color="inherit"
+                editable={editable}
+                autoselect={autoselect}
+                onFinishEdit={onFinishEdit}
               >
                 {primary}
               </Text>

@@ -2,7 +2,7 @@ const serialize = content => content
 const capitalize = s => s[0].toUpperCase() + s.substr(1)
 
 export default class State {
-  activeRow = null
+  activeRow = 0
   activeCol = 0
   schema = []
   watchers = {}
@@ -71,6 +71,10 @@ export default class State {
     this.activeRow = row
     this.removeExcessCols()
     this.emit('selectionChange')
+  }
+
+  setActiveRow(row) {
+    this.setSelection(this.activeCol, row)
   }
 
   moveCol(delta) {

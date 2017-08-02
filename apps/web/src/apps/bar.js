@@ -44,9 +44,20 @@ class BarStore {
   millerStateVersion = 0
 
   search = ''
+  visible = true
+
+  start() {
+    this.on(window, 'focus', this.onFocus)
+  }
+
+  onFocus = () => {
+    console.log('focus bar window')
+    this.inputRef.focus()
+    this.inputRef.select()
+  }
 
   onSearchChange = e => {
-    this.millerState.blur()
+    this.millerState.setActiveRow(0)
     this.search = e.target.value
   }
 
@@ -95,15 +106,11 @@ class BarStore {
     up: e => {
       if (this.millerState.activeRow > 0) {
         this.millerActions.up()
-      } else {
-        this.millerState.blur()
-        this.inputRef.focus()
       }
 
       e.preventDefault()
     },
     esc: () => {
-      console.log('send bar hide')
       this.visible = false
       ipcRenderer.send('bar-hide')
     },

@@ -14,7 +14,7 @@ class MillerStore {
     const { state, onChange } = this.props
     window.millerState = state
 
-    state.onSelectionChange(() => {
+    const handleSchemaChanges = () => {
       const { activeRow, activeCol } = state
       const plugin = this.plugins[activeCol]
       if (activeRow !== null && plugin && plugin.getChildSchema) {
@@ -23,6 +23,14 @@ class MillerStore {
       }
 
       onChange(state)
+    }
+
+    state.onSelectionChange(() => {
+      handleSchemaChanges()
+    })
+
+    setTimeout(() => {
+      handleSchemaChanges()
     })
   }
 

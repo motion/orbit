@@ -16,6 +16,9 @@ module.exports = {
     path: Path.join(__dirname, 'build'),
     filename: 'out.js',
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+  ],
   externals: nodeModules,
 }

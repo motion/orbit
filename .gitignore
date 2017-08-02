@@ -11,6 +11,7 @@ kubeconfig
 apps/web/public/_/*
 apps/web/build
 apps/electron/dist
+apps/electron/build
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

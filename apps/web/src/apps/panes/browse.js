@@ -43,6 +43,7 @@ class BarBrowseStore {
   }
 
   select = index => {
+    console.log('selecting', index)
     this.props.navigate(this.results[index])
   }
 }

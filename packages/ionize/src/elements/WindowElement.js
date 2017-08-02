@@ -74,8 +74,6 @@ import { getCurrentFiberStackAddendum } from 'react-dom/lib/ReactDebugCurrentFib
  * onHide
  *
  * closable
- * onClose
- * onClosed (???)
  *
  * TBD props
  * alwaysOnTop
@@ -100,13 +98,8 @@ const SUPPORTED_PROPS = {
   onResize: true,
   showDevTools: true,
   acceptFirstMouse: true,
-}
-
-const PROP_TO_APP_EVENT_NAME = {
-  onReadyToShow: 'ready-to-show',
-  onResize: 'resize',
-  onMove: 'move',
-  onMoved: 'moved',
+  onClose: true,
+  onClosed: true,
 }
 
 const BASIC_PROPS = {

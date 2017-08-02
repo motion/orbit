@@ -15,7 +15,9 @@
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5",
     "watch": "1.0.2",
-    "webpack": "^3.4.1"
+    "webpack": "^3.4.1",
+    "react-motion": "^0.5.0",
+    "lodash": "^4.17.4"
   },
   "build": {
     "appId": "jot.id",

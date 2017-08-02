@@ -1,5 +1,6 @@
 import React from 'react'
 import { app, globalShortcut, screen, ipcMain } from 'electron'
+import { once } from 'lodash'
 
 const MIN_WIDTH = 50
 const MIN_HEIGHT = 500
@@ -26,7 +27,51 @@ export function onWindow(cb) {
   onWindows.push(cb)
 }
 
-class Window {
+class Window extends React.Component {
+  state = {
+    showing: false,
+    position: 0,
+  }
+
+  componentDidUpdate() {
+    if (this.props.show) {
+      console.log('show this window')
+      if (!this.state.showing) {
+        this.setState({ showing: true })
+      }
+    }
+
+    if (this.state.showing) {
+      this.startAnimate()
+    }
+  }
+
+  startAnimate = once(() => {
+    console.log('startanimate')
+    this.interval = setInterval(() => {
+      console.log('setstate')
+      // this.setState({ position: this.state.position + 10 })
+      clearInterval(this.interval)
+    }, 1000)
+  })
+
+  getPublicInstance() {
+    return {}
+  }
+
+  render() {
+    const { position, ...props } = this.props
+
+    return (
+      <window
+        {...props}
+        position={[position[0], position[1] + this.state.position]}
+      />
+    )
+  }
+}
+
+class WindowStore {
   path = '/'
   key = Math.random()
   position = measure().position
@@ -38,10 +83,10 @@ class Window {
   setSize = x => (this.size = x)
 }
 
-class Windows {
+class WindowsStore {
   windows = []
   addWindow = () => {
-    this.windows = [new Window(), ...this.windows]
+    this.windows = [new WindowStore(), ...this.windows]
   }
   next(path) {
     if (!this.windows[0]) {
@@ -60,7 +105,6 @@ class Windows {
   removeBy(key, val) {
     this.windows = this.windows.filter(window => window[key] === val)
   }
-
   removeByPath(path) {
     this.removeBy('path', path)
   }
@@ -69,7 +113,7 @@ class Windows {
   }
 }
 
-const WindowStore = new Windows()
+const WinStore = new WindowsStore()
 
 export default class ExampleApp extends React.Component {
   state = {
@@ -77,10 +121,12 @@ export default class ExampleApp extends React.Component {
     show: true,
     size: [0, 0],
     position: [0, 0],
-    windows: WindowStore.windows,
+    windows: WinStore.windows,
   }
 
   componentDidMount() {
+    this.measureAndShow()
+
     setTimeout(() => {
       this.next() // preload app window a second after initial load
     }, 1000)
@@ -90,13 +136,15 @@ export default class ExampleApp extends React.Component {
     })
   }
 
-  hide = () => {
-    this.setState({ show: false })
-  }
+  hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
 
-  show = () => {
-    this.setState({ show: true, position: this.position, size: this.size })
-  }
+  show = () =>
+    new Promise(resolve =>
+      this.setState(
+        { show: true, position: this.position, size: this.size },
+        resolve
+      )
+    )
 
   blur = () => {
     if (!this.disableAutohide) {
@@ -156,19 +204,19 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('close', (event, path) => {
-      WindowStore.removeByPath(path)
+      WinStore.removeByPath(path)
       this.updateWindows()
     })
   }
 
   updateWindows = () => {
     return new Promise(resolve => {
-      this.setState({ windows: WindowStore.windows }, resolve)
+      this.setState({ windows: WinStore.windows }, resolve)
     })
   }
 
   next = async path => {
-    const next = WindowStore.next(path)
+    const next = WinStore.next(path)
     await this.updateWindows()
     return next
   }
@@ -196,9 +244,7 @@ export default class ExampleApp extends React.Component {
         if (this.state.show) {
           this.hide()
         } else {
-          this.measure()
-          this.show()
-          this.windowRef.focus()
+          this.measureAndShow()
         }
       },
     }
@@ -208,6 +254,13 @@ export default class ExampleApp extends React.Component {
         console.log('couldnt register shortcut')
       }
     }
+  }
+
+  measureAndShow = async () => {
+    console.log('measuring and showing')
+    this.measure()
+    await this.show()
+    this.windowRef.focus()
   }
 
   onReadyToShow = () => {
@@ -225,8 +278,13 @@ export default class ExampleApp extends React.Component {
     const { windows, error, restart } = this.state
 
     if (restart) {
-      console.log('restarting')
-      return null
+      console.log('restarting2')
+      onWindows = []
+      return (
+        <app>
+          <window />
+        </app>
+      )
     }
 
     const appWindow = {
@@ -245,7 +303,7 @@ export default class ExampleApp extends React.Component {
       return null
     }
 
-    // console.log('render', this.state, windows, WindowStore)
+    // console.log('render', this.state, windows, WinStore)
 
     return (
       <app>
@@ -262,7 +320,6 @@ export default class ExampleApp extends React.Component {
           </submenu>
         </menu>
         <window
-          key={-100}
           {...appWindow}
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
@@ -284,7 +341,7 @@ export default class ExampleApp extends React.Component {
         {windows.map(
           ({ key, active, position, size, setPosition, setSize }) => {
             return (
-              <window
+              <Window
                 key={key}
                 {...appWindow}
                 defaultSize={size}
@@ -299,7 +356,7 @@ export default class ExampleApp extends React.Component {
                   this.updateWindows()
                 }}
                 onClose={() => {
-                  WindowStore.removeByKey(key)
+                  WinStore.removeByKey(key)
                   this.updateWindows()
                 }}
                 showDevTools={false}

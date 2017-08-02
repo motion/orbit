@@ -38,6 +38,7 @@ const actions = [
 ].sort()
 
 class BarStore {
+  visible = true
   column = 0
   columnsByRow = [0]
   value = ''
@@ -146,6 +147,7 @@ class BarStore {
   watchForFocus = () => {
     this.on(window, 'focus', () => {
       console.log('focus bar window')
+      this.visible = true
       this.inputRef.focus()
       this.inputRef.select()
     })
@@ -207,6 +209,7 @@ class BarStore {
     },
     esc: () => {
       console.log('got esc')
+      this.visible = false
       ipcRenderer.send('bar-hide')
     },
     cmdA: () => {
@@ -218,7 +221,7 @@ class BarStore {
   }
 
   navigate = thing => {
-    log('navigate yo', thing)
+    log('navigate yo', thing, thing.url)
     if (thing && thing.url) {
       ipcRenderer.send('bar-goto', thing.url())
     } else if (typeof thing === 'string') {
@@ -251,7 +254,7 @@ export default class BarPage {
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
-          <bar $$fullscreen $$draggable>
+          <bar $$fullscreen $$draggable $visible={store.visible}>
             <div>
               <UI.Input
                 size={3}
@@ -335,6 +338,11 @@ export default class BarPage {
     bar: {
       background: [150, 150, 150, 0.5],
       flex: 1,
+      // opacity: 0,
+      // transition: 'all ease-in 300ms',
+    },
+    visible: {
+      opacity: 1,
     },
     results: {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],

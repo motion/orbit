@@ -8,7 +8,6 @@ import parentSize from '~/helpers/parentSize'
 import type { ItemProps } from './listItem'
 import Surface from './surface'
 import type { Color } from '@mcro/gloss'
-import { isNumber } from 'lodash'
 
 const idFn = _ => _
 

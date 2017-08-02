@@ -86,7 +86,6 @@ class BarStore {
     up: () => {
       if (this.millerState.activeRow === 0) {
         this.inputRef.focus()
-        this.millerState.activeRow = null
       } else {
         this.millerActions.up()
       }

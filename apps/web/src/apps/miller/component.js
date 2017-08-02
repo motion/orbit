@@ -80,7 +80,6 @@ class Pane {
     col,
   }) {
     const paneActive = state.activeCol == col
-
     const highlightIndex = !paneActive && state.prevActiveRows[col]
     const activeIndex = paneActive && state.activeRow
     const Pane = pane

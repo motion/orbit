@@ -117,6 +117,7 @@ export const methods = {
   get previewText() {
     return (
       //color: '#666',
+      this.content &&
       this.content.document &&
       this.content.document.nodes
         .filter(n => n.type === 'paragraph')

@@ -125,19 +125,21 @@ export default class BarFeed {
           <item $active={activeIndex === index} key={result.id}>
             <meta>
               <avatar $img={`/images/${data.image}.jpg`} />
-              <span $name>
+              <UI.Text $name>
                 {parent.title}
-              </span>
-              <span $action>
+              </UI.Text>
+              <UI.Text $action>
                 {result.action}
-              </span>
-              <span $date>
+              </UI.Text>
+              <UI.Text $date>
                 {result.date}
-              </span>
+              </UI.Text>
             </meta>
             <body if={result.content}>
               <content>
-                {result.content}
+                <UI.Text>
+                  {result.content}
+                </UI.Text>
               </content>
               <icon>
                 <iconBg />

@@ -20,49 +20,52 @@ export default class Header {
     }
 
     return (
-      <header $$draggable>
-        <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
-        <bar>
-          <UI.Button
-            if={IS_ELECTRON}
-            {...btnProps}
-            theme="light"
-            icon="minimal-left"
-            disabled={Router.atBack}
-            onClick={() => !Router.atBack && Router.back()}
-          />
-          <Explorer
-            onOpen={() => (layoutStore.explorerOpen = true)}
-            onClose={() => (layoutStore.explorerOpen = false)}
-          />
-        </bar>
-        <rest $$row $$centered>
-          <UI.SlotFill.Slot name="actions">
-            {items => {
-              return (
-                <actions>
-                  {items}
-                </actions>
-              )
-            }}
-          </UI.SlotFill.Slot>
-          <UI.Button
-            if={false}
-            size={1.2}
-            chromeless
-            circular
-            margin={[0, 2]}
-            badge={layoutStore.sidebar.active ? false : 10}
-            icon={layoutStore.sidebar.active ? 'arrminright' : 'aminleft'}
-            onClick={layoutStore.sidebar.ref('active').toggle}
-          />
-        </rest>
-      </header>
+      <UI.Theme name="clear-dark">
+        <header $$draggable>
+          <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
+          <bar>
+            <UI.Button
+              if={false && IS_ELECTRON}
+              {...btnProps}
+              theme="light"
+              icon="minimal-left"
+              disabled={Router.atBack}
+              onClick={() => !Router.atBack && Router.back()}
+            />
+            <Explorer
+              onOpen={() => (layoutStore.explorerOpen = true)}
+              onClose={() => (layoutStore.explorerOpen = false)}
+            />
+          </bar>
+          <rest $$row $$centered>
+            <UI.SlotFill.Slot name="actions">
+              {items => {
+                return (
+                  <actions>
+                    {items}
+                  </actions>
+                )
+              }}
+            </UI.SlotFill.Slot>
+            <UI.Button
+              if={false}
+              size={1.2}
+              chromeless
+              circular
+              margin={[0, 2]}
+              badge={layoutStore.sidebar.active ? false : 10}
+              icon={layoutStore.sidebar.active ? 'arrminright' : 'aminleft'}
+              onClick={layoutStore.sidebar.ref('active').toggle}
+            />
+          </rest>
+        </header>
+      </UI.Theme>
     )
   }
 
   static style = {
     header: {
+      background: '#050505',
       // position: 'absolute',
       // top: 0,
       // right: 0,

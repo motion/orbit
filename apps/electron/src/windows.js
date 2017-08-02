@@ -1,6 +1,5 @@
 import React from 'react'
 import { app, globalShortcut, screen, ipcMain } from 'electron'
-import { once } from 'lodash'
 import Window from './window'
 
 const MIN_WIDTH = 50

@@ -1,4 +1,5 @@
 import React from 'react'
+import { once } from 'lodash'
 
 export default class Window extends React.Component {
   state = {

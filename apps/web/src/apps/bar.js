@@ -103,6 +103,7 @@ class BarStore {
       e.preventDefault()
     },
     esc: () => {
+      console.log('send bar hide')
       this.visible = false
       ipcRenderer.send('bar-hide')
     },

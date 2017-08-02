@@ -123,10 +123,7 @@ export default class Miller {
     const content = (
       <columns $$row $transX={transX}>
         {schema.map((pane, index) =>
-          <column
-            style={{ marginRight: store.colLeftMargin }}
-            key={index > state.activeCol ? Math.random() : index}
-          >
+          <column key={index > state.activeCol ? Math.random() : index}>
             <Pane
               // if it's the next preview, always rerender
               pane={panes[pane.kind]}

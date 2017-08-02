@@ -28,7 +28,6 @@ export default class State {
   }
 
   setSchema(index, schema) {
-    console.log('setting schema', index)
     if (this.schema.length < index) {
       this.schema.push(schema)
     } else {

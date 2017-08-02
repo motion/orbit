@@ -19,6 +19,7 @@ export default class BarNotificationsPane {
 
   render({ store, onRef, activeIndex }) {
     onRef(this)
+
     return (
       <InboxList
         controlled={false}

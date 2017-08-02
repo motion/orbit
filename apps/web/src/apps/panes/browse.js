@@ -13,6 +13,10 @@ class BarBrowseStore {
     () => this.parent && this.parent.getChildren(),
   ]
 
+  get isHome() {
+    return !this.props.data.parent
+  }
+
   get parent() {
     return this.props.data.parent || User.home
   }
@@ -60,9 +64,12 @@ export default class BarBrowse {
 
   getChildSchema = row => {
     const { store } = this.props
-    if (store.length === 0) return null
 
-    const data = { parent: store.results[row] }
+    const child = store.results[row]
+    // console.log('children is', child.children)
+    // if (child.children.length === 0) return null
+
+    const data = { parent: child }
     return { kind: 'browse', data }
   }
 

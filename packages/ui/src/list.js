@@ -64,13 +64,8 @@ class List {
 
   componentDidUpdate() {
     if (this.state.selected > -1) {
-      console.log('didupdate', this.itemRefs, this.state.selected)
       if (this.itemRefs[this.state.selected]) {
-        console.log(
-          'check if ref',
-          this.itemRefs[this.state.selected],
-          'is off screen'
-        )
+        true // was a console log
       }
     }
   }

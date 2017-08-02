@@ -150,12 +150,6 @@ export default class ExampleApp extends React.Component {
       )
     )
 
-  blur = () => {
-    if (!this.disableAutohide) {
-      this.hide()
-    }
-  }
-
   measure = () => {
     const { position, size } = measure()
     this.size = size
@@ -163,21 +157,12 @@ export default class ExampleApp extends React.Component {
     this.initialSize = this.initialSize || this.size
   }
 
-  get disableAutohide() {
-    return false
-  }
-
-  set disableAutohide(value) {
-    // todo
-  }
-
   onWindow = ref => {
     if (ref) {
       this.windowRef = ref
       this.measure()
       this.show()
-      this.listenToApp()
-      this.listenForBlur()
+      this.listenToApps()
       this.registerShortcuts()
     }
   }
@@ -189,13 +174,14 @@ export default class ExampleApp extends React.Component {
     }
   }
 
-  listenToApp = () => {
+  listenToApps = () => {
     ipcMain.on('where-to', (event, key) => {
-      console.log('find', key, this.state.windows)
       const win = this.state.windows.find(x => `${x.key}` === `${key}`)
       if (win) {
         console.log('where to?', win.path)
         event.sender.send('app-goto', win.path)
+      } else {
+        console.log('no window found for where-to event')
       }
     })
 
@@ -228,14 +214,8 @@ export default class ExampleApp extends React.Component {
   goTo = async path => {
     this.hide()
     const next = await this.next(path)
-    next.ref.focus()
-  }
-
-  listenForBlur = () => {
-    this.windowRef.on('blur', () => {
-      console.log('got a blur')
-      // this.blur()
-    })
+    console.log('got next.ref', next.ref)
+    // next.ref.focus()
   }
 
   registerShortcuts = () => {
@@ -343,6 +323,7 @@ export default class ExampleApp extends React.Component {
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
         />
+<<<<<<< 9c6a8568cea404ad9ccb72e316632bc3c472ab97
         {windows.map(
           ({ key, active, path, position, size, setPosition, setSize }) => {
             console.log('rendering path', path, 'active', active)
@@ -374,6 +355,47 @@ export default class ExampleApp extends React.Component {
             )
           }
         )}
+=======
+        {windows.map(win => {
+          return (
+            <Window
+              key={win.key}
+              {...appWindow}
+              defaultSize={win.size}
+              size={win.size}
+              position={win.position}
+              onMoved={x => {
+                win.setPosition(x)
+                this.updateWindows()
+              }}
+              onResize={x => {
+                win.setSize(x)
+                this.updateWindows()
+              }}
+              onClose={() => {
+                WinStore.removeByKey(win.key)
+                this.updateWindows()
+              }}
+              onFocus={() => {
+                console.log('focused!', win.key)
+                win.showDevTools = true
+                win.focused = true
+                this.updateWindows()
+              }}
+              onBlur={() => {
+                console.log('blurred!', win.key)
+                win.focused = false
+                this.updateWindows()
+              }}
+              showDevTools={win.showDevTools}
+              titleBarStyle="hidden-inset"
+              file={`http://jot.dev?key=${win.key}`}
+              show={win.active}
+              ref={ref => this.onAppWindow(win.key, ref)}
+            />
+          )
+        })}
+>>>>>>> :new: onFocus onBlur and showDevTools
       </app>
     )
   }

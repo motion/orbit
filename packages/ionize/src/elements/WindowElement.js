@@ -106,6 +106,8 @@ const BASIC_PROPS = {
   onReadyToShow: 'ready-to-show',
   onClose: 'close',
   onClosed: 'closed',
+  onBlur: 'blur',
+  onFocus: 'focus',
 }
 
 export default class WindowElement extends BaseElement {
@@ -202,21 +204,21 @@ export default class WindowElement extends BaseElement {
       let propKey = ((updatePayload[i]: any): string)
       let propVal = updatePayload[i + 1]
 
+      if (BASIC_PROPS[propKey]) {
+        this.configureEvent(propKey, BASIC_PROPS[propKey], propVal)
+        continue
+      }
+
       // If we hit this point, we KNOW the prop changed, so we don't need to do
       // any checking. Just update to the new value.
       switch (propKey) {
-        case 'onReadyToShow': {
-          this.configureEvent('onReadyToShow', 'ready-to-show', propVal)
+        case 'showDevTools':
+          if (propVal) {
+            this.window.webContents.openDevTools()
+          } else {
+            this.window.webContents.closeDevTools()
+          }
           break
-        }
-        case 'onClose': {
-          this.configureEvent('onClose', 'close', propVal)
-          break
-        }
-        case 'onClosed': {
-          this.configureEvent('onClosed', 'closed', propVal)
-          break
-        }
         case 'show': {
           if (propVal) {
             this.window.show()

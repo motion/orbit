@@ -233,7 +233,7 @@ export default class BarMain {
               icon={
                 result.data && result.data.image
                   ? <img $image src={`/images/${result.data.image}.jpg`} />
-                  : (result.data && result.data.icon) || undefined
+                  : result.icon || (result.doc && result.doc.icon)
               }
               primary={result.title}
             />}

@@ -83,7 +83,7 @@ const getContent = doc => {
 export const TYPE_TO_ICON = {
   document: 'paper',
   inbox: 'filesg',
-  thread: 'chat43',
+  thread: 'chat',
 }
 
 // keep here so we can use as generic

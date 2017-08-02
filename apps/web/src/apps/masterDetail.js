@@ -40,6 +40,8 @@ export default class MasterPage {
       highlightColor: [255, 255, 255, 1],
     }
 
+    return <div>hi</div>
+
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="light">

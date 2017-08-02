@@ -27,7 +27,7 @@ export function onWindow(cb) {
   onWindows.push(cb)
 }
 
-const JOT_HOME = 'http://jot.dev'
+const JOT_HOME = '/'
 
 class WindowStore {
   path = JOT_HOME

@@ -7,12 +7,6 @@ import { SIDEBAR_TRANSITION } from '~/constants'
 @view.attach('layoutStore')
 @view
 export default class LayoutWrap {
-  dragger = null
-
-  componentDidMount() {
-    this.props.layoutStore.sidebar.attachDragger(this.dragger)
-  }
-
   render({ layoutStore, children }) {
     return (
       <wrap

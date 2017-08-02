@@ -245,6 +245,7 @@ export default class BarMain {
   static style = {
     pane: {
       minWidth: 150,
+      flex: 1,
     },
     image: {
       width: 20,

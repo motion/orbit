@@ -2,8 +2,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
-import * as UI from '@mcro/ui'
-import * as Panes from '../panes'
 import { sum, range } from 'lodash'
 
 class MillerStore {
@@ -88,7 +86,7 @@ class Pane {
     const Pane = pane
 
     return (
-      <pane ref={el => el && onMeasureWidth(el.clientWidth)}>
+      <pane css={{ flex: 1 }} ref={el => el && onMeasureWidth(el.clientWidth)}>
         <Pane
           paneProps={paneProps}
           data={data || {}}
@@ -154,6 +152,7 @@ export default class Miller {
 
   static style = {
     columns: {
+      flex: 1,
       transition: 'transform 80ms linear',
       transform: {
         z: 0,

@@ -47,7 +47,10 @@ class MillerStore {
     },
     down: () => {
       const { state } = this.props
-      if (state.activeRow < this.plugins[state.activeCol].getLength() - 1) {
+      if (
+        state.activeRow === null ||
+        state.activeRow < this.plugins[state.activeCol].getLength() - 1
+      ) {
         state.moveRow(1)
       }
     },
@@ -118,26 +121,28 @@ export default class Miller {
     const transX = animate ? store.translateX : 0
 
     const content = (
-      <columns $$row $transX={transX}>
-        {schema.map((pane, index) =>
-          <column key={index > state.activeCol ? Math.random() : index}>
-            <Pane
-              // if it's the next preview, always rerender
-              pane={panes[pane.kind]}
-              data={pane.data}
-              search={search}
-              paneProps={paneProps}
-              onMeasureWidth={width => (store.colWidths[index] = width)}
-              col={index}
-              onRef={plugin => {
-                store.plugins[index] = plugin
-              }}
-              onSelect={row => store.onSelect(index, row)}
-              state={state}
-            />
-          </column>
-        )}
-      </columns>
+      <miller>
+        <columns $$row $transX={transX}>
+          {schema.map((pane, index) =>
+            <column key={index > state.activeCol ? Math.random() : index}>
+              <Pane
+                // if it's the next preview, always rerender
+                pane={panes[pane.kind]}
+                data={pane.data}
+                search={search}
+                paneProps={paneProps}
+                onMeasureWidth={width => (store.colWidths[index] = width)}
+                col={index}
+                onRef={plugin => {
+                  store.plugins[index] = plugin
+                }}
+                onSelect={row => store.onSelect(index, row)}
+                state={state}
+              />
+            </column>
+          )}
+        </columns>
+      </miller>
     )
 
     if (onActions) return content

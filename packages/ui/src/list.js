@@ -303,35 +303,39 @@ class List {
       }
     }
 
-    return (
-      <HotKeys handlers={this.actions} style={{ height: '100%' }}>
-        <Surface
-          tagName="list"
-          align="stretch"
+    const innerContent = (
+      <Surface
+        tagName="list"
+        align="stretch"
+        height={height}
+        width={width}
+        style={{
+          height: '100%',
+          overflowY: scrollable ? 'scroll' : 'auto',
+          overflowX: 'visible',
+          ...style,
+        }}
+        borderRadius={borderRadius}
+        {...props}
+      >
+        <loading if={loading}>loading</loading>
+        <VirtualList
+          if={!loading && virtualized}
           height={height}
           width={width}
-          style={{
-            height: '100%',
-            overflowY: scrollable ? 'scroll' : 'auto',
-            overflowX: 'visible',
-            ...style,
-          }}
-          borderRadius={borderRadius}
-          {...props}
-        >
-          <loading if={loading}>loading</loading>
-          <VirtualList
-            if={!loading && virtualized}
-            height={height}
-            width={width}
-            rowCount={total}
-            rowHeight={100}
-            rowRenderer={({ index, key, style }) =>
-              chillen[index]({ key, style })}
-            {...virtualized}
-          />
-          {!virtualized && chillen}
-        </Surface>
+          rowCount={total}
+          rowHeight={100}
+          rowRenderer={({ index, key, style }) =>
+            chillen[index]({ key, style })}
+          {...virtualized}
+        />
+        {!virtualized && chillen}
+      </Surface>
+    )
+    if (!controlled) return innerContent
+    return (
+      <HotKeys handlers={this.actions} style={{ height: '100%' }}>
+        {innerContent}
       </HotKeys>
     )
   }

@@ -45,6 +45,11 @@ class BarStore {
 
   search = ''
 
+  onSearchChange = e => {
+    this.millerState.blur()
+    this.search = e.target.value
+  }
+
   get peekItem() {
     if (!this.search) {
       return ''
@@ -80,16 +85,22 @@ class BarStore {
   // call these to send key to miller
   millerActions = {}
   actions = {
-    down: () => {
+    down: e => {
+      if (!this.hasSelectedItem) {
+        // this.inputRef.blur()
+      }
       this.millerActions.down()
+      e.preventDefault()
     },
-    up: () => {
-      if (this.millerState.activeRow === 0) {
+    up: e => {
+      if (this.millerState.activeRow > 0) {
+        this.millerActions.up()
+      } else {
         this.millerState.blur()
         this.inputRef.focus()
-      } else {
-        this.millerActions.up()
       }
+
+      e.preventDefault()
     },
     esc: () => {
       this.visible = false
@@ -102,15 +113,19 @@ class BarStore {
       const schema = JSON.stringify(last(this.millerState.schema))
       ipcRenderer.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
     },
-    right: () => {
+    right: e => {
       if (this.hasSelectedItem) {
         this.millerActions.right()
+        e.preventDefault()
       } else {
         if (this.peekItem) this.search = this.peekItem
       }
     },
-    left: () => {
-      if (this.hasSelectedItem) this.millerActions.left()
+    left: e => {
+      if (this.hasSelectedItem) {
+        this.millerActions.left()
+        e.preventDefault()
+      }
     },
   }
 
@@ -155,13 +170,18 @@ export default class BarPage {
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
-          <bar $$fullscreen $$draggable $visible={store.visible}>
+          <bar
+            ref={store.ref('barRef').set}
+            $$fullscreen
+            $$draggable
+            $visible={store.visible}
+          >
             <div>
               <UI.Input
                 size={3}
                 getRef={store.ref('inputRef').set}
                 borderRadius={5}
-                onChange={e => (store.search = e.target.value)}
+                onChange={store.onSearchChange}
                 value={store.search}
                 borderWidth={0}
                 css={{

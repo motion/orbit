@@ -116,36 +116,47 @@ class Pane {
   store: MillerStore,
 })
 export default class Miller {
-  render({ store, paneProps, search, panes, animate, state }) {
+  componentWillMount() {
+    const { onActions, store } = this.props
+
+    onActions && onActions(store.actions)
+  }
+
+  render({ store, paneProps, onActions, search, panes, animate, state }) {
     const { schema } = state
     const transX = animate ? store.translateX : 0
 
+    const content = (
+      <columns $$row $transX={transX}>
+        {schema.map((pane, index) =>
+          <column
+            style={{ marginRight: store.colLeftMargin }}
+            key={index > state.activeCol ? Math.random() : index}
+          >
+            <Pane
+              // if it's the next preview, always rerender
+              pane={panes[pane.kind]}
+              data={pane.data}
+              search={search}
+              paneProps={paneProps}
+              onMeasureWidth={width => (store.colWidths[index] = width)}
+              col={index}
+              onRef={plugin => {
+                store.plugins[index] = plugin
+              }}
+              onSelect={row => store.onSelect(index, row)}
+              state={state}
+            />
+          </column>
+        )}
+      </columns>
+    )
+
+    if (onActions) return content
+
     return (
       <HotKeys handlers={store.actions}>
-        <div style={{ height: 20, background: '#333' }} />
-        <columns $$row $transX={transX}>
-          {schema.map((pane, index) =>
-            <column
-              style={{ marginRight: store.colLeftMargin }}
-              key={index > state.activeCol ? Math.random() : index}
-            >
-              <Pane
-                // if it's the next preview, always rerender
-                pane={panes[pane.kind]}
-                data={pane.data}
-                search={search}
-                paneProps={paneProps}
-                onMeasureWidth={width => (store.colWidths[index] = width)}
-                col={index}
-                onRef={plugin => {
-                  store.plugins[index] = plugin
-                }}
-                onSelect={row => store.onSelect(index, row)}
-                state={state}
-              />
-            </column>
-          )}
-        </columns>
+        {content}
       </HotKeys>
     )
   }

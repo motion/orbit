@@ -12,7 +12,7 @@ window.log = Black.log
 const dark = new ThemeMaker().fromColor('#555')
 
 async function render() {
-  const Main = require('./main').default
+  const Main = require('./playground').default
 
   const models = new Models(
     {

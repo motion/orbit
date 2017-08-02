@@ -32,6 +32,15 @@ class BarMainStore {
   get integrations() {
     return [
       {
+        title: 'Test Open Window',
+        type: 'doc',
+        doc: {
+          url() {
+            return '/test'
+          },
+        },
+      },
+      {
         title: 'Setup Google Docs',
         data: 'google-docs',
         type: 'setup',
@@ -83,6 +92,9 @@ class BarMainStore {
       {
         title: 'Home',
         type: 'browse',
+        url() {
+          return '/?home=true'
+        },
         icon: (
           <abc
             css={{

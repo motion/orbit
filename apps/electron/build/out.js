@@ -36,7 +36,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0884d712b71666e9b113"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "03332fb3fde419f91fab"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -10866,7 +10866,7 @@ function onWindow(cb) {
   onWindows.push(cb);
 }
 
-var JOT_HOME = `http://jot.dev`;
+var JOT_HOME = 'http://jot.dev';
 
 var Window = function (_React$Component) {
   _inherits(Window, _React$Component);
@@ -11044,10 +11044,6 @@ var ExampleApp = function (_React$Component2) {
       return new Promise(function (resolve) {
         return _this4.setState({ show: true, position: _this4.position, size: _this4.size }, resolve);
       });
-    }, _this4.blur = function () {
-      if (!_this4.disableAutohide) {
-        _this4.hide();
-      }
     }, _this4.measure = function () {
       var _measure = measure(),
           position = _measure.position,
@@ -11061,8 +11057,7 @@ var ExampleApp = function (_React$Component2) {
         _this4.windowRef = ref;
         _this4.measure();
         _this4.show();
-        _this4.listenToApp();
-        _this4.listenForBlur();
+        _this4.listenToApps();
         _this4.registerShortcuts();
       }
     }, _this4.onAppWindow = function (key, ref) {
@@ -11072,15 +11067,16 @@ var ExampleApp = function (_React$Component2) {
       if (win) {
         win.ref = ref;
       }
-    }, _this4.listenToApp = function () {
+    }, _this4.listenToApps = function () {
       _electron.ipcMain.on('where-to', function (event, key) {
-        console.log('find', key, _this4.state.windows);
         var win = _this4.state.windows.find(function (x) {
           return `${x.key}` === `${key}`;
         });
         if (win) {
           console.log('where to?', win.path);
           event.sender.send('app-goto', win.path);
+        } else {
+          console.log('no window found for where-to event');
         }
       });
 
@@ -11114,18 +11110,14 @@ var ExampleApp = function (_React$Component2) {
       var _ref4 = _asyncToGenerator(function* (path) {
         _this4.hide();
         var next = yield _this4.next(path);
-        next.ref.focus();
+        console.log('got next.ref', next.ref);
+        // next.ref.focus()
       });
 
       return function (_x2) {
         return _ref4.apply(this, arguments);
       };
-    }(), _this4.listenForBlur = function () {
-      _this4.windowRef.on('blur', function () {
-        console.log('got a blur');
-        // this.blur()
-      });
-    }, _this4.registerShortcuts = function () {
+    }(), _this4.registerShortcuts = function () {
       console.log('registerShortcuts');
       _electron.globalShortcut.unregisterAll();
 
@@ -11223,7 +11215,7 @@ var ExampleApp = function (_React$Component2) {
         defaultSize: [700, 500],
         vibrancy: 'dark',
         transparent: true,
-        hasShadow: false,
+        hasShadow: true,
         webPreferences: {
           experimentalFeatures: true,
           transparentVisuals: true
@@ -11278,52 +11270,46 @@ var ExampleApp = function (_React$Component2) {
             return _this6.setState({ position });
           }
         })),
-        windows.map(function (_ref6) {
-          var key = _ref6.key,
-              active = _ref6.active,
-              path = _ref6.path,
-              position = _ref6.position,
-              size = _ref6.size,
-              setPosition = _ref6.setPosition,
-              setSize = _ref6.setSize;
-
-          console.log('rendering path', path, 'active', active);
+        windows.map(function (win) {
           return _react2.default.createElement(Window, _extends({
-            key: key
+            key: win.key
           }, appWindow, {
-            defaultSize: size,
-            size: size,
-            position: position,
+            defaultSize: win.size,
+            size: win.size,
+            position: win.position,
             onMoved: function onMoved(x) {
-              setPosition(x);
+              win.setPosition(x);
               _this6.updateWindows();
             },
             onResize: function onResize(x) {
-              setSize(x);
+              win.setSize(x);
               _this6.updateWindows();
             },
             onClose: function onClose() {
-              WinStore.removeByKey(key);
+              WinStore.removeByKey(win.key);
               _this6.updateWindows();
             },
-            showDevTools: false,
+            onFocus: function onFocus() {
+              console.log('focused!', win.key);
+              win.showDevTools = true;
+              win.focused = true;
+              _this6.updateWindows();
+            },
+            onBlur: function onBlur() {
+              console.log('blurred!', win.key);
+              win.focused = false;
+              _this6.updateWindows();
+            },
+            showDevTools: win.showDevTools,
             titleBarStyle: 'hidden-inset',
-            file: '/',
-            show: active,
-            ref: function ref(_ref7) {
-              return _this6.onAppWindow(key, _ref7);
+            file: `http://jot.dev?key=${win.key}`,
+            show: win.active,
+            ref: function ref(_ref6) {
+              return _this6.onAppWindow(win.key, _ref6);
             }
           }));
         })
       );
-    }
-  }, {
-    key: 'disableAutohide',
-    get: function get() {
-      return false;
-    },
-    set: function set(value) {
-      // todo
     }
   }]);
 

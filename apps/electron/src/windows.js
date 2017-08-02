@@ -27,7 +27,7 @@ export function onWindow(cb) {
   onWindows.push(cb)
 }
 
-const JOT_HOME = `http://jot.dev`
+const JOT_HOME = 'http://jot.dev'
 class Window extends React.Component {
   state = {
     showing: false,
@@ -276,7 +276,7 @@ export default class ExampleApp extends React.Component {
       defaultSize: [700, 500],
       vibrancy: 'dark',
       transparent: true,
-      hasShadow: false,
+      hasShadow: true,
       webPreferences: {
         experimentalFeatures: true,
         transparentVisuals: true,
@@ -323,39 +323,6 @@ export default class ExampleApp extends React.Component {
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
         />
-<<<<<<< 9c6a8568cea404ad9ccb72e316632bc3c472ab97
-        {windows.map(
-          ({ key, active, path, position, size, setPosition, setSize }) => {
-            console.log('rendering path', path, 'active', active)
-            return (
-              <Window
-                key={key}
-                {...appWindow}
-                defaultSize={size}
-                size={size}
-                position={position}
-                onMoved={x => {
-                  setPosition(x)
-                  this.updateWindows()
-                }}
-                onResize={x => {
-                  setSize(x)
-                  this.updateWindows()
-                }}
-                onClose={() => {
-                  WinStore.removeByKey(key)
-                  this.updateWindows()
-                }}
-                showDevTools={false}
-                titleBarStyle="hidden-inset"
-                file={'/'}
-                show={active}
-                ref={ref => this.onAppWindow(key, ref)}
-              />
-            )
-          }
-        )}
-=======
         {windows.map(win => {
           return (
             <Window
@@ -395,7 +362,6 @@ export default class ExampleApp extends React.Component {
             />
           )
         })}
->>>>>>> :new: onFocus onBlur and showDevTools
       </app>
     )
   }

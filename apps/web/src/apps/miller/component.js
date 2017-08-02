@@ -122,9 +122,7 @@ export default class Miller {
 
     return (
       <HotKeys handlers={store.actions}>
-        <h4>
-          row is {state.activeRow}
-        </h4>
+        <div style={{ height: 20, background: '#333' }} />
         <columns $$row $transX={transX}>
           {schema.map((pane, index) =>
             <column

@@ -36,7 +36,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "102bbe6ced92a7a5c947"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c67f0d33e4b719c22963"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -3059,13 +3059,15 @@ function onWindow(cb) {
   onWindows.push(cb);
 }
 
+var JOT_HOME = `http://jot.dev`;
+
 var Window = function () {
   function Window() {
     var _this = this;
 
     _classCallCheck(this, Window);
 
-    this.path = '/';
+    this.path = JOT_HOME;
     this.key = Math.random();
     this.position = measure().position;
     this.size = measure().size;
@@ -3082,7 +3084,7 @@ var Window = function () {
   _createClass(Window, [{
     key: 'active',
     get: function get() {
-      return this.path !== '/';
+      return this.path !== JOT_HOME;
     }
   }]);
 
@@ -3105,12 +3107,15 @@ var Windows = function () {
   _createClass(Windows, [{
     key: 'next',
     value: function next(path) {
+      console.log('next path:', path);
       if (!this.windows[0]) {
         this.addWindow();
+        return;
       }
-      var next = this.windows[0];
       this.addWindow();
+      var next = this.windows[1];
 
+      console.log('currentn next path is', next.path);
       if (next) {
         if (path) {
           next.path = path;
@@ -3220,6 +3225,9 @@ var ExampleApp = function (_React$Component) {
       });
     }, _this3.updateWindows = function () {
       return new Promise(function (resolve) {
+        console.log('windows are', WindowStore.windows.map(function (w, i) {
+          return `index: ${i}, path: ${w.path}`;
+        }));
         _this3.setState({ windows: WindowStore.windows }, resolve);
       });
     }, _this3.next = function () {
@@ -3376,7 +3384,7 @@ var ExampleApp = function (_React$Component) {
           size: this.state.size,
           ref: this.onWindow,
           showDevTools: true,
-          file: `http://jot.dev/bar?randomId=${this.randomKey}`,
+          file: `${JOT_HOME}/bar?randomId=${this.randomKey}`,
           titleBarStyle: 'customButtonsOnHover',
           show: this.state.show,
           size: this.state.size,
@@ -3394,11 +3402,13 @@ var ExampleApp = function (_React$Component) {
         windows.map(function (_ref4) {
           var key = _ref4.key,
               active = _ref4.active,
+              path = _ref4.path,
               position = _ref4.position,
               size = _ref4.size,
               setPosition = _ref4.setPosition,
               setSize = _ref4.setSize;
 
+          console.log('rendering path', path, 'active', active);
           return _react2.default.createElement('window', _extends({
             key: key
           }, appWindow, {
@@ -3419,7 +3429,7 @@ var ExampleApp = function (_React$Component) {
             },
             showDevTools: false,
             titleBarStyle: 'hidden-inset',
-            file: `http://jot.dev?key=${key}`,
+            file: path,
             show: active,
             ref: function ref(_ref5) {
               return _this5.onAppWindow(key, _ref5);

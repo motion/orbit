@@ -7,9 +7,14 @@ import * as Panes from './panes'
 import { Miller, MillerState } from './miller'
 import { range, random, last } from 'lodash'
 
+const getSchema = () => {
+  const val = decodeURIComponent((window.location + '').split('schema=')[1])
+  return JSON.parse(val)
+}
+
 @view({
   store: class {
-    millerState = MillerState.serialize([{ kind: 'main' }])
+    millerState = MillerState.serialize([getSchema()])
     millerStateVersion = 0
 
     onMillerStateChange = state => {

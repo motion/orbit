@@ -26,13 +26,14 @@ export function onWindow(cb) {
   onWindows.push(cb)
 }
 
+const JOT_HOME = `http://jot.dev`
 class Window {
-  path = '/'
+  path = JOT_HOME
   key = Math.random()
   position = measure().position
   size = measure().size
   get active() {
-    return this.path !== '/'
+    return this.path !== JOT_HOME
   }
   setPosition = x => (this.position = x)
   setSize = x => (this.size = x)
@@ -47,10 +48,12 @@ class Windows {
     console.log('next path:', path)
     if (!this.windows[0]) {
       this.addWindow()
+      return
     }
-    const next = this.windows[0]
     this.addWindow()
+    const next = this.windows[1]
 
+    console.log('currentn next path is', next.path)
     if (next) {
       if (path) {
         next.path = path
@@ -164,6 +167,10 @@ export default class ExampleApp extends React.Component {
 
   updateWindows = () => {
     return new Promise(resolve => {
+      console.log(
+        'windows are',
+        WindowStore.windows.map((w, i) => `index: ${i}, path: ${w.path}`)
+      )
       this.setState({ windows: WindowStore.windows }, resolve)
     })
   }
@@ -175,7 +182,6 @@ export default class ExampleApp extends React.Component {
   }
 
   goTo = async path => {
-    console.log('going to ', path)
     this.hide()
     const next = await this.next(path)
     next.ref.focus()
@@ -270,7 +276,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`http://jot.dev/bar?randomId=${this.randomKey}`}
+          file={`${JOT_HOME}/bar?randomId=${this.randomKey}`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
@@ -284,7 +290,8 @@ export default class ExampleApp extends React.Component {
           onMoved={position => this.setState({ position })}
         />
         {windows.map(
-          ({ key, active, position, size, setPosition, setSize }) => {
+          ({ key, active, path, position, size, setPosition, setSize }) => {
+            console.log('rendering path', path, 'active', active)
             return (
               <window
                 key={key}
@@ -306,7 +313,7 @@ export default class ExampleApp extends React.Component {
                 }}
                 showDevTools={false}
                 titleBarStyle="hidden-inset"
-                file={`http://jot.dev?key=${key}`}
+                file={path}
                 show={active}
                 ref={ref => this.onAppWindow(key, ref)}
               />

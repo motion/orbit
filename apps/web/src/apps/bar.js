@@ -5,7 +5,7 @@ import { HotKeys } from 'react-hotkeys'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
-import { range, random } from 'lodash'
+import { range, last, random } from 'lodash'
 
 const safeString = thing => {
   try {
@@ -69,7 +69,8 @@ class BarStore {
       this.inputRef.select()
     },
     enter: () => {
-      ipcRenderer.send('bar-goto', '/master')
+      const schema = JSON.stringify(last(this.millerState.schema))
+      ipcRenderer.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
     },
   }
 

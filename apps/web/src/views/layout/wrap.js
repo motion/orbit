@@ -23,11 +23,6 @@ export default class LayoutWrap {
   }
   static style = {
     wrap: {
-      background: '#fff',
-      boxShadow: [
-        // 'inset 5px 10px 20px rgba(0,0,0,0.03)',
-        '0 0 6px rgba(0,0,0,0.3)',
-      ],
       overflow: 'hidden',
       position: 'absolute',
       left: 0,

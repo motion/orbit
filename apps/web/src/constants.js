@@ -18,7 +18,7 @@ export const DB_CONFIG = {
   couchHost: COUCH_HOST,
 }
 
-export const HEADER_HEIGHT = 38
+export const HEADER_HEIGHT = 36
 export const SIDEBAR_WIDTH = 340
 export const SIDEBAR_TRANSITION = 'ease-in 100ms'
 

@@ -58,25 +58,21 @@ export default class Layout {
         <UI.Theme name="light">
           <UI.SlotFill.Provider>
             <content>
-              <app>
-                <Browse />
-                <Signup />
-                <LayoutWrap layoutStore={layoutStore}>
-                  <Header />
-                  <content
-                    if={User.loggedIn}
-                    onScroll={this.onScroll}
-                    $dragStartedAt={
-                      layoutStore.isDragging && this.lastScrolledTo
-                    }
-                  >
-                    <ExplorerResults />
-                    <CurrentPage key={Router.key} {...Router.params} />
-                  </content>
-                </LayoutWrap>
-                <Errors />
-                <BottomBar />
-              </app>
+              <Browse />
+              <Signup />
+              <LayoutWrap layoutStore={layoutStore}>
+                <Header />
+                <content
+                  if={User.loggedIn}
+                  onScroll={this.onScroll}
+                  $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
+                >
+                  <ExplorerResults />
+                  <CurrentPage key={Router.key} {...Router.params} />
+                </content>
+              </LayoutWrap>
+              <Errors />
+              <BottomBar />
             </content>
           </UI.SlotFill.Provider>
         </UI.Theme>
@@ -86,7 +82,7 @@ export default class Layout {
 
   static style = {
     layout: {
-      background: Constants.IS_ELECTRON ? [42, 42, 45, 0.9] : 'transparent',
+      background: Constants.IS_ELECTRON ? [42, 42, 45, 0.6] : 'transparent',
       position: 'absolute',
       top: 0,
       right: 0,
@@ -99,7 +95,6 @@ export default class Layout {
     },
     content: {
       flex: 1,
-      flexFlow: 'row',
     },
     dragStartedAt: pos => ({
       overflowX: 'visible',

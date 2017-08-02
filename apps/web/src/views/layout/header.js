@@ -22,8 +22,9 @@ export default class Header {
     return (
       <UI.Theme name="clear-dark">
         <header $$draggable>
-          <UI.Glint color={[255, 255, 255, 1]} borderRadius={5} />
-          <bar>
+          <UI.Glint color={[255, 255, 255, 0.1]} borderRadius={5} />
+
+          <leftside $$row $$centered>
             <UI.Button
               if={false && IS_ELECTRON}
               {...btnProps}
@@ -32,12 +33,16 @@ export default class Header {
               disabled={Router.atBack}
               onClick={() => !Router.atBack && Router.back()}
             />
+          </leftside>
+
+          <centerside $$row $$centered>
             <Explorer
               onOpen={() => (layoutStore.explorerOpen = true)}
               onClose={() => (layoutStore.explorerOpen = false)}
             />
-          </bar>
-          <rest $$row $$centered>
+          </centerside>
+
+          <rightside $$row $$centered>
             <UI.SlotFill.Slot name="actions">
               {items => {
                 return (
@@ -57,7 +62,7 @@ export default class Header {
               icon={layoutStore.sidebar.active ? 'arrminright' : 'aminleft'}
               onClick={layoutStore.sidebar.ref('active').toggle}
             />
-          </rest>
+          </rightside>
         </header>
       </UI.Theme>
     )
@@ -65,7 +70,8 @@ export default class Header {
 
   static style = {
     header: {
-      background: '#050505',
+      background: 'transparent',
+      color: '#fff',
       // position: 'absolute',
       // top: 0,
       // right: 0,
@@ -76,11 +82,12 @@ export default class Header {
       padding: [0, 10],
       paddingLeft: IS_ELECTRON ? 78 : 10,
       flexFlow: 'row',
+      alignItems: 'center',
       height: HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
     },
-    bar: {
+    leftside: {
       flex: 1,
       flexFlow: 'row',
       alignItems: 'center',

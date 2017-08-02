@@ -99,11 +99,12 @@ export default class Explorer {
         </crumbs>
 
         <fade
+          if={false}
           $$fullscreen
           css={{
             left: 'auto',
             width: 50,
-            background: 'linear-gradient(left, transparent, #fff)',
+            background: 'linear-gradient(left, transparent, #050505)',
           }}
         />
       </bar>
@@ -118,7 +119,6 @@ export default class Explorer {
       flexFlow: 'row',
       flex: 1,
       alignItems: 'center',
-      borderBottom: [1, '#e0e0e0', 'dotted'],
     },
     focused: {
       borderColor: '#ddd',

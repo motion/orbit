@@ -89,15 +89,23 @@ class Pane {
     search,
     onSelect,
     col,
+    type,
   }) {
     const paneActive = state.activeCol == col
     const highlightIndex = !paneActive && state.prevActiveRows[col]
     const activeIndex = paneActive && state.activeRow
-    const Pane = pane
+    const ChildPane = pane
+
+    console.log('got child pane', ChildPane)
+
+    if (!ChildPane) {
+      console.error('no pane found for type', type)
+      return null
+    }
 
     return (
       <pane css={{ flex: 1 }} ref={el => el && onMeasureWidth(el.clientWidth)}>
-        <Pane
+        <ChildPane
           paneProps={paneProps}
           data={data || {}}
           onSelect={onSelect}
@@ -131,24 +139,29 @@ export default class Miller {
     const content = (
       <miller>
         <columns $$row $transX={transX}>
-          {schema.map((pane, index) =>
-            <column key={index > state.activeCol ? Math.random() : index}>
-              <Pane
-                // if it's the next preview, always rerender
-                pane={panes[pane.kind]}
-                data={pane.data}
-                search={search}
-                paneProps={paneProps}
-                onMeasureWidth={width => (store.colWidths[index] = width)}
-                col={index}
-                onRef={plugin => {
-                  store.plugins[index] = plugin
-                }}
-                onSelect={row => store.onSelect(index, row)}
-                state={state}
-              />
-            </column>
-          )}
+          {schema.map((pane, index) => {
+            console.log('panes[pane.kind]', panes, pane.kind)
+
+            return (
+              <column key={index > state.activeCol ? Math.random() : index}>
+                <Pane
+                  // if it's the next preview, always rerender
+                  pane={panes[pane.kind]}
+                  type={pane.type}
+                  data={pane.data}
+                  search={search}
+                  paneProps={paneProps}
+                  onMeasureWidth={width => (store.colWidths[index] = width)}
+                  col={index}
+                  onRef={plugin => {
+                    store.plugins[index] = plugin
+                  }}
+                  onSelect={row => store.onSelect(index, row)}
+                  state={state}
+                />
+              </column>
+            )
+          })}
         </columns>
       </miller>
     )

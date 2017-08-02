@@ -6,8 +6,8 @@ const historyApiFallback = require('connect-history-api-fallback')
 const httpProxyMiddleware = require('http-proxy-middleware')
 const detect = require('detect-port')
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
-const log = require('./config/webpackLog')
-const config = require('./config/webpack')
+const log = require('./config/build.log')
+const config = require('./config/build.config')
 const paths = require('./config/paths')
 
 // Warn and crash if required files are missing

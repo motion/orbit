@@ -5,8 +5,8 @@
   "scripts": {
     "pack": "build --mac --dir",
     "dist": "build --mac",
-    "start": "electron lib",
-    "watch": "watch 'npm start' src/"
+    "start": "electron build/out",
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "@mcro/black": "^1.1.0",
@@ -14,7 +14,8 @@
     "electron": "^1.6.11",
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5",
-    "watch": "1.0.2"
+    "watch": "1.0.2",
+    "webpack": "^3.4.1"
   },
   "build": {
     "appId": "jot.id",

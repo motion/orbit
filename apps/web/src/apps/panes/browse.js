@@ -64,13 +64,15 @@ export default class BarBrowse {
 
   getChildSchema = row => {
     const { store } = this.props
+    if (store.length === 0) return null
+
     const data = { parent: store.results[row] }
     return { kind: 'browse', data }
   }
 
   render({ store, onRef, activeIndex, highlightIndex, itemProps }) {
     onRef(this)
-    if (!store.results || !store.results.length) {
+    if (store.length === 0) {
       return <UI.Placeholder>Empty</UI.Placeholder>
     }
 

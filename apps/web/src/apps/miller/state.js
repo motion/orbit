@@ -28,6 +28,7 @@ export default class State {
   }
 
   setSchema(index, schema) {
+    console.log('setting schema', index)
     if (this.schema.length < index) {
       this.schema.push(schema)
     } else {
@@ -69,7 +70,7 @@ export default class State {
 
   moveCol(delta) {
     if (delta > 0) {
-      if (this.schema.length > this.activeCol) {
+      if (this.schema.length - 1 > this.activeCol) {
         this.prevActiveRows.push(this.activeRow)
         this.activeCol += delta
         this.activeRow = 0

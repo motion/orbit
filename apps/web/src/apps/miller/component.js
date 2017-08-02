@@ -21,7 +21,7 @@ class MillerStore {
       const plugin = this.plugins[activeCol]
       if (plugin && plugin.getChildSchema) {
         const child = plugin.getChildSchema(activeRow)
-        state.setSchema(activeCol + 1, child)
+        if (child !== null) state.setSchema(activeCol + 1, child)
       }
 
       onChange(state)

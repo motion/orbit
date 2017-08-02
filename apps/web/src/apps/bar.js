@@ -5,7 +5,7 @@ import { HotKeys } from 'react-hotkeys'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
-import { range, isNumber, last, random } from 'lodash'
+import { isNumber, last } from 'lodash'
 
 const safeString = thing => {
   try {
@@ -16,27 +16,6 @@ const safeString = thing => {
   }
 }
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
-const actions = [
-  'remind',
-  'send',
-  'attach',
-  'discuss',
-  'assign',
-  'update',
-  'new',
-  'calendar',
-  'busy',
-  'free',
-  'wait',
-  'ping',
-  'everyone',
-  'open',
-  'close',
-  'forward',
-  'notifications',
-  'issues',
-  'docs',
-].sort()
 
 class BarStore {
   millerState = MillerState.serialize([{ kind: 'main', data: { prefix: '' } }])
@@ -101,7 +80,6 @@ class BarStore {
   }
 
   navigate = thing => {
-    log('navigate yo', thing, thing.url)
     if (thing && thing.url) {
       ipcRenderer.send('bar-goto', thing.url())
     } else if (typeof thing === 'string') {
@@ -122,8 +100,6 @@ const inputStyle = {
 })
 export default class BarPage {
   render({ store }) {
-    log('hlindex', store.highlightIndex)
-
     const paneProps = {
       itemProps: {
         size: 1.55,
@@ -179,7 +155,6 @@ export default class BarPage {
               </selected>
             </div>
             <Miller
-              animate
               search={store.search}
               version={store.millerStateVersion}
               state={store.millerState}

@@ -154,7 +154,7 @@ class BarMainStore {
       ...integrations,
     ]
     return fuzzy
-      .filter(this.props.search, hayStack, {
+      .filter(this.search, hayStack, {
         extract: el => el.title,
         pre: '<',
         post: '>',
@@ -163,21 +163,21 @@ class BarMainStore {
       .filter(x => !!x)
   }
 
+  get search() {
+    return this.props.search || ''
+  }
+
   start() {
     this.props.getRef && this.props.getRef(this)
 
     this.watch(async () => {
-      if (!this.props.search) {
-        return []
-      }
-
       // search
       const [searchResults, pathSearchResults] = await Promise.all([
-        Thing.search(this.props.search).exec(),
+        Thing.search && Thing.search(this.search).exec(),
         Thing.collection
           .find()
           .where('slug')
-          .regex(new RegExp(`^${this.props.search}$`, 'i'))
+          .regex(new RegExp(`^${this.search}$`, 'i'))
           .where({ home: { $ne: true } })
           .limit(20)
           .exec(),
@@ -214,12 +214,11 @@ export default class BarMain {
 
   getChildSchema = row => {
     const { store } = this.props
-
     const item = store.results[row]
     return { kind: item.type, data: item.data || {} }
   }
 
-  render({ store, onRef, activeIndex, highlightIndex, paneProps }) {
+  render({ store, onRef, activeIndex, paneProps }) {
     onRef(this)
 
     return (

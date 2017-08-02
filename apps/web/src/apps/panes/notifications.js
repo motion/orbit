@@ -17,7 +17,7 @@ class BarNotificationsStore {
 export default class BarNotificationsPane {
   getLength = () => this.props.store.results.length
 
-  render({ store, onRef, activeIndex, highlightIndex }) {
+  render({ store, onRef, activeIndex }) {
     onRef(this)
     return (
       <InboxList

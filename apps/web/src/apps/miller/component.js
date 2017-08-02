@@ -9,11 +9,11 @@ import { sum, range } from 'lodash'
 class MillerStore {
   // refs to the plugins
   plugins = []
-  colWidths = range(100).map(_ => 0)
+  colWidths = range(100).map(() => 0)
   colLeftMargin = 10
 
   start() {
-    const { state, onChange, schema } = this.props
+    const { state, onChange } = this.props
     window.millerState = state
 
     state.onSelectionChange(() => {
@@ -35,11 +35,6 @@ class MillerStore {
       -sum(this.colWidths.slice(0, state.activeCol)) -
       this.colLeftMargin * state.activeCol
     )
-  }
-
-  getChildSchema(index) {
-    const { nodes, state } = this.props
-    // this.refs[index]
   }
 
   onSelect(col, row) {
@@ -84,7 +79,6 @@ class Pane {
     data,
     search,
     onSelect,
-    clientWidth,
     col,
   }) {
     const paneActive = state.activeCol == col

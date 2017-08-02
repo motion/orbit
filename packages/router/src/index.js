@@ -100,15 +100,21 @@ export class ObservableRouter {
 
   @action
   go = (...segments) => {
-    const path = segments.join('/')
-    const nextPath = path[0] === '/' ? path : `/${path}`
-    if (nextPath === this.path) {
+    let path = segments.join('/')
+
+    if (path.indexOf(window.location.origin) === 0) {
+      path = path.replace(window.location.origin, '')
+    } else {
+      path = path[0] === '/' ? path : `/${path}`
+    }
+    console.log('going to path', path)
+    if (path === this.path) {
       // avoid going to same url
       return
     }
     this.position += 1
     this.max = this.position
-    this.path = nextPath
+    this.path = path
   }
 
   // sets a part of the url

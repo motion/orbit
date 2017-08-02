@@ -4,6 +4,7 @@ import Window from './window'
 
 const MIN_WIDTH = 50
 const MIN_HEIGHT = 500
+const JOT_URL = 'http://jot.dev'
 
 const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -267,7 +268,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`${JOT_HOME}/bar?randomId=${this.randomKey}`}
+          file={`${JOT_URL}/bar?randomId=${this.randomKey}`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
@@ -313,7 +314,7 @@ export default class ExampleApp extends React.Component {
               }}
               showDevTools={win.showDevTools}
               titleBarStyle="hidden-inset"
-              file={`http://jot.dev?key=${win.key}`}
+              file={`${JOT_URL}?key=${win.key}`}
               show={win.active}
               ref={ref => this.onAppWindow(win.key, ref)}
             />

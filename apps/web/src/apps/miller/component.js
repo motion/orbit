@@ -17,7 +17,7 @@ class MillerStore {
     state.onSelectionChange(() => {
       const { activeRow, activeCol } = state
       const plugin = this.plugins[activeCol]
-      if (plugin && plugin.getChildSchema) {
+      if (activeRow !== null && plugin && plugin.getChildSchema) {
         const child = plugin.getChildSchema(activeRow)
         if (child !== null) state.setSchema(activeCol + 1, child)
       }

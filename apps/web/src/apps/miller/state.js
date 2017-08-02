@@ -55,6 +55,12 @@ export default class State {
     this.schema = this.schema.slice(0, this.activeCol + 1)
   }
 
+  blur() {
+    this.activeRow = null
+    this.removeExcessCols()
+    this.emit('selectionChange')
+  }
+
   setSelection(col, row) {
     if (col > this.activeCol) {
       this.moveCol(1)

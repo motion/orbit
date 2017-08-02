@@ -85,13 +85,13 @@ class BarStore {
     },
     up: () => {
       if (this.millerState.activeRow === 0) {
+        this.millerState.blur()
         this.inputRef.focus()
       } else {
         this.millerActions.up()
       }
     },
     esc: () => {
-      console.log('got esc')
       this.visible = false
       ipcRenderer.send('bar-hide')
     },

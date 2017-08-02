@@ -228,7 +228,7 @@ export default class BarMain {
           if={store.results}
           controlled={false}
           selected={activeIndex}
-          itemProps={paneProps}
+          itemProps={paneProps.itemProps}
           groupKey="category"
           items={store.results}
           getItem={(result, index) =>
@@ -236,9 +236,9 @@ export default class BarMain {
               highlight={index === activeIndex}
               key={result.id}
               icon={
-                result.image
-                  ? <img $image src={`/images/${result.image}.jpg`} />
-                  : result.icon
+                result.data && result.data.image
+                  ? <img $image src={`/images/${result.data.image}.jpg`} />
+                  : (result.data && result.data.icon) || undefined
               }
               primary={result.title}
             />}

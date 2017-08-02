@@ -164,5 +164,8 @@ export default class Miller {
       },
     },
     transX: x => ({ transform: { x } }),
+    column: {
+      flex: 1,
+    },
   }
 }

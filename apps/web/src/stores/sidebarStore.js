@@ -8,7 +8,7 @@ const IS_SIDEBAR_OPEN = 'sidebarOpen'
 @store
 export default class SidebarRootStore {
   width = SIDEBAR_WIDTH
-  active = !(localStorage.getItem(IS_SIDEBAR_OPEN) === 'false')
+  active = false
   dragging = false
   changing = false
 

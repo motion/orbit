@@ -24,10 +24,6 @@ export default class LayoutWrap {
         }}
       >
         {children}
-        <dragger
-          style={{ WebkitAppRegion: 'no-drag' }}
-          ref={this.ref('dragger').set}
-        />
       </wrap>
     )
   }
@@ -45,15 +41,6 @@ export default class LayoutWrap {
       bottom: 0,
       zIndex: 10,
       transform: { z: 0 },
-    },
-    dragger: {
-      width: 8,
-      position: 'absolute',
-      top: 0,
-      right: -4,
-      bottom: 0,
-      zIndex: 10000,
-      cursor: 'ew-resize',
     },
   }
 }

@@ -47,6 +47,7 @@ export default class Header {
             }}
           </UI.SlotFill.Slot>
           <UI.Button
+            if={false}
             size={1.2}
             chromeless
             circular

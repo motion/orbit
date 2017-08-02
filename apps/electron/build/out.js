@@ -36,7 +36,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "fc89984c8a35746ce405"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "5483567e783ea4667519"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -2090,7 +2090,8 @@ var WindowElement = function (_BaseElement) {
       titleBarStyle: props.titleBarStyle,
       vibrancy: props.vibrancy,
       transparent: !!props.transparent,
-      webPreferences: props.webPreferences
+      webPreferences: props.webPreferences,
+      hasShadow: props.hasShadow
     });
     _this.parentWindow = null;
     _this.attachedHandlers = {};
@@ -11218,6 +11219,7 @@ var ExampleApp = function (_React$Component2) {
         defaultSize: [700, 500],
         vibrancy: 'dark',
         transparent: true,
+        hasShadow: false,
         webPreferences: {
           experimentalFeatures: true,
           transparentVisuals: true

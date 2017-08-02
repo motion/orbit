@@ -292,6 +292,7 @@ export default class ExampleApp extends React.Component {
       defaultSize: [700, 500],
       vibrancy: 'dark',
       transparent: true,
+      hasShadow: false,
       webPreferences: {
         experimentalFeatures: true,
         transparentVisuals: true,

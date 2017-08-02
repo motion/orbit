@@ -123,6 +123,7 @@ export default class WindowElement extends BaseElement {
       vibrancy: props.vibrancy,
       transparent: !!props.transparent,
       webPreferences: props.webPreferences,
+      hasShadow: props.hasShadow,
     })
     this.parentWindow = null
     this.attachedHandlers = {}

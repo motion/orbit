@@ -21,7 +21,7 @@ export default class IonizeContainer {
   insertBefore(child: BaseElement | TextElement): void {}
 
   removeChild(child: BaseElement | TextElement): void {
-    if (child instanceof typeof AppElement) {
+    if (child instanceof AppElement) {
       this.appElement = null
     }
   }

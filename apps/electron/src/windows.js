@@ -1,18 +1,29 @@
 import React from 'react'
 import { app, globalShortcut, screen, ipcMain } from 'electron'
 
+const MIN_WIDTH = 50
+const MIN_HEIGHT = 500
+
 const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
-  const size = [Math.round(width / 3), Math.round(height / 2)]
+  const size = [
+    Math.max(MIN_WIDTH, Math.round(width / 3)),
+    Math.max(MIN_HEIGHT, Math.round(height / 2)),
+  ]
   const middleX = Math.round(width / 2 - size[0] / 2)
   const middleY = Math.round(height / 2 - size[1] / 2)
-  const endX = width - size[0] - 20
-  const endY = height - size[1] - 20
+  // const endX = width - size[0] - 20
+  // const endY = height - size[1] - 20
 
   return {
     size,
     position: [middleX, middleY],
   }
+}
+
+let onWindows = []
+export function onWindow(cb) {
+  onWindows.push(cb)
 }
 
 class Window {
@@ -62,6 +73,7 @@ const WindowStore = new Windows()
 
 export default class ExampleApp extends React.Component {
   state = {
+    restart: false,
     show: true,
     size: [0, 0],
     position: [0, 0],
@@ -72,6 +84,10 @@ export default class ExampleApp extends React.Component {
     setTimeout(() => {
       this.next() // preload app window a second after initial load
     }, 1000)
+
+    onWindows.forEach(cb => {
+      cb(this)
+    })
   }
 
   hide = () => {
@@ -206,7 +222,13 @@ export default class ExampleApp extends React.Component {
   randomKey = Math.random()
 
   render() {
-    const { windows, error } = this.state
+    const { windows, error, restart } = this.state
+
+    if (restart) {
+      console.log('restarting')
+      return null
+    }
+
     const appWindow = {
       frame: false,
       defaultSize: [700, 500],

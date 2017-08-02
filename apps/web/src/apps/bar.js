@@ -15,7 +15,6 @@ const safeString = thing => {
     return `${thing}`
   }
 }
-
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
 const actions = [
   'remind',
@@ -71,9 +70,6 @@ class BarStore {
   // call these to send key to miller
   millerActions = {}
   actions = {
-    enter: () => {
-      console.log('woo')
-    },
     down: () => {
       this.millerActions.down()
     },
@@ -126,11 +122,19 @@ const inputStyle = {
 })
 export default class BarPage {
   render({ store }) {
-    log(store.highlightIndex)
+    log('hlindex', store.highlightIndex)
 
     const paneProps = {
-      highlightBackground: [0, 0, 0, 0.15],
-      highlightColor: [255, 255, 255, 1],
+      itemProps: {
+        size: 1.55,
+        glow: false,
+        hoverable: true,
+        fontSize: 26,
+        padding: [0, 10],
+        height: 48,
+        highlightBackground: [0, 0, 0, 0.15],
+        highlightColor: [255, 255, 255, 1],
+      },
     }
 
     return (

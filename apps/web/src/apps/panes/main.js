@@ -154,7 +154,7 @@ class BarMainStore {
       ...integrations,
     ]
     return fuzzy
-      .filter(this.search, hayStack, {
+      .filter(this.props.search, hayStack, {
         extract: el => el.title,
         pre: '<',
         post: '>',
@@ -163,21 +163,17 @@ class BarMainStore {
       .filter(x => !!x)
   }
 
-  get search() {
-    return this.props.search || ''
-  }
-
   start() {
     this.props.getRef && this.props.getRef(this)
 
     this.watch(async () => {
       // search
       const [searchResults, pathSearchResults] = await Promise.all([
-        Thing.search && Thing.search(this.search).exec(),
+        Thing.search && Thing.search(this.props.search).exec(),
         Thing.collection
           .find()
           .where('slug')
-          .regex(new RegExp(`^${this.search}$`, 'i'))
+          .regex(new RegExp(`^${this.props.search}$`, 'i'))
           .where({ home: { $ne: true } })
           .limit(20)
           .exec(),

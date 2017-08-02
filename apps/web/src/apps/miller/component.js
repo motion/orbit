@@ -97,7 +97,7 @@ class Pane {
             onRef(ref)
             this.pane = ref
           }}
-          search={paneActive && search}
+          search={paneActive ? search : ''}
           highlightIndex={highlightIndex}
           activeIndex={activeIndex}
         />

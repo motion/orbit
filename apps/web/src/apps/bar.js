@@ -17,11 +17,42 @@ const safeString = thing => {
 }
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
+const actions = [
+  'remind',
+  'send',
+  'attach',
+  'discuss',
+  'assign',
+  'update',
+  'new',
+  'calendar',
+  'busy',
+  'free',
+  'wait',
+  'ping',
+  'everyone',
+  'open',
+  'close',
+  'forward',
+  'notifications',
+  'issues',
+  'docs',
+].sort()
+
 class BarStore {
   millerState = MillerState.serialize([{ kind: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
 
   search = ''
+
+  get peekItem() {
+    if (!this.search) {
+      return ''
+    }
+    return actions[
+      actions.findIndex(action => action.indexOf(this.search) === 0)
+    ]
+  }
 
   onMillerStateChange = state => {
     this.millerState = state
@@ -53,7 +84,12 @@ class BarStore {
       this.millerActions.down()
     },
     up: () => {
-      this.millerActions.up()
+      if (this.millerState.activeRow === 0) {
+        this.inputRef.focus()
+        this.millerState.activeRow = null
+      } else {
+        this.millerActions.up()
+      }
     },
     esc: () => {
       console.log('got esc')
@@ -68,7 +104,11 @@ class BarStore {
       ipcRenderer.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
     },
     right: () => {
-      if (this.hasSelectedItem) this.millerActions.right()
+      if (this.hasSelectedItem) {
+        this.millerActions.right()
+      } else {
+        if (this.peekItem) this.search = this.peekItem
+      }
     },
     left: () => {
       if (this.hasSelectedItem) this.millerActions.left()

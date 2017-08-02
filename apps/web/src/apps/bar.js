@@ -4,66 +4,22 @@ import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
+import { MillerState, Miller } from './miller'
+import { range, random } from 'lodash'
 
 const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 class BarStore {
-  column = 0
-  highlightedRow = [0]
-  value = ''
-  panes = []
-  pushRight = false
-  state = {
-    paneRefs: [],
-  }
+  millerState = MillerState.serialize([{ kind: 'main', data: { prefix: '' } }])
+  millerStateVersion = 0
 
-  get highlightIndex() {
-    return this.highlightedRow[this.column] || 0
-  }
-
-  set highlightIndex(value) {
-    this.highlightedRow[this.column] = value
-    this.highlightedRow = [...this.highlightedRow]
-  }
-
-  get activePane() {
-    return this.state.paneRefs[this.column]
-  }
-
-  get activeItem() {
-    return this.activePane && this.activePane.results[this.highlightIndex]
-  }
-
-  get parent() {
-    return this.state.paneRefs[this.column - 1]
-  }
-
-  get parentItem() {
-    return this.parent && this.parent[this.highlightedRow[this.column - 1]]
-  }
-
-  start() {
-    this.pushPane(Panes.Main)
-    this.watchPaneSelections()
-    this.watchForFocus()
-  }
-
-  lastSet = []
-
-  watchPaneSelections = () => {
-    this.watch(() => {
-      const { activeItem, column, highlightIndex } = this
-      const [lastCol, lastRow] = this.lastSet
-      const nextColumn = column + 1
-      if (nextColumn === lastCol && highlightIndex === lastRow) {
-        return
-      }
-      this.setColumn(nextColumn, activeItem)
-      this.lastSet = [nextColumn, highlightIndex]
-    })
+  onMillerStateChange = state => {
+    this.millerState = state
+    this.millerStateVersion++
   }
 
   PANE_TYPES = {
+    main: Panes.Main,
     setup: Panes.Setup,
     inbox: Panes.Threads,
     browse: Panes.Browse,
@@ -72,84 +28,7 @@ class BarStore {
     login: Panes.Login,
   }
 
-  setColumn = (column, activeItem) => {
-    const paneType =
-      activeItem.type === 'doc' ? activeItem.doc.type : activeItem.type
-    const Pane = this.PANE_TYPES[paneType] || Panes.Preview
-    this.setColumnTo(column, Pane)
-  }
-
-  setColumnTo = (column, pane) => {
-    if (!pane) {
-      console.error('no pane', pane)
-      return null
-    }
-    this.panes[column] = pane
-    this.panes = this.panes.slice(0, column + 1) // remove anything below
-  }
-
-  watchForFocus = () => {
-    this.on(window, 'focus', () => {
-      console.log('focus bar window')
-      this.inputRef.focus()
-      this.inputRef.select()
-    })
-  }
-
-  pushPane = pane => {
-    this.panes.push(pane)
-  }
-
-  moveHighlight = (diff: number) => {
-    this.highlightIndex += diff
-    if (this.highlightIndex === -1) {
-      this.highlightIndex = this.activePane.length - 1
-    }
-    if (this.highlightIndex >= this.activePane.length) {
-      this.highlightIndex = 0
-    }
-  }
-
-  onEnter = async () => {
-    if (this.highlightIndex > -1) {
-      this.select()
-    }
-  }
-
-  onSelect = item => {
-    console.log('select', item)
-  }
-
-  select = () => {
-    this.activePane.select(this.highlightIndex)
-  }
-
-  onChange = ({ target: { value } }) => {
-    this.value = value
-  }
-
   actions = {
-    right: () => {
-      if (this.column === 1) {
-        this.pushRight = true
-      } else {
-        this.column = this.column + 1
-      }
-    },
-    down: () => {
-      log('down')
-      this.moveHighlight(1)
-    },
-    up: () => {
-      this.moveHighlight(-1)
-    },
-    left: () => {
-      if (this.pushRight) {
-        this.pushRight = false
-      } else {
-        this.column = Math.max(0, this.column - 1)
-      }
-    },
     esc: () => {
       console.log('got esc')
       ipcRenderer.send('bar-hide')
@@ -157,9 +36,10 @@ class BarStore {
     cmdA: () => {
       this.inputRef.select()
     },
-    enter: () => {
-      this.select()
-    },
+  }
+
+  newWindow = url => {
+    ipcRenderer.send('where-to', url)
   }
 
   navigate = thing => {
@@ -179,10 +59,9 @@ class BarStore {
 export default class BarPage {
   render({ store }) {
     log(store.highlightIndex)
-    store.highlightIndex
-    store.column
+    store.millerStateVersion
 
-    const itemProps = {
+    const paneProps = {
       highlightBackground: [0, 0, 0, 0.15],
       highlightColor: [255, 255, 255, 1],
     }
@@ -221,43 +100,14 @@ export default class BarPage {
                 Selected: {JSON.stringify(store.activeItem)}
               </selected>
             </div>
-            <results $pushRight={store.pushRight}>
-              {store.panes.map((Pane, index) =>
-                <section key={Pane.name || Math.random()}>
-                  <content $list>
-                    <Pane
-                      itemProps={itemProps}
-                      highlightIndex={store.highlightIndex}
-                      column={store.column}
-                      isActive={store.column === index}
-                      activeItem={store.activeItem}
-                      search={store.value}
-                      parent={store.parentItem}
-                      navigate={store.navigate}
-                      getRef={ref => {
-                        store.state.paneRefs[index] = ref
-                      }}
-                      onSelect={store.onSelect}
-                      itemProps={{
-                        size: 1.75,
-                        glow: false,
-                        hoverable: true,
-                        fontSize: 32,
-                        padding: [18, 10],
-                        height: 60,
-                      }}
-                    />
-                  </content>
-                  <line
-                    css={{
-                      width: 0,
-                      marginTop: 1,
-                      borderLeft: [1, 'dotted', [0, 0, 0, 0.1]],
-                    }}
-                  />
-                </section>
-              )}
-            </results>
+            <Miller
+              animate
+              version={store.millerStateVersion}
+              state={store.millerState}
+              panes={store.PANE_TYPES}
+              onChange={store.onMillerStateChange}
+              paneProps={paneProps}
+            />
           </bar>
         </UI.Theme>
       </HotKeys>

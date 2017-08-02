@@ -8,6 +8,7 @@ import parentSize from '~/helpers/parentSize'
 import type { ItemProps } from './listItem'
 import Surface from './surface'
 import type { Color } from '@mcro/gloss'
+import { isNumber } from 'lodash'
 
 const idFn = _ => _
 
@@ -57,10 +58,16 @@ class List {
 
   componentDidMount() {
     this.totalItems = this.getTotalItems(this.props)
+    if (this.props.selected)
+      return this.setState({ selected: this.props.selected })
   }
 
   componentWillReceiveProps = nextProps => {
     this.lastDidReceivePropsDate = Date.now()
+    if (nextProps.selected !== this.state.selected) {
+      this.setState({ selected: nextProps.selected })
+    }
+
     const totalItems = this.getTotalItems(nextProps)
     if (totalItems !== this.totalItems) {
       this.totalItems = totalItems
@@ -207,6 +214,8 @@ class List {
         props.highlight = this.showInternalSelection
           ? index === this.state.selected
           : this.props.isSelected && this.props.isSelected(items[index], index)
+      } else {
+        props.highlight = index === this.props.selected
       }
       return props
     }

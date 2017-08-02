@@ -4,16 +4,22 @@ import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import fuzzy from 'fuzzy'
 import { User } from '~/app'
+import { isNumber } from 'lodash'
 
 class BarBrowseStore {
-  @watch children = () => this.root && this.root.getChildren()
+  @watch
+  children = [
+    () => this.parent && this.parent.id,
+    () => this.parent && this.parent.getChildren(),
+  ]
 
-  get root() {
-    return this.props.parent || User.home
+  get parent() {
+    return this.props.data.parent || User.home
   }
 
   get results() {
     const hayStack = this.children
+
     return fuzzy
       .filter(this.props.search, hayStack, {
         extract: el => el.title,
@@ -41,25 +47,36 @@ class BarBrowseStore {
   store: BarBrowseStore,
 })
 export default class BarBrowse {
-  render({ store, isActive, highlightIndex, itemProps }) {
+  getLength = () => this.props.store.length
+
+  getChildSchema = row => {
+    const { store } = this.props
+    const data = { parent: store.results[row] }
+    return { kind: 'browse', data }
+  }
+
+  render({ store, onRef, activeIndex, highlightIndex, itemProps }) {
+    onRef(this)
     if (!store.results || !store.results.length) {
       return <UI.Placeholder>Empty</UI.Placeholder>
     }
 
     return (
-      <UI.List
-        if={store.results}
-        controlled={isActive}
-        isSelected={(item, index) => index === highlightIndex}
-        itemProps={itemProps}
-        items={store.results}
-        getItem={result =>
-          <UI.ListItem
-            key={result.id}
-            icon={result.icon}
-            primary={result.title}
-          />}
-      />
+      <browse>
+        <UI.List
+          if={store.results}
+          controlled={false}
+          selected={isNumber(activeIndex) ? activeIndex : highlightIndex}
+          itemProps={itemProps}
+          items={store.results}
+          getItem={result =>
+            <UI.ListItem
+              key={result.id}
+              icon={result.icon}
+              primary={result.title}
+            />}
+        />
+      </browse>
     )
   }
 }

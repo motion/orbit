@@ -54,7 +54,15 @@ export default class Inbox {
     controlled: true,
   }
 
-  render({ controlled, store, inSidebar, large, isSelected, itemProps }) {
+  render({
+    controlled,
+    store,
+    listProps = {},
+    inSidebar,
+    large,
+    isSelected,
+    itemProps,
+  }) {
     const badgeProps = {}
 
     Router.path // trigger change
@@ -96,6 +104,7 @@ export default class Inbox {
         </bar>
         <content if={filteredThreads}>
           <UI.List
+            {...listProps}
             background="transparent"
             controlled={controlled}
             virtualized={{

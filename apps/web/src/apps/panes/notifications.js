@@ -15,11 +15,14 @@ class BarNotificationsStore {
   store: BarNotificationsStore,
 })
 export default class BarNotificationsPane {
-  render({ store, isActive, highlightIndex }) {
+  getLength = () => this.props.store.results.length
+
+  render({ store, onRef, activeIndex, highlightIndex }) {
+    onRef(this)
     return (
       <InboxList
-        controlled={isActive}
-        isSelected={(item, index) => index === highlightIndex}
+        controlled={false}
+        listProps={{ selected: activeIndex }}
         getItems={store.ref('results').set}
         filter={store.value}
       />

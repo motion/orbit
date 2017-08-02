@@ -33,6 +33,7 @@ class Windows {
     this.windows = [new Window(), ...this.windows]
   }
   next(path) {
+    console.log('next path:', path)
     if (!this.windows[0]) {
       this.addWindow()
     }
@@ -158,6 +159,7 @@ export default class ExampleApp extends React.Component {
   }
 
   goTo = async path => {
+    console.log('going to ', path)
     this.hide()
     const next = await this.next(path)
     next.ref.focus()

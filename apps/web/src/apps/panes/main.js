@@ -153,13 +153,23 @@ class BarMainStore {
   store: BarMainStore,
 })
 export default class BarMain {
-  render({ store, isActive, highlightIndex, itemProps }) {
+  getLength = () => this.props.store.results.length
+
+  getChildSchema = row => {
+    const { store } = this.props
+
+    return { kind: store.results[row].type }
+  }
+
+  render({ store, onRef, activeIndex, highlightIndex, paneProps }) {
+    onRef(this)
+
     return (
       <UI.List
         if={store.results}
-        controlled={isActive}
-        isSelected={(item, index) => index === highlightIndex}
-        itemProps={itemProps}
+        controlled={false}
+        selected={activeIndex}
+        itemProps={paneProps}
         groupKey="category"
         items={store.results}
         getItem={result =>

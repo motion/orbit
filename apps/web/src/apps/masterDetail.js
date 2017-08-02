@@ -4,271 +4,224 @@ import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
+import { Miller, MillerState } from './miller'
+import { range, random, last } from 'lodash'
 
-const { ipcRenderer } = (window.require && window.require('electron')) || {}
+class MillerMailStore {
+  animate = true
+  millerState = null
+  resetKey = 0
+  constructor() {
+    this.millerState = MillerState.serialize([{ kind: 'mailList', data: {} }])
+  }
+  reset = () => {
+    this.setMillerState(MillerState.serialize([{ kind: 'mailList', data: {} }]))
+    this.resetKey++
+  }
+  millerVersion = 0
 
-class BarStore {
-  column = 0
-  highlightedRow = [0]
-  value = ''
-  panes = []
-  pushRight = false
-  state = {
-    paneRefs: [],
+  setMillerState = state => {
+    this.millerState = state
+    this.millerVersion++
+  }
+}
+
+class MailList {
+  constructor({ data }) {
+    this.data = data
   }
 
-  get highlightIndex() {
-    return this.highlightedRow[this.column] || 0
+  results = range(random(3, 10)).map(i => ({ active, highlight }) => {
+    let color = 'white'
+    if (highlight) color = '#666'
+    if (active) color = '#226dbb'
+
+    return (
+      <h3
+        style={{
+          paddingLeft: 3,
+          marginLeft: 3,
+          borderLeft: `4px solid ${color}`,
+        }}
+      >
+        item {this.data.prefix}
+        {i + 1}
+      </h3>
+    )
+  })
+
+  getChildSchema = row => ({
+    kind: 'mail',
+    data: { text: 'mail item ' + row },
+  })
+}
+
+class Mail {
+  constructor({ data }) {
+    this.data = data
   }
 
-  set highlightIndex(value) {
-    this.highlightedRow[this.column] = value
-    this.highlightedRow = [...this.highlightedRow]
+  results = [
+    () =>
+      <h2
+        style={{
+          alignSelf: 'center',
+          textAlign: 'center',
+        }}
+      >
+        mail is {this.data.text}
+      </h2>,
+  ]
+}
+
+@view({
+  store: MillerMailStore,
+})
+class MailMiller {
+  render({ store }) {
+    const panes = {
+      mailList: MailList,
+      mail: Mail,
+    }
+
+    store.millerVersion
+
+    return (
+      <mail>
+        <h3>Mail Example</h3>
+        <info $$row>
+          animate? ({store.animate + ''}){' '}
+          <UI.Button onClick={() => (store.animate = !store.animate)}>
+            toggle
+          </UI.Button>
+          <UI.Button onClick={store.reset}>reset state</UI.Button>
+        </info>
+        <content $$row>
+          <Miller
+            key={store.resetKey}
+            version={store.millerVersion}
+            animate={store.animate}
+            panes={panes}
+            state={store.millerState}
+            onChange={store.setMillerState}
+          />
+          <h4
+            if={store.millerState.schema.length < 2}
+            style={{
+              alignSelf: 'center',
+              textAlign: 'center',
+            }}
+          >
+            select a mail pls!
+          </h4>
+        </content>
+      </mail>
+    )
+  }
+}
+
+class MillerSimpleStore {
+  animate = true
+  millerState = MillerState.serialize([{ kind: 'list', data: { prefix: '' } }])
+  millerVersion = 0
+
+  setMillerState = state => {
+    this.millerState = state
+    this.millerVersion++
+  }
+}
+
+class BasicList {
+  constructor({ data }) {
+    this.data = data
+    this.items = 10
   }
 
-  get activePane() {
-    return this.state.paneRefs[this.column]
+  getLength() {
+    return this.items
   }
 
-  get activeItem() {
-    return this.activePane && this.activePane.results[this.highlightIndex]
-  }
+  render = ({ active, onSelect, highlight }) => {
+    return range(this.getLength()).map(index => {
+      let color = 'white'
+      if (index === highlight) color = '#666'
+      if (index === active) color = '#226dbb'
 
-  get parent() {
-    return this.state.paneRefs[this.column - 1]
-  }
-
-  get parentItem() {
-    return this.parent && this.parent[this.highlightedRow[this.column - 1]]
-  }
-
-  start() {
-    this.pushPane(Panes.Threads)
-    this.watchPaneSelections()
-    this.watchForFocus()
-  }
-
-  lastSet = []
-
-  watchPaneSelections = () => {
-    this.watch(() => {
-      const { activeItem, column, highlightIndex } = this
-      const [lastCol, lastRow] = this.lastSet
-      const nextColumn = column + 1
-      if (nextColumn === lastCol && highlightIndex === lastRow) {
-        return
-      }
-      this.setColumn(nextColumn, activeItem)
-      this.lastSet = [nextColumn, highlightIndex]
+      return (
+        <h3
+          onClick={() => onSelect(index)}
+          style={{
+            paddingLeft: 3,
+            marginLeft: 3,
+            borderLeft: `4px solid ${color}`,
+          }}
+        >
+          item {this.data.prefix}
+          {index + 1}
+        </h3>
+      )
     })
   }
 
-  setColumn = (column, activeItem) => {
-    console.log('setColumn', column, !!activeItem)
-    if (activeItem) {
-      if (activeItem.type === 'pane') {
-        const nextPane = Panes[activeItem.pane]
-        if (nextPane) {
-          this.setColumnTo(column, nextPane)
-        } else {
-          console.error('no pane', activeItem)
-        }
-      } else {
-        // is a Thing
-        this.setColumnTo(column, Panes.Preview)
-      }
+  getChildSchema = row => ({
+    kind: 'list',
+    data: { prefix: this.data.prefix + `${row + 1}.` },
+  })
+}
+
+@view({
+  store: MillerSimpleStore,
+})
+class SimpleMiller {
+  render({ store }) {
+    const panes = {
+      list: BasicList,
     }
-  }
 
-  setColumnTo = (column, pane) => {
-    if (!pane) {
-      console.error('no pane', pane)
-      return null
-    }
-    this.panes[column] = pane
-    this.panes = this.panes.slice(0, column + 1) // remove anything below
-  }
+    store.millerVersion
 
-  watchForFocus = () => {
-    this.on(window, 'focus', () => {
-      console.log('focus bar window')
-      this.inputRef.focus()
-      this.inputRef.select()
-    })
-  }
-
-  pushPane = pane => {
-    this.panes.push(pane)
-  }
-
-  moveHighlight = (diff: number) => {
-    this.highlightIndex += diff
-    if (this.highlightIndex === -1) {
-      this.highlightIndex = this.activePane.length - 1
-    }
-    if (this.highlightIndex >= this.activePane.length) {
-      this.highlightIndex = 0
-    }
-  }
-
-  onEnter = async () => {
-    if (this.highlightIndex > -1) {
-      this.select()
-    }
-  }
-
-  onSelect = item => {
-    console.log('select', item)
-  }
-
-  select = () => {
-    this.activePane.select(this.highlightIndex)
-  }
-
-  onChange = ({ target: { value } }) => {
-    this.value = value
-  }
-
-  actions = {
-    right: () => {
-      if (this.column === 1) {
-        this.pushRight = true
-      } else {
-        this.column = this.column + 1
-      }
-    },
-    down: () => {
-      log('down')
-      this.moveHighlight(1)
-    },
-    up: () => {
-      this.moveHighlight(-1)
-    },
-    left: () => {
-      if (this.pushRight) {
-        this.pushRight = false
-      } else {
-        this.column = Math.max(0, this.column - 1)
-      }
-    },
-    esc: () => {
-      console.log('got esc')
-      ipcRenderer.send('bar-hide')
-    },
-    cmdA: () => {
-      this.inputRef.select()
-    },
-    enter: () => {
-      this.select()
-    },
-  }
-
-  navigate = thing => {
-    log('navigate yo', thing)
-    if (thing && thing.url) {
-      ipcRenderer.send('bar-goto', thing.url())
-    } else if (typeof thing === 'string') {
-      console.log('got a navigate weird thing', thing)
-      ipcRenderer.send('bar-goto', thing)
-    }
+    return (
+      <simple>
+        <h3>simple lists</h3>
+        <info $$row>
+          animate? ({store.animate + ''}){' '}
+          <UI.Button onClick={() => (store.animate = !store.animate)}>
+            toggle
+          </UI.Button>
+        </info>
+        <Miller
+          animate={store.animate}
+          panes={panes}
+          state={store.millerState}
+          onChange={store.setMillerState}
+        />
+      </simple>
+    )
   }
 }
 
 @view({
-  store: BarStore,
+  store: class {
+    actions: {}
+  },
 })
-export default class BarPage {
+export default class MasterPage {
   render({ store }) {
-    log(store.highlightIndex)
-    store.highlightIndex
-    store.column
-
-    const itemProps = {
-      highlightBackground: [0, 0, 0, 0.15],
-      highlightColor: [255, 255, 255, 1],
-    }
-
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="light">
-          <bar $$fullscreen $$draggable>
-            <results $pushRight={store.pushRight}>
-              {store.panes.map((Pane, index) =>
-                <section key={Pane.name || Math.random()}>
-                  <content $list>
-                    <Pane
-                      itemProps={itemProps}
-                      highlightIndex={store.highlightIndex}
-                      column={store.column}
-                      isActive={store.column === index}
-                      activeItem={store.activeItem}
-                      search={store.value}
-                      parent={store.parentItem}
-                      navigate={store.navigate}
-                      getRef={ref => {
-                        store.state.paneRefs[index] = ref
-                      }}
-                      onSelect={store.onSelect}
-                      itemProps={{
-                        size: 1.75,
-                        glow: false,
-                        hoverable: true,
-                        fontSize: 32,
-                        padding: [18, 10],
-                        height: 60,
-                      }}
-                    />
-                  </content>
-                  <line
-                    css={{
-                      width: 0,
-                      marginTop: 1,
-                      borderLeft: [1, 'dotted', [0, 0, 0, 0.1]],
-                    }}
-                  />
-                </section>
-              )}
-            </results>
-          </bar>
+          <content>
+            <SimpleMiller />
+            <br />
+            <br />
+            <br />
+            <br />
+            <MailMiller if={false} />
+          </content>
         </UI.Theme>
       </HotKeys>
     )
   }
 
-  static style = {
-    bar: {
-      background: [150, 150, 150, 0.5],
-      flex: 1,
-    },
-    results: {
-      borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
-      flex: 2,
-      flexFlow: 'row',
-      transition: 'transform 80ms linear',
-      transform: {
-        z: 0,
-        x: 0,
-      },
-    },
-    pushRight: {
-      transform: {
-        x: '-50%',
-      },
-    },
-    section: {
-      width: '50%',
-      height: '100%',
-    },
-    content: {
-      flex: 1,
-      height: '100%',
-    },
-    pasteIcon: {
-      position: 'absolute',
-      top: -30,
-      right: -20,
-      width: 128,
-      height: 128,
-    },
-  }
+  static style = {}
 }

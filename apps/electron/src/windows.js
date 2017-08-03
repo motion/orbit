@@ -174,7 +174,7 @@ export default class ExampleApp extends React.Component {
     setTimeout(() => {
       console.log('got next.ref', next.ref)
       if (next.ref) {
-        console.log(Object.keys(next.ref))
+        console.log('ref keys', Object.keys(next.ref))
         // next.ref.focus()
       }
     }, 16)

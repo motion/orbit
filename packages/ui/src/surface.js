@@ -350,10 +350,10 @@ export default class Surface implements ViewType {
     },
     hasIconBefore: {
       // this adjusts for height
-      marginLeft: 'calc(5px + 5%)',
+      marginLeft: 'calc(5px + 1vh)',
     },
     hasIconAfter: {
-      marginRight: 'calc(5px + 5%)',
+      marginRight: 'calc(5px + 1vh)',
     },
     iconAfter: {
       order: 3,

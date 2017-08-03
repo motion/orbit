@@ -83,6 +83,7 @@ class BarStore {
     feed: Panes.Feed,
     notifications: Panes.Notifications,
     login: Panes.Login,
+    orbit: Panes.Orbit,
   }
 
   get isBarActive() {

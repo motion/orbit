@@ -3,12 +3,11 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class BarSetupPane {
-  render({ activeItem }) {
+  render({ ...props }) {
+    console.log('pane props', props)
     return (
       <setup>
-        <UI.Title size={2}>
-          {activeItem.title}
-        </UI.Title>
+        <UI.Title size={2}>Setup</UI.Title>
         <UI.Form>
           <UI.Input size={2} placeholder="Username" />
           <UI.Input size={2} placeholder="Password" />

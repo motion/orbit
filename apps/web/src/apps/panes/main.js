@@ -8,22 +8,6 @@ import { uniq } from 'lodash'
 
 class BarMainStore {
   searchResults: Array<Document> = []
-  @watch children = () => this.root && this.root.getChildren()
-
-  get subDocs() {
-    return (
-      this.children &&
-      this.children.map(doc => {
-        return {
-          type: 'browse',
-          title: doc.title,
-          category: 'Browse',
-          icon: doc.icon,
-          doc,
-        }
-      })
-    )
-  }
 
   get root() {
     return User.home
@@ -85,34 +69,29 @@ class BarMainStore {
   get browse() {
     return [
       {
-        title: 'Notifications',
+        title: 'Incoming',
         type: 'notifications',
-        icon: 'alert',
+        icon: 'check',
       },
       {
-        title: 'Home',
-        type: 'browse',
+        title: 'My Team',
+        category: 'Browse',
+        type: 'orbit',
         url() {
           return '/?home=true'
         },
-        icon: (
-          <abc
-            css={{
-              margin: 'auto',
-              width: 19,
-              alignItems: 'center',
-              fontSize: 26,
-              opacity: 0.65,
-            }}
-          >
-            /
-          </abc>
-        ),
+        icon: 'objects_planet',
       },
-    ].map(x => ({
-      ...x,
-      category: 'Favorites',
-    }))
+      {
+        title: 'Company',
+        category: 'Browse',
+        type: 'orbit',
+        url() {
+          return '/?home=true'
+        },
+        icon: 'objects_planet',
+      },
+    ]
   }
 
   get people() {
@@ -145,10 +124,9 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login' }]
     }
 
-    const { subDocs, searchResults, integrations, browse, people } = this
+    const { searchResults, integrations, browse, people } = this
     const hayStack = [
       ...browse,
-      ...(subDocs || []),
       ...(searchResults || []),
       ...people,
       ...integrations,

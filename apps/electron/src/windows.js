@@ -90,11 +90,7 @@ export default class ExampleApp extends React.Component {
 
   componentDidMount() {
     this.measureAndShow()
-
-    setTimeout(() => {
-      this.next() // preload app window a second after initial load
-    }, 1000)
-
+    this.next() // preload one app window
     onWindows.forEach(cb => {
       cb(this)
     })
@@ -127,9 +123,9 @@ export default class ExampleApp extends React.Component {
     }
   }
 
-  onAppWindow = (key, ref) => {
-    const win = this.state.windows.find(x => x.key === key)
-    if (win) {
+  onAppWindow = win => ref => {
+    if (win && ref) {
+      console.log('setref', ref)
       win.ref = ref
     }
   }
@@ -165,17 +161,23 @@ export default class ExampleApp extends React.Component {
     })
   }
 
-  next = async path => {
+  next = path => {
     const next = WinStore.next(path)
-    await this.updateWindows()
+    this.updateWindows()
     return next
   }
 
-  goTo = async path => {
+  goTo = path => {
     this.hide()
-    const next = await this.next(path)
-    console.log('got next.ref', next.ref)
-    // next.ref.focus()
+    const next = this.next(path)
+
+    setTimeout(() => {
+      console.log('got next.ref', next.ref)
+      if (next.ref) {
+        console.log(Object.keys(next.ref))
+        // next.ref.focus()
+      }
+    }, 16)
   }
 
   registerShortcuts = () => {
@@ -318,7 +320,7 @@ export default class ExampleApp extends React.Component {
               titleBarStyle="hidden-inset"
               file={`${JOT_URL}?key=${win.key}`}
               show={win.active}
-              ref={ref => this.onAppWindow(win.key, ref)}
+              ref={this.onAppWindow(win)}
             />
           )
         })}

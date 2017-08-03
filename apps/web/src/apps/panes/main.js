@@ -168,6 +168,11 @@ class BarMainStore {
   }
 
   search = async () => {
+    if (!this.props.search) {
+      this.searchResults = []
+      return
+    }
+
     const [searchResults, pathSearchResults] = await Promise.all([
       Thing.search && Thing.search(this.props.search).exec(),
       Thing.collection

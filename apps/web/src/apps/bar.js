@@ -111,8 +111,12 @@ class BarStore {
       e.preventDefault()
     },
     esc: () => {
-      this.visible = false
-      ipcRenderer.send('bar-hide')
+      if (this.search !== '') {
+        this.search = ''
+      } else {
+        this.visible = false
+        ipcRenderer.send('bar-hide')
+      }
     },
     cmdA: () => {
       this.inputRef.select()

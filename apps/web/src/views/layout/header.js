@@ -62,16 +62,21 @@ export default class Header {
                 )
               }}
             </UI.SlotFill.Slot>
-            <UI.Button
-              if={false}
-              size={1.2}
-              chromeless
-              circular
-              margin={[0, 2]}
-              badge={layoutStore.sidebar.active ? false : 10}
-              icon={layoutStore.sidebar.active ? 'arrminright' : 'aminleft'}
-              onClick={layoutStore.sidebar.ref('active').toggle}
-            />
+            <UI.Row>
+              <UI.Button
+                chromeless
+                margin={[0, 2]}
+                onClick={layoutStore.sidebar.ref('active').toggle}
+              >
+                Share
+              </UI.Button>
+              <UI.Button
+                chromeless
+                margin={[0, 2]}
+                onClick={layoutStore.sidebar.ref('active').toggle}
+                icon="add"
+              />
+            </UI.Row>
           </rightside>
         </header>
       </UI.Theme>
@@ -91,7 +96,7 @@ export default class Header {
       // // background: [255, 255, 255, 0.1],
       zIndex: 500,
       padding: [0, 10],
-      paddingLeft: IS_ELECTRON ? 78 : 10,
+      marginLeft: IS_ELECTRON ? 78 : 10,
       flexFlow: 'row',
       alignItems: 'center',
       height: HEADER_HEIGHT,

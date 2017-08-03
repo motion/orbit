@@ -31,10 +31,12 @@ export function onWindow(cb) {
 const JOT_HOME = '/'
 
 class WindowStore {
-  path = JOT_HOME
-  key = Math.random()
-  position = measure().position
-  size = measure().size
+  constructor(opts = {}) {
+    this.path = opts.path || JOT_HOME
+    this.key = opts.key || Math.random()
+    this.position = opts.position || measure().position
+    this.size = opts.size || measure().size
+  }
   get active() {
     return this.path !== JOT_HOME
   }
@@ -45,7 +47,7 @@ class WindowStore {
 class WindowsStore {
   windows = []
   addWindow = () => {
-    this.windows = [new WindowStore(), ...this.windows]
+    this.windows = [new WindowStore({ size: [300, 500] }), ...this.windows]
   }
   next(path) {
     console.log('next path:', path)
@@ -54,14 +56,14 @@ class WindowsStore {
       return
     }
     this.addWindow()
-    const next = this.windows[1]
+    const toShowWindow = this.windows[1]
 
-    console.log('currentn next path is', next.path)
-    if (next) {
+    console.log('> next path is', toShowWindow.path)
+    if (toShowWindow) {
       if (path) {
-        next.path = path
+        toShowWindow.path = path
       }
-      return next
+      return toShowWindow
     }
   }
   removeBy(key, val) {

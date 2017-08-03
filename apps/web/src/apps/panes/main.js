@@ -165,31 +165,30 @@ class BarMainStore {
 
   start() {
     this.props.getRef && this.props.getRef(this)
+  }
 
-    this.watch(async () => {
-      // search
-      const [searchResults, pathSearchResults] = await Promise.all([
-        Thing.search && Thing.search(this.props.search).exec(),
-        Thing.collection
-          .find()
-          .where('slug')
-          .regex(new RegExp(`^${this.props.search}$`, 'i'))
-          .where({ home: { $ne: true } })
-          .limit(20)
-          .exec(),
-      ])
+  search = async () => {
+    const [searchResults, pathSearchResults] = await Promise.all([
+      Thing.search && Thing.search(this.props.search).exec(),
+      Thing.collection
+        .find()
+        .where('slug')
+        .regex(new RegExp(`^${this.props.search}$`, 'i'))
+        .where({ home: { $ne: true } })
+        .limit(20)
+        .exec(),
+    ])
 
-      this.searchResults = uniq(
-        [...(searchResults || []), ...pathSearchResults],
-        x => x.id
-      ).map(doc => {
-        return {
-          doc,
-          title: doc.title,
-          type: 'browse',
-          category: 'Search Results',
-        }
-      })
+    this.searchResults = uniq(
+      [...(searchResults || []), ...pathSearchResults],
+      x => x.id
+    ).map(doc => {
+      return {
+        doc,
+        title: doc.title,
+        type: 'browse',
+        category: 'Search Results',
+      }
     })
   }
 
@@ -206,6 +205,15 @@ class BarMainStore {
   store: BarMainStore,
 })
 export default class BarMain {
+  lastSearch = ''
+
+  componentWillReceiveProps() {
+    if (this.lastSearch !== this.props.search) {
+      this.props.store.search()
+      this.lastSearch = this.props.search
+    }
+  }
+
   getLength = () => this.props.store.results.length
 
   getChildSchema = row => {

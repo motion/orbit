@@ -26,6 +26,61 @@ class BarBrowseStore {
   }
 }
 
+const Slice = ({ size, offset }) => {
+  const width = size / 2
+  const height = size / 2
+  const hypotenuse = Math.sqrt(width * width + height * height)
+  const ratio = height / width
+  let rotate = Math.atan(ratio) * 57.5
+  rotate = rotate * offset + 1
+
+  return (
+    <thing
+      css={{
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width,
+        height,
+        background: 'rgba(0, 0, 255, 0.2)',
+        overflow: 'hidden',
+        transform: {
+          rotate: '90deg',
+        },
+      }}
+    >
+      <otherthing
+        css={{
+          background: 'rgba(255, 0, 0, 0.2)',
+          width: hypotenuse,
+          marginLeft: width - hypotenuse,
+          height,
+          transformOrigin: 'right bottom',
+          transform: {
+            rotate: `${rotate}deg`,
+          },
+          overflow: 'hidden',
+        }}
+      >
+        <content
+          css={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            textAlign: 'center',
+            transform: { rotate: `-${rotate}deg` },
+            fontSize: 10,
+            background: 'blue',
+          }}
+        >
+          testasdasdasdsad
+        </content>
+      </otherthing>
+    </thing>
+  )
+}
+
 @view({
   store: BarBrowseStore,
 })
@@ -34,14 +89,7 @@ export default class BarBrowse {
     onRef(this)
 
     const size = 450
-    const items = [1, 2, 3]
-    const width = size / 2
-    const height = size / 2
-    const hypotenuse = Math.sqrt(width * width + height * height)
-    const ratio = height / width
-    const rotate = Math.atan(ratio) * 57.5
-
-    console.log(width, height, hypotenuse, ratio, rotate)
+    const slices = [1] //, 2, 3, 4, 5]
 
     return (
       <orbit
@@ -49,52 +97,10 @@ export default class BarBrowse {
           width: size,
           height: size,
           overflow: 'hidden',
-          background: 'yellow',
+          background: [0, 0, 0, 0.1],
         }}
       >
-        <thing
-          css={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width,
-            height,
-            background: 'rgba(0, 0, 255, 0.2)',
-            overflow: 'hidden',
-            transform: {
-              rotate: '90deg',
-            },
-          }}
-        >
-          <otherthing
-            css={{
-              background: 'rgba(255, 0, 0, 0.2)',
-              width: hypotenuse,
-              marginLeft: width - hypotenuse,
-              height,
-              transformOrigin: 'right bottom',
-              transform: {
-                rotate: `${rotate}deg`,
-              },
-              overflow: 'hidden',
-            }}
-          >
-            <content
-              css={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                textAlign: 'center',
-                transform: { rotate: `-${rotate}deg` },
-                fontSize: 10,
-                background: 'blue',
-              }}
-            >
-              testasdasdasdsad
-            </content>
-          </otherthing>
-        </thing>
+        {slices.map(index => <Slice key={index} offset={index} size={size} />)}
       </orbit>
     )
 

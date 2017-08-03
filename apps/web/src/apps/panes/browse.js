@@ -10,12 +10,8 @@ class BarBrowseStore {
   @watch
   children = [
     () => this.parent && this.parent.id,
-    () => this.parent && this.parent.getChildren(),
+    () => this.parent && this.parent.getChildren({ depth: Infinity }),
   ]
-
-  get isHome() {
-    return !this.props.data.parent
-  }
 
   get parent() {
     return this.props.data.parent || User.home
@@ -66,8 +62,7 @@ export default class BarBrowse {
     const { store } = this.props
 
     const child = store.results[row]
-    // console.log('children is', child.children)
-    // if (child.children.length === 0) return null
+    if (child.children.length === 0) return null
 
     const data = { parent: child }
     return { kind: 'browse', data }
@@ -80,20 +75,22 @@ export default class BarBrowse {
     }
 
     return (
-      <UI.List
-        if={store.results}
-        controlled={false}
-        selected={isNumber(activeIndex) ? activeIndex : highlightIndex}
-        itemProps={itemProps}
-        items={store.results}
-        getItem={result =>
-          <UI.ListItem
-            key={result.id}
-            icon={result.icon}
-            icon={result.icon}
-            primary={result.title}
-          />}
-      />
+      <browse>
+        <UI.List
+          if={store.results}
+          controlled={false}
+          selected={isNumber(activeIndex) ? activeIndex : highlightIndex}
+          itemProps={itemProps}
+          items={store.results}
+          getItem={result =>
+            <UI.ListItem
+              key={result.id}
+              icon={result.icon}
+              icon={result.icon}
+              primary={result.title}
+            />}
+        />
+      </browse>
     )
   }
 }

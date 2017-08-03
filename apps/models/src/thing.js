@@ -167,7 +167,7 @@ export const methods = {
       }
       return this.collection
         .find({ parentId: parent.id, type: { $gt: null }, ...find })
-        .$.takeWhile(() => true)
+        .$.take(1)
         .mergeMap(documents => {
           if (curDepth - 1 === 0) {
             return [documents]

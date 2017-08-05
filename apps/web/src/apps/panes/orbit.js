@@ -29,7 +29,11 @@ class BarBrowseStore {
 @view
 class Item {
   render() {
-    return this.props.children
+    return (
+      <div>
+        {this.props.children}
+      </div>
+    )
   }
 }
 
@@ -65,8 +69,12 @@ class RadialMenu extends React.Component {
   ]
 
   render() {
-    return this.spots.map((position, index) =>
-      <Item key={index} position={position} />
+    return (
+      <radialmenu>
+        {this.spots.map((position, index) =>
+          <Item key={index} position={position} />
+        )}
+      </radialmenu>
     )
   }
 }

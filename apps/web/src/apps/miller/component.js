@@ -104,7 +104,7 @@ class Pane {
     }
 
     return (
-      <pane css={{ flex: 1 }} ref={el => el && onMeasureWidth(el.clientWidth)}>
+      <pane $first={activeIndex === 0} ref={el => el && onMeasureWidth(el.clientWidth)}>
         <ChildPane
           paneProps={paneProps}
           data={data || {}}
@@ -119,6 +119,16 @@ class Pane {
         />
       </pane>
     )
+  }
+
+  static style = {
+    pane: {
+      height: '100%',
+      borderLeft: [1, [0,0,0,0.05]]
+    },
+    first: {
+      borderLeft: 'none'
+    }
   }
 }
 

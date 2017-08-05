@@ -82,7 +82,7 @@ export default class Layout {
 
   static style = {
     layout: {
-      background: Constants.IS_ELECTRON ? [42, 42, 45, 0.6] : 'transparent',
+      background: Constants.IS_ELECTRON ? [42, 42, 45, 1] : 'transparent',
       position: 'absolute',
       top: 0,
       right: 0,

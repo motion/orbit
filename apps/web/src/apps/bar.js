@@ -169,12 +169,12 @@ export default class BarPage {
   render({ store }) {
     const paneProps = {
       itemProps: {
-        size: 1.55,
+        size: 1.2,
         glow: false,
         hoverable: true,
         fontSize: 26,
         padding: [0, 10],
-        height: 48,
+        height: 40,
         highlightBackground: [0, 0, 0, 0.15],
         highlightColor: [255, 255, 255, 1],
       },
@@ -243,7 +243,7 @@ export default class BarPage {
 
   static style = {
     bar: {
-      background: [150, 150, 150, 0.5],
+      background: [145, 145, 145, 0.7],
       flex: 1,
       // opacity: 0,
       // transition: 'all ease-in 300ms',

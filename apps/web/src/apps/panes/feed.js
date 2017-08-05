@@ -82,6 +82,10 @@ class BarFeedStore {
         date: '2m ago',
         content: 'Some small amount of editing went into this one.',
         icon: 'gmail',
+        author: {
+          title: 'Nate',
+          image: 'me',
+        }
       },
       {
         id: 1,
@@ -91,6 +95,10 @@ class BarFeedStore {
         content:
           'This is a much longer edit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
         icon: 'drive',
+        author: {
+          title: 'Nick',
+          image: 'nick',
+        }
       },
       {
         id: 3,
@@ -98,6 +106,10 @@ class BarFeedStore {
         action: 'uploaded a new document',
         date: '2m ago',
         icon: 'drive',
+        author: {
+          title: 'Steph',
+          image: 'steph',
+        }
       },
       {
         id: 2,
@@ -106,6 +118,10 @@ class BarFeedStore {
         date: '2m ago',
         content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
         icon: 'gmail',
+        author: {
+          title: 'Nick',
+          image: 'nick',
+        }
       },
     ]
   }
@@ -119,12 +135,15 @@ export default class BarFeed {
 
   render({ store, onRef, highlightIndex, activeIndex, data }) {
     onRef(this)
+
     return (
       <feed>
-        {store.results.map((result, index) =>
-          <item $active={activeIndex === index} key={result.id}>
+        {store.results.map((result, index) => {
+          const parent = data && data.author || result.author
+
+          return <item $active={activeIndex === index} key={result.id}>
             <meta>
-              <avatar $img={`/images/${data.image}.jpg`} />
+              <avatar $img={`/images/${parent.image}.jpg`} />
               <UI.Text $name>
                 {parent.title}
               </UI.Text>
@@ -147,7 +166,7 @@ export default class BarFeed {
               </icon>
             </body>
           </item>
-        )}
+        })}
       </feed>
     )
   }

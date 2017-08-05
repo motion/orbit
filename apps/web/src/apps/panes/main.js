@@ -69,14 +69,14 @@ class BarMainStore {
   get browse() {
     return [
       {
-        title: 'Incoming',
-        type: 'notifications',
-        icon: 'check',
+        title: 'Subscribed',
+        type: 'feed',
+        icon: 'radio',
       },
       {
         title: 'My Team',
         category: 'Browse',
-        type: 'orbit',
+        type: 'browse',
         url() {
           return '/?home=true'
         },
@@ -85,7 +85,7 @@ class BarMainStore {
       {
         title: 'Company',
         category: 'Browse',
-        type: 'orbit',
+        type: 'browse',
         url() {
           return '/?home=true'
         },

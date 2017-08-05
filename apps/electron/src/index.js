@@ -16,9 +16,12 @@ function restart() {
     },
     () => {
       const Windows = require('./windows').default
-      Ionize.reset()
-      Ionize.start(<Windows />)
-      console.log('did hmr')
+
+      setTimeout(() => {
+        Ionize.reset()
+        Ionize.start(<Windows />)
+        console.log('did hmr')
+      }, 500)
     }
   )
 }

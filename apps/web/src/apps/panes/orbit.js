@@ -26,59 +26,49 @@ class BarBrowseStore {
   }
 }
 
-const Slice = ({ size, offset }) => {
-  const width = size / 2
-  const height = size / 2
-  const hypotenuse = Math.sqrt(width * width + height * height)
-  const ratio = height / width
-  let rotate = Math.atan(ratio) * 57.5
-  rotate = rotate * offset + 1
+@view
+class Item {
+  render() {
+    return this.props.children
+  }
+}
 
-  return (
-    <thing
-      css={{
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        width,
-        height,
-        background: 'rgba(0, 0, 255, 0.2)',
-        overflow: 'hidden',
-        transform: {
-          rotate: '90deg',
-        },
-      }}
-    >
-      <otherthing
-        css={{
-          background: 'rgba(255, 0, 0, 0.2)',
-          width: hypotenuse,
-          marginLeft: width - hypotenuse,
-          height,
-          transformOrigin: 'right bottom',
-          transform: {
-            rotate: `${rotate}deg`,
-          },
-          overflow: 'hidden',
-        }}
-      >
-        <content
-          css={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            textAlign: 'center',
-            transform: { rotate: `-${rotate}deg` },
-            fontSize: 10,
-            background: 'blue',
-          }}
-        >
-          testasdasdasdsad
-        </content>
-      </otherthing>
-    </thing>
-  )
+const generateRadialPositions = (count, radius, spread_angle, start_angle) => {
+  let span = spread_angle < 360 ? 1 : 0
+  let start = start_angle * Math.PI / 180
+  let rad = spread_angle * Math.PI * 2 / 360 / (count - span)
+  return [...Array(count)].map((_, i) => {
+    return {
+      x: -Math.cos(start + rad * i) * radius,
+      y: -Math.sin(start + rad * i) * radius,
+    }
+  })
+}
+
+@view
+class RadialMenu extends React.Component {
+  static defaultProps = {
+    itemRadius: 30,
+    menuRadius: 100,
+    spreadAngle: 360,
+    startAngle: 0,
+  }
+
+  spots = [
+    { x: 0, y: 0 },
+    ...generateRadialPositions(
+      this.props.items.length - 1,
+      this.props.menuRadius,
+      this.props.spreadAngle,
+      this.props.startAngle
+    ),
+  ]
+
+  render() {
+    return this.spots.map((position, index) =>
+      <Item key={index} position={position} />
+    )
+  }
 }
 
 @view({
@@ -89,18 +79,21 @@ export default class BarBrowse {
     onRef(this)
 
     const size = 450
-    const slices = [1] //, 2, 3, 4, 5]
+    const slices = ['red', 'green', 'blue'] //, 2, 3, 4, 5]
 
     return (
       <orbit
         css={{
           width: size,
           height: size,
-          overflow: 'hidden',
+          //overflow: 'hidden',
           background: [0, 0, 0, 0.1],
+          transform: {
+            //scale: 0.2,
+          },
         }}
       >
-        {slices.map(index => <Slice key={index} offset={index} size={size} />)}
+        <RadialMenu items={slices} />
       </orbit>
     )
 

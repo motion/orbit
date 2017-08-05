@@ -8,7 +8,6 @@
     "@mcro/models": "^1.1.0",
     "@mcro/ui": "^1.1.0",
     "@mcro/web": "^1.1.0",
-    "babel-preset-steelbrain": "*",
     "react": "^15.6.0",
     "react-dom": "^15.6.1"
   }

@@ -55,13 +55,21 @@ export default class Badge {
       >
         <content $labelBefore={labelBefore} if={icon || children || label}>
           <lbl if={label} $hasChildren={!!children}>
-            <Text fontSize={fontSizeNum} lineHeight={fontSizeNum} color={color}>
+            <Text
+              fontSize={fontSizeNum}
+              lineHeight={fontSizeNum + 1}
+              color={color}
+            >
               {label}
             </Text>
           </lbl>
           <Icon if={icon} size={16} name={icon} color={color} {...iconProps} />
           <inner if={children} $hasLabel={!!label}>
-            <Text fontSize={fontSizeNum} lineHeight={fontSizeNum} color={color}>
+            <Text
+              fontSize={fontSizeNum}
+              lineHeight={fontSizeNum + 1}
+              color={color}
+            >
               {children}
             </Text>
           </inner>

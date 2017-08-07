@@ -32,6 +32,12 @@ const items = [
   },
 ]
 
+const SelectableSection = ({ index, activeIndex, ...props }) =>
+  <section
+    {...props}
+    css={{ background: activeIndex === index ? [0, 0, 0, 0.1] : null }}
+  />
+
 const badgeProps = item =>
   item.background ? { background: item.background, color: '#fff' } : {}
 
@@ -56,7 +62,7 @@ export default class BarTaskPane {
               </headingcontent>
             </heading>
 
-            <meta>
+            <SelectableSection $meta index={0} activeIndex={activeIndex}>
               <UI.Grid columns={2}>
                 {items.map((item, index) =>
                   <UI.ListItem
@@ -78,9 +84,9 @@ export default class BarTaskPane {
                 selected={isNumber(activeIndex) ? activeIndex : highlightIndex}
                 items={items}
               />
-            </meta>
+            </SelectableSection>
 
-            <content>
+            <SelectableSection $content index={1} activeIndex={activeIndex}>
               <UI.Title $subtitle size={1}>
                 Description
               </UI.Title>
@@ -92,17 +98,31 @@ export default class BarTaskPane {
               <UI.Title size={1.2}>Current Behavior</UI.Title>
               <UI.Text>
                 Installing CouchDB in Kubernetes is currently a very manual
-                task. Many of our users are starting to adopt Kubernetes in
-                their environments and are working through these details
-                themselves.
+                task. Many of our users...
               </UI.Text>
-              <UI.Title size={1.2}>Possible Solution</UI.Title>
-              <UI.Text>
-                See
-                https://github.com/kubernetes/charts/blob/master/CONTRIBUTING.md
-                for the process to add a new chart to the Helm repository.
-              </UI.Text>
-            </content>
+              <more>Show more...</more>
+            </SelectableSection>
+
+            <SelectableSection $content index={2} activeIndex={activeIndex}>
+              <UI.Title $subtitle size={1}>
+                Replies (20)
+              </UI.Title>
+              <reply css={{ flexFlow: 'row', flex: 1, overflow: 'hidden' }}>
+                <img
+                  css={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 100,
+                    marginRight: 10,
+                  }}
+                  src="/images/me.jpg"
+                />
+                <UI.Text>
+                  Helm install stable/couchdb should stand up a working CouchDB
+                  deployment in my Kubernetes environment.
+                </UI.Text>
+              </reply>
+            </SelectableSection>
           </task>
         </UI.Theme>
       </card>
@@ -113,9 +133,9 @@ export default class BarTaskPane {
     card: {
       flex: 1,
       padding: 8,
-      margin: 5,
+      margin: [5, 0],
       background: [250, 250, 250, 1],
-      borderRadius: 5,
+      //borderRadius: 5,
       maxHeight: 500,
       overflowY: 'scroll',
       boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.1]]],
@@ -139,7 +159,9 @@ export default class BarTaskPane {
       width: '100%',
     },
     meta: {
-      // margin: [0, -20],
+      margin: [-5, -10],
+      padding: [5, 0],
+      borderBottom: [1, [0, 0, 0, 0.05]],
     },
     label: {
       width: '35%',
@@ -153,9 +175,8 @@ export default class BarTaskPane {
       fontSize: 16,
     },
     subtitle: {
-      borderBottom: [1, [0, 0, 0, 0.05]],
-      marginBottom: 5,
-      paddingBottom: 5,
+      margin: [5, 0, 0],
+      opacity: 0.6,
     },
     primary: {
       flexFlow: 'row',

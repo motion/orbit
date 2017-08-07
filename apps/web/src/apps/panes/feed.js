@@ -3,6 +3,8 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import PaneCard from './views/card'
+import DocPane from './doc'
+import GithubPane from './github'
 
 const icons = {
   gmail: (
@@ -72,22 +74,6 @@ const icons = {
   ),
 }
 
-const changes = [
-  {
-    contents:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam similique veritatis...',
-    type: 'addition',
-  },
-  {
-    contents: 'Consectetur adipisicing elit. Veniam similique veritatis...',
-    type: 'deletion',
-  },
-  {
-    contents: 'Veniam similique veritatis...',
-    type: 'addition',
-  },
-]
-
 class BarFeedStore {
   get results() {
     return [
@@ -97,38 +83,13 @@ class BarFeedStore {
         action: 'edited',
         date: '2m ago',
         content: (
-          <PaneCard
-            title="Product Page Planning Meeting Aug. 5"
-            icon="google"
-            id="52"
-          >
-            <what css={{ padding: [5, 5, 5] }}>
-              <UI.Text>
-                Nate made{' '}
-                <span css={{ color: 'green' }}>
-                  <strong>2</strong> additions
-                </span>{' '}
-                and{' '}
-                <span css={{ color: 'red' }}>
-                  <strong>1</strong> deletion
-                </span>:
-              </UI.Text>
-            </what>
-
-            {changes.map((change, index) => {
-              const add = change.type === 'addition'
-              return (
-                <change key={index} css={{ flexFlow: 'row', marginBottom: 5 }}>
-                  <icon css={{ padding: [0, 8], color: add ? 'green' : 'red' }}>
-                    {add ? '+' : '-'}
-                  </icon>
-                  <UI.Text>
-                    {change.contents}
-                  </UI.Text>
-                </change>
-              )
-            })}
-          </PaneCard>
+          <DocPane
+            data={{
+              title: 'Product Page Planning Meeting Aug. 5',
+              id: '52',
+              author: 'Nate',
+            }}
+          />
         ),
         author: {
           title: 'Nate',
@@ -152,8 +113,16 @@ class BarFeedStore {
         id: 3,
         title: 'Item 1',
         action: 'uploaded a new document',
+        content: (
+          <GithubPane
+            data={{
+              title: 'Kubernetes React Integration',
+              id: '52',
+              author: 'Steph',
+            }}
+          />
+        ),
         date: '2m ago',
-        icon: 'drive',
         author: {
           title: 'Steph',
           image: 'steph',
@@ -223,8 +192,9 @@ export default class BarFeed {
 
   static style = {
     feed: {
-      flex: 2,
+      flex: 1,
       minWidth: 200,
+      overflowY: 'scroll',
     },
     item: {
       padding: [10, 15],

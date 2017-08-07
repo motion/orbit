@@ -13,6 +13,16 @@ class BarMainStore {
     return User.home
   }
 
+  get actions() {
+    return [
+      {
+        title: 'Create new topic +',
+        type: 'feed',
+        category: 'Actions',
+      },
+    ]
+  }
+
   get integrations() {
     return [
       {
@@ -72,6 +82,9 @@ class BarMainStore {
         title: 'Subscribed',
         type: 'feed',
         icon: 'radio',
+        data: {
+          special: true,
+        },
       },
       {
         title: 'Assigned to me',
@@ -129,11 +142,12 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login' }]
     }
 
-    const { searchResults, integrations, browse, people } = this
+    const { searchResults, integrations, browse, people, actions } = this
     const hayStack = [
       ...browse,
       ...(searchResults || []),
       ...people,
+      ...actions,
       ...integrations,
     ]
     return fuzzy

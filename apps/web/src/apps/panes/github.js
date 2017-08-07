@@ -4,17 +4,30 @@ import PaneCard from './views/card'
 
 const changes = [
   {
-    contents:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam similique veritatis...',
+    contents: `
+content: (
+  <PaneCard
+    title="Product Page Planning Meeting"
+    icon="google"
+)
+`,
     type: 'addition',
   },
   {
-    contents: 'Consectetur adipisicing elit. Veniam similique veritatis...',
+    contents: `
+this.children &&
+this.children.map(doc => {
+  return {
+    type: 'browse',
+    title: doc.title,
+    category: 'Browse',
+    icon: doc.icon,
+    doc,
+  }
+})
+)
+`,
     type: 'deletion',
-  },
-  {
-    contents: 'Veniam similique veritatis...',
-    type: 'addition',
   },
 ]
 
@@ -22,7 +35,7 @@ const changes = [
 export default class BarDocPane {
   render({ data, highlightIndex, activeIndex, paneProps }) {
     return (
-      <PaneCard title={data.title} icon="google" id={data.id || 0}>
+      <PaneCard title={data.title} icon="github" id={data.id || 0}>
         <what css={{ padding: [5, 5, 5] }}>
           <UI.Text>
             {data.author} made{' '}
@@ -43,9 +56,13 @@ export default class BarDocPane {
               <icon css={{ padding: [0, 8], color: add ? 'green' : 'red' }}>
                 {add ? '+' : '-'}
               </icon>
-              <UI.Text>
-                {change.contents}
-              </UI.Text>
+              <code>
+                <pre>
+                  <UI.Text>
+                    {change.contents}
+                  </UI.Text>
+                </pre>
+              </code>
             </change>
           )
         })}

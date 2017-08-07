@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import fuzzy from 'fuzzy'
+import PaneCard from './views/card'
 
 const icons = {
   gmail: (
@@ -72,6 +72,22 @@ const icons = {
   ),
 }
 
+const changes = [
+  {
+    contents:
+      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam similique veritatis...',
+    type: 'addition',
+  },
+  {
+    contents: 'Consectetur adipisicing elit. Veniam similique veritatis...',
+    type: 'deletion',
+  },
+  {
+    contents: 'Veniam similique veritatis...',
+    type: 'addition',
+  },
+]
+
 class BarFeedStore {
   get results() {
     return [
@@ -80,8 +96,40 @@ class BarFeedStore {
         title: 'Item 1',
         action: 'edited',
         date: '2m ago',
-        content: 'Some small amount of editing went into this one.',
-        icon: 'gmail',
+        content: (
+          <PaneCard
+            title="Product Page Planning Meeting Aug. 5"
+            icon="google"
+            id="52"
+          >
+            <what css={{ padding: [5, 5, 5] }}>
+              <UI.Text>
+                Nate made{' '}
+                <span css={{ color: 'green' }}>
+                  <strong>2</strong> additions
+                </span>{' '}
+                and{' '}
+                <span css={{ color: 'red' }}>
+                  <strong>1</strong> deletion
+                </span>:
+              </UI.Text>
+            </what>
+
+            {changes.map((change, index) => {
+              const add = change.type === 'addition'
+              return (
+                <change key={index} css={{ flexFlow: 'row', marginBottom: 5 }}>
+                  <icon css={{ padding: [0, 8], color: add ? 'green' : 'red' }}>
+                    {add ? '+' : '-'}
+                  </icon>
+                  <UI.Text>
+                    {change.contents}
+                  </UI.Text>
+                </change>
+              )
+            })}
+          </PaneCard>
+        ),
         author: {
           title: 'Nate',
           image: 'me',
@@ -161,7 +209,7 @@ export default class BarFeed {
                     {result.content}
                   </UI.Text>
                 </content>
-                <icon>
+                <icon if={result.icon}>
                   <iconBg />
                   {icons[result.icon]}
                 </icon>

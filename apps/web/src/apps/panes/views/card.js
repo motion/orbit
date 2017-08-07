@@ -15,6 +15,7 @@ export default class PaneCard {
                 </UI.Title>
                 <UI.Icon
                   css={{ marginTop: 10, marginLeft: 20 }}
+                  color="#555"
                   size={30}
                   name={icon}
                 />
@@ -32,7 +33,7 @@ export default class PaneCard {
     card: {
       flex: 1,
       padding: 8,
-      margin: [5, 5, 5, 0],
+      //margin: 5,
       background: [250, 250, 250, 1],
       //borderRadius: 5,
       maxHeight: 500,

@@ -2,8 +2,8 @@ import React from 'react'
 import { app, globalShortcut, screen, ipcMain } from 'electron'
 import Window from './window'
 
-const MIN_WIDTH = 600
-const MIN_HEIGHT = 500
+const MIN_WIDTH = 750
+const MIN_HEIGHT = 600
 const JOT_URL = 'http://jot.dev'
 
 const measure = () => {

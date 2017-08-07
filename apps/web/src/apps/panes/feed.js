@@ -85,7 +85,7 @@ class BarFeedStore {
         author: {
           title: 'Nate',
           image: 'me',
-        }
+        },
       },
       {
         id: 1,
@@ -98,7 +98,7 @@ class BarFeedStore {
         author: {
           title: 'Nick',
           image: 'nick',
-        }
+        },
       },
       {
         id: 3,
@@ -109,7 +109,7 @@ class BarFeedStore {
         author: {
           title: 'Steph',
           image: 'steph',
-        }
+        },
       },
       {
         id: 2,
@@ -121,7 +121,7 @@ class BarFeedStore {
         author: {
           title: 'Nick',
           image: 'nick',
-        }
+        },
       },
     ]
   }
@@ -139,39 +139,45 @@ export default class BarFeed {
     return (
       <feed>
         {store.results.map((result, index) => {
-          const parent = data && data.author || result.author
+          const parent = (data && data.author) || result.author
 
-          return <item $active={activeIndex === index} key={result.id}>
-            <meta>
-              <avatar $img={`/images/${parent.image}.jpg`} />
-              <UI.Text $name>
-                {parent.title}
-              </UI.Text>
-              <UI.Text $action>
-                {result.action}
-              </UI.Text>
-              <UI.Text $date>
-                {result.date}
-              </UI.Text>
-            </meta>
-            <body if={result.content}>
-              <content>
-                <UI.Text>
-                  {result.content}
+          return (
+            <item $active={activeIndex === index} key={result.id}>
+              <meta>
+                <avatar $img={`/images/${parent.image}.jpg`} />
+                <UI.Text $name>
+                  {parent.title}{' '}
                 </UI.Text>
-              </content>
-              <icon>
-                <iconBg />
-                {icons[result.icon]}
-              </icon>
-            </body>
-          </item>
+                <UI.Text $action>
+                  {result.action}{' '}
+                </UI.Text>
+                <UI.Text $date>
+                  {result.date}{' '}
+                </UI.Text>
+              </meta>
+              <body if={result.content}>
+                <content>
+                  <UI.Text>
+                    {result.content}
+                  </UI.Text>
+                </content>
+                <icon>
+                  <iconBg />
+                  {icons[result.icon]}
+                </icon>
+              </body>
+            </item>
+          )
         })}
       </feed>
     )
   }
 
   static style = {
+    feed: {
+      flex: 2,
+      minWidth: 200,
+    },
     item: {
       padding: [10, 15],
       color: '#fff',
@@ -181,6 +187,7 @@ export default class BarFeed {
       flexFlow: 'row',
       flexWrap: 'wrap',
       alignItems: 'center',
+      whiteSpace: 'pre',
       fontSize: 13,
       marginBottom: 5,
     },
@@ -201,8 +208,8 @@ export default class BarFeed {
       padding: [2, 5],
     },
     icon: {
-      width: 26,
-      height: 26,
+      width: 30,
+      height: 30,
       margin: [10, 5, 0],
       position: 'relative',
     },
@@ -223,10 +230,10 @@ export default class BarFeed {
       marginRight: 4,
     },
     avatar: {
-      width: 16,
-      height: 16,
+      width: 18,
+      height: 18,
       borderRadius: 100,
-      marginRight: 4,
+      marginRight: 8,
     },
     img: src => ({
       background: `url(${src})`,

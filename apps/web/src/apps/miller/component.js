@@ -104,31 +104,29 @@ class Pane {
     }
 
     return (
-      <pane $first={activeIndex === 0} ref={el => el && onMeasureWidth(el.clientWidth)}>
-        <ChildPane
-          paneProps={paneProps}
-          data={data || {}}
-          onSelect={onSelect}
-          onRef={ref => {
-            onRef(ref)
-            this.pane = ref
-          }}
-          search={paneActive ? search : ''}
-          highlightIndex={highlightIndex}
-          activeIndex={activeIndex}
-        />
-      </pane>
+      <ChildPane
+        paneProps={paneProps}
+        data={data || {}}
+        onSelect={onSelect}
+        onRef={ref => {
+          onRef(ref)
+          this.pane = ref
+        }}
+        search={paneActive ? search : ''}
+        highlightIndex={highlightIndex}
+        activeIndex={activeIndex}
+      />
     )
   }
 
   static style = {
     pane: {
       height: '100%',
-      borderLeft: [1, [0,0,0,0.05]]
+      borderLeft: [1, [0, 0, 0, 0.05]],
     },
     first: {
-      borderLeft: 'none'
-    }
+      borderLeft: 'none',
+    },
   }
 }
 
@@ -153,23 +151,22 @@ export default class Miller {
             console.log('panes[pane.kind]', panes, pane.kind)
 
             return (
-              <column key={index > state.activeCol ? Math.random() : index}>
-                <Pane
-                  // if it's the next preview, always rerender
-                  pane={panes[pane.kind]}
-                  type={pane.type}
-                  data={pane.data}
-                  search={search}
-                  paneProps={paneProps}
-                  onMeasureWidth={width => (store.colWidths[index] = width)}
-                  col={index}
-                  onRef={plugin => {
-                    store.plugins[index] = plugin
-                  }}
-                  onSelect={row => store.onSelect(index, row)}
-                  state={state}
-                />
-              </column>
+              <Pane
+                key={index > state.activeCol ? Math.random() : index}
+                // if it's the next preview, always rerender
+                pane={panes[pane.kind]}
+                type={pane.type}
+                data={pane.data}
+                search={search}
+                paneProps={paneProps}
+                onMeasureWidth={width => (store.colWidths[index] = width)}
+                col={index}
+                onRef={plugin => {
+                  store.plugins[index] = plugin
+                }}
+                onSelect={row => store.onSelect(index, row)}
+                state={state}
+              />
             )
           })}
         </columns>
@@ -195,8 +192,5 @@ export default class Miller {
       },
     },
     transX: x => ({ transform: { x } }),
-    column: {
-      flex: 1,
-    },
   }
 }

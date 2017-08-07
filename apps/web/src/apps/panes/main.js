@@ -74,6 +74,11 @@ class BarMainStore {
         icon: 'radio',
       },
       {
+        title: 'Assigned to me',
+        type: 'task',
+        icon: 'check',
+      },
+      {
         title: 'My Team',
         category: 'Browse',
         type: 'browse',
@@ -235,8 +240,7 @@ export default class BarMain {
 
   static style = {
     pane: {
-      minWidth: 150,
-      flex: 1,
+      width: 280,
     },
     image: {
       width: 20,

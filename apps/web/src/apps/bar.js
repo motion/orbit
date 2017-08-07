@@ -248,7 +248,7 @@ export default class BarPage {
 
   static style = {
     bar: {
-      background: [145, 145, 145, 0.7],
+      background: [145, 145, 145, 0.5],
       flex: 1,
       // opacity: 0,
       // transition: 'all ease-in 300ms',

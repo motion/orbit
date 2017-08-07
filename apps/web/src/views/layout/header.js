@@ -40,17 +40,22 @@ export default class Header {
               position: 'absolute',
               width: '40%',
               overflow: 'hidden',
-              marginLeft: '-20%',
+              //marginLeft: '-20%',
               top: 0,
               bottom: 0,
-              left: '50%',
+              left: '20%',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <Explorer
-              onOpen={() => (layoutStore.explorerOpen = true)}
-              onClose={() => (layoutStore.explorerOpen = false)}
-            />
+            My App
           </centerside>
+
+          <Explorer
+            if={false}
+            onOpen={() => (layoutStore.explorerOpen = true)}
+            onClose={() => (layoutStore.explorerOpen = false)}
+          />
 
           <rightside $$row $$centered>
             <UI.SlotFill.Slot name="actions">

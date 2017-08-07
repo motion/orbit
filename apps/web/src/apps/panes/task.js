@@ -133,7 +133,7 @@ export default class BarTaskPane {
     card: {
       flex: 1,
       padding: 8,
-      margin: [5, 0],
+      margin: [5, 5, 5, 0],
       background: [250, 250, 250, 1],
       //borderRadius: 5,
       maxHeight: 500,

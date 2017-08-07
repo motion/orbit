@@ -96,8 +96,6 @@ class Pane {
     const activeIndex = paneActive && state.activeRow
     const ChildPane = pane
 
-    console.log('got child pane', ChildPane)
-
     if (!ChildPane) {
       console.error('no pane found for type', type)
       return null
@@ -148,8 +146,6 @@ export default class Miller {
       <miller>
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
-            console.log('panes[pane.kind]', panes, pane.kind)
-
             return (
               <Pane
                 key={index > state.activeCol ? Math.random() : index}

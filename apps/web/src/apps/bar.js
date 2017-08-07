@@ -141,6 +141,9 @@ class BarStore {
         e.preventDefault()
       }
     },
+    cmdR: () => {
+      window.location.href = window.location.href
+    },
   }
 
   newWindow = url => {
@@ -207,7 +210,7 @@ export default class BarPage {
               <forwardComplete>
                 {store.peekItem}
               </forwardComplete>
-              <pasteIcon>
+              <pasteIcon if={false}>
                 <UI.Icon size={50} type="detailed" name="paper" />
               </pasteIcon>
               <selected

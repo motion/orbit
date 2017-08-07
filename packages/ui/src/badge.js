@@ -3,6 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
 import Surface from './surface'
+import Text from './text'
 import Icon from './icon'
 
 type Props = {
@@ -49,11 +50,15 @@ export default class Badge {
       >
         <content $labelBefore={labelBefore} if={icon || children || label}>
           <lbl if={label} $hasChildren={!!children}>
-            {label}
+            <Text color={color}>
+              {label}
+            </Text>
           </lbl>
           <Icon if={icon} size={16} name={icon} color={color} {...iconProps} />
           <inner if={children} $hasLabel={!!label}>
-            {children}
+            <Text color={color}>
+              {children}
+            </Text>
           </inner>
         </content>
       </Surface>

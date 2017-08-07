@@ -65,6 +65,7 @@ export default class Title extends React.Component {
     onFocus,
     onBlur,
     style,
+    display,
     css,
     ...props
   }: TitleProps) {
@@ -116,7 +117,7 @@ export default class Title extends React.Component {
           fontWeight={fontWeight}
           {...textProps}
         >
-          <el $$row>
+          <el $display={display} $$row>
             {children}
             <stat if={stat}>
               {stat}
@@ -143,7 +144,7 @@ export default class Title extends React.Component {
       textTransform: 'uppercase',
     },
     size2: {
-      fontWeight: 700,
+      fontWeight: 200,
     },
     size3: {
       fontWeight: 200,
@@ -161,5 +162,6 @@ export default class Title extends React.Component {
       marginLeft: 8,
       opacity: 0.7,
     },
+    display: display => ({ display }),
   }
 }

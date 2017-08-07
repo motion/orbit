@@ -9,7 +9,7 @@ import Surface from './surface'
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class row implements ViewType<Props> {
+export default class Row implements ViewType<Props> {
   props: Props & {
     active?: number,
     defaultActive?: number,

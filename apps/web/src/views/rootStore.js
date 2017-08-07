@@ -18,6 +18,7 @@ const SHORTCUTS = {
   cmdL: 'command+l',
   cmdEnter: 'command+enter',
   cmdUp: 'command+up',
+  cmdR: 'command+r',
   delete: ['delete', 'backspace'],
   toggleSidebar: 'command+\\',
   togglePane: 'shift+tab',

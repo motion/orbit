@@ -126,6 +126,7 @@ export default class Text {
     getRef,
     style,
     placeholder,
+    lineHeight,
     ...props
   }: Props) {
     const eventProps = {
@@ -177,7 +178,10 @@ export default class Text {
       text: {
         fontSize,
         fontWeight: props.fontWeight,
-        lineHeight: `${fontSize + 8}px`,
+        lineHeight:
+          typeof props.lineHeight === 'number'
+            ? `${props.lineHeight}px`
+            : props.lineHeight || `${fontSize + 8}px`,
         color: props.color || theme.base.color,
         opacity: props.opacity,
       },

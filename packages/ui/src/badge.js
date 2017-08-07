@@ -17,6 +17,7 @@ type Props = {
   iconProps?: Object,
   label?: string | HTMLElement,
   labelBefore?: boolean,
+  fontSize?: number,
 }
 
 @view.ui
@@ -26,6 +27,7 @@ export default class Badge {
   static defaultProps = {
     background: [0, 0, 0, 0.1],
     borderRadius: 30,
+    fontSize: 12,
   }
 
   render({
@@ -38,8 +40,11 @@ export default class Badge {
     className,
     style,
     labelBefore,
+    fontSize,
     ...props
   }: Props) {
+    const fontSizeNum = +fontSize
+
     return (
       <Surface
         $badge
@@ -50,13 +55,13 @@ export default class Badge {
       >
         <content $labelBefore={labelBefore} if={icon || children || label}>
           <lbl if={label} $hasChildren={!!children}>
-            <Text color={color}>
+            <Text fontSize={fontSizeNum} lineHeight={fontSizeNum} color={color}>
               {label}
             </Text>
           </lbl>
           <Icon if={icon} size={16} name={icon} color={color} {...iconProps} />
           <inner if={children} $hasLabel={!!label}>
-            <Text color={color}>
+            <Text fontSize={fontSizeNum} lineHeight={fontSizeNum} color={color}>
               {children}
             </Text>
           </inner>
@@ -69,7 +74,6 @@ export default class Badge {
     badge: {
       height: 18,
       padding: [2, 3],
-      fontSize: 11.5,
       marginLeft: 5,
       alignSelf: 'center',
       flexFlow: 'row',

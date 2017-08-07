@@ -7,11 +7,13 @@ const items = [
     label: 'Type',
     value: 'Epic',
     icon: 'tag',
+    background: '#5F95F7',
   },
   {
     label: 'Priority',
     value: 'High',
     icon: 'alert',
+    background: '#FF9140',
   },
   {
     label: 'Status',
@@ -29,6 +31,9 @@ const items = [
     icon: 'space',
   },
 ]
+
+const badgeProps = item =>
+  item.background ? { background: item.background, color: '#fff' } : {}
 
 @view
 export default class BarTaskPane {
@@ -59,9 +64,7 @@ export default class BarTaskPane {
                     primary={
                       <primary>
                         <UI.Text $label>{item.label}:</UI.Text>{' '}
-                        <UI.Badge background="red" color="white">
-                          {item.value}
-                        </UI.Badge>
+                        <UI.Badge {...badgeProps(item)}>{item.value}</UI.Badge>
                       </primary>
                     }
                   />

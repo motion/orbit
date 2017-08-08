@@ -150,6 +150,46 @@ export default class BarFeed {
   render({ store, onRef, highlightIndex, activeIndex, data }) {
     onRef(this)
 
+    const results = store.results.map((result, index) => {
+      const parent = (data && data.author) || result.author
+
+      return (
+        <item $active={activeIndex === index} key={result.id}>
+          <meta>
+            <avatar $img={`/images/${parent.image}.jpg`} />
+            <UI.Text $name>
+              {parent.title}{' '}
+            </UI.Text>
+            <UI.Text $action>
+              {result.action}{' '}
+            </UI.Text>
+            <UI.Text $date>
+              {result.date}{' '}
+            </UI.Text>
+          </meta>
+          <body if={result.content}>
+            <content>
+              <UI.Text>
+                {result.content}
+              </UI.Text>
+            </content>
+            <icon if={result.icon}>
+              <iconBg />
+              {icons[result.icon]}
+            </icon>
+          </body>
+        </item>
+      )
+    })
+
+    if (!data.special) {
+      return (
+        <feed>
+          {results}
+        </feed>
+      )
+    }
+
     return (
       <UI.Theme name="light">
         <feed>
@@ -205,37 +245,7 @@ export default class BarFeed {
               <UI.Title>Recently</UI.Title>
             </feedtitle>
 
-            {store.results.map((result, index) => {
-              const parent = (data && data.author) || result.author
-
-              return (
-                <item $active={activeIndex === index} key={result.id}>
-                  <meta>
-                    <avatar $img={`/images/${parent.image}.jpg`} />
-                    <UI.Text $name>
-                      {parent.title}{' '}
-                    </UI.Text>
-                    <UI.Text $action>
-                      {result.action}{' '}
-                    </UI.Text>
-                    <UI.Text $date>
-                      {result.date}{' '}
-                    </UI.Text>
-                  </meta>
-                  <body if={result.content}>
-                    <content>
-                      <UI.Text>
-                        {result.content}
-                      </UI.Text>
-                    </content>
-                    <icon if={result.icon}>
-                      <iconBg />
-                      {icons[result.icon]}
-                    </icon>
-                  </body>
-                </item>
-              )
-            })}
+            {results}
           </feeditems>
         </feed>
       </UI.Theme>
@@ -281,7 +291,6 @@ export default class BarFeed {
     },
     feeditems: {
       padding: [10, 15],
-      background: '#f2f2f2',
     },
     feedtitle: {
       marginBottom: 5,

@@ -77,6 +77,34 @@ const icons = {
 class BarFeedStore {
   get results() {
     return [
+      this.props.data.special && {
+        id: -1,
+        title: 'Item 0',
+        action: 'edited',
+        date: '2m ago',
+        content: (
+          <UI.TabPane tabs={['Test', 'Other']}>
+            <DocPane
+              data={{
+                title: 'Test',
+                id: '52',
+                author: 'Nate',
+              }}
+            />
+            <DocPane
+              data={{
+                title: 'Test',
+                id: '52',
+                author: 'Nate',
+              }}
+            />
+          </UI.TabPane>
+        ),
+        author: {
+          title: 'Nate',
+          image: 'me',
+        },
+      },
       {
         id: 0,
         title: 'Item 1',
@@ -140,7 +168,7 @@ class BarFeedStore {
           image: 'nick',
         },
       },
-    ]
+    ].filter(x => !!x)
   }
 }
 
@@ -148,8 +176,6 @@ class BarFeedStore {
   store: BarFeedStore,
 })
 export default class BarFeed {
-  getLength = () => this.props.store.results.length
-
   render({ store, onRef, highlightIndex, activeIndex, data }) {
     onRef(this)
 

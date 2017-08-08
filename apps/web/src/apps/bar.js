@@ -234,7 +234,7 @@ export default class BarPage {
               panes={store.PANE_TYPES}
               onChange={store.onMillerStateChange}
               paneProps={paneProps}
-              onActions={actions => (store.millerActions = actions)}
+              onActions={store.ref('millerActions').set}
             />
           </bar>
         </UI.Theme>

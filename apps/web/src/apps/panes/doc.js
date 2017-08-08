@@ -20,9 +20,14 @@ const changes = [
 
 @view
 export default class BarDocPane {
-  render({ data, highlightIndex, activeIndex, paneProps }) {
+  render({ data, highlightIndex, activeIndex, paneProps, chromeless }) {
     return (
-      <PaneCard title={data.title} icon="google" id={data.id || 0}>
+      <PaneCard
+        chromeless={chromeless}
+        title={data.title}
+        icon="google"
+        id={data.id || 0}
+      >
         <what css={{ padding: [5, 5, 5] }}>
           <UI.Text>
             {data.author} made{' '}

@@ -44,6 +44,7 @@ class WindowStore {
   setPosition = x => (this.position = x)
   setSize = x => (this.size = x)
   toggleBar() {
+    console.log('toggling bar')
     this.showBar = !this.showBar
   }
 }
@@ -192,7 +193,7 @@ export default class ExampleApp extends React.Component {
     setTimeout(() => {
       console.log('got next.ref', next.ref)
       if (next.ref) {
-        console.log('ref keys', Object.keys(next.ref))
+        console.log('ref keys', Object.keys(next.ref), next.ref.focus)
         // next.ref.focus()
       }
     }, 16)
@@ -336,7 +337,9 @@ export default class ExampleApp extends React.Component {
                 this.updateWindows()
               }}
               showDevTools={win.showDevTools}
-              titleBarStyle="hidden-inset"
+              titleBarStyle={
+                win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
+              }
               file={`${JOT_URL}?key=${win.key}`}
               show={win.active}
               ref={this.onAppWindow(win)}

@@ -3,9 +3,9 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class PaneCard {
-  render({ id, title, icon, children }) {
+  render({ id, title, icon, children, chromeless }) {
     return (
-      <card>
+      <card $chromeless={chromeless}>
         <UI.Theme name="light">
           <task>
             <heading>
@@ -33,12 +33,12 @@ export default class PaneCard {
     card: {
       flex: 1,
       padding: 8,
-      //margin: 5,
       background: [250, 250, 250, 1],
-      //borderRadius: 5,
-      maxHeight: 500,
-      overflowY: 'scroll',
       boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.1]]],
+    },
+    chromeless: {
+      background: 'transparent',
+      boxShadow: 'none',
     },
     heading: {
       borderBottom: [1, [0, 0, 0, 0.05]],

@@ -54,6 +54,7 @@ class MillerStore {
       state.moveCol(1)
     },
     down: () => {
+      console.log('miller down')
       const { state } = this.props
       if (
         state.activeRow === null ||
@@ -132,10 +133,13 @@ class Pane {
   store: MillerStore,
 })
 export default class Miller {
+  static defaultProps = {
+    onActions: _ => _,
+  }
+
   componentWillMount() {
     const { onActions, store } = this.props
-
-    onActions && onActions(store.actions)
+    onActions(store.actions)
   }
 
   render({ store, paneProps, onActions, search, panes, animate, state }) {
@@ -169,7 +173,9 @@ export default class Miller {
       </miller>
     )
 
-    if (onActions) return content
+    if (onActions) {
+      return content
+    }
 
     return (
       <HotKeys handlers={store.actions}>

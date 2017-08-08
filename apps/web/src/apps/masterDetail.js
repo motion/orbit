@@ -41,19 +41,17 @@ export default class MasterPage {
 
     return (
       <UI.Surface flex>
-        <HotKeys handlers={store.actions}>
-          <UI.Theme name="light">
-            <Miller
-              animate
-              search={''}
-              version={store.millerStateVersion}
-              state={store.millerState}
-              panes={store.PANE_TYPES}
-              onChange={store.onMillerStateChange}
-              paneProps={paneProps}
-            />
-          </UI.Theme>
-        </HotKeys>
+        <UI.Theme name="light">
+          <Miller
+            animate
+            search={''}
+            version={store.millerStateVersion}
+            state={store.millerState}
+            panes={store.PANE_TYPES}
+            onChange={store.onMillerStateChange}
+            paneProps={paneProps}
+          />
+        </UI.Theme>
       </UI.Surface>
     )
   }

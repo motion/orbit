@@ -291,6 +291,7 @@ export default class BarFeed {
     },
     feeditems: {
       padding: [10, 15],
+      background: '#f2f2f2',
     },
     feedtitle: {
       marginBottom: 5,

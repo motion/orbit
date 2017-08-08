@@ -52,22 +52,25 @@ export default class TabPane {
   static style = {
     tabpane: {
       boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.2]]],
-      background: '#fefefe',
+      background: '#f2f2f2',
     },
     tabs: {
       flexFlow: 'row',
       borderBottom: [1, [0, 0, 0, 0.05]],
     },
     tab: {
-      background: '#fefefe',
-      padding: [5, 8],
+      background: '#f2f2f2',
+      padding: [10, 12],
+      marginBottom: -1,
       borderRight: [1, [0, 0, 0, 0.05]],
+      borderBottom: [1, [0, 0, 0, 0.05]],
       minWidth: 90,
       alignItems: 'center',
     },
     activeTab: {
       fontWeight: 600,
       background: '#fff',
+      borderBottom: [1, 'transparent'],
     },
     content: {
       flex: 1,

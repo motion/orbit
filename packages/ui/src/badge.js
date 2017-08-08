@@ -100,13 +100,13 @@ export default class Badge {
       textOverflow: 'ellipsis',
       margin: 'auto',
       textAlign: 'center',
-      padding: [0, 6],
+      padding: [0, 4],
     },
     hasLabel: {
       paddingLeft: 4,
     },
     lbl: {
-      padding: [2, 6],
+      padding: [2, 4],
     },
     hasChildren: {
       paddingRight: 4,

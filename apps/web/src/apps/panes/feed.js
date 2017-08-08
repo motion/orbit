@@ -2,7 +2,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import PaneCard from './views/card'
 import DocPane from './doc'
 import GithubPane from './github'
 
@@ -77,34 +76,6 @@ const icons = {
 class BarFeedStore {
   get results() {
     return [
-      this.props.data.special && {
-        id: -1,
-        title: 'Item 0',
-        action: 'edited',
-        date: '2m ago',
-        content: (
-          <UI.TabPane tabs={['Test', 'Other']}>
-            <DocPane
-              data={{
-                title: 'Test',
-                id: '52',
-                author: 'Nate',
-              }}
-            />
-            <DocPane
-              data={{
-                title: 'Test',
-                id: '52',
-                author: 'Nate',
-              }}
-            />
-          </UI.TabPane>
-        ),
-        author: {
-          title: 'Nate',
-          image: 'me',
-        },
-      },
       {
         id: 0,
         title: 'Item 1',
@@ -181,37 +152,83 @@ export default class BarFeed {
 
     return (
       <feed>
-        {store.results.map((result, index) => {
-          const parent = (data && data.author) || result.author
+        <apps if={data.special} css={{ borderBottom: [2, [0, 0, 0, 0.0001]] }}>
+          <UI.TabPane
+            tabs={[
+              <tab $$row>
+                <UI.Badge
+                  background="rgb(34.5%, 67.5%, 34.5%)"
+                  color="white"
+                  marginRight={8}
+                >
+                  #301
+                </UI.Badge>Product Page...
+              </tab>,
+              <tab $$row>
+                <UI.Badge
+                  background="rgb(34.5%, 64.6%, 67.5%)"
+                  color="white"
+                  marginRight={8}
+                >
+                  #52
+                </UI.Badge>Kubernetes React...
+              </tab>,
+            ]}
+          >
+            <DocPane
+              data={{
+                title: 'Product Page Integration',
+                id: '301',
+                author: 'Nate',
+              }}
+            />
+            <GithubPane
+              data={{
+                title: 'Kubernetes React Integration',
+                id: '52',
+                author: 'Steph',
+              }}
+            />
+          </UI.TabPane>
+        </apps>
 
-          return (
-            <item $active={activeIndex === index} key={result.id}>
-              <meta>
-                <avatar $img={`/images/${parent.image}.jpg`} />
-                <UI.Text $name>
-                  {parent.title}{' '}
-                </UI.Text>
-                <UI.Text $action>
-                  {result.action}{' '}
-                </UI.Text>
-                <UI.Text $date>
-                  {result.date}{' '}
-                </UI.Text>
-              </meta>
-              <body if={result.content}>
-                <content>
-                  <UI.Text>
-                    {result.content}
+        <feeditems $inApp={data.special}>
+          <feedtitle if={data.special}>
+            <UI.Title>Recently</UI.Title>
+          </feedtitle>
+
+          {store.results.map((result, index) => {
+            const parent = (data && data.author) || result.author
+
+            return (
+              <item $active={activeIndex === index} key={result.id}>
+                <meta>
+                  <avatar $img={`/images/${parent.image}.jpg`} />
+                  <UI.Text $name>
+                    {parent.title}{' '}
                   </UI.Text>
-                </content>
-                <icon if={result.icon}>
-                  <iconBg />
-                  {icons[result.icon]}
-                </icon>
-              </body>
-            </item>
-          )
-        })}
+                  <UI.Text $action>
+                    {result.action}{' '}
+                  </UI.Text>
+                  <UI.Text $date>
+                    {result.date}{' '}
+                  </UI.Text>
+                </meta>
+                <body if={result.content}>
+                  <content>
+                    <UI.Text>
+                      {result.content}
+                    </UI.Text>
+                  </content>
+                  <icon if={result.icon}>
+                    <iconBg />
+                    {icons[result.icon]}
+                  </icon>
+                </body>
+              </item>
+            )
+          })}
+        </feeditems>
       </feed>
     )
   }
@@ -223,7 +240,8 @@ export default class BarFeed {
       overflowY: 'scroll',
     },
     item: {
-      padding: [10, 15],
+      padding: [10, 25],
+      margin: [0, -5],
       color: '#fff',
       borderBottom: [1, [0, 0, 0, 0.05]],
     },
@@ -246,6 +264,14 @@ export default class BarFeed {
     },
     body: {
       flexFlow: 'row',
+    },
+    feeditems: {
+      padding: [10, 15],
+      background: '#f2f2f2',
+    },
+    feedtitle: {
+      marginBottom: 5,
+      opacity: 0.7,
     },
     content: {
       flex: 1,
@@ -284,7 +310,7 @@ export default class BarFeed {
       backgroundSize: 'cover',
     }),
     active: {
-      background: [0, 0, 0, 0.1],
+      background: [0, 0, 0, 0.05],
     },
   }
 }

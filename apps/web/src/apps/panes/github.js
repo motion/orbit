@@ -33,9 +33,9 @@ this.children.map(doc => {
 
 @view
 export default class BarDocPane {
-  render({ data, highlightIndex, activeIndex, paneProps }) {
+  render({ data, highlightIndex, activeIndex, paneProps, ...props }) {
     return (
-      <PaneCard title={data.title} icon="github" id={data.id || 0}>
+      <PaneCard title={data.title} icon="github" id={data.id || 0} {...props}>
         <what css={{ padding: [5, 5, 5] }}>
           <UI.Text>
             {data.author} made{' '}

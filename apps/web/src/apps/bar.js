@@ -1,12 +1,11 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { HotKeys } from 'react-hotkeys'
+import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
 import { isNumber, last } from 'lodash'
-import { OS } from '~/helpers/electron'
 
 const safeString = thing => {
   try {
@@ -141,12 +140,6 @@ class BarStore {
         this.millerActions.left()
         e.preventDefault()
       }
-    },
-    cmdR: () => {
-      window.location.href = window.location.href
-    },
-    toggleTitlebar: () => {
-      OS.send('toggle-bar')
     },
   }
 

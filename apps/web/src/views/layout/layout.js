@@ -51,7 +51,6 @@ export default class Layout {
     }
 
     const CurrentPage = Router.activeView || NotFound
-    console.log('CurrentPage', CurrentPage)
 
     return (
       <layout>

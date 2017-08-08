@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { HotKeys } from 'react-hotkeys'
+import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
 
 class MillerStore {
@@ -143,7 +143,7 @@ export default class Miller {
     const transX = animate ? store.translateX : 0
 
     const content = (
-      <miller>
+      <miller css={{ flex: 1 }}>
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
             return (

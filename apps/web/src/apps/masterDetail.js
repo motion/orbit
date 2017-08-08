@@ -1,11 +1,10 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { HotKeys } from 'react-hotkeys'
+import { HotKeys } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { Miller, MillerState } from './miller'
-import { range, random, last } from 'lodash'
 
 const getSchema = () => {
   const val = decodeURIComponent((window.location + '').split('schema=')[1])

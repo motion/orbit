@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { HotKeys } from 'react-hotkeys'
+import { HotKeys } from '~/helpers'
 import Redbox from 'redbox-react'
 import RootStore from './rootStore'
 import Router from '~/router'

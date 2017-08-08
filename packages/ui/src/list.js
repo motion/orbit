@@ -334,7 +334,14 @@ class List {
     )
     if (!controlled) return innerContent
     return (
-      <HotKeys handlers={this.actions} style={{ height: '100%' }}>
+      <HotKeys
+        handlers={this.actions}
+        style={{
+          height: '100%',
+          flexDirection: 'inherit',
+          flexGrow: 'inherit',
+        }}
+      >
         {innerContent}
       </HotKeys>
     )

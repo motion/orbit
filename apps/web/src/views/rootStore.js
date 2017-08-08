@@ -2,6 +2,7 @@
 import { watch } from '@mcro/black'
 import { User, Thing } from '~/app'
 import Router from '~/router'
+import { OS } from '~/helpers'
 
 const SHORTCUTS = {
   left: 'left',
@@ -50,4 +51,13 @@ export default class RootStore {
   ]
 
   shortcuts = SHORTCUTS
+
+  actions = {
+    cmdR: () => {
+      window.location.href = window.location.href
+    },
+    toggleTitlebar: () => {
+      OS.send('app-bar-toggle')
+    },
+  }
 }

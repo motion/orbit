@@ -36,15 +36,19 @@ class WindowStore {
     this.key = opts.key || Math.random()
     this.position = opts.position || measure().position
     this.size = opts.size || measure().size
+    this.showBar = true
   }
   get active() {
     return this.path !== JOT_HOME
   }
   setPosition = x => (this.position = x)
   setSize = x => (this.size = x)
+  toggleBar() {
+    this.showBar = !this.showBar
+  }
 }
 
-class WindowsStore {
+class WindowsStoreFactory {
   windows = []
   addWindow = () => {
     this.windows = [new WindowStore({ size: [300, 500] }), ...this.windows]
@@ -66,6 +70,9 @@ class WindowsStore {
       return toShowWindow
     }
   }
+  findBy(key) {
+    return this.windows.find(x => `${x.key}` === `${key}`)
+  }
   removeBy(key, val) {
     this.windows = this.windows.filter(window => window[key] === val)
   }
@@ -77,7 +84,7 @@ class WindowsStore {
   }
 }
 
-const WinStore = new WindowsStore()
+const WindowsStore = new WindowsStoreFactory()
 
 export default class ExampleApp extends React.Component {
   state = {
@@ -85,7 +92,7 @@ export default class ExampleApp extends React.Component {
     show: true,
     size: [0, 0],
     position: [0, 0],
-    windows: WinStore.windows,
+    windows: WindowsStore.windows,
   }
 
   componentDidMount() {
@@ -94,6 +101,10 @@ export default class ExampleApp extends React.Component {
     onWindows.forEach(cb => {
       cb(this)
     })
+
+    setTimeout(() => {
+      this.measureAndShow()
+    }, 500)
   }
 
   hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
@@ -132,7 +143,7 @@ export default class ExampleApp extends React.Component {
 
   listenToApps = () => {
     ipcMain.on('where-to', (event, key) => {
-      const win = this.state.windows.find(x => `${x.key}` === `${key}`)
+      const win = WindowsStore.findBy(key)
       if (win) {
         console.log('where to?', win.path)
         event.sender.send('app-goto', win.path)
@@ -150,19 +161,26 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('close', (event, path) => {
-      WinStore.removeByPath(path)
+      WindowsStore.removeByPath(path)
       this.updateWindows()
+    })
+
+    ipcMain.on('app-bar-toggle', (event, key) => {
+      console.log('got a toggle from', key)
+      WindowsStore.findBy(key).toggleBar()
+      this.updateWindows()
+      event.sender.send('app-bar-toggle', 'success')
     })
   }
 
   updateWindows = () => {
     return new Promise(resolve => {
-      this.setState({ windows: WinStore.windows }, resolve)
+      this.setState({ windows: WindowsStore.windows }, resolve)
     })
   }
 
   next = path => {
-    const next = WinStore.next(path)
+    const next = WindowsStore.next(path)
     this.updateWindows()
     return next
   }
@@ -250,7 +268,7 @@ export default class ExampleApp extends React.Component {
       return null
     }
 
-    // console.log('render', this.state, windows, WinStore)
+    // console.log('render', this.state, windows, WindowsStore)
 
     return (
       <app>
@@ -272,7 +290,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`${JOT_URL}/bar?randomId=${this.randomKey}`}
+          file={`${JOT_URL}/bar?cachebust=${this.randomKey}`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
@@ -302,7 +320,7 @@ export default class ExampleApp extends React.Component {
                 this.updateWindows()
               }}
               onClose={() => {
-                WinStore.removeByKey(win.key)
+                WindowsStore.removeByKey(win.key)
                 this.updateWindows()
               }}
               onFocus={() => {

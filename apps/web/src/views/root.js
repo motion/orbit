@@ -29,11 +29,11 @@ export default class Root extends React.Component {
     })
 
     // listen to Ionize
-    if (Constants.KEY) {
+    if (Constants.APP_KEY) {
       log('WERE AN APP WINDOW')
       this.on(window, 'focus', () => {
         console.log('ask where to go')
-        ipcRenderer.send('where-to', Constants.KEY)
+        ipcRenderer.send('where-to', Constants.APP_KEY)
       })
 
       ipcRenderer.on('app-goto', (event, arg) => {

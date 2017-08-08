@@ -6,6 +6,7 @@ import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
 import { isNumber, last } from 'lodash'
+import { OS } from '~/helpers/electron'
 
 const safeString = thing => {
   try {
@@ -15,7 +16,6 @@ const safeString = thing => {
     return `${thing}`
   }
 }
-const { ipcRenderer } = (window.require && window.require('electron')) || {}
 
 const actions = [
   'remind',
@@ -118,7 +118,7 @@ class BarStore {
         this.search = ''
       } else {
         this.visible = false
-        ipcRenderer.send('bar-hide')
+        OS.send('bar-hide')
       }
     },
     cmdA: () => {
@@ -126,7 +126,7 @@ class BarStore {
     },
     enter: () => {
       const schema = JSON.stringify(last(this.millerState.schema))
-      ipcRenderer.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
+      OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
     },
     right: e => {
       if (this.hasSelectedItem) {
@@ -145,18 +145,21 @@ class BarStore {
     cmdR: () => {
       window.location.href = window.location.href
     },
+    toggleTitlebar: () => {
+      OS.send('toggle-bar')
+    },
   }
 
   newWindow = url => {
-    ipcRenderer.send('where-to', url)
+    OS.send('where-to', url)
   }
 
   navigate = thing => {
     if (thing && thing.url) {
-      ipcRenderer.send('bar-goto', thing.url())
+      OS.send('bar-goto', thing.url())
     } else if (typeof thing === 'string') {
       console.log('got a navigate weird thing', thing)
-      ipcRenderer.send('bar-goto', thing)
+      OS.send('bar-goto', thing)
     }
   }
 }

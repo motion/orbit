@@ -34,4 +34,4 @@ export const IS_BAR =
 console.log('IS_BAR', IS_BAR)
 
 const keysearch = window.location.search.match(/key=(.*)/)
-export const KEY = keysearch ? keysearch[1] : ''
+export const APP_KEY = keysearch ? keysearch[1] : ''

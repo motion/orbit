@@ -4,6 +4,8 @@ import Router from '~/router'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
 import Explorer from './explorer/explorer'
+import { OS } from '~/helpers/electron'
+import Constants from '~/constants'
 
 @view.attach('layoutStore')
 @view
@@ -68,17 +70,15 @@ export default class Header {
               }}
             </UI.SlotFill.Slot>
             <UI.Row>
-              <UI.Button
-                chromeless
-                margin={[0, 2]}
-                onClick={layoutStore.sidebar.ref('active').toggle}
-              >
+              <UI.Button chromeless margin={[0, 2]}>
                 Share
               </UI.Button>
               <UI.Button
                 chromeless
                 margin={[0, 2]}
-                onClick={layoutStore.sidebar.ref('active').toggle}
+                onClick={() => {
+                  OS.send('app-bar-toggle', Constants.APP_KEY)
+                }}
                 icon="add"
               />
             </UI.Row>

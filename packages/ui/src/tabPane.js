@@ -28,18 +28,20 @@ export default class TabPane {
             <tab
               key={index}
               onClick={this.handleSelect(index)}
-              $activeTab={index === this.state.index}
+              $activeTab={index === this.state.selected}
             >
               {tab}
             </tab>
           )}
         </tabs>
         <content>
-          {React.Children.map(children, child => {
+          {React.Children.map(children, (child, index) => {
             if (!child) {
               return child
             }
-
+            if (index !== this.state.selected) {
+              return null
+            }
             return React.cloneElement(child, { chromeless: true })
           })}
         </content>

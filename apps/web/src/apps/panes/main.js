@@ -2,9 +2,9 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import fuzzy from 'fuzzy'
 import { User, Document, Thing } from '~/app'
 import { uniq } from 'lodash'
+import { filterItem } from './helpers'
 
 class BarMainStore {
   searchResults: Array<Document> = []
@@ -143,21 +143,25 @@ class BarMainStore {
     }
 
     const { searchResults, integrations, browse, people, actions } = this
-    const hayStack = [
-      ...browse,
-      ...(searchResults || []),
-      ...people,
-      ...actions,
-      ...integrations,
+
+    const results = filterItem(
+      [
+        ...browse,
+        ...(searchResults || []),
+        ...people,
+        ...actions,
+        ...integrations,
+      ],
+      this.props.search
+    )
+
+    return [
+      ...results,
+      {
+        title: this.props.search,
+        type: 'feed',
+      },
     ]
-    return fuzzy
-      .filter(this.props.search, hayStack, {
-        extract: el => el.title,
-        pre: '<',
-        post: '>',
-      })
-      .map(item => item.original)
-      .filter(x => !!x)
   }
 
   start() {

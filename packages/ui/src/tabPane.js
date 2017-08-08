@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
+import Text from './text'
 
 @view.ui
 export default class TabPane {
@@ -66,10 +67,15 @@ export default class TabPane {
       borderBottom: [1, [0, 0, 0, 0.05]],
       minWidth: 90,
       alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      maxWidth: '100%',
+      overflow: 'hidden',
     },
     activeTab: {
       fontWeight: 600,
       background: '#fff',
+      borderRight: [1, [0, 0, 0, 0.1]],
       borderBottom: [1, 'transparent'],
     },
     content: {

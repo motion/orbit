@@ -151,85 +151,94 @@ export default class BarFeed {
     onRef(this)
 
     return (
-      <feed>
-        <apps if={data.special} css={{ borderBottom: [2, [0, 0, 0, 0.0001]] }}>
-          <UI.TabPane
-            tabs={[
-              <tab $$row>
-                <UI.Badge
-                  background="rgb(34.5%, 67.5%, 34.5%)"
-                  color="white"
-                  marginRight={8}
-                >
-                  #301
-                </UI.Badge>Product Page...
-              </tab>,
-              <tab $$row>
-                <UI.Badge
-                  background="rgb(34.5%, 64.6%, 67.5%)"
-                  color="white"
-                  marginRight={8}
-                >
-                  #52
-                </UI.Badge>Kubernetes React...
-              </tab>,
-            ]}
+      <UI.Theme name="light">
+        <feed>
+          <apps
+            if={data.special}
+            css={{ borderBottom: [2, [0, 0, 0, 0.0001]] }}
           >
-            <DocPane
-              data={{
-                title: 'Product Page Integration',
-                id: '301',
-                author: 'Nate',
-              }}
-            />
-            <GithubPane
-              data={{
-                title: 'Kubernetes React Integration',
-                id: '52',
-                author: 'Steph',
-              }}
-            />
-          </UI.TabPane>
-        </apps>
-
-        <feeditems $inApp={data.special}>
-          <feedtitle if={data.special}>
-            <UI.Title>Recently</UI.Title>
-          </feedtitle>
-
-          {store.results.map((result, index) => {
-            const parent = (data && data.author) || result.author
-
-            return (
-              <item $active={activeIndex === index} key={result.id}>
-                <meta>
-                  <avatar $img={`/images/${parent.image}.jpg`} />
-                  <UI.Text $name>
-                    {parent.title}{' '}
+            <UI.TabPane
+              tabs={[
+                <tab>
+                  <UI.Badge
+                    background="rgb(34.5%, 67.5%, 34.5%)"
+                    color="white"
+                    marginRight={8}
+                  >
+                    #301
+                  </UI.Badge>
+                  <UI.Text ellipse>Product Page Something Or Other</UI.Text>
+                </tab>,
+                <tab>
+                  <UI.Badge
+                    background="rgb(34.5%, 64.6%, 67.5%)"
+                    color="white"
+                    marginRight={8}
+                  >
+                    #52
+                  </UI.Badge>
+                  <UI.Text ellipse>
+                    Kubernetes React Integration Thingie
                   </UI.Text>
-                  <UI.Text $action>
-                    {result.action}{' '}
-                  </UI.Text>
-                  <UI.Text $date>
-                    {result.date}{' '}
-                  </UI.Text>
-                </meta>
-                <body if={result.content}>
-                  <content>
-                    <UI.Text>
-                      {result.content}
+                </tab>,
+              ]}
+            >
+              <DocPane
+                data={{
+                  title: 'Product Page Integration',
+                  id: '301',
+                  author: 'Nate',
+                }}
+              />
+              <GithubPane
+                data={{
+                  title: 'Kubernetes React Integration',
+                  id: '52',
+                  author: 'Steph',
+                }}
+              />
+            </UI.TabPane>
+          </apps>
+
+          <feeditems $inApp={data.special}>
+            <feedtitle if={data.special}>
+              <UI.Title>Recently</UI.Title>
+            </feedtitle>
+
+            {store.results.map((result, index) => {
+              const parent = (data && data.author) || result.author
+
+              return (
+                <item $active={activeIndex === index} key={result.id}>
+                  <meta>
+                    <avatar $img={`/images/${parent.image}.jpg`} />
+                    <UI.Text $name>
+                      {parent.title}{' '}
                     </UI.Text>
-                  </content>
-                  <icon if={result.icon}>
-                    <iconBg />
-                    {icons[result.icon]}
-                  </icon>
-                </body>
-              </item>
-            )
-          })}
-        </feeditems>
-      </feed>
+                    <UI.Text $action>
+                      {result.action}{' '}
+                    </UI.Text>
+                    <UI.Text $date>
+                      {result.date}{' '}
+                    </UI.Text>
+                  </meta>
+                  <body if={result.content}>
+                    <content>
+                      <UI.Text>
+                        {result.content}
+                      </UI.Text>
+                    </content>
+                    <icon if={result.icon}>
+                      <iconBg />
+                      {icons[result.icon]}
+                    </icon>
+                  </body>
+                </item>
+              )
+            })}
+          </feeditems>
+        </feed>
+      </UI.Theme>
     )
   }
 
@@ -238,6 +247,11 @@ export default class BarFeed {
       flex: 1,
       minWidth: 200,
       overflowY: 'scroll',
+    },
+    tab: {
+      flexFlow: 'row',
+      overflow: 'hidden',
+      maxWidth: '100%',
     },
     item: {
       padding: [10, 25],

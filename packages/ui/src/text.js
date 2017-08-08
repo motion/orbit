@@ -146,6 +146,7 @@ export default class Text {
         ref={this.getRef}
         style={style}
         css={{ ...props, ...css }}
+        $ellipseText={ellipse}
         {...eventProps}
       >
         {!ellipse && children}
@@ -164,6 +165,11 @@ export default class Text {
       maxWidth: '100%',
       wordBreak: 'break-word',
       position: 'relative',
+    },
+    ellipseText: {
+      display: 'flex',
+      flex: 1,
+      overflow: 'hidden',
     },
     selectable: {
       userSelect: 'auto',

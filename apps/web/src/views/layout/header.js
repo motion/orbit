@@ -2,10 +2,9 @@ import React from 'react'
 import { view } from '@mcro/black'
 import Router from '~/router'
 import * as UI from '@mcro/ui'
-import { HEADER_HEIGHT, IS_ELECTRON } from '~/constants'
+import * as Constants from '~/constants'
 import Explorer from './explorer/explorer'
 import { OS } from '~/helpers/electron'
-import Constants from '~/constants'
 
 @view.attach('layoutStore')
 @view
@@ -28,7 +27,7 @@ export default class Header {
 
           <leftside $$row $$centered>
             <UI.Button
-              if={false && IS_ELECTRON}
+              if={false && Constants.IS_ELECTRON}
               {...btnProps}
               theme="light"
               icon="minimal-left"
@@ -101,10 +100,10 @@ export default class Header {
       // // background: [255, 255, 255, 0.1],
       zIndex: 500,
       padding: [0, 10],
-      marginLeft: IS_ELECTRON ? 78 : 10,
+      marginLeft: Constants.IS_ELECTRON ? 78 : 10,
       flexFlow: 'row',
       alignItems: 'center',
-      height: HEADER_HEIGHT,
+      height: Constants.HEADER_HEIGHT,
       transition: 'all ease-out 300ms',
       transitionDelay: '400ms',
     },

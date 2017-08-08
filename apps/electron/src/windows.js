@@ -325,7 +325,7 @@ export default class ExampleApp extends React.Component {
               }}
               onFocus={() => {
                 console.log('focused!', win.key)
-                //win.showDevTools = true
+                win.showDevTools = true
                 win.focused = true
                 this.updateWindows()
               }}

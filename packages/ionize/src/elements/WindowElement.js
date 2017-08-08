@@ -167,6 +167,7 @@ export default class WindowElement extends BaseElement {
   }
 
   finalizeBeforeRemoval(): void {
+    this.window.disposed = true
     this.window.close()
     for (const eventKey in this.attachedHandlers) {
       const handler = this.attachedHandlers[eventKey]
@@ -289,6 +290,10 @@ function configureFile({ file }: Object) {
 }
 
 function configureSize({ size, onResize, defaultSize }: Object) {
+  if (this.window.disposed) {
+    return
+  }
+
   this.configureEvent('onResize', 'resize', onResize, rawHandler => {
     const size = this.window.getSize()
     rawHandler(size)
@@ -321,6 +326,10 @@ function configurePosition({
   onMoved,
   defaultPosition,
 }: Object) {
+  if (this.window.disposed) {
+    return
+  }
+
   this.configureEvent('onMove', 'move', onMove, rawHandler => {
     const position = this.window.getPosition()
     rawHandler(position)

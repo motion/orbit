@@ -320,6 +320,7 @@ export default class ExampleApp extends React.Component {
                 this.updateWindows()
               }}
               onClose={() => {
+                console.log('closing!', win.key)
                 WindowsStore.removeByKey(win.key)
                 this.updateWindows()
               }}

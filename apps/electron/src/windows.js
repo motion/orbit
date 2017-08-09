@@ -2,10 +2,12 @@ import React from 'react'
 import { app, globalShortcut, screen, ipcMain } from 'electron'
 import Window from './window'
 import repl from 'repl'
+import localShortcut from 'electron-localshortcut'
 
 const MIN_WIDTH = 750
 const MIN_HEIGHT = 600
 const JOT_URL = 'http://jot.dev'
+const IS_MAC = process.platform === 'darwin'
 
 const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -48,15 +50,27 @@ class WindowStore {
     console.log('toggling bar')
     this.showBar = !this.showBar
   }
+  hasPathCbs = []
+  onHasPath(cb) {
+    this.hasPathCbs.push(cb)
+  }
+  setPath(value) {
+    this.path = value
+    if (value !== '/') {
+      for (const listener of this.hasPathCbs) {
+        listener()
+      }
+      this.hasPathCbs = []
+    }
+  }
 }
 
 class WindowsStoreFactory {
   windows = []
   addWindow = () => {
-    this.windows = [new WindowStore({ size: [300, 500] }), ...this.windows]
+    this.windows = [new WindowStore({ size: [450, 700] }), ...this.windows]
   }
   next(path) {
-    console.log('next path:', path)
     if (!this.windows[0]) {
       this.addWindow()
       return
@@ -67,10 +81,12 @@ class WindowsStoreFactory {
     console.log('> next path is', toShowWindow.path)
     if (toShowWindow) {
       if (path) {
-        toShowWindow.path = path
+        toShowWindow.setPath(path)
       }
-      return toShowWindow
     }
+
+    console.log('next path:', path, toShowWindow.key)
+    return toShowWindow
   }
   findBy(key) {
     return this.windows.find(x => `${x.key}` === `${key}`)
@@ -147,9 +163,24 @@ export default class ExampleApp extends React.Component {
     }
   }
 
-  onAppWindow = win => ref => {
-    if (win && ref) {
-      win.ref = ref
+  onAppWindow = win => electron => {
+    if (win && electron && !win.ref) {
+      win.ref = electron
+
+      // dev-tools helpers, from electron-debug
+      const toggleDevTools = () => {
+        win.showDevTools = !win.showDevTools
+        this.updateWindows()
+      }
+
+      localShortcut.register(
+        IS_MAC ? 'Cmd+Alt+I' : 'Ctrl+Shift+I',
+        toggleDevTools
+      )
+      localShortcut.register('F12', toggleDevTools)
+      localShortcut.register('CmdOrCtrl+R', () => {
+        electron.webContents.reloadIgnoringCache()
+      })
     }
   }
 
@@ -157,15 +188,17 @@ export default class ExampleApp extends React.Component {
     ipcMain.on('where-to', (event, key) => {
       const win = WindowsStore.findBy(key)
       if (win) {
-        console.log('where to?', win.path)
-        event.sender.send('app-goto', win.path)
+        win.onHasPath(() => {
+          console.log('where-to:', key, win.path)
+          event.sender.send('app-goto', win.path)
+        })
       } else {
         console.log('no window found for where-to event')
       }
     })
 
     ipcMain.on('bar-goto', (event, path) => {
-      this.goTo(path)
+      this.openApp(path)
     })
 
     ipcMain.on('bar-hide', () => {
@@ -197,17 +230,20 @@ export default class ExampleApp extends React.Component {
     return next
   }
 
-  goTo = path => {
+  openApp = path => {
     this.hide()
     const next = this.next(path)
 
+    if (!next) {
+      console.log('no next')
+      return
+    }
+
     setTimeout(() => {
-      console.log('got next.ref', next.ref)
       if (next.ref) {
-        console.log('ref keys', Object.keys(next.ref), next.ref.focus)
-        // next.ref.focus()
+        next.ref.focus()
       }
-    }, 16)
+    }, 100)
   }
 
   registerShortcuts = () => {
@@ -281,20 +317,32 @@ export default class ExampleApp extends React.Component {
       return null
     }
 
-    // console.log('render', this.state, windows, WindowsStore)
-
     return (
       <app>
         <menu>
           <submenu label="Electron">
             <about />
             <sep />
+            <hide />
+            <hideothers />
+            <unhide />
+            <sep />
             <quit />
+          </submenu>
+          <submenu label="Edit">
+            <undo />
+            <redo />
+            <sep />
+            <cut />
+            <copy />
+            <paste />
+            <selectall />
           </submenu>
           <submenu label="Custom Menu">
             <item label="Foo the bars" />
-            <sep />
             <item label="Baz the quuxes" />
+            <sep />
+            <togglefullscreen />
           </submenu>
         </menu>
         <window
@@ -315,11 +363,17 @@ export default class ExampleApp extends React.Component {
           onReadyToShow={this.onReadyToShow}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
+          onFocus={() => {
+            this.activeWindow = this.windowRef
+          }}
         />
         {windows.map(win => {
           return (
             <Window
               key={win.key}
+              ref={this.onAppWindow(win)}
+              file={`${JOT_URL}?key=${win.key}`}
+              show={win.active}
               {...appWindow}
               defaultSize={win.size}
               size={win.size}
@@ -339,22 +393,23 @@ export default class ExampleApp extends React.Component {
               }}
               onFocus={() => {
                 console.log('focused!', win.key)
-                win.showDevTools = true
+                //win.showDevTools = true
                 win.focused = true
+                this.activeWindow = win.ref
                 this.updateWindows()
               }}
               onBlur={() => {
                 console.log('blurred!', win.key)
                 win.focused = false
+                if (this.activeWindow.key === win.key) {
+                  this.activeWindow = null
+                }
                 this.updateWindows()
               }}
               showDevTools={win.showDevTools}
               titleBarStyle={
                 win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
               }
-              file={`${JOT_URL}?key=${win.key}`}
-              show={win.active}
-              ref={this.onAppWindow(win)}
             />
           )
         })}

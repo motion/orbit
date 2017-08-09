@@ -203,13 +203,14 @@ export default class WindowElement extends BaseElement {
       let propKey = ((updatePayload[i]: any): string)
       let propVal = updatePayload[i + 1]
 
+      // If we hit this point, we KNOW the prop changed, so we don't need to do
+      // any checking. Just update to the new value.
+
       if (BASIC_PROPS[propKey]) {
         this.configureEvent(propKey, BASIC_PROPS[propKey], propVal)
         continue
       }
 
-      // If we hit this point, we KNOW the prop changed, so we don't need to do
-      // any checking. Just update to the new value.
       switch (propKey) {
         case 'showDevTools':
           if (propVal) {

@@ -45,7 +45,7 @@ export default class Couch {
         }
 
         const designDoc = JSON.stringify(doc, 0, 2)
-        console.log('wrote', designDoc)
+        // console.log('wrote', designDoc)
       })
     }
   }

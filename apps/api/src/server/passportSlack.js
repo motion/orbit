@@ -31,8 +31,6 @@ function Strategy(options, verify) {
       'Scope \'identity.basic\' is required to retrieve Slack user profile'
     )
   }
-
-  console.log('strategy', this)
 }
 
 /**

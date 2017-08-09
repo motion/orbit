@@ -138,6 +138,7 @@ class BarMainStore {
   }
 
   get results() {
+    console.time('Main.results')
     if (!User.loggedIn) {
       return [{ title: 'Login', type: 'login' }]
     }
@@ -155,13 +156,20 @@ class BarMainStore {
       this.props.search
     )
 
-    return [
+    const final = [
       ...results,
       {
-        title: this.props.search,
+        title: `Search "${this.props.search}"`,
+        type: 'feed',
+      },
+      {
+        title: `Feed "${this.props.search}"`,
         type: 'feed',
       },
     ]
+
+    console.timeEnd('Main.results')
+    return final
   }
 
   start() {

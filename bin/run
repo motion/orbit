@@ -6,7 +6,9 @@ cd $ROOT
 ACTION=$1
 ARG1=$2
 
-if [ "$ACTION" = "electron" ]; then
+if [ "$ACTION" = "backend" ]; then
+  compose up ${@:2}
+elif [ "$ACTION" = "electron" ]; then
   cd apps/electron
   npm run watch &
   sleep 1

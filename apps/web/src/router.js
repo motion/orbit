@@ -7,6 +7,7 @@ import InboxPage from './apps/inbox'
 import DraftPage from './apps/draft'
 import BarPage from './apps/bar'
 import MasterDetailPage from './apps/masterDetail'
+import { render } from './start'
 
 let AppRouter
 
@@ -31,6 +32,7 @@ if (module.hot) {
   module.hot.accept(() => {
     log('accept: ./router.js')
     runRouter()
+    render()
   })
 }
 

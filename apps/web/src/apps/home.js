@@ -14,6 +14,6 @@ export default class HomePage {
       return <null>weird no org</null>
     }
 
-    return <DocumentPage {...this.props} />
+    return <home $$centered>...</home>
   }
 }

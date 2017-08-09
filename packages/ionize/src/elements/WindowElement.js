@@ -100,6 +100,8 @@ const SUPPORTED_PROPS = {
   acceptFirstMouse: true,
   onClose: true,
   onClosed: true,
+  onBlur: true,
+  onFocus: true,
 }
 
 const BASIC_PROPS = {
@@ -127,6 +129,7 @@ export default class WindowElement extends BaseElement {
       webPreferences: props.webPreferences,
       hasShadow: props.hasShadow,
     })
+
     this.parentWindow = null
     this.attachedHandlers = {}
   }
@@ -139,11 +142,11 @@ export default class WindowElement extends BaseElement {
 
   // Hook up event handlers, if they exist
   finalizeBeforeMount(type: string, props: Object): boolean {
-    Object.keys(props).forEach(propName => {
+    for (const propName of Object.keys(props)) {
       if (BASIC_PROPS[propName]) {
         this.configureEvent(propName, BASIC_PROPS[propName], props[propName])
       }
-    })
+    }
 
     if (props.showDevTools) {
       this.window.webContents.openDevTools()
@@ -200,7 +203,7 @@ export default class WindowElement extends BaseElement {
     newProps: Object
   ): void {
     for (let i = 0; i < updatePayload.length; i += 2) {
-      let propKey = ((updatePayload[i]: any): string)
+      let propKey = updatePayload[i]
       let propVal = updatePayload[i + 1]
 
       // If we hit this point, we KNOW the prop changed, so we don't need to do

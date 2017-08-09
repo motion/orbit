@@ -284,7 +284,7 @@ export default class ExampleApp extends React.Component {
     this.setState({ error })
   }
 
-  randomKey = Math.random()
+  uid = Math.random()
 
   render() {
     const { windows, error, restart } = this.state
@@ -346,12 +346,13 @@ export default class ExampleApp extends React.Component {
           </submenu>
         </menu>
         <window
+          key={this.uid}
           {...appWindow}
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`${JOT_URL}/bar?cachebust=${this.randomKey}`}
+          file={`${JOT_URL}/bar?cachebust=${this.uid}`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}

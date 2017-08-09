@@ -290,8 +290,7 @@ export function getPublicInstance(
   return instance.getPublicInstance()
 }
 
-// For these last two, I got nothin'. That's why they're at the bottom.
-export const useSyncScheduling = false
+export const useSyncScheduling = true
 
 export function shouldDeprioritizeSubtree(
   type: string,

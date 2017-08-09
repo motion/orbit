@@ -143,10 +143,6 @@ class BarStore {
     },
   }
 
-  newWindow = url => {
-    OS.send('where-to', url)
-  }
-
   navigate = thing => {
     if (thing && thing.url) {
       OS.send('bar-goto', thing.url())

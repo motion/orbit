@@ -18,8 +18,8 @@ function restart() {
       const Windows = require('./windows').default
 
       setTimeout(() => {
-        Ionize.reset()
-        Ionize.start(<Windows />)
+        //Ionize.reset()
+        Ionize.update(<Windows />)
         console.log('did hmr')
       }, 500)
     }

@@ -176,8 +176,6 @@ export default class WindowElement extends BaseElement {
   }
 
   getPublicInstance(): BrowserWindow {
-    // TBD: Make this a 'smart ref' so users can't modify window state that
-    // we control.
     return this.window
   }
 

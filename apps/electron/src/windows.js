@@ -1,6 +1,7 @@
 import React from 'react'
 import { app, globalShortcut, screen, ipcMain } from 'electron'
 import Window from './window'
+import repl from 'repl'
 
 const MIN_WIDTH = 750
 const MIN_HEIGHT = 600
@@ -106,6 +107,17 @@ export default class ExampleApp extends React.Component {
     setTimeout(() => {
       this.measureAndShow()
     }, 500)
+
+    this.repl = repl.start({
+      prompt: 'electron > ',
+    })
+
+    Object.assign(this.repl.context, {
+      Root: this,
+      WindowsStore: WindowsStore,
+    })
+
+    console.log('started a repl!')
   }
 
   hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
@@ -137,7 +149,6 @@ export default class ExampleApp extends React.Component {
 
   onAppWindow = win => ref => {
     if (win && ref) {
-      console.log('setref', ref)
       win.ref = ref
     }
   }
@@ -243,7 +254,8 @@ export default class ExampleApp extends React.Component {
     const { windows, error, restart } = this.state
 
     if (restart) {
-      console.log('restarting2')
+      console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
+      this.repl.close()
       onWindows = []
       return (
         <app>

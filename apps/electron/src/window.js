@@ -30,7 +30,11 @@ export default class Window extends React.Component {
   })
 
   getPublicInstance() {
-    return {}
+    return this.ref
+  }
+
+  setRef = ref => {
+    this.ref = ref
   }
 
   render() {
@@ -40,6 +44,7 @@ export default class Window extends React.Component {
       <window
         {...props}
         position={[position[0], position[1] + this.state.position]}
+        ref={this.setRef}
       />
     )
   }

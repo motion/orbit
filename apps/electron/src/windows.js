@@ -400,6 +400,10 @@ export default class ExampleApp extends React.Component {
                 this.updateWindows()
               }}
               onBlur={() => {
+                if (!win) {
+                  console.log('no window weird')
+                  return
+                }
                 console.log('blurred!', win.key)
                 win.focused = false
                 if (this.activeWindow.key === win.key) {

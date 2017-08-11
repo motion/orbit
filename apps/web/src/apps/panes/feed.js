@@ -6,6 +6,196 @@ import DocPane from './doc'
 import GithubPane from './github'
 
 const icons = {
+  cal: (
+    <svg width="6.444in" height="5.722in">
+      <defs>
+        <filter
+          filterUnits="userSpaceOnUse"
+          id="Filter_0"
+          x="0px"
+          y="0px"
+          width="464px"
+          height="412px"
+        >
+          <feOffset in="SourceAlpha" dx="0" dy="6" />
+          <feGaussianBlur result="blurOut" stdDeviation="5.916" />
+          <feFlood floodColor="rgb(0, 0, 0)" result="floodOut" />
+          <feComposite operator="atop" in="floodOut" in2="blurOut" />
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.2" />
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <filter
+          filterUnits="userSpaceOnUse"
+          id="Filter_1"
+          x="34px"
+          y="228px"
+          width="10px"
+          height="26px"
+        >
+          <feOffset in="SourceAlpha" dx="0" dy="3" />
+          <feGaussianBlur result="blurOut" stdDeviation="0" />
+          <feFlood floodColor="rgb(2, 3, 3)" result="floodOut" />
+          <feComposite operator="atop" in="floodOut" in2="blurOut" />
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.1" />
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <filter
+          filterUnits="userSpaceOnUse"
+          id="Filter_2"
+          x="419px"
+          y="228px"
+          width="10px"
+          height="26px"
+        >
+          <feOffset in="SourceAlpha" dx="0" dy="3" />
+          <feGaussianBlur result="blurOut" stdDeviation="0" />
+          <feFlood floodColor="rgb(2, 3, 3)" result="floodOut" />
+          <feComposite operator="atop" in="floodOut" in2="blurOut" />
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.1" />
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <filter
+          filterUnits="userSpaceOnUse"
+          id="Filter_3"
+          x="34px"
+          y="28px"
+          width="395px"
+          height="87px"
+        >
+          <feOffset in="SourceAlpha" dx="0" dy="3" />
+          <feGaussianBlur result="blurOut" stdDeviation="0" />
+          <feFlood floodColor="rgb(2, 3, 3)" result="floodOut" />
+          <feComposite operator="atop" in="floodOut" in2="blurOut" />
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.1" />
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#Filter_0)">
+        <path
+          fillRule="evenodd"
+          fillOpacity="0"
+          fill="rgb(255, 0, 0)"
+          d="M398.141,371.000 L64.859,371.000 C47.816,371.000 34.000,357.165 34.000,340.099 L34.000,327.739 L34.000,288.005 L34.000,288.005 L34.000,275.624 L34.000,71.334 L34.000,58.953 C34.000,41.858 47.816,28.000 64.859,28.000 L398.141,28.000 C415.184,28.000 429.000,41.858 429.000,58.953 L429.000,71.334 L429.000,111.432 L429.000,111.432 L429.000,123.793 L429.000,327.739 L429.000,340.099 C429.000,357.165 415.184,371.000 398.141,371.000 Z"
+        />
+      </g>
+      <path
+        fillRule="evenodd"
+        fill="rgb(255, 255, 255)"
+        d="M398.141,371.000 L64.859,371.000 C47.816,371.000 34.000,357.165 34.000,340.099 L34.000,327.739 L34.000,123.793 L34.000,111.432 L429.000,111.432 L429.000,123.793 L429.000,327.739 L429.000,340.099 C429.000,357.165 415.184,371.000 398.141,371.000 Z"
+      />
+      <g filter="url(#Filter_1)">
+        <path
+          fillRule="evenodd"
+          fill="rgb(192, 200, 208)"
+          d="M34.000,228.856 L43.258,228.856 L43.258,250.487 L34.000,250.487 L34.000,228.856 Z"
+        />
+      </g>
+      <g filter="url(#Filter_2)">
+        <path
+          fillRule="evenodd"
+          fill="rgb(193, 200, 208)"
+          d="M419.742,228.856 L429.000,228.856 L429.000,250.487 L419.742,250.487 L419.742,228.856 Z"
+        />
+      </g>
+      <path
+        fillRule="evenodd"
+        fillOpacity="0"
+        opacity="0.678"
+        fill="rgb(255, 255, 255)"
+        d="M34.000,148.514 L429.000,148.514 L429.000,241.216 L34.000,241.216 L34.000,148.514 Z"
+      />
+      <path
+        fill="url(#PSgrad_0)"
+        d="M34.000,148.514 L429.000,148.514 L429.000,241.216 L34.000,241.216 L34.000,148.514 Z"
+      />
+      <g filter="url(#Filter_3)">
+        <path
+          fillRule="evenodd"
+          fill="rgb(250, 86, 90)"
+          d="M34.000,111.432 L34.000,58.901 C34.000,41.835 47.816,28.000 64.859,28.000 L398.141,28.000 C415.184,28.000 429.000,41.835 429.000,58.901 L429.000,111.432 L34.000,111.432 Z"
+        />
+      </g>
+      <text
+        fontFamily="Helvetica"
+        fill="rgb(255, 255, 255)"
+        transform="matrix( 3.0859375, 0, 0, 3.09009009009009,158.8871875, 56.9322432432432)"
+        fontWeight="bold"
+        fontSize="13px"
+      >
+        August
+      </text>
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M86.461,120.703 L89.547,120.703 L89.547,371.000 L86.461,371.000 L86.461,120.703 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M145.094,120.703 L148.180,120.703 L148.180,371.000 L145.094,371.000 L145.094,120.703 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M203.727,120.703 L206.813,120.703 L206.813,371.000 L203.727,371.000 L203.727,120.703 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M259.273,120.703 L262.359,120.703 L262.359,371.000 L259.273,371.000 L259.273,120.703 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M317.906,120.703 L320.992,120.703 L320.992,371.000 L317.906,371.000 L317.906,120.703 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M34.000,173.234 L34.000,170.144 L429.000,170.144 L429.000,173.234 L34.000,173.234 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M34.000,225.766 L34.000,222.676 L429.000,222.676 L429.000,225.766 L34.000,225.766 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M34.000,275.207 L34.000,272.117 L429.000,272.117 L429.000,275.207 L34.000,275.207 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M34.000,324.649 L34.000,321.559 L429.000,321.559 L429.000,324.649 L34.000,324.649 Z"
+      />
+      <path
+        fillRule="evenodd"
+        fill="rgb(228, 228, 228)"
+        d="M376.539,120.703 L379.625,120.703 L379.625,371.000 L376.539,371.000 L376.539,120.703 Z"
+      />
+    </svg>
+  ),
   gmail: (
     <svg x="0px" y="0px" viewBox="0 0 512 512">
       <g>
@@ -154,7 +344,7 @@ export default class BarFeed {
       const parent = (data && data.author) || result.author
 
       return (
-        <item $active={activeIndex === index} key={result.id}>
+        <feeditem $active={activeIndex === index} key={result.id}>
           <meta>
             <avatar $img={`/images/${parent.image}.jpg`} />
             <UI.Text $name>
@@ -178,14 +368,204 @@ export default class BarFeed {
               {icons[result.icon]}
             </icon>
           </body>
-        </item>
+        </feeditem>
       )
     })
+
+    const content = (
+      <contents>
+        <section>
+          <UI.Title size={2}>Stephanie He</UI.Title>
+        </section>
+
+        <section $$row>
+          <UI.Title>Now</UI.Title>{' '}
+          <subtitle $$row $$centered>
+            <UI.Badge
+              background="rgb(34.5%, 64.6%, 67.5%)"
+              color="white"
+              marginRight={8}
+            >
+              #52
+            </UI.Badge>{' '}
+            <UI.Text color="#fff" size={1.05}>
+              Kubernetes integration with new cloud setup
+            </UI.Text>
+          </subtitle>
+        </section>
+
+        <section $personal>
+          <UI.Title>Calender</UI.Title>
+          <content
+            $$row
+            css={{ width: '100%', overflowX: 'scroll', margin: [-5, 0] }}
+          >
+            <item
+              if={false}
+              css={{
+                width: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <icon css={{ transform: { scale: 0.1, x: -200, y: -210 } }}>
+                {icons.cal}
+              </icon>
+            </item>
+
+            {[
+              {
+                content: (
+                  <cool
+                    $$row
+                    css={{
+                      color: '#000',
+                      width: 60,
+                      justifyContent: 'center',
+                      position: 'relative',
+                      fontWeight: 500,
+                      transform: {
+                        y: 35,
+                        scale: 1.1,
+                      },
+                    }}
+                  >
+                    <icon
+                      css={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        transform: { scale: 0.1, x: -200, y: -300 },
+                      }}
+                    >
+                      {icons.cal}
+                    </icon>
+
+                    <inner
+                      css={{
+                        transform: { y: 3, x: -6, scale: 0.9 },
+                        flexFlow: 'row',
+                      }}
+                    >
+                      <month
+                        key={0}
+                        css={{
+                          fontSize: 16,
+                          marginRight: 3,
+                          flexFlow: 'row',
+                          transform: {
+                            scale: 1,
+                          },
+                        }}
+                      >
+                        <month css={{ fontSize: 14, transform: { y: -6 } }}>
+                          12
+                        </month>
+                        <sep
+                          css={{
+                            fontSize: 18,
+                            opacity: 0.6,
+                            transform: { rotate: '25deg', x: -19, y: 4 },
+                          }}
+                        >
+                          /
+                        </sep>
+                        <day css={{ fontSize: 18, transform: { y: 6, x: -3 } }}>
+                          7
+                        </day>
+                      </month>
+                    </inner>
+                  </cool>
+                ),
+              },
+              {
+                month: '12',
+                day: '7',
+                time: '7am',
+                description: 'IdeaDrive w/Search team',
+              },
+              {
+                month: '12',
+                day: '7',
+                time: '10am',
+                description: 'OKR Review w/James',
+              },
+              {
+                month: '12',
+                day: '7',
+                time: '3pm',
+                description: 'Planetary fundraiser',
+              },
+              {
+                month: '12',
+                day: '8',
+                time: '8am',
+                description: 'Q4 linkup review',
+              },
+              {
+                month: '12',
+                day: '8',
+                time: '10:30am',
+                description: '1on1 with Dave',
+              },
+            ].map(
+              (item, index) =>
+                item.content ||
+                <item
+                  if={!item.content}
+                  key={index}
+                  css={{
+                    width: '16.6666%',
+                    minWidth: 110,
+                    padding: [10, 25, 10, 0],
+                    color: '#fff',
+                  }}
+                >
+                  <date
+                    css={{
+                      opacity: 1,
+                      flexFlow: 'row',
+                    }}
+                  >
+                    <time
+                      css={{
+                        fontSize: 16,
+                        opacity: 0.5,
+                        fontWeight: 300,
+                        marginLeft: 0,
+                      }}
+                    >
+                      {item.time}
+                    </time>
+                  </date>
+                  <description
+                    css={{
+                      fontSize: 14,
+                      lineHeight: '17px',
+                      marginTop: 10,
+                      fontWeight: 400,
+                    }}
+                  >
+                    {item.description}
+                  </description>
+                </item>
+            )}
+          </content>
+        </section>
+
+        <section $feeditems $inApp={data.special}>
+          <UI.Title>Recently</UI.Title>
+          <unpad>
+            {results}
+          </unpad>
+        </section>
+      </contents>
+    )
 
     if (!data.special) {
       return (
         <feed>
-          {results}
+          {content}
         </feed>
       )
     }
@@ -240,13 +620,7 @@ export default class BarFeed {
             </UI.TabPane>
           </apps>
 
-          <feeditems $inApp={data.special}>
-            <feedtitle if={data.special}>
-              <UI.Title>Recently</UI.Title>
-            </feedtitle>
-
-            {results}
-          </feeditems>
+          {content}
         </feed>
       </UI.Theme>
     )
@@ -256,14 +630,18 @@ export default class BarFeed {
     feed: {
       flex: 1,
       minWidth: 200,
+      padding: [0, 10],
       overflowY: 'scroll',
+    },
+    unpad: {
+      margin: [0, -15],
     },
     tab: {
       flexFlow: 'row',
       overflow: 'hidden',
       maxWidth: '100%',
     },
-    item: {
+    feeditem: {
       padding: [10, 25],
       margin: [0, -5],
       color: '#fff',
@@ -289,13 +667,9 @@ export default class BarFeed {
     body: {
       flexFlow: 'row',
     },
-    feeditems: {
+    inApp: {
       padding: [10, 15],
       background: '#f2f2f2',
-    },
-    feedtitle: {
-      marginBottom: 5,
-      opacity: 0.7,
     },
     content: {
       flex: 1,
@@ -306,6 +680,10 @@ export default class BarFeed {
       height: 30,
       margin: [10, 5, 0],
       position: 'relative',
+    },
+    section: {
+      padding: [8, 10],
+      borderBottom: [1, [0, 0, 0, 0.05]],
     },
     iconBg: {
       position: 'absolute',

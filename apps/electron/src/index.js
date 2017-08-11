@@ -10,6 +10,7 @@ onWindow(ref => {
 })
 
 function restart() {
+  console.log('got a restart from hmr')
   app.setState(
     {
       restart: true,

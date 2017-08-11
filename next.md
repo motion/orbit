@@ -1,81 +1,33 @@
-- opening apps
-  - control position/size
-  - test animate in app windows
-  - working close app windows
-  - teams with @nick in explorer
-  - basic gdocs paste into app
+highest level things required for beta:
 
-- Fix automagic getting stuck and not updating sometimes
-- Polish
-  - Improve document saving so it saves more consistent
-  - Document breaks with quotes etc
-- Technical
-  - Query sync down needs to be fixed
-- Documents
-  - Remove the alternative right arrow insert
-  - Links to other docs
-  - Code blocks?
+  - architecture:
+    - need to figure API for pane/app that handles all cases nicely
+    - many fixes to miller movements
+    - many fixes to search and search speed
+    - many fixes for window management/persistance
+  - integrations:
+      - github
+      - google docs
+      - jira
+      - calendar (google + others?)
+  - teams:
+    - onboarding process
+    - figuring who is who across integrations
+    - feeds on a person-basis
+  - search:
+    - how to do
+    - potentially filter by source
+    - combine multiple topics into feeds
+  - quick actions:
+    - jira/github cards w actions
+  - orbits:
+    - some test of sharing to team orbit
 
-- speed up pouchdb, split Content into its own db
-  - gives you quick reads when using lists
-  - lets you treat content db differently to save space/size and sync differently
-  - have two content db's:
-    - saved revisions
-    - typing state (undo/redo?)
-- not be edit mode by default in threads unless you are author
-- archive/delete things
-  - context menu for sidebar?
-- signup: asks for your team names + emails, then makes root pages for them
-- @mentions
-  - @doc mention
-  - @user mention
-  - @thread mention
-- fix keyboard nav
-- fix sync todos doc/sidebar
-- pullout of notifications
-- lightweight gdocs style inline comments too?
+maybe:
 
-- cant paste in rich content
-- no numbered lists
-- cant invite people with a link
-- no pasting/editing/adding links
-- images break on paste
-- save doesnt happen after many actions
-- outline of a doc view that shows just headers and links to them
-- no code blocks
-- blockquotes break on enter
-- lists dont auto-join together
-- doesnt always keep empty paragraph line at end of doc
-- sub-headings visibility
-- super basic tables
-- alignment
-- list and concept of who has joined a doc
-- font size choice
-- cant move things to other locations
-- revisions/history
-- pop out discussions into a new window so you can view side-by-side
+  - notifications
+    - if we have apps that have feeds, may want notifications
 
-- potentially
-- needs to be a universal dragcancel thing that prevents clicks once you started dragging electron
-- see about pouch revisions
-- types not working on <Views prop={array | string} /> still
-
-- attachments
-- documents
-  - inserting and editing a link
-  - linking between docs
-  - inserting and editing an image
-  - changing text alignment
-  - changing text color/background
-  - focused nodes (image, doclist) cursor fixes
-  - realtime
-  - history/revisions
-- deploy to prod
-- slack integration + avatars
-- drag/drop: list items
-- email forwarding
-- github sync
-- integrations
 
 -fast pouch
   - https://github.com/redgeoff/delta-pouch

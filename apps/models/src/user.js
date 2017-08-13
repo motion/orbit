@@ -246,7 +246,7 @@ class User {
 
 const user = new User({
   superlogin: {
-    providers: ['slack'],
+    providers: ['slack', 'github'],
     baseUrl: `${API_URL}/auth/`,
     endpoints: [API_HOST],
     storage: 'local', //   'local' | 'session'

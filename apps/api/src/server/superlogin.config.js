@@ -131,6 +131,13 @@ export default {
         ],
       },
     },
+    github: {
+      credentials: {
+        clientID: '9afb7a8f8758557ca884',
+        clientSecret: 'eb53a07f613eb07f4fa4db96845bae813ec2c01f',
+        scope: ['user:email'],
+      },
+    },
   },
 
   // providers: {
@@ -167,13 +174,6 @@ export default {
   //   },
   //   options: {
   //     scope: ['profile', 'email'],
-  //   },
-  // },
-  // github: {
-  //   credentials: {
-  //     clientID: process.env.GITHUB_CLIENTID,
-  //     clientSecret: process.env.GITHUB_CLIENTSECRET,
-  //     scope: ['user:email'],
   //   },
   // },
   // windowslive: {

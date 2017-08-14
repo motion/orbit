@@ -64,14 +64,20 @@ class User {
     return this.queries.defaultInbox
   }
 
-  constructor({ superlogin }) {
+  constructor({ superlogin, ...options }) {
     this.superlogin = SuperLoginClient
-    this.options = superlogin
+    this.superloginOptions = superlogin
+    this.options = options
   }
 
   connect = async database => {
     if (this.database) {
       return // hmr
+    }
+
+    if (this.options.userDB) {
+      console.log('connect to pouchd', this.options.userDB)
+      this.userDB = new PouchDB(this.options.userDB, { skip_setup: true })
     }
 
     // for now
@@ -100,12 +106,15 @@ class User {
   }
 
   async setupSuperLogin() {
-    this.superlogin.configure(this.options)
+    this.superlogin.configure(this.superloginOptions)
 
     // sync
     this.superlogin.on('login', async () => {
       this.user = await this.getCurrentUser()
+
       if (this.user) {
+        // i think these two things are duplicated work
+        this.setupDbSync()
         await this.documents.connect(this.database, {
           sync: this.user.userDBs.documents,
         })
@@ -148,16 +157,16 @@ class User {
   }
 
   setupDbSync = () => {
-    if (!this.remoteDb && this.user) {
-      this.remoteDb = new PouchDB(this.user.userDBs.documents, {
-        skip_setup: true,
-      })
-      this.localDb = new PouchDB(`local_db_${this.user.user_id}`)
-      // syncronize the local and remote user databases...
-      this.remoteSyncHandler = this.localDb
-        .sync(this.remoteDb, { live: true, retry: true })
-        .on('error', console.log.bind(console))
-    }
+    // if (!this.remoteDb && this.user) {
+    //   this.remoteDb = new PouchDB(this.user.userDBs.documents, {
+    //     skip_setup: true,
+    //   })
+    //   this.localDb = new PouchDB(`local_db_${this.user.user_id}`)
+    //   // syncronize the local and remote user databases...
+    //   this.remoteSyncHandler = this.localDb
+    //     .sync(this.remoteDb, { live: true, retry: true })
+    //     .on('error', console.log.bind(console))
+    // }
   }
 
   loginOrSignup = async (email, password) => {
@@ -215,7 +224,6 @@ class User {
       password,
     })
     console.log('login: user', this.user)
-    this.setupDbSync()
   }
 
   logout = async () => {
@@ -231,8 +239,11 @@ class User {
 
   getCurrentUser = async () => {
     const session = await this.superlogin.getSession()
-    this.setupDbSync()
-    return session
+    const user = await this.userDB.get(session.user_id)
+    return {
+      ...session,
+      ...user,
+    }
   }
 
   createOrg = async name => {
@@ -245,6 +256,7 @@ class User {
 }
 
 const user = new User({
+  userDB: 'http://couch.jot.dev/users',
   superlogin: {
     providers: ['slack', 'github'],
     baseUrl: `${API_URL}/api/auth/`,

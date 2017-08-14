@@ -5,7 +5,7 @@ import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 import Inbox from './inbox'
 
-const API_HOST = `api.${window.location.host}`
+const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
 @store
@@ -247,7 +247,7 @@ class User {
 const user = new User({
   superlogin: {
     providers: ['slack', 'github'],
-    baseUrl: `${API_URL}/auth/`,
+    baseUrl: `${API_URL}/api/auth/`,
     endpoints: [API_HOST],
     storage: 'local', //   'local' | 'session'
     checkExpired: 'stateChange', // 'stateChange' ($stateChangeStart or $routeChangeStart is fired) | 'startup'

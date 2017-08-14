@@ -15,6 +15,8 @@ import config from './superlogin.config'
 import url from 'url'
 import smartTag from './smartTag'
 
+// test
+
 function getAuth(authHeader) {
   if (!authHeader) {
     return null
@@ -77,16 +79,17 @@ export default class Server {
     // express
     app.set('port', port)
     app.use(logger('dev'))
+    app.use('*', cors())
 
-    const HEADER_ALLOWED =
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
+    // const HEADER_ALLOWED =
+    //   'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
 
-    app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*')
-      res.header('Access-Control-Allow-Credentials', 'true')
-      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-      next()
-    })
+    // app.use((req, res, next) => {
+    //   res.header('Access-Control-Allow-Origin', '*')
+    //   res.header('Access-Control-Allow-Credentials', 'true')
+    //   res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
+    //   next()
+    // })
 
     // must be before bodyParser.json
     const subPath = '/couch'
@@ -186,7 +189,7 @@ export default class Server {
 
   setupLogin() {
     this.login = new SuperLogin(config)
-    this.server.use('/auth', this.login.router)
+    this.server.use('/api/auth', this.login.router)
   }
 
   setupRateLimiting() {

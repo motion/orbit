@@ -1,3 +1,4 @@
+// @flow
 import Server from './server'
 import Bootstrap from './bootstrap'
 import type { Options } from '~/types'

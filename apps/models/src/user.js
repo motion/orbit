@@ -1,4 +1,4 @@
-import { store, watch, log } from '@mcro/black'
+import { store, watch } from '@mcro/black'
 import PouchDB from 'pouchdb-core'
 import SuperLoginClient from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'

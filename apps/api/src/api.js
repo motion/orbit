@@ -1,5 +1,4 @@
 // @flow
-// hi
 import Server from './server'
 import Bootstrap from './bootstrap'
 import Jobs from './jobs'

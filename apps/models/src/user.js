@@ -1,3 +1,5 @@
+// @flow
+import global from 'global'
 import store from '@mcro/black/lib/store'
 import watch from '@mcro/black/lib/helpers/watch'
 import PouchDB from 'pouchdb-core'
@@ -6,7 +8,8 @@ import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 import Inbox from './inbox'
 
-const API_HOST = `${window.location.host}`
+// TODO: Constants.API_HOST
+const API_HOST = global.location ? `${global.location.host}` : ''
 const API_URL = `http://${API_HOST}`
 
 @store
@@ -269,6 +272,6 @@ const user = new User({
 })
 
 // because
-window.User = user
+global.User = user
 
 export default user

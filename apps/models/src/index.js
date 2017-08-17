@@ -12,13 +12,13 @@ import { omit } from 'lodash'
 // export all models
 export Document from './document'
 export Thread from './thread'
-export Reply from './reply'
 export Inbox from './inbox'
 export Image from './image'
 export Thing from './thing'
 export User from './user'
 export Org from './org'
 export Job from './job'
+export Reply from './reply'
 
 // exports
 export type { Model } from '~/helpers'

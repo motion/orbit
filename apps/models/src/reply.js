@@ -1,8 +1,6 @@
 // @flow
 import { Thing, methods } from './thing'
 
-// hi
-
 const type = 'reply'
 
 class Reply extends Thing {

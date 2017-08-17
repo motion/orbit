@@ -1,4 +1,5 @@
 // @flow
+import global from 'global'
 import { Model, query, str, array, bool } from '@mcro/model'
 import Document from './document'
 import Inbox from './inbox'
@@ -90,6 +91,6 @@ export class OrgModel extends Model {
 }
 
 const OrgInstance = new OrgModel()
-window.Org = OrgInstance
+global.Org = OrgInstance
 
 export default OrgInstance

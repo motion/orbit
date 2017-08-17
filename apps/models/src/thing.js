@@ -1,11 +1,12 @@
 // @flow
+import global from 'global'
 import { Model, query, str, object, array, bool, number } from '@mcro/model'
-import Image from './image'
-import User from './user'
 import { some, last, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 import { Observable } from 'rxjs'
+
+let User = null
 
 const urlify = id => id && id.replace(':', '-')
 const toSlug = (str: string) =>
@@ -185,11 +186,11 @@ export const methods = {
     this.save()
   },
   async addImage(file) {
-    return await Image.create({
-      file,
-      name: ('image' + Math.random()).slice(0, 8),
-      docId: this._id,
-    })
+    // return await Image.create({
+    //   file,
+    //   name: ('image' + Math.random()).slice(0, 8),
+    //   docId: this._id,
+    // })
   },
   // todo if two tasks have the same name, they'll switch together
   async toggleTask(text) {
@@ -283,6 +284,13 @@ export class Thing extends Model {
     }
   }
 
+  constructor(...args) {
+    super(...args)
+
+    // lazy load circular deps for node
+    User = require('./user')
+  }
+
   methods = methods
 
   settings = {
@@ -363,6 +371,6 @@ export class Thing extends Model {
 }
 
 const ThingInstance = new Thing()
-window.Thing = ThingInstance
+global.Thing = ThingInstance
 
 export default ThingInstance

@@ -1,0 +1,14 @@
+{
+  "name": "@mcro/automagical",
+  "main": "lib/automagical.js",
+  "version": "1.1.0",
+  "scripts": {},
+  "dependencies": {
+    "mobx": "^3.2.0",
+    "mobx-utils": "^2.0.1",
+    "rxjs": "^5.4.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

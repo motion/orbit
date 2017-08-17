@@ -1,4 +1,5 @@
 // @flow
+import global from 'global'
 import { Model, query, object, str, number } from '@mcro/model'
 
 export const STATUS = {
@@ -71,6 +72,6 @@ export class JobModel extends Model {
 }
 
 const JobInstance = new JobModel()
-window.Job = JobInstance
+global.Job = JobInstance
 
 export default JobInstance

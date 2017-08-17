@@ -1,6 +1,6 @@
 // @flow
 import 'babel-polyfill'
-import { createElement } from '@mcro/black'
+import createElement from '@mcro/black/lib/createElement'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'

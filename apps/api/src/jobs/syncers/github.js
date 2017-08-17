@@ -3,7 +3,7 @@ import type { Job } from '@mcro/models'
 import { User } from '@mcro/models'
 
 export default class GithubSync {
-  async activate() {
+  async start() {
     console.log('activate github syncer')
   }
 

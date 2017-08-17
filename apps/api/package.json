@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-dev": "nodemon --legacy-watch --inspect=5858 lib"
+    "start-dev": "nodemon --legacy-watch --inspect=5858 --stack lib"
   },
   "dependencies": {
     "@mcro/passport-slack": "*",
@@ -38,7 +38,8 @@
     "ratelimit.js": "^1.8.0",
     "redis": "^2.7.1",
     "rxjs": "^5.4.3",
-    "superlogin": "^0.6.1"
+    "superlogin": "^0.6.1",
+    "longjohn": "^0.2.12"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

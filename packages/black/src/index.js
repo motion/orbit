@@ -3,36 +3,7 @@
 export view from './view'
 export store from './store'
 
-export Model from './model/model'
-export query from './model/query'
-
-export gloss, { createElement } from './gloss'
-export log from './helpers/log'
-export watch from './helpers/watch'
-export inject from './helpers/inject'
-export getTarget from './helpers/getTarget'
-export keycode from './helpers/keycode'
-
-// mobx helpers
-export { computed, observable, autorun, react, isObservable } from 'mobx'
-
-// schema helpers
-export validator from 'is-my-json-valid'
-export {
-  bool,
-  array,
-  object,
-  str,
-  string,
-  nil,
-  oneOf,
-  compile,
-  number,
-  int,
-} from './model/properties'
-import { compile } from './model/properties'
-import validator from 'is-my-json-valid'
-export const schema = obj => validator(compile(obj))
+export * from './helpers'
 
 // ViewType
 import type { ViewClass } from './view'

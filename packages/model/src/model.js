@@ -1,5 +1,5 @@
 // @flow
-import { CompositeDisposable } from '@mcro/decor'
+import { CompositeDisposable } from 'sb-event-kit'
 import { autorun, observable } from 'mobx'
 import { compile } from './properties'
 import type RxDB, { RxCollection } from 'rxdb'

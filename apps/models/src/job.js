@@ -1,5 +1,5 @@
 // @flow
-import { Model, query, object, str, number } from '@mcro/black'
+import { Model, query, object, str, number } from '@mcro/model'
 
 export const STATUS = {
   PENDING: 0,

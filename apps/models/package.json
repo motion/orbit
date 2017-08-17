@@ -4,7 +4,8 @@
   "version": "1.1.0",
   "main": "lib/index.js",
   "dependencies": {
-    "@mcro/black": "^1.1.0",
+    "@mcro/black": "*",
+    "@mcro/model": "*",
     "lodash": "^4.17.4",
     "pouchdb-adapter-http": "^6.3.4",
     "pouchdb-adapter-idb": "^6.3.4",

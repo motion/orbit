@@ -1,5 +1,5 @@
 // @flow
-import { query } from '@mcro/black'
+import { query } from '@mcro/model'
 import { Thing, methods, extend, withContent } from './thing'
 
 export class Document extends Thing {

@@ -1,5 +1,5 @@
 // @flow
-import Sync from './jobs/sync'
+import Sync from './sync'
 
 export default class Jobs {
   sync: Sync
@@ -8,7 +8,7 @@ export default class Jobs {
     this.sync = new Sync()
   }
 
-  async activate() {
+  async start() {
     console.log('Starting jobs...')
     await this.sync.activate()
     console.log('Started jobs')

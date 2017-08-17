@@ -1,5 +1,5 @@
 // @flow
-import { Model, query, str, object, array, bool, number } from '@mcro/black'
+import { Model, query, str, object, array, bool, number } from '@mcro/model'
 import Image from './image'
 import User from './user'
 import { some, last, includes, without } from 'lodash'

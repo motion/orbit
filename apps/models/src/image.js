@@ -1,4 +1,4 @@
-import { Model, query, str } from '@mcro/black'
+import { Model, query, str } from '@mcro/model'
 import User from './user'
 
 class Image extends Model {

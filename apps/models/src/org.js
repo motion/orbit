@@ -1,5 +1,5 @@
 // @flow
-import { Model, query, str, object, array, bool } from '@mcro/black'
+import { Model, query, str, array, bool } from '@mcro/model'
 import Document from './document'
 import Inbox from './inbox'
 

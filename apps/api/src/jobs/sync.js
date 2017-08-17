@@ -7,18 +7,12 @@ const SOURCE_TO_SYNCER = {
   github: Syncers.Github,
 }
 
-//  Jobs:
-//     0 - new
-//     1 - running
-//     2 - finished
-//     3 - error
-
 export default class Sync {
   locks: Set<string> = new Set()
-  watching: Observable
+  jobWatcher: Observable
   activeSyncers = []
 
-  activate = () => {
+  start = () => {
     this.setupSyncers()
     this.watchJobs()
   }
@@ -31,7 +25,7 @@ export default class Sync {
   setupSyncers = async () => {
     for await (const name of Object.keys(Syncers)) {
       const Syncer = new Syncers[name]()
-      await Syncer.activate()
+      await Syncer.start()
       this.activeSyncers.push(Syncer)
     }
   }

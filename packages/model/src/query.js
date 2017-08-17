@@ -1,9 +1,9 @@
 // @flow
-import { observable, isObservable, autorun } from 'mobx'
+import { observable, isObservable } from 'mobx'
 import hashsum from 'hash-sum'
 
-const short = value =>
-  (value && JSON.stringify(value).slice(0, 15) + '..') || value
+// const short = value =>
+//   (value && JSON.stringify(value).slice(0, 15) + '..') || value
 const Cache = {}
 const CacheListeners = {}
 
@@ -25,8 +25,7 @@ function execQuery(it, valueGet: Function) {
 
   // TODO can probably handle this here
   // const notConnected = query && query.isntConnected
-
-  const INFO = `@query ${it.model}.${it.property}(${it.args.join(', ')}) => `
+  // const INFO = `@query ${it.model}.${it.property}(${it.args.join(', ')}) => `
 
   // subscribe and update
   let subscriber = null

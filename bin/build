@@ -15,7 +15,7 @@ elif [ "$APP" = "web" ]; then
   npm run build
 else
   # flow
-  link-flow &
+  # link-flow &
   # lerna
   ./node_modules/lerna/bin/lerna.js exec --parallel \
     --ignore @mcro/native  \
@@ -25,5 +25,5 @@ else
       -- \
       babel src --out-dir lib -s true $ARGS
   # to kill flow after
-  fg
+  # fg
 fi

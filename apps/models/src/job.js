@@ -1,25 +1,30 @@
 // @flow
-import { Model, query, str, number } from '@mcro/black'
+import { Model, query, object, str, number } from '@mcro/black'
 
 export const STATUS = {
   PENDING: 0,
   PROCESSING: 1,
-  FINISHED: 2,
+  COMPLETED: 2,
   FAILED: 3,
 }
 
 export const methods = {}
 
-export type Org = typeof methods & {
-  title: str,
-  members: Array<string>,
-  private: boolean,
-  slug: str,
-  timestamps: true,
+export type Job = typeof methods & {
+  type: string,
+  info?: Object,
+  percent: number,
+  tries: number,
+  status: number,
+  lastError?: string,
+  createdAt?: string,
+  updatedAt?: string,
 }
 
 export class JobModel extends Model {
   static props = {
+    type: str,
+    info: object.optional,
     percent: number,
     tries: number,
     status: number,
@@ -38,6 +43,8 @@ export class JobModel extends Model {
     index: ['createdAt', 'updatedAt'],
   }
 
+  status = STATUS
+
   hooks = {}
 
   methods = methods
@@ -53,8 +60,8 @@ export class JobModel extends Model {
   }
 
   @query
-  finished = () => {
-    return this.collection.find({ status: STATUS.FINISHED })
+  completed = () => {
+    return this.collection.find({ status: STATUS.COMPLETED })
   }
 
   @query

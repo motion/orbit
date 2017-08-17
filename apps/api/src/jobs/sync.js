@@ -1,6 +1,11 @@
 // @flow
 import { Job } from '@mcro/models'
 import type { Observable } from 'rxjs'
+import * as Syncers from './syncers'
+
+const SOURCE_TO_SYNCER = {
+  github: Syncers.Github,
+}
 
 //  Jobs:
 //     0 - new
@@ -8,12 +13,38 @@ import type { Observable } from 'rxjs'
 //     2 - finished
 //     3 - error
 
-export default class TSNE {
+export default class Sync {
   locks: Set<string> = new Set()
   watching: Observable
+  activeSyncers = []
 
   activate = () => {
-    this.watcher = Job.pending().$.subscribe(async jobs => {
+    this.setupSyncers()
+    this.watchJobs()
+  }
+
+  dispose = () => {
+    this.jobWatcher.unsubscribe()
+    this.disposeSyncers()
+  }
+
+  setupSyncers = async () => {
+    for await (const name of Object.keys(Syncers)) {
+      const Syncer = new Syncers[name]()
+      await Syncer.activate()
+      this.activeSyncers.push(Syncer)
+    }
+  }
+
+  disposeSyncers = async () => {
+    for await (const syncer of this.activeSyncers) {
+      await syncer.dispose()
+    }
+  }
+
+  watchJobs = () => {
+    this.jobWatcher = Job.pending().$.subscribe(async jobs => {
+      console.log('Pending jobs: ', jobs.length)
       for (const job of jobs) {
         if (this.locks.has(job.id)) {
           return
@@ -30,29 +61,24 @@ export default class TSNE {
     })
   }
 
-  dispose = () => {
-    this.watcher.unsubscribe()
-  }
-
   runJob = async (job: Job) => {
     console.log('Running', job.id)
-    if (!job.options) {
-      await job.update({ status: 3, lastError: 'no options on job', tries: 3 })
-      return
-    }
-
-    // Reset percentage from last invocations
     await job.update({
       percent: 0,
-      status: 1,
+      status: Job.status.PROCESSING,
       tries: job.tries + 1,
     })
 
-    let percent = 0
+    if (job.type === 'sync' && SOURCE_TO_SYNCER[job.info.source]) {
+      const Syncer = SOURCE_TO_SYNCER[job.info.source]
+      try {
+        await Syncer.run(job)
+      } catch (e) {
+        job.update({ status: Job.status.FAILED, lastError: e })
+      }
+    }
 
-    // stop timer
-    percent = 100
     // update job
-    await job.update({ percent: 100, status: 2 })
+    await job.update({ percent: 100, status: Job.status.COMPLETED })
   }
 }

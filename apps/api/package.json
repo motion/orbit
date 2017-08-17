@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-dev": "nodemon --legacy-watch --inspect=5858 --stack lib"
+    "start-dev": "nodemon --legacy-watch --inspect=5858 --stack-trace-limit=1000 lib"
   },
   "dependencies": {
     "@mcro/passport-slack": "*",

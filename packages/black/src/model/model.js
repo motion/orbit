@@ -392,6 +392,26 @@ export default class Model {
     return this._collection.insert(object)
   }
 
+  // pass object to set onto model and save
+  async update(object: Object = {}) {
+    if (!this._collection) {
+      await this.onConnection()
+    }
+    return await this._collection.atomicUpdate(doc => {
+      Object.assign(doc, object)
+    })
+  }
+
+  // this is the mongo field update syntax that rxdb has
+  // see https://docs.mongodb.com/manual/reference/operator/update-field/
+  // and https://github.com/lgandecki/modifyjs#implemented
+  async mutate(object: Object = {}) {
+    if (!this._collection) {
+      await this.onConnection()
+    }
+    return this._collection.update(object)
+  }
+
   findOrCreate = async (object: Object = {}): Promise<Object> => {
     const found = await this.collection.findOne(object).exec()
     return found || (await this.create(object))

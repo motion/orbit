@@ -18,6 +18,7 @@ export Image from './image'
 export Thing from './thing'
 export User from './user'
 export Org from './org'
+export Job from './job'
 
 // exports
 export type { Model } from '~/helpers'

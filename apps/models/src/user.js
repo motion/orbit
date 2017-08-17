@@ -1,5 +1,5 @@
 import store from '@mcro/black/lib/store'
-import { watch } from '@mcro/black/lib/helpers'
+import watch from '@mcro/black/lib/helpers/watch'
 import PouchDB from 'pouchdb-core'
 import SuperLoginClient from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'

@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-dev": "nodemon --legacy-watch --inspect=5858 --stack-trace-limit=1000 lib"
+    "start-nodemon": "nodemon --legacy-watch --inspect=5858 --stack-trace-limit=1000 lib",
+    "start-watch": "../../bin/build --watch",
+    "start-dev": "concurrently \"npm run start-nodemon\" \"npm run start-watch\""
   },
   "dependencies": {
     "@mcro/passport-slack": "*",
@@ -39,7 +41,8 @@
     "redis": "^2.7.1",
     "rxjs": "^5.4.3",
     "superlogin": "^0.6.1",
-    "longjohn": "^0.2.12"
+    "longjohn": "^0.2.12",
+    "concurrently": "^3.5.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

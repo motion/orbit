@@ -18,18 +18,11 @@ RUN apk add --update git
 # import apps
 RUN mkdir -p /repo
 
-#COPY ./.* ./package.json ./lerna.json ./yarn.lock /repo/
-#COPY ./apps/api /repo/apps/api
-#COPY ./apps/couch /repo/apps/couch
-#COPY ./apps/models /repo/apps/models
 COPY . /repo
 
 # build
 WORKDIR /repo
-# RUN yarn install --production
-# RUN git init
-# RUN npm run bootstrap
-# RUN apk del git
+RUN bin/bootstrap
 
 # run
 WORKDIR /repo/apps/api

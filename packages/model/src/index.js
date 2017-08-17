@@ -18,7 +18,7 @@ export {
   compile,
   number,
   int,
-} from './model/properties'
-import { compile } from './model/properties'
+} from './properties'
+import { compile } from './properties'
 import validator from 'is-my-json-valid'
 export const schema = obj => validator(compile(obj))

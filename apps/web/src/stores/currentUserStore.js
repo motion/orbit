@@ -1,5 +1,5 @@
 // @flow
-import { Org, Inbox, Document, DocumentModel, User } from '~/app'
+import { Org, Inbox, Document, User } from '~/app'
 import { store, watch } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
 
@@ -49,6 +49,24 @@ class CurrentUser {
   queries = {}
   integrations = []
 
+  constructor(options) {
+    this.superlogin = SuperLoginClient
+    this.options = options
+
+    this.setTimeout(() => {
+      this.queries = new Queries()
+      this.watch(() => {
+        if (this.id && !this.queries.id) {
+          console.log('starting user')
+          this.queries.id = this.id
+        }
+      })
+    }, 500)
+
+    this.setupSuperLogin()
+    this.connected = true
+  }
+
   get org() {
     return this.queries.org
   }
@@ -65,60 +83,18 @@ class CurrentUser {
     return this.queries.defaultInbox
   }
 
-  constructor({ superlogin }) {
-    this.superlogin = SuperLoginClient
-    this.superloginOptions = superlogin
-  }
-
-  connect = async database => {
-    if (this.database) {
-      return // hmr
-    }
-
-    // for now
-    this.setTimeout(() => {
-      this.queries = new Queries()
-      this.watch(() => {
-        if (this.id && !this.queries.id) {
-          console.log('starting user')
-          this.queries.id = this.id
-        }
-      })
-    }, 500)
-
-    this.database = database
-    this.documents = new DocumentModel()
-    this.documents.settings.database = 'userdocuments'
-
-    await new Promise(resolve => {
-      this.setTimeout(async () => {
-        await this.setupSuperLogin()
-        resolve()
-      })
-    })
-
-    this.connected = true
-  }
-
   async setupSuperLogin() {
-    if (!this.superloginOptions) {
+    if (!this.options) {
       console.log('skipping superlogin')
       return
     }
 
-    this.superlogin.configure(this.superloginOptions)
+    this.superlogin.configure(this.options)
 
     // sync
     this.superlogin.on('login', async () => {
       this.user = await this.getCurrentUser()
-
-      if (this.user) {
-        // i think these two things are duplicated work
-        this.setupDbSync()
-        await this.documents.connect(this.database, {
-          sync: this.user.userDBs.documents,
-        })
-      }
+      this.setupDbSync()
     })
 
     this.superlogin.on('logout', () => {
@@ -272,14 +248,12 @@ class CurrentUser {
 }
 
 const user = new CurrentUser({
-  superlogin: {
-    providers: ['slack', 'github'],
-    baseUrl: `${API_URL}/api/auth/`,
-    endpoints: [API_HOST],
-    storage: 'local', //   'local' | 'session'
-    checkExpired: 'stateChange', // 'stateChange' ($stateChangeStart or $routeChangeStart is fired) | 'startup'
-    refreshThreshold: 0.2, // eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm
-  },
+  providers: ['slack', 'github'],
+  baseUrl: `${API_URL}/api/auth/`,
+  endpoints: [API_HOST],
+  storage: 'local', //   'local' | 'session'
+  checkExpired: 'stateChange', // 'stateChange' ($stateChangeStart or $routeChangeStart is fired) | 'startup'
+  refreshThreshold: 0.2, // eg: a token was issued at 1pm and expires at 2pm, threshold = 0.5, token will refresh at 1:30pm
 })
 
 // because

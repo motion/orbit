@@ -367,6 +367,11 @@ export default class Model {
 
   // helpers
 
+  // get is a helper that returns a promise only
+  get = query => this.collection.find(query).exec();
+
+  // find/findOne return RxQuery objects
+  // so you can subscribe to streams or just .exec()
   @query
   find = ({ sort, ...query } = {}) =>
     chain(this.collection.find(query), 'sort', sort)
@@ -375,6 +380,13 @@ export default class Model {
   findOne = ({ sort, ...query } = {}) =>
     chain(this.collection.findOne(query), 'sort', sort)
 
+  // returns a promise that resolves to found or created model
+  findOrCreate = async (object: Object = {}): Promise<Object> => {
+    const found = await this.collection.findOne(object).exec()
+    return found || (await this.create(object))
+  }
+
+  // creates a model without persisting
   async createTemporary(object) {
     if (!this._collection) {
       await this.onConnection()
@@ -385,6 +397,7 @@ export default class Model {
     return doc
   }
 
+  // create a model and persist
   async create(object: Object = {}) {
     if (!this._collection) {
       await this.onConnection()
@@ -410,10 +423,5 @@ export default class Model {
       await this.onConnection()
     }
     return this._collection.update(object)
-  }
-
-  findOrCreate = async (object: Object = {}): Promise<Object> => {
-    const found = await this.collection.findOne(object).exec()
-    return found || (await this.create(object))
   }
 }

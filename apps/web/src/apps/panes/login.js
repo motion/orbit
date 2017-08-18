@@ -12,7 +12,7 @@ import { CurrentUser } from '~/app'
     finish = async ({ email, password }) => {
       this.loggingIn = true
       try {
-        await CurrentUser.loginOrSignup(email, password)
+        await CurrentUser.login(email, password)
       } catch (e) {
         console.error(e)
       }

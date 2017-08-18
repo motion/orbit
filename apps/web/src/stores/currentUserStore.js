@@ -7,8 +7,6 @@ import SuperLoginClient from 'superlogin-client'
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
-console.log('API_HOST', API_HOST)
-
 @store
 class Queries {
   id = false

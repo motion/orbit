@@ -34,10 +34,12 @@ services:
         ENV: "dev"
     volumes:
       - ./apps/api:/repo/apps/api
-      - ./apps/web:/repo/apps/web
+      - ./apps/models:/repo/apps/models
+      - ./packages:/repo/packages
       - ./apps/couch:/repo/apps/couch
     ports:
       - 3000:3000
+      - 5858:5858
     links:
       - pad-couch
     depends_on:

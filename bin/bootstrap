@@ -68,6 +68,9 @@ rm -rf packages/decor/node_modules/react
 rm -rf packages/black/node_modules/react
 rm -rf packages/gloss/node_modules/react
 
+# bugfix for pundle for some reason checking for memdown when it shouldn't
+touch apps/web/node_modules/@mcro/models/node_modules/memdown/node_modules/immediate/lib/browser.js
+
 echo " welcome!"
 echo " to start the app:"
 echo " $ compose up"

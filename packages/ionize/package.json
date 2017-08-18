@@ -14,7 +14,6 @@
     "electron-builder": "^16.2.0",
     "express": "^4.15.2",
     "file-loader": "^0.10.1",
-    "flow-bin": "0.38.0",
     "flow-typed": "^2.0.0",
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5",

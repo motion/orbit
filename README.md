@@ -36,6 +36,13 @@ run watch
 
 then hit: http://jot.dev
 
+## debug
+
+To ssh into a docker container:
+
+```sh
+compose exec pad-api /bin/bash
+```
 
 ## wield out
 

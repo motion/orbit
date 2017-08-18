@@ -6,6 +6,7 @@
   "dependencies": {
     "@mcro/decor": "^1.1.0",
     "@mcro/gloss": "^1.1.0",
+    "@mcro/automagical": "*",
     "color": "1.0.3",
     "global": "^4.3.0",
     "hash-sum": "1.0.2",

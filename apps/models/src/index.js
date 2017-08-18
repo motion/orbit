@@ -1,24 +1,25 @@
 // @flow
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
-import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
 import { omit } from 'lodash'
+import Storage from './helpers/storage'
+import { isBrowser } from './helpers'
 
 // export all models
 export Document from './document'
 export Thread from './thread'
-export Reply from './reply'
 export Inbox from './inbox'
 export Image from './image'
 export Thing from './thing'
 export User from './user'
 export Org from './org'
 export Job from './job'
+export Reply from './reply'
 
 // exports
 export type { Model } from '~/helpers'
@@ -50,19 +51,24 @@ export default class Models implements ModelsStore {
     if (!RxDB.PouchDB.replicate) {
       RxDB.QueryChangeDetector.enable()
       // RxDB.QueryChangeDetector.enableDebugging(false)
-      RxDB.plugin(pHTTP)
-      RxDB.plugin(pIDB)
+      RxDB.plugin(Storage.adapter)
       RxDB.plugin(pREPL)
       RxDB.plugin(pValidate)
       RxDB.plugin(pSearch)
-      PouchDB.plugin(pHTTP)
-      PouchDB.plugin(pIDB)
+      PouchDB.plugin(Storage.adapter)
+
+      if (isBrowser) {
+        RxDB.plugin(pHTTP)
+        PouchDB.plugin(pHTTP)
+      }
     }
+
+    console.log('Pouch using storage adapter:', Storage.name)
   }
 
   start = async () => {
     this.database = await RxDB.create({
-      adapter: 'idb',
+      adapter: Storage.name,
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
       multiInstance: true,
@@ -97,9 +103,11 @@ export default class Models implements ModelsStore {
 
       connections.push(
         model.connect(this.database, {
+          pouch: PouchDB,
           remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
           remoteOptions: {
             skip_setup: true,
+            adapter: Storage.name,
             ajax: {
               headers: {
                 'X-Token': `${User.name}*|*${User.token}`,

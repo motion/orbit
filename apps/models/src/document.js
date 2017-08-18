@@ -1,4 +1,5 @@
 // @flow
+import global from 'global'
 import { query } from '@mcro/model'
 import { Thing, methods, extend, withContent } from './thing'
 
@@ -67,9 +68,9 @@ export class Document extends Thing {
   }
 }
 
-window.DocumentModel = Document
+global.DocumentModel = Document
 
 const DocumentInstance = new Document()
-window.Document = DocumentInstance
+global.Document = DocumentInstance
 
 export default DocumentInstance

@@ -1,1 +1,3 @@
-export { createElement } from './gloss'
+import { createElement } from './gloss'
+
+export default createElement

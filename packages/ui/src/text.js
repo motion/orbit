@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { view, keycode, observable } from '@mcro/black'
+import { view, keycode } from '@mcro/black'
+import { observable } from 'mobx'
 
 export type Props = {
   editable?: boolean,

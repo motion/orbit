@@ -1,5 +1,7 @@
+// @flow
 import React from 'react'
-import { view, observable } from '@mcro/black'
+import { view } from '@mcro/black'
+import { observable } from 'mobx'
 import ReactGridLayout, { WidthProvider } from 'react-grid-layout'
 
 const Layout: HTMLElement = WidthProvider(ReactGridLayout)

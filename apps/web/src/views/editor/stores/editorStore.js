@@ -2,7 +2,8 @@
 import { Raw } from 'slate'
 import SelectionStore from './selectionStore'
 import { flatten, includes, uniq } from 'lodash'
-import { computed, StoreType } from '@mcro/black'
+import type { StoreType } from '@mcro/black'
+import { computed } from 'mobx'
 import { getSpec } from './helpers'
 
 type Plugin = Class<Object>

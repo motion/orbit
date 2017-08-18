@@ -1,6 +1,8 @@
 // @flow
+import global from 'global'
 import { fromStream, fromPromise } from 'mobx-utils'
 import * as Mobx from 'mobx'
+import { Observable } from 'rxjs'
 
 if (module && module.hot && module.hot.accept) {
   module.hot.accept(() => {})
@@ -16,7 +18,7 @@ const isObservable = x => {
 }
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery
-const isRxObservable = val => window.Rx && val instanceof window.Rx.Observable
+const isRxObservable = val => val instanceof Observable
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
 const isObservableLike = val =>
@@ -177,8 +179,8 @@ function mobxify(target: Object, method: string, descriptors: Object) {
     const targetMethod = target[method].bind(target)
     const NAME = `${target.constructor.name}.${method}`
     const logWrappedMethod = (...args) => {
-      if (window.log && window.log.debug) {
-        if (window.log.filter && window.log.filter.test(NAME)) {
+      if (global.log && global.log.debug) {
+        if (global.log.filter && global.log.filter.test(NAME)) {
           console.log(NAME, ...args)
         }
       }

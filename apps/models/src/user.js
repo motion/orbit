@@ -1,12 +1,17 @@
+// @flow
+import global from 'global'
 import store from '@mcro/black/lib/store'
-import { watch } from '@mcro/black/lib/helpers'
+import watch from '@mcro/black/lib/helpers/watch'
 import PouchDB from 'pouchdb-core'
 import SuperLoginClient from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 import Inbox from './inbox'
+import Storage from './helpers/storage'
+import { isBrowser } from './helpers'
 
-const API_HOST = `${window.location.host}`
+// TODO: Constants.API_HOST
+const API_HOST = global.location ? `${global.location.host}` : ''
 const API_URL = `http://${API_HOST}`
 
 @store
@@ -77,8 +82,10 @@ class User {
     }
 
     if (this.options.userDB) {
-      console.log('connect to pouchd', this.options.userDB)
-      this.userDB = new PouchDB(this.options.userDB, { skip_setup: true })
+      this.userDB = new PouchDB(this.options.userDB, {
+        skip_setup: true,
+        adapter: Storage.name,
+      })
     }
 
     // for now
@@ -107,6 +114,11 @@ class User {
   }
 
   async setupSuperLogin() {
+    if (!this.superloginOptions) {
+      console.log('skipping superlogin')
+      return
+    }
+
     this.superlogin.configure(this.superloginOptions)
 
     // sync
@@ -239,7 +251,10 @@ class User {
   }
 
   getCurrentUser = async () => {
-    const session = await this.superlogin.getSession()
+    let session = {}
+    if (this.superlogin) {
+      session = await this.superlogin.getSession()
+    }
     const user = await this.userDB.get(session.user_id)
     return {
       ...session,
@@ -258,7 +273,7 @@ class User {
 
 const user = new User({
   userDB: 'http://couch.jot.dev/users',
-  superlogin: {
+  superlogin: isBrowser && {
     providers: ['slack', 'github'],
     baseUrl: `${API_URL}/api/auth/`,
     endpoints: [API_HOST],
@@ -269,6 +284,6 @@ const user = new User({
 })
 
 // because
-window.User = user
+global.User = user
 
 export default user

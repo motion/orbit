@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import { schema, string } from '@mcro/model'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
 import Gemstone from '~/views/kit/gemstone'
@@ -35,7 +35,7 @@ import Gemstone from '~/views/kit/gemstone'
       }
 
       try {
-        await User.signup(fields.email, fields.password)
+        await CurrentUser.signup(fields.email, fields.password)
       } catch (e) {
         this.errors = [{ message: `Error signing up user: ${e.message}` }]
         return
@@ -44,7 +44,7 @@ import Gemstone from '~/views/kit/gemstone'
       console.log('created user now')
 
       try {
-        const org = await User.createOrg(fields.name)
+        const org = await CurrentUser.createOrg(fields.name)
         console.log('done signed up', org)
 
         // ensure they are at home

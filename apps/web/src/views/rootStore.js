@@ -1,6 +1,6 @@
 // @flow
 import { watch } from '@mcro/black'
-import { User, Thing } from '~/app'
+import { CurrentUser, Thing } from '~/app'
 import Router from '~/router'
 import { OS } from '~/helpers'
 import * as Constants from '~/constants'
@@ -32,7 +32,7 @@ export default class RootStore {
   @watch
   document = () => {
     if (Router.path === '/') {
-      return User.home
+      return CurrentUser.home
     }
     if (Router.params.id) {
       return Thing.get(Router.params.id)

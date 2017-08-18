@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Gemstone from '~/views/kit/gemstone'
 import Router from '~/router'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()
@@ -92,7 +92,7 @@ export default class DocPageActions {
           <UI.Surface width={200} padding={10}>
             <UI.List.Item if={false} icon="back" primary="Revisions" />
 
-            <UI.Form onSubmit={User.org && User.org.inviteMember}>
+            <UI.Form onSubmit={CurrentUser.org && CurrentUser.org.inviteMember}>
               <UI.Title>Invite</UI.Title>
               <UI.Row>
                 <UI.Input

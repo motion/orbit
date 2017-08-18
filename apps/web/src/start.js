@@ -24,7 +24,6 @@ export function render() {
 
 export async function start(quiet) {
   // render()
-  log('start')
   await App.start(quiet)
   render()
 }

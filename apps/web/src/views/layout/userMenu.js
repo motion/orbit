@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User, Thing, Org, Image } from '~/app'
+import { CurrentUser, Thing, Org, Image } from '~/app'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
 
@@ -8,7 +8,7 @@ import * as Constants from '~/constants'
 export default class UserMenu {
   render({ children }) {
     return (
-      <usermenu if={User.loggedIn}>
+      <usermenu if={CurrentUser.loggedIn}>
         <UI.Popover
           distance={10}
           elevation={2}
@@ -19,7 +19,7 @@ export default class UserMenu {
           target={
             children ||
             <UI.Button chromeless icon="gear" iconAfter>
-              {User.name}
+              {CurrentUser.name}
             </UI.Button>
           }
           openOnHover
@@ -37,13 +37,13 @@ export default class UserMenu {
             items={[
               {
                 icon: 'body',
-                primary: User.name,
+                primary: CurrentUser.name,
                 ellipse: true,
                 after: (
                   <UI.Button
                     size={0.8}
                     icon="power"
-                    onClick={() => User.logout()}
+                    onClick={() => CurrentUser.logout()}
                   />
                 ),
               },

@@ -1,16 +1,15 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '~/app'
-import DocumentPage from './document'
+import { CurrentUser } from '~/app'
 
 @view
 export default class HomePage {
   render() {
-    if (!User.loggedIn) {
+    if (!CurrentUser.loggedIn) {
       return <center $$centered>login plz</center>
     }
 
-    if (User.home === null) {
+    if (CurrentUser.home === null) {
       return <null>weird no org</null>
     }
 

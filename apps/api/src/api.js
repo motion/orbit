@@ -5,6 +5,7 @@ import Server from './server'
 import Bootstrap from './bootstrap'
 import Jobs from './jobs'
 import type { Options } from '~/types'
+import adapter from 'pouchdb-adapter-memory'
 
 export default class API {
   constructor(options: Options) {
@@ -17,6 +18,8 @@ export default class API {
         password: 'password',
         couchUrl: 'http://api.jot.dev',
         couchHost: 'api.jot.dev',
+        adapter,
+        adapterName: 'memory',
       },
       AllModels
     )

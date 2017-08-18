@@ -7,7 +7,6 @@ import SuperLoginClient from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 import Inbox from './inbox'
-import Storage from './helpers/storage'
 import { isBrowser } from './helpers'
 
 // TODO: Constants.API_HOST
@@ -76,16 +75,13 @@ class User {
     this.options = options
   }
 
-  connect = async database => {
+  connect = async (database, options) => {
     if (this.database) {
       return // hmr
     }
 
     if (this.options.userDB) {
-      this.userDB = new PouchDB(this.options.userDB, {
-        skip_setup: true,
-        adapter: Storage.name,
-      })
+      this.userDB = new PouchDB(this.options.userDB, options.remoteOptions)
     }
 
     // for now

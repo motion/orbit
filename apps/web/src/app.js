@@ -2,6 +2,7 @@
 import * as AllModels from '@mcro/models'
 import { DB_CONFIG } from '~/constants'
 import AppStore from './stores/appStore'
+import adapter from 'pouchdb-adapter-idb'
 
 export * from '@mcro/models'
 
@@ -9,7 +10,11 @@ let App
 
 function start() {
   App = new AppStore({
-    config: DB_CONFIG,
+    config: {
+      ...DB_CONFIG,
+      adapter,
+      adapterName: 'idb',
+    },
     models: AllModels,
   })
   window.App = App

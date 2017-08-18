@@ -7,7 +7,6 @@ import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
 import { omit } from 'lodash'
-import Storage from './helpers/storage'
 import { isBrowser } from './helpers'
 
 // export all models
@@ -51,11 +50,11 @@ export default class Models implements ModelsStore {
     if (!RxDB.PouchDB.replicate) {
       RxDB.QueryChangeDetector.enable()
       // RxDB.QueryChangeDetector.enableDebugging(false)
-      RxDB.plugin(Storage.adapter)
+      RxDB.plugin(this.databaseConfig.adapter)
       RxDB.plugin(pREPL)
       RxDB.plugin(pValidate)
       RxDB.plugin(pSearch)
-      PouchDB.plugin(Storage.adapter)
+      PouchDB.plugin(this.databaseConfig.adapter)
 
       if (isBrowser) {
         RxDB.plugin(pHTTP)
@@ -63,12 +62,12 @@ export default class Models implements ModelsStore {
       }
     }
 
-    console.log('Pouch using storage adapter:', Storage.name)
+    console.log('Pouch using storage adapter:', this.databaseConfig.adapterName)
   }
 
   start = async () => {
     this.database = await RxDB.create({
-      adapter: Storage.name,
+      adapter: this.databaseConfig.adapterName,
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
       multiInstance: true,
@@ -107,7 +106,7 @@ export default class Models implements ModelsStore {
           remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
           remoteOptions: {
             skip_setup: true,
-            adapter: Storage.name,
+            adapter: this.databaseConfig.adapterName,
             ajax: {
               headers: {
                 'X-Token': `${User.name}*|*${User.token}`,

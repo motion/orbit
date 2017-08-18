@@ -57,6 +57,7 @@
     "morgan": "^1.8.1",
     "natural": "^0.5.4",
     "pouchdb-core": "^6.3.4",
+    "pouchdb-adapter-idb": "^6.3.4",
     "prop-types": "^15.5.9",
     "randomcolor": "^0.5.2",
     "react": "^15.6.0",

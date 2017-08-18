@@ -10,15 +10,15 @@ export default class PaneCard {
           <task>
             <heading>
               <headingcontent>
-                <UI.Title display="block" size={1.5}>
-                  <span if={id}>#{id}</span> {title}
+                <UI.Title $title display="block" size={1.2}>
+                  {title}
                 </UI.Title>
-                <UI.Icon
-                  css={{ marginTop: 10, marginLeft: 20 }}
-                  color="#555"
-                  size={30}
-                  name={icon}
-                />
+                <service>
+                  <UI.Icon $icon color="#555" size={24} name={icon} />
+                  <id if={id}>
+                    #{id}
+                  </id>
+                </service>
               </headingcontent>
             </heading>
 
@@ -36,6 +36,9 @@ export default class PaneCard {
       background: [250, 250, 250, 1],
       boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.1]]],
       overflowY: 'scroll',
+    },
+    title: {
+      alignSelf: 'center',
     },
     chromeless: {
       background: 'transparent',
@@ -55,12 +58,20 @@ export default class PaneCard {
       justifyContent: 'space-between',
       width: '100%',
     },
-    span: {
-      padding: [2, 4],
-      margin: [-2, -2],
-      borderRadius: 5,
-      background: [255, 255, 255, 0.1],
-      fontSize: 16,
+    service: {
+      alignSelf: 'center',
+      alignItems: 'center',
+    },
+    icon: {
+      marginLeft: 6,
+    },
+    id: {
+      alignText: 'center',
+      alignSelf: 'center',
+      marginTop: 3,
+      fontWeight: 600,
+      opacity: 0.9,
+      fontSize: 13,
     },
   }
 }

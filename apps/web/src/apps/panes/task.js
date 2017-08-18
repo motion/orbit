@@ -59,10 +59,11 @@ const badgeProps = item =>
 @view
 class Reply {
   render({ author, when, activeIndex, text, index }) {
+    const image = author === 'Nate' ? 'me' : author.toLowerCase()
     return (
       <SelectableSection index={index} activeIndex={activeIndex}>
         <reply $$row>
-          <img $avatar src="/images/me.jpg" />
+          <img $avatar src={`/images/${image}.jpg`} />
           <bubble>
             <info $$row>
               <name>
@@ -83,7 +84,7 @@ class Reply {
 
   static style = {
     reply: {
-      padding: [10, 5],
+      padding: [7, 5],
       width: '100%',
       borderTop: '1px solid #eee',
     },
@@ -140,12 +141,12 @@ class MetaItem {
 export default class BarTaskPane {
   getLength = () => 5
   render({ highlightIndex, activeIndex, store, paneProps }) {
-    console.log('active index is', activeIndex)
+    const commentButtonActive = store.response.trim().length > 0
+
     return (
       <PaneCard
         id="609"
-        title="Create a Helm chart to deploy CouchDB using
-                  Kubernetes"
+        title="Create a Helm chart to deploy CouchDB on K8s"
         icon="github"
       >
         <SelectableSection $meta index={0} activeIndex={activeIndex}>
@@ -165,7 +166,7 @@ export default class BarTaskPane {
         <Reply
           index={1}
           activeIndex={activeIndex}
-          when="three days ago"
+          when="six days ago"
           author="Nick"
           text={
             <div>
@@ -178,21 +179,21 @@ export default class BarTaskPane {
           }
         />
 
-        {[0, 1, 2].map((v, index) =>
+        {[0].map((v, index) =>
           <Reply
             index={index + 2}
             activeIndex={activeIndex}
             when="three days ago"
-            author="Nick"
+            author="Nate"
             text={
               <div>
-                This is a question, sorry if this is the wrong place to ask it!<br />
-                <br />
+                This is a question, sorry if this is the wrong place to ask it!
+                <break />
                 I believe that NodeList.forEach is in the WhatWG DOM spec, but
-                is not polyfilled by the Babel polyfill. This makes sense
-                because the Babel polyfill is for JavaScript language built-ins,
-                not Web APIs. Is there a suggestion for what polyfill folks
-                should use for DOM built-ins?
+                is not polyfilled by the Babel polyfill. <break />This makes
+                sense because the Babel polyfill is for JavaScript language
+                built-ins, not Web APIs. Is there a suggestion for what polyfill
+                folks should use for DOM built-ins?
               </div>
             }
           />
@@ -205,11 +206,8 @@ export default class BarTaskPane {
             placeholder="Leave a comment"
           />
           <info $$row>
-            <shortcut>cmd+enter to post</shortcut>
-            <UI.Button
-              disabled={store.response.trim().length === 0}
-              icon="send"
-            >
+            <shortcut $bright={commentButtonActive}>cmd+enter to post</shortcut>
+            <UI.Button disabled={!commentButtonActive} icon="send">
               comment
             </UI.Button>
           </info>
@@ -221,7 +219,11 @@ export default class BarTaskPane {
   static style = {
     metaInfo: {
       justifyContent: 'space-between',
-      margin: [5, 20],
+      margin: [5, 40],
+    },
+    break: {
+      height: 8,
+      width: '100%',
     },
     label: {
       width: '35%',
@@ -242,10 +244,13 @@ export default class BarTaskPane {
     shortcut: {
       alignSelf: 'center',
       marginLeft: 5,
+      opacity: 0.4,
+    },
+    bright: {
       opacity: 0.7,
     },
     response: {
-      marginTop: 15,
+      marginTop: 5,
       background: '#fafbfc',
       border: '1px solid rgb(209, 213, 218)',
       width: '100%',

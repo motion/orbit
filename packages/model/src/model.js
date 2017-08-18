@@ -227,10 +227,10 @@ export default class Model {
     })
 
     // shim add pouchdb-validation
-    this.collection.pouch.installValidationMethods()
+    this._collection.pouch.installValidationMethods()
 
     // bump listeners
-    this.collection.pouch.setMaxListeners(100)
+    this._collection.pouch.setMaxListeners(100)
 
     // create index
     await this.createIndexes()
@@ -292,14 +292,14 @@ export default class Model {
       }
     }
 
-    if (this.collection && this.hooks) {
+    if (this._collection && this.hooks) {
       Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
-        this.collection[hook](this.hooks[hook])
+        this._collection[hook](this.hooks[hook])
       })
     }
 
     // this makes our userdb react properly to login, no idea why
-    this.collection.watchForChanges()
+    this._collection.watchForChanges()
 
     // AND NOW
     this.connected = true
@@ -334,7 +334,7 @@ export default class Model {
     // console.log('indexes ARE', indexes, 'vs', index)
 
     // TODO see if we can remove but fixes bug for now
-    await this.collection.pouch.createIndex({ fields: index })
+    await this._collection.pouch.createIndex({ fields: index })
 
     // this was a faster way to make indexes if need be
     // if (index.length) {

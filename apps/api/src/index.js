@@ -3,6 +3,15 @@ if (process.env.NODE_ENV !== 'production') {
   require('longjohn')
 }
 
+// bootstrap process
+process.title = 'orbit-api'
+process.on('unhandledRejection', reason => {
+  console.error('unhandledRejection', reason)
+})
+process.on('uncaughtException', error => {
+  console.error('uncaughtException', error && error.stack)
+})
+
 const API = require('./api').default
 
 console.log('starting api')

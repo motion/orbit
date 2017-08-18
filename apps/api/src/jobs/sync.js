@@ -37,6 +37,8 @@ export default class Sync {
   }
 
   watchJobs = () => {
+    console.log('lets see what this shiz is', Job.collection)
+
     this.jobWatcher = Job.pending().$.subscribe(async jobs => {
       console.log('Pending jobs: ', jobs.length)
       for (const job of jobs) {

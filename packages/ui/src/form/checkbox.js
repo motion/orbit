@@ -1,4 +1,5 @@
-import { view, observable } from '@mcro/black'
+import { view } from '@mcro/black'
+import { observable } from 'mobx'
 import SizedSurface from '../sizedSurface'
 
 @view

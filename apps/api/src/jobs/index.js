@@ -10,7 +10,7 @@ export default class Jobs {
 
   async start() {
     console.log('Starting jobs...')
-    await this.sync.activate()
+    await this.sync.start()
     console.log('Started jobs')
   }
 

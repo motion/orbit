@@ -18,8 +18,8 @@ export type Job = typeof methods & {
   tries: number,
   status: number,
   lastError?: string,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export class JobModel extends Model {
@@ -50,25 +50,10 @@ export class JobModel extends Model {
 
   methods = methods
 
-  @query
-  pending = () => {
-    return this.collection.find({ status: STATUS.PENDING })
-  }
-
-  @query
-  processing = () => {
-    return this.collection.find({ status: STATUS.PROCESSING })
-  }
-
-  @query
-  completed = () => {
-    return this.collection.find({ status: STATUS.COMPLETED })
-  }
-
-  @query
-  failed = () => {
-    return this.collection.find({ status: STATUS.FAILED })
-  }
+  @query pending = () => this.collection.find({ status: STATUS.PENDING })
+  @query processing = () => this.collection.find({ status: STATUS.PROCESSING })
+  @query completed = () => this.collection.find({ status: STATUS.COMPLETED })
+  @query failed = () => this.collection.find({ status: STATUS.FAILED })
 }
 
 const JobInstance = new JobModel()

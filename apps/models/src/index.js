@@ -50,9 +50,7 @@ export default class Models implements ModelsStore {
     this.models = omit(models, ['default'])
 
     // hmr fix
-    console.log('pluggin models')
     if (!RxDB.PouchDB.replicate) {
-      console.log('adding plugins to rxdb')
       RxDB.QueryChangeDetector.enable()
       // RxDB.QueryChangeDetector.enableDebugging(false)
       RxDB.plugin(Storage.adapter)
@@ -66,6 +64,8 @@ export default class Models implements ModelsStore {
         PouchDB.plugin(pHTTP)
       }
     }
+
+    console.log('Pouch using storage adapter:', Storage.name)
   }
 
   start = async () => {

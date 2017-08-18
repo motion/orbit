@@ -1,4 +1,5 @@
 // @flow
+import global from 'global'
 import { fromStream, fromPromise } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
@@ -178,8 +179,8 @@ function mobxify(target: Object, method: string, descriptors: Object) {
     const targetMethod = target[method].bind(target)
     const NAME = `${target.constructor.name}.${method}`
     const logWrappedMethod = (...args) => {
-      if (window.log && window.log.debug) {
-        if (window.log.filter && window.log.filter.test(NAME)) {
+      if (global.log && global.log.debug) {
+        if (global.log.filter && global.log.filter.test(NAME)) {
           console.log(NAME, ...args)
         }
       }

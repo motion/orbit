@@ -146,6 +146,10 @@ class User {
     return !!this.user
   }
 
+  get github() {
+    return this.user && this.user.github
+  }
+
   get authorId() {
     return (this.user && this.user._id) || 'anon'
   }
@@ -247,8 +251,9 @@ class User {
     await this.superlogin.logout()
   }
 
-  link = provider => {
-    return this.superlogin.link(provider)
+  link = async provider => {
+    await this.superlogin.link(provider)
+    await this.getCurrentUser()
   }
 
   getCurrentUser = async () => {

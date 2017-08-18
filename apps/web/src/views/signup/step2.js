@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
 
@@ -30,7 +30,7 @@ class SignupStep2Store {
 
   handleSubmit = async fields => {
     log('handle submit')
-    await User.createOrg('testorg')
+    await CurrentUser.createOrg('testorg')
     Router.go('/')
   }
 }
@@ -93,7 +93,7 @@ export default class SignupStep2 {
               theme="rgb(48, 130, 224)"
               alignSelf="flex-end"
               size={1.2}
-              onClick={User.logout}
+              onClick={CurrentUser.logout}
             />
             <UI.Button
               icon="check"

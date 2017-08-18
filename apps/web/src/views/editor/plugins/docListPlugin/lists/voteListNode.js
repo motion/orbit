@@ -1,6 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import { Button, Glow, Loading } from '@mcro/ui'
 import { sortBy } from 'lodash'
 import Router from '~/router'
@@ -31,9 +31,9 @@ class VoteStore {
 
     const votes = Object.assign({}, data.get('votes') || {})
     const voters = votes[_id] || []
-    votes[_id] = includes(voters, User.name)
-      ? without(voters, User.name)
-      : [...voters, User.name]
+    votes[_id] = includes(voters, CurrentUser.name)
+      ? without(voters, CurrentUser.name)
+      : [...voters, CurrentUser.name]
 
     setData(data.set('votes', votes))
   }
@@ -97,7 +97,7 @@ export default class VotesList {
                       <Button
                         icon={'up'}
                         iconColor={
-                          includes(votes[doc._id] || [], User.name)
+                          includes(votes[doc._id] || [], CurrentUser.name)
                             ? 'green'
                             : '#ccc'
                         }

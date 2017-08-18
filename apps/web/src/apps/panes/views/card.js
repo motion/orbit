@@ -44,7 +44,6 @@ export default class PaneCard {
     heading: {
       borderBottom: [1, [0, 0, 0, 0.05]],
       paddingBottom: 5,
-      marginBottom: 5,
       padding: [0, 10],
       width: '100%',
       overflow: 'hidden',

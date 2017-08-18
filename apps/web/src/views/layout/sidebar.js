@@ -6,7 +6,7 @@ import * as Constants from '~/constants'
 import InboxList from '~/views/inbox/list'
 import { throttle } from 'lodash'
 import Draft from '~/views/inbox/draft'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import VirtualizedSelect from 'react-virtualized-select'
 import UserMenu from './userMenu'
 
@@ -49,7 +49,7 @@ class AddButton {
               height: 300,
             }}
             if={true || store.show === 'draft'}
-            parentId={User.defaultInbox && User.defaultInbox.id}
+            parentId={CurrentUser.defaultInbox && CurrentUser.defaultInbox.id}
             closePopover={() => this.popover && this.popover.close()}
             onEditorStore={this.ref('editorStore').set}
           />

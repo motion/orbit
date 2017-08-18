@@ -12,7 +12,9 @@
     "build-debug": "DEBUG=true node scripts/build.js",
     "electron": "denode electron.js &>/dev/null &"
   },
-  "denodeOptions": ["DENODE_INSECURE"],
+  "denodeOptions": [
+    "DENODE_INSECURE"
+  ],
   "electronOptions": {
     "width": "1200",
     "height": "800",
@@ -31,11 +33,10 @@
   "dependencies": {
     "@mcro/black": "^1.1.0",
     "@mcro/gloss": "^1.1.0",
+    "@mcro/model": "*",
     "@mcro/models": "^1.1.0",
     "@mcro/router": "^1.1.0",
     "@mcro/ui": "^1.1.0",
-    "@mcro/model": "*",
-    "react-hotkeys": "^0.10.0",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
     "buffer": "^5.0.6",
@@ -56,13 +57,14 @@
     "mobx-utils": "^2.0.2",
     "morgan": "^1.8.1",
     "natural": "^0.5.4",
-    "pouchdb-core": "^6.3.4",
     "pouchdb-adapter-idb": "^6.3.4",
+    "pouchdb-core": "^6.3.4",
     "prop-types": "^15.5.9",
     "randomcolor": "^0.5.2",
-    "react": "^15.6.0",
-    "react-dom": "^15.6.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
     "react-flip-move": "^2.9.14",
+    "react-hotkeys": "^0.10.0",
     "react-sortable-hoc": "^0.6.3",
     "react-virtualized-select": "^3.1.0",
     "redbox-react": "^1.4.3",
@@ -76,6 +78,7 @@
     "slate-edit-table": "^0.9.0",
     "slate-paste-linkify": "^0.2.1",
     "slate-trailing-block": "^0.2.4",
+    "superlogin-client": "^0.7.1",
     "time-ago": "^0.1.0"
   },
   "devDependencies": {

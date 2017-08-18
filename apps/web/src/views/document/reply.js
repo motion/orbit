@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import DocumentView from '~/views/document'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import ReplyTitle from './replyTitle'
 
 @view({
@@ -37,7 +37,7 @@ export default class Reply {
             <UI.Text size={0.9} color="#999" />
             <actions>
               <UI.Text
-                if={!store.editing && User.id === doc.authorId}
+                if={!store.editing && CurrentUser.id === doc.authorId}
                 onClick={store.ref('editing').toggle}
               >
                 Edit

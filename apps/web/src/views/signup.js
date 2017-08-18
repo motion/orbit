@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import * as UI from '@mcro/ui'
 import Step1 from './signup/step1'
 import Step2 from './signup/step2'
@@ -14,10 +14,10 @@ import App from '~/app'
       if (!App.connected) {
         return 1
       }
-      if (!User.loggedIn) {
+      if (!CurrentUser.loggedIn) {
         return 1
       }
-      if (!User.org) {
+      if (!CurrentUser.org) {
         return 2
       }
       return false
@@ -79,7 +79,7 @@ export default class Signup {
             <Step2 if={step === 2} />
           </centered>
         </UI.Theme>
-        <UI.Theme name="clear-light" if={!User.loggedIn}>
+        <UI.Theme name="clear-light" if={!CurrentUser.loggedIn}>
           <login
             $$row
             $$centered

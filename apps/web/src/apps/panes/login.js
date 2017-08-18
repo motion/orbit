@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 
 @view({
   store: class LoginStore {
@@ -12,7 +12,7 @@ import { User } from '~/app'
     finish = async ({ email, password }) => {
       this.loggingIn = true
       try {
-        await User.loginOrSignup(email, password)
+        await CurrentUser.login(email, password)
       } catch (e) {
         console.error(e)
       }

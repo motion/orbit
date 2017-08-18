@@ -3,7 +3,7 @@ import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { filterItem } from './helpers'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 
 class BarBrowseStore {
   @watch
@@ -13,7 +13,7 @@ class BarBrowseStore {
   ]
 
   get parent() {
-    return this.props.data.parent || User.home
+    return this.props.data.parent || CurrentUser.home
   }
 
   get filterItem() {

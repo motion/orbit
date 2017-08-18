@@ -5,6 +5,19 @@ import PaneCard from './views/card'
 
 const items = [
   {
+    label: 'Assignees',
+    value: 'No one assigned',
+  },
+  {
+    label: 'Labels',
+    value: 'None yet',
+  },
+  {
+    label: 'Milestone',
+    value: 'No milestone',
+  },
+  /*
+  {
     label: 'Type',
     value: 'Epic',
     icon: 'tag',
@@ -31,6 +44,7 @@ const items = [
     value: 'Prod Release 2',
     icon: 'space',
   },
+  */
 ]
 
 const SelectableSection = ({ index, activeIndex, ...props }) =>
@@ -41,6 +55,82 @@ const SelectableSection = ({ index, activeIndex, ...props }) =>
 
 const badgeProps = item =>
   item.background ? { background: item.background, color: '#fff' } : {}
+
+@view
+class Reply {
+  render({ author, when, activeIndex, text, index }) {
+    return (
+      <SelectableSection index={index} activeIndex={activeIndex}>
+        <reply $$row>
+          <img $avatar src="/images/me.jpg" />
+          <bubble>
+            <info $$row>
+              <name>
+                {author}
+              </name>
+              <when>
+                {when}
+              </when>
+            </info>
+            <UI.Text $content>
+              {text}
+            </UI.Text>
+          </bubble>
+        </reply>
+      </SelectableSection>
+    )
+  }
+
+  static style = {
+    reply: {
+      padding: [10, 5],
+      width: '100%',
+      borderTop: '1px solid #eee',
+    },
+    avatar: {
+      width: 30,
+      height: 30,
+      borderRadius: 100,
+      marginRight: 10,
+      marginTop: 10,
+    },
+    info: {
+      marginTop: 5,
+      justifyContent: 'space-between',
+    },
+    bubble: {
+      flex: 1,
+    },
+    content: {
+      marginTop: 3,
+    },
+    when: {
+      opacity: 0.7,
+    },
+  }
+}
+
+@view
+class MetaItem {
+  render({ label, value }) {
+    return (
+      <item>
+        <name>
+          {label}
+        </name>
+        <value>
+          {value}
+        </value>
+      </item>
+    )
+  }
+
+  static style = {
+    name: {
+      fontWeight: 500,
+    },
+  }
+}
 
 @view({
   store: class TaskStore {
@@ -59,19 +149,9 @@ export default class BarTaskPane {
         icon="github"
       >
         <SelectableSection $meta index={0} activeIndex={activeIndex}>
-          <UI.Grid columns={2}>
-            {items.map((item, index) =>
-              <UI.ListItem
-                key={index}
-                primary={
-                  <primary>
-                    <UI.Text $label>{item.label}:</UI.Text>{' '}
-                    <UI.Badge {...badgeProps(item)}>{item.value}</UI.Badge>
-                  </primary>
-                }
-              />
-            )}
-          </UI.Grid>
+          <metaInfo $$row>
+            {items.map(item => <MetaItem {...item} />)}
+          </metaInfo>
 
           <UI.List
             if={false}
@@ -82,48 +162,40 @@ export default class BarTaskPane {
           />
         </SelectableSection>
 
-        <SelectableSection $content index={1} activeIndex={activeIndex}>
-          <UI.Title $subtitle size={1}>
-            Description
-          </UI.Title>
-          <UI.Title size={1.2}>Expected Behavior</UI.Title>
-          <UI.Text>
-            helm install stable/couchdb should stand up a working CouchDB
-            deployment in my Kubernetes environment.
-          </UI.Text>
-          <UI.Title size={1.2}>Current Behavior</UI.Title>
-          <UI.Text>
-            Installing CouchDB in Kubernetes is currently a very manual task.
-            Many of our users...
-          </UI.Text>
-          <more>Show more...</more>
-        </SelectableSection>
+        <Reply
+          index={1}
+          activeIndex={activeIndex}
+          when="three days ago"
+          author="Nick"
+          text={
+            <div>
+              helm install stable/couchdb should stand up a working CouchDB
+              deployment in my Kubernetes environment.
+              <br />
+              <UI.Title size={1.2}>Current Behavior</UI.Title>
+              Installing CouchDB in Kubernetes is currently a very manual task.
+            </div>
+          }
+        />
 
-        <UI.Title $subtitle size={1}>
-          Replies (30)
-        </UI.Title>
         {[0, 1, 2].map((v, index) =>
-          <SelectableSection
-            $content
-            index={2 + index}
+          <Reply
+            index={index + 2}
             activeIndex={activeIndex}
-          >
-            <reply css={{ flexFlow: 'row', flex: 1, overflow: 'hidden' }}>
-              <img
-                css={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 100,
-                  marginRight: 10,
-                }}
-                src="/images/me.jpg"
-              />
-              <UI.Text>
-                Helm install stable/couchdb should stand up a working CouchDB
-                deployment in my Kubernetes environment.
-              </UI.Text>
-            </reply>
-          </SelectableSection>
+            when="three days ago"
+            author="Nick"
+            text={
+              <div>
+                This is a question, sorry if this is the wrong place to ask it!<br />
+                <br />
+                I believe that NodeList.forEach is in the WhatWG DOM spec, but
+                is not polyfilled by the Babel polyfill. This makes sense
+                because the Babel polyfill is for JavaScript language built-ins,
+                not Web APIs. Is there a suggestion for what polyfill folks
+                should use for DOM built-ins?
+              </div>
+            }
+          />
         )}
         <comment>
           <textarea
@@ -147,10 +219,9 @@ export default class BarTaskPane {
   }
 
   static style = {
-    meta: {
-      margin: [-5, -10],
-      padding: [5, 0],
-      borderBottom: [1, [0, 0, 0, 0.05]],
+    metaInfo: {
+      justifyContent: 'space-between',
+      margin: [5, 20],
     },
     label: {
       width: '35%',
@@ -163,9 +234,6 @@ export default class BarTaskPane {
     primary: {
       flexFlow: 'row',
       alignItems: 'center',
-    },
-    content: {
-      padding: [10],
     },
     info: {
       marginTop: 5,

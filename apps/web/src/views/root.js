@@ -1,4 +1,5 @@
 import React from 'react'
+import { CurrentUser } from '~/app'
 import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
 import Redbox from 'redbox-react'
@@ -23,7 +24,7 @@ export default class Root extends React.Component {
     view.on('hmr', this.clearErr)
 
     this.watch(() => {
-      if (User.org === null) {
+      if (CurrentUser.org === null) {
         console.log('CREATE AN ORG WITH User.createOrg(\'yourorgname\')')
       }
     })

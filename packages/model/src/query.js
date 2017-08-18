@@ -104,6 +104,11 @@ function execQuery(it, valueGet: Function) {
     current: {
       get: getValue,
     },
+    sync: {
+      value: () => {
+        return this.syncQuery(query)
+      },
+    },
     get: {
       value: getValue,
     },

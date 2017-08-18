@@ -15,7 +15,7 @@ export default class API {
       {
         name: 'username',
         password: 'password',
-        couchUrl: 'http://api.jot.dev',
+        couchUrl: 'http://api.jot.dev/couch',
         couchHost: 'api.jot.dev',
         adapter,
         adapterName: 'memory',
@@ -30,7 +30,11 @@ export default class API {
     this.server.start()
 
     // things that depend on models go after this line
-    await this.database.start()
+    await this.database.start({
+      modelOptions: {
+        autoSync: true,
+      },
+    })
 
     this.jobs.start()
   }

@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+JSONStream@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.1.tgz#707f761e01dae9e16f1bcf93703b78c70966579a"
+  dependencies:
+    jsonparse "^1.2.0"
+    through ">=2.2.7 <3"
+
 abbrev@1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.0.tgz#d0554c2256636e2f56e7c2e5ad183f859428d81f"
@@ -200,6 +207,13 @@ babel-runtime@^6.22.0, babel-runtime@^6.23.0:
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
+backoff-promise@0.0.2, backoff-promise@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/backoff-promise/-/backoff-promise-0.0.2.tgz#08584def2f76bb6d8b420bbb6282c0b9c22e180f"
+  dependencies:
+    bluebird "^3.5.0"
+    sporks "0.0.1"
+
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
@@ -268,7 +282,7 @@ bluebird@^2.9.30, bluebird@^2.9.34:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
 
-bluebird@^3.3.4:
+bluebird@^3.3.4, bluebird@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
@@ -507,6 +521,17 @@ cors@^2.8.3:
 couch-pwd@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/couch-pwd/-/couch-pwd-0.0.1.tgz#f263afb4e5b3f48facb0cf7a665f03d8556d094e"
+
+couch-slouch@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/couch-slouch/-/couch-slouch-0.0.4.tgz#e7f06fa6a0c443a6fbf1899ea056e2437e417023"
+  dependencies:
+    backoff-promise "^0.0.2"
+    bluebird "^3.5.0"
+    quelle "^0.0.4"
+    request "^2.81.0"
+    sporks "^0.0.1"
+    squadron "^0.0.3"
 
 couchdb-bootstrap@^1.14.0:
   version "1.14.0"
@@ -816,6 +841,10 @@ event-stream@~3.3.0:
     split "0.3"
     stream-combiner "~0.0.4"
     through "~2.3.1"
+
+events@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
 
 execspawn@^1.0.1:
   version "1.0.1"
@@ -1581,6 +1610,10 @@ jsonist@~1.3.0:
     json-stringify-safe "~5.0.0"
     xtend "~4.0.0"
 
+jsonparse@^1.2.0:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/jsonparse/-/jsonparse-1.3.1.tgz#3f4dae4a91fac315f71062f8521cc239f1366280"
+
 jsonpointer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.0.1.tgz#4fd92cb34e0e9db3c89c8622ecf51f9b978c6cb9"
@@ -1910,17 +1943,17 @@ ltgt@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ltgt/-/ltgt-2.1.2.tgz#e7472324fee690afc0d5ecf900403ce5788a311d"
 
-ltgt@2.2.0, ltgt@^2.1.2:
+ltgt@2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/ltgt/-/ltgt-2.2.0.tgz#b65ba5fcb349a29924c8e333f7c6a5562f2e4842"
+
+ltgt@^2.1.2, ltgt@~2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/ltgt/-/ltgt-2.1.3.tgz#10851a06d9964b971178441c23c9e52698eece34"
 
 ltgt@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/ltgt/-/ltgt-1.0.2.tgz#e6817eb29ad204fc0c9e96ef8b0fee98ef6b9aa3"
-
-ltgt@~2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/ltgt/-/ltgt-2.1.3.tgz#10851a06d9964b971178441c23c9e52698eece34"
 
 mailcomposer@4.0.1:
   version "4.0.1"
@@ -2867,6 +2900,17 @@ qs@~6.1.0:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.1.2.tgz#b59d8925d0c999ef6d63acf4ac5abb0adaa24b54"
 
+quelle@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/quelle/-/quelle-0.0.4.tgz#902dc034929ff19c37bc35ba221764a69d3c44e6"
+  dependencies:
+    JSONStream "^1.3.1"
+    backoff-promise "0.0.2"
+    bluebird "^3.5.0"
+    events "^1.1.1"
+    inherits "^2.0.3"
+    sporks "0.0.1"
+
 randomatic@^1.1.3:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-1.1.7.tgz#c7abe9cc8b87c0baa876b19fde83fd464797e38c"
@@ -3332,12 +3376,29 @@ split@0.3:
   dependencies:
     through "2"
 
+sporks@0.0.1, sporks@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/sporks/-/sporks-0.0.1.tgz#2fcf6e307cd5518a182272fc0a9b8d6b8fee93c4"
+  dependencies:
+    bluebird "^3.5.0"
+    events "^1.1.1"
+    inherits "^2.0.3"
+
 sqlite3@^3.1.1:
   version "3.1.8"
   resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-3.1.8.tgz#4cbcf965d8b901d1b1015cbc7fc415aae157dfaa"
   dependencies:
     nan "~2.4.0"
     node-pre-gyp "~0.6.31"
+
+squadron@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/squadron/-/squadron-0.0.3.tgz#8b20d8a580f24481805c979a8dab8a603d0a1894"
+  dependencies:
+    bluebird "^3.5.0"
+    events "^1.1.1"
+    inherits "^2.0.3"
+    sporks "0.0.1"
 
 sshpk@^1.7.0:
   version "1.13.1"
@@ -3561,7 +3622,7 @@ through2@^0.6.2, through2@^0.6.5, through2@~0.6.3:
     readable-stream ">=1.0.33-1 <1.1.0-0"
     xtend ">=4.0.0 <4.1.0-0"
 
-through@2, through@~2.3, through@~2.3.1, through@~2.3.4:
+through@2, "through@>=2.2.7 <3", through@~2.3, through@~2.3.1, through@~2.3.4:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 

@@ -7,6 +7,7 @@ import SuperLoginClient from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 import Inbox from './inbox'
+import Storage from './helpers/storage'
 
 // TODO: Constants.API_HOST
 const API_HOST = global.location ? `${global.location.host}` : ''
@@ -80,8 +81,10 @@ class User {
     }
 
     if (this.options.userDB) {
-      console.log('connect to pouchd', this.options.userDB)
-      this.userDB = new PouchDB(this.options.userDB, { skip_setup: true })
+      this.userDB = new PouchDB(this.options.userDB, {
+        skip_setup: true,
+        adapter: Storage.name,
+      })
     }
 
     // for now

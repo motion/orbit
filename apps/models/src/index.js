@@ -7,20 +7,10 @@ import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
 import { omit } from 'lodash'
+import Storage from './helpers/storage'
 
 const isNode = typeof process !== 'undefined' && process.release.name === 'node'
 const isBrowser = !isNode
-
-let Storage = {}
-
-// node vs browser pouch storage
-if (isNode) {
-  Storage.adapter = require('pouchdb-adapter-memory')
-  Storage.name = 'memory'
-} else {
-  Storage.adapter = require('pouchdb-adapter-idb')
-  Storage.name = 'idb'
-}
 
 // export all models
 export Document from './document'
@@ -60,6 +50,7 @@ export default class Models implements ModelsStore {
     this.models = omit(models, ['default'])
 
     // hmr fix
+    console.log('pluggin models')
     if (!RxDB.PouchDB.replicate) {
       console.log('adding plugins to rxdb')
       RxDB.QueryChangeDetector.enable()
@@ -117,6 +108,7 @@ export default class Models implements ModelsStore {
           remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
           remoteOptions: {
             skip_setup: true,
+            adapter: Storage.name,
             ajax: {
               headers: {
                 'X-Token': `${User.name}*|*${User.token}`,

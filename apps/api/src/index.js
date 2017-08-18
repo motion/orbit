@@ -14,7 +14,11 @@ process.on('uncaughtException', error => {
 
 const API = require('./api').default
 
-console.log('starting api')
-const Api = new API({ rootPath: __dirname })
+async function run() {
+  console.log('Starting API...')
+  const Api = new API({ rootPath: __dirname })
+  await Api.start()
+  console.log('API started')
+}
 
-Api.start()
+run()

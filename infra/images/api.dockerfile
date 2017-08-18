@@ -28,3 +28,4 @@ RUN bin/bootstrap
 WORKDIR /repo/apps/api
 CMD npm run start-$ENV
 EXPOSE 3000
+EXPOSE 5858

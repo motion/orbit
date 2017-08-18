@@ -35,7 +35,7 @@ export default class PaneCard {
       padding: 8,
       background: [250, 250, 250, 1],
       boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.1]]],
-      overflow: 'hidden',
+      overflowY: 'scroll',
     },
     chromeless: {
       background: 'transparent',

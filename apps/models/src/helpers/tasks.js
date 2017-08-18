@@ -1,5 +1,5 @@
 import { random, flatten } from 'lodash'
-import merge from 'deep-extend'
+// import merge from 'deep-extend'
 
 const liToText = ({ nodes }) =>
   nodes

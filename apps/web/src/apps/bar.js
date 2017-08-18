@@ -82,6 +82,7 @@ class BarStore {
     feed: Panes.Feed,
     notifications: Panes.Notifications,
     login: Panes.Login,
+    'code.issue': Panes.Code.Issue,
     orbit: Panes.Orbit,
     task: Panes.Task,
     doc: Panes.Doc,
@@ -190,6 +191,7 @@ export default class BarPage {
               <UI.Input
                 size={3}
                 getRef={store.ref('inputRef').set}
+                placeholder="Start searching"
                 borderRadius={5}
                 onChange={store.onSearchChange}
                 value={store.search}

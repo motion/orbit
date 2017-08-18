@@ -139,6 +139,7 @@ class BarMainStore {
 
   get results() {
     console.time('Main.results')
+
     if (!User.loggedIn) {
       return [{ title: 'Login', type: 'login' }]
     }
@@ -236,7 +237,7 @@ export default class BarMain {
     return { kind: item.type, data: item.data || {} }
   }
 
-  render({ store, onRef, activeIndex, paneProps }) {
+  render({ store, onSelect, onRef, activeIndex, paneProps }) {
     onRef(this)
 
     return (
@@ -250,6 +251,7 @@ export default class BarMain {
           items={store.results}
           getItem={(result, index) =>
             <UI.ListItem
+              onClick={() => onSelect(index)}
               highlight={index === activeIndex}
               key={result.id}
               icon={

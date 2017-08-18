@@ -6,6 +6,7 @@
   "dependencies": {
     "hash-sum": "1.0.2",
     "kontur": "^0.2.0",
+    "lodash": "*",
     "mobx": "^3.2.0",
     "pouchdb-core": "^6.2.0",
     "rxdb": "^5.0.0",

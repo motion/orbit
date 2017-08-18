@@ -42,9 +42,15 @@ const SelectableSection = ({ index, activeIndex, ...props }) =>
 const badgeProps = item =>
   item.background ? { background: item.background, color: '#fff' } : {}
 
-@view
+@view({
+  store: class TaskStore {
+    response = ''
+  },
+})
 export default class BarTaskPane {
-  render({ highlightIndex, activeIndex, paneProps }) {
+  getLength = () => 5
+  render({ highlightIndex, activeIndex, store, paneProps }) {
+    console.log('active index is', activeIndex)
     return (
       <PaneCard
         id="609"
@@ -93,26 +99,49 @@ export default class BarTaskPane {
           <more>Show more...</more>
         </SelectableSection>
 
-        <SelectableSection $content index={2} activeIndex={activeIndex}>
-          <UI.Title $subtitle size={1}>
-            Replies (20)
-          </UI.Title>
-          <reply css={{ flexFlow: 'row', flex: 1, overflow: 'hidden' }}>
-            <img
-              css={{
-                width: 40,
-                height: 40,
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-              src="/images/me.jpg"
-            />
-            <UI.Text>
-              Helm install stable/couchdb should stand up a working CouchDB
-              deployment in my Kubernetes environment.
-            </UI.Text>
-          </reply>
-        </SelectableSection>
+        <UI.Title $subtitle size={1}>
+          Replies (30)
+        </UI.Title>
+        {[0, 1, 2].map((v, index) =>
+          <SelectableSection
+            $content
+            index={2 + index}
+            activeIndex={activeIndex}
+          >
+            <reply css={{ flexFlow: 'row', flex: 1, overflow: 'hidden' }}>
+              <img
+                css={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 100,
+                  marginRight: 10,
+                }}
+                src="/images/me.jpg"
+              />
+              <UI.Text>
+                Helm install stable/couchdb should stand up a working CouchDB
+                deployment in my Kubernetes environment.
+              </UI.Text>
+            </reply>
+          </SelectableSection>
+        )}
+        <comment>
+          <textarea
+            $response
+            value={store.response}
+            onChange={e => (store.response = e.target.value)}
+            placeholder="Leave a comment"
+          />
+          <info $$row>
+            <shortcut>cmd+enter to post</shortcut>
+            <UI.Button
+              disabled={store.response.trim().length === 0}
+              icon="send"
+            >
+              comment
+            </UI.Button>
+          </info>
+        </comment>
       </PaneCard>
     )
   }
@@ -137,6 +166,25 @@ export default class BarTaskPane {
     },
     content: {
       padding: [10],
+    },
+    info: {
+      marginTop: 5,
+      justifyContent: 'space-between',
+    },
+    shortcut: {
+      alignSelf: 'center',
+      marginLeft: 5,
+      opacity: 0.7,
+    },
+    response: {
+      marginTop: 5,
+      background: '#fafbfc',
+      border: '1px solid rgb(209, 213, 218)',
+      width: '100%',
+      height: 150,
+      borderRadius: 5,
+      padding: 10,
+      fontSize: 14,
     },
   }
 }

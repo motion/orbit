@@ -2,6 +2,8 @@ import { isNode } from './index'
 
 let Storage = {}
 
+console.log('IS NODE?', isNode)
+
 // node vs browser pouch storage
 if (isNode) {
   Storage.adapter = require('pouchdb-adapter-memory')

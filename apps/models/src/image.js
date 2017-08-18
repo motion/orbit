@@ -56,6 +56,7 @@ class Image extends Model {
     if (!doc) {
       return null
     }
+    console.log('running forDocument')
     return this.collection.find().where('docId').eq(doc.id)
   }
 

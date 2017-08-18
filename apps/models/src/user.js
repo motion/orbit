@@ -13,6 +13,8 @@ import { isBrowser } from './helpers'
 const API_HOST = global.location ? `${global.location.host}` : ''
 const API_URL = `http://${API_HOST}`
 
+console.log('API_HOST', API_HOST)
+
 @store
 class Queries {
   id = false
@@ -69,10 +71,10 @@ class User {
     return this.queries.defaultInbox
   }
 
-  constructor({ superlogin, ...options }) {
+  constructor({ superlogin, userDB }) {
     this.superlogin = SuperLoginClient
     this.superloginOptions = superlogin
-    this.options = options
+    this.userDB = userDB
   }
 
   connect = async (database, options) => {
@@ -80,8 +82,11 @@ class User {
       return // hmr
     }
 
-    if (this.options.userDB) {
-      this.userDB = new PouchDB(this.options.userDB, options.remoteOptions)
+    if (this.userDB) {
+      console.log('connecting to userdb', this.userDB)
+      this.userDB = new PouchDB(this.userDB, {
+        skip_setup: true,
+      })
     }
 
     // for now
@@ -212,7 +217,7 @@ class User {
         confirmPassword: password,
       })
       console.log('registerNewUser: ', res, 'logging in...')
-      // await this.login(username, password) // this should be auto done
+      await this.login(username, password) // this should be auto done
     } catch (error) {
       console.error('registerNewUser error: ', error)
       if (error && error.validationErrors) {
@@ -247,18 +252,28 @@ class User {
   }
 
   getCurrentUser = async () => {
-    let session = {}
-    if (this.superlogin) {
-      session = await this.superlogin.getSession()
-    }
-    const user = await this.userDB.get(session.user_id)
-    return {
-      ...session,
-      ...user,
+    try {
+      let session = {}
+      if (this.superlogin) {
+        session = await this.superlogin.getSession()
+      }
+      console.log('session user id is', session.user_id)
+      const user = await this.userDB.get(session.user_id)
+      return {
+        ...session,
+        ...user,
+      }
+    } catch (e) {
+      console.error('got err with current user get', e)
     }
   }
 
   createOrg = async name => {
+    if (!this.id) {
+      console.error('woah no id')
+      return
+    }
+
     await Org.create({
       title: name,
       admins: [this.id],

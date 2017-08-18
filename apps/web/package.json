@@ -34,6 +34,7 @@
     "@mcro/models": "^1.1.0",
     "@mcro/router": "^1.1.0",
     "@mcro/ui": "^1.1.0",
+    "@mcro/model": "*",
     "react-hotkeys": "^0.10.0",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",

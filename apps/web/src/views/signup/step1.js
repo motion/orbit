@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { view, schema, string } from '@mcro/black'
+import { view } from '@mcro/black'
+import { schema, string } from '@mcro/model'
 import { User } from '~/app'
 import * as UI from '@mcro/ui'
 import Router from '~/router'

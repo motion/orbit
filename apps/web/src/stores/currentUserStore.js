@@ -222,7 +222,6 @@ class CurrentUser {
       if (this.superlogin) {
         session = await this.superlogin.getSession()
       }
-      console.log('session user id is', session.user_id)
       const user = await User.get(session.user_id)
       return {
         ...session,

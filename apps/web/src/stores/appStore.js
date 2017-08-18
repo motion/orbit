@@ -42,7 +42,6 @@ export default class AppStore {
       console.time('start')
     }
     this.database = new Database(this.config, this.models)
-    console.log('start models')
     await this.database.start()
     this.connected = true
     this.catchErrors()

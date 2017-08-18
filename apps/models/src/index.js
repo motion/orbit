@@ -84,13 +84,10 @@ export default class Database implements ModelsStore {
       PouchDB.plugin(this.databaseConfig.adapter)
 
       if (isBrowser) {
-        console.log('THIS IS A BROWSER')
         RxDB.plugin(pHTTP)
         PouchDB.plugin(pHTTP)
       }
     }
-
-    console.log('Pouch using storage adapter:', this.databaseConfig.adapterName)
   }
 
   start = async () => {

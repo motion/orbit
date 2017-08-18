@@ -1,13 +1,26 @@
 // @flow
 import * as RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
-import pIDB from 'pouchdb-adapter-idb'
 import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
 import { omit } from 'lodash'
+
+const isNode = typeof process !== 'undefined' && process.release.name === 'node'
+const isBrowser = !isNode
+
+let Storage = {}
+
+// node vs browser pouch storage
+if (isNode) {
+  Storage.adapter = require('pouchdb-adapter-memory')
+  Storage.name = 'memory'
+} else {
+  Storage.adapter = require('pouchdb-adapter-idb')
+  Storage.name = 'idb'
+}
 
 // export all models
 export Document from './document'
@@ -48,21 +61,25 @@ export default class Models implements ModelsStore {
 
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
+      console.log('adding plugins to rxdb')
       RxDB.QueryChangeDetector.enable()
       // RxDB.QueryChangeDetector.enableDebugging(false)
-      RxDB.plugin(pHTTP)
-      RxDB.plugin(pIDB)
+      RxDB.plugin(Storage.adapter)
       RxDB.plugin(pREPL)
       RxDB.plugin(pValidate)
       RxDB.plugin(pSearch)
-      PouchDB.plugin(pHTTP)
-      PouchDB.plugin(pIDB)
+      PouchDB.plugin(Storage.adapter)
+
+      if (isBrowser) {
+        RxDB.plugin(pHTTP)
+        PouchDB.plugin(pHTTP)
+      }
     }
   }
 
   start = async () => {
     this.database = await RxDB.create({
-      adapter: 'idb',
+      adapter: Storage.name,
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
       multiInstance: true,

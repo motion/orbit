@@ -3,7 +3,7 @@ import { CompositeDisposable } from 'sb-event-kit'
 import { autorun, observable } from 'mobx'
 import { compile } from './properties'
 import type RxDB, { RxCollection } from 'rxdb'
-import PouchDB from 'pouchdb-core'
+import type PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
 import query from './query'
 
@@ -201,9 +201,9 @@ export default class Model {
     return worm()
   }
 
-  setupRemoteDB = (url, options: Object) => {
-    if (url) {
-      this.remoteDB = new PouchDB(url, options)
+  setupRemoteDB = ({ pouch, remote, remoteOptions }) => {
+    if (remote) {
+      this.remoteDB = new pouch(remote, remoteOptions)
     }
   }
 
@@ -215,7 +215,7 @@ export default class Model {
       return
     }
 
-    this.setupRemoteDB(options.remote, options.remoteOptions)
+    this.setupRemoteDB(options)
 
     // new connect
     this.database = database

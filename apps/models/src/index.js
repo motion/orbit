@@ -8,9 +8,7 @@ import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
 import { omit } from 'lodash'
 import Storage from './helpers/storage'
-
-const isNode = typeof process !== 'undefined' && process.release.name === 'node'
-const isBrowser = !isNode
+import { isBrowser } from './helpers'
 
 // export all models
 export Document from './document'
@@ -105,6 +103,7 @@ export default class Models implements ModelsStore {
 
       connections.push(
         model.connect(this.database, {
+          pouch: PouchDB,
           remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
           remoteOptions: {
             skip_setup: true,

@@ -8,6 +8,7 @@ import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 import Inbox from './inbox'
 import Storage from './helpers/storage'
+import { isBrowser } from './helpers'
 
 // TODO: Constants.API_HOST
 const API_HOST = global.location ? `${global.location.host}` : ''
@@ -113,6 +114,11 @@ class User {
   }
 
   async setupSuperLogin() {
+    if (!this.superloginOptions) {
+      console.log('skipping superlogin')
+      return
+    }
+
     this.superlogin.configure(this.superloginOptions)
 
     // sync
@@ -245,7 +251,10 @@ class User {
   }
 
   getCurrentUser = async () => {
-    const session = await this.superlogin.getSession()
+    let session = {}
+    if (this.superlogin) {
+      session = await this.superlogin.getSession()
+    }
     const user = await this.userDB.get(session.user_id)
     return {
       ...session,
@@ -264,7 +273,7 @@ class User {
 
 const user = new User({
   userDB: 'http://couch.jot.dev/users',
-  superlogin: {
+  superlogin: isBrowser && {
     providers: ['slack', 'github'],
     baseUrl: `${API_URL}/api/auth/`,
     endpoints: [API_HOST],

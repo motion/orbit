@@ -8,6 +8,20 @@ import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
 import { isBrowser } from './helpers'
 
+// ADD TO BOTH THIS SECTION
+
+export User from './user'
+export Document from './document'
+export Thread from './thread'
+export Inbox from './inbox'
+export Image from './image'
+export Thing from './thing'
+export Org from './org'
+export Job from './job'
+export Reply from './reply'
+
+// AND THIS ONE
+
 import User from './user'
 import Document from './document'
 import Thread from './thread'
@@ -107,8 +121,6 @@ export default class Database implements ModelsStore {
     // attach Models to app and connect if need be
     for (const [name, model] of Object.entries(this.models)) {
       this[name] = model
-
-      console.log('attaching', name, model)
 
       if (typeof model.connect !== 'function') {
         throw new Error(

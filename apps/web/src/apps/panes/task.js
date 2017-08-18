@@ -177,11 +177,11 @@ export default class BarTaskPane {
       opacity: 0.7,
     },
     response: {
-      marginTop: 5,
+      marginTop: 15,
       background: '#fafbfc',
       border: '1px solid rgb(209, 213, 218)',
       width: '100%',
-      height: 150,
+      height: 80,
       borderRadius: 5,
       padding: 10,
       fontSize: 14,

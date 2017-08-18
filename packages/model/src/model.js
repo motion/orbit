@@ -6,6 +6,7 @@ import type RxDB, { RxCollection } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
 import query from './query'
+import hashsum from 'hash-sum'
 
 type SettingsObject = {
   index?: Array<string>,
@@ -39,8 +40,6 @@ export default class Model {
   @observable connected = false
   // sync to
   remoteDB: ?string = null
-  // for tracking which queries we are watching
-  queryCache: Object = {}
   // hooks that run before/after operations
   hooks: Object<string, () => Promise<any>> = {}
 
@@ -137,7 +136,9 @@ export default class Model {
 
   _filteredProxy = null
 
-  // apply static defaultFilter
+  // we wrap the .collection calls so we can do some stuff in between
+  //  first: allowing models to define a filter
+  //  second: automatic sync from remote
   get _filteredCollection() {
     const { defaultFilter } = this.constructor
     if (!defaultFilter) {
@@ -147,12 +148,25 @@ export default class Model {
       return this._filteredProxy
     }
     const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
+    const sync = this.syncRemote
+
     this._filteredProxy = new Proxy(this._collection, {
       get(target, method) {
         if (method === 'find' || method === 'findOne') {
           return query => {
             // log('calling', method, defaultFilter(queryObject(query)))
-            return target[method](defaultFilter(queryObject(query)))
+            return new Proxy(
+              target[method](defaultFilter(queryObject(query))),
+              {
+                get(target, method) {
+                  // they have intent to run this
+                  if (method === 'exec' || method === '$') {
+                    sync(target)
+                  }
+                  return target[method]
+                },
+              }
+            )
           }
         }
         return target[method]
@@ -199,6 +213,24 @@ export default class Model {
     }
 
     return worm()
+  }
+
+  syncRemote = query => {
+    // TODO re-enable
+    if (query && query.mquery && this.remoteDB) {
+      console.log('lets do a sync', query)
+      const selector = query.keyCompress().selector
+      const key = hashsum({ db: this.remoteDB.name, selector })
+      const syncSettings = {
+        remote: this.remoteDB,
+        // waitForLeadership: false,
+        query,
+      }
+      const syncer = this._collection.sync(syncSettings)
+      // const stopSync = () => {
+      //   syncer.cancel()
+      // }
+    }
   }
 
   setupRemoteDB = ({ pouch, remote, remoteOptions }) => {

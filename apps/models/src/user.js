@@ -7,7 +7,7 @@ import SuperLoginClient from 'superlogin-client'
 import Document, { Document as DocumentModel } from './document'
 import Org from './org'
 import Inbox from './inbox'
-import { isBrowser } from './helpers'
+import { isBrowser, isNode } from './helpers'
 
 // TODO: Constants.API_HOST
 const API_HOST = global.location ? `${global.location.host}` : ''
@@ -84,9 +84,15 @@ class User {
 
     if (this.userDB) {
       console.log('connecting to userdb', this.userDB)
-      this.userDB = new PouchDB(this.userDB, {
+      // BUGFIX: the browser doesnt want us to specify adapter,
+      // but node requires it, thus the conditional here
+      const pouchOptions = {
         skip_setup: true,
-      })
+      }
+      if (isNode) {
+        pouchOptions.adapter = options.remoteOptions.adapter
+      }
+      this.userDB = new PouchDB(this.userDB, pouchOptions)
     }
 
     // for now

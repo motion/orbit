@@ -1,6 +1,6 @@
 // @flow
 import { keycode } from '@mcro/black'
-import { Document, User } from '~/app'
+import { Document, CurrentUser } from '~/app'
 import Router from '~/router'
 import { uniq, last, includes, dropRightWhile } from 'lodash'
 import { Raw } from 'slate'
@@ -327,7 +327,7 @@ export default class ExplorerStore {
     const result = []
     let last
     if (path === '/') {
-      return User.home
+      return CurrentUser.home
     }
     for (const slug of this.splitPath(path)) {
       const query = { slug }
@@ -353,7 +353,7 @@ export default class ExplorerStore {
 
   getChildDocsForPath = async (path: string): Array<Document> => {
     if (path === '/') {
-      return User.home
+      return CurrentUser.home
     }
     const lastDoc = await this.getDocAtPath(path)
     if (!lastDoc) {

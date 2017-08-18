@@ -11,7 +11,7 @@ import SoundStore from '~/stores/soundStore'
 import RecStore from '~/stores/recStore'
 import LayoutWrap from '~/views/layout/wrap'
 import Signup from '~/views/signup'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import ExplorerResults from './explorer/results'
 import Header from './header'
 import BottomBar from '~/views/bottomBar'
@@ -62,7 +62,7 @@ export default class Layout {
               <LayoutWrap layoutStore={layoutStore}>
                 <Header />
                 <content
-                  if={User.loggedIn}
+                  if={CurrentUser.loggedIn}
                   onScroll={this.onScroll}
                   $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
                 >

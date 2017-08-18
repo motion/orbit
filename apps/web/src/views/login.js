@@ -1,5 +1,5 @@
 import { view } from '@mcro/black'
-import { User } from '~/app'
+import { CurrentUser } from '~/app'
 import React from 'react'
 import * as UI from '@mcro/ui'
 import { HEADER_HEIGHT } from '~/constants'
@@ -14,7 +14,7 @@ import { HEADER_HEIGHT } from '~/constants'
     finish = async ({ email, password }) => {
       this.loggingIn = true
       try {
-        await User.loginOrSignup(email, password)
+        await CurrentUser.loginOrSignup(email, password)
       } catch (e) {
         console.error(e)
       }
@@ -25,7 +25,7 @@ import { HEADER_HEIGHT } from '~/constants'
 export default class Login {
   render({ store, ...props }) {
     return (
-      <login if={!User.loggedIn} $$draggable {...props}>
+      <login if={!CurrentUser.loggedIn} $$draggable {...props}>
         <UI.Form flex $$undraggable onSubmit={store.finish}>
           <UI.Row>
             <UI.Input

@@ -2,7 +2,7 @@
 import { view, store } from '@mcro/black'
 import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
-import Models from '@mcro/models'
+import Database from '@mcro/models'
 
 if (module.hot) {
   module.hot.accept('@mcro/models', () => {
@@ -25,7 +25,7 @@ export default class AppStore {
 
   constructor({ config, models }) {
     this.config = config
-    this.modelsObjects = models
+    this.models = models
     // listen for stuff, attach here
     view.on('store.mount', this.mount('stores'))
     view.on('store.unmount', this.unmount('stores'))
@@ -41,9 +41,9 @@ export default class AppStore {
       )
       console.time('start')
     }
-    this.models = new Models(this.config, this.modelsObjects)
+    this.database = new Database(this.config, this.models)
     console.log('start models')
-    await this.models.start()
+    await this.database.start()
     this.connected = true
     this.catchErrors()
     this.trackMounts()
@@ -54,7 +54,7 @@ export default class AppStore {
   }
 
   dispose = () => {
-    this.models && this.models.dispose()
+    this.database && this.database.dispose()
   }
 
   // private

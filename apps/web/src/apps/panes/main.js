@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { User, Document, Thing } from '~/app'
+import { CurrentUser, Document, Thing } from '~/app'
 import { uniq } from 'lodash'
 import { filterItem } from './helpers'
 
@@ -10,7 +10,7 @@ class BarMainStore {
   searchResults: Array<Document> = []
 
   get root() {
-    return User.home
+    return CurrentUser.home
   }
 
   get actions() {
@@ -139,7 +139,7 @@ class BarMainStore {
 
   get results() {
     console.time('Main.results')
-    if (!User.loggedIn) {
+    if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login' }]
     }
 

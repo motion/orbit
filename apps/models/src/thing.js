@@ -6,7 +6,7 @@ import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 import { Observable } from 'rxjs'
 
-let User = null
+let User = {}
 
 const urlify = id => id && id.replace(':', '-')
 const toSlug = (str: string) =>
@@ -284,13 +284,6 @@ export class Thing extends Model {
     }
   }
 
-  constructor(...args) {
-    super(...args)
-
-    // lazy load circular deps for node
-    User = require('./user')
-  }
-
   methods = methods
 
   settings = {
@@ -367,6 +360,10 @@ export class Thing extends Model {
         doc.uid = last.uid + 1
       }
     }
+  }
+
+  setCurrentUser = currentUser => {
+    User = currentUser
   }
 }
 

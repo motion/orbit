@@ -6,24 +6,35 @@ import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
-import { omit } from 'lodash'
 import { isBrowser } from './helpers'
 
-// export all models
-export Document from './document'
-export Thread from './thread'
-export Inbox from './inbox'
-export Image from './image'
-export Thing from './thing'
-export User from './user'
-export Org from './org'
-export Job from './job'
-export Reply from './reply'
+import User from './user'
+import Document from './document'
+import Thread from './thread'
+import Inbox from './inbox'
+import Image from './image'
+import Thing from './thing'
+import Org from './org'
+import Job from './job'
+import Reply from './reply'
+
+export const Models = {
+  Document,
+  Thread,
+  Inbox,
+  Image,
+  Thing,
+  User,
+  Org,
+  Job,
+  Reply,
+}
+
+// export base model classes
+export { Document as DocumentModel } from './document'
 
 // exports
 export type { Model } from '~/helpers'
-
-import User from './user'
 
 declare class ModelsStore {
   databaseConfig: Object,
@@ -31,7 +42,7 @@ declare class ModelsStore {
   models: Object<string, Model>,
 }
 
-export default class Models implements ModelsStore {
+export default class Database implements ModelsStore {
   connected = false
 
   constructor(databaseConfig, models) {
@@ -44,7 +55,7 @@ export default class Models implements ModelsStore {
     }
 
     this.databaseConfig = databaseConfig
-    this.models = omit(models, ['default'])
+    this.models = models
 
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
@@ -97,8 +108,12 @@ export default class Models implements ModelsStore {
     for (const [name, model] of Object.entries(this.models)) {
       this[name] = model
 
+      console.log('attaching', name, model)
+
       if (typeof model.connect !== 'function') {
-        throw `No connect found for model ${model.name} connect = ${typeof model.connect}`
+        throw new Error(
+          `No connect found for model ${model.name} connect = ${typeof model.connect}`
+        )
       }
 
       connections.push(

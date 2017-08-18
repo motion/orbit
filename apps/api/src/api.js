@@ -1,6 +1,5 @@
 // @flow
-import Models from '@mcro/models'
-import * as AllModels from '@mcro/models'
+import Database, { Models } from '@mcro/models'
 import Server from './server'
 import Bootstrap from './bootstrap'
 import Jobs from './jobs'
@@ -12,7 +11,7 @@ export default class API {
     this.server = new Server(options)
     this.bootstrap = new Bootstrap(options)
     this.jobs = new Jobs(options)
-    this.models = new Models(
+    this.database = new Database(
       {
         name: 'username',
         password: 'password',
@@ -21,7 +20,7 @@ export default class API {
         adapter,
         adapterName: 'memory',
       },
-      AllModels
+      Models
     )
     return this
   }
@@ -31,7 +30,7 @@ export default class API {
     this.server.start()
 
     // things that depend on models go after this line
-    await this.models.start()
+    await this.database.start()
 
     this.jobs.start()
   }

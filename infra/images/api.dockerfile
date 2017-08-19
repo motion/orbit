@@ -22,7 +22,11 @@ COPY . /repo
 
 # build
 WORKDIR /repo
-RUN bin/bootstrap
+
+# put in .dockerignore if you want to run bin/bootstrap
+# RUN bin/bootstrap
+# */node_modules
+# */*/node_modules
 
 # run
 WORKDIR /repo/apps/api

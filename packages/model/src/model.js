@@ -3,9 +3,11 @@ import { CompositeDisposable } from 'sb-event-kit'
 import { autorun, observable } from 'mobx'
 import { compile } from './properties'
 import type RxDB, { RxCollection } from 'rxdb'
+import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
 import query from './query'
+import hashsum from 'hash-sum'
 
 type SettingsObject = {
   index?: Array<string>,
@@ -28,19 +30,17 @@ export default class Model {
   static props: Object
   static defaultProps: Function | Object
 
-  subscriptions = new CompositeDisposable()
-  options: ?Object
   methods: ?Object
   statics: ?Object
   database: ?RxDB
+
+  subscriptions = new CompositeDisposable()
   settings: SettingsObject = {}
   defaultSchema: Object = {}
-
+  options: ?Object = {}
   @observable connected = false
   // sync to
-  remoteDB: ?string = null
-  // for tracking which queries we are watching
-  queryCache: Object = {}
+  remote: ?string = null
   // hooks that run before/after operations
   hooks: Object<string, () => Promise<any>> = {}
 
@@ -137,7 +137,9 @@ export default class Model {
 
   _filteredProxy = null
 
-  // apply static defaultFilter
+  // we wrap the .collection calls so we can do some stuff in between
+  //  first: allowing models to define a filter
+  //  second: automatic sync from remote
   get _filteredCollection() {
     const { defaultFilter } = this.constructor
     if (!defaultFilter) {
@@ -147,12 +149,31 @@ export default class Model {
       return this._filteredProxy
     }
     const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
+    const sync = this.syncRemote
+
     this._filteredProxy = new Proxy(this._collection, {
       get(target, method) {
+        console.log('getting method', method)
         if (method === 'find' || method === 'findOne') {
-          return query => {
+          return queryParams => {
+            console.log('what the fuck, ran a find', queryParams)
             // log('calling', method, defaultFilter(queryObject(query)))
-            return target[method](defaultFilter(queryObject(query)))
+            const query = target[method](
+              defaultFilter(queryObject(queryParams))
+            )
+            return new Proxy(query, {
+              get(target, method) {
+                // they have intent to run this
+                if (method === 'exec' || method === '$') {
+                  console.log('got exec or $', this.options)
+                  if (this.options.autoSync) {
+                    console.log('syncing query', query.mquery)
+                    this.syncQuery(query)
+                  }
+                }
+                return target[method]
+              },
+            })
           }
         }
         return target[method]
@@ -201,27 +222,19 @@ export default class Model {
     return worm()
   }
 
-  setupRemoteDB = ({ pouch, remote, remoteOptions }) => {
-    if (remote) {
-      this.remoteDB = new pouch(remote, remoteOptions)
-    }
-  }
-
   connect = async (database: RxDB, options: Object): Promise<void> => {
-    this.options = options
+    this.options = options || {}
 
-    // re-connect or hmr
+    // avoid re-connect on hmr
     if (this.database) {
       return
     }
 
-    this.setupRemoteDB(options)
-
-    // new connect
+    this.remote = options.remote
     this.database = database
-
+    const name = options.remoteOnly ? options.remote : this.title
     this._collection = await database.collection({
-      name: this.title,
+      name,
       schema: this.compiledSchema,
       statics: this.statics,
     })
@@ -365,7 +378,23 @@ export default class Model {
     }
   }
 
-  // helpers
+  syncQuery = query => {
+    if (!isRxQuery(query)) {
+      console.log('weird rxdb thinks this isnt a query', query)
+      // throw new Error(
+      //   'Could not sync query, does not look like a proper RxQuery object.'
+      // )
+    }
+    if (!this.remote) {
+      throw new Error('Could not sync query, no remote is specified.')
+    }
+    return this._collection.sync({
+      remote: this.remote,
+      query,
+    })
+  }
+
+  // user facing!
 
   // get is a helper that returns a promise only
   get = query => this.collection.findOne(query).exec();

@@ -67,28 +67,6 @@ function execQuery(it, valueGet: Function) {
     }
   }
 
-  // autosync query
-  let stopSync = null
-
-  // TODO re-enable
-  if (false && query && query.mquery && this.remoteDB) {
-    const selector = query.keyCompress().selector
-    const key = hashsum({ db: this.remoteDB.name, selector })
-    if (!this.queryCache[key]) {
-      this.queryCache[key] = true
-      const syncSettings = {
-        remote: this.remoteDB,
-        waitForLeadership: false,
-        query,
-      }
-      const syncer = this.collection.sync(syncSettings)
-      stopSync = () => {
-        delete this.queryCache[key]
-        syncer.cancel()
-      }
-    }
-  }
-
   const response = {}
   const id = Math.random()
   const getValue = () => {
@@ -126,6 +104,11 @@ function execQuery(it, valueGet: Function) {
     current: {
       get: getValue,
     },
+    sync: {
+      value: () => {
+        return this.syncQuery(query)
+      },
+    },
     get: {
       value: getValue,
     },
@@ -141,7 +124,6 @@ function execQuery(it, valueGet: Function) {
           setTimeout(() => {
             if (CacheListeners[KEY] === 0) {
               finishSubscribe()
-              stopSync && stopSync()
             }
           }, 1000)
         }

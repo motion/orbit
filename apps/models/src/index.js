@@ -81,25 +81,23 @@ export default class Database implements ModelsStore {
       RxDB.plugin(pREPL)
       RxDB.plugin(pValidate)
       RxDB.plugin(pSearch)
+      RxDB.plugin(pHTTP)
       PouchDB.plugin(this.databaseConfig.adapter)
-
-      if (isBrowser) {
-        RxDB.plugin(pHTTP)
-        PouchDB.plugin(pHTTP)
-      }
+      PouchDB.plugin(pHTTP)
     }
   }
 
-  start = async () => {
+  start = async ({ options, modelOptions } = {}) => {
     this.database = await RxDB.create({
       adapter: this.databaseConfig.adapterName,
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
       multiInstance: true,
       withCredentials: false,
+      ...options,
     })
 
-    await this.attachModels()
+    await this.attachModels(modelOptions)
     this.connected = true
   }
 
@@ -114,7 +112,7 @@ export default class Database implements ModelsStore {
     }
   }
 
-  attachModels = async () => {
+  attachModels = async (modelOptions?: Object) => {
     const connections = []
 
     // attach Models to app and connect if need be
@@ -140,6 +138,7 @@ export default class Database implements ModelsStore {
               },
             },
           },
+          ...modelOptions,
         })
       )
     }

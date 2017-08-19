@@ -5,7 +5,10 @@ import { User } from '@mcro/models'
 export default class GithubSync {
   async start() {
     console.log('activate github syncer')
-    console.log('user is', User.user)
+
+    User.find().exec().then(users => {
+      console.log('all users', users)
+    })
   }
 
   async dispose() {

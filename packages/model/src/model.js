@@ -7,7 +7,6 @@ import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
 import query from './query'
-import hashsum from 'hash-sum'
 
 type SettingsObject = {
   index?: Array<string>,

@@ -149,19 +149,9 @@ export default class BarTaskPane {
         title="Create a Helm chart to deploy CouchDB on K8s"
         icon="github"
       >
-        <SelectableSection $meta index={0} activeIndex={activeIndex}>
-          <metaInfo $$row>
-            {items.map(item => <MetaItem {...item} />)}
-          </metaInfo>
-
-          <UI.List
-            if={false}
-            background="transparent"
-            itemProps={paneProps.itemProps}
-            selected={isNumber(activeIndex) ? activeIndex : highlightIndex}
-            items={items}
-          />
-        </SelectableSection>
+        <metaInfo $$row>
+          {items.map(item => <MetaItem {...item} />)}
+        </metaInfo>
 
         <Reply
           index={1}
@@ -181,7 +171,7 @@ export default class BarTaskPane {
 
         {[0].map((v, index) =>
           <Reply
-            index={index + 2}
+            index={index + 1}
             activeIndex={activeIndex}
             when="three days ago"
             author="Nate"
@@ -207,9 +197,12 @@ export default class BarTaskPane {
           />
           <info $$row>
             <shortcut $bright={commentButtonActive}>cmd+enter to post</shortcut>
-            <UI.Button disabled={!commentButtonActive} icon="send">
-              comment
-            </UI.Button>
+            <buttons $$row>
+              <UI.Button disabled={!commentButtonActive}>Archive</UI.Button>
+              <UI.Button disabled={!commentButtonActive} icon="send">
+                Comment
+              </UI.Button>
+            </buttons>
           </info>
         </comment>
       </PaneCard>
@@ -241,7 +234,12 @@ export default class BarTaskPane {
       marginTop: 5,
       justifyContent: 'space-between',
     },
+    buttons: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
     shortcut: {
+      flex: 2,
       alignSelf: 'center',
       marginLeft: 5,
       opacity: 0.4,

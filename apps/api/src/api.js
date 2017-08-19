@@ -36,7 +36,7 @@ export default class API {
       },
     })
 
-    this.jobs.start()
+    await this.jobs.start()
   }
 
   dispose() {

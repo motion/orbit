@@ -12,8 +12,8 @@ export default class Sync {
   jobWatcher: Observable
   activeSyncers = []
 
-  start = () => {
-    this.setupSyncers()
+  start = async () => {
+    await this.setupSyncers()
     this.watchJobs()
   }
 
@@ -37,6 +37,10 @@ export default class Sync {
   }
 
   watchJobs = () => {
+    console.log(Job.pending().$isQuery)
+    console.log('call sync manually damn')
+    Job.syncQuery(Job.pending().query)
+
     this.jobWatcher = Job.pending().$.subscribe(async jobs => {
       console.log('Pending jobs: ', jobs.length)
       for (const job of jobs) {

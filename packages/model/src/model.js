@@ -147,8 +147,10 @@ export default class Model {
     if (this._filteredProxy) {
       return this._filteredProxy
     }
+
+    // bind here to avoid this changing in proxy
+    const { syncQuery } = this
     const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
-    const sync = this.syncRemote
 
     this._filteredProxy = new Proxy(this._collection, {
       get(target, method) {
@@ -167,7 +169,7 @@ export default class Model {
                   console.log('got exec or $', this.options)
                   if (this.options.autoSync) {
                     console.log('syncing query', query.mquery)
-                    this.syncQuery(query)
+                    syncQuery(query)
                   }
                 }
                 return target[method]

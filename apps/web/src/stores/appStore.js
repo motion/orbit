@@ -97,9 +97,6 @@ export default class AppStore {
 
   // TODO make this not hacky
   // could actually just be a Proxy around this class that finds these
-  get layoutStore(): LayoutStore {
-    return this.stores && this.stores.LayoutStore && this.stores.LayoutStore[0]
-  }
 
   get root() {
     return this.stores && this.stores.RootStore && this.stores.RootStore[0]

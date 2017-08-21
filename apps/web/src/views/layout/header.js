@@ -3,16 +3,11 @@ import { view } from '@mcro/black'
 import Router from '~/router'
 import * as UI from '@mcro/ui'
 import * as Constants from '~/constants'
-import Explorer from './explorer/explorer'
 import { OS } from '~/helpers/electron'
 
-@view.attach('layoutStore')
 @view
 export default class Header {
-  render({ layoutStore }) {
-    // use sidebar.active so it binds to variable and rerenders
-    layoutStore.sidebar.active
-
+  render() {
     const btnProps = {
       iconSize: 12,
       padding: [0, 6],
@@ -51,12 +46,6 @@ export default class Header {
           >
             My App
           </centerside>
-
-          <Explorer
-            if={false}
-            onOpen={() => (layoutStore.explorerOpen = true)}
-            onClose={() => (layoutStore.explorerOpen = false)}
-          />
 
           <rightside $$row $$centered>
             <UI.SlotFill.Slot name="actions">

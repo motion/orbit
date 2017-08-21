@@ -7,15 +7,10 @@ import adapter from 'pouchdb-adapter-idb'
 export CurrentUser from './stores/currentUserStore'
 
 // ugly but we want to export these all here
+// this prevents hmr from going nuts when we edit models
 export const User = Models.User
-export const Document = Models.Document
 export const Thing = Models.Thing
-export const Inbox = Models.Inbox
-export const Thread = Models.Thread
-export const Reply = Models.Reply
-export const Image = Models.Image
 export const Job = Models.Job
-export const Org = Models.Org
 
 let App
 

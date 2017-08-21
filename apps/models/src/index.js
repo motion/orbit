@@ -10,43 +10,22 @@ import type { Model } from '~/helpers'
 // ADD TO BOTH THIS SECTION
 
 export User from './user'
-export Document from './document'
-export Thread from './thread'
-export Inbox from './inbox'
-export Image from './image'
 export Thing from './thing'
-export Org from './org'
 export Job from './job'
-export Reply from './reply'
 
 // AND THIS ONE
 
 import User from './user'
-import Document from './document'
-import Thread from './thread'
-import Inbox from './inbox'
-import Image from './image'
 import Thing from './thing'
-import Org from './org'
 import Job from './job'
-import Reply from './reply'
 
 // AND THIS TOO
 
 export const Models = {
-  Document,
-  Thread,
-  Inbox,
-  Image,
   Thing,
   User,
-  Org,
   Job,
-  Reply,
 }
-
-// export base model classes
-export { Document as DocumentModel } from './document'
 
 // exports
 export type { Model } from '~/helpers'

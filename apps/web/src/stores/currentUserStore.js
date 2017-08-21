@@ -1,6 +1,6 @@
 // @flow
-import { Org, Inbox, Document, User } from '~/app'
-import { store, watch } from '@mcro/black'
+import { Org, User } from '~/app'
+import { store } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
 
 // TODO: Constants.API_HOST
@@ -8,77 +8,18 @@ const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
 @store
-class Queries {
-  id = false
-  activeOrg = 0
-
-  get org() {
-    return this.orgs && this.orgs[this.activeOrg]
-  }
-
-  @watch orgs = () => this.id && Org.forUser(this.id)
-  @watch favorites = () => Document.favoritedBy(this.id)
-
-  @watch
-  home = () => {
-    if (this.org === false) {
-      return false
-    }
-    if (this.org) {
-      return Document.get({ parentId: this.org.id })
-    }
-    return null
-  }
-
-  @watch
-  defaultInbox = () => {
-    if (this.org) {
-      return Inbox.get({ parentId: this.org.id })
-    }
-  }
-}
-
-@store
 class CurrentUser {
   connected = false
   user = false
   localDb = false
   remoteDb = false
-  queries = {}
   integrations = []
 
   constructor(options) {
     this.superlogin = SuperLoginClient
     this.options = options
-
-    this.setTimeout(() => {
-      this.queries = new Queries()
-      this.watch(() => {
-        if (this.id && !this.queries.id) {
-          console.log('starting user')
-          this.queries.id = this.id
-        }
-      })
-    }, 500)
-
     this.setupSuperLogin()
     this.connected = true
-  }
-
-  get org() {
-    return this.queries.org
-  }
-
-  get favorites() {
-    return this.queries.favorites
-  }
-
-  get home() {
-    return this.queries.home
-  }
-
-  get defaultInbox() {
-    return this.queries.defaultInbox
   }
 
   async setupSuperLogin() {

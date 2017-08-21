@@ -19,8 +19,6 @@ export const DB_CONFIG = {
 }
 
 export const HEADER_HEIGHT = 36
-export const SIDEBAR_WIDTH = 340
-export const SIDEBAR_TRANSITION = 'ease-in 100ms'
 
 export const IN_TRAY =
   IS_ELECTRON && (window.location + '').indexOf('?inTray') !== -1

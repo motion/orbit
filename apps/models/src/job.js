@@ -29,7 +29,7 @@ export class JobModel extends Model {
     percent: number,
     tries: number,
     status: number,
-    lastError: str.optional,
+    lastError: object.optional,
     timestamps: true,
   }
 

@@ -110,12 +110,11 @@ export default class Model {
       .toLowerCase()
   }
 
-  get compiledMethods(): Object {
-    if (!this.methods) {
-      return null
-    }
-
+  compiledMethods = (doc): Object => {
     const descriptors = Object.getOwnPropertyDescriptors(this.methods)
+
+    // methods to be added to each model
+    const ogUpdate = doc.update.bind(doc)
     const extraDescriptors = Object.getOwnPropertyDescriptors({
       get id() {
         return this._id
@@ -126,11 +125,27 @@ export default class Model {
           .exec()
           .then(doc => doc && doc.remove())
       },
+      // nicer update, adds properties to model & save
+      async update(object: Object = {}) {
+        // return await this.atomicUpdate(doc => {
+        for (const key of Object.keys(object)) {
+          this[key] = object[key]
+        }
+        delete this._ext
+        // })
+        return await this.save()
+      },
+      // this is the mongo field update syntax that rxdb has
+      // see https://docs.mongodb.com/manual/reference/operator/update-field/
+      // and https://github.com/lgandecki/modifyjs#implemented
+      async replace(object: Object = {}) {
+        return await ogUpdate(object)
+      },
     })
 
     return {
-      ...extraDescriptors,
       ...descriptors,
+      ...extraDescriptors,
     }
   }
 
@@ -279,7 +294,7 @@ export default class Model {
     // decorate each instance with this.methods
     const ogPostCreate = this.hooks.postCreate
     this.hooks.postCreate = doc => {
-      const { compiledMethods } = this
+      const compiledMethods = this.compiledMethods(doc)
       if (compiledMethods) {
         for (const method of Object.keys(compiledMethods)) {
           const descriptor = compiledMethods[method]
@@ -430,25 +445,5 @@ export default class Model {
       await this.onConnection()
     }
     return this._collection.insert(object)
-  }
-
-  // pass object to set onto model and save
-  async update(object: Object = {}) {
-    if (!this._collection) {
-      await this.onConnection()
-    }
-    return await this._collection.atomicUpdate(doc => {
-      Object.assign(doc, object)
-    })
-  }
-
-  // this is the mongo field update syntax that rxdb has
-  // see https://docs.mongodb.com/manual/reference/operator/update-field/
-  // and https://github.com/lgandecki/modifyjs#implemented
-  async mutate(object: Object = {}) {
-    if (!this._collection) {
-      await this.onConnection()
-    }
-    return this._collection.update(object)
   }
 }

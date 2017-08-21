@@ -47,7 +47,8 @@
     "longjohn": "^0.2.12",
     "concurrently": "^3.5.0",
     "object.entries": "^1.0.4",
-    "object.values": "^1.0.4"
+    "object.values": "^1.0.4",
+    "object.getownpropertydescriptors": "^2.0.3"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

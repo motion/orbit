@@ -1,6 +1,8 @@
 // shims
+// TODO remove once node 7+ works, depends on nodemon
 Object.entries = require('object.entries')
 Object.values = require('object.values')
+Object.getOwnPropertyDescriptors = require('object.getownpropertydescriptors')
 
 if (process.env.NODE_ENV !== 'production') {
   // long stack traces

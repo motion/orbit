@@ -140,25 +140,21 @@ export default class Model {
   //  first: allowing models to define a filter
   //  second: automatic sync from remote
   get _filteredCollection() {
-    const { defaultFilter } = this.constructor
-    if (!defaultFilter) {
-      return this._collection
-    }
+    const { defaultFilter = _ => _ } = this.constructor
+
+    // cache the proxy
     if (this._filteredProxy) {
       return this._filteredProxy
     }
 
-    // bind here to avoid this changing in proxy
-    const { syncQuery } = this
+    // set here to avoid changed `this` in proxy
+    const { syncQuery, options } = this
     const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
 
     this._filteredProxy = new Proxy(this._collection, {
       get(target, method) {
-        console.log('getting method', method)
         if (method === 'find' || method === 'findOne') {
           return queryParams => {
-            console.log('what the fuck, ran a find', queryParams)
-            // log('calling', method, defaultFilter(queryObject(query)))
             const query = target[method](
               defaultFilter(queryObject(queryParams))
             )
@@ -166,9 +162,7 @@ export default class Model {
               get(target, method) {
                 // they have intent to run this
                 if (method === 'exec' || method === '$') {
-                  console.log('got exec or $', this.options)
-                  if (this.options.autoSync) {
-                    console.log('syncing query', query.mquery)
+                  if (options.autoSync) {
                     syncQuery(query)
                   }
                 }
@@ -384,16 +378,14 @@ export default class Model {
     if (query.query) {
       query = query.query
     }
-    if (!isRxQuery(query)) {
-      console.log('weird rxdb thinks this isnt a query', query.constructor.name)
-      // throw new Error(
-      //   'Could not sync query, does not look like a proper RxQuery object.'
-      // )
+    if (!isRxQuery(query) && !(query.constructor.name === 'RxQuery')) {
+      throw new Error(
+        'Could not sync query, does not look like a proper RxQuery object.'
+      )
     }
     if (!this.remote) {
       throw new Error('Could not sync query, no remote is specified.')
     }
-    console.log('syncing with remote', this.remote)
     return this._collection.sync({
       remote: this.remote,
       // query,

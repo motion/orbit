@@ -99,7 +99,7 @@ function execQuery(it, valueGet: Function) {
       value: query,
     },
     $: {
-      value: query.$,
+      get: () => query.$,
     },
     current: {
       get: getValue,

@@ -37,9 +37,12 @@ export default class Sync {
   }
 
   watchJobs = () => {
-    console.log(Job.pending().$isQuery)
-    console.log('call sync manually damn')
-    Job.syncQuery(Job.pending().query)
+    // Job._collection.sync({
+    //   remote: 'http://pad-couch:5984/jobs',
+    // })
+
+    console.log('testing filtered collection')
+    Job.collection.find({ status: 0 }).$
 
     this.jobWatcher = Job.pending().$.subscribe(async jobs => {
       console.log('Pending jobs: ', jobs.length)
@@ -60,7 +63,7 @@ export default class Sync {
   }
 
   runJob = async (job: Job) => {
-    console.log('Running', job.id)
+    console.log('Running', job._id)
     await job.update({
       percent: 0,
       status: Job.status.PROCESSING,

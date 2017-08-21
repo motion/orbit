@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-nodemon": "nodemon --legacy-watch --debug=0.0.0.0:5858 --stack-trace-limit=1000 lib",
+    "start-nodemon": "nodemon --config nodemon.json lib",
     "start-watch": "../../bin/build --watch",
     "start-dev": "npm run start-nodemon"
   },
@@ -45,8 +45,10 @@
     "rxjs": "^5.4.3",
     "superlogin": "^0.6.1",
     "longjohn": "^0.2.12",
-    "concurrently": "^3.5.0",
-    "request-promise": "*"
+    "request-promise": "*",
+    "object.entries": "^1.0.4",
+    "object.values": "^1.0.4",
+    "object.getownpropertydescriptors": "^2.0.3"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

@@ -15,8 +15,8 @@ export default class API {
       {
         name: 'username',
         password: 'password',
-        couchUrl: 'http://api.jot.dev/couch',
-        couchHost: 'api.jot.dev',
+        couchUrl: 'http://pad-couch:5984',
+        couchHost: 'pad-couch:5984',
         adapter,
         adapterName: 'memory',
       },

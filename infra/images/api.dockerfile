@@ -1,4 +1,4 @@
-FROM node:7-alpine
+FROM mhart/alpine-node:6
 
 # args
 ARG ENV="prod"

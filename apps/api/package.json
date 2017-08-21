@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-nodemon": "nodemon lib",
+    "start-nodemon": "nodemon --config nodemon.json lib",
     "start-watch": "../../bin/build --watch",
     "start-dev": "npm run start-nodemon"
   },

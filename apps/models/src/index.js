@@ -6,7 +6,6 @@ import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
-import { isBrowser } from './helpers'
 
 // ADD TO BOTH THIS SECTION
 

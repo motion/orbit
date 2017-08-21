@@ -15,6 +15,7 @@
     "rxdb": "^5.2.1",
     "rxjs": "^5.4.2",
     "sillyname": "0.1.0",
-    "global": "^4.3.2"
+    "global": "^4.3.2",
+    "object.getownpropertydescriptors": "^2.0.3"
   }
 }

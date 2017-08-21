@@ -5,6 +5,7 @@ import { some, last, includes, without } from 'lodash'
 import { docToTasks, toggleTask } from './helpers/tasks'
 import randomcolor from 'randomcolor'
 import { Observable } from 'rxjs'
+import getDescriptors from 'object.getownpropertydescriptors'
 
 let User = {}
 
@@ -24,8 +25,8 @@ const cleanGetQuery = (query: Object | string) => {
 
 export const extend = (a, b) => {
   const result = {}
-  const ad = Object.getOwnPropertyDescriptors(a)
-  const bd = Object.getOwnPropertyDescriptors(b)
+  const ad = getDescriptors(a)
+  const bd = getDescriptors(b)
   Object.defineProperties(result, ad)
   Object.defineProperties(result, bd)
   return result

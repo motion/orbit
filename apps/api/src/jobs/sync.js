@@ -39,12 +39,10 @@ export default class Sync {
   watchJobs = () => {
     console.log(Job.pending().$isQuery)
     console.log('call sync manually, ok')
-    console.log(
-      'sync is',
-      Job._collection.sync({
-        remote: 'http://couch.jot.dev/jobs',
-      })
-    )
+    Job._collection.sync({
+      remote: 'http://couch.jot.dev/jobs',
+    })
+
     // Job.pending().sync()
 
     this.jobWatcher = Job.pending().$.subscribe(async jobs => {

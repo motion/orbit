@@ -40,7 +40,7 @@ export default class Sync {
     console.log(Job.pending().$isQuery)
     console.log('call sync manually, ok')
     Job._collection.sync({
-      remote: 'http://couch.jot.dev/jobs',
+      remote: 'http://pad-couch:5984/jobs',
     })
 
     // Job.pending().sync()

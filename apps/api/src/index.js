@@ -1,5 +1,6 @@
 // shims
 Object.entries = require('object.entries')
+Object.values = require('object.values')
 
 if (process.env.NODE_ENV !== 'production') {
   // long stack traces

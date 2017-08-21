@@ -72,22 +72,23 @@ export default class Sync {
 
   runJob = async (job: Job) => {
     console.log('Running', job.id, job.type)
-    await job.update({
-      percent: 0,
-      status: Job.status.PROCESSING,
-      tries: job.tries + 1,
-    })
+    // await job.update({
+    //   percent: 0,
+    //   status: Job.status.PROCESSING,
+    //   tries: job.tries + 1,
+    // })
 
-    if (job.type === 'sync' && SOURCE_TO_SYNCER[job.info.source]) {
-      const Syncer = SOURCE_TO_SYNCER[job.info.source]
+    if (SOURCE_TO_SYNCER[job.type]) {
+      const Syncer = new SOURCE_TO_SYNCER[job.type]()
       try {
         await Syncer.run(job)
       } catch (e) {
-        job.update({ status: Job.status.FAILED, lastError: e })
+        console.log('error running syncer', e)
+        // await job.update({ status: Job.status.FAILED, lastError: e })
       }
     }
 
     // update job
-    await job.update({ percent: 100, status: Job.status.COMPLETED })
+    // await job.update({ percent: 100, status: Job.status.COMPLETED })
   }
 }

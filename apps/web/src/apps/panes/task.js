@@ -1,7 +1,12 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { isNumber } from 'lodash'
+import { isNumber, includes } from 'lodash'
+import PersonPicker from './views/personPicker'
 import PaneCard from './views/card'
+import { Atom } from '@mcro/models'
+import timeAgo from 'time-ago'
+
+const { ago } = timeAgo()
 
 const items = [
   {
@@ -53,13 +58,14 @@ const SelectableSection = ({ index, activeIndex, ...props }) =>
     css={{ background: activeIndex === index ? [0, 0, 0, 0.1] : null }}
   />
 
-const badgeProps = item =>
-  item.background ? { background: item.background, color: '#fff' } : {}
-
 @view
 class Reply {
   render({ author, when, activeIndex, text, index }) {
-    const image = author === 'Nate' ? 'me' : author.toLowerCase()
+    const name = includes(author, ' ')
+      ? author.split(' ')[0].toLowerCase()
+      : author
+    const image = name === 'nate' ? 'me' : name
+
     return (
       <SelectableSection index={index} activeIndex={activeIndex}>
         <reply $$row>
@@ -111,16 +117,29 @@ class Reply {
   }
 }
 
-@view
+@view({
+  store: class {
+    who = null
+  },
+})
 class MetaItem {
-  render({ label, value }) {
+  render({ store, label, value }) {
     return (
       <item>
+        <PersonPicker
+          if={false}
+          popoverProps={{
+            target: <UI.Button>assign</UI.Button>,
+          }}
+          onSelect={person => {
+            store.who = person
+          }}
+        />
         <name>
           {label}
         </name>
         <value>
-          {value}
+          {store.who ? store.who : value}
         </value>
       </item>
     )
@@ -136,58 +155,43 @@ class MetaItem {
 @view({
   store: class TaskStore {
     response = ''
+
+    submit = () => {
+      Atom.addComment(this.response)
+      this.response = ''
+    }
   },
 })
 export default class BarTaskPane {
   getLength = () => 5
-  render({ highlightIndex, activeIndex, store, paneProps }) {
+  render({ highlightIndex, data, activeIndex, store, paneProps }) {
     const commentButtonActive = store.response.trim().length > 0
+    const title = data.title || 'Create a Helm chart to deploy CouchDB on K8s'
+    const comments = data.comments || [0, 1].map(() => 'just a test')
+    const type = data.type || 'github'
 
     return (
-      <PaneCard
-        id="609"
-        title="Create a Helm chart to deploy CouchDB on K8s"
-        icon="github"
-      >
-        <metaInfo $$row>
-          {items.map(item => <MetaItem {...item} />)}
-        </metaInfo>
+      <PaneCard $paneCard id={data.id} title={title} icon={type}>
+        {/* everything but comment area so comment area is sticky footer */}
+        <content>
+          <metaInfo $$row>
+            {items.map(item => <MetaItem {...item} />)}
+          </metaInfo>
 
-        <Reply
-          index={1}
-          activeIndex={activeIndex}
-          when="six days ago"
-          author="Nick"
-          text={
-            <div>
-              helm install stable/couchdb should stand up a working CouchDB
-              deployment in my Kubernetes environment.
-              <br />
-              <UI.Title size={1.2}>Current Behavior</UI.Title>
-              Installing CouchDB in Kubernetes is currently a very manual task.
-            </div>
-          }
-        />
-
-        {[0].map((v, index) =>
-          <Reply
-            index={index + 1}
-            activeIndex={activeIndex}
-            when="three days ago"
-            author="Nate"
-            text={
-              <div>
-                This is a question, sorry if this is the wrong place to ask it!
-                <break />
-                I believe that NodeList.forEach is in the WhatWG DOM spec, but
-                is not polyfilled by the Babel polyfill. <break />This makes
-                sense because the Babel polyfill is for JavaScript language
-                built-ins, not Web APIs. Is there a suggestion for what polyfill
-                folks should use for DOM built-ins?
-              </div>
-            }
-          />
-        )}
+          {comments.map((comment, index) =>
+            <Reply
+              index={index + 1}
+              activeIndex={activeIndex}
+              when={ago(comment.date)}
+              author={comment.author}
+              text={
+                <div>
+                  {comment.text}
+                </div>
+              }
+            />
+          )}
+        </content>
         <comment>
           <textarea
             $response
@@ -199,7 +203,11 @@ export default class BarTaskPane {
             <shortcut $bright={commentButtonActive}>cmd+enter to post</shortcut>
             <buttons $$row>
               <UI.Button disabled={!commentButtonActive}>Archive</UI.Button>
-              <UI.Button disabled={!commentButtonActive} icon="send">
+              <UI.Button
+                disabled={!commentButtonActive}
+                onClick={store.submit}
+                icon="send"
+              >
                 Comment
               </UI.Button>
             </buttons>
@@ -213,6 +221,12 @@ export default class BarTaskPane {
     metaInfo: {
       justifyContent: 'space-between',
       margin: [5, 40],
+    },
+    paneCard: {
+      flex: 1,
+    },
+    content: {
+      flex: 1,
     },
     break: {
       height: 8,

@@ -55,7 +55,6 @@ class MillerStore {
     },
     down: () => {
       const { state } = this.props
-      console.log('miller down', this.plugins[state.activeCol])
       const len = 50 // this.plugins[state.activeCol].getLength() - 1
       if (state.activeRow === null || state.activeRow < len) {
         state.moveRow(1)

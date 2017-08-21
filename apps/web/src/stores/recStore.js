@@ -5,6 +5,7 @@ import { Thread } from '~/app'
 
 @store
 export default class RecStore {
+  /*
   docs = Thread.find()
 
   start() {}
@@ -27,4 +28,5 @@ export default class RecStore {
       `${API_URL}/rec?phrase=${chars}&phrases=${JSON.stringify(phrases)}`
     )).json()
   }
+  */
 }

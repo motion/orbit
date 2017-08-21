@@ -56,8 +56,10 @@ class BarStore {
   }
 
   onSearchChange = e => {
-    this.millerState.setActiveRow(0)
     this.search = e.target.value
+    setTimeout(() => {
+      this.millerState.setActiveRow(0)
+    })
   }
 
   get peekItem() {
@@ -191,7 +193,6 @@ export default class BarPage {
               <UI.Input
                 size={3}
                 getRef={store.ref('inputRef').set}
-                placeholder="Start searching"
                 borderRadius={5}
                 onChange={store.onSearchChange}
                 value={store.search}

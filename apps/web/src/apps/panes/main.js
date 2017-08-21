@@ -5,9 +5,11 @@ import * as UI from '@mcro/ui'
 import { CurrentUser, Document, Thing } from '~/app'
 import { uniq } from 'lodash'
 import { filterItem } from './helpers'
+import { Atom } from '@mcro/models'
 
 class BarMainStore {
   searchResults: Array<Document> = []
+  cards = []
 
   get root() {
     return CurrentUser.home
@@ -143,11 +145,12 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login' }]
     }
 
-    const { searchResults, integrations, browse, people, actions } = this
+    const { searchResults, cards, integrations, browse, people, actions } = this
 
     const results = filterItem(
       [
         ...browse,
+        ...cards,
         ...(searchResults || []),
         ...people,
         ...actions,
@@ -173,6 +176,21 @@ class BarMainStore {
   }
 
   start() {
+    Atom.getAll().then(cards => {
+      this.cards = cards.map(card => ({
+        title: card.card.name,
+        data: {
+          title: card.card.name,
+          id: card.card.id,
+          comments: card.comments,
+          type: 'trello',
+        },
+        searchTags: 'trello',
+        type: 'task',
+        icon: 'trello',
+      }))
+    })
+
     this.props.getRef && this.props.getRef(this)
   }
 

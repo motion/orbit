@@ -379,9 +379,13 @@ export default class Model {
     }
   }
 
-  syncQuery = query => {
+  syncQuery = queryish => {
+    let query = queryish
+    if (query.query) {
+      query = query.query
+    }
     if (!isRxQuery(query)) {
-      console.log('weird rxdb thinks this isnt a query', query)
+      console.log('weird rxdb thinks this isnt a query', query.constructor.name)
       // throw new Error(
       //   'Could not sync query, does not look like a proper RxQuery object.'
       // )
@@ -389,9 +393,10 @@ export default class Model {
     if (!this.remote) {
       throw new Error('Could not sync query, no remote is specified.')
     }
+    console.log('syncing with remote', this.remote)
     return this._collection.sync({
       remote: this.remote,
-      query,
+      // query,
     })
   }
 

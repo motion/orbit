@@ -16,7 +16,7 @@
     "pouchdb-core": "^6.2.0",
     "prop-types": "^15.5.9",
     "react-tunnel": "0.1.0",
-    "rxdb": "^5.0.0",
+    "rxdb": "^5.2.1",
     "rxjs": "^5.4.1"
   },
   "peerDependencies": {

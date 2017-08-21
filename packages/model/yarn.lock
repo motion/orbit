@@ -318,7 +318,7 @@ replace-comments-x@^1.0.1:
   dependencies:
     is-string "^1.0.4"
 
-rxdb@^5.0.0:
+rxdb@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/rxdb/-/rxdb-5.2.1.tgz#1a79d1303f6f65b3a4eea460cccc178156fa9ed2"
   dependencies:

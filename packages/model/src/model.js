@@ -127,13 +127,11 @@ export default class Model {
       },
       // nicer update, adds properties to model & save
       async update(object: Object = {}) {
-        // return await this.atomicUpdate(doc => {
-        for (const key of Object.keys(object)) {
-          this[key] = object[key]
-        }
-        delete this._ext
-        // })
-        return await this.save()
+        return await this.atomicUpdate(doc => {
+          for (const key of Object.keys(object)) {
+            doc[key] = object[key]
+          }
+        })
       },
       // this is the mongo field update syntax that rxdb has
       // see https://docs.mongodb.com/manual/reference/operator/update-field/

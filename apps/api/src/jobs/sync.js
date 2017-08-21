@@ -7,6 +7,16 @@ const SOURCE_TO_SYNCER = {
   github: Syncers.Github,
 }
 
+function getRxError({ message, stack }) {
+  try {
+    const message = JSON.parse(message)
+    console.log(JSON.stringify(message, 0, 2))
+  } catch (e) {
+    // nothing
+  }
+  return { message, stack }
+}
+
 export default class Sync {
   locks: Set<string> = new Set()
   jobWatcher: Observable
@@ -46,9 +56,14 @@ export default class Sync {
         this.locks.add(job.id)
         try {
           await this.runJob(job)
-        } catch (e) {
-          console.log('ERROR', e)
-          await job.update({ status: 3, lastError: e.message, tries: 3 })
+        } catch (error) {
+          console.log('ERROR')
+          const lastError = getRxError(error)
+          await job.update({
+            status: 3,
+            lastError,
+            tries: 3,
+          })
         }
         this.locks.delete(job.id)
       }

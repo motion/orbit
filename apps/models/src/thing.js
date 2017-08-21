@@ -346,8 +346,12 @@ export class Thing extends Model {
       throw new Error('No parentId given!')
     }
     if (!doc.parentIds) {
-      const parent = await this._collection.findOne(doc.parentId).exec()
-      doc.parentIds = [...parent.parentIds, doc.parentId]
+      const parent = await this._collection.findOne({ id: doc.parentId }).exec()
+      if (parent) {
+        doc.parentIds = [...parent.parentIds, doc.parentId]
+      } else {
+        doc.parentIds = []
+      }
     }
   }
 

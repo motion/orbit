@@ -6,27 +6,18 @@ import * as UI from '@mcro/ui'
 import NotFound from '~/apps/error/404'
 import Router from '~/router'
 import Errors from '~/views/layout/errors'
-import LayoutStore from '~/stores/layoutStore'
-import SoundStore from '~/stores/soundStore'
-import RecStore from '~/stores/recStore'
 import LayoutWrap from '~/views/layout/wrap'
 import Signup from '~/views/signup'
 import { CurrentUser } from '~/app'
-import ExplorerResults from './explorer/results'
 import Header from './header'
 import BottomBar from '~/views/bottomBar'
-import Browse from './browse'
 
 type Props = {
   layoutStore: LayoutStore,
   soundStore: SoundStore,
 }
 
-@view.provide({
-  layoutStore: LayoutStore,
-  recStore: RecStore,
-  soundStore: SoundStore,
-})
+@view
 export default class Layout {
   props: Props
 
@@ -43,7 +34,7 @@ export default class Layout {
     this.lastScrolledTo = e.currentTarget.scrollTop
   }
 
-  render({ layoutStore }: Props) {
+  render() {
     if (Constants.IS_BAR) {
       console.log('Constants.IS_BAR')
       const CurrentPage = Router.activeView || <null>no way</null>
@@ -57,16 +48,10 @@ export default class Layout {
         <UI.Theme name="light">
           <UI.SlotFill.Provider>
             <content>
-              <Browse />
               <Signup />
-              <LayoutWrap layoutStore={layoutStore}>
+              <LayoutWrap>
                 <Header />
-                <content
-                  if={CurrentUser.loggedIn}
-                  onScroll={this.onScroll}
-                  $dragStartedAt={layoutStore.isDragging && this.lastScrolledTo}
-                >
-                  <ExplorerResults />
+                <content if={CurrentUser.loggedIn} onScroll={this.onScroll}>
                   <CurrentPage key={Router.key} {...Router.params} />
                 </content>
               </LayoutWrap>
@@ -95,12 +80,5 @@ export default class Layout {
     content: {
       flex: 1,
     },
-    dragStartedAt: pos => ({
-      overflowX: 'visible',
-      overflowY: 'visible',
-      transform: {
-        y: -pos,
-      },
-    }),
   }
 }

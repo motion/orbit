@@ -1,7 +1,6 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import App from '~/app'
-import { SIDEBAR_WIDTH } from '~/constants'
 
 @view
 export default class Errors {
@@ -16,7 +15,9 @@ export default class Errors {
           <error key={error.id || Math.random()}>
             <message $$ellipse if={error.errors}>
               {error.errors.map(({ field, message }) =>
-                <subErr key={Math.random()}>{field}: {message}</subErr>
+                <subErr key={Math.random()}>
+                  {field}: {message}
+                </subErr>
               )}
             </message>
             <message $$ellipse if={error.message}>
@@ -25,7 +26,9 @@ export default class Errors {
             <message $$ellipse if={error.reason}>
               <strong>{error.reason.name}</strong>: {error.reason.message}
             </message>
-            <clear if={i === 0} onClick={App.clearErrors}>x</clear>
+            <clear if={i === 0} onClick={App.clearErrors}>
+              x
+            </clear>
           </error>
         )}
       </errors>
@@ -35,7 +38,6 @@ export default class Errors {
   static style = {
     errors: {
       position: 'fixed',
-      right: SIDEBAR_WIDTH,
       bottom: 0,
       left: 0,
       zIndex: 100000,

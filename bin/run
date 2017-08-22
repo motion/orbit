@@ -15,6 +15,11 @@ elif [ "$ACTION" = "electron" ]; then
   npm start
   fg
 elif [ "$ACTION" =  "web" ]; then
+  if [ ! -d "$ROOT/packages/ui/lib" ]; then
+    echo "Make sure to run 'build --watch' before running web"
+    exit 0
+  fi
+
   cd apps/web
   if [ "$ARG1" = "--clean" ]; then
     motion watch --disable-cache

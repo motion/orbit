@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser, Document, Thing } from '~/app'
 import { uniq } from 'lodash'
@@ -19,71 +19,18 @@ class BarMainStore {
 
   get actions() {
     return [
-      {
-        title: 'Create new topic +',
-        type: 'feed',
-        category: 'Actions',
-      },
+      // {
+      //   title: 'Create new topic +',
+      //   type: 'feed',
+      //   category: 'Actions',
+      // },
     ]
-  }
-
-  get integrations() {
-    return [
-      {
-        title: 'Test Open Window',
-        type: 'doc',
-        doc: {
-          url() {
-            return '/test'
-          },
-        },
-      },
-      {
-        title: 'Setup Google Docs',
-        data: 'google-docs',
-        type: 'setup',
-        icon: 'google',
-      },
-      {
-        title: 'Setup Google Drive',
-        data: 'google-drive',
-        type: 'setup',
-        icon: 'disk',
-      },
-      {
-        title: 'Setup Dropbox Paper',
-        data: 'dropbox-paper',
-        type: 'setup',
-        icon: 'dropbox',
-      },
-      {
-        title: 'Setup Trello',
-        data: 'trello',
-        type: 'setup',
-        icon: 'trello',
-      },
-      {
-        title: 'Setup Jira',
-        data: 'jira',
-        type: 'setup',
-        icon: 'jira',
-      },
-      {
-        title: 'Setup Github',
-        data: 'github',
-        type: 'setup',
-        icon: 'github',
-      },
-    ].map(x => ({
-      ...x,
-      category: 'Setup Integrations',
-    }))
   }
 
   get browse() {
     return [
       {
-        title: 'Subscribed',
+        title: 'Recent',
         type: 'feed',
         icon: 'radio',
         data: {
@@ -146,7 +93,7 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login' }]
     }
 
-    const { searchResults, cards, integrations, browse, people, actions } = this
+    const { searchResults, cards, browse, people, actions } = this
 
     const results = filterItem(
       [
@@ -155,24 +102,25 @@ class BarMainStore {
         ...(searchResults || []),
         ...people,
         ...actions,
-        ...integrations,
+        {
+          title: 'Integrations',
+          icon: 'gear',
+          type: 'integrations',
+          category: 'Settings',
+        },
       ],
       this.props.search
     )
 
-    const final = [
-      ...results,
-      {
+    if (this.props.search) {
+      results.push({
         title: `Search "${this.props.search}"`,
         type: 'feed',
-      },
-      {
-        title: `Feed "${this.props.search}"`,
-        type: 'feed',
-      },
-    ]
+      })
+    }
 
-    return final
+    console.timeEnd('Main.results')
+    return results
   }
 
   start() {
@@ -261,7 +209,7 @@ export default class BarMain {
     return { kind: item.type, data: item.data || {} }
   }
 
-  render({ store, onSelect, onRef, isActive, activeIndex, paneProps }) {
+  render({ store, onSelect, onRef, activeIndex, paneProps }) {
     onRef(this)
     const secondary = item => {
       if (item.data && item.data.service === 'github')
@@ -283,8 +231,10 @@ export default class BarMain {
       <pane>
         <UI.List
           if={store.results}
-          controlled={false}
           selected={activeIndex}
+          onSelect={(item, index) => {
+            onSelect(index)
+          }}
           itemProps={paneProps.itemProps}
           groupKey="category"
           virtualized

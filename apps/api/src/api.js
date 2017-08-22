@@ -15,7 +15,7 @@ export default class API {
       {
         name: 'username',
         password: 'password',
-        couchUrl: 'http://pad-couch:5984',
+        couchUrl: 'http://admin:password@pad-couch:5984',
         couchHost: 'pad-couch:5984',
         adapter,
         adapterName: 'memory',

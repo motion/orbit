@@ -1,4 +1,3 @@
-import bootstrap from 'couchdb-bootstrap'
 import ensure from 'couchdb-ensure'
 import compile from 'couchdb-compile'
 import Path from 'path'
@@ -22,7 +21,10 @@ export default class Couch {
 
   start({ write = true } = {}) {
     console.log('Bootstrapping...', this.designPath, this.databaseUrl, write)
+    this.ensureDbsCreated(write)
+  }
 
+  ensureDbsCreated = shouldWrite => {
     // ensure dbs created
     const dirs = path =>
       fs
@@ -37,7 +39,7 @@ export default class Couch {
       ensure(dbUrl, handleErr)
     }
 
-    if (write) {
+    if (shouldWrite) {
       compile(this.designPath, (err, doc) => {
         if (err) {
           console.log('err', err)

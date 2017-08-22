@@ -1,6 +1,6 @@
 {
   "verbose": true,
-  "ignore": ["src/*"],
+  "ignore": ["src/*", "lib/*.map"],
   "legacy-watch": true,
   "inspect": "5858",
   "stack-trace-limit": 1000

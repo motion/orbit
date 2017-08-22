@@ -1,22 +1,13 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { SIDEBAR_TRANSITION } from '~/constants'
 
 // optimized re-render for sidebar resize
-@view.attach('layoutStore')
 @view
 export default class LayoutWrap {
-  render({ layoutStore, children }) {
+  render({ children }) {
     return (
-      <wrap
-        style={{
-          transition: layoutStore.sidebar.changing
-            ? `right ${SIDEBAR_TRANSITION}`
-            : 'none',
-          right: layoutStore.sidebar.trueWidth,
-        }}
-      >
+      <wrap>
         {children}
       </wrap>
     )

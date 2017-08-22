@@ -12,8 +12,8 @@ const IS_MAC = process.platform === 'darwin'
 const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   const size = [
-    Math.max(MIN_WIDTH, Math.round(width / 3)),
-    Math.max(MIN_HEIGHT, Math.round(height / 2)),
+    Math.max(MIN_WIDTH, Math.round(width / 1.8)),
+    Math.max(MIN_HEIGHT, Math.round(height / 1.5)),
   ]
   const middleX = Math.round(width / 2 - size[0] / 2)
   const middleY = Math.round(height / 2 - size[1] / 2)

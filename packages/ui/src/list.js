@@ -220,7 +220,7 @@ class List {
         ...(isListItem ? positionProps : null),
         ref: this.gatherRefs(index),
       }
-      if (controlled) {
+      if (onSelect || controlled) {
         const ogClick = props.onClick
         props.onClick = e => {
           this.highlightItem(() => index)
@@ -228,7 +228,8 @@ class List {
             ogClick.call(this, e)
           }
         }
-
+      }
+      if (controlled) {
         // set highlight if necessary
         props.highlight = this.showInternalSelection
           ? index === this.state.selected

@@ -1,4 +1,4 @@
-// import request from 'request-promise'
+import fetch from 'node-fetch'
 
 const apiKey = 'c6b4ba882e6b2afa18ac5367654f4ebb'
 const secret =
@@ -14,8 +14,7 @@ const cardUrl = id => `${base}${cardPath(id)}?key=${apiKey}&token=${nicksToken}`
 
 export default new class TrelloHandler {
   async getCard(card) {
-    // const val = await request(cardUrl(card.id))
-    const val = {}
+    const val = await await fetch(cardUrl(card.id)).json()
     return {
       card: { id: card.id, name: card.name },
       comments: JSON.parse(val),
@@ -23,8 +22,7 @@ export default new class TrelloHandler {
   }
 
   async getAllCards() {
-    const val = {}
-    // const val = JSON.parse(await request(boardUrl))
+    const val = JSON.parse(await (await fetch(boardUrl)).json())
 
     const cards = await Promise.all(val.map(this.getCard))
 

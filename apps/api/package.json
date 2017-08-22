@@ -47,6 +47,9 @@
     "rxjs": "^5.4.3",
     "superlogin": "^0.6.1",
     "longjohn": "^0.2.12",
+    "object.entries": "^1.0.4",
+    "object.values": "^1.0.4",
+    "object.getownpropertydescriptors": "^2.0.3",
     "github-graphql-client": "*"
   },
   "devDependencies": {

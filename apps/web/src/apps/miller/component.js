@@ -166,23 +166,24 @@ export default class Miller {
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
             return (
-              <Pane
-                key={index + ':' + pane.kind}
-                // if it's the next preview, always rerender
-                pane={panes[pane.type]}
-                type={pane.type}
-                data={pane.data}
-                search={search}
-                paneProps={paneProps}
-                onMeasureWidth={width => (store.colWidths[index] = width)}
-                col={index}
-                getRef={plugin => {
-                  console.log('got a ref', plugin)
-                  store.plugins[index] = plugin
-                }}
-                onSelect={row => store.onSelect(index, row)}
-                state={state}
-              />
+              <pane $grow={index === schema.length - 1}>
+                <Pane
+                  key={index + ':' + pane.kind}
+                  // if it's the next preview, always rerender
+                  pane={panes[pane.type]}
+                  type={pane.type}
+                  data={pane.data}
+                  search={search}
+                  paneProps={paneProps}
+                  onMeasureWidth={width => (store.colWidths[index] = width)}
+                  col={index}
+                  getRef={plugin => {
+                    store.plugins[index] = plugin
+                  }}
+                  onSelect={row => store.onSelect(index, row)}
+                  state={state}
+                />
+              </pane>
             )
           })}
         </columns>

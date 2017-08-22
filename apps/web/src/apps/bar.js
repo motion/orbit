@@ -46,8 +46,6 @@ class BarStore {
   search = ''
   textboxVal = ''
 
-  visible = true
-
   start() {
     this.on(window, 'focus', this.onFocus)
   }
@@ -125,18 +123,19 @@ class BarStore {
 
       e.preventDefault()
     },
-    esc: () => {
+    esc: e => {
+      e.preventDefault()
       if (this.search !== '') {
         this.search = ''
       } else {
-        this.visible = false
         OS.send('bar-hide')
       }
     },
     cmdA: () => {
       this.inputRef.select()
     },
-    enter: () => {
+    enter: e => {
+      e.preventDefault()
       const schema = JSON.stringify(last(this.millerState.schema))
       OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
     },
@@ -193,12 +192,7 @@ export default class BarPage {
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
-          <bar
-            ref={store.ref('barRef').set}
-            $$fullscreen
-            $$draggable
-            $visible={store.visible}
-          >
+          <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
             <div>
               <UI.Input
                 size={3}
@@ -257,9 +251,6 @@ export default class BarPage {
       flex: 1,
       // opacity: 0,
       // transition: 'all ease-in 300ms',
-    },
-    visible: {
-      opacity: 1,
     },
     results: {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],

@@ -205,6 +205,9 @@ export default class Miller {
     grow: {
       flex: 1,
     },
+    pane: {
+      overflow: 'scroll',
+    },
     columns: {
       flex: 1,
       transition: 'transform 80ms linear',

@@ -23,9 +23,8 @@ export default class GithubSync {
 
   run = async (job: Job, users) => {
     for (const user of users) {
-      console.log('sync for user', user.name)
       if (!user.github) {
-        throw new Error('User deleted their github link!')
+        throw new Error('No User.github found, changed since sync started?')
       }
       const token = user.github.auth.accessToken
       console.log('user token for github', token)

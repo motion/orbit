@@ -6,6 +6,10 @@ import { filterItem } from './helpers'
 import { CurrentUser } from '~/app'
 
 class BarBrowseStore {
+  start() {
+    this.props.getRef(this)
+  }
+
   @watch
   children = [
     () => this.parent && this.parent.id,
@@ -83,9 +87,7 @@ class RadialMenu extends React.Component {
   store: BarBrowseStore,
 })
 export default class BarBrowse {
-  render({ store, onRef }) {
-    onRef(this)
-
+  render({ store }) {
     const size = 450
     const slices = ['red', 'green', 'blue'] //, 2, 3, 4, 5]
 

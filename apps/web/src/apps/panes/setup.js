@@ -1,20 +1,28 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { CurrentUser } from '~/app'
 
 @view
 export default class BarSetupPane {
-  render({ ...props }) {
-    console.log('pane props', props)
+  render({ data }) {
+    console.log('render setup for', data)
+    const userIntegration = CurrentUser[data.type]
+
     return (
       <setup>
-        <UI.Title size={2}>Setup</UI.Title>
-        <UI.Form>
-          <UI.Input size={2} placeholder="Username" />
-          <UI.Input size={2} placeholder="Password" />
-          <UI.Button size={2} type="submit">
-            Setup
+        <integrate if={!userIntegration}>
+          <UI.Title size={2}>Authorize</UI.Title>
+          <UI.Button
+            icon={data.type}
+            onClick={() => CurrentUser.link(data.type)}
+          >
+            Authorize {data.name}
           </UI.Button>
-        </UI.Form>
+        </integrate>
+        <settings if={userIntegration}>
+          <UI.Title size={2}>Settings</UI.Title>
+        </settings>
+        hello world
       </setup>
     )
   }

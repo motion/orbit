@@ -7,6 +7,10 @@ import { CurrentUser } from '~/app'
 import { isNumber } from 'lodash'
 
 class BarBrowseStore {
+  start() {
+    this.props.getRef && this.props.getRef(this)
+  }
+
   @watch
   children = [
     () => this.parent && this.parent.id,
@@ -39,10 +43,6 @@ class BarBrowseStore {
     ]
   }
 
-  start() {
-    this.props.getRef && this.props.getRef(this)
-  }
-
   get length() {
     return (this.results && this.results.length) || 0
   }
@@ -56,20 +56,7 @@ class BarBrowseStore {
   store: BarBrowseStore,
 })
 export default class BarBrowse {
-  getLength = () => this.props.store.length
-
-  getChildSchema = row => {
-    const { store } = this.props
-
-    const child = store.results[row]
-    if (child.children.length === 0) return null
-
-    const data = { parent: child }
-    return { kind: 'browse', data }
-  }
-
-  render({ store, onRef, activeIndex, onSelect, highlightIndex, paneProps }) {
-    onRef(this)
+  render({ store, activeIndex, highlightIndex, paneProps }) {
     if (store.length === 0) {
       return <UI.Placeholder>Empty</UI.Placeholder>
     }

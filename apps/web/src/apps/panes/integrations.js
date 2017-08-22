@@ -3,43 +3,47 @@ import * as UI from '@mcro/ui'
 
 @view({
   store: class IntegrationsStore {
+    start() {
+      this.props.getRef(this)
+    }
+
     get results() {
       return [
         {
+          title: 'Setup Github',
+          data: { type: 'github', name: 'Github' },
+          type: 'setup',
+          icon: 'github',
+        },
+        {
           title: 'Setup Google Docs',
-          data: 'google-docs',
+          data: { type: 'google-docs', name: 'Google Docs' },
           type: 'setup',
           icon: 'google',
         },
         {
           title: 'Setup Google Drive',
-          data: 'google-drive',
+          data: { type: 'google-drive', name: 'Google Drive' },
           type: 'setup',
           icon: 'disk',
         },
         {
           title: 'Setup Dropbox Paper',
-          data: 'dropbox-paper',
+          data: { type: 'dropbox-paper', name: 'Dropbox Paper' },
           type: 'setup',
           icon: 'dropbox',
         },
         {
           title: 'Setup Trello',
-          data: 'trello',
+          data: { type: 'trello', name: 'Trello' },
           type: 'setup',
           icon: 'trello',
         },
         {
           title: 'Setup Jira',
-          data: 'jira',
+          data: { type: 'jira', name: 'Jira' },
           type: 'setup',
           icon: 'jira',
-        },
-        {
-          title: 'Setup Github',
-          data: 'github',
-          type: 'setup',
-          icon: 'github',
         },
       ].map(x => ({
         ...x,
@@ -49,8 +53,7 @@ import * as UI from '@mcro/ui'
   },
 })
 export default class BarIntegrationsPane {
-  render({ store, onRef, onSelect, activeIndex, paneProps }) {
-    onRef(this)
+  render({ store, onSelect, activeIndex, paneProps }) {
     return (
       <integrations>
         <UI.List

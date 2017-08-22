@@ -30,7 +30,7 @@ export default class Models {
       type: 'github',
       userId: user.id,
     })
-    console.log('github setting is', setting)
+    console.log('github setting is', setting.values)
   }
 
   dispose() {

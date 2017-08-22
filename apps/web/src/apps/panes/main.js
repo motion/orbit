@@ -13,6 +13,32 @@ class BarMainStore {
   searchResults: Array<Document> = []
   cards = []
 
+  start() {
+    this.props.getRef(this)
+
+    if (allCards) {
+      this.cards = allCards
+    } else {
+      Atom.getAll().then(cards => {
+        this.cards = cards.map(card => ({
+          title: card.card.name,
+          data: {
+            title: card.card.name,
+            content: card.card.content,
+            id: card.card.id,
+            comments: card.comments,
+            labels: card.card.labels,
+            service: card.service,
+          },
+          searchTags: card.searchWords || card.service,
+          type: 'task',
+          icon: card.service,
+        }))
+      })
+      allCards = this.cards
+    }
+  }
+
   get root() {
     return CurrentUser.home
   }
@@ -125,32 +151,6 @@ class BarMainStore {
     return results
   }
 
-  start() {
-    if (allCards) {
-      this.cards = allCards
-    } else {
-      Atom.getAll().then(cards => {
-        this.cards = cards.map(card => ({
-          title: card.card.name,
-          data: {
-            title: card.card.name,
-            content: card.card.content,
-            id: card.card.id,
-            comments: card.comments,
-            labels: card.card.labels,
-            service: card.service,
-          },
-          searchTags: card.searchWords || card.service,
-          type: 'task',
-          icon: card.service,
-        }))
-      })
-      allCards = this.cards
-    }
-
-    this.props.getRef && this.props.getRef(this)
-  }
-
   search = async () => {
     if (!this.props.search) {
       this.searchResults = []
@@ -181,10 +181,6 @@ class BarMainStore {
     })
   }
 
-  get length() {
-    return (this.results && this.results.length) || 0
-  }
-
   select = index => {
     this.props.navigate(this.results[index])
   }
@@ -203,16 +199,13 @@ export default class BarMain {
     }
   }
 
-  getLength = () => this.props.store.results.length
-
   getChildSchema = row => {
     const { store } = this.props
     const item = store.results[row]
     return { kind: item.type, data: item.data || {} }
   }
 
-  render({ store, onSelect, onRef, activeIndex, paneProps }) {
-    onRef(this)
+  render({ store, activeIndex, paneProps, onSelect }) {
     const secondary = item => {
       if (item.data && item.data.service === 'github')
         return (
@@ -228,7 +221,6 @@ export default class BarMain {
 
       return null
     }
-
     return (
       <pane>
         <UI.List

@@ -182,11 +182,14 @@ export default class Model {
 
                     // wait for sync to happen before returning
                     if (method === 'exec') {
-                      return new Promise(async resolve => {
-                        await syncPromise
-                        const value = await target.exec()
-                        resolve(value)
-                      })
+                      const execute = target.exec.bind(target)
+                      return function exec() {
+                        return new Promise(async resolve => {
+                          await syncPromise
+                          const value = await execute()
+                          resolve(value)
+                        })
+                      }
                     }
                   }
                 }
@@ -422,18 +425,29 @@ export default class Model {
     })
 
     // wait for first replication to finish
-    return new Promise(async resolve => {
-      await firstReplication.complete$.filter(x => !!x).asPromise()
+    return new Promise(resolve => {
+      let resolved = false
 
-      if (options.live) {
-        const liveReplication = this._collection.sync({
-          remote: this.remote,
-          options,
+      // watched replication stream and checks for finish
+      firstReplication.complete$
+        .filter(state => {
+          const done = state && state.pull && state.pull.ok
+          if (done && !resolved) {
+            if (options.live) {
+              // if live, we re-run with a live query to keep it syncing
+              // TODO we need to watch this and clear it on unsubscribe
+              const liveReplication = this._collection.sync({
+                remote: this.remote,
+                options,
+              })
+              resolve(liveReplication)
+            } else {
+              resolve(true)
+            }
+            resolved = true
+          }
         })
-        return resolve(liveReplication)
-      }
-
-      resolve(true)
+        .toPromise()
     })
   }
 

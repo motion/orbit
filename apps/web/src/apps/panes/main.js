@@ -79,7 +79,7 @@ class BarMainStore {
   get browse() {
     return [
       {
-        title: 'Subscribed',
+        title: 'Recent',
         type: 'feed',
         icon: 'radio',
         data: {
@@ -236,15 +236,18 @@ export default class BarMain {
     return { kind: item.type, data: item.data || {} }
   }
 
-  render({ store, onRef, activeIndex, paneProps }) {
+  render({ store, onRef, activeIndex, paneProps, onSelect }) {
     onRef(this)
 
     return (
       <pane>
         <UI.List
           if={store.results}
-          controlled={false}
           selected={activeIndex}
+          onSelect={(item, index) => {
+            console.log('selected', index)
+            onSelect(index)
+          }}
           itemProps={paneProps.itemProps}
           groupKey="category"
           items={store.results}

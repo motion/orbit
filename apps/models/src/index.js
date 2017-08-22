@@ -7,17 +7,21 @@ import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '~/helpers'
 
+export { CompositeDisposable } from '@mcro/model'
+
 // ADD TO BOTH THIS SECTION
 
 export User from './user'
 export Thing from './thing'
 export Job from './job'
+export Setting from './setting'
 
 // AND THIS ONE
 
 import User from './user'
 import Thing from './thing'
 import Job from './job'
+import Setting from './setting'
 
 // AND THIS TOO
 
@@ -25,6 +29,7 @@ export const Models = {
   Thing,
   User,
   Job,
+  Setting,
 }
 
 // exports

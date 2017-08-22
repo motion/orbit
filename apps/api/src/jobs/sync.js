@@ -1,7 +1,7 @@
 // @flow
-import { Job } from '@mcro/models'
 import type { Observable } from 'rxjs'
 import * as Syncers from './syncers'
+import { Job, User, Setting, CompositeDisposable } from '@mcro/models'
 
 const SOURCE_TO_SYNCER = {
   github: Syncers.Github,
@@ -18,18 +18,51 @@ function getRxError({ message, stack }) {
 }
 
 export default class Sync {
+  subscriptions = new CompositeDisposable()
   locks: Set<string> = new Set()
   jobWatcher: Observable
   syncers = {}
+  users = []
+  settings = []
 
   start = async () => {
-    await this.setupSyncers()
+    await Promise.all([
+      this.setupSyncers(),
+      this.setupUsers(),
+      this.setupSettings(),
+    ])
     this.watchJobs()
   }
 
   dispose = () => {
     this.jobWatcher.unsubscribe()
     this.disposeSyncers()
+    this.subscriptions.dispose()
+  }
+
+  setupUsers = () => {
+    return new Promise(resolve => {
+      const query = User.find().$.subscribe(allUsers => {
+        if (allUsers) {
+          console.log('got users:', allUsers.length)
+          this.users = allUsers
+          resolve()
+        }
+      })
+      this.subscriptions.add(query.unsubscribe)
+    })
+  }
+
+  setupSettings = () => {
+    return new Promise(resolve => {
+      const query = Setting.find().$.subscribe(settings => {
+        if (settings) {
+          this.users = settings
+          resolve()
+        }
+      })
+      this.subscriptions.add(query.unsubscribe)
+    })
   }
 
   setupSyncers = async () => {
@@ -82,7 +115,7 @@ export default class Sync {
 
     if (syncer) {
       try {
-        await syncer.run(job)
+        await syncer.run(job, this.users, this.settings)
       } catch (e) {
         console.log('error running syncer', e)
         // await job.update({ status: Job.status.FAILED, lastError: e })

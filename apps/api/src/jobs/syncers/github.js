@@ -1,31 +1,34 @@
 // @flow
 import type { Job } from '@mcro/models'
-import { User } from '@mcro/models'
 
 export default class GithubSync {
-  users = []
+  baseUrl = 'https://api.github.com'
 
   start = () => {
     console.log('activate github syncer')
-    return new Promise(resolve => {
-      User.find().$.subscribe(allUsers => {
-        if (allUsers) {
-          console.log('setting users', allUsers.length)
-          this.users = allUsers
-          resolve()
-        }
-      })
-    })
   }
 
   async dispose() {
     console.log('dispose github syncer')
   }
 
-  run = async (job: Job) => {
-    for (const user of this.users) {
+  fetchers = {
+    organizations: {
+      url: '/organizations',
+    },
+    repoEvents: {
+      url: '/repos/:user/',
+    },
+  }
+
+  run = async (job: Job, users) => {
+    for (const user of users) {
       console.log('sync for user', user.name)
-      console.log('github', user.github)
+      if (!user.github) {
+        throw new Error('User deleted their github link!')
+      }
+      const token = user.github.auth.accessToken
+      console.log('user token for github', token)
     }
   }
 }

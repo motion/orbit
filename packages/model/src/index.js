@@ -22,3 +22,5 @@ export {
 import { compile } from './properties'
 import validator from 'is-my-json-valid'
 export const schema = obj => validator(compile(obj))
+
+export { CompositeDisposable } from 'sb-event-kit'

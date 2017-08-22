@@ -39,10 +39,13 @@ class CurrentUser {
   watchUser = () => {
     autorun(() => {
       if (this.sessionInfo && User.connected) {
-        User.findOne(this.sessionInfo.user_id).sync()
-        User.findOne(this.sessionInfo.user_id).$.subscribe(user => {
-          console.log('and we got something', user)
-        })
+        User._collection
+          .findOne(this.sessionInfo.user_id)
+          .$.subscribe(userInfo => {
+            if (userInfo) {
+              this.userInfo = userInfo
+            }
+          })
       }
     })
   }

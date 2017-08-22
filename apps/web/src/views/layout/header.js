@@ -7,6 +7,10 @@ import { OS } from '~/helpers/electron'
 
 @view
 export default class Header {
+  onClose() {
+    OS.send('close', ``)
+  }
+
   render() {
     const btnProps = {
       iconSize: 12,
@@ -37,6 +41,7 @@ export default class Header {
               width: '40%',
               overflow: 'hidden',
               //marginLeft: '-20%',
+              userSelect: 'none',
               top: 0,
               bottom: 0,
               left: '20%',
@@ -58,7 +63,7 @@ export default class Header {
               }}
             </UI.SlotFill.Slot>
             <UI.Row>
-              <UI.Button chromeless margin={[0, 2]}>
+              <UI.Button onClose={this.onClose} chromeless margin={[0, 2]}>
                 Share
               </UI.Button>
               <UI.Button

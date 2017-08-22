@@ -5,12 +5,38 @@ import * as UI from '@mcro/ui'
 import { CurrentUser, Document, Thing } from '~/app'
 import { uniq } from 'lodash'
 import { filterItem } from './helpers'
+import { Atom } from '@mcro/models'
+
+let allCards = null
 
 class BarMainStore {
   searchResults: Array<Document> = []
+  cards = []
 
   start() {
     this.props.getRef(this)
+
+    if (allCards) {
+      this.cards = allCards
+    } else {
+      Atom.getAll().then(cards => {
+        this.cards = cards.map(card => ({
+          title: card.card.name,
+          data: {
+            title: card.card.name,
+            content: card.card.content,
+            id: card.card.id,
+            comments: card.comments,
+            labels: card.card.labels,
+            service: card.service,
+          },
+          searchTags: card.searchWords || card.service,
+          type: 'task',
+          icon: card.service,
+        }))
+      })
+      allCards = this.cards
+    }
   }
 
   get root() {
@@ -38,23 +64,26 @@ class BarMainStore {
         },
       },
       {
+        data: { name: 'assigned' },
         title: 'Assigned to me',
-        type: 'task',
+        type: 'placeholder',
         icon: 'check',
       },
       {
+        data: { name: 'my team' },
         title: 'My Team',
         category: 'Browse',
-        type: 'browse',
+        type: 'placeholder',
         url() {
           return '/?home=true'
         },
         icon: 'objects_planet',
       },
       {
+        data: { name: 'from company' },
         title: 'Company',
         category: 'Browse',
-        type: 'browse',
+        type: 'placeholder',
         url() {
           return '/?home=true'
         },
@@ -89,16 +118,16 @@ class BarMainStore {
   }
 
   get results() {
-    console.time('Main.results')
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login' }]
     }
 
-    const { searchResults, browse, people, actions } = this
+    const { searchResults, cards, browse, people, actions } = this
 
     const results = filterItem(
       [
         ...browse,
+        ...cards,
         ...(searchResults || []),
         ...people,
         ...actions,
@@ -119,7 +148,6 @@ class BarMainStore {
       })
     }
 
-    console.timeEnd('Main.results')
     return results
   }
 
@@ -171,14 +199,34 @@ export default class BarMain {
     }
   }
 
+  getChildSchema = row => {
+    const { store } = this.props
+    const item = store.results[row]
+    return { kind: item.type, data: item.data || {} }
+  }
+
   render({ store, activeIndex, paneProps, onSelect }) {
+    const secondary = item => {
+      if (item.data && item.data.service === 'github')
+        return (
+          <spread $$row>
+            <left>
+              {item.data.comments.length} replies
+            </left>
+            <right>
+              {item.data.labels}
+            </right>
+          </spread>
+        )
+
+      return null
+    }
     return (
       <pane>
         <UI.List
           if={store.results}
           selected={activeIndex}
           onSelect={(item, index) => {
-            console.log('selected', index)
             onSelect(index)
           }}
           itemProps={paneProps.itemProps}
@@ -186,6 +234,7 @@ export default class BarMain {
           items={store.results}
           getItem={(result, index) =>
             <UI.ListItem
+              onClick={() => onSelect(index)}
               highlight={index === activeIndex}
               key={result.id}
               icon={
@@ -194,6 +243,7 @@ export default class BarMain {
                   : result.icon || (result.doc && result.doc.icon)
               }
               primary={result.title}
+              secondary={secondary(result)}
             />}
         />
       </pane>
@@ -202,7 +252,10 @@ export default class BarMain {
 
   static style = {
     pane: {
-      width: 280,
+      width: 340,
+    },
+    spread: {
+      justifyContent: 'space-between',
     },
     image: {
       width: 20,

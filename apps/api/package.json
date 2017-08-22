@@ -47,10 +47,11 @@
     "rxjs": "^5.4.3",
     "superlogin": "^0.6.1",
     "longjohn": "^0.2.12",
-    "concurrently": "^3.5.0",
+    "request-promise": "*",
     "object.entries": "^1.0.4",
     "object.values": "^1.0.4",
-    "object.getownpropertydescriptors": "^2.0.3"
+    "object.getownpropertydescriptors": "^2.0.3",
+    "github-graphql-client": "*"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

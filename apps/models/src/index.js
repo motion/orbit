@@ -13,6 +13,7 @@ export { CompositeDisposable } from '@mcro/model'
 
 export User from './user'
 export Thing from './thing'
+export Atom from './atom'
 export Job from './job'
 export Setting from './setting'
 

@@ -25,7 +25,7 @@ export default class Root extends React.Component {
 
     this.watch(() => {
       if (CurrentUser.org === null) {
-        console.log('CREATE AN ORG WITH User.createOrg(\'yourorgname\')')
+        console.log("CREATE AN ORG WITH User.createOrg('yourorgname')")
       }
     })
 

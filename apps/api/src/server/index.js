@@ -10,7 +10,8 @@ import repStream from 'express-pouchdb-replication-stream'
 import SuperLogin from './superlogin'
 import config from './superlogin.config'
 import url from 'url'
-import smartTag from './smartTag'
+import trello from './trello'
+import github from './github'
 
 // test
 
@@ -173,12 +174,16 @@ export default class Server {
       res.send('hello world')
     })
 
-    app.get('/rec', (req, res) => {
-      res.send(
-        JSON.stringify(
-          smartTag(JSON.parse(req.query.phrases), req.query.phrase)
-        )
-      )
+    app.get('/trello/cards', (req, res) => {
+      trello.getAllCards().then(val => {
+        res.send(val)
+      })
+    })
+
+    app.get('/github/issues', (req, res) => {
+      github.getIssues().then(val => {
+        res.send(val)
+      })
     })
 
     this.server = app

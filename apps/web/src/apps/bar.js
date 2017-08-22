@@ -5,7 +5,7 @@ import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
-import { isNumber, last } from 'lodash'
+import { isNumber, last, debounce } from 'lodash'
 
 const safeString = thing => {
   try {
@@ -42,8 +42,9 @@ class BarStore {
   millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
 
+  // search is throttled, textboxVal isn't
   search = ''
-  visible = true
+  textboxVal = ''
 
   start() {
     this.on(window, 'focus', this.onFocus)
@@ -55,9 +56,16 @@ class BarStore {
     this.inputRef.select()
   }
 
+  setSearch = debounce(text => {
+    this.search = text
+    setTimeout(() => {
+      this.millerState.setActiveRow(0)
+    })
+  }, 150)
+
   onSearchChange = e => {
-    this.millerState.setActiveRow(0)
-    this.search = e.target.value
+    this.textboxVal = e.target.value
+    this.setSearch(this.textboxVal)
   }
 
   get peekItem() {
@@ -76,12 +84,14 @@ class BarStore {
 
   PANE_TYPES = {
     main: Panes.Main,
+    placeholder: Panes.Placeholder,
     setup: Panes.Setup,
     inbox: Panes.Threads,
     browse: Panes.Browse,
     feed: Panes.Feed,
     notifications: Panes.Notifications,
     login: Panes.Login,
+    'code.issue': Panes.Code.Issue,
     orbit: Panes.Orbit,
     task: Panes.Task,
     doc: Panes.Doc,
@@ -113,18 +123,19 @@ class BarStore {
 
       e.preventDefault()
     },
-    esc: () => {
+    esc: e => {
+      e.preventDefault()
       if (this.search !== '') {
         this.search = ''
       } else {
-        this.visible = false
         OS.send('bar-hide')
       }
     },
     cmdA: () => {
       this.inputRef.select()
     },
-    enter: () => {
+    enter: e => {
+      e.preventDefault()
       const schema = JSON.stringify(last(this.millerState.schema))
       OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
     },
@@ -181,19 +192,14 @@ export default class BarPage {
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
-          <bar
-            ref={store.ref('barRef').set}
-            $$fullscreen
-            $$draggable
-            $visible={store.visible}
-          >
+          <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
             <div>
               <UI.Input
                 size={3}
                 getRef={store.ref('inputRef').set}
                 borderRadius={5}
                 onChange={store.onSearchChange}
-                value={store.search}
+                value={store.textboxVal}
                 borderWidth={0}
                 css={{
                   margin: [-2, 0, 0],
@@ -245,9 +251,6 @@ export default class BarPage {
       flex: 1,
       // opacity: 0,
       // transition: 'all ease-in 300ms',
-    },
-    visible: {
-      opacity: 1,
     },
     results: {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],

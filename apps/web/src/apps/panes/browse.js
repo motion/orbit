@@ -68,8 +68,9 @@ export default class BarBrowse {
           selected={isNumber(activeIndex) ? activeIndex : highlightIndex}
           itemProps={paneProps.itemProps}
           items={store.results}
-          getItem={result =>
+          getItem={(result, index) =>
             <UI.ListItem
+              onClick={() => onSelect(index)}
               key={result.id}
               icon={result.icon}
               icon={result.icon}

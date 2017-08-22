@@ -1567,6 +1567,10 @@ os-tmpdir@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
 
+osap@*:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/osap/-/osap-1.0.2.tgz#17d12e871ec684d0547d8163cfba962258ef1f85"
+
 osenv@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/osenv/-/osenv-0.1.4.tgz#42fe6d5953df06c8064be6f176c3d05aaaa34644"

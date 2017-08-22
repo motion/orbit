@@ -63,7 +63,6 @@ class MillerStore {
       state.moveCol(1)
     },
     down: () => {
-      console.log('miller down')
       const { state } = this.props
       if (
         state.activeRow === null ||
@@ -112,18 +111,25 @@ class Pane {
     }
 
     return (
-      <ChildPane
-        paneProps={paneProps}
-        data={data || {}}
-        onSelect={onSelect}
-        getRef={ref => {
-          getRef(ref)
-          this.pane = ref
+      <pane
+        ref={ref => {
+          ref && onMeasureWidth(ref.offsetWidth)
         }}
-        search={paneActive ? search : ''}
-        highlightIndex={highlightIndex}
-        activeIndex={activeIndex}
-      />
+      >
+        <ChildPane
+          paneProps={paneProps}
+          data={data || {}}
+          isActive={paneActive}
+          onSelect={onSelect}
+          getRef={ref => {
+            getRef(ref)
+            this.pane = ref
+          }}
+          search={paneActive ? search : ''}
+          highlightIndex={highlightIndex}
+          activeIndex={activeIndex}
+        />
+      </pane>
     )
   }
 
@@ -161,7 +167,7 @@ export default class Miller {
           {schema.map((pane, index) => {
             return (
               <Pane
-                key={index > state.activeCol ? Math.random() : index}
+                key={index + ':' + pane.kind}
                 // if it's the next preview, always rerender
                 pane={panes[pane.type]}
                 type={pane.type}
@@ -195,6 +201,9 @@ export default class Miller {
   }
 
   static style = {
+    grow: {
+      flex: 1,
+    },
     columns: {
       flex: 1,
       transition: 'transform 80ms linear',

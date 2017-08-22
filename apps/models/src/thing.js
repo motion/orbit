@@ -4,15 +4,6 @@ import { Model, query, str, object, array, bool, number } from '@mcro/model'
 
 let User = null
 
-export const extend = (a, b) => {
-  const result = {}
-  const ad = Object.getOwnPropertyDescriptors(a)
-  const bd = Object.getOwnPropertyDescriptors(b)
-  Object.defineProperties(result, ad)
-  Object.defineProperties(result, bd)
-  return result
-}
-
 // keep here so we can use as generic
 export const methods = {}
 

@@ -20,7 +20,7 @@ function getRxError({ message, stack }) {
 export default class Sync {
   locks: Set<string> = new Set()
   jobWatcher: Observable
-  activeSyncers = []
+  syncers = {}
 
   start = async () => {
     await this.setupSyncers()
@@ -33,16 +33,16 @@ export default class Sync {
   }
 
   setupSyncers = async () => {
-    for await (const name of Object.keys(Syncers)) {
-      const Syncer = new Syncers[name]()
+    for await (const name of Object.keys(SOURCE_TO_SYNCER)) {
+      const Syncer = new SOURCE_TO_SYNCER[name]()
       await Syncer.start()
-      this.activeSyncers.push(Syncer)
+      this.syncers[name] = Syncer
     }
   }
 
   disposeSyncers = async () => {
-    for await (const syncer of this.activeSyncers) {
-      await syncer.dispose()
+    for await (const name of Object.keys(this.syncers)) {
+      await this.syncers[name].dispose()
     }
   }
 
@@ -78,10 +78,11 @@ export default class Sync {
     //   tries: job.tries + 1,
     // })
 
-    if (SOURCE_TO_SYNCER[job.type]) {
-      const Syncer = new SOURCE_TO_SYNCER[job.type]()
+    const syncer = this.syncers[job.type]
+
+    if (syncer) {
       try {
-        await Syncer.run(job)
+        await syncer.run(job)
       } catch (e) {
         console.log('error running syncer', e)
         // await job.update({ status: Job.status.FAILED, lastError: e })

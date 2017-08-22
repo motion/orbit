@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { view } from '@mcro/black'
-import { inject } from '@mcro/ui'
+import inject from '../helpers/inject'
 import SizedSurface from '../sizedSurface'
 import Button from '../button'
 import Checkbox from './checkbox'

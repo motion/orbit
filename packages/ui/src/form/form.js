@@ -1,8 +1,8 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { inject } from '@mcro/ui'
 import { object } from 'prop-types'
 import Surface from '../surface'
+import inject from '../helpers/inject'
 
 const resolveFormValues = obj =>
   Object.keys(obj).reduce(

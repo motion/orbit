@@ -1,9 +1,10 @@
 // @flow
 import React from 'react'
-import { view, inject } from '@mcro/black'
+import { view } from '@mcro/black'
 import type { ViewType } from '@mcro/black'
 import Button from './button'
 import { Provider } from 'react-tunnel'
+import inject from './helpers/inject'
 import type { Color } from '@mcro/gloss'
 import Surface from './surface'
 

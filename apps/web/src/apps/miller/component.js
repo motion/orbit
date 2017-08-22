@@ -5,7 +5,6 @@ import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
 
 class MillerStore {
-  // refs to the plugins
   plugins = []
   colWidths = range(100).map(() => 0)
   colLeftMargin = 10
@@ -17,9 +16,11 @@ class MillerStore {
     const handleSchemaChanges = () => {
       const { activeRow, activeCol } = state
       const plugin = this.plugins[activeCol]
-      if (activeRow !== null && plugin && plugin.getChildSchema) {
-        const child = plugin.getChildSchema(activeRow)
-        if (child !== null) state.setSchema(activeCol + 1, child)
+      if (activeRow !== null && plugin && plugin.results) {
+        const current = plugin.results[activeRow]
+        if (current !== null) {
+          state.setSchema(activeCol + 1, current)
+        }
       }
 
       onChange(state)
@@ -43,6 +44,14 @@ class MillerStore {
     )
   }
 
+  get activePlugin() {
+    return this.plugins[this.props.state.activeCol]
+  }
+
+  get activeResults() {
+    return this.activePlugin.results
+  }
+
   onSelect(col, row) {
     const { state } = this.props
     state.setSelection(col, row)
@@ -58,7 +67,7 @@ class MillerStore {
       const { state } = this.props
       if (
         state.activeRow === null ||
-        state.activeRow < this.plugins[state.activeCol].getLength() - 1
+        (this.activeResults && state.activeRow < this.activeResults.length - 1)
       ) {
         state.moveRow(1)
       }
@@ -82,7 +91,7 @@ class MillerStore {
 class Pane {
   render({
     pane,
-    onRef,
+    getRef,
     paneProps,
     state,
     onMeasureWidth,
@@ -107,8 +116,8 @@ class Pane {
         paneProps={paneProps}
         data={data || {}}
         onSelect={onSelect}
-        onRef={ref => {
-          onRef(ref)
+        getRef={ref => {
+          getRef(ref)
           this.pane = ref
         }}
         search={paneActive ? search : ''}
@@ -154,14 +163,15 @@ export default class Miller {
               <Pane
                 key={index > state.activeCol ? Math.random() : index}
                 // if it's the next preview, always rerender
-                pane={panes[pane.kind]}
+                pane={panes[pane.type]}
                 type={pane.type}
                 data={pane.data}
                 search={search}
                 paneProps={paneProps}
                 onMeasureWidth={width => (store.colWidths[index] = width)}
                 col={index}
-                onRef={plugin => {
+                getRef={plugin => {
+                  console.log('got a ref', plugin)
                   store.plugins[index] = plugin
                 }}
                 onSelect={row => store.onSelect(index, row)}

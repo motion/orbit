@@ -3,6 +3,10 @@ import * as UI from '@mcro/ui'
 
 @view({
   store: class IntegrationsStore {
+    start() {
+      this.props.getRef(this)
+    }
+
     get results() {
       return [
         {
@@ -49,8 +53,7 @@ import * as UI from '@mcro/ui'
   },
 })
 export default class BarIntegrationsPane {
-  render({ store, onRef, onSelect, activeIndex, paneProps }) {
-    onRef(this)
+  render({ store, onSelect, activeIndex, paneProps }) {
     return (
       <integrations>
         <UI.List

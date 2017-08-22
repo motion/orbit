@@ -39,7 +39,7 @@ const actions = [
 ].sort()
 
 class BarStore {
-  millerState = MillerState.serialize([{ kind: 'main', data: { prefix: '' } }])
+  millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
 
   search = ''

@@ -5,6 +5,7 @@ import { CurrentUser } from '~/app'
 @view
 export default class BarSetupPane {
   render({ data }) {
+    console.log('render setup for', data)
     const userIntegration = CurrentUser[data.type]
 
     return (
@@ -18,10 +19,10 @@ export default class BarSetupPane {
             Authorize {data.name}
           </UI.Button>
         </integrate>
-
         <settings if={userIntegration}>
           <UI.Title size={2}>Settings</UI.Title>
         </settings>
+        hello world
       </setup>
     )
   }

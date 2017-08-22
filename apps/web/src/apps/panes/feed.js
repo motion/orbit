@@ -264,6 +264,10 @@ const icons = {
 }
 
 class BarFeedStore {
+  start() {
+    this.props.getRef(this)
+  }
+
   get results() {
     return [
       {
@@ -337,9 +341,7 @@ class BarFeedStore {
   store: BarFeedStore,
 })
 export default class BarFeed {
-  render({ store, onRef, highlightIndex, activeIndex, data }) {
-    onRef(this)
-
+  render({ store, highlightIndex, activeIndex, data }) {
     const results = store.results.map((result, index) => {
       const parent = (data && data.author) || result.author
 

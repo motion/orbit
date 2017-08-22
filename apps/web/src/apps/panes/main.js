@@ -9,6 +9,10 @@ import { filterItem } from './helpers'
 class BarMainStore {
   searchResults: Array<Document> = []
 
+  start() {
+    this.props.getRef(this)
+  }
+
   get root() {
     return CurrentUser.home
   }
@@ -119,10 +123,6 @@ class BarMainStore {
     return results
   }
 
-  start() {
-    this.props.getRef && this.props.getRef(this)
-  }
-
   search = async () => {
     if (!this.props.search) {
       this.searchResults = []
@@ -153,10 +153,6 @@ class BarMainStore {
     })
   }
 
-  get length() {
-    return (this.results && this.results.length) || 0
-  }
-
   select = index => {
     this.props.navigate(this.results[index])
   }
@@ -175,17 +171,7 @@ export default class BarMain {
     }
   }
 
-  getLength = () => this.props.store.results.length
-
-  getChildSchema = row => {
-    const { store } = this.props
-    const item = store.results[row]
-    return { kind: item.type, data: item.data || {} }
-  }
-
-  render({ store, onRef, activeIndex, paneProps, onSelect }) {
-    onRef(this)
-
+  render({ store, activeIndex, paneProps, onSelect }) {
     return (
       <pane>
         <UI.List

@@ -6,6 +6,7 @@ import { CurrentUser, Document, Thing } from '~/app'
 import { uniq } from 'lodash'
 import { filterItem } from './helpers'
 import { Atom } from '@mcro/models'
+import { OS } from '~/helpers'
 
 let allCards = null
 
@@ -43,16 +44,6 @@ class BarMainStore {
     return CurrentUser.home
   }
 
-  get actions() {
-    return [
-      // {
-      //   title: 'Create new topic +',
-      //   type: 'feed',
-      //   category: 'Actions',
-      // },
-    ]
-  }
-
   get browse() {
     return [
       {
@@ -64,26 +55,26 @@ class BarMainStore {
         },
       },
       {
-        data: { name: 'assigned' },
+        data: { message: 'assigned' },
         title: 'Assigned to me',
-        type: 'placeholder',
+        type: 'message',
         icon: 'check',
       },
       {
-        data: { name: 'my team' },
+        data: { message: 'my team' },
         title: 'My Team',
         category: 'Browse',
-        type: 'placeholder',
+        type: 'message',
         url() {
           return '/?home=true'
         },
         icon: 'objects_planet',
       },
       {
-        data: { name: 'from company' },
+        data: { message: 'from company' },
         title: 'Company',
         category: 'Browse',
-        type: 'placeholder',
+        type: 'message',
         url() {
           return '/?home=true'
         },
@@ -122,7 +113,7 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login' }]
     }
 
-    const { searchResults, cards, browse, people, actions } = this
+    const { searchResults, cards, browse, people } = this
 
     const results = filterItem(
       [
@@ -130,11 +121,17 @@ class BarMainStore {
         ...cards,
         ...(searchResults || []),
         ...people,
-        ...actions,
         {
-          title: 'Integrations',
+          title: 'Settings',
           icon: 'gear',
-          type: 'integrations',
+          type: 'message',
+          data: {
+            message: 'Open Settings',
+            icon: 'gear',
+          },
+          onSelect: () => {
+            OS.send('open-settings')
+          },
           category: 'Settings',
         },
       ],

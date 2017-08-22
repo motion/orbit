@@ -1,18 +1,26 @@
+// @flow
 const serialize = content => content
 const capitalize = s => s[0].toUpperCase() + s.substr(1)
 
-export default class State {
+type Schema = {
+  title: string,
+  type: string,
+  category?: string,
+  data?: Object,
+  icon?: string,
+  onSelect?: Function,
+}
+
+export default class MillerStateStore {
+  static serialize(content) {
+    return new MillerStateStore({ schema: serialize(content) })
+  }
+
   activeRow = 0
   activeCol = 0
-  schema = []
+  schema: Array<Schema> = []
   watchers = {}
-
-  // holds the previously active columns
-  prevActiveRows = [0]
-
-  static serialize(content) {
-    return new State({ schema: serialize(content) })
-  }
+  prevActiveRows = [0] // holds the previously active columns
 
   constructor({ schema }) {
     this.schema = schema
@@ -20,14 +28,17 @@ export default class State {
     const events = ['selectionChange']
     events.forEach(event => {
       this.watchers[event] = []
-
       this['on' + capitalize(event)] = cb => {
         this.watchers[event].push(cb)
       }
     })
   }
 
-  setSchema(index, schema) {
+  get currentItem() {
+    return this.schema[this.schema.length - 1]
+  }
+
+  setSchema(index, schema: Schema) {
     if (this.schema.length < index) {
       this.schema.push(schema)
     } else {

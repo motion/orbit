@@ -219,6 +219,10 @@ export default class ExampleApp extends React.Component {
       this.updateWindows()
       event.sender.send('app-bar-toggle', 'success')
     })
+
+    ipcMain.on('open-settings', (event, key) => {
+      console.log('should open settings')
+    })
   }
 
   updateWindows = () => {

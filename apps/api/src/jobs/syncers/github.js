@@ -24,7 +24,8 @@ export default class GithubSync {
   run = async (job: Job, users) => {
     for (const user of users) {
       if (!user.github) {
-        throw new Error('No User.github found, changed since sync started?')
+        console.error('No User.github found, changed since sync started?')
+        return
       }
       const token = user.github.auth.accessToken
       console.log('user token for github', token)

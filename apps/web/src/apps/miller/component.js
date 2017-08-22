@@ -10,29 +10,18 @@ class MillerStore {
   colLeftMargin = 10
 
   start() {
+    this.props.state.onSelectionChange(this.handleSelectionChange)
+    this.setTimeout(this.handleSelectionChange)
+  }
+
+  handleSelectionChange = () => {
     const { state, onChange } = this.props
-    window.millerState = state
-
-    const handleSchemaChanges = () => {
-      const { activeRow, activeCol } = state
-      const plugin = this.plugins[activeCol]
-      if (activeRow !== null && plugin && plugin.results) {
-        const current = plugin.results[activeRow]
-        if (current !== null) {
-          state.setSchema(activeCol + 1, current)
-        }
+    if (state.activeRow !== null && this.activeResults) {
+      if (this.activeItem) {
+        state.setSchema(state.activeCol + 1, this.activeItem)
       }
-
-      onChange(state)
     }
-
-    state.onSelectionChange(() => {
-      handleSchemaChanges()
-    })
-
-    setTimeout(() => {
-      handleSchemaChanges()
-    })
+    onChange(state)
   }
 
   get translateX() {
@@ -49,7 +38,11 @@ class MillerStore {
   }
 
   get activeResults() {
-    return this.activePlugin.results
+    return this.activePlugin && this.activePlugin.results
+  }
+
+  get activeItem() {
+    return this.activeResults && this.activeResults[this.props.state.activeRow]
   }
 
   onSelect(col, row) {
@@ -112,6 +105,9 @@ class Pane {
 
     return (
       <pane
+        css={{
+          flex: 1,
+        }}
         ref={ref => {
           ref && onMeasureWidth(ref.offsetWidth)
         }}

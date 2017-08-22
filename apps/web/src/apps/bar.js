@@ -84,7 +84,7 @@ class BarStore {
 
   PANE_TYPES = {
     main: Panes.Main,
-    placeholder: Panes.Placeholder,
+    message: Panes.Message,
     setup: Panes.Setup,
     inbox: Panes.Threads,
     browse: Panes.Browse,
@@ -136,8 +136,14 @@ class BarStore {
     },
     enter: e => {
       e.preventDefault()
-      const schema = JSON.stringify(last(this.millerState.schema))
-      OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
+      const { currentItem } = this.millerState
+
+      if (currentItem.onSelect) {
+        currentItem.onSelect()
+      } else {
+        const schema = JSON.stringify(currentItem)
+        OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
+      }
     },
     right: e => {
       if (this.hasSelectedItem) {
@@ -153,15 +159,6 @@ class BarStore {
         e.preventDefault()
       }
     },
-  }
-
-  navigate = thing => {
-    if (thing && thing.url) {
-      OS.send('bar-goto', thing.url())
-    } else if (typeof thing === 'string') {
-      console.log('got a navigate weird thing', thing)
-      OS.send('bar-goto', thing)
-    }
   }
 }
 

@@ -457,6 +457,7 @@ export default class Model {
 
   // get is a helper that returns a promise only
   get = query => this.collection.findOne(query).exec();
+  getAll = query => this.collection.find(query).exec()
 
   // find/findOne return RxQuery objects
   // so you can subscribe to streams or just .exec()

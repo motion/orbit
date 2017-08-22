@@ -1,5 +1,6 @@
 import React from 'react'
-import { view, inject } from '@mcro/black'
+import { view } from '@mcro/black'
+import { inject } from '@mcro/ui'
 import { object } from 'prop-types'
 import Surface from '../surface'
 

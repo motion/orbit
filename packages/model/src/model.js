@@ -111,7 +111,7 @@ export default class Model {
   }
 
   compiledMethods = (doc): Object => {
-    const descriptors = Object.getOwnPropertyDescriptors(this.methods)
+    const descriptors = Object.getOwnPropertyDescriptors(this.methods || {})
 
     // methods to be added to each model
     const ogUpdate = doc.update.bind(doc)
@@ -392,6 +392,7 @@ export default class Model {
       query = query.query
     }
     if (!isRxQuery(query) && !(query.constructor.name === 'RxQuery')) {
+      console.log(query.constructor.name, query)
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.'
       )

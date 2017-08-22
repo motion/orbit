@@ -1,5 +1,4 @@
 // @flow
-import type React from 'react'
 import gloss from '@mcro/gloss'
 
 export type Glossy = {

@@ -16,16 +16,10 @@ import * as UI from '@mcro/ui'
           icon: 'github',
         },
         {
-          title: 'Setup Google Docs',
-          data: { type: 'google-docs', name: 'Google Docs' },
+          title: 'Setup Google',
+          data: { type: 'google', name: 'Google' },
           type: 'setup',
           icon: 'google',
-        },
-        {
-          title: 'Setup Google Drive',
-          data: { type: 'google-drive', name: 'Google Drive' },
-          type: 'setup',
-          icon: 'disk',
         },
         {
           title: 'Setup Dropbox Paper',

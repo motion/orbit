@@ -2,17 +2,30 @@
 import { Org, User } from '~/app'
 import { store } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
+import { observable, autorun, computed } from 'mobx'
 
 // TODO: Constants.API_HOST
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
-@store
 class CurrentUser {
   connected = false
-  user = false
-  localDb = false
-  remoteDb = false
+  localDb = null
+  remoteDb = null
+  @observable.ref sessionInfo = null
+  @observable.ref userInfo = null
+
+  @computed
+  get user() {
+    if (!this.sessionInfo) {
+      return null
+    }
+    return {
+      ...this.sessionInfo,
+      ...this.userInfo,
+    }
+  }
+
   integrations = []
 
   constructor(options) {
@@ -20,6 +33,21 @@ class CurrentUser {
     this.options = options
     this.setupSuperLogin()
     this.connected = true
+    this.watchUser()
+  }
+
+  watchUser = () => {
+    autorun(() => {
+      if (this.sessionInfo && User.connected) {
+        User._collection
+          .findOne(this.sessionInfo.user_id)
+          .$.subscribe(userInfo => {
+            if (userInfo) {
+              this.userInfo = userInfo
+            }
+          })
+      }
+    })
   }
 
   async setupSuperLogin() {
@@ -32,12 +60,12 @@ class CurrentUser {
 
     // sync
     this.superlogin.on('login', async () => {
-      this.user = await this.getCurrentUser()
+      await this.setUserSession()
       this.setupDbSync()
     })
 
     this.superlogin.on('logout', () => {
-      this.user = null
+      this.sessionInfo = null
     })
   }
 
@@ -136,7 +164,7 @@ class CurrentUser {
   }
 
   login = async (email, password) => {
-    this.user = await this.superlogin.login({
+    await this.superlogin.login({
       username: email,
       password,
     })
@@ -151,37 +179,22 @@ class CurrentUser {
   }
 
   link = async provider => {
-    await this.superlogin.link(provider)
-    await this.getCurrentUser()
+    return await this.superlogin.link(provider)
   }
 
-  getCurrentUser = async () => {
+  unlink = async provider => {
+    return await this.superlogin.unlink(provider)
+  }
+
+  setUserSession = async () => {
     try {
-      let session = {}
       if (this.superlogin) {
-        session = await this.superlogin.getSession()
-      }
-      const user = await User.get(session.user_id)
-      return {
-        ...session,
-        ...user,
+        this.sessionInfo = await this.superlogin.getSession()
+        console.log('setting to', this.sessionInfo)
       }
     } catch (e) {
       console.error('got err with current user get', e)
     }
-  }
-
-  createOrg = async name => {
-    if (!this.id) {
-      console.error('woah no id')
-      return
-    }
-
-    await Org.create({
-      title: name,
-      admins: [this.id],
-      members: [this.id],
-    })
   }
 }
 

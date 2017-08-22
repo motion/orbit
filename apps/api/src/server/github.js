@@ -1,7 +1,6 @@
-import request from 'request-promise'
 import client from 'github-graphql-client'
 
-const nicksToken = `b711959f85f7ac5b122fe9a571ac402d78454a0f`
+const nicksToken = 'b711959f85f7ac5b122fe9a571ac402d78454a0f'
 
 const gqlRequest = gql =>
   new Promise(resolve => {

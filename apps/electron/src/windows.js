@@ -6,14 +6,16 @@ import localShortcut from 'electron-localshortcut'
 
 const MIN_WIDTH = 750
 const MIN_HEIGHT = 600
+const MAX_WIDTH = 950
+const MAX_HEIGHT = 800
 const JOT_URL = 'http://jot.dev'
 const IS_MAC = process.platform === 'darwin'
 
 const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   const size = [
-    Math.max(MIN_WIDTH, Math.round(width / 1.8)),
-    Math.max(MIN_HEIGHT, Math.round(height / 1.5)),
+    Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, Math.round(width / 1.8))),
+    Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, Math.round(height / 1.5))),
   ]
   const middleX = Math.round(width / 2 - size[0] / 2)
   const middleY = Math.round(height / 2 - size[1] / 2)
@@ -364,6 +366,9 @@ export default class ExampleApp extends React.Component {
           onMoved={position => this.setState({ position })}
           onFocus={() => {
             this.activeWindow = this.windowRef
+          }}
+          webPreferences={{
+            nativeWindowOpen: true,
           }}
         />
         {windows.map(win => {

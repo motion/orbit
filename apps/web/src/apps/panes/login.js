@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
+import Signup from './views/signup'
 
 @view({
   store: class LoginStore {
@@ -24,26 +25,30 @@ export default class BarLoginPane {
   render({ store }) {
     return (
       <setup>
+        <Signup />
+
         <UI.Title size={2}>Login</UI.Title>
-        <UI.Form flex $$undraggable onSubmit={store.finish}>
-          <UI.Input
-            $error={store.error}
-            disabled={store.loggingIn}
-            name="email"
-            getRef={store.ref('email').set}
-            placeholder="Email"
-          />
-          <UI.Input
-            disabled={store.loggingIn}
-            name="password"
-            type="password"
-            placeholder="Password"
-            getRef={store.ref('password').set}
-          />
-          <UI.Button icon="raft" tooltip="Forgot password?" />
-          <UI.Button type="submit" icon={store.loggingIn ? 'time' : 'lock'}>
-            {store.loggingIn ? 'Logging in...' : 'Login'}
-          </UI.Button>
+        <UI.Form $$undraggable onSubmit={store.finish}>
+          <UI.Row>
+            <UI.Input
+              $error={store.error}
+              disabled={store.loggingIn}
+              name="email"
+              getRef={store.ref('email').set}
+              placeholder="Email"
+            />
+            <UI.Input
+              disabled={store.loggingIn}
+              name="password"
+              type="password"
+              placeholder="Password"
+              getRef={store.ref('password').set}
+            />
+            <UI.Button icon="raft" tooltip="Forgot password?" />
+            <UI.Button type="submit" icon={store.loggingIn ? 'time' : 'lock'}>
+              {store.loggingIn ? 'Logging in...' : 'Login'}
+            </UI.Button>
+          </UI.Row>
         </UI.Form>
       </setup>
     )

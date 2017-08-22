@@ -166,9 +166,11 @@ export default class Miller {
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
             return (
-              <pane $grow={index === schema.length - 1}>
+              <pane
+                key={index + ':' + pane.kind}
+                $grow={index === schema.length - 1}
+              >
                 <Pane
-                  key={index + ':' + pane.kind}
                   // if it's the next preview, always rerender
                   pane={panes[pane.type]}
                   type={pane.type}

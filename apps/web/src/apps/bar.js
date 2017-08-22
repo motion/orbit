@@ -85,6 +85,7 @@ class BarStore {
     orbit: Panes.Orbit,
     task: Panes.Task,
     doc: Panes.Doc,
+    integrations: Panes.Integrations,
   }
 
   get isBarActive() {

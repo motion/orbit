@@ -114,7 +114,7 @@ class Reply {
 class MetaItem {
   render({ store, label, value }) {
     return (
-      <item>
+      <item key={label}>
         <PersonPicker
           if={false}
           popoverProps={{

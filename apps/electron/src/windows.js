@@ -136,12 +136,7 @@ export default class ExampleApp extends React.Component {
     console.log('started a repl!')
   }
 
-  hide = () =>
-    new Promise(resolve =>
-      this.setState({ show: false }, () => {
-        resolve()
-      })
-    )
+  hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
 
   show = () =>
     new Promise(resolve =>
@@ -211,7 +206,6 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('close', (event, path) => {
-      console.log('got close message')
       WindowsStore.removeByPath(path)
       this.updateWindows()
     })

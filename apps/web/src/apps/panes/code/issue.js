@@ -43,42 +43,7 @@ class Response {
 }
 
 @view({
-  store: class CodeStore {
-    responses = [
-      {
-        author: 'nick',
-        text: `
-      What problem would it solve for you?
-
-In some places (especially tests files) the code is a bit hard to read because of formatting issues like bad indentation. Prettier is an opinionated code formatter, and can help us here.
-
-Also, @mweststrate mentioned in #1035 (comment) the will to implement Prettier in the near future.
-
-Do you think others will benefit from this change as well and it should in core package (see also mobx-utils)?
-
-Yes, but it will not make a difference in the core package.
-
-Are you willing to (attempt) a PR yourself?
-
-Yes, but I'm not sure if I'm the appropriate person.
-      `,
-      },
-      {
-        author: 'nate',
-        text: `
-        Prettier is a welcome addition :). Can you make sure the same settings as in mobx-state-tree are used?
-        `,
-      },
-      {
-        author: 'nick',
-        text: 'The pull request #1103 was raised to satisfy this issue.',
-      },
-      {
-        author: 'nate',
-        text: 'This can be closed now that #1103 has been merged',
-      },
-    ]
-  },
+  store: class CodeStore {},
 })
 export default class Issue {
   getLength = () => this.props.store.responses.length

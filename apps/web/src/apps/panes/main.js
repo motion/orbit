@@ -231,7 +231,6 @@ export default class BarMain {
           }}
           itemProps={paneProps.itemProps}
           groupKey="category"
-          virtualized
           items={store.results}
           getItem={(result, index) =>
             <UI.ListItem

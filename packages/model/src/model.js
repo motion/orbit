@@ -182,10 +182,11 @@ export default class Model {
 
                     // wait for sync to happen before returning
                     if (method === 'exec') {
+                      const execute = target.exec.bind(target)
                       return function exec() {
                         return new Promise(async resolve => {
                           await syncPromise
-                          const value = await target.exec()
+                          const value = await execute()
                           resolve(value)
                         })
                       }

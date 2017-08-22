@@ -23,14 +23,9 @@ export default class Sync {
   jobWatcher: Observable
   syncers = {}
   users = []
-  settings = []
 
   start = async () => {
-    await Promise.all([
-      this.setupSyncers(),
-      this.setupUsers(),
-      this.setupSettings(),
-    ])
+    await Promise.all([this.setupSyncers(), this.setupUsers()])
     this.watchJobs()
   }
 
@@ -43,21 +38,8 @@ export default class Sync {
   setupUsers = () => {
     return new Promise(resolve => {
       const query = User.find().$.subscribe(allUsers => {
-        if (allUsers) {
-          console.log('got users:', allUsers.length)
+        if (allUsers && allUsers.length) {
           this.users = allUsers
-          resolve()
-        }
-      })
-      this.subscriptions.add(query.unsubscribe)
-    })
-  }
-
-  setupSettings = () => {
-    return new Promise(resolve => {
-      const query = Setting.find().$.subscribe(settings => {
-        if (settings) {
-          this.users = settings
           resolve()
         }
       })
@@ -92,11 +74,12 @@ export default class Sync {
         } catch (error) {
           console.log('ERROR')
           const lastError = getRxError(error)
-          await job.update({
-            status: 3,
-            lastError,
-            tries: 3,
-          })
+          console.log(lastError)
+          // await job.update({
+          //   status: 3,
+          //   // lastError,
+          //   tries: 3,
+          // })
         }
         this.locks.delete(job.id)
       }
@@ -115,10 +98,13 @@ export default class Sync {
 
     if (syncer) {
       try {
-        await syncer.run(job, this.users, this.settings)
-      } catch (e) {
-        console.log('error running syncer', e)
-        // await job.update({ status: Job.status.FAILED, lastError: e })
+        await syncer.run(job, this.users)
+      } catch (error) {
+        console.log('error running syncer', error)
+        // await job.update({
+        //   status: Job.status.FAILED,
+        //   lastError: getRxError(error),
+        // })
       }
     }
 

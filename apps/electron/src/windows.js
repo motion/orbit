@@ -367,6 +367,9 @@ export default class ExampleApp extends React.Component {
           onFocus={() => {
             this.activeWindow = this.windowRef
           }}
+          webPreferences={{
+            nativeWindowOpen: true,
+          }}
         />
         {windows.map(win => {
           return (

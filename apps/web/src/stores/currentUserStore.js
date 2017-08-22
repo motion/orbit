@@ -179,8 +179,11 @@ class CurrentUser {
   }
 
   link = async provider => {
-    await this.superlogin.link(provider)
-    await this.setUserSession()
+    return await this.superlogin.link(provider)
+  }
+
+  unlink = async provider => {
+    return await this.superlogin.unlink(provider)
   }
 
   setUserSession = async () => {
@@ -192,19 +195,6 @@ class CurrentUser {
     } catch (e) {
       console.error('got err with current user get', e)
     }
-  }
-
-  createOrg = async name => {
-    if (!this.id) {
-      console.error('woah no id')
-      return
-    }
-
-    await Org.create({
-      title: name,
-      admins: [this.id],
-      members: [this.id],
-    })
   }
 }
 

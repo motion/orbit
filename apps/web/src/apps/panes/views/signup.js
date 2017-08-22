@@ -5,17 +5,14 @@ import { schema, string } from '@mcro/model'
 import { CurrentUser } from '~/app'
 import * as UI from '@mcro/ui'
 import Router from '~/router'
-import Gemstone from '~/views/kit/gemstone'
 
 @view({
-  store: class SignupStep1Store {
+  store: class SignupStore {
     errors = null
 
     // wrap to avoid mobx action wrap because validator has weird api
     helpers = {
       validator: schema({
-        company: string.minlen(2),
-        name: string.minlen(2),
         email: string
           .minlen(5)
           .match(
@@ -41,21 +38,13 @@ import Gemstone from '~/views/kit/gemstone'
         return
       }
 
-      console.log('created user now')
-
       if (!this.errors) {
         console.log('NICE JOB DUDE')
       }
     }
-
-    play = node => {
-      if (node) {
-        node.play()
-      }
-    }
   },
 })
-export default class SignupStep1 {
+export default class Signup {
   render({ store }) {
     return (
       <inner $$margin="auto">
@@ -75,13 +64,6 @@ export default class SignupStep1 {
             labelProps={{ css: { width: 110 } }}
             size={1.2}
           >
-            <UI.Field label="Company" placeholder="" />
-            <UI.Field label="Icon">
-              {[1, 2, 3, 4, 5].map(i =>
-                <Gemstone marginRight={5} id={i} key={i} />
-              )}
-            </UI.Field>
-            <UI.Field label="Name" placeholder="" />
             <UI.Field label="Email" placeholder="" />
             <UI.Field label="Password" type="password" placeholder="" />
           </UI.PassProps>

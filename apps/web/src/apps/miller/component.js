@@ -121,8 +121,8 @@ class Pane {
           data={data || {}}
           isActive={paneActive}
           onSelect={onSelect}
-          onRef={ref => {
-            onRef(ref)
+          getRef={ref => {
+            getRef(ref)
             this.pane = ref
           }}
           search={paneActive ? search : ''}

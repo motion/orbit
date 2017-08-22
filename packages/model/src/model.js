@@ -111,7 +111,7 @@ export default class Model {
   }
 
   compiledMethods = (doc): Object => {
-    const descriptors = Object.getOwnPropertyDescriptors(this.methods)
+    const descriptors = Object.getOwnPropertyDescriptors(this.methods || {})
 
     // methods to be added to each model
     const ogUpdate = doc.update.bind(doc)
@@ -176,7 +176,18 @@ export default class Model {
                 // they have intent to run this
                 if (method === 'exec' || method === '$') {
                   if (options.autoSync) {
-                    syncQuery(query)
+                    const syncPromise = syncQuery(query, {
+                      live: method === '$',
+                    })
+
+                    // wait for sync to happen before returning
+                    if (method === 'exec') {
+                      return new Promise(async resolve => {
+                        await syncPromise
+                        const value = await target.exec()
+                        resolve(value)
+                      })
+                    }
                   }
                 }
                 return target[method]
@@ -386,12 +397,13 @@ export default class Model {
     }
   }
 
-  syncQuery = queryish => {
+  syncQuery = (queryish, options = { live: true, retry: true }) => {
     let query = queryish
     if (query.query) {
       query = query.query
     }
     if (!isRxQuery(query) && !(query.constructor.name === 'RxQuery')) {
+      console.log(query.constructor.name, query)
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.'
       )
@@ -399,9 +411,29 @@ export default class Model {
     if (!this.remote) {
       throw new Error('Could not sync query, no remote is specified.')
     }
-    return this._collection.sync({
-      remote: this.remote,
+
+    const firstReplication = this._collection.sync({
       // query,
+      remote: this.remote,
+      options: {
+        ...options,
+        live: false,
+      },
+    })
+
+    // wait for first replication to finish
+    return new Promise(async resolve => {
+      await firstReplication.complete$.filter(x => !!x).asPromise()
+
+      if (options.live) {
+        const liveReplication = this._collection.sync({
+          remote: this.remote,
+          options,
+        })
+        return resolve(liveReplication)
+      }
+
+      resolve(true)
     })
   }
 

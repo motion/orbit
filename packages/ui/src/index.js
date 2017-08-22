@@ -10,6 +10,9 @@ export * as SlotFill from './helpers/slot'
 export * as Virtualized from 'react-virtualized'
 export Portal from 'react-portal'
 export StableContainer from './helpers/stableContainer'
+export inject from './helpers/inject'
+export getTarget from './helpers/getTarget'
+export keycode from './helpers/keycode'
 
 // base
 export Arrow from './arrow'

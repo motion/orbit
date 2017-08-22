@@ -26,15 +26,15 @@ export default class API {
   }
 
   async start() {
-    this.bootstrap.start()
-    this.server.start()
-
     // things that depend on models go after this line
     await this.database.start({
       modelOptions: {
         autoSync: true,
       },
     })
+
+    this.bootstrap.start()
+    this.server.start()
 
     await this.jobs.start()
   }

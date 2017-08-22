@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { view, keycode } from '@mcro/black'
+import { view } from '@mcro/black'
+import { keycode } from '@mcro/ui'
 import { observable } from 'mobx'
 
 export type Props = {

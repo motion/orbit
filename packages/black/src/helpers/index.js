@@ -1,5 +1,2 @@
 export log from './log'
 export watch from './watch'
-export inject from './inject'
-export getTarget from './getTarget'
-export keycode from './keycode'

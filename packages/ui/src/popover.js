@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
-import { view, getTarget } from '@mcro/black'
+import { view } from '@mcro/black'
+import getTarget from './helpers/getTarget'
 import Portal from 'react-portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'

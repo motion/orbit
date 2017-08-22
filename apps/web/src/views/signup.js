@@ -27,7 +27,7 @@ import App from '~/app'
 export default class Signup {
   render({ store: { step } }) {
     return (
-      <signup if={step} $$fullscreen $$draggable $$centered>
+      <signup if={false && step} $$fullscreen $$draggable $$centered>
         <UI.Glint size={1.1} borderRadius={5} />
         <UI.Glow
           if={false}

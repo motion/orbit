@@ -100,18 +100,25 @@ class Pane {
     }
 
     return (
-      <ChildPane
-        paneProps={paneProps}
-        data={data || {}}
-        onSelect={onSelect}
-        onRef={ref => {
-          onRef(ref)
-          this.pane = ref
+      <pane
+        ref={ref => {
+          ref && onMeasureWidth(ref.offsetWidth)
         }}
-        search={paneActive ? search : ''}
-        highlightIndex={highlightIndex}
-        activeIndex={activeIndex}
-      />
+      >
+        <ChildPane
+          paneProps={paneProps}
+          data={data || {}}
+          isActive={paneActive}
+          onSelect={onSelect}
+          onRef={ref => {
+            onRef(ref)
+            this.pane = ref
+          }}
+          search={paneActive ? search : ''}
+          highlightIndex={highlightIndex}
+          activeIndex={activeIndex}
+        />
+      </pane>
     )
   }
 
@@ -148,22 +155,24 @@ export default class Miller {
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
             return (
-              <Pane
-                key={index > state.activeCol ? Math.random() : index}
-                // if it's the next preview, always rerender
-                pane={panes[pane.kind]}
-                type={pane.type}
-                data={pane.data}
-                search={search}
-                paneProps={paneProps}
-                onMeasureWidth={width => (store.colWidths[index] = width)}
-                col={index}
-                onRef={plugin => {
-                  store.plugins[index] = plugin
-                }}
-                onSelect={row => store.onSelect(index, row)}
-                state={state}
-              />
+              <pane>
+                <Pane
+                  key={index + ':' + pane.kind}
+                  // if it's the next preview, always rerender
+                  pane={panes[pane.kind]}
+                  type={pane.type}
+                  data={pane.data}
+                  search={search}
+                  paneProps={paneProps}
+                  onMeasureWidth={width => (store.colWidths[index] = width)}
+                  col={index}
+                  onRef={plugin => {
+                    store.plugins[index] = plugin
+                  }}
+                  onSelect={row => store.onSelect(index, row)}
+                  state={state}
+                />
+              </pane>
             )
           })}
         </columns>

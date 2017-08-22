@@ -7,6 +7,8 @@ import { uniq } from 'lodash'
 import { filterItem } from './helpers'
 import { Atom } from '@mcro/models'
 
+let allCards = null
+
 class BarMainStore {
   searchResults: Array<Document> = []
   cards = []
@@ -90,13 +92,13 @@ class BarMainStore {
       },
       {
         title: 'Assigned to me',
-        type: 'task',
+        type: 'placeholder',
         icon: 'check',
       },
       {
         title: 'My Team',
         category: 'Browse',
-        type: 'browse',
+        type: 'placeholder',
         url() {
           return '/?home=true'
         },
@@ -105,7 +107,7 @@ class BarMainStore {
       {
         title: 'Company',
         category: 'Browse',
-        type: 'browse',
+        type: 'placeholder',
         url() {
           return '/?home=true'
         },
@@ -140,7 +142,6 @@ class BarMainStore {
   }
 
   get results() {
-    console.time('Main.results')
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login' }]
     }
@@ -171,25 +172,31 @@ class BarMainStore {
       },
     ]
 
-    console.timeEnd('Main.results')
     return final
   }
 
   start() {
-    Atom.getAll().then(cards => {
-      this.cards = cards.map(card => ({
-        title: card.card.name,
-        data: {
+    if (allCards) {
+      this.cards = allCards
+    } else {
+      Atom.getAll().then(cards => {
+        this.cards = cards.map(card => ({
           title: card.card.name,
-          id: card.card.id,
-          comments: card.comments,
-          type: 'trello',
-        },
-        searchTags: 'trello',
-        type: 'task',
-        icon: 'trello',
-      }))
-    })
+          data: {
+            title: card.card.name,
+            content: card.card.content,
+            id: card.card.id,
+            comments: card.comments,
+            labels: card.card.labels,
+            service: card.service,
+          },
+          searchTags: card.searchWords || card.service,
+          type: 'task',
+          icon: card.service,
+        }))
+      })
+      allCards = this.cards
+    }
 
     this.props.getRef && this.props.getRef(this)
   }
@@ -254,8 +261,23 @@ export default class BarMain {
     return { kind: item.type, data: item.data || {} }
   }
 
-  render({ store, onSelect, onRef, activeIndex, paneProps }) {
+  render({ store, onSelect, onRef, isActive, activeIndex, paneProps }) {
     onRef(this)
+    const secondary = item => {
+      if (item.data && item.data.service === 'github')
+        return (
+          <spread $$row>
+            <left>
+              {item.data.comments.length} replies
+            </left>
+            <right>
+              {item.data.labels}
+            </right>
+          </spread>
+        )
+
+      return null
+    }
 
     return (
       <pane>
@@ -265,6 +287,7 @@ export default class BarMain {
           selected={activeIndex}
           itemProps={paneProps.itemProps}
           groupKey="category"
+          virtualized
           items={store.results}
           getItem={(result, index) =>
             <UI.ListItem
@@ -277,6 +300,7 @@ export default class BarMain {
                   : result.icon || (result.doc && result.doc.icon)
               }
               primary={result.title}
+              secondary={secondary(result)}
             />}
         />
       </pane>
@@ -285,7 +309,10 @@ export default class BarMain {
 
   static style = {
     pane: {
-      width: 240,
+      width: 340,
+    },
+    spread: {
+      justifyContent: 'space-between',
     },
     image: {
       width: 20,

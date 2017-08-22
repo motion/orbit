@@ -8,20 +8,7 @@ import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()
 
-const items = [
-  {
-    label: 'Assignees',
-    value: 'No one assigned',
-  },
-  {
-    label: 'Labels',
-    value: 'None yet',
-  },
-  {
-    label: 'Milestone',
-    value: 'No milestone',
-  },
-  /*
+/*
   {
     label: 'Type',
     value: 'Epic',
@@ -50,7 +37,6 @@ const items = [
     icon: 'space',
   },
   */
-]
 
 const SelectableSection = ({ index, activeIndex, ...props }) =>
   <section
@@ -60,7 +46,7 @@ const SelectableSection = ({ index, activeIndex, ...props }) =>
 
 @view
 class Reply {
-  render({ author, when, activeIndex, text, index }) {
+  render({ author, when, avatarUrl, activeIndex, text, index }) {
     const name = includes(author, ' ')
       ? author.split(' ')[0].toLowerCase()
       : author
@@ -69,7 +55,7 @@ class Reply {
     return (
       <SelectableSection index={index} activeIndex={activeIndex}>
         <reply $$row>
-          <img $avatar src={`/images/${image}.jpg`} />
+          <img $avatar src={avatarUrl || `/images/${image}.jpg`} />
           <bubble>
             <info $$row>
               <name>
@@ -79,9 +65,9 @@ class Reply {
                 {when}
               </when>
             </info>
-            <UI.Text $content>
+            <content className="html-content">
               {text}
-            </UI.Text>
+            </content>
           </bubble>
         </reply>
       </SelectableSection>
@@ -93,6 +79,9 @@ class Reply {
       padding: [7, 5],
       width: '100%',
       borderTop: '1px solid #eee',
+    },
+    name: {
+      fontWeight: 500,
     },
     avatar: {
       width: 30,
@@ -110,6 +99,7 @@ class Reply {
     },
     content: {
       marginTop: 3,
+      maxWidth: 400,
     },
     when: {
       opacity: 0.7,
@@ -145,9 +135,67 @@ class MetaItem {
     )
   }
 
+  static style = {}
+}
+
+@view
+class AddResponse {
+  render({ store }) {
+    const commentButtonActive = store.response.trim().length > 0
+
+    return (
+      <comment>
+        <textarea
+          $response
+          value={store.response}
+          onChange={e => (store.response = e.target.value)}
+          placeholder="Leave a comment"
+        />
+        <info $$row>
+          <shortcut $bright={commentButtonActive}>cmd+enter to post</shortcut>
+          <buttons $$row>
+            <UI.Button disabled={!commentButtonActive}>Archive</UI.Button>
+            <UI.Button
+              disabled={!commentButtonActive}
+              onClick={store.submit}
+              icon="send"
+            >
+              Comment
+            </UI.Button>
+          </buttons>
+        </info>
+      </comment>
+    )
+  }
+
   static style = {
-    name: {
-      fontWeight: 500,
+    info: {
+      marginTop: 5,
+      justifyContent: 'space-between',
+    },
+    buttons: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
+    shortcut: {
+      flex: 2,
+      alignSelf: 'center',
+      marginLeft: 5,
+      opacity: 0.4,
+    },
+    comment: {},
+    bright: {
+      opacity: 0.7,
+    },
+    response: {
+      marginTop: 5,
+      background: '#fafbfc',
+      border: '1px solid rgb(209, 213, 218)',
+      width: '100%',
+      height: 80,
+      borderRadius: 5,
+      padding: 10,
+      fontSize: 14,
     },
   }
 }
@@ -164,69 +212,75 @@ class MetaItem {
 })
 export default class BarTaskPane {
   getLength = () => 5
-  render({ highlightIndex, data, activeIndex, store, paneProps }) {
-    const commentButtonActive = store.response.trim().length > 0
+  getChildSchema = row => null
+
+  render({ highlightIndex, data, activeIndex, isActive, store, paneProps }) {
     const title = data.title || 'Create a Helm chart to deploy CouchDB on K8s'
     const comments = data.comments || [0, 1].map(() => 'just a test')
-    const type = data.type || 'github'
+    const labels = data.labels
+    const type = data.service || 'github'
+    const items = [
+      {
+        label: 'Assignees',
+        value: 'No one assigned',
+      },
+      {
+        label: 'Labels',
+        value: labels && labels.length > 0 ? labels : 'None yet',
+      },
+      {
+        label: 'Milestone',
+        value: 'No milestone',
+      },
+    ]
 
     return (
       <PaneCard $paneCard id={data.id} title={title} icon={type}>
-        {/* everything but comment area so comment area is sticky footer */}
-        <content>
-          <metaInfo $$row>
-            {items.map(item => <MetaItem {...item} />)}
-          </metaInfo>
+        <container $isActive={isActive}>
+          <content>
+            <metaInfo $$row>
+              {items.map(item => <MetaItem {...item} />)}
+            </metaInfo>
 
-          {comments.map((comment, index) =>
-            <Reply
-              index={index + 1}
-              activeIndex={activeIndex}
-              when={ago(comment.date)}
-              author={comment.author}
-              text={
-                <div>
-                  {comment.text}
-                </div>
-              }
-            />
-          )}
-        </content>
-        <comment>
-          <textarea
-            $response
-            value={store.response}
-            onChange={e => (store.response = e.target.value)}
-            placeholder="Leave a comment"
-          />
-          <info $$row>
-            <shortcut $bright={commentButtonActive}>cmd+enter to post</shortcut>
-            <buttons $$row>
-              <UI.Button disabled={!commentButtonActive}>Archive</UI.Button>
-              <UI.Button
-                disabled={!commentButtonActive}
-                onClick={store.submit}
-                icon="send"
-              >
-                Comment
-              </UI.Button>
-            </buttons>
-          </info>
-        </comment>
+            {comments.map((comment, index) =>
+              <Reply
+                if={comment.content.length > 0}
+                index={index + 1}
+                activeIndex={activeIndex}
+                when={ago(comment.date)}
+                author={comment.author}
+                avatarUrl={comment.avatarUrl}
+                text={
+                  <div dangerouslySetInnerHTML={{ __html: comment.content }} />
+                }
+              />
+            )}
+          </content>
+          <AddResponse store={store} />
+        </container>
       </PaneCard>
     )
   }
 
   static style = {
+    container: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
     metaInfo: {
       justifyContent: 'space-between',
-      margin: [5, 40],
+      borderBottom: [1, [0, 0, 0, 0.05]],
+      padding: [5, 40],
     },
     paneCard: {
       flex: 1,
     },
     content: {
       flex: 1,
+      overflow: 'scroll',
+    },
+    postContent: {
+      padding: 10,
     },
     break: {
       height: 8,
@@ -243,33 +297,6 @@ export default class BarTaskPane {
     primary: {
       flexFlow: 'row',
       alignItems: 'center',
-    },
-    info: {
-      marginTop: 5,
-      justifyContent: 'space-between',
-    },
-    buttons: {
-      flex: 1,
-      justifyContent: 'space-between',
-    },
-    shortcut: {
-      flex: 2,
-      alignSelf: 'center',
-      marginLeft: 5,
-      opacity: 0.4,
-    },
-    bright: {
-      opacity: 0.7,
-    },
-    response: {
-      marginTop: 5,
-      background: '#fafbfc',
-      border: '1px solid rgb(209, 213, 218)',
-      width: '100%',
-      height: 80,
-      borderRadius: 5,
-      padding: 10,
-      fontSize: 14,
     },
   }
 }

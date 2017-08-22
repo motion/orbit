@@ -15,7 +15,7 @@ export default new class TrelloHandler {
     const val = await request(cardUrl(card.id))
     return {
       card: { id: card.id, name: card.name },
-      actions: JSON.parse(val),
+      comments: JSON.parse(val),
     }
   }
 
@@ -27,10 +27,10 @@ export default new class TrelloHandler {
     return cards.map(card => {
       return {
         card: card.card,
-        comments: card.actions.map(action => ({
+        comments: card.comments.map(action => ({
           author: action.memberCreator.fullName,
           date: +new Date(action.date),
-          text: action.data.text,
+          content: action.data.text,
         })),
       }
     })

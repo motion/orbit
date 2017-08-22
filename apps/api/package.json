@@ -48,7 +48,8 @@
     "request-promise": "*",
     "object.entries": "^1.0.4",
     "object.values": "^1.0.4",
-    "object.getownpropertydescriptors": "^2.0.3"
+    "object.getownpropertydescriptors": "^2.0.3",
+    "github-graphql-client": "*"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

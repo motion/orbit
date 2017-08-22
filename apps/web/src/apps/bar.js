@@ -5,7 +5,7 @@ import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
-import { isNumber, last } from 'lodash'
+import { isNumber, last, debounce } from 'lodash'
 
 const safeString = thing => {
   try {
@@ -42,7 +42,10 @@ class BarStore {
   millerState = MillerState.serialize([{ kind: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
 
+  // search is throttled, textboxVal isn't
   search = ''
+  textboxVal = ''
+
   visible = true
 
   start() {
@@ -55,11 +58,16 @@ class BarStore {
     this.inputRef.select()
   }
 
-  onSearchChange = e => {
-    this.search = e.target.value
+  setSearch = debounce(text => {
+    this.search = text
     setTimeout(() => {
       this.millerState.setActiveRow(0)
     })
+  }, 150)
+
+  onSearchChange = e => {
+    this.textboxVal = e.target.value
+    this.setSearch(this.textboxVal)
   }
 
   get peekItem() {
@@ -78,6 +86,7 @@ class BarStore {
 
   PANE_TYPES = {
     main: Panes.Main,
+    placeholder: Panes.Placeholder,
     setup: Panes.Setup,
     inbox: Panes.Threads,
     browse: Panes.Browse,
@@ -195,7 +204,7 @@ export default class BarPage {
                 getRef={store.ref('inputRef').set}
                 borderRadius={5}
                 onChange={store.onSearchChange}
-                value={store.search}
+                value={store.textboxVal}
                 borderWidth={0}
                 css={{
                   margin: [-2, 0, 0],
@@ -230,6 +239,7 @@ export default class BarPage {
               search={store.search}
               version={store.millerStateVersion}
               state={store.millerState}
+              animate={true}
               panes={store.PANE_TYPES}
               onChange={store.onMillerStateChange}
               paneProps={paneProps}

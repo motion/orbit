@@ -3,7 +3,6 @@ import { app, globalShortcut, screen, ipcMain } from 'electron'
 import Window from './window'
 import repl from 'repl'
 import localShortcut from 'electron-localshortcut'
-import osap from 'osap'
 
 const MIN_WIDTH = 750
 const MIN_HEIGHT = 600

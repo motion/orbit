@@ -92,13 +92,15 @@ class WindowsStoreFactory {
     return this.windows.find(x => `${x.key}` === `${key}`)
   }
   removeBy(key, val) {
-    this.windows = this.windows.filter(window => window[key] === val)
+    this.windows = this.windows.filter(win => win[key] !== val)
   }
   removeByPath(path) {
     this.removeBy('path', path)
   }
   removeByKey(key) {
+    console.log('removing by key', key, 'old len', this.windows.length)
     this.removeBy('key', key)
+    console.log('new len', this.windows.length)
   }
 }
 
@@ -205,13 +207,12 @@ export default class ExampleApp extends React.Component {
       this.hide()
     })
 
-    ipcMain.on('close', (event, path) => {
-      WindowsStore.removeByPath(path)
+    ipcMain.on('close', (event, key) => {
+      WindowsStore.removeByKey(+key)
       this.updateWindows()
     })
 
     ipcMain.on('app-bar-toggle', (event, key) => {
-      console.log('got a toggle from', key)
       WindowsStore.findBy(key).toggleBar()
       this.updateWindows()
       event.sender.send('app-bar-toggle', 'success')
@@ -260,6 +261,7 @@ export default class ExampleApp extends React.Component {
         }
       },
     }
+
     for (const shortcut of Object.keys(SHORTCUTS)) {
       const ret = globalShortcut.register(shortcut, SHORTCUTS[shortcut])
       if (!ret) {
@@ -368,7 +370,6 @@ export default class ExampleApp extends React.Component {
           return (
             <Window
               key={win.key}
-              ref={this.onAppWindow(win)}
               file={`${JOT_URL}?key=${win.key}`}
               show={win.active}
               {...appWindow}
@@ -384,15 +385,13 @@ export default class ExampleApp extends React.Component {
                 this.updateWindows()
               }}
               onClose={() => {
-                console.log('closing!', win.key)
                 WindowsStore.removeByKey(win.key)
                 this.updateWindows()
               }}
               onFocus={() => {
-                console.log('focused!', win.key)
                 //win.showDevTools = true
                 win.focused = true
-                this.activeWindow = win.ref
+                this.activeWindow = win
                 this.updateWindows()
               }}
               onBlur={() => {
@@ -400,7 +399,6 @@ export default class ExampleApp extends React.Component {
                   console.log('no window weird')
                   return
                 }
-                console.log('blurred!', win.key)
                 win.focused = false
                 if (this.activeWindow.key === win.key) {
                   this.activeWindow = null

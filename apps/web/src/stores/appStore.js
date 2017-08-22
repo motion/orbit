@@ -42,7 +42,11 @@ export default class AppStore {
       console.time('start')
     }
     this.database = new Database(this.config, this.models)
-    await this.database.start()
+    await this.database.start({
+      modelOptions: {
+        autoSync: true,
+      },
+    })
     this.connected = true
     this.catchErrors()
     this.trackMounts()

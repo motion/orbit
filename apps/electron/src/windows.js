@@ -3,6 +3,7 @@ import { app, globalShortcut, screen, ipcMain } from 'electron'
 import Window from './window'
 import repl from 'repl'
 import localShortcut from 'electron-localshortcut'
+import osap from 'osap'
 
 const MIN_WIDTH = 750
 const MIN_HEIGHT = 600
@@ -136,7 +137,12 @@ export default class ExampleApp extends React.Component {
     console.log('started a repl!')
   }
 
-  hide = () => new Promise(resolve => this.setState({ show: false }, resolve))
+  hide = () =>
+    new Promise(resolve =>
+      this.setState({ show: false }, () => {
+        resolve()
+      })
+    )
 
   show = () =>
     new Promise(resolve =>
@@ -206,6 +212,7 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('close', (event, path) => {
+      console.log('got close message')
       WindowsStore.removeByPath(path)
       this.updateWindows()
     })
@@ -356,11 +363,7 @@ export default class ExampleApp extends React.Component {
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
-          position={
-            this.state.show
-              ? this.state.position
-              : this.state.size.map(x => -x - 100)
-          }
+          position={this.state.position}
           onReadyToShow={this.onReadyToShow}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}

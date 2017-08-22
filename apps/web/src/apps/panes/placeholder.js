@@ -7,10 +7,12 @@ export default class Placeholder {
   getLength = () => 0
   getChildSchema = row => null
 
-  render({}) {
+  render({ data }) {
     return (
       <PaneCard $paneCard id={''} title={'not implemented yet'} icon={''}>
-        <container />
+        <container>
+          data is {JSON.stringify(data)}
+        </container>
       </PaneCard>
     )
   }

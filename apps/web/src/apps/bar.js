@@ -240,7 +240,6 @@ export default class BarPage {
               search={store.search}
               version={store.millerStateVersion}
               state={store.millerState}
-              animate={true}
               panes={store.PANE_TYPES}
               onChange={store.onMillerStateChange}
               paneProps={paneProps}

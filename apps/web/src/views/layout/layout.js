@@ -68,6 +68,7 @@ export default class Layout {
     layout: {
       background: Constants.IS_ELECTRON ? [42, 42, 45, 0.2] : 'transparent',
       position: 'absolute',
+      flex: 1,
       top: 0,
       right: 0,
       bottom: 0,

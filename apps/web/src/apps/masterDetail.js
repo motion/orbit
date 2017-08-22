@@ -23,12 +23,18 @@ const getSchema = () => {
 
     PANE_TYPES = {
       main: Panes.Main,
+      placeholder: Panes.Placeholder,
       setup: Panes.Setup,
       inbox: Panes.Threads,
       browse: Panes.Browse,
       feed: Panes.Feed,
       notifications: Panes.Notifications,
       login: Panes.Login,
+      'code.issue': Panes.Code.Issue,
+      orbit: Panes.Orbit,
+      task: Panes.Task,
+      doc: Panes.Doc,
+      integrations: Panes.Integrations,
     }
   },
 })
@@ -42,19 +48,25 @@ export default class MasterPage {
     return (
       <UI.Surface flex>
         <UI.Theme name="light">
-          <Miller
-            animate
-            search={''}
-            version={store.millerStateVersion}
-            state={store.millerState}
-            panes={store.PANE_TYPES}
-            onChange={store.onMillerStateChange}
-            paneProps={paneProps}
-          />
+          <container>
+            <Miller
+              animate
+              search={''}
+              version={store.millerStateVersion}
+              state={store.millerState}
+              panes={store.PANE_TYPES}
+              onChange={store.onMillerStateChange}
+              paneProps={paneProps}
+            />
+          </container>
         </UI.Theme>
       </UI.Surface>
     )
   }
 
-  static style = {}
+  static style = {
+    container: {
+      flex: 1,
+    },
+  }
 }

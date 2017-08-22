@@ -99,7 +99,6 @@ class Reply {
     },
     content: {
       marginTop: 3,
-      maxWidth: 400,
     },
     when: {
       opacity: 0.7,

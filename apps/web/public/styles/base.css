@@ -50,6 +50,15 @@ div[data-slate-editor="true"] > div {
   padding: 5px 22px;
 }
 
+.html-content code {
+  margin: 10px;
+}
+
+.html-content img {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .html-content h3 {
   margin-top: 5px;
   margin-bottom: 5px;

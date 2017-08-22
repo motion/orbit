@@ -38,11 +38,13 @@ class BarMainStore {
         },
       },
       {
+        data: { name: 'assigned' },
         title: 'Assigned to me',
         type: 'placeholder',
         icon: 'check',
       },
       {
+        data: { name: 'my team' },
         title: 'My Team',
         category: 'Browse',
         type: 'placeholder',
@@ -52,6 +54,7 @@ class BarMainStore {
         icon: 'objects_planet',
       },
       {
+        data: { name: 'from company' },
         title: 'Company',
         category: 'Browse',
         type: 'placeholder',
@@ -119,7 +122,6 @@ class BarMainStore {
       })
     }
 
-    console.timeEnd('Main.results')
     return results
   }
 

@@ -155,7 +155,7 @@ export default class Miller {
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
             return (
-              <pane>
+              <pane $grow={index === schema.length - 1}>
                 <Pane
                   key={index + ':' + pane.kind}
                   // if it's the next preview, always rerender
@@ -191,6 +191,9 @@ export default class Miller {
   }
 
   static style = {
+    grow: {
+      flex: 1,
+    },
     columns: {
       flex: 1,
       transition: 'transform 80ms linear',

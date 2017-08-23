@@ -44,6 +44,11 @@ export default class GithubSetting {
                 size={1.2}
                 label={org.login}
                 type="toggle"
+                defaultValue={
+                  store.setting.values.orgs
+                    ? store.setting.values.orgs[org.id]
+                    : false
+                }
                 onChange={val => {
                   store.setting.values = {
                     ...store.setting.values,

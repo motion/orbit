@@ -28,7 +28,7 @@ export default class GithubSetting {
         <UI.Form if={store.orgs}>
           {store.orgs.map(org =>
             <field key={org.id}>
-              <UI.Field size={1.2} label={org.login} type="toggle" />
+              <UI.Field row size={1.2} label={org.login} type="toggle" />
             </field>
           )}
         </UI.Form>

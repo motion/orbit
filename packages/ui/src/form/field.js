@@ -139,19 +139,18 @@ export default class Field {
         padding: [6, 0],
         flexFlow: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
       },
       label: {
         margin: 0,
-        width: '30%',
         padding: [0, 10],
-        textAlign: 'right',
+        flex: 'none',
+        width: 'auto',
       },
       element: {
         fontSize: 24,
         height: 40,
         border: 'none',
-        borderBottom: [1, '#eee'],
-        flex: 1,
       },
     }
 

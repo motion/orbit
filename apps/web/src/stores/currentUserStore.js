@@ -8,14 +8,14 @@ import { observable, autorun, computed } from 'mobx'
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
+@store
 class CurrentUser {
   connected = false
   localDb = null
   remoteDb = null
-  @observable.ref sessionInfo = null
-  @observable.ref userInfo = null
+  sessionInfo = null
+  userInfo = null
 
-  @computed
   get user() {
     if (!this.sessionInfo) {
       return null
@@ -37,20 +37,15 @@ class CurrentUser {
   }
 
   watchUser = () => {
-    autorun(() => {
+    this.watch(() => {
       if (this.sessionInfo && User.connected) {
-        User._collection
-          .findOne(this.sessionInfo.user_id)
-          .$.subscribe(userInfo => {
-            if (userInfo) {
-              this.userInfo = userInfo
-            }
-          })
+        User.findOne(this.sessionInfo.user_id).$.subscribe(userInfo => {
+          if (userInfo) {
+            this.userInfo = userInfo
+          }
+        })
       }
     })
-
-    // try this too
-    User.find().sync()
   }
 
   async setupSuperLogin() {

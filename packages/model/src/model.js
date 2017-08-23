@@ -168,9 +168,8 @@ export default class Model {
       get(target, method) {
         if (method === 'find' || method === 'findOne') {
           return queryParams => {
-            const query = target[method](
-              defaultFilter(queryObject(queryParams))
-            )
+            const finalParams = defaultFilter(queryObject(queryParams))
+            const query = target[method](finalParams)
             return new Proxy(query, {
               get(target, method) {
                 // they have intent to run this
@@ -185,7 +184,6 @@ export default class Model {
                       const execute = target.exec.bind(target)
                       return function exec() {
                         return new Promise(async resolve => {
-                          console.log('RUNNING WITH A SYNC')
                           await syncPromise
                           const value = await execute()
                           resolve(value)
@@ -429,6 +427,24 @@ export default class Model {
     return new Promise(resolve => {
       let resolved = false
 
+      console.log('got a repl observable', firstReplication)
+
+      firstReplication.error$.subscribe(error => {
+        console.log('got an error with stream', error)
+      })
+
+      firstReplication.docs$.subscribe(docs => {
+        console.log('got an docs with stream', docs)
+      })
+
+      firstReplication.change$.subscribe(change => {
+        console.log('got an change with stream', change)
+      })
+
+      firstReplication.active$.subscribe(active => {
+        console.log('got an active with stream', active)
+      })
+
       // watched replication stream and checks for finish
       firstReplication.complete$
         .filter(state => {
@@ -453,6 +469,19 @@ export default class Model {
     })
   }
 
+  getParams = (params, callback) => {
+    const objParams = this.paramsToObject(params)
+    return callback(objParams)
+  }
+
+  paramsToObject = params => {
+    if (typeof params === 'string') {
+      return { _id: params }
+    } else {
+      return params
+    }
+  }
+
   // user facing!
 
   // get is a helper that returns a promise only
@@ -462,12 +491,16 @@ export default class Model {
   // find/findOne return RxQuery objects
   // so you can subscribe to streams or just .exec()
   @query
-  find = ({ sort, ...query } = {}) =>
-    chain(this.collection.find(query), 'sort', sort)
+  find = params =>
+    this.getParams(params, ({ sort, ...query }) =>
+      chain(this.collection.find(query), 'sort', sort)
+    )
 
   @query
-  findOne = ({ sort, ...query } = {}) =>
-    chain(this.collection.findOne(query), 'sort', sort)
+  findOne = params =>
+    this.getParams(params, ({ sort, ...query }) =>
+      chain(this.collection.findOne(query), 'sort', sort)
+    )
 
   // returns a promise that resolves to found or created model
   findOrCreate = async (object: Object = {}): Promise<Object> => {

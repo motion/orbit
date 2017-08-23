@@ -8,7 +8,7 @@ import { OS } from '~/helpers/electron'
 @view
 export default class Header {
   onClose() {
-    OS.send('close', ``)
+    OS.send('close', '')
   }
 
   render() {
@@ -63,7 +63,7 @@ export default class Header {
               }}
             </UI.SlotFill.Slot>
             <UI.Row>
-              <UI.Button onClose={this.onClose} chromeless margin={[0, 2]}>
+              <UI.Button onClick={this.onClose} chromeless margin={[0, 2]}>
                 Share
               </UI.Button>
               <UI.Button

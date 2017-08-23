@@ -3,6 +3,7 @@ import Router from '@mcro/router'
 import HomePage from './apps/home'
 import BarPage from './apps/bar'
 import MasterDetailPage from './apps/masterDetail'
+import SettingsPage from './apps/settings'
 import { render } from './start'
 
 let AppRouter
@@ -13,6 +14,7 @@ function runRouter() {
       '/': HomePage,
       bar: BarPage,
       master: MasterDetailPage,
+      settings: SettingsPage,
     },
   })
   // because doing in installDevTools would break import order

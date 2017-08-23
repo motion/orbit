@@ -3,10 +3,6 @@ import * as UI from '@mcro/ui'
 
 @view({
   store: class IntegrationsStore {
-    start() {
-      this.props.getRef(this)
-    }
-
     get results() {
       return [
         {
@@ -47,21 +43,17 @@ import * as UI from '@mcro/ui'
   },
 })
 export default class BarIntegrationsPane {
-  render({ store, onSelect, activeIndex, paneProps }) {
+  render({ store, onSelect, itemProps }) {
     return (
       <integrations>
         <UI.List
           if={store.results}
-          selected={activeIndex}
-          onSelect={(item, index) => {
-            onSelect(index)
-          }}
-          itemProps={paneProps.itemProps}
+          onSelect={onSelect}
           groupKey="category"
           items={store.results}
-          getItem={(result, index) =>
+          itemProps={itemProps}
+          getItem={result =>
             <UI.ListItem
-              highlight={index === activeIndex}
               key={result.id}
               icon={
                 result.data && result.data.image
@@ -73,11 +65,5 @@ export default class BarIntegrationsPane {
         />
       </integrations>
     )
-  }
-
-  static style = {
-    setup: {
-      padding: 20,
-    },
   }
 }

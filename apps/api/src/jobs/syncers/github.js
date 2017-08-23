@@ -1,23 +1,10 @@
 // @flow
-import { store, watch } from '@mcro/black/store'
 import { Setting } from '@mcro/models'
 import type { Job } from '@mcro/models'
 
-@store
 export default class GithubSync {
   user = null
-  @watch
-  setting = () => {
-    console.log('RUNNING WATCH OF SETTING, USER?', !!this.user)
-
-    return (
-      this.user &&
-      Setting.findOne({
-        userId: this.user.id,
-        type: 'github',
-      })
-    )
-  }
+  setting = null
 
   constructor({ user }) {
     this.user = user
@@ -29,7 +16,12 @@ export default class GithubSync {
 
   baseUrl = 'https://api.github.com'
 
-  start = () => {
+  start = async () => {
+    this.setting = await Setting.findOne({
+      userId: this.user.id,
+      type: 'github',
+    }).exec()
+
     console.log('activate github syncer', this.setting)
   }
 

@@ -138,6 +138,11 @@ class BarStore {
       e.preventDefault()
       const { currentItem } = this.millerState
 
+      if (currentItem.static) {
+        console.log('static item, no action')
+        return
+      }
+
       if (currentItem.onSelect) {
         currentItem.onSelect()
       } else {

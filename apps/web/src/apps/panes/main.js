@@ -110,7 +110,7 @@ class BarMainStore {
 
   get results() {
     if (!CurrentUser.loggedIn) {
-      return [{ title: 'Login', type: 'login' }]
+      return [{ title: 'Login', type: 'login', static: true }]
     }
 
     const { searchResults, cards, browse, people } = this

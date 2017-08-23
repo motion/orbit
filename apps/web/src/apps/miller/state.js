@@ -9,6 +9,7 @@ type Schema = {
   data?: Object,
   icon?: string,
   onSelect?: Function,
+  static?: boolean,
 }
 
 export default class MillerStateStore {

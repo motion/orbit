@@ -23,7 +23,6 @@ else
     --ignore @mcro/couch \
     --ignore @mcro/playground \
       -- \
-      babel src --out-dir lib -s true $ARGS
-  # to kill flow after
-  fg
+      babel src --out-dir lib -s true $ARGS &
+  wait
 fi

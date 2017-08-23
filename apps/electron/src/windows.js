@@ -3,6 +3,7 @@ import { app, globalShortcut, screen, ipcMain } from 'electron'
 import Window from './window'
 import repl from 'repl'
 import localShortcut from 'electron-localshortcut'
+import open from 'opn'
 
 const MIN_WIDTH = 750
 const MIN_HEIGHT = 600
@@ -221,7 +222,7 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('open-settings', (event, key) => {
-      console.log('should open settings')
+      open('http://jot.dev/settings')
     })
   }
 

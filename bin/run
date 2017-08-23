@@ -12,8 +12,8 @@ elif [ "$ACTION" = "electron" ]; then
   cd apps/electron
   npm run watch &
   sleep 1
-  npm start
-  fg
+  npm start &
+  wait
 elif [ "$ACTION" =  "web" ]; then
   if [ ! -d "$ROOT/packages/ui/lib" ]; then
     echo "Make sure to run 'build --watch' before running web"

@@ -424,25 +424,15 @@ export default class Model {
     })
 
     // wait for first replication to finish
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       let resolved = false
 
       console.log('got a repl observable', firstReplication)
 
-      firstReplication.error$.subscribe(error => {
-        console.log('got an error with stream', error)
-      })
-
-      firstReplication.docs$.subscribe(docs => {
-        console.log('got an docs with stream', docs)
-      })
-
-      firstReplication.change$.subscribe(change => {
-        console.log('got an change with stream', change)
-      })
-
-      firstReplication.active$.subscribe(active => {
-        console.log('got an active with stream', active)
+      const error$ = firstReplication.error$.subscribe(error => {
+        if (error) {
+          reject(erorr)
+        }
       })
 
       // watched replication stream and checks for finish
@@ -451,6 +441,9 @@ export default class Model {
           console.log('REPLY STATE', state)
           const done = state && state.pull && state.pull.ok
           if (done && !resolved) {
+            // unsub error stream
+            error$.unsubscribe()
+
             if (options.live) {
               // if live, we re-run with a live query to keep it syncing
               // TODO we need to watch this and clear it on unsubscribe
@@ -475,6 +468,9 @@ export default class Model {
   }
 
   paramsToObject = params => {
+    if (!params) {
+      return {}
+    }
     if (typeof params === 'string') {
       return { _id: params }
     } else {
@@ -492,13 +488,13 @@ export default class Model {
   // so you can subscribe to streams or just .exec()
   @query
   find = params =>
-    this.getParams(params, ({ sort, ...query }) =>
+    this.getParams(params, ({ sort, ...query } = {}) =>
       chain(this.collection.find(query), 'sort', sort)
     )
 
   @query
   findOne = params =>
-    this.getParams(params, ({ sort, ...query }) =>
+    this.getParams(params, ({ sort, ...query } = {}) =>
       chain(this.collection.findOne(query), 'sort', sort)
     )
 

@@ -1,12 +1,14 @@
 import React from 'react'
 import { view } from '@mcro/black'
+import inject from '../helpers/inject'
 
 const BAR_HEIGHT = 8
 const BAR_WIDTH = 30
 const BAR_INVISIBLE_PAD = 5
 
+@inject(context => ({ uiContext: context.uiContext }))
 @view
-export default class Toggle {
+export default class Toggle extends React.Component {
   static defaultProps = {
     dotSize: 14,
     onChange: _ => _,
@@ -37,7 +39,19 @@ export default class Toggle {
   }
 
   toggleClick = () => {
+    console.log('toggle click')
     this.setOn(!this.getOnVal(this.props), true)
+  }
+
+  get shouldSyncToForm() {
+    const { uiContext, sync } = this.props
+    return uiContext && uiContext.inForm && !sync
+  }
+
+  setValues = () => {
+    if (this.shouldSyncToForm && this.node) {
+      this.props.uiContext.formValues[this.props.name] = () => this.node.value
+    }
   }
 
   render() {
@@ -49,6 +63,12 @@ export default class Toggle {
       dark,
       barColor,
       sync,
+      uiContext,
+      form,
+      theme,
+      placeholderColor,
+      borderRadius,
+      chromeless,
       ...props
     } = this.props
 

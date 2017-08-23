@@ -1,15 +1,17 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
+import * as Panes from './panes'
 
 @view
 export default class BarSetupPane {
   render({ item }) {
-    const userIntegration = CurrentUser[item.data.type]
+    const integration = CurrentUser[item.data.type]
+    const SettingPane = integration && Panes[item.data.type]
 
     return (
       <setup>
-        <integrate if={!userIntegration}>
+        <integrate if={!integration}>
           <UI.Title size={2}>Authorize</UI.Title>
           <UI.Button
             icon={item.icon}
@@ -18,10 +20,12 @@ export default class BarSetupPane {
             Authorize {item.data.name}
           </UI.Button>
         </integrate>
-        <settings if={userIntegration}>
-          <UI.Title size={2}>Settings</UI.Title>
+        <settings if={integration && SettingPane}>
+          <UI.Title size={1.5}>
+            {item.data.name} Settings
+          </UI.Title>
+          <SettingPane integration={integration} />
         </settings>
-        hello world
       </setup>
     )
   }

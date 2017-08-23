@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys, OS } from '~/helpers'
 import Redbox from 'redbox-react'
-import RootStore from './rootStore'
+import RootStore from '~/stores/rootStore'
 
 @view.provide({
   rootStore: RootStore,

@@ -5,8 +5,7 @@ import { CurrentUser } from '~/app'
 @view
 export default class BarSetupPane {
   render({ item }) {
-    console.log('render setup for', item)
-    const userIntegration = CurrentUser[item.type]
+    const userIntegration = CurrentUser[item.data.type]
 
     return (
       <setup>
@@ -14,7 +13,7 @@ export default class BarSetupPane {
           <UI.Title size={2}>Authorize</UI.Title>
           <UI.Button
             icon={item.icon}
-            onClick={() => CurrentUser.link(item.type)}
+            onClick={() => CurrentUser.link(item.data.type)}
           >
             Authorize {item.data.name}
           </UI.Button>

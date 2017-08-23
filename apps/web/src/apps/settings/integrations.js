@@ -48,20 +48,18 @@ export default class BarIntegrationsPane {
       <integrations>
         <UI.List
           if={store.results}
+          controlled
           onSelect={onSelect}
           groupKey="category"
           items={store.results}
           itemProps={itemProps}
-          getItem={result =>
-            <UI.ListItem
-              key={result.id}
-              icon={
-                result.data && result.data.image
-                  ? <img $image src={`/images/${result.data.image}.jpg`} />
-                  : result.icon || (result.doc && result.doc.icon)
-              }
-              primary={result.title}
-            />}
+          getItem={result => ({
+            primary: result.title,
+            icon:
+              result.data && result.data.image
+                ? <img $image src={`/images/${result.data.image}.jpg`} />
+                : result.icon || (result.doc && result.doc.icon),
+          })}
         />
       </integrations>
     )

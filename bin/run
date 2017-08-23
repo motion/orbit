@@ -6,6 +6,11 @@ cd $ROOT
 ACTION=$1
 ARG1=$2
 
+trap killgroup SIGINT
+killgroup() {
+  kill 0
+}
+
 if [ "$ACTION" = "backend" ]; then
   compose up ${@:2}
 elif [ "$ACTION" = "electron" ]; then
@@ -14,6 +19,7 @@ elif [ "$ACTION" = "electron" ]; then
   sleep 1
   npm start &
   wait
+  echo "done"
 elif [ "$ACTION" =  "web" ]; then
   if [ ! -d "$ROOT/packages/ui/lib" ]; then
     echo "Make sure to run 'build --watch' before running web"

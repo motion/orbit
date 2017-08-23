@@ -89,7 +89,7 @@ export default class GithubSetting {
 
         <UI.Form if={store.orgs}>
           {store.orgs.map(org => {
-            const repos = store.repos[org.id]
+            const repos = store.repos && store.repos[org.id]
 
             return (
               <field key={org.id}>

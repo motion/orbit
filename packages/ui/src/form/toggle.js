@@ -7,7 +7,7 @@ const BAR_WIDTH = 30
 const BAR_INVISIBLE_PAD = 5
 
 @inject(context => ({ uiContext: context.uiContext }))
-@view
+@view.ui
 export default class Toggle extends React.Component {
   static defaultProps = {
     dotSize: 14,
@@ -21,10 +21,19 @@ export default class Toggle extends React.Component {
     on: false,
   }
 
-  getOnVal = props =>
-    typeof props.on === 'undefined'
-      ? props.defaultValue || (props.sync && props.sync.get())
-      : props.on
+  componentWillMount() {
+    if (this.props.defaultValue) {
+      this.setState({ on: this.props.defaultValue })
+    }
+  }
+
+  componentDidMount() {
+    this.syncToForm()
+  }
+
+  get value() {
+    return (this.props.sync && this.props.sync.get()) || this.state.on
+  }
 
   setOn = (on, triggerOnChange) => {
     if (typeof on !== 'undefined') {
@@ -40,7 +49,7 @@ export default class Toggle extends React.Component {
 
   toggleClick = () => {
     console.log('toggle click')
-    this.setOn(!this.getOnVal(this.props), true)
+    this.setOn(!this.value, true)
   }
 
   get shouldSyncToForm() {
@@ -48,9 +57,9 @@ export default class Toggle extends React.Component {
     return uiContext && uiContext.inForm && !sync
   }
 
-  setValues = () => {
-    if (this.shouldSyncToForm && this.node) {
-      this.props.uiContext.formValues[this.props.name] = () => this.node.value
+  syncToForm = () => {
+    if (this.shouldSyncToForm) {
+      this.props.uiContext.formValues[this.props.name] = () => this.state.on
     }
   }
 
@@ -79,6 +88,8 @@ export default class Toggle extends React.Component {
       on = this.state.on
     }
 
+    console.log('render toggle', on)
+
     return (
       <bar onClick={this.toggleClick} {...props}>
         <dot $dotOn={on} />
@@ -106,6 +117,12 @@ export default class Toggle extends React.Component {
       transform: { x: -BAR_INVISIBLE_PAD },
       transition: 'all ease-in 80ms',
     },
+    dotOn: {
+      background: '#000',
+      transform: {
+        x: BAR_WIDTH - 10 - 5,
+      },
+    },
   }
 
   static theme = ({ dotSize, color, barColor }) => ({
@@ -117,12 +134,6 @@ export default class Toggle extends React.Component {
       width: dotSize,
       height: dotSize,
       marginTop: -((dotSize - BAR_HEIGHT) / 2) - BAR_INVISIBLE_PAD + 1,
-    },
-    dotOn: {
-      background: '#000',
-      transform: {
-        x: BAR_WIDTH - dotSize - 5,
-      },
     },
   })
 }

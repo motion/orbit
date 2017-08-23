@@ -22,10 +22,18 @@ export default class GithubSetting {
       <githubSettings>
         <UI.Form if={store.orgs}>
           {store.orgs.map(org =>
-            <UI.Field key={org.id} label={org.login} type="toggle" />
+            <field key={org.id}>
+              <UI.Field size={1.2} label={org.login} type="toggle" />
+            </field>
           )}
         </UI.Form>
       </githubSettings>
     )
+  }
+
+  static style = {
+    field: {
+      padding: [5, 0],
+    },
   }
 }

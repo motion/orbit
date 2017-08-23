@@ -1,12 +1,22 @@
 {
-	"dependencies": {
-		"babel-plugin-root-import": "5.1.0",
-		"babel-plugin-transform-class-properties": "^6.24.1",
-		"babel-plugin-transform-decorators-legacy": "^1.3.4",
-		"babel-plugin-transform-runtime": "^6.23.0",
-		"babel-preset-env": "^1.5.2",
-		"babel-preset-react": "^6.11.1",
-		"babel-preset-stage-1": "^6.24.1",
-		"react-hot-loader": "next"
-	}
+  "name": "@mcro/preset-motion",
+  "main": "lib/index.js",
+  "version": "1.1.0",
+  "dependencies": {
+    "@mcro/gloss": "^1.1.0",
+    "@mcro/hmr": "^1.1.0",
+    "@mcro/hmr-view": "^1.1.0",
+    "babel-plugin-root-import": "5.1.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.5.2",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "react-hot-loader": "next"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

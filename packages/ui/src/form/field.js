@@ -143,7 +143,7 @@ export default class Field {
       },
       label: {
         margin: 0,
-        padding: [0, 10],
+        padding: [0, 10, 0, 0],
         flex: 'none',
         width: 'auto',
       },

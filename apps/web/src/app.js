@@ -11,6 +11,7 @@ export CurrentUser from './stores/currentUserStore'
 export const User = Models.User
 export const Thing = Models.Thing
 export const Job = Models.Job
+export const Setting = Models.Setting
 
 let App
 

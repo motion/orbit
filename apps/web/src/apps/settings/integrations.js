@@ -49,6 +49,7 @@ export default class BarIntegrationsPane {
         <UI.List
           if={store.results}
           controlled
+          defaultSelected={0}
           onSelect={onSelect}
           groupKey="category"
           items={store.results}

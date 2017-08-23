@@ -12,6 +12,7 @@ import type { Color } from '@mcro/gloss'
 const idFn = _ => _
 
 export type Props = {
+  defaultSelected?: number,
   borderColor?: Color,
   borderRadius?: number,
   children?: React$Element<any>,
@@ -35,6 +36,7 @@ export type Props = {
   style?: Object,
   width?: number,
   groupKey?: string,
+  selected?: number,
 }
 
 @parentSize('virtualized')
@@ -54,11 +56,13 @@ class List {
 
   // for tracking list resizing for virtual lists
   totalItems = null
+  itemRefs = []
 
-  componentDidMount() {
+  componentWillMount = () => {
     this.totalItems = this.getTotalItems(this.props)
-    if (this.props.selected)
-      return this.setState({ selected: this.props.selected })
+    if (typeof this.props.defaultSelected !== 'undefined') {
+      this.setState({ selected: this.props.defaultSelected })
+    }
   }
 
   componentDidUpdate() {
@@ -69,18 +73,12 @@ class List {
     }
   }
 
-  itemRefs = []
-
-  gatherRefs = index => ref => {
-    if (ref) {
-      this.itemRefs[index] = ref
-    }
-  }
-
   componentWillReceiveProps = nextProps => {
-    this.lastDidReceivePropsDate = Date.now()
-    if (nextProps.selected !== this.state.selected) {
-      this.setState({ selected: nextProps.selected })
+    if (typeof nextProps.selected !== 'undefined') {
+      this.lastDidReceivePropsDate = Date.now()
+      if (nextProps.selected !== this.state.selected) {
+        this.setState({ selected: nextProps.selected })
+      }
     }
 
     const totalItems = this.getTotalItems(nextProps)
@@ -90,6 +88,12 @@ class List {
       if (nextProps.parentSize) {
         nextProps.parentSize.measure()
       }
+    }
+  }
+
+  gatherRefs = index => ref => {
+    if (ref) {
+      this.itemRefs[index] = ref
     }
   }
 
@@ -152,6 +156,9 @@ class List {
   }
 
   get showInternalSelection() {
+    if (!this.props.selected) {
+      return true
+    }
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
@@ -178,6 +185,7 @@ class List {
     isSelected,
     groupKey,
     parentSize,
+    defaultSelected,
     ...props
   }: Props) {
     if (!items && !children) {
@@ -230,12 +238,20 @@ class List {
         }
       }
       if (controlled) {
+        console.log(
+          'list getting highlight prop',
+          this.showInternalSelection,
+          index,
+          this.state.selected
+        )
         // set highlight if necessary
         props.highlight = this.showInternalSelection
           ? index === this.state.selected
           : this.props.isSelected && this.props.isSelected(items[index], index)
       } else {
-        if (this.props.selected === index) props.highlight = true
+        if (this.props.selected === index) {
+          props.highlight = true
+        }
         // if they provide a prop-based isSelected, still track the right index internally
         if (props.highlight && this.state.selected !== index) {
           this.state.selected = index

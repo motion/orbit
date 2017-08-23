@@ -427,11 +427,9 @@ export default class Model {
     return new Promise((resolve, reject) => {
       let resolved = false
 
-      console.log('got a repl observable', firstReplication)
-
       const error$ = firstReplication.error$.subscribe(error => {
         if (error) {
-          reject(erorr)
+          reject(error)
         }
       })
 

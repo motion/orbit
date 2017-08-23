@@ -7,7 +7,7 @@ import Setup from './setup'
 
 @view({
   store: class SettingsStore {
-    activeItem = null
+    activeItem = 0
   },
 })
 export default class SettingsPage {

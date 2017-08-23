@@ -43,6 +43,10 @@ import * as UI from '@mcro/ui'
   },
 })
 export default class BarIntegrationsPane {
+  componentDidMount() {
+    this.props.onSelect(this.props.store.results[0])
+  }
+
   render({ store, onSelect, itemProps }) {
     return (
       <integrations>

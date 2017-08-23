@@ -1,24 +1,71 @@
-import { view } from '@mcro/black'
+// @flow
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser, Setting } from '~/app'
 
+type GithubOrg = {
+  login: string,
+  id: number,
+  url: string,
+  repos_url: string,
+  avatar_url: string,
+  description: string,
+}
+
+type GithubRepo = {
+  id: number,
+  owner: object,
+  name: string,
+  url: string,
+  default_branch: string,
+  permissions: object,
+  created_at: string,
+  updated_at: string,
+}
+
 @view({
   store: class GithubSettingStore {
-    orgs = null
-    setting = Setting.findOne({
+    orgs: Array<GithubOrg> = null
+    setting: Setting = Setting.findOne({
       type: 'github',
       userId: CurrentUser.id,
     })
+
+    @watch
+    allRepos = () =>
+      this.orgs &&
+      Promise.all(
+        this.orgs.map(org =>
+          this.fetch(`/orgs/${org.login.toLowerCase()}/repos`)
+        )
+      )
+
+    get repos(): Object<string, GithubRepo> {
+      if (!this.allRepos) {
+        return null
+      }
+      return this.orgs.reduce(
+        (acc, org, index) => ({
+          ...acc,
+          [org.id]: this.allRepos[index],
+        }),
+        {}
+      )
+    }
 
     get token() {
       return this.props.integration.auth.accessToken
     }
 
     async start() {
-      this.orgs = await fetch(
-        `https://api.github.com/user/orgs?access_token=${this.token}`
-      ).then(res => res.json())
+      this.orgs = await this.fetch('/user/orgs')
     }
+
+    fetch = (path, options) =>
+      fetch(
+        `https://api.github.com${path}?access_token=${this.token}`,
+        options
+      ).then(res => res.json())
   },
 })
 export default class GithubSetting {
@@ -34,6 +81,7 @@ export default class GithubSetting {
 
         <settings if={store.setting}>
           setting values: {JSON.stringify(store.setting.values)}
+          repos: {JSON.stringify(store.repos)}
         </settings>
 
         <UI.Form if={store.orgs}>

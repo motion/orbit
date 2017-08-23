@@ -1,12 +1,8 @@
 import React from 'react'
-import { CurrentUser } from '~/app'
 import { view } from '@mcro/black'
-import { HotKeys } from '~/helpers'
+import { HotKeys, OS } from '~/helpers'
 import Redbox from 'redbox-react'
 import RootStore from './rootStore'
-import Router from '~/router'
-const { ipcRenderer } = (window.require && window.require('electron')) || {}
-import * as Constants from '~/constants'
 
 @view.provide({
   rootStore: RootStore,
@@ -22,22 +18,6 @@ export default class Root extends React.Component {
 
   componentDidMount() {
     view.on('hmr', this.clearErr)
-
-    this.watch(() => {
-      if (CurrentUser.org === null) {
-        console.log("CREATE AN ORG WITH User.createOrg('yourorgname')")
-      }
-    })
-
-    // listen to Ionize
-    if (Constants.APP_KEY) {
-      log('WERE AN APP WINDOW')
-      ipcRenderer.on('app-goto', (event, arg) => {
-        console.log('appgoto', arg)
-        Router.go(arg)
-      })
-      ipcRenderer.send('where-to', Constants.APP_KEY)
-    }
   }
 
   componentWillUnmount() {

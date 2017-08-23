@@ -28,6 +28,17 @@ const SHORTCUTS = {
 export default class RootStore {
   showBrowse = false
 
+  start() {
+    // listen to Ionize
+    if (Constants.APP_KEY) {
+      OS.on('app-goto', (event, arg) => {
+        console.log('appgoto', arg)
+        Router.go(arg)
+      })
+      OS.send('where-to', Constants.APP_KEY)
+    }
+  }
+
   @watch
   document = () => {
     if (Router.path === '/') {

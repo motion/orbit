@@ -19,7 +19,6 @@ export default class SettingsPage {
     const itemProps = {
       size: 1.2,
       glow: false,
-      hoverable: true,
       fontSize: 26,
       padding: [0, 10],
       height: 40,
@@ -48,11 +47,10 @@ export default class SettingsPage {
 
   static style = {
     settings: {
-      padding: 20,
       flex: 1,
     },
     header: {
-      padding: [0, 0, 10],
+      padding: [20, 20, 10],
       borderBottom: [1, '#eee'],
     },
     content: {

@@ -8,7 +8,8 @@
     "start-prod": "node lib",
     "start-nodemon": "nodemon --config nodemon.json lib",
     "start-watch": "../../bin/build --watch",
-    "start-dev": "npm run start-nodemon"
+    "start-dev": "npm run start-nodemon",
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "@mcro/passport-slack": "*",
@@ -32,6 +33,7 @@
     "express-pouchdb-replication-stream": "^1.0.6",
     "invariant": "^2.2.2",
     "lodash": "^4.17.4",
+    "mobx": "^3.2.2",
     "morgan": "^1.8.2",
     "ms": "^2.0.0",
     "natural": "^0.5.4",
@@ -51,6 +53,7 @@
     "node-fetch": "^1.7.2"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "webpack": "^3.4.1"
   }
 }

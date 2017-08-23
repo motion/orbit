@@ -146,12 +146,6 @@ inherits@2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
 
-invariant@2.x.x:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
-  dependencies:
-    loose-envify "^1.0.0"
-
 is-array-buffer-x@^1.0.13:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/is-array-buffer-x/-/is-array-buffer-x-1.4.0.tgz#c46586ab456fdf069fa9fdf27606a74c7a8719ef"
@@ -225,10 +219,6 @@ jsonpointer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.0.1.tgz#4fd92cb34e0e9db3c89c8622ecf51f9b978c6cb9"
 
-keycode@^2.1.9:
-  version "2.1.9"
-  resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.1.9.tgz#964a23c54e4889405b4861a5c9f0480d45141dfa"
-
 kontur@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/kontur/-/kontur-0.2.0.tgz#90665fb2528da37430988ed2e98823ff20a285a0"
@@ -254,10 +244,6 @@ min-document@^2.19.0:
   resolved "https://registry.yarnpkg.com/min-document/-/min-document-2.19.0.tgz#7bd282e3f5842ed295bb748cdd9f1ffa2c824685"
   dependencies:
     dom-walk "^0.1.0"
-
-mobx@^3.2.0:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.2.2.tgz#aa671459bededfd9880c948889a3f62bce09279c"
 
 modifyjs@0.3.1:
   version "0.3.1"
@@ -438,12 +424,6 @@ random-token@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/random-token/-/random-token-0.0.8.tgz#1cf845af3fb31e57f7caa4b9a173478c46483b61"
 
-react-tunnel@0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-tunnel/-/react-tunnel-0.1.0.tgz#5179c1cdef37020caea9eccd8169b65807890385"
-  dependencies:
-    invariant "2.x.x"
-
 regenerator-runtime@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.0.tgz#7e54fe5b5ccd5d6624ea6255c3473be090b802e1"
@@ -474,7 +454,7 @@ rxdb@^5.2.1:
     unload "^1.3.5"
     url "0.11.0"
 
-rxjs@^5.4.1:
+rxjs@^5.4.3:
   version "5.4.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-5.4.3.tgz#0758cddee6033d68e0fd53676f0f3596ce3d483f"
   dependencies:

@@ -6,8 +6,8 @@ import type { Emittable } from '@mcro/decor/lib/plugins/core/emittable'
 import automagical from '@mcro/automagical'
 import subscribable from '@mcro/decor/lib/plugins/react/subscribable'
 import type { Subscribable } from '@mcro/decor/lib/plugins/react/subscribable'
-import helpers from '@mcro/decor/lib/plugins/core/helpers'
-import type { Helpers } from '@mcro/decor/lib/plugins/core/helpers'
+import helpers from '@mcro/decor/lib/plugins/mobx/helpers'
+import type { Helpers } from '@mcro/decor/lib/plugins/mobx/helpers'
 
 export type StoreClass = Emittable & Subscribable & Helpers
 

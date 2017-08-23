@@ -16,15 +16,16 @@ export default class Errors {
             <message $$ellipse if={error.errors}>
               {error.errors.map(({ field, message }) =>
                 <subErr key={Math.random()}>
-                  {field}: {message}
+                  {field ? `${field}:` : ''} {message}
                 </subErr>
               )}
             </message>
-            <message $$ellipse if={error.message}>
-              <strong>{error.name}</strong>: {error.message}
+            <message $$ellipse if={error.message && !error.errors}>
+              <strong if={error.name}>{error.name}:</strong> {error.message}
             </message>
-            <message $$ellipse if={error.reason}>
-              <strong>{error.reason.name}</strong>: {error.reason.message}
+            <message $$ellipse if={error.reason && !error.message}>
+              <strong if={error.reason.name}>{error.reason.name}:</strong>{' '}
+              {error.reason.message}
             </message>
             <clear if={i === 0} onClick={App.clearErrors}>
               x
@@ -40,6 +41,7 @@ export default class Errors {
       position: 'fixed',
       bottom: 0,
       left: 0,
+      right: 0,
       zIndex: 100000,
       pointerEvents: 'none',
       userSelect: 'none',

@@ -135,7 +135,7 @@ export default {
       credentials: {
         clientID: '9afb7a8f8758557ca884',
         clientSecret: 'eb53a07f613eb07f4fa4db96845bae813ec2c01f',
-        scope: ['user:email', 'notifications', 'repo'],
+        scope: ['user:email', 'notifications', 'repo', 'read:org'],
       },
     },
   },

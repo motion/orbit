@@ -1,5 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { CurrentUser } from '~/app'
 
 @view({
   store: class GithubSettingStore {
@@ -20,6 +21,10 @@ export default class GithubSetting {
   render({ store }) {
     return (
       <githubSettings>
+        <UI.Button onClick={() => CurrentUser.unlink('github')}>
+          Unlink Github
+        </UI.Button>
+
         <UI.Form if={store.orgs}>
           {store.orgs.map(org =>
             <field key={org.id}>

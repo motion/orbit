@@ -48,6 +48,9 @@ class CurrentUser {
           })
       }
     })
+
+    // try this too
+    User.find().sync()
   }
 
   async setupSuperLogin() {

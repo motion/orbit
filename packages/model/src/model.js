@@ -436,7 +436,7 @@ export default class Model {
       // watched replication stream and checks for finish
       firstReplication.complete$
         .filter(state => {
-          console.log('REPLY STATE', state)
+          console.log('REPLY STATE', !!state)
           const done = state && state.pull && state.pull.ok
           if (done && !resolved) {
             // unsub error stream

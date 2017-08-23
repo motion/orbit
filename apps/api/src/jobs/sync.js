@@ -22,10 +22,11 @@ export default class Sync {
   locks: Set<string> = new Set()
   jobWatcher: Observable
   syncers = {}
-  users = []
+  user = null
 
   start = async () => {
-    await Promise.all([this.setupSyncers(), this.setupUsers()])
+    await this.setupUser()
+    await this.setupSyncers()
     this.watchJobs()
   }
 
@@ -35,11 +36,11 @@ export default class Sync {
     this.subscriptions.dispose()
   }
 
-  setupUsers = () => {
+  setupUser = () => {
     return new Promise(resolve => {
-      const query = User.find().$.subscribe(allUsers => {
-        if (allUsers && allUsers.length) {
-          this.users = allUsers
+      const query = User.findOne().$.subscribe(user => {
+        if (user) {
+          this.user = user
           resolve()
         }
       })
@@ -49,7 +50,7 @@ export default class Sync {
 
   setupSyncers = async () => {
     for await (const name of Object.keys(SOURCE_TO_SYNCER)) {
-      const Syncer = new SOURCE_TO_SYNCER[name]()
+      const Syncer = new SOURCE_TO_SYNCER[name]({ user: this.user })
       await Syncer.start()
       this.syncers[name] = Syncer
     }
@@ -98,7 +99,7 @@ export default class Sync {
 
     if (syncer) {
       try {
-        await syncer.run(job, this.users)
+        await syncer.run(job)
       } catch (error) {
         console.log('error running syncer', error)
         // await job.update({

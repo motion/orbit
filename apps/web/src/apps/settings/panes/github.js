@@ -23,6 +23,10 @@ type GithubRepo = {
   updated_at: string,
 }
 
+type Props = {
+  store: GithubSettingStore,
+}
+
 @view({
   store: class GithubSettingStore {
     orgs: Array<GithubOrg> = null
@@ -69,9 +73,9 @@ type GithubRepo = {
   },
 })
 export default class GithubSetting {
-  render({ store }) {
+  render({ store }: Props) {
     return (
-      <githubSettings>
+      <content>
         <loading
           if={!store.orgs}
           css={{ height: 200, alignItems: 'center', justifyContent: 'center' }}
@@ -81,46 +85,64 @@ export default class GithubSetting {
 
         <settings if={store.setting}>
           setting values: {JSON.stringify(store.setting.values)}
-          repos: {JSON.stringify(store.repos)}
         </settings>
 
         <UI.Form if={store.orgs}>
-          {store.orgs.map(org =>
-            <field key={org.id}>
-              <UI.Field
-                row
-                size={1.2}
-                label={org.login}
-                type="toggle"
-                defaultValue={
-                  store.setting.values.orgs
-                    ? store.setting.values.orgs[org.id]
-                    : false
-                }
-                onChange={val => {
-                  store.setting.values = {
-                    ...store.setting.values,
-                    orgs: {
-                      ...store.setting.values.orgs,
-                      [org.id]: val,
-                    },
+          {store.orgs.map(org => {
+            const repos = store.repos[org.id]
+
+            return (
+              <field key={org.id}>
+                <UI.Field
+                  row
+                  size={1.2}
+                  label={org.login}
+                  type="toggle"
+                  defaultValue={
+                    store.setting.values.orgs
+                      ? store.setting.values.orgs[org.id]
+                      : false
                   }
-                  console.log('settings.values is', store.setting.values)
-                  store.setting.save()
-                }}
-              />
-            </field>
-          )}
+                  onChange={val => {
+                    store.setting.values = {
+                      ...store.setting.values,
+                      orgs: {
+                        ...store.setting.values.orgs,
+                        [org.id]: val,
+                      },
+                    }
+                    console.log('settings.values is', store.setting.values)
+                    store.setting.save()
+                  }}
+                />
+
+                <repos if={repos}>
+                  {repos.map(repo =>
+                    <UI.Field
+                      key={repo.id}
+                      row
+                      label={repo.name}
+                      type="toggle"
+                    />
+                  )}
+                </repos>
+              </field>
+            )
+          })}
         </UI.Form>
 
         <UI.Button onClick={() => CurrentUser.unlink('github')}>
           Unlink Github
         </UI.Button>
-      </githubSettings>
+      </content>
     )
   }
 
   static style = {
+    content: {
+      flex: 1,
+      overflowY: 'scroll',
+    },
     field: {
       padding: [5, 0],
     },

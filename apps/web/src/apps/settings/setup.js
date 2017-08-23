@@ -33,6 +33,10 @@ export default class BarSetupPane {
   static style = {
     setup: {
       padding: 20,
+      flex: 1,
+    },
+    settings: {
+      flex: 1,
     },
   }
 }

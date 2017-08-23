@@ -18,7 +18,7 @@ import * as UI from '@mcro/ui'
           icon: 'google',
         },
         {
-          title: 'Setup Dropbox Paper',
+          title: 'Setup Dropbox',
           data: { type: 'dropbox-paper', name: 'Dropbox Paper' },
           type: 'setup',
           icon: 'dropbox',
@@ -33,7 +33,7 @@ import * as UI from '@mcro/ui'
           title: 'Setup Jira',
           data: { type: 'jira', name: 'Jira' },
           type: 'setup',
-          icon: 'jira',
+          icon: 'atlass',
         },
       ].map(x => ({
         ...x,

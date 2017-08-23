@@ -50,7 +50,7 @@ export default class Layout {
             <content>
               <Signup />
               <LayoutWrap>
-                <Header />
+                <Header if={!!Constants.APP_KEY} />
                 <content if={CurrentUser.loggedIn} onScroll={this.onScroll}>
                   <CurrentPage key={Router.key} {...Router.params} />
                 </content>

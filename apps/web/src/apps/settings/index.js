@@ -27,7 +27,9 @@ export default class SettingsPage {
 
     return (
       <settings>
-        <UI.Title size={3}>Settings</UI.Title>
+        <header>
+          <UI.Title size={3}>Settings</UI.Title>
+        </header>
 
         <content>
           <sidebar>
@@ -47,6 +49,11 @@ export default class SettingsPage {
   static style = {
     settings: {
       padding: 20,
+      flex: 1,
+    },
+    header: {
+      padding: [0, 0, 10],
+      borderBottom: [1, '#eee'],
     },
     content: {
       flexFlow: 'row',
@@ -54,6 +61,8 @@ export default class SettingsPage {
     },
     sidebar: {
       width: 200,
+      height: '100%',
+      borderRight: [1, '#eee'],
     },
     main: {
       flex: 1,

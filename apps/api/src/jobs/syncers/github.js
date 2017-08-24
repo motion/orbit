@@ -41,12 +41,15 @@ export default class GithubSync {
     console.log('dispose github syncer')
   }
 
-  fetchers = {
+  paths = {
     organizations: {
       url: '/organizations',
     },
-    repoEvents: {
+    repos: {
       url: '/repos/:user/',
+    },
+    files: {
+      url: '/repos/:owner/:repo/git/trees/:sha?recursive=1',
     },
   }
 
@@ -61,7 +64,9 @@ export default class GithubSync {
     }
 
     for (const org of Object.keys(this.setting.values.orgs)) {
-      console.log('syncing org', org)
+      this.syncOrg(org)
     }
   }
+
+  syncOrg = org => {}
 }

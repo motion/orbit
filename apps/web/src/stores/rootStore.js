@@ -5,7 +5,7 @@ import Router from '~/router'
 import { OS } from '~/helpers'
 import * as Constants from '~/constants'
 
-const SHORTCUTS = {
+export const SHORTCUTS = {
   left: 'left',
   right: 'right',
   down: 'down',

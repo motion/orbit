@@ -1,11 +1,14 @@
 // @flow
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { view } from '@mcro/black'
 import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
 import { isNumber, debounce } from 'lodash'
+import Mousetrap from 'mousetrap'
+import { SHORTCUTS } from '~/stores/rootStore'
 
 const safeString = thing => {
   try {
@@ -181,6 +184,15 @@ const inputStyle = {
   store: BarStore,
 })
 export default class BarPage {
+  componentDidMount() {
+    const node = ReactDOM.findDOMNode(this)
+    this.trap = new Mousetrap(node)
+    for (const name of Object.keys(SHORTCUTS)) {
+      const chord = SHORTCUTS[name]
+      this.trap.bind(chord, this.props.store.actions[name])
+    }
+  }
+
   render({ store }) {
     const paneProps = {
       itemProps: {
@@ -196,58 +208,56 @@ export default class BarPage {
     }
 
     return (
-      <HotKeys handlers={store.actions}>
-        <UI.Theme name="clear-dark">
-          <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
-            <div>
-              <UI.Input
-                size={2.6}
-                getRef={store.ref('inputRef').set}
-                borderRadius={5}
-                onChange={store.onSearchChange}
-                value={store.textboxVal}
-                borderWidth={0}
-                css={{
-                  margin: [-2, 0, 0],
-                  padding: [0, 10],
-                  ...inputStyle,
-                }}
-              />
-              <forwardcomplete>
-                {store.peekItem}
-              </forwardcomplete>
-              <pasteicon if={false}>
-                <UI.Icon size={50} type="detailed" name="paper" />
-              </pasteicon>
-              <selected
-                if={false}
-                css={{
-                  position: 'absolute',
-                  top: 80,
-                  left: 0,
-                  right: 0,
-                  height: 20,
-                  fontSize: 12,
-                  overflow: 'hidden',
-                  opacity: 0.8,
-                  color: '#fff',
-                }}
-              >
-                Selected: {safeString(store.activeItem)}
-              </selected>
-            </div>
-            <Miller
-              search={store.search}
-              version={store.millerStateVersion}
-              state={store.millerState}
-              panes={store.PANE_TYPES}
-              onChange={store.onMillerStateChange}
-              paneProps={paneProps}
-              onActions={store.ref('millerActions').set}
+      <UI.Theme name="clear-dark">
+        <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
+          <div>
+            <UI.Input
+              size={2.6}
+              getRef={store.ref('inputRef').set}
+              borderRadius={5}
+              onChange={store.onSearchChange}
+              value={store.textboxVal}
+              borderWidth={0}
+              css={{
+                margin: [-2, 0, 0],
+                padding: [0, 10],
+                ...inputStyle,
+              }}
             />
-          </bar>
-        </UI.Theme>
-      </HotKeys>
+            <forwardcomplete>
+              {store.peekItem}
+            </forwardcomplete>
+            <pasteicon if={false}>
+              <UI.Icon size={50} type="detailed" name="paper" />
+            </pasteicon>
+            <selected
+              if={false}
+              css={{
+                position: 'absolute',
+                top: 80,
+                left: 0,
+                right: 0,
+                height: 20,
+                fontSize: 12,
+                overflow: 'hidden',
+                opacity: 0.8,
+                color: '#fff',
+              }}
+            >
+              Selected: {safeString(store.activeItem)}
+            </selected>
+          </div>
+          <Miller
+            search={store.search}
+            version={store.millerStateVersion}
+            state={store.millerState}
+            panes={store.PANE_TYPES}
+            onChange={store.onMillerStateChange}
+            paneProps={paneProps}
+            onActions={store.ref('millerActions').set}
+          />
+        </bar>
+      </UI.Theme>
     )
   }
 

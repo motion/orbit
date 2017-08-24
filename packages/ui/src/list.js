@@ -238,12 +238,6 @@ class List {
         }
       }
       if (controlled) {
-        console.log(
-          'list getting highlight prop',
-          this.showInternalSelection,
-          index,
-          this.state.selected
-        )
         // set highlight if necessary
         props.highlight = this.showInternalSelection
           ? index === this.state.selected

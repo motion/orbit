@@ -11,7 +11,7 @@ export default class Checkbox {
     return this.isChecked
   }
 
-  render({ onChange, ...props }) {
+  render({ onChange, sync, ...props }) {
     const { isChecked } = this
     return (
       <SizedSurface

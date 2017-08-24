@@ -311,8 +311,11 @@ function mobxifyWatch(obj, method, val) {
   Object.defineProperty(obj, method, {
     get() {
       const result = current.get()
-      debug('getttttttt', result)
-      if (result && result.promise) {
+      // promise get
+      if (
+        result &&
+        (result.state === 'fulfilled' || result.state === 'pending')
+      ) {
         return result.value
       }
       if (isObservable(result)) {

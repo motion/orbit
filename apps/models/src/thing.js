@@ -12,6 +12,7 @@ export type ThingType = typeof methods & {
   integration: 'github',
   type: 'issue',
   parentId?: string,
+  givenId?: string,
   createdAt: string,
   updatedAt: string,
 }
@@ -24,6 +25,7 @@ export class Thing extends Model {
     type: str,
     data: object.optional,
     parentId: str.optional,
+    givenId: str.optional,
     timestamps: true,
   }
 

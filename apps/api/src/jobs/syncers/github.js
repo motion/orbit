@@ -3,6 +3,7 @@ import { Setting, Thing, Job } from '@mcro/models'
 import type { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
+import { omit } from 'lodash'
 
 type GithubSetting = {
   values: {
@@ -23,7 +24,6 @@ export default class GithubSync {
   graphFetch = createApolloFetch({
     uri: 'https://api.github.com/graphql',
   }).use(({ request, options }, next) => {
-    console.log('request', request, 'options', options)
     if (!options.headers) {
       options.headers = {}
     }
@@ -42,6 +42,7 @@ export default class GithubSync {
   }
 
   start = async () => {
+    // fetch setting
     this.setting = await Setting.findOne({
       userId: this.user.id,
       type: 'github',
@@ -69,22 +70,28 @@ export default class GithubSync {
     }
 
     for (const login of Object.keys(this.setting.values.orgs)) {
-      this.syncOrg(login)
+      this.syncIssues(login)
     }
   }
 
-  syncOrg = async (login: string) => {
-    const results = await this.graphFetch(`
-      query {
-        organization(login:"${login}") {
+  syncIssues = async (orgLogin: string) => {
+    console.log('SYNC issues for org', orgLogin)
+    const results = await this.graphFetch({
+      query: `
+      query AllIssues {
+        organization(login: "${orgLogin}") {
           repositories(first: 20) {
             edges {
               node {
+                id
+                name
                 issues(first: 100) {
                   edges {
                     node {
+                      id
                       title
                       body
+                      bodyText
                       author {
                         login
                       }
@@ -113,17 +120,53 @@ export default class GithubSync {
           }
         }
       }
-    `)
+    `,
+    })
 
-    console.log('resutsl', results)
-    const { repositories } = results.query.organization
-
-    if (!repositories || !repositories.length) {
-      console.log('no repos found in response', results)
+    if (results.message) {
+      console.error('Error doing fetch', results)
       return
     }
 
-    for (const repository of repositories) {
+    const repositories = results.data.organization.repositories.edges
+    if (!repositories || !repositories.length) {
+      console.log('no repos found in response', repositories)
+      return
     }
+
+    const createdIssues = []
+    const unwrap = obj => {
+      obj.labels = obj.labels.edges.map(edge => edge.node)
+      obj.comments = obj.comments.edges.map(edge => edge.node)
+      return obj
+    }
+
+    for (const repositoryNode of repositories) {
+      const repository = repositoryNode.node
+      const issues = repository.issues.edges.map(edge => edge.node)
+
+      if (!issues || !issues.length) {
+        console.log('no issues found for repo', repository.id)
+        continue
+      }
+
+      for (const issue of issues) {
+        const data = unwrap(omit(issue, ['bodyText']))
+        console.log('creating issue', issue.title, data)
+        createdIssues.push(
+          Thing.create({
+            integration: 'github',
+            title: issue.title,
+            body: issue.bodyText,
+            data,
+            parentId: repository.name,
+            givenId: issue.id,
+          })
+        )
+      }
+    }
+
+    await Promise.all(createdIssues)
+    console.log('Created all issues!', createdIssues.length)
   }
 }

@@ -74,6 +74,8 @@ type Props = {
 })
 export default class GithubSetting {
   render({ store }: Props) {
+    console.log('store.setting', store.setting)
+
     return (
       <content>
         <loading
@@ -87,7 +89,7 @@ export default class GithubSetting {
           setting values: {JSON.stringify(store.setting.values)}
         </settings>
 
-        <UI.Form if={store.orgs}>
+        <UI.Form if={store.orgs && store.setting}>
           {store.orgs.map(org => {
             const repos = store.repos && store.repos[org.id]
             const { orgs } = store.setting.values

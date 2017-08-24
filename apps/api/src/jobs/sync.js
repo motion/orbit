@@ -1,16 +1,18 @@
 // @flow
-import type { Observable } from 'rxjs'
+import type { Subscription } from 'rxjs'
 import * as Syncers from './syncers'
-import { Job, User, Setting, CompositeDisposable } from '@mcro/models'
+import { Job, User, CompositeDisposable } from '@mcro/models'
 
 const SOURCE_TO_SYNCER = {
   github: Syncers.Github,
 }
 
-function getRxError({ message, stack }) {
+function getRxError(error: Error) {
+  const { message, stack } = error
+
   try {
-    const message = JSON.parse(message)
-    console.log(JSON.stringify(message, 0, 2))
+    const parsedMessage = JSON.parse(message)
+    console.log(JSON.stringify(parsedMessage, null, 2))
   } catch (e) {
     // nothing
   }
@@ -18,11 +20,11 @@ function getRxError({ message, stack }) {
 }
 
 export default class Sync {
-  subscriptions = new CompositeDisposable()
+  subscriptions: CompositeDisposable = new CompositeDisposable()
   locks: Set<string> = new Set()
-  jobWatcher: Observable
+  jobWatcher: ?Subscription = null
   syncers = {}
-  user = null
+  user: ?User = null
 
   start = async () => {
     await this.setupUser()
@@ -31,7 +33,9 @@ export default class Sync {
   }
 
   dispose = () => {
-    this.jobWatcher.unsubscribe()
+    if (this.jobWatcher) {
+      this.jobWatcher.unsubscribe()
+    }
     this.disposeSyncers()
     this.subscriptions.dispose()
   }
@@ -49,7 +53,7 @@ export default class Sync {
   }
 
   setupSyncers = async () => {
-    for await (const name of Object.keys(SOURCE_TO_SYNCER)) {
+    for (const name of Object.keys(SOURCE_TO_SYNCER)) {
       const Syncer = new SOURCE_TO_SYNCER[name]({ user: this.user })
       await Syncer.start()
       this.syncers[name] = Syncer
@@ -57,7 +61,7 @@ export default class Sync {
   }
 
   disposeSyncers = async () => {
-    for await (const name of Object.keys(this.syncers)) {
+    for (const name of Object.keys(this.syncers)) {
       await this.syncers[name].dispose()
     }
   }

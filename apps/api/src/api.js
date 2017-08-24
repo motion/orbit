@@ -7,10 +7,15 @@ import type { Options } from '~/types'
 import adapter from 'pouchdb-adapter-memory'
 
 export default class API {
+  server: Server
+  bootstrap: Bootstrap
+  jobs: Jobs
+  database: Database
+
   constructor(options: Options) {
     this.server = new Server(options)
     this.bootstrap = new Bootstrap(options)
-    this.jobs = new Jobs(options)
+    this.jobs = new Jobs()
     this.database = new Database(
       {
         name: 'username',

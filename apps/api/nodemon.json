@@ -1,5 +1,5 @@
 {
-  "verbose": false,
+  "verbose": true,
   "ignore": ["src/*", "lib/*.map"],
   "legacy-watch": true,
   "inspect": "5858",

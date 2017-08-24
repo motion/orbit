@@ -1,28 +1,40 @@
 // @flow
 import { Setting } from '@mcro/models'
-import type { Job } from '@mcro/models'
+import type { Job, User } from '@mcro/models'
+import type { SyncOptions } from '~/types'
+
+type GithubSetting = {
+  values: {
+    orgs: {
+      [string]: boolean,
+    },
+  },
+}
 
 export default class GithubSync {
-  user = null
-  setting = null
+  user: User
+  setting: ?GithubSetting = null
+  baseUrl = 'https://api.github.com'
 
-  constructor({ user }) {
+  constructor({ user }: SyncOptions) {
     this.user = user
   }
 
-  get githubToken() {
-    return this.user && this.user.github && this.user.github.auth.accessToken
+  get token(): ?string {
+    return this.user.github && this.user.github.auth.accessToken
   }
 
-  baseUrl = 'https://api.github.com'
+  fetch = (path: string, opts?: Object) =>
+    fetch(
+      `${this.baseUrl}${path}?access_token=${this.token || ''}`,
+      opts
+    ).then(res => res.json())
 
   start = async () => {
     this.setting = await Setting.findOne({
       userId: this.user.id,
       type: 'github',
     }).exec()
-
-    console.log('activate github syncer', this.setting)
   }
 
   async dispose() {
@@ -39,13 +51,17 @@ export default class GithubSync {
   }
 
   run = async (job: Job) => {
-    if (!this.githubToken) {
+    if (!this.token) {
       console.error('No User.github found, changed since sync started?')
       return
     }
     if (!this.setting) {
       console.error('No setting for user and github! :(')
       return
+    }
+
+    for (const org of Object.keys(this.setting.values.orgs)) {
+      console.log('syncing org', org)
     }
   }
 }

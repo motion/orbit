@@ -35,7 +35,7 @@
     "ratelimit.js": "^1.8.0",
     "redis": "^2.7.1",
     "rxjs": "^5.4.3",
-    "superlogin": "^0.6.1",
+    "superlogin": "github:colinskow/superlogin",
     "longjohn": "^0.2.12",
     "github-graphql-client": "*",
     "node-fetch": "^1.7.2"

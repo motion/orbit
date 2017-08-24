@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-nodemon": "nodemon --config nodemon.json lib",
+    "start-nodemon": "nodemon --inspect=0.0.0.0:5858 --verbose --legacy-watch lib",
     "start-watch": "../../bin/build --watch",
     "start-dev": "npm run start-nodemon",
     "watch": "webpack --watch"

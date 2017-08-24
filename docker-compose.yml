@@ -40,6 +40,8 @@ services:
     ports:
       - 3000:3000
       - 5858:5858
+    expose:
+      - 5858
     links:
       - pad-couch
     depends_on:

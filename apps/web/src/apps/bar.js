@@ -216,9 +216,9 @@ export default class BarPage {
               <forwardcomplete>
                 {store.peekItem}
               </forwardcomplete>
-              <pasteIcon if={false}>
+              <pasteicon if={false}>
                 <UI.Icon size={50} type="detailed" name="paper" />
-              </pasteIcon>
+              </pasteicon>
               <selected
                 if={false}
                 css={{
@@ -255,8 +255,6 @@ export default class BarPage {
     bar: {
       background: [145, 145, 145, 0.5],
       flex: 1,
-      // opacity: 0,
-      // transition: 'all ease-in 300ms',
     },
     results: {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
@@ -268,11 +266,6 @@ export default class BarPage {
         x: 0,
       },
     },
-    pushRight: {
-      transform: {
-        x: '-50%',
-      },
-    },
     section: {
       width: '50%',
       height: '100%',
@@ -281,7 +274,7 @@ export default class BarPage {
       flex: 1,
       height: '100%',
     },
-    pasteIcon: {
+    pasteicon: {
       position: 'absolute',
       top: -30,
       right: -20,

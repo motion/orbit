@@ -12,6 +12,7 @@ killgroup() {
 }
 
 if [ "$ACTION" = "backend" ]; then
+  echo "Open about:inspect in Chrome to debug Node"
   compose up ${@:2}
 elif [ "$ACTION" = "electron" ]; then
   cd apps/electron

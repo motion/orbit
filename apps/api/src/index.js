@@ -1,5 +1,4 @@
-// shims
-// import 'babel-polyfill'
+import global from 'global'
 
 if (process.env.NODE_ENV !== 'production') {
   // long stack traces
@@ -23,6 +22,8 @@ async function run() {
   const Api = new API({ rootPath: __dirname })
   await Api.start()
   console.log('API started')
+
+  global.API = Api
 }
 
 run()

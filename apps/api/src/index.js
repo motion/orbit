@@ -1,5 +1,5 @@
 // shims
-import 'babel-polyfill'
+// import 'babel-polyfill'
 
 if (process.env.NODE_ENV !== 'production') {
   // long stack traces

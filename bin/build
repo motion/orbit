@@ -19,10 +19,6 @@ elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   npm run build
 else
-  cd apps/api
-  npm run watch &
-  cd -
-
   # flow
   link-flow &
   # lerna

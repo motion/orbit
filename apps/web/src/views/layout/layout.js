@@ -12,15 +12,8 @@ import { CurrentUser } from '~/app'
 import Header from './header'
 import BottomBar from '~/views/bottomBar'
 
-type Props = {
-  layoutStore: LayoutStore,
-  soundStore: SoundStore,
-}
-
 @view
 export default class Layout {
-  props: Props
-
   state = {
     error: null,
   }

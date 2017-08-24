@@ -41,6 +41,7 @@ const actions = [
 class BarStore {
   millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
+  inputRef: ?HTMLElement = null
 
   // search is throttled, textboxVal isn't
   search = ''
@@ -52,8 +53,10 @@ class BarStore {
 
   onFocus = () => {
     console.log('focus bar window')
-    this.inputRef.focus()
-    this.inputRef.select()
+    if (this.inputRef) {
+      this.inputRef.focus()
+      this.inputRef.select()
+    }
   }
 
   setSearch = debounce(text => {
@@ -169,9 +172,9 @@ class BarStore {
 }
 
 const inputStyle = {
-  fontWeight: 300,
+  fontWeight: 200,
   color: '#fff',
-  fontSize: 38,
+  fontSize: 32,
 }
 
 @view({
@@ -198,7 +201,7 @@ export default class BarPage {
           <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
             <div>
               <UI.Input
-                size={3}
+                size={2.6}
                 getRef={store.ref('inputRef').set}
                 borderRadius={5}
                 onChange={store.onSearchChange}
@@ -287,7 +290,7 @@ export default class BarPage {
     },
     forwardcomplete: {
       position: 'absolute',
-      top: 35,
+      top: 28,
       left: 20,
       opacity: 0.3,
       ...inputStyle,

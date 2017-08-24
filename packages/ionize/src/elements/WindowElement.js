@@ -169,6 +169,7 @@ export default class WindowElement extends BaseElement {
   }
 
   finalizeBeforeRemoval(): void {
+    this.disposed = true
     this.window.disposed = true
     this.window.close()
     for (const eventKey in this.attachedHandlers) {
@@ -201,6 +202,10 @@ export default class WindowElement extends BaseElement {
     oldProps: Object,
     newProps: Object
   ): void {
+    if (this.disposed) {
+      return
+    }
+
     for (let i = 0; i < updatePayload.length; i += 2) {
       let propKey = updatePayload[i]
       let propVal = updatePayload[i + 1]

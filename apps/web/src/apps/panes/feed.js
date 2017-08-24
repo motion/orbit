@@ -419,6 +419,7 @@ export default class BarFeed {
               {
                 content: (
                   <cool
+                    key={Math.random()}
                     $$row
                     css={{
                       color: '#000',

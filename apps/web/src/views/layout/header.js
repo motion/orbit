@@ -53,15 +53,6 @@ export default class Header {
           </centerside>
 
           <rightside $$row $$centered>
-            <UI.SlotFill.Slot name="actions">
-              {items => {
-                return (
-                  <actions>
-                    {items}
-                  </actions>
-                )
-              }}
-            </UI.SlotFill.Slot>
             <UI.Row>
               <UI.Button onClick={this.onClose} chromeless margin={[0, 2]}>
                 Share

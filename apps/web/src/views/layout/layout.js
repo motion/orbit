@@ -46,19 +46,17 @@ export default class Layout {
     return (
       <layout>
         <UI.Theme name="light">
-          <UI.SlotFill.Provider>
-            <content>
-              <Signup />
-              <LayoutWrap>
-                <Header if={!!Constants.APP_KEY} />
-                <content if={CurrentUser.loggedIn} onScroll={this.onScroll}>
-                  <CurrentPage key={Router.key} {...Router.params} />
-                </content>
-              </LayoutWrap>
-              <Errors />
-              <BottomBar />
-            </content>
-          </UI.SlotFill.Provider>
+          <content>
+            <Signup />
+            <LayoutWrap>
+              <Header if={!!Constants.APP_KEY} />
+              <content if={CurrentUser.loggedIn} onScroll={this.onScroll}>
+                <CurrentPage key={Router.key} {...Router.params} />
+              </content>
+            </LayoutWrap>
+            <Errors />
+            <BottomBar />
+          </content>
         </UI.Theme>
       </layout>
     )

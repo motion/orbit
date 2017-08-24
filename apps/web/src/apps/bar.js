@@ -5,7 +5,7 @@ import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
-import { isNumber, last, debounce } from 'lodash'
+import { isNumber, debounce } from 'lodash'
 
 const safeString = thing => {
   try {
@@ -110,6 +110,7 @@ class BarStore {
   millerActions = {}
   actions = {
     down: e => {
+      console.log('down down down')
       if (!this.hasSelectedItem) {
         // this.inputRef.blur()
       }

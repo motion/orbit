@@ -16,11 +16,11 @@
   "devDependencies": {
     "jest-expo": "^0.4.0",
     "react-native-scripts": "0.0.29",
-    "react-test-renderer": "16.0.0-alpha.6"
+    "react-test-renderer": "16.0.0-beta.5"
   },
   "dependencies": {
     "expo": "^16.0.0",
-    "react": "16.0.0-alpha.6",
+    "react": "16.0.0-alpha.5",
     "react-native": "^0.43.4"
   }
 }

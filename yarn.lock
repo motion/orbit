@@ -7673,10 +7673,6 @@ minimist@^1.1.0, minimist@^1.1.1, minimist@^1.1.2, minimist@^1.1.3, minimist@^1.
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
 
-mitt@^1.1.0:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/mitt/-/mitt-1.1.2.tgz#380e61480d6a615b660f07abb60d51e0a4e4bed6"
-
 mixin-deep@^1.1.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/mixin-deep/-/mixin-deep-1.2.0.tgz#d02b8c6f8b6d4b8f5982d3fd009c4919851c3fe2"
@@ -9776,12 +9772,6 @@ react-select@^1.0.0-rc.2:
     prop-types "^15.5.8"
     react-input-autosize "^1.1.3"
 
-react-slot-fill@^1.0.0-alpha.12:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-slot-fill/-/react-slot-fill-1.0.1.tgz#01bbbdb669286623e9d29e8e3a9cbfde9b594091"
-  dependencies:
-    mitt "^1.1.0"
-
 react-sortable-hoc@^0.6.3:
   version "0.6.7"
   resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-0.6.7.tgz#e30d247bc36dd5a605430c331ac9cb50a5fa72a6"
@@ -9794,6 +9784,13 @@ react-sortable-hoc@^0.6.3:
 react-test-renderer@16.0.0-alpha.6:
   version "16.0.0-alpha.6"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.0.0-alpha.6.tgz#c032def0dc8319cee39caa4e4373a60019cb3786"
+  dependencies:
+    fbjs "^0.8.9"
+    object-assign "^4.1.0"
+
+react-test-renderer@16.0.0-beta.5:
+  version "16.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.0.0-beta.5.tgz#6169e2ea96e8d21645662b369c23239974cd1f11"
   dependencies:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
@@ -10017,7 +10014,7 @@ recursive-readdir@2.2.1:
   dependencies:
     minimatch "3.0.3"
 
-redbox-react@^1.3.6, redbox-react@^1.4.2:
+redbox-react@^1.3.6, redbox-react@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/redbox-react/-/redbox-react-1.5.0.tgz#04dab11557d26651bf3562a67c22ace56c5d3967"
   dependencies:
@@ -12307,7 +12304,11 @@ whatwg-encoding@^1.0.1:
   dependencies:
     iconv-lite "0.4.13"
 
-whatwg-fetch@>=0.10.0, whatwg-fetch@^1.0.0:
+whatwg-fetch@>=0.10.0:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.3.tgz#9c84ec2dcf68187ff00bc64e1274b442176e1c84"
+
+whatwg-fetch@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-1.1.1.tgz#ac3c9d39f320c6dce5339969d054ef43dd333319"
 

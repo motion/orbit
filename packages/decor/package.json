@@ -15,12 +15,12 @@
     "motion-mobx-helpers": "*",
     "prop-types": "^15.5.9",
     "react-mixin": "^3.0.5",
-    "redbox-react": "^1.4.2",
+    "redbox-react": "^1.5.0",
     "sb-event-kit": "^3.0.0"
   },
   "peerDependencies": {
-    "react": ">= 15.6.0",
-    "react-dom": ">= 15.6.0"
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0-beta || ^16.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0-beta || ^16.0.0"
   },
   "publishConfig": {
     "access": "public"

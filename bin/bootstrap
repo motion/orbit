@@ -69,6 +69,12 @@ echo "ensuring react isnt duped until pundle fix"
 # rm -rf packages/black/node_modules/react
 # rm -rf packages/gloss/node_modules/react
 
+# fix until they update to 16
+rm -r node_modules/react-hotkeys/node_modules/react
+rm -r node_modules/react-hotkeys/node_modules/react-dom
+rm -r node_modules/react-tilt/node_modules/react
+rm -r node_modules/react-tilt/node_modules/react-dom
+
 echo " welcome!"
 echo " to start the app:"
 echo " $ compose up"

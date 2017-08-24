@@ -184,6 +184,8 @@ const inputStyle = {
   store: BarStore,
 })
 export default class BarPage {
+  trap: MouseTrap
+
   componentDidMount() {
     const node = ReactDOM.findDOMNode(this)
     this.trap = new Mousetrap(node)

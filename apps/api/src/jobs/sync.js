@@ -93,11 +93,11 @@ export default class Sync {
 
   runJob = async (job: Job) => {
     console.log('Running', job.id, job.type)
-    // await job.update({
-    //   percent: 0,
-    //   status: Job.status.PROCESSING,
-    //   tries: job.tries + 1,
-    // })
+    await job.update({
+      percent: 0,
+      status: Job.status.PROCESSING,
+      tries: job.tries + 1,
+    })
 
     const syncer = this.syncers[job.type]
 
@@ -106,14 +106,14 @@ export default class Sync {
         await syncer.run(job)
       } catch (error) {
         console.log('error running syncer', error)
-        // await job.update({
-        //   status: Job.status.FAILED,
-        //   lastError: getRxError(error),
-        // })
+        await job.update({
+          status: Job.status.FAILED,
+          lastError: getRxError(error),
+        })
       }
     }
 
     // update job
-    // await job.update({ percent: 100, status: Job.status.COMPLETED })
+    await job.update({ percent: 100, status: Job.status.COMPLETED })
   }
 }

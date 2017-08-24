@@ -209,9 +209,9 @@ export default class BarPage {
                   ...inputStyle,
                 }}
               />
-              <forwardComplete>
+              <forwardcomplete>
                 {store.peekItem}
-              </forwardComplete>
+              </forwardcomplete>
               <pasteIcon if={false}>
                 <UI.Icon size={50} type="detailed" name="paper" />
               </pasteIcon>
@@ -284,7 +284,7 @@ export default class BarPage {
       width: 128,
       height: 128,
     },
-    forwardComplete: {
+    forwardcomplete: {
       position: 'absolute',
       top: 35,
       left: 20,

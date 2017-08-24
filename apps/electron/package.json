@@ -6,6 +6,7 @@
     "pack": "build --mac --dir",
     "dist": "build --mac",
     "start": "electron build/out",
+    "build": "webpack",
     "watch": "webpack --watch"
   },
   "dependencies": {

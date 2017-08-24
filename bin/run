@@ -15,9 +15,9 @@ if [ "$ACTION" = "backend" ]; then
   compose up ${@:2}
 elif [ "$ACTION" = "electron" ]; then
   cd apps/electron
-  npm run watch &
-  sleep 1
+  npm run build
   npm start &
+  npm run watch &
   wait
   echo "done"
 elif [ "$ACTION" =  "web" ]; then

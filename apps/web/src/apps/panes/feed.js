@@ -341,12 +341,12 @@ class BarFeedStore {
   store: BarFeedStore,
 })
 export default class BarFeed {
-  render({ store, highlightIndex, activeIndex, data }) {
+  render({ store, activeIndex, data }) {
     const results = store.results.map((result, index) => {
       const parent = (data && data.author) || result.author
 
       return (
-        <feeditem $active={activeIndex === index} key={result.id}>
+        <feeditem $active={activeIndex === index} key={`${result.id}${index}`}>
           <meta>
             <avatar $img={`/images/${parent.image}.jpg`} />
             <UI.Text $name>
@@ -366,7 +366,7 @@ export default class BarFeed {
               </UI.Text>
             </content>
             <icon if={result.icon}>
-              <iconBg />
+              <iconbg />
               {icons[result.icon]}
             </icon>
           </body>
@@ -687,7 +687,7 @@ export default class BarFeed {
       padding: [8, 10],
       borderBottom: [1, [0, 0, 0, 0.05]],
     },
-    iconBg: {
+    iconbg: {
       position: 'absolute',
       top: -2,
       zIndex: -1,

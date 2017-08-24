@@ -1,4 +1,5 @@
-import { inject as injector } from 'react-tunnel'
+// @flow
+import { inject as injector } from '@mcro/react-tunnel'
 
 // adds object fallback if not defined
 export default function inject(mapProvidedToProps: Function) {

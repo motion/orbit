@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import type { ViewType } from '@mcro/black'
 import Button from './button'
-import { Provider } from 'react-tunnel'
+import { Provider } from '@mcro/react-tunnel'
 import inject from './helpers/inject'
 import type { Color } from '@mcro/gloss'
 import Surface from './surface'
@@ -97,13 +97,12 @@ export default class Row implements ViewType<Props> {
 
       children = realChildren.map((child, index) =>
         <Provider key={index} provide={getContext(index, realChildren.length)}>
-          {() =>
-            itemProps
-              ? React.cloneElement(child, {
-                  ...itemProps,
-                  ...child.props,
-                }) /* merge child props so they can override */
-              : child}
+          {itemProps
+            ? React.cloneElement(child, {
+                ...itemProps,
+                ...child.props,
+              }) /* merge child props so they can override */
+            : child}
         </Provider>
       )
     } else if (Array.isArray(items)) {

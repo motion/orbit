@@ -19,8 +19,8 @@
     "sb-event-kit": "^3.0.0"
   },
   "peerDependencies": {
-    "react": "^15.6.0",
-    "react-dom": "^15.6.0"
+    "react": ">= 15.6.0",
+    "react-dom": ">= 15.6.0"
   },
   "publishConfig": {
     "access": "public"

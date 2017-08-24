@@ -1,9 +1,11 @@
 {
-  "lerna": "2.0.0-rc.5",
-  "packages": [
-    "apps/*",
-    "packages/*"
-  ],
+  "lerna": "2.0.0",
+  "packages": ["apps/*", "packages/*"],
   "npmClient": "yarn",
-  "version": "1.1.0"
+  "version": "1.1.0",
+  "commands": {
+    "bootstrap": {
+      "hoist": "!(react|react-*)"
+    }
+  }
 }

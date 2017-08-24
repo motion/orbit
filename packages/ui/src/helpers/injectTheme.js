@@ -25,12 +25,20 @@ export default View => {
       const context = this.theme()
       if (context) {
         return context
+      } else {
+        return {}
       }
     }
 
     render() {
       const theme = this.theme()
-      return <View {...this.props} theme={theme && theme.uiActiveTheme} />
+      const themeProps = theme
+        ? {
+            theme: theme.uiActiveTheme,
+          }
+        : null
+
+      return <View {...this.props} {...themeProps} />
     }
   }
 }

@@ -1,10 +1,5 @@
 // shims
-import 'core-js'
-
-// TODO remove once node 7+ works, depends on nodemon
-// Object.entries = require('object.entries')
-// Object.values = require('object.values')
-// Object.getOwnPropertyDescriptors = require('object.getownpropertydescriptors')
+// import 'babel-polyfill'
 
 if (process.env.NODE_ENV !== 'production') {
   // long stack traces
@@ -15,6 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
 process.title = 'orbit-api'
 process.on('unhandledRejection', reason => {
   console.error('unhandledRejection', reason)
+  console.log(reason.stack)
 })
 process.on('uncaughtException', error => {
   console.error('uncaughtException', error && error.stack)

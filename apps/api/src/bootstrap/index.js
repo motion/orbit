@@ -6,6 +6,9 @@ import * as Constants from '~/constants'
 import type { Options } from '~/types'
 
 export default class Bootstrap {
+  couch: Couch
+  models: Models
+
   constructor(options: Options) {
     this.couch = new Couch({
       databaseUrl: Constants.COUCH_URL,

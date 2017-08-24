@@ -10,6 +10,7 @@ kubeconfig
 .vscode/**/*
 apps/web/public/_/*
 apps/web/build
+apps/api/build
 apps/electron/dist
 apps/electron/build
 

@@ -6,9 +6,9 @@
   "author": "Motion (motion.io)",
   "license": "MIT",
   "dependencies": {
+    "mobx": "*",
     "babel-runtime": "^6.23.0",
-    "history": "^4.5.1",
-    "mobx": "^3.2.0",
+    "history": "^4.7.2",
     "url-pattern": "^1.0.3"
   },
   "publishConfig": {

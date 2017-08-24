@@ -8,7 +8,7 @@
     "@mcro/models": "^1.1.0",
     "@mcro/ui": "^1.1.0",
     "@mcro/web": "^1.1.0",
-    "react": "^15.6.0",
+    "react": "16.0.0-alpha.5",
     "react-dom": "^15.6.1"
   }
 }

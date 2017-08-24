@@ -43,31 +43,6 @@ export default function storeProvidable(options, emitter) {
           stores: null,
         }
 
-        getChildContext() {
-          if (context && Stores) {
-            if (options.warnOnOverwriteStore && this.context.stores) {
-              Object.keys(Stores).forEach(name => {
-                if (this.context.stores[name]) {
-                  console.log(
-                    `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${Klass.name}`
-                  )
-                }
-              })
-            }
-
-            const names = Object.keys(Stores)
-            const stores = {
-              ...this.context.stores,
-              ...pickBy(
-                this.state.stores,
-                (value, key) => names.indexOf(key) >= 0
-              ),
-            }
-
-            return { stores }
-          }
-        }
-
         componentWillReceiveProps(nextProps) {
           const curPropKeys = Object.keys(this._props)
           const nextPropsKeys = Object.keys(nextProps)
@@ -196,6 +171,34 @@ export default function storeProvidable(options, emitter) {
           }
 
           return <Klass {...this.props} {...this.state.stores} />
+        }
+      }
+
+      if (context && Stores) {
+        StoreProvider.prototype.childContextTypes = {
+          stores: object,
+        }
+
+        StoreProvider.prototype.getChildContext = function() {
+          if (options.warnOnOverwriteStore && this.context.stores) {
+            Object.keys(Stores).forEach(name => {
+              if (this.context.stores[name]) {
+                console.log(
+                  `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${Klass.name}`
+                )
+              }
+            })
+          }
+
+          const names = Object.keys(Stores)
+          const stores = {
+            ...this.context.stores,
+            ...pickBy(
+              this.state.stores,
+              (value, key) => names.indexOf(key) >= 0
+            ),
+          }
+          return { stores }
         }
       }
 

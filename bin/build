@@ -29,5 +29,7 @@ else
     --ignore @mcro/playground \
       -- \
       babel src --out-dir lib -s true $ARGS &
+
   wait
+  echo "done"
 fi

@@ -90,6 +90,8 @@ export default class GithubSetting {
         <UI.Form if={store.orgs}>
           {store.orgs.map(org => {
             const repos = store.repos && store.repos[org.id]
+            const { orgs } = store.setting.values
+            const orgActive = orgs && orgs[org.id]
 
             return (
               <field key={org.id}>
@@ -98,16 +100,12 @@ export default class GithubSetting {
                   size={1.2}
                   label={org.login}
                   type="toggle"
-                  defaultValue={
-                    store.setting.values.orgs
-                      ? store.setting.values.orgs[org.id]
-                      : false
-                  }
+                  defaultValue={orgActive}
                   onChange={val => {
                     store.setting.values = {
                       ...store.setting.values,
                       orgs: {
-                        ...store.setting.values.orgs,
+                        ...orgs,
                         [org.id]: val,
                       },
                     }
@@ -116,13 +114,13 @@ export default class GithubSetting {
                   }}
                 />
 
-                <repos if={repos}>
+                <repos if={repos && orgActive}>
                   {repos.map(repo =>
                     <UI.Field
                       key={repo.id}
                       row
                       label={repo.name}
-                      type="toggle"
+                      type="checkbox"
                     />
                   )}
                 </repos>
@@ -142,6 +140,8 @@ export default class GithubSetting {
     content: {
       flex: 1,
       overflowY: 'scroll',
+      margin: [0, -20],
+      padding: [0, 20],
     },
     field: {
       padding: [5, 0],

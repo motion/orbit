@@ -8,11 +8,13 @@ import type { Color } from '@mcro/gloss'
 import Input from './input'
 import Select from './select'
 import Toggle from './toggle'
+import Checkbox from './checkbox'
 
 const fields = {
   input: Input,
   select: Select,
   toggle: Toggle,
+  checkbox: Checkbox,
 }
 
 const TYPE_TO_ELEMENT_MAP = {
@@ -20,7 +22,7 @@ const TYPE_TO_ELEMENT_MAP = {
 }
 
 type Props = {
-  type: 'input' | 'select' | 'toggle' | 'password',
+  type: 'input' | 'select' | 'toggle' | 'password' | 'checkbox',
   spacing: number,
   row?: boolean,
   name?: string,

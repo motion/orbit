@@ -14,11 +14,11 @@ type GithubOrg = {
 
 type GithubRepo = {
   id: number,
-  owner: object,
+  owner: Object,
   name: string,
   url: string,
   default_branch: string,
-  permissions: object,
+  permissions: Object,
   created_at: string,
   updated_at: string,
 }
@@ -106,7 +106,7 @@ export default class GithubSetting {
                       ...store.setting.values,
                       orgs: {
                         ...orgs,
-                        [org.id]: val,
+                        [org.login]: val,
                       },
                     }
                     console.log('settings.values is', store.setting.values)

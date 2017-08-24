@@ -2,20 +2,28 @@
 import global from 'global'
 import { Model, query, str, object, array, bool, number } from '@mcro/model'
 
-let User = null
-
 // keep here so we can use as generic
 export const methods = {}
 
 export type ThingType = typeof methods & {
-  title: str,
-  type: 'document' | 'inbox' | 'thread' | 'reply',
+  title: string,
+  body?: string,
+  data?: Object,
+  integration: 'github',
+  type: 'issue',
+  parentId?: string,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export class Thing extends Model {
   static props = {
     title: str,
+    body: str.optional,
+    integration: str,
     type: str,
+    data: object.optional,
+    parentId: str.optional,
     timestamps: true,
   }
 
@@ -26,32 +34,18 @@ export class Thing extends Model {
     index: ['createdAt', 'updatedAt'],
   }
 
-  hooks = {
-    preInsert: async doc => {
-      // doc
-    },
-  }
-
   @query
   search = async (text: string) => {
     if (text === '') {
-      return await this.collection
-        .find({ draft: { $ne: true } })
-        .sort('createdAt')
-        .limit(20)
-        .exec()
+      return await this.collection.find().sort('createdAt').limit(20).exec()
     }
-
     const { rows } = await this.pouch.search({
       query: text,
       fields: ['text', 'title'],
       include_docs: true,
       highlighting: false,
     })
-
     const ids = rows.map(row => row.id)
-    console.log('ids', ids)
-
     return await this._collection
       .find({ _id: { $in: ids }, title: { $gt: null } })
       .sort('createdAt')
@@ -59,7 +53,7 @@ export class Thing extends Model {
   }
 
   setCurrentUser = currentUser => {
-    User = currentUser
+    this.currentUser = currentUser
   }
 }
 

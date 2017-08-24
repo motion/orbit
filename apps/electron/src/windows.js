@@ -322,7 +322,7 @@ export default class ExampleApp extends React.Component {
     }
 
     if (error) {
-      console.log('recover render')
+      console.log('recover render from error')
       return null
     }
 

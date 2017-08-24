@@ -1,3 +1,4 @@
+import 'isomorphic-fetch'
 import global from 'global'
 
 if (process.env.NODE_ENV !== 'production') {

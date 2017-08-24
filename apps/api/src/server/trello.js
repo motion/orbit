@@ -1,5 +1,3 @@
-import fetch from 'node-fetch'
-
 const apiKey = 'c6b4ba882e6b2afa18ac5367654f4ebb'
 const secret =
   '3f58daaec7afe2d46c723d13307394b5e3a41ad451724df2423e9ecaec654ee4'

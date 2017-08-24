@@ -10,7 +10,6 @@ import SuperLogin from './superlogin'
 import config from './superlogin.config'
 import url from 'url'
 import trello from './trello'
-import github from './github'
 
 // test
 
@@ -174,12 +173,6 @@ export default class Server {
 
     app.get('/trello/cards', (req, res) => {
       trello.getAllCards().then(val => {
-        res.send(val)
-      })
-    })
-
-    app.get('/github/issues', (req, res) => {
-      github.getIssues().then(val => {
         res.send(val)
       })
     })

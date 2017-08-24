@@ -4,7 +4,6 @@
   "version": "1.1.0",
   "scripts": {},
   "dependencies": {
-    "mobx": "*",
     "hash-sum": "1.0.2",
     "kontur": "^0.2.0",
     "pouchdb-core": "^6.2.0",
@@ -13,6 +12,9 @@
     "is-my-json-valid": "^2.16.0",
     "sb-event-kit": "^3.0.0",
     "lodash": "^4.17.4"
+  },
+  "peerDependencies": {
+    "mobx": "*"
   },
   "publishConfig": {
     "access": "public"

@@ -1,5 +1,5 @@
 // shims
-import 'core-js'
+import 'babel-polyfill'
 
 if (process.env.NODE_ENV !== 'production') {
   // long stack traces

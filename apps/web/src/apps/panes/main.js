@@ -28,9 +28,14 @@ class BarMainStore {
   // 10 most relevant things
   get things(): Array<PaneResult> {
     if (!this.props.search) {
-      return this.topThings.slice(0, 10).map(thingToResult)
+      if (this.topThings) {
+        return this.topThings.slice(0, 10).map(thingToResult)
+      }
     }
-    return this.searchedThings.slice(0, 10).map(thingToResult)
+    if (this.searchedThings) {
+      return this.searchedThings.slice(0, 10).map(thingToResult)
+    }
+    return []
   }
 
   get browse(): Array<PaneResult> {

@@ -29,6 +29,7 @@ export default class Model {
   static props: Object
   static defaultProps: Function | Object
 
+  _collection: RxCollection
   methods: ?Object
   statics: ?Object
   database: ?RxDB
@@ -429,7 +430,7 @@ export default class Model {
     }
 
     const firstReplication = this._collection.sync({
-      // query,
+      query,
       remote: this.remote,
       options: {
         ...options,
@@ -451,6 +452,8 @@ export default class Model {
       firstReplication.complete$
         .filter(state => {
           const done = state && state.pull && state.pull.ok
+          console.log('replication state', this.remote, state)
+
           if (done && !resolved) {
             // unsub error stream
             error$.unsubscribe()

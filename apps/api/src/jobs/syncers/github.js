@@ -156,6 +156,7 @@ export default class GithubSync {
         createdIssues.push(
           Thing.create({
             integration: 'github',
+            type: 'issue',
             title: issue.title,
             body: issue.bodyText,
             data,

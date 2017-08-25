@@ -10494,6 +10494,10 @@ sb-event-kit@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/sb-event-kit/-/sb-event-kit-3.0.0.tgz#0deab6e8a2d9ddad73375e7b83da80bfc9105d24"
 
+sb-promisify@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/sb-promisify/-/sb-promisify-2.0.2.tgz#4277a54754488aa9675d886e354db894c9bdc981"
+
 scope-eval@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/scope-eval/-/scope-eval-0.0.3.tgz#166f2ccd1f3754429dec511805501f9d6923b5ec"
@@ -12119,6 +12123,10 @@ vm-browserify@0.0.4:
 vuvuzela@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/vuvuzela/-/vuvuzela-1.0.3.tgz#3be145e58271c73ca55279dd851f12a682114b0b"
+
+wait-for-port@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/wait-for-port/-/wait-for-port-0.0.2.tgz#bb5ff253436b9933ab9d65c00d584dc68c4d531a"
 
 walker@~1.0.5:
   version "1.0.7"

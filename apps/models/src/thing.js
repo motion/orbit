@@ -35,7 +35,7 @@ export class Thing extends Model {
 
   settings = {
     database: 'things',
-    index: ['createdAt', 'updatedAt'],
+    index: ['title', 'body', 'createdAt', 'updatedAt'],
   }
 
   @query

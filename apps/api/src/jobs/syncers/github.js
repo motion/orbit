@@ -49,9 +49,17 @@ export default class GithubSync {
     }).exec()
 
     // auto-run a job on startup if we have the integration
-    const jobs = await Job.pending().exec()
-    if (this.user.github && !jobs) {
-      Job.create({ type: 'github' })
+    const lastRun = await Job.lastCompleted().exec()
+    const sinceLastRun = Date.now() - lastRun.updatedAt
+
+    if (sinceLastRun > 1000) {
+      console.log(
+        'It\'s been an hour since last job, check for new stuff on github'
+      )
+      const jobs = await Job.pending().exec()
+      if (this.user.github && !jobs) {
+        Job.create({ type: 'github' })
+      }
     }
   }
 

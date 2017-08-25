@@ -22,7 +22,7 @@ class BarMainStore {
     this.props.getRef(this)
   }
 
-  topThings = Thing.find({ sort: 'created_at' })
+  topThings = Thing.find({ sort: 'createdAt' })
   @watch searchedThings = () => Thing.search(this.props.search)
 
   // 10 most relevant things

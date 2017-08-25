@@ -25,6 +25,7 @@ const API = require('./api').default
 async function run() {
   console.log('Starting API...')
   const Api = new API({ rootPath: __dirname })
+  console.log('Waiting for Couch & Redis...')
   await waitForPort(Constants.DB_HOSTNAME, Constants.DB_PORT)
   await waitForPort(Constants.REDIS_HOSTNAME, Constants.REDIS_PORT)
   await Api.start()

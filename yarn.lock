@@ -10411,9 +10411,9 @@ rx-lite@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
 
-"rxdb@git://github.com/pubkey/rxdb.git#05dd10b2ed73c354afaee1c6b6ac241401345020":
-  version "5.2.1"
-  resolved "git://github.com/pubkey/rxdb.git#05dd10b2ed73c354afaee1c6b6ac241401345020"
+rxdb@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/rxdb/-/rxdb-5.3.0.tgz#46fc2a79f9c37d31f1122a0e9ad183a22de442b7"
   dependencies:
     "@types/core-js" "0.9.43"
     babel-runtime "^6.25.0"

@@ -419,8 +419,7 @@ export default class Model {
     if (query.query) {
       query = query.query
     }
-    if (!isRxQuery(query) && !(query.constructor.name === 'RxQuery')) {
-      console.log(query.constructor.name, query)
+    if (!isRxQuery(query)) {
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.'
       )
@@ -432,6 +431,9 @@ export default class Model {
     const firstReplication = this._collection.sync({
       query,
       remote: this.remote,
+      direction: {
+        pull: true,
+      },
       options: {
         ...options,
         live: false,

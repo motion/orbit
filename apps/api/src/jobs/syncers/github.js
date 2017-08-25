@@ -51,8 +51,9 @@ export default class GithubSync {
     // auto-run a job on startup if we have the integration
     const lastRun = await Job.lastCompleted().exec()
     const sinceLastRun = Date.now() - lastRun.updatedAt
+    console.log('TIME SINCE LAST JOB RUN', sinceLastRun)
 
-    if (sinceLastRun > 1000) {
+    if (sinceLastRun > 1000 * 60) {
       console.log(
         'It\'s been an hour since last job, check for new stuff on github'
       )

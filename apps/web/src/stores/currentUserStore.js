@@ -1,5 +1,5 @@
 // @flow
-import { User, Setting } from '~/app'
+import { User, Setting } from '@mcro/models'
 import { store, watch } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
 
@@ -15,8 +15,8 @@ class CurrentUser {
   sessionInfo = null
   superlogin: ?SuperLoginClient = null
 
-  @watch userInfo = () => User.findOne(this.id)
-  @watch settings = () => Setting.find({ userId: this.id })
+  @watch userInfo = () => this.id && User.findOne(this.id)
+  @watch settings = () => this.id && Setting.find({ userId: this.id })
   @watch
   setting = () =>
     this.settings &&

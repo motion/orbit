@@ -5,17 +5,8 @@ import type { CurrentUser } from '../stores/currentUserStore'
 
 @store
 export default class GithubService {
-  token: ?string = null
-
   constructor(user: CurrentUser) {
     this.user = user
-
-    this.watch(() => {
-      if (user.github && !this.token) {
-        this.token = user.github.auth.accessToken
-        console.log('got a token', this.token)
-      }
-    })
 
     return new Proxy(this, {
       get(target, method) {
@@ -26,5 +17,9 @@ export default class GithubService {
         return target[method]
       },
     })
+  }
+
+  get token() {
+    return this.user.github && this.user.github.auth.accessToken
   }
 }

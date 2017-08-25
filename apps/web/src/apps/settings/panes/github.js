@@ -74,8 +74,6 @@ type Props = {
 })
 export default class GithubSetting {
   render({ store }: Props) {
-    console.log('store.setting', store.setting)
-
     return (
       <content>
         <loading

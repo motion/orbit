@@ -1,5 +1,5 @@
 // @flow
-import { Org, User } from '~/app'
+import { User, Setting } from '~/app'
 import { store, watch } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
 import { observable, autorun, computed } from 'mobx'
@@ -14,9 +14,14 @@ class CurrentUser {
   localDb = null
   remoteDb = null
   sessionInfo = null
-  @watch
-  userInfo = () => User.findOne(this.sessionInfo && this.sessionInfo.user_id)
   superlogin: ?SuperLoginClient = null
+
+  @watch userInfo = () => User.findOne(this.id)
+  @watch settings = () => Setting.find({ userId: this.id })
+  @watch
+  setting = () =>
+    this.settings &&
+    this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})
 
   get user() {
     if (!this.sessionInfo) {
@@ -81,7 +86,7 @@ class CurrentUser {
   }
 
   get id() {
-    return this.user && this.user.user_id
+    return this.sessionInfo && this.sessionInfo.user_id
   }
 
   get token() {

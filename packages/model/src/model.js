@@ -431,6 +431,7 @@ export default class Model {
     const firstReplication = this._collection.sync({
       query,
       remote: this.remote,
+      waitForLeadership: false,
       direction: {
         pull: true,
       },
@@ -454,7 +455,6 @@ export default class Model {
       firstReplication.complete$
         .filter(state => {
           const done = state && state.pull && state.pull.ok
-          console.log('replication state', this.remote, state)
 
           if (done && !resolved) {
             // unsub error stream

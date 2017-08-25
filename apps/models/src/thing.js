@@ -40,20 +40,17 @@ export class Thing extends Model {
 
   @query
   search = async (text: string) => {
-    if (text === '') {
-      return await this.collection.find().sort('createdAt').limit(20).exec()
+    if (!text) {
+      return null
     }
     const { rows } = await this.pouch.search({
       query: text,
-      fields: ['text', 'title'],
-      include_docs: true,
+      fields: ['body', 'title'],
+      include_docs: false,
       highlighting: false,
     })
     const ids = rows.map(row => row.id)
-    return await this._collection
-      .find({ _id: { $in: ids }, title: { $gt: null } })
-      .sort('createdAt')
-      .exec()
+    return await this.collection.find({ _id: { $in: ids } }).sort('createdAt')
   }
 
   setCurrentUser = (currentUser: CurrentUser) => {

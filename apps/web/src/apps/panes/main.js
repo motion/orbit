@@ -1,50 +1,39 @@
 // @flow
 import React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser, Document, Thing } from '~/app'
-import { uniq } from 'lodash'
 import { filterItem } from './helpers'
-import { Atom } from '@mcro/models'
 import { OS } from '~/helpers'
+import type { PaneProps, PaneResult } from '~/types'
 
-let allCards = null
+const thingToResult = (thing: Thing) => ({
+  title: thing.title,
+  type: thing.type,
+  icon: 'icon',
+  data: thing.data,
+  category: 'Thing',
+})
 
 class BarMainStore {
-  searchResults: Array<Document> = []
-  cards = []
+  props: PaneProps
 
   start() {
     this.props.getRef(this)
+  }
 
-    if (allCards) {
-      this.cards = allCards
-    } else {
-      Atom.getAll().then(cards => {
-        this.cards = cards.map(card => ({
-          title: card.card.name,
-          data: {
-            title: card.card.name,
-            content: card.card.content,
-            id: card.card.id,
-            comments: card.comments,
-            labels: card.card.labels,
-            service: card.service,
-          },
-          searchTags: card.searchWords || card.service,
-          type: 'task',
-          icon: card.service,
-        }))
-      })
-      allCards = this.cards
+  topThings = Thing.find({ sort: 'created_at' })
+  @watch searchThings = () => Thing.search(this.props.search)
+
+  // 10 most relevant things
+  get things(): Array<PaneResult> {
+    if (!this.props.search) {
+      return this.topThings.slice(0, 10).map(thingToResult)
     }
+    return this.searchThings.slice(0, 10).map(thingToResult)
   }
 
-  get root() {
-    return CurrentUser.home
-  }
-
-  get browse() {
+  get browse(): Array<PaneResult> {
     return [
       {
         title: 'Recent',
@@ -83,7 +72,7 @@ class BarMainStore {
     ]
   }
 
-  get people() {
+  get people(): Array<PaneResult> {
     return [
       {
         title: 'Stephanie',
@@ -108,19 +97,16 @@ class BarMainStore {
     ]
   }
 
-  get results() {
+  get results(): Array<PaneResult> {
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login', static: true }]
     }
 
-    const { searchResults, cards, browse, people } = this
-
     const results = filterItem(
       [
-        ...browse,
-        ...cards,
-        ...(searchResults || []),
-        ...people,
+        ...this.browse,
+        ...this.things,
+        ...this.people,
         {
           title: 'Settings',
           icon: 'gear',
@@ -148,37 +134,7 @@ class BarMainStore {
     return results
   }
 
-  search = async () => {
-    if (!this.props.search) {
-      this.searchResults = []
-      return
-    }
-
-    const [searchResults, pathSearchResults] = await Promise.all([
-      Thing.search && Thing.search(this.props.search).exec(),
-      Thing.collection
-        .find()
-        .where('slug')
-        .regex(new RegExp(`^${this.props.search}$`, 'i'))
-        .where({ home: { $ne: true } })
-        .limit(20)
-        .exec(),
-    ])
-
-    this.searchResults = uniq(
-      [...(searchResults || []), ...pathSearchResults],
-      x => x.id
-    ).map(doc => {
-      return {
-        doc,
-        title: doc.title,
-        type: 'browse',
-        category: 'Search Results',
-      }
-    })
-  }
-
-  select = index => {
+  select = (index: number) => {
     this.props.navigate(this.results[index])
   }
 }
@@ -187,22 +143,12 @@ class BarMainStore {
   store: BarMainStore,
 })
 export default class BarMain {
-  lastSearch = ''
-
-  componentWillReceiveProps() {
-    if (this.lastSearch !== this.props.search) {
-      this.props.store.search()
-      this.lastSearch = this.props.search
-    }
-  }
-
-  getChildSchema = row => {
-    const { store } = this.props
-    const item = store.results[row]
-    return { kind: item.type, data: item.data || {} }
-  }
-
-  render({ store, activeIndex, paneProps, onSelect }) {
+  render({
+    store,
+    activeIndex,
+    paneProps,
+    onSelect,
+  }: PaneProps & { store: BarMainStore }) {
     const secondary = item => {
       if (item.data && item.data.service === 'github')
         return (

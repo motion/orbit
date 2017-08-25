@@ -17,7 +17,6 @@
 [options]
 experimental.strict_type_args=true
 emoji=true
-module.system=haste
 suppress_type=$FlowFixMe
 suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
 esproposal.class_instance_fields=enable

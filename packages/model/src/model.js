@@ -29,6 +29,7 @@ export default class Model {
   static props: Object
   static defaultProps: Function | Object
 
+  _collection: RxCollection
   methods: ?Object
   statics: ?Object
   database: ?RxDB
@@ -418,8 +419,7 @@ export default class Model {
     if (query.query) {
       query = query.query
     }
-    if (!isRxQuery(query) && !(query.constructor.name === 'RxQuery')) {
-      console.log(query.constructor.name, query)
+    if (!isRxQuery(query)) {
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.'
       )
@@ -429,8 +429,12 @@ export default class Model {
     }
 
     const firstReplication = this._collection.sync({
-      // query,
+      query,
       remote: this.remote,
+      waitForLeadership: false,
+      direction: {
+        pull: true,
+      },
       options: {
         ...options,
         live: false,
@@ -451,6 +455,7 @@ export default class Model {
       firstReplication.complete$
         .filter(state => {
           const done = state && state.pull && state.pull.ok
+
           if (done && !resolved) {
             // unsub error stream
             error$.unsubscribe()

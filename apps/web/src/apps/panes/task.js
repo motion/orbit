@@ -210,9 +210,6 @@ class AddResponse {
   },
 })
 export default class BarTaskPane {
-  getLength = () => 5
-  getChildSchema = row => null
-
   render({ highlightIndex, data, activeIndex, isActive, store, paneProps }) {
     const title = data.title || 'Create a Helm chart to deploy CouchDB on K8s'
     const comments = data.comments || [0, 1].map(() => 'just a test')

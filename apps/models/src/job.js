@@ -54,6 +54,10 @@ export class JobModel extends Model {
   @query processing = () => this.collection.find({ status: STATUS.PROCESSING })
   @query completed = () => this.collection.find({ status: STATUS.COMPLETED })
   @query failed = () => this.collection.find({ status: STATUS.FAILED })
+
+  @query
+  lastCompleted = () =>
+    this.collection.findOne({ status: STATUS.COMPLETED }).sort('createdAt')
 }
 
 const JobInstance = new JobModel()

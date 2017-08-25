@@ -12,7 +12,7 @@
     "pouchdb-replication": "^6.3.4",
     "pouchdb-validation": "^1.2.1",
     "randomcolor": "0.5.3",
-    "rxdb": "git://github.com/pubkey/rxdb.git#05dd10b2ed73c354afaee1c6b6ac241401345020",
+    "rxdb": "^5.3.0",
     "rxjs": "^5.4.2",
     "sillyname": "0.1.0",
     "global": "^4.3.2",

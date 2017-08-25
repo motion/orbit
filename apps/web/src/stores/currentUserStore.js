@@ -2,7 +2,6 @@
 import { User, Setting } from '~/app'
 import { store, watch } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
-import { observable, autorun, computed } from 'mobx'
 
 // TODO: Constants.API_HOST
 const API_HOST = `${window.location.host}`

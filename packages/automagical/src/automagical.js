@@ -279,7 +279,6 @@ function mobxifyWatch(obj, method, val) {
         const isSameObservable =
           currentObservable && currentObservable[AID] === result[AID]
         if (isSameObservable) {
-          console.log('get', currentObservable)
           update(currentObservable.get())
           return
         }

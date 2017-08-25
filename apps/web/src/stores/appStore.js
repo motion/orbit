@@ -3,6 +3,7 @@ import { view, store } from '@mcro/black'
 import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
 import Database from '@mcro/models'
+import CurrentUser from './currentUserStore'
 
 if (module.hot) {
   module.hot.accept('@mcro/models', () => {
@@ -12,6 +13,7 @@ if (module.hot) {
 
 @store
 export default class AppStore {
+  database: Database
   started = false
   connected = false
   errors = []
@@ -22,10 +24,12 @@ export default class AppStore {
   mountedVersion = 0
   stores = null
   views = null
+  services = null
 
-  constructor({ config, models }) {
+  constructor({ config, models, services }) {
     this.config = config
     this.models = models
+    this.serviceObjects = services
     // listen for stuff, attach here
     view.on('store.mount', this.mount('stores'))
     view.on('store.unmount', this.unmount('stores'))
@@ -50,6 +54,7 @@ export default class AppStore {
     this.connected = true
     this.catchErrors()
     this.trackMounts()
+    this.setupServices()
     if (!quiet) {
       console.timeEnd('start')
     }
@@ -61,6 +66,16 @@ export default class AppStore {
   }
 
   // private
+
+  setupServices = () => {
+    this.services = {}
+    for (const serviceName of Object.keys(this.serviceObjects)) {
+      this.services[serviceName] = new this.serviceObjects[serviceName](
+        CurrentUser
+      )
+    }
+  }
+
   trackMounts = () => {
     // auto Object<string, Set> => Object<string, []>
     autorunAsync(() => {
@@ -82,7 +97,6 @@ export default class AppStore {
     }, 1)
   }
 
-  // private
   mount = type => thing => {
     const key = thing.constructor.name
     this.mounted[type][key] = this.mounted[type][key] || new Set()
@@ -90,7 +104,6 @@ export default class AppStore {
     this.mountedVersion++
   }
 
-  // private
   unmount = type => thing => {
     const key = thing.constructor.name
     if (this.mounted[type][key]) {
@@ -98,6 +111,8 @@ export default class AppStore {
       this.mountedVersion++
     }
   }
+
+  // end private
 
   // TODO make this not hacky
   // could actually just be a Proxy around this class that finds these

@@ -3,6 +3,7 @@ import { Models } from '@mcro/models'
 import { DB_CONFIG } from '~/constants'
 import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
+import * as Services from './services'
 
 export CurrentUser from './stores/currentUserStore'
 
@@ -23,6 +24,7 @@ function start() {
       adapterName: 'idb',
     },
     models: Models,
+    services: Services,
   })
   window.App = App
   return App

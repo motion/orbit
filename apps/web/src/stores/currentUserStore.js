@@ -1,6 +1,6 @@
 // @flow
 import { Org, User } from '~/app'
-import { store } from '@mcro/black'
+import { store, watch } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
 import { observable, autorun, computed } from 'mobx'
 
@@ -8,14 +8,16 @@ import { observable, autorun, computed } from 'mobx'
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
+@store
 class CurrentUser {
   connected = false
   localDb = null
   remoteDb = null
-  @observable.ref sessionInfo = null
-  @observable.ref userInfo = null
+  sessionInfo = null
+  @watch
+  userInfo = () => User.findOne(this.sessionInfo && this.sessionInfo.user_id)
+  superlogin: ?SuperLoginClient = null
 
-  @computed
   get user() {
     if (!this.sessionInfo) {
       return null
@@ -28,27 +30,11 @@ class CurrentUser {
 
   integrations = []
 
-  constructor(options) {
+  constructor(options: Object) {
     this.superlogin = SuperLoginClient
     this.options = options
     this.setupSuperLogin()
     this.connected = true
-    this.watchUser()
-  }
-
-  watchUser = () => {
-    autorun(() => {
-      if (this.sessionInfo && User.connected) {
-        User.findOne(this.sessionInfo.user_id).$.subscribe(userInfo => {
-          if (userInfo) {
-            this.userInfo = userInfo
-          }
-        })
-      }
-    })
-
-    // try this too
-    // User.find().sync()
   }
 
   async setupSuperLogin() {

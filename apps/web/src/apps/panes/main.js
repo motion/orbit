@@ -7,7 +7,7 @@ import { filterItem } from './helpers'
 import { OS } from '~/helpers'
 import type { PaneProps, PaneResult } from '~/types'
 
-const thingToResult = (thing: Thing) => ({
+const thingToResult = (thing: Thing): PaneResult => ({
   title: thing.title,
   type: thing.type,
   icon: 'icon',

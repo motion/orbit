@@ -32,7 +32,7 @@ export class Thing extends Model {
   methods = methods
 
   settings = {
-    database: 'thing',
+    database: 'things',
     index: ['createdAt', 'updatedAt'],
   }
 

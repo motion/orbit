@@ -37,8 +37,8 @@ export default class GithubSync {
       opts
     ).then(res => res.json())
 
-  get token(): ?string {
-    return this.user.github && this.user.github.auth.accessToken
+  get token(): string {
+    return (this.user.github && this.user.github.auth.accessToken) || ''
   }
 
   start = async () => {

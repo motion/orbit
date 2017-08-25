@@ -2,6 +2,8 @@
 import global from 'global'
 import { Model, query, str, object, array, bool, number } from '@mcro/model'
 
+declare class CurrentUser {}
+
 // keep here so we can use as generic
 export const methods = {}
 
@@ -54,7 +56,7 @@ export class Thing extends Model {
       .exec()
   }
 
-  setCurrentUser = currentUser => {
+  setCurrentUser = (currentUser: CurrentUser) => {
     this.currentUser = currentUser
   }
 }

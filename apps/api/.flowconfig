@@ -1,4 +1,6 @@
 [ignore]
+**/lib/*.js
+**/.*.js.flow
 
 [include]
 ./node_modules

@@ -31,7 +31,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
   return function fancyElement(
     type_: string | Function,
     props?: Object,
-    ...children
+    ...children: Array<any>
   ) {
     let type = type_
     if (!type) {

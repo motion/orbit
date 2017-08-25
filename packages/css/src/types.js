@@ -2,13 +2,11 @@
 
 type NoS = number | string
 
-export type NiceColor = string
-  | CSSArray
-  | { r: NoS, g: NoS, b: NoS, a?: NoS }
+export type CSSArray = Array<number>
 
-export type ToCSSAble =
-  { toCSS: Function }
-  | { css: Function }
+export type NiceColor = string | CSSArray | { r: NoS, g: NoS, b: NoS, a?: NoS }
+
+export type ToCSSAble = { toCSS: Function } | { css: Function }
 
 export type Color = ToCSSAble | NiceColor
 
@@ -17,5 +15,3 @@ export type Transform = {
   y: number | string,
   z: number | string,
 }
-
-export type CSSArray = Array<number>

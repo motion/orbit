@@ -50,7 +50,10 @@ export class Thing extends Model {
       highlighting: false,
     })
     const ids = rows.map(row => row.id)
-    return await this.collection.find({ _id: { $in: ids } }).sort('createdAt')
+    return await this.collection
+      .find({ _id: { $in: ids } })
+      .sort('createdAt')
+      .exec()
   }
 
   setCurrentUser = (currentUser: CurrentUser) => {

@@ -23,14 +23,14 @@ class BarMainStore {
   }
 
   topThings = Thing.find({ sort: 'created_at' })
-  @watch searchThings = () => Thing.search(this.props.search)
+  @watch searchedThings = () => Thing.search(this.props.search)
 
   // 10 most relevant things
   get things(): Array<PaneResult> {
     if (!this.props.search) {
       return this.topThings.slice(0, 10).map(thingToResult)
     }
-    return this.searchThings.slice(0, 10).map(thingToResult)
+    return this.searchedThings.slice(0, 10).map(thingToResult)
   }
 
   get browse(): Array<PaneResult> {

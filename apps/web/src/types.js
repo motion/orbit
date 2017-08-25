@@ -15,4 +15,6 @@ export type PaneResult = {|
   icon: string,
   data?: Object,
   category?: string,
+  url?: Function,
+  onSelect?: Function,
 |}

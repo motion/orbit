@@ -203,7 +203,7 @@ export default class Model {
     return this._filteredProxy
   }
 
-  get collection(): ?RxCollection & { pouch: PouchDB } {
+  get collection(): RxCollection {
     if (this._collection) {
       return this._filteredCollection
     }
@@ -259,6 +259,20 @@ export default class Model {
       schema: this.compiledSchema,
       statics: this.statics,
     })
+
+    // sync PUSH ONLY
+    if (this.options.autoSync) {
+      this._collection.sync({
+        remote: this.remote,
+        direction: {
+          push: true,
+        },
+        options: {
+          live: true,
+          retry: true,
+        },
+      })
+    }
 
     // shim add pouchdb-validation
     this._collection.pouch.installValidationMethods()
@@ -485,13 +499,13 @@ export default class Model {
   // find/findOne return RxQuery objects
   // so you can subscribe to streams or just .exec()
   @query
-  find = params =>
+  find = (params: string | Object) =>
     this.getParams(params, ({ sort, ...query } = {}) =>
       chain(this.collection.find(query), 'sort', sort)
     )
 
   @query
-  findOne = params =>
+  findOne = (params: string | Object) =>
     this.getParams(params, ({ sort, ...query } = {}) =>
       chain(this.collection.findOne(query), 'sort', sort)
     )
@@ -503,7 +517,7 @@ export default class Model {
   }
 
   // creates a model without persisting
-  async createTemporary(object) {
+  async createTemporary(object: Object = {}) {
     if (!this._collection) {
       await this.onConnection()
     }

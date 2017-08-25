@@ -19,8 +19,9 @@ class CurrentUser {
   @watch settings = () => this.id && Setting.find({ userId: this.id })
   @watch
   setting = () =>
-    this.settings &&
-    this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})
+    (this.settings &&
+      this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})) ||
+    {}
 
   get user() {
     if (!this.sessionInfo) {

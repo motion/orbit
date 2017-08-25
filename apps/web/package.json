@@ -35,7 +35,7 @@
     "@mcro/models": "^1.1.0",
     "@mcro/router": "^1.1.0",
     "@mcro/ui": "^1.1.0",
-    "github-api": "^3.0.0",
+    "octokat": "^0.9.2",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
     "buffer": "^5.0.6",

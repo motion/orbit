@@ -1,96 +1,36 @@
 // @flow
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { CurrentUser, Setting } from '~/app'
+import { CurrentUser } from '~/app'
+import App from '~/app'
 
-type GithubOrg = {
-  login: string,
-  id: number,
-  url: string,
-  repos_url: string,
-  avatar_url: string,
-  description: string,
-}
-
-type GithubRepo = {
-  id: number,
-  owner: Object,
-  name: string,
-  url: string,
-  default_branch: string,
-  permissions: Object,
-  created_at: string,
-  updated_at: string,
-}
-
-type Props = {
-  store: GithubSettingStore,
-}
-
-@view({
-  store: class GithubSettingStore {
-    orgs: Array<GithubOrg> = null
-    setting: Setting = Setting.findOne({
-      type: 'github',
-      userId: CurrentUser.id,
-    })
-
-    @watch
-    allRepos = () =>
-      this.orgs &&
-      Promise.all(
-        this.orgs.map(org =>
-          this.fetch(`/orgs/${org.login.toLowerCase()}/repos`)
-        )
-      )
-
-    get repos(): Object<string, GithubRepo> {
-      if (!this.allRepos) {
-        return null
-      }
-      return this.orgs.reduce(
-        (acc, org, index) => ({
-          ...acc,
-          [org.id]: this.allRepos[index],
-        }),
-        {}
-      )
-    }
-
-    get token() {
-      return this.props.integration.auth.accessToken
-    }
-
-    async start() {
-      this.orgs = await this.fetch('/user/orgs')
-    }
-
-    fetch = (path, options) =>
-      fetch(
-        `https://api.github.com${path}?access_token=${this.token}`,
-        options
-      ).then(res => res.json())
-  },
-})
+@view
 export default class GithubSetting {
-  render({ store }: Props) {
+  render() {
+    if (!App.services) {
+      return null
+    }
+
+    const githubSettings = CurrentUser.setting.github
+    const { Github } = App.services
+
     return (
       <content>
         <loading
-          if={!store.orgs}
+          if={!Github.orgs}
           css={{ height: 200, alignItems: 'center', justifyContent: 'center' }}
         >
           <UI.Icon size={40} name="loader_dots" opacity={0.5} />
         </loading>
 
-        <settings if={store.setting}>
-          setting values: {JSON.stringify(store.setting.values)}
+        <settings if={githubSettings}>
+          setting values: {JSON.stringify(githubSettings.values)}
         </settings>
 
-        <UI.Form if={store.orgs && store.setting}>
-          {store.orgs.map(org => {
-            const repos = store.repos && store.repos[org.id]
-            const { orgs } = store.setting.values
+        <UI.Form if={Github.orgs && Github.setting}>
+          {Github.orgs.map(org => {
+            const repos = Github.repos && Github.repos[org.id]
+            const { orgs } = Github.setting.values
             const orgActive = orgs && orgs[org.id]
 
             return (
@@ -102,15 +42,14 @@ export default class GithubSetting {
                   type="toggle"
                   defaultValue={orgActive}
                   onChange={val => {
-                    store.setting.values = {
-                      ...store.setting.values,
+                    githubSettings.values = {
+                      ...githubSettings.values,
                       orgs: {
                         ...orgs,
                         [org.login]: val,
                       },
                     }
-                    console.log('settings.values is', store.setting.values)
-                    store.setting.save()
+                    githubSettings.save()
                   }}
                 />
 

@@ -34,10 +34,10 @@ export default class Model {
   statics: ?Object
   database: ?RxDB
 
+  options: Object = {}
   subscriptions = new CompositeDisposable()
   settings: SettingsObject = {}
   defaultSchema: Object = {}
-  options: ?Object = {}
   @observable connected = false
   // sync to
   remote: ?string = null
@@ -276,7 +276,7 @@ export default class Model {
     }
 
     // shim add pouchdb-validation
-    this._collection.pouch.installValidationMethods()
+    // this._collection.pouch.installValidationMethods()
 
     // bump listeners
     this._collection.pouch.setMaxListeners(100)
@@ -419,6 +419,7 @@ export default class Model {
     if (query.query) {
       query = query.query
     }
+    console.log('syncing query')
     if (!isRxQuery(query)) {
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.'

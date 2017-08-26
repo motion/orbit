@@ -60,11 +60,10 @@ export default class Database implements ModelsStore {
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
       RxDB.QueryChangeDetector.enable()
-      // RxDB.QueryChangeDetector.enableDebugging(false)
       RxDB.plugin(this.databaseConfig.adapter)
       RxDB.plugin(pREPL)
-      RxDB.plugin(pValidate)
-      RxDB.plugin(pSearch)
+      // RxDB.plugin(pValidate)
+      // RxDB.plugin(pSearch)
       RxDB.plugin(pHTTP)
       PouchDB.plugin(this.databaseConfig.adapter)
       PouchDB.plugin(pHTTP)

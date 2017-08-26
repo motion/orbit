@@ -19,5 +19,3 @@ export function filterItem(
 
   return results
 }
-
-window.f = filterItem

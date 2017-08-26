@@ -24,6 +24,10 @@ class BarMainStore {
 
   topThings = Thing.find({ sort: 'createdAt' })
 
+  get things() {
+    return (this.topThings || []).map(thingToResult)
+  }
+
   get browse(): Array<PaneResult> {
     return [
       {
@@ -91,7 +95,7 @@ class BarMainStore {
   get all(): Array<PaneResult> {
     return [
       ...this.browse,
-      ...this.topThings.map(thingToResult),
+      ...this.things,
       ...this.people,
       {
         title: 'Settings',

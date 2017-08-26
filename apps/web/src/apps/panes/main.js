@@ -17,19 +17,19 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
+  filter = (x, opts) => filterItem(x || [], this.props.search, opts)
+  topThings = Thing.find({ sort: 'createdAt' })
 
   start() {
     this.props.getRef(this)
   }
 
-  topThings = Thing.find({ sort: 'createdAt' })
-
   get things() {
-    return (this.topThings || []).map(thingToResult)
+    return this.filter(this.topThings.map(thingToResult), { max: 8 })
   }
 
   get browse(): Array<PaneResult> {
-    return [
+    return this.filter([
       {
         title: 'Recent',
         type: 'feed',
@@ -64,11 +64,11 @@ class BarMainStore {
         },
         icon: 'objects_planet',
       },
-    ]
+    ])
   }
 
   get people(): Array<PaneResult> {
-    return [
+    return this.filter([
       {
         title: 'Stephanie',
         type: 'feed',
@@ -89,14 +89,11 @@ class BarMainStore {
         data: { image: 'nick' },
         category: 'People',
       },
-    ]
+    ])
   }
 
-  get all(): Array<PaneResult> {
-    return [
-      ...this.browse,
-      ...this.things,
-      ...this.people,
+  get extras() {
+    return this.filter([
       {
         title: 'Settings',
         icon: 'gear',
@@ -110,7 +107,11 @@ class BarMainStore {
         },
         category: 'Settings',
       },
-    ]
+    ])
+  }
+
+  get all(): Array<PaneResult> {
+    return [...this.browse, ...this.things, ...this.people, ...this.extras]
   }
 
   get results(): Array<PaneResult> {
@@ -118,7 +119,7 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login', static: true }]
     }
 
-    const results = filterItem(this.all, this.props.search, { max: 15 })
+    const results = this.all
 
     if (this.props.search) {
       results.push({

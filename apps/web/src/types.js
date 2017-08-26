@@ -12,9 +12,10 @@ export type PaneProps = {|
 export type PaneResult = {|
   title: string,
   type: string,
-  icon: string,
+  icon?: string,
   data?: Object,
   category?: string,
   url?: Function,
   onSelect?: Function,
+  static?: boolean,
 |}

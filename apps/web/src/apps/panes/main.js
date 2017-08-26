@@ -102,32 +102,33 @@ class BarMainStore {
     ]
   }
 
+  get all() {
+    return [
+      ...this.browse,
+      ...this.things,
+      ...this.people,
+      {
+        title: 'Settings',
+        icon: 'gear',
+        type: 'message',
+        data: {
+          message: 'Open Settings',
+          icon: 'gear',
+        },
+        onSelect: () => {
+          OS.send('open-settings')
+        },
+        category: 'Settings',
+      },
+    ]
+  }
+
   get results(): Array<PaneResult> {
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login', static: true }]
     }
 
-    const results = filterItem(
-      [
-        ...this.browse,
-        ...this.things,
-        ...this.people,
-        {
-          title: 'Settings',
-          icon: 'gear',
-          type: 'message',
-          data: {
-            message: 'Open Settings',
-            icon: 'gear',
-          },
-          onSelect: () => {
-            OS.send('open-settings')
-          },
-          category: 'Settings',
-        },
-      ],
-      this.props.search
-    )
+    const results = filterItem(this.all, this.props.search, { max: 15 })
 
     if (this.props.search) {
       results.push({

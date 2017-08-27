@@ -1,9 +1,8 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { isNumber, includes } from 'lodash'
+import { includes } from 'lodash'
 import PersonPicker from './views/personPicker'
 import PaneCard from './views/card'
-import { Atom } from '@mcro/models'
 import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()
@@ -204,7 +203,6 @@ class AddResponse {
     response = ''
 
     submit = () => {
-      Atom.addComment(this.response)
       this.response = ''
     }
   },

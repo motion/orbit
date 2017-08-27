@@ -118,17 +118,7 @@ class BarMainStore {
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login', static: true }]
     }
-
-    const results = this.all
-
-    if (this.props.search) {
-      results.push({
-        title: `Search "${this.props.search}"`,
-        type: 'feed',
-      })
-    }
-
-    return results
+    return this.all
   }
 
   select = (index: number) => {

@@ -11,18 +11,16 @@ export const STATUS = {
 
 export const methods = {}
 
-export type Job = typeof methods & {
-  type: string,
-  info?: Object,
-  percent: number,
-  tries: number,
-  status: number,
-  lastError?: string,
-  createdAt: string,
-  updatedAt: string,
-}
-
 export class JobModel extends Model {
+  type: string
+  info: ?Object
+  percent: number
+  tries: number
+  status: number
+  lastError: ?string
+  createdAt: string
+  updatedAt: string
+
   static props = {
     type: str,
     info: object.optional,

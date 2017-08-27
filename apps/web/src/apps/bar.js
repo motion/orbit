@@ -190,8 +190,10 @@ export default class BarPage {
     const node = ReactDOM.findDOMNode(this)
     this.trap = new Mousetrap(node)
     for (const name of Object.keys(SHORTCUTS)) {
-      const chord = SHORTCUTS[name]
-      this.trap.bind(chord, this.props.store.actions[name])
+      if (this.props.store.actions[name]) {
+        const chord = SHORTCUTS[name]
+        this.trap.bind(chord, this.props.store.actions[name])
+      }
     }
   }
 

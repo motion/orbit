@@ -9,20 +9,15 @@ import type { Model } from '~/helpers'
 
 export { CompositeDisposable } from '@mcro/model'
 
-// ADD TO BOTH THIS SECTION
+import UserInstance from './user'
+import ThingInstance from './thing'
+import JobInstance from './job'
+import SettingInstance from './setting'
 
-export User from './user'
-export Thing from './thing'
-export Atom from './atom'
-export Job from './job'
-export Setting from './setting'
-
-// AND THIS ONE
-
-import User from './user'
-import Thing from './thing'
-import Job from './job'
-import Setting from './setting'
+export const User = UserInstance
+export const Thing = ThingInstance
+export const Job = JobInstance
+export const Setting = SettingInstance
 
 // AND THIS TOO
 
@@ -36,13 +31,11 @@ export const Models = {
 // exports
 export type { Model } from '~/helpers'
 
-declare class ModelsStore {
-  databaseConfig: Object,
-  database: RxDB.Database,
-  models: Object<string, Model>,
-}
+export default class Database {
+  databaseConfig: Object
+  database: RxDB.Database
+  models: { [string]: Model }
 
-export default class Database implements ModelsStore {
   connected = false
 
   constructor(databaseConfig, models) {

@@ -1,3 +1,4 @@
+// @flow
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import PaneCard from './views/card'

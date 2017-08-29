@@ -78,8 +78,10 @@ export default class GithubSync {
       return
     }
 
-    for (const login of Object.keys(this.setting.values.orgs)) {
-      this.syncIssues(login)
+    if (this.setting.values.orgs) {
+      for (const login of Object.keys(this.setting.values.orgs)) {
+        this.syncIssues(login)
+      }
     }
   }
 

@@ -93,8 +93,8 @@ export default function storeProvidable(options, emitter) {
         }
 
         unstable_handleError(error) {
+          console.error('StoreProvidable.handleError', error)
           this.setState({ error })
-          console.error(error)
         }
 
         setupStores() {
@@ -135,6 +135,9 @@ export default function storeProvidable(options, emitter) {
         }
 
         mountStores() {
+          if (!this.state.stores) {
+            return
+          }
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]
             emitter.emit('store.mount', store)
@@ -144,7 +147,7 @@ export default function storeProvidable(options, emitter) {
           }
         }
 
-        disposeStores = () => {
+        disposeStores() {
           if (!this.state.stores) {
             log('no stores to dispose')
             return

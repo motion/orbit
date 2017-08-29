@@ -25,8 +25,8 @@ export default class Root extends React.Component {
   }
 
   unstable_handleError(error) {
+    console.error('React.handleError', error)
     this.setState({ error })
-    console.error('ERR', error)
   }
 
   clearErrors() {

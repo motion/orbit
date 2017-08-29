@@ -7,7 +7,7 @@ import { view } from '@mcro/black'
 @inject(context => ({ uiContext: context.uiContext }))
 @injectTheme
 @view.ui
-export default class Button {
+export default class Button extends React.Component {
   render({
     uiContext,
     badge,

@@ -36,7 +36,7 @@ type Props = {
 }
 
 @view.ui
-export default class Drawer {
+export default class Drawer extends React.Component {
   props: Props
 
   static defaultProps = {

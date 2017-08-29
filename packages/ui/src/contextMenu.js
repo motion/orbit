@@ -8,7 +8,7 @@ import Popover from './popover'
 import Theme from './helpers/theme'
 
 @view.ui
-class ContextMenuTarget {
+class ContextMenuTarget extends React.Component {
   static contextTypes = {
     contextMenu: object,
   }
@@ -49,7 +49,7 @@ class ContextMenuStore {
 @view({
   store: ContextMenuStore,
 })
-class ContextMenu {
+class ContextMenu extends React.Component {
   props: Props
   node = null
 

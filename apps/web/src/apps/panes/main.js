@@ -24,7 +24,10 @@ class BarMainStore {
     this.props.getRef(this)
   }
 
-  get things() {
+  get things(): Array<PaneResult> {
+    if (!this.topThings) {
+      return []
+    }
     return this.filter(this.topThings.map(thingToResult), { max: 8 })
   }
 

@@ -11,7 +11,7 @@ export type Props = {
 }
 
 @view.ui
-export default class Arrow {
+export default class Arrow extends React.Component {
   props: Props
 
   static defaultProps = {

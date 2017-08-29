@@ -54,20 +54,21 @@ export type DatabaseConfig = {|
 |}
 
 export default class Database {
+  models: ModelsObject = {}
   databaseConfig: Object
+  modelsConfig: ModelsObject
   database: RxDB.Database
-  models: { [string]: Model }
 
   connected = false
 
-  constructor(databaseConfig: DatabaseConfig, models: ModelsObject) {
-    if (!databaseConfig || !models) {
-      console.log('Info for error', typeof databaseConfig, typeof models)
+  constructor(databaseConfig: DatabaseConfig, modelsConfig: ModelsObject) {
+    if (!databaseConfig || !modelsConfig) {
+      console.log('Info for error', typeof databaseConfig, typeof modelsConfig)
       throw new Error('No database or models given to App!')
     }
 
     this.databaseConfig = databaseConfig
-    this.models = models
+    this.modelsConfig = modelsConfig
 
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
@@ -110,8 +111,8 @@ export default class Database {
     const connections = []
 
     // attach Models to app and connect if need be
-    for (const [name, model] of Object.entries(this.models)) {
-      this[name] = model
+    for (const [name, model] of Object.entries(this.modelsConfig)) {
+      this.models[name] = model
 
       if (typeof model.connect !== 'function') {
         throw new Error(

@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class Grid {
+export default class Grid extends React.Component {
   static defaultProps = {
     columns: 1,
   }

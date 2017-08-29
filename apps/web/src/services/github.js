@@ -50,7 +50,9 @@ export default class GithubService {
 
   get activeOrgs() {
     return (
-      this.setting && Object.keys(this.setting.values.orgs).filter(x => !!x)
+      this.setting &&
+      this.setting.values.orgs &&
+      Object.keys(this.setting.values.orgs).filter(x => !!x)
     )
   }
 }

@@ -13,7 +13,7 @@ module.exports = function(context, givenOpts) {
     plugins: [
       // getPlugin('babel-plugin-transform-runtime'),
       // order important here
-      getPlugin('babel-plugin-transform-decorators-legacy'),
+      getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),
       getPlugin('@mcro/gloss/transform', {
         decoratorName: opts.decorator || 'view',
@@ -34,21 +34,21 @@ module.exports = function(context, givenOpts) {
       }),
     ],
     presets: [
+      getPlugin('babel-preset-react'),
+      getPlugin('babel-preset-stage-1-without-async'),
       [
         getPlugin('babel-preset-env'),
         Object.assign(
           {
             useBuiltIns: true,
             targets: {
-              node: '4',
+              node: 8,
             },
             exclude: ['transform-regenerator', 'transform-async-to-generator'],
           },
-          opts.env
+          opts.env || {}
         ),
       ],
-      getPlugin('babel-preset-react'),
-      getPlugin('babel-preset-stage-1'),
     ],
   }
 

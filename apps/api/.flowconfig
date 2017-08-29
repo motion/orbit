@@ -1,6 +1,7 @@
 [ignore]
 **/lib/*.js
 **/.*.js.flow
+../../node_modules/lunr/.*
 
 [include]
 ./node_modules

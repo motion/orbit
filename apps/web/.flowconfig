@@ -4,6 +4,7 @@
 **/.*.js.flow
 **/.*.json
 ../native/.*
+../../node_modules/lunr/.*
 
 [include]
 ./node_modules

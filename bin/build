@@ -22,7 +22,7 @@ else
   # flow
   link-flow &
   # lerna
-  ./node_modules/lerna/bin/lerna.js exec --parallel \
+  npx lerna exec --parallel \
     --ignore @mcro/native  \
     --ignore @mcro/web \
     --ignore @mcro/couch \

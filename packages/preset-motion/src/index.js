@@ -34,8 +34,6 @@ module.exports = function(context, givenOpts) {
       }),
     ],
     presets: [
-      getPlugin('babel-preset-react'),
-      getPlugin('babel-preset-stage-1-without-async'),
       [
         getPlugin('babel-preset-env'),
         Object.assign(
@@ -49,11 +47,15 @@ module.exports = function(context, givenOpts) {
           opts.env || {}
         ),
       ],
+      getPlugin('babel-preset-react'),
+      getPlugin('babel-preset-stage-1-without-async'),
     ],
   }
 
   config.plugins = config.plugins.filter(Boolean)
   config.presets = config.presets.filter(Boolean)
+
+  console.log('config is', config)
 
   return config
 }

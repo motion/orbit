@@ -1,18 +1,12 @@
 {
   "lerna": "2.0.0",
-  "packages": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packages": ["apps/*", "packages/*"],
   "npmClient": "yarn",
   "version": "1.2.0",
   "commands": {
     "bootstrap": {
       "hoist": true,
-      "nohoist": [
-        "react",
-        "react-dom"
-      ]
+      "nohoist": ["react", "react-dom", "sb-event-kit"]
     }
   }
 }

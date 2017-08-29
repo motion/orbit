@@ -8,9 +8,9 @@ exports.default = createPrototypeProxy;
 var _lodash = require('lodash');
 
 function createPrototypeProxy() {
-  var proxy = {};
-  var current = null;
-  var mountedInstances = [];
+  let proxy = {};
+  let current = null;
+  let mountedInstances = [];
 
   /**
    * Creates a proxied toString() method pointing to the current version's toString().
@@ -31,7 +31,7 @@ function createPrototypeProxy() {
    */
   function proxyMethod(name) {
     // Wrap to always call the current version
-    var proxiedMethod = function proxiedMethod() {
+    const proxiedMethod = function () {
       if (typeof current[name] === 'function') {
         return current[name].apply(this, arguments);
       }
@@ -59,7 +59,7 @@ function createPrototypeProxy() {
    * Augments the original componentWillUnmount with instance tracking.
    */
   function proxiedComponentWillUnmount() {
-    var index = mountedInstances.indexOf(this);
+    const index = mountedInstances.indexOf(this);
     // Unless we're in a weird environment without componentDidMount
     if (index !== -1) {
       mountedInstances.splice(index, 1);
@@ -81,11 +81,7 @@ function createPrototypeProxy() {
    * Defines a property, attempting to keep the original descriptor configuration.
    */
   function defineProxyPropertyWithValue(name, value) {
-    var _ref = Object.getOwnPropertyDescriptor(current, name) || {},
-        _ref$enumerable = _ref.enumerable,
-        enumerable = _ref$enumerable === undefined ? false : _ref$enumerable,
-        _ref$writable = _ref.writable,
-        writable = _ref$writable === undefined ? true : _ref$writable;
+    const { enumerable = false, writable = true } = Object.getOwnPropertyDescriptor(current, name) || {};
 
     defineProxyProperty(name, {
       configurable: true,
@@ -103,8 +99,8 @@ function createPrototypeProxy() {
       return;
     }
 
-    var __reactAutoBindMap = {};
-    for (var name in current.__reactAutoBindMap) {
+    let __reactAutoBindMap = {};
+    for (let name in current.__reactAutoBindMap) {
       if (typeof proxy[name] === 'function' && current.__reactAutoBindMap.hasOwnProperty(name)) {
         __reactAutoBindMap[name] = proxy[name];
       }
@@ -117,11 +113,11 @@ function createPrototypeProxy() {
    * Creates an auto-bind map mimicking the original map, but directed at proxy.
    */
   function createAutoBindPairs() {
-    var __reactAutoBindPairs = [];
+    let __reactAutoBindPairs = [];
 
-    for (var i = 0; i < current.__reactAutoBindPairs.length; i += 2) {
-      var name = current.__reactAutoBindPairs[i];
-      var method = proxy[name];
+    for (let i = 0; i < current.__reactAutoBindPairs.length; i += 2) {
+      const name = current.__reactAutoBindPairs[i];
+      const method = proxy[name];
 
       if (typeof method === 'function') {
         __reactAutoBindPairs.push(name, method);
@@ -139,18 +135,18 @@ function createPrototypeProxy() {
     current = next;
 
     // Find changed property names
-    var currentNames = Object.getOwnPropertyNames(current);
-    var previousName = Object.getOwnPropertyNames(proxy);
-    var removedNames = (0, _lodash.difference)(previousName, currentNames);
+    const currentNames = Object.getOwnPropertyNames(current);
+    const previousName = Object.getOwnPropertyNames(proxy);
+    const removedNames = (0, _lodash.difference)(previousName, currentNames);
 
     // Remove properties and methods that are no longer there
-    removedNames.forEach(function (name) {
+    removedNames.forEach(name => {
       delete proxy[name];
     });
 
     // Copy every descriptor
-    currentNames.forEach(function (name) {
-      var descriptor = Object.getOwnPropertyDescriptor(current, name);
+    currentNames.forEach(name => {
+      const descriptor = Object.getOwnPropertyDescriptor(current, name);
       if (typeof descriptor.value === 'function') {
         // Functions require additional wrapping so they can be bound later
         defineProxyPropertyWithValue(name, proxyMethod(name));

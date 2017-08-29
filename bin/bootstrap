@@ -60,7 +60,7 @@ fi
 
 yarn install
 echo "lerna bootstrap"
-./node_modules/lerna/bin/lerna.js bootstrap
+npx lerna bootstrap
 
 echo " welcome!"
 echo " to start the app:"

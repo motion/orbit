@@ -1,18 +1,12 @@
-# 🔫 🔫  dual wield meteor in a box
-
-- motion meets webpack
+- motion + webpack
 - kubernetes + minikube + docker
   - `(dev|prod) start`, `(dev|prod) restart api`, `dev ssh api`...
 - mobx stores
-  - co-located stores
-  - observables | streams => mobx
+  - co-located
+  - automagical
 - [gloss 💅](https://github.com/motion/gloss)
 - helpers: `this.setTimeout`, `this.watch`, etc
 - [rxdb](https://github.com/pubkey/rxdb)
-  - offline first!
-  - shared models
-  - superlogin
-  - couch 2
 
 ## install
 
@@ -24,14 +18,16 @@ npm i
 npm run bootstrap
 ```
 
+After install you can just run `bootstrap` to update packages as long as dotenv is working. See `bin/*` folder for all commands.
+
 ## run
 
 Run these side-by-side:
 
 ```sh
-compose up
+build --watch
+run backend
 run web
-run watch
 ```
 
 then hit: http://jot.dev
@@ -43,7 +39,3 @@ To ssh into a docker container:
 ```sh
 compose exec pad-api /bin/bash
 ```
-
-## wield out
-
-🔫 🔫

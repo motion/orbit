@@ -21,15 +21,18 @@ class BarMainStore {
   topThings = Thing.find({ sort: 'createdAt' })
 
   start() {
+    console.log('this is', this, this.props)
     this.props.getRef(this)
   }
 
   get things(): Array<PaneResult> {
-    console.log('get things')
+    console.time('get things()')
     if (!this.topThings) {
       return []
     }
-    return this.filter(this.topThings.map(thingToResult), { max: 8 })
+    const filtered = this.filter(this.topThings.map(thingToResult), { max: 8 })
+    console.timeEnd('get things()')
+    return filtered
   }
 
   get browse(): Array<PaneResult> {

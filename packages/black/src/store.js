@@ -23,12 +23,12 @@ export const storeOptions = {
   storeDecorator,
   onStoreMount(store: StoreClass, props: Object) {
     if (store.start) {
-      store.start.call(this, props)
+      store.start.call(store, props)
     }
   },
   onStoreUnmount(store: StoreClass) {
     if (store.stop) {
-      store.stop.call(this)
+      store.stop.call(store)
     }
     store.subscriptions.dispose()
   },

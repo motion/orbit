@@ -65,8 +65,7 @@ export default function storeProvidable(options, emitter) {
           // for reactive props in stores
           // 🐛 if you define this as normal observable on class
           //    it will break with never before seen mobx bug on next line
-          Mobx.extendObservable(this, { _props: null })
-          this._props = { ...this.props }
+          this.setupProps()
           this.setupStores()
           this.unmounted = false
         }
@@ -95,6 +94,10 @@ export default function storeProvidable(options, emitter) {
         unstable_handleError(error) {
           console.error('StoreProvidable.handleError', error)
           this.setState({ error })
+        }
+
+        setupProps() {
+          Mobx.extendObservable(this, { _props: { ...this.props } })
         }
 
         setupStores() {
@@ -127,8 +130,11 @@ export default function storeProvidable(options, emitter) {
             for (const name of Object.keys(stores)) {
               // fallback to store if nothing returned
               stores[name] =
-                options.onStoreMount.call(this, stores[name], this.props) ||
-                stores[name]
+                options.onStoreMount.call(
+                  stores[name],
+                  stores[name],
+                  this.props
+                ) || stores[name]
             }
           }
 
@@ -164,6 +170,7 @@ export default function storeProvidable(options, emitter) {
 
         hotReload = () => {
           this.disposeStores()
+          this.setupProps()
           this.setupStores()
           this.mountStores()
         }

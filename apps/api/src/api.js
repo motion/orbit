@@ -39,7 +39,6 @@ export default class API {
         autoSync: true,
       },
     })
-    throw Error('what is thi')
 
     this.bootstrap.start()
     this.server.start()

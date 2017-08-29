@@ -1,11 +1,11 @@
 // @flow
-import * as RxDB from 'rxdb'
+import RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
-import type { Model } from '~/helpers'
+import type { Model } from '@mcro/model'
 
 export { CompositeDisposable } from '@mcro/model'
 
@@ -31,6 +31,28 @@ export const Models = {
 // exports
 export type { Model } from '~/helpers'
 
+export type ModelOptions = {|
+  autoSync?: boolean,
+|}
+
+export type StartOptions = {|
+  options: Object,
+  modelOptions?: ModelOptions,
+|}
+
+export type ModelsObject = {
+  [string]: Model,
+}
+
+export type DatabaseConfig = {|
+  name: string,
+  password: string,
+  couchUrl: string,
+  couchHost: string,
+  adapter: Function,
+  adapterName: string,
+|}
+
 export default class Database {
   databaseConfig: Object
   database: RxDB.Database
@@ -38,13 +60,10 @@ export default class Database {
 
   connected = false
 
-  constructor(databaseConfig, models) {
+  constructor(databaseConfig: DatabaseConfig, models: ModelsObject) {
     if (!databaseConfig || !models) {
-      throw new Error(
-        'No database or models given to App!',
-        typeof databaseConfig,
-        typeof models
-      )
+      console.log('Info for error', typeof databaseConfig, typeof models)
+      throw new Error('No database or models given to App!')
     }
 
     this.databaseConfig = databaseConfig
@@ -63,7 +82,7 @@ export default class Database {
     }
   }
 
-  start = async ({ options, modelOptions } = {}) => {
+  start = async ({ options, modelOptions }: StartOptions = {}) => {
     this.database = await RxDB.create({
       adapter: this.databaseConfig.adapterName,
       name: this.databaseConfig.name,
@@ -79,16 +98,15 @@ export default class Database {
 
   dispose = () => {
     for (const [name, model] of Object.entries(this.models)) {
-      console.log('dispose model', name)
       if (model && model.dispose) {
         model.dispose()
       } else {
-        console.error('waht is this thing', model)
+        console.error('what is this thing', name, model)
       }
     }
   }
 
-  attachModels = async (modelOptions?: Object) => {
+  attachModels = async (modelOptions?: ModelOptions) => {
     const connections = []
 
     // attach Models to app and connect if need be

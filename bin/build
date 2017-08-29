@@ -19,8 +19,6 @@ elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   npm run build
 else
-  # flow
-  link-flow &
   # lerna
   npx lerna exec --parallel \
     --ignore @mcro/native  \
@@ -28,8 +26,5 @@ else
     --ignore @mcro/couch \
     --ignore @mcro/playground \
       -- \
-      babel src --out-dir lib -s true $ARGS &
-
-  wait
-  echo "done"
+      babel src --out-dir lib -s true $ARGS
 fi

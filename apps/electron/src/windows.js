@@ -235,7 +235,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`${JOT_URL}/bar?cachebust=${this.uid}`}
+          file={`${Constants.JOT_URL}/bar?cachebust=${this.uid}`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
@@ -254,7 +254,7 @@ export default class ExampleApp extends React.Component {
           return (
             <Window
               key={win.key}
-              file={`${JOT_URL}?key=${win.key}`}
+              file={`${Constants.JOT_URL}?key=${win.key}`}
               show={win.active}
               {...appWindow}
               defaultSize={win.size}

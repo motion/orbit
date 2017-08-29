@@ -47,15 +47,18 @@ export default function storeProvidable(options, emitter) {
           const curPropKeys = Object.keys(this._props)
           const nextPropsKeys = Object.keys(nextProps)
           // update
-          for (const prop of nextPropsKeys) {
-            if (this._props[prop] !== nextProps[prop]) {
-              this._props[prop] = nextProps[prop]
+          Mobx.action('updateProps', () => {
+            // insert
+            for (const prop of nextPropsKeys) {
+              if (this._props[prop] !== nextProps[prop]) {
+                this._props[prop] = nextProps[prop]
+              }
             }
-          }
-          // clean
-          for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-            this._props[extraProp] = undefined
-          }
+            // remove
+            for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
+              this._props[extraProp] = undefined
+            }
+          })
         }
 
         componentWillMount() {

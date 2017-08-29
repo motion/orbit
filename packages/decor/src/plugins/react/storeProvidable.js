@@ -127,7 +127,8 @@ export default function storeProvidable(options, emitter) {
             for (const name of Object.keys(stores)) {
               // fallback to store if nothing returned
               stores[name] =
-                options.onStoreMount(stores[name], this.props) || stores[name]
+                options.onStoreMount.call(this, stores[name], this.props) ||
+                stores[name]
             }
           }
 

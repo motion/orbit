@@ -139,7 +139,7 @@ export default class BarMain extends React.Component {
     activeIndex,
     paneProps,
     onSelect,
-  }: PaneProps & { store: BarMainStore }) {
+  }: PaneProps & {| store: BarMainStore |}) {
     const secondary = item => {
       if (item.data && item.data.service === 'github')
         return (

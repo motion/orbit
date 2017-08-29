@@ -15,7 +15,7 @@ services:
     restart: always
     volumes:
        - ./app_data/couchdb:/opt/couchdb/data
-       - ./apps/couch/config:/usr/local/etc/couchdb
+       - ./apps/couch/config:/opts/couchdb/etc
     restart: always
     links:
       - pad-redis

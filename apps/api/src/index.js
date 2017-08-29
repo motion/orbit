@@ -1,28 +1,18 @@
 console.log('Starting API...')
-let i = 0
 
 require('isomorphic-fetch')
-console.log(++i)
 const betterStackTraces = require('better-stack-traces')
-console.log(++i)
 const cleanStack = require('clean-stacktrace')
-console.log(++i)
 const global = require('global')
-console.log(++i)
 const wfp = require('wait-for-port')
-console.log(++i)
 const Constants = require('~/constants')
-console.log(++i)
 const promisify = require('sb-promisify').default
-console.log(++i)
 const waitForPort = promisify(wfp)
-console.log(++i)
 
-// betterStackTraces.register()
+betterStackTraces.register()
 
 if (process.env.NODE_ENV !== 'production') {
-  // long stack traces
-  require('longjohn')
+  require('longjohn') // long stack traces
 }
 
 // bootstrap process
@@ -43,7 +33,6 @@ process.on('UncaughtException', error => {
   console.error('uncaughtException', error)
   console.log(stack(error.stack))
 })
-console.log(++i)
 
 console.log('require api')
 const API = require('./api').default
@@ -61,7 +50,5 @@ async function run() {
   console.log('API started')
   global.API = Api
 }
-
-console.log(++i)
 
 run()

@@ -17,7 +17,7 @@ if [ "$ACTION" = "backend" ]; then
 elif [ "$ACTION" = "electron" ]; then
   cd apps/electron
   npm run watch &
-  sleep 2
+  sleep 3
   npm start &
   wait
   echo "done"

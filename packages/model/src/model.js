@@ -261,6 +261,10 @@ export default class Model {
       statics: this.statics,
     })
 
+    // TEMPORARY BUGFIX, fixed pouch console warnings about db.info()
+    // TODO remove on RxDB 5.4.0
+    await this._collection.pouch.info()
+
     // sync PUSH ONLY
     if (this.options.autoSync) {
       this._collection.sync({
@@ -538,5 +542,12 @@ export default class Model {
       await this.onConnection()
     }
     return this._collection.insert(object)
+  }
+
+  async upsert(object: Object = {}) {
+    if (!this._collection) {
+      await this.onConnection()
+    }
+    return this._collection.upset(object)
   }
 }

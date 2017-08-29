@@ -27,3 +27,9 @@ maybe:
 -fast pouch
   - https://github.com/pouchdb-community/socket-pouch (web sockets)
   - https://github.com/jkleinsc/telegraph (web workers)
+
+
+### technical downsides
+
+- cant use docker-compose offline due to HOST_IP problem
+- cant use flow due to variety of problems

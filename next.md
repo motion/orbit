@@ -25,6 +25,5 @@ maybe:
 
 
 -fast pouch
-  - https://github.com/pouchdb-community/socket-pouch
-  - https://github.com/redgeoff/delta-pouch
-  - https://github.com/jkleinsc/telegraph
+  - https://github.com/pouchdb-community/socket-pouch (web sockets)
+  - https://github.com/jkleinsc/telegraph (web workers)

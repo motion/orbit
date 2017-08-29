@@ -1,7 +1,7 @@
 {
   "name": "@mcro/web",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "main": "index.js",
   "scripts": {
     "start": "motion",
@@ -12,7 +12,9 @@
     "build-debug": "DEBUG=true node scripts/build.js",
     "electron": "denode electron.js &>/dev/null &"
   },
-  "denodeOptions": ["DENODE_INSECURE"],
+  "denodeOptions": [
+    "DENODE_INSECURE"
+  ],
   "electronOptions": {
     "width": "1200",
     "height": "800",
@@ -29,13 +31,12 @@
     }
   },
   "dependencies": {
-    "@mcro/black": "^1.1.0",
-    "@mcro/gloss": "^1.1.0",
-    "@mcro/model": "*",
-    "@mcro/models": "^1.1.0",
-    "@mcro/router": "^1.1.0",
-    "@mcro/ui": "^1.1.0",
-    "octokat": "^0.9.2",
+    "@mcro/black": "^1.2.0",
+    "@mcro/gloss": "^1.2.0",
+    "@mcro/model": "^1.2.0",
+    "@mcro/models": "^1.2.0",
+    "@mcro/router": "^1.2.0",
+    "@mcro/ui": "^1.2.0",
     "babel-loader": "^6.4.1",
     "babel-polyfill": "^6.23.0",
     "buffer": "^5.0.6",
@@ -57,6 +58,7 @@
     "mobx-utils": "^3.0.0",
     "morgan": "^1.8.1",
     "natural": "^0.5.4",
+    "octokat": "^0.9.2",
     "pouchdb-adapter-idb": "^6.3.4",
     "pouchdb-core": "^6.3.4",
     "prop-types": "^15.5.9",

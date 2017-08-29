@@ -23,6 +23,7 @@ export const storeOptions = {
   storeDecorator,
   onStoreMount(store: StoreClass, props: Object) {
     if (store.start) {
+      console.log('props are', props)
       store.start(props)
     }
   },

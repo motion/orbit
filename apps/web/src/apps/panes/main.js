@@ -25,6 +25,7 @@ class BarMainStore {
   }
 
   get things(): Array<PaneResult> {
+    console.log('get things')
     if (!this.topThings) {
       return []
     }
@@ -132,7 +133,7 @@ class BarMainStore {
 @view({
   store: BarMainStore,
 })
-export default class BarMain {
+export default class BarMain extends React.Component {
   render({
     store,
     activeIndex,

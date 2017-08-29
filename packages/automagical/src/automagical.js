@@ -130,14 +130,11 @@ function automagic(obj: Object) {
 function mobxify(target: Object, method: string, descriptors: Object) {
   const descriptor = descriptors && descriptors[method]
 
-  // check first to avoid accidental get
+  // @computed get (do first to avoid hitting the getter on next line)
   if (descriptor && !!descriptor.get) {
-    const getter = {
-      [method]: DEFAULT_VALUE,
-    }
-    Object.defineProperty(getter, method, descriptor)
-    // @computed get
-    Mobx.extendObservable(target, getter)
+    Mobx.extendObservable(target, {
+      [method]: Mobx.computed(DEFAULT_VALUE),
+    })
     return
   }
 
@@ -319,12 +316,6 @@ function mobxifyWatch(obj, method, val) {
       }
       if (isObservable(result)) {
         let value = result.get()
-        if (
-          value &&
-          (Mobx.isObservableArray(value) || Mobx.isObservableMap(value))
-        ) {
-          value = Mobx.toJS(value)
-        }
         return value
       }
       return result

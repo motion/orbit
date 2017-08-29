@@ -3,6 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
+import { throttle } from 'lodash-decorators'
 
 class MillerStore {
   plugins = []
@@ -14,6 +15,7 @@ class MillerStore {
     this.setTimeout(this.handleSelectionChange)
   }
 
+  @throttle(16)
   handleSelectionChange = () => {
     const { state, onChange } = this.props
     if (state.activeRow !== null && this.activeResults) {
@@ -80,7 +82,7 @@ class MillerStore {
 }
 
 @view
-class Pane {
+class Pane extends React.Component {
   render({
     pane,
     getRef,
@@ -104,14 +106,7 @@ class Pane {
     }
 
     return (
-      <pane
-        css={{
-          flex: 1,
-        }}
-        ref={ref => {
-          ref && onMeasureWidth(ref.offsetWidth)
-        }}
-      >
+      <pane ref={ref => ref && onMeasureWidth(ref.offsetWidth)}>
         <ChildPane
           paneProps={paneProps}
           data={data || {}}
@@ -131,6 +126,7 @@ class Pane {
 
   static style = {
     pane: {
+      flex: 1,
       height: '100%',
       borderLeft: [1, [0, 0, 0, 0.05]],
     },
@@ -143,7 +139,7 @@ class Pane {
 @view({
   store: MillerStore,
 })
-export default class Miller {
+export default class Miller extends React.Component {
   static defaultProps = {
     onActions: _ => _,
   }

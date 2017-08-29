@@ -6,7 +6,7 @@ import open from 'opn'
 import Menu from '~/menu'
 import { measure } from '~/helpers'
 import * as Constants from '~/constants'
-import WindowsStoreFactory from './windowsStore'
+import WindowsStore from './windowsStore'
 import Window from './window'
 
 let onWindows = []
@@ -14,7 +14,8 @@ export function onWindow(cb) {
   onWindows.push(cb)
 }
 
-const WindowsStore = new WindowsStoreFactory()
+const AppWindows = new WindowsStore()
+const ActionWindows = new WindowsStore()
 
 export default class ExampleApp extends React.Component {
   state = {
@@ -22,7 +23,8 @@ export default class ExampleApp extends React.Component {
     show: true,
     size: [0, 0],
     position: [0, 0],
-    windows: WindowsStore.windows,
+    appWindows: AppWindows.windows,
+    actionWindows: ActionWindows.windows,
   }
 
   componentDidMount() {
@@ -35,7 +37,8 @@ export default class ExampleApp extends React.Component {
     })
     Object.assign(this.repl.context, {
       Root: this,
-      WindowsStore: WindowsStore,
+      AppWindows: AppWindows,
+      ActionWindows: ActionWindows,
     })
     console.log('started a repl!')
   }
@@ -90,7 +93,7 @@ export default class ExampleApp extends React.Component {
 
   listenToApps = () => {
     ipcMain.on('where-to', (event, key) => {
-      const win = WindowsStore.findBy(key)
+      const win = AppWindows.findBy(key) || ActionWindows.findBy(key)
       if (win) {
         win.onHasPath(() => {
           console.log('where-to:', key, win.path)
@@ -110,12 +113,13 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('close', (event, key) => {
-      WindowsStore.removeByKey(+key)
+      AppWindows.removeByKey(+key)
+      ActionWindows.removeByKey(+key)
       this.updateWindows()
     })
 
     ipcMain.on('app-bar-toggle', (event, key) => {
-      WindowsStore.findBy(key).toggleBar()
+      AppWindows.findBy(key).toggleBar()
       this.updateWindows()
       event.sender.send('app-bar-toggle', 'success')
     })
@@ -127,12 +131,18 @@ export default class ExampleApp extends React.Component {
 
   updateWindows = () => {
     return new Promise(resolve => {
-      this.setState({ windows: WindowsStore.windows }, resolve)
+      this.setState(
+        {
+          appWindows: AppWindows.windows,
+          actionWindows: ActionWindows.windows,
+        },
+        resolve
+      )
     })
   }
 
   next = path => {
-    const next = WindowsStore.next(path)
+    const next = AppWindows.next(path)
     this.updateWindows()
     return next
   }
@@ -140,23 +150,13 @@ export default class ExampleApp extends React.Component {
   openApp = path => {
     this.hide()
     const next = this.next(path)
-
-    if (!next) {
-      console.log('no next')
-      return
+    if (next) {
+      setTimeout(() => next.ref && next.ref.focus(), 100)
     }
-
-    setTimeout(() => {
-      if (next.ref) {
-        next.ref.focus()
-      }
-    }, 100)
   }
 
   registerShortcuts = () => {
-    console.log('registerShortcuts')
     globalShortcut.unregisterAll()
-
     const SHORTCUTS = {
       'Option+Space': () => {
         console.log('command option+space')
@@ -167,7 +167,6 @@ export default class ExampleApp extends React.Component {
         }
       },
     }
-
     for (const shortcut of Object.keys(SHORTCUTS)) {
       const ret = globalShortcut.register(shortcut, SHORTCUTS[shortcut])
       if (!ret) {
@@ -177,14 +176,9 @@ export default class ExampleApp extends React.Component {
   }
 
   measureAndShow = async () => {
-    console.log('measuring and showing')
     this.measure()
     await this.show()
     this.windowRef.focus()
-  }
-
-  onReadyToShow = () => {
-    console.log('READY TO SHOW')
   }
 
   unstable_handleError(error) {
@@ -195,7 +189,7 @@ export default class ExampleApp extends React.Component {
   uid = Math.random()
 
   render() {
-    const { windows, error, restart } = this.state
+    const { actionWindows, appWindows, error, restart } = this.state
 
     if (restart) {
       console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
@@ -220,6 +214,11 @@ export default class ExampleApp extends React.Component {
       },
     }
 
+    const actionWindow = {
+      ...appWindow,
+      vibrancy: 'light',
+    }
+
     if (error) {
       console.log('recover render from error')
       return null
@@ -240,7 +239,6 @@ export default class ExampleApp extends React.Component {
           show={this.state.show}
           size={this.state.size}
           position={this.state.position}
-          onReadyToShow={this.onReadyToShow}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
           onFocus={() => {
@@ -250,7 +248,8 @@ export default class ExampleApp extends React.Component {
             nativeWindowOpen: true,
           }}
         />
-        {windows.map(win => {
+
+        {appWindows.map(win => {
           return (
             <Window
               key={win.key}
@@ -269,7 +268,7 @@ export default class ExampleApp extends React.Component {
                 this.updateWindows()
               }}
               onClose={() => {
-                WindowsStore.removeByKey(win.key)
+                AppWindows.removeByKey(win.key)
                 this.updateWindows()
               }}
               onFocus={() => {
@@ -293,6 +292,26 @@ export default class ExampleApp extends React.Component {
               titleBarStyle={
                 win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
               }
+            />
+          )
+        })}
+
+        {actionWindows.map((win, index) => {
+          return (
+            <window
+              key={win.key}
+              file={`${Constants.JOT_URL}?key=${win.key}`}
+              show={win.active}
+              {...actionWindow}
+              size={this.state.size}
+              position={this.state.position.map(
+                coordinate => coordinate + index * 10
+              )}
+              onClose={() => {
+                ActionWindows.removeByKey(win.key)
+                this.updateWindows()
+              }}
+              titleBarStyle="customButtonsOnHover"
             />
           )
         })}

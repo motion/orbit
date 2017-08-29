@@ -1,3 +1,5 @@
+import { screen } from 'electron'
+
 const MIN_WIDTH = 750
 const MIN_HEIGHT = 600
 const MAX_WIDTH = 950

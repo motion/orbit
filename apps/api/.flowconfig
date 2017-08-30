@@ -2,6 +2,7 @@
 **/lib/*.js
 **/.*.js.flow
 ../../node_modules/lunr/.*
+../../node_modules/art/.*
 
 [include]
 ./node_modules

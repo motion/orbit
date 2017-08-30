@@ -17,6 +17,8 @@ type ModelArgs = {
   defaultSchema?: Object,
 }
 
+type PromiseFunction = () => Promise<any>
+
 const chain = (object, method, value) => {
   if (!value) {
     return object
@@ -42,7 +44,7 @@ export default class Model {
   defaultSchema: Object = {}
   @observable connected = false
   remote: ?string = null // sync to
-  hooks: Object<string, () => Promise<any>> = {} // hooks run before/after operations
+  hooks: { [string]: PromiseFunction } = {} // hooks run before/after operations
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args

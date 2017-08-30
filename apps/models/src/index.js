@@ -6,6 +6,7 @@ import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
 import type { Model } from '@mcro/model'
+export type { Model }
 
 export { CompositeDisposable } from '@mcro/model'
 
@@ -27,9 +28,6 @@ export const Models = {
   Job,
   Setting,
 }
-
-// exports
-export type { Model } from '~/helpers'
 
 export type ModelOptions = {|
   autoSync?: boolean,

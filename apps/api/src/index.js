@@ -11,10 +11,6 @@ const waitForPort = promisify(wfp)
 
 betterStackTraces.register()
 
-if (process.env.NODE_ENV !== 'production') {
-  require('longjohn') // long stack traces
-}
-
 // bootstrap process
 process.title = 'orbit-api'
 

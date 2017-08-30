@@ -2,7 +2,7 @@
 import { CompositeDisposable } from 'sb-event-kit'
 import { autorun, observable } from 'mobx'
 import { compile } from './properties'
-import type RxDB, { RxCollection } from 'rxdb'
+import type RxDB, { RxCollection, RxQuery } from 'rxdb'
 import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
@@ -16,6 +16,8 @@ type SettingsObject = {
 type ModelArgs = {
   defaultSchema?: Object,
 }
+
+type Queryish = RxQuery | { query: RxQuery }
 
 type PromiseFunction = () => Promise<any>
 
@@ -261,6 +263,7 @@ export default class Model {
       name,
       schema: this.compiledSchema,
       statics: this.statics,
+      pouchSettings: this.options.pouchSettings,
     })
 
     // TEMPORARY BUGFIX, fixed pouch console warnings about db.info()
@@ -292,7 +295,7 @@ export default class Model {
 
     // PRE-INSERT
     const ogInsert = this.hooks.preInsert
-    this.hooks.preInsert = doc => {
+    this.hooks.preInsert = (doc: Object) => {
       this.applyDefaults(doc)
       if (this.hasTimestamps) {
         doc.createdAt = this.now
@@ -387,7 +390,7 @@ export default class Model {
     await this._collection.pouch.createIndex({ fields: index })
   }
 
-  applyDefaults = doc => {
+  applyDefaults = (doc: Object) => {
     const defaults = this.getDefaultProps(doc)
     for (const prop of Object.keys(defaults)) {
       if (typeof doc[prop] === 'undefined') {
@@ -396,7 +399,10 @@ export default class Model {
     }
   }
 
-  syncQuery = (queryish, options = { live: true, retry: true }) => {
+  syncQuery = (
+    queryish: Queryish,
+    options: Object = { live: true, retry: true }
+  ) => {
     let query = queryish
     if (query.query) {
       query = query.query
@@ -445,6 +451,12 @@ export default class Model {
           const done = state && state.pull && state.pull.ok
 
           if (done && !resolved) {
+            resolved = true
+            console.log(
+              'Done syncing query',
+              this.constructor.name,
+              queryKey(query)
+            )
             // unsub error stream
             error$.unsubscribe()
 
@@ -462,7 +474,6 @@ export default class Model {
             } else {
               resolve(true)
             }
-            resolved = true
           }
         })
         .toPromise()

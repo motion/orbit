@@ -1,4 +1,5 @@
 // @flow
+import { store, watch } from '@mcro/black/store'
 import { Setting, Thing, Job } from '@mcro/models'
 import type { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
@@ -16,10 +17,18 @@ type GithubSetting = {
 const withinMinutes = (date, minutes) =>
   Date.now() - Date.parse(date) > minutes * 1000 * 60
 
+@store
 export default class GithubSync {
   user: User
   type = 'github'
-  setting: ?GithubSetting = null
+
+  @watch
+  setting: ?GithubSetting = () =>
+    this.user &&
+    Setting.findOne({
+      userId: this.user.id,
+      type: 'github',
+    })
 
   constructor({ user }: SyncOptions) {
     this.user = user
@@ -29,13 +38,11 @@ export default class GithubSync {
     return (this.user.github && this.user.github.auth.accessToken) || ''
   }
 
-  start = async () => {
-    // fetch setting
-    this.setting = await Setting.findOne({
-      userId: this.user.id,
-      type: 'github',
-    }).exec()
+  get settings(): Object {
+    return (this.setting && this.setting.values) || {}
+  }
 
+  start = async () => {
     if (!this.user.github) {
       console.log('No github credentials found for user')
       return
@@ -88,6 +95,10 @@ export default class GithubSync {
   }
 
   runJob = async (action: string) => {
+    if (!this.setting) {
+      console.log('No setting found')
+      return
+    }
     switch (action) {
       case 'issues':
         return await this.runJobIssues()
@@ -98,17 +109,32 @@ export default class GithubSync {
 
   runJobFeed = async () => {
     console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️')
+    if (this.settings.activeOrgs) {
+      await Promise.all(this.settings.activeOrgs).map(this.syncFeed)
+    }
+  }
+
+  syncFeed = async (orgLogin: string) => {
+    const repos = await this.fetch(`/orgs/${orgLogin}/repos`)
+    if (repos) {
+      const allEvents = await Promise.all(
+        repos.map(repo => this.fetch(`/repos/${orgLogin}/${repo.name}/events`))
+      )
+
+      for (const event of allEvents) {
+        console.log(
+          'should add this event to feed',
+          orgLogin,
+          event.repo.name,
+          event.payload
+        )
+      }
+    }
   }
 
   runJobIssues = async () => {
-    if (!this.setting) {
-      console.log('No setting found')
-      return
-    }
-    if (this.setting.values.orgs) {
-      await Promise.all(
-        Object.keys(this.setting.values.orgs).map(this.syncIssues)
-      )
+    if (this.settings.activeOrgs) {
+      await Promise.all(this.settings.activeOrgs.map(this.syncIssues))
     } else {
       console.log('No orgs selected in settings')
     }

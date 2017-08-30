@@ -17,6 +17,12 @@ export class SettingModel extends Model {
   settings = {
     database: 'settings',
   }
+
+  methods = {
+    get activeOrgs() {
+      return (this.orgs && Object.keys(this.orgs).filter(Boolean)) || null
+    },
+  }
 }
 
 const SettingInstance = new SettingModel()

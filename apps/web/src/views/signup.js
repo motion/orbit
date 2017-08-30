@@ -5,7 +5,7 @@ import { CurrentUser } from '~/app'
 import Login from '~/apps/panes/login'
 
 @view
-export default class Signup {
+export default class Signup extends React.Component {
   render() {
     return (
       <signup if={!CurrentUser.loggedIn} $$fullscreen $$draggable $$centered>

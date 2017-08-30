@@ -3,7 +3,9 @@ import React from 'react'
 import { StyleSheet, css } from './stylesheet'
 import deepExtend from 'deep-extend'
 import type { Gloss } from './index'
+import tags from 'html-tags'
 
+const VALID_TAGS = tags.reduce((acc, cur) => ({ ...acc, [cur]: true }), {})
 const IS_PROD = process.env.NODE_ENV === 'production'
 
 const arrayOfObjectsToObject = (arr: Array<Object>) => {
@@ -15,10 +17,10 @@ const arrayOfObjectsToObject = (arr: Array<Object>) => {
 }
 const ogCreateElement = React.createElement.bind(React)
 const TAG_NAME_MAP = {
-  title: 'xtitle',
-  body: 'xbody',
-  meta: 'xmeta',
-  head: 'xhead',
+  title: 'div',
+  body: 'div',
+  meta: 'div',
+  head: 'div',
 }
 const $ = '$'
 
@@ -29,7 +31,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
   return function fancyElement(
     type_: string | Function,
     props?: Object,
-    ...children
+    ...children: Array<any>
   ) {
     let type = type_
     if (!type) {
@@ -146,6 +148,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     }
 
     if (isTag) {
+      type = VALID_TAGS[type] ? type : 'div'
       type = TAG_NAME_MAP[type] || type
     }
 

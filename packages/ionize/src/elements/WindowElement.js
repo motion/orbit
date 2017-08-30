@@ -9,7 +9,6 @@ import type { ElectronApp } from 'electron'
 import type IonizeContainer from '../IonizeContainer'
 import type { HostContext } from '../IonizeHostConfig'
 import configureWrappedEventHandler from '../util/configureWrappedEventHandler'
-import { getCurrentFiberStackAddendum } from 'react-dom/lib/ReactDebugCurrentFiber'
 
 /* PROPS NEEDED
  * title
@@ -170,6 +169,7 @@ export default class WindowElement extends BaseElement {
   }
 
   finalizeBeforeRemoval(): void {
+    this.disposed = true
     this.window.disposed = true
     this.window.close()
     for (const eventKey in this.attachedHandlers) {
@@ -202,6 +202,10 @@ export default class WindowElement extends BaseElement {
     oldProps: Object,
     newProps: Object
   ): void {
+    if (this.disposed) {
+      return
+    }
+
     for (let i = 0; i < updatePayload.length; i += 2) {
       let propKey = updatePayload[i]
       let propVal = updatePayload[i + 1]
@@ -254,8 +258,7 @@ export default class WindowElement extends BaseElement {
             console.warn(
               'A component is changing the acceptFirstMouse prop of a window. ' +
                 'The acceptFirstMouse prop only has effect when the window is first rendered, ' +
-                'changing it after the first render does nothing. ' +
-                getCurrentFiberStackAddendum()
+                'changing it after the first render does nothing. '
             )
           }
           break

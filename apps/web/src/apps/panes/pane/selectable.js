@@ -18,8 +18,8 @@ export default class Selectable {
 
   render({ paneStore, options }) {
     const { name, when, body, actions, index, id } = options
-    const { activeIndex, selectedIds } = paneStore
-    const isActive = activeIndex === index
+    const { selectedIds } = paneStore
+    const isActive = paneStore.getActiveIndex() === index
     const isSelected = includes(selectedIds, id)
     const showActions = isActive && selectedIds.length === 0
 
@@ -70,7 +70,7 @@ export default class Selectable {
       alignSelf: 'center',
     },
     active: {
-      background: '#888',
+      background: '#aaa',
     },
     top: {
       justifyContent: 'space-between',

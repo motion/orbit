@@ -26,11 +26,11 @@ export default class Models {
   }
 
   ensureGithubSetting = async user => {
-    const setting = await Setting.findOrCreate({
+    console.log('ensure setting for user', user.id)
+    await Setting.findOrCreate({
       type: 'github',
       userId: user.id,
     })
-    console.log('github setting is', setting.values)
   }
 
   dispose() {

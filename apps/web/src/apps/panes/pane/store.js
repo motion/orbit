@@ -4,8 +4,7 @@ import { random, without, intersection, includes, flatten } from 'lodash'
 const toggleInclude = (xs, x) => (includes(xs, x) ? without(xs, x) : [...xs, x])
 
 export default class PaneStore {
-  version = 0
-
+  // version = 0
   metaKey = false
 
   selectedIds = []
@@ -13,8 +12,11 @@ export default class PaneStore {
   visibleActions = {}
   cardIdByIndex = {}
 
-  get activeIndex() {
-    return this.props.millerState.activeRow
+  isActive = this.props.isActive
+
+  getActiveIndex = () => {
+    const { millerState } = this.props
+    return this.isActive ? millerState.activeRow : null
   }
 
   setIndex = index => {
@@ -33,7 +35,7 @@ export default class PaneStore {
       }
 
       if (this.metaKey) {
-        ;(this.allActions || []).forEach(action => {
+        ; (this.allActions || []).forEach(action => {
           if (actionToKeyCode(action) === e.keyCode) {
             e.preventDefault()
             console.log('executing action', action)
@@ -54,7 +56,7 @@ export default class PaneStore {
 
   toggleId = id => {
     this.selectedIds = toggleInclude(this.selectedIds, id)
-    this.version++
+    // this.version++
   }
 
   addCard = options => {

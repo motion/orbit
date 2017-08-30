@@ -43,52 +43,29 @@ export default function storeProvidable(options, emitter) {
           stores: null,
         }
 
-        getChildContext() {
-          if (context && Stores) {
-            if (options.warnOnOverwriteStore && this.context.stores) {
-              Object.keys(Stores).forEach(name => {
-                if (this.context.stores[name]) {
-                  console.log(
-                    `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${Klass.name}`
-                  )
-                }
-              })
-            }
-
-            const names = Object.keys(Stores)
-            const stores = {
-              ...this.context.stores,
-              ...pickBy(
-                this.state.stores,
-                (value, key) => names.indexOf(key) >= 0
-              ),
-            }
-
-            return { stores }
-          }
-        }
-
         componentWillReceiveProps(nextProps) {
           const curPropKeys = Object.keys(this._props)
           const nextPropsKeys = Object.keys(nextProps)
           // update
-          for (const prop of nextPropsKeys) {
-            if (this._props[prop] !== nextProps[prop]) {
-              this._props[prop] = nextProps[prop]
+          Mobx.action('updateProps', () => {
+            // insert
+            for (const prop of nextPropsKeys) {
+              if (this._props[prop] !== nextProps[prop]) {
+                this._props[prop] = nextProps[prop]
+              }
             }
-          }
-          // clean
-          for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-            this._props[extraProp] = undefined
-          }
+            // remove
+            for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
+              this._props[extraProp] = undefined
+            }
+          })
         }
 
         componentWillMount() {
           // for reactive props in stores
           // 🐛 if you define this as normal observable on class
           //    it will break with never before seen mobx bug on next line
-          Mobx.extendObservable(this, { _props: null })
-          this._props = { ...this.props }
+          this.setupProps()
           this.setupStores()
           this.unmounted = false
         }
@@ -115,8 +92,12 @@ export default function storeProvidable(options, emitter) {
         }
 
         unstable_handleError(error) {
+          console.error('StoreProvidable.handleError', error)
           this.setState({ error })
-          console.error(error)
+        }
+
+        setupProps() {
+          Mobx.extendObservable(this, { _props: { ...this.props } })
         }
 
         setupStores() {
@@ -149,7 +130,11 @@ export default function storeProvidable(options, emitter) {
             for (const name of Object.keys(stores)) {
               // fallback to store if nothing returned
               stores[name] =
-                options.onStoreMount(stores[name], this.props) || stores[name]
+                options.onStoreMount.call(
+                  stores[name],
+                  stores[name],
+                  this.props
+                ) || stores[name]
             }
           }
 
@@ -157,6 +142,9 @@ export default function storeProvidable(options, emitter) {
         }
 
         mountStores() {
+          if (!this.state.stores) {
+            return
+          }
           for (const name of Object.keys(this.state.stores)) {
             const store = this.state.stores[name]
             emitter.emit('store.mount', store)
@@ -166,7 +154,7 @@ export default function storeProvidable(options, emitter) {
           }
         }
 
-        disposeStores = () => {
+        disposeStores() {
           if (!this.state.stores) {
             log('no stores to dispose')
             return
@@ -182,6 +170,7 @@ export default function storeProvidable(options, emitter) {
 
         hotReload = () => {
           this.disposeStores()
+          this.setupProps()
           this.setupStores()
           this.mountStores()
         }
@@ -196,6 +185,34 @@ export default function storeProvidable(options, emitter) {
           }
 
           return <Klass {...this.props} {...this.state.stores} />
+        }
+      }
+
+      if (context && Stores) {
+        StoreProvider.prototype.childContextTypes = {
+          stores: object,
+        }
+
+        StoreProvider.prototype.getChildContext = function() {
+          if (options.warnOnOverwriteStore && this.context.stores) {
+            Object.keys(Stores).forEach(name => {
+              if (this.context.stores[name]) {
+                console.log(
+                  `Notice! You are overwriting an existing store in provide. This may be intentional: ${name} from ${Klass.name}`
+                )
+              }
+            })
+          }
+
+          const names = Object.keys(Stores)
+          const stores = {
+            ...this.context.stores,
+            ...pickBy(
+              this.state.stores,
+              (value, key) => names.indexOf(key) >= 0
+            ),
+          }
+          return { stores }
         }
       }
 

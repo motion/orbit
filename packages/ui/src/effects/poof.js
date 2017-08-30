@@ -7,7 +7,7 @@ const FRAMES = 5
 const HEIGHT = 240 / FRAMES
 
 @view.ui
-export default class Poof {
+export default class Poof extends React.Component {
   static defaultProps = {
     top: 0,
     left: 0,

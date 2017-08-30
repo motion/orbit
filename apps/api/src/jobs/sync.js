@@ -1,16 +1,18 @@
 // @flow
-import type { Observable } from 'rxjs'
+import type { Subscription } from 'rxjs'
 import * as Syncers from './syncers'
-import { Job, User, Setting, CompositeDisposable } from '@mcro/models'
+import { Job, User, CompositeDisposable } from '@mcro/models'
 
 const SOURCE_TO_SYNCER = {
   github: Syncers.Github,
 }
 
-function getRxError({ message, stack }) {
+function getRxError(error: Error) {
+  const { message, stack } = error
+
   try {
-    const message = JSON.parse(message)
-    console.log(JSON.stringify(message, 0, 2))
+    const parsedMessage = JSON.parse(message)
+    console.log(JSON.stringify(parsedMessage, null, 2))
   } catch (e) {
     // nothing
   }
@@ -18,28 +20,31 @@ function getRxError({ message, stack }) {
 }
 
 export default class Sync {
-  subscriptions = new CompositeDisposable()
+  subscriptions: CompositeDisposable = new CompositeDisposable()
   locks: Set<string> = new Set()
-  jobWatcher: Observable
+  jobWatcher: ?Subscription = null
   syncers = {}
-  users = []
+  user: ?User = null
 
   start = async () => {
-    await Promise.all([this.setupSyncers(), this.setupUsers()])
+    await this.setupUser()
+    await this.setupSyncers()
     this.watchJobs()
   }
 
   dispose = () => {
-    this.jobWatcher.unsubscribe()
+    if (this.jobWatcher) {
+      this.jobWatcher.unsubscribe()
+    }
     this.disposeSyncers()
     this.subscriptions.dispose()
   }
 
-  setupUsers = () => {
+  setupUser = () => {
     return new Promise(resolve => {
-      const query = User.find().$.subscribe(allUsers => {
-        if (allUsers && allUsers.length) {
-          this.users = allUsers
+      const query = User.findOne().$.subscribe(user => {
+        if (user) {
+          this.user = user
           resolve()
         }
       })
@@ -48,15 +53,16 @@ export default class Sync {
   }
 
   setupSyncers = async () => {
-    for await (const name of Object.keys(SOURCE_TO_SYNCER)) {
-      const Syncer = new SOURCE_TO_SYNCER[name]()
+    for (const name of Object.keys(SOURCE_TO_SYNCER)) {
+      const Syncer = new SOURCE_TO_SYNCER[name]({ user: this.user })
       await Syncer.start()
+      console.log('Syncer started:', name)
       this.syncers[name] = Syncer
     }
   }
 
   disposeSyncers = async () => {
-    for await (const name of Object.keys(this.syncers)) {
+    for (const name of Object.keys(this.syncers)) {
       await this.syncers[name].dispose()
     }
   }
@@ -72,14 +78,13 @@ export default class Sync {
         try {
           await this.runJob(job)
         } catch (error) {
-          console.log('ERROR')
           const lastError = getRxError(error)
-          console.log(lastError)
-          // await job.update({
-          //   status: 3,
-          //   // lastError,
-          //   tries: 3,
-          // })
+          console.log('JOB ERROR', lastError)
+          await job.update({
+            status: 3,
+            lastError,
+            tries: 3,
+          })
         }
         this.locks.delete(job.id)
       }
@@ -88,27 +93,28 @@ export default class Sync {
 
   runJob = async (job: Job) => {
     console.log('Running', job.id, job.type)
-    // await job.update({
-    //   percent: 0,
-    //   status: Job.status.PROCESSING,
-    //   tries: job.tries + 1,
-    // })
+    await job.update({
+      percent: 0,
+      status: Job.status.PROCESSING,
+      tries: job.tries + 1,
+    })
 
     const syncer = this.syncers[job.type]
 
     if (syncer) {
       try {
-        await syncer.run(job, this.users)
+        await syncer.run(job)
       } catch (error) {
         console.log('error running syncer', error)
-        // await job.update({
-        //   status: Job.status.FAILED,
-        //   lastError: getRxError(error),
-        // })
+        await job.update({
+          status: Job.status.FAILED,
+          lastError: getRxError(error),
+        })
       }
     }
 
     // update job
-    // await job.update({ percent: 100, status: Job.status.COMPLETED })
+    await job.update({ percent: 100, status: Job.status.COMPLETED })
+    console.log('Job completed:', job.type, job.action, job.id)
   }
 }

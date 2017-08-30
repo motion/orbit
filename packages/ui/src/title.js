@@ -138,7 +138,7 @@ export default class Title extends React.Component {
       alignItems: 'center',
       userSelect: 'none',
       cursor: 'default',
-      flex: 'inherit',
+      flex: 'default',
     },
     size1: {
       textTransform: 'uppercase',

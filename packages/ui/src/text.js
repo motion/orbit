@@ -17,8 +17,8 @@ export type Props = {
 }
 
 // click away from edit clears it
-@view
-export default class Text {
+@view.ui
+export default class Text extends React.Component {
   props: Props
 
   static defaultProps = {

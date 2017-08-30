@@ -1,19 +1,20 @@
 {
   "name": "@mcro/model",
   "main": "lib/index.js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "scripts": {},
   "dependencies": {
     "hash-sum": "1.0.2",
-    "kontur": "^0.2.0",
-    "lodash": "*",
-    "mobx": "^3.2.0",
-    "pouchdb-core": "^6.2.0",
-    "rxdb": "^5.2.1",
-    "rxjs": "^5.4.1",
     "is-my-json-valid": "^2.16.0",
-    "sb-event-kit": "^3.0.0",
-    "lodash": "^4.17.4"
+    "kontur": "^0.2.0",
+    "lodash": "^4.17.4",
+    "pouchdb-core": "^6.2.0",
+    "rxdb": "^5.3.0",
+    "rxjs": "^5.4.1",
+    "sb-event-kit": "^3.0.0"
+  },
+  "peerDependencies": {
+    "mobx": "*"
   },
   "publishConfig": {
     "access": "public"

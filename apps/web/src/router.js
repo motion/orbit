@@ -4,6 +4,7 @@ import HomePage from './apps/home'
 import BarPage from './apps/bar'
 import EmptyPage from './apps/empty'
 import MasterDetailPage from './apps/masterDetail'
+import SettingsPage from './apps/settings'
 import { render } from './start'
 
 let AppRouter
@@ -15,6 +16,7 @@ function runRouter() {
       '/vibrancy': EmptyPage,
       bar: BarPage,
       master: MasterDetailPage,
+      settings: SettingsPage,
     },
   })
   // because doing in installDevTools would break import order

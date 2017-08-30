@@ -12,15 +12,8 @@ import { CurrentUser } from '~/app'
 import Header from './header'
 import BottomBar from '~/views/bottomBar'
 
-type Props = {
-  layoutStore: LayoutStore,
-  soundStore: SoundStore,
-}
-
 @view
 export default class Layout {
-  props: Props
-
   state = {
     error: null,
   }
@@ -45,19 +38,17 @@ export default class Layout {
     return (
       <layout>
         <UI.Theme name="light">
-          <UI.SlotFill.Provider>
-            <content>
-              <Signup />
-              <LayoutWrap>
-                <Header />
-                <content if={CurrentUser.loggedIn} onScroll={this.onScroll}>
-                  <CurrentPage key={Router.key} {...Router.params} />
-                </content>
-              </LayoutWrap>
-              <Errors />
-              <BottomBar />
-            </content>
-          </UI.SlotFill.Provider>
+          <content>
+            <Signup />
+            <LayoutWrap>
+              <Header if={!!Constants.APP_KEY} />
+              <content if={CurrentUser.loggedIn} onScroll={this.onScroll}>
+                <CurrentPage key={Router.key} {...Router.params} />
+              </content>
+            </LayoutWrap>
+            <Errors />
+            <BottomBar />
+          </content>
         </UI.Theme>
       </layout>
     )

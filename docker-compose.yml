@@ -15,7 +15,7 @@ services:
     restart: always
     volumes:
        - ./app_data/couchdb:/opt/couchdb/data
-       - ./apps/couch/config:/usr/local/etc/couchdb
+       - ./apps/couch/config:/opts/couchdb/etc
     restart: always
     links:
       - pad-redis
@@ -35,11 +35,14 @@ services:
     volumes:
       - ./apps/api:/repo/apps/api
       - ./apps/models:/repo/apps/models
-      - ./packages:/repo/packages
       - ./apps/couch:/repo/apps/couch
+      - ./node_modules:/repo/node_modules
+      - ./packages:/repo/packages
     ports:
       - 3000:3000
       - 5858:5858
+    expose:
+      - 5858
     links:
       - pad-couch
     depends_on:

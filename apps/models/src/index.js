@@ -1,28 +1,24 @@
 // @flow
-import * as RxDB from 'rxdb'
+import RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 import pValidate from 'pouchdb-validation'
 import pSearch from 'pouchdb-quick-search'
-import type { Model } from '~/helpers'
+import type { Model } from '@mcro/model'
+export type { Model }
 
 export { CompositeDisposable } from '@mcro/model'
 
-// ADD TO BOTH THIS SECTION
+import UserInstance from './user'
+import ThingInstance from './thing'
+import JobInstance from './job'
+import SettingInstance from './setting'
 
-export User from './user'
-export Thing from './thing'
-export Atom from './atom'
-export Job from './job'
-export Setting from './setting'
-
-// AND THIS ONE
-
-import User from './user'
-import Thing from './thing'
-import Job from './job'
-import Setting from './setting'
+export const User = UserInstance
+export const Thing = ThingInstance
+export const Job = JobInstance
+export const Setting = SettingInstance
 
 // AND THIS TOO
 
@@ -33,45 +29,59 @@ export const Models = {
   Setting,
 }
 
-// exports
-export type { Model } from '~/helpers'
+export type ModelOptions = {|
+  autoSync?: boolean,
+|}
 
-declare class ModelsStore {
-  databaseConfig: Object,
-  database: RxDB.Database,
-  models: Object<string, Model>,
+export type StartOptions = {|
+  options: Object,
+  modelOptions?: ModelOptions,
+|}
+
+export type ModelsObject = {
+  [string]: Model,
 }
 
-export default class Database implements ModelsStore {
+export type DatabaseConfig = {|
+  name: string,
+  password: string,
+  couchUrl: string,
+  couchHost: string,
+  adapter: Function,
+  adapterName: string,
+|}
+
+export default class Database {
+  models: ModelsObject = {}
+  databaseConfig: Object
+  modelsConfig: ModelsObject
+  database: RxDB.Database
+
   connected = false
 
-  constructor(databaseConfig, models) {
-    if (!databaseConfig || !models) {
-      throw new Error(
-        'No database or models given to App!',
-        typeof databaseConfig,
-        typeof models
-      )
+  constructor(databaseConfig: DatabaseConfig, modelsConfig: ModelsObject) {
+    if (!databaseConfig || !modelsConfig) {
+      console.log('Info for error', typeof databaseConfig, typeof modelsConfig)
+      throw new Error('No database or models given to App!')
     }
 
     this.databaseConfig = databaseConfig
-    this.models = models
+    this.modelsConfig = modelsConfig
 
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
       RxDB.QueryChangeDetector.enable()
-      // RxDB.QueryChangeDetector.enableDebugging(false)
       RxDB.plugin(this.databaseConfig.adapter)
       RxDB.plugin(pREPL)
-      RxDB.plugin(pValidate)
-      RxDB.plugin(pSearch)
+      // RxDB.plugin(pValidate)
+      // RxDB.plugin(pSearch)
       RxDB.plugin(pHTTP)
       PouchDB.plugin(this.databaseConfig.adapter)
       PouchDB.plugin(pHTTP)
     }
   }
 
-  start = async ({ options, modelOptions } = {}) => {
+  start = async ({ options, modelOptions }: StartOptions = {}) => {
     this.database = await RxDB.create({
       adapter: this.databaseConfig.adapterName,
       name: this.databaseConfig.name,
@@ -86,22 +96,20 @@ export default class Database implements ModelsStore {
   }
 
   dispose = () => {
-    for (const [name, model] of Object.entries(this.models)) {
-      console.log('dispose model', name)
-      if (model && model.dispose) {
+    for (const name of Object.keys(this.models)) {
+      const model = this.models[name]
+      if (model) {
         model.dispose()
-      } else {
-        console.error('waht is this thing', model)
       }
     }
   }
 
-  attachModels = async (modelOptions?: Object) => {
+  attachModels = async (modelOptions?: ModelOptions) => {
     const connections = []
 
     // attach Models to app and connect if need be
-    for (const [name, model] of Object.entries(this.models)) {
-      this[name] = model
+    for (const [name, model] of Object.entries(this.modelsConfig)) {
+      this.models[name] = model
 
       if (typeof model.connect !== 'function') {
         throw new Error(
@@ -127,7 +135,6 @@ export default class Database implements ModelsStore {
       )
     }
 
-    const result = await Promise.all(connections)
-    return result
+    return await Promise.all(connections)
   }
 }

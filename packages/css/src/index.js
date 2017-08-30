@@ -219,9 +219,8 @@ export default function motionStyle(options: Object = {}) {
       }
 
       throw new Error(
-        `${errorMessage}: Invalid style value for ${key}: ${JSON.stringify(
-          value
-        )}`
+        `${errorMessage ||
+          'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`
       )
     }
 

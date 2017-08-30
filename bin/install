@@ -24,8 +24,7 @@ fi
 rm -f yarn.lock
 
 cd $ROOT
-cat ./node_modules/lerna/bin/lerna.js
 
-./node_modules/lerna/bin/lerna.js install --scope @mcro/$APP
+npx lerna install --scope @mcro/$APP
 
 cd -

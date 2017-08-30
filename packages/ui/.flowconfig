@@ -1,0 +1,23 @@
+[ignore]
+../../node_modules/lunr/.*
+../../node_modules/art/.*
+
+[include]
+./node_modules
+
+[libs]
+../../flow-typed
+
+[options]
+experimental.strict_type_args=true
+emoji=true
+module.system=haste
+suppress_type=$FlowFixMe
+suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
+esproposal.class_instance_fields=enable
+esproposal.class_static_fields=enable
+esproposal.decorators=ignore
+unsafe.enable_getters_and_setters=true
+module.name_mapper='^~/\(.*\)$' -> '<PROJECT_ROOT>/src/\1.js'
+module.name_mapper='\./\(\1\)$' -> '\1/\1.js'
+module.system.node.resolve_dirname=node_modules

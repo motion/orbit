@@ -17,6 +17,8 @@ type ModelArgs = {
   defaultSchema?: Object,
 }
 
+type PromiseFunction = () => Promise<any>
+
 const chain = (object, method, value) => {
   if (!value) {
     return object
@@ -24,24 +26,25 @@ const chain = (object, method, value) => {
   return object[method](value)
 }
 
+const queryKey = query => JSON.stringify(query.mquery)
+
 export default class Model {
   static isModel = true
   static props: Object
   static defaultProps: Function | Object
 
+  _collection: RxCollection
   methods: ?Object
   statics: ?Object
   database: ?RxDB
-
+  liveQueries: Object = {}
+  options: Object = {}
   subscriptions = new CompositeDisposable()
   settings: SettingsObject = {}
   defaultSchema: Object = {}
-  options: ?Object = {}
   @observable connected = false
-  // sync to
-  remote: ?string = null
-  // hooks that run before/after operations
-  hooks: Object<string, () => Promise<any>> = {}
+  remote: ?string = null // sync to
+  hooks: { [string]: PromiseFunction } = {} // hooks run before/after operations
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
@@ -168,9 +171,8 @@ export default class Model {
       get(target, method) {
         if (method === 'find' || method === 'findOne') {
           return queryParams => {
-            const query = target[method](
-              defaultFilter(queryObject(queryParams))
-            )
+            const finalParams = defaultFilter(queryObject(queryParams))
+            const query = target[method](finalParams)
             return new Proxy(query, {
               get(target, method) {
                 // they have intent to run this
@@ -185,7 +187,6 @@ export default class Model {
                       const execute = target.exec.bind(target)
                       return function exec() {
                         return new Promise(async resolve => {
-                          console.log('RUNNING WITH A SYNC')
                           await syncPromise
                           const value = await execute()
                           resolve(value)
@@ -205,7 +206,7 @@ export default class Model {
     return this._filteredProxy
   }
 
-  get collection(): ?RxCollection & { pouch: PouchDB } {
+  get collection(): RxCollection {
     if (this._collection) {
       return this._filteredCollection
     }
@@ -262,8 +263,26 @@ export default class Model {
       statics: this.statics,
     })
 
+    // TEMPORARY BUGFIX, fixed pouch console warnings about db.info()
+    // TODO remove on RxDB 5.4.0
+    await this._collection.pouch.info()
+
+    // sync PUSH ONLY
+    if (this.options.autoSync) {
+      this._collection.sync({
+        remote: this.remote,
+        direction: {
+          push: true,
+        },
+        options: {
+          live: true,
+          retry: true,
+        },
+      })
+    }
+
     // shim add pouchdb-validation
-    this._collection.pouch.installValidationMethods()
+    // this._collection.pouch.installValidationMethods()
 
     // bump listeners
     this._collection.pouch.setMaxListeners(100)
@@ -365,31 +384,7 @@ export default class Model {
 
   createIndexes = async (): Promise<void> => {
     const index = this.settings.index || []
-
-    // const { indexes } = await this.collection.pouch.getIndexes()
-    // console.log('indexes ARE', indexes, 'vs', index)
-
-    // TODO see if we can remove but fixes bug for now
     await this._collection.pouch.createIndex({ fields: index })
-
-    // this was a faster way to make indexes if need be
-    // if (index.length) {
-    //   // TODO: pouchdb supposedly does this for you, but it was slow in profiling
-    //   const { indexes } = await this.collection.pouch.getIndexes()
-    //   const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
-    //     field => Object.keys(field)[0]
-    //   )
-    //   // if have not indexed every field
-    //   if (intersection(index, alreadyIndexedFields).length !== index.length) {
-    //     // need to await or you get error sorting by dates, etc
-    //     console.log(
-    //       `%c[pouch] CREATE INDEX ${this.title} ${JSON.stringify(index)}`,
-    //       'color: green'
-    //     )
-
-    //     await this.collection.pouch.createIndex({ fields: index })
-    //   }
-    // }
   }
 
   applyDefaults = doc => {
@@ -406,8 +401,7 @@ export default class Model {
     if (query.query) {
       query = query.query
     }
-    if (!isRxQuery(query) && !(query.constructor.name === 'RxQuery')) {
-      console.log(query.constructor.name, query)
+    if (!isRxQuery(query)) {
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.'
       )
@@ -416,9 +410,19 @@ export default class Model {
       throw new Error('Could not sync query, no remote is specified.')
     }
 
+    const QUERY_KEY = queryKey(query)
+    if (this.liveQueries[QUERY_KEY]) {
+      console.log('already watching this query!')
+      return Promise.resolve(true)
+    }
+
     const firstReplication = this._collection.sync({
-      // query,
+      query,
       remote: this.remote,
+      waitForLeadership: false,
+      direction: {
+        pull: true,
+      },
       options: {
         ...options,
         live: false,
@@ -426,15 +430,24 @@ export default class Model {
     })
 
     // wait for first replication to finish
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       let resolved = false
+
+      const error$ = firstReplication.error$.subscribe(error => {
+        if (error) {
+          reject(error)
+        }
+      })
 
       // watched replication stream and checks for finish
       firstReplication.complete$
         .filter(state => {
-          console.log('REPLY STATE', state)
           const done = state && state.pull && state.pull.ok
+
           if (done && !resolved) {
+            // unsub error stream
+            error$.unsubscribe()
+
             if (options.live) {
               // if live, we re-run with a live query to keep it syncing
               // TODO we need to watch this and clear it on unsubscribe
@@ -442,6 +455,9 @@ export default class Model {
                 remote: this.remote,
                 options,
               })
+
+              this.liveQueries[QUERY_KEY] = true
+
               resolve(liveReplication)
             } else {
               resolve(true)
@@ -453,30 +469,53 @@ export default class Model {
     })
   }
 
+  getParams = (params?: Object, callback: Function) => {
+    const objParams = this.paramsToObject(params)
+    return callback(objParams)
+  }
+
+  paramsToObject = params => {
+    if (!params) {
+      return {}
+    }
+    if (typeof params === 'string') {
+      return { _id: params }
+    } else {
+      return params
+    }
+  }
+
   // user facing!
 
   // get is a helper that returns a promise only
-  get = query => this.collection.findOne(query).exec();
-  getAll = query => this.collection.find(query).exec()
+  get = (query: string | Object) => this.collection.findOne(query).exec();
+  getAll = (query: string | Object) => this.collection.find(query).exec()
 
   // find/findOne return RxQuery objects
   // so you can subscribe to streams or just .exec()
   @query
-  find = ({ sort, ...query } = {}) =>
-    chain(this.collection.find(query), 'sort', sort)
+  find = (params: string | Object) =>
+    this.getParams(params, ({ sort, ...query } = {}) =>
+      chain(this.collection.find(query), 'sort', sort)
+    )
 
   @query
-  findOne = ({ sort, ...query } = {}) =>
-    chain(this.collection.findOne(query), 'sort', sort)
+  findOne = (params: string | Object) =>
+    this.getParams(params, ({ sort, ...query } = {}) =>
+      chain(this.collection.findOne(query), 'sort', sort)
+    )
 
   // returns a promise that resolves to found or created model
   findOrCreate = async (object: Object = {}): Promise<Object> => {
-    const found = await this.collection.findOne(object).exec()
-    return found || (await this.create(object))
+    const found = await this.get(object)
+    if (found) {
+      return found
+    }
+    return await this.create(object)
   }
 
   // creates a model without persisting
-  async createTemporary(object) {
+  async createTemporary(object: Object = {}) {
     if (!this._collection) {
       await this.onConnection()
     }
@@ -492,5 +531,12 @@ export default class Model {
       await this.onConnection()
     }
     return this._collection.insert(object)
+  }
+
+  async upsert(object: Object = {}) {
+    if (!this._collection) {
+      await this.onConnection()
+    }
+    return this._collection.upset(object)
   }
 }

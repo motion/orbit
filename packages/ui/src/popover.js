@@ -2,7 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import getTarget from './helpers/getTarget'
-import Portal from 'react-portal'
+import Portal from './helpers/portal'
 import { isNumber, debounce, throttle } from 'lodash'
 import Arrow from './arrow'
 import Surface from './surface'
@@ -743,7 +743,7 @@ class Popover {
     return (
       <root>
         {React.isValidElement(target) && controlledTarget(target)}
-        <Portal isOpened>
+        <Portal>
           <container
             data-towards={direction}
             $open={showPopover}

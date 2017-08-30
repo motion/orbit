@@ -19,15 +19,12 @@ elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   npm run build
 else
-  # flow
-  link-flow &
   # lerna
-  ./node_modules/lerna/bin/lerna.js exec --parallel \
+  npx lerna exec --parallel \
     --ignore @mcro/native  \
     --ignore @mcro/web \
     --ignore @mcro/couch \
     --ignore @mcro/playground \
       -- \
-      babel src --out-dir lib -s true $ARGS &
-  wait
+      babel src --out-dir lib -s true $ARGS
 fi

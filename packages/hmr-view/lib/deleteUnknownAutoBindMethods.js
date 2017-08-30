@@ -26,9 +26,8 @@ function shouldDeleteClassicInstanceMethod(component, name) {
 }
 
 function shouldDeleteModernInstanceMethod(component, name) {
-  var prototype = component.constructor.prototype;
-
-  var prototypeDescriptor = Object.getOwnPropertyDescriptor(prototype, name);
+  const { prototype } = component.constructor;
+  const prototypeDescriptor = Object.getOwnPropertyDescriptor(prototype, name);
 
   if (!prototypeDescriptor || !prototypeDescriptor.get) {
     // This is definitely not an autobinding getter
@@ -46,7 +45,7 @@ function shouldDeleteModernInstanceMethod(component, name) {
 }
 
 function shouldDeleteInstanceMethod(component, name) {
-  var descriptor = Object.getOwnPropertyDescriptor(component, name);
+  const descriptor = Object.getOwnPropertyDescriptor(component, name);
   if (typeof descriptor.value !== 'function') {
     // Not a function, or something fancy: bail out
     return;
@@ -73,9 +72,9 @@ function shouldDeleteInstanceMethod(component, name) {
  * and the getter will re-generate the memoized handler on next access.
  */
 function deleteUnknownAutoBindMethods(component) {
-  var names = Object.getOwnPropertyNames(component);
+  const names = Object.getOwnPropertyNames(component);
 
-  names.forEach(function (name) {
+  names.forEach(name => {
     if (shouldDeleteInstanceMethod(component, name)) {
       delete component[name];
     }

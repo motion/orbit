@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 exports.default = createClassProxy;
 
 var _lodash = require('lodash');
@@ -30,9 +28,7 @@ var _supportsProtoAssignment2 = _interopRequireDefault(_supportsProtoAssignment)
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-var RESERVED_STATICS = ['length', 'displayName', 'name', 'arguments', 'caller', 'prototype', 'toString'];
+const RESERVED_STATICS = ['length', 'displayName', 'name', 'arguments', 'caller', 'prototype', 'toString'];
 
 function isEqualDescriptor(a, b) {
   if (!a && !b) {
@@ -41,7 +37,7 @@ function isEqualDescriptor(a, b) {
   if (!a || !b) {
     return false;
   }
-  for (var key in a) {
+  for (let key in a) {
     if (a[key] !== b[key]) {
       return false;
     }
@@ -50,18 +46,13 @@ function isEqualDescriptor(a, b) {
 }
 
 function getDisplayName(Component) {
-  var displayName = Component.displayName || Component.name;
+  const displayName = Component.displayName || Component.name;
   return displayName && displayName !== 'ReactComponent' ? displayName : 'Unknown';
 }
 
-var allProxies = [];
+let allProxies = [];
 function findProxy(Component) {
-  var pair = (0, _lodash.find)(allProxies, function (_ref) {
-    var _ref2 = _slicedToArray(_ref, 1),
-        key = _ref2[0];
-
-    return key === Component;
-  });
+  const pair = (0, _lodash.find)(allProxies, ([key]) => key === Component);
   return pair ? pair[1] : null;
 }
 function addProxy(Component, proxy) {
@@ -76,18 +67,18 @@ function proxyClass(InitialComponent) {
     return existingProxy;
   }
 
-  var CurrentComponent = void 0;
-  var ProxyComponent = void 0;
-  var savedDescriptors = {};
+  let CurrentComponent;
+  let ProxyComponent;
+  let savedDescriptors = {};
 
   function instantiate(factory, context, params) {
-    var component = factory();
+    const component = factory();
 
     try {
       return component.apply(context, params);
     } catch (err) {
-      var instance = new (Function.prototype.bind.apply(component, [null].concat(_toConsumableArray(params))))();
-      Object.keys(instance).forEach(function (key) {
+      const instance = new component(...params);
+      Object.keys(instance).forEach(key => {
         if (RESERVED_STATICS.indexOf(key) > -1) {
           return;
         }
@@ -96,20 +87,16 @@ function proxyClass(InitialComponent) {
     }
   }
 
-  var displayName = getDisplayName(InitialComponent);
+  let displayName = getDisplayName(InitialComponent);
   try {
     // Create a proxy constructor with matching name
     ProxyComponent = new Function('factory', 'instantiate', `return function ${displayName}() {
          return instantiate(factory, this, arguments);
-      }`)(function () {
-      return CurrentComponent;
-    }, instantiate);
+      }`)(() => CurrentComponent, instantiate);
   } catch (err) {
     // Some environments may forbid dynamic evaluation
-    ProxyComponent = function ProxyComponent() {
-      return instantiate(function () {
-        return CurrentComponent;
-      }, this, arguments);
+    ProxyComponent = function () {
+      return instantiate(() => CurrentComponent, this, arguments);
     };
   }
   try {
@@ -123,7 +110,7 @@ function proxyClass(InitialComponent) {
     return CurrentComponent.toString();
   };
 
-  var prototypeProxy = void 0;
+  let prototypeProxy;
   if (InitialComponent.prototype && InitialComponent.prototype.isReactComponent) {
     // Point proxy constructor to the proxy prototype
     prototypeProxy = (0, _proxyProto2.default)();
@@ -145,7 +132,7 @@ function proxyClass(InitialComponent) {
     }
 
     // Save the next constructor so we call it
-    var PreviousComponent = CurrentComponent;
+    const PreviousComponent = CurrentComponent;
     CurrentComponent = NextComponent;
 
     // Try to infer displayName
@@ -162,13 +149,13 @@ function proxyClass(InitialComponent) {
 
     // Copy over static methods and properties added at runtime
     if (PreviousComponent) {
-      Object.getOwnPropertyNames(PreviousComponent).forEach(function (key) {
+      Object.getOwnPropertyNames(PreviousComponent).forEach(key => {
         if (RESERVED_STATICS.indexOf(key) > -1) {
           return;
         }
 
-        var prevDescriptor = Object.getOwnPropertyDescriptor(PreviousComponent, key);
-        var savedDescriptor = savedDescriptors[key];
+        const prevDescriptor = Object.getOwnPropertyDescriptor(PreviousComponent, key);
+        const savedDescriptor = savedDescriptors[key];
 
         if (!isEqualDescriptor(prevDescriptor, savedDescriptor)) {
           Object.defineProperty(NextComponent, key, prevDescriptor);
@@ -177,13 +164,13 @@ function proxyClass(InitialComponent) {
     }
 
     // Copy newly defined static methods and properties
-    Object.getOwnPropertyNames(NextComponent).forEach(function (key) {
+    Object.getOwnPropertyNames(NextComponent).forEach(key => {
       if (RESERVED_STATICS.indexOf(key) > -1) {
         return;
       }
 
-      var prevDescriptor = PreviousComponent && Object.getOwnPropertyDescriptor(PreviousComponent, key);
-      var savedDescriptor = savedDescriptors[key];
+      const prevDescriptor = PreviousComponent && Object.getOwnPropertyDescriptor(PreviousComponent, key);
+      const savedDescriptor = savedDescriptors[key];
 
       // Skip redefined descriptors
       if (prevDescriptor && savedDescriptor && !isEqualDescriptor(savedDescriptor, prevDescriptor)) {
@@ -197,7 +184,7 @@ function proxyClass(InitialComponent) {
         return;
       }
 
-      var nextDescriptor = _extends({}, Object.getOwnPropertyDescriptor(NextComponent, key), {
+      const nextDescriptor = _extends({}, Object.getOwnPropertyDescriptor(NextComponent, key), {
         configurable: true
       });
       savedDescriptors[key] = nextDescriptor;
@@ -205,7 +192,7 @@ function proxyClass(InitialComponent) {
     });
 
     // Remove static methods and properties that are no longer defined
-    Object.getOwnPropertyNames(ProxyComponent).forEach(function (key) {
+    Object.getOwnPropertyNames(ProxyComponent).forEach(key => {
       if (RESERVED_STATICS.indexOf(key) > -1) {
         return;
       }
@@ -214,13 +201,13 @@ function proxyClass(InitialComponent) {
         return;
       }
       // Skip non-configurable statics
-      var proxyDescriptor = Object.getOwnPropertyDescriptor(ProxyComponent, key);
+      const proxyDescriptor = Object.getOwnPropertyDescriptor(ProxyComponent, key);
       if (proxyDescriptor && !proxyDescriptor.configurable) {
         return;
       }
 
-      var prevDescriptor = PreviousComponent && Object.getOwnPropertyDescriptor(PreviousComponent, key);
-      var savedDescriptor = savedDescriptors[key];
+      const prevDescriptor = PreviousComponent && Object.getOwnPropertyDescriptor(PreviousComponent, key);
+      const savedDescriptor = savedDescriptors[key];
 
       // Skip redefined descriptors
       if (prevDescriptor && savedDescriptor && !isEqualDescriptor(savedDescriptor, prevDescriptor)) {
@@ -232,7 +219,7 @@ function proxyClass(InitialComponent) {
 
     if (prototypeProxy) {
       // Update the prototype proxy with new methods
-      var mountedInstances = prototypeProxy.update(NextComponent.prototype);
+      const mountedInstances = prototypeProxy.update(NextComponent.prototype);
 
       // Set up the constructor property so accessing the statics work
       ProxyComponent.prototype.constructor = NextComponent;
@@ -255,7 +242,7 @@ function proxyClass(InitialComponent) {
 
   update(InitialComponent);
 
-  var proxy = { get, update };
+  const proxy = { get, update };
   addProxy(ProxyComponent, proxy);
 
   Object.defineProperty(proxy, '__getCurrent', {
@@ -269,7 +256,7 @@ function proxyClass(InitialComponent) {
 }
 
 function createFallback(Component) {
-  var CurrentComponent = Component;
+  let CurrentComponent = Component;
 
   return {
     get() {

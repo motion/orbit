@@ -3,10 +3,6 @@ import * as UI from '@mcro/ui'
 
 @view({
   store: class IntegrationsStore {
-    start() {
-      this.props.getRef(this)
-    }
-
     get results() {
       return [
         {
@@ -22,7 +18,7 @@ import * as UI from '@mcro/ui'
           icon: 'google',
         },
         {
-          title: 'Setup Dropbox Paper',
+          title: 'Setup Dropbox',
           data: { type: 'dropbox-paper', name: 'Dropbox Paper' },
           type: 'setup',
           icon: 'dropbox',
@@ -37,7 +33,7 @@ import * as UI from '@mcro/ui'
           title: 'Setup Jira',
           data: { type: 'jira', name: 'Jira' },
           type: 'setup',
-          icon: 'jira',
+          icon: 'atlass',
         },
       ].map(x => ({
         ...x,
@@ -47,37 +43,30 @@ import * as UI from '@mcro/ui'
   },
 })
 export default class BarIntegrationsPane {
-  render({ store, onSelect, activeIndex, paneProps }) {
+  componentDidMount() {
+    this.props.onSelect(this.props.store.results[0])
+  }
+
+  render({ store, onSelect, itemProps }) {
     return (
       <integrations>
         <UI.List
           if={store.results}
-          selected={activeIndex}
-          onSelect={(item, index) => {
-            onSelect(index)
-          }}
-          itemProps={paneProps.itemProps}
+          controlled
+          defaultSelected={0}
+          onSelect={onSelect}
           groupKey="category"
           items={store.results}
-          getItem={(result, index) =>
-            <UI.ListItem
-              highlight={index === activeIndex}
-              key={result.id}
-              icon={
-                result.data && result.data.image
-                  ? <img $image src={`/images/${result.data.image}.jpg`} />
-                  : result.icon || (result.doc && result.doc.icon)
-              }
-              primary={result.title}
-            />}
+          itemProps={itemProps}
+          getItem={result => ({
+            primary: result.title,
+            icon:
+              result.data && result.data.image
+                ? <img $image src={`/images/${result.data.image}.jpg`} />
+                : result.icon || (result.doc && result.doc.icon),
+          })}
         />
       </integrations>
     )
-  }
-
-  static style = {
-    setup: {
-      padding: 20,
-    },
   }
 }

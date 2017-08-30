@@ -3,6 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
+import { throttle } from 'lodash-decorators'
 
 class MillerStore {
   colWidths = range(100).map(() => 0)
@@ -15,6 +16,7 @@ class MillerStore {
     this.setTimeout(this.handleSelectionChange)
   }
 
+  @throttle(16)
   handleSelectionChange = () => {
     const { state, onChange } = this.props
     if (state.activeRow !== null && state.activeResults) {
@@ -62,15 +64,15 @@ class MillerStore {
       const { state } = this.props
       state.moveCol(-1)
     },
-    esc: () => {},
-    cmdA: () => {},
-    cmdEnter: () => {},
-    enter: () => {},
+    esc: () => { },
+    cmdA: () => { },
+    cmdEnter: () => { },
+    enter: () => { },
   }
 }
 
 @view
-class Pane {
+class Pane extends React.Component {
   render({
     pane,
     getRef,
@@ -86,6 +88,7 @@ class Pane {
     type,
   }) {
     const paneActive = state.activeCol == col
+    const isLast = col === state.schema.length - 1
     const highlightIndex = !paneActive && state.prevActiveRows[col]
     const activeRow = paneActive && state.activeRow
     const ChildPane = pane
@@ -101,6 +104,7 @@ class Pane {
           flex: 1,
           width,
         }}
+        $grow={isLast}
         ref={ref => {
           ref && onMeasureWidth(ref.offsetWidth)
         }}
@@ -126,8 +130,12 @@ class Pane {
 
   static style = {
     pane: {
+      flex: 1,
       height: '100%',
       borderLeft: [1, [0, 0, 0, 0.05]],
+    },
+    grow: {
+      width: '101.5%',
     },
     first: {
       borderLeft: 'none',
@@ -138,7 +146,7 @@ class Pane {
 @view({
   store: MillerStore,
 })
-export default class Miller {
+export default class Miller extends React.Component {
   static defaultProps = {
     onActions: _ => _,
   }
@@ -172,7 +180,7 @@ export default class Miller {
                   // if it's the next preview, always rerender
                   pane={panes[pane.type]}
                   type={pane.type}
-                  width={index === schema.length - 1 && store.paneWidth}
+                  // width={index === schema.length - 1 && store.paneWidth}
                   data={pane.data}
                   search={search}
                   paneProps={paneProps}
@@ -204,8 +212,14 @@ export default class Miller {
   }
 
   static style = {
+    // hang off edge
     grow: {
       flex: 1,
+      overflow: 'visible',
+      width: '100%',
+      height: '101.5%',
+      background: 'white',
+      boxShadow: '1px 1px 5px rgba(0,0,0,.5)',
     },
     pane: {
       //overflowY: 'scroll',

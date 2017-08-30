@@ -1,6 +1,5 @@
 .DS_Store
 .git
-node_modules
 app_data
 infra
 apps/native

@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class DefinitionList {
+export default class DefinitionList extends React.Component {
   render() {
     const { object, children, ...props } = this.props
     const target = object || children
@@ -12,7 +12,9 @@ export default class DefinitionList {
       <dl {...props}>
         {rows.map((item, i) =>
           <row key={`${item}${i}`}>
-            <dt>{item}</dt>
+            <dt>
+              {item}
+            </dt>
             <dd>
               {typeof target[item] === 'object'
                 ? JSON.stringify(target[item])

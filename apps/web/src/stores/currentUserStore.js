@@ -1,21 +1,28 @@
 // @flow
-import { Org, User } from '~/app'
-import { store } from '@mcro/black'
+import { User, Setting } from '@mcro/models'
+import { store, watch } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
-import { observable, autorun, computed } from 'mobx'
 
 // TODO: Constants.API_HOST
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
+@store
 class CurrentUser {
   connected = false
   localDb = null
   remoteDb = null
-  @observable.ref sessionInfo = null
-  @observable.ref userInfo = null
+  sessionInfo = null
+  superlogin: ?SuperLoginClient = null
 
-  @computed
+  @watch userInfo = () => this.id && User.findOne(this.id)
+  @watch settings = () => this.id && Setting.find({ userId: this.id })
+  @watch
+  setting = () =>
+    (this.settings &&
+      this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})) ||
+    {}
+
   get user() {
     if (!this.sessionInfo) {
       return null
@@ -28,26 +35,11 @@ class CurrentUser {
 
   integrations = []
 
-  constructor(options) {
+  constructor(options: Object) {
     this.superlogin = SuperLoginClient
     this.options = options
     this.setupSuperLogin()
     this.connected = true
-    this.watchUser()
-  }
-
-  watchUser = () => {
-    autorun(() => {
-      if (this.sessionInfo && User.connected) {
-        User._collection
-          .findOne(this.sessionInfo.user_id)
-          .$.subscribe(userInfo => {
-            if (userInfo) {
-              this.userInfo = userInfo
-            }
-          })
-      }
-    })
   }
 
   async setupSuperLogin() {
@@ -94,7 +86,7 @@ class CurrentUser {
   }
 
   get id() {
-    return this.user && this.user.user_id
+    return this.sessionInfo && this.sessionInfo.user_id
   }
 
   get token() {
@@ -190,7 +182,6 @@ class CurrentUser {
     try {
       if (this.superlogin) {
         this.sessionInfo = await this.superlogin.getSession()
-        // console.log('setting to', this.sessionInfo)
       }
     } catch (e) {
       console.error('got err with current user get', e)

@@ -1,11 +1,14 @@
 // @flow
 import React from 'react'
+import Mousetrap from 'mousetrap'
+import ReactDOM from 'react-dom'
 import { view } from '@mcro/black'
 import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
 import { isNumber, debounce } from 'lodash'
+import { SHORTCUTS } from '~/stores/rootStore'
 
 const actions = [
   'remind',
@@ -32,6 +35,7 @@ const actions = [
 class BarStore {
   millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
+  inputRef: ?HTMLElement = null
 
   // search is throttled, textboxVal isn't
   search = ''
@@ -47,8 +51,10 @@ class BarStore {
 
   onFocus = () => {
     console.log('focus bar window')
-    this.inputRef.focus()
-    this.inputRef.select()
+    if (this.inputRef) {
+      this.inputRef.focus()
+      this.inputRef.select()
+    }
   }
 
   setSearch = debounce(text => {
@@ -107,6 +113,7 @@ class BarStore {
   millerActions = {}
   actions = {
     down: e => {
+      console.log('down down down')
       if (!this.hasSelectedItem) {
         // this.inputRef.blur()
       }
@@ -165,15 +172,28 @@ class BarStore {
 }
 
 const inputStyle = {
-  fontWeight: 300,
+  fontWeight: 200,
   color: '#fff',
-  fontSize: 38,
+  fontSize: 32,
 }
 
 @view({
   store: BarStore,
 })
 export default class BarPage {
+  trap: MouseTrap
+
+  componentDidMount() {
+    const node = ReactDOM.findDOMNode(this)
+    this.trap = new Mousetrap(node)
+    for (const name of Object.keys(SHORTCUTS)) {
+      if (this.props.store.actions[name]) {
+        const chord = SHORTCUTS[name]
+        this.trap.bind(chord, this.props.store.actions[name])
+      }
+    }
+  }
+
   render({ store }) {
     const paneProps = {
       itemProps: {
@@ -188,73 +208,49 @@ export default class BarPage {
       },
     }
 
-    const { millerState } = store
-
     return (
-      <HotKeys handlers={store.actions}>
-        <UI.Theme name="clear-dark">
-          <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
-            <omni>
-              <nav $showNav={!store.showTextbox} $$row>
-                <left>
-                  <UI.Button
-                    size={2}
-                    chromeless
-                    $backArrow
-                    onClick={() => {
-                      millerState.moveCol(-1)
-                    }}
-                    icon="arrows-1_bold-left"
-                  />
-                </left>
-                <middle>
-                  {millerState.activeBar}
-                </middle>
-              </nav>
-              <textbox if={store.showTextbox}>
-                <UI.Input
-                  size={3}
-                  getRef={store.ref('inputRef').set}
-                  borderRadius={5}
-                  onChange={store.onSearchChange}
-                  value={store.textboxVal}
-                  borderWidth={0}
-                  css={{
-                    margin: [-2, 0, 0],
-                    padding: [0, 10],
-                    ...inputStyle,
-                  }}
-                />
-                <forwardComplete>
-                  {store.peekItem}
-                </forwardComplete>
-                <pasteIcon if={false}>
-                  <UI.Icon size={50} type="detailed" name="paper" />
-                </pasteIcon>
-              </textbox>
-            </omni>
-            <Miller
-              search={store.search}
-              animate={true}
-              version={store.millerStateVersion}
-              state={store.millerState}
-              panes={store.PANE_TYPES}
-              onChange={store.onMillerStateChange}
-              paneProps={paneProps}
-              onActions={store.ref('millerActions').set}
+      <UI.Theme name="clear-dark">
+        <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
+          <div>
+            <UI.Input
+              size={2.6}
+              getRef={store.ref('inputRef').set}
+              borderRadius={5}
+              onChange={store.onSearchChange}
+              value={store.textboxVal}
+              borderWidth={0}
+              css={{
+                margin: [-2, 0, 0],
+                padding: [0, 10],
+                ...inputStyle,
+              }}
             />
-          </bar>
-        </UI.Theme>
-      </HotKeys>
+            <forwardcomplete>
+              {store.peekItem}
+            </forwardcomplete>
+            <pasteicon if={false}>
+              <UI.Icon size={50} type="detailed" name="paper" />
+            </pasteicon>
+          </div>
+          <Miller
+            search={store.search}
+            version={store.millerStateVersion}
+            state={store.millerState}
+            panes={store.PANE_TYPES}
+            onChange={store.onMillerStateChange}
+            paneProps={paneProps}
+            onActions={store.ref('millerActions').set}
+          />
+        </bar>
+      </UI.Theme>
     )
   }
 
   static style = {
     bar: {
       background: [145, 145, 145, 0.5],
+      margin: 30,
       flex: 1,
-      // opacity: 0,
-      // transition: 'all ease-in 300ms',
     },
     omni: {
       height: 100,
@@ -293,11 +289,6 @@ export default class BarPage {
         x: 0,
       },
     },
-    pushRight: {
-      transform: {
-        x: '-50%',
-      },
-    },
     section: {
       width: '50%',
       height: '100%',
@@ -306,16 +297,16 @@ export default class BarPage {
       flex: 1,
       height: '100%',
     },
-    pasteIcon: {
+    pasteicon: {
       position: 'absolute',
       top: -30,
       right: -20,
       width: 128,
       height: 128,
     },
-    forwardComplete: {
+    forwardcomplete: {
       position: 'absolute',
-      top: 35,
+      top: 28,
       left: 20,
       opacity: 0.3,
       ...inputStyle,

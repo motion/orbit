@@ -26,7 +26,7 @@ export type Props = {
 }
 
 @view.ui
-export default class Icon {
+export default class Icon extends React.Component {
   props: Props
 
   static defaultProps = {

@@ -1,13 +1,13 @@
 import React from 'react'
 import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
-import { inject } from 'react-tunnel'
+import { inject } from '@mcro/react-tunnel'
 import { view } from '@mcro/black'
 
 @inject(context => ({ uiContext: context.uiContext }))
 @injectTheme
 @view.ui
-export default class Button {
+export default class Button extends React.Component {
   render({
     uiContext,
     badge,

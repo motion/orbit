@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 
 @view
-export default class Circle {
+export default class Circle extends React.Component {
   static defaultProps = {
     size: 30,
   }

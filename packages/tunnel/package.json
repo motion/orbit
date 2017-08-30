@@ -1,0 +1,10 @@
+{
+  "name": "@mcro/react-tunnel",
+  "main": "lib/index.js",
+  "version": "1.2.0",
+  "scripts": {},
+  "dependencies": {
+    "invariant": "2.x.x",
+    "prop-types": "^15.5.10"
+  }
+}

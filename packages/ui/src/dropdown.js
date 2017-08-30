@@ -18,7 +18,7 @@ export type Props = {
 }
 
 @view
-export default class Dropdown {
+export default class Dropdown extends React.Component {
   props: Props
 
   static defaultProps = {

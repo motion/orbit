@@ -3,7 +3,6 @@ import * as UI from '@mcro/ui'
 import * as Pane from './pane'
 import { includes } from 'lodash'
 import PersonPicker from './views/personPicker'
-import { Atom } from '@mcro/models'
 import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()
@@ -204,15 +203,12 @@ class AddResponse {
     response = ''
 
     submit = () => {
-      Atom.addComment(this.response)
       this.response = ''
     }
   },
 })
 export default class BarTaskPane {
-  getLength = () => 5
-
-  render({ highlightIndex, data, activeIndex, isActive, store, paneProps }) {
+  render({ data, activeIndex, isActive, store }) {
     const title = data.title || 'Create a Helm chart to deploy CouchDB on K8s'
     const comments = data.comments || [0, 1].map(() => 'just a test')
     const labels = data.labels

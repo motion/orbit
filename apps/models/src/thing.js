@@ -2,64 +2,62 @@
 import global from 'global'
 import { Model, query, str, object, array, bool, number } from '@mcro/model'
 
-let User = null
+declare class CurrentUser {}
 
 // keep here so we can use as generic
 export const methods = {}
 
 export type ThingType = typeof methods & {
-  title: str,
-  type: 'document' | 'inbox' | 'thread' | 'reply',
+  title: string,
+  body?: string,
+  data?: Object,
+  integration: 'github',
+  type: 'issue',
+  parentId?: string,
+  givenId?: string,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export class Thing extends Model {
   static props = {
     title: str,
+    body: str.optional,
+    integration: str,
     type: str,
+    data: object.optional,
+    parentId: str.optional,
+    givenId: str.optional,
     timestamps: true,
   }
 
   methods = methods
 
   settings = {
-    database: 'thing',
-    index: ['createdAt', 'updatedAt'],
-  }
-
-  hooks = {
-    preInsert: async doc => {
-      // doc
-    },
+    database: 'things',
+    index: ['title', 'body', 'createdAt', 'updatedAt'],
   }
 
   @query
   search = async (text: string) => {
-    if (text === '') {
-      return await this.collection
-        .find({ draft: { $ne: true } })
-        .sort('createdAt')
-        .limit(20)
-        .exec()
+    if (!text) {
+      return null
     }
-
     const { rows } = await this.pouch.search({
       query: text,
-      fields: ['text', 'title'],
-      include_docs: true,
+      fields: ['body', 'title'],
+      include_docs: false,
       highlighting: false,
     })
-
     const ids = rows.map(row => row.id)
-    console.log('ids', ids)
-
-    return await this._collection
-      .find({ _id: { $in: ids }, title: { $gt: null } })
+    return await this.collection
+      .find({ _id: { $in: ids } })
       .sort('createdAt')
       .exec()
   }
 
-  setCurrentUser = currentUser => {
-    User = currentUser
+  setCurrentUser = (currentUser: CurrentUser) => {
+    this.currentUser = currentUser
   }
 }
 

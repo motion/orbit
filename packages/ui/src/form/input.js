@@ -9,7 +9,18 @@ import Checkbox from './checkbox'
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Input {
-  node = null
+  props: {
+    uiContext: Object,
+    sync?: Object,
+    onEnter?: Function,
+    getRef?: Function,
+    type?: 'checkbox' | 'submit',
+    name?: string,
+    form?: Object,
+    elementProps?: Object,
+  }
+
+  node: ?HTMLInputElement = null
 
   componentDidMount() {
     this.setValues(this.props)

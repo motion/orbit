@@ -1,16 +1,28 @@
 // @flow
-import Database, { Models } from '@mcro/models'
-import Server from './server'
-import Bootstrap from './bootstrap'
-import Jobs from './jobs'
+let i = 0
+console.log(++i)
+const { default: Database, Models } = require('@mcro/models')
+console.log(++i)
+const Server = require('./server').default
+console.log(++i)
+const Bootstrap = require('./bootstrap').default
+console.log(++i)
+const Jobs = require('./jobs').default
+console.log(++i)
 import type { Options } from '~/types'
-import adapter from 'pouchdb-adapter-memory'
+const adapter = require('pouchdb-adapter-memory')
+console.log(++i)
 
 export default class API {
+  server: Server
+  bootstrap: Bootstrap
+  jobs: Jobs
+  database: Database
+
   constructor(options: Options) {
     this.server = new Server(options)
     this.bootstrap = new Bootstrap(options)
-    this.jobs = new Jobs(options)
+    this.jobs = new Jobs()
     this.database = new Database(
       {
         name: 'username',

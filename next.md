@@ -1,14 +1,5 @@
 highest level things required for beta:
 
-  - architecture:
-    - need a rough mapping of two versions of the sync services:
-      (and an idea of how offical v1 should be, how much work to transition to official, etc)
-      - beta/rough version
-      - official private nice version
-    - need to figure API for pane/app that handles all cases nicely
-    - many fixes to miller movements
-    - many fixes to search and search speed
-    - many fixes for window management/persistance
   - integrations:
       - github
       - google docs
@@ -19,7 +10,8 @@ highest level things required for beta:
     - figuring who is who across integrations
     - feeds on a person-basis
   - search:
-    - how to do
+    - filter algo
+      - enforce never show same result twice (hashlike)
     - potentially filter by source
     - combine multiple topics into feeds
   - quick actions:
@@ -34,5 +26,11 @@ maybe:
 
 
 -fast pouch
-  - https://github.com/redgeoff/delta-pouch
-  - https://github.com/jkleinsc/telegraph
+  - https://github.com/pouchdb-community/socket-pouch (web sockets)
+  - https://github.com/jkleinsc/telegraph (web workers)
+
+
+### technical downsides
+
+- cant use docker-compose offline due to HOST_IP problem
+- cant use flow due to variety of problems

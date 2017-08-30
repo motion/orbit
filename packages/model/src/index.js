@@ -1,13 +1,20 @@
 // @flow
-export Model from './model'
-export query from './query'
+import Model$ from './model'
+import query$ from './query'
+
+export const Model = Model$
+export const query = query$
 
 // mobx helpers
-export { computed, observable, autorun, react, isObservable } from 'mobx'
+import * as Mobx from 'mobx'
+export const { computed, observable, autorun, react, isObservable } = Mobx
 
 // schema helpers
-export validator from 'is-my-json-valid'
-export {
+import validator$ from 'is-my-json-valid'
+export const validator = validator$
+
+import * as Properties from './properties'
+export const {
   bool,
   array,
   object,
@@ -18,9 +25,9 @@ export {
   compile,
   number,
   int,
-} from './properties'
-import { compile } from './properties'
-import validator from 'is-my-json-valid'
+} = Properties
+
 export const schema = obj => validator(compile(obj))
 
-export { CompositeDisposable } from 'sb-event-kit'
+import { CompositeDisposable as CD } from 'sb-event-kit'
+export const CompositeDisposable = CD

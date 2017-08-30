@@ -1,12 +1,14 @@
 import React from 'react'
 import { view } from '@mcro/black'
+import inject from '../helpers/inject'
 
 const BAR_HEIGHT = 8
 const BAR_WIDTH = 30
 const BAR_INVISIBLE_PAD = 5
 
-@view
-export default class Toggle {
+@inject(context => ({ uiContext: context.uiContext }))
+@view.ui
+export default class Toggle extends React.Component {
   static defaultProps = {
     dotSize: 14,
     onChange: _ => _,
@@ -19,10 +21,19 @@ export default class Toggle {
     on: false,
   }
 
-  getOnVal = props =>
-    typeof props.on === 'undefined'
-      ? props.defaultValue || (props.sync && props.sync.get())
-      : props.on
+  componentWillMount() {
+    if (this.props.defaultValue) {
+      this.setState({ on: this.props.defaultValue })
+    }
+  }
+
+  componentDidMount() {
+    this.syncToForm()
+  }
+
+  get value() {
+    return (this.props.sync && this.props.sync.get()) || this.state.on
+  }
 
   setOn = (on, triggerOnChange) => {
     if (typeof on !== 'undefined') {
@@ -37,7 +48,19 @@ export default class Toggle {
   }
 
   toggleClick = () => {
-    this.setOn(!this.getOnVal(this.props), true)
+    console.log('toggle click')
+    this.setOn(!this.value, true)
+  }
+
+  get shouldSyncToForm() {
+    const { uiContext, sync } = this.props
+    return uiContext && uiContext.inForm && !sync
+  }
+
+  syncToForm = () => {
+    if (this.shouldSyncToForm) {
+      this.props.uiContext.formValues[this.props.name] = () => this.state.on
+    }
   }
 
   render() {
@@ -49,6 +72,12 @@ export default class Toggle {
       dark,
       barColor,
       sync,
+      uiContext,
+      form,
+      theme,
+      placeholderColor,
+      borderRadius,
+      chromeless,
       ...props
     } = this.props
 
@@ -58,6 +87,8 @@ export default class Toggle {
     } else {
       on = this.state.on
     }
+
+    console.log('render toggle', on)
 
     return (
       <bar onClick={this.toggleClick} {...props}>
@@ -86,6 +117,12 @@ export default class Toggle {
       transform: { x: -BAR_INVISIBLE_PAD },
       transition: 'all ease-in 80ms',
     },
+    dotOn: {
+      background: '#000',
+      transform: {
+        x: BAR_WIDTH - 10 - 5,
+      },
+    },
   }
 
   static theme = ({ dotSize, color, barColor }) => ({
@@ -97,12 +134,6 @@ export default class Toggle {
       width: dotSize,
       height: dotSize,
       marginTop: -((dotSize - BAR_HEIGHT) / 2) - BAR_INVISIBLE_PAD + 1,
-    },
-    dotOn: {
-      background: '#000',
-      transform: {
-        x: BAR_WIDTH - dotSize - 5,
-      },
     },
   })
 }

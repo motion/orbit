@@ -6,20 +6,21 @@
     "pack": "build --mac --dir",
     "dist": "build --mac",
     "start": "electron build/out",
+    "build": "webpack",
     "watch": "webpack --watch"
   },
   "dependencies": {
-    "@mcro/black": "^1.1.0",
-    "@mcro/ionize": "^1.1.0",
+    "@mcro/black": "^1.2.0",
+    "@mcro/ionize": "^1.2.0",
     "electron": "^1.6.11",
+    "electron-localshortcut": "^2.0.2",
+    "lodash": "^4.17.4",
+    "opn": "^5.1.0",
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5",
-    "electron-localshortcut": "^2.0.2",
-    "watch": "1.0.2",
-    "webpack": "^3.4.1",
     "react-motion": "^0.5.0",
-    "lodash": "^4.17.4",
-    "opn": "^5.1.0"
+    "watch": "1.0.2",
+    "webpack": "^3.4.1"
   },
   "build": {
     "appId": "jot.id",
@@ -27,5 +28,5 @@
       "category": "pro"
     }
   },
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

@@ -1,14 +1,14 @@
 {
   "name": "@mcro/playground",
   "main": "index.js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "dependencies": {
-    "@mcro/black": "^1.1.0",
-    "@mcro/models": "^1.1.0",
-    "@mcro/ui": "^1.1.0",
-    "@mcro/web": "^1.1.0",
-    "react": "^15.6.0",
-    "react-dom": "^15.6.1"
+    "@mcro/black": "^1.2.0",
+    "@mcro/models": "^1.2.0",
+    "@mcro/ui": "^1.2.0",
+    "@mcro/web": "^1.2.0",
+    "react": "16.0.0-alpha.5",
+    "react-dom": "16.0.0-alpha.5"
   }
 }

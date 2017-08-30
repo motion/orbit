@@ -20,44 +20,42 @@ export default class PaneCard {
       return <h5>no store</h5>
     }
     // version is just to subscribe to updates
-    const { selectedIds, version, toolbarActions } = paneStore
+    const { selectedIds, toolbarActions } = paneStore
 
     return (
       <card $light={light} style={{ width }} $chromeless={chromeless}>
-        <task>
-          <heading>
-            <headingcontent if={title}>
-              <UI.Title $title display="block" size={1.2}>
-                {title}
-              </UI.Title>
-              <service>
-                <UI.Icon $icon color="#555" size={24} name={icon} />
-                <id if={id}>
-                  #{id.slice(0, 4)}
-                </id>
-              </service>
-            </headingcontent>
-            <Action
-              actions={actions}
-              color="#333"
-              id="paneActions"
-              if={actions}
-            />
-          </heading>
-          <content>
-            {children}
-          </content>
-          <toolbar if={toolbarActions} $$row>
-            <info>
-              {selectedIds.length} selected
+        <heading>
+          <headingcontent if={title}>
+            <UI.Title $title display="block" size={1.2}>
+              {title}
+            </UI.Title>
+            <service>
+              <UI.Icon $icon color="#555" size={24} name={icon} />
+              <id if={id}>
+                #{id.slice(0, 4)}
+              </id>
+            </service>
+          </headingcontent>
+          <Action
+            actions={actions}
+            color="#333"
+            id="paneActions"
+            if={actions}
+          />
+        </heading>
+        <content>
+          {children}
+        </content>
+        <toolbar if={toolbarActions} $$row>
+          <info>
+            {selectedIds.length} selected
             </info>
-            <Actions
-              actions={toolbarActions}
-              id="toolbarActions"
-              color="#eee"
-            />
-          </toolbar>
-        </task>
+          <Actions
+            actions={toolbarActions}
+            id="toolbarActions"
+            color="#eee"
+          />
+        </toolbar>
       </card>
     )
   }
@@ -65,7 +63,6 @@ export default class PaneCard {
   static style = {
     card: {
       flex: 1,
-      padding: 8,
       position: 'relative',
       overflowY: 'scroll',
     },
@@ -75,9 +72,6 @@ export default class PaneCard {
     content: {
       overflow: 'scroll',
       height: '100%',
-    },
-    task: {
-      flex: 1,
     },
     toolbar: {
       position: 'absolute',

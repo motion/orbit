@@ -122,6 +122,10 @@ class TestPageStore {
 }
 @view.provide({ store: TestPageStore, paneStore: Pane.Store })
 export default class Message {
+  componentWillReceiveProps({ isActive }) {
+    this.props.paneStore.isActive = isActive
+  }
+
   render({ data, isActive }) {
     return (
       <Pane.Card light isActive={isActive} icon={data.icon}>

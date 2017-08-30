@@ -6,12 +6,10 @@ import bodyParser from 'body-parser'
 import { RateLimit, ExpressMiddleware } from 'ratelimit.js'
 import * as Constants from '~/constants'
 import redis from 'redis'
-import repStream from 'express-pouchdb-replication-stream'
 import SuperLogin from './superlogin'
 import config from './superlogin.config'
 import url from 'url'
 import trello from './trello'
-import github from './github'
 
 // test
 
@@ -41,7 +39,6 @@ export default class Server {
     this.setupServer()
     this.setupLogin()
     this.setupRateLimiting()
-    this.setupCouchStreamProxy()
   }
 
   start() {
@@ -180,12 +177,6 @@ export default class Server {
       })
     })
 
-    app.get('/github/issues', (req, res) => {
-      github.getIssues().then(val => {
-        res.send(val)
-      })
-    })
-
     this.server = app
   }
 
@@ -208,17 +199,6 @@ export default class Server {
     this.server.use(
       limiter.middleware((req, res) => {
         res.status(429).json({ message: 'rate limit exceeded' })
-      })
-    )
-  }
-
-  setupCouchStreamProxy() {
-    // streaming couch proxy
-    this.server.get(
-      '/couch-stream/:db',
-      repStream({
-        url: Constants.COUCH_URL,
-        dbReq: true,
       })
     )
   }

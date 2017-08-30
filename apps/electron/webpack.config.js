@@ -11,6 +11,7 @@ Fs.readdirSync(Path.join(__dirname, 'node_modules'))
 
 module.exports = {
   entry: ['webpack/hot/poll?500', Path.join(__dirname, 'lib', 'index.js')],
+  devtool: 'source-map',
   target: 'electron',
   output: {
     path: Path.join(__dirname, 'build'),

@@ -2,7 +2,7 @@
 import type { Color, CSSArray, ToCSSAble } from './types'
 import colorNames from './colorNames'
 
-export function colorToString(color: Color, options): string {
+export function colorToString(color: Color, options?: Object): string {
   if (typeof color === 'string') {
     return color
   }
@@ -46,7 +46,7 @@ export function isColorLikeString(str: string) {
   return false
 }
 
-export function isColorLikeArray(array: Array) {
+export function isColorLikeArray(array: Array<number | string>) {
   return (
     typeof array[0] === 'number' &&
     typeof array[1] === 'number' &&
@@ -78,7 +78,7 @@ export function isColorLikeLibrary(val: any, options?: Object): boolean {
 }
 
 // attempts to work with a variety of css libraries
-export function getColorLikeLibraryValue(val: ToCSSAble, options?: Object) {
+export function getColorLikeLibraryValue(val: any, options?: Object) {
   let res = val
   if (options && options.isColor(val)) {
     return options.toColor(val)
@@ -95,7 +95,7 @@ export function getColorLikeLibraryValue(val: ToCSSAble, options?: Object) {
   return res
 }
 
-function objectToColor(color: Color, converter?: Function): string {
+function objectToColor(color: Color): string {
   // final processing of objects and arrays
   if (Array.isArray(color)) {
     const length = color.length
@@ -111,7 +111,7 @@ function objectToColor(color: Color, converter?: Function): string {
     }
     return `rgb(${color.r}, ${color.g}, ${color.b})`
   }
-  return color
+  return color.toString()
 }
 
 const arr3to4 = arr => [...arr, arr[1]]

@@ -10,24 +10,31 @@ export type { Model }
 
 export { CompositeDisposable } from '@mcro/model'
 
+// ⭐️ ADD MODELS HERE:
+
 import UserInstance from './user'
 import ThingInstance from './thing'
 import JobInstance from './job'
 import SettingInstance from './setting'
+import EventInstance from './event'
 
 export const User = UserInstance
 export const Thing = ThingInstance
 export const Job = JobInstance
 export const Setting = SettingInstance
+export const Event = EventInstance
 
-// AND THIS TOO
+// ⭐️ DONT FORGET TO ADD HERE TOO:
 
 export const Models = {
   Thing,
   User,
   Job,
   Setting,
+  Event,
 }
+
+// ⭐️ YOU'RE ALL SET
 
 export type ModelOptions = {|
   autoSync?: boolean,

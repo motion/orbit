@@ -1,6 +1,6 @@
 // @flow
 import { store, watch } from '@mcro/black/store'
-import { Setting, Thing, Job } from '@mcro/models'
+import { Setting, Thing, Event, Job } from '@mcro/models'
 import type { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
@@ -120,13 +120,32 @@ export default class GithubSync {
     const repos = await this.fetch(`/orgs/${orgLogin}/repos`)
     if (repos) {
       console.log('got repos', repos.length)
-      const allEvents = await Promise.all(
+      const repoEvents = await Promise.all(
         repos.map(repo => this.fetch(`/repos/${orgLogin}/${repo.name}/events`))
       )
 
-      for (const event of allEvents) {
-        console.log('should add this event to feed', orgLogin, event)
+      const createdEvents = []
+
+      for (const events of repoEvents) {
+        if (events && events.length) {
+          for (const event of events) {
+            createdEvents.push(
+              Event.upsert({
+                _id: event.id,
+                integration: 'github',
+                type: event.type,
+                author: event.actor.login,
+                org: event.org.login,
+                parentId: event.repo.name,
+                data: event,
+              })
+            )
+          }
+        }
       }
+
+      await Promise.all(createdEvents)
+      console.log('⭐️⭐️ DONE SYNCING EVENTS ⭐️⭐️')
     }
   }
 

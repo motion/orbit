@@ -412,7 +412,7 @@ export default class Model {
     }
 
     const QUERY_KEY = queryKey(query)
-    if (this.liveQueries: Object[QUERY_KEY]) {
+    if (this.liveQueries[QUERY_KEY]) {
       console.log('already watching this query!')
       return Promise.resolve(true)
     }
@@ -457,7 +457,7 @@ export default class Model {
                 options,
               })
 
-              this.liveQueries: Object[QUERY_KEY] = true
+              this.liveQueries[QUERY_KEY] = true
 
               resolve(liveReplication)
             } else {
@@ -470,7 +470,7 @@ export default class Model {
     })
   }
 
-  getParams = (params, callback) => {
+  getParams = (params?: Object, callback: Function) => {
     const objParams = this.paramsToObject(params)
     return callback(objParams)
   }

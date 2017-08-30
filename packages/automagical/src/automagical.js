@@ -4,10 +4,6 @@ import { fromStream, fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 
-if (module && module.hot && module.hot.accept) {
-  module.hot.accept(() => {})
-}
-
 const isObservable = x => {
   try {
     return x && (x.isObservable || Mobx.isObservable(x))
@@ -34,13 +30,20 @@ export default function automagical() {
         return Klass
       }
 
-      const ogConstructor = Klass.prototype.constructor
-      Klass.prototype.constructor = function() {
-        automagic(this)
-        return ogConstructor.call(this)
+      class ProxyClass extends Klass {
+        static get name() {
+          return Klass.name
+        }
+        constructor(...args) {
+          super(...args)
+          automagic(this)
+        }
+        get $mobx() {
+          return super.$mobx
+        }
       }
 
-      return Klass
+      return ProxyClass
     },
   }
 }
@@ -66,6 +69,7 @@ const FILTER_KEYS = {
   stop: true,
   subscriptions: true,
   watch: true,
+  $mobx: true,
 }
 
 function mobxifyQuery(obj, method, val) {
@@ -80,10 +84,8 @@ function mobxifyQuery(obj, method, val) {
 
 function mobxifyPromise(obj, method, val) {
   const observable = fromPromise(val)
-  console.log('mobxigu')
   Object.defineProperty(obj, method, {
     get() {
-      console.log('get me')
       return observable.value
     },
   })
@@ -130,8 +132,9 @@ function mobxify(target: Object, method: string, descriptors: Object) {
 
   // @computed get (do first to avoid hitting the getter on next line)
   if (descriptor && !!descriptor.get) {
+    console.log('dgggg', descriptor.get)
     Mobx.extendObservable(target, {
-      [method]: Mobx.computed(DEFAULT_VALUE),
+      [method]: Mobx.computed(descriptor.get),
     })
     return
   }

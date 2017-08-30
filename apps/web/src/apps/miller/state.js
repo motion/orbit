@@ -17,6 +17,7 @@ export default class MillerStateStore {
     return new MillerStateStore({ schema: serialize(content) })
   }
 
+  plugins = []
   activeRow = 0
   activeCol = 0
   schema: Array<Schema> = []
@@ -26,7 +27,7 @@ export default class MillerStateStore {
   constructor({ schema }) {
     this.schema = schema
 
-    const events = ['selectionChange']
+    const events = ['selectionChange', 'change']
     events.forEach(event => {
       this.watchers[event] = []
       this['on' + capitalize(event)] = cb => {
@@ -39,6 +40,22 @@ export default class MillerStateStore {
     return this.schema[this.schema.length - 1]
   }
 
+  get activeBar() {
+    return this.activePlugin && this.activePlugin.barContents
+  }
+
+  get activePlugin() {
+    return this.plugins[this.activeCol]
+  }
+
+  get activeResults() {
+    return this.activePlugin && this.activePlugin.results
+  }
+
+  get activeItem() {
+    return this.activeResults && this.activeResults[this.activeRow]
+  }
+
   setSchema(index, schema: Schema) {
     if (this.schema.length < index) {
       this.schema.push(schema)
@@ -47,8 +64,13 @@ export default class MillerStateStore {
     }
   }
 
-  emit(name) {
-    this.watchers[name].forEach(cb => cb())
+  setPlugin(index, plugin) {
+    this.plugins[index] = plugin
+    this.emit('change', this)
+  }
+
+  emit(name, obj) {
+    this.watchers[name].forEach(cb => cb(obj))
   }
 
   moveRow(delta) {
@@ -58,6 +80,7 @@ export default class MillerStateStore {
     } else {
       this.activeRow += delta
     }
+    console.log('new row is', this.activeRow)
     this.emit('selectionChange')
   }
 

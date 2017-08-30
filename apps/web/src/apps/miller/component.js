@@ -5,20 +5,21 @@ import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
 
 class MillerStore {
-  plugins = []
   colWidths = range(100).map(() => 0)
+  paneWidth = null
   colLeftMargin = 10
 
   start() {
     this.props.state.onSelectionChange(this.handleSelectionChange)
+    this.props.state.onChange(this.props.onChange)
     this.setTimeout(this.handleSelectionChange)
   }
 
   handleSelectionChange = () => {
     const { state, onChange } = this.props
-    if (state.activeRow !== null && this.activeResults) {
-      if (this.activeItem) {
-        state.setSchema(state.activeCol + 1, this.activeItem)
+    if (state.activeRow !== null && state.activeResults) {
+      if (state.activeItem && state.activeItem.showChild !== false) {
+        state.setSchema(state.activeCol + 1, state.activeItem)
       }
     }
     onChange(state)
@@ -31,18 +32,6 @@ class MillerStore {
       -sum(this.colWidths.slice(0, state.activeCol)) -
       this.colLeftMargin * state.activeCol
     )
-  }
-
-  get activePlugin() {
-    return this.plugins[this.props.state.activeCol]
-  }
-
-  get activeResults() {
-    return this.activePlugin && this.activePlugin.results
-  }
-
-  get activeItem() {
-    return this.activeResults && this.activeResults[this.props.state.activeRow]
   }
 
   onSelect(col, row) {
@@ -59,7 +48,8 @@ class MillerStore {
       const { state } = this.props
       if (
         state.activeRow === null ||
-        (this.activeResults && state.activeRow < this.activeResults.length - 1)
+        (state.activeResults &&
+          state.activeRow < state.activeResults.length - 1)
       ) {
         state.moveRow(1)
       }
@@ -91,11 +81,13 @@ class Pane {
     search,
     onSelect,
     col,
+    width,
+    millerState,
     type,
   }) {
     const paneActive = state.activeCol == col
     const highlightIndex = !paneActive && state.prevActiveRows[col]
-    const activeIndex = paneActive && state.activeRow
+    const activeRow = paneActive && state.activeRow
     const ChildPane = pane
 
     if (!ChildPane) {
@@ -107,6 +99,7 @@ class Pane {
       <pane
         css={{
           flex: 1,
+          width,
         }}
         ref={ref => {
           ref && onMeasureWidth(ref.offsetWidth)
@@ -115,15 +108,17 @@ class Pane {
         <ChildPane
           paneProps={paneProps}
           data={data || {}}
+          millerState={millerState}
           isActive={paneActive}
           onSelect={onSelect}
           getRef={ref => {
+            console.log('giving ref for ', type)
             getRef(ref)
             this.pane = ref
           }}
           search={paneActive ? search : ''}
           highlightIndex={highlightIndex}
-          activeIndex={activeIndex}
+          activeRow={activeRow}
         />
       </pane>
     )
@@ -158,7 +153,14 @@ export default class Miller {
     const transX = animate ? store.translateX : 0
 
     const content = (
-      <miller css={{ flex: 1 }}>
+      <miller
+        ref={el => {
+          if (el) {
+            store.paneWidth = el.offsetWidth
+          }
+        }}
+        css={{ flex: 1 }}
+      >
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
             return (
@@ -170,13 +172,15 @@ export default class Miller {
                   // if it's the next preview, always rerender
                   pane={panes[pane.type]}
                   type={pane.type}
+                  width={index === schema.length - 1 && store.paneWidth}
                   data={pane.data}
                   search={search}
                   paneProps={paneProps}
                   onMeasureWidth={width => (store.colWidths[index] = width)}
                   col={index}
+                  millerState={state}
                   getRef={plugin => {
-                    store.plugins[index] = plugin
+                    state.setPlugin(index, plugin)
                   }}
                   onSelect={row => store.onSelect(index, row)}
                   state={state}
@@ -204,7 +208,7 @@ export default class Miller {
       flex: 1,
     },
     pane: {
-      overflow: 'scroll',
+      //overflowY: 'scroll',
     },
     columns: {
       flex: 1,

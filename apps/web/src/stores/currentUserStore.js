@@ -190,7 +190,7 @@ class CurrentUser {
     try {
       if (this.superlogin) {
         this.sessionInfo = await this.superlogin.getSession()
-        console.log('setting to', this.sessionInfo)
+        // console.log('setting to', this.sessionInfo)
       }
     } catch (e) {
       console.error('got err with current user get', e)

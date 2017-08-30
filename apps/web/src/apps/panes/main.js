@@ -7,6 +7,7 @@ import { uniq } from 'lodash'
 import { filterItem } from './helpers'
 import { Atom } from '@mcro/models'
 import { OS } from '~/helpers'
+import * as Pane from './pane'
 
 let allCards = null
 
@@ -65,6 +66,46 @@ class BarMainStore {
         title: 'My Team',
         category: 'Browse',
         type: 'message',
+        url() {
+          return '/?home=true'
+        },
+        icon: 'objects_planet',
+      },
+      {
+        data: {},
+        title: 'Test Page',
+        category: 'Browse',
+        type: 'test',
+        url() {
+          return '/?home=true'
+        },
+        icon: 'objects_planet',
+      },
+      {
+        data: {},
+        title: 'Orbit → New GitHub Issue',
+        category: 'Browse',
+        type: 'newIssue',
+        url() {
+          return '/?home=true'
+        },
+        icon: 'objects_planet',
+      },
+      {
+        data: {},
+        title: 'Gloss → New GitHub Issue',
+        category: 'Browse',
+        type: 'newIssue',
+        url() {
+          return '/?home=true'
+        },
+        icon: 'objects_planet',
+      },
+      {
+        data: {},
+        title: 'Motion → New GitHub Issue',
+        category: 'Browse',
+        type: 'newIssue',
         url() {
           return '/?home=true'
         },
@@ -148,6 +189,14 @@ class BarMainStore {
     return results
   }
 
+  actionsByType = {
+    issue: ['archive', 'add label', 'milestone'],
+  }
+
+  getActions = ({ type }) => {
+    return this.actionsByType[type] || []
+  }
+
   search = async () => {
     if (!this.props.search) {
       this.searchResults = []
@@ -183,43 +232,55 @@ class BarMainStore {
   }
 }
 
+@view.provide({ paneStore: Pane.Store })
 @view({
   store: BarMainStore,
 })
 export default class BarMain {
   lastSearch = ''
 
-  componentWillReceiveProps() {
-    if (this.lastSearch !== this.props.search) {
+  componentWillReceiveProps({ search, activeRow }) {
+    if (this.lastSearch !== search) {
       this.props.store.search()
       this.lastSearch = this.props.search
     }
   }
 
-  getChildSchema = row => {
-    const { store } = this.props
-    const item = store.results[row]
-    return { kind: item.type, data: item.data || {} }
-  }
-
-  render({ store, activeIndex, paneProps, onSelect }) {
+  render({ store, paneStore, isActive, activeIndex, paneProps, onSelect }) {
     const secondary = item => {
       if (item.data && item.data.service === 'github')
         return (
-          <spread $$row>
-            <left>
-              {item.data.comments.length} replies
-            </left>
-            <right>
-              {item.data.labels}
-            </right>
-          </spread>
+          <secondary>
+            <spread $$row>
+              <left>
+                {item.data.comments.length} replies
+              </left>
+              <right>
+                {item.data.labels}
+              </right>
+            </spread>
+          </secondary>
         )
 
       return null
     }
     return (
-      <pane>
+      <Pane.Card isActive={isActive} width={340} $pane>
+        {false &&
+          store.results.map((result, index) => {
+            return (
+              <Pane.Selectable
+                options={{
+                  when: '3 days ago',
+                  name: result.title,
+                  actions: store.getActions(result),
+                  id: result.title,
+                  body: null, //<h2>hello</h2>,
+                  index,
+                }}
+              />
+            )
+          })}
         <UI.List
           if={store.results}
           selected={activeIndex}
@@ -230,27 +291,21 @@ export default class BarMain {
           groupKey="category"
           items={store.results}
           getItem={(result, index) =>
-            <UI.ListItem
-              onClick={() => onSelect(index)}
-              highlight={index === activeIndex}
-              key={result.id}
-              icon={
-                result.data && result.data.image
-                  ? <img $image src={`/images/${result.data.image}.jpg`} />
-                  : result.icon || (result.doc && result.doc.icon)
-              }
-              primary={result.title}
-              secondary={secondary(result)}
+            <Pane.Selectable
+              options={{
+                when: '3 days ago',
+                name: result.title,
+                actions: store.getActions(result),
+                id: result.title,
+                index,
+              }}
             />}
         />
-      </pane>
+      </Pane.Card>
     )
   }
 
   static style = {
-    pane: {
-      width: 340,
-    },
     spread: {
       justifyContent: 'space-between',
     },

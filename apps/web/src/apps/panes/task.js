@@ -1,8 +1,8 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { isNumber, includes } from 'lodash'
+import * as Pane from './pane'
+import { includes } from 'lodash'
 import PersonPicker from './views/personPicker'
-import PaneCard from './views/card'
 import { Atom } from '@mcro/models'
 import timeAgo from 'time-ago'
 
@@ -211,7 +211,6 @@ class AddResponse {
 })
 export default class BarTaskPane {
   getLength = () => 5
-  getChildSchema = row => null
 
   render({ highlightIndex, data, activeIndex, isActive, store, paneProps }) {
     const title = data.title || 'Create a Helm chart to deploy CouchDB on K8s'
@@ -234,7 +233,7 @@ export default class BarTaskPane {
     ]
 
     return (
-      <PaneCard $paneCard id={data.id} title={title} icon={type}>
+      <Pane.Card $paneCard id={data.id} title={title} icon={type}>
         <container $isActive={isActive}>
           <content>
             <metaInfo $$row>
@@ -257,7 +256,7 @@ export default class BarTaskPane {
           </content>
           <AddResponse store={store} />
         </container>
-      </PaneCard>
+      </Pane.Card>
     )
   }
 

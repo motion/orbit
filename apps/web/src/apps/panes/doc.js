@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import PaneCard from './views/card'
+import * as Pane from './pane'
 
 const changes = [
   {
@@ -22,7 +22,7 @@ const changes = [
 export default class BarDocPane {
   render({ data, highlightIndex, activeIndex, paneProps, ...props }) {
     return (
-      <PaneCard title={data.title} icon="google" id={data.id || 0} {...props}>
+      <Pane.Card title={data.title} icon="google" id={data.id || 0} {...props}>
         <what css={{ padding: [5, 5, 5] }}>
           <UI.Text>
             {data.author} made{' '}
@@ -49,7 +49,7 @@ export default class BarDocPane {
             </change>
           )
         })}
-      </PaneCard>
+      </Pane.Card>
     )
   }
 

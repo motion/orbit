@@ -277,6 +277,7 @@ class BarFeedStore {
         date: '2m ago',
         content: (
           <DocPane
+            key={'docPane'}
             data={{
               title: 'Product Page Planning Meeting Aug. 5',
               id: '52',
@@ -294,8 +295,12 @@ class BarFeedStore {
         title: 'Item 1',
         action: 'edited',
         date: '2m ago',
-        content:
-          'This is a much longer edit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+        content: (
+          <p key="edit">
+            This is a much longer edit. Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit.
+          </p>
+        ),
         icon: 'drive',
         author: {
           title: 'Nick',
@@ -308,6 +313,7 @@ class BarFeedStore {
         action: 'uploaded a new document',
         content: (
           <GithubPane
+            key="ghPane"
             data={{
               title: 'Kubernetes React Integration',
               id: '52',
@@ -326,7 +332,11 @@ class BarFeedStore {
         title: 'Item 1',
         action: 'edited',
         date: '2m ago',
-        content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+        content: (
+          <p key="gmail">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          </p>
+        ),
         icon: 'gmail',
         author: {
           title: 'Nick',

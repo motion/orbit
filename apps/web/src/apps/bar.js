@@ -5,16 +5,7 @@ import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
-import { isNumber, last, debounce } from 'lodash'
-
-const safeString = thing => {
-  try {
-    return JSON.stringify(thing)
-  } catch (e) {
-    console.log('non safe object', thing)
-    return `${thing}`
-  }
-}
+import { isNumber, debounce } from 'lodash'
 
 const actions = [
   'remind',
@@ -45,6 +36,10 @@ class BarStore {
   // search is throttled, textboxVal isn't
   search = ''
   textboxVal = ''
+
+  get showTextbox() {
+    return this.millerState.activeCol === 0
+  }
 
   start() {
     this.on(window, 'focus', this.onFocus)
@@ -95,6 +90,8 @@ class BarStore {
     orbit: Panes.Orbit,
     task: Panes.Task,
     doc: Panes.Doc,
+    test: Panes.Test,
+    newIssue: Panes.Code.NewIssue,
     integrations: Panes.Integrations,
   }
 
@@ -191,49 +188,54 @@ export default class BarPage {
       },
     }
 
+    const { millerState } = store
+
     return (
       <HotKeys handlers={store.actions}>
         <UI.Theme name="clear-dark">
           <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
-            <div>
-              <UI.Input
-                size={3}
-                getRef={store.ref('inputRef').set}
-                borderRadius={5}
-                onChange={store.onSearchChange}
-                value={store.textboxVal}
-                borderWidth={0}
-                css={{
-                  margin: [-2, 0, 0],
-                  padding: [0, 10],
-                  ...inputStyle,
-                }}
-              />
-              <forwardComplete>
-                {store.peekItem}
-              </forwardComplete>
-              <pasteIcon if={false}>
-                <UI.Icon size={50} type="detailed" name="paper" />
-              </pasteIcon>
-              <selected
-                if={false}
-                css={{
-                  position: 'absolute',
-                  top: 80,
-                  left: 0,
-                  right: 0,
-                  height: 20,
-                  fontSize: 12,
-                  overflow: 'hidden',
-                  opacity: 0.8,
-                  color: '#fff',
-                }}
-              >
-                Selected: {safeString(store.activeItem)}
-              </selected>
-            </div>
+            <omni>
+              <nav $showNav={!store.showTextbox} $$row>
+                <left>
+                  <UI.Button
+                    size={2}
+                    chromeless
+                    $backArrow
+                    onClick={() => {
+                      millerState.moveCol(-1)
+                    }}
+                    icon="arrows-1_bold-left"
+                  />
+                </left>
+                <middle>
+                  {millerState.activeBar}
+                </middle>
+              </nav>
+              <textbox if={store.showTextbox}>
+                <UI.Input
+                  size={3}
+                  getRef={store.ref('inputRef').set}
+                  borderRadius={5}
+                  onChange={store.onSearchChange}
+                  value={store.textboxVal}
+                  borderWidth={0}
+                  css={{
+                    margin: [-2, 0, 0],
+                    padding: [0, 10],
+                    ...inputStyle,
+                  }}
+                />
+                <forwardComplete>
+                  {store.peekItem}
+                </forwardComplete>
+                <pasteIcon if={false}>
+                  <UI.Icon size={50} type="detailed" name="paper" />
+                </pasteIcon>
+              </textbox>
+            </omni>
             <Miller
               search={store.search}
+              animate={true}
               version={store.millerStateVersion}
               state={store.millerState}
               panes={store.PANE_TYPES}
@@ -253,6 +255,33 @@ export default class BarPage {
       flex: 1,
       // opacity: 0,
       // transition: 'all ease-in 300ms',
+    },
+    omni: {
+      height: 100,
+    },
+    // pos textbox over nav so they don't collide when nav is opacity 0
+    textbox: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+    },
+    nav: {
+      flex: 1,
+      userSelect: 'none',
+      padding: [20, 5],
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      transition: 'opacity ease-in 150ms',
+      opacity: 0,
+    },
+    showNav: {
+      opacity: 1,
+    },
+    left: {
+      position: 'absolute',
+      left: 3,
+      top: 20,
     },
     results: {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],

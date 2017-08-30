@@ -321,10 +321,17 @@ export default class ExampleApp extends React.Component {
       },
     }
 
+    const bgWindow = Object.assign({}, appWindow, {
+      vibrancy: undefined,
+      hasShadow: false,
+    })
+
     if (error) {
       console.log('recover render')
       return null
     }
+
+    const bgPadding = 20
 
     return (
       <app>
@@ -361,7 +368,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`${JOT_URL}/bar?cachebust=${this.uid}`}
+          file={`${JOT_URL}/vibrancy`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
@@ -369,6 +376,7 @@ export default class ExampleApp extends React.Component {
           onReadyToShow={this.onReadyToShow}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
+          onMove={position => this.setState({ position })}
           onFocus={() => {
             this.activeWindow = this.windowRef
           }}
@@ -376,6 +384,29 @@ export default class ExampleApp extends React.Component {
             nativeWindowOpen: true,
           }}
         />
+        {false && <window
+          key={'bg'}
+          {...bgWindow}
+          defaultSize={this.initialSize || this.state.size}
+          size={this.state.size}
+          ref={this.onWindow}
+          showDevTools
+          file={`${JOT_URL}/bar?cachebust=${this.uid}`}
+          titleBarStyle="customButtonsOnHover"
+          show={this.state.show}
+          size={this.state.size.map(x => x + bgPadding * 2)}
+          position={this.state.position.map(val => val - bgPadding)}
+          onReadyToShow={this.onReadyToShow}
+          onResize={size => this.setState({ size })}
+          onMoved={position => this.setState({ position })}
+          onMove={position => this.setState({ position })}
+          onFocus={() => {
+            this.activeWindow = this.windowRef
+          }}
+          webPreferences={{
+            nativeWindowOpen: true,
+          }}
+        />}
         {windows.map(win => {
           return (
             <Window

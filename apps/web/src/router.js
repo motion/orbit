@@ -2,6 +2,7 @@
 import Router from '@mcro/router'
 import HomePage from './apps/home'
 import BarPage from './apps/bar'
+import EmptyPage from './apps/empty'
 import MasterDetailPage from './apps/masterDetail'
 import { render } from './start'
 
@@ -11,6 +12,7 @@ function runRouter() {
   AppRouter = new Router({
     routes: {
       '/': HomePage,
+      '/vibrancy': EmptyPage,
       bar: BarPage,
       master: MasterDetailPage,
     },

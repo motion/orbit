@@ -98,11 +98,10 @@ export default class Database {
   }
 
   dispose = () => {
-    for (const [name, model] of Object.entries(this.models)) {
-      if (model && model.dispose) {
+    for (const name of Object.keys(this.models)) {
+      const model = this.models[name]
+      if (model) {
         model.dispose()
-      } else {
-        console.error('what is this thing', name, model)
       }
     }
   }
@@ -138,7 +137,6 @@ export default class Database {
       )
     }
 
-    const result = await Promise.all(connections)
-    return result
+    return await Promise.all(connections)
   }
 }

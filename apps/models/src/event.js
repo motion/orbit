@@ -1,6 +1,6 @@
 // @flow
 import global from 'global'
-import { Model, query, str, object } from '@mcro/model'
+import { Model, str, object } from '@mcro/model'
 
 // keep here so we can use as generic
 export const methods = {}
@@ -11,7 +11,7 @@ export type EventType = typeof methods & {
   type: string,
   data?: Object,
   parentId?: string,
-  givenId?: string,
+  id?: string,
   org?: string,
   createdAt: string,
   updatedAt: string,
@@ -19,7 +19,7 @@ export type EventType = typeof methods & {
 
 export class Event extends Model {
   static props = {
-    givenId: str.primary,
+    id: str.primary,
     integration: str,
     type: str,
     author: str.optional,
@@ -33,7 +33,7 @@ export class Event extends Model {
 
   settings = {
     database: 'events',
-    index: ['givenId', 'type', 'createdAt', 'updatedAt'],
+    index: ['type'],
   }
 }
 

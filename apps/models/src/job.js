@@ -41,7 +41,6 @@ export class JobModel extends Model {
 
   settings = {
     database: 'jobs',
-    index: ['createdAt', 'updatedAt'],
   }
 
   status = STATUS

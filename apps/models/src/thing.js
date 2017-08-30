@@ -14,14 +14,14 @@ export type ThingType = typeof methods & {
   integration: 'github',
   type: 'issue',
   parentId?: string,
-  givenId?: string,
+  id?: string,
   createdAt: string,
   updatedAt: string,
 }
 
 export class Thing extends Model {
   static props = {
-    givenId: str.primary,
+    id: str.primary,
     title: str,
     integration: str,
     type: str,
@@ -35,7 +35,7 @@ export class Thing extends Model {
 
   settings = {
     database: 'things',
-    index: ['title', 'body', 'createdAt', 'updatedAt'],
+    index: ['title', 'body'],
   }
 
   @query

@@ -135,7 +135,7 @@ export default class GithubSync {
           for (const event of events) {
             createdEvents.push(
               Event.upsert({
-                givenId: event.id,
+                id: `${event.id}`,
                 integration: 'github',
                 type: event.type,
                 author: event.actor.login,
@@ -242,7 +242,7 @@ export default class GithubSync {
         console.log('creating issue', issue.id, issue.title)
         createdIssues.push(
           Thing.upsert({
-            givenId: `${issue.id}`,
+            id: `${issue.id}`,
             integration: 'github',
             type: 'issue',
             title: issue.title,

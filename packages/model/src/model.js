@@ -317,9 +317,13 @@ export default class Model {
 
     // PRE-SAVE
     const ogSave = this.hooks.preSave
-    this.hooks.preSave = doc => {
+    this.hooks.preSave = (doc: Object) => {
       if (this.hasTimestamps) {
         doc.updatedAt = this.now
+        // 🐛 this handles upsert not using preInsert (i think)
+        if (!doc.createdAt) {
+          doc.createdAt = this.now
+        }
       }
       if (ogSave) {
         return ogSave.call(this, doc)

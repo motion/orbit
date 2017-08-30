@@ -10,7 +10,8 @@ highest level things required for beta:
     - figuring who is who across integrations
     - feeds on a person-basis
   - search:
-    - how to do
+    - filter algo
+      - enforce never show same result twice (hashlike)
     - potentially filter by source
     - combine multiple topics into feeds
   - quick actions:

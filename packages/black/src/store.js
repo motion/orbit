@@ -1,6 +1,5 @@
 // @flow
 import decor from '@mcro/decor'
-import autobound from '@mcro/decor/lib/plugins/core/autobound'
 import emittable from '@mcro/decor/lib/plugins/core/emittable'
 import type { Emittable } from '@mcro/decor/lib/plugins/core/emittable'
 import automagical from '@mcro/automagical'
@@ -16,19 +15,18 @@ export const storeDecorator = decor([
   helpers,
   emittable,
   automagical,
-  autobound,
 ])
 
 export const storeOptions = {
   storeDecorator,
   onStoreMount(store: StoreClass, props: Object) {
     if (store.start) {
-      store.start(props)
+      store.start.call(store, props)
     }
   },
   onStoreUnmount(store: StoreClass) {
     if (store.stop) {
-      store.stop()
+      store.stop.call(store)
     }
     store.subscriptions.dispose()
   },

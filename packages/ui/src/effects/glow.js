@@ -10,7 +10,7 @@ import type { Color } from '@mcro/gloss'
 // const Resize = resizer({ strategy: 'scroll' })
 
 @view.ui
-class HoverGlow {
+class HoverGlow extends React.Component {
   props: {
     color: Color,
     background?: Color,

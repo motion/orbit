@@ -1,113 +1,21 @@
 import React from 'react'
-import { app, globalShortcut, screen, ipcMain } from 'electron'
-import Window from './window'
+import { app, globalShortcut, ipcMain } from 'electron'
 import repl from 'repl'
 import localShortcut from 'electron-localshortcut'
 import open from 'opn'
-
-const MIN_WIDTH = 750
-const MIN_HEIGHT = 600
-const MAX_WIDTH = 950
-const MAX_HEIGHT = 800
-const JOT_URL = 'http://jot.dev'
-const IS_MAC = process.platform === 'darwin'
-
-const measure = () => {
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize
-  const size = [
-    Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, Math.round(width / 1.8))),
-    Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, Math.round(height / 1.5))),
-  ]
-  const middleX = Math.round(width / 2 - size[0] / 2)
-  const middleY = Math.round(height / 2 - size[1] / 2)
-  // const endX = width - size[0] - 20
-  // const endY = height - size[1] - 20
-
-  return {
-    size,
-    position: [middleX, middleY],
-  }
-}
+import Menu from '~/menu'
+import { measure } from '~/helpers'
+import * as Constants from '~/constants'
+import WindowsStore from './windowsStore'
+import Window from './window'
 
 let onWindows = []
 export function onWindow(cb) {
   onWindows.push(cb)
 }
 
-const JOT_HOME = '/'
-
-class WindowStore {
-  constructor(opts = {}) {
-    this.path = opts.path || JOT_HOME
-    this.key = opts.key || Math.random()
-    this.position = opts.position || measure().position
-    this.size = opts.size || measure().size
-    this.showBar = true
-  }
-  get active() {
-    return this.path !== JOT_HOME
-  }
-  setPosition = x => (this.position = x)
-  setSize = x => (this.size = x)
-  toggleBar() {
-    console.log('toggling bar')
-    this.showBar = !this.showBar
-  }
-  hasPathCbs = []
-  onHasPath(cb) {
-    this.hasPathCbs.push(cb)
-  }
-  setPath(value) {
-    this.path = value
-    if (value !== '/') {
-      for (const listener of this.hasPathCbs) {
-        listener()
-      }
-      this.hasPathCbs = []
-    }
-  }
-}
-
-class WindowsStoreFactory {
-  windows = []
-  addWindow = () => {
-    this.windows = [new WindowStore({ size: [450, 700] }), ...this.windows]
-  }
-  next(path) {
-    if (!this.windows[0]) {
-      this.addWindow()
-      return
-    }
-    this.addWindow()
-    const toShowWindow = this.windows[1]
-
-    console.log('> next path is', toShowWindow.path)
-    if (toShowWindow) {
-      if (path) {
-        toShowWindow.setPath(path)
-      }
-    }
-
-    console.log('next path:', path, toShowWindow.key)
-    return toShowWindow
-  }
-  findBy(key) {
-    return this.windows.find(x => `${x.key}` === `${key}`)
-  }
-  removeBy(key, val) {
-    this.windows = this.windows.filter(win => win[key] !== val)
-  }
-  removeByPath(path) {
-    this.removeBy('path', path)
-  }
-  removeByKey(key) {
-    console.log('removing by key', key, 'old len', this.windows.length)
-    this.removeBy('key', key)
-    console.log('new len', this.windows.length)
-  }
-}
-
-const WindowsStore = new WindowsStoreFactory()
+const AppWindows = new WindowsStore()
+const ActionWindows = new WindowsStore()
 
 export default class ExampleApp extends React.Component {
   state = {
@@ -115,29 +23,23 @@ export default class ExampleApp extends React.Component {
     show: true,
     size: [0, 0],
     position: [0, 0],
-    windows: WindowsStore.windows,
+    appWindows: AppWindows.windows,
+    actionWindows: ActionWindows.windows,
   }
 
   componentDidMount() {
     this.measureAndShow()
     this.next() // preload one app window
-    onWindows.forEach(cb => {
-      cb(this)
-    })
-
-    setTimeout(() => {
-      this.measureAndShow()
-    }, 500)
-
+    onWindows.forEach(cb => cb(this))
+    setTimeout(this.measureAndShow, 500)
     this.repl = repl.start({
       prompt: 'electron > ',
     })
-
     Object.assign(this.repl.context, {
       Root: this,
-      WindowsStore: WindowsStore,
+      AppWindows: AppWindows,
+      ActionWindows: ActionWindows,
     })
-
     console.log('started a repl!')
   }
 
@@ -179,7 +81,7 @@ export default class ExampleApp extends React.Component {
       }
 
       localShortcut.register(
-        IS_MAC ? 'Cmd+Alt+I' : 'Ctrl+Shift+I',
+        Constants.IS_MAC ? 'Cmd+Alt+I' : 'Ctrl+Shift+I',
         toggleDevTools
       )
       localShortcut.register('F12', toggleDevTools)
@@ -191,7 +93,7 @@ export default class ExampleApp extends React.Component {
 
   listenToApps = () => {
     ipcMain.on('where-to', (event, key) => {
-      const win = WindowsStore.findBy(key)
+      const win = AppWindows.findBy(key) || ActionWindows.findBy(key)
       if (win) {
         win.onHasPath(() => {
           console.log('where-to:', key, win.path)
@@ -211,12 +113,13 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('close', (event, key) => {
-      WindowsStore.removeByKey(+key)
+      AppWindows.removeByKey(+key)
+      ActionWindows.removeByKey(+key)
       this.updateWindows()
     })
 
     ipcMain.on('app-bar-toggle', (event, key) => {
-      WindowsStore.findBy(key).toggleBar()
+      AppWindows.findBy(key).toggleBar()
       this.updateWindows()
       event.sender.send('app-bar-toggle', 'success')
     })
@@ -228,12 +131,18 @@ export default class ExampleApp extends React.Component {
 
   updateWindows = () => {
     return new Promise(resolve => {
-      this.setState({ windows: WindowsStore.windows }, resolve)
+      this.setState(
+        {
+          appWindows: AppWindows.windows,
+          actionWindows: ActionWindows.windows,
+        },
+        resolve
+      )
     })
   }
 
   next = path => {
-    const next = WindowsStore.next(path)
+    const next = AppWindows.next(path)
     this.updateWindows()
     return next
   }
@@ -241,23 +150,13 @@ export default class ExampleApp extends React.Component {
   openApp = path => {
     this.hide()
     const next = this.next(path)
-
-    if (!next) {
-      console.log('no next')
-      return
+    if (next) {
+      setTimeout(() => next.ref && next.ref.focus(), 100)
     }
-
-    setTimeout(() => {
-      if (next.ref) {
-        next.ref.focus()
-      }
-    }, 100)
   }
 
   registerShortcuts = () => {
-    console.log('registerShortcuts')
     globalShortcut.unregisterAll()
-
     const SHORTCUTS = {
       'Option+Space': () => {
         console.log('command option+space')
@@ -268,7 +167,6 @@ export default class ExampleApp extends React.Component {
         }
       },
     }
-
     for (const shortcut of Object.keys(SHORTCUTS)) {
       const ret = globalShortcut.register(shortcut, SHORTCUTS[shortcut])
       if (!ret) {
@@ -278,14 +176,9 @@ export default class ExampleApp extends React.Component {
   }
 
   measureAndShow = async () => {
-    console.log('measuring and showing')
     this.measure()
     await this.show()
     this.windowRef.focus()
-  }
-
-  onReadyToShow = () => {
-    console.log('READY TO SHOW')
   }
 
   unstable_handleError(error) {
@@ -296,7 +189,7 @@ export default class ExampleApp extends React.Component {
   uid = Math.random()
 
   render() {
-    const { windows, error, restart } = this.state
+    const { actionWindows, appWindows, error, restart } = this.state
 
     if (restart) {
       console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
@@ -321,6 +214,11 @@ export default class ExampleApp extends React.Component {
       },
     }
 
+    const actionWindow = {
+      ...appWindow,
+      vibrancy: 'light',
+    }
+
     if (error) {
       console.log('recover render from error')
       return null
@@ -328,32 +226,7 @@ export default class ExampleApp extends React.Component {
 
     return (
       <app>
-        <menu>
-          <submenu label="Electron">
-            <about />
-            <sep />
-            <hide />
-            <hideothers />
-            <unhide />
-            <sep />
-            <quit />
-          </submenu>
-          <submenu label="Edit">
-            <undo />
-            <redo />
-            <sep />
-            <cut />
-            <copy />
-            <paste />
-            <selectall />
-          </submenu>
-          <submenu label="Custom Menu">
-            <item label="Foo the bars" />
-            <item label="Baz the quuxes" />
-            <sep />
-            <togglefullscreen />
-          </submenu>
-        </menu>
+        <Menu />
         <window
           key={this.uid}
           {...appWindow}
@@ -361,12 +234,11 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`${JOT_URL}/bar?cachebust=${this.uid}`}
+          file={`${Constants.JOT_URL}/bar?cachebust=${this.uid}`}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size}
           position={this.state.position}
-          onReadyToShow={this.onReadyToShow}
           onResize={size => this.setState({ size })}
           onMoved={position => this.setState({ position })}
           onFocus={() => {
@@ -376,11 +248,12 @@ export default class ExampleApp extends React.Component {
             nativeWindowOpen: true,
           }}
         />
-        {windows.map(win => {
+
+        {appWindows.map(win => {
           return (
             <Window
               key={win.key}
-              file={`${JOT_URL}?key=${win.key}`}
+              file={`${Constants.JOT_URL}?key=${win.key}`}
               show={win.active}
               {...appWindow}
               defaultSize={win.size}
@@ -395,7 +268,7 @@ export default class ExampleApp extends React.Component {
                 this.updateWindows()
               }}
               onClose={() => {
-                WindowsStore.removeByKey(win.key)
+                AppWindows.removeByKey(win.key)
                 this.updateWindows()
               }}
               onFocus={() => {
@@ -419,6 +292,26 @@ export default class ExampleApp extends React.Component {
               titleBarStyle={
                 win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
               }
+            />
+          )
+        })}
+
+        {actionWindows.map((win, index) => {
+          return (
+            <window
+              key={win.key}
+              file={`${Constants.JOT_URL}?key=${win.key}`}
+              show={win.active}
+              {...actionWindow}
+              size={this.state.size}
+              position={this.state.position.map(
+                coordinate => coordinate + index * 10
+              )}
+              onClose={() => {
+                ActionWindows.removeByKey(win.key)
+                this.updateWindows()
+              }}
+              titleBarStyle="customButtonsOnHover"
             />
           )
         })}

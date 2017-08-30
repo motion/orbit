@@ -78,8 +78,10 @@ export default class GithubSync {
       return
     }
 
-    for (const login of Object.keys(this.setting.values.orgs)) {
-      this.syncIssues(login)
+    if (this.setting.values.orgs) {
+      for (const login of Object.keys(this.setting.values.orgs)) {
+        this.syncIssues(login)
+      }
     }
   }
 
@@ -163,7 +165,8 @@ export default class GithubSync {
         const data = unwrap(omit(issue, ['bodyText']))
         console.log('creating issue', issue.title, data)
         createdIssues.push(
-          Thing.create({
+          Thing.upsert({
+            _id: issue.id,
             integration: 'github',
             type: 'issue',
             title: issue.title,

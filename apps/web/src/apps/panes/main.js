@@ -21,14 +21,18 @@ class BarMainStore {
   topThings = Thing.find({ sort: 'createdAt' })
 
   start() {
+    console.log('this is', this, this.props)
     this.props.getRef(this)
   }
 
   get things(): Array<PaneResult> {
+    console.time('get things()')
     if (!this.topThings) {
       return []
     }
-    return this.filter(this.topThings.map(thingToResult), { max: 8 })
+    const filtered = this.filter(this.topThings.map(thingToResult), { max: 8 })
+    console.timeEnd('get things()')
+    return filtered
   }
 
   get browse(): Array<PaneResult> {
@@ -129,16 +133,18 @@ class BarMainStore {
   }
 }
 
+window.Test = BarMainStore
+
 @view({
   store: BarMainStore,
 })
-export default class BarMain {
+export default class BarMain extends React.Component {
   render({
     store,
     activeIndex,
     paneProps,
     onSelect,
-  }: PaneProps & { store: BarMainStore }) {
+  }: PaneProps & {| store: BarMainStore |}) {
     const secondary = item => {
       if (item.data && item.data.service === 'github')
         return (

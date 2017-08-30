@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser, Document, Thing } from '~/app'
 import { filterItem } from './helpers'
@@ -144,7 +144,9 @@ export default class BarMain extends React.Component {
     activeIndex,
     paneProps,
     onSelect,
-  }: PaneProps & {| store: BarMainStore |}) {
+  }: PaneProps & { store: BarMainStore }) {
+    console.log('render barmain')
+
     const secondary = item => {
       if (item.data && item.data.service === 'github')
         return (

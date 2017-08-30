@@ -69,6 +69,7 @@ const FILTER_KEYS = {
   emit: true,
   on: true,
   CompositeDisposable: true,
+  glossElement: true,
 }
 
 function collectGetterPropertyDescriptors(obj) {

@@ -4,19 +4,12 @@ import { fromStream, fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 
-console.log(626)
-
 if (module && module.hot) {
   module.hot.accept(_ => _) // prevent aggressive hmrs
 }
 
 const isObservable = x => {
-  try {
-    return x && (x.isObservable || Mobx.isObservable(x))
-  } catch (e) {
-    console.log('mobxer', e)
-    return x && x.observersIndexes
-  }
+  return x && (Mobx.isObservable(x) || x.isObservable)
 }
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && val.$isQuery

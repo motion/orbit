@@ -505,8 +505,11 @@ export default class Model {
 
   // returns a promise that resolves to found or created model
   findOrCreate = async (object: Object = {}): Promise<Object> => {
-    const found = await this.collection.findOne(object).exec()
-    return found || (await this.create(object))
+    const found = await this.get(object)
+    if (found) {
+      return found
+    }
+    return await this.create(object)
   }
 
   // creates a model without persisting

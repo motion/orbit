@@ -26,6 +26,7 @@ export default class Models {
   }
 
   ensureGithubSetting = async user => {
+    console.log('ensure setting for user', user.id)
     await Setting.findOrCreate({
       type: 'github',
       userId: user.id,

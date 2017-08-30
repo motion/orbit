@@ -20,7 +20,6 @@ export default class API {
   database: Database
 
   constructor(options: Options) {
-    console.log('123')
     this.server = new Server(options)
     this.bootstrap = new Bootstrap(options)
     this.jobs = new Jobs()
@@ -35,7 +34,6 @@ export default class API {
       },
       Models
     )
-    console.log('done')
     return this
   }
 

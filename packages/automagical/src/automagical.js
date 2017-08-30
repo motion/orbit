@@ -4,6 +4,12 @@ import { fromStream, fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 
+console.log(626)
+
+if (module && module.hot) {
+  module.hot.accept(_ => _) // prevent aggressive hmrs
+}
+
 const isObservable = x => {
   try {
     return x && (x.isObservable || Mobx.isObservable(x))
@@ -38,9 +44,6 @@ export default function automagical() {
           super(...args)
           automagic(this)
         }
-        get $mobx() {
-          return super.$mobx
-        }
       }
 
       return ProxyClass
@@ -49,7 +52,6 @@ export default function automagical() {
 }
 
 const FILTER_KEYS = {
-  addEvent: true,
   componentDidMount: true,
   componentDidUpdate: true,
   componentWillMount: true,
@@ -70,6 +72,24 @@ const FILTER_KEYS = {
   subscriptions: true,
   watch: true,
   $mobx: true,
+  emitter: true,
+  emit: true,
+  on: true,
+  CompositeDisposable: true,
+}
+
+function collectGetterPropertyDescriptors(obj) {
+  const proto = Object.getPrototypeOf(obj)
+  const fproto = Object.getOwnPropertyNames(proto).filter(
+    x => !FILTER_KEYS[x] && x[0] !== '_'
+  )
+  return fproto.reduce(
+    (acc, cur) => ({
+      ...acc,
+      [cur]: Object.getOwnPropertyDescriptor(proto, cur),
+    }),
+    {}
+  )
 }
 
 function mobxifyQuery(obj, method, val) {
@@ -103,36 +123,21 @@ function mobxifyRxObservable(obj, method, val) {
 }
 
 function automagic(obj: Object) {
-  const proto = Object.getPrototypeOf(obj)
-  const fproto = Object.getOwnPropertyNames(proto).filter(
-    x => !FILTER_KEYS[x] && x[0] !== '_'
-  )
-
   const descriptors = {
     ...Object.getOwnPropertyDescriptors(obj),
-    // gets the getters
-    ...fproto.reduce(
-      (acc, cur) => ({
-        ...acc,
-        [cur]: Object.getOwnPropertyDescriptor(proto, cur),
-      }),
-      {}
-    ),
+    ...collectGetterPropertyDescriptors(Object.getPrototypeOf(obj)),
   }
 
   // mutate to be mobx observables
   for (const method of Object.keys(descriptors)) {
-    mobxify(obj, method, descriptors)
+    mobxify(obj, method, descriptors[method])
   }
 }
 
 // * => mobx
-function mobxify(target: Object, method: string, descriptors: Object) {
-  const descriptor = descriptors && descriptors[method]
-
+function mobxify(target: Object, method: string, descriptor: Object) {
   // @computed get (do first to avoid hitting the getter on next line)
   if (descriptor && !!descriptor.get) {
-    console.log('dgggg', descriptor.get)
     Mobx.extendObservable(target, {
       [method]: Mobx.computed(descriptor.get),
     })

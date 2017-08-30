@@ -78,14 +78,13 @@ export default class Sync {
         try {
           await this.runJob(job)
         } catch (error) {
-          console.log('ERROR')
           const lastError = getRxError(error)
-          console.log(lastError)
-          // await job.update({
-          //   status: 3,
-          //   // lastError,
-          //   tries: 3,
-          // })
+          console.log('JOB ERROR', lastError)
+          await job.update({
+            status: 3,
+            lastError,
+            tries: 3,
+          })
         }
         this.locks.delete(job.id)
       }
@@ -116,5 +115,6 @@ export default class Sync {
 
     // update job
     await job.update({ percent: 100, status: Job.status.COMPLETED })
+    console.log('Job completed:', job.type, job.action, job.id)
   }
 }

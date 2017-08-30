@@ -18,7 +18,7 @@ export class JobModel extends Model {
   percent: number
   tries: number
   status: number
-  lastError: ?string
+  lastError: ?Object
   createdAt: string
   updatedAt: string
 

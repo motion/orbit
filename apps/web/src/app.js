@@ -13,6 +13,7 @@ export const User = Models.User
 export const Thing = Models.Thing
 export const Job = Models.Job
 export const Setting = Models.Setting
+export const Event = Models.Event
 
 let App
 

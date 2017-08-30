@@ -4,6 +4,7 @@ import deepForceUpdate from 'react-deep-force-update'
 let viewProxies = {}
 let reloaded = []
 let reloadedInstances = 0
+let lastHotReload = Date.now()
 
 if (module && module.hot && module.hot.accept) {
   module.hot.accept(() => {
@@ -56,6 +57,13 @@ export default function proxyReactComponents({
       const instances = viewProxies[path].update(ReactClass)
       setTimeout(() => {
         instances.forEach(doHotReload)
+
+        // double save helper to force clear better on two saves
+        if (Date.now() - lastHotReload < 500 && window.start) {
+          window.start()
+          lastHotReload = Date.now()
+        }
+
         // Black.view.emit('hmr')
       })
     } else {

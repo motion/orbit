@@ -116,7 +116,7 @@ export default class GithubSync {
   runJobFeed = async () => {
     console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️')
     if (this.settings.activeOrgs) {
-      await Promise.all(this.settings.activeOrgs).map(this.syncFeed)
+      await Promise.all(this.settings.activeOrgs.map(this.syncFeed))
     }
   }
 

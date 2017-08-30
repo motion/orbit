@@ -550,6 +550,7 @@ export default class Model {
     if (!this._collection) {
       await this.onConnection()
     }
-    return this._collection.upsert(this.applyDefaults(object))
+    this.applyDefaults(object)
+    return this._collection.upsert(object)
   }
 }

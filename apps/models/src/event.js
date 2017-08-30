@@ -11,6 +11,7 @@ export type EventType = typeof methods & {
   type: string,
   data?: Object,
   parentId?: string,
+  givenId?: string,
   org?: string,
   createdAt: string,
   updatedAt: string,
@@ -18,9 +19,10 @@ export type EventType = typeof methods & {
 
 export class Event extends Model {
   static props = {
-    author: str.optional,
     integration: str,
     type: str,
+    givenId: str,
+    author: str.optional,
     data: object.optional,
     parentId: str.optional,
     org: str.optional,
@@ -31,7 +33,7 @@ export class Event extends Model {
 
   settings = {
     database: 'events',
-    index: ['title', 'body', 'createdAt', 'updatedAt'],
+    index: ['givenId', 'type', 'createdAt', 'updatedAt'],
   }
 }
 

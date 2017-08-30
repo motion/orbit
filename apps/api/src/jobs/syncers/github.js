@@ -40,7 +40,7 @@ export default class GithubSync {
   }
 
   get settings(): Object {
-    return (this.setting && this.setting.values) || {}
+    return this.setting || {}
   }
 
   start = async () => {

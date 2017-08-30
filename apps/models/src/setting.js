@@ -20,7 +20,10 @@ export class SettingModel extends Model {
 
   methods = {
     get activeOrgs() {
-      return (this.orgs && Object.keys(this.orgs).filter(Boolean)) || null
+      return (
+        (this.values.orgs && Object.keys(this.values.orgs).filter(Boolean)) ||
+        null
+      )
     },
   }
 }

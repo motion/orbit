@@ -51,7 +51,7 @@ export default class GithubSync {
 
     // auto-run jobs on startup
     await Promise.all([
-      this.ensureJob('issues', { every: 60 }),
+      this.ensureJob('issues', { every: 60 * 6 }), // 6 hours
       this.ensureJob('feed', { every: 15 }),
     ])
   }
@@ -79,7 +79,11 @@ export default class GithubSync {
     return new Promise((resolve, reject) => {
       const runJob = once(async () => {
         if (job.action) {
-          await this.runJob(job.action)
+          try {
+            await this.runJob(job.action)
+          } catch (error) {
+            reject(error)
+          }
           resolve()
         } else {
           reject(`No action found on job ${job.id}`)
@@ -129,6 +133,12 @@ export default class GithubSync {
       for (const events of repoEvents) {
         if (events && events.length) {
           for (const event of events) {
+            console.log(
+              'Creating events',
+              event.id,
+              event.type,
+              event.repo.name
+            )
             createdEvents.push(
               Event.upsert({
                 originalId: event.id,

@@ -272,7 +272,7 @@ export default class Model {
 
     // sync PUSH ONLY
     if (this.options.autoSync) {
-      this._collection.sync({
+      const pushSync = this._collection.sync({
         remote: this.remote,
         direction: {
           push: true,
@@ -282,6 +282,7 @@ export default class Model {
           retry: true,
         },
       })
+      this.subscriptions.add(pushSync.cancel)
     }
 
     // shim add pouchdb-validation
@@ -390,13 +391,14 @@ export default class Model {
     await this._collection.pouch.createIndex({ fields: index })
   }
 
-  applyDefaults = (doc: Object) => {
+  applyDefaults = (doc: Object): Object => {
     const defaults = this.getDefaultProps(doc)
     for (const prop of Object.keys(defaults)) {
       if (typeof doc[prop] === 'undefined') {
         doc[prop] = defaults[prop]
       }
     }
+    return doc
   }
 
   syncQuery = (
@@ -480,12 +482,12 @@ export default class Model {
     })
   }
 
-  getParams = (params?: Object, callback: Function) => {
+  getParams = (params?: Object | string, callback: Function) => {
     const objParams = this.paramsToObject(params)
     return callback(objParams)
   }
 
-  paramsToObject = params => {
+  paramsToObject = (params: Object | string) => {
     if (!params) {
       return {}
     }
@@ -548,6 +550,6 @@ export default class Model {
     if (!this._collection) {
       await this.onConnection()
     }
-    return this._collection.upsert(object)
+    return this._collection.upsert(this.applyDefaults(object))
   }
 }

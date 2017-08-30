@@ -38,6 +38,11 @@ class BarMainStore {
   get browse(): Array<PaneResult> {
     return this.filter([
       {
+        title: 'Nate',
+        type: 'feed',
+        data: { person: 'natew', image: 'me' },
+      },
+      {
         title: 'Recent',
         type: 'feed',
         icon: 'radio',

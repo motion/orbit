@@ -172,10 +172,12 @@ export default function storeProvidable(options, emitter) {
         }
 
         hotReload = () => {
-          this.disposeStores()
-          this.setupProps()
-          this.setupStores()
-          this.mountStores()
+          setTimeout(() => {
+            this.disposeStores()
+            this.setupProps()
+            this.setupStores()
+            this.mountStores()
+          })
         }
 
         render() {

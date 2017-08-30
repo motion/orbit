@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 let viewProxies = {};
 let reloaded = [];
-let reloadedInstances = [];
+let reloadedInstances = 0;
 
 if (module && module.hot && module.hot.accept) {
   module.hot.accept(() => {
@@ -42,12 +42,12 @@ function proxyReactComponents({
     throw new Error('locals[0] does not appear to be a `module` object with Hot Module replacement API enabled. You should disable @mcro/view-hmr');
   }
 
-  const hotReload = instance => {
+  const doHotReload = instance => {
     if (instance.hotReload) {
       instance.hotReload(module);
     }
     (0, _reactDeepForceUpdate2.default)(instance);
-    reloadedInstances.push(1);
+    reloadedInstances++;
   };
 
   return function wrapWithProxy(ReactClass, uid) {
@@ -67,7 +67,7 @@ function proxyReactComponents({
       reloaded.push(displayName);
       const instances = viewProxies[path].update(ReactClass);
       setTimeout(() => {
-        instances.forEach(hotReload);
+        instances.forEach(doHotReload);
         // Black.view.emit('hmr')
       });
     } else {
@@ -80,9 +80,9 @@ function proxyReactComponents({
 
 setInterval(() => {
   if (reloaded.length) {
-    console.log(`[HMR] views: ${reloaded.join(', ')}, ${reloadedInstances.length} instances`);
+    console.log(`[HMR] views: ${reloaded.join(', ')}, ${reloadedInstances} instances`);
     reloaded = [];
-    reloadedInstances = [];
+    reloadedInstances = 0;
   }
 }, 1000);
 //# sourceMappingURL=index.js.map

@@ -3,7 +3,7 @@ import deepForceUpdate from 'react-deep-force-update'
 
 let viewProxies = {}
 let reloaded = []
-let reloadedInstances = []
+let reloadedInstances = 0
 
 if (module && module.hot && module.hot.accept) {
   module.hot.accept(() => {
@@ -30,12 +30,12 @@ export default function proxyReactComponents({
     )
   }
 
-  const hotReload = instance => {
+  const doHotReload = instance => {
     if (instance.hotReload) {
       instance.hotReload(module)
     }
     deepForceUpdate(instance)
-    reloadedInstances.push(1)
+    reloadedInstances++
   }
 
   return function wrapWithProxy(ReactClass, uid) {
@@ -55,7 +55,7 @@ export default function proxyReactComponents({
       reloaded.push(displayName)
       const instances = viewProxies[path].update(ReactClass)
       setTimeout(() => {
-        instances.forEach(hotReload)
+        instances.forEach(doHotReload)
         // Black.view.emit('hmr')
       })
     } else {
@@ -69,11 +69,9 @@ export default function proxyReactComponents({
 setInterval(() => {
   if (reloaded.length) {
     console.log(
-      `[HMR] views: ${reloaded.join(
-        ', '
-      )}, ${reloadedInstances.length} instances`
+      `[HMR] views: ${reloaded.join(', ')}, ${reloadedInstances} instances`
     )
     reloaded = []
-    reloadedInstances = []
+    reloadedInstances = 0
   }
 }, 1000)

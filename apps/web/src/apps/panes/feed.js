@@ -402,18 +402,6 @@ export default class BarFeed {
             $$row
             css={{ width: '100%', overflowX: 'scroll', margin: [-5, 0] }}
           >
-            <item
-              if={false}
-              css={{
-                width: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <icon css={{ transform: { scale: 0.1, x: -200, y: -210 } }}>
-                {icons.cal}
-              </icon>
-            </item>
 
             {[
               {
@@ -433,17 +421,6 @@ export default class BarFeed {
                       },
                     }}
                   >
-                    <icon
-                      css={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        transform: { scale: 0.1, x: -200, y: -300 },
-                      }}
-                    >
-                      {icons.cal}
-                    </icon>
-
                     <inner
                       css={{
                         transform: { y: 3, x: -6, scale: 0.9 },

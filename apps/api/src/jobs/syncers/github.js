@@ -4,7 +4,7 @@ import { Setting, Thing, Job } from '@mcro/models'
 import type { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
-import { omit } from 'lodash'
+import { omit, once } from 'lodash'
 
 type GithubSetting = {
   values: {
@@ -28,6 +28,7 @@ export default class GithubSync {
     Setting.findOne({
       userId: this.user.id,
       type: 'github',
+      sort: 'createdAt',
     })
 
   constructor({ user }: SyncOptions) {
@@ -48,11 +49,20 @@ export default class GithubSync {
       return
     }
 
-    // auto-run jobs on startup
-    await Promise.all([
-      this.ensureJob('issues', { every: 60 }),
-      this.ensureJob('feed', { every: 15 }),
-    ])
+    const runJobs = once(async () => {
+      console.log('Running jobs')
+      // auto-run jobs on startup
+      await Promise.all([
+        this.ensureJob('issues', { every: 60 }),
+        this.ensureJob('feed', { every: 15 }),
+      ])
+    })
+
+    this.watch(() => {
+      if (this.setting) {
+        runJobs()
+      }
+    })
   }
 
   async dispose() {
@@ -95,10 +105,6 @@ export default class GithubSync {
   }
 
   runJob = async (action: string) => {
-    if (!this.setting) {
-      console.log('No setting found')
-      return
-    }
     switch (action) {
       case 'issues':
         return await this.runJobIssues()

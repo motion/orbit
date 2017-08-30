@@ -80,11 +80,37 @@ export default class GithubSync {
       console.error('No setting for user and github! :(')
       return
     }
+    if (job.action) {
+      await this.runJob(job.action)
+    } else {
+      console.log('No action found on job', job.id)
+    }
+  }
 
+  runJob = async (action: string) => {
+    switch (action) {
+      case 'issues':
+        return await this.runJobIssues()
+      case 'feed':
+        return await this.runJobFeed()
+    }
+  }
+
+  runJobFeed = async () => {
+    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️')
+  }
+
+  runJobIssues = async () => {
+    if (!this.setting) {
+      console.log('No setting found')
+      return
+    }
     if (this.setting.values.orgs) {
-      for (const login of Object.keys(this.setting.values.orgs)) {
-        this.syncIssues(login)
-      }
+      await Promise.all(
+        Object.keys(this.setting.values.orgs).map(this.syncIssues)
+      )
+    } else {
+      console.log('No orgs selected in settings')
     }
   }
 

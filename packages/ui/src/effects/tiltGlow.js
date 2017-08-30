@@ -1,6 +1,6 @@
 // @flow
-import { view } from '@mcro/black'
 import React from 'react'
+import { view } from '@mcro/black'
 import Tilt from 'react-tilt'
 import Glow from './glow'
 
@@ -12,7 +12,7 @@ type Props = {
 }
 
 @view
-export default class TiltGlow {
+export default class TiltGlow extends React.Component {
   props: Props
 
   version() {

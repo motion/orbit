@@ -24,6 +24,8 @@ const chain = (object, method, value) => {
   return object[method](value)
 }
 
+const queryKey = query => JSON.stringify(query.mquery)
+
 export default class Model {
   static isModel = true
   static props: Object
@@ -34,6 +36,7 @@ export default class Model {
   statics: ?Object
   database: ?RxDB
 
+  liveQueries: Object = {}
   options: Object = {}
   subscriptions = new CompositeDisposable()
   settings: SettingsObject = {}
@@ -382,31 +385,7 @@ export default class Model {
 
   createIndexes = async (): Promise<void> => {
     const index = this.settings.index || []
-
-    // const { indexes } = await this.collection.pouch.getIndexes()
-    // console.log('indexes ARE', indexes, 'vs', index)
-
-    // TODO see if we can remove but fixes bug for now
     await this._collection.pouch.createIndex({ fields: index })
-
-    // this was a faster way to make indexes if need be
-    // if (index.length) {
-    //   // TODO: pouchdb supposedly does this for you, but it was slow in profiling
-    //   const { indexes } = await this.collection.pouch.getIndexes()
-    //   const alreadyIndexedFields = flatten(indexes.map(i => i.def.fields)).map(
-    //     field => Object.keys(field)[0]
-    //   )
-    //   // if have not indexed every field
-    //   if (intersection(index, alreadyIndexedFields).length !== index.length) {
-    //     // need to await or you get error sorting by dates, etc
-    //     console.log(
-    //       `%c[pouch] CREATE INDEX ${this.title} ${JSON.stringify(index)}`,
-    //       'color: green'
-    //     )
-
-    //     await this.collection.pouch.createIndex({ fields: index })
-    //   }
-    // }
   }
 
   applyDefaults = doc => {
@@ -423,7 +402,6 @@ export default class Model {
     if (query.query) {
       query = query.query
     }
-    console.log('syncing query')
     if (!isRxQuery(query)) {
       throw new Error(
         'Could not sync query, does not look like a proper RxQuery object.'
@@ -431,6 +409,12 @@ export default class Model {
     }
     if (!this.remote) {
       throw new Error('Could not sync query, no remote is specified.')
+    }
+
+    const QUERY_KEY = queryKey(query)
+    if (this.liveQueries: Object[QUERY_KEY]) {
+      console.log('already watching this query!')
+      return Promise.resolve(true)
     }
 
     const firstReplication = this._collection.sync({
@@ -472,6 +456,9 @@ export default class Model {
                 remote: this.remote,
                 options,
               })
+
+              this.liveQueries: Object[QUERY_KEY] = true
+
               resolve(liveReplication)
             } else {
               resolve(true)

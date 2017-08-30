@@ -1,6 +1,6 @@
 // @flow
 import global from 'global'
-import { fromStream, fromPromise } from 'mobx-utils'
+import { fromStream, fromPromise, isPromiseBasedObservable } from 'mobx-utils'
 import * as Mobx from 'mobx'
 import { Observable } from 'rxjs'
 
@@ -34,17 +34,13 @@ export default function automagical() {
         return Klass
       }
 
-      class ProxyClass extends Klass {
-        static get name() {
-          return Klass.name
-        }
-        constructor(...args) {
-          super(...args)
-          automagic(this)
-        }
+      const ogConstructor = Klass.prototype.constructor
+      Klass.prototype.constructor = function() {
+        automagic(this)
+        return ogConstructor.call(this)
       }
 
-      return ProxyClass
+      return Klass
     },
   }
 }
@@ -84,8 +80,10 @@ function mobxifyQuery(obj, method, val) {
 
 function mobxifyPromise(obj, method, val) {
   const observable = fromPromise(val)
+  console.log('mobxigu')
   Object.defineProperty(obj, method, {
     get() {
+      console.log('get me')
       return observable.value
     },
   })
@@ -307,11 +305,7 @@ function mobxifyWatch(obj, method, val) {
   Object.defineProperty(obj, method, {
     get() {
       const result = current.get()
-      // promise get
-      if (
-        result &&
-        (result.state === 'fulfilled' || result.state === 'pending')
-      ) {
+      if (result && isPromiseBasedObservable(result)) {
         return result.value
       }
       if (isObservable(result)) {

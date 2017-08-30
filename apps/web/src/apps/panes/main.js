@@ -133,6 +133,8 @@ class BarMainStore {
   }
 }
 
+window.Test = BarMainStore
+
 @view({
   store: BarMainStore,
 })

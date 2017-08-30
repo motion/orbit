@@ -2,7 +2,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class Grain {
+export default class Grain extends React.Component {
   render() {
     return <grain $$fullscreen />
   }

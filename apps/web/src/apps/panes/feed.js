@@ -15,6 +15,7 @@ class BarFeedStore {
   }
 
   @watch
+  // $FlowFixMe
   events: ?Array<Event> = () =>
     Event.find({ author: this.props.data.person, sort: 'createdAt' })
 
@@ -65,7 +66,9 @@ export default class BarFeed {
     const content = (
       <contents>
         <section>
-          <UI.Title size={2}>{data.person}</UI.Title>
+          <UI.Title size={2}>
+            {data.person}
+          </UI.Title>
         </section>
 
         <section $$row>

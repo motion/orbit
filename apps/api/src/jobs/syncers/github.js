@@ -13,29 +13,17 @@ type GithubSetting = {
   },
 }
 
+const withinMinutes = (date, minutes) =>
+  Date.now() - Date.parse(date) > minutes * 1000 * 60
+
 export default class GithubSync {
   user: User
+  type = 'github'
   setting: ?GithubSetting = null
 
   constructor({ user }: SyncOptions) {
     this.user = user
   }
-
-  graphFetch = createApolloFetch({
-    uri: 'https://api.github.com/graphql',
-  }).use(({ request, options }, next) => {
-    if (!options.headers) {
-      options.headers = {}
-    }
-    options.headers['Authorization'] = `bearer ${this.token}`
-    next()
-  })
-
-  fetch = (path: string, opts?: Object) =>
-    fetch(
-      `https://api.github.com${path}?access_token=${this.token || ''}`,
-      opts
-    ).then(res => res.json())
 
   get token(): string {
     return (this.user.github && this.user.github.auth.accessToken) || ''
@@ -48,24 +36,39 @@ export default class GithubSync {
       type: 'github',
     }).exec()
 
-    // auto-run a job on startup if we have the integration
-    const lastRun = await Job.lastCompleted().exec()
-    const ONE_HOUR = 1000 * 60 * 60
-
-    // if older than one hour
-    if (!lastRun || Date.now() - Date.parse(lastRun.updatedAt) > ONE_HOUR) {
-      console.log(
-        'It\'s been an hour since last job, check for new stuff on github'
-      )
-      const jobs = await Job.pending().exec()
-      if (this.user.github && !jobs) {
-        Job.create({ type: 'github' })
-      }
+    if (!this.user.github) {
+      console.log('No github credentials found for user')
+      return
     }
+
+    // auto-run jobs on startup
+    await Promise.all([
+      this.ensureJob('issues', { every: 60 }),
+      this.ensureJob('feed', { every: 15 }),
+    ])
   }
 
   async dispose() {
     console.log('dispose github syncer')
+  }
+
+  ensureJob = async (action: string, options: Object = {}): ?Job => {
+    const lastPending = await Job.lastPending({ action }).exec()
+    if (lastPending) {
+      console.log(`Pending job already running for ${this.type} ${action}`)
+      return
+    }
+    const lastCompleted = await Job.lastCompleted({ action }).exec()
+    if (
+      !lastCompleted ||
+      (options.every && withinMinutes(lastCompleted.updatedAt, options.every))
+    ) {
+      console.log(
+        `Last Run: ${lastCompleted &&
+          lastCompleted.updatedAt}, starting new job for ${this.type} ${action}`
+      )
+      return await Job.create({ type: 'github', action })
+    }
   }
 
   run = async (job: Job) => {
@@ -182,4 +185,20 @@ export default class GithubSync {
     await Promise.all(createdIssues)
     console.log('Created all issues!', createdIssues.length)
   }
+
+  graphFetch = createApolloFetch({
+    uri: 'https://api.github.com/graphql',
+  }).use(({ request, options }, next) => {
+    if (!options.headers) {
+      options.headers = {}
+    }
+    options.headers['Authorization'] = `bearer ${this.token}`
+    next()
+  })
+
+  fetch = (path: string, opts?: Object) =>
+    fetch(
+      `https://api.github.com${path}?access_token=${this.token || ''}`,
+      opts
+    ).then(res => res.json())
 }

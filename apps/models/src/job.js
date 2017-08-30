@@ -13,6 +13,7 @@ export const methods = {}
 
 export class JobModel extends Model {
   type: string
+  action: ?string
   info: ?Object
   percent: number
   tries: number
@@ -23,6 +24,7 @@ export class JobModel extends Model {
 
   static props = {
     type: str,
+    action: str.optional,
     info: object.optional,
     percent: number,
     tries: number,
@@ -48,14 +50,26 @@ export class JobModel extends Model {
 
   methods = methods
 
-  @query pending = () => this.collection.find({ status: STATUS.PENDING })
-  @query processing = () => this.collection.find({ status: STATUS.PROCESSING })
-  @query completed = () => this.collection.find({ status: STATUS.COMPLETED })
-  @query failed = () => this.collection.find({ status: STATUS.FAILED })
+  @query
+  pending = opt => this.collection.find({ status: STATUS.PENDING, ...opt })
+  @query
+  processing = opt =>
+    this.collection.find({ status: STATUS.PROCESSING, ...opt })
+  @query
+  completed = opt => this.collection.find({ status: STATUS.COMPLETED, ...opt })
+  @query failed = opt => this.collection.find({ status: STATUS.FAILED, ...opt })
 
   @query
-  lastCompleted = () =>
-    this.collection.findOne({ status: STATUS.COMPLETED }).sort('createdAt')
+  lastCompleted = opt =>
+    this.collection
+      .findOne({ status: STATUS.COMPLETED, ...opt })
+      .sort('createdAt')
+
+  @query
+  lastPending = opt =>
+    this.collection
+      .findOne({ status: STATUS.PENDING, ...opt })
+      .sort('createdAt')
 }
 
 const JobInstance = new JobModel()

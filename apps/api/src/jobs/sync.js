@@ -56,6 +56,7 @@ export default class Sync {
     for (const name of Object.keys(SOURCE_TO_SYNCER)) {
       const Syncer = new SOURCE_TO_SYNCER[name]({ user: this.user })
       await Syncer.start()
+      console.log('Syncer started:', name)
       this.syncers[name] = Syncer
     }
   }

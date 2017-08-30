@@ -35,17 +35,14 @@ export default class Model {
   methods: ?Object
   statics: ?Object
   database: ?RxDB
-
   liveQueries: Object = {}
   options: Object = {}
   subscriptions = new CompositeDisposable()
   settings: SettingsObject = {}
   defaultSchema: Object = {}
   @observable connected = false
-  // sync to
-  remote: ?string = null
-  // hooks that run before/after operations
-  hooks: Object<string, () => Promise<any>> = {}
+  remote: ?string = null // sync to
+  hooks: Object<string, () => Promise<any>> = {} // hooks run before/after operations
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
@@ -489,8 +486,8 @@ export default class Model {
   // user facing!
 
   // get is a helper that returns a promise only
-  get = query => this.collection.findOne(query).exec();
-  getAll = query => this.collection.find(query).exec()
+  get = (query: string | Object) => this.collection.findOne(query).exec();
+  getAll = (query: string | Object) => this.collection.find(query).exec()
 
   // find/findOne return RxQuery objects
   // so you can subscribe to streams or just .exec()

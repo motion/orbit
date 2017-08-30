@@ -49,24 +49,11 @@ export default class GithubSync {
       return
     }
 
-    const runJobs = once(async () => {
-      console.log('Running jobs')
-      // auto-run jobs on startup
-      await Promise.all([
-        this.ensureJob('issues', { every: 60 }),
-        this.ensureJob('feed', { every: 15 }),
-      ])
-    })
-
-    this.watch(() => {
-      if (this.setting) {
-        runJobs()
-      }
-    })
-  }
-
-  async dispose() {
-    console.log('dispose github syncer')
+    // auto-run jobs on startup
+    await Promise.all([
+      this.ensureJob('issues', { every: 60 }),
+      this.ensureJob('feed', { every: 15 }),
+    ])
   }
 
   ensureJob = async (action: string, options: Object = {}): ?Job => {
@@ -88,20 +75,24 @@ export default class GithubSync {
     }
   }
 
-  run = async (job: Job) => {
-    if (!this.token) {
-      console.error('No User.github found, changed since sync started?')
-      return
-    }
-    if (!this.setting) {
-      console.error('No setting for user and github! :(')
-      return
-    }
-    if (job.action) {
-      await this.runJob(job.action)
-    } else {
-      console.log('No action found on job', job.id)
-    }
+  run = (job: Job) => {
+    return new Promise((resolve, reject) => {
+      const runJob = once(async () => {
+        if (job.action) {
+          await this.runJob(job.action)
+          resolve()
+        } else {
+          reject(`No action found on job ${job.id}`)
+        }
+      })
+
+      // wait for setting before running
+      this.watch(async () => {
+        if (this.setting) {
+          runJob()
+        }
+      })
+    })
   }
 
   runJob = async (action: string) => {
@@ -114,13 +105,14 @@ export default class GithubSync {
   }
 
   runJobFeed = async () => {
-    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️')
+    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️', this.settings.activeOrgs)
     if (this.settings.activeOrgs) {
       await Promise.all(this.settings.activeOrgs.map(this.syncFeed))
     }
   }
 
   syncFeed = async (orgLogin: string) => {
+    console.log('SYNC feed for org', orgLogin)
     const repos = await this.fetch(`/orgs/${orgLogin}/repos`)
     if (repos) {
       const allEvents = await Promise.all(

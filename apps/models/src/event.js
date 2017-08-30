@@ -19,9 +19,9 @@ export type EventType = typeof methods & {
 
 export class Event extends Model {
   static props = {
+    givenId: str.primary,
     integration: str,
     type: str,
-    givenId: str,
     author: str.optional,
     data: object.optional,
     parentId: str.optional,

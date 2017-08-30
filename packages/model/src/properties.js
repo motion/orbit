@@ -10,6 +10,9 @@ const prox = obj =>
         case 'indexed':
           target.isIndexed = true
           return target
+        case 'primary':
+          target.isPrimary = true
+          return target
       }
       return target[property]
     },
@@ -59,23 +62,26 @@ export function compile(obj) {
   const orig = { ...obj }
   const kontured = Kontur.compile(obj)
 
-  // // monkey patch poorly to add indexed and unique
-  // for (const key of Object.keys(obj)) {
-  //   if (orig[key].isIndexed) {
-  //     kontured.properties[key].index = true
-  //   }
-  //   if (orig[key].isUnique) {
-  //     kontured.properties[key].uniqueItems = true
-  //   }
-  // }
+  // monkey patch poorly
+  for (const key of Object.keys(obj)) {
+    if (orig[key].isIndexed) {
+      kontured.properties[key].index = true
+    }
+    if (orig[key].isUnique) {
+      kontured.properties[key].uniqueItems = true
+    }
+    if (orig[key].isPrimary) {
+      kontured.properties[key].primary = true
+    }
+  }
 
   return kontured
 }
 
+module.hot.accept(() => {})
 // TEST :)
-// module.hot.accept(() => {})
 // console.log(
 //   compile({
-//     draft: str.indexed,
+//     draft: str.primary,
 //   })
 // )

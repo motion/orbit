@@ -235,7 +235,7 @@ export default class GithubSync {
 
       for (const issue of issues) {
         const data = unwrap(omit(issue, ['bodyText']))
-        console.log('creating issue', issue.title, data)
+        console.log('creating issue', issue.id, issue.title)
         createdIssues.push(
           Thing.upsert({
             givenId: issue.id,

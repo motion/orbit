@@ -118,19 +118,14 @@ export default class GithubSync {
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
     const repos = await this.fetch(`/orgs/${orgLogin}/repos`)
-    console.log('got repos', repos)
     if (repos) {
+      console.log('got repos', repos.length)
       const allEvents = await Promise.all(
         repos.map(repo => this.fetch(`/repos/${orgLogin}/${repo.name}/events`))
       )
 
       for (const event of allEvents) {
-        console.log(
-          'should add this event to feed',
-          orgLogin,
-          event.repo.name,
-          event.payload
-        )
+        console.log('should add this event to feed', orgLogin, event)
       }
     }
   }

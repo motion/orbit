@@ -88,8 +88,12 @@ export default class GithubSync {
 
       // wait for setting before running
       this.watch(async () => {
-        if (this.setting) {
-          runJob()
+        if (this.settings) {
+          if (this.settings.activeOrgs) {
+            runJob()
+          } else {
+            console.log('weird no orgs')
+          }
         }
       })
     })
@@ -114,6 +118,7 @@ export default class GithubSync {
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
     const repos = await this.fetch(`/orgs/${orgLogin}/repos`)
+    console.log('got repos', repos)
     if (repos) {
       const allEvents = await Promise.all(
         repos.map(repo => this.fetch(`/repos/${orgLogin}/${repo.name}/events`))

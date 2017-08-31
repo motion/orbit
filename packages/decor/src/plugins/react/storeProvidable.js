@@ -151,7 +151,7 @@ export default function storeProvidable(options, emitter) {
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            emitter.emit('store.mount', store)
+            emitter.emit('store.mount', { name, thing: store })
             if (options.onStoreDidMount) {
               options.onStoreDidMount(store, this.props)
             }
@@ -165,7 +165,7 @@ export default function storeProvidable(options, emitter) {
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            emitter.emit('store.unmount', store)
+            emitter.emit('store.unmount', { name, thing: store })
             if (options.onStoreUnmount) {
               options.onStoreUnmount(store)
             }

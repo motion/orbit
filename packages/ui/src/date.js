@@ -2,6 +2,7 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import timeago from 'time-ago'
+import Text from './text'
 
 const { ago } = timeago()
 
@@ -13,9 +14,9 @@ export default class Date {
 
   render({ children, ...props }) {
     return (
-      <date {...props}>
+      <Text {...props}>
         {ago(children || '')}
-      </date>
+      </Text>
     )
   }
 }

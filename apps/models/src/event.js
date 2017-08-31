@@ -2,8 +2,17 @@
 import global from 'global'
 import { Model, str, object } from '@mcro/model'
 
+const VERB_MAP = {
+  PushEvent: 'pushed',
+  CreateEvent: 'created branch',
+}
+
 // keep here so we can use as generic
-export const methods = {}
+export const methods = {
+  get verb() {
+    return VERB_MAP[this.type]
+  },
+}
 
 export type EventType = typeof methods & {
   author?: string,

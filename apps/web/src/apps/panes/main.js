@@ -42,6 +42,13 @@ class BarMainStore {
   get browse(): Array<PaneResult> {
     return this.helper.filter([
       {
+        title: 'Nate',
+        type: 'feed',
+        data: {
+          person: 'natew',
+        },
+      },
+      {
         title: 'Recent',
         type: 'feed',
         icon: 'radio',

@@ -17,6 +17,7 @@
     "@mcro/passport-slack": "^1.2.0",
     "apollo-fetch": "^0.6.0",
     "babel-polyfill": "^6.23.0",
+    "source-map-support": "^0.4.16",
     "body-parser": "^1.16.1",
     "cors": "^2.8.3",
     "couchdb-compile": "^1.7.0",

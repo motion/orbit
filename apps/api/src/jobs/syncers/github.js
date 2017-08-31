@@ -6,14 +6,6 @@ import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once } from 'lodash'
 
-type GithubSetting = {
-  values: {
-    orgs: {
-      [string]: boolean,
-    },
-  },
-}
-
 const withinMinutes = (date, minutes) =>
   Date.now() - Date.parse(date) > minutes * 1000 * 60
 
@@ -21,9 +13,10 @@ const withinMinutes = (date, minutes) =>
 export default class GithubSync {
   user: User
   type = 'github'
+  syncedPaths = {}
 
   @watch
-  setting: ?GithubSetting = () =>
+  _setting: any = () =>
     this.user &&
     Setting.findOne({
       userId: this.user.id,
@@ -39,8 +32,8 @@ export default class GithubSync {
     return (this.user.github && this.user.github.auth.accessToken) || ''
   }
 
-  get settings(): Object {
-    return this.setting || {}
+  get setting(): ?Setting {
+    return this._setting
   }
 
   start = async () => {
@@ -92,8 +85,9 @@ export default class GithubSync {
 
       // wait for setting before running
       this.watch(async () => {
-        if (this.settings) {
-          if (this.settings.activeOrgs) {
+        if (this.setting) {
+          this.validateSetting()
+          if (this.setting.activeOrgs) {
             runJob()
           } else {
             console.log('weird no orgs')
@@ -101,6 +95,13 @@ export default class GithubSync {
         }
       })
     })
+  }
+
+  validateSetting = () => {
+    // ensure properties on setting
+    if (!this.setting.values.lastSyncs) {
+      this.setting.values.lastSyncs = {}
+    }
   }
 
   runJob = async (action: string) => {
@@ -113,49 +114,100 @@ export default class GithubSync {
   }
 
   runJobFeed = async () => {
-    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️', this.settings.activeOrgs)
-    if (this.settings.activeOrgs) {
-      await Promise.all(this.settings.activeOrgs.map(this.syncFeed))
+    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️')
+    if (!this.setting) {
+      throw Error('No setting')
+    }
+    if (this.setting.activeOrgs) {
+      await Promise.all(this.setting.activeOrgs.map(this.syncFeed))
+    }
+  }
+
+  writeLastSyncs = async (source: string) => {
+    if (!this.setting) {
+      throw Error('No setting')
+    }
+    const syncPaths = this.syncedPaths[source]
+    if (syncPaths) {
+      this.setting.values.lastSyncs = {
+        ...this.setting.values.lastSyncs,
+        ...syncPaths,
+      }
+      await this.setting.save()
     }
   }
 
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
-    const repos = await this.fetch(`/orgs/${orgLogin}/repos`)
+    const repoEvents = await this.getNewEvents(orgLogin)
+    console.log('got events for org', orgLogin, repoEvents)
+    await this.insertEvents(repoEvents)
+    await this.writeLastSyncs('feed')
+    console.log('⭐️⭐️ DONE SYNCING EVENTS ⭐️⭐️')
+  }
+
+  getRepoEvents = async (
+    org: string,
+    repoName: string,
+    page: number = 0
+  ): Promise<Array<Object>> => {
+    const events: ?Array<Object> = await this.fetch(
+      'feed',
+      `/repos/${org}/${repoName}/events?page=${page}`
+    )
+    // recurse to get older if necessary
+    if (events && events.length) {
+      const oldestEvent = events[events.length - 1]
+      if (!await Event.get(oldestEvent.id)) {
+        const previousEvents: Array<Object> = await this.getRepoEvents(
+          org,
+          repoName,
+          page + 1
+        )
+        return [...events, ...previousEvents]
+      }
+    }
+    return events || []
+  }
+
+  getNewEvents = async (org: string): Promise<Array<Object>> => {
+    const repos = await this.fetch('feed', `/orgs/${org}/repos`)
     if (repos) {
-      console.log('got repos', repos.length)
-      const repoEvents = await Promise.all(
-        repos.map(repo => this.fetch(`/repos/${orgLogin}/${repo.name}/events`))
+      return await Promise.all(
+        repos.map(repo => this.getRepoEvents(org, repo.name))
       )
+    }
+    return Promise.resolve([])
+  }
 
-      const createdEvents = []
-
-      for (const events of repoEvents) {
-        if (events && events.length) {
-          for (const event of events) {
-            createdEvents.push(
-              Event.upsert({
-                id: `${event.id}`,
-                integration: 'github',
-                type: event.type,
-                author: event.actor.login,
-                org: event.org.login,
-                parentId: event.repo.name,
-                data: event,
-              })
-            )
-          }
+  insertEvents = (allEvents: Array<Object>): Promise<Array<Object>> => {
+    const createdEvents = []
+    for (const events of allEvents) {
+      if (events && events.length) {
+        for (const event of events) {
+          createdEvents.push(
+            Event.upsert({
+              id: `${event.id}`,
+              integration: 'github',
+              type: event.type,
+              author: event.actor.login,
+              org: event.org.login,
+              parentId: event.repo.name,
+              data: event,
+            })
+          )
         }
       }
-
-      await Promise.all(createdEvents)
-      console.log('⭐️⭐️ DONE SYNCING EVENTS ⭐️⭐️')
     }
+    return Promise.all(createdEvents)
   }
 
   runJobIssues = async () => {
-    if (this.settings.activeOrgs) {
-      await Promise.all(this.settings.activeOrgs.map(this.syncIssues))
+    if (!this.setting) {
+      throw Error('No setting')
+    }
+    if (this.setting.activeOrgs) {
+      await Promise.all(this.setting.activeOrgs.map(this.syncIssues))
     } else {
       console.log('No orgs selected in settings')
     }
@@ -268,9 +320,29 @@ export default class GithubSync {
     next()
   })
 
-  fetch = (path: string, opts?: Object) =>
-    fetch(
+  fetch = async (source: string, path: string, opts?: Object) => {
+    if (!this.setting) {
+      throw Error('No setting')
+    }
+    this.validateSetting()
+    const syncDate = Date.now()
+    const response = await fetch(
       `https://api.github.com${path}?access_token=${this.token || ''}`,
-      opts
-    ).then(res => res.json())
+      {
+        headers: new Headers({
+          'If-Modified-Since': this.setting.values.lastSyncs[path],
+        }),
+        ...opts,
+      }
+    )
+    // if not modified return null
+    if (response.status === 304) {
+      return null
+    }
+    this.syncedPaths[source] = {
+      ...this.syncedPaths[source],
+      [path]: syncDate,
+    }
+    return response.json()
+  }
 }

@@ -34,32 +34,35 @@ export default class BarFeed {
       const { actor, payload } = data
 
       return (
-        <feeditem $active={activeIndex === index} key={`${event.id}${index}`}>
-          <meta if={actor}>
-            <avatar $img={actor.avatar_url} />
-            <UI.Text $name>
-              {actor.login}{' '}
-            </UI.Text>
-            <UI.Text $action>
-              {verb}{' '}
-            </UI.Text>
-            <UI.Date $date>
-              {data.created_at}
-            </UI.Date>
-          </meta>
-          <body if={payload && payload.commits}>
-            <content>
-              {payload.commits.map(commit =>
-                <UI.Text key={commit.sha}>
-                  {commit.message}
-                </UI.Text>
-              )}
-            </content>
-            <icon>
-              <UI.Icon name={event.integration} />
-            </icon>
-          </body>
-        </feeditem>
+        <UI.Theme name="light">
+          <feeditem $active={activeIndex === index} key={`${event.id}${index}`}>
+            <h1>hello</h1>
+            <meta if={actor}>
+              <avatar $img={actor.avatar_url} />
+              <UI.Text $name>
+                {actor.login}{' '}
+              </UI.Text>
+              <UI.Text $action>
+                {verb}{' '}
+              </UI.Text>
+              <UI.Date $date>
+                {data.created_at}
+              </UI.Date>
+            </meta>
+            <body if={payload && payload.commits}>
+              <content>
+                {payload.commits.map(commit =>
+                  <UI.Text key={commit.sha}>
+                    {commit.message}
+                  </UI.Text>
+                )}
+              </content>
+              <icon>
+                <UI.Icon name={event.integration} />
+              </icon>
+            </body>
+          </feeditem>
+        </UI.Theme>
       )
     })
 
@@ -76,12 +79,11 @@ export default class BarFeed {
           <subtitle $$row $$centered>
             <UI.Badge
               background="rgb(34.5%, 64.6%, 67.5%)"
-              color="white"
               marginRight={8}
             >
               #52
             </UI.Badge>{' '}
-            <UI.Text color="#fff" size={1.05}>
+            <UI.Text size={1.05}>
               Kubernetes integration with new cloud setup
             </UI.Text>
           </subtitle>
@@ -134,7 +136,6 @@ export default class BarFeed {
                     width: '16.6666%',
                     minWidth: 110,
                     padding: [10, 25, 10, 0],
-                    color: '#fff',
                   }}
                 >
                   <date
@@ -180,15 +181,18 @@ export default class BarFeed {
 
     if (!data.special) {
       return (
-        <feed>
-          {content}
-        </feed>
+        <UI.Theme name="light">
+          <feed>
+            {content}
+          </feed>
+        </UI.Theme>
       )
     }
 
     return (
       <UI.Theme name="light">
         <feed>
+          <h1>hello</h1>
           <apps
             if={data.special}
             css={{ borderBottom: [2, [0, 0, 0, 0.0001]] }}
@@ -198,7 +202,6 @@ export default class BarFeed {
                 <tab>
                   <UI.Badge
                     background="rgb(34.5%, 67.5%, 34.5%)"
-                    color="white"
                     marginRight={8}
                   >
                     #301
@@ -260,7 +263,6 @@ export default class BarFeed {
     feeditem: {
       padding: [10, 25],
       margin: [0, -5],
-      color: '#fff',
       borderBottom: [1, [0, 0, 0, 0.05]],
     },
     meta: {

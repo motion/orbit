@@ -86,7 +86,8 @@ view.basics = decor([
   observer,
   () => ({ decorator: glossDecorator }),
 ])
-view.provide = stores => base({ stores, context: true })
+view.provide = stores =>
+  decor([[storeProvidable, storeOptions]])({ stores, context: true })
 view.attach = (...names) => decor([[attach, { names }]])
 
 export default view

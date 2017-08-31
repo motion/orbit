@@ -19,6 +19,7 @@ class MillerStore {
     @throttle(16)
     handleSelectionChange = () => {
         const { state, onChange } = this.props
+
         if (state.activeRow !== null && state.activeResults) {
             if (state.activeItem && state.activeItem.showChild !== false) {
                 state.setSchema(state.activeCol + 1, state.activeItem)

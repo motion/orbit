@@ -33,7 +33,7 @@ class BarContents {
 }
 
 @view.provide({
-  paneStore: Pane.Store,
+  // paneStore: Pane.Store,
   store: class CodeStore {
     start() {
       this.props.getRef(this)
@@ -47,6 +47,7 @@ class BarContents {
     barContents = <BarContents />
   },
 })
+@view
 export default class NewIssue {
   render({ data, store }) {
     return (

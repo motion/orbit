@@ -38,6 +38,7 @@ class DataList {
     create = () => Document.create()
   },
 })
+@view
 class DataPlayground {
   render({ show, dataStore }) {
     log(show, dataStore.items)

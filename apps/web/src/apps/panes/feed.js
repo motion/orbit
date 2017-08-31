@@ -17,7 +17,7 @@ class BarFeedStore {
   @watch
   // $FlowFixMe
   events: ?Array<Event> = () =>
-    Event.find({ author: this.props.data.person, sort: 'createdAt' })
+    Event.find({ author: this.props.data.person, sort: { createdAt: 'asc' } })
 
 get results(): Array < Event > {
   return this.events || []
@@ -30,7 +30,7 @@ get results(): Array < Event > {
 export default class BarFeed {
   render({ store, activeIndex, data }: PaneProps & { store: BarFeedStore }) {
     const results = store.results.map((event, index) => {
-      const { type, data } = event
+      const { verb, data } = event
       const { actor, payload } = data
 
       return (
@@ -41,11 +41,11 @@ export default class BarFeed {
               {actor.login}{' '}
             </UI.Text>
             <UI.Text $action>
-              {type}{' '}
+              {verb}{' '}
             </UI.Text>
-            <UI.Text $date>
-              {data.created_at}{' '}
-            </UI.Text>
+            <UI.Date $date>
+              {data.created_at}
+            </UI.Date>
           </meta>
           <body if={payload && payload.commits}>
             <content>

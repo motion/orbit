@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { filterItem } from './helpers'
+import { fuzzy } from '~/helpers'
 import { CurrentUser } from '~/app'
 
 class BarBrowseStore {
@@ -20,13 +20,8 @@ class BarBrowseStore {
     return this.props.data.parent || CurrentUser.home
   }
 
-  get filterItem() {
-    return this.props.filterItem || filterItem
-  }
-
   get results() {
-    const filtered = this.filterItem(this.children, this.props.search)
-    return filtered
+    return fuzzy(this.children, this.props.search)
   }
 }
 

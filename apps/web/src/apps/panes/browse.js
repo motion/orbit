@@ -2,7 +2,7 @@
 import React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { filterItem } from './helpers'
+import { fuzzy } from '~/helpers'
 import { CurrentUser } from '~/app'
 import { isNumber } from 'lodash'
 
@@ -21,26 +21,8 @@ class BarBrowseStore {
     return this.props.data.parent || CurrentUser.home
   }
 
-  get filterItem() {
-    return this.props.filterItem || filterItem
-  }
-
   get results() {
-    const filtered = this.filterItem(this.children, this.props.search)
-
-    return [
-      ...filtered,
-      // {
-      //   title: 'Create',
-      //   props: {
-      //     editable: true,
-      //     autoselect: true,
-      //     css: {
-      //       opacity: 0.5,
-      //     },
-      //   },
-      // },
-    ]
+    return this.children ? fuzzy(this.children, this.props.search) : []
   }
 
   get length() {

@@ -11,6 +11,7 @@ import query from './query'
 type SettingsObject = {
   index?: Array<string>,
   database?: string,
+  version?: string | number,
 }
 
 type ModelArgs = {
@@ -50,19 +51,18 @@ export default class Model {
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
-    this.defaultSchema = defaultSchema || {
-      primaryPath: '_id',
-      version: 0,
-      disableKeyCompression: true,
-    }
+    this.defaultSchema = defaultSchema || {}
   }
 
   get compiledSchema(): Object {
     return {
+      primaryPath: '_id',
+      disableKeyCompression: true,
       ...this.defaultSchema,
       ...this.settings,
       ...cloneDeep(this.props), // cloneDeep fixes bug when re-using a model (compiling twice)
       title: this.settings.database,
+      version: this.settings.version || 0,
     }
   }
 
@@ -267,6 +267,7 @@ export default class Model {
       schema: this.compiledSchema,
       statics: this.statics,
       pouchSettings: this.options.pouchSettings,
+      migrationStrategies: this.migrations,
     })
 
     // TEMPORARY BUGFIX, fixed pouch console warnings about db.info()

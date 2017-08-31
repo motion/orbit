@@ -4,7 +4,7 @@ import { random, without, intersection, includes, flatten } from 'lodash'
 const toggleInclude = (xs, x) => (includes(xs, x) ? without(xs, x) : [...xs, x])
 
 export default class PaneStore {
-    // version = 0
+    version = 0
     metaKey = false
 
     selectedIds = []
@@ -22,11 +22,13 @@ export default class PaneStore {
     }
 
     start() {
+        return
         document.addEventListener('keydown', e => {
             console.log('key down', e.metaKey, this.props.isActive)
             if (!this.props.isActive) return
 
             this.metaKey = e.metaKey
+            console.log('setting meta to ', this.metaKey)
 
             // x
             if (this.metaKey && e.keyCode === 88) {

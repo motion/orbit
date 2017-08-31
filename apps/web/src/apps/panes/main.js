@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser, Document, Thing } from '~/app'
-import { filterItem } from './helpers'
+import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from './pane'
 
@@ -21,13 +21,14 @@ class BarMainStore {
     props: PaneProps
     topThings = Thing.find({ sort: 'createdAt' })
 
+    helper = {
+        filter: (x, opts) => fuzzy(x || [], this.props.search, opts),
+    }
+
     start() {
         this.props.getRef(this)
     }
 
-    helper = {
-        filter: (x, opts) => filterItem(x || [], this.props.search, opts),
-    }
     get things(): Array<PaneResult> {
         console.time('get things()')
         if (!this.topThings) {
@@ -39,19 +40,27 @@ class BarMainStore {
         console.timeEnd('get things()')
         return filtered
     }
+
     get browse(): Array<PaneResult> {
         return this.helper.filter([
             {
-                title: 'Recent',
+                title: 'Nate',
                 type: 'feed',
+                data: {
+                    person: 'natew',
+                },
+            },
+            {
+                title: 'Test',
+                type: 'test',
                 icon: 'radio',
                 data: {
                     special: true,
                 },
             },
             {
-                title: 'Test',
-                type: 'test',
+                title: 'Recent',
+                type: 'feed',
                 icon: 'radio',
                 data: {
                     special: true,

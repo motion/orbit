@@ -121,40 +121,45 @@ class TestPageStore {
     }
 }
 @view.provide({ store: TestPageStore, paneStore: Pane.Store })
+@view
 export default class Message {
-    render({ data, isActive, onSelect }) {
+    render({ paneStore, data, isActive, onSelect }) {
+        paneStore.version
+        paneStore.metaKey
         return (
-            <Pane.Card light isActive={isActive} icon={data.icon}>
-                <UI.Theme name="light">
-                    <container>
-                        <top $$row>
-                            <left $$row>
-                                <img $avatar src={`/images/${'me'}.jpg`} />
-                                <h3>Nate Weinert</h3>
-                            </left>
-                            <Pane.Actions id="paneActions" actions={['new']} />
-                        </top>
-                        {false && <figma $$undraggable>
-                            <iframe height={500} seamless src="https://www.figma.com/file/NoOi8acSNhO29VLMe790Ut?embed_host=dropbox-paper&viewer=1" />
-                        </figma>}
-                        <UI.List items={events} getItem={(event, index) =>
-                            <Pane.Selectable
-                                options={{ ...event, id: `select${index}`, index }}
-                                render={(isActive, actions) =>
-                                    <UI.ListItem
-                                        onClick={() => onSelect(index)}
-                                        highlight={isActive}
-                                        key={event.id}
-                                        primary={event.name}
-                                        secondary={<container>
-                                            {actions}
-                                        </container>}
-                                    />
-                                } />
-                        }
-                        /></container>
-                </UI.Theme>
-            </Pane.Card>
+            <container>
+                <Pane.Card light isActive={isActive} icon={data.icon}>
+                    <UI.Theme name="light">
+                        <container>
+                            <h5>version is {paneStore.version + ''}</h5>
+                            <button onClick={() => paneStore.version = Math.random()}>up</button>
+                            <top $$row>
+                                <left $$row>
+                                    <img $avatar src={`/images/${'me'}.jpg`} />
+                                    <h3>Nate Weinert</h3>
+                                </left>
+                                <Pane.Actions id="paneActions" actions={['new']} />
+                            </top>
+
+                            <UI.List items={events} getItem={(event, index) =>
+                                <Pane.Selectable
+                                    options={{ ...event, id: `select${index}`, index }}
+                                    render={(isActive, actions) =>
+                                        <UI.ListItem
+                                            onClick={() => onSelect(index)}
+                                            highlight={isActive}
+                                            key={event.id}
+                                            primary={event.name}
+                                            secondary={<container>
+                                                {actions}
+                                            </container>}
+                                        />
+                                    } />
+                            }
+                            /></container>
+                    </UI.Theme>
+                </Pane.Card>
+            </container>
         )
     }
 

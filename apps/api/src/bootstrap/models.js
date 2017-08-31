@@ -3,18 +3,10 @@ import { store } from '@mcro/black/store'
 
 @store
 export default class Models {
-  users = null
+  users = User.find()
 
   start() {
-    this.subscriptions.add(
-      User.find().$.subscribe(users => {
-        this.users = users
-
-        if (this.users) {
-          this.processUsers()
-        }
-      }).unsubscribe
-    )
+    this.react(() => this.users, this.processUsers)
   }
 
   processUsers = () => {
@@ -27,10 +19,13 @@ export default class Models {
 
   ensureGithubSetting = async user => {
     console.log('ensure setting for user', user.id)
-    await Setting.findOrCreate({
-      type: 'github',
-      userId: user.id,
-    })
+    this.setTimeout(async () => {
+      console.log('now do it ok')
+      await Setting.findOrCreate({
+        type: 'github',
+        userId: user.id,
+      })
+    }, 4000)
   }
 
   dispose() {

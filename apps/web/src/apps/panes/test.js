@@ -120,6 +120,7 @@ class TestPageStore {
         this.props.getRef(this)
     }
 }
+
 @view.provide({ store: TestPageStore, paneStore: Pane.Store })
 @view
 export default class Message {

@@ -8,12 +8,12 @@ export default (options: Object, emitter) => ({
     }
     const ogMount = Klass.prototype.componentDidMount
     Klass.prototype.componentDidMount = function(...args) {
-      emitter.emit('view.mount', this)
+      emitter.emit('view.mount', { name: this.constructor.name, thing: this })
       return ogMount && ogMount.call(this, ...args)
     }
     const ogUnmount = Klass.prototype.componentWillUnmount
     Klass.prototype.componentWillUnmount = function() {
-      emitter.emit('view.unmount', this)
+      emitter.emit('view.unmount', { name: this.constructor.name, thing: this })
       return ogUnmount && ogUnmount.call(this, ...args)
     }
     return Klass

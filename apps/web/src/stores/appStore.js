@@ -35,6 +35,8 @@ export default class AppStore {
     view.on('store.unmount', this.unmount('stores'))
     view.on('view.mount', this.mount('views'))
     view.on('view.unmount', this.unmount('views'))
+    view.provide.on('store.mount', this.mount('stores'))
+    view.provide.on('store.unmount', this.unmount('stores'))
   }
 
   start = async (quiet = true) => {
@@ -48,8 +50,8 @@ export default class AppStore {
     this.database = new Database(this.config, this.models)
     await this.database.start({
       modelOptions: {
-        autoSync: true,
-        asyncFirstSync: true,
+        autoSync: false,
+        asyncFirstSync: false,
       },
     })
     this.connected = true
@@ -65,8 +67,6 @@ export default class AppStore {
   dispose = () => {
     this.database && this.database.dispose()
   }
-
-  // private
 
   setupServices = () => {
     this.services = {}
@@ -89,7 +89,8 @@ export default class AppStore {
           })
           return {
             ...acc,
-            [key]: entries,
+            // nice helper: turn just one array into a singular item
+            [key]: entries.length === 1 ? entries[0] : entries,
           }
         }, {})
 
@@ -98,62 +99,21 @@ export default class AppStore {
     }, 1)
   }
 
-  mount = type => thing => {
-    const key = thing.constructor.name
+  key = (name, thing) => (name === 'store' ? thing.constructor.name : name)
+
+  mount = type => ({ name, thing }) => {
+    const key = this.key(name, thing)
     this.mounted[type][key] = this.mounted[type][key] || new Set()
     this.mounted[type][key].add(thing)
     this.mountedVersion++
   }
 
-  unmount = type => thing => {
-    const key = thing.constructor.name
+  unmount = type => ({ name, thing }) => {
+    const key = this.key(name, thing)
     if (this.mounted[type][key]) {
       this.mounted[type][key].delete(thing)
       this.mountedVersion++
     }
-  }
-
-  // end private
-
-  // TODO make this not hacky
-  // could actually just be a Proxy around this class that finds these
-
-  get root() {
-    return this.stores && this.stores.RootStore && this.stores.RootStore[0]
-  }
-
-  get bar() {
-    return this.stores && this.stores.BarStore && this.stores.BarStore[0]
-  }
-
-  get explorer() {
-    return (
-      this.stores && this.stores.ExplorerStore && this.stores.ExplorerStore[0]
-    )
-  }
-
-  get editor(): EditorStore {
-    if (!this.stores || !this.stores.EditorStore) {
-      return
-    }
-    return this.stores.EditorStore.find(store => !!store.focused)
-  }
-
-  get document(): DocumentStore {
-    if (!this.stores || !this.stores.DocumentStore) {
-      return
-    }
-    return this.stores.DocumentStore.find(
-      store => !!store.props.isPrimaryDocument
-    )
-  }
-
-  get editorState() {
-    return this.editor && this.editor.slate.getState()
-  }
-
-  get docLayout() {
-    return this.editorState.document.nodes.findByType('docList')
   }
 
   handleError = (...errors) => {

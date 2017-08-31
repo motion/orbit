@@ -25,6 +25,7 @@ export default function automagical() {
   return {
     name: 'automagical',
     decorator: (Klass: Class<any> | Function) => {
+      console.log('doo the auto magic', Klass.name)
       if (!Klass.prototype) {
         return Klass
       }

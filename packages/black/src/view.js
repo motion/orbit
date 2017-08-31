@@ -33,7 +33,9 @@ export type ViewDec = Function & {
   attach(...stores: Array<string>): ViewClass,
 }
 
-export type DecoratorType = () => ViewClass | (() => () => ViewClass)
+export type DecoratorType = (
+  opts: ?Object
+) => ViewClass | ((opts: ?Object) => () => ViewClass)
 
 const uiContext = [
   addContext,
@@ -86,8 +88,11 @@ view.basics = decor([
   observer,
   () => ({ decorator: glossDecorator }),
 ])
-view.provide = stores =>
-  decor([[storeProvidable, storeOptions]])({ stores, context: true })
+
+const providable = decor([[storeProvidable, storeOptions]])
+view.provide = stores => providable({ stores, context: true })
+view.provide.on = providable.on
+
 view.attach = (...names) => decor([[attach, { names }]])
 
 export default view

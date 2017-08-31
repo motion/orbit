@@ -7,6 +7,7 @@ import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
 import { cloneDeep } from 'lodash'
 import query from './query'
+import * as Helpers from './helpers'
 
 type SettingsObject = {
   index?: Array<string>,
@@ -37,6 +38,7 @@ export default class Model {
   static defaultProps: Function | Object
 
   _collection: RxCollection
+  migrations: ?Object
   methods: ?Object
   statics: ?Object
   database: ?RxDB
@@ -47,7 +49,7 @@ export default class Model {
   defaultSchema: Object = {}
   @observable connected = false
   remote: ?string = null // sync to
-  hooks: { [string]: PromiseFunction } = {} // hooks run before/after operations
+  hooks: { [string]: PromiseFunction | Function } = {} // hooks run before/after operations
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
@@ -75,7 +77,7 @@ export default class Model {
   }
 
   get pouch(): PouchDB {
-    return this.collection.pouch
+    return this._collection.pouch
   }
 
   get props(): Object {
@@ -272,7 +274,7 @@ export default class Model {
 
     // TEMPORARY BUGFIX, fixed pouch console warnings about db.info()
     // TODO remove on RxDB 5.4.0
-    await this._collection.pouch.info()
+    await this.pouch.info()
 
     // sync PUSH ONLY
     if (this.options.autoSync) {
@@ -289,81 +291,13 @@ export default class Model {
       this.subscriptions.add(pushSync.cancel)
     }
 
-    // shim add pouchdb-validation
-    // this._collection.pouch.installValidationMethods()
-
     // bump listeners
-    this._collection.pouch.setMaxListeners(100)
+    this.pouch.setMaxListeners(100)
 
     // create index
     await this.createIndexes()
 
-    // PRE-INSERT
-    const ogInsert = this.hooks.preInsert
-    this.hooks.preInsert = (doc: Object) => {
-      this.applyDefaults(doc)
-      if (this.hasTimestamps) {
-        doc.createdAt = this.now
-        doc.updatedAt = this.now
-      }
-      console.log(
-        `%cINSERT ${this.constructor.name}.create(${JSON.stringify(
-          doc,
-          0,
-          2
-        )})`,
-        'color: green'
-      )
-      if (ogInsert) {
-        return ogInsert.call(this, doc)
-      }
-    }
-
-    // PRE-SAVE
-    const ogSave = this.hooks.preSave
-    this.hooks.preSave = (doc: Object) => {
-      if (this.hasTimestamps) {
-        doc.updatedAt = this.now
-        // 🐛 this handles upsert not using preInsert (i think)
-        if (!doc.createdAt) {
-          doc.createdAt = this.now
-        }
-      }
-      if (ogSave) {
-        return ogSave.call(this, doc)
-      }
-    }
-
-    // POST-CREATE
-    // decorate each instance with this.methods
-    const ogPostCreate = this.hooks.postCreate
-    this.hooks.postCreate = doc => {
-      const compiledMethods = this.compiledMethods(doc)
-      if (compiledMethods) {
-        for (const method of Object.keys(compiledMethods)) {
-          const descriptor = compiledMethods[method]
-          // autobind
-          if (typeof descriptor.get === 'function') {
-            descriptor.get = descriptor.get.bind(doc)
-          }
-          if (typeof descriptor.value === 'function') {
-            descriptor.value = descriptor.value.bind(doc)
-          }
-        }
-      } else {
-        console.warn('no methods')
-      }
-      Object.defineProperties(doc, compiledMethods)
-      if (ogPostCreate) {
-        ogPostCreate.call(this, doc)
-      }
-    }
-
-    if (this._collection && this.hooks) {
-      Object.keys(this.hooks).forEach((hook: () => Promise<any>) => {
-        this._collection[hook](this.hooks[hook])
-      })
-    }
+    Helpers.applyHooks(this)
 
     // this makes our userdb react properly to login, no idea why
     this._collection.watchForChanges()
@@ -526,9 +460,15 @@ export default class Model {
       chain(this.collection.findOne(query), 'sort', sort)
     )
 
-  // returns a promise that resolves to found or created model
+  // find or create, doesnt require primary key usage
   findOrCreate = async (object: Object = {}): Promise<Object> => {
-    const found = await this.get(object)
+    if (!this._collection) {
+      await this.onConnection()
+    }
+    const query = this.findOne(object)
+    await query.sync()
+    const found = await query.exec()
+    console.log('found it', found)
     if (found) {
       return found
     }
@@ -554,6 +494,8 @@ export default class Model {
     return this._collection.insert(object)
   }
 
+  // upsert requires you to use primary key, unlike findOrCreate which doesn't
+  // but upsert only requires one request
   async upsert(object: Object = {}) {
     if (!this._collection) {
       await this.onConnection()

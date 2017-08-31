@@ -71,6 +71,9 @@ export default class GithubSync {
   run = (job: Job) => {
     return new Promise((resolve, reject) => {
       const runJob = once(async () => {
+        this.validateSetting()
+        console.log('GithubSetting:', this.setting.toJSON())
+
         if (job.action) {
           try {
             await this.runJob(job.action)
@@ -86,7 +89,6 @@ export default class GithubSync {
       // wait for setting before running
       this.watch(async () => {
         if (this.setting) {
-          this.validateSetting()
           if (this.setting.activeOrgs) {
             runJob()
           } else {
@@ -100,7 +102,10 @@ export default class GithubSync {
   validateSetting = () => {
     // ensure properties on setting
     if (!this.setting.values.lastSyncs) {
-      this.setting.values.lastSyncs = {}
+      this.setting.values = {
+        ...this.setting.values,
+        lastSyncs: {},
+      }
     }
   }
 
@@ -214,7 +219,6 @@ export default class GithubSync {
   }
 
   syncIssues = async (orgLogin: string) => {
-    console.log('SYNC issues for org', orgLogin)
     const results = await this.graphFetch({
       query: `
       query AllIssues {

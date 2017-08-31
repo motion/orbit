@@ -28,7 +28,6 @@ class BarMainStore {
     helper = {
         filter: (x, opts) => filterItem(x || [], this.props.search, opts),
     }
-
     get things(): Array<PaneResult> {
         console.time('get things()')
         if (!this.topThings) {
@@ -40,17 +39,19 @@ class BarMainStore {
         console.timeEnd('get things()')
         return filtered
     }
-
     get browse(): Array<PaneResult> {
         return this.helper.filter([
             {
-                title: 'Nate',
-                type: 'feed',
-                data: { person: 'natew', image: 'me' },
-            },
-            {
                 title: 'Recent',
                 type: 'feed',
+                icon: 'radio',
+                data: {
+                    special: true,
+                },
+            },
+            {
+                title: 'Test',
+                type: 'test',
                 icon: 'radio',
                 data: {
                     special: true,
@@ -67,46 +68,6 @@ class BarMainStore {
                 title: 'My Team',
                 category: 'Browse',
                 type: 'message',
-                url() {
-                    return '/?home=true'
-                },
-                icon: 'objects_planet',
-            },
-            {
-                data: {},
-                title: 'Figma',
-                category: 'Browse',
-                type: 'test',
-                url() {
-                    return '/?home=true'
-                },
-                icon: 'objects_planet',
-            },
-            {
-                data: {},
-                title: 'Orbit → New GitHub Issue',
-                category: 'Browse',
-                type: 'newIssue',
-                url() {
-                    return '/?home=true'
-                },
-                icon: 'objects_planet',
-            },
-            {
-                data: {},
-                title: 'Gloss → New GitHub Issue',
-                category: 'Browse',
-                type: 'newIssue',
-                url() {
-                    return '/?home=true'
-                },
-                icon: 'objects_planet',
-            },
-            {
-                data: {},
-                title: 'Motion → New GitHub Issue',
-                category: 'Browse',
-                type: 'newIssue',
                 url() {
                     return '/?home=true'
                 },
@@ -172,14 +133,6 @@ class BarMainStore {
         return [...this.browse, ...this.things, ...this.people, ...this.extras]
     }
 
-    actionsByType = {
-        issue: ['archive', 'add label', 'milestone'],
-    }
-
-    getActions = ({ type }) => {
-        return this.actionsByType[type] || ['one', 'two', 'three']
-    }
-
     get results(): Array<PaneResult> {
         if (!CurrentUser.loggedIn) {
             return [{ title: 'Login', type: 'login', static: true }]
@@ -189,6 +142,9 @@ class BarMainStore {
 
     select = (index: number) => {
         this.props.navigate(this.results[index])
+    }
+    getActions() {
+        return ['one', 'two', 'four']
     }
 }
 

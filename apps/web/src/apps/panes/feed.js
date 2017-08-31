@@ -35,7 +35,7 @@ export default class BarFeed {
 
       return (
         <feeditem $active={activeIndex === index} key={`${event.id}${index}`}>
-          <meta>
+          <meta if={actor}>
             <avatar $img={actor.avatar_url} />
             <UI.Text $name>
               {actor.login}{' '}
@@ -47,7 +47,7 @@ export default class BarFeed {
               {data.created_at}{' '}
             </UI.Text>
           </meta>
-          <body if={payload.commits}>
+          <body if={payload && payload.commits}>
             <content>
               {payload.commits.map(commit =>
                 <UI.Text key={commit.sha}>

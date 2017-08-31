@@ -6,37 +6,32 @@ import Actions from './actions'
 @view.attach('paneStore')
 @view
 export default class Selectable {
-  componentWillMount() {
-    const { paneStore, options } = this.props
-    paneStore.addCard(options)
-  }
-
-  componentWillUnmount() {
-    const { paneStore, options } = this.props
-    paneStore.removeCard(options)
-  }
-
-  render({ paneStore, render, options }) {
-    const { actions, index, id } = options
-    const { selectedIds } = paneStore
-    const isActive = paneStore.getActiveIndex() === index
-    const isSelected = includes(selectedIds, id)
-    const showActions = isActive && selectedIds.length === 0
-    if (showActions) {
-      console.log('gonna show actions')
+    componentWillMount() {
+        const { paneStore, options } = this.props
+        paneStore.addCard(options)
     }
 
-    const actionsEl = <Actions id={id} actions={actions} />
-    // const actionsEl = <h4>im the actions</h4>
+    componentWillUnmount() {
+        const { paneStore, options } = this.props
+        paneStore.removeCard(options)
+    }
 
-    return (
-      <card onClick={() => { paneStore.setIndex(index) }}>
-        {isFunction(render) && render(isActive || isSelected, showActions && actionsEl)}
-        {!isFunction(render) && <h3>needs a fn</h3>}
-      </card>
-    )
-  }
+    render({ paneStore, render, options }) {
+        const { actions, index, id } = options
+        const { selectedIds } = paneStore
+        const isActive = paneStore.getActiveIndex() === index
+        const isSelected = includes(selectedIds, id)
+        const showActions = isActive && selectedIds.length === 0
+        const actionsEl = <Actions id={id} actions={actions} />
 
-  static style = {
-  }
+        return (
+            <card onClick={() => { paneStore.setIndex(index) }}>
+                {isFunction(render) && render(isActive || isSelected, showActions && actionsEl)}
+                {!isFunction(render) && <h3>needs a fn</h3>}
+            </card>
+        )
+    }
+
+    static style = {
+    }
 }

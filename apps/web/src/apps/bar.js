@@ -113,7 +113,6 @@ class BarStore {
     millerActions = {}
     actions = {
         down: e => {
-            console.log('down down down')
             if (!this.hasSelectedItem) {
                 // this.inputRef.blur()
             }

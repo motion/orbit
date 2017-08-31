@@ -19,7 +19,7 @@ export default class PaneCard {
         if (!paneStore) {
             return <h5>no store</h5>
         }
-        // version is just to subscribe to updates
+
         const { selectedIds, toolbarActions } = paneStore
 
         return (

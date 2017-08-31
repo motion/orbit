@@ -132,8 +132,6 @@ export default class Message {
                 <Pane.Card light isActive={isActive} icon={data.icon}>
                     <UI.Theme name="light">
                         <container>
-                            <h5>version is {paneStore.version + ''}</h5>
-                            <button onClick={() => paneStore.version = Math.random()}>up</button>
                             <top $$row>
                                 <left $$row>
                                     <img $avatar src={`/images/${'me'}.jpg`} />

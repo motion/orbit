@@ -37,7 +37,6 @@ export default class Actions {
 
         return (
             <actions $$row>
-                <h2>meta? {paneStore.props.isActive + ''} {paneStore.metaKey + ''}</h2>
                 {(actions || []).map(action => shortcutButton(action))}
             </actions>
         )

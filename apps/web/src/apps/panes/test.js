@@ -137,15 +137,15 @@ export default class Message {
                         {false && <figma $$undraggable>
                             <iframe height={500} seamless src="https://www.figma.com/file/NoOi8acSNhO29VLMe790Ut?embed_host=dropbox-paper&viewer=1" />
                         </figma>}
-                        <UI.List items={events} getItem={(result, index) =>
+                        <UI.List items={events} getItem={(event, index) =>
                             <Pane.Selectable
                                 options={{ ...event, id: `select${index}`, index }}
                                 render={(isActive, actions) =>
                                     <UI.ListItem
                                         onClick={() => onSelect(index)}
                                         highlight={isActive}
-                                        key={result.id}
-                                        primary={result.name}
+                                        key={event.id}
+                                        primary={event.name}
                                         secondary={<container>
                                             {actions}
                                         </container>}

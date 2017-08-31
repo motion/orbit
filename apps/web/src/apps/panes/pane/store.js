@@ -12,8 +12,6 @@ export default class PaneStore {
     visibleActions = {}
     cardIdByIndex = {}
 
-    isActive = this.props.isActive
-
     getActiveIndex = () => {
         const { millerState, isActive } = this.props
         return isActive ? millerState.activeRow : null
@@ -25,6 +23,7 @@ export default class PaneStore {
 
     start() {
         document.addEventListener('keydown', e => {
+            console.log('key down', e.metaKey, this.props.isActive)
             if (!this.props.isActive) return
 
             this.metaKey = e.metaKey
@@ -36,7 +35,6 @@ export default class PaneStore {
 
             if (this.metaKey) {
                 ; (this.allActions || []).forEach(action => {
-                    console.log('action is ', action)
                     if (actionToKeyCode(action) === e.keyCode) {
                         e.preventDefault()
                         console.log('executing action', action)

@@ -179,8 +179,8 @@ export default class BarMain extends React.Component {
 
         return (
             <Pane.Card isActive={isActive} width={340} $pane>
+                <none if={store.results.length === 0}>No Results</none>
                 <UI.List
-                    if={store.results}
                     itemProps={paneProps.itemProps}
                     groupKey="category"
                     items={store.results}
@@ -216,6 +216,11 @@ export default class BarMain extends React.Component {
     }
 
     static style = {
+        none: {
+            alignSelf: 'center',
+            fontSize: 18,
+            color: 'rgba(255,255,255,.5)',
+        },
         spread: {
             justifyContent: 'space-between',
         },

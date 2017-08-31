@@ -37,6 +37,7 @@ export default class Actions {
 
         return (
             <actions $$row>
+                <h2>meta? {metaKey + ''}</h2>
                 {(actions || []).map(action => shortcutButton(action))}
             </actions>
         )

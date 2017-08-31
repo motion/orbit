@@ -25,6 +25,7 @@ export default class MillerStateStore {
     prevActiveRows = [] // holds the previously active columns
 
     constructor({ schema }) {
+        console.log('in constructor', schema)
         this.schema = schema
 
         const events = ['selectionChange', 'change']

@@ -1,6 +1,6 @@
-import fuzzy from 'fuzzysearch'
+import fuzzySearch from 'fuzzysearch'
 
-export function filterItem(
+export default function fuzzy(
   haystack,
   needle,
   { max = Infinity, property = 'title' } = {}
@@ -9,7 +9,9 @@ export function filterItem(
   const results = []
 
   for (let i = 0; i < total; i++) {
-    if (fuzzy(needle.toLowerCase(), haystack[i][property].toLowerCase())) {
+    if (
+      fuzzySearch(needle.toLowerCase(), haystack[i][property].toLowerCase())
+    ) {
       results.push(haystack[i])
       if (results.length === max) {
         break

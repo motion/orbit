@@ -11,7 +11,6 @@ import PouchDB from 'pouchdb-core'
 import * as Constants from '~/constants'
 import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
-import Immutable from 'immutable'
 import * as Black from '@mcro/black'
 import color from 'color'
 
@@ -28,7 +27,6 @@ window.Mobx = Mobx
 window.MobxUtils = MobxUtils
 window.RxDB = RxDB
 window.Rx = Rx
-window.Immutable = Immutable
 window.PouchDB = PouchDB
 window.Constants = Constants
 window._ = _

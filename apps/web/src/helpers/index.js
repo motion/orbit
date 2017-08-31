@@ -2,6 +2,7 @@
 export * from 'mobx'
 export { Component } from 'react'
 export debug from 'debug'
+export fuzzy from './fuzzy'
 
 class Cache {
   all = new Set()

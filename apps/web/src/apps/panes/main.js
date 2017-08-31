@@ -3,7 +3,7 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser, Document, Thing } from '~/app'
-import { filterItem } from './helpers'
+import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import type { PaneProps, PaneResult } from '~/types'
 
@@ -24,7 +24,7 @@ class BarMainStore {
   }
 
   helper = {
-    filter: (x, opts) => filterItem(x || [], this.props.search, opts),
+    filter: (x, opts) => fuzzy(x || [], this.props.search, opts),
   }
 
   get things(): Array<PaneResult> {

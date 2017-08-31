@@ -6,9 +6,11 @@ import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 
-export default function storeProvidable(options, emitter) {
+export default function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',
+    once: true,
+    onlyClass: true,
     decorator: (Klass, opts = {}) => {
       const allStores = opts.stores || options.stores
       const context = opts.context || options.context
@@ -151,7 +153,7 @@ export default function storeProvidable(options, emitter) {
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            emitter.emit('store.mount', { name, thing: store })
+            Helpers.emitter.emit('store.mount', { name, thing: store })
             if (options.onStoreDidMount) {
               options.onStoreDidMount(store, this.props)
             }
@@ -165,7 +167,7 @@ export default function storeProvidable(options, emitter) {
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            emitter.emit('store.unmount', { name, thing: store })
+            Helpers.emitter.emit('store.unmount', { name, thing: store })
             if (options.onStoreUnmount) {
               options.onStoreUnmount(store)
             }

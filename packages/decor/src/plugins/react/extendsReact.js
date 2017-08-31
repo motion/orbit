@@ -3,13 +3,11 @@ import React from 'react'
 
 export type ExtendsReact = React$Component
 
-export default (options: Object) => ({
+export default () => ({
   name: 'extends-react',
+  once: true,
+  onlyClass: true,
   decorator: (Klass: Class<any> | Function) => {
-    // functional components
-    if (!Klass.prototype) {
-      return Klass
-    }
     Object.setPrototypeOf(Klass.prototype, React.Component.prototype)
     return Klass
   },

@@ -6,12 +6,12 @@ declare class ReactRenderArgs<Props, State, Context> {
 
 export default () => ({
   name: 'react-render-args',
+  once: true,
+  onlyClass: true,
   decorator: (Klass: Class<any> | Function) => {
-    // avoid fn classes
-    if (!Klass.prototype || !Klass.prototype.render) {
-      return Klass
+    if (!Klass.prototype.render) {
+      throw new Error('Not a react-like class')
     }
-
     // preact-like render
     const or = Klass.prototype.render
     Klass.prototype.render = function() {

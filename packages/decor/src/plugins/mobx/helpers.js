@@ -17,9 +17,13 @@ export function react(fn, onReact, immediately = false): Function {
 
 export default () => ({
   name: 'helpers',
-  mixin: {
-    ...Helpers,
-    watch,
-    react,
+  once: true,
+  onlyClass: true,
+  decorator: Klass => {
+    Object.assign(Klass.prototype, {
+      ...Helpers,
+      watch,
+      react,
+    })
   },
 })

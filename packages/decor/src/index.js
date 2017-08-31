@@ -7,11 +7,12 @@ type Plugin = () => { decorator?: Function, mixin?: Object }
 
 export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
   const allPlugins = []
-  // unique key per decorator instance
-  const DECOR_KEY = `__IS_DECOR_DECORATED${Math.random()}`
-  const DECOR_GLOBAL_KEY = '__IS_DECOR_DECORATED'
-  const emitter = new Emitter()
 
+  // Helpers
+  const emitter = new Emitter()
+  const isClass = x => !!x.prototype
+
+  // process plugins
   for (const curPlugin of plugins.filter(Boolean)) {
     let getPlugin = curPlugin
     let options = {}
@@ -26,10 +27,34 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
       throw `Plugin must be a function, got ${typeof getPlugin}`
     }
 
-    let plugin = getPlugin(options, emitter)
+    // uid per plugin
+    const uid = Math.random()
+    const alreadyDecorated = Klass => {
+      const result = Klass[uid]
+      Klass[uid] = true
+      return result
+    }
+    const Helpers = {
+      emitter,
+      alreadyDecorated,
+      isClass,
+    }
+
+    let plugin = getPlugin(options, Helpers)
 
     if (!plugin.decorator && !plugin.mixin) {
       throw `Bad plugin, needs decorator or mixin ${plugin.name}`
+    }
+
+    // apply helpers
+    if (plugin.once) {
+      const ogPlugin = plugin.decorator
+      plugin.decorator = Klass =>
+        alreadyDecorated(Klass) ? Klass : ogPlugin(Klass)
+    }
+    if (plugin.onlyClass) {
+      const ogPlugin = plugin.decorator
+      plugin.decorator = Klass => (!isClass(Klass) ? Klass : ogPlugin(Klass))
     }
 
     allPlugins.push(plugin)
@@ -52,27 +77,14 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
       )
     }
 
-    // avoid decorating twice
-    if (Klass[DECOR_KEY]) {
-      console.log('avoid decorating twice', Klass.name)
-      return Klass
-    }
-
-    try {
-      for (const plugin of allPlugins) {
-        if (plugin.mixin && Klass.prototype) {
-          reactMixin(Klass.prototype, plugin.mixin)
-        }
-        if (plugin.decorator) {
-          decoratedClass =
-            plugin.decorator(decoratedClass, opts) || decoratedClass
-        }
+    for (const plugin of allPlugins) {
+      if (plugin.mixin && Klass.prototype) {
+        reactMixin(Klass.prototype, plugin.mixin)
       }
-
-      Klass[DECOR_KEY] = true
-      Klass[DECOR_GLOBAL_KEY] = true
-    } catch (e) {
-      console.error('dev mode catching error', e)
+      if (plugin.decorator) {
+        decoratedClass =
+          plugin.decorator(decoratedClass, opts) || decoratedClass
+      }
     }
 
     return decoratedClass

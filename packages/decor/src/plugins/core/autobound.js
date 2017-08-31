@@ -1,11 +1,10 @@
 import autobind from 'autobind-decorator'
 
-export default options => ({
+export default () => ({
   name: 'autobind',
+  once: true,
+  onlyClass: true,
   decorator: Klass => {
-    if (!Klass.prototype) {
-      return Klass
-    }
     return autobind(Klass)
   },
 })

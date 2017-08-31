@@ -35,6 +35,8 @@ export default class AppStore {
     view.on('store.unmount', this.unmount('stores'))
     view.on('view.mount', this.mount('views'))
     view.on('view.unmount', this.unmount('views'))
+    view.provide.on('store.mount', this.mount('stores'))
+    view.provide.on('store.unmount', this.unmount('stores'))
   }
 
   start = async quiet => {
@@ -48,8 +50,8 @@ export default class AppStore {
     this.database = new Database(this.config, this.models)
     await this.database.start({
       modelOptions: {
-        autoSync: true,
-        asyncFirstSync: true,
+        autoSync: false,
+        asyncFirstSync: false,
       },
     })
     this.connected = true

@@ -47,7 +47,7 @@ export default class API {
     this.bootstrap.start()
     this.server.start()
 
-    await this.jobs.start()
+    // await this.jobs.start()
   }
 
   dispose() {

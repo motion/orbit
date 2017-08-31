@@ -7,6 +7,7 @@ import RootStore from '~/stores/rootStore'
 @view.provide({
   rootStore: RootStore,
 })
+@view
 export default class Root extends React.Component {
   state = {
     error: null,

@@ -38,9 +38,12 @@ export default function storeProvidable(options, emitter) {
           return Klass.name
         }
 
+        get name() {
+          return Klass.name
+        }
+
         state = {
           error: null,
-          stores: null,
         }
 
         componentWillReceiveProps(nextProps) {
@@ -65,16 +68,13 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillMount() {
-          // for reactive props in stores
-          // 🐛 if you define this as normal observable on class
-          //    it will break with never before seen mobx bug on next line
           this.setupProps()
           this.setupStores()
           this.unmounted = false
         }
 
         componentDidMount() {
-          if (this.state.stores === null) {
+          if (this.stores === null) {
             return
           }
           this.mountStores()
@@ -99,10 +99,13 @@ export default function storeProvidable(options, emitter) {
           this.setState({ error })
         }
 
+        // for reactive props in stores
+        // 🐛 must run this before this.setupStore()
         setupProps() {
           Mobx.extendObservable(this, { _props: { ...this.props } })
         }
 
+        // DO NOT USE CLASS PROPERTY DECORATORS FOR THIS, IDK WTF WHY
         setupStores() {
           const getProps = {
             get: () => this._props,
@@ -112,7 +115,6 @@ export default function storeProvidable(options, emitter) {
           // start stores
           const stores = Object.keys(Stores).reduce((acc, cur) => {
             const Store = Stores[cur]
-
             const createStore = () => {
               Object.defineProperty(Store.prototype, 'props', getProps)
               const store = new Store()
@@ -121,7 +123,6 @@ export default function storeProvidable(options, emitter) {
               Object.defineProperty(store, 'props', getProps)
               return store
             }
-
             return {
               ...acc,
               [cur]: createStore(),
@@ -141,15 +142,15 @@ export default function storeProvidable(options, emitter) {
             }
           }
 
-          this.setState({ stores })
+          this.stores = stores
         }
 
         mountStores() {
-          if (!this.state.stores) {
+          if (!this.stores) {
             return
           }
-          for (const name of Object.keys(this.state.stores)) {
-            const store = this.state.stores[name]
+          for (const name of Object.keys(this.stores)) {
+            const store = this.stores[name]
             emitter.emit('store.mount', store)
             if (options.onStoreDidMount) {
               options.onStoreDidMount(store, this.props)
@@ -158,12 +159,12 @@ export default function storeProvidable(options, emitter) {
         }
 
         disposeStores() {
-          if (!this.state.stores) {
+          if (!this.stores) {
             log('no stores to dispose')
             return
           }
-          for (const name of Object.keys(this.state.stores)) {
-            const store = this.state.stores[name]
+          for (const name of Object.keys(this.stores)) {
+            const store = this.stores[name]
             emitter.emit('store.unmount', store)
             if (options.onStoreUnmount) {
               options.onStoreUnmount(store)
@@ -188,8 +189,7 @@ export default function storeProvidable(options, emitter) {
             console.log('failed view', this)
             return null
           }
-
-          return <Klass {...this.props} {...this.state.stores} />
+          return <Klass {...this.props} {...this.stores} />
         }
       }
 
@@ -212,10 +212,7 @@ export default function storeProvidable(options, emitter) {
           const names = Object.keys(Stores)
           const stores = {
             ...this.context.stores,
-            ...pickBy(
-              this.state.stores,
-              (value, key) => names.indexOf(key) >= 0
-            ),
+            ...pickBy(this.stores, (value, key) => names.indexOf(key) >= 0),
           }
           return { stores }
         }

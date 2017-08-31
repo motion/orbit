@@ -91,13 +91,13 @@ export default class ListItem {
   }: ItemProps) {
     const radiusProps = segmented
       ? {
-          borderRadius: isLastElement || isFirstElement ? borderRadius : 0,
-          borderBottomRadius: isLastElement,
-          borderTopRadius: isFirstElement,
-        }
+        borderRadius: isLastElement || isFirstElement ? borderRadius : 0,
+        borderBottomRadius: isLastElement,
+        borderTopRadius: isFirstElement,
+      }
       : {
-          borderRadius,
-        }
+        borderRadius,
+      }
 
     return (
       <SizedSurface
@@ -173,11 +173,11 @@ export default class ListItem {
           <children if={children} $$row={row} $$margin={[0, -8]}>
             {Array.isArray(children)
               ? children.map(
-                  (item, index) =>
-                    item && typeof item === 'object' && item.primary
-                      ? <ListItem key={item.key || index} {...item} />
-                      : item
-                )
+                (item, index) =>
+                  item && typeof item === 'object' && item.primary
+                    ? <ListItem key={item.key || index} {...item} />
+                    : item
+              )
               : children}
           </children>
         </content>

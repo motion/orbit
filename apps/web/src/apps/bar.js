@@ -11,307 +11,309 @@ import { isNumber, debounce } from 'lodash'
 import { SHORTCUTS } from '~/stores/rootStore'
 
 const actions = [
-  'remind',
-  'send',
-  'attach',
-  'discuss',
-  'assign',
-  'update',
-  'new',
-  'calendar',
-  'busy',
-  'free',
-  'wait',
-  'ping',
-  'everyone',
-  'open',
-  'close',
-  'forward',
-  'notifications',
-  'issues',
-  'docs',
+    'remind',
+    'send',
+    'attach',
+    'discuss',
+    'assign',
+    'update',
+    'new',
+    'calendar',
+    'busy',
+    'free',
+    'wait',
+    'ping',
+    'everyone',
+    'open',
+    'close',
+    'forward',
+    'notifications',
+    'issues',
+    'docs',
 ].sort()
 
 class BarStore {
-  millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
-  millerStateVersion = 0
-  inputRef: ?HTMLElement = null
+    millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
+    millerStateVersion = 0
+    inputRef: ?HTMLElement = null
 
-  // search is throttled, textboxVal isn't
-  search = ''
-  textboxVal = ''
+    // search is throttled, textboxVal isn't
+    search = ''
+    textboxVal = ''
 
-  get showTextbox() {
-    return this.millerState.activeCol === 0
-  }
-
-  start() {
-    this.on(window, 'focus', this.onFocus)
-  }
-
-  onFocus = () => {
-    console.log('focus bar window')
-    if (this.inputRef) {
-      this.inputRef.focus()
-      this.inputRef.select()
+    get showTextbox() {
+        return this.millerState.activeCol === 0
     }
-  }
 
-  setSearch = debounce(text => {
-    this.search = text
-    setTimeout(() => {
-      this.millerState.setActiveRow(0)
-    })
-  }, 150)
-
-  onSearchChange = e => {
-    this.textboxVal = e.target.value
-    this.setSearch(this.textboxVal)
-  }
-
-  get peekItem() {
-    if (!this.search) {
-      return ''
+    start() {
+        this.on(window, 'focus', this.onFocus)
     }
-    return actions[
-      actions.findIndex(action => action.indexOf(this.search) === 0)
-    ]
-  }
 
-  onMillerStateChange = state => {
-    this.millerState = state
-    this.millerStateVersion++
-  }
+    onFocus = () => {
+        console.log('focus bar window')
+        if (this.inputRef) {
+            this.inputRef.focus()
+            this.inputRef.select()
+        }
+    }
 
-  PANE_TYPES = {
-    main: Panes.Main,
-    message: Panes.Message,
-    setup: Panes.Setup,
-    inbox: Panes.Threads,
-    browse: Panes.Browse,
-    feed: Panes.Feed,
-    notifications: Panes.Notifications,
-    login: Panes.Login,
-    'code.issue': Panes.Code.Issue,
-    orbit: Panes.Orbit,
-    task: Panes.Task,
-    doc: Panes.Doc,
-    test: Panes.Test,
-    newIssue: Panes.Code.NewIssue,
-    integrations: Panes.Integrations,
-  }
+    setSearch = debounce(text => {
+        this.search = text
+        setTimeout(() => {
+            this.millerState.setActiveRow(0)
+        })
+    }, 150)
 
-  get isBarActive() {
-    return this.inputRef === document.activeElement
-  }
+    onSearchChange = e => {
+        this.textboxVal = e.target.value
+        this.setSearch(this.textboxVal)
+    }
 
-  get hasSelectedItem() {
-    return isNumber(this.millerState.activeRow)
-  }
+    get peekItem() {
+        if (!this.search) {
+            return ''
+        }
+        return actions[
+            actions.findIndex(action => action.indexOf(this.search) === 0)
+        ]
+    }
 
-  // call these to send key to miller
-  millerActions = {}
-  actions = {
-    down: e => {
-      console.log('down down down')
-      if (!this.hasSelectedItem) {
-        // this.inputRef.blur()
-      }
-      this.millerActions.down()
-      e.preventDefault()
-    },
-    up: e => {
-      if (this.millerState.activeRow > 0) {
-        this.millerActions.up()
-      }
+    onMillerStateChange = state => {
+        this.millerState = state
+        this.millerStateVersion++
+    }
 
-      e.preventDefault()
-    },
-    esc: e => {
-      e.preventDefault()
-      if (this.search !== '') {
-        this.search = ''
-      } else {
-        OS.send('bar-hide')
-      }
-    },
-    cmdA: () => {
-      this.inputRef.select()
-    },
-    enter: e => {
-      e.preventDefault()
-      const { currentItem } = this.millerState
+    PANE_TYPES = {
+        main: Panes.Main,
+        message: Panes.Message,
+        setup: Panes.Setup,
+        inbox: Panes.Threads,
+        browse: Panes.Browse,
+        feed: Panes.Feed,
+        notifications: Panes.Notifications,
+        login: Panes.Login,
+        'code.issue': Panes.Code.Issue,
+        orbit: Panes.Orbit,
+        task: Panes.Task,
+        doc: Panes.Doc,
+        test: Panes.Test,
+        newIssue: Panes.Code.NewIssue,
+        integrations: Panes.Integrations,
+    }
 
-      if (currentItem.static) {
-        console.log('static item, no action')
-        return
-      }
+    get isBarActive() {
+        return this.inputRef === document.activeElement
+    }
 
-      if (currentItem.onSelect) {
-        currentItem.onSelect()
-      } else {
-        const schema = JSON.stringify(currentItem)
-        OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
-      }
-    },
-    right: e => {
-      if (this.hasSelectedItem) {
-        this.millerActions.right()
-        e.preventDefault()
-      } else {
-        if (this.peekItem) this.search = this.peekItem
-      }
-    },
-    left: e => {
-      if (this.hasSelectedItem) {
-        this.millerActions.left()
-        e.preventDefault()
-      }
-    },
-  }
+    get hasSelectedItem() {
+        return isNumber(this.millerState.activeRow)
+    }
+
+    // call these to send key to miller
+    millerActions = {}
+    actions = {
+        down: e => {
+            console.log('down down down')
+            if (!this.hasSelectedItem) {
+                // this.inputRef.blur()
+            }
+            this.millerActions.down()
+            e.preventDefault()
+        },
+        up: e => {
+            if (this.millerState.activeRow > 0) {
+                this.millerActions.up()
+            }
+
+            e.preventDefault()
+        },
+        esc: e => {
+            e.preventDefault()
+            if (this.search !== '') {
+                this.search = ''
+            } else {
+                OS.send('bar-hide')
+            }
+        },
+        cmdA: () => {
+            this.inputRef.select()
+        },
+        enter: e => {
+            e.preventDefault()
+            const { currentItem } = this.millerState
+
+            if (currentItem.static) {
+                console.log('static item, no action')
+                return
+            }
+
+            if (currentItem.onSelect) {
+                currentItem.onSelect()
+            } else {
+                const schema = JSON.stringify(currentItem)
+                OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
+            }
+        },
+        right: e => {
+            if (this.hasSelectedItem) {
+                this.millerActions.right()
+                e.preventDefault()
+            } else {
+                if (this.peekItem) this.search = this.peekItem
+            }
+        },
+        left: e => {
+            if (this.hasSelectedItem) {
+                this.millerActions.left()
+                e.preventDefault()
+            }
+        },
+    }
 }
 
 const inputStyle = {
-  fontWeight: 200,
-  color: '#fff',
-  fontSize: 32,
+    fontWeight: 200,
+    color: '#fff',
+    fontSize: 32,
 }
 
 @view({
-  store: BarStore,
+    store: BarStore,
 })
 export default class BarPage {
-  trap: MouseTrap
+    trap: MouseTrap
 
-  componentDidMount() {
-    const node = ReactDOM.findDOMNode(this)
-    this.trap = new Mousetrap(node)
-    for (const name of Object.keys(SHORTCUTS)) {
-      if (this.props.store.actions[name]) {
-        const chord = SHORTCUTS[name]
-        this.trap.bind(chord, this.props.store.actions[name])
-      }
-    }
-  }
-
-  render({ store }) {
-    const paneProps = {
-      itemProps: {
-        size: 1.2,
-        glow: false,
-        hoverable: true,
-        fontSize: 26,
-        padding: [0, 10],
-        height: 40,
-        highlightBackground: [0, 0, 0, 0.15],
-        highlightColor: [255, 255, 255, 1],
-      },
+    componentDidMount() {
+        const node = ReactDOM.findDOMNode(this)
+        this.trap = new Mousetrap(node)
+        for (const name of Object.keys(SHORTCUTS)) {
+            if (this.props.store.actions[name]) {
+                const chord = SHORTCUTS[name]
+                this.trap.bind(chord, this.props.store.actions[name])
+            }
+        }
     }
 
-    return (
-      <UI.Theme name="clear-dark">
-        <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
-          <div>
-            <UI.Input
-              size={2.6}
-              getRef={store.ref('inputRef').set}
-              borderRadius={5}
-              onChange={store.onSearchChange}
-              value={store.textboxVal}
-              borderWidth={0}
-              css={{
-                margin: [-2, 0, 0],
+    render({ store }) {
+        const paneProps = {
+            itemProps: {
+                size: 1.2,
+                glow: false,
+                hoverable: true,
+                fontSize: 26,
                 padding: [0, 10],
-                ...inputStyle,
-              }}
-            />
-            <forwardcomplete>
-              {store.peekItem}
-            </forwardcomplete>
-            <pasteicon if={false}>
-              <UI.Icon size={50} type="detailed" name="paper" />
-            </pasteicon>
-          </div>
-          <Miller
-            search={store.search}
-            version={store.millerStateVersion}
-            state={store.millerState}
-            panes={store.PANE_TYPES}
-            onChange={store.onMillerStateChange}
-            paneProps={paneProps}
-            onActions={store.ref('millerActions').set}
-          />
-        </bar>
-      </UI.Theme>
-    )
-  }
+                height: 40,
+                highlightBackground: [0, 0, 0, 0.15],
+                highlightColor: [255, 255, 255, 1],
+            },
+        }
 
-  static style = {
-    bar: {
-      background: [145, 145, 145, 0.5],
-      margin: 30,
-      flex: 1,
-    },
-    omni: {
-      height: 100,
-    },
-    // pos textbox over nav so they don't collide when nav is opacity 0
-    textbox: {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-    },
-    nav: {
-      flex: 1,
-      userSelect: 'none',
-      padding: [20, 5],
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-      transition: 'opacity ease-in 150ms',
-      opacity: 0,
-    },
-    showNav: {
-      opacity: 1,
-    },
-    left: {
-      position: 'absolute',
-      left: 3,
-      top: 20,
-    },
-    results: {
-      borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
-      flex: 2,
-      flexFlow: 'row',
-      transition: 'transform 80ms linear',
-      transform: {
-        z: 0,
-        x: 0,
-      },
-    },
-    section: {
-      width: '50%',
-      height: '100%',
-    },
-    content: {
-      flex: 1,
-      height: '100%',
-    },
-    pasteicon: {
-      position: 'absolute',
-      top: -30,
-      right: -20,
-      width: 128,
-      height: 128,
-    },
-    forwardcomplete: {
-      position: 'absolute',
-      top: 28,
-      left: 20,
-      opacity: 0.3,
-      ...inputStyle,
-      zIndex: -1,
-      pointerEvents: 'none',
-    },
-  }
+        return (
+            <HotKeys actions={store.actions}>
+                <UI.Theme name="clear-dark">
+                    <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
+                        <div>
+                            <UI.Input
+                                size={2.6}
+                                getRef={store.ref('inputRef').set}
+                                borderRadius={5}
+                                onChange={store.onSearchChange}
+                                value={store.textboxVal}
+                                borderWidth={0}
+                                css={{
+                                    margin: [-2, 0, 0],
+                                    padding: [0, 10],
+                                    ...inputStyle,
+                                }}
+                            />
+                            <forwardcomplete>
+                                {store.peekItem}
+                            </forwardcomplete>
+                            <pasteicon if={false}>
+                                <UI.Icon size={50} type="detailed" name="paper" />
+                            </pasteicon>
+                        </div>
+                        <Miller
+                            search={store.search}
+                            version={store.millerStateVersion}
+                            state={store.millerState}
+                            panes={store.PANE_TYPES}
+                            onChange={store.onMillerStateChange}
+                            paneProps={paneProps}
+                            onActions={store.ref('millerActions').set}
+                        />
+                    </bar>
+                </UI.Theme>
+            </HotKeys>
+        )
+    }
+
+    static style = {
+        bar: {
+            background: [145, 145, 145, 0.5],
+            margin: 30,
+            flex: 1,
+        },
+        omni: {
+            height: 100,
+        },
+        // pos textbox over nav so they don't collide when nav is opacity 0
+        textbox: {
+            position: 'absolute',
+            left: 0,
+            top: 0,
+        },
+        nav: {
+            flex: 1,
+            userSelect: 'none',
+            padding: [20, 5],
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            transition: 'opacity ease-in 150ms',
+            opacity: 0,
+        },
+        showNav: {
+            opacity: 1,
+        },
+        left: {
+            position: 'absolute',
+            left: 3,
+            top: 20,
+        },
+        results: {
+            borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
+            flex: 2,
+            flexFlow: 'row',
+            transition: 'transform 80ms linear',
+            transform: {
+                z: 0,
+                x: 0,
+            },
+        },
+        section: {
+            width: '50%',
+            height: '100%',
+        },
+        content: {
+            flex: 1,
+            height: '100%',
+        },
+        pasteicon: {
+            position: 'absolute',
+            top: -30,
+            right: -20,
+            width: 128,
+            height: 128,
+        },
+        forwardcomplete: {
+            position: 'absolute',
+            top: 28,
+            left: 20,
+            opacity: 0.3,
+            ...inputStyle,
+            zIndex: -1,
+            pointerEvents: 'none',
+        },
+    }
 }

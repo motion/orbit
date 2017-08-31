@@ -17,12 +17,14 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
-  filter = (x, opts) => filterItem(x || [], this.props.search, opts)
   topThings = Thing.find({ sort: 'createdAt' })
 
   start() {
-    console.log('this is', this, this.props)
     this.props.getRef(this)
+  }
+
+  helper = {
+    filter: (x, opts) => filterItem(x || [], this.props.search, opts),
   }
 
   get things(): Array<PaneResult> {
@@ -30,13 +32,15 @@ class BarMainStore {
     if (!this.topThings) {
       return []
     }
-    const filtered = this.filter(this.topThings.map(thingToResult), { max: 8 })
+    const filtered = this.helper.filter(this.topThings.map(thingToResult), {
+      max: 8,
+    })
     console.timeEnd('get things()')
     return filtered
   }
 
   get browse(): Array<PaneResult> {
-    return this.filter([
+    return this.helper.filter([
       {
         title: 'Nate',
         type: 'feed',
@@ -80,7 +84,7 @@ class BarMainStore {
   }
 
   get people(): Array<PaneResult> {
-    return this.filter([
+    return this.helper.filter([
       {
         title: 'Stephanie',
         type: 'feed',
@@ -105,7 +109,7 @@ class BarMainStore {
   }
 
   get extras() {
-    return this.filter([
+    return this.helper.filter([
       {
         title: 'Settings',
         icon: 'gear',
@@ -150,8 +154,6 @@ export default class BarMain extends React.Component {
     paneProps,
     onSelect,
   }: PaneProps & { store: BarMainStore }) {
-    console.log('render barmain')
-
     const secondary = item => {
       if (item.data && item.data.service === 'github')
         return (

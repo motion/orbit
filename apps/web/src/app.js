@@ -1,11 +1,12 @@
 // @flow
 import { Models } from '@mcro/models'
-import { DB_CONFIG } from '~/constants'
+import * as Constants from '~/constants'
 import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import * as Services from './services'
 
-export CurrentUser from './stores/currentUserStore'
+import CurrentUserX from './stores/currentUserStore'
+export const CurrentUser = CurrentUserX
 
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
@@ -13,13 +14,14 @@ export const User = Models.User
 export const Thing = Models.Thing
 export const Job = Models.Job
 export const Setting = Models.Setting
+export const Event = Models.Event
 
 let App
 
 function start() {
   App = new AppStore({
     config: {
-      ...DB_CONFIG,
+      ...Constants.DB_CONFIG,
       adapter,
       adapterName: 'idb',
     },

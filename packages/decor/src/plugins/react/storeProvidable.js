@@ -47,7 +47,6 @@ export default function storeProvidable(options, emitter) {
           if (!isEqual(this.props, nextProps)) {
             // use action so it waits to trigger reactions until after
             Mobx.action('updateProps', () => {
-              console.log('RUNNING ACTION UPDATE PROPS')
               const curPropKeys = Object.keys(this._props)
               const nextPropsKeys = Object.keys(nextProps)
 
@@ -173,10 +172,12 @@ export default function storeProvidable(options, emitter) {
         }
 
         hotReload = () => {
-          this.disposeStores()
-          this.setupProps()
-          this.setupStores()
-          this.mountStores()
+          setTimeout(() => {
+            this.disposeStores()
+            this.setupProps()
+            this.setupStores()
+            this.mountStores()
+          })
         }
 
         render() {

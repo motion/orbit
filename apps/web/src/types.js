@@ -7,6 +7,7 @@ export type PaneProps = {|
   onSelect: Function,
   getRef: Function,
   navigate: Function,
+  data?: Object,
 |}
 
 export type PaneResult = {|

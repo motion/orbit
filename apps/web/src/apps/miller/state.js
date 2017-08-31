@@ -22,7 +22,7 @@ export default class MillerStateStore {
   activeCol = 0
   schema: Array<Schema> = []
   watchers = {}
-  prevActiveRows = [0] // holds the previously active columns
+  prevActiveRows = [] // holds the previously active columns
 
   constructor({ schema }) {
     this.schema = schema
@@ -114,7 +114,7 @@ export default class MillerStateStore {
 
   moveCol(delta) {
     if (delta > 0) {
-      if (this.schema.length - 1 > this.activeCol) {
+      if (this.activeCol < this.schema.length - 1) {
         this.prevActiveRows.push(this.activeRow)
         this.activeCol += delta
         this.activeRow = 0

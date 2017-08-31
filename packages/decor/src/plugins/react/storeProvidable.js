@@ -2,7 +2,7 @@ import React from 'react'
 import * as Mobx from 'mobx'
 import { view } from '@mcro/black'
 import { object } from 'prop-types'
-import { pickBy, difference } from 'lodash'
+import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 
@@ -44,21 +44,25 @@ export default function storeProvidable(options, emitter) {
         }
 
         componentWillReceiveProps(nextProps) {
-          const curPropKeys = Object.keys(this._props)
-          const nextPropsKeys = Object.keys(nextProps)
-          // update
-          Mobx.action('updateProps', () => {
-            // insert
-            for (const prop of nextPropsKeys) {
-              if (this._props[prop] !== nextProps[prop]) {
-                this._props[prop] = nextProps[prop]
+          if (!isEqual(this.props, nextProps)) {
+            // use action so it waits to trigger reactions until after
+            Mobx.action('updateProps', () => {
+              console.log('RUNNING ACTION UPDATE PROPS')
+              const curPropKeys = Object.keys(this._props)
+              const nextPropsKeys = Object.keys(nextProps)
+
+              // change granular so reactions are granular
+              for (const prop of nextPropsKeys) {
+                if (this._props[prop] !== nextProps[prop]) {
+                  this._props[prop] = nextProps[prop]
+                }
               }
-            }
-            // remove
-            for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-              this._props[extraProp] = undefined
-            }
-          })
+              // remove
+              for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
+                this._props[extraProp] = undefined
+              }
+            })()
+          }
         }
 
         componentWillMount() {

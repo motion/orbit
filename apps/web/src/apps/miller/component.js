@@ -87,11 +87,12 @@ class Pane extends React.Component {
     millerState,
     type,
   }) {
-    const paneActive = state.activeCol == col
-    const isLast = col === state.schema.length - 1
-    const highlightIndex = !paneActive && state.prevActiveRows[col]
-    const activeRow = paneActive && state.activeRow
+    const isActive = state.activeCol == col
+    const highlightIndex = !isActive && state.prevActiveRows[col]
+    const isFirst = col === 0
+    const activeRow = isActive && state.activeRow
     const ChildPane = pane
+
 
     if (!ChildPane) {
       console.error('no pane found for type', type)
@@ -104,7 +105,6 @@ class Pane extends React.Component {
           flex: 1,
           width,
         }}
-        $grow={isLast}
         ref={ref => {
           ref && onMeasureWidth(ref.offsetWidth)
         }}
@@ -113,14 +113,14 @@ class Pane extends React.Component {
           paneProps={paneProps}
           data={data || {}}
           millerState={millerState}
-          isActive={paneActive}
+          isActive={isActive}
           onSelect={onSelect}
           getRef={ref => {
             console.log('giving ref for ', type)
             getRef(ref)
             this.pane = ref
           }}
-          search={paneActive ? search : ''}
+          search={isActive ? search : ''}
           highlightIndex={highlightIndex}
           activeRow={activeRow}
         />
@@ -133,9 +133,6 @@ class Pane extends React.Component {
       flex: 1,
       height: '100%',
       borderLeft: [1, [0, 0, 0, 0.05]],
-    },
-    grow: {
-      width: '101.5%',
     },
     first: {
       borderLeft: 'none',
@@ -171,10 +168,15 @@ export default class Miller extends React.Component {
       >
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
+            const isLast = index === schema.length - 1
+            const isActive = index === state.activeCol
+
             return (
               <pane
                 key={index + ':' + pane.kind}
-                $grow={index === schema.length - 1}
+                $grow={isLast}
+                $pullLeft={index !== 0 && isActive}
+                $upcoming={index !== 0 && !isActive}
               >
                 <Pane
                   // if it's the next preview, always rerender
@@ -213,16 +215,23 @@ export default class Miller extends React.Component {
 
   static style = {
     // hang off edge
+    pane: {
+      transform: 'translate3d(0, 0, 0)',
+      transformOrigin: 'top left',
+      transition: 'transform 50ms ease-in',
+    },
+    upcoming: {
+      transform: 'scale(0.96)',
+    },
+    pullLeft: {
+      transform: 'translate3d(-30px, -30px, 0) scale(1)',
+    },
     grow: {
-      flex: 1,
       overflow: 'visible',
-      width: '100%',
-      height: '101.5%',
+      width: '69%',
+      height: '106%',
       background: 'white',
       boxShadow: '1px 1px 5px rgba(0,0,0,.5)',
-    },
-    pane: {
-      //overflowY: 'scroll',
     },
     columns: {
       flex: 1,

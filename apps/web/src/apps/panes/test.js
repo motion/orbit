@@ -122,27 +122,35 @@ class TestPageStore {
 }
 @view.provide({ store: TestPageStore, paneStore: Pane.Store })
 export default class Message {
-  componentWillReceiveProps({ isActive }) {
-    this.props.paneStore.isActive = isActive
-  }
-
-  render({ data, isActive }) {
+  render({ data, isActive, onSelect }) {
     return (
       <Pane.Card light isActive={isActive} icon={data.icon}>
-        <container>
-          <top $$row>
-            <left $$row>
-              <img $avatar src={`/images/${'me'}.jpg`} />
-              <h3>Nate Weinert</h3>
-            </left>
-            <Pane.Actions id="paneActions" actions={['new']} />
-          </top>
-          {events.map((event, i) =>
-            <Pane.Selectable
-              options={{ ...event, id: `select${i}`, index: i }}
-            />
-          )}
-        </container>
+        <UI.Theme name="light">
+          <container>
+            <top $$row>
+              <left $$row>
+                <img $avatar src={`/images/${'me'}.jpg`} />
+                <h3>Nate Weinert</h3>
+              </left>
+              <Pane.Actions id="paneActions" actions={['new']} />
+            </top>
+            <UI.List items={events} getItem={(result, index) =>
+              <Pane.Selectable
+                options={{ ...event, id: `select${index}`, index }}
+                render={(isActive, actions) =>
+                  <UI.ListItem
+                    onClick={() => onSelect(index)}
+                    highlight={isActive}
+                    key={result.id}
+                    primary={result.name}
+                    secondary={<container>
+                      {actions}
+                    </container>}
+                  />
+                } />
+            }
+            /></container>
+        </UI.Theme>
       </Pane.Card>
     )
   }

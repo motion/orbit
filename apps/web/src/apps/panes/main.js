@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { view, watch } from '@mcro/black'
+import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser, Document, Thing } from '~/app'
 import { filterItem } from './helpers'
@@ -168,7 +168,7 @@ class BarMainStore {
   }
 
   getActions = ({ type }) => {
-    return this.actionsByType[type] || []
+    return this.actionsByType[type] || ['one', 'two', 'three']
   }
 
   get results(): Array<PaneResult> {
@@ -187,74 +187,80 @@ class BarMainStore {
 @view({
   store: BarMainStore,
 })
-export default class BarMain {
-  lastSearch = ''
+export default class BarMain extends React.Component {
+  render({
+    store,
+    isActive,
+    paneProps,
+    onSelect,
+  }: PaneProps & { store: BarMainStore }) {
+    console.log('render barmain')
 
-  componentWillReceiveProps({ isActive, search }) {
-    if (this.lastSearch !== search) {
-      this.props.store.search()
-      this.lastSearch = this.props.search
+    const secondary = item => {
+      if (item.data && item.data.service === 'github')
+        return (
+          <secondary>
+            <spread $$row>
+              <left>
+                {item.data.comments.length} replies
+              </left>
+              <right>
+                {item.data.labels}
+              </right>
+            </spread>
+          </secondary>
+        )
+
+      return null
     }
 
-    this.props.paneStore.isActive = isActive
+    return (
+      <Pane.Card isActive={isActive} width={340} $pane>
+        <UI.List
+          if={store.results}
+          itemProps={paneProps.itemProps}
+          groupKey="category"
+          items={store.results}
+          getItem={(result, index) =>
+            <Pane.Selectable
+              key={index}
+              options={{
+                actions: store.getActions(result),
+                id: result.title,
+                index,
+              }}
+              render={(isActive, actions) =>
+                <UI.ListItem
+                  onClick={() => onSelect(index)}
+                  highlight={isActive}
+                  key={result.id}
+                  icon={
+                    result.data && result.data.image
+                      ? <img $image src={`/images/${result.data.image}.jpg`} />
+                      : result.icon || (result.doc && result.doc.icon)
+                  }
+                  primary={result.title}
+                  secondary={<container>
+                    {secondary(result)}
+                    {actions}
+                  </container>}
+                />
+              }
+            />}
+        />
+      </Pane.Card>
+    )
   }
 
-  render({ store, isActive, activeRow, paneProps, onSelect }: PaneProps & {| store: BarMainStore |}) {
-  const secondary = item => {
-    if (item.data && item.data.service === 'github')
-      return (
-        <secondary>
-          <spread $$row>
-            <left>
-              {item.data.comments.length} replies
-              </left>
-            <right>
-              {item.data.labels}
-            </right>
-          </spread>
-        </secondary>
-      )
-
-    return null
+  static style = {
+    spread: {
+      justifyContent: 'space-between',
+    },
+    image: {
+      width: 20,
+      height: 20,
+      borderRadius: 1000,
+      margin: 'auto',
+    },
   }
-
-  return (
-    <Pane.Card isActive={isActive} width={340} $pane>
-      <UI.List
-        if={store.results}
-        selected={activeRow}
-        onSelect={(item, index) => {
-          onSelect(index)
-        }}
-        itemProps={paneProps.itemProps}
-        groupKey="category"
-        items={store.results}
-        getItem={(result, index) =>
-          <Pane.Selectable
-            key={index}
-            options={{
-              when: '3 days ago',
-              name: result.title,
-              actions: store.getActions(result),
-              id: result.title,
-              body: null, //<h2>hello</h2>,
-              index,
-            }}
-          />}
-      />
-    </Pane.Card>
-  )
-}
-
-static style = {
-  spread: {
-    justifyContent: 'space-between',
-  },
-  image: {
-    width: 20,
-    height: 20,
-    borderRadius: 1000,
-    margin: 'auto',
-  },
-}
 }

@@ -10,27 +10,35 @@ export type { Model }
 
 export { CompositeDisposable } from '@mcro/model'
 
+// ⭐️ ADD MODELS HERE:
+
 import UserInstance from './user'
 import ThingInstance from './thing'
 import JobInstance from './job'
 import SettingInstance from './setting'
+import EventInstance from './event'
 
 export const User = UserInstance
 export const Thing = ThingInstance
 export const Job = JobInstance
 export const Setting = SettingInstance
+export const Event = EventInstance
 
-// AND THIS TOO
+// ⭐️ DONT FORGET TO ADD HERE TOO:
 
 export const Models = {
   Thing,
   User,
   Job,
   Setting,
+  Event,
 }
+
+// ⭐️ YOU'RE ALL SET
 
 export type ModelOptions = {|
   autoSync?: boolean,
+  pouchSettings?: Object,
 |}
 
 export type StartOptions = {|
@@ -52,6 +60,7 @@ export type DatabaseConfig = {|
 |}
 
 export default class Database {
+  modelOptions: ?ModelOptions
   models: ModelsObject = {}
   databaseConfig: Object
   modelsConfig: ModelsObject
@@ -82,6 +91,7 @@ export default class Database {
   }
 
   start = async ({ options, modelOptions }: StartOptions = {}) => {
+    this.modelOptions = modelOptions
     this.database = await RxDB.create({
       adapter: this.databaseConfig.adapterName,
       name: this.databaseConfig.name,
@@ -91,7 +101,7 @@ export default class Database {
       ...options,
     })
 
-    await this.attachModels(modelOptions)
+    await this.attachModels()
     this.connected = true
   }
 
@@ -104,11 +114,12 @@ export default class Database {
     }
   }
 
-  attachModels = async (modelOptions?: ModelOptions) => {
+  attachModels = async () => {
     const connections = []
 
     // attach Models to app and connect if need be
-    for (const [name, model] of Object.entries(this.modelsConfig)) {
+    for (const name of Object.keys(this.modelsConfig)) {
+      const model = this.modelsConfig[name]
       this.models[name] = model
 
       if (typeof model.connect !== 'function') {
@@ -121,6 +132,9 @@ export default class Database {
         model.connect(this.database, {
           pouch: PouchDB,
           remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
+          pouchSettings: {
+            skip_setup: true,
+          },
           remoteOptions: {
             skip_setup: true,
             adapter: this.databaseConfig.adapterName,
@@ -130,7 +144,7 @@ export default class Database {
               },
             },
           },
-          ...modelOptions,
+          ...this.modelOptions,
         })
       )
     }

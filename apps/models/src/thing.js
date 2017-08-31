@@ -1,6 +1,6 @@
 // @flow
 import global from 'global'
-import { Model, query, str, object, array, bool, number } from '@mcro/model'
+import { Model, query, str, object } from '@mcro/model'
 
 declare class CurrentUser {}
 
@@ -14,20 +14,20 @@ export type ThingType = typeof methods & {
   integration: 'github',
   type: 'issue',
   parentId?: string,
-  givenId?: string,
+  id?: string,
   createdAt: string,
   updatedAt: string,
 }
 
 export class Thing extends Model {
   static props = {
+    id: str.primary,
     title: str,
-    body: str.optional,
     integration: str,
     type: str,
+    body: str.optional,
     data: object.optional,
     parentId: str.optional,
-    givenId: str.optional,
     timestamps: true,
   }
 
@@ -35,7 +35,7 @@ export class Thing extends Model {
 
   settings = {
     database: 'things',
-    index: ['title', 'body', 'createdAt', 'updatedAt'],
+    index: ['title', 'body'],
   }
 
   @query

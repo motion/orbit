@@ -8,7 +8,6 @@ console.log(++i)
 const Bootstrap = require('./bootstrap').default
 console.log(++i)
 const Jobs = require('./jobs').default
-console.log(++i)
 import type { Options } from '~/types'
 const adapter = require('pouchdb-adapter-memory')
 console.log(++i)

@@ -1,15 +1,21 @@
 import * as Kontur from 'kontur'
 
+const setProp = (target, prop) => {
+  const next = new target()
+  next.s[prop] = true
+  return next
+}
+
 const prox = obj =>
   new Proxy(obj, {
     get(target, property) {
       switch (property) {
         case 'unique':
-          target.isUnique = true
-          return target
+          return setProp(target, 'unique')
         case 'indexed':
-          target.isIndexed = true
-          return target
+          return setProp(target, 'index')
+        case 'primary':
+          return setProp(target, 'primary')
       }
       return target[property]
     },
@@ -56,26 +62,27 @@ export const oneOf = klass =>
   }
 
 export function compile(obj) {
-  const orig = { ...obj }
-  const kontured = Kontur.compile(obj)
+  const compiled = Kontur.compile(obj)
+  for (const key of Object.keys(compiled.properties)) {
+    const prop = compiled.properties[key]
+    // 🐛 fix rxdb doesn't like primary to also have required, which kontur does automatically
+    if (prop.primary) {
+      compiled.required = compiled.required.filter(k => k !== key)
+    }
+  }
+  return compiled
+}
 
-  // // monkey patch poorly to add indexed and unique
-  // for (const key of Object.keys(obj)) {
-  //   if (orig[key].isIndexed) {
-  //     kontured.properties[key].index = true
-  //   }
-  //   if (orig[key].isUnique) {
-  //     kontured.properties[key].uniqueItems = true
-  //   }
-  // }
-
-  return kontured
+if (module && module.hot) {
+  module.hot.accept(() => {})
 }
 
 // TEST :)
-// module.hot.accept(() => {})
 // console.log(
 //   compile({
-//     draft: str.indexed,
+//     first: str,
+//     draft: str.primary,
+//     other: str,
+//     another: str,
 //   })
 // )

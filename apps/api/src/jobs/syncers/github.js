@@ -1,9 +1,10 @@
 // @flow
-import { Setting, Thing, Job } from '@mcro/models'
+import { store, watch } from '@mcro/black/store'
+import { Setting, Thing, Event, Job } from '@mcro/models'
 import type { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
-import { omit } from 'lodash'
+import { omit, once } from 'lodash'
 
 type GithubSetting = {
   values: {
@@ -16,10 +17,19 @@ type GithubSetting = {
 const withinMinutes = (date, minutes) =>
   Date.now() - Date.parse(date) > minutes * 1000 * 60
 
+@store
 export default class GithubSync {
   user: User
   type = 'github'
-  setting: ?GithubSetting = null
+
+  @watch
+  setting: ?GithubSetting = () =>
+    this.user &&
+    Setting.findOne({
+      userId: this.user.id,
+      type: 'github',
+      sort: 'createdAt',
+    })
 
   constructor({ user }: SyncOptions) {
     this.user = user
@@ -29,13 +39,11 @@ export default class GithubSync {
     return (this.user.github && this.user.github.auth.accessToken) || ''
   }
 
-  start = async () => {
-    // fetch setting
-    this.setting = await Setting.findOne({
-      userId: this.user.id,
-      type: 'github',
-    }).exec()
+  get settings(): Object {
+    return this.setting || {}
+  }
 
+  start = async () => {
     if (!this.user.github) {
       console.log('No github credentials found for user')
       return
@@ -43,13 +51,9 @@ export default class GithubSync {
 
     // auto-run jobs on startup
     await Promise.all([
-      this.ensureJob('issues', { every: 60 }),
+      this.ensureJob('issues', { every: 60 * 6 }), // 6 hours
       this.ensureJob('feed', { every: 15 }),
     ])
-  }
-
-  async dispose() {
-    console.log('dispose github syncer')
   }
 
   ensureJob = async (action: string, options: Object = {}): ?Job => {
@@ -71,20 +75,32 @@ export default class GithubSync {
     }
   }
 
-  run = async (job: Job) => {
-    if (!this.token) {
-      console.error('No User.github found, changed since sync started?')
-      return
-    }
-    if (!this.setting) {
-      console.error('No setting for user and github! :(')
-      return
-    }
-    if (job.action) {
-      await this.runJob(job.action)
-    } else {
-      console.log('No action found on job', job.id)
-    }
+  run = (job: Job) => {
+    return new Promise((resolve, reject) => {
+      const runJob = once(async () => {
+        if (job.action) {
+          try {
+            await this.runJob(job.action)
+          } catch (error) {
+            reject(error)
+          }
+          resolve()
+        } else {
+          reject(`No action found on job ${job.id}`)
+        }
+      })
+
+      // wait for setting before running
+      this.watch(async () => {
+        if (this.settings) {
+          if (this.settings.activeOrgs) {
+            runJob()
+          } else {
+            console.log('weird no orgs')
+          }
+        }
+      })
+    })
   }
 
   runJob = async (action: string) => {
@@ -97,18 +113,49 @@ export default class GithubSync {
   }
 
   runJobFeed = async () => {
-    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️')
+    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️', this.settings.activeOrgs)
+    if (this.settings.activeOrgs) {
+      await Promise.all(this.settings.activeOrgs.map(this.syncFeed))
+    }
+  }
+
+  syncFeed = async (orgLogin: string) => {
+    console.log('SYNC feed for org', orgLogin)
+    const repos = await this.fetch(`/orgs/${orgLogin}/repos`)
+    if (repos) {
+      console.log('got repos', repos.length)
+      const repoEvents = await Promise.all(
+        repos.map(repo => this.fetch(`/repos/${orgLogin}/${repo.name}/events`))
+      )
+
+      const createdEvents = []
+
+      for (const events of repoEvents) {
+        if (events && events.length) {
+          for (const event of events) {
+            createdEvents.push(
+              Event.upsert({
+                id: `${event.id}`,
+                integration: 'github',
+                type: event.type,
+                author: event.actor.login,
+                org: event.org.login,
+                parentId: event.repo.name,
+                data: event,
+              })
+            )
+          }
+        }
+      }
+
+      await Promise.all(createdEvents)
+      console.log('⭐️⭐️ DONE SYNCING EVENTS ⭐️⭐️')
+    }
   }
 
   runJobIssues = async () => {
-    if (!this.setting) {
-      console.log('No setting found')
-      return
-    }
-    if (this.setting.values.orgs) {
-      await Promise.all(
-        Object.keys(this.setting.values.orgs).map(this.syncIssues)
-      )
+    if (this.settings.activeOrgs) {
+      await Promise.all(this.settings.activeOrgs.map(this.syncIssues))
     } else {
       console.log('No orgs selected in settings')
     }
@@ -192,17 +239,16 @@ export default class GithubSync {
 
       for (const issue of issues) {
         const data = unwrap(omit(issue, ['bodyText']))
-        console.log('creating issue', issue.title, data)
+        console.log('creating issue', issue.id, issue.title)
         createdIssues.push(
           Thing.upsert({
-            _id: issue.id,
+            id: `${issue.id}`,
             integration: 'github',
             type: 'issue',
             title: issue.title,
             body: issue.bodyText,
             data,
             parentId: repository.name,
-            givenId: issue.id,
           })
         )
       }

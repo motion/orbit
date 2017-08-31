@@ -33,7 +33,7 @@ export default class Actions {
 
     return (
       <actions $$row>
-        {actions.map(action => shortcutButton(action))}
+        {(actions || []).map(action => shortcutButton(action))}
       </actions>
     )
   }

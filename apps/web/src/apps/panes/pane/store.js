@@ -15,8 +15,8 @@ export default class PaneStore {
   isActive = this.props.isActive
 
   getActiveIndex = () => {
-    const { millerState } = this.props
-    return this.isActive ? millerState.activeRow : null
+    const { millerState, isActive } = this.props
+    return isActive ? millerState.activeRow : null
   }
 
   setIndex = index => {

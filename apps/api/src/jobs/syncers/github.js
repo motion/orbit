@@ -100,7 +100,10 @@ export default class GithubSync {
   validateSetting = () => {
     // ensure properties on setting
     if (!this.setting.values.lastSyncs) {
-      this.setting.values.lastSyncs = {}
+      this.setting.values = {
+        ...this.setting.values,
+        lastSyncs: {},
+      }
     }
   }
 
@@ -214,7 +217,6 @@ export default class GithubSync {
   }
 
   syncIssues = async (orgLogin: string) => {
-    console.log('SYNC issues for org', orgLogin)
     const results = await this.graphFetch({
       query: `
       query AllIssues {
@@ -325,6 +327,7 @@ export default class GithubSync {
       throw Error('No setting')
     }
     this.validateSetting()
+    console.log('setting is', this.setting)
     const syncDate = Date.now()
     const response = await fetch(
       `https://api.github.com${path}?access_token=${this.token || ''}`,

@@ -71,8 +71,10 @@ export default class GithubSync {
   run = (job: Job) => {
     return new Promise((resolve, reject) => {
       const runJob = once(async () => {
-        this.validateSetting()
-        console.log('GithubSetting:', this.setting.toJSON())
+        if (this.setting) {
+          this.validateSetting()
+          console.log('GithubSetting:', this.setting.toJSON())
+        }
 
         if (job.action) {
           try {
@@ -329,6 +331,7 @@ export default class GithubSync {
       throw Error('No setting')
     }
     this.validateSetting()
+    console.log('setting is', this.setting)
     const syncDate = Date.now()
     const response = await fetch(
       `https://api.github.com${path}?access_token=${this.token || ''}`,

@@ -19,13 +19,10 @@ export default class Models {
 
   ensureGithubSetting = async user => {
     console.log('ensure setting for user', user.id)
-    this.setTimeout(async () => {
-      console.log('now do it ok')
-      await Setting.findOrCreate({
-        type: 'github',
-        userId: user.id,
-      })
-    }, 4000)
+    await Setting.findOrCreate({
+      type: 'github',
+      userId: user.id,
+    })
   }
 
   dispose() {

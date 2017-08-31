@@ -71,6 +71,9 @@ export default class GithubSync {
   run = (job: Job) => {
     return new Promise((resolve, reject) => {
       const runJob = once(async () => {
+        this.validateSetting()
+        console.log('GithubSetting:', this.setting.toJSON())
+
         if (job.action) {
           try {
             await this.runJob(job.action)
@@ -86,8 +89,6 @@ export default class GithubSync {
       // wait for setting before running
       this.watch(async () => {
         if (this.setting) {
-          this.validateSetting()
-          console.log('GithubSetting:', this.setting.toJSON())
           if (this.setting.activeOrgs) {
             runJob()
           } else {

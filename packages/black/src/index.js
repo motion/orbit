@@ -1,7 +1,5 @@
 // @flow
 
-console.log(1234)
-
 import view_ from './view'
 import store_ from './store'
 import * as Helpers from './helpers'

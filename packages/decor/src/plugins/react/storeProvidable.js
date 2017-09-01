@@ -10,7 +10,7 @@ export default function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',
     once: true,
-    onlyClass: true,
+    // onlyClass: true,
     decorator: (Klass, opts = {}) => {
       const allStores = opts.stores || options.stores
       const context = opts.context || options.context
@@ -80,10 +80,10 @@ export default function storeProvidable(options, Helpers) {
             return
           }
           this.mountStores()
-          view.on('hmr', this.clearError)
+          view.on('hmr', () => this.clearError())
         }
 
-        clearError = () => {
+        clearError() {
           this.setState({ error: null })
         }
 
@@ -91,7 +91,7 @@ export default function storeProvidable(options, Helpers) {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()
-            view.off('hmr', this.clearError)
+            view.off('hmr', () => this.clearError())
             this.unmounted = true
           }
         }
@@ -174,7 +174,7 @@ export default function storeProvidable(options, Helpers) {
           }
         }
 
-        hotReload = () => {
+        hotReload() {
           setTimeout(() => {
             this.disposeStores()
             this.setupProps()
@@ -188,8 +188,7 @@ export default function storeProvidable(options, Helpers) {
             return <Redbox $$draggable error={this.state.error} />
           }
           if (this.failed || !this.state) {
-            console.log('failed view', this)
-            return null
+            return <Redbox $$draggable error={{ message: 'Failed view' }} />
           }
           return <Klass {...this.props} {...this.stores} />
         }

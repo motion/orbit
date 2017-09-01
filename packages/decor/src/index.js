@@ -49,37 +49,33 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
     // apply helpers
     if (plugin.once) {
       const ogPlugin = plugin.decorator
-      plugin.decorator = Klass =>
-        alreadyDecorated(Klass) ? Klass : ogPlugin(Klass)
+      plugin.decorator = (Klass, ...args) =>
+        alreadyDecorated(Klass) ? Klass : ogPlugin(Klass, ...args)
     }
     if (plugin.onlyClass) {
       const ogPlugin = plugin.decorator
-      plugin.decorator = Klass => (!isClass(Klass) ? Klass : ogPlugin(Klass))
+      plugin.decorator = (Klass, ...args) =>
+        !isClass(Klass) ? Klass : ogPlugin(Klass, ...args)
     }
 
     allPlugins.push(plugin)
   }
 
-  function decorDecorator(Klass, opts) {
-    const isPassingExtraOptions = typeof Klass === 'object'
-
-    if (isPassingExtraOptions) {
-      const realOpts = Klass
-      return NextKlass => decorDecorator(NextKlass, realOpts)
+  function decorDecorator(KlassOrOpts, opts) {
+    // optional: decorator-side props
+    if (typeof KlassOrOpts === 'object') {
+      return NextKlass => decorDecorator(NextKlass, KlassOrOpts)
     }
 
-    let decoratedClass = Klass
+    let decoratedClass = KlassOrOpts
 
-    if (!Klass) {
-      console.log(Klass)
-      throw new Error(
-        'Didnt pass a valid class or function to decorator, see above'
-      )
+    if (!decoratedClass) {
+      throw new Error('No class/function passed to decorator')
     }
 
     for (const plugin of allPlugins) {
-      if (plugin.mixin && Klass.prototype) {
-        reactMixin(Klass.prototype, plugin.mixin)
+      if (plugin.mixin && decoratedClass.prototype) {
+        reactMixin(decoratedClass.prototype, plugin.mixin)
       }
       if (plugin.decorator) {
         decoratedClass =

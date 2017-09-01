@@ -1,6 +1,7 @@
 [ignore]
-../../node_modules/lunr/.*
-../../node_modules/art/.*
+.*/node_modules/lunr/.*
+.*/node_modules/art/.*
+.*/fixtures/.*
 
 [include]
 ../../node_modules/

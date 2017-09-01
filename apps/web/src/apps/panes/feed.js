@@ -36,7 +36,6 @@ export default class BarFeed {
       return (
         <UI.Theme name="light">
           <feeditem $active={activeIndex === index} key={`${event.id}${index}`}>
-            <h1>hello</h1>
             <meta if={actor}>
               <avatar $img={actor.avatar_url} />
               <UI.Text $name>
@@ -192,7 +191,6 @@ export default class BarFeed {
     return (
       <UI.Theme name="light">
         <feed>
-          <h1>hello</h1>
           <apps
             if={data.special}
             css={{ borderBottom: [2, [0, 0, 0, 0.0001]] }}

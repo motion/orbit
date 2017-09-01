@@ -41,20 +41,40 @@ class BarStore {
     search = ''
     textboxVal = ''
 
+    attachTrap = (name, el) => {
+        const _name = `${name}Trap`
+        this[_name] = new Mousetrap(el)
+        for (const name of Object.keys(SHORTCUTS)) {
+            if (this.actions[name]) {
+                const chord = SHORTCUTS[name]
+                this[_name].bind(chord, this.actions[name])
+            }
+        }
+    }
+
     get showTextbox() {
         return this.millerState.activeCol === 0
     }
 
     start() {
-        this.on(window, 'focus', this.onFocus)
+        this.on(window, 'focus', this.focusBar)
+        this.attachTrap('window', window)
     }
 
-    onFocus = () => {
-        console.log('focus bar window')
+    onInputRef = el => {
+        this.inputRef = el
+        this.attachTrap('bar', el)
+    }
+
+    focusBar = () => {
         if (this.inputRef) {
             this.inputRef.focus()
             this.inputRef.select()
         }
+    }
+
+    blurBar = () => {
+        this.inputRef && this.inputRef.blur()
     }
 
     setSearch = debounce(text => {
@@ -79,6 +99,14 @@ class BarStore {
     }
 
     onMillerStateChange = state => {
+        const lastCol = this.millerState.activeCol
+        if (lastCol !== 0 && state.activeCol === 0) {
+            this.focusBar()
+        }
+        if (lastCol === 0 && state.activeCol !== 0) {
+            this.blurBar()
+        }
+
         this.millerState = state
         this.millerStateVersion++
     }
@@ -113,9 +141,6 @@ class BarStore {
     millerActions = {}
     actions = {
         down: e => {
-            if (!this.hasSelectedItem) {
-                // this.inputRef.blur()
-            }
             this.millerActions.down()
             e.preventDefault()
         },
@@ -127,12 +152,19 @@ class BarStore {
             e.preventDefault()
         },
         esc: e => {
-            e.preventDefault()
-            if (this.search !== '') {
-                this.search = ''
-            } else {
-                OS.send('bar-hide')
-            }
+            // allows one frame of interception (by pane store)
+            setTimeout(() => {
+                if (window.preventEscClose !== true) {
+                    e.preventDefault()
+                    if (this.search !== '') {
+                        this.search = ''
+                        this.textboxVal = ''
+                    } else {
+                        OS.send('bar-hide')
+                    }
+                }
+                window.preventEscClose = false
+            }, 50)
         },
         cmdA: () => {
             this.inputRef.select()
@@ -180,19 +212,6 @@ const inputStyle = {
     store: BarStore,
 })
 export default class BarPage {
-    trap: MouseTrap
-
-    componentDidMount() {
-        const node = ReactDOM.findDOMNode(this)
-        this.trap = new Mousetrap(node)
-        for (const name of Object.keys(SHORTCUTS)) {
-            if (this.props.store.actions[name]) {
-                const chord = SHORTCUTS[name]
-                this.trap.bind(chord, this.props.store.actions[name])
-            }
-        }
-    }
-
     render({ store }) {
         const paneProps = {
             itemProps: {
@@ -208,13 +227,13 @@ export default class BarPage {
         }
 
         return (
-            <HotKeys actions={store.actions}>
+            <HotKeys attach={window} actions={store.actions}>
                 <UI.Theme name="clear-dark">
                     <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
                         <div>
                             <UI.Input
                                 size={2.6}
-                                getRef={store.ref('inputRef').set}
+                                getRef={store.onInputRef}
                                 borderRadius={5}
                                 onChange={store.onSearchChange}
                                 value={store.textboxVal}

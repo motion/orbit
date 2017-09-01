@@ -117,11 +117,10 @@ class Pane extends React.Component {
                     isActive={isActive}
                     onSelect={onSelect}
                     getRef={ref => {
-                        console.log('giving ref for ', type)
                         getRef(ref)
                         this.pane = ref
                     }}
-                    search={isActive ? search : ''}
+                    search={search}
                     highlightIndex={highlightIndex}
                     activeRow={activeRow}
                 />

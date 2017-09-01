@@ -116,10 +116,6 @@ export default function storeProvidable(options, emitter) {
                         configurable: true,
                     }
 
-                    if (Stores.paneStore) {
-                        console.log('got a pane store', Stores)
-                    }
-
                     // start stores
                     const stores = Object.keys(Stores).reduce((acc, cur) => {
                         const Store = Stores[cur]

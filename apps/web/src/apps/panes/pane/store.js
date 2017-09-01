@@ -17,18 +17,24 @@ export default class PaneStore {
         return isActive ? millerState.activeRow : null
     }
 
+    get activeCol() {
+        return this.props.millerState.activeCol
+    }
+
     setIndex = index => {
         this.props.millerState.setActiveRow(index)
     }
 
     start() {
-        return
         document.addEventListener('keydown', e => {
-            console.log('key down', e.metaKey, this.props.isActive)
             if (!this.props.isActive) return
 
             this.metaKey = e.metaKey
-            console.log('setting meta to ', this.metaKey)
+
+            if (e.keyCode === 27 && this.activeCol !== 0) {
+                window.preventEscClose = true
+                this.props.millerState.moveCol(-1)
+            }
 
             // x
             if (this.metaKey && e.keyCode === 88) {

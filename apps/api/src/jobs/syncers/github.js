@@ -10,14 +10,6 @@ const olderThan = (date, minutes) => {
   const upperBound = minutes * 1000 * 60
   const timeDifference = Date.now() - Date.parse(date)
   const answer = timeDifference > upperBound
-  console.log(
-    'within minutes',
-    answer,
-    'timeDifference',
-    timeDifference,
-    'upperBound',
-    upperBound
-  )
   return answer
 }
 
@@ -130,9 +122,9 @@ export default class GithubSync {
   runJob = async (action: string) => {
     switch (action) {
       case 'issues':
-      // return await this.runJobIssues()
+        return await this.runJobIssues()
       case 'feed':
-      // return await this.runJobFeed()
+        return await this.runJobFeed()
     }
   }
 

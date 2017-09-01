@@ -4,7 +4,7 @@ import { Setting, Thing, Event, Job } from '@mcro/models'
 import type { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
-import { omit, once } from 'lodash'
+import { omit, once, flatten } from 'lodash'
 
 const withinMinutes = (date, minutes) =>
   Date.now() - Date.parse(date) > minutes * 1000 * 60
@@ -157,7 +157,7 @@ export default class GithubSync {
     org: string,
     repoName: string,
     page: number = 0
-  ): Promise<Array<Object>> => {
+  ): Promise<?Array<Object>> => {
     const events: ?Array<Object> = await this.fetch(
       'feed',
       `/repos/${org}/${repoName}/events?page=${page}`
@@ -174,14 +174,17 @@ export default class GithubSync {
         return [...events, ...previousEvents]
       }
     }
-    return events || []
+    if (events && events.message === 'Not Found') {
+      return null
+    }
+    return events
   }
 
   getNewEvents = async (org: string): Promise<Array<Object>> => {
     const repos = await this.fetch('feed', `/orgs/${org}/repos`)
     if (repos) {
       return await Promise.all(
-        repos.map(repo => this.getRepoEvents(org, repo.name))
+        flatten(repos.map(repo => this.getRepoEvents(org, repo.name)))
       )
     }
     return Promise.resolve([])
@@ -331,7 +334,6 @@ export default class GithubSync {
       throw Error('No setting')
     }
     this.validateSetting()
-    console.log('setting is', this.setting)
     const syncDate = Date.now()
     const response = await fetch(
       `https://api.github.com${path}?access_token=${this.token || ''}`,

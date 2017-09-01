@@ -30,7 +30,7 @@ const chain = (object, method, value) => {
   return object[method](value)
 }
 
-const queryKey = query => JSON.stringify(query.mquery)
+const queryKey = query => JSON.stringify(query.mquery._conditions)
 
 export default class Model {
   static isModel = true
@@ -408,12 +408,15 @@ export default class Model {
               // if live, we re-run with a live query to keep it syncing
               // TODO we need to watch this and clear it on unsubscribe
               const liveReplication = this._collection.sync({
+                query,
                 remote: this.remote,
+                waitForLeadership: false,
+                direction: {
+                  pull: true,
+                },
                 options,
               })
-
               this.liveQueries[QUERY_KEY] = true
-
               resolve(liveReplication)
             } else {
               resolve(true)
@@ -465,10 +468,7 @@ export default class Model {
     if (!this._collection) {
       await this.onConnection()
     }
-    const query = this.findOne(object)
-    await query.sync()
-    const found = await query.exec()
-    console.log('found it', found)
+    const found = await this.get(object)
     if (found) {
       return found
     }

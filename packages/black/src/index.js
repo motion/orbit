@@ -1,12 +1,17 @@
 // @flow
 
+console.log(1234)
+
 import view_ from './view'
 import store_ from './store'
-import * as Helpers_ from './helpers'
+import * as Helpers from './helpers'
 
 export const view = view_
 export const store = store_
-export const Helpers = Helpers_
+
+for (const name of Object.keys(Helpers)) {
+  exports[name] = Helpers[name]
+}
 
 // ViewType
 import type { ViewClass } from './view'

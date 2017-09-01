@@ -3,6 +3,8 @@ import { User, Setting } from '@mcro/models'
 import { store, watch } from '@mcro/black'
 import SuperLoginClient from 'superlogin-client'
 
+console.log('Black', watch)
+
 // TODO: Constants.API_HOST
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`

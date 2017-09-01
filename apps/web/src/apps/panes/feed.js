@@ -15,9 +15,8 @@ class BarFeedStore {
   }
 
   @watch
-  // $FlowFixMe
-  events: ?Array<Event> = () =>
-    Event.find({ author: this.props.data.person, sort: { createdAt: 'asc' } })
+  events: ?Array<Event> = (() =>
+    Event.find({ author: this.props.data.person, sort: 'createdAt' }): any)
 
   get results(): Array<Event> {
     return this.events || []

@@ -10,7 +10,7 @@ export default function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',
     once: true,
-    // onlyClass: true,
+    onlyClass: true,
     decorator: (Klass, opts = {}) => {
       const allStores = opts.stores || options.stores
       const context = opts.context || options.context

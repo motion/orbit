@@ -6,7 +6,7 @@ import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
 
-const withinMinutes = (date, minutes) => {
+const olderThan = (date, minutes) => {
   const upperBound = minutes * 1000 * 60
   const timeDifference = Date.now() - Date.parse(date)
   const answer = timeDifference > upperBound
@@ -79,7 +79,7 @@ export default class GithubSync {
     )
     console.log(`${this.type}.${action} last ran -- ${ago} minutes ago`)
 
-    if (!withinMinutes(lastCompleted.updatedAt, options.every)) {
+    if (olderThan(lastCompleted.updatedAt, options.every)) {
       return await createJob()
     }
   }

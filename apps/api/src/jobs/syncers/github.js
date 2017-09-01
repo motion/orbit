@@ -74,8 +74,10 @@ export default class GithubSync {
       return await createJob()
     }
 
-    const ago = Date.now() - Date.parse(lastCompleted.updatedAt) / 1000 / 60
-    console.log(`Last ran ${ago} minutes ago, running (${this.type} ${action})`)
+    const ago = Math.round(
+      (Date.now() - Date.parse(lastCompleted.updatedAt)) / 1000 / 60
+    )
+    console.log(`${this.type}.${action} last ran -- ${ago} minutes ago`)
 
     if (!withinMinutes(lastCompleted.updatedAt, options.every)) {
       return await createJob()

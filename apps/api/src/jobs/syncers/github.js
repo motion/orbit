@@ -6,8 +6,20 @@ import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
 
-const withinMinutes = (date, minutes) =>
-  Date.now() - Date.parse(date) > minutes * 1000 * 60
+const withinMinutes = (date, minutes) => {
+  const upperBound = minutes * 1000 * 60
+  const timeDifference = Date.now() - Date.parse(date)
+  const answer = timeDifference > upperBound
+  console.log(
+    'within minutes',
+    answer,
+    'timeDifference',
+    timeDifference,
+    'upperBound',
+    upperBound
+  )
+  return answer
+}
 
 @store
 export default class GithubSync {
@@ -56,15 +68,17 @@ export default class GithubSync {
       return
     }
     const lastCompleted = await Job.lastCompleted({ action }).exec()
-    if (
-      !lastCompleted ||
-      (options.every && withinMinutes(lastCompleted.updatedAt, options.every))
-    ) {
-      console.log(
-        `Last Run: ${lastCompleted &&
-          lastCompleted.updatedAt}, starting new job for ${this.type} ${action}`
-      )
-      return await Job.create({ type: 'github', action })
+    const createJob = () => Job.create({ type: 'github', action })
+
+    if (!lastCompleted) {
+      return await createJob()
+    }
+
+    const ago = Date.now() - Date.parse(lastCompleted.updatedAt) / 1000 / 60
+    console.log(`Last ran ${ago} minutes ago, running (${this.type} ${action})`)
+
+    if (!withinMinutes(lastCompleted.updatedAt, options.every)) {
+      return await createJob()
     }
   }
 
@@ -114,9 +128,9 @@ export default class GithubSync {
   runJob = async (action: string) => {
     switch (action) {
       case 'issues':
-        return await this.runJobIssues()
+      // return await this.runJobIssues()
       case 'feed':
-        return await this.runJobFeed()
+      // return await this.runJobFeed()
     }
   }
 
@@ -185,7 +199,7 @@ export default class GithubSync {
     if (repos) {
       return flatten(
         await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
-      )
+      ).filter(Boolean)
     }
     return Promise.resolve([])
   }

@@ -121,7 +121,6 @@ export default class GithubSync {
   }
 
   runJobFeed = async () => {
-    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️')
     if (!this.setting) {
       throw Error('No setting')
     }
@@ -150,7 +149,6 @@ export default class GithubSync {
     console.log('got events for org', orgLogin, repoEvents)
     await this.insertEvents(repoEvents)
     await this.writeLastSyncs('feed')
-    console.log('⭐️⭐️ DONE SYNCING EVENTS ⭐️⭐️')
   }
 
   getRepoEvents = async (
@@ -174,7 +172,9 @@ export default class GithubSync {
         return [...events, ...previousEvents]
       }
     }
-    if (events && events.message === 'Not Found') {
+    // weird error format github has
+    if (events && !!events.message) {
+      console.log(events)
       return null
     }
     return events
@@ -183,8 +183,8 @@ export default class GithubSync {
   getNewEvents = async (org: string): Promise<Array<Object>> => {
     const repos = await this.fetch('feed', `/orgs/${org}/repos`)
     if (repos) {
-      return await Promise.all(
-        flatten(repos.map(repo => this.getRepoEvents(org, repo.name)))
+      return flatten(
+        await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
       )
     }
     return Promise.resolve([])

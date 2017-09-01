@@ -43,12 +43,11 @@ export default class API {
         autoSync: true,
       },
     })
-
     console.log('Start bootstrap')
     this.bootstrap.start()
     console.log('Start server')
     this.server.start()
-
+    console.log('Start jobs')
     await this.jobs.start()
   }
 

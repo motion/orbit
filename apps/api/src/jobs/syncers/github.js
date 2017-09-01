@@ -110,7 +110,8 @@ export default class GithubSync {
   }
 
   validateSetting = () => {
-    // ensure properties on setting
+    // ensures properties on setting
+    // TODO move this into GithubSetting model
     if (!this.setting.values.lastSyncs) {
       this.setting.values = {
         ...this.setting.values,
@@ -122,15 +123,15 @@ export default class GithubSync {
   runJob = async (action: string) => {
     switch (action) {
       case 'issues':
-        return await this.runJobIssues()
+        return await this.runIssues()
       case 'feed':
-        return await this.runJobFeed()
+        return await this.runFeed()
     }
   }
 
-  runJobFeed = async () => {
+  runFeed = async () => {
     if (!this.setting) {
-      throw Error('No setting')
+      throw new Error('No setting')
     }
     if (this.setting.activeOrgs) {
       await Promise.all(this.setting.activeOrgs.map(this.syncFeed))
@@ -139,13 +140,17 @@ export default class GithubSync {
 
   writeLastSyncs = async (source: string) => {
     if (!this.setting) {
-      throw Error('No setting')
+      throw new Error('No setting')
     }
-    const syncPaths = this.syncedPaths[source]
-    if (syncPaths) {
-      this.setting.values.lastSyncs = {
-        ...this.setting.values.lastSyncs,
-        ...syncPaths,
+    const lastSyncs = this.syncedPaths[source]
+    console.log('Writing last syncs for', source, lastSyncs)
+    if (lastSyncs) {
+      this.setting.values = {
+        ...this.setting.values,
+        lastSyncs: {
+          ...this.setting.values.lastSyncs,
+          lastSyncs,
+        },
       }
       await this.setting.save()
     }
@@ -154,8 +159,9 @@ export default class GithubSync {
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
-    console.log('got events for org', orgLogin, repoEvents)
-    await this.insertEvents(repoEvents)
+    console.log('got events for org', orgLogin, repoEvents && repoEvents.length)
+    const created = await this.insertEvents(repoEvents)
+    console.log('Created', created.length, 'events')
     await this.writeLastSyncs('feed')
   }
 
@@ -171,12 +177,10 @@ export default class GithubSync {
     // recurse to get older if necessary
     if (events && events.length) {
       const oldestEvent = events[events.length - 1]
-      if (!await Event.get(oldestEvent.id)) {
-        const previousEvents: Array<Object> = await this.getRepoEvents(
-          org,
-          repoName,
-          page + 1
-        )
+      const existingEvent = await Event.get(oldestEvent.id)
+      console.log('Check oldest event', oldestEvent.id, 'vs', existingEvent)
+      if (!existingEvent) {
+        const previousEvents = await this.getRepoEvents(org, repoName, page + 1)
         return [...events, ...previousEvents]
       }
     }
@@ -220,18 +224,20 @@ export default class GithubSync {
     return Promise.all(createdEvents)
   }
 
-  runJobIssues = async () => {
+  runIssues = async () => {
     if (!this.setting) {
-      throw Error('No setting')
+      throw new Error('No setting')
     }
-    if (this.setting.activeOrgs) {
-      await Promise.all(this.setting.activeOrgs.map(this.syncIssues))
-    } else {
-      console.log('No orgs selected in settings')
+    if (!this.setting.activeOrgs) {
+      throw new Error('User hasnt selected any orgs in settings')
     }
+    const createdIssues = await Promise.all(
+      this.setting.activeOrgs.map(this.syncIssues)
+    )
+    console.log('Created', createdIssues ? createdIssues.length : 0, 'issues')
   }
 
-  syncIssues = async (orgLogin: string) => {
+  syncIssues = async (orgLogin: string): ?Array<Object> => {
     const results = await this.graphFetch({
       query: `
       query AllIssues {
@@ -308,7 +314,6 @@ export default class GithubSync {
 
       for (const issue of issues) {
         const data = unwrap(omit(issue, ['bodyText']))
-        console.log('creating issue', issue.id, issue.title)
         createdIssues.push(
           Thing.upsert({
             id: `${issue.id}`,
@@ -323,8 +328,7 @@ export default class GithubSync {
       }
     }
 
-    await Promise.all(createdIssues)
-    console.log('Created all issues!', createdIssues.length)
+    return await Promise.all(createdIssues)
   }
 
   graphFetch = createApolloFetch({
@@ -339,7 +343,7 @@ export default class GithubSync {
 
   fetch = async (source: string, path: string, opts?: Object) => {
     if (!this.setting) {
-      throw Error('No setting')
+      throw new Error('No setting')
     }
     this.validateSetting()
     const syncDate = Date.now()

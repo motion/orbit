@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
 import Surface from './surface'
@@ -16,7 +16,7 @@ type Props = {
   attach?: Object,
   background?: Color,
   bordered?: boolean,
-  children?: React$Element<any>,
+  children?: React.Element<any>,
   className?: string,
   from: 'top' | 'bottom' | 'left' | 'right',
   showOverlay?: boolean,
@@ -36,9 +36,7 @@ type Props = {
 }
 
 @view.ui
-export default class Drawer extends React.Component {
-  props: Props
-
+export default class Drawer extends React.Component<Props> {
   static defaultProps = {
     size: 400,
     from: 'left',

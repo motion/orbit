@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import color from 'color'
 import Popover from './popover'
@@ -26,9 +26,7 @@ export type Props = {
 }
 
 @view.ui
-export default class Icon extends React.Component {
-  props: Props
-
+export default class Icon extends React.Component<Props> {
   static defaultProps = {
     size: 16,
     type: 'mini',

@@ -1,33 +1,32 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
-import type { ViewType } from '@mcro/black'
 import Button from './button'
 import { Provider } from '@mcro/react-tunnel'
 import inject from './helpers/inject'
 import type { Color } from '@mcro/gloss'
 import Surface from './surface'
 
+type Props = {
+  active?: number,
+  defaultActive?: number,
+  controlled?: boolean,
+  items: Array<React.Element<any> | Object>,
+  children: React.Element<any>,
+  label: React.Element<any>,
+  onChange?: Function,
+  onlyIcons?: boolean,
+  stretch?: boolean,
+  sync?: { get(): number, set(value: number): void },
+  color: Color,
+  uiContext?: Object,
+  itemProps?: Object,
+  spaced?: boolean,
+}
+
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Row implements ViewType<Props> {
-  props: Props & {
-    active?: number,
-    defaultActive?: number,
-    controlled?: boolean,
-    items: Array<React$Element<any> | Object>,
-    children: React$Element<any>,
-    label: React$Element<any>,
-    onChange?: Function,
-    onlyIcons?: boolean,
-    stretch?: boolean,
-    sync?: { get(): number, set(value: number): void },
-    color: Color,
-    uiContext?: Object,
-    itemProps?: Object,
-    spaced?: boolean,
-  }
-
+export default class Row extends React.Component<Props> {
   state = {
     active: null,
   }

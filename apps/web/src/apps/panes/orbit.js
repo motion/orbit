@@ -1,7 +1,6 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view, watch } from '@mcro/black'
-import * as UI from '@mcro/ui'
 import { fuzzy } from '~/helpers'
 import { CurrentUser } from '~/app'
 
@@ -49,7 +48,7 @@ const generateRadialPositions = (count, radius, spread_angle, start_angle) => {
 }
 
 @view
-class RadialMenu extends React.Component {
+class RadialMenu extends React.Component<> {
   static defaultProps = {
     itemRadius: 30,
     menuRadius: 100,

@@ -1,8 +1,8 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { CurrentUser, Document, Thing } from '~/app'
+import { CurrentUser, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import type { PaneProps, PaneResult } from '~/types'
@@ -149,7 +149,8 @@ window.Test = BarMainStore
 @view({
   store: BarMainStore,
 })
-export default class BarMain extends React.Component {
+export default class BarMain extends React.Component<> {
+  static defaultProps: {}
   render({
     store,
     activeIndex,

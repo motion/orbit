@@ -1,12 +1,12 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import Button from './button'
 import type { Color } from '@mcro/gloss'
 import $ from 'color'
 import Text from './text'
 
-export type TitleProps = {
+export type Props = {
   size: number,
   tagName?: string,
   children: React$Children,
@@ -22,9 +22,7 @@ export type TitleProps = {
 }
 
 @view.ui
-export default class Title extends React.Component {
-  props: TitleProps
-
+export default class Title extends React.Component<Props> {
   static defaultProps = {
     size: 1,
     tagName: 'title',
@@ -68,7 +66,7 @@ export default class Title extends React.Component {
     display,
     css,
     ...props
-  }: TitleProps) {
+  }: Props) {
     const eventProps = {
       onClick,
       onMouseEnter,

@@ -64,7 +64,7 @@ function link-flow() {
   OG=$(pwd)
   cd $ROOT
   # link flow
-  find . -name *.js.flow | grep -v node_modules | xargs rm -f
+  find . -name "*.js.flow" | grep -v node_modules | xargs rm -f
 
   function link() {
     for PACKAGE in $(ls $1); do

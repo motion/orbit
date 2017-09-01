@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { Theme, ThemeProvide, ThemeMaker } from '@mcro/ui'
 import * as Black from '@mcro/black'

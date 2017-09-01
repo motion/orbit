@@ -1,9 +1,13 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 
+type Props = {
+  columns: number,
+}
+
 @view.ui
-export default class Grid extends React.Component {
+export default class Grid extends React.Component<Props> {
   static defaultProps = {
     columns: 1,
   }

@@ -1,28 +1,37 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
 import { throttle } from 'lodash'
-// import resizer from 'element-resize-detector'
-import type { Color } from '@mcro/gloss'
+import type { Color } from 'gloss'
 
-// const Resize = resizer({ strategy: 'scroll' })
+type Props = {
+  width: number,
+  height: number,
+  color: Color,
+  zIndex: number,
+  resist: number,
+  scale: number,
+  opacity: number,
+  boundPct: number | string,
+  offsetTop: number,
+  offsetLeft: number,
+  clickable: boolean,
+  clickDuration: number,
+  clickScale: number,
+  transition: number,
+  overlayZIndex: number,
+  blur: number,
+}
+
+type State = {
+  track: boolean,
+  position: Object,
+}
 
 @view.ui
-class HoverGlow extends React.Component {
-  props: {
-    color: Color,
-    background?: Color,
-    behind?: boolean,
-    children?: Function,
-    blur: number,
-    gradient?: boolean,
-    borderRadius?: number,
-    show?: boolean,
-    backdropFilter?: string,
-  }
-
+class HoverGlow extends React.Component<Props, State> {
   static acceptsHovered = 'show'
 
   static defaultProps = {

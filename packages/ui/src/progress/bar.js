@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
 import type { Color } from '@mcro/gloss'
@@ -12,9 +12,7 @@ type Props = {
 }
 
 @view.ui
-export default class ProgressBar {
-  props: Props
-
+export default class ProgressBar extends React.Component<Props> {
   static defaultProps = {
     width: 90,
     percent: 0,

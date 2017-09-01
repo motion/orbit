@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
@@ -82,7 +82,8 @@ class MillerStore {
 }
 
 @view
-class Pane extends React.Component {
+class Pane extends React.Component<$FlowFixMeState> {
+  static defaultProps: {}
   render({
     pane,
     getRef,
@@ -139,7 +140,7 @@ class Pane extends React.Component {
 @view({
   store: MillerStore,
 })
-export default class Miller extends React.Component {
+export default class Miller extends React.Component<$FlowFixMeState> {
   static defaultProps = {
     onActions: _ => _,
   }

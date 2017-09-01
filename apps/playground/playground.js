@@ -1,11 +1,13 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import Interface from './interface'
 import Data from './data'
 
+type Props = {}
+
 @view
-export default class Main {
+export default class Main extends React.Component<Props> {
   render() {
     return (
       <main>

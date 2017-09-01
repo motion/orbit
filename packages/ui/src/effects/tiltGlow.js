@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import Tilt from 'react-tilt'
 import Glow from './glow'
@@ -8,12 +8,13 @@ type Props = {
   width: number,
   height: number,
   tiltOptions?: Object,
-  children?: React$Children,
+  children?: React$Element<any>,
+  css?: Object,
 }
 
 @view
-export default class TiltGlow extends React.Component {
-  props: Props
+export default class TiltGlow extends React.Component<Props> {
+  static defaultProps: {}
 
   version() {
     return 1

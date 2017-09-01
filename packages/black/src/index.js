@@ -1,9 +1,12 @@
 // @flow
 
-export view from './view'
-export store from './store'
+import view_ from './view'
+import store_ from './store'
+import * as Helpers_ from './helpers'
 
-export * from './helpers'
+export const view = view_
+export const store = store_
+export const Helpers = Helpers_
 
 // ViewType
 import type { ViewClass } from './view'
@@ -14,4 +17,5 @@ import type { StoreClass } from './store'
 export type StoreType = StoreClass
 
 // constants
-export * from './constants'
+import * as Constants_ from './constants'
+export const Constants = Constants_

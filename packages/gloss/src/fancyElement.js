@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { StyleSheet, css } from './stylesheet'
 import deepExtend from 'deep-extend'
 import type { Gloss } from './index'

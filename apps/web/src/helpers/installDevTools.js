@@ -1,7 +1,7 @@
 // @flow
 // 🐛 note: dont import router or app here
 // it causes the entire app to be imported before boot
-import React from 'react'
+import * as React from 'react'
 import ReactDOM from 'react-dom'
 import RxDB from 'rxdb'
 import * as Mobx from 'mobx'

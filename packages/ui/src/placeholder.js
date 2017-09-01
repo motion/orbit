@@ -1,8 +1,8 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import Text from './text'
 
-export default props =>
+export default (props: Object) =>
   <Text
     tagName="placeholder"
     size={1.5}

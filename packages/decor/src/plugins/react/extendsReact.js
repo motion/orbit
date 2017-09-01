@@ -1,7 +1,7 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 
-export type ExtendsReact = React$Component
+export type ExtendsReact = React$Component<*, *>
 
 export default () => ({
   name: 'extends-react',

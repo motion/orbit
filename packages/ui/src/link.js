@@ -1,15 +1,13 @@
 // @flow
-import React from 'react'
-import { view, observable, IS_ELECTRON } from '@mcro/black'
+import * as React from 'react'
+import { view, IS_ELECTRON } from '@mcro/black'
 
 type Props = {
   router?: { path: string, go: Function },
 }
 
 @view
-export default class Link {
-  props: Props
-
+export default class Link extends React.Component<Props> {
   isActive = false
 
   componentDidMount() {

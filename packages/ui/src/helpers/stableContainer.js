@@ -1,13 +1,15 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 
+type Props = {}
+type State = {
+  children: React$Element<any>,
+}
+
 @view
-export default class StableContainer extends React.Component {
-  props: {
-    stableDuration: number,
-    children?: React$Element<any>,
-  }
+export default class StableContainer extends React.Component<Props, State> {
+  static defaultProps: {}
 
   componentWillMount() {
     this.setState({

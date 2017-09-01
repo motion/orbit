@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import Title from './title'
 import type { Color } from '@mcro/gloss'
@@ -22,8 +22,12 @@ export type Props = {
   background?: Color,
 }
 
+type State = {
+  collapsed: boolean,
+}
+
 @view.ui
-export default class Pane {
+export default class Pane extends React.Component<Props, State> {
   static defaultProps = {
     collapsable: false,
     onSetCollapse: () => {},

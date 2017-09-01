@@ -1,8 +1,8 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import ReactDOM from 'react-dom'
 import { view } from '@mcro/black'
-import { HotKeys, OS } from '~/helpers'
+import { OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { MillerState, Miller } from './miller'

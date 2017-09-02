@@ -232,7 +232,7 @@ export default class GithubSync {
     console.log('Created', createdIssues ? createdIssues.length : 0, 'issues')
   }
 
-  syncIssues = async (orgLogin: string): ?Array<Object> => {
+  syncIssues = async (orgLogin: string): Promise<?Array<Object>> => {
     const results = await this.graphFetch({
       query: `
       query AllIssues {
@@ -282,13 +282,13 @@ export default class GithubSync {
 
     if (results.message) {
       console.error('Error doing fetch', results)
-      return
+      return null
     }
 
     const repositories = results.data.organization.repositories.edges
     if (!repositories || !repositories.length) {
       console.log('no repos found in response', repositories)
-      return
+      return null
     }
 
     const createdIssues = []
@@ -342,7 +342,7 @@ export default class GithubSync {
     return date.toGMTString()
   }
 
-  fetchHeaders = (uri, extraHeaders = {}) => {
+  fetchHeaders = (uri: string, extraHeaders: Object = {}) => {
     const lastSync = this.setting.values.lastSyncs[uri]
     console.log('got lastSync', lastSync)
     if (lastSync && lastSync.date) {
@@ -357,7 +357,8 @@ export default class GithubSync {
     return new Headers(extraHeaders)
   }
 
-  fetch = async (path: string, { search, headers, ...opts } = {}) => {
+  fetch = async (path: string, options: Object = {}) => {
+    const { search, headers, ...opts } = options
     if (!this.setting) {
       throw new Error('No setting')
     }
@@ -367,8 +368,8 @@ export default class GithubSync {
     const syncDate = Date.now()
     const requestSearch = new URLSearchParams(
       Object.entries({ ...search, access_token: this.token })
-    ).toString()
-    const uri = `https://api.github.com${path}?${requestSearch}`
+    )
+    const uri = `https://api.github.com${path}?${requestSearch.toString()}`
     const requestHeaders = this.fetchHeaders(uri, headers)
 
     const res = await fetch(uri, {

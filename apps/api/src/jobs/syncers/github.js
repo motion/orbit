@@ -5,6 +5,7 @@ import type { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
+import { URLSearchParams } from 'url'
 
 const olderThan = (date, minutes) => {
   const upperBound = minutes * 1000 * 60
@@ -17,7 +18,7 @@ const olderThan = (date, minutes) => {
 export default class GithubSync {
   user: User
   type = 'github'
-  syncedPaths = {}
+  lastSyncs = {}
 
   @watch
   setting: any = () =>
@@ -135,19 +136,16 @@ export default class GithubSync {
     }
   }
 
-  writeLastSyncs = async (source: string) => {
+  writeLastSyncs = async () => {
     if (!this.setting) {
       throw new Error('No setting')
     }
-    const lastSyncs = this.syncedPaths[source]
-    console.log('Writing last syncs for', source, lastSyncs)
-    if (lastSyncs) {
-      await this.setting.mergeUpdate({
-        values: {
-          lastSyncs,
-        },
-      })
-    }
+    const { lastSyncs } = this
+    await this.setting.mergeUpdate({
+      values: {
+        lastSyncs,
+      },
+    })
   }
 
   syncFeed = async (orgLogin: string) => {
@@ -155,8 +153,8 @@ export default class GithubSync {
     const repoEvents = await this.getNewEvents(orgLogin)
     console.log('got events for org', orgLogin, repoEvents && repoEvents.length)
     const created = await this.insertEvents(repoEvents)
-    console.log('Created', created.length, 'events')
-    await this.writeLastSyncs('feed')
+    console.log('Created', created.length, 'feed events')
+    await this.writeLastSyncs()
   }
 
   getRepoEvents = async (
@@ -164,10 +162,11 @@ export default class GithubSync {
     repoName: string,
     page: number = 0
   ): Promise<?Array<Object>> => {
-    const events: ?Array<Object> = await this.fetch(
-      'feed',
-      `/repos/${org}/${repoName}/events?page=${page}`
-    )
+    const events: ?Array<
+      Object
+    > = await this.fetch(`/repos/${org}/${repoName}/events`, {
+      search: { page },
+    })
     // recurse to get older if necessary
     if (events && events.length) {
       const oldestEvent = events[events.length - 1]
@@ -186,11 +185,13 @@ export default class GithubSync {
   }
 
   getNewEvents = async (org: string): Promise<Array<Object>> => {
-    const repos = await this.fetch('feed', `/orgs/${org}/repos`)
-    if (repos) {
+    const repos = await this.fetch(`/orgs/${org}/repos`)
+    if (Array.isArray(repos)) {
       return flatten(
         await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
       ).filter(Boolean)
+    } else {
+      console.log('No repos', repos)
     }
     return Promise.resolve([])
   }
@@ -334,36 +335,63 @@ export default class GithubSync {
     next()
   })
 
-  getDate = path => {
-    const epochDate = this.setting.values.lastSyncs[path]
+  epochToGMTDate = (epochDate: number | string): string => {
     const date = new Date(0)
     date.setUTCSeconds(epochDate)
-    return date
+    return date.toGMTString()
   }
 
-  fetch = async (source: string, path: string, opts?: Object) => {
+  fetchHeaders = (path, extraHeaders) => {
+    const lastSync = this.setting.values.lastSyncs[path]
+    const modifiedSince = this.epochToGMTDate(lastSync.date)
+    const etag = lastSync.etag
+    return new Headers({
+      'If-Modified-Since': modifiedSince,
+      'If-None-Match': etag,
+      ...extraHeaders,
+    })
+  }
+
+  fetch = async (path: string, { search, headers, ...opts } = {}) => {
     if (!this.setting) {
       throw new Error('No setting')
     }
+
+    // setup options
     this.validateSetting()
     const syncDate = Date.now()
-    const response = await fetch(
-      `https://api.github.com${path}?access_token=${this.token || ''}`,
-      {
-        headers: new Headers({
-          'If-Modified-Since': this.getDate(path),
-        }),
-        ...opts,
-      }
-    )
+    const requestSearch = new URLSearchParams(
+      Object.entries({ ...search, access_token: this.token })
+    ).toString()
+    const uri = `https://api.github.com${path}?${requestSearch}`
+    const requestHeaders = this.fetchHeaders(path, headers)
+
+    // fetch
+    console.log('Github fetch', uri, 'headers', headers.toString())
+    const res = await fetch(uri, {
+      headers: requestHeaders,
+      ...opts,
+    })
+
+    // update lastSyncs
+    this.lastSyncs = {
+      ...this.lastSyncs,
+      [path]: {
+        date: syncDate,
+        etag: res.headers.etag ? res.headers.etag[0] : '',
+        rateLimit: res.headers['x-ratelimit-limit'],
+        rateLimitRemaining: res.headers['x-ratelimit-remaining'],
+        rateLimitReset: res.headers['x-rate-limit-reset'],
+        pollInterval: res.headers['x-poll-interval'],
+      },
+    }
+
     // if not modified return null
-    if (response.status === 304) {
+    if (res.status === 304) {
+      console.log('Not modified', path)
       return null
     }
-    this.syncedPaths[source] = {
-      ...this.syncedPaths[source],
-      [path]: syncDate,
-    }
-    return response.json()
+
+    return res.json()
   }
 }

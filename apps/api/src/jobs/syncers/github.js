@@ -79,7 +79,6 @@ export default class GithubSync {
       const runJob = once(async () => {
         if (this.setting) {
           this.validateSetting()
-          console.log('GithubSetting:', this.setting.toJSON())
         }
 
         if (job.action) {
@@ -100,7 +99,7 @@ export default class GithubSync {
           if (this.setting.activeOrgs) {
             runJob()
           } else {
-            console.log('weird no orgs')
+            console.log('no orgs')
           }
         }
       })
@@ -152,7 +151,6 @@ export default class GithubSync {
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
-    console.log('got events for org', orgLogin, repoEvents && repoEvents.length)
     const created = await this.insertEvents(repoEvents)
     console.log('Created', created.length, 'feed events')
     await this.writeLastSyncs()
@@ -344,7 +342,6 @@ export default class GithubSync {
 
   fetchHeaders = (uri: string, extraHeaders: Object = {}) => {
     const lastSync = this.setting.values.lastSyncs[uri]
-    console.log('got lastSync', lastSync)
     if (lastSync && lastSync.date) {
       const modifiedSince = this.epochToGMTDate(lastSync.date)
       const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''

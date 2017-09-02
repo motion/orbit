@@ -149,7 +149,7 @@ export default class GithubSync {
         ...this.setting.values,
         lastSyncs: {
           ...this.setting.values.lastSyncs,
-          lastSyncs,
+          ...lastSyncs,
         },
       }
       await this.setting.save()

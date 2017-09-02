@@ -32,7 +32,7 @@ const chain = (object, method, value) => {
 
 const queryKey = query => JSON.stringify(query.mquery._conditions)
 
-const extraDescriptors = Object.getOwnPropertyDescriptors({
+const extraDescriptors = {
   get id() {
     return this._id
   },
@@ -43,14 +43,10 @@ const extraDescriptors = Object.getOwnPropertyDescriptors({
       .then(doc => doc && doc.remove())
   },
   // update, add properties to model & save
-  async update(object: Object, merge = false) {
+  async update(object: Object) {
     return await this.atomicUpdate(doc => {
-      if (merge) {
-        this.merge.call(doc, object)
-      } else {
-        for (const key of Object.keys(object)) {
-          doc[key] = object[key]
-        }
+      for (const key of Object.keys(object)) {
+        doc[key] = object[key]
       }
     })
   },
@@ -61,7 +57,9 @@ const extraDescriptors = Object.getOwnPropertyDescriptors({
     }
   },
   async mergeUpdate(object: Object) {
-    return this.update(object, true)
+    return await this.atomicUpdate(doc => {
+      this.merge.call(doc, object)
+    })
   },
   // this is the mongo field update syntax that rxdb has
   // see https://docs.mongodb.com/manual/reference/operator/update-field/
@@ -69,7 +67,7 @@ const extraDescriptors = Object.getOwnPropertyDescriptors({
   async replace(object: Object = {}) {
     return await this.update(object)
   },
-})
+}
 
 export default class Model {
   static isModel = true
@@ -89,11 +87,11 @@ export default class Model {
   @observable connected = false
   remote: ?string = null // sync to
   hooks: { [string]: PromiseFunction | Function } = {} // hooks run before/after operations
+  extraDescriptors = extraDescriptors
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
     this.defaultSchema = defaultSchema || {}
-    this.extraDescriptors = cloneDeep(extraDescriptors)
   }
 
   get compiledSchema(): Object {
@@ -157,13 +155,9 @@ export default class Model {
       .toLowerCase()
   }
 
-  compiledMethods = (): Object => {
-    const descriptors = Object.getOwnPropertyDescriptors(this.methods || {})
-    const { extraDescriptors } = this
-    return {
-      ...descriptors,
-      ...extraDescriptors,
-    }
+  compiledMethods = {
+    ...Object.getOwnPropertyDescriptors(this.methods || {}),
+    ...Object.getOwnPropertyDescriptors(this.extraDescriptors),
   }
 
   _filteredProxy = null

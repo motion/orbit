@@ -43,21 +43,25 @@ export const applyHooks = (model: Model) => {
   // POST-CREATE
   // decorate each instance with model.methods
   const ogPostCreate = model.hooks.postCreate
+  const { compiledMethods } = model
+  console.log('methods are', compiledMethods)
   model.hooks.postCreate = doc => {
-    const { compiledMethods } = model
     if (compiledMethods) {
       for (const method of Object.keys(compiledMethods)) {
         const descriptor = compiledMethods[method]
-        // autobind
+        // bind to doc
+        // set ogXXX so we don't keep nesting bind
         if (typeof descriptor.get === 'function') {
-          descriptor.get = descriptor.get.bind(doc)
+          descriptor.ogGet = descriptor.ogGet || descriptor.get
+          descriptor.get = descriptor.ogGet.bind(doc)
         }
         if (typeof descriptor.value === 'function') {
-          descriptor.value = descriptor.value.bind(doc)
+          descriptor.ogValue = descriptor.ogValue || descriptor.value
+          descriptor.value = descriptor.ogValue.bind(doc)
         }
       }
     } else {
-      console.warn('no methods')
+      console.warn('no compiledMethods')
     }
     Object.defineProperties(doc, compiledMethods)
     if (ogPostCreate) {

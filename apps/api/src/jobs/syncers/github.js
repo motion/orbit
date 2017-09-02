@@ -145,14 +145,11 @@ export default class GithubSync {
     const lastSyncs = this.syncedPaths[source]
     console.log('Writing last syncs for', source, lastSyncs)
     if (lastSyncs) {
-      this.setting.values = {
-        ...this.setting.values,
-        lastSyncs: {
-          ...this.setting.values.lastSyncs,
-          ...lastSyncs,
+      await this.setting.mergeUpdate({
+        values: {
+          lastSyncs,
         },
-      }
-      await this.setting.save()
+      })
     }
   }
 

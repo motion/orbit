@@ -5,7 +5,7 @@ import { compile } from './properties'
 import type RxDB, { RxCollection, RxQuery } from 'rxdb'
 import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, merge } from 'lodash'
 import query from './query'
 import * as Helpers from './helpers'
 
@@ -32,6 +32,45 @@ const chain = (object, method, value) => {
 
 const queryKey = query => JSON.stringify(query.mquery._conditions)
 
+const extraDescriptors = Object.getOwnPropertyDescriptors({
+  get id() {
+    return this._id
+  },
+  delete() {
+    return this.collection
+      .findOne(this._id)
+      .exec()
+      .then(doc => doc && doc.remove())
+  },
+  // update, add properties to model & save
+  async update(object: Object, merge = false) {
+    return await this.atomicUpdate(doc => {
+      if (merge) {
+        this.merge.call(doc, object)
+      } else {
+        for (const key of Object.keys(object)) {
+          doc[key] = object[key]
+        }
+      }
+    })
+  },
+  // merge object deeply
+  merge(object: Object) {
+    for (const key of Object.keys(object)) {
+      merge(this[key], object[key])
+    }
+  },
+  async mergeUpdate(object: Object) {
+    return this.update(object, true)
+  },
+  // this is the mongo field update syntax that rxdb has
+  // see https://docs.mongodb.com/manual/reference/operator/update-field/
+  // and https://github.com/lgandecki/modifyjs#implemented
+  async replace(object: Object = {}) {
+    return await this.update(object)
+  },
+})
+
 export default class Model {
   static isModel = true
   static props: Object
@@ -54,6 +93,7 @@ export default class Model {
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
     this.defaultSchema = defaultSchema || {}
+    this.extraDescriptors = cloneDeep(extraDescriptors)
   }
 
   get compiledSchema(): Object {
@@ -117,37 +157,9 @@ export default class Model {
       .toLowerCase()
   }
 
-  compiledMethods = (doc): Object => {
+  compiledMethods = (): Object => {
     const descriptors = Object.getOwnPropertyDescriptors(this.methods || {})
-
-    // methods to be added to each model
-    const ogUpdate = doc.update.bind(doc)
-    const extraDescriptors = Object.getOwnPropertyDescriptors({
-      get id() {
-        return this._id
-      },
-      delete() {
-        return this.collection
-          .findOne(this._id)
-          .exec()
-          .then(doc => doc && doc.remove())
-      },
-      // nicer update, adds properties to model & save
-      async update(object: Object = {}) {
-        return await this.atomicUpdate(doc => {
-          for (const key of Object.keys(object)) {
-            doc[key] = object[key]
-          }
-        })
-      },
-      // this is the mongo field update syntax that rxdb has
-      // see https://docs.mongodb.com/manual/reference/operator/update-field/
-      // and https://github.com/lgandecki/modifyjs#implemented
-      async replace(object: Object = {}) {
-        return await ogUpdate(object)
-      },
-    })
-
+    const { extraDescriptors } = this
     return {
       ...descriptors,
       ...extraDescriptors,

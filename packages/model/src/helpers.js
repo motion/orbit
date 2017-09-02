@@ -44,7 +44,7 @@ export const applyHooks = (model: Model) => {
   // decorate each instance with model.methods
   const ogPostCreate = model.hooks.postCreate
   model.hooks.postCreate = doc => {
-    const compiledMethods = model.compiledMethods(doc)
+    const { compiledMethods } = model
     if (compiledMethods) {
       for (const method of Object.keys(compiledMethods)) {
         const descriptor = compiledMethods[method]

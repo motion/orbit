@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-nodemon": "nodemon --inspect=0.0.0.0:5858 --verbose --legacy-watch lib",
+    "start-nodemon":
+      "nodemon --inspect=0.0.0.0:5858 --verbose --legacy-watch lib",
     "start-watch": "../../bin/build --watch",
     "start-dev": "npm run start-nodemon",
     "watch": "webpack --watch"
@@ -28,6 +29,7 @@
     "lodash": "^4.17.4",
     "longjohn": "^0.2.12",
     "mobx": "^3.2.2",
+    "mobx-utils": "^3.0.0",
     "morgan": "^1.8.2",
     "natural": "^0.5.4",
     "passport-facebook": "^2.1.1",

@@ -6,6 +6,7 @@ import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
 import { URLSearchParams } from 'url'
+import { now } from 'mobx-utils'
 
 const olderThan = (date, minutes) => {
   const upperBound = minutes * 1000 * 60
@@ -43,11 +44,14 @@ export default class GithubSync {
       return
     }
 
-    // auto-run jobs on startup
-    await Promise.all([
-      this.ensureJob('issues', { every: 60 * 6 }), // 6 hours
-      this.ensureJob('feed', { every: 15 }),
-    ])
+    // autorun
+    this.watch(async () => {
+      now(1000 * 60) // every minute
+      await Promise.all([
+        this.ensureJob('issues', { every: 60 * 6 }), // 6 hours
+        this.ensureJob('feed', { every: 15 }),
+      ])
+    })
   }
 
   ensureJob = async (action: string, options: Object = {}): ?Job => {
@@ -58,16 +62,13 @@ export default class GithubSync {
     }
     const lastCompleted = await Job.lastCompleted({ action }).exec()
     const createJob = () => Job.create({ type: 'github', action })
-
     if (!lastCompleted) {
       return await createJob()
     }
-
     const ago = Math.round(
       (Date.now() - Date.parse(lastCompleted.updatedAt)) / 1000 / 60
     )
     console.log(`${this.type}.${action} last ran -- ${ago} minutes ago`)
-
     if (olderThan(lastCompleted.updatedAt, options.every)) {
       return await createJob()
     }
@@ -341,15 +342,18 @@ export default class GithubSync {
     return date.toGMTString()
   }
 
-  fetchHeaders = (path, extraHeaders) => {
+  fetchHeaders = (path, extraHeaders = {}) => {
     const lastSync = this.setting.values.lastSyncs[path]
-    const modifiedSince = this.epochToGMTDate(lastSync.date)
-    const etag = lastSync.etag
-    return new Headers({
-      'If-Modified-Since': modifiedSince,
-      'If-None-Match': etag,
-      ...extraHeaders,
-    })
+    if (lastSync) {
+      const modifiedSince = this.epochToGMTDate(lastSync.date)
+      const etag = lastSync.etag
+      return new Headers({
+        'If-Modified-Since': modifiedSince,
+        'If-None-Match': etag,
+        ...extraHeaders,
+      })
+    }
+    return new Headers(extraHeaders)
   }
 
   fetch = async (path: string, { search, headers, ...opts } = {}) => {
@@ -367,7 +371,12 @@ export default class GithubSync {
     const requestHeaders = this.fetchHeaders(path, headers)
 
     // fetch
-    console.log('Github fetch', uri, 'headers', headers.toString())
+    console.log(
+      'Github fetch',
+      uri,
+      'headers',
+      JSON.stringify(requestHeaders._headers)
+    )
     const res = await fetch(uri, {
       headers: requestHeaders,
       ...opts,

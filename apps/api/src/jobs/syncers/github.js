@@ -342,11 +342,12 @@ export default class GithubSync {
     return date.toGMTString()
   }
 
-  fetchHeaders = (path, extraHeaders = {}) => {
-    const lastSync = this.setting.values.lastSyncs[path]
-    if (lastSync) {
+  fetchHeaders = (uri, extraHeaders = {}) => {
+    const lastSync = this.setting.values.lastSyncs[uri]
+    console.log('got lastSync', lastSync)
+    if (lastSync && lastSync.date) {
       const modifiedSince = this.epochToGMTDate(lastSync.date)
-      const etag = lastSync.etag
+      const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''
       return new Headers({
         'If-Modified-Since': modifiedSince,
         'If-None-Match': etag,
@@ -368,7 +369,7 @@ export default class GithubSync {
       Object.entries({ ...search, access_token: this.token })
     ).toString()
     const uri = `https://api.github.com${path}?${requestSearch}`
-    const requestHeaders = this.fetchHeaders(path, headers)
+    const requestHeaders = this.fetchHeaders(uri, headers)
 
     // fetch
     console.log(
@@ -383,16 +384,13 @@ export default class GithubSync {
     })
 
     // update lastSyncs
-    this.lastSyncs = {
-      ...this.lastSyncs,
-      [path]: {
-        date: syncDate,
-        etag: res.headers.etag ? res.headers.etag[0] : '',
-        rateLimit: res.headers['x-ratelimit-limit'],
-        rateLimitRemaining: res.headers['x-ratelimit-remaining'],
-        rateLimitReset: res.headers['x-rate-limit-reset'],
-        pollInterval: res.headers['x-poll-interval'],
-      },
+    this.lastSyncs[uri] = {
+      date: syncDate,
+      etag: res.headers.get('etag'),
+      rateLimit: res.headers.get('x-ratelimit-limit'),
+      rateLimitRemaining: res.headers.get('x-ratelimit-remaining'),
+      rateLimitReset: res.headers.get('x-rate-limit-reset'),
+      pollInterval: res.headers.get('x-poll-interval'),
     }
 
     // if not modified return null

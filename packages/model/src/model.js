@@ -23,15 +23,29 @@ type Queryish = RxQuery | { query: RxQuery }
 
 type PromiseFunction = () => Promise<any>
 
+// HELPERS
 const chain = (object, method, value) => {
   if (!value) {
     return object
   }
   return object[method](value)
 }
-
 const queryKey = query => JSON.stringify(query.mquery._conditions)
+const modelMerge = (subjectModel: Object, object: Object) => {
+  const subject = subjectModel.toJSON()
 
+  for (const key of Object.keys(object)) {
+    console.log('checking', key, subject[key], object[key])
+    const type = typeof subject[key]
+    if (!subject[key] || type === 'string' || type === 'number') {
+      subjectModel[key] = object[key]
+    } else {
+      subjectModel[key] = merge(subject[key], object[key])
+    }
+  }
+}
+
+// METHODS
 const modelMethods = {
   get id() {
     return this._id
@@ -52,13 +66,11 @@ const modelMethods = {
   },
   // merge object deeply
   merge(object: Object) {
-    for (const key of Object.keys(object)) {
-      merge(this[key], object[key])
-    }
+    modelMerge(this, object)
   },
   async mergeUpdate(object: Object) {
     return await this.atomicUpdate(doc => {
-      this.merge.call(doc, object)
+      modelMerge(doc, object)
     })
   },
   // this is the mongo field update syntax that rxdb has

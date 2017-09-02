@@ -172,7 +172,6 @@ export default class GithubSync {
     if (events && events.length) {
       const oldestEvent = events[events.length - 1]
       const existingEvent = await Event.get(oldestEvent.id)
-      console.log('Check oldest event', oldestEvent.id, 'vs', existingEvent)
       if (!existingEvent) {
         const previousEvents = await this.getRepoEvents(org, repoName, page + 1)
         return [...events, ...previousEvents]

@@ -43,8 +43,7 @@ export const applyHooks = (model: Model) => {
   // POST-CREATE
   // decorate each instance with model.methods
   const ogPostCreate = model.hooks.postCreate
-  const { compiledMethods } = model
-  console.log('methods are', compiledMethods)
+  const compiledMethods = model.compiledMethods()
   model.hooks.postCreate = doc => {
     if (compiledMethods) {
       for (const method of Object.keys(compiledMethods)) {

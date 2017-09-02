@@ -20,7 +20,7 @@ export default class GithubSync {
   syncedPaths = {}
 
   @watch
-  _setting: any = () =>
+  setting: any = () =>
     this.user &&
     Setting.findOne({
       userId: this.user.id,
@@ -34,10 +34,6 @@ export default class GithubSync {
 
   get token(): string {
     return (this.user.github && this.user.github.auth.accessToken) || ''
-  }
-
-  get setting(): ?Setting {
-    return this._setting
   }
 
   start = async () => {
@@ -113,10 +109,11 @@ export default class GithubSync {
     // ensures properties on setting
     // TODO move this into GithubSetting model
     if (!this.setting.values.lastSyncs) {
-      this.setting.values = {
-        ...this.setting.values,
-        lastSyncs: {},
-      }
+      this.setting.merge({
+        values: {
+          lastSyncs: {},
+        },
+      })
     }
   }
 

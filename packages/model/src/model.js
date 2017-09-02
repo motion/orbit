@@ -155,10 +155,10 @@ export default class Model {
       .toLowerCase()
   }
 
-  compiledMethods = {
+  compiledMethods = () => ({
     ...Object.getOwnPropertyDescriptors(this.methods || {}),
     ...Object.getOwnPropertyDescriptors(this.extraDescriptors),
-  }
+  })
 
   _filteredProxy = null
 

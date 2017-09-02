@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import Text from '../text'
 import type { Color } from '@mcro/gloss'
@@ -34,13 +34,11 @@ type Props = {
   elementProps?: Object,
   fieldProps?: Object,
   labelProps?: Object,
-  element?: React$Children<any>,
+  element?: React$Element<any>,
 }
 
 @view.ui
-export default class Field {
-  props: Props
-
+export default class Field extends React.Component<Props> {
   static defaultProps = {
     type: 'input',
     width: 'auto',

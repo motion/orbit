@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
@@ -73,8 +73,9 @@ class MillerStore {
 }
 
 @view
-class Pane extends React.Component {
-    render({
+class Pane extends React.Component<$FlowFixMeState> {
+  static defaultProps: {}
+  render({
     pane,
         getRef,
         paneProps,
@@ -143,74 +144,53 @@ class Pane extends React.Component {
 @view({
     store: MillerStore,
 })
-export default class Miller extends React.Component {
-    static defaultProps = {
-        onActions: _ => _,
-    }
+export default class Miller extends React.Component<$FlowFixMeState> {
+  static defaultProps = {
+    onActions: _ => _,
+  }
 
-    componentWillMount() {
-        const { onActions, store } = this.props
-        onActions(store.actions)
-    }
+  componentWillMount() {
+    const { onActions, store } = this.props
+    onActions(store.actions)
+  }
 
-    render({ store, paneProps, onActions, search, panes, animate, state }) {
-        const { schema } = state
-        const transX = animate ? store.translateX : 0
+  render({ store, paneProps, onActions, search, panes, animate, state }) {
+    const { schema } = state
+    const transX = animate ? store.translateX : 0
 
-        const content = (
-            <miller
-                ref={el => {
-                    if (el) {
-                        store.paneWidth = el.offsetWidth
-                    }
-                }}
-                css={{ flex: 1 }}
-            >
-                <columns $$row $transX={transX}>
-                    {schema.map((pane, index) => {
-                        const isCard = index > 0 && index === schema.length - 1
-                        const isActive = index === state.activeCol
+    const content = (
+      <miller css={{ flex: 1 }}>
+        <columns $$row $transX={transX}>
+          {schema.map((pane, index) => {
+            return (
+              <pane
+                key={index + ':' + pane.kind}
+                $grow={index === schema.length - 1}
+              >
+                <Pane
+                  // if it's the next preview, always rerender
+                  pane={panes[pane.type]}
+                  type={pane.type}
+                  data={pane.data}
+                  search={search}
+                  paneProps={paneProps}
+                  onMeasureWidth={width => (store.colWidths[index] = width)}
+                  col={index}
+                  getRef={plugin => {
+                    store.plugins[index] = plugin
+                  }}
+                  onSelect={row => store.onSelect(index, row)}
+                  state={state}
+                />
+              </pane>
+            )
+          })}
+        </columns>
+      </miller>
+    )
 
-                        return (
-                            <pane
-                                key={index + ':' + pane.kind}
-                                $grow={isCard}
-                                $pullLeft={index !== 0 && isActive}
-                                $upcoming={index !== 0 && !isActive}
-                            >
-                                <Pane
-                                    // if it's the next preview, always rerender
-                                    pane={panes[pane.type]}
-                                    type={pane.type}
-                                    // width={index === schema.length - 1 && store.paneWidth}
-                                    data={pane.data}
-                                    search={search}
-                                    paneProps={paneProps}
-                                    onMeasureWidth={width => (store.colWidths[index] = width)}
-                                    col={index}
-                                    millerState={state}
-                                    getRef={plugin => {
-                                        state.setPlugin(index, plugin)
-                                    }}
-                                    onSelect={row => store.onSelect(index, row)}
-                                    state={state}
-                                />
-                            </pane>
-                        )
-                    })}
-                </columns>
-            </miller>
-        )
-
-        if (onActions) {
-            return content
-        }
-
-        return (
-            <HotKeys handlers={store.actions}>
-                {content}
-            </HotKeys>
-        )
+    if (onActions) {
+      return content
     }
 
     static style = {

@@ -10,6 +10,9 @@ export default class Models {
   }
 
   processUsers = () => {
+    if (!this.users) {
+      return
+    }
     for (const user of this.users) {
       if (user.github) {
         this.ensureGithubSetting(user)
@@ -19,13 +22,12 @@ export default class Models {
 
   ensureGithubSetting = async user => {
     console.log('ensure setting for user', user.id)
-    this.setTimeout(async () => {
-      console.log('now do it ok')
-      await Setting.findOrCreate({
-        type: 'github',
-        userId: user.id,
-      })
-    }, 4000)
+    // temp bugfix, running get first syncs it more deterministically
+    await Setting.get({ type: 'github' })
+    await Setting.findOrCreate({
+      type: 'github',
+      userId: user.id,
+    })
   }
 
   dispose() {

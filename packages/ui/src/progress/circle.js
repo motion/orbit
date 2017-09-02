@@ -1,20 +1,19 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
-import { Helpers } from '@mcro/gloss'
 import type { Color } from '@mcro/gloss'
 
-@view.ui
-export default class ProgressCircle {
-  props: {
-    percent: number,
-    size: number,
-    lineType: 'butt' | 'square' | 'round',
-    backgroundColor: Color,
-    lineColor: Color,
-    lineWidth: number,
-  }
+type Props = {
+  percent: number,
+  size: number,
+  lineType: 'butt' | 'square' | 'round',
+  backgroundColor: Color,
+  lineColor: Color,
+  lineWidth: number,
+}
 
+@view.ui
+export default class ProgressCircle extends React.Component<Props> {
   static defaultProps = {
     backgroundColor: [0, 0, 0, 1],
     lineColor: 'green',

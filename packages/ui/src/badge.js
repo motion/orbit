@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
 import Surface from './surface'
@@ -21,9 +21,7 @@ type Props = {
 }
 
 @view.ui
-export default class Badge extends React.Component {
-  props: Props
-
+export default class Badge extends React.Component<Props> {
   static defaultProps = {
     background: [0, 0, 0, 0.1],
     borderRadius: 30,

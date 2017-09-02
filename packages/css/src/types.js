@@ -2,7 +2,7 @@
 
 type NoS = number | string
 
-export type CSSArray = Array<number>
+export type CSSArray = Array<NoS>
 
 export type NiceColor = string | CSSArray | { r: NoS, g: NoS, b: NoS, a?: NoS }
 

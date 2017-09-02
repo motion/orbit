@@ -1,6 +1,6 @@
 // @flow
 import { colorToString, isColorLike } from './helpers'
-import type { Transform } from './types'
+import type { Color } from './types'
 
 // exports
 export type { Transform, Color } from './types'
@@ -42,12 +42,11 @@ const BORDER_KEY = {
 
 // helpers
 const px = (x: number | string) => (/px$/.test(`${x}`) ? x : `${x}px`)
-const isFloat = n => n === +n && n !== (n | 0)
 
 // style transform creator
 export default function motionStyle(options: Object = {}) {
-  const isColor = color => isColorLike(color, options)
-  const toColor = color => colorToString(color, options)
+  const isColor = (color: any) => isColorLike(color, options)
+  const toColor = (color: Color) => colorToString(color, options)
 
   const OBJECT_TRANSFORM = {
     textShadow: ({ x, y, blur, color }) =>
@@ -66,7 +65,7 @@ export default function motionStyle(options: Object = {}) {
             : v.position) || ''} ${v.repeat || ''}`,
   }
 
-  function processArrayItem(key: string, val: any, level) {
+  function processArrayItem(key: string, val: any, level: number = 0) {
     // recurse
     if (isColor(val)) {
       return toColor(val)
@@ -79,19 +78,19 @@ export default function motionStyle(options: Object = {}) {
 
   function processArray(
     key: string,
-    array: Array<number | string>,
-    level = 0
+    value: Array<number | string>,
+    level: number = 0
   ): string {
     if (key === 'background') {
-      if (isColor(array)) {
-        return toColor(array)
+      if (isColor(value)) {
+        return toColor(value)
       }
     }
     // solid default option for borders
-    if (BORDER_KEY[key] && array.length === 2) {
-      array.push('solid')
+    if (BORDER_KEY[key] && value.length === 2) {
+      value.push('solid')
     }
-    return array
+    return value
       .map(val => processArrayItem(key, val))
       .join(level === 0 && COMMA_JOINED[key] ? ', ' : ' ')
   }

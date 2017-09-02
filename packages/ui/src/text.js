@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { keycode } from '@mcro/ui'
 import { observable } from 'mobx'
@@ -18,9 +18,7 @@ export type Props = {
 
 // click away from edit clears it
 @view.ui
-export default class Text extends React.Component {
-  props: Props
-
+export default class Text extends React.Component<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
     size: 1,

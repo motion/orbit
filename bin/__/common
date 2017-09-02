@@ -60,6 +60,40 @@ function save-config {
   echo "$ALL" > "$KUBES_CONFIG_FILE"
 }
 
+function link-flow() {
+  OG=$(pwd)
+  cd $ROOT
+  # link flow
+  find . -name "*.js.flow" | grep -v node_modules | xargs rm -f
+
+  function link() {
+    for PACKAGE in $(ls $1); do
+      if [ ! -d "$ROOT/$1/$PACKAGE/src" ]; then
+        continue
+      fi
+      cd $ROOT/$1/$PACKAGE
+      mkdir -p lib
+
+      ENTRIES=$(cd src; find . -name "*.js")
+      for ENTRY in $ENTRIES; do
+        ENTRY_TRIMMED=${ENTRY:2}
+        mkdir -p lib/$(dirname $ENTRY_TRIMMED)
+        ln src/$ENTRY_TRIMMED lib/$ENTRY_TRIMMED.flow
+      done
+
+      cd -
+      echo "Linked $PACKAGE"
+    done
+  }
+
+  # link flow in all
+  link "packages"
+  # disable apps for now
+  # flow only cares about stuff in node_modules
+  # link "apps"
+  cd $OG
+}
+
 function bin-exists {
   echo "$(which $1 2> /dev/null)"
 }

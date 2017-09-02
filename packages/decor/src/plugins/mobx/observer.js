@@ -1,11 +1,10 @@
 import { observer } from 'mobx-react'
 
-export default options => ({
+export default () => ({
   name: 'observer',
+  once: true,
+  onlyClass: true,
   decorator: Klass => {
-    if (!Klass.prototype) {
-      return Klass
-    }
     return observer(Klass)
   },
 })

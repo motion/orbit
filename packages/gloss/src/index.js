@@ -2,15 +2,17 @@
 import fancyElement from './fancyElement'
 import motionStyle from '@mcro/css'
 import { StyleSheet } from './stylesheet'
-import * as Helpers from '@mcro/css'
+import * as Helpers_ from '@mcro/css'
 
 // exports
-export * as Helpers from '@mcro/css'
-export type { Transform, Color } from '@mcro/css'
-// export components
-export ThemeProvide from './components/themeProvide'
-export Theme from './components/theme'
+import ThemeProvide_ from './components/themeProvide'
+import Theme_ from './components/theme'
+export const Theme = Theme_
+export const ThemeProvide = ThemeProvide_
+export const Helpers = Helpers_
 
+// type exports
+export type { Transform, Color } from '@mcro/css'
 export type Options = {
   themeKey: string | boolean,
   baseStyles?: Object,

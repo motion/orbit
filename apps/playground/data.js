@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Document } from '@mcro/models'

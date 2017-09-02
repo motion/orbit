@@ -1,5 +1,5 @@
 // @flow
-import { Emitter, CompositeDisposable } from 'sb-event-kit'
+import { Emitter } from 'sb-event-kit'
 
 export type Emittable = {
   emitter: Emitter,
@@ -13,11 +13,9 @@ export default function emittable(options) {
 
   return {
     name: 'emittable',
+    once: true,
+    onlyClass: true,
     decorator: Klass => {
-      if (!Klass.prototype) {
-        return Klass
-      }
-
       Object.defineProperty(Klass.prototype, emitterProp, {
         get() {
           const KEY = `__${emitterProp}`

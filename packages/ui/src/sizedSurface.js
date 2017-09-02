@@ -1,11 +1,19 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import Surface from './surface'
 
 const LINE_HEIGHT = 32
 const adj = x => (x === true ? 1 : x)
 
-export default class SizedSurface extends React.Component {
+type Props = {
+  size: number,
+  sizeHeight: boolean | number,
+  sizeFont?: boolean | number,
+  sizePadding?: boolean | number,
+  sizeMargin?: boolean | number,
+}
+
+export default class SizedSurface extends React.Component<Props> {
   static defaultProps = {
     size: 1,
     sizeHeight: true,

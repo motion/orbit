@@ -1,10 +1,9 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { schema, string } from '@mcro/model'
 import { CurrentUser } from '~/app'
 import * as UI from '@mcro/ui'
-import Router from '~/router'
 
 @view({
   store: class SignupStore {

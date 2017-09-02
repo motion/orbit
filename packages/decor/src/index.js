@@ -7,11 +7,12 @@ type Plugin = () => { decorator?: Function, mixin?: Object }
 
 export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
   const allPlugins = []
-  // unique key per decorator instance
-  const DECOR_KEY = `__IS_DECOR_DECORATED${Math.random()}`
-  const DECOR_GLOBAL_KEY = '__IS_DECOR_DECORATED'
-  const emitter = new Emitter()
 
+  // Helpers
+  const emitter = new Emitter()
+  const isClass = x => !!x.prototype
+
+  // process plugins
   for (const curPlugin of plugins.filter(Boolean)) {
     let getPlugin = curPlugin
     let options = {}
@@ -26,53 +27,60 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
       throw `Plugin must be a function, got ${typeof getPlugin}`
     }
 
-    let plugin = getPlugin(options, emitter)
+    // uid per plugin
+    const uid = Math.random()
+    const alreadyDecorated = Klass => {
+      const result = Klass[uid]
+      Klass[uid] = true
+      return result
+    }
+    const Helpers = {
+      emitter,
+      alreadyDecorated,
+      isClass,
+    }
+
+    let plugin = getPlugin(options, Helpers)
 
     if (!plugin.decorator && !plugin.mixin) {
       throw `Bad plugin, needs decorator or mixin ${plugin.name}`
     }
 
+    // apply helpers
+    if (plugin.once) {
+      const ogPlugin = plugin.decorator
+      plugin.decorator = (Klass, ...args) =>
+        alreadyDecorated(Klass) ? Klass : ogPlugin(Klass, ...args)
+    }
+    if (plugin.onlyClass) {
+      const ogPlugin = plugin.decorator
+      plugin.decorator = (Klass, ...args) =>
+        !isClass(Klass) ? Klass : ogPlugin(Klass, ...args)
+    }
+
     allPlugins.push(plugin)
   }
 
-  function decorDecorator(Klass, opts) {
-    const isPassingExtraOptions = typeof Klass === 'object'
-
-    if (isPassingExtraOptions) {
-      const realOpts = Klass
-      return NextKlass => decorDecorator(NextKlass, realOpts)
+  function decorDecorator(KlassOrOpts, opts) {
+    // optional: decorator-side props
+    if (typeof KlassOrOpts === 'object') {
+      return NextKlass => decorDecorator(NextKlass, KlassOrOpts)
     }
 
-    let decoratedClass = Klass
+    let decoratedClass = KlassOrOpts
 
-    if (!Klass) {
-      console.log(Klass)
-      throw new Error(
-        'Didnt pass a valid class or function to decorator, see above'
-      )
+    if (!decoratedClass) {
+      throw new Error('No class/function passed to decorator')
     }
 
-    // avoid decorating twice
-    if (Klass[DECOR_KEY]) {
-      console.log('avoid decorating twice', Klass.name)
-      return Klass
-    }
-
-    try {
-      for (const plugin of allPlugins) {
-        if (plugin.mixin && Klass.prototype) {
-          reactMixin(Klass.prototype, plugin.mixin)
-        }
-        if (plugin.decorator) {
-          decoratedClass =
-            plugin.decorator(decoratedClass, opts) || decoratedClass
-        }
+    for (const plugin of allPlugins) {
+      if (plugin.mixin && decoratedClass.prototype) {
+        reactMixin(decoratedClass.prototype, plugin.mixin)
       }
-
-      Klass[DECOR_KEY] = true
-      Klass[DECOR_GLOBAL_KEY] = true
-    } catch (e) {
-      console.error('dev mode catching error', e)
+      if (plugin.decorator) {
+        decoratedClass =
+          plugin.decorator(decoratedClass, opts) || decoratedClass
+      }
     }
 
     return decoratedClass

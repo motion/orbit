@@ -1,7 +1,7 @@
 // @flow
 import 'babel-polyfill'
 import createElement from '@mcro/black/lib/createElement'
-import React from 'react'
+import * as React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'
 import '@mcro/models/lib/user' // start superlogin connect immediately

@@ -1,10 +1,9 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
-import Text from './text'
 
 @view.ui
-export default class TabPane {
+export default class TabPane extends React.Component<{}, { selected: number }> {
   state = {
     selected: 0,
   }

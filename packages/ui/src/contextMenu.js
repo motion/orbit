@@ -1,14 +1,18 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { findDOMNode } from 'react-dom'
 import { object } from 'prop-types'
 import List from './list'
 import Popover from './popover'
-import Theme from './helpers/theme'
+
+type TargetProps = {
+  contextMenu: Object,
+}
 
 @view.ui
-class ContextMenuTarget extends React.Component {
+class ContextMenuTarget extends React.Component<TargetProps> {
+  static defaultProps: {}
   static contextTypes = {
     contextMenu: object,
   }
@@ -20,14 +24,14 @@ class ContextMenuTarget extends React.Component {
     })
   }
 
-  render({ data, children, ...props }) {
+  render({ children, ...props }) {
     return React.cloneElement(children, props)
   }
 }
 
 export type Props = {
   width: number,
-  children: React$Element<any>,
+  children: React.Element<any>,
   inactive?: Boolean,
   options?: Object,
   store?: ContextMenuStore,
@@ -49,8 +53,7 @@ class ContextMenuStore {
 @view({
   store: ContextMenuStore,
 })
-class ContextMenu extends React.Component {
-  props: Props
+class ContextMenu extends React.Component<Props> {
   node = null
 
   static defaultProps = {

@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import List from './list'
 import Button from './button'
@@ -17,10 +17,8 @@ export type Props = {
   noWrap?: boolean,
 }
 
-@view
-export default class Dropdown extends React.Component {
-  props: Props
-
+@view.ui
+export default class Dropdown extends React.Component<Props> {
   static defaultProps = {
     width: 100,
   }

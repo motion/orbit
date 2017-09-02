@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
 
@@ -17,9 +17,7 @@ type Props = {
 }
 
 @view.ui
-export default class Glint extends React.Component {
-  props: Props
-
+export default class Glint extends React.Component<Props> {
   static defaultProps = {
     color: [255, 255, 255, 0.15],
     size: 1,

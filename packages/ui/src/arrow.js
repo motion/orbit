@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import type { Color } from '@mcro/gloss'
 
@@ -8,18 +8,19 @@ export type Props = {
   towards: 'top' | 'right' | 'bottom' | 'left',
   color?: Color,
   boxShadow?: string,
+  theme?: string | Object,
+  boxShadow?: any,
+  background?: any,
 }
 
 @view.ui
-export default class Arrow extends React.Component {
-  props: Props
-
+export default class Arrow extends React.Component<> {
   static defaultProps = {
     size: 16,
     towards: 'bottom',
   }
 
-  getRotation = towards => {
+  getRotation = (towards: string) => {
     switch (towards) {
       case 'left':
         return '-90deg'
@@ -29,7 +30,7 @@ export default class Arrow extends React.Component {
     return '0deg'
   }
 
-  getOuterRotation = towards => {
+  getOuterRotation = (towards: string) => {
     switch (towards) {
       case 'right':
         return '90deg'

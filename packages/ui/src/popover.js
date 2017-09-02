@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import getTarget from './helpers/getTarget'
 import Portal from './helpers/portal'
@@ -10,9 +10,9 @@ import injectTheme from './helpers/injectTheme'
 
 export type Props = {
   // can pass function to get isOpen passed in
-  children?: React$Element<any> | Function,
+  children?: React.Element<any> | Function,
   // element or function that returns element, or querySelector to element
-  target?: React$Element<any> | (() => React$Element<any>) | string,
+  target?: React.Element<any> | (() => React.Element<any>) | string,
   open?: boolean,
   // the amount of space around popover you can move mouse
   // before it triggers it to close
@@ -84,11 +84,8 @@ const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @injectTheme
 @view.ui
-class Popover {
-  props: Props
-
+class Popover extends React.Component<Props> {
   static acceptsHovered = 'open'
-
   static defaultProps = {
     edgePadding: 5,
     distance: 10,

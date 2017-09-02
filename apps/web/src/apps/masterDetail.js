@@ -1,11 +1,10 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
 import { Miller, MillerState } from './miller'
-import * as Constants from '~/constants'
 
 const getSchema = () => {
   const val = decodeURIComponent((window.location + '').split('schema=')[1])

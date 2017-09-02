@@ -1,12 +1,12 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
 import Text from './text'
 import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
 
-export type ItemProps = {
+export type Props = {
   after?: React$Element<any>,
   before?: React$Element<any>,
   borderWidth?: number,
@@ -32,16 +32,12 @@ export type ItemProps = {
 
 @injectTheme
 @view.ui
-export default class ListItem {
-  props: ItemProps
-
+export default class ListItem extends React.Component<Props> {
   static isListItem = true
-
   static contextTypes = {
     uiTheme: object,
     uiActiveTheme: string,
   }
-
   static defaultProps = {
     size: 1,
     borderWidth: 0,

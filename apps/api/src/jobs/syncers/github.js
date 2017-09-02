@@ -4,10 +4,14 @@ import { Setting, Thing, Event, Job } from '@mcro/models'
 import type { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
-import { omit, once } from 'lodash'
+import { omit, once, flatten } from 'lodash'
 
-const withinMinutes = (date, minutes) =>
-  Date.now() - Date.parse(date) > minutes * 1000 * 60
+const olderThan = (date, minutes) => {
+  const upperBound = minutes * 1000 * 60
+  const timeDifference = Date.now() - Date.parse(date)
+  const answer = timeDifference > upperBound
+  return answer
+}
 
 @store
 export default class GithubSync {
@@ -56,23 +60,29 @@ export default class GithubSync {
       return
     }
     const lastCompleted = await Job.lastCompleted({ action }).exec()
-    if (
-      !lastCompleted ||
-      (options.every && withinMinutes(lastCompleted.updatedAt, options.every))
-    ) {
-      console.log(
-        `Last Run: ${lastCompleted &&
-          lastCompleted.updatedAt}, starting new job for ${this.type} ${action}`
-      )
-      return await Job.create({ type: 'github', action })
+    const createJob = () => Job.create({ type: 'github', action })
+
+    if (!lastCompleted) {
+      return await createJob()
+    }
+
+    const ago = Math.round(
+      (Date.now() - Date.parse(lastCompleted.updatedAt)) / 1000 / 60
+    )
+    console.log(`${this.type}.${action} last ran -- ${ago} minutes ago`)
+
+    if (olderThan(lastCompleted.updatedAt, options.every)) {
+      return await createJob()
     }
   }
 
   run = (job: Job) => {
     return new Promise((resolve, reject) => {
       const runJob = once(async () => {
-        this.validateSetting()
-        console.log('GithubSetting:', this.setting.toJSON())
+        if (this.setting) {
+          this.validateSetting()
+          console.log('GithubSetting:', this.setting.toJSON())
+        }
 
         if (job.action) {
           try {
@@ -119,7 +129,6 @@ export default class GithubSync {
   }
 
   runJobFeed = async () => {
-    console.log('⭐️ SHOULD BE RUNNING FEED JOB ⭐️')
     if (!this.setting) {
       throw Error('No setting')
     }
@@ -148,14 +157,13 @@ export default class GithubSync {
     console.log('got events for org', orgLogin, repoEvents)
     await this.insertEvents(repoEvents)
     await this.writeLastSyncs('feed')
-    console.log('⭐️⭐️ DONE SYNCING EVENTS ⭐️⭐️')
   }
 
   getRepoEvents = async (
     org: string,
     repoName: string,
     page: number = 0
-  ): Promise<Array<Object>> => {
+  ): Promise<?Array<Object>> => {
     const events: ?Array<Object> = await this.fetch(
       'feed',
       `/repos/${org}/${repoName}/events?page=${page}`
@@ -172,15 +180,20 @@ export default class GithubSync {
         return [...events, ...previousEvents]
       }
     }
-    return events || []
+    // weird error format github has
+    if (events && !!events.message) {
+      console.log(events)
+      return null
+    }
+    return events
   }
 
   getNewEvents = async (org: string): Promise<Array<Object>> => {
     const repos = await this.fetch('feed', `/orgs/${org}/repos`)
     if (repos) {
-      return await Promise.all(
-        repos.map(repo => this.getRepoEvents(org, repo.name))
-      )
+      return flatten(
+        await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
+      ).filter(Boolean)
     }
     return Promise.resolve([])
   }

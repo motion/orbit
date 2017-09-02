@@ -6,7 +6,7 @@
   "commands": {
     "bootstrap": {
       "hoist": true,
-      "nohoist": ["react", "react-dom", "sb-event-kit"]
+      "nohoist": ["react", "react-dom", "react-native", "sb-event-kit"]
     }
   }
 }

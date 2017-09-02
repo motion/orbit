@@ -62,13 +62,13 @@ export class JobModel extends Model {
   lastCompleted = opt =>
     this.collection
       .findOne({ status: STATUS.COMPLETED, ...opt })
-      .sort('createdAt')
+      .sort({ updatedAt: 'desc' })
 
   @query
   lastPending = opt =>
     this.collection
       .findOne({ status: STATUS.PENDING, ...opt })
-      .sort('createdAt')
+      .sort({ updatedAt: 'desc' })
 }
 
 const JobInstance = new JobModel()

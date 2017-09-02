@@ -5,18 +5,15 @@ export type Subscribable = {
   subscriptions: CompositeDisposable,
 }
 
-export default (options: Object) => ({
+export default () => ({
   name: 'subscribable',
+  once: true,
+  onlyClass: true,
   decorator: (Klass: Class<any> | Function) => {
-    if (!Klass.prototype) {
-      return Klass
-    }
-
     if (Klass.prototype.subscriptions) {
       console.log('skip, already has subscriptions')
       return Klass
     }
-
     Object.defineProperty(Klass.prototype, 'subscriptions', {
       configurable: true,
       get() {

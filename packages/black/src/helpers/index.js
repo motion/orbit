@@ -1,2 +1,5 @@
-export log from './log'
-export watch from './watch'
+import log_ from './log'
+import watch_ from './watch'
+
+export const log = log_
+export const watch = watch_

@@ -1,11 +1,15 @@
 // @flow
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { CurrentUser } from '~/app'
 import Login from '~/apps/panes/login'
 
+type Props = {}
+
 @view
-export default class Signup extends React.Component {
+export default class Signup extends React.Component<Props> {
+  static defaultProps: {}
+
   render() {
     return (
       <signup if={!CurrentUser.loggedIn} $$fullscreen $$draggable $$centered>

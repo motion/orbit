@@ -1,5 +1,5 @@
 // @flow
-import type { Color, CSSArray, ToCSSAble } from './types'
+import type { Color, CSSArray } from './types'
 import colorNames from './colorNames'
 
 export function colorToString(color: Color, options?: Object): string {
@@ -17,7 +17,7 @@ export function colorToString(color: Color, options?: Object): string {
   return res
 }
 
-export function isColorLike(object: Array | Object, options?: Object) {
+export function isColorLike(object: any, options?: Object) {
   if (!object) {
     return false
   }
@@ -105,7 +105,7 @@ function objectToColor(color: Color): string {
     if (length === 3) {
       return `rgb(${color.join(', ')})`
     }
-  } else if (typeof color === 'object') {
+  } else if (color instanceof Object) {
     if (color.a) {
       return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
     }
@@ -118,7 +118,9 @@ const arr3to4 = arr => [...arr, arr[1]]
 const arr2to4 = arr => [...arr, arr[0], arr[1]]
 const arr1to4 = arr => [...arr, arr[0], arr[0], arr[1]]
 
-export function expandCSSArray(given: number | Array<number>): CSSArray {
+export function expandCSSArray(
+  given: number | Array<number | string>
+): CSSArray {
   if (typeof given === 'number') {
     return [given, given, given, given]
   }

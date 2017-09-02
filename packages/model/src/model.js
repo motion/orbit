@@ -33,9 +33,7 @@ const chain = (object, method, value) => {
 const queryKey = query => JSON.stringify(query.mquery._conditions)
 const modelMerge = (subjectModel: Object, object: Object) => {
   const subject = subjectModel.toJSON()
-
   for (const key of Object.keys(object)) {
-    console.log('checking', key, subject[key], object[key])
     const type = typeof subject[key]
     if (!subject[key] || type === 'string' || type === 'number') {
       subjectModel[key] = object[key]

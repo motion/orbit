@@ -32,7 +32,7 @@ const chain = (object, method, value) => {
 
 const queryKey = query => JSON.stringify(query.mquery._conditions)
 
-const extraDescriptors = {
+const modelMethods = {
   get id() {
     return this._id
   },
@@ -87,7 +87,7 @@ export default class Model {
   @observable connected = false
   remote: ?string = null // sync to
   hooks: { [string]: PromiseFunction | Function } = {} // hooks run before/after operations
-  extraDescriptors = extraDescriptors
+  modelMethods = modelMethods
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
@@ -157,7 +157,7 @@ export default class Model {
 
   compiledMethods = () => ({
     ...Object.getOwnPropertyDescriptors(this.methods || {}),
-    ...Object.getOwnPropertyDescriptors(this.extraDescriptors),
+    ...Object.getOwnPropertyDescriptors(this.modelMethods),
   })
 
   _filteredProxy = null

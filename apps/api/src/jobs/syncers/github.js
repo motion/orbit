@@ -334,6 +334,13 @@ export default class GithubSync {
     next()
   })
 
+  getDate = path => {
+    const epochDate = this.setting.values.lastSyncs[path]
+    const date = new Date(0)
+    date.setUTCSeconds(epochDate)
+    return date
+  }
+
   fetch = async (source: string, path: string, opts?: Object) => {
     if (!this.setting) {
       throw new Error('No setting')
@@ -344,7 +351,7 @@ export default class GithubSync {
       `https://api.github.com${path}?access_token=${this.token || ''}`,
       {
         headers: new Headers({
-          'If-Modified-Since': this.setting.values.lastSyncs[path],
+          'If-Modified-Since': this.getDate(path),
         }),
         ...opts,
       }

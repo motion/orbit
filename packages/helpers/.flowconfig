@@ -4,7 +4,6 @@
 ./node_modules
 
 [libs]
-../../flow-typed
 
 [options]
 experimental.strict_type_args=true

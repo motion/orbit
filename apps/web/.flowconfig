@@ -1,20 +1,10 @@
 [ignore]
 **/node_modules/aphrodite-jss/.*
 **/node_modules/node-uuid/lib/sha1-browser.js
-**/.*.js.flow
-**/.*.json
-../native/.*
-.*/node_modules/lunr/.*
-.*/node_modules/art/.*
-.*/node_modules/aphrodite-jss/.*
-.*/node_modules/expo/.*
-.*/node_modules/react-native.*
-.*/node_modules/jss/.*
-.*/node_modules/xdl/.*
 
 [include]
 ./node_modules
-../../node_modules
+../../node_modules/mobx
 
 [libs]
 ../../flow-typed

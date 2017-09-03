@@ -1,8 +1,12 @@
 // @flow
 import { CompositeDisposable } from 'sb-event-kit'
 
-export type Subscribable = {
+declare class Subscribable {
   subscriptions: CompositeDisposable,
+}
+
+declare class Object {
+  static defineProperty(any, any, any): void,
 }
 
 export default () => ({
@@ -16,6 +20,7 @@ export default () => ({
     }
     Object.defineProperty(Klass.prototype, 'subscriptions', {
       configurable: true,
+      enumerable: true,
       get() {
         if (!this.__subscriptions) {
           this.__subscriptions = new CompositeDisposable()

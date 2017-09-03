@@ -2,7 +2,7 @@ import ThemeMaker from './themeMaker'
 
 const Theme = new ThemeMaker()
 
-export default (propName = 'theme') => {
+export default function getThemeFromContext(propName = 'theme') {
   return function getContext() {
     const prop = this.props[propName]
     if (prop) {

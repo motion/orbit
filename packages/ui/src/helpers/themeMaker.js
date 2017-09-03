@@ -48,7 +48,7 @@ export default class ThemeMaker {
     color,
     borderColor,
     ...rest
-  }): Object => {
+  }: Object): Object => {
     const {
       highlightColor: hlColor,
       highlightBackground: hlBackgorund,

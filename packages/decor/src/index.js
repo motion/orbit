@@ -3,14 +3,31 @@ import reactMixin from 'react-mixin'
 import { Emitter } from 'sb-event-kit'
 export { Emitter, CompositeDisposable } from 'sb-event-kit'
 
-type Plugin = () => { decorator?: Function, mixin?: Object }
+type Helpers = {
+  emitter: Emitter,
+  alreadyDecorated: (a: any) => boolean,
+  isClass: (a: any) => boolean,
+}
 
-export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
+type Plugin = (
+  options: Object,
+  Helpers: Helpers
+) => {
+  name: string,
+  once?: boolean,
+  onlyClass?: boolean,
+  decorator?: (a: Class<any> | Function, b?: Object) => any,
+  mixin?: Object,
+}
+
+const empty = (...args) => void 0
+
+export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   const allPlugins = []
 
   // Helpers
   const emitter = new Emitter()
-  const isClass = x => !!x.prototype
+  const isClass = x => x && !!x.prototype
 
   // process plugins
   for (const curPlugin of plugins.filter(Boolean)) {
@@ -48,12 +65,12 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
 
     // apply helpers
     if (plugin.once) {
-      const ogPlugin = plugin.decorator
+      const ogPlugin = plugin.decorator || empty
       plugin.decorator = (Klass, ...args) =>
         alreadyDecorated(Klass) ? Klass : ogPlugin(Klass, ...args)
     }
     if (plugin.onlyClass) {
-      const ogPlugin = plugin.decorator
+      const ogPlugin = plugin.decorator || empty
       plugin.decorator = (Klass, ...args) =>
         !isClass(Klass) ? Klass : ogPlugin(Klass, ...args)
     }
@@ -61,10 +78,14 @@ export default function decor(plugins: Array<Array<Plugin | Object> | Plugin>) {
     allPlugins.push(plugin)
   }
 
-  function decorDecorator(KlassOrOpts, opts) {
+  function decorDecorator(
+    KlassOrOpts: Class<any> | Function | Object,
+    opts?: Object
+  ) {
     // optional: decorator-side props
     if (typeof KlassOrOpts === 'object') {
-      return NextKlass => decorDecorator(NextKlass, KlassOrOpts)
+      return (NextKlass: Class<any> | Function) =>
+        decorDecorator(NextKlass, KlassOrOpts)
     }
 
     let decoratedClass = KlassOrOpts

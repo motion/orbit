@@ -1,5 +1,7 @@
+import type { Helpers } from '../index'
+
 // @flow
-export default (options: Object, Helpers) => ({
+export default (options: Object, Helpers: Helpers) => ({
   name: 'extends-react',
   once: true,
   onlyClass: true,

@@ -13,7 +13,7 @@ type Props = {
 }
 
 @view.ui
-export default class ProgressCircle extends React.Component<Props> {
+export default class ProgressCircle extends React.PureComponent<Props> {
   static defaultProps = {
     backgroundColor: [0, 0, 0, 1],
     lineColor: 'green',

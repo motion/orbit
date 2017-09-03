@@ -288,10 +288,6 @@ export default class Model {
       migrationStrategies: this.migrations,
     })
 
-    // TEMPORARY BUGFIX, fixed pouch console warnings about db.info()
-    // TODO remove on RxDB 5.4.0
-    await this.pouch.info()
-
     // sync PUSH ONLY
     if (this.options.autoSync) {
       const pushSync = this._collection.sync({

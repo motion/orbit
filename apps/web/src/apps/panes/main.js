@@ -149,7 +149,7 @@ window.Test = BarMainStore
 @view({
   store: BarMainStore,
 })
-export default class BarMain extends React.Component<> {
+export default class BarMain extends React.PureComponent<> {
   static defaultProps: {}
   render({
     store,

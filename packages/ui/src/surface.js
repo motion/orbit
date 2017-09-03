@@ -108,7 +108,7 @@ const hasChildren = children =>
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Surface extends React.Component<Props> {
+export default class Surface extends React.PureComponent<Props> {
   static defaultProps = {
     tagName: IS_PROD ? 'div' : 'surface',
     borderStyle: 'solid',

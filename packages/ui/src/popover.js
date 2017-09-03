@@ -84,7 +84,7 @@ const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @injectTheme
 @view.ui
-class Popover extends React.Component<Props> {
+class Popover extends React.PureComponent<Props> {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,

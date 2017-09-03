@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 
 // optimized re-render for sidebar resize
 @view
-export default class LayoutWrap extends React.Component<> {
+export default class LayoutWrap extends React.PureComponent<> {
   render({ children }) {
     return (
       <wrap>

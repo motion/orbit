@@ -82,7 +82,7 @@ class MillerStore {
 }
 
 @view
-class Pane extends React.Component<$FlowFixMeState> {
+class Pane extends React.PureComponent<any> {
   static defaultProps: {}
   render({
     pane,
@@ -140,7 +140,7 @@ class Pane extends React.Component<$FlowFixMeState> {
 @view({
   store: MillerStore,
 })
-export default class Miller extends React.Component<$FlowFixMeState> {
+export default class Miller extends React.PureComponent<any> {
   static defaultProps = {
     onActions: _ => _,
   }
@@ -189,11 +189,7 @@ export default class Miller extends React.Component<$FlowFixMeState> {
       return content
     }
 
-    return (
-      <HotKeys handlers={store.actions}>
-        {content}
-      </HotKeys>
-    )
+    return <HotKeys handlers={store.actions}>{content}</HotKeys>
   }
 
   static style = {

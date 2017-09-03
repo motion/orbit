@@ -32,7 +32,7 @@ export type Props = {
 
 @injectTheme
 @view.ui
-export default class ListItem extends React.Component<Props> {
+export default class ListItem extends React.PureComponent<Props> {
   static isListItem = true
   static contextTypes = {
     uiTheme: object,

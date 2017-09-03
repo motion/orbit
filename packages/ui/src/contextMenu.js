@@ -11,7 +11,7 @@ type TargetProps = {
 }
 
 @view.ui
-class ContextMenuTarget extends React.Component<TargetProps> {
+class ContextMenuTarget extends React.PureComponent<TargetProps> {
   static defaultProps: {}
   static contextTypes = {
     contextMenu: object,
@@ -53,7 +53,7 @@ class ContextMenuStore {
 @view({
   store: ContextMenuStore,
 })
-class ContextMenu extends React.Component<Props> {
+class ContextMenu extends React.PureComponent<Props> {
   node = null
 
   static defaultProps = {

@@ -62,13 +62,13 @@ export default prop => Child => {
       delete props[prop]
 
       return (
-        <parent
+        <div
           className={className}
           style={{ ...style, height: '100%' }}
           ref={this.setParent}
         >
           <Child {...props} parentSize={parentSize} />
-        </parent>
+        </div>
       )
     }
   }

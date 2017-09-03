@@ -3,7 +3,7 @@ import React from 'react'
 export default class Splash extends React.Component {
   render() {
     return (
-      <loader
+      <div
         style={{
           position: 'absolute',
           top: 0,
@@ -18,7 +18,7 @@ export default class Splash extends React.Component {
         }}
       >
         loading
-      </loader>
+      </div>
     )
   }
 }

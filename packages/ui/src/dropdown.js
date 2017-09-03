@@ -18,7 +18,7 @@ export type Props = {
 }
 
 @view.ui
-export default class Dropdown extends React.Component<Props> {
+export default class Dropdown extends React.PureComponent<Props> {
   static defaultProps = {
     width: 100,
   }

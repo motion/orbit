@@ -12,7 +12,7 @@ type Props = {
 }
 
 @view.ui
-export default class ProgressBar extends React.Component<Props> {
+export default class ProgressBar extends React.PureComponent<Props> {
   static defaultProps = {
     width: 90,
     percent: 0,

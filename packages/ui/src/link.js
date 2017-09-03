@@ -7,7 +7,7 @@ type Props = {
 }
 
 @view
-export default class Link extends React.Component<Props> {
+export default class Link extends React.PureComponent<Props> {
   isActive = false
 
   componentDidMount() {

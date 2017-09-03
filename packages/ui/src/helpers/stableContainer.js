@@ -8,7 +8,7 @@ type State = {
 }
 
 @view
-export default class StableContainer extends React.Component<Props, State> {
+export default class StableContainer extends React.PureComponent<Props, State> {
   static defaultProps: {}
 
   componentWillMount() {

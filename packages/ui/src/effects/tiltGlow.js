@@ -13,7 +13,7 @@ type Props = {
 }
 
 @view
-export default class TiltGlow extends React.Component<Props> {
+export default class TiltGlow extends React.PureComponent<Props> {
   static defaultProps: {}
 
   version() {

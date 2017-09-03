@@ -48,7 +48,7 @@ const generateRadialPositions = (count, radius, spread_angle, start_angle) => {
 }
 
 @view
-class RadialMenu extends React.Component<> {
+class RadialMenu extends React.PureComponent<> {
   static defaultProps = {
     itemRadius: 30,
     menuRadius: 100,

@@ -38,7 +38,7 @@ type Props = {
 }
 
 @view.ui
-export default class Field extends React.Component<Props> {
+export default class Field extends React.PureComponent<Props> {
   static defaultProps = {
     type: 'input',
     width: 'auto',

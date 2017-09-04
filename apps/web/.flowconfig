@@ -12,10 +12,11 @@
 
 [include]
 ./node_modules
-../../node_module
+../../node_modules
 
 [libs]
 ../../flow-typed
+src/types.js
 
 [options]
 emoji=true

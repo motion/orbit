@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { view, watch } from '@mcro/black'
+import { view, watch, Component } from '@mcro/black'
 import { Event } from '~/app'
 import * as UI from '@mcro/ui'
 import type { PaneProps } from '~/types'
@@ -21,12 +21,12 @@ class BarTeamStore {
   }
 }
 
-type Props = PaneProps & {| store: BarTeamStore |}
+type Props = PaneProps & { store: BarTeamStore }
 
 @view({
   store: BarTeamStore,
 })
-export default class BarTeam extends React.Component<Props> {
+export default class BarTeam extends Component<Props> {
   render({ store, activeIndex, data }: Props) {
     return (
       <team>

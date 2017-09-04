@@ -39,8 +39,10 @@ if (!App) {
 // hmr
 if (module && module.hot) {
   module.hot.accept('@mcro/models', () => {
-    App.dispose()
-    start()
+    if (App) {
+      App.dispose()
+      start()
+    }
   })
 
   module.hot.accept(() => {

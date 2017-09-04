@@ -24,6 +24,6 @@
   },
   "devDependencies": {
     "eslint-plugin-react": "^7.1.0",
-    "flow-bin": "^0.53.1"
+    "flow-bin": "^0.54.0"
   }
 }

@@ -23,7 +23,7 @@ export default class MillerStateStore {
   watchers = {}
   prevActiveRows = [0] // holds the previously active columns
 
-  constructor({ schema }) {
+  constructor({ schema }: { schema: Object }) {
     this.schema = schema
 
     const events = ['selectionChange']
@@ -39,7 +39,7 @@ export default class MillerStateStore {
     return this.schema[this.schema.length - 1]
   }
 
-  setSchema(index, schema: Schema) {
+  setSchema(index: number, schema: Schema) {
     if (this.schema.length < index) {
       this.schema.push(schema)
     } else {
@@ -47,11 +47,11 @@ export default class MillerStateStore {
     }
   }
 
-  emit(name) {
+  emit(name: string) {
     this.watchers[name].forEach(cb => cb())
   }
 
-  moveRow(delta) {
+  moveRow(delta: number) {
     if (delta < 0 && this.activeRow === 0) return
     if (this.activeRow === null) {
       this.activeRow = 0
@@ -73,7 +73,7 @@ export default class MillerStateStore {
     this.emit('selectionChange')
   }
 
-  setSelection(col, row) {
+  setSelection(col: number, row: number) {
     if (col > this.activeCol) {
       this.moveCol(1)
     } else {
@@ -85,11 +85,11 @@ export default class MillerStateStore {
     this.emit('selectionChange')
   }
 
-  setActiveRow(row) {
+  setActiveRow(row: number) {
     this.setSelection(this.activeCol, row)
   }
 
-  moveCol(delta) {
+  moveCol(delta: number) {
     if (delta > 0) {
       if (this.schema.length - 1 > this.activeCol) {
         this.prevActiveRows.push(this.activeRow)

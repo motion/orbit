@@ -31,7 +31,7 @@ type State = {
 }
 
 @view.ui
-class HoverGlow extends React.PureComponent<Props, State> {
+class HoverGlow extends React.Component<Props, State> {
   static acceptsHovered = 'show'
 
   static defaultProps = {

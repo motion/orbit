@@ -7,7 +7,7 @@ import Login from '~/apps/panes/login'
 type Props = {}
 
 @view
-export default class Signup extends React.PureComponent<Props> {
+export default class Signup extends React.Component<Props> {
   static defaultProps: {}
 
   render() {

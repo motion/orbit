@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class TabPane extends React.PureComponent<{}, { selected: number }> {
+export default class TabPane extends React.Component<{}, { selected: number }> {
   state = {
     selected: 0,
   }

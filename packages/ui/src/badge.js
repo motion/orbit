@@ -21,7 +21,7 @@ type Props = {
 }
 
 @view.ui
-export default class Badge extends React.PureComponent<Props> {
+export default class Badge extends React.Component<Props> {
   static defaultProps = {
     background: [0, 0, 0, 0.1],
     borderRadius: 30,

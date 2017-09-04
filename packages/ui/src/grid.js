@@ -7,7 +7,7 @@ type Props = {
 }
 
 @view.ui
-export default class Grid extends React.PureComponent<Props> {
+export default class Grid extends React.Component<Props> {
   static defaultProps = {
     columns: 1,
   }

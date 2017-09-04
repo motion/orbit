@@ -102,6 +102,7 @@ class BarStore {
     task: Panes.Task,
     doc: Panes.Doc,
     integrations: Panes.Integrations,
+    team: Panes.Team,
   }
 
   get isBarActive() {
@@ -228,9 +229,7 @@ export default class BarPage {
                 ...inputStyle,
               }}
             />
-            <forwardcomplete>
-              {store.peekItem}
-            </forwardcomplete>
+            <forwardcomplete>{store.peekItem}</forwardcomplete>
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>

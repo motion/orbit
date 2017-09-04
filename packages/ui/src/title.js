@@ -22,7 +22,7 @@ export type Props = {
 }
 
 @view.ui
-export default class Title extends React.PureComponent<Props> {
+export default class Title extends React.Component<Props> {
   static defaultProps = {
     size: 1,
     tagName: 'title',

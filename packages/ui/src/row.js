@@ -26,7 +26,7 @@ type Props = {
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Row extends React.PureComponent<Props> {
+export default class Row extends React.Component<Props> {
   state = {
     active: null,
   }

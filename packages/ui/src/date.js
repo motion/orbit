@@ -11,7 +11,7 @@ type Props = {
 }
 
 @view.ui
-export default class Date extends React.PureComponent<Props> {
+export default class Date extends React.Component<Props> {
   render({ children, ...props }) {
     return (
       <Text {...props}>

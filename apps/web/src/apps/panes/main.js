@@ -42,10 +42,10 @@ class BarMainStore {
   get browse(): Array<PaneResult> {
     return this.helper.filter([
       {
-        title: 'Nate',
-        type: 'feed',
+        title: 'Team: Motion',
+        type: 'team',
         data: {
-          person: 'natew',
+          team: 'motion',
         },
       },
       {
@@ -98,13 +98,13 @@ class BarMainStore {
       {
         title: 'Nate',
         type: 'feed',
-        data: { image: 'me' },
+        data: { person: 'natew', image: 'me' },
         category: 'People',
       },
       {
         title: 'Nick',
         type: 'feed',
-        data: { image: 'nick' },
+        data: { person: 'ncammarata', image: 'nick' },
         category: 'People',
       },
     ])
@@ -149,7 +149,7 @@ window.Test = BarMainStore
 @view({
   store: BarMainStore,
 })
-export default class BarMain extends React.PureComponent<> {
+export default class BarMain extends React.Component<> {
   static defaultProps: {}
   render({
     store,
@@ -161,12 +161,8 @@ export default class BarMain extends React.PureComponent<> {
       if (item.data && item.data.service === 'github')
         return (
           <spread $$row>
-            <left>
-              {item.data.comments.length} replies
-            </left>
-            <right>
-              {item.data.labels}
-            </right>
+            <left>{item.data.comments.length} replies</left>
+            <right>{item.data.labels}</right>
           </spread>
         )
 
@@ -183,19 +179,22 @@ export default class BarMain extends React.PureComponent<> {
           itemProps={paneProps.itemProps}
           groupKey="category"
           items={store.results}
-          getItem={(result, index) =>
+          getItem={(result, index) => (
             <UI.ListItem
               onClick={() => onSelect(index)}
               highlight={index === activeIndex}
               key={result.id}
               icon={
-                result.data && result.data.image
-                  ? <img $image src={`/images/${result.data.image}.jpg`} />
-                  : result.icon || (result.doc && result.doc.icon)
+                result.data && result.data.image ? (
+                  <img $image src={`/images/${result.data.image}.jpg`} />
+                ) : (
+                  result.icon || (result.doc && result.doc.icon)
+                )
               }
               primary={result.title}
               secondary={secondary(result)}
-            />}
+            />
+          )}
         />
       </pane>
     )

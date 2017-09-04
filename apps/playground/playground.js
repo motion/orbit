@@ -7,7 +7,7 @@ import Data from './data'
 type Props = {}
 
 @view
-export default class Main extends React.PureComponent<Props> {
+export default class Main extends React.Component<Props> {
   render() {
     return (
       <main>

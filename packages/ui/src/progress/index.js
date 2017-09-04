@@ -9,7 +9,7 @@ type Props = {
 }
 
 @view.ui
-export default class Progress extends React.PureComponent<Props> {
+export default class Progress extends React.Component<Props> {
   static Bar = Bar
   static Circle = Circle
 

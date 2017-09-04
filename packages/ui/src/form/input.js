@@ -19,7 +19,7 @@ type Props = {
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Input extends React.PureComponent<Props> {
+export default class Input extends React.Component<Props> {
   node: ?HTMLInputElement = null
 
   componentDidMount() {

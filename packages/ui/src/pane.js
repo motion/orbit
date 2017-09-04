@@ -27,7 +27,7 @@ type State = {
 }
 
 @view.ui
-export default class Pane extends React.PureComponent<Props, State> {
+export default class Pane extends React.Component<Props, State> {
   static defaultProps = {
     collapsable: false,
     onSetCollapse: () => {},

@@ -13,7 +13,7 @@ type Props = {
   sizeMargin?: boolean | number,
 }
 
-export default class SizedSurface extends React.PureComponent<Props> {
+export default class SizedSurface extends React.Component<Props> {
   static defaultProps = {
     size: 1,
     sizeHeight: true,

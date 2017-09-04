@@ -4,7 +4,8 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 @view
-export default class Calendar extends React.Component<{}> {
+export default class Calendar extends React.Component<> {
+  static defaultProps: {};
   render() {
     return (
       <calendar>

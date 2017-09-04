@@ -16,7 +16,7 @@
 
 [libs]
 ../../flow-typed
-src/types.js
+src/type-declarations.js
 
 [options]
 emoji=true

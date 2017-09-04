@@ -51,28 +51,38 @@ export class Gloss {
     if (Child.prototype) {
       Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
       Child.prototype.gloss = this
-      if (Child.theme && typeof Child.theme === 'function') {
-        const getStyles = this.getStyles
-        const ogRender = Child.prototype.render
-        Child.prototype.render = function(...args) {
+      const hasTheme = Child.theme && typeof Child.theme === 'function'
+      if (!hasTheme) {
+        return Child
+      }
+      if (!Child.prototype.theme) {
+        Child.prototype.getTheme = function(theme) {
           let activeTheme
-          if (typeof this.props.theme === 'object') {
-            activeTheme = { base: this.props.theme }
+          if (typeof theme === 'object') {
+            activeTheme = { base: theme }
           } else {
             activeTheme =
               this.context.uiThemes &&
-              this.context.uiThemes[
-                this.props.theme || this.context.uiActiveThemeName
-              ]
+              this.context.uiThemes[theme || this.context.uiActiveThemeName]
           }
           if (activeTheme) {
-            this.theme = getStyles(Child.theme(this.props, activeTheme, this))
+            return getStyles(Child.theme(this.props, activeTheme, this))
           }
-          return ogRender.call(this, ...args)
+          return null
         }
+
+        const { getStyles } = this
+        Object.defineProperty(Child.prototype, 'theme', {
+          get() {
+            const { uiActiveThemeName, uiThemes } = this.context
+            return (
+              this.getTheme(this.props.theme) ||
+              (uiThemes && uiThemes[uiActiveThemeName])
+            )
+          },
+        })
       }
     }
-    return Child
   }
 
   niceStyleSheet = (styles: Object, errorMessage: string) => {

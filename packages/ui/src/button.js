@@ -55,9 +55,7 @@ export default class Button extends React.Component {
             $badgeSize={props.size === true ? 1 : props.size || 1}
             {...badgeProps}
           >
-            <contents>
-              {badge}
-            </contents>
+            <contents>{badge}</contents>
           </badge>
         }
       >

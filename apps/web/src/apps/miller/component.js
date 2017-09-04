@@ -82,7 +82,7 @@ class MillerStore {
 }
 
 @view
-class Pane extends React.Component<any> {
+class Pane extends React.Component<> {
   static defaultProps: {}
   render({
     pane,
@@ -140,7 +140,7 @@ class Pane extends React.Component<any> {
 @view({
   store: MillerStore,
 })
-export default class Miller extends React.Component<any> {
+export default class Miller extends React.Component<> {
   static defaultProps = {
     onActions: _ => _,
   }

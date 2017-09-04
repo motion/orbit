@@ -31,6 +31,7 @@ type Props = PaneProps & {| store: BarFeedStore |}
   store: BarFeedStore,
 })
 export default class BarFeed extends React.Component<Props> {
+  static defaultProps: Props
   render({ store, activeIndex, data }: Props) {
     const content = (
       <contents>

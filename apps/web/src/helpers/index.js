@@ -1,20 +1,27 @@
 // @flow
-export * from 'mobx'
-export { Component } from 'react'
-export debug from 'debug'
-export fuzzy from './fuzzy'
+import * as React from 'react'
+import debug_ from 'debug'
+import fuzzy_ from './fuzzy'
+
+export const fuzzy = fuzzy_
+export const debug = debug_
+export const Component = React.Component
 
 class Cache {
-  all = new Set()
-  add = item => this.all.add(item)
-  remove = item => this.all.delete(item)
+  all: Set = new Set()
+  add = (item: any) => this.all.add(item)
+  remove = (item: any) => this.all.delete(item)
 }
 export const viewCache = new Cache()
 
 import { HotKeys as OGHotKeys } from 'react-hotkeys'
 
 // ensures it doesnt interrupt flexing
-export const HotKeys = ({ style, ...props }) =>
+type Props = {
+  style: any,
+}
+
+export const HotKeys = ({ style, ...props }: Props) => (
   <OGHotKeys
     style={{
       flex: 'inherit',
@@ -24,5 +31,8 @@ export const HotKeys = ({ style, ...props }) =>
     }}
     {...props}
   />
+)
 
-export electron, { OS } from '~/helpers/electron'
+import electron_, { OS as OS_ } from '~/helpers/electron'
+export const electron = electron_
+export const OS = OS_

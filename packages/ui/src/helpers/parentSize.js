@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import resizer from 'element-resize-detector'
 
 const Resize = resizer({ strategy: 'scroll' })

@@ -27,6 +27,7 @@ type Props = PaneProps & { store: BarTeamStore }
   store: BarTeamStore,
 })
 export default class BarTeam extends Component<Props> {
+  static defaultProps: Props
   render({ store, activeIndex, data }: Props) {
     return (
       <team>

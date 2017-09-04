@@ -2,6 +2,11 @@
 import type { Color, CSSArray } from './types'
 import colorNames from './colorNames'
 
+const memoize = (wm: WeakMap, cb: Function) => (...args) => {
+  const res = wm[args[0]]
+  return (res || cb)(...args)
+}
+
 export function colorToString(color: Color, options?: Object): string {
   if (typeof color === 'string') {
     return color
@@ -17,21 +22,25 @@ export function colorToString(color: Color, options?: Object): string {
   return res
 }
 
-export function isColorLike(object: any, options?: Object) {
-  if (!object) {
+const ColorLikeCache = new WeakMap()
+export const isColorLike = memoize(
+  ColorLikeCache,
+  (object: any, options?: Object) => {
+    if (!object) {
+      return false
+    }
+    if (typeof object === 'string' && isColorLikeString(object)) {
+      return true
+    }
+    if (Array.isArray(object)) {
+      return isColorLikeArray(object)
+    }
+    if (typeof object === 'object') {
+      return isColorLikeLibrary(object, options) || isColorLikeObject(object)
+    }
     return false
   }
-  if (typeof object === 'string' && isColorLikeString(object)) {
-    return true
-  }
-  if (Array.isArray(object)) {
-    return isColorLikeArray(object)
-  }
-  if (typeof object === 'object') {
-    return isColorLikeLibrary(object, options) || isColorLikeObject(object)
-  }
-  return false
-}
+)
 
 export function isColorLikeString(str: string) {
   if (str[0] === '#' && (str.length === 4 || str.length === 7)) {
@@ -95,7 +104,11 @@ export function getColorLikeLibraryValue(val: any, options?: Object) {
   return res
 }
 
+const ObjectToColorCache = new WeakMap()
 function objectToColor(color: Color): string {
+  if (ObjectToColorCache[color]) {
+    return ObjectToColorCache[color]
+  }
   // final processing of objects and arrays
   if (Array.isArray(color)) {
     const length = color.length

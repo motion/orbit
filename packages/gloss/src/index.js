@@ -55,7 +55,7 @@ export class Gloss {
       if (!hasTheme) {
         return Child
       }
-      if (!Child.prototype.theme) {
+      if (!Object.hasOwnProperty(Child.prototype, 'theme')) {
         Child.prototype.getTheme = function(theme) {
           let activeTheme
           if (typeof theme === 'object') {

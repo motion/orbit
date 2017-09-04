@@ -46,6 +46,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     const isTag = typeof type === 'string'
     const finalProps = {}
     const finalStyles = []
+    const { theme } = this
 
     const addStyle = (obj, key, val, checkTheme) => {
       const style = obj[key]
@@ -56,8 +57,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
       } else {
         finalStyles.push(style)
       }
-      if (SHOULD_THEME && checkTheme && this.theme && this.theme[key]) {
-        finalStyles.push(this.theme[key])
+      if (SHOULD_THEME && checkTheme && theme && theme[key]) {
+        finalStyles.push(theme[key])
       }
     }
 

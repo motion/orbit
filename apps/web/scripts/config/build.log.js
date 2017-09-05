@@ -27,8 +27,7 @@ module.exports = (fatalError, stats) => {
   }
 
   if (firstTime) {
-    console.log('\nrun:')
-    console.log('statik --port 5000 apps/web/build &')
-    console.log('open http://localhost:5000')
+    console.log('\ncool, now:')
+    console.log('npm run start-prod')
   }
 }

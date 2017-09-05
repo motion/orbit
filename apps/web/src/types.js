@@ -11,6 +11,7 @@ export type PaneProps = {
 }
 
 export type PaneResult = {
+  id?: string | number,
   title: string,
   type: string,
   icon?: string,

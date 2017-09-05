@@ -8,6 +8,7 @@ import { OS } from '~/helpers'
 import type { PaneProps, PaneResult } from '~/types'
 
 const thingToResult = (thing: Thing): PaneResult => ({
+  id: thing.id,
   title: thing.title,
   type: thing.type,
   icon: 'icon',
@@ -17,14 +18,17 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
-  topThings = Thing.find({ sort: 'createdAt' })
+  topThings: ?Array<Thing> = Thing.find({ sort: 'createdAt' })
 
   start() {
     this.props.getRef(this)
   }
 
   helper = {
-    filter: (x, opts) => fuzzy(x || [], this.props.search, opts),
+    filter: (
+      x: Array<PaneResult>,
+      opts?: { max?: number }
+    ): Array<PaneResult> => fuzzy(x || [], this.props.search, opts),
   }
 
   get things(): Array<PaneResult> {
@@ -42,6 +46,7 @@ class BarMainStore {
   get browse(): Array<PaneResult> {
     return this.helper.filter([
       {
+        id: 10,
         title: 'Team: Motion',
         type: 'team',
         data: {
@@ -49,6 +54,7 @@ class BarMainStore {
         },
       },
       {
+        id: 11,
         title: 'Recent',
         type: 'feed',
         icon: 'radio',
@@ -57,12 +63,14 @@ class BarMainStore {
         },
       },
       {
+        id: 12,
         data: { message: 'assigned' },
         title: 'Assigned to me',
         type: 'message',
         icon: 'check',
       },
       {
+        id: 13,
         data: { message: 'my team' },
         title: 'My Team',
         category: 'Browse',
@@ -73,6 +81,7 @@ class BarMainStore {
         icon: 'objects_planet',
       },
       {
+        id: 14,
         data: { message: 'from company' },
         title: 'Company',
         category: 'Browse',
@@ -88,6 +97,7 @@ class BarMainStore {
   get people(): Array<PaneResult> {
     return this.helper.filter([
       {
+        id: 20,
         title: 'Stephanie',
         type: 'feed',
         data: {
@@ -96,12 +106,14 @@ class BarMainStore {
         category: 'People',
       },
       {
+        id: 21,
         title: 'Nate',
         type: 'feed',
         data: { person: 'natew', image: 'me' },
         category: 'People',
       },
       {
+        id: 22,
         title: 'Nick',
         type: 'feed',
         data: { person: 'ncammarata', image: 'nick' },
@@ -113,6 +125,7 @@ class BarMainStore {
   get extras() {
     return this.helper.filter([
       {
+        id: 30,
         title: 'Settings',
         icon: 'gear',
         type: 'message',

@@ -236,7 +236,7 @@ export default class Surface extends React.PureComponent<Props> {
     const contents = [
       <Glint
         key={0}
-        if={glint && this.theme}
+        if={glint}
         size={size}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}

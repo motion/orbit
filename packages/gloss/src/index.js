@@ -81,14 +81,13 @@ export class Gloss {
         const ogRender = Child.prototype.render
         Child.prototype.render = function(...args) {
           let activeTheme
-          if (typeof this.props.theme === 'object') {
-            activeTheme = { base: this.props.theme }
+          const { theme } = this.props
+          if (typeof theme === 'object') {
+            activeTheme = { base: theme }
           } else {
             activeTheme =
               this.context.uiThemes &&
-              this.context.uiThemes[
-                this.props.theme || this.context.uiActiveThemeName
-              ]
+              this.context.uiThemes[theme || this.context.uiActiveThemeName]
           }
           if (activeTheme) {
             const childTheme = Child.theme(this.props, activeTheme, this)
@@ -102,7 +101,7 @@ export class Gloss {
     }
   }
 
-  niceStyleSheet = (styles: Object, errorMessage: string): Object => {
+  niceStyleSheet = (styles: Object, errorMessage?: string): Object => {
     for (const style of Object.keys(styles)) {
       const value = styles[style]
       if (value) {

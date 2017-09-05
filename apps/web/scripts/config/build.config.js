@@ -22,13 +22,16 @@ const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
 const EXCLUDE = /@mcro/
+const ROOT = Path.join(__dirname, '..', '..')
 
-const exclude = Object.keys(
-  JSON.parse(Fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json')))
-    .dependencies
+let exclude = Object.keys(
+  JSON.parse(Fs.readFileSync(Path.join(ROOT, 'package.json'))).dependencies
 ).filter(x => !EXCLUDE.test(x))
 
-console.log('exclude', exclude)
+exclude = [].concat(
+  exclude.map(name => Path.resolve(ROOT, 'node_modules', name)),
+  exclude.map(name => Path.resolve(ROOT, '..', '..', 'node_modules', name))
+)
 
 console.log('running webpack for:', process.env.NODE_ENV)
 

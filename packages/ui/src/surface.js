@@ -378,7 +378,6 @@ export default class Surface extends React.Component<Props> {
   }
 
   static theme = (props, theme, self) => {
-    console.log('RUN THEME')
     if (props.debug) {
       log('debugging')
       log(props.hover)
@@ -554,7 +553,6 @@ export default class Surface extends React.Component<Props> {
       props.iconSize || Math.round(size * 11 * (props.sizeIcon || 1))
 
     // TODO figure out better pattern for this
-    console.log('setting themevals onto', self)
     self.themeValues = {
       iconSize,
       borderRadiusSize: radius,

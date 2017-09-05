@@ -1,6 +1,7 @@
 {
   "name": "@mcro/black",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "module": "lib/index.js",
   "version": "1.2.0",
   "scripts": {},
   "dependencies": {

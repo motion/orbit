@@ -2,7 +2,8 @@
   "name": "@mcro/css",
   "version": "1.2.0",
   "description": "",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "module": "lib/index.js",
   "author": "Motion",
   "license": "MIT",
   "publishConfig": {

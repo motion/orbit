@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react'
-import debug_ from 'debug'
 import fuzzy_ from './fuzzy'
 
 export const fuzzy = fuzzy_
-export const debug = debug_
 export const Component = React.Component
 
 class Cache {

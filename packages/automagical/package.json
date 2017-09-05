@@ -1,6 +1,7 @@
 {
   "name": "@mcro/automagical",
-  "main": "lib/automagical.js",
+  "main": "dist/automagical.js",
+  "module": "lib/automagical.js",
   "version": "1.2.0",
   "scripts": {},
   "dependencies": {

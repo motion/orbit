@@ -2,7 +2,8 @@
   "name": "@mcro/helpers",
   "version": "1.2.0",
   "description": "",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "module": "lib/index.js",
   "author": "Motion (motion.io)",
   "license": "MIT",
   "dependencies": {

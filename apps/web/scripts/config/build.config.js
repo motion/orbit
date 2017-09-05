@@ -29,9 +29,7 @@ const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
 const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
-const includes = Fs.readdirSync(ORG).map(folder =>
-  Path.resolve(ORG, folder, 'src')
-)
+const includes = Fs.readdirSync(ORG).map(folder => Path.resolve(ORG, folder))
 
 console.log('includes', includes)
 
@@ -68,7 +66,7 @@ module.exports = Object.assign(config, {
   },
 
   resolve: {
-    mainFields: ['module', 'esnext', 'jsnext:main', 'main'],
+    mainFields: ['module', 'main'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -94,24 +92,9 @@ module.exports = Object.assign(config, {
       {
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: [
-              [
-                '@mcro/preset-motion',
-                {
-                  disable: ['@mcro/hmr', '@mcro/hmr-view'],
-                  env: {
-                    targets: {
-                      chrome: '58',
-                    },
-                  },
-                },
-              ],
-            ],
-          },
         },
         test: /\.js$/,
-        exclude: new RegExp('node_modules\\' + Path.sep + '(?!@mcro).*'),
+        exclude: new RegExp('node_modules.*(?!@mcro)'),
         include: [].concat(includes, [
           Path.resolve(__dirname, '..', '..', 'src'),
         ]),
@@ -156,5 +139,6 @@ module.exports = Object.assign(config, {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
+    __dirname: 'empty',
   },
 })

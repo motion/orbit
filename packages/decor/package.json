@@ -1,12 +1,12 @@
 {
   "name": "@mcro/decor",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "module": "lib/index.js",
   "version": "1.2.0",
   "scripts": {},
   "dependencies": {
     "@mcro/helpers": "^1.2.0",
     "autobind-decorator": "^2.1.0",
-    "debug": "^3.0.0",
     "hoist-non-react-statics": "^2.3.0",
     "lodash": "^4.17.4",
     "mobx": "*",

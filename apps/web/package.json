@@ -37,7 +37,6 @@
     "@mcro/ui": "^1.2.0",
     "babel-polyfill": "^6.23.0",
     "color": "^2.0.0",
-    "debug": "^2.6.8",
     "fuzzysearch": "^1.0.3",
     "geopattern": "1.2.3",
     "hash-sum": "1.0.2",

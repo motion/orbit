@@ -39,7 +39,7 @@ export default class Text extends React.Component<Props> {
 
   handleProps(props: Object) {
     // setup reaction for editing if necessary
-    if (!this.editableReaction) {
+    if (!this.editableReaction && props.editable) {
       this.editableReaction = this.react(
         () => this.editable,
         editable => {

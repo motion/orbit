@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react'
 import fancyElement from './fancyElement'
 import motionStyle from '@mcro/css'
 import { StyleSheet } from './stylesheet'
@@ -49,7 +50,7 @@ export class Gloss {
     if (typeof Child === 'string') {
       const name = Child
       const createEl = this.makeCreateEl({ [name]: style }, name)
-      return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
+      return (props: Object): React.Element<any> => createEl(name, props)
     }
 
     if (Child.prototype) {

@@ -30,7 +30,7 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
   const isClass = x => x && !!x.prototype
 
   // process plugins
-  for (const curPlugin of plugins.filter(Boolean)) {
+  for (const curPlugin of plugins.filter(x => !!x)) {
     let getPlugin = curPlugin
     let options = {}
 

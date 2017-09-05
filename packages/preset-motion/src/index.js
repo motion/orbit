@@ -52,10 +52,10 @@ module.exports = function(context, givenOpts) {
     ],
   }
 
-  config.plugins = config.plugins.filter(Boolean)
-  config.presets = config.presets.filter(Boolean)
+  config.plugins = config.plugins.filter(x => !!x)
+  config.presets = config.presets.filter(x => !!x)
 
-  console.log('config is', config)
+  // console.log(JSON.stringify(config, null, 2))
 
   return config
 }

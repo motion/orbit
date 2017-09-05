@@ -7,6 +7,6 @@ const { ncp } = require('ncp')
 const Path = require('path')
 const path = (...path) => Path.join(__dirname, '..', ...path)
 
-console.log('calling webpack')
-webpack(config, log)
+console.log('running webpack...')
 ncp(path('public'), path('build'), console.log.bind(console))
+webpack(config, log)

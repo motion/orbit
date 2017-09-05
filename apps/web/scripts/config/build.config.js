@@ -1,3 +1,5 @@
+const Path = require('path')
+const Fs = require('fs')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
@@ -19,6 +21,15 @@ const IS_PROD = process.env.NODE_ENV === 'production'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
+const EXCLUDE = /@mcro/
+
+const exclude = Object.keys(
+  JSON.parse(Fs.readFileSync(Path.join(__dirname, '..', '..', 'package.json')))
+    .dependencies
+).filter(x => !EXCLUDE.test(x))
+
+console.log('exclude', exclude)
+
 console.log('running webpack for:', process.env.NODE_ENV)
 
 let config
@@ -26,7 +37,7 @@ let config
 if (IS_PROD) {
   config = {
     devtool: 'source-map',
-    bail: true,
+    // bail: true,
   }
 } else {
   config = {
@@ -80,6 +91,7 @@ module.exports = Object.assign(config, {
               [
                 '@mcro/preset-motion',
                 {
+                  disable: ['@mcro/hmr', '@mcro/hmr-view'],
                   env: {
                     targets: {
                       chrome: '58',
@@ -91,7 +103,7 @@ module.exports = Object.assign(config, {
           },
         },
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: exclude,
       },
     ],
   },
@@ -124,7 +136,7 @@ module.exports = Object.assign(config, {
     // IS_PROD && new ButternutWebpackPlugin({}),
     // IS_PROD && new BabiliPlugin(),
     // IS_PROD && new PrepackPlugin(),
-    IS_PROD && new UglifyJSPlugin(),
+    // IS_PROD && new UglifyJSPlugin(),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

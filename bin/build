@@ -17,10 +17,11 @@ if [ "$APP" = "electron" ]; then
   npm run dist
 elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
+  rm -rf build
   npm run build
 else
   link-flow &
-  # lerna
+  # dev build
   npx lerna exec --parallel \
     --ignore @mcro/native  \
     --ignore @mcro/web \

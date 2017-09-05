@@ -188,7 +188,7 @@ export default class GithubSync {
     if (Array.isArray(repos)) {
       return flatten(
         await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
-      ).filter(Boolean)
+      ).filter(x => !!x)
     } else {
       console.log('No repos', repos)
     }

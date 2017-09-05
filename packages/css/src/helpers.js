@@ -2,9 +2,23 @@
 import type { Color, CSSArray } from './types'
 import colorNames from './colorNames'
 
-const memoize = (wm: WeakMap, cb: Function) => (...args) => {
-  const res = wm[args[0]]
-  return (res || cb)(...args)
+function memoize<Result>(cb: Function): (a?: any, b?: any, c?: any) => Result {
+  const Cache = new WeakMap()
+
+  return (key: any, ...rest: Array<any>) => {
+    // use first argument as key
+    if (key) {
+      const res = Cache.get(key)
+      if (res) {
+        return res
+      }
+    }
+    const newVal: Result = cb.call(this, key, ...rest)
+    if (key) {
+      Cache.set(key, newVal)
+    }
+    return newVal
+  }
 }
 
 export function colorToString(color: Color, options?: Object): string {
@@ -19,28 +33,24 @@ export function colorToString(color: Color, options?: Object): string {
     res = getColorLikeLibraryValue(color, options)
   }
   res = objectToColor(res)
-  return res
+  return `${res}`
 }
 
-const ColorLikeCache = new WeakMap()
-export const isColorLike = memoize(
-  ColorLikeCache,
-  (object: any, options?: Object) => {
-    if (!object) {
-      return false
-    }
-    if (typeof object === 'string' && isColorLikeString(object)) {
-      return true
-    }
-    if (Array.isArray(object)) {
-      return isColorLikeArray(object)
-    }
-    if (typeof object === 'object') {
-      return isColorLikeLibrary(object, options) || isColorLikeObject(object)
-    }
+export const isColorLike = memoize((object: any, options?: Object) => {
+  if (!object) {
     return false
   }
-)
+  if (typeof object === 'string' && isColorLikeString(object)) {
+    return true
+  }
+  if (Array.isArray(object)) {
+    return isColorLikeArray(object)
+  }
+  if (typeof object === 'object') {
+    return isColorLikeLibrary(object, options) || isColorLikeObject(object)
+  }
+  return false
+})
 
 export function isColorLikeString(str: string) {
   if (str[0] === '#' && (str.length === 4 || str.length === 7)) {
@@ -104,11 +114,7 @@ export function getColorLikeLibraryValue(val: any, options?: Object) {
   return res
 }
 
-const ObjectToColorCache = new WeakMap()
-function objectToColor(color: Color): string {
-  if (ObjectToColorCache[color]) {
-    return ObjectToColorCache[color]
-  }
+const objectToColor = memoize((color: Color): string => {
   // final processing of objects and arrays
   if (Array.isArray(color)) {
     const length = color.length
@@ -125,7 +131,7 @@ function objectToColor(color: Color): string {
     return `rgb(${color.r}, ${color.g}, ${color.b})`
   }
   return color.toString()
-}
+})
 
 const arr3to4 = arr => [...arr, arr[1]]
 const arr2to4 = arr => [...arr, arr[0], arr[1]]

@@ -76,9 +76,14 @@ function link-flow() {
 
       ENTRIES=$(cd src; find . -name "*.js")
       for ENTRY in $ENTRIES; do
+        if [ ! -f ".flowconfig" ]; then
+          echo "no flow config for $ENTRY"
+          continue
+        fi
         ENTRY_TRIMMED=${ENTRY:2}
         mkdir -p lib/$(dirname $ENTRY_TRIMMED)
-        ln src/$ENTRY_TRIMMED lib/$ENTRY_TRIMMED.flow
+        echo "flow gen-flow-files src/$ENTRY_TRIMMED > lib/$ENTRY_TRIMMED.flow"
+        flow gen-flow-files src/$ENTRY_TRIMMED > lib/$ENTRY_TRIMMED.flow
       done
 
       cd -

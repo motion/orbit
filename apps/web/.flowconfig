@@ -1,4 +1,5 @@
 [ignore]
+.*/node_modules/fbjs/.*
 **/node_modules/aphrodite-jss/.*
 **/node_modules/node-uuid/lib/sha1-browser.js
 .*/node_modules/lunr/.*

@@ -9,8 +9,6 @@
 .*/node_modules/xdl/.*
 
 [include]
-./node_modules
-../../node_modules
 
 [libs]
 ../../flow-typed

@@ -14,6 +14,7 @@ export const Helpers = Helpers_
 // type exports
 export type { Transform, Color } from '@mcro/css'
 export type Options = {
+  dontTheme?: boolean,
   themeKey: string | boolean,
   baseStyles?: Object,
   tagName?: boolean,
@@ -27,15 +28,18 @@ const DEFAULT_OPTS = {
 
 export class Gloss {
   options: Options
-
-  Helpers = Helpers
-  makeCreateEl = styles => fancyElement(this, this.getStyles(styles))
+  niceStyle: any
+  baseStyles: ?Object
+  createElement: Function
+  Helpers: Object = Helpers
+  makeCreateEl = (styles: Object): Function =>
+    fancyElement(this, this.getStyles(styles))
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
     this.niceStyle = motionStyle(opts)
     this.helpers = this.niceStyle.helpers
-    this.baseStyles = opts.baseStyles && this.getStyles(opts.baseStyles)
+    this.baseStyles = opts.baseStyles ? this.getStyles(opts.baseStyles) : null
     this.createElement = this.makeCreateEl()
     this.decorator.createElement = this.createElement
   }
@@ -85,7 +89,7 @@ export class Gloss {
     }
   }
 
-  niceStyleSheet = (styles: Object, errorMessage: string) => {
+  niceStyleSheet = (styles: Object, errorMessage: string): Object => {
     for (const style in styles) {
       if (!styles.hasOwnProperty(style)) continue
       const value = styles[style]
@@ -97,7 +101,7 @@ export class Gloss {
   }
 
   // runs niceStyleSheet on non-function styles
-  getStyles = styles => {
+  getStyles = (styles: any): ?Object => {
     if (!styles) {
       return null
     }
@@ -118,6 +122,6 @@ export class Gloss {
   }
 }
 
-export default function glossFactory(options: Options): Function {
+export default function glossFactory(options: Options): Gloss {
   return new Gloss(options)
 }

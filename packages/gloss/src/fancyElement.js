@@ -15,7 +15,8 @@ const arrayOfObjectsToObject = (arr: Array<Object>) => {
   }
   return res
 }
-const ogCreateElement = React.createElement.bind(React)
+const ogCreateElement = (type: string | Function, ...args) =>
+  React.createElement(type, ...args)
 const TAG_NAME_MAP = {
   title: 'div',
   body: 'div',
@@ -27,7 +28,6 @@ const $ = '$'
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
   const { baseStyles, options, niceStyle } = Gloss
-  const SHOULD_THEME = !options.dontTheme
   return function fancyElement(
     type_: string | Function,
     props?: Object,
@@ -44,20 +44,26 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     let cssStyles
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
+    const name: string = typeof type === 'function' ? `${type.name}` : type
     const finalProps = {}
     const finalStyles = []
     const { theme } = this
 
     const addStyle = (obj, key, val, checkTheme) => {
       const style = obj[key]
-      if (!style) return
+      if (!style) {
+        return
+      }
+      // dynamic
       if (typeof style === 'function') {
-        const sheet = StyleSheet.create({ [type]: niceStyle(style(val)) })
+        const sheet = StyleSheet.create({
+          [name]: niceStyle(style(val)),
+        })
         finalStyles.push(sheet[type])
       } else {
         finalStyles.push(style)
       }
-      if (SHOULD_THEME && checkTheme && theme && theme[key]) {
+      if (checkTheme && theme && theme[key]) {
         finalStyles.push(theme[key])
       }
     }
@@ -115,7 +121,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
 
     // glossify and append style prop
     if (cssStyles) {
-      const sheet = StyleSheet.create({ [type]: niceStyle(cssStyles) })
+      const sheet = StyleSheet.create({ [name]: niceStyle(cssStyles) })
       finalStyles.push(sheet[type])
     }
 
@@ -129,7 +135,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           try {
             finalProps.className = css(...finalStyles)
           } catch (e) {
-            console.error('Error applying style to', type, finalStyles, this)
+            console.error('Error applying style to', name, finalStyles, this)
           }
         }
 
@@ -141,16 +147,18 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         }
       } else {
         // children get a style prop
-        finalProps.style = arrayOfObjectsToObject([
-          props.style,
-          ...finalStyles.map(style => style && style.style),
-        ])
+        if (props) {
+          finalProps.style = arrayOfObjectsToObject([
+            props.style,
+            ...finalStyles.map(style => style && style.style),
+          ])
+        }
       }
     }
 
     if (isTag) {
-      type = VALID_TAGS[type] ? type : 'div'
-      type = TAG_NAME_MAP[type] || type
+      type = VALID_TAGS[name] ? name : 'div'
+      type = TAG_NAME_MAP[name] || type
     }
 
     return ogCreateElement(type, finalProps, ...children)

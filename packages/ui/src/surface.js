@@ -18,19 +18,19 @@ export type Props = {
   background?: Color,
   badge?: React.Element<any>,
   badgeProps?: Object,
-  border?: Array | Object,
-  borderBottom?: Array | Object,
+  border?: Array<any> | Object,
+  borderBottom?: Array<any> | Object,
   borderBottomRadius?: number,
-  borderLeft?: Array | Object,
+  borderLeft?: Array<any> | Object,
   borderLeftRadius?: number,
   borderRadius: number,
-  borderRight?: Array | Object,
+  borderRight?: Array<any> | Object,
   borderRightRadius?: number,
   borderStyle?: 'solid' | 'dotted',
-  borderTop?: Array | Object,
+  borderTop?: Array<any> | Object,
   borderTopRadius?: number,
   borderWidth?: number | string,
-  boxShadow?: Array | string,
+  boxShadow?: Array<any> | string,
   children?: Element | string,
   chromeless?: boolean,
   circular?: boolean,
@@ -308,25 +308,18 @@ export default class Surface extends React.Component<Props> {
         onClick={this.onClick}
         {...!wrapElement && passProps}
       >
-        {after &&
+        {after && (
           <wrap>
-            <before>
-              {contents}
-            </before>
-            <after>
-              {after}
-            </after>
-          </wrap>}
+            <before>{contents}</before>
+            <after>{after}</after>
+          </wrap>
+        )}
         {!after && contents}
       </surface>
     )
 
     if (theme) {
-      return (
-        <Theme name={theme}>
-          {surface}
-        </Theme>
-      )
+      return <Theme name={theme}>{surface}</Theme>
     }
 
     return surface

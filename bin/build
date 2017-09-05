@@ -19,7 +19,7 @@ elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   npm run build
 else
-  # link-flow &
+  link-flow &
   # lerna
   npx lerna exec --parallel \
     --ignore @mcro/native  \

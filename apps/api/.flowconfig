@@ -1,4 +1,5 @@
 [ignore]
+.*/node_modules/fbjs/.*
 **/lib/*.js
 **/.*.js.flow
 .*/node_modules/lunr/.*

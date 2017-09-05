@@ -60,6 +60,8 @@ export class Gloss {
         return Child
       }
       if (!Child.prototype.theme) {
+        const { getStyles } = this
+
         Child.prototype.getTheme = function(theme) {
           let activeTheme
           if (typeof theme === 'object') {
@@ -76,8 +78,11 @@ export class Gloss {
         }
 
         const ogRender = Child.prototype.render
-        const { getStyles } = this
         Child.prototype.render = function(...args) {
+          const key = `${this.displayName || this.constructor.name}`
+          console.time(`${key}.gettheme`)
+          console.time('4')
+          console.time('1')
           let activeTheme
           if (typeof this.props.theme === 'object') {
             activeTheme = { base: this.props.theme }
@@ -88,9 +93,19 @@ export class Gloss {
                 this.props.theme || this.context.uiActiveThemeName
               ]
           }
+          console.timeEnd('1')
+          console.time('2')
           if (activeTheme) {
-            this.theme = getStyles(Child.theme(this.props, activeTheme, this))
+            console.time('2.1')
+            const childTheme = Child.theme(this.props, activeTheme, this)
+            console.timeEnd('2.1')
+            console.time('2.2')
+            this.theme = getStyles(childTheme)
+            console.timeEnd('2.2')
           }
+          console.timeEnd('2')
+          console.timeEnd('4')
+          console.timeEnd(`${key}.gettheme`)
           return ogRender.call(this, ...args)
         }
       }
@@ -98,8 +113,7 @@ export class Gloss {
   }
 
   niceStyleSheet = (styles: Object, errorMessage: string): Object => {
-    for (const style in styles) {
-      if (!styles.hasOwnProperty(style)) continue
+    for (const style of Object.keys(styles)) {
       const value = styles[style]
       if (value) {
         styles[style] = this.niceStyle(value, errorMessage)
@@ -115,7 +129,8 @@ export class Gloss {
     }
     const functionalStyles = {}
     const staticStyles = {}
-    for (const [key, val] of Object.entries(styles)) {
+    for (const key of Object.keys(styles)) {
+      const val = styles[key]
       if (typeof val === 'function') {
         functionalStyles[key] = val // to be run later
       } else {

@@ -109,7 +109,7 @@ const hasChildren = (children: any): boolean =>
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Surface extends React.Component<Props> {
+export default class Surface extends React.PureComponent<Props> {
   static defaultProps = {
     tagName: IS_PROD ? 'div' : 'surface',
     borderStyle: 'solid',
@@ -562,7 +562,7 @@ export default class Surface extends React.Component<Props> {
 
     const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
 
-    return {
+    const result = {
       element: {
         height,
         ...borderRadius,
@@ -644,5 +644,7 @@ export default class Surface extends React.Component<Props> {
         ...props.style,
       },
     }
+
+    return result
   }
 }

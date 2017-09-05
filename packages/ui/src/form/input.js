@@ -38,7 +38,8 @@ export default class Input extends React.Component<Props> {
 
   setValues = () => {
     if (this.shouldSyncToForm && this.node) {
-      this.props.uiContext.formValues[this.props.name] = () => this.node.value
+      this.props.uiContext.formValues[this.props.name] = () =>
+        this.node && this.node.value
     }
   }
 

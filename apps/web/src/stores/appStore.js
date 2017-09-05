@@ -96,7 +96,7 @@ export default class AppStore {
 
       this.stores = reduce(this.mounted.stores)
       this.views = reduce(this.mounted.views)
-    }, 1)
+    }, 100)
   }
 
   key = (name, thing) => (name === 'store' ? thing.constructor.name : name)

@@ -24,6 +24,7 @@ export default class Text extends React.Component<Props> {
     size: 1,
   }
 
+  editableReaction: ?Function
   @observable selected = false
   @observable editable = false
   node = null
@@ -32,11 +33,11 @@ export default class Text extends React.Component<Props> {
     this.handleProps(this.props)
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     this.handleProps(nextProps)
   }
 
-  handleProps(props) {
+  handleProps(props: Object) {
     // setup reaction for editing if necessary
     if (!this.editableReaction) {
       this.editableReaction = this.react(
@@ -57,10 +58,12 @@ export default class Text extends React.Component<Props> {
       )
     }
     // set props
-    if (!props.editing) {
+    if (!props.editing && this.selected) {
       this.selected = false
     }
-    this.editable = props.editable
+    if (this.editable !== props.editable) {
+      this.editable = props.editable
+    }
   }
 
   componentDidUpdate() {

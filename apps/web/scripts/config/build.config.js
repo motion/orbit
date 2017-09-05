@@ -28,10 +28,9 @@ const IS_PROD = process.env.NODE_ENV === 'production'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
-const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
-const includes = Fs.readdirSync(ORG).map(folder => Path.resolve(ORG, folder))
-
-console.log('includes', includes)
+// if you want to parse our modules directly use this, but we have dist/ folder now
+// const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
+// const includes = Fs.readdirSync(ORG).map(folder => Path.resolve(ORG, folder))
 
 console.log('running webpack for:', process.env.NODE_ENV)
 
@@ -95,10 +94,7 @@ module.exports = Object.assign(config, {
           loader: 'babel-loader',
         },
         test: /\.js$/,
-        exclude: new RegExp('node_modules.*(?!@mcro)'),
-        include: [].concat(includes, [
-          Path.resolve(__dirname, '..', '..', 'src'),
-        ]),
+        exclude: /node_modules/,
       },
     ],
   },
@@ -140,6 +136,5 @@ module.exports = Object.assign(config, {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-    assert: 'empty',
   },
 })

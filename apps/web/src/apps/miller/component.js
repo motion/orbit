@@ -1,9 +1,7 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
-import { throttle } from 'lodash-decorators'
 
 class MillerStore {
   plugins = []
@@ -15,7 +13,6 @@ class MillerStore {
     this.setTimeout(this.handleSelectionChange)
   }
 
-  @throttle(16)
   handleSelectionChange = () => {
     const { state, onChange } = this.props
     if (state.activeRow !== null && this.activeResults) {
@@ -82,8 +79,7 @@ class MillerStore {
 }
 
 @view
-class Pane extends React.Component<> {
-  static defaultProps: {}
+class Pane extends React.Component {
   render({
     pane,
     getRef,
@@ -140,7 +136,7 @@ class Pane extends React.Component<> {
 @view({
   store: MillerStore,
 })
-export default class Miller extends React.Component<> {
+export default class Miller extends React.Component {
   static defaultProps = {
     onActions: _ => _,
   }

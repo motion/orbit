@@ -73,7 +73,23 @@ module.exports = Object.assign(config, {
   module: {
     rules: [
       {
-        use: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              [
+                '@mcro/preset-motion',
+                {
+                  env: {
+                    targets: {
+                      chrome: '58',
+                    },
+                  },
+                },
+              ],
+            ],
+          },
+        },
         test: /\.js$/,
         exclude: /node_modules/,
       },
@@ -108,7 +124,7 @@ module.exports = Object.assign(config, {
     // IS_PROD && new ButternutWebpackPlugin({}),
     // IS_PROD && new BabiliPlugin(),
     // IS_PROD && new PrepackPlugin(),
-    // IS_PROD && new UglifyJSPlugin(),
+    IS_PROD && new UglifyJSPlugin(),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

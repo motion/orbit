@@ -1,5 +1,5 @@
 // @flow
-const serialize = content => content
+const serialize = (_: any): any => _
 const capitalize = s => s[0].toUpperCase() + s.substr(1)
 
 type Schema = {

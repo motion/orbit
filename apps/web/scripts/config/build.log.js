@@ -1,3 +1,5 @@
+let firstTime = true
+
 module.exports = (fatalError, stats) => {
   if (fatalError) {
     console.error(fatalError)
@@ -22,5 +24,11 @@ module.exports = (fatalError, stats) => {
         version: false,
       })
     )
+  }
+
+  if (firstTime) {
+    console.log('\nrun:')
+    console.log('statik apps/web/build &')
+    console.log('open http://localhost:3000')
   }
 }

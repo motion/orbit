@@ -145,7 +145,10 @@ export default class Server {
 
           for (const header of CASE_ME) {
             if (remoteRes.headers[header]) {
-              const mapped = header.split('-').map(toTitleCase).join('-')
+              const mapped = header
+                .split('-')
+                .map(toTitleCase)
+                .join('-')
               remoteRes.headers[mapped] = remoteRes.headers[header]
               delete remoteRes.headers[header]
             }
@@ -168,7 +171,7 @@ export default class Server {
     app.use(bodyParser.urlencoded({ extended: false }))
 
     app.get('/', (req, res) => {
-      res.send('hello world')
+      res.send('~hello world~')
     })
 
     app.get('/trello/cards', (req, res) => {

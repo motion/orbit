@@ -15,8 +15,7 @@ const arrayOfObjectsToObject = (arr: Array<Object>) => {
   }
   return res
 }
-const ogCreateElement = (type: string | Function, ...args) =>
-  React.createElement(type, ...args)
+const ogCreateElement: Function = React.createElement.bind(React)
 const TAG_NAME_MAP = {
   title: 'div',
   body: 'div',

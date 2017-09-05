@@ -7,14 +7,15 @@ function memoize<Result>(cb: Function): (a?: any, b?: any, c?: any) => Result {
 
   return (key: any, ...rest: Array<any>) => {
     // use first argument as key
-    if (key) {
+    const mappable = key && typeof key === 'object'
+    if (mappable) {
       const res = Cache.get(key)
       if (res) {
         return res
       }
     }
     const newVal: Result = cb.call(this, key, ...rest)
-    if (key) {
+    if (mappable) {
       Cache.set(key, newVal)
     }
     return newVal

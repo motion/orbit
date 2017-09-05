@@ -102,7 +102,7 @@ const BORDER_RADIUS_SIDES = [
   'borderRightRadius',
 ]
 
-const hasChildren = children =>
+const hasChildren = (children: any): boolean =>
   Array.isArray(children)
     ? children.reduce((a, b) => a || !!b, false)
     : !!children
@@ -187,7 +187,6 @@ export default class Surface extends React.Component<Props> {
       marginLeft,
       marginRight,
       marginTop,
-      material,
       maxWidth,
       minWidth,
       noElement,

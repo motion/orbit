@@ -2,10 +2,10 @@
 import * as React from 'react'
 import { StyleSheet, css } from './stylesheet'
 import deepExtend from 'deep-extend'
-import type { Gloss } from './index'
+import { Gloss } from './index'
 import tags from 'html-tags'
 
-const VALID_TAGS: Object<string, boolean> = tags.reduce(
+const VALID_TAGS: { [string]: boolean } = tags.reduce(
   (acc, cur) => ({ ...acc, [cur]: true }),
   {}
 )
@@ -46,7 +46,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     let cssStyles
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
-    const name: string = typeof type === 'function' ? `${type.name}` : type
+    const name: string = !isTag ? `${type.name}` : type
     const finalProps = {}
     const finalStyles = []
     const { theme } = this
@@ -61,7 +61,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         const sheet = StyleSheet.create({
           [name]: niceStyle(style(val)),
         })
-        finalStyles.push(sheet[type])
+        finalStyles.push(sheet[name])
       } else {
         finalStyles.push(style)
       }
@@ -70,24 +70,23 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
       }
     }
 
-    if (styles && (isTag || type.name)) {
-      const tagName = type.name || type
-      addStyle(styles, tagName, null, true)
+    if (styles && name) {
+      addStyle(styles, name, null, true)
     }
 
     if (propNames) {
-      for (const NAME of propNames) {
-        const val = props && props[NAME]
+      for (const prop of propNames) {
+        const val = props && props[prop]
 
         // non-style actions
-        if (options.glossProp && NAME === options.glossProp) {
+        if (options.glossProp && prop === options.glossProp) {
           // css={}
           cssStyles = val
           continue
         }
         if (
           options.tagName &&
-          NAME === options.tagName &&
+          prop === options.tagName &&
           isTag &&
           typeof val === 'string'
         ) {
@@ -95,9 +94,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           type = val
           continue
         }
-        if (NAME[0] !== $) {
+        if (prop[0] !== $) {
           // pass props down if not glossProp style prop
-          finalProps[NAME] = val
+          finalProps[prop] = val
           continue
         }
 
@@ -108,23 +107,23 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         }
         if (baseStyles) {
           // $$style
-          const isParentStyle = NAME[1] === $
+          const isParentStyle = prop[1] === $
           if (isParentStyle) {
-            addStyle(baseStyles, NAME.slice(2), val)
+            addStyle(baseStyles, prop.slice(2), val)
             continue
           }
         }
         if (styles) {
           // $style
-          addStyle(styles, NAME.slice(1), val, true)
+          addStyle(styles, prop.slice(1), val, true)
         }
       }
     }
 
     // glossify and append style prop
-    if (cssStyles) {
-      const sheet = StyleSheet.create({ [name]: niceStyle(cssStyles) })
-      finalStyles.push(sheet[type])
+    if (cssStyles && Object.keys(cssStyles).length) {
+      const sheet = StyleSheet.create({ [name]: niceStyle(cssStyles) })[name]
+      finalStyles.push(sheet)
     }
 
     // styles => props

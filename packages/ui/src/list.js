@@ -16,7 +16,6 @@ function memoize(fn) {
   return (...args: Array<any>) => {
     const key = hash(args)
     if (C[key]) {
-      console.log('memoized')
       return C[key]
     }
     C[key] = fn(...args)

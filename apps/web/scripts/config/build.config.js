@@ -1,3 +1,14 @@
+//
+
+
+
+
+
+// WARNING WARNING
+// TURN OFF PRETTIER ON THIS FILE IT DESTROYS THE REGEX
+// WARNING
+
+
 const Path = require('path')
 const Fs = require('fs')
 const webpack = require('webpack')
@@ -17,21 +28,16 @@ const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
 const PrepackPlugin = require('prepack-webpack-plugin').default
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
+const ROOT = Path.join(__dirname, '..', '..', '..', '..')
 const IS_PROD = process.env.NODE_ENV === 'production'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
-const EXCLUDE = /@mcro/
-const ROOT = Path.join(__dirname, '..', '..')
+const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
+const includes = Fs.readdirSync(ORG)
+  .map(folder => Path.resolve(Path.resolve(ORG, folder)))
 
-let exclude = Object.keys(
-  JSON.parse(Fs.readFileSync(Path.join(ROOT, 'package.json'))).dependencies
-).filter(x => !EXCLUDE.test(x))
-
-exclude = [].concat(
-  exclude.map(name => Path.resolve(ROOT, 'node_modules', name)),
-  exclude.map(name => Path.resolve(ROOT, '..', '..', 'node_modules', name))
-)
+console.log('includes', includes)
 
 console.log('running webpack for:', process.env.NODE_ENV)
 
@@ -47,6 +53,8 @@ if (IS_PROD) {
     devtool: 'cheap-module-source-map',
   }
 }
+
+console.log(Path.resolve(ROOT, 'node_modules', '@mcro', 'ui'))
 
 module.exports = Object.assign(config, {
   entry: {
@@ -106,7 +114,11 @@ module.exports = Object.assign(config, {
           },
         },
         test: /\.js$/,
-        exclude: exclude,
+        exclude: new RegExp('node_modules\\' + Path.sep + '(?!\@mcro).*'),
+        include: [].concat(includes, [
+          Path.resolve(__dirname, '..', '..', 'src'),
+          Path.resolve(ROOT, 'node_modules', '@mcro', 'ui')
+        ])
       },
     ],
   },

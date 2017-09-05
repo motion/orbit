@@ -7,16 +7,12 @@ import Text from './text'
 const { ago } = timeago()
 
 type Props = {
-  children: React$Element<any>,
+  children: string,
 }
 
 @view.ui
-export default class Date extends React.Component<Props> {
-  render({ children, ...props }) {
-    return (
-      <Text {...props}>
-        {ago(children || '')}
-      </Text>
-    )
+export default class Date extends React.PureComponent<Props> {
+  render({ children, ...props }: Props) {
+    return <Text {...props}>{ago(children || '')}</Text>
   }
 }

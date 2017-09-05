@@ -5,7 +5,10 @@ import deepExtend from 'deep-extend'
 import type { Gloss } from './index'
 import tags from 'html-tags'
 
-const VALID_TAGS = tags.reduce((acc, cur) => ({ ...acc, [cur]: true }), {})
+const VALID_TAGS: Object<string, boolean> = tags.reduce(
+  (acc, cur) => ({ ...acc, [cur]: true }),
+  {}
+)
 const IS_PROD = process.env.NODE_ENV === 'production'
 
 const arrayOfObjectsToObject = (arr: Array<Object>) => {
@@ -156,8 +159,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     }
 
     if (isTag) {
-      type = VALID_TAGS[name] ? name : 'div'
-      type = TAG_NAME_MAP[name] || type
+      type = VALID_TAGS[type] ? type : 'div'
+      type = TAG_NAME_MAP[type] || type
     }
 
     return ogCreateElement(type, finalProps, ...children)

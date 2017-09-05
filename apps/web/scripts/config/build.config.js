@@ -116,8 +116,7 @@ module.exports = Object.assign(config, {
         test: /\.js$/,
         exclude: new RegExp('node_modules\\' + Path.sep + '(?!\@mcro).*'),
         include: [].concat(includes, [
-          Path.resolve(__dirname, '..', '..', 'src'),
-          Path.resolve(ROOT, 'node_modules', '@mcro', 'ui')
+          // Path.resolve(__dirname, '..', '..', 'src')
         ])
       },
     ],

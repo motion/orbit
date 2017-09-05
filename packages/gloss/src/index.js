@@ -32,8 +32,8 @@ export class Gloss {
   baseStyles: ?Object
   createElement: Function
   Helpers: Object = Helpers
-  makeCreateEl = (styles: Object): Function =>
-    fancyElement(this, this.getStyles(styles))
+  makeCreateEl = (styles: ?Object): Function =>
+    fancyElement(this, styles ? this.getStyles(styles) : null)
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
@@ -59,7 +59,7 @@ export class Gloss {
       if (!hasTheme) {
         return Child
       }
-      if (!Object.hasOwnProperty.call(Child.prototype, 'theme')) {
+      if (!Child.prototype.hasOwnProperty('theme')) {
         Child.prototype.getTheme = function(theme) {
           let activeTheme
           if (typeof theme === 'object') {

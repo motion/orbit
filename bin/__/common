@@ -82,8 +82,9 @@ function link-flow() {
         fi
         ENTRY_TRIMMED=${ENTRY:2}
         mkdir -p lib/$(dirname $ENTRY_TRIMMED)
-        echo "flow gen-flow-files src/$ENTRY_TRIMMED > lib/$ENTRY_TRIMMED.flow"
-        flow gen-flow-files src/$ENTRY_TRIMMED > lib/$ENTRY_TRIMMED.flow
+        # todo: flow gen-flow-files instead of cp
+        echo "cp src/$ENTRY_TRIMMED > lib/$ENTRY_TRIMMED.flow"
+        cp src/$ENTRY_TRIMMED > lib/$ENTRY_TRIMMED.flow
       done
 
       cd -

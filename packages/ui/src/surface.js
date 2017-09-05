@@ -217,7 +217,7 @@ export default class Surface extends React.Component<Props> {
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
-    const { themeValues = {} } = this
+    const { themeValues } = this
 
     const passProps = {
       tagName,
@@ -228,6 +228,10 @@ export default class Surface extends React.Component<Props> {
 
     const borderLeftRadius = _borderLeftRadius || themeValues.borderRadiusSize
     const borderRightRadius = _borderRightRadius || themeValues.borderRadiusSize
+
+    console.log('themevals', themeValues)
+    const glowColor =
+      (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
 
     const contents = [
       <Glint
@@ -258,9 +262,7 @@ export default class Surface extends React.Component<Props> {
         full
         scale={1.3}
         show={hovered}
-        color={
-          (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
-        }
+        color={glowColor}
         opacity={0.2}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
@@ -376,6 +378,7 @@ export default class Surface extends React.Component<Props> {
   }
 
   static theme = (props, theme, self) => {
+    console.log('RUN THEME')
     if (props.debug) {
       log('debugging')
       log(props.hover)
@@ -551,6 +554,7 @@ export default class Surface extends React.Component<Props> {
       props.iconSize || Math.round(size * 11 * (props.sizeIcon || 1))
 
     // TODO figure out better pattern for this
+    console.log('setting themevals onto', self)
     self.themeValues = {
       iconSize,
       borderRadiusSize: radius,

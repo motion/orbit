@@ -59,7 +59,8 @@ export class Gloss {
       if (!hasTheme) {
         return Child
       }
-      if (!Object.hasOwnProperty.call(Child.prototype, 'theme')) {
+
+      if (!Child.prototype.theme) {
         Child.prototype.getTheme = function(theme) {
           let activeTheme
           if (typeof theme === 'object') {
@@ -75,16 +76,22 @@ export class Gloss {
           return null
         }
 
-        const { getStyles } = this
-        Object.defineProperty(Child.prototype, 'theme', {
-          get() {
-            const { uiActiveThemeName, uiThemes } = this.context
-            return (
-              this.getTheme(this.props.theme) ||
-              (uiThemes && uiThemes[uiActiveThemeName])
-            )
-          },
-        })
+        Child.prototype.render = function(...args) {
+          let activeTheme
+          if (typeof this.props.theme === 'object') {
+            activeTheme = { base: this.props.theme }
+          } else {
+            activeTheme =
+              this.context.uiThemes &&
+              this.context.uiThemes[
+                this.props.theme || this.context.uiActiveThemeName
+              ]
+          }
+          if (activeTheme) {
+            this.theme = getStyles(Child.theme(this.props, activeTheme, this))
+          }
+          return ogRender.call(this, ...args)
+        }
       }
     }
   }

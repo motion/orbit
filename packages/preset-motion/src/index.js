@@ -9,6 +9,8 @@ module.exports = function(context, givenOpts) {
     return opts ? [plugin, opts] : plugin
   }
 
+  console.log('this is a test', opts)
+
   const config = {
     plugins: [
       // getPlugin('babel-plugin-transform-runtime'),

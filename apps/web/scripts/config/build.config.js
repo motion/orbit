@@ -1,13 +1,8 @@
 //
 
-
-
-
-
 // WARNING WARNING
 // TURN OFF PRETTIER ON THIS FILE IT DESTROYS THE REGEX
 // WARNING
-
 
 const Path = require('path')
 const Fs = require('fs')
@@ -34,8 +29,9 @@ const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
 const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
-const includes = Fs.readdirSync(ORG)
-  .map(folder => Path.resolve(Path.resolve(ORG, folder)))
+const includes = Fs.readdirSync(ORG).map(folder =>
+  Path.resolve(ORG, folder, 'src')
+)
 
 console.log('includes', includes)
 
@@ -72,6 +68,7 @@ module.exports = Object.assign(config, {
   },
 
   resolve: {
+    mainFields: ['module', 'esnext', 'jsnext:main', 'main'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -114,10 +111,10 @@ module.exports = Object.assign(config, {
           },
         },
         test: /\.js$/,
-        exclude: new RegExp('node_modules\\' + Path.sep + '(?!\@mcro).*'),
+        exclude: new RegExp('node_modules\\' + Path.sep + '(?!@mcro).*'),
         include: [].concat(includes, [
-          // Path.resolve(__dirname, '..', '..', 'src')
-        ])
+          Path.resolve(__dirname, '..', '..', 'src'),
+        ]),
       },
     ],
   },

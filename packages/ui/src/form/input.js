@@ -15,6 +15,7 @@ type Props = {
   name?: string,
   form?: Object,
   elementProps?: Object,
+  onClick?: Function,
 }
 
 @inject(context => ({ uiContext: context.uiContext }))
@@ -23,11 +24,11 @@ export default class Input extends React.Component<Props> {
   node: ?HTMLInputElement = null
 
   componentDidMount() {
-    this.setValues(this.props)
+    this.setValues()
   }
 
   componentDidUpdate() {
-    this.setValues(this.props)
+    this.setValues()
   }
 
   get shouldSyncToForm() {
@@ -41,7 +42,7 @@ export default class Input extends React.Component<Props> {
     }
   }
 
-  onNode = node => {
+  onNode = (node: ?HTMLInputElement) => {
     this.node = node
     this.props.getRef && this.props.getRef(node)
 
@@ -69,8 +70,18 @@ export default class Input extends React.Component<Props> {
     }
   }
 
-  render({ sync, type, name, uiContext, form, elementProps, ...props }) {
-    if (sync) {
+  render() {
+    const {
+      sync,
+      type,
+      name,
+      uiContext,
+      form,
+      elementProps,
+      ...props
+    } = this.props
+
+    if (sync && elementProps) {
       elementProps.value = sync.get()
       elementProps.onChange = e => sync.set(e.target.value)
     }
@@ -98,9 +109,9 @@ export default class Input extends React.Component<Props> {
         name={name}
         type={type}
         elementProps={{
-          css: {
+          style: {
             width: '100%',
-            padding: [0, 10],
+            padding: '0 10px',
           },
           ref: this.onNode,
           ...elementProps,

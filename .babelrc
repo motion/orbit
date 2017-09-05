@@ -1,12 +1,15 @@
 {
-  "presets": ["@mcro/preset-motion"],
   "env": {
-    "es5": {
+    "development": {
+      "presets": ["@mcro/preset-motion"]
+    },
+    "production": {
       "presets": [
         [
           "@mcro/preset-motion",
           {
             "disable": ["@mcro/hmr", "@mcro/hmr-view"],
+            "async": false,
             "env": { "targets": { "chrome": "50" } }
           }
         ]

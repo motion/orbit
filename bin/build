@@ -12,7 +12,7 @@ killgroup() {
   kill 0
 }
 
-function build-es6() {
+function build-dev() {
   npx lerna exec --parallel \
     --ignore @mcro/native  \
     --ignore @mcro/web \
@@ -22,21 +22,20 @@ function build-es6() {
       babel src --out-dir lib -s true $1
 }
 
-function build-es5() {
+function build-prod() {
   npx lerna exec --parallel \
     --ignore @mcro/native  \
     --ignore @mcro/web \
     --ignore @mcro/couch \
     --ignore @mcro/playground \
       -- \
-      NODE_ENV=es5 babel src --out-dir dist -s true $1
+      NODE_ENV=production babel src --out-dir dist -s true $1
 }
 
 if [ "$APP" = "electron" ]; then
   cd $ROOT/apps/electron
   npm run dist
 elif [ "$APP" = "web" ]; then
-  build-es5
   cd $ROOT/apps/web
   rm -rf build
   npm run build
@@ -45,10 +44,11 @@ else
 
   # only build modern during dev-watch
   if [ "$ARGS" = "--watch" ]; then
-    build-es6 --watch &
+    build-dev --watch &
+    build-prod --watch &
   else
-    build-es6 &
-    build-es5 &
+    build-dev &
+    build-prod &
   fi
 
   wait

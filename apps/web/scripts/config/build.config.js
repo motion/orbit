@@ -66,7 +66,8 @@ module.exports = Object.assign(config, {
   },
 
   resolve: {
-    mainFields: ['module', 'main'],
+    // avoid module field so we pick up our prod build stuff
+    mainFields: ['browser', 'main'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -139,6 +140,6 @@ module.exports = Object.assign(config, {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-    __dirname: 'empty',
+    assert: 'empty',
   },
 })

@@ -29,33 +29,28 @@ export default class BarTeam extends Component<Props> {
   static defaultProps: Props
   render({ store, activeIndex, data }: Props) {
     return (
-      <UI.Theme name="clear-light">
-        <team>
-          <section>
-            <UI.Title size={2}>Team {data.team}</UI.Title>
-          </section>
+      <team>
+        <section>
+          <UI.Title size={2}>Team {data.team}</UI.Title>
+        </section>
 
-          <section>
-            <Calendar />
-          </section>
+        <section>
+          <Calendar />
+        </section>
 
-          <section css={{ flex: 1 }}>
-            <Feed items={store.results} data={data} activeIndex={activeIndex} />
-          </section>
-        </team>
-      </UI.Theme>
+        <section css={{ flex: 1 }}>
+          <Feed items={store.results} data={data} activeIndex={activeIndex} />
+        </section>
+      </team>
     )
   }
 
   static style = {
     team: {
       minWidth: 200,
-      padding: [0, 10],
-      background: '#fff',
+      padding: [5, 15],
       borderRadius: 4,
-      boxShadow: '0 0 4px rgba(0,0,0,0.4)',
       flex: 1,
-      margin: [-10, -10, -2, -10],
       overflowY: 'scroll',
       zIndex: 100000000,
       position: 'relative',

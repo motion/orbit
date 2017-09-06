@@ -1,3 +1,11 @@
+//
+
+// WARNING WARNING
+// TURN OFF PRETTIER ON THIS FILE IT DESTROYS THE REGEX
+// WARNING
+
+const Path = require('path')
+const Fs = require('fs')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
@@ -15,9 +23,14 @@ const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
 const PrepackPlugin = require('prepack-webpack-plugin').default
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
+const ROOT = Path.join(__dirname, '..', '..', '..', '..')
 const IS_PROD = process.env.NODE_ENV === 'production'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
+
+// if you want to parse our modules directly use this, but we have dist/ folder now
+// const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')
+// const includes = Fs.readdirSync(ORG).map(folder => Path.resolve(ORG, folder))
 
 console.log('running webpack for:', process.env.NODE_ENV)
 
@@ -26,13 +39,15 @@ let config
 if (IS_PROD) {
   config = {
     devtool: 'source-map',
-    bail: true,
+    // bail: true,
   }
 } else {
   config = {
     devtool: 'cheap-module-source-map',
   }
 }
+
+console.log(Path.resolve(ROOT, 'node_modules', '@mcro', 'ui'))
 
 module.exports = Object.assign(config, {
   entry: {
@@ -50,6 +65,8 @@ module.exports = Object.assign(config, {
   },
 
   resolve: {
+    // avoid module field so we pick up our prod build stuff
+    mainFields: ['browser', 'main'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -73,7 +90,9 @@ module.exports = Object.assign(config, {
   module: {
     rules: [
       {
-        use: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+        },
         test: /\.js$/,
         exclude: /node_modules/,
       },

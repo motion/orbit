@@ -1,9 +1,8 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class TabPane extends React.Component<{}, { selected: number }> {
+export default class TabPane extends React.Component {
   state = {
     selected: 0,
   }
@@ -12,7 +11,7 @@ export default class TabPane extends React.Component<{}, { selected: number }> {
     this.setState({ selected })
   }
 
-  render({ tabs, children, ...props }: Props) {
+  render({ tabs, children, ...props }) {
     const total = tabs.length
     const totalChildren = React.Children.count(children)
 
@@ -24,7 +23,7 @@ export default class TabPane extends React.Component<{}, { selected: number }> {
     return (
       <tabpane>
         <tabs>
-          {tabs.map((tab, index) =>
+          {tabs.map((tab, index) => (
             <tab
               key={index}
               onClick={this.handleSelect(index)}
@@ -32,7 +31,7 @@ export default class TabPane extends React.Component<{}, { selected: number }> {
             >
               {tab}
             </tab>
-          )}
+          ))}
         </tabs>
         <content>
           {React.Children.map(children, (child, index) => {

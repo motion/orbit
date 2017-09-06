@@ -5,28 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "motion",
-    "start-dev": "echo hi",
-    "start-prod": "echo hi",
+    "start-prod": "static-server -p 3001 -n build/index.html build",
     "start-debug": "motion --debug",
     "build": "node scripts/build.js",
-    "build-debug": "DEBUG=true node scripts/build.js",
-    "electron": "denode electron.js &>/dev/null &"
-  },
-  "denodeOptions": ["DENODE_INSECURE"],
-  "electronOptions": {
-    "width": "1200",
-    "height": "800",
-    "titleBarStyle": "hidden-inset",
-    "minWidth": "700",
-    "minHeight": "500",
-    "backgroundColor": "#fff",
-    "hide": false,
-    "vibrancy": "dark",
-    "transparent": true,
-    "webPreferences": {
-      "experimentalFeatures": true,
-      "transparentVisuals": true
-    }
+    "build-debug": "DEBUG=true node scripts/build.js"
   },
   "dependencies": {
     "@mcro/black": "^1.2.0",
@@ -37,7 +19,7 @@
     "@mcro/ui": "^1.2.0",
     "babel-polyfill": "^6.23.0",
     "color": "^2.0.0",
-    "debug": "^2.6.8",
+    "emojinize": "^1.0.0",
     "fuzzysearch": "^1.0.3",
     "geopattern": "1.2.3",
     "hash-sum": "1.0.2",
@@ -61,7 +43,8 @@
     "rxdb": "^5.3.0",
     "rxjs": "^5.3.0",
     "superlogin-client": "^0.7.1",
-    "time-ago": "^0.1.0"
+    "time-ago": "^0.1.0",
+    "match-sorter": "^1.8.1"
   },
   "devDependencies": {
     "babel-loader": "^6.4.1",
@@ -79,6 +62,7 @@
     "uglifyjs-webpack-plugin": "^0.4.6",
     "webpack": "^3.4.1",
     "webpack-bundle-analyzer": "^2.8.3",
-    "webpack-dev-server": "^2.5.1"
+    "webpack-dev-server": "^2.5.1",
+    "static-server": "^2.0.5"
   }
 }

@@ -1,4 +1,3 @@
-// @flow
 import helper from 'babel-helper-builder-react-jsx'
 
 export default function({ types: t }: { types: Object }) {

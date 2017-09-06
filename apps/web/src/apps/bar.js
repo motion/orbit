@@ -127,6 +127,7 @@ class BarStore {
     test: Panes.Test,
     newIssue: Panes.Code.NewIssue,
     integrations: Panes.Integrations,
+    team: Panes.Team,
   }
 
   get isBarActive() {

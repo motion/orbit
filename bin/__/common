@@ -71,6 +71,9 @@ function link-flow() {
       if [ ! -d "$ROOT/$1/$PACKAGE/src" ]; then
         continue
       fi
+      if [ ! -f ".flowconfig" ]; then
+        continue
+      fi
       cd $ROOT/$1/$PACKAGE
       mkdir -p lib
 
@@ -78,7 +81,8 @@ function link-flow() {
       for ENTRY in $ENTRIES; do
         ENTRY_TRIMMED=${ENTRY:2}
         mkdir -p lib/$(dirname $ENTRY_TRIMMED)
-        ln src/$ENTRY_TRIMMED lib/$ENTRY_TRIMMED.flow
+        # flow gen-flow-files src/$ENTRY_TRIMMED > lib/$ENTRY_TRIMMED.flow
+        cp src/$ENTRY_TRIMMED lib/$ENTRY_TRIMMED.flow
       done
 
       cd -

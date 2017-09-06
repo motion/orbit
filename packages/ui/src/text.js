@@ -8,8 +8,8 @@ export type Props = {
   editable?: boolean,
   autoselect?: boolean,
   selectable?: boolean,
-  onFinishEdit: Function,
-  onCancelEdit: Function,
+  onFinishEdit?: Function,
+  onCancelEdit?: Function,
   getRef?: Function,
   ellipse?: boolean,
   tagName: string,
@@ -18,40 +18,52 @@ export type Props = {
 
 // click away from edit clears it
 @view.ui
-export default class Text extends React.Component<Props> {
+export default class Text extends React.PureComponent<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
     size: 1,
   }
 
+  editableReaction: ?Function
   @observable selected = false
   @observable editable = false
   node = null
 
   componentWillMount() {
-    this.react(
-      () => this.editable,
-      editable => {
-        if (this.clickaway) {
-          this.clickaway.dispose()
-        }
-        if (editable) {
-          // this.clickaway = this.addEvent(window, 'click', (event: Event) => {
-          //   if (this.props.onFinishEdit) {
-          //     this.props.onFinishEdit(this.value)
-          //   }
-          // })
-        }
-      }
-    )
-    this.editable = this.props.editable
+    this.handleProps(this.props)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!nextProps.editing) {
+  componentWillReceiveProps(nextProps: Object) {
+    this.handleProps(nextProps)
+  }
+
+  handleProps(props: Object) {
+    // setup reaction for editing if necessary
+    if (!this.editableReaction && props.editable) {
+      this.editableReaction = this.react(
+        () => this.editable,
+        editable => {
+          if (this.clickaway) {
+            this.clickaway.dispose()
+          }
+          if (editable) {
+            // this.clickaway = this.addEvent(window, 'click', (event: Event) => {
+            //   if (this.props.onFinishEdit) {
+            //     this.props.onFinishEdit(this.value)
+            //   }
+            // })
+          }
+        },
+        true
+      )
+    }
+    // set props
+    if (!props.editing && this.selected) {
       this.selected = false
     }
-    this.editable = nextProps.editable
+    if (this.editable !== props.editable) {
+      this.editable = props.editable
+    }
   }
 
   componentDidUpdate() {
@@ -67,7 +79,7 @@ export default class Text extends React.Component<Props> {
     }
   }
 
-  focus = () => {
+  focus() {
     this.node && this.node.focus()
   }
 
@@ -93,7 +105,7 @@ export default class Text extends React.Component<Props> {
     }
   }
 
-  getRef = (node: HTMLElement) => {
+  getRef = (node: any) => {
     if (node) {
       this.node = node
       if (this.props.getRef) {
@@ -150,7 +162,7 @@ export default class Text extends React.Component<Props> {
         {...eventProps}
       >
         {!ellipse && children}
-        <span if={ellipse} $ellipse $$ellipse>
+        <span if={ellipse} $$ellipse>
           {children}
         </span>
       </text>

@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react'
 import fancyElement from './fancyElement'
 import motionStyle from '@mcro/css'
 import { StyleSheet } from './stylesheet'
@@ -14,6 +15,7 @@ export const Helpers = Helpers_
 // type exports
 export type { Transform, Color } from '@mcro/css'
 export type Options = {
+  dontTheme?: boolean,
   themeKey: string | boolean,
   baseStyles?: Object,
   tagName?: boolean,
@@ -27,15 +29,18 @@ const DEFAULT_OPTS = {
 
 export class Gloss {
   options: Options
-
-  Helpers = Helpers
-  makeCreateEl = styles => fancyElement(this, this.getStyles(styles))
+  niceStyle: any
+  baseStyles: ?Object
+  createElement: Function
+  Helpers: Object = Helpers
+  makeCreateEl = (styles: ?Object): Function =>
+    fancyElement(this, styles ? this.getStyles(styles) : null)
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
     this.niceStyle = motionStyle(opts)
     this.helpers = this.niceStyle.helpers
-    this.baseStyles = opts.baseStyles && this.getStyles(opts.baseStyles)
+    this.baseStyles = opts.baseStyles ? this.getStyles(opts.baseStyles) : null
     this.createElement = this.makeCreateEl()
     this.decorator.createElement = this.createElement
   }
@@ -45,39 +50,59 @@ export class Gloss {
     if (typeof Child === 'string') {
       const name = Child
       const createEl = this.makeCreateEl({ [name]: style }, name)
-      return ({ getRef, ...props }) => createEl(name, { ref: getRef, ...props })
+      return (props: Object): React.Element<any> => createEl(name, props)
     }
 
     if (Child.prototype) {
       Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
       Child.prototype.gloss = this
-      if (Child.theme && typeof Child.theme === 'function') {
-        const getStyles = this.getStyles
-        const ogRender = Child.prototype.render
-        Child.prototype.render = function(...args) {
+      const hasTheme = Child.theme && typeof Child.theme === 'function'
+      if (!hasTheme) {
+        return Child
+      }
+      if (!Child.prototype.theme) {
+        const { getStyles, niceStyleSheet } = this
+
+        Child.prototype.getTheme = function(theme) {
           let activeTheme
-          if (typeof this.props.theme === 'object') {
-            activeTheme = { base: this.props.theme }
+          if (typeof theme === 'object') {
+            activeTheme = { base: theme }
           } else {
             activeTheme =
               this.context.uiThemes &&
-              this.context.uiThemes[
-                this.props.theme || this.context.uiActiveThemeName
-              ]
+              this.context.uiThemes[theme || this.context.uiActiveThemeName]
           }
           if (activeTheme) {
-            this.theme = getStyles(Child.theme(this.props, activeTheme, this))
+            return getStyles(Child.theme(this.props, activeTheme, this))
+          }
+          return null
+        }
+
+        const ogRender = Child.prototype.render
+        Child.prototype.render = function(...args) {
+          let activeTheme
+          const { theme } = this.props
+          if (typeof theme === 'object') {
+            activeTheme = { base: theme }
+          } else {
+            activeTheme =
+              this.context.uiThemes &&
+              this.context.uiThemes[theme || this.context.uiActiveThemeName]
+          }
+          if (activeTheme) {
+            const childTheme = Child.theme(this.props, activeTheme, this)
+            this.theme = childTheme
+              ? StyleSheet.create(niceStyleSheet(childTheme))
+              : null
           }
           return ogRender.call(this, ...args)
         }
       }
     }
-    return Child
   }
 
-  niceStyleSheet = (styles: Object, errorMessage: string) => {
-    for (const style in styles) {
-      if (!styles.hasOwnProperty(style)) continue
+  niceStyleSheet = (styles: Object, errorMessage?: string): Object => {
+    for (const style of Object.keys(styles)) {
       const value = styles[style]
       if (value) {
         styles[style] = this.niceStyle(value, errorMessage)
@@ -87,13 +112,14 @@ export class Gloss {
   }
 
   // runs niceStyleSheet on non-function styles
-  getStyles = styles => {
+  getStyles = (styles: any): ?Object => {
     if (!styles) {
       return null
     }
     const functionalStyles = {}
     const staticStyles = {}
-    for (const [key, val] of Object.entries(styles)) {
+    for (const key of Object.keys(styles)) {
+      const val = styles[key]
       if (typeof val === 'function') {
         functionalStyles[key] = val // to be run later
       } else {
@@ -108,6 +134,6 @@ export class Gloss {
   }
 }
 
-export default function glossFactory(options: Options): Function {
+export default function glossFactory(options: Options): Gloss {
   return new Gloss(options)
 }

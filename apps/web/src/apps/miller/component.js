@@ -1,9 +1,7 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
-import { throttle } from 'lodash-decorators'
 
 class MillerStore {
   colWidths = range(100).map(() => 0)
@@ -16,7 +14,6 @@ class MillerStore {
     this.setTimeout(this.handleSelectionChange)
   }
 
-  @throttle(16)
   handleSelectionChange = () => {
     const { state, onChange } = this.props
 
@@ -73,8 +70,7 @@ class MillerStore {
 }
 
 @view
-class Pane extends React.Component<$FlowFixMeState> {
-  static defaultProps: {}
+class Pane extends React.Component {
   render({
     pane,
     getRef,
@@ -92,7 +88,7 @@ class Pane extends React.Component<$FlowFixMeState> {
     const isActive = state.activeCol == col
     const highlightIndex = !isActive && state.prevActiveRows[col]
     const isFirst = col === 0
-    const activeRow = isActive && state.activeRow
+    const activeIndex = isActive && state.activeRow
     const ChildPane = pane
 
     if (!ChildPane) {
@@ -122,7 +118,7 @@ class Pane extends React.Component<$FlowFixMeState> {
           }}
           search={search}
           highlightIndex={highlightIndex}
-          activeRow={activeRow}
+          activeIndex={activeIndex}
         />
       </pane>
     )
@@ -143,7 +139,7 @@ class Pane extends React.Component<$FlowFixMeState> {
 @view({
   store: MillerStore,
 })
-export default class Miller extends React.Component<$FlowFixMeState> {
+export default class Miller extends React.Component {
   static defaultProps = {
     onActions: _ => _,
   }
@@ -177,7 +173,6 @@ export default class Miller extends React.Component<$FlowFixMeState> {
                   onMeasureWidth={width => (store.colWidths[index] = width)}
                   col={index}
                   getRef={plugin => {
-                    console.log('got ref ', plugin)
                     state.setPlugin(index, plugin)
                   }}
                   onSelect={row => store.onSelect(index, row)}

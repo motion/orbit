@@ -71,7 +71,7 @@ export default function motionStyle(options: Object = {}) {
       return toColor(val)
     }
     if (Array.isArray(val)) {
-      return processArray(key, val, ++level)
+      return processArray(key, val, level + 1)
     }
     return typeof val === 'number' ? `${val}px` : val
   }

@@ -30,9 +30,16 @@ export type Props = {
   onFinishEdit?: Function,
 }
 
+const DEFAULT_GLOW = {
+  scale: 1.4,
+  opacity: 0.09,
+  resist: 40,
+  overlayZIndex: 0,
+}
+
 @injectTheme
 @view.ui
-export default class ListItem extends React.Component<Props> {
+export default class ListItem extends React.PureComponent<Props> {
   static isListItem = true
   static contextTypes = {
     uiTheme: object,
@@ -55,51 +62,51 @@ export default class ListItem extends React.Component<Props> {
     this.node = ref
   }
 
-  render({
-    after,
-    before,
-    borderRadius,
-    borderWidth,
-    children,
-    date,
-    dateSize,
-    autoselect,
-    isFirstElement,
-    isLastElement,
-    meta,
-    onItemMount,
-    onToggle,
-    onClick,
-    primary,
-    row,
-    segmented,
-    secondary,
-    size,
-    style,
-    ellipse,
-    glowProps,
-    theme,
-    editable,
-    onFinishEdit,
-    iconProps,
-    getRef,
-    ...props
-  }: ItemProps) {
+  render() {
+    const {
+      after,
+      before,
+      borderRadius,
+      borderWidth,
+      children,
+      date,
+      dateSize,
+      autoselect,
+      isFirstElement,
+      isLastElement,
+      meta,
+      onItemMount,
+      onToggle,
+      onClick,
+      primary,
+      row,
+      segmented,
+      secondary,
+      size,
+      style,
+      ellipse,
+      glowProps,
+      theme,
+      editable,
+      onFinishEdit,
+      iconProps,
+      getRef,
+      ...props
+    } = this.props
     const radiusProps = segmented
       ? {
-        borderRadius: isLastElement || isFirstElement ? borderRadius : 0,
-        borderBottomRadius: isLastElement,
-        borderTopRadius: isFirstElement,
-      }
+          borderRadius: isLastElement || isFirstElement ? borderRadius : 0,
+          borderBottomRadius: isLastElement,
+          borderTopRadius: isFirstElement,
+        }
       : {
-        borderRadius,
-      }
+          borderRadius,
+        }
 
     return (
       <SizedSurface
         tagName="listitem"
         size={size}
-        sizeHeight
         sizePadding={1.2}
         hoverable
         $item
@@ -114,22 +121,12 @@ export default class ListItem extends React.Component<Props> {
         glow
         row
         onClick={onClick}
-        glowProps={{
-          scale: 1.4,
-          opacity: 0.09,
-          resist: 40,
-          clickable: !!onClick,
-          overlayZIndex: 0,
-          ...glowProps,
-        }}
+        glowProps={glowProps || DEFAULT_GLOW}
         iconProps={{
           alignSelf: 'center',
           ...iconProps,
         }}
-        style={{
-          ...style,
-          position: (style && style.position) || 'relative',
-        }}
+        style={style}
         getRef={this.getRef}
         {...props}
       >
@@ -166,15 +163,8 @@ export default class ListItem extends React.Component<Props> {
               {date}
             </Text>
           </above>
-          <children if={children} $$row={row} $$margin={[0, -8]}>
-            {Array.isArray(children)
-              ? children.map(
-                (item, index) =>
-                  item && typeof item === 'object' && item.primary
-                    ? <ListItem key={item.key || index} {...item} />
-                    : item
-              )
-              : children}
+          <children if={children}>
+            {children}
           </children>
         </content>
         <after if={after}>
@@ -233,8 +223,9 @@ export default class ListItem extends React.Component<Props> {
       margin: ['auto', 5, 'auto', 0],
     },
     children: {
+      flexFlow: 'row',
+      margin: [0, -8],
       flex: 1,
-      // opacity: 0.5,
       lineHeight: '1.38rem',
       padding: [0, 8],
     },

@@ -1,4 +1,5 @@
 [ignore]
+.*/fixtures/.*
 .*/node_modules/lunr/.*
 .*/node_modules/art/.*
 .*/fixtures/.*
@@ -8,17 +9,20 @@
 .*/node_modules/jss/.*
 .*/node_modules/xdl/.*
 
+
 [include]
-../../node_modules/
+./node_modules/
+../../node_modules
 
 [libs]
 ../../flow-typed
 
 [options]
-experimental.strict_type_args=true
 emoji=true
 suppress_type=$FlowFixMe
 suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
+experimental.const_params=true
+esproposal.export_star_as=enable
 esproposal.class_instance_fields=enable
 esproposal.class_static_fields=enable
 esproposal.decorators=ignore
@@ -26,4 +30,3 @@ unsafe.enable_getters_and_setters=true
 module.name_mapper='^~/\(.*\)$' -> '<PROJECT_ROOT>/src/\1.js'
 module.name_mapper='^~/\(.*\)$' -> '<PROJECT_ROOT>/src/\1/index.js'
 module.name_mapper='\./\(\1\)$' -> '\1/\1.js'
-module.system.node.resolve_dirname=node_modules

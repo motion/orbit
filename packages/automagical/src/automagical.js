@@ -12,7 +12,7 @@ const isObservable = x => {
   return x && (Mobx.isObservable(x) || x.isObservable)
 }
 const isFunction = val => typeof val === 'function'
-const isQuery = val => val && val.$isQuery
+const isQuery = val => val && !!val.$isQuery
 const isRxObservable = val => val instanceof Observable
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
@@ -25,7 +25,7 @@ export default function automagical() {
   return {
     name: 'automagical',
     decorator: (Klass: Class<any> | Function) => {
-      if (!Klass.prototype) {
+      if (!Klass.prototype.constructor) {
         return Klass
       }
 
@@ -33,7 +33,7 @@ export default function automagical() {
         static get name() {
           return Klass.name
         }
-        constructor(...args) {
+        constructor(...args: Array<any>) {
           super(...args)
           automagic(this)
         }
@@ -106,8 +106,8 @@ function mobxifyPromise(obj, method, val) {
 }
 
 // TODO use rxdb api
-function isRxDbQuery(query) {
-  return query && query.mquery
+function isRxDbQuery(query: any): boolean {
+  return query && !!query.mquery
 }
 
 function mobxifyRxObservable(obj, method, val) {
@@ -193,7 +193,8 @@ function mobxify(target: Object, method: string, descriptor: Object) {
 }
 
 // * => Mobx
-function resolve(value) {
+function resolve(inValue: any) {
+  let value = inValue
   // convert RxQuery to RxObservable
   if (isRxDbQuery(value)) {
     value = value.$

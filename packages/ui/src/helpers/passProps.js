@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 export default class PassProps extends React.Component {
   render() {
@@ -17,7 +17,7 @@ export default class PassProps extends React.Component {
     }
 
     return (
-      <passprops
+      <div
         style={{
           flexOrder: 'inherit',
           flexBasis: 'inherit',
@@ -27,7 +27,7 @@ export default class PassProps extends React.Component {
         {...containerProps}
       >
         {React.Children.map(children, getChild)}
-      </passprops>
+      </div>
     )
   }
 }

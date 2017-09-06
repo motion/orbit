@@ -70,7 +70,6 @@ export default class Surface implements ViewType<Props> {
     circular,
     size,
     borderRadius,
-    material,
     padding,
     height,
     margin,

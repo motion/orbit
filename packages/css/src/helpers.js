@@ -2,6 +2,26 @@
 import type { Color, CSSArray } from './types'
 import colorNames from './colorNames'
 
+function memoize<Result>(cb: Function): (a?: any, b?: any, c?: any) => Result {
+  const Cache = new WeakMap()
+
+  return (key: any, ...rest: Array<any>) => {
+    // use first argument as key
+    const mappable = key && typeof key === 'object'
+    if (mappable) {
+      const res = Cache.get(key)
+      if (res) {
+        return res
+      }
+    }
+    const newVal: Result = cb.call(this, key, ...rest)
+    if (mappable) {
+      Cache.set(key, newVal)
+    }
+    return newVal
+  }
+}
+
 export function colorToString(color: Color, options?: Object): string {
   if (typeof color === 'string') {
     return color
@@ -14,10 +34,10 @@ export function colorToString(color: Color, options?: Object): string {
     res = getColorLikeLibraryValue(color, options)
   }
   res = objectToColor(res)
-  return res
+  return `${res}`
 }
 
-export function isColorLike(object: any, options?: Object) {
+export const isColorLike = memoize((object: any, options?: Object) => {
   if (!object) {
     return false
   }
@@ -31,7 +51,7 @@ export function isColorLike(object: any, options?: Object) {
     return isColorLikeLibrary(object, options) || isColorLikeObject(object)
   }
   return false
-}
+})
 
 export function isColorLikeString(str: string) {
   if (str[0] === '#' && (str.length === 4 || str.length === 7)) {
@@ -95,7 +115,7 @@ export function getColorLikeLibraryValue(val: any, options?: Object) {
   return res
 }
 
-function objectToColor(color: Color): string {
+const objectToColor = memoize((color: Color): string => {
   // final processing of objects and arrays
   if (Array.isArray(color)) {
     const length = color.length
@@ -112,7 +132,7 @@ function objectToColor(color: Color): string {
     return `rgb(${color.r}, ${color.g}, ${color.b})`
   }
   return color.toString()
-}
+})
 
 const arr3to4 = arr => [...arr, arr[1]]
 const arr2to4 = arr => [...arr, arr[0], arr[1]]

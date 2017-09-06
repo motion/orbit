@@ -6,6 +6,8 @@ import * as UI from '@mcro/ui'
 import DocPane from './doc'
 import GithubPane from './github'
 import type { PaneProps } from '~/types'
+import Feed from './views/feed'
+import Calendar from './views/calendar'
 
 class BarFeedStore {
   props: PaneProps
@@ -18,52 +20,19 @@ class BarFeedStore {
   events: ?Array<Event> = (() =>
     Event.find({ author: this.props.data.person, sort: 'createdAt' }): any)
 
-get results(): Array < Event > {
-  return this.events || []
+  get results(): Array<Event> {
+    return this.events || []
+  }
 }
-}
+
+type Props = PaneProps & {| store: BarFeedStore |}
 
 @view({
   store: BarFeedStore,
 })
-export default class BarFeed {
-  render({ store, activeIndex, data }: PaneProps & { store: BarFeedStore }) {
-    const results = store.results.map((event, index) => {
-      const { verb, data } = event
-      const { actor, payload } = data
-
-      return (
-        <UI.Theme name="light">
-          <feeditem $active={activeIndex === index} key={`${event.id}${index}`}>
-            <meta if={actor}>
-              <avatar $img={actor.avatar_url} />
-              <UI.Text $name>
-                {actor.login}{' '}
-              </UI.Text>
-              <UI.Text $action>
-                {verb}{' '}
-              </UI.Text>
-              <UI.Date $date>
-                {data.created_at}
-              </UI.Date>
-            </meta>
-            <body if={payload && payload.commits}>
-              <content>
-                {payload.commits.map(commit =>
-                  <UI.Text key={commit.sha}>
-                    {commit.message}
-                  </UI.Text>
-                )}
-              </content>
-              <icon>
-                <UI.Icon name={event.integration} />
-              </icon>
-            </body>
-          </feeditem>
-        </UI.Theme>
-      )
-    })
-
+export default class BarFeed extends React.Component<Props> {
+  static defaultProps: Props
+  render({ store, activeIndex, data }: Props) {
     const content = (
       <contents>
         <section>
@@ -75,10 +44,7 @@ export default class BarFeed {
         <section $$row>
           <UI.Title>Now</UI.Title>{' '}
           <subtitle $$row $$centered>
-            <UI.Badge
-              background="rgb(34.5%, 64.6%, 67.5%)"
-              marginRight={8}
-            >
+            <UI.Badge background="rgb(34.5%, 64.6%, 67.5%)" marginRight={8}>
               #52
             </UI.Badge>{' '}
             <UI.Text size={1.05}>
@@ -87,92 +53,12 @@ export default class BarFeed {
           </subtitle>
         </section>
 
-        <section $personal>
-          <UI.Title>Calender</UI.Title>
-          <content
-            $$row
-            css={{ width: '100%', overflowX: 'scroll', margin: [-5, 0] }}
-          >
-            {[
-              {
-                month: '12',
-                day: '7',
-                time: '7am',
-                description: 'IdeaDrive w/Search team',
-              },
-              {
-                month: '12',
-                day: '7',
-                time: '10am',
-                description: 'OKR Review w/James',
-              },
-              {
-                month: '12',
-                day: '7',
-                time: '3pm',
-                description: 'Planetary fundraiser',
-              },
-              {
-                month: '12',
-                day: '8',
-                time: '8am',
-                description: 'Q4 linkup review',
-              },
-              {
-                month: '12',
-                day: '8',
-                time: '10:30am',
-                description: '1on1 with Dave',
-              },
-            ].map(
-              (item, index) =>
-                item.content ||
-                <item
-                  if={!item.content}
-                  key={index}
-                  css={{
-                    width: '16.6666%',
-                    minWidth: 110,
-                    padding: [10, 25, 10, 0],
-                  }}
-                >
-                  <date
-                    css={{
-                      opacity: 1,
-                      flexFlow: 'row',
-                    }}
-                  >
-                    <time
-                      css={{
-                        fontSize: 16,
-                        opacity: 0.5,
-                        fontWeight: 300,
-                        marginLeft: 0,
-                      }}
-                    >
-                      {item.time}
-                    </time>
-                  </date>
-                  <description
-                    css={{
-                      fontSize: 14,
-                      lineHeight: '17px',
-                      marginTop: 10,
-                      fontWeight: 400,
-                    }}
-                  >
-                    {item.description}
-                  </description>
-                </item>
-              )}
-          </content>
+        <section>
+          <Calendar />
         </section>
 
-        <section $feeditems $inApp={data.special}>
-          <UI.Title>Recently</UI.Title>
-          <unpad>
-            {results}
-          </unpad>
+        <section>
+          <Feed items={store.results} data={data} activeIndex={activeIndex} />
         </section>
       </contents>
     )
@@ -247,74 +133,18 @@ export default class BarFeed {
       flex: 1,
       minWidth: 200,
       padding: [0, 10],
-      overflowY: 'scroll',
-    },
-    unpad: {
-      margin: [0, -15],
     },
     tab: {
       flexFlow: 'row',
       overflow: 'hidden',
       maxWidth: '100%',
     },
-    feeditem: {
-      padding: [10, 25],
-      margin: [0, -5],
-      borderBottom: [1, [0, 0, 0, 0.05]],
-    },
-    meta: {
-      flexFlow: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      whiteSpace: 'pre',
-      fontSize: 13,
-      marginBottom: 5,
-    },
-    name: {
-      fontWeight: 500,
-    },
-    action: {
-      opacity: 0.5,
-    },
-    date: {
-      opacity: 0.5,
-    },
-    body: {
-      flexFlow: 'row',
-    },
-    inApp: {
-      padding: [10, 15],
-      background: '#f2f2f2',
-    },
-    content: {
-      flex: 1,
-      padding: [2, 5],
-    },
-    icon: {
-      width: 30,
-      height: 30,
-      margin: [10, 5, 0],
-      position: 'relative',
+    span: {
+      marginRight: 4,
     },
     section: {
       padding: [8, 10],
       borderBottom: [1, [0, 0, 0, 0.05]],
-    },
-    span: {
-      marginRight: 4,
-    },
-    avatar: {
-      width: 18,
-      height: 18,
-      borderRadius: 100,
-      marginRight: 8,
-    },
-    img: src => ({
-      background: `url(${src})`,
-      backgroundSize: 'cover',
-    }),
-    active: {
-      background: [0, 0, 0, 0.05],
     },
   }
 }

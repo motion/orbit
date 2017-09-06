@@ -5,7 +5,7 @@ import { compile } from './properties'
 import type RxDB, { RxCollection, RxQuery } from 'rxdb'
 import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, merge } from 'lodash'
 import query from './query'
 import * as Helpers from './helpers'
 
@@ -23,14 +23,61 @@ type Queryish = RxQuery | { query: RxQuery }
 
 type PromiseFunction = () => Promise<any>
 
+// HELPERS
 const chain = (object, method, value) => {
   if (!value) {
     return object
   }
   return object[method](value)
 }
-
 const queryKey = query => JSON.stringify(query.mquery._conditions)
+const modelMerge = (subjectModel: Object, object: Object) => {
+  const subject = subjectModel.toJSON()
+  for (const key of Object.keys(object)) {
+    const type = typeof subject[key]
+    if (!subject[key] || type === 'string' || type === 'number') {
+      subjectModel[key] = object[key]
+    } else {
+      subjectModel[key] = merge(subject[key], object[key])
+    }
+  }
+}
+
+// METHODS
+const modelMethods = {
+  get id() {
+    return this._id
+  },
+  delete() {
+    return this.collection
+      .findOne(this._id)
+      .exec()
+      .then(doc => doc && doc.remove())
+  },
+  // update, add properties to model & save
+  async update(object: Object) {
+    return await this.atomicUpdate(doc => {
+      for (const key of Object.keys(object)) {
+        doc[key] = object[key]
+      }
+    })
+  },
+  // merge object deeply
+  merge(object: Object) {
+    modelMerge(this, object)
+  },
+  async mergeUpdate(object: Object) {
+    return await this.atomicUpdate(doc => {
+      modelMerge(doc, object)
+    })
+  },
+  // this is the mongo field update syntax that rxdb has
+  // see https://docs.mongodb.com/manual/reference/operator/update-field/
+  // and https://github.com/lgandecki/modifyjs#implemented
+  async replace(object: Object = {}) {
+    return await this.update(object)
+  },
+}
 
 export default class Model {
   static isModel = true
@@ -50,6 +97,7 @@ export default class Model {
   @observable connected = false
   remote: ?string = null // sync to
   hooks: { [string]: PromiseFunction | Function } = {} // hooks run before/after operations
+  modelMethods = modelMethods
 
   constructor(args: ModelArgs = {}) {
     const { defaultSchema } = args
@@ -117,42 +165,10 @@ export default class Model {
       .toLowerCase()
   }
 
-  compiledMethods = (doc): Object => {
-    const descriptors = Object.getOwnPropertyDescriptors(this.methods || {})
-
-    // methods to be added to each model
-    const ogUpdate = doc.update.bind(doc)
-    const extraDescriptors = Object.getOwnPropertyDescriptors({
-      get id() {
-        return this._id
-      },
-      delete() {
-        return this.collection
-          .findOne(this._id)
-          .exec()
-          .then(doc => doc && doc.remove())
-      },
-      // nicer update, adds properties to model & save
-      async update(object: Object = {}) {
-        return await this.atomicUpdate(doc => {
-          for (const key of Object.keys(object)) {
-            doc[key] = object[key]
-          }
-        })
-      },
-      // this is the mongo field update syntax that rxdb has
-      // see https://docs.mongodb.com/manual/reference/operator/update-field/
-      // and https://github.com/lgandecki/modifyjs#implemented
-      async replace(object: Object = {}) {
-        return await ogUpdate(object)
-      },
-    })
-
-    return {
-      ...descriptors,
-      ...extraDescriptors,
-    }
-  }
+  compiledMethods = () => ({
+    ...Object.getOwnPropertyDescriptors(this.methods || {}),
+    ...Object.getOwnPropertyDescriptors(this.modelMethods),
+  })
 
   _filteredProxy = null
 
@@ -271,10 +287,6 @@ export default class Model {
       pouchSettings: this.options.pouchSettings,
       migrationStrategies: this.migrations,
     })
-
-    // TEMPORARY BUGFIX, fixed pouch console warnings about db.info()
-    // TODO remove on RxDB 5.4.0
-    await this.pouch.info()
 
     // sync PUSH ONLY
     if (this.options.autoSync) {

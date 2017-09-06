@@ -47,6 +47,8 @@ const uiContext = [
   },
 ]
 
+const glossPlugin = () => ({ decorator: glossDecorator })
+
 // applied top to bottom
 const decorations = ({ mobx, ui, magic } = {}) => [
   !ui && emitsMount,
@@ -57,7 +59,7 @@ const decorations = ({ mobx, ui, magic } = {}) => [
   reactRenderArgs,
   mobx && observer,
   // gloss after mobx
-  () => ({ decorator: glossDecorator }),
+  glossPlugin,
   magic && automagical,
   [storeProvidable, storeOptions],
 ]
@@ -82,12 +84,8 @@ view.emit = base.emit
 
 // other decorators
 view.ui = decor(decorations({ ui: true }))
-view.basics = decor([
-  extendsReact,
-  reactRenderArgs,
-  observer,
-  () => ({ decorator: glossDecorator }),
-])
+view.gloss = decor([uiContext, glossPlugin])
+view.basics = decor([extendsReact, reactRenderArgs, observer, glossPlugin])
 
 const providable = decor([[storeProvidable, storeOptions]])
 view.provide = stores => providable({ stores, context: true })

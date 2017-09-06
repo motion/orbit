@@ -1,16 +1,18 @@
 // @flow
 
-export type PaneProps = {|
+export type PaneProps = {
   search: string,
   activeIndex: number,
+  highlightIndex: number,
   paneProps: Object,
   onSelect: Function,
   getRef: Function,
   navigate: Function,
-  data?: Object,
-|}
+  data: Object,
+}
 
-export type PaneResult = {|
+export type PaneResult = {
+  id?: string | number,
   title: string,
   type: string,
   icon?: string,
@@ -19,4 +21,4 @@ export type PaneResult = {|
   url?: Function,
   onSelect?: Function,
   static?: boolean,
-|}
+}

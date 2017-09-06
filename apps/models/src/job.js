@@ -50,22 +50,26 @@ export class JobModel extends Model {
   methods = methods
 
   @query
-  pending = opt => this.collection.find({ status: STATUS.PENDING, ...opt })
+  pending = (opt?: Object) =>
+    this.collection.find({ status: STATUS.PENDING, ...opt })
   @query
-  processing = opt =>
+  processing = (opt?: Object) =>
     this.collection.find({ status: STATUS.PROCESSING, ...opt })
   @query
-  completed = opt => this.collection.find({ status: STATUS.COMPLETED, ...opt })
-  @query failed = opt => this.collection.find({ status: STATUS.FAILED, ...opt })
+  completed = (opt?: Object) =>
+    this.collection.find({ status: STATUS.COMPLETED, ...opt })
+  @query
+  failed = (opt?: Object) =>
+    this.collection.find({ status: STATUS.FAILED, ...opt })
 
   @query
-  lastCompleted = opt =>
+  lastCompleted = (opt?: Object) =>
     this.collection
       .findOne({ status: STATUS.COMPLETED, ...opt })
       .sort({ updatedAt: 'desc' })
 
   @query
-  lastPending = opt =>
+  lastPending = (opt?: Object) =>
     this.collection
       .findOne({ status: STATUS.PENDING, ...opt })
       .sort({ updatedAt: 'desc' })

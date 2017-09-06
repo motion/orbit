@@ -18,19 +18,19 @@ export type Props = {
   background?: Color,
   badge?: React.Element<any>,
   badgeProps?: Object,
-  border?: Array | Object,
-  borderBottom?: Array | Object,
+  border?: Array<any> | Object,
+  borderBottom?: Array<any> | Object,
   borderBottomRadius?: number,
-  borderLeft?: Array | Object,
+  borderLeft?: Array<any> | Object,
   borderLeftRadius?: number,
   borderRadius: number,
-  borderRight?: Array | Object,
+  borderRight?: Array<any> | Object,
   borderRightRadius?: number,
   borderStyle?: 'solid' | 'dotted',
-  borderTop?: Array | Object,
+  borderTop?: Array<any> | Object,
   borderTopRadius?: number,
   borderWidth?: number | string,
-  boxShadow?: Array | string,
+  boxShadow?: Array<any> | string,
   children?: Element | string,
   chromeless?: boolean,
   circular?: boolean,
@@ -88,6 +88,7 @@ export type Props = {
   uiContext?: boolean,
   width?: number,
   wrapElement?: boolean,
+  borderRadius?: number,
 }
 
 const IS_PROD = process.env.NODE_ENV === 'production'
@@ -101,14 +102,14 @@ const BORDER_RADIUS_SIDES = [
   'borderRightRadius',
 ]
 
-const hasChildren = children =>
+const hasChildren = (children: any): boolean =>
   Array.isArray(children)
     ? children.reduce((a, b) => a || !!b, false)
     : !!children
 
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
-export default class Surface extends React.Component<Props> {
+export default class Surface extends React.PureComponent<Props> {
   static defaultProps = {
     tagName: IS_PROD ? 'div' : 'surface',
     borderStyle: 'solid',
@@ -117,107 +118,107 @@ export default class Surface extends React.Component<Props> {
 
   uniq = `SRFC-${Math.round(Math.random() * 100000000)}`
 
-  onClick = e => {
+  onClick = (e: Event) => {
     e.preventDefault()
     if (this.props.onClick) {
       this.props.onClick(e)
     }
   }
 
-  render({
-    active,
-    after,
-    align,
-    alignSelf,
-    background,
-    badge,
-    badgeProps,
-    border,
-    borderBottom,
-    borderBottomRadius,
-    borderColor,
-    borderLeft,
-    borderLeftRadius: _borderLeftRadius,
-    borderRadius: _borderRadius,
-    borderRight,
-    borderRightRadius: _borderRightRadius,
-    borderStyle,
-    borderTop,
-    borderTopRadius,
-    borderWidth,
-    boxShadow,
-    children,
-    chromeless,
-    circular,
-    className,
-    clickable,
-    color,
-    dim,
-    disabled,
-    elementProps,
-    elevation,
-    flex,
-    flexFlow,
-    focusable,
-    getRef,
-    glint,
-    glow,
-    glowProps,
-    height,
-    highlight,
-    highlightBackground,
-    highlightColor,
-    hover,
-    hoverable,
-    hoverBackground,
-    hoverColor,
-    hovered,
-    icon,
-    iconAfter,
-    iconColor,
-    iconProps,
-    iconSize: _iconSize,
-    inline,
-    justify,
-    lineHeight,
-    margin,
-    marginBottom,
-    marginLeft,
-    marginRight,
-    marginTop,
-    material,
-    maxWidth,
-    minWidth,
-    noElement,
-    noWrap,
-    onClick,
-    opacity,
-    padding,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-    paddingTop,
-    placeholderColor,
-    row,
-    size,
-    sizeIcon,
-    spaced,
-    stretch,
-    style,
-    tagName,
-    textAlign,
-    theme,
-    tooltip,
-    tooltipProps,
-    uiContext,
-    width,
-    wrapElement,
-    ...props
-  }) {
+  render() {
+    const {
+      active,
+      after,
+      align,
+      alignSelf,
+      background,
+      badge,
+      badgeProps,
+      border,
+      borderBottom,
+      borderBottomRadius,
+      borderColor,
+      borderLeft,
+      borderLeftRadius: _borderLeftRadius,
+      borderRadius: _borderRadius,
+      borderRight,
+      borderRightRadius: _borderRightRadius,
+      borderStyle,
+      borderTop,
+      borderTopRadius,
+      borderWidth,
+      boxShadow,
+      children,
+      chromeless,
+      circular,
+      className,
+      clickable,
+      color,
+      dim,
+      disabled,
+      elementProps,
+      elevation,
+      flex,
+      flexFlow,
+      focusable,
+      getRef,
+      glint,
+      glow,
+      glowProps,
+      height,
+      highlight,
+      highlightBackground,
+      highlightColor,
+      hover,
+      hoverable,
+      hoverBackground,
+      hoverColor,
+      hovered,
+      icon,
+      iconAfter,
+      iconColor,
+      iconProps,
+      iconSize: _iconSize,
+      inline,
+      justify,
+      lineHeight,
+      margin,
+      marginBottom,
+      marginLeft,
+      marginRight,
+      marginTop,
+      maxWidth,
+      minWidth,
+      noElement,
+      noWrap,
+      onClick,
+      opacity,
+      padding,
+      paddingBottom,
+      paddingLeft,
+      paddingRight,
+      paddingTop,
+      placeholderColor,
+      row,
+      size,
+      sizeIcon,
+      spaced,
+      stretch,
+      style,
+      tagName,
+      textAlign,
+      theme,
+      tooltip,
+      tooltipProps,
+      uiContext,
+      width,
+      wrapElement,
+      ...props
+    } = this.props
     const hasIconBefore = icon && !iconAfter
     const hasIconAfter = icon && iconAfter
     const stringIcon = typeof icon === 'string'
-    const { themeValues = {} } = this
+    const { themeValues } = this
 
     const passProps = {
       tagName,
@@ -229,10 +230,13 @@ export default class Surface extends React.Component<Props> {
     const borderLeftRadius = _borderLeftRadius || themeValues.borderRadiusSize
     const borderRightRadius = _borderRightRadius || themeValues.borderRadiusSize
 
+    const glowColor =
+      (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
+
     const contents = [
       <Glint
         key={0}
-        if={glint && this.theme}
+        if={glint}
         size={size}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
@@ -258,9 +262,7 @@ export default class Surface extends React.Component<Props> {
         full
         scale={1.3}
         show={hovered}
-        color={
-          (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
-        }
+        color={glowColor}
         opacity={0.2}
         borderLeftRadius={borderLeftRadius - 1}
         borderRightRadius={borderRightRadius - 1}
@@ -308,25 +310,18 @@ export default class Surface extends React.Component<Props> {
         onClick={this.onClick}
         {...!wrapElement && passProps}
       >
-        {after &&
+        {after && (
           <wrap>
-            <before>
-              {contents}
-            </before>
-            <after>
-              {after}
-            </after>
-          </wrap>}
+            <before>{contents}</before>
+            <after>{after}</after>
+          </wrap>
+        )}
         {!after && contents}
       </surface>
     )
 
     if (theme) {
-      return (
-        <Theme name={theme}>
-          {surface}
-        </Theme>
-      )
+      return <Theme name={theme}>{surface}</Theme>
     }
 
     return surface
@@ -567,7 +562,7 @@ export default class Surface extends React.Component<Props> {
 
     const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
 
-    return {
+    const result = {
       element: {
         height,
         ...borderRadius,
@@ -649,5 +644,7 @@ export default class Surface extends React.Component<Props> {
         ...props.style,
       },
     }
+
+    return result
   }
 }

@@ -1,10 +1,10 @@
-import React from 'react'
+import * as React from 'react'
 import resizer from 'element-resize-detector'
 
 const Resize = resizer({ strategy: 'scroll' })
 
 export default prop => Child => {
-  class ParentSize extends React.Component {
+  class ParentSize extends React.PureComponent {
     state = {
       dimensions: null,
     }
@@ -58,17 +58,14 @@ export default prop => Child => {
 
       const { className, style, ...props } = this.props
 
-      // remove the parentSize prop
-      delete props[prop]
-
       return (
-        <parent
+        <div
           className={className}
           style={{ ...style, height: '100%' }}
           ref={this.setParent}
         >
           <Child {...props} parentSize={parentSize} />
-        </parent>
+        </div>
       )
     }
   }

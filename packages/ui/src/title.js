@@ -22,7 +22,7 @@ export type Props = {
 }
 
 @view.ui
-export default class Title extends React.Component<Props> {
+export default class Title extends React.PureComponent<Props> {
   static defaultProps = {
     size: 1,
     tagName: 'title',
@@ -91,7 +91,9 @@ export default class Title extends React.Component<Props> {
             icon={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
             iconProps={{
               size: 8,
-              color: $(color).alpha(0.5).toString() || [255, 255, 255, 0.3],
+              color: $(color)
+                .alpha(0.5)
+                .toString() || [255, 255, 255, 0.3],
             }}
             circular
             chromeless
@@ -101,9 +103,7 @@ export default class Title extends React.Component<Props> {
             height="auto"
           />
         </collapse>
-        <before if={before}>
-          {before}
-        </before>
+        <before if={before}>{before}</before>
         <Text
           $title
           {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
@@ -117,14 +117,10 @@ export default class Title extends React.Component<Props> {
         >
           <el $display={display} $$row>
             {children}
-            <stat if={stat}>
-              {stat}
-            </stat>
+            <stat if={stat}>{stat}</stat>
           </el>
         </Text>
-        <after if={after}>
-          {after}
-        </after>
+        <after if={after}>{after}</after>
       </titleroot>
     )
   }

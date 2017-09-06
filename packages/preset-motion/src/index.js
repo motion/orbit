@@ -1,6 +1,7 @@
 module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
+  const noAsync = opts.async === false
   const getPlugin = (name, opts) => {
     if (disable.find(x => x === name)) {
       return null
@@ -8,6 +9,19 @@ module.exports = function(context, givenOpts) {
     const plugin = require.resolve(name)
     return opts ? [plugin, opts] : plugin
   }
+
+  const envOpts = Object.assign(
+    {
+      useBuiltIns: true,
+      targets: {
+        node: 8,
+      },
+      exclude: !noAsync
+        ? ['transform-regenerator', 'transform-async-to-generator']
+        : [],
+    },
+    opts.env || {}
+  )
 
   const config = {
     plugins: [
@@ -34,28 +48,15 @@ module.exports = function(context, givenOpts) {
       }),
     ],
     presets: [
-      [
-        getPlugin('babel-preset-env'),
-        Object.assign(
-          {
-            useBuiltIns: true,
-            targets: {
-              node: 8,
-            },
-            exclude: ['transform-regenerator', 'transform-async-to-generator'],
-          },
-          opts.env || {}
-        ),
-      ],
+      [getPlugin('babel-preset-env'), envOpts],
       getPlugin('babel-preset-react'),
-      getPlugin('babel-preset-stage-1-without-async'),
+      !noAsync && getPlugin('babel-preset-stage-1-without-async'),
+      noAsync && getPlugin('babel-preset-stage-1'),
     ],
   }
 
-  config.plugins = config.plugins.filter(Boolean)
-  config.presets = config.presets.filter(Boolean)
-
-  console.log('config is', config)
+  config.plugins = config.plugins.filter(x => !!x)
+  config.presets = config.presets.filter(x => !!x)
 
   return config
 }

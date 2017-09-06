@@ -2,10 +2,13 @@
 import * as React from 'react'
 import { StyleSheet, css } from './stylesheet'
 import deepExtend from 'deep-extend'
-import type { Gloss } from './index'
+import { Gloss } from './index'
 import tags from 'html-tags'
 
-const VALID_TAGS = tags.reduce((acc, cur) => ({ ...acc, [cur]: true }), {})
+const VALID_TAGS: { [string]: boolean } = tags.reduce(
+  (acc, cur) => ({ ...acc, [cur]: true }),
+  {}
+)
 const IS_PROD = process.env.NODE_ENV === 'production'
 
 const arrayOfObjectsToObject = (arr: Array<Object>) => {
@@ -15,7 +18,7 @@ const arrayOfObjectsToObject = (arr: Array<Object>) => {
   }
   return res
 }
-const ogCreateElement = React.createElement.bind(React)
+const ogCreateElement: Function = React.createElement.bind(React)
 const TAG_NAME_MAP = {
   title: 'div',
   body: 'div',
@@ -27,7 +30,6 @@ const $ = '$'
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
   const { baseStyles, options, niceStyle } = Gloss
-  const SHOULD_THEME = !options.dontTheme
   return function fancyElement(
     type_: string | Function,
     props?: Object,
@@ -44,41 +46,47 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     let cssStyles
     const propNames = props ? Object.keys(props) : null
     const isTag = typeof type === 'string'
+    const name: string = !isTag ? `${type.name}` : type
     const finalProps = {}
     const finalStyles = []
+    const { theme } = this
 
     const addStyle = (obj, key, val, checkTheme) => {
       const style = obj[key]
-      if (!style) return
+      if (!style) {
+        return
+      }
+      // dynamic
       if (typeof style === 'function') {
-        const sheet = StyleSheet.create({ [type]: niceStyle(style(val)) })
-        finalStyles.push(sheet[type])
+        const sheet = StyleSheet.create({
+          [name]: niceStyle(style(val)),
+        })
+        finalStyles.push(sheet[name])
       } else {
         finalStyles.push(style)
       }
-      if (SHOULD_THEME && checkTheme && this.theme && this.theme[key]) {
-        finalStyles.push(this.theme[key])
+      if (checkTheme && theme && theme[key]) {
+        finalStyles.push(theme[key])
       }
     }
 
-    if (styles && (isTag || type.name)) {
-      const tagName = type.name || type
-      addStyle(styles, tagName, null, true)
+    if (styles && name) {
+      addStyle(styles, name, null, true)
     }
 
     if (propNames) {
-      for (const NAME of propNames) {
-        const val = props && props[NAME]
+      for (const prop of propNames) {
+        const val = props && props[prop]
 
         // non-style actions
-        if (options.glossProp && NAME === options.glossProp) {
+        if (options.glossProp && prop === options.glossProp) {
           // css={}
           cssStyles = val
           continue
         }
         if (
           options.tagName &&
-          NAME === options.tagName &&
+          prop === options.tagName &&
           isTag &&
           typeof val === 'string'
         ) {
@@ -86,9 +94,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           type = val
           continue
         }
-        if (NAME[0] !== $) {
+        if (prop[0] !== $) {
           // pass props down if not glossProp style prop
-          finalProps[NAME] = val
+          finalProps[prop] = val
           continue
         }
 
@@ -99,23 +107,23 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         }
         if (baseStyles) {
           // $$style
-          const isParentStyle = NAME[1] === $
+          const isParentStyle = prop[1] === $
           if (isParentStyle) {
-            addStyle(baseStyles, NAME.slice(2), val)
+            addStyle(baseStyles, prop.slice(2), val)
             continue
           }
         }
         if (styles) {
           // $style
-          addStyle(styles, NAME.slice(1), val, true)
+          addStyle(styles, prop.slice(1), val, true)
         }
       }
     }
 
     // glossify and append style prop
-    if (cssStyles) {
-      const sheet = StyleSheet.create({ [type]: niceStyle(cssStyles) })
-      finalStyles.push(sheet[type])
+    if (cssStyles && Object.keys(cssStyles).length) {
+      const sheet = StyleSheet.create({ [name]: niceStyle(cssStyles) })[name]
+      finalStyles.push(sheet)
     }
 
     // styles => props
@@ -128,7 +136,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
           try {
             finalProps.className = css(...finalStyles)
           } catch (e) {
-            console.error('Error applying style to', type, finalStyles, this)
+            console.error('Error applying style to', name, finalStyles, this)
           }
         }
 
@@ -140,15 +148,20 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
         }
       } else {
         // children get a style prop
-        finalProps.style = arrayOfObjectsToObject([
-          props.style,
-          ...finalStyles.map(style => style && style.style),
-        ])
+        if (props) {
+          finalProps.style = arrayOfObjectsToObject([
+            props.style,
+            ...finalStyles.map(style => style && style.style),
+          ])
+        }
       }
     }
 
     if (isTag) {
-      type = VALID_TAGS[type] ? type : 'div'
+      if (!VALID_TAGS[type]) {
+        finalProps['data-tagname'] = type
+        type = 'div'
+      }
       type = TAG_NAME_MAP[type] || type
     }
 

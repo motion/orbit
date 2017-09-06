@@ -1,5 +1,5 @@
 // @flow
-import React, { Children, cloneElement } from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from 'react-hotkeys'
 import ListItem from './listItem'
@@ -10,6 +10,7 @@ import Surface from './surface'
 import type { Color } from '@mcro/gloss'
 
 const idFn = _ => _
+const SEPARATOR_HEIGHT = 25
 
 export type Props = {
   defaultSelected?: number,
@@ -28,7 +29,7 @@ export type Props = {
   onHighlight: Function,
   onItemMount?: Function,
   onSelect: Function,
-  parentSize?: boolean,
+  parentSize?: Object,
   rowHeight?: number,
   scrollable?: boolean,
   segmented?: boolean,
@@ -37,26 +38,29 @@ export type Props = {
   width?: number,
   groupKey?: string,
   selected?: number,
+  separatorHeight: number,
 }
 
 @parentSize('virtualized')
 @view.ui
-class List {
-  props: Props
+class List extends React.PureComponent<Props, { selected: number }> {
+  static Item = ListItem
 
   static defaultProps = {
     getItem: idFn,
     onSelect: idFn,
     onHighlight: idFn,
+    separatorHeight: SEPARATOR_HEIGHT,
   }
 
   state = {
-    selected: null,
+    selected: -1,
   }
 
   // for tracking list resizing for virtual lists
   totalItems = null
-  itemRefs = []
+  itemRefs: Array<HTMLElement> = []
+  lastDidReceivePropsDate: ?number
 
   componentWillMount = () => {
     this.totalItems = this.getTotalItems(this.props)
@@ -73,7 +77,7 @@ class List {
     }
   }
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps = (nextProps: Props) => {
     if (typeof nextProps.selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
       if (nextProps.selected !== this.state.selected) {
@@ -98,7 +102,7 @@ class List {
   }
 
   getTotalItems = props =>
-    props.items ? props.items.length : Children.count(props.children)
+    props.items ? props.items.length : React.Children.count(props.children)
 
   isSelected = fn => (...args) =>
     typeof this.state.selected === 'number' ? fn(...args) : null
@@ -132,7 +136,7 @@ class List {
     }
   }
 
-  highlightItem = (setter: () => number | null, cb: Function) => {
+  highlightItem = (setter: ?() => number, cb?: Function) => {
     const selected = setter(this.state.selected)
     this.lastSelectionDate = Date.now()
     this.setState({ selected }, () => {
@@ -162,50 +166,56 @@ class List {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
-  render({
-    borderColor,
-    borderRadius,
-    children,
-    controlled,
-    getItem,
-    height: userHeight,
-    itemProps,
-    items,
-    loading,
-    onHighlight,
-    onItemMount,
-    onSelect,
-    virtualized,
-    scrollable,
-    segmented,
-    size,
-    style,
-    width: userWidth,
-    virtualProps,
-    isSelected,
-    groupKey,
-    parentSize,
-    defaultSelected,
-    ...props
-  }: Props) {
+  render() {
+    const {
+      borderColor,
+      borderRadius,
+      children,
+      controlled,
+      getItem,
+      height: height_,
+      itemProps,
+      items,
+      loading,
+      onHighlight,
+      onItemMount,
+      onSelect,
+      virtualized,
+      scrollable,
+      segmented,
+      size,
+      style,
+      width: userWidth,
+      separatorHeight,
+      isSelected,
+      groupKey,
+      parentSize,
+      defaultSelected,
+      ...props
+    } = this.props
+
     if (!items && !children) {
       return null
     }
 
-    let height = userHeight
+    let height = height_
     let width = userWidth
+    let rowHeight
+    let dynamicRowHeight = false
 
     if (virtualized && !parentSize) {
       return null
     }
 
-    if (virtualized) {
-      height = parentSize.height || userHeight
-      width = parentSize.width || userWidth
+    if (virtualized && parentSize) {
+      height = parentSize.height || height_ || 0
+      width = parentSize.width || userWidth || 0
+      rowHeight = virtualized ? virtualized.rowHeight : undefined
+      dynamicRowHeight = typeof virtualized.rowHeight === 'function'
     }
 
     const passThroughProps = {
-      height: virtualized ? virtualized.rowHeight : undefined,
+      height: rowHeight,
       onItemMount,
       size,
       borderRadius,
@@ -213,7 +223,7 @@ class List {
       ...itemProps,
     }
 
-    const total = items ? items.length : Children.count(children)
+    const total = items ? items.length : React.Children.count(children)
 
     const getItemProps = (index, rowProps, isListItem) => {
       const positionProps = {
@@ -241,7 +251,7 @@ class List {
         // set highlight if necessary
         props.highlight = this.showInternalSelection
           ? index === this.state.selected
-          : this.props.isSelected && this.props.isSelected(items[index], index)
+          : isSelected && isSelected(items[index], index)
       } else {
         if (this.props.selected === index) {
           props.highlight = true
@@ -274,9 +284,9 @@ class List {
 
     // allow passing of rowProps by wrapping each in function
     let chillen = children
-      ? Children.map(children, (item, index) => rowProps =>
+      ? React.Children.map(children, (item, index) => rowProps =>
           item
-            ? cloneElement(
+            ? React.cloneElement(
                 item,
                 getItemProps(index, rowProps, item.type.isListItem)
               )
@@ -289,7 +299,10 @@ class List {
       chillen = chillen.map(child => child())
     }
 
-    if (groupKey) {
+    const groupOffsets = {}
+    let totalGroups = 0
+
+    if (groupKey && items) {
       const groups = []
       let lastGroup = null
 
@@ -297,24 +310,44 @@ class List {
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
           if (lastGroup) {
+            const groupIndex = index + totalGroups
+            groupOffsets[groupIndex] = true
             // add groups.length because we make list bigger as we add separators
-            groups.push({ index: index + groups.length, name: lastGroup })
+            groups.push({ index: groupIndex, name: lastGroup })
+            totalGroups++
           }
         }
       })
 
       for (const { index, name } of groups) {
-        chillen.splice(
-          index,
-          0,
-          <separator key={Math.random()}>
-            {name}
-          </separator>
-        )
+        let child
+        if (virtualized) {
+          child = (extraProps: Object) =>
+            <separator {...extraProps}>
+              {name}
+            </separator>
+        } else {
+          child = (
+            <separator key={Math.random()}>
+              {name}
+            </separator>
+          )
+        }
+        chillen.splice(index, 0, child)
       }
     }
 
-    const innerContent = (
+    const getRowHeight = ({ index }) => {
+      if (groupOffsets[index]) {
+        return separatorHeight
+      }
+      if (dynamicRowHeight) {
+        return virtualized.rowHeight(index)
+      }
+      return virtualized.rowHeight
+    }
+
+    const inner = (
       <Surface
         tagName="list"
         align="stretch"
@@ -322,28 +355,31 @@ class List {
         width={width}
         style={{
           height: '100%',
-          overflowY: scrollable ? 'scroll' : 'auto',
+          overflowY: scrollable ? 'scroll' : 'hidden',
           overflowX: 'visible',
           ...style,
         }}
         borderRadius={borderRadius}
         {...props}
       >
-        <loading if={loading}>loading</loading>
-        <VirtualList
-          if={!loading && virtualized}
-          height={height}
-          width={width}
-          rowCount={total}
-          rowHeight={100}
-          rowRenderer={({ index, key, style }) =>
-            chillen[index]({ key, style })}
-          {...virtualized}
-        />
+        {!loading &&
+          virtualized &&
+          <VirtualList
+            height={height}
+            width={width}
+            overscanRowCount={3}
+            rowCount={total + totalGroups}
+            rowRenderer={({ index, key, style }) =>
+              chillen[index]({ key, style })}
+            {...virtualized}
+            rowHeight={getRowHeight}
+          />}
         {!virtualized && chillen}
       </Surface>
     )
-    if (!controlled) return innerContent
+    if (!controlled) {
+      return inner
+    }
     return (
       <HotKeys
         handlers={this.actions}
@@ -353,20 +389,19 @@ class List {
           flexGrow: 'inherit',
         }}
       >
-        {innerContent}
+        {inner}
       </HotKeys>
     )
   }
 
   static style = {
     separator: {
-      display: 'sticky',
-      padding: [2, 10],
+      padding: [0, 10],
+      height: SEPARATOR_HEIGHT,
+      justifyContent: 'center',
       background: [0, 0, 0, 0.05],
     },
   }
 }
-
-List.Item = ListItem
 
 export default List

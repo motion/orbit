@@ -1,5 +1,5 @@
 // @flow
-const serialize = content => content
+const serialize = (_: any): any => _
 const capitalize = s => s[0].toUpperCase() + s.substr(1)
 
 type Schema = {
@@ -24,8 +24,7 @@ export default class MillerStateStore {
   watchers = {}
   prevActiveRows = [] // holds the previously active columns
 
-  constructor({ schema }) {
-    console.log('in constructor', schema)
+  constructor({ schema }: { schema: Object }) {
     this.schema = schema
 
     const events = ['selectionChange', 'change', 'changeColumn']
@@ -41,10 +40,6 @@ export default class MillerStateStore {
     return this.schema[this.schema.length - 1]
   }
 
-  get activeBar() {
-    return this.activePlugin && this.activePlugin.barContents
-  }
-
   get activePlugin() {
     return this.plugins[this.activeCol]
   }
@@ -57,7 +52,7 @@ export default class MillerStateStore {
     return this.activeResults && this.activeResults[this.activeRow]
   }
 
-  setSchema(index, schema: Schema) {
+  setSchema(index: number, schema: Schema) {
     if (this.schema.length < index) {
       this.schema.push(schema)
     } else {
@@ -70,11 +65,11 @@ export default class MillerStateStore {
     this.emit('change', this)
   }
 
-  emit(name, ...obj) {
+  emit(name: string, ...obj) {
     this.watchers[name].forEach(cb => cb(...obj))
   }
 
-  moveRow(delta) {
+  moveRow(delta: number) {
     if (delta < 0 && this.activeRow === 0) return
     if (this.activeRow === null) {
       this.activeRow = 0
@@ -96,7 +91,7 @@ export default class MillerStateStore {
     this.emit('selectionChange')
   }
 
-  setSelection(col, row) {
+  setSelection(col: number, row: number) {
     if (col > this.activeCol) {
       this.moveCol(1)
     } else {
@@ -108,7 +103,7 @@ export default class MillerStateStore {
     this.emit('selectionChange')
   }
 
-  setActiveRow(row) {
+  setActiveRow(row: number) {
     this.setSelection(this.activeCol, row)
   }
 
@@ -118,7 +113,7 @@ export default class MillerStateStore {
     this.emit('changeColumn', col, lastCol)
   }
 
-  moveCol(delta) {
+  moveCol(delta: number) {
     if (delta > 0) {
       if (this.activeCol < this.schema.length - 1) {
         this.prevActiveRows.push(this.activeRow)

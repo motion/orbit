@@ -107,7 +107,6 @@ export default class ListItem extends React.PureComponent<Props> {
       <SizedSurface
         tagName="listitem"
         size={size}
-        sizeHeight
         sizePadding={1.2}
         hoverable
         $item

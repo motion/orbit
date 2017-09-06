@@ -58,6 +58,7 @@ export default prop => Child => {
 
       const { className, style, ...props } = this.props
 
+      console.log('parentSize', parentSize)
       return (
         <div
           className={className}

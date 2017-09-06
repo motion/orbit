@@ -5,11 +5,11 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class Calendar extends React.Component<> {
-  static defaultProps: {};
+  static defaultProps: {}
   render() {
     return (
       <calendar>
-        <UI.Title>Calender</UI.Title>
+        <UI.Title>Upcoming</UI.Title>
         <content
           $$row
           css={{ width: '100%', overflowX: 'scroll', margin: [-5, 0] }}

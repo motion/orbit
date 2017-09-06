@@ -8,20 +8,6 @@ import parentSize from '~/helpers/parentSize'
 import type { ItemProps } from './listItem'
 import Surface from './surface'
 import type { Color } from '@mcro/gloss'
-import hash from 'hash-sum'
-
-// memoize
-const C = {}
-function memoize(fn) {
-  return (...args: Array<any>) => {
-    const key = hash(args)
-    if (C[key]) {
-      return C[key]
-    }
-    C[key] = fn(...args)
-    return C[key]
-  }
-}
 
 const idFn = _ => _
 const SEPARATOR_HEIGHT = 25
@@ -57,7 +43,7 @@ export type Props = {
 
 @parentSize('virtualized')
 @view.ui
-class List extends React.PureComponent<Props, { selected: number }> {
+class List extends React.Component<Props, { selected: number }> {
   static Item = ListItem
 
   static defaultProps = {
@@ -187,7 +173,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       children,
       controlled,
       getItem,
-      height: userHeight,
+      height: height_,
       itemProps,
       items,
       loading,
@@ -212,18 +198,20 @@ class List extends React.PureComponent<Props, { selected: number }> {
       return null
     }
 
-    let height = userHeight
+    let height = height_
     let width = userWidth
     let rowHeight
+    let dynamicRowHeight = false
 
     if (virtualized && !parentSize) {
       return null
     }
 
     if (virtualized && parentSize) {
-      height = parentSize.height || userHeight
-      width = parentSize.width || userWidth
+      height = parentSize.height || height_ || 0
+      width = parentSize.width || userWidth || 0
       rowHeight = virtualized ? virtualized.rowHeight : undefined
+      dynamicRowHeight = typeof virtualized.rowHeight === 'function'
     }
 
     const passThroughProps = {
@@ -344,8 +332,15 @@ class List extends React.PureComponent<Props, { selected: number }> {
       }
     }
 
-    const getRowHeight = ({ index }) =>
-      groupOffsets[index] ? separatorHeight : virtualized.rowHeight
+    const getRowHeight = ({ index }) => {
+      if (groupOffsets[index]) {
+        return separatorHeight
+      }
+      if (dynamicRowHeight) {
+        return virtualized.rowHeight(index)
+      }
+      return virtualized.rowHeight
+    }
 
     const inner = (
       <Surface

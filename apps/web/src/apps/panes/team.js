@@ -5,6 +5,7 @@ import { Event } from '~/app'
 import * as UI from '@mcro/ui'
 import type { PaneProps } from '~/types'
 import Feed from './views/feed'
+import Calendar from './views/calendar'
 
 class BarTeamStore {
   props: PaneProps
@@ -12,9 +13,7 @@ class BarTeamStore {
     this.props.getRef(this)
   }
 
-  @watch
-  events: ?Array<Event> = (() =>
-    Event.find({ author: this.props.data.person, sort: 'createdAt' }): any)
+  @watch events: ?Array<Event> = (() => Event.find({ sort: 'createdAt' }): any)
 
   get results(): Array<Event> {
     return this.events || []
@@ -32,10 +31,14 @@ export default class BarTeam extends Component<Props> {
     return (
       <team>
         <section>
-          <UI.Title size={2}>{data.team}</UI.Title>
+          <UI.Title size={2}>Team {data.team}</UI.Title>
         </section>
 
         <section>
+          <Calendar />
+        </section>
+
+        <section css={{ flex: 1 }}>
           <Feed items={store.results} data={data} activeIndex={activeIndex} />
         </section>
       </team>

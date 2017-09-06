@@ -215,7 +215,6 @@ class BarStore {
       e.preventDefault()
     },
     up: e => {
-      console.log('up')
       if (this.millerState.activeRow > 0) {
         this.millerActions.up()
       }

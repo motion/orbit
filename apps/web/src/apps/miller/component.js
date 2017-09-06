@@ -221,14 +221,15 @@ export default class Miller extends React.Component {
       height: '103%',
       background: 'white',
       boxShadow: '1px 1px 3px rgba(0,0,0,.4)',
+      // overflow: 'scroll',
     },
     columns: {
       flex: 1,
       transition: 'transform 80ms linear',
-      transform: {
-        z: 0,
-        x: 0,
-      },
+      // transform: {
+      //   z: 0,
+      //   x: 0,
+      // },
     },
     transX: x => ({ transform: { x } }),
   }

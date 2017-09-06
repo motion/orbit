@@ -1,7 +1,6 @@
 // @flow
 import * as React from 'react'
 import Mousetrap from 'mousetrap'
-import ReactDOM from 'react-dom'
 import { view } from '@mcro/black'
 import { OS } from '~/helpers'
 import * as UI from '@mcro/ui'
@@ -9,6 +8,76 @@ import * as Panes from './panes'
 import { MillerState, Miller } from './miller'
 import { isNumber, debounce } from 'lodash'
 import { SHORTCUTS } from '~/stores/rootStore'
+
+const safeString = thing => {
+  try {
+    return JSON.stringify(thing)
+  } catch (e) {
+    console.log('non safe object', thing)
+    return `${thing}`
+  }
+}
+
+@view.ui
+class Actions {
+  render() {
+    const actions = ['Archive', 'Reply', 'Delete', 'Forward']
+
+    return (
+      <bar $$draggable>
+        <section>
+          <UI.Text $label>Team: Motion</UI.Text>
+        </section>
+        <section>
+          <UI.Text $label>⌘ Actions</UI.Text>
+          {actions.map(action =>
+            <UI.Text $text key={action}>
+              <icon if={false}>⌘</icon>&nbsp;<strong>{action[0]}</strong>
+              <rest>{action.slice(1)}</rest>
+            </UI.Text>
+          )}
+        </section>
+      </bar>
+    )
+  }
+
+  static style = {
+    bar: {
+      justifyContent: 'space-between',
+      flexFlow: 'row',
+      height: 32,
+      alignItems: 'center',
+      padding: [0, 10],
+      // background: [255, 255, 255, 0.1],
+      borderTop: [1, [0, 0, 0, 0.1]],
+    },
+    section: {
+      flexFlow: 'row',
+    },
+    label: {
+      marginRight: 0,
+      opacity: 0.5,
+    },
+    text: {
+      marginLeft: 10,
+      marginRight: 5,
+    },
+    icon: {
+      opacity: 0.5,
+      display: 'inline',
+      fontSize: 12,
+    },
+    strong: {
+      fontWeight: 400,
+      opacity: 1,
+      color: '#fff',
+    },
+    rest: {
+      display: 'inline',
+      opacity: 0.8,
+    },
+  }
+}
 
 const actions = [
   'remind',
@@ -222,7 +291,8 @@ export default class BarPage {
         hoverable: true,
         fontSize: 26,
         padding: [0, 10],
-        highlightBackground: [0, 0, 0, 0.15],
+        height: 40,
+        highlightBackground: [0, 0, 0, 0.2],
         highlightColor: [255, 255, 255, 1],
       },
     }
@@ -279,6 +349,8 @@ export default class BarPage {
               store.millerActions = val
             }}
           />
+
+          <Actions />
         </bar>
       </UI.Theme>
     )
@@ -286,36 +358,8 @@ export default class BarPage {
 
   static style = {
     bar: {
-      background: [145, 145, 145, 0.5],
-      margin: 30,
+      background: [150, 150, 150, 0.65],
       flex: 1,
-    },
-    omni: {
-      height: 100,
-    },
-    // pos textbox over nav so they don't collide when nav is opacity 0
-    textbox: {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-    },
-    nav: {
-      flex: 1,
-      userSelect: 'none',
-      padding: [20, 5],
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-      transition: 'opacity ease-in 150ms',
-      opacity: 0,
-    },
-    showNav: {
-      opacity: 1,
-    },
-    left: {
-      position: 'absolute',
-      left: 3,
-      top: 20,
     },
     results: {
       borderTop: [1, 'dotted', [0, 0, 0, 0.1]],

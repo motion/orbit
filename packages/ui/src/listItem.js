@@ -91,6 +91,7 @@ export default class ListItem extends React.PureComponent<Props> {
       onFinishEdit,
       iconProps,
       getRef,
+      highlight,
       ...props
     } = this.props
     const radiusProps = segmented
@@ -124,10 +125,12 @@ export default class ListItem extends React.PureComponent<Props> {
         glowProps={glowProps || DEFAULT_GLOW}
         iconProps={{
           alignSelf: 'center',
+          opacity: 0.7,
           ...iconProps,
         }}
         style={style}
         getRef={this.getRef}
+        highlight={highlight}
         {...props}
       >
         <before if={before}>

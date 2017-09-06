@@ -24,33 +24,35 @@ import Signup from './views/signup'
 export default class BarLoginPane {
   render({ store }) {
     return (
-      <setup>
-        <Signup />
+      <UI.Theme name="light">
+        <setup>
+          <Signup />
 
-        <UI.Title size={2}>Login</UI.Title>
-        <UI.Form $$undraggable onSubmit={store.finish}>
-          <UI.Row>
-            <UI.Input
-              $error={store.error}
-              disabled={store.loggingIn}
-              name="email"
-              getRef={store.ref('email').set}
-              placeholder="Email"
-            />
-            <UI.Input
-              disabled={store.loggingIn}
-              name="password"
-              type="password"
-              placeholder="Password"
-              getRef={store.ref('password').set}
-            />
-            <UI.Button icon="raft" tooltip="Forgot password?" />
-            <UI.Button type="submit" icon={store.loggingIn ? 'time' : 'lock'}>
-              {store.loggingIn ? 'Logging in...' : 'Login'}
-            </UI.Button>
-          </UI.Row>
-        </UI.Form>
-      </setup>
+          <UI.Title size={2}>Login</UI.Title>
+          <UI.Form $$undraggable onSubmit={store.finish}>
+            <UI.Row>
+              <UI.Input
+                $error={store.error}
+                disabled={store.loggingIn}
+                name="email"
+                getRef={store.ref('email').set}
+                placeholder="Email"
+              />
+              <UI.Input
+                disabled={store.loggingIn}
+                name="password"
+                type="password"
+                placeholder="Password"
+                getRef={store.ref('password').set}
+              />
+              <UI.Button icon="raft" tooltip="Forgot password?" />
+              <UI.Button type="submit" icon={store.loggingIn ? 'time' : 'lock'}>
+                {store.loggingIn ? 'Logging in...' : 'Login'}
+              </UI.Button>
+            </UI.Row>
+          </UI.Form>
+        </setup>
+      </UI.Theme>
     )
   }
 

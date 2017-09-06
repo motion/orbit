@@ -21,12 +21,12 @@ export default class Feed extends React.PureComponent<Props> {
             const { actor, payload } = data
             return (
               <feeditem key={index}>
-                <meta if={actor}>
+                <info if={actor}>
                   <avatar $img={actor.avatar_url} />
                   <UI.Text $name>{actor.login} </UI.Text>
                   <UI.Text $action>{verb} </UI.Text>
                   <UI.Date $date>{data.created_at}</UI.Date>
-                </meta>
+                </info>
                 <body if={payload && payload.commits}>
                   <content>
                     {payload.commits.map(commit => (
@@ -52,7 +52,7 @@ export default class Feed extends React.PureComponent<Props> {
       flex: 1,
       position: 'relative',
     },
-    meta: {
+    info: {
       flexFlow: 'row',
       flexWrap: 'wrap',
       alignItems: 'center',

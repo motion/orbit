@@ -28,6 +28,6 @@ module.exports = (fatalError, stats) => {
 
   if (firstTime) {
     console.log('\ncool, now:')
-    console.log('npm run start-prod')
+    console.log('run web --prod')
   }
 }

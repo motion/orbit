@@ -30,6 +30,8 @@ elif [ "$ACTION" =  "web" ]; then
   cd apps/web
   if [ "$ARG1" = "--clean" ]; then
     motion watch --disable-cache
+  elif [ "$ARG1" = "--prod" ]; then
+    npm run start-prod
   else
     motion watch ${@:2}
   fi

@@ -2,8 +2,9 @@
   "name": "@mcro/gloss",
   "version": "1.2.0",
   "description": "Higher order component for nicer component styles",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "module": "lib/index.js",
+  "es5": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/motion/gloss.git"

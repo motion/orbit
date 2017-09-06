@@ -2,6 +2,7 @@ module.exports = function(context, givenOpts) {
   const opts = givenOpts || {}
   const disable = opts.disable || []
   const noAsync = opts.async === false
+  const isAsync = !noAsync
   const getPlugin = (name, opts) => {
     if (disable.find(x => x === name)) {
       return null
@@ -16,7 +17,7 @@ module.exports = function(context, givenOpts) {
       targets: {
         node: 8,
       },
-      exclude: !noAsync
+      exclude: isAsync
         ? ['transform-regenerator', 'transform-async-to-generator']
         : [],
     },
@@ -50,7 +51,7 @@ module.exports = function(context, givenOpts) {
     presets: [
       [getPlugin('babel-preset-env'), envOpts],
       getPlugin('babel-preset-react'),
-      !noAsync && getPlugin('babel-preset-stage-1-without-async'),
+      isAsync && getPlugin('babel-preset-stage-1-without-async'),
       noAsync && getPlugin('babel-preset-stage-1'),
     ],
   }

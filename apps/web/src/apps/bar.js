@@ -1,6 +1,6 @@
 // @flow
-import Mousetrap from 'mousetrap'
 import * as React from 'react'
+import Mousetrap from 'mousetrap'
 import ReactDOM from 'react-dom'
 import { view } from '@mcro/black'
 import { OS } from '~/helpers'
@@ -59,6 +59,15 @@ class BarStore {
   start() {
     this.on(window, 'focus', this.focusBar)
     this.attachTrap('window', window)
+    this.millerState.onChangeColumn((col, lastCol) => {
+      if (lastCol !== 0 && col === 0) {
+        this.focusBar()
+      }
+
+      if (lastCol === 0 && col !== 0) {
+        this.blurBar()
+      }
+    })
   }
 
   onInputRef = el => {
@@ -99,15 +108,6 @@ class BarStore {
   }
 
   onMillerStateChange = state => {
-    const lastCol = this.millerState.activeCol
-    if (lastCol !== 0 && state.activeCol === 0) {
-      this.focusBar()
-    }
-    if (lastCol === 0 && state.activeCol !== 0) {
-      this.blurBar()
-    }
-
-    this.millerState = state
     this.millerStateVersion++
   }
 
@@ -145,6 +145,7 @@ class BarStore {
       e.preventDefault()
     },
     up: e => {
+      console.log('up')
       if (this.millerState.activeRow > 0) {
         this.millerActions.up()
       }
@@ -227,42 +228,43 @@ export default class BarPage {
     }
 
     return (
-      <HotKeys attach={window} actions={store.actions}>
-        <UI.Theme name="clear-dark">
-          <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
-            <div>
-              <UI.Input
-                size={2.6}
-                getRef={store.onInputRef}
-                borderRadius={5}
-                onChange={store.onSearchChange}
-                value={store.textboxVal}
-                borderWidth={0}
-                css={{
-                  margin: [-2, 0, 0],
-                  padding: [0, 10],
-                  ...inputStyle,
-                }}
-              />
-              <forwardcomplete>
-                {store.peekItem}
-              </forwardcomplete>
-              <pasteicon if={false}>
-                <UI.Icon size={50} type="detailed" name="paper" />
-              </pasteicon>
-            </div>
-            <Miller
-              search={store.search}
-              version={store.millerStateVersion}
-              state={store.millerState}
-              panes={store.PANE_TYPES}
-              onChange={store.onMillerStateChange}
-              paneProps={paneProps}
-              onActions={store.ref('millerActions').set}
+      <UI.Theme name="clear-dark">
+        <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
+          <div>
+            <UI.Input
+              size={2.6}
+              getRef={store.onInputRef}
+              borderRadius={5}
+              onChange={store.onSearchChange}
+              value={store.textboxVal}
+              borderWidth={0}
+              css={{
+                margin: [-2, 0, 0],
+                padding: [0, 10],
+                ...inputStyle,
+              }}
             />
-          </bar>
-        </UI.Theme>
-      </HotKeys>
+            <forwardcomplete>
+              {store.peekItem}
+            </forwardcomplete>
+            <pasteicon if={false}>
+              <UI.Icon size={50} type="detailed" name="paper" />
+            </pasteicon>
+          </div>
+          <Miller
+            search={store.search}
+            version={store.millerStateVersion}
+            state={store.millerState}
+            panes={store.PANE_TYPES}
+            onChange={store.onMillerStateChange}
+            paneProps={paneProps}
+            onActions={val => {
+              console.log('actions', val)
+              store.millerActions = val
+            }}
+          />
+        </bar>
+      </UI.Theme>
     )
   }
 

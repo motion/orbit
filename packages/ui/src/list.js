@@ -89,7 +89,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (totalItems !== this.totalItems) {
       this.totalItems = totalItems
       // resize to fit
-      if (nextProps.parentSize) {
+      const { parentHeight } = this.props
+      if (
+        parentHeight &&
+        nextProps.parentHeight &&
+        (nextProps.parentSize.height !== parentHeight.height ||
+          nextProps.parentHeight.width !== parentHeight.width)
+      ) {
         nextProps.parentSize.measure()
       }
     }

@@ -17,7 +17,6 @@ export default prop => Child => {
     }
 
     measure(parent) {
-      console.log('mesaure')
       if (this.unmounted) {
         return null
       }
@@ -35,7 +34,6 @@ export default prop => Child => {
     }
 
     setParent(ref) {
-      console.log(this.props, this.node)
       if (!this.node && ref) {
         Resize.listenTo(ref, () => this.measure(ref))
         this.measure(ref)
@@ -49,10 +47,7 @@ export default prop => Child => {
 
       if (dimensions) {
         parentSize = {
-          measure: (...args) => {
-            this.measure(...args)
-            console.log('measure from measure')
-          },
+          measure: (...args) => this.measure(...args),
           height: this.state.dimensions.height,
           width: this.state.dimensions.width,
         }

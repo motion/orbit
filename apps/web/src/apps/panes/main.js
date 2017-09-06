@@ -6,6 +6,7 @@ import { CurrentUser, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from './pane'
+import { includes } from 'lodash'
 
 import type { PaneProps, PaneResult } from '~/types'
 
@@ -40,6 +41,7 @@ class BarMainStore {
       data: {
         team: 'motion',
       },
+      actions: ['like motion'],
     },
     {
       id: 11,
@@ -49,6 +51,7 @@ class BarMainStore {
       data: {
         special: true,
       },
+      actions: ['respond to recent'],
     },
     {
       id: 12,
@@ -137,9 +140,6 @@ class BarMainStore {
   select = (index: number) => {
     this.props.navigate(this.results[index])
   }
-  getActions() {
-    return ['one', 'two', 'four']
-  }
 }
 
 @view.provide({ paneStore: Pane.Store })
@@ -150,73 +150,35 @@ export default class BarMain extends React.Component<> {
   static defaultProps: {}
   render({
     store,
-    isActive,
-    highlightIndex,
     activeIndex,
-    paneProps,
     onSelect,
   }: PaneProps & { store: BarMainStore }) {
-    const secondary = item => {
-      if (item.data && item.data.service === 'github')
-        return (
-          <spread $$row>
-            <left>
-              {item.data.comments.length} replies
-            </left>
-            <right>
-              {item.data.labels}
-            </right>
-          </spread>
-        )
-
-      return null
-    }
-
-    const getHeight = index => 38 // (index === activeRow ? 55 : 38)
+    const isActive = index => activeIndex === index
 
     return (
-      <Pane.Card isActive={isActive} width={340} $pane>
+      <Pane.Card width={315} $pane>
         <none if={store.results.length === 0}>No Results</none>
         <UI.List
           if={store.results}
-          /*
           virtualized={{
-            rowHeight: 38, // getHeight,
+            rowHeight: 38,
           }}
-          */
           selected={activeIndex}
           onSelect={(item, index) => {
             onSelect(index)
           }}
-          itemProps={paneProps.itemProps}
           groupKey="category"
           items={store.results}
           getItem={(result, index) =>
-            <Pane.Selectable
-              key={index}
-              options={{
-                actions: store.getActions(result),
-                id: result.title,
-                index,
-              }}
-              render={(isActive, actions) =>
-                <UI.ListItem
-                  onClick={() => onSelect(index)}
-                  highlight={index === activeIndex}
-                  key={result.id}
-                  icon={
-                    result.data && result.data.image
-                      ? <img $image src={`/images/${result.data.image}.jpg`} />
-                      : result.icon || (result.doc && result.doc.icon)
-                  }
-                  primary={result.title}
-                  secondary={
-                    <container if={false}>
-                      {secondary(result)}
-                      {actions}
-                    </container>
-                  }
-                />}
+            <UI.ListItem
+              onClick={() => onSelect(index)}
+              highlight={isActive(index)}
+              icon={
+                result.data && result.data.image
+                  ? <img $image src={`/images/${result.data.image}.jpg`} />
+                  : result.icon || (result.doc && result.doc.icon)
+              }
+              primary={result.title}
             />}
         />
       </Pane.Card>
@@ -225,7 +187,6 @@ export default class BarMain extends React.Component<> {
 
   static style = {
     pane: {
-      width: 340,
       height: '100%',
     },
     spread: {

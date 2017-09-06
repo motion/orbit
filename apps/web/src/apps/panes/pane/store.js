@@ -4,111 +4,52 @@ import { random, without, intersection, includes, flatten } from 'lodash'
 const toggleInclude = (xs, x) => (includes(xs, x) ? without(xs, x) : [...xs, x])
 
 export default class PaneStore {
-    version = 0
-    metaKey = false
+  version = 0
+  metaKey = false
+  actions = []
 
-    selectedIds = []
-    activeCards = {}
-    visibleActions = {}
-    cardIdByIndex = {}
+  start() {
+    document.addEventListener('keydown', e => {
+      if (!this.props.isActive) return
+      this.metaKey = e.metaKey
 
-    getActiveIndex = () => {
-        const { millerState, isActive } = this.props
-        return isActive ? millerState.activeRow : null
-    }
-
-    get activeCol() {
-        return this.props.millerState.activeCol
-    }
-
-    setIndex = index => {
-        this.props.millerState.setActiveRow(index)
-    }
-
-    start() {
-        document.addEventListener('keydown', e => {
-            if (!this.props.isActive) return
-
-            this.metaKey = e.metaKey
-
-            if (e.keyCode === 27 && this.activeCol !== 0) {
-                window.preventEscClose = true
-                this.props.millerState.moveCol(-1)
-            }
-
-            // x
-            if (this.metaKey && e.keyCode === 88) {
-                this.toggleActive()
-            }
-
-            if (this.metaKey) {
-                ; (this.allActions || []).forEach(action => {
-                    if (actionToKeyCode(action) === e.keyCode) {
-                        e.preventDefault()
-                        console.log('executing action', action)
-                    }
-                })
-            }
+      if (this.metaKey) {
+        ;(this.allActions || []).forEach(action => {
+          if (actionToKeyCode(action) === e.keyCode) {
+            e.preventDefault()
+            console.log('executing action', action)
+          }
         })
+      }
+    })
+    document.addEventListener('keyup', e => {
+      this.metaKey = e.metaKey
+    })
+  }
 
-        document.addEventListener('keyup', e => {
-            this.metaKey = e.metaKey
+  get allActions() {
+    const { activeItem } = this.props.millerState
+    return [...(this.actions || []), ...(activeItem.actions || [])]
+  }
+
+  get toolbarActions() {
+    const { millerState, isActive } = this.props
+
+    if (!isActive) return false
+    return (millerState.activeItem && millerState.activeItem.actions) || []
+    /*
+
+    if (this.selectedIds.length > 0) {
+      return intersection.apply(
+        null,
+        this.selectedIds.map(id => {
+          console.log('getting id', id)
+          return this.activeCards[id].actions
         })
+      )
     }
+    */
 
-    toggleActive = () => {
-        if (this.activeIndex === null) return
-        this.toggleId(this.activeId)
-    }
-
-    toggleId = id => {
-        this.selectedIds = toggleInclude(this.selectedIds, id)
-        // this.version++
-    }
-
-    addCard = options => {
-        this.cardIdByIndex[options.index] = options.id
-        this.activeCards[options.id] = options
-    }
-
-    removeCard = ({ id, index }) => {
-        delete this.cardIdByIndex[index]
-        delete this.activeCards[id]
-    }
-
-    addActions = actions => {
-        const id = random(0, 1000000)
-        this.visibleActions[id] = actions
-        return id
-    }
-
-    removeActions = id => {
-        delete this.visibleActions[id]
-    }
-
-    get activeId() {
-        return this.cardIdByIndex[this.activeIndex]
-    }
-
-    get allActions() {
-        return flatten(Object.values(this.visibleActions))
-    }
-
-    get selectedCount() {
-        return this.selectedIds.length
-    }
-
-    get toolbarActions() {
-        if (this.selectedIds.length > 0) {
-            return intersection.apply(
-                null,
-                this.selectedIds.map(id => {
-                    console.log('getting id', id)
-                    return this.activeCards[id].actions
-                })
-            )
-        }
-
-        return null
-    }
+    return null
+  }
 }

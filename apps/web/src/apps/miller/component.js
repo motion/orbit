@@ -18,7 +18,11 @@ class MillerStore {
     const { state, onChange } = this.props
 
     if (state.activeRow !== null && state.activeResults) {
-      if (state.activeItem && state.activeItem.showChild !== false) {
+      if (
+        state.activeItem &&
+        state.activeItem.type &&
+        state.activeItem.showChild !== false
+      ) {
         state.setSchema(state.activeCol + 1, state.activeItem)
       }
     }
@@ -118,6 +122,7 @@ class Pane extends React.Component {
           }}
           search={search}
           highlightIndex={highlightIndex}
+          selectedIndices={[]}
           activeIndex={activeIndex}
         />
       </pane>
@@ -161,6 +166,7 @@ export default class Miller extends React.Component {
               <pane
                 key={index + ':' + pane.kind}
                 $grow={index > 0 && index === schema.length - 1}
+                $pullLeft={index > 0 && index === state.activeCol}
               >
                 <Pane
                   // if it's the next preview, always rerender
@@ -207,14 +213,14 @@ export default class Miller extends React.Component {
       transform: 'scale(0.96)',
     },
     pullLeft: {
-      transform: 'translate3d(-30px, -30px, 0) scale(1)',
+      transform: 'translate3d(-30px, -10px, 0) scale(1)',
     },
     grow: {
       overflow: 'visible',
       width: '69%',
-      height: '106%',
+      height: '103%',
       background: 'white',
-      boxShadow: '1px 1px 5px rgba(0,0,0,.5)',
+      boxShadow: '1px 1px 3px rgba(0,0,0,.4)',
     },
     columns: {
       flex: 1,

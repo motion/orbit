@@ -328,7 +328,7 @@ export default class BarPage {
 
   static style = {
     bar: {
-      background: [150, 150, 150, 0.5],
+      background: [150, 150, 150, 0.65],
       flex: 1,
     },
     results: {

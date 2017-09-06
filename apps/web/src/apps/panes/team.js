@@ -29,7 +29,7 @@ export default class BarTeam extends Component<Props> {
   static defaultProps: Props
   render({ store, activeIndex, data }: Props) {
     return (
-      <UI.Theme name="clear-dark">
+      <UI.Theme name="clear-light">
         <team>
           <section>
             <UI.Title size={2}>Team {data.team}</UI.Title>
@@ -51,6 +51,14 @@ export default class BarTeam extends Component<Props> {
     team: {
       minWidth: 200,
       padding: [0, 10],
+      background: '#fff',
+      borderRadius: 4,
+      boxShadow: '0 0 4px rgba(0,0,0,0.4)',
+      flex: 1,
+      margin: [-10, -10, -2, -10],
+      overflowY: 'scroll',
+      zIndex: 100000000,
+      position: 'relative',
     },
     section: {
       padding: [8, 10],

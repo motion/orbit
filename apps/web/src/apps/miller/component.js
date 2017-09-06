@@ -193,15 +193,15 @@ export default class Miller extends React.Component {
       flex: 1,
     },
     pane: {
-      overflow: 'scroll',
+      // overflow: 'scroll',
     },
     columns: {
       flex: 1,
       transition: 'transform 80ms linear',
-      transform: {
-        z: 0,
-        x: 0,
-      },
+      // transform: {
+      //   z: 0,
+      //   x: 0,
+      // },
     },
     transX: x => ({ transform: { x } }),
   }

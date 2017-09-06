@@ -213,8 +213,8 @@ export default class BarPage {
 
     return (
       <UI.Theme name="clear-dark">
-        <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
-          <div>
+        <bar ref={store.ref('barRef').set} $$fullscreen>
+          <header $$draggable>
             <UI.Input
               size={2.6}
               getRef={store.ref('inputRef').set}
@@ -248,7 +248,7 @@ export default class BarPage {
             >
               Selected: {safeString(store.activeItem)}
             </selected>
-          </div>
+          </header>
           <Miller
             search={store.search}
             version={store.millerStateVersion}

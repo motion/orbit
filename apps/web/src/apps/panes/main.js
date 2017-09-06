@@ -24,12 +24,10 @@ class BarMainStore {
     this.props.getRef(this)
   }
 
-  get thingResults(): Array<PaneResult> {
-    return (this.topThings || []).map(thingToResult)
-  }
-
-  get things() {
-    return fuzzy(this.thingResults, this.props.search, { max: 8 })
+  get things(): Array<PaneResult> {
+    return fuzzy(this.topThings || [], this.props.search)
+      .slice(0, 8)
+      .map(thingToResult)
   }
 
   browse: Array<PaneResult> = [
@@ -128,6 +126,7 @@ class BarMainStore {
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login', static: true }]
     }
+    this.things
     return fuzzy(
       [...this.browse, ...this.things, ...this.people, ...this.extras],
       this.props.search

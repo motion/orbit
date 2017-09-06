@@ -29,19 +29,21 @@ export default class BarTeam extends Component<Props> {
   static defaultProps: Props
   render({ store, activeIndex, data }: Props) {
     return (
-      <team>
-        <section>
-          <UI.Title size={2}>Team {data.team}</UI.Title>
-        </section>
+      <UI.Theme name="clear-dark">
+        <team>
+          <section>
+            <UI.Title size={2}>Team {data.team}</UI.Title>
+          </section>
 
-        <section>
-          <Calendar />
-        </section>
+          <section>
+            <Calendar />
+          </section>
 
-        <section css={{ flex: 1 }}>
-          <Feed items={store.results} data={data} activeIndex={activeIndex} />
-        </section>
-      </team>
+          <section css={{ flex: 1 }}>
+            <Feed items={store.results} data={data} activeIndex={activeIndex} />
+          </section>
+        </team>
+      </UI.Theme>
     )
   }
 

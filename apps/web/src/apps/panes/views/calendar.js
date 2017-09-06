@@ -55,35 +55,30 @@ export default class Calendar extends React.Component<> {
                     width: '16.6666%',
                     minWidth: 110,
                     padding: [10, 25, 10, 0],
-                    color: '#fff',
                   }}
                 >
                   <date
                     css={{
-                      opacity: 1,
                       flexFlow: 'row',
                     }}
                   >
                     <time
                       css={{
-                        fontSize: 16,
                         opacity: 0.5,
                         fontWeight: 300,
                         marginLeft: 0,
                       }}
                     >
-                      {item.time}
+                      <UI.Text>{item.time}</UI.Text>
                     </time>
                   </date>
                   <description
                     css={{
-                      fontSize: 14,
-                      lineHeight: '17px',
                       marginTop: 10,
                       fontWeight: 400,
                     }}
                   >
-                    {item.description}
+                    <UI.Text>{item.description}</UI.Text>
                   </description>
                 </item>
               )

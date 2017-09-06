@@ -27,14 +27,12 @@ class Actions {
     return (
       <bar $$draggable>
         <section>
-          <UI.Text $label>Assigned to me</UI.Text>
+          <UI.Text $label>Team: Motion</UI.Text>
         </section>
         <section>
-          <UI.Text $label>
-            <icon>⌘</icon> Actions
-          </UI.Text>
+          <UI.Text $label>⌘ Actions</UI.Text>
           {actions.map(action => (
-            <UI.Text $text size={1.1}>
+            <UI.Text $text key={action}>
               <icon if={false}>⌘</icon>&nbsp;<strong>{action[0]}</strong>
               <rest>{action.slice(1)}</rest>
             </UI.Text>
@@ -48,20 +46,22 @@ class Actions {
     bar: {
       justifyContent: 'space-between',
       flexFlow: 'row',
-      height: 35,
+      height: 32,
       alignItems: 'center',
       padding: [0, 10],
-      background: [255, 255, 255, 0.1],
+      // background: [255, 255, 255, 0.1],
+      borderTop: [1, [0, 0, 0, 0.1]],
     },
     section: {
       flexFlow: 'row',
     },
     label: {
       marginRight: 0,
+      opacity: 0.5,
     },
     text: {
-      marginLeft: 20,
-      marginRight: 10,
+      marginLeft: 10,
+      marginRight: 5,
     },
     icon: {
       opacity: 0.5,

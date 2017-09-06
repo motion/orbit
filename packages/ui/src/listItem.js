@@ -124,6 +124,7 @@ export default class ListItem extends React.PureComponent<Props> {
         glowProps={glowProps || DEFAULT_GLOW}
         iconProps={{
           alignSelf: 'center',
+          opacity: 0.7,
           ...iconProps,
         }}
         style={style}

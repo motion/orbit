@@ -167,16 +167,12 @@ export default class BarMain extends React.Component<> {
             rowHeight: 38,
           }}
           selected={activeIndex}
-          onSelect={(item, index) => {
-            onSelect(index)
-          }}
+          onSelect={(item, index) => onSelect(index)}
           itemProps={paneProps.itemProps}
           groupKey="category"
           items={store.results}
-          getItem={(result, index) => (
+          getItem={result => (
             <UI.ListItem
-              onClick={() => onSelect(index)}
-              highlight={index === activeIndex}
               key={result.id}
               icon={
                 result.data && result.data.image ? (

@@ -18,7 +18,7 @@ export type Props = {
 
 // click away from edit clears it
 @view.ui
-export default class Text extends React.Component<Props> {
+export default class Text extends React.PureComponent<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
     size: 1,

@@ -7,10 +7,9 @@ import emojinize from 'emojinize'
 
 type Props = { data: Object, activeIndex: number, items: Array<Event> }
 
-@view
-export default class Feed extends React.Component<Props> {
+@view.ui
+export default class Feed extends React.PureComponent<Props> {
   render({ items, data, activeIndex }: Props) {
-    console.log('items', items)
     return (
       <feed $inApp={data.special}>
         <UI.Title>Recently</UI.Title>

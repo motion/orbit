@@ -4,7 +4,7 @@ import resizer from 'element-resize-detector'
 const Resize = resizer({ strategy: 'scroll' })
 
 export default prop => Child => {
-  class ParentSize extends React.Component {
+  class ParentSize extends React.PureComponent {
     state = {
       dimensions: null,
     }
@@ -58,7 +58,6 @@ export default prop => Child => {
 
       const { className, style, ...props } = this.props
 
-      console.log('parentSize', parentSize)
       return (
         <div
           className={className}

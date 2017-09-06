@@ -58,9 +58,6 @@ export default prop => Child => {
 
       const { className, style, ...props } = this.props
 
-      // remove the parentSize prop
-      delete props[prop]
-
       return (
         <div
           className={className}

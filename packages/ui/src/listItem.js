@@ -172,7 +172,6 @@ export default class ListItem extends React.PureComponent<Props> {
   static style = {
     item: {
       maxWidth: '100%',
-      position: 'relative',
     },
     content: {
       flex: 1,

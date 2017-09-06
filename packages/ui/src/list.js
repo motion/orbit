@@ -24,6 +24,7 @@ function memoize(fn) {
 }
 
 const idFn = _ => _
+const SEPARATOR_HEIGHT = 25
 
 export type Props = {
   defaultSelected?: number,
@@ -51,6 +52,7 @@ export type Props = {
   width?: number,
   groupKey?: string,
   selected?: number,
+  separatorHeight: number,
 }
 
 @parentSize('virtualized')
@@ -62,6 +64,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     getItem: idFn,
     onSelect: idFn,
     onHighlight: idFn,
+    separatorHeight: SEPARATOR_HEIGHT,
   }
 
   state = {
@@ -197,31 +200,34 @@ class List extends React.PureComponent<Props, { selected: number }> {
       size,
       style,
       width: userWidth,
-      virtualProps,
+      separatorHeight,
       isSelected,
       groupKey,
       parentSize,
       defaultSelected,
       ...props
     } = this.props
+
     if (!items && !children) {
       return null
     }
 
     let height = userHeight
     let width = userWidth
+    let rowHeight
 
     if (virtualized && !parentSize) {
       return null
     }
 
-    if (virtualized) {
+    if (virtualized && parentSize) {
       height = parentSize.height || userHeight
       width = parentSize.width || userWidth
+      rowHeight = virtualized ? virtualized.rowHeight : undefined
     }
 
     const passThroughProps = {
-      height: virtualized ? virtualized.rowHeight : undefined,
+      height: rowHeight,
       onItemMount,
       size,
       borderRadius,
@@ -305,6 +311,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
       chillen = chillen.map(child => child())
     }
 
+    const groupOffsets = {}
+    let totalGroups = 0
+
     if (groupKey && items) {
       const groups = []
       let lastGroup = null
@@ -313,20 +322,30 @@ class List extends React.PureComponent<Props, { selected: number }> {
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
           if (lastGroup) {
+            const groupIndex = index + totalGroups
+            groupOffsets[groupIndex] = true
             // add groups.length because we make list bigger as we add separators
-            groups.push({ index: index + groups.length, name: lastGroup })
+            groups.push({ index: groupIndex, name: lastGroup })
+            totalGroups++
           }
         }
       })
 
       for (const { index, name } of groups) {
-        chillen.splice(
-          index,
-          0,
-          <separator key={Math.random()}>{name}</separator>
-        )
+        let child
+        if (virtualized) {
+          child = (extraProps: Object) => (
+            <separator {...extraProps}>{name}</separator>
+          )
+        } else {
+          child = <separator key={Math.random()}>{name}</separator>
+        }
+        chillen.splice(index, 0, child)
       }
     }
+
+    const getRowHeight = ({ index }) =>
+      groupOffsets[index] ? separatorHeight : virtualized.rowHeight
 
     const inner = (
       <Surface
@@ -343,23 +362,23 @@ class List extends React.PureComponent<Props, { selected: number }> {
         borderRadius={borderRadius}
         {...props}
       >
-        {loading && <loading>loading</loading>}
         {!loading &&
         virtualized && (
           <VirtualList
             height={height}
             width={width}
-            rowCount={total}
-            rowHeight={100}
+            overscanRowCount={3}
+            rowCount={total + totalGroups}
             rowRenderer={({ index, key, style }) =>
               chillen[index]({ key, style })}
             {...virtualized}
+            rowHeight={getRowHeight}
           />
         )}
         {!virtualized && chillen}
       </Surface>
     )
-    if (!this.props.controlled) {
+    if (!controlled) {
       return inner
     }
     return (
@@ -378,7 +397,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   static style = {
     separator: {
-      padding: [2, 10],
+      padding: [0, 10],
+      height: SEPARATOR_HEIGHT,
+      justifyContent: 'center',
       background: [0, 0, 0, 0.05],
     },
   }

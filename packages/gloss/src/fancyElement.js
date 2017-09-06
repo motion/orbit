@@ -158,7 +158,10 @@ export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
     }
 
     if (isTag) {
-      type = VALID_TAGS[type] ? type : 'div'
+      if (!VALID_TAGS[type]) {
+        finalProps['data-tagname'] = type
+        type = 'div'
+      }
       type = TAG_NAME_MAP[type] || type
     }
 

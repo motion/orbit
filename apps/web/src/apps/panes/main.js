@@ -185,6 +185,9 @@ export default class BarMain extends React.Component<> {
       <pane>
         <UI.List
           if={store.results}
+          virtualized={{
+            rowHeight: 38,
+          }}
           selected={activeIndex}
           onSelect={(item, index) => {
             onSelect(index)
@@ -216,6 +219,7 @@ export default class BarMain extends React.Component<> {
   static style = {
     pane: {
       width: 340,
+      height: '100%',
     },
     spread: {
       justifyContent: 'space-between',

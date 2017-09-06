@@ -19,6 +19,67 @@ const safeString = thing => {
   }
 }
 
+@view.ui
+class Actions {
+  render() {
+    const actions = ['Archive', 'Reply', 'Delete', 'Forward']
+
+    return (
+      <bar $$draggable>
+        <section>
+          <UI.Text $label>Assigned to me</UI.Text>
+        </section>
+        <section>
+          <UI.Text $label>
+            <icon>⌘</icon> Actions
+          </UI.Text>
+          {actions.map(action => (
+            <UI.Text $text size={1.1}>
+              <icon if={false}>⌘</icon>&nbsp;<strong>{action[0]}</strong>
+              <rest>{action.slice(1)}</rest>
+            </UI.Text>
+          ))}
+        </section>
+      </bar>
+    )
+  }
+
+  static style = {
+    bar: {
+      justifyContent: 'space-between',
+      flexFlow: 'row',
+      height: 35,
+      alignItems: 'center',
+      padding: [0, 10],
+      background: [255, 255, 255, 0.1],
+    },
+    section: {
+      flexFlow: 'row',
+    },
+    label: {
+      marginRight: 0,
+    },
+    text: {
+      marginLeft: 20,
+      marginRight: 10,
+    },
+    icon: {
+      opacity: 0.5,
+      display: 'inline',
+      fontSize: 12,
+    },
+    strong: {
+      fontWeight: 400,
+      opacity: 1,
+      color: '#fff',
+    },
+    rest: {
+      display: 'inline',
+      opacity: 0.8,
+    },
+  }
+}
+
 const actions = [
   'remind',
   'send',
@@ -258,6 +319,8 @@ export default class BarPage {
             paneProps={paneProps}
             onActions={store.ref('millerActions').set}
           />
+
+          <Actions />
         </bar>
       </UI.Theme>
     )

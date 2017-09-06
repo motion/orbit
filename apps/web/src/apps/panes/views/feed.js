@@ -3,6 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { Event } from '@mcro/models'
+import emojinize from 'emojinize'
 
 type Props = { data: Object, activeIndex: number, items: Array<Event> }
 
@@ -30,7 +31,9 @@ export default class Feed extends React.Component<Props> {
                 <body if={payload && payload.commits}>
                   <content>
                     {payload.commits.map(commit => (
-                      <UI.Text key={commit.sha}>{commit.message}</UI.Text>
+                      <UI.Text key={commit.sha}>
+                        {emojinize.encode(commit.message)}
+                      </UI.Text>
                     ))}
                   </content>
                   <icon>

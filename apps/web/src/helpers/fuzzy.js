@@ -1,23 +1,14 @@
-import fuzzySearch from 'fuzzysearch'
+// @flow
+import matchSorter from 'match-sorter'
+
+type FuzzyOpts = {
+  keys: Array<string>,
+}
 
 export default function fuzzy(
-  haystack,
-  needle,
-  { max = Infinity, property = 'title' } = {}
+  haystack: Array<any>,
+  needle: string,
+  { keys = ['title'] }: FuzzyOpts = {}
 ) {
-  const total = haystack.length
-  const results = []
-
-  for (let i = 0; i < total; i++) {
-    if (
-      fuzzySearch(needle.toLowerCase(), haystack[i][property].toLowerCase())
-    ) {
-      results.push(haystack[i])
-      if (results.length === max) {
-        break
-      }
-    }
-  }
-
-  return results
+  return matchSorter(haystack, needle, { keys })
 }

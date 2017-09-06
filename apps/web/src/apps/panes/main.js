@@ -24,132 +24,114 @@ class BarMainStore {
     this.props.getRef(this)
   }
 
-  helper = {
-    filter: (
-      x: Array<PaneResult>,
-      opts?: { max?: number }
-    ): Array<PaneResult> => fuzzy(x || [], this.props.search, opts),
+  get thingResults(): Array<PaneResult> {
+    return this.topThings.map(thingToResult) || []
   }
 
-  get things(): Array<PaneResult> {
-    console.time('get things()')
-    if (!this.topThings) {
-      return []
-    }
-    const filtered = this.helper.filter(this.topThings.map(thingToResult), {
-      max: 8,
-    })
-    console.timeEnd('get things()')
-    return filtered
+  get things() {
+    return fuzzy(this.thingResults, this.props.search, { max: 8 })
   }
 
-  get browse(): Array<PaneResult> {
-    return this.helper.filter([
-      {
-        id: 10,
-        title: 'Team: Motion',
-        type: 'team',
-        data: {
-          team: 'motion',
-        },
+  browse: Array<PaneResult> = [
+    {
+      id: 10,
+      title: 'Team: Motion',
+      type: 'team',
+      data: {
+        team: 'motion',
       },
-      {
-        id: 11,
-        title: 'Recent',
-        type: 'feed',
-        icon: 'radio',
-        data: {
-          special: true,
-        },
+    },
+    {
+      id: 11,
+      title: 'Recent',
+      type: 'feed',
+      icon: 'radio',
+      data: {
+        special: true,
       },
-      {
-        id: 12,
-        data: { message: 'assigned' },
-        title: 'Assigned to me',
-        type: 'message',
-        icon: 'check',
+    },
+    {
+      id: 12,
+      data: { message: 'assigned' },
+      title: 'Assigned to me',
+      type: 'message',
+      icon: 'check',
+    },
+    {
+      id: 13,
+      data: { message: 'my team' },
+      title: 'My Team',
+      category: 'Browse',
+      type: 'message',
+      url() {
+        return '/?home=true'
       },
-      {
-        id: 13,
-        data: { message: 'my team' },
-        title: 'My Team',
-        category: 'Browse',
-        type: 'message',
-        url() {
-          return '/?home=true'
-        },
-        icon: 'objects_planet',
+      icon: 'objects_planet',
+    },
+    {
+      id: 14,
+      data: { message: 'from company' },
+      title: 'Company',
+      category: 'Browse',
+      type: 'message',
+      url() {
+        return '/?home=true'
       },
-      {
-        id: 14,
-        data: { message: 'from company' },
-        title: 'Company',
-        category: 'Browse',
-        type: 'message',
-        url() {
-          return '/?home=true'
-        },
-        icon: 'objects_planet',
-      },
-    ])
-  }
+      icon: 'objects_planet',
+    },
+  ]
 
-  get people(): Array<PaneResult> {
-    return this.helper.filter([
-      {
-        id: 20,
-        title: 'Stephanie',
-        type: 'feed',
-        data: {
-          image: 'steph',
-        },
-        category: 'People',
+  people: Array<PaneResult> = [
+    {
+      id: 20,
+      title: 'Stephanie',
+      type: 'feed',
+      data: {
+        image: 'steph',
       },
-      {
-        id: 21,
-        title: 'Nate',
-        type: 'feed',
-        data: { person: 'natew', image: 'me' },
-        category: 'People',
-      },
-      {
-        id: 22,
-        title: 'Nick',
-        type: 'feed',
-        data: { person: 'ncammarata', image: 'nick' },
-        category: 'People',
-      },
-    ])
-  }
+      category: 'People',
+    },
+    {
+      id: 21,
+      title: 'Nate',
+      type: 'feed',
+      data: { person: 'natew', image: 'me' },
+      category: 'People',
+    },
+    {
+      id: 22,
+      title: 'Nick',
+      type: 'feed',
+      data: { person: 'ncammarata', image: 'nick' },
+      category: 'People',
+    },
+  ]
 
-  get extras() {
-    return this.helper.filter([
-      {
-        id: 30,
-        title: 'Settings',
+  extras = [
+    {
+      id: 30,
+      title: 'Settings',
+      icon: 'gear',
+      type: 'message',
+      data: {
+        message: 'Open Settings',
         icon: 'gear',
-        type: 'message',
-        data: {
-          message: 'Open Settings',
-          icon: 'gear',
-        },
-        onSelect: () => {
-          OS.send('open-settings')
-        },
-        category: 'Settings',
       },
-    ])
-  }
-
-  get all(): Array<PaneResult> {
-    return [...this.browse, ...this.things, ...this.people, ...this.extras]
-  }
+      onSelect: () => {
+        OS.send('open-settings')
+      },
+      category: 'Settings',
+    },
+  ]
 
   get results(): Array<PaneResult> {
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login', static: true }]
     }
-    return this.all
+    return fuzzy(
+      [...this.browse, ...this.things, ...this.people, ...this.extras],
+      this.props.search
+    )
   }
 
   select = (index: number) => {

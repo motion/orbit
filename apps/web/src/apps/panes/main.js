@@ -126,7 +126,6 @@ class BarMainStore {
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login', static: true }]
     }
-    this.things
     return fuzzy(
       [...this.browse, ...this.things, ...this.people, ...this.extras],
       this.props.search

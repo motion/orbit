@@ -22,6 +22,7 @@ const BabiliPlugin = require('babili-webpack-plugin')
 const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
 const PrepackPlugin = require('prepack-webpack-plugin').default
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 
 const ROOT = Path.join(__dirname, '..', '..', '..', '..')
 const IS_PROD = process.env.NODE_ENV === 'production'
@@ -126,11 +127,12 @@ module.exports = Object.assign(config, {
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
     // IS_PROD && new ButternutWebpackPlugin({}),
     // IS_PROD && new BabiliPlugin(),
-    // IS_PROD && new PrepackPlugin(),
     // IS_PROD && new UglifyJSPlugin(),
+    // IS_PROD && new PrepackPlugin(),
+    // IS_PROD && new BabelMinifyPlugin(),
 
     // bundle analyzer
-    process.env.DEBUG && new BundleAnalyzerPlugin(),
+    // process.env.DEBUG && new BundleAnalyzerPlugin(),
   ]),
   node: {
     fs: 'empty',

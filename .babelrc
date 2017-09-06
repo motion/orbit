@@ -10,7 +10,12 @@
           {
             "disable": ["@mcro/hmr", "@mcro/hmr-view"],
             "async": false,
-            "env": { "targets": { "chrome": "50" } }
+            "env": {
+              "targets": {
+                "chrome": "44"
+              },
+              "uglify": true
+            }
           }
         ]
       ]

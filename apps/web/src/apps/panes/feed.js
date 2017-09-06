@@ -70,8 +70,8 @@ export default class BarFeed extends React.Component<Props> {
     }
 
     return (
-      <UI.Theme name="light">
-        <feed>
+      <feed>
+        <UI.Theme name="light">
           <apps
             if={data.special}
             css={{ borderBottom: [2, [0, 0, 0, 0.0001]] }}
@@ -118,10 +118,10 @@ export default class BarFeed extends React.Component<Props> {
               />
             </UI.TabPane>
           </apps>
+        </UI.Theme>
 
-          {content}
-        </feed>
-      </UI.Theme>
+        {content}
+      </feed>
     )
   }
 

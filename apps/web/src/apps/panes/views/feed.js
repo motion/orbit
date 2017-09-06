@@ -12,7 +12,9 @@ export default class Feed extends React.PureComponent<Props> {
   render({ items, data, activeIndex }: Props) {
     return (
       <feed $inApp={data.special}>
-        <UI.Title>Recently</UI.Title>
+        <UI.Title opacity={0.5} marginBottom={10}>
+          Recently
+        </UI.Title>
         <UI.List
           items={items}
           selected={activeIndex}
@@ -98,7 +100,6 @@ export default class Feed extends React.PureComponent<Props> {
     },
     inApp: {
       padding: [10, 15],
-      background: '#f2f2f2',
     },
     unpad: {
       margin: [0, -15],

@@ -267,7 +267,7 @@ export default class BarPage {
         fontSize: 26,
         padding: [0, 10],
         height: 40,
-        highlightBackground: [0, 0, 0, 0.15],
+        highlightBackground: [0, 0, 0, 0.2],
         highlightColor: [255, 255, 255, 1],
       },
     }
@@ -328,7 +328,7 @@ export default class BarPage {
 
   static style = {
     bar: {
-      background: [145, 145, 145, 0.5],
+      background: [150, 150, 150, 0.5],
       flex: 1,
     },
     results: {

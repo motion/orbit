@@ -47,6 +47,7 @@
     "match-sorter": "^1.8.1"
   },
   "devDependencies": {
+    "typescript": "^2.5.2",
     "babel-loader": "^6.4.1",
     "babel-core": "^6.25.0",
     "babili-webpack-plugin": "^0.1.2",
@@ -63,6 +64,8 @@
     "webpack": "^3.4.1",
     "webpack-bundle-analyzer": "^2.8.3",
     "webpack-dev-server": "^2.5.1",
-    "static-server": "^2.0.5"
+    "static-server": "^2.0.5",
+    "babel-minify": "^0.2.0",
+    "babel-minify-webpack-plugin": "^0.2.0"
   }
 }

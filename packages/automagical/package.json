@@ -1,7 +1,8 @@
 {
   "name": "@mcro/automagical",
-  "main": "dist/automagical.js",
-  "module": "lib/automagical.js",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "es5": "dist/index.js",
   "version": "1.2.0",
   "scripts": {},
   "dependencies": {

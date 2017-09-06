@@ -230,8 +230,8 @@ export default class BarPage {
 
     return (
       <UI.Theme name="clear-dark">
-        <bar ref={store.ref('barRef').set} $$fullscreen $$draggable>
-          <div>
+        <bar ref={store.ref('barRef').set} $$fullscreen>
+          <header $$draggable>
             <UI.Input
               size={2.6}
               getRef={store.onInputRef}
@@ -251,7 +251,23 @@ export default class BarPage {
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>
-          </div>
+            <selected
+              if={false}
+              css={{
+                position: 'absolute',
+                top: 80,
+                left: 0,
+                right: 0,
+                height: 20,
+                fontSize: 12,
+                overflow: 'hidden',
+                opacity: 0.8,
+                color: '#fff',
+              }}
+            >
+              Selected: {safeString(store.activeItem)}
+            </selected>
+          </header>
           <Miller
             search={store.search}
             version={store.millerStateVersion}

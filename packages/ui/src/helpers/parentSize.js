@@ -9,29 +9,22 @@ export default prop => Child => {
       dimensions: null,
     }
 
-    componentDidMount() {
-      if (this.props[prop]) {
-        Resize.listenTo(this.parent, this.measure)
-        this.measure(this.parent)
-      }
-    }
-
     componentWillUnmount() {
       if (this.props[prop]) {
-        Resize.removeAllListeners(this.parent)
+        Resize.removeAllListeners(this.node)
         this.unmounted = true
       }
     }
 
-    measure = parent => {
+    measure(parent) {
       if (this.unmounted) {
         return null
       }
-      const parentNode = parent || this.parent
-      if (!parentNode) {
+      const node = parent || this.node
+      if (!node) {
         return null
       }
-      const { offsetWidth, offsetHeight } = parentNode
+      const { offsetWidth, offsetHeight } = node
       const dimensions = {
         width: offsetWidth,
         height: offsetHeight,
@@ -40,8 +33,12 @@ export default prop => Child => {
       return dimensions
     }
 
-    setParent = ref => {
-      this.parent = ref
+    setParent(ref) {
+      if (!this.node && ref) {
+        Resize.listenTo(ref, () => this.measure(ref))
+        this.measure(ref)
+        this.node = ref
+      }
     }
 
     render() {
@@ -50,7 +47,7 @@ export default prop => Child => {
 
       if (dimensions) {
         parentSize = {
-          measure: this.measure,
+          measure: (...args) => this.measure(...args),
           height: this.state.dimensions.height,
           width: this.state.dimensions.width,
         }
@@ -62,7 +59,7 @@ export default prop => Child => {
         <div
           className={className}
           style={{ ...style, height: '100%' }}
-          ref={this.setParent}
+          ref={x => this.setParent(x)}
         >
           <Child {...props} parentSize={parentSize} />
         </div>

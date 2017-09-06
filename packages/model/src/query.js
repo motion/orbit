@@ -67,7 +67,7 @@ function execQuery(it, valueGet: Function) {
     }
   }
 
-  const response = {}
+  const response = query.isntConnected ? {} : query
   const id = Math.random()
   const getValue = () => {
     observe() // start observe
@@ -79,27 +79,8 @@ function execQuery(it, valueGet: Function) {
     $isQuery: {
       value: true,
     },
-    exec: {
-      value: () => {
-        return (query.exec
-          ? query.exec()
-          : Promise.resolve(query)).then(val => {
-          // helper: queries return empty objects on null findOne(), this returns null
-          if (val instanceof Object && Object.keys(val).length === 0) {
-            return null
-          }
-          return val
-        })
-      },
-    },
     id: {
       value: id,
-    },
-    query: {
-      value: query,
-    },
-    $: {
-      get: () => query.$,
     },
     current: {
       get: getValue,

@@ -212,6 +212,15 @@ export default class Model {
                             await syncPromise
                           }
                           const value = await execute()
+
+                          // return null for empty responses
+                          if (
+                            value instanceof Object &&
+                            Object.keys(value).length === 0
+                          ) {
+                            return null
+                          }
+
                           resolve(value)
                         })
                       }

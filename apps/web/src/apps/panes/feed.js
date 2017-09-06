@@ -130,7 +130,6 @@ export default class BarFeed extends React.Component<Props> {
       flex: 1,
       minWidth: 200,
       padding: [0, 10],
-      overflowY: 'scroll',
     },
     tab: {
       flexFlow: 'row',

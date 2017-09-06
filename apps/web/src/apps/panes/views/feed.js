@@ -20,29 +20,24 @@ export default class Feed extends React.Component<Props> {
             const { verb, data } = event
             const { actor, payload } = data
             return (
-              <UI.ListItem
-                key={`${event.id}` + index}
-                highlight={index === activeIndex}
-              >
-                <feeditem>
-                  <meta if={actor}>
-                    <avatar $img={actor.avatar_url} />
-                    <UI.Text $name>{actor.login} </UI.Text>
-                    <UI.Text $action>{verb} </UI.Text>
-                    <UI.Date $date>{data.created_at}</UI.Date>
-                  </meta>
-                  <body if={payload && payload.commits}>
-                    <content>
-                      {payload.commits.map(commit => (
-                        <UI.Text key={commit.sha}>{commit.message}</UI.Text>
-                      ))}
-                    </content>
-                    <icon>
-                      <UI.Icon name={event.integration} />
-                    </icon>
-                  </body>
-                </feeditem>
-              </UI.ListItem>
+              <feeditem key={index}>
+                <meta if={actor}>
+                  <avatar $img={actor.avatar_url} />
+                  <UI.Text $name>{actor.login} </UI.Text>
+                  <UI.Text $action>{verb} </UI.Text>
+                  <UI.Date $date>{data.created_at}</UI.Date>
+                </meta>
+                <body if={payload && payload.commits}>
+                  <content>
+                    {payload.commits.map(commit => (
+                      <UI.Text key={commit.sha}>{commit.message}</UI.Text>
+                    ))}
+                  </content>
+                  <icon>
+                    <UI.Icon name={event.integration} />
+                  </icon>
+                </body>
+              </feeditem>
             )
           }}
         />

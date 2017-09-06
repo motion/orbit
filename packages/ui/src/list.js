@@ -350,7 +350,7 @@ class List extends React.Component<Props, { selected: number }> {
         width={width}
         style={{
           height: '100%',
-          overflowY: scrollable ? 'scroll' : 'auto',
+          overflowY: scrollable ? 'scroll' : 'hidden',
           overflowX: 'visible',
           ...style,
         }}

@@ -15,9 +15,7 @@ export default class PaneCard {
                 </UI.Title>
                 <service>
                   <UI.Icon $icon color="#555" size={24} name={icon} />
-                  <id if={id}>
-                    #{id.slice(0, 4)}
-                  </id>
+                  <id if={id}>#{id.slice(0, 4)}</id>
                 </service>
               </headingcontent>
             </heading>
@@ -35,7 +33,6 @@ export default class PaneCard {
       padding: 8,
       background: [250, 250, 250, 1],
       boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.1]]],
-      overflowY: 'scroll',
     },
     task: {
       flex: 1,

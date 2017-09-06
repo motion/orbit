@@ -47,10 +47,8 @@ export default class BarTeam extends Component<Props> {
 
   static style = {
     team: {
-      flex: 1,
       minWidth: 200,
       padding: [0, 10],
-      overflowY: 'scroll',
     },
     section: {
       padding: [8, 10],

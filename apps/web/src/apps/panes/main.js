@@ -25,7 +25,7 @@ class BarMainStore {
   }
 
   get thingResults(): Array<PaneResult> {
-    return this.topThings.map(thingToResult) || []
+    return (this.topThings || []).map(thingToResult)
   }
 
   get things() {

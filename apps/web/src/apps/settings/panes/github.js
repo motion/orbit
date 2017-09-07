@@ -24,7 +24,7 @@ export default class GithubSetting {
         </loading>
 
         <settings if={githubSettings}>
-          setting values: {JSON.stringify(githubSettings.values)}
+          orgs selected: {JSON.stringify(githubSettings.values.orgs)}
         </settings>
 
         <UI.Form if={Github.orgs && Github.setting}>
@@ -54,14 +54,14 @@ export default class GithubSetting {
                 />
 
                 <repos if={repos && orgActive}>
-                  {repos.map(repo =>
+                  {repos.map(repo => (
                     <UI.Field
                       key={repo.id}
                       row
                       label={repo.name}
                       type="checkbox"
                     />
-                  )}
+                  ))}
                 </repos>
               </field>
             )

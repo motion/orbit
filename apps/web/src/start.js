@@ -29,9 +29,3 @@ export async function start(quiet) {
 
 start(App.started, App.started)
 window.start = start
-
-if (module && module.hot) {
-  module.hot.accept('./views/layout', () => {
-    log('accepted layout')
-  })
-}

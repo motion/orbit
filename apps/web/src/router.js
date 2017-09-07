@@ -26,7 +26,6 @@ function runRouter() {
 // for hmr
 if (module.hot) {
   module.hot.accept(() => {
-    log('accept: ./router.js')
     runRouter()
     render()
   })

@@ -378,11 +378,6 @@ export default class Surface extends React.PureComponent<Props> {
   }
 
   static theme = (props, theme, self) => {
-    if (props.debug) {
-      log('debugging')
-      log(props.hover)
-    }
-
     // sizes
     const size = props.size === true ? 1 : props.size || 1
     const height = props.height

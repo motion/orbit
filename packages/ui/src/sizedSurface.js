@@ -30,7 +30,7 @@ export default class SizedSurface extends React.PureComponent<Props> {
     if (props.inline) {
       height = Math.round(height * 0.8)
     }
-    const padWithWrap = props.wrapElement ? 0 : height / 3.5
+    const padWithWrap = props.wrapElement ? 0 : height ? height / 3.5 : 8
     const padding = sizePadding && [0, padWithWrap * adj(sizePadding)]
     const margin = sizeMargin && adj(sizeMargin) * 0.25
 
@@ -39,6 +39,10 @@ export default class SizedSurface extends React.PureComponent<Props> {
       fontSize,
       padding,
       margin,
+    }
+
+    if (props.debug) {
+      console.log(pass)
     }
 
     return <Surface {...pass} {...rest} />

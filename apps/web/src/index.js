@@ -28,10 +28,7 @@ require('./start')
 // accept hmr
 if (module && module.hot) {
   module.hot.accept(() => {
-    log('accept: ./index.js')
     require('./start').start(true)
   })
-  module.hot.accept('@mcro/models/lib/user', () => {
-    log('accept user')
-  })
+  module.hot.accept('@mcro/models/lib/user', () => {})
 }

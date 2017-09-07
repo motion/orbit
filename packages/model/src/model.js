@@ -401,7 +401,6 @@ export default class Model {
 
     const QUERY_KEY = queryKey(query)
     if (this.liveQueries[QUERY_KEY]) {
-      console.log('already watching this query!')
       return Promise.resolve(true)
     }
 

@@ -44,9 +44,7 @@ export class JobModel extends Model {
   }
 
   status = STATUS
-
   hooks = {}
-
   methods = methods
 
   pending = (opt?: Object) =>

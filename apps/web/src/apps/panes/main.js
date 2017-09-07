@@ -163,7 +163,11 @@ export default class BarMain extends React.Component<> {
           if={store.results}
           virtualized={{
             rowHeight: i =>
-              store.results[i] && store.results[i].data.body ? 52 : 38,
+              store.results[i] &&
+              store.results[i].data &&
+              store.results[i].data.body
+                ? 52
+                : 38,
           }}
           selected={activeIndex}
           onSelect={(item, index) => {

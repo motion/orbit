@@ -195,6 +195,13 @@ export default class Model {
             const query = target[method](finalParams)
             return new Proxy(query, {
               get(target, method) {
+                if (method === 'sync') {
+                  return opts =>
+                    syncQuery(query, {
+                      live: method === '$',
+                      ...opts,
+                    })
+                }
                 // they have intent to run this
                 if (method === 'exec' || method === '$') {
                   if (options.autoSync) {

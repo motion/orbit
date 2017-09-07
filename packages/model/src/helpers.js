@@ -10,14 +10,9 @@ export const applyHooks = (model: Model) => {
       doc.createdAt = model.now
       doc.updatedAt = model.now
     }
-    if (model.options.debug) {
+    if (true || model.options.debug) {
       console.log(
-        `%cINSERT ${model.constructor.name}.create(${JSON.stringify(
-          doc,
-          null,
-          2
-        )})`,
-        'color: green'
+        `INSERT ${model.constructor.name}.create(${JSON.stringify(doc)})`
       )
     }
     if (ogInsert) {

@@ -82,6 +82,7 @@ export type Props = {
   spaced?: boolean,
   stretch?: boolean,
   tagName: string,
+  theme?: string,
   tooltip?: string,
   tooltipProps?: Object,
   uiContext?: boolean,
@@ -206,6 +207,7 @@ export default class Surface extends React.PureComponent<Props> {
       style,
       tagName,
       textAlign,
+      theme,
       tooltip,
       tooltipProps,
       uiContext,
@@ -317,6 +319,10 @@ export default class Surface extends React.PureComponent<Props> {
         {!after && contents}
       </surface>
     )
+
+    if (theme) {
+      return <Theme name={theme}>{surface}</Theme>
+    }
 
     return surface
   }

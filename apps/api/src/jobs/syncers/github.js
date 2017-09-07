@@ -182,7 +182,6 @@ export default class GithubSync {
       console.log(events)
       return null
     }
-    console.log('no new events')
     return events
   }
 

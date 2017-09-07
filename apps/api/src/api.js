@@ -1,16 +1,11 @@
 // @flow
-let i = 0
-console.log(++i)
-const { default: Database, Models } = require('@mcro/models')
-console.log(++i)
-const Server = require('./server').default
-console.log(++i)
-const Bootstrap = require('./bootstrap').default
-console.log(++i)
-const Jobs = require('./jobs').default
+import Database, { Models } from '@mcro/models'
+import Server from './server'
+import Bootstrap from './bootstrap'
+import Jobs from './jobs'
 import type { Options } from '~/types'
-const adapter = require('pouchdb-adapter-memory')
-console.log(++i)
+import adapter from 'pouchdb-adapter-memory'
+import * as Constants from '~/constants'
 
 export default class API {
   server: Server
@@ -22,12 +17,13 @@ export default class API {
     this.server = new Server(options)
     this.bootstrap = new Bootstrap(options)
     this.jobs = new Jobs()
+    console.log('Connecting to couch', Constants.DB_URL, Constants.DB_HOST)
     this.database = new Database(
       {
         name: 'username',
         password: 'password',
-        couchUrl: 'http://admin:password@pad-couch:5984',
-        couchHost: 'pad-couch:5984',
+        couchUrl: Constants.DB_URL,
+        couchHost: Constants.DB_HOST,
         adapter,
         adapterName: 'memory',
       },

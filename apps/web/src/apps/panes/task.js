@@ -19,7 +19,7 @@ class Comment {
     */
 
     return (
-      <comment $$row>
+      <comment if={author} $$row>
         <user>
           <img $avatar src={author.avatarUrl} />
         </user>
@@ -170,7 +170,7 @@ class TaskHeader {
   render({ data, data: { title, author, createdAt, body }, isActive }) {
     console.log('created at ', data.createdAt)
     return (
-      <header $isActive={isActive}>
+      <header if={author} $isActive={isActive}>
         <h3>{title}</h3>
         <info $$row>
           <img $avatar src={author.avatarUrl} />

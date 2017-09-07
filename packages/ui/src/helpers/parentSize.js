@@ -58,7 +58,7 @@ export default prop => Child => {
       return (
         <div
           className={className}
-          style={{ ...style, height: '100%' }}
+          style={{ ...style, flex: 1 }}
           ref={x => this.setParent(x)}
         >
           <Child {...props} parentSize={parentSize} />

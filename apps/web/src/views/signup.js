@@ -4,8 +4,6 @@ import { view } from '@mcro/black'
 import { CurrentUser } from '~/app'
 import Login from '~/apps/panes/login'
 
-type Props = {}
-
 @view
 export default class Signup extends React.Component<> {
   static defaultProps: {}

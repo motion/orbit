@@ -79,6 +79,7 @@ export default class Input extends React.Component<Props> {
       uiContext,
       form,
       elementProps,
+      style,
       ...props
     } = this.props
 
@@ -113,6 +114,7 @@ export default class Input extends React.Component<Props> {
           style: {
             width: '100%',
             padding: '0 10px',
+            ...style,
           },
           ref: this.onNode,
           ...elementProps,

@@ -287,38 +287,38 @@ const inputStyle = {
   fontSize: 32,
 }
 
+const paneProps = {
+  itemProps: {
+    size: 1.2,
+    glow: false,
+    hoverable: true,
+    fontSize: 26,
+    padding: [0, 10],
+    height: 40,
+    highlightBackground: [0, 0, 0, 0.2],
+    highlightColor: [255, 255, 255, 1],
+  },
+}
+
 @view({
   store: BarStore,
 })
 export default class BarPage {
   render({ store }) {
-    const paneProps = {
-      itemProps: {
-        size: 1.2,
-        glow: false,
-        hoverable: true,
-        fontSize: 26,
-        padding: [0, 10],
-        height: 40,
-        highlightBackground: [0, 0, 0, 0.2],
-        highlightColor: [255, 255, 255, 1],
-      },
-    }
-
     return (
       <UI.Theme name="clear-dark">
         <bar ref={store.ref('barRef').set} $$fullscreen>
           <header $$draggable>
             <UI.Input
-              size={2.6}
+              size={2.2}
               getRef={store.onInputRef}
               borderRadius={5}
               onChange={store.onSearchChange}
               value={store.textboxVal}
               borderWidth={0}
+              fontWeight={200}
               css={{
-                margin: [-2, 0, 0],
-                padding: [0, 10],
+                padding: [0, 20],
                 ...inputStyle,
               }}
             />
@@ -396,7 +396,7 @@ export default class BarPage {
     },
     forwardcomplete: {
       position: 'absolute',
-      top: 28,
+      top: 25,
       left: 20,
       opacity: 0.3,
       ...inputStyle,

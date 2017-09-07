@@ -255,15 +255,17 @@ export default class TaskPane {
     }
 
     return (
-      <Pane.Card
-        isActive={isActive}
-        actions={['one', 'two', 'three']}
-        icon={type}
-      >
-        <container>
-          {store.results.map((result, index) => renderItem(index))}
-        </container>
-      </Pane.Card>
+      <UI.Theme name="light">
+        <Pane.Card
+          isActive={isActive}
+          actions={['one', 'two', 'three']}
+          icon={type}
+        >
+          <container>
+            {store.results.map((result, index) => renderItem(index))}
+          </container>
+        </Pane.Card>
+      </UI.Theme>
     )
   }
 

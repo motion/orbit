@@ -151,12 +151,11 @@ export default class BarMain extends React.Component<> {
   render({
     store,
     activeIndex,
+    isActive,
     onSelect,
   }: PaneProps & { store: BarMainStore }) {
-    const isActive = index => activeIndex === index
-
     return (
-      <Pane.Card width={315} $pane>
+      <Pane.Card width={315} $pane isActive={isActive}>
         <none if={store.results.length === 0}>No Results</none>
         <UI.List
           if={store.results}
@@ -172,7 +171,7 @@ export default class BarMain extends React.Component<> {
           getItem={(result, index) =>
             <UI.ListItem
               onClick={() => onSelect(index)}
-              highlight={isActive(index)}
+              highlight={index === activeIndex}
               icon={
                 result.data && result.data.image
                   ? <img $image src={`/images/${result.data.image}.jpg`} />

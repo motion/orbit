@@ -242,7 +242,7 @@ class TaskStore {
   store: TaskStore,
 })
 export default class TaskPane {
-  render({ data, activeIndex, store }) {
+  render({ data, activeIndex, isActive, store }) {
     const { labels } = data
     const type = data.service || 'github'
     const items = [
@@ -264,12 +264,17 @@ export default class TaskPane {
       const { element, data } = store.results[index]
       return React.createElement(element, {
         data,
+        key: index,
         isActive: index === activeIndex,
       })
     }
 
     return (
-      <Pane.Card actions={['one', 'two', 'three']} icon={type}>
+      <Pane.Card
+        isActive={isActive}
+        actions={['one', 'two', 'three']}
+        icon={type}
+      >
         <container>
           {store.results.map((result, index) => renderItem(index))}
         </container>

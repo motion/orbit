@@ -22,6 +22,7 @@ export default class MillerStateStore {
   activeCol = 0
   schema: Array<Schema> = []
   watchers = {}
+  paneActions = []
   prevActiveRows = [] // holds the previously active columns
 
   constructor({ schema }: { schema: Object }) {
@@ -50,6 +51,10 @@ export default class MillerStateStore {
 
   get activeItem() {
     return this.activeResults && this.activeResults[this.activeRow]
+  }
+
+  setPaneActions(actions) {
+    this.paneActions = actions
   }
 
   setSchema(index: number, schema: Schema) {
@@ -109,6 +114,7 @@ export default class MillerStateStore {
 
   setActiveColumn(col) {
     const lastCol = this.activeCol
+    this.paneActions = []
     this.activeCol = col
     this.emit('changeColumn', col, lastCol)
   }

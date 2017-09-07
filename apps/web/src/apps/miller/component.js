@@ -43,7 +43,7 @@ class MillerStore {
     state.setSelection(col, row)
   }
 
-  actions = {
+  keyActions = {
     right: () => {
       const { state } = this.props
       state.moveCol(1)
@@ -146,15 +146,15 @@ class Pane extends React.Component {
 })
 export default class Miller extends React.Component {
   static defaultProps = {
-    onActions: _ => _,
+    onKeyActions: _ => _,
   }
 
   componentWillMount() {
-    const { onActions, store } = this.props
-    onActions(store.actions)
+    const { onKeyActions, store } = this.props
+    onKeyActions(store.keyActions)
   }
 
-  render({ store, paneProps, onActions, search, panes, animate, state }) {
+  render({ store, paneProps, onKeyActions, search, panes, animate, state }) {
     const { schema } = state
     const transX = animate ? store.translateX : 0
 
@@ -163,11 +163,7 @@ export default class Miller extends React.Component {
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
             return (
-              <pane
-                key={index + ':' + pane.kind}
-                $grow={index > 0 && index === schema.length - 1}
-                $pullLeft={index > 0 && index === state.activeCol}
-              >
+              <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
                 <Pane
                   // if it's the next preview, always rerender
                   pane={panes[pane.type]}
@@ -191,12 +187,12 @@ export default class Miller extends React.Component {
       </miller>
     )
 
-    if (onActions) {
+    if (onKeyActions) {
       return content
     }
 
     return (
-      <HotKeys handlers={store.actions}>
+      <HotKeys handlers={store.keyActions}>
         {content}
       </HotKeys>
     )
@@ -205,20 +201,11 @@ export default class Miller extends React.Component {
   static style = {
     // hang off edge
     pane: {
-      transform: 'translate3d(0, 0, 0)',
-      transformOrigin: 'top left',
-      transition: 'transform 50ms ease-in',
+      height: '100%',
     },
-    upcoming: {
-      transform: 'scale(0.96)',
-    },
-    pullLeft: {
-      transform: 'translate3d(-30px, -10px, 0) scale(1)',
-    },
-    grow: {
+    notFirst: {
       overflow: 'visible',
       width: '69%',
-      height: '103%',
       background: 'white',
       boxShadow: '1px 1px 3px rgba(0,0,0,.4)',
       // overflow: 'scroll',

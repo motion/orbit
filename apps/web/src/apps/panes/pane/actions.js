@@ -1,38 +1,42 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import { capitalize } from 'lodash'
 
-@view.attach('paneStore')
 @view
 export default class Actions {
-  render({ paneStore, actions, color }) {
-    const { metaKey } = paneStore
-    const shortcutButton = text => {
-      const letter = text[0]
+  render({ actions }) {
+    const shortcutButton = action => {
       return (
-        <UI.Button key={text} chromeless color={color}>
-          <div if={metaKey} $$row>
-            ⌘<letter>{letter}</letter>
-            {text.substr(1)}
-          </div>
-          <div if={!metaKey} $$row>
-            {text}
-          </div>
-        </UI.Button>
+        <UI.Text $text $$row key={action}>
+          <strong>
+            {action[0]}
+          </strong>
+          <rest>
+            {action.slice(1)}
+          </rest>
+        </UI.Text>
       )
     }
 
     return (
-      <UI.Theme name="light">
-        <actions $$row>
-          {(actions || []).map(action => shortcutButton(action))}
-        </actions>
-      </UI.Theme>
+      <actions $$row>
+        {(actions || []).map(action => shortcutButton(capitalize(action)))}
+      </actions>
     )
   }
 
   static style = {
-    letter: {
-      fontWeight: 600,
+    text: {
+      marginLeft: 10,
+      marginRight: 5,
+    },
+    strong: {
+      fontWeight: 400,
+      opacity: 1,
+    },
+    rest: {
+      display: 'inline',
+      opacity: 0.8,
     },
   }
 }

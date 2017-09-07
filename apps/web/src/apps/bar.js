@@ -4,9 +4,12 @@ import Mousetrap from 'mousetrap'
 import { view } from '@mcro/black'
 import { OS } from '~/helpers'
 import * as UI from '@mcro/ui'
-import * as Panes from './panes'
+import * as PaneTypes from './panes'
+import Actions from './panes/pane/actions'
 import { MillerState, Miller } from './miller'
 import { isNumber, debounce } from 'lodash'
+import { actionToKeyCode } from './helpers'
+
 import { SHORTCUTS } from '~/stores/rootStore'
 
 const safeString = thing => {
@@ -19,10 +22,8 @@ const safeString = thing => {
 }
 
 @view.ui
-class Actions {
-  render() {
-    const actions = ['Archive', 'Reply', 'Delete', 'Forward']
-
+class BottomActions {
+  render({ actions, metaKey }) {
     return (
       <bar $$draggable>
         <section>
@@ -30,12 +31,7 @@ class Actions {
         </section>
         <section>
           <UI.Text $label>⌘ Actions</UI.Text>
-          {actions.map(action =>
-            <UI.Text $text key={action}>
-              <icon if={false}>⌘</icon>&nbsp;<strong>{action[0]}</strong>
-              <rest>{action.slice(1)}</rest>
-            </UI.Text>
-          )}
+          <Actions metaKey={metaKey} actions={actions} />
         </section>
       </bar>
     )
@@ -57,24 +53,6 @@ class Actions {
     label: {
       marginRight: 0,
       opacity: 0.5,
-    },
-    text: {
-      marginLeft: 10,
-      marginRight: 5,
-    },
-    icon: {
-      opacity: 0.5,
-      display: 'inline',
-      fontSize: 12,
-    },
-    strong: {
-      fontWeight: 400,
-      opacity: 1,
-      color: '#fff',
-    },
-    rest: {
-      display: 'inline',
-      opacity: 0.8,
     },
   }
 }
@@ -105,10 +83,54 @@ class BarStore {
   millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
   inputRef: ?HTMLElement = null
+  metaKey = false
 
   // search is throttled, textboxVal isn't
   search = ''
   textboxVal = ''
+
+  start() {
+    this.on(window, 'focus', this.focusBar)
+    this.attachTrap('window', window)
+    this.millerState.onChangeColumn((col, lastCol) => {
+      if (lastCol !== 0 && col === 0) {
+        this.focusBar()
+      }
+
+      if (lastCol === 0 && col !== 0) {
+        this.blurBar()
+      }
+    })
+
+    document.addEventListener('keydown', e => {
+      this.metaKey = e.metaKey
+
+      if (this.metaKey) {
+        ;(this.allActions() || []).forEach(action => {
+          if (actionToKeyCode(action) === e.keyCode) {
+            e.preventDefault()
+            console.log('executing action', action)
+          }
+        })
+      }
+    })
+    document.addEventListener('keyup', e => {
+      this.metaKey = e.metaKey
+    })
+  }
+
+  allActions() {
+    const { activeItem, paneActions } = this.millerState
+    return [
+      ...(paneActions || []),
+      ...((activeItem && activeItem.actions) || []),
+    ]
+  }
+
+  toolbarActions() {
+    const { activeItem } = this.millerState
+    return (activeItem && activeItem.actions) || []
+  }
 
   attachTrap = (name, el) => {
     const _name = `${name}Trap`
@@ -123,20 +145,6 @@ class BarStore {
 
   get showTextbox() {
     return this.millerState.activeCol === 0
-  }
-
-  start() {
-    this.on(window, 'focus', this.focusBar)
-    this.attachTrap('window', window)
-    this.millerState.onChangeColumn((col, lastCol) => {
-      if (lastCol !== 0 && col === 0) {
-        this.focusBar()
-      }
-
-      if (lastCol === 0 && col !== 0) {
-        this.blurBar()
-      }
-    })
   }
 
   onInputRef = el => {
@@ -177,26 +185,27 @@ class BarStore {
   }
 
   onMillerStateChange = state => {
+    this.millerState = state
     this.millerStateVersion++
   }
 
   PANE_TYPES = {
-    main: Panes.Main,
-    message: Panes.Message,
-    setup: Panes.Setup,
-    inbox: Panes.Threads,
-    browse: Panes.Browse,
-    feed: Panes.Feed,
-    notifications: Panes.Notifications,
-    login: Panes.Login,
-    issue: Panes.Task,
-    orbit: Panes.Orbit,
-    task: Panes.Task,
-    doc: Panes.Doc,
-    test: Panes.Test,
-    newIssue: Panes.Code.NewIssue,
-    integrations: Panes.Integrations,
-    team: Panes.Team,
+    main: PaneTypes.Main,
+    message: PaneTypes.Message,
+    setup: PaneTypes.Setup,
+    inbox: PaneTypes.Threads,
+    browse: PaneTypes.Browse,
+    feed: PaneTypes.Feed,
+    notifications: PaneTypes.Notifications,
+    login: PaneTypes.Login,
+    issue: PaneTypes.Task,
+    orbit: PaneTypes.Orbit,
+    task: PaneTypes.Task,
+    doc: PaneTypes.Doc,
+    test: PaneTypes.Test,
+    newIssue: PaneTypes.Code.NewIssue,
+    integrations: PaneTypes.Integrations,
+    team: PaneTypes.Team,
   }
 
   get isBarActive() {
@@ -208,15 +217,15 @@ class BarStore {
   }
 
   // call these to send key to miller
-  millerActions = {}
+  millerKeyActions = {}
   actions = {
     down: e => {
-      this.millerActions.down()
+      this.millerKeyActions.down()
       e.preventDefault()
     },
     up: e => {
       if (this.millerState.activeRow > 0) {
-        this.millerActions.up()
+        this.millerKeyActions.up()
       }
 
       e.preventDefault()
@@ -257,7 +266,7 @@ class BarStore {
     },
     right: e => {
       if (this.hasSelectedItem) {
-        this.millerActions.right()
+        this.millerKeyActions.right()
         e.preventDefault()
       } else {
         if (this.peekItem) this.search = this.peekItem
@@ -265,7 +274,7 @@ class BarStore {
     },
     left: e => {
       if (this.hasSelectedItem) {
-        this.millerActions.left()
+        this.millerKeyActions.left()
         e.preventDefault()
       }
     },
@@ -343,13 +352,16 @@ export default class BarPage {
             panes={store.PANE_TYPES}
             onChange={store.onMillerStateChange}
             paneProps={paneProps}
-            onActions={val => {
+            onKeyActions={val => {
               console.log('actions', val)
-              store.millerActions = val
+              store.millerKeyActions = val
             }}
           />
 
-          <Actions />
+          <BottomActions
+            metaKey={store.metaKey}
+            actions={store.toolbarActions()}
+          />
         </bar>
       </UI.Theme>
     )

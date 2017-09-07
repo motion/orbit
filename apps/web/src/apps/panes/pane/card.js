@@ -6,9 +6,10 @@ import Actions from './actions'
 @view
 export default class PaneCard {
   setActions = () => {
-    const { paneStore, actions } = this.props
-    if (actions) paneStore.actions = actions
+    const { paneStore, actions, isActive } = this.props
+    if (actions && isActive) paneStore.setActions(actions)
   }
+
   componentWillMount() {
     this.setActions()
   }
@@ -26,16 +27,14 @@ export default class PaneCard {
 
     return (
       <card style={{ width: width }}>
-        <Actions actions={actions} if={actions} />
+        <UI.Theme name="light">
+          <inner>
+            <Actions actions={actions} if={actions} />
+          </inner>
+        </UI.Theme>
         <content>
           {children}
         </content>
-        <toolbar if={toolbarActions} $$row>
-          <info if={false && selectedIds.length > 0}>
-            {selectedIds.length} selected
-          </info>
-          <Actions actions={toolbarActions} color="#eee" />
-        </toolbar>
       </card>
     )
   }

@@ -19,56 +19,41 @@ class Comment {
     */
 
     return (
-      <reply $$row $isActive={isActive}>
-        <img if={false} $avatar src={avatarUrl || `/images/${image}.jpg`} />
-        <bubble>
-          <info $$row>
-            <name>
-              {author.login}
-            </name>
-            <when if={false}>
-              {when}
-            </when>
-          </info>
-          <content className="html-content">
+      <comment $$row>
+        <user>
+          <img $avatar src="/images/me.jpg" />
+        </user>
+        <content>
+          <name>Nate Weinert</name>
+          <p>
             {body}
-          </content>
-        </bubble>
-      </reply>
+          </p>
+        </content>
+      </comment>
     )
   }
 
   static style = {
+    comment: {
+      flex: 1,
+      padding: [7, 5],
+      borderTop: '1px solid #eee',
+    },
     isActive: {
       background: '#aaa',
     },
-    reply: {
-      padding: [7, 5],
-      width: '100%',
-      borderTop: '1px solid #eee',
+    avatar: {
+      alignSelf: 'center',
+      width: 40,
+      height: 40,
+      borderRadius: 100,
+      marginRight: 10,
+    },
+    content: {
+      flex: 1,
     },
     name: {
       fontWeight: 500,
-    },
-    avatar: {
-      width: 30,
-      height: 30,
-      borderRadius: 100,
-      marginRight: 10,
-      marginTop: 10,
-    },
-    info: {
-      marginTop: 5,
-      justifyContent: 'space-between',
-    },
-    bubble: {
-      flex: 1,
-    },
-    content: {
-      marginTop: 3,
-    },
-    when: {
-      opacity: 0.7,
     },
   }
 }
@@ -284,8 +269,8 @@ export default class TaskPane {
 
   static style = {
     container: {
+      padding: 20,
       flex: 1,
-      justifyContent: 'space-between',
     },
     metaInfo: {
       justifyContent: 'space-between',

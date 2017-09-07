@@ -9,7 +9,14 @@ if (module && module.hot) {
 }
 
 const isObservable = x => {
-  return x && (Mobx.isObservable(x) || x.isObservable)
+  if (!x) {
+    return false
+  }
+  try {
+    return Mobx.isObservable(x)
+  } catch (e) {
+    return x.isObservable
+  }
 }
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && !!val.$isQuery
@@ -17,7 +24,7 @@ const isRxObservable = val => val instanceof Observable
 const isPromise = val => val instanceof Promise
 const isWatch = (val: any) => val && val.IS_AUTO_RUN
 const isObservableLike = val =>
-  val && (isQuery(val) || isObservable(val) || val.isObservable)
+  (val && (val.isntConnected || val.isObservable || isObservable(val))) || false
 
 const DEFAULT_VALUE = undefined
 
@@ -105,9 +112,30 @@ function mobxifyPromise(obj, method, val) {
   })
 }
 
+function mobxifyRxQuery(obj, method) {
+  const value = obj[method]
+  const observable = Mobx.observable.box(undefined)
+  const runObservable = () => {
+    const stream = value.$.subscribe(res => {
+      observable.set(res)
+    })
+    obj.subscriptions.add(() => stream.unsubscribe())
+  }
+  if (value.isntConnected) {
+    value.onConnection().then(runObservable)
+  } else {
+    runObservable()
+  }
+  Object.defineProperty(obj, method, {
+    get() {
+      return observable.get()
+    },
+  })
+}
+
 // TODO use rxdb api
 function isRxDbQuery(query: any): boolean {
-  return query && !!query.mquery
+  return query && (query.isntConnected || !!query.mquery)
 }
 
 function mobxifyRxObservable(obj, method, val) {
@@ -161,14 +189,7 @@ function mobxify(target: Object, method: string, descriptor: Object) {
     return
   }
   if (isRxDbQuery(value)) {
-    const watchedMethod = `__${method}_stream`
-    target[watchedMethod] = target[method].$
-    mobxifyRxObservable(target, watchedMethod)
-    Object.defineProperty(target, method, {
-      get() {
-        return target[watchedMethod].current
-      },
-    })
+    mobxifyRxQuery(target, method)
     return
   }
   if (isFunction(value)) {
@@ -196,18 +217,25 @@ function mobxify(target: Object, method: string, descriptor: Object) {
 function resolve(inValue: any) {
   let value = inValue
   // convert RxQuery to RxObservable
-  if (isRxDbQuery(value)) {
-    value = value.$
-  }
-  if (isRxObservable(value)) {
-    const observable = value
-    const mobxStream = fromStream(value)
-    return {
-      get: () => mobxStream.current,
-      mobxStream,
-      observable,
-      dispose: mobxStream.dispose,
-      isObservable: true,
+  if (value) {
+    if (isRxDbQuery(value)) {
+      if (!value.isntConnected) {
+        value = value.$
+      } else {
+        return value
+      }
+    }
+    // let this fall through from rxdbquerys
+    if (isRxObservable(value)) {
+      const observable = value
+      const mobxStream = fromStream(value)
+      return {
+        get: () => mobxStream.current,
+        mobxStream,
+        observable,
+        dispose: mobxStream.dispose,
+        isObservable: true,
+      }
     }
   }
   return value
@@ -218,12 +246,10 @@ const uid = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
 function mobxifyWatch(obj, method, val) {
-  const debug = (...args) => {
-    // const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
-    // if (method === 'draft') {
-    //   console.log(KEY, ...args)
-    // }
-  }
+  // const debug = (...args) => {
+  //   const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
+  //   console.log(KEY, ...args)
+  // }
 
   let current = Mobx.observable.box(DEFAULT_VALUE)
   let currentDisposable = null
@@ -236,7 +262,7 @@ function mobxifyWatch(obj, method, val) {
     if (Mobx.isObservableArray(value) || Mobx.isObservableMap(value)) {
       value = Mobx.toJS(value)
     }
-    debug('update ===', value)
+    // debug('update ===', value)
     current.set(Mobx.observable.box(value))
   }
 
@@ -253,10 +279,25 @@ function mobxifyWatch(obj, method, val) {
   }
 
   let stop
+  let disposed = false
+
+  const dispose = () => {
+    if (disposed) {
+      return
+    }
+    if (currentDisposable) {
+      currentDisposable()
+    }
+    stop()
+    stopAutoObserve && stopAutoObserve()
+    disposed = true
+  }
 
   function watcher(val) {
-    return () => {
-      const result = resolve(val.call(obj, obj.props)) // hit user observables // pass in props
+    let value = val
+
+    return function watcherCb() {
+      const result = resolve(value.call(obj, obj.props)) // hit user observables // pass in props
       const observableLike = isObservableLike(result)
       stopAutoObserve()
 
@@ -272,7 +313,13 @@ function mobxifyWatch(obj, method, val) {
 
       if (observableLike) {
         if (result.isntConnected) {
-          return
+          // try on reconnect
+          result.onConnection().then(() => {
+            // re-run after connect
+            dispose()
+            watcherCb()
+          })
+          return false
         }
         const isSameObservable =
           currentObservable && currentObservable[AID] === result[AID]
@@ -289,7 +336,7 @@ function mobxifyWatch(obj, method, val) {
         if (isPromise(result)) {
           current.set(fromPromise(result))
         } else {
-          debug('watchForNewValue ===', result)
+          // debug('watchForNewValue ===', result)
           update(result)
         }
       }
@@ -325,13 +372,7 @@ function mobxifyWatch(obj, method, val) {
     },
   })
 
-  obj.subscriptions.add(() => {
-    if (currentDisposable) {
-      currentDisposable()
-    }
-    stop()
-    stopAutoObserve && stopAutoObserve()
-  })
+  obj.subscriptions.add(dispose)
 
   return current
 }

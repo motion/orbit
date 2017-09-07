@@ -242,22 +242,35 @@ export default class Model {
     if (this._collection) {
       return this._filteredCollection
     }
+
     // chain().until().exec().or().$
     const self = this
-    const worm = () => {
+
+    // turns a serialized query back into a real query
+    const getQuery = called => {
+      return called.reduce((acc, cur) => {
+        return acc[cur.name](...(cur.args || []))
+      }, this.collection)
+    }
+
+    const worm = base => {
       const result = new Proxy(
         {
+          ...base,
           exec: () => {
             console.warn('This model isn\'t connected!')
             return Promise.resolve(false)
           },
           isntConnected: true,
-          onConnection: () => {
+          getQuery() {
+            return getQuery(this.called)
+          },
+          onConnection() {
             return new Promise(resolve => {
               const stop = autorun(() => {
                 if (self.connected) {
                   stop && stop()
-                  resolve({ connected: true })
+                  resolve(this.getQuery())
                 }
               })
             })
@@ -268,7 +281,12 @@ export default class Model {
             if (target[name]) {
               return target[name]
             }
-            return () => worm()
+            target.called = target.called || []
+            target.called.push({ name })
+            return (...args) => {
+              target.called[target.called.length - 1].args = args
+              return worm(target)
+            }
           },
         }
       )
@@ -471,18 +489,12 @@ export default class Model {
   getAll = (query: string | Object) => this.collection.find(query).exec()
 
   // find/findOne return RxQuery objects
-  // so you can subscribe to streams or just .exec()
-  @query
+  // so you can subscribe to streams with .$ or promise with .exec()
   find = (params: string | Object) =>
-    this.getParams(params, ({ sort, ...query } = {}) =>
-      chain(this.collection.find(query), 'sort', sort)
-    )
+    this.getParams(params, this.collection.find)
 
-  @query
   findOne = (params: string | Object) =>
-    this.getParams(params, ({ sort, ...query } = {}) =>
-      chain(this.collection.findOne(query), 'sort', sort)
-    )
+    this.getParams(params, this.collection.findOne)
 
   // find or create, doesnt require primary key usage
   findOrCreate = async (object: Object = {}): Promise<Object> => {

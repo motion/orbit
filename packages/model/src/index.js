@@ -1,9 +1,6 @@
 // @flow
 import Model$ from './model'
-import query$ from './query'
-
 export const Model = Model$
-export const query = query$
 
 // mobx helpers
 import * as Mobx from 'mobx'

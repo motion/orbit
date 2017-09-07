@@ -1,6 +1,6 @@
 // @flow
 import global from 'global'
-import { Model, query, str, object } from '@mcro/model'
+import { Model, str, object } from '@mcro/model'
 
 declare class CurrentUser {}
 
@@ -38,7 +38,6 @@ export class Thing extends Model {
     index: ['title', 'body'],
   }
 
-  @query
   search = async (text: string) => {
     if (!text) {
       return null

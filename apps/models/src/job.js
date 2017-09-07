@@ -1,6 +1,6 @@
 // @flow
 import global from 'global'
-import { Model, query, object, str, number } from '@mcro/model'
+import { Model, object, str, number } from '@mcro/model'
 
 export const STATUS = {
   PENDING: 0,
@@ -49,26 +49,20 @@ export class JobModel extends Model {
 
   methods = methods
 
-  @query
   pending = (opt?: Object) =>
     this.collection.find({ status: STATUS.PENDING, ...opt })
-  @query
   processing = (opt?: Object) =>
     this.collection.find({ status: STATUS.PROCESSING, ...opt })
-  @query
   completed = (opt?: Object) =>
     this.collection.find({ status: STATUS.COMPLETED, ...opt })
-  @query
   failed = (opt?: Object) =>
     this.collection.find({ status: STATUS.FAILED, ...opt })
 
-  @query
   lastCompleted = (opt?: Object) =>
     this.collection
       .findOne({ status: STATUS.COMPLETED, ...opt })
       .sort({ updatedAt: 'desc' })
 
-  @query
   lastPending = (opt?: Object) =>
     this.collection
       .findOne({ status: STATUS.PENDING, ...opt })

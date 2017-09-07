@@ -195,7 +195,7 @@ export default class BarMain extends React.Component<> {
           itemProps={paneProps.itemProps}
           getItem={(result, index) =>
             <UI.ListItem
-              primary={result.title}
+              primary={`${index}: ${result.title}`}
               onClick={() => onSelect(index)}
               highlight={index === activeIndex}
               date={

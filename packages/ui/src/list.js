@@ -69,14 +69,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  componentDidUpdate() {
-    if (this.state.selected > -1) {
-      if (this.itemRefs[this.state.selected]) {
-        true // was a console log
-      }
-    }
-  }
-
   componentWillReceiveProps = (nextProps: Props) => {
     if (typeof nextProps.selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
@@ -305,7 +297,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       chillen = chillen.map(child => child())
     }
 
-    const groupOffsets = {}
+    const realIndex = []
     let totalGroups = 0
 
     if (groupKey && items) {
@@ -316,19 +308,17 @@ class List extends React.PureComponent<Props, { selected: number }> {
         const groupIndex = index + totalGroups
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
+          // if is separator
           if (lastGroup) {
             // add groups.length because we make list bigger as we add separators
             groups.push({ index: groupIndex, name: lastGroup })
             totalGroups++
+            realIndex[groupIndex] = true // separator
+            realIndex[groupIndex + 1] = groupIndex // next for some reason
           }
-          if (lastGroup) {
-            groupOffsets[groupIndex] = true // separator
-          } else {
-            groupOffsets[groupIndex] = totalGroups
-          }
-        } else {
-          groupOffsets[groupIndex] = totalGroups
         }
+        realIndex[groupIndex] =
+          realIndex[groupIndex] || groupIndex - totalGroups
       })
 
       for (const { index, name } of groups) {
@@ -345,11 +335,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
 
     const getRowHeight = ({ index }) => {
-      if (groupOffsets[index] === true) {
+      if (realIndex[index] === true) {
         return separatorHeight
       }
       if (dynamicRowHeight) {
-        return virtualized.rowHeight(index - groupOffsets[index])
+        return virtualized.rowHeight(realIndex[index])
       }
       return virtualized.rowHeight
     }

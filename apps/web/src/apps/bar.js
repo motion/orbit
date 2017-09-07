@@ -310,7 +310,7 @@ export default class BarPage {
     return (
       <UI.Theme name="clear-dark">
         <bar ref={store.ref('barRef').set} $$fullscreen>
-          <header $$draggable>
+          <header css={{ borderBottom: [1, [0, 0, 0, 0.1]] }} $$draggable>
             <UI.Input
               size={2.2}
               getRef={store.onInputRef}

@@ -12,6 +12,7 @@ const olderThan = (date, minutes) => {
   const upperBound = minutes * 1000 * 60
   const timeDifference = Date.now() - Date.parse(date)
   const answer = timeDifference > upperBound
+  console.log(timeDifference, upperBound, answer)
   return answer
 }
 
@@ -27,8 +28,7 @@ export default class GithubSync {
     Setting.findOne({
       userId: this.user.id,
       type: 'github',
-      sort: 'createdAt',
-    })
+    }).sort('createdAt')
 
   constructor({ user }: SyncOptions) {
     this.user = user

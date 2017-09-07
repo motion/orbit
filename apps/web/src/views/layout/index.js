@@ -10,6 +10,7 @@ import Signup from '~/views/signup'
 import { CurrentUser } from '~/app'
 import Header from './header'
 import BottomBar from '~/views/bottomBar'
+import * as UI from '@mcro/ui'
 
 @view
 export default class Layout {
@@ -35,16 +36,19 @@ export default class Layout {
     const CurrentPage = Router.activeView || NotFound
 
     return (
-      <layout>
-        <LayoutWrap>
-          <Header if={!!Constants.APP_KEY} />
-          <content if={CurrentUser.loggedIn} onScroll={this.onScroll}>
-            <CurrentPage key={Router.key} {...Router.params} />
-          </content>
-        </LayoutWrap>
-        <Errors />
-        <BottomBar />
-      </layout>
+      <UI.Theme name="light">
+        <layout>
+          <Signup />
+          <LayoutWrap if={CurrentUser.loggedIn}>
+            <Header if={!!Constants.APP_KEY} />
+            <content onScroll={this.onScroll}>
+              <CurrentPage key={Router.key} {...Router.params} />
+            </content>
+          </LayoutWrap>
+          <Errors />
+          <BottomBar />
+        </layout>
+      </UI.Theme>
     )
   }
 

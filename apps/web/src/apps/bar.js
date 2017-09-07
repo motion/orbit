@@ -7,7 +7,7 @@ import * as UI from '@mcro/ui'
 import * as PaneTypes from './panes'
 import Actions from './panes/pane/actions'
 import { MillerState, Miller } from './miller'
-import { isNumber, debounce } from 'lodash'
+import { isNumber, includes, debounce } from 'lodash'
 import { actionToKeyCode } from './helpers'
 
 import { SHORTCUTS } from '~/stores/rootStore'
@@ -105,7 +105,10 @@ class BarStore {
     document.addEventListener('keydown', e => {
       this.metaKey = e.metaKey
 
-      if (this.metaKey) {
+      if (
+        this.metaKey &&
+        !includes(['input', 'textarea'], e.target.tagName.toLowerCase())
+      ) {
         ;(this.allActions() || []).forEach(action => {
           if (actionToKeyCode(action) === e.keyCode) {
             e.preventDefault()
@@ -321,7 +324,9 @@ export default class BarPage {
                 ...inputStyle,
               }}
             />
-            <forwardcomplete>{store.peekItem}</forwardcomplete>
+            <forwardcomplete>
+              {store.peekItem}
+            </forwardcomplete>
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>

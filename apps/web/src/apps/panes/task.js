@@ -2,9 +2,9 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Pane from './pane'
 import * as React from 'react'
-import { includes } from 'lodash'
-import PersonPicker from './views/personPicker'
+import Multiselect from './views/multiselect'
 import timeAgo from 'time-ago'
+import { capitalize } from 'lodash'
 
 const { ago } = timeAgo()
 
@@ -19,30 +19,36 @@ class Comment {
     */
 
     return (
-      <comment if={author} $$row>
+      <comment if={author} $isActive={isActive} $$row>
         <user>
           <img $avatar src={author.avatarUrl} />
         </user>
         <content>
           <info $$row>
-            <name>{author.login}</name>
-            <when>{ago(new Date(createdAt))}</when>
+            <name>
+              {author.login}
+            </name>
+            <when>
+              {ago(new Date(createdAt))}
+            </when>
           </info>
 
-          <p>{body}</p>
+          <p>
+            {body}
+          </p>
         </content>
       </comment>
     )
   }
 
   static style = {
+    isActive: {
+      background: '#aaa',
+    },
     comment: {
       flex: 1,
       padding: [7, 5],
       borderTop: '1px solid #eee',
-    },
-    isActive: {
-      background: '#aaa',
     },
     avatar: {
       alignSelf: 'center',
@@ -81,8 +87,12 @@ class MetaItem {
             store.who = person
           }}
         />
-        <name>{label}</name>
-        <value>{store.who ? store.who : value}</value>
+        <name>
+          {label}
+        </name>
+        <value>
+          {store.who ? store.who : value}
+        </value>
       </item>
     )
   }
@@ -171,13 +181,21 @@ class TaskHeader {
     console.log('created at ', data.createdAt)
     return (
       <header if={author} $isActive={isActive}>
-        <h3>{title}</h3>
+        <h3>
+          {title}
+        </h3>
         <info $$row>
           <img $avatar src={author.avatarUrl} />
-          <name>{author.login}</name>
-          <when>{ago(new Date(createdAt))}</when>
+          <name>
+            {author.login}
+          </name>
+          <when>
+            {ago(new Date(createdAt))}
+          </when>
         </info>
-        <p>{body}</p>
+        <p>
+          {body}
+        </p>
       </header>
     )
   }
@@ -247,15 +265,133 @@ class TaskStore {
   }
 }
 
+@view
+class Assign {
+  render() {
+    return (
+      <multi>
+        <Multiselect
+          items={[{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]}
+          renderItem={(item, { isActive, isHighlight }) =>
+            <item $$row $isHighlight={isHighlight} $isActive={isActive}>
+              <img src={`/images/${item.id}.jpg`} $avatar />
+              <name>
+                {capitalize(item.id)}
+              </name>
+            </item>}
+        />
+      </multi>
+    )
+  }
+
+  static style = {
+    multi: {
+      margin: 15,
+    },
+    item: {
+      width: '100%',
+      fontWeight: 600,
+      padding: 10,
+      flex: 1,
+      alignItems: 'center',
+      fontSize: 16,
+    },
+    name: {
+      marginLeft: 10,
+    },
+    isActive: {
+      background: '#ddd',
+    },
+    isHighlight: {
+      background: '#eee',
+    },
+    avatar: {
+      borderRadius: 100,
+      width: 30,
+      height: 30,
+    },
+  }
+}
+
+@view
+class Labels {
+  render() {
+    const labelColors = {
+      bug: 'red',
+      duplicate: 'gray',
+      'help wanted': 'green',
+      question: 'purple',
+      enhancement: 'blue',
+    }
+    return (
+      <multi>
+        <Multiselect
+          items={[
+            { id: 'bug' },
+            { id: 'duplicate' },
+            { id: 'enhancement' },
+            { id: 'help wanted' },
+            { id: 'invalid' },
+            { id: 'question' },
+            { id: 'wontfix' },
+          ]}
+          renderItem={(item, { index, isActive, isHighlight }) =>
+            <item
+              $$row
+              $first={index === 0}
+              $isHighlight={isHighlight}
+              $isActive={isActive}
+            >
+              <color style={{ background: labelColors[item.id] || 'gray' }} />
+              <name>
+                {item.id}
+              </name>
+            </item>}
+        />
+      </multi>
+    )
+  }
+
+  static style = {
+    multi: {
+      margin: 15,
+    },
+    item: {
+      width: '100%',
+      borderTop: '1px solid #f3f3f3',
+      padding: 10,
+      flex: 1,
+      alignItems: 'center',
+      fontWeight: 600,
+      fontSize: 16,
+    },
+    first: {
+      borderTop: '0px solid white',
+    },
+    name: {
+      marginLeft: 10,
+    },
+    isActive: {
+      background: '#ddd',
+    },
+    isHighlight: {
+      background: '#eee',
+    },
+    color: {
+      borderRadius: 5,
+      width: 20,
+      height: 20,
+    },
+  }
+}
+
 @view.provide({ paneStore: Pane.Store })
 @view({
   store: TaskStore,
 })
 export default class TaskPane {
   render({ data, activeIndex, isActive, store }) {
-    console.log('got data', data)
     const { labels } = data
-    const type = data.service || 'github'
     const items = [
       {
         label: 'Assignees',
@@ -284,10 +420,17 @@ export default class TaskPane {
       <UI.Theme name="light">
         <Pane.Card
           isActive={isActive}
-          actions={['one', 'two', 'three']}
-          icon={type}
+          actions={['Assign', 'Milestone', 'Labels']}
         >
           <container>
+            <info $$row>
+              <UI.Popover openOnClick target={<UI.Button>labels</UI.Button>}>
+                <Labels />
+              </UI.Popover>
+              <UI.Popover openOnClick target={<UI.Button>assign</UI.Button>}>
+                <Assign />
+              </UI.Popover>
+            </info>
             {store.results.map((result, index) => renderItem(index))}
           </container>
         </Pane.Card>
@@ -304,6 +447,9 @@ export default class TaskPane {
       justifyContent: 'space-between',
       borderBottom: [1, [0, 0, 0, 0.05]],
       padding: [5, 40],
+    },
+    info: {
+      justifyContent: 'space-between',
     },
     headerActive: {
       background: '#aaa',

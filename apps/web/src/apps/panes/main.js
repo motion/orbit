@@ -6,6 +6,7 @@ import { CurrentUser, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from './pane'
+import TestIssue from './test_data/issue'
 
 import type { PaneProps, PaneResult } from '~/types'
 
@@ -20,9 +21,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
-  topThings: ?Array<Thing> = Thing.find()
-    .sort('createdAt')
-    .limit(300)
+  topThings: ?Array<Thing> = Thing.find().sort('createdAt').limit(300)
 
   start() {
     this.props.getRef(this)
@@ -111,6 +110,16 @@ class BarMainStore {
     },
   ]
 
+  tests: Array<PaneResult> = [
+    {
+      id: 500,
+      title: 'Github issue about performance',
+      type: 'task',
+      data: TestIssue,
+      category: 'Tests',
+    },
+  ]
+
   extras = [
     {
       id: 30,
@@ -133,7 +142,13 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login', static: true }]
     }
     return fuzzy(
-      [...this.browse, ...this.things, ...this.people, ...this.extras],
+      [
+        ...this.browse,
+        ...this.tests,
+        ...this.things,
+        ...this.people,
+        ...this.extras,
+      ],
       this.props.search
     )
   }
@@ -178,12 +193,16 @@ export default class BarMain extends React.Component<> {
           groupKey="category"
           items={store.results}
           itemProps={paneProps.itemProps}
-          getItem={(result, index) => (
+          getItem={(result, index) =>
             <UI.ListItem
               primary={result.title}
               onClick={() => onSelect(index)}
               highlight={index === activeIndex}
-              date={<UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>}
+              date={
+                <UI.Date if={result.data}>
+                  {result.data.updatedAt}
+                </UI.Date>
+              }
               children={
                 <UI.Text
                   if={result.data && result.data.body}
@@ -199,14 +218,11 @@ export default class BarMain extends React.Component<> {
                 },
               }}
               icon={
-                result.data && result.data.image ? (
-                  <img $image src={`/images/${result.data.image}.jpg`} />
-                ) : (
-                  result.icon
-                )
+                result.data && result.data.image
+                  ? <img $image src={`/images/${result.data.image}.jpg`} />
+                  : result.icon
               }
-            />
-          )}
+            />}
         />
       </Pane.Card>
     )

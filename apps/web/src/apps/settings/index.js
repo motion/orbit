@@ -21,7 +21,6 @@ export default class SettingsPage {
       glow: false,
       fontSize: 26,
       padding: [0, 10],
-      height: 40,
     }
 
     return (

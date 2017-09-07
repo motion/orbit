@@ -293,8 +293,7 @@ const paneProps = {
     glow: false,
     hoverable: true,
     fontSize: 26,
-    padding: [0, 10],
-    height: 40,
+    padding: [10, 10],
     highlightBackground: [0, 0, 0, 0.2],
     highlightColor: [255, 255, 255, 1],
   },
@@ -378,14 +377,6 @@ export default class BarPage {
         z: 0,
         x: 0,
       },
-    },
-    section: {
-      width: '50%',
-      height: '100%',
-    },
-    content: {
-      flex: 1,
-      height: '100%',
     },
     pasteicon: {
       position: 'absolute',

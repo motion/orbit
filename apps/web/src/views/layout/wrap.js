@@ -6,11 +6,7 @@ import { view } from '@mcro/black'
 @view
 export default class LayoutWrap extends React.Component<> {
   render({ children }) {
-    return (
-      <wrap>
-        {children}
-      </wrap>
-    )
+    return <wrap>{children}</wrap>
   }
   static style = {
     wrap: {

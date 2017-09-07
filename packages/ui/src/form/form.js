@@ -1,8 +1,7 @@
-import React from 'react'
+import * as React from 'react'
 import { view } from '@mcro/black'
 import { object } from 'prop-types'
 import Surface from '../surface'
-import inject from '../helpers/inject'
 
 const resolveFormValues = obj =>
   Object.keys(obj).reduce(
@@ -10,13 +9,10 @@ const resolveFormValues = obj =>
     {}
   )
 
-@inject(context => ({ uiContext: context.uiContext }))
-@view.ui
-export default class Form {
+export default class Form extends React.Component {
   static contextTypes = {
     provided: object,
   }
-
   static childContextTypes = {
     provided: object,
   }
@@ -33,24 +29,25 @@ export default class Form {
     }
   }
 
-  render({ uiContext, ...props }) {
-    return <FormInner {...props} />
+  render() {
+    return <FormInner {...this.props} />
   }
 }
 
 @view.ui
 class FormInner extends React.Component {
+  static defaultProps = {
+    onSubmit: _ => _,
+  }
   static contextTypes = {
     provided: object,
   }
-
   static childContextTypes = {
     provided: object,
   }
 
   getChildContext() {
-    const submit = this.props.onSubmit || (_ => _)
-
+    const { onSubmit } = this.props
     return {
       provided: {
         ...this.context.provided,
@@ -58,7 +55,7 @@ class FormInner extends React.Component {
           ...this.context.provided.uiContext,
           // adds a helper to submit forms from below, useful for buttons
           form: {
-            submit: () => submit(this.formValues),
+            submit: () => onSubmit(this.formValues),
           },
         },
       },
@@ -70,11 +67,10 @@ class FormInner extends React.Component {
   }
 
   onSubmit = e => {
+    console.log('on SBUNMIT')
     e.preventDefault()
     e.stopPropagation()
-    if (this.props.onSubmit) {
-      this.props.onSubmit(this.formValues, e)
-    }
+    this.props.onSubmit(this.formValues, e)
   }
 
   onKeyDown = e => {
@@ -90,6 +86,7 @@ class FormInner extends React.Component {
         tagName="form"
         $form
         {...props}
+        onSubmit={this.onSubmit}
         onKeyDown={this.onKeyDown}
       />
     )

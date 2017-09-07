@@ -9,17 +9,12 @@ export default class Signup extends React.Component<> {
   static defaultProps: {}
 
   render() {
+    console.log('show', CurrentUser.loggedIn)
     return (
       <signup if={!CurrentUser.loggedIn} $$fullscreen $$draggable $$centered>
+        23
         <Login />
       </signup>
     )
-  }
-
-  static style = {
-    signup: {
-      background: 'radial-gradient(#fff, #eee)',
-      zIndex: 11,
-    },
   }
 }

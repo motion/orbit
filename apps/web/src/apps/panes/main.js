@@ -149,6 +149,15 @@ class BarMainStore {
 })
 export default class BarMain extends React.Component<> {
   static defaultProps: {}
+
+  get results() {
+    return this.props.store.results
+  }
+
+  onSelect = (item, index) => this.props.onSelect(index)
+  hasContent = result => result && result.data && result.data.body
+  getRowHeight = i => (this.hasContent(this.results[i]) ? 110 : 38)
+
   render({
     store,
     activeIndex,
@@ -162,37 +171,38 @@ export default class BarMain extends React.Component<> {
         <UI.List
           if={store.results}
           virtualized={{
-            rowHeight: i =>
-              store.results[i] &&
-              store.results[i].data &&
-              store.results[i].data.body
-                ? 52
-                : 38,
+            rowHeight: this.getRowHeight,
           }}
           selected={activeIndex}
-          onSelect={(item, index) => {
-            onSelect(index)
-          }}
+          onSelect={this.onSelect}
           groupKey="category"
           items={store.results}
           itemProps={paneProps.itemProps}
           getItem={(result, index) => (
             <UI.ListItem
-              if={result.data}
               primary={result.title}
               onClick={() => onSelect(index)}
               highlight={index === activeIndex}
-              date={<UI.Date>result.data.updatedAt</UI.Date>}
+              date={<UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>}
               children={
-                <UI.Text if={result.data.body} css={{ opacity: 0.2 }}>
+                <UI.Text
+                  if={result.data && result.data.body}
+                  css={{ opacity: 0.5 }}
+                >
                   {result.data.body.slice(0, 100)}
                 </UI.Text>
               }
+              iconProps={{
+                style: {
+                  alignSelf: 'flex-start',
+                  paddingTop: 2,
+                },
+              }}
               icon={
-                result.data.image ? (
+                result.data && result.data.image ? (
                   <img $image src={`/images/${result.data.image}.jpg`} />
                 ) : (
-                  result.icon || (result.doc && result.doc.icon)
+                  result.icon
                 )
               }
             />

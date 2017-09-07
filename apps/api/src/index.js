@@ -4,7 +4,7 @@ import global from 'global'
 import wfp from 'wait-for-port'
 import * as Constants from '~/constants'
 import promisify from 'sb-promisify'
-// import cleanStack from 'clean-stacktrace'
+import cleanStack from 'clean-stacktrace'
 
 const wfpp = promisify(wfp)
 const options = {
@@ -15,16 +15,20 @@ const waitForPort = (host, port) => wfpp(host, port, options)
 
 process.on('unhandledRejection', function(reason, p) {
   const path = require('path')
-  // const stack = stack =>
-  //   cleanStack(stack, line => {
-  //     const m = /.*\((.*)\).?/.exec(line) || []
-  //     return m[1]
-  //       ? line.replace(m[1], path.relative(process.cwd(), m[1]))
-  //       : line
-  //   })
+  const stack = stack =>
+    cleanStack(stack, line => {
+      const m = /.*\((.*)\).?/.exec(line) || []
+      return m[1]
+        ? line.replace(m[1], path.relative(process.cwd(), m[1]))
+        : line
+    })
   console.log('PromiseFail:')
   if (reason.stack) {
-    console.log(reason.stack)
+    try {
+      console.log(stack(reason.stack))
+    } catch (e) {
+      console.log('errr', reason.stack, e)
+    }
   } else {
     console.log(reason)
   }

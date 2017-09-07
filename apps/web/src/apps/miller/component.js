@@ -191,11 +191,7 @@ export default class Miller extends React.Component {
       return content
     }
 
-    return (
-      <HotKeys handlers={store.keyActions}>
-        {content}
-      </HotKeys>
-    )
+    return <HotKeys handlers={store.keyActions}>{content}</HotKeys>
   }
 
   static style = {
@@ -205,7 +201,7 @@ export default class Miller extends React.Component {
     },
     notFirst: {
       flex: 1,
-      background: 'white',
+      // background: 'white',
       // overflow: 'scroll',
     },
     columns: {

@@ -27,7 +27,9 @@ export default class Feed extends React.PureComponent<Props> {
                   <avatar $img={actor.avatar_url} />
                   <UI.Text $name>{actor.login} </UI.Text>
                   <UI.Text $action>{verb} </UI.Text>
-                  <UI.Date $date>{data.created_at}</UI.Date>
+                  <UI.Date key={data.created_at} $date>
+                    {data.created_at}
+                  </UI.Date>
                 </info>
                 <body if={payload && payload.commits}>
                   <content>

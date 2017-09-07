@@ -222,7 +222,7 @@ class TaskStore {
   get results() {
     const { data } = this.props
 
-    const comments = data.comments.map(comment => ({
+    const comments = (data.comments || []).map(comment => ({
       element: Comment,
       data: comment,
       actions: ['like comment'],

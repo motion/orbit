@@ -6,7 +6,6 @@ import type RxDB, { RxCollection, RxQuery } from 'rxdb'
 import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
 import { cloneDeep, merge } from 'lodash'
-import query from './query'
 import * as Helpers from './helpers'
 
 type SettingsObject = {
@@ -14,22 +13,14 @@ type SettingsObject = {
   database?: string,
   version?: string | number,
 }
-
 type ModelArgs = {
   defaultSchema?: Object,
 }
-
 type Queryish = RxQuery | { query: RxQuery }
-
 type PromiseFunction = () => Promise<any>
 
 // HELPERS
-const chain = (object, method, value) => {
-  if (!value) {
-    return object
-  }
-  return object[method](value)
-}
+const idFn = _ => _
 const queryKey = query => JSON.stringify(query.mquery._conditions)
 const modelMerge = (subjectModel: Object, object: Object) => {
   const subject = subjectModel.toJSON()
@@ -176,7 +167,7 @@ export default class Model {
   //  first: allowing models to define a filter
   //  second: automatic sync from remote
   get _filteredCollection() {
-    const { defaultFilter = _ => _ } = this.constructor
+    const { defaultFilter = idFn } = this.constructor
 
     // cache the proxy
     if (this._filteredProxy) {
@@ -193,22 +184,18 @@ export default class Model {
           return queryParams => {
             const finalParams = defaultFilter(queryObject(queryParams))
             const query = target[method](finalParams)
+            const sync = opts =>
+              syncQuery(query, { live: method === '$', retry: false, ...opts })
+
             return new Proxy(query, {
               get(target, method) {
                 if (method === 'sync') {
-                  return opts =>
-                    syncQuery(query, {
-                      live: method === '$',
-                      ...opts,
-                    })
+                  return sync
                 }
                 // they have intent to run this
                 if (method === 'exec' || method === '$') {
                   if (options.autoSync) {
-                    const syncPromise = syncQuery(query, {
-                      live: method === '$',
-                    })
-
+                    const syncPromise = sync()
                     // wait for sync to happen before returning
                     if (method === 'exec') {
                       const execute = target.exec.bind(target)
@@ -432,6 +419,7 @@ export default class Model {
 
       const error$ = firstReplication.error$.subscribe(error => {
         if (error) {
+          console.log('rejecting replication', JSON.stringify(error))
           reject(error)
         }
       })

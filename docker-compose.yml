@@ -69,5 +69,6 @@ services:
       - pad-api
     volumes:
       - ./apps/web:/apps/web
+      - ./apps/web/nginx:/apps/web/nginx
     extra_hosts:
       - 'starter-host:$HOST_IP'

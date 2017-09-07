@@ -156,10 +156,12 @@ export default class BarMain extends React.Component<> {
     return this.props.store.results
   }
 
-  getRowHeight = i =>
-    this.results[i] && this.results[i].data && this.results[i].data.body
-      ? 52
-      : 38
+  hasContent = (result, index) => {
+    console.log('has', !!(result && result.data && result.data.body), index)
+    return result && result.data && result.data.body
+  }
+
+  getRowHeight = i => (this.hasContent(this.results[i], i) ? 110 : 38)
 
   render({
     store,
@@ -190,11 +192,17 @@ export default class BarMain extends React.Component<> {
               children={
                 <UI.Text
                   if={result.data && result.data.body}
-                  css={{ opacity: 0.2 }}
+                  css={{ opacity: 0.5 }}
                 >
                   {result.data.body.slice(0, 100)}
                 </UI.Text>
               }
+              iconProps={{
+                style: {
+                  alignSelf: 'flex-start',
+                  paddingTop: 12,
+                },
+              }}
               icon={
                 result.data && result.data.image ? (
                   <img $image src={`/images/${result.data.image}.jpg`} />

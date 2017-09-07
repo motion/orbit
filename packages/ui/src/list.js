@@ -313,15 +313,21 @@ class List extends React.PureComponent<Props, { selected: number }> {
       let lastGroup = null
 
       items.forEach((item, index) => {
+        const groupIndex = index + totalGroups
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
           if (lastGroup) {
-            const groupIndex = index + totalGroups
-            groupOffsets[groupIndex] = true
             // add groups.length because we make list bigger as we add separators
             groups.push({ index: groupIndex, name: lastGroup })
             totalGroups++
           }
+          if (lastGroup) {
+            groupOffsets[groupIndex] = true // separator
+          } else {
+            groupOffsets[groupIndex] = totalGroups
+          }
+        } else {
+          groupOffsets[groupIndex] = totalGroups
         }
       })
 
@@ -339,11 +345,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
 
     const getRowHeight = ({ index }) => {
-      if (groupOffsets[index]) {
+      if (groupOffsets[index] === true) {
         return separatorHeight
       }
       if (dynamicRowHeight) {
-        return virtualized.rowHeight(index)
+        return virtualized.rowHeight(index - groupOffsets[index] - 1)
       }
       return virtualized.rowHeight
     }

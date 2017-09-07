@@ -310,15 +310,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
           lastGroup = item[groupKey]
           // if is separator
           if (lastGroup) {
-            // add groups.length because we make list bigger as we add separators
             groups.push({ index: groupIndex, name: lastGroup })
             totalGroups++
             realIndex[groupIndex] = true // separator
-            realIndex[groupIndex + 1] = groupIndex // next for some reason
+            realIndex[groupIndex + 1] = index // next
+            return
           }
         }
-        realIndex[groupIndex] =
-          realIndex[groupIndex] || groupIndex - totalGroups
+        realIndex[groupIndex] = index
       })
 
       for (const { index, name } of groups) {

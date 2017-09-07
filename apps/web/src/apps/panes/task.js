@@ -19,7 +19,7 @@ class Comment {
     */
 
     return (
-      <comment $$row>
+      <comment if={author} $$row>
         <user>
           <img $avatar src={author.avatarUrl} />
         </user>

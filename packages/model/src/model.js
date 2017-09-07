@@ -411,6 +411,8 @@ export default class Model {
       return Promise.resolve(true)
     }
 
+    console.log('SYNC', this.title, JSON.stringify(query.mquery), QUERY_KEY)
+
     const firstReplication = this._collection.sync({
       query,
       remote: this.remote,

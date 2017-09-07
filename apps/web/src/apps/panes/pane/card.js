@@ -32,9 +32,7 @@ export default class PaneCard {
             <Actions actions={actions} if={actions} />
           </inner>
         </UI.Theme>
-        <content>
-          {children}
-        </content>
+        <content>{children}</content>
       </card>
     )
   }

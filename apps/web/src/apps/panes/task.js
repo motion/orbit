@@ -25,17 +25,11 @@ class Comment {
         </user>
         <content>
           <info $$row>
-            <name>
-              {author.login}
-            </name>
-            <when>
-              {ago(new Date(createdAt))}
-            </when>
+            <name>{author.login}</name>
+            <when>{ago(new Date(createdAt))}</when>
           </info>
 
-          <p>
-            {body}
-          </p>
+          <p>{body}</p>
         </content>
       </comment>
     )
@@ -87,12 +81,8 @@ class MetaItem {
             store.who = person
           }}
         />
-        <name>
-          {label}
-        </name>
-        <value>
-          {store.who ? store.who : value}
-        </value>
+        <name>{label}</name>
+        <value>{store.who ? store.who : value}</value>
       </item>
     )
   }
@@ -165,7 +155,6 @@ class AddResponse {
     },
     response: {
       marginTop: 5,
-      background: '#fafbfc',
       border: '1px solid rgb(209, 213, 218)',
       width: '100%',
       height: 80,
@@ -182,21 +171,13 @@ class TaskHeader {
     console.log('created at ', data.createdAt)
     return (
       <header $isActive={isActive}>
-        <h3>
-          {title}
-        </h3>
+        <h3>{title}</h3>
         <info $$row>
           <img $avatar src={author.avatarUrl} />
-          <name>
-            {author.login}
-          </name>
-          <when>
-            {ago(new Date(createdAt))}
-          </when>
+          <name>{author.login}</name>
+          <when>{ago(new Date(createdAt))}</when>
         </info>
-        <p>
-          {body}
-        </p>
+        <p>{body}</p>
       </header>
     )
   }
@@ -241,7 +222,7 @@ class TaskStore {
   get results() {
     const { data } = this.props
 
-    const comments = data.comments.map(comment => ({
+    const comments = (data.comments || []).map(comment => ({
       element: Comment,
       data: comment,
       actions: ['like comment'],

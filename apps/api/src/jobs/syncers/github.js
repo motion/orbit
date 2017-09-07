@@ -49,7 +49,7 @@ export default class GithubSync {
       now(1000 * 60) // every minute
       await Promise.all([
         this.ensureJob('issues', { every: 60 * 6 }), // 6 hours
-        this.ensureJob('feed', { every: 15 }),
+        this.ensureJob('feed', { every: 0.1 }),
       ])
     })
   }
@@ -168,11 +168,13 @@ export default class GithubSync {
     })
     // recurse to get older if necessary
     if (events && events.length) {
-      const oldestEvent = events[events.length - 1]
-      const existingEvent = await Event.get(oldestEvent.id)
-      if (!existingEvent) {
-        const previousEvents = await this.getRepoEvents(org, repoName, page + 1)
-        return [...events, ...previousEvents]
+      const last = events[events.length - 1]
+      const lastEvent = await Event.get(last.id)
+      if (!lastEvent) {
+        return [
+          ...events,
+          ...(await this.getRepoEvents(org, repoName, page + 1)),
+        ]
       }
     }
     // weird error format github has
@@ -180,6 +182,7 @@ export default class GithubSync {
       console.log(events)
       return null
     }
+    console.log('no new events')
     return events
   }
 

@@ -6,7 +6,6 @@ import { CurrentUser, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from './pane'
-import { includes } from 'lodash'
 
 import type { PaneProps, PaneResult } from '~/types'
 
@@ -15,7 +14,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   title: thing.title,
   type: thing.type,
   icon: 'icon',
-  data: thing.data,
+  data: thing.toJSON(),
   category: 'Thing',
 })
 
@@ -163,7 +162,12 @@ export default class BarMain extends React.Component<> {
         <UI.List
           if={store.results}
           virtualized={{
-            rowHeight: 38,
+            rowHeight: i =>
+              store.results[i] &&
+              store.results[i].data &&
+              store.results[i].data.body
+                ? 52
+                : 38,
           }}
           selected={activeIndex}
           onSelect={(item, index) => {
@@ -174,16 +178,23 @@ export default class BarMain extends React.Component<> {
           itemProps={paneProps.itemProps}
           getItem={(result, index) => (
             <UI.ListItem
+              if={result.data}
+              primary={result.title}
               onClick={() => onSelect(index)}
               highlight={index === activeIndex}
+              date={<UI.Date>result.data.updatedAt</UI.Date>}
+              children={
+                <UI.Text if={result.data.body} css={{ opacity: 0.2 }}>
+                  {result.data.body.slice(0, 100)}
+                </UI.Text>
+              }
               icon={
-                result.data && result.data.image ? (
+                result.data.image ? (
                   <img $image src={`/images/${result.data.image}.jpg`} />
                 ) : (
                   result.icon || (result.doc && result.doc.icon)
                 )
               }
-              primary={result.title}
             />
           )}
         />

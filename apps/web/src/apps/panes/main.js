@@ -171,7 +171,7 @@ export default class BarMain extends React.Component<> {
 
   onSelect = (item, index) => this.props.onSelect(index)
   hasContent = result => result && result.data && result.data.body
-  getRowHeight = i => (this.hasContent(this.results[i]) ? 110 : 38)
+  getRowHeight = i => (this.hasContent(this.results[i]) ? 100 : 38)
 
   render({
     store,
@@ -195,7 +195,7 @@ export default class BarMain extends React.Component<> {
           itemProps={paneProps.itemProps}
           getItem={(result, index) =>
             <UI.ListItem
-              primary={`${index}: ${result.title}`}
+              primary={result.title}
               onClick={() => onSelect(index)}
               highlight={index === activeIndex}
               date={
@@ -208,7 +208,7 @@ export default class BarMain extends React.Component<> {
                   if={result.data && result.data.body}
                   css={{ opacity: 0.5 }}
                 >
-                  {result.data.body.slice(0, 100)}
+                  {result.data.body.slice(0, 120)}
                 </UI.Text>
               }
               iconProps={{

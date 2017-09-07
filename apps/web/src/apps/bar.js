@@ -379,14 +379,6 @@ export default class BarPage {
         x: 0,
       },
     },
-    section: {
-      width: '50%',
-      height: '100%',
-    },
-    content: {
-      flex: 1,
-      height: '100%',
-    },
     pasteicon: {
       position: 'absolute',
       top: -30,

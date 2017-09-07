@@ -410,6 +410,7 @@ export default class Model {
       options: {
         ...options,
         live: false,
+        retry: false,
       },
     })
 
@@ -444,7 +445,10 @@ export default class Model {
                 direction: {
                   pull: true,
                 },
-                options,
+                options: {
+                  ...options,
+                  retry: false,
+                },
               })
               this.liveQueries[QUERY_KEY] = true
               resolve(liveReplication)

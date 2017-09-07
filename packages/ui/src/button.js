@@ -7,7 +7,7 @@ import { view } from '@mcro/black'
 @inject(context => ({ uiContext: context.uiContext }))
 @injectTheme
 @view.ui
-export default class Button extends React.Component {
+export default class Button extends React.PureComponent {
   render({
     uiContext,
     badge,
@@ -19,6 +19,14 @@ export default class Button extends React.Component {
     badgeProps,
     ...props
   }) {
+    // patch until figure out why this doesnt trigger onSubmit
+    if (type === 'submit') {
+      const ogOnClick = props.onClick
+      props.onClick = function(...args) {
+        uiContext.form.submit()
+        return (ogOnClick && ogOnClick(...args)) || null
+      }
+    }
     return (
       <SizedSurface
         tagName="button"

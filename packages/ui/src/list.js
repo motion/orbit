@@ -349,7 +349,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
         return separatorHeight
       }
       if (dynamicRowHeight) {
-        return virtualized.rowHeight(index - groupOffsets[index] - 1)
+        return virtualized.rowHeight(index - groupOffsets[index])
       }
       return virtualized.rowHeight
     }

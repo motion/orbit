@@ -150,18 +150,13 @@ class BarMainStore {
 export default class BarMain extends React.Component<> {
   static defaultProps: {}
 
-  onSelect = (item, index) => this.props.onSelect(index)
-
   get results() {
     return this.props.store.results
   }
 
-  hasContent = (result, index) => {
-    console.log('has', !!(result && result.data && result.data.body), index)
-    return result && result.data && result.data.body
-  }
-
-  getRowHeight = i => (this.hasContent(this.results[i], i) ? 110 : 38)
+  onSelect = (item, index) => this.props.onSelect(index)
+  hasContent = result => result && result.data && result.data.body
+  getRowHeight = i => (this.hasContent(this.results[i]) ? 110 : 38)
 
   render({
     store,
@@ -200,7 +195,7 @@ export default class BarMain extends React.Component<> {
               iconProps={{
                 style: {
                   alignSelf: 'flex-start',
-                  paddingTop: 12,
+                  paddingTop: 2,
                 },
               }}
               icon={

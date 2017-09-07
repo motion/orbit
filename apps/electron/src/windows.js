@@ -226,7 +226,7 @@ export default class ExampleApp extends React.Component {
         <Menu />
         {false &&
           <window
-            key={'bar'}
+            key={'bg'}
             {...bgWindow}
             defaultSize={this.initialSize || this.state.size}
             size={this.state.size}
@@ -241,9 +241,9 @@ export default class ExampleApp extends React.Component {
               nativeWindowOpen: true,
             }}
           />}
-        {true &&
+        {
           <window
-            key={'bg'}
+            key={'bar'}
             {...appWindow}
             defaultSize={this.initialSize || this.state.size}
             size={this.state.size}
@@ -273,7 +273,8 @@ export default class ExampleApp extends React.Component {
             webPreferences={{
               nativeWindowOpen: true,
             }}
-          />}
+          />
+        }
         {false &&
           appWindows.map(win => {
             return (

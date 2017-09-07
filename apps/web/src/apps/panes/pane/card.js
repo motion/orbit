@@ -19,7 +19,7 @@ export default class PaneCard {
 
   render({ paneStore, children }) {
     if (!paneStore) {
-      return <h5>no store</h5>
+      return <h5>Provide paneStore to Pane.Card</h5>
     }
 
     const { actions, width } = this.props

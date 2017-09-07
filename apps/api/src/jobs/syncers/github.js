@@ -27,7 +27,8 @@ export default class GithubSync {
     Setting.findOne({
       userId: this.user.id,
       type: 'github',
-    }).sort('createdAt')
+      sort: 'createdAt',
+    })
 
   constructor({ user }: SyncOptions) {
     this.user = user
@@ -246,7 +247,9 @@ export default class GithubSync {
                       title
                       body
                       bodyText
+                      createdAt
                       author {
+                        avatarUrl
                         login
                       }
                       labels(first: 10) {
@@ -260,8 +263,10 @@ export default class GithubSync {
                         edges {
                           node {
                             author {
+                              avatarUrl
                               login
                             }
+                            createdAt
                             body
                           }
                         }

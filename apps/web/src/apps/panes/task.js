@@ -10,7 +10,7 @@ const { ago } = timeAgo()
 
 @view
 class Comment {
-  render({ isActive, data: { body, author } }) {
+  render({ isActive, data: { body, createdAt, author } }) {
     /*
     const name = includes(author, ' ')
       ? author.split(' ')[0].toLowerCase()
@@ -21,10 +21,18 @@ class Comment {
     return (
       <comment $$row>
         <user>
-          <img $avatar src="/images/me.jpg" />
+          <img $avatar src={author.avatarUrl} />
         </user>
         <content>
-          <name>Nate Weinert</name>
+          <info $$row>
+            <name>
+              {author.login}
+            </name>
+            <when>
+              {ago(new Date(createdAt))}
+            </when>
+          </info>
+
           <p>
             {body}
           </p>
@@ -51,6 +59,9 @@ class Comment {
     },
     content: {
       flex: 1,
+    },
+    when: {
+      marginLeft: 5,
     },
     name: {
       fontWeight: 500,
@@ -91,10 +102,16 @@ class MetaItem {
 
 @view({
   store: class ResponseStore {
+    textbox = null
     response = ''
   },
 })
 class AddResponse {
+  componentWillReceiveProps({ isActive, store }) {
+    if (isActive && !this.props.isActive) store.textbox.focus()
+    if (!isActive && this.props.isActive) store.textbox.blur()
+  }
+
   render({ store, isActive, data: { onSubmit } }) {
     const commentButtonActive = store.response.trim().length > 0
 
@@ -105,6 +122,7 @@ class AddResponse {
           value={store.response}
           onChange={e => (store.response = e.target.value)}
           placeholder="Leave a comment"
+          ref={store.ref('textbox').set}
         />
         <info $$row>
           <shortcut $bright={commentButtonActive}>cmd+enter to post</shortcut>
@@ -160,12 +178,22 @@ class AddResponse {
 
 @view
 class TaskHeader {
-  render({ data: { title, body }, isActive }) {
+  render({ data, data: { title, author, createdAt, body }, isActive }) {
+    console.log('created at ', data.createdAt)
     return (
       <header $isActive={isActive}>
         <h3>
           {title}
         </h3>
+        <info $$row>
+          <img $avatar src={author.avatarUrl} />
+          <name>
+            {author.login}
+          </name>
+          <when>
+            {ago(new Date(createdAt))}
+          </when>
+        </info>
         <p>
           {body}
         </p>
@@ -174,8 +202,27 @@ class TaskHeader {
   }
 
   static style = {
+    header: {
+      marginBottom: 20,
+    },
     isActive: {
       background: '#999',
+    },
+    info: {
+      alignItems: 'center',
+      marginTop: 5,
+    },
+    name: {
+      fontWeight: 500,
+    },
+    avatar: {
+      width: 30,
+      height: 30,
+      borderRadius: 100,
+      marginRight: 10,
+    },
+    when: {
+      marginLeft: 10,
     },
   }
 }
@@ -203,10 +250,7 @@ class TaskStore {
     return [
       {
         element: TaskHeader,
-        data: {
-          title: data.title,
-          body: data.body,
-        },
+        data,
         actions: ['imma header'],
       },
       ...comments,
@@ -228,6 +272,7 @@ class TaskStore {
 })
 export default class TaskPane {
   render({ data, activeIndex, isActive, store }) {
+    console.log('got data', data)
     const { labels } = data
     const type = data.service || 'github'
     const items = [

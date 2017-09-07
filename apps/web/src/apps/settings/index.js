@@ -1,6 +1,5 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { CurrentUser } from '~/app'
 import * as UI from '@mcro/ui'
 import Integrations from './integrations'
 import Setup from './setup'
@@ -12,10 +11,6 @@ import Setup from './setup'
 })
 export default class SettingsPage {
   render({ store }) {
-    if (!CurrentUser.loggedIn) {
-      return <center $$centered>login plz</center>
-    }
-
     const itemProps = {
       size: 1.2,
       glow: false,

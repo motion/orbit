@@ -6,7 +6,6 @@ import { CurrentUser, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from './pane'
-import { includes } from 'lodash'
 
 import type { PaneProps, PaneResult } from '~/types'
 

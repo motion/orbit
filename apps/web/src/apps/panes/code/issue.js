@@ -7,14 +7,10 @@ class Response {
     return (
       <response $active={active}>
         <bar $$row>
-          <name>
-            {author}
-          </name>
+          <name>{author}</name>
           <when>6 days ago</when>
         </bar>
-        <content>
-          {text}
-        </content>
+        <content>{text}</content>
       </response>
     )
   }
@@ -25,7 +21,6 @@ class Response {
       padding: 10,
       border: '1px solid #eee',
       borderRadius: 3,
-      background: '#aaa',
     },
     bar: {
       justifyContent: 'space-between',
@@ -51,9 +46,9 @@ export default class Issue {
   render({ store, activeIndex }) {
     return (
       <container>
-        {store.responses.map((r, index) =>
+        {store.responses.map((r, index) => (
           <Response {...r} active={index === activeIndex} />
-        )}
+        ))}
         <textarea $reply placeholder="Leave a comment" />
       </container>
     )

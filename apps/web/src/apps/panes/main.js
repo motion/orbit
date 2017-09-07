@@ -22,7 +22,7 @@ class BarMainStore {
   props: PaneProps
   topThings: ?Array<Thing> = Thing.find()
     .sort('createdAt')
-    .limit(100)
+    .limit(300)
 
   start() {
     this.props.getRef(this)
@@ -30,7 +30,7 @@ class BarMainStore {
 
   get things(): Array<PaneResult> {
     return fuzzy(this.topThings || [], this.props.search)
-      .slice(0, 8)
+      .slice(0, this.props.search.length ? 20 : 8)
       .map(thingToResult)
   }
 

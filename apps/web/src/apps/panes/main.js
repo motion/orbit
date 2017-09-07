@@ -21,7 +21,9 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
-  topThings: ?Array<Thing> = Thing.find({ sort: 'createdAt' }).limit(100)
+  topThings: ?Array<Thing> = Thing.find()
+    .sort('createdAt')
+    .limit(100)
 
   start() {
     this.props.getRef(this)

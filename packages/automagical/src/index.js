@@ -9,14 +9,7 @@ if (module && module.hot) {
 }
 
 const isObservable = x => {
-  if (!x) {
-    return false
-  }
-  try {
-    return Mobx.isObservable(x)
-  } catch (e) {
-    return x.isObservable
-  }
+  return x && (Mobx.isObservable(x) || x.isObservable)
 }
 const isFunction = val => typeof val === 'function'
 const isQuery = val => val && !!val.$isQuery

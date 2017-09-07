@@ -27,8 +27,7 @@ export default class GithubSync {
     Setting.findOne({
       userId: this.user.id,
       type: 'github',
-      sort: 'createdAt',
-    })
+    }).sort('createdAt')
 
   constructor({ user }: SyncOptions) {
     this.user = user

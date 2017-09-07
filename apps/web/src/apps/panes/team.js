@@ -13,7 +13,7 @@ class BarTeamStore {
     this.props.getRef(this)
   }
 
-  @watch events: ?Array<Event> = (() => Event.find({ sort: 'createdAt' }): any)
+  @watch events: ?Array<Event> = (() => Event.find().sort('createdAt'): any)
 
   get results(): Array<Event> {
     return this.events || []

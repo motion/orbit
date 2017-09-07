@@ -139,7 +139,6 @@ export default class ListItem extends React.PureComponent<Props> {
             <prop if={primary || secondary} $col>
               <Text
                 $text
-                $primary
                 fontSize="inherit"
                 ellipse={ellipse}
                 size={size}

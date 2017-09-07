@@ -319,6 +319,7 @@ export default class GithubSync {
             title: issue.title,
             body: issue.bodyText,
             data,
+            orgName: orgLogin,
             parentId: repository.name,
           })
         )

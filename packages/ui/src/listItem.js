@@ -133,7 +133,9 @@ export default class ListItem extends React.PureComponent<Props> {
         highlight={highlight}
         {...props}
       >
-        <before if={before}>{before}</before>
+        <before if={before}>
+          {before}
+        </before>
         <content>
           <above if={primary || secondary || date}>
             <prop if={primary || secondary} $col>
@@ -164,9 +166,13 @@ export default class ListItem extends React.PureComponent<Props> {
               {date}
             </Text>
           </above>
-          <children if={children}>{children}</children>
+          <children if={children}>
+            {children}
+          </children>
         </content>
-        <after if={after}>{after}</after>
+        <after if={after}>
+          {after}
+        </after>
       </SizedSurface>
     )
   }

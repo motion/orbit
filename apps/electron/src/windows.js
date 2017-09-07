@@ -15,7 +15,6 @@ export function onWindow(cb) {
 }
 
 const AppWindows = new WindowsStore()
-const ActionWindows = new WindowsStore()
 
 export default class ExampleApp extends React.Component {
   state = {
@@ -24,7 +23,6 @@ export default class ExampleApp extends React.Component {
     size: [0, 0],
     position: [0, 0],
     appWindows: AppWindows.windows,
-    actionWindows: ActionWindows.windows,
   }
 
   componentDidMount() {
@@ -38,7 +36,6 @@ export default class ExampleApp extends React.Component {
     Object.assign(this.repl.context, {
       Root: this,
       AppWindows: AppWindows,
-      ActionWindows: ActionWindows,
     })
     console.log('started a repl!')
   }
@@ -93,7 +90,7 @@ export default class ExampleApp extends React.Component {
 
   listenToApps = () => {
     ipcMain.on('where-to', (event, key) => {
-      const win = AppWindows.findBy(key) || ActionWindows.findBy(key)
+      const win = AppWindows.findBy(key)
       if (win) {
         win.onHasPath(() => {
           console.log('where-to:', key, win.path)
@@ -114,7 +111,6 @@ export default class ExampleApp extends React.Component {
 
     ipcMain.on('close', (event, key) => {
       AppWindows.removeByKey(+key)
-      ActionWindows.removeByKey(+key)
       this.updateWindows()
     })
 
@@ -134,7 +130,6 @@ export default class ExampleApp extends React.Component {
       this.setState(
         {
           appWindows: AppWindows.windows,
-          actionWindows: ActionWindows.windows,
         },
         resolve
       )
@@ -189,7 +184,7 @@ export default class ExampleApp extends React.Component {
   uid = Math.random()
 
   render() {
-    const { actionWindows, appWindows, error, restart } = this.state
+    const { appWindows, error, restart } = this.state
 
     if (restart) {
       console.log('\n\n\n\n\n\nRESTARTING\n\n\n\n\n\n')
@@ -214,107 +209,119 @@ export default class ExampleApp extends React.Component {
       },
     }
 
-    const actionWindow = {
-      ...appWindow,
-      vibrancy: 'light',
-    }
+    const bgWindow = Object.assign({}, appWindow, {
+      vibrancy: 'dark',
+      hasShadow: true,
+    })
 
     if (error) {
       console.log('recover render from error')
       return null
     }
 
+    const bgPadding = 30
+
     return (
       <app>
         <Menu />
-        <window
-          key={this.uid}
-          {...appWindow}
-          defaultSize={this.initialSize || this.state.size}
-          size={this.state.size}
-          ref={this.onWindow}
-          showDevTools
-          file={`${Constants.JOT_URL}/bar?cachebust=${this.uid}`}
-          titleBarStyle="customButtonsOnHover"
-          show={this.state.show}
-          size={this.state.size}
-          position={this.state.position}
-          onResize={size => this.setState({ size })}
-          onMoved={position => this.setState({ position })}
-          onFocus={() => {
-            this.activeWindow = this.windowRef
-          }}
-          webPreferences={{
-            nativeWindowOpen: true,
-          }}
-        />
-
-        {appWindows.map(win => {
-          return (
-            <Window
-              key={win.key}
-              file={`${Constants.JOT_URL}?key=${win.key}`}
-              show={win.active}
-              {...appWindow}
-              defaultSize={win.size}
-              size={win.size}
-              position={win.position}
-              onMoved={x => {
-                win.setPosition(x)
-                this.updateWindows()
-              }}
-              onResize={x => {
-                win.setSize(x)
-                this.updateWindows()
-              }}
-              onClose={() => {
-                AppWindows.removeByKey(win.key)
-                this.updateWindows()
-              }}
-              onFocus={() => {
-                //win.showDevTools = true
-                win.focused = true
-                this.activeWindow = win
-                this.updateWindows()
-              }}
-              onBlur={() => {
-                if (!win) {
-                  console.log('no window weird')
-                  return
+        {false &&
+          <window
+            key={'bg'}
+            {...bgWindow}
+            defaultSize={this.initialSize || this.state.size}
+            size={this.state.size}
+            ref={this.onWindow}
+            file={`${Constants.JOT_URL}/vibrancy`}
+            titleBarStyle="customButtonsOnHover"
+            show={this.state.show}
+            onReadyToShow={this.onReadyToShow}
+            size={this.state.size}
+            position={this.state.position}
+            webPreferences={{
+              nativeWindowOpen: true,
+            }}
+          />}
+        {
+          <window
+            key={'bar'}
+            {...appWindow}
+            defaultSize={this.initialSize || this.state.size}
+            size={this.state.size}
+            ref={this.onWindow}
+            showDevTools
+            file={`${Constants.JOT_URL}/bar?cachebust=${this.uid}`}
+            titleBarStyle="customButtonsOnHover"
+            show={this.state.show}
+            size={this.state.size.map(x => x + bgPadding * 2)}
+            position={this.state.position.map(val => val - bgPadding)}
+            onResize={size =>
+              this.setState({ size: size.map(x => x - bgPadding * 2) })}
+            onMoved={position =>
+              this.setState({ position: position.map(v => v + bgPadding) })}
+            onMove={position => {
+              console.log('called move')
+              this.setState({ position: position.map(v => v + bgPadding) })
+            }}
+            onFocus={() => {
+              this.activeWindow = this.windowRef
+            }}
+            // onResize={size => this.setState({ size })}
+            //onMoved={position => this.setState({ position })}
+            //onFocus={() => {
+            //this.activeWindow = this.windowRef
+            //}}
+            webPreferences={{
+              nativeWindowOpen: true,
+            }}
+          />
+        }
+        {false &&
+          appWindows.map(win => {
+            return (
+              <Window
+                key={win.key}
+                file={`${Constants.JOT_URL}?key=${win.key}`}
+                show={win.active}
+                {...appWindow}
+                defaultSize={win.size}
+                size={win.size}
+                position={win.position}
+                onMoved={x => {
+                  win.setPosition(x)
+                  this.updateWindows()
+                }}
+                onResize={x => {
+                  win.setSize(x)
+                  this.updateWindows()
+                }}
+                onClose={() => {
+                  AppWindows.removeByKey(win.key)
+                  this.updateWindows()
+                }}
+                onFocus={() => {
+                  //win.showDevTools = true
+                  win.focused = true
+                  this.activeWindow = win
+                  this.updateWindows()
+                }}
+                onBlur={() => {
+                  if (!win) {
+                    console.log('no window weird')
+                    return
+                  }
+                  win.focused = false
+                  if (this.activeWindow.key === win.key) {
+                    this.activeWindow = null
+                  }
+                  this.updateWindows()
+                }}
+                showDevTools={win.showDevTools}
+                titleBarStyle={
+                  win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
                 }
-                win.focused = false
-                if (this.activeWindow.key === win.key) {
-                  this.activeWindow = null
-                }
-                this.updateWindows()
-              }}
-              showDevTools={win.showDevTools}
-              titleBarStyle={
-                win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
-              }
-            />
-          )
-        })}
-
-        {actionWindows.map((win, index) => {
-          return (
-            <window
-              key={win.key}
-              file={`${Constants.JOT_URL}?key=${win.key}`}
-              show={win.active}
-              {...actionWindow}
-              size={this.state.size}
-              position={this.state.position.map(
-                coordinate => coordinate + index * 10
-              )}
-              onClose={() => {
-                ActionWindows.removeByKey(win.key)
-                this.updateWindows()
-              }}
-              titleBarStyle="customButtonsOnHover"
-            />
-          )
-        })}
+              />
+            )
+          })}
       </app>
     )
   }

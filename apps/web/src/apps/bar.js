@@ -1,13 +1,15 @@
 // @flow
 import * as React from 'react'
-import ReactDOM from 'react-dom'
+import Mousetrap from 'mousetrap'
 import { view } from '@mcro/black'
 import { OS } from '~/helpers'
 import * as UI from '@mcro/ui'
-import * as Panes from './panes'
+import * as PaneTypes from './panes'
+import Actions from './panes/pane/actions'
 import { MillerState, Miller } from './miller'
 import { isNumber, debounce } from 'lodash'
-import Mousetrap from 'mousetrap'
+import { actionToKeyCode } from './helpers'
+
 import { SHORTCUTS } from '~/stores/rootStore'
 
 const safeString = thing => {
@@ -20,10 +22,8 @@ const safeString = thing => {
 }
 
 @view.ui
-class Actions {
-  render() {
-    const actions = ['Archive', 'Reply', 'Delete', 'Forward']
-
+class BottomActions {
+  render({ actions, metaKey }) {
     return (
       <bar $$draggable>
         <section>
@@ -31,12 +31,7 @@ class Actions {
         </section>
         <section>
           <UI.Text $label>⌘ Actions</UI.Text>
-          {actions.map(action => (
-            <UI.Text $text key={action}>
-              <icon if={false}>⌘</icon>&nbsp;<strong>{action[0]}</strong>
-              <rest>{action.slice(1)}</rest>
-            </UI.Text>
-          ))}
+          <Actions metaKey={metaKey} actions={actions} />
         </section>
       </bar>
     )
@@ -58,24 +53,6 @@ class Actions {
     label: {
       marginRight: 0,
       opacity: 0.5,
-    },
-    text: {
-      marginLeft: 10,
-      marginRight: 5,
-    },
-    icon: {
-      opacity: 0.5,
-      display: 'inline',
-      fontSize: 12,
-    },
-    strong: {
-      fontWeight: 400,
-      opacity: 1,
-      color: '#fff',
-    },
-    rest: {
-      display: 'inline',
-      opacity: 0.8,
     },
   }
 }
@@ -106,21 +83,84 @@ class BarStore {
   millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
   inputRef: ?HTMLElement = null
+  metaKey = false
 
   // search is throttled, textboxVal isn't
   search = ''
   textboxVal = ''
 
   start() {
-    this.on(window, 'focus', this.onFocus)
+    this.on(window, 'focus', this.focusBar)
+    this.attachTrap('window', window)
+    this.millerState.onChangeColumn((col, lastCol) => {
+      if (lastCol !== 0 && col === 0) {
+        this.focusBar()
+      }
+
+      if (lastCol === 0 && col !== 0) {
+        this.blurBar()
+      }
+    })
+
+    document.addEventListener('keydown', e => {
+      this.metaKey = e.metaKey
+
+      if (this.metaKey) {
+        ;(this.allActions() || []).forEach(action => {
+          if (actionToKeyCode(action) === e.keyCode) {
+            e.preventDefault()
+            console.log('executing action', action)
+          }
+        })
+      }
+    })
+    document.addEventListener('keyup', e => {
+      this.metaKey = e.metaKey
+    })
   }
 
-  onFocus = () => {
-    console.log('focus bar window')
+  allActions() {
+    const { activeItem, paneActions } = this.millerState
+    return [
+      ...(paneActions || []),
+      ...((activeItem && activeItem.actions) || []),
+    ]
+  }
+
+  toolbarActions() {
+    const { activeItem } = this.millerState
+    return (activeItem && activeItem.actions) || []
+  }
+
+  attachTrap = (name, el) => {
+    const _name = `${name}Trap`
+    this[_name] = new Mousetrap(el)
+    for (const name of Object.keys(SHORTCUTS)) {
+      if (this.actions[name]) {
+        const chord = SHORTCUTS[name]
+        this[_name].bind(chord, this.actions[name])
+      }
+    }
+  }
+
+  get showTextbox() {
+    return this.millerState.activeCol === 0
+  }
+
+  onInputRef = el => {
+    this.inputRef = el
+    this.attachTrap('bar', el)
+  }
+
+  focusBar = () => {
     if (this.inputRef) {
       this.inputRef.focus()
       this.inputRef.select()
     }
+  }
+
+  blurBar = () => {
+    this.inputRef && this.inputRef.blur()
   }
 
   setSearch = debounce(text => {
@@ -150,20 +190,22 @@ class BarStore {
   }
 
   PANE_TYPES = {
-    main: Panes.Main,
-    message: Panes.Message,
-    setup: Panes.Setup,
-    inbox: Panes.Threads,
-    browse: Panes.Browse,
-    feed: Panes.Feed,
-    notifications: Panes.Notifications,
-    login: Panes.Login,
-    'code.issue': Panes.Code.Issue,
-    orbit: Panes.Orbit,
-    task: Panes.Task,
-    doc: Panes.Doc,
-    integrations: Panes.Integrations,
-    team: Panes.Team,
+    main: PaneTypes.Main,
+    message: PaneTypes.Message,
+    setup: PaneTypes.Setup,
+    inbox: PaneTypes.Threads,
+    browse: PaneTypes.Browse,
+    feed: PaneTypes.Feed,
+    notifications: PaneTypes.Notifications,
+    login: PaneTypes.Login,
+    issue: PaneTypes.Task,
+    orbit: PaneTypes.Orbit,
+    task: PaneTypes.Task,
+    doc: PaneTypes.Doc,
+    test: PaneTypes.Test,
+    newIssue: PaneTypes.Code.NewIssue,
+    integrations: PaneTypes.Integrations,
+    team: PaneTypes.Team,
   }
 
   get isBarActive() {
@@ -175,29 +217,33 @@ class BarStore {
   }
 
   // call these to send key to miller
-  millerActions = {}
+  millerKeyActions = {}
   actions = {
     down: e => {
-      if (!this.hasSelectedItem) {
-        // this.inputRef.blur()
-      }
-      this.millerActions.down()
+      this.millerKeyActions.down()
       e.preventDefault()
     },
     up: e => {
       if (this.millerState.activeRow > 0) {
-        this.millerActions.up()
+        this.millerKeyActions.up()
       }
 
       e.preventDefault()
     },
     esc: e => {
-      e.preventDefault()
-      if (this.search !== '') {
-        this.search = ''
-      } else {
-        OS.send('bar-hide')
-      }
+      // allows one frame of interception (by pane store)
+      setTimeout(() => {
+        if (window.preventEscClose !== true) {
+          e.preventDefault()
+          if (this.search !== '') {
+            this.search = ''
+            this.textboxVal = ''
+          } else {
+            OS.send('bar-hide')
+          }
+        }
+        window.preventEscClose = false
+      }, 50)
     },
     cmdA: () => {
       this.inputRef.select()
@@ -220,7 +266,7 @@ class BarStore {
     },
     right: e => {
       if (this.hasSelectedItem) {
-        this.millerActions.right()
+        this.millerKeyActions.right()
         e.preventDefault()
       } else {
         if (this.peekItem) this.search = this.peekItem
@@ -228,7 +274,7 @@ class BarStore {
     },
     left: e => {
       if (this.hasSelectedItem) {
-        this.millerActions.left()
+        this.millerKeyActions.left()
         e.preventDefault()
       }
     },
@@ -245,19 +291,6 @@ const inputStyle = {
   store: BarStore,
 })
 export default class BarPage {
-  trap: MouseTrap
-
-  componentDidMount() {
-    const node = ReactDOM.findDOMNode(this)
-    this.trap = new Mousetrap(node)
-    for (const name of Object.keys(SHORTCUTS)) {
-      if (this.props.store.actions[name]) {
-        const chord = SHORTCUTS[name]
-        this.trap.bind(chord, this.props.store.actions[name])
-      }
-    }
-  }
-
   render({ store }) {
     const paneProps = {
       itemProps: {
@@ -278,7 +311,7 @@ export default class BarPage {
           <header $$draggable>
             <UI.Input
               size={2.6}
-              getRef={store.ref('inputRef').set}
+              getRef={store.onInputRef}
               borderRadius={5}
               onChange={store.onSearchChange}
               value={store.textboxVal}
@@ -289,7 +322,9 @@ export default class BarPage {
                 ...inputStyle,
               }}
             />
-            <forwardcomplete>{store.peekItem}</forwardcomplete>
+            <forwardcomplete>
+              {store.peekItem}
+            </forwardcomplete>
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>
@@ -317,10 +352,16 @@ export default class BarPage {
             panes={store.PANE_TYPES}
             onChange={store.onMillerStateChange}
             paneProps={paneProps}
-            onActions={store.ref('millerActions').set}
+            onKeyActions={val => {
+              console.log('actions', val)
+              store.millerKeyActions = val
+            }}
           />
 
-          <Actions />
+          <BottomActions
+            metaKey={store.metaKey}
+            actions={store.toolbarActions()}
+          />
         </bar>
       </UI.Theme>
     )

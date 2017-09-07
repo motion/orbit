@@ -36,20 +36,18 @@ export default class BarFeed extends React.Component<Props> {
     const content = (
       <contents>
         <section>
-          <UI.Title size={2}>{data.person}</UI.Title>
+          <UI.Title size={2}>
+            {data.person}
+          </UI.Title>
         </section>
 
         <section $$row>
           <UI.Title>Now</UI.Title>{' '}
           <subtitle $$row $$centered>
-            <UI.Badge
-              background="rgb(34.5%, 64.6%, 67.5%)"
-              color="white"
-              marginRight={8}
-            >
+            <UI.Badge background="rgb(34.5%, 64.6%, 67.5%)" marginRight={8}>
               #52
             </UI.Badge>{' '}
-            <UI.Text color="#fff" size={1.05}>
+            <UI.Text size={1.05}>
               Kubernetes integration with new cloud setup
             </UI.Text>
           </subtitle>
@@ -66,7 +64,13 @@ export default class BarFeed extends React.Component<Props> {
     )
 
     if (!data.special) {
-      return <feed>{content}</feed>
+      return (
+        <UI.Theme name="light">
+          <feed>
+            {content}
+          </feed>
+        </UI.Theme>
+      )
     }
 
     return (
@@ -81,7 +85,6 @@ export default class BarFeed extends React.Component<Props> {
                 <tab>
                   <UI.Badge
                     background="rgb(34.5%, 67.5%, 34.5%)"
-                    color="white"
                     marginRight={8}
                   >
                     #301

@@ -3,6 +3,7 @@
 export type PaneProps = {
   search: string,
   activeIndex: number,
+  highlightIndex: number,
   paneProps: Object,
   onSelect: Function,
   getRef: Function,

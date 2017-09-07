@@ -4,20 +4,26 @@ import { HotKeys } from '~/helpers'
 import { sum, range } from 'lodash'
 
 class MillerStore {
-  plugins = []
   colWidths = range(100).map(() => 0)
+  paneWidth = null
   colLeftMargin = 10
 
   start() {
     this.props.state.onSelectionChange(this.handleSelectionChange)
+    this.props.state.onChange(this.props.onChange)
     this.setTimeout(this.handleSelectionChange)
   }
 
   handleSelectionChange = () => {
     const { state, onChange } = this.props
-    if (state.activeRow !== null && this.activeResults) {
-      if (this.activeItem) {
-        state.setSchema(state.activeCol + 1, this.activeItem)
+
+    if (state.activeRow !== null && state.activeResults) {
+      if (
+        state.activeItem &&
+        state.activeItem.type &&
+        state.activeItem.showChild !== false
+      ) {
+        state.setSchema(state.activeCol + 1, state.activeItem)
       }
     }
     onChange(state)
@@ -32,24 +38,12 @@ class MillerStore {
     )
   }
 
-  get activePlugin() {
-    return this.plugins[this.props.state.activeCol]
-  }
-
-  get activeResults() {
-    return this.activePlugin && this.activePlugin.results
-  }
-
-  get activeItem() {
-    return this.activeResults && this.activeResults[this.props.state.activeRow]
-  }
-
   onSelect(col, row) {
     const { state } = this.props
     state.setSelection(col, row)
   }
 
-  actions = {
+  keyActions = {
     right: () => {
       const { state } = this.props
       state.moveCol(1)
@@ -58,7 +52,8 @@ class MillerStore {
       const { state } = this.props
       if (
         state.activeRow === null ||
-        (this.activeResults && state.activeRow < this.activeResults.length - 1)
+        (state.activeResults &&
+          state.activeRow < state.activeResults.length - 1)
       ) {
         state.moveRow(1)
       }
@@ -90,11 +85,14 @@ class Pane extends React.Component {
     search,
     onSelect,
     col,
+    width,
+    millerState,
     type,
   }) {
-    const paneActive = state.activeCol == col
-    const highlightIndex = !paneActive && state.prevActiveRows[col]
-    const activeIndex = paneActive && state.activeRow
+    const isActive = state.activeCol == col
+    const highlightIndex = !isActive && state.prevActiveRows[col]
+    const isFirst = col === 0
+    const activeIndex = isActive && state.activeRow
     const ChildPane = pane
 
     if (!ChildPane) {
@@ -103,18 +101,28 @@ class Pane extends React.Component {
     }
 
     return (
-      <pane ref={ref => ref && onMeasureWidth(ref.offsetWidth)}>
+      <pane
+        css={{
+          flex: 1,
+          width,
+        }}
+        ref={ref => {
+          ref && onMeasureWidth(ref.offsetWidth)
+        }}
+      >
         <ChildPane
           paneProps={paneProps}
           data={data || {}}
-          isActive={paneActive}
+          millerState={millerState}
+          isActive={isActive}
           onSelect={onSelect}
           getRef={ref => {
             getRef(ref)
             this.pane = ref
           }}
-          search={paneActive ? search : ''}
+          search={search}
           highlightIndex={highlightIndex}
+          selectedIndices={[]}
           activeIndex={activeIndex}
         />
       </pane>
@@ -138,15 +146,15 @@ class Pane extends React.Component {
 })
 export default class Miller extends React.Component {
   static defaultProps = {
-    onActions: _ => _,
+    onKeyActions: _ => _,
   }
 
   componentWillMount() {
-    const { onActions, store } = this.props
-    onActions(store.actions)
+    const { onKeyActions, store } = this.props
+    onKeyActions(store.keyActions)
   }
 
-  render({ store, paneProps, onActions, search, panes, animate, state }) {
+  render({ store, paneProps, onKeyActions, search, panes, animate, state }) {
     const { schema } = state
     const transX = animate ? store.translateX : 0
 
@@ -155,10 +163,7 @@ export default class Miller extends React.Component {
         <columns $$row $transX={transX}>
           {schema.map((pane, index) => {
             return (
-              <pane
-                key={index + ':' + pane.kind}
-                $grow={index === schema.length - 1}
-              >
+              <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
                 <Pane
                   // if it's the next preview, always rerender
                   pane={panes[pane.type]}
@@ -166,10 +171,11 @@ export default class Miller extends React.Component {
                   data={pane.data}
                   search={search}
                   paneProps={paneProps}
+                  millerState={state}
                   onMeasureWidth={width => (store.colWidths[index] = width)}
                   col={index}
                   getRef={plugin => {
-                    store.plugins[index] = plugin
+                    state.setPlugin(index, plugin)
                   }}
                   onSelect={row => store.onSelect(index, row)}
                   state={state}
@@ -181,18 +187,25 @@ export default class Miller extends React.Component {
       </miller>
     )
 
-    if (onActions) {
+    if (onKeyActions) {
       return content
     }
 
-    return <HotKeys handlers={store.actions}>{content}</HotKeys>
+    return (
+      <HotKeys handlers={store.keyActions}>
+        {content}
+      </HotKeys>
+    )
   }
 
   static style = {
-    grow: {
-      flex: 1,
-    },
+    // hang off edge
     pane: {
+      height: '100%',
+    },
+    notFirst: {
+      flex: 1,
+      background: 'white',
       // overflow: 'scroll',
     },
     columns: {

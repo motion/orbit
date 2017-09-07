@@ -38,7 +38,7 @@ class BarBrowseStore {
   store: BarBrowseStore,
 })
 export default class BarBrowse {
-  render({ store, activeIndex, highlightIndex, paneProps }) {
+  render({ store, activeIndex, highlightRow, paneProps }) {
     if (store.length === 0) {
       return <UI.Placeholder>Empty</UI.Placeholder>
     }
@@ -47,7 +47,7 @@ export default class BarBrowse {
       <browse>
         <UI.List
           if={store.results}
-          selected={isNumber(activeIndex) ? activeIndex : highlightIndex}
+          selected={isNumber(activeIndex) ? activeIndex : highlightRow}
           itemProps={paneProps.itemProps}
           items={store.results}
           getItem={(result, index) =>

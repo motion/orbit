@@ -1,106 +1,59 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import * as Pane from './pane'
+import * as React from 'react'
 import { includes } from 'lodash'
 import PersonPicker from './views/personPicker'
-import PaneCard from './views/card'
 import timeAgo from 'time-ago'
 
 const { ago } = timeAgo()
 
-/*
-  {
-    label: 'Type',
-    value: 'Epic',
-    icon: 'tag',
-    background: '#5F95F7',
-  },
-  {
-    label: 'Priority',
-    value: 'High',
-    icon: 'alert',
-    background: '#FF9140',
-  },
-  {
-    label: 'Status',
-    value: 'TODO',
-    icon: 'status',
-  },
-  {
-    label: 'Assignee',
-    value: 'Unassigned',
-    icon: 'person',
-  },
-  {
-    label: 'Project',
-    value: 'Prod Release 2',
-    icon: 'space',
-  },
-  */
-
-const SelectableSection = ({ index, activeIndex, ...props }) =>
-  <section
-    {...props}
-    css={{ background: activeIndex === index ? [0, 0, 0, 0.1] : null }}
-  />
-
 @view
-class Reply {
-  render({ author, when, avatarUrl, activeIndex, text, index }) {
+class Comment {
+  render({ isActive, data: { body, author } }) {
+    /*
     const name = includes(author, ' ')
       ? author.split(' ')[0].toLowerCase()
       : author
     const image = name === 'nate' ? 'me' : name
+    */
 
     return (
-      <SelectableSection index={index} activeIndex={activeIndex}>
-        <reply $$row>
-          <img $avatar src={avatarUrl || `/images/${image}.jpg`} />
-          <bubble>
-            <info $$row>
-              <name>
-                {author}
-              </name>
-              <when>
-                {when}
-              </when>
-            </info>
-            <content className="html-content">
-              {text}
-            </content>
-          </bubble>
-        </reply>
-      </SelectableSection>
+      <comment $$row>
+        <user>
+          <img $avatar src="/images/me.jpg" />
+        </user>
+        <content>
+          <name>Nate Weinert</name>
+          <p>
+            {body}
+          </p>
+        </content>
+      </comment>
     )
   }
 
   static style = {
-    reply: {
+    comment: {
+      flex: 1,
       padding: [7, 5],
-      width: '100%',
       borderTop: '1px solid #eee',
+    },
+    isActive: {
+      background: '#aaa',
+    },
+    avatar: {
+      alignSelf: 'center',
+      width: 40,
+      height: 40,
+      borderRadius: 100,
+      marginRight: 10,
+    },
+    content: {
+      flex: 1,
     },
     name: {
       fontWeight: 500,
-    },
-    avatar: {
-      width: 30,
-      height: 30,
-      borderRadius: 100,
-      marginRight: 10,
-      marginTop: 10,
-    },
-    info: {
-      marginTop: 5,
-      justifyContent: 'space-between',
-    },
-    bubble: {
-      flex: 1,
-    },
-    content: {
-      marginTop: 3,
-    },
-    when: {
-      opacity: 0.7,
     },
   }
 }
@@ -136,13 +89,17 @@ class MetaItem {
   static style = {}
 }
 
-@view
+@view({
+  store: class ResponseStore {
+    response = ''
+  },
+})
 class AddResponse {
-  render({ store }) {
+  render({ store, isActive, data: { onSubmit } }) {
     const commentButtonActive = store.response.trim().length > 0
 
     return (
-      <comment>
+      <comment $isActive={isActive}>
         <textarea
           $response
           value={store.response}
@@ -155,7 +112,7 @@ class AddResponse {
             <UI.Button disabled={!commentButtonActive}>Archive</UI.Button>
             <UI.Button
               disabled={!commentButtonActive}
-              onClick={store.submit}
+              onClick={() => onSubmit(store.response)}
               icon="send"
             >
               Comment
@@ -167,6 +124,9 @@ class AddResponse {
   }
 
   static style = {
+    isActive: {
+      background: '#aaa',
+    },
     info: {
       marginTop: 5,
       justifyContent: 'space-between',
@@ -198,20 +158,77 @@ class AddResponse {
   }
 }
 
-@view({
-  store: class TaskStore {
-    response = ''
+@view
+class TaskHeader {
+  render({ data: { title, body }, isActive }) {
+    return (
+      <header $isActive={isActive}>
+        <h3>
+          {title}
+        </h3>
+        <p>
+          {body}
+        </p>
+      </header>
+    )
+  }
 
-    submit = () => {
-      this.response = ''
-    }
-  },
+  static style = {
+    isActive: {
+      background: '#999',
+    },
+  }
+}
+
+class TaskStore {
+  response = ''
+
+  start() {
+    this.props.getRef(this)
+  }
+
+  submit = () => {
+    this.response = ''
+  }
+
+  get results() {
+    const { data } = this.props
+
+    const comments = data.comments.map(comment => ({
+      element: Comment,
+      data: comment,
+      actions: ['like comment'],
+    }))
+
+    return [
+      {
+        element: TaskHeader,
+        data: {
+          title: data.title,
+          body: data.body,
+        },
+        actions: ['imma header'],
+      },
+      ...comments,
+      {
+        element: AddResponse,
+        data: {
+          onSubmit(text) {
+            console.log('submitted', text)
+          },
+        },
+      },
+    ]
+  }
+}
+
+@view.provide({ paneStore: Pane.Store })
+@view({
+  store: TaskStore,
 })
-export default class BarTaskPane {
-  render({ highlightIndex, data, activeIndex, isActive, store, paneProps }) {
-    const title = data.title || 'Create a Helm chart to deploy CouchDB on K8s'
-    const comments = data.comments || [0, 1].map(() => 'just a test')
-    const labels = data.labels
+export default class TaskPane {
+  render({ data, activeIndex, isActive, store }) {
+    const { labels } = data
     const type = data.service || 'github'
     const items = [
       {
@@ -228,69 +245,46 @@ export default class BarTaskPane {
       },
     ]
 
-    return (
-      <PaneCard $paneCard id={data.id} title={title} icon={type}>
-        <container $isActive={isActive}>
-          <content>
-            <metaInfo $$row>
-              {items.map(item => <MetaItem {...item} />)}
-            </metaInfo>
+    const renderItem = index => {
+      const { element, data } = store.results[index]
+      return React.createElement(element, {
+        data,
+        key: index,
+        isActive: index === activeIndex,
+      })
+    }
 
-            {comments.map((comment, index) =>
-              <Reply
-                if={comment.content.length > 0}
-                index={index + 1}
-                activeIndex={activeIndex}
-                when={ago(comment.date)}
-                author={comment.author}
-                avatarUrl={comment.avatarUrl}
-                text={
-                  <div dangerouslySetInnerHTML={{ __html: comment.content }} />
-                }
-              />
-            )}
-          </content>
-          <AddResponse store={store} />
-        </container>
-      </PaneCard>
+    return (
+      <UI.Theme name="light">
+        <Pane.Card
+          isActive={isActive}
+          actions={['one', 'two', 'three']}
+          icon={type}
+        >
+          <container>
+            {store.results.map((result, index) => renderItem(index))}
+          </container>
+        </Pane.Card>
+      </UI.Theme>
     )
   }
 
   static style = {
     container: {
+      padding: 20,
       flex: 1,
-      justifyContent: 'space-between',
     },
     metaInfo: {
       justifyContent: 'space-between',
       borderBottom: [1, [0, 0, 0, 0.05]],
       padding: [5, 40],
     },
-    paneCard: {
-      flex: 1,
+    headerActive: {
+      background: '#aaa',
     },
     content: {
       flex: 1,
       overflow: 'scroll',
-    },
-    postContent: {
-      padding: 10,
-    },
-    break: {
-      height: 8,
-      width: '100%',
-    },
-    label: {
-      width: '35%',
-      textAlign: 'right',
-    },
-    subtitle: {
-      margin: [5, 0, 0],
-      opacity: 0.6,
-    },
-    primary: {
-      flexFlow: 'row',
-      alignItems: 'center',
     },
   }
 }

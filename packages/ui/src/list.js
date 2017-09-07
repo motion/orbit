@@ -328,11 +328,16 @@ class List extends React.PureComponent<Props, { selected: number }> {
       for (const { index, name } of groups) {
         let child
         if (virtualized) {
-          child = (extraProps: Object) => (
-            <separator {...extraProps}>{name}</separator>
-          )
+          child = (extraProps: Object) =>
+            <separator {...extraProps}>
+              {name}
+            </separator>
         } else {
-          child = <separator key={Math.random()}>{name}</separator>
+          child = (
+            <separator key={Math.random()}>
+              {name}
+            </separator>
+          )
         }
         chillen.splice(index, 0, child)
       }
@@ -364,7 +369,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
         {...props}
       >
         {!loading &&
-        virtualized && (
+          virtualized &&
           <VirtualList
             height={height}
             width={width}
@@ -374,8 +379,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
               chillen[index]({ key, style })}
             {...virtualized}
             rowHeight={getRowHeight}
-          />
-        )}
+          />}
         {!virtualized && chillen}
       </Surface>
     )

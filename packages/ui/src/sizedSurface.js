@@ -16,7 +16,6 @@ type Props = {
 export default class SizedSurface extends React.PureComponent<Props> {
   static defaultProps = {
     size: 1,
-    sizeHeight: true,
   }
 
   render() {
@@ -24,9 +23,9 @@ export default class SizedSurface extends React.PureComponent<Props> {
     const { sizeHeight, sizeMargin, sizeFont, sizePadding, ...rest } = props
 
     // sizes
-    let height = Math.round(
-      sizeHeight && props.size * LINE_HEIGHT * adj(sizeHeight)
-    )
+    let height = sizeHeight
+      ? Math.round(sizeHeight && props.size * LINE_HEIGHT * adj(sizeHeight))
+      : undefined
     const fontSize = sizeFont && height * 0.45 * adj(sizeFont)
     if (props.inline) {
       height = Math.round(height * 0.8)

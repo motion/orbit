@@ -5,6 +5,9 @@ import * as UI from '@mcro/ui'
 import { CurrentUser, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
+import * as Pane from './pane'
+import { includes } from 'lodash'
+
 import type { PaneProps, PaneResult } from '~/types'
 
 const thingToResult = (thing: Thing): PaneResult => ({
@@ -38,6 +41,7 @@ class BarMainStore {
       data: {
         team: 'motion',
       },
+      actions: ['like motion'],
     },
     {
       id: 11,
@@ -47,6 +51,7 @@ class BarMainStore {
       data: {
         special: true,
       },
+      actions: ['respond to recent'],
     },
     {
       id: 12,
@@ -137,6 +142,7 @@ class BarMainStore {
   }
 }
 
+@view.provide({ paneStore: Pane.Store })
 @view({
   store: BarMainStore,
 })
@@ -145,54 +151,41 @@ export default class BarMain extends React.Component<> {
   render({
     store,
     activeIndex,
-    paneProps,
+    isActive,
     onSelect,
   }: PaneProps & { store: BarMainStore }) {
-    const secondary = item => {
-      if (item.data && item.data.service === 'github')
-        return (
-          <spread $$row>
-            <left>{item.data.comments.length} replies</left>
-            <right>{item.data.labels}</right>
-          </spread>
-        )
-
-      return null
-    }
     return (
-      <pane>
+      <Pane.Card width={315} $pane isActive={isActive}>
+        <none if={store.results.length === 0}>No Results</none>
         <UI.List
           if={store.results}
           virtualized={{
             rowHeight: 38,
           }}
           selected={activeIndex}
-          onSelect={(item, index) => onSelect(index)}
-          itemProps={paneProps.itemProps}
+          onSelect={(item, index) => {
+            onSelect(index)
+          }}
           groupKey="category"
           items={store.results}
-          getItem={result => (
+          getItem={(result, index) =>
             <UI.ListItem
-              key={result.id}
+              onClick={() => onSelect(index)}
+              highlight={index === activeIndex}
               icon={
-                result.data && result.data.image ? (
-                  <img $image src={`/images/${result.data.image}.jpg`} />
-                ) : (
-                  result.icon || (result.doc && result.doc.icon)
-                )
+                result.data && result.data.image
+                  ? <img $image src={`/images/${result.data.image}.jpg`} />
+                  : result.icon || (result.doc && result.doc.icon)
               }
               primary={result.title}
-              secondary={secondary(result)}
-            />
-          )}
+            />}
         />
-      </pane>
+      </Pane.Card>
     )
   }
 
   static style = {
     pane: {
-      width: 340,
       height: '100%',
     },
     spread: {

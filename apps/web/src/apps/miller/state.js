@@ -17,16 +17,18 @@ export default class MillerStateStore {
     return new MillerStateStore({ schema: serialize(content) })
   }
 
+  plugins = []
   activeRow = 0
   activeCol = 0
   schema: Array<Schema> = []
   watchers = {}
-  prevActiveRows = [0] // holds the previously active columns
+  paneActions = []
+  prevActiveRows = [] // holds the previously active columns
 
   constructor({ schema }: { schema: Object }) {
     this.schema = schema
 
-    const events = ['selectionChange']
+    const events = ['selectionChange', 'change', 'changeColumn']
     events.forEach(event => {
       this.watchers[event] = []
       this['on' + capitalize(event)] = cb => {
@@ -39,6 +41,22 @@ export default class MillerStateStore {
     return this.schema[this.schema.length - 1]
   }
 
+  get activePlugin() {
+    return this.plugins[this.activeCol]
+  }
+
+  get activeResults() {
+    return this.activePlugin && this.activePlugin.results
+  }
+
+  get activeItem() {
+    return this.activeResults && this.activeResults[this.activeRow]
+  }
+
+  setPaneActions(actions) {
+    this.paneActions = actions
+  }
+
   setSchema(index: number, schema: Schema) {
     if (this.schema.length < index) {
       this.schema.push(schema)
@@ -47,8 +65,13 @@ export default class MillerStateStore {
     }
   }
 
-  emit(name: string) {
-    this.watchers[name].forEach(cb => cb())
+  setPlugin(index, plugin) {
+    this.plugins[index] = plugin
+    this.emit('change', this)
+  }
+
+  emit(name: string, ...obj) {
+    this.watchers[name].forEach(cb => cb(...obj))
   }
 
   moveRow(delta: number) {
@@ -89,18 +112,25 @@ export default class MillerStateStore {
     this.setSelection(this.activeCol, row)
   }
 
+  setActiveColumn(col) {
+    const lastCol = this.activeCol
+    this.paneActions = []
+    this.activeCol = col
+    this.emit('changeColumn', col, lastCol)
+  }
+
   moveCol(delta: number) {
     if (delta > 0) {
-      if (this.schema.length - 1 > this.activeCol) {
+      if (this.activeCol < this.schema.length - 1) {
         this.prevActiveRows.push(this.activeRow)
-        this.activeCol += delta
+        this.setActiveColumn(this.activeCol + delta)
         this.activeRow = 0
       }
     }
 
     if (delta < 0) {
       if (this.activeCol === 0) return
-      this.activeCol += delta
+      this.setActiveColumn(this.activeCol + delta)
       this.activeRow = this.prevActiveRows[this.activeCol]
       this.removeExcessCols()
     }

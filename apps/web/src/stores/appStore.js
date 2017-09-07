@@ -39,7 +39,7 @@ export default class AppStore {
     view.provide.on('store.unmount', this.unmount('stores'))
   }
 
-  start = async quiet => {
+  start = async (quiet = true) => {
     if (!quiet) {
       console.log(
         '%cUse App in your console to access models, stores, etc',

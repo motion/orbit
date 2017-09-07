@@ -434,11 +434,6 @@ export default class Model {
 
           if (done && !resolved) {
             resolved = true
-            console.log(
-              'Done syncing query',
-              this.constructor.name,
-              queryKey(query)
-            )
             // unsub error stream
             error$.unsubscribe()
 

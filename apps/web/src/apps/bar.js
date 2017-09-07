@@ -322,9 +322,7 @@ export default class BarPage {
                 ...inputStyle,
               }}
             />
-            <forwardcomplete>
-              {store.peekItem}
-            </forwardcomplete>
+            <forwardcomplete>{store.peekItem}</forwardcomplete>
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>
@@ -353,7 +351,6 @@ export default class BarPage {
             onChange={store.onMillerStateChange}
             paneProps={paneProps}
             onKeyActions={val => {
-              console.log('actions', val)
               store.millerKeyActions = val
             }}
           />

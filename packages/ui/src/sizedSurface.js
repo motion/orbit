@@ -41,10 +41,6 @@ export default class SizedSurface extends React.PureComponent<Props> {
       margin,
     }
 
-    if (props.debug) {
-      console.log(pass)
-    }
-
     return <Surface {...pass} {...rest} />
   }
 }

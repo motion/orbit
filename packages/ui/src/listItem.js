@@ -109,7 +109,6 @@ export default class ListItem extends React.PureComponent<Props> {
         tagName="listitem"
         size={size}
         sizePadding={1.2}
-        debug
         hoverable
         $item
         {...radiusProps}

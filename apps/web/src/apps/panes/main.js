@@ -30,8 +30,9 @@ class BarMainStore {
   }
 
   get things(): Array<PaneResult> {
-    return fuzzy(this.topThings || [], this.props.search)
-      .slice(0, this.props.search.length ? 20 : 8)
+    console.log(this.props)
+    return fuzzy(this.topThings || [], this.props.paneStore.search)
+      .slice(0, this.props.paneStore.search.length ? 20 : 8)
       .map(thingToResult)
   }
 
@@ -151,7 +152,7 @@ class BarMainStore {
         ...this.people,
         ...this.extras,
       ],
-      this.props.search
+      this.props.paneStore.search
     )
   }
 
@@ -160,7 +161,6 @@ class BarMainStore {
   }
 }
 
-@view.attach('paneStore')
 @view({
   store: BarMainStore,
 })

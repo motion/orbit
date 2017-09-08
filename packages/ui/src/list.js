@@ -231,12 +231,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
         isFirstElement: index === 0,
         isLastElement: index === total - 1,
       }
+      const getRef = this.gatherRefs(index)
       const props = {
         key: index,
         ...rowProps,
         ...(isListItem ? passThroughProps : itemProps),
         ...(isListItem ? positionProps : null),
-        getRef: this.gatherRefs(index),
+        ...(isListItem ? { getRef } : { ref: getRef }),
       }
       if (onSelect || controlled) {
         const ogClick = props.onClick

@@ -9,6 +9,14 @@ export default class PaneStore {
     highlightColor: [255, 255, 255, 1],
   }
 
+  get data() {
+    return this.props.data
+  }
+
+  get search() {
+    return this.props.search
+  }
+
   get state() {
     return this.props.state
   }

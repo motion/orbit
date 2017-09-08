@@ -36,11 +36,11 @@ type Props = PaneProps & {| store: BarFeedStore |}
 })
 export default class BarFeed extends React.Component<Props> {
   static defaultProps: Props
-  render({ store, activeIndex, data }: Props) {
+  render({ store, paneStore }: Props) {
     const content = (
       <contents>
         <section>
-          <UI.Title size={2}>{data.person}</UI.Title>
+          <UI.Title size={2}>{paneStore.data.person}</UI.Title>
         </section>
 
         <section $$row>
@@ -60,7 +60,11 @@ export default class BarFeed extends React.Component<Props> {
         </section>
 
         <section>
-          <Feed items={store.results} data={data} activeIndex={activeIndex} />
+          <Feed
+            items={store.results}
+            data={paneStore.data}
+            activeIndex={paneStore.activeIndex}
+          />
         </section>
       </contents>
     )

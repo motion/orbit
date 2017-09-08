@@ -22,11 +22,11 @@ export default class PaneCard {
     paneStore,
     children,
     style,
-    isActive,
     getRef,
     actions,
     width,
     icon,
+    chromeless,
     ...props
   }) {
     if (!paneStore) {

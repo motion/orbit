@@ -17,7 +17,7 @@ export default class PaneCard {
     this.setActions()
   }
 
-  render({ paneStore, children }) {
+  render({ paneStore, children, style, isActive, getRef, ...props }) {
     if (!paneStore) {
       return <h5>Provide paneStore to Pane.Card</h5>
     }
@@ -26,7 +26,7 @@ export default class PaneCard {
     const { selectedIds, toolbarActions } = paneStore
 
     return (
-      <card style={{ width: width }}>
+      <card style={{ width, ...style }} {...props}>
         <UI.Theme name="light">
           <inner>
             <Actions actions={actions} if={actions} />

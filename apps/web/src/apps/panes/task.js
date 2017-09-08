@@ -25,17 +25,11 @@ class Comment {
         </user>
         <content>
           <info $$row>
-            <name>
-              {author.login}
-            </name>
-            <when>
-              {ago(new Date(createdAt))}
-            </when>
+            <name>{author.login}</name>
+            <when>{ago(new Date(createdAt))}</when>
           </info>
 
-          <p>
-            {body}
-          </p>
+          <p>{body}</p>
         </content>
       </comment>
     )
@@ -87,12 +81,8 @@ class MetaItem {
             store.who = person
           }}
         />
-        <name>
-          {label}
-        </name>
-        <value>
-          {store.who ? store.who : value}
-        </value>
+        <name>{label}</name>
+        <value>{store.who ? store.who : value}</value>
       </item>
     )
   }
@@ -178,24 +168,15 @@ class AddResponse {
 @view
 class TaskHeader {
   render({ data, data: { title, author, createdAt, body }, isActive }) {
-    console.log('created at ', data.createdAt)
     return (
       <header if={author} $isActive={isActive}>
-        <h3>
-          {title}
-        </h3>
+        <h3>{title}</h3>
         <info $$row>
           <img $avatar src={author.avatarUrl} />
-          <name>
-            {author.login}
-          </name>
-          <when>
-            {ago(new Date(createdAt))}
-          </when>
+          <name>{author.login}</name>
+          <when>{ago(new Date(createdAt))}</when>
         </info>
-        <p>
-          {body}
-        </p>
+        <p>{body}</p>
       </header>
     )
   }
@@ -272,13 +253,12 @@ class Assign {
       <multi>
         <Multiselect
           items={[{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]}
-          renderItem={(item, { isActive, isHighlight }) =>
+          renderItem={(item, { isActive, isHighlight }) => (
             <item $$row $isHighlight={isHighlight} $isActive={isActive}>
               <img src={`/images/${item.id}.jpg`} $avatar />
-              <name>
-                {capitalize(item.id)}
-              </name>
-            </item>}
+              <name>{capitalize(item.id)}</name>
+            </item>
+          )}
         />
       </multi>
     )
@@ -335,7 +315,7 @@ class Labels {
             { id: 'question' },
             { id: 'wontfix' },
           ]}
-          renderItem={(item, { index, isActive, isHighlight }) =>
+          renderItem={(item, { index, isActive, isHighlight }) => (
             <item
               $$row
               $first={index === 0}
@@ -343,10 +323,9 @@ class Labels {
               $isActive={isActive}
             >
               <color style={{ background: labelColors[item.id] || 'gray' }} />
-              <name>
-                {item.id}
-              </name>
-            </item>}
+              <name>{item.id}</name>
+            </item>
+          )}
         />
       </multi>
     )

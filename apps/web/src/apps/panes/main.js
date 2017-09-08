@@ -21,7 +21,9 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
-  topThings: ?Array<Thing> = Thing.find().sort('createdAt').limit(300)
+  topThings: ?Array<Thing> = Thing.find()
+    .sort('createdAt')
+    .limit(300)
 
   start() {
     this.props.getRef(this)
@@ -185,6 +187,7 @@ export default class BarMain extends React.Component<> {
         <none if={store.results.length === 0}>No Results</none>
         <UI.List
           if={store.results}
+          followHighlight
           virtualized={{
             rowHeight: this.getRowHeight,
           }}
@@ -193,16 +196,12 @@ export default class BarMain extends React.Component<> {
           groupKey="category"
           items={store.results}
           itemProps={paneProps.itemProps}
-          getItem={(result, index) =>
+          getItem={(result, index) => (
             <UI.ListItem
               primary={result.title}
               onClick={() => onSelect(index)}
               highlight={index === activeIndex}
-              date={
-                <UI.Date if={result.data}>
-                  {result.data.updatedAt}
-                </UI.Date>
-              }
+              date={<UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>}
               children={
                 <UI.Text
                   if={result.data && result.data.body}
@@ -218,11 +217,14 @@ export default class BarMain extends React.Component<> {
                 },
               }}
               icon={
-                result.data && result.data.image
-                  ? <img $image src={`/images/${result.data.image}.jpg`} />
-                  : result.icon
+                result.data && result.data.image ? (
+                  <img $image src={`/images/${result.data.image}.jpg`} />
+                ) : (
+                  result.icon
+                )
               }
-            />}
+            />
+          )}
         />
       </Pane.Card>
     )

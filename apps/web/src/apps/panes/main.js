@@ -187,7 +187,6 @@ export default class BarMain extends React.Component<> {
         <none if={store.results.length === 0}>No Results</none>
         <UI.List
           if={store.results}
-          followHighlight
           virtualized={{
             rowHeight: this.getRowHeight,
           }}

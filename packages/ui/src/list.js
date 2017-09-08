@@ -39,7 +39,6 @@ export type Props = {
   groupKey?: string,
   selected?: number,
   separatorHeight: number,
-  followHighlight?: boolean,
 }
 
 @parentSize('virtualized')
@@ -182,7 +181,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
       onItemMount,
       onSelect,
       virtualized,
-      followHighlight,
       scrollable,
       segmented,
       size,

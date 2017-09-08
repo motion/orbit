@@ -18,7 +18,7 @@ class BarFeedStore {
 
   @watch
   events: ?Array<Event> = (() => {
-    const { person } = this.props.data
+    const { person } = this.props.paneStore.data
     return Event.find(person ? { author: this.props.data.person } : null).sort({
       createdAt: 'desc',
     })

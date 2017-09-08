@@ -27,6 +27,7 @@ export default class PaneCard {
     width,
     icon,
     chromeless,
+    isActive,
     ...props
   }) {
     if (!paneStore) {

@@ -9,6 +9,7 @@ import Actions from './panes/pane/actions'
 import { MillerState, Miller } from './miller'
 import { isNumber, includes, debounce } from 'lodash'
 import { actionToKeyCode } from './helpers'
+import Pane from '~/views/pane'
 
 import { SHORTCUTS } from '~/stores/rootStore'
 
@@ -290,18 +291,6 @@ const inputStyle = {
   fontSize: 32,
 }
 
-const paneProps = {
-  itemProps: {
-    size: 1.2,
-    glow: false,
-    hoverable: true,
-    fontSize: 26,
-    padding: [10, 10],
-    highlightBackground: [0, 0, 0, 0.2],
-    highlightColor: [255, 255, 255, 1],
-  },
-}
-
 @view({
   store: BarStore,
 })
@@ -324,9 +313,7 @@ export default class BarPage {
                 ...inputStyle,
               }}
             />
-            <forwardcomplete>
-              {store.peekItem}
-            </forwardcomplete>
+            <forwardcomplete>{store.peekItem}</forwardcomplete>
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>
@@ -353,7 +340,7 @@ export default class BarPage {
             state={store.millerState}
             panes={store.PANE_TYPES}
             onChange={store.onMillerStateChange}
-            paneProps={paneProps}
+            pane={Pane}
             onKeyActions={val => {
               store.millerKeyActions = val
             }}

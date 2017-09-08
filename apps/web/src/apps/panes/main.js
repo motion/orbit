@@ -160,7 +160,7 @@ class BarMainStore {
   }
 }
 
-@view.provide({ paneStore: Pane.Store })
+@view.attach('paneStore')
 @view({
   store: BarMainStore,
 })
@@ -171,35 +171,28 @@ export default class BarMain extends React.Component<> {
     return this.props.store.results
   }
 
-  onSelect = (item, index) => this.props.onSelect(index)
+  onSelect = (item, index) => this.props.paneStore.selectRow(index)
   hasContent = result => result && result.data && result.data.body
   getRowHeight = i => (this.hasContent(this.results[i]) ? 100 : 38)
 
-  render({
-    store,
-    activeIndex,
-    isActive,
-    onSelect,
-    paneProps,
-  }: PaneProps & { store: BarMainStore }) {
+  render({ store, paneStore }: PaneProps & { store: BarMainStore }) {
     return (
-      <Pane.Card width={315} $pane isActive={isActive}>
+      <Pane.Card width={315} $pane isActive={paneStore.isActive}>
         <none if={store.results.length === 0}>No Results</none>
         <UI.List
           if={store.results}
           virtualized={{
             rowHeight: this.getRowHeight,
           }}
-          selected={activeIndex}
+          selected={paneStore.activeIndex}
           onSelect={this.onSelect}
           groupKey="category"
           items={store.results}
-          itemProps={paneProps.itemProps}
+          itemProps={paneStore.itemProps}
           getItem={(result, index) => (
             <UI.ListItem
               primary={result.title}
-              onClick={() => onSelect(index)}
-              highlight={index === activeIndex}
+              highlight={index === paneStore.activeIndex}
               date={<UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>}
               children={
                 <UI.Text

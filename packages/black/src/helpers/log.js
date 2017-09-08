@@ -86,10 +86,18 @@ function doLog(...args) {
     typeof descriptor === 'object'
   ) {
     // decorator
-    const ogInit = descriptor.initializer
-    descriptor.initializer = function() {
-      return wrapLogger(ogInit.call(this), target, key)
+    if (descriptor.initializer) {
+      const ogInit = descriptor.initializer
+      descriptor.initializer = function() {
+        return wrapLogger(ogInit.call(this), target, key)
+      }
+    } else if (descriptor.get) {
+      const ogGet = descriptor.get
+      descriptor.get = function() {
+        return wrapLogger(ogGet.call(this), target, key)
+      }
     }
+
     return descriptor
   } else if (args.length === 1 && typeof args[0] === 'function') {
     // regular fn

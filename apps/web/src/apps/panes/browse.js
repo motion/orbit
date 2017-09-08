@@ -34,11 +34,12 @@ class BarBrowseStore {
   }
 }
 
+@view.attach('paneStore')
 @view({
   store: BarBrowseStore,
 })
 export default class BarBrowse {
-  render({ store, activeIndex, highlightRow, paneProps }) {
+  render({ store, paneStore }) {
     if (store.length === 0) {
       return <UI.Placeholder>Empty</UI.Placeholder>
     }
@@ -47,17 +48,24 @@ export default class BarBrowse {
       <browse>
         <UI.List
           if={store.results}
-          selected={isNumber(activeIndex) ? activeIndex : highlightRow}
-          itemProps={paneProps.itemProps}
+          selected={
+            isNumber(paneStore.activeIndex) ? (
+              paneStore.activeIndex
+            ) : (
+              paneStore.highlightRow
+            )
+          }
+          itemProps={paneStore.itemProps}
           items={store.results}
-          getItem={(result, index) =>
+          getItem={(result, index) => (
             <UI.ListItem
-              onClick={() => onSelect(index)}
+              onClick={() => paneStore.selectRow(index)}
               key={result.id}
               icon={result.icon}
               icon={result.icon}
               primary={result.title}
-            />}
+            />
+          )}
         />
       </browse>
     )

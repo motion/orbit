@@ -306,7 +306,7 @@ export default class Model {
       schema: this.compiledSchema,
       statics: this.statics,
       pouchSettings: this.options.pouchSettings,
-      // migrationStrategies: this.migrations,
+      migrationStrategies: this.migrations,
     })
 
     // sync PUSH ONLY

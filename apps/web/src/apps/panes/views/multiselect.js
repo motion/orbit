@@ -43,6 +43,7 @@ class Items {
       return (
         <Item
           {...item}
+          key={item.id}
           onSelect={() => onActivate(item.id)}
           onHighlight={() => onHighlight(item.id)}
           isHighlight={isHighlight}
@@ -53,11 +54,7 @@ class Items {
       )
     }
 
-    return (
-      <items>
-        {items.map(renderWrappedItem)}
-      </items>
-    )
+    return <items>{items.map(renderWrappedItem)}</items>
   }
 
   static style = {}

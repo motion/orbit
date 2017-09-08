@@ -86,12 +86,14 @@ export default class Multiselect {
 
     return (
       <container onMouseLeave={() => (store.highlightId = null)}>
-        <UI.Input
-          onChange={e => (store.search = e.target.value)}
-          value={store.search}
-          placeholder="search"
-          $search
-        />
+        <search>
+          <UI.Input
+            onChange={e => (store.search = e.target.value)}
+            value={store.search}
+            placeholder="search"
+            $searchText
+          />
+        </search>
         <items>
           <Items
             items={activeItems}
@@ -110,8 +112,8 @@ export default class Multiselect {
     container: {
       background: 'white',
     },
-    items: {
-      marginTop: 10,
+    search: {
+      margin: 10,
     },
   }
 }

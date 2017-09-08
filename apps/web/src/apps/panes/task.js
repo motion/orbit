@@ -48,7 +48,6 @@ class Comment {
     comment: {
       flex: 1,
       padding: [7, 5],
-      borderTop: '1px solid #eee',
     },
     avatar: {
       alignSelf: 'center',
@@ -180,10 +179,14 @@ class TaskHeader {
   render({ data, data: { title, author, createdAt, body }, isActive }) {
     console.log('created at ', data.createdAt)
     return (
-      <header if={author} $isActive={isActive}>
-        <h3>
+      <header $isActive={isActive}>
+        <UI.Title size={2}>
           {title}
-        </h3>
+        </UI.Title>
+        <meta $$row>
+          <UI.Button chromeless>No Labels</UI.Button>
+          <UI.Button chromeless>No one Assigned</UI.Button>
+        </meta>
         <info $$row>
           <img $avatar src={author.avatarUrl} />
           <name>
@@ -272,43 +275,89 @@ class Assign {
       <multi>
         <Multiselect
           items={[{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]}
-          renderItem={(item, { isActive, isHighlight }) =>
-            <item $$row $isHighlight={isHighlight} $isActive={isActive}>
-              <img src={`/images/${item.id}.jpg`} $avatar />
-              <name>
-                {capitalize(item.id)}
-              </name>
-            </item>}
+          renderItem={(item, { index, isActive, isHighlight }) =>
+            <SelectItem
+              text={item.id}
+              isActive={isActive}
+              isHighlight={isHighlight}
+              index={index}
+              icon={<img src={`/images/${item.id}.jpg`} $avatar />}
+            />}
         />
       </multi>
     )
   }
 
   static style = {
-    multi: {
-      margin: 15,
+    avatar: {
+      borderRadius: 100,
+      width: 24,
+      height: 24,
     },
+  }
+}
+
+@view
+class SelectItem {
+  render({ icon, isActive, index, isHighlight, text }) {
+    return (
+      <item
+        $first={index === 0}
+        $isHighlight={isHighlight}
+        $isActive={isActive}
+        $$row
+      >
+        <left $$row>
+          <check>
+            {isActive && <UI.Icon size={14} $icon name="check" />}
+          </check>
+          {icon}
+          <name>
+            {text}
+          </name>
+        </left>
+        <x>
+          {isActive && <UI.Icon size={14} $icon name="remove" />}
+        </x>
+      </item>
+    )
+  }
+  static style = {
     item: {
       width: '100%',
-      fontWeight: 600,
-      padding: 10,
+      borderTop: '1px solid #e8e8e8',
+      padding: [12, 20],
       flex: 1,
       alignItems: 'center',
+      fontWeight: 600,
+      justifyContent: 'space-between',
       fontSize: 16,
+    },
+    left: {
+      alignItems: 'center',
+    },
+    check: {
+      width: 30,
+    },
+    icon: {
+      opacity: 0.6,
+    },
+    x: {
+      width: 30,
+      marginLeft: 30,
+    },
+    first: {
+      //borderTop: '0px solid white',
     },
     name: {
       marginLeft: 10,
     },
     isActive: {
-      background: '#ddd',
+      opacity: 0.9,
+      background: '#f2f2f2',
     },
     isHighlight: {
       background: '#eee',
-    },
-    avatar: {
-      borderRadius: 100,
-      width: 30,
-      height: 30,
     },
   }
 }
@@ -336,47 +385,21 @@ class Labels {
             { id: 'wontfix' },
           ]}
           renderItem={(item, { index, isActive, isHighlight }) =>
-            <item
-              $$row
-              $first={index === 0}
-              $isHighlight={isHighlight}
-              $isActive={isActive}
-            >
-              <color style={{ background: labelColors[item.id] || 'gray' }} />
-              <name>
-                {item.id}
-              </name>
-            </item>}
+            <SelectItem
+              text={item.id}
+              isActive={isActive}
+              isHighlight={isHighlight}
+              index={index}
+              icon={
+                <color style={{ background: labelColors[item.id] || 'gray' }} />
+              }
+            />}
         />
       </multi>
     )
   }
 
   static style = {
-    multi: {
-      margin: 15,
-    },
-    item: {
-      width: '100%',
-      borderTop: '1px solid #f3f3f3',
-      padding: 10,
-      flex: 1,
-      alignItems: 'center',
-      fontWeight: 600,
-      fontSize: 16,
-    },
-    first: {
-      borderTop: '0px solid white',
-    },
-    name: {
-      marginLeft: 10,
-    },
-    isActive: {
-      background: '#ddd',
-    },
-    isHighlight: {
-      background: '#eee',
-    },
     color: {
       borderRadius: 5,
       width: 20,
@@ -423,15 +446,31 @@ export default class TaskPane {
           actions={['Assign', 'Milestone', 'Labels']}
         >
           <container>
-            <info $$row>
-              <UI.Popover openOnClick target={<UI.Button>labels</UI.Button>}>
+            <info $$row if={false}>
+              <UI.Popover
+                distance={14}
+                openOnClick
+                target={<UI.Button>labels</UI.Button>}
+              >
                 <Labels />
               </UI.Popover>
-              <UI.Popover openOnClick target={<UI.Button>assign</UI.Button>}>
+              <UI.Popover
+                openOnClick
+                distance={14}
+                target={<UI.Button>assign</UI.Button>}
+              >
                 <Assign />
               </UI.Popover>
             </info>
-            {store.results.map((result, index) => renderItem(index))}
+            {renderItem(0)}
+            <commentTitle>
+              <UI.Title size={1}>
+                {data.comments.length} Comments
+              </UI.Title>
+            </commentTitle>
+            {store.results
+              .slice(1)
+              .map((result, index) => renderItem(index + 1))}
           </container>
         </Pane.Card>
       </UI.Theme>
@@ -448,8 +487,15 @@ export default class TaskPane {
       borderBottom: [1, [0, 0, 0, 0.05]],
       padding: [5, 40],
     },
+    commentTitle: {
+      padding: [10, 0],
+      borderTop: [1, [0, 0, 0, 0.05]],
+      borderBottom: [1, [0, 0, 0, 0.05]],
+      marginBottom: 10,
+    },
     info: {
       justifyContent: 'space-between',
+      width: 300,
     },
     headerActive: {
       background: '#aaa',

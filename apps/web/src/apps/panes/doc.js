@@ -21,7 +21,7 @@ const changes = [
 
 @view
 export default class BarDocPane {
-  render({ paneStore: { data }, ...props }) {
+  render({ data, ...props }) {
     return (
       <Pane.Card title={data.title} icon="google" id={data.id || 0} {...props}>
         <what css={{ padding: [5, 5, 5] }}>

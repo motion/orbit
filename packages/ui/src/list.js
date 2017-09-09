@@ -65,7 +65,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  componentWillReceiveProps = (nextProps: Props) => {
+  // willUpdate only runs when PureComponent has new props
+  componentWillUpdate = (nextProps: Props) => {
     const { selected } = nextProps
 
     if (this.state.selected !== selected) {

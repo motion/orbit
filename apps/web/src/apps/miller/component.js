@@ -50,7 +50,6 @@ export default class Miller extends React.Component {
                   data={pane.data}
                   col={index}
                   getRef={this.handleRef(index)}
-                  state={state}
                   millerStore={store}
                 />
               </pane>

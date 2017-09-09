@@ -75,7 +75,7 @@ class AddResponse {
     if (!isActive && this.props.isActive) store.textbox.blur()
   }
 
-  render({ store, paneStore: { isActive, data: { onSubmit } } }) {
+  render({ store, isActive, data: { onSubmit } }) {
     const commentButtonActive = store.response.trim().length > 0
 
     return (
@@ -140,9 +140,7 @@ class AddResponse {
 
 @view
 class TaskHeader {
-  render({
-    paneStore: { isActive, data: { title, author, createdAt, body } },
-  }) {
+  render({ isActive, data: { title, author, createdAt, body } }) {
     return (
       <header if={author} $isActive={isActive}>
         <h3>{title}</h3>
@@ -179,45 +177,6 @@ class TaskHeader {
     when: {
       marginLeft: 10,
     },
-  }
-}
-
-class TaskStore {
-  response = ''
-
-  start() {
-    this.props.getRef(this)
-  }
-
-  submit = () => {
-    this.response = ''
-  }
-
-  get results() {
-    const { data } = this.props
-
-    const comments = (data.comments || []).map(comment => ({
-      element: Comment,
-      data: comment,
-      actions: ['like comment'],
-    }))
-
-    return [
-      {
-        element: TaskHeader,
-        data,
-        actions: ['imma header'],
-      },
-      ...comments,
-      {
-        element: AddResponse,
-        data: {
-          onSubmit(text) {
-            console.log('submitted', text)
-          },
-        },
-      },
-    ]
   }
 }
 
@@ -336,6 +295,45 @@ class Labels {
       width: 20,
       height: 20,
     },
+  }
+}
+
+class TaskStore {
+  response = ''
+
+  start() {
+    this.props.getRef(this)
+  }
+
+  submit = () => {
+    this.response = ''
+  }
+
+  get results() {
+    const { data } = this.props.paneStore
+
+    const comments = (data.comments || []).map(comment => ({
+      element: Comment,
+      data: comment,
+      actions: ['like comment'],
+    }))
+
+    return [
+      {
+        element: TaskHeader,
+        data,
+        actions: ['imma header'],
+      },
+      ...comments,
+      {
+        element: AddResponse,
+        data: {
+          onSubmit(text) {
+            console.log('submitted', text)
+          },
+        },
+      },
+    ]
   }
 }
 

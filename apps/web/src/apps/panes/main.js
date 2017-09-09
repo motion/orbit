@@ -34,7 +34,6 @@ class BarMainStore {
   }
 
   get things(): Array<PaneResult> {
-    console.log(this.props)
     return fuzzy(this.topThings || [], this.pane.search)
       .slice(0, this.pane.search.length ? 20 : 8)
       .map(thingToResult)
@@ -166,32 +165,32 @@ class BarMainStore {
 }
 
 @view({
-  store: BarMainStore,
+  mainStore: BarMainStore,
 })
 export default class BarMain extends React.Component<> {
   static defaultProps: {}
 
   get results() {
-    return this.props.store.results
+    return this.props.mainStore.results
   }
 
   onSelect = (item, index) => this.props.paneStore.selectRow(index)
   hasContent = result => result && result.data && result.data.body
   getRowHeight = i => (this.hasContent(this.results[i]) ? 100 : 38)
 
-  render({ store, paneStore }: PaneProps & { store: BarMainStore }) {
+  render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
     return (
       <Pane.Card width={315} $pane isActive={paneStore.isActive}>
-        <none if={store.results.length === 0}>No Results</none>
+        <none if={mainStore.results.length === 0}>No Results</none>
         <UI.List
-          if={store.results}
+          if={mainStore.results}
           virtualized={{
             rowHeight: this.getRowHeight,
           }}
           selected={paneStore.activeIndex}
           onSelect={this.onSelect}
           groupKey="category"
-          items={store.results}
+          items={mainStore.results}
           itemProps={paneStore.itemProps}
           getItem={(result, index) => (
             <UI.ListItem

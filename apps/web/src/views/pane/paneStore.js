@@ -12,7 +12,6 @@ export default class PaneStore {
   selectedIndices = []
 
   get millerStore() {
-    console.log(this.props)
     return this.props.millerStore
   }
 
@@ -25,7 +24,7 @@ export default class PaneStore {
   }
 
   get state() {
-    return this.props.state
+    return this.millerStore.state
   }
 
   get isActive() {

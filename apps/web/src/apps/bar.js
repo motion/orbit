@@ -107,7 +107,7 @@ class BarStore {
     this.watch(() => {
       if (this.millerStore) {
         console.log('setting pane props')
-        this.millerStore.updatePaneProps({
+        this.millerStore.setPaneProps({
           search: this.search,
         })
       }
@@ -305,10 +305,6 @@ const inputStyle = {
   store: BarStore,
 })
 export default class BarPage {
-  handleMillerRef = ref => {
-    this.props.store.millerStore = ref
-  }
-
   render({ store }) {
     return (
       <UI.Theme name="clear-dark">
@@ -349,7 +345,7 @@ export default class BarPage {
             </selected>
           </header>
           <Miller
-            getRef={store.ref('millerStore').ref}
+            getRef={store.ref('millerStore').set}
             version={store.millerStateVersion}
             state={store.millerState}
             panes={store.PANE_TYPES}

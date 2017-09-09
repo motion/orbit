@@ -21,11 +21,28 @@ function firstSegment(path: CursorPath): string {
   return path.split('.')[0]
 }
 
+const Cache = {}
+
 // like a cursor
 // give it a reference to an object path
 // it gives you helpers for get/set/...
 // also works nicely with mobx
 export default function ref(path: CursorPath): Cursor {
+  // Cache
+  // by returning same function, prevent react from deoptimizing renders that use this
+  // because it can track the function as being stable over time
+  // also this should have minimal overhead memory wise because refs are small
+  // TODO see if weakmap works here
+  // TODO add subscription to remove afer unmount
+  let cacheKey
+  if (this) {
+    this.__refUid = this.__refUid || Math.random()
+    cacheKey = `${this.__refUid}${path}`
+    if (Cache[cacheKey]) {
+      return Cache[cacheKey]
+    }
+  }
+
   const key = firstSegment(path)
 
   const get = () => {
@@ -52,5 +69,11 @@ export default function ref(path: CursorPath): Cursor {
   const toggle = () => set(!get())
   const clear = () => set(null)
 
-  return { get, set, toggle, clear, setter, increment }
+  const res = { get, set, toggle, clear, setter, increment }
+
+  if (this) {
+    Cache[cacheKey] = res
+  }
+
+  return res
 }

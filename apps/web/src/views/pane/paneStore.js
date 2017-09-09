@@ -9,12 +9,19 @@ export default class PaneStore {
     highlightColor: [255, 255, 255, 1],
   }
 
+  selectedIndices = []
+
+  get millerStore() {
+    console.log(this.props)
+    return this.props.millerStore
+  }
+
   get data() {
     return this.props.data
   }
 
   get search() {
-    return this.props.search
+    return this.millerStore.paneProps.search || ''
   }
 
   get state() {
@@ -33,5 +40,5 @@ export default class PaneStore {
     return this.isActive && this.state.activeRow
   }
 
-  selectRow = row => this.props.millerStore.onSelect(this.props.col, row)
+  selectRow = row => this.millerStore.onSelect(this.props.col, row)
 }

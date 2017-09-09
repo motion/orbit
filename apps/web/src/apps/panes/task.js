@@ -64,33 +64,6 @@ class Comment {
 }
 
 @view({
-  store: class {
-    who = null
-  },
-})
-class MetaItem {
-  render({ store, label, value }) {
-    return (
-      <item key={label}>
-        <PersonPicker
-          if={false}
-          popoverProps={{
-            target: <UI.Button>assign</UI.Button>,
-          }}
-          onSelect={person => {
-            store.who = person
-          }}
-        />
-        <name>{label}</name>
-        <value>{store.who ? store.who : value}</value>
-      </item>
-    )
-  }
-
-  static style = {}
-}
-
-@view({
   store: class ResponseStore {
     textbox = null
     response = ''
@@ -102,7 +75,7 @@ class AddResponse {
     if (!isActive && this.props.isActive) store.textbox.blur()
   }
 
-  render({ store, isActive, data: { onSubmit } }) {
+  render({ store, paneStore: { isActive, data: { onSubmit } } }) {
     const commentButtonActive = store.response.trim().length > 0
 
     return (
@@ -167,7 +140,9 @@ class AddResponse {
 
 @view
 class TaskHeader {
-  render({ data, data: { title, author, createdAt, body }, isActive }) {
+  render({
+    paneStore: { isActive, data: { title, author, createdAt, body } },
+  }) {
     return (
       <header if={author} $isActive={isActive}>
         <h3>{title}</h3>
@@ -364,28 +339,11 @@ class Labels {
   }
 }
 
-@view.provide({ paneStore: Pane.Store })
 @view({
   store: TaskStore,
 })
 export default class TaskPane {
-  render({ data, activeIndex, isActive, store }) {
-    const { labels } = data
-    const items = [
-      {
-        label: 'Assignees',
-        value: 'No one assigned',
-      },
-      {
-        label: 'Labels',
-        value: labels && labels.length > 0 ? labels : 'None yet',
-      },
-      {
-        label: 'Milestone',
-        value: 'No milestone',
-      },
-    ]
-
+  render({ paneStore: { activeIndex, isActive }, store }) {
     const renderItem = index => {
       const { element, data } = store.results[index]
       return React.createElement(element, {

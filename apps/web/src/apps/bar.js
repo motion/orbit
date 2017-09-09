@@ -87,6 +87,7 @@ class BarStore {
   metaKey = false
 
   // search is throttled, textboxVal isn't
+  millerStore = null
   search = ''
   textboxVal = ''
 
@@ -100,6 +101,15 @@ class BarStore {
 
       if (lastCol === 0 && col !== 0) {
         this.blurBar()
+      }
+    })
+
+    this.watch(() => {
+      if (this.millerStore) {
+        console.log('setting pane props')
+        this.millerStore.updatePaneProps({
+          search: this.search,
+        })
       }
     })
 
@@ -295,6 +305,10 @@ const inputStyle = {
   store: BarStore,
 })
 export default class BarPage {
+  handleMillerRef = ref => {
+    this.props.store.millerStore = ref
+  }
+
   render({ store }) {
     return (
       <UI.Theme name="clear-dark">
@@ -335,7 +349,7 @@ export default class BarPage {
             </selected>
           </header>
           <Miller
-            search={store.search}
+            getRef={store.ref('millerStore').ref}
             version={store.millerStateVersion}
             state={store.millerState}
             panes={store.PANE_TYPES}

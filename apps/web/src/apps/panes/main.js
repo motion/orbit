@@ -29,10 +29,14 @@ class BarMainStore {
     this.props.getRef(this)
   }
 
+  get pane() {
+    return this.props.paneStore
+  }
+
   get things(): Array<PaneResult> {
     console.log(this.props)
-    return fuzzy(this.topThings || [], this.props.paneStore.search)
-      .slice(0, this.props.paneStore.search.length ? 20 : 8)
+    return fuzzy(this.topThings || [], this.pane.search)
+      .slice(0, this.pane.search.length ? 20 : 8)
       .map(thingToResult)
   }
 

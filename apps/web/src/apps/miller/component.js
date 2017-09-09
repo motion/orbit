@@ -35,10 +35,7 @@ export default class Miller extends React.Component {
     this.props.state.setPlugin(index, plugin)
   }
 
-  render(
-    { pane, state, store, onKeyActions, search, panes, animate },
-    { schema }
-  ) {
+  render({ pane, state, store, onKeyActions, panes, animate }, { schema }) {
     const Pane = pane
     const transX = animate ? store.translateX : 0
     const content = (
@@ -51,7 +48,6 @@ export default class Miller extends React.Component {
                   pane={panes[pane.type]}
                   type={pane.type}
                   data={pane.data}
-                  search={search}
                   col={index}
                   getRef={this.handleRef(index)}
                   state={state}

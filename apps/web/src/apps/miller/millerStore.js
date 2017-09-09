@@ -4,11 +4,19 @@ export default class MillerStore {
   colWidths = range(100).map(() => 0)
   paneWidth = null
   colLeftMargin = 10
+  paneProps = {}
 
   start() {
     this.props.state.onSelectionChange(this.handleSelectionChange)
     this.props.state.onChange(this.props.onChange)
     this.setTimeout(this.handleSelectionChange)
+    if (this.props.getRef) {
+      this.props.getRef(this)
+    }
+  }
+
+  setPaneProps = props => {
+    this.paneProps = { ...this.paneProps, ...props }
   }
 
   handleSelectionChange = () => {

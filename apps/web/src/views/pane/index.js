@@ -31,7 +31,6 @@ export default class Pane extends React.Component {
           paneStore={paneStore}
           millerStore={millerStore}
           getRef={this.getRef}
-          selectedIndices={[]}
         />
       </pane>
     )
@@ -42,9 +41,6 @@ export default class Pane extends React.Component {
       flex: 1,
       height: '100%',
       borderLeft: [1, [0, 0, 0, 0.05]],
-    },
-    first: {
-      borderLeft: 'none',
     },
   }
 }

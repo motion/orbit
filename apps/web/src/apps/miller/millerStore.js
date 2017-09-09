@@ -1,6 +1,7 @@
 import { sum, range } from 'lodash'
 
 export default class MillerStore {
+  stateVersion = 0
   colWidths = range(100).map(() => 0)
   paneWidth = null
   colLeftMargin = 10
@@ -13,6 +14,11 @@ export default class MillerStore {
     if (this.props.getRef) {
       this.props.getRef(this)
     }
+  }
+
+  get state() {
+    this.stateVersion // reactive
+    return this.props.state
   }
 
   setPaneProps = props => {
@@ -32,6 +38,7 @@ export default class MillerStore {
       }
     }
     onChange(state)
+    this.stateVersion++
   }
 
   setWidth = (index, width) => {

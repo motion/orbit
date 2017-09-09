@@ -15,16 +15,17 @@ export default class PaneStore {
     return this.props.millerStore
   }
 
+  get state() {
+    this.props.millerStore.stateVersion
+    return this.props.millerStore.state
+  }
+
   get data() {
     return this.props.data
   }
 
   get search() {
     return this.millerStore.paneProps.search || ''
-  }
-
-  get state() {
-    return this.millerStore.state
   }
 
   get isActive() {

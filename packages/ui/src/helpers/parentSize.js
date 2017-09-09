@@ -29,7 +29,10 @@ export default prop => Child => {
         width: offsetWidth,
         height: offsetHeight,
       }
-      this.setState({ dimensions })
+      // this could be called from outside parentSize, safety
+      if (!this.unmounted) {
+        this.setState({ dimensions })
+      }
       return dimensions
     }
 

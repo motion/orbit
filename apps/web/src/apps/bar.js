@@ -106,7 +106,6 @@ class BarStore {
 
     this.watch(() => {
       if (this.millerStore) {
-        console.log('setting pane props')
         this.millerStore.setPaneProps({
           search: this.search,
         })
@@ -327,22 +326,6 @@ export default class BarPage {
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>
-            <selected
-              if={false}
-              css={{
-                position: 'absolute',
-                top: 80,
-                left: 0,
-                right: 0,
-                height: 20,
-                fontSize: 12,
-                overflow: 'hidden',
-                opacity: 0.8,
-                color: '#fff',
-              }}
-            >
-              Selected: {safeString(store.activeItem)}
-            </selected>
           </header>
           <Miller
             getRef={store.ref('millerStore').set}
@@ -351,9 +334,7 @@ export default class BarPage {
             panes={store.PANE_TYPES}
             onChange={store.onMillerStateChange}
             pane={Pane}
-            onKeyActions={val => {
-              store.millerKeyActions = val
-            }}
+            onKeyActions={store.ref('millerKeyActions').set}
           />
 
           <BottomActions

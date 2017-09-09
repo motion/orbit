@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
-import { isEqual } from 'lodash'
+import { isEqual, memoize } from 'lodash'
 import MillerStore from './millerStore'
 
 @view({
@@ -31,9 +31,10 @@ export default class Miller extends React.Component {
     }
   }
 
-  handleRef = index => plugin => {
+  // memoize to avoid mobx break
+  handleRef = memoize(index => plugin => {
     this.props.state.setPlugin(index, plugin)
-  }
+  })
 
   render({ pane, state, store, onKeyActions, panes, animate }, { schema }) {
     const Pane = pane

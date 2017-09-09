@@ -57,7 +57,7 @@ export default function storeProvidable(options, Helpers) {
 
               // change granular so reactions are granular
               for (const prop of nextPropsKeys) {
-                if (this._props[prop] !== nextProps[prop]) {
+                if (!isEqual(this._props[prop], nextProps[prop])) {
                   this._props[prop] = nextProps[prop]
                 }
               }

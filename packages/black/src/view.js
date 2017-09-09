@@ -51,7 +51,6 @@ const glossPlugin = () => ({ decorator: glossDecorator })
 
 // applied top to bottom
 const decorations = ({ mobx, ui, magic } = {}) => [
-  !ui && emitsMount,
   extendsReact,
   subscribable,
   helpers,
@@ -62,10 +61,11 @@ const decorations = ({ mobx, ui, magic } = {}) => [
   glossPlugin,
   magic && automagical,
   [storeProvidable, storeOptions],
+  !ui && emitsMount,
 ]
 
 const base: DecoratorType = decor(
-  decorations({ mobx: true, magic: true, ui: true })
+  decorations({ mobx: true, magic: false, ui: true })
 )
 
 // @view

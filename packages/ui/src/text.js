@@ -58,11 +58,15 @@ export default class Text extends React.PureComponent<Props> {
       )
     }
     // set props
-    if (!props.editing && this.selected) {
-      this.selected = false
+    if (typeof props.editing !== 'undefined') {
+      if (!props.editing && this.selected) {
+        this.selected = false
+      }
     }
-    if (this.editable !== props.editable) {
-      this.editable = props.editable
+    if (typeof props.editable !== 'undefined') {
+      if (this.editable !== props.editable) {
+        this.editable = props.editable
+      }
     }
   }
 

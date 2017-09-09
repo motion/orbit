@@ -68,6 +68,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
   componentWillReceiveProps = (nextProps: Props) => {
     const { selected } = nextProps
 
+    if (this.state.selected !== selected) {
+      this.props = nextProps
+      this.updateChildren(this.props)
+    }
+
     if (typeof selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
       if (selected !== this.state.selected) {

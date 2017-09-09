@@ -179,6 +179,7 @@ export default class BarMain extends React.Component<> {
   getRowHeight = i => (this.hasContent(this.results[i]) ? 100 : 38)
 
   render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
+    console.log('render me')
     return (
       <Pane.Card width={315} $pane isActive={paneStore.isActive}>
         <none if={mainStore.results.length === 0}>No Results</none>

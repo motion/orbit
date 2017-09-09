@@ -12,6 +12,25 @@ import { actionToKeyCode } from './helpers'
 import Pane from '~/views/pane'
 import { SHORTCUTS } from '~/stores/rootStore'
 
+const PANE_TYPES = {
+  main: PaneTypes.Main,
+  message: PaneTypes.Message,
+  setup: PaneTypes.Setup,
+  inbox: PaneTypes.Threads,
+  browse: PaneTypes.Browse,
+  feed: PaneTypes.Feed,
+  notifications: PaneTypes.Notifications,
+  login: PaneTypes.Login,
+  issue: PaneTypes.Task,
+  orbit: PaneTypes.Orbit,
+  task: PaneTypes.Task,
+  doc: PaneTypes.Doc,
+  test: PaneTypes.Test,
+  newIssue: PaneTypes.Code.NewIssue,
+  integrations: PaneTypes.Integrations,
+  team: PaneTypes.Team,
+}
+
 @view.ui
 class BottomActions {
   render({ actions, metaKey }) {
@@ -192,25 +211,6 @@ class BarStore {
     this.millerStateVersion++
   }
 
-  PANE_TYPES = {
-    main: PaneTypes.Main,
-    message: PaneTypes.Message,
-    setup: PaneTypes.Setup,
-    inbox: PaneTypes.Threads,
-    browse: PaneTypes.Browse,
-    feed: PaneTypes.Feed,
-    notifications: PaneTypes.Notifications,
-    login: PaneTypes.Login,
-    issue: PaneTypes.Task,
-    orbit: PaneTypes.Orbit,
-    task: PaneTypes.Task,
-    doc: PaneTypes.Doc,
-    test: PaneTypes.Test,
-    newIssue: PaneTypes.Code.NewIssue,
-    integrations: PaneTypes.Integrations,
-    team: PaneTypes.Team,
-  }
-
   get isBarActive() {
     return this.inputRef === document.activeElement
   }
@@ -321,7 +321,7 @@ export default class BarPage {
             getRef={store.ref('millerStore').set}
             version={store.millerStateVersion}
             state={store.millerState}
-            panes={store.PANE_TYPES}
+            panes={PANE_TYPES}
             onChange={store.onMillerStateChange}
             pane={Pane}
             onKeyActions={store.ref('millerKeyActions').set}

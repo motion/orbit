@@ -10,7 +10,6 @@ import Layout from './views/layout'
 export function render() {
   console.time('#render')
   let ROOT = document.querySelector('#app')
-  console.log('waht is layout', Layout)
   ReactDOM.render(
     <Root>
       <ThemeProvide {...themes}>

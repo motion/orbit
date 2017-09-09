@@ -187,15 +187,14 @@ export default class BarMain extends React.Component<> {
           virtualized={{
             rowHeight: this.getRowHeight,
           }}
-          selected={paneStore.activeIndex}
+          isSelected={paneStore.ref('activeIndex').equals}
           onSelect={this.onSelect}
           groupKey="category"
           items={mainStore.results}
           itemProps={paneStore.itemProps}
-          getItem={(result, index) => (
+          getItem={result => (
             <UI.ListItem
               primary={result.title}
-              highlight={index === paneStore.activeIndex}
               date={<UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>}
               children={
                 <UI.Text

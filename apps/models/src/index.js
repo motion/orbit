@@ -91,8 +91,6 @@ export default class Database {
   }
 
   start = async ({ options, modelOptions }: StartOptions = {}) => {
-    let i = 0
-    console.log(++i)
     this.modelOptions = modelOptions
     this.database = await RxDB.create({
       adapter: this.databaseConfig.adapterName,
@@ -102,10 +100,8 @@ export default class Database {
       withCredentials: false,
       ...options,
     })
-    console.log(++i)
 
     await this.attachModels()
-    console.log(++i)
     this.connected = true
   }
 

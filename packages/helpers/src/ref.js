@@ -68,8 +68,9 @@ export default function ref(path: CursorPath): Cursor {
   const setter = (...args) => () => set(...args)
   const toggle = () => set(!get())
   const clear = () => set(null)
+  const equals = x => get() === x
 
-  const res = { get, set, toggle, clear, setter, increment }
+  const res = { get, set, toggle, clear, setter, increment, equals }
 
   if (this) {
     Cache[cacheKey] = res

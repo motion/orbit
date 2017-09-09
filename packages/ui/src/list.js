@@ -7,15 +7,12 @@ import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { ItemProps } from './listItem'
 import Surface from './surface'
-import type { Color } from '@mcro/gloss'
 
 const idFn = _ => _
 const SEPARATOR_HEIGHT = 25
 
 export type Props = {
   defaultSelected?: number,
-  borderColor?: Color,
-  borderRadius?: number,
   children?: React.Element<any>,
   controlled?: boolean,
   flex?: boolean | number,
@@ -25,7 +22,6 @@ export type Props = {
   horizontal?: boolean,
   itemProps?: Object,
   items?: Array<ItemProps | React.Element<any>>,
-  loading?: boolean,
   onHighlight: Function,
   onItemMount?: Function,
   onSelect: Function,
@@ -64,6 +60,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   componentWillMount = () => {
     this.totalItems = this.getTotalItems(this.props)
+    console.log('MOUNTING', this.props.virtualized)
+    this.updateChildren(this.props)
     if (typeof this.props.defaultSelected !== 'undefined') {
       this.setState({ selected: this.props.defaultSelected })
     }
@@ -166,105 +164,111 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
-  render() {
+  getRow = ({ index, key, style }) => this.children[index]({ key, style })
+
+  getRowHeight = ({ index }) => {
+    const { groupedIndex } = this
+    const { separatorHeight, virtualized } = this.props
+    if (groupedIndex[index] === true) {
+      return separatorHeight
+    }
+    const dynamicRowHeight = typeof virtualized.rowHeight === 'function'
+    if (dynamicRowHeight) {
+      return virtualized.rowHeight(groupedIndex[index])
+    }
+    return virtualized.rowHeight
+  }
+
+  get total() {
+    return this.props.items
+      ? this.props.items.length
+      : React.Children.count(this.props.children)
+  }
+
+  getItemProps = (index, rowProps, isListItem) => {
     const {
-      borderColor,
-      borderRadius,
-      children,
-      controlled,
-      getItem,
-      height: height_,
-      itemProps,
-      items,
-      loading,
-      onHighlight,
-      onItemMount,
-      onSelect,
-      virtualized,
-      scrollable,
-      segmented,
-      size,
-      style,
-      width: userWidth,
-      separatorHeight,
-      isSelected,
-      groupKey,
       parentSize,
-      defaultSelected,
-      ...props
+      virtualized,
+      onItemMount,
+      size,
+      onSelect,
+      controlled,
+      itemProps,
+      isSelected,
+      items,
+      segmented,
     } = this.props
-
-    if (!items && !children) {
-      return null
-    }
-
-    let height = height_
-    let width = userWidth
+    const { total } = this
     let rowHeight
-    let dynamicRowHeight = false
-
-    if (virtualized && !parentSize) {
-      return null
-    }
-
     if (virtualized && parentSize) {
-      height = parentSize.height || height_ || 0
-      width = parentSize.width || userWidth || 0
       rowHeight = virtualized ? virtualized.rowHeight : undefined
-      dynamicRowHeight = typeof virtualized.rowHeight === 'function'
     }
-
     const passThroughProps = {
       height: rowHeight,
       onItemMount,
       size,
-      borderRadius,
-      borderColor,
       ...itemProps,
     }
-
-    const total = items ? items.length : React.Children.count(children)
-
-    const getItemProps = (index, rowProps, isListItem) => {
-      const positionProps = {
-        segmented,
-        isFirstElement: index === 0,
-        isLastElement: index === total - 1,
-      }
-      const getRef = this.gatherRefs(index)
-      const props = {
-        key: index,
-        ...rowProps,
-        ...(isListItem ? passThroughProps : itemProps),
-        ...(isListItem ? positionProps : null),
-        ...(isListItem ? { getRef } : { ref: getRef }),
-      }
-      if (onSelect || controlled) {
-        const ogClick = props.onClick
-        props.onClick = e => {
-          this.highlightItem(() => index)
-          if (ogClick) {
-            ogClick.call(this, e)
+    const getRef = this.gatherRefs(index)
+    const props = {
+      ...rowProps,
+      ...(isListItem ? passThroughProps : itemProps),
+      ...(isListItem
+        ? {
+            segmented,
+            isFirstElement: index === 0,
+            isLastElement: index === total - 1,
           }
-        }
-      }
-      if (controlled) {
-        // set highlight if necessary
-        props.highlight = this.showInternalSelection
-          ? index === this.state.selected
-          : isSelected && isSelected(items[index], index)
-      } else {
-        if (this.props.selected === index) {
-          props.highlight = true
-        }
-        // if they provide a prop-based isSelected, still track the right index internally
-        if (props.highlight && this.state.selected !== index) {
-          this.state.selected = index
-        }
-      }
-      return props
+        : null),
+      ...(isListItem ? { getRef } : { ref: getRef }),
     }
+    if (onSelect || controlled) {
+      const ogClick = props.onClick
+      props.onClick = e => {
+        this.highlightItem(() => index)
+        if (ogClick) {
+          ogClick.call(this, e)
+        }
+      }
+    }
+    if (controlled) {
+      // set highlight if necessary
+      props.highlight = this.showInternalSelection
+        ? index === this.state.selected
+        : isSelected && isSelected(items[index], index)
+    } else {
+      if (this.props.selected === index) {
+        props.highlight = true
+      }
+      // if they provide a prop-based isSelected, still track the right index internally
+      if (props.highlight && this.state.selected !== index) {
+        this.state.selected = index
+      }
+    }
+    return props
+  }
 
+  // mutative which is odd
+  // sets:
+  //   this.children
+  //   this.groupedIndex
+  //   this.realIndex
+  //   this.totalGroups
+  updateChildren = ({
+    children: children_,
+    getItem,
+    items,
+    virtualized,
+    groupKey,
+    parentSize,
+  }) => {
+    if (!items && !children_) {
+      return null
+    }
+    if (virtualized && !parentSize) {
+      return null
+    }
+    const { getItemProps } = this
     const getListItem = (cur, index) => rowProps => {
       const item = getItem(cur, index)
       if (item === null) {
@@ -282,10 +286,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
         />
       )
     }
-
     // allow passing of rowProps by wrapping each in function
-    let chillen = children
-      ? React.Children.map(children, (item, index) => rowProps =>
+    let children = children_
+      ? React.Children.map(children_, (item, index) => rowProps =>
           item
             ? React.cloneElement(
                 item,
@@ -297,32 +300,34 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
     // if no need, just get them right away
     if (!virtualized) {
-      chillen = chillen.map(child => child())
+      console.time('getChildren.nonVirtual')
+      children = children.map(child => child())
+      console.timeEnd('getChildren.nonVirtual')
     }
 
-    const groupedIndex = []
-    const realIndex = []
-    let totalGroups = 0
+    this.groupedIndex = []
+    this.realIndex = []
+    this.totalGroups = 0
 
     if (groupKey && items) {
       const groups = []
       let lastGroup = null
 
       items.forEach((item, itemIndex) => {
-        const index = itemIndex + totalGroups
-        realIndex[itemIndex] = index
+        const index = itemIndex + this.totalGroups
+        this.realIndex[itemIndex] = index
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
           // if is separator
           if (lastGroup) {
             groups.push({ index, name: lastGroup })
-            totalGroups++
-            groupedIndex[index] = true // separator
-            groupedIndex[index + 1] = itemIndex // next
+            this.totalGroups++
+            this.groupedIndex[index] = true // separator
+            this.groupedIndex[index + 1] = itemIndex // next
             return
           }
         }
-        groupedIndex[index] = itemIndex
+        this.groupedIndex[index] = itemIndex
       })
 
       for (const { index, name } of groups) {
@@ -334,18 +339,34 @@ class List extends React.PureComponent<Props, { selected: number }> {
         } else {
           child = <separator key={Math.random()}>{name}</separator>
         }
-        chillen.splice(index, 0, child)
+        children.splice(index, 0, child)
       }
     }
 
-    const getRowHeight = ({ index }) => {
-      if (groupedIndex[index] === true) {
-        return separatorHeight
-      }
-      if (dynamicRowHeight) {
-        return virtualized.rowHeight(groupedIndex[index])
-      }
-      return virtualized.rowHeight
+    this.children = children
+  }
+
+  render() {
+    const { children } = this
+    if (!children) {
+      return null
+    }
+
+    let height = this.props.height
+    let width = this.props.width
+    const {
+      virtualized,
+      parentSize,
+      scrollable,
+      style,
+      attach,
+      controlled,
+    } = this.props
+    const { total, totalGroups, realIndex } = this
+
+    if (virtualized && parentSize) {
+      height = parentSize.height || height || 0
+      width = parentSize.width || width || 0
     }
 
     const inner = (
@@ -356,48 +377,43 @@ class List extends React.PureComponent<Props, { selected: number }> {
         width={width}
         style={{
           height: '100%',
-          overflowY: scrollable ? 'scroll' : 'auto',
           overflowX: 'visible',
+          overflowY: scrollable ? 'scroll' : 'auto',
           ...style,
         }}
-        borderRadius={borderRadius}
-        {...props}
+        {...attach}
       >
-        {!loading &&
-        virtualized && (
+        {virtualized && (
           <VirtualList
             height={height}
             width={width}
             overscanRowCount={3}
             scrollToIndex={realIndex[this.state.selected]}
             rowCount={total + totalGroups}
-            rowRenderer={({ index, key, style }) =>
-              chillen[index]({ key, style })}
+            rowRenderer={this.getRow}
             {...virtualized}
-            rowHeight={getRowHeight}
+            rowHeight={this.getRowHeight}
           />
         )}
-        {!virtualized && chillen}
+        {!virtualized && children}
       </Surface>
     )
     if (!controlled) {
       return inner
     }
     return (
-      <HotKeys
-        handlers={this.actions}
-        style={{
-          height: '100%',
-          flexDirection: 'inherit',
-          flexGrow: 'inherit',
-        }}
-      >
+      <HotKeys $keys handlers={this.actions}>
         {inner}
       </HotKeys>
     )
   }
 
   static style = {
+    keys: {
+      height: '100%',
+      flexDirection: 'inherit',
+      flexGrow: 'inherit',
+    },
     separator: {
       padding: [0, 10],
       height: SEPARATOR_HEIGHT,

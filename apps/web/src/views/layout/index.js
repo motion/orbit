@@ -12,7 +12,7 @@ import Header from './header'
 import BottomBar from '~/views/bottomBar'
 import * as UI from '@mcro/ui'
 
-@view
+@view.ui
 export default class Layout {
   state = {
     error: null,
@@ -28,6 +28,8 @@ export default class Layout {
   }
 
   render() {
+    console.log('wahts happenign')
+
     if (Constants.IS_BAR) {
       const CurrentPage = Router.activeView || <null>no way</null>
       return <CurrentPage />

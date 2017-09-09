@@ -10,17 +10,7 @@ import { MillerState, Miller } from './miller'
 import { isNumber, includes, debounce } from 'lodash'
 import { actionToKeyCode } from './helpers'
 import Pane from '~/views/pane'
-
 import { SHORTCUTS } from '~/stores/rootStore'
-
-const safeString = thing => {
-  try {
-    return JSON.stringify(thing)
-  } catch (e) {
-    console.log('non safe object', thing)
-    return `${thing}`
-  }
-}
 
 @view.ui
 class BottomActions {

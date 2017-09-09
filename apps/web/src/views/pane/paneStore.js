@@ -37,6 +37,7 @@ export default class PaneStore {
   }
 
   get activeIndex() {
+    this.props.millerStore.stateVersion
     return this.isActive && this.state.activeRow
   }
 

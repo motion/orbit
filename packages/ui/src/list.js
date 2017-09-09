@@ -59,6 +59,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   lastDidReceivePropsDate: ?number
 
   componentWillMount = () => {
+    this.updateChildren(this.props)
     this.totalItems = this.getTotalItems(this.props)
     if (typeof this.props.defaultSelected !== 'undefined') {
       this.setState({ selected: this.props.defaultSelected })
@@ -359,7 +360,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   render() {
-    this.updateChildren(this.props)
     const { children } = this
     if (!children) {
       return null

@@ -539,7 +539,7 @@ export default class TaskPane {
 
     const actions = [
       {
-        name: 'Labels',
+        name: 'labels',
         popover: <Labels />,
       },
     ]

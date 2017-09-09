@@ -7,9 +7,8 @@ import * as UI from '@mcro/ui'
 import * as PaneTypes from './panes'
 import Actions from './panes/pane/actions'
 import { MillerState, Miller } from './miller'
-import { isNumber, includes, debounce } from 'lodash'
+import { isNumber, includes, find, debounce } from 'lodash'
 import { actionToKeyCode } from './helpers'
-
 import { SHORTCUTS } from '~/stores/rootStore'
 
 const safeString = thing => {
@@ -90,9 +89,18 @@ class BarStore {
   search = ''
   textboxVal = ''
 
+  // check if it's a textbox in a pane so we can not close bar
+  isTextbox = ({ target }) =>
+    target.className !== this.inputRef.className &&
+    includes(['input', 'textarea'], target.tagName.toLowerCase())
+
   start() {
     this.on(window, 'focus', this.focusBar)
     this.attachTrap('window', window)
+    this.millerState.onSelectionChange(() => {
+      this.activeAction = null
+    })
+
     this.millerState.onChangeColumn((col, lastCol) => {
       if (lastCol !== 0 && col === 0) {
         this.focusBar()
@@ -106,10 +114,7 @@ class BarStore {
     document.addEventListener('keydown', e => {
       this.metaKey = e.metaKey
 
-      if (
-        this.metaKey &&
-        !includes(['input', 'textarea'], e.target.tagName.toLowerCase())
-      ) {
+      if (this.metaKey && !this.isTextbox(e)) {
         ;(this.allActions() || []).forEach(action => {
           if (actionToKeyCode(action) === e.keyCode) {
             e.preventDefault()
@@ -125,9 +130,12 @@ class BarStore {
   }
 
   runAction = name => {
-    this.activeAction = this.allActions().filter(
-      a => a.name.toLowerCase() === name
-    )[0]
+    if (this.activeAction && this.activeAction.name === name) {
+      this.activeAction = null
+    } else {
+      this.activeAction =
+        find(this.allActions(), action => action.name === name) || null
+    }
   }
 
   allActions() {
@@ -242,6 +250,11 @@ class BarStore {
       e.preventDefault()
     },
     esc: e => {
+      if (this.isTextbox(e)) return
+      if (this.activeAction) {
+        this.activeAction = null
+        return
+      }
       // allows one frame of interception (by pane store)
       setTimeout(() => {
         if (window.preventEscClose !== true) {
@@ -371,7 +384,7 @@ export default class BarPage {
             }}
             borderRadius={5}
             elevation={3}
-            target={`.target-${store.activeAction.name.toLowerCase()}`}
+            target={`.target-${store.activeAction.name}`}
             overlay="transparent"
             distance={8}
           >

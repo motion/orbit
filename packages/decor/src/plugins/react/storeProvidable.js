@@ -50,22 +50,24 @@ export default function storeProvidable(options, Helpers) {
 
         componentWillReceiveProps(nextProps) {
           if (!isEqual(this.props, nextProps)) {
-            // use action so it waits to trigger reactions until after
-            Mobx.action('updateProps', () => {
-              const curPropKeys = Object.keys(this._props)
-              const nextPropsKeys = Object.keys(nextProps)
+            this.updateProps(nextProps)
+          }
+        }
 
-              // change granular so reactions are granular
-              for (const prop of nextPropsKeys) {
-                if (!isEqual(this._props[prop], nextProps[prop])) {
-                  this._props[prop] = nextProps[prop]
-                }
-              }
-              // remove
-              for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-                this._props[extraProp] = undefined
-              }
-            })()
+        @Mobx.action
+        updateProps = nextProps => {
+          const curPropKeys = Object.keys(this._props)
+          const nextPropsKeys = Object.keys(nextProps)
+
+          // change granular so reactions are granular
+          for (const prop of nextPropsKeys) {
+            if (!isEqual(this._props[prop], nextProps[prop])) {
+              this._props[prop] = nextProps[prop]
+            }
+          }
+          // remove
+          for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
+            this._props[extraProp] = undefined
           }
         }
 

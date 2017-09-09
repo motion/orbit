@@ -249,6 +249,7 @@ export default class GithubSync {
                       title
                       body
                       bodyText
+                      updatedAt
                       createdAt
                       author {
                         avatarUrl
@@ -323,6 +324,8 @@ export default class GithubSync {
             data,
             orgName: orgLogin,
             parentId: repository.name,
+            created: issue.createdAt,
+            updated: issue.updatedAt,
           })
         )
       }

@@ -3,9 +3,9 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class PaneCard {
-  render({ id, title, icon, children, chromeless }) {
+  render({ id, title, icon, children, chromeless, ...props }) {
     return (
-      <card $chromeless={chromeless}>
+      <card $chromeless={chromeless} {...props}>
         <UI.Theme name="light">
           <task>
             <heading>

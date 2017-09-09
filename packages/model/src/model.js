@@ -480,8 +480,15 @@ export default class Model {
   // user facing!
 
   // get is a helper that returns a promise only
-  get = (query: string | Object) => this.collection.findOne(query).exec();
-  getAll = (query: string | Object) => this.collection.find(query).exec()
+  get = async (query: string | Object) => {
+    await this.onConnection()
+    return await this.findOne(query).exec()
+  };
+
+  getAll = async (query: string | Object) => {
+    await this.onConnection()
+    return await this.find(query).exec()
+  }
 
   // find/findOne return RxQuery objects
   // so you can subscribe to streams with .$ or promise with .exec()

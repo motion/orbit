@@ -43,7 +43,18 @@ export class Event extends Model {
   settings = {
     database: 'events',
     index: ['type'],
+    // version: 1,
   }
+
+  // migrations = {
+  //   1: async () => {
+  //     console.log('run migration')
+  //     // const all = await this.getAll()
+  //     // if (all) {
+  //     //   all.map(_ => _.remove())
+  //     // }
+  //   },
+  // }
 }
 
 const EventInstance = new Event()

@@ -54,11 +54,7 @@ class Items {
       )
     }
 
-    return (
-      <items>
-        {items.map(renderWrappedItem)}
-      </items>
-    )
+    return <items>{items.map(renderWrappedItem)}</items>
   }
 
   static style = {}

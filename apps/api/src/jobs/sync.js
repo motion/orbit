@@ -32,6 +32,10 @@ export default class Sync {
     this.watchJobs()
   }
 
+  get github() {
+    return this.syncers.github
+  }
+
   dispose = () => {
     if (this.jobWatcher) {
       this.jobWatcher.unsubscribe()

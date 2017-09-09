@@ -17,6 +17,8 @@ export type ThingType = typeof methods & {
   id?: string,
   createdAt: string,
   updatedAt: string,
+  date: string,
+  orgName?: string,
 }
 
 export class Thing extends Model {
@@ -28,6 +30,9 @@ export class Thing extends Model {
     body: str.optional,
     data: object.optional,
     parentId: str.optional,
+    created: str.optional,
+    updated: str.optional,
+    orgName: str.optional,
     timestamps: true,
   }
 
@@ -36,7 +41,18 @@ export class Thing extends Model {
   settings = {
     database: 'things',
     index: ['title', 'body'],
+    // version: 1,
   }
+
+  // migrations = {
+  //   1: async () => {
+  //     console.log('migrate thing')
+  //     // const all = await this.getAll()
+  //     // if (all) {
+  //     //   all.map(_ => _.remove())
+  //     // }
+  //   },
+  // }
 
   search = async (text: string) => {
     if (!text) {

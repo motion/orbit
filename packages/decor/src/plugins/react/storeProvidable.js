@@ -35,7 +35,7 @@ export default function storeProvidable(options, Helpers) {
       decorateStores()
 
       // return HoC
-      class StoreProvider extends React.Component {
+      class StoreProvider extends React.PureComponent {
         static get name() {
           return Klass.name
         }
@@ -48,10 +48,9 @@ export default function storeProvidable(options, Helpers) {
           error: null,
         }
 
-        componentWillReceiveProps(nextProps) {
-          if (!isEqual(this.props, nextProps)) {
-            this.updateProps(nextProps)
-          }
+        // PureComponent means this is only called when props are not shallow equal
+        componentWillUpdate(nextProps) {
+          this.updateProps(nextProps)
         }
 
         @Mobx.action

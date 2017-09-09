@@ -199,7 +199,7 @@ export default class Text extends React.PureComponent<Props> {
         lineHeight:
           typeof props.lineHeight === 'number'
             ? `${props.lineHeight}px`
-            : props.lineHeight || `${fontSize + 8}px`,
+            : props.lineHeight || `${fontSize + 5}px`,
         color: props.color || theme.base.color,
         opacity: props.opacity,
       },

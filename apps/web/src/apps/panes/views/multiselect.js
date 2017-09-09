@@ -43,6 +43,7 @@ class Items {
       return (
         <Item
           {...item}
+          key={item.id}
           onSelect={() => onActivate(item.id)}
           onHighlight={() => onHighlight(item.id)}
           isHighlight={isHighlight}
@@ -85,26 +86,28 @@ export default class Multiselect {
     )
 
     return (
-      <container onMouseLeave={() => (store.highlightId = null)}>
-        <search>
-          <UI.Input
-            onChange={e => (store.search = e.target.value)}
-            value={store.search}
-            placeholder="search"
-            $searchText
-          />
-        </search>
-        <items>
-          <Items
-            items={activeItems}
-            highlightId={store.highlightId}
-            activeIds={store.activeIds}
-            onHighlight={id => (store.highlightId = id)}
-            renderItem={renderItem}
-            onActivate={id => (store.activeIds = toggle(store.activeIds, id))}
-          />
-        </items>
-      </container>
+      <UI.Theme name="light">
+        <container onMouseLeave={() => (store.highlightId = null)}>
+          <search>
+            <UI.Input
+              onChange={e => (store.search = e.target.value)}
+              value={store.search}
+              placeholder="search"
+              $searchText
+            />
+          </search>
+          <items>
+            <Items
+              items={activeItems}
+              highlightId={store.highlightId}
+              activeIds={store.activeIds}
+              onHighlight={id => (store.highlightId = id)}
+              renderItem={renderItem}
+              onActivate={id => (store.activeIds = toggle(store.activeIds, id))}
+            />
+          </items>
+        </container>
+      </UI.Theme>
     )
   }
 

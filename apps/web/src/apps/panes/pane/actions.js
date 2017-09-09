@@ -1,15 +1,17 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { capitalize } from 'lodash'
+import { capitalize, isString } from 'lodash'
 
 @view
 export default class Actions {
   render({ actions }) {
+    const getName = action => (isString(action) ? action : action.name)
+
     const shortcutButton = action => {
       return (
         <UI.Text $text $$row key={action}>
           <strong>
-            {action[0]}
+            {action}
           </strong>
           <rest>
             {action.slice(1)}
@@ -20,7 +22,8 @@ export default class Actions {
 
     return (
       <actions $$row>
-        {(actions || []).map(action => shortcutButton(capitalize(action)))}
+        {(actions || [])
+          .map(action => shortcutButton(capitalize(getName(action))))}
       </actions>
     )
   }

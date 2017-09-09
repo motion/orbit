@@ -69,19 +69,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  componentDidUpdate() {
-    if (this.state.selected > -1) {
-      if (this.itemRefs[this.state.selected]) {
-        true // was a console log
-      }
-    }
-  }
-
   componentWillReceiveProps = (nextProps: Props) => {
-    if (typeof nextProps.selected !== 'undefined') {
+    const { selected } = nextProps
+
+    if (typeof selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
-      if (nextProps.selected !== this.state.selected) {
-        this.setState({ selected: nextProps.selected })
+      if (selected !== this.state.selected) {
+        this.setState({ selected })
       }
     }
 
@@ -242,7 +236,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
         ...rowProps,
         ...(isListItem ? passThroughProps : itemProps),
         ...(isListItem ? positionProps : null),
-        ref: this.gatherRefs(index),
+        getRef: this.gatherRefs(index),
       }
       if (onSelect || controlled) {
         const ogClick = props.onClick
@@ -305,30 +299,29 @@ class List extends React.PureComponent<Props, { selected: number }> {
       chillen = chillen.map(child => child())
     }
 
-    const groupOffsets = {}
+    const groupedIndex = []
+    const realIndex = []
     let totalGroups = 0
 
     if (groupKey && items) {
       const groups = []
       let lastGroup = null
 
-      items.forEach((item, index) => {
-        const groupIndex = index + totalGroups
+      items.forEach((item, itemIndex) => {
+        const index = itemIndex + totalGroups
+        realIndex[itemIndex] = index
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
+          // if is separator
           if (lastGroup) {
-            // add groups.length because we make list bigger as we add separators
-            groups.push({ index: groupIndex, name: lastGroup })
+            groups.push({ index, name: lastGroup })
             totalGroups++
+            groupedIndex[index] = true // separator
+            groupedIndex[index + 1] = itemIndex // next
+            return
           }
-          if (lastGroup) {
-            groupOffsets[groupIndex] = true // separator
-          } else {
-            groupOffsets[groupIndex] = totalGroups
-          }
-        } else {
-          groupOffsets[groupIndex] = totalGroups
         }
+        groupedIndex[index] = itemIndex
       })
 
       for (const { index, name } of groups) {
@@ -345,11 +338,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
 
     const getRowHeight = ({ index }) => {
-      if (groupOffsets[index] === true) {
+      if (groupedIndex[index] === true) {
         return separatorHeight
       }
       if (dynamicRowHeight) {
-        return virtualized.rowHeight(index - groupOffsets[index])
+        return virtualized.rowHeight(groupedIndex[index])
       }
       return virtualized.rowHeight
     }
@@ -375,6 +368,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
             height={height}
             width={width}
             overscanRowCount={3}
+            scrollToIndex={realIndex[this.state.selected]}
             rowCount={total + totalGroups}
             rowRenderer={({ index, key, style }) =>
               chillen[index]({ key, style })}

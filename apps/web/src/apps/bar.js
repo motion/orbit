@@ -84,6 +84,7 @@ class BarStore {
   millerStateVersion = 0
   inputRef: ?HTMLElement = null
   metaKey = false
+  activeAction = null
 
   // search is throttled, textboxVal isn't
   search = ''
@@ -112,6 +113,7 @@ class BarStore {
         ;(this.allActions() || []).forEach(action => {
           if (actionToKeyCode(action) === e.keyCode) {
             e.preventDefault()
+            this.activeAction = action
             console.log('executing action', action)
           }
         })
@@ -120,6 +122,12 @@ class BarStore {
     document.addEventListener('keyup', e => {
       this.metaKey = e.metaKey
     })
+  }
+
+  runAction = name => {
+    this.activeAction = this.allActions().filter(
+      a => a.name.toLowerCase() === name
+    )[0]
   }
 
   allActions() {
@@ -302,15 +310,14 @@ const paneProps = {
   },
 }
 
-@view({
-  store: BarStore,
-})
+@view.provide({ barStore: BarStore })
+@view
 export default class BarPage {
-  render({ store }) {
+  render({ barStore: store }) {
     return (
       <UI.Theme name="clear-dark">
         <bar ref={store.ref('barRef').set} $$fullscreen>
-          <header $$draggable>
+          <header css={{ borderBottom: [1, [0, 0, 0, 0.1]] }} $$draggable>
             <UI.Input
               size={2.2}
               getRef={store.onInputRef}
@@ -324,9 +331,7 @@ export default class BarPage {
                 ...inputStyle,
               }}
             />
-            <forwardcomplete>
-              {store.peekItem}
-            </forwardcomplete>
+            <forwardcomplete>{store.peekItem}</forwardcomplete>
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>
@@ -358,6 +363,20 @@ export default class BarPage {
               store.millerKeyActions = val
             }}
           />
+          <UI.Popover
+            if={store.activeAction}
+            open={true}
+            onClose={() => {
+              store.activeAction = null
+            }}
+            borderRadius={5}
+            elevation={3}
+            target={`.target-${store.activeAction.name.toLowerCase()}`}
+            overlay="transparent"
+            distance={8}
+          >
+            {store.activeAction.popover}
+          </UI.Popover>
 
           <BottomActions
             metaKey={store.metaKey}

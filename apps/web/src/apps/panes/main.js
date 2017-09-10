@@ -182,11 +182,12 @@ export default class BarMain extends React.Component<> {
         <none if={mainStore.results.length === 0}>No Results</none>
         <UI.List
           if={mainStore.results}
+          debug
           virtualized={{
             rowHeight: this.getRowHeight,
           }}
+          measureOn={paneStore.search}
           onSelect={this.onSelect}
-          debug
           groupKey="category"
           items={mainStore.results}
           itemProps={paneStore.itemProps}

@@ -205,7 +205,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
       controlled,
       itemProps,
       isSelected,
-      items,
       segmented,
     } = this.props
     const { total } = this

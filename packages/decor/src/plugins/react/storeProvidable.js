@@ -34,6 +34,25 @@ export default function storeProvidable(options, Helpers) {
 
       decorateStores()
 
+      // keep action out of class directly because of hmr bug
+      const updateProps = Mobx.action(
+        `${Klass.name}.updateProps`,
+        (props, nextProps) => {
+          const curPropKeys = Object.keys(props)
+          const nextPropsKeys = Object.keys(nextProps)
+          // change granular so reactions are granular
+          for (const prop of nextPropsKeys) {
+            if (!isEqual(props[prop], nextProps[prop])) {
+              props[prop] = nextProps[prop]
+            }
+          }
+          // remove
+          for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
+            props[extraProp] = undefined
+          }
+        }
+      )
+
       // return HoC
       class StoreProvider extends React.PureComponent {
         static get name() {
@@ -48,32 +67,16 @@ export default function storeProvidable(options, Helpers) {
           error: null,
         }
 
-        // PureComponent means this is only called when props are not shallow equal
-        componentWillUpdate(nextProps) {
-          this.updateProps(nextProps)
-        }
-
-        @Mobx.action
-        updateProps = nextProps => {
-          const curPropKeys = Object.keys(this._props)
-          const nextPropsKeys = Object.keys(nextProps)
-
-          // change granular so reactions are granular
-          for (const prop of nextPropsKeys) {
-            if (!isEqual(this._props[prop], nextProps[prop])) {
-              this._props[prop] = nextProps[prop]
-            }
-          }
-          // remove
-          for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-            this._props[extraProp] = undefined
-          }
-        }
-
         componentWillMount() {
+          this.componentWillUpdate = this.componentWillUpdate.bind(this)
           this.setupProps()
           this.setupStores()
           this.unmounted = false
+        }
+
+        // PureComponent means this is only called when props are not shallow equal
+        componentWillUpdate(nextProps) {
+          updateProps(this._props, nextProps)
         }
 
         componentDidMount() {
@@ -178,10 +181,11 @@ export default function storeProvidable(options, Helpers) {
         }
 
         hotReload() {
-          this.disposeStores()
-          this.setupProps()
-          this.setupStores()
-          this.mountStores()
+          console.log('hmr')
+          // this.disposeStores()
+          // this.setupProps()
+          // this.setupStores()
+          // this.mountStores()
         }
 
         render() {

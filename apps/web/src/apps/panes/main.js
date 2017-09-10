@@ -170,16 +170,13 @@ class BarMainStore {
 export default class BarMain extends React.Component<> {
   static defaultProps: {}
 
-  get results() {
-    return this.props.mainStore.results
-  }
-
   onSelect = (item, index) => this.props.paneStore.selectRow(index)
   hasContent = result => result && result.data && result.data.body
-  getRowHeight = i => (this.hasContent(this.results[i]) ? 100 : 38)
+  getRowHeight = i =>
+    this.hasContent(this.props.mainStore.results[i]) ? 100 : 38
 
   render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
-    console.log('render me')
+    console.log('render main')
     return (
       <Pane.Card width={315} $pane isActive={paneStore.isActive}>
         <none if={mainStore.results.length === 0}>No Results</none>
@@ -189,6 +186,7 @@ export default class BarMain extends React.Component<> {
             rowHeight: this.getRowHeight,
           }}
           onSelect={this.onSelect}
+          debug
           groupKey="category"
           items={mainStore.results}
           itemProps={paneStore.itemProps}

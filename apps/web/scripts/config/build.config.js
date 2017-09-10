@@ -114,16 +114,16 @@ module.exports = Object.assign(config, {
     IS_DEV && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     // readable names
     new webpack.NamedModulesPlugin(),
-    // vendor
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'common',
-      minChunks(module) {
-        var context = module.context
-        return context && context.indexOf('node_modules') >= 0
-      },
-    }),
 
     // production
+    IS_PROD &&
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'common',
+        minChunks(module) {
+          var context = module.context
+          return context && context.indexOf('node_modules') >= 0
+        },
+      }),
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
     // IS_PROD && new ButternutWebpackPlugin({}),
     // IS_PROD && new BabiliPlugin(),

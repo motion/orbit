@@ -105,7 +105,9 @@ export default function storeProvidable(options, Helpers) {
         // for reactive props in stores
         // 🐛 must run this before this.setupStore()
         setupProps() {
-          Mobx.extendObservable(this, { _props: { ...this.props } })
+          if (!this._props) {
+            Mobx.extendObservable(this, { _props: { ...this.props } })
+          }
         }
 
         // DO NOT USE CLASS PROPERTY DECORATORS FOR THIS, IDK WTF WHY
@@ -176,12 +178,10 @@ export default function storeProvidable(options, Helpers) {
         }
 
         hotReload() {
-          setTimeout(() => {
-            this.disposeStores()
-            this.setupProps()
-            this.setupStores()
-            this.mountStores()
-          })
+          this.disposeStores()
+          this.setupProps()
+          this.setupStores()
+          this.mountStores()
         }
 
         render() {

@@ -142,10 +142,17 @@ class List extends React.PureComponent<Props, { selected: number }> {
   highlightItem = (setter: ?() => number, cb?: Function) => {
     const selected = setter(this.state.selected)
     this.lastSelectionDate = Date.now()
-    this.setState({ selected }, () => {
+    // only setstate if controlled
+    if (this.props.controlled) {
+      this.setState({ selected }, () => {
+        this.props.onSelect(this.selected, selected)
+        if (cb) cb()
+      })
+    } else {
+      this.state.selected = selected
       this.props.onSelect(this.selected, selected)
       if (cb) cb()
-    })
+    }
     return selected
   }
 
@@ -359,6 +366,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   render() {
+    if (this.props.debug) {
+      console.log('render list')
+    }
     const { children } = this
     if (!children) {
       return null

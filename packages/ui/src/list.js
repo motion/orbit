@@ -82,7 +82,8 @@ class List extends React.Component<Props, { selected: number }> {
     }
 
     const totalItems = this.getTotalItems(nextProps)
-    if (totalItems !== this.totalItems) {
+    const hasNewItems = totalItems !== this.totalItems
+    if (hasNewItems) {
       this.totalItems = totalItems
       // resize to fit
       const { parentHeight } = this.props
@@ -98,6 +99,7 @@ class List extends React.Component<Props, { selected: number }> {
 
     if (
       (typeof selected === 'number' && this.state.selected !== selected) ||
+      hasNewItems ||
       !this.childrenVersion
     ) {
       this.props = nextProps

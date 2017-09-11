@@ -26,11 +26,15 @@ class BarMainStore {
     .sort('createdAt')
     .limit(300)
 
+  get search() {
+    return this.props.paneStore.search
+  }
+
   start() {
     this.props.getRef(this)
 
     this.react(
-      () => this.listRef && this.pane.search,
+      () => this.listRef && this.search,
       () => {
         this.setTimeout(() => {
           this.listRef.updateChildren()
@@ -40,45 +44,13 @@ class BarMainStore {
     )
   }
 
-  get pane() {
-    return this.props.paneStore
-  }
-
   get things(): Array<PaneResult> {
-    return fuzzy(this.topThings || [], this.pane.search)
-      .slice(0, this.pane.search.length ? 20 : 8)
+    return fuzzy(this.topThings || [], this.search)
+      .slice(0, this.search.length ? 20 : 8)
       .map(thingToResult)
   }
 
   browse: Array<PaneResult> = [
-    {
-      id: 500,
-      title: 'Github issue about performance',
-      type: 'task',
-      data: TestIssue,
-      category: 'Tests',
-    },
-    {
-      id: 500,
-      title: 'Github issue about performance',
-      type: 'task',
-      data: TestIssue,
-      category: 'Tests',
-    },
-    {
-      id: 500,
-      title: 'Github issue about performance',
-      type: 'task',
-      data: TestIssue,
-      category: 'Tests',
-    },
-    {
-      id: 500,
-      title: 'Github issue about performance',
-      type: 'task',
-      data: TestIssue,
-      category: 'Tests',
-    },
     {
       id: 10,
       title: 'Team: Motion',
@@ -194,7 +166,7 @@ class BarMainStore {
         ...this.people,
         ...this.extras,
       ],
-      this.props.paneStore.search
+      this.search
     )
   }
 

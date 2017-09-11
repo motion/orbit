@@ -17,7 +17,6 @@ export default class Feed extends React.PureComponent<Props> {
         </UI.Title>
         <UI.List
           items={items}
-          selected={activeIndex}
           getItem={(event, index) => {
             const { verb, data } = event
             const { actor, payload } = data

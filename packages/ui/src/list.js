@@ -216,8 +216,6 @@ class List extends React.Component<Props, { selected: number }> {
 
   getItemProps(index, rowProps, isListItem) {
     const {
-      parentSize,
-      virtualized,
       onItemMount,
       size,
       onSelect,
@@ -227,28 +225,22 @@ class List extends React.Component<Props, { selected: number }> {
       selected,
       segmented,
     } = this.props
-    let rowHeight
-    if (virtualized && parentSize) {
-      rowHeight = virtualized ? virtualized.rowHeight : undefined
-    }
-    const passThroughProps = {
-      height: rowHeight,
-      onItemMount,
-      size,
-      ...itemProps,
-    }
     const getRef = this.gatherRefs(index)
     const props = {
       ...rowProps,
-      ...(isListItem ? passThroughProps : itemProps),
       ...(isListItem
         ? {
+            onItemMount,
+            size,
+            getRef,
             segmented,
             isFirstElement: index === 0,
             isLastElement: index === this.totalItems - 1,
           }
-        : null),
-      ...(isListItem ? { getRef } : { ref: getRef }),
+        : {
+            ref: getRef,
+          }),
+      ...itemProps,
     }
     if (onSelect || controlled) {
       const ogClick = props.onClick
@@ -280,18 +272,21 @@ class List extends React.Component<Props, { selected: number }> {
   // curried so we can avoid work in virtualized contexts
   getListItem = (cur, index) => rowProps => {
     const item = this.props.getItem(cur, index)
-    if (item === null) {
+    if (!item) {
       return null
     }
     if (React.isValidElement(item)) {
-      return React.cloneElement(item, this.getItemProps(index, rowProps))
+      return React.cloneElement(
+        item,
+        this.getItemProps(index, rowProps, item.type.isListItem)
+      )
     }
     // pass object to ListItem
     return (
       <ListItem
-        key={item.key || cur.id || index}
         {...this.getItemProps(index, rowProps, true)}
         {...item}
+        key={item.key || item.id || index}
       />
     )
   }
@@ -371,7 +366,7 @@ class List extends React.Component<Props, { selected: number }> {
             <separator {...extraProps}>{name}</separator>
           )
         } else {
-          child = <separator key={Math.random()}>{name}</separator>
+          child = <separator key={name}>{name}</separator>
         }
         children.splice(index, 0, child)
       }

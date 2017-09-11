@@ -205,34 +205,32 @@ export default class BarMain extends React.Component<> {
           groupKey="category"
           items={mainStore.results}
           itemProps={paneStore.itemProps}
-          getItem={(result, index) => (
-            <UI.ListItem
-              highlight={() => index === paneStore.activeIndex}
-              primary={result.title}
-              date={<UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>}
-              children={
-                <UI.Text
-                  if={result.data && result.data.body}
-                  css={{ opacity: 0.5 }}
-                >
-                  {result.data.body.slice(0, 120)}
-                </UI.Text>
-              }
-              iconProps={{
-                style: {
-                  alignSelf: 'flex-start',
-                  paddingTop: 2,
-                },
-              }}
-              icon={
-                result.data && result.data.image ? (
-                  <img $image src={`/images/${result.data.image}.jpg`} />
-                ) : (
-                  result.icon
-                )
-              }
-            />
-          )}
+          getItem={(result, index) => ({
+            key: result.id,
+            highlight: () => index === paneStore.activeIndex,
+            primary: result.title,
+            date: <UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>,
+            children: (
+              <UI.Text
+                if={result.data && result.data.body}
+                css={{ opacity: 0.5 }}
+              >
+                {result.data.body.slice(0, 120)}
+              </UI.Text>
+            ),
+            iconProps: {
+              style: {
+                alignSelf: 'flex-start',
+                paddingTop: 2,
+              },
+            },
+            icon:
+              result.data && result.data.image ? (
+                <img $image src={`/images/${result.data.image}.jpg`} />
+              ) : (
+                result.icon
+              ),
+          })}
         />
       </Pane.Card>
     )

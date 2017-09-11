@@ -34,7 +34,8 @@ class BarMainStore {
     this.props.getRef(this)
 
     this.react(
-      () => this.results && this.listRef && this.search,
+      () =>
+        this.results && this.listRef && `${this.search}${this.results.length}`,
       () => {
         this.setTimeout(() => {
           this.listRef.updateChildren()

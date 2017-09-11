@@ -10,11 +10,6 @@ export const applyHooks = (model: Model) => {
       doc.createdAt = model.now
       doc.updatedAt = model.now
     }
-    if (true || model.options.debug) {
-      console.log(
-        `INSERT ${model.constructor.name}.create(${JSON.stringify(doc)})`
-      )
-    }
     if (ogInsert) {
       return ogInsert.call(model, doc)
     }
@@ -58,6 +53,11 @@ export const applyHooks = (model: Model) => {
       console.warn('no compiledMethods')
     }
     Object.defineProperties(doc, compiledMethods)
+    if (true || model.options.debug) {
+      console.log(
+        `INSERT ${model.constructor.name}.create(${JSON.stringify(doc)})`
+      )
+    }
     if (ogPostCreate) {
       ogPostCreate.call(model, doc)
     }

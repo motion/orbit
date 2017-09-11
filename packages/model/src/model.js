@@ -398,7 +398,7 @@ export default class Model {
       return Promise.resolve(true)
     }
 
-    console.log('SYNC', this.title, JSON.stringify(query.mquery), QUERY_KEY)
+    console.log('SYNC', this.title, QUERY_KEY)
 
     const firstReplication = this._collection.sync({
       query,
@@ -431,6 +431,7 @@ export default class Model {
           const done = state && state.pull && state.pull.ok
 
           if (done && !resolved) {
+            console.log('SYNC DONE', this.title, QUERY_KEY)
             resolved = true
             // unsub error stream
             error$.unsubscribe()

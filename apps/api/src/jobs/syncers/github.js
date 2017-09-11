@@ -28,7 +28,7 @@ export default class GithubSync {
     Setting.findOne({
       userId: this.user.id,
       type: 'github',
-    }).sort('createdAt')
+    }).sort('createdAt') // oldest
 
   constructor({ user }: SyncOptions) {
     this.user = user
@@ -308,7 +308,7 @@ export default class GithubSync {
       const issues = repository.issues.edges.map(edge => edge.node)
 
       if (!issues || !issues.length) {
-        console.log('no issues found for repo', repository.id)
+        console.log('no issues found for repo', repository.name)
         continue
       }
 
@@ -396,7 +396,7 @@ export default class GithubSync {
 
     // if not modified return null
     if (res.status === 304) {
-      console.log('Not modified', path)
+      console.log('Not modified', path, res.json())
       return null
     }
 

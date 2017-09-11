@@ -49,10 +49,13 @@ export class JobModel extends Model {
 
   pending = (opt?: Object) =>
     this.collection.find({ status: STATUS.PENDING, ...opt })
+
   processing = (opt?: Object) =>
     this.collection.find({ status: STATUS.PROCESSING, ...opt })
+
   completed = (opt?: Object) =>
     this.collection.find({ status: STATUS.COMPLETED, ...opt })
+
   failed = (opt?: Object) =>
     this.collection.find({ status: STATUS.FAILED, ...opt })
 

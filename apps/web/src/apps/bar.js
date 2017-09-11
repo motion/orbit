@@ -9,15 +9,26 @@ import Actions from './panes/pane/actions'
 import { MillerState, Miller } from './miller'
 import { isNumber, includes, find, debounce } from 'lodash'
 import { actionToKeyCode } from './helpers'
+import Pane from '~/views/pane'
 import { SHORTCUTS } from '~/stores/rootStore'
 
-const safeString = thing => {
-  try {
-    return JSON.stringify(thing)
-  } catch (e) {
-    console.log('non safe object', thing)
-    return `${thing}`
-  }
+const PANE_TYPES = {
+  main: PaneTypes.Main,
+  message: PaneTypes.Message,
+  setup: PaneTypes.Setup,
+  inbox: PaneTypes.Threads,
+  browse: PaneTypes.Browse,
+  feed: PaneTypes.Feed,
+  notifications: PaneTypes.Notifications,
+  login: PaneTypes.Login,
+  issue: PaneTypes.Task,
+  orbit: PaneTypes.Orbit,
+  task: PaneTypes.Task,
+  doc: PaneTypes.Doc,
+  test: PaneTypes.Test,
+  newIssue: PaneTypes.Code.NewIssue,
+  integrations: PaneTypes.Integrations,
+  team: PaneTypes.Team,
 }
 
 @view.ui
@@ -86,6 +97,7 @@ class BarStore {
   activeAction = null
 
   // search is throttled, textboxVal isn't
+  millerStore = null
   search = ''
   textboxVal = ''
 
@@ -108,6 +120,14 @@ class BarStore {
 
       if (lastCol === 0 && col !== 0) {
         this.blurBar()
+      }
+    })
+
+    this.watch(() => {
+      if (this.millerStore) {
+        this.millerStore.setPaneProps({
+          search: this.search,
+        })
       }
     })
 
@@ -208,25 +228,6 @@ class BarStore {
     this.millerStateVersion++
   }
 
-  PANE_TYPES = {
-    main: PaneTypes.Main,
-    message: PaneTypes.Message,
-    setup: PaneTypes.Setup,
-    inbox: PaneTypes.Threads,
-    browse: PaneTypes.Browse,
-    feed: PaneTypes.Feed,
-    notifications: PaneTypes.Notifications,
-    login: PaneTypes.Login,
-    issue: PaneTypes.Task,
-    orbit: PaneTypes.Orbit,
-    task: PaneTypes.Task,
-    doc: PaneTypes.Doc,
-    test: PaneTypes.Test,
-    newIssue: PaneTypes.Code.NewIssue,
-    integrations: PaneTypes.Integrations,
-    team: PaneTypes.Team,
-  }
-
   get isBarActive() {
     return this.inputRef === document.activeElement
   }
@@ -311,18 +312,6 @@ const inputStyle = {
   fontSize: 32,
 }
 
-const paneProps = {
-  itemProps: {
-    size: 1.2,
-    glow: false,
-    hoverable: true,
-    fontSize: 26,
-    padding: [10, 10],
-    highlightBackground: [0, 0, 0, 0.2],
-    highlightColor: [255, 255, 255, 1],
-  },
-}
-
 @view.provide({ barStore: BarStore })
 @view
 export default class BarPage {
@@ -348,33 +337,15 @@ export default class BarPage {
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>
-            <selected
-              if={false}
-              css={{
-                position: 'absolute',
-                top: 80,
-                left: 0,
-                right: 0,
-                height: 20,
-                fontSize: 12,
-                overflow: 'hidden',
-                opacity: 0.8,
-                color: '#fff',
-              }}
-            >
-              Selected: {safeString(store.activeItem)}
-            </selected>
           </header>
           <Miller
-            search={store.search}
+            getRef={store.ref('millerStore').set}
             version={store.millerStateVersion}
             state={store.millerState}
-            panes={store.PANE_TYPES}
+            panes={PANE_TYPES}
             onChange={store.onMillerStateChange}
-            paneProps={paneProps}
-            onKeyActions={val => {
-              store.millerKeyActions = val
-            }}
+            pane={Pane}
+            onKeyActions={store.ref('millerKeyActions').set}
           />
           <UI.Popover
             if={store.activeAction}

@@ -67,7 +67,6 @@ class FormInner extends React.Component {
   }
 
   onSubmit = e => {
-    console.log('on SBUNMIT')
     e.preventDefault()
     e.stopPropagation()
     this.props.onSubmit(this.formValues, e)

@@ -68,7 +68,9 @@ module.exports = Object.assign(config, {
   resolve: {
     // avoid module field so we pick up our prod build stuff
     // NOTE: 'es5'
-    mainFields: ['es5', 'browser', 'main'],
+    mainFields: IS_DEV
+      ? ['module', 'browser', 'es5', 'main']
+      : ['es5', 'browser', 'main'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -114,17 +116,16 @@ module.exports = Object.assign(config, {
     IS_DEV && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
     // readable names
     new webpack.NamedModulesPlugin(),
-    // vendor
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'node-static',
-    //   filename: 'node-static.js',
-    //   minChunks(module, count) {
-    //     var context = module.context
-    //     return context && context.indexOf('node_modules') >= 0
-    //   },
-    // }),
 
     // production
+    IS_PROD &&
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'common',
+        minChunks(module) {
+          var context = module.context
+          return context && context.indexOf('node_modules') >= 0
+        },
+      }),
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
     // IS_PROD && new ButternutWebpackPlugin({}),
     // IS_PROD && new BabiliPlugin(),

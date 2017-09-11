@@ -1,11 +1,10 @@
+import type PaneStore from '~/views/pane/paneStore'
+
 // @flow
 
 export type PaneProps = {
   search: string,
-  activeIndex: number,
-  highlightIndex: number,
-  paneProps: Object,
-  onSelect: Function,
+  paneStore: PaneStore,
   getRef: Function,
   navigate: Function,
   data: Object,

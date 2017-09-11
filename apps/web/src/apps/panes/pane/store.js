@@ -3,7 +3,7 @@ export default class PaneStore {
   metaKey = false
 
   setActions = actions => {
-    const { millerState } = this.props
-    millerState.setPaneActions(actions)
+    const { millerStore } = this.props
+    millerStore.state.setPaneActions(actions)
   }
 }

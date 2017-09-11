@@ -199,6 +199,7 @@ function mobxify(target: Object, method: string, descriptor: Object) {
     // @action
     const targetMethod = target[method].bind(target)
     const NAME = `${target.constructor.name}.${method}`
+    // TODO remove in prod
     const logWrappedMethod = (...args) => {
       if (global.log && global.log.debug) {
         if (global.log.filter && global.log.filter.test(NAME)) {

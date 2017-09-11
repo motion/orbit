@@ -21,17 +21,32 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
+  listRef = null
   topThings: ?Array<Thing> = Thing.find()
     .sort('createdAt')
     .limit(300)
 
+  get search() {
+    return this.props.paneStore.search
+  }
+
   start() {
     this.props.getRef(this)
+
+    this.react(
+      () => this.listRef && this.search,
+      () => {
+        this.setTimeout(() => {
+          this.listRef.updateChildren()
+          this.listRef.measure()
+        })
+      }
+    )
   }
 
   get things(): Array<PaneResult> {
-    return fuzzy(this.topThings || [], this.props.search)
-      .slice(0, this.props.search.length ? 20 : 8)
+    return fuzzy(this.topThings || [], this.search)
+      .slice(0, this.search.length ? 20 : 8)
       .map(thingToResult)
   }
 
@@ -151,7 +166,7 @@ class BarMainStore {
         ...this.people,
         ...this.extras,
       ],
-      this.props.search
+      this.search
     )
   }
 
@@ -160,46 +175,35 @@ class BarMainStore {
   }
 }
 
-@view.provide({ paneStore: Pane.Store })
 @view({
-  store: BarMainStore,
+  mainStore: BarMainStore,
 })
 export default class BarMain extends React.Component<> {
   static defaultProps: {}
 
-  get results() {
-    return this.props.store.results
-  }
-
-  onSelect = (item, index) => this.props.onSelect(index)
+  onSelect = (item, index) => this.props.paneStore.selectRow(index)
   hasContent = result => result && result.data && result.data.body
-  getRowHeight = i => (this.hasContent(this.results[i]) ? 100 : 38)
+  getRowHeight = i =>
+    this.hasContent(this.props.mainStore.results[i]) ? 100 : 38
 
-  render({
-    store,
-    activeIndex,
-    isActive,
-    onSelect,
-    paneProps,
-  }: PaneProps & { store: BarMainStore }) {
+  render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
     return (
-      <Pane.Card width={315} $pane isActive={isActive}>
-        <none if={store.results.length === 0}>No Results</none>
+      <Pane.Card width={315} $pane isActive={paneStore.isActive}>
+        <none if={mainStore.results.length === 0}>No Results</none>
         <UI.List
-          if={store.results}
+          if={mainStore.results}
+          getRef={mainStore.ref('listRef').set}
           virtualized={{
             rowHeight: this.getRowHeight,
           }}
-          selected={activeIndex}
           onSelect={this.onSelect}
           groupKey="category"
-          items={store.results}
-          itemProps={paneProps.itemProps}
+          items={mainStore.results}
+          itemProps={paneStore.itemProps}
           getItem={(result, index) => (
             <UI.ListItem
+              highlight={() => index === paneStore.activeIndex}
               primary={result.title}
-              onClick={() => onSelect(index)}
-              highlight={index === activeIndex}
               date={<UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>}
               children={
                 <UI.Text

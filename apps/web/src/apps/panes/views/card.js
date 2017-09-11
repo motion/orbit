@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class PaneCard {
-  render({ id, title, icon, children, chromeless, ...props }) {
+  render({ id, title, icon, children, chromeless, isActive, ...props }) {
     return (
       <card $chromeless={chromeless} {...props}>
         <UI.Theme name="light">

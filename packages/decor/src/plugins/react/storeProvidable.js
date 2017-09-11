@@ -34,8 +34,27 @@ export default function storeProvidable(options, Helpers) {
 
       decorateStores()
 
+      // keep action out of class directly because of hmr bug
+      const updateProps = Mobx.action(
+        `${Klass.name}.updateProps`,
+        (props, nextProps) => {
+          const curPropKeys = Object.keys(props)
+          const nextPropsKeys = Object.keys(nextProps)
+          // change granular so reactions are granular
+          for (const prop of nextPropsKeys) {
+            if (!isEqual(props[prop], nextProps[prop])) {
+              props[prop] = nextProps[prop]
+            }
+          }
+          // remove
+          for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
+            props[extraProp] = undefined
+          }
+        }
+      )
+
       // return HoC
-      class StoreProvider extends React.Component {
+      class StoreProvider extends React.PureComponent {
         static get name() {
           return Klass.name
         }
@@ -48,31 +67,16 @@ export default function storeProvidable(options, Helpers) {
           error: null,
         }
 
-        componentWillReceiveProps(nextProps) {
-          if (!isEqual(this.props, nextProps)) {
-            // use action so it waits to trigger reactions until after
-            Mobx.action('updateProps', () => {
-              const curPropKeys = Object.keys(this._props)
-              const nextPropsKeys = Object.keys(nextProps)
-
-              // change granular so reactions are granular
-              for (const prop of nextPropsKeys) {
-                if (this._props[prop] !== nextProps[prop]) {
-                  this._props[prop] = nextProps[prop]
-                }
-              }
-              // remove
-              for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-                this._props[extraProp] = undefined
-              }
-            })()
-          }
-        }
-
         componentWillMount() {
+          this.componentWillUpdate = this.componentWillUpdate.bind(this)
           this.setupProps()
           this.setupStores()
           this.unmounted = false
+        }
+
+        // PureComponent means this is only called when props are not shallow equal
+        componentWillUpdate(nextProps) {
+          updateProps(this._props, nextProps)
         }
 
         componentDidMount() {
@@ -104,7 +108,9 @@ export default function storeProvidable(options, Helpers) {
         // for reactive props in stores
         // 🐛 must run this before this.setupStore()
         setupProps() {
-          Mobx.extendObservable(this, { _props: { ...this.props } })
+          if (!this._props) {
+            Mobx.extendObservable(this, { _props: { ...this.props } })
+          }
         }
 
         // DO NOT USE CLASS PROPERTY DECORATORS FOR THIS, IDK WTF WHY
@@ -175,12 +181,11 @@ export default function storeProvidable(options, Helpers) {
         }
 
         hotReload() {
-          setTimeout(() => {
-            this.disposeStores()
-            this.setupProps()
-            this.setupStores()
-            this.mountStores()
-          })
+          console.log('hmr')
+          // this.disposeStores()
+          // this.setupProps()
+          // this.setupStores()
+          // this.mountStores()
         }
 
         render() {

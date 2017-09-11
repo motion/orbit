@@ -27,11 +27,11 @@ type Props = PaneProps & { store: BarTeamStore }
 })
 export default class BarTeam extends Component<Props> {
   static defaultProps: Props
-  render({ store, activeIndex, data }: Props) {
+  render({ store, paneStore }: Props) {
     return (
       <team>
         <section>
-          <UI.Title size={2}>Team {data.team}</UI.Title>
+          <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
         </section>
 
         <section>
@@ -39,7 +39,7 @@ export default class BarTeam extends Component<Props> {
         </section>
 
         <section css={{ flex: 1 }}>
-          <Feed items={store.results} data={data} activeIndex={activeIndex} />
+          <Feed items={store.results} data={paneStore.data} />
         </section>
       </team>
     )

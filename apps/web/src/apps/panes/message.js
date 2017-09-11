@@ -2,10 +2,9 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Pane from './pane'
 
-@view.provide({ paneStore: Pane.Store })
 @view
 export default class Message {
-  render({ data }) {
+  render({ paneStore: { data } }) {
     return (
       <Pane.Card icon={data.icon}>
         <UI.Theme name="light">

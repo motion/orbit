@@ -37,9 +37,8 @@ const DEFAULT_GLOW = {
   overlayZIndex: 0,
 }
 
-@injectTheme
-@view.ui
-export default class ListItem extends React.PureComponent<Props> {
+@view
+export default class ListItem extends React.Component<Props> {
   static isListItem = true
   static contextTypes = {
     uiTheme: object,
@@ -67,7 +66,6 @@ export default class ListItem extends React.PureComponent<Props> {
       after,
       before,
       borderRadius,
-      borderWidth,
       children,
       date,
       dateSize,
@@ -86,7 +84,6 @@ export default class ListItem extends React.PureComponent<Props> {
       style,
       ellipse,
       glowProps,
-      theme,
       editable,
       onFinishEdit,
       iconProps,
@@ -104,6 +101,9 @@ export default class ListItem extends React.PureComponent<Props> {
           borderRadius,
         }
 
+    const highlightValue =
+      typeof highlight === 'function' ? highlight() : highlight
+
     return (
       <SizedSurface
         tagName="listitem"
@@ -115,10 +115,6 @@ export default class ListItem extends React.PureComponent<Props> {
         border={false}
         background="transparent"
         hoverBackground
-        borderBottom={[
-          borderWidth,
-          theme ? theme.base.borderColor : 'transparent',
-        ]}
         glow
         row
         onClick={onClick}
@@ -130,7 +126,7 @@ export default class ListItem extends React.PureComponent<Props> {
         }}
         style={style}
         getRef={this.getRef}
-        highlight={highlight}
+        highlight={highlightValue}
         {...props}
       >
         <before if={before}>{before}</before>

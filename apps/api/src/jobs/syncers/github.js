@@ -6,15 +6,7 @@ import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
 import { URLSearchParams } from 'url'
-import { now } from 'mobx-utils'
-
-const olderThan = (date, minutes) => {
-  const upperBound = minutes * 1000 * 60
-  const timeDifference = Date.now() - Date.parse(date)
-  const answer = timeDifference > upperBound
-  console.log(timeDifference, upperBound, answer)
-  return answer
-}
+import { ensureJob } from '~/jobs/helpers'
 
 @store
 export default class GithubSync {
@@ -45,33 +37,12 @@ export default class GithubSync {
     }
 
     // autorun
-    this.watch(async () => {
-      now(1000 * 60) // every minute
+    this.setInterval(async () => {
       await Promise.all([
-        this.ensureJob('issues', { every: 60 * 6 }), // 6 hours
-        this.ensureJob('feed', { every: 0.1 }),
+        ensureJob(this.type, 'issues', { every: 60 * 6 }), // 6 hours
+        ensureJob(this.type, 'feed', { every: 0.1 }),
       ])
-    })
-  }
-
-  ensureJob = async (action: string, options: Object = {}): ?Job => {
-    const lastPending = await Job.lastPending({ action }).exec()
-    if (lastPending) {
-      console.log(`Pending job already running for ${this.type} ${action}`)
-      return
-    }
-    const lastCompleted = await Job.lastCompleted({ action }).exec()
-    const createJob = () => Job.create({ type: 'github', action })
-    if (!lastCompleted) {
-      return await createJob()
-    }
-    const ago = Math.round(
-      (Date.now() - Date.parse(lastCompleted.updatedAt)) / 1000 / 60
-    )
-    console.log(`${this.type}.${action} last ran -- ${ago} minutes ago`)
-    if (olderThan(lastCompleted.updatedAt, options.every)) {
-      return await createJob()
-    }
+    }, 1000 * 60)
   }
 
   run = (job: Job) => {
@@ -397,9 +368,10 @@ export default class GithubSync {
     // if not modified return null
     if (res.status === 304) {
       console.log('Not modified', path)
-      console.log(await res.json())
       return null
     }
+
+    console.log('BODY', res.body)
 
     return res.json()
   }

@@ -37,6 +37,7 @@ export default class API {
     await this.database.start({
       modelOptions: {
         autoSync: true,
+        debug: true,
       },
     })
     console.log('Start bootstrap')

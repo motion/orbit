@@ -39,12 +39,14 @@ const modelMethods = {
   get id() {
     return this._id
   },
+
   delete() {
     return this.collection
       .findOne(this._id)
       .exec()
       .then(doc => doc && doc.remove())
   },
+
   // update, add properties to model & save
   async update(object: Object) {
     return await this.atomicUpdate(doc => {
@@ -53,6 +55,7 @@ const modelMethods = {
       }
     })
   },
+
   // merge object deeply
   merge(object: Object) {
     modelMerge(this, object)
@@ -62,6 +65,7 @@ const modelMethods = {
       modelMerge(doc, object)
     })
   },
+
   // this is the mongo field update syntax that rxdb has
   // see https://docs.mongodb.com/manual/reference/operator/update-field/
   // and https://github.com/lgandecki/modifyjs#implemented
@@ -450,8 +454,10 @@ export default class Model {
                 },
               })
               this.liveQueries[QUERY_KEY] = true
+              console.log('resolving')
               resolve(liveReplication)
             } else {
+              console.log('resolving')
               resolve(true)
             }
           }
@@ -535,6 +541,6 @@ export default class Model {
       await this.onConnection()
     }
     this.applyDefaults(object)
-    return this._collection.upsert(object)
+    return this._collection.atomicUpsert(object)
   }
 }

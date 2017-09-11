@@ -22,14 +22,11 @@ function getRxError(error: Error) {
 @store
 export default class Sync {
   locks: Set<string> = new Set()
-  jobWatcher: ?Subscription = null
-
   @watch user: ?User = () => User.findOne()
-
   @watch pendingJobs: ?Array<Job> = () => Job.pending()
-
   @watch
   syncers = () => {
+    console.log('watching user', this.user)
     if (!this.user) {
       return {}
     }

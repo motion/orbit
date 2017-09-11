@@ -19,7 +19,12 @@ export const applyHooks = (model: Model) => {
   const ogSave = model.hooks.preSave
   model.hooks.preSave = (doc: Object) => {
     if (model.hasTimestamps) {
-      doc.updatedAt = model.now
+      // WARNING
+      // TODO MAKE THIS WORK WITH UPSERT AND THEN TAKE OUT THE IF CHECK HERE
+      // WARNING
+      if (!doc.updatedAt) {
+        doc.updatedAt = model.now
+      }
       // 🐛 model handles upsert not using preInsert (i think)
       if (!doc.createdAt) {
         doc.createdAt = model.now
@@ -30,8 +35,26 @@ export const applyHooks = (model: Model) => {
     }
   }
 
+  // POST-INSERT
+  // this is called when a new model has been inserted
+  const ogPostInsert = model.hooks.postInsert
+  model.hooks.postInsert = (doc: Object) => {
+    if (model.options.debug) {
+      // add some helper logs
+      console.log(
+        `INSERT ${model.constructor.name} #${doc.id ||
+          doc._id ||
+          doc.name ||
+          doc.title}`
+      )
+    }
+    if (ogPostInsert) {
+      ogPostInsert.call(model, doc)
+    }
+  }
+
   // POST-CREATE
-  // decorate each instance with model.methods
+  // this when any model is instantiated
   const ogPostCreate = model.hooks.postCreate
   const compiledMethods = model.compiledMethods()
   model.hooks.postCreate = doc => {
@@ -53,14 +76,6 @@ export const applyHooks = (model: Model) => {
       console.warn('no compiledMethods')
     }
     Object.defineProperties(doc, compiledMethods)
-    if (true || model.options.debug) {
-      console.log(
-        `Created/updated ${model.constructor.name} #${doc.id ||
-          doc._id ||
-          doc.name ||
-          doc.title}`
-      )
-    }
     if (ogPostCreate) {
       ogPostCreate.call(model, doc)
     }

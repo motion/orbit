@@ -100,7 +100,7 @@ export default function storeProvidable(options, Helpers) {
           }
         }
 
-        unstable_handleError(error) {
+        componentDidCatch(error) {
           console.error('StoreProvidable.handleError', error)
           this.setState({ error })
         }
@@ -181,11 +181,10 @@ export default function storeProvidable(options, Helpers) {
         }
 
         hotReload() {
-          console.log('hmr')
-          // this.disposeStores()
-          // this.setupProps()
-          // this.setupStores()
-          // this.mountStores()
+          this.disposeStores()
+          this.setupProps()
+          this.setupStores()
+          this.mountStores()
         }
 
         render() {

@@ -451,7 +451,7 @@ class TaskStore {
   }
 
   get results() {
-    const { data } = this.props
+    const { data } = this.props.paneStore
 
     const comments = (data.comments || []).map(comment => ({
       element: Comment,

@@ -25,7 +25,7 @@ export default class Root extends React.Component {
     view.off('hmr', this.clearErr)
   }
 
-  unstable_handleError(error) {
+  componentDidCatch(error) {
     console.error('React.handleError', error)
     this.setState({ error })
   }

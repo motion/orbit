@@ -103,6 +103,7 @@ class BarStore {
 
   // check if it's a textbox in a pane so we can not close bar
   isTextbox = ({ target }) =>
+    this.inputRef &&
     target.className !== this.inputRef.className &&
     includes(['input', 'textarea'], target.tagName.toLowerCase())
 

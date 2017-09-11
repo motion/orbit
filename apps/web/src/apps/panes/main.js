@@ -42,6 +42,11 @@ class BarMainStore {
         })
       }
     )
+
+    this.react(
+      () => this.props.paneStore.activeIndex,
+      row => this.listRef && this.listRef.scrollToRow(row)
+    )
   }
 
   get things(): Array<PaneResult> {

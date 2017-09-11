@@ -176,7 +176,7 @@ export default class ExampleApp extends React.Component {
     this.windowRef.focus()
   }
 
-  unstable_handleError(error) {
+  componentDidCatch(error) {
     console.error(error)
     this.setState({ error })
   }
@@ -224,7 +224,7 @@ export default class ExampleApp extends React.Component {
     return (
       <app>
         <Menu />
-        {false &&
+        {false && (
           <window
             key={'bg'}
             {...bgWindow}
@@ -240,7 +240,8 @@ export default class ExampleApp extends React.Component {
             webPreferences={{
               nativeWindowOpen: true,
             }}
-          />}
+          />
+        )}
         {
           <window
             key={'bar'}

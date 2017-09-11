@@ -34,7 +34,7 @@ class BarMainStore {
     this.props.getRef(this)
 
     this.react(
-      () => this.listRef && this.search,
+      () => this.results && this.listRef && this.search,
       () => {
         this.setTimeout(() => {
           this.listRef.updateChildren()
@@ -57,7 +57,7 @@ class BarMainStore {
 
   browse: Array<PaneResult> = [
     {
-      id: 10,
+      id: 1000,
       title: 'Team: Motion',
       type: 'team',
       data: {
@@ -66,7 +66,7 @@ class BarMainStore {
       actions: ['like motion'],
     },
     {
-      id: 11,
+      id: 1100,
       title: 'Recent',
       type: 'feed',
       icon: 'radio',
@@ -76,14 +76,14 @@ class BarMainStore {
       actions: ['respond to recent'],
     },
     {
-      id: 12,
+      id: 1200,
       data: { message: 'assigned' },
       title: 'Assigned to me',
       type: 'message',
       icon: 'check',
     },
     {
-      id: 13,
+      id: 1300,
       data: { message: 'my team' },
       title: 'My Team',
       category: 'Browse',
@@ -94,7 +94,7 @@ class BarMainStore {
       icon: 'objects_planet',
     },
     {
-      id: 14,
+      id: 1400,
       data: { message: 'from company' },
       title: 'Company',
       category: 'Browse',

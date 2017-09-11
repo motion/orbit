@@ -11,7 +11,9 @@ export default prop => Child => {
     }
 
     componentWillUnmount() {
-      Resize.removeAllListeners(this.node)
+      if (this.node) {
+        Resize.removeAllListeners(this.node)
+      }
       this.unmounted = true
     }
 

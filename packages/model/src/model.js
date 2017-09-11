@@ -345,7 +345,7 @@ export default class Model {
         if (this.connected) {
           console.log('watch connected')
           resolve()
-          off()
+          setTimeout(off)
         }
       })
       setTimeout(() => {

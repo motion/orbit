@@ -13,15 +13,16 @@ export default class Feed extends React.PureComponent<Props> {
     return (
       <feed $inApp={data.special}>
         <UI.Title opacity={0.5} marginBottom={10}>
-          Recently
+          Recently ({items.length})
         </UI.Title>
         <UI.List
           items={items}
+          selected={activeIndex}
           getItem={(event, index) => {
             const { verb, data } = event
             const { actor, payload } = data
             return (
-              <feeditem key={index}>
+              <feeditem $active={index === activeIndex} key={index}>
                 <info if={actor}>
                   <avatar $img={actor.avatar_url} />
                   <UI.Text $name>{actor.login} </UI.Text>

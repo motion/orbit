@@ -1,4 +1,5 @@
 import * as React from 'react'
+import hoistStatics from 'hoist-non-react-statics'
 import resizer from 'element-resize-detector'
 
 const Resize = resizer({ strategy: 'scroll' })
@@ -70,8 +71,7 @@ export default prop => Child => {
     }
   }
 
-  // inherent properties
-  Object.setPrototypeOf(ParentSize.prototype, Child.prototype)
+  hoistStatics(ParentSize, Child)
 
   return ParentSize
 }

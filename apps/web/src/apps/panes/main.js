@@ -21,12 +21,23 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
+  listRef = null
   topThings: ?Array<Thing> = Thing.find()
     .sort('createdAt')
     .limit(300)
 
   start() {
     this.props.getRef(this)
+
+    this.react(
+      () => this.listRef && this.pane.search,
+      () => {
+        this.setTimeout(() => {
+          this.listRef.updateChildren()
+          this.listRef.measure()
+        })
+      }
+    )
   }
 
   get pane() {
@@ -40,6 +51,34 @@ class BarMainStore {
   }
 
   browse: Array<PaneResult> = [
+    {
+      id: 500,
+      title: 'Github issue about performance',
+      type: 'task',
+      data: TestIssue,
+      category: 'Tests',
+    },
+    {
+      id: 500,
+      title: 'Github issue about performance',
+      type: 'task',
+      data: TestIssue,
+      category: 'Tests',
+    },
+    {
+      id: 500,
+      title: 'Github issue about performance',
+      type: 'task',
+      data: TestIssue,
+      category: 'Tests',
+    },
+    {
+      id: 500,
+      title: 'Github issue about performance',
+      type: 'task',
+      data: TestIssue,
+      category: 'Tests',
+    },
     {
       id: 10,
       title: 'Team: Motion',
@@ -176,17 +215,15 @@ export default class BarMain extends React.Component<> {
     this.hasContent(this.props.mainStore.results[i]) ? 100 : 38
 
   render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
-    console.log('render main')
     return (
       <Pane.Card width={315} $pane isActive={paneStore.isActive}>
         <none if={mainStore.results.length === 0}>No Results</none>
         <UI.List
           if={mainStore.results}
-          debug
+          getRef={mainStore.ref('listRef').set}
           virtualized={{
             rowHeight: this.getRowHeight,
           }}
-          measureOn={paneStore.search}
           onSelect={this.onSelect}
           groupKey="category"
           items={mainStore.results}

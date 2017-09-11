@@ -38,7 +38,7 @@ export type Props = {
 }
 
 @parentSize('virtualized')
-@view
+@view.ui
 class List extends React.Component<Props, { selected: number }> {
   static Item = ListItem
 
@@ -58,19 +58,20 @@ class List extends React.Component<Props, { selected: number }> {
   itemRefs: Array<HTMLElement> = []
   lastDidReceivePropsDate: ?number
 
-  componentWillMount = () => {
+  componentWillMount() {
     this.totalItems = this.getTotalItems(this.props)
-    this.updateChildren()
 
     if (typeof this.props.defaultSelected !== 'undefined') {
       this.setState({ selected: this.props.defaultSelected })
     }
 
-    console.log('List is', this)
+    if (this.props.getRef) {
+      this.props.getRef(this)
+    }
   }
 
   // willUpdate only runs when PureComponent has new props
-  componentWillUpdate = (nextProps: Props) => {
+  componentWillUpdate(nextProps: Props) {
     const { selected } = nextProps
 
     if (typeof selected !== 'undefined') {
@@ -97,10 +98,18 @@ class List extends React.Component<Props, { selected: number }> {
 
     if (
       (typeof selected === 'number' && this.state.selected !== selected) ||
-      nextProps.measureOn !== this.props.measureOn
+      !this.childrenVersion
     ) {
       this.props = nextProps
       this.updateChildren()
+    }
+  }
+
+  measure = () => {
+    if (this.virtualListRef) {
+      this.virtualListRef.recomputeRowHeights(0)
+    } else {
+      console.log('no virtual list')
     }
   }
 
@@ -140,7 +149,7 @@ class List extends React.Component<Props, { selected: number }> {
     }
   }
 
-  highlightItem = (setter: ?() => number, cb?: Function) => {
+  highlightItem(setter: ?() => number, cb?: Function) {
     const selected = setter(this.state.selected)
     this.lastSelectionDate = Date.now()
     // only setstate if controlled
@@ -155,10 +164,6 @@ class List extends React.Component<Props, { selected: number }> {
       if (cb) cb()
     }
     return selected
-  }
-
-  clearSelected = () => {
-    this.highlightItem(() => null)
   }
 
   get selected() {
@@ -181,7 +186,6 @@ class List extends React.Component<Props, { selected: number }> {
   }
 
   getRow = ({ index, key, style }) => {
-    // console.log('getting row', this.children, this.children[index])
     if (!this.children || !this.children[index]) {
       console.log('no child', index, this)
       return null
@@ -265,6 +269,7 @@ class List extends React.Component<Props, { selected: number }> {
   }
 
   // for items={}
+  // curried so we can avoid work in virtualized contexts
   getListItem = (cur, index) => rowProps => {
     const item = this.props.getItem(cur, index)
     if (item === null) {
@@ -368,20 +373,14 @@ class List extends React.Component<Props, { selected: number }> {
     this.totalGroups = totalGroups
     this.realIndex = realIndex
     this.groupedIndex = groupedIndex
-    this.curIndex = Math.random()
-    console.log('updated stuff', this.curIndex)
+    this.childrenVersion = Math.random()
   }
 
   render() {
     const { children } = this
-    if (this.props.debug) {
-      console.log('render list', children)
-    }
     if (!children) {
       return null
     }
-    let height = this.props.height
-    let width = this.props.width
     const {
       virtualized,
       parentSize,
@@ -390,7 +389,7 @@ class List extends React.Component<Props, { selected: number }> {
       attach,
       controlled,
     } = this.props
-
+    let { width, height } = this.props
     if (virtualized && parentSize) {
       height = parentSize.height || height || 0
       width = parentSize.width || width || 0
@@ -414,6 +413,7 @@ class List extends React.Component<Props, { selected: number }> {
           if={virtualized}
           height={height}
           width={width}
+          ref={this.ref('virtualListRef').set}
           overscanRowCount={3}
           scrollToIndex={realIndex[this.state.selected]}
           rowCount={totalItems + totalGroups}

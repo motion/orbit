@@ -7,7 +7,7 @@ import * as UI from '@mcro/ui'
 import * as PaneTypes from './panes'
 import Actions from './panes/pane/actions'
 import { MillerState, Miller } from './miller'
-import { isNumber, includes, debounce } from 'lodash'
+import { isNumber, includes, find, debounce } from 'lodash'
 import { actionToKeyCode } from './helpers'
 import Pane from '~/views/pane'
 import { SHORTCUTS } from '~/stores/rootStore'
@@ -94,15 +94,25 @@ class BarStore {
   millerStateVersion = 0
   inputRef: ?HTMLElement = null
   metaKey = false
+  activeAction = null
 
   // search is throttled, textboxVal isn't
   millerStore = null
   search = ''
   textboxVal = ''
 
+  // check if it's a textbox in a pane so we can not close bar
+  isTextbox = ({ target }) =>
+    target.className !== this.inputRef.className &&
+    includes(['input', 'textarea'], target.tagName.toLowerCase())
+
   start() {
     this.on(window, 'focus', this.focusBar)
     this.attachTrap('window', window)
+    this.millerState.onSelectionChange(() => {
+      this.activeAction = null
+    })
+
     this.millerState.onChangeColumn((col, lastCol) => {
       if (lastCol !== 0 && col === 0) {
         this.focusBar()
@@ -124,13 +134,11 @@ class BarStore {
     document.addEventListener('keydown', e => {
       this.metaKey = e.metaKey
 
-      if (
-        this.metaKey &&
-        !includes(['input', 'textarea'], e.target.tagName.toLowerCase())
-      ) {
+      if (this.metaKey && !this.isTextbox(e)) {
         ;(this.allActions() || []).forEach(action => {
           if (actionToKeyCode(action) === e.keyCode) {
             e.preventDefault()
+            this.activeAction = action
             console.log('executing action', action)
           }
         })
@@ -139,6 +147,15 @@ class BarStore {
     document.addEventListener('keyup', e => {
       this.metaKey = e.metaKey
     })
+  }
+
+  runAction = name => {
+    if (this.activeAction && this.activeAction.name === name) {
+      this.activeAction = null
+    } else {
+      this.activeAction =
+        find(this.allActions(), action => action.name === name) || null
+    }
   }
 
   allActions() {
@@ -234,6 +251,11 @@ class BarStore {
       e.preventDefault()
     },
     esc: e => {
+      if (this.isTextbox(e)) return
+      if (this.activeAction) {
+        this.activeAction = null
+        return
+      }
       // allows one frame of interception (by pane store)
       setTimeout(() => {
         if (window.preventEscClose !== true) {
@@ -290,11 +312,10 @@ const inputStyle = {
   fontSize: 32,
 }
 
-@view({
-  store: BarStore,
-})
+@view.provide({ barStore: BarStore })
+@view
 export default class BarPage {
-  render({ store }) {
+  render({ barStore: store }) {
     return (
       <UI.Theme name="clear-dark">
         <bar ref={store.ref('barRef').set} $$fullscreen>
@@ -326,6 +347,20 @@ export default class BarPage {
             pane={Pane}
             onKeyActions={store.ref('millerKeyActions').set}
           />
+          <UI.Popover
+            if={store.activeAction}
+            open={true}
+            onClose={() => {
+              store.activeAction = null
+            }}
+            borderRadius={5}
+            elevation={3}
+            target={`.target-${store.activeAction.name}`}
+            overlay="transparent"
+            distance={8}
+          >
+            {store.activeAction.popover}
+          </UI.Popover>
 
           <BottomActions
             metaKey={store.metaKey}

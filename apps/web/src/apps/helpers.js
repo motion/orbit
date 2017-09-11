@@ -1,3 +1,5 @@
+import { isString } from 'lodash'
+
 export const actionToKeyCode = action => {
-  return action.toUpperCase().charCodeAt(0)
+  return (isString(action) ? action : action.name).toUpperCase().charCodeAt(0)
 }

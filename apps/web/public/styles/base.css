@@ -20,6 +20,10 @@ div[data-slate-editor="true"] > div {
   content: attr(placeholder);
 }
 
+.dark-textarea::-webkit-input-placeholder {
+  color: #ccc;
+}
+
 /* github html embed */
 .task-list-item {
   list-style: none;

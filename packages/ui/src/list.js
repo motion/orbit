@@ -59,11 +59,14 @@ class List extends React.Component<Props, { selected: number }> {
   lastDidReceivePropsDate: ?number
 
   componentWillMount = () => {
-    this.updateChildren(this.props)
     this.totalItems = this.getTotalItems(this.props)
+    this.updateChildren()
+
     if (typeof this.props.defaultSelected !== 'undefined') {
       this.setState({ selected: this.props.defaultSelected })
     }
+
+    console.log('List is', this)
   }
 
   // willUpdate only runs when PureComponent has new props
@@ -97,7 +100,7 @@ class List extends React.Component<Props, { selected: number }> {
       nextProps.measureOn !== this.props.measureOn
     ) {
       this.props = nextProps
-      this.updateChildren(this.props)
+      this.updateChildren()
     }
   }
 
@@ -126,11 +129,6 @@ class List extends React.Component<Props, { selected: number }> {
     enter: this.isSelected(() => {
       this.highlightItem(() => this.state.selected)
     }),
-  }
-
-  totalItems = () => {
-    // TODO could check children length?
-    return this.props.items.length
   }
 
   // wrap weird signature
@@ -182,18 +180,16 @@ class List extends React.Component<Props, { selected: number }> {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
-  get total() {
-    return this.props.items
-      ? this.props.items.length
-      : React.Children.count(this.props.children)
-  }
-
   getRow = ({ index, key, style }) => {
+    // console.log('getting row', this.children, this.children[index])
+    if (!this.children || !this.children[index]) {
+      console.log('no child', index, this)
+      return null
+    }
     return this.children[index]({ key, style })
   }
 
   getRowHeight = ({ index }) => {
-    console.log('getting row height from', this.curIndex)
     const { groupedIndex } = this
     const { separatorHeight, virtualized } = this.props
     if (groupedIndex[index] === true) {
@@ -201,18 +197,13 @@ class List extends React.Component<Props, { selected: number }> {
     }
     const dynamicRowHeight = typeof virtualized.rowHeight === 'function'
     if (dynamicRowHeight) {
-      console.log(
-        'returning row height',
-        index,
-        virtualized.rowHeight(groupedIndex[index])
-      )
       return virtualized.rowHeight(groupedIndex[index])
     }
     return virtualized.rowHeight
   }
 
-  getItemProps(
-    {
+  getItemProps(index, rowProps, isListItem) {
+    const {
       parentSize,
       virtualized,
       onItemMount,
@@ -223,12 +214,7 @@ class List extends React.Component<Props, { selected: number }> {
       isSelected,
       selected,
       segmented,
-    },
-    index,
-    rowProps,
-    isListItem
-  ) {
-    const { total } = this
+    } = this.props
     let rowHeight
     if (virtualized && parentSize) {
       rowHeight = virtualized ? virtualized.rowHeight : undefined
@@ -247,7 +233,7 @@ class List extends React.Component<Props, { selected: number }> {
         ? {
             segmented,
             isFirstElement: index === 0,
-            isLastElement: index === total - 1,
+            isLastElement: index === this.totalItems - 1,
           }
         : null),
       ...(isListItem ? { getRef } : { ref: getRef }),
@@ -279,31 +265,31 @@ class List extends React.Component<Props, { selected: number }> {
   }
 
   // for items={}
-  getListItem = props => (cur, index) => rowProps => {
-    const item = props.getItem(cur, index)
+  getListItem = (cur, index) => rowProps => {
+    const item = this.props.getItem(cur, index)
     if (item === null) {
       return null
     }
     if (React.isValidElement(item)) {
-      return React.cloneElement(item, this.getItemProps(props, index, rowProps))
+      return React.cloneElement(item, this.getItemProps(index, rowProps))
     }
     // pass object to ListItem
     return (
       <ListItem
         key={item.key || cur.id || index}
-        {...this.getItemProps(props, index, rowProps, true)}
+        {...this.getItemProps(index, rowProps, true)}
         {...item}
       />
     )
   }
 
   // for children={}
-  getListChildren = (props, children) =>
+  getListChildren = children =>
     React.Children.map(children, (item, index) => rowProps =>
       item
         ? React.cloneElement(
             item,
-            this.getItemProps(props, index, rowProps, item.type.isListItem)
+            this.getItemProps(index, rowProps, item.type.isListItem)
           )
         : null
     )
@@ -314,7 +300,8 @@ class List extends React.Component<Props, { selected: number }> {
   //   this.groupedIndex
   //   this.realIndex
   //   this.totalGroups
-  updateChildren(props) {
+  updateChildren() {
+    const { props } = this
     const {
       children: children_,
       items,
@@ -330,8 +317,8 @@ class List extends React.Component<Props, { selected: number }> {
     }
     // allow passing of rowProps by wrapping each in function
     let children = children_
-      ? this.getListChildren(props, children_)
-      : items.map(this.getListItem(props))
+      ? this.getListChildren(children_)
+      : items.map(this.getListItem)
 
     // if no need, just get them right away
     if (!virtualized) {
@@ -348,7 +335,7 @@ class List extends React.Component<Props, { selected: number }> {
       let lastGroup = null
 
       items.forEach((item, itemIndex) => {
-        const index = itemIndex + this.totalGroups
+        const index = itemIndex + totalGroups
         realIndex[itemIndex] = index
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
@@ -386,10 +373,10 @@ class List extends React.Component<Props, { selected: number }> {
   }
 
   render() {
-    if (this.props.debug) {
-      console.log('render list')
-    }
     const { children } = this
+    if (this.props.debug) {
+      console.log('render list', children)
+    }
     if (!children) {
       return null
     }
@@ -408,7 +395,7 @@ class List extends React.Component<Props, { selected: number }> {
       height = parentSize.height || height || 0
       width = parentSize.width || width || 0
     }
-    const { total, totalGroups, realIndex } = this
+    const { totalItems, totalGroups, realIndex } = this
     const inner = (
       <Surface
         tagName="list"
@@ -429,7 +416,7 @@ class List extends React.Component<Props, { selected: number }> {
           width={width}
           overscanRowCount={3}
           scrollToIndex={realIndex[this.state.selected]}
-          rowCount={total + totalGroups}
+          rowCount={totalItems + totalGroups}
           rowRenderer={this.getRow}
           {...virtualized}
           rowHeight={this.getRowHeight}

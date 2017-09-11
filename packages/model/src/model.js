@@ -403,7 +403,6 @@ export default class Model {
     const firstReplication = this._collection.sync({
       query,
       remote: this.remote,
-      waitForLeadership: false,
       direction: {
         pull: true,
       },
@@ -442,7 +441,6 @@ export default class Model {
               const liveReplication = this._collection.sync({
                 query,
                 remote: this.remote,
-                waitForLeadership: false,
                 direction: {
                   pull: true,
                 },

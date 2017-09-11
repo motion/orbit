@@ -396,7 +396,8 @@ export default class GithubSync {
 
     // if not modified return null
     if (res.status === 304) {
-      console.log('Not modified', path, res.json())
+      console.log('Not modified', path)
+      console.log(await res.json())
       return null
     }
 

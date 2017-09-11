@@ -55,7 +55,10 @@ export const applyHooks = (model: Model) => {
     Object.defineProperties(doc, compiledMethods)
     if (true || model.options.debug) {
       console.log(
-        `INSERT ${model.constructor.name}.create(${JSON.stringify(doc)})`
+        `Created/updated ${model.constructor.name} #${doc.id ||
+          doc._id ||
+          doc.name ||
+          doc.title}`
       )
     }
     if (ogPostCreate) {

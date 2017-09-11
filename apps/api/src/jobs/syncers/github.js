@@ -8,19 +8,17 @@ import { omit, once, flatten } from 'lodash'
 import { URLSearchParams } from 'url'
 import { ensureJob } from '~/jobs/helpers'
 
+const type = 'github'
+
 @store
 export default class GithubSync {
   user: User
-  type = 'github'
   lastSyncs = {}
-
   @watch
-  setting: any = () =>
+  setting = () =>
     this.user &&
-    Setting.findOne({
-      userId: this.user.id,
-      type: 'github',
-    }).sort('createdAt') // oldest
+    // oldest
+    Setting.findOne({ userId: this.user.id, type }).sort('createdAt')
 
   constructor({ user }: SyncOptions) {
     this.user = user
@@ -39,8 +37,8 @@ export default class GithubSync {
     // autorun
     this.setInterval(async () => {
       await Promise.all([
-        ensureJob(this.type, 'issues', { every: 60 * 6 }), // 6 hours
-        ensureJob(this.type, 'feed', { every: 0.1 }),
+        ensureJob(type, 'issues', { every: 60 * 6 }), // 6 hours
+        ensureJob(type, 'feed', { every: 0.1 }),
       ])
     }, 1000 * 60)
   }

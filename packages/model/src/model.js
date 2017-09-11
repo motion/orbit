@@ -454,10 +454,8 @@ export default class Model {
                 },
               })
               this.liveQueries[QUERY_KEY] = true
-              console.log('resolving')
               resolve(liveReplication)
             } else {
-              console.log('resolving')
               resolve(true)
             }
           }

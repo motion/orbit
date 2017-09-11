@@ -11,10 +11,8 @@ export default prop => Child => {
     }
 
     componentWillUnmount() {
-      if (this.props[prop]) {
-        Resize.removeAllListeners(this.node)
-        this.unmounted = true
-      }
+      Resize.removeAllListeners(this.node)
+      this.unmounted = true
     }
 
     measure(parent) {
@@ -30,15 +28,16 @@ export default prop => Child => {
         width: offsetWidth,
         height: offsetHeight,
       }
-      // this could be called from outside parentSize, safety
-      if (!this.unmounted) {
-        this.setState({ dimensions })
-      }
+      this.setState({ dimensions })
       return dimensions
     }
 
+    get isActive() {
+      return !prop || !!this.props[prop]
+    }
+
     setParent(ref) {
-      if (!this.node && ref) {
+      if (!this.node && ref && this.isActive) {
         Resize.listenTo(ref, () => this.measure(ref))
         this.measure(ref)
         this.node = ref

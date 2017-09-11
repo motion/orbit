@@ -130,7 +130,7 @@ export default class Pane extends React.Component<Props, State> {
     },
   }
 
-  static theme = (props, theme) => {
+  static theme = props => {
     const contentMaxHeightStyles = props.maxHeight && {
       maxHeight: props.maxHeight,
       overflowY: 'auto',

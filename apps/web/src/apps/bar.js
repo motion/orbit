@@ -4,15 +4,27 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import Actions from './panes/pane/actions'
 import BarStore from './barStore'
+import * as PaneTypes from './panes'
 import { Miller, MillerState } from './miller'
+import Pane from '~/views/pane'
 
-const safeString = thing => {
-  try {
-    return JSON.stringify(thing)
-  } catch (e) {
-    console.log('non safe object', thing)
-    return `${thing}`
-  }
+const PANE_TYPES = {
+  main: PaneTypes.Main,
+  message: PaneTypes.Message,
+  setup: PaneTypes.Setup,
+  inbox: PaneTypes.Threads,
+  browse: PaneTypes.Browse,
+  feed: PaneTypes.Feed,
+  notifications: PaneTypes.Notifications,
+  login: PaneTypes.Login,
+  issue: PaneTypes.Task,
+  orbit: PaneTypes.Orbit,
+  task: PaneTypes.Task,
+  doc: PaneTypes.Doc,
+  test: PaneTypes.Test,
+  newIssue: PaneTypes.Code.NewIssue,
+  integrations: PaneTypes.Integrations,
+  team: PaneTypes.Team,
 }
 
 @view.ui
@@ -57,32 +69,24 @@ const inputStyle = {
   fontSize: 32,
 }
 
-const paneProps = {
-  itemProps: {
-    size: 1.2,
-    glow: false,
-    hoverable: true,
-    fontSize: 26,
-    padding: [10, 10],
-    highlightBackground: [0, 0, 0, 0.2],
-    highlightColor: [255, 255, 255, 1],
-  },
-}
-
-@view.provide({ barStore: BarStore, millerState: MillerState })
+@view.provide({ millerState: MillerState, barStore: BarStore })
 @view
 export default class BarPage {
-  render({ barStore: store }) {
+  componentWillMount() {
+    this.props.barStore.setMillerState(this.props.millerState)
+  }
+
+  render({ barStore }) {
     return (
       <UI.Theme name="clear-dark">
-        <bar ref={store.ref('barRef').set} $$fullscreen>
+        <bar ref={barStore.ref('barRef').set} $$fullscreen>
           <header css={{ borderBottom: [1, [0, 0, 0, 0.1]] }} $$draggable>
             <UI.Input
               size={2.2}
-              getRef={store.onInputRef}
+              getRef={barStore.onInputRef}
               borderRadius={5}
-              onChange={store.onSearchChange}
-              value={store.textboxVal}
+              onChange={barStore.onSearchChange}
+              value={barStore.textboxVal}
               borderWidth={0}
               fontWeight={200}
               css={{
@@ -90,53 +94,35 @@ export default class BarPage {
                 ...inputStyle,
               }}
             />
-            <forwardcomplete>{store.peekItem}</forwardcomplete>
+            <forwardcomplete>{barStore.peekItem}</forwardcomplete>
             <pasteicon if={false}>
               <UI.Icon size={50} type="detailed" name="paper" />
             </pasteicon>
-            <selected
-              if={false}
-              css={{
-                position: 'absolute',
-                top: 80,
-                left: 0,
-                right: 0,
-                height: 20,
-                fontSize: 12,
-                overflow: 'hidden',
-                opacity: 0.8,
-                color: '#fff',
-              }}
-            >
-              Selected: {safeString(store.activeItem)}
-            </selected>
           </header>
           <Miller
-            search={store.search}
-            panes={store.PANE_TYPES}
-            paneProps={paneProps}
-            onKeyActions={val => {
-              store.millerKeyActions = val
-            }}
+            search={barStore.search}
+            pane={Pane}
+            panes={PANE_TYPES}
+            onKeyActions={barStore.ref('millerKeyActions').set}
           />
           <UI.Popover
-            if={store.activeAction}
+            if={barStore.activeAction}
             open={true}
             onClose={() => {
-              store.activeAction = null
+              barStore.activeAction = null
             }}
             borderRadius={5}
             elevation={3}
-            target={`.target-${store.activeAction.name}`}
+            target={`.target-${barStore.activeAction.name}`}
             overlay="transparent"
             distance={8}
           >
-            {store.activeAction.popover}
+            {barStore.activeAction.popover}
           </UI.Popover>
 
           <BottomActions
-            metaKey={store.metaKey}
-            actions={store.toolbarActions()}
+            metaKey={barStore.metaKey}
+            actions={barStore.toolbarActions()}
           />
         </bar>
       </UI.Theme>

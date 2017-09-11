@@ -12,7 +12,7 @@ import Header from './header'
 import BottomBar from '~/views/bottomBar'
 import * as UI from '@mcro/ui'
 
-@view
+@view.ui
 export default class Layout {
   state = {
     error: null,

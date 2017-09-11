@@ -31,15 +31,25 @@ const actions = [
 ].sort()
 
 export default class BarStore {
-  millerState = MillerState.serialize([{ type: 'main', data: { prefix: '' } }])
   millerStateVersion = 0
   inputRef: ?HTMLElement = null
   metaKey = false
   activeAction = null
 
+  millerStore = null
   // search is throttled, textboxVal isn't
   search = ''
   textboxVal = ''
+
+  _millerState = null
+  setMillerState = val => {
+    this._millerState = val
+  }
+
+  get millerState() {
+    return this._millerState
+    // return this.millerState
+  }
 
   // check if it's a textbox in a pane so we can not close bar
   isTextbox = ({ target }) =>
@@ -49,10 +59,16 @@ export default class BarStore {
   start() {
     this.on(window, 'focus', this.focusBar)
     this.attachTrap('window', window)
-    this.millerState.onSelectionChange(() => {
-      this.activeAction = null
-    })
+    this.react(
+      () => {
+        this.activeCol
+      },
+      () => {
+        this.activeAction = null
+      }
+    )
 
+    /*
     this.millerState.onChangeColumn((col, lastCol) => {
       if (lastCol !== 0 && col === 0) {
         this.focusBar()
@@ -62,6 +78,7 @@ export default class BarStore {
         this.blurBar()
       }
     })
+    */
 
     document.addEventListener('keydown', e => {
       this.metaKey = e.metaKey
@@ -78,6 +95,14 @@ export default class BarStore {
     })
     document.addEventListener('keyup', e => {
       this.metaKey = e.metaKey
+    })
+
+    this.watch(() => {
+      if (this.millerStore) {
+        this.millerStore.setPaneProps({
+          search: this.search,
+        })
+      }
     })
   }
 
@@ -153,11 +178,6 @@ export default class BarStore {
     return actions[
       actions.findIndex(action => action.indexOf(this.search) === 0)
     ]
-  }
-
-  onMillerStateChange = state => {
-    this.millerState = state
-    this.millerStateVersion++
   }
 
   PANE_TYPES = {

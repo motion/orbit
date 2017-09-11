@@ -21,7 +21,7 @@ const changes = [
 
 @view
 export default class BarDocPane {
-  render({ data, highlightIndex, activeIndex, paneProps, ...props }) {
+  render({ data, ...props }) {
     return (
       <Pane.Card title={data.title} icon="google" id={data.id || 0} {...props}>
         <what css={{ padding: [5, 5, 5] }}>
@@ -44,9 +44,7 @@ export default class BarDocPane {
               <icon css={{ padding: [0, 8], color: add ? 'green' : 'red' }}>
                 {add ? '+' : '-'}
               </icon>
-              <UI.Text>
-                {change.contents}
-              </UI.Text>
+              <UI.Text>{change.contents}</UI.Text>
             </change>
           )
         })}

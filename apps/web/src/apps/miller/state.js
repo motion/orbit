@@ -1,5 +1,5 @@
 // @flow
-import { sum, range } from 'lodash'
+import { sum, range, memoize } from 'lodash'
 
 type Schema = {
   title: string,
@@ -14,61 +14,30 @@ type Schema = {
 export default class MillerStateStore {
   activeRow = 0
   activeCol = 0
-  refs = []
-  schema: Array<Schema> = []
+  paneRefs = []
+  schema: Array<Schema> = [{ type: 'main', data: { prefix: '' } }]
   paneActions = []
   prevActiveRows = [] // holds the previously active columns
   colWidths = range(100).map(() => 0)
   colLeftMargin = 10
 
-  start() {
-    this.schema = this.props.schema
-  }
-
-  handleSelectionChange = () => {
-    const { state } = this.props
-
-    if (state.activeRow !== null && state.activeResults) {
-      if (
-        state.activeItem &&
-        state.activeItem.type &&
-        state.activeItem.showChild !== false
-      ) {
-        state.setSchema(state.activeCol + 1, state.activeItem)
-      }
-    }
-  }
-
-  get translateX() {
-    if (this.activeCol === 0) return 0
-    return (
-      -sum(this.colWidths.slice(0, this.activeCol)) -
-      this.colLeftMargin * this.activeCol
-    )
-  }
-
   keyActions = {
     right: () => {
-      const { state } = this.props
-      state.moveCol(1)
+      this.moveCol(1)
     },
     down: () => {
-      const { state } = this.props
       if (
-        state.activeRow === null ||
-        (state.activeResults &&
-          state.activeRow < state.activeResults.length - 1)
+        this.activeRow === null ||
+        (this.activeResults && this.activeRow < this.activeResults.length - 1)
       ) {
-        state.moveRow(1)
+        this.moveRow(1)
       }
     },
     up: () => {
-      const { state } = this.props
-      state.moveRow(-1)
+      this.moveRow(-1)
     },
     left: () => {
-      const { state } = this.props
-      state.moveCol(-1)
+      this.moveCol(-1)
     },
     esc: () => {},
     cmdA: () => {},
@@ -76,20 +45,18 @@ export default class MillerStateStore {
     enter: () => {},
   }
 
-  get currentItem() {
-    return this.schema[this.schema.length - 1]
-  }
-
-  get activePlugin() {
-    return this.plugins[this.activeCol]
-  }
-
-  get activeResults() {
-    return this.activePlugin && this.activePlugin.results
-  }
-
-  get activeItem() {
-    return this.activeResults && this.activeResults[this.activeRow]
+  start() {
+    this.watch(() => {
+      if (this.activeRow !== null && this.activeResults) {
+        if (
+          this.activeItem &&
+          this.activeItem.type &&
+          this.activeItem.showChild !== false
+        ) {
+          this.setSchema(this.activeCol + 1, this.activeItem)
+        }
+      }
+    })
   }
 
   setPaneActions(actions) {
@@ -104,8 +71,12 @@ export default class MillerStateStore {
     }
   }
 
-  setPlugin(index, plugin) {
-    this.plugins[index] = plugin
+  handleRef = memoize(index => ref => {
+    this.setRef(index, ref)
+  })
+
+  setRef(index, ref) {
+    this.refs[index] = ref
   }
 
   moveRow(delta: number) {
@@ -143,17 +114,11 @@ export default class MillerStateStore {
     this.setSelection(this.activeCol, row)
   }
 
-  setActiveColumn(col) {
-    const lastCol = this.activeCol
-    this.paneActions = []
-    this.activeCol = col
-  }
-
   moveCol(delta: number) {
     if (delta > 0) {
       if (this.activeCol < this.schema.length - 1) {
         this.prevActiveRows.push(this.activeRow)
-        this.setActiveColumn(this.activeCol + delta)
+        this.activeCol = this.activeCol + delta
         this.activeRow = 0
       }
     }
@@ -164,5 +129,29 @@ export default class MillerStateStore {
       this.activeRow = this.prevActiveRows[this.activeCol]
       this.removeExcessCols()
     }
+  }
+
+  get translateX() {
+    if (this.activeCol === 0) return 0
+    return (
+      -sum(this.colWidths.slice(0, this.activeCol)) -
+      this.colLeftMargin * this.activeCol
+    )
+  }
+
+  get currentItem() {
+    return this.schema[this.schema.length - 1]
+  }
+
+  get activeRef() {
+    return this.paneRefs[this.activeCol]
+  }
+
+  get activeResults() {
+    return this.activeRef && this.activeRef.results
+  }
+
+  get activeItem() {
+    return this.activeResults && this.activeResults[this.activeRow]
   }
 }

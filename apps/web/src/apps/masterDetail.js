@@ -11,6 +11,21 @@ const getSchema = () => {
   return JSON.parse(val)
 }
 
+const PANE_TYPES = {
+  main: Panes.Main,
+  placeholder: Panes.Placeholder,
+  setup: Panes.Setup,
+  inbox: Panes.Threads,
+  feed: Panes.Feed,
+  notifications: Panes.Notifications,
+  login: Panes.Login,
+  'code.issue': Panes.Code.Issue,
+  orbit: Panes.Orbit,
+  task: Panes.Task,
+  doc: Panes.Doc,
+  integrations: Panes.Integrations,
+}
+
 @view({
   store: class {
     actions = {
@@ -25,28 +40,11 @@ const getSchema = () => {
       */
     }
 
-    millerState = MillerState.serialize([getSchema()])
     millerStateVersion = 0
 
     onMillerStateChange = state => {
       this.millerState = state
       this.millerStateVersion++
-    }
-
-    PANE_TYPES = {
-      main: Panes.Main,
-      placeholder: Panes.Placeholder,
-      setup: Panes.Setup,
-      inbox: Panes.Threads,
-      browse: Panes.Browse,
-      feed: Panes.Feed,
-      notifications: Panes.Notifications,
-      login: Panes.Login,
-      'code.issue': Panes.Code.Issue,
-      orbit: Panes.Orbit,
-      task: Panes.Task,
-      doc: Panes.Doc,
-      integrations: Panes.Integrations,
     }
   },
 })
@@ -68,7 +66,7 @@ export default class MasterPage {
                 search={''}
                 version={store.millerStateVersion}
                 state={store.millerState}
-                panes={store.PANE_TYPES}
+                panes={PANE_TYPES}
                 onChange={store.onMillerStateChange}
                 paneProps={paneProps}
               />

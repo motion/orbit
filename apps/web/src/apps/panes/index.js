@@ -1,7 +1,6 @@
 export Main from './main'
 export Login from './login'
 export Code from './code'
-export Browse from './browse'
 export Feed from './feed'
 export Message from './message'
 export Orbit from './orbit'

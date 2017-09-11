@@ -14,6 +14,7 @@
     "@mcro/react-tunnel": "^1.2.0",
     "color": "^2.0.0",
     "element-resize-detector": "^1.1.12",
+    "hoist-non-react-statics": "^2.3.0",
     "flubber": "^0.3.0",
     "fuzzy": "^0.1.3",
     "keycode": "^2.1.9",

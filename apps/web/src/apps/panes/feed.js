@@ -18,7 +18,7 @@ class BarFeedStore {
 
   @watch
   events: ?Array<Event> = (() => {
-    const { person } = this.props.data
+    const { person } = this.props.paneStore.data
     return Event.find(person ? { author: this.props.data.person } : null).sort({
       createdAt: 'desc',
     })
@@ -36,7 +36,9 @@ type Props = PaneProps & {| store: BarFeedStore |}
 })
 export default class BarFeed extends React.Component<Props> {
   static defaultProps: Props
-  render({ store, activeIndex, data }: Props) {
+  render({ store, paneStore }: Props) {
+    const { data } = paneStore
+
     const content = (
       <contents>
         <section>
@@ -60,7 +62,11 @@ export default class BarFeed extends React.Component<Props> {
         </section>
 
         <section>
-          <Feed items={store.results} data={data} activeIndex={activeIndex} />
+          <Feed
+            items={store.results}
+            data={data}
+            activeIndex={paneStore.activeIndex}
+          />
         </section>
       </contents>
     )

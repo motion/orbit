@@ -1,103 +1,41 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import { isEqual } from 'lodash'
 import { HotKeys } from '~/helpers'
-import { sum, range } from 'lodash'
-
-class MillerStore {}
 
 @view.attach('millerState')
 @view
-class Pane extends React.Component {
-  render({
-    pane,
-    paneProps,
-    state,
-    data,
-    search,
-    index,
-    col,
-    width,
-    millerState,
-    type,
-  }) {
-    const isActive = state.activeCol == col
-    const highlightIndex = !isActive && state.prevActiveRows[col]
-    const activeIndex = isActive && state.activeRow
-    const ChildPane = pane
-
-    if (!ChildPane) {
-      console.error('no pane found for type', type)
-      return null
-    }
-
-    return (
-      <pane
-        css={{
-          flex: 1,
-          width,
-        }}
-        ref={ref => {
-          if (ref) {
-            millerState.colWidths[index] = ref.offsetWidth
-          }
-        }}
-      >
-        <ChildPane
-          paneProps={paneProps}
-          data={data || {}}
-          millerState={millerState}
-          isActive={isActive}
-          onSelect={row => millerState.setSelection(index, row)}
-          getRef={ref => {
-            millerState.setPlugin(index, ref)
-          }}
-          search={search}
-          highlightIndex={highlightIndex}
-          selectedIndices={[]}
-          activeIndex={activeIndex}
-        />
-      </pane>
-    )
-  }
-
-  static style = {
-    pane: {
-      flex: 1,
-      height: '100%',
-      borderLeft: [1, [0, 0, 0, 0.05]],
-    },
-    first: {
-      borderLeft: 'none',
-    },
-  }
-}
-
-@view.attach('millerState')
-@view({
-  store: MillerStore,
-})
 export default class Miller extends React.Component {
   static defaultProps = {
     onKeyActions: _ => _,
   }
 
-  componentWillMount() {
-    const { onKeyActions, store } = this.props
-    onKeyActions(store.keyActions)
+  state = {
+    schema: null,
   }
 
-  render({
-    store,
-    paneProps,
-    onKeyActions,
-    search,
-    panes,
-    animate,
-    millerState,
-  }) {
-    const { schema } = millerState
-    const transX = animate ? store.translateX : 0
+  componentWillMount() {
+    const { onKeyActions, millerState } = this.props
+    console.log('ms is', millerState)
+    onKeyActions(millerState.keyActions)
+    this.setState({ schema: millerState.schema })
+  }
 
+  componentWillReceiveProps({ state }) {
+    if (!isEqual(state.schema, this.state.schema)) {
+      // :car: setTimeout will make the next render happen after list updates highlight position
+      this.setTimeout(() => {
+        this.setState({ schema: state.schema })
+      })
+    }
+  }
+
+  render(
+    { pane, store, search, millerState, onKeyActions, panes, animate },
+    { schema }
+  ) {
+    const Pane = pane
+    const transX = animate ? store.translateX : 0
     const content = (
       <miller css={{ flex: 1 }}>
         <columns $$row $transX={transX}>
@@ -105,12 +43,10 @@ export default class Miller extends React.Component {
             return (
               <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
                 <Pane
-                  // if it's the next preview, always rerender
                   pane={panes[pane.type]}
                   type={pane.type}
                   data={pane.data}
                   search={search}
-                  paneProps={paneProps}
                   index={index}
                 />
               </pane>
@@ -137,10 +73,6 @@ export default class Miller extends React.Component {
     columns: {
       flex: 1,
       transition: 'transform 80ms linear',
-      // transform: {
-      //   z: 0,
-      //   x: 0,
-      // },
     },
     transX: x => ({ transform: { x } }),
   }

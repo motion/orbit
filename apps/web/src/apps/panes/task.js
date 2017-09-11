@@ -260,46 +260,6 @@ class TaskHeader {
   }
 }
 
-class TaskStore {
-  response = ''
-
-  start() {
-    this.props.getRef(this)
-  }
-
-  submit = () => {
-    this.response = ''
-  }
-
-  get results() {
-    const { data } = this.props
-
-    const comments = (data.comments || []).map(comment => ({
-      element: Comment,
-      data: comment,
-      actions: ['like comment'],
-    }))
-    data.title = 'Improve Babel performance of Acorn in 1.3'
-
-    return [
-      {
-        element: TaskHeader,
-        data,
-        actions: [{ name: 'imma header' }],
-      },
-      ...comments,
-      {
-        element: AddResponse,
-        data: {
-          onSubmit(text) {
-            console.log('submitted', text)
-          },
-        },
-      },
-    ]
-  }
-}
-
 @view
 class Assign {
   render() {
@@ -459,28 +419,51 @@ class Labels {
   }
 }
 
-@view.provide({ paneStore: Pane.Store })
+class TaskStore {
+  response = ''
+
+  start() {
+    this.props.getRef(this)
+  }
+
+  submit = () => {
+    this.response = ''
+  }
+
+  get results() {
+    const { data } = this.props
+
+    const comments = (data.comments || []).map(comment => ({
+      element: Comment,
+      data: comment,
+      actions: ['like comment'],
+    }))
+    data.title = 'Improve Babel performance of Acorn in 1.3'
+
+    return [
+      {
+        element: TaskHeader,
+        data,
+        actions: [{ name: 'imma header' }],
+      },
+      ...comments,
+      {
+        element: AddResponse,
+        data: {
+          onSubmit(text) {
+            console.log('submitted', text)
+          },
+        },
+      },
+    ]
+  }
+}
+
 @view({
   store: TaskStore,
 })
 export default class TaskPane {
-  render({ data, activeIndex, isActive, store }) {
-    const { labels } = data
-    const items = [
-      {
-        label: 'Assignees',
-        value: 'No one assigned',
-      },
-      {
-        label: 'Labels',
-        value: labels && labels.length > 0 ? labels : 'None yet',
-      },
-      {
-        label: 'Milestone',
-        value: 'No milestone',
-      },
-    ]
-
+  render({ paneStore: { activeIndex, isActive }, store }) {
     const renderItem = index => {
       const { element, data } = store.results[index]
       return React.createElement(element, {

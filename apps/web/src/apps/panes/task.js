@@ -69,33 +69,6 @@ class Comment {
 }
 
 @view({
-  store: class {
-    who = null
-  },
-})
-class MetaItem {
-  render({ store, label, value }) {
-    return (
-      <item key={label}>
-        <PersonPicker
-          if={false}
-          popoverProps={{
-            target: <UI.Button>assign</UI.Button>,
-          }}
-          onSelect={person => {
-            store.who = person
-          }}
-        />
-        <name>{label}</name>
-        <value>{store.who ? store.who : value}</value>
-      </item>
-    )
-  }
-
-  static style = {}
-}
-
-@view({
   store: class ResponseStore {
     textbox = null
     response = ''
@@ -214,36 +187,16 @@ class TaskHeader {
             >
               No Labels
             </UI.Button>
-            <UI.Popover
-              borderRadius={5}
-              elevation={3}
-              overlay="transparent"
-              openOnClick
-              distance={8}
-              target={
-                <UI.Button $button size={0.8}>
-                  Nobody Assigned
-                </UI.Button>
-              }
+            <UI.Button
+              onClick={() => {
+                barStore.runAction('assign')
+              }}
+              className="target-assign"
+              $button
+              size={0.8}
             >
-              <Assign />
-            </UI.Popover>
-            <UI.Popover
-              if={false}
-              borderRadius={5}
-              elevation={3}
-              overlay="transparent"
-              openOnClick
-              borderRadius
-              distance={8}
-              target={
-                <UI.Button $button size={0.8}>
-                  No Milestone
-                </UI.Button>
-              }
-            >
-              <Assign />
-            </UI.Popover>
+              Assign
+            </UI.Button>
           </buttons>
         </meta>
         <titleContainer>
@@ -541,6 +494,10 @@ export default class TaskPane {
       {
         name: 'labels',
         popover: <Labels />,
+      },
+      {
+        name: 'assign',
+        popover: <Assign />,
       },
     ]
 

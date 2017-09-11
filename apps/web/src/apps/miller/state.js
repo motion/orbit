@@ -1,6 +1,5 @@
 // @flow
-const serialize = (_: any): any => _
-const capitalize = s => s[0].toUpperCase() + s.substr(1)
+import { sum, range } from 'lodash'
 
 type Schema = {
   title: string,
@@ -13,28 +12,68 @@ type Schema = {
 }
 
 export default class MillerStateStore {
-  static serialize(content) {
-    return new MillerStateStore({ schema: serialize(content) })
-  }
-
-  plugins = []
   activeRow = 0
   activeCol = 0
+  refs = []
   schema: Array<Schema> = []
-  watchers = {}
   paneActions = []
   prevActiveRows = [] // holds the previously active columns
+  colWidths = range(100).map(() => 0)
+  colLeftMargin = 10
 
-  constructor({ schema }: { schema: Object }) {
-    this.schema = schema
+  start() {
+    this.schema = this.props.schema
+  }
 
-    const events = ['selectionChange', 'change', 'changeColumn']
-    events.forEach(event => {
-      this.watchers[event] = []
-      this['on' + capitalize(event)] = cb => {
-        this.watchers[event].push(cb)
+  handleSelectionChange = () => {
+    const { state } = this.props
+
+    if (state.activeRow !== null && state.activeResults) {
+      if (
+        state.activeItem &&
+        state.activeItem.type &&
+        state.activeItem.showChild !== false
+      ) {
+        state.setSchema(state.activeCol + 1, state.activeItem)
       }
-    })
+    }
+  }
+
+  get translateX() {
+    if (this.activeCol === 0) return 0
+    return (
+      -sum(this.colWidths.slice(0, this.activeCol)) -
+      this.colLeftMargin * this.activeCol
+    )
+  }
+
+  keyActions = {
+    right: () => {
+      const { state } = this.props
+      state.moveCol(1)
+    },
+    down: () => {
+      const { state } = this.props
+      if (
+        state.activeRow === null ||
+        (state.activeResults &&
+          state.activeRow < state.activeResults.length - 1)
+      ) {
+        state.moveRow(1)
+      }
+    },
+    up: () => {
+      const { state } = this.props
+      state.moveRow(-1)
+    },
+    left: () => {
+      const { state } = this.props
+      state.moveCol(-1)
+    },
+    esc: () => {},
+    cmdA: () => {},
+    cmdEnter: () => {},
+    enter: () => {},
   }
 
   get currentItem() {
@@ -67,11 +106,6 @@ export default class MillerStateStore {
 
   setPlugin(index, plugin) {
     this.plugins[index] = plugin
-    this.emit('change', this)
-  }
-
-  emit(name: string, ...obj) {
-    this.watchers[name].forEach(cb => cb(...obj))
   }
 
   moveRow(delta: number) {
@@ -81,7 +115,6 @@ export default class MillerStateStore {
     } else {
       this.activeRow += delta
     }
-    this.emit('selectionChange')
   }
 
   removeExcessCols() {
@@ -93,7 +126,6 @@ export default class MillerStateStore {
   blur() {
     this.activeRow = null
     this.removeExcessCols()
-    this.emit('selectionChange')
   }
 
   setSelection(col: number, row: number) {
@@ -105,7 +137,6 @@ export default class MillerStateStore {
 
     this.activeRow = row
     this.removeExcessCols()
-    this.emit('selectionChange')
   }
 
   setActiveRow(row: number) {
@@ -116,7 +147,6 @@ export default class MillerStateStore {
     const lastCol = this.activeCol
     this.paneActions = []
     this.activeCol = col
-    this.emit('changeColumn', col, lastCol)
   }
 
   moveCol(delta: number) {
@@ -134,7 +164,5 @@ export default class MillerStateStore {
       this.activeRow = this.prevActiveRows[this.activeCol]
       this.removeExcessCols()
     }
-
-    this.emit('selectionChange')
   }
 }

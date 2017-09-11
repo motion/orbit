@@ -8,7 +8,7 @@ import Root from './views/root'
 import Layout from './views/layout'
 
 export function render() {
-  console.time('#render')
+  // console.time('#render')
   let ROOT = document.querySelector('#app')
   ReactDOM.render(
     <Root>
@@ -18,7 +18,7 @@ export function render() {
     </Root>,
     ROOT
   )
-  console.timeEnd('#render')
+  // console.timeEnd('#render')
 }
 
 export async function start(quiet) {

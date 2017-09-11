@@ -16,7 +16,6 @@ const PANE_TYPES = {
   placeholder: Panes.Placeholder,
   setup: Panes.Setup,
   inbox: Panes.Threads,
-  browse: Panes.Browse,
   feed: Panes.Feed,
   notifications: Panes.Notifications,
   login: Panes.Login,

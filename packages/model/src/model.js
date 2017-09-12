@@ -547,6 +547,7 @@ export default class Model {
       if (previous) {
         await previous.atomicUpdate(doc => {
           for (const key of Object.keys(object).filter(x => x !== 'id')) {
+            console.log('setting', key)
             doc[key] = object[key]
           }
         })

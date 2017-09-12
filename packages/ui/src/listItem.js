@@ -28,6 +28,7 @@ export type Props = {
   glowProps?: Object,
   editable?: boolean,
   onFinishEdit?: Function,
+  childrenProps?: Object,
 }
 
 const DEFAULT_GLOW = {
@@ -89,6 +90,7 @@ export default class ListItem extends React.Component<Props> {
       iconProps,
       getRef,
       highlight,
+      childrenProps,
       ...props
     } = this.props
     const radiusProps = segmented
@@ -138,6 +140,7 @@ export default class ListItem extends React.Component<Props> {
                 fontSize="inherit"
                 css={{
                   wordWrap: 'break-word',
+                  maxHeight: '2.8rem',
                 }}
                 size={size}
                 color="inherit"
@@ -151,14 +154,22 @@ export default class ListItem extends React.Component<Props> {
                 if={secondary}
                 $text
                 size={size * 0.85}
-                opacity={0.75}
+                opacity={0.7}
                 ellipse
               >
                 {secondary}
               </Text>
             </prop>
           </above>
-          <children if={children}>{children}</children>
+          <Text
+            $children
+            if={children}
+            size={size * 0.9}
+            opacity={0.6}
+            {...childrenProps}
+          >
+            {children}
+          </Text>
         </content>
         <after if={after}>{after}</after>
       </SizedSurface>
@@ -196,10 +207,10 @@ export default class ListItem extends React.Component<Props> {
       width: '100%',
     },
     date: {
-      alignSelf: 'center',
+      // alignSelf: 'flex-end',
       justifyContent: 'flex-end',
-      flex: 'inherit',
-      padding: [0, 15],
+      // flex: 'inherit',
+      margin: ['-1.2rem', 0, 0],
       userSelect: 'none',
       fontSize: 12,
       fontWeight: 200,

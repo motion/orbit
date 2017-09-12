@@ -216,15 +216,16 @@ export default class BarMain extends React.Component<> {
             key: result.id,
             highlight: () => index === paneStore.activeIndex,
             primary: result.title,
-            date: <UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>,
             children: (
-              <UI.Text
-                if={result.data && result.data.body}
-                css={{ opacity: 0.5 }}
-              >
-                {result.data.body.slice(0, 120)}
-              </UI.Text>
+              <div css={{ lineHeight: '20px' }}>
+                <UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>
+                {(result.data &&
+                  result.data.body &&
+                  result.data.body.slice(0, 120)) ||
+                  null}
+              </div>
             ),
+            iconAfter: true,
             iconProps: {
               style: {
                 alignSelf: 'flex-start',

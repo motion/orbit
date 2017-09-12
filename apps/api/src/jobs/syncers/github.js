@@ -124,6 +124,7 @@ export default class GithubSync {
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
+    console.log('got repo events', repoEvents)
     const created = await this.insertEvents(repoEvents)
     console.log('Created', created.length, 'feed events')
     await this.writeLastSyncs()
@@ -144,10 +145,8 @@ export default class GithubSync {
       const last = events[events.length - 1]
       const lastEvent = await Event.get(last.id)
       if (!lastEvent) {
-        return [
-          ...events,
-          ...(await this.getRepoEvents(org, repoName, page + 1)),
-        ]
+        const nextEvents = await this.getRepoEvents(org, repoName, page + 1)
+        return [...events, ...nextEvents]
       }
     }
     // weird error format github has
@@ -172,24 +171,20 @@ export default class GithubSync {
 
   insertEvents = (allEvents: Array<Object>): Promise<Array<Object>> => {
     const createdEvents = []
-    for (const events of allEvents) {
-      if (events && events.length) {
-        for (const event of events) {
-          createdEvents.push(
-            Event.upsert({
-              id: `${event.id}`,
-              integration: 'github',
-              type: event.type,
-              author: event.actor.login,
-              org: event.org.login,
-              parentId: event.repo.name,
-              created: event.created_at,
-              updated: event.updated_at,
-              data: event,
-            })
-          )
-        }
-      }
+    for (const event of allEvents) {
+      createdEvents.push(
+        Event.upsert({
+          id: `${event.id}`,
+          integration: 'github',
+          type: event.type,
+          author: event.actor.login,
+          org: event.org.login,
+          parentId: event.repo.name,
+          created: event.created_at,
+          updated: event.updated_at,
+          data: event,
+        })
+      )
     }
     return Promise.all(createdEvents)
   }
@@ -376,7 +371,6 @@ export default class GithubSync {
     }
 
     const text = await res.text()
-    console.log('parsing', text)
     return JSON.parse(text)
   }
 }

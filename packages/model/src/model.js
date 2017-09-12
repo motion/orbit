@@ -208,7 +208,7 @@ export default class Model {
               sync()
               return target[method]
             case 'exec':
-              console.log('--', `${target.op}.${method}`, finalParams)
+              // console.log('--', `${target.op}.${method}`, finalParams)
               return () =>
                 new Promise(async resolve => {
                   if (!options.asyncFirstSync) {

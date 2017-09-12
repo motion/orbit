@@ -43,10 +43,11 @@ class BarMainStore {
       () =>
         this.results && this.listRef && `${this.search}${this.results.length}`,
       () => {
-        this.setTimeout(() => {
-          this.listRef.updateChildren()
-          this.listRef.measure()
-        })
+        // this.listRef.measure()
+        // this.setTimeout(() => {
+        // this.listRef.updateChildren()
+        // this.listRef.measure()
+        // })
       }
     )
 
@@ -207,6 +208,7 @@ export default class BarMain extends React.Component<> {
           getRef={mainStore.ref('listRef').set}
           virtualized={{
             rowHeight: this.getRowHeight,
+            measure: true,
           }}
           onSelect={this.onSelect}
           groupKey="category"
@@ -218,12 +220,7 @@ export default class BarMain extends React.Component<> {
             primary: result.title,
             primaryEllipse: !this.hasContent(result),
             children: (
-              <UI.Text
-                if={result.data}
-                lineHeight={20}
-                opacity={0.5}
-                lines={20}
-              >
+              <UI.Text if={result.data} lineHeight={20} opacity={0.5}>
                 {result.data.updatedAt ? (
                   UI.Date.format(result.data.updatedAt) + ' · '
                 ) : (

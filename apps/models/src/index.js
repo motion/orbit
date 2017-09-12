@@ -9,7 +9,8 @@ import * as Constants from '~/constants'
 import type { Model } from '@mcro/model'
 export type { Model }
 
-export { CompositeDisposable } from '@mcro/model'
+import { CompositeDisposable as CD } from '@mcro/model'
+export const CompositeDisposable = CD
 
 // ⭐️ ADD MODELS HERE:
 

@@ -106,6 +106,10 @@ class List extends React.PureComponent<Props, { selected: number }> {
       this.props = nextProps
       this.updateChildren()
     }
+
+    if (nextProps.virtualized && nextProps.virtualized.measure) {
+      this.measure()
+    }
   }
 
   scrollToRow = (index: number) => {

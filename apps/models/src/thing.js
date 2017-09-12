@@ -17,10 +17,10 @@ export type ThingType = typeof methods & {
   id?: string,
   createdAt: string,
   updatedAt: string,
-  created?: string,
-  updated?: string,
+  created: string,
+  updated: string,
   date: string,
-  orgName?: string,
+  orgName: string,
 }
 
 export class Thing extends Model {
@@ -32,9 +32,9 @@ export class Thing extends Model {
     body: str.optional,
     data: object.optional,
     parentId: str.optional,
-    created: str.indexed.optional,
-    updated: str.indexed.optional,
-    orgName: str.indexed.optional,
+    created: str.indexed,
+    updated: str.indexed,
+    orgName: str.indexed,
     timestamps: true,
   }
 

@@ -48,9 +48,6 @@ const modelMethods = {
       .then(doc => {
         if (doc) {
           doc.remove()
-          if (this.options.debug) {
-            console.log('REMOVE', doc.id)
-          }
         }
       })
   },

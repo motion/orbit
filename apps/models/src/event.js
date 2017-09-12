@@ -31,14 +31,14 @@ export type EventType = typeof methods & {
 export class Event extends Model {
   static props = {
     id: str.primary,
-    integration: str,
-    type: str,
+    integration: str.indexed,
+    type: str.indexed,
     author: str.optional,
     data: object.optional,
     parentId: str.optional,
-    org: str.optional,
-    created: str.optional,
-    updated: str.optional,
+    org: str.indexed.optional,
+    created: str.indexed.optional,
+    updated: str.indexed.optional,
     timestamps: true,
   }
 
@@ -46,7 +46,6 @@ export class Event extends Model {
 
   settings = {
     database: 'events',
-    index: ['type', 'created', 'createdAt', 'updated', 'updatedAt'],
     // version: 1,
   }
 

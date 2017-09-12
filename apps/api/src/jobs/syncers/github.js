@@ -45,7 +45,7 @@ export default class GithubSync {
   checkJobs = async () => {
     try {
       await Promise.all([
-        ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
+        // ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
         ensureJob(type, 'feed', { every: 60 }), // 60 seconds
       ])
     } catch (e) {
@@ -214,17 +214,17 @@ export default class GithubSync {
     const createdEvents = []
     for (const event of allEvents) {
       const id = `${event.id}`
-      const updatedAt = event.updated_at
-      const createdAt = event.created_at
+      const updated = event.updated_at
+      const created = event.created_at
       // stale event removal
-      const stale = await Event.get({ id, createdAt: { $ne: createdAt } })
+      const stale = await Event.get({ id, created: { $ne: created } })
       if (stale) {
         console.log('Removing stale event', id)
         await stale.remove()
       }
       if (
         !stale &&
-        !await Event.get(updatedAt ? { id, updatedAt } : { id, createdAt })
+        !await Event.get(updated ? { id, updated } : { id, created })
       ) {
         const inserted = await Event.update({
           id,
@@ -233,8 +233,8 @@ export default class GithubSync {
           author: event.actor.login,
           org: event.org.login,
           parentId: event.repo.name,
-          createdAt,
-          updatedAt,
+          created,
+          updated,
           data: event,
         })
         createdEvents.push(inserted)
@@ -339,17 +339,17 @@ export default class GithubSync {
       for (const issue of issues) {
         const data = unwrap(omit(issue, ['bodyText']))
         const id = `${issue.id}`
-        const updatedAt = issue.updatedAt
-        const createdAt = issue.createdAt
+        const updated = issue.updatedAt
+        const created = issue.createdAt
         // stale thing removal
-        const stale = await Thing.get({ id, createdAt: { $ne: createdAt } })
+        const stale = await Thing.get({ id, created: { $ne: created } })
         if (stale) {
           console.log('Removing stale event', id)
           await stale.remove()
         }
         if (
           stale ||
-          !await Thing.get(updatedAt ? { id, updatedAt } : { id, createdAt })
+          !await Thing.get(updated ? { id, updated } : { id, created })
         ) {
           const inserted = await Thing.update({
             id,
@@ -360,8 +360,8 @@ export default class GithubSync {
             data,
             orgName: orgLogin,
             parentId: repository.name,
-            createdAt,
-            updatedAt,
+            created,
+            updated,
           })
           createdIssues.push(inserted)
         }

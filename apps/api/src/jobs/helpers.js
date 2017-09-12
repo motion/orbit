@@ -23,15 +23,14 @@ export async function ensureJob(
     const secondsAgo =
       (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
     console.log(
-      `Pending job running for ${type} ${action}, ${secondsAgo /
-        60} minutes ago`
+      `Pending job running for ${type} ${action}, ${secondsAgo} seconds ago`
     )
     if (secondsAgo > SECONDS_UNTIL_JOB_IS_STALE) {
       console.log('Stale job, removing...', lastPending.id)
       await lastPending.remove()
-      return ensureJob(type, action, options)
+    } else {
+      return
     }
-    return
   }
   const lastCompleted = await Job.lastCompleted({ action }).exec()
   const createJob = () => Job.create({ type, action })

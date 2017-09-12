@@ -416,6 +416,7 @@ export default class GithubSync {
     const uri = `https://api.github.com${path}?${requestSearch.toString()}`
     const requestHeaders = this.fetchHeaders(uri, headers)
 
+    console.log('Fetching', uri)
     const res = await fetch(uri, {
       headers: requestHeaders,
       ...opts,

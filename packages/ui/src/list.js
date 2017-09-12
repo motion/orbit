@@ -7,6 +7,7 @@ import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { ItemProps } from './listItem'
 import Surface from './surface'
+import { isArrayLike } from 'mobx'
 
 const idFn = _ => _
 const SEPARATOR_HEIGHT = 25
@@ -322,7 +323,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (hasChildren) {
       children = this.getListChildren(props.children)
     } else {
-      if (Array.isArray(items)) {
+      if (isArrayLike(items)) {
         children = items.map(this.getListItem)
       } else {
         console.error('not array', items)

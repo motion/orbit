@@ -28,16 +28,12 @@ export default class Jobs {
     if (!this.user) {
       return {}
     }
-    console.time('run API.jobs.syncers')
     const res = {}
     for (const name of Object.keys(Syncers)) {
-      console.log('Starting syncer', name, this.user)
       const Syncer = new Syncers[name](this)
       await Syncer.start()
-      console.log('Syncer started:', name)
       res[name] = Syncer
     }
-    console.timeEnd('run API.jobs.syncers')
     return res
   }
 

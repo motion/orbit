@@ -13,10 +13,6 @@ const type = 'github'
 @store
 export default class GithubSync {
   static type = type
-  // static ensureJobs = {
-  //   issues: { every: 60 * 6 },
-  //   feed: { every: 0.1 }
-  // }
 
   user: User
   lastSyncs = {}
@@ -45,8 +41,8 @@ export default class GithubSync {
 
   checkJobs = async () => {
     await Promise.all([
-      ensureJob(type, 'issues', { every: 60 * 6 }), // 6 hours
-      ensureJob(type, 'feed', { every: 10 }),
+      ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
+      ensureJob(type, 'feed', { every: 60 }), // 60 seconds
     ])
   }
 

@@ -84,7 +84,8 @@ export default class Jobs {
           }
           this.locks.delete(job.lock)
         }
-      }
+      },
+      true
     )
   }
 

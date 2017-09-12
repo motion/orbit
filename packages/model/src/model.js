@@ -41,7 +41,7 @@ const modelMethods = {
     return this._id
   },
 
-  delete() {
+  remove() {
     return this.collection
       .findOne(this._id)
       .exec()

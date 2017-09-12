@@ -7,6 +7,10 @@ export const olderThan = (date, minutes) => {
   return answer
 }
 
+// 2 minutes
+// TODO bump this up likely, its aggressive for dev mode
+export const SECONDS_UNTIL_JOB_IS_STALE = 60 * 2
+
 export async function ensureJob(
   type: string,
   action: string,
@@ -14,7 +18,14 @@ export async function ensureJob(
 ): ?Job {
   const lastPending = await Job.lastPending({ type, action }).exec()
   if (lastPending) {
-    console.log(`Pending job already running for ${type} ${action}`)
+    const secondsAgo = (Date.now() - Date.parse(lastPending.createdAt)) / 1000
+    console.log(
+      `Pending job running for ${type} ${action}, ${secondsAgo} seconds ago`
+    )
+    if (secondsAgo > SECONDS_UNTIL_JOB_IS_STALE) {
+      await lastPending.remove()
+      return ensureJob(type, action, options)
+    }
     return
   }
   const lastCompleted = await Job.lastCompleted({ action }).exec()

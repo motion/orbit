@@ -12,13 +12,19 @@ const type = 'github'
 
 @store
 export default class GithubSync {
+  static type = type
+  // static ensureJobs = {
+  //   issues: { every: 60 * 6 },
+  //   feed: { every: 0.1 }
+  // }
+
   user: User
   lastSyncs = {}
   @watch
   setting = () =>
     this.user &&
     // oldest
-    Setting.findOne({ userId: this.user.id, type }).sort('createdAt')
+    Setting.findOne({ type, userId: this.user.id }).sort('createdAt')
 
   constructor({ user }: SyncOptions) {
     this.user = user
@@ -36,6 +42,7 @@ export default class GithubSync {
 
     // autorun
     this.setInterval(async () => {
+      console.log('check')
       await Promise.all([
         ensureJob(type, 'issues', { every: 60 * 6 }), // 6 hours
         ensureJob(type, 'feed', { every: 0.1 }),
@@ -179,6 +186,8 @@ export default class GithubSync {
               author: event.actor.login,
               org: event.org.login,
               parentId: event.repo.name,
+              created: event.created_at,
+              updated: event.updated_at,
               data: event,
             })
           )
@@ -366,6 +375,7 @@ export default class GithubSync {
     // if not modified return null
     if (res.status === 304) {
       console.log('Not modified', path)
+      res.json().then(console.log)
       return null
     }
 

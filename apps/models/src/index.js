@@ -3,8 +3,9 @@ import RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
-import pValidate from 'pouchdb-validation'
-import pSearch from 'pouchdb-quick-search'
+// import pValidate from 'pouchdb-validation'
+// import pSearch from 'pouchdb-quick-search'
+import * as Constants from '~/constants'
 import type { Model } from '@mcro/model'
 export type { Model }
 
@@ -79,7 +80,9 @@ export default class Database {
 
     // hmr fix
     if (!RxDB.PouchDB.replicate) {
-      RxDB.QueryChangeDetector.enable()
+      if (Constants.IS_BROWSER) {
+        RxDB.QueryChangeDetector.enable()
+      }
       RxDB.plugin(this.databaseConfig.adapter)
       RxDB.plugin(pREPL)
       // RxDB.plugin(pValidate)

@@ -17,6 +17,8 @@ export type ThingType = typeof methods & {
   id?: string,
   createdAt: string,
   updatedAt: string,
+  created?: string,
+  updated?: string,
   date: string,
   orgName?: string,
 }

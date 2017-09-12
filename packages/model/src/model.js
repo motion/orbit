@@ -21,7 +21,8 @@ type PromiseFunction = () => Promise<any>
 
 // HELPERS
 const idFn = _ => _
-const queryKey = query => JSON.stringify(query.mquery._conditions)
+const queryKey = query =>
+  `${query.op}.${JSON.stringify(query.mquery._conditions)}`
 const modelMerge = (subjectModel: Object, object: Object) => {
   const subject = subjectModel.toJSON()
   for (const key of Object.keys(object)) {
@@ -178,7 +179,7 @@ export default class Model {
       return this._filteredProxy
     }
 
-    // set here to avoid changed `this` in proxy
+    // assign here to avoid changed `this` in proxy
     const { syncQuery, options } = this
     const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
 
@@ -199,18 +200,19 @@ export default class Model {
                 // they have intent to run this
                 if (method === 'exec' || method === '$') {
                   if (options.autoSync) {
+                    // run sync
                     const syncPromise = sync()
-                    // wait for sync to happen before returning
+
+                    // exec(): wait for sync to happen before returning
                     if (method === 'exec') {
-                      const execute = target.exec.bind(target)
-                      return function exec() {
+                      const ogExec = target.exec.bind(target)
+                      return function newExec() {
                         return new Promise(async resolve => {
                           // gives option to avoid waiting for initial sync before resolving
                           if (!options.asyncFirstSync) {
                             await syncPromise
                           }
-                          const value = await execute()
-
+                          const value = await ogExec()
                           // return null for empty responses
                           if (
                             value instanceof Object &&
@@ -218,13 +220,14 @@ export default class Model {
                           ) {
                             return null
                           }
-
+                          // return
                           resolve(value)
                         })
                       }
                     }
                   }
                 }
+                // return
                 return target[method]
               },
             })
@@ -347,9 +350,11 @@ export default class Model {
     return new Promise((resolve, reject) => {
       const off = autorun(() => {
         if (this.connected) {
-          console.log('watch connected')
           resolve()
-          setTimeout(off)
+          // :bug: fix, though not sure how this is possible
+          if (off) {
+            off()
+          }
         }
       })
       setTimeout(() => {
@@ -435,9 +440,6 @@ export default class Model {
 
           if (done && !resolved) {
             console.log('SYNC DONE', this.title, QUERY_KEY)
-            resolved = true
-            // unsub error stream
-            error$.unsubscribe()
 
             if (options.live) {
               // if live, we re-run with a live query to keep it syncing
@@ -458,15 +460,14 @@ export default class Model {
             } else {
               resolve(true)
             }
+
+            // cleanup
+            resolved = true
+            error$.unsubscribe()
           }
         })
         .toPromise()
     })
-  }
-
-  getParams = (params?: Object | string, callback: Function) => {
-    const objParams = this.paramsToObject(params)
-    return callback(objParams)
   }
 
   paramsToObject = (params: Object | string) => {
@@ -496,10 +497,10 @@ export default class Model {
   // find/findOne return RxQuery objects
   // so you can subscribe to streams with .$ or promise with .exec()
   find = (params: string | Object) =>
-    this.getParams(params, this.collection.find)
+    this.collection.find(this.paramsToObject(params))
 
   findOne = (params: string | Object) =>
-    this.getParams(params, this.collection.findOne)
+    this.collection.findOne(this.paramsToObject(params))
 
   // find or create, doesnt require primary key usage
   findOrCreate = async (object: Object = {}): Promise<Object> => {

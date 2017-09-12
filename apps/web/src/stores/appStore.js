@@ -141,4 +141,17 @@ export default class AppStore {
   clearErrors = () => {
     this.errors = []
   }
+
+  clearAllData() {
+    console.log(this.models)
+    Object.keys(this.models).forEach(async name => {
+      const model = this.models[name]
+      const models = await model.getAll()
+      await Promise.all(models.map(model => model.remove()))
+      console.log('Removed all models', name)
+    })
+
+    // Setting.getAll().then(x => x.remove())
+    // Setting.getAll().then(x => x.remove())
+  }
 }

@@ -9,7 +9,11 @@ export const STATUS = {
   FAILED: 3,
 }
 
-export const methods = {}
+export const methods = {
+  get lock() {
+    return `${this.action}${this.type}${this.status}`
+  },
+}
 
 export class JobModel extends Model {
   type: string

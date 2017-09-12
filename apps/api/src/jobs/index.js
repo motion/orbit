@@ -63,10 +63,10 @@ export default class Jobs {
           return
         }
         console.log('Pending job: ', job.type, job.action)
-        if (this.locks.has(job.id)) {
+        if (this.locks.has(job.lock)) {
           return
         }
-        this.locks.add(job.id)
+        this.locks.add(job.lock)
         try {
           await this.runJob(job)
         } catch (error) {
@@ -78,13 +78,13 @@ export default class Jobs {
             tries: 3,
           })
         }
-        this.locks.delete(job.id)
+        this.locks.delete(job.lock)
       }
     )
   }
 
   runJob = async (job: Job) => {
-    console.log('Running', job.id, job.type)
+    console.log('Running', job.type, job.action)
     await job.update({
       percent: 0,
       status: Job.status.PROCESSING,

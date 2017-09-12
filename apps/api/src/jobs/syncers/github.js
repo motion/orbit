@@ -45,7 +45,7 @@ export default class GithubSync {
   checkJobs = async () => {
     try {
       await Promise.all([
-        // ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
+        ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
         ensureJob(type, 'feed', { every: 60 }), // 60 seconds
       ])
     } catch (e) {

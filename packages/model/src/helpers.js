@@ -7,8 +7,12 @@ export const applyHooks = (model: Model) => {
   model.hooks.preInsert = (doc: Object) => {
     model.applyDefaults(doc)
     if (model.hasTimestamps) {
-      doc.createdAt = model.now
-      doc.updatedAt = model.now
+      if (!doc.createdAt || doc.createdAt === true) {
+        doc.createdAt = model.now
+      }
+      if (!doc.updatedAt || doc.updatedAt === true) {
+        doc.updatedAt = model.now
+      }
     }
     if (ogInsert) {
       return ogInsert.call(model, doc)

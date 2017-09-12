@@ -35,13 +35,14 @@ export default class GithubSync {
     }
 
     // every so often
-    setInterval(this.checkJobs, 1000 * 5)
+    const CHECK_JOBS_TIME = 1000 * 30 // 30 seconds
+    setInterval(this.checkJobs, CHECK_JOBS_TIME)
     this.checkJobs()
   }
 
   checkJobs = async () => {
     await Promise.all([
-      // ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
+      ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
       ensureJob(type, 'feed', { every: 60 }), // 60 seconds
     ])
   }

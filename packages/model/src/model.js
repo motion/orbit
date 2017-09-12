@@ -401,7 +401,7 @@ export default class Model {
       return Promise.resolve(true)
     }
 
-    console.log('<<', QUERY_KEY)
+    console.log('>>', QUERY_KEY)
 
     const firstReplication = this._collection.sync({
       query,
@@ -434,7 +434,7 @@ export default class Model {
           const done = state && state.pull && state.pull.ok
 
           if (done && !resolved) {
-            console.log('>>', QUERY_KEY)
+            console.log('<<', QUERY_KEY)
             resolve()
 
             // cleanup

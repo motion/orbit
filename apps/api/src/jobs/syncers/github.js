@@ -137,32 +137,61 @@ export default class GithubSync {
     await this.writeLastSyncs()
   }
 
+  getRepoEventsPage = async (org, repoName, page): Promise<?Array<Object>> => {
+    return await this.fetch(`/repos/${org}/${repoName}/events`, {
+      search: { page },
+    })
+  }
+
   getRepoEvents = async (
     org: string,
     repoName: string,
     page: number = 0
   ): Promise<?Array<Object>> => {
-    const events: ?Array<
-      Object
-    > = await this.fetch(`/repos/${org}/${repoName}/events`, {
-      search: { page },
-    })
+    let events = await this.getRepoEventsPage(org, repoName, page)
+
+    if (events && !!events.message) {
+      // error format from github
+      console.log('error getting events', events)
+      return null
+    }
+
     // recurse to get older if necessary
     if (events && events.length) {
-      const last = events[events.length - 1]
-      const lastEvent = await Event.get(last.id)
-      if (!lastEvent) {
-        const nextEvents = await this.getRepoEvents(org, repoName, page + 1)
-        if (nextEvents) {
-          return [...events, ...nextEvents]
+      let moreEvents = true
+      let last
+
+      while (moreEvents) {
+        const prev = last
+        last = events[events.length - 1]
+
+        if (prev && last && prev.id === last.id) {
+          moreEvents = false
+          continue
+        }
+
+        const existingLastEvent = await Event.get(last.id)
+
+        if (!existingLastEvent) {
+          const nextEvents = await this.getRepoEventsPage(
+            org,
+            repoName,
+            page + 1
+          )
+          if (nextEvents) {
+            if (nextEvents.message) {
+              console.log('nextEvents.message', nextEvents.message)
+              moreEvents = false
+            } else {
+              events = [...events, ...nextEvents]
+            }
+          } else {
+            moreEvents = false
+          }
         }
       }
     }
-    // weird error format github has
-    if (events && !!events.message) {
-      console.log(events)
-      return null
-    }
+
     return events
   }
 

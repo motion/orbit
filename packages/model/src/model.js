@@ -426,6 +426,7 @@ export default class Model {
 
       const error$ = firstReplication.error$.subscribe(error => {
         if (error) {
+          error$.unsubscribe()
           console.log('rejecting replication', error)
           reject(error)
         }

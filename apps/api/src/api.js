@@ -16,7 +16,6 @@ export default class API {
   constructor(options: Options) {
     this.server = new Server(options)
     this.bootstrap = new Bootstrap(options)
-    this.jobs = new Jobs()
     this.database = new Database(
       {
         name: 'username',
@@ -39,8 +38,10 @@ export default class API {
       },
     })
     this.bootstrap.start()
-    this.server.start()
+    const port = this.server.start()
+    this.jobs = new Jobs()
     await this.jobs.start()
+    console.log('API on port', port)
   }
 
   dispose() {

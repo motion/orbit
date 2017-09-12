@@ -32,21 +32,22 @@ export default class GithubSync {
     return (this.user.github && this.user.github.auth.accessToken) || ''
   }
 
-  start = async () => {
+  start = () => {
     if (!this.user.github) {
       console.log('No github credentials found for user')
       return
     }
 
-    // autorun
-    console.log('Running igthub')
-    this.setInterval(async () => {
-      console.log('check')
-      await Promise.all([
-        ensureJob(type, 'issues', { every: 60 * 6 }), // 6 hours
-        ensureJob(type, 'feed', { every: 0.1 }),
-      ])
-    }, 1000 * 60)
+    // every so often
+    setInterval(this.checkJobs, 1000 * 5)
+    this.checkJobs()
+  }
+
+  checkJobs = async () => {
+    await Promise.all([
+      ensureJob(type, 'issues', { every: 60 * 6 }), // 6 hours
+      ensureJob(type, 'feed', { every: 10 }),
+    ])
   }
 
   run = (job: Job) => {
@@ -378,8 +379,6 @@ export default class GithubSync {
       res.json().then(console.log)
       return null
     }
-
-    console.log('BODY', res.body)
 
     return res.json()
   }

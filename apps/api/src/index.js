@@ -51,7 +51,6 @@ async function run() {
   } catch (err) {
     console.log('error', err)
   }
-  console.log('API STARTED')
 }
 
 run()

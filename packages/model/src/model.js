@@ -22,7 +22,7 @@ type PromiseFunction = () => Promise<any>
 // HELPERS
 const idFn = _ => _
 const queryKey = query =>
-  `${query.op}.${JSON.stringify(query.mquery._conditions)}`
+  `${query.op}(${JSON.stringify(query.mquery._conditions)})`
 const modelMerge = (subjectModel: Object, object: Object) => {
   const subject = subjectModel.toJSON()
   for (const key of Object.keys(object)) {
@@ -172,71 +172,65 @@ export default class Model {
   //  first: allowing models to define a filter
   //  second: automatic sync from remote
   get _filteredCollection() {
-    const { defaultFilter = idFn } = this.constructor
-
-    // cache the proxy
-    if (this._filteredProxy) {
-      return this._filteredProxy
+    if (!this._filteredProxy) {
+      const { _createFindProxy } = this
+      this._filteredProxy = new Proxy(this._collection, {
+        get(target, method) {
+          if (method === 'find' || method === 'findOne') {
+            return _createFindProxy(target, method)
+          }
+          return target[method]
+        },
+      })
     }
+    return this._filteredProxy
+  }
 
+  _createFindProxy = (target, method) => {
+    const { defaultFilter = idFn } = this.constructor
     // assign here to avoid changed `this` in proxy
-    const { syncQuery, options } = this
+    const { options } = this
     const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
 
-    this._filteredProxy = new Proxy(this._collection, {
-      get(target, method) {
-        if (method === 'find' || method === 'findOne') {
-          return queryParams => {
-            const finalParams = defaultFilter(queryObject(queryParams))
-            const query = target[method](finalParams)
-            const sync = opts =>
-              syncQuery(query, { live: method === '$', retry: false, ...opts })
+    return queryParams => {
+      const finalParams = defaultFilter(queryObject(queryParams))
+      const query = target[method](finalParams)
+      const sync = opts =>
+        this.syncQuery(query, { live: method === '$', retry: false, ...opts })
+      const executeQuery = query.exec.bind(query)
 
-            return new Proxy(query, {
-              get(target, method) {
-                if (method === 'sync') {
-                  return sync
-                }
-                // they have intent to run this
-                if (method === 'exec' || method === '$') {
-                  if (options.autoSync) {
-                    // run sync
-                    const syncPromise = sync()
-
-                    // exec(): wait for sync to happen before returning
-                    if (method === 'exec') {
-                      const ogExec = target.exec.bind(target)
-                      return function newExec() {
-                        return new Promise(async resolve => {
-                          // gives option to avoid waiting for initial sync before resolving
-                          if (!options.asyncFirstSync) {
-                            await syncPromise
-                          }
-                          const value = await ogExec()
-                          // return null for empty responses
-                          if (
-                            value instanceof Object &&
-                            Object.keys(value).length === 0
-                          ) {
-                            return null
-                          }
-                          // return
-                          resolve(value)
-                        })
-                      }
-                    }
+      return new Proxy(query, {
+        get(target, method) {
+          switch (method) {
+            case 'sync':
+              return sync
+            case '$':
+              sync()
+              return target[method]
+            case 'exec':
+              console.log('--', `${target.op}.${method}`, finalParams)
+              return () =>
+                new Promise(async resolve => {
+                  if (!options.asyncFirstSync) {
+                    await sync()
                   }
-                }
-                // return
-                return target[method]
-              },
-            })
+                  const value = await executeQuery()
+                  if (
+                    // patch: null === empty response
+                    value instanceof Object &&
+                    Object.keys(value).length === 0
+                  ) {
+                    resolve(null)
+                  } else {
+                    resolve(value)
+                  }
+                })
+            default:
+              return target[method]
           }
-        }
-        return target[method]
-      },
-    })
-    return this._filteredProxy
+        },
+      })
+    }
   }
 
   get collection(): RxCollection {
@@ -348,12 +342,12 @@ export default class Model {
 
   onConnection = () => {
     return new Promise((resolve, reject) => {
-      const off = autorun(() => {
+      this.off = autorun(() => {
         if (this.connected) {
           resolve()
-          // :bug: fix, though not sure how this is possible
-          if (off) {
-            off()
+          if (this.off) {
+            // :bug: this., not sure why
+            this.off()
           }
         }
       })
@@ -402,16 +396,17 @@ export default class Model {
       throw new Error('Could not sync query, no remote is specified.')
     }
 
-    const QUERY_KEY = queryKey(query)
+    const QUERY_KEY = `${this.title}.${queryKey(query)}`
     if (this.liveQueries[QUERY_KEY]) {
       return Promise.resolve(true)
     }
 
-    console.log('SYNC', this.title, QUERY_KEY)
+    console.log('<<', QUERY_KEY)
 
     const firstReplication = this._collection.sync({
       query,
       remote: this.remote,
+      waitForLeadership: false,
       direction: {
         pull: true,
       },
@@ -428,7 +423,7 @@ export default class Model {
 
       const error$ = firstReplication.error$.subscribe(error => {
         if (error) {
-          console.log('rejecting replication', JSON.stringify(error))
+          console.log('rejecting replication', error)
           reject(error)
         }
       })
@@ -439,7 +434,8 @@ export default class Model {
           const done = state && state.pull && state.pull.ok
 
           if (done && !resolved) {
-            console.log('SYNC DONE', this.title, QUERY_KEY)
+            console.log('>>', QUERY_KEY)
+            resolve()
 
             // cleanup
             resolved = true
@@ -449,11 +445,12 @@ export default class Model {
               // if live, we re-run with a live query to keep it syncing
               // TODO we need to watch this and clear it on unsubscribe
               this.liveQueries[QUERY_KEY] = true
-              resolve()
+              // let some breathe time before second sync
               setTimeout(() => {
                 this._collection.sync({
                   query,
                   remote: this.remote,
+                  waitForLeadership: false,
                   direction: {
                     pull: true,
                   },
@@ -463,8 +460,6 @@ export default class Model {
                   },
                 })
               })
-            } else {
-              resolve()
             }
           }
         })

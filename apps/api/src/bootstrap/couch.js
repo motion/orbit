@@ -8,8 +8,8 @@ const handleErr = (err, res) => {
     console.log('Error')
     console.log(err)
   } else {
-    console.log('Success!')
-    console.log(JSON.stringify(res, 0, 2))
+    // console.log('Success!')
+    // console.log(JSON.stringify(res, 0, 2))
   }
 }
 

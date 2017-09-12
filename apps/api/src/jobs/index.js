@@ -22,20 +22,22 @@ export default class Jobs {
   @watch lastPending: ?Array<Job> = () => Job.lastPending()
   @watch
   syncers = async () => {
-    console.log('run syncers', this.user)
+    if (this.user === null) {
+      console.log('Null user === no user found?')
+    }
     if (!this.user) {
       return {}
     }
     console.time('run API.jobs.syncers')
     const res = {}
     for (const name of Object.keys(Syncers)) {
-      console.log('Starting syncer', name)
+      console.log('Starting syncer', name, this.user)
       const Syncer = new Syncers[name](this)
       await Syncer.start()
       console.log('Syncer started:', name)
       res[name] = Syncer
     }
-    console.timeEnd('end API.jobs.syncers')
+    console.timeEnd('run API.jobs.syncers')
     return res
   }
 
@@ -43,7 +45,7 @@ export default class Jobs {
     this.watchJobs()
   }
 
-  get github() {
+  get thub() {
     return this.syncers.github
   }
 

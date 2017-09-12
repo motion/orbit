@@ -136,7 +136,9 @@ export default class ListItem extends React.Component<Props> {
               <Text
                 $text
                 fontSize="inherit"
-                ellipse={ellipse}
+                css={{
+                  wordWrap: 'break-word',
+                }}
                 size={size}
                 color="inherit"
                 editable={editable}
@@ -155,9 +157,6 @@ export default class ListItem extends React.Component<Props> {
                 {secondary}
               </Text>
             </prop>
-            <Text if={date} size={size * 0.6} $date $meta ellipse>
-              {date}
-            </Text>
           </above>
           <children if={children}>{children}</children>
         </content>
@@ -191,15 +190,20 @@ export default class ListItem extends React.Component<Props> {
       overflow: 'hidden',
       maxWidth: '100%',
       fontWeight: 200,
+      padding: [0, 10, 0, 0],
     },
     text: {
       width: '100%',
     },
     date: {
-      alignSelf: 'flex-start',
+      alignSelf: 'center',
+      justifyContent: 'flex-end',
+      flex: 'inherit',
+      padding: [0, 15],
       userSelect: 'none',
       fontSize: 12,
       fontWeight: 200,
+      opacity: 0.9,
     },
     col: {
       flexDirection: 'column',
@@ -220,6 +224,7 @@ export default class ListItem extends React.Component<Props> {
       flex: 1,
       lineHeight: '1.38rem',
       padding: [0, 8],
+      overflow: 'hidden',
     },
   }
 }

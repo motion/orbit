@@ -393,8 +393,8 @@ export default class GithubSync {
       const modifiedSince = this.epochToGMTDate(lastSync.date)
       const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''
       return new Headers({
-        // 'If-Modified-Since': modifiedSince,
-        // 'If-None-Match': etag,
+        'If-Modified-Since': modifiedSince,
+        'If-None-Match': etag,
         ...extraHeaders,
       })
     }

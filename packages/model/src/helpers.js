@@ -23,15 +23,8 @@ export const applyHooks = (model: Model) => {
   const ogSave = model.hooks.preSave
   model.hooks.preSave = (doc: Object) => {
     if (model.hasTimestamps) {
-      // WARNING
-      // TODO MAKE THIS WORK WITH UPSERT AND THEN TAKE OUT THE IF CHECK HERE
-      // WARNING
       if (!doc.updatedAt || doc.updatedAt === true) {
         doc.updatedAt = model.now
-      }
-      // 🐛 model handles upsert not using preInsert (i think)
-      if (!doc.createdAt || doc.createdAt === true) {
-        doc.createdAt = model.now
       }
     }
     if (ogSave) {

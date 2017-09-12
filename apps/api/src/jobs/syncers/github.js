@@ -177,8 +177,9 @@ export default class GithubSync {
     for (const event of allEvents) {
       const id = `${event.id}`
       const updatedAt = event.updated_at
+      const createdAt = event.created_at
 
-      if (!await Event.get({ id, updatedAt })) {
+      if (!await Event.get(updatedAt ? { id, updatedAt } : { id, createdAt })) {
         createdEvents.push(
           Event.update({
             id,
@@ -187,7 +188,7 @@ export default class GithubSync {
             author: event.actor.login,
             org: event.org.login,
             parentId: event.repo.name,
-            createdAt: event.created_at,
+            createdAt,
             updatedAt,
             data: event,
           })
@@ -294,8 +295,11 @@ export default class GithubSync {
         const data = unwrap(omit(issue, ['bodyText']))
         const id = `${issue.id}`
         const updatedAt = issue.updatedAt
+        const createdAt = issue.createdAt
 
-        if (!await Thing.get({ id, updatedAt })) {
+        if (
+          !await Thing.get(updatedAt ? { id, updatedAt } : { id, createdAt })
+        ) {
           createdIssues.push(
             Thing.update({
               id,

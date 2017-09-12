@@ -3,6 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { keycode } from '@mcro/ui'
 import { observable } from 'mobx'
+import LinesEllipse from 'react-lines-ellipsis'
 
 export type Props = {
   editable?: boolean,
@@ -14,6 +15,7 @@ export type Props = {
   ellipse?: boolean,
   tagName: string,
   fontWeight?: number,
+  lines?: number,
 }
 
 // click away from edit clears it
@@ -143,6 +145,7 @@ export default class Text extends React.PureComponent<Props> {
     style,
     placeholder,
     lineHeight,
+    lines,
     ...props
   }: Props) {
     const eventProps = {
@@ -151,6 +154,16 @@ export default class Text extends React.PureComponent<Props> {
       onMouseLeave,
       onFocus,
       onBlur,
+    }
+    if (lines) {
+      return (
+        <LinesEllipse
+          text={children}
+          maxLine={lines}
+          trimRight
+          basedOn="letters"
+        />
+      )
     }
     return (
       <text

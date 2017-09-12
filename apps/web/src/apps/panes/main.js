@@ -225,6 +225,9 @@ export default class BarMain extends React.Component<> {
                   null}
               </div>
             ),
+            childrenProps: {
+              lines: 2,
+            },
             iconAfter: true,
             iconProps: {
               style: {

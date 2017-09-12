@@ -155,13 +155,21 @@ export default class Text extends React.PureComponent<Props> {
       onFocus,
       onBlur,
     }
+    let inner = children
+
     if (lines) {
-      return (
+      if (!children) {
+        return null
+      }
+      let childrenString = children
+      if (Array.isArray(children)) {
+        childrenString = children.filter(x => !!x).join('')
+      }
+      inner = (
         <LinesEllipse
-          text={children}
-          maxLine={lines}
-          trimRight
-          basedOn="letters"
+          className="line-ellipse"
+          text={childrenString}
+          maxLine={200}
         />
       )
     }
@@ -178,9 +186,9 @@ export default class Text extends React.PureComponent<Props> {
         $ellipseText={ellipse}
         {...eventProps}
       >
-        {!ellipse && children}
+        {!ellipse && inner}
         <span if={ellipse} $$ellipse>
-          {children}
+          {inner}
         </span>
       </text>
     )

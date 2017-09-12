@@ -1,7 +1,7 @@
 // @flow
 import { store, watch } from '@mcro/black/store'
 import { Setting, Thing, Event, Job } from '@mcro/models'
-import type { User } from '@mcro/models'
+import typeof { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
@@ -49,7 +49,7 @@ export default class GithubSync {
     ])
   }
 
-  run = (job: Job) => {
+  run = (job: Job): Promise<void> => {
     return new Promise((resolve, reject) => {
       const runJob = once(async () => {
         if (this.setting) {

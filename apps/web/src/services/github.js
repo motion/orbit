@@ -1,5 +1,7 @@
+// @flow
 import Octokat from 'octokat'
 import { store, watch } from '@mcro/black'
+import typeof CurrentUser from '~/stores/currentUserStore'
 
 @store
 export default class GithubService {
@@ -40,15 +42,15 @@ export default class GithubService {
     this.user = user
   }
 
-  get token() {
-    return this.user && this.user.github && this.user.github.auth.accessToken
+  get token(): ?string {
+    return this.user && this.user.github && this.user.github.auth.accessToken || null
   }
 
-  get setting() {
-    return this.user && this.user.setting.github
+  get setting(): ?string {
+    return this.user && this.user.setting.github || null
   }
 
-  get activeOrgs() {
+  get activeOrgs(): ?Array<string> {
     return (
       this.setting &&
       this.setting.values.orgs &&

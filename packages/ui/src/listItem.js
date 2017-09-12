@@ -7,28 +7,29 @@ import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
 
 export type Props = {
-  after?: React$Element<any>,
-  before?: React$Element<any>,
+  after?: React.Element<any>,
+  before?: React.Element<any>,
   borderWidth?: number,
   borderRadius?: number,
-  children?: React$Element<any>,
-  date?: React$Element<any>,
+  children?: React.Element<any>,
+  date?: React.Element<any>,
   dateSize?: number,
   iconProps?: Object,
   isFirstElement?: boolean,
   isLastElement?: boolean,
-  meta?: React$Element<any>,
+  meta?: React.Element<any>,
   onClick?: Function,
   onItemMount?: Function,
   onToggle?: Function,
-  primary?: React$Element<any>,
+  primary?: React.Element<any>,
   row?: boolean,
-  secondary?: React$Element<any>,
+  secondary?: React.Element<any>,
   ellipse?: boolean,
   glowProps?: Object,
   editable?: boolean,
   onFinishEdit?: Function,
   childrenProps?: Object,
+  primaryEllipse?: boolean,
 }
 
 const DEFAULT_GLOW = {
@@ -84,6 +85,7 @@ export default class ListItem extends React.Component<Props> {
       size,
       style,
       ellipse,
+      primaryEllipse,
       glowProps,
       editable,
       onFinishEdit,
@@ -147,6 +149,7 @@ export default class ListItem extends React.Component<Props> {
                 editable={editable}
                 autoselect={autoselect}
                 onFinishEdit={onFinishEdit}
+                ellipse={primaryEllipse}
               >
                 {primary}
               </Text>
@@ -161,9 +164,12 @@ export default class ListItem extends React.Component<Props> {
               </Text>
             </prop>
           </above>
+          <children if={children && React.isValidElement(children)}>
+            {children}
+          </children>
           <Text
             $children
-            if={children}
+            if={children && !React.isValidElement(children)}
             size={size * 0.9}
             opacity={0.6}
             {...childrenProps}

@@ -59,7 +59,8 @@ export default function proxyReactComponents({
         instances.forEach(doHotReload)
 
         // double save helper to force clear better on two saves
-        if (Date.now() - lastHotReload < 500 && window.start) {
+        console.log('Since last hmr:', Date.now() - lastHotReload)
+        if (Date.now() - lastHotReload < 1500 && window.start) {
           window.start()
           lastHotReload = Date.now()
         }

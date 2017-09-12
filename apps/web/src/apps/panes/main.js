@@ -22,9 +22,12 @@ const thingToResult = (thing: Thing): PaneResult => ({
 class BarMainStore {
   props: PaneProps
   listRef = null
-  topThings: ?Array<Thing> = Thing.find()
-    .sort('createdAt')
-    .limit(300)
+  topThingsRaw: ?Array<Thing> = Thing.find().limit(300)
+
+  get topThings() {
+    return (this.topThingsRaw || [])
+      .sort((a, b) => new Date(a.created) - new Date(b.created))
+  }
 
   get search() {
     return this.props.paneStore.search

@@ -365,8 +365,8 @@ export default class Model {
   }
 
   createIndexes = async (): Promise<void> => {
-    const index = this.settings.index || []
-    await this._collection.pouch.createIndex({ fields: index })
+    let index = this.settings.index || []
+    await this.pouch.createIndex({ fields: index })
   }
 
   applyDefaults = (doc: Object): Object => {
@@ -538,5 +538,21 @@ export default class Model {
     }
     this.applyDefaults(object)
     return this._collection.atomicUpsert(object)
+  }
+
+  // update
+  async update(object: ?Object) {
+    if (object instanceof Object) {
+      const previous = await this.get(object.id)
+      if (previous) {
+        await previous.atomicUpdate(doc => {
+          for (const key of Object.keys(object).filter(x => x !== 'id')) {
+            doc[key] = object[key]
+          }
+        })
+        return previous
+      }
+    }
+    return await this.create(object)
   }
 }

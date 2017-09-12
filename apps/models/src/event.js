@@ -46,7 +46,7 @@ export class Event extends Model {
 
   settings = {
     database: 'events',
-    index: ['type', 'created'],
+    index: ['type', 'created', 'createdAt', 'updated', 'updatedAt'],
     // version: 1,
   }
 

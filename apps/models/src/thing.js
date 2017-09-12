@@ -42,7 +42,7 @@ export class Thing extends Model {
 
   settings = {
     database: 'things',
-    index: ['title', 'body'],
+    index: ['title', 'body', 'created', 'createdAt', 'updated', 'updatedAt'],
     // version: 1,
   }
 
@@ -67,10 +67,7 @@ export class Thing extends Model {
       highlighting: false,
     })
     const ids = rows.map(row => row.id)
-    return await this.collection
-      .find({ _id: { $in: ids } })
-      .sort('createdAt')
-      .exec()
+    return await this.collection.find({ _id: { $in: ids } }).exec()
   }
 
   setCurrentUser = (currentUser: CurrentUser) => {

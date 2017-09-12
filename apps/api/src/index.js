@@ -13,7 +13,7 @@ const options = {
 }
 const waitForPort = (host, port) => wfpp(host, port, options)
 
-process.on('unhandledRejection', function(reason, p) {
+process.on('unhandledRejection', function(error, p) {
   const path = require('path')
   const stack = stack =>
     cleanStack(stack, line => {
@@ -23,14 +23,16 @@ process.on('unhandledRejection', function(reason, p) {
         : line
     })
   console.log('PromiseFail:')
-  if (reason.stack) {
+  if (error.stack) {
     try {
-      console.log(stack(reason.stack))
+      console.log(error.message)
+      console.log(stack(error.stack))
     } catch (e) {
-      console.log('errr', reason.stack, e)
+      console.log(e.message, e.stack)
+      console.log('errr', error.stack)
     }
   } else {
-    console.log(reason)
+    console.log(error)
   }
 })
 

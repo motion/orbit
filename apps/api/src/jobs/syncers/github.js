@@ -41,7 +41,7 @@ export default class GithubSync {
 
   checkJobs = async () => {
     await Promise.all([
-      ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
+      // ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
       ensureJob(type, 'feed', { every: 60 }), // 60 seconds
     ])
   }
@@ -201,8 +201,8 @@ export default class GithubSync {
     if (!this.setting.activeOrgs) {
       throw new Error('User hasnt selected any orgs in settings')
     }
-    const createdIssues = await Promise.all(
-      this.setting.activeOrgs.map(this.syncIssues)
+    const createdIssues = flatten(
+      await Promise.all(this.setting.activeOrgs.map(this.syncIssues))
     )
     console.log('Created', createdIssues ? createdIssues.length : 0, 'issues')
   }
@@ -331,8 +331,8 @@ export default class GithubSync {
       const modifiedSince = this.epochToGMTDate(lastSync.date)
       const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''
       return new Headers({
-        'If-Modified-Since': modifiedSince,
-        'If-None-Match': etag,
+        // 'If-Modified-Since': modifiedSince,
+        // 'If-None-Match': etag,
         ...extraHeaders,
       })
     }
@@ -372,10 +372,11 @@ export default class GithubSync {
     // if not modified return null
     if (res.status === 304) {
       console.log('Not modified', path)
-      res.json().then(console.log)
       return null
     }
 
-    return res.json()
+    const text = await res.text()
+    console.log('parsing', text)
+    return JSON.parse(text)
   }
 }

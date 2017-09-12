@@ -41,7 +41,7 @@ export default class Jobs {
     this.watchJobs()
   }
 
-  get thub() {
+  get github() {
     return this.syncers.github
   }
 

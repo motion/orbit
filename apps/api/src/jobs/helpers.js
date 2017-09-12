@@ -25,7 +25,7 @@ export async function ensureJob(
   const ago = Math.round(
     (Date.now() - Date.parse(lastCompleted.updatedAt)) / 1000
   )
-  console.log(`${type}.${action} last ran ${ago} minutes ago`)
+  console.log(`${type}.${action} last ran ${ago} seconds ago`)
   if (olderThan(lastCompleted.updatedAt, options.every)) {
     return await createJob()
   }

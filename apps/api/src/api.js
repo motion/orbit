@@ -40,7 +40,7 @@ export default class API {
     this.bootstrap.start()
     const port = this.server.start()
     this.jobs = new Jobs()
-    await this.jobs.start()
+    // await this.jobs.start()
     console.log('API on port', port)
   }
 

@@ -149,7 +149,9 @@ export default class GithubSync {
       const lastEvent = await Event.get(last.id)
       if (!lastEvent) {
         const nextEvents = await this.getRepoEvents(org, repoName, page + 1)
-        return [...events, ...nextEvents]
+        if (nextEvents) {
+          return [...events, ...nextEvents]
+        }
       }
     }
     // weird error format github has
@@ -310,7 +312,7 @@ export default class GithubSync {
               data,
               orgName: orgLogin,
               parentId: repository.name,
-              createdAt: issue.createdAt,
+              createdAt,
               updatedAt,
             })
           )

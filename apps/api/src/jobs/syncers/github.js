@@ -216,8 +216,16 @@ export default class GithubSync {
       const id = `${event.id}`
       const updatedAt = event.updated_at
       const createdAt = event.created_at
-
-      if (!await Event.get(updatedAt ? { id, updatedAt } : { id, createdAt })) {
+      // stale event removal
+      const stale = await Event.get({ id, createdAt: { $ne: createdAt } })
+      if (stale) {
+        console.log('Removing stale event', id)
+        await stale.remove()
+      }
+      if (
+        !stale &&
+        !await Event.get(updatedAt ? { id, updatedAt } : { id, createdAt })
+      ) {
         const inserted = await Event.update({
           id,
           integration: 'github',
@@ -333,8 +341,14 @@ export default class GithubSync {
         const id = `${issue.id}`
         const updatedAt = issue.updatedAt
         const createdAt = issue.createdAt
-
+        // stale thing removal
+        const stale = await Thing.get({ id, createdAt: { $ne: createdAt } })
+        if (stale) {
+          console.log('Removing stale event', id)
+          await stale.remove()
+        }
         if (
+          stale ||
           !await Thing.get(updatedAt ? { id, updatedAt } : { id, createdAt })
         ) {
           const inserted = await Thing.update({

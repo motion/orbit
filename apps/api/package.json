@@ -12,6 +12,9 @@
     "start-dev": "npm run start-nodemon",
     "watch": "webpack --watch"
   },
+  "nodemonConfig": {
+    "ignore": ["**/*.map", "lib", "dist"]
+  },
   "dependencies": {
     "@mcro/black": "^1.2.0",
     "@mcro/models": "^1.2.0",

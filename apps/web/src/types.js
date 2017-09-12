@@ -1,4 +1,4 @@
-import type PaneStore from '~/views/pane/paneStore'
+import typeof PaneStore from '~/views/pane/paneStore'
 
 // @flow
 

@@ -147,7 +147,11 @@ function mobxifyRxObservable(obj, method, val) {
   obj.subscriptions.add(stream)
 }
 
-function automagic(obj: Object) {
+type MagicalObject = {
+  subscriptions: { add: (fn: Function) => void }
+}
+
+function automagic(obj: MagicalObject) {
   const descriptors = {
     ...Object.getOwnPropertyDescriptors(obj),
     ...collectGetterPropertyDescriptors(Object.getPrototypeOf(obj)),
@@ -249,7 +253,7 @@ const AID = '__AUTOMAGICAL_ID__'
 const uid = () => `__ID_${Math.random()}__`
 
 // watches values in an autorun, and resolves their results
-function mobxifyWatch(obj, method, val) {
+function mobxifyWatch(obj: MagicalObject, method, val) {
   // const debug = (...args) => {
   //   const KEY = `${obj.constructor.name}.${method}--${Math.random()}--`
   //   console.log(KEY, ...args)
@@ -327,13 +331,15 @@ function mobxifyWatch(obj, method, val) {
         }
         const isSameObservable =
           currentObservable && currentObservable[AID] === result[AID]
-        if (isSameObservable) {
+        if (isSameObservable && currentObservable) {
           update(currentObservable.get())
           return
         }
         replaceDisposable()
         currentObservable = result
-        currentObservable[AID] = currentObservable[AID] || uid()
+        if (currentObservable && currentObservable instanceof Object) {
+          currentObservable[AID] = currentObservable[AID] || uid()
+        }
         runObservable()
       } else {
         replaceDisposable()
@@ -350,7 +356,7 @@ function mobxifyWatch(obj, method, val) {
   // autorun vs reaction
   if (Array.isArray(val)) {
     // reaction
-    stop = Mobx.reaction(val[0], watcher(val[1]), true)
+    stop = Mobx.reaction(val[0], watcher(val[1]), val[3] || true)
   } else {
     //autorun
     stop = Mobx.autorun(watcher(val))

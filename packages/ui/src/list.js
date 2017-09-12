@@ -7,6 +7,7 @@ import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
 import type { ItemProps } from './listItem'
 import Surface from './surface'
+import { isArrayLike } from 'mobx'
 
 const idFn = _ => _
 const SEPARATOR_HEIGHT = 25
@@ -39,7 +40,7 @@ export type Props = {
 
 @parentSize('virtualized')
 @view.ui
-class List extends React.Component<Props, { selected: number }> {
+class List extends React.PureComponent<Props, { selected: number }> {
   static Item = ListItem
 
   static defaultProps = {
@@ -216,8 +217,6 @@ class List extends React.Component<Props, { selected: number }> {
 
   getItemProps(index, rowProps, isListItem) {
     const {
-      parentSize,
-      virtualized,
       onItemMount,
       size,
       onSelect,
@@ -227,28 +226,22 @@ class List extends React.Component<Props, { selected: number }> {
       selected,
       segmented,
     } = this.props
-    let rowHeight
-    if (virtualized && parentSize) {
-      rowHeight = virtualized ? virtualized.rowHeight : undefined
-    }
-    const passThroughProps = {
-      height: rowHeight,
-      onItemMount,
-      size,
-      ...itemProps,
-    }
     const getRef = this.gatherRefs(index)
     const props = {
       ...rowProps,
-      ...(isListItem ? passThroughProps : itemProps),
       ...(isListItem
         ? {
+            onItemMount,
+            size,
+            getRef,
             segmented,
             isFirstElement: index === 0,
             isLastElement: index === this.totalItems - 1,
           }
-        : null),
-      ...(isListItem ? { getRef } : { ref: getRef }),
+        : {
+            ref: getRef,
+          }),
+      ...itemProps,
     }
     if (onSelect || controlled) {
       const ogClick = props.onClick
@@ -280,18 +273,21 @@ class List extends React.Component<Props, { selected: number }> {
   // curried so we can avoid work in virtualized contexts
   getListItem = (cur, index) => rowProps => {
     const item = this.props.getItem(cur, index)
-    if (item === null) {
+    if (!item) {
       return null
     }
     if (React.isValidElement(item)) {
-      return React.cloneElement(item, this.getItemProps(index, rowProps))
+      return React.cloneElement(
+        item,
+        this.getItemProps(index, rowProps, item.type.isListItem)
+      )
     }
     // pass object to ListItem
     return (
       <ListItem
-        key={item.key || cur.id || index}
         {...this.getItemProps(index, rowProps, true)}
         {...item}
+        key={item.key || item.id || index}
       />
     )
   }
@@ -315,23 +311,25 @@ class List extends React.Component<Props, { selected: number }> {
   //   this.totalGroups
   updateChildren() {
     const { props } = this
-    const {
-      children: children_,
-      items,
-      virtualized,
-      groupKey,
-      parentSize,
-    } = props
-    if (!items && !children_) {
+    const { items, virtualized, groupKey, parentSize } = props
+    const hasChildren = props.children
+    if (!items && !hasChildren) {
       return null
     }
     if (virtualized && !parentSize) {
       return null
     }
-    // allow passing of rowProps by wrapping each in function
-    let children = children_
-      ? this.getListChildren(children_)
-      : items.map(this.getListItem)
+    let children
+    if (hasChildren) {
+      children = this.getListChildren(props.children)
+    } else {
+      if (isArrayLike(items)) {
+        children = items.map(this.getListItem)
+      } else {
+        console.error('not array', items)
+        return
+      }
+    }
 
     // if no need, just get them right away
     if (!virtualized) {
@@ -371,7 +369,7 @@ class List extends React.Component<Props, { selected: number }> {
             <separator {...extraProps}>{name}</separator>
           )
         } else {
-          child = <separator key={Math.random()}>{name}</separator>
+          child = <separator key={name}>{name}</separator>
         }
         children.splice(index, 0, child)
       }

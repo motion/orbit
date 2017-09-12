@@ -12,14 +12,18 @@ type Props = {
 
 @view.ui
 export default class DateView extends React.PureComponent<Props> {
+  static format = text => {
+    const date = new Date(text)
+    const dateWords = ago(date)
+    if (dateWords.indexOf('NaN') === 0) {
+      return null
+    }
+    return dateWords
+  }
+
   render({ children, ...props }: Props) {
     if (children) {
-      const date = new Date(children)
-      const dateWords = ago(date)
-      if (dateWords.indexOf('NaN') === 0) {
-        return null
-      }
-      return <Text {...props}>{dateWords}</Text>
+      return <Text {...props}>{this.constructor.format(children)}</Text>
     }
     return null
   }

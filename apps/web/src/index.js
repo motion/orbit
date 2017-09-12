@@ -12,7 +12,6 @@ if (Constants.IS_PROD) {
   require('./helpers/installDevTools')
 }
 
-window.React = React // fine for now
 React.createElement = createElement // any <tag /> can use $$style
 
 function splash() {

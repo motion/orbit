@@ -9,7 +9,11 @@ export const STATUS = {
   FAILED: 3,
 }
 
-export const methods = {}
+export const methods = {
+  get lock() {
+    return `${this.action}${this.type}${this.status}`
+  },
+}
 
 export class JobModel extends Model {
   type: string
@@ -49,10 +53,13 @@ export class JobModel extends Model {
 
   pending = (opt?: Object) =>
     this.collection.find({ status: STATUS.PENDING, ...opt })
+
   processing = (opt?: Object) =>
     this.collection.find({ status: STATUS.PROCESSING, ...opt })
+
   completed = (opt?: Object) =>
     this.collection.find({ status: STATUS.COMPLETED, ...opt })
+
   failed = (opt?: Object) =>
     this.collection.find({ status: STATUS.FAILED, ...opt })
 

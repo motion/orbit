@@ -31,10 +31,11 @@ export default class GithubSetting {
           {Github.orgs.map(org => {
             const repos = Github.repos && Github.repos[org.id]
             const { orgs } = Github.setting.values
-            const orgActive = orgs && orgs[org.id]
+            const lower = x => `${x}`.toLowerCase()
+            const orgActive = orgs && orgs[lower(org.login)]
 
             return (
-              <field key={org.id}>
+              <field key={org.login}>
                 <UI.Field
                   row
                   size={1.2}
@@ -46,7 +47,7 @@ export default class GithubSetting {
                       ...githubSettings.values,
                       orgs: {
                         ...orgs,
-                        [org.login]: val,
+                        [lower(org.login)]: val,
                       },
                     }
                     githubSettings.save()

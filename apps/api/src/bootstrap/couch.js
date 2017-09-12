@@ -8,8 +8,8 @@ const handleErr = (err, res) => {
     console.log('Error')
     console.log(err)
   } else {
-    console.log('Success!')
-    console.log(JSON.stringify(res, 0, 2))
+    // console.log('Success!')
+    // console.log(JSON.stringify(res, 0, 2))
   }
 }
 
@@ -20,7 +20,6 @@ export default class Couch {
   }
 
   start({ write = true } = {}) {
-    console.log('Bootstrapping...', this.designPath, this.databaseUrl, write)
     this.ensureDbsCreated(write)
   }
 
@@ -35,7 +34,6 @@ export default class Couch {
 
     for (const db of dbs) {
       const dbUrl = `${this.databaseUrl}/${db}`
-      console.log('ensuring db:', db, dbUrl)
       ensure(dbUrl, handleErr)
     }
 

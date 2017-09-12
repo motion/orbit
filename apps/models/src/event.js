@@ -24,6 +24,8 @@ export type EventType = typeof methods & {
   org?: string,
   createdAt: string,
   updatedAt: string,
+  created?: string,
+  updated?: string,
 }
 
 export class Event extends Model {
@@ -35,6 +37,8 @@ export class Event extends Model {
     data: object.optional,
     parentId: str.optional,
     org: str.optional,
+    created: str.optional,
+    updated: str.optional,
     timestamps: true,
   }
 
@@ -42,7 +46,7 @@ export class Event extends Model {
 
   settings = {
     database: 'events',
-    index: ['type'],
+    index: ['type', 'created', 'createdAt', 'updated', 'updatedAt'],
     // version: 1,
   }
 

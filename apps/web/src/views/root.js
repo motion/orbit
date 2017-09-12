@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import { HotKeys } from '~/helpers'
 import Redbox from 'redbox-react'
 import RootStore from '~/stores/rootStore'
+import * as UI from '@mcro/ui'
 
 @view.provide({
   rootStore: RootStore,
@@ -34,9 +35,38 @@ export default class Root extends React.Component {
     this.setState({ error: null })
   }
 
+  clearHmr = async () => {
+    await window.start()
+    view.emit('hmr')
+  }
+
   render({ rootStore }) {
     if (this.state.error) {
-      return <Redbox $$draggable error={this.state.error} />
+      return (
+        <aboveredbox
+          css={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: Number.MAX_SAFE_INTEGER,
+          }}
+        >
+          <UI.Portal>
+            <UI.Button
+              css={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: Number.MAX_SAFE_INTEGER,
+              }}
+              onClick={this.clearHmr}
+            >
+              Refresh
+            </UI.Button>
+          </UI.Portal>
+          <Redbox $$draggable error={this.state.error} />
+        </aboveredbox>
+      )
     }
     return (
       <HotKeys keyMap={rootStore.shortcuts}>

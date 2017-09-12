@@ -21,7 +21,8 @@ type PromiseFunction = () => Promise<any>
 
 // HELPERS
 const idFn = _ => _
-const queryKey = query => JSON.stringify(query.mquery._conditions)
+const queryKey = query =>
+  `${query.op}(${JSON.stringify(query.mquery._conditions)})`
 const modelMerge = (subjectModel: Object, object: Object) => {
   const subject = subjectModel.toJSON()
   for (const key of Object.keys(object)) {
@@ -39,12 +40,14 @@ const modelMethods = {
   get id() {
     return this._id
   },
+
   delete() {
     return this.collection
       .findOne(this._id)
       .exec()
       .then(doc => doc && doc.remove())
   },
+
   // update, add properties to model & save
   async update(object: Object) {
     return await this.atomicUpdate(doc => {
@@ -53,6 +56,7 @@ const modelMethods = {
       }
     })
   },
+
   // merge object deeply
   merge(object: Object) {
     modelMerge(this, object)
@@ -62,6 +66,7 @@ const modelMethods = {
       modelMerge(doc, object)
     })
   },
+
   // this is the mongo field update syntax that rxdb has
   // see https://docs.mongodb.com/manual/reference/operator/update-field/
   // and https://github.com/lgandecki/modifyjs#implemented
@@ -167,69 +172,65 @@ export default class Model {
   //  first: allowing models to define a filter
   //  second: automatic sync from remote
   get _filteredCollection() {
-    const { defaultFilter = idFn } = this.constructor
-
-    // cache the proxy
-    if (this._filteredProxy) {
-      return this._filteredProxy
+    if (!this._filteredProxy) {
+      const { _createFindProxy } = this
+      this._filteredProxy = new Proxy(this._collection, {
+        get(target, method) {
+          if (method === 'find' || method === 'findOne') {
+            return _createFindProxy(target, method)
+          }
+          return target[method]
+        },
+      })
     }
+    return this._filteredProxy
+  }
 
-    // set here to avoid changed `this` in proxy
-    const { syncQuery, options } = this
+  _createFindProxy = (target, method) => {
+    const { defaultFilter = idFn } = this.constructor
+    // assign here to avoid changed `this` in proxy
+    const { options } = this
     const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
 
-    this._filteredProxy = new Proxy(this._collection, {
-      get(target, method) {
-        if (method === 'find' || method === 'findOne') {
-          return queryParams => {
-            const finalParams = defaultFilter(queryObject(queryParams))
-            const query = target[method](finalParams)
-            const sync = opts =>
-              syncQuery(query, { live: method === '$', retry: false, ...opts })
+    return queryParams => {
+      const finalParams = defaultFilter(queryObject(queryParams))
+      const query = target[method](finalParams)
+      const sync = opts =>
+        this.syncQuery(query, { live: method === '$', retry: false, ...opts })
+      const executeQuery = query.exec.bind(query)
 
-            return new Proxy(query, {
-              get(target, method) {
-                if (method === 'sync') {
-                  return sync
-                }
-                // they have intent to run this
-                if (method === 'exec' || method === '$') {
-                  if (options.autoSync) {
-                    const syncPromise = sync()
-                    // wait for sync to happen before returning
-                    if (method === 'exec') {
-                      const execute = target.exec.bind(target)
-                      return function exec() {
-                        return new Promise(async resolve => {
-                          // gives option to avoid waiting for initial sync before resolving
-                          if (!options.asyncFirstSync) {
-                            await syncPromise
-                          }
-                          const value = await execute()
-
-                          // return null for empty responses
-                          if (
-                            value instanceof Object &&
-                            Object.keys(value).length === 0
-                          ) {
-                            return null
-                          }
-
-                          resolve(value)
-                        })
-                      }
-                    }
+      return new Proxy(query, {
+        get(target, method) {
+          switch (method) {
+            case 'sync':
+              return sync
+            case '$':
+              sync()
+              return target[method]
+            case 'exec':
+              // console.log('--', `${target.op}.${method}`, finalParams)
+              return () =>
+                new Promise(async resolve => {
+                  if (!options.asyncFirstSync) {
+                    await sync()
                   }
-                }
-                return target[method]
-              },
-            })
+                  const value = await executeQuery()
+                  if (
+                    // patch: null === empty response
+                    value instanceof Object &&
+                    Object.keys(value).length === 0
+                  ) {
+                    resolve(null)
+                  } else {
+                    resolve(value)
+                  }
+                })
+            default:
+              return target[method]
           }
-        }
-        return target[method]
-      },
-    })
-    return this._filteredProxy
+        },
+      })
+    }
   }
 
   get collection(): RxCollection {
@@ -341,11 +342,13 @@ export default class Model {
 
   onConnection = () => {
     return new Promise((resolve, reject) => {
-      const off = autorun(() => {
+      this.off = autorun(() => {
         if (this.connected) {
-          console.log('watch connected')
           resolve()
-          off()
+          if (this.off) {
+            // :bug: this., not sure why
+            this.off()
+          }
         }
       })
       setTimeout(() => {
@@ -362,8 +365,8 @@ export default class Model {
   }
 
   createIndexes = async (): Promise<void> => {
-    const index = this.settings.index || []
-    await this._collection.pouch.createIndex({ fields: index })
+    let index = this.settings.index || []
+    await this.pouch.createIndex({ fields: index })
   }
 
   applyDefaults = (doc: Object): Object => {
@@ -393,12 +396,12 @@ export default class Model {
       throw new Error('Could not sync query, no remote is specified.')
     }
 
-    const QUERY_KEY = queryKey(query)
+    const QUERY_KEY = `${this.title}.${queryKey(query)}`
     if (this.liveQueries[QUERY_KEY]) {
       return Promise.resolve(true)
     }
 
-    console.log('SYNC', this.title, JSON.stringify(query.mquery), QUERY_KEY)
+    console.log('>>', QUERY_KEY)
 
     const firstReplication = this._collection.sync({
       query,
@@ -420,7 +423,7 @@ export default class Model {
 
       const error$ = firstReplication.error$.subscribe(error => {
         if (error) {
-          console.log('rejecting replication', JSON.stringify(error))
+          console.log('rejecting replication', error)
           reject(error)
         }
       })
@@ -431,39 +434,37 @@ export default class Model {
           const done = state && state.pull && state.pull.ok
 
           if (done && !resolved) {
+            console.log('<<', QUERY_KEY)
+            resolve()
+
+            // cleanup
             resolved = true
-            // unsub error stream
             error$.unsubscribe()
 
             if (options.live) {
               // if live, we re-run with a live query to keep it syncing
               // TODO we need to watch this and clear it on unsubscribe
-              const liveReplication = this._collection.sync({
-                query,
-                remote: this.remote,
-                waitForLeadership: false,
-                direction: {
-                  pull: true,
-                },
-                options: {
-                  ...options,
-                  retry: false,
-                },
-              })
               this.liveQueries[QUERY_KEY] = true
-              resolve(liveReplication)
-            } else {
-              resolve(true)
+              // let some breathe time before second sync
+              setTimeout(() => {
+                this._collection.sync({
+                  query,
+                  remote: this.remote,
+                  waitForLeadership: false,
+                  direction: {
+                    pull: true,
+                  },
+                  options: {
+                    ...options,
+                    retry: false,
+                  },
+                })
+              })
             }
           }
         })
         .toPromise()
     })
-  }
-
-  getParams = (params?: Object | string, callback: Function) => {
-    const objParams = this.paramsToObject(params)
-    return callback(objParams)
   }
 
   paramsToObject = (params: Object | string) => {
@@ -493,10 +494,10 @@ export default class Model {
   // find/findOne return RxQuery objects
   // so you can subscribe to streams with .$ or promise with .exec()
   find = (params: string | Object) =>
-    this.getParams(params, this.collection.find)
+    this.collection.find(this.paramsToObject(params))
 
   findOne = (params: string | Object) =>
-    this.getParams(params, this.collection.findOne)
+    this.collection.findOne(this.paramsToObject(params))
 
   // find or create, doesnt require primary key usage
   findOrCreate = async (object: Object = {}): Promise<Object> => {
@@ -536,6 +537,23 @@ export default class Model {
       await this.onConnection()
     }
     this.applyDefaults(object)
-    return this._collection.upsert(object)
+    return this._collection.atomicUpsert(object)
+  }
+
+  // update
+  async update(object: ?Object) {
+    if (object instanceof Object) {
+      const previous = await this.get(object.id)
+      if (previous) {
+        await previous.atomicUpdate(doc => {
+          for (const key of Object.keys(object).filter(x => x !== 'id')) {
+            console.log('setting', key)
+            doc[key] = object[key]
+          }
+        })
+        return previous
+      }
+    }
+    return await this.create(object)
   }
 }

@@ -7,27 +7,29 @@ import SizedSurface from './sizedSurface'
 import injectTheme from './helpers/injectTheme'
 
 export type Props = {
-  after?: React$Element<any>,
-  before?: React$Element<any>,
+  after?: React.Element<any>,
+  before?: React.Element<any>,
   borderWidth?: number,
   borderRadius?: number,
-  children?: React$Element<any>,
-  date?: React$Element<any>,
+  children?: React.Element<any>,
+  date?: React.Element<any>,
   dateSize?: number,
   iconProps?: Object,
   isFirstElement?: boolean,
   isLastElement?: boolean,
-  meta?: React$Element<any>,
+  meta?: React.Element<any>,
   onClick?: Function,
   onItemMount?: Function,
   onToggle?: Function,
-  primary?: React$Element<any>,
+  primary?: React.Element<any>,
   row?: boolean,
-  secondary?: React$Element<any>,
+  secondary?: React.Element<any>,
   ellipse?: boolean,
   glowProps?: Object,
   editable?: boolean,
   onFinishEdit?: Function,
+  childrenProps?: Object,
+  primaryEllipse?: boolean,
 }
 
 const DEFAULT_GLOW = {
@@ -83,12 +85,14 @@ export default class ListItem extends React.Component<Props> {
       size,
       style,
       ellipse,
+      primaryEllipse,
       glowProps,
       editable,
       onFinishEdit,
       iconProps,
       getRef,
       highlight,
+      childrenProps,
       ...props
     } = this.props
     const radiusProps = segmented
@@ -136,12 +140,16 @@ export default class ListItem extends React.Component<Props> {
               <Text
                 $text
                 fontSize="inherit"
-                ellipse={ellipse}
+                css={{
+                  wordWrap: 'break-word',
+                  maxHeight: '2.8rem',
+                }}
                 size={size}
                 color="inherit"
                 editable={editable}
                 autoselect={autoselect}
                 onFinishEdit={onFinishEdit}
+                ellipse={primaryEllipse}
               >
                 {primary}
               </Text>
@@ -149,17 +157,25 @@ export default class ListItem extends React.Component<Props> {
                 if={secondary}
                 $text
                 size={size * 0.85}
-                opacity={0.75}
+                opacity={0.7}
                 ellipse
               >
                 {secondary}
               </Text>
             </prop>
-            <Text if={date} size={size * 0.6} $date $meta ellipse>
-              {date}
-            </Text>
           </above>
-          <children if={children}>{children}</children>
+          <children if={children && React.isValidElement(children)}>
+            {children}
+          </children>
+          <Text
+            $children
+            if={children && !React.isValidElement(children)}
+            size={size * 0.9}
+            opacity={0.6}
+            {...childrenProps}
+          >
+            {children}
+          </Text>
         </content>
         <after if={after}>{after}</after>
       </SizedSurface>
@@ -191,15 +207,20 @@ export default class ListItem extends React.Component<Props> {
       overflow: 'hidden',
       maxWidth: '100%',
       fontWeight: 200,
+      padding: [0, 10, 0, 0],
     },
     text: {
       width: '100%',
     },
     date: {
-      alignSelf: 'flex-start',
+      // alignSelf: 'flex-end',
+      justifyContent: 'flex-end',
+      // flex: 'inherit',
+      margin: ['-1.2rem', 0, 0],
       userSelect: 'none',
       fontSize: 12,
       fontWeight: 200,
+      opacity: 0.9,
     },
     col: {
       flexDirection: 'column',
@@ -220,6 +241,7 @@ export default class ListItem extends React.Component<Props> {
       flex: 1,
       lineHeight: '1.38rem',
       padding: [0, 8],
+      overflow: 'hidden',
     },
   }
 }

@@ -22,9 +22,15 @@ const thingToResult = (thing: Thing): PaneResult => ({
 class BarMainStore {
   props: PaneProps
   listRef = null
-  topThings: ?Array<Thing> = Thing.find()
-    .sort('createdAt')
+  topThingsRaw: ?Array<Thing> = Thing.find()
+    .sort({ createdAt: 'desc' })
     .limit(300)
+
+  get topThings() {
+    console.log('this.topThingsRaw', this.topThingsRaw)
+    return this.topThingsRaw || []
+    // .sort((a, b) => new Date(a.created) - new Date(b.created))
+  }
 
   get search() {
     return this.props.barStore.search
@@ -34,7 +40,8 @@ class BarMainStore {
     this.props.getRef(this)
 
     this.react(
-      () => this.listRef && this.search,
+      () =>
+        this.results && this.listRef && `${this.search}${this.results.length}`,
       () => {
         this.setTimeout(() => {
           this.listRef.updateChildren()
@@ -57,7 +64,7 @@ class BarMainStore {
 
   browse: Array<PaneResult> = [
     {
-      id: 10,
+      id: 1000,
       title: 'Team: Motion',
       type: 'team',
       data: {
@@ -66,7 +73,7 @@ class BarMainStore {
       actions: ['like motion'],
     },
     {
-      id: 11,
+      id: 1100,
       title: 'Recent',
       type: 'feed',
       icon: 'radio',
@@ -76,14 +83,14 @@ class BarMainStore {
       actions: ['respond to recent'],
     },
     {
-      id: 12,
+      id: 1200,
       data: { message: 'assigned' },
       title: 'Assigned to me',
       type: 'message',
       icon: 'check',
     },
     {
-      id: 13,
+      id: 1300,
       data: { message: 'my team' },
       title: 'My Team',
       category: 'Browse',
@@ -94,7 +101,7 @@ class BarMainStore {
       icon: 'objects_planet',
     },
     {
-      id: 14,
+      id: 1400,
       data: { message: 'from company' },
       title: 'Company',
       category: 'Browse',
@@ -209,34 +216,40 @@ export default class BarMain extends React.Component<> {
           groupKey="category"
           items={mainStore.results}
           itemProps={paneStore.itemProps}
-          getItem={(result, index) => (
-            <UI.ListItem
-              highlight={() => index === paneStore.activeIndex}
-              primary={result.title}
-              date={<UI.Date if={result.data}>{result.data.updatedAt}</UI.Date>}
-              children={
-                <UI.Text
-                  if={result.data && result.data.body}
-                  css={{ opacity: 0.5 }}
-                >
-                  {result.data.body.slice(0, 120)}
-                </UI.Text>
-              }
-              iconProps={{
-                style: {
-                  alignSelf: 'flex-start',
-                  paddingTop: 2,
-                },
-              }}
-              icon={
-                result.data && result.data.image ? (
-                  <img $image src={`/images/${result.data.image}.jpg`} />
+          getItem={(result, index) => ({
+            key: result.id,
+            highlight: () => index === paneStore.activeIndex,
+            primary: result.title,
+            primaryEllipse: !this.hasContent(result),
+            children: (
+              <UI.Text
+                if={result.data}
+                lineHeight={20}
+                opacity={0.5}
+                lines={20}
+              >
+                {result.data.updatedAt ? (
+                  UI.Date.format(result.data.updatedAt) + ' · '
                 ) : (
-                  result.icon
-                )
-              }
-            />
-          )}
+                  ''
+                )}
+                {(result.data.body && result.data.body.slice(0, 120)) || ''}
+              </UI.Text>
+            ),
+            iconAfter: true,
+            iconProps: {
+              style: {
+                alignSelf: 'flex-start',
+                paddingTop: 2,
+              },
+            },
+            icon:
+              result.data && result.data.image ? (
+                <img $image src={`/images/${result.data.image}.jpg`} />
+              ) : (
+                result.icon
+              ),
+          })}
         />
       </Pane.Card>
     )

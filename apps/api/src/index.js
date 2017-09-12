@@ -13,7 +13,7 @@ const options = {
 }
 const waitForPort = (host, port) => wfpp(host, port, options)
 
-process.on('unhandledRejection', function(reason, p) {
+process.on('unhandledRejection', function(error, p) {
   const path = require('path')
   const stack = stack =>
     cleanStack(stack, line => {
@@ -23,14 +23,16 @@ process.on('unhandledRejection', function(reason, p) {
         : line
     })
   console.log('PromiseFail:')
-  if (reason.stack) {
+  if (error.stack) {
     try {
-      console.log(stack(reason.stack))
+      console.log(error.message)
+      console.log(stack(error.stack))
     } catch (e) {
-      console.log('errr', reason.stack, e)
+      console.log(e.message, e.stack)
+      console.log('errr', error.stack)
     }
   } else {
-    console.log(reason)
+    console.log(error)
   }
 })
 
@@ -40,21 +42,17 @@ process.title = 'orbit-api'
 const API = require('./api').default
 
 async function run() {
-  console.log('Running...')
   const Api = new API({ rootPath: __dirname })
   global.API = Api
-  console.log('Waiting for Couch & Redis...')
   try {
     await Promise.all([
       waitForPort(Constants.DB_HOSTNAME, Constants.DB_PORT),
       waitForPort(Constants.REDIS_HOSTNAME, Constants.REDIS_PORT),
     ])
-    console.log('Connected to Couch and Redis')
     await Api.start()
   } catch (err) {
     console.log('error', err)
   }
-  console.log('API started')
 }
 
 run()

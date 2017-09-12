@@ -1,34 +1,26 @@
 // @flow
 import { store, watch } from '@mcro/black/store'
 import { Setting, Thing, Event, Job } from '@mcro/models'
-import type { User } from '@mcro/models'
+import typeof { User } from '@mcro/models'
 import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
 import { URLSearchParams } from 'url'
-import { now } from 'mobx-utils'
+import { ensureJob } from '~/jobs/helpers'
 
-const olderThan = (date, minutes) => {
-  const upperBound = minutes * 1000 * 60
-  const timeDifference = Date.now() - Date.parse(date)
-  const answer = timeDifference > upperBound
-  console.log(timeDifference, upperBound, answer)
-  return answer
-}
+const type = 'github'
 
 @store
 export default class GithubSync {
+  static type = type
+
   user: User
-  type = 'github'
   lastSyncs = {}
 
+  // oldest setting
   @watch
-  setting: any = () =>
-    this.user &&
-    Setting.findOne({
-      userId: this.user.id,
-      type: 'github',
-    }).sort('createdAt')
+  setting = () =>
+    Setting.findOne({ type, userId: this.user.id }).sort('createdAt')
 
   constructor({ user }: SyncOptions) {
     this.user = user
@@ -38,43 +30,26 @@ export default class GithubSync {
     return (this.user.github && this.user.github.auth.accessToken) || ''
   }
 
-  start = async () => {
+  start = () => {
     if (!this.user.github) {
       console.log('No github credentials found for user')
       return
     }
 
-    // autorun
-    this.watch(async () => {
-      now(1000 * 60) // every minute
-      await Promise.all([
-        this.ensureJob('issues', { every: 60 * 6 }), // 6 hours
-        this.ensureJob('feed', { every: 0.1 }),
-      ])
-    })
+    // every so often
+    const CHECK_JOBS_TIME = 1000 * 30 // 30 seconds
+    setInterval(this.checkJobs, CHECK_JOBS_TIME)
+    this.checkJobs()
   }
 
-  ensureJob = async (action: string, options: Object = {}): ?Job => {
-    const lastPending = await Job.lastPending({ action }).exec()
-    if (lastPending) {
-      console.log(`Pending job already running for ${this.type} ${action}`)
-      return
-    }
-    const lastCompleted = await Job.lastCompleted({ action }).exec()
-    const createJob = () => Job.create({ type: 'github', action })
-    if (!lastCompleted) {
-      return await createJob()
-    }
-    const ago = Math.round(
-      (Date.now() - Date.parse(lastCompleted.updatedAt)) / 1000 / 60
-    )
-    console.log(`${this.type}.${action} last ran -- ${ago} minutes ago`)
-    if (olderThan(lastCompleted.updatedAt, options.every)) {
-      return await createJob()
-    }
+  checkJobs = async () => {
+    await Promise.all([
+      ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
+      ensureJob(type, 'feed', { every: 60 }), // 60 seconds
+    ])
   }
 
-  run = (job: Job) => {
+  run = (job: Job): Promise<void> => {
     return new Promise((resolve, reject) => {
       const runJob = once(async () => {
         if (this.setting) {
@@ -83,6 +58,7 @@ export default class GithubSync {
 
         if (job.action) {
           try {
+            console.log('running job', job.action)
             await this.runJob(job.action)
           } catch (error) {
             reject(error)
@@ -151,6 +127,7 @@ export default class GithubSync {
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
+    console.log('got repo events', repoEvents)
     const created = await this.insertEvents(repoEvents)
     console.log('Created', created.length, 'feed events')
     await this.writeLastSyncs()
@@ -171,10 +148,8 @@ export default class GithubSync {
       const last = events[events.length - 1]
       const lastEvent = await Event.get(last.id)
       if (!lastEvent) {
-        return [
-          ...events,
-          ...(await this.getRepoEvents(org, repoName, page + 1)),
-        ]
+        const nextEvents = await this.getRepoEvents(org, repoName, page + 1)
+        return [...events, ...nextEvents]
       }
     }
     // weird error format github has
@@ -199,22 +174,20 @@ export default class GithubSync {
 
   insertEvents = (allEvents: Array<Object>): Promise<Array<Object>> => {
     const createdEvents = []
-    for (const events of allEvents) {
-      if (events && events.length) {
-        for (const event of events) {
-          createdEvents.push(
-            Event.upsert({
-              id: `${event.id}`,
-              integration: 'github',
-              type: event.type,
-              author: event.actor.login,
-              org: event.org.login,
-              parentId: event.repo.name,
-              data: event,
-            })
-          )
-        }
-      }
+    for (const event of allEvents) {
+      createdEvents.push(
+        Event.update({
+          id: `${event.id}`,
+          integration: 'github',
+          type: event.type,
+          author: event.actor.login,
+          org: event.org.login,
+          parentId: event.repo.name,
+          createdAt: event.created_at,
+          updatedAt: event.updated_at,
+          data: event,
+        })
+      )
     }
     return Promise.all(createdEvents)
   }
@@ -226,8 +199,8 @@ export default class GithubSync {
     if (!this.setting.activeOrgs) {
       throw new Error('User hasnt selected any orgs in settings')
     }
-    const createdIssues = await Promise.all(
-      this.setting.activeOrgs.map(this.syncIssues)
+    const createdIssues = flatten(
+      await Promise.all(this.setting.activeOrgs.map(this.syncIssues))
     )
     console.log('Created', createdIssues ? createdIssues.length : 0, 'issues')
   }
@@ -308,14 +281,14 @@ export default class GithubSync {
       const issues = repository.issues.edges.map(edge => edge.node)
 
       if (!issues || !issues.length) {
-        console.log('no issues found for repo', repository.id)
+        console.log('no issues found for repo', repository.name)
         continue
       }
 
       for (const issue of issues) {
         const data = unwrap(omit(issue, ['bodyText']))
         createdIssues.push(
-          Thing.upsert({
+          Thing.update({
             id: `${issue.id}`,
             integration: 'github',
             type: 'issue',
@@ -324,8 +297,8 @@ export default class GithubSync {
             data,
             orgName: orgLogin,
             parentId: repository.name,
-            created: issue.createdAt,
-            updated: issue.updatedAt,
+            createdAt: issue.createdAt,
+            updatedAt: issue.updatedAt,
           })
         )
       }
@@ -356,8 +329,8 @@ export default class GithubSync {
       const modifiedSince = this.epochToGMTDate(lastSync.date)
       const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''
       return new Headers({
-        'If-Modified-Since': modifiedSince,
-        'If-None-Match': etag,
+        // 'If-Modified-Since': modifiedSince,
+        // 'If-None-Match': etag,
         ...extraHeaders,
       })
     }
@@ -400,6 +373,7 @@ export default class GithubSync {
       return null
     }
 
-    return res.json()
+    const text = await res.text()
+    return JSON.parse(text)
   }
 }

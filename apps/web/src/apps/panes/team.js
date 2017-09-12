@@ -13,7 +13,8 @@ class BarTeamStore {
     this.props.getRef(this)
   }
 
-  @watch events: ?Array<Event> = (() => Event.find().sort('createdAt'): any)
+  @watch
+  events: ?Array<Event> = (() => Event.find().sort({ createdAt: 'desc' }): any)
 
   get results(): Array<Event> {
     return this.events || []
@@ -39,7 +40,11 @@ export default class BarTeam extends Component<Props> {
         </section>
 
         <section css={{ flex: 1 }}>
-          <Feed items={store.results} data={paneStore.data} />
+          <Feed
+            items={store.results}
+            data={paneStore.data}
+            activeIndex={paneStore.activeIndex}
+          />
         </section>
       </team>
     )

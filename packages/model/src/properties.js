@@ -1,7 +1,6 @@
 import * as Kontur from 'kontur'
 
 const setProp = (target, prop) => {
-  console.log('set somet hing', target, prop)
   const next = new target()
   next.s[prop] = true
   return next
@@ -79,11 +78,11 @@ if (module && module.hot) {
 }
 
 // TEST :)
-console.log(
-  compile({
-    first: str,
-    draft: str.primary,
-    other: str,
-    another: str,
-  })
-)
+// console.log(
+//   compile({
+//     first: str,
+//     draft: str.primary,
+//     other: str,
+//     another: str,
+//   })
+// )

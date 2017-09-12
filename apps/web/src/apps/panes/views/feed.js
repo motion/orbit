@@ -20,6 +20,11 @@ export default class Feed extends React.PureComponent<Props> {
           selected={activeIndex}
           getItem={(event, index) => {
             const { verb, data } = event
+            if (!data) {
+              console.log('no data')
+              return null
+            }
+
             const { actor, payload } = data
             return (
               <feeditem $active={index === activeIndex} key={index}>

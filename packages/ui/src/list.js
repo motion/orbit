@@ -437,11 +437,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (!controlled) {
       return inner
     }
-    return (
-      <HotKeys $keys handlers={this.actions}>
-        {inner}
-      </HotKeys>
-    )
+    return inner
   }
 
   static style = {

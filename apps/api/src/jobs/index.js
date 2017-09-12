@@ -19,20 +19,24 @@ function getRxError(error: Error) {
 export default class Jobs {
   locks: Set<string> = new Set()
   @watch user: ?User = () => User.findOne()
-  @watch pendingJobs: ?Array<Job> = () => Job.pending()
+  @watch lastPending: ?Array<Job> = () => Job.lastPending()
   @watch
-  syncers = () => {
+  syncers = async () => {
+    console.log('run syncers', this.user)
     if (!this.user) {
       return {}
     }
-    const syncers = {}
+    console.time('run API.jobs.syncers')
+    const res = {}
     for (const name of Object.keys(Syncers)) {
-      const Syncer = new Syncers[name]({ user: this.user })
-      Syncer.start()
+      console.log('Starting syncer', name)
+      const Syncer = new Syncers[name](this)
+      await Syncer.start()
       console.log('Syncer started:', name)
-      syncers[name] = Syncer
+      res[name] = Syncer
     }
-    return syncers
+    console.timeEnd('end API.jobs.syncers')
+    return res
   }
 
   start = async () => {
@@ -55,27 +59,28 @@ export default class Jobs {
 
   watchJobs = () => {
     this.react(
-      () => this.pendingJobs,
-      async jobs => {
-        console.log('Pending jobs: ', jobs.length)
-        for (const job of jobs) {
-          if (this.locks.has(job.id)) {
-            return
-          }
-          this.locks.add(job.id)
-          try {
-            await this.runJob(job)
-          } catch (error) {
-            const lastError = getRxError(error)
-            console.log('JOB ERROR', lastError)
-            await job.update({
-              status: 3,
-              lastError,
-              tries: 3,
-            })
-          }
-          this.locks.delete(job.id)
+      () => this.lastPending,
+      async job => {
+        if (!job) {
+          return
         }
+        console.log('Pending job: ', job.type, job.action)
+        if (this.locks.has(job.id)) {
+          return
+        }
+        this.locks.add(job.id)
+        try {
+          await this.runJob(job)
+        } catch (error) {
+          const lastError = getRxError(error)
+          console.log('JOB ERROR', lastError)
+          await job.update({
+            status: 3,
+            lastError,
+            tries: 3,
+          })
+        }
+        this.locks.delete(job.id)
       }
     )
   }

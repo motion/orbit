@@ -441,29 +441,31 @@ export default class Model {
           if (done && !resolved) {
             console.log('SYNC DONE', this.title, QUERY_KEY)
 
-            if (options.live) {
-              // if live, we re-run with a live query to keep it syncing
-              // TODO we need to watch this and clear it on unsubscribe
-              const liveReplication = this._collection.sync({
-                query,
-                remote: this.remote,
-                direction: {
-                  pull: true,
-                },
-                options: {
-                  ...options,
-                  retry: false,
-                },
-              })
-              this.liveQueries[QUERY_KEY] = true
-              resolve(liveReplication)
-            } else {
-              resolve(true)
-            }
-
             // cleanup
             resolved = true
             error$.unsubscribe()
+
+            if (options.live) {
+              // if live, we re-run with a live query to keep it syncing
+              // TODO we need to watch this and clear it on unsubscribe
+              this.liveQueries[QUERY_KEY] = true
+              resolve()
+              setTimeout(() => {
+                this._collection.sync({
+                  query,
+                  remote: this.remote,
+                  direction: {
+                    pull: true,
+                  },
+                  options: {
+                    ...options,
+                    retry: false,
+                  },
+                })
+              })
+            } else {
+              resolve()
+            }
           }
         })
         .toPromise()

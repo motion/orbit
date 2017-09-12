@@ -22,8 +22,6 @@ export default class GithubSync {
   lastSyncs = {}
   @watch
   setting = () =>
-    this.user &&
-    // oldest
     Setting.findOne({ type, userId: this.user.id }).sort('createdAt')
 
   constructor({ user }: SyncOptions) {
@@ -41,6 +39,7 @@ export default class GithubSync {
     }
 
     // autorun
+    console.log('Running igthub')
     this.setInterval(async () => {
       console.log('check')
       await Promise.all([
@@ -59,6 +58,7 @@ export default class GithubSync {
 
         if (job.action) {
           try {
+            console.log('running job', job.action)
             await this.runJob(job.action)
           } catch (error) {
             reject(error)

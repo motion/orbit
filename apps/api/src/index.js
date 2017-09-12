@@ -40,21 +40,18 @@ process.title = 'orbit-api'
 const API = require('./api').default
 
 async function run() {
-  console.log('Running...')
   const Api = new API({ rootPath: __dirname })
   global.API = Api
-  console.log('Waiting for Couch & Redis...')
   try {
     await Promise.all([
       waitForPort(Constants.DB_HOSTNAME, Constants.DB_PORT),
       waitForPort(Constants.REDIS_HOSTNAME, Constants.REDIS_PORT),
     ])
-    console.log('Connected to Couch and Redis')
     await Api.start()
   } catch (err) {
     console.log('error', err)
   }
-  console.log('API started')
+  console.log('API STARTED')
 }
 
 run()

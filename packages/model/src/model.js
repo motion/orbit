@@ -200,7 +200,7 @@ export default class Model {
       const finalParams = defaultFilter(queryObject(queryParams))
       const query = target[method](finalParams)
       const sync = opts =>
-        this.syncQuery(query, { live: method === '$', retry: false, ...opts })
+        this.syncQuery(query, { live: method === '$', ...opts })
       const executeQuery = query.exec.bind(query)
 
       return new Proxy(query, {
@@ -417,7 +417,6 @@ export default class Model {
       options: {
         ...options,
         live: false,
-        retry: false,
       },
     })
 

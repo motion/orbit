@@ -22,9 +22,11 @@ class BarFeedStore {
 
   @watch
   events: ?Array<Event> = (() =>
-    Event.find({ author: this.person, updated: { $ne: null } }).sort({
-      updated: 'desc',
-    }): any)
+    Event.find({ author: this.person, updated: { $ne: null } })
+      .sort({
+        updated: 'desc',
+      })
+      .limit(20): any)
 
   get results(): Array<Event> {
     return this.events || []

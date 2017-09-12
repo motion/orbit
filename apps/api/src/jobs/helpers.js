@@ -27,7 +27,7 @@ export async function ensureJob(
         60} minutes ago`
     )
     if (secondsAgo > SECONDS_UNTIL_JOB_IS_STALE) {
-      console.log('Stale job, removing...', job.id)
+      console.log('Stale job, removing...', lastPending.id)
       await lastPending.remove()
       return ensureJob(type, action, options)
     }

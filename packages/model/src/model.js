@@ -45,7 +45,14 @@ const modelMethods = {
     return this.collection
       .findOne(this._id)
       .exec()
-      .then(doc => doc && doc.remove())
+      .then(doc => {
+        if (doc) {
+          doc.remove()
+          if (this.options.debug) {
+            console.log('REMOVE', doc.id)
+          }
+        }
+      })
   },
 
   // update, add properties to model & save

@@ -19,7 +19,7 @@ function getRxError(error: Error) {
 export default class Jobs {
   locks: Set<string> = new Set()
   @watch user: ?User = () => User.findOne()
-  @watch lastPending: ?Array<Job> = () => Job.lastPending()
+  @watch pending: ?Array<Job> = () => Job.pending()
   @watch
   syncers = async () => {
     if (this.user === null) {
@@ -57,28 +57,33 @@ export default class Jobs {
 
   watchJobs = () => {
     this.react(
-      () => this.lastPending,
-      async job => {
-        if (!job) {
+      () => this.pending,
+      async pendingJobs => {
+        if (!pendingJobs || !pendingJobs.length) {
           return
         }
-        console.log('Pending job: ', job.type, job.action)
-        if (this.locks.has(job.lock)) {
-          return
+        for (const job of pendingJobs) {
+          if (!job) {
+            return
+          }
+          if (this.locks.has(job.lock)) {
+            console.log('Already locked job: ', job.type, job.action, job.lock)
+            return
+          }
+          this.locks.add(job.lock)
+          try {
+            await this.runJob(job)
+          } catch (error) {
+            const lastError = getRxError(error)
+            console.log('JOB ERROR', lastError)
+            await job.update({
+              status: 3,
+              lastError,
+              tries: 3,
+            })
+          }
+          this.locks.delete(job.lock)
         }
-        this.locks.add(job.lock)
-        try {
-          await this.runJob(job)
-        } catch (error) {
-          const lastError = getRxError(error)
-          console.log('JOB ERROR', lastError)
-          await job.update({
-            status: 3,
-            lastError,
-            tries: 3,
-          })
-        }
-        this.locks.delete(job.lock)
       }
     )
   }

@@ -172,24 +172,29 @@ export default class GithubSync {
     return Promise.resolve([])
   }
 
-  insertEvents = (allEvents: Array<Object>): Promise<Array<Object>> => {
+  insertEvents = async (allEvents: Array<Object>): Promise<Array<Object>> => {
     const createdEvents = []
     for (const event of allEvents) {
-      createdEvents.push(
-        Event.update({
-          id: `${event.id}`,
-          integration: 'github',
-          type: event.type,
-          author: event.actor.login,
-          org: event.org.login,
-          parentId: event.repo.name,
-          createdAt: event.created_at,
-          updatedAt: event.updated_at,
-          data: event,
-        })
-      )
+      const id = `${event.id}`
+      const updatedAt = event.updated_at
+
+      if (!await Event.get({ id, updatedAt })) {
+        createdEvents.push(
+          Event.update({
+            id,
+            integration: 'github',
+            type: event.type,
+            author: event.actor.login,
+            org: event.org.login,
+            parentId: event.repo.name,
+            createdAt: event.created_at,
+            updatedAt,
+            data: event,
+          })
+        )
+      }
     }
-    return Promise.all(createdEvents)
+    return await Promise.all(createdEvents)
   }
 
   runIssues = async () => {
@@ -287,20 +292,25 @@ export default class GithubSync {
 
       for (const issue of issues) {
         const data = unwrap(omit(issue, ['bodyText']))
-        createdIssues.push(
-          Thing.update({
-            id: `${issue.id}`,
-            integration: 'github',
-            type: 'issue',
-            title: issue.title,
-            body: issue.bodyText,
-            data,
-            orgName: orgLogin,
-            parentId: repository.name,
-            createdAt: issue.createdAt,
-            updatedAt: issue.updatedAt,
-          })
-        )
+        const id = `${issue.id}`
+        const updatedAt = issue.updatedAt
+
+        if (!await Thing.get({ id, updatedAt })) {
+          createdIssues.push(
+            Thing.update({
+              id,
+              integration: 'github',
+              type: 'issue',
+              title: issue.title,
+              body: issue.bodyText,
+              data,
+              orgName: orgLogin,
+              parentId: repository.name,
+              createdAt: issue.createdAt,
+              updatedAt,
+            })
+          )
+        }
       }
     }
 

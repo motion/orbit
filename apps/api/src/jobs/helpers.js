@@ -12,7 +12,7 @@ export async function ensureJob(
   action: string,
   options: Object = {}
 ): ?Job {
-  const lastPending = await Job.lastPending({ action }).exec()
+  const lastPending = await Job.lastPending({ type, action }).exec()
   if (lastPending) {
     console.log(`Pending job already running for ${type} ${action}`)
     return

@@ -43,8 +43,27 @@ export default class Root extends React.Component {
   render({ rootStore }) {
     if (this.state.error) {
       return (
-        <aboveredbox>
-          <UI.Button onClick={this.clearHmr}>Refresh</UI.Button>
+        <aboveredbox
+          css={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: Number.MAX_SAFE_INTEGER,
+          }}
+        >
+          <UI.Portal>
+            <UI.Button
+              css={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: Number.MAX_SAFE_INTEGER,
+              }}
+              onClick={this.clearHmr}
+            >
+              Refresh
+            </UI.Button>
+          </UI.Portal>
           <Redbox $$draggable error={this.state.error} />
         </aboveredbox>
       )

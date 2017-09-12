@@ -22,11 +22,14 @@ const thingToResult = (thing: Thing): PaneResult => ({
 class BarMainStore {
   props: PaneProps
   listRef = null
-  topThingsRaw: ?Array<Thing> = Thing.find().limit(300)
+  topThingsRaw: ?Array<Thing> = Thing.find()
+    .sort({ createdAt: 'desc' })
+    .limit(300)
 
   get topThings() {
-    return (this.topThingsRaw || [])
-      .sort((a, b) => new Date(a.created) - new Date(b.created))
+    console.log('this.topThingsRaw', this.topThingsRaw)
+    return this.topThingsRaw || []
+    // .sort((a, b) => new Date(a.created) - new Date(b.created))
   }
 
   get search() {

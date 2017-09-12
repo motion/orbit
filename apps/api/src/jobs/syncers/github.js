@@ -16,6 +16,8 @@ export default class GithubSync {
 
   user: User
   lastSyncs = {}
+
+  // oldest setting
   @watch
   setting = () =>
     Setting.findOne({ type, userId: this.user.id }).sort('createdAt')
@@ -181,8 +183,8 @@ export default class GithubSync {
           author: event.actor.login,
           org: event.org.login,
           parentId: event.repo.name,
-          created: event.created_at,
-          updated: event.updated_at,
+          createdAt: event.created_at,
+          updatedAt: event.updated_at,
           data: event,
         })
       )
@@ -295,8 +297,8 @@ export default class GithubSync {
             data,
             orgName: orgLogin,
             parentId: repository.name,
-            created: issue.createdAt,
-            updated: issue.updatedAt,
+            createdAt: issue.createdAt,
+            updatedAt: issue.updatedAt,
           })
         )
       }

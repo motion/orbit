@@ -22,11 +22,11 @@ export const applyHooks = (model: Model) => {
       // WARNING
       // TODO MAKE THIS WORK WITH UPSERT AND THEN TAKE OUT THE IF CHECK HERE
       // WARNING
-      if (!doc.updatedAt) {
+      if (!doc.updatedAt || doc.updatedAt === true) {
         doc.updatedAt = model.now
       }
       // 🐛 model handles upsert not using preInsert (i think)
-      if (!doc.createdAt) {
+      if (!doc.createdAt || doc.createdAt === true) {
         doc.createdAt = model.now
       }
     }

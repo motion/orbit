@@ -310,23 +310,25 @@ class List extends React.PureComponent<Props, { selected: number }> {
   //   this.totalGroups
   updateChildren() {
     const { props } = this
-    const {
-      children: children_,
-      items,
-      virtualized,
-      groupKey,
-      parentSize,
-    } = props
-    if (!items && !children_) {
+    const { items, virtualized, groupKey, parentSize } = props
+    const hasChildren = props.children
+    if (!items && !hasChildren) {
       return null
     }
     if (virtualized && !parentSize) {
       return null
     }
-    // allow passing of rowProps by wrapping each in function
-    let children = children_
-      ? this.getListChildren(children_)
-      : items.map(this.getListItem)
+    let children
+    if (hasChildren) {
+      children = this.getListChildren(props.children)
+    } else {
+      if (Array.isArray(items)) {
+        children = items.map(this.getListItem)
+      } else {
+        console.error('not array', items)
+        return
+      }
+    }
 
     // if no need, just get them right away
     if (!virtualized) {

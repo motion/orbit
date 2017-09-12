@@ -1,15 +1,17 @@
 // @flow
 
-export const olderThan = (date, minutes) => {
-  const upperBound = minutes * 1000 * 60
+const UNITS_SECOND = 1000
+
+export const olderThanSeconds = (date, seconds) => {
+  const upperBound = seconds * UNITS_SECOND
   const timeDifference = Date.now() - Date.parse(date)
   const answer = timeDifference > upperBound
   return answer
 }
 
-// 2 minutes
+// 10 minutes
 // TODO bump this up likely, its aggressive for dev mode
-export const SECONDS_UNTIL_JOB_IS_STALE = 60 * 2
+export const SECONDS_UNTIL_JOB_IS_STALE = 60 * 10
 
 export async function ensureJob(
   type: string,
@@ -18,11 +20,14 @@ export async function ensureJob(
 ): ?Job {
   const lastPending = await Job.lastPending({ type, action }).exec()
   if (lastPending) {
-    const secondsAgo = (Date.now() - Date.parse(lastPending.createdAt)) / 1000
+    const secondsAgo =
+      (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
     console.log(
-      `Pending job running for ${type} ${action}, ${secondsAgo} seconds ago`
+      `Pending job running for ${type} ${action}, ${secondsAgo /
+        60} minutes ago`
     )
     if (secondsAgo > SECONDS_UNTIL_JOB_IS_STALE) {
+      console.log('Stale job, removing...', job.id)
       await lastPending.remove()
       return ensureJob(type, action, options)
     }
@@ -34,10 +39,10 @@ export async function ensureJob(
     return await createJob()
   }
   const ago = Math.round(
-    (Date.now() - Date.parse(lastCompleted.updatedAt)) / 1000
+    (Date.now() - Date.parse(lastCompleted.updatedAt)) / UNITS_SECOND
   )
   console.log(`${type}.${action} last ran ${ago} seconds ago`)
-  if (olderThan(lastCompleted.updatedAt, options.every)) {
+  if (olderThanSeconds(lastCompleted.updatedAt, options.every)) {
     return await createJob()
   }
 }

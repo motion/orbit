@@ -99,11 +99,15 @@ export default class GithubSync {
   }
 
   runJob = async (action: string) => {
-    switch (action) {
-      case 'issues':
-        return await this.runIssues()
-      case 'feed':
-        return await this.runFeed()
+    try {
+      switch (action) {
+        case 'issues':
+          return await this.runIssues()
+        case 'feed':
+          return await this.runFeed()
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -131,7 +135,6 @@ export default class GithubSync {
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
-    console.log('got repo events', repoEvents)
     const created = await this.insertEvents(repoEvents)
     console.log('Created', created.length, 'feed events')
     await this.writeLastSyncs()
@@ -215,22 +218,21 @@ export default class GithubSync {
       const createdAt = event.created_at
 
       if (!await Event.get(updatedAt ? { id, updatedAt } : { id, createdAt })) {
-        createdEvents.push(
-          Event.update({
-            id,
-            integration: 'github',
-            type: event.type,
-            author: event.actor.login,
-            org: event.org.login,
-            parentId: event.repo.name,
-            createdAt,
-            updatedAt,
-            data: event,
-          })
-        )
+        const inserted = await Event.update({
+          id,
+          integration: 'github',
+          type: event.type,
+          author: event.actor.login,
+          org: event.org.login,
+          parentId: event.repo.name,
+          createdAt,
+          updatedAt,
+          data: event,
+        })
+        createdEvents.push(inserted)
       }
     }
-    return await Promise.all(createdEvents)
+    return createdEvents
   }
 
   runIssues = async () => {
@@ -335,25 +337,24 @@ export default class GithubSync {
         if (
           !await Thing.get(updatedAt ? { id, updatedAt } : { id, createdAt })
         ) {
-          createdIssues.push(
-            Thing.update({
-              id,
-              integration: 'github',
-              type: 'issue',
-              title: issue.title,
-              body: issue.bodyText,
-              data,
-              orgName: orgLogin,
-              parentId: repository.name,
-              createdAt,
-              updatedAt,
-            })
-          )
+          const inserted = await Thing.update({
+            id,
+            integration: 'github',
+            type: 'issue',
+            title: issue.title,
+            body: issue.bodyText,
+            data,
+            orgName: orgLogin,
+            parentId: repository.name,
+            createdAt,
+            updatedAt,
+          })
+          createdIssues.push(inserted)
         }
       }
     }
 
-    return await Promise.all(createdIssues)
+    return createdIssues
   }
 
   graphFetch = createApolloFetch({

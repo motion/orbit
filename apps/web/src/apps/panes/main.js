@@ -27,7 +27,7 @@ class BarMainStore {
     .limit(300)
 
   get search() {
-    return this.props.paneStore.search
+    return this.props.barStore.search
   }
 
   start() {
@@ -41,6 +41,11 @@ class BarMainStore {
           this.listRef.measure()
         })
       }
+    )
+
+    this.react(
+      () => this.props.paneStore.activeIndex,
+      row => this.listRef && this.listRef.scrollToRow(row)
     )
   }
 
@@ -175,13 +180,17 @@ class BarMainStore {
   }
 }
 
+@view.attach('barStore')
 @view({
   mainStore: BarMainStore,
 })
 export default class BarMain extends React.Component<> {
   static defaultProps: {}
 
-  onSelect = (item, index) => this.props.paneStore.selectRow(index)
+  onSelect = (item, index) => {
+    this.props.paneStore.selectRow(index)
+  }
+
   hasContent = result => result && result.data && result.data.body
   getRowHeight = i =>
     this.hasContent(this.props.mainStore.results[i]) ? 100 : 38

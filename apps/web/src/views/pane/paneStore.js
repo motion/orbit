@@ -11,35 +11,33 @@ export default class PaneStore {
 
   selectedIndices = []
 
-  get millerStore() {
-    return this.props.millerStore
+  get actions() {
+    return this.state.actions[this.col]
   }
 
   get state() {
-    this.props.millerStore.stateVersion
-    return this.props.millerStore.state
+    return this.props.millerState
+  }
+
+  get col() {
+    return this.props.index
   }
 
   get data() {
     return this.props.data
   }
 
-  get search() {
-    return this.millerStore.paneProps.search || ''
-  }
-
   get isActive() {
-    return this.state.activeCol == this.props.col
+    return !this.state.activeAction && this.state.activeCol == this.col
   }
 
   get highlightIndex() {
-    return !this.isActive && this.state.prevActiveRows[this.props.col]
+    return !this.isActive && this.state.prevActiveRows[this.col]
   }
 
   get activeIndex() {
-    this.props.millerStore.stateVersion
     return this.isActive && this.state.activeRow
   }
 
-  selectRow = row => this.millerStore.onSelect(this.props.col, row)
+  selectRow = row => this.state.setSelection(this.col, row)
 }

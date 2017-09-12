@@ -39,13 +39,6 @@ const PANE_TYPES = {
       },
       */
     }
-
-    millerStateVersion = 0
-
-    onMillerStateChange = state => {
-      this.millerState = state
-      this.millerStateVersion++
-    }
   },
 })
 export default class MasterPage {
@@ -64,7 +57,6 @@ export default class MasterPage {
               <Miller
                 animate
                 search={''}
-                version={store.millerStateVersion}
                 state={store.millerState}
                 panes={PANE_TYPES}
                 onChange={store.onMillerStateChange}

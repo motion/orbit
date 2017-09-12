@@ -2,10 +2,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Actions from './panes/pane/actions'
-import BarStore from './barStore'
-import * as PaneTypes from './panes'
-import { Miller, MillerState } from './miller'
+import Actions from '../panes/pane/actions'
+import BarStore from './store'
+import * as PaneTypes from '../panes'
+import { Miller, MillerState } from '../miller'
 import Pane from '~/views/pane'
 
 const PANE_TYPES = {
@@ -100,27 +100,12 @@ export default class BarPage {
             </pasteicon>
           </header>
           <Miller
-            search={barStore.search}
             pane={Pane}
             panes={PANE_TYPES}
             onKeyActions={barStore.ref('millerKeyActions').set}
           />
-          <UI.Popover
-            if={barStore.activeAction}
-            open={true}
-            onClose={() => {
-              barStore.activeAction = null
-            }}
-            borderRadius={5}
-            elevation={3}
-            target={`.target-${barStore.activeAction.name}`}
-            overlay="transparent"
-            distance={8}
-          >
-            {barStore.activeAction.popover}
-          </UI.Popover>
-
           <BottomActions
+            if={false}
             metaKey={barStore.metaKey}
             actions={barStore.toolbarActions()}
           />

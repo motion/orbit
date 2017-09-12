@@ -3,11 +3,12 @@ import * as UI from '@mcro/ui'
 import Actions from './actions'
 
 @view.attach('paneStore')
+@view.attach('millerState')
 @view
 export default class PaneCard {
   setActions = () => {
-    const { paneStore, actions, isActive } = this.props
-    if (actions && isActive) paneStore.setActions(actions)
+    const { paneStore, millerState, actions } = this.props
+    if (actions) millerState.setPaneActions(paneStore.props.index, actions)
   }
 
   componentWillMount() {
@@ -18,34 +19,10 @@ export default class PaneCard {
     this.setActions()
   }
 
-  render({
-    paneStore,
-    children,
-    style,
-    getRef,
-    actions,
-    width,
-    icon,
-    chromeless,
-    isActive,
-    ...props
-  }) {
-    if (!paneStore) {
-      return <h5>Provide paneStore to Pane.Card</h5>
-    }
-
-    // const { selectedIds, toolbarActions } = paneStore
-
+  render({ children, style, width }) {
     return (
-      <card style={{ width, ...style }} {...props}>
-        <UI.Theme name="light">
-          <inner>
-            <Actions actions={actions} if={actions} />
-          </inner>
-        </UI.Theme>
-        <content>
-          {children}
-        </content>
+      <card style={{ width, ...style }}>
+        <content>{children}</content>
       </card>
     )
   }

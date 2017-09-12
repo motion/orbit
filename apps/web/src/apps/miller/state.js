@@ -1,5 +1,6 @@
 // @flow
-import { sum, range, memoize } from 'lodash'
+import { actionToKeyCode } from './helpers'
+import { sum, range, find, includes, memoize } from 'lodash'
 
 type Schema = {
   title: string,
@@ -18,14 +19,19 @@ export default class MillerStateStore {
   schema: Array<Schema> = [{ type: 'main', data: { prefix: '' } }]
   paneActions = []
   prevActiveRows = [] // holds the previously active columns
-  colWidths = range(100).map(() => 0)
-  colLeftMargin = 10
+  paneWidths = range(100).map(() => 0)
+  paneLeftMargin = 10
+  metaKey = false
+
+  activeAction = null
 
   keyActions = {
     right: () => {
+      if (this.activeAction) return
       this.moveCol(1)
     },
     down: () => {
+      if (this.activeAction) return
       if (
         this.activeRow === null ||
         (this.activeResults && this.activeRow < this.activeResults.length - 1)
@@ -34,16 +40,26 @@ export default class MillerStateStore {
       }
     },
     up: () => {
+      if (this.activeAction) return
       this.moveRow(-1)
     },
     left: () => {
+      if (this.activeAction) return
       this.moveCol(-1)
     },
-    esc: () => {},
+    esc: () => {
+      console.log('esc')
+    },
     cmdA: () => {},
     cmdEnter: () => {},
     enter: () => {},
   }
+
+  textboxRef = null
+  isTextbox = ({ target }) =>
+    this.inputRef &&
+    target.className !== this.inputRef.className &&
+    includes(['input', 'textarea'], target.tagName.toLowerCase())
 
   start() {
     this.watch(() => {
@@ -57,26 +73,61 @@ export default class MillerStateStore {
         }
       }
     })
+
+    document.addEventListener('keydown', e => {
+      this.metaKey = e.metaKey
+
+      if (!this.isTextbox(e)) {
+        this.activeActions.forEach(action => {
+          if (actionToKeyCode(action) === e.keyCode) {
+            e.preventDefault()
+            this.runAction(action.name)
+            console.log('executing action', action)
+          }
+        })
+      }
+    })
+
+    document.addEventListener('keyup', e => {
+      this.metaKey = e.metaKey
+    })
   }
 
-  setPaneActions(actions) {
-    this.paneActions = actions
+  setPaneWidth = (index, width) => {
+    this.paneWidths[index] = width
+  }
+
+  setPaneActions(index, actions) {
+    this.paneActions[index] = actions
+    this.paneActions = [...this.paneActions]
   }
 
   setSchema(index: number, schema: Schema) {
     if (this.schema.length < index) {
-      this.schema.push(schema)
+      this.schema = [...this.schema, schema]
     } else {
       this.schema[index] = schema
     }
+
+    this.schema = [...this.schema]
   }
 
   handleRef = memoize(index => ref => {
-    this.setRef(index, ref)
+    this.setPaneRef(index, ref)
   })
 
-  setRef(index, ref) {
-    this.refs[index] = ref
+  setPaneRef = (index, ref) => {
+    this.paneRefs[index] = ref
+    this.paneRefs = [...this.paneRefs]
+  }
+
+  runAction = name => {
+    if (this.activeAction && this.activeAction.name === name) {
+      this.activeAction = null
+    } else {
+      this.activeAction =
+        find(this.activeActions || [], action => action.name === name) || null
+    }
   }
 
   moveRow(delta: number) {
@@ -110,8 +161,16 @@ export default class MillerStateStore {
     this.removeExcessCols()
   }
 
+  setActiveCol(col: number) {
+    this.setSelection(col, this.activeRow)
+  }
+
   setActiveRow(row: number) {
     this.setSelection(this.activeCol, row)
+  }
+
+  setActiveAction(action) {
+    this.activeAction = action
   }
 
   moveCol(delta: number) {
@@ -119,14 +178,14 @@ export default class MillerStateStore {
       if (this.activeCol < this.schema.length - 1) {
         this.prevActiveRows.push(this.activeRow)
         this.activeCol = this.activeCol + delta
-        this.activeRow = 0
+        this.setActiveRow(0)
       }
     }
 
     if (delta < 0) {
       if (this.activeCol === 0) return
-      this.setActiveColumn(this.activeCol + delta)
-      this.activeRow = this.prevActiveRows[this.activeCol]
+      this.activeCol = this.activeCol + delta
+      this.setActiveRow(this.prevActiveRows[this.activeCol])
       this.removeExcessCols()
     }
   }
@@ -134,8 +193,8 @@ export default class MillerStateStore {
   get translateX() {
     if (this.activeCol === 0) return 0
     return (
-      -sum(this.colWidths.slice(0, this.activeCol)) -
-      this.colLeftMargin * this.activeCol
+      -sum(this.paneWidths.slice(0, this.activeCol)) -
+      this.paneLeftMargin * this.activeCol
     )
   }
 
@@ -145,6 +204,10 @@ export default class MillerStateStore {
 
   get activeRef() {
     return this.paneRefs[this.activeCol]
+  }
+
+  get activeActions() {
+    return this.paneActions[this.activeCol] || []
   }
 
   get activeResults() {

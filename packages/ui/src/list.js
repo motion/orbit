@@ -107,6 +107,12 @@ class List extends React.Component<Props, { selected: number }> {
     }
   }
 
+  scrollToRow = (index: number) => {
+    if (this.virtualListRef) {
+      this.virtualListRef.scrollToRow(index)
+    }
+  }
+
   measure = () => {
     if (this.virtualListRef) {
       this.virtualListRef.recomputeRowHeights(0)

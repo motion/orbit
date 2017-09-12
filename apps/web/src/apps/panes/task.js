@@ -127,7 +127,7 @@ class AddResponse {
     },
     buttons: {
       flex: 1,
-      maxWidth: 170,
+      maxWidth: 190,
       justifyContent: 'space-between',
     },
     shortcut: {
@@ -154,11 +154,11 @@ class AddResponse {
   }
 }
 
-@view.attach('barStore')
+@view.attach('millerState')
 @view
 class TaskHeader {
   render({
-    barStore,
+    millerState,
     data,
     data: { title, author, createdAt, body },
     isActive,
@@ -179,7 +179,7 @@ class TaskHeader {
           <buttons $$row>
             <UI.Button
               onClick={() => {
-                barStore.runAction('labels')
+                millerState.runAction('labels')
               }}
               className="target-labels"
               $button
@@ -189,7 +189,7 @@ class TaskHeader {
             </UI.Button>
             <UI.Button
               onClick={() => {
-                barStore.runAction('assign')
+                millerState.runAction('assign')
               }}
               className="target-assign"
               $button
@@ -270,6 +270,7 @@ class Assign {
             items={[{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]}
             renderItem={(item, { index, isActive, isHighlight }) => (
               <SelectItem
+                key={item.id}
                 text={item.id}
                 isActive={isActive}
                 isHighlight={isHighlight}
@@ -294,10 +295,11 @@ class Assign {
 
 @view
 class SelectItem {
-  render({ icon, isActive, index, isHighlight, text }) {
+  render({ key, icon, isActive, index, isHighlight, text }) {
     return (
       <UI.Theme name="light">
         <item
+          key={key}
           $first={index === 0}
           $isHighlight={isHighlight}
           $isActive={isActive}
@@ -431,7 +433,7 @@ class TaskStore {
   }
 
   get results() {
-    const { data } = this.props
+    const { data } = this.props.paneStore
 
     const comments = (data.comments || []).map(comment => ({
       element: Comment,

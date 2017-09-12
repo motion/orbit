@@ -1,6 +1,8 @@
 import { view } from '@mcro/black'
+import Mousetrap from 'mousetrap'
+import { SHORTCUTS } from '~/stores/rootStore'
 import * as UI from '@mcro/ui'
-import { includes, without } from 'lodash'
+import { includes, findIndex, without } from 'lodash'
 import { fuzzy } from '~/helpers'
 
 @view
@@ -68,9 +70,50 @@ const toggle = (xs, x) => (includes(xs, x) ? without(xs, x) : [...xs, x])
     activeIds = []
     search = ''
 
+    start() {
+      this.handlers = new Mousetrap(window)
+      for (const name of Object.keys(SHORTCUTS)) {
+        if (this.actions[name]) {
+          const chord = SHORTCUTS[name]
+          this.handlers.bind(chord, this.actions[name])
+        }
+      }
+    }
+
+    get highlightIndex() {
+      if (this.highlightId === null) return null
+      return findIndex(this.props.items, ({ id }) => id === this.highlightId)
+    }
+
+    setHighlightIndex = index => {
+      this.highlightId = this.props.items[index].id
+    }
+
+    toggleActive = id => {
+      this.activeIds = toggle(this.activeIds, id)
+    }
+
     // todo make work
     actions = {
-      down: () => {},
+      up: () => {
+        if (this.highlightIndex !== 0) {
+          this.setHighlightIndex(this.highlightIndex - 1)
+        }
+      },
+
+      enter: () => {
+        this.toggleActive(this.highlightId)
+      },
+
+      down: () => {
+        if (this.highlightIndex === null) {
+          this.setHighlightIndex(0)
+        } else {
+          if (this.highlightIndex < this.props.items.length - 1) {
+            this.setHighlightIndex(this.highlightIndex + 1)
+          }
+        }
+      },
     }
   },
 })
@@ -99,7 +142,7 @@ export default class Multiselect {
               activeIds={store.activeIds}
               onHighlight={id => (store.highlightId = id)}
               renderItem={renderItem}
-              onActivate={id => (store.activeIds = toggle(store.activeIds, id))}
+              onActivate={store.toggleActive}
             />
           </items>
         </container>

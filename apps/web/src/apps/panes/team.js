@@ -14,7 +14,8 @@ class BarTeamStore {
   }
 
   @watch
-  events: ?Array<Event> = (() => Event.find().sort({ createdAt: 'desc' }): any)
+  events: ?Array<Event> = (() =>
+    Event.find({ updated: { $ne: null } }).sort({ updated: 'desc' }): any)
 
   get results(): Array<Event> {
     return this.events || []

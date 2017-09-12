@@ -16,13 +16,15 @@ class BarFeedStore {
     this.props.getRef(this)
   }
 
+  get person() {
+    return this.props.paneStore.data && this.props.paneStore.data.person
+  }
+
   @watch
-  events: ?Array<Event> = (() => {
-    const { person } = this.props.paneStore.data
-    return Event.find(person ? { author: this.props.data.person } : null).sort({
-      updatedAt: 'desc',
-    })
-  }: any)
+  events: ?Array<Event> = (() =>
+    Event.find({ author: this.person, updated: { $ne: null } }).sort({
+      updated: 'desc',
+    }): any)
 
   get results(): Array<Event> {
     return this.events || []

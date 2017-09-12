@@ -214,8 +214,8 @@ export default class GithubSync {
     const createdEvents = []
     for (const event of allEvents) {
       const id = `${event.id}`
-      const updated = event.updated_at || ''
       const created = event.created_at || ''
+      const updated = event.updated_at || created
       // stale event removal
       const stale = await Event.get({ id, created: { $ne: created } })
       if (stale) {
@@ -339,8 +339,8 @@ export default class GithubSync {
       for (const issue of issues) {
         const data = unwrap(omit(issue, ['bodyText']))
         const id = `${issue.id}`
-        const updated = issue.updatedAt || ''
         const created = issue.createdAt || ''
+        const updated = issue.updatedAt || created
         // stale thing removal
         const stale = await Thing.get({ id, created: { $ne: created } })
         if (stale) {

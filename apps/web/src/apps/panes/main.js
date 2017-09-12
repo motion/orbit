@@ -38,18 +38,6 @@ class BarMainStore {
     this.props.getRef(this)
 
     this.react(
-      () =>
-        this.results && this.listRef && `${this.search}${this.results.length}`,
-      () => {
-        // this.listRef.measure()
-        // this.setTimeout(() => {
-        // this.listRef.updateChildren()
-        // this.listRef.measure()
-        // })
-      }
-    )
-
-    this.react(
       () => this.props.paneStore.activeIndex,
       row => this.listRef && this.listRef.scrollToRow(row)
     )

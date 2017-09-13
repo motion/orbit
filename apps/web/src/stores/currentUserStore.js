@@ -47,13 +47,16 @@ class CurrentUser {
   }
 
   ensureSettings() {
-    this.watch(() => {
+    this.watch(async () => {
       if (!this.user) {
         return
       }
       if (this.user.github) {
-        console.log('Ensuring github setting')
-        Setting.findOrCreate({ userId: this.id, type: 'github' })
+        const setting = await Setting.findOrCreate({
+          userId: this.id,
+          type: 'github',
+        })
+        console.log('Made github setting', setting)
       }
     })
   }

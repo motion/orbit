@@ -17,24 +17,24 @@ export type ThingType = typeof methods & {
   id?: string,
   createdAt: string,
   updatedAt: string,
-  created?: string,
-  updated?: string,
+  created: string,
+  updated: string,
   date: string,
-  orgName?: string,
+  orgName: string,
 }
 
 export class Thing extends Model {
   static props = {
     id: str.primary,
-    title: str,
+    title: str.indexed,
     integration: str,
-    type: str,
+    type: str.indexed,
     body: str.optional,
     data: object.optional,
     parentId: str.optional,
-    created: str.optional,
-    updated: str.optional,
-    orgName: str.optional,
+    created: str.indexed,
+    updated: str.indexed,
+    orgName: str.indexed,
     timestamps: true,
   }
 

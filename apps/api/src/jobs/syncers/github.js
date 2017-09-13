@@ -2,17 +2,20 @@
 import { store, watch } from '@mcro/black/store'
 import { Setting, Thing, Event, Job } from '@mcro/models'
 import typeof { User } from '@mcro/models'
-import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
 import { URLSearchParams } from 'url'
-import { ensureJob } from '~/jobs/helpers'
+import Syncer from './syncer'
 
 const type = 'github'
 
 @store
-export default class GithubSync {
+export default class GithubSync extends Syncer {
   static type = type
+  static jobs = {
+    issues: { every: 60 * 60 * 6 },
+    feed: { every: 60 },
+  }
 
   user: User
   lastSyncs = {}
@@ -21,10 +24,6 @@ export default class GithubSync {
   @watch
   setting = () =>
     Setting.findOne({ type, userId: this.user.id }).sort('createdAt')
-
-  constructor({ user }: SyncOptions) {
-    this.user = user
-  }
 
   get token(): string {
     return (this.user.github && this.user.github.auth.accessToken) || ''
@@ -35,18 +34,6 @@ export default class GithubSync {
       console.log('No github credentials found for user')
       return
     }
-
-    // every so often
-    const CHECK_JOBS_TIME = 1000 * 30 // 30 seconds
-    setInterval(this.checkJobs, CHECK_JOBS_TIME)
-    this.checkJobs()
-  }
-
-  checkJobs = async () => {
-    await Promise.all([
-      ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
-      ensureJob(type, 'feed', { every: 60 }), // 60 seconds
-    ])
   }
 
   run = (job: Job): Promise<void> => {
@@ -95,11 +82,15 @@ export default class GithubSync {
   }
 
   runJob = async (action: string) => {
-    switch (action) {
-      case 'issues':
-        return await this.runIssues()
-      case 'feed':
-        return await this.runFeed()
+    try {
+      switch (action) {
+        case 'issues':
+          return await this.runIssues()
+        case 'feed':
+          return await this.runFeed()
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -127,10 +118,15 @@ export default class GithubSync {
   syncFeed = async (orgLogin: string) => {
     console.log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
-    console.log('got repo events', repoEvents)
     const created = await this.insertEvents(repoEvents)
-    console.log('Created', created.length, 'feed events')
+    console.log('Created', created ? created.length : 0, 'feed events', created)
     await this.writeLastSyncs()
+  }
+
+  getRepoEventsPage = async (org, repoName, page): Promise<?Array<Object>> => {
+    return await this.fetch(`/repos/${org}/${repoName}/events`, {
+      search: { page },
+    })
   }
 
   getRepoEvents = async (
@@ -138,30 +134,78 @@ export default class GithubSync {
     repoName: string,
     page: number = 0
   ): Promise<?Array<Object>> => {
-    const events: ?Array<
-      Object
-    > = await this.fetch(`/repos/${org}/${repoName}/events`, {
-      search: { page },
-    })
-    // recurse to get older if necessary
-    if (events && events.length) {
-      const last = events[events.length - 1]
-      const lastEvent = await Event.get(last.id)
-      if (!lastEvent) {
-        const nextEvents = await this.getRepoEvents(org, repoName, page + 1)
-        return [...events, ...nextEvents]
-      }
-    }
-    // weird error format github has
+    let events = await this.getRepoEventsPage(org, repoName, page)
+
     if (events && !!events.message) {
-      console.log(events)
+      // error format from github
+      console.log('error getting events', events)
       return null
     }
+
+    // recurse to get older if necessary
+    if (events && events.length) {
+      let moreEvents = true
+      let last
+
+      while (moreEvents) {
+        const prev = last
+        last = events[events.length - 1]
+
+        if (prev && last && prev.id === last.id) {
+          moreEvents = false
+          continue
+        }
+
+        const existingLastEvent = await Event.get(last.id)
+
+        if (!existingLastEvent) {
+          const nextEvents = await this.getRepoEventsPage(
+            org,
+            repoName,
+            page + 1
+          )
+          if (nextEvents) {
+            if (nextEvents.message) {
+              console.log('nextEvents.message', nextEvents.message)
+              moreEvents = false
+            } else {
+              events = [...events, ...nextEvents]
+            }
+          } else {
+            moreEvents = false
+          }
+        }
+      }
+    }
+
     return events
   }
 
+  getAllRepos = async (org: string): Promise<Array<Object>> => {
+    const getPage = (page: number) =>
+      this.fetch(`/orgs/${org}/repos`, { force: true, search: { page } })
+    let res = []
+    let done = false
+    let page = 1
+    let lastFetch = null
+    while (!done) {
+      lastFetch = await getPage(page)
+      if (!lastFetch) {
+        done = true
+      } else {
+        if (lastFetch.length < 30) {
+          done = true
+        }
+        page++
+        res = [...res, ...lastFetch]
+      }
+    }
+    return res
+  }
+
   getNewEvents = async (org: string): Promise<Array<Object>> => {
-    const repos = await this.fetch(`/orgs/${org}/repos`)
+    // empty headers to avoid modified header
+    const repos = await this.getAllRepos(org)
     if (Array.isArray(repos)) {
       return flatten(
         await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
@@ -169,27 +213,40 @@ export default class GithubSync {
     } else {
       console.log('No repos', repos)
     }
-    return Promise.resolve([])
+    return []
   }
 
-  insertEvents = (allEvents: Array<Object>): Promise<Array<Object>> => {
+  insertEvents = async (allEvents: Array<Object>): Promise<Array<Object>> => {
     const createdEvents = []
     for (const event of allEvents) {
-      createdEvents.push(
-        Event.update({
-          id: `${event.id}`,
+      const id = `${event.id}`
+      const created = event.created_at || ''
+      const updated = event.updated_at || created
+      // stale event removal
+      const stale = await Event.get({ id, created: { $ne: created } })
+      if (stale) {
+        console.log('Removing stale event', id)
+        await stale.remove()
+      }
+      if (
+        !stale &&
+        !await Event.get(updated ? { id, updated } : { id, created })
+      ) {
+        const inserted = await Event.update({
+          id,
           integration: 'github',
           type: event.type,
           author: event.actor.login,
           org: event.org.login,
           parentId: event.repo.name,
-          createdAt: event.created_at,
-          updatedAt: event.updated_at,
+          created,
+          updated,
           data: event,
         })
-      )
+        createdEvents.push(inserted)
+      }
     }
-    return Promise.all(createdEvents)
+    return createdEvents
   }
 
   runIssues = async () => {
@@ -287,9 +344,21 @@ export default class GithubSync {
 
       for (const issue of issues) {
         const data = unwrap(omit(issue, ['bodyText']))
-        createdIssues.push(
-          Thing.update({
-            id: `${issue.id}`,
+        const id = `${issue.id}`
+        const created = issue.createdAt || ''
+        const updated = issue.updatedAt || created
+        // stale thing removal
+        const stale = await Thing.get({ id, created: { $ne: created } })
+        if (stale) {
+          console.log('Removing stale event', id)
+          await stale.remove()
+        }
+        if (
+          stale ||
+          !await Thing.get(updated ? { id, updated } : { id, created })
+        ) {
+          const inserted = await Thing.update({
+            id,
             integration: 'github',
             type: 'issue',
             title: issue.title,
@@ -297,14 +366,15 @@ export default class GithubSync {
             data,
             orgName: orgLogin,
             parentId: repository.name,
-            createdAt: issue.createdAt,
-            updatedAt: issue.updatedAt,
+            created,
+            updated,
           })
-        )
+          createdIssues.push(inserted)
+        }
       }
     }
 
-    return await Promise.all(createdIssues)
+    return createdIssues
   }
 
   graphFetch = createApolloFetch({
@@ -329,8 +399,8 @@ export default class GithubSync {
       const modifiedSince = this.epochToGMTDate(lastSync.date)
       const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''
       return new Headers({
-        // 'If-Modified-Since': modifiedSince,
-        // 'If-None-Match': etag,
+        'If-Modified-Since': modifiedSince,
+        'If-None-Match': etag,
         ...extraHeaders,
       })
     }
@@ -338,7 +408,7 @@ export default class GithubSync {
   }
 
   fetch = async (path: string, options: Object = {}) => {
-    const { search, headers, ...opts } = options
+    const { search, headers, force, ...opts } = options
     if (!this.setting) {
       throw new Error('No setting')
     }
@@ -350,8 +420,10 @@ export default class GithubSync {
       Object.entries({ ...search, access_token: this.token })
     )
     const uri = `https://api.github.com${path}?${requestSearch.toString()}`
-    const requestHeaders = this.fetchHeaders(uri, headers)
 
+    const requestHeaders = force ? null : this.fetchHeaders(uri, headers)
+
+    console.log('Fetching', uri)
     const res = await fetch(uri, {
       headers: requestHeaders,
       ...opts,

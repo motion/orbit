@@ -1,5 +1,5 @@
 // @flow
-import * as Helpers from '@mcro/helpers'
+import * as AllHelpers from '@mcro/helpers'
 import { autorun, reaction } from 'mobx'
 
 // subscribe-aware helpers
@@ -19,13 +19,18 @@ export function react(
   return dispose
 }
 
+export type Helpers = AllHelpers & {
+  react: typeof react,
+  watch: typeof watch,
+}
+
 export default () => ({
   name: 'helpers',
   once: true,
   onlyClass: true,
   decorator: (Klass: Class<any> | Function) => {
     Object.assign(Klass.prototype, {
-      ...Helpers,
+      ...AllHelpers,
       watch,
       react,
     })

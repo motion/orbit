@@ -7,8 +7,12 @@ export const applyHooks = (model: Model) => {
   model.hooks.preInsert = (doc: Object) => {
     model.applyDefaults(doc)
     if (model.hasTimestamps) {
-      doc.createdAt = model.now
-      doc.updatedAt = model.now
+      if (!doc.createdAt || doc.createdAt === true) {
+        doc.createdAt = model.now
+      }
+      if (!doc.updatedAt || doc.updatedAt === true) {
+        doc.updatedAt = model.now
+      }
     }
     if (ogInsert) {
       return ogInsert.call(model, doc)
@@ -19,15 +23,8 @@ export const applyHooks = (model: Model) => {
   const ogSave = model.hooks.preSave
   model.hooks.preSave = (doc: Object) => {
     if (model.hasTimestamps) {
-      // WARNING
-      // TODO MAKE THIS WORK WITH UPSERT AND THEN TAKE OUT THE IF CHECK HERE
-      // WARNING
       if (!doc.updatedAt || doc.updatedAt === true) {
         doc.updatedAt = model.now
-      }
-      // 🐛 model handles upsert not using preInsert (i think)
-      if (!doc.createdAt || doc.createdAt === true) {
-        doc.createdAt = model.now
       }
     }
     if (ogSave) {
@@ -41,12 +38,8 @@ export const applyHooks = (model: Model) => {
   model.hooks.postInsert = (doc: Object) => {
     if (model.options.debug) {
       // add some helper logs
-      console.log(
-        `INSERT ${model.constructor.name} #${doc.id ||
-          doc._id ||
-          doc.name ||
-          doc.title}`
-      )
+      const key = Object.keys(doc)[0]
+      console.log(`INSERT ${model.constructor.name} (${key} = ${doc[key]})`)
     }
     if (ogPostInsert) {
       ogPostInsert.call(model, doc)

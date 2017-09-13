@@ -14,7 +14,10 @@ class BarTeamStore {
   }
 
   @watch
-  events: ?Array<Event> = (() => Event.find().sort({ createdAt: 'desc' }): any)
+  events: ?Array<Event> = (() =>
+    Event.find({ created: { $ne: null } })
+      .sort({ created: 'desc' })
+      .limit(20): any)
 
   get results(): Array<Event> {
     return this.events || []
@@ -35,7 +38,18 @@ export default class BarTeam extends Component<Props> {
           <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
         </section>
 
+        <UI.Row $section spaced itemProps={{ size: 1.2 }}>
+          <UI.Button icon="Github">Github</UI.Button>
+          <UI.Button icon="hard">Drive</UI.Button>
+          <UI.Button icon="Google">Google Docs</UI.Button>
+          <UI.Button icon="Cal">Events</UI.Button>
+        </UI.Row>
+
         <section>
+          <UI.Title opacity={1} marginBottom={10}>
+            Tuesday, the 12th
+          </UI.Title>
+          <Calendar />
           <Calendar />
         </section>
 
@@ -62,7 +76,6 @@ export default class BarTeam extends Component<Props> {
     },
     section: {
       padding: [8, 10],
-      borderBottom: [1, [0, 0, 0, 0.05]],
     },
   }
 }

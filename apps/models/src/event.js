@@ -3,14 +3,19 @@ import global from 'global'
 import { Model, str, object } from '@mcro/model'
 
 const VERB_MAP = {
-  PushEvent: 'pushed',
-  CreateEvent: 'created branch',
+  PushEvent: () => 'pushed',
+  CreateEvent: () => 'created branch',
+  IssueCommentEvent: () => 'commented',
+  ForkEvent: () => 'forked',
+  PullRequestEvent: ({ action }) => `${action} a pull request`,
+  WatchEvent: ({ action }) => `${action} watching`,
+  IssuesEvent: () => 'created issue',
 }
 
 // keep here so we can use as generic
 export const methods = {
   get verb() {
-    return VERB_MAP[this.type]
+    return VERB_MAP[this.type]((this.data && this.data.payload) || {})
   },
 }
 
@@ -31,14 +36,14 @@ export type EventType = typeof methods & {
 export class Event extends Model {
   static props = {
     id: str.primary,
-    integration: str,
-    type: str,
+    integration: str.indexed,
+    type: str.indexed,
     author: str.optional,
     data: object.optional,
     parentId: str.optional,
-    org: str.optional,
-    created: str.optional,
-    updated: str.optional,
+    org: str.indexed.optional,
+    created: str.indexed.optional,
+    updated: str.indexed.optional,
     timestamps: true,
   }
 
@@ -46,7 +51,6 @@ export class Event extends Model {
 
   settings = {
     database: 'events',
-    index: ['type', 'created', 'createdAt', 'updated', 'updatedAt'],
     // version: 1,
   }
 

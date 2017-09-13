@@ -106,6 +106,10 @@ class List extends React.PureComponent<Props, { selected: number }> {
       this.props = nextProps
       this.updateChildren()
     }
+
+    if (nextProps.virtualized && nextProps.virtualized.measure) {
+      this.measure()
+    }
   }
 
   scrollToRow = (index: number) => {
@@ -433,11 +437,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (!controlled) {
       return inner
     }
-    return (
-      <HotKeys $keys handlers={this.actions}>
-        {inner}
-      </HotKeys>
-    )
+    return inner
   }
 
   static style = {

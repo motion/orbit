@@ -30,6 +30,7 @@ module.exports = function(context, givenOpts) {
       // order important here
       getPlugin('babel-plugin-transform-decorators-legacy-without-clutter'),
       getPlugin('babel-plugin-transform-class-properties'),
+      getPlugin('babel-plugin-sitrep'),
       getPlugin('@mcro/gloss/transform', {
         decoratorName: opts.decorator || 'view',
         jsxIf: opts.jsxIf || true,

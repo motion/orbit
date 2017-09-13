@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-decorators'
 import type { Color } from 'gloss'
 
 type Props = {
@@ -31,7 +31,7 @@ type State = {
 }
 
 @view.ui
-class HoverGlow extends React.Component<Props, State> {
+class HoverGlow extends React.PureComponent<Props, State> {
   static acceptsHovered = 'show'
 
   static defaultProps = {
@@ -51,7 +51,7 @@ class HoverGlow extends React.Component<Props, State> {
     transition: 0,
     overlayZIndex: 1,
     blur: 15,
-    // backdropFilter: 'contrast(100%)',
+    backdropFilter: 'contrast(100%)',
   }
 
   state = {
@@ -63,10 +63,13 @@ class HoverGlow extends React.Component<Props, State> {
   bounds = {}
 
   componentDidMount() {
-    this.setTimeout(this.follow)
+    this.setState = this.setState.bind(this)
+    this.setTimeout(() => {
+      this.follow()
+    })
   }
 
-  follow = () => {
+  follow() {
     let node
 
     if (this.props.parent) {
@@ -78,17 +81,25 @@ class HoverGlow extends React.Component<Props, State> {
     if (node) {
       this.node = node
       this.setBounds()
-      this.on(node, 'mouseenter', this.trackMouse(true))
-      this.on(node, 'mousemove', this.move)
-      this.on(node, 'mouseleave', this.trackMouse(false))
+      this.on(node, 'mouseenter', () => {
+        this.trackMouse(true)
+      })
+      this.on(node, 'mousemove', event => {
+        this.move(event)
+      })
+      this.on(node, 'mouseleave', () => {
+        this.trackMouse(false)
+      })
       // Resize.listenTo(node, this.setBounds)
 
       if (this.props.clickable) {
-        this.on(node, 'mousedown', this.mouseDown)
+        this.on(node, 'mousedown', event => {
+          this.mouseDown(event)
+        })
       }
     }
 
-    if (this.visible) {
+    if (this.props.show) {
       // trigger it to show
       this.setState({})
     }
@@ -101,23 +112,27 @@ class HoverGlow extends React.Component<Props, State> {
     }
   }
 
-  setBounds = throttle(() => {
+  setBounds() {
     this.bounds = this.node.getBoundingClientRect()
-  }, 32)
+  }
 
   // offset gives us offset without scroll, just based on parent
-  move = throttle(e => {
+  @throttle(14)
+  move(e) {
     const [x, y] = offset(e, this.node)
-    if (this.unmounted) return
+    if (this.unmounted || !this.bounds) {
+      console.log('no move', this)
+      return
+    }
     this.setState({
       position: {
         x: x - this.bounds.width / 2,
         y: y - this.bounds.height / 2,
       },
     })
-  }, 16)
+  }
 
-  mouseDown = () => {
+  mouseDown() {
     this.setState({ clicked: true }, () => {
       this.setTimeout(() => {
         this.setState({ clicked: false })
@@ -125,12 +140,12 @@ class HoverGlow extends React.Component<Props, State> {
     })
   }
 
-  trackMouse = track => () => {
+  @throttle(14)
+  trackMouse(track) {
+    if (this.unmounted) {
+      return
+    }
     this.setState({ track })
-  }
-
-  get visible() {
-    return this.props.show
   }
 
   render({
@@ -169,9 +184,8 @@ class HoverGlow extends React.Component<Props, State> {
   }) {
     const setRootRef = this.ref('rootRef').set
     const { track } = this.state
-    const { visible } = this
 
-    if (!visible && !transition && ((!track && !children) || !track)) {
+    if (!show && !transition && ((!track && !children) || !track)) {
       return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
@@ -181,6 +195,14 @@ class HoverGlow extends React.Component<Props, State> {
     if (full) {
       width = this.bounds.width
       height = this.bounds.height
+    }
+
+    const isNaNw = typeof width === 'number' && width === NaN
+    const isNaNh = typeof height === 'number' && height === NaN
+
+    if (isNaNw || isNaNh) {
+      console.log('weird')
+      return null
     }
 
     const { position, clicked } = this.state
@@ -246,7 +268,7 @@ class HoverGlow extends React.Component<Props, State> {
             width={width}
             style={{
               transform: `scale(${scale * extraScale}) translateZ(0px)`,
-              opacity: track || visible ? opacity : 0,
+              opacity: track || show ? opacity : 0,
               width,
               height,
               marginLeft: -width / 2,

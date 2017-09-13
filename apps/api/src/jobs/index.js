@@ -19,7 +19,7 @@ function getRxError(error: Error) {
 export default class Jobs {
   locks: Set<string> = new Set()
   @watch user: ?User = () => User.findOne()
-  @watch lastPending: ?Array<Job> = () => Job.lastPending()
+  @watch pending: ?Array<Job> = () => Job.pending()
   @watch
   syncers = async () => {
     if (this.user === null) {
@@ -57,31 +57,54 @@ export default class Jobs {
 
   watchJobs = () => {
     this.react(
-      () => this.lastPending,
-      async job => {
-        if (!job) {
+      () => this.pending,
+      async jobs => {
+        if (!jobs || !jobs.length) {
           return
         }
-        console.log('Pending job: ', job.type, job.action)
-        if (this.locks.has(job.lock)) {
-          return
+        for (const job of jobs) {
+          if (!job) {
+            return
+          }
+          if (this.locks.has(job.lock)) {
+            console.log('Already locked job:', job.lock)
+            return
+          }
+          let completed = false
+
+          // expire stale jobs
+          setTimeout(async () => {
+            if (!completed) {
+              await this.failJob(job, { message: 'timed out---' })
+              this.locks.delete(job.lock)
+              console.log('removed stale job', job.lock)
+            }
+          }, 1000 * 60 * 2) // 2 min
+
+          this.locks.add(job.lock)
+          try {
+            await this.runJob(job)
+            completed = true
+          } catch (error) {
+            let lastError = error
+            try {
+              lastError = getRxError(error)
+            } catch (err) {}
+            this.failJob(job, lastError)
+          }
+          this.locks.delete(job.lock)
         }
-        this.locks.add(job.lock)
-        try {
-          await this.runJob(job)
-        } catch (error) {
-          const lastError = getRxError(error)
-          console.log('JOB ERROR', lastError)
-          await job.update({
-            status: 3,
-            lastError,
-            tries: 3,
-          })
-        }
-        this.locks.delete(job.lock)
-      }
+      },
+      true
     )
   }
+
+  failJob = (job: Job, lastError) =>
+    job.update({
+      status: 3,
+      lastError,
+      tries: 3,
+    })
 
   runJob = async (job: Job) => {
     console.log('Running', job.type, job.action)

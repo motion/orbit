@@ -41,13 +41,6 @@ const modelMethods = {
     return this._id
   },
 
-  delete() {
-    return this.collection
-      .findOne(this._id)
-      .exec()
-      .then(doc => doc && doc.remove())
-  },
-
   // update, add properties to model & save
   async update(object: Object) {
     return await this.atomicUpdate(doc => {
@@ -196,7 +189,7 @@ export default class Model {
       const finalParams = defaultFilter(queryObject(queryParams))
       const query = target[method](finalParams)
       const sync = opts =>
-        this.syncQuery(query, { live: method === '$', retry: false, ...opts })
+        this.syncQuery(query, { live: method === '$', ...opts })
       const executeQuery = query.exec.bind(query)
 
       return new Proxy(query, {
@@ -413,7 +406,6 @@ export default class Model {
       options: {
         ...options,
         live: false,
-        retry: false,
       },
     })
 
@@ -423,6 +415,7 @@ export default class Model {
 
       const error$ = firstReplication.error$.subscribe(error => {
         if (error) {
+          error$.unsubscribe()
           console.log('rejecting replication', error)
           reject(error)
         }
@@ -547,7 +540,6 @@ export default class Model {
       if (previous) {
         await previous.atomicUpdate(doc => {
           for (const key of Object.keys(object).filter(x => x !== 'id')) {
-            console.log('setting', key)
             doc[key] = object[key]
           }
         })

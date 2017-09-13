@@ -9,9 +9,6 @@ export default class Calendar extends React.Component<> {
   render() {
     return (
       <calendar>
-        <UI.Title opacity={0.5} marginBottom={10}>
-          Upcoming
-        </UI.Title>
         <content
           $$row
           css={{ width: '100%', overflowX: 'scroll', margin: [-5, 0] }}
@@ -54,9 +51,9 @@ export default class Calendar extends React.Component<> {
                   if={!item.content}
                   key={index}
                   css={{
-                    width: '16.6666%',
+                    width: '20%',
                     minWidth: 110,
-                    padding: [0, 25, 10, 0],
+                    padding: [12, 12, 12, 12],
                   }}
                 >
                   <date

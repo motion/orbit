@@ -261,7 +261,7 @@ export default class Surface extends React.PureComponent<Props> {
         if={glow && !active && !disabled}
         full
         scale={1.3}
-        show={hovered}
+        show
         color={glowColor}
         opacity={0.2}
         borderLeftRadius={borderLeftRadius - 1}

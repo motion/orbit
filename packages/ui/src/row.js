@@ -94,16 +94,18 @@ export default class Row extends React.Component<Props> {
         .map(children, _ => _)
         .filter(child => !!child)
 
-      children = realChildren.map((child, index) =>
+      children = realChildren.map((child, index) => (
         <Provider key={index} provide={getContext(index, realChildren.length)}>
-          {itemProps
-            ? React.cloneElement(child, {
-                ...itemProps,
-                ...child.props,
-              }) /* merge child props so they can override */
-            : child}
+          {itemProps ? (
+            React.cloneElement(child, {
+              ...itemProps,
+              ...child.props,
+            }) /* merge child props so they can override */
+          ) : (
+            child
+          )}
         </Provider>
-      )
+      ))
     } else if (Array.isArray(items)) {
       children = items.map((seg, index) => {
         const { text, id, icon, ...segmentProps } =
@@ -140,9 +142,7 @@ export default class Row extends React.Component<Props> {
         $row
         {...props}
       >
-        <label if={label}>
-          {label}
-        </label>
+        <label if={label}>{label}</label>
         {children}
       </Surface>
     )
@@ -151,6 +151,7 @@ export default class Row extends React.Component<Props> {
   static style = {
     row: {
       flexFlow: 'row',
+      maxWidth: '100%',
       alignItems: 'center',
       userSelect: 'none',
     },

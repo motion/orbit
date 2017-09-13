@@ -9,6 +9,37 @@ type Props = { data: Object, activeIndex: number, items: Array<Event> }
 
 @view.ui
 export default class Feed extends React.PureComponent<Props> {
+  getBody(type: string, { payload }) {
+    switch (type) {
+      case 'PushEvent':
+        return (
+          <body if={payload.commits}>
+            <content>
+              {payload.commits.map(commit => (
+                <UI.Text key={commit.sha}>
+                  {emojinize.encode(commit.message)}
+                </UI.Text>
+              ))}
+            </content>
+            <icon>
+              <UI.Icon name={event.integration} />
+            </icon>
+          </body>
+        )
+
+      case 'IssueCommentEvent':
+        return (
+          <body if={payload.comment}>
+            <content>
+              <UI.Text>{payload.comment.body}</UI.Text>
+            </content>
+          </body>
+        )
+    }
+
+    return null
+  }
+
   render({ items, data, activeIndex }: Props) {
     return (
       <feed $inApp={data.special}>
@@ -20,29 +51,23 @@ export default class Feed extends React.PureComponent<Props> {
           selected={activeIndex}
           getItem={(event, index) => {
             const { verb, data } = event
-            const { actor, payload } = data
+            if (!data) {
+              console.log('no data')
+              return null
+            }
+
+            const { actor } = data
+            const body = this.getBody(event.type, data)
+
             return (
               <feeditem $active={index === activeIndex} key={index}>
                 <info if={actor}>
                   <avatar $img={actor.avatar_url} />
                   <UI.Text $name>{actor.login} </UI.Text>
                   <UI.Text $action>{verb} </UI.Text>
-                  <UI.Date key={data.created_at} $date>
-                    {data.created_at}
-                  </UI.Date>
+                  <UI.Date $date>{event.updated || event.created}</UI.Date>
                 </info>
-                <body if={payload && payload.commits}>
-                  <content>
-                    {payload.commits.map(commit => (
-                      <UI.Text key={commit.sha}>
-                        {emojinize.encode(commit.message)}
-                      </UI.Text>
-                    ))}
-                  </content>
-                  <icon>
-                    <UI.Icon name={event.integration} />
-                  </icon>
-                </body>
+                {body}
               </feeditem>
             )
           }}
@@ -78,13 +103,12 @@ export default class Feed extends React.PureComponent<Props> {
     },
     content: {
       flex: 1,
-      padding: [2, 5],
+      padding: 10,
     },
     img: src => ({
       background: `url(${src})`,
       backgroundSize: 'cover',
     }),
-
     active: {
       background: [0, 0, 0, 0.05],
     },

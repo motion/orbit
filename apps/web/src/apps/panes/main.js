@@ -23,13 +23,11 @@ class BarMainStore {
   props: PaneProps
   listRef = null
   topThingsRaw: ?Array<Thing> = Thing.find()
-    .sort({ createdAt: 'desc' })
-    .limit(300)
+    .sort({ updated: 'desc' })
+    .limit(3000)
 
   get topThings() {
-    console.log('this.topThingsRaw', this.topThingsRaw)
     return this.topThingsRaw || []
-    // .sort((a, b) => new Date(a.created) - new Date(b.created))
   }
 
   get search() {
@@ -38,17 +36,6 @@ class BarMainStore {
 
   start() {
     this.props.getRef(this)
-
-    this.react(
-      () =>
-        this.results && this.listRef && `${this.search}${this.results.length}`,
-      () => {
-        this.setTimeout(() => {
-          this.listRef.updateChildren()
-          this.listRef.measure()
-        })
-      }
-    )
 
     this.react(
       () => this.props.paneStore.activeIndex,
@@ -218,6 +205,7 @@ export default class BarMain extends React.Component<> {
           getRef={mainStore.ref('listRef').set}
           virtualized={{
             rowHeight: this.getRowHeight,
+            measure: true,
           }}
           onSelect={this.onSelect}
           groupKey="category"
@@ -229,12 +217,7 @@ export default class BarMain extends React.Component<> {
             primary: result.title,
             primaryEllipse: !this.hasContent(result),
             children: (
-              <UI.Text
-                if={result.data}
-                lineHeight={20}
-                opacity={0.5}
-                lines={20}
-              >
+              <UI.Text if={result.data} lineHeight={20} opacity={0.5}>
                 {result.data.updatedAt ? (
                   UI.Date.format(result.data.updatedAt) + ' · '
                 ) : (

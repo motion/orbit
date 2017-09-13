@@ -4,7 +4,6 @@ import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
 import Text from './text'
 import SizedSurface from './sizedSurface'
-import injectTheme from './helpers/injectTheme'
 
 export type Props = {
   after?: React.Element<any>,
@@ -30,11 +29,12 @@ export type Props = {
   onFinishEdit?: Function,
   childrenProps?: Object,
   primaryEllipse?: boolean,
+  glow?: boolean,
 }
 
 const DEFAULT_GLOW = {
   scale: 1.4,
-  opacity: 0.09,
+  opacity: 0.1,
   resist: 40,
   overlayZIndex: 0,
 }
@@ -50,6 +50,7 @@ export default class ListItem extends React.Component<Props> {
     size: 1,
     borderWidth: 0,
     ellipse: true,
+    glow: true,
   }
 
   componentDidMount() {
@@ -92,6 +93,7 @@ export default class ListItem extends React.Component<Props> {
       iconProps,
       getRef,
       highlight,
+      glow,
       childrenProps,
       ...props
     } = this.props
@@ -113,7 +115,6 @@ export default class ListItem extends React.Component<Props> {
         tagName="listitem"
         size={size}
         sizePadding={1.2}
-        hoverable
         $item
         {...radiusProps}
         border={false}

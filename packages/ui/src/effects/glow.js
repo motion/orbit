@@ -3,7 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import $ from 'color'
 import offset from '~/helpers/offset'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-decorators'
 import type { Color } from 'gloss'
 
 type Props = {
@@ -63,10 +63,13 @@ class HoverGlow extends React.Component<Props, State> {
   bounds = {}
 
   componentDidMount() {
-    this.setTimeout(this.follow)
+    this.setState = this.setState.bind(this)
+    this.setTimeout(() => {
+      this.follow()
+    })
   }
 
-  follow = () => {
+  follow() {
     let node
 
     if (this.props.parent) {
@@ -79,12 +82,16 @@ class HoverGlow extends React.Component<Props, State> {
       this.node = node
       this.setBounds()
       this.on(node, 'mouseenter', this.trackMouse(true))
-      this.on(node, 'mousemove', this.move)
+      this.on(node, 'mousemove', event => {
+        this.move(event)
+      })
       this.on(node, 'mouseleave', this.trackMouse(false))
       // Resize.listenTo(node, this.setBounds)
 
       if (this.props.clickable) {
-        this.on(node, 'mousedown', this.mouseDown)
+        this.on(node, 'mousedown', event => {
+          this.mouseDown(event)
+        })
       }
     }
 
@@ -101,21 +108,25 @@ class HoverGlow extends React.Component<Props, State> {
     }
   }
 
-  setBounds = throttle(() => {
+  setBounds() {
     this.bounds = this.node.getBoundingClientRect()
-  }, 32)
+  }
 
   // offset gives us offset without scroll, just based on parent
-  move = throttle(e => {
+  @throttle(10)
+  move(e) {
     const [x, y] = offset(e, this.node)
-    if (this.unmounted) return
+    if (this.unmounted || !this.bounds) {
+      console.log('no move', this)
+      return
+    }
     this.setState({
       position: {
         x: x - this.bounds.width / 2,
         y: y - this.bounds.height / 2,
       },
     })
-  }, 16)
+  }
 
   mouseDown = () => {
     this.setState({ clicked: true }, () => {
@@ -125,8 +136,13 @@ class HoverGlow extends React.Component<Props, State> {
     })
   }
 
-  trackMouse = track => () => {
-    this.setState({ track })
+  trackMouse(track) {
+    return () => {
+      if (this.unmounted) {
+        return
+      }
+      this.setState({ track })
+    }
   }
 
   get visible() {

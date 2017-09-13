@@ -4,6 +4,7 @@ import * as Pane from './pane'
 import * as React from 'react'
 import Multiselect from './views/multiselect'
 import timeAgo from 'time-ago'
+import { range } from 'lodash'
 
 const { ago } = timeAgo()
 
@@ -44,30 +45,47 @@ class Comment {
       : author
     const image = name === 'nate' ? 'me' : name
     */
+    const isOwner = CurrentUser.github.profile.username === author.login
 
     return (
-      <comment if={author} $isActive={isActive} $$row>
+      <comment $$row>
         <user>
           <img $avatar src={author.avatarUrl} />
         </user>
         <content>
           <info $$row>
-            <UI.Text $name>{author.login}</UI.Text>
-            <UI.Text $when>{ago(new Date(createdAt))}</UI.Text>
+            <left $$row>
+              <UI.Text $name>{author.login}</UI.Text>
+              <UI.Text $when>{ago(new Date(createdAt))}</UI.Text>
+            </left>
+            <UI.Button if={isOwner} chromeless icon="delete" />
           </info>
-
           <UI.Text $body>{body}</UI.Text>
         </content>
       </comment>
+      /*
+      <comment $isActive={isActive}>
+
+          <thing>
+            <h4>hello</h4>
+          </thing>
+        </content>
+      </comment>
+      */
     )
   }
 
   static style = {
     comment: {
-      flex: 1,
       padding: 10,
       border: [1, [0, 0, 0, 0]],
       transition: 'all 150ms ease-in',
+    },
+    info: {
+      justifyContent: 'space-between',
+    },
+    left: {
+      marginTop: 3,
     },
     isActive: {
       border: [1, [0, 0, 0, 0.2]],
@@ -88,6 +106,7 @@ class Comment {
     },
     body: {
       padding: [5, 0],
+      flex: 1,
       width: '95%',
     },
     name: {
@@ -249,9 +268,6 @@ class TaskHeader {
             ))}
           </badges>
         </titleContainer>
-        <firstComment>
-          <Comment isActive={isActive} data={data} />
-        </firstComment>
       </header>
     )
   }
@@ -485,7 +501,11 @@ class TaskStore {
   }
 
   start() {
+    const { data: { data } } = this.props.paneStore
+
     this.props.getRef(this)
+
+    this.labels = data.labels.map(({ name }) => name)
   }
 
   submit = () => {
@@ -596,7 +616,7 @@ export default class TaskPane {
               .slice(1)
               .slice(0, -1)
               .map((result, index) => renderItem(index + 1))}
-            {renderItem(store.results.length - 1)}
+            {false && renderItem(store.results.length - 1)}
           </container>
         </Pane.Card>
       </UI.Theme>

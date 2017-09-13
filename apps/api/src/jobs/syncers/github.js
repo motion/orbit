@@ -119,7 +119,7 @@ export default class GithubSync extends Syncer {
     console.log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
     const created = await this.insertEvents(repoEvents)
-    console.log('Created', created.length, 'feed events')
+    console.log('Created', created ? created.length : 0, 'feed events')
     await this.writeLastSyncs()
   }
 
@@ -183,7 +183,6 @@ export default class GithubSync extends Syncer {
 
   getNewEvents = async (org: string): Promise<Array<Object>> => {
     const repos = this.setting.activeOrgs
-    // const repos = await this.fetch(`/orgs/${org}/repos`)
     if (Array.isArray(repos)) {
       return flatten(
         await Promise.all(repos.map(name => this.getRepoEvents(org, name)))
@@ -191,7 +190,7 @@ export default class GithubSync extends Syncer {
     } else {
       console.log('No repos', repos)
     }
-    return Promise.resolve([])
+    return []
   }
 
   insertEvents = async (allEvents: Array<Object>): Promise<Array<Object>> => {

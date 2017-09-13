@@ -48,7 +48,7 @@ class Comment {
     const isOwner = CurrentUser.github.profile.username === author.login
 
     return (
-      <comment $$row>
+      <comment $$row $isActive={isActive}>
         <user>
           <img $avatar src={author.avatarUrl} />
         </user>
@@ -58,20 +58,14 @@ class Comment {
               <UI.Text $name>{author.login}</UI.Text>
               <UI.Text $when>{ago(new Date(createdAt))}</UI.Text>
             </left>
-            <UI.Button if={isOwner} chromeless icon="delete" />
+            <buttons $$row>
+              <UI.Button if={isOwner} chromeless icon="edit" opacity={0.7} />
+              <UI.Button if={isOwner} chromeless icon="remove" opacity={0.7} />
+            </buttons>
           </info>
           <UI.Text $body>{body}</UI.Text>
         </content>
       </comment>
-      /*
-      <comment $isActive={isActive}>
-
-          <thing>
-            <h4>hello</h4>
-          </thing>
-        </content>
-      </comment>
-      */
     )
   }
 
@@ -105,7 +99,7 @@ class Comment {
       marginLeft: 5,
     },
     body: {
-      padding: [5, 0],
+      padding: [3, 0],
       flex: 1,
       width: '95%',
     },
@@ -126,34 +120,32 @@ class AddResponse {
     const commentButtonActive = store.response.trim().length > 0
 
     return (
-      <flex>
-        <container $isActive={isActive}>
-          <textarea
-            $response
-            value={store.response}
-            onChange={e => (store.response = e.target.value)}
-            placeholder="Leave a comment"
-            className="dark-textarea"
-            ref={store.ref('textbox').set}
-          />
-          <info $$row>
-            <UI.Text $shortcut $bright={commentButtonActive}>
-              cmd+enter to post
-            </UI.Text>
-            <buttons $$row>
-              <UI.Button size={0.9}>Archive</UI.Button>
-              <UI.Button
-                size={0.9}
-                disabled={!commentButtonActive}
-                onClick={() => onSubmit(store.response)}
-                icon="send"
-              >
-                Comment
-              </UI.Button>
-            </buttons>
-          </info>
-        </container>
-      </flex>
+      <container $isActive={isActive}>
+        <textarea
+          $response
+          value={store.response}
+          onChange={e => (store.response = e.target.value)}
+          placeholder="Leave a comment"
+          className="dark-textarea"
+          ref={store.ref('textbox').set}
+        />
+        <info $$row>
+          <UI.Text $shortcut $bright={commentButtonActive}>
+            cmd+enter to post
+          </UI.Text>
+          <buttons $$row>
+            <UI.Button size={0.9}>Archive</UI.Button>
+            <UI.Button
+              size={0.9}
+              disabled={!commentButtonActive}
+              onClick={() => onSubmit(store.response)}
+              icon="send"
+            >
+              Comment
+            </UI.Button>
+          </buttons>
+        </info>
+      </container>
     )
   }
 
@@ -163,7 +155,7 @@ class AddResponse {
     },
     container: {
       flex: 1,
-      justifyContent: 'flex-end',
+      // justifyContent: 'flex-end',
     },
     isActive: {},
     info: {
@@ -611,12 +603,14 @@ export default class TaskPane {
       <UI.Theme name="clear-dark">
         <Pane.Card isActive={isActive} actions={actions}>
           <container>
-            {renderItem(0)}
-            {store.results
-              .slice(1)
-              .slice(0, -1)
-              .map((result, index) => renderItem(index + 1))}
-            {false && renderItem(store.results.length - 1)}
+            <header>{renderItem(0)}</header>
+            <content>
+              {store.results
+                .slice(1)
+                .slice(0, -1)
+                .map((result, index) => renderItem(index + 1))}
+            </content>
+            <footer>{renderItem(store.results.length - 1)}</footer>
           </container>
         </Pane.Card>
       </UI.Theme>
@@ -627,7 +621,14 @@ export default class TaskPane {
     container: {
       padding: 20,
       flex: 1,
+      justifyContent: 'space-between',
     },
+    header: {},
+    content: {
+      flex: 1,
+      overflow: 'scroll',
+    },
+    footer: {},
     metaInfo: {
       justifyContent: 'space-between',
       borderBottom: [1, [0, 0, 0, 0.05]],
@@ -645,10 +646,6 @@ export default class TaskPane {
     },
     headerActive: {
       background: '#aaa',
-    },
-    content: {
-      flex: 1,
-      overflow: 'scroll',
     },
   }
 }

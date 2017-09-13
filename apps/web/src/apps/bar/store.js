@@ -23,6 +23,9 @@ export default class BarStore {
 
     let lastActiveCol = null
     this.watch(() => {
+      if (!this.millerState) {
+        return
+      }
       const { activeCol } = this.millerState
       if (activeCol === 0 && lastActiveCol !== 0) {
         this.focusBar()

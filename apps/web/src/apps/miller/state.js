@@ -1,6 +1,6 @@
 // @flow
 import { actionToKeyCode } from './helpers'
-import { sum, range, find, includes, memoize } from 'lodash'
+import { sum, range, find, includes, flatten, memoize } from 'lodash'
 
 type Schema = {
   title: string,
@@ -84,7 +84,6 @@ export default class MillerStateStore {
           if (actionToKeyCode(action) === e.keyCode) {
             e.preventDefault()
             this.runAction(action.name)
-            console.log('executing action', action)
           }
         })
       }
@@ -153,6 +152,7 @@ export default class MillerStateStore {
   }
 
   setSelection(col: number, row: number) {
+    if (col === this.activeCol && row === this.activeRow) return
     if (col > this.activeCol) {
       this.moveCol(1)
     } else {
@@ -209,7 +209,12 @@ export default class MillerStateStore {
   }
 
   get activeActions() {
-    return this.paneActions[this.activeCol] || []
+    // currently allows actions for all panes
+
+    // comment this out to only allow the currently selected pane
+    // return this.paneActions[this.activeCol] || []
+
+    return flatten(this.paneActions.map(xs => xs || []))
   }
 
   get activeResults() {

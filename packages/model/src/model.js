@@ -41,17 +41,6 @@ const modelMethods = {
     return this._id
   },
 
-  remove() {
-    return this.collection
-      .findOne(this._id)
-      .exec()
-      .then(doc => {
-        if (doc) {
-          doc.remove()
-        }
-      })
-  },
-
   // update, add properties to model & save
   async update(object: Object) {
     return await this.atomicUpdate(doc => {

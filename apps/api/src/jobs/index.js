@@ -58,24 +58,28 @@ export default class Jobs {
   watchJobs = () => {
     this.react(
       () => this.pending,
-      async pendingJobs => {
-        if (!pendingJobs || !pendingJobs.length) {
+      async jobs => {
+        if (!jobs || !jobs.length) {
           return
         }
-        for (const job of pendingJobs) {
+        for (const job of jobs) {
           if (!job) {
             return
           }
           if (this.locks.has(job.lock)) {
-            console.log('Already locked job: ', job.type, job.action, job.lock)
+            console.log('Already locked job:', job.lock)
             return
           }
           this.locks.add(job.lock)
           try {
             await this.runJob(job)
           } catch (error) {
-            const lastError = getRxError(error)
-            console.log('JOB ERROR', lastError)
+            let lastError
+            try {
+              lastError = getRxError(error)
+            } catch (err) {
+              console.log('error with getting erer')
+            }
             await job.update({
               status: 3,
               lastError,

@@ -51,7 +51,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
     transition: 0,
     overlayZIndex: 1,
     blur: 15,
-    // backdropFilter: 'contrast(100%)',
+    backdropFilter: 'contrast(100%)',
   }
 
   state = {

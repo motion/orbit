@@ -52,6 +52,7 @@ export default class Button extends React.PureComponent {
         glowProps={{
           scale: 1.8,
           draggable: false,
+          show: false,
           ...glowProps,
           ...(theme && theme.glow),
         }}

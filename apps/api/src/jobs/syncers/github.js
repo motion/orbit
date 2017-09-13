@@ -193,11 +193,15 @@ export default class GithubSync extends Syncer {
       if (!lastFetch) {
         done = true
       } else {
-        if (lastFetch.length < 30) {
-          done = true
+        if (Array.isArray(lastFetch)) {
+          if (lastFetch.length < 30) {
+            done = true
+          }
+          page++
+          res = [...res, ...lastFetch]
+        } else {
+          console.log('weird thing', lastFetch)
         }
-        page++
-        res = [...res, ...lastFetch]
       }
     }
     return res

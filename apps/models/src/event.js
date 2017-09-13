@@ -14,8 +14,12 @@ const VERB_MAP = {
 
 // keep here so we can use as generic
 export const methods = {
-  get verb() {
-    return VERB_MAP[this.type]((this.data && this.data.payload) || {})
+  get verb(): string {
+    const mapping = VERB_MAP[this.type]
+    if (mapping) {
+      return mapping((this.data && this.data.payload) || {})
+    }
+    return ''
   },
 }
 

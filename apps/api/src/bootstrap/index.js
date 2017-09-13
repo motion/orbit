@@ -1,7 +1,7 @@
 // @flow
 import Path from 'path'
 import Couch from './couch'
-import Models from './models'
+// import Models from './models'
 import * as Constants from '~/constants'
 import type { Options } from '~/types'
 
@@ -14,16 +14,16 @@ export default class Bootstrap {
       databaseUrl: Constants.COUCH_URL,
       designPath: Path.join(options.rootPath, '..', 'design'),
     })
-    this.models = new Models()
+    // this.models = new Models()
   }
 
   start() {
     this.couch.start()
-    this.models.start()
+    // this.models.start()
   }
 
   dispose() {
     this.couch.dispose()
-    this.models.dispose()
+    // this.models.dispose()
   }
 }

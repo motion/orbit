@@ -42,6 +42,22 @@ class CurrentUser {
     this.connected = true
   }
 
+  start() {
+    this.ensureSettings()
+  }
+
+  ensureSettings() {
+    this.watch(() => {
+      if (!this.user) {
+        return
+      }
+      if (this.user.github) {
+        console.log('Ensuring github setting')
+        Setting.findOrCreate({ userId: this.id, type: 'github' })
+      }
+    })
+  }
+
   async setupSuperLogin() {
     if (!this.options) {
       console.log('skipping superlogin')

@@ -24,7 +24,7 @@ class BarMainStore {
   listRef = null
   topThingsRaw: ?Array<Thing> = Thing.find()
     .sort({ updated: 'desc' })
-    .limit(300)
+    .limit(3000)
 
   get topThings() {
     return this.topThingsRaw || []

@@ -39,6 +39,11 @@ export default class BarTeam extends Component<Props> {
         </section>
 
         <section>
+          <UI.Title opacity={1} marginBottom={10}>
+            Tuesday, the 12th
+          </UI.Title>
+          <Calendar />
+          <Calendar />
           <Calendar />
         </section>
 
@@ -65,7 +70,6 @@ export default class BarTeam extends Component<Props> {
     },
     section: {
       padding: [8, 10],
-      borderBottom: [1, [0, 0, 0, 0.05]],
     },
   }
 }

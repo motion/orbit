@@ -4,7 +4,6 @@ import * as Pane from './pane'
 import * as React from 'react'
 import Multiselect from './views/multiselect'
 import timeAgo from 'time-ago'
-import { capitalize } from 'lodash'
 
 const { ago } = timeAgo()
 
@@ -103,11 +102,6 @@ class Comment {
   },
 })
 class AddResponse {
-  componentWillReceiveProps({ isActive, store }) {
-    // if (isActive && !this.props.isActive) store.textbox.focus()
-    // if (!isActive && this.props.isActive) store.textbox.blur()
-  }
-
   render({ store, isActive, data: { onSubmit } }) {
     const commentButtonActive = store.response.trim().length > 0
 
@@ -188,7 +182,7 @@ class TaskHeader {
   render({
     millerState,
     data,
-    data: { title, author, createdAt, body },
+    data: { title, author },
     store: { labels, assigned },
     isActive,
   }) {

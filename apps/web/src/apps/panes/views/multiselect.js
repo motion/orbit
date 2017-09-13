@@ -134,7 +134,7 @@ class MultiSelectStore {
       }
     },
 
-    esc: e => {
+    esc: () => {
       this.props.onClose()
     },
 

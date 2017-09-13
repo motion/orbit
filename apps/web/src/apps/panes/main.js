@@ -136,7 +136,7 @@ class BarMainStore {
     },
     {
       id: 501,
-      title: ":Nick's Calendar",
+      title: `:Nick's Calendar`,
       type: 'calendar',
       data: {},
       category: 'Calendar',

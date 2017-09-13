@@ -30,12 +30,18 @@ export default class Miller extends React.Component {
     }
   }
 
+  onPopoverClose = () => {
+    this.props.millerState.activeAction = null
+  }
+
   render(
     { pane, store, millerState, onKeyActions, panes, animate },
     { schema }
   ) {
     const Pane = pane
     const transX = animate ? store.translateX : 0
+    const PopoverContent =
+      millerState.activeAction && millerState.activeAction.popover
 
     const content = (
       <miller css={{ flex: 1 }}>
@@ -56,16 +62,15 @@ export default class Miller extends React.Component {
         <UI.Popover
           if={millerState.activeAction}
           open={true}
-          onClose={() => {
-            millerState.activeAction = null
-          }}
+          theme="light"
+          onClose={this.onPopoverClose}
           borderRadius={5}
           elevation={3}
           target={`.target-${millerState.activeAction.name}`}
           overlay="transparent"
-          distance={8}
+          distance={14}
         >
-          {millerState.activeAction.popover}
+          <PopoverContent onClose={this.onPopoverClose} />
         </UI.Popover>
       </miller>
     )

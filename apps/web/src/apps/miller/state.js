@@ -56,10 +56,12 @@ export default class MillerStateStore {
   }
 
   textboxRef = null
-  isTextbox = ({ target }) =>
-    this.inputRef &&
-    target.className !== this.inputRef.className &&
-    includes(['input', 'textarea'], target.tagName.toLowerCase())
+  isTextbox = ({ target }) => {
+    return (
+      (this.inputRef && target.className !== this.inputRef.className) ||
+      includes(['input', 'textarea'], target.tagName.toLowerCase())
+    )
+  }
 
   start() {
     this.watch(() => {

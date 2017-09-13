@@ -4,7 +4,7 @@ const avatars = {
 }
 
 export default {
-  title: 'main gh issue',
+  title: 'Improve Babel performance of Acorn in 1.3',
   body: `
       Performance has been unacceptably slow recently and there are many easy
       wins in Acorn that we can attack first

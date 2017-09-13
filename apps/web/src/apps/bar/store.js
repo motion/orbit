@@ -107,7 +107,6 @@ export default class BarStore {
       e.preventDefault()
     },
     esc: e => {
-      console.log('in esc')
       // if (this.isTextbox(e)) return
       e.preventDefault()
 

@@ -147,6 +147,13 @@ class BarMainStore {
       data: TestIssue,
       category: 'Tests',
     },
+    {
+      id: 501,
+      title: "Nick's Calendar",
+      type: 'calendar',
+      data: {},
+      category: 'Calendar',
+    },
   ]
 
   extras = [

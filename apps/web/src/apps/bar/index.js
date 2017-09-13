@@ -20,6 +20,7 @@ const PANE_TYPES = {
   issue: PaneTypes.Task,
   orbit: PaneTypes.Orbit,
   task: PaneTypes.Task,
+  calendar: PaneTypes.Calendar,
   doc: PaneTypes.Doc,
   test: PaneTypes.Test,
   newIssue: PaneTypes.Code.NewIssue,

@@ -181,11 +181,36 @@ export default class GithubSync extends Syncer {
     return events
   }
 
+  getAllRepos = async (org: string): Promise<Array<Object>> => {
+    const getPage = (page: number) =>
+      this.fetch(`/orgs/${org}/repos`, { force: true, search: { page } })
+    let res = []
+    let done = false
+    let page = 1
+    let lastFetch = null
+    while (!done) {
+      console.log('look at page', page)
+      lastFetch = await getPage(page)
+      console.log('got', lastFetch)
+      if (!lastFetch) {
+        done = true
+      } else {
+        if (lastFetch.length < 30) {
+          done = true
+        }
+        page++
+        res = [...res, ...lastFetch]
+      }
+    }
+    return res
+  }
+
   getNewEvents = async (org: string): Promise<Array<Object>> => {
-    const repos = this.setting.activeOrgs
+    // empty headers to avoid modified header
+    const repos = await this.getAllRepos(org)
     if (Array.isArray(repos)) {
       return flatten(
-        await Promise.all(repos.map(name => this.getRepoEvents(org, name)))
+        await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
       ).filter(x => !!x)
     } else {
       console.log('No repos', repos)
@@ -385,7 +410,7 @@ export default class GithubSync extends Syncer {
   }
 
   fetch = async (path: string, options: Object = {}) => {
-    const { search, headers, ...opts } = options
+    const { search, headers, force, ...opts } = options
     if (!this.setting) {
       throw new Error('No setting')
     }
@@ -397,7 +422,8 @@ export default class GithubSync extends Syncer {
       Object.entries({ ...search, access_token: this.token })
     )
     const uri = `https://api.github.com${path}?${requestSearch.toString()}`
-    const requestHeaders = this.fetchHeaders(uri, headers)
+
+    const requestHeaders = force ? null : this.fetchHeaders(uri, headers)
 
     console.log('Fetching', uri)
     const res = await fetch(uri, {

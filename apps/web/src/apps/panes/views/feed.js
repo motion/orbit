@@ -31,7 +31,7 @@ export default class Feed extends React.PureComponent<Props> {
         return (
           <body if={payload.comment}>
             <content>
-              <UI.Text>{payload.comment.body}</UI.Text>
+              <UI.Text>{emojinize.encode(payload.comment.body)}</UI.Text>
             </content>
           </body>
         )

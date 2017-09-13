@@ -16,7 +16,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   type: thing.type,
   icon: 'icon',
   data: thing.toJSON(),
-  category: 'Thing',
+  category: 'Github',
 })
 
 class BarMainStore {
@@ -165,13 +165,7 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login', static: true }]
     }
     return fuzzy(
-      [
-        ...this.browse,
-        ...this.tests,
-        ...this.things,
-        ...this.people,
-        ...this.extras,
-      ],
+      [...this.browse, ...this.things, ...this.people, ...this.extras],
       this.search
     )
   }

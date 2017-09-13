@@ -424,7 +424,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
           height={height}
           width={width}
           ref={this.ref('virtualListRef').set}
-          overscanRowCount={3}
+          overscanRowCount={5}
           scrollToIndex={realIndex[this.state.selected]}
           rowCount={totalItems + totalGroups}
           rowRenderer={this.getRow}
@@ -451,6 +451,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       height: SEPARATOR_HEIGHT,
       justifyContent: 'center',
       background: [0, 0, 0, 0.05],
+      color: [255, 255, 255, 0.6],
     },
   }
 }

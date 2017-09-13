@@ -82,42 +82,49 @@ export default class BarFeed extends React.Component<Props> {
 
     return (
       <feed>
-        <apps if={data.special} css={{ borderBottom: [2, [0, 0, 0, 0.0001]] }}>
-          <UI.TabPane
-            tabs={[
-              <tab>
-                <UI.Badge background="rgb(34.5%, 67.5%, 34.5%)" marginRight={8}>
-                  #301
-                </UI.Badge>
-                <UI.Text ellipse>Product Page Something Or Other</UI.Text>
-              </tab>,
-              <tab>
-                <UI.Badge
-                  background="rgb(34.5%, 64.6%, 67.5%)"
-                  color="white"
-                  marginRight={8}
-                >
-                  #52
-                </UI.Badge>
-                <UI.Text ellipse>Kubernetes React Integration Thingie</UI.Text>
-              </tab>,
-            ]}
-          >
-            <DocPane
-              data={{
-                title: 'Product Page Integration',
-                id: '301',
-                author: 'Nate',
-              }}
-            />
-            <GithubPane
-              data={{
-                title: 'Kubernetes React Integration',
-                id: '52',
-                author: 'Steph',
-              }}
-            />
-          </UI.TabPane>
+        <apps if={data.special} css={{ padding: [10, 0, 0] }}>
+          <UI.Theme name="light">
+            <UI.TabPane
+              tabs={[
+                <tab>
+                  <UI.Badge
+                    background="rgb(34.5%, 67.5%, 34.5%)"
+                    marginRight={8}
+                  >
+                    #301
+                  </UI.Badge>
+                  <UI.Text ellipse>Product Page Something Or Other</UI.Text>
+                </tab>,
+                <tab>
+                  <UI.Badge
+                    background="rgb(34.5%, 64.6%, 67.5%)"
+                    color="white"
+                    marginRight={8}
+                  >
+                    #52
+                  </UI.Badge>
+                  <UI.Text ellipse>
+                    Kubernetes React Integration Thingie
+                  </UI.Text>
+                </tab>,
+              ]}
+            >
+              <DocPane
+                data={{
+                  title: 'Product Page Integration',
+                  id: '301',
+                  author: 'Nate',
+                }}
+              />
+              <GithubPane
+                data={{
+                  title: 'Kubernetes React Integration',
+                  id: '52',
+                  author: 'Steph',
+                }}
+              />
+            </UI.TabPane>
+          </UI.Theme>
         </apps>
 
         {content}

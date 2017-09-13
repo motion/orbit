@@ -2,16 +2,18 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 
 @view.ui
-export default class TabPane extends React.Component {
+export default class TabPane extends React.PureComponent {
   state = {
     selected: 0,
   }
 
-  handleSelect = selected => () => {
-    this.setState({ selected })
+  handleSelect(selected) {
+    return () => {
+      this.setState({ selected })
+    }
   }
 
-  render({ tabs, children, ...props }) {
+  render({ tabs, children }) {
     const total = tabs.length
     const totalChildren = React.Children.count(children)
 

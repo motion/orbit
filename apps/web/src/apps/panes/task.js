@@ -189,7 +189,7 @@ class TaskHeader {
     millerState,
     data,
     data: { title, author, createdAt, body },
-    store: { labels },
+    store: { labels, assigned },
     isActive,
   }) {
     const minSize = 1.4
@@ -215,7 +215,6 @@ class TaskHeader {
               }}
               className="target-labels"
               $button
-              size={0.8}
             >
               {labelsText}
             </UI.Button>
@@ -225,7 +224,6 @@ class TaskHeader {
               }}
               className="target-assign"
               $button
-              size={0.8}
             >
               Assign
             </UI.Button>
@@ -241,10 +239,14 @@ class TaskHeader {
                 chromeless
                 icon={<ColorBlock size={16} id={label} />}
                 iconSize={12}
-                size={0.8}
                 $badge
               >
                 {label}
+              </UI.Button>
+            ))}
+            {assigned.map(id => (
+              <UI.Button chromeless iconSize={12} $badge>
+                {id}
               </UI.Button>
             ))}
           </badges>
@@ -314,13 +316,15 @@ class TaskHeader {
 
 @view
 class Assign {
-  render({ onClose }) {
+  render({ onClose, onChange, store }) {
     return (
       <UI.Theme name="light">
         <multi>
           <Multiselect
-            items={[{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]}
+            items={store.assignOptions}
             onClose={onClose}
+            activeIds={store.assigned}
+            onChange={onChange}
             renderItem={(item, { index, isActive, isHighlight }) => (
               <SelectItem
                 key={item.id}
@@ -428,21 +432,13 @@ class SelectItem {
 
 @view
 class Labels {
-  render({ onChange, onClose, activeIds }) {
+  render({ onChange, onClose, store, activeIds }) {
     return (
       <UI.Theme name="light">
         <multi>
           <Multiselect
             onClose={onClose}
-            items={[
-              { id: 'bug' },
-              { id: 'duplicate' },
-              { id: 'enhancement' },
-              { id: 'help wanted' },
-              { id: 'invalid' },
-              { id: 'question' },
-              { id: 'wontfix' },
-            ]}
+            items={store.labelOptions}
             activeIds={activeIds}
             onChange={onChange}
             renderItem={(item, { index, isActive, isHighlight }) => (
@@ -468,11 +464,24 @@ class TaskStore {
   count = 0
 
   labels = []
+  assigned = []
+
+  assignOptions = [{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]
+
+  labelOptions = [
+    { id: 'bug' },
+    { id: 'duplicate' },
+    { id: 'enhancement' },
+    { id: 'help wanted' },
+    { id: 'invalid' },
+    { id: 'question' },
+    { id: 'wontfix' },
+  ]
+
   setLabels = xs => {
     this.labels = xs
   }
 
-  assigned = []
   setAssigned = xs => {
     this.assigned = xs
   }
@@ -520,6 +529,7 @@ class LabelAction {
       <Labels
         activeIds={store.labels}
         onClose={onClose}
+        store={store}
         onChange={store.setLabels}
       />
     )
@@ -528,11 +538,12 @@ class LabelAction {
 
 @view
 class AssignAction {
-  render({ store }) {
+  render({ store, onClose }) {
     return (
       <Assign
         activeIds={store.assigned}
         onClose={onClose}
+        store={store}
         onChange={store.setAssigned}
       />
     )

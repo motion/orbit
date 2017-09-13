@@ -341,7 +341,7 @@ export default class CalendarPane {
     events: {
       flex: 1,
       width: '80%',
-      marginTop: 20,
+      marginTop: 10,
       borderRadius: 3,
       background: 'rgba(16,144,255,0.7)',
       boxShadow: '1px 1px 5px rgba(0,0,0,.1)',

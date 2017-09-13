@@ -1,14 +1,15 @@
 // @flow
+import * as React from 'react'
 import decor from '@mcro/decor'
 import { object, string } from 'prop-types'
 import extendsReact from '@mcro/decor/lib/plugins/react/extendsReact'
-import type { ExtendsReact } from '@mcro/decor/src/plugins/react/extendsReact'
+// import type { ExtendsReact } from '@mcro/decor/src/plugins/react/extendsReact'
 import observer from '@mcro/decor/lib/plugins/mobx/observer'
 import automagical from '@mcro/automagical'
 import helpers from '@mcro/decor/lib/plugins/mobx/helpers'
-import type { Helpers } from '@mcro/decor/src/plugins/mobx/helpers'
+// import type { Helpers } from '@mcro/decor/src/plugins/mobx/helpers'
 import subscribable from '@mcro/decor/lib/plugins/react/subscribable'
-import type { Subscribable } from '@mcro/decor/src/plugins/react/subscribable'
+// import type { Subscribable } from '@mcro/decor/src/plugins/react/subscribable'
 import emitsMount from '@mcro/decor/lib/plugins/react/emitsMount'
 import reactRenderArgs from '@mcro/decor/lib/plugins/react/reactRenderArgs'
 // import type { ReactRenderArgs } from '@mcro/decor/src/plugins/react/reactRenderArgs'
@@ -17,28 +18,32 @@ import attach from '@mcro/decor/lib/plugins/react/attach'
 import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
 import { storeOptions } from './store'
 import { decorator as glossDecorator } from './gloss'
-import type { Glossy } from './gloss'
+// import type { Glossy } from './gloss'
+import * as Helpers from './helpers'
 
-export type ViewClass = ExtendsReact &
-  Subscribable &
-  Helpers &
-  // ReactRenderArgs &
-  Glossy
-
-export type Decoratable = Object | Class<any> | Function
-export type Decorator = (a: Decoratable) => ViewClass
-
-export type ViewDecorator = Decorator & {
-  on(): ViewClass,
-  ui(): ViewClass,
-  basics(): ViewClass,
-  provide(stores: Object): ViewClass,
-  attach(...stores: Array<string>): ViewClass,
+declare class ViewClass<Props, State> {
+  props: $Abstract<Props>,
+  state: $Abstract<State>,
+  watch: typeof Helpers.watch,
+  react: typeof Helpers.react,
+  // emitter: typeof Emitter,
+  emit(name: string, data: any): void,
+  render(props: Props, state: State): React$Element<any>,
+  subscriptions: Set<any>,
 }
 
-export type DecoratorType = (
-  opts: ?Object
-) => ViewClass | ((opts: ?Object) => () => ViewClass)
+type View = ViewClass<any, any>
+type Decoratable = Object | Class<any> | Function
+type Decorator = (a: Decoratable) => View | ((opts: Object) => View)
+type FancyDecoratorFactory = (a: Object) => Decorator
+
+export type ViewDecorator = Decorator & {
+  on(): View,
+  ui(): View,
+  basics(): View,
+  provide(stores: Object): View,
+  attach(...stores: Array<string>): View,
+}
 
 function createViewDecorator(): ViewDecorator {
   const uiContext = [
@@ -53,8 +58,14 @@ function createViewDecorator(): ViewDecorator {
 
   const glossPlugin = () => ({ decorator: glossDecorator })
 
+  type DecorationOpts = {
+    mobx?: boolean,
+    ui?: boolean,
+    magic?: boolean,
+  }
+
   // applied top to bottom
-  const decorations = ({ mobx, ui, magic } = {}) => [
+  const decorations = ({ mobx, ui, magic }: DecorationOpts = {}) => [
     extendsReact,
     subscribable,
     helpers,
@@ -68,16 +79,18 @@ function createViewDecorator(): ViewDecorator {
     !ui && emitsMount,
   ]
 
-  const base: DecoratorType = decor(
+  const base: FancyDecoratorFactory = decor(
     decorations({ mobx: true, magic: false, ui: true })
   )
 
-  const view = (item: Decoratable): ViewClass => {
+  const view = (item: Decoratable) => {
     // @view({ ...stores }) shorthand
     if (typeof item === 'object') {
-      return base({ stores: item })
+      const res: Decorator = base({ stores: item })
+      return res
     }
-    return base(item)
+    const res: View = base(item)
+    return res
   }
 
   // pass on emitter

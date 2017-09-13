@@ -19,7 +19,7 @@ export const storeDecorator = decor([
 
 export const storeOptions = {
   storeDecorator,
-  onStoreMount(store: StoreClass, props: Object) {
+  onStoreMount(name: string, store: StoreClass, props: Object) {
     if (store.start) {
       store.start.call(store, props)
     }
@@ -32,7 +32,7 @@ export const storeOptions = {
   },
 }
 
-export default function store(Store: Class): StoreClass {
+export default function store(Store: Class<any>): StoreClass {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     const store = new DecoratedStore(...args)

@@ -44,7 +44,7 @@ function _setInterval(givenCallback: Function, duration: number): number {
 
 // adds this.subscriptions to a class at call-time
 function patchSubscribers(fn) {
-  return function(...args) {
+  return function(...args: Array<any>) {
     if (!this.subscriptions) {
       this.subscriptions = new CompositeDisposable()
       // dispose

@@ -58,7 +58,7 @@ function prettyPrint(thing: any) {
       return 'null'
     }
     try {
-      return cutoff(JSON.stringify(thing, 0, 2))
+      return cutoff(JSON.stringify(thing, null, 2))
     } catch (e) {
       return thing
     }
@@ -69,7 +69,7 @@ function prettyPrint(thing: any) {
   }
 }
 
-function doLog(...args) {
+function doLog(...args: Array<any>) {
   const [target, key, descriptor] = args
 
   const logger = (...things) => {
@@ -114,24 +114,26 @@ function doLog(...args) {
   }
 }
 
-export default function log(...args) {
+export default function log(...args: Array<any>) {
   doCutoff = true
   const res = doLog(...args)
   doCutoff = false
   return res
 }
 
-log.full = function(...args) {
+log.full = function(...args: Array<any>) {
   doCutoff = false
   return doLog(...args)
 }
 
-function wrapLogger(wrapFn: Function, parent, name?: string) {
-  const parentName = parent ? parent.name || parent.constructor.name : ''
-  const methodName = wrapFn.name || name
+function wrapLogger(wrapFn: Function, parent: any, name?: string) {
+  const parentName: string = parent
+    ? parent.name || (parent.constructor && parent.constructor.name) || ''
+    : ''
+  const methodName = wrapFn.name || name || ''
   const color = Color.getColor(`${parentName}${methodName}`)
 
-  return function(...args) {
+  return function(...args: Array<any>) {
     const result = wrapFn.call(this, ...args)
     const state =
       this &&

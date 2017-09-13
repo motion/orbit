@@ -144,6 +144,7 @@ export default function storeProvidable(options, Helpers) {
               stores[name] =
                 options.onStoreMount.call(
                   stores[name],
+                  name,
                   stores[name],
                   this.props
                 ) || stores[name]

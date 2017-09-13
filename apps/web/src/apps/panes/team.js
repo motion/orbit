@@ -38,7 +38,12 @@ export default class BarTeam extends Component<Props> {
           <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
         </section>
 
-        <UI.Row $section spaced itemProps={{ size: 1.2 }}>
+        <UI.Row
+          $section
+          spaced
+          itemProps={{ size: 1 }}
+          css={{ justifyContent: 'flex-end' }}
+        >
           <UI.Button icon="Github">Github</UI.Button>
           <UI.Button icon="hard">Drive</UI.Button>
           <UI.Button icon="Google">Google Docs</UI.Button>

@@ -32,13 +32,6 @@ export type Props = {
   glow?: boolean,
 }
 
-const DEFAULT_GLOW = {
-  scale: 1.4,
-  opacity: 0.1,
-  resist: 40,
-  overlayZIndex: 0,
-}
-
 @view
 export default class ListItem extends React.Component<Props> {
   static isListItem = true
@@ -50,7 +43,13 @@ export default class ListItem extends React.Component<Props> {
     size: 1,
     borderWidth: 0,
     ellipse: true,
-    glow: true,
+    glowProps: {
+      color: [255, 255, 255],
+      scale: 1.4,
+      opacity: 0.1,
+      resist: 80,
+      overlayZIndex: 0,
+    },
   }
 
   componentDidMount() {
@@ -119,11 +118,10 @@ export default class ListItem extends React.Component<Props> {
         {...radiusProps}
         border={false}
         background="transparent"
-        hoverBackground
-        glow
         row
         onClick={onClick}
-        glowProps={glowProps || DEFAULT_GLOW}
+        glow={glow}
+        glowProps={glowProps}
         iconProps={{
           alignSelf: 'center',
           opacity: 0.7,

@@ -31,7 +31,7 @@ type State = {
 }
 
 @view.ui
-class HoverGlow extends React.Component<Props, State> {
+class HoverGlow extends React.PureComponent<Props, State> {
   static acceptsHovered = 'show'
 
   static defaultProps = {
@@ -81,11 +81,15 @@ class HoverGlow extends React.Component<Props, State> {
     if (node) {
       this.node = node
       this.setBounds()
-      this.on(node, 'mouseenter', this.trackMouse(true))
+      this.on(node, 'mouseenter', () => {
+        this.trackMouse(true)
+      })
       this.on(node, 'mousemove', event => {
         this.move(event)
       })
-      this.on(node, 'mouseleave', this.trackMouse(false))
+      this.on(node, 'mouseleave', () => {
+        this.trackMouse(false)
+      })
       // Resize.listenTo(node, this.setBounds)
 
       if (this.props.clickable) {
@@ -113,7 +117,7 @@ class HoverGlow extends React.Component<Props, State> {
   }
 
   // offset gives us offset without scroll, just based on parent
-  @throttle(10)
+  @throttle(14)
   move(e) {
     const [x, y] = offset(e, this.node)
     if (this.unmounted || !this.bounds) {
@@ -136,13 +140,12 @@ class HoverGlow extends React.Component<Props, State> {
     })
   }
 
+  @throttle(14)
   trackMouse(track) {
-    return () => {
-      if (this.unmounted) {
-        return
-      }
-      this.setState({ track })
+    if (this.unmounted) {
+      return
     }
+    this.setState({ track })
   }
 
   get visible() {

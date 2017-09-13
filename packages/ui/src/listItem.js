@@ -45,10 +45,11 @@ export default class ListItem extends React.Component<Props> {
     ellipse: true,
     glowProps: {
       color: [255, 255, 255],
-      scale: 1.4,
-      opacity: 0.1,
-      resist: 80,
-      overlayZIndex: 0,
+      scale: 1.1,
+      blur: 80,
+      opacity: 0.175,
+      show: false,
+      resist: 60,
     },
   }
 

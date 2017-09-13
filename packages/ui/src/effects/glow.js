@@ -99,7 +99,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
       }
     }
 
-    if (this.visible) {
+    if (this.props.show) {
       // trigger it to show
       this.setState({})
     }
@@ -132,7 +132,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
     })
   }
 
-  mouseDown = () => {
+  mouseDown() {
     this.setState({ clicked: true }, () => {
       this.setTimeout(() => {
         this.setState({ clicked: false })
@@ -146,10 +146,6 @@ class HoverGlow extends React.PureComponent<Props, State> {
       return
     }
     this.setState({ track })
-  }
-
-  get visible() {
-    return this.props.show
   }
 
   render({
@@ -188,9 +184,8 @@ class HoverGlow extends React.PureComponent<Props, State> {
   }) {
     const setRootRef = this.ref('rootRef').set
     const { track } = this.state
-    const { visible } = this
 
-    if (!visible && !transition && ((!track && !children) || !track)) {
+    if (!show && !transition && ((!track && !children) || !track)) {
       return <overlay ref={setRootRef} style={{ opacity: 0 }} />
     }
 
@@ -200,6 +195,14 @@ class HoverGlow extends React.PureComponent<Props, State> {
     if (full) {
       width = this.bounds.width
       height = this.bounds.height
+    }
+
+    const isNaNw = typeof width === 'number' && width === NaN
+    const isNaNh = typeof height === 'number' && height === NaN
+
+    if (isNaNw || isNaNh) {
+      console.log('weird')
+      return null
     }
 
     const { position, clicked } = this.state
@@ -265,7 +268,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
             width={width}
             style={{
               transform: `scale(${scale * extraScale}) translateZ(0px)`,
-              opacity: track || visible ? opacity : 0,
+              opacity: track || show ? opacity : 0,
               width,
               height,
               marginLeft: -width / 2,

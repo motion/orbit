@@ -9,6 +9,37 @@ type Props = { data: Object, activeIndex: number, items: Array<Event> }
 
 @view.ui
 export default class Feed extends React.PureComponent<Props> {
+  getBody(type: string, { payload }) {
+    switch (type) {
+      case 'PushEvent':
+        return (
+          <body if={payload.commits}>
+            <content>
+              {payload.commits.map(commit => (
+                <UI.Text key={commit.sha}>
+                  {emojinize.encode(commit.message)}
+                </UI.Text>
+              ))}
+            </content>
+            <icon>
+              <UI.Icon name={event.integration} />
+            </icon>
+          </body>
+        )
+
+      case 'IssueCommentEvent':
+        return (
+          <body if={payload.comment}>
+            <content>
+              <UI.Text>{payload.comment.body}</UI.Text>
+            </content>
+          </body>
+        )
+    }
+
+    return null
+  }
+
   render({ items, data, activeIndex }: Props) {
     return (
       <feed $inApp={data.special}>
@@ -25,7 +56,9 @@ export default class Feed extends React.PureComponent<Props> {
               return null
             }
 
-            const { actor, payload } = data
+            const { actor } = data
+            const body = this.getBody(event.type, data)
+
             return (
               <feeditem $active={index === activeIndex} key={index}>
                 <info if={actor}>
@@ -34,18 +67,7 @@ export default class Feed extends React.PureComponent<Props> {
                   <UI.Text $action>{verb} </UI.Text>
                   <UI.Date $date>{event.updated || event.created}</UI.Date>
                 </info>
-                <body if={payload && payload.commits}>
-                  <content>
-                    {payload.commits.map(commit => (
-                      <UI.Text key={commit.sha}>
-                        {emojinize.encode(commit.message)}
-                      </UI.Text>
-                    ))}
-                  </content>
-                  <icon>
-                    <UI.Icon name={event.integration} />
-                  </icon>
-                </body>
+                {body}
               </feeditem>
             )
           }}
@@ -81,13 +103,12 @@ export default class Feed extends React.PureComponent<Props> {
     },
     content: {
       flex: 1,
-      padding: [2, 5],
+      padding: 10,
     },
     img: src => ({
       background: `url(${src})`,
       backgroundSize: 'cover',
     }),
-
     active: {
       background: [0, 0, 0, 0.05],
     },

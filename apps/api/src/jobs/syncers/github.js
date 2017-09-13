@@ -119,7 +119,7 @@ export default class GithubSync extends Syncer {
     console.log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
     const created = await this.insertEvents(repoEvents)
-    console.log('Created', created ? created.length : 0, 'feed events')
+    console.log('Created', created ? created.length : 0, 'feed events', created)
     await this.writeLastSyncs()
   }
 
@@ -189,9 +189,7 @@ export default class GithubSync extends Syncer {
     let page = 1
     let lastFetch = null
     while (!done) {
-      console.log('look at page', page)
       lastFetch = await getPage(page)
-      console.log('got', lastFetch)
       if (!lastFetch) {
         done = true
       } else {

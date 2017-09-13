@@ -3,14 +3,19 @@ import global from 'global'
 import { Model, str, object } from '@mcro/model'
 
 const VERB_MAP = {
-  PushEvent: 'pushed',
-  CreateEvent: 'created branch',
+  PushEvent: () => 'pushed',
+  CreateEvent: () => 'created branch',
+  IssueCommentEvent: () => 'commented',
+  ForkEvent: () => 'forked',
+  PullRequestEvent: ({ action }) => `${action} a pull request`,
+  WatchEvent: ({ action }) => `${action} watching`,
+  IssuesEvent: () => 'created issue',
 }
 
 // keep here so we can use as generic
 export const methods = {
   get verb() {
-    return VERB_MAP[this.type]
+    return VERB_MAP[this.type]((this.data && this.data.payload) || {})
   },
 }
 

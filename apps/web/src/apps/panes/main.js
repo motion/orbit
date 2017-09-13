@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
@@ -22,9 +22,12 @@ const thingToResult = (thing: Thing): PaneResult => ({
 class BarMainStore {
   props: PaneProps
   listRef = null
-  topThingsRaw: ?Array<Thing> = Thing.find()
-    .sort({ updated: 'desc' })
-    .limit(3000)
+
+  @watch
+  topThingsRaw: ?Array<Thing> = () =>
+    Thing.find()
+      .sort({ updated: 'desc' })
+      .limit(3000)
 
   get topThings() {
     return this.topThingsRaw || []

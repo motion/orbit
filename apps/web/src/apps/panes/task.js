@@ -64,6 +64,7 @@ class Comment {
 
   static style = {
     comment: {
+      flex: 1,
       padding: 10,
       border: [1, [0, 0, 0, 0]],
       transition: 'all 150ms ease-in',
@@ -140,6 +141,9 @@ class AddResponse {
   static style = {
     flex: {
       flex: 1,
+    },
+    container: {
+      flex: 1,
       justifyContent: 'flex-end',
     },
     isActive: {},
@@ -194,7 +198,7 @@ class TaskHeader {
     if (labels.length === 1) labelsText = 'One Label'
 
     return (
-      <header if={author} $isActive={isActive}>
+      <header $isActive={isActive}>
         <meta $$row>
           <left $$row>
             <UI.Icon size={32} name="github" />
@@ -489,20 +493,30 @@ class TaskStore {
   }
 
   get results() {
-    const { data } = this.props.paneStore
+    const { data: { data } } = this.props.paneStore
 
     const comments = (data.comments || []).map(comment => ({
       element: Comment,
       data: comment,
-      actions: ['like comment'],
+      actions: [],
     }))
+
+    const firstComment = {
+      element: Comment,
+      data: {
+        author: data.author,
+        body: data.body,
+        createdAt: data.createdAt,
+      },
+    }
 
     return [
       {
         element: TaskHeader,
         data,
-        actions: [{ name: 'imma header' }],
+        actions: [],
       },
+      firstComment,
       ...comments,
       {
         element: AddResponse,
@@ -580,7 +594,9 @@ export default class TaskPane {
             {renderItem(0)}
             {store.results
               .slice(1)
+              .slice(0, -1)
               .map((result, index) => renderItem(index + 1))}
+            {renderItem(store.results.length - 1)}
           </container>
         </Pane.Card>
       </UI.Theme>

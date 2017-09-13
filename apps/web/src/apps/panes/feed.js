@@ -40,6 +40,7 @@ type Props = PaneProps & {| store: BarFeedStore |}
 })
 export default class BarFeed extends React.Component<Props> {
   static defaultProps: Props
+
   render({ store, paneStore }: Props) {
     const { data } = paneStore
 

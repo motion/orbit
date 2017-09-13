@@ -1,15 +1,6 @@
 // @flow
 import type Model from './model'
 
-export const formatDates = (model: Model, doc: Object) {
-  if (doc.updatedAt) {
-    doc.updatedAt = model.toDate(doc.updatedAt)
-  }
-  if (doc.createdAt) {
-    doc.createdAt = model.toDate(doc.createdAt)
-  }
-}
-
 export const applyHooks = (model: Model) => {
   // PRE-INSERT
   const ogInsert = model.hooks.preInsert
@@ -48,9 +39,7 @@ export const applyHooks = (model: Model) => {
     if (model.options.debug) {
       // add some helper logs
       const key = Object.keys(doc)[0]
-      console.log(
-        `INSERT ${model.constructor.name} (${key} = ${doc[key]})`
-      )
+      console.log(`INSERT ${model.constructor.name} (${key} = ${doc[key]})`)
     }
     if (ogPostInsert) {
       ogPostInsert.call(model, doc)

@@ -107,10 +107,11 @@ class Calendar {
       textAlign: 'center',
       width: 60,
       height: 60,
+      borderRadius: 100,
+      transition: 'background ease-in 50ms',
     },
     lit: {
       background: '#aaa',
-      borderRadius: 100,
     },
     dots: {
       marginTop: 3,
@@ -178,13 +179,14 @@ class NewEvent {
 
 @view
 class Event {
-  render({ name, details }) {
+  render({ name, details, highlight }) {
     return (
-      <event>
-        <name>
+      <event $highlight={highlight}>
+        <name $$row>
           <UI.Title $title size={1.2}>
             {name}
           </UI.Title>
+          <UI.Icon $icon name="arrows-1_bold-right" color="#eee" size={12} />
         </name>
         <info>
           <UI.Text>{details}</UI.Text>
@@ -194,6 +196,20 @@ class Event {
   }
 
   static style = {
+    event: {
+      padding: [15, 20],
+      transition: 'box-shadow ease-in 80ms',
+    },
+    highlight: {
+      boxShadow: '1px 1px 5px rgba(0,0,0,.2)',
+    },
+    name: {
+      alignItems: 'center',
+    },
+    icon: {
+      marginLeft: 8,
+      opacity: 0.6,
+    },
     title: {
       textShadow: '1px 1px 1px rgba(0,0,0,.1)',
     },
@@ -203,12 +219,16 @@ class Event {
   }
 }
 
+class CalendarPaneStore {
+  highlightEventIndex = -1
+}
+
 @view.attach('millerState')
 @view({
-  store: CalendarStore,
+  store: CalendarPaneStore,
 })
 export default class CalendarPane {
-  render({ calStore: store, millerState, isActive }) {
+  render({ store, millerState, isActive }) {
     const actions = [
       {
         name: 'newEvent',
@@ -237,18 +257,18 @@ export default class CalendarPane {
           <container>
             <titleContainer $$row>
               <actions $$row>
-                <UI.Button $leftAction size={0.8} chromeless>
+                <UI.Button $leftAction size={1.0} chromeless>
                   Today
                 </UI.Button>
                 <UI.Button
                   $leftAction
-                  size={0.8}
+                  size={1.0}
                   chromeless
                   icon="arrows-1_bold-left"
                 />
                 <UI.Button
                   $leftAction
-                  size={0.8}
+                  size={1.0}
                   chromeless
                   icon="arrows-1_bold-right"
                 />
@@ -258,9 +278,9 @@ export default class CalendarPane {
               </UI.Title>
               <actions>
                 <UI.Button
-                  size={0.8}
+                  size={1.0}
                   onClick={() => {
-                    millerState.runAction('labels')
+                    millerState.runAction('newEvent')
                   }}
                   className="target-newEvent"
                   icon="simple-add"
@@ -273,9 +293,15 @@ export default class CalendarPane {
               <Calendar />
               <bottom>
                 <events>
-                  {events.map(event => (
-                    <event>
-                      <Event {...event} />
+                  {events.map((event, index) => (
+                    <event
+                      onMouseEnter={() => (store.highlightEventIndex = index)}
+                      onMouseLeave={() => (store.highlightEventIndex = null)}
+                    >
+                      <Event
+                        highlight={index === store.highlightEventIndex}
+                        {...event}
+                      />
                     </event>
                   ))}
                 </events>
@@ -292,9 +318,6 @@ export default class CalendarPane {
       justifyContent: 'space-between',
       margin: [10, 0],
       alignItems: 'center',
-    },
-    title: {
-      transform: { translateY: 3 },
     },
     input: {
       fontSize: 18,
@@ -319,13 +342,9 @@ export default class CalendarPane {
       flex: 1,
       width: '80%',
       marginTop: 20,
-      padding: [5, 20],
       borderRadius: 3,
       background: 'rgba(16,144,255,0.7)',
       boxShadow: '1px 1px 5px rgba(0,0,0,.1)',
-    },
-    event: {
-      margin: [10, 0],
     },
   }
 }

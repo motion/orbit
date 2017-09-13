@@ -129,14 +129,14 @@ class BarMainStore {
   tests: Array<PaneResult> = [
     {
       id: 500,
-      title: 'Github issue about performance',
+      title: ':Github issue about performance',
       type: 'task',
       data: TestIssue,
       category: 'Tests',
     },
     {
       id: 501,
-      title: "Nick's Calendar",
+      title: ":Nick's Calendar",
       type: 'calendar',
       data: {},
       category: 'Calendar',
@@ -164,8 +164,16 @@ class BarMainStore {
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login', static: true }]
     }
+    const includeTests = this.search.indexOf(':') === 0
+
     return fuzzy(
-      [...this.browse, ...this.things, ...this.people, ...this.extras],
+      [
+        ...this.browse,
+        ...this.things,
+        ...this.people,
+        ...(includeTests ? this.tests : []),
+        ...this.extras,
+      ],
       this.search
     )
   }

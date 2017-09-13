@@ -108,7 +108,11 @@ class MultiSelectStore {
   }
 
   setHighlightIndex = index => {
-    this.highlightId = this.activeItems[index].id
+    if (this.activeItems.length === 0) {
+      this.highlightId = null
+    } else {
+      this.highlightId = this.activeItems[index].id
+    }
   }
 
   setSearch = ({ target: { value } }) => {

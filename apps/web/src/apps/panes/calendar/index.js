@@ -45,7 +45,7 @@ class Calendar {
       <cal>
         <days $$row>
           {days.map(day => (
-            <item $dayItem>
+            <item key={day} $dayItem>
               <day>
                 <UI.Text>{day}</UI.Text>
               </day>
@@ -54,9 +54,10 @@ class Calendar {
         </days>
         <rows>
           {range(rows).map(row => (
-            <row $$row>
+            <row key={row} $$row>
               {range(days.length).map((item, index) => (
                 <item
+                  key={index}
                   $dark={!isThisMonth(row, index)}
                   onClick={() => {
                     store.select(row, index)
@@ -67,8 +68,10 @@ class Calendar {
                   >
                     <UI.Text>{dayNumber(row, index)}</UI.Text>
                     <dots $$row>
-                      {store.dots[dayIndex(row, index) + 20].map(background => (
-                        <dot css={{ background }} />
+                      {store.dots[
+                        dayIndex(row, index) + 20
+                      ].map((background, index) => (
+                        <dot key={index} css={{ background }} />
                       ))}
                     </dots>
                   </highlight>
@@ -295,6 +298,7 @@ export default class CalendarPane {
                 <events>
                   {events.map((event, index) => (
                     <event
+                      key={index}
                       onMouseEnter={() => (store.highlightEventIndex = index)}
                       onMouseLeave={() => (store.highlightEventIndex = null)}
                     >

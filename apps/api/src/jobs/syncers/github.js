@@ -2,17 +2,20 @@
 import { store, watch } from '@mcro/black/store'
 import { Setting, Thing, Event, Job } from '@mcro/models'
 import typeof { User } from '@mcro/models'
-import type { SyncOptions } from '~/types'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
 import { URLSearchParams } from 'url'
-import { ensureJob } from '~/jobs/helpers'
+import Syncer from './syncer'
 
 const type = 'github'
 
 @store
-export default class GithubSync {
+export default class GithubSync extends Syncer {
   static type = type
+  static jobs = {
+    issues: { every: 60 * 60 * 6 },
+    feed: { every: 60 },
+  }
 
   user: User
   lastSyncs = {}
@@ -22,10 +25,6 @@ export default class GithubSync {
   setting = () =>
     Setting.findOne({ type, userId: this.user.id }).sort('createdAt')
 
-  constructor({ user }: SyncOptions) {
-    this.user = user
-  }
-
   get token(): string {
     return (this.user.github && this.user.github.auth.accessToken) || ''
   }
@@ -34,22 +33,6 @@ export default class GithubSync {
     if (!this.user.github) {
       console.log('No github credentials found for user')
       return
-    }
-
-    // every so often
-    const CHECK_JOBS_TIME = 1000 * 30 // 30 seconds
-    setInterval(this.checkJobs, CHECK_JOBS_TIME)
-    this.checkJobs()
-  }
-
-  checkJobs = async () => {
-    try {
-      await Promise.all([
-        ensureJob(type, 'issues', { every: 6 * 60 * 60 }), // 6 hours
-        ensureJob(type, 'feed', { every: 60 }), // 60 seconds
-      ])
-    } catch (e) {
-      console.error(e)
     }
   }
 
@@ -199,10 +182,11 @@ export default class GithubSync {
   }
 
   getNewEvents = async (org: string): Promise<Array<Object>> => {
-    const repos = await this.fetch(`/orgs/${org}/repos`)
+    const repos = this.setting.activeOrgs
+    // const repos = await this.fetch(`/orgs/${org}/repos`)
     if (Array.isArray(repos)) {
       return flatten(
-        await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
+        await Promise.all(repos.map(name => this.getRepoEvents(org, name)))
       ).filter(x => !!x)
     } else {
       console.log('No repos', repos)

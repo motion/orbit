@@ -70,21 +70,27 @@ export default class Jobs {
             console.log('Already locked job:', job.lock)
             return
           }
+          let completed = false
+
+          // expire stale jobs
+          setTimeout(async () => {
+            if (!completed) {
+              await this.failJob(job, { message: 'timed out---' })
+              this.locks.delete(job.lock)
+              console.log('removed stale job', job.lock)
+            }
+          }, 1000 * 60 * 2) // 2 min
+
           this.locks.add(job.lock)
           try {
             await this.runJob(job)
+            completed = true
           } catch (error) {
-            let lastError
+            let lastError = error
             try {
               lastError = getRxError(error)
-            } catch (err) {
-              console.log('error with getting erer')
-            }
-            await job.update({
-              status: 3,
-              lastError,
-              tries: 3,
-            })
+            } catch (err) {}
+            this.failJob(job, lastError)
           }
           this.locks.delete(job.lock)
         }
@@ -92,6 +98,13 @@ export default class Jobs {
       true
     )
   }
+
+  failJob = (job: Job, lastError) =>
+    job.update({
+      status: 3,
+      lastError,
+      tries: 3,
+    })
 
   runJob = async (job: Job) => {
     console.log('Running', job.type, job.action)

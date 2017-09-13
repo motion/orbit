@@ -142,7 +142,7 @@ class Calendar {
   },
 })
 class NewEvent {
-  render({ store, onClose }) {
+  render({ store, onCreate, onClose }) {
     return (
       <UI.Theme name="light">
         <newEvent>
@@ -156,6 +156,7 @@ class NewEvent {
               store.text = e.target.value
             }}
             onKeyDown={e => {
+              if (e.keyCode === 13) onCreate(store.text)
               if (e.keyCode === 13 || e.keyCode === 27) onClose()
             }}
             value={store.text}
@@ -224,6 +225,23 @@ class Event {
 
 class CalendarPaneStore {
   highlightEventIndex = -1
+
+  events = [
+    {
+      name: `Flu shots in the office October 9`,
+      details: `Next Friday we'll have a flu shot clinic in the office. It's available to all employees regardless of wheter you've previously`,
+    },
+    {
+      name: `Please claim your giant stuffed animals`,
+      details: `If you are the guardian of a stuffed bear spherical dog, please take it hope so that the humans`,
+    },
+    {
+      name: `Office closed July 3`,
+      details: `The San Francisco office will be closed Friday, July 3 for Independence day weekend`,
+    },
+  ]
+
+  addEvent = event => (this.events = [...this.events, event])
 }
 
 @view.attach('millerState')
@@ -235,22 +253,12 @@ export default class CalendarPane {
     const actions = [
       {
         name: 'newEvent',
-        popover: props => <NewEvent {...props} />,
-      },
-    ]
-
-    const events = [
-      {
-        name: `Flu shots in the office October 9`,
-        details: `Next Friday we'll have a flu shot clinic in the office. It's available to all employees regardless of wheter you've previously`,
-      },
-      {
-        name: `Please claim your giant stuffed animals`,
-        details: `If you are the guardian of a stuffed bear spherical dog, please take it hope so that the humans`,
-      },
-      {
-        name: `Office closed July 3`,
-        details: `The San Francisco office will be closed Friday, July 3 for Independence day weekend`,
+        popover: props => (
+          <NewEvent
+            onCreate={name => store.addEvent({ name, details: '' })}
+            {...props}
+          />
+        ),
       },
     ]
 
@@ -296,7 +304,7 @@ export default class CalendarPane {
               <Calendar />
               <bottom>
                 <events>
-                  {events.map((event, index) => (
+                  {store.events.map((event, index) => (
                     <event
                       key={index}
                       onMouseEnter={() => (store.highlightEventIndex = index)}

@@ -1,4 +1,6 @@
 [ignore]
+.*/lib/.*.js
+.*/dist/.*.js
 .*/node_modules/fbjs/.*
 .*/node_modules/lunr/.*
 .*/node_modules/art/.*
@@ -9,6 +11,7 @@
 .*/node_modules/jss/.*
 .*/node_modules/xdl/.*
 .*/node_modules/@mcro/.*
+.*/node_modules/prepack-webpack-plugin/.*
 
 [include]
 ./node_modules

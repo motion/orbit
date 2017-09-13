@@ -1,9 +1,9 @@
 // @flow
 
-declare class ReactRenderArgs<Props, State, Context> {
-  props: $Abstract<Props>,
-  render(props: Props, state: State, context: Context): React$Element<any>,
-}
+// declare class ReactRenderArgs<Props, State, Context> {
+//   props: $Abstract<Props>,
+//   render(props: Props, state: State, context: Context): React$Element<any>,
+// }
 
 export default () => ({
   name: 'react-render-args',

@@ -1,11 +1,12 @@
 // @flow
+import * as React from 'react'
 import gloss from '@mcro/gloss'
 
 export type Glossy = {
   glossElement(
     tagName: string,
     props: ?Object,
-    children: ?React$Children
+    children: ?React.Children
   ): React$Element<any>,
 }
 

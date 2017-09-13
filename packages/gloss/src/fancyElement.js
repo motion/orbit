@@ -28,7 +28,7 @@ const TAG_NAME_MAP = {
 const $ = '$'
 
 // factory that returns fancyElement helper
-export default function fancyElementFactory(Gloss: Gloss, styles: Object) {
+export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
   const { baseStyles, options, niceStyle } = Gloss
   return function fancyElement(
     type_: string | Function,

@@ -18,7 +18,7 @@ export const Constants = Constants_
 import * as React from 'react'
 export const { Component } = React
 
-export interface View extends React.Component<DP, Props, State> {
+export interface View extends React.Component<Props, State> {
   watch: Helper.watch,
   react: Helpers.react,
   emitter: Emitter,

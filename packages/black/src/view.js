@@ -11,7 +11,7 @@ import subscribable from '@mcro/decor/lib/plugins/react/subscribable'
 import type { Subscribable } from '@mcro/decor/src/plugins/react/subscribable'
 import emitsMount from '@mcro/decor/lib/plugins/react/emitsMount'
 import reactRenderArgs from '@mcro/decor/lib/plugins/react/reactRenderArgs'
-import type { ReactRenderArgs } from '@mcro/decor/src/plugins/react/reactRenderArgs'
+// import type { ReactRenderArgs } from '@mcro/decor/src/plugins/react/reactRenderArgs'
 import addContext from '@mcro/decor/lib/plugins/react/addContext'
 import attach from '@mcro/decor/lib/plugins/react/attach'
 import storeProvidable from '@mcro/decor/lib/plugins/react/storeProvidable'
@@ -22,10 +22,13 @@ import type { Glossy } from './gloss'
 export type ViewClass = ExtendsReact &
   Subscribable &
   Helpers &
-  ReactRenderArgs &
+  // ReactRenderArgs &
   Glossy
 
-export type ViewDec = Function & {
+export type Decoratable = Object | Class<any> | Function
+export type Decorator = (a: Decoratable) => ViewClass
+
+export type ViewDecorator = Decorator & {
   on(): ViewClass,
   ui(): ViewClass,
   basics(): ViewClass,
@@ -37,60 +40,62 @@ export type DecoratorType = (
   opts: ?Object
 ) => ViewClass | ((opts: ?Object) => () => ViewClass)
 
-const uiContext = [
-  addContext,
-  {
-    uiActiveThemeName: string,
-    uiActiveTheme: object,
-    uiThemes: object,
-    ui: object,
-  },
-]
+function createViewDecorator(): ViewDecorator {
+  const uiContext = [
+    addContext,
+    {
+      uiActiveThemeName: string,
+      uiActiveTheme: object,
+      uiThemes: object,
+      ui: object,
+    },
+  ]
 
-const glossPlugin = () => ({ decorator: glossDecorator })
+  const glossPlugin = () => ({ decorator: glossDecorator })
 
-// applied top to bottom
-const decorations = ({ mobx, ui, magic } = {}) => [
-  extendsReact,
-  subscribable,
-  helpers,
-  ui && uiContext,
-  reactRenderArgs,
-  mobx && observer,
-  // gloss after mobx
-  glossPlugin,
-  magic && automagical,
-  [storeProvidable, storeOptions],
-  !ui && emitsMount,
-]
+  // applied top to bottom
+  const decorations = ({ mobx, ui, magic } = {}) => [
+    extendsReact,
+    subscribable,
+    helpers,
+    ui && uiContext,
+    reactRenderArgs,
+    mobx && observer,
+    // gloss after mobx
+    glossPlugin,
+    magic && automagical,
+    [storeProvidable, storeOptions],
+    !ui && emitsMount,
+  ]
 
-const base: DecoratorType = decor(
-  decorations({ mobx: true, magic: false, ui: true })
-)
+  const base: DecoratorType = decor(
+    decorations({ mobx: true, magic: false, ui: true })
+  )
 
-// @view
-const view: ViewDec = (item: Object | Class<any> | Function): ViewClass => {
-  // @view({ ...stores }) shorthand
-  if (typeof item === 'object') {
-    return base({ stores: item })
+  const view = (item: Decoratable): ViewClass => {
+    // @view({ ...stores }) shorthand
+    if (typeof item === 'object') {
+      return base({ stores: item })
+    }
+    return base(item)
   }
-  return base(item)
+
+  // pass on emitter
+  view.on = base.on
+  view.off = base.off
+  view.emit = base.emit
+
+  // other decorators
+  view.ui = decor(decorations({ ui: true }))
+  view.gloss = decor([uiContext, glossPlugin])
+  view.basics = decor([extendsReact, reactRenderArgs, observer, glossPlugin])
+
+  const providable = decor([[storeProvidable, storeOptions]])
+  view.provide = stores => providable({ stores, context: true })
+  view.provide.on = providable.on
+
+  view.attach = (...names) => decor([[attach, { names }]])
+  return view
 }
 
-// pass on emitter
-view.on = base.on
-view.off = base.off
-view.emit = base.emit
-
-// other decorators
-view.ui = decor(decorations({ ui: true }))
-view.gloss = decor([uiContext, glossPlugin])
-view.basics = decor([extendsReact, reactRenderArgs, observer, glossPlugin])
-
-const providable = decor([[storeProvidable, storeOptions]])
-view.provide = stores => providable({ stores, context: true })
-view.provide.on = providable.on
-
-view.attach = (...names) => decor([[attach, { names }]])
-
-export default view
+export default createViewDecorator()

@@ -1,6 +1,8 @@
 import { view } from '@mcro/black'
+import Mousetrap from 'mousetrap'
+import { SHORTCUTS } from '~/stores/rootStore'
 import * as UI from '@mcro/ui'
-import { includes, without } from 'lodash'
+import { includes, findIndex, without } from 'lodash'
 import { fuzzy } from '~/helpers'
 
 @view
@@ -62,44 +64,123 @@ class Items {
 
 const toggle = (xs, x) => (includes(xs, x) ? without(xs, x) : [...xs, x])
 
-@view({
-  store: class SelectStore {
-    highlightId = null
-    activeIds = []
-    search = ''
+class MultiSelectStore {
+  highlightId = null
+  search = ''
+  handlers = {}
 
-    // todo make work
-    actions = {
-      down: () => {},
+  start() {
+    this.attachRef('main', window)
+  }
+
+  attachRef = (name, el) => {
+    if (this.handlers[name]) this.handlers[name].reset()
+    this.handlers[name] = new Mousetrap(el)
+    for (const actionName of Object.keys(SHORTCUTS)) {
+      if (this.actions[actionName]) {
+        const chord = SHORTCUTS[actionName]
+        this.handlers[name].bind(chord, this.actions[actionName])
+      }
     }
-  },
+  }
+
+  onSearchRef = el => {
+    this.attachRef('search', el)
+  }
+
+  stop() {
+    Object.keys(this.handlers).forEach(name => {
+      this.handlers[name].reset()
+    })
+    this.handlers = {}
+  }
+
+  get highlightIndex() {
+    if (this.highlightId === null) return null
+    return findIndex(this.props.items, ({ id }) => id === this.highlightId)
+  }
+
+  get activeItems() {
+    return fuzzy(
+      this.props.items.map(i => ({ ...i, title: i.id })),
+      this.search
+    )
+  }
+
+  setHighlightIndex = index => {
+    if (this.activeItems.length === 0) {
+      this.highlightId = null
+    } else {
+      this.highlightId = this.activeItems[index].id
+    }
+  }
+
+  setSearch = ({ target: { value } }) => {
+    this.search = value
+    this.setHighlightIndex(0)
+  }
+
+  toggleActive = id => {
+    const activeIds = toggle([...this.props.activeIds], id)
+    this.props.onChange && this.props.onChange(activeIds)
+  }
+
+  // todo make work
+  actions = {
+    up: e => {
+      e.preventDefault()
+      if (this.highlightIndex !== 0) {
+        this.setHighlightIndex(this.highlightIndex - 1)
+      }
+    },
+
+    esc: () => {
+      this.props.onClose()
+    },
+
+    enter: () => {
+      this.toggleActive(this.highlightId)
+    },
+
+    down: e => {
+      e.preventDefault()
+      if (this.highlightIndex === null) {
+        this.setHighlightIndex(0)
+      } else {
+        if (this.highlightIndex < this.props.items.length - 1) {
+          this.setHighlightIndex(this.highlightIndex + 1)
+        }
+      }
+    },
+  }
+}
+
+@view({
+  store: MultiSelectStore,
 })
 export default class Multiselect {
-  render({ store, items, renderItem }) {
-    const activeItems = fuzzy(
-      items.map(i => ({ ...i, title: i.id })),
-      store.search
-    )
-
+  render({ store, activeIds, renderItem }) {
     return (
       <UI.Theme name="light">
         <container onMouseLeave={() => (store.highlightId = null)}>
           <search>
             <UI.Input
-              onChange={e => (store.search = e.target.value)}
+              autoFocus
+              onChange={store.setSearch}
               value={store.search}
+              getRef={store.onSearchRef}
               placeholder="search"
               $searchText
             />
           </search>
           <items>
             <Items
-              items={activeItems}
+              items={store.activeItems}
               highlightId={store.highlightId}
-              activeIds={store.activeIds}
+              activeIds={activeIds}
               onHighlight={id => (store.highlightId = id)}
               renderItem={renderItem}
-              onActivate={id => (store.activeIds = toggle(store.activeIds, id))}
+              onActivate={store.toggleActive}
             />
           </items>
         </container>

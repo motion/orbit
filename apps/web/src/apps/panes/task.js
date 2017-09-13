@@ -4,10 +4,37 @@ import * as Pane from './pane'
 import * as React from 'react'
 import Multiselect from './views/multiselect'
 import timeAgo from 'time-ago'
-import { capitalize } from 'lodash'
 
 const { ago } = timeAgo()
 
+const labelColors = {
+  bug: 'red',
+  duplicate: 'gray',
+  'help wanted': 'green',
+  question: 'purple',
+  enhancement: 'blue',
+}
+
+@view
+class ColorBlock {
+  render({ id, size = 20 }) {
+    return (
+      <color
+        style={{
+          width: size,
+          height: size,
+          background: labelColors[id] || 'gray',
+        }}
+      />
+    )
+  }
+
+  static style = {
+    color: {
+      borderRadius: 5,
+    },
+  }
+}
 @view
 class Comment {
   render({ isActive, data: { body, createdAt, author } }) {
@@ -75,11 +102,6 @@ class Comment {
   },
 })
 class AddResponse {
-  componentWillReceiveProps({ isActive, store }) {
-    // if (isActive && !this.props.isActive) store.textbox.focus()
-    // if (!isActive && this.props.isActive) store.textbox.blur()
-  }
-
   render({ store, isActive, data: { onSubmit } }) {
     const commentButtonActive = store.response.trim().length > 0
 
@@ -127,7 +149,7 @@ class AddResponse {
     },
     buttons: {
       flex: 1,
-      maxWidth: 170,
+      maxWidth: 190,
       justifyContent: 'space-between',
     },
     shortcut: {
@@ -154,18 +176,22 @@ class AddResponse {
   }
 }
 
-@view.attach('barStore')
+@view.attach('millerState')
 @view
 class TaskHeader {
   render({
-    barStore,
+    millerState,
     data,
-    data: { title, author, createdAt, body },
+    data: { title, author },
+    store: { labels, assigned },
     isActive,
   }) {
     const minSize = 1.4
     const maxSize = 2.5
     const titleSize = 3 - title.length * 0.05
+    let labelsText = labels.length + ' Labels'
+    if (labels.length === 0) labelsText = 'No Labels'
+    if (labels.length === 1) labelsText = 'One Label'
 
     return (
       <header if={author} $isActive={isActive}>
@@ -179,50 +205,45 @@ class TaskHeader {
           <buttons $$row>
             <UI.Button
               onClick={() => {
-                barStore.runAction('labels')
+                millerState.runAction('labels')
               }}
               className="target-labels"
               $button
-              size={0.8}
             >
-              No Labels
+              {labelsText}
             </UI.Button>
-            <UI.Popover
-              borderRadius={5}
-              elevation={3}
-              overlay="transparent"
-              openOnClick
-              distance={8}
-              target={
-                <UI.Button $button size={0.8}>
-                  Nobody Assigned
-                </UI.Button>
-              }
+            <UI.Button
+              onClick={() => {
+                millerState.runAction('assign')
+              }}
+              className="target-assign"
+              $button
             >
-              <Assign />
-            </UI.Popover>
-            <UI.Popover
-              if={false}
-              borderRadius={5}
-              elevation={3}
-              overlay="transparent"
-              openOnClick
-              borderRadius
-              distance={8}
-              target={
-                <UI.Button $button size={0.8}>
-                  No Milestone
-                </UI.Button>
-              }
-            >
-              <Assign />
-            </UI.Popover>
+              Assign
+            </UI.Button>
           </buttons>
         </meta>
         <titleContainer>
           <UI.Title size={Math.min(maxSize, Math.max(titleSize, minSize))}>
             {title}
           </UI.Title>
+          <badges $$row>
+            {labels.map(label => (
+              <UI.Button
+                chromeless
+                icon={<ColorBlock size={16} id={label} />}
+                iconSize={12}
+                $badge
+              >
+                {label}
+              </UI.Button>
+            ))}
+            {assigned.map(id => (
+              <UI.Button chromeless iconSize={12} $badge>
+                {id}
+              </UI.Button>
+            ))}
+          </badges>
         </titleContainer>
         <firstComment>
           <Comment isActive={isActive} data={data} />
@@ -242,6 +263,13 @@ class TaskHeader {
     meta: {
       justifyContent: 'space-between',
       alignItems: 'center',
+    },
+    badges: {
+      height: 10,
+      marginTop: 5,
+    },
+    badge: {
+      marginLeft: 6,
     },
     id: {
       marginLeft: 10,
@@ -282,14 +310,18 @@ class TaskHeader {
 
 @view
 class Assign {
-  render() {
+  render({ onClose, onChange, store }) {
     return (
       <UI.Theme name="light">
         <multi>
           <Multiselect
-            items={[{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]}
+            items={store.assignOptions}
+            onClose={onClose}
+            activeIds={store.assigned}
+            onChange={onChange}
             renderItem={(item, { index, isActive, isHighlight }) => (
               <SelectItem
+                key={item.id}
                 text={item.id}
                 isActive={isActive}
                 isHighlight={isHighlight}
@@ -314,13 +346,14 @@ class Assign {
 
 @view
 class SelectItem {
-  render({ icon, isActive, index, isHighlight, text }) {
+  render({ key, icon, isActive, index, isHighlight, text }) {
     return (
       <UI.Theme name="light">
         <item
+          key={key}
           $first={index === 0}
-          $isHighlight={isHighlight}
           $isActive={isActive}
+          $isHighlight={isHighlight}
           $$row
         >
           <left $$row>
@@ -379,10 +412,13 @@ class SelectItem {
       marginLeft: 10,
     },
     isActive: {
-      opacity: 0.9,
+      opacity: 0.7,
       background: '#f2f2f2',
     },
     isHighlight: {
+      color: '#000',
+      opacity: 0.9,
+
       background: '#eee',
     },
   }
@@ -390,38 +426,22 @@ class SelectItem {
 
 @view
 class Labels {
-  render() {
-    const labelColors = {
-      bug: 'red',
-      duplicate: 'gray',
-      'help wanted': 'green',
-      question: 'purple',
-      enhancement: 'blue',
-    }
+  render({ onChange, onClose, store, activeIds }) {
     return (
       <UI.Theme name="light">
         <multi>
           <Multiselect
-            items={[
-              { id: 'bug' },
-              { id: 'duplicate' },
-              { id: 'enhancement' },
-              { id: 'help wanted' },
-              { id: 'invalid' },
-              { id: 'question' },
-              { id: 'wontfix' },
-            ]}
+            onClose={onClose}
+            items={store.labelOptions}
+            activeIds={activeIds}
+            onChange={onChange}
             renderItem={(item, { index, isActive, isHighlight }) => (
               <SelectItem
                 text={item.id}
                 isActive={isActive}
                 isHighlight={isHighlight}
                 index={index}
-                icon={
-                  <color
-                    style={{ background: labelColors[item.id] || 'gray' }}
-                  />
-                }
+                icon={<ColorBlock id={item.id} />}
               />
             )}
           />
@@ -430,17 +450,35 @@ class Labels {
     )
   }
 
-  static style = {
-    color: {
-      borderRadius: 5,
-      width: 20,
-      height: 20,
-    },
-  }
+  static style = {}
 }
 
 class TaskStore {
   response = ''
+  count = 0
+
+  labels = []
+  assigned = []
+
+  assignOptions = [{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]
+
+  labelOptions = [
+    { id: 'bug' },
+    { id: 'duplicate' },
+    { id: 'enhancement' },
+    { id: 'help wanted' },
+    { id: 'invalid' },
+    { id: 'question' },
+    { id: 'wontfix' },
+  ]
+
+  setLabels = xs => {
+    this.labels = xs
+  }
+
+  setAssigned = xs => {
+    this.assigned = xs
+  }
 
   start() {
     this.props.getRef(this)
@@ -458,7 +496,6 @@ class TaskStore {
       data: comment,
       actions: ['like comment'],
     }))
-    data.title = 'Improve Babel performance of Acorn in 1.3'
 
     return [
       {
@@ -479,6 +516,34 @@ class TaskStore {
   }
 }
 
+@view
+class LabelAction {
+  render({ store, onClose }) {
+    return (
+      <Labels
+        activeIds={store.labels}
+        onClose={onClose}
+        store={store}
+        onChange={store.setLabels}
+      />
+    )
+  }
+}
+
+@view
+class AssignAction {
+  render({ store, onClose }) {
+    return (
+      <Assign
+        activeIds={store.assigned}
+        onClose={onClose}
+        store={store}
+        onChange={store.setAssigned}
+      />
+    )
+  }
+}
+
 @view({
   store: TaskStore,
 })
@@ -486,17 +551,25 @@ export default class TaskPane {
   render({ paneStore: { activeIndex, isActive }, store }) {
     const renderItem = index => {
       const { element, data } = store.results[index]
-      return React.createElement(element, {
-        data,
-        key: index,
-        isActive: index === activeIndex,
-      })
+      const El = element
+      return (
+        <El
+          data={data}
+          store={store}
+          key={index}
+          isActive={index === activeIndex}
+        />
+      )
     }
 
     const actions = [
       {
         name: 'labels',
-        popover: <Labels />,
+        popover: props => <LabelAction store={store} {...props} />,
+      },
+      {
+        name: 'assign',
+        popover: props => <AssignAction store={store} {...props} />,
       },
     ]
 

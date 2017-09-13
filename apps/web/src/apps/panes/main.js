@@ -31,7 +31,7 @@ class BarMainStore {
   }
 
   get search() {
-    return this.props.paneStore.search
+    return this.props.barStore.search
   }
 
   start() {
@@ -126,6 +126,23 @@ class BarMainStore {
     },
   ]
 
+  tests: Array<PaneResult> = [
+    {
+      id: 500,
+      title: ':Github issue about performance',
+      type: 'task',
+      data: TestIssue,
+      category: 'Tests',
+    },
+    {
+      id: 501,
+      title: `:Nick's Calendar`,
+      type: 'calendar',
+      data: {},
+      category: 'Calendar',
+    },
+  ]
+
   extras = [
     {
       id: 30,
@@ -147,8 +164,16 @@ class BarMainStore {
     if (!CurrentUser.loggedIn) {
       return [{ title: 'Login', type: 'login', static: true }]
     }
+    const includeTests = this.search.indexOf(':') === 0
+
     return fuzzy(
-      [...this.browse, ...this.things, ...this.people, ...this.extras],
+      [
+        ...this.browse,
+        ...this.things,
+        ...this.people,
+        ...(includeTests ? this.tests : []),
+        ...this.extras,
+      ],
       this.search
     )
   }
@@ -158,13 +183,17 @@ class BarMainStore {
   }
 }
 
+@view.attach('barStore')
 @view({
   mainStore: BarMainStore,
 })
 export default class BarMain extends React.Component<> {
   static defaultProps: {}
 
-  onSelect = (item, index) => this.props.paneStore.selectRow(index)
+  onSelect = (item, index) => {
+    this.props.paneStore.selectRow(index)
+  }
+
   hasContent = result => result && result.data && result.data.body
   getRowHeight = i =>
     this.hasContent(this.props.mainStore.results[i]) ? 100 : 38

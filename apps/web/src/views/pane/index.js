@@ -2,22 +2,20 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import PaneStore from './paneStore'
 
+@view.attach('millerState')
 @view.provide({
   paneStore: PaneStore,
 })
 @view
 export default class Pane extends React.Component {
-  getRef = ref => {
-    this.props.getRef(ref)
-  }
-
   handleRef = ref => {
+    const { millerState, index } = this.props
     if (ref) {
-      this.props.millerStore.setWidth(ref.offsetWidth)
+      millerState.setPaneWidth(index, ref.offsetWidth)
     }
   }
 
-  render({ pane, paneStore, width, millerStore, type }) {
+  render({ pane, paneStore, index, width, millerState, type }) {
     const ChildPane = pane
 
     if (!ChildPane) {
@@ -28,9 +26,9 @@ export default class Pane extends React.Component {
     return (
       <pane css={{ width }} ref={this.handleRef}>
         <ChildPane
+          onSelect={row => millerState.setSelection(index, row)}
           paneStore={paneStore}
-          millerStore={millerStore}
-          getRef={this.getRef}
+          getRef={millerState.handleRef(index)}
         />
       </pane>
     )

@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import * as UI from '@mcro/ui'
+import { isEqual } from 'lodash'
 import { HotKeys } from '~/helpers'
-import { isEqual, memoize } from 'lodash'
-import MillerStore from './millerStore'
 
-@view({
-  store: MillerStore,
-})
+@view.attach('millerState')
+@view
 export default class Miller extends React.Component {
   static defaultProps = {
     onKeyActions: _ => _,
@@ -17,46 +16,62 @@ export default class Miller extends React.Component {
   }
 
   componentWillMount() {
-    const { onKeyActions, store, state } = this.props
-    onKeyActions(store.keyActions)
-    this.setState({ schema: state.schema })
+    const { onKeyActions, millerState } = this.props
+    onKeyActions(millerState.keyActions)
+    this.setState({ schema: millerState.schema })
   }
 
-  componentWillReceiveProps({ state }) {
-    if (!isEqual(state.schema, this.state.schema)) {
+  componentWillReceiveProps({ millerState }) {
+    if (!isEqual(millerState.schema, this.state.schema)) {
       // :car: setTimeout will make the next render happen after list updates highlight position
       this.setTimeout(() => {
-        this.setState({ schema: state.schema })
+        this.setState({ schema: millerState.schema })
       })
     }
   }
 
-  // memoize to avoid mobx break
-  handleRef = memoize(index => plugin => {
-    this.props.state.setPlugin(index, plugin)
-  })
+  onPopoverClose = () => {
+    this.props.millerState.activeAction = null
+  }
 
-  render({ pane, state, store, onKeyActions, panes, animate }, { schema }) {
+  render(
+    { pane, store, millerState, onKeyActions, panes, animate },
+    { schema }
+  ) {
     const Pane = pane
     const transX = animate ? store.translateX : 0
+    const PopoverContent =
+      millerState.activeAction && millerState.activeAction.popover
+
     const content = (
       <miller css={{ flex: 1 }}>
         <columns $$row $transX={transX}>
-          {schema.map((pane, index) => {
+          {millerState.schema.map((pane, index) => {
             return (
               <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
                 <Pane
                   pane={panes[pane.type]}
                   type={pane.type}
                   data={pane.data}
-                  col={index}
-                  getRef={this.handleRef(index)}
-                  millerStore={store}
+                  index={index}
                 />
               </pane>
             )
           })}
         </columns>
+        <UI.Popover
+          if={millerState.activeAction}
+          open={true}
+          theme="light"
+          onClose={this.onPopoverClose}
+          borderRadius={5}
+          elevation={3}
+          target={`.target-${millerState.activeAction.name}`}
+          overlay="transparent"
+          distance={14}
+        >
+          <PopoverContent onClose={this.onPopoverClose} />
+        </UI.Popover>
       </miller>
     )
 
@@ -68,7 +83,6 @@ export default class Miller extends React.Component {
   }
 
   static style = {
-    // hang off edge
     pane: {
       height: '100%',
     },

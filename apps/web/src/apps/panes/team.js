@@ -38,11 +38,17 @@ export default class BarTeam extends Component<Props> {
           <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
         </section>
 
+        <UI.Row $section spaced itemProps={{ size: 1.2 }}>
+          <UI.Button icon="Github">Github</UI.Button>
+          <UI.Button icon="hard">Drive</UI.Button>
+          <UI.Button icon="Google">Google Docs</UI.Button>
+          <UI.Button icon="Cal">Events</UI.Button>
+        </UI.Row>
+
         <section>
           <UI.Title opacity={1} marginBottom={10}>
             Tuesday, the 12th
           </UI.Title>
-          <Calendar />
           <Calendar />
           <Calendar />
         </section>

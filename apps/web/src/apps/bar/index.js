@@ -83,6 +83,7 @@ export default class BarPage {
         <bar ref={barStore.ref('barRef').set} $$fullscreen>
           <header css={{ borderBottom: [1, [0, 0, 0, 0.1]] }} $$draggable>
             <UI.Input
+              onClick={barStore.onClickBar}
               size={2.2}
               getRef={barStore.onInputRef}
               borderRadius={5}

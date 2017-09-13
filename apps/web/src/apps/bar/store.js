@@ -67,6 +67,13 @@ export default class BarStore {
     }
   }
 
+  onClickBar = () => {
+    // if they click the pane, activate main again
+    if (this.millerState.activeCol > 0) {
+      this.millerState.setSelection(0, this.millerState.prevActiveRows[0])
+    }
+  }
+
   blurBar = () => {
     this.inputRef && this.inputRef.blur()
   }
@@ -80,6 +87,7 @@ export default class BarStore {
 
   onSearchChange = e => {
     this.textboxVal = e.target.value
+
     this.setSearch(this.textboxVal)
   }
 

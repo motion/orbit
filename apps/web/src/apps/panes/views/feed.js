@@ -9,8 +9,8 @@ type Props = { data: Object, activeIndex: number, items: Array<Event> }
 
 @view.ui
 export default class Feed extends React.PureComponent<Props> {
-  getBody(type: string, { payload }) {
-    switch (type) {
+  getBody(event, { payload }) {
+    switch (event.type) {
       case 'PushEvent':
         return (
           <body if={payload.commits}>
@@ -57,7 +57,7 @@ export default class Feed extends React.PureComponent<Props> {
             }
 
             const { actor } = data
-            const body = this.getBody(event.type, data)
+            const body = this.getBody(event, data)
 
             return (
               <feeditem $active={index === activeIndex} key={index}>

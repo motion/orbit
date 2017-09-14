@@ -364,7 +364,7 @@ export default class GithubSync extends Syncer {
           const inserted = await Thing.update({
             id,
             integration: 'github',
-            type: 'issue',
+            type: 'task',
             title: issue.title,
             body: issue.bodyText,
             data,

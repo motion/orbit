@@ -5,6 +5,7 @@ import * as React from 'react'
 import Multiselect from './views/multiselect'
 import timeAgo from 'time-ago'
 import { range } from 'lodash'
+import App from '~/app'
 
 const { ago } = timeAgo()
 
@@ -38,7 +39,11 @@ class ColorBlock {
 }
 @view
 class Comment {
-  render({ isActive, data: { body, createdAt, author } }) {
+  render({
+    isActive,
+    store,
+    data: { id, issueBody = false, body, createdAt, author },
+  }) {
     /*
     const name = includes(author, ' ')
       ? author.split(' ')[0].toLowerCase()
@@ -60,7 +65,13 @@ class Comment {
             </left>
             <buttons $$row>
               <UI.Button if={isOwner} chromeless icon="edit" opacity={0.7} />
-              <UI.Button if={isOwner} chromeless icon="remove" opacity={0.7} />
+              <UI.Button
+                if={!issueBody && isOwner}
+                onClick={() => store.removeComment(body)}
+                chromeless
+                icon="remove"
+                opacity={0.7}
+              />
             </buttons>
           </info>
           <UI.Text $body>{body}</UI.Text>
@@ -125,6 +136,9 @@ class AddResponse {
           $response
           value={store.response}
           onChange={e => (store.response = e.target.value)}
+          onKeyDown={e => {
+            if (e.keyCode === 13 && e.metaKey) onSubmit(store.response)
+          }}
           placeholder="Leave a comment"
           className="dark-textarea"
           ref={store.ref('textbox').set}
@@ -500,8 +514,37 @@ class TaskStore {
     this.labels = data.labels.map(({ name }) => name)
   }
 
-  submit = () => {
-    this.response = ''
+  getThing = async id => {
+    const { paneStore } = this.props
+    return await Thing.findOne(paneStore.data.id).exec()
+  }
+
+  // todo, change to body
+  removeComment = async body => {
+    const thing = await this.getThing()
+    thing.data = {
+      ...thing.data,
+      comments: thing.data.comments.filter(c => c.body !== body),
+    }
+    await thing.save()
+  }
+
+  onSubmit = async body => {
+    const thing = await this.getThing()
+    thing.data = {
+      ...thing.data,
+      comments: [
+        ...thing.data.comments,
+        {
+          body,
+          author: {
+            login: CurrentUser.github.profile.username,
+          },
+          createdAt: +Date.now(),
+        },
+      ],
+    }
+    await thing.save()
   }
 
   get results() {
@@ -519,6 +562,7 @@ class TaskStore {
         author: data.author,
         body: data.body,
         createdAt: data.createdAt,
+        issueBody: true,
       },
     }
 
@@ -533,9 +577,7 @@ class TaskStore {
       {
         element: AddResponse,
         data: {
-          onSubmit(text) {
-            console.log('submitted', text)
-          },
+          onSubmit: this.onSubmit,
         },
       },
     ]

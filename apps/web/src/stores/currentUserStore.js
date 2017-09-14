@@ -52,11 +52,10 @@ class CurrentUser {
         return
       }
       if (this.user.github) {
-        const setting = await Setting.findOrCreate({
+        await Setting.findOrCreate({
           userId: this.id,
           type: 'github',
         })
-        console.log('Made github setting', setting)
       }
     })
   }

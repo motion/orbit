@@ -1,43 +1,25 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { isEqual } from 'lodash'
 import { HotKeys } from '~/helpers'
 
 @view.attach('millerState')
 @view
-export default class Miller extends React.Component {
+export default class Miller extends React.PureComponent {
   static defaultProps = {
     onKeyActions: _ => _,
-  }
-
-  state = {
-    schema: null,
   }
 
   componentWillMount() {
     const { onKeyActions, millerState } = this.props
     onKeyActions(millerState.keyActions)
-    this.setState({ schema: millerState.schema })
-  }
-
-  componentWillReceiveProps({ millerState }) {
-    if (!isEqual(millerState.schema, this.state.schema)) {
-      // :car: setTimeout will make the next render happen after list updates highlight position
-      this.setTimeout(() => {
-        this.setState({ schema: millerState.schema })
-      })
-    }
   }
 
   onPopoverClose = () => {
     this.props.millerState.activeAction = null
   }
 
-  render(
-    { pane, store, millerState, onKeyActions, panes, animate },
-    { schema }
-  ) {
+  render({ pane, store, millerState, onKeyActions, panes, animate }) {
     const Pane = pane
     const transX = animate ? store.translateX : 0
     const PopoverContent =
@@ -46,7 +28,7 @@ export default class Miller extends React.Component {
     const content = (
       <miller css={{ flex: 1 }}>
         <columns $$row $transX={transX}>
-          {schema.map((pane, index) => {
+          {millerState.schema.map((pane, index) => {
             return (
               <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
                 <Pane

@@ -104,13 +104,15 @@ export default class MillerStateStore {
   }
 
   setSchema(index: number, schema: Schema) {
-    if (this.schema.length < index) {
-      this.schema = [...this.schema, schema]
-    } else {
-      this.schema[index] = schema
-    }
+    this.setTimeout(() => {
+      if (this.schema.length < index) {
+        this.schema = [...this.schema, schema]
+      } else {
+        this.schema[index] = schema
+      }
 
-    this.schema = [...this.schema]
+      this.schema = [...this.schema]
+    })
   }
 
   handleRef = memoize(index => ref => {

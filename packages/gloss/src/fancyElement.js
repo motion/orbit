@@ -66,9 +66,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       }
       if (checkTheme && theme) {
         const themeKey = key.replace(/--.*/, '')
-        const style = theme.getRule(themeKey)
-        if (style) {
-          finalStyles.push(style)
+        const themeStyle = theme.getRule(themeKey)
+        if (themeStyle) {
+          finalStyles.push(themeStyle)
         }
       }
     }
@@ -83,18 +83,16 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       for (const prop of propNames) {
         const val = props && props[prop]
         if (prop === 'style') {
-          style = val
+          style = { ...style, ...val }
           continue
         }
         // non-style actions
-        if (
-          options.glossProp &&
-          prop === options.glossProp &&
-          Object.keys(val).length
-        ) {
-          // css={}
-          const extraStyle = niceStyle(val)
-          style = { ...style, ...extraStyle }
+        if (options.glossProp && prop === options.glossProp) {
+          if (Object.keys(val).length) {
+            // css={}
+            const extraStyle = niceStyle(val)
+            style = { ...style, ...extraStyle }
+          }
           continue
         }
         if (

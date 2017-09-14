@@ -46,7 +46,7 @@ export default class Miller extends React.Component {
     const content = (
       <miller css={{ flex: 1 }}>
         <columns $$row $transX={transX}>
-          {millerState.schema.map((pane, index) => {
+          {schema.map((pane, index) => {
             return (
               <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
                 <Pane

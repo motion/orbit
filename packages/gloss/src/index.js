@@ -54,7 +54,7 @@ export class Gloss {
 
   decorator = (Child: Function | string) => {
     if (Child.prototype) {
-      const { attachStyles, niceStyleSheet } = this
+      const { attachStyles, applyStyles, niceStyle } = this
 
       Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
@@ -93,8 +93,12 @@ export class Gloss {
           if (activeTheme) {
             const childTheme = Child.theme(this.props, activeTheme, this)
             if (childTheme) {
-              this.theme = attachStyles(`${Child.glossUID}--theme`, childTheme)
-              console.log('got child theme', this.theme)
+              if (this.theme) {
+                this.theme.detach()
+              }
+              this.theme = JSS.createStyleSheet(
+                applyStyles(childTheme, (key, val) => niceStyle(val))
+              ).attach()
             }
           }
           return ogRender.call(this, ...args)
@@ -103,27 +107,31 @@ export class Gloss {
     }
   }
 
+  applyStyles = (styles: Object, getter: Function) => {
+    return Object.keys(styles).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur]:
+          typeof styles[cur] === 'function'
+            ? styles[cur]
+            : getter(cur, styles[cur]),
+      }),
+      {}
+    )
+  }
+
   // runs niceStyleSheet on non-function styles
   attachStyles = (childKey, styles: any): void => {
     if (!styles) {
       return
     }
-    const niceStyles = Object.keys(styles).reduce(
-      (acc, cur) =>
-        typeof styles[cur] === 'function'
-          ? acc
-          : { ...acc, [cur]: this.niceStyle(styles[cur]) },
-      {}
-    )
-    const results = {}
-    for (const key of Object.keys(niceStyles)) {
+    return this.applyStyles(styles, (key, style) => {
       const stylesKey = childKey ? `${key}--${childKey}` : key
       if (!this.stylesheet.getRule(stylesKey)) {
-        const rule = this.stylesheet.addRule(stylesKey, niceStyles[key])
-        results[stylesKey] = rule
+        const niceStyle = this.niceStyle(style)
+        return this.stylesheet.addRule(stylesKey, niceStyle)
       }
-    }
-    return results
+    })
   }
 }
 

@@ -65,7 +65,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         finalStyles.push(style)
       }
       if (checkTheme && theme) {
-        const style = theme[`${key}--theme`]
+        const themeKey = key.replace(/--.*/, '')
+        const style = theme.getRule(themeKey)
         if (style) {
           finalStyles.push(style)
         }

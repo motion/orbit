@@ -13,8 +13,8 @@ const type = 'github'
 export default class GithubSync extends Syncer {
   static type = type
   static jobs = {
-    issues: { every: 60 * 60 * 6 },
-    feed: { every: 60 },
+    // issues: { every: 60 * 60 * 6 },
+    // feed: { every: 60 },
   }
 
   user: User

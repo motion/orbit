@@ -38,7 +38,7 @@ export default class Layout {
     return (
       <UI.Theme name="light">
         <layout>
-          <Signup />
+          <Signup if={false} />
           <LayoutWrap if={CurrentUser.loggedIn}>
             <Header if={!!Constants.APP_KEY} />
             <content onScroll={this.onScroll}>

@@ -1,8 +1,7 @@
 // @flow
-import * as React from 'react'
 import fancyElement from './fancyElement'
 import motionStyle from '@mcro/css'
-import { StyleSheet } from './stylesheet'
+import JSS from './stylesheet'
 import * as Helpers_ from '@mcro/css'
 
 // exports
@@ -27,57 +26,59 @@ const DEFAULT_OPTS = {
   themeKey: 'theme',
 }
 
+function uid() {
+  return `g${Math.random()
+    .toString()
+    .replace('.', '')
+    .slice(0, 15)}`
+}
+
 export class Gloss {
   options: Options
   niceStyle: any
   baseStyles: ?Object
   createElement: Function
   Helpers: Object = Helpers
-  makeCreateEl = (styles: ?Object): Function =>
-    fancyElement(this, styles ? this.getStyles(styles) : null)
+  attachedStyles: Object = {}
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
     this.niceStyle = motionStyle(opts)
     this.helpers = this.niceStyle.helpers
-    this.baseStyles = opts.baseStyles ? this.getStyles(opts.baseStyles) : null
-    this.createElement = this.makeCreateEl()
+    this.stylesheet = JSS.createStyleSheet()
+    this.stylesheet.attach()
+    this.baseStyles = this.attachStyles(false, opts.baseStyles)
+    this.createElement = fancyElement(this, this.stylesheet)
     this.decorator.createElement = this.createElement
   }
 
-  decorator = (Child: Function | string, style: ?Object) => {
-    // shorthand
-    if (typeof Child === 'string') {
-      const name = Child
-      const createEl = this.makeCreateEl({ [name]: style }, name)
-      return (props: Object): React.Element<any> => createEl(name, props)
-    }
-
+  decorator = (Child: Function | string) => {
     if (Child.prototype) {
-      Child.prototype.glossElement = this.makeCreateEl(Child.style, 'style')
+      const { attachStyles, applyStyles, niceStyle } = this
+
+      Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
+      Child.prototype.glossStylesheet = this.stylesheet
+
+      // on first mount, attach styles
+      const ogComponentWillMount = Child.prototype.componentWillMount
+      Child.prototype.componentWillMount = function(...args) {
+        if (!Child.glossUID) {
+          Child.glossUID = uid()
+          attachStyles(Child.glossUID, Child.style)
+        }
+        if (ogComponentWillMount) {
+          return ogComponentWillMount.call(this, ...args)
+        }
+      }
+
       const hasTheme = Child.theme && typeof Child.theme === 'function'
+
       if (!hasTheme) {
         return Child
       }
+
       if (!Child.prototype.theme) {
-        const { getStyles, niceStyleSheet } = this
-
-        Child.prototype.getTheme = function(theme) {
-          let activeTheme
-          if (typeof theme === 'object') {
-            activeTheme = { base: theme }
-          } else {
-            activeTheme =
-              this.context.uiThemes &&
-              this.context.uiThemes[theme || this.context.uiActiveThemeName]
-          }
-          if (activeTheme) {
-            return getStyles(Child.theme(this.props, activeTheme, this))
-          }
-          return null
-        }
-
         const ogRender = Child.prototype.render
         Child.prototype.render = function(...args) {
           let activeTheme
@@ -91,9 +92,14 @@ export class Gloss {
           }
           if (activeTheme) {
             const childTheme = Child.theme(this.props, activeTheme, this)
-            this.theme = childTheme
-              ? StyleSheet.create(niceStyleSheet(childTheme))
-              : null
+            if (childTheme) {
+              if (this.theme) {
+                this.theme.detach()
+              }
+              this.theme = JSS.createStyleSheet(
+                applyStyles(childTheme, (key, val) => niceStyle(val))
+              ).attach()
+            }
           }
           return ogRender.call(this, ...args)
         }
@@ -101,36 +107,31 @@ export class Gloss {
     }
   }
 
-  niceStyleSheet = (styles: Object, errorMessage?: string): Object => {
-    for (const style of Object.keys(styles)) {
-      const value = styles[style]
-      if (value) {
-        styles[style] = this.niceStyle(value, errorMessage)
-      }
-    }
-    return styles
+  applyStyles = (styles: Object, getter: Function) => {
+    return Object.keys(styles).reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur]:
+          typeof styles[cur] === 'function'
+            ? styles[cur]
+            : getter(cur, styles[cur]),
+      }),
+      {}
+    )
   }
 
   // runs niceStyleSheet on non-function styles
-  getStyles = (styles: any): ?Object => {
+  attachStyles = (childKey, styles: any): void => {
     if (!styles) {
-      return null
+      return
     }
-    const functionalStyles = {}
-    const staticStyles = {}
-    for (const key of Object.keys(styles)) {
-      const val = styles[key]
-      if (typeof val === 'function') {
-        functionalStyles[key] = val // to be run later
-      } else {
-        staticStyles[key] = val
+    return this.applyStyles(styles, (key, style) => {
+      const stylesKey = childKey ? `${key}--${childKey}` : key
+      if (!this.stylesheet.getRule(stylesKey)) {
+        const niceStyle = this.niceStyle(style)
+        return this.stylesheet.addRule(stylesKey, niceStyle)
       }
-    }
-    const stylesheet = {
-      ...StyleSheet.create(this.niceStyleSheet(staticStyles)),
-      ...functionalStyles,
-    }
-    return stylesheet
+    })
   }
 }
 

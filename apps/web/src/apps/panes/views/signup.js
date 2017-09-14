@@ -51,7 +51,6 @@ export default class Signup {
           onSubmit={store.handleSubmit}
           $$draggable
           $$centered
-          $form
           padding={15}
           margin="auto"
         >

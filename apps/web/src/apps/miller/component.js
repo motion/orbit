@@ -5,7 +5,7 @@ import { HotKeys } from '~/helpers'
 
 @view.attach('millerState')
 @view
-export default class Miller extends React.PureComponent {
+export default class Miller {
   static defaultProps = {
     onKeyActions: _ => _,
   }

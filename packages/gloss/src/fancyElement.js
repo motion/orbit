@@ -5,6 +5,19 @@ import JSS from './stylesheet'
 import { Gloss } from './index'
 import tags from 'html-tags'
 
+function toCamelCase(string) {
+  return string.replace(/-(\w)/g, function(matches, letter) {
+    return letter.toUpperCase()
+  })
+}
+
+const objToCamel = (style: Object) => {
+  return Object.keys(style).reduce(
+    (acc, cur) => ({ ...acc, [toCamelCase(cur)]: style[cur] }),
+    {}
+  )
+}
+
 const VALID_TAGS: { [string]: boolean } = tags.reduce(
   (acc, cur) => ({ ...acc, [cur]: true }),
   {}
@@ -158,8 +171,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         // children get a style prop
         if (props) {
           finalProps.style = arrayOfObjectsToObject([
-            style,
-            ...finalStyles.map(style => style && style.style),
+            finalProps.style,
+            ...finalStyles.map(style => style && objToCamel(style.style)),
           ])
         }
       }

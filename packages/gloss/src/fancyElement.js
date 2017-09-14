@@ -59,8 +59,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       }
       // dynamic
       if (typeof style === 'function') {
-        const style = JSS.createRule(niceStyle(style(val)))
-        finalStyles.push(style)
+        finalStyles.push(JSS.createRule(niceStyle(style(val))))
       } else {
         finalStyles.push(style)
       }

@@ -29,7 +29,6 @@ const $ = '$'
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
-  console.log('run factory with styles', styles)
   const { baseStyles, options, niceStyle } = Gloss
   return function fancyElement(
     type_: string | Function,
@@ -146,7 +145,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         } else {
           try {
             finalProps.className = css(...finalStyles)
-            console.log('set classname', finalStyles, finalProps.className)
           } catch (e) {
             console.error('Error applying style to', name, finalStyles, this)
           }
@@ -161,7 +159,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       } else {
         // children get a style prop
         if (props) {
-          console.log('finalStyles', finalStyles)
           finalProps.style = arrayOfObjectsToObject([
             style,
             ...finalStyles.map(style => style && style.style),

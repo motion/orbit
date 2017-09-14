@@ -77,6 +77,7 @@ export class Gloss {
       if (!hasTheme) {
         return Child
       }
+
       if (!Child.prototype.theme) {
         const ogRender = Child.prototype.render
         Child.prototype.render = function(...args) {
@@ -91,31 +92,15 @@ export class Gloss {
           }
           if (activeTheme) {
             const childTheme = Child.theme(this.props, activeTheme, this)
-            this.theme = childTheme
-              ? attachStyles(
-                  `${Child.glossUID}--theme`,
-                  niceStyleSheet(childTheme)
-                )
-              : null
-          }
-          // TODO empty theme {} comes through, fixing, this could be done better
-          if (this.theme && Object.keys(this.theme).length === 0) {
-            this.theme = null
+            if (childTheme) {
+              this.theme = attachStyles(`${Child.glossUID}--theme`, childTheme)
+              console.log('got child theme', this.theme)
+            }
           }
           return ogRender.call(this, ...args)
         }
       }
     }
-  }
-
-  niceStyleSheet = (styles: Object, errorMessage?: string): Object => {
-    for (const style of Object.keys(styles)) {
-      const value = styles[style]
-      if (value) {
-        styles[style] = this.niceStyle(value, errorMessage)
-      }
-    }
-    return styles
   }
 
   // runs niceStyleSheet on non-function styles

@@ -40,6 +40,7 @@ export class Gloss {
   createElement: Function
   Helpers: Object = Helpers
   attachedStyles: Object = {}
+  themeCache: Object = {}
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
@@ -54,11 +55,61 @@ export class Gloss {
 
   decorator = (Child: Function | string) => {
     if (Child.prototype) {
-      const { attachStyles, applyStyles, niceStyle } = this
+      const { attachStyles, applyStyles, niceStyle, themeCache } = this
 
       Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
       Child.prototype.glossStylesheet = this.stylesheet
+
+      const hasTheme = Child.theme && typeof Child.theme === 'function'
+
+      if (hasTheme) {
+        Child.prototype.glossUpdateTheme = function(props) {
+          let activeTheme
+
+          if (typeof theme === 'object') {
+            activeTheme = { base: props.theme }
+          } else {
+            activeTheme =
+              this.context.uiThemes &&
+              this.context.uiThemes[
+                props.theme || this.context.uiActiveThemeName
+              ]
+          }
+          if (activeTheme) {
+            const childTheme = Child.theme(props, activeTheme, this)
+            const key = JSON.stringify(childTheme)
+            if (themeCache[key]) {
+              this.theme = themeCache[key]
+              if (!this.theme.attached) {
+                this.theme.attach()
+              }
+              return
+            }
+
+            if (childTheme) {
+              const { theme } = this
+              if (theme) {
+                // makes it detach after render
+                requestIdleCallback(() => theme.detach())
+              }
+              this.theme = JSS.createStyleSheet(
+                applyStyles(childTheme, (key, val) => niceStyle(val))
+              ).attach()
+              themeCache[key] = this.theme
+            }
+          }
+        }
+
+        // updateTheme on willUpdate
+        const ogComponentWillUpdate = Child.prototype.componentWillUpdate
+        Child.prototype.componentWillUpdate = function(...args) {
+          this.glossUpdateTheme(args[0])
+          if (ogComponentWillUpdate) {
+            return ogComponentWillUpdate(...args)
+          }
+        }
+      }
 
       // on first mount, attach styles
       const ogComponentWillMount = Child.prototype.componentWillMount
@@ -67,41 +118,11 @@ export class Gloss {
           Child.glossUID = uid()
           attachStyles(Child.glossUID, Child.style)
         }
+        if (hasTheme) {
+          this.glossUpdateTheme(this.props)
+        }
         if (ogComponentWillMount) {
           return ogComponentWillMount.call(this, ...args)
-        }
-      }
-
-      const hasTheme = Child.theme && typeof Child.theme === 'function'
-
-      if (!hasTheme) {
-        return Child
-      }
-
-      if (!Child.prototype.theme) {
-        const ogRender = Child.prototype.render
-        Child.prototype.render = function(...args) {
-          let activeTheme
-          const { theme } = this.props
-          if (typeof theme === 'object') {
-            activeTheme = { base: theme }
-          } else {
-            activeTheme =
-              this.context.uiThemes &&
-              this.context.uiThemes[theme || this.context.uiActiveThemeName]
-          }
-          if (activeTheme) {
-            const childTheme = Child.theme(this.props, activeTheme, this)
-            if (childTheme) {
-              if (this.theme) {
-                this.theme.detach()
-              }
-              this.theme = JSS.createStyleSheet(
-                applyStyles(childTheme, (key, val) => niceStyle(val))
-              ).attach()
-            }
-          }
-          return ogRender.call(this, ...args)
         }
       }
     }

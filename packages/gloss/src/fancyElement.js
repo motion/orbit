@@ -5,6 +5,10 @@ import JSS from './stylesheet'
 import { Gloss } from './index'
 import tags from 'html-tags'
 
+if (module.hot) {
+  module.hot.accept(_ => _)
+}
+
 function toCamelCase(string) {
   return string.replace(/-(\w)/g, function(matches, letter) {
     return letter.toUpperCase()
@@ -39,10 +43,21 @@ const TAG_NAME_MAP = {
   head: 'div',
 }
 const $ = '$'
+const dynamicCache = {}
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
   const { baseStyles, options, niceStyle } = Gloss
+
+  const getDynamicStyle = styles => {
+    const key = JSON.stringify(styles)
+    if (dynamicCache[key]) {
+      return dynamicCache[key]
+    }
+    const res = (dynamicCache[key] = JSS.createRule(niceStyle(styles)))
+    return res
+  }
+
   return function fancyElement(
     type_: string | Function,
     props?: Object,
@@ -72,7 +87,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       }
       // dynamic
       if (typeof style === 'function') {
-        finalStyles.push(JSS.createRule(niceStyle(style(val))))
+        finalStyles.push(getDynamicStyle(style(val)))
       } else {
         finalStyles.push(style)
       }

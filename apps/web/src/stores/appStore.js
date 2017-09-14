@@ -51,7 +51,7 @@ export default class AppStore {
     await this.database.start({
       modelOptions: {
         debug: true,
-        // autoSync: true,
+        autoSync: true,
         asyncFirstSync: true,
       },
     })

@@ -1,11 +1,17 @@
 // @flow
 import Octokat from 'octokat'
 import { store, watch } from '@mcro/black'
-import typeof CurrentUser from '~/stores/currentUserStore'
+import { CurrentUser } from '~/app'
 
 @store
 export default class GithubService {
-  user = null
+  get user() {
+    return CurrentUser
+  }
+
+  get setting(): ?string {
+    return this.user.setting.github
+  }
 
   @watch
   orgs = () => this.setting && this.github && this.github.user.orgs.fetchAll()
@@ -13,10 +19,13 @@ export default class GithubService {
   @watch
   allRepos = () =>
     this.github &&
-    this.activeOrgs &&
+    this.setting &&
     Promise.all(
-      this.activeOrgs.map(org =>
-        this.github.orgs(org).repos.fetchAll().then(repos => ({ org, repos }))
+      this.setting.activeOrgs.map(org =>
+        this.github
+          .orgs(org)
+          .repos.fetchAll()
+          .then(repos => ({ org, repos }))
       )
     )
 
@@ -38,23 +47,7 @@ export default class GithubService {
       token: this.token,
     })
 
-  constructor(user: CurrentUser) {
-    this.user = user
-  }
-
   get token(): ?string {
-    return this.user && this.user.github && this.user.github.auth.accessToken || null
-  }
-
-  get setting(): ?string {
-    return this.user && this.user.setting.github || null
-  }
-
-  get activeOrgs(): ?Array<string> {
-    return (
-      this.setting &&
-      this.setting.values.orgs &&
-      Object.keys(this.setting.values.orgs).filter(x => !!x)
-    )
+    return (this.user.github && this.user.github.auth.accessToken) || null
   }
 }

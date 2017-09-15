@@ -2,6 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import emojinize from 'emojinize'
 import * as UI from '@mcro/ui'
+import Card from './card'
 
 @view
 export default class FeedItem {
@@ -10,13 +11,13 @@ export default class FeedItem {
       case 'PushEvent':
         return (
           <body if={payload.commits}>
-            <content>
+            <Card title="Commits">
               {payload.commits.map(commit => (
-                <UI.Text key={commit.sha}>
-                  {emojinize.encode(commit.message)}
-                </UI.Text>
+                <commit key={commit.sha}>
+                  <UI.Text>{emojinize.encode(commit.message)}</UI.Text>
+                </commit>
               ))}
-            </content>
+            </Card>
             <icon>
               <UI.Icon name={event.integration} />
             </icon>
@@ -60,6 +61,10 @@ export default class FeedItem {
   }
 
   static style = {
+    feeditem: {
+      width: '100%',
+      justifyContent: 'center',
+    },
     info: {
       flexFlow: 'row',
       flexWrap: 'wrap',

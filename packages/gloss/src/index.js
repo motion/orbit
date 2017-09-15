@@ -54,7 +54,7 @@ export class Gloss {
 
   decorator = (Child: Function | string) => {
     if (Child.prototype) {
-      const { attachStyles, applyStyles, niceStyle } = this
+      const { attachStyles, niceStyle } = this
 
       Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
@@ -97,12 +97,23 @@ export class Gloss {
         }
 
         // updateTheme on willUpdate
-        const ogcomponentWillUnmount = Child.prototype.componentWillUnmount
-        Child.prototype.componentWillUnmount = function(...args) {
-          // remove sheet
-          // this.theme.detach()
-          if (ogcomponentWillUnmount) {
-            return ogcomponentWillUnmount.call(this, ...args)
+        // const ogcomponentWillUnmount = Child.prototype.componentWillUnmount
+        // Child.prototype.componentWillUnmount = function(...args) {
+        //   // remove sheet
+        //   // this.theme.detach()
+        //   if (ogcomponentWillUnmount) {
+        //     return ogcomponentWillUnmount.call(this, ...args)
+        //   }
+        // }
+      }
+
+      // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK
+      if (process.env.NODE_ENV !== 'production') {
+        const ogrender = Child.prototype.render
+        Child.prototype.render = function(...args) {
+          attachStyles(Child.glossUID, Child.style, true)
+          if (ogrender) {
+            return ogrender.call(this, ...args)
           }
         }
       }
@@ -138,13 +149,13 @@ export class Gloss {
   }
 
   // runs niceStyleSheet on non-function styles
-  attachStyles = (childKey, styles: any): void => {
+  attachStyles = (childKey, styles: any, force = false): void => {
     if (!styles) {
       return
     }
     return this.applyStyles(styles, (key, style) => {
       const stylesKey = childKey ? `${key}--${childKey}` : key
-      if (!this.stylesheet.getRule(stylesKey)) {
+      if (force || !this.stylesheet.getRule(stylesKey)) {
         const niceStyle = this.niceStyle(style)
         return this.stylesheet.addRule(stylesKey, niceStyle)
       }

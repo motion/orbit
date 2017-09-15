@@ -4,7 +4,6 @@ import { view, watch, Component } from '@mcro/black'
 import { Event } from '~/app'
 import * as UI from '@mcro/ui'
 import type { PaneProps } from '~/types'
-import Feed from './views/feed'
 import Calendar from './views/calendar'
 import FeedItem from './views/feedItem'
 
@@ -38,12 +37,7 @@ export default class BarTeam extends Component<Props> {
       return null
     }
 
-    const heights = [
-      50,
-      40,
-      300,
-      ...store.events.map(event => (event.hasData ? 150 : 50)),
-    ]
+    const heights = [55, 40, 230, ...store.events.map(event => event.height)]
     const getRowHeight = index => heights[index] || 100
 
     return (
@@ -53,18 +47,21 @@ export default class BarTeam extends Component<Props> {
             rowHeight: getRowHeight,
           }}
           items={[
-            <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>,
-            <UI.Row
-              $section
-              spaced
-              itemProps={{ size: 1 }}
-              css={{ justifyContent: 'flex-end' }}
-            >
-              <UI.Button icon="Github">Github</UI.Button>
-              <UI.Button icon="hard">Drive</UI.Button>
-              <UI.Button icon="Google">Google Docs</UI.Button>
-              <UI.Button icon="Cal">Events</UI.Button>
-            </UI.Row>,
+            <section>
+              <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
+            </section>,
+            <section>
+              <UI.Row
+                spaced
+                itemProps={{ size: 1 }}
+                css={{ justifyContent: 'flex-end' }}
+              >
+                <UI.Button icon="Github">Github</UI.Button>
+                <UI.Button icon="hard">Drive</UI.Button>
+                <UI.Button icon="Google">Google Docs</UI.Button>
+                <UI.Button icon="Cal">Events</UI.Button>
+              </UI.Row>
+            </section>,
             <section>
               <UI.Title opacity={1} marginBottom={10}>
                 Tuesday, the 12th
@@ -86,16 +83,13 @@ export default class BarTeam extends Component<Props> {
 
   static style = {
     team: {
-      minWidth: 200,
       padding: [5, 15],
-      borderRadius: 4,
       flex: 1,
-      overflowY: 'scroll',
-      zIndex: 100000000,
       position: 'relative',
     },
     section: {
       padding: [8, 10],
+      justifyContent: 'center',
     },
   }
 }

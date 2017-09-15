@@ -24,6 +24,9 @@ export const methods = {
   get hasData(): boolean {
     return this.data.payload && this.data.payload.commits
   },
+  get height() {
+    return this.hasData ? 150 : 50
+  },
 }
 
 export type EventType = typeof methods & {

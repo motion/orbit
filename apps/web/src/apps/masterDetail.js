@@ -4,7 +4,7 @@ import { view } from '@mcro/black'
 import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
-import { Miller, MillerState } from './miller'
+import { Miller, millerStore } from './miller'
 
 const getSchema = () => {
   const val = decodeURIComponent((window.location + '').split('schema=')[1])
@@ -57,9 +57,9 @@ export default class MasterPage {
               <Miller
                 animate
                 search={''}
-                state={store.millerState}
+                state={store.millerStore}
                 panes={PANE_TYPES}
-                onChange={store.onMillerStateChange}
+                onChange={store.onmillerStoreChange}
                 paneProps={paneProps}
               />
             </container>

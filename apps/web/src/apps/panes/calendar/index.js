@@ -243,12 +243,12 @@ class CalendarPaneStore {
   addEvent = event => (this.events = [...this.events, event])
 }
 
-@view.attach('millerState')
+@view.attach('millerStore')
 @view({
   store: CalendarPaneStore,
 })
 export default class CalendarPane {
-  render({ store, millerState, isActive }) {
+  render({ store, millerStore, isActive }) {
     const actions = [
       {
         name: 'newEvent',
@@ -290,7 +290,7 @@ export default class CalendarPane {
                 <UI.Button
                   size={1.0}
                   onClick={() => {
-                    millerState.runAction('newEvent')
+                    millerStore.runAction('newEvent')
                   }}
                   className="target-newEvent"
                   icon="simple-add"

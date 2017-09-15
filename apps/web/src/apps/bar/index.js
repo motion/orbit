@@ -5,7 +5,7 @@ import * as UI from '@mcro/ui'
 import Actions from '../panes/pane/actions'
 import BarStore from './store'
 import * as PaneTypes from '../panes'
-import { Miller, MillerState } from '../miller'
+import { Miller, MillerStore } from '../miller'
 import Pane from '~/views/pane'
 
 const PANE_TYPES = {
@@ -70,11 +70,11 @@ const inputStyle = {
   fontSize: 32,
 }
 
-@view.provide({ millerState: MillerState, barStore: BarStore })
+@view.provide({ millerStore: MillerStore, barStore: BarStore })
 @view
 export default class BarPage {
   componentWillMount() {
-    this.props.barStore.setMillerState(this.props.millerState)
+    this.props.barStore.setMillerStore(this.props.millerStore)
   }
 
   render({ barStore }) {

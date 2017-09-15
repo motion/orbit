@@ -12,7 +12,7 @@ type Schema = {
   static?: boolean,
 }
 
-export default class MillerStateStore {
+export default class MillerStore {
   activeRow = 0
   activeCol = 0
   paneRefs = []

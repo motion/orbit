@@ -40,7 +40,6 @@ export class Gloss {
   createElement: Function
   Helpers: Object = Helpers
   attachedStyles: Object = {}
-  themeCache: Object = {}
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
@@ -55,18 +54,19 @@ export class Gloss {
 
   decorator = (Child: Function | string) => {
     if (Child.prototype) {
-      const { attachStyles, applyStyles, niceStyle, themeCache } = this
+      const { attachStyles, applyStyles, niceStyle } = this
 
       Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
       Child.prototype.glossStylesheet = this.stylesheet
 
       const hasTheme = Child.theme && typeof Child.theme === 'function'
+      const themeSheet = JSS.createStyleSheet().attach()
 
       if (hasTheme) {
         Child.prototype.glossUpdateTheme = function(props) {
+          this.theme = this.theme || themeSheet
           let activeTheme
-
           if (typeof theme === 'object') {
             activeTheme = { base: props.theme }
           } else {
@@ -78,35 +78,31 @@ export class Gloss {
           }
           if (activeTheme) {
             const childTheme = Child.theme(props, activeTheme, this)
-            const key = JSON.stringify(childTheme)
-            if (themeCache[key]) {
-              this.theme = themeCache[key]
-              if (!this.theme.attached) {
-                this.theme.attach()
-              }
-              return
-            }
-
-            if (childTheme) {
-              const { theme } = this
-              if (theme) {
-                // makes it detach after render
-                requestIdleCallback(() => theme.detach())
-              }
-              this.theme = JSS.createStyleSheet(
-                applyStyles(childTheme, (key, val) => niceStyle(val))
-              ).attach()
-              themeCache[key] = this.theme
+            for (const name of Object.keys(childTheme)) {
+              const style = niceStyle(childTheme[name])
+              const selector = `${name}--${Child.glossUID}--theme`
+              this.theme.deleteRule(selector)
+              this.theme.addRule(selector, style)
             }
           }
         }
 
         // updateTheme on willUpdate
-        const ogComponentWillUpdate = Child.prototype.componentWillUpdate
+        const ogcomponentWillUpdate = Child.prototype.componentWillUpdate
         Child.prototype.componentWillUpdate = function(...args) {
           this.glossUpdateTheme(args[0])
-          if (ogComponentWillUpdate) {
-            return ogComponentWillUpdate(...args)
+          if (ogcomponentWillUpdate) {
+            return ogcomponentWillUpdate.call(this, ...args)
+          }
+        }
+
+        // updateTheme on willUpdate
+        const ogcomponentWillUnmount = Child.prototype.componentWillUnmount
+        Child.prototype.componentWillUnmount = function(...args) {
+          // remove sheet
+          // this.theme.detach()
+          if (ogcomponentWillUnmount) {
+            return ogcomponentWillUnmount.call(this, ...args)
           }
         }
       }

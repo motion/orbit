@@ -10,27 +10,24 @@ export default class FeedItem {
     switch (event.type) {
       case 'PushEvent':
         return (
-          <body if={payload.commits}>
-            <Card title="Commits">
+          <content if={payload.commits}>
+            <Card icon={event.integration}>
               {payload.commits.map(commit => (
                 <commit key={commit.sha}>
                   <UI.Text html={marky(commit.message)} />
                 </commit>
               ))}
             </Card>
-            <icon>
-              <UI.Icon name={event.integration} />
-            </icon>
-          </body>
+          </content>
         )
 
       case 'IssueCommentEvent':
         return (
-          <body if={payload.comment}>
+          <content if={payload.comment}>
             <content>
               <UI.Text html={marky(payload.comment.body)} />
             </content>
-          </body>
+          </content>
         )
     }
 
@@ -55,7 +52,7 @@ export default class FeedItem {
           <UI.Text $action>{verb} </UI.Text>
           <UI.Date $date>{event.updated || event.created}</UI.Date>
         </info>
-        {body}
+        <body if={body}>{body}</body>
       </feeditem>
     )
   }
@@ -65,6 +62,7 @@ export default class FeedItem {
       width: '100%',
       justifyContent: 'flex-start',
       overflow: 'hidden',
+      padding: [0, 10],
     },
     info: {
       flexFlow: 'row',
@@ -72,7 +70,10 @@ export default class FeedItem {
       alignItems: 'center',
       whiteSpace: 'pre',
       fontSize: 13,
-      marginBottom: 5,
+      height: 40,
+    },
+    body: {
+      height: `calc(100% - 40px)`,
     },
     name: {
       fontWeight: 500,
@@ -82,9 +83,6 @@ export default class FeedItem {
     },
     date: {
       opacity: 0.5,
-    },
-    body: {
-      flexFlow: 'row',
     },
     content: {
       flex: 1,

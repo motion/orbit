@@ -162,7 +162,10 @@ export class Gloss {
     }
     return this.applyStyles(styles, (key, style) => {
       const stylesKey = childKey ? `${key}--${childKey}` : key
-      if (force || !this.stylesheet.getRule(stylesKey)) {
+      if (force) {
+        this.stylesheet.deleteRule(stylesKey)
+      }
+      if (!this.stylesheet.getRule(stylesKey)) {
         const niceStyle = this.niceStyle(style)
         return this.stylesheet.addRule(stylesKey, niceStyle)
       }

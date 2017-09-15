@@ -223,8 +223,8 @@ export default class BarMain extends React.Component<> {
             primaryEllipse: !this.hasContent(result),
             children: (
               <UI.Text if={result.data} lineHeight={20} opacity={0.5}>
-                {result.data.updatedAt ? (
-                  UI.Date.format(result.data.updatedAt) + ' · '
+                {result.data.updated ? (
+                  UI.Date.format(result.data.updated) + ' · '
                 ) : (
                   ''
                 )}

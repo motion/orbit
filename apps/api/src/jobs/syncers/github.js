@@ -13,8 +13,8 @@ const type = 'github'
 export default class GithubSync extends Syncer {
   static type = type
   static jobs = {
-    issues: { every: 60 * 60 * 6 },
-    feed: { every: 60 },
+    // issues: { every: 60 * 60 * 6 },
+    // feed: { every: 60 },
   }
 
   user: User
@@ -271,7 +271,7 @@ export default class GithubSync extends Syncer {
       query: `
       query AllIssues {
         organization(login: "${orgLogin}") {
-          repositories(first: 20) {
+          repositories(first: 50) {
             edges {
               node {
                 id
@@ -330,11 +330,19 @@ export default class GithubSync extends Syncer {
       return null
     }
 
-    const createdIssues = []
     const unwrap = obj => {
       obj.labels = obj.labels.edges.map(edge => edge.node)
       obj.comments = obj.comments.edges.map(edge => edge.node)
       return obj
+    }
+
+    let finished = []
+    let creating = []
+
+    async function waitForCreating() {
+      const successful = (await Promise.all(creating)).map(i => !!i)
+      finished = [...finished, ...successful]
+      creating = []
     }
 
     for (const repositoryNode of repositories) {
@@ -347,21 +355,28 @@ export default class GithubSync extends Syncer {
       }
 
       for (const issue of issues) {
-        const data = unwrap(omit(issue, ['bodyText']))
-        const id = `${issue.id}`
-        const created = issue.createdAt || ''
-        const updated = issue.updatedAt || created
-        // stale thing removal
-        const stale = await Thing.get({ id, created: { $ne: created } })
-        if (stale) {
-          console.log('Removing stale event', id)
-          await stale.remove()
+        // pause for every 10 to finish
+        if (creating.length === 10) {
+          await waitForCreating()
         }
-        if (
-          stale ||
-          !await Thing.get(updated ? { id, updated } : { id, created })
-        ) {
-          const inserted = await Thing.update({
+
+        const create = async () => {
+          const data = unwrap(omit(issue, ['bodyText']))
+          const id = `${issue.id}`
+          // ensure if one is set, the other gets set too
+          const created = issue.createdAt || issue.updatedAt || ''
+          const updated = issue.updatedAt || created
+          // stale removal
+          const stale = await Thing.get({ id, created: { $ne: created } })
+          if (stale) {
+            console.log('Removing stale event', id)
+            await stale.remove()
+          }
+          // already exists
+          if (updated && (await Thing.get({ id, updated }))) {
+            return false
+          }
+          return await Thing.update({
             id,
             integration: 'github',
             type: 'task',
@@ -373,12 +388,15 @@ export default class GithubSync extends Syncer {
             created,
             updated,
           })
-          createdIssues.push(inserted)
         }
+
+        creating.push(create())
       }
     }
 
-    return createdIssues
+    await waitForCreating()
+
+    return finished
   }
 
   graphFetch = createApolloFetch({

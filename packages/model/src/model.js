@@ -394,7 +394,7 @@ export default class Model {
       return Promise.resolve(true)
     }
 
-    console.log('>>', QUERY_KEY)
+    // console.log('>>', QUERY_KEY)
 
     const firstReplication = this._collection.sync({
       query,

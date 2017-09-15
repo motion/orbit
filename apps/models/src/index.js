@@ -138,9 +138,11 @@ export default class Database {
           remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
           pouchSettings: {
             skip_setup: true,
+            skipSetup: true,
           },
           remoteOptions: {
             skip_setup: true,
+            skipSetup: true,
             adapter: this.databaseConfig.adapterName,
             ajax: {
               headers: {

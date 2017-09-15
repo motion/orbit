@@ -109,9 +109,16 @@ export class Gloss {
 
       // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK
       if (process.env.NODE_ENV !== 'production') {
+        let lastUpdatedStyles = null
         const ogrender = Child.prototype.render
         Child.prototype.render = function(...args) {
-          attachStyles(Child.glossUID, Child.style, true)
+          if (
+            !lastUpdatedStyles ||
+            (window.lastHotReload && lastUpdatedStyles > window.lastHotReload)
+          ) {
+            attachStyles(Child.glossUID, Child.style, true)
+            lastUpdatedStyles = Date.now()
+          }
           if (ogrender) {
             return ogrender.call(this, ...args)
           }

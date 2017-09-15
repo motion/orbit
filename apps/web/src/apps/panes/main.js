@@ -198,11 +198,14 @@ export default class BarMain extends React.Component<> {
   }
 
   hasContent = result => result && result.data && result.data.body
+  getResult = i => this.props.mainStore.results[i]
 
-  getRowHeight = i =>
-    this.hasContent(this.props.mainStore.results[i])
+  getRowHeight = i => {
+    const result = this.getResult(i)
+    return this.hasContent(result)
       ? 100
-      : this.props.mainStore.results[i].data.updated ? 58 : 38
+      : result.data && result.data.updated ? 58 : 38
+  }
 
   getDate = result =>
     result.data.updated ? UI.Date.format(result.data.updated) : ''
@@ -233,7 +236,7 @@ export default class BarMain extends React.Component<> {
                 {(result.data.body && result.data.body.slice(0, 120)) || ''}
               </UI.Text>,
               <UI.Text if={!result.data}>{this.getDate(result)}</UI.Text>,
-            ],
+            ].filter(Boolean),
             iconAfter: true,
             iconProps: {
               style: {

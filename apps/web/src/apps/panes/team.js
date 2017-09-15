@@ -18,7 +18,7 @@ class BarTeamStore {
   events: ?Array<Event> = (() =>
     Event.find({ created: { $ne: null } })
       .sort({ created: 'desc' })
-      .limit(20): any)
+      .limit(50): any)
 
   get results(): Array<Event> {
     return this.events || []

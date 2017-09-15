@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import emojinize from 'emojinize'
+import marky from 'marky-markdown'
 import * as UI from '@mcro/ui'
 import Card from './card'
 
@@ -14,7 +14,7 @@ export default class FeedItem {
             <Card title="Commits">
               {payload.commits.map(commit => (
                 <commit key={commit.sha}>
-                  <UI.Text>{emojinize.encode(commit.message)}</UI.Text>
+                  <UI.Text html={marky(commit.message)} />
                 </commit>
               ))}
             </Card>
@@ -28,7 +28,7 @@ export default class FeedItem {
         return (
           <body if={payload.comment}>
             <content>
-              <UI.Text>{emojinize.encode(payload.comment.body)}</UI.Text>
+              <UI.Text html={marky(payload.comment.body)} />
             </content>
           </body>
         )
@@ -37,7 +37,7 @@ export default class FeedItem {
     return null
   }
 
-  render({ event }) {
+  render({ event, style }) {
     const { verb, data } = event
     if (!data) {
       console.log('no data')
@@ -48,7 +48,7 @@ export default class FeedItem {
     const body = this.getBody(event, data)
 
     return (
-      <feeditem>
+      <feeditem style={style}>
         <info if={actor}>
           <avatar $img={actor.avatar_url} />
           <UI.Text $name>{actor.login} </UI.Text>
@@ -63,7 +63,8 @@ export default class FeedItem {
   static style = {
     feeditem: {
       width: '100%',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
+      overflow: 'hidden',
     },
     info: {
       flexFlow: 'row',

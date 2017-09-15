@@ -146,6 +146,8 @@ export default class Text extends React.PureComponent<Props> {
     placeholder,
     lineHeight,
     lines,
+    attach,
+    html,
     ...props
   }: Props) {
     const eventProps = {
@@ -155,7 +157,12 @@ export default class Text extends React.PureComponent<Props> {
       onFocus,
       onBlur,
     }
-    let inner = children
+
+    let inner = html ? (
+      <span dangerouslySetInnerHTML={{ __html: html }} />
+    ) : (
+      children
+    )
 
     if (lines) {
       if (!children) {
@@ -185,6 +192,7 @@ export default class Text extends React.PureComponent<Props> {
         css={{ ...props, ...css }}
         $ellipseText={ellipse}
         {...eventProps}
+        {...attach}
       >
         {!ellipse && inner}
         <span if={ellipse} $$ellipse>

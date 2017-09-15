@@ -37,7 +37,7 @@ export default class BarTeam extends Component<Props> {
       return null
     }
 
-    const heights = [55, 40, 230, ...store.events.map(event => event.height)]
+    const heights = [55, 40, 280, ...store.events.map(event => event.height)]
     const getRowHeight = index => heights[index] || 100
 
     return (
@@ -73,9 +73,6 @@ export default class BarTeam extends Component<Props> {
               <FeedItem event={event} key={event.id} />
             )),
           ]}
-          getItem={item => ({
-            children: item,
-          })}
         />
       </team>
     )

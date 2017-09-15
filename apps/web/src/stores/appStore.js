@@ -142,16 +142,20 @@ export default class AppStore {
     this.errors = []
   }
 
+  clearLocalData() {
+    Object.keys(this.models).forEach(async name => {
+      const model = this.models[name]
+      await model.database.remove()
+      console.log('Removed model local data', name)
+    })
+  }
+
   clearAllData() {
-    console.log(this.models)
     Object.keys(this.models).forEach(async name => {
       const model = this.models[name]
       const models = await model.getAll()
       await Promise.all(models.map(model => model.remove()))
       console.log('Removed all models', name)
     })
-
-    // Setting.getAll().then(x => x.remove())
-    // Setting.getAll().then(x => x.remove())
   }
 }

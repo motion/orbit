@@ -44,6 +44,10 @@ export default class Issue {
   getLength = () => this.props.store.responses.length
 
   render({ store, activeIndex }) {
+    if (!store.responses) {
+      return null
+    }
+
     return (
       <container>
         {store.responses.map((r, index) => (

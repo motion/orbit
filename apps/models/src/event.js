@@ -21,6 +21,9 @@ export const methods = {
     }
     return ''
   },
+  get hasData(): boolean {
+    return this.data.payload && this.data.payload.commits
+  },
 }
 
 export type EventType = typeof methods & {

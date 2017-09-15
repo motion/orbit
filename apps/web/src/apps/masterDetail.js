@@ -4,27 +4,7 @@ import { view } from '@mcro/black'
 import { HotKeys, OS } from '~/helpers'
 import * as UI from '@mcro/ui'
 import * as Panes from './panes'
-import { Miller, millerStore } from './miller'
-
-const getSchema = () => {
-  const val = decodeURIComponent((window.location + '').split('schema=')[1])
-  return JSON.parse(val)
-}
-
-const PANE_TYPES = {
-  main: Panes.Main,
-  placeholder: Panes.Placeholder,
-  setup: Panes.Setup,
-  inbox: Panes.Threads,
-  feed: Panes.Feed,
-  notifications: Panes.Notifications,
-  login: Panes.Login,
-  'code.issue': Panes.Code.Issue,
-  orbit: Panes.Orbit,
-  task: Panes.Task,
-  doc: Panes.Doc,
-  integrations: Panes.Integrations,
-}
+import { Miller } from './miller'
 
 @view({
   store: class {
@@ -57,9 +37,9 @@ export default class MasterPage {
               <Miller
                 animate
                 search={''}
-                state={store.millerStore}
-                panes={PANE_TYPES}
-                onChange={store.onmillerStoreChange}
+                state={store.millerState}
+                panes={Panes}
+                onChange={store.onMillerStateChange}
                 paneProps={paneProps}
               />
             </container>

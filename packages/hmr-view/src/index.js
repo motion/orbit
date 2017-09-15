@@ -57,14 +57,6 @@ export default function proxyReactComponents({
       const instances = viewProxies[path].update(ReactClass)
       setTimeout(() => {
         instances.forEach(doHotReload)
-
-        // double save helper to force clear better on two saves
-        console.log('Since last hmr:', Date.now() - lastHotReload)
-        if (Date.now() - lastHotReload < 1500 && window.start) {
-          // console.log('super hmr')
-          // window.start()
-        }
-
         lastHotReload = Date.now()
         // Black.view.emit('hmr')
       })

@@ -1,43 +1,25 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { isEqual } from 'lodash'
 import { HotKeys } from '~/helpers'
 
 @view.attach('millerStore')
 @view
-export default class Miller extends React.Component {
+export default class Miller {
   static defaultProps = {
     onKeyActions: _ => _,
-  }
-
-  state = {
-    schema: null,
   }
 
   componentWillMount() {
     const { onKeyActions, millerStore } = this.props
     onKeyActions(millerStore.keyActions)
-    this.setState({ schema: millerStore.schema })
-  }
-
-  componentWillReceiveProps({ millerStore }) {
-    if (!isEqual(millerStore.schema, this.state.schema)) {
-      // :car: setTimeout will make the next render happen after list updates highlight position
-      this.setTimeout(() => {
-        this.setState({ schema: millerStore.schema })
-      })
-    }
   }
 
   onPopoverClose = () => {
     this.props.millerStore.activeAction = null
   }
 
-  render(
-    { pane, store, millerStore, onKeyActions, panes, animate },
-    { schema }
-  ) {
+  render({ pane, store, millerStore, onKeyActions, panes, animate }) {
     const Pane = pane
     const transX = animate ? store.translateX : 0
     const PopoverContent =

@@ -1,17 +1,25 @@
-highest level things required for beta:
+micro:
+  - team pane:
+    - show integrations they use
+    - github pulse like stats
+    - aggregate people
+      - show list of them
+      - show their feeds
+  - project pane:
+    - combining multiple functionality
+    - shows whats combined
+    - mockup design
+  - calendar integration
 
+macro:
   - integrations:
-      - github
-      - google docs
+      - google (docs, calendar)
       - jira
-      - calendar (google + others?)
   - teams:
     - onboarding process
     - figuring who is who across integrations
     - feeds on a person-basis
   - search:
-    - filter algo
-      - enforce never show same result twice (hashlike)
     - potentially filter by source
     - combine multiple topics into feeds
   - quick actions:
@@ -19,18 +27,11 @@ highest level things required for beta:
   - orbits:
     - some test of sharing to team orbit
 
-maybe:
-
+later:
   - notifications
     - if we have apps that have feeds, may want notifications
 
-
 -fast pouch
+  - looks into shared array buffers and webworkers
   - https://github.com/pouchdb-community/socket-pouch (web sockets)
   - https://github.com/jkleinsc/telegraph (web workers)
-
-
-### technical downsides
-
-- cant use docker-compose offline due to HOST_IP problem
-- cant use flow due to variety of problems

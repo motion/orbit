@@ -139,13 +139,23 @@ export const styles: Object = {
   },
 }
 
+const ColorCache = new WeakMap()
+
 const Gloss = gloss({
   baseStyles: styles,
   glossProp: 'css',
   themeProp: 'theme',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,
-  toColor: color => color.toString(),
+  toColor: color => {
+    const cached = ColorCache.get(color)
+    if (cached) {
+      return cached
+    }
+    const res = color.toString()
+    ColorCache.set(color, res)
+    return res
+  },
 })
 
 window.Gloss = Gloss

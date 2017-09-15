@@ -6,6 +6,7 @@ import * as UI from '@mcro/ui'
 import type { PaneProps } from '~/types'
 import Feed from './views/feed'
 import Calendar from './views/calendar'
+import FeedItem from './views/feedItem'
 
 class BarTeamStore {
   props: PaneProps
@@ -31,40 +32,54 @@ type Props = PaneProps & { store: BarTeamStore }
 })
 export default class BarTeam extends Component<Props> {
   static defaultProps: Props
+
   render({ store, paneStore }: Props) {
+    if (!store.results.length) {
+      return null
+    }
+
+    const heights = [
+      50,
+      40,
+      300,
+      ...store.events.map(event => (event.hasData ? 150 : 50)),
+    ]
+    const getRowHeight = index => heights[index] || 100
+
     return (
       <team>
-        <section>
-          <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
-        </section>
-
-        <UI.Row
-          $section
-          spaced
-          itemProps={{ size: 1 }}
-          css={{ justifyContent: 'flex-end' }}
-        >
-          <UI.Button icon="Github">Github</UI.Button>
-          <UI.Button icon="hard">Drive</UI.Button>
-          <UI.Button icon="Google">Google Docs</UI.Button>
-          <UI.Button icon="Cal">Events</UI.Button>
-        </UI.Row>
-
-        <section>
-          <UI.Title opacity={1} marginBottom={10}>
-            Tuesday, the 12th
-          </UI.Title>
-          <Calendar />
-          <Calendar />
-        </section>
-
-        <section css={{ flex: 1 }}>
-          <Feed
-            items={store.results}
-            data={paneStore.data}
-            activeIndex={paneStore.activeIndex}
-          />
-        </section>
+        <UI.List
+          virtualized={{
+            rowHeight: getRowHeight,
+          }}
+          items={[
+            <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>,
+            <UI.Row
+              $section
+              spaced
+              itemProps={{ size: 1 }}
+              css={{ justifyContent: 'flex-end' }}
+            >
+              <UI.Button icon="Github">Github</UI.Button>
+              <UI.Button icon="hard">Drive</UI.Button>
+              <UI.Button icon="Google">Google Docs</UI.Button>
+              <UI.Button icon="Cal">Events</UI.Button>
+            </UI.Row>,
+            <section>
+              <UI.Title opacity={1} marginBottom={10}>
+                Tuesday, the 12th
+              </UI.Title>
+              <Calendar />
+              <Calendar />
+            </section>,
+            ...store.events.map(event => (
+              <FeedItem event={event} key={event.id} />
+            )),
+          ]}
+          getItem={item => ({
+            children: item,
+          })}
+        />
       </team>
     )
   }

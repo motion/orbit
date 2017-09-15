@@ -1,5 +1,9 @@
-import aphrodite from 'aphrodite-jss'
 import preset from 'jss-preset-default'
-import { create } from 'jss'
+import cache from 'jss-cache'
+import * as JSS from 'jss'
 
-export const { css, StyleSheet } = aphrodite(create(preset()))
+const JSSInstance = JSS.create(preset())
+
+export default JSSInstance
+
+window.JSS = JSSInstance

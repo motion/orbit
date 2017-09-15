@@ -9,6 +9,7 @@ micro:
     - combining multiple functionality
     - shows whats combined
     - mockup design
+  - calendar integration
 
 macro:
   - integrations:

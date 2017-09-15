@@ -6,6 +6,7 @@ import * as UI from '@mcro/ui'
 import type { PaneProps } from '~/types'
 import Feed from './views/feed'
 import Calendar from './views/calendar'
+import FeedItem from './views/feedItem'
 
 class BarTeamStore {
   props: PaneProps
@@ -32,16 +33,24 @@ type Props = PaneProps & { store: BarTeamStore }
 export default class BarTeam extends Component<Props> {
   static defaultProps: Props
 
-  heights = [50, 40, 300, 400]
-
-  getRowHeight = index => this.heights[index] || 100
-
   render({ store, paneStore }: Props) {
+    if (!store.results.length) {
+      return null
+    }
+
+    const heights = [
+      50,
+      40,
+      300,
+      ...store.events.map(event => (event.hasData ? 150 : 50)),
+    ]
+    const getRowHeight = index => heights[index] || 100
+
     return (
       <team>
         <UI.List
           virtualized={{
-            rowHeight: this.getRowHeight,
+            rowHeight: getRowHeight,
           }}
           items={[
             <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>,
@@ -63,11 +72,9 @@ export default class BarTeam extends Component<Props> {
               <Calendar />
               <Calendar />
             </section>,
-            <Feed
-              items={store.results}
-              data={paneStore.data}
-              activeIndex={paneStore.activeIndex}
-            />,
+            ...store.events.map(event => (
+              <FeedItem event={event} key={event.id} />
+            )),
           ]}
           getItem={item => ({
             children: item,

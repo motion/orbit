@@ -31,40 +31,48 @@ type Props = PaneProps & { store: BarTeamStore }
 })
 export default class BarTeam extends Component<Props> {
   static defaultProps: Props
+
+  heights = [50, 40, 300, 400]
+
+  getRowHeight = index => this.heights[index] || 100
+
   render({ store, paneStore }: Props) {
     return (
       <team>
-        <section>
-          <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
-        </section>
-
-        <UI.Row
-          $section
-          spaced
-          itemProps={{ size: 1 }}
-          css={{ justifyContent: 'flex-end' }}
-        >
-          <UI.Button icon="Github">Github</UI.Button>
-          <UI.Button icon="hard">Drive</UI.Button>
-          <UI.Button icon="Google">Google Docs</UI.Button>
-          <UI.Button icon="Cal">Events</UI.Button>
-        </UI.Row>
-
-        <section>
-          <UI.Title opacity={1} marginBottom={10}>
-            Tuesday, the 12th
-          </UI.Title>
-          <Calendar />
-          <Calendar />
-        </section>
-
-        <section css={{ flex: 1 }}>
-          <Feed
-            items={store.results}
-            data={paneStore.data}
-            activeIndex={paneStore.activeIndex}
-          />
-        </section>
+        <UI.List
+          virtualized={{
+            rowHeight: this.getRowHeight,
+          }}
+          items={[
+            <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>,
+            <UI.Row
+              $section
+              spaced
+              itemProps={{ size: 1 }}
+              css={{ justifyContent: 'flex-end' }}
+            >
+              <UI.Button icon="Github">Github</UI.Button>
+              <UI.Button icon="hard">Drive</UI.Button>
+              <UI.Button icon="Google">Google Docs</UI.Button>
+              <UI.Button icon="Cal">Events</UI.Button>
+            </UI.Row>,
+            <section>
+              <UI.Title opacity={1} marginBottom={10}>
+                Tuesday, the 12th
+              </UI.Title>
+              <Calendar />
+              <Calendar />
+            </section>,
+            <Feed
+              items={store.results}
+              data={paneStore.data}
+              activeIndex={paneStore.activeIndex}
+            />,
+          ]}
+          getItem={item => ({
+            children: item,
+          })}
+        />
       </team>
     )
   }

@@ -1,5 +1,13 @@
-import aphrodite from 'aphrodite-jss'
-import preset from 'jss-preset-default'
-import { create } from 'jss'
+import jssCache from 'jss-cache'
+import jssNested from 'jss-nested'
+import jssDefaultUnit from 'jss-default-unit'
+import jssPropsSort from 'jss-props-sort'
+import * as JSS from 'jss'
 
-export const { css, StyleSheet } = aphrodite(create(preset()))
+const jss = JSS.create()
+
+jss.use(jssNested(), jssDefaultUnit(), jssPropsSort())
+
+export default jss
+
+window.JSS = jss

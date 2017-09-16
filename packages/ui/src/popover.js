@@ -52,8 +52,6 @@ export type Props = {
   showForgiveness?: boolean,
   // padding from edge of window
   edgePadding: number,
-  // sway towards mouse
-  swayX?: boolean,
   // pretty much what it says, for use with closeOnClick
   keepOpenOnClickTarget?: boolean,
   // callback after close
@@ -84,7 +82,7 @@ const calcForgiveness = (forgiveness, distance) => forgiveness
 
 @injectTheme
 @view.ui
-class Popover extends React.Component<Props> {
+class Popover extends React.PureComponent<Props> {
   static acceptsHovered = 'open'
   static defaultProps = {
     edgePadding: 5,
@@ -122,18 +120,19 @@ class Popover extends React.Component<Props> {
     this.curProps = this.props
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = nextProps => {
     this.curProps = nextProps
     this.setPosition()
   }
 
-  componentWillUpdate(nextProps) {
+  componentWillUpdate = nextProps => {
     this.setOpenOrClosed(nextProps)
     this.setTarget()
   }
 
   componentDidMount() {
-    const { openOnClick, closeOnClick, closeOnEsc, open, swayX } = this.curProps
+    this.mounted = true
+    const { openOnClick, closeOnClick, closeOnEsc, open } = this.curProps
 
     this.listenForResize()
     this.setTarget()
@@ -175,9 +174,9 @@ class Popover extends React.Component<Props> {
     }
   }
 
-  listenForResize = () => {
-    const updatePosition = throttle(this.setPosition, 32)
-    const updatePositionInactive = debounce(this.setPosition, 300)
+  listenForResize() {
+    const updatePosition = throttle(() => this.setPosition(), 32)
+    const updatePositionInactive = debounce(() => this.setPosition(), 300)
     this.on(window, 'resize', () => {
       if (this.showPopover) {
         updatePosition()
@@ -187,32 +186,9 @@ class Popover extends React.Component<Props> {
     })
   }
 
-  swayEvent = null
-
-  startSwaying = () => {
-    if (this.props.swayX) {
-      this.swayEvent = this.on(
-        window,
-        'mousemove',
-        throttle(event => {
-          if (this.showPopover) {
-            // log('sawy event', event)
-          }
-        }, 32)
-      )
-    }
-  }
-
-  stopSwaying = () => {
-    if (this.swayEvent) {
-      this.swayEvent.dispose()
-    }
-  }
-
-  open = () => {
+  open() {
     this.setPosition(() => {
       this.setState({ isOpen: true }, () => {
-        this.startSwaying()
         if (this.curProps.onOpen) {
           this.curProps.onOpen()
         }
@@ -222,7 +198,6 @@ class Popover extends React.Component<Props> {
 
   close = (): Promise => {
     return new Promise(resolve => {
-      this.stopSwaying()
       this.setState({ closing: true }, () => {
         if (this.curProps.onClose) {
           this.curProps.onClose()
@@ -249,8 +224,11 @@ class Popover extends React.Component<Props> {
       e.stopPropagation()
       this.isClickingTarget = true
       if (typeof this.curProps.open === 'undefined') {
-        if (this.state.isOpen) this.close()
-        else this.open()
+        if (this.state.isOpen) {
+          this.close()
+        } else {
+          this.open()
+        }
       }
       this.setTimeout(() => {
         this.isClickingTarget = false
@@ -258,7 +236,7 @@ class Popover extends React.Component<Props> {
     })
   }
 
-  listenForClickAway = () => {
+  listenForClickAway() {
     this.on(window, 'click', e => {
       const { showPopover, isClickingTarget, keepOpenOnClickTarget } = this
       const { open, closeOnClick } = this.curProps
@@ -281,19 +259,20 @@ class Popover extends React.Component<Props> {
     })
   }
 
-  stopListeningUntilNextMouseEnter = async () => {
+  async stopListeningUntilNextMouseEnter() {
     await this.clearHovered()
     this.removeListenForHover()
     this.close()
     this.setTimeout(this.listenForHover, 100)
   }
 
-  clearHovered = async () =>
-    new Promise(resolve =>
+  clearHovered() {
+    return new Promise(resolve =>
       this.setState({ menuHovered: false, targetHovered: false }, resolve)
     )
+  }
 
-  setTarget = () => {
+  setTarget() {
     this.target = getTarget(this.targetRef || this.curProps.target)
   }
 
@@ -310,7 +289,7 @@ class Popover extends React.Component<Props> {
   }
 
   // transitions between open and closed
-  setOpenOrClosed = nextProps => {
+  setOpenOrClosed(nextProps) {
     if (nextProps.open === this.props.open) {
       return
     }
@@ -327,7 +306,7 @@ class Popover extends React.Component<Props> {
     }
   }
 
-  setPosition = (callback?: Function) => {
+  setPosition(callback?: Function) {
     clearTimeout(this.positionTimeout)
     this.positionTimeout = this.setTimeout(() => {
       if (!this.unmounted) {
@@ -540,14 +519,14 @@ class Popover extends React.Component<Props> {
     return { arrowTop, top, maxHeight }
   }
 
-  handleOverlayClick = (event: MouseEvent) => {
+  handleOverlayClick(event: MouseEvent) {
     event.stopPropagation()
     this.close()
   }
 
   listeners = []
 
-  listenForHover = () => {
+  listenForHover() {
     if (!(this.target instanceof HTMLElement)) {
       return
     }
@@ -560,7 +539,7 @@ class Popover extends React.Component<Props> {
     }
   }
 
-  removeListenForHover = () => {
+  removeListenForHover() {
     for (const listener of this.listeners) {
       listener.dispose()
     }
@@ -572,7 +551,7 @@ class Popover extends React.Component<Props> {
     enter: { target: null, menu: null },
   }
 
-  addHoverListeners = (name, node) => {
+  addHoverListeners(name, node) {
     if (!(node instanceof HTMLElement)) {
       console.log('no node!', name)
       return
@@ -620,7 +599,7 @@ class Popover extends React.Component<Props> {
   }
 
   // hover helpers
-  hoverStateSet = (name, val) => {
+  hoverStateSet(name, val) {
     const { openOnHover, onMouseEnter } = this.curProps
     const setter = () => {
       // this.lastEvent[val ? 'enter' : 'leave'][name] = Date.now()
@@ -655,7 +634,7 @@ class Popover extends React.Component<Props> {
 
   overlayRef = ref => {
     if (ref) {
-      this.on(ref, 'contextmenu', this.handleOverlayClick)
+      this.on(ref, 'contextmenu', e => this.handleOverlayClick(e))
     }
   }
 
@@ -664,7 +643,7 @@ class Popover extends React.Component<Props> {
     const { openOnHover, open, openOnClick } = this.props
     const openUndef = typeof open === 'undefined'
     return (
-      open ||
+      (this.mounted && open) ||
       isOpen ||
       (openUndef &&
         ((openOnHover && this.isHovered) || (openOnClick && isOpen)))
@@ -696,7 +675,6 @@ class Popover extends React.Component<Props> {
     shadow,
     showForgiveness,
     style,
-    swayX,
     target,
     theme,
     top: _top,
@@ -750,7 +728,7 @@ class Popover extends React.Component<Props> {
               if={overlay}
               ref={this.overlayRef}
               $overlayShown={showPopover && !closing}
-              onClick={this.handleOverlayClick}
+              onClick={e => this.handleOverlayClick(e)}
             />
             <popover
               {...popoverProps}
@@ -791,9 +769,11 @@ class Popover extends React.Component<Props> {
                 elevation={elevation}
                 background={background}
               >
-                {typeof children === 'function'
-                  ? children(showPopover)
-                  : children}
+                {typeof children === 'function' ? (
+                  children(showPopover)
+                ) : (
+                  children
+                )}
               </Surface>
             </popover>
           </container>

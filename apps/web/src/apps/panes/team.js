@@ -3,9 +3,10 @@ import * as React from 'react'
 import { view, watch, Component } from '@mcro/black'
 import { Event } from '~/app'
 import * as UI from '@mcro/ui'
+import * as Pane from '~/apps/panes/pane'
 import type { PaneProps } from '~/types'
-import Feed from './views/feed'
 import Calendar from './views/calendar'
+import FeedItem from './views/feedItem'
 
 class BarTeamStore {
   props: PaneProps
@@ -31,56 +32,61 @@ type Props = PaneProps & { store: BarTeamStore }
 })
 export default class BarTeam extends Component<Props> {
   static defaultProps: Props
+
   render({ store, paneStore }: Props) {
+    console.log('render team', store.results)
+    const heights = [55, 40, 280, ...store.results.map(event => event.height)]
+    const getRowHeight = index => heights[index] || 100
+
     return (
-      <team>
-        <section>
-          <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
-        </section>
-
-        <UI.Row
-          $section
-          spaced
-          itemProps={{ size: 1 }}
-          css={{ justifyContent: 'flex-end' }}
-        >
-          <UI.Button icon="Github">Github</UI.Button>
-          <UI.Button icon="hard">Drive</UI.Button>
-          <UI.Button icon="Google">Google Docs</UI.Button>
-          <UI.Button icon="Cal">Events</UI.Button>
-        </UI.Row>
-
-        <section>
-          <UI.Title opacity={1} marginBottom={10}>
-            Tuesday, the 12th
-          </UI.Title>
-          <Calendar />
-          <Calendar />
-        </section>
-
-        <section css={{ flex: 1 }}>
-          <Feed
-            items={store.results}
-            data={paneStore.data}
-            activeIndex={paneStore.activeIndex}
-          />
-        </section>
-      </team>
+      <Pane.Card>
+        <UI.List
+          virtualized={{
+            rowHeight: getRowHeight,
+          }}
+          items={[
+            () => (
+              <section>
+                <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
+              </section>
+            ),
+            () => (
+              <section>
+                <UI.Row
+                  spaced
+                  itemProps={{ size: 1 }}
+                  css={{ justifyContent: 'flex-end' }}
+                >
+                  <UI.Button icon="Github">Github</UI.Button>
+                  <UI.Button icon="hard">Drive</UI.Button>
+                  <UI.Button icon="Google">Google Docs</UI.Button>
+                  <UI.Button icon="Cal">Events</UI.Button>
+                </UI.Row>
+              </section>
+            ),
+            () => (
+              <section>
+                <UI.Title opacity={1} marginBottom={10}>
+                  Tuesday, the 12th
+                </UI.Title>
+                <Calendar />
+                <Calendar />
+              </section>
+            ),
+            ...store.results.map(event => () => (
+              <FeedItem event={event} key={event.id} />
+            )),
+          ]}
+          getItem={item => item()}
+        />
+      </Pane.Card>
     )
   }
 
   static style = {
-    team: {
-      minWidth: 200,
-      padding: [5, 15],
-      borderRadius: 4,
-      flex: 1,
-      overflowY: 'scroll',
-      zIndex: 100000000,
-      position: 'relative',
-    },
     section: {
       padding: [8, 10],
+      justifyContent: 'center',
     },
   }
 }

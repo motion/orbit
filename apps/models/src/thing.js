@@ -12,7 +12,7 @@ export type ThingType = typeof methods & {
   body?: string,
   data?: Object,
   integration: 'github',
-  type: 'issue',
+  type: string,
   parentId?: string,
   id?: string,
   createdAt: string,

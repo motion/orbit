@@ -48,7 +48,7 @@ class BarMainStore {
 
   get things(): Array<PaneResult> {
     return fuzzy(this.topThings || [], this.search)
-      .slice(0, this.search.length ? 20 : 8)
+      .slice(0, this.search.length ? 200 : 8)
       .map(thingToResult)
   }
 
@@ -198,8 +198,19 @@ export default class BarMain extends React.Component<> {
   }
 
   hasContent = result => result && result.data && result.data.body
-  getRowHeight = i =>
-    this.hasContent(this.props.mainStore.results[i]) ? 100 : 38
+  getResult = i => this.props.mainStore.results[i]
+
+  getRowHeight = i => {
+    const result = this.getResult(i)
+    return this.hasContent(result)
+      ? 100
+      : result.data && result.data.updated ? 58 : 38
+  }
+
+  getDate = result =>
+    result.data && result.data.updated
+      ? UI.Date.format(result.data.updated)
+      : ''
 
   render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
     return (
@@ -221,16 +232,13 @@ export default class BarMain extends React.Component<> {
             highlight: () => index === paneStore.activeIndex,
             primary: result.title,
             primaryEllipse: !this.hasContent(result),
-            children: (
+            children: [
               <UI.Text if={result.data} lineHeight={20} opacity={0.5}>
-                {result.data.updatedAt ? (
-                  UI.Date.format(result.data.updatedAt) + ' · '
-                ) : (
-                  ''
-                )}
+                {this.getDate(result) + ' · '}
                 {(result.data.body && result.data.body.slice(0, 120)) || ''}
-              </UI.Text>
-            ),
+              </UI.Text>,
+              <UI.Text if={!result.data}>{this.getDate(result)}</UI.Text>,
+            ].filter(Boolean),
             iconAfter: true,
             iconProps: {
               style: {

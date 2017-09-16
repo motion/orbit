@@ -16,10 +16,8 @@ export const Job = Models.Job
 export const Setting = Models.Setting
 export const Event = Models.Event
 
-let App
-
 function start() {
-  App = new AppStore({
+  return new AppStore({
     config: {
       ...Constants.DB_CONFIG,
       adapter,
@@ -28,9 +26,10 @@ function start() {
     models: Models,
     services: Services,
   })
-  window.App = App
-  return App
 }
+
+let App = start()
+window.App = App
 
 if (!App) {
   start()
@@ -41,7 +40,7 @@ if (module && module.hot) {
   module.hot.accept('@mcro/models', () => {
     if (App) {
       App.dispose()
-      start()
+      App = start()
     }
   })
 

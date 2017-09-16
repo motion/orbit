@@ -33,6 +33,8 @@ export default class Text extends React.PureComponent<Props> {
 
   componentWillMount() {
     this.handleProps(this.props)
+    this.handleKeydown = this.handleKeydown.bind(this)
+    this.getRef = this.getRef.bind(this)
   }
 
   componentWillReceiveProps(nextProps: Object) {
@@ -93,7 +95,7 @@ export default class Text extends React.PureComponent<Props> {
     return (this.node && this.node.innerText) || ''
   }
 
-  handleKeydown = (event: Event) => {
+  handleKeydown(event: Event) {
     const { onFinishEdit, onCancelEdit, editable, onKeyDown } = this.props
     if (editable) {
       const code = keycode(event)
@@ -111,7 +113,7 @@ export default class Text extends React.PureComponent<Props> {
     }
   }
 
-  getRef = (node: any) => {
+  getRef(node: any) {
     if (node) {
       this.node = node
       if (this.props.getRef) {
@@ -146,6 +148,8 @@ export default class Text extends React.PureComponent<Props> {
     placeholder,
     lineHeight,
     lines,
+    attach,
+    html,
     ...props
   }: Props) {
     const eventProps = {
@@ -155,7 +159,12 @@ export default class Text extends React.PureComponent<Props> {
       onFocus,
       onBlur,
     }
-    let inner = children
+
+    let inner = html ? (
+      <span dangerouslySetInnerHTML={{ __html: html }} />
+    ) : (
+      children
+    )
 
     if (lines) {
       if (!children) {
@@ -185,6 +194,7 @@ export default class Text extends React.PureComponent<Props> {
         css={{ ...props, ...css }}
         $ellipseText={ellipse}
         {...eventProps}
+        {...attach}
       >
         {!ellipse && inner}
         <span if={ellipse} $$ellipse>

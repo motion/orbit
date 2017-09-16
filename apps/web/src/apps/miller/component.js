@@ -1,52 +1,33 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { isEqual } from 'lodash'
-import { HotKeys } from '~/helpers'
 
-@view.attach('millerState')
+@view.attach('millerStore')
 @view
-export default class Miller extends React.Component {
+export default class Miller {
   static defaultProps = {
     onKeyActions: _ => _,
   }
 
-  state = {
-    schema: null,
-  }
-
   componentWillMount() {
-    const { onKeyActions, millerState } = this.props
-    onKeyActions(millerState.keyActions)
-    this.setState({ schema: millerState.schema })
-  }
-
-  componentWillReceiveProps({ millerState }) {
-    if (!isEqual(millerState.schema, this.state.schema)) {
-      // :car: setTimeout will make the next render happen after list updates highlight position
-      this.setTimeout(() => {
-        this.setState({ schema: millerState.schema })
-      })
-    }
+    const { onKeyActions, millerStore } = this.props
+    onKeyActions(millerStore.keyActions)
   }
 
   onPopoverClose = () => {
-    this.props.millerState.activeAction = null
+    this.props.millerStore.activeAction = null
   }
 
-  render(
-    { pane, store, millerState, onKeyActions, panes, animate },
-    { schema }
-  ) {
+  render({ pane, store, millerStore, onKeyActions, panes, animate }) {
     const Pane = pane
     const transX = animate ? store.translateX : 0
     const PopoverContent =
-      millerState.activeAction && millerState.activeAction.popover
+      millerStore.activeAction && millerStore.activeAction.popover
 
     const content = (
       <miller css={{ flex: 1 }}>
         <columns $$row $transX={transX}>
-          {millerState.schema.map((pane, index) => {
+          {millerStore.schema.map((pane, index) => {
             return (
               <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
                 <Pane
@@ -60,13 +41,13 @@ export default class Miller extends React.Component {
           })}
         </columns>
         <UI.Popover
-          if={millerState.activeAction}
-          open={true}
+          if={millerStore.activeAction}
+          open
           theme="light"
           onClose={this.onPopoverClose}
           borderRadius={5}
           elevation={3}
-          target={`.target-${millerState.activeAction.name}`}
+          target={`.target-${millerStore.activeAction.name}`}
           overlay="transparent"
           distance={14}
         >
@@ -79,12 +60,13 @@ export default class Miller extends React.Component {
       return content
     }
 
-    return <HotKeys handlers={store.keyActions}>{content}</HotKeys>
+    return content
   }
 
   static style = {
     pane: {
       height: '100%',
+      overflow: 'hidden',
     },
     notFirst: {
       flex: 1,

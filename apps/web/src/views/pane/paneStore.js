@@ -16,7 +16,7 @@ export default class PaneStore {
   }
 
   get state() {
-    return this.props.millerState
+    return this.props.millerStore
   }
 
   get col() {

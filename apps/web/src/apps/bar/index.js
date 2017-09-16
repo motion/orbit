@@ -5,28 +5,8 @@ import * as UI from '@mcro/ui'
 import Actions from '../panes/pane/actions'
 import BarStore from './store'
 import * as PaneTypes from '../panes'
-import { Miller, MillerState } from '../miller'
+import { Miller, MillerStore } from '../miller'
 import Pane from '~/views/pane'
-
-const PANE_TYPES = {
-  main: PaneTypes.Main,
-  message: PaneTypes.Message,
-  setup: PaneTypes.Setup,
-  inbox: PaneTypes.Threads,
-  browse: PaneTypes.Browse,
-  feed: PaneTypes.Feed,
-  notifications: PaneTypes.Notifications,
-  login: PaneTypes.Login,
-  issue: PaneTypes.Task,
-  orbit: PaneTypes.Orbit,
-  task: PaneTypes.Task,
-  calendar: PaneTypes.Calendar,
-  doc: PaneTypes.Doc,
-  test: PaneTypes.Test,
-  newIssue: PaneTypes.Code.NewIssue,
-  integrations: PaneTypes.Integrations,
-  team: PaneTypes.Team,
-}
 
 @view.ui
 class BottomActions {
@@ -70,11 +50,11 @@ const inputStyle = {
   fontSize: 32,
 }
 
-@view.provide({ millerState: MillerState, barStore: BarStore })
+@view.provide({ millerStore: MillerStore, barStore: BarStore })
 @view
 export default class BarPage {
   componentWillMount() {
-    this.props.barStore.setMillerState(this.props.millerState)
+    this.props.barStore.setMillerStore(this.props.millerStore)
   }
 
   render({ barStore }) {
@@ -103,7 +83,7 @@ export default class BarPage {
           </header>
           <Miller
             pane={Pane}
-            panes={PANE_TYPES}
+            panes={PaneTypes}
             onKeyActions={barStore.ref('millerKeyActions').set}
           />
           <BottomActions

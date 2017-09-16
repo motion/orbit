@@ -333,8 +333,11 @@ export default class Model {
     this.connected = true
   }
 
-  onConnection = () => {
+  onConnection = (): Promise<void> => {
     return new Promise((resolve, reject) => {
+      if (this.connected) {
+        resolve()
+      }
       this.off = autorun(() => {
         if (this.connected) {
           resolve()
@@ -375,7 +378,7 @@ export default class Model {
   syncQuery = (
     queryish: Queryish,
     options: Object = { live: true, retry: true }
-  ) => {
+  ): Promise<boolean> => {
     let query = queryish
     if (query.query) {
       query = query.query
@@ -394,7 +397,7 @@ export default class Model {
       return Promise.resolve(true)
     }
 
-    console.log('>>', QUERY_KEY)
+    // console.log('>>', QUERY_KEY)
 
     const firstReplication = this._collection.sync({
       query,
@@ -428,7 +431,7 @@ export default class Model {
 
           if (done && !resolved) {
             console.log('<<', QUERY_KEY)
-            resolve()
+            resolve(true)
 
             // cleanup
             resolved = true

@@ -8,7 +8,7 @@ export default class PaneCard {
       <card $chromeless={chromeless} {...props}>
         <UI.Theme name="light">
           <task>
-            <heading>
+            <heading if={title}>
               <headingcontent>
                 <UI.Title $title display="block" size={1.2}>
                   {title}
@@ -19,7 +19,6 @@ export default class PaneCard {
                 </service>
               </headingcontent>
             </heading>
-
             {children}
           </task>
         </UI.Theme>
@@ -33,6 +32,8 @@ export default class PaneCard {
       padding: 8,
       background: [250, 250, 250, 1],
       boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.1]]],
+      overflow: 'hidden',
+      overflowY: 'scroll',
     },
     task: {
       flex: 1,

@@ -11,8 +11,16 @@ if (module.hot) {
   })
 }
 
+type Options = {
+  config: Object,
+  models: Object,
+  services: Object,
+}
+
 @store
 export default class AppStore {
+  config: ?Object
+  models: ?Object
   database: Database
   started = false
   connected = false
@@ -24,9 +32,9 @@ export default class AppStore {
   mountedVersion = 0
   stores = null
   views = null
-  services = null
+  serviceObjects: ?Object = null
 
-  constructor({ config, models, services }) {
+  constructor({ config, models, services }: Options) {
     this.config = config
     this.models = models
     this.serviceObjects = services
@@ -39,7 +47,7 @@ export default class AppStore {
     view.provide.on('store.unmount', this.unmount('stores'))
   }
 
-  start = async quiet => {
+  start = async (quiet?: boolean) => {
     if (!quiet) {
       console.log(
         '%cUse App in your console to access models, stores, etc',
@@ -51,31 +59,32 @@ export default class AppStore {
     await this.database.start({
       modelOptions: {
         debug: true,
-        autoSync: true,
+        // autoSync: true,
         asyncFirstSync: true,
       },
     })
     this.connected = true
     this.catchErrors()
     this.trackMounts()
-    this.setupServices()
     if (!quiet) {
       console.timeEnd('start')
     }
     this.started = true
   }
 
-  dispose = () => {
-    this.database && this.database.dispose()
+  get services(): ?Object {
+    if (!this.serviceObjects) {
+      return null
+    }
+    const services = {}
+    for (const serviceName of Object.keys(this.serviceObjects)) {
+      services[serviceName] = new this.serviceObjects[serviceName](CurrentUser)
+    }
+    return services
   }
 
-  setupServices = () => {
-    this.services = {}
-    for (const serviceName of Object.keys(this.serviceObjects)) {
-      this.services[serviceName] = new this.serviceObjects[serviceName](
-        CurrentUser
-      )
-    }
+  dispose = () => {
+    this.database && this.database.dispose()
   }
 
   trackMounts = () => {
@@ -142,16 +151,20 @@ export default class AppStore {
     this.errors = []
   }
 
+  clearLocalData() {
+    Object.keys(this.models).forEach(async name => {
+      const model = this.models[name]
+      await model.database.remove()
+      console.log('Removed model local data', name)
+    })
+  }
+
   clearAllData() {
-    console.log(this.models)
     Object.keys(this.models).forEach(async name => {
       const model = this.models[name]
       const models = await model.getAll()
       await Promise.all(models.map(model => model.remove()))
       console.log('Removed all models', name)
     })
-
-    // Setting.getAll().then(x => x.remove())
-    // Setting.getAll().then(x => x.remove())
   }
 }

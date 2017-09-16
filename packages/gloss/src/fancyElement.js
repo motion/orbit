@@ -10,9 +10,12 @@ const VALID_TAGS: { [string]: boolean } = tags.reduce(
 )
 const IS_PROD = process.env.NODE_ENV === 'production'
 
-const arrayOfObjectsToObject = (arr: Array<Object>) => {
+const arrayOfObjectsToObject = (arr: Array<?Object>) => {
   let res = {}
   for (let i = 0; i < arr.length; i++) {
+    if (!arr[i]) {
+      continue
+    }
     deepExtend(res, arr[i])
   }
   return res
@@ -25,21 +28,10 @@ const TAG_NAME_MAP = {
   head: 'div',
 }
 const $ = '$'
-const dynamicCache = {}
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
   const { baseStyles, options, css } = Gloss
-
-  const getDynamicStyle = styles => {
-    const key = JSON.stringify(styles)
-    if (dynamicCache[key]) {
-      return dynamicCache[key]
-    }
-    const niceStyles = css(styles)
-    dynamicCache[key] = JSS.createRule(niceStyles)
-    return dynamicCache[key]
-  }
 
   // Fast object reduce
   function objToCamel(style) {
@@ -76,14 +68,14 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     const { theme } = this
     const { glossUID } = this.constructor
 
-    const addStyle = (obj, key, val, checkTheme) => {
-      const style = obj.getRule ? obj.getRule(key) : obj[key]
+    const addStyle = (obj, key, val, checkTheme): ?Object => {
+      const style = obj.getRule ? obj.getRule(key) || obj[key] : obj[key]
       if (!style) {
-        return
+        return null
       }
       // dynamic
       if (typeof style === 'function') {
-        finalStyles.push(getDynamicStyle(style(val)))
+        return css(style(val))
       } else {
         finalStyles.push(style)
       }
@@ -105,13 +97,18 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     if (propNames) {
       for (const prop of propNames) {
         const val = props && props[prop]
+        // style actions
+        if (val === false || val === null || val === undefined) {
+          // ignore most falsy values (except 0)
+          continue
+        }
         if (prop === 'style') {
           style = { ...style, ...val }
           continue
         }
         // non-style actions
         if (options.glossProp && prop === options.glossProp) {
-          if (Object.keys(val).length) {
+          if (val && Object.keys(val).length) {
             // css={}
             const extraStyle = css(val, { snakeCase: false })
             style = { ...style, ...extraStyle }
@@ -133,13 +130,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           finalProps[prop] = val
           continue
         }
-        // style actions
-        if (val === false || val === null || val === undefined) {
-          // ignore most falsy values (except 0)
-          continue
-        }
         if (baseStyles) {
-          // $$style
+          // $$style props
           const isParentStyle = prop[1] === $
           if (isParentStyle) {
             addStyle(baseStyles, prop.slice(2), val, false)
@@ -147,8 +139,16 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           }
         }
         if (styles) {
-          // $style
-          addStyle(styles, `${prop.slice(1)}--${glossUID}`, val, true)
+          // $style props
+          const inlineStyle = addStyle(
+            styles,
+            `${prop.slice(1)}--${glossUID}`,
+            val,
+            true
+          )
+          if (inlineStyle) {
+            style = { ...style, ...inlineStyle }
+          }
         }
       }
     }

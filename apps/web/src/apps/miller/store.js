@@ -78,7 +78,8 @@ export default class MillerStore {
             this.setSchema(this.activeCol + 1, this.activeItem)
           })
         }
-      }
+      },
+      true
     )
 
     this.react(
@@ -91,7 +92,8 @@ export default class MillerStore {
         ) {
           this.setSchema(this.activeCol + 1, this.activeItem)
         }
-      }
+      },
+      true
     )
 
     this.on(window, 'keydown', e => {

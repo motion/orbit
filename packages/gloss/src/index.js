@@ -1,6 +1,6 @@
 // @flow
 import fancyElement from './fancyElement'
-import motionStyle from '@mcro/css'
+import css from '@mcro/css'
 import JSS from './stylesheet'
 import * as Helpers_ from '@mcro/css'
 
@@ -35,7 +35,7 @@ function uid() {
 
 export class Gloss {
   options: Options
-  niceStyle: any
+  css: (a: Object) => Object
   baseStyles: ?Object
   createElement: Function
   Helpers: Object = Helpers
@@ -43,7 +43,7 @@ export class Gloss {
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
-    this.css = motionStyle(opts)
+    this.css = css(opts)
     this.helpers = this.css.helpers
     this.stylesheet = JSS.createStyleSheet()
     this.stylesheet.attach()
@@ -52,7 +52,7 @@ export class Gloss {
     this.decorator.createElement = this.createElement
   }
 
-  decorator = (Child: Function | string) => {
+  decorator = (Child: Function) => {
     if (Child.prototype) {
       const { attachStyles, css } = this
 
@@ -146,34 +146,30 @@ export class Gloss {
     }
   }
 
-  applyStyles = (styles: Object, getter: Function) => {
-    return Object.keys(styles).reduce(
-      (acc, cur) => ({
-        ...acc,
-        [cur]:
-          typeof styles[cur] === 'function'
-            ? styles[cur]
-            : getter(cur, styles[cur]),
-      }),
-      {}
-    )
-  }
-
   // runs niceStyleSheet on non-function styles
-  attachStyles = (childKey, styles: any, force = false): void => {
+  attachStyles = (
+    childKey: string,
+    styles: any,
+    force: boolean = false
+  ): void => {
     if (!styles) {
       return
     }
-    return this.applyStyles(styles, (key, style) => {
+    for (const key of Object.keys(styles)) {
+      const style = styles[key]
       const stylesKey = childKey ? `${key}--${childKey}` : key
+      if (typeof style === 'function') {
+        this.stylesheet[stylesKey] = style
+        continue
+      }
       if (force) {
         this.stylesheet.deleteRule(stylesKey)
       }
       if (!this.stylesheet.getRule(stylesKey)) {
         const niceStyle = this.css(style)
-        return this.stylesheet.addRule(stylesKey, niceStyle)
+        this.stylesheet.addRule(stylesKey, niceStyle)
       }
-    })
+    }
   }
 }
 

@@ -16,7 +16,7 @@ type Props = {
   attach?: Object,
   background?: Color,
   bordered?: boolean,
-  children?: React.Element<any>,
+  children?: React.Element<any> | string,
   className?: string,
   from: 'top' | 'bottom' | 'left' | 'right',
   showOverlay?: boolean,
@@ -36,7 +36,7 @@ type Props = {
 }
 
 @view.ui
-export default class Drawer extends React.Component<Props> {
+export default class Drawer extends React.PureComponent<Props> {
   static defaultProps = {
     size: 400,
     from: 'left',
@@ -80,10 +80,10 @@ export default class Drawer extends React.Component<Props> {
     return (
       <drawer>
         <Surface
+          style={panelStyle}
           $panel
           $from={from}
           $panelOpen={open}
-          style={panelStyle}
           className={className}
           {...props}
         >

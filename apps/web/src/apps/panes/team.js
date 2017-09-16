@@ -56,6 +56,12 @@ export default class BarTeam extends Component<Props> {
     }
 
     return (
+      <UI.Drawer from="bottom" open>
+        something
+      </UI.Drawer>
+    )
+
+    return (
       <Pane.Card>
         <UI.List
           virtualized={{

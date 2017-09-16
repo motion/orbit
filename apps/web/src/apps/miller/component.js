@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { HotKeys } from '~/helpers'
 
 @view.attach('millerStore')
 @view
@@ -61,7 +60,7 @@ export default class Miller {
       return content
     }
 
-    return <HotKeys handlers={store.keyActions}>{content}</HotKeys>
+    return content
   }
 
   static style = {

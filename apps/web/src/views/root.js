@@ -68,12 +68,6 @@ export default class Root extends React.Component {
         </aboveredbox>
       )
     }
-    return (
-      <HotKeys keyMap={rootStore.shortcuts}>
-        <HotKeys attach={window} focused handlers={rootStore.actions}>
-          {this.props.children}
-        </HotKeys>
-      </HotKeys>
-    )
+    return this.props.children
   }
 }

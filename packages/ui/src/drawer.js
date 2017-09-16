@@ -63,6 +63,7 @@ export default class Drawer extends React.PureComponent<Props> {
     theme,
     scrollable,
     closePortal,
+    style,
     ...props
   }: Props) {
     const unit = +percent ? '%' : 'px'
@@ -80,7 +81,7 @@ export default class Drawer extends React.PureComponent<Props> {
     return (
       <drawer>
         <Surface
-          style={panelStyle}
+          style={{ ...style, ...panelStyle }}
           $panel
           $from={from}
           $panelOpen={open}

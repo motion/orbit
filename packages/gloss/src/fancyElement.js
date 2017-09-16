@@ -97,16 +97,16 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     if (propNames) {
       for (const prop of propNames) {
         const val = props && props[prop]
-        // style actions
+        // ignore most falsy values (except 0)
         if (val === false || val === null || val === undefined) {
-          // ignore most falsy values (except 0)
           continue
         }
+        // style={}
         if (prop === 'style') {
           style = { ...style, ...val }
           continue
         }
-        // non-style actions
+        // css={}
         if (options.glossProp && prop === options.glossProp) {
           if (val && Object.keys(val).length) {
             // css={}
@@ -115,31 +115,32 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           }
           continue
         }
+        // ensure before tagName={} so it passes tagName down
+        if (prop[0] !== $) {
+          // pass props down if not glossProp style prop
+          finalProps[prop] = val
+          continue
+        }
+        // tagName={}
         if (
           options.tagName &&
           prop === options.tagName &&
           isTag &&
           typeof val === 'string'
         ) {
-          // tagName={}
           type = val
           continue
         }
-        if (prop[0] !== $) {
-          // pass props down if not glossProp style prop
-          finalProps[prop] = val
-          continue
-        }
+        // $$style={}
         if (baseStyles) {
-          // $$style props
           const isParentStyle = prop[1] === $
           if (isParentStyle) {
             addStyle(baseStyles, prop.slice(2), val, false)
             continue
           }
         }
+        // $style={}
         if (styles) {
-          // $style props
           const inlineStyle = addStyle(
             styles,
             `${prop.slice(1)}--${glossUID}`,
@@ -153,7 +154,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       }
     }
 
-    finalProps.style = style
+    if (style) {
+      finalProps.style = style
+    }
 
     // styles => props
     if (finalStyles.length) {
@@ -182,8 +185,8 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         // children get a style prop
         if (props) {
           finalProps.style = arrayOfObjectsToObject([
-            finalProps.style,
             ...finalStyles.map(style => style && objToCamel(style.style)),
+            finalProps.style,
           ])
         }
       }

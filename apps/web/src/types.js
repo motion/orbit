@@ -1,6 +1,5 @@
-import typeof PaneStore from '~/views/pane/paneStore'
-
 // @flow
+import typeof PaneStore from '~/views/pane/paneStore'
 
 export type PaneProps = {
   search: string,
@@ -13,7 +12,7 @@ export type PaneProps = {
 export type PaneResult = {
   id?: string | number,
   title: string,
-  type: string,
+  type?: string,
   icon?: string,
   data?: Object,
   category?: string,

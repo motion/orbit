@@ -27,5 +27,5 @@ export async function start(quiet) {
   render()
 }
 
-start(App.started, App.started)
+start(App.started)
 window.start = start

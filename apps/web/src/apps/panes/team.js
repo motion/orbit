@@ -4,9 +4,13 @@ import { view, watch, Component } from '@mcro/black'
 import { Event } from '~/app'
 import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/panes/pane'
-import type { PaneProps } from '~/types'
+import type { PaneProps, PaneResult } from '~/types'
 import Calendar from './views/calendar'
 import FeedItem from './views/feedItem'
+
+const eventToPaneResult = (event: Event): PaneResult => ({
+  title: event.title,
+})
 
 class BarTeamStore {
   props: PaneProps
@@ -21,7 +25,7 @@ class BarTeamStore {
       .limit(20): any)
 
   get results(): Array<Event> {
-    return this.events || []
+    return this.events ? this.events.map(eventToPaneResult) : []
   }
 }
 
@@ -35,13 +39,18 @@ export default class BarTeam extends Component<Props> {
 
   render({ store, paneStore }: Props) {
     console.log('render team', store.results)
-    const heights = [55, 40, 280, ...store.results.map(event => event.height)]
+    const heights = [
+      55,
+      40,
+      280,
+      ...(store.events || []).map(event => event.height),
+    ]
     const getRowHeight = index => heights[index] || 100
 
     if (!store.results.length) {
       return (
         <Pane.Card $$padded>
-          <UI.FakeText lines={10} />
+          <UI.FakeText lines={5} />
         </Pane.Card>
       )
     }
@@ -81,9 +90,8 @@ export default class BarTeam extends Component<Props> {
                 <Calendar />
               </section>
             ),
-            ...store.results.map(event => () => (
-              <FeedItem event={event} key={event.id} />
-            )),
+            ...(store.events || [])
+              .map(event => () => <FeedItem event={event} key={event.id} />),
           ]}
           getItem={item => item()}
         />

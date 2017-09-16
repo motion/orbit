@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Pane from '../pane'
+import * as Pane from '~/apps/panes/pane'
 import * as React from 'react'
 import ColorBlock from './colorBlock'
 import Comment from './comment'

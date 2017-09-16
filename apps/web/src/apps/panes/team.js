@@ -3,6 +3,7 @@ import * as React from 'react'
 import { view, watch, Component } from '@mcro/black'
 import { Event } from '~/app'
 import * as UI from '@mcro/ui'
+import * as Pane from '~/apps/panes/pane'
 import type { PaneProps } from '~/types'
 import Calendar from './views/calendar'
 import FeedItem from './views/feedItem'
@@ -38,7 +39,7 @@ export default class BarTeam extends Component<Props> {
     const getRowHeight = index => heights[index] || 100
 
     return (
-      <team>
+      <Pane.Card>
         <UI.List
           virtualized={{
             rowHeight: getRowHeight,
@@ -78,16 +79,11 @@ export default class BarTeam extends Component<Props> {
           ]}
           getItem={item => item()}
         />
-      </team>
+      </Pane.Card>
     )
   }
 
   static style = {
-    team: {
-      padding: [5, 15],
-      flex: 1,
-      position: 'relative',
-    },
     section: {
       padding: [8, 10],
       justifyContent: 'center',

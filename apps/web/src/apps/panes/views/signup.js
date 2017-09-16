@@ -46,38 +46,40 @@ import * as UI from '@mcro/ui'
 export default class Signup {
   render({ store }) {
     return (
-      <inner $$margin="auto">
-        <UI.Form
-          onSubmit={store.handleSubmit}
-          $$draggable
-          $$centered
-          padding={15}
-          margin="auto"
-        >
-          {store.errors && JSON.stringify(store.errors)}
-          <br />
-          <UI.PassProps
-            row
-            placeholderColor="#444"
-            labelProps={{ css: { width: 110 } }}
-            size={1.2}
+      <UI.Theme name="light">
+        <inner $$margin="auto">
+          <UI.Form
+            onSubmit={store.handleSubmit}
+            $$draggable
+            $$centered
+            padding={15}
+            margin="auto"
           >
-            <UI.Field label="Email" placeholder="" />
-            <UI.Field label="Password" type="password" placeholder="" />
-          </UI.PassProps>
-          <space css={{ height: 20 }} />
-          <UI.Button
-            iconAfter
-            icon="arrowminri"
-            type="submit"
-            theme="rgb(113, 97, 172)"
-            alignSelf="flex-end"
-            size={1.1}
-          >
-            Signup
-          </UI.Button>
-        </UI.Form>
-      </inner>
+            {store.errors && JSON.stringify(store.errors)}
+            <br />
+            <UI.PassProps
+              row
+              placeholderColor="#444"
+              labelProps={{ css: { width: 110 } }}
+              size={1.2}
+            >
+              <UI.Field label="Email" placeholder="" />
+              <UI.Field label="Password" type="password" placeholder="" />
+            </UI.PassProps>
+            <space css={{ height: 20 }} />
+            <UI.Button
+              iconAfter
+              icon="arrowminri"
+              type="submit"
+              theme="rgb(113, 97, 172)"
+              alignSelf="flex-end"
+              size={1.1}
+            >
+              Signup
+            </UI.Button>
+          </UI.Form>
+        </inner>
+      </UI.Theme>
     )
   }
 }

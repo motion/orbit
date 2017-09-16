@@ -26,10 +26,13 @@ const COMMA_JOINED = {
 }
 
 const SHORTHANDS = {
-  borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
-  borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],
-  borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
-  borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
+  borderLeftRadius: ['border-top-left-radius', 'border-bottom-left-radius'],
+  borderRightRadius: ['border-top-right-radius', 'border-bottom-right-radius'],
+  borderBottomRadius: [
+    'border-bottom-left-radius',
+    'border-bottom-right-radius',
+  ],
+  borderTopRadius: ['border-top-right-radius', 'border-top-left-radius'],
 }
 
 const FALSE_VALUES = {
@@ -175,10 +178,11 @@ export default function motionStyle(options: Object = {}) {
 
       let value = styles[key]
       let valueType = typeof value
+      let finalKey = key
 
       // convert camel to snake
       if (!opts || opts.snakeCase !== false) {
-        key = CAMEL_TO_SNAKE[key] || key
+        finalKey = CAMEL_TO_SNAKE[key] || key
       }
 
       // get real values
@@ -196,26 +200,26 @@ export default function motionStyle(options: Object = {}) {
       const firstChar = key[0]
 
       if (valueType === 'string' || valueType === 'number') {
-        toReturn[key] = value
+        toReturn[finalKey] = value
         respond = true
       } else if (COLOR_KEYS.has(key)) {
-        toReturn[key] = toColor(value)
+        toReturn[finalKey] = toColor(value)
         respond = true
       } else if (Array.isArray(value)) {
         if (key === 'fontFamily') {
-          toReturn[key] = value
+          toReturn[finalKey] = value
             .map(x => (x.indexOf(' ') ? `"${x}"` : x))
             .join(', ')
         } else {
-          toReturn[key] = processArray(key, value)
+          toReturn[finalKey] = processArray(key, value)
         }
         respond = true
       } else if (firstChar === '&' || firstChar === '@') {
         // recurse into psuedo or media query
-        toReturn[key] = processStyles(value, opts && opts.errorMessage)
+        toReturn[finalKey] = processStyles(value, opts && opts.errorMessage)
         respond = true
       } else if (valueType === 'object') {
-        toReturn[key] = processObject(key, value)
+        toReturn[finalKey] = processObject(key, value)
         respond = true
       }
 

@@ -1,6 +1,5 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import { HotKeys } from '~/helpers'
 import Redbox from 'redbox-react'
 import RootStore from '~/stores/rootStore'
 import * as UI from '@mcro/ui'
@@ -40,7 +39,7 @@ export default class Root extends React.Component {
     view.emit('hmr')
   }
 
-  render({ rootStore }) {
+  render() {
     if (this.state.error) {
       return (
         <aboveredbox

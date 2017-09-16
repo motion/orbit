@@ -1,7 +1,6 @@
 import { view } from '@mcro/black'
 
-@view.attach('paneStore')
-@view.attach('millerStore')
+@view.attach('paneStore', 'millerStore')
 @view
 export default class PaneCard {
   setActions = () => {

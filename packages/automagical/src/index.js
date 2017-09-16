@@ -39,17 +39,11 @@ export default function automagical() {
         return Klass
       }
 
-      class ProxyClass extends Klass {
-        static get name() {
-          return Klass.name
-        }
-        constructor(...args: Array<any>) {
-          super(...args)
-          automagic(this)
-        }
+      Klass.prototype.automagic = function() {
+        automagic(this)
       }
 
-      return ProxyClass
+      return Klass
     },
   }
 }
@@ -148,7 +142,7 @@ function mobxifyRxObservable(obj, method, val) {
 }
 
 type MagicalObject = {
-  subscriptions: { add: (fn: Function) => void }
+  subscriptions: { add: (fn: Function) => void },
 }
 
 function automagic(obj: MagicalObject) {

@@ -20,6 +20,9 @@ export const storeDecorator = decor([
 export const storeOptions = {
   storeDecorator,
   onStoreMount(name: string, store: StoreClass, props: Object) {
+    if (store.automagic) {
+      store.automagic()
+    }
     if (store.start) {
       store.start.call(store, props)
     }

@@ -184,6 +184,10 @@ class BarMainStore {
   select = (index: number) => {
     this.props.navigate(this.results[index])
   }
+
+  setListRef = ref => {
+    this.listRef = ref
+  }
 }
 
 @view.attach('barStore')
@@ -218,7 +222,7 @@ export default class BarMain extends React.Component<> {
         <none if={mainStore.results.length === 0}>No Results</none>
         <UI.List
           if={mainStore.results}
-          getRef={mainStore.ref('listRef').set}
+          getRef={mainStore.setListRef}
           virtualized={{
             rowHeight: this.getRowHeight,
             measure: true,

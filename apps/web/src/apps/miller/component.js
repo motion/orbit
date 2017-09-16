@@ -43,7 +43,7 @@ export default class Miller {
         </columns>
         <UI.Popover
           if={millerStore.activeAction}
-          open={true}
+          open
           theme="light"
           onClose={this.onPopoverClose}
           borderRadius={5}

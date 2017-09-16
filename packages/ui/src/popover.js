@@ -131,6 +131,7 @@ class Popover extends React.PureComponent<Props> {
   }
 
   componentDidMount() {
+    this.mounted = true
     const { openOnClick, closeOnClick, closeOnEsc, open } = this.curProps
 
     this.listenForResize()
@@ -642,7 +643,7 @@ class Popover extends React.PureComponent<Props> {
     const { openOnHover, open, openOnClick } = this.props
     const openUndef = typeof open === 'undefined'
     return (
-      open ||
+      (this.mounted && open) ||
       isOpen ||
       (openUndef &&
         ((openOnHover && this.isHovered) || (openOnClick && isOpen)))

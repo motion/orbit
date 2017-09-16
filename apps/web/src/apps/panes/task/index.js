@@ -4,7 +4,6 @@ import * as Pane from '../pane'
 import * as React from 'react'
 import ColorBlock from './colorBlock'
 import Comment from './comment'
-import App from '~/app'
 import TaskStore from './store'
 import { LabelAction, AssignAction } from './actions'
 

@@ -35,7 +35,7 @@ export default class Comment {
               <UI.Button if={isOwner} chromeless icon="edit" opacity={0.7} />
               <UI.Button
                 if={!issueBody && isOwner}
-                onClick={() => store.removeComment(body)}
+                onClick={() => store.deleteComment(id)}
                 chromeless
                 icon="remove"
                 opacity={0.7}

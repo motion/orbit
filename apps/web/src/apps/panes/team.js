@@ -49,20 +49,32 @@ export default class BarTeam extends Component<Props> {
 
     if (!store.results.length) {
       return (
-        <Pane.Card $$padded>
+        <div $$padded>
           <UI.FakeText lines={5} />
-        </Pane.Card>
+        </div>
       )
     }
 
     return (
-      <UI.Drawer from="bottom" open>
-        something
-      </UI.Drawer>
-    )
-
-    return (
       <Pane.Card>
+        <UI.Drawer
+          from="bottom"
+          open
+          showOverlay
+          overlayBlur
+          css={{ right: 20, left: 20 }}
+        >
+          <UI.Theme name="light">
+            <UI.Surface
+              background="#fff"
+              flex
+              padding={20}
+              borderTopRadius={10}
+            >
+              <UI.Title>Have a nice day</UI.Title>
+            </UI.Surface>
+          </UI.Theme>
+        </UI.Drawer>
         <UI.List
           virtualized={{
             rowHeight: getRowHeight,

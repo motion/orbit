@@ -115,12 +115,6 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           }
           continue
         }
-        // ensure before tagName={} so it passes tagName down
-        if (prop[0] !== $) {
-          // pass props down if not glossProp style prop
-          finalProps[prop] = val
-          continue
-        }
         // tagName={}
         if (
           options.tagName &&
@@ -129,6 +123,12 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
           typeof val === 'string'
         ) {
           type = val
+          continue
+        }
+        // ensure before tagName={} so it passes tagName down
+        if (prop[0] !== $) {
+          // pass props down if not glossProp style prop
+          finalProps[prop] = val
           continue
         }
         // $$style={}

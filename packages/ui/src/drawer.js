@@ -122,7 +122,7 @@ export default class Drawer extends React.PureComponent<Props> {
       blur
         ? {
             backdropFilter: `blur(${blur}px)`,
-            background: 'rgba(0,0,0,0.01)',
+            background: 'rgba(0,0,0,0.1)',
           }
         : {
             background: 'rgba(0,0,0,0.25)',
@@ -135,6 +135,7 @@ export default class Drawer extends React.PureComponent<Props> {
       left: 0,
       right: 0,
       transition: 'transform ease-in-out 150ms',
+      zIndex: 100,
     },
     panelOpen: {
       pointerEvents: 'all',
@@ -157,15 +158,13 @@ export default class Drawer extends React.PureComponent<Props> {
     },
     overlayOpen: {
       opacity: 1,
+      zIndex: 1,
       pointerEvents: 'all',
     },
   }
 
   static theme = (props, theme) => {
     return {
-      overlay: {
-        display: props.overlay ? 'block' : 'none',
-      },
       drawer: {
         zIndex: props.zIndex,
       },

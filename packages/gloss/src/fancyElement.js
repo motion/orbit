@@ -4,10 +4,6 @@ import deepExtend from 'deep-extend'
 import JSS from './stylesheet'
 import tags from 'html-tags'
 
-if (module.hot) {
-  module.hot.accept(_ => _)
-}
-
 const VALID_TAGS: { [string]: boolean } = tags.reduce(
   (acc, cur) => ({ ...acc, [cur]: true }),
   {}
@@ -117,7 +113,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         if (options.glossProp && prop === options.glossProp) {
           if (Object.keys(val).length) {
             // css={}
-            const extraStyle = css(val)
+            const extraStyle = css(val, { snakeCase: false })
             style = { ...style, ...extraStyle }
           }
           continue

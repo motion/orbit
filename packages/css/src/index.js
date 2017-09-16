@@ -159,9 +159,14 @@ export default function motionStyle(options: Object = {}) {
     return toReturn.join(' ')
   }
 
+  type Opts = {
+    errorMessage?: string,
+    snakeCase?: boolean,
+  }
+
   // RETURN THIS
   // style transformer
-  function processStyles(styles: Object, errorMessage?: string): Object {
+  function processStyles(styles: Object, opts: Opts): Object {
     const toReturn = {}
     for (let key in styles) {
       if (!styles.hasOwnProperty(key)) {
@@ -172,7 +177,9 @@ export default function motionStyle(options: Object = {}) {
       let valueType = typeof value
 
       // convert camel to snake
-      key = CAMEL_TO_SNAKE[key] || key
+      if (!opts || opts.snakeCase !== false) {
+        key = CAMEL_TO_SNAKE[key] || key
+      }
 
       // get real values
       if (valueType === false) {
@@ -205,7 +212,7 @@ export default function motionStyle(options: Object = {}) {
         respond = true
       } else if (firstChar === '&' || firstChar === '@') {
         // recurse into psuedo or media query
-        toReturn[key] = processStyles(value, errorMessage)
+        toReturn[key] = processStyles(value, opts && opts.errorMessage)
         respond = true
       } else if (valueType === 'object') {
         toReturn[key] = processObject(key, value)
@@ -227,7 +234,7 @@ export default function motionStyle(options: Object = {}) {
       }
 
       throw new Error(
-        `${errorMessage ||
+        `${(opts && opts.errorMessage) ||
           'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`
       )
     }

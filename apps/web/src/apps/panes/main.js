@@ -221,7 +221,7 @@ export default class BarMain extends React.Component<> {
           getRef={mainStore.ref('listRef').set}
           virtualized={{
             rowHeight: this.getRowHeight,
-            measure: true,
+            //measure: true,
           }}
           onSelect={this.onSelect}
           groupKey="category"

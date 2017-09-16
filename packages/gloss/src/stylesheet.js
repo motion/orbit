@@ -7,9 +7,7 @@ import * as JSS from 'jss'
 
 const jss = JSS.create()
 
-console.log('usiong new sjadsadas')
-
-jss.use(jssCache(), jssGlobal(), jssNested(), jssDefaultUnit(), jssPropsSort())
+jss.use(jssNested(), jssDefaultUnit(), jssPropsSort())
 
 export default jss
 

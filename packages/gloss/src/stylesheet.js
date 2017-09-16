@@ -1,9 +1,16 @@
-import preset from 'jss-preset-default'
-import cache from 'jss-cache'
+import jssCache from 'jss-cache'
+import jssGlobal from 'jss-global'
+import jssNested from 'jss-nested'
+import jssDefaultUnit from 'jss-default-unit'
+import jssPropsSort from 'jss-props-sort'
 import * as JSS from 'jss'
 
-const JSSInstance = JSS.create(preset())
+const jss = JSS.create()
 
-export default JSSInstance
+console.log('usiong new sjadsadas')
 
-window.JSS = JSSInstance
+jss.use(jssCache(), jssGlobal(), jssNested(), jssDefaultUnit(), jssPropsSort())
+
+export default jss
+
+window.JSS = jss

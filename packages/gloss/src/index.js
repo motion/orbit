@@ -43,8 +43,8 @@ export class Gloss {
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
-    this.niceStyle = motionStyle(opts)
-    this.helpers = this.niceStyle.helpers
+    this.css = motionStyle(opts)
+    this.helpers = this.css.helpers
     this.stylesheet = JSS.createStyleSheet()
     this.stylesheet.attach()
     this.baseStyles = this.attachStyles(false, opts.baseStyles)
@@ -54,7 +54,7 @@ export class Gloss {
 
   decorator = (Child: Function | string) => {
     if (Child.prototype) {
-      const { attachStyles, niceStyle } = this
+      const { attachStyles, css } = this
 
       Child.prototype.glossElement = this.createElement
       Child.prototype.gloss = this
@@ -80,7 +80,7 @@ export class Gloss {
             const childTheme = Child.theme(props, activeTheme, this)
             const rules = {}
             for (const name of Object.keys(childTheme)) {
-              const style = niceStyle(childTheme[name])
+              const style = css(childTheme[name])
               const selector = `${name}--${Child.glossUID}--theme`
               rules[selector] = style
               this.theme.deleteRule(selector)
@@ -170,7 +170,7 @@ export class Gloss {
         this.stylesheet.deleteRule(stylesKey)
       }
       if (!this.stylesheet.getRule(stylesKey)) {
-        const niceStyle = this.niceStyle(style)
+        const niceStyle = this.css(style)
         return this.stylesheet.addRule(stylesKey, niceStyle)
       }
     })

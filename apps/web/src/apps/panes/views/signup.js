@@ -65,7 +65,7 @@ export default class Signup {
             <UI.Field label="Email" placeholder="" />
             <UI.Field label="Password" type="password" placeholder="" />
           </UI.PassProps>
-          <space $$height={20} />
+          <space css={{ height: 20 }} />
           <UI.Button
             iconAfter
             icon="arrowminri"

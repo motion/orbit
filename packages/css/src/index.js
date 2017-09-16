@@ -1,6 +1,12 @@
 // @flow
-import { colorToString, isColorLike } from './helpers'
+import {
+  colorToString,
+  isColorLike,
+  snakeToCamel,
+  camelToSnake,
+} from './helpers'
 import type { Color } from './types'
+import { CAMEL_TO_SNAKE } from './cssNameMap'
 
 // exports
 export type { Transform, Color } from './types'
@@ -165,6 +171,9 @@ export default function motionStyle(options: Object = {}) {
       let value = styles[key]
       let valueType = typeof value
 
+      // convert camel to snake
+      key = CAMEL_TO_SNAKE[key] || key
+
       // get real values
       if (valueType === false) {
         value === FALSE_VALUES[key]
@@ -232,6 +241,8 @@ export default function motionStyle(options: Object = {}) {
     isColor,
     processArray,
     processObject,
+    snakeToCamel,
+    camelToSnake,
   }
 
   return processStyles

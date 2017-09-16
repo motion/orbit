@@ -1,4 +1,4 @@
-import App from '~/app'
+import App, { Thing } from '~/app'
 
 const getIssue = async (taskId, issueNumber) => {
   const thing = await Thing.findOne(taskId).exec()

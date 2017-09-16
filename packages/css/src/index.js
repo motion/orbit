@@ -26,13 +26,10 @@ const COMMA_JOINED = {
 }
 
 const SHORTHANDS = {
-  borderLeftRadius: ['border-top-left-radius', 'border-bottom-left-radius'],
-  borderRightRadius: ['border-top-right-radius', 'border-bottom-right-radius'],
-  borderBottomRadius: [
-    'border-bottom-left-radius',
-    'border-bottom-right-radius',
-  ],
-  borderTopRadius: ['border-top-right-radius', 'border-top-left-radius'],
+  borderLeftRadius: ['borderTopLeftRadius', 'borderBottomLeftRadius'],
+  borderRightRadius: ['borderTopRightRadius', 'borderBottomRightRadius'],
+  borderBottomRadius: ['borderBottomLeftRadius', 'borderBottomRightRadius'],
+  borderTopRadius: ['borderTopRightRadius', 'borderTopLeftRadius'],
 }
 
 const FALSE_VALUES = {
@@ -179,9 +176,10 @@ export default function motionStyle(options: Object = {}) {
       let value = styles[key]
       let valueType = typeof value
       let finalKey = key
+      const shouldSnake = !opts || opts.snakeCase !== false
 
       // convert camel to snake
-      if (!opts || opts.snakeCase !== false) {
+      if (shouldSnake) {
         finalKey = CAMEL_TO_SNAKE[key] || key
       }
 
@@ -216,7 +214,7 @@ export default function motionStyle(options: Object = {}) {
         respond = true
       } else if (firstChar === '&' || firstChar === '@') {
         // recurse into psuedo or media query
-        toReturn[finalKey] = processStyles(value, opts && opts.errorMessage)
+        toReturn[finalKey] = processStyles(value, opts)
         respond = true
       } else if (valueType === 'object') {
         toReturn[finalKey] = processObject(key, value)
@@ -227,7 +225,8 @@ export default function motionStyle(options: Object = {}) {
       if (SHORTHANDS[key]) {
         key = SHORTHANDS[key]
         if (Array.isArray(key)) {
-          for (const k of key) {
+          for (let k of key) {
+            k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
             toReturn[k] = value
           }
         }

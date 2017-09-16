@@ -13,9 +13,9 @@ export default class BarStore {
   search = ''
   textboxVal = ''
 
-  _millerState = null
-  setMillerState = val => {
-    this._millerState = val
+  _millerStore = null
+  setMillerStore = val => {
+    this._millerStore = val
   }
 
   start() {
@@ -23,10 +23,10 @@ export default class BarStore {
 
     let lastActiveCol = null
     this.watch(() => {
-      if (!this.millerState) {
+      if (!this.millerStore) {
         return
       }
-      const { activeCol } = this.millerState
+      const { activeCol } = this.millerStore
       if (activeCol === 0 && lastActiveCol !== 0) {
         this.focusBar()
       }
@@ -35,7 +35,7 @@ export default class BarStore {
         this.blurBar()
       }
 
-      lastActiveCol = this.millerState.activeCol
+      lastActiveCol = this.millerStore.activeCol
     })
   }
 
@@ -50,9 +50,9 @@ export default class BarStore {
     }
   }
 
-  get millerState() {
-    return this._millerState
-    // return this.millerState
+  get millerStore() {
+    return this._millerStore
+    // return this.millerStore
   }
 
   onInputRef = el => {
@@ -69,8 +69,8 @@ export default class BarStore {
 
   onClickBar = () => {
     // if they click the pane, activate main again
-    if (this.millerState.activeCol > 0) {
-      this.millerState.setSelection(0, this.millerState.prevActiveRows[0])
+    if (this.millerStore.activeCol > 0) {
+      this.millerStore.setSelection(0, this.millerStore.prevActiveRows[0])
     }
   }
 
@@ -81,7 +81,7 @@ export default class BarStore {
   setSearch = debounce(text => {
     this.search = text
     setTimeout(() => {
-      this.millerState.setActiveRow(0)
+      this.millerStore.setActiveRow(0)
     })
   }, 150)
 
@@ -100,7 +100,7 @@ export default class BarStore {
   }
 
   get hasSelectedItem() {
-    return isNumber(this.millerState.activeRow)
+    return isNumber(this.millerStore.activeRow)
   }
 
   // call these to send key to miller
@@ -111,7 +111,7 @@ export default class BarStore {
       e.preventDefault()
     },
     up: e => {
-      if (this.millerState.activeRow > 0) {
+      if (this.millerStore.activeRow > 0) {
         this.millerKeyActions.up()
       }
 
@@ -121,8 +121,8 @@ export default class BarStore {
       // if (this.isTextbox(e)) return
       e.preventDefault()
 
-      if (this.millerState.activeAction) {
-        this.millerState.setActiveAction(null)
+      if (this.millerStore.activeAction) {
+        this.millerStore.setActiveAction(null)
         return
       }
       if (this.search !== '') {
@@ -138,7 +138,7 @@ export default class BarStore {
     },
     enter: e => {
       e.preventDefault()
-      const { currentItem, activeAction } = this.millerState
+      const { currentItem, activeAction } = this.millerStore
 
       if (activeAction) return
 

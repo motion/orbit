@@ -3,12 +3,12 @@ import * as UI from '@mcro/ui'
 import Actions from './actions'
 
 @view.attach('paneStore')
-@view.attach('millerState')
+@view.attach('millerStore')
 @view
 export default class PaneCard {
   setActions = () => {
-    const { paneStore, millerState, actions } = this.props
-    if (actions) millerState.setPaneActions(paneStore.props.index, actions)
+    const { paneStore, millerStore, actions } = this.props
+    if (actions) millerStore.setPaneActions(paneStore.props.index, actions)
   }
 
   componentWillMount() {

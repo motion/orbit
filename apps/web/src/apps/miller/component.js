@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { HotKeys } from '~/helpers'
 
-@view.attach('millerState')
+@view.attach('millerStore')
 @view
 export default class Miller {
   static defaultProps = {
@@ -11,24 +11,24 @@ export default class Miller {
   }
 
   componentWillMount() {
-    const { onKeyActions, millerState } = this.props
-    onKeyActions(millerState.keyActions)
+    const { onKeyActions, millerStore } = this.props
+    onKeyActions(millerStore.keyActions)
   }
 
   onPopoverClose = () => {
-    this.props.millerState.activeAction = null
+    this.props.millerStore.activeAction = null
   }
 
-  render({ pane, store, millerState, onKeyActions, panes, animate }) {
+  render({ pane, store, millerStore, onKeyActions, panes, animate }) {
     const Pane = pane
     const transX = animate ? store.translateX : 0
     const PopoverContent =
-      millerState.activeAction && millerState.activeAction.popover
+      millerStore.activeAction && millerStore.activeAction.popover
 
     const content = (
       <miller css={{ flex: 1 }}>
         <columns $$row $transX={transX}>
-          {millerState.schema.map((pane, index) => {
+          {millerStore.schema.map((pane, index) => {
             return (
               <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
                 <Pane
@@ -42,13 +42,13 @@ export default class Miller {
           })}
         </columns>
         <UI.Popover
-          if={millerState.activeAction}
+          if={millerStore.activeAction}
           open={true}
           theme="light"
           onClose={this.onPopoverClose}
           borderRadius={5}
           elevation={3}
-          target={`.target-${millerState.activeAction.name}`}
+          target={`.target-${millerStore.activeAction.name}`}
           overlay="transparent"
           distance={14}
         >

@@ -208,7 +208,9 @@ export default class BarMain extends React.Component<> {
   }
 
   getDate = result =>
-    result.data.updated ? UI.Date.format(result.data.updated) : ''
+    result.data && result.data.updated
+      ? UI.Date.format(result.data.updated)
+      : ''
 
   render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
     return (

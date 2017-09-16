@@ -281,6 +281,7 @@ export default class GithubSync extends Syncer {
                     node {
                       id
                       title
+                      number
                       body
                       bodyText
                       updatedAt

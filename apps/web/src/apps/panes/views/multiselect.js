@@ -71,6 +71,7 @@ class MultiSelectStore {
 
   start() {
     this.attachRef('main', window)
+    this.setHighlightIndex(0)
   }
 
   attachRef = (name, el) => {

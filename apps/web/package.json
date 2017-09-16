@@ -46,6 +46,7 @@
     "time-ago": "^0.1.0",
     "match-sorter": "^1.8.1",
     "marky-markdown": "^11.2.0",
+    "marked": "^0.3.6",
     "worker-pouch": "^2.0.0"
   },
   "devDependencies": {

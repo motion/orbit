@@ -36,6 +36,7 @@ export type Props = {
   groupKey?: string,
   selected?: number,
   separatorHeight: number,
+  isSelected?: Function,
 }
 
 @parentSize('virtualized')
@@ -55,6 +56,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   // for tracking list resizing for virtual lists
+  children: ?Array<any>
   totalItems = null
   itemRefs: Array<HTMLElement> = []
   lastDidReceivePropsDate: ?number
@@ -115,7 +117,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   scrollToRow = (index: number) => {
     if (this.virtualListRef) {
-      this.virtualListRef.scrollToRow(index)
+      const row = this.getRealIndex(index)
+      console.log('row', row)
+      this.virtualListRef.scrollToRow(row)
     }
   }
 
@@ -138,21 +142,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   isSelected = fn => (...args) =>
     typeof this.state.selected === 'number' ? fn(...args) : null
-
-  actions = {
-    down: this.isSelected(() => {
-      this.highlightItem(cur => Math.min(this.totalItems, cur + 1))
-    }),
-    cmdEnter: this.isSelected(() => {
-      this.props.onCmdEnter && this.props.onCmdEnter(this.selected)
-    }),
-    up: this.isSelected(() => {
-      this.highlightItem(cur => Math.max(0, cur - 1))
-    }),
-    enter: this.isSelected(() => {
-      this.highlightItem(() => this.state.selected)
-    }),
-  }
 
   // wrap weird signature
   select = (selector: number | Function) => {
@@ -199,6 +188,13 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
+  getRealIndex(index: number) {
+    if (this.realIndex) {
+      return this.realIndex[index]
+    }
+    return index
+  }
+
   getRow = ({ index, key, style }) => {
     if (!this.children || !this.children[index]) {
       console.log('no child', index, this)
@@ -220,7 +216,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return virtualized.rowHeight
   }
 
-  getItemProps(index, rowProps, isListItem) {
+  getItemProps(index, rowProps, isListItem: boolean) {
     const {
       onItemMount,
       size,
@@ -389,6 +385,10 @@ class List extends React.PureComponent<Props, { selected: number }> {
     this.childrenVersion = Math.random()
   }
 
+  setVirtualRef = ref => {
+    this.virtualListRef = ref
+  }
+
   render() {
     const { children } = this
     if (!children) {
@@ -426,7 +426,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
           if={virtualized}
           height={height}
           width={width}
-          ref={this.ref('virtualListRef').set}
+          ref={this.setVirtualRef}
           overscanRowCount={5}
           scrollToIndex={
             realIndex ? realIndex[this.state.selected] : this.state.selected

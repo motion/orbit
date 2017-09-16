@@ -1,8 +1,13 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import marky from 'marky-markdown'
+import marked from 'marked'
+import emojinize from 'emojinize'
 import * as UI from '@mcro/ui'
 import Card from './card'
+
+const format = str => {
+  return marked(emojinize.encode(str))
+}
 
 @view
 export default class FeedItem {
@@ -29,7 +34,7 @@ export default class FeedItem {
 
               {payload.commits.map(commit => (
                 <commit key={commit.sha}>
-                  <UI.Text html={marky(commit.message)} />
+                  <UI.Text html={format(commit.message)} />
                 </commit>
               ))}
             </Card>
@@ -40,7 +45,7 @@ export default class FeedItem {
         return (
           <content if={payload.comment}>
             <content>
-              <UI.Text html={marky(payload.comment.body)} />
+              <UI.Text html={format(payload.comment.body)} />
             </content>
           </content>
         )

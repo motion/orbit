@@ -19,7 +19,22 @@ class GithubStore {
 
   static createTask = title => {}
 
-  static setLabels = labels => {}
+  static setLabels = async (taskId, issueNumber, labels) => {
+    const thing = await Thing.findOne(taskId).exec()
+    const issue = await getIssue(taskId, issueNumber)
+    const res = issue.labels.add(labels)
+
+    if (res !== true) return
+
+    thing.data = {
+      ...thing.data,
+      labels,
+    }
+
+    await thing.save()
+  }
+
+  static deleteLabel = (taskId, issueNumber, label) => {}
 
   static setAssigned = assigned => {}
 
@@ -97,8 +112,9 @@ export default class TaskStore {
     { id: 'wontfix' },
   ]
 
-  setLabels = xs => {
-    this.labels = xs
+  setLabels = labels => {
+    GithubStore.setLabels(this.taskId, this.taskNumber, labels)
+    this.labels = labels
   }
 
   setAssigned = xs => {

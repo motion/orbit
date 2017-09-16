@@ -1970,6 +1970,17 @@ bl@~1.0.0:
   dependencies:
     readable-stream "~2.0.5"
 
+blob-util@^1.1.1:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/blob-util/-/blob-util-1.3.0.tgz#dbb4e8caffd50b5720d347e1169b6369ba34fe95"
+  dependencies:
+    blob "0.0.4"
+    native-or-lie "1.0.2"
+
+blob@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.4.tgz#bcf13052ca54463f30f9fc7e95b9a47630a94921"
+
 block-stream@*:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/block-stream/-/block-stream-0.0.9.tgz#13ebfe778a03205cfe03751481ebb4b3300c126a"
@@ -6577,6 +6588,10 @@ join-component@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/join-component/-/join-component-1.1.0.tgz#b8417b750661a392bee2c2537c68b2a9d4977cd5"
 
+js-extend@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/js-extend/-/js-extend-1.0.1.tgz#50551ab1ac71d4bb302e4040ebbe59033ba2b1f7"
+
 js-regression@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/js-regression/-/js-regression-1.0.7.tgz#432f7abf0f7b72e8c814512c585905c02164566f"
@@ -7174,6 +7189,12 @@ libqp@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/libqp/-/libqp-1.1.0.tgz#f5e6e06ad74b794fb5b5b66988bf728ef1dedbe8"
 
+lie@*, lie@3.1.1, lie@^3.0.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
+  dependencies:
+    immediate "~3.0.5"
+
 lie@3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lie/-/lie-3.0.4.tgz#bc7ae1ebe7f1c8de39afdcd4f789076b47b0f634"
@@ -7182,12 +7203,6 @@ lie@3.0.4:
     immediate "~3.0.5"
     inline-process-browser "^1.0.0"
     unreachable-branch-transform "^0.3.0"
-
-lie@3.1.1, lie@^3.0.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
-  dependencies:
-    immediate "~3.0.5"
 
 lie@^2.6.0:
   version "2.9.1"
@@ -7584,6 +7599,10 @@ markdown-it@^8.2.0:
     linkify-it "^2.0.0"
     mdurl "^1.0.1"
     uc.micro "^1.0.3"
+
+marked@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.6.tgz#b2c6c618fccece4ef86c4fc6cb8a7cbf5aeda8d7"
 
 marky-markdown@^11.2.0:
   version "11.2.0"
@@ -8057,6 +8076,12 @@ nanomatch@^1.2.0:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+native-or-lie@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/native-or-lie/-/native-or-lie-1.0.2.tgz#c870ee0ba0bf0ff11350595d216cfea68a6d8086"
+  dependencies:
+    lie "*"
 
 natives@^1.1.0:
   version "1.1.0"
@@ -9013,7 +9038,7 @@ pouchdb-abstract-mapreduce@6.3.4:
     pouchdb-promise "6.3.4"
     pouchdb-utils "6.3.4"
 
-pouchdb-adapter-http@^6.3.4:
+pouchdb-adapter-http@^6.0.0, pouchdb-adapter-http@^6.3.4:
   version "6.3.4"
   resolved "https://registry.yarnpkg.com/pouchdb-adapter-http/-/pouchdb-adapter-http-6.3.4.tgz#9cad63e41e309dd9172aaf9dd0c832a17f5e4379"
   dependencies:
@@ -9024,7 +9049,7 @@ pouchdb-adapter-http@^6.3.4:
     pouchdb-promise "6.3.4"
     pouchdb-utils "6.3.4"
 
-pouchdb-adapter-idb@^6.3.4:
+pouchdb-adapter-idb@^6.0.0, pouchdb-adapter-idb@^6.3.4:
   version "6.3.4"
   resolved "https://registry.yarnpkg.com/pouchdb-adapter-idb/-/pouchdb-adapter-idb-6.3.4.tgz#a9e5f5fd71fdf4403f9e6f84c20c00a9da6e6923"
   dependencies:
@@ -9087,6 +9112,10 @@ pouchdb-ajax@6.3.4:
     pouchdb-utils "6.3.4"
     request "2.80.0"
 
+pouchdb-binary-util@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/pouchdb-binary-util/-/pouchdb-binary-util-1.0.1.tgz#34c9ccf25e3ff6ddeb2abed99a2cf8526826f9cb"
+
 pouchdb-binary-utils@5.4.4:
   version "5.4.4"
   resolved "https://registry.yarnpkg.com/pouchdb-binary-utils/-/pouchdb-binary-utils-5.4.4.tgz#142b6b166e18915d65dbb99f4e6f3a25538631e8"
@@ -9135,7 +9164,7 @@ pouchdb-collections@6.3.4:
   version "6.3.4"
   resolved "https://registry.yarnpkg.com/pouchdb-collections/-/pouchdb-collections-6.3.4.tgz#24f4dd3d7aabd630b2f5f26353fe09ddd4ef7afa"
 
-pouchdb-core@6.3.4, pouchdb-core@^6.2.0:
+pouchdb-core@6.3.4, pouchdb-core@^6.0.0, pouchdb-core@^6.2.0:
   version "6.3.4"
   resolved "https://registry.yarnpkg.com/pouchdb-core/-/pouchdb-core-6.3.4.tgz#843f1c63b4da3be7dffb2d0bdf1663a250ab092c"
   dependencies:
@@ -9227,6 +9256,14 @@ pouchdb-mapreduce-utils@6.3.4:
     pouchdb-collections "6.3.4"
     pouchdb-utils "6.3.4"
 
+pouchdb-mapreduce@^6.0.0:
+  version "6.3.4"
+  resolved "https://registry.yarnpkg.com/pouchdb-mapreduce/-/pouchdb-mapreduce-6.3.4.tgz#b519599e9ba707be6285d4bc667afb30f5c8e6ec"
+  dependencies:
+    pouchdb-abstract-mapreduce "6.3.4"
+    pouchdb-mapreduce-utils "6.3.4"
+    pouchdb-utils "6.3.4"
+
 pouchdb-md5@5.4.4:
   version "5.4.4"
   resolved "https://registry.yarnpkg.com/pouchdb-md5/-/pouchdb-md5-5.4.4.tgz#55e72ad3dde62506878f0258520ec6d94f393ed7"
@@ -9259,7 +9296,7 @@ pouchdb-promise@5.4.4:
   dependencies:
     lie "3.0.4"
 
-pouchdb-promise@6.3.4:
+pouchdb-promise@6.3.4, pouchdb-promise@^6.0.0:
   version "6.3.4"
   resolved "https://registry.yarnpkg.com/pouchdb-promise/-/pouchdb-promise-6.3.4.tgz#817052fa2320293dd2dbc4be2f1cc81b02be30c2"
   dependencies:
@@ -9288,7 +9325,7 @@ pouchdb-quick-search@^1.3.0:
     pouchdb-promise "5.4.4"
     uniq "^1.0.1"
 
-pouchdb-replication@^6.3.4:
+pouchdb-replication@^6.0.0, pouchdb-replication@^6.3.4:
   version "6.3.4"
   resolved "https://registry.yarnpkg.com/pouchdb-replication/-/pouchdb-replication-6.3.4.tgz#a1d22ace6f18e0bb459dc152ed0eed71d56534b0"
   dependencies:
@@ -12443,6 +12480,23 @@ worker-farm@^1.3.1:
   dependencies:
     errno "^0.1.4"
     xtend "^4.0.1"
+
+worker-pouch@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/worker-pouch/-/worker-pouch-2.0.0.tgz#dc2b17577d706f241eeb3cf34665458e28f8b5f9"
+  dependencies:
+    argsarray "0.0.1"
+    blob-util "^1.1.1"
+    debug "^2.1.3"
+    inherits "^2.0.1"
+    js-extend "^1.0.1"
+    pouchdb-adapter-http "^6.0.0"
+    pouchdb-adapter-idb "^6.0.0"
+    pouchdb-binary-util "^1.0.0"
+    pouchdb-core "^6.0.0"
+    pouchdb-mapreduce "^6.0.0"
+    pouchdb-promise "^6.0.0"
+    pouchdb-replication "^6.0.0"
 
 wrap-ansi@^2.0.0:
   version "2.1.0"

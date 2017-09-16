@@ -2,25 +2,7 @@
 import * as React from 'react'
 import deepExtend from 'deep-extend'
 import JSS from './stylesheet'
-import { Gloss } from './index'
 import tags from 'html-tags'
-
-if (module.hot) {
-  module.hot.accept(_ => _)
-}
-
-function toCamelCase(string) {
-  return string.replace(/-(\w)/g, function(matches, letter) {
-    return letter.toUpperCase()
-  })
-}
-
-const objToCamel = (style: Object) => {
-  return Object.keys(style).reduce(
-    (acc, cur) => ({ ...acc, [toCamelCase(cur)]: style[cur] }),
-    {}
-  )
-}
 
 const VALID_TAGS: { [string]: boolean } = tags.reduce(
   (acc, cur) => ({ ...acc, [cur]: true }),
@@ -47,15 +29,29 @@ const dynamicCache = {}
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
-  const { baseStyles, options, niceStyle } = Gloss
+  const { baseStyles, options, css } = Gloss
 
   const getDynamicStyle = styles => {
     const key = JSON.stringify(styles)
     if (dynamicCache[key]) {
       return dynamicCache[key]
     }
-    const res = (dynamicCache[key] = JSS.createRule(niceStyle(styles)))
-    return res
+    const niceStyles = css(styles)
+    dynamicCache[key] = JSS.createRule(niceStyles)
+    return dynamicCache[key]
+  }
+
+  // Fast object reduce
+  function objToCamel(style) {
+    let newStyle = {}
+    for (const name of Object.keys(style)) {
+      if (name.indexOf('-')) {
+        newStyle[Gloss.helpers.snakeToCamel(name)] = style[name]
+      } else {
+        newStyle[name] = style[name]
+      }
+    }
+    return newStyle
   }
 
   return function fancyElement(
@@ -117,7 +113,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         if (options.glossProp && prop === options.glossProp) {
           if (Object.keys(val).length) {
             // css={}
-            const extraStyle = niceStyle(val)
+            const extraStyle = css(val, { snakeCase: false })
             style = { ...style, ...extraStyle }
           }
           continue

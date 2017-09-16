@@ -1,6 +1,15 @@
 // @flow
 import type { Color, CSSArray } from './types'
 import colorNames from './colorNames'
+import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
+
+export function camelToSnake(key: string) {
+  return CAMEL_TO_SNAKE[key] || key
+}
+
+export function snakeToCamel(key: string) {
+  return SNAKE_TO_CAMEL[key] || key
+}
 
 function memoize<Result>(cb: Function): (a?: any, b?: any, c?: any) => Result {
   const Cache = new WeakMap()

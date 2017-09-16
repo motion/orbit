@@ -161,6 +161,8 @@ export default class Surface extends React.PureComponent<Props> {
       flex,
       flexFlow,
       focusable,
+      fontSize,
+      fontWeight,
       getRef,
       glint,
       glow,
@@ -296,7 +298,7 @@ export default class Surface extends React.PureComponent<Props> {
         forgiveness={8}
         arrowSize={10}
         delay={100}
-        popoverProps={{ $$style: { fontSize: 12 } }}
+        popoverProps={{ style: { fontSize: 12 } }}
         {...tooltipProps}
       >
         {tooltip}

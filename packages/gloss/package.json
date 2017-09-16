@@ -20,6 +20,9 @@
     "html-tags": "^2.0.0",
     "jss": "^8.1.0",
     "jss-preset-default": "^3.0.0",
+    "jss-global": "^2.0.0",
+    "jss-nested": "^5.0.0",
+    "jss-default-unit": "^7.0.0",
     "jss-cache": "^2.0.0"
   },
   "peerDependencies": {

@@ -135,7 +135,7 @@ export default class Surface implements ViewType<Props> {
           distance={8}
           arrowSize={8}
           delay={100}
-          popoverProps={{ $$style: { fontSize: 11 } }}
+          popoverProps={{ style: { fontSize: 11 } }}
           {...tooltipProps}
         >
           {tooltip}

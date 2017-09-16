@@ -1,6 +1,12 @@
 // @flow
-import { colorToString, isColorLike } from './helpers'
+import {
+  colorToString,
+  isColorLike,
+  snakeToCamel,
+  camelToSnake,
+} from './helpers'
 import type { Color } from './types'
+import { CAMEL_TO_SNAKE } from './cssNameMap'
 
 // exports
 export type { Transform, Color } from './types'
@@ -153,9 +159,14 @@ export default function motionStyle(options: Object = {}) {
     return toReturn.join(' ')
   }
 
+  type Opts = {
+    errorMessage?: string,
+    snakeCase?: boolean,
+  }
+
   // RETURN THIS
   // style transformer
-  function processStyles(styles: Object, errorMessage?: string): Object {
+  function processStyles(styles: Object, opts: Opts): Object {
     const toReturn = {}
     for (let key in styles) {
       if (!styles.hasOwnProperty(key)) {
@@ -164,6 +175,13 @@ export default function motionStyle(options: Object = {}) {
 
       let value = styles[key]
       let valueType = typeof value
+      let finalKey = key
+      const shouldSnake = !opts || opts.snakeCase !== false
+
+      // convert camel to snake
+      if (shouldSnake) {
+        finalKey = CAMEL_TO_SNAKE[key] || key
+      }
 
       // get real values
       if (valueType === false) {
@@ -180,26 +198,26 @@ export default function motionStyle(options: Object = {}) {
       const firstChar = key[0]
 
       if (valueType === 'string' || valueType === 'number') {
-        toReturn[key] = value
+        toReturn[finalKey] = value
         respond = true
       } else if (COLOR_KEYS.has(key)) {
-        toReturn[key] = toColor(value)
+        toReturn[finalKey] = toColor(value)
         respond = true
       } else if (Array.isArray(value)) {
         if (key === 'fontFamily') {
-          toReturn[key] = value
+          toReturn[finalKey] = value
             .map(x => (x.indexOf(' ') ? `"${x}"` : x))
             .join(', ')
         } else {
-          toReturn[key] = processArray(key, value)
+          toReturn[finalKey] = processArray(key, value)
         }
         respond = true
       } else if (firstChar === '&' || firstChar === '@') {
         // recurse into psuedo or media query
-        toReturn[key] = processStyles(value, errorMessage)
+        toReturn[finalKey] = processStyles(value, opts)
         respond = true
       } else if (valueType === 'object') {
-        toReturn[key] = processObject(key, value)
+        toReturn[finalKey] = processObject(key, value)
         respond = true
       }
 
@@ -207,7 +225,8 @@ export default function motionStyle(options: Object = {}) {
       if (SHORTHANDS[key]) {
         key = SHORTHANDS[key]
         if (Array.isArray(key)) {
-          for (const k of key) {
+          for (let k of key) {
+            k = shouldSnake ? CAMEL_TO_SNAKE[k] || k : k
             toReturn[k] = value
           }
         }
@@ -218,7 +237,7 @@ export default function motionStyle(options: Object = {}) {
       }
 
       throw new Error(
-        `${errorMessage ||
+        `${(opts && opts.errorMessage) ||
           'Error'}: Invalid style value for ${key}: ${JSON.stringify(value)}`
       )
     }
@@ -232,6 +251,8 @@ export default function motionStyle(options: Object = {}) {
     isColor,
     processArray,
     processObject,
+    snakeToCamel,
+    camelToSnake,
   }
 
   return processStyles

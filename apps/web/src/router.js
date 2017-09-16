@@ -7,10 +7,8 @@ import MasterDetailPage from './apps/masterDetail'
 import SettingsPage from './apps/settings'
 import { render } from './start'
 
-let AppRouter
-
 function runRouter() {
-  AppRouter = new Router({
+  return new Router({
     routes: {
       '/': HomePage,
       '/vibrancy': EmptyPage,
@@ -19,18 +17,19 @@ function runRouter() {
       settings: SettingsPage,
     },
   })
-  // because doing in installDevTools would break import order
-  window.Router = AppRouter
 }
+
+let AppRouter = runRouter()
+
+// because doing in installDevTools would break import order
+window.Router = AppRouter
 
 // for hmr
 if (module.hot) {
   module.hot.accept(() => {
-    runRouter()
+    AppRouter = runRouter()
     render()
   })
 }
-
-runRouter()
 
 export default AppRouter

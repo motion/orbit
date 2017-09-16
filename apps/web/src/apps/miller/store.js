@@ -3,7 +3,7 @@ import { actionToKeyCode } from './helpers'
 import { sum, range, find, includes, flatten, memoize } from 'lodash'
 
 type Schema = {
-  title: string,
+  title?: string,
   type: string,
   category?: string,
   data?: Object,
@@ -76,7 +76,7 @@ export default class MillerStore {
       }
     })
 
-    document.addEventListener('keydown', e => {
+    this.on(window, 'keydown', e => {
       this.metaKey = e.metaKey
 
       if (!this.isTextbox(e)) {
@@ -89,7 +89,7 @@ export default class MillerStore {
       }
     })
 
-    document.addEventListener('keyup', e => {
+    this.on(window, 'keyup', e => {
       this.metaKey = e.metaKey
     })
   }

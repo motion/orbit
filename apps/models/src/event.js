@@ -25,7 +25,7 @@ export const methods = {
     return this.data.payload && this.data.payload.commits
   },
   get height() {
-    return this.hasData ? 150 : 50
+    return this.hasData ? 200 : 50
   },
 }
 

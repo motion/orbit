@@ -78,12 +78,16 @@ export class Gloss {
           }
           if (activeTheme) {
             const childTheme = Child.theme(props, activeTheme, this)
+            const rules = {}
             for (const name of Object.keys(childTheme)) {
               const style = niceStyle(childTheme[name])
               const selector = `${name}--${Child.glossUID}--theme`
+              rules[selector] = style
               this.theme.deleteRule(selector)
-              this.theme.addRule(selector, style)
             }
+            this.theme.addRules(rules)
+            // requestIdleCallback(() => {
+            // })
           }
         }
 

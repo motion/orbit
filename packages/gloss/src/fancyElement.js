@@ -9,17 +9,36 @@ if (module.hot) {
   module.hot.accept(_ => _)
 }
 
+// fast toCamelCase
 function toCamelCase(string) {
-  return string.replace(/-(\w)/g, function(matches, letter) {
-    return letter.toUpperCase()
-  })
+  let final = ''
+  let hasDash = false
+  for (const ch of string) {
+    if (ch === '-') {
+      hasDash = true
+      continue
+    }
+    if (hasDash) {
+      hasDash = false
+      final += ch.toUpperCase()
+    } else {
+      final += ch
+    }
+  }
+  return final
 }
 
-const objToCamel = (style: Object) => {
-  return Object.keys(style).reduce(
-    (acc, cur) => ({ ...acc, [toCamelCase(cur)]: style[cur] }),
-    {}
-  )
+// Fast object reduce
+function objToCamel(style) {
+  let newStyle = {}
+  for (const name of Object.keys(style)) {
+    if (name.indexOf('-')) {
+      newStyle[toCamelCase(name)] = style[name]
+    } else {
+      newStyle[name] = style[name]
+    }
+  }
+  return newStyle
 }
 
 const VALID_TAGS: { [string]: boolean } = tags.reduce(

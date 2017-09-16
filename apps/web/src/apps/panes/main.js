@@ -11,7 +11,7 @@ import TestIssue from './test_data/issue'
 import type { PaneProps, PaneResult } from '~/types'
 
 const thingToResult = (thing: Thing): PaneResult => ({
-  id: thing.id,
+  id: thing.id || thing.data.id,
   title: thing.title,
   type: thing.type,
   icon: 'icon',

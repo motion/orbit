@@ -64,8 +64,26 @@ export default class MillerStore {
   }
 
   start() {
-    this.watch(() => {
-      if (this.activeRow !== null && this.activeResults) {
+    this.react(
+      () => {
+        return this.activeRow
+      },
+      () => {
+        if (
+          this.activeItem &&
+          this.activeItem.type &&
+          this.activeItem.showChild !== false
+        ) {
+          this.setTimeout(() => {
+            this.setSchema(this.activeCol + 1, this.activeItem)
+          })
+        }
+      }
+    )
+
+    this.react(
+      () => this.activeCol,
+      () => {
         if (
           this.activeItem &&
           this.activeItem.type &&
@@ -74,7 +92,7 @@ export default class MillerStore {
           this.setSchema(this.activeCol + 1, this.activeItem)
         }
       }
-    })
+    )
 
     this.on(window, 'keydown', e => {
       this.metaKey = e.metaKey
@@ -104,15 +122,13 @@ export default class MillerStore {
   }
 
   setSchema(index: number, schema: Schema) {
-    this.setTimeout(() => {
-      if (this.schema.length < index) {
-        this.schema = [...this.schema, schema]
-      } else {
-        this.schema[index] = schema
-      }
+    if (this.schema.length < index) {
+      this.schema = [...this.schema, schema]
+    } else {
+      this.schema[index] = schema
+    }
 
-      this.schema = [...this.schema]
-    })
+    this.schema = [...this.schema]
   }
 
   handleRef = memoize(index => ref => {

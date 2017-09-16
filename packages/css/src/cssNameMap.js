@@ -1,4 +1,5 @@
 export const CAMEL_TO_SNAKE = {
+  WebkitAppRegion: '-webkit-app-region',
   alignContent: 'align-content',
   alignItems: 'align-items',
   alignSelf: 'align-self',
@@ -144,6 +145,7 @@ export const CAMEL_TO_SNAKE = {
 }
 
 export const SNAKE_TO_CAMEL = {
+  '-webkit-app-region': 'WebkitAppRegion',
   'align-content': 'alignContent',
   'align-items': 'alignItems',
   'align-self': 'alignSelf',

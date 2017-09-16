@@ -1,4 +1,5 @@
 [ignore]
+.*/node_modules/http-parser-js/.*
 
 [include]
 ./node_modules
@@ -19,3 +20,4 @@ unsafe.enable_getters_and_setters=true
 module.name_mapper='^~/\(.*\)$' -> '<PROJECT_ROOT>/src/\1.js'
 module.name_mapper='^~/\(.*\)$' -> '<PROJECT_ROOT>/src/\1/index.js'
 module.name_mapper='\./\(\1\)$' -> '\1/\1.js'
+module.system=haste

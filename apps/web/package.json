@@ -44,7 +44,8 @@
     "rxjs": "^5.3.0",
     "superlogin-client": "^0.7.1",
     "time-ago": "^0.1.0",
-    "match-sorter": "^1.8.1"
+    "match-sorter": "^1.8.1",
+    "marky-markdown": "^11.2.0"
   },
   "devDependencies": {
     "typescript": "^2.5.2",

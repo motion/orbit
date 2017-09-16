@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import emojinize from 'emojinize'
+import marky from 'marky-markdown'
 import * as UI from '@mcro/ui'
+import Card from './card'
 
 @view
 export default class FeedItem {
@@ -9,34 +10,46 @@ export default class FeedItem {
     switch (event.type) {
       case 'PushEvent':
         return (
-          <body if={payload.commits}>
-            <content>
+          <content if={payload.commits}>
+            <Card icon={event.integration}>
+              <header
+                css={{
+                  flexFlow: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <UI.Title>{payload.commits.length} commits</UI.Title>
+                <nav css={{ flexFlow: 'row' }}>
+                  <UI.Icon name="arrowminleft" color="#000" />
+                  <UI.Icon name="arrowminright" color="#000" />
+                </nav>
+              </header>
+
               {payload.commits.map(commit => (
-                <UI.Text key={commit.sha}>
-                  {emojinize.encode(commit.message)}
-                </UI.Text>
+                <commit key={commit.sha}>
+                  <UI.Text html={marky(commit.message)} />
+                </commit>
               ))}
-            </content>
-            <icon>
-              <UI.Icon name={event.integration} />
-            </icon>
-          </body>
+            </Card>
+          </content>
         )
 
       case 'IssueCommentEvent':
         return (
-          <body if={payload.comment}>
+          <content if={payload.comment}>
             <content>
-              <UI.Text>{emojinize.encode(payload.comment.body)}</UI.Text>
+              <UI.Text html={marky(payload.comment.body)} />
             </content>
-          </body>
+          </content>
         )
     }
 
     return null
   }
 
-  render({ event }) {
+  render({ event, style }) {
     const { verb, data } = event
     if (!data) {
       console.log('no data')
@@ -47,26 +60,40 @@ export default class FeedItem {
     const body = this.getBody(event, data)
 
     return (
-      <feeditem>
+      <feeditem style={style}>
         <info if={actor}>
-          <avatar $img={actor.avatar_url} />
+          <avatar
+            css={{
+              background: `url(${actor.avatar_url})`,
+              backgroundSize: 'cover',
+            }}
+          />
           <UI.Text $name>{actor.login} </UI.Text>
           <UI.Text $action>{verb} </UI.Text>
           <UI.Date $date>{event.updated || event.created}</UI.Date>
         </info>
-        {body}
+        <body if={body}>{body}</body>
       </feeditem>
     )
   }
 
   static style = {
+    feeditem: {
+      width: '100%',
+      justifyContent: 'flex-start',
+      overflow: 'hidden',
+      padding: [0, 10],
+    },
     info: {
       flexFlow: 'row',
       flexWrap: 'wrap',
       alignItems: 'center',
       whiteSpace: 'pre',
       fontSize: 13,
-      marginBottom: 5,
+      height: 40,
+    },
+    body: {
+      height: `calc(100% - 40px)`,
     },
     name: {
       fontWeight: 500,
@@ -77,22 +104,9 @@ export default class FeedItem {
     date: {
       opacity: 0.5,
     },
-    body: {
-      flexFlow: 'row',
-    },
     content: {
       flex: 1,
       padding: 10,
-    },
-    img: src => ({
-      background: `url(${src})`,
-      backgroundSize: 'cover',
-    }),
-    icon: {
-      width: 30,
-      height: 30,
-      margin: [10, 5, 0],
-      position: 'relative',
     },
     avatar: {
       width: 18,
@@ -100,5 +114,6 @@ export default class FeedItem {
       borderRadius: 100,
       marginRight: 8,
     },
+    commit: {},
   }
 }

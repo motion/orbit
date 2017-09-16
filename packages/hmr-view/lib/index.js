@@ -70,7 +70,7 @@ function proxyReactComponents({
       setTimeout(() => {
         instances.forEach(doHotReload);
         lastHotReload = Date.now();
-        // Black.view.emit('hmr')
+        window.lastHotReload = lastHotReload;
       });
     } else {
       viewProxies[path] = (0, _proxyClass2.default)(ReactClass);

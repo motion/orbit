@@ -96,8 +96,7 @@ class AddResponse {
 class TaskHeader {
   render({
     millerStore,
-    data,
-    data: { title, author },
+    data: { title },
     store: { labels, assigned },
     isActive,
   }) {
@@ -259,20 +258,17 @@ export default class TaskPane {
     ]
 
     return (
-      <UI.Theme name="clear-dark">
-        <Pane.Card isActive={isActive} actions={actions}>
-          <container>
-            <header>{this.renderItem(0)}</header>
-            <content>
-              {store.results
-                .slice(1)
-                .slice(0, -1)
-                .map((result, index) => this.renderItem(index + 1))}
-            </content>
-            <footer>{this.renderItem(store.results.length - 1)}</footer>
-          </container>
-        </Pane.Card>
-      </UI.Theme>
+      <Pane.Card isActive={isActive} actions={actions}>
+        <container>
+          <header>{this.renderItem(0)}</header>
+          <content>
+            {store.results
+              .slice(1, -1)
+              .map((result, index) => this.renderItem(index + 1))}
+          </content>
+          <footer>{this.renderItem(store.results.length - 1)}</footer>
+        </container>
+      </Pane.Card>
     )
   }
 

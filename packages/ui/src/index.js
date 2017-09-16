@@ -43,6 +43,7 @@ import import_Circle from './circle'
 import import_Surface from './surface'
 import import_SizedSurface from './sizedSurface'
 import import_Date from './date'
+import import_FakeText from './fake/fakeText'
 
 // effects
 import import_Glow from './effects/glow'
@@ -111,3 +112,4 @@ export const Checkbox = import_Checkbox
 export const Toggle = import_Toggle
 export const Field = import_Field
 export const Select = import_Select
+export const FakeText = import_FakeText

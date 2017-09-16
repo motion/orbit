@@ -348,13 +348,16 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   }
 
   // autorun vs reaction
-  if (Array.isArray(val)) {
-    // reaction
-    stop = Mobx.reaction(val[0], watcher(val[1]), val[3] || true)
-  } else {
-    //autorun
-    stop = Mobx.autorun(watcher(val))
-  }
+  // settimeout allows the watchers to run after react renders
+  setTimeout(() => {
+    if (Array.isArray(val)) {
+      // reaction
+      stop = Mobx.reaction(val[0], watcher(val[1]), val[3] || true)
+    } else {
+      //autorun
+      stop = Mobx.autorun(watcher(val))
+    }
+  })
 
   Object.defineProperty(obj, method, {
     get() {

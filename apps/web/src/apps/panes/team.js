@@ -38,6 +38,14 @@ export default class BarTeam extends Component<Props> {
     const heights = [55, 40, 280, ...store.results.map(event => event.height)]
     const getRowHeight = index => heights[index] || 100
 
+    if (!store.results.length) {
+      return (
+        <Pane.Card $$padded>
+          <UI.FakeText lines={10} />
+        </Pane.Card>
+      )
+    }
+
     return (
       <Pane.Card>
         <UI.List

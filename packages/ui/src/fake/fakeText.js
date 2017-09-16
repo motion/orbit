@@ -2,17 +2,20 @@ import { view } from '@mcro/black'
 import { range } from 'lodash'
 
 @view.ui
-export default class FakeText {
+export default class FakeText extends React.PureComponent {
   static defaultProps = {
     minWidth: 40,
     maxWidth: 100,
-    lineHeight: 16,
+    lineHeight: 20,
+    lines: 1,
   }
 
   lines = []
 
   getLineWidth = key => {
-    if (this.lines[key]) return this.lines[key]
+    if (this.lines[key]) {
+      return this.lines[key]
+    }
     const { minWidth, maxWidth } = this.props
     this.lines[key] = ((Math.random() * (maxWidth - minWidth) + minWidth) ^
       0).toString()
@@ -20,27 +23,33 @@ export default class FakeText {
   }
 
   render() {
-    const { lines, fontSize, lineHeight, ...props } = this.props
+    const {
+      lines,
+      fontSize,
+      lineHeight,
+      minWidth,
+      maxWidth,
+      ...props
+    } = this.props
 
     return (
       <root {...props}>
-        {range(lines).map(i =>
+        {range(lines).map(i => (
           <fakeline
             key={i}
             style={{
-              marginBottom: lineHeight,
-              height: fontSize,
+              marginBottom: 5,
+              height: lineHeight - 5,
               width: `${this.getLineWidth(i)}%`,
             }}
           />
-        )}
+        ))}
       </root>
     )
   }
   static style = {
     root: {
       flex: 1,
-      flexFlow: 'row',
     },
     fakeline: {
       backgroundColor: 'rgba(200, 200, 200, 0.15)',

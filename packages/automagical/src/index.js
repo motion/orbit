@@ -38,17 +38,16 @@ export default function automagical() {
       if (!Klass.prototype.constructor) {
         return Klass
       }
-
       Klass.prototype.automagic = function() {
         automagic(this)
       }
-
       return Klass
     },
   }
 }
 
 const FILTER_KEYS = {
+  automagic: true,
   componentDidMount: true,
   componentDidUpdate: true,
   componentWillMount: true,
@@ -76,11 +75,11 @@ const FILTER_KEYS = {
   glossElement: true,
 }
 
-function collectGetterPropertyDescriptors(obj) {
-  const proto = Object.getPrototypeOf(obj)
+function collectGetterPropertyDescriptors(proto) {
   const fproto = Object.getOwnPropertyNames(proto).filter(
     x => !FILTER_KEYS[x] && x[0] !== '_'
   )
+
   return fproto.reduce(
     (acc, cur) => ({
       ...acc,

@@ -50,7 +50,10 @@ const inputStyle = {
   fontSize: 32,
 }
 
-@view.provide({ millerStore: MillerStore, barStore: BarStore })
+@view.provide({
+  millerStore: MillerStore,
+  barStore: BarStore,
+})
 @view
 export default class BarPage {
   componentWillMount() {

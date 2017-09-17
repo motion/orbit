@@ -42,9 +42,9 @@ export default class BarTeam extends Component<Props> {
 
   render({ store, paneStore }: Props) {
     const heights = [
-      55,
-      40,
-      280,
+      65,
+      36,
+      260,
       ...(store.events || []).map(event => event.height),
     ]
     const getRowHeight = index => heights[index] || 100
@@ -85,7 +85,10 @@ export default class BarTeam extends Component<Props> {
           virtualized={{
             rowHeight: getRowHeight,
           }}
-          itemProps={paneStore.itemProps}
+          itemProps={{
+            ...paneStore.itemProps,
+            glow: false,
+          }}
           items={[
             () => (
               <section>

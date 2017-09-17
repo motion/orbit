@@ -64,7 +64,14 @@ export default class BarPage {
       <UI.Theme name="clear-dark">
         <bar ref={barStore.ref('barRef').set} $$fullscreen>
           <header $$draggable>
+            <UI.Icon
+              $searchIcon
+              size={18}
+              name="zoom"
+              color={[255, 255, 255, 0.1]}
+            />
             <UI.Input
+              $searchInput
               onClick={barStore.onClickBar}
               size={2.2}
               getRef={barStore.onInputRef}
@@ -73,15 +80,9 @@ export default class BarPage {
               value={barStore.textboxVal}
               borderWidth={0}
               fontWeight={200}
-              css={{
-                padding: [0, 20],
-                ...inputStyle,
-              }}
+              css={inputStyle}
             />
             <forwardcomplete>{barStore.peekItem}</forwardcomplete>
-            <pasteicon if={false}>
-              <UI.Icon size={50} type="detailed" name="paper" />
-            </pasteicon>
           </header>
           <Miller
             pane={Pane}
@@ -103,27 +104,24 @@ export default class BarPage {
       background: [120, 120, 120, 0.7],
       flex: 1,
     },
-    results: {
-      borderTop: [1, 'dotted', [0, 0, 0, 0.1]],
-      flex: 2,
-      flexFlow: 'row',
-      transition: 'transform 80ms linear',
-      transform: {
-        z: 0,
-        x: 0,
-      },
+    header: {
+      position: 'relative',
     },
-    pasteicon: {
+    searchIcon: {
       position: 'absolute',
-      top: -30,
-      right: -20,
-      width: 128,
-      height: 128,
+      top: 4,
+      bottom: 0,
+      alignItems: 'center',
+      height: 'auto',
+      left: 18,
+    },
+    searchInput: {
+      padding: [0, 20, 0, 50],
     },
     forwardcomplete: {
       position: 'absolute',
       top: 25,
-      left: 20,
+      left: 50,
       opacity: 0.3,
       ...inputStyle,
       zIndex: -1,

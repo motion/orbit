@@ -73,13 +73,13 @@ export default class Icon extends React.PureComponent<Props> {
       alignSelf: alignSelf,
       alignItems: 'center',
       opacity: opacity,
-      color: color ? `${$(color).toString()} !important` : '',
+      color: color ? $(color).toString() : '',
       width: width || size,
       height: height || size,
       fontSize: size,
       lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
       '&:hover': hoverColor && {
-        color: `${hoverColor.toString()} !important`,
+        color: hoverColor.toString(),
       },
     }
 

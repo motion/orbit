@@ -47,7 +47,10 @@ export class Gloss {
     this.helpers = this.css.helpers
     this.stylesheet = JSS.createStyleSheet()
     this.stylesheet.attach()
-    this.baseStyles = this.attachStyles(false, opts.baseStyles)
+    if (opts.baseStyles) {
+      this.baseStyles = true
+      this.attachStyles(null, opts.baseStyles)
+    }
     this.createElement = fancyElement(this, this.stylesheet)
     this.decorator.createElement = this.createElement
   }
@@ -148,12 +151,12 @@ export class Gloss {
 
   // runs niceStyleSheet on non-function styles
   attachStyles = (
-    childKey: string,
-    styles: any,
+    childKey: ?string,
+    styles: ?{ [a: string]: Object },
     force: boolean = false
   ): void => {
     if (!styles) {
-      return
+      return null
     }
     for (const key of Object.keys(styles)) {
       const style = styles[key]

@@ -135,7 +135,10 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         if (baseStyles) {
           const isParentStyle = prop[1] === $
           if (isParentStyle) {
-            addStyle(baseStyles, prop.slice(2), val, false)
+            const inlineStyle = addStyle(styles, prop.slice(2), val, false)
+            if (inlineStyle) {
+              style = { ...style, ...inlineStyle }
+            }
             continue
           }
         }

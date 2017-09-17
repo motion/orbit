@@ -80,7 +80,10 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
         finalStyles.push(style)
       }
       if (checkTheme && theme) {
-        const themeKey = `${key}--theme`
+        const themeKey = `${key.replace(
+          `--${glossUID}`,
+          `--${this.themeKey}`
+        )}--theme`
         const themeStyle = theme.getRule(themeKey)
         if (themeStyle) {
           finalStyles.push(themeStyle)

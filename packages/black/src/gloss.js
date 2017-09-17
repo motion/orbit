@@ -147,14 +147,22 @@ const Gloss = gloss({
   themeProp: 'theme',
   tagName: 'tagName',
   isColor: color => color && !!color.rgb,
-  toColor: color => {
-    const cached = ColorCache.get(color)
-    if (cached) {
-      return cached
+  toColor: obj => {
+    const { model, color, valpha } = obj
+    if (model === 'rgb') {
+      if (typeof valpha === 'number') {
+        return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${valpha})`
+      }
+      return `rgb(${color[0]}, ${color[1]}, ${color[2]})`
     }
-    const res = color.toString()
-    ColorCache.set(color, res)
-    return res
+    return color.toString()
+    // const cached = ColorCache.get(color)
+    // if (cached) {
+    //   return cached
+    // }
+    // const res = color.toString()
+    // ColorCache.set(color, res)
+    // return res
   },
 })
 

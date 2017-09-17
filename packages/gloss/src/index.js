@@ -3,6 +3,7 @@ import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import JSS from './stylesheet'
 import * as Helpers_ from '@mcro/css'
+import hash from 'hash-sum'
 
 // exports
 import ThemeProvide_ from './components/themeProvide'
@@ -65,6 +66,8 @@ export class Gloss {
 
       const hasTheme = Child.theme && typeof Child.theme === 'function'
       const themeSheet = JSS.createStyleSheet().attach()
+      const ViewCache = {}
+      const id = `${Math.random()}`.replace('.', '')
 
       if (hasTheme) {
         Child.prototype.glossUpdateTheme = function(props) {
@@ -81,16 +84,33 @@ export class Gloss {
           }
           if (activeTheme) {
             const childTheme = Child.theme(props, activeTheme, this)
+
+            // cache
+            const oldKey = this.themeKey
+            this.themeKey = `${id}${hash(childTheme)}`
+            if (ViewCache[this.themeKey]) {
+              ViewCache[this.themeKey]++
+              return
+            }
+            if (oldKey) {
+              ViewCache[this.themeKey]--
+              if (ViewCache[this.themeKey] === 0) {
+                for (const key of this.themeActiveRules) {
+                  this.theme.deleteRule(key)
+                }
+              }
+            }
+            ViewCache[this.themeKey] = 1
+
             const rules = {}
             for (const name of Object.keys(childTheme)) {
               const style = css(childTheme[name])
-              const selector = `${name}--${Child.glossUID}--theme`
+              const selector = `${name}--${this.themeKey}--theme`
               rules[selector] = style
               this.theme.deleteRule(selector)
             }
+            this.themeActiveRules = Object.keys(rules)
             this.theme.addRules(rules)
-            // requestIdleCallback(() => {
-            // })
           }
         }
 
@@ -103,15 +123,19 @@ export class Gloss {
           }
         }
 
-        // updateTheme on willUpdate
-        // const ogcomponentWillUnmount = Child.prototype.componentWillUnmount
-        // Child.prototype.componentWillUnmount = function(...args) {
-        //   // remove sheet
-        //   // this.theme.detach()
-        //   if (ogcomponentWillUnmount) {
-        //     return ogcomponentWillUnmount.call(this, ...args)
-        //   }
-        // }
+        const ogcomponentWillUnmount = Child.prototype.componentWillUnmount
+        Child.prototype.componentWillUnmount = function(...args) {
+          // remove cache
+          ViewCache[this.themeKey]--
+          if (ViewCache[this.themeKey] === 0 && this.themeActiveRules) {
+            for (const key of this.themeActiveRules) {
+              this.theme.deleteRule(key)
+            }
+          }
+          if (ogcomponentWillUnmount) {
+            return ogcomponentWillUnmount.call(this, ...args)
+          }
+        }
       }
 
       // ONLY IN DEV -- ALWAYS UPDATE STYLESHEET SO HMR STYLE CHANGES WORK

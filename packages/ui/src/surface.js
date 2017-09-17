@@ -9,6 +9,7 @@ import Glow from './effects/glow'
 import Glint from './effects/glint'
 import Popover from './popover'
 import type { Color } from '@mcro/gloss'
+import { object } from 'prop-types'
 
 export type Props = {
   active?: boolean,
@@ -108,9 +109,12 @@ const hasChildren = (children: any): boolean =>
     ? children.reduce((a, b) => a || !!b, false)
     : !!children
 
-@inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Surface extends React.PureComponent<Props> {
+  static contextTypes = {
+    provided: object,
+  }
+
   static defaultProps = {
     tagName: IS_PROD ? 'div' : 'surface',
     borderStyle: 'solid',
@@ -124,6 +128,10 @@ export default class Surface extends React.PureComponent<Props> {
     if (this.props.onClick) {
       this.props.onClick(e)
     }
+  }
+
+  get uiContext() {
+    return this.context.provided.uiContext
   }
 
   render() {
@@ -213,7 +221,6 @@ export default class Surface extends React.PureComponent<Props> {
       theme,
       tooltip,
       tooltipProps,
-      uiContext,
       width,
       wrapElement,
       ...props
@@ -282,29 +289,30 @@ export default class Surface extends React.PureComponent<Props> {
         {children}
       </element>,
       noElement && noWrap && hasChildren(children) && children,
-      <Popover
-        key={4}
-        if={tooltip}
-        theme="dark"
-        background
-        openOnHover
-        closeOnClick
-        noHover
-        noArrow
-        animation="bounce 150ms"
-        target={`.${this.uniq}`}
-        padding={[2, 7]}
-        borderRadius={5}
-        distance={8}
-        forgiveness={8}
-        arrowSize={10}
-        delay={100}
-        popoverProps={{ style: { fontSize: 12 } }}
-        {...tooltipProps}
-      >
-        {tooltip}
-      </Popover>,
-    ]
+      tooltip && (
+        <Popover
+          key={4}
+          theme="dark"
+          background
+          openOnHover
+          closeOnClick
+          noHover
+          noArrow
+          animation="bounce 150ms"
+          target={`.${this.uniq}`}
+          padding={[2, 7]}
+          borderRadius={5}
+          distance={8}
+          forgiveness={8}
+          arrowSize={10}
+          delay={100}
+          popoverProps={{ style: { fontSize: 12 } }}
+          {...tooltipProps}
+        >
+          {tooltip}
+        </Popover>
+      ),
+    ].filter(Boolean)
 
     const surface = (
       <surface
@@ -381,6 +389,8 @@ export default class Surface extends React.PureComponent<Props> {
   }
 
   static theme = (props, theme, self) => {
+    const uiContext = self.uiContext
+
     // sizes
     const size = props.size === true ? 1 : props.size || 1
     const height = props.height
@@ -472,13 +482,9 @@ export default class Surface extends React.PureComponent<Props> {
     radius = typeof radius === 'number' ? Math.round(radius) : radius
 
     const borderRadius = {}
-    if (props.uiContext && props.uiContext.inSegment) {
-      borderRadius.borderLeftRadius = props.uiContext.inSegment.first
-        ? radius
-        : 0
-      borderRadius.borderRightRadius = props.uiContext.inSegment.last
-        ? radius
-        : 0
+    if (uiContext && uiContext.inSegment) {
+      borderRadius.borderLeftRadius = uiContext.inSegment.first ? radius : 0
+      borderRadius.borderRightRadius = uiContext.inSegment.last ? radius : 0
     } else if (props.circular) {
       borderRadius.borderRadius = size * LINE_HEIGHT
     } else {
@@ -540,8 +546,7 @@ export default class Surface extends React.PureComponent<Props> {
       background: 'transparent',
     }
 
-    const focusable =
-      props.focusable || (props.uiContext && props.uiContext.inForm)
+    const focusable = props.focusable || (uiContext && uiContext.inForm)
     const focusStyle = !props.chromeless && {
       ...theme.focus,
       boxShadow: [...boxShadow, [0, 0, 0, 4, $(theme.focus.color).alpha(0.05)]],
@@ -610,9 +615,7 @@ export default class Surface extends React.PureComponent<Props> {
         marginBottom: props.marginBottom,
         marginTop: props.marginTop,
         marginLeft:
-          props.uiContext &&
-          props.uiContext.inSegment &&
-          !props.uiContext.inSegment.first
+          uiContext && uiContext.inSegment && !uiContext.inSegment.first
             ? -1
             : props.marginLeft,
         marginRight: props.marginRight,

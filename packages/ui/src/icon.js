@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import color from 'color'
+import $ from 'color'
 import Popover from './popover'
 import names from './iconNames'
 import iconsDetailed from './iconsDetailed'
@@ -25,8 +25,7 @@ export type Props = {
   opacity?: number,
 }
 
-@view.ui
-export default class Icon extends React.Component<Props> {
+export default class Icon extends React.PureComponent<Props> {
   static defaultProps = {
     size: 16,
     type: 'mini',
@@ -35,26 +34,29 @@ export default class Icon extends React.Component<Props> {
 
   uniq = `icon-${Math.round(Math.random() * 1000000)}`
 
-  render({
-    color,
-    hoverColor,
-    size,
-    tooltip,
-    tooltipProps,
-    name,
-    type,
-    className,
-    onClick,
-    attach,
-    children,
-    button,
-    margin,
-    opacity,
-    style,
-    contentEditable,
-    alignSelf,
-    ...props
-  }: Props) {
+  render() {
+    const {
+      color,
+      hoverColor,
+      size,
+      tooltip,
+      tooltipProps,
+      name,
+      type,
+      className,
+      onClick,
+      attach,
+      children,
+      button,
+      margin,
+      opacity,
+      style,
+      contentEditable,
+      alignSelf,
+      width,
+      height,
+      ...props
+    } = this.props
     const iconName = findMatch(name)
     let content = children || !iconName ? name : ''
 
@@ -66,13 +68,28 @@ export default class Icon extends React.Component<Props> {
       )
     }
 
+    const styles = {
+      margin,
+      alignSelf: alignSelf,
+      alignItems: 'center',
+      opacity: opacity,
+      color: color ? `${$(color).toString()} !important` : '',
+      width: width || size,
+      height: height || size,
+      fontSize: size,
+      lineHeight: `${size / 12 - 1}rem`, // scale where 1 when 14
+      '&:hover': hoverColor && {
+        color: `${hoverColor.toString()} !important`,
+      },
+    }
+
     return (
       <icon
         contentEditable={false}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
         style={{
-          margin: margin || (style && style.margin),
+          ...styles,
           ...style,
         }}
         {...props}
@@ -82,6 +99,10 @@ export default class Icon extends React.Component<Props> {
           contentEditable={false}
           className={`nc-icon-${type} ${iconName}`}
           contentEditable={contentEditable}
+          style={{
+            margin: 'auto',
+            textRendering: 'geometricPrecision',
+          }}
         >
           {content}
         </inner>
@@ -102,32 +123,5 @@ export default class Icon extends React.Component<Props> {
         </Popover>
       </icon>
     )
-  }
-
-  static style = {
-    icon: {
-      alignItems: 'center',
-    },
-    inner: {
-      margin: 'auto',
-      textRendering: 'geometricPrecision',
-    },
-  }
-
-  static theme = props => {
-    return {
-      icon: {
-        alignSelf: props.alignSelf,
-        opacity: props.opacity,
-        color: props.color ? `${color(props.color).toString()} !important` : '',
-        width: props.width || props.size,
-        height: props.height || props.size,
-        fontSize: props.size,
-        lineHeight: `${props.size / 12 - 1}rem`, // scale where 1 when 14
-        '&:hover': props.hoverColor && {
-          color: `${props.hoverColor.toString()} !important`,
-        },
-      },
-    }
   }
 }

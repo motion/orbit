@@ -51,11 +51,12 @@ class BarMainStore {
     {
       id: 1100,
       title: 'Me',
-      type: 'feed',
+      type: 'person',
       icon: 'radio',
       data: {
         special: true,
         person: 'Nate Wienert',
+        image: 'me',
       },
       actions: ['respond to recent'],
     },

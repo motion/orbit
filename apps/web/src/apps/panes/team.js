@@ -59,7 +59,14 @@ export default class BarTeam extends Component<Props> {
     }
 
     return (
-      <Pane.Card>
+      <Pane.Card
+        css={{
+          background: [255, 255, 255, 0.1],
+          transition: 'all ease-in 80ms',
+          zIndex: 1000,
+          transform: { y: paneStore.isActive ? -15 : 0 },
+        }}
+      >
         <UI.Drawer
           from="bottom"
           open={store.isOpen}
@@ -78,6 +85,7 @@ export default class BarTeam extends Component<Props> {
           virtualized={{
             rowHeight: getRowHeight,
           }}
+          itemProps={paneStore.itemProps}
           items={[
             () => (
               <section>
@@ -112,7 +120,10 @@ export default class BarTeam extends Component<Props> {
             ...(store.events || [])
               .map(event => () => <FeedItem event={event} key={event.id} />),
           ]}
-          getItem={item => item()}
+          getItem={(item, index) => ({
+            highlight: () => index === paneStore.activeIndex,
+            children: item(),
+          })}
         />
       </Pane.Card>
     )

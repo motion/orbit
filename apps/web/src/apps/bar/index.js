@@ -61,7 +61,7 @@ export default class BarPage {
     return (
       <UI.Theme name="clear-dark">
         <bar ref={barStore.ref('barRef').set} $$fullscreen>
-          <header css={{ borderBottom: [1, [0, 0, 0, 0.1]] }} $$draggable>
+          <header $$draggable>
             <UI.Input
               onClick={barStore.onClickBar}
               size={2.2}

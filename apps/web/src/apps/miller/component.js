@@ -66,7 +66,6 @@ export default class Miller {
   static style = {
     pane: {
       height: '100%',
-      overflow: 'hidden',
     },
     notFirst: {
       flex: 1,

@@ -33,6 +33,7 @@ type Props = {
   transparent?: boolean,
   zIndex: number,
   scrollable?: boolean,
+  containerProps?: Object,
 }
 
 @view.ui
@@ -64,6 +65,7 @@ export default class Drawer extends React.PureComponent<Props> {
     scrollable,
     closePortal,
     style,
+    containerProps,
     ...props
   }: Props) {
     const unit = +percent ? '%' : 'px'
@@ -79,7 +81,7 @@ export default class Drawer extends React.PureComponent<Props> {
     }
 
     return (
-      <drawer>
+      <drawer {...containerProps}>
         <Surface
           style={{ ...style, ...panelStyle }}
           $panel

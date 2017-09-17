@@ -1,9 +1,7 @@
 export default class PaneStore {
   itemProps = {
-    size: 1.2,
     glow: true,
     hoverable: true,
-    fontSize: 26,
     padding: [10, 10],
     highlightBackground: [0, 0, 0, 0.2],
     highlightColor: [255, 255, 255, 1],

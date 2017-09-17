@@ -230,7 +230,11 @@ export default class BarMain extends React.Component<> {
           onSelect={this.onSelect}
           groupKey="category"
           items={mainStore.results}
-          itemProps={paneStore.itemProps}
+          itemProps={{
+            ...paneStore.itemProps,
+            fontSize: 26,
+            size: 1.2,
+          }}
           getItem={(result, index) => ({
             key: result.id,
             highlight: () => index === paneStore.activeIndex,

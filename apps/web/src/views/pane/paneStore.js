@@ -4,7 +4,7 @@ export default class PaneStore {
   itemProps = {
     glow: true,
     padding: [10, 10],
-    highlightBackground: [0, 0, 0, 0.2],
+    highlightBackground: [0, 0, 0, 0.15],
     highlightColor: [255, 255, 255, 1],
   }
 

@@ -352,18 +352,19 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
 
   // autorun vs reaction
   // settimeout allows the watchers to run after react renders
-  // setTimeout(() =>
-  if (disposed) {
-    return
-  }
-  if (Array.isArray(val)) {
-    // reaction
-    stop = Mobx.reaction(val[0], watcher(val[1]), val[3] || true)
-  } else {
-    //autorun
-    stop = Mobx.autorun(watcher(val))
-  }
-  // })
+  setTimeout(() => {
+    if (disposed) {
+      console.log('avoiding work')
+      return
+    }
+    if (Array.isArray(val)) {
+      // reaction
+      stop = Mobx.reaction(val[0], watcher(val[1]), val[3] || true)
+    } else {
+      //autorun
+      stop = Mobx.autorun(watcher(val))
+    }
+  })
 
   Object.defineProperty(obj, method, {
     get() {

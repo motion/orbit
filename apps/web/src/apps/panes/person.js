@@ -7,6 +7,7 @@ import * as Pane from '~/apps/panes/pane'
 import type { PaneProps, PaneResult } from '~/types'
 import Calendar from './views/calendar'
 import FeedItem from './views/feedItem'
+import Calendar2 from './calendar'
 
 const eventToPaneResult = (event: Event): PaneResult => ({
   title: event.title,
@@ -44,7 +45,8 @@ export default class BarPerson extends Component<Props> {
     const heights = [
       90,
       55,
-      260,
+      200,
+      35,
       ...(store.events || []).map(event => event.height),
     ]
     const getRowHeight = index => heights[index] || 100
@@ -101,11 +103,28 @@ export default class BarPerson extends Component<Props> {
             ),
             () => (
               <section>
-                <UI.Title opacity={1} marginBottom={10}>
-                  Tuesday, the 12th
-                </UI.Title>
-                <Calendar />
-                <Calendar />
+                <div
+                  $$row
+                  css={{ alignItems: 'flex-start', maxHeight: '100%' }}
+                >
+                  <cal1 css={{ padding: [0, 10] }}>
+                    <Calendar2 />
+                  </cal1>
+                  <cal2
+                    css={{
+                      borderLeft: [1, [0, 0, 0, 0.1]],
+                      padding: [0, 0, 0, 10],
+                      margin: [0, 0, 0, 10],
+                    }}
+                  >
+                    <Calendar />
+                  </cal2>
+                </div>
+              </section>
+            ),
+            () => (
+              <section>
+                <UI.Title opacity={0.5}>Recently</UI.Title>
               </section>
             ),
             ...(store.events || [])

@@ -151,7 +151,7 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
             true
           )
           if (inlineStyle) {
-            style = { ...style, ...inlineStyle }
+            style = { ...style, ...objToCamel(inlineStyle) }
           }
         }
       }

@@ -22,6 +22,7 @@ export const CAMEL_TO_SNAKE = {
   backgroundPosition: 'background-position',
   backgroundRepeat: 'background-repeat',
   backgroundSize: 'background-size',
+  backdropFilter: 'backdrop-filter',
   borderBottom: 'border-bottom',
   borderBottomColor: 'border-bottom-color',
   borderBottomLeftRadius: 'border-bottom-left-radius',

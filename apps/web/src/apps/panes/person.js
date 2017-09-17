@@ -12,7 +12,7 @@ const eventToPaneResult = (event: Event): PaneResult => ({
   title: event.title,
 })
 
-class BarTeamStore {
+class BarPersonStore {
   props: PaneProps
 
   start() {
@@ -32,18 +32,18 @@ class BarTeamStore {
   }
 }
 
-type Props = PaneProps & { store: BarTeamStore }
+type Props = PaneProps & { store: BarPersonStore }
 
 @view({
-  store: BarTeamStore,
+  store: BarPersonStore,
 })
-export default class BarTeam extends Component<Props> {
+export default class BarPerson extends Component<Props> {
   static defaultProps: Props
 
   render({ store, paneStore }: Props) {
     const heights = [
-      65,
-      60,
+      90,
+      55,
       260,
       ...(store.events || []).map(event => event.height),
     ]
@@ -65,20 +65,6 @@ export default class BarTeam extends Component<Props> {
           transform: { y: paneStore.isActive ? -15 : 0 },
         }}
       >
-        <UI.Drawer
-          from="bottom"
-          open={store.isOpen}
-          onClickOverlay={store.ref('isOpen').toggle}
-          showOverlay
-          overlayBlur
-          css={{ right: 6, left: 6 }}
-        >
-          <UI.Theme name="light">
-            <UI.Surface background="#fff" flex padding={20} borderTopRadius={6}>
-              <UI.Title>Have a nice day</UI.Title>
-            </UI.Surface>
-          </UI.Theme>
-        </UI.Drawer>
         <UI.List
           getRef={paneStore.setList}
           virtualized={{
@@ -90,9 +76,10 @@ export default class BarTeam extends Component<Props> {
           }}
           items={[
             () => (
-              <section>
+              <section $$row>
+                <img $image src={`/images/${paneStore.data.image}.jpg`} />
                 <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
-                  Team {paneStore.data.team}
+                  {paneStore.data.person}
                 </UI.Title>
               </section>
             ),
@@ -104,10 +91,11 @@ export default class BarTeam extends Component<Props> {
                   css={{ justifyContent: 'flex-end' }}
                 >
                   <UI.Button highlight>All</UI.Button>
-                  <UI.Button icon="Cal">Calendar</UI.Button>
-                  <UI.Button icon="Github">Github</UI.Button>
+                  <UI.Button icon="cal">Calendar</UI.Button>
+                  <UI.Button icon="github">Github</UI.Button>
                   <UI.Button icon="hard">Drive</UI.Button>
-                  <UI.Button icon="Google">Google Docs</UI.Button>
+                  <UI.Button icon="atl">Jira</UI.Button>
+                  <UI.Button icon="google">Google Docs</UI.Button>
                 </UI.Row>
               </section>
             ),
@@ -136,6 +124,13 @@ export default class BarTeam extends Component<Props> {
     section: {
       padding: [8, 10],
       justifyContent: 'center',
+    },
+    image: {
+      width: 50,
+      height: 50,
+      borderRadius: 1000,
+      margin: 'auto',
+      marginRight: 10,
     },
   }
 }

@@ -3,7 +3,6 @@ export default class PaneStore {
   listRef = null
   itemProps = {
     glow: true,
-    hoverable: true,
     padding: [10, 10],
     highlightBackground: [0, 0, 0, 0.2],
     highlightColor: [255, 255, 255, 1],
@@ -44,10 +43,7 @@ export default class PaneStore {
       this.listRef = ref
 
       // scroll to row in list
-      this.react(
-        () => this.activeIndex,
-        this.listRef.scrollToRow
-      )
+      this.react(() => this.activeIndex, this.listRef.scrollToRow)
     }
   }
 }

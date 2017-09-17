@@ -114,24 +114,22 @@ class BarMainStore {
     {
       id: 20,
       title: 'Stephanie',
-      type: 'feed',
-      data: {
-        image: 'steph',
-      },
+      type: 'person',
+      data: { person: 'Stephanie He', image: 'steph' },
       category: 'People',
     },
     {
       id: 21,
       title: 'Nate',
-      type: 'feed',
-      data: { person: 'natew', image: 'me' },
+      type: 'person',
+      data: { person: 'Nate Wienert', image: 'me' },
       category: 'People',
     },
     {
       id: 22,
       title: 'Nick',
-      type: 'feed',
-      data: { person: 'ncammarata', image: 'nick' },
+      type: 'person',
+      data: { person: 'Nick Cammarata', image: 'nick' },
       category: 'People',
     },
   ]

@@ -16,7 +16,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   type: thing.type,
   icon: 'icon',
   data: thing.toJSON(),
-  category: 'Github',
+  category: 'Recently',
 })
 
 class BarMainStore {
@@ -49,52 +49,64 @@ class BarMainStore {
 
   browse: Array<PaneResult> = [
     {
-      id: 1000,
-      title: 'Team: Motion',
-      type: 'team',
-      data: {
-        team: 'motion',
-      },
-      actions: ['like motion'],
-    },
-    {
       id: 1100,
-      title: 'Recent',
+      title: 'Me',
       type: 'feed',
       icon: 'radio',
       data: {
         special: true,
+        person: 'Nate Wienert',
       },
       actions: ['respond to recent'],
     },
     {
-      id: 1200,
-      data: { message: 'assigned' },
-      title: 'Assigned to me',
-      type: 'message',
-      icon: 'check',
-    },
-    {
       id: 1300,
       data: { message: 'my team' },
-      title: 'My Team',
-      category: 'Browse',
+      title: 'Github',
+      category: 'Apps',
       type: 'message',
-      url() {
-        return '/?home=true'
-      },
-      icon: 'objects_planet',
+      icon: 'github',
     },
     {
       id: 1400,
       data: { message: 'from company' },
-      title: 'Company',
-      category: 'Browse',
+      title: 'Jira',
+      category: 'Apps',
       type: 'message',
-      url() {
-        return '/?home=true'
+      icon: 'atlas',
+    },
+  ]
+
+  teams: Array<PaneResult> = [
+    {
+      id: 1030,
+      title: 'Motion',
+      type: 'team',
+      category: 'Teams',
+      data: {
+        team: 'Motion',
       },
-      icon: 'objects_planet',
+      actions: ['like motion'],
+    },
+    {
+      id: 1040,
+      title: 'Product',
+      type: 'team',
+      category: 'Teams',
+      data: {
+        team: 'Product',
+      },
+      actions: ['like motion'],
+    },
+    {
+      id: 1050,
+      title: 'Search',
+      type: 'team',
+      category: 'Teams',
+      data: {
+        team: 'Search',
+      },
+      actions: ['like motion'],
     },
   ]
 
@@ -167,8 +179,9 @@ class BarMainStore {
     return fuzzy(
       [
         ...this.browse,
-        ...this.things,
+        ...this.teams,
         ...this.people,
+        ...this.things,
         ...(includeTests ? this.tests : []),
         ...this.extras,
       ],

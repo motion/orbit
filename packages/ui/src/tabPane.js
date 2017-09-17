@@ -52,7 +52,8 @@ export default class TabPane extends React.PureComponent {
 
   static style = {
     tabpane: {
-      boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.2]]],
+      boxShadow: [[0, 0, 0, 4, [0, 0, 0, 0.05]]],
+      margin: [0, -4],
       background: '#f2f2f2',
     },
     tabs: {
@@ -81,6 +82,7 @@ export default class TabPane extends React.PureComponent {
     content: {
       flex: 1,
       background: '#fff',
+      padding: 10,
     },
   }
 }

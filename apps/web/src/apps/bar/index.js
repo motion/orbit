@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
@@ -101,7 +100,7 @@ export default class BarPage {
 
   static style = {
     bar: {
-      background: [100, 100, 110, 0.65],
+      background: [120, 120, 120, 0.7],
       flex: 1,
     },
     results: {

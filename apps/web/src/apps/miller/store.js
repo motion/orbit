@@ -1,6 +1,7 @@
 // @flow
 import { actionToKeyCode } from './helpers'
 import { sum, range, find, includes, flatten, memoize } from 'lodash'
+import { transaction } from 'mobx'
 
 type Schema = {
   title?: string,
@@ -64,36 +65,26 @@ export default class MillerStore {
   }
 
   start() {
+    let lastCol = null
     this.react(
-      () => {
-        return this.activeRow
-      },
+      () => this.activeItem,
       () => {
         if (
           this.activeItem &&
           this.activeItem.type &&
           this.activeItem.showChild !== false
         ) {
-          this.setTimeout(() => {
-            this.setSchema(this.activeCol + 1, this.activeItem)
-          })
-        }
-      },
-      true
-    )
+          const run = () => this.setSchema(this.activeCol + 1, this.activeItem)
 
-    this.react(
-      () => this.activeCol,
-      () => {
-        if (
-          this.activeItem &&
-          this.activeItem.type &&
-          this.activeItem.showChild !== false
-        ) {
-          this.setSchema(this.activeCol + 1, this.activeItem)
+          // if we're not moving cols, setTimeout to improve highlight speeds
+          if (lastCol === this.activeCol) {
+            this.setTimeout(run)
+          } else {
+            run()
+          }
         }
-      },
-      true
+        lastCol = this.activeCol
+      }
     )
 
     this.on(window, 'keydown', e => {
@@ -124,6 +115,7 @@ export default class MillerStore {
   }
 
   setSchema(index: number, schema: Schema) {
+    if (this.schema[index] && this.schema[index].id === schema.id) return
     if (this.schema.length < index) {
       this.schema = [...this.schema, schema]
     } else {
@@ -161,6 +153,7 @@ export default class MillerStore {
   }
 
   removeExcessCols() {
+    return
     // clean up old column variables
     this.prevActiveRows = this.prevActiveRows.slice(0, this.activeCol)
     this.schema = this.schema.slice(0, this.activeCol + 1)
@@ -206,9 +199,11 @@ export default class MillerStore {
 
     if (delta < 0) {
       if (this.activeCol === 0) return
-      this.activeCol = this.activeCol + delta
-      this.setActiveRow(this.prevActiveRows[this.activeCol])
-      this.removeExcessCols()
+      transaction(() => {
+        this.activeCol = this.activeCol + delta
+        this.setActiveRow(this.prevActiveRows[this.activeCol])
+      })
+      // this.removeExcessCols()
     }
   }
 

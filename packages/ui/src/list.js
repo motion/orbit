@@ -118,7 +118,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
   scrollToRow = (index: number) => {
     if (this.virtualListRef) {
       const row = this.getRealIndex(index)
-      console.log('row', row)
       this.virtualListRef.scrollToRow(row)
     }
   }

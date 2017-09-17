@@ -18,7 +18,7 @@ export default class PaneCard {
     this.setActions()
   }
 
-  render({ children, style, width }) {
+  render({ children, style, millerStore, width }) {
     return (
       <card style={{ width, ...style }}>
         <content>{children}</content>

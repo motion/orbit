@@ -347,10 +347,10 @@ export default class Surface extends React.PureComponent<Props> {
     },
     hasIconBefore: {
       // this adjusts for height
-      marginLeft: 'calc(5px + 1vh)',
+      marginLeft: 'calc(5px + 1vw)',
     },
     hasIconAfter: {
-      marginRight: 'calc(5px + 1vh)',
+      marginRight: 'calc(5px + 1vw)',
     },
     iconAfter: {
       order: 3,
@@ -558,6 +558,7 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
+    const iconPad = props.icon ? `- ${iconSize + 5}px - 1vw` : ''
 
     const result = {
       element: {
@@ -568,7 +569,7 @@ export default class Surface extends React.PureComponent<Props> {
         fontSize: props.fontSize,
         lineHeight: props.lineHeight || 'inherit',
         justifyContent: props.justify,
-        maxWidth: `calc(100% - ${props.icon ? iconSize + 5 : 0}px)`,
+        maxWidth: `calc(100% ${iconPad})`,
         maxHeight: '100%',
         textAlign: props.textAlign,
       },

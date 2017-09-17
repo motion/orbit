@@ -14,9 +14,12 @@ const eventToPaneResult = (event: Event): PaneResult => ({
 
 class BarTeamStore {
   props: PaneProps
+
   start() {
     this.props.getRef(this)
   }
+
+  isOpen = false
 
   @watch
   events: ?Array<Event> = (() =>
@@ -59,18 +62,14 @@ export default class BarTeam extends Component<Props> {
       <Pane.Card>
         <UI.Drawer
           from="bottom"
-          open
+          open={store.isOpen}
+          onClickOverlay={store.ref('isOpen').toggle}
           showOverlay
           overlayBlur
-          css={{ right: 20, left: 20 }}
+          css={{ right: 6, left: 6 }}
         >
           <UI.Theme name="light">
-            <UI.Surface
-              background="#fff"
-              flex
-              padding={20}
-              borderTopRadius={10}
-            >
+            <UI.Surface background="#fff" flex padding={20} borderTopRadius={6}>
               <UI.Title>Have a nice day</UI.Title>
             </UI.Surface>
           </UI.Theme>
@@ -82,7 +81,9 @@ export default class BarTeam extends Component<Props> {
           items={[
             () => (
               <section>
-                <UI.Title size={2}>Team {paneStore.data.team}</UI.Title>
+                <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+                  Team {paneStore.data.team}
+                </UI.Title>
               </section>
             ),
             () => (

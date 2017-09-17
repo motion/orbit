@@ -1,7 +1,6 @@
 // @flow
 import { actionToKeyCode } from './helpers'
 import { sum, range, find, includes, flatten, memoize } from 'lodash'
-import { transaction } from 'mobx'
 
 type Schema = {
   title?: string,
@@ -199,10 +198,8 @@ export default class MillerStore {
 
     if (delta < 0) {
       if (this.activeCol === 0) return
-      transaction(() => {
-        this.activeCol = this.activeCol + delta
-        this.setActiveRow(this.prevActiveRows[this.activeCol])
-      })
+      this.activeCol = this.activeCol + delta
+      this.setActiveRow(this.prevActiveRows[this.activeCol])
       // this.removeExcessCols()
     }
   }

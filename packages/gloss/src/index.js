@@ -73,7 +73,7 @@ export class Gloss {
         Child.prototype.glossUpdateTheme = function(props) {
           this.theme = this.theme || themeSheet
           let activeTheme
-          if (typeof theme === 'object') {
+          if (typeof props.theme === 'object') {
             activeTheme = { base: props.theme }
           } else {
             activeTheme =

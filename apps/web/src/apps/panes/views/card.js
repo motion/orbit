@@ -14,7 +14,13 @@ export default class PaneCard {
                   {title}
                 </UI.Title>
                 <service>
-                  <UI.Icon $icon color="#555" size={24} name={icon} />
+                  <UI.Icon
+                    if={false}
+                    $icon
+                    color="#555"
+                    size={24}
+                    name={icon}
+                  />
                   <id if={id}>#{id.slice(0, 4)}</id>
                 </service>
               </headingcontent>

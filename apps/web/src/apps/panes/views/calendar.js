@@ -56,27 +56,30 @@ export default class Calendar extends React.Component<> {
                     padding: [12, 12, 12, 12],
                   }}
                 >
-                  <date
+                  <div
+                    $date
                     css={{
                       flexFlow: 'row',
                     }}
                   >
-                    <time
+                    <div
+                      $time
                       css={{
                         opacity: 0.5,
                       }}
                     >
                       <UI.Text size={1.2}>{item.time}</UI.Text>
-                    </time>
-                  </date>
-                  <description
+                    </div>
+                  </div>
+                  <div
+                    $description
                     css={{
                       marginTop: 5,
                       fontWeight: 400,
                     }}
                   >
                     <UI.Text size={1.1}>{item.description}</UI.Text>
-                  </description>
+                  </div>
                 </item>
               )
           )}

@@ -41,7 +41,6 @@ export default class BarTeam extends Component<Props> {
   static defaultProps: Props
 
   render({ store, paneStore }: Props) {
-    console.log('render team', store.results)
     const heights = [
       55,
       40,

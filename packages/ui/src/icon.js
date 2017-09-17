@@ -106,21 +106,23 @@ export default class Icon extends React.PureComponent<Props> {
         >
           {content}
         </inner>
-        <Popover
-          if={tooltip}
-          theme="dark"
-          background
-          openOnHover
-          noArrow
-          noHover
-          target={`.${this.uniq}`}
-          padding={[0, 5]}
-          distance={10}
-          towards="top"
-          {...tooltipProps}
-        >
-          {tooltip}
-        </Popover>
+        {tooltip &&
+          log(
+            <Popover
+              theme="dark"
+              background
+              openOnHover
+              noArrow
+              noHover
+              target={`.${this.uniq}`}
+              padding={[0, 5]}
+              distance={10}
+              towards="top"
+              {...tooltipProps}
+            >
+              {tooltip}
+            </Popover>
+          )}
       </icon>
     )
   }

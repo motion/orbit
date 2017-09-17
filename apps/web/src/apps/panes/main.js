@@ -39,11 +39,6 @@ class BarMainStore {
 
   start() {
     this.props.getRef(this)
-
-    this.react(
-      () => this.props.paneStore.activeIndex,
-      row => this.listRef && this.listRef.scrollToRow(row)
-    )
   }
 
   get things(): Array<PaneResult> {
@@ -201,7 +196,7 @@ export default class BarMain extends React.Component<> {
     this.props.paneStore.selectRow(index)
   }
 
-  hasContent = result => result && result.data && result.data.body
+  hasContent = (result: PaneResult) => result && result.data && result.data.body
   getResult = i => this.props.mainStore.results[i]
 
   getRowHeight = i => {
@@ -211,7 +206,7 @@ export default class BarMain extends React.Component<> {
       : result.data && result.data.updated ? 58 : 38
   }
 
-  getDate = result =>
+  getDate = (result: PaneResult) =>
     result.data && result.data.updated
       ? UI.Date.format(result.data.updated)
       : ''
@@ -222,7 +217,7 @@ export default class BarMain extends React.Component<> {
         <none if={mainStore.results.length === 0}>No Results</none>
         <UI.List
           if={mainStore.results}
-          getRef={mainStore.setListRef}
+          getRef={paneStore.setList}
           virtualized={{
             rowHeight: this.getRowHeight,
             measure: true,

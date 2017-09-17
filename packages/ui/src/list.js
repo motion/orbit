@@ -59,6 +59,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
   totalItems = null
   itemRefs: Array<HTMLElement> = []
   lastDidReceivePropsDate: ?number
+  virtualListRef: ?VirtualList = null
+  lastSelectionDate: ?number
+  realIndex: ?Array<number>
 
   componentWillMount() {
     this.totalItems = this.getTotalItems(this.props)
@@ -115,11 +118,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   scrollToRow = (index: number) => {
-    if (this.virtualListRef) {
-      const row =
-        index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
-      this.virtualListRef.scrollToRow(row)
+    if (!this.virtualListRef) {
+      return
     }
+    let row = index
+    if (this.realIndex) {
+      row = index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
+    }
+    this.virtualListRef.scrollToRow(row)
   }
 
   measure = () => {
@@ -151,7 +157,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  highlightItem(setter: ?() => number, cb?: Function) {
+  highlightItem(setter: () => number, cb?: Function) {
     const selected = setter(this.state.selected)
     this.lastSelectionDate = Date.now()
     // only setstate if controlled

@@ -1,4 +1,6 @@
 export default class PaneStore {
+  selectedIndices = []
+  listRef = null
   itemProps = {
     glow: true,
     hoverable: true,
@@ -6,8 +8,6 @@ export default class PaneStore {
     highlightBackground: [0, 0, 0, 0.2],
     highlightColor: [255, 255, 255, 1],
   }
-
-  selectedIndices = []
 
   get actions() {
     return this.state.actions[this.col]
@@ -38,4 +38,16 @@ export default class PaneStore {
   }
 
   selectRow = row => this.state.setSelection(this.col, row)
+
+  setList = ref => {
+    if (!this.listRef) {
+      this.listRef = ref
+
+      // scroll to row in list
+      this.react(
+        () => this.activeIndex,
+        this.listRef.scrollToRow
+      )
+    }
+  }
 }

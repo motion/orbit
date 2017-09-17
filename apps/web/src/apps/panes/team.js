@@ -81,6 +81,7 @@ export default class BarTeam extends Component<Props> {
           </UI.Theme>
         </UI.Drawer>
         <UI.List
+          getRef={paneStore.setList}
           virtualized={{
             rowHeight: getRowHeight,
           }}

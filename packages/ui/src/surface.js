@@ -93,6 +93,7 @@ export type Props = {
 
 const IS_PROD = process.env.NODE_ENV === 'production'
 
+const ICON_PAD = 10
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
 const BORDER_RADIUS_SIDES = [
@@ -347,10 +348,10 @@ export default class Surface extends React.PureComponent<Props> {
     },
     hasIconBefore: {
       // this adjusts for height
-      marginLeft: 'calc(5px + 1vw)',
+      marginLeft: ICON_PAD,
     },
     hasIconAfter: {
-      marginRight: 'calc(5px + 1vw)',
+      marginRight: ICON_PAD,
     },
     iconAfter: {
       order: 3,
@@ -558,7 +559,7 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const flexFlow = props.flexFlow || props.row ? 'row' : 'column'
-    const iconPad = props.icon ? `- ${iconSize + 5}px - 1vw` : ''
+    const iconPad = props.icon ? `- ${iconSize + ICON_PAD}px` : ''
 
     const result = {
       element: {

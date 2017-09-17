@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { HotKeys } from 'react-hotkeys'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
-import type { ItemProps } from './listItem'
+import type { Props as ItemProps } from './listItem'
 import Surface from './surface'
 import { isArrayLike } from 'mobx'
 
@@ -117,7 +116,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   scrollToRow = (index: number) => {
     if (this.virtualListRef) {
-      const row = this.getRealIndex(index)
+      const row =
+        index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
       this.virtualListRef.scrollToRow(row)
     }
   }
@@ -185,13 +185,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
       return false
     }
     return this.lastSelectionDate > this.lastDidReceivePropsDate
-  }
-
-  getRealIndex(index: number) {
-    if (this.realIndex) {
-      return this.realIndex[index]
-    }
-    return index
   }
 
   getRow = ({ index, key, style }) => {
@@ -338,7 +331,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
     // grouping logic
     const groupedIndex = []
-    const realIndex = []
+    let realIndex = []
     let totalGroups = 0
 
     if (groupKey && items) {
@@ -347,7 +340,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
       items.forEach((item, itemIndex) => {
         const index = itemIndex + totalGroups
-        realIndex[itemIndex] = index
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
           // if is separator
@@ -359,8 +351,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
             return
           }
         }
+        realIndex[itemIndex] = index - totalGroups
         groupedIndex[index] = itemIndex
       })
+
+      realIndex = realIndex.filter(x => typeof x !== 'undefined')
 
       for (const { index, name } of groups) {
         let child

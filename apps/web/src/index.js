@@ -12,6 +12,7 @@ if (Constants.IS_PROD) {
   require('./helpers/installDevTools')
 }
 
+// $FlowIgnore
 React.createElement = createElement // any <tag /> can use $$style
 
 function splash() {

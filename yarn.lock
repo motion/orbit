@@ -9818,7 +9818,7 @@ react-mixin@^3.0.5:
     object-assign "^4.0.1"
     smart-mixin "^2.0.0"
 
-react-motion@^0.5.0:
+react-motion@*:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/react-motion/-/react-motion-0.5.1.tgz#b90631408175ab1668e173caccd66d41a44f4592"
   dependencies:

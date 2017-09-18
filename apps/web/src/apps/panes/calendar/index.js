@@ -2,32 +2,171 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Pane from '../pane'
 import * as React from 'react'
-import { range, capitalize, random, sample } from 'lodash'
+import { range, capitalize, sample, includes, random } from 'lodash'
+import { Motion, spring } from 'react-motion'
 
-class CalendarStore {
-  activeRow = 2
-  activeCol = 2
+const dayIndex = (row, col) => row * 7 + col - 4
+const dotColors = [[64, 146, 240, 1], [163, 131, 236, 1], [242, 203, 70, 1]]
+const dots = range(100).map(() =>
+  range(random(0, 2)).map(() => sample(dotColors))
+)
 
-  dotColors = [[64, 146, 240, 1], [163, 131, 236, 1], [242, 203, 70, 1]]
-  dots = range(100).map(() =>
-    range(random(0, 2)).map(() => sample(this.dotColors))
-  )
+const getActiveDots = (row, index) => dots[dayIndex(row, index) + 20]
 
-  select(row, col) {
-    this.activeRow = row
-    this.activeCol = col
+@view
+class RightList extends React.Component<> {
+  static defaultProps: {}
+  render({ dots }) {
+    const items = [
+      {
+        month: '12',
+        day: '7',
+        time: '7am',
+        people: 'Jacob',
+        description: 'IdeaDrive w/Search team',
+      },
+      {
+        month: '12',
+        day: '7',
+        time: '10am',
+        people: 'Steel',
+        description: 'OKR Review w/James',
+      },
+      {
+        month: '12',
+        day: '7',
+        time: '3pm',
+        people: 'Steph and Nick',
+        description: 'Planetary fundraiser',
+      },
+      {
+        month: '12',
+        day: '8',
+        time: '8am',
+        people: 'Steph',
+        description: 'Q4 linkup review',
+      },
+      {
+        month: '12',
+        day: '8',
+        people: 'Nick',
+        time: '10:30am',
+        description: '1on1 with Dave',
+      },
+    ]
+
+    return (
+      <list>
+        <placeholder if={dots.length === 0}>
+          <UI.Title size={2}>No Events</UI.Title>
+        </placeholder>
+        <content if={dots.length > 0}>
+          {dots.map((background, index) => {
+            const item = sample(items)
+
+            return (
+              <item $$row>
+                <content>
+                  {item.content || (
+                    <UI.Button
+                      $item
+                      chromeless
+                      icon={<dot css={{ marginTop: -13, background }} />}
+                      if={!item.content}
+                      height={50}
+                      size={1.1}
+                      key={index}
+                      padding={[10, 20, 20, 10]}
+                    >
+                      <div
+                        $description
+                        css={{
+                          marginTop: -15,
+                          fontWeight: 400,
+                          fontSize: item.description.length > 20 ? 14 : 16,
+                        }}
+                        $$row
+                      >
+                        {item.description}
+                      </div>
+                      <info
+                        $date
+                        css={{
+                          flexFlow: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <div
+                          $time
+                          css={{
+                            opacity: 0.5,
+                          }}
+                        >
+                          <UI.Text size={1}>
+                            {item.time}, {item.people}
+                          </UI.Text>
+                        </div>
+                      </info>
+                    </UI.Button>
+                  )}
+                </content>
+                <UI.Icon
+                  if={false}
+                  size={12}
+                  color="#eee"
+                  $arrow
+                  name="arrows-1_bold-right"
+                />
+              </item>
+            )
+          })}
+        </content>
+      </list>
+    )
+  }
+
+  static style = {
+    list: {
+      width: 280,
+      borderLeft: [1, [0, 0, 0, 0.1]],
+      justifyContent: 'center',
+      padding: [0, 0, 0, 10],
+      margin: [0, 0, 0, 0],
+    },
+    item: {
+      height: 60,
+    },
+    placeholder: {
+      alignItems: 'center',
+      justifySelf: 'center',
+    },
+    content: {},
+    arrow: {
+      marginLeft: 10,
+      marginTop: 5,
+      opacity: 0.7,
+    },
+    item: {
+      marginLeft: 10,
+    },
+    dot: {
+      width: 10,
+      height: 10,
+      borderRadius: 10,
+    },
+    section: {
+      padding: [8, 10],
+    },
   }
 }
 
-@view({
-  store: CalendarStore,
-})
+@view
 class Calendar {
-  render({ store }) {
+  render({ activeRow, activeCol, onSelect, isSmall }) {
     const days = 'sun,mon,tue,wed,thu,fri,sat'
       .split(',')
       .map(d => capitalize(d))
-    const dayIndex = (row, col) => row * 7 + col - 4
     const dayNumber = (row, col) => {
       const index = dayIndex(row, col)
       if (index < 1) return 29 + index
@@ -40,11 +179,14 @@ class Calendar {
       return index > 0 && index < 31
     }
 
+    const allWeeks = 4
+    const rows = isSmall ? range(1, 3) : range(0, allWeeks)
+
     return (
       <cal>
         <days $$row>
           {days.map(day => (
-            <item key={day} $dayItem>
+            <item $visibleDay $dayLabel key={day}>
               <day>
                 <UI.Text ellipse>{day}</UI.Text>
               </day>
@@ -52,24 +194,21 @@ class Calendar {
           ))}
         </days>
         <rows>
-          {range(2, 4).map(row => (
-            <row key={row} $$row>
+          {range(0, allWeeks).map(row => (
+            <row $visible={includes(rows, row)} key={row} $$row>
               {range(days.length).map((item, index) => (
                 <item
                   key={index}
-                  $dark={!isThisMonth(row, index)}
+                  $visibleDay={includes(rows, row)}
+                  $dark={includes(rows, row) && !isThisMonth(row, index)}
                   onClick={() => {
-                    store.select(row, index)
+                    onSelect(row, index)
                   }}
                 >
-                  <highlight
-                    $lit={row === store.activeRow && index === store.activeCol}
-                  >
+                  <highlight $lit={row === activeRow && index === activeCol}>
                     <UI.Text>{dayNumber(row, index)}</UI.Text>
                     <dots $$row>
-                      {store.dots[
-                        dayIndex(row, index) + 20
-                      ].map((background, index) => (
+                      {getActiveDots(row, index).map(background => (
                         <dot key={index} css={{ background }} />
                       ))}
                     </dots>
@@ -84,6 +223,13 @@ class Calendar {
   }
 
   static style = {
+    cal: {
+      width: '100%',
+      userSelect: 'none',
+    },
+    days: {
+      borderBottom: [1, 'solid', [0, 0, 0, 0.05]],
+    },
     day: {
       fontWeight: 400,
       margin: 5,
@@ -92,6 +238,10 @@ class Calendar {
     item: {
       margin: 5,
       flex: 1,
+      transform: { scale: 0.5 },
+      transformOrigin: 'center center',
+      opacity: 0,
+      transition: 'all 150ms ease-in',
       fontWeight: 500,
       fontSize: 18,
       justifyContent: 'center',
@@ -101,8 +251,8 @@ class Calendar {
       justifyContent: 'center',
       alignItems: 'center',
       textAlign: 'center',
-      width: 38,
-      height: 38,
+      minWidth: 38,
+      minHeight: 38,
       borderRadius: 100,
       transition: 'background ease-in 50ms',
     },
@@ -123,10 +273,19 @@ class Calendar {
       opacity: 0.5,
     },
     dayItem: {
-      height: 35,
+      height: 25,
     },
     row: {
-      marginTop: 10,
+      // marginTop: 10,
+      transition: 'all 150ms ease-in',
+      height: 0,
+    },
+    visible: {
+      height: 50,
+    },
+    visibleDay: {
+      opacity: 1,
+      transform: { scale: 1 },
     },
   }
 }
@@ -219,6 +378,14 @@ class Event {
 }
 
 class CalendarPaneStore {
+  activeRow = 2
+  activeCol = 2
+
+  onSelect = (row, col) => {
+    this.activeRow = row
+    this.activeCol = col
+  }
+
   highlightEventIndex = -1
   events = [
     {
@@ -243,7 +410,7 @@ class CalendarPaneStore {
   store: CalendarPaneStore,
 })
 export default class CalendarPane {
-  render({ store, millerStore, isActive }) {
+  render({ store, isSmall, millerStore, isActive }) {
     const actions = [
       {
         name: 'newEvent',
@@ -294,8 +461,17 @@ export default class CalendarPane {
                 </UI.Button>
               </actions>
             </titleContainer>
-            <content>
-              <Calendar />
+            <content $$row>
+              <Calendar
+                onSelect={store.onSelect}
+                activeDots={dots}
+                activeRow={store.activeRow}
+                activeCol={store.activeCol}
+                isSmall={isSmall}
+              />
+              <RightList
+                dots={getActiveDots(store.activeRow, store.activeCol)}
+              />
               <bottom if={false}>
                 <events>
                   {store.events.map((event, index) => (
@@ -320,6 +496,9 @@ export default class CalendarPane {
   }
 
   static style = {
+    content: {
+      width: 420,
+    },
     titleContainer: {
       justifyContent: 'space-between',
       margin: [10, 0],
@@ -327,9 +506,6 @@ export default class CalendarPane {
     },
     input: {
       fontSize: 18,
-    },
-    content: {
-      alignItems: 'center',
     },
     leftAction: {
       marginLeft: 3,

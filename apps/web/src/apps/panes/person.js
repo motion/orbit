@@ -5,9 +5,9 @@ import { Event } from '~/app'
 import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/panes/pane'
 import type { PaneProps, PaneResult } from '~/types'
-import Calendar from './views/calendar'
 import FeedItem from './views/feedItem'
-import Calendar2 from './calendar'
+import Calendar from './calendar'
+import { isFunction } from 'lodash'
 
 const eventToPaneResult = (event: Event): PaneResult => ({
   title: event.title,
@@ -15,6 +15,21 @@ const eventToPaneResult = (event: Event): PaneResult => ({
 
 class BarPersonStore {
   props: PaneProps
+
+  activeType = 'All'
+
+  setActiveType = type => {
+    console.log('setting type to', type.name)
+    this.activeType = type.name
+  }
+  types = [
+    { name: 'All', icon: false },
+    { name: 'Calendar', icon: 'cal' },
+    { name: 'Github', icon: 'github' },
+    { name: 'Drive', icon: 'hard' },
+    { name: 'Jira', icon: 'atl' },
+    { name: 'Google Docs', icon: 'google' },
+  ]
 
   start() {
     this.props.getRef(this)
@@ -35,6 +50,61 @@ class BarPersonStore {
 
 type Props = PaneProps & { store: BarPersonStore }
 
+@view
+class ItemsSection {
+  render({ store }) {
+    return (
+      <UI.Row
+        spaced
+        itemProps={{ size: 1, borderWidth: 0, glint: false }}
+        // css={{ justifyContent: 'flex-end' }}
+      >
+        {store.types.map(type => (
+          <UI.Button
+            icon={type.icon}
+            highlight={type.name === store.activeType}
+            onClick={() => {
+              store.setActiveType(type)
+            }}
+          >
+            {type.name}
+          </UI.Button>
+        ))}
+      </UI.Row>
+    )
+  }
+}
+
+@view
+class CalSection {
+  render({ store }) {
+    return (
+      <div
+        $$row
+        $active={store.activeType === 'Calendar'}
+        css={{ alignItems: 'center', maxHeight: '100%' }}
+      >
+        <Calendar isSmall={store.activeType !== 'Calendar'} />
+      </div>
+    )
+  }
+
+  static style = {
+    div: {
+      transition: 'all ease-in 150ms',
+      background: 'rgba(0,0,0,.2)',
+      marginLeft: -10,
+      paddingLeft: 10,
+      width: '110%',
+      paddingTop: 20,
+      paddingBottom: 20,
+    },
+    active: {
+      marginTop: 100,
+    },
+  }
+}
+
 @view({
   store: BarPersonStore,
 })
@@ -45,10 +115,11 @@ export default class BarPerson extends Component<Props> {
     const heights = [
       90,
       55,
-      200,
+      store.activeType === 'Calendar' ? 350 : 200,
       35,
       ...(store.events || []).map(event => event.height),
     ]
+
     const getRowHeight = index => heights[index] || 100
 
     if (!store.results.length) {
@@ -59,6 +130,37 @@ export default class BarPerson extends Component<Props> {
       )
     }
 
+    const items = [
+      //() => (
+      <section $$row>
+        <img $image src={`/images/${paneStore.data.image}.jpg`} />
+        <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+          {paneStore.data.person}
+        </UI.Title>
+      </section>,
+      //),
+      () => (
+        <section>
+          <ItemsSection store={store} />
+        </section>
+      ),
+      () => (
+        <section>
+          <CalSection store={store} />
+        </section>
+      ),
+      () => (
+        <section>
+          <UI.Title opacity={0.5}>Recently</UI.Title>
+        </section>
+      ),
+      ...(store.events || [])
+        .slice(0, 2)
+        .map(event => () => <FeedItem event={event} key={event.id} />),
+    ]
+    const activeItems =
+      store.activeType === 'Calendar' ? items.slice(0, 3) : items
+
     return (
       <Pane.Card
         css={{
@@ -67,8 +169,13 @@ export default class BarPerson extends Component<Props> {
           transform: { y: paneStore.isActive ? -15 : 0 },
         }}
       >
+        <items>
+          {activeItems.map(item => (isFunction(item) ? item() : item))}
+        </items>
+
         <UI.List
           getRef={paneStore.setList}
+          if={false}
           virtualized={{
             rowHeight: getRowHeight,
           }}
@@ -76,60 +183,7 @@ export default class BarPerson extends Component<Props> {
             ...paneStore.itemProps,
             glow: false,
           }}
-          items={[
-            () => (
-              <section $$row>
-                <img $image src={`/images/${paneStore.data.image}.jpg`} />
-                <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
-                  {paneStore.data.person}
-                </UI.Title>
-              </section>
-            ),
-            () => (
-              <section>
-                <UI.Row
-                  spaced
-                  itemProps={{ size: 1, borderWidth: 0, glint: false }}
-                  css={{ justifyContent: 'flex-end' }}
-                >
-                  <UI.Button highlight>All</UI.Button>
-                  <UI.Button icon="cal">Calendar</UI.Button>
-                  <UI.Button icon="github">Github</UI.Button>
-                  <UI.Button icon="hard">Drive</UI.Button>
-                  <UI.Button icon="atl">Jira</UI.Button>
-                  <UI.Button icon="google">Google Docs</UI.Button>
-                </UI.Row>
-              </section>
-            ),
-            () => (
-              <section>
-                <div
-                  $$row
-                  css={{ alignItems: 'flex-start', maxHeight: '100%' }}
-                >
-                  <cal1 css={{ padding: [0, 10] }}>
-                    <Calendar2 />
-                  </cal1>
-                  <cal2
-                    css={{
-                      borderLeft: [1, [0, 0, 0, 0.1]],
-                      padding: [0, 0, 0, 10],
-                      margin: [0, 0, 0, 10],
-                    }}
-                  >
-                    <Calendar />
-                  </cal2>
-                </div>
-              </section>
-            ),
-            () => (
-              <section>
-                <UI.Title opacity={0.5}>Recently</UI.Title>
-              </section>
-            ),
-            ...(store.events || [])
-              .map(event => () => <FeedItem event={event} key={event.id} />),
-          ]}
+          items={items}
           getItem={(item, index) => ({
             highlight: () => index === paneStore.activeIndex + 1,
             children: item(),
@@ -148,7 +202,8 @@ export default class BarPerson extends Component<Props> {
       width: 50,
       height: 50,
       borderRadius: 1000,
-      margin: 'auto',
+      // margin: 'auto',
+      margin: 0,
       marginRight: 10,
     },
   }

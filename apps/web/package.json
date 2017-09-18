@@ -47,6 +47,7 @@
     "match-sorter": "^1.8.1",
     "marky-markdown": "^11.2.0",
     "marked": "^0.3.6",
+    "react-motion": "*",
     "worker-pouch": "^2.0.0"
   },
   "devDependencies": {

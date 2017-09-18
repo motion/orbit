@@ -457,18 +457,10 @@ class List extends React.PureComponent<Props, { selected: number }> {
         {!virtualized && children}
       </Surface>
     )
-    if (!controlled) {
-      return inner
-    }
     return inner
   }
 
   static style = {
-    keys: {
-      height: '100%',
-      flexDirection: 'inherit',
-      flexGrow: 'inherit',
-    },
     separator: {
       padding: [4, 10],
       justifyContent: 'center',

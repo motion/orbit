@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Surface from './surface'
 
-const LINE_HEIGHT = 32
+const LINE_HEIGHT = 30
 const adj = x => (x === true ? 1 : x)
 
 type Props = {

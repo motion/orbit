@@ -1,36 +1,28 @@
 import { view } from '@mcro/black'
-import timeAgo from 'time-ago'
 import * as UI from '@mcro/ui'
-
-const { ago } = timeAgo()
+import { CurrentUser } from '~/app'
 
 @view
-export default class Comment {
-  render({
-    isActive,
-    store,
-    data: { id, issueBody = false, body, createdAt, author },
-  }) {
-    /*
-    const name = includes(author, ' ')
-      ? author.split(' ')[0].toLowerCase()
-      : author
-    const image = name === 'nate' ? 'me' : name
-    */
+export default class TaskComment {
+  render({ store, data: { id, issueBody = false, body, createdAt, author } }) {
     const isOwner =
       author && CurrentUser.github.profile.username === author.login
 
     return (
-      <comment if={author} $$row $isActive={isActive}>
+      <comment if={author} $$row>
         <user>
           <img $avatar src={author.avatarUrl} />
         </user>
         <content>
-          <info $$row>
-            <left $$row>
-              <UI.Text $name>{author.login}</UI.Text>
-              <UI.Text $when>{ago(new Date(createdAt))}</UI.Text>
-            </left>
+          <info>
+            <userheader>
+              <UI.Text size={1.1} $name>
+                {author.login}
+              </UI.Text>
+              <UI.Date $when color={[255, 255, 255, 0.5]}>
+                {createdAt}
+              </UI.Date>
+            </userheader>
             <buttons $$row>
               <UI.Button if={isOwner} chromeless icon="edit" opacity={0.7} />
               <UI.Button
@@ -42,7 +34,9 @@ export default class Comment {
               />
             </buttons>
           </info>
-          <UI.Text $body>{body}</UI.Text>
+          <UI.Text lineHeight={23} $body>
+            {body}
+          </UI.Text>
         </content>
       </comment>
     )
@@ -50,26 +44,25 @@ export default class Comment {
 
   static style = {
     comment: {
-      padding: 10,
+      width: '100%',
+      padding: [5, 10],
       border: [1, [0, 0, 0, 0]],
       transition: 'all 150ms ease-in',
     },
     info: {
+      flexFlow: 'row',
       justifyContent: 'space-between',
     },
-    left: {
-      marginTop: 3,
-    },
-    isActive: {
-      border: [1, [0, 0, 0, 0.2]],
-      boxShadow: '0px 0px 4px rgba(0,0,0,0.2)',
+    userheader: {
+      flexFlow: 'row',
     },
     avatar: {
       alignSelf: 'center',
-      width: 30,
-      height: 30,
+      width: 20,
+      height: 20,
       borderRadius: 100,
-      marginRight: 10,
+      marginRight: 16,
+      marginTop: 0,
     },
     content: {
       flex: 1,
@@ -78,7 +71,7 @@ export default class Comment {
       marginLeft: 5,
     },
     body: {
-      padding: [3, 0],
+      padding: [5, 0, 8],
       flex: 1,
       width: '95%',
     },

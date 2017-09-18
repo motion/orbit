@@ -4,7 +4,6 @@ import { view } from '@mcro/black'
 import { object, string } from 'prop-types'
 import Text from './text'
 import SizedSurface from './sizedSurface'
-import { findDOMNode } from 'react-dom'
 
 export type Props = {
   after?: React.Element<any>,
@@ -59,9 +58,7 @@ export default class ListItem extends React.Component<Props> {
       this.props.onItemMount(this)
     }
     if (this.props.measure) {
-      this.setTimeout(() => {
-        this.props.measure()
-      }, 1000)
+      this.props.measure()
     }
   }
 

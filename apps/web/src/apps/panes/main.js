@@ -222,6 +222,7 @@ export default class BarMain extends React.Component<Props> {
         itemProps={{
           fontSize: 26,
           size: 1.2,
+          glow: true,
         }}
         getItem={(result, index) => ({
           key: result.id,

@@ -53,7 +53,7 @@ export default class PaneCard {
         css={{
           transition: 'all ease-in 80ms',
           zIndex: 1000,
-          transform: { y: paneStore.col === 1 && paneStore.isActive ? -5 : 0 },
+          //transform: { y: paneStore.col === 1 && paneStore.isActive ? -5 : 0 },
         }}
       >
         <content if={!items}>{children}</content>

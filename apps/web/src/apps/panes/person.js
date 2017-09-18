@@ -6,20 +6,15 @@ import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/panes/pane'
 import type { PaneProps, PaneResult } from '~/types'
 import Calendar from './views/calendar'
-import FeedItem from './views/feedItem'
 import Calendar2 from './calendar'
+import FeedItem from './views/feedItem'
 
 const eventToPaneResult = (event: Event): PaneResult => ({
   title: event.title,
 })
 
-class BarPersonStore {
+class BarTeamStore {
   props: PaneProps
-
-  start() {
-    this.props.getRef(this)
-  }
-
   isOpen = false
 
   @watch
@@ -33,24 +28,13 @@ class BarPersonStore {
   }
 }
 
-type Props = PaneProps & { store: BarPersonStore }
+type Props = PaneProps & { store: BarTeamStore }
 
 @view({
-  store: BarPersonStore,
+  store: BarTeamStore,
 })
-export default class BarPerson extends Component<Props> {
-  static defaultProps: Props
-
+export default class BarTeam extends Component<Props> {
   render({ store, paneStore }: Props) {
-    const heights = [
-      90,
-      55,
-      200,
-      35,
-      ...(store.events || []).map(event => event.height),
-    ]
-    const getRowHeight = index => heights[index] || 100
-
     if (!store.results.length) {
       return (
         <div $$padded>
@@ -61,23 +45,13 @@ export default class BarPerson extends Component<Props> {
 
     return (
       <Pane.Card
-        css={{
-          transition: 'all ease-in 80ms',
-          zIndex: 1000,
-          transform: { y: paneStore.isActive ? -15 : 0 },
+        itemProps={{
+          glow: false,
         }}
-      >
-        <UI.List
-          getRef={paneStore.setList}
-          virtualized={{
-            rowHeight: getRowHeight,
-          }}
-          itemProps={{
-            ...paneStore.itemProps,
-            glow: false,
-          }}
-          items={[
-            () => (
+        items={[
+          {
+            height: 65,
+            view: () => (
               <section $$row>
                 <img $image src={`/images/${paneStore.data.image}.jpg`} />
                 <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
@@ -85,7 +59,10 @@ export default class BarPerson extends Component<Props> {
                 </UI.Title>
               </section>
             ),
-            () => (
+          },
+          {
+            height: 60,
+            view: () => (
               <section>
                 <UI.Row
                   spaced
@@ -93,15 +70,17 @@ export default class BarPerson extends Component<Props> {
                   css={{ justifyContent: 'flex-end' }}
                 >
                   <UI.Button highlight>All</UI.Button>
-                  <UI.Button icon="cal">Calendar</UI.Button>
-                  <UI.Button icon="github">Github</UI.Button>
+                  <UI.Button icon="Cal">Calendar</UI.Button>
+                  <UI.Button icon="Github">Github</UI.Button>
                   <UI.Button icon="hard">Drive</UI.Button>
-                  <UI.Button icon="atl">Jira</UI.Button>
-                  <UI.Button icon="google">Google Docs</UI.Button>
+                  <UI.Button icon="Google">Google Docs</UI.Button>
                 </UI.Row>
               </section>
             ),
-            () => (
+          },
+          {
+            height: 200,
+            view: () => (
               <section>
                 <div
                   $$row
@@ -122,20 +101,13 @@ export default class BarPerson extends Component<Props> {
                 </div>
               </section>
             ),
-            () => (
-              <section>
-                <UI.Title opacity={0.5}>Recently</UI.Title>
-              </section>
-            ),
-            ...(store.events || [])
-              .map(event => () => <FeedItem event={event} key={event.id} />),
-          ]}
-          getItem={(item, index) => ({
-            highlight: () => index === paneStore.activeIndex + 1,
-            children: item(),
-          })}
-        />
-      </Pane.Card>
+          },
+          ...(store.events || []).map(event => ({
+            height: event.height,
+            view: () => <FeedItem event={event} />,
+          })),
+        ]}
+      />
     )
   }
 

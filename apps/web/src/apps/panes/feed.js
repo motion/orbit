@@ -12,10 +12,6 @@ import Calendar from './views/calendar'
 class BarFeedStore {
   props: PaneProps
 
-  start() {
-    this.props.getRef(this)
-  }
-
   get person() {
     return this.props.paneStore.data && this.props.paneStore.data.person
   }

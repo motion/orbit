@@ -35,10 +35,6 @@ class BarContents {
 @view.provide({
   // paneStore: Pane.Store,
   store: class CodeStore {
-    start() {
-      this.props.getRef(this)
-    }
-
     children = null
 
     newTitle = ''

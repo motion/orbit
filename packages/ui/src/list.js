@@ -36,6 +36,9 @@ export type Props = {
   selected?: number,
   separatorHeight: number,
   isSelected?: Function,
+  virtualized?: { rowHeight: number | ((a: number) => number) },
+  // force update children
+  updateChildren?: boolean,
 }
 
 @parentSize('virtualized')
@@ -62,6 +65,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
   virtualListRef: ?VirtualList = null
   lastSelectionDate: ?number
   realIndex: ?Array<number>
+  groupedIndex: ?Array<number>
+  totalGroups: number = 0
 
   componentWillMount() {
     this.totalItems = this.getTotalItems(this.props)
@@ -78,7 +83,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
   // willUpdate only runs when PureComponent has new props
   componentWillUpdate(nextProps: Props) {
     const { updateChildren, selected } = nextProps
-
     if (typeof selected !== 'undefined') {
       this.lastDidReceivePropsDate = Date.now()
       if (selected !== this.state.selected) {
@@ -136,28 +140,28 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  gatherRefs = index => ref => {
+  gatherRefs = (index: number) => (ref: ?HTMLElement) => {
     if (ref) {
       this.itemRefs[index] = ref
     }
   }
 
-  getTotalItems = props =>
+  getTotalItems = (props: Props) =>
     props.items ? props.items.length : React.Children.count(props.children)
 
-  isSelected = fn => (...args) =>
+  isSelected = (fn: Function) => (...args) =>
     typeof this.state.selected === 'number' ? fn(...args) : null
 
   // wrap weird signature
   select = (selector: number | Function) => {
     if (typeof selector === 'number') {
       this.highlightItem(() => selector)
-    } else if (typeof selector === 'function') {
+    } else if (typeof selector === 'function' && this.props.items) {
       this.highlightItem(() => this.props.items.findIndex(selector))
     }
   }
 
-  highlightItem(setter: () => number, cb?: Function) {
+  highlightItem(setter: (a: number) => number, cb?: Function) {
     const selected = setter(this.state.selected)
     this.lastSelectionDate = Date.now()
     // only setstate if controlled
@@ -174,9 +178,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return selected
   }
 
-  get selected() {
+  get selected(): ?Object {
     const { selected } = this.state
-    if (selected === null) {
+    if (selected === null || !this.props.items) {
       return null
     } else {
       return this.props.items[selected]
@@ -193,7 +197,15 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
-  getRow = ({ index, key, style }) => {
+  getRow = ({
+    index,
+    key,
+    style,
+  }: {
+    index: number,
+    key: string,
+    style: Object,
+  }) => {
     if (!this.children || !this.children[index]) {
       console.log('no child', index, this)
       return null
@@ -201,15 +213,18 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return this.children[index]({ key, style })
   }
 
-  getRowHeight = ({ index }) => {
+  getRowHeight = ({ index }: { index: number }) => {
     const { groupedIndex } = this
     const { separatorHeight, virtualized } = this.props
+    if (!virtualized) {
+      return
+    }
     if (groupedIndex && groupedIndex[index] === true) {
       return separatorHeight
     }
-    const dynamicRowHeight = typeof virtualized.rowHeight === 'function'
-    if (dynamicRowHeight) {
-      return virtualized.rowHeight(groupedIndex ? groupedIndex[index] : index)
+    if (typeof virtualized.rowHeight === 'function') {
+      const realIndex = groupedIndex ? groupedIndex[index] : index
+      return virtualized.rowHeight(realIndex)
     }
     return virtualized.rowHeight
   }

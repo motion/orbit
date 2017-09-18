@@ -6,6 +6,7 @@ import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/panes/pane'
 import type { PaneProps, PaneResult } from '~/types'
 import Calendar from './views/calendar'
+import Calendar2 from './calendar'
 import FeedItem from './views/feedItem'
 
 const eventToPaneResult = (event: Event): PaneResult => ({
@@ -14,11 +15,6 @@ const eventToPaneResult = (event: Event): PaneResult => ({
 
 class BarTeamStore {
   props: PaneProps
-
-  start() {
-    this.props.getRef(this)
-  }
-
   isOpen = false
 
   @watch
@@ -38,17 +34,7 @@ type Props = PaneProps & { store: BarTeamStore }
   store: BarTeamStore,
 })
 export default class BarTeam extends Component<Props> {
-  static defaultProps: Props
-
   render({ store, paneStore }: Props) {
-    const heights = [
-      65,
-      60,
-      260,
-      ...(store.events || []).map(event => event.height),
-    ]
-    const getRowHeight = index => heights[index] || 100
-
     if (!store.results.length) {
       return (
         <div $$padded>
@@ -59,44 +45,23 @@ export default class BarTeam extends Component<Props> {
 
     return (
       <Pane.Card
-        css={{
-          transition: 'all ease-in 80ms',
-          zIndex: 1000,
-          transform: { y: paneStore.isActive ? -15 : 0 },
+        itemProps={{
+          glow: false,
         }}
-      >
-        <UI.Drawer
-          from="bottom"
-          open={store.isOpen}
-          onClickOverlay={store.ref('isOpen').toggle}
-          showOverlay
-          overlayBlur
-          css={{ right: 6, left: 6 }}
-        >
-          <UI.Theme name="light">
-            <UI.Surface background="#fff" flex padding={20} borderTopRadius={6}>
-              <UI.Title>Have a nice day</UI.Title>
-            </UI.Surface>
-          </UI.Theme>
-        </UI.Drawer>
-        <UI.List
-          getRef={paneStore.setList}
-          virtualized={{
-            rowHeight: getRowHeight,
-          }}
-          itemProps={{
-            ...paneStore.itemProps,
-            glow: false,
-          }}
-          items={[
-            () => (
+        items={[
+          {
+            height: 65,
+            view: () => (
               <section>
                 <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
                   Team {paneStore.data.team}
                 </UI.Title>
               </section>
             ),
-            () => (
+          },
+          {
+            height: 60,
+            view: () => (
               <section>
                 <UI.Row
                   spaced
@@ -111,24 +76,37 @@ export default class BarTeam extends Component<Props> {
                 </UI.Row>
               </section>
             ),
-            () => (
+          },
+          {
+            height: 200,
+            view: () => (
               <section>
-                <UI.Title opacity={1} marginBottom={10}>
-                  Tuesday, the 12th
-                </UI.Title>
-                <Calendar />
-                <Calendar />
+                <div
+                  $$row
+                  css={{ alignItems: 'flex-start', maxHeight: '100%' }}
+                >
+                  <cal1 css={{ padding: [0, 10] }}>
+                    <Calendar2 />
+                  </cal1>
+                  <cal2
+                    css={{
+                      borderLeft: [1, [0, 0, 0, 0.1]],
+                      padding: [0, 0, 0, 10],
+                      margin: [0, 0, 0, 10],
+                    }}
+                  >
+                    <Calendar />
+                  </cal2>
+                </div>
               </section>
             ),
-            ...(store.events || [])
-              .map(event => () => <FeedItem event={event} key={event.id} />),
-          ]}
-          getItem={(item, index) => ({
-            highlight: () => index === paneStore.activeIndex + 1,
-            children: item(),
-          })}
-        />
-      </Pane.Card>
+          },
+          ...(store.events || []).map(event => ({
+            height: event.height,
+            view: () => <FeedItem event={event} />,
+          })),
+        ]}
+      />
     )
   }
 

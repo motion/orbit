@@ -5,10 +5,6 @@ import { fuzzy } from '~/helpers'
 import { CurrentUser } from '~/app'
 
 class BarBrowseStore {
-  start() {
-    this.props.getRef(this)
-  }
-
   @watch
   children = [
     () => this.parent && this.parent.id,
@@ -27,11 +23,7 @@ class BarBrowseStore {
 @view
 class Item {
   render() {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    )
+    return <div>{this.props.children}</div>
   }
 }
 
@@ -69,9 +61,9 @@ class RadialMenu extends React.Component<> {
   render() {
     return (
       <radialmenu>
-        {this.spots.map((position, index) =>
+        {this.spots.map((position, index) => (
           <Item key={index} position={position} />
-        )}
+        ))}
       </radialmenu>
     )
   }

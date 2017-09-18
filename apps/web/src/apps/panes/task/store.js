@@ -124,8 +124,6 @@ export default class TaskStore {
   async start() {
     const { data: { data } } = this.props.paneStore
 
-    this.props.getRef(this)
-
     this.labels = data.labels.map(({ name }) => name)
 
     const thing = await Thing.findOne(this.taskId).exec()

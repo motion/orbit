@@ -50,7 +50,6 @@ export default class BarTeam extends Component<Props> {
         }}
         items={[
           {
-            height: 65,
             view: () => (
               <section>
                 <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
@@ -60,7 +59,6 @@ export default class BarTeam extends Component<Props> {
             ),
           },
           {
-            height: 60,
             view: () => (
               <section>
                 <UI.Row
@@ -78,7 +76,6 @@ export default class BarTeam extends Component<Props> {
             ),
           },
           {
-            height: 200,
             view: () => (
               <section>
                 <div
@@ -102,7 +99,6 @@ export default class BarTeam extends Component<Props> {
             ),
           },
           ...(store.events || []).map(event => ({
-            height: event.height,
             view: () => <FeedItem event={event} />,
           })),
         ]}

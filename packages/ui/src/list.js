@@ -7,9 +7,15 @@ import parentSize from '~/helpers/parentSize'
 import type { Props as ItemProps } from './listItem'
 import Surface from './surface'
 import { isArrayLike } from 'mobx'
+import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+
+const cache = new CellMeasurerCache({
+  defaultHeight: 50,
+  fixedWidth: true,
+})
 
 const idFn = _ => _
-const SEPARATOR_HEIGHT = 25
+const SEPARATOR_HEIGHT = 28
 
 export type Props = {
   defaultSelected?: number,
@@ -78,6 +84,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (this.props.getRef) {
       this.props.getRef(this)
     }
+
+    this.updateChildren()
   }
 
   // willUpdate only runs when PureComponent has new props
@@ -197,36 +205,32 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
-  getRow = ({
+  rowRenderer = ({
     index,
     key,
     style,
+    parent,
   }: {
     index: number,
     key: string,
     style: Object,
+    parent: any,
   }) => {
     if (!this.children || !this.children[index]) {
       console.log('no child', index, this)
       return null
     }
-    return this.children[index]({ key, style })
-  }
-
-  getRowHeight = ({ index }: { index: number }) => {
-    const { groupedIndex } = this
-    const { separatorHeight, virtualized } = this.props
-    if (!virtualized) {
-      return
-    }
-    if (groupedIndex && groupedIndex[index] === true) {
-      return separatorHeight
-    }
-    if (typeof virtualized.rowHeight === 'function') {
-      const realIndex = groupedIndex ? groupedIndex[index] : index
-      return virtualized.rowHeight(realIndex)
-    }
-    return virtualized.rowHeight
+    return (
+      <CellMeasurer
+        cache={cache}
+        columnIndex={0}
+        key={key}
+        parent={parent}
+        rowIndex={index}
+      >
+        {this.children[index]({ style })}
+      </CellMeasurer>
+    )
   }
 
   getItemProps(index, rowProps, isListItem: boolean) {
@@ -439,6 +443,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       >
         <VirtualList
           if={virtualized}
+          deferredMeasurementCache={cache}
           height={height}
           width={width}
           ref={this.setVirtualRef}
@@ -447,9 +452,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
             realIndex ? realIndex[this.state.selected] : this.state.selected
           }
           rowCount={totalItems + totalGroups}
-          rowRenderer={this.getRow}
+          rowRenderer={this.rowRenderer}
+          rowHeight={cache.rowHeight}
           {...virtualized}
-          rowHeight={this.getRowHeight}
         />
         {!virtualized && children}
       </Surface>

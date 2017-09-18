@@ -230,22 +230,24 @@ const typeToElement = type =>
   store: TaskStore,
 })
 export default class TaskPane {
-  renderItem = index => {
-    const { paneStore: { activeIndex }, store } = this.props
-    const { elName, data } = store.results[index]
+  getItem = ({ elName, data }, index) => {
+    const { store, paneStore } = this.props
     const El = typeToElement(elName)
 
-    return (
-      <El
-        data={data}
-        store={store}
-        key={index}
-        isActive={index === activeIndex}
-      />
-    )
+    return {
+      highlight: () => index === paneStore.activeIndex,
+      children: () => (
+        <El
+          data={data}
+          store={store}
+          key={index}
+          isActive={index === paneStore.activeIndex}
+        />
+      ),
+    }
   }
 
-  render({ paneStore: { isActive }, store }) {
+  render({ store }) {
     if (!store.results.length) {
       return null
     }
@@ -262,49 +264,11 @@ export default class TaskPane {
     ]
 
     return (
-      <Pane.Card isActive={isActive} actions={actions}>
-        <container>
-          <header>{this.renderItem(0)}</header>
-          <content>
-            {store.results
-              .slice(1, -1)
-              .map((result, index) => this.renderItem(index + 1))}
-          </content>
-          <footer>{this.renderItem(store.results.length - 1)}</footer>
-        </container>
-      </Pane.Card>
+      <Pane.Card
+        items={store.results}
+        getItem={this.getItem}
+        actions={actions}
+      />
     )
-  }
-
-  static style = {
-    container: {
-      padding: 20,
-      flex: 1,
-      justifyContent: 'space-between',
-    },
-    header: {},
-    content: {
-      flex: 1,
-      overflow: 'scroll',
-    },
-    footer: {},
-    metaInfo: {
-      justifyContent: 'space-between',
-      borderBottom: [1, [0, 0, 0, 0.05]],
-      padding: [5, 40],
-    },
-    commentTitle: {
-      padding: [10, 0],
-      borderTop: [1, [0, 0, 0, 0.05]],
-      borderBottom: [1, [0, 0, 0, 0.05]],
-      marginBottom: 10,
-    },
-    info: {
-      justifyContent: 'space-between',
-      width: 300,
-    },
-    headerActive: {
-      background: '#aaa',
-    },
   }
 }

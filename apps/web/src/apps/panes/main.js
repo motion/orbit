@@ -46,7 +46,7 @@ class BarMainStore {
     {
       id: 1100,
       title: 'Me',
-      type: 'team',
+      type: 'person',
       icon: 'radio',
       data: {
         special: true,
@@ -229,7 +229,11 @@ export default class BarMain extends React.Component<Props> {
           primary: result.title,
           primaryEllipse: !mainStore.hasContent(result),
           children: [
-            <UI.Text if={result.data} lineHeight={20} opacity={0.5}>
+            <UI.Text
+              if={result.data && result.data.body}
+              lineHeight={20}
+              opacity={0.5}
+            >
               {this.getDate(result) + ' · '}
               {(result.data.body && result.data.body.slice(0, 120)) || ''}
             </UI.Text>,

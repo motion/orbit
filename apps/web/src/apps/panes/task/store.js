@@ -161,9 +161,11 @@ export default class TaskStore {
       elName: 'comment',
       data: comment,
       actions: [],
+      height: 100,
     }))
 
     const firstComment = {
+      height: 100,
       elName: 'comment',
       data: {
         author: data.author,
@@ -178,10 +180,12 @@ export default class TaskStore {
         elName: 'header',
         data,
         actions: [],
+        height: 50,
       },
       firstComment,
       ...comments,
       {
+        height: 100,
         elName: 'response',
         data: {
           onSubmit: this.onSubmit,

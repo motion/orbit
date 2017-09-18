@@ -40,20 +40,19 @@ class Calendar {
       return index > 0 && index < 31
     }
 
-    const rows = 5
     return (
       <cal>
         <days $$row>
           {days.map(day => (
             <item key={day} $dayItem>
               <day>
-                <UI.Text>{day}</UI.Text>
+                <UI.Text ellipse>{day}</UI.Text>
               </day>
             </item>
           ))}
         </days>
         <rows>
-          {range(rows).map(row => (
+          {range(2, 4).map(row => (
             <row key={row} $$row>
               {range(days.length).map((item, index) => (
                 <item
@@ -85,12 +84,6 @@ class Calendar {
   }
 
   static style = {
-    cal: {
-      // background: 'rgba(26,36,50,0.8)',
-      width: '100%',
-      padding: [5, 20],
-      borderRadius: 10,
-    },
     day: {
       fontWeight: 400,
       margin: 5,
@@ -108,8 +101,8 @@ class Calendar {
       justifyContent: 'center',
       alignItems: 'center',
       textAlign: 'center',
-      width: 60,
-      height: 60,
+      width: 38,
+      height: 38,
       borderRadius: 100,
       transition: 'background ease-in 50ms',
     },
@@ -130,9 +123,11 @@ class Calendar {
       opacity: 0.5,
     },
     dayItem: {
-      height: 40,
+      height: 35,
     },
-    row: {},
+    row: {
+      marginTop: 10,
+    },
   }
 }
 
@@ -265,7 +260,7 @@ export default class CalendarPane {
       <UI.Theme name="clear-dark">
         <Pane.Card isActive={isActive} actions={actions}>
           <container>
-            <titleContainer $$row>
+            <titleContainer if={false} $$row>
               <actions $$row>
                 <UI.Button $leftAction size={1.0} chromeless>
                   Today
@@ -301,7 +296,7 @@ export default class CalendarPane {
             </titleContainer>
             <content>
               <Calendar />
-              <bottom>
+              <bottom if={false}>
                 <events>
                   {store.events.map((event, index) => (
                     <event
@@ -335,7 +330,6 @@ export default class CalendarPane {
     },
     content: {
       alignItems: 'center',
-      margin: [10, 20],
     },
     leftAction: {
       marginLeft: 3,

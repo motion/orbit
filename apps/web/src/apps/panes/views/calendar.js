@@ -9,10 +9,7 @@ export default class Calendar extends React.Component<> {
   render() {
     return (
       <calendar>
-        <content
-          $$row
-          css={{ width: '100%', overflowX: 'scroll', margin: [-5, 0] }}
-        >
+        <content css={{ overflowY: 'scroll' }}>
           {[
             {
               month: '12',
@@ -51,9 +48,7 @@ export default class Calendar extends React.Component<> {
                   if={!item.content}
                   key={index}
                   css={{
-                    width: '20%',
-                    minWidth: 110,
-                    padding: [12, 12, 12, 12],
+                    padding: [5, 12, 5, 12],
                   }}
                 >
                   <div
@@ -68,7 +63,7 @@ export default class Calendar extends React.Component<> {
                         opacity: 0.5,
                       }}
                     >
-                      <UI.Text size={1.2}>{item.time}</UI.Text>
+                      <UI.Text size={1}>{item.time}</UI.Text>
                     </div>
                   </div>
                   <div
@@ -91,7 +86,6 @@ export default class Calendar extends React.Component<> {
   static style = {
     section: {
       padding: [8, 10],
-      borderBottom: [1, [0, 0, 0, 0.05]],
     },
   }
 }

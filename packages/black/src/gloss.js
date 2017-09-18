@@ -149,13 +149,25 @@ const Gloss = gloss({
   isColor: color => color && !!color.rgb,
   toColor: obj => {
     const { model, color, valpha } = obj
+    const hasAlpha = typeof valpha === 'number' && valpha !== 1
     if (model === 'rgb') {
-      if (typeof valpha === 'number') {
-        return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${valpha})`
+      const inner = `${color[0]}, ${color[1]}, ${color[2]}`
+      if (hasAlpha) {
+        return `rgba(${inner}, ${valpha})`
       }
-      return `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+      return `rgb(${inner})`
     }
-    return color.toString()
+    if (model === 'hsl') {
+      const inner = `${color[0]}, ${Math.round(color[1], 4)}%, ${Math.round(
+        color[2],
+        4
+      )}%`
+      if (hasAlpha) {
+        return `hsla(${inner}, ${valpha})`
+      }
+      return `hsl(${inner})`
+    }
+    return obj.toString()
     // const cached = ColorCache.get(color)
     // if (cached) {
     //   return cached

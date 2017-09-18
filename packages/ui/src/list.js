@@ -1,11 +1,10 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { HotKeys } from 'react-hotkeys'
 import ListItem from './listItem'
 import { List as VirtualList } from 'react-virtualized'
 import parentSize from '~/helpers/parentSize'
-import type { ItemProps } from './listItem'
+import type { Props as ItemProps } from './listItem'
 import Surface from './surface'
 import { isArrayLike } from 'mobx'
 
@@ -60,6 +59,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
   totalItems = null
   itemRefs: Array<HTMLElement> = []
   lastDidReceivePropsDate: ?number
+  virtualListRef: ?VirtualList = null
+  lastSelectionDate: ?number
+  realIndex: ?Array<number>
 
   componentWillMount() {
     this.totalItems = this.getTotalItems(this.props)
@@ -116,10 +118,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   scrollToRow = (index: number) => {
-    if (this.virtualListRef) {
-      const row = this.getRealIndex(index)
-      this.virtualListRef.scrollToRow(row)
+    if (!this.virtualListRef) {
+      return
     }
+    let row = index
+    if (this.realIndex) {
+      row = index === 0 ? 0 : this.realIndex[index] || index + this.totalGroups
+    }
+    this.virtualListRef.scrollToRow(row)
   }
 
   measure = () => {
@@ -151,7 +157,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
   }
 
-  highlightItem(setter: ?() => number, cb?: Function) {
+  highlightItem(setter: () => number, cb?: Function) {
     const selected = setter(this.state.selected)
     this.lastSelectionDate = Date.now()
     // only setstate if controlled
@@ -185,13 +191,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
       return false
     }
     return this.lastSelectionDate > this.lastDidReceivePropsDate
-  }
-
-  getRealIndex(index: number) {
-    if (this.realIndex) {
-      return this.realIndex[index]
-    }
-    return index
   }
 
   getRow = ({ index, key, style }) => {
@@ -338,7 +337,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
     // grouping logic
     const groupedIndex = []
-    const realIndex = []
+    let realIndex = []
     let totalGroups = 0
 
     if (groupKey && items) {
@@ -347,7 +346,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
       items.forEach((item, itemIndex) => {
         const index = itemIndex + totalGroups
-        realIndex[itemIndex] = index
         if (lastGroup !== item[groupKey]) {
           lastGroup = item[groupKey]
           // if is separator
@@ -359,8 +357,11 @@ class List extends React.PureComponent<Props, { selected: number }> {
             return
           }
         }
+        realIndex[itemIndex] = index - totalGroups
         groupedIndex[index] = itemIndex
       })
+
+      realIndex = realIndex.filter(x => typeof x !== 'undefined')
 
       for (const { index, name } of groups) {
         let child
@@ -454,8 +455,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
       padding: [0, 10],
       height: SEPARATOR_HEIGHT,
       justifyContent: 'center',
-      background: [0, 0, 0, 0.05],
-      color: [255, 255, 255, 0.6],
+      background: [0, 0, 0, 0.04],
+      color: [255, 255, 255, 0.3],
     },
   }
 }

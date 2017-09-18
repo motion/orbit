@@ -16,7 +16,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   type: thing.type,
   icon: 'icon',
   data: thing.toJSON(),
-  category: 'Github',
+  category: 'Recently',
 })
 
 class BarMainStore {
@@ -39,11 +39,6 @@ class BarMainStore {
 
   start() {
     this.props.getRef(this)
-
-    this.react(
-      () => this.props.paneStore.activeIndex,
-      row => this.listRef && this.listRef.scrollToRow(row)
-    )
   }
 
   get things(): Array<PaneResult> {
@@ -54,52 +49,65 @@ class BarMainStore {
 
   browse: Array<PaneResult> = [
     {
-      id: 1000,
-      title: 'Team: Motion',
-      type: 'team',
-      data: {
-        team: 'motion',
-      },
-      actions: ['like motion'],
-    },
-    {
       id: 1100,
-      title: 'Recent',
-      type: 'feed',
+      title: 'Me',
+      type: 'person',
       icon: 'radio',
       data: {
         special: true,
+        person: 'Nate Wienert',
+        image: 'me',
       },
       actions: ['respond to recent'],
     },
     {
-      id: 1200,
-      data: { message: 'assigned' },
-      title: 'Assigned to me',
-      type: 'message',
-      icon: 'check',
-    },
-    {
       id: 1300,
       data: { message: 'my team' },
-      title: 'My Team',
-      category: 'Browse',
+      title: 'Github',
+      category: 'Apps',
       type: 'message',
-      url() {
-        return '/?home=true'
-      },
-      icon: 'objects_planet',
+      icon: 'github',
     },
     {
       id: 1400,
       data: { message: 'from company' },
-      title: 'Company',
-      category: 'Browse',
+      title: 'Jira',
+      category: 'Apps',
       type: 'message',
-      url() {
-        return '/?home=true'
+      icon: 'atlas',
+    },
+  ]
+
+  teams: Array<PaneResult> = [
+    {
+      id: 1030,
+      title: 'Motion',
+      type: 'team',
+      category: 'Teams',
+      data: {
+        team: 'Motion',
       },
-      icon: 'objects_planet',
+      actions: ['like motion'],
+    },
+    {
+      id: 1040,
+      title: 'Product',
+      type: 'team',
+      category: 'Teams',
+      data: {
+        team: 'Product',
+      },
+      actions: ['like motion'],
+    },
+    {
+      id: 1050,
+      title: 'Search',
+      type: 'team',
+      category: 'Teams',
+      data: {
+        team: 'Search',
+      },
+      actions: ['like motion'],
     },
   ]
 
@@ -107,24 +115,22 @@ class BarMainStore {
     {
       id: 20,
       title: 'Stephanie',
-      type: 'feed',
-      data: {
-        image: 'steph',
-      },
+      type: 'person',
+      data: { person: 'Stephanie He', image: 'steph' },
       category: 'People',
     },
     {
       id: 21,
       title: 'Nate',
-      type: 'feed',
-      data: { person: 'natew', image: 'me' },
+      type: 'person',
+      data: { person: 'Nate Wienert', image: 'me' },
       category: 'People',
     },
     {
       id: 22,
       title: 'Nick',
-      type: 'feed',
-      data: { person: 'ncammarata', image: 'nick' },
+      type: 'person',
+      data: { person: 'Nick Cammarata', image: 'nick' },
       category: 'People',
     },
   ]
@@ -172,8 +178,9 @@ class BarMainStore {
     return fuzzy(
       [
         ...this.browse,
-        ...this.things,
+        ...this.teams,
         ...this.people,
+        ...this.things,
         ...(includeTests ? this.tests : []),
         ...this.extras,
       ],
@@ -201,7 +208,7 @@ export default class BarMain extends React.Component<> {
     this.props.paneStore.selectRow(index)
   }
 
-  hasContent = result => result && result.data && result.data.body
+  hasContent = (result: PaneResult) => result && result.data && result.data.body
   getResult = i => this.props.mainStore.results[i]
 
   getRowHeight = i => {
@@ -211,7 +218,7 @@ export default class BarMain extends React.Component<> {
       : result.data && result.data.updated ? 58 : 38
   }
 
-  getDate = result =>
+  getDate = (result: PaneResult) =>
     result.data && result.data.updated
       ? UI.Date.format(result.data.updated)
       : ''
@@ -222,7 +229,7 @@ export default class BarMain extends React.Component<> {
         <none if={mainStore.results.length === 0}>No Results</none>
         <UI.List
           if={mainStore.results}
-          getRef={mainStore.setListRef}
+          getRef={paneStore.setList}
           virtualized={{
             rowHeight: this.getRowHeight,
             measure: true,

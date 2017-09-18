@@ -190,10 +190,12 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
       } else {
         // children get a style prop
         if (props) {
-          finalProps.style = arrayOfObjectsToObject([
-            ...finalStyles.map(style => style && objToCamel(style.style)),
-            finalProps.style,
-          ])
+          finalProps.style = objToCamel(
+            arrayOfObjectsToObject([
+              ...finalStyles.map(style => style && style.style),
+              finalProps.style,
+            ])
+          )
         }
       }
     }

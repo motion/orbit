@@ -155,6 +155,10 @@ export default class TaskStore {
   get results() {
     const { data: { data } } = this.props.paneStore
 
+    if (!data) {
+      return []
+    }
+
     const comments = (data.comments || []).map(comment => ({
       elName: 'comment',
       data: comment,

@@ -354,6 +354,7 @@ function mobxifyWatch(obj: MagicalObject, method, val) {
   // settimeout allows the watchers to run after react renders
   setTimeout(() => {
     if (disposed) {
+      console.log('avoiding work')
       return
     }
     if (Array.isArray(val)) {

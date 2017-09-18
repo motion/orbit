@@ -246,6 +246,10 @@ export default class TaskPane {
   }
 
   render({ paneStore: { isActive }, store }) {
+    if (!store.results.length) {
+      return null
+    }
+
     const actions = [
       {
         name: 'labels',

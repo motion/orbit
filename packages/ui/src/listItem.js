@@ -59,7 +59,9 @@ export default class ListItem extends React.Component<Props> {
       this.props.onItemMount(this)
     }
     if (this.props.measure) {
-      this.props.measure()
+      this.setTimeout(() => {
+        this.props.measure()
+      }, 1000)
     }
   }
 

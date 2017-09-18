@@ -47,26 +47,26 @@ export default class PaneCard {
       children: item.view,
     })
 
-    // virtualized={{
-    //   measure: true,
-    //   ...virtualProps,
-    // }}
-
     return (
       <card
         style={{ width, ...style }}
         css={{
           transition: 'all ease-in 80ms',
           zIndex: 1000,
-          //transform: { y: paneStore.isActive ? -15 : 0 },
+          transform: { y: paneStore.col === 1 && paneStore.isActive ? -5 : 0 },
         }}
       >
         <content if={!items}>{children}</content>
+
         <content if={items}>
           <UI.List
             getRef={paneStore.setList}
             groupKey={groupKey}
             onSelect={this.onSelect}
+            virtualized={{
+              measure: true,
+              ...virtualProps,
+            }}
             itemProps={{
               ...paneStore.itemProps,
               ...itemProps,

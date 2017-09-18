@@ -9,13 +9,7 @@ import Surface from './surface'
 import { isArrayLike } from 'mobx'
 import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 
-const cache = new CellMeasurerCache({
-  defaultHeight: 50,
-  fixedWidth: true,
-})
-
 const idFn = _ => _
-const SEPARATOR_HEIGHT = 28
 
 export type Props = {
   defaultSelected?: number,
@@ -56,7 +50,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
     getItem: idFn,
     onSelect: idFn,
     onHighlight: idFn,
-    separatorHeight: SEPARATOR_HEIGHT,
   }
 
   state = {
@@ -222,7 +215,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
     return (
       <CellMeasurer
-        cache={cache}
+        cache={this.cache}
         columnIndex={0}
         key={key}
         parent={parent}
@@ -383,17 +376,22 @@ class List extends React.PureComponent<Props, { selected: number }> {
       realIndex = realIndex.filter(x => typeof x !== 'undefined')
 
       for (const { index, name } of groups) {
-        let child
-        if (virtualized) {
-          child = (extraProps: Object) => (
-            <separator {...extraProps}>{name}</separator>
-          )
-        } else {
-          child = <separator key={name}>{name}</separator>
+        let child = (extraProps: Object) => (
+          <separator key={name} {...extraProps}>
+            {name}
+          </separator>
+        )
+        if (!virtualized) {
+          child = child()
         }
         children.splice(index, 0, child)
       }
     }
+
+    this.cache = new CellMeasurerCache({
+      defaultHeight: 50,
+      fixedWidth: true,
+    })
 
     this.children = children
     this.totalGroups = totalGroups
@@ -443,17 +441,17 @@ class List extends React.PureComponent<Props, { selected: number }> {
       >
         <VirtualList
           if={virtualized}
-          deferredMeasurementCache={cache}
+          deferredMeasurementCache={this.cache}
           height={height}
           width={width}
           ref={this.setVirtualRef}
-          overscanRowCount={5}
+          overscanRowCount={3}
           scrollToIndex={
             realIndex ? realIndex[this.state.selected] : this.state.selected
           }
           rowCount={totalItems + totalGroups}
           rowRenderer={this.rowRenderer}
-          rowHeight={cache.rowHeight}
+          rowHeight={this.cache.rowHeight}
           {...virtualized}
         />
         {!virtualized && children}
@@ -472,8 +470,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       flexGrow: 'inherit',
     },
     separator: {
-      padding: [0, 10],
-      height: SEPARATOR_HEIGHT,
+      padding: [4, 10],
       justifyContent: 'center',
       background: [0, 0, 0, 0.04],
       color: [255, 255, 255, 0.3],

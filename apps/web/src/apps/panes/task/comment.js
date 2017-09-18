@@ -54,8 +54,12 @@ export default class Comment {
       border: [1, [0, 0, 0, 0]],
       transition: 'all 150ms ease-in',
     },
+    user: {
+      userSelect: 'none',
+    },
     info: {
       justifyContent: 'space-between',
+      userSelect: 'none',
     },
     left: {
       marginTop: 3,

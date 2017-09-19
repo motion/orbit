@@ -178,11 +178,9 @@ class CurrentUser {
       windowOptions: 'location=100,status=0,width=800,height=600',
       ...options,
     }
-    const authWindow = window.open(
-      `/auth/${provider}`,
-      opts.windowName,
-      opts.windowOptions
-    )
+    const path = `/auth/${provider}`
+    console.log('Opening oauth window at', path)
+    const authWindow = window.open(path, opts.windowName, opts.windowOptions)
     if (!authWindow) {
       throw new Error('Authorization popup blocked')
     }

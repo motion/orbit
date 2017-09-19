@@ -21,7 +21,11 @@ export default class Server {
         return { token, refreshToken, info }
       },
     })
-    this.server = this.setupServer()
+
+    this.app = express()
+    this.setupServer()
+    this.setupPassport()
+    this.setupProxy()
   }
 
   start() {
@@ -49,40 +53,42 @@ export default class Server {
     return session.expires > Date.now()
   }
 
-  setupServer() {
-    const app = express()
-
-    // express
-    app.set('port', port)
-    app.use(logger('dev'))
-    // app.use('*', cors())
+  setupServer(app) {
+    this.app.set('port', port)
+    this.app.use(logger('dev'))
 
     const HEADER_ALLOWED =
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
 
-    app.use((req, res, next) => {
+    this.app.use((req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*')
       res.header('Access-Control-Allow-Credentials', 'true')
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
       next()
     })
 
-    app.use(bodyParser.json())
-    app.use(bodyParser.urlencoded({ extended: false }))
+    this.app.use(bodyParser.json())
+    this.app.use(bodyParser.urlencoded({ extended: false }))
+  }
 
-    app.use('/', proxy({ target: 'http://localhost:3001', ws: true }))
+  setupProxy() {
+    this.app.use('/', proxy({ target: 'http://localhost:3001', ws: true }))
+  }
 
+  setupPassport() {
     for (const name of Object.keys(OAuthStrategies)) {
-      app.get(`/auth/${name}`, Passport.authenticate(name))
-      app.get(
+      const path = `/auth/${name}`
+      this.app.get(path, Passport.authenticate(name))
+      this.app.get(
         `/auth/${name}/callback`,
         Passport.authenticate(name),
         (req, res) => {
           res.redirect('/')
         }
       )
+      console.log(`Oauth setup: ${path}`)
     }
 
-    return app
+    this.app.use(Passport.initialize())
   }
 }

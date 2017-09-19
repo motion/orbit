@@ -7,9 +7,9 @@ import parentSize from '~/helpers/parentSize'
 import type { Props as ItemProps } from './listItem'
 import Surface from './surface'
 import { isArrayLike } from 'mobx'
+import { CellMeasurer, CellMeasurerCache } from 'react-virtualized'
 
 const idFn = _ => _
-const SEPARATOR_HEIGHT = 25
 
 export type Props = {
   defaultSelected?: number,
@@ -50,7 +50,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
     getItem: idFn,
     onSelect: idFn,
     onHighlight: idFn,
-    separatorHeight: SEPARATOR_HEIGHT,
   }
 
   state = {
@@ -78,6 +77,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (this.props.getRef) {
       this.props.getRef(this)
     }
+
+    this.updateChildren()
   }
 
   // willUpdate only runs when PureComponent has new props
@@ -197,36 +198,32 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
-  getRow = ({
+  rowRenderer = ({
     index,
     key,
     style,
+    parent,
   }: {
     index: number,
     key: string,
     style: Object,
+    parent: any,
   }) => {
     if (!this.children || !this.children[index]) {
       console.log('no child', index, this)
       return null
     }
-    return this.children[index]({ key, style })
-  }
-
-  getRowHeight = ({ index }: { index: number }) => {
-    const { groupedIndex } = this
-    const { separatorHeight, virtualized } = this.props
-    if (!virtualized) {
-      return
-    }
-    if (groupedIndex && groupedIndex[index] === true) {
-      return separatorHeight
-    }
-    if (typeof virtualized.rowHeight === 'function') {
-      const realIndex = groupedIndex ? groupedIndex[index] : index
-      return virtualized.rowHeight(realIndex)
-    }
-    return virtualized.rowHeight
+    return (
+      <CellMeasurer
+        cache={this.cache}
+        columnIndex={0}
+        key={key}
+        parent={parent}
+        rowIndex={index}
+      >
+        {this.children[index]({ style })}
+      </CellMeasurer>
+    )
   }
 
   getItemProps(index, rowProps, isListItem: boolean) {
@@ -379,17 +376,22 @@ class List extends React.PureComponent<Props, { selected: number }> {
       realIndex = realIndex.filter(x => typeof x !== 'undefined')
 
       for (const { index, name } of groups) {
-        let child
-        if (virtualized) {
-          child = (extraProps: Object) => (
-            <separator {...extraProps}>{name}</separator>
-          )
-        } else {
-          child = <separator key={name}>{name}</separator>
+        let child = (extraProps: Object) => (
+          <separator key={name} {...extraProps}>
+            {name}
+          </separator>
+        )
+        if (!virtualized) {
+          child = child()
         }
         children.splice(index, 0, child)
       }
     }
+
+    this.cache = new CellMeasurerCache({
+      defaultHeight: 50,
+      fixedWidth: true,
+    })
 
     this.children = children
     this.totalGroups = totalGroups
@@ -439,36 +441,28 @@ class List extends React.PureComponent<Props, { selected: number }> {
       >
         <VirtualList
           if={virtualized}
+          deferredMeasurementCache={this.cache}
           height={height}
           width={width}
           ref={this.setVirtualRef}
-          overscanRowCount={5}
+          overscanRowCount={3}
           scrollToIndex={
             realIndex ? realIndex[this.state.selected] : this.state.selected
           }
           rowCount={totalItems + totalGroups}
-          rowRenderer={this.getRow}
+          rowRenderer={this.rowRenderer}
+          rowHeight={this.cache.rowHeight}
           {...virtualized}
-          rowHeight={this.getRowHeight}
         />
         {!virtualized && children}
       </Surface>
     )
-    if (!controlled) {
-      return inner
-    }
     return inner
   }
 
   static style = {
-    keys: {
-      height: '100%',
-      flexDirection: 'inherit',
-      flexGrow: 'inherit',
-    },
     separator: {
-      padding: [0, 10],
-      height: SEPARATOR_HEIGHT,
+      padding: [4, 10],
       justifyContent: 'center',
       background: [0, 0, 0, 0.04],
       color: [255, 255, 255, 0.3],

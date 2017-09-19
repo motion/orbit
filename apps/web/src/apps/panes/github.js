@@ -58,9 +58,7 @@ export default class BarDocPane {
               </icon>
               <code>
                 <pre>
-                  <UI.Text>
-                    {change.contents}
-                  </UI.Text>
+                  <UI.Text>{change.contents}</UI.Text>
                 </pre>
               </code>
             </change>

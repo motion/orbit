@@ -3,20 +3,22 @@ import * as UI from '@mcro/ui'
 import * as Pane from '../pane'
 import * as React from 'react'
 import { range, capitalize, sample, includes, random } from 'lodash'
-import { Motion, spring } from 'react-motion'
 import moment from 'moment'
 
 const dayIndex = (row, col) => row * 7 + col - 4
+const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 const dotColors = [[64, 146, 240, 1], [163, 131, 236, 1], [242, 203, 70, 1]]
 const dots = range(100).map(() =>
   range(random(0, 2)).map(() => sample(dotColors))
 )
+const months = 'Jan,Feb,Mar,Apr,May,Jun,July,Aug,Sep,Oct,Nov,Dec'.split(',')
 
-const getActiveDots = (row, index) => dots[dayIndex(row, index) + 20]
+const getActiveDots = (month, day) => dots[month + day + 20]
 
 @view
 class RightList extends React.Component<> {
   static defaultProps: {}
+
   render({ dots }) {
     const items = [
       {
@@ -164,27 +166,62 @@ class RightList extends React.Component<> {
 
 @view
 class Calendar {
-  render({ activeRow, activeCol, onSelect, isSmall }) {
+  render({ store }) {
+    const {
+      onSelect,
+      isSmall,
+      visibleMonth,
+      wrapMonth,
+      activeDay,
+      activeMonth,
+      nextMonth,
+      prevMonth,
+    } = store
     const days = 'sun,mon,tue,wed,thu,fri,sat'
       .split(',')
       .map(d => capitalize(d))
-    const dayNumber = (row, col) => {
+
+    const norm = (row, col) => {
       const index = dayIndex(row, col)
-      if (index < 1) return 29 + index
-      if (index > 30) return index - 30
-      return index
+      if (index < 1)
+        return {
+          day: daysInMonth[wrapMonth(visibleMonth - 1)] + index,
+          month: wrapMonth(visibleMonth - 1),
+        }
+      if (index > daysInMonth[visibleMonth])
+        return {
+          day: index - daysInMonth[visibleMonth],
+          month: wrapMonth(visibleMonth + 1),
+        }
+
+      return { day: index, month: visibleMonth }
     }
 
-    const isThisMonth = (row, col) => {
-      const index = dayIndex(row, col)
-      return index > 0 && index < 31
-    }
-
-    const allWeeks = 4
+    const allWeeks = 5
     const rows = isSmall ? range(1, 3) : range(0, allWeeks)
 
     return (
       <cal>
+        <actions if={!isSmall} $$row>
+          <UI.Button $leftAction onClick={store.toToday} size={1.0} chromeless>
+            Today
+          </UI.Button>
+          <UI.Button
+            $leftAction
+            size={1.0}
+            chromeless
+            onClick={prevMonth}
+            icon="arrows-1_bold-left"
+          />
+          <UI.Button
+            $leftAction
+            size={1.0}
+            onClick={nextMonth}
+            chromeless
+            icon="arrows-1_bold-right"
+          />
+          <UI.Title size={1.2}>{months[visibleMonth]}</UI.Title>
+        </actions>
         <days $$row>
           {days.map(day => (
             <item $visibleDay $dayLabel key={day}>
@@ -197,25 +234,34 @@ class Calendar {
         <rows>
           {range(0, allWeeks).map(row => (
             <row $visible={includes(rows, row)} key={row} $$row>
-              {range(days.length).map((item, index) => (
-                <item
-                  key={index}
-                  $visibleDay={includes(rows, row)}
-                  $dark={includes(rows, row) && !isThisMonth(row, index)}
-                  onClick={() => {
-                    onSelect(row, index)
-                  }}
-                >
-                  <highlight $lit={row === activeRow && index === activeCol}>
-                    <UI.Text>{dayNumber(row, index)}</UI.Text>
-                    <dots $$row>
-                      {getActiveDots(row, index).map(background => (
-                        <dot key={index} css={{ background }} />
-                      ))}
-                    </dots>
-                  </highlight>
-                </item>
-              ))}
+              {range(days.length).map((item, index) => {
+                const { day: itemDay, month: itemMonth } = norm(row, index)
+
+                return (
+                  <item
+                    key={'row' + row + 'index' + index}
+                    $visibleDay={includes(rows, row)}
+                    $dark={includes(rows, row) && itemMonth !== visibleMonth}
+                    onClick={() => {
+                      onSelect({ day: itemDay, month: itemMonth })
+                    }}
+                  >
+                    <highlight
+                      $lit={itemDay === activeDay && itemMonth === activeMonth}
+                    >
+                      <UI.Text>{itemDay + ''}</UI.Text>
+                      <dots $$row>
+                        {getActiveDots(
+                          itemMonth,
+                          itemDay
+                        ).map((background, index) => (
+                          <dot key={index} css={{ background }} />
+                        ))}
+                      </dots>
+                    </highlight>
+                  </item>
+                )
+              })}
             </row>
           ))}
         </rows>
@@ -270,7 +316,12 @@ class Calendar {
       height: 5,
       width: 5,
     },
+    visibleDay: {
+      opacity: 1,
+      transform: { scale: 1 },
+    },
     dark: {
+      color: 'rgba(0,0,0,0.3)',
       opacity: 0.5,
     },
     dayItem: {
@@ -283,10 +334,6 @@ class Calendar {
     },
     visible: {
       height: 50,
-    },
-    visibleDay: {
-      opacity: 1,
-      transform: { scale: 1 },
     },
   }
 }
@@ -379,12 +426,62 @@ class Event {
 }
 
 class CalendarPaneStore {
-  activeRow = 2
-  activeCol = 2
+  activeMonth = null
+  activeDay = null
+  visibleMonth = null
 
-  onSelect = (row, col) => {
-    this.activeRow = row
-    this.activeCol = col
+  get isSmall() {
+    return this.props.isSmall
+  }
+
+  get startDate() {
+    return this.props.paneStore && this.props.paneStore.data.startDate
+  }
+
+  setActive = () => {
+    if (this.startDate) {
+      const active = this.startDate
+      this.activeDay = active.getDate()
+      this.activeMonth = active.getMonth()
+      this.visibleMonth = active.getMonth()
+    }
+  }
+
+  start() {
+    let active = new Date()
+    if (this.startDate) {
+      active = this.startDate
+    }
+
+    this.activeDay = active.getDate()
+    this.activeMonth = active.getMonth()
+    this.visibleMonth = active.getMonth()
+  }
+
+  toToday = () => {
+    this.activeMonth = new Date().getMonth()
+    this.activeDay = new Date().getDate()
+    this.visibleMonth = this.activeMonth
+  }
+
+  prevMonth = () => {
+    this.visibleMonth = this.wrapMonth(this.visibleMonth - 1)
+  }
+
+  nextMonth = () => {
+    this.visibleMonth = this.wrapMonth(this.visibleMonth + 1)
+  }
+
+  wrapMonth = i => {
+    if (i < 0) return 13 + i
+    if (i > 12) return i - 13
+    return i
+  }
+
+  onSelect = ({ day, month }) => {
+    console.log('selecting', day, month)
+    this.activeDay = day
+    this.activeMonth = month
   }
 
   highlightEventIndex = -1
@@ -421,6 +518,10 @@ const friendlyDate = ({ startDate, endDate }) => {
   store: CalendarPaneStore,
 })
 export default class CalendarPane {
+  componentWillReceiveProps() {
+    this.props.store.setActive()
+  }
+
   render({ store, isSmall, paneStore, millerStore, isActive }) {
     const actions = [
       {
@@ -496,12 +597,10 @@ export default class CalendarPane {
               <Calendar
                 onSelect={store.onSelect}
                 activeDots={dots}
-                activeRow={store.activeRow}
-                activeCol={store.activeCol}
-                isSmall={isSmall}
+                store={store}
               />
               <RightList
-                dots={getActiveDots(store.activeRow, store.activeCol)}
+                dots={getActiveDots(store.activeMonth, store.activeDay)}
               />
               <bottom if={false}>
                 <events>

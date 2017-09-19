@@ -26,10 +26,7 @@ export default class PaneCard {
     this.setActions(nextProps)
   }
 
-  rowHeight = i => this.props.items[i].height
-
   onSelect = (item, index) => {
-    console.log('selecing row', index)
     this.props.paneStore.selectRow(index)
   }
 
@@ -56,7 +53,7 @@ export default class PaneCard {
         css={{
           transition: 'all ease-in 80ms',
           zIndex: 1000,
-          //transform: { y: paneStore.isActive ? -15 : 0 },
+          //transform: { y: paneStore.col === 1 && paneStore.isActive ? -5 : 0 },
         }}
       >
         <content if={!items}>{children}</content>
@@ -66,11 +63,6 @@ export default class PaneCard {
             getRef={paneStore.setList}
             groupKey={groupKey}
             onSelect={this.onSelect}
-            virtualized={{
-              rowHeight: this.rowHeight,
-              measure: true,
-              ...virtualProps,
-            }}
             itemProps={{
               ...paneStore.itemProps,
               ...itemProps,

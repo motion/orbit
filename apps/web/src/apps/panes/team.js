@@ -44,30 +44,6 @@ class BarTeamStore {
 type Props = PaneProps & { store: BarTeamStore }
 
 @view
-class CalSection {
-  render({ store }) {
-    return (
-      <div
-        $$row
-        $active={store.activeType === 'Calendar'}
-        css={{ alignItems: 'center', maxHeight: '100%' }}
-      >
-        <Calendar isSmall={store.activeType !== 'Calendar'} />
-      </div>
-    )
-  }
-
-  static style = {
-    div: {
-      width: '100%',
-    },
-    active: {
-      marginTop: 100,
-    },
-  }
-}
-
-@view
 class ItemsSection {
   render({ store }) {
     return (
@@ -106,41 +82,55 @@ export default class BarTeam extends Component<Props> {
       )
     }
 
-    const items = [
-      {
-        height: 75,
-        view: () => (
-          <section $$row>
-            <img $image src={`/images/${paneStore.data.image}.jpg`} />
-            <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
-              {paneStore.data.person}
-            </UI.Title>
-          </section>
-        ),
-      },
-      {
-        height: 60,
-        view: () => <ItemsSection store={store} />,
-      },
-      {
-        height: 200,
-        view: () => <CalSection store={store} />,
-      },
-      ...(store.events || []).map(event => ({
-        height: event.height,
-        view: () => <FeedItem event={event} />,
-      })),
-    ]
-
     return (
-      <div style={{ flex: 1 }}>
-        <Pane.Card
-          itemProps={{
-            glow: false,
-          }}
-          items={items}
-        />
-      </div>
+      <Pane.Card
+        itemProps={{
+          glow: false,
+        }}
+        items={[
+          {
+            view: () => (
+              <section>
+                <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+                  Team {paneStore.data.team}
+                </UI.Title>
+              </section>
+            ),
+          },
+          {
+            view: () => (
+              <section>
+                <UI.Row
+                  spaced
+                  itemProps={{ size: 1, borderWidth: 0, glint: false }}
+                  css={{ justifyContent: 'flex-end' }}
+                >
+                  <UI.Button highlight>All</UI.Button>
+                  <UI.Button icon="Cal">Calendar</UI.Button>
+                  <UI.Button icon="Github">Github</UI.Button>
+                  <UI.Button icon="hard">Drive</UI.Button>
+                  <UI.Button icon="Google">Google Docs</UI.Button>
+                </UI.Row>
+              </section>
+            ),
+          },
+          {
+            view: () => (
+              <section>
+                <div
+                  $$row
+                  css={{ alignItems: 'flex-start', maxHeight: '100%' }}
+                >
+                  <Calendar isSmall={store.activeType === 'Calendar'} />
+                </div>
+              </section>
+            ),
+          },
+          ...(store.events || []).map(event => ({
+            view: () => <FeedItem event={event} />,
+          })),
+        ]}
+      />
     )
   }
 

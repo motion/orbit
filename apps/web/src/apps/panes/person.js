@@ -124,7 +124,13 @@ export default class BarTeam extends Component<Props> {
       },
       {
         height: 200,
-        view: () => <CalSection store={store} />,
+        view: () => (
+          <section>
+            <div $$row css={{ alignItems: 'flex-start', maxHeight: '100%' }}>
+              <Calendar isSmall={store.activeType !== 'Calendar'} />
+            </div>
+          </section>
+        ),
       },
       ...(store.events || []).map(event => ({
         height: event.height,

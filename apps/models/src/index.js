@@ -54,8 +54,8 @@ export type ModelsObject = {
 export type DatabaseConfig = {|
   name: string,
   password: string,
-  couchUrl: string,
-  couchHost: string,
+  remoteUrl: string,
+  remoteHost: string,
   adapter: Function,
   adapterName: string,
 |}
@@ -104,13 +104,14 @@ export default class Database {
     this.connected = true
   }
 
-  dispose = () => {
+  dispose = async () => {
     for (const name of Object.keys(this.models)) {
       const model = this.models[name]
       if (model) {
-        model.dispose()
+        await model.dispose()
       }
     }
+    await this.database.destroy()
   }
 
   attachModels = async () => {
@@ -127,27 +128,33 @@ export default class Database {
         )
       }
 
-      connections.push(
-        model.connect(this.database, {
-          pouch: PouchDB,
-          // remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
-          pouchSettings: {
+      let settings = {
+        pouch: PouchDB,
+        pouchSettings: {
+          skip_setup: true,
+          skipSetup: true,
+        },
+        ...this.modelOptions,
+      }
+
+      if (this.databaseConfig.remoteUrl) {
+        settings = {
+          remote: `${this.databaseConfig.remoteUrl}/${model.title}/`,
+          remoteOptions: {
             skip_setup: true,
             skipSetup: true,
+            adapter: this.databaseConfig.adapterName,
+            ajax: {
+              headers: {
+                'X-Token': `${User.name}*|*${User.token}`,
+              },
+            },
           },
-          // remoteOptions: {
-          //   skip_setup: true,
-          //   skipSetup: true,
-          //   adapter: this.databaseConfig.adapterName,
-          //   ajax: {
-          //     headers: {
-          //       'X-Token': `${User.name}*|*${User.token}`,
-          //     },
-          //   },
-          // },
-          ...this.modelOptions,
-        })
-      )
+          ...settings,
+        }
+      }
+
+      connections.push(model.connect(this.database, settings))
     }
 
     return await Promise.all(connections)

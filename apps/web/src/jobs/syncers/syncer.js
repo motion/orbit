@@ -27,6 +27,5 @@ export default class Syncer {
       syncers.push(ensureJob(type, action, job))
     }
     await Promise.all(syncers)
-    console.log('Done with sync', type)
   }
 }

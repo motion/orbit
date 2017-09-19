@@ -15,8 +15,6 @@ export default class API {
       {
         name: 'username',
         password: 'password',
-        couchUrl: Constants.DB_URL,
-        couchHost: Constants.DB_HOST,
         adapter,
         adapterName: 'memory',
       },
@@ -28,7 +26,9 @@ export default class API {
     // things that depend on models go after this line
     await this.database.start({
       modelOptions: {
-        // autoSync: true,
+        // autoSync: {
+        //   push: true,
+        // },
         debug: true,
       },
     })

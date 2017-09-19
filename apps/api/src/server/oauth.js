@@ -25,7 +25,6 @@ export default class OAuth {
           cb
         ) {
           try {
-            console.log('finishign', name, accessToken)
             const user = await onSuccess(
               name,
               accessToken,

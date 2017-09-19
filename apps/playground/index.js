@@ -18,8 +18,8 @@ async function render() {
     {
       name: 'username',
       password: 'password',
-      couchUrl: 'api.jot.dev/couch',
-      couchHost: 'api.jot.dev',
+      remoteUrl: 'api.jot.dev/db',
+      remoteHost: 'api.jot.dev',
     },
     AllModels
   )

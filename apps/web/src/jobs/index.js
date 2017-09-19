@@ -107,7 +107,6 @@ export default class Jobs {
     })
 
   runJob = async (job: Job) => {
-    console.log('Running', job.type, job.action)
     await job.update({
       percent: 0,
       status: Job.status.PROCESSING,

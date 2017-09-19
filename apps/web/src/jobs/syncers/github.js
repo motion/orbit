@@ -25,11 +25,16 @@ export default class GithubSync extends Syncer {
     Setting.findOne({ type, userId: this.user.id }).sort('createdAt')
 
   get token(): string {
-    return (this.user.github && this.user.github.auth.accessToken) || ''
+    return (
+      (this.user.authorizations &&
+        this.user.authorizations.github &&
+        this.user.authorizations.github.token) ||
+      ''
+    )
   }
 
-  start = () => {
-    if (!this.user.github) {
+  start() {
+    if (!this.token) {
       console.log('No github credentials found for user')
       return
     }
@@ -44,7 +49,6 @@ export default class GithubSync extends Syncer {
 
         if (job.action) {
           try {
-            console.log('running job', job.action)
             await this.runJob(job.action)
           } catch (error) {
             reject(error)

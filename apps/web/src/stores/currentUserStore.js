@@ -7,6 +7,42 @@ import SuperLoginClient from 'superlogin-client'
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
+function passportLink(provider: string, options: Object = {}): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const opts = {
+      windowName: 'Login',
+      windowOptions: 'location=100,status=0,width=800,height=600',
+      ...options,
+    }
+    const path = `/auth/${provider}`
+    console.log('Opening oauth window at', path)
+
+    // setup new response object
+    window.passport = {}
+    window.passport.oauthSession = info => {
+      if (!info.error && info.token) {
+        return resolve(info)
+      }
+      return reject(`Got an oauth error: ${JSON.stringify(info)}`)
+    }
+
+    const authWindow = window.open(path, opts.windowName, opts.windowOptions)
+    if (!authWindow) {
+      return reject('Authorization popup blocked')
+    }
+    let authComplete = false
+    const check = setInterval(() => {
+      if (authWindow.closed) {
+        clearInterval(check)
+        if (!authComplete) {
+          authComplete = true
+          return reject('Authorization cancelled')
+        }
+      }
+    })
+  })
+}
+
 @store
 class CurrentUser {
   connected = false
@@ -15,23 +51,13 @@ class CurrentUser {
   sessionInfo = null
   superlogin: SuperLoginClient = SuperLoginClient
 
-  @watch userInfo = () => this.id && User.findOne(this.id)
+  @watch user = () => this.id && User.findOne(this.id)
   @watch settings = () => this.id && Setting.find({ userId: this.id })
   @watch
   setting = () =>
     (this.settings &&
       this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})) ||
     {}
-
-  get user() {
-    if (!this.sessionInfo) {
-      return null
-    }
-    return {
-      ...this.sessionInfo,
-      ...this.userInfo,
-    }
-  }
 
   integrations = []
 
@@ -41,7 +67,9 @@ class CurrentUser {
     this.connected = true
   }
 
-  start() {
+  async start() {
+    // temp user for now
+    await User.findOrCreate('a@b.com')
     this.ensureSettings()
   }
 
@@ -102,7 +130,8 @@ class CurrentUser {
   }
 
   get id() {
-    return this.sessionInfo && this.sessionInfo.user_id
+    // return this.sessionInfo && this.sessionInfo.user_id
+    return 'a@b.com'
   }
 
   get token() {
@@ -173,32 +202,23 @@ class CurrentUser {
   }
 
   link = async (provider: string, options: Object = {}) => {
-    const opts = {
-      windowName: 'Login',
-      windowOptions: 'location=100,status=0,width=800,height=600',
-      ...options,
+    if (!this.user) {
+      throw new Error(`No user`)
     }
-    const path = `/auth/${provider}`
-    console.log('Opening oauth window at', path)
-    const authWindow = window.open(path, opts.windowName, opts.windowOptions)
-    if (!authWindow) {
-      throw new Error('Authorization popup blocked')
+    const info = await passportLink(provider, options)
+    if (info) {
+      this.user.mergeUpdate({
+        authorizations: {
+          github: info,
+        },
+      })
     }
-    let authComplete = false
-    const check = setInterval(() => {
-      if (authWindow.closed) {
-        clearInterval(check)
-        if (!authComplete) {
-          authComplete = true
-          throw new Error('Authorization cancelled')
-        }
-      }
-    })
+    console.log('linked', info)
   }
 
-  unlink = async provider => {
-    // return await this.superlogin.unlink(provider)
-  }
+  // unlink = async provider => {
+  //   // return await this.superlogin.unlink(provider)
+  // }
 
   setUserSession = async () => {
     try {

@@ -72,6 +72,7 @@ export default class Model {
   static isModel = true
   static props: Object
   static defaultProps: Function | Object
+  static defaultFilter: ?Function
 
   _collection: RxCollection
   migrations: ?Object
@@ -184,8 +185,9 @@ export default class Model {
   _createFindProxy = (target: Object, method: string) => {
     const { defaultFilter = idFn } = this.constructor
     // assign here to avoid changed `this` in proxy
-    const { options } = this
-    const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
+    const { autoSync, asyncFirstSync } = this.options
+    const shouldSyncPush = autoSync && (autoSync === true || autoSync.push)
+    const queryObject = x => (typeof x === 'string' ? { id: x } : x)
 
     return (queryParams: Object | string) => {
       const finalParams = defaultFilter(queryObject(queryParams))
@@ -200,7 +202,7 @@ export default class Model {
             case 'sync':
               return sync
             case '$':
-              if (options.autoSync) {
+              if (shouldSyncPush) {
                 sync()
               }
               return target[method]
@@ -208,7 +210,7 @@ export default class Model {
               // console.log('--', `${target.op}.${method}`, finalParams)
               return () =>
                 new Promise(async resolve => {
-                  if (options.autoSync && !options.asyncFirstSync) {
+                  if (shouldSyncPush && !asyncFirstSync) {
                     await sync()
                   }
                   const value = await executeQuery()
@@ -235,9 +237,6 @@ export default class Model {
       return this._filteredCollection
     }
 
-    // chain().until().exec().or().$
-    const self = this
-
     // turns a serialized query back into a real query
     const getQuery = called => {
       return called.reduce((acc, cur) => {
@@ -246,6 +245,8 @@ export default class Model {
     }
 
     const { onConnection } = this
+
+    // this worm returns when not yet connected, letting you still run queries before connect
     const worm = base => {
       const result = new Proxy(
         {
@@ -300,7 +301,8 @@ export default class Model {
     })
 
     // sync PUSH ONLY
-    if (this.options.autoSync) {
+    const { autoSync } = this.options
+    if (autoSync && (autoSync === true || autoSync.push)) {
       const pushSync = this._collection.sync({
         remote: this.remote,
         direction: {
@@ -464,7 +466,7 @@ export default class Model {
       return {}
     }
     if (typeof params === 'string') {
-      return { _id: params }
+      return { id: params }
     } else {
       return params
     }
@@ -515,11 +517,11 @@ export default class Model {
   }
 
   // create a model and persist
-  async create(object: Object = {}) {
+  async create(object: Object | string) {
     if (!this._collection) {
       await this.onConnection()
     }
-    return this._collection.insert(object)
+    return this._collection.insert(this.paramsToObject(object))
   }
 
   // upsert requires you to use primary key, unlike findOrCreate which doesn't

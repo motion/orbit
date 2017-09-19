@@ -6,18 +6,19 @@ export const methods = {}
 
 export class UserModel extends Model {
   static props = {
-    name: str,
-    username: str,
-    type: str,
+    id: str.primary,
+    name: str.optional,
+    username: str.optional,
+    type: str.optional,
     roles: array.optional.items(str),
     providers: array.optional.items(str),
-    unverifiedEmail: object,
-    local: object,
-    signUp: object,
-    personalDBs: object,
+    unverifiedEmail: object.optional,
+    local: object.optional,
+    signUp: object.optional,
+    personalDBs: object.optional,
     activity: array.optional.items(object),
-    session: object,
-    github: object.optional,
+    session: object.optional,
+    authorizations: object.optional,
   }
 
   settings = {

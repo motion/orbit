@@ -41,8 +41,8 @@ export default class App {
   }
 
   async start() {
-    // this.jobs = new Jobs()
-    // await this.jobs.start()
+    this.jobs = new Jobs()
+    await this.jobs.start()
   }
 
   dispose() {
@@ -65,6 +65,10 @@ export default class App {
   }
 
   // helpers that wrap appStore
+  get database() {
+    return this.store.database
+  }
+
   get errors() {
     return this.store.errors
   }

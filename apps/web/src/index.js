@@ -1,5 +1,6 @@
 // @flow
 import 'babel-polyfill'
+import 'isomorphic-fetch'
 import createElement from '@mcro/black/lib/createElement'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
@@ -24,11 +25,11 @@ function splash() {
   console.timeEnd('splash')
 }
 
-function main() {
+function main(options: ?Object) {
   splash()
   const App = require('./app').default
   const app = new App()
-  app.start()
+  app.start(options)
   window.App = app
   return app
 }
@@ -38,10 +39,14 @@ export let App = main()
 // accept hmr
 if (module && module.hot) {
   module.hot.accept(_ => _)
-  module.hot.accept('@mcro/models', () => {
+  module.hot.accept('@mcro/models', async () => {
     if (App) {
-      App.dispose()
-      App = main()
+      await App.dispose()
+      App = main({
+        options: {
+          ignoreDuplicate: true,
+        },
+      })
     }
   })
 }

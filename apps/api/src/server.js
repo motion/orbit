@@ -8,6 +8,8 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
+import FS from 'fs'
+import Path from 'path'
 
 const port = Constants.SERVER_PORT
 
@@ -87,10 +89,36 @@ export default class Server {
         `/auth/${name}/callback`,
         Passport.authenticate(name),
         (req, res) => {
-          res.redirect('/')
+          const { user } = req
+          res.send(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Authentication Success</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+</head>
+<body>
+<script type="text/javascript">
+  if (window.opener) {
+    window.opener.focus()
+    const info = {
+      refreshToken: ${JSON.stringify(user.refreshToken)},
+      token: ${JSON.stringify(user.token)},
+      error: ${JSON.stringify(user.error)},
+      info: ${JSON.stringify(user.info)},
+    }
+    if (window.opener.passport && window.opener.passport.oauthSession) {
+      window.opener.passport.oauthSession(info)
+    }
+  }
+  window.close()
+</script>
+</body>
+</html>
+          `)
         }
       )
-      console.log(`Oauth setup: ${path}`)
     }
   }
 

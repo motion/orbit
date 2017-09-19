@@ -1,10 +1,9 @@
 // @flow
 import Database, { Models } from '@mcro/models'
 import Server from './server'
-import Bootstrap from './bootstrap'
-import type { Options } from '~/types'
 import adapter from 'pouchdb-adapter-memory'
 import * as Constants from '~/constants'
+import type { Options } from '~/types'
 
 export default class API {
   server: Server
@@ -13,7 +12,6 @@ export default class API {
 
   constructor(options: Options) {
     this.server = new Server(options)
-    this.bootstrap = new Bootstrap(options)
     this.database = new Database(
       {
         name: 'username',
@@ -35,13 +33,11 @@ export default class API {
         debug: true,
       },
     })
-    this.bootstrap.start()
     const port = this.server.start()
     console.log('API on port', port)
   }
 
   dispose() {
-    this.bootstrap.dispose()
     this.server.dispose()
   }
 }

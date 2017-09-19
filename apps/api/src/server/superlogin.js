@@ -1,6 +1,6 @@
 import SL from 'superlogin'
 import { Strategy as GithubStrategy } from 'passport-github'
-// import { GoogleStrategy } from 'passport-google-oauth'
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import SlackStrategy from './passportSlack'
 
 export default class SuperLogin {
@@ -10,7 +10,7 @@ export default class SuperLogin {
     const strategies = [
       ['slack', SlackStrategy],
       ['github', GithubStrategy],
-      // ['google', GoogleStrategy],
+      ['google', GoogleStrategy],
     ]
 
     strategies.forEach(([name, strategy]) => {

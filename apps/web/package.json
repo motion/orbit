@@ -53,7 +53,6 @@
     "butternut-webpack-plugin": "^0.1.0",
     "case-sensitive-paths-webpack-plugin": "^2.1.1",
     "denode": "^1.10.5",
-    "detect-port": "^1.1.1",
     "electron": "^1.7.3",
     "html-webpack-plugin": "^2.28.0",
     "ncp": "2.0.0",

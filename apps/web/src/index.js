@@ -5,6 +5,9 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'
 import '@mcro/models/lib/user' // start superlogin connect immediately
+import Path from 'path'
+
+export const indexFile = Path.join(__dirname, '..', 'index.html')
 
 if (Constants.IS_PROD) {
   require('./helpers/installProd')

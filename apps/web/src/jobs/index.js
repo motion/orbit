@@ -18,7 +18,7 @@ function getRxError(error: Error) {
 @store
 export default class Jobs {
   locks: Set<string> = new Set()
-  @watch user: ?User = () => User.findOne()
+  @watch user: ?User = (() => User.findOne(): any)
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
   @watch
   syncers = async () => {
@@ -38,7 +38,7 @@ export default class Jobs {
   }
 
   start = async () => {
-    this.watchJobs()
+    // this.watchJobs()
   }
 
   get github() {

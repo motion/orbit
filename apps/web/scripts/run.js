@@ -10,7 +10,7 @@ const config = require('./config/build.config')
 const paths = require('./config/paths')
 
 const HOST = '0.0.0.0'
-const PORT = 3000
+const PORT = 3001
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {

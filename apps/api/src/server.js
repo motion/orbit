@@ -1,18 +1,20 @@
 import http from 'http'
 import logger from 'morgan'
 import express from 'express'
+import proxy from 'http-proxy-middleware'
 import bodyParser from 'body-parser'
 import * as Constants from '~/constants'
+
+const port = Constants.SERVER_PORT
 
 export default class Server {
   login = null
 
   constructor() {
-    this.setupServer()
+    this.server = this.setupServer()
   }
 
   start() {
-    const port = this.server.get('port')
     http.createServer(this.server).listen(port)
     return port
   }
@@ -39,7 +41,6 @@ export default class Server {
 
   setupServer() {
     const app = express()
-    const port = Constants.SERVER_PORT
 
     // express
     app.set('port', port)
@@ -59,10 +60,8 @@ export default class Server {
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
 
-    app.get('/', (req, res) => {
-      res.send('~hello world~')
-    })
+    app.use('/', proxy({ target: 'http://localhost:3001', ws: true }))
 
-    this.server = app
+    return app
   }
 }

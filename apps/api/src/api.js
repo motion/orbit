@@ -7,7 +7,6 @@ import type { Options } from '~/types'
 
 export default class API {
   server: Server
-  bootstrap: Bootstrap
   database: Database
 
   constructor(options: Options) {
@@ -29,7 +28,7 @@ export default class API {
     // things that depend on models go after this line
     await this.database.start({
       modelOptions: {
-        autoSync: true,
+        // autoSync: true,
         debug: true,
       },
     })

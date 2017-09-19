@@ -9,7 +9,6 @@ import LayoutWrap from '~/views/layout/wrap'
 import Signup from '~/views/signup'
 import { CurrentUser } from '~/app'
 import Header from './header'
-import BottomBar from '~/views/bottomBar'
 import * as UI from '@mcro/ui'
 
 @view.ui
@@ -49,7 +48,6 @@ export default class Layout {
             </content>
           </LayoutWrap>
           <Errors />
-          <BottomBar />
         </layout>
       </UI.Theme>
     )

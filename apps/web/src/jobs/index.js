@@ -38,7 +38,7 @@ export default class Jobs {
   }
 
   start = async () => {
-    // this.watchJobs()
+    this.watchJobs()
   }
 
   get github() {

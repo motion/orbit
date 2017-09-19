@@ -164,9 +164,9 @@ class BarMainStore {
   ]
 
   get results(): Array<PaneResult> {
-    if (!CurrentUser.loggedIn) {
-      return [{ title: 'Login', type: 'login', static: true }]
-    }
+    // if (!CurrentUser.loggedIn) {
+    //   return [{ title: 'Login', type: 'login', static: true }]
+    // }
     const includeTests = this.search.indexOf(':') === 0
     const all = [
       ...this.browse,

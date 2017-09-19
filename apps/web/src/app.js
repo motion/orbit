@@ -39,11 +39,11 @@ export default class App {
       services: Services,
     })
     this.render()
-    this.jobs = new Jobs()
   }
 
   async start() {
-    await this.jobs.start()
+    // this.jobs = new Jobs()
+    // await this.jobs.start()
   }
 
   dispose() {

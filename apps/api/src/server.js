@@ -73,7 +73,14 @@ export default class Server {
     app.use('/', proxy({ target: 'http://localhost:3001', ws: true }))
 
     for (const name of Object.keys(OAuthStrategies)) {
-      app.post(`/oauth/${name}`, Passport.authenticate(name))
+      app.get(`/auth/${name}`, Passport.authenticate(name))
+      app.get(
+        `/auth/${name}/callback`,
+        Passport.authenticate(name),
+        (req, res) => {
+          res.redirect('/')
+        }
+      )
     }
 
     return app

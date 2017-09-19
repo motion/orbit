@@ -13,7 +13,7 @@ class CurrentUser {
   localDb = null
   remoteDb = null
   sessionInfo = null
-  superlogin: ?SuperLoginClient = null
+  superlogin: SuperLoginClient = SuperLoginClient
 
   @watch userInfo = () => this.id && User.findOne(this.id)
   @watch settings = () => this.id && Setting.find({ userId: this.id })
@@ -36,7 +36,6 @@ class CurrentUser {
   integrations = []
 
   constructor(options: Object) {
-    this.superlogin = SuperLoginClient
     this.options = options
     this.setupSuperLogin()
     this.connected = true
@@ -71,7 +70,6 @@ class CurrentUser {
     // sync
     this.superlogin.on('login', async () => {
       await this.setUserSession()
-      this.setupDbSync()
     })
 
     this.superlogin.on('logout', () => {
@@ -109,19 +107,6 @@ class CurrentUser {
 
   get token() {
     return this.user && this.user.token
-  }
-
-  setupDbSync = () => {
-    // if (!this.remoteDb && this.user) {
-    //   this.remoteDb = new PouchDB(this.user.userDBs.documents, {
-    //     skip_setup: true,
-    //   })
-    //   this.localDb = new PouchDB(`local_db_${this.user.user_id}`)
-    //   // syncronize the local and remote user databases...
-    //   this.remoteSyncHandler = this.localDb
-    //     .sync(this.remoteDb, { live: true, retry: true })
-    //     .on('error', console.log.bind(console))
-    // }
   }
 
   loginOrSignup = async (email, password) => {
@@ -182,18 +167,39 @@ class CurrentUser {
   }
 
   logout = async () => {
-    this.remoteSyncHandler && this.remoteSyncHandler.cancel()
     this.remoteDb = null
     this.localDb = null
     await this.superlogin.logout()
   }
 
-  link = async provider => {
-    return await this.superlogin.link(provider)
+  link = async (provider: string, options: Object = {}) => {
+    const opts = {
+      windowName: 'Login',
+      windowOptions: 'location=100,status=0,width=800,height=600',
+      ...options,
+    }
+    const authWindow = window.open(
+      `/auth/${provider}`,
+      opts.windowName,
+      opts.windowOptions
+    )
+    if (!authWindow) {
+      throw new Error('Authorization popup blocked')
+    }
+    let authComplete = false
+    const check = setInterval(() => {
+      if (authWindow.closed) {
+        clearInterval(check)
+        if (!authComplete) {
+          authComplete = true
+          throw new Error('Authorization cancelled')
+        }
+      }
+    })
   }
 
   unlink = async provider => {
-    return await this.superlogin.unlink(provider)
+    // return await this.superlogin.unlink(provider)
   }
 
   setUserSession = async () => {

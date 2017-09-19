@@ -19,7 +19,7 @@ function getRxError(error: Error) {
 export default class Jobs {
   locks: Set<string> = new Set()
   @watch user: ?User = () => User.findOne()
-  @watch pending: ?Array<Job> = () => Job.pending()
+  @watch pending: ?Array<Job> = (() => Job.pending(): any)
   @watch
   syncers = async () => {
     if (this.user === null) {

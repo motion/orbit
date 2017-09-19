@@ -1,7 +1,6 @@
 // @flow
 import RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
-import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 // import pValidate from 'pouchdb-validation'
 // import pSearch from 'pouchdb-quick-search'
@@ -80,18 +79,14 @@ export default class Database {
     this.modelsConfig = modelsConfig
 
     // hmr fix
-    if (!RxDB.PouchDB.replicate) {
-      if (Constants.IS_BROWSER) {
-        RxDB.QueryChangeDetector.enable()
-      }
-      RxDB.plugin(this.databaseConfig.adapter)
-      RxDB.plugin(pREPL)
-      // RxDB.plugin(pValidate)
-      // RxDB.plugin(pSearch)
-      RxDB.plugin(pHTTP)
-      PouchDB.plugin(this.databaseConfig.adapter)
-      PouchDB.plugin(pHTTP)
+    if (Constants.IS_BROWSER) {
+      RxDB.QueryChangeDetector.enable()
     }
+    console.log('Create RxDB with adapter', this.databaseConfig.adapterName)
+    RxDB.plugin(this.databaseConfig.adapter)
+    RxDB.plugin(pHTTP)
+    PouchDB.plugin(this.databaseConfig.adapter)
+    PouchDB.plugin(pHTTP)
   }
 
   start = async ({ options, modelOptions }: StartOptions = {}) => {

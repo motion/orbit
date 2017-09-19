@@ -67,6 +67,7 @@ export default class Root extends React.Component {
         </aboveredbox>
       )
     }
+
     return this.props.children
   }
 }

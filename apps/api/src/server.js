@@ -3,15 +3,12 @@ import logger from 'morgan'
 import express from 'express'
 import bodyParser from 'body-parser'
 import * as Constants from '~/constants'
-import SuperLogin from './server/superlogin'
-import config from './server/superlogin.config'
 
 export default class Server {
   login = null
 
   constructor() {
     this.setupServer()
-    this.setupLogin()
   }
 
   start() {
@@ -67,10 +64,5 @@ export default class Server {
     })
 
     this.server = app
-  }
-
-  setupLogin() {
-    this.login = new SuperLogin(config)
-    this.server.use('/api/auth', this.login.router)
   }
 }

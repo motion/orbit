@@ -87,12 +87,12 @@ export default {
       private: ['documents'],
     },
   },
-  session: {
-    adapter: 'redis',
-    redis: {
-      url: Constants.REDIS_URL,
-    },
-  },
+  // session: {
+  //   adapter: 'redis',
+  //   redis: {
+  //     url: Constants.REDIS_URL,
+  //   },
+  // },
   //  emails: {
   //   // Customize the templates for the emails that SuperLogin sends out
   //   confirmEmail: {

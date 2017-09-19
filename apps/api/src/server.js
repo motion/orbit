@@ -2,6 +2,7 @@ import http from 'http'
 import logger from 'morgan'
 import express from 'express'
 import proxy from 'http-proxy-middleware'
+import session from 'express-session'
 import bodyParser from 'body-parser'
 import * as Constants from '~/constants'
 import OAuth from './server/oauth'
@@ -23,13 +24,34 @@ export default class Server {
     })
 
     this.app = express()
-    this.setupServer()
-    this.setupPassport()
+    this.app.set('port', port)
+    this.app.use(logger('dev'))
+
+    // MIDDLEWARE
+    const HEADER_ALLOWED =
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
+    this.app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*')
+      res.header('Access-Control-Allow-Credentials', 'true')
+      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
+      next()
+    })
+    this.app.use(bodyParser.json())
+    this.app.use(bodyParser.urlencoded({ extended: false }))
+    this.app.use(
+      session({ secret: 'orbit', resave: false, saveUninitialized: true })
+    ) // TODO change secret
+    this.app.use(Passport.initialize())
+    this.app.use(Passport.session())
+
+    // ROUTES
+    this.setupPassportSerialization()
+    this.setupPassportRoutes()
     this.setupProxy()
   }
 
   start() {
-    http.createServer(this.server).listen(port)
+    http.createServer(this.app).listen(port)
     return port
   }
 
@@ -53,29 +75,11 @@ export default class Server {
     return session.expires > Date.now()
   }
 
-  setupServer(app) {
-    this.app.set('port', port)
-    this.app.use(logger('dev'))
-
-    const HEADER_ALLOWED =
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
-
-    this.app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*')
-      res.header('Access-Control-Allow-Credentials', 'true')
-      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-      next()
-    })
-
-    this.app.use(bodyParser.json())
-    this.app.use(bodyParser.urlencoded({ extended: false }))
-  }
-
   setupProxy() {
     this.app.use('/', proxy({ target: 'http://localhost:3001', ws: true }))
   }
 
-  setupPassport() {
+  setupPassportRoutes() {
     for (const name of Object.keys(OAuthStrategies)) {
       const path = `/auth/${name}`
       this.app.get(path, Passport.authenticate(name))
@@ -88,7 +92,19 @@ export default class Server {
       )
       console.log(`Oauth setup: ${path}`)
     }
+  }
 
-    this.app.use(Passport.initialize())
+  setupPassportSerialization() {
+    let cache = {}
+
+    Passport.serializeUser((user, done) => {
+      const id = user.info.id
+      cache[id] = user.info
+      done(null, id)
+    })
+
+    Passport.deserializeUser((id, done) => {
+      done(null, cache[id])
+    })
   }
 }

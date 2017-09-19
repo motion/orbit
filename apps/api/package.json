@@ -44,7 +44,8 @@
     "wait-for-port": "^0.0.2",
     "clean-stacktrace": "^1.1.0",
     "http-proxy-middleware": "^0.17.4",
-    "better-stack-traces": "^1.1.0"
+    "better-stack-traces": "^1.1.0",
+    "express-session": "^1.15.5"
   },
   "devDependencies": {
     "nodemon": "^1.11.0",

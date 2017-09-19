@@ -29,7 +29,6 @@
     "mobx-formatters": "^1.0.0",
     "mobx-react": "^4.1.8",
     "mobx-utils": "^3.0.0",
-    "mobx-devtools": "^0.0.8",
     "octokat": "^0.9.2",
     "pouchdb-adapter-idb": "^6.3.4",
     "pouchdb-core": "^6.3.4",

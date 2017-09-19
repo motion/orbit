@@ -19,23 +19,25 @@ export default class SettingsPage {
     }
 
     return (
-      <settings>
-        <header>
-          <UI.Title size={3}>Settings</UI.Title>
-        </header>
+      <UI.Theme name="light">
+        <settings>
+          <header>
+            <UI.Title size={3}>Settings</UI.Title>
+          </header>
 
-        <content>
-          <sidebar>
-            <Integrations
-              onSelect={store.ref('activeItem').set}
-              itemProps={itemProps}
-            />
-          </sidebar>
-          <main>
-            <Setup if={store.activeItem} item={store.activeItem} />
-          </main>
-        </content>
-      </settings>
+          <content>
+            <sidebar>
+              <Integrations
+                onSelect={store.ref('activeItem').set}
+                itemProps={itemProps}
+              />
+            </sidebar>
+            <main>
+              <Setup if={store.activeItem} item={store.activeItem} />
+            </main>
+          </content>
+        </settings>
+      </UI.Theme>
     )
   }
 

@@ -4,6 +4,9 @@ import express from 'express'
 import proxy from 'http-proxy-middleware'
 import bodyParser from 'body-parser'
 import * as Constants from '~/constants'
+import OAuth from './server/oauth'
+import OAuthStrategies from './server/oauth.strategies'
+import Passport from 'passport'
 
 const port = Constants.SERVER_PORT
 
@@ -11,6 +14,13 @@ export default class Server {
   login = null
 
   constructor() {
+    this.oauth = new OAuth({
+      strategies: OAuthStrategies,
+      onSuccess: async (service, token, refreshToken, info) => {
+        console.log('got info', token, refreshToken, info)
+        return { token, refreshToken, info }
+      },
+    })
     this.server = this.setupServer()
   }
 
@@ -61,6 +71,10 @@ export default class Server {
     app.use(bodyParser.urlencoded({ extended: false }))
 
     app.use('/', proxy({ target: 'http://localhost:3001', ws: true }))
+
+    for (const name of Object.keys(OAuthStrategies)) {
+      app.post(`/oauth/${name}`, Passport.authenticate(name))
+    }
 
     return app
   }

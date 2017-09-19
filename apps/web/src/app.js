@@ -12,7 +12,6 @@ import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import * as Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
-import MobxDevTools from 'mobx-devtools'
 
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
@@ -58,7 +57,6 @@ export default class App {
       <Root>
         <ThemeProvide {...Themes}>
           <Layout />
-          <MobxDevTools />
         </ThemeProvide>
       </Root>,
       ROOT

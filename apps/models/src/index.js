@@ -95,7 +95,7 @@ export default class Database {
       adapter: this.databaseConfig.adapterName,
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
-      multiInstance: true,
+      multiInstance: false,
       withCredentials: false,
       ...options,
     })

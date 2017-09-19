@@ -148,7 +148,7 @@ class CurrentUser {
     }
   }
 
-  signup = async (email, password) => {
+  signup = async (email: string, password: string) => {
     try {
       const username = email
       const res = await this.superlogin.register({
@@ -173,7 +173,7 @@ class CurrentUser {
     }
   }
 
-  login = async (email, password) => {
+  login = async (email: string, password: string) => {
     await this.superlogin.login({
       username: email,
       password,

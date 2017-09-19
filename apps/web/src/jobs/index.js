@@ -20,7 +20,7 @@ export default class Jobs {
   locks: Set<string> = new Set()
   @watch user: ?User = (() => User.findOne(): any)
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
-  syncers = null
+  syncers: ?Object = null
 
   start = async () => {
     this.watchJobs()
@@ -109,7 +109,11 @@ export default class Jobs {
     })
 
   runJob = async (job: Job) => {
-    console.log('Running job', job)
+    if (!this.syncers) {
+      return
+    }
+
+    console.log('Running job', job.type, job.action)
     await job.update({
       percent: 0,
       status: Job.status.PROCESSING,

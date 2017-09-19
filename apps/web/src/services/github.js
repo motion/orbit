@@ -5,12 +5,12 @@ import { CurrentUser } from '~/app'
 
 @store
 export default class GithubService {
-  get user(): CurrentUser {
-    return CurrentUser
+  get setting(): ?string {
+    return CurrentUser.setting.github
   }
 
-  get setting(): ?string {
-    return this.user.setting.github
+  get token(): ?string {
+    return CurrentUser.user && CurrentUser.token('github')
   }
 
   @watch
@@ -20,6 +20,7 @@ export default class GithubService {
   allRepos = () =>
     this.github &&
     this.setting &&
+    this.setting.activeOrgs &&
     Promise.all(
       this.setting.activeOrgs.map(org =>
         this.github
@@ -41,13 +42,14 @@ export default class GithubService {
     )
 
   @watch
-  github = () =>
-    this.token &&
-    new Octokat({
-      token: this.token,
-    })
-
-  get token(): ?string {
-    return (this.user.github && this.user.github.auth.accessToken) || null
+  github = () => {
+    console.log('running with', CurrentUser.user, this.token)
+    return (
+      CurrentUser.user &&
+      this.token &&
+      new Octokat({
+        token: this.token,
+      })
+    )
   }
 }

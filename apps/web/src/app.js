@@ -65,6 +65,10 @@ export default class App {
   }
 
   // helpers that wrap appStore
+  get services() {
+    return this.store.services
+  }
+
   get database() {
     return this.store.database
   }

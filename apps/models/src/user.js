@@ -2,7 +2,15 @@
 import global from 'global'
 import { Model, query, array, object, str } from '@mcro/model'
 
-export const methods = {}
+export const methods = {
+  token(provider: string) {
+    return (
+      this.authorizations &&
+      this.authorizations[provider] &&
+      this.authorizations[provider].token
+    )
+  },
+}
 
 export class UserModel extends Model {
   static props = {

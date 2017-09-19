@@ -59,8 +59,6 @@ class CurrentUser {
       this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})) ||
     {}
 
-  integrations = []
-
   constructor(options: Object) {
     this.options = options
     this.setupSuperLogin()
@@ -78,16 +76,18 @@ class CurrentUser {
       if (!this.user) {
         return
       }
-      if (this.user.github) {
-        await Setting.findOrCreate({
-          userId: this.id,
-          type: 'github',
-        })
+      if (this.user.authorizations) {
+        for (const type of Object.keys(this.user.authorizations)) {
+          await Setting.findOrCreate({
+            userId: this.id,
+            type,
+          })
+        }
       }
     })
   }
 
-  async setupSuperLogin() {
+  setupSuperLogin() {
     if (!this.options) {
       console.log('skipping superlogin')
       return
@@ -132,6 +132,10 @@ class CurrentUser {
   get id() {
     // return this.sessionInfo && this.sessionInfo.user_id
     return 'a@b.com'
+  }
+
+  get authorizations() {
+    return this.user && this.user.authorizations
   }
 
   get token() {

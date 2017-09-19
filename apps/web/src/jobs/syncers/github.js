@@ -43,6 +43,7 @@ export default class GithubSync extends Syncer {
   run = (job: Job): Promise<void> => {
     return new Promise((resolve, reject) => {
       const runJob = once(async () => {
+        console.log('waht', this.setting, job.action)
         if (this.setting) {
           this.validateSetting()
         }
@@ -85,6 +86,7 @@ export default class GithubSync extends Syncer {
   }
 
   runJob = async (action: string) => {
+    console.log('Github running', action)
     try {
       switch (action) {
         case 'issues':

@@ -76,6 +76,9 @@ export default class AppStore {
     if (!this.serviceObjects) {
       return null
     }
+    if (!CurrentUser.user) {
+      return null
+    }
     const services = {}
     for (const serviceName of Object.keys(this.serviceObjects)) {
       services[serviceName] = new this.serviceObjects[serviceName](CurrentUser)

@@ -10,7 +10,14 @@ const getIssue = async (taskId, issueNumber) => {
 
 class GithubStore {
   static get api() {
-    return App.services.Github.github
+    return new Promise(async (resolve, reject) => {
+      try {
+        resolve(App.services.Github.github)
+        console.log('is', App.services.Github.github)
+      } catch (err) {
+        reject(err)
+      }
+    })
   }
 
   static editTask = newTitle => {}

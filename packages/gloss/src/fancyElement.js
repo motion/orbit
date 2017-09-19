@@ -1,14 +1,15 @@
 // @flow
 import * as React from 'react'
 import deepExtend from 'deep-extend'
-import JSS from './stylesheet'
 import tags from 'html-tags'
 
+const IS_PROD = process.env.NODE_ENV === 'production'
+const $ = '$'
+const ogCreateElement: Function = React.createElement.bind(React)
 const VALID_TAGS: { [string]: boolean } = tags.reduce(
   (acc, cur) => ({ ...acc, [cur]: true }),
   {}
 )
-const IS_PROD = process.env.NODE_ENV === 'production'
 
 const arrayOfObjectsToObject = (arr: Array<?Object>) => {
   let res = {}
@@ -20,16 +21,14 @@ const arrayOfObjectsToObject = (arr: Array<?Object>) => {
   }
   return res
 }
-const ogCreateElement: Function = React.createElement.bind(React)
+
+// tags that are dangerous to use
 const TAG_NAME_MAP = {
   title: 'div',
   body: 'div',
   meta: 'div',
   head: 'div',
-  icon: 'div',
-  inner: 'div',
 }
-const $ = '$'
 
 // factory that returns fancyElement helper
 export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {

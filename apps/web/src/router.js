@@ -5,7 +5,6 @@ import BarPage from './apps/bar'
 import EmptyPage from './apps/empty'
 import MasterDetailPage from './apps/masterDetail'
 import SettingsPage from './apps/settings'
-import { render } from './start'
 
 function runRouter() {
   return new Router({
@@ -28,7 +27,7 @@ window.Router = AppRouter
 if (module.hot) {
   module.hot.accept(() => {
     AppRouter = runRouter()
-    render()
+    window.App.render()
   })
 }
 

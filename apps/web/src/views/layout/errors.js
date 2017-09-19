@@ -1,24 +1,29 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import App from '~/app'
+import { App } from '~/index'
 
 @view
 export default class Errors {
   render() {
+    if (!App) {
+      console.log('no app')
+      return null
+    }
+
     const errs = App.errors.filter(
       x => x.message !== 'Document update conflict'
     )
 
     return (
       <errors>
-        {errs.map((error, i) =>
+        {errs.map((error, i) => (
           <error key={error.id || Math.random()}>
             <message $$ellipse if={error.errors}>
-              {error.errors.map(({ field, message }) =>
+              {error.errors.map(({ field, message }) => (
                 <subErr key={Math.random()}>
                   {field ? `${field}:` : ''} {message}
                 </subErr>
-              )}
+              ))}
             </message>
             <message $$ellipse if={error.message && !error.errors}>
               <strong if={error.name}>{error.name}:</strong> {error.message}
@@ -31,7 +36,7 @@ export default class Errors {
               x
             </clear>
           </error>
-        )}
+        ))}
       </errors>
     )
   }

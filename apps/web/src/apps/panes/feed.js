@@ -29,7 +29,7 @@ class BarFeedStore {
   }
 }
 
-type Props = PaneProps & {| store: BarFeedStore |}
+type Props = PaneProps & { store: BarFeedStore }
 
 @view({
   store: BarFeedStore,

@@ -21,14 +21,24 @@ function splash() {
   console.timeEnd('splash')
 }
 
-// start app
-splash()
-require('./start')
+function main() {
+  splash()
+  const App = require('./app').default
+  const app = new App()
+  app.start()
+  window.App = app
+  return app
+}
+
+export let App = main()
 
 // accept hmr
 if (module && module.hot) {
-  module.hot.accept(() => {
-    require('./start').start(true)
+  module.hot.accept(_ => _)
+  module.hot.accept('@mcro/models', () => {
+    if (App) {
+      App.dispose()
+      App = main()
+    }
   })
-  module.hot.accept('@mcro/models/lib/user', () => {})
 }

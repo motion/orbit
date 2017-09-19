@@ -60,7 +60,7 @@ export default class AppStore {
       modelOptions: {
         debug: true,
         // autoSync: true,
-        asyncFirstSync: true,
+        // asyncFirstSync: true,
       },
     })
     this.connected = true

@@ -8,7 +8,6 @@ import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from './pane'
 import TestIssue from './test_data/issue'
-
 import type { PaneProps, PaneResult } from '~/types'
 
 const thingToResult = (thing: Thing): PaneResult => ({
@@ -24,10 +23,10 @@ class BarMainStore {
   props: PaneProps
 
   @watch
-  topThingsRaw: ?Array<Thing> = () =>
+  topThingsRaw: ?Array<Thing> = (() =>
     Thing.find()
       .sort({ updated: 'desc' })
-      .limit(3000)
+      .limit(3000): any)
 
   get topThings() {
     return this.topThingsRaw || []

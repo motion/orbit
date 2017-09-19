@@ -5,23 +5,17 @@ import { Event } from '~/app'
 import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/panes/pane'
 import type { PaneProps, PaneResult } from '~/types'
-import FeedItem from './views/feedItem'
 import Calendar from './calendar'
-import { isFunction } from 'lodash'
+import FeedItem from './views/feedItem'
 
 const eventToPaneResult = (event: Event): PaneResult => ({
   title: event.title,
 })
 
-class BarPersonStore {
+class BarTeamStore {
   props: PaneProps
-
+  isOpen = false
   activeType = 'All'
-
-  setActiveType = type => {
-    console.log('setting type to', type.name)
-    this.activeType = type.name
-  }
   types = [
     { name: 'All', icon: false },
     { name: 'Calendar', icon: 'cal' },
@@ -31,11 +25,10 @@ class BarPersonStore {
     { name: 'Google Docs', icon: 'google' },
   ]
 
-  start() {
-    this.props.getRef(this)
+  setActiveType = type => {
+    console.log('setting type to', type.name)
+    this.activeType = type.name
   }
-
-  isOpen = false
 
   @watch
   events: ?Array<Event> = (() =>
@@ -48,7 +41,31 @@ class BarPersonStore {
   }
 }
 
-type Props = PaneProps & { store: BarPersonStore }
+type Props = PaneProps & { store: BarTeamStore }
+
+@view
+class CalSection {
+  render({ store }) {
+    return (
+      <div
+        $$row
+        $active={store.activeType === 'Calendar'}
+        css={{ alignItems: 'center', maxHeight: '100%' }}
+      >
+        <Calendar isSmall={store.activeType !== 'Calendar'} />
+      </div>
+    )
+  }
+
+  static style = {
+    div: {
+      width: '100%',
+    },
+    active: {
+      marginTop: 100,
+    },
+  }
+}
 
 @view
 class ItemsSection {
@@ -75,53 +92,12 @@ class ItemsSection {
   }
 }
 
-@view
-class CalSection {
-  render({ store }) {
-    return (
-      <div
-        $$row
-        $active={store.activeType === 'Calendar'}
-        css={{ alignItems: 'center', maxHeight: '100%' }}
-      >
-        <Calendar isSmall={store.activeType !== 'Calendar'} />
-      </div>
-    )
-  }
-
-  static style = {
-    div: {
-      transition: 'all ease-in 150ms',
-      background: 'rgba(0,0,0,.2)',
-      marginLeft: -10,
-      paddingLeft: 10,
-      width: '110%',
-      paddingTop: 20,
-      paddingBottom: 20,
-    },
-    active: {
-      marginTop: 100,
-    },
-  }
-}
-
 @view({
-  store: BarPersonStore,
+  store: BarTeamStore,
 })
-export default class BarPerson extends Component<Props> {
-  static defaultProps: Props
-
+export default class BarTeam extends Component<Props> {
   render({ store, paneStore }: Props) {
-    const heights = [
-      90,
-      55,
-      store.activeType === 'Calendar' ? 350 : 200,
-      35,
-      ...(store.events || []).map(event => event.height),
-    ]
-
-    const getRowHeight = index => heights[index] || 100
-
+    // return <h4>team page</h4>
     if (!store.results.length) {
       return (
         <div $$padded>
@@ -131,65 +107,40 @@ export default class BarPerson extends Component<Props> {
     }
 
     const items = [
-      //() => (
-      <section $$row>
-        <img $image src={`/images/${paneStore.data.image}.jpg`} />
-        <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
-          {paneStore.data.person}
-        </UI.Title>
-      </section>,
-      //),
-      () => (
-        <section>
-          <ItemsSection store={store} />
-        </section>
-      ),
-      () => (
-        <section>
-          <CalSection store={store} />
-        </section>
-      ),
-      () => (
-        <section>
-          <UI.Title opacity={0.5}>Recently</UI.Title>
-        </section>
-      ),
-      ...(store.events || [])
-        .slice(0, 2)
-        .map(event => () => <FeedItem event={event} key={event.id} />),
+      {
+        height: 75,
+        view: () => (
+          <section $$row>
+            <img $image src={`/images/${paneStore.data.image}.jpg`} />
+            <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+              {paneStore.data.person}
+            </UI.Title>
+          </section>
+        ),
+      },
+      {
+        height: 60,
+        view: () => <ItemsSection store={store} />,
+      },
+      {
+        height: 200,
+        view: () => <CalSection store={store} />,
+      },
+      ...(store.events || []).map(event => ({
+        height: event.height,
+        view: () => <FeedItem event={event} />,
+      })),
     ]
-    const activeItems =
-      store.activeType === 'Calendar' ? items.slice(0, 3) : items
 
     return (
-      <Pane.Card
-        css={{
-          transition: 'all ease-in 80ms',
-          zIndex: 1000,
-          transform: { y: paneStore.isActive ? -15 : 0 },
-        }}
-      >
-        <items>
-          {activeItems.map(item => (isFunction(item) ? item() : item))}
-        </items>
-
-        <UI.List
-          getRef={paneStore.setList}
-          if={false}
-          virtualized={{
-            rowHeight: getRowHeight,
-          }}
+      <div style={{ flex: 1 }}>
+        <Pane.Card
           itemProps={{
-            ...paneStore.itemProps,
             glow: false,
           }}
           items={items}
-          getItem={(item, index) => ({
-            highlight: () => index === paneStore.activeIndex + 1,
-            children: item(),
-          })}
         />
-      </Pane.Card>
+      </div>
     )
   }
 
@@ -202,8 +153,7 @@ export default class BarPerson extends Component<Props> {
       width: 50,
       height: 50,
       borderRadius: 1000,
-      // margin: 'auto',
-      margin: 0,
+      margin: 'auto',
       marginRight: 10,
     },
   }

@@ -1,4 +1,5 @@
 // @flow
+import parser from '../bar/parser'
 import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
@@ -21,7 +22,6 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
-  listRef = null
 
   @watch
   topThingsRaw: ?Array<Thing> = () =>
@@ -37,8 +37,33 @@ class BarMainStore {
     return this.props.barStore.search
   }
 
-  start() {
-    this.props.getRef(this)
+  get parserResult() {
+    return this.search ? parser(this.search) : null
+  }
+
+  get searchResult() {
+    if (!this.parserResult) return null
+
+    const { people, startDate, endDate, service } = this.parserResult
+
+    const person = people.length > 0 ? people[0] : undefined
+
+    return {
+      id: `${service}${(people || []).join(',')}${startDate + ''}${endDate +
+        ''}`,
+      title: service || 'person',
+      type: service || 'person',
+      data: {
+        startDate,
+        endDate,
+        person,
+        image: person,
+        people,
+      },
+      people,
+      startDate,
+      endDate,
+    }
   }
 
   get things(): Array<PaneResult> {
@@ -51,7 +76,7 @@ class BarMainStore {
     {
       id: 1100,
       title: 'Me',
-      type: 'person',
+      type: 'team',
       icon: 'radio',
       data: {
         special: true,
@@ -174,112 +199,93 @@ class BarMainStore {
       return [{ title: 'Login', type: 'login', static: true }]
     }
     const includeTests = this.search.indexOf(':') === 0
+    const all = [
+      ...this.browse,
+      ...this.teams,
+      ...this.people,
+      ...this.things,
+      ...(includeTests ? this.tests : []),
+      ...this.extras,
+    ]
 
-    return fuzzy(
-      [
-        ...this.browse,
-        ...this.teams,
-        ...this.people,
-        ...this.things,
-        ...(includeTests ? this.tests : []),
-        ...this.extras,
-      ],
-      this.search
-    )
+    const getRowHeight = item => {
+      const height = this.hasContent(item)
+        ? 100
+        : item.data && item.data.updated ? 58 : 38
+      return { ...item, height }
+    }
+
+    const search = fuzzy(all, this.search).map(getRowHeight)
+    if (this.searchResult) return [getRowHeight(this.searchResult), ...search]
+    return search
   }
+
+  hasContent = (result: PaneResult) => result && result.data && result.data.body
 
   select = (index: number) => {
     this.props.navigate(this.results[index])
   }
+}
 
-  setListRef = ref => {
-    this.listRef = ref
-  }
+type Props = {
+  mainStore: BarMainStore,
+  paneStore: Class<any>,
 }
 
 @view.attach('barStore')
 @view({
   mainStore: BarMainStore,
 })
-export default class BarMain extends React.Component<> {
-  static defaultProps: {}
-
-  onSelect = (item, index) => {
-    this.props.paneStore.selectRow(index)
-  }
-
-  hasContent = (result: PaneResult) => result && result.data && result.data.body
-  getResult = i => this.props.mainStore.results[i]
-
-  getRowHeight = i => {
-    const result = this.getResult(i)
-    return this.hasContent(result)
-      ? 100
-      : result.data && result.data.updated ? 58 : 38
-  }
-
+export default class BarMain extends React.Component<Props> {
   getDate = (result: PaneResult) =>
     result.data && result.data.updated
       ? UI.Date.format(result.data.updated)
       : ''
 
   render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
+    if (!mainStore.results) {
+      return null
+    }
     return (
-      <Pane.Card width={315} $pane isActive={paneStore.isActive}>
-        <none if={mainStore.results.length === 0}>No Results</none>
-        <UI.List
-          if={mainStore.results}
-          getRef={paneStore.setList}
-          virtualized={{
-            rowHeight: this.getRowHeight,
-            measure: true,
-          }}
-          onSelect={this.onSelect}
-          groupKey="category"
-          items={mainStore.results}
-          itemProps={{
-            ...paneStore.itemProps,
-            fontSize: 26,
-            size: 1.2,
-          }}
-          getItem={(result, index) => ({
-            key: result.id,
-            highlight: () => index === paneStore.activeIndex,
-            primary: result.title,
-            primaryEllipse: !this.hasContent(result),
-            children: [
-              <UI.Text if={result.data} lineHeight={20} opacity={0.5}>
-                {this.getDate(result) + ' · '}
-                {(result.data.body && result.data.body.slice(0, 120)) || ''}
-              </UI.Text>,
-              <UI.Text if={!result.data}>{this.getDate(result)}</UI.Text>,
-            ].filter(Boolean),
-            iconAfter: true,
-            iconProps: {
-              style: {
-                alignSelf: 'flex-start',
-                paddingTop: 2,
-              },
+      <Pane.Card
+        items={mainStore.results}
+        width={315}
+        groupKey="category"
+        itemProps={{
+          fontSize: 26,
+          size: 1.2,
+        }}
+        getItem={(result, index) => ({
+          key: result.id,
+          highlight: () => index === paneStore.activeIndex,
+          primary: result.title,
+          primaryEllipse: !mainStore.hasContent(result),
+          children: [
+            <UI.Text if={result.data} lineHeight={20} opacity={0.5}>
+              {this.getDate(result) + ' · '}
+              {(result.data.body && result.data.body.slice(0, 120)) || ''}
+            </UI.Text>,
+            <UI.Text if={!result.data}>{this.getDate(result)}</UI.Text>,
+          ].filter(Boolean),
+          iconAfter: true,
+          iconProps: {
+            style: {
+              alignSelf: 'flex-start',
+              paddingTop: 2,
             },
-            icon:
-              result.data && result.data.image ? (
-                <img $image src={`/images/${result.data.image}.jpg`} />
-              ) : (
-                result.icon
-              ),
-          })}
-        />
-      </Pane.Card>
+          },
+          icon:
+            result.data && result.data.image ? (
+              <img $image src={`/images/${result.data.image}.jpg`} />
+            ) : (
+              result.icon
+            ),
+        })}
+      />
     )
   }
 
   static style = {
-    pane: {
-      height: '100%',
-    },
-    spread: {
-      justifyContent: 'space-between',
-    },
     image: {
       width: 20,
       height: 20,

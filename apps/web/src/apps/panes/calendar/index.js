@@ -4,6 +4,7 @@ import * as Pane from '../pane'
 import * as React from 'react'
 import { range, capitalize, sample, includes, random } from 'lodash'
 import { Motion, spring } from 'react-motion'
+import moment from 'moment'
 
 const dayIndex = (row, col) => row * 7 + col - 4
 const dotColors = [[64, 146, 240, 1], [163, 131, 236, 1], [242, 203, 70, 1]]
@@ -65,7 +66,7 @@ class RightList extends React.Component<> {
             const item = sample(items)
 
             return (
-              <item $$row>
+              <item $$row key={item.description}>
                 <content>
                   {item.content || (
                     <UI.Button
@@ -405,12 +406,22 @@ class CalendarPaneStore {
   addEvent = event => (this.events = [...this.events, event])
 }
 
+const friendlyDate = ({ startDate, endDate }) => {
+  const start = moment(startDate).calendar()
+  if (endDate) {
+    const end = moment(endDate).calendar()
+    return `${start} - ${end}`
+  }
+
+  return start
+}
+
 @view.attach('millerStore')
 @view({
   store: CalendarPaneStore,
 })
 export default class CalendarPane {
-  render({ store, isSmall, millerStore, isActive }) {
+  render({ store, isSmall, paneStore, millerStore, isActive }) {
     const actions = [
       {
         name: 'newEvent',
@@ -422,10 +433,30 @@ export default class CalendarPane {
         ),
       },
     ]
+    console.log('people are', paneStore && paneStore.data.people)
 
     return (
       <UI.Theme name="clear-dark">
         <Pane.Card isActive={isActive} actions={actions}>
+          <section if={paneStore}>
+            <people $$row>
+              {paneStore.data.people.map(person => (
+                <person $$row key={person}>
+                  <img $image src={`/images/${person}.jpg`} />
+                  <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+                    {person}
+                  </UI.Title>
+                </person>
+              ))}
+            </people>
+            <UI.Title
+              css={{ padding: 20 }}
+              size={1.2}
+              if={paneStore.data.startDate}
+            >
+              {friendlyDate(paneStore.data).replace(/\ at\ 12\:00\ AM/g, '')}
+            </UI.Title>
+          </section>
           <container>
             <titleContainer if={false} $$row>
               <actions $$row>
@@ -498,6 +529,13 @@ export default class CalendarPane {
   static style = {
     content: {
       width: 420,
+    },
+    image: {
+      width: 50,
+      height: 50,
+      borderRadius: 1000,
+      marginLeft: 20,
+      marginRight: 10,
     },
     titleContainer: {
       justifyContent: 'space-between',

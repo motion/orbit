@@ -12,6 +12,7 @@ export default class BarStore {
   // search is throttled, textboxVal isn't
   search = ''
   textboxVal = ''
+  smartRes = []
 
   _millerStore = null
   setMillerStore = val => {
@@ -125,6 +126,7 @@ export default class BarStore {
         this.millerStore.setActiveAction(null)
         return
       }
+
       if (this.search !== '') {
         this.search = ''
         this.textboxVal = ''

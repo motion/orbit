@@ -26,6 +26,8 @@ const TAG_NAME_MAP = {
   body: 'div',
   meta: 'div',
   head: 'div',
+  icon: 'div',
+  inner: 'div',
 }
 const $ = '$'
 

@@ -5,7 +5,7 @@ import { Event } from '~/app'
 import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/panes/pane'
 import type { PaneProps, PaneResult } from '~/types'
-import Calendar from './views/calendar'
+import Calendar from './calendar'
 import FeedItem from './views/feedItem'
 
 const eventToPaneResult = (event: Event): PaneResult => ({
@@ -14,12 +14,21 @@ const eventToPaneResult = (event: Event): PaneResult => ({
 
 class BarTeamStore {
   props: PaneProps
-
-  start() {
-    this.props.getRef(this)
-  }
-
   isOpen = false
+  activeType = 'All'
+  types = [
+    { name: 'All', icon: false },
+    { name: 'Calendar', icon: 'cal' },
+    { name: 'Github', icon: 'github' },
+    { name: 'Drive', icon: 'hard' },
+    { name: 'Jira', icon: 'atl' },
+    { name: 'Google Docs', icon: 'google' },
+  ]
+
+  setActiveType = type => {
+    console.log('setting type to', type.name)
+    this.activeType = type.name
+  }
 
   @watch
   events: ?Array<Event> = (() =>
@@ -34,21 +43,61 @@ class BarTeamStore {
 
 type Props = PaneProps & { store: BarTeamStore }
 
+@view
+class CalSection {
+  render({ store }) {
+    return (
+      <div
+        $$row
+        $active={store.activeType === 'Calendar'}
+        css={{ alignItems: 'center', maxHeight: '100%' }}
+      >
+        <Calendar isSmall={store.activeType !== 'Calendar'} />
+      </div>
+    )
+  }
+
+  static style = {
+    div: {
+      width: '100%',
+    },
+    active: {
+      marginTop: 100,
+    },
+  }
+}
+
+@view
+class ItemsSection {
+  render({ store }) {
+    return (
+      <UI.Row
+        spaced
+        itemProps={{ size: 1, borderWidth: 0, glint: false }}
+        // css={{ justifyContent: 'flex-end' }}
+      >
+        {store.types.map(type => (
+          <UI.Button
+            icon={type.icon}
+            highlight={type.name === store.activeType}
+            onClick={() => {
+              store.setActiveType(type)
+            }}
+          >
+            {type.name}
+          </UI.Button>
+        ))}
+      </UI.Row>
+    )
+  }
+}
+
 @view({
   store: BarTeamStore,
 })
 export default class BarTeam extends Component<Props> {
-  static defaultProps: Props
-
   render({ store, paneStore }: Props) {
-    const heights = [
-      65,
-      60,
-      260,
-      ...(store.events || []).map(event => event.height),
-    ]
-    const getRowHeight = index => heights[index] || 100
-
+    // return <h4>team page</h4>
     if (!store.results.length) {
       return (
         <div $$padded>
@@ -57,78 +106,41 @@ export default class BarTeam extends Component<Props> {
       )
     }
 
+    const items = [
+      {
+        height: 75,
+        view: () => (
+          <section $$row>
+            <img $image src={`/images/${paneStore.data.image}.jpg`} />
+            <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+              {paneStore.data.person}
+            </UI.Title>
+          </section>
+        ),
+      },
+      {
+        height: 60,
+        view: () => <ItemsSection store={store} />,
+      },
+      {
+        height: 200,
+        view: () => <CalSection store={store} />,
+      },
+      ...(store.events || []).map(event => ({
+        height: event.height,
+        view: () => <FeedItem event={event} />,
+      })),
+    ]
+
     return (
-      <Pane.Card
-        css={{
-          transition: 'all ease-in 80ms',
-          zIndex: 1000,
-          transform: { y: paneStore.isActive ? -15 : 0 },
-        }}
-      >
-        <UI.Drawer
-          from="bottom"
-          open={store.isOpen}
-          onClickOverlay={store.ref('isOpen').toggle}
-          showOverlay
-          overlayBlur
-          css={{ right: 6, left: 6 }}
-        >
-          <UI.Theme name="light">
-            <UI.Surface background="#fff" flex padding={20} borderTopRadius={6}>
-              <UI.Title>Have a nice day</UI.Title>
-            </UI.Surface>
-          </UI.Theme>
-        </UI.Drawer>
-        <UI.List
-          getRef={paneStore.setList}
-          virtualized={{
-            rowHeight: getRowHeight,
-          }}
+      <div style={{ flex: 1 }}>
+        <Pane.Card
           itemProps={{
-            ...paneStore.itemProps,
             glow: false,
           }}
-          items={[
-            () => (
-              <section>
-                <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
-                  Team {paneStore.data.team}
-                </UI.Title>
-              </section>
-            ),
-            () => (
-              <section>
-                <UI.Row
-                  spaced
-                  itemProps={{ size: 1, borderWidth: 0, glint: false }}
-                  css={{ justifyContent: 'flex-end' }}
-                >
-                  <UI.Button highlight>All</UI.Button>
-                  <UI.Button icon="Cal">Calendar</UI.Button>
-                  <UI.Button icon="Github">Github</UI.Button>
-                  <UI.Button icon="hard">Drive</UI.Button>
-                  <UI.Button icon="Google">Google Docs</UI.Button>
-                </UI.Row>
-              </section>
-            ),
-            () => (
-              <section>
-                <UI.Title opacity={1} marginBottom={10}>
-                  Tuesday, the 12th
-                </UI.Title>
-                <Calendar />
-                <Calendar />
-              </section>
-            ),
-            ...(store.events || [])
-              .map(event => () => <FeedItem event={event} key={event.id} />),
-          ]}
-          getItem={(item, index) => ({
-            highlight: () => index === paneStore.activeIndex + 1,
-            children: item(),
-          })}
+          items={items}
         />
-      </Pane.Card>
+      </div>
     )
   }
 
@@ -136,6 +148,13 @@ export default class BarTeam extends Component<Props> {
     section: {
       padding: [8, 10],
       justifyContent: 'center',
+    },
+    image: {
+      width: 50,
+      height: 50,
+      borderRadius: 1000,
+      margin: 'auto',
+      marginRight: 10,
     },
   }
 }

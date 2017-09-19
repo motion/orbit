@@ -48,7 +48,9 @@
     "marky-markdown": "^11.2.0",
     "marked": "^0.3.6",
     "react-motion": "*",
-    "worker-pouch": "^2.0.0"
+    "sherlockjs": "*",
+    "worker-pouch": "^2.0.0",
+    "moment": "*"
   },
   "devDependencies": {
     "typescript": "^2.5.2",

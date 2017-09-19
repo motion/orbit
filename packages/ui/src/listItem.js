@@ -69,7 +69,7 @@ export default class ListItem extends React.Component<Props> {
       after,
       before,
       borderRadius,
-      children,
+      children: _children,
       date,
       dateSize,
       autoselect,
@@ -109,6 +109,12 @@ export default class ListItem extends React.Component<Props> {
 
     const highlightValue =
       typeof highlight === 'function' ? highlight() : highlight
+
+    let children = _children
+    // allows for reactive children
+    if (typeof children === 'function') {
+      children = _children()
+    }
 
     return (
       <SizedSurface

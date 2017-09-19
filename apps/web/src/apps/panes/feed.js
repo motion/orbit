@@ -7,14 +7,10 @@ import DocPane from './doc'
 import GithubPane from './github'
 import type { PaneProps } from '~/types'
 import Feed from './views/feed'
-import Calendar from './views/calendar'
+import Calendar from './calendar'
 
 class BarFeedStore {
   props: PaneProps
-
-  start() {
-    this.props.getRef(this)
-  }
 
   get person() {
     return this.props.paneStore.data && this.props.paneStore.data.person

@@ -1,6 +1,7 @@
 // @flow
 import { actionToKeyCode } from './helpers'
-import { sum, range, find, includes, flatten, memoize } from 'lodash'
+import { sum, range, find, includes, flatten } from 'lodash'
+import type { PaneResult } from '~/types'
 
 type Schema = {
   title?: string,
@@ -15,7 +16,7 @@ type Schema = {
 export default class MillerStore {
   activeRow = 0
   activeCol = 0
-  paneRefs = []
+  paneResults: Array<Function> = []
   schema: Array<Schema> = [{ type: 'main', data: { prefix: '' } }]
   paneActions = []
   prevActiveRows = [] // holds the previously active columns
@@ -124,13 +125,9 @@ export default class MillerStore {
     this.schema = [...this.schema]
   }
 
-  handleRef = memoize(index => ref => {
-    this.setPaneRef(index, ref)
-  })
-
-  setPaneRef = (index, ref) => {
-    this.paneRefs[index] = ref
-    this.paneRefs = [...this.paneRefs]
+  setResults = (index: number, results: Array<PaneResult>) => {
+    this.paneResults[index] = results
+    this.paneResults = [...this.paneResults]
   }
 
   runAction = name => {
@@ -216,8 +213,14 @@ export default class MillerStore {
     return this.schema[this.schema.length - 1]
   }
 
-  get activeRef() {
-    return this.paneRefs[this.activeCol]
+  get activeResults() {
+    if (this.paneResults[this.activeCol]) {
+      return this.paneResults[this.activeCol]()
+    }
+  }
+
+  get activeItem() {
+    return this.activeResults && this.activeResults[this.activeRow]
   }
 
   get activeActions() {
@@ -227,13 +230,5 @@ export default class MillerStore {
     // return this.paneActions[this.activeCol] || []
 
     return flatten(this.paneActions.map(xs => xs || []))
-  }
-
-  get activeResults() {
-    return this.activeRef && this.activeRef.results
-  }
-
-  get activeItem() {
-    return this.activeResults && this.activeResults[this.activeRow]
   }
 }

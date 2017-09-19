@@ -5,7 +5,7 @@ import { CurrentUser } from '~/app'
 
 @store
 export default class GithubService {
-  get user() {
+  get user(): CurrentUser {
     return CurrentUser
   }
 

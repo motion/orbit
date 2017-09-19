@@ -135,21 +135,21 @@ export default class Database {
       connections.push(
         model.connect(this.database, {
           pouch: PouchDB,
-          remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
+          // remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
           pouchSettings: {
             skip_setup: true,
             skipSetup: true,
           },
-          remoteOptions: {
-            skip_setup: true,
-            skipSetup: true,
-            adapter: this.databaseConfig.adapterName,
-            ajax: {
-              headers: {
-                'X-Token': `${User.name}*|*${User.token}`,
-              },
-            },
-          },
+          // remoteOptions: {
+          //   skip_setup: true,
+          //   skipSetup: true,
+          //   adapter: this.databaseConfig.adapterName,
+          //   ajax: {
+          //     headers: {
+          //       'X-Token': `${User.name}*|*${User.token}`,
+          //     },
+          //   },
+          // },
           ...this.modelOptions,
         })
       )

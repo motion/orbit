@@ -27,11 +27,9 @@ const DEFAULT_OPTS = {
   themeKey: 'theme',
 }
 
+let idCounter = 0
 function uid() {
-  return `g${Math.random()
-    .toString()
-    .replace('.', '')
-    .slice(0, 15)}`
+  return idCounter++
 }
 
 export class Gloss {

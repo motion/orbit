@@ -4,7 +4,6 @@ import { Setting, Thing, Event, Job } from '@mcro/models'
 import typeof { User } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, once, flatten } from 'lodash'
-import { URLSearchParams } from 'url'
 import Syncer from './syncer'
 
 const type = 'github'
@@ -446,11 +445,12 @@ export default class GithubSync extends Syncer {
 
     const requestHeaders = force ? null : this.fetchHeaders(uri, headers)
 
-    console.log('Fetching', uri)
-    const res = await fetch(uri, {
+    const fetchOpts = {
       headers: requestHeaders,
       ...opts,
-    })
+    }
+    console.log('Fetching', uri, fetchOpts)
+    const res = await fetch(uri, fetchOpts)
 
     // update lastSyncs
     this.lastSyncs[uri] = {

@@ -154,10 +154,12 @@ export default class Model {
       .toLowerCase()
   }
 
-  compiledMethods = () => ({
-    ...Object.getOwnPropertyDescriptors(this.methods || {}),
-    ...Object.getOwnPropertyDescriptors(this.modelMethods),
-  })
+  get compiledMethods() {
+    return {
+      ...Object.getOwnPropertyDescriptors(this.methods || {}),
+      ...Object.getOwnPropertyDescriptors(this.modelMethods),
+    }
+  }
 
   _filteredProxy = null
 
@@ -179,13 +181,13 @@ export default class Model {
     return this._filteredProxy
   }
 
-  _createFindProxy = (target, method) => {
+  _createFindProxy = (target: Object, method: string) => {
     const { defaultFilter = idFn } = this.constructor
     // assign here to avoid changed `this` in proxy
     const { options } = this
     const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
 
-    return queryParams => {
+    return (queryParams: Object | string) => {
       const finalParams = defaultFilter(queryObject(queryParams))
       const query = target[method](finalParams)
       const sync = opts =>
@@ -198,13 +200,15 @@ export default class Model {
             case 'sync':
               return sync
             case '$':
-              sync()
+              if (options.autoSync) {
+                sync()
+              }
               return target[method]
             case 'exec':
               // console.log('--', `${target.op}.${method}`, finalParams)
               return () =>
                 new Promise(async resolve => {
-                  if (!options.asyncFirstSync) {
+                  if (options.autoSync && !options.asyncFirstSync) {
                     await sync()
                   }
                   const value = await executeQuery()
@@ -241,27 +245,19 @@ export default class Model {
       }, this.collection)
     }
 
+    const { onConnection } = this
     const worm = base => {
       const result = new Proxy(
         {
           ...base,
           exec: () => {
-            console.warn('This model isn\'t connected!')
-            return Promise.resolve(false)
+            console.warn('exec() called, not connected yet')
+            return onConnection()
           },
+          onConnection,
           isntConnected: true,
           getQuery() {
             return getQuery(this.called)
-          },
-          onConnection() {
-            return new Promise(resolve => {
-              const stop = autorun(() => {
-                if (self.connected) {
-                  stop && stop()
-                  resolve(this.getQuery())
-                }
-              })
-            })
           },
         },
         {

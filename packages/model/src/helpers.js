@@ -49,7 +49,7 @@ export const applyHooks = (model: Model) => {
   // POST-CREATE
   // this when any model is instantiated
   const ogPostCreate = model.hooks.postCreate
-  const compiledMethods = model.compiledMethods()
+  const { compiledMethods } = model
   model.hooks.postCreate = doc => {
     if (compiledMethods) {
       for (const method of Object.keys(compiledMethods)) {

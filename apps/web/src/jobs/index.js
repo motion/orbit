@@ -20,25 +20,27 @@ export default class Jobs {
   locks: Set<string> = new Set()
   @watch user: ?User = (() => User.findOne(): any)
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
-  @watch
-  syncers = async () => {
-    if (this.user === null) {
-      console.log('Null user === no user found?')
-    }
-    if (!this.user) {
-      return {}
-    }
-    const res = {}
-    for (const name of Object.keys(Syncers)) {
-      const Syncer = new Syncers[name](this)
-      await Syncer.start()
-      res[name] = Syncer
-    }
-    return res
-  }
+  syncers = null
 
   start = async () => {
     this.watchJobs()
+
+    this.react(
+      () => this.user,
+      async user => {
+        if (!user) {
+          return
+        }
+        if (!this.syncers) {
+          this.syncers = {}
+          for (const name of Object.keys(Syncers)) {
+            const Syncer = new Syncers[name](this)
+            await Syncer.start()
+            this.syncers[name] = Syncer
+          }
+        }
+      }
+    )
   }
 
   get github() {
@@ -107,6 +109,7 @@ export default class Jobs {
     })
 
   runJob = async (job: Job) => {
+    console.log('Running job', job)
     await job.update({
       percent: 0,
       status: Job.status.PROCESSING,
@@ -125,6 +128,8 @@ export default class Jobs {
           lastError: getRxError(error),
         })
       }
+    } else {
+      console.log('no syncer found for', job)
     }
 
     // update job

@@ -23,7 +23,7 @@ export async function ensureJob(
     const secondsAgo =
       (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
     console.log(
-      `Pending job running for ${type} ${action}, ${secondsAgo} seconds ago`
+      `Job already running for ${type} ${action}, ${secondsAgo} seconds ago`
     )
     if (secondsAgo > SECONDS_UNTIL_JOB_IS_STALE) {
       console.log('Stale job, removing...', lastPending.id)

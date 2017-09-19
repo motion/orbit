@@ -10,7 +10,7 @@ export default class Syncer {
   }
 
   async runSyncer(): Promise<void> {
-    console.log('Running syncer jobs', this.constructor.jobs)
+    console.log('Started syncer', this.constructor.jobs)
     // every so often
     setInterval(this.syncJobs, this.JOBS_CHECK_INTERVAL)
     this.syncJobs()

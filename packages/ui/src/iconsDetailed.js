@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 export default {
   clock: (
     <svg width="1.778in" height="1.778in">

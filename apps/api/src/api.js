@@ -2,7 +2,6 @@
 import Database, { Models } from '@mcro/models'
 import Server from './server'
 import Bootstrap from './bootstrap'
-import Jobs from './jobs'
 import type { Options } from '~/types'
 import adapter from 'pouchdb-adapter-memory'
 import * as Constants from '~/constants'
@@ -10,7 +9,6 @@ import * as Constants from '~/constants'
 export default class API {
   server: Server
   bootstrap: Bootstrap
-  jobs: Jobs
   database: Database
 
   constructor(options: Options) {
@@ -39,14 +37,11 @@ export default class API {
     })
     this.bootstrap.start()
     const port = this.server.start()
-    this.jobs = new Jobs()
-    await this.jobs.start()
     console.log('API on port', port)
   }
 
   dispose() {
     this.bootstrap.dispose()
     this.server.dispose()
-    this.jobs.dispose()
   }
 }

@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 const avatars = {
   nate: '/images/me.jpg',
   nick: '/images/nick.jpg',

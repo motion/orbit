@@ -1,5 +1,3 @@
-// @flow
-
 import { isNumber, find, debounce } from 'lodash'
 import { SHORTCUTS } from '~/stores/rootStore'
 import Mousetrap from 'mousetrap'

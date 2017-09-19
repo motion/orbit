@@ -1,12 +1,17 @@
 // @flow
+import * as React from 'react'
+import ReactDOM from 'react-dom'
+import { ThemeProvide } from '@mcro/ui'
+import Themes from './themes'
+import Root from './views/root'
+import Layout from './views/layout'
+import Jobs from './jobs'
 import { Models } from '@mcro/models'
 import * as Constants from '~/constants'
 import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import * as Services from './services'
-
-import CurrentUserX from './stores/currentUserStore'
-export const CurrentUser = CurrentUserX
+import CurrentUser_ from './stores/currentUserStore'
 
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
@@ -15,36 +20,65 @@ export const Thing = Models.Thing
 export const Job = Models.Job
 export const Setting = Models.Setting
 export const Event = Models.Event
+export const CurrentUser = CurrentUser_
 
-function start() {
-  return new AppStore({
-    config: {
-      ...Constants.DB_CONFIG,
-      adapter,
-      adapterName: 'idb',
-    },
-    models: Models,
-    services: Services,
-  })
-}
+export default class App {
+  jobs: Jobs
+  store: AppStore
 
-let App = start()
-window.App = App
+  constructor() {
+    // render() // to render before db connects
+    this.store = new AppStore({
+      config: {
+        ...Constants.DB_CONFIG,
+        adapter,
+        adapterName: 'idb',
+      },
+      models: Models,
+      services: Services,
+    })
+    this.render()
+    this.jobs = new Jobs()
+  }
 
-if (!App) {
-  start()
+  async start() {
+    await this.jobs.start()
+  }
+
+  dispose() {
+    this.store.dispose()
+    this.jobs.dispose()
+  }
+
+  render(): void {
+    // console.time('#render')
+    let ROOT = document.querySelector('#app')
+    ReactDOM.render(
+      <Root>
+        <ThemeProvide {...Themes}>
+          <Layout />
+        </ThemeProvide>
+      </Root>,
+      ROOT
+    )
+    // console.timeEnd('#render')
+  }
+
+  // helpers that wrap appStore
+  get errors() {
+    return this.store.errors
+  }
+
+  get stores() {
+    return this.store.stores
+  }
+
+  get views() {
+    return this.store.views
+  }
 }
 
 // hmr
 if (module && module.hot) {
-  module.hot.accept('@mcro/models', () => {
-    if (App) {
-      App.dispose()
-      App = start()
-    }
-  })
-
-  module.hot.accept(() => {})
+  module.hot.accept(_ => _)
 }
-
-export default App

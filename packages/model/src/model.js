@@ -37,10 +37,6 @@ const modelMerge = (subjectModel: Object, object: Object) => {
 
 // METHODS
 const modelMethods = {
-  get id() {
-    return this._id
-  },
-
   // update, add properties to model & save
   async update(object: Object) {
     return await this.atomicUpdate(doc => {
@@ -54,6 +50,7 @@ const modelMethods = {
   merge(object: Object) {
     modelMerge(this, object)
   },
+
   async mergeUpdate(object: Object) {
     return await this.atomicUpdate(doc => {
       modelMerge(doc, object)

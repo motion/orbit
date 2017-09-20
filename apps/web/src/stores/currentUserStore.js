@@ -211,13 +211,13 @@ class CurrentUser {
     }
     const info = await passportLink(provider, options)
     if (info) {
+      console.log('Merging new oauth', info)
       this.user.mergeUpdate({
         authorizations: {
           github: info,
         },
       })
     }
-    console.log('linked', info)
   }
 
   // unlink = async provider => {

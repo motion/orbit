@@ -178,8 +178,7 @@ export default class Model {
   _createFindProxy = (target: Object, method: string) => {
     const { defaultFilter = idFn } = this.constructor
     // assign here to avoid changed `this` in proxy
-    const { autoSync, asyncFirstSync } = this.options
-    const shouldSyncPush = autoSync && (autoSync === true || autoSync.push)
+    const { asyncFirstSync } = this.options
     const queryObject = x => (typeof x === 'string' ? { id: x } : x)
 
     return (queryParams: Object | string) => {
@@ -195,15 +194,13 @@ export default class Model {
             case 'sync':
               return sync
             case '$':
-              if (shouldSyncPush) {
-                sync()
-              }
+              sync()
               return target[method]
             case 'exec':
               // console.log('--', `${target.op}.${method}`, finalParams)
               return () =>
                 new Promise(async resolve => {
-                  if (shouldSyncPush && !asyncFirstSync) {
+                  if (!asyncFirstSync) {
                     await sync()
                   }
                   const value = await executeQuery()
@@ -295,7 +292,9 @@ export default class Model {
 
     // sync PUSH ONLY
     const { autoSync } = this.options
-    if (autoSync && (autoSync === true || autoSync.push)) {
+    const shouldSyncPush = autoSync && (autoSync === true || autoSync.push)
+
+    if (shouldSyncPush) {
       const pushSync = this._collection.sync({
         remote: this.remote,
         direction: {
@@ -303,7 +302,7 @@ export default class Model {
         },
         options: {
           live: true,
-          retry: true,
+          retry: false,
         },
       })
       this.subscriptions.add(pushSync.cancel)
@@ -370,6 +369,15 @@ export default class Model {
     queryish: Queryish,
     options: Object = { live: true, retry: true }
   ): Promise<boolean> => {
+    const { autoSync } = this.options
+    const shouldSyncPull = autoSync && (autoSync === true || autoSync.pull)
+
+    if (!shouldSyncPull) {
+      return Promise.resolve(false)
+    }
+
+    debugger
+
     let query = queryish
     if (query.query) {
       query = query.query

@@ -59,7 +59,10 @@ export default class AppStore {
     await this.database.start({
       modelOptions: {
         debug: true,
-        autoSync: true,
+        autoSync: {
+          push: window.location.pathname === '/settings',
+          pull: window.location.pathname === '/bar',
+        },
         asyncFirstSync: true,
       },
     })

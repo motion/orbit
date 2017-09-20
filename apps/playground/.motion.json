@@ -1,6 +1,0 @@
-{
-  "pathType": "filePath",
-  "saveNpmModules": true,
-  "webServerPort": 10547,
-  "outputDirectory": "../web/public"
-}

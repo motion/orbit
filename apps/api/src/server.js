@@ -98,16 +98,20 @@ export default class Server {
   }
 
   setupPouch() {
-    this.app.use(
-      '/db',
-      PouchExpress(
-        Pouch.defaults({
-          adapter: 'memory',
-          prefix: '/tmp/my-pouch',
-        }),
-        { inMemoryConfig: true, mode: 'minimumForPouchDB' }
+    const dbs = ['settings', 'users']
+
+    for (const db of dbs) {
+      this.app.use(
+        `/db/${db}`,
+        PouchExpress(
+          Pouch.defaults({
+            adapter: 'memory',
+            prefix: `/tmp/my-pouch/${db}`,
+          }),
+          { inMemoryConfig: true }
+        )
       )
-    )
+    }
   }
 
   setupPassportRoutes() {

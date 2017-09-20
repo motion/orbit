@@ -5,8 +5,8 @@ import { CurrentUser } from '~/app'
 @view
 export default class TaskComment {
   render({ store, data: { id, issueBody = false, body, createdAt, author } }) {
-    const isOwner =
-      author && CurrentUser.github.profile.username === author.login
+    const { github } = CurrentUser.authorizations
+    const isOwner = author && github && github.info.username === author.login
 
     return (
       <comment if={author} $$row>

@@ -72,7 +72,7 @@ export default class Jobs {
           }
           if (this.locks.has(job.lock)) {
             console.log('Already locked job:', job.lock)
-            // return
+            return
           }
           let completed = false
 

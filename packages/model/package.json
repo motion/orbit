@@ -11,7 +11,7 @@
     "kontur": "^0.2.0",
     "lodash": "^4.17.4",
     "pouchdb-core": "^6.2.0",
-    "rxdb": "github:pubkey/rxdb#dbd9acb236d938ca644f864104e5bc35eb8b3280",
+    "rxdb": "^6.0.1",
     "rxjs": "^5.4.1",
     "sb-event-kit": "^3.0.0"
   },

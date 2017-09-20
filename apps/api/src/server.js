@@ -1,3 +1,4 @@
+import Path from 'path'
 import http from 'http'
 import logger from 'morgan'
 import express from 'express'
@@ -12,6 +13,7 @@ import PouchExpress from 'express-pouchdb'
 import Pouch from 'pouchdb'
 import PouchAdapterMemory from 'pouchdb-adapter-memory'
 import PouchAdapterHTTP from 'pouchdb-adapter-http'
+import { Models } from '@mcro/models'
 
 const port = Constants.SERVER_PORT
 
@@ -98,19 +100,24 @@ export default class Server {
   }
 
   setupPouch() {
-    const dbs = ['settings', 'users']
+    const dbs = Object.keys(Models).map(model => Models[model].title)
+
+    this.app.use(
+      '/db',
+      PouchExpress(
+        Pouch.defaults({
+          adapter: 'memory',
+        }),
+        {
+          inMemoryConfig: true,
+          dir: Path.join(__dirname, 'tmp'),
+        }
+      )
+    )
 
     for (const db of dbs) {
-      this.app.use(
-        `/db/${db}`,
-        PouchExpress(
-          Pouch.defaults({
-            adapter: 'memory',
-            prefix: `/tmp/my-pouch/${db}`,
-          }),
-          { inMemoryConfig: true }
-        )
-      )
+      // creating a pouchdb makes it work
+      new Pouch(db)
     }
   }
 

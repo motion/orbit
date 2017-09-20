@@ -376,8 +376,6 @@ export default class Model {
       return Promise.resolve(false)
     }
 
-    debugger
-
     let query = queryish
     if (query.query) {
       query = query.query

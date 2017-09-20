@@ -28,11 +28,11 @@ export const Event = EventInstance
 // ⭐️ DONT FORGET TO ADD HERE TOO:
 
 export const Models = {
-  Thing,
-  User,
-  Job,
-  Setting,
-  Event,
+  Thing: ThingInstance,
+  User: UserInstance,
+  Job: JobInstance,
+  Setting: SettingInstance,
+  Event: EventInstance,
 }
 
 // ⭐️ YOU'RE ALL SET

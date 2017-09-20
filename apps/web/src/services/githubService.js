@@ -13,7 +13,7 @@ export default class GithubService {
 
   constructor() {
     this.react(
-      () => CurrentUser.user && CurrentUser.user.authorizations,
+      () => (CurrentUser.user && CurrentUser.user.authorizations) || {},
       ({ github }) => {
         if (github && !this.github) {
           this.github = new Octokat({
@@ -27,7 +27,7 @@ export default class GithubService {
 
   @watch
   orgs = async () => {
-    if (!this.setting && this.github) {
+    if (!this.setting || !this.github) {
       return null
     }
     const orgs = await this.github.user.orgs.fetchAll()

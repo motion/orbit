@@ -59,16 +59,6 @@ module.exports = Object.assign(config, {
     ]),
   },
 
-  devServer: {
-    proxy: {
-      '/auth': {
-        target: 'http://localhost:3002',
-        secure: false,
-        ws: true,
-      },
-    },
-  },
-
   output: {
     path: paths.appBuild,
     pathinfo: true,

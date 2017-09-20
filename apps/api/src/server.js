@@ -8,8 +8,10 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import FS from 'fs'
-import Path from 'path'
+import PouchExpress from 'express-pouchdb'
+import Pouch from 'pouchdb'
+import PouchAdapterMemory from 'pouchdb-adapter-memory'
+import PouchAdapterHTTP from 'pouchdb-adapter-http'
 
 const port = Constants.SERVER_PORT
 
@@ -17,6 +19,9 @@ export default class Server {
   login = null
 
   constructor() {
+    Pouch.plugin(PouchAdapterMemory)
+    Pouch.plugin(PouchAdapterHTTP)
+
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
       onSuccess: async (service, token, refreshToken, info) => {
@@ -38,15 +43,17 @@ export default class Server {
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
       next()
     })
-    this.app.use(bodyParser.json())
-    this.app.use(bodyParser.urlencoded({ extended: false }))
+    this.app.use('/auth', bodyParser.json())
+    this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
     this.app.use(
+      '/auth',
       session({ secret: 'orbit', resave: false, saveUninitialized: true })
     ) // TODO change secret
-    this.app.use(Passport.initialize())
-    this.app.use(Passport.session())
+    this.app.use('/auth', Passport.initialize())
+    this.app.use('/auth', Passport.session())
 
     // ROUTES
+    this.setupPouch()
     this.setupPassportSerialization()
     this.setupPassportRoutes()
     this.setupProxy()
@@ -85,8 +92,15 @@ export default class Server {
         changeOrigin: true,
         secure: false,
         ws: true,
-        // logLevel: 'debug',
+        logLevel: 'warn',
       })
+    )
+  }
+
+  setupPouch() {
+    this.app.use(
+      '/db',
+      PouchExpress(Pouch, { adapter: 'memory', inMemoryConfig: true })
     )
   }
 

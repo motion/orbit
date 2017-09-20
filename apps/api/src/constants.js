@@ -11,4 +11,4 @@ export const IS_PROD = process.env.NODE_ENV === 'production'
 
 export const APP_URL = process.env.APP_URL || 'http://jot.dev'
 
-export const SERVER_PORT = process.env.PORT || 80
+export const SERVER_PORT = process.env.PORT || 3002

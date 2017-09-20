@@ -21,9 +21,7 @@ export default class BarSetupPane {
           </UI.Button>
         </integrate>
         <settings if={integration && SettingPane}>
-          <UI.Title size={1.5}>
-            {item.data.name} Settings
-          </UI.Title>
+          <UI.Title size={1.5}>{item.data.name} Settings</UI.Title>
           <SettingPane integration={integration} />
         </settings>
       </setup>

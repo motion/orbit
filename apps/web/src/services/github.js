@@ -5,12 +5,25 @@ import { CurrentUser } from '~/app'
 
 @store
 export default class GithubService {
+  github = null
+
   get setting(): ?string {
     return CurrentUser.setting.github
   }
 
-  get token(): ?string {
-    return CurrentUser.user && CurrentUser.token('github')
+  constructor() {
+    this.react(
+      () => CurrentUser.user && CurrentUser.user.authorizations,
+      ({ github }) => {
+        console.log('waht', github)
+        if (github && !this.github) {
+          this.github = new Octokat({
+            token: github.token,
+          })
+        }
+      },
+      true
+    )
   }
 
   @watch
@@ -40,16 +53,4 @@ export default class GithubService {
       }),
       {}
     )
-
-  @watch
-  github = () => {
-    console.log('running with', CurrentUser.user, this.token)
-    return (
-      CurrentUser.user &&
-      this.token &&
-      new Octokat({
-        token: this.token,
-      })
-    )
-  }
 }

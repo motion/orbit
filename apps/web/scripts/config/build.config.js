@@ -58,6 +58,17 @@ module.exports = Object.assign(config, {
       paths.appIndexJs,
     ]),
   },
+
+  devServer: {
+    proxy: {
+      '/auth': {
+        target: 'http://localhost:3002',
+        secure: false,
+        ws: true,
+      },
+    },
+  },
+
   output: {
     path: paths.appBuild,
     pathinfo: true,

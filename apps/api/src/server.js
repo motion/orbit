@@ -32,7 +32,7 @@ export default class Server {
 
     this.app = express()
     this.app.set('port', port)
-    this.app.use(logger('dev'))
+    // this.app.use(logger('dev'))
 
     // MIDDLEWARE
     const HEADER_ALLOWED =
@@ -100,7 +100,13 @@ export default class Server {
   setupPouch() {
     this.app.use(
       '/db',
-      PouchExpress(Pouch, { adapter: 'memory', inMemoryConfig: true })
+      PouchExpress(
+        Pouch.defaults({
+          adapter: 'memory',
+          prefix: '/tmp/my-pouch',
+        }),
+        { inMemoryConfig: true, mode: 'minimumForPouchDB' }
+      )
     )
   }
 

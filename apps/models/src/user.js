@@ -26,7 +26,11 @@ export class UserModel extends Model {
     personalDBs: object.optional,
     activity: array.optional.items(object),
     session: object.optional,
-    authorizations: object.optional,
+    authorizations: object,
+  }
+
+  static defaultProps = {
+    authorizations: {},
   }
 
   settings = {

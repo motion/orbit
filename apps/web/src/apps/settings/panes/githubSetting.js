@@ -15,6 +15,7 @@ export default class GithubSetting {
     const { Github } = App.services
 
     if (Github.orgs && Github.orgs.message) {
+      console.warn('bad orgs')
       return null
     }
 

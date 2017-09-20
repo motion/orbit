@@ -3,6 +3,8 @@ import * as UI from '@mcro/ui'
 
 @view({
   store: class IntegrationsStore {
+    selectedIndex = 0
+
     get results() {
       return [
         {
@@ -47,23 +49,30 @@ export default class BarIntegrationsPane {
     this.props.onSelect(this.props.store.results[0])
   }
 
-  render({ store, onSelect, itemProps }) {
+  select = (item, index) => {
+    this.props.onSelect(item)
+    this.props.store.selectedIndex = index
+  }
+
+  render({ store, itemProps }) {
     return (
       <integrations>
         <UI.List
           if={store.results}
-          controlled
           defaultSelected={0}
-          onSelect={onSelect}
+          onSelect={this.select}
           groupKey="category"
           items={store.results}
           itemProps={itemProps}
-          getItem={result => ({
+          getItem={(result, index) => ({
+            highlight: () => store.selectedIndex === index,
             primary: result.title,
             icon:
-              result.data && result.data.image
-                ? <img $image src={`/images/${result.data.image}.jpg`} />
-                : result.icon || (result.doc && result.doc.icon),
+              result.data && result.data.image ? (
+                <img $image src={`/images/${result.data.image}.jpg`} />
+              ) : (
+                result.icon || (result.doc && result.doc.icon)
+              ),
           })}
         />
       </integrations>

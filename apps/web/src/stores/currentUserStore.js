@@ -51,7 +51,7 @@ class CurrentUser {
   sessionInfo = null
   superlogin: SuperLoginClient = SuperLoginClient
 
-  @watch user = () => this.id && User.findOne(this.id)
+  @watch user = () => this.id && User.findOrCreate(this.id)
   @watch settings = () => this.id && Setting.find({ userId: this.id })
   @watch
   setting = () =>

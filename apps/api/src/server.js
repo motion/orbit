@@ -82,10 +82,10 @@ export default class Server {
       '/',
       proxy({
         target: 'http://localhost:3002',
-        ws: true,
         changeOrigin: true,
         secure: false,
-        inline: true,
+        ws: true,
+        // logLevel: 'debug',
       })
     )
   }

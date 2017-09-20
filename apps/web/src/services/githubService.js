@@ -26,7 +26,17 @@ export default class GithubService {
   }
 
   @watch
-  orgs = () => this.setting && this.github && this.github.user.orgs.fetchAll()
+  orgs = async () => {
+    if (!this.setting && this.github) {
+      return null
+    }
+    const orgs = await this.github.user.orgs.fetchAll()
+    if (orgs.message) {
+      console.error('orgs.message', orgs.message)
+      return null
+    }
+    return orgs
+  }
 
   @watch
   allRepos = () =>

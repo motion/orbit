@@ -14,6 +14,10 @@ export default class GithubSetting {
 
     const { Github } = App.services
 
+    if (Github.orgs && Github.orgs.message) {
+      return null
+    }
+
     return (
       <content>
         <loading
@@ -22,11 +26,9 @@ export default class GithubSetting {
         >
           <UI.Icon size={40} name="loader_dots" opacity={0.5} />
         </loading>
-
         <settings if={Github.setting}>
           orgs selected: {JSON.stringify(Github.setting.values.orgs)}
         </settings>
-
         <UI.Form if={Github.orgs && Github.setting}>
           {Github.orgs.map(org => {
             const repos = Github.repos && Github.repos[org.id]
@@ -67,7 +69,6 @@ export default class GithubSetting {
             )
           })}
         </UI.Form>
-
         <UI.Button onClick={() => CurrentUser.unlink('github')}>
           Unlink Github
         </UI.Button>

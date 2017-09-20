@@ -15,7 +15,7 @@ export default class BarSetupPane {
 
     return (
       <setup>
-        <integrate if={!integration}>
+        <integrate>
           <UI.Title size={2}>Authorize</UI.Title>
           <UI.Button
             icon={item.icon}

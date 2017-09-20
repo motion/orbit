@@ -32,8 +32,10 @@ function ensure-dir {
   echo "installed: $1"
 }
 
-function install-pow {
-  curl get.pow.cx | sh
+function install-puma-dev {
+  brew install puma/puma/puma-dev
+  sudo puma-dev -setup
+  puma-dev -install
 }
 
 xcode-select --install 2> /dev/null
@@ -46,7 +48,7 @@ ensure-dep "kubectl" -- brew install kubectl
 ensure-dep "minikube" -- brew cask install minikube
 ensure-dep "pip" -- brew install python
 ensure-dep "envtpl" -- pip install envtpl
-ensure-dir "~/.pow" -- install-pow
+ensure-dep "puma-dev" -- install-puma-dev
 
 # echo "Make sure to install dotenv and ensure it picks up your .env vars!"
 # TODO: revisit once we can use kubes locally nicely
@@ -58,8 +60,8 @@ ensure-dir "~/.pow" -- install-pow
 # minikube config set vm-driver xyhve
 # minikube addons enable ingress
 
-echo "3001 > ~/.pow/jot"
-echo 3001 > ~/.pow/jot
+echo "3001 > ~/.puma-dev/jot"
+echo 3001 > ~/.puma-dev/jot
 
 yarn install
 echo "lerna bootstrap"

@@ -110,7 +110,6 @@ export default class Server {
         }),
         {
           inMemoryConfig: true,
-          dir: Path.join(__dirname, 'tmp'),
         }
       )
     )

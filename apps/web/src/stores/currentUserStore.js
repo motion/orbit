@@ -138,8 +138,8 @@ class CurrentUser {
     return this.user && this.user.authorizations
   }
 
-  get token() {
-    return this.user && this.user.token
+  get token(): (provider: string) => string {
+    return (this.user && this.user.token) || (_ => '')
   }
 
   loginOrSignup = async (email, password) => {

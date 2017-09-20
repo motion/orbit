@@ -25,28 +25,14 @@ function splash() {
   console.timeEnd('splash')
 }
 
-function main(options: ?Object) {
+function main() {
   splash()
-  const App = require('./app').default
-  const app = new App()
-  app.start(options)
-  window.App = app
-  return app
+  require('./app')
 }
 
-export let App = main()
+main()
 
 // accept hmr
 if (module && module.hot) {
   module.hot.accept(_ => _)
-  module.hot.accept('@mcro/models', async () => {
-    if (App) {
-      await App.dispose()
-      App = main({
-        options: {
-          ignoreDuplicate: true,
-        },
-      })
-    }
-  })
 }

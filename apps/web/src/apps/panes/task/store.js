@@ -128,7 +128,7 @@ export default class TaskStore {
     this.assigned = xs
   }
 
-  async start() {
+  async willMount() {
     const { data: { data } } = this.props.paneStore
 
     this.labels = data.labels.map(({ name }) => name)

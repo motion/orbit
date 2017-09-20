@@ -22,12 +22,12 @@ export const Setting = Models.Setting
 export const Event = Models.Event
 export const CurrentUser = CurrentUser_
 
-export default class App {
+class App {
   jobs: Jobs
   store: AppStore
 
   constructor() {
-    // render() // to render before db connects
+    // this.render() // to render before db connects
     this.store = new AppStore({
       config: {
         ...Constants.DB_CONFIG,
@@ -37,12 +37,13 @@ export default class App {
       models: Models,
       services: Services,
     })
-    this.render()
+    this.start()
   }
 
   async start() {
+    await this.store.start()
     this.jobs = new Jobs()
-    await this.jobs.start()
+    this.render()
   }
 
   dispose() {
@@ -65,28 +66,37 @@ export default class App {
   }
 
   // helpers that wrap appStore
-  get services() {
-    return this.store.services
+  get services(): Object {
+    return this.store && this.store.services
   }
 
-  get database() {
-    return this.store.database
+  get database(): Object {
+    return this.store && this.store.database
   }
 
-  get errors() {
-    return this.store.errors
+  get errors(): ?Array<any> {
+    return this.store && this.store.errors
   }
 
-  get stores() {
-    return this.store.stores
+  get stores(): Object {
+    return this.store && this.store.stores
   }
 
-  get views() {
-    return this.store.views
+  get views(): Object {
+    return this.store && this.store.views
   }
 }
+
+let app = new App()
+window.App = app
+
+export default app
 
 // hmr
 if (module && module.hot) {
   module.hot.accept(_ => _)
+  module.hot.accept('@mcro/models', async () => {
+    app.dispose()
+    app = new App()
+  })
 }

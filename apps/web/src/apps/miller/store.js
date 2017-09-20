@@ -64,7 +64,7 @@ export default class MillerStore {
     )
   }
 
-  start() {
+  willMount() {
     let lastCol = null
     this.react(
       () => this.activeItem,

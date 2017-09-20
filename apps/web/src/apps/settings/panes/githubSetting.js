@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
@@ -7,13 +8,14 @@ import App from '~/app'
 @view
 export default class GithubSetting {
   render() {
+    console.log('render2', App)
     if (!App.services) {
       return null
     }
 
-    const githubSettings = CurrentUser.setting.github
     const { Github } = App.services
 
+    console.log('looking for', Github.orgs, Github.setting)
     return (
       <content>
         <loading
@@ -23,8 +25,8 @@ export default class GithubSetting {
           <UI.Icon size={40} name="loader_dots" opacity={0.5} />
         </loading>
 
-        <settings if={githubSettings}>
-          orgs selected: {JSON.stringify(githubSettings.values.orgs)}
+        <settings if={Github.setting}>
+          orgs selected: {JSON.stringify(Github.setting.values.orgs)}
         </settings>
 
         <UI.Form if={Github.orgs && Github.setting}>
@@ -43,14 +45,13 @@ export default class GithubSetting {
                   type="toggle"
                   defaultValue={orgActive}
                   onChange={val => {
-                    githubSettings.values = {
-                      ...githubSettings.values,
-                      orgs: {
-                        ...orgs,
-                        [lower(org.login)]: val,
+                    Github.setting.mergeUpdate({
+                      values: {
+                        orgs: {
+                          [lower(org.login)]: val,
+                        },
                       },
-                    }
-                    githubSettings.save()
+                    })
                   }}
                 />
 

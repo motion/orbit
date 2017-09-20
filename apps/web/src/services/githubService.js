@@ -15,7 +15,6 @@ export default class GithubService {
     this.react(
       () => CurrentUser.user && CurrentUser.user.authorizations,
       ({ github }) => {
-        console.log('waht', github)
         if (github && !this.github) {
           this.github = new Octokat({
             token: github.token,

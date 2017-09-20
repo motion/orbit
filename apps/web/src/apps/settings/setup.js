@@ -6,7 +6,11 @@ import * as Panes from './panes'
 @view
 export default class BarSetupPane {
   render({ item }) {
-    const integration = CurrentUser[item.data.type]
+    if (!CurrentUser.authorizations) {
+      return null
+    }
+
+    const integration = CurrentUser.authorizations[item.data.type]
     const SettingPane = integration && Panes[item.data.type]
 
     return (

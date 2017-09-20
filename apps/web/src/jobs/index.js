@@ -22,7 +22,7 @@ export default class Jobs {
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
   syncers: ?Object = null
 
-  start = async () => {
+  willMount = async () => {
     this.watchJobs()
 
     this.react(
@@ -35,7 +35,9 @@ export default class Jobs {
           this.syncers = {}
           for (const name of Object.keys(Syncers)) {
             const Syncer = new Syncers[name](this)
-            await Syncer.start()
+            if (Syncer.start) {
+              await Syncer.start()
+            }
             this.syncers[name] = Syncer
           }
         }
@@ -109,10 +111,6 @@ export default class Jobs {
     })
 
   runJob = async (job: Job) => {
-    if (!this.syncers) {
-      return
-    }
-
     console.log('Running job', job.type, job.action)
     await job.update({
       percent: 0,
@@ -120,6 +118,9 @@ export default class Jobs {
       tries: job.tries + 1,
     })
 
+    if (!this.syncers) {
+      return
+    }
     const syncer = this.syncers[job.type]
 
     if (syncer) {

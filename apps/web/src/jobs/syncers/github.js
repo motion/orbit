@@ -1,9 +1,9 @@
 // @flow
-import { store, watch } from '@mcro/black/store'
-import { Setting, Thing, Event, Job } from '@mcro/models'
-import typeof { User } from '@mcro/models'
+import { store } from '@mcro/black/store'
+import { CurrentUser, Thing, Event, Job } from '~/app'
+import typeof { Setting } from '@mcro/models'
 import { createApolloFetch } from 'apollo-fetch'
-import { omit, once, flatten } from 'lodash'
+import { omit, flatten } from 'lodash'
 import Syncer from './syncer'
 
 const type = 'github'
@@ -16,64 +16,29 @@ export default class GithubSync extends Syncer {
     feed: { every: 60 },
   }
 
-  user: User
   lastSyncs = {}
 
-  // oldest setting
-  @watch
-  setting = () =>
-    Setting.findOne({ type, userId: this.user.id }).sort('createdAt')
-
-  get token(): string {
-    return (
-      (this.user.authorizations &&
-        this.user.authorizations.github &&
-        this.user.authorizations.github.token) ||
-      ''
-    )
+  get setting(): ?Setting {
+    return CurrentUser.setting.github
   }
 
-  start() {
-    if (!this.token) {
-      console.log('No github credentials found for user')
-      return
+  get token(): ?string {
+    return CurrentUser.token('github')
+  }
+
+  run = async (job: Job) => {
+    this.validateSetting()
+    if (job.action) {
+      await this.runJob(job.action)
+    } else {
+      throw new Error(`No action found on job ${job.id}`)
     }
   }
 
-  run = (job: Job): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      const runJob = once(async () => {
-        console.log('waht', this.setting, job.action)
-        if (this.setting) {
-          this.validateSetting()
-        }
-
-        if (job.action) {
-          try {
-            await this.runJob(job.action)
-          } catch (error) {
-            reject(error)
-          }
-          resolve()
-        } else {
-          reject(`No action found on job ${job.id}`)
-        }
-      })
-
-      // wait for setting before running
-      this.watch(async () => {
-        if (this.setting) {
-          if (this.setting.activeOrgs) {
-            runJob()
-          } else {
-            console.log('no orgs')
-          }
-        }
-      })
-    })
-  }
-
   validateSetting = () => {
+    if (!this.setting) {
+      throw new Error('No setting found for github')
+    }
     // ensures properties on setting
     // TODO move this into GithubSetting model
     if (!this.setting.values.lastSyncs) {

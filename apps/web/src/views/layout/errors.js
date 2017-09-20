@@ -6,7 +6,6 @@ import { App } from '~/index'
 export default class Errors {
   render() {
     if (!App) {
-      console.log('no app')
       return null
     }
 

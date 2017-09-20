@@ -8,14 +8,12 @@ import App from '~/app'
 @view
 export default class GithubSetting {
   render() {
-    console.log('render2', App)
     if (!App.services) {
       return null
     }
 
     const { Github } = App.services
 
-    console.log('looking for', Github.orgs, Github.setting)
     return (
       <content>
         <loading

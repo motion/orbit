@@ -39,7 +39,6 @@ export default function store(Store: Class<any>): StoreClass {
   const DecoratedStore = storeDecorator(Store)
   const ProxyStore = function(...args) {
     const store = new DecoratedStore(...args)
-    console.log('got args', args, this)
     storeOptions.onStoreMount(Store.constructor.name, store, args[0])
     return store
   }

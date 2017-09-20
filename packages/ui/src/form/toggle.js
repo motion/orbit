@@ -88,8 +88,6 @@ export default class Toggle extends React.Component {
       on = this.state.on
     }
 
-    console.log('render toggle', on)
-
     return (
       <bar onClick={this.toggleClick} {...props}>
         <dot $dotOn={on} />

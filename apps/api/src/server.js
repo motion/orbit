@@ -49,7 +49,7 @@ export default class Server {
     // ROUTES
     this.setupPassportSerialization()
     this.setupPassportRoutes()
-    // this.setupProxy()
+    this.setupProxy()
   }
 
   start() {
@@ -81,7 +81,7 @@ export default class Server {
     this.app.use(
       '/',
       proxy({
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3002',
         ws: true,
         changeOrigin: true,
         secure: false,

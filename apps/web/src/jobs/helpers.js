@@ -1,8 +1,9 @@
 // @flow
+import typeof { Job } from '@mcro/models'
 
 const UNITS_SECOND = 1000
 
-export const olderThanSeconds = (date, seconds) => {
+export const olderThanSeconds = (date: string, seconds: number) => {
   const upperBound = seconds * UNITS_SECOND
   const timeDifference = Date.now() - Date.parse(date)
   const answer = timeDifference > upperBound

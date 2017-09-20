@@ -32,6 +32,8 @@ elif [ "$ACTION" =  "web" ]; then
     motion watch --disable-cache
   elif [ "$ARG1" = "--prod" ]; then
     npm run start-prod &
+  elif [ "$ARG1" = "--webpack" ]; then
+    node scripts/run.js
   else
     motion watch ${@:2} &
   fi

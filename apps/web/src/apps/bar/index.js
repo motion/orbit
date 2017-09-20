@@ -109,18 +109,18 @@ export default class BarPage {
     },
     searchIcon: {
       position: 'absolute',
-      top: 4,
+      top: 2,
       bottom: 0,
       alignItems: 'center',
       height: 'auto',
       left: 18,
     },
     searchInput: {
-      padding: [0, 20, 0, 50],
+      padding: [0, 20, 0, 40],
     },
     forwardcomplete: {
       position: 'absolute',
-      top: 25,
+      top: 23,
       left: 50,
       opacity: 0.3,
       ...inputStyle,

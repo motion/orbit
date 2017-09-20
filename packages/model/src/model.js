@@ -117,10 +117,7 @@ export default class Model {
 
   get props(): Object {
     const { timestamps, ...props } = this.constructor.props
-    let result = props
-
-    result = compile(cloneDeep(result))
-
+    const result = compile(cloneDeep(props))
     if (timestamps) {
       result.properties = {
         ...result.properties,
@@ -136,7 +133,6 @@ export default class Model {
         },
       }
     }
-
     return result
   }
 

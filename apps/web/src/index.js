@@ -1,6 +1,5 @@
 // @flow
 import 'babel-polyfill'
-import 'isomorphic-fetch'
 import createElement from '@mcro/black/lib/createElement'
 import * as React from 'react'
 import ReactDOM from 'react-dom'

@@ -63,6 +63,7 @@ class CurrentUser {
     this.options = options
     this.setupSuperLogin()
     this.connected = true
+    this.start()
   }
 
   async start() {
@@ -73,6 +74,7 @@ class CurrentUser {
 
   ensureSettings() {
     this.watch(async () => {
+      console.log('watching', this.user, this.user.authorizations)
       if (!this.user) {
         return
       }

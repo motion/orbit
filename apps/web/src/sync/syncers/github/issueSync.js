@@ -13,18 +13,18 @@ export default class GithubIssueSync {
   }
 
   run = async () => {
+    const res = await this.createAllIssues()
+    console.log('Created', res ? res.length : 0, 'issues', res)
+  }
+
+  createAllIssues = async () => {
     if (!this.setting.activeOrgs) {
-      throw new Error('User hasnt selected any orgs in settings')
+      console.log('User hasnt selected any orgs in settings')
+      return []
     }
-    const createdIssues = flatten(
+    return flatten(
       await Promise.all(this.setting.activeOrgs.map(this.createIssuesForOrg))
     ).filter(Boolean)
-    console.log(
-      'Created',
-      createdIssues ? createdIssues.length : 0,
-      'issues',
-      createdIssues
-    )
   }
 
   graphQueryIssue = `

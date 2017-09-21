@@ -25,6 +25,7 @@ apps/api/users
 apps/api/_replicator
 apps/api/_users
 apps/api/config.json
+apps/api/pouch__all_dbs__
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

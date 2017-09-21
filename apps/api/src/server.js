@@ -11,9 +11,10 @@ import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 import PouchExpress from 'express-pouchdb'
 import Pouch from 'pouchdb'
-import PouchAdapterMemory from 'pouchdb-adapter-memory'
 import PouchAdapterHTTP from 'pouchdb-adapter-http'
+import PouchAdapterMemory from 'pouchdb-adapter-memory'
 import { Models } from '@mcro/models'
+import PouchRouter from 'pouchdb-express-router'
 
 const port = Constants.SERVER_PORT
 
@@ -21,8 +22,8 @@ export default class Server {
   login = null
 
   constructor() {
-    Pouch.plugin(PouchAdapterMemory)
     Pouch.plugin(PouchAdapterHTTP)
+    Pouch.plugin(PouchAdapterMemory)
 
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
@@ -34,7 +35,7 @@ export default class Server {
 
     this.app = express()
     this.app.set('port', port)
-    // this.app.use(logger('dev'))
+    this.app.use(logger('dev'))
 
     // MIDDLEWARE
     const HEADER_ALLOWED =
@@ -100,23 +101,8 @@ export default class Server {
   }
 
   setupPouch() {
-    const dbs = Object.keys(Models).map(model => Models[model].title)
-
-    const ThePouch = Pouch.defaults({
-      adapter: 'memory',
-    })
-
-    this.app.use(
-      '/db',
-      PouchExpress(ThePouch, {
-        inMemoryConfig: true,
-      })
-    )
-
-    for (const db of dbs) {
-      // creating a pouchdb makes it work
-      new ThePouch(db)
-    }
+    // const dbs = Object.keys(Models).map(model => Models[model].title)
+    this.app.use('/db', PouchRouter(Pouch))
   }
 
   setupPassportRoutes() {

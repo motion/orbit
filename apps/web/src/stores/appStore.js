@@ -60,8 +60,8 @@ export default class AppStore {
       modelOptions: {
         debug: true,
         autoSync: {
-          push: window.location.pathname === '/settings',
-          pull: window.location.pathname === '/bar',
+          push: true,
+          pull: true,
         },
         asyncFirstSync: true,
       },

@@ -80,9 +80,11 @@ export default class Database {
 
     // hmr fix
     if (Constants.IS_BROWSER) {
+      const oglog = console.log
+      console.log = _ => _
       RxDB.QueryChangeDetector.enable()
+      console.log = oglog
     }
-    console.log('Create RxDB with adapter', this.databaseConfig.adapterName)
     RxDB.plugin(this.databaseConfig.adapter)
     RxDB.plugin(pHTTP)
     PouchDB.plugin(this.databaseConfig.adapter)
@@ -104,14 +106,16 @@ export default class Database {
     this.connected = true
   }
 
-  dispose = async () => {
+  async dispose() {
     for (const name of Object.keys(this.models)) {
       const model = this.models[name]
       if (model) {
         await model.dispose()
       }
     }
-    await this.database.destroy()
+    if (this.database) {
+      await this.database.destroy()
+    }
   }
 
   attachModels = async () => {

@@ -84,7 +84,7 @@ export default class Icon extends React.PureComponent<Props> {
     }
 
     return (
-      <icon
+      <div
         contentEditable={false}
         className={`${className || ''} ${this.uniq}`}
         onClick={onClick}
@@ -95,7 +95,7 @@ export default class Icon extends React.PureComponent<Props> {
         {...props}
         contentEditable={contentEditable}
       >
-        <inner
+        <div
           contentEditable={false}
           className={`nc-icon-${type} ${iconName}`}
           contentEditable={contentEditable}
@@ -105,25 +105,24 @@ export default class Icon extends React.PureComponent<Props> {
           }}
         >
           {content}
-        </inner>
-        {tooltip &&
-          log(
-            <Popover
-              theme="dark"
-              background
-              openOnHover
-              noArrow
-              noHover
-              target={`.${this.uniq}`}
-              padding={[0, 5]}
-              distance={10}
-              towards="top"
-              {...tooltipProps}
-            >
-              {tooltip}
-            </Popover>
-          )}
-      </icon>
+        </div>
+        {tooltip && (
+          <Popover
+            theme="dark"
+            background
+            openOnHover
+            noArrow
+            noHover
+            target={`.${this.uniq}`}
+            padding={[0, 5]}
+            distance={10}
+            towards="top"
+            {...tooltipProps}
+          >
+            {tooltip}
+          </Popover>
+        )}
+      </div>
     )
   }
 }

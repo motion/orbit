@@ -26,7 +26,7 @@ class App {
   jobs: Jobs
   store: AppStore
 
-  constructor() {
+  constructor(quiet?: boolean) {
     // this.render() // to render before db connects
     this.store = new AppStore({
       config: {
@@ -38,25 +38,25 @@ class App {
       models: Models,
       services: Services,
     })
-    this.start()
+    this.start(quiet)
   }
 
-  async start() {
+  async start(quiet: boolean) {
     this.syncSettings()
-    await this.store.start()
+    await this.store.start(quiet)
     this.jobs = new Jobs()
     this.render()
   }
 
   async syncSettings() {
     await Setting.find().sync()
-    const all = await Setting.find()
-    console.log('got settings', all ? all.map(x => x.toJSON()) : all)
   }
 
-  dispose() {
-    this.store.dispose()
-    this.jobs.dispose()
+  async dispose() {
+    await this.store.dispose()
+    if (this.jobs) {
+      this.jobs.dispose()
+    }
   }
 
   render(): void {
@@ -93,17 +93,30 @@ class App {
   get views(): Object {
     return this.store && this.store.views
   }
+
+  get models(): Object {
+    return this.store && this.store.models
+  }
 }
 
-let app = new App()
-window.App = app
+let app = window.App
+
+export async function start(recreate?: boolean) {
+  if (app) {
+    await app.dispose()
+  }
+  if (recreate || !app) {
+    app = new App(recreate)
+    window.App = app
+  }
+}
 
 export default app
 
 // hmr
 if (module && module.hot) {
-  module.hot.accept(_ => _)
+  module.hot.accept(() => start(true))
   module.hot.accept('@mcro/models', async () => {
-    log('nada')
+    // cutoff models
   })
 }

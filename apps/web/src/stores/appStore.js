@@ -1,20 +1,19 @@
 // @flow
-import { view, store } from '@mcro/black'
+import { view, store, watch } from '@mcro/black'
 import { autorunAsync } from 'mobx'
 import { uniqBy } from 'lodash'
 import Database from '@mcro/models'
 import CurrentUser from './currentUserStore'
 
-if (module.hot) {
-  module.hot.accept('@mcro/models', () => {
-    log('no accept @mcro/models')
-  })
-}
-
 type Options = {
   config: Object,
   models: Object,
   services: Object,
+}
+
+type ThingRef = {
+  name: string,
+  thing: Class<any>,
 }
 
 @store
@@ -33,6 +32,18 @@ export default class AppStore {
   stores: ?Object = null
   views: ?Object = null
   serviceObjects: ?Object = null
+
+  @watch
+  services: ?Object = (() => {
+    if (!CurrentUser.user) {
+      return null
+    }
+    const res = {}
+    for (const serviceName of Object.keys(this.serviceObjects)) {
+      res[serviceName] = new this.serviceObjects[serviceName](CurrentUser)
+    }
+    return res
+  }: any)
 
   constructor({ config, models, services }: Options) {
     this.config = config
@@ -67,7 +78,6 @@ export default class AppStore {
       },
     })
     this.connected = true
-    this.setupServices()
     this.catchErrors()
     this.trackMounts()
     if (!quiet) {
@@ -76,20 +86,10 @@ export default class AppStore {
     this.started = true
   }
 
-  setupServices() {
-    if (!CurrentUser.user) {
-      throw new Error('No way')
+  async dispose() {
+    if (this.database) {
+      await this.database.dispose()
     }
-    this.services = {}
-    for (const serviceName of Object.keys(this.serviceObjects)) {
-      this.services[serviceName] = new this.serviceObjects[serviceName](
-        CurrentUser
-      )
-    }
-  }
-
-  dispose = () => {
-    this.database && this.database.dispose()
   }
 
   trackMounts = () => {
@@ -114,16 +114,17 @@ export default class AppStore {
     }, 100)
   }
 
-  key = (name, thing) => (name === 'store' ? thing.constructor.name : name)
+  key = (name: string, thing: Class<any>) =>
+    name === 'store' ? thing.constructor.name : name
 
-  mount = type => ({ name, thing }) => {
+  mount = (type: string) => ({ name, thing }: ThingRef) => {
     const key = this.key(name, thing)
     this.mounted[type][key] = this.mounted[type][key] || new Set()
     this.mounted[type][key].add(thing)
     this.mountedVersion++
   }
 
-  unmount = type => ({ name, thing }) => {
+  unmount = (type: string) => ({ name, thing }: ThingRef) => {
     const key = this.key(name, thing)
     if (this.mounted[type][key]) {
       this.mounted[type][key].delete(thing)
@@ -131,7 +132,7 @@ export default class AppStore {
     }
   }
 
-  handleError = (...errors) => {
+  handleError = (...errors: Array<Error>) => {
     const unique = uniqBy(errors, err => err.name)
     const final = []
     for (const error of unique) {
@@ -157,6 +158,9 @@ export default class AppStore {
   }
 
   clearLocalData() {
+    if (!this.models) {
+      return
+    }
     Object.keys(this.models).forEach(async name => {
       const model = this.models[name]
       await model.database.remove()
@@ -165,11 +169,17 @@ export default class AppStore {
   }
 
   clearAllData() {
-    Object.keys(this.models).forEach(async name => {
-      const model = this.models[name]
-      const models = await model.getAll()
-      await Promise.all(models.map(model => model.remove()))
-      console.log('Removed all models', name)
-    })
+    if (!this.models) {
+      return
+    }
+    Object.keys(this.models)
+      .filter(name => name === 'Setting')
+      .forEach(async name => {
+        console.log('Removing', name)
+        const model = this.models[name]
+        const models = await model.getAll()
+        await Promise.all(models.map(model => model.remove()))
+        console.log('Removed all', name)
+      })
   }
 }

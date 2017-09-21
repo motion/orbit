@@ -272,20 +272,23 @@ export default class BarMain extends React.Component<Props> {
           glow: true,
         }}
         getItem={(result, index) => ({
-          key: result.id,
+          key: `${index}${result.id}`,
           highlight: () => index === paneStore.activeIndex,
           primary: result.title,
           primaryEllipse: !mainStore.hasContent(result),
           children: [
             <UI.Text
               if={result.data && result.data.body}
+              key={0}
               lineHeight={20}
               opacity={0.5}
             >
               {this.getDate(result) + ' · '}
               {(result.data.body && result.data.body.slice(0, 120)) || ''}
             </UI.Text>,
-            <UI.Text if={!result.data}>{this.getDate(result)}</UI.Text>,
+            <UI.Text if={!result.data} key={1}>
+              {this.getDate(result)}
+            </UI.Text>,
           ].filter(Boolean),
           iconAfter: true,
           iconProps: {

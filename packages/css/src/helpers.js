@@ -3,6 +3,24 @@ import type { Color, CSSArray } from './types'
 import colorNames from './colorNames'
 import { CAMEL_TO_SNAKE, SNAKE_TO_CAMEL } from './cssNameMap'
 
+export function hash(thing: string | Object) {
+  let str = thing
+  if (thing instanceof Object) {
+    str = JSON.stringify(thing)
+  }
+  if (typeof str === 'string') {
+    let hash = 5381
+    let i = str.length
+    while (i) {
+      hash = (hash * 33) ^ str.charCodeAt(--i)
+    }
+    /* JavaScript does bitwise operations (like XOR, above) on 32-bit signed
+     * integers. Since we want the results to be always positive, convert the
+     * signed int to an unsigned by doing an unsigned bitshift. */
+    return hash >>> 0
+  }
+}
+
 export function camelToSnake(key: string) {
   return CAMEL_TO_SNAKE[key] || key
 }

@@ -6,12 +6,16 @@ import * as Panes from './panes'
 @view
 export default class BarSetupPane {
   render({ item }) {
-    const integration = CurrentUser[item.data.type]
+    if (!CurrentUser.authorizations) {
+      return null
+    }
+
+    const integration = CurrentUser.authorizations[item.data.type]
     const SettingPane = integration && Panes[item.data.type]
 
     return (
       <setup>
-        <integrate if={!integration}>
+        <integrate>
           <UI.Title size={2}>Authorize</UI.Title>
           <UI.Button
             icon={item.icon}
@@ -21,9 +25,7 @@ export default class BarSetupPane {
           </UI.Button>
         </integrate>
         <settings if={integration && SettingPane}>
-          <UI.Title size={1.5}>
-            {item.data.name} Settings
-          </UI.Title>
+          <UI.Title size={1.5}>{item.data.name} Settings</UI.Title>
           <SettingPane integration={integration} />
         </settings>
       </setup>

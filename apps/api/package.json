@@ -6,10 +6,8 @@
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",
-    "start-nodemon":
-      "nodemon --inspect=0.0.0.0:5858 --verbose --legacy-watch lib",
+    "start-dev": "nodemon --inspect=0.0.0.0:5858 lib",
     "start-watch": "../../bin/build --watch",
-    "start-dev": "npm run start-nodemon",
     "watch": "webpack --watch"
   },
   "nodemonConfig": {
@@ -19,13 +17,10 @@
     "@mcro/black": "^1.2.0",
     "@mcro/models": "^1.2.0",
     "@mcro/passport-slack": "^1.2.0",
-    "apollo-fetch": "^0.6.0",
     "babel-polyfill": "^6.23.0",
     "source-map-support": "^0.4.16",
     "body-parser": "^1.16.1",
     "cors": "^2.8.3",
-    "couchdb-compile": "^1.7.0",
-    "couchdb-ensure": "^1.3.3",
     "express": "^4.15.2",
     "invariant": "^2.2.2",
     "isomorphic-fetch": "^2.2.1",
@@ -41,14 +36,18 @@
     "passport-oauth": "1.0.0",
     "passport-slack-ponycode": "0.0.2",
     "pouchdb-adapter-memory": "^6.3.4",
-    "ratelimit.js": "^1.8.0",
-    "redis": "^2.7.1",
     "rxjs": "^5.4.3",
     "sb-promisify": "^2.0.2",
     "superlogin": "github:colinskow/superlogin",
     "wait-for-port": "^0.0.2",
     "clean-stacktrace": "^1.1.0",
-    "better-stack-traces": "^1.1.0"
+    "http-proxy-middleware": "^0.17.4",
+    "better-stack-traces": "^1.1.0",
+    "express-session": "^1.15.5",
+    "express-pouchdb": "^2.3.7",
+    "pouchdb": "^6.3.4",
+    "pouchdb-adapter-http": "^6.3.4",
+    "pouchdb-express-router": "^0.0.9"
   },
   "devDependencies": {
     "nodemon": "^1.11.0",

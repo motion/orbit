@@ -5,6 +5,9 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'
 import '@mcro/models/lib/user' // start superlogin connect immediately
+import Path from 'path'
+
+export const indexFile = Path.join(__dirname, '..', 'index.html')
 
 if (Constants.IS_PROD) {
   require('./helpers/installProd')
@@ -23,22 +26,12 @@ function splash() {
 
 function main() {
   splash()
-  const App = require('./app').default
-  const app = new App()
-  app.start()
-  window.App = app
-  return app
+  require('./app')
 }
 
-export let App = main()
+main()
 
 // accept hmr
 if (module && module.hot) {
   module.hot.accept(_ => _)
-  module.hot.accept('@mcro/models', () => {
-    if (App) {
-      App.dispose()
-      App = main()
-    }
-  })
 }

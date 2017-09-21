@@ -189,7 +189,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
   }
 
   get showInternalSelection() {
-    if (!this.props.selected) {
+    if (typeof this.props.selected !== 'undefined') {
       return true
     }
     if (this.props.isSelected) {
@@ -226,7 +226,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     )
   }
 
-  getItemProps(index, rowProps, isListItem: boolean) {
+  getItemProps(index: number, rowProps: Object, isListItem: boolean) {
     const {
       onItemMount,
       size,

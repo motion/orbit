@@ -63,6 +63,12 @@ export default class PaneCard {
             getRef={paneStore.setList}
             groupKey={groupKey}
             onSelect={this.onSelect}
+            virtualized={
+              false && {
+                measure: true,
+                ...virtualProps,
+              }
+            }
             itemProps={{
               ...paneStore.itemProps,
               ...itemProps,

@@ -69,7 +69,7 @@ class MultiSelectStore {
   search = ''
   handlers = {}
 
-  start() {
+  willMount() {
     this.attachRef('main', window)
     this.setHighlightIndex(0)
   }

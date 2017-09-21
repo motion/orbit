@@ -1,4 +1,3 @@
-// @flow
 import { ensureJob } from '~/jobs/helpers'
 
 export default class Syncer {
@@ -9,14 +8,13 @@ export default class Syncer {
     this.user = user
   }
 
-  async runSyncer(): Promise<void> {
-    console.log('Running syncer jobs', this.constructor.jobs)
+  async runSyncer() {
     // every so often
     setInterval(this.syncJobs, this.JOBS_CHECK_INTERVAL)
     this.syncJobs()
   }
 
-  async syncJobs(): Promise<void> {
+  async syncJobs() {
     const { type, jobs } = this.constructor
     if (!jobs) {
       return
@@ -27,6 +25,5 @@ export default class Syncer {
       syncers.push(ensureJob(type, action, job))
     }
     await Promise.all(syncers)
-    console.log('Done with sync', type)
   }
 }

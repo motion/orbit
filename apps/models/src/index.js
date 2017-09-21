@@ -1,7 +1,6 @@
 // @flow
 import RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
-import pREPL from 'pouchdb-replication'
 import pHTTP from 'pouchdb-adapter-http'
 // import pValidate from 'pouchdb-validation'
 // import pSearch from 'pouchdb-quick-search'
@@ -29,11 +28,11 @@ export const Event = EventInstance
 // ⭐️ DONT FORGET TO ADD HERE TOO:
 
 export const Models = {
-  Thing,
-  User,
-  Job,
-  Setting,
-  Event,
+  Thing: ThingInstance,
+  User: UserInstance,
+  Job: JobInstance,
+  Setting: SettingInstance,
+  Event: EventInstance,
 }
 
 // ⭐️ YOU'RE ALL SET
@@ -55,8 +54,8 @@ export type ModelsObject = {
 export type DatabaseConfig = {|
   name: string,
   password: string,
-  couchUrl: string,
-  couchHost: string,
+  remoteUrl: string,
+  remoteHost: string,
   adapter: Function,
   adapterName: string,
 |}
@@ -80,18 +79,14 @@ export default class Database {
     this.modelsConfig = modelsConfig
 
     // hmr fix
-    if (!RxDB.PouchDB.replicate) {
-      if (Constants.IS_BROWSER) {
-        RxDB.QueryChangeDetector.enable()
-      }
-      RxDB.plugin(this.databaseConfig.adapter)
-      RxDB.plugin(pREPL)
-      // RxDB.plugin(pValidate)
-      // RxDB.plugin(pSearch)
-      RxDB.plugin(pHTTP)
-      PouchDB.plugin(this.databaseConfig.adapter)
-      PouchDB.plugin(pHTTP)
+    if (Constants.IS_BROWSER) {
+      RxDB.QueryChangeDetector.enable()
     }
+    console.log('Create RxDB with adapter', this.databaseConfig.adapterName)
+    RxDB.plugin(this.databaseConfig.adapter)
+    RxDB.plugin(pHTTP)
+    PouchDB.plugin(this.databaseConfig.adapter)
+    PouchDB.plugin(pHTTP)
   }
 
   start = async ({ options, modelOptions }: StartOptions = {}) => {
@@ -100,7 +95,7 @@ export default class Database {
       adapter: this.databaseConfig.adapterName,
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
-      multiInstance: true,
+      multiInstance: false,
       withCredentials: false,
       ...options,
     })
@@ -109,13 +104,14 @@ export default class Database {
     this.connected = true
   }
 
-  dispose = () => {
+  dispose = async () => {
     for (const name of Object.keys(this.models)) {
       const model = this.models[name]
       if (model) {
-        model.dispose()
+        await model.dispose()
       }
     }
+    await this.database.destroy()
   }
 
   attachModels = async () => {
@@ -132,27 +128,33 @@ export default class Database {
         )
       }
 
-      connections.push(
-        model.connect(this.database, {
-          pouch: PouchDB,
-          // remote: `${this.databaseConfig.couchUrl}/${model.title}/`,
-          pouchSettings: {
+      let settings = {
+        pouch: PouchDB,
+        pouchSettings: {
+          skip_setup: true,
+          skipSetup: true,
+        },
+        ...this.modelOptions,
+      }
+
+      if (this.databaseConfig.remoteUrl) {
+        settings = {
+          remote: `${this.databaseConfig.remoteUrl}/${model.title}/`,
+          remoteOptions: {
             skip_setup: true,
             skipSetup: true,
+            adapter: this.databaseConfig.adapterName,
+            ajax: {
+              headers: {
+                'X-Token': `${User.name}*|*${User.token}`,
+              },
+            },
           },
-          // remoteOptions: {
-          //   skip_setup: true,
-          //   skipSetup: true,
-          //   adapter: this.databaseConfig.adapterName,
-          //   ajax: {
-          //     headers: {
-          //       'X-Token': `${User.name}*|*${User.token}`,
-          //     },
-          //   },
-          // },
-          ...this.modelOptions,
-        })
-      )
+          ...settings,
+        }
+      }
+
+      connections.push(model.connect(this.database, settings))
     }
 
     return await Promise.all(connections)

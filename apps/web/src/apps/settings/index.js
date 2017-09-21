@@ -6,36 +6,36 @@ import Setup from './setup'
 
 @view({
   store: class SettingsStore {
-    activeItem = 0
+    activeItem = null
   },
 })
 export default class SettingsPage {
   render({ store }) {
     const itemProps = {
-      size: 1.2,
-      glow: false,
-      fontSize: 26,
-      padding: [0, 10],
+      size: 1.1,
     }
 
     return (
-      <settings>
-        <header>
-          <UI.Title size={3}>Settings</UI.Title>
-        </header>
+      <UI.Theme name="light">
+        <settings>
+          <header>
+            <UI.Title size={2}>Settings</UI.Title>
+          </header>
 
-        <content>
-          <sidebar>
-            <Integrations
-              onSelect={store.ref('activeItem').set}
-              itemProps={itemProps}
-            />
-          </sidebar>
-          <main>
-            <Setup if={store.activeItem} item={store.activeItem} />
-          </main>
-        </content>
-      </settings>
+          <content>
+            <sidebar>
+              <Integrations
+                onSelect={store.ref('activeItem').set}
+                itemProps={itemProps}
+                settingsStore={store}
+              />
+            </sidebar>
+            <main>
+              <Setup if={store.activeItem} item={store.activeItem} />
+            </main>
+          </content>
+        </settings>
+      </UI.Theme>
     )
   }
 

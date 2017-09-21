@@ -6,12 +6,15 @@ import ColorBlock from './colorBlock'
 @view.attach('millerStore')
 @view
 export default class TaskHeader {
-  render({
-    millerStore,
-    data: { title },
-    store: { labels, assigned },
-    isActive,
-  }) {
+  render(props) {
+    const {
+      millerStore,
+      data: { title, number },
+      paneStore: { data: { parentId, orgName } },
+      store: { labels, assigned },
+      isActive,
+    } = this.props
+
     const minSize = 1.4
     const maxSize = 2.5
     const titleSize = 3.4 - title.length * 0.05
@@ -33,9 +36,14 @@ export default class TaskHeader {
         </meta>
         <below>
           <badges>
-            <UI.Text opacity={0.7} size={1.2} $id>
-              #323
-            </UI.Text>
+            <left $$row>
+              <UI.Text opacity={0.7} size={1.2} $id>
+                #{number + ''}
+              </UI.Text>
+              <UI.Text opacity={1} size={1} $id>
+                {orgName}/{parentId}
+              </UI.Text>
+            </left>
             {labels.map(label => (
               <UI.Button
                 chromeless

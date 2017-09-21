@@ -46,8 +46,7 @@
     "sherlockjs": "*",
     "worker-pouch": "^2.0.0",
     "moment": "*",
-    "victory": "*",
-    "electron-oauth2": "*"
+    "victory": "0.22.2"
   },
   "devDependencies": {
     "typescript": "^2.5.2",

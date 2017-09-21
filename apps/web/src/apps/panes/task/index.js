@@ -28,6 +28,7 @@ export default class TaskPane {
         <El
           data={data}
           store={store}
+          paneStore={paneStore}
           key={index}
           isActive={index === paneStore.activeIndex}
         />

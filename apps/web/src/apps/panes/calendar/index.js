@@ -254,9 +254,7 @@ class Calendar {
                     >
                       <UI.Text>{itemDay + ''}</UI.Text>
                       <dots $$row>
-                        {getActiveDots(
-                          itemMonth,
-                          itemDay
+                        {(getActiveDots(itemMonth, itemDay) || []
                         ).map((background, index) => (
                           <dot key={index} css={{ background }} />
                         ))}
@@ -482,7 +480,6 @@ class CalendarPaneStore {
   }
 
   onSelect = ({ day, month }) => {
-    console.log('selecting', day, month)
     this.activeDay = day
     this.activeMonth = month
   }

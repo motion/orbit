@@ -20,7 +20,7 @@ const nameToUser = {
   steel: 'steelbrain',
 }
 
-class BarTeamStore {
+class SetStore {
   props: PaneProps
   isOpen = false
   activeType = 'all'
@@ -37,10 +37,13 @@ class BarTeamStore {
   start() {
     this.currentAuthor = nameToUser[this.props.paneStore.data.person]
 
+    console.log('in start')
+
     this.react(
       () => this.props.paneStore.data.service,
       () => {
         const { service } = this.props.paneStore.data
+        console.log('service is', service)
         this.activeType = service || 'all'
       },
       true
@@ -70,12 +73,11 @@ class BarTeamStore {
   }
 }
 
-type Props = PaneProps & { store: BarTeamStore }
+type Props = PaneProps & { store: SetStore }
 
 @view
 class Events {
   render({ store }) {
-    console.log('rendering events')
     const active = (store.events || []).filter(event => {
       if (event.author !== store.currentAuthor) return false
 
@@ -129,9 +131,9 @@ class ItemsSection {
 }
 
 @view({
-  store: BarTeamStore,
+  store: SetStore,
 })
-export default class BarTeam extends Component<Props> {
+export default class SetView extends Component<Props> {
   render({ store, paneStore }: Props) {
     // return <h4>team page</h4>
     if (!store.results.length) {

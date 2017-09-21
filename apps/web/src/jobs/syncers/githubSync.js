@@ -275,6 +275,7 @@ export default class GithubSync extends Syncer {
                               login
                             }
                             createdAt
+                            id
                             body
                           }
                         }

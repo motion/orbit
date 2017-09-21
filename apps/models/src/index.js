@@ -80,7 +80,10 @@ export default class Database {
 
     // hmr fix
     if (Constants.IS_BROWSER) {
+      const oglog = console.log
+      console.log = _ => _
       RxDB.QueryChangeDetector.enable()
+      console.log = oglog
     }
     RxDB.plugin(this.databaseConfig.adapter)
     RxDB.plugin(pHTTP)

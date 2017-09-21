@@ -40,7 +40,8 @@ export default class Jobs {
             this.syncers[name] = Syncer
           }
         }
-      }
+      },
+      true
     )
   }
 

@@ -24,14 +24,21 @@ export default class Syncer {
 
   start() {
     // every so often
-    this.jobWatcher = setInterval(this.syncJobs, this.JOBS_CHECK_INTERVAL)
-    this.syncJobs()
+    this.jobWatcher = setInterval(
+      () => this.check(false),
+      this.JOBS_CHECK_INTERVAL
+    )
+    this.check(false)
   }
 
   async run(action: string) {
     this.ensureSetting()
     const syncer = new this.syncers[action](this.setting, this.token)
     await syncer.run()
+  }
+
+  async runAll() {
+    await Promise.all(Object.keys(this.syncers).map(x => this.run(x)))
   }
 
   get setting(): ?Setting {
@@ -42,7 +49,7 @@ export default class Syncer {
     return this.user.token(this.type)
   }
 
-  async syncJobs() {
+  async check(loud: boolean = true) {
     const { type, jobs } = this
     if (!jobs) {
       return
@@ -50,7 +57,7 @@ export default class Syncer {
     const syncers = []
     for (const action of Object.keys(jobs)) {
       const job = jobs[action]
-      syncers.push(ensureJob(type, action, job))
+      syncers.push(ensureJob(type, action, job, loud))
     }
     await Promise.all(syncers)
   }

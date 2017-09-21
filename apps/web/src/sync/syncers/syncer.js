@@ -14,7 +14,6 @@ export default class Syncer {
 
   // internal
   JOBS_CHECK_INTERVAL = 1000 * 10 // 10 seconds
-  jobWatcher: ?number
   user: User
 
   constructor({ user }: SyncOptions) {
@@ -24,16 +23,14 @@ export default class Syncer {
 
   start() {
     // every so often
-    this.jobWatcher = setInterval(
-      () => this.check(false),
-      this.JOBS_CHECK_INTERVAL
-    )
+    this.setInterval(() => this.check(false), this.JOBS_CHECK_INTERVAL)
     this.check(false)
   }
 
   async run(action: string) {
     this.ensureSetting()
-    const syncer = new this.syncers[action](this.setting, this.token)
+    const Syncer = this.syncers[action]
+    const syncer = new Syncer(this.setting, this.token)
     await syncer.run()
   }
 
@@ -65,12 +62,6 @@ export default class Syncer {
   ensureSetting() {
     if (!this.setting) {
       throw new Error('No setting found for ' + this.type)
-    }
-  }
-
-  dispose() {
-    if (this.jobWatcher) {
-      clearInterval(this.jobWatcher)
     }
   }
 }

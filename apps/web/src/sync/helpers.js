@@ -39,7 +39,7 @@ export async function ensureJob(
           status: Job.status.FAILED,
           lastError: { message: 'stale' },
         })
-        console.log('Stale job removed', lastPending.id)
+        console.log('Stale job removed', type)
       } catch (e) {
         if (e.name !== 'conflict') {
           console.log(e)

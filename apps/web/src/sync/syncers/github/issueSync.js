@@ -5,9 +5,10 @@ import { omit, flatten } from 'lodash'
 
 export default class GithubIssueSync {
   setting: Setting
-
-  constructor(setting: Setting) {
+  token: string
+  constructor(setting: Setting, token: string) {
     this.setting = setting
+    this.token = token
   }
 
   run = async () => {

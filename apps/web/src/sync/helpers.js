@@ -1,6 +1,7 @@
 // @flow
-import typeof { Job } from '@mcro/models'
+import { Job } from '@mcro/models'
 
+const SECONDS_UNTIL_JOB_STALE = 60 * 10
 const UNITS_SECOND = 1000
 
 export const olderThanSeconds = (date: string, seconds: number) => {
@@ -9,10 +10,6 @@ export const olderThanSeconds = (date: string, seconds: number) => {
   const answer = timeDifference > upperBound
   return answer
 }
-
-// 10 minutes
-// TODO bump this up likely, its aggressive for dev mode
-export const SECONDS_UNTIL_JOB_IS_STALE = 60 * 10
 
 export async function ensureJob(
   type: string,
@@ -26,8 +23,8 @@ export async function ensureJob(
     console.log(
       `Job already running for ${type} ${action}, ${secondsAgo} seconds ago`
     )
-    if (secondsAgo > SECONDS_UNTIL_JOB_IS_STALE) {
-      console.log('Stale job, removing...', lastPending.id)
+    if (secondsAgo > SECONDS_UNTIL_JOB_STALE) {
+      console.log('Stale job, removing...', lastPending)
       await lastPending.remove()
     } else {
       return

@@ -4,11 +4,12 @@ import { flatten } from 'lodash'
 
 export default class GithubFeedSync {
   setting: Setting
-
+  token: string
   lastSyncs = {}
 
-  constructor(setting: Setting) {
+  constructor(setting: Setting, token: string) {
     this.setting = setting
+    this.token = token
   }
 
   run = async () => {
@@ -205,7 +206,6 @@ export default class GithubFeedSync {
     if (requestHeaders) {
       opts.headers = requestHeaders
     }
-    console.log('Fetching', uri, opts)
     const res = await fetch(uri, opts)
 
     // update lastSyncs
@@ -220,7 +220,6 @@ export default class GithubFeedSync {
 
     // if not modified return null
     if (res.status === 304) {
-      console.log('Not modified', path)
       return null
     }
 

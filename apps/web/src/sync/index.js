@@ -131,7 +131,7 @@ export default class Sync {
 
     if (syncer) {
       try {
-        await syncer.run(job)
+        await syncer.run(job.action)
       } catch (error) {
         console.log('error running syncer', error)
         await job.update({

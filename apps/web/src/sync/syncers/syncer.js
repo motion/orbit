@@ -1,6 +1,6 @@
 // @flow
 import { ensureJob } from '../helpers'
-import type { Job, User, Setting } from '@mcro/models'
+import type { User, Setting } from '@mcro/models'
 
 type SyncOptions = {
   user: User,
@@ -28,10 +28,9 @@ export default class Syncer {
     this.syncJobs()
   }
 
-  async run(job: Job) {
+  async run(action: string) {
     this.ensureSetting()
-    this.ensureJob(job)
-    const syncer = new this.syncers[job.action](this.setting)
+    const syncer = new this.syncers[action](this.setting, this.token)
     await syncer.run()
   }
 
@@ -59,15 +58,6 @@ export default class Syncer {
   ensureSetting() {
     if (!this.setting) {
       throw new Error('No setting found for ' + this.type)
-    }
-  }
-
-  ensureJob(job: ?Job) {
-    if (!job) {
-      throw new Error('No job')
-    }
-    if (!job.action) {
-      throw new Error(`No action found on job ${job.id}`)
     }
   }
 

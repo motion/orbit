@@ -1,7 +1,6 @@
 // @flow
 import { store } from '@mcro/black/store'
-import { CurrentUser, Thing, Event, Job } from '~/app'
-import typeof { Setting } from '@mcro/models'
+import { Thing, Event, Job } from '~/app'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
 import Syncer from './syncer'
@@ -27,12 +26,9 @@ export default class GithubSync extends Syncer {
     }
   }
 
-  validateSetting = () => {
-    if (!this.setting) {
-      throw new Error('No setting found for github')
-    }
+  validateSetting() {
+    this.ensureSetting()
     // ensures properties on setting
-    // TODO move this into GithubSetting model
     if (!this.setting.values.lastSyncs) {
       this.setting.merge({
         values: {
@@ -43,32 +39,23 @@ export default class GithubSync extends Syncer {
   }
 
   runJob = async (action: string) => {
-    console.log('Github running', action)
-    try {
-      switch (action) {
-        case 'issues':
-          return await this.runIssues()
-        case 'feed':
-          return await this.runFeed()
-      }
-    } catch (err) {
-      console.error(err)
+    switch (action) {
+      case 'issues':
+        return await this.runIssues()
+      case 'feed':
+        return await this.runFeed()
     }
   }
 
   runFeed = async () => {
-    if (!this.setting) {
-      throw new Error('No setting')
-    }
+    this.ensureSetting()
     if (this.setting.activeOrgs) {
       await Promise.all(this.setting.activeOrgs.map(this.syncFeed))
     }
   }
 
   writeLastSyncs = async () => {
-    if (!this.setting) {
-      throw new Error('No setting')
-    }
+    this.ensureSetting()
     const { lastSyncs } = this
     await this.setting.mergeUpdate({
       values: {

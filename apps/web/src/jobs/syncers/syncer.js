@@ -1,6 +1,6 @@
 // @flow
 import { ensureJob } from '~/jobs/helpers'
-import typeof { User } from '@mcro/models'
+import type { User, Setting } from '@mcro/models'
 
 type SyncOptions = {
   user: User,
@@ -11,13 +11,15 @@ export default class Syncer {
   static jobs: Object
 
   JOBS_CHECK_INTERVAL = 1000 * 10 // 10 seconds
+  jobWatcher: ?NodeJS.Timer
+  user: User
 
   constructor({ user }: SyncOptions) {
     this.runSyncer()
     this.user = user
   }
 
-  get type() {
+  get type(): string {
     return this.constructor.type
   }
 
@@ -29,9 +31,9 @@ export default class Syncer {
     return this.user.token(this.type)
   }
 
-  async runSyncer() {
+  runSyncer() {
     // every so often
-    setInterval(this.syncJobs, this.JOBS_CHECK_INTERVAL)
+    this.jobWatcher = setInterval(this.syncJobs, this.JOBS_CHECK_INTERVAL)
     this.syncJobs()
   }
 
@@ -48,5 +50,15 @@ export default class Syncer {
     await Promise.all(syncers)
   }
 
-  dispose() {}
+  ensureSetting() {
+    if (!this.setting) {
+      throw new Error('No setting found for ' + this.type)
+    }
+  }
+
+  dispose() {
+    if (this.jobWatcher) {
+      clearInterval(this.jobWatcher)
+    }
+  }
 }

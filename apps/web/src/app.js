@@ -42,9 +42,16 @@ class App {
   }
 
   async start() {
+    this.syncSettings()
     await this.store.start()
     this.jobs = new Jobs()
     this.render()
+  }
+
+  async syncSettings() {
+    await Setting.find().sync()
+    const all = await Setting.find()
+    console.log('got settings', all ? all.map(x => x.toJSON()) : all)
   }
 
   dispose() {

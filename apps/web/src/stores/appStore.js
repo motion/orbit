@@ -61,7 +61,7 @@ export default class AppStore {
         debug: true,
         autoSync: {
           push: true,
-          pull: true,
+          pull: false,
         },
         asyncFirstSync: true,
       },

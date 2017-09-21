@@ -1,26 +1,38 @@
 // @flow
-import { ensureJob } from '~/jobs/helpers'
-import type { User, Setting } from '@mcro/models'
+import { ensureJob } from '../helpers'
+import type { Job, User, Setting } from '@mcro/models'
 
 type SyncOptions = {
   user: User,
 }
 
 export default class Syncer {
-  static type: string
-  static jobs: Object
+  // external interface, must set:
+  syncers: Object<string, Class<any>>
+  type: string
+  jobs: Object
 
+  // internal
   JOBS_CHECK_INTERVAL = 1000 * 10 // 10 seconds
-  jobWatcher: ?NodeJS.Timer
+  jobWatcher: ?number
   user: User
 
   constructor({ user }: SyncOptions) {
-    this.runSyncer()
+    this.start()
     this.user = user
   }
 
-  get type(): string {
-    return this.constructor.type
+  start() {
+    // every so often
+    this.jobWatcher = setInterval(this.syncJobs, this.JOBS_CHECK_INTERVAL)
+    this.syncJobs()
+  }
+
+  async run(job: Job) {
+    this.ensureSetting()
+    this.ensureJob(job)
+    const syncer = new this.syncers[job.action](this.setting)
+    await syncer.run()
   }
 
   get setting(): ?Setting {
@@ -31,14 +43,8 @@ export default class Syncer {
     return this.user.token(this.type)
   }
 
-  runSyncer() {
-    // every so often
-    this.jobWatcher = setInterval(this.syncJobs, this.JOBS_CHECK_INTERVAL)
-    this.syncJobs()
-  }
-
   async syncJobs() {
-    const { type, jobs } = this.constructor
+    const { type, jobs } = this
     if (!jobs) {
       return
     }
@@ -53,6 +59,15 @@ export default class Syncer {
   ensureSetting() {
     if (!this.setting) {
       throw new Error('No setting found for ' + this.type)
+    }
+  }
+
+  ensureJob(job: ?Job) {
+    if (!job) {
+      throw new Error('No job')
+    }
+    if (!job.action) {
+      throw new Error(`No action found on job ${job.id}`)
     }
   }
 

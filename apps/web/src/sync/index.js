@@ -16,7 +16,7 @@ function getRxError(error: Error) {
 }
 
 @store
-export default class Jobs {
+export default class Sync {
   locks: Set<string> = new Set()
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
   syncers: ?Object = null

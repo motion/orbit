@@ -5,7 +5,7 @@ import { ThemeProvide } from '@mcro/ui'
 import Themes from './themes'
 import Root from './views/root'
 import Layout from './views/layout'
-import Jobs from './jobs'
+import Sync from './sync'
 import { Models } from '@mcro/models'
 import * as Constants from '~/constants'
 import AppStore from './stores/appStore'
@@ -23,7 +23,7 @@ export const Event = Models.Event
 export const CurrentUser = CurrentUser_
 
 class App {
-  jobs: Jobs
+  sync: Sync
   store: AppStore
 
   constructor(quiet?: boolean) {
@@ -41,10 +41,10 @@ class App {
     this.start(quiet)
   }
 
-  async start(quiet: boolean) {
+  async start(quiet?: boolean) {
     this.syncSettings()
     await this.store.start(quiet)
-    this.jobs = new Jobs()
+    this.sync = new Sync()
     this.render()
   }
 
@@ -54,8 +54,8 @@ class App {
 
   async dispose() {
     await this.store.dispose()
-    if (this.jobs) {
-      this.jobs.dispose()
+    if (this.sync) {
+      this.sync.dispose()
     }
   }
 

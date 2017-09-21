@@ -41,6 +41,13 @@ export type Props = {
   updateChildren?: boolean,
 }
 
+type VirtualItemProps = {
+  index: number,
+  key: string,
+  style: Object,
+  parent: any,
+}
+
 @parentSize('virtualized')
 @view.ui
 class List extends React.PureComponent<Props, { selected: number }> {
@@ -198,17 +205,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return this.lastSelectionDate > this.lastDidReceivePropsDate
   }
 
-  rowRenderer = ({
-    index,
-    key,
-    style,
-    parent,
-  }: {
-    index: number,
-    key: string,
-    style: Object,
-    parent: any,
-  }) => {
+  rowRenderer = ({ index, key, style, parent }: VirtualItemProps) => {
     if (!this.children || !this.children[index]) {
       console.log('no child', index, this)
       return null
@@ -254,6 +251,9 @@ class List extends React.PureComponent<Props, { selected: number }> {
           }),
       ...itemProps,
     }
+    // fallback key
+    props.key = props.key || index
+    // handle click
     if (onSelect || controlled) {
       const ogClick = props.onClick
       props.onClick = e => {
@@ -263,6 +263,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
         }
       }
     }
+    // highlight logic
     if (controlled && this.showInternalSelection) {
       // set highlight if necessary
       props.highlight = index === this.state.selected

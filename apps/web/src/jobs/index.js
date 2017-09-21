@@ -1,7 +1,7 @@
 // @flow
 import { store, watch } from '@mcro/black/store'
 import * as Syncers from './syncers'
-import { Job, User } from '@mcro/models'
+import { Job, CurrentUser } from '~/app'
 
 function getRxError(error: Error) {
   const { message, stack } = error
@@ -18,7 +18,6 @@ function getRxError(error: Error) {
 @store
 export default class Jobs {
   locks: Set<string> = new Set()
-  @watch user: ?User = (() => User.findOne(): any)
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
   syncers: ?Object = null
 
@@ -33,7 +32,7 @@ export default class Jobs {
         if (!this.syncers) {
           this.syncers = {}
           for (const name of Object.keys(Syncers)) {
-            const Syncer = new Syncers[name](this)
+            const Syncer = new Syncers[name]({ user: CurrentUser })
             if (Syncer.start) {
               await Syncer.start()
             }
@@ -43,6 +42,10 @@ export default class Jobs {
       },
       true
     )
+  }
+
+  get user() {
+    return CurrentUser
   }
 
   get github(): ?Class<any> {

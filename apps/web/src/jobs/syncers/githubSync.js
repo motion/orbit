@@ -18,14 +18,6 @@ export default class GithubSync extends Syncer {
 
   lastSyncs = {}
 
-  get setting(): ?Setting {
-    return CurrentUser.setting.github
-  }
-
-  get token(): ?string {
-    return CurrentUser.token('github')
-  }
-
   run = async (job: Job) => {
     this.validateSetting()
     if (job.action) {

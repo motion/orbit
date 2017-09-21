@@ -8,14 +8,14 @@ type SyncOptions = {
 
 export default class Syncer {
   // external interface, must set:
-  syncers: Object<string, Class<any>>
-  type: string
-  jobs: Object
+  static syncers: Object<string, Class<any>>
+  static type: string
+  static jobs: Object
 
   // internal
   JOBS_CHECK_INTERVAL = 1000 * 10 // 10 seconds
   user: User
-  activeSyncers = {}
+  syncers = {}
   jobWatcher: ?number
 
   constructor({ user }: SyncOptions) {
@@ -24,11 +24,14 @@ export default class Syncer {
   }
 
   start() {
+    const { syncers } = this.constructor
+
     // setup syncers
-    if (this.syncers) {
-      this.activeSyncers = {}
-      for (const key of Object.keys(this.syncers)) {
-        this.activeSyncers[key] = new Syncer(this.setting, this.token)
+    if (syncers) {
+      this.syncers = {}
+      for (const key of Object.keys(syncers)) {
+        const Syncer = syncers[key]
+        this.syncers[key] = new Syncer(this.setting, this.token)
       }
     }
 
@@ -42,11 +45,19 @@ export default class Syncer {
 
   async run(action: string) {
     this.ensureSetting()
-    await this.activeSyncers[action].run()
+    await this.syncers[action].run()
   }
 
   async runAll() {
     await Promise.all(Object.keys(this.syncers).map(x => this.run(x)))
+  }
+
+  get type(): string {
+    return this.constructor.type
+  }
+
+  get jobs(): string {
+    return this.constructor.jobs
   }
 
   get setting(): ?Setting {

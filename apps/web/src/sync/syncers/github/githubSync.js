@@ -6,12 +6,12 @@ import GithubIssueSync from './issueSync'
 
 @store
 export default class GithubSync extends Syncer {
-  type = 'github'
-  jobs = {
+  static type = 'github'
+  static jobs = {
     issues: { every: 60 * 60 * 6 },
     feed: { every: 60 },
   }
-  syncers = {
+  static syncers = {
     issues: GithubIssueSync,
     feed: GithubFeedSync,
   }

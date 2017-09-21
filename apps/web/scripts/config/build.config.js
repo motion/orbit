@@ -58,6 +58,7 @@ module.exports = Object.assign(config, {
       paths.appIndexJs,
     ]),
   },
+
   output: {
     path: paths.appBuild,
     pathinfo: true,

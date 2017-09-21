@@ -87,12 +87,12 @@ export default {
       private: ['documents'],
     },
   },
-  session: {
-    adapter: 'redis',
-    redis: {
-      url: Constants.REDIS_URL,
-    },
-  },
+  // session: {
+  //   adapter: 'redis',
+  //   redis: {
+  //     url: Constants.REDIS_URL,
+  //   },
+  // },
   //  emails: {
   //   // Customize the templates for the emails that SuperLogin sends out
   //   confirmEmail: {
@@ -108,37 +108,6 @@ export default {
   //     format: 'text'
   //   }
   // },
-
-  providers: {
-    slack: {
-      callbackURL: 'http://api.jot.dev/auth/slack/callback',
-      credentials: {
-        callbackURL: 'http://api.jot.dev/auth/slack/callback',
-        clientID: '19222037265.219986189088',
-        clientSecret: '281011e25d0c473136b4caa5807ada6d',
-      },
-      options: {
-        callbackURL: 'http://api.jot.dev/auth/slack/callback',
-        scope: [
-          'identity.basic',
-          'identity.email',
-          'identity.avatar',
-          'identity.team',
-          //'users.profile:read',
-          //'usergroups:read',
-          //'users:read',
-          //'channels:read',
-        ],
-      },
-    },
-    github: {
-      credentials: {
-        clientID: '9afb7a8f8758557ca884',
-        clientSecret: 'eb53a07f613eb07f4fa4db96845bae813ec2c01f',
-        scope: ['user:email', 'notifications', 'repo', 'read:org'],
-      },
-    },
-  },
 
   // providers: {
   // facebook: {

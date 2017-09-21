@@ -1,8 +1,9 @@
 // @flow
+import typeof { Job } from '@mcro/models'
 
 const UNITS_SECOND = 1000
 
-export const olderThanSeconds = (date, seconds) => {
+export const olderThanSeconds = (date: string, seconds: number) => {
   const upperBound = seconds * UNITS_SECOND
   const timeDifference = Date.now() - Date.parse(date)
   const answer = timeDifference > upperBound
@@ -23,7 +24,7 @@ export async function ensureJob(
     const secondsAgo =
       (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
     console.log(
-      `Pending job running for ${type} ${action}, ${secondsAgo} seconds ago`
+      `Job already running for ${type} ${action}, ${secondsAgo} seconds ago`
     )
     if (secondsAgo > SECONDS_UNTIL_JOB_IS_STALE) {
       console.log('Stale job, removing...', lastPending.id)
@@ -40,7 +41,6 @@ export async function ensureJob(
   const ago = Math.round(
     (Date.now() - Date.parse(lastCompleted.updatedAt)) / UNITS_SECOND
   )
-  console.log(`${type}.${action} last ran ${ago} seconds ago`)
   if (olderThanSeconds(lastCompleted.updatedAt, options.every)) {
     return await createJob()
   }

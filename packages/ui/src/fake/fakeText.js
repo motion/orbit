@@ -7,7 +7,7 @@ export default class FakeText extends React.PureComponent {
   static defaultProps = {
     minWidth: 40,
     maxWidth: 100,
-    lineHeight: 20,
+    lineHeight: 30,
     lines: 1,
   }
 

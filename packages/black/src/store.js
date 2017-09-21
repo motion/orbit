@@ -23,13 +23,13 @@ export const storeOptions = {
     if (store.automagic) {
       store.automagic()
     }
-    if (store.start) {
-      store.start.call(store, props)
+    if (store.willMount) {
+      store.willMount.call(store, props)
     }
   },
   onStoreUnmount(store: StoreClass) {
-    if (store.stop) {
-      store.stop.call(store)
+    if (store.willUnmount) {
+      store.willUnmount.call(store)
     }
     store.subscriptions.dispose()
   },

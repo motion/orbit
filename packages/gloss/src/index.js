@@ -3,7 +3,6 @@ import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import JSS from './stylesheet'
 import * as Helpers_ from '@mcro/css'
-import hash from 'hash-sum'
 
 // exports
 import ThemeProvide_ from './components/themeProvide'
@@ -22,6 +21,8 @@ export type Options = {
   toColor?: Function,
   isColor?: Function,
 }
+
+const { hash } = Helpers
 
 const DEFAULT_OPTS = {
   themeKey: 'theme',

@@ -17,6 +17,7 @@ macro:
       - jira
   - teams:
     - onboarding process
+      -
     - figuring who is who across integrations
     - feeds on a person-basis
   - search:

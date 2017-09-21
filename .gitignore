@@ -2,6 +2,7 @@ node_modules
 lib
 dist
 *.log
+log.txt
 .DS_Store
 app_data
 shrinkwrap.yaml
@@ -14,6 +15,17 @@ apps/web/build
 apps/api/build
 apps/electron/dist
 apps/electron/build
+
+# until we can get pouch-server to cooperate
+apps/api/events
+apps/api/jobs
+apps/api/settings
+apps/api/things
+apps/api/users
+apps/api/_replicator
+apps/api/_users
+apps/api/config.json
+apps/api/pouch__all_dbs__
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

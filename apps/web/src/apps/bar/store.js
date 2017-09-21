@@ -16,7 +16,7 @@ export default class BarStore {
     this._millerStore = val
   }
 
-  start() {
+  willMount() {
     this.attachTrap('window', window)
 
     let lastActiveCol = null

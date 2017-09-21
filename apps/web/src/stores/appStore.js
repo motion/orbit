@@ -30,8 +30,8 @@ export default class AppStore {
     views: {},
   }
   mountedVersion = 0
-  stores = null
-  views = null
+  stores: ?Object = null
+  views: ?Object = null
   serviceObjects: ?Object = null
 
   constructor({ config, models, services }: Options) {
@@ -59,11 +59,15 @@ export default class AppStore {
     await this.database.start({
       modelOptions: {
         debug: true,
-        // autoSync: true,
-        // asyncFirstSync: true,
+        autoSync: {
+          push: true,
+          pull: false,
+        },
+        asyncFirstSync: true,
       },
     })
     this.connected = true
+    this.setupServices()
     this.catchErrors()
     this.trackMounts()
     if (!quiet) {
@@ -72,15 +76,16 @@ export default class AppStore {
     this.started = true
   }
 
-  get services(): ?Object {
-    if (!this.serviceObjects) {
-      return null
+  setupServices() {
+    if (!CurrentUser.user) {
+      throw new Error('No way')
     }
-    const services = {}
+    this.services = {}
     for (const serviceName of Object.keys(this.serviceObjects)) {
-      services[serviceName] = new this.serviceObjects[serviceName](CurrentUser)
+      this.services[serviceName] = new this.serviceObjects[serviceName](
+        CurrentUser
+      )
     }
-    return services
   }
 
   dispose = () => {

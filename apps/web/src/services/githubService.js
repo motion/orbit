@@ -5,21 +5,44 @@ import { CurrentUser } from '~/app'
 
 @store
 export default class GithubService {
-  get user(): CurrentUser {
-    return CurrentUser
-  }
+  github = null
 
   get setting(): ?string {
-    return this.user.setting.github
+    return CurrentUser.setting.github
+  }
+
+  constructor() {
+    this.react(
+      () => (CurrentUser.user && CurrentUser.user.authorizations) || {},
+      ({ github }) => {
+        if (github && !this.github) {
+          this.github = new Octokat({
+            token: github.token,
+          })
+        }
+      },
+      true
+    )
   }
 
   @watch
-  orgs = () => this.setting && this.github && this.github.user.orgs.fetchAll()
+  orgs = async () => {
+    if (!this.setting || !this.github) {
+      return null
+    }
+    const orgs = await this.github.user.orgs.fetchAll()
+    if (orgs.message) {
+      console.error('orgs.message', orgs.message)
+      return null
+    }
+    return orgs
+  }
 
   @watch
   allRepos = () =>
     this.github &&
     this.setting &&
+    this.setting.activeOrgs &&
     Promise.all(
       this.setting.activeOrgs.map(org =>
         this.github
@@ -39,15 +62,4 @@ export default class GithubService {
       }),
       {}
     )
-
-  @watch
-  github = () =>
-    this.token &&
-    new Octokat({
-      token: this.token,
-    })
-
-  get token(): ?string {
-    return (this.user.github && this.user.github.auth.accessToken) || null
-  }
 }

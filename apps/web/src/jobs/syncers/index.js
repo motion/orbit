@@ -1,3 +1,3 @@
 // map job.type <=> JobModel
 
-export github from './github'
+export github from './githubSync'

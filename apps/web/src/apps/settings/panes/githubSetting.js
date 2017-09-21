@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
@@ -11,8 +12,12 @@ export default class GithubSetting {
       return null
     }
 
-    const githubSettings = CurrentUser.setting.github
     const { Github } = App.services
+
+    if (Github.orgs && Github.orgs.message) {
+      console.warn('bad orgs')
+      return null
+    }
 
     return (
       <content>
@@ -22,11 +27,9 @@ export default class GithubSetting {
         >
           <UI.Icon size={40} name="loader_dots" opacity={0.5} />
         </loading>
-
-        <settings if={githubSettings}>
-          orgs selected: {JSON.stringify(githubSettings.values.orgs)}
+        <settings if={Github.setting}>
+          orgs selected: {JSON.stringify(Github.setting.values.orgs)}
         </settings>
-
         <UI.Form if={Github.orgs && Github.setting}>
           {Github.orgs.map(org => {
             const repos = Github.repos && Github.repos[org.id]
@@ -43,14 +46,13 @@ export default class GithubSetting {
                   type="toggle"
                   defaultValue={orgActive}
                   onChange={val => {
-                    githubSettings.values = {
-                      ...githubSettings.values,
-                      orgs: {
-                        ...orgs,
-                        [lower(org.login)]: val,
+                    Github.setting.mergeUpdate({
+                      values: {
+                        orgs: {
+                          [lower(org.login)]: val,
+                        },
                       },
-                    }
-                    githubSettings.save()
+                    })
                   }}
                 />
 
@@ -68,7 +70,6 @@ export default class GithubSetting {
             )
           })}
         </UI.Form>
-
         <UI.Button onClick={() => CurrentUser.unlink('github')}>
           Unlink Github
         </UI.Button>

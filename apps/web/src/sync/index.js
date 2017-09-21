@@ -5,12 +5,11 @@ import { Job, CurrentUser } from '~/app'
 
 function getRxError(error: Error) {
   const { message, stack } = error
-
   try {
     const parsedMessage = JSON.parse(message)
     console.log(JSON.stringify(parsedMessage, null, 2))
   } catch (e) {
-    // nothing
+    console.log('error parsing error', e)
   }
   return { message, stack }
 }

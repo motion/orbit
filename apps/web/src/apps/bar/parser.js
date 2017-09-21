@@ -14,6 +14,8 @@ const parse = text => {
   const services = {
     calendar: ['cal', 'calendar'],
     issues: ['issues', 'issue'],
+    github: ['github', 'git'],
+    docs: ['docs', 'google docs', 'gdrive'],
     jira: ['jira', 'tickets'],
   }
 

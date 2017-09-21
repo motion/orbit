@@ -46,7 +46,9 @@
     "react-motion": "*",
     "sherlockjs": "*",
     "worker-pouch": "^2.0.0",
-    "moment": "*"
+    "moment": "*",
+    "victory": "*",
+    "electron-oauth2": "*"
   },
   "devDependencies": {
     "typescript": "^2.5.2",

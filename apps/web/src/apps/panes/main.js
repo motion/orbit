@@ -9,6 +9,7 @@ import { OS } from '~/helpers'
 import * as Pane from './pane'
 import TestIssue from './test_data/issue'
 import type { PaneProps, PaneResult } from '~/types'
+import { includes } from 'lodash'
 
 const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
@@ -47,22 +48,30 @@ class BarMainStore {
 
     const person = people.length > 0 ? people[0] : undefined
 
-    return {
-      id: `${service}${(people || []).join(',')}${startDate + ''}${endDate +
-        ''}`,
-      title: service || 'person',
-      type: service || 'person',
+    const actuallyPerson = ['docs', 'github']
+
+    const type =
+      (includes(actuallyPerson, service) ? 'person' : service) || 'person'
+
+    const val = {
+      id: `type:${people.join(':')}`,
+      title: type,
+      type,
       data: {
         startDate,
         endDate,
+        type,
         person,
         image: person,
+        service,
         people,
       },
       people,
       startDate,
       endDate,
     }
+
+    return val
   }
 
   get things(): Array<PaneResult> {
@@ -79,7 +88,7 @@ class BarMainStore {
       icon: 'radio',
       data: {
         special: true,
-        person: 'Nate Wienert',
+        person: 'me',
         image: 'me',
       },
       actions: ['respond to recent'],
@@ -106,7 +115,7 @@ class BarMainStore {
     {
       id: 1030,
       title: 'Motion',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Motion',
@@ -116,7 +125,7 @@ class BarMainStore {
     {
       id: 1040,
       title: 'Product',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Product',
@@ -126,7 +135,7 @@ class BarMainStore {
     {
       id: 1050,
       title: 'Search',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Search',
@@ -165,6 +174,13 @@ class BarMainStore {
       title: ':Github issue about performance',
       type: 'task',
       data: TestIssue,
+      category: 'Tests',
+    },
+    {
+      id: 502,
+      title: ':Universe',
+      type: 'universe',
+      data: {},
       category: 'Tests',
     },
     {

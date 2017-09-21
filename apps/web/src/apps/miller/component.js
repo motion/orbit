@@ -29,7 +29,7 @@ export default class Miller {
         <columns $$row $transX={transX}>
           {millerStore.schema.map((pane, index) => {
             return (
-              <pane $notFirst={index > 0} key={index + ':' + pane.kind}>
+              <pane $notFirst={index > 0} key={pane.id}>
                 <Pane
                   pane={panes[pane.type]}
                   type={pane.type}

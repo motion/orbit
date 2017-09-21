@@ -198,7 +198,10 @@ class Calendar {
     }
 
     const allWeeks = 5
-    const rows = isSmall ? range(1, 3) : range(0, allWeeks)
+    // which weeks do we show in small mode
+    // we get the actual day so it doesn't change as we click around
+    const startWeek = Math.floor(new Date().getDate() / 7)
+    const rows = isSmall ? range(startWeek, startWeek + 2) : range(0, allWeeks)
 
     return (
       <cal>
@@ -534,7 +537,6 @@ export default class CalendarPane {
         ),
       },
     ]
-    console.log('people are', paneStore && paneStore.data.people)
 
     return (
       <UI.Theme name="clear-dark">

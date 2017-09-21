@@ -7,26 +7,47 @@ import * as Pane from '~/apps/panes/pane'
 import type { PaneProps, PaneResult } from '~/types'
 import Calendar from './calendar'
 import FeedItem from './views/feedItem'
+import { capitalize, isUndefined } from 'lodash'
 
 const eventToPaneResult = (event: Event): PaneResult => ({
   title: event.title,
 })
 
+const nameToUser = {
+  nate: 'natew',
+  me: 'natew',
+  nick: 'ncammarata',
+  steel: 'steelbrain',
+}
+
 class BarTeamStore {
   props: PaneProps
   isOpen = false
-  activeType = 'All'
+  activeType = 'all'
   types = [
-    { name: 'All', icon: false },
-    { name: 'Calendar', icon: 'cal' },
-    { name: 'Github', icon: 'github' },
-    { name: 'Drive', icon: 'hard' },
-    { name: 'Jira', icon: 'atl' },
-    { name: 'Google Docs', icon: 'google' },
+    { name: 'all', icon: false },
+    { name: 'calendar', icon: 'cal' },
+    { name: 'github', icon: 'github' },
+    { name: 'docs', icon: 'hard' },
+    { name: 'jira', icon: 'atl' },
+    { name: 'issues', icon: 'github' },
   ]
+  currentAuthor = ''
+
+  start() {
+    this.currentAuthor = nameToUser[this.props.paneStore.data.person]
+
+    this.react(
+      () => this.props.paneStore.data.service,
+      () => {
+        const { service } = this.props.paneStore.data
+        this.activeType = service || 'all'
+      },
+      true
+    )
+  }
 
   setActiveType = type => {
-    console.log('setting type to', type.name)
     this.activeType = type.name
   }
 
@@ -39,31 +60,46 @@ class BarTeamStore {
   get results(): Array<Event> {
     return this.events ? this.events.map(eventToPaneResult) : []
   }
+
+  get calendarActive() {
+    return this.activeType === 'calendar'
+  }
+
+  get allActive() {
+    return this.activeType === 'all'
+  }
 }
 
 type Props = PaneProps & { store: BarTeamStore }
 
 @view
-class CalSection {
+class Events {
   render({ store }) {
-    return (
-      <div
-        $$row
-        $active={store.activeType === 'Calendar'}
-        css={{ alignItems: 'center', maxHeight: '100%' }}
-      >
-        <Calendar isSmall={store.activeType !== 'Calendar'} />
-      </div>
-    )
-  }
+    console.log('rendering events')
+    const active = (store.events || []).filter(event => {
+      if (event.author !== store.currentAuthor) return false
 
-  static style = {
-    div: {
-      width: '100%',
-    },
-    active: {
-      marginTop: 100,
-    },
+      if (store.allActive) return true
+
+      // https://github.com/motion/orbit/issues/67
+      if (
+        event.integration === 'github' &&
+        store.activeType === 'issues' &&
+        !isUndefined(event.comments)
+      ) {
+        return event
+      }
+
+      return event.integration === store.activeType
+    })
+    return (
+      <container>
+        <events if={active.length > 0}>
+          {active.map(event => <FeedItem event={event} />)}
+        </events>
+        <placeholder if={active.length === 0}>No Event Found</placeholder>
+      </container>
+    )
   }
 }
 
@@ -84,7 +120,7 @@ class ItemsSection {
               store.setActiveType(type)
             }}
           >
-            {type.name}
+            {capitalize(type.name)}
           </UI.Button>
         ))}
       </UI.Row>
@@ -125,17 +161,27 @@ export default class BarTeam extends Component<Props> {
       {
         height: 200,
         view: () => (
-          <section>
-            <div $$row css={{ alignItems: 'flex-start', maxHeight: '100%' }}>
-              <Calendar isSmall={store.activeType !== 'Calendar'} />
+          <section
+            if={store.allActive || store.calendarActive}
+            css={{ width: '100%' }}
+          >
+            <div
+              $$row
+              css={{
+                width: '100%',
+                alignItems: 'flex-start',
+                maxHeight: '100%',
+              }}
+            >
+              <Calendar isSmall={!store.calendarActive} />
             </div>
           </section>
         ),
       },
-      ...(store.events || []).map(event => ({
-        height: event.height,
-        view: () => <FeedItem event={event} />,
-      })),
+      {
+        height: 500,
+        view: () => <Events store={store} />,
+      },
     ]
 
     return (

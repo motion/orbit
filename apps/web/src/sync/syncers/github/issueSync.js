@@ -27,53 +27,60 @@ export default class GithubIssueSync {
     )
   }
 
-  graphQuery = {
-    repo: `edges {
+  graphQueryIssue = `
+    edges {
       node {
         id
-        name
-        issues(first: 100) {
+        title
+        number
+        body
+        bodyText
+        updatedAt
+        createdAt
+        author {
+          avatarUrl
+          login
+        }
+        labels(first: 10) {
           edges {
             node {
-              id
-              title
-              number
-              body
-              bodyText
-              updatedAt
-              createdAt
+              name
+            }
+          }
+        }
+        comments(first: 100) {
+          edges {
+            node {
               author {
                 avatarUrl
                 login
               }
-              labels(first: 10) {
-                edges {
-                  node {
-                    name
-                  }
-                }
-              }
-              comments(first: 100) {
-                edges {
-                  node {
-                    author {
-                      avatarUrl
-                      login
-                    }
-                    createdAt
-                    body
-                  }
-                }
-              }
+              createdAt
+              body
             }
           }
         }
       }
-    }`,
-  }
+    }
+  `
+
+  graphQueryRepo = `
+    edges {
+      node {
+        id
+        name
+        issues(first: 100) {
+          ${this.graphQueryIssue}
+        }
+      }
+    }
+  `
 
   getIssuesFromRepo = (repository: Object) => {
-    return repository.issues.edges.map(edge => ({ ...edge.node, repository }))
+    return repository.issues.edges.map(edge => ({
+      ...edge.node,
+      repositoryName: repository.name,
+    }))
   }
 
   unwrapIssue = (obj: Object) => {
@@ -106,20 +113,20 @@ export default class GithubIssueSync {
       body: issue.bodyText,
       data,
       orgName: orgLogin,
-      parentId: issue.repository,
+      parentId: issue.repositoryName,
       created,
       updated,
     })
   }
 
-  createIssuesForOrg = async (orgLogin: string): Promise<?Array<Object>> => {
+  createIssuesForOrg = async (orgLogin: string): Promise<Array<Object>> => {
     const repositories = await this.getRepositoriesForOrg(orgLogin)
     const issues = flatten(repositories.map(this.getIssuesFromRepo))
     let finished = []
     let creating = []
 
     async function waitForCreating() {
-      const successful = (await Promise.all(creating)).map(i => !!i)
+      const successful = (await Promise.all(creating)).filter(Boolean)
       finished = [...finished, ...successful]
       creating = []
     }
@@ -142,7 +149,7 @@ export default class GithubIssueSync {
       query AllIssues {
         organization(login: "${orgLogin}") {
           repositories(first: 50) {
-            ${this.graphQuery.repo}
+            ${this.graphQueryRepo}
           }
         }
       }

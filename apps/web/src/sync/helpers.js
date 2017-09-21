@@ -34,8 +34,14 @@ export async function ensureJob(
       )
     }
     if (secondsAgo > SECONDS_UNTIL_JOB_STALE) {
-      console.log('Stale job, removing...', lastPending)
-      await lastPending.remove()
+      try {
+        await lastPending.remove()
+        console.log('Stale job, removed', lastPending.id)
+      } catch (e) {
+        if (e.name !== 'conflict') {
+          console.log(e)
+        }
+      }
     } else {
       return
     }

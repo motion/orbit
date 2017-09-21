@@ -26,7 +26,7 @@ class App {
   sync: Sync
   store: AppStore
 
-  constructor(quiet?: boolean) {
+  constructor() {
     // this.render() // to render before db connects
     this.store = new AppStore({
       config: {
@@ -38,7 +38,6 @@ class App {
       models: Models,
       services: Services,
     })
-    this.start(quiet)
   }
 
   async start(quiet?: boolean) {
@@ -102,21 +101,23 @@ class App {
 let app = window.App
 
 export async function start(recreate?: boolean) {
+  if (window.appDisposing) {
+    return
+  }
+  window.appDisposing = true
   if (app) {
     await app.dispose()
   }
   if (recreate || !app) {
-    app = new App(recreate)
+    app = new App()
+    await app.start(recreate)
     window.App = app
   }
+  window.appDisposing = false
 }
 
 export default app
 
-// hmr
 if (module && module.hot) {
   module.hot.accept(() => start(true))
-  module.hot.accept('@mcro/models', async () => {
-    // cutoff models
-  })
 }

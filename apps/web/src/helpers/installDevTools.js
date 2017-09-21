@@ -17,7 +17,7 @@ import color from 'color'
 // Mobx.useStrict(true)
 
 // install console formatters
-// mobxFormatters(Mobx)
+mobxFormatters(Mobx)
 
 // the heavy hitters
 window.React = React

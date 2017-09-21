@@ -305,7 +305,7 @@ export default class Model {
           retry: false,
         },
       })
-      this.subscriptions.add(pushSync.cancel)
+      this.subscriptions.add(() => pushSync.cancel())
     }
 
     // bump listeners

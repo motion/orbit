@@ -22,9 +22,8 @@ export default class Jobs {
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
   syncers: ?Object = null
 
-  willMount = async () => {
+  constructor() {
     this.watchJobs()
-
     this.react(
       () => this.user,
       async user => {
@@ -45,15 +44,18 @@ export default class Jobs {
     )
   }
 
-  get github() {
+  get github(): ?Class<any> {
     return this.syncers.github
   }
 
-  dispose = async () => {
+  async dispose() {
     await this.disposeSyncers()
   }
 
-  disposeSyncers = async () => {
+  async disposeSyncers() {
+    if (!this.syncers) {
+      return
+    }
     for (const name of Object.keys(this.syncers)) {
       await this.syncers[name].dispose()
     }

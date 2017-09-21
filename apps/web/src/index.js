@@ -26,12 +26,12 @@ function splash() {
 
 function main() {
   splash()
-  require('./app')
+  require('./app').start()
 }
 
 main()
 
 // accept hmr
 if (module && module.hot) {
-  module.hot.accept(_ => _)
+  module.hot.accept(() => require('./app').start(true))
 }

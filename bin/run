@@ -33,7 +33,7 @@ elif [ "$ACTION" =  "web" ]; then
   elif [ "$ARG1" = "--prod" ]; then
     npm run start-prod &
   elif [ "$ARG1" = "--webpack" ]; then
-    node scripts/run.js
+    node scripts/run.js &
   else
     motion watch --debug ${@:2} &
   fi

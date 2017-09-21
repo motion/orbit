@@ -102,21 +102,20 @@ export default class Server {
   setupPouch() {
     const dbs = Object.keys(Models).map(model => Models[model].title)
 
+    const ThePouch = Pouch.defaults({
+      adapter: 'memory',
+    })
+
     this.app.use(
       '/db',
-      PouchExpress(
-        Pouch.defaults({
-          adapter: 'memory',
-        }),
-        {
-          inMemoryConfig: true,
-        }
-      )
+      PouchExpress(ThePouch, {
+        inMemoryConfig: true,
+      })
     )
 
     for (const db of dbs) {
       // creating a pouchdb makes it work
-      new Pouch(db)
+      new ThePouch(db)
     }
   }
 

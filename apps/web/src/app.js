@@ -97,7 +97,6 @@ export default app
 if (module && module.hot) {
   module.hot.accept(_ => _)
   module.hot.accept('@mcro/models', async () => {
-    app.dispose()
-    app = new App()
+    log('nada')
   })
 }

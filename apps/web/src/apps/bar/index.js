@@ -116,7 +116,7 @@ export default class BarPage {
       left: 18,
     },
     searchInput: {
-      padding: [0, 20, 0, 40],
+      padding: [0, 20, 0, 50],
     },
     forwardcomplete: {
       position: 'absolute',

@@ -29,13 +29,13 @@ elif [ "$ACTION" =  "web" ]; then
 
   cd apps/web
   if [ "$ARG1" = "--clean" ]; then
-    motion watch --disable-cache &
+    motion watch --debug --disable-cache &
   elif [ "$ARG1" = "--prod" ]; then
     npm run start-prod &
   elif [ "$ARG1" = "--webpack" ]; then
     node scripts/run.js
   else
-    motion watch ${@:2} &
+    motion watch --debug ${@:2} &
   fi
 
   cd $ROOT/apps/api

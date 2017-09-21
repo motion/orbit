@@ -17,8 +17,13 @@ export default class GithubIssueSync {
     }
     const createdIssues = flatten(
       await Promise.all(this.setting.activeOrgs.map(this.syncIssues))
+    ).filter(Boolean)
+    console.log(
+      'Created',
+      createdIssues ? createdIssues.length : 0,
+      'issues',
+      createdIssues
     )
-    console.log('Created', createdIssues ? createdIssues.length : 0, 'issues')
   }
 
   syncIssues = async (orgLogin: string): Promise<?Array<Object>> => {
@@ -106,7 +111,6 @@ export default class GithubIssueSync {
       const issues = repository.issues.edges.map(edge => edge.node)
 
       if (!issues || !issues.length) {
-        console.log('no issues found for repo', repository.name)
         continue
       }
 

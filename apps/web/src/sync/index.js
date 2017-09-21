@@ -61,7 +61,9 @@ export default class Sync {
       return
     }
     for (const name of Object.keys(this.syncers)) {
-      await this.syncers[name].dispose()
+      if (this.syncers[name].dispose) {
+        await this.syncers[name].dispose()
+      }
     }
   }
 

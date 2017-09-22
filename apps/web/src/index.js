@@ -1,12 +1,12 @@
 // @flow
 import 'babel-polyfill'
+import 'isomorphic-fetch'
 import createElement from '@mcro/black/lib/createElement'
 import * as React from 'react'
 import ReactDOM from 'react-dom'
 import * as Constants from './constants'
-import '@mcro/models/lib/user' // start superlogin connect immediately
+import '@mcro/models/lib/user' // start user connect immediately
 import Path from 'path'
-import { debounce } from 'lodash'
 
 export const indexFile = Path.join(__dirname, '..', 'index.html')
 

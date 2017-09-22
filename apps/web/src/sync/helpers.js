@@ -1,5 +1,7 @@
 // @flow
 import { Job } from '@mcro/models'
+import date from 'date-fns'
+window.date = date
 
 const SECONDS_UNTIL_JOB_STALE = 60 * 10
 const UNITS_SECOND = 1000
@@ -26,11 +28,11 @@ export async function ensureJob(
 ): ?Job {
   const lastPending = await Job.lastPending({ type, action }).exec()
   if (lastPending) {
-    const { createdAt } = lastPending
-    const secondsAgo = (Date.now() - Date.parse(lastPending)) / UNITS_SECOND
+    const secondsAgo =
+      (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
     if (loud) {
       console.log(
-        `Job already running for ${type} ${action}, ${secondsAgo} seconds ago`
+        `Job already running for ${type} ${action}, ${secondsAgo} seconds ago ${lastPending.createdAt}`
       )
     }
     if (secondsAgo > SECONDS_UNTIL_JOB_STALE) {

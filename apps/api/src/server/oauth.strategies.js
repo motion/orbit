@@ -42,5 +42,8 @@ export default {
         clientSecret: 'LLXP2Vq36socQtgXy_XQqLOW',
       },
     },
+    options: {
+      scope: ['profile', 'https://www.googleapis.com/auth/drive'],
+    },
   },
 }

@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Panes from './panes'
 
-@view
+@view.ui
 export default class BarSetupPane {
   render({ item }) {
     if (!CurrentUser.authorizations) {
@@ -16,8 +16,11 @@ export default class BarSetupPane {
     return (
       <setup>
         <integrate>
-          <UI.Title size={2}>Authorize</UI.Title>
+          <UI.Title size={2} marginBottom={20}>
+            Authorize {item.data.name}
+          </UI.Title>
           <UI.Button
+            size={2}
             icon={item.icon}
             onClick={() => CurrentUser.link(item.data.type)}
           >

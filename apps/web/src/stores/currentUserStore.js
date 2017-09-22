@@ -15,12 +15,13 @@ function passportLink(provider: string, options: Object = {}): Promise<any> {
       ...options,
     }
     const path = `/auth/${provider}`
-    console.log('Opening oauth window at', path)
 
     // setup new response object
+    let resolved = false
     window.passport = {}
     window.passport.oauthSession = info => {
       if (!info.error && info.token) {
+        resolved = true
         return resolve(info)
       }
       return reject(`Got an oauth error: ${JSON.stringify(info)}`)
@@ -36,6 +37,9 @@ function passportLink(provider: string, options: Object = {}): Promise<any> {
         clearInterval(check)
         if (!authComplete) {
           authComplete = true
+          if (resolved) {
+            return
+          }
           return reject('Authorization cancelled')
         }
       }
@@ -215,7 +219,7 @@ class CurrentUser {
       console.log('Merging new oauth', info)
       this.user.mergeUpdate({
         authorizations: {
-          github: info,
+          [provider]: info,
         },
       })
     }

@@ -108,10 +108,11 @@ export default class Server {
   setupPassportRoutes() {
     for (const name of Object.keys(OAuthStrategies)) {
       const path = `/auth/${name}`
-      this.app.get(path, Passport.authenticate(name))
+      const options = OAuthStrategies[name].options
+      this.app.get(path, Passport.authenticate(name, options))
       this.app.get(
         `/auth/${name}/callback`,
-        Passport.authenticate(name),
+        Passport.authenticate(name, options),
         (req, res) => {
           const { user } = req
           res.send(`

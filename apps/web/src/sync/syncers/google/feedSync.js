@@ -1,6 +1,6 @@
 // @flow
 import { Event, Setting } from '~/app'
-import Drive from 'google-drive'
+import GAPI from './api'
 
 export default class GithubFeedSync {
   setting: Setting
@@ -12,9 +12,9 @@ export default class GithubFeedSync {
     this.token = token
   }
 
-  drive = Drive(this.token)
+  api = new GAPI({ key: this.token })
 
   run = async () => {
-    console.log('run', this.drive)
+    console.log('run', this.api)
   }
 }

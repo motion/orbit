@@ -43,7 +43,7 @@
     "match-sorter": "^1.8.1",
     "marked": "^0.3.6",
     "worker-pouch": "^2.0.0",
-    "google-drive": "^0.0.8"
+    "r2": "^1.0.0"
   },
   "devDependencies": {
     "typescript": "^2.5.2",

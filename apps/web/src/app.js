@@ -41,8 +41,8 @@ class App {
   }
 
   async start(quiet?: boolean) {
-    await Setting.find().sync() // sync settings
     await this.store.start(quiet)
+    await Setting.find().sync() // sync settings
     this.sync = new Sync()
     this.render()
   }
@@ -101,6 +101,9 @@ export async function start(recreate?: boolean) {
     return
   }
   window.appDisposing = true
+  setTimeout(() => {
+    window.appDisposing = false
+  }, 50)
   if (app) {
     await app.dispose()
   }

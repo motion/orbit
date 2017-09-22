@@ -19,7 +19,7 @@ export default class Syncer {
 
   constructor({ user }: SyncOptions) {
     this.user = user
-    this.start()
+    // this.start()
   }
 
   start() {

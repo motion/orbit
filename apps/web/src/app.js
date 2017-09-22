@@ -116,6 +116,8 @@ export async function start(recreate?: boolean) {
   window.appDisposing = false
 }
 
+start()
+
 export default app
 
 if (module && module.hot) {

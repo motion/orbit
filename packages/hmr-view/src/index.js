@@ -59,6 +59,9 @@ export default function proxyReactComponents({
         instances.forEach(doHotReload)
         lastHotReload = Date.now()
         window.lastHotReload = lastHotReload
+        if (window.Black) {
+          window.Black.view.emit('hmr')
+        }
       })
     } else {
       viewProxies[path] = createProxy(ReactClass)

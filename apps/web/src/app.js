@@ -106,8 +106,10 @@ class App {
 
   debug(setting) {
     if (!setting) {
+      localStorage.setItem('debug', 'none')
       debug.enable('')
     } else {
+      localStorage.setItem('debug', setting)
       debug.enable(setting)
     }
   }

@@ -48,7 +48,7 @@ class BarMainStore {
 
     const person = people.length > 0 ? people[0] : undefined
 
-    const actuallyPerson = ['docs', 'github']
+    const actuallyPerson = ['docs', 'issues', 'github', 'calendar', 'tasks']
 
     const type =
       (includes(actuallyPerson, service) ? 'person' : service) || 'person'

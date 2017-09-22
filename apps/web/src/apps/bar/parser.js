@@ -13,7 +13,7 @@ const parse = text => {
 
   const services = {
     calendar: ['cal', 'calendar'],
-    issues: ['issues', 'issue'],
+    issues: ['issues', 'tasks', 'issue'],
     github: ['github', 'git'],
     docs: ['docs', 'google docs', 'gdrive'],
     jira: ['jira', 'tickets'],
@@ -30,7 +30,7 @@ const parse = text => {
   })
 
   return {
-    people: people.length > 0 ? people : ['me'],
+    people,
     service,
     startDate,
     endDate,

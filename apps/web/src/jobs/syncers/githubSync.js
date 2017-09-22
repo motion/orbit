@@ -172,7 +172,7 @@ export default class GithubSync extends Syncer {
   insertEvents = async (allEvents: Array<Object>): Promise<Array<Object>> => {
     const createdEvents = []
     for (const event of allEvents) {
-      const id = `${event.id}`
+      const id = event.id
       const created = event.created_at || ''
       const updated = event.updated_at || created
       // stale event removal
@@ -242,6 +242,7 @@ export default class GithubSync extends Syncer {
                       labels(first: 10) {
                         edges {
                           node {
+                            color
                             name
                           }
                         }

@@ -1,7 +1,8 @@
 // @flow
-import { Thing, Setting } from '~/app'
+import { Thing } from '~/app'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
+import SyncerAction from '../syncerAction'
 
 const issueGet = `
 edges {
@@ -52,15 +53,7 @@ edges {
 }
 `
 
-export default class GithubIssueSync {
-  setting: Setting
-  token: string
-
-  constructor(setting: Setting, token: string) {
-    this.setting = setting
-    this.token = token
-  }
-
+export default class GithubIssueSync extends SyncerAction {
   run = async () => {
     const res = await this.syncOrgs()
     console.log('Created', res ? res.length : 0, 'issues', res)

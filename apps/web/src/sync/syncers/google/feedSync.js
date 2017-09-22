@@ -1,17 +1,9 @@
 // @flow
-import { Event, Setting } from '~/app'
+import { Event } from '~/app'
 import GAPI from './api'
+import SyncerAction from '../syncerAction'
 
-export default class GithubFeedSync {
-  setting: Setting
-  token: string
-  lastSyncs = {}
-
-  constructor(setting: Setting, token: string) {
-    this.setting = setting
-    this.token = token
-  }
-
+export default class GoogleFeedSync extends SyncerAction {
   api = new GAPI({ key: this.token })
 
   run = async () => {

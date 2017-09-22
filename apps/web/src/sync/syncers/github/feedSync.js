@@ -1,16 +1,10 @@
 // @flow
 import { Event, Setting } from '~/app'
 import { flatten } from 'lodash'
+import SyncerAction from '../syncerAction'
 
-export default class GithubFeedSync {
-  setting: Setting
-  token: string
+export default class GithubFeedSync extends SyncerAction {
   lastSyncs = {}
-
-  constructor(setting: Setting, token: string) {
-    this.setting = setting
-    this.token = token
-  }
 
   run = async () => {
     if (this.setting.activeOrgs) {

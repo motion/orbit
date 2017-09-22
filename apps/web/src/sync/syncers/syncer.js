@@ -30,7 +30,7 @@ export default class Syncer {
       this.syncers = {}
       for (const key of Object.keys(syncers)) {
         const Syncer = syncers[key]
-        this.syncers[key] = new Syncer(this.setting, this.token)
+        this.syncers[key] = new Syncer(this)
 
         // helper to make checking syncers easier
         if (!this[key]) {

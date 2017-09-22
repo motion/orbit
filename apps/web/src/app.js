@@ -41,7 +41,6 @@ class App {
   }
 
   async start(quiet?: boolean) {
-    console.log('start')
     await Setting.find().sync() // sync settings
     await this.store.start(quiet)
     this.sync = new Sync()
@@ -113,8 +112,8 @@ export async function start(recreate?: boolean) {
   window.appDisposing = false
 }
 
-if (!app) {
-  start()
-}
-
 export default app
+
+if (module && module.hot) {
+  module.hot.accept(() => start(true))
+}

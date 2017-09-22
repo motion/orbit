@@ -7,7 +7,7 @@ import GithubIssueSync from './issueSync'
 @store
 export default class GithubSync extends Syncer {
   static type = 'github'
-  static jobs = {
+  static actions = {
     issues: { every: 60 * 60 * 6 },
     feed: { every: 60 },
   }

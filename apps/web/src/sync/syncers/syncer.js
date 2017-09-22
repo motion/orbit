@@ -10,10 +10,9 @@ export default class Syncer {
   // external interface, must set:
   static syncers: Object<string, Class<any>>
   static type: string
-  static jobs: Object
+  static actions: Object
 
   // internal
-  JOBS_CHECK_INTERVAL = 1000 * 10 // 10 seconds
   user: User
   syncers = {}
   jobWatcher: ?number
@@ -32,13 +31,18 @@ export default class Syncer {
       for (const key of Object.keys(syncers)) {
         const Syncer = syncers[key]
         this.syncers[key] = new Syncer(this.setting, this.token)
+
+        // helper to make checking syncers easier
+        if (!this[key]) {
+          this[key] = this.syncers[key]
+        }
       }
     }
 
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
-      this.JOBS_CHECK_INTERVAL
+      1000 * 10 // 10 seconds
     )
     this.check(false)
   }
@@ -56,8 +60,8 @@ export default class Syncer {
     return this.constructor.type
   }
 
-  get jobs(): string {
-    return this.constructor.jobs
+  get actions(): string {
+    return this.constructor.actions
   }
 
   get setting(): ?Setting {
@@ -69,13 +73,13 @@ export default class Syncer {
   }
 
   async check(loud: boolean = true) {
-    const { type, jobs } = this
-    if (!jobs) {
+    const { type, actions } = this
+    if (!actions) {
       return
     }
     const syncers = []
-    for (const action of Object.keys(jobs)) {
-      const job = jobs[action]
+    for (const action of Object.keys(actions)) {
+      const job = actions[action]
       syncers.push(ensureJob(type, action, job, loud))
     }
     await Promise.all(syncers)

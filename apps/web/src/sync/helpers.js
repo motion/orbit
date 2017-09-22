@@ -26,8 +26,8 @@ export async function ensureJob(
 ): ?Job {
   const lastPending = await Job.lastPending({ type, action }).exec()
   if (lastPending) {
-    const secondsAgo =
-      (Date.now() - Date.parse(lastPending.createdAt)) / UNITS_SECOND
+    const { createdAt } = lastPending
+    const secondsAgo = (Date.now() - Date.parse(lastPending)) / UNITS_SECOND
     if (loud) {
       console.log(
         `Job already running for ${type} ${action}, ${secondsAgo} seconds ago`
@@ -39,7 +39,7 @@ export async function ensureJob(
           status: Job.status.FAILED,
           lastError: { message: 'stale' },
         })
-        console.log('Stale job removed', type)
+        console.log('Stale job removed', secondsAgo, 's ago', type, createdAt)
       } catch (e) {
         if (e.name !== 'conflict') {
           console.log(e)

@@ -19,10 +19,12 @@ export default class Button extends React.PureComponent {
     badgeProps,
     ...props
   }) {
+    let onClick = props.onClick
+
     // patch until figure out why this doesnt trigger onSubmit
     if (type === 'submit') {
-      const ogOnClick = props.onClick
-      props.onClick = function(...args) {
+      const ogOnClick = onClick
+      onClick = function(...args) {
         uiContext.form.submit()
         return (ogOnClick && ogOnClick(...args)) || null
       }
@@ -58,6 +60,7 @@ export default class Button extends React.PureComponent {
           ...(theme && theme.glow),
         }}
         {...props}
+        onClick={onClick}
         noElement
         after={
           <badge

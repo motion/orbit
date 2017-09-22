@@ -42,8 +42,16 @@ class App {
 
   async start(quiet?: boolean) {
     await this.store.start(quiet)
-    await Setting.find().sync() // sync settings
+    // sync settings
+    await Setting.find().sync()
+    // remove all previous jobs
+    const jobs = await Job.find().exec()
+    if (jobs) {
+      console.log('clearing', jobs.length, 'jobs')
+      await Promise.all(jobs.map(job => job.remove()))
+    }
     this.sync = new Sync()
+    this.sync.start()
     this.render()
   }
 
@@ -120,7 +128,3 @@ if (!window.App) {
 }
 
 export default app
-
-if (module && module.hot) {
-  module.hot.accept(() => start(true))
-}

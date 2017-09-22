@@ -20,8 +20,31 @@ export default class Sync {
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
   syncers: ?Object = null
 
-  constructor() {
+  start() {
     this.watchJobs()
+    this.watchSyncers()
+  }
+
+  get user() {
+    return CurrentUser
+  }
+
+  async dispose() {
+    await this.disposeSyncers()
+  }
+
+  async disposeSyncers() {
+    if (!this.syncers) {
+      return
+    }
+    for (const name of Object.keys(this.syncers)) {
+      if (this.syncers[name].dispose) {
+        await this.syncers[name].dispose()
+      }
+    }
+  }
+
+  watchSyncers() {
     this.react(
       () => this.user,
       async user => {
@@ -47,29 +70,11 @@ export default class Sync {
     )
   }
 
-  get user() {
-    return CurrentUser
-  }
-
-  async dispose() {
-    await this.disposeSyncers()
-  }
-
-  async disposeSyncers() {
-    if (!this.syncers) {
-      return
-    }
-    for (const name of Object.keys(this.syncers)) {
-      if (this.syncers[name].dispose) {
-        await this.syncers[name].dispose()
-      }
-    }
-  }
-
-  watchJobs = () => {
+  watchJobs() {
     this.react(
       () => this.pending,
       async jobs => {
+        console.log('watching pending', jobs)
         if (!jobs || !jobs.length) {
           return
         }

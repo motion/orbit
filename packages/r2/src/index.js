@@ -62,27 +62,21 @@ class R2 {
       set: failSet,
     })
 
-    this.defaults(...args)
-  }
-  defaults(uri = '', opts = {}) {
-    this.defaultOpts = { uri, opts }
+    this._args(...args)
+
+    setTimeout(() => {
+      this._request()
+    }, 0)
   }
   _args(...args) {
-    const { defaultOpts } = this
     let opts = this.opts
     if (typeof args[0] === 'string') {
-      const url = args.shift()
-      opts.url = `${defaultOpts.uri}${url}`
+      opts.url = args.shift()
     }
     if (typeof args[0] === 'object') {
       opts = Object.assign(opts, args.shift())
     }
-    const headers = { ...defaultOpts.opts.headers, ...opts.headers }
-    if (headers) {
-      console.log('headers', headers)
-      this.setHeaders(headers)
-    }
-    console.log('opts are', defaultOpts, opts)
+    if (opts.headers) this.setHeaders(opts.headers)
     this.opts = opts
   }
   put(...args) {

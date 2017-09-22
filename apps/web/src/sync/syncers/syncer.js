@@ -1,6 +1,9 @@
 // @flow
 import { ensureJob } from '../helpers'
 import type { User, Setting } from '@mcro/models'
+import debug from 'debug'
+
+const log = debug('sync')
 
 type SyncOptions = {
   user: User,
@@ -21,10 +24,10 @@ export default class Syncer {
 
   constructor({ user }: SyncOptions) {
     this.user = user
-    this.start()
   }
 
   start() {
+    log('starting syncer', this.constructor.name)
     const { settings } = this.constructor
     const { syncers } = settings
 

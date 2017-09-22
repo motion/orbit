@@ -16,6 +16,7 @@
     "@mcro/model": "^1.2.0",
     "@mcro/models": "^1.2.0",
     "@mcro/router": "^1.2.0",
+    "@mcro/r2": "^1.2.0",
     "@mcro/ui": "^1.2.0",
     "babel-polyfill": "^6.23.0",
     "apollo-fetch": "^0.6.0",

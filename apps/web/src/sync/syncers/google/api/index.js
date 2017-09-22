@@ -1,6 +1,6 @@
 // from https://github.com/gadventures/gapi-js
 
-import request from 'r2'
+import r2 from '@mcro/r2'
 import GapiResources from './resources'
 
 export default class Gapi extends GapiResources {
@@ -19,24 +19,22 @@ export default class Gapi extends GapiResources {
   }
 
   get _setParams() {
-    this.requestOpts = {
-      json: {
-        ...this.queryParams,
-        ...this.dupableParams.reduce((o, [key, val]) => ({ [key]: val }), {}),
-      },
-      headers: {
+    this.rOpts = {
+      params: new URLSearchParams(
+        Object.entries({
+          ...this.queryParams,
+          ...this.dupableParams.reduce((o, [key, val]) => ({ [key]: val }), {}),
+        })
+      ),
+      headers: new Headers({
         'X-Application-Key': this.key,
-      },
+      }),
     }
-    console.log('this.requestOpts', this.requestOpts)
+    console.log('this.rOpts', this.rOpts)
     return this
   }
 
   _getUrl(...ids) {
-    /**
-     *  Builds the full gapi request URL based on the resource provided
-     *  `this.resource` is set by `GapiResource` getter methods.
-    **/
     if (!this.resource) {
       throw 'No resource has been provided.' // TODO: Something more declarative.
     }
@@ -45,22 +43,15 @@ export default class Gapi extends GapiResources {
   }
 
   get(ids) {
-    /**
-     * Support for multiple resource Ids
-     * For resources that accept more than one id. e.g. `itineraries/123/456/`
-    **/
     const url = this._getUrl(ids)
-    this.request = request.get(url)
+    this.request = r2.get(url, this.rOpts)
     return this
   }
 
-  list(number = 1, size = 20) {
-    /**
-     *  By default will look for the first 20 items
-    **/
+  list(start = 1, size = 20) {
     const url = this._getUrl()
-    this.request = request.get(url)
-    this.page(number, size)
+    this.request = r2.get(url, this.rOpts)
+    this.page(start, size)
     return this
   }
 
@@ -92,19 +83,19 @@ export default class Gapi extends GapiResources {
 
   post() {
     const url = this._getUrl()
-    this.request = request.post(url)
+    this.request = r2.post(url)
     return this
   }
 
   patch(ids) {
     const url = this._getUrl(ids)
-    this.request = request.patch(url)
+    this.request = r2.patch(url)
     return this
   }
 
   del(ids) {
     const url = this._getUrl(ids)
-    this.request = request.del(url)
+    this.request = r2.del(url)
     return this
   }
 
@@ -114,11 +105,11 @@ export default class Gapi extends GapiResources {
   }
 
   end(callback) {
-    this._setParams.request.end(callback)
+    this._setParams.r2.end(callback)
     return this
   }
 
   then(resolve, reject) {
-    return this._setParams.request.then(resolve, reject)
+    return this._setParams.r2.then(resolve, reject)
   }
 }

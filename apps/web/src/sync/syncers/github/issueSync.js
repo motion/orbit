@@ -3,6 +3,55 @@ import { Thing, Setting } from '~/app'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
 
+const issueGet = `
+edges {
+  node {
+    id
+    title
+    number
+    body
+    bodyText
+    updatedAt
+    createdAt
+    author {
+      avatarUrl
+      login
+    }
+    labels(first: 10) {
+      edges {
+        node {
+          name
+        }
+      }
+    }
+    comments(first: 100) {
+      edges {
+        node {
+          author {
+            avatarUrl
+            login
+          }
+          createdAt
+          body
+        }
+      }
+    }
+  }
+}
+`
+
+const repoGetIssues = `
+edges {
+  node {
+    id
+    name
+    issues(first: 100) {
+      ${issueGet}
+    }
+  }
+}
+`
+
 export default class GithubIssueSync {
   setting: Setting
   token: string
@@ -13,70 +62,66 @@ export default class GithubIssueSync {
   }
 
   run = async () => {
-    const res = await this.createAllIssues()
+    const res = await this.syncOrgs()
     console.log('Created', res ? res.length : 0, 'issues', res)
   }
 
-  createAllIssues = async () => {
-    if (!this.setting.activeOrgs) {
-      console.log('User hasnt selected any orgs in settings')
-      return []
+  syncOrgs = async (orgs: Array<string> = this.setting.activeOrgs) => {
+    if (!orgs || !orgs.length) {
+      return null
     }
-    return flatten(
-      await Promise.all(this.setting.activeOrgs.map(this.createIssuesForOrg))
-    ).filter(Boolean)
+    const issues = await Promise.all(orgs.map(this.syncOrg))
+    return flatten(issues).filter(Boolean)
   }
 
-  graphQueryIssue = `
-    edges {
-      node {
-        id
-        title
-        number
-        body
-        bodyText
-        updatedAt
-        createdAt
-        author {
-          avatarUrl
-          login
-        }
-        labels(first: 10) {
-          edges {
-            node {
-              name
-            }
-          }
-        }
-        comments(first: 100) {
-          edges {
-            node {
-              author {
-                avatarUrl
-                login
-              }
-              createdAt
-              body
-            }
+  syncOrg = async (org: string): Promise<Array<Object>> => {
+    const repositories = await this.getRepositoriesForOrg(org)
+    const issues = flatten(repositories.map(this.getIssuesForRepo))
+    return await this.createIssues(org, issues)
+  }
+
+  syncRepo = async (org: string, name: string) => {
+    const results = await this.graphFetch({
+      query: `
+      query AllIssues {
+        organization(login: "${org}") {
+          repository(name: "${name}") {
+            ${repoGetIssues}
           }
         }
       }
+    `,
+    })
+    if (!results) {
+      return
     }
-  `
+    const repository = results.data.organization.repository.node
+    return await this.createIssues(org, this.getIssuesForRepo(repository))
+  }
 
-  graphQueryRepo = `
-    edges {
-      node {
-        id
-        name
-        issues(first: 100) {
-          ${this.graphQueryIssue}
-        }
+  createIssues = async (org: string, issues: Array<Object>, chunk = 10) => {
+    let finished = []
+    let creating = []
+
+    async function waitForCreating() {
+      const successful = (await Promise.all(creating)).filter(Boolean)
+      finished = [...finished, ...successful]
+      creating = []
+    }
+
+    for (const issue of issues) {
+      // pause for every 10 to finish
+      if (creating.length === chunk) {
+        await waitForCreating()
       }
+      creating.push(this.createIssue(issue, org))
     }
-  `
 
-  getIssuesFromRepo = (repository: Object) => {
+    await waitForCreating()
+    return finished
+  }
+
+  getIssuesForRepo = (repository: Object) => {
     return repository.issues.edges.map(edge => ({
       ...edge.node,
       repositoryName: repository.name,
@@ -119,45 +164,20 @@ export default class GithubIssueSync {
     })
   }
 
-  createIssuesForOrg = async (orgLogin: string): Promise<Array<Object>> => {
-    const repositories = await this.getRepositoriesForOrg(orgLogin)
-    const issues = flatten(repositories.map(this.getIssuesFromRepo))
-    let finished = []
-    let creating = []
-
-    async function waitForCreating() {
-      const successful = (await Promise.all(creating)).filter(Boolean)
-      finished = [...finished, ...successful]
-      creating = []
-    }
-
-    for (const issue of issues) {
-      // pause for every 10 to finish
-      if (creating.length === 10) {
-        await waitForCreating()
-      }
-      creating.push(this.createIssue(issue, orgLogin))
-    }
-
-    await waitForCreating()
-    return finished
-  }
-
   getRepositoriesForOrg = async (orgLogin: string): ?Array<Object> => {
     const results = await this.graphFetch({
       query: `
       query AllIssues {
         organization(login: "${orgLogin}") {
           repositories(first: 50) {
-            ${this.graphQueryRepo}
+            ${repoGetIssues}
           }
         }
       }
     `,
     })
-    if (results.message) {
-      console.error('Error doing fetch', results)
-      return null
+    if (!results) {
+      return
     }
     let repositories = results.data.organization.repositories.edges
     if (!repositories || !repositories.length) {
@@ -168,7 +188,7 @@ export default class GithubIssueSync {
     return repositories
   }
 
-  graphFetch = createApolloFetch({
+  apolloFetch = createApolloFetch({
     uri: 'https://api.github.com/graphql',
   }).use(({ request, options }, next) => {
     if (!options.headers) {
@@ -177,4 +197,13 @@ export default class GithubIssueSync {
     options.headers['Authorization'] = `bearer ${this.token}`
     next()
   })
+
+  async graphFetch(...args) {
+    const results = this.apolloFetch(...args)
+    if (results.message) {
+      console.error('Error doing fetch', results)
+      return null
+    }
+    return results
+  }
 }

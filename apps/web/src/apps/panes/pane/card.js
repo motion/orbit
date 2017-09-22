@@ -64,7 +64,7 @@ export default class PaneCard {
             groupKey={groupKey}
             onSelect={this.onSelect}
             virtualized={
-              false && {
+              this.props.debug && {
                 measure: true,
                 ...virtualProps,
               }

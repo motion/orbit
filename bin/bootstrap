@@ -38,32 +38,36 @@ function install-puma-dev {
   puma-dev -install
 }
 
-xcode-select --install 2> /dev/null
-ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-ensure-dep "npm" -- brew install node
-ensure-dep "docker" -- brew install docker
-ensure-dep "docker-machine" -- brew install docker-machine
-ensure-dep "xhyve" -- brew cask install xhyve
-ensure-dep "kubectl" -- brew install kubectl
-ensure-dep "minikube" -- brew cask install minikube
-ensure-dep "pip" -- brew install python
-ensure-dep "envtpl" -- pip install envtpl
-ensure-dep "puma-dev" -- install-puma-dev
+xcode-select --install 2> /dev/null &
+ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &
+ensure-dep "npm" -- brew install node &
+ensure-dep "yarn" -- npm i -g yarn &
+ensure-dep "docker" -- brew install docker &
+ensure-dep "docker-machine" -- brew install docker-machine &
+ensure-dep "xhyve" -- brew cask install xhyve &
+ensure-dep "kubectl" -- brew install kubectl &
+ensure-dep "minikube" -- brew cask install minikube &
+ensure-dep "pip" -- brew install python &
+ensure-dep "envtpl" -- pip install envtpl &
+ensure-dep "puma-dev" -- install-puma-dev &
 
-# echo "Make sure to install dotenv and ensure it picks up your .env vars!"
-# TODO: revisit once we can use kubes locally nicely
-# echo "docker boot"
-# docker-machine inspect dev > /dev/null || docker-machine create dev -d xhyve
-# dev boot
-# echo "minikubes"
-# minikube config set WantReportErrorPrompt false
-# minikube config set vm-driver xyhve
-# minikube addons enable ingress
+wait
 
 echo "3001 > ~/.puma-dev/jot"
 echo 3001 > ~/.puma-dev/jot
 
 yarn install
+
+# link in @mcro stuff
+# if [ ! -L "./node_modules/@mcro/gloss" ]; then
+#   echo "linking in local stuff"
+#   npx lerna exec --parallel -- yarn link
+#   for path in ./node_modules/@mcro/*; do
+#     dirname="$(basename "${path}")"
+#     yarn link "@mcro/$dirname"
+#   done
+# fi
+
 echo "lerna bootstrap"
 npx lerna bootstrap
 
@@ -72,7 +76,3 @@ echo " to start the app:"
 echo " $ compose up"
 echo " $ watch"
 echo " $ npm run web"
-
-# echo "   $ minikube up"
-# echo "   $ dev start"
-# echo "   $ dev serve"

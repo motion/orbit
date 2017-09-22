@@ -210,6 +210,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
       console.log('no child', index, this)
       return null
     }
+    const child = this.children[index]({ style })
+    console.log('child', child)
     return (
       <CellMeasurer
         cache={this.cache}
@@ -218,7 +220,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
         parent={parent}
         rowIndex={index}
       >
-        {this.children[index]({ style })}
+        {child}
       </CellMeasurer>
     )
   }

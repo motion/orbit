@@ -13,6 +13,7 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import * as Black from '@mcro/black'
 import color from 'color'
+import debug from 'debug'
 
 // Mobx.useStrict(true)
 
@@ -33,6 +34,7 @@ window._ = _
 window.log = Black.log
 window.$ = color
 window.Black = Black
+window.debug = debug
 
 // TODO check if this is needed and fix the global thing if so
 // PATCH: ignore octocat

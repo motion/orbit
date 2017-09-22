@@ -2,6 +2,9 @@
 import { Event, Setting } from '~/app'
 import { flatten } from 'lodash'
 import SyncerAction from '../syncerAction'
+import debug from 'debug'
+
+const log = debug('sync')
 
 export default class GithubFeedSync extends SyncerAction {
   lastSyncs = {}
@@ -22,7 +25,7 @@ export default class GithubFeedSync extends SyncerAction {
   }
 
   syncFeed = async (orgLogin: string) => {
-    console.log('SYNC feed for org', orgLogin)
+    log('SYNC feed for org', orgLogin)
     const repoEvents = await this.getNewEvents(orgLogin)
     const created = await this.insertEvents(repoEvents)
     console.log('Created', created ? created.length : 0, 'feed events', created)
@@ -129,7 +132,7 @@ export default class GithubFeedSync extends SyncerAction {
         await Promise.all(repos.map(repo => this.getRepoEvents(org, repo.name)))
       ).filter(x => !!x)
     } else {
-      console.log('No repos', repos)
+      log('No repos', repos)
     }
     return []
   }
@@ -143,7 +146,7 @@ export default class GithubFeedSync extends SyncerAction {
       // stale event removal
       const stale = await Event.get({ id, created: { $ne: created } })
       if (stale) {
-        console.log('Removing stale event', id)
+        log('Removing stale event', id)
         await stale.remove()
       }
       if (

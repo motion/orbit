@@ -3,7 +3,9 @@ import { Thing } from '~/app'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
 import SyncerAction from '../syncerAction'
+import debug from 'debug'
 
+const log = debug('sync')
 const issueGet = `
 edges {
   node {
@@ -136,7 +138,7 @@ export default class GithubIssueSync extends SyncerAction {
     // stale removal
     const stale = await Thing.get({ id, created: { $ne: created } })
     if (stale) {
-      console.log('Removing stale event', id)
+      log('Removing stale event', id)
       await stale.remove()
     }
     // already exists
@@ -174,7 +176,7 @@ export default class GithubIssueSync extends SyncerAction {
     }
     let repositories = results.data.organization.repositories.edges
     if (!repositories || !repositories.length) {
-      console.log('no repos found in response', repositories)
+      log('no repos found in response', repositories)
       return null
     }
     repositories = repositories.map(r => r.node)

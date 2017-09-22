@@ -46,8 +46,9 @@
     "worker-pouch": "^2.0.0",
     "r2": "^1.0.0",
     "sherlockjs": "*",
-    "moment": "*",
-    "victory": "0.22.2"
+    "victory": "0.22.2",
+    "date-fns": "2.0.0-alpha.3",
+    "debug": "^2.6.9"
   },
   "devDependencies": {
     "typescript": "^2.5.2",

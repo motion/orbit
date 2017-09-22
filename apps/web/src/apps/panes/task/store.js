@@ -3,7 +3,6 @@ import App, { Thing } from '~/app'
 const getIssue = async taskId => {
   const thing = await Thing.findOne(taskId).exec()
 
-  console.log('api is', GithubStore.api)
   return GithubStore.api
     .repos(thing.orgName, thing.parentId)
     .issues(thing.data.number)

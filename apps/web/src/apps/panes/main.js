@@ -177,13 +177,6 @@ class BarMainStore {
       category: 'Tests',
     },
     {
-      id: 502,
-      title: ':Universe',
-      type: 'universe',
-      data: {},
-      category: 'Tests',
-    },
-    {
       id: 501,
       title: `:Nick's Calendar`,
       type: 'calendar',

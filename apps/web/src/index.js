@@ -27,7 +27,7 @@ function splash() {
 
 function main() {
   splash()
-  require('./app').start()
+  require('./app')
 }
 
 if (!window.started) {

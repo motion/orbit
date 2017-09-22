@@ -1,4 +1,3 @@
-import Path from 'path'
 import http from 'http'
 import logger from 'morgan'
 import express from 'express'
@@ -9,11 +8,9 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import PouchExpress from 'express-pouchdb'
 import Pouch from 'pouchdb'
 import PouchAdapterHTTP from 'pouchdb-adapter-http'
 import PouchAdapterMemory from 'pouchdb-adapter-memory'
-import { Models } from '@mcro/models'
 import PouchRouter from 'pouchdb-express-router'
 
 const port = Constants.SERVER_PORT
@@ -33,27 +30,29 @@ export default class Server {
       },
     })
 
-    this.app = express()
-    this.app.set('port', port)
-    this.app.use(logger('dev'))
+    const app = express()
+    app.set('port', port)
+    app.use(logger('dev'))
 
     // MIDDLEWARE
     const HEADER_ALLOWED =
       'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
-    this.app.use((req, res, next) => {
+    app.use((req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*')
       res.header('Access-Control-Allow-Credentials', 'true')
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
       next()
     })
-    this.app.use('/auth', bodyParser.json())
-    this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
-    this.app.use(
+    app.use('/auth', bodyParser.json())
+    app.use('/auth', bodyParser.urlencoded({ extended: false }))
+    app.use(
       '/auth',
       session({ secret: 'orbit', resave: false, saveUninitialized: true })
     ) // TODO change secret
-    this.app.use('/auth', Passport.initialize())
-    this.app.use('/auth', Passport.session())
+    app.use('/auth', Passport.initialize())
+    app.use('/auth', Passport.session())
+
+    this.app = app
 
     // ROUTES
     this.setupPouch()

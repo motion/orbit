@@ -3,6 +3,7 @@ import { store } from '@mcro/black/store'
 import Syncer from '../syncer'
 import GoogleFeedSync from './feedSync'
 import * as Constants from '~/constants'
+import r2 from '@mcro/r2'
 
 @store
 export default class GoogleSync extends Syncer {
@@ -13,26 +14,20 @@ export default class GoogleSync extends Syncer {
   static syncers = {
     feed: GoogleFeedSync,
   }
-
-  clientId = Constants.GOOGLE_CLIENT_ID
-
-  constructor(...args) {
-    super(...args)
-
-    // setTimeout(() => {
-    //   const gapi = window.gapi
-    //   gapi.load('client', async () => {
-    //     const opts = {
-    //       apiKey: this.token,
-    //       scope: ['profile'], // , 'drive'
-    //       clientId: Constants.GOOGLE_CLIENT_ID,
-    //     }
-    //     console.log('init with opts', opts)
-    //     await gapi.client.init(opts)
-
-    //     this.api = gapi.client
-    //     console.log('set it up', this.api)
-    //   })
-    // })
+  helpers = {
+    clientId: Constants.GOOGLE_CLIENT_ID,
+    baseUrl: 'https://content.googleapis.com/drive/v3',
+    request: (path: string, opts: Object = {}) =>
+      fetch(`${this.helpers.baseUrl}${path}`, {
+        method: 'GET',
+        mode: 'cors',
+        ...opts,
+        headers: new Headers({
+          Authorization: `Bearer ${this.token}`,
+          'Access-Control-Allow-Origin': 'jot.dev',
+          'Access-Control-Allow-Methods': 'GET',
+          ...opts.headers,
+        }),
+      }),
   }
 }

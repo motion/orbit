@@ -15,4 +15,8 @@ export default class SyncerAction {
   get token() {
     return this.syncer.token
   }
+
+  get helpers() {
+    return this.syncer.helpers
+  }
 }

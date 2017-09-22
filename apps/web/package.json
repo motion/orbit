@@ -47,7 +47,7 @@
     "worker-pouch": "^2.0.0",
     "sherlockjs": "*",
     "victory": "0.22.2",
-    "date-fns": "2.0.0-alpha.3",
+    "date-fns": "2.0.0-alpha.3"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

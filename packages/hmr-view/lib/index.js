@@ -82,7 +82,7 @@ function proxyReactComponents({
 
 setInterval(() => {
   if (reloaded.length) {
-    console.log(`[HMR] views: ${reloaded.join(', ')}, ${reloadedInstances} instances`);
+    console.log(`[HMR] ${reloaded.join(', ')}, ${reloadedInstances} instances`);
     if (window.Black) {
       window.Black.view.emit('hmr');
     }

@@ -48,6 +48,9 @@ export default class Syncer {
   }
 
   async run(action: string) {
+    if (!action) {
+      throw new Error('Must provide action')
+    }
     this.ensureSetting()
     await this.syncers[action].run()
   }

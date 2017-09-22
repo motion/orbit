@@ -31,11 +31,15 @@ export default class Sync {
         if (!this.syncers) {
           this.syncers = {}
           for (const name of Object.keys(Syncers)) {
-            const Syncer = new Syncers[name]({ user: CurrentUser })
-            if (Syncer.start) {
-              await Syncer.start()
+            const syncer = new Syncers[name]({ user: CurrentUser })
+            if (syncer.start) {
+              await syncer.start()
             }
-            this.syncers[name] = Syncer
+            this.syncers[name] = syncer
+            if (!this[name]) {
+              // $FlowIgnore
+              this[name] = syncer
+            }
           }
         }
       },
@@ -45,10 +49,6 @@ export default class Sync {
 
   get user() {
     return CurrentUser
-  }
-
-  get github(): ?Class<any> {
-    return this.syncers.github
   }
 
   async dispose() {

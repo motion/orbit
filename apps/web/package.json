@@ -42,7 +42,8 @@
     "time-ago": "^0.1.0",
     "match-sorter": "^1.8.1",
     "marked": "^0.3.6",
-    "worker-pouch": "^2.0.0"
+    "worker-pouch": "^2.0.0",
+    "google-drive": "^0.0.8"
   },
   "devDependencies": {
     "typescript": "^2.5.2",

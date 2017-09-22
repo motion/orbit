@@ -41,14 +41,11 @@ class App {
   }
 
   async start(quiet?: boolean) {
-    this.syncSettings()
+    console.log('start')
+    await Setting.find().sync() // sync settings
     await this.store.start(quiet)
     this.sync = new Sync()
     this.render()
-  }
-
-  async syncSettings() {
-    await Setting.find().sync()
   }
 
   async dispose() {
@@ -116,10 +113,8 @@ export async function start(recreate?: boolean) {
   window.appDisposing = false
 }
 
-start()
+if (!app) {
+  start()
+}
 
 export default app
-
-if (module && module.hot) {
-  module.hot.accept(() => start(true))
-}

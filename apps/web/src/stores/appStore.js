@@ -61,7 +61,7 @@ export default class AppStore {
   start = async (quiet?: boolean) => {
     if (!quiet) {
       console.log(
-        '%cUse App in your console to access models, stores, etc',
+        '%cUse App.* (models, stores, sync, debug(false)...))',
         'background: yellow'
       )
       console.time('start')

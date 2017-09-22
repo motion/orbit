@@ -12,6 +12,9 @@ import AppStore from './stores/appStore'
 import adapter from 'pouchdb-adapter-idb'
 import * as Services from './services'
 import CurrentUser_ from './stores/currentUserStore'
+import debug from 'debug'
+
+const log = debug('app')
 
 // ugly but we want to export these all here
 // this prevents hmr from going nuts when we edit models
@@ -47,7 +50,7 @@ class App {
     // remove all previous jobs
     const jobs = await Job.find().exec()
     if (jobs) {
-      console.log('clearing', jobs.length, 'jobs')
+      log('clearing', jobs.length, 'jobs')
       await Promise.all(jobs.map(job => job.remove()))
     }
     this.sync = new Sync()
@@ -99,6 +102,14 @@ class App {
 
   get models(): Object {
     return this.store && this.store.models
+  }
+
+  debug(setting) {
+    if (!setting) {
+      debug.enable('')
+    } else {
+      debug.enable(setting)
+    }
   }
 }
 

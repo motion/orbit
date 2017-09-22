@@ -59,9 +59,6 @@ export default function proxyReactComponents({
         instances.forEach(doHotReload)
         lastHotReload = Date.now()
         window.lastHotReload = lastHotReload
-        if (window.Black) {
-          window.Black.view.emit('hmr')
-        }
       })
     } else {
       viewProxies[path] = createProxy(ReactClass)
@@ -76,6 +73,9 @@ setInterval(() => {
     console.log(
       `[HMR] views: ${reloaded.join(', ')}, ${reloadedInstances} instances`
     )
+    if (window.Black) {
+      window.Black.view.emit('hmr')
+    }
     reloaded = []
     reloadedInstances = 0
   }

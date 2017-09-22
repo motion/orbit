@@ -1,7 +1,7 @@
 {
   "name": "@mcro/web",
   "private": true,
-  "version": "1.3.2",
+  "version": "1.3.3",
   "main": "index.js",
   "scripts": {
     "start": "motion",
@@ -15,9 +15,9 @@
     "@mcro/gloss": "^1.3.2",
     "@mcro/model": "^1.3.2",
     "@mcro/models": "^1.3.2",
-    "@mcro/r2": "^1.3.2",
+    "@mcro/r2": "^1.3.3",
     "@mcro/router": "^1.3.2",
-    "@mcro/ui": "^1.3.2",
+    "@mcro/ui": "^1.3.3",
     "apollo-fetch": "^0.6.0",
     "babel-polyfill": "^6.23.0",
     "color": "^2.0.0",

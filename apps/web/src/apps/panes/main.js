@@ -1,4 +1,5 @@
 // @flow
+import parser from '../bar/parser'
 import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
@@ -8,6 +9,7 @@ import { OS } from '~/helpers'
 import * as Pane from './pane'
 import TestIssue from './test_data/issue'
 import type { PaneProps, PaneResult } from '~/types'
+import { includes } from 'lodash'
 
 const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
@@ -35,6 +37,43 @@ class BarMainStore {
     return this.props.barStore.search
   }
 
+  get parserResult() {
+    return this.search ? parser(this.search) : null
+  }
+
+  get searchResult() {
+    if (!this.parserResult) return null
+
+    const { people, startDate, endDate, service } = this.parserResult
+
+    const person = people.length > 0 ? people[0] : undefined
+
+    const actuallyPerson = ['docs', 'issues', 'github', 'calendar', 'tasks']
+
+    const type =
+      (includes(actuallyPerson, service) ? 'person' : service) || 'person'
+
+    const val = {
+      id: `type:${people.join(':')}`,
+      title: type,
+      type,
+      data: {
+        startDate,
+        endDate,
+        type,
+        person,
+        image: person,
+        service,
+        people,
+      },
+      people,
+      startDate,
+      endDate,
+    }
+
+    return val
+  }
+
   get things(): Array<PaneResult> {
     return fuzzy(this.topThings || [], this.search)
       .slice(0, this.search.length ? 200 : 8)
@@ -49,7 +88,7 @@ class BarMainStore {
       icon: 'radio',
       data: {
         special: true,
-        person: 'Nate Wienert',
+        person: 'me',
         image: 'me',
       },
       actions: ['respond to recent'],
@@ -76,7 +115,7 @@ class BarMainStore {
     {
       id: 1030,
       title: 'Motion',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Motion',
@@ -86,7 +125,7 @@ class BarMainStore {
     {
       id: 1040,
       title: 'Product',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Product',
@@ -96,7 +135,7 @@ class BarMainStore {
     {
       id: 1050,
       title: 'Search',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Search',
@@ -184,7 +223,9 @@ class BarMainStore {
       return { ...item, height }
     }
 
-    return fuzzy(all, this.search).map(getRowHeight)
+    const search = fuzzy(all, this.search).map(getRowHeight)
+    if (this.searchResult) return [getRowHeight(this.searchResult), ...search]
+    return search
   }
 
   hasContent = (result: PaneResult) => result && result.data && result.data.body

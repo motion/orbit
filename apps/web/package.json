@@ -45,7 +45,9 @@
     "marked": "^0.3.6",
     "worker-pouch": "^2.0.0",
     "r2": "^1.0.0",
-    "date-fns": "^1.28.5",
+    "sherlockjs": "*",
+    "victory": "0.22.2",
+    "date-fns": "2.0.0-alpha.3",
     "debug": "^2.6.9"
   },
   "devDependencies": {

@@ -7,7 +7,7 @@ import DocPane from './doc'
 import GithubPane from './github'
 import type { PaneProps } from '~/types'
 import Feed from './views/feed'
-import Calendar from './views/calendar'
+import Calendar from './calendar'
 
 class BarFeedStore {
   props: PaneProps

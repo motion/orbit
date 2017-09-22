@@ -49,9 +49,13 @@ export default class TaskComment {
       border: [1, [0, 0, 0, 0]],
       transition: 'all 150ms ease-in',
     },
+    user: {
+      userSelect: 'none',
+    },
     info: {
       flexFlow: 'row',
       justifyContent: 'space-between',
+      userSelect: 'none',
     },
     userheader: {
       flexFlow: 'row',

@@ -115,7 +115,10 @@ export default class MillerStore {
   }
 
   setSchema(index: number, schema: Schema) {
-    if (this.schema[index] && this.schema[index].id === schema.id) return
+    // subscribe
+    // index
+    // schema
+    // if (this.schema[index] && this.schema[index].id === schema.id) return
     if (this.schema.length < index) {
       this.schema = [...this.schema, schema]
     } else {

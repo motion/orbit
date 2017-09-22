@@ -3,7 +3,6 @@ import { view } from '@mcro/black'
 import marked from 'marked'
 import emojinize from 'emojinize'
 import * as UI from '@mcro/ui'
-import Card from './card'
 
 const format = str => {
   return marked(emojinize.encode(str))
@@ -11,33 +10,110 @@ const format = str => {
 
 @view
 export default class FeedItem {
-  getBody(event, { payload }) {
+  getBody(event, { payload }, store) {
     switch (event.type) {
+      case 'task':
+        const {
+          title,
+          number,
+          labels,
+          comments,
+          body,
+          createdAt,
+          author,
+        } = event.data
+        return (
+          <content>
+            <top
+              $$row
+              css={{
+                justifyContent: 'space-between',
+              }}
+            >
+              <UI.Title size={1.2}>{title}</UI.Title>
+              <extra
+                $$row
+                css={{
+                  alignItems: 'center',
+                }}
+              >
+                <labels css={{ marginRight: 5 }} $$row>
+                  {labels.map(label => (
+                    <UI.Badge
+                      key={label.name}
+                      color={label.name === 'ready' ? '#333' : 'white'}
+                      background={'#' + label.color}
+                    >
+                      {label.name}
+                    </UI.Badge>
+                  ))}
+                </labels>
+                <UI.Button icon="holidays_message" chromeless>
+                  {(comments || []).length + ''}
+                </UI.Button>
+              </extra>
+            </top>
+            <info $$row css={{ marginTop: -8 }}>
+              <UI.Text>#{number}</UI.Text>
+              <UI.Text> opened {UI.Date.format(createdAt)} by</UI.Text>
+              <user
+                css={{ marginLeft: 10 }}
+                $$row
+                onClick={() => store.toggleLogin(author.login)}
+              >
+                <img $avatar src={author.avatarUrl} />
+                {author.login}
+              </user>
+              <UI.Button
+                if={false}
+                chromeless
+                css={{ marginLeft: 10 }}
+                icon={
+                  <img
+                    $avatar
+                    css={{ marginRight: -3 }}
+                    src={author.avatarUrl}
+                  />
+                }
+                onClick={() => {
+                  store.toggleLogin(author.login)
+                }}
+              >
+                {author.login}
+              </UI.Button>
+            </info>
+            <UI.Text opacity={0.7}>
+              {body.length > 240 ? body.slice(0, 240) + '...' : body}
+            </UI.Text>
+          </content>
+        )
       case 'PushEvent':
         return (
           <content if={payload.commits}>
-            <Card icon={event.integration}>
-              <header
-                css={{
-                  flexFlow: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '100%',
-                }}
-              >
-                <UI.Title>{payload.commits.length} commits</UI.Title>
-                <nav css={{ flexFlow: 'row' }}>
-                  <UI.Icon name="arrowminleft" color="#000" />
-                  <UI.Icon name="arrowminright" color="#000" />
-                </nav>
-              </header>
+            <header
+              css={{
+                flexFlow: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <left>
+                <UI.Title if={payload.commits.length > 1} size={1.15}>
+                  {payload.commits.length} commits
+                </UI.Title>
+              </left>
+              <nav css={{ flexFlow: 'row' }}>
+                <UI.Icon name="arrowminleft" color="white" />
+                <UI.Icon name="arrowminright" color="white" />
+              </nav>
+            </header>
 
-              {payload.commits.map(commit => (
-                <commit key={commit.sha}>
-                  <UI.Text html={format(commit.message)} />
-                </commit>
-              ))}
-            </Card>
+            {payload.commits.map(commit => (
+              <commit key={commit.sha}>
+                <UI.Text html={format(commit.message)} />
+              </commit>
+            ))}
           </content>
         )
 
@@ -54,7 +130,7 @@ export default class FeedItem {
     return null
   }
 
-  render({ event, style }) {
+  render({ store, event, style }) {
     const { verb, data } = event
     if (!data) {
       console.log('no data')
@@ -62,7 +138,7 @@ export default class FeedItem {
     }
 
     const { actor } = data
-    const body = this.getBody(event, data)
+    const body = this.getBody(event, data, store)
 
     return (
       <feeditem style={style}>
@@ -111,7 +187,7 @@ export default class FeedItem {
     },
     content: {
       flex: 1,
-      padding: 10,
+      padding: [0, 20],
     },
     avatar: {
       width: 18,

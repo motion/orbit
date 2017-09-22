@@ -1,6 +1,9 @@
 // @flow
 import { ensureJob } from '../helpers'
 import type { User, Setting } from '@mcro/models'
+import debug from 'debug'
+
+const log = debug('sync')
 
 type SyncOptions = {
   user: User,
@@ -8,9 +11,11 @@ type SyncOptions = {
 
 export default class Syncer {
   // external interface, must set:
-  static syncers: Object<string, Class<any>>
-  static type: string
-  static actions: Object
+  static settings: {
+    syncers: Object<string, Object>,
+    type: string,
+    actions: Object,
+  }
 
   // internal
   user: User
@@ -19,11 +24,12 @@ export default class Syncer {
 
   constructor({ user }: SyncOptions) {
     this.user = user
-    this.start()
   }
 
   start() {
-    const { syncers } = this.constructor
+    log('starting syncer', this.constructor.name)
+    const { settings } = this.constructor
+    const { syncers } = settings
 
     // setup syncers
     if (syncers) {
@@ -60,11 +66,11 @@ export default class Syncer {
   }
 
   get type(): string {
-    return this.constructor.type
+    return this.constructor.settings.type
   }
 
   get actions(): string {
-    return this.constructor.actions
+    return this.constructor.settings.actions
   }
 
   get setting(): ?Setting {

@@ -44,7 +44,9 @@
     "match-sorter": "^1.8.1",
     "marked": "^0.3.6",
     "worker-pouch": "^2.0.0",
-    "r2": "^1.0.0"
+    "r2": "^1.0.0",
+    "date-fns": "^1.28.5",
+    "debug": "^2.6.9"
   },
   "devDependencies": {
     "typescript": "^2.5.2",

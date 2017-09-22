@@ -12,7 +12,8 @@
     "pouchdb-core": "^6.2.0",
     "rxdb": "^6.0.1",
     "rxjs": "^5.4.1",
-    "sb-event-kit": "^3.0.0"
+    "sb-event-kit": "^3.0.0",
+    "debug": "^2.6.9"
   },
   "peerDependencies": {
     "mobx": "*"

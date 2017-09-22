@@ -2,6 +2,9 @@
 import { store, watch } from '@mcro/black/store'
 import * as Syncers from './syncers'
 import { Job, CurrentUser } from '~/app'
+import debug from 'debug'
+
+const log = debug('sync')
 
 function getRxError(error: Error) {
   const { message, stack } = error
@@ -20,8 +23,31 @@ export default class Sync {
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
   syncers: ?Object = null
 
-  constructor() {
+  start() {
     this.watchJobs()
+    this.watchSyncers()
+  }
+
+  get user() {
+    return CurrentUser
+  }
+
+  async dispose() {
+    await this.disposeSyncers()
+  }
+
+  async disposeSyncers() {
+    if (!this.syncers) {
+      return
+    }
+    for (const name of Object.keys(this.syncers)) {
+      if (this.syncers[name].dispose) {
+        await this.syncers[name].dispose()
+      }
+    }
+  }
+
+  watchSyncers() {
     this.react(
       () => this.user,
       async user => {
@@ -47,29 +73,11 @@ export default class Sync {
     )
   }
 
-  get user() {
-    return CurrentUser
-  }
-
-  async dispose() {
-    await this.disposeSyncers()
-  }
-
-  async disposeSyncers() {
-    if (!this.syncers) {
-      return
-    }
-    for (const name of Object.keys(this.syncers)) {
-      if (this.syncers[name].dispose) {
-        await this.syncers[name].dispose()
-      }
-    }
-  }
-
-  watchJobs = () => {
+  watchJobs() {
     this.react(
       () => this.pending,
       async jobs => {
+        log('watching pending', jobs)
         if (!jobs || !jobs.length) {
           return
         }
@@ -78,7 +86,7 @@ export default class Sync {
             return
           }
           if (this.locks.has(job.lock)) {
-            console.log('Already locked job:', job.lock)
+            log('Already locked job:', job.lock)
             return
           }
           let completed = false
@@ -88,7 +96,7 @@ export default class Sync {
             if (!completed) {
               await this.failJob(job, { message: 'timed out---' })
               this.locks.delete(job.lock)
-              console.log('removed stale job', job.lock)
+              log('removed stale job', job.lock)
             }
           }, 1000 * 60 * 2) // 2 min
 
@@ -118,7 +126,7 @@ export default class Sync {
     })
 
   runJob = async (job: Job) => {
-    console.log('Running job', job.type, job.action)
+    log('Running job', job.type, job.action)
     await job.update({
       percent: 0,
       status: Job.status.PROCESSING,
@@ -146,6 +154,6 @@ export default class Sync {
 
     // update job
     await job.update({ percent: 100, status: Job.status.COMPLETED })
-    console.log('Job completed:', job.type, job.action, job.id)
+    log('Job completed:', job.type, job.action, job.id)
   }
 }

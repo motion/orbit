@@ -59,8 +59,16 @@ export default class FeedItem {
               <UI.Button
                 chromeless
                 css={{ marginLeft: 10 }}
-                icon={<img $avatar src={author.avatarUrl} />}
-                onClick={() => store.toggleLogin(author.login)}
+                icon={
+                  <img
+                    $avatar
+                    css={{ marginRight: -3 }}
+                    src={author.avatarUrl}
+                  />
+                }
+                onClick={() => {
+                  store.toggleLogin(author.login)
+                }}
               >
                 {author.login}
               </UI.Button>

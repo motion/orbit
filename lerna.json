@@ -1,9 +1,6 @@
 {
   "lerna": "2.0.0",
-  "packages": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packages": ["apps/*", "packages/*"],
   "npmClient": "yarn",
   "version": "1.3.3",
   "commands": {
@@ -20,7 +17,8 @@
         "mobx-react",
         "react-virtualized",
         "@mcro/css",
-        "@mcro/gloss"
+        "@mcro/gloss",
+        "victory"
       ]
     }
   }

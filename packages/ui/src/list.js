@@ -211,7 +211,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
       return null
     }
     const child = this.children[index]({ style })
-    console.log('child', child)
     return (
       <CellMeasurer
         cache={this.cache}

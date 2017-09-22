@@ -224,7 +224,10 @@ class SetStore {
         if (item.type === 'task') {
           if (
             this.hasPeople &&
-            !includes(this.currentLogins, item.data.author.login)
+            !includes(
+              this.currentLogins,
+              item.data.author && item.data.author.login
+            )
           ) {
             return false
           }

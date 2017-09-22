@@ -32,3 +32,6 @@ export const IS_BAR =
 
 const keysearch = window.location.search.match(/key=(.*)/)
 export const APP_KEY = keysearch ? keysearch[1] : ''
+
+export const GOOGLE_CLIENT_ID =
+  '97251911865-qm0isevf5m3omuice4eg3s4uq9i99gcn.apps.googleusercontent.com'

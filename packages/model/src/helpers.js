@@ -37,9 +37,10 @@ export const applyHooks = (model: Model) => {
   const ogPostInsert = model.hooks.postInsert
   model.hooks.postInsert = (doc: Object) => {
     if (model.options.debug) {
-      // add some helper logs
-      const key = Object.keys(doc)[0]
-      console.log(`INSERT ${model.constructor.name} (${key} = ${doc[key]})`)
+      console.log(
+        `INSERT ${model.constructor.name}`,
+        JSON.stringify(doc.toJSON()).slice(0, 100)
+      )
     }
     if (ogPostInsert) {
       ogPostInsert.call(model, doc)

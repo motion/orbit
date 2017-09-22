@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 import * as Constants from './constants'
 import '@mcro/models/lib/user' // start superlogin connect immediately
 import Path from 'path'
+import { debounce } from 'lodash'
 
 export const indexFile = Path.join(__dirname, '..', 'index.html')
 
@@ -26,12 +27,17 @@ function splash() {
 
 function main() {
   splash()
-  require('./app').start()
+  require('./app')
 }
 
-main()
+if (!window.started) {
+  window.started = true
+  main()
+}
 
 // accept hmr
 if (module && module.hot) {
-  module.hot.accept(() => require('./app').start(true))
+  const restart = () => require('./app').start(true)
+  module.hot.accept(restart)
+  module.hot.accept('@mcro/models', restart)
 }

@@ -5,18 +5,17 @@ import { Job, CurrentUser } from '~/app'
 
 function getRxError(error: Error) {
   const { message, stack } = error
-
   try {
     const parsedMessage = JSON.parse(message)
     console.log(JSON.stringify(parsedMessage, null, 2))
   } catch (e) {
-    // nothing
+    console.log('error parsing error', e)
   }
   return { message, stack }
 }
 
 @store
-export default class Jobs {
+export default class Sync {
   locks: Set<string> = new Set()
   @watch pending: ?Array<Job> = (() => Job.pending(): any)
   syncers: ?Object = null
@@ -32,11 +31,15 @@ export default class Jobs {
         if (!this.syncers) {
           this.syncers = {}
           for (const name of Object.keys(Syncers)) {
-            const Syncer = new Syncers[name]({ user: CurrentUser })
-            if (Syncer.start) {
-              await Syncer.start()
+            const syncer = new Syncers[name]({ user: CurrentUser })
+            if (syncer.start) {
+              await syncer.start()
             }
-            this.syncers[name] = Syncer
+            this.syncers[name] = syncer
+            if (!this[name]) {
+              // $FlowIgnore
+              this[name] = syncer
+            }
           }
         }
       },
@@ -48,10 +51,6 @@ export default class Jobs {
     return CurrentUser
   }
 
-  get github(): ?Class<any> {
-    return this.syncers.github
-  }
-
   async dispose() {
     await this.disposeSyncers()
   }
@@ -61,7 +60,9 @@ export default class Jobs {
       return
     }
     for (const name of Object.keys(this.syncers)) {
-      await this.syncers[name].dispose()
+      if (this.syncers[name].dispose) {
+        await this.syncers[name].dispose()
+      }
     }
   }
 
@@ -131,7 +132,7 @@ export default class Jobs {
 
     if (syncer) {
       try {
-        await syncer.run(job)
+        await syncer.run(job.action)
       } catch (error) {
         console.log('error running syncer', error)
         await job.update({

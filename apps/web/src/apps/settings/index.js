@@ -31,7 +31,11 @@ export default class SettingsPage {
               />
             </sidebar>
             <main>
-              <Setup if={store.activeItem} item={store.activeItem} />
+              <Setup
+                if={store.activeItem}
+                item={store.activeItem}
+                key={Math.random()}
+              />
             </main>
           </content>
         </settings>

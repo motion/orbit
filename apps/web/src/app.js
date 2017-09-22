@@ -5,7 +5,7 @@ import { ThemeProvide } from '@mcro/ui'
 import Themes from './themes'
 import Root from './views/root'
 import Layout from './views/layout'
-import Jobs from './jobs'
+import Sync from './sync'
 import { Models } from '@mcro/models'
 import * as Constants from '~/constants'
 import AppStore from './stores/appStore'
@@ -23,10 +23,10 @@ export const Event = Models.Event
 export const CurrentUser = CurrentUser_
 
 class App {
-  jobs: Jobs
+  sync: Sync
   store: AppStore
 
-  constructor(quiet?: boolean) {
+  constructor() {
     // this.render() // to render before db connects
     this.store = new AppStore({
       config: {
@@ -38,24 +38,19 @@ class App {
       models: Models,
       services: Services,
     })
-    this.start(quiet)
   }
 
-  async start(quiet: boolean) {
-    this.syncSettings()
+  async start(quiet?: boolean) {
     await this.store.start(quiet)
-    this.jobs = new Jobs()
+    await Setting.find().sync() // sync settings
+    this.sync = new Sync()
     this.render()
-  }
-
-  async syncSettings() {
-    await Setting.find().sync()
   }
 
   async dispose() {
     await this.store.dispose()
-    if (this.jobs) {
-      this.jobs.dispose()
+    if (this.sync) {
+      this.sync.dispose()
     }
   }
 
@@ -102,21 +97,30 @@ class App {
 let app = window.App
 
 export async function start(recreate?: boolean) {
+  if (window.appDisposing) {
+    return
+  }
+  window.appDisposing = true
+  setTimeout(() => {
+    window.appDisposing = false
+  }, 50)
   if (app) {
     await app.dispose()
   }
   if (recreate || !app) {
-    app = new App(recreate)
+    app = new App()
+    await app.start(recreate)
     window.App = app
   }
+  window.appDisposing = false
+}
+
+if (!window.App) {
+  start()
 }
 
 export default app
 
-// hmr
 if (module && module.hot) {
   module.hot.accept(() => start(true))
-  module.hot.accept('@mcro/models', async () => {
-    // cutoff models
-  })
 }

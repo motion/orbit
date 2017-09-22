@@ -18,7 +18,6 @@ export default class GithubSetting {
       console.warn('bad orgs')
       return null
     }
-
     return (
       <content>
         <loading

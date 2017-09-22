@@ -56,7 +56,16 @@ export default class FeedItem {
             <info $$row css={{ marginTop: -8 }}>
               <UI.Text>#{number}</UI.Text>
               <UI.Text> opened {UI.Date.format(createdAt)} by</UI.Text>
+              <user
+                css={{ marginLeft: 10 }}
+                $$row
+                onClick={() => store.toggleLogin(author.login)}
+              >
+                <img $avatar src={author.avatarUrl} />
+                {author.login}
+              </user>
               <UI.Button
+                if={false}
                 chromeless
                 css={{ marginLeft: 10 }}
                 icon={

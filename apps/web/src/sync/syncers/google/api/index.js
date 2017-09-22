@@ -1,6 +1,6 @@
 // from https://github.com/gadventures/gapi-js
 
-import r2 from '@mcro/r2'
+import * as r2 from '@mcro/r2'
 import GapiResources from './resources'
 
 export default class Gapi extends GapiResources {

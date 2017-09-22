@@ -1,17 +1,7 @@
 import 'source-map-support/register'
 import 'isomorphic-fetch'
 import global from 'global'
-import wfp from 'wait-for-port'
-import * as Constants from '~/constants'
-import promisify from 'sb-promisify'
 import cleanStack from 'clean-stacktrace'
-
-const wfpp = promisify(wfp)
-const options = {
-  numRetries: 100,
-  retryInterval: 3000,
-}
-const waitForPort = (host, port) => wfpp(host, port, options)
 
 process.on('unhandledRejection', function(error, p) {
   const path = require('path')
@@ -45,10 +35,6 @@ async function run() {
   const Api = new API({ rootPath: __dirname })
   global.API = Api
   try {
-    await Promise.all([
-      waitForPort(Constants.DB_HOSTNAME, Constants.DB_PORT),
-      waitForPort(Constants.REDIS_HOSTNAME, Constants.REDIS_PORT),
-    ])
     await Api.start()
   } catch (err) {
     console.log('error', err)

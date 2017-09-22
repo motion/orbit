@@ -4,11 +4,13 @@ const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const historyApiFallback = require('connect-history-api-fallback')
 const httpProxyMiddleware = require('http-proxy-middleware')
-const detect = require('detect-port')
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles')
 const log = require('./config/build.log')
 const config = require('./config/build.config')
 const paths = require('./config/paths')
+
+const HOST = '0.0.0.0'
+const PORT = 3002
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -16,7 +18,7 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3001
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || PORT
 let compiler
 
 function setupCompiler(host, port) {
@@ -114,12 +116,9 @@ function runDevServer(host, port) {
 function run(port) {
   console.log('running on', port)
   var protocol = process.env.HTTPS === 'true' ? 'https' : 'http'
-  var host = process.env.HOST || 'localhost'
+  var host = process.env.HOST || HOST
   setupCompiler(host, port, protocol)
   runDevServer(host, port, protocol)
 }
 
-detect(DEFAULT_PORT).then(port => {
-  run(port)
-  console.log('running on port', port)
-})
+run(DEFAULT_PORT)

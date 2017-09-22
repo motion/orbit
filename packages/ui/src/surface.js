@@ -393,7 +393,7 @@ export default class Surface extends React.PureComponent<Props> {
 
     // sizes
     const size = props.size === true ? 1 : props.size || 1
-    const height = props.height
+    const height = props.height || (props.style && props.style.height)
     const width = props.width
     const padding = props.padding
     const flex = props.flex === true ? 1 : props.flex

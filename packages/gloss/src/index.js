@@ -3,7 +3,6 @@ import fancyElement from './fancyElement'
 import css from '@mcro/css'
 import JSS from './stylesheet'
 import * as Helpers_ from '@mcro/css'
-import hash from 'hash-sum'
 
 // exports
 import ThemeProvide_ from './components/themeProvide'
@@ -23,15 +22,15 @@ export type Options = {
   isColor?: Function,
 }
 
+const { hash } = Helpers
+
 const DEFAULT_OPTS = {
   themeKey: 'theme',
 }
 
+let idCounter = 0
 function uid() {
-  return `g${Math.random()
-    .toString()
-    .replace('.', '')
-    .slice(0, 15)}`
+  return idCounter++
 }
 
 export class Gloss {

@@ -1,4 +1,3 @@
-import jssCache from 'jss-cache'
 import jssNested from 'jss-nested'
 import jssDefaultUnit from 'jss-default-unit'
 import jssPropsSort from 'jss-props-sort'

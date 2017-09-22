@@ -1,4 +1,5 @@
 // @flow
+import parser from '../bar/parser'
 import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
@@ -7,8 +8,8 @@ import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from './pane'
 import TestIssue from './test_data/issue'
-
 import type { PaneProps, PaneResult } from '~/types'
+import { includes } from 'lodash'
 
 const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
@@ -21,13 +22,12 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
-  listRef = null
 
   @watch
-  topThingsRaw: ?Array<Thing> = () =>
+  topThingsRaw: ?Array<Thing> = (() =>
     Thing.find()
       .sort({ updated: 'desc' })
-      .limit(3000)
+      .limit(3000): any)
 
   get topThings() {
     return this.topThingsRaw || []
@@ -37,8 +37,41 @@ class BarMainStore {
     return this.props.barStore.search
   }
 
-  start() {
-    this.props.getRef(this)
+  get parserResult() {
+    return this.search ? parser(this.search) : null
+  }
+
+  get searchResult() {
+    if (!this.parserResult) return null
+
+    const { people, startDate, endDate, service } = this.parserResult
+
+    const person = people.length > 0 ? people[0] : undefined
+
+    const actuallyPerson = ['docs', 'issues', 'github', 'calendar', 'tasks']
+
+    const type =
+      (includes(actuallyPerson, service) ? 'person' : service) || 'person'
+
+    const val = {
+      id: `type:${people.join(':')}`,
+      title: type,
+      type,
+      data: {
+        startDate,
+        endDate,
+        type,
+        person,
+        image: person,
+        service,
+        people,
+      },
+      people,
+      startDate,
+      endDate,
+    }
+
+    return val
   }
 
   get things(): Array<PaneResult> {
@@ -55,7 +88,7 @@ class BarMainStore {
       icon: 'radio',
       data: {
         special: true,
-        person: 'Nate Wienert',
+        person: 'me',
         image: 'me',
       },
       actions: ['respond to recent'],
@@ -82,7 +115,7 @@ class BarMainStore {
     {
       id: 1030,
       title: 'Motion',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Motion',
@@ -92,7 +125,7 @@ class BarMainStore {
     {
       id: 1040,
       title: 'Product',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Product',
@@ -102,7 +135,7 @@ class BarMainStore {
     {
       id: 1050,
       title: 'Search',
-      type: 'team',
+      type: 'person',
       category: 'Teams',
       data: {
         team: 'Search',
@@ -170,116 +203,105 @@ class BarMainStore {
   ]
 
   get results(): Array<PaneResult> {
-    if (!CurrentUser.loggedIn) {
-      return [{ title: 'Login', type: 'login', static: true }]
-    }
+    // if (!CurrentUser.loggedIn) {
+    //   return [{ title: 'Login', type: 'login', static: true }]
+    // }
     const includeTests = this.search.indexOf(':') === 0
+    const all = [
+      ...this.browse,
+      ...this.teams,
+      ...this.people,
+      ...this.things,
+      ...(includeTests ? this.tests : []),
+      ...this.extras,
+    ]
 
-    return fuzzy(
-      [
-        ...this.browse,
-        ...this.teams,
-        ...this.people,
-        ...this.things,
-        ...(includeTests ? this.tests : []),
-        ...this.extras,
-      ],
-      this.search
-    )
+    const getRowHeight = item => {
+      const height = this.hasContent(item)
+        ? 100
+        : item.data && item.data.updated ? 58 : 38
+      return { ...item, height }
+    }
+
+    const search = fuzzy(all, this.search).map(getRowHeight)
+    if (this.searchResult) return [getRowHeight(this.searchResult), ...search]
+    return search
   }
+
+  hasContent = (result: PaneResult) => result && result.data && result.data.body
 
   select = (index: number) => {
     this.props.navigate(this.results[index])
   }
+}
 
-  setListRef = ref => {
-    this.listRef = ref
-  }
+type Props = {
+  mainStore: BarMainStore,
+  paneStore: Class<any>,
 }
 
 @view.attach('barStore')
 @view({
   mainStore: BarMainStore,
 })
-export default class BarMain extends React.Component<> {
-  static defaultProps: {}
-
-  onSelect = (item, index) => {
-    this.props.paneStore.selectRow(index)
-  }
-
-  hasContent = (result: PaneResult) => result && result.data && result.data.body
-  getResult = i => this.props.mainStore.results[i]
-
-  getRowHeight = i => {
-    const result = this.getResult(i)
-    return this.hasContent(result)
-      ? 100
-      : result.data && result.data.updated ? 58 : 38
-  }
-
+export default class BarMain extends React.Component<Props> {
   getDate = (result: PaneResult) =>
     result.data && result.data.updated
       ? UI.Date.format(result.data.updated)
       : ''
 
   render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
+    if (!mainStore.results) {
+      return null
+    }
     return (
-      <Pane.Card width={315} $pane isActive={paneStore.isActive}>
-        <none if={mainStore.results.length === 0}>No Results</none>
-        <UI.List
-          if={mainStore.results}
-          getRef={paneStore.setList}
-          virtualized={{
-            rowHeight: this.getRowHeight,
-            measure: true,
-          }}
-          onSelect={this.onSelect}
-          groupKey="category"
-          items={mainStore.results}
-          itemProps={{
-            ...paneStore.itemProps,
-            fontSize: 26,
-            size: 1.2,
-          }}
-          getItem={(result, index) => ({
-            key: result.id,
-            highlight: () => index === paneStore.activeIndex,
-            primary: result.title,
-            primaryEllipse: !this.hasContent(result),
-            children: [
-              <UI.Text if={result.data} lineHeight={20} opacity={0.5}>
-                {this.getDate(result) + ' · '}
-                {(result.data.body && result.data.body.slice(0, 120)) || ''}
-              </UI.Text>,
-              <UI.Text if={!result.data}>{this.getDate(result)}</UI.Text>,
-            ].filter(Boolean),
-            iconAfter: true,
-            iconProps: {
-              style: {
-                alignSelf: 'flex-start',
-                paddingTop: 2,
-              },
+      <Pane.Card
+        items={mainStore.results}
+        width={315}
+        groupKey="category"
+        itemProps={{
+          fontSize: 26,
+          size: 1.2,
+          glow: true,
+        }}
+        getItem={(result, index) => ({
+          key: `${index}${result.id}`,
+          highlight: () => index === paneStore.activeIndex,
+          primary: result.title,
+          primaryEllipse: !mainStore.hasContent(result),
+          children: [
+            <UI.Text
+              if={result.data && result.data.body}
+              key={0}
+              lineHeight={20}
+              opacity={0.5}
+            >
+              {this.getDate(result) + ' · '}
+              {(result.data.body && result.data.body.slice(0, 120)) || ''}
+            </UI.Text>,
+            <UI.Text if={!result.data} key={1}>
+              {this.getDate(result)}
+            </UI.Text>,
+          ].filter(Boolean),
+          iconAfter: true,
+          iconProps: {
+            style: {
+              alignSelf: 'flex-start',
+              paddingTop: 2,
             },
-            icon:
-              result.data && result.data.image ? (
-                <img $image src={`/images/${result.data.image}.jpg`} />
-              ) : (
-                result.icon
-              ),
-          })}
-        />
-      </Pane.Card>
+          },
+          icon:
+            result.data && result.data.image ? (
+              <img $image src={`/images/${result.data.image}.jpg`} />
+            ) : (
+              result.icon
+            ),
+        })}
+      />
     )
   }
 
   static style = {
-    pane: {
-      height: '100%',
-    },
-    spread: {
-      justifyContent: 'space-between',
-    },
     image: {
       width: 20,
       height: 20,

@@ -2,12 +2,19 @@ const webpack = require('webpack')
 const Fs = require('fs')
 const Path = require('path')
 
-const nodeModules = {}
-Fs.readdirSync(Path.join(__dirname, 'node_modules'))
+const nodeModules = [
+  Path.join(__dirname, 'node_modules'),
+  Path.join(__dirname, '..', '..', 'node_modules'),
+]
+  .map(name => Fs.readdirSync(name))
   .filter(x => ['.bin', '@mcro'].indexOf(x) === -1)
-  .forEach(module => {
-    nodeModules[module] = `commonjs ${module}`
-  })
+  .reduce(
+    (res, key) => ({
+      ...res,
+      [key]: `commonjs ${module}`,
+    }),
+    {}
+  )
 
 module.exports = {
   entry: [Path.join(__dirname, 'lib', 'index.js')],

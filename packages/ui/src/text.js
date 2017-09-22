@@ -3,7 +3,6 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { keycode } from '@mcro/ui'
 import { observable } from 'mobx'
-import LinesEllipse from 'react-lines-ellipsis'
 
 export type Props = {
   editable?: boolean,
@@ -174,13 +173,14 @@ export default class Text extends React.PureComponent<Props> {
       if (Array.isArray(children)) {
         childrenString = children.filter(x => !!x).join('')
       }
-      inner = (
-        <LinesEllipse
-          className="line-ellipse"
-          text={childrenString}
-          maxLine={200}
-        />
-      )
+      // TODO get a good ellpse tool
+      // inner = (
+      //   <LinesEllipse
+      //     className="line-ellipse"
+      //     text={childrenString}
+      //     maxLine={200}
+      //   />
+      // )
     }
     return (
       <text

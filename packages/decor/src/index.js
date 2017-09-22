@@ -6,7 +6,6 @@ export { Emitter, CompositeDisposable } from 'sb-event-kit'
 type Helpers = {
   emitter: Emitter,
   alreadyDecorated: (a: any) => boolean,
-  isClass: (a: any) => boolean,
 }
 
 type Plugin = (
@@ -54,7 +53,6 @@ export default function decor(plugins: Array<[Plugin, Object] | Plugin>) {
     const Helpers = {
       emitter,
       alreadyDecorated,
-      isClass,
     }
 
     let plugin = getPlugin(options, Helpers)

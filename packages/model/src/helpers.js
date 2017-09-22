@@ -1,5 +1,8 @@
 // @flow
 import type Model from './model'
+import debug from 'debug'
+
+const log = debug('model')
 
 export const applyHooks = (model: Model) => {
   // PRE-INSERT
@@ -36,11 +39,10 @@ export const applyHooks = (model: Model) => {
   // this is called when a new model has been inserted
   const ogPostInsert = model.hooks.postInsert
   model.hooks.postInsert = (doc: Object) => {
-    if (model.options.debug) {
-      // add some helper logs
-      const key = Object.keys(doc)[0]
-      console.log(`INSERT ${model.constructor.name} (${key} = ${doc[key]})`)
-    }
+    log(
+      `INSERT ${model.constructor.name}`,
+      JSON.stringify(doc.toJSON()).slice(0, 100)
+    )
     if (ogPostInsert) {
       ogPostInsert.call(model, doc)
     }
@@ -49,7 +51,7 @@ export const applyHooks = (model: Model) => {
   // POST-CREATE
   // this when any model is instantiated
   const ogPostCreate = model.hooks.postCreate
-  const compiledMethods = model.compiledMethods()
+  const { compiledMethods } = model
   model.hooks.postCreate = doc => {
     if (compiledMethods) {
       for (const method of Object.keys(compiledMethods)) {

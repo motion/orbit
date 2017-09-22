@@ -13,11 +13,12 @@ import mobxFormatters from 'mobx-formatters'
 import _ from 'lodash'
 import * as Black from '@mcro/black'
 import color from 'color'
+import debug from 'debug'
 
 // Mobx.useStrict(true)
 
 // install console formatters
-// mobxFormatters(Mobx)
+mobxFormatters(Mobx)
 
 // the heavy hitters
 window.React = React
@@ -33,14 +34,16 @@ window._ = _
 window.log = Black.log
 window.$ = color
 window.Black = Black
+window.debug = debug
 
 // TODO check if this is needed and fix the global thing if so
-// const ogErr = console.error.bind(console)
-// console.error = function(...args) {
-//   if (args[0] && typeof args[0] === 'string') {
-//     if (args[0].indexOf('DeprecationWarning: ')) {
-//       return
-//     }
-//   }
-//   return ogErr.call(this, ...args)
-// }
+// PATCH: ignore octocat
+const ogWarn = console.warn.bind(console)
+console.warn = function(...args) {
+  if (args[0] && typeof args[0] === 'string') {
+    if (args[0].indexOf('Octokat BUG: ') > -1) {
+      return
+    }
+  }
+  return ogWarn.call(this, ...args)
+}

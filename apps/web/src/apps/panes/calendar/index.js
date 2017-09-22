@@ -2,49 +2,232 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Pane from '../pane'
 import * as React from 'react'
-import { range, capitalize, random, sample } from 'lodash'
+import { range, capitalize, sample, includes, random } from 'lodash'
+import moment from 'moment'
 
-class CalendarStore {
-  activeRow = 2
-  activeCol = 2
+const dayIndex = (row, col) => row * 7 + col - 4
+const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+const dotColors = [[64, 146, 240, 1], [163, 131, 236, 1], [242, 203, 70, 1]]
+const dots = range(100).map(() =>
+  range(random(0, 2)).map(() => sample(dotColors))
+)
+const months = 'Jan,Feb,Mar,Apr,May,Jun,July,Aug,Sep,Oct,Nov,Dec'.split(',')
 
-  dotColors = [[64, 146, 240, 1], [163, 131, 236, 1], [242, 203, 70, 1]]
-  dots = range(100).map(() =>
-    range(random(0, 2)).map(() => sample(this.dotColors))
-  )
+const getActiveDots = (month, day) => dots[month + day + 20]
 
-  select(row, col) {
-    this.activeRow = row
-    this.activeCol = col
+@view
+class RightList extends React.Component<> {
+  static defaultProps: {}
+
+  render({ dots }) {
+    const items = [
+      {
+        month: '12',
+        day: '7',
+        time: '7am',
+        people: 'Jacob',
+        description: 'IdeaDrive w/Search team',
+      },
+      {
+        month: '12',
+        day: '7',
+        time: '10am',
+        people: 'Steel',
+        description: 'OKR Review w/James',
+      },
+      {
+        month: '12',
+        day: '7',
+        time: '3pm',
+        people: 'Steph and Nick',
+        description: 'Planetary fundraiser',
+      },
+      {
+        month: '12',
+        day: '8',
+        time: '8am',
+        people: 'Steph',
+        description: 'Q4 linkup review',
+      },
+      {
+        month: '12',
+        day: '8',
+        people: 'Nick',
+        time: '10:30am',
+        description: '1on1 with Dave',
+      },
+    ]
+
+    return (
+      <list>
+        <placeholder if={dots.length === 0}>
+          <UI.Title size={2}>No Events</UI.Title>
+        </placeholder>
+        <content if={dots.length > 0}>
+          {dots.map((background, index) => {
+            const item = sample(items)
+
+            return (
+              <item $$row key={item.description}>
+                <content>
+                  {item.content || (
+                    <UI.Button
+                      $item
+                      chromeless
+                      icon={<dot css={{ marginTop: -13, background }} />}
+                      if={!item.content}
+                      height={50}
+                      size={1.1}
+                      key={index}
+                      padding={[10, 20, 20, 10]}
+                    >
+                      <div
+                        $description
+                        css={{
+                          marginTop: -15,
+                          fontWeight: 400,
+                          fontSize: item.description.length > 20 ? 14 : 16,
+                        }}
+                        $$row
+                      >
+                        {item.description}
+                      </div>
+                      <info
+                        $date
+                        css={{
+                          flexFlow: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <div
+                          $time
+                          css={{
+                            opacity: 0.5,
+                          }}
+                        >
+                          <UI.Text size={1}>
+                            {item.time}, {item.people}
+                          </UI.Text>
+                        </div>
+                      </info>
+                    </UI.Button>
+                  )}
+                </content>
+                <UI.Icon
+                  if={false}
+                  size={12}
+                  color="#eee"
+                  $arrow
+                  name="arrows-1_bold-right"
+                />
+              </item>
+            )
+          })}
+        </content>
+      </list>
+    )
+  }
+
+  static style = {
+    list: {
+      width: 280,
+      borderLeft: [1, [0, 0, 0, 0.1]],
+      justifyContent: 'center',
+      padding: [0, 0, 0, 10],
+      margin: [0, 0, 0, 0],
+    },
+    item: {
+      height: 60,
+    },
+    placeholder: {
+      alignItems: 'center',
+      justifySelf: 'center',
+    },
+    content: {},
+    arrow: {
+      marginLeft: 10,
+      marginTop: 5,
+      opacity: 0.7,
+    },
+    item: {
+      marginLeft: 10,
+    },
+    dot: {
+      width: 10,
+      height: 10,
+      borderRadius: 10,
+    },
+    section: {
+      padding: [8, 10],
+    },
   }
 }
 
-@view({
-  store: CalendarStore,
-})
+@view
 class Calendar {
   render({ store }) {
+    const {
+      onSelect,
+      isSmall,
+      visibleMonth,
+      wrapMonth,
+      activeDay,
+      activeMonth,
+      nextMonth,
+      prevMonth,
+    } = store
     const days = 'sun,mon,tue,wed,thu,fri,sat'
       .split(',')
       .map(d => capitalize(d))
-    const dayIndex = (row, col) => row * 7 + col - 4
-    const dayNumber = (row, col) => {
+
+    const norm = (row, col) => {
       const index = dayIndex(row, col)
-      if (index < 1) return 29 + index
-      if (index > 30) return index - 30
-      return index
+      if (index < 1)
+        return {
+          day: daysInMonth[wrapMonth(visibleMonth - 1)] + index,
+          month: wrapMonth(visibleMonth - 1),
+        }
+      if (index > daysInMonth[visibleMonth])
+        return {
+          day: index - daysInMonth[visibleMonth],
+          month: wrapMonth(visibleMonth + 1),
+        }
+
+      return { day: index, month: visibleMonth }
     }
 
-    const isThisMonth = (row, col) => {
-      const index = dayIndex(row, col)
-      return index > 0 && index < 31
-    }
+    const allWeeks = 5
+    // which weeks do we show in small mode
+    // we get the actual day so it doesn't change as we click around
+    const startWeek = Math.floor(new Date().getDate() / 7)
+    const rows = isSmall ? range(startWeek, startWeek + 2) : range(0, allWeeks)
 
     return (
       <cal>
+        <actions if={!isSmall} $$row>
+          <UI.Button $leftAction onClick={store.toToday} size={1.0} chromeless>
+            Today
+          </UI.Button>
+          <UI.Button
+            $leftAction
+            size={1.0}
+            chromeless
+            onClick={prevMonth}
+            icon="arrows-1_bold-left"
+          />
+          <UI.Button
+            $leftAction
+            size={1.0}
+            onClick={nextMonth}
+            chromeless
+            icon="arrows-1_bold-right"
+          />
+          <UI.Title size={1.2}>{months[visibleMonth]}</UI.Title>
+        </actions>
         <days $$row>
           {days.map(day => (
-            <item key={day} $dayItem>
+            <item $visibleDay $dayLabel key={day}>
               <day>
                 <UI.Text ellipse>{day}</UI.Text>
               </day>
@@ -52,30 +235,34 @@ class Calendar {
           ))}
         </days>
         <rows>
-          {range(2, 4).map(row => (
-            <row key={row} $$row>
-              {range(days.length).map((item, index) => (
-                <item
-                  key={index}
-                  $dark={!isThisMonth(row, index)}
-                  onClick={() => {
-                    store.select(row, index)
-                  }}
-                >
-                  <highlight
-                    $lit={row === store.activeRow && index === store.activeCol}
+          {range(0, allWeeks).map(row => (
+            <row $visible={includes(rows, row)} key={row} $$row>
+              {range(days.length).map((item, index) => {
+                const { day: itemDay, month: itemMonth } = norm(row, index)
+
+                return (
+                  <item
+                    key={'row' + row + 'index' + index}
+                    $visibleDay={includes(rows, row)}
+                    $dark={includes(rows, row) && itemMonth !== visibleMonth}
+                    onClick={() => {
+                      onSelect({ day: itemDay, month: itemMonth })
+                    }}
                   >
-                    <UI.Text>{dayNumber(row, index)}</UI.Text>
-                    <dots $$row>
-                      {store.dots[
-                        dayIndex(row, index) + 20
-                      ].map((background, index) => (
-                        <dot key={index} css={{ background }} />
-                      ))}
-                    </dots>
-                  </highlight>
-                </item>
-              ))}
+                    <highlight
+                      $lit={itemDay === activeDay && itemMonth === activeMonth}
+                    >
+                      <UI.Text>{itemDay + ''}</UI.Text>
+                      <dots $$row>
+                        {(getActiveDots(itemMonth, itemDay) || []
+                        ).map((background, index) => (
+                          <dot key={index} css={{ background }} />
+                        ))}
+                      </dots>
+                    </highlight>
+                  </item>
+                )
+              })}
             </row>
           ))}
         </rows>
@@ -84,6 +271,13 @@ class Calendar {
   }
 
   static style = {
+    cal: {
+      width: '100%',
+      userSelect: 'none',
+    },
+    days: {
+      borderBottom: [1, 'solid', [0, 0, 0, 0.05]],
+    },
     day: {
       fontWeight: 400,
       margin: 5,
@@ -92,6 +286,10 @@ class Calendar {
     item: {
       margin: 5,
       flex: 1,
+      transform: { scale: 0.5 },
+      transformOrigin: 'center center',
+      opacity: 0,
+      transition: 'all 150ms ease-in',
       fontWeight: 500,
       fontSize: 18,
       justifyContent: 'center',
@@ -101,8 +299,8 @@ class Calendar {
       justifyContent: 'center',
       alignItems: 'center',
       textAlign: 'center',
-      width: 38,
-      height: 38,
+      minWidth: 38,
+      minHeight: 38,
       borderRadius: 100,
       transition: 'background ease-in 50ms',
     },
@@ -119,14 +317,24 @@ class Calendar {
       height: 5,
       width: 5,
     },
+    visibleDay: {
+      opacity: 1,
+      transform: { scale: 1 },
+    },
     dark: {
+      color: 'rgba(0,0,0,0.3)',
       opacity: 0.5,
     },
     dayItem: {
-      height: 35,
+      height: 25,
     },
     row: {
-      marginTop: 10,
+      // marginTop: 10,
+      transition: 'all 150ms ease-in',
+      height: 0,
+    },
+    visible: {
+      height: 50,
     },
   }
 }
@@ -219,6 +427,63 @@ class Event {
 }
 
 class CalendarPaneStore {
+  activeMonth = null
+  activeDay = null
+  visibleMonth = null
+
+  get isSmall() {
+    return this.props.isSmall
+  }
+
+  get startDate() {
+    return this.props.paneStore && this.props.paneStore.data.startDate
+  }
+
+  setActive = () => {
+    if (this.startDate) {
+      const active = this.startDate
+      this.activeDay = active.getDate()
+      this.activeMonth = active.getMonth()
+      this.visibleMonth = active.getMonth()
+    }
+  }
+
+  start() {
+    let active = new Date()
+    if (this.startDate) {
+      active = this.startDate
+    }
+
+    this.activeDay = active.getDate()
+    this.activeMonth = active.getMonth()
+    this.visibleMonth = active.getMonth()
+  }
+
+  toToday = () => {
+    this.activeMonth = new Date().getMonth()
+    this.activeDay = new Date().getDate()
+    this.visibleMonth = this.activeMonth
+  }
+
+  prevMonth = () => {
+    this.visibleMonth = this.wrapMonth(this.visibleMonth - 1)
+  }
+
+  nextMonth = () => {
+    this.visibleMonth = this.wrapMonth(this.visibleMonth + 1)
+  }
+
+  wrapMonth = i => {
+    if (i < 0) return 13 + i
+    if (i > 12) return i - 13
+    return i
+  }
+
+  onSelect = ({ day, month }) => {
+    this.activeDay = day
+    this.activeMonth = month
+  }
+
   highlightEventIndex = -1
   events = [
     {
@@ -238,12 +503,26 @@ class CalendarPaneStore {
   addEvent = event => (this.events = [...this.events, event])
 }
 
+const friendlyDate = ({ startDate, endDate }) => {
+  const start = moment(startDate).calendar()
+  if (endDate) {
+    const end = moment(endDate).calendar()
+    return `${start} - ${end}`
+  }
+
+  return start
+}
+
 @view.attach('millerStore')
 @view({
   store: CalendarPaneStore,
 })
 export default class CalendarPane {
-  render({ store, millerStore, isActive }) {
+  componentWillReceiveProps() {
+    this.props.store.setActive()
+  }
+
+  render({ store, isSmall, paneStore, millerStore, isActive }) {
     const actions = [
       {
         name: 'newEvent',
@@ -259,6 +538,25 @@ export default class CalendarPane {
     return (
       <UI.Theme name="clear-dark">
         <Pane.Card isActive={isActive} actions={actions}>
+          <section if={paneStore}>
+            <people $$row>
+              {paneStore.data.people.map(person => (
+                <person $$row key={person}>
+                  <img $image src={`/images/${person}.jpg`} />
+                  <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+                    {person}
+                  </UI.Title>
+                </person>
+              ))}
+            </people>
+            <UI.Title
+              css={{ padding: 20 }}
+              size={1.2}
+              if={paneStore.data.startDate}
+            >
+              {friendlyDate(paneStore.data).replace(/\ at\ 12\:00\ AM/g, '')}
+            </UI.Title>
+          </section>
           <container>
             <titleContainer if={false} $$row>
               <actions $$row>
@@ -294,8 +592,15 @@ export default class CalendarPane {
                 </UI.Button>
               </actions>
             </titleContainer>
-            <content>
-              <Calendar />
+            <content $$row>
+              <Calendar
+                onSelect={store.onSelect}
+                activeDots={dots}
+                store={store}
+              />
+              <RightList
+                dots={getActiveDots(store.activeMonth, store.activeDay)}
+              />
               <bottom if={false}>
                 <events>
                   {store.events.map((event, index) => (
@@ -320,6 +625,16 @@ export default class CalendarPane {
   }
 
   static style = {
+    content: {
+      width: 420,
+    },
+    image: {
+      width: 50,
+      height: 50,
+      borderRadius: 1000,
+      marginLeft: 20,
+      marginRight: 10,
+    },
     titleContainer: {
       justifyContent: 'space-between',
       margin: [10, 0],
@@ -327,9 +642,6 @@ export default class CalendarPane {
     },
     input: {
       fontSize: 18,
-    },
-    content: {
-      alignItems: 'center',
     },
     leftAction: {
       marginLeft: 3,

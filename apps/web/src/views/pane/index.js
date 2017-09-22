@@ -25,11 +25,7 @@ export default class Pane extends React.Component {
 
     return (
       <pane css={{ width }} ref={this.handleRef}>
-        <ChildPane
-          onSelect={row => millerStore.setSelection(index, row)}
-          paneStore={paneStore}
-          getRef={millerStore.handleRef(index)}
-        />
+        <ChildPane index={index} paneStore={paneStore} />
       </pane>
     )
   }

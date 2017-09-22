@@ -4,6 +4,7 @@ import {
   isColorLike,
   snakeToCamel,
   camelToSnake,
+  hash,
 } from './helpers'
 import type { Color } from './types'
 import { CAMEL_TO_SNAKE } from './cssNameMap'
@@ -247,6 +248,7 @@ export default function motionStyle(options: Object = {}) {
 
   // expose helpers
   processStyles.helpers = {
+    hash,
     toColor,
     isColor,
     processArray,

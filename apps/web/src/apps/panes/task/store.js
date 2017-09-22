@@ -1,16 +1,25 @@
 import App, { Thing } from '~/app'
 
-const getIssue = async (taskId, issueNumber) => {
+const getIssue = async taskId => {
   const thing = await Thing.findOne(taskId).exec()
 
-  return await GithubStore.api
+  return GithubStore.api
     .repos(thing.orgName, thing.parentId)
-    .issues(issueNumber)
+    .issues(thing.data.number)
 }
 
 class GithubStore {
   static get api() {
     return App.services.Github.github
+    /*
+    return new Promise(async (resolve, reject) => {
+      try {
+        resolve(App.services.Github.github)
+      } catch (err) {
+        reject(err)
+      }
+    })
+    */
   }
 
   static editTask = newTitle => {}
@@ -19,9 +28,9 @@ class GithubStore {
 
   static createTask = title => {}
 
-  static setLabels = async (taskId, issueNumber, labels) => {
+  static setLabels = async (taskId, labels) => {
     const thing = await Thing.findOne(taskId).exec()
-    const issue = await getIssue(taskId, issueNumber)
+    const issue = await getIssue(taskId)
     const res = issue.labels.add(labels)
 
     if (res !== true) return
@@ -34,11 +43,9 @@ class GithubStore {
     await thing.save()
   }
 
-  static deleteLabel = (taskId, issueNumber, label) => {}
-
   static setAssigned = assigned => {}
 
-  static deleteComment = async (taskId, issueNumber, commentId) => {
+  static deleteComment = async (taskId, commentId) => {
     const thing = await Thing.findOne(taskId).exec()
     const res = await GithubStore.api
       .repos(thing.orgName, thing.parentId)
@@ -55,23 +62,23 @@ class GithubStore {
     await thing.save()
   }
 
-  static editComment = async (issueId, body) => {
+  static editComment = async (issueId, id, body) => {
     const thing = await Thing.findOne(issueId).exec()
 
     thing.data = {
       ...thing.data,
-      comments: thing.data.comments.map((c, body) => {
-        if (c.body !== body) return c
-        return { ...c, body }
+      comments: thing.data.comments.map(comment => {
+        if (comment.id !== id) return comment
+        return { ...comment, body }
       }),
     }
 
     await thing.save()
   }
 
-  static createComment = async (taskId, issueNumber, body) => {
+  static createComment = async (taskId, body) => {
     const thing = await Thing.findOne(taskId).exec()
-    const issue = await getIssue(taskId, issueNumber)
+    const issue = await getIssue(taskId)
     const res = await issue.comments.create({ body })
     const newComment = {
       id: res.id,
@@ -113,7 +120,7 @@ export default class TaskStore {
   ]
 
   setLabels = labels => {
-    GithubStore.setLabels(this.taskId, this.taskNumber, labels)
+    GithubStore.setLabels(this.taskId, labels)
     this.labels = labels
   }
 
@@ -121,10 +128,8 @@ export default class TaskStore {
     this.assigned = xs
   }
 
-  async start() {
+  async willMount() {
     const { data: { data } } = this.props.paneStore
-
-    this.props.getRef(this)
 
     this.labels = data.labels.map(({ name }) => name)
 
@@ -132,16 +137,11 @@ export default class TaskStore {
     this.allIssues = await GithubStore.api
       .repos(thing.orgName, thing.parentId)
       .issues.fetch()
-    console.log('all issues are ', this.allIssues)
   }
 
   // todo, change to body
   deleteComment = async id => {
-    GithubStore.deleteComment(this.taskId, this.taskNumber, id)
-  }
-
-  get taskNumber() {
-    return 55
+    GithubStore.deleteComment(this.taskId, id)
   }
 
   get taskId() {
@@ -149,7 +149,7 @@ export default class TaskStore {
   }
 
   onSubmit = body => {
-    GithubStore.createComment(this.taskId, this.taskNumber, body)
+    GithubStore.createComment(this.taskId, body)
   }
 
   get results() {
@@ -163,9 +163,11 @@ export default class TaskStore {
       elName: 'comment',
       data: comment,
       actions: [],
+      height: 100,
     }))
 
     const firstComment = {
+      height: 100,
       elName: 'comment',
       data: {
         author: data.author,
@@ -180,10 +182,12 @@ export default class TaskStore {
         elName: 'header',
         data,
         actions: [],
+        height: 50,
       },
       firstComment,
       ...comments,
       {
+        height: 100,
         elName: 'response',
         data: {
           onSubmit: this.onSubmit,

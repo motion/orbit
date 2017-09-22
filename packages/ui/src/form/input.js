@@ -11,16 +11,24 @@ type Props = {
   sync?: Object,
   onEnter?: Function,
   getRef?: Function,
-  type?: 'checkbox' | 'submit',
+  type?: 'input' | 'checkbox' | 'submit' | 'textarea' | 'password',
   name?: string,
   form?: Object,
   elementProps?: Object,
   onClick?: Function,
 }
 
+const TAG_MAP = {
+  password: 'input',
+}
+
 @inject(context => ({ uiContext: context.uiContext }))
 @view.ui
 export default class Input extends React.Component<Props> {
+  static defaultProps = {
+    type: 'input',
+  }
+
   node: ?HTMLInputElement = null
 
   componentDidMount() {
@@ -107,7 +115,7 @@ export default class Input extends React.Component<Props> {
         flex
         borderWidth={1}
         wrapElement
-        tagName="input"
+        tagName={TAG_MAP[type] || type}
         name={name}
         type={type}
         elementProps={{

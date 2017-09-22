@@ -37,10 +37,6 @@ const modelMerge = (subjectModel: Object, object: Object) => {
 
 // METHODS
 const modelMethods = {
-  get id() {
-    return this._id
-  },
-
   // update, add properties to model & save
   async update(object: Object) {
     return await this.atomicUpdate(doc => {
@@ -54,6 +50,7 @@ const modelMethods = {
   merge(object: Object) {
     modelMerge(this, object)
   },
+
   async mergeUpdate(object: Object) {
     return await this.atomicUpdate(doc => {
       modelMerge(doc, object)
@@ -72,6 +69,7 @@ export default class Model {
   static isModel = true
   static props: Object
   static defaultProps: Function | Object
+  static defaultFilter: ?Function
 
   _collection: RxCollection
   migrations: ?Object
@@ -119,10 +117,7 @@ export default class Model {
 
   get props(): Object {
     const { timestamps, ...props } = this.constructor.props
-    let result = props
-
-    result = compile(cloneDeep(result))
-
+    const result = compile(cloneDeep(props))
     if (timestamps) {
       result.properties = {
         ...result.properties,
@@ -138,7 +133,6 @@ export default class Model {
         },
       }
     }
-
     return result
   }
 
@@ -154,10 +148,12 @@ export default class Model {
       .toLowerCase()
   }
 
-  compiledMethods = () => ({
-    ...Object.getOwnPropertyDescriptors(this.methods || {}),
-    ...Object.getOwnPropertyDescriptors(this.modelMethods),
-  })
+  get compiledMethods() {
+    return {
+      ...Object.getOwnPropertyDescriptors(this.methods || {}),
+      ...Object.getOwnPropertyDescriptors(this.modelMethods),
+    }
+  }
 
   _filteredProxy = null
 
@@ -179,13 +175,13 @@ export default class Model {
     return this._filteredProxy
   }
 
-  _createFindProxy = (target, method) => {
+  _createFindProxy = (target: Object, method: string) => {
     const { defaultFilter = idFn } = this.constructor
     // assign here to avoid changed `this` in proxy
-    const { options } = this
-    const queryObject = x => (typeof x === 'string' ? { _id: x } : x)
+    const { asyncFirstSync } = this.options
+    const queryObject = x => (typeof x === 'string' ? { id: x } : x)
 
-    return queryParams => {
+    return (queryParams: Object | string) => {
       const finalParams = defaultFilter(queryObject(queryParams))
       const query = target[method](finalParams)
       const sync = opts =>
@@ -204,7 +200,7 @@ export default class Model {
               // console.log('--', `${target.op}.${method}`, finalParams)
               return () =>
                 new Promise(async resolve => {
-                  if (!options.asyncFirstSync) {
+                  if (!asyncFirstSync) {
                     await sync()
                   }
                   const value = await executeQuery()
@@ -231,9 +227,6 @@ export default class Model {
       return this._filteredCollection
     }
 
-    // chain().until().exec().or().$
-    const self = this
-
     // turns a serialized query back into a real query
     const getQuery = called => {
       return called.reduce((acc, cur) => {
@@ -241,27 +234,21 @@ export default class Model {
       }, this.collection)
     }
 
+    const { onConnection } = this
+
+    // this worm returns when not yet connected, letting you still run queries before connect
     const worm = base => {
       const result = new Proxy(
         {
           ...base,
           exec: () => {
-            console.warn('This model isn\'t connected!')
-            return Promise.resolve(false)
+            console.warn('exec() called, not connected yet')
+            return onConnection()
           },
+          onConnection,
           isntConnected: true,
           getQuery() {
             return getQuery(this.called)
-          },
-          onConnection() {
-            return new Promise(resolve => {
-              const stop = autorun(() => {
-                if (self.connected) {
-                  stop && stop()
-                  resolve(this.getQuery())
-                }
-              })
-            })
           },
         },
         {
@@ -304,7 +291,10 @@ export default class Model {
     })
 
     // sync PUSH ONLY
-    if (this.options.autoSync) {
+    const { autoSync } = this.options
+    const shouldSyncPush = autoSync && (autoSync === true || autoSync.push)
+
+    if (shouldSyncPush) {
       const pushSync = this._collection.sync({
         remote: this.remote,
         direction: {
@@ -312,10 +302,10 @@ export default class Model {
         },
         options: {
           live: true,
-          retry: true,
+          retry: false,
         },
       })
-      this.subscriptions.add(pushSync.cancel)
+      this.subscriptions.add(() => pushSync.cancel())
     }
 
     // bump listeners
@@ -379,6 +369,13 @@ export default class Model {
     queryish: Queryish,
     options: Object = { live: true, retry: true }
   ): Promise<boolean> => {
+    const { autoSync } = this.options
+    const shouldSyncPull = autoSync && (autoSync === true || autoSync.pull)
+
+    if (!shouldSyncPull) {
+      return Promise.resolve(false)
+    }
+
     let query = queryish
     if (query.query) {
       query = query.query
@@ -468,7 +465,7 @@ export default class Model {
       return {}
     }
     if (typeof params === 'string') {
-      return { _id: params }
+      return { id: params }
     } else {
       return params
     }
@@ -519,11 +516,11 @@ export default class Model {
   }
 
   // create a model and persist
-  async create(object: Object = {}) {
+  async create(object: Object | string) {
     if (!this._collection) {
       await this.onConnection()
     }
-    return this._collection.insert(object)
+    return this._collection.insert(this.paramsToObject(object))
   }
 
   // upsert requires you to use primary key, unlike findOrCreate which doesn't

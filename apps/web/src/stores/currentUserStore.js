@@ -7,15 +7,55 @@ import SuperLoginClient from 'superlogin-client'
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
+function passportLink(provider: string, options: Object = {}): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const opts = {
+      windowName: 'Login',
+      windowOptions: 'location=100,status=0,width=800,height=600',
+      ...options,
+    }
+    const path = `/auth/${provider}`
+
+    // setup new response object
+    let resolved = false
+    window.passport = {}
+    window.passport.oauthSession = info => {
+      if (!info.error && info.token) {
+        resolved = true
+        return resolve(info)
+      }
+      return reject(`Got an oauth error: ${JSON.stringify(info)}`)
+    }
+
+    const authWindow = window.open(path, opts.windowName, opts.windowOptions)
+    if (!authWindow) {
+      return reject('Authorization popup blocked')
+    }
+    let authComplete = false
+    const check = setInterval(() => {
+      if (authWindow.closed) {
+        clearInterval(check)
+        if (!authComplete) {
+          authComplete = true
+          if (resolved) {
+            return
+          }
+          return reject('Authorization cancelled')
+        }
+      }
+    })
+  })
+}
+
 @store
 class CurrentUser {
   connected = false
   localDb = null
   remoteDb = null
   sessionInfo = null
-  superlogin: ?SuperLoginClient = null
+  superlogin: SuperLoginClient = SuperLoginClient
 
-  @watch userInfo = () => this.id && User.findOne(this.id)
+  @watch user = () => this.id && User.findOrCreate(this.id)
   @watch settings = () => this.id && Setting.find({ userId: this.id })
   @watch
   setting = () =>
@@ -23,26 +63,16 @@ class CurrentUser {
       this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})) ||
     {}
 
-  get user() {
-    if (!this.sessionInfo) {
-      return null
-    }
-    return {
-      ...this.sessionInfo,
-      ...this.userInfo,
-    }
-  }
-
-  integrations = []
-
   constructor(options: Object) {
-    this.superlogin = SuperLoginClient
     this.options = options
     this.setupSuperLogin()
     this.connected = true
+    this.start()
   }
 
-  start() {
+  async start() {
+    // temp user for now
+    await User.findOrCreate('a@b.com')
     this.ensureSettings()
   }
 
@@ -51,16 +81,18 @@ class CurrentUser {
       if (!this.user) {
         return
       }
-      if (this.user.github) {
-        await Setting.findOrCreate({
-          userId: this.id,
-          type: 'github',
-        })
+      if (this.user.authorizations) {
+        for (const type of Object.keys(this.user.authorizations)) {
+          await Setting.findOrCreate({
+            userId: this.id,
+            type,
+          })
+        }
       }
     })
   }
 
-  async setupSuperLogin() {
+  setupSuperLogin() {
     if (!this.options) {
       console.log('skipping superlogin')
       return
@@ -71,7 +103,6 @@ class CurrentUser {
     // sync
     this.superlogin.on('login', async () => {
       await this.setUserSession()
-      this.setupDbSync()
     })
 
     this.superlogin.on('logout', () => {
@@ -104,24 +135,16 @@ class CurrentUser {
   }
 
   get id() {
-    return this.sessionInfo && this.sessionInfo.user_id
+    // return this.sessionInfo && this.sessionInfo.user_id
+    return 'a@b.com'
   }
 
-  get token() {
-    return this.user && this.user.token
+  get authorizations() {
+    return this.user && this.user.authorizations
   }
 
-  setupDbSync = () => {
-    // if (!this.remoteDb && this.user) {
-    //   this.remoteDb = new PouchDB(this.user.userDBs.documents, {
-    //     skip_setup: true,
-    //   })
-    //   this.localDb = new PouchDB(`local_db_${this.user.user_id}`)
-    //   // syncronize the local and remote user databases...
-    //   this.remoteSyncHandler = this.localDb
-    //     .sync(this.remoteDb, { live: true, retry: true })
-    //     .on('error', console.log.bind(console))
-    // }
+  get token(): (provider: string) => string {
+    return (this.user && this.user.token) || (_ => '')
   }
 
   loginOrSignup = async (email, password) => {
@@ -148,7 +171,7 @@ class CurrentUser {
     }
   }
 
-  signup = async (email, password) => {
+  signup = async (email: string, password: string) => {
     try {
       const username = email
       const res = await this.superlogin.register({
@@ -173,7 +196,7 @@ class CurrentUser {
     }
   }
 
-  login = async (email, password) => {
+  login = async (email: string, password: string) => {
     await this.superlogin.login({
       username: email,
       password,
@@ -182,19 +205,29 @@ class CurrentUser {
   }
 
   logout = async () => {
-    this.remoteSyncHandler && this.remoteSyncHandler.cancel()
     this.remoteDb = null
     this.localDb = null
     await this.superlogin.logout()
   }
 
-  link = async provider => {
-    return await this.superlogin.link(provider)
+  link = async (provider: string, options: Object = {}) => {
+    if (!this.user) {
+      throw new Error(`No user`)
+    }
+    const info = await passportLink(provider, options)
+    if (info) {
+      console.log('Merging new oauth', info)
+      this.user.mergeUpdate({
+        authorizations: {
+          [provider]: info,
+        },
+      })
+    }
   }
 
-  unlink = async provider => {
-    return await this.superlogin.unlink(provider)
-  }
+  // unlink = async provider => {
+  //   // return await this.superlogin.unlink(provider)
+  // }
 
   setUserSession = async () => {
     try {

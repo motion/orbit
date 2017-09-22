@@ -1,5 +1,3 @@
-// @flow
-
 import { isNumber, find, debounce } from 'lodash'
 import { SHORTCUTS } from '~/stores/rootStore'
 import Mousetrap from 'mousetrap'
@@ -12,13 +10,14 @@ export default class BarStore {
   // search is throttled, textboxVal isn't
   search = ''
   textboxVal = ''
+  smartRes = []
 
   _millerStore = null
   setMillerStore = val => {
     this._millerStore = val
   }
 
-  start() {
+  willMount() {
     this.attachTrap('window', window)
 
     let lastActiveCol = null
@@ -125,6 +124,7 @@ export default class BarStore {
         this.millerStore.setActiveAction(null)
         return
       }
+
       if (this.search !== '') {
         this.search = ''
         this.textboxVal = ''

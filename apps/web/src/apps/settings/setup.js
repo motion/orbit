@@ -3,17 +3,24 @@ import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Panes from './panes'
 
-@view
+@view.ui
 export default class BarSetupPane {
   render({ item }) {
-    const integration = CurrentUser[item.data.type]
+    if (!CurrentUser.authorizations) {
+      return null
+    }
+
+    const integration = CurrentUser.authorizations[item.data.type]
     const SettingPane = integration && Panes[item.data.type]
 
     return (
       <setup>
-        <integrate if={!integration}>
-          <UI.Title size={2}>Authorize</UI.Title>
+        <integrate>
+          <UI.Title size={2} marginBottom={20}>
+            Authorize {item.data.name}
+          </UI.Title>
           <UI.Button
+            size={2}
             icon={item.icon}
             onClick={() => CurrentUser.link(item.data.type)}
           >
@@ -21,9 +28,7 @@ export default class BarSetupPane {
           </UI.Button>
         </integrate>
         <settings if={integration && SettingPane}>
-          <UI.Title size={1.5}>
-            {item.data.name} Settings
-          </UI.Title>
+          <UI.Title size={1.5}>{item.data.name} Settings</UI.Title>
           <SettingPane integration={integration} />
         </settings>
       </setup>

@@ -35,7 +35,7 @@ const weeks = stamps => {
 @view
 class Chart {
   render({ store }) {
-    const things = store.currentService
+    const things = store.currentChart
     if (things.length === 0) return <div />
     const chartStyle = { parent: { minWidth: '80%' } }
     const values = weeks(things.map(itemStamp))
@@ -112,7 +112,7 @@ class SetStore {
     this.brushDomain = domain
     this.setFilter('startDate', +new Date(domain.x[0]))
     this.setFilter('endDate', +new Date(domain.x[1]))
-  }, 100)
+  }, 20)
 
   setFilter = (key, val) => {
     this.filters = {
@@ -201,13 +201,30 @@ class SetStore {
   }
 
   // separated so chart can use it
-  get currentService() {
+  get currentChart() {
     const { filters: { type } } = this
     if (this.allActive) return this.allItems
     return this.allItems.filter(item => {
       if (type && (item.type || item.name) !== type) {
         return false
       }
+
+      if (item.type === 'task') {
+        if (
+          this.hasPeople &&
+          !includes(
+            this.currentLogins,
+            item.data.author && item.data.author.login
+          )
+        ) {
+          return false
+        }
+      } else {
+        if ((this.hasPeople, !includes(this.currentLogins, item.author))) {
+          return false
+        }
+      }
+
       return true
     })
   }
@@ -219,24 +236,10 @@ class SetStore {
   get activeItems() {
     const { filters: { search, startDate, endDate } } = this
 
-    return this.currentService
-      .filter(item => {
-        if (item.type === 'task') {
-          if (
-            this.hasPeople &&
-            !includes(
-              this.currentLogins,
-              item.data.author && item.data.author.login
-            )
-          ) {
-            return false
-          }
-        } else {
-          if ((this.hasPeople, !includes(this.currentLogins, item.author))) {
-            return false
-          }
-        }
+    console.time('calculating active items')
 
+    const val = this.currentChart
+      .filter(item => {
         const itemDate = item.date
           ? +new Date(item.date)
           : +new Date(item.data.createdAt || item.data.created_at)
@@ -254,6 +257,10 @@ class SetStore {
         return true
       })
       .reverse()
+
+    console.timeEnd('calculating active items')
+
+    return val
   }
 }
 

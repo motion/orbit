@@ -88,7 +88,7 @@ class BarMainStore {
       icon: 'radio',
       data: {
         special: true,
-        person: 'me',
+        person: 'nate',
         image: 'me',
       },
       actions: ['respond to recent'],

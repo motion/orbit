@@ -36,6 +36,6 @@ export default class GoogleSync extends Syncer {
           }),
           body: opts.body ? JSON.stringify(opts.body) : null,
         }
-      ).then(res => res.json()),
+      ).then(res => res[opts.type || 'json']()),
   }
 }

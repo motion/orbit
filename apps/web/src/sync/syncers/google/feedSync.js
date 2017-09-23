@@ -32,9 +32,15 @@ export default class GoogleFeedSync extends SyncerAction {
     console.log('files', files)
 
     if (files.files) {
-      for (const file of files.files.slice(0, 10)) {
-        const res = await this.helpers.fetch(`/files/${file.id}`)
-        console.log('res', res)
+      for (const file of files.files.slice(0, 2)) {
+        const info = await this.helpers.fetch(`/files/${file.id}`)
+        const body = await this.helpers.fetch(`/files/${file.id}/export`, {
+          type: 'text',
+          query: {
+            mimeType: 'text/plain',
+          },
+        })
+        console.log('res', info, body)
       }
     }
 

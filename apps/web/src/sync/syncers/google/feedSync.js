@@ -69,8 +69,14 @@ export default class GoogleFeedSync extends SyncerAction {
     })
   }
 
-  async syncFiles() {
-    const files = await this.getFiles()
+  async syncFiles() {}
+
+  async getFilesWithContents(query?: Object, fileQuery?: Object) {
+    const { files } = await this.getFiles(query)
+    const filesFilled = await Promise.all(
+      files.map(({ id }) => this.getFile(id, fileQuery))
+    )
+    return filesFilled
   }
 
   async getFiles(query?: Object) {
@@ -87,8 +93,42 @@ export default class GoogleFeedSync extends SyncerAction {
     })
   }
 
-  async getFile(id: string) {
-    return await this.helpers.fetch(`/files/${id}`)
+  async getFile(id: string, query?: Object) {
+    return await this.helpers.fetch(`/files/${id}`, {
+      query: {
+        fields: [
+          'id',
+          'name',
+          'mimeType',
+          'description',
+          'starred',
+          'trashed',
+          'parents',
+          'properties',
+          'spaces',
+          'version',
+          'webContentLink',
+          'iconLink',
+          'thumbnailLink',
+          'viewedByMe',
+          'viewedByMeTime',
+          'createdTime',
+          'modifiedTime',
+          'sharingUser',
+          'owners',
+          'shared',
+          'ownedByMe',
+          'folderColorRgb',
+          'originalFilename',
+          'fileExtension',
+          'size',
+          'capabilities',
+          'modifiedByMe',
+          'teamDriveId',
+        ],
+        ...query,
+      },
+    })
   }
 
   async getFileContents(id: string) {

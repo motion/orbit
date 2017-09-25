@@ -47,18 +47,6 @@ export default class GoogleFeedSync extends SyncerAction {
 
   async syncFiles() {
     const files = await this.getFiles()
-    if (files.files) {
-      for (const file of files.files.slice(0, 2)) {
-        const info = await this.helpers.fetch(`/files/${file.id}`)
-        const body = await this.helpers.fetch(`/files/${file.id}/export`, {
-          type: 'text',
-          query: {
-            mimeType: 'text/plain',
-          },
-        })
-        console.log('res', info, body)
-      }
-    }
   }
 
   async getFiles() {
@@ -66,6 +54,19 @@ export default class GoogleFeedSync extends SyncerAction {
       query: {
         orderBy:
           'modifiedByMeTime desc,modifiedTime desc,sharedWithMeTime desc,viewedByMeTime desc',
+      },
+    })
+  }
+
+  async getFile(id: string) {
+    return await this.helpers.fetch(`/files/${id}`)
+  }
+
+  async getFileContents(id: string) {
+    return await this.helpers.fetch(`/files/${id}/export`, {
+      type: 'text',
+      query: {
+        mimeType: 'text/plain',
       },
     })
   }

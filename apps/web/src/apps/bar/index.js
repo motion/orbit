@@ -124,8 +124,8 @@ export default class BarPage {
               css={inputStyle}
             />
             <forwardcomplete>{barStore.peekItem}</forwardcomplete>
-            <Underline key={1} width={100} left={50} />
-            <Underline key={2} width={100} left={250} />
+            <Underline if={false} key={1} width={100} left={50} />
+            <Underline if={false} key={2} width={100} left={250} />
           </header>
           <Miller
             pane={Pane}

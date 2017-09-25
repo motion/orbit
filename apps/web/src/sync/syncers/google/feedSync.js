@@ -15,12 +15,17 @@ export default class GoogleFeedSync extends SyncerAction {
     }
   }
 
-  async getRevisions(id: string) {
-    return await this.helpers.fetch(`/files/${id}/revisions`, {
+  async getRevisions(fileId: string) {
+    const {
+      revisions,
+    } = await this.helpers.fetch(`/files/${fileId}/revisions`, {
       query: {
         pageSize: 1000,
       },
     })
+    return await Promise.all(
+      revisions.map(({ id }) => this.getRevision(fileId, id))
+    )
   }
 
   async getRevision(fileId: string, revisionId: string) {
@@ -28,16 +33,7 @@ export default class GoogleFeedSync extends SyncerAction {
       `/files/${fileId}/revisions/${revisionId}`,
       {
         query: {
-          fields: [
-            'lastModifyingUser',
-            'lastModifyingUser.displayName',
-            'lastModifyingUser.photoLink',
-            'lastModifyingUser.permissionId',
-            'lastModifyingUser.emailAddress',
-            'size',
-            'mimeType',
-            'modifiedTime',
-          ].join(','),
+          fields: ['lastModifyingUser', 'size', 'mimeType', 'modifiedTime'],
         },
       }
     )
@@ -90,12 +86,11 @@ export default class GoogleFeedSync extends SyncerAction {
     return await this.helpers.fetch(`/files/${id}`)
   }
 
-  async getFileContents(id: string, revisionId?: string) {
+  async getFileContents(id: string) {
     return await this.helpers.fetch(`/files/${id}/export`, {
       type: 'text',
       query: {
         mimeType: 'text/plain',
-        revision: revisionId,
         alt: 'media',
       },
     })

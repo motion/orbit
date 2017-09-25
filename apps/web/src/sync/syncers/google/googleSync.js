@@ -18,7 +18,7 @@ export default class GoogleSync extends Syncer {
 
   helpers = {
     clientId: Constants.GOOGLE_CLIENT_ID,
-    baseUrl: 'https://content.googleapis.com/drive/v2',
+    baseUrl: 'https://content.googleapis.com/drive/v3',
     fetch: (path: string, opts: Object = {}) =>
       fetch(
         `${this.helpers.baseUrl}${path}${opts.query

@@ -527,12 +527,12 @@ export default class Surface extends React.PureComponent<Props> {
       (!props.chromeless &&
         !props.disabled &&
         (props.hoverable || props.hoverBackground))) && {
-      ...theme.hover,
-      color: hoverColor,
-      borderColor: hoverBorderColor,
-      background: hoverBackground,
-      ...props.hover,
-    }
+        ...theme.hover,
+        color: hoverColor,
+        borderColor: hoverBorderColor,
+        background: hoverBackground,
+        ...props.hover,
+      }
 
     const activeStyle = !props.chromeless && {
       position: 'relative',
@@ -573,6 +573,7 @@ export default class Surface extends React.PureComponent<Props> {
         overflow: props.overflow || 'visible',
         flexFlow: props.noElement ? 'column' : flexFlow,
         fontSize: props.fontSize,
+        fontWeight: props.fontWeight,
         lineHeight: props.lineHeight || 'inherit',
         justifyContent: props.justify,
         maxWidth: `calc(100% ${iconPad})`,

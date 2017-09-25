@@ -104,5 +104,8 @@ export default class Syncer {
     if (this.jobWatcher) {
       clearInterval(this.jobWatcher)
     }
+    if (super.dispose) {
+      super.dispose()
+    }
   }
 }

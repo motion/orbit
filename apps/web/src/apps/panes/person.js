@@ -236,7 +236,7 @@ class SetStore {
   get activeItems() {
     const { filters: { search, startDate, endDate } } = this
 
-    console.time('calculating active items')
+    // console.time('calculating active items')
 
     const val = this.currentChart
       .filter(item => {
@@ -258,7 +258,7 @@ class SetStore {
       })
       .reverse()
 
-    console.timeEnd('calculating active items')
+    // console.timeEnd('calculating active items')
 
     return val
   }

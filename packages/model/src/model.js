@@ -144,8 +144,9 @@ export default class Model {
   }
 
   get title(): string {
-    return ((this.settings && this.settings.database) || this.constructor.name)
-      .toLowerCase()
+    return ((this.settings && this.settings.database) ||
+      this.constructor.name
+    ).toLowerCase()
   }
 
   get compiledMethods() {

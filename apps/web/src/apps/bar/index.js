@@ -7,6 +7,47 @@ import * as PaneTypes from '../panes'
 import { Miller, MillerStore } from '../miller'
 import Pane from '~/views/pane'
 
+@view
+class Underline {
+  render() {
+    return (
+      <underline>
+        <edge $left />
+        <edge $right />
+      </underline>
+    )
+  }
+
+  static style = {
+    underline: {
+      position: 'absolute',
+      bottom: 6,
+      height: 5,
+      borderBottom: 'dashed 2px rgba(255,255,255,0.5)',
+    },
+    edge: {
+      position: 'absolute',
+      bottom: 0,
+      top: 0,
+    },
+    left: {
+      left: 0,
+      borderLeft: 'dashed 2px rgba(255,255,255,0.5)',
+    },
+    right: {
+      right: 0,
+      borderRight: 'dashed 2px rgba(255,255,255,0.5)',
+    },
+  }
+
+  static theme = props => ({
+    underline: {
+      width: props.width,
+      left: props.left,
+    },
+  })
+}
+
 @view.ui
 class BottomActions {
   render({ actions, metaKey }) {
@@ -46,7 +87,7 @@ class BottomActions {
 const inputStyle = {
   fontWeight: 200,
   color: '#fff',
-  fontSize: 32,
+  fontSize: 30,
 }
 
 @view.provide({
@@ -83,6 +124,8 @@ export default class BarPage {
               css={inputStyle}
             />
             <forwardcomplete>{barStore.peekItem}</forwardcomplete>
+            <Underline key={1} width={100} left={50} />
+            <Underline key={2} width={100} left={250} />
           </header>
           <Miller
             pane={Pane}
@@ -109,7 +152,7 @@ export default class BarPage {
     },
     searchIcon: {
       position: 'absolute',
-      top: 2,
+      top: 3,
       bottom: 0,
       alignItems: 'center',
       height: 'auto',

@@ -86,6 +86,17 @@ class List extends React.PureComponent<Props, { selected: number }> {
     }
 
     this.updateChildren()
+
+    this.setTimeout(() => {
+      // TODO stupid ass bugfix, for some reason lists started flickering
+      // likely a bug with our cellmeasurer, or maybe even gloss
+      // this seems to fix for now
+      if (this.props.virtualized) {
+        this.setState({
+          started: true,
+        })
+      }
+    })
   }
 
   // willUpdate only runs when PureComponent has new props
@@ -143,8 +154,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
   measure = () => {
     if (this.virtualListRef) {
       this.virtualListRef.recomputeRowHeights(0)
-    } else {
-      console.log('no virtual list')
     }
   }
 
@@ -413,29 +422,25 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (!children) {
       return null
     }
-    const {
-      virtualized,
-      parentSize,
-      scrollable,
-      style,
-      attach,
-      controlled,
-    } = this.props
+    const { virtualized, parentSize, scrollable, style, attach } = this.props
+    if (virtualized && !parentSize) {
+      return null
+    }
     let { width, height } = this.props
     if (virtualized && parentSize) {
       height = parentSize.height || height || 0
       width = parentSize.width || width || 0
     }
     const { totalItems, totalGroups, realIndex } = this
-    const inner = (
+    return (
       <Surface
+        $list
+        $visible={this.state.started}
         tagName="list"
         align="stretch"
         height={height}
         width={width}
         style={{
-          height: '100%',
-          overflowX: 'visible',
           overflowY: scrollable ? 'scroll' : 'auto',
           ...style,
         }}
@@ -459,10 +464,17 @@ class List extends React.PureComponent<Props, { selected: number }> {
         {!virtualized && children}
       </Surface>
     )
-    return inner
   }
 
   static style = {
+    list: {
+      height: '100%',
+      overflowX: 'visible',
+      visibility: 'hidden',
+    },
+    visible: {
+      visibility: 'visible',
+    },
     separator: {
       padding: [4, 10],
       justifyContent: 'center',

@@ -73,11 +73,16 @@ export default class GoogleFeedSync extends SyncerAction {
     const files = await this.getFiles()
   }
 
-  async getFiles() {
+  async getFiles(query?: Object) {
     return await this.helpers.fetch('/files', {
       query: {
-        orderBy:
-          'modifiedByMeTime desc,modifiedTime desc,sharedWithMeTime desc,viewedByMeTime desc',
+        orderBy: [
+          'modifiedByMeTime desc',
+          'modifiedTime desc',
+          'sharedWithMeTime desc',
+          'viewedByMeTime desc',
+        ],
+        ...query,
       },
     })
   }
@@ -94,5 +99,28 @@ export default class GoogleFeedSync extends SyncerAction {
         alt: 'media',
       },
     })
+  }
+
+  async getTeamDrives() {
+    return await this.helpers.fetch('/teamdrives')
+  }
+
+  async getComments(fileId: string) {
+    return await this.helpers.fetch(`/files/${fileId}/comments`, {
+      query: {
+        pageSize: 1000,
+      },
+    })
+  }
+
+  async getReplies(fileId: string, commentId: string) {
+    return await this.helpers.fetch(
+      `/files/${fileId}/comments/${commentId}/replies`,
+      {
+        query: {
+          pageSize: 1000,
+        },
+      }
+    )
   }
 }

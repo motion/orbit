@@ -15,7 +15,19 @@ export default class GoogleFeedSync extends SyncerAction {
     }
   }
 
-  async getChanges(lastPageToken: string) {
+  async getChanges(max = 5000) {
+    let { changes, newStartPageToken } = await this.fetchChanges()
+    let tries = 0
+    while (changes.length < max && tries < 20) {
+      tries++
+      newStartPageToken--
+      const next = await this.fetchChanges(newStartPageToken)
+      changes = [...changes, ...next.changes]
+    }
+    return changes
+  }
+
+  async fetchChanges(lastPageToken: string, total = 1000) {
     let pageToken = lastPageToken
     if (!pageToken) {
       pageToken = (await this.helpers.fetch('/changes/startPageToken'))
@@ -27,7 +39,7 @@ export default class GoogleFeedSync extends SyncerAction {
         supportsTeamDrives: true,
         includeRemoved: true,
         includeTeamDriveItems: true,
-        pageSize: 1000,
+        pageSize: Math.min(1000, total),
         spaces: 'drive',
       },
     })

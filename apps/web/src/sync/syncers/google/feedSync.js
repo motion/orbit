@@ -3,15 +3,27 @@ import { Event } from '~/app'
 import SyncerAction from '../syncerAction'
 
 export default class GoogleFeedSync extends SyncerAction {
-  run = async () => {
-    console.log('run google feed')
-    const { startPageToken } = await this.helpers.fetch(
-      '/changes/startPageToken'
-    )
-    console.log('startPageToken', startPageToken)
-    const changes = await this.helpers.fetch('/changes', {
+  run = async () => {}
+
+  async syncFeed() {
+    const changes = await this.getChanges()
+
+    if (changes && changes.changes) {
+      for (const change of changes) {
+        console.log('change:', change.fileId, change)
+      }
+    }
+  }
+
+  async getChanges(lastPageToken: string) {
+    let pageToken = lastPageToken
+    if (!pageToken) {
+      pageToken = (await this.helpers.fetch('/changes/startPageToken'))
+        .startPageToken
+    }
+    return await this.helpers.fetch('/changes', {
       query: {
-        pageToken: startPageToken - 2,
+        pageToken,
         supportsTeamDrives: true,
         includeRemoved: true,
         includeTeamDriveItems: true,
@@ -19,18 +31,10 @@ export default class GoogleFeedSync extends SyncerAction {
         spaces: 'drive',
       },
     })
+  }
 
-    console.log('changes', changes)
-
-    const files = await this.helpers.fetch('/files', {
-      query: {
-        orderBy:
-          'modifiedByMeTime desc,modifiedTime desc,sharedWithMeTime desc,viewedByMeTime desc',
-      },
-    })
-
-    console.log('files', files)
-
+  async syncFiles() {
+    const files = await this.getFiles()
     if (files.files) {
       for (const file of files.files.slice(0, 2)) {
         const info = await this.helpers.fetch(`/files/${file.id}`)
@@ -43,23 +47,14 @@ export default class GoogleFeedSync extends SyncerAction {
         console.log('res', info, body)
       }
     }
+  }
 
-    // console.log(
-    //   await this.helpers.fetch(
-    //     '/files/17AtJsGkCiA1wgyZ8m0nTP_axreF66AbSLtNeTiEO0Pg/watch',
-    //     {
-    //       method: 'POST',
-    //       body: {
-    //         kind: 'api#channel',
-    //         id: '1',
-    //         resourceId: '123',
-    //         resourceUri: '1234',
-    //         type: 'json',
-    //         address: 'http://jot.dev/test',
-    //         payload: true,
-    //       },
-    //     }
-    //   )
-    // )
+  async getFiles() {
+    return await this.helpers.fetch('/files', {
+      query: {
+        orderBy:
+          'modifiedByMeTime desc,modifiedTime desc,sharedWithMeTime desc,viewedByMeTime desc',
+      },
+    })
   }
 }

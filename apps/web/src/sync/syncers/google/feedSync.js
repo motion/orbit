@@ -15,11 +15,39 @@ export default class GoogleFeedSync extends SyncerAction {
     }
   }
 
-  async getChanges(max = 5000) {
+  async getRevisions(id: string) {
+    return await this.helpers.fetch(`/files/${id}/revisions`, {
+      query: {
+        pageSize: 1000,
+      },
+    })
+  }
+
+  async getRevision(fileId: string, revisionId: string) {
+    return await this.helpers.fetch(
+      `/files/${fileId}/revisions/${revisionId}`,
+      {
+        query: {
+          fields: [
+            'lastModifyingUser',
+            'lastModifyingUser.displayName',
+            'lastModifyingUser.photoLink',
+            'lastModifyingUser.permissionId',
+            'lastModifyingUser.emailAddress',
+            'size',
+            'mimeType',
+            'modifiedTime',
+          ].join(','),
+        },
+      }
+    )
+  }
+
+  async getChanges({ max = 5000, maxRequests = 20 } = {}) {
     let { changes, newStartPageToken } = await this.fetchChanges()
-    let tries = 0
-    while (changes.length < max && tries < 20) {
-      tries++
+    let requests = 0
+    while (changes.length < max && requests < maxRequests) {
+      requests++
       newStartPageToken--
       const next = await this.fetchChanges(newStartPageToken)
       changes = [...changes, ...next.changes]
@@ -62,11 +90,13 @@ export default class GoogleFeedSync extends SyncerAction {
     return await this.helpers.fetch(`/files/${id}`)
   }
 
-  async getFileContents(id: string) {
+  async getFileContents(id: string, revisionId?: string) {
     return await this.helpers.fetch(`/files/${id}/export`, {
       type: 'text',
       query: {
         mimeType: 'text/plain',
+        revision: revisionId,
+        alt: 'media',
       },
     })
   }

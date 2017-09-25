@@ -1,0 +1,15 @@
+{
+ "error": {
+  "errors": [
+   {
+    "domain": "global",
+    "reason": "fileNotDownloadable",
+    "message": "Only files with binary content can be downloaded. Use Export with Google Docs files.",
+    "locationType": "parameter",
+    "location": "alt"
+   }
+  ],
+  "code": 403,
+  "message": "Only files with binary content can be downloaded. Use Export with Google Docs files."
+ }
+}

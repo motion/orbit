@@ -71,6 +71,7 @@ export default class BarIntegrationsPane {
           items={store.results}
           itemProps={itemProps}
           getItem={(result, index) => ({
+            sizeHeight: true,
             highlight: () => store.selectedIndex === index,
             primary: result.title,
             icon:

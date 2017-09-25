@@ -44,6 +44,8 @@ export default {
     },
     options: {
       scope: ['profile', 'https://www.googleapis.com/auth/drive'],
+      accessType: 'offline',
+      prompt: 'consent',
     },
   },
 }

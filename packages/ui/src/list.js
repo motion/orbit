@@ -435,7 +435,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     return (
       <Surface
         $list
-        $visible={this.state.started}
+        $visible={!virtualized || this.state.started}
         tagName="list"
         align="stretch"
         height={height}

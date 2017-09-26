@@ -132,7 +132,6 @@ export default class BarPage {
               color={[255, 255, 255, 0.1]}
             />
             <UI.Input
-              if={false}
               $searchInput
               onClick={barStore.onClickBar}
               size={2.2}

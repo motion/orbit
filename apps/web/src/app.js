@@ -49,11 +49,11 @@ class App {
     // sync settings
     await Setting.find().sync()
     // remove all previous jobs
-    const jobs = await Job.find().exec()
-    if (jobs) {
-      log('clearing', jobs.length, 'jobs')
-      await Promise.all(jobs.map(job => job.remove()))
-    }
+    // const jobs = await Job.find().exec()
+    // if (jobs) {
+    //   log('clearing', jobs.length, 'jobs')
+    //   await Promise.all(jobs.map(job => job.remove()))
+    // }
     this.sync = new Sync()
     this.sync.start()
     this.render()

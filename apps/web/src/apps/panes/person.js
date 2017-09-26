@@ -316,11 +316,10 @@ export default class SetView extends Component<Props> {
 
     const items = [
       {
-        height: 75,
         view: () => (
           <section $$row>
-            {store.people.map(person => (
-              <person $$row css={{ marginRight: 20 }}>
+            {store.people.map((person, index) => (
+              <person key={index} $$row css={{ marginRight: 20 }}>
                 <img $image src={avatar(person)} />
                 <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
                   {person}
@@ -331,7 +330,6 @@ export default class SetView extends Component<Props> {
         ),
       },
       {
-        height: 60,
         view: () => <ItemsSection store={store} />,
       },
       {
@@ -345,7 +343,6 @@ export default class SetView extends Component<Props> {
         ),
       },
       {
-        height: 200,
         view: () => (
           <section if={store.calendarActive} css={{ width: '100%' }}>
             <div

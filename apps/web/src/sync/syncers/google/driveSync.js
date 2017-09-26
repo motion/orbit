@@ -4,7 +4,7 @@ import SyncerAction from '../syncerAction'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-export default class GoogleFeedSync extends SyncerAction {
+export default class GoogleDriveSync extends SyncerAction {
   run = async () => {}
 
   async syncFeed() {

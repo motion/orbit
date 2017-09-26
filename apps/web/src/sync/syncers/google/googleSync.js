@@ -1,7 +1,8 @@
 // @flow
 import { store } from '@mcro/black/store'
 import Syncer from '../syncer'
-import GoogleFeedSync from './feedSync'
+import GoogleDriveSync from './driveSync'
+import GoogleCalSync from './calSync'
 import * as Constants from '~/constants'
 
 @store
@@ -9,10 +10,12 @@ export default class GoogleSync extends Syncer {
   static settings = {
     type: 'google',
     actions: {
-      feed: { every: 4 },
+      drive: { every: 4 },
+      cal: { every: 4 },
     },
     syncers: {
-      feed: GoogleFeedSync,
+      drive: GoogleDriveSync,
+      cal: GoogleCalSync,
     },
   }
 

@@ -10,8 +10,8 @@ export default class GoogleSync extends Syncer {
   static settings = {
     type: 'google',
     actions: {
-      drive: { every: 4 },
-      cal: { every: 4 },
+      drive: { every: 60 },
+      cal: { every: 60 },
     },
     syncers: {
       drive: GoogleDriveSync,

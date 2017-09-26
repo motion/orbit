@@ -88,7 +88,9 @@ export default function storeProvidable(options, Helpers) {
         }
 
         clearError() {
-          this.setState({ error: null })
+          if (!this.unmounted) {
+            this.setState({ error: null })
+          }
         }
 
         componentWillUnmount() {

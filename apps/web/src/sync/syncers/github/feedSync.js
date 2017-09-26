@@ -10,6 +10,9 @@ export default class GithubFeedSync extends SyncerAction {
   lastSyncs = {}
 
   run = async () => {
+    if (!this.token) {
+      throw new Error('No CurrentUser.authorizations.github.token!')
+    }
     if (this.setting.activeOrgs) {
       await Promise.all(this.setting.activeOrgs.map(this.syncFeed))
     } else {
@@ -193,6 +196,10 @@ export default class GithubFeedSync extends SyncerAction {
   }
 
   fetch = async (path: string, options: Object = {}) => {
+    if (!this.token) {
+      console.log('no App.sync.github.feed.token')
+      return null
+    }
     const { search, headers, force, ...opts } = options
     // setup options
     const syncDate = Date.now()

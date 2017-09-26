@@ -2,18 +2,21 @@
 import { Event } from '~/app'
 import SyncerAction from '../syncerAction'
 
+const sleep = ms => new Promise(res => setTimeout(res, ms))
+
 export default class GoogleFeedSync extends SyncerAction {
   run = async () => {}
 
   async syncFeed() {
     const changes = await this.getChanges()
-
     if (changes && changes.changes) {
       for (const change of changes) {
         console.log('change:', change.fileId, change)
       }
     }
   }
+
+  async syncFiles() {}
 
   async getRevisions(fileId: string) {
     const {
@@ -69,17 +72,33 @@ export default class GoogleFeedSync extends SyncerAction {
     })
   }
 
-  async syncFiles() {}
-
-  async getFilesWithContents(query?: Object, fileQuery?: Object) {
-    const { files } = await this.getFiles(query)
-    const filesFilled = await Promise.all(
-      files.map(({ id }) => this.getFile(id, fileQuery))
-    )
-    return filesFilled
+  async getFiles(query?: Object, fileQuery?: Object) {
+    const { files } = await this.getFileMeta(query)
+    const fileIds = files.map(file => file.id)
+    const perSecond = 2
+    let fetched = 0
+    let response = []
+    while (fetched < files.length) {
+      const next = await this.getFilesWithAllInfo(
+        fileIds.slice(fetched, fetched + perSecond),
+        fileQuery
+      )
+      console.log('got', next, fetched)
+      response = [...response, ...next]
+      fetched += perSecond
+      await sleep(1000)
+    }
+    return response
   }
 
-  async getFiles(query?: Object) {
+  async getFilesWithAllInfo(ids: Array<number>, fileQuery?: Object) {
+    const meta = await Promise.all(ids.map(id => this.getFile(id, fileQuery)))
+    const contents = await Promise.all(ids.map(id => this.getFileContents(id)))
+    // zip
+    return meta.map((file, i) => ({ ...file, contents: contents[i] }))
+  }
+
+  async getFileMeta(query?: Object) {
     return await this.helpers.fetch('/files', {
       query: {
         orderBy: [

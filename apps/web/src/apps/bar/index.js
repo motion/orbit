@@ -6,6 +6,9 @@ import BarStore from './store'
 import * as PaneTypes from '../panes'
 import { Miller, MillerStore } from '../miller'
 import Pane from '~/views/pane'
+import { format } from 'date-fns'
+
+const commas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 @view
 class Underline {
@@ -101,6 +104,23 @@ export default class BarPage {
   }
 
   render({ barStore }) {
+    const { filters } = barStore
+    const avatar = s => `/images/${s === 'nate' ? 'me' : s}.jpg`
+
+    const getDate = date => (
+      <date $$row>
+        <UI.Text css={{ marginRight: 5, alignSelf: 'center' }} size={2} $num>
+          {format(date, 'D')}
+        </UI.Text>
+        <right>
+          <UI.Text $desc>{format(date, 'MMM GGGG')}</UI.Text>
+          <UI.Text css={{ marginTop: -3 }} opacity={0.7} $day>
+            {format(date, 'dddd')}
+          </UI.Text>
+        </right>
+      </date>
+    )
+
     return (
       <UI.Theme name="clear-dark">
         <bar ref={barStore.ref('barRef').set} $$fullscreen>
@@ -149,6 +169,7 @@ export default class BarPage {
     },
     header: {
       position: 'relative',
+      height: 70,
     },
     searchIcon: {
       position: 'absolute',
@@ -157,6 +178,11 @@ export default class BarPage {
       alignItems: 'center',
       height: 'auto',
       left: 18,
+    },
+    avatar: {
+      width: 24,
+      height: 24,
+      borderRadius: 100,
     },
     searchInput: {
       padding: [0, 20, 0, 50],

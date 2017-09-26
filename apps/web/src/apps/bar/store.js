@@ -11,6 +11,8 @@ export default class BarStore {
   search = ''
   textboxVal = ''
   smartRes = []
+  resultCount = 0
+  filters = {}
 
   _millerStore = null
   setMillerStore = val => {

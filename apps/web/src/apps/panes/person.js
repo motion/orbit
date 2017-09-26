@@ -195,7 +195,7 @@ class SetStore {
   @watch
   events: ?Array<Event> = (() =>
     Event.find({ created: { $ne: null } })
-      .sort({ created: 'desc' })
+      .sort({ created: 'asc' })
       .limit(20): any)
 
   get allItems() {

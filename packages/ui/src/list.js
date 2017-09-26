@@ -452,7 +452,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
           height={height}
           width={width}
           ref={this.setVirtualRef}
-          overscanRowCount={3}
+          overscanRowCount={10}
           scrollToIndex={
             realIndex ? realIndex[this.state.selected] : this.state.selected
           }

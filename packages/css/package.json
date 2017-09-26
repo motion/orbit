@@ -8,8 +8,5 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "fast-stable-stringify": "^1.0.0"
   }
 }

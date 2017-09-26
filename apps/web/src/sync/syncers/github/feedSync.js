@@ -1,5 +1,5 @@
 // @flow
-import { Event, Setting } from '~/app'
+import { Event } from '~/app'
 import { flatten } from 'lodash'
 import SyncerAction from '../syncerAction'
 import debug from 'debug'
@@ -12,6 +12,8 @@ export default class GithubFeedSync extends SyncerAction {
   run = async () => {
     if (this.setting.activeOrgs) {
       await Promise.all(this.setting.activeOrgs.map(this.syncFeed))
+    } else {
+      log('No orgs selected')
     }
   }
 

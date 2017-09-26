@@ -26,7 +26,11 @@ export default class TaskHeader {
       <header $isActive={isActive}>
         <meta css={{ padding: [0, 10] }}>
           <title $$row css={{ alignItems: 'center' }}>
-            <UI.Title size={Math.min(maxSize, Math.max(titleSize, minSize))}>
+            <UI.Title
+              fontWeight={200}
+              color="#fff"
+              size={Math.min(maxSize, Math.max(titleSize, minSize))}
+            >
               {title}
             </UI.Title>
           </title>
@@ -46,6 +50,7 @@ export default class TaskHeader {
             </left>
             {labels.map(label => (
               <UI.Button
+                key={label}
                 chromeless
                 icon={<ColorBlock size={16} id={label} />}
                 iconSize={12}
@@ -55,25 +60,21 @@ export default class TaskHeader {
               </UI.Button>
             ))}
             {assigned.map(id => (
-              <UI.Button chromeless iconSize={12} $badge>
+              <UI.Button key={id} chromeless iconSize={12} $badge>
                 {id}
               </UI.Button>
             ))}
           </badges>
           <buttons>
             <UI.Button
-              onClick={() => {
-                millerStore.runAction('labels')
-              }}
+              onClick={() => millerStore.runAction('labels')}
               className="target-labels"
               $button
             >
               {labelsText}
             </UI.Button>
             <UI.Button
-              onClick={() => {
-                millerStore.runAction('assign')
-              }}
+              onClick={() => millerStore.runAction('assign')}
               className="target-assign"
               $button
             >

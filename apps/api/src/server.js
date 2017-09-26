@@ -56,7 +56,6 @@ export default class Server {
 
     // ROUTES
     this.setupPouch()
-    this.setupPassportSerialization()
     this.setupPassportRoutes()
     this.setupProxy()
   }
@@ -144,19 +143,5 @@ export default class Server {
         }
       )
     }
-  }
-
-  setupPassportSerialization() {
-    let cache = {}
-
-    Passport.serializeUser((user, done) => {
-      const id = user.info.id
-      cache[id] = user.info
-      done(null, id)
-    })
-
-    Passport.deserializeUser((id, done) => {
-      done(null, cache[id])
-    })
   }
 }

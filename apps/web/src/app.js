@@ -47,7 +47,7 @@ class App {
   async start(quiet?: boolean) {
     await this.store.start(quiet)
     // sync settings
-    await Setting.find().sync()
+    await Setting.find()
     // remove all previous jobs
     // const jobs = await Job.find().exec()
     // if (jobs) {

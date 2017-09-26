@@ -20,7 +20,6 @@ elif [ "$ACTION" = "electron" ]; then
   sleep 3
   npm start &
   wait
-  echo "done"
 elif [ "$ACTION" =  "web" ]; then
   if [ ! -d "$ROOT/packages/ui/lib" ]; then
     echo "Make sure to run 'build --watch' before running web"

@@ -160,7 +160,6 @@ export class Gloss {
       Child.prototype.componentWillMount = function(...args) {
         if (!Child.glossUID) {
           Child.glossUID = uid()
-          attachStyles(Child.glossUID, Child.style)
         }
         if (hasTheme) {
           this.glossUpdateTheme(this.props)

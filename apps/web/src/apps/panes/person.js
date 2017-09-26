@@ -34,10 +34,24 @@ const weeks = stamps => {
 
 @view
 class Chart {
+  show = false
+
+  componentDidMount() {
+    this.show = true
+  }
+
   render({ store }) {
+    // YO - this is taking 300ms to render
+    // and breaks if you return null for a frame for some reason
+
+    if (!this.show) {
+      return null
+    }
+    log('debug')
     const things = store.currentChart
     if (things.length === 0) return <div />
     const chartStyle = { parent: { minWidth: '80%' } }
+    console.time('')
     const values = weeks(things.map(itemStamp))
 
     return (

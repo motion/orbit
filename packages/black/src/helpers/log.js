@@ -94,7 +94,7 @@ function doLog(...args: Array<any>) {
     } else if (descriptor.get) {
       const ogGet = descriptor.get
       descriptor.get = function() {
-        return wrapLogger(ogGet.call(this), target, key)
+        return wrapLogger(ogGet, target, key)
       }
     }
 
@@ -127,9 +127,10 @@ log.full = function(...args: Array<any>) {
 }
 
 function wrapLogger(wrapFn: Function, parent: any, name?: string) {
-  const parentName: string = parent
-    ? parent.name || (parent.constructor && parent.constructor.name) || ''
-    : ''
+  const parentName: string =
+    parent instanceof Object
+      ? parent.name || (parent.constructor && parent.constructor.name) || ''
+      : parent || ''
   const methodName = wrapFn.name || name || ''
   const color = Color.getColor(`${parentName}${methodName}`)
 

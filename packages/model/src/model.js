@@ -1,4 +1,5 @@
 // @flow
+import { log } from '@mcro/black'
 import { CompositeDisposable } from 'sb-event-kit'
 import { autorun, observable } from 'mobx'
 import { compile } from './properties'
@@ -271,14 +272,15 @@ export default class Model {
     return worm()
   }
 
-  get shouldSyncPush() {
+  get shouldSyncPush(): boolean {
     const autoSync = this.settings.autoSync || this.options.autoSync
-    return autoSync && (autoSync === true || autoSync.push)
+    return (autoSync && (autoSync === true || autoSync.push)) || false
   }
 
-  get shouldSyncPull() {
+  // sitrep
+  get shouldSyncPull(): boolean {
     const autoSync = this.settings.autoSync || this.options.autoSync
-    return autoSync && (autoSync === true || autoSync.pull)
+    return (autoSync && (autoSync === true || autoSync.pull)) || false
   }
 
   connect = async (database: RxDB, options: Object): Promise<void> => {

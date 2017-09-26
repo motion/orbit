@@ -104,23 +104,6 @@ export default class BarPage {
   }
 
   render({ barStore }) {
-    const { filters } = barStore
-    const avatar = s => `/images/${s === 'nate' ? 'me' : s}.jpg`
-
-    const getDate = date => (
-      <date $$row>
-        <UI.Text css={{ marginRight: 5, alignSelf: 'center' }} size={2} $num>
-          {format(date, 'D')}
-        </UI.Text>
-        <right>
-          <UI.Text $desc>{format(date, 'MMM GGGG')}</UI.Text>
-          <UI.Text css={{ marginTop: -3 }} opacity={0.7} $day>
-            {format(date, 'dddd')}
-          </UI.Text>
-        </right>
-      </date>
-    )
-
     return (
       <UI.Theme name="clear-dark">
         <bar ref={barStore.ref('barRef').set} $$fullscreen>

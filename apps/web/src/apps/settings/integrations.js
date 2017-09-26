@@ -52,7 +52,7 @@ import * as UI from '@mcro/ui'
 })
 export default class BarIntegrationsPane {
   componentDidMount() {
-    this.props.onSelect(this.props.store.results[0])
+    this.select(this.props.store.results[0], 0)
   }
 
   select = (item, index) => {

@@ -73,12 +73,16 @@ export default class GoogleFeedSync extends SyncerAction {
   }
 
   async getFiles(query?: Object, fileQuery?: Object) {
-    const { files } = await this.getFileMeta(query)
-    const fileIds = files.map(file => file.id)
-    const perSecond = 2
+    const { files } = await this.getFilesBasic(query)
+    // just docs
+    const docs = files.filter(
+      file => file.mimeType === 'application/vnd.google-apps.document'
+    )
+    const fileIds = docs.map(file => file.id)
+    const perSecond = 5
     let fetched = 0
     let response = []
-    while (fetched < files.length) {
+    while (fetched < fileIds.length) {
       const next = await this.getFilesWithAllInfo(
         fileIds.slice(fetched, fetched + perSecond),
         fileQuery
@@ -98,7 +102,7 @@ export default class GoogleFeedSync extends SyncerAction {
     return meta.map((file, i) => ({ ...file, contents: contents[i] }))
   }
 
-  async getFileMeta(query?: Object) {
+  async getFilesBasic(query?: Object) {
     return await this.helpers.fetch('/files', {
       query: {
         orderBy: [

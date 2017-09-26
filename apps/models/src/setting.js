@@ -16,10 +16,10 @@ export class SettingModel extends Model {
 
   settings = {
     database: 'settings',
-    autoSync: {
-      push: true,
-      pull: true,
-    },
+    // autoSync: {
+    //   push: true,
+    //   pull: true,
+    // },
   }
 
   methods = {

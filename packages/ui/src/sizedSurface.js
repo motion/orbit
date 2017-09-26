@@ -3,7 +3,7 @@ import * as React from 'react'
 import Surface from './surface'
 
 const LINE_HEIGHT = 30
-const adj = x => (x === true ? 1 : x)
+const num = x => (x === true ? 1 : x || 1)
 
 type Props = {
   size: number,
@@ -11,6 +11,7 @@ type Props = {
   sizeFont?: boolean | number,
   sizePadding?: boolean | number,
   sizeMargin?: boolean | number,
+  sizeRadius?: boolean | number,
 }
 
 export default function SizedSurface(props: Props) {
@@ -23,15 +24,17 @@ export default function SizedSurface(props: Props) {
     ...rest
   } = props
 
+  const size = num(props.size)
+
   // sizes
   const height = sizeHeight
-    ? Math.round(sizeHeight && props.size * LINE_HEIGHT * adj(sizeHeight))
+    ? Math.round(sizeHeight && size * LINE_HEIGHT * num(sizeHeight))
     : props.height || undefined
-  const fontSize = sizeFont && height * 0.45 * adj(sizeFont)
+  const fontSize = sizeFont && height * 0.45 * num(sizeFont)
   const padWithWrap = props.wrapElement ? 0 : height ? height / 3.5 : 8
-  const padding = (sizePadding && [0, padWithWrap * adj(sizePadding)]) || 0
-  const margin = (sizeMargin && adj(sizeMargin) * 0.25) || 0
-  const radius = (sizeRadius && adj(sizeRadius) * 4) || 0
+  const padding = (sizePadding && [0, padWithWrap * num(sizePadding)]) || 0
+  const margin = (sizeMargin && num(sizeMargin) * 0.25) || 0
+  const radius = (sizeRadius && num(sizeRadius) * 4) || 0
 
   const pass = {}
   if (sizeHeight) {
@@ -48,6 +51,10 @@ export default function SizedSurface(props: Props) {
   }
   if (sizeRadius) {
     pass.borderRadius = radius
+  }
+
+  if (props.children === 'No Labels') {
+    console.log('praps', props, pass, rest)
   }
 
   return <Surface {...pass} {...rest} />

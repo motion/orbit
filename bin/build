@@ -14,20 +14,14 @@ killgroup() {
 
 function build-dev() {
   npx lerna exec --parallel \
-    --ignore @mcro/native  \
     --ignore @mcro/web \
-    --ignore @mcro/couch \
-    --ignore @mcro/playground \
       -- \
       babel src --out-dir lib -s true $1
 }
 
 function build-prod() {
   npx lerna exec --parallel \
-    --ignore @mcro/native  \
     --ignore @mcro/web \
-    --ignore @mcro/couch \
-    --ignore @mcro/playground \
       -- \
       NODE_ENV=production babel src --out-dir dist -s true $1
 }

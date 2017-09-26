@@ -43,7 +43,11 @@ export default {
       },
     },
     options: {
-      scope: ['profile', 'https://www.googleapis.com/auth/drive'],
+      scope: [
+        'profile',
+        'https://www.googleapis.com/auth/drive',
+        'https://www.googleapis.com/auth/calendar',
+      ],
       accessType: 'offline',
       prompt: 'consent',
     },

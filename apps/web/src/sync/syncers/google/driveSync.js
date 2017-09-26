@@ -5,6 +5,9 @@ import SyncerAction from '../syncerAction'
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class GoogleDriveSync extends SyncerAction {
+  fetch2 = (path, opts) => this.helpers.fetch(`/drive/v2${path}`, opts)
+  fetch = (path, opts) => this.helpers.fetch(`/drive/v3${path}`, opts)
+
   run = async () => {}
 
   async syncFeed() {
@@ -19,9 +22,7 @@ export default class GoogleDriveSync extends SyncerAction {
   async syncFiles() {}
 
   async getRevisions(fileId: string) {
-    const {
-      revisions,
-    } = await this.helpers.fetch(`/files/${fileId}/revisions`, {
+    const { revisions } = await this.fetch(`/files/${fileId}/revisions`, {
       query: {
         pageSize: 1000,
       },
@@ -32,14 +33,11 @@ export default class GoogleDriveSync extends SyncerAction {
   }
 
   async getRevision(fileId: string, revisionId: string) {
-    return await this.helpers.fetch(
-      `/files/${fileId}/revisions/${revisionId}`,
-      {
-        query: {
-          fields: ['lastModifyingUser', 'size', 'mimeType', 'modifiedTime'],
-        },
-      }
-    )
+    return await this.fetch(`/files/${fileId}/revisions/${revisionId}`, {
+      query: {
+        fields: ['lastModifyingUser', 'size', 'mimeType', 'modifiedTime'],
+      },
+    })
   }
 
   async getChanges({ max = 5000, maxRequests = 20 } = {}) {
@@ -57,10 +55,9 @@ export default class GoogleDriveSync extends SyncerAction {
   async fetchChanges(lastPageToken: string, total = 1000) {
     let pageToken = lastPageToken
     if (!pageToken) {
-      pageToken = (await this.helpers.fetch('/changes/startPageToken'))
-        .startPageToken
+      pageToken = (await this.fetch('/changes/startPageToken')).startPageToken
     }
-    return await this.helpers.fetch('/changes', {
+    return await this.fetch('/changes', {
       query: {
         pageToken,
         supportsTeamDrives: true,
@@ -103,7 +100,7 @@ export default class GoogleDriveSync extends SyncerAction {
   }
 
   async getFilesBasic(query?: Object) {
-    return await this.helpers.fetch('/files', {
+    return await this.fetch('/files', {
       query: {
         orderBy: [
           'modifiedByMeTime desc',
@@ -117,7 +114,7 @@ export default class GoogleDriveSync extends SyncerAction {
   }
 
   async getFile(id: string, query?: Object) {
-    return await this.helpers.fetch(`/files/${id}`, {
+    return await this.fetch(`/files/${id}`, {
       query: {
         fields: [
           'id',
@@ -155,7 +152,7 @@ export default class GoogleDriveSync extends SyncerAction {
   }
 
   async getFileContents(id: string) {
-    return await this.helpers.fetch(`/files/${id}/export`, {
+    return await this.fetch(`/files/${id}/export`, {
       type: 'text',
       query: {
         mimeType: 'text/plain',
@@ -165,11 +162,11 @@ export default class GoogleDriveSync extends SyncerAction {
   }
 
   async getTeamDrives() {
-    return await this.helpers.fetch('/teamdrives')
+    return await this.fetch('/teamdrives')
   }
 
   async getComments(fileId: string) {
-    return await this.helpers.fetch(`/files/${fileId}/comments`, {
+    return await this.fetch(`/files/${fileId}/comments`, {
       query: {
         pageSize: 1000,
       },
@@ -177,13 +174,10 @@ export default class GoogleDriveSync extends SyncerAction {
   }
 
   async getReplies(fileId: string, commentId: string) {
-    return await this.helpers.fetch(
-      `/files/${fileId}/comments/${commentId}/replies`,
-      {
-        query: {
-          pageSize: 1000,
-        },
-      }
-    )
+    return await this.fetch(`/files/${fileId}/comments/${commentId}/replies`, {
+      query: {
+        pageSize: 1000,
+      },
+    })
   }
 }

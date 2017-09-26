@@ -1,5 +1,5 @@
 // @flow
-import { Event, Setting } from '~/app'
+import { Event } from '~/app'
 import { flatten } from 'lodash'
 import SyncerAction from '../syncerAction'
 import debug from 'debug'

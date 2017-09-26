@@ -102,7 +102,7 @@ const loginToName = Object.keys(nameToLogin).reduce(
   {}
 )
 
-class SetStore {
+class FeedStore {
   props: PaneProps
   isOpen = false
   filters = {
@@ -286,14 +286,18 @@ class SetStore {
     return this.filters.people.length > 0
   }
 
+  createdAt = item => {
+    return item.date
+      ? +new Date(item.date)
+      : +new Date(item.data.createdAt || item.data.created_at)
+  }
+
   get activeItems() {
     const { filters: { startDate, endDate } } = this
 
     const val = this.currentChart
       .filter(item => {
-        const itemDate = item.date
-          ? +new Date(item.date)
-          : +new Date(item.data.createdAt || item.data.created_at)
+        const itemDate = this.createdAt(item)
 
         if (
           startDate &&
@@ -305,7 +309,7 @@ class SetStore {
 
         return true
       })
-      .reverse()
+      .sort((a, b) => this.createdAt(b) - this.createdAt(a))
 
     console.timeEnd('calculating active items')
 
@@ -313,7 +317,7 @@ class SetStore {
   }
 }
 
-type Props = PaneProps & { store: SetStore }
+type Props = PaneProps & { store: FeedStore }
 
 @view
 class ItemsSection {
@@ -349,7 +353,7 @@ class ItemsSection {
 
 @view.attach('barStore')
 @view({
-  store: SetStore,
+  store: FeedStore,
 })
 export default class SetView extends Component<Props> {
   render({ store, paneStore }: Props) {

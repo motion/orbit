@@ -18,7 +18,7 @@ export class SettingModel extends Model {
     database: 'settings',
     autoSync: {
       push: true,
-      pull: true,
+      // pull: true,
     },
   }
 

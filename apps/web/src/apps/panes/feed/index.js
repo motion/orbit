@@ -190,7 +190,6 @@ class FeedStore {
     this.react(
       () => this.filters,
       () => {
-        console.log('setting filters to', this.filters)
         this.props.barStore.filters = this.filters
       }
     )

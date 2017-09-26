@@ -10,6 +10,47 @@ import { format } from 'date-fns'
 
 const commas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
+@view
+class Underline {
+  render() {
+    return (
+      <underline>
+        <edge $left />
+        <edge $right />
+      </underline>
+    )
+  }
+
+  static style = {
+    underline: {
+      position: 'absolute',
+      bottom: 6,
+      height: 5,
+      borderBottom: 'dashed 2px rgba(255,255,255,0.5)',
+    },
+    edge: {
+      position: 'absolute',
+      bottom: 0,
+      top: 0,
+    },
+    left: {
+      left: 0,
+      borderLeft: 'dashed 2px rgba(255,255,255,0.5)',
+    },
+    right: {
+      right: 0,
+      borderRight: 'dashed 2px rgba(255,255,255,0.5)',
+    },
+  }
+
+  static theme = props => ({
+    underline: {
+      width: props.width,
+      left: props.left,
+    },
+  })
+}
+
 @view.ui
 class BottomActions {
   render({ actions, metaKey }) {
@@ -49,7 +90,7 @@ class BottomActions {
 const inputStyle = {
   fontWeight: 200,
   color: '#fff',
-  fontSize: 32,
+  fontSize: 30,
 }
 
 @view.provide({
@@ -103,60 +144,9 @@ export default class BarPage {
               fontWeight={200}
               css={inputStyle}
             />
-            <forwardcomplete if={false}>{barStore.peekItem}</forwardcomplete>
-            <fancy
-              style={{
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginLeft: 40,
-                marginTop: 5,
-                height: 50,
-              }}
-              $$row
-            >
-              <left $$row css={{ alignItems: 'center' }}>
-                <people
-                  style={{ alignItems: 'center' }}
-                  $$row
-                  if={filters.people}
-                >
-                  {filters.people.map(person => (
-                    <UI.Button
-                      css={{ marginTop: 12, marginLeft: 5, marginRight: 5 }}
-                      size={1.6}
-                      chromeless
-                      icon={<img src={avatar(person)} $avatar />}
-                    >
-                      {person}
-                    </UI.Button>
-                  ))}
-                </people>
-                <dates
-                  css={{ marginRight: 10, marginTop: 10, marginLeft: 10 }}
-                  $$row
-                  if={filters.startDate}
-                >
-                  {getDate(filters.startDate)}
-                  <UI.Button
-                    css={{ marginRight: 5, marginLeft: 5, marginTop: 5 }}
-                    size={1.0}
-                    chromeless
-                    icon="arrows-1_bold-right"
-                  />
-                  {getDate(filters.endDate)}
-                </dates>
-              </left>
-              <type if={barStore.resultCount > 0}>
-                <UI.Button
-                  opacity={0.7}
-                  chromeless
-                  css={{ marginTop: 12, marginRight: 10 }}
-                  size={1.6}
-                >
-                  {commas(barStore.resultCount) + ' '} {filters.type || 'item'}s
-                </UI.Button>
-              </type>
-            </fancy>
+            <forwardcomplete>{barStore.peekItem}</forwardcomplete>
+            <Underline if={false} key={1} width={100} left={50} />
+            <Underline if={false} key={2} width={100} left={250} />
           </header>
           <Miller
             pane={Pane}
@@ -184,7 +174,7 @@ export default class BarPage {
     },
     searchIcon: {
       position: 'absolute',
-      top: 2,
+      top: 3,
       bottom: 0,
       alignItems: 'center',
       height: 'auto',

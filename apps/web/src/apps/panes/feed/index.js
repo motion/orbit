@@ -5,9 +5,9 @@ import { Event, Thing } from '~/app'
 import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/panes/pane'
 import type { PaneProps } from '~/types'
-import Calendar from './calendar'
+import Calendar from '../calendar'
 import moment from 'moment'
-import FeedItem from './views/feedItem'
+import FeedItem from '../views/feedItem'
 import {
   capitalize,
   includes,
@@ -17,7 +17,17 @@ import {
   sortBy,
   without,
 } from 'lodash'
-import { VictoryChart, VictoryBrushContainer, VictoryBar } from 'victory'
+import {
+  VictoryChart,
+  VictoryBrushContainer,
+  VictoryTheme,
+  VictoryBar,
+} from 'victory'
+// import slack from './slack'
+import getConvos from './helpers'
+
+// const convos = getConvos(slack)
+const convos = []
 
 const itemStamp = item => +new Date(item.data.createdAt || item.data.created_at)
 const weeks = stamps => {
@@ -34,32 +44,20 @@ const weeks = stamps => {
 
 @view
 class Chart {
-  show = false
-
-  componentDidMount() {
-    this.show = true
-  }
-
   render({ store }) {
-    // YO - this is taking 300ms to render
-    // and breaks if you return null for a frame for some reason
-
-    if (!this.show) {
-      return null
-    }
-    log('debug')
     const things = store.currentChart
     if (things.length === 0) return <div />
-    const chartStyle = { parent: { minWidth: '80%' } }
-    console.time('')
+    const chartStyle = {
+      border: '1px solid orange',
+    }
     const values = weeks(things.map(itemStamp))
 
     return (
       <chart>
         <VictoryChart
-          padding={{ top: 0, left: 0, right: 0, bottom: 30 }}
-          width={500}
-          height={90}
+          padding={{ top: 0, left: 0, right: 0, bottom: 20 }}
+          width={600}
+          height={60}
           scale={{ x: 'time' }}
           style={chartStyle}
           containerComponent={
@@ -67,20 +65,12 @@ class Chart {
               responsive={false}
               dimension="x"
               onDomainChange={store.setBrush}
-              style={{
-                tickLabels: {
-                  fontSize: 15,
-                  color: 'red',
-                  fill: 'blue',
-                  padding: 5,
-                },
-              }}
             />
           }
         >
           <VictoryBar
             style={{
-              data: { fill: '#75a9f3' },
+              data: { fill: '#7697ff' },
             }}
             data={values}
           />
@@ -117,9 +107,12 @@ class SetStore {
   isOpen = false
   filters = {
     type: null,
+    search: '',
     startDate: null,
     endDate: null,
+    people: [],
   }
+
   brushDomain = null
 
   setBrush = debounce(domain => {
@@ -139,26 +132,41 @@ class SetStore {
     { name: 'all', type: null, icon: false },
     { name: 'calendar', icon: 'cal' },
     { name: 'github', icon: 'github' },
+    { name: 'slack', type: 'convo', icon: 'slack' },
     { name: 'docs', icon: 'hard' },
     { name: 'jira', icon: 'atl' },
     { name: 'tasks', type: 'task', icon: 'github' },
   ]
-  people = []
 
   get currentLogins() {
-    return this.people.map(name => nameToLogin[name])
+    return this.filters.people.map(name => nameToLogin[name])
   }
 
   toggleLogin = login => {
-    const name = loginToName[login]
-    this.people = includes(this.people, name)
-      ? without(this.people, name)
-      : [...this.people, name]
+    this.togglePerson(loginToName[login])
+  }
+
+  togglePerson = name => {
+    console.log('toggling person', name)
+    this.setFilter(
+      'people',
+      includes(this.filters.people, name)
+        ? without(this.filters.people, name)
+        : [...this.filters.people, name]
+    )
   }
 
   willMount() {
     const { people, person } = this.props.paneStore.data
-    this.people = people ? people : [person]
+    this.setFilter(people ? people : [person])
+
+    this.react(
+      () => this.props.paneStore.data.people,
+      () => {
+        this.setFilter('people', people)
+      },
+      true
+    )
 
     this.react(
       () => this.props.paneStore.data.service,
@@ -178,16 +186,35 @@ class SetStore {
       },
       true
     )
+
+    this.react(
+      () => this.filters,
+      () => {
+        console.log('setting filters to', this.filters)
+        this.props.barStore.filters = this.filters
+      }
+    )
+
+    this.react(
+      () => this.activeItems.length,
+      () => {
+        this.props.barStore.resultCount = this.activeItems.length
+      }
+    )
   }
 
-  get searchDesc() {
+  get titleDesc() {
     const { type, startDate, endDate } = this.filters
+    return `${this.activeItems.length} ${(type || 'item') + 's'}`
+  }
+
+  get titleSubdesc() {
+    const { type, startDate, endDate } = this.filters
+    if (!startDate || !endDate) return ''
+
     const format = ts => moment(new Date(ts)).format('MMM Do')
-    const time =
-      startDate &&
-      endDate &&
-      `between ${format(startDate)} and ${format(endDate)}`
-    return `${this.activeItems.length} ${(type || 'item') + 's'} ${time || ''}`
+
+    return `${format(startDate)} - ${format(endDate)}`
   }
 
   things = Thing.find()
@@ -199,7 +226,7 @@ class SetStore {
       .limit(20): any)
 
   get allItems() {
-    return [...(this.events || []), ...(this.things || [])]
+    return [...(this.events || []), ...(this.things || []), ...convos]
   }
 
   get results(): Array<Event> {
@@ -216,27 +243,39 @@ class SetStore {
 
   // separated so chart can use it
   get currentChart() {
-    const { filters: { type } } = this
+    const { filters: { type, search } } = this
+
     if (this.allActive) return this.allItems
+
     return this.allItems.filter(item => {
       if (type && (item.type || item.name) !== type) {
         return false
       }
 
+      const itemAuthors = item.authors || [item.author]
+
       if (item.type === 'task') {
         if (
           this.hasPeople &&
-          !includes(
-            this.currentLogins,
-            item.data.author && item.data.author.login
-          )
+          !includes(this.currentLogins, item.data.author.login)
         ) {
           return false
         }
       } else {
-        if ((this.hasPeople, !includes(this.currentLogins, item.author))) {
+        if (
+          this.hasPeople &&
+          itemAuthors.filter(author => includes(this.filters.people, author))
+            .length === 0
+        ) {
           return false
         }
+      }
+
+      if (
+        search.length > 0 &&
+        (item.title || item.data.text || '').indexOf(search) === -1
+      ) {
+        return false
       }
 
       return true
@@ -244,13 +283,11 @@ class SetStore {
   }
 
   get hasPeople() {
-    return this.people.length > 0
+    return this.filters.people.length > 0
   }
 
   get activeItems() {
-    const { filters: { search, startDate, endDate } } = this
-
-    // console.time('calculating active items')
+    const { filters: { startDate, endDate } } = this
 
     const val = this.currentChart
       .filter(item => {
@@ -266,13 +303,11 @@ class SetStore {
           return false
         }
 
-        if (search && item.title.indexOf(search) === -1) return false
-
         return true
       })
       .reverse()
 
-    // console.timeEnd('calculating active items')
+    console.timeEnd('calculating active items')
 
     return val
   }
@@ -312,6 +347,7 @@ class ItemsSection {
   }
 }
 
+@view.attach('barStore')
 @view({
   store: SetStore,
 })
@@ -329,11 +365,12 @@ export default class SetView extends Component<Props> {
     const avatar = s => `/images/${s === 'nate' ? 'me' : s}.jpg`
 
     const items = [
-      {
+      false && {
+        height: 75,
         view: () => (
           <section $$row>
-            {store.people.map((person, index) => (
-              <person key={index} $$row css={{ marginRight: 20 }}>
+            {store.filters.people.map(person => (
+              <person $$row css={{ marginRight: 20 }}>
                 <img $image src={avatar(person)} />
                 <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
                   {person}
@@ -344,38 +381,42 @@ export default class SetView extends Component<Props> {
         ),
       },
       {
+        height: 60,
         view: () => <ItemsSection store={store} />,
       },
       {
         view: () => (
-          <info
-            style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}
-          >
-            <UI.Title size={1.2}>{store.searchDesc}</UI.Title>
-            <Chart store={store} />
+          <info css={{ marginLeft: 30 }}>
+            <chart className="chart">
+              <Chart store={store} />
+            </chart>
           </info>
         ),
       },
-      {
-        view: () => (
-          <section if={store.calendarActive} css={{ width: '100%' }}>
-            <div
-              $$row
-              css={{
-                width: '100%',
-                alignItems: 'flex-start',
-                maxHeight: '100%',
-              }}
+      false &&
+        store.filters.type === 'calendar' && {
+          view: () => (
+            <section
+              if={store.filters.type === 'calendar'}
+              css={{ width: '100%' }}
             >
-              <Calendar isSmall={!store.calendarActive} />
-            </div>
-          </section>
-        ),
-      },
+              <div
+                $$row
+                css={{
+                  width: '100%',
+                  alignItems: 'flex-start',
+                  maxHeight: '100%',
+                }}
+              >
+                <Calendar isSmall={!store.calendarActive} />
+              </div>
+            </section>
+          ),
+        },
       ...store.activeItems.map(item => ({
         view: () => <FeedItem store={store} event={item} />,
       })),
-    ]
+    ].filter(i => i)
 
     return (
       <div style={{ flex: 1 }}>

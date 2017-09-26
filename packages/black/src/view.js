@@ -102,6 +102,7 @@ function createViewDecorator(): ViewDecorator {
   view.ui = decor(decorations({ ui: true }))
   view.gloss = decor([uiContext, glossPlugin])
   view.basics = decor([extendsReact, reactRenderArgs, observer, glossPlugin])
+  // view.magic = decor({ mobx: true, ui: true, magic: true })
 
   const providable = decor([[storeProvidable, storeOptions]])
   view.provide = stores => providable({ stores, context: true })

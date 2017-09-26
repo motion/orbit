@@ -28,9 +28,10 @@ export const CurrentUser = CurrentUser_
 class App {
   sync: Sync
   store: AppStore
+  started = false
 
   constructor() {
-    // this.render() // to render before db connects
+    this.render() // to render before db connects
     this.store = new AppStore({
       config: {
         ...Constants.DB_CONFIG,
@@ -46,22 +47,26 @@ class App {
   async start(quiet?: boolean) {
     await this.store.start(quiet)
     // sync settings
-    await Setting.find().sync()
+    await Setting.find()
     // remove all previous jobs
-    const jobs = await Job.find().exec()
-    if (jobs) {
-      log('clearing', jobs.length, 'jobs')
-      await Promise.all(jobs.map(job => job.remove()))
-    }
+    // const jobs = await Job.find().exec()
+    // if (jobs) {
+    //   log('clearing', jobs.length, 'jobs')
+    //   await Promise.all(jobs.map(job => job.remove()))
+    // }
     this.sync = new Sync()
     this.sync.start()
     this.render()
+    this.started = true
   }
 
   async dispose() {
     await this.store.dispose()
     if (this.sync) {
       this.sync.dispose()
+    }
+    if (super.dispose) {
+      super.dispose()
     }
   }
 
@@ -122,9 +127,6 @@ export async function start(recreate?: boolean) {
     return
   }
   window.appDisposing = true
-  setTimeout(() => {
-    window.appDisposing = false
-  }, 50)
   if (app) {
     await app.dispose()
   }

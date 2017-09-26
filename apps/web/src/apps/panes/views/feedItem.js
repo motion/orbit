@@ -8,10 +8,89 @@ const format = str => {
   return marked(emojinize.encode(str))
 }
 
+const parseMessage = text => {
+  const split = text.split('[]')
+  const first = split[0]
+  const who = text.split(' ')[0]
+  const date = first.split(' ')[1]
+  const body = text.slice(first.length + 4)
+
+  return { date, who, body }
+}
+
 @view
 export default class FeedItem {
   getBody(event, { payload }, store) {
     switch (event.type) {
+      case 'convo':
+        const { data: { messages }, authors } = event
+        const avatar = s => `/images/${s === 'nate' ? 'me' : s}.jpg`
+
+        return (
+          <convo>
+            <info $$row>
+              <UI.Title size={1.2}>
+                {UI.Date.format(event.data.createdAt)}
+              </UI.Title>
+              {authors.map(author => (
+                <UI.Button
+                  chromeless
+                  css={{ marginLeft: 10 }}
+                  icon={
+                    <img
+                      $avatar
+                      css={{ marginRight: -3 }}
+                      src={avatar(author)}
+                    />
+                  }
+                  onMouseDown={() => {
+                    store.togglePerson(author)
+                  }}
+                >
+                  {author}
+                </UI.Button>
+              ))}
+            </info>
+            <texts>
+              {messages.map((message, index) => {
+                const { date, who, body } = parseMessage(message)
+                const lastWho =
+                  index === 0 ? null : parseMessage(messages[index - 1]).who
+
+                return (
+                  <item css={{ marginTop: 5 }}>
+                    <user if={lastWho !== who} $$row>
+                      <UI.Button
+                        icon={
+                          <img
+                            css={{ marginRight: -3 }}
+                            src={avatar(who)}
+                            $avatar
+                          />
+                        }
+                        onMouseDown={() => store.togglePerson(who)}
+                        chromeless
+                        $$row
+                        css={{
+                          marginBottom: 10,
+                          fontWeight: 600,
+                          marginRight: 10,
+                        }}
+                      >
+                        {who}
+                      </UI.Button>
+                      <date css={{ opacity: 0.7, marginTop: 5 }}>{date}</date>
+                    </user>
+                    <message css={{ marginLeft: 5, marginTop: -3 }}>
+                      {body}
+                    </message>
+                  </item>
+                )
+              })}
+            </texts>
+          </convo>
+        )
+
       case 'task':
         const {
           title,
@@ -56,16 +135,7 @@ export default class FeedItem {
             <info $$row css={{ marginTop: -8 }}>
               <UI.Text>#{number}</UI.Text>
               <UI.Text> opened {UI.Date.format(createdAt)} by</UI.Text>
-              <user
-                css={{ marginLeft: 10 }}
-                $$row
-                onClick={() => store.toggleLogin(author.login)}
-              >
-                <img $avatar src={author.avatarUrl} />
-                {author.login}
-              </user>
               <UI.Button
-                if={false}
                 chromeless
                 css={{ marginLeft: 10 }}
                 icon={
@@ -75,7 +145,7 @@ export default class FeedItem {
                     src={author.avatarUrl}
                   />
                 }
-                onClick={() => {
+                onMouseDown={() => {
                   store.toggleLogin(author.login)
                 }}
               >

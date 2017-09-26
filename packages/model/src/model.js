@@ -1,4 +1,5 @@
 // @flow
+import { log } from '@mcro/black'
 import { CompositeDisposable } from 'sb-event-kit'
 import { autorun, observable } from 'mobx'
 import { compile } from './properties'
@@ -96,7 +97,6 @@ export default class Model {
       primaryPath: '_id',
       disableKeyCompression: true,
       ...this.defaultSchema,
-      ...this.settings,
       ...cloneDeep(this.props), // cloneDeep fixes bug when re-using a model (compiling twice)
       title: this.settings.database,
       version: this.settings.version || 0,
@@ -144,8 +144,9 @@ export default class Model {
   }
 
   get title(): string {
-    return ((this.settings && this.settings.database) || this.constructor.name)
-      .toLowerCase()
+    return ((this.settings && this.settings.database) ||
+      this.constructor.name
+    ).toLowerCase()
   }
 
   get compiledMethods() {
@@ -271,6 +272,17 @@ export default class Model {
     return worm()
   }
 
+  get shouldSyncPush(): boolean {
+    const autoSync = this.settings.autoSync || this.options.autoSync
+    return (autoSync && (autoSync === true || autoSync.push)) || false
+  }
+
+  // sitrep
+  get shouldSyncPull(): boolean {
+    const autoSync = this.settings.autoSync || this.options.autoSync
+    return (autoSync && (autoSync === true || autoSync.pull)) || false
+  }
+
   connect = async (database: RxDB, options: Object): Promise<void> => {
     this.options = options || {}
 
@@ -290,10 +302,8 @@ export default class Model {
       migrationStrategies: this.migrations,
     })
 
-    // sync PUSH ONLY
-    const { autoSync } = this.options
-    const shouldSyncPush = autoSync && (autoSync === true || autoSync.push)
-
+    // sync PUSH
+    const { shouldSyncPush } = this
     if (shouldSyncPush) {
       const pushSync = this._collection.sync({
         remote: this.remote,
@@ -369,8 +379,7 @@ export default class Model {
     queryish: Queryish,
     options: Object = { live: true, retry: true }
   ): Promise<boolean> => {
-    const { autoSync } = this.options
-    const shouldSyncPull = autoSync && (autoSync === true || autoSync.pull)
+    const { shouldSyncPull } = this
 
     if (!shouldSyncPull) {
       return Promise.resolve(false)

@@ -38,17 +38,10 @@ function install-puma-dev {
   puma-dev -install
 }
 
-xcode-select --install 2> /dev/null &
-ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" &
+xcode-select --install 2> /dev/null
+ensure-dep "brew" -- /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ensure-dep "npm" -- brew install node &
 ensure-dep "yarn" -- npm i -g yarn &
-ensure-dep "docker" -- brew install docker &
-ensure-dep "docker-machine" -- brew install docker-machine &
-ensure-dep "xhyve" -- brew cask install xhyve &
-ensure-dep "kubectl" -- brew install kubectl &
-ensure-dep "minikube" -- brew cask install minikube &
-ensure-dep "pip" -- brew install python &
-ensure-dep "envtpl" -- pip install envtpl &
 ensure-dep "puma-dev" -- install-puma-dev &
 
 wait
@@ -58,21 +51,7 @@ echo 3001 > ~/.puma-dev/jot
 
 yarn install
 
-# link in @mcro stuff
-# if [ ! -L "./node_modules/@mcro/gloss" ]; then
-#   echo "linking in local stuff"
-#   npx lerna exec --parallel -- yarn link
-#   for path in ./node_modules/@mcro/*; do
-#     dirname="$(basename "${path}")"
-#     yarn link "@mcro/$dirname"
-#   done
-# fi
-
 echo "lerna bootstrap"
 npx lerna bootstrap
 
-echo " welcome!"
-echo " to start the app:"
-echo " $ compose up"
-echo " $ watch"
-echo " $ npm run web"
+echo " done!"

@@ -48,10 +48,9 @@ class BarMainStore {
 
     const person = people.length > 0 ? people[0] : undefined
 
-    const actuallyPerson = ['docs', 'issues', 'github', 'calendar', 'tasks']
+    const actuallyFeed = ['docs', 'issues', 'github', 'calendar', 'tasks']
 
-    const type =
-      (includes(actuallyPerson, service) ? 'person' : service) || 'person'
+    const type = (includes(actuallyFeed, service) ? 'feed' : service) || 'feed'
 
     const val = {
       id: `type:${people.join(':')}`,
@@ -84,11 +83,11 @@ class BarMainStore {
     {
       id: 1100,
       title: 'Me',
-      type: 'person',
+      type: 'feed',
       icon: 'radio',
       data: {
         special: true,
-        person: 'nate',
+        people: ['nate'],
         image: 'me',
       },
       actions: ['respond to recent'],
@@ -115,30 +114,33 @@ class BarMainStore {
     {
       id: 1030,
       title: 'Motion',
-      type: 'person',
+      type: 'feed',
       category: 'Teams',
       data: {
         team: 'Motion',
+        people: [],
       },
       actions: ['like motion'],
     },
     {
       id: 1040,
       title: 'Product',
-      type: 'person',
+      type: 'feed',
       category: 'Teams',
       data: {
         team: 'Product',
+        people: [],
       },
       actions: ['like motion'],
     },
     {
       id: 1050,
       title: 'Search',
-      type: 'person',
+      type: 'feed',
       category: 'Teams',
       data: {
         team: 'Search',
+        people: [],
       },
       actions: ['like motion'],
     },
@@ -148,22 +150,22 @@ class BarMainStore {
     {
       id: 20,
       title: 'Stephanie',
-      type: 'person',
-      data: { person: 'Stephanie He', image: 'steph' },
+      type: 'feed',
+      data: { people: ['steph'], image: 'steph' },
       category: 'People',
     },
     {
       id: 21,
       title: 'Nate',
-      type: 'person',
-      data: { person: 'Nate Wienert', image: 'me' },
+      type: 'feed',
+      data: { people: ['nate'], image: 'me' },
       category: 'People',
     },
     {
       id: 22,
       title: 'Nick',
-      type: 'person',
-      data: { person: 'Nick Cammarata', image: 'nick' },
+      type: 'feed',
+      data: { people: ['nick'], image: 'nick' },
       category: 'People',
     },
   ]

@@ -34,6 +34,9 @@ export default class Sync {
 
   async dispose() {
     await this.disposeSyncers()
+    if (super.dispose) {
+      super.dispose()
+    }
   }
 
   async disposeSyncers() {

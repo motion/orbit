@@ -17,8 +17,6 @@ const getActiveDots = (month, day) => dots[month + day + 20]
 
 @view
 class RightList extends React.Component<> {
-  static defaultProps: {}
-
   render({ dots }) {
     const items = [
       {
@@ -68,7 +66,7 @@ class RightList extends React.Component<> {
             const item = sample(items)
 
             return (
-              <item $$row key={item.description}>
+              <item $$row key={Math.random()}>
                 <content>
                   {item.content || (
                     <UI.Button

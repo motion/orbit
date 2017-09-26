@@ -9,6 +9,7 @@ import type { HostContext } from '../IonizeHostConfig'
 
 const PROP_TO_APP_EVENT_NAME = {
   onReady: 'ready',
+  onBeforeQuit: 'before-quit',
 }
 
 export default class AppElement extends BaseElement {

@@ -2,6 +2,19 @@
   width: 100%;
 }
 
+.chart text {
+  transform: translateY(-6px);
+}
+
+tspan {
+  font-size: 13px !important;
+  font: 'Helvetica' !important;
+  font-weight: 500;
+  fill: white !important;
+  opacity: 0.7;
+  padding: 4px !important;
+}
+
 /* for highlighting words */
 mark {
   display: inline !important;

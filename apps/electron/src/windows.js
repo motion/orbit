@@ -222,7 +222,7 @@ export default class ExampleApp extends React.Component {
     const bgPadding = 30
 
     return (
-      <app>
+      <app onBeforeQuit={() => console.log('hi')}>
         <Menu />
         {false && (
           <window

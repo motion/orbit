@@ -39,7 +39,7 @@ export async function ensureJob(
         }
       }
     } else {
-      log('no need to run', type, action)
+      // log('no need to run', type, action)
       return
     }
   }

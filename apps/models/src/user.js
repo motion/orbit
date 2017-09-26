@@ -10,6 +10,18 @@ export const methods = {
       this.authorizations[provider].token
     )
   },
+
+  async refreshToken(provider: string) {
+    const info = await fetch(`/auth/refreshToken/${provider}`)
+    if (!info || info.error) {
+      throw new Error(`Error fetching refresh token: ${info.error}`)
+    }
+    this.mergeUpdate({
+      authorizations: {
+        [provider]: info,
+      },
+    })
+  },
 }
 
 export class UserModel extends Model {

@@ -1,15 +1,32 @@
 // @flow
 import Server from './server'
-import type { Options } from '~/types'
+import Database, { Models } from '@mcro/models'
+import PouchAdapterMemory from 'pouchdb-adapter-memory'
 
 export default class API {
   server: Server
+  database: Database
 
-  constructor(options: Options) {
-    this.server = new Server(options)
+  constructor() {
+    this.database = new Database(
+      {
+        name: 'username',
+        password: 'password',
+        adapter: PouchAdapterMemory,
+        adapterName: 'memory',
+      },
+      Models
+    )
+    const pouch = this.database.pouch
+    this.server = new Server({ pouch })
   }
 
   async start() {
+    await this.database.start({
+      modelOptions: {
+        debug: true,
+      },
+    })
     const port = this.server.start()
     console.log('API on port', port)
   }

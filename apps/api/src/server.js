@@ -8,25 +8,44 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import Pouch from 'pouchdb'
-import PouchAdapterHTTP from 'pouchdb-adapter-http'
-import PouchAdapterMemory from 'pouchdb-adapter-memory'
+import { User } from '@mcro/models'
 import PouchRouter from 'pouchdb-express-router'
+// import typeof Pouch from 'pouchdb'
 
 const port = Constants.SERVER_PORT
 
 export default class Server {
   login = null
+  // pouch: Pouch
 
-  constructor() {
-    Pouch.plugin(PouchAdapterHTTP)
-    Pouch.plugin(PouchAdapterMemory)
-
+  constructor({ pouch }) {
+    this.pouch = pouch
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
       onSuccess: async (service, token, refreshToken, info) => {
         console.log('got info', token, refreshToken, info)
         return { token, refreshToken, info }
+      },
+      findUser: async () => {
+        console.log('find user')
+        const user = await User.get('a@b.com')
+        console.log('got user', user)
+        return user.toJSON()
+      },
+      updateUser: async res => {
+        if (!res.info || !res.info.provider) {
+          throw new Error(`Don't see a provider for ${res}`)
+        }
+        const user = await User.get('a@b.com')
+        if (!user) {
+          throw new Error(`Don't see a user`)
+        }
+        await user.mergeUpdate({
+          authorizations: {
+            [res.info.provider]: res,
+          },
+        })
+        await user.sync({ direction: { push: true } })
       },
     })
 
@@ -100,7 +119,7 @@ export default class Server {
 
   setupPouch() {
     // const dbs = Object.keys(Models).map(model => Models[model].title)
-    this.app.use('/db', PouchRouter(Pouch))
+    this.app.use('/db', PouchRouter(this.pouch))
   }
 
   setupPassportRoutes() {

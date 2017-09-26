@@ -1,5 +1,4 @@
 // @flow
-import { log } from '@mcro/black'
 import { CompositeDisposable } from 'sb-event-kit'
 import { autorun, observable } from 'mobx'
 import { compile } from './properties'
@@ -273,12 +272,18 @@ export default class Model {
   }
 
   get shouldSyncPush(): boolean {
+    if (!this.remote) {
+      return false
+    }
     const autoSync = this.settings.autoSync || this.options.autoSync
     return (autoSync && (autoSync === true || autoSync.push)) || false
   }
 
   // sitrep
   get shouldSyncPull(): boolean {
+    if (!this.remote) {
+      return false
+    }
     const autoSync = this.settings.autoSync || this.options.autoSync
     return (autoSync && (autoSync === true || autoSync.pull)) || false
   }
@@ -481,6 +486,15 @@ export default class Model {
   }
 
   // user facing!
+
+  sync = async (options = {}) => {
+    await this.onConnection()
+    return await this._collection.sync({
+      remote: this.remote,
+      waitForLeadership: false,
+      ...options,
+    })
+  }
 
   // get is a helper that returns a promise only
   get = async (query: string | Object) => {

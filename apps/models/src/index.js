@@ -91,6 +91,10 @@ export default class Database {
     PouchDB.plugin(pHTTP)
   }
 
+  get pouch() {
+    return PouchDB
+  }
+
   start = async ({ options, modelOptions }: StartOptions = {}) => {
     this.modelOptions = modelOptions
     this.database = await RxDB.create({
@@ -136,7 +140,6 @@ export default class Database {
         pouch: PouchDB,
         pouchSettings: {
           skip_setup: true,
-          skipSetup: true,
         },
         ...this.modelOptions,
       }

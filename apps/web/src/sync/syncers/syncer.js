@@ -82,6 +82,10 @@ export default class Syncer {
     return this.user.token(this.type)
   }
 
+  async refreshToken() {
+    return await this.user.refreshToken(this.type)
+  }
+
   async check(loud: boolean = true) {
     const { type, actions } = this
     if (!actions) {

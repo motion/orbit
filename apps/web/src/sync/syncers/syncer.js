@@ -58,6 +58,7 @@ export default class Syncer {
       throw new Error('Must provide action')
     }
     this.ensureSetting()
+    log(`Running ${this.type} ${action}`)
     await this.syncers[action].run()
   }
 

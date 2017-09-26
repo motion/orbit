@@ -18,8 +18,13 @@ export async function ensureJob(
   type: string,
   action: string,
   options: Object = {},
-  loud?: boolean
+  force?: boolean
 ): ?Job {
+  const createJob = () => Job.create({ type, action })
+  if (force) {
+    return await createJob()
+  }
+
   const lastPending = await Job.lastPending({ type, action }).exec()
   if (lastPending) {
     const secondsAgo =
@@ -44,7 +49,6 @@ export async function ensureJob(
     }
   }
   const lastCompleted = await Job.lastCompleted({ action }).exec()
-  const createJob = () => Job.create({ type, action })
   if (!lastCompleted) {
     log('No existing completed jobs')
     return await createJob()

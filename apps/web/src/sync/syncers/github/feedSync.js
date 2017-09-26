@@ -12,6 +12,8 @@ export default class GithubFeedSync extends SyncerAction {
   run = async () => {
     if (this.setting.activeOrgs) {
       await Promise.all(this.setting.activeOrgs.map(this.syncFeed))
+    } else {
+      log('No orgs selected')
     }
   }
 

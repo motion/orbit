@@ -7,7 +7,7 @@ import * as Pane from '~/apps/panes/pane'
 import type { PaneProps } from '~/types'
 import Calendar from '../calendar'
 import moment from 'moment'
-import FeedItem from '../views/feedItem'
+import FeedItem from './feedItem'
 import {
   capitalize,
   includes,

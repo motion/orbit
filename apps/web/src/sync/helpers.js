@@ -39,9 +39,7 @@ export async function ensureJob(
           lastError: { message: 'stale' },
         })
       } catch (e) {
-        if (e.name !== 'conflict') {
-          console.log(e)
-        }
+        console.log(e)
       }
     } else {
       // log('no need to run', type, action)

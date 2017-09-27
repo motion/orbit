@@ -12,21 +12,28 @@ export const methods = {
   },
 
   async refreshToken(provider: string) {
-    const info = await fetch(`/auth/refreshToken/${provider}`).then(res =>
-      res.json()
-    )
-    if (!info || info.error) {
-      throw new Error(`Error fetching refresh token: ${info.error}`)
+    if (!provider) {
+      throw new Error(`no provider ${provider}`)
     }
-    const update = {
-      authorizations: {
-        [provider]: {
-          refreshToken: info.refreshToken,
+    let info
+    try {
+      info = await fetch(`/auth/refreshToken/${provider}`).then(res =>
+        res.json()
+      )
+    } catch (error) {
+      console.log('refreshToken error', error)
+    }
+    if (info) {
+      const update = {
+        authorizations: {
+          [provider]: {
+            refreshToken: info.refreshToken,
+          },
         },
-      },
+      }
+      console.log('updating user with', update)
+      this.mergeUpdate(update)
     }
-    console.log('updating user with', update)
-    this.mergeUpdate(update)
   },
 }
 

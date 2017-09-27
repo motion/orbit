@@ -1540,7 +1540,7 @@ babili-webpack-plugin@^0.1.2:
     babel-preset-babili "^0.1.4"
     webpack-sources "^1.0.1"
 
-babylon@^6.17.0, babylon@^6.17.4, babylon@^6.18.0:
+babylon@^6.17.0, babylon@^6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
@@ -5288,7 +5288,7 @@ is-fullwidth-code-point@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/is-fullwidth-code-point/-/is-fullwidth-code-point-2.0.0.tgz#a3b30a5c4f199183167aaab93beefae3ddfb654f"
 
-is-function-x@^3.1.1:
+is-function-x@^3.1.1, is-function-x@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/is-function-x/-/is-function-x-3.2.0.tgz#38f3fe92324d1770531a4bf9adf4cbf26b1c3103"
   dependencies:
@@ -6213,7 +6213,7 @@ lodash.toarray@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.toarray/-/lodash.toarray-4.4.0.tgz#24c4bfcd6b2fba38bfd0594db1179d8e9b656561"
 
-lodash@, lodash@^4.0.0, lodash@^4.1.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.4, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.1, lodash@^4.3.0:
+lodash@^4.0.0, lodash@^4.1.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.4, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.1, lodash@^4.3.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -8267,15 +8267,15 @@ prepack-webpack-plugin@^1.1.0:
     webpack-sources "^0.2.3"
 
 prepack@^0.2.0:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/prepack/-/prepack-0.2.6.tgz#d0bab693a109dc57e442b26435222c905a22d265"
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/prepack/-/prepack-0.2.7.tgz#d4a1990391f3880a30d06e933204d7f0cd35e6ee"
   dependencies:
     babel-core "^6.8.0"
     babel-generator "^6.8.0"
     babel-template "^6.9.0"
     babel-traverse "^6.9.0"
     babel-types "^6.9.0"
-    babylon "^6.17.4"
+    babylon "^6.18.0"
     base62 "^1.1.2"
     seedrandom "^2.4.2"
     source-map "^0.5.6"
@@ -9054,12 +9054,6 @@ run-async@^2.2.0:
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.3.0.tgz#0371ab4ae0bdd720d4166d7dfda64ff7a445a6c0"
   dependencies:
     is-promise "^2.1.0"
-
-run-middleware@^0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/run-middleware/-/run-middleware-0.6.6.tgz#1344813be69a740105b487db0bd5fa3d0a036a42"
-  dependencies:
-    lodash ""
 
 rx-lite-aggregates@^4.0.8:
   version "4.0.8"
@@ -10056,12 +10050,12 @@ to-object-x@^1.4.1:
     require-object-coercible-x "^1.4.1"
 
 to-primitive-x@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/to-primitive-x/-/to-primitive-x-1.0.1.tgz#9618eb6e909288017bd370c1f33c490094cf63c0"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/to-primitive-x/-/to-primitive-x-1.1.0.tgz#41ce2c13e3e246e0e5d0a8829a0567c6015833f8"
   dependencies:
     has-symbol-support-x "^1.4.1"
     is-date-object "^1.0.1"
-    is-function-x "^3.1.1"
+    is-function-x "^3.2.0"
     is-nil-x "^1.4.1"
     is-primitive "^2.0.0"
     is-symbol "^1.0.1"

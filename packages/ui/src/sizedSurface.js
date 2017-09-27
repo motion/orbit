@@ -53,9 +53,5 @@ export default function SizedSurface(props: Props) {
     pass.borderRadius = radius
   }
 
-  if (props.children === 'No Labels') {
-    console.log('praps', props, pass, rest)
-  }
-
   return <Surface {...pass} {...rest} />
 }

@@ -310,7 +310,7 @@ class FeedStore {
       })
       .sort((a, b) => this.createdAt(b) - this.createdAt(a))
 
-    console.timeEnd('calculating active items')
+    // console.timeEnd('calculating active items')
 
     return val
   }

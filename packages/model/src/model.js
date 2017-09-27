@@ -7,6 +7,9 @@ import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
 import { cloneDeep, merge } from 'lodash'
 import * as Helpers from './helpers'
+import debug from 'debug'
+
+const log = debug('model')
 
 type SettingsObject = {
   index?: Array<string>,
@@ -446,7 +449,7 @@ export default class Model {
           const done = state && state.pull && state.pull.ok
 
           if (done && !resolved) {
-            console.log('<<', QUERY_KEY)
+            log('<<', QUERY_KEY)
             resolve(true)
 
             // cleanup

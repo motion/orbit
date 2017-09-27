@@ -4,10 +4,8 @@ import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import peeks from './peeks'
 
-console.log('OS', OS)
-
 export default class BarStore {
-  inputRef: ?HTMLElement = null
+  inputRef = null
 
   // search is throttled, textboxVal isn't
   search = ''

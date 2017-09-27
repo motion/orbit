@@ -30,7 +30,7 @@ const parseMessage = text => {
 class Commit {
   render({ store }) {
     return (
-      <commit if={store.info}>
+      <commit css={{ maxHeight: 200, overflowY: 'scroll' }} if={store.info}>
         {store.info.files.map(file => file.patch)}
       </commit>
     )

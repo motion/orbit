@@ -322,29 +322,28 @@ type Props = PaneProps & { store: FeedStore }
 class ItemsSection {
   render({ store }) {
     return (
-      <UI.Row
-        spaced
-        itemProps={{ size: 1, borderWidth: 0, glint: false }}
-        css={{ justifyContent: 'space-between' }}
-      >
-        {store.types.map(type => (
-          <UI.Button
-            key={type}
-            icon={type.icon}
-            highlight={
-              (isUndefined(type.type) ? type.name : type.type) ===
-              store.filters.type
-            }
-            onClick={() => {
-              store.setFilter(
-                'type',
-                isUndefined(type.type) ? type.name : type.type
-              )
-            }}
-          >
-            {capitalize(type.name)}
-          </UI.Button>
-        ))}
+      <UI.Row stretch itemProps={{ size: 1, borderWidth: 0, glint: false }}>
+        {store.types.map(type => {
+          const highlight =
+            (isUndefined(type.type) ? type.name : type.type) ===
+            store.filters.type
+          return (
+            <UI.Button
+              key={type}
+              icon={type.icon}
+              background={highlight ? null : [255, 255, 255, 0.1]}
+              highlight={highlight}
+              onClick={() => {
+                store.setFilter(
+                  'type',
+                  isUndefined(type.type) ? type.name : type.type
+                )
+              }}
+            >
+              {capitalize(type.name)}
+            </UI.Button>
+          )
+        })}
       </UI.Row>
     )
   }
@@ -367,75 +366,73 @@ export default class SetView extends Component<Props> {
 
     const avatar = s => `/images/${s === 'nate' ? 'me' : s}.jpg`
 
-    const items = [
-      {
-        height: 75,
-        view: () => (
-          <section $$row>
-            {store.filters.people.map(person => (
-              <person $$row css={{ marginRight: 20 }}>
-                <img $image src={avatar(person)} />
-                <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
-                  {person}
-                </UI.Title>
-              </person>
-            ))}
-
-            <cards if={false}>
-              <UI.TiltHoverGlow width={200} height={250}>
-                <card css={{ background: '#000', flex: 1, borderRadius: 5 }}>
-                  <UI.Title>some content here</UI.Title>
-                </card>
-              </UI.TiltHoverGlow>
-            </cards>
-          </section>
-        ),
-      },
-      {
-        height: 60,
-        view: () => <ItemsSection store={store} />,
-      },
-      {
-        view: () => (
-          <info css={{ marginLeft: 30 }}>
-            <chart className="chart">
-              <Chart store={store} />
-            </chart>
-          </info>
-        ),
-      },
-      false &&
-        store.filters.type === 'calendar' && {
-          view: () => (
-            <section
-              if={store.filters.type === 'calendar'}
-              css={{ width: '100%' }}
-            >
-              <div
-                $$row
-                css={{
-                  width: '100%',
-                  alignItems: 'flex-start',
-                  maxHeight: '100%',
-                }}
-              >
-                <Calendar isSmall={!store.calendarActive} />
-              </div>
-            </section>
-          ),
-        },
-      ...store.activeItems.map(item => ({
-        view: () => <FeedItem store={store} event={item} />,
-      })),
-    ].filter(i => !!i)
-
     return (
       <div style={{ flex: 1 }}>
         <Pane.Card
           itemProps={{
             glow: false,
           }}
-          items={items}
+          items={[
+            {
+              view: () => (
+                <section $$row>
+                  {store.filters.people.map(person => (
+                    <person $$row css={{ marginRight: 20 }}>
+                      <img $image src={avatar(person)} />
+                      <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+                        {person}
+                      </UI.Title>
+                    </person>
+                  ))}
+
+                  <cards if={false}>
+                    <UI.TiltHoverGlow width={200} height={250}>
+                      <card
+                        css={{ background: '#000', flex: 1, borderRadius: 5 }}
+                      >
+                        <UI.Title>some content here</UI.Title>
+                      </card>
+                    </UI.TiltHoverGlow>
+                  </cards>
+                </section>
+              ),
+            },
+            {
+              view: () => <ItemsSection store={store} />,
+            },
+            {
+              view: () => (
+                <info css={{ marginLeft: 30 }}>
+                  <chart className="chart">
+                    <Chart store={store} />
+                  </chart>
+                </info>
+              ),
+            },
+            false &&
+              store.filters.type === 'calendar' && {
+                view: () => (
+                  <section
+                    if={store.filters.type === 'calendar'}
+                    css={{ width: '100%' }}
+                  >
+                    <div
+                      $$row
+                      css={{
+                        width: '100%',
+                        alignItems: 'flex-start',
+                        maxHeight: '100%',
+                      }}
+                    >
+                      <Calendar isSmall={!store.calendarActive} />
+                    </div>
+                  </section>
+                ),
+              },
+            ...store.activeItems.map(item => ({
+              view: () => <FeedItem store={store} event={item} />,
+            })),
+          ].filter(i => !!i)}
         />
       </div>
     )

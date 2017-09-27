@@ -233,20 +233,23 @@ export default class FeedItem {
   extraInfo(event) {
     const { data } = event
     const { payload } = data
+    const branch = payload.ref ? payload.ref.replace('refs/heads/', '') : ''
     switch (event.type) {
       case 'DeleteEvent':
         return (
           <UI.Text>
-            branch <strong>
-              {payload.ref.replace('refs/heads/', '')}
-            </strong>{' '}
+            branch <strong>{branch}</strong>{' '}
           </UI.Text>
         )
       case 'PushEvent':
         return (
           <UI.Text>
             {payload.commits.length} commits to branch{' '}
-            <strong>{payload.ref.replace('refs/heads/', '')}</strong>{' '}
+            <strong>
+              <a href={`https://github.com/${data.repo.name}/tree/${branch}`}>
+                {branch}
+              </a>
+            </strong>{' '}
           </UI.Text>
         )
     }

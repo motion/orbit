@@ -18,6 +18,9 @@ class ItemsSection {
     return (
       <UI.Row
         stretch
+        css={{
+          margin: [0, 10],
+        }}
         itemProps={{
           size: 1,
           borderWidth: 0,

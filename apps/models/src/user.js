@@ -17,13 +17,12 @@ export const methods = {
     }
     let info
     try {
-      info = await fetch(`/auth/refreshToken/${provider}`).then(res =>
-        res.json()
-      )
+      info = await fetch(`/auth/refreshToken/${provider}`)
     } catch (error) {
       console.log('refreshToken error', error)
     }
-    if (info) {
+    info = await info.json()
+    if (info && info instanceof Object) {
       const update = {
         authorizations: {
           [provider]: {

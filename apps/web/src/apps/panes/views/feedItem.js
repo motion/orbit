@@ -180,40 +180,44 @@ export default class FeedItem {
       case 'PushEvent':
         return (
           <content if={payload.commits}>
-            <body $$row>
-              <main css={{ flex: 1 }}>
-                {payload.commits.map(commit => (
-                  <commit key={commit.sha}>
-                    <UI.Text html={format(commit.message)} />
-                  </commit>
-                ))}
-              </main>
-
-              <cards css={{ width: 200 }}>
-                <header
-                  css={{
-                    flexFlow: 'row',
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                    width: '100%',
-                    marginBottom: 10,
-                  }}
-                >
-                  <nav css={{ flexFlow: 'row' }}>
-                    <UI.Icon name="arrowminleft" color="white" />
-                    <UI.Icon name="arrowminright" color="white" />
-                  </nav>
-                </header>
-                <UI.Surface
-                  color="black"
-                  background="#fff"
-                  flex={1}
-                  borderRadius={5}
-                >
-                  <Commit sha={payload.commits[0].sha} />
-                </UI.Surface>
-              </cards>
-            </body>
+            <main>
+              {payload.commits.map(commit => (
+                <commit key={commit.sha}>
+                  <UI.Text html={format(commit.message)} />
+                </commit>
+              ))}
+            </main>
+            <cards
+              css={{
+                height: 100,
+                overflow: 'hidden',
+                justifyContent: 'flex-start',
+              }}
+            >
+              <header
+                css={{
+                  flexFlow: 'row',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  width: '100%',
+                  marginBottom: 10,
+                }}
+              >
+                <nav css={{ flexFlow: 'row' }}>
+                  <UI.Icon name="arrowminleft" color="white" />
+                  <UI.Icon name="arrowminright" color="white" />
+                </nav>
+              </header>
+              <UI.Surface
+                color="black"
+                background="#fff"
+                flex={1}
+                borderRadius={5}
+                padding={15}
+              >
+                <Commit sha={payload.commits[0].sha} />
+              </UI.Surface>
+            </cards>
           </content>
         )
 

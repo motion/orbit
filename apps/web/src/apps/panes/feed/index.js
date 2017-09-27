@@ -132,7 +132,7 @@ class FeedStore {
     { name: 'slack', type: 'convo', icon: 'slack' },
     { name: 'docs', icon: 'hard' },
     { name: 'jira', icon: 'atl' },
-    { name: 'tasks', type: 'task', icon: 'github' },
+    // { name: 'tasks', type: 'task', icon: 'github' },
   ]
 
   get currentLogins() {

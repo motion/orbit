@@ -23,10 +23,7 @@ import {
   VictoryTheme,
   VictoryBar,
 } from 'victory'
-// import slack from './slack'
-import getConvos from './helpers'
 
-// const convos = getConvos(slack)
 const convos = []
 
 const itemStamp = item => +new Date(item.data.createdAt || item.data.created_at)
@@ -129,8 +126,8 @@ class FeedStore {
   }
 
   types = [
-    { name: 'all', type: null, icon: false },
-    { name: 'calendar', icon: 'cal' },
+    { name: 'all', type: null, icon: 'list' },
+    { name: 'cal', icon: 'cal' },
     { name: 'github', icon: 'github' },
     { name: 'slack', type: 'convo', icon: 'slack' },
     { name: 'docs', icon: 'hard' },
@@ -333,6 +330,7 @@ class ItemsSection {
               icon={type.icon}
               background={highlight ? null : [255, 255, 255, 0.1]}
               highlight={highlight}
+              padding={[0, 15]}
               onClick={() => {
                 store.setFilter(
                   'type',

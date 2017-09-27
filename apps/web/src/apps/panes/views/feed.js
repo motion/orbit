@@ -9,7 +9,7 @@ type Props = { data: Object, activeIndex: number, items: Array<Event> }
 
 @view.ui
 export default class Feed extends React.PureComponent<Props> {
-  render({ items, data, activeIndex }: Props) {
+  render({ items, data }: Props) {
     return (
       <feed $inApp={data.special}>
         <UI.Title opacity={0.5} marginBottom={10}>

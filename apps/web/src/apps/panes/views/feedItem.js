@@ -157,33 +157,39 @@ export default class FeedItem {
             </UI.Text>
           </content>
         )
+
       case 'PushEvent':
         return (
           <content if={payload.commits}>
-            <header
-              css={{
-                flexFlow: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <left>
-                <UI.Title if={payload.commits.length > 1} size={1.15}>
-                  {payload.commits.length} commits
-                </UI.Title>
-              </left>
-              <nav css={{ flexFlow: 'row' }}>
-                <UI.Icon name="arrowminleft" color="white" />
-                <UI.Icon name="arrowminright" color="white" />
-              </nav>
-            </header>
+            <body $$row>
+              <main css={{ flex: 1 }}>
+                {payload.commits.map(commit => (
+                  <commit key={commit.sha}>
+                    <UI.Text html={format(commit.message)} />
+                  </commit>
+                ))}
+              </main>
 
-            {payload.commits.map(commit => (
-              <commit key={commit.sha}>
-                <UI.Text html={format(commit.message)} />
-              </commit>
-            ))}
+              <cards css={{ width: 200 }}>
+                <header
+                  css={{
+                    flexFlow: 'row',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    width: '100%',
+                    marginBottom: 10,
+                  }}
+                >
+                  <nav css={{ flexFlow: 'row' }}>
+                    <UI.Icon name="arrowminleft" color="white" />
+                    <UI.Icon name="arrowminright" color="white" />
+                  </nav>
+                </header>
+                <UI.Surface background="#fff" flex={1} borderRadius={5}>
+                  content
+                </UI.Surface>
+              </cards>
+            </body>
           </content>
         )
 
@@ -198,6 +204,28 @@ export default class FeedItem {
     }
 
     return null
+  }
+
+  extraInfo(event) {
+    const { data } = event
+    const { payload } = data
+    switch (event.type) {
+      case 'DeleteEvent':
+        return (
+          <UI.Text>
+            branch <strong>
+              {payload.ref.replace('refs/heads/', '')}
+            </strong>{' '}
+          </UI.Text>
+        )
+      case 'PushEvent':
+        return (
+          <UI.Text>
+            {payload.commits.length} commits to branch{' '}
+            <strong>{payload.ref.replace('refs/heads/', '')}</strong>{' '}
+          </UI.Text>
+        )
+    }
   }
 
   render({ store, event, style }) {
@@ -221,6 +249,7 @@ export default class FeedItem {
           />
           <UI.Text $name>{actor.login} </UI.Text>
           <UI.Text $action>{verb} </UI.Text>
+          {this.extraInfo(event)}
           <UI.Date $date>{event.updated || event.created}</UI.Date>
         </info>
         <body if={body}>{body}</body>

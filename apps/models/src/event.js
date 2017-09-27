@@ -10,6 +10,7 @@ const VERB_MAP = {
   PullRequestEvent: ({ action }) => `${action} a pull request`,
   WatchEvent: ({ action }) => `${action} watching`,
   IssuesEvent: () => 'created issue',
+  DeleteEvent: () => 'deleted',
 }
 
 // keep here so we can use as generic

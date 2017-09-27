@@ -48,7 +48,7 @@ class ItemsSection {
 @view({
   store: FeedStore,
 })
-export default class SetView extends React.PureComponent<Props> {
+export default class SetView extends React.Component<Props> {
   render({ store }: Props) {
     // return <h4>team page</h4>
     if (!store.allItems.length) {

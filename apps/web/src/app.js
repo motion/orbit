@@ -110,6 +110,10 @@ class App {
     return this.store && this.store.models
   }
 
+  get services(): Object {
+    return this.store && this.store.services
+  }
+
   debug(setting) {
     if (!setting) {
       localStorage.setItem('debug', 'none')

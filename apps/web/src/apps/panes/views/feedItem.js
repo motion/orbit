@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import marked from 'marked'
 import emojinize from 'emojinize'
 import * as UI from '@mcro/ui'
+import App from '~/app'
 
 const format = str => {
   return marked(emojinize.encode(str))
@@ -16,6 +17,20 @@ const parseMessage = text => {
   const body = text.slice(first.length + 4)
 
   return { date, who, body }
+}
+
+@view({
+  store: class CommitStore {
+    info = App.services.Github.github
+      .repos('motion', 'orbit')
+      .commits(this.props.sha)
+      .fetch()
+  },
+})
+class Commit {
+  render({ store }) {
+    return <commit if={store.info}>{JSON.stringify(store.info)}</commit>
+  }
 }
 
 @view
@@ -185,8 +200,13 @@ export default class FeedItem {
                     <UI.Icon name="arrowminright" color="white" />
                   </nav>
                 </header>
-                <UI.Surface background="#fff" flex={1} borderRadius={5}>
-                  content
+                <UI.Surface
+                  color="black"
+                  background="#fff"
+                  flex={1}
+                  borderRadius={5}
+                >
+                  <Commit sha={payload.commits[0].sha} />
                 </UI.Surface>
               </cards>
             </body>

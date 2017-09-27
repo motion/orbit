@@ -16,7 +16,14 @@ type Props = PaneProps & { store: FeedStore }
 class ItemsSection {
   render({ store }) {
     return (
-      <UI.Row stretch itemProps={{ size: 1, borderWidth: 0, glint: false }}>
+      <UI.Row
+        stretch
+        itemProps={{
+          size: 1,
+          borderWidth: 0,
+          height: 36,
+        }}
+      >
         {store.types.map(type => {
           const highlight =
             (isUndefined(type.type) ? type.name : type.type) ===

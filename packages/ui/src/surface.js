@@ -237,8 +237,15 @@ export default class Surface extends React.PureComponent<Props> {
       ...props,
     }
 
-    const borderLeftRadius = _borderLeftRadius || themeValues.borderRadiusSize
-    const borderRightRadius = _borderRightRadius || themeValues.borderRadiusSize
+    let borderLeftRadius =
+      _borderLeftRadius || themeValues.borderRadius.borderLeftRadius
+    let borderRightRadius =
+      _borderRightRadius || themeValues.borderRadius.borderRightRadius
+
+    if (typeof borderLeftRadius === 'undefined') {
+      borderLeftRadius = themeValues.radius
+      borderRightRadius = themeValues.radius
+    }
 
     const glowColor =
       (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
@@ -559,6 +566,7 @@ export default class Surface extends React.PureComponent<Props> {
     self.themeValues = {
       iconSize,
       borderRadiusSize: radius,
+      borderRadius,
       glintColor,
       color,
     }

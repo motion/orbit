@@ -44,7 +44,7 @@ export default class PaneCard {
   }) {
     const getItemDefault = (item, index) => ({
       highlight: () => index === paneStore.activeIndex,
-      children: item.view,
+      children: item,
     })
 
     return (

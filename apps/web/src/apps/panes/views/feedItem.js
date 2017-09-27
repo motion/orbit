@@ -29,7 +29,11 @@ const parseMessage = text => {
 })
 class Commit {
   render({ store }) {
-    return <commit if={store.info}>{JSON.stringify(store.info)}</commit>
+    return (
+      <commit if={store.info}>
+        {store.info.files.map(file => file.patch)}
+      </commit>
+    )
   }
 }
 

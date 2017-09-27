@@ -1,6 +1,7 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
+import { format } from './helpers'
 
 @view
 export default class TaskComment {
@@ -34,9 +35,7 @@ export default class TaskComment {
               />
             </buttons>
           </info>
-          <UI.Text lineHeight={23} $body>
-            {body}
-          </UI.Text>
+          <UI.Text $body html={format(body)} />
         </content>
       </comment>
     )

@@ -1,13 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import marked from 'marked'
-import emojinize from 'emojinize'
+import { format } from '~/apps/panes/task/helpers'
 import * as UI from '@mcro/ui'
 import App from '~/app'
-
-const format = str => {
-  return marked(emojinize.encode(str))
-}
 
 const parseMessage = text => {
   const split = text.split('[]')

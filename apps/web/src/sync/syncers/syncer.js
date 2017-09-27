@@ -1,13 +1,10 @@
 // @flow
 import { ensureJob } from '../helpers'
-import type { User, Setting } from '@mcro/models'
+import { CurrentUser } from '~/app'
+import type { Setting } from '@mcro/models'
 import debug from 'debug'
 
 const log = debug('sync')
-
-type SyncOptions = {
-  user: User,
-}
 
 export default class Syncer {
   // external interface, must set:
@@ -17,14 +14,13 @@ export default class Syncer {
     actions: Object,
   }
 
+  get user() {
+    return CurrentUser
+  }
+
   // internal
-  user: User
   syncers = {}
   jobWatcher: ?number
-
-  constructor({ user }: SyncOptions) {
-    this.user = user
-  }
 
   start() {
     log('starting syncer', this.constructor.name)
@@ -83,6 +79,7 @@ export default class Syncer {
   }
 
   async refreshToken() {
+    console.log('this.user', this.user)
     return await this.user.refreshToken(this.type)
   }
 

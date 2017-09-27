@@ -48,9 +48,10 @@ export default class Oauth {
     }
   }
 
-  refreshToken(userId, service) {
+  refreshToken(service) {
     return new Promise(async (resolve, reject) => {
-      const user = await this.findUser(userId)
+      const user = await this.findUser()
+      console.log('got user', user)
       Refresh.requestNewAccessToken(
         service,
         user.refreshToken,

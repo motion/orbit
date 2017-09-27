@@ -47,6 +47,10 @@ export class UserModel extends Model {
 
   settings = {
     database: 'users',
+    autoSync: {
+      push: true,
+      pull: 'basic',
+    },
   }
 
   methods = methods

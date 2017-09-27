@@ -114,26 +114,6 @@ class CurrentUser {
     return !!this.user
   }
 
-  get github() {
-    return this.user && this.user.github
-  }
-
-  get authorId() {
-    return (this.user && this.user._id) || 'anon'
-  }
-
-  get name() {
-    return this.user && this.user.user_id
-  }
-
-  get email() {
-    return this.user && this.user.user_id
-  }
-
-  get roles() {
-    return this.user.roles
-  }
-
   get id() {
     // return this.sessionInfo && this.sessionInfo.user_id
     return 'a@b.com'
@@ -141,6 +121,10 @@ class CurrentUser {
 
   get authorizations() {
     return this.user && this.user.authorizations
+  }
+
+  get refreshToken() {
+    return this.user && this.user.refreshToken
   }
 
   get token(): (provider: string) => string {

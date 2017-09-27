@@ -85,9 +85,12 @@ export default class Database {
       RxDB.QueryChangeDetector.enable()
       console.log = oglog
     }
-    RxDB.plugin(this.databaseConfig.adapter)
+    if (this.databaseConfig.adapter) {
+      RxDB.plugin(this.databaseConfig.adapter)
+      PouchDB.plugin(this.databaseConfig.adapter)
+    }
+
     RxDB.plugin(pHTTP)
-    PouchDB.plugin(this.databaseConfig.adapter)
     PouchDB.plugin(pHTTP)
   }
 

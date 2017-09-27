@@ -410,6 +410,11 @@ export default class Model {
 
     // console.log('>>', QUERY_KEY)
 
+    // allows for basic non-query syncing option
+    if (shouldSyncPull === 'basic') {
+      query = null
+    }
+
     const firstReplication = this._collection.sync({
       query,
       remote: this.remote,

@@ -47,9 +47,9 @@ export default class GoogleSync extends Syncer {
 
       if (res.status === 401) {
         // refresh token
-        await this.refreshToken()
+        // await this.refreshToken()
         // retry
-        return await this.helpers.fetch(path, opts)
+        // return await this.helpers.fetch(path, opts)
       }
 
       throw new Error(`Bad status from fetch: ${res.status} ${res.statusText}`)

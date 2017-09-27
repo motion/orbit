@@ -8,15 +8,14 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import { User } from '@mcro/models'
-import PouchRouter from 'pouchdb-express-router'
-// import typeof Pouch from 'pouchdb'
+import { Models, User } from '@mcro/models'
+import PouchRouter from 'express-pouchdb'
+import Pouch from 'pouchdb'
 
 const port = Constants.SERVER_PORT
 
 export default class Server {
   login = null
-  // pouch: Pouch
 
   constructor({ pouch }) {
     this.pouch = pouch
@@ -27,16 +26,13 @@ export default class Server {
         return { token, refreshToken, info }
       },
       findUser: async () => {
-        console.log('find user')
-        const user = await User.get('a@b.com')
-        console.log('got user', user)
-        return user.toJSON()
+        return await User.findOrCreate('a@b.com')
       },
       updateUser: async res => {
         if (!res.info || !res.info.provider) {
           throw new Error(`Don't see a provider for ${res}`)
         }
-        const user = await User.get('a@b.com')
+        const user = await User.findOrCreate('a@b.com')
         if (!user) {
           throw new Error(`Don't see a user`)
         }
@@ -45,7 +41,6 @@ export default class Server {
             [res.info.provider]: res,
           },
         })
-        await user.sync({ direction: { push: true } })
       },
     })
 
@@ -53,29 +48,11 @@ export default class Server {
     app.set('port', port)
     app.use(logger('dev'))
 
-    // MIDDLEWARE
-    const HEADER_ALLOWED =
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token'
-    app.use((req, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*')
-      res.header('Access-Control-Allow-Credentials', 'true')
-      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-      next()
-    })
-    app.use('/auth', bodyParser.json())
-    app.use('/auth', bodyParser.urlencoded({ extended: false }))
-    app.use(
-      '/auth',
-      session({ secret: 'orbit', resave: false, saveUninitialized: true })
-    ) // TODO change secret
-    app.use('/auth', Passport.initialize())
-    app.use('/auth', Passport.session())
-
     this.app = app
 
     // ROUTES
-    this.setupPouch()
     this.setupPassportRoutes()
+    this.setupPouch()
     this.setupProxy()
   }
 
@@ -118,11 +95,67 @@ export default class Server {
   }
 
   setupPouch() {
-    // const dbs = Object.keys(Models).map(model => Models[model].title)
-    this.app.use('/db', PouchRouter(this.pouch))
+    // const dbPaths = Object.keys(Models)
+    //   .map(model => Models[model].title)
+    //   .map(name => `/db/${name}`)
+
+    // rewrite rxdb paths to non-rxdb :)
+    this.app.use(
+      '/db',
+      proxy({
+        target: '/db2',
+        pathRewrite: path => {
+          console.log('path', path)
+          if (path === '/db' || path === '/db/') {
+            return '/'
+          }
+          const newPath = path.replace(
+            /\/db\/(.*)([\/\?].*)?$/g,
+            '/username-rxdb-0-$1$2'
+          )
+          console.log('newPath', newPath)
+          return newPath
+        },
+      })
+    )
+
+    // pouch routes
+    this.app.use('/db2', PouchRouter(this.pouch, { inMemoryConfig: true }))
   }
 
   setupPassportRoutes() {
+    this.setupAuthRoutes()
+    this.setupAuthRefreshRoutes()
+    this.setupAuthReplyRoutes()
+  }
+
+  setupAuthRoutes() {
+    this.app.use('/auth', bodyParser.json())
+    this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
+    // TODO change secret
+    this.app.use(
+      '/auth',
+      session({ secret: 'orbit', resave: false, saveUninitialized: true })
+    )
+    this.app.use('/auth', Passport.initialize())
+    this.app.use('/auth', Passport.session())
+  }
+
+  setupAuthRefreshRoutes() {
+    this.app.use('/auth/refreshToken/:service', async (req, res) => {
+      console.log('refresh for', req.params.service)
+      try {
+        const info = await this.oauth.refreshToken(req.params.service)
+        res.json(info)
+      } catch (error) {
+        console.log('error', error)
+        res.status(500)
+        res.json({ error })
+      }
+    })
+  }
+
+  setupAuthReplyRoutes() {
     for (const name of Object.keys(OAuthStrategies)) {
       const path = `/auth/${name}`
       const options = OAuthStrategies[name].options

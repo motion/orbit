@@ -25,8 +25,8 @@ const parseMessage = text => {
 class Commit {
   render({ store }) {
     return (
-      <commit css={{ maxHeight: 200, overflowY: 'scroll' }} if={store.info}>
-        {store.info.files.map(file => file.patch)}
+      <commit css={{ maxHeight: 200 }} if={store.info}>
+        <pre>{store.info.files.map(file => file.patch)}</pre>
       </commit>
     )
   }
@@ -198,7 +198,7 @@ export default class FeedItem {
                   marginBottom: 10,
                 }}
               >
-                <nav css={{ flexFlow: 'row' }}>
+                <nav if={false} css={{ flexFlow: 'row' }}>
                   <UI.Icon name="arrowminleft" color="white" />
                   <UI.Icon name="arrowminright" color="white" />
                 </nav>

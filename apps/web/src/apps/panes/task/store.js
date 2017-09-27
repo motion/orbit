@@ -100,15 +100,21 @@ class GithubStore {
 }
 
 export default class TaskStore {
+  async willMount() {
+    const { data: { data } } = this.props.paneStore
+    this.labels = data.labels.map(({ name }) => name)
+    const thing = await Thing.findOne(this.taskId).exec()
+    this.allIssues = await GithubStore.api
+      .repos(thing.orgName, thing.parentId)
+      .issues.fetch()
+  }
+
   response = ''
   count = 0
-
   labels = []
   assigned = []
   allIssues = []
-
   assignOptions = [{ id: 'me' }, { id: 'nick' }, { id: 'steph' }]
-
   labelOptions = [
     { id: 'bug' },
     { id: 'duplicate' },
@@ -126,17 +132,6 @@ export default class TaskStore {
 
   setAssigned = xs => {
     this.assigned = xs
-  }
-
-  async willMount() {
-    const { data: { data } } = this.props.paneStore
-
-    this.labels = data.labels.map(({ name }) => name)
-
-    const thing = await Thing.findOne(this.taskId).exec()
-    this.allIssues = await GithubStore.api
-      .repos(thing.orgName, thing.parentId)
-      .issues.fetch()
   }
 
   // todo, change to body

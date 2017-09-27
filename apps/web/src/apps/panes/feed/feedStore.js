@@ -1,6 +1,6 @@
 import { watch } from '@mcro/black'
 import { Event, Thing } from '~/app'
-import moment from 'moment'
+import { format } from 'date-fns'
 import { includes, debounce, without } from 'lodash'
 
 const convos = []
@@ -119,32 +119,30 @@ export default class FeedStore {
   }
 
   get titleDesc() {
-    const { type, startDate, endDate } = this.filters
+    const { type } = this.filters
     return `${this.activeItems.length} ${(type || 'item') + 's'}`
   }
 
   get titleSubdesc() {
-    const { type, startDate, endDate } = this.filters
-    if (!startDate || !endDate) return ''
-
-    const format = ts => moment(new Date(ts)).format('MMM Do')
-
-    return `${format(startDate)} - ${format(endDate)}`
+    const { startDate, endDate } = this.filters
+    if (!startDate || !endDate) {
+      return ''
+    }
+    const fmt = ts => format(new Date(ts), 'MMM Do')
+    return `${fmt(startDate)} - ${fmt(endDate)}`
   }
-
-  things = Thing.find()
 
   @watch
-  events: ?Array<Event> = (() =>
+  events = () =>
     Event.find({ created: { $ne: null } })
       .sort({ created: 'desc' })
-      .limit(20): any)
+      .limit(20)
 
   get allItems() {
-    return [...(this.events || []), ...(this.things || []), ...convos]
+    return this.events || []
   }
 
-  get results(): Array<Event> {
+  get results() {
     return this.activeItems.map(i => ({ ...i, showChild: false }))
   }
 
@@ -159,16 +157,14 @@ export default class FeedStore {
   // separated so chart can use it
   get currentChart() {
     const { filters: { type, search } } = this
-
-    if (this.allActive) return this.allItems
-
+    if (this.allActive) {
+      return this.allItems
+    }
     return this.allItems.filter(item => {
       if (type && (item.type || item.name) !== type) {
         return false
       }
-
       const itemAuthors = item.authors || [item.author]
-
       if (item.type === 'task') {
         if (
           this.hasPeople &&
@@ -185,14 +181,12 @@ export default class FeedStore {
           return false
         }
       }
-
       if (
         search.length > 0 &&
         (item.title || item.data.text || '').indexOf(search) === -1
       ) {
         return false
       }
-
       return true
     })
   }
@@ -204,30 +198,22 @@ export default class FeedStore {
   createdAt = item => {
     return item.date
       ? +new Date(item.date)
-      : +new Date(item.data.createdAt || item.data.created_at)
+      : +new Date(item.created || item.data.createdAt || item.date.created_at)
   }
 
   get activeItems() {
     const { filters: { startDate, endDate } } = this
-
-    const val = this.currentChart
-      .filter(item => {
-        const itemDate = this.createdAt(item)
-
-        if (
-          startDate &&
-          endDate &&
-          (itemDate < startDate || itemDate > endDate)
-        ) {
-          return false
-        }
-
-        return true
-      })
-      .sort((a, b) => this.createdAt(b) - this.createdAt(a))
-
-    // console.timeEnd('calculating active items')
-
+    const val = this.currentChart.filter(item => {
+      const itemDate = this.createdAt(item)
+      if (
+        startDate &&
+        endDate &&
+        (itemDate < startDate || itemDate > endDate)
+      ) {
+        return false
+      }
+      return true
+    })
     return val
   }
 }

@@ -85,10 +85,17 @@ export default class Database {
       RxDB.QueryChangeDetector.enable()
       console.log = oglog
     }
-    RxDB.plugin(this.databaseConfig.adapter)
+    if (this.databaseConfig.adapter) {
+      RxDB.plugin(this.databaseConfig.adapter)
+      PouchDB.plugin(this.databaseConfig.adapter)
+    }
+
     RxDB.plugin(pHTTP)
-    PouchDB.plugin(this.databaseConfig.adapter)
     PouchDB.plugin(pHTTP)
+  }
+
+  get pouch() {
+    return PouchDB
   }
 
   start = async ({ options, modelOptions }: StartOptions = {}) => {
@@ -136,7 +143,6 @@ export default class Database {
         pouch: PouchDB,
         pouchSettings: {
           skip_setup: true,
-          skipSetup: true,
         },
         ...this.modelOptions,
       }

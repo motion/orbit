@@ -22,8 +22,8 @@ export default class GoogleSync extends Syncer {
   helpers = {
     clientId: Constants.GOOGLE_CLIENT_ID,
     baseUrl: 'https://content.googleapis.com',
-    fetch: (path: string, opts: Object = {}) =>
-      fetch(
+    fetch: async (path: string, opts: Object = {}) => {
+      const res = await fetch(
         `${this.helpers.baseUrl}${path}${opts.query
           ? `?${new URLSearchParams(Object.entries(opts.query))}`
           : ''}`,
@@ -39,6 +39,20 @@ export default class GoogleSync extends Syncer {
           }),
           body: opts.body ? JSON.stringify(opts.body) : null,
         }
-      ).then(res => res[opts.type || 'json']()),
+      )
+
+      if (res.status === 200) {
+        return await res[opts.type || 'json']()
+      }
+
+      if (res.status === 401 && !opts.isRetrying) {
+        // refresh token
+        await this.user.refreshToken()
+        // retry
+        return await this.helpers.fetch(path, { ...opts, isRetrying: true })
+      }
+
+      throw new Error(`Bad status from fetch: ${res.status} ${res.statusText}`)
+    },
   }
 }

@@ -32,7 +32,7 @@ process.title = 'orbit-api'
 const API = require('./api').default
 
 async function run() {
-  const Api = new API({ rootPath: __dirname })
+  const Api = new API()
   global.API = Api
   try {
     await Api.start()

@@ -10,6 +10,24 @@ export const methods = {
       this.authorizations[provider].token
     )
   },
+
+  async refreshToken(provider: string) {
+    const info = await fetch(`/auth/refreshToken/${provider}`).then(res =>
+      res.json()
+    )
+    if (!info || info.error) {
+      throw new Error(`Error fetching refresh token: ${info.error}`)
+    }
+    const update = {
+      authorizations: {
+        [provider]: {
+          refreshToken: info.refreshToken,
+        },
+      },
+    }
+    console.log('updating user with', update)
+    this.mergeUpdate(update)
+  },
 }
 
 export class UserModel extends Model {
@@ -35,6 +53,10 @@ export class UserModel extends Model {
 
   settings = {
     database: 'users',
+    autoSync: {
+      push: true,
+      pull: 'basic',
+    },
   }
 
   methods = methods

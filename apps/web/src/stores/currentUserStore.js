@@ -7,11 +7,29 @@ import SuperLoginClient from 'superlogin-client'
 const API_HOST = `${window.location.host}`
 const API_URL = `http://${API_HOST}`
 
+function popup(url, title, win, w, h) {
+  var y = win.top.outerHeight / 2 + win.top.screenY - h / 2
+  var x = win.top.outerWidth / 2 + win.top.screenX - w / 2
+  return win.open(
+    url,
+    title,
+    'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' +
+      w +
+      ', height=' +
+      h +
+      ', top=' +
+      y +
+      ', left=' +
+      x
+  )
+}
+
 function passportLink(provider: string, options: Object = {}): Promise<any> {
   return new Promise((resolve, reject) => {
     const opts = {
       windowName: 'Login',
-      windowOptions: 'location=100,status=0,width=800,height=600',
+      width: 800,
+      height: 600,
       ...options,
     }
     const path = `/auth/${provider}`
@@ -27,7 +45,13 @@ function passportLink(provider: string, options: Object = {}): Promise<any> {
       return reject(`Got an oauth error: ${JSON.stringify(info)}`)
     }
 
-    const authWindow = window.open(path, opts.windowName, opts.windowOptions)
+    const authWindow = popup(
+      path,
+      opts.windowName,
+      window,
+      opts.width,
+      opts.height
+    )
     if (!authWindow) {
       return reject('Authorization popup blocked')
     }
@@ -114,26 +138,6 @@ class CurrentUser {
     return !!this.user
   }
 
-  get github() {
-    return this.user && this.user.github
-  }
-
-  get authorId() {
-    return (this.user && this.user._id) || 'anon'
-  }
-
-  get name() {
-    return this.user && this.user.user_id
-  }
-
-  get email() {
-    return this.user && this.user.user_id
-  }
-
-  get roles() {
-    return this.user.roles
-  }
-
   get id() {
     // return this.sessionInfo && this.sessionInfo.user_id
     return 'a@b.com'
@@ -141,6 +145,10 @@ class CurrentUser {
 
   get authorizations() {
     return this.user && this.user.authorizations
+  }
+
+  get refreshToken() {
+    return this.user && this.user.refreshToken
   }
 
   get token(): (provider: string) => string {
@@ -185,7 +193,7 @@ class CurrentUser {
     } catch (error) {
       console.error('registerNewUser error: ', error)
       if (error && error.validationErrors) {
-        var errors = Object.keys(error.validationErrors)
+        const errors = Object.keys(error.validationErrors)
           .map(key => {
             return error.validationErrors[key]
           })

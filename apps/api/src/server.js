@@ -8,9 +8,8 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import { Models, User } from '@mcro/models'
+import { User } from '@mcro/models'
 import PouchRouter from 'express-pouchdb'
-import Pouch from 'pouchdb'
 
 const port = Constants.SERVER_PORT
 
@@ -18,30 +17,39 @@ export default class Server {
   login = null
 
   constructor({ pouch }) {
+    this.cache = {}
     this.pouch = pouch
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
       onSuccess: async (service, token, refreshToken, info) => {
-        console.log('got info', token, refreshToken, info)
+        // const user = await User.findOrCreate('a@b.com')
+        // await user.mergeUpdate({
+        //   authorizations: {
+        //     [service]: res,
+        //   },
+        // })
         return { token, refreshToken, info }
       },
-      findUser: async () => {
-        return await User.findOrCreate('a@b.com')
+      findInfo: provider => {
+        return this.cache[provider]
       },
-      updateUser: async res => {
-        if (!res.info || !res.info.provider) {
-          throw new Error(`Don't see a provider for ${res}`)
-        }
-        const user = await User.findOrCreate('a@b.com')
-        if (!user) {
-          throw new Error(`Don't see a user`)
-        }
-        await user.mergeUpdate({
-          authorizations: {
-            [res.info.provider]: res,
-          },
-        })
+      updateInfo: (provider, info) => {
+        this.cache[provider] = info
       },
+      // updateUser: async res => {
+      //   if (!res.info || !res.info.provider) {
+      //     throw new Error(`Don't see a provider for ${res}`)
+      //   }
+      //   const user = await User.findOrCreate('a@b.com')
+      //   if (!user) {
+      //     throw new Error(`Don't see a user`)
+      //   }
+      //   await user.mergeUpdate({
+      //     authorizations: {
+      //       [res.info.provider]: res,
+      //     },
+      //   })
+      // },
     })
 
     const app = express()
@@ -105,7 +113,6 @@ export default class Server {
       proxy({
         target: '/db2',
         pathRewrite: path => {
-          console.log('path', path)
           if (path === '/db' || path === '/db/') {
             return '/'
           }
@@ -113,7 +120,6 @@ export default class Server {
             /\/db\/(.*)([\/\?].*)?$/g,
             '/username-rxdb-0-$1$2'
           )
-          console.log('newPath', newPath)
           return newPath
         },
       })
@@ -145,8 +151,8 @@ export default class Server {
     this.app.use('/auth/refreshToken/:service', async (req, res) => {
       console.log('refresh for', req.params.service)
       try {
-        const info = await this.oauth.refreshToken(req.params.service)
-        res.json(info)
+        const refreshToken = await this.oauth.refreshToken(req.params.service)
+        res.json({ refreshToken })
       } catch (error) {
         console.log('error', error)
         res.status(500)

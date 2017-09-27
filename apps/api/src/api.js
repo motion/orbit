@@ -1,6 +1,6 @@
 // @flow
 import Server from './server'
-import Database, { Models, User } from '@mcro/models'
+import Database, { Models } from '@mcro/models'
 import PouchAdapterMemory from 'pouchdb-adapter-memory'
 
 export default class API {
@@ -29,8 +29,6 @@ export default class API {
         debug: true,
       },
     })
-    await User.create({ id: 'boo' })
-
     console.log('API on port', port)
   }
 

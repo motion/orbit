@@ -12,15 +12,21 @@ export const methods = {
   },
 
   async refreshToken(provider: string) {
-    const info = await fetch(`/auth/refreshToken/${provider}`)
+    const info = await fetch(`/auth/refreshToken/${provider}`).then(res =>
+      res.json()
+    )
     if (!info || info.error) {
       throw new Error(`Error fetching refresh token: ${info.error}`)
     }
-    this.mergeUpdate({
+    const update = {
       authorizations: {
-        [provider]: info,
+        [provider]: {
+          refreshToken: info.refreshToken,
+        },
       },
-    })
+    }
+    console.log('updating user with', update)
+    this.mergeUpdate(update)
   },
 }
 

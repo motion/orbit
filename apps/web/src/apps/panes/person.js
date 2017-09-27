@@ -37,7 +37,9 @@ class Chart {
   show = false
 
   componentDidMount() {
-    this.show = true
+    this.setTimeout(() => {
+      this.show = true
+    }, 200)
   }
 
   render({ store }) {
@@ -353,6 +355,7 @@ export default class SetView extends Component<Props> {
           >
             <UI.Title size={1.2}>{store.searchDesc}</UI.Title>
             <Chart store={store} />
+            1234
           </info>
         ),
       },
@@ -367,6 +370,7 @@ export default class SetView extends Component<Props> {
                 maxHeight: '100%',
               }}
             >
+              1236
               <Calendar isSmall={!store.calendarActive} />
             </div>
           </section>
@@ -379,6 +383,7 @@ export default class SetView extends Component<Props> {
 
     return (
       <div style={{ flex: 1 }}>
+        123
         <Pane.Card
           itemProps={{
             glow: false,

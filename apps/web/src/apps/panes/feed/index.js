@@ -368,7 +368,7 @@ export default class SetView extends Component<Props> {
     const avatar = s => `/images/${s === 'nate' ? 'me' : s}.jpg`
 
     const items = [
-      false && {
+      {
         height: 75,
         view: () => (
           <section $$row>
@@ -380,6 +380,8 @@ export default class SetView extends Component<Props> {
                 </UI.Title>
               </person>
             ))}
+
+            <cards />
           </section>
         ),
       },

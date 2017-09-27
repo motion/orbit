@@ -381,7 +381,13 @@ export default class SetView extends Component<Props> {
               </person>
             ))}
 
-            <cards />
+            <cards if={false}>
+              <UI.TiltHoverGlow width={200} height={250}>
+                <card css={{ background: '#000', flex: 1, borderRadius: 5 }}>
+                  <UI.Title>some content here</UI.Title>
+                </card>
+              </UI.TiltHoverGlow>
+            </cards>
           </section>
         ),
       },
@@ -421,7 +427,7 @@ export default class SetView extends Component<Props> {
       ...store.activeItems.map(item => ({
         view: () => <FeedItem store={store} event={item} />,
       })),
-    ].filter(i => i)
+    ].filter(i => !!i)
 
     return (
       <div style={{ flex: 1 }}>

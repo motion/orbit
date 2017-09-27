@@ -5,7 +5,7 @@ import { view } from '@mcro/black'
 import inject from './helpers/inject'
 import $ from 'color'
 import Icon from './icon'
-import Glow from './effects/glow'
+import HoverGlow from './effects/hoverGlow'
 import Glint from './effects/glint'
 import Popover from './popover'
 import type { Color } from '@mcro/gloss'
@@ -266,7 +266,7 @@ export default class Surface extends React.PureComponent<Props> {
         size={themeValues.iconSize}
         {...iconProps}
       />,
-      <Glow
+      <HoverGlow
         key={2}
         if={glow && !active && !disabled}
         full

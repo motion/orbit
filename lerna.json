@@ -7,8 +7,10 @@
     "bootstrap": {
       "hoist": true,
       "nohoist": [
+        "react*",
         "react",
         "react-dom",
+        "react-tilt",
         "react-native",
         "sb-event-kit",
         "electron-react-devtools",

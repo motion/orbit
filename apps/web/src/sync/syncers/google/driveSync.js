@@ -1,7 +1,9 @@
 // @flow
 import { Event, Thing } from '~/app'
 import SyncerAction from '../syncerAction'
+import debug from 'debug'
 
+const log = debug('sync')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class GoogleDriveSync extends SyncerAction {
@@ -9,7 +11,7 @@ export default class GoogleDriveSync extends SyncerAction {
   fetch = (path, opts) => this.helpers.fetch(`/drive/v3${path}`, opts)
 
   run = async () => {
-    // await this.syncFeed()
+    await this.syncFiles()
   }
 
   async syncFeed() {
@@ -26,6 +28,7 @@ export default class GoogleDriveSync extends SyncerAction {
     const results = await this.createInChunks(files, file =>
       this.createFile(file)
     )
+    log('syncFiles', results)
     return results
   }
 
@@ -110,7 +113,7 @@ export default class GoogleDriveSync extends SyncerAction {
         fileIds.slice(fetched, fetched + perSecond),
         fileQuery
       )
-      console.log('got', next, fetched)
+      log('getFiles', next, fetched)
       response = [...response, ...next]
       fetched += perSecond
       await sleep(1000)

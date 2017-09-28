@@ -5,6 +5,7 @@ import type { Setting } from '@mcro/models'
 import debug from 'debug'
 
 const log = debug('sync')
+const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
   // external interface, must set:
@@ -44,7 +45,7 @@ export default class Syncer {
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
-      1000 * 10 // 10 seconds
+      settings.checkInterval || DEFAULT_CHECK_INTERVAL
     )
     this.check(false)
   }

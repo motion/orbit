@@ -26,12 +26,11 @@ export const methods = {
       const update = {
         authorizations: {
           [provider]: {
-            refreshToken: info.refreshToken,
+            token: info.refreshToken,
           },
         },
       }
-      console.log('updating user with', update)
-      this.mergeUpdate(update)
+      await this.mergeUpdate(update)
     }
   },
 }

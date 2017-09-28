@@ -98,8 +98,9 @@ export default class GoogleDriveSync extends SyncerAction {
     })
   }
 
-  async getFiles(query?: Object, fileQuery?: Object) {
-    const { files } = await this.getFilesBasic(query)
+  async getFiles(pages = 20, query?: Object, fileQuery?: Object) {
+    log(`Getting ${pages} pages of files`)
+    const files = await this.getFilesBasic(pages, query)
     // just docs
     const docs = files.filter(
       file => file.mimeType === 'application/vnd.google-apps.document'
@@ -128,7 +129,23 @@ export default class GoogleDriveSync extends SyncerAction {
     return meta.map((file, i) => ({ ...file, contents: contents[i] }))
   }
 
-  async getFilesBasic(query?: Object) {
+  async getFilesBasic(pages = 1, query: Object = {}) {
+    let all = []
+    let fetchedPages = 0
+    while (fetchedPages < pages) {
+      fetchedPages++
+      const res = await this.fetchFiles(query)
+      if (res) {
+        all = [...all, ...res.files]
+        query.pageToken = res.nextPageToken
+      } else {
+        throw new Error('No res')
+      }
+    }
+    return all
+  }
+
+  async fetchFiles(query?: Object) {
     return await this.fetch('/files', {
       query: {
         orderBy: [

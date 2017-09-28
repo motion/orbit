@@ -5,12 +5,15 @@ import { Event } from '~/app'
 export default class GoogleCalSync extends SyncerAction {
   fetch = (path, opts) => this.helpers.fetch(`/calendar/v3${path}`, opts)
 
+  get activeCals() {
+    return this.setting.values.calendarsActive
+      ? Object.keys(this.setting.values.calendarsActive)
+      : []
+  }
+
   run = async () => {
     await this.syncSettings()
-    const activeCals = Object.keys(this.setting.values.calendarsActive)
-    if (activeCals.length) {
-      await this.syncEvents()
-    }
+    await this.syncEvents()
   }
 
   async syncSettings() {
@@ -28,7 +31,9 @@ export default class GoogleCalSync extends SyncerAction {
   }
 
   syncEvents() {
-    console.log('should sync events')
+    for (const cal of this.activeCals) {
+      console.log('should sync events', cal)
+    }
   }
 
   async getEvents(calendarId: string, query = {}) {

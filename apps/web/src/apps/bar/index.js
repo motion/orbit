@@ -149,6 +149,7 @@ export default class BarPage {
     header: {
       position: 'relative',
       height: 70,
+      borderBottom: [1, [0, 0, 0, 0.075]],
     },
     searchIcon: {
       position: 'absolute',

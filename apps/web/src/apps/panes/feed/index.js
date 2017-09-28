@@ -35,8 +35,8 @@ class ItemsSection {
             <UI.Button
               key={type}
               icon={type.icon}
-              background={highlight ? null : [255, 255, 255, 0.1]}
               highlight={highlight}
+              highlightBackground={[0, 0, 0, 0.1]}
               padding={[0, 15]}
               onClick={() => {
                 store.setFilter(
@@ -78,7 +78,6 @@ export default class SetView extends React.Component<Props> {
             <section $$row>
               {store.filters.people.map(person => (
                 <person $$row css={{ marginRight: 20 }}>
-                  <img $image src={avatar(person)} />
                   <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
                     {person}
                   </UI.Title>

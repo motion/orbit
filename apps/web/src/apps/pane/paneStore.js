@@ -35,6 +35,7 @@ export default class PaneStore {
     return this.isActive && this.miller.activeRow
   }
 
+  runAction = (this.miller && this.miller.runAction) || (_ => _)
   selectRow = row => this.miller.setSelection(this.col, row)
   onSelect = row => this.props.millerStore.setSelection(this.props.index, row)
 

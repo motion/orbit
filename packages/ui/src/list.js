@@ -476,9 +476,10 @@ class List extends React.PureComponent<Props, { selected: number }> {
       visibility: 'visible',
     },
     separator: {
-      padding: [4, 10],
+      fontWeight: 200,
+      padding: [5, 10],
       justifyContent: 'center',
-      background: [0, 0, 0, 0.04],
+      background: [0, 0, 0, 0.02],
       color: [255, 255, 255, 0.3],
     },
   }

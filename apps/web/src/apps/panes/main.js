@@ -15,7 +15,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
   title: thing.title,
   type: thing.type,
-  icon: 'icon',
+  // icon: 'icon',
   data: thing.toJSON(),
   category: 'Recently',
 })
@@ -79,94 +79,69 @@ class BarMainStore {
       .map(thingToResult)
   }
 
-  browse: Array<PaneResult> = [
+  pinned: Array<PaneResult> = [
     {
       id: 1100,
-      title: 'Me',
+      title: 'My Projects',
       type: 'feed',
-      icon: 'radio',
+      icon: 'list',
+      category: 'Pinned',
       data: {
         special: true,
-        people: ['nate'],
-        image: 'me',
+        people: ['My Projects'],
       },
       actions: ['respond to recent'],
     },
     {
-      id: 1300,
-      data: { message: 'my team' },
-      title: 'Github',
-      category: 'Apps',
-      type: 'message',
-      icon: 'github',
-    },
-    {
-      id: 1400,
-      data: { message: 'from company' },
-      title: 'Jira',
-      category: 'Apps',
-      type: 'message',
-      icon: 'atlas',
-    },
-  ]
-
-  teams: Array<PaneResult> = [
-    {
-      id: 1030,
-      title: 'Motion',
-      type: 'feed',
-      category: 'Teams',
-      data: {
-        team: 'Motion',
-        people: [],
-      },
-      actions: ['like motion'],
-    },
-    {
       id: 1040,
-      title: 'Product',
+      title: 'My Team',
+      icon: 'list',
       type: 'feed',
-      category: 'Teams',
+      category: 'Pinned',
       data: {
         team: 'Product',
         people: [],
       },
       actions: ['like motion'],
     },
+  ]
+
+  top: Array<PaneResult> = [
     {
-      id: 1050,
-      title: 'Search',
+      id: 1300,
+      data: { message: 'my team' },
+      title: 'Orbit Mac App',
+      category: 'Projects',
+      type: 'message',
+      icon: 'tool',
+    },
+    {
+      id: 1400,
+      data: { message: 'from company' },
+      title: 'Orbit Launch',
+      category: 'Projects',
+      type: 'message',
+      icon: 'tool',
+    },
+    {
+      id: 1400,
+      data: { message: 'from company' },
+      title: 'User Research',
+      category: 'Projects',
+      type: 'message',
+      icon: 'tool',
+    },
+    {
+      id: 1030,
+      title: 'Motion',
+      icon: 'list',
       type: 'feed',
-      category: 'Teams',
+      category: 'Projects',
       data: {
-        team: 'Search',
+        team: 'Motion',
         people: [],
       },
       actions: ['like motion'],
-    },
-  ]
-
-  people: Array<PaneResult> = [
-    {
-      id: 20,
-      title: 'Stephanie',
-      type: 'feed',
-      data: { people: ['steph'], image: 'steph' },
-      category: 'People',
-    },
-    {
-      id: 21,
-      title: 'Nate',
-      type: 'feed',
-      data: { people: ['nate'], image: 'me' },
-      category: 'People',
-    },
-    {
-      id: 22,
-      title: 'Nick',
-      type: 'feed',
-      data: { people: ['nick'], image: 'nick' },
-      category: 'People',
     },
   ]
 
@@ -207,9 +182,8 @@ class BarMainStore {
   get results(): Array<PaneResult> {
     const includeTests = this.search.indexOf(':') === 0
     const all = [
-      ...this.browse,
-      ...this.teams,
-      ...this.people,
+      ...this.pinned,
+      ...this.top,
       ...this.things,
       ...(includeTests ? this.tests : []),
       ...this.extras,

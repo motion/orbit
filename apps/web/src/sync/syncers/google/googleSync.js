@@ -11,7 +11,7 @@ export default class GoogleSync extends Syncer {
     type: 'google',
     actions: {
       // drive: { every: 60 },
-      cal: { every: 60 },
+      cal: { every: 60 * 5 }, // 5 minutes
     },
     syncers: {
       drive: GoogleDriveSync,

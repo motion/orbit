@@ -1,6 +1,9 @@
 // @flow
 import SyncerAction from '../syncerAction'
 import { Event } from '~/app'
+import debug from 'debug'
+
+const log = debug('sync')
 
 export default class GoogleCalSync extends SyncerAction {
   fetch = (path, opts) => this.helpers.fetch(`/calendar/v3${path}`, opts)
@@ -11,21 +14,22 @@ export default class GoogleCalSync extends SyncerAction {
       : []
   }
 
+  get syncTokens() {
+    return this.setting.values.syncTokens || {}
+  }
+
   run = async () => {
-    await this.syncSettings()
+    await this.setupSettings()
     await this.syncEvents()
   }
 
-  async syncSettings() {
-    await this.syncCalendarList()
-  }
-
-  async syncCalendarList() {
+  async setupSettings() {
     const { items } = await this.fetch(`/users/me/calendarList`)
     await this.setting.mergeUpdate({
       values: {
         calendars: items,
         calendarsActive: this.setting.values.calendarsActive || {},
+        syncTokens: this.setting.values.syncTokens || {},
       },
     })
   }
@@ -38,7 +42,13 @@ export default class GoogleCalSync extends SyncerAction {
   }
 
   async getEvents(calendarId: string, query = {}) {
-    const results = await this.fetch(`/calendars/${calendarId}/events`, {
+    const syncToken = this.syncTokens[calendarId]
+    if (syncToken) {
+      log('using sync token from previous fetch', syncToken)
+      query.syncToken = syncToken
+    }
+    const path = `/calendars/${calendarId}/events`
+    const results = await this.fetch(path, {
       query: {
         maxResults: 2500,
         orderBy: 'startTime',
@@ -46,6 +56,15 @@ export default class GoogleCalSync extends SyncerAction {
         ...query,
       },
     })
+    if (results.nextPageToken) {
+      await this.setting.mergeUpdate({
+        values: {
+          syncTokens: {
+            [path]: results.nextPageToken,
+          },
+        },
+      })
+    }
     return results
   }
 }

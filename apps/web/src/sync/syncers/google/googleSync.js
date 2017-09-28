@@ -52,7 +52,9 @@ export default class GoogleSync extends Syncer {
         return await this.helpers.fetch(path, { ...opts, isRetrying: true })
       }
 
-      throw new Error(`Bad status from fetch: ${res.status} ${res.statusText}`)
+      // gapi returns json errors
+      const { error } = await res.json()
+      throw error
     },
   }
 }

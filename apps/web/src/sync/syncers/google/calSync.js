@@ -20,7 +20,7 @@ export default class GoogleCalSync extends SyncerAction {
 
   run = async () => {
     await this.setupSettings()
-    await this.syncEvents()
+    // await this.syncEvents()
   }
 
   async setupSettings() {
@@ -36,35 +36,65 @@ export default class GoogleCalSync extends SyncerAction {
 
   async syncEvents() {
     for (const cal of this.activeCals) {
-      const events = await this.getEvents(cal)
-      console.log('got events', events)
+      let allEvents = []
+      let gotEvents = true
+      while (gotEvents) {
+        const events = await this.getEvents(cal)
+        gotEvents = events && !!events.length
+        if (gotEvents) {
+          allEvents = [...allEvents, ...events]
+        }
+      }
+      console.log('got events for', cal, allEvents, 'now need to insert..')
     }
   }
 
-  async getEvents(calendarId: string, query = {}) {
+  async getEvents(calendarId: string, query = {}, tries = 0) {
     const syncToken = this.syncTokens[calendarId]
     if (syncToken) {
       log('using sync token from previous fetch', syncToken)
       query.syncToken = syncToken
     }
     const path = `/calendars/${calendarId}/events`
-    const results = await this.fetch(path, {
-      query: {
-        maxResults: 2500,
-        orderBy: 'startTime',
-        singleEvents: true,
-        ...query,
-      },
-    })
+    let results
+    try {
+      results = await this.fetch(path, {
+        query: {
+          maxResults: 250,
+          singleEvents: true,
+          ...query,
+        },
+      })
+    } catch (error) {
+      if (tries > 0) {
+        console.log('out of tries')
+        return null
+      }
+      if (error.code === 410) {
+        // fullSyncRequired, clear token
+        await this.setting.mergeUpdate({
+          values: {
+            syncTokens: {
+              [calendarId]: null,
+            },
+          },
+        })
+        // retry
+        return await this.getEvents(calendarId, query, tries + 1)
+      } else {
+        console.log('error with fetch', error)
+      }
+      return null
+    }
     if (results.nextPageToken) {
       await this.setting.mergeUpdate({
         values: {
           syncTokens: {
-            [path]: results.nextPageToken,
+            [calendarId]: results.nextPageToken,
           },
         },
       })
     }
-    return results
+    return results.items
   }
 }

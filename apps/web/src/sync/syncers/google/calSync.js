@@ -1,11 +1,16 @@
 // @flow
 import SyncerAction from '../syncerAction'
+import { Event } from '~/app'
 
 export default class GoogleCalSync extends SyncerAction {
   fetch = (path, opts) => this.helpers.fetch(`/calendar/v3${path}`, opts)
 
   run = async () => {
     await this.syncSettings()
+    const activeCals = Object.keys(this.setting.values.calendarsActive)
+    if (activeCals.length) {
+      await this.syncEvents()
+    }
   }
 
   async syncSettings() {
@@ -20,5 +25,17 @@ export default class GoogleCalSync extends SyncerAction {
         calendarsActive: this.setting.values.calendarsActive || {},
       },
     })
+  }
+
+  async getEvents(calendarId: string, query = {}) {
+    const results = await this.fetch(`/calendars/${calendarId}/events`, {
+      query: {
+        maxResults: 2500,
+        orderBy: 'startTime',
+        singleEvents: true,
+        ...query,
+      },
+    })
+    return results
   }
 }

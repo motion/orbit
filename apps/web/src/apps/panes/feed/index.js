@@ -37,6 +37,7 @@ class ItemsSection {
               icon={type.icon}
               highlight={highlight}
               highlightBackground={[0, 0, 0, 0.1]}
+              glow={!highlight}
               padding={[0, 15]}
               onClick={() => {
                 store.setFilter(

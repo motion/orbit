@@ -13,7 +13,7 @@ import App from '~/app'
 export default class Commit {
   render({ store }) {
     return (
-      <commit css={{ maxHeight: 200 }} if={store.info}>
+      <commit css={{ maxHeight: 400 }} if={store.info}>
         <pre>{store.info.files.map(file => file.patch)}</pre>
       </commit>
     )

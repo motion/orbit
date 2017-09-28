@@ -3,6 +3,7 @@ import { view } from '@mcro/black'
 import { format } from '~/apps/panes/task/helpers'
 import * as UI from '@mcro/ui'
 import GithubCommit from './githubCommit'
+import Task from '~/apps/panes/task'
 
 @view
 export default class GithubFeedItem {
@@ -10,7 +11,11 @@ export default class GithubFeedItem {
     const { payload } = event.data
     switch (event.type) {
       case 'IssuesEvent':
-        return <todo>show issue</todo>
+        return (
+          <Task
+            paneStore={{ activeIndex: 1, data: { data: event.data, id: 0 } }}
+          />
+        )
       case 'PushEvent':
         return (
           <content if={payload.commits}>

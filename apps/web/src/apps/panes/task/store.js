@@ -1,10 +1,25 @@
+// @flow
 import { Thing } from '~/app'
 import GithubStore from '~/stores/githubStore'
 
+type TaskProps = {
+  paneStore: {
+    activeIndex: number,
+    data: {
+      id: number,
+      data: Object,
+    },
+  },
+}
+
 export default class TaskStore {
+  props: TaskProps
+
   async willMount() {
     const { data: { data } } = this.props.paneStore
-    this.labels = data.labels.map(({ name }) => name)
+    if (data.labels) {
+      this.labels = data.labels.map(({ name }) => name)
+    }
     const thing = await Thing.findOne(this.taskId).exec()
     this.allIssues = await GithubStore.api
       .repos(thing.orgName, thing.parentId)

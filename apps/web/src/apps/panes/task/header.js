@@ -90,9 +90,6 @@ export default class TaskHeader {
     header: {
       width: '100%',
     },
-    titleContainer: {
-      alignItems: 'center',
-    },
     below: {
       flexFlow: 'row',
       alignItems: 'center',

@@ -3,7 +3,7 @@ export default class PaneStore {
   listRef = null
   itemProps = {
     padding: [10, 10],
-    highlightBackground: [0, 0, 0, 0.15],
+    highlightBackground: [0, 0, 0, 0.08],
     highlightColor: [255, 255, 255, 1],
   }
 

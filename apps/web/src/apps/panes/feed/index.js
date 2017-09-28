@@ -88,11 +88,11 @@ export default class SetView extends React.Component<Props> {
           ),
           () => <ItemsSection store={store} />,
           () => (
-            <info css={{ marginLeft: 30 }}>
+            <section>
               <chart className="chart">
                 <Chart store={store} />
               </chart>
-            </info>
+            </section>
           ),
           false && store.filters.type === 'calendar'
             ? () => (
@@ -123,8 +123,8 @@ export default class SetView extends React.Component<Props> {
 
   static style = {
     section: {
+      flex: 1,
       padding: [4, 10],
-      justifyContent: 'center',
     },
     image: {
       width: 30,

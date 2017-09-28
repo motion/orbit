@@ -1,3 +1,4 @@
+// @flow
 import { view } from '@mcro/black'
 import * as Pane from '~/apps/pane'
 import * as React from 'react'
@@ -6,6 +7,10 @@ import TaskStore from './store'
 import { LabelAction, AssignAction } from './actions'
 import TaskResponse from './response'
 import TaskHeader from './header'
+
+declare class PaneStorish {
+  activeIndex: number,
+}
 
 const typeToElement = type =>
   ({
@@ -17,7 +22,9 @@ const typeToElement = type =>
 @view({
   store: TaskStore,
 })
-export default class TaskPane {
+export default class TaskPane extends React.Component<{
+  paneStore: PaneStorish,
+}> {
   render({ store }) {
     if (!store.results.length) {
       return null

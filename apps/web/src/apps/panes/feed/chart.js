@@ -25,6 +25,7 @@ export default class Chart {
     }
     const chartStyle = {
       border: '1px solid orange',
+      background: 'red',
     }
     const values = weeks(things.map(itemStamp))
     return (

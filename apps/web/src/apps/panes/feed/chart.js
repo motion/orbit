@@ -10,7 +10,6 @@ const weeks = stamps => {
     stamps,
     stamp => +new Date(moment(+new Date(stamp)).startOf('isoWeek'))
   )
-
   return sortBy(Object.keys(groups)).map(stamp => ({
     x: new Date(+stamp),
     y: groups[stamp].length,
@@ -21,12 +20,13 @@ const weeks = stamps => {
 export default class Chart {
   render({ store }) {
     const things = store.currentChart
-    if (things.length === 0) return <div />
+    if (things.length === 0) {
+      return <div />
+    }
     const chartStyle = {
       border: '1px solid orange',
     }
     const values = weeks(things.map(itemStamp))
-
     return (
       <chart>
         <VictoryChart

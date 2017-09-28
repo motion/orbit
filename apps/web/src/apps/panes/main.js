@@ -3,10 +3,10 @@ import parser from '../bar/parser'
 import * as React from 'react'
 import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { CurrentUser, Thing } from '~/app'
+import { Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
-import * as Pane from './pane'
+import * as Pane from '~/apps/pane'
 import TestIssue from './test_data/issue'
 import type { PaneProps, PaneResult } from '~/types'
 import { includes } from 'lodash'
@@ -205,9 +205,6 @@ class BarMainStore {
   ]
 
   get results(): Array<PaneResult> {
-    // if (!CurrentUser.loggedIn) {
-    //   return [{ title: 'Login', type: 'login', static: true }]
-    // }
     const includeTests = this.search.indexOf(':') === 0
     const all = [
       ...this.browse,

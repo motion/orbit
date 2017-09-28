@@ -2,9 +2,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Pane from '~/apps/panes/pane'
+import * as Pane from '~/apps/pane'
 import type { PaneProps } from '~/types'
-import Calendar from '../calendar'
+import Calendar from '../views/calendar'
 import FeedItem from './feedItem'
 import FeedStore from './feedStore'
 import Chart from './chart'
@@ -94,8 +94,8 @@ export default class SetView extends React.Component<Props> {
               </chart>
             </info>
           ),
-          false &&
-            store.filters.type === 'calendar' && () => (
+          false && store.filters.type === 'calendar'
+            ? () => (
                 <section
                   if={store.filters.type === 'calendar'}
                   css={{ width: '100%' }}
@@ -111,7 +111,8 @@ export default class SetView extends React.Component<Props> {
                     <Calendar isSmall={!store.calendarActive} />
                   </div>
                 </section>
-              ),
+              )
+            : null,
           ...store.activeItems.map(item => () => (
             <FeedItem store={store} event={item} />
           )),

@@ -2,12 +2,10 @@
 import * as React from 'react'
 import * as Constants from '~/constants'
 import { view } from '@mcro/black'
-import NotFound from '~/apps/error/404'
+import NotFound from '~/views/404'
 import Router from '~/router'
 import Errors from '~/views/layout/errors'
 import LayoutWrap from '~/views/layout/wrap'
-import Signup from '~/views/signup'
-import { CurrentUser } from '~/app'
 import Header from './header'
 import * as UI from '@mcro/ui'
 
@@ -27,15 +25,11 @@ export default class Layout {
   }
 
   render() {
-    if (Constants.IS_BAR) {
-      const CurrentPage = Router.activeView
-      if (CurrentPage) {
-        return <CurrentPage />
-      }
-      return null
-    }
-
     const CurrentPage = Router.activeView || NotFound
+
+    if (Constants.IS_BAR) {
+      return <CurrentPage />
+    }
 
     return (
       <UI.Theme name="light">

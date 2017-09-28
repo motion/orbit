@@ -27,6 +27,10 @@ export default class GoogleCalSync extends SyncerAction {
     })
   }
 
+  syncEvents() {
+    console.log('should sync events')
+  }
+
   async getEvents(calendarId: string, query = {}) {
     const results = await this.fetch(`/calendars/${calendarId}/events`, {
       query: {

@@ -47,8 +47,14 @@ class App {
   async start(quiet?: boolean) {
     await this.store.start(quiet)
     // sync before starting
-    await Setting.find().sync()
-    await User.find().sync()
+    console.time('startModels')
+    const jobs = await Job.pending().exec()
+    await Promise.all([
+      Setting.find().sync(),
+      User.find().sync(),
+      ...(jobs || []).map(job => job.remove()),
+    ])
+    console.timeEnd('startModels')
     // remove all previous jobs
     // const jobs = await Job.find().exec()
     // if (jobs) {

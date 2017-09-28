@@ -55,6 +55,6 @@ export async function ensureJob(
     log('Creating new job', type, action)
     return await createJob()
   } else {
-    log('Not old enough', type, action)
+    // not old enough
   }
 }

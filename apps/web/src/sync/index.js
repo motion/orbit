@@ -71,7 +71,7 @@ export default class Sync {
     this.react(
       () => this.pending,
       async jobs => {
-        log('watching pending', jobs)
+        log('pending jobs:', jobs ? jobs.length : 0)
         if (!jobs || !jobs.length) {
           return
         }

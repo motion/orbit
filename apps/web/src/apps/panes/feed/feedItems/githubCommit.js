@@ -12,8 +12,11 @@ import App from '~/app'
 })
 export default class Commit {
   render({ store }) {
+    if (!store.info || !store.info.files) {
+      return null
+    }
     return (
-      <commit css={{ maxHeight: 400 }} if={store.info}>
+      <commit css={{ maxHeight: 400 }}>
         <pre>{store.info.files.map(file => file.patch)}</pre>
       </commit>
     )

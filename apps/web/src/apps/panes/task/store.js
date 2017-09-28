@@ -182,17 +182,20 @@ export default class TaskStore {
         elName: 'header',
         data,
         actions: [],
-        height: 50,
       },
       firstComment,
       ...comments,
       {
-        height: 100,
         elName: 'response',
         data: {
           onSubmit: this.onSubmit,
         },
       },
-    ]
+      false && {
+        height: 500,
+        elName: 'similar',
+        data,
+      },
+    ].filter(i => i)
   }
 }

@@ -185,6 +185,12 @@ class BarMainStore {
       data: {},
       category: 'Calendar',
     },
+    {
+      id: 502,
+      title: ':topic',
+      type: 'topic',
+      category: 'Tests',
+    },
   ]
 
   extras = [

@@ -1,28 +1,21 @@
-import { format } from 'date-fns'
-import { sum, every, uniq, includes } from 'lodash'
+import { every, uniq, includes } from 'lodash'
+
+const stamp = m => +(m.ts.split('.')[0] + '000')
 
 export default (messages, search = []) => {
   let lastConvo = []
   let lastTs = 0
   let convos = []
-  let convoStamps = []
 
   messages.reverse().forEach(m => {
-    const text =
-      '#' + m.channel + m.userName +
-      ' ' +
-      format(+m.ts, 'HH:mm') +
-      '[]: ' +
-      m.text
-
-    // console.log('time since last', +m.ts - lastTs, text)
-    if (+m.ts - lastTs > 1000 * 60 * 20) {
-      convos.push({ messages: lastConvo, stamp: +m.ts })
+    // console.log('time since last', stamp(m) - lastTs, text)
+    if (lastConvo.length > 0 && stamp(m) - lastTs > 1000 * 60 * 20) {
+      convos.push({ messages: lastConvo, stamp: stamp(m) })
       lastConvo = []
     }
 
-    lastConvo.push(text)
-    lastTs = +m.ts
+    lastConvo.push({ ...m, timestamp: stamp(m), ts: undefined })
+    lastTs = stamp(m)
   })
   const activeConvos =
     search === ''
@@ -48,10 +41,11 @@ export default (messages, search = []) => {
   */
 
   return activeConvos.map(({ stamp, messages }) => ({
-    authors: uniq(messages.map(m => m.fullName)),
+    authors: uniq(messages.map(m => m.userName)),
+    id: '' + stamp,
     data: {
       messages: messages,
-      text: messages.join('\n'),
+      text: messages.map(m => m.text).join('\n'),
       createdAt: stamp,
     },
     type: 'convo',

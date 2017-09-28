@@ -5,6 +5,7 @@ import Comment from './comment'
 import TaskStore from './store'
 import { LabelAction, AssignAction } from './actions'
 import TaskResponse from './response'
+import Similar from './similar'
 import TaskHeader from './header'
 
 const typeToElement = type =>
@@ -12,6 +13,7 @@ const typeToElement = type =>
     comment: Comment,
     header: TaskHeader,
     response: TaskResponse,
+    similar: Similar,
   }[type] || <h3>{type} not found</h3>)
 
 @view({

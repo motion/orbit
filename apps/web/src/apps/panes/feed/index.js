@@ -17,17 +17,8 @@ import {
   sortBy,
   without,
 } from 'lodash'
-import {
-  VictoryChart,
-  VictoryBrushContainer,
-  VictoryTheme,
-  VictoryBar,
-} from 'victory'
-// import slack from './slack'
+import { VictoryChart, VictoryBrushContainer, VictoryBar } from 'victory'
 import getConvos from './helpers'
-
-// const convos = getConvos(slack)
-const convos = []
 
 const itemStamp = item => +new Date(item.data.createdAt || item.data.created_at)
 const weeks = stamps => {
@@ -114,6 +105,7 @@ class FeedStore {
   }
 
   brushDomain = null
+  convos = []
 
   setBrush = debounce(domain => {
     this.brushDomain = domain
@@ -156,9 +148,16 @@ class FeedStore {
     )
   }
 
+  fetchSlack = async () => {
+    const data = await (await fetch('/slack.json')).json()
+    this.convos = getConvos(data)
+    window._convos = this.convos
+  }
+
   willMount() {
     const { people, person } = this.props.paneStore.data
     this.setFilter(people ? people : [person])
+    this.fetchSlack()
 
     this.react(
       () => this.props.paneStore.data.people,
@@ -203,12 +202,12 @@ class FeedStore {
   }
 
   get titleDesc() {
-    const { type, startDate, endDate } = this.filters
+    const { type } = this.filters
     return `${this.activeItems.length} ${(type || 'item') + 's'}`
   }
 
   get titleSubdesc() {
-    const { type, startDate, endDate } = this.filters
+    const { startDate, endDate } = this.filters
     if (!startDate || !endDate) return ''
 
     const format = ts => moment(new Date(ts)).format('MMM Do')
@@ -225,7 +224,7 @@ class FeedStore {
       .limit(20): any)
 
   get allItems() {
-    return [...(this.events || []), ...(this.things || []), ...convos]
+    return [...(this.events || []), ...(this.things || []), ...this.convos]
   }
 
   get results(): Array<Event> {
@@ -355,7 +354,7 @@ class ItemsSection {
   store: FeedStore,
 })
 export default class SetView extends Component<Props> {
-  render({ store, paneStore }: Props) {
+  render({ store }: Props) {
     // return <h4>team page</h4>
     if (!store.allItems.length) {
       return (

@@ -145,7 +145,6 @@ export default class BarStore {
       if (activeAction) return
 
       if (currentItem.static) {
-        console.log('static item, no action')
         return
       }
 

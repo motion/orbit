@@ -15,6 +15,7 @@ export default class Button extends React.PureComponent {
     theme,
     chromeless,
     type,
+    glow,
     glowProps,
     badgeProps,
     ...props
@@ -47,7 +48,7 @@ export default class Button extends React.PureComponent {
         row
         align="center"
         justify="center"
-        glow
+        glow={glow}
         css={{
           flexWrap: 'nowrap',
           whiteSpace: 'pre',

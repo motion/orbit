@@ -3,18 +3,15 @@ import * as UI from '@mcro/ui'
 import * as React from 'react'
 import ColorBlock from './colorBlock'
 
-@view.attach('millerStore')
 @view
 export default class TaskHeader {
-  render(props) {
-    const {
-      millerStore,
-      data: { title, number },
-      paneStore: { data: { parentId, orgName } },
-      store: { labels, assigned },
-      isActive,
-    } = this.props
-
+  render({
+    data: { title, number },
+    paneStore,
+    paneStore: { data: { parentId, orgName } },
+    store: { labels, assigned },
+    isActive,
+  }) {
     const minSize = 1.4
     const maxSize = 2.5
     const titleSize = 3.4 - title.length * 0.05
@@ -67,14 +64,14 @@ export default class TaskHeader {
           </badges>
           <buttons>
             <UI.Button
-              onClick={() => millerStore.runAction('labels')}
+              onClick={() => paneStore.runAction('labels')}
               className="target-labels"
               $button
             >
               {labelsText}
             </UI.Button>
             <UI.Button
-              onClick={() => millerStore.runAction('assign')}
+              onClick={() => paneStore.runAction('assign')}
               className="target-assign"
               $button
             >
@@ -89,9 +86,6 @@ export default class TaskHeader {
   static style = {
     header: {
       width: '100%',
-    },
-    titleContainer: {
-      alignItems: 'center',
     },
     below: {
       flexFlow: 'row',
@@ -134,12 +128,6 @@ export default class TaskHeader {
     },
     name: {
       fontWeight: 500,
-    },
-    avatar: {
-      width: 30,
-      height: 30,
-      borderRadius: 100,
-      marginRight: 10,
     },
     when: {
       marginLeft: 10,

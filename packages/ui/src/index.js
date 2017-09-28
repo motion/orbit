@@ -22,6 +22,7 @@ import import_Drawer from './drawer'
 import import_Dropdown from './dropdown'
 import import_Ellipse from './ellipse'
 import import_ContextMenu from './contextMenu'
+import import_Card from './card'
 import import_Link from './link'
 import import_List from './list'
 import import_ListItem from './listItem'
@@ -46,10 +47,10 @@ import import_Date from './date'
 import import_FakeText from './fake/fakeText'
 
 // effects
-import import_Glow from './effects/glow'
+import import_HoverGlow from './effects/hoverGlow'
 import import_Grain from './effects/grain'
 import import_Poof from './effects/poof'
-import import_TiltGlow from './effects/tiltGlow'
+import import_TiltHoverGlow from './effects/tiltHoverGlow'
 import import_Glint from './effects/glint'
 
 // form
@@ -80,6 +81,7 @@ export const Drawer = import_Drawer
 export const Dropdown = import_Dropdown
 export const Ellipse = import_Ellipse
 export const ContextMenu = import_ContextMenu
+export const Card = import_Card
 export const Link = import_Link
 export const List = import_List
 export const ListItem = import_ListItem
@@ -101,10 +103,10 @@ export const Circle = import_Circle
 export const Surface = import_Surface
 export const SizedSurface = import_SizedSurface
 export const Date = import_Date
-export const Glow = import_Glow
+export const HoverGlow = import_HoverGlow
 export const Grain = import_Grain
 export const Poof = import_Poof
-export const TiltGlow = import_TiltGlow
+export const TiltHoverGlow = import_TiltHoverGlow
 export const Glint = import_Glint
 export const Form = import_Form
 export const Input = import_Input

@@ -84,7 +84,7 @@ export default function storeProvidable(options, Helpers) {
             return
           }
           this.mountStores()
-          view.on('hmr', () => this.clearError())
+          view.on('hmr', () => this.clearError && this.clearError())
         }
 
         clearError() {
@@ -97,7 +97,7 @@ export default function storeProvidable(options, Helpers) {
           // if you remove @view({ store: ... }) it tries to remove it here but its gone
           if (this.disposeStores) {
             this.disposeStores()
-            view.off('hmr', () => this.clearError())
+            view.off('hmr', () => this.clearError && this.clearError())
             this.unmounted = true
           }
         }

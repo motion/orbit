@@ -66,12 +66,12 @@ export class JobModel extends Model {
   lastCompleted = (opt?: Object) =>
     this.collection
       .findOne({ status: STATUS.COMPLETED, ...opt })
-      .sort({ updatedAt: 'desc' })
+      .sort({ createdAt: 'desc' })
 
   lastPending = (opt?: Object) =>
     this.collection
       .findOne({ status: STATUS.PENDING, ...opt })
-      .sort({ updatedAt: 'desc' })
+      .sort({ createdAt: 'desc' })
 }
 
 const JobInstance = new JobModel()

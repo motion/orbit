@@ -14,8 +14,7 @@ export const COUCH_URL = `${PROTOCOL}${COUCH_HOST}/couch`
 export const DB_CONFIG = {
   name: 'username',
   password: 'password',
-  couchUrl: COUCH_URL,
-  couchHost: COUCH_HOST,
+  remoteUrl: COUCH_URL,
 }
 
 export const HEADER_HEIGHT = 36

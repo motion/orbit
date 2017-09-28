@@ -5,8 +5,7 @@ import { OS } from '~/helpers'
 import peeks from './peeks'
 
 export default class BarStore {
-  inputRef: ?HTMLElement = null
-
+  inputRef = null
   // search is throttled, textboxVal isn't
   search = ''
   textboxVal = ''
@@ -79,12 +78,10 @@ export default class BarStore {
     this.inputRef && this.inputRef.blur()
   }
 
-  setSearch = debounce(text => {
+  setSearch = text => {
     this.search = text
-    setTimeout(() => {
-      this.millerStore.setActiveRow(0)
-    })
-  }, 150)
+    this.millerStore.setActiveRow(0)
+  }
 
   onSearchChange = e => {
     this.textboxVal = e.target.value

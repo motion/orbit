@@ -10,6 +10,29 @@ export const methods = {
       this.authorizations[provider].token
     )
   },
+
+  async refreshToken(provider: string) {
+    if (!provider) {
+      throw new Error(`no provider ${provider}`)
+    }
+    let info
+    try {
+      info = await fetch(`/auth/refreshToken/${provider}`)
+    } catch (error) {
+      console.log('refreshToken error', error)
+    }
+    info = await info.json()
+    if (info && info instanceof Object) {
+      const update = {
+        authorizations: {
+          [provider]: {
+            token: info.refreshToken,
+          },
+        },
+      }
+      await this.mergeUpdate(update)
+    }
+  },
 }
 
 export class UserModel extends Model {
@@ -35,6 +58,10 @@ export class UserModel extends Model {
 
   settings = {
     database: 'users',
+    autoSync: {
+      push: true,
+      pull: 'basic',
+    },
   }
 
   methods = methods

@@ -1,33 +1,33 @@
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
+import Icon from './icon'
+import Theme from './helpers/theme'
+import Title from './title'
 
-@view
-export default class PaneCard {
-  render({ id, title, icon, children, chromeless, isActive, ...props }) {
+@view.ui
+export default class Card {
+  static defaultProps = {
+    theme: 'light',
+  }
+
+  render({ id, title, icon, children, chromeless, theme, ...props }) {
     return (
       <card $chromeless={chromeless} {...props}>
-        <UI.Theme name="light">
+        <Theme name={theme}>
           <task>
             <heading if={title}>
               <headingcontent>
-                <UI.Title $title display="block" size={1.2}>
+                <Title $title display="block" size={1.2}>
                   {title}
-                </UI.Title>
+                </Title>
                 <service>
-                  <UI.Icon
-                    if={false}
-                    $icon
-                    color="#555"
-                    size={24}
-                    name={icon}
-                  />
+                  <Icon if={false} $icon color="#555" size={24} name={icon} />
                   <id if={id}>#{id.slice(0, 4)}</id>
                 </service>
               </headingcontent>
             </heading>
             {children}
           </task>
-        </UI.Theme>
+        </Theme>
       </card>
     )
   }

@@ -1,14 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Actions from '../panes/pane/actions'
-import BarStore from './store'
-import * as PaneTypes from '../panes'
+import * as Pane from '~/apps/pane'
+import BarStore from './barStore'
+import * as PaneTypes from '~/apps/panes'
 import { Miller, MillerStore } from '../miller'
-import Pane from '~/views/pane'
-import { format } from 'date-fns'
-
-const commas = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 @view
 class Underline {
@@ -61,7 +57,7 @@ class BottomActions {
         </section>
         <section>
           <UI.Text $label>⌘ Actions</UI.Text>
-          <Actions metaKey={metaKey} actions={actions} />
+          <Pane.Actions metaKey={metaKey} actions={actions} />
         </section>
       </bar>
     )
@@ -131,7 +127,7 @@ export default class BarPage {
             <Underline if={false} key={2} width={100} left={250} />
           </header>
           <Miller
-            pane={Pane}
+            pane={Pane.Pane}
             panes={PaneTypes}
             onKeyActions={barStore.ref('millerKeyActions').set}
           />
@@ -153,6 +149,7 @@ export default class BarPage {
     header: {
       position: 'relative',
       height: 70,
+      borderBottom: [1, [0, 0, 0, 0.075]],
     },
     searchIcon: {
       position: 'absolute',
@@ -172,7 +169,7 @@ export default class BarPage {
     },
     forwardcomplete: {
       position: 'absolute',
-      top: 23,
+      top: 26,
       left: 50,
       opacity: 0.3,
       ...inputStyle,

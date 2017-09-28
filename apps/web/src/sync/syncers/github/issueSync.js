@@ -95,25 +95,11 @@ export default class GithubIssueSync extends SyncerAction {
   }
 
   createIssues = async (org: string, issues: Array<Object>, chunk = 10) => {
-    let finished = []
-    let creating = []
-
-    async function waitForCreating() {
-      const successful = (await Promise.all(creating)).filter(Boolean)
-      finished = [...finished, ...successful]
-      creating = []
-    }
-
-    for (const issue of issues) {
-      // pause for every 10 to finish
-      if (creating.length === chunk) {
-        await waitForCreating()
-      }
-      creating.push(this.createIssue(issue, org))
-    }
-
-    await waitForCreating()
-    return finished
+    return await this.createInChunks(
+      issues,
+      item => this.createIssue(item, org),
+      chunk
+    )
   }
 
   getIssuesForRepo = (repository: Object) => {
@@ -135,17 +121,7 @@ export default class GithubIssueSync extends SyncerAction {
     // ensure if one is set, the other gets set too
     const created = issue.createdAt || issue.updatedAt || ''
     const updated = issue.updatedAt || created
-    // stale removal
-    const stale = await Thing.get({ id, created: { $ne: created } })
-    if (stale) {
-      log('Removing stale event', id)
-      await stale.remove()
-    }
-    // already exists
-    if (updated && (await Thing.get({ id, updated }))) {
-      return false
-    }
-    return await Thing.update({
+    return await Thing.findOrUpdateByTimestamps({
       id,
       integration: 'github',
       type: 'task',

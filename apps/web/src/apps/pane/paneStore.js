@@ -3,7 +3,7 @@ export default class PaneStore {
   listRef = null
   itemProps = {
     padding: [10, 10],
-    highlightBackground: [0, 0, 0, 0.15],
+    highlightBackground: [0, 0, 0, 0.08],
     highlightColor: [255, 255, 255, 1],
   }
 
@@ -35,6 +35,7 @@ export default class PaneStore {
     return this.isActive && this.miller.activeRow
   }
 
+  runAction = (this.miller && this.miller.runAction) || (_ => _)
   selectRow = row => this.miller.setSelection(this.col, row)
   onSelect = row => this.props.millerStore.setSelection(this.props.index, row)
 

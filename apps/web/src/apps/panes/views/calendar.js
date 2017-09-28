@@ -1,6 +1,6 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Pane from '../pane'
+import * as Pane from '~/apps/pane'
 import * as React from 'react'
 import { range, capitalize, sample, includes, random } from 'lodash'
 import moment from 'moment'

@@ -1,12 +1,35 @@
 import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Integrations from './integrations'
 import Setup from './setup'
 
 @view({
   store: class SettingsStore {
-    activeItem = null
+    activeItem = 0
+
+    items = [
+      {
+        title: 'Setup Github',
+        data: { type: 'github', name: 'Github' },
+        type: 'setup',
+        icon: 'github',
+      },
+      {
+        title: 'Setup Google',
+        data: { type: 'google', name: 'Google' },
+        type: 'setup',
+        icon: 'google',
+      },
+      {
+        title: 'Setup Slack',
+        data: { type: 'slack', name: 'Slack' },
+        type: 'setup',
+        icon: 'slack',
+      },
+    ].map(x => ({
+      ...x,
+      category: 'Integrations',
+    }))
   },
 })
 export default class SettingsPage {
@@ -24,18 +47,28 @@ export default class SettingsPage {
 
           <content>
             <sidebar>
-              <Integrations
-                onSelect={store.ref('activeItem').set}
+              <UI.List
+                if={store.items}
+                defaultSelected={0}
+                onSelect={(i, index) => (store.activeItem = index)}
+                groupKey="category"
+                items={store.items}
                 itemProps={itemProps}
-                settingsStore={store}
+                getItem={(result, index) => ({
+                  sizeHeight: true,
+                  highlight: () => store.activeItem === index,
+                  primary: result.title,
+                  icon:
+                    result.data && result.data.image ? (
+                      <img $image src={`/images/${result.data.image}.jpg`} />
+                    ) : (
+                      result.icon || (result.doc && result.doc.icon)
+                    ),
+                })}
               />
             </sidebar>
             <main>
-              <Setup
-                if={store.activeItem}
-                item={store.activeItem}
-                key={Math.random()}
-              />
+              <Setup item={store.items[store.activeItem]} />
             </main>
           </content>
         </settings>

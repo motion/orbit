@@ -34,13 +34,13 @@ const DEFAULT_VALUE = undefined
 export default function automagical() {
   return {
     name: 'automagical',
+    onlyClass: true,
     decorator: (Klass: Class<any> | Function) => {
-      if (!Klass.prototype.constructor) {
-        return Klass
-      }
-      Klass.prototype.automagic = function() {
-        automagic(this)
-      }
+      Klass.prototype.automagic =
+        Klass.prototype.automagic ||
+        function() {
+          automagic(this)
+        }
       return Klass
     },
   }

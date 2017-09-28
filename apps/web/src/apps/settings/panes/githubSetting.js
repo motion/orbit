@@ -9,14 +9,13 @@ import App from '~/app'
 export default class GithubSetting {
   render() {
     if (!App.services) {
-      return null
+      return <null>No services</null>
     }
 
     const { Github } = App.services
 
     if (Github.orgs && Github.orgs.message) {
-      console.warn('bad orgs')
-      return null
+      return <null>No orgs</null>
     }
     return (
       <content>

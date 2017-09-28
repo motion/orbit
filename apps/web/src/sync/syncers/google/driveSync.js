@@ -1,14 +1,18 @@
 // @flow
-import { Event } from '~/app'
+import { Event, Thing } from '~/app'
 import SyncerAction from '../syncerAction'
+import debug from 'debug'
 
+const log = debug('sync')
 const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export default class GoogleDriveSync extends SyncerAction {
   fetch2 = (path, opts) => this.helpers.fetch(`/drive/v2${path}`, opts)
   fetch = (path, opts) => this.helpers.fetch(`/drive/v3${path}`, opts)
 
-  run = async () => {}
+  run = async () => {
+    await this.syncFiles()
+  }
 
   async syncFeed() {
     const changes = await this.getChanges()
@@ -19,7 +23,32 @@ export default class GoogleDriveSync extends SyncerAction {
     }
   }
 
-  async syncFiles() {}
+  async syncFiles() {
+    const files = await this.getFiles()
+    const results = await this.createInChunks(files, file =>
+      this.createFile(file)
+    )
+    log('syncFiles', results)
+    return results
+  }
+
+  async createFile(info: Object) {
+    const { name, contents, ...data } = info
+    const created = info.createdTime
+    const updated = info.modifiedTime
+    return await Thing.findOrUpdateByTimestamps({
+      id: info.id,
+      integration: 'google',
+      type: 'doc',
+      title: name,
+      body: contents,
+      data,
+      orgName: info.spaces ? info.spaces[0] : '',
+      parentId: info.parents ? info.parents[0] : '',
+      created,
+      updated,
+    })
+  }
 
   async getRevisions(fileId: string) {
     const { revisions } = await this.fetch(`/files/${fileId}/revisions`, {
@@ -69,8 +98,9 @@ export default class GoogleDriveSync extends SyncerAction {
     })
   }
 
-  async getFiles(query?: Object, fileQuery?: Object) {
-    const { files } = await this.getFilesBasic(query)
+  async getFiles(pages = 20, query?: Object, fileQuery?: Object) {
+    log(`Getting ${pages} pages of files`)
+    const files = await this.getFilesBasic(pages, query)
     // just docs
     const docs = files.filter(
       file => file.mimeType === 'application/vnd.google-apps.document'
@@ -84,7 +114,7 @@ export default class GoogleDriveSync extends SyncerAction {
         fileIds.slice(fetched, fetched + perSecond),
         fileQuery
       )
-      console.log('got', next, fetched)
+      log('getFiles', next, fetched)
       response = [...response, ...next]
       fetched += perSecond
       await sleep(1000)
@@ -99,7 +129,23 @@ export default class GoogleDriveSync extends SyncerAction {
     return meta.map((file, i) => ({ ...file, contents: contents[i] }))
   }
 
-  async getFilesBasic(query?: Object) {
+  async getFilesBasic(pages = 1, query: Object = {}) {
+    let all = []
+    let fetchedPages = 0
+    while (fetchedPages < pages) {
+      fetchedPages++
+      const res = await this.fetchFiles(query)
+      if (res) {
+        all = [...all, ...res.files]
+        query.pageToken = res.nextPageToken
+      } else {
+        throw new Error('No res')
+      }
+    }
+    return all
+  }
+
+  async fetchFiles(query?: Object) {
     return await this.fetch('/files', {
       query: {
         orderBy: [

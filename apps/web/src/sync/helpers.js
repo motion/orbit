@@ -39,9 +39,7 @@ export async function ensureJob(
           lastError: { message: 'stale' },
         })
       } catch (e) {
-        if (e.name !== 'conflict') {
-          console.log(e)
-        }
+        console.log(e)
       }
     } else {
       // log('no need to run', type, action)
@@ -57,6 +55,6 @@ export async function ensureJob(
     log('Creating new job', type, action)
     return await createJob()
   } else {
-    log('Not old enough', type, action)
+    // not old enough
   }
 }

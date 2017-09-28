@@ -1,5 +1,4 @@
 // @flow
-import { log } from '@mcro/black'
 import { CompositeDisposable } from 'sb-event-kit'
 import { autorun, observable } from 'mobx'
 import { compile } from './properties'
@@ -8,6 +7,9 @@ import { isRxQuery } from 'rxdb'
 import type PouchDB from 'pouchdb-core'
 import { cloneDeep, merge } from 'lodash'
 import * as Helpers from './helpers'
+import debug from 'debug'
+
+const log = debug('model')
 
 type SettingsObject = {
   index?: Array<string>,
@@ -273,12 +275,18 @@ export default class Model {
   }
 
   get shouldSyncPush(): boolean {
+    if (!this.remote) {
+      return false
+    }
     const autoSync = this.settings.autoSync || this.options.autoSync
     return (autoSync && (autoSync === true || autoSync.push)) || false
   }
 
   // sitrep
   get shouldSyncPull(): boolean {
+    if (!this.remote) {
+      return false
+    }
     const autoSync = this.settings.autoSync || this.options.autoSync
     return (autoSync && (autoSync === true || autoSync.pull)) || false
   }
@@ -405,6 +413,11 @@ export default class Model {
 
     // console.log('>>', QUERY_KEY)
 
+    // allows for basic non-query syncing option
+    if (shouldSyncPull === 'basic') {
+      query = null
+    }
+
     const firstReplication = this._collection.sync({
       query,
       remote: this.remote,
@@ -436,7 +449,7 @@ export default class Model {
           const done = state && state.pull && state.pull.ok
 
           if (done && !resolved) {
-            console.log('<<', QUERY_KEY)
+            log('<<', QUERY_KEY)
             resolve(true)
 
             // cleanup
@@ -481,6 +494,15 @@ export default class Model {
   }
 
   // user facing!
+
+  sync = async (options = {}) => {
+    await this.onConnection()
+    return await this._collection.sync({
+      remote: this.remote,
+      waitForLeadership: false,
+      ...options,
+    })
+  }
 
   // get is a helper that returns a promise only
   get = async (query: string | Object) => {

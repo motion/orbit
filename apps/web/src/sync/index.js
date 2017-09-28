@@ -28,10 +28,6 @@ export default class Sync {
     this.watchSyncers()
   }
 
-  get user() {
-    return CurrentUser
-  }
-
   async dispose() {
     await this.disposeSyncers()
     if (super.dispose) {
@@ -50,37 +46,32 @@ export default class Sync {
     }
   }
 
-  watchSyncers() {
-    this.react(
-      () => this.user,
-      async user => {
-        if (!user) {
-          return
+  async watchSyncers() {
+    const user = CurrentUser
+    if (!user) {
+      throw new Error('No CurrentUser')
+    }
+    if (!this.syncers) {
+      this.syncers = {}
+      for (const name of Object.keys(Syncers)) {
+        const syncer = new Syncers[name]({ user: CurrentUser })
+        if (syncer.start) {
+          await syncer.start()
         }
-        if (!this.syncers) {
-          this.syncers = {}
-          for (const name of Object.keys(Syncers)) {
-            const syncer = new Syncers[name]({ user: CurrentUser })
-            if (syncer.start) {
-              await syncer.start()
-            }
-            this.syncers[name] = syncer
-            if (!this[name]) {
-              // $FlowIgnore
-              this[name] = syncer
-            }
-          }
+        this.syncers[name] = syncer
+        if (!this[name]) {
+          // $FlowIgnore
+          this[name] = syncer
         }
-      },
-      true
-    )
+      }
+    }
   }
 
   watchJobs() {
     this.react(
       () => this.pending,
       async jobs => {
-        log('watching pending', jobs)
+        log('pending jobs:', jobs ? jobs.length : 0)
         if (!jobs || !jobs.length) {
           return
         }

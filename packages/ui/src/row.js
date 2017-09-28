@@ -59,10 +59,11 @@ export default class Row extends React.Component<Props> {
     sync,
     uiContext,
     color,
-    itemProps,
+    itemProps: itemProps_,
     spaced,
     ...props
   }: Props) {
+    let itemProps = itemProps_
     let children = children_
     const ACTIVE = typeof active === 'undefined' ? this.active : active
     const getContext = (index: number, length: number) =>
@@ -89,6 +90,11 @@ export default class Row extends React.Component<Props> {
       ]
     }
 
+    if (stretch) {
+      itemProps = itemProps || {}
+      itemProps.flex = 1
+    }
+
     if (children) {
       const realChildren = React.Children
         .map(children, _ => _)
@@ -96,14 +102,12 @@ export default class Row extends React.Component<Props> {
 
       children = realChildren.map((child, index) => (
         <Provider key={index} provide={getContext(index, realChildren.length)}>
-          {itemProps ? (
-            React.cloneElement(child, {
-              ...itemProps,
-              ...child.props,
-            }) /* merge child props so they can override */
-          ) : (
-            child
-          )}
+          {itemProps
+            ? React.cloneElement(child, {
+                ...itemProps,
+                ...child.props,
+              }) /* merge child props so they can override */
+            : child}
         </Provider>
       ))
     } else if (Array.isArray(items)) {
@@ -164,7 +168,7 @@ export default class Row extends React.Component<Props> {
 
   static theme = props => ({
     row: {
-      flex: props.flex === true ? 1 : props.flex,
+      flex: props.flex || props.stretch === true ? 1 : props.flex,
       ...(props.reverse && {
         flexFlow: 'row-reverse',
       }),

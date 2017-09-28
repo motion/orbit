@@ -2,15 +2,21 @@ import Passport from 'passport'
 import Refresh from 'passport-oauth2-refresh'
 
 export default class Oauth {
-  cache = {}
-
-  constructor({ strategies, onSuccess }) {
+  constructor({ strategies, onSuccess, findInfo, updateInfo }) {
     if (!strategies) {
       throw Error(`Need to provide strategies key`)
     }
     if (!onSuccess) {
       throw Error(`Need to provide onSuccess callback`)
     }
+    if (!findInfo) {
+      throw Error(`Need to provide findInfo`)
+    }
+    if (!updateInfo) {
+      throw Error(`Need to provide updateInfo`)
+    }
+    this.findInfo = findInfo
+    this.updateInfo = updateInfo
     this.setupStrategies(strategies, onSuccess)
     this.setupSerialization()
   }
@@ -23,34 +29,43 @@ export default class Oauth {
         continue
       }
 
-      const strategy = new Strategy(config.credentials, async function(
-        accessToken,
-        refreshToken,
-        profile,
-        cb
-      ) {
-        try {
-          const user = await onSuccess(name, accessToken, refreshToken, profile)
-          cb(null, user)
-        } catch (err) {
-          cb(err)
+      const strategy = new Strategy(
+        config.credentials,
+        async (accessToken, refreshToken, profile, cb) => {
+          try {
+            const info = await onSuccess(
+              name,
+              accessToken,
+              refreshToken,
+              profile
+            )
+            this.updateInfo(name, info)
+            cb(null, info)
+          } catch (err) {
+            cb(err)
+          }
         }
-      })
+      )
 
       Passport.use(strategy)
       Refresh.use(strategy)
     }
   }
 
-  refreshToken(userId, service) {
-    return new Promise((resolve, reject) => {
+  refreshToken(service) {
+    return new Promise(async (resolve, reject) => {
+      const info = this.findInfo(service)
+      if (!info || !info.refreshToken) {
+        return reject('No refreshToken found')
+      }
       Refresh.requestNewAccessToken(
         service,
-        this.cache[userId].refreshToken,
-        (err, accessToken) => {
+        info.refreshToken,
+        async (err, accessToken) => {
           if (err || !accessToken) {
             reject(err || 'No access token')
           }
+          console.log('got access token', accessToken)
           resolve(accessToken)
         }
       )
@@ -58,14 +73,13 @@ export default class Oauth {
   }
 
   setupSerialization() {
-    Passport.serializeUser((user, done) => {
-      const id = user.info.id
-      this.cache[id] = user.info
-      done(null, id)
+    Passport.serializeUser(async (user, done) => {
+      done(null, 'a@b.com')
     })
 
-    Passport.deserializeUser((id, done) => {
-      done(null, this.cache[id])
+    Passport.deserializeUser(async (id, done) => {
+      const info = await this.findInfo()
+      done(null, info)
     })
   }
 }

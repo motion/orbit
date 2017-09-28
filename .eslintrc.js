@@ -31,6 +31,7 @@ module.exports = {
     'no-unused-vars': 'error',
     'react/jsx-uses-vars': 2,
     'react/jsx-uses-react': 'error',
+    'no-case-declarations': 'off',
   },
   settings: {
     'import/resolver': {

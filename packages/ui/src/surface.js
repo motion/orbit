@@ -5,7 +5,7 @@ import { view } from '@mcro/black'
 import inject from './helpers/inject'
 import $ from 'color'
 import Icon from './icon'
-import Glow from './effects/glow'
+import HoverGlow from './effects/hoverGlow'
 import Glint from './effects/glint'
 import Popover from './popover'
 import type { Color } from '@mcro/gloss'
@@ -237,8 +237,15 @@ export default class Surface extends React.PureComponent<Props> {
       ...props,
     }
 
-    const borderLeftRadius = _borderLeftRadius || themeValues.borderRadiusSize
-    const borderRightRadius = _borderRightRadius || themeValues.borderRadiusSize
+    let borderLeftRadius =
+      _borderLeftRadius || themeValues.borderRadius.borderLeftRadius
+    let borderRightRadius =
+      _borderRightRadius || themeValues.borderRadius.borderRightRadius
+
+    if (typeof borderLeftRadius === 'undefined') {
+      borderLeftRadius = themeValues.radius
+      borderRightRadius = themeValues.radius
+    }
 
     const glowColor =
       (this.theme && themeValues.color.lighten(0.2)) || DEFAULT_GLOW_COLOR
@@ -266,7 +273,7 @@ export default class Surface extends React.PureComponent<Props> {
         size={themeValues.iconSize}
         {...iconProps}
       />,
-      <Glow
+      <HoverGlow
         key={2}
         if={glow && !active && !disabled}
         full
@@ -559,6 +566,7 @@ export default class Surface extends React.PureComponent<Props> {
     self.themeValues = {
       iconSize,
       borderRadiusSize: radius,
+      borderRadius,
       glintColor,
       color,
     }

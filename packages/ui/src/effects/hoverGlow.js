@@ -140,7 +140,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
     })
   }
 
-  @throttle(14)
+  @throttle(20)
   trackMouse(track) {
     if (this.unmounted) {
       return
@@ -197,10 +197,7 @@ class HoverGlow extends React.PureComponent<Props, State> {
       height = this.bounds.height
     }
 
-    const isNaNw = typeof width === 'number' && width === NaN
-    const isNaNh = typeof height === 'number' && height === NaN
-
-    if (isNaNw || isNaNh) {
+    if (isNaN(width) || isNaN(height)) {
       console.log('weird')
       return null
     }

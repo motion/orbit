@@ -3,7 +3,7 @@ import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
 import * as Panes from './panes'
 
-@view.ui
+@view
 export default class BarSetupPane {
   render({ item }) {
     if (!CurrentUser.authorizations) {

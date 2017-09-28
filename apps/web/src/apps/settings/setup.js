@@ -7,11 +7,11 @@ import * as Panes from './panes'
 export default class BarSetupPane {
   render({ item }) {
     if (!CurrentUser.authorizations) {
-      return null
+      return <null>No auths</null>
     }
 
     const integration = CurrentUser.authorizations[item.data.type]
-    const SettingPane = integration && Panes[item.data.type]
+    const SettingPane = Panes[item.data.type]
 
     return (
       <setup>
@@ -27,7 +27,7 @@ export default class BarSetupPane {
             Authorize {item.data.name}
           </UI.Button>
         </integrate>
-        <settings if={integration && SettingPane}>
+        <settings if={SettingPane}>
           <UI.Title size={1.5}>{item.data.name} Settings</UI.Title>
           <SettingPane integration={integration} />
         </settings>

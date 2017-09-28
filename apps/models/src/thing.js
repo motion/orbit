@@ -46,15 +46,23 @@ export class Thing extends Model {
     // version: 1,
   }
 
-  // migrations = {
-  //   1: async () => {
-  //     console.log('migrate thing')
-  //     // const all = await this.getAll()
-  //     // if (all) {
-  //     //   all.map(_ => _.remove())
-  //     // }
-  //   },
-  // }
+  findOrUpdateByTimestamps = async (info: Object) => {
+    const { id, created, updated } = info
+    if (!id || !created || !updated) {
+      throw new Error('Object must have properties: id, created, updated')
+    }
+    const stale = await this.get({ id, created: { $ne: created } })
+    if (stale) {
+      await stale.remove()
+    }
+    // already exists
+    if (updated && (await this.get({ id, updated }))) {
+      return false
+    }
+    // update
+    const res = await this.update(info)
+    return res
+  }
 
   search = async (text: string) => {
     if (!text) {

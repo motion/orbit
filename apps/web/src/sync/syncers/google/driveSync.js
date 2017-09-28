@@ -1,5 +1,5 @@
 // @flow
-import { Event } from '~/app'
+import { Event, Thing } from '~/app'
 import SyncerAction from '../syncerAction'
 
 const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -8,7 +8,9 @@ export default class GoogleDriveSync extends SyncerAction {
   fetch2 = (path, opts) => this.helpers.fetch(`/drive/v2${path}`, opts)
   fetch = (path, opts) => this.helpers.fetch(`/drive/v3${path}`, opts)
 
-  run = async () => {}
+  run = async () => {
+    // await this.syncFeed()
+  }
 
   async syncFeed() {
     const changes = await this.getChanges()
@@ -19,7 +21,31 @@ export default class GoogleDriveSync extends SyncerAction {
     }
   }
 
-  async syncFiles() {}
+  async syncFiles() {
+    const files = await this.getFiles()
+    const results = await this.createInChunks(files, file =>
+      this.createFile(file)
+    )
+    return results
+  }
+
+  async createFile(info: Object) {
+    const { name, contents, ...data } = info
+    const created = info.createdTime
+    const updated = info.modifiedTime
+    return await Thing.findOrUpdateByTimestamps({
+      id: info.id,
+      integration: 'google',
+      type: 'doc',
+      title: name,
+      body: contents,
+      data,
+      orgName: info.spaces ? info.spaces[0] : '',
+      parentId: info.parents ? info.parents[0] : '',
+      created,
+      updated,
+    })
+  }
 
   async getRevisions(fileId: string) {
     const { revisions } = await this.fetch(`/files/${fileId}/revisions`, {

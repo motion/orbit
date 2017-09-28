@@ -46,7 +46,7 @@ export async function ensureJob(
       return
     }
   }
-  const lastCompleted = await Job.lastCompleted({ action }).exec()
+  const lastCompleted = await Job.lastCompleted({ type, action }).exec()
   if (!lastCompleted) {
     log('No existing completed jobs')
     return await createJob()

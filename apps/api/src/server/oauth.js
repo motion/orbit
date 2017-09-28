@@ -55,9 +55,8 @@ export default class Oauth {
   refreshToken(service) {
     return new Promise(async (resolve, reject) => {
       const info = this.findInfo(service)
-      console.log('got info', info)
       if (!info || !info.refreshToken) {
-        reject('No refreshToken found')
+        return reject('No refreshToken found')
       }
       Refresh.requestNewAccessToken(
         service,

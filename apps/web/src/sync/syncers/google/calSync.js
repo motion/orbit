@@ -30,9 +30,10 @@ export default class GoogleCalSync extends SyncerAction {
     })
   }
 
-  syncEvents() {
+  async syncEvents() {
     for (const cal of this.activeCals) {
-      console.log('should sync events', cal)
+      const events = await this.getEvents(cal)
+      console.log('got events', events)
     }
   }
 

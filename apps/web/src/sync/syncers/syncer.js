@@ -1,5 +1,5 @@
 // @flow
-import { ensureJob } from '../helpers'
+import * as Helpers from '../helpers'
 import { CurrentUser } from '~/app'
 import type { Setting } from '@mcro/models'
 import debug from 'debug'
@@ -83,17 +83,18 @@ export default class Syncer {
     return await this.user.refreshToken(this.type)
   }
 
-  async check(loud: boolean = true) {
+  async check(loud: boolean = true): Array<any> {
     const { type, actions } = this
+    log('Syncer.check', actions)
     if (!actions) {
       return
     }
     const syncers = []
     for (const action of Object.keys(actions)) {
       const job = actions[action]
-      syncers.push(ensureJob(type, action, job, loud))
+      syncers.push(Helpers.ensureJob(type, action, job, loud))
     }
-    await Promise.all(syncers)
+    return await Promise.all(syncers)
   }
 
   ensureSetting() {

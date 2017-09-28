@@ -42,7 +42,7 @@ export async function ensureJob(
         console.log(e)
       }
     } else {
-      // log('no need to run', type, action)
+      log('no need to run', type, action)
       return
     }
   }
@@ -56,5 +56,6 @@ export async function ensureJob(
     return await createJob()
   } else {
     // not old enough
+    log('Not old enough', type, action)
   }
 }

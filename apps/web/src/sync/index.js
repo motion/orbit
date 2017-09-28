@@ -71,7 +71,7 @@ export default class Sync {
     this.react(
       () => this.pending,
       async jobs => {
-        log('pending jobs:', jobs ? jobs.length : 0)
+        log('watchJobs jobs:', jobs ? jobs.length : 0)
         if (!jobs || !jobs.length) {
           return
         }
@@ -96,6 +96,7 @@ export default class Sync {
 
           this.locks.add(job.lock)
           try {
+            log('Run job', job.type, job.action)
             await this.runJob(job)
             completed = true
           } catch (error) {

@@ -95,8 +95,7 @@ export default class SetView extends React.Component<Props> {
             </info>
           ),
           false &&
-            store.filters.type === 'calendar' && {
-              view: () => (
+            store.filters.type === 'calendar' && () => (
                 <section
                   if={store.filters.type === 'calendar'}
                   css={{ width: '100%' }}
@@ -113,7 +112,6 @@ export default class SetView extends React.Component<Props> {
                   </div>
                 </section>
               ),
-            },
           ...store.activeItems.map(item => () => (
             <FeedItem store={store} event={item} />
           )),

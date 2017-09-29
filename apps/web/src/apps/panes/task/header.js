@@ -7,9 +7,10 @@ import ColorBlock from './colorBlock'
 export default class TaskHeader {
   render({
     paneStore,
-    paneStore: { data: { parentId, orgName, title, number } },
+    paneStore: { data: { parentId, orgName } },
     store: { labels, assigned },
   }) {
+    const { title = '', number = 0 } = paneStore.data.data || {}
     const minSize = 1.4
     const maxSize = 2.5
     const titleSize = 3.4 - title.length * 0.05

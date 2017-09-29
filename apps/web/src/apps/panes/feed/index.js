@@ -70,6 +70,10 @@ export default class SetView extends React.Component<Props> {
       )
     }
 
+    if (!store.filters.people) {
+      debugger
+    }
+
     return (
       <Pane.Card
         items={[

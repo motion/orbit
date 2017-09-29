@@ -20,7 +20,7 @@ export default class PaneStore {
   }
 
   get data() {
-    return (this.props.data && this.props.data.data) || {}
+    return this.props.data
   }
 
   get isActive() {

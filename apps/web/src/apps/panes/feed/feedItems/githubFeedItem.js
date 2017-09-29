@@ -11,7 +11,9 @@ export default class GithubFeedItem {
     const { payload } = event.data
     switch (event.type) {
       case 'IssuesEvent':
-        return <Task paneStore={{ activeIndex: 1, data: event.data }} />
+        return (
+          <Task paneStore={{ activeIndex: 1, data: { data: event.data } }} />
+        )
       case 'PushEvent':
         return (
           <content if={payload.commits}>

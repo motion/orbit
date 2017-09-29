@@ -20,10 +20,10 @@ function getRxError(error: Error) {
 @store
 export default class Sync {
   locks: Set<string> = new Set()
-  pending: ?Array<Job> = Job.pending()
-  nonPending: ?Array<Job> = Job.nonPending()
+  @watch pending: ?Array<Job> = () => Job.pending()
+  @watch nonPending: ?Array<Job> = () => Job.nonPending()
   syncers: ?Object = null
-  enabled = localStorage.getItem('runSyncers')
+  enabled = localStorage.getItem('runSyncers') === 'true'
 
   start() {
     this.startJobs()
@@ -36,11 +36,13 @@ export default class Sync {
   enable() {
     this.enabled = true
     localStorage.setItem('runSyncers', true)
+    this.startSyncers()
   }
 
   disable() {
     this.enabled = false
     localStorage.setItem('runSyncers', false)
+    this.disposeSyncers()
   }
 
   async dispose() {
@@ -59,6 +61,7 @@ export default class Sync {
         await this.syncers[name].dispose()
       }
     }
+    this.syncers = null
   }
 
   async startSyncers() {

@@ -20,7 +20,8 @@ function getRxError(error: Error) {
 @store
 export default class Sync {
   locks: Set<string> = new Set()
-  @watch pending: ?Array<Job> = (() => Job.pending(): any)
+  pending: ?Array<Job> = Job.pending()
+  nonPending: ?Array<Job> = Job.nonPending()
   syncers: ?Object = null
 
   start() {
@@ -68,6 +69,24 @@ export default class Sync {
   }
 
   watchJobs() {
+    this.react(
+      () => this.nonPending,
+      jobs => {
+        if (jobs) {
+          log('checking nonpending for extraneous locks')
+          for (const job of jobs) {
+            if (this.locks.has(job.lock)) {
+              log(
+                'unlock job that was removed/completed/failed outside sync',
+                job.lock
+              )
+              this.locks.delete(job.lock)
+            }
+          }
+        }
+      }
+    )
+
     this.react(
       () => this.pending,
       async jobs => {

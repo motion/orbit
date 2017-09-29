@@ -63,6 +63,12 @@ export class JobModel extends Model {
   failed = (opt?: Object) =>
     this.collection.find({ status: STATUS.FAILED, ...opt })
 
+  nonPending = () =>
+    this.collection
+      .find({ status: { $ne: STATUS.PENDING } })
+      .sort({ updatedAt: 'desc' })
+      .limit(50)
+
   lastCompleted = (opt?: Object) =>
     this.collection
       .findOne({ status: STATUS.COMPLETED, ...opt })

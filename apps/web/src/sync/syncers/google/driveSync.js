@@ -36,7 +36,7 @@ export default class GoogleDriveSync extends SyncerAction {
     const { name, contents, ...data } = info
     const created = info.createdTime
     const updated = info.modifiedTime
-    return await Thing.findOrUpdateByTimestamps({
+    return await Thing.findOrUpdate({
       id: info.id,
       integration: 'google',
       type: 'doc',

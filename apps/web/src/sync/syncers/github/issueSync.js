@@ -121,7 +121,7 @@ export default class GithubIssueSync extends SyncerAction {
     // ensure if one is set, the other gets set too
     const created = issue.createdAt || issue.updatedAt || ''
     const updated = issue.updatedAt || created
-    return await Thing.findOrUpdateByTimestamps({
+    return await Thing.findOrUpdate({
       id,
       integration: 'github',
       type: 'task',

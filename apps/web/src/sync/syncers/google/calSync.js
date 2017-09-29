@@ -66,17 +66,22 @@ export default class GoogleCalSync extends SyncerAction {
 
   async createEvent(calendar: string, data: Object): Promise<Event> {
     const { id, created, updated } = data
-    return await Event.findOrUpdateByTimestamps({
-      id,
-      integration: 'google',
-      type: 'calendar',
-      author: data.organizer.email,
-      org: calendar,
-      parentId: calendar,
-      created,
-      updated,
-      data,
-    })
+    try {
+      return await Event.findOrUpdate({
+        id,
+        integration: 'google',
+        type: 'calendar',
+        author: data.organizer.email,
+        org: calendar,
+        parentId: calendar,
+        created,
+        updated,
+        data,
+      })
+    } catch (err) {
+      console.error(err)
+      return null
+    }
   }
 
   async getEvents(
@@ -85,7 +90,7 @@ export default class GoogleCalSync extends SyncerAction {
     fetchAll = true,
     tries = 0
   ): Promise<Array<Object>> {
-    let finalQuery = { ...query }
+    const finalQuery = { ...query }
     const syncToken = this.setting.values.syncTokens[calendarId]
     if (syncToken) {
       log('using sync token from previous fetch', syncToken)

@@ -7,7 +7,7 @@ type TaskProps = {
     activeIndex: number,
     data: {
       id: number,
-      data: Object,
+      labels: ?Array<string>,
     },
   },
 }
@@ -16,7 +16,7 @@ export default class TaskStore {
   props: TaskProps
 
   async willMount() {
-    const { data: { data } } = this.props.paneStore
+    const { data } = this.props.paneStore
     if (data.labels) {
       this.labels = data.labels.map(({ name }) => name)
     }
@@ -89,22 +89,6 @@ export default class TaskStore {
       },
     }
 
-    return [
-      {
-        elName: 'header',
-        data,
-        actions: [],
-        height: 50,
-      },
-      firstComment,
-      ...comments,
-      {
-        height: 100,
-        elName: 'response',
-        data: {
-          onSubmit: this.onSubmit,
-        },
-      },
-    ]
+    return [firstComment, ...comments]
   }
 }

@@ -70,8 +70,6 @@ export default class SetView extends React.Component<Props> {
       )
     }
 
-    const avatar = s => `/images/${s === 'nate' ? 'me' : s}.jpg`
-
     return (
       <Pane.Card
         items={[

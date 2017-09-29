@@ -6,12 +6,11 @@ import ColorBlock from './colorBlock'
 @view
 export default class TaskHeader {
   render({
-    data: { title, number },
     paneStore,
-    paneStore: { data: { parentId, orgName } },
+    paneStore: { data: { parentId, orgName, title, number } },
     store: { labels, assigned },
-    isActive,
   }) {
+    debugger
     const minSize = 1.4
     const maxSize = 2.5
     const titleSize = 3.4 - title.length * 0.05
@@ -20,7 +19,7 @@ export default class TaskHeader {
     if (labels.length === 1) labelsText = 'One Label'
 
     return (
-      <header $isActive={isActive}>
+      <header>
         <meta css={{ padding: [0, 10] }}>
           <title $$row css={{ alignItems: 'center' }}>
             <UI.Title

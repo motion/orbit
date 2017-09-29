@@ -73,6 +73,7 @@ export default class FeedStore {
   }
 
   willMount() {
+    console.log('got', this.props.paneStore.data)
     const { people, person } = this.props.paneStore.data
     this.setFilter(people ? people : [person])
 

@@ -150,7 +150,7 @@ export default class GithubFeedSync extends SyncerAction {
       const created = event.created_at || ''
       const updated = event.updated_at || created
       creating.push(
-        Event.findOrUpdateByTimestamps({
+        Event.findOrUpdate({
           id,
           integration: 'github',
           type: event.type,

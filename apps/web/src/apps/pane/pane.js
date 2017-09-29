@@ -15,7 +15,7 @@ export default class Pane extends React.Component {
     }
   }
 
-  render({ pane, paneStore, index, width, millerStore, type }) {
+  render({ pane, paneStore, index, width, type }) {
     const ChildPane = pane
 
     if (!ChildPane) {

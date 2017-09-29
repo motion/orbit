@@ -1,6 +1,7 @@
 // @flow
 import global from 'global'
 import { Model, str, object } from '@mcro/model'
+import { cleanId, findOrUpdate } from './helpers'
 
 const VERB_MAP = {
   PushEvent: () => 'pushed',
@@ -44,12 +45,12 @@ export type EventType = typeof methods & {
 export class Event extends Model {
   static props = {
     id: str.primary,
+    parentId: str.optional,
+    org: str.indexed.optional,
     integration: str.indexed,
     type: str.indexed,
     author: str.optional,
     data: object.optional,
-    parentId: str.optional,
-    org: str.indexed.optional,
     created: str.indexed.optional,
     updated: str.indexed.optional,
     timestamps: true,
@@ -61,23 +62,13 @@ export class Event extends Model {
     database: 'events',
   }
 
-  findOrUpdateByTimestamps = async (info: Object) => {
-    const { id, created, updated } = info
-    if (!id || !created || !updated) {
-      throw new Error('Object must have properties: id, created, updated')
-    }
-    const stale = await this.get({ id, created: { $ne: created } })
-    if (stale) {
-      await stale.remove()
-    }
-    // already exists
-    if (updated && (await this.get({ id, updated }))) {
-      return false
-    }
-    // update
-    const res = await this.update(info)
-    return res
+  hooks = {
+    preCreate: (doc: Object) => {
+      doc.id = `${doc.integration}-${doc.type}-${cleanId(doc.id)}`
+    },
   }
+
+  findOrUpdate = findOrUpdate
 }
 
 const EventInstance = new Event()

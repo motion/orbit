@@ -1,6 +1,7 @@
 // @flow
 import global from 'global'
 import { Model, str, object } from '@mcro/model'
+import { cleanId, findOrUpdate } from './helpers'
 
 declare class CurrentUser {}
 
@@ -42,27 +43,15 @@ export class Thing extends Model {
 
   settings = {
     database: 'things',
-    index: ['title', 'body', 'created', 'createdAt', 'updated', 'updatedAt'],
-    // version: 1,
   }
 
-  findOrUpdateByTimestamps = async (info: Object) => {
-    const { id, created, updated } = info
-    if (!id || !created || !updated) {
-      throw new Error('Object must have properties: id, created, updated')
-    }
-    const stale = await this.get({ id, created: { $ne: created } })
-    if (stale) {
-      await stale.remove()
-    }
-    // already exists
-    if (updated && (await this.get({ id, updated }))) {
-      return false
-    }
-    // update
-    const res = await this.update(info)
-    return res
+  hooks = {
+    preCreate: (doc: Object) => {
+      doc.id = `${doc.integration}-${doc.type}-${cleanId(doc.id)}`
+    },
   }
+
+  findOrUpdate = findOrUpdate
 
   search = async (text: string) => {
     if (!text) {

@@ -23,10 +23,24 @@ export default class Sync {
   pending: ?Array<Job> = Job.pending()
   nonPending: ?Array<Job> = Job.nonPending()
   syncers: ?Object = null
+  enabled = localStorage.getItem('runSyncers')
 
   start() {
     this.startJobs()
     this.startSyncers()
+    this.watch(() => {
+      log('syncers enabled?', this.enabled)
+    })
+  }
+
+  enable() {
+    this.enabled = true
+    localStorage.setItem('runSyncers', true)
+  }
+
+  disable() {
+    this.enabled = false
+    localStorage.setItem('runSyncers', false)
   }
 
   async dispose() {
@@ -55,7 +69,7 @@ export default class Sync {
     if (!this.syncers) {
       this.syncers = {}
       for (const name of Object.keys(Syncers)) {
-        const syncer = new Syncers[name]({ user: CurrentUser })
+        const syncer = new Syncers[name]({ user: CurrentUser, sync: this })
         if (syncer.start) {
           await syncer.start()
         }

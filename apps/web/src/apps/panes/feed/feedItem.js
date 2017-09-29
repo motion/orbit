@@ -13,6 +13,9 @@ export default class FeedItem {
     }
     const { actor } = data
     const GetFeedItem = FeedItems[event.integration]
+    if (!GetFeedItem) {
+      return <null>no feed item</null>
+    }
     return (
       <GetFeedItem event={event}>
         {({ extraInfo, body }) => {

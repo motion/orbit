@@ -47,7 +47,7 @@ export class Thing extends Model {
 
   hooks = {
     preInsert: (doc: Object) => {
-      doc.id = `${doc.integration}-${doc.type}-${cleanId(doc.id)}`
+      doc.id = cleanId(doc)
     },
   }
 

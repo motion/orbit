@@ -1,9 +1,9 @@
 import cleanId from './cleanId'
 
 // @flow
-export default async function findOrUpdate(info: Object) {
-  const { created, updated } = info
-  const id = cleanId(info.id)
+export default async function findOrUpdate(doc: Object) {
+  const { created, updated } = doc
+  const id = cleanId(doc)
   if (!id || !created || !updated) {
     throw new Error('Object must have properties: id, created, updated')
   }
@@ -16,6 +16,6 @@ export default async function findOrUpdate(info: Object) {
     return false
   }
   // update
-  const res = await this.update(info)
+  const res = await this.update(doc)
   return res
 }

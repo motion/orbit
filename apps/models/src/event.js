@@ -3,26 +3,8 @@ import global from 'global'
 import { Model, str, object } from '@mcro/model'
 import { cleanId, findOrUpdate } from './helpers'
 
-const VERB_MAP = {
-  PushEvent: () => 'pushed',
-  CreateEvent: () => 'created branch',
-  IssueCommentEvent: () => 'commented',
-  ForkEvent: () => 'forked',
-  PullRequestEvent: ({ action }) => `${action} a pull request`,
-  WatchEvent: ({ action }) => `${action} watching`,
-  IssuesEvent: () => 'created issue',
-  DeleteEvent: () => 'deleted',
-}
-
 // keep here so we can use as generic
 export const methods = {
-  get verb(): string {
-    const mapping = VERB_MAP[this.type]
-    if (mapping) {
-      return mapping((this.data && this.data.payload) || {})
-    }
-    return ''
-  },
   get hasData(): boolean {
     return this.data.payload && this.data.payload.commits
   },

@@ -19,6 +19,10 @@ const weeks = stamps => {
 @view
 export default class Chart {
   render({ store }) {
+    console.log(
+      '%cUse NICK HELP ME PLEASEEEEEEEEEEEEEEEEEEE',
+      'background: red'
+    )
     return null
 
     const things = store.currentChart

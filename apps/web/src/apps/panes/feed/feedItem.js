@@ -6,12 +6,11 @@ import * as FeedItems from './feedItems'
 @view
 export default class FeedItem {
   render({ event, style }) {
-    const { verb, data } = event
+    const { data } = event
     if (!data) {
       console.log('no data')
       return null
     }
-    const { actor } = data
     const GetFeedItem = FeedItems[event.type]
     if (!GetFeedItem) {
       return (
@@ -22,16 +21,16 @@ export default class FeedItem {
     }
     return (
       <GetFeedItem event={event}>
-        {({ extraInfo, body }) => {
+        {({ name, verb, avatar, extraInfo, body }) => {
           return (
             <feeditem style={style}>
-              <info if={actor}>
+              <info>
                 <avatar
                   css={{
-                    background: `url(${actor.avatar_url})`,
+                    background: `url(${avatar})`,
                   }}
                 />
-                <UI.Text $name>{actor.login} </UI.Text>
+                <UI.Text $name>{name} </UI.Text>
                 <UI.Text $action>{verb} </UI.Text>
                 {extraInfo || null}
                 <UI.Date $date>{event.updated || event.created}</UI.Date>

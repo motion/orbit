@@ -99,12 +99,29 @@ export default class IssueFeedItem {
   }
 
   render({ children, event }) {
+    const VERB_MAP = {
+      PushEvent: () => 'pushed',
+      CreateEvent: () => 'created branch',
+      IssueCommentEvent: () => 'commented',
+      ForkEvent: () => 'forked',
+      PullRequestEvent: ({ action }) => `${action} a pull request`,
+      WatchEvent: ({ action }) => `${action} watching`,
+      IssuesEvent: () => 'created issue',
+      DeleteEvent: () => 'deleted',
+    }
+
+    const { actor } = event.data
     const body = this.getBody(event)
     const extraInfo = this.extraInfo(event)
     if (typeof children === 'function') {
       return children({
         body,
         extraInfo,
+        avatar: actor.avatar_url,
+        name: actor.login,
+        verb: VERB_MAP[event.action]
+          ? VERB_MAP[event.action](event)
+          : `NO ACTION FOR ${event.action}`,
       })
     }
     return body

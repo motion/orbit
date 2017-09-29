@@ -87,7 +87,7 @@ export default class GoogleCalSync extends SyncerAction {
         integration: 'google',
         type: 'calendar',
         action: '',
-        author: data.organizer.email,
+        author: data.organizer ? data.organizer.email : '',
         org: calendar,
         parentId: calendar,
         created,

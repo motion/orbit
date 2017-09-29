@@ -477,7 +477,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
     },
     separator: {
       fontSize: 14,
-      fontWeight: 300,
+      fontWeight: 500,
       padding: [10, 10, 6],
       justifyContent: 'center',
       // background: [0, 0, 0, 0.02],

@@ -133,7 +133,7 @@ class BarMainStore {
     },
     {
       id: 1030,
-      title: 'Motion',
+      title: '+ 10 more...',
       icon: 'list',
       type: 'feed',
       category: 'Projects',

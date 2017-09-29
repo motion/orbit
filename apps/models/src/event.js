@@ -32,6 +32,7 @@ export type EventType = typeof methods & {
   author?: string,
   integration: string,
   type: string,
+  action: string,
   data?: Object,
   parentId?: string,
   id?: string,
@@ -45,10 +46,11 @@ export type EventType = typeof methods & {
 export class Event extends Model {
   static props = {
     id: str.primary,
-    parentId: str.optional,
-    org: str.indexed.optional,
     integration: str.indexed,
     type: str.indexed,
+    action: str.indexed,
+    parentId: str.optional,
+    org: str.indexed.optional,
     author: str.optional,
     data: object.optional,
     created: str.indexed.optional,

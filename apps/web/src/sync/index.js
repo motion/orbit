@@ -29,20 +29,37 @@ export default class Sync {
     this.startJobs()
     this.startSyncers()
     this.watch(() => {
-      log('syncers enabled?', this.enabled)
+      const title = this.enabled ? 'SYNCING ✅' : 'SYNC DISABLED'
+      log(`----${title}----`)
     })
+  }
+
+  async stop() {
+    await this.disposeSyncers()
+  }
+
+  runAll() {
+    for (const name of Object.keys(this.syncers)) {
+      this.syncers[name].runAll()
+    }
+  }
+
+  run(integration?: string, action?: string) {
+    if (!integration) {
+      console.log('Needs parameters')
+    } else {
+      this.syncers[integration][action ? 'run' : 'runAll'](action)
+    }
   }
 
   enable() {
     this.enabled = true
     localStorage.setItem('runSyncers', true)
-    this.startSyncers()
   }
 
   disable() {
     this.enabled = false
     localStorage.setItem('runSyncers', false)
-    this.disposeSyncers()
   }
 
   async dispose() {

@@ -2,7 +2,7 @@ export default class PaneStore {
   selectedIndices = []
   listRef = null
   itemProps = {
-    padding: [11, 15],
+    padding: [12, 10],
     highlightBackground: [0, 0, 0, 0.08],
     highlightColor: [255, 255, 255, 1],
   }

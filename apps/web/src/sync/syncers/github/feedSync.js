@@ -160,7 +160,8 @@ export default class GithubFeedSync extends SyncerAction {
         Event.findOrUpdate({
           id,
           integration: 'github',
-          type: event.type,
+          type: 'issue',
+          action: event.type,
           author: event.actor.login,
           org: event.org.login,
           parentId: event.repo.name,

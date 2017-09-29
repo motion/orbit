@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { format } from '~/apps/panes/task/helpers'
 import * as UI from '@mcro/ui'
-import GithubCommit from './githubCommit'
+import Commit from './views/commit'
 import Task from '~/apps/panes/task'
 
 @view
@@ -58,7 +58,7 @@ export default class GithubFeedItem {
                 borderRadius={5}
                 padding={15}
               >
-                <GithubCommit sha={payload.commits[0].sha} />
+                <Commit sha={payload.commits[0].sha} />
               </UI.Surface>
             </cards>
           </content>

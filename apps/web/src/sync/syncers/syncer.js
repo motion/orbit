@@ -1,6 +1,5 @@
 // @flow
 import * as Helpers from '../helpers'
-import { CurrentUser } from '~/app'
 import type { Setting } from '@mcro/models'
 import debug from 'debug'
 
@@ -25,7 +24,6 @@ export default class Syncer {
   jobWatcher: ?number
 
   start() {
-    log('starting syncer', this.constructor.name)
     const { settings } = this.constructor
     const { syncers } = settings
 

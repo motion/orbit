@@ -12,9 +12,13 @@ export default class FeedItem {
       return null
     }
     const { actor } = data
-    const GetFeedItem = FeedItems[event.integration]
+    const GetFeedItem = FeedItems[event.type]
     if (!GetFeedItem) {
-      return <null>no feed item</null>
+      return (
+        <null>
+          no feed item for {event.integration} {event.type}
+        </null>
+      )
     }
     return (
       <GetFeedItem event={event}>

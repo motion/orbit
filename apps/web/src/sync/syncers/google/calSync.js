@@ -14,10 +14,6 @@ export default class GoogleCalSync extends SyncerAction {
       : []
   }
 
-  get syncTokens() {
-    return this.setting.values.syncTokens || {}
-  }
-
   run = async () => {
     await this.setupSettings()
     // await this.syncEvents()
@@ -50,10 +46,11 @@ export default class GoogleCalSync extends SyncerAction {
   }
 
   async getEvents(calendarId: string, query = {}, tries = 0) {
-    const syncToken = this.syncTokens[calendarId]
+    let finalQuery = { ...query }
+    const syncToken = this.setting.values.syncTokens[calendarId]
     if (syncToken) {
       log('using sync token from previous fetch', syncToken)
-      query.syncToken = syncToken
+      finalQuery.syncToken = syncToken
     }
     const path = `/calendars/${calendarId}/events`
     let results
@@ -62,7 +59,7 @@ export default class GoogleCalSync extends SyncerAction {
         query: {
           maxResults: 250,
           singleEvents: true,
-          ...query,
+          ...finalQuery,
         },
       })
     } catch (error) {

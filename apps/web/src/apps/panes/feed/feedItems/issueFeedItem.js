@@ -6,7 +6,7 @@ import Commit from './views/commit'
 import Task from '~/apps/panes/task'
 
 @view
-export default class GithubFeedItem {
+export default class IssueFeedItem {
   getBody(event) {
     const { payload } = event.data
     switch (event.type) {

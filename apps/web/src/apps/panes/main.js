@@ -133,7 +133,11 @@ class BarMainStore {
     },
     {
       id: 1030,
-      title: '+ 10 more...',
+      title: (
+        <UI.Text opacity={0.5} size={1.2}>
+          + 10 more...
+        </UI.Text>
+      ),
       icon: 'list',
       type: 'feed',
       category: 'Projects',
@@ -240,6 +244,7 @@ export default class BarMain extends React.Component<Props> {
         getItem={(result, index) => ({
           key: `${index}${result.id}`,
           highlight: () => index === paneStore.activeIndex,
+          //color: [255, 255, 255, 0.6],
           primary: result.title,
           primaryEllipse: !mainStore.hasContent(result),
           children: [

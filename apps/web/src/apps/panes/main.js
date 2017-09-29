@@ -15,7 +15,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
   title: thing.title,
   type: thing.type,
-  // icon: 'icon',
+  icon: thing.type,
   data: thing.toJSON(),
   category: 'Recently',
 })
@@ -261,6 +261,7 @@ export default class BarMain extends React.Component<Props> {
             style: {
               alignSelf: 'flex-start',
               paddingTop: 2,
+              opacity: 0.4,
             },
           },
           icon:

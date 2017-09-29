@@ -24,7 +24,10 @@ export default class Pane extends React.Component {
     }
 
     return (
-      <pane css={{ width }} ref={this.handleRef}>
+      <pane
+        css={{ width, borderTop: index > 0 ? [1, [0, 0, 0, 0.075]] : null }}
+        ref={this.handleRef}
+      >
         <ChildPane index={index} paneStore={paneStore} />
       </pane>
     )

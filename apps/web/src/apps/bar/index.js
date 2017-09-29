@@ -115,14 +115,16 @@ export default class BarPage {
               onClick={barStore.onClickBar}
               size={2.2}
               getRef={barStore.onInputRef}
-              borderRadius={5}
+              borderRadius={0}
               onChange={barStore.onSearchChange}
               value={barStore.textboxVal}
               borderWidth={0}
               fontWeight={200}
               css={inputStyle}
             />
-            <forwardcomplete>{barStore.peekItem}</forwardcomplete>
+            <forwardcomplete>
+              <fwdcontents>{barStore.peekItem}</fwdcontents>
+            </forwardcomplete>
             <Underline if={false} key={1} width={100} left={50} />
             <Underline if={false} key={2} width={100} left={250} />
           </header>
@@ -148,8 +150,8 @@ export default class BarPage {
     },
     header: {
       position: 'relative',
-      height: 70,
-      borderBottom: [1, [0, 0, 0, 0.075]],
+      height: 75,
+      marginTop: -1,
     },
     searchIcon: {
       position: 'absolute',
@@ -169,12 +171,18 @@ export default class BarPage {
     },
     forwardcomplete: {
       position: 'absolute',
-      top: 26,
+      top: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
       left: 50,
-      opacity: 0.3,
+      opacity: 0,
       ...inputStyle,
       zIndex: -1,
       pointerEvents: 'none',
+    },
+    fwdcontents: {
+      marginTop: 1,
     },
   }
 }

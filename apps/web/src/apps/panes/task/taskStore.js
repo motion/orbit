@@ -1,4 +1,5 @@
 // @flow
+import { watch } from '@mcro/black'
 import { Thing } from '~/app'
 import GithubStore from '~/stores/githubStore'
 
@@ -7,25 +8,13 @@ type TaskProps = {
     activeIndex: number,
     data: {
       id: number,
-      data: Object,
+      labels: ?Array<string>,
     },
   },
 }
 
 export default class TaskStore {
   props: TaskProps
-
-  async willMount() {
-    const { data: { data } } = this.props.paneStore
-    if (data.labels) {
-      this.labels = data.labels.map(({ name }) => name)
-    }
-    const thing = await Thing.findOne(this.taskId).exec()
-    this.allIssues = await GithubStore.api
-      .repos(thing.orgName, thing.parentId)
-      .issues.fetch()
-  }
-
   response = ''
   count = 0
   labels = []
@@ -42,6 +31,49 @@ export default class TaskStore {
     { id: 'wontfix' },
   ]
 
+  @watch thing = () => Thing.findOne(this.taskId)
+  @watch
+  allIssues = () =>
+    this.thing &&
+    GithubStore.api
+      .repos(this.thing.orgName, this.thing.parentId)
+      .issues.fetch()
+
+  async willMount() {
+    const { data } = this.props.paneStore
+    if (data.labels) {
+      this.labels = data.labels.map(({ name }) => name)
+    }
+  }
+
+  get results() {
+    const { data: { data } } = this.props.paneStore
+    if (!data) {
+      return []
+    }
+    const comments = (data.comments || []).map(comment => ({
+      elName: 'comment',
+      data: comment,
+      actions: [],
+      height: 100,
+    }))
+    const firstComment = {
+      height: 100,
+      elName: 'comment',
+      data: {
+        author: data.author,
+        body: data.body,
+        createdAt: data.createdAt,
+        issueBody: true,
+      },
+    }
+    return [firstComment, ...comments]
+  }
+
+  get taskId() {
+    return this.props.paneStore.data.id
+  }
+
   setLabels = labels => {
     GithubStore.setLabels(this.taskId, labels)
     this.labels = labels
@@ -56,55 +88,7 @@ export default class TaskStore {
     GithubStore.deleteComment(this.taskId, id)
   }
 
-  get taskId() {
-    return this.props.paneStore.data.id
-  }
-
   onSubmit = body => {
     GithubStore.createComment(this.taskId, body)
-  }
-
-  get results() {
-    const { data: { data } } = this.props.paneStore
-
-    if (!data) {
-      return []
-    }
-
-    const comments = (data.comments || []).map(comment => ({
-      elName: 'comment',
-      data: comment,
-      actions: [],
-      height: 100,
-    }))
-
-    const firstComment = {
-      height: 100,
-      elName: 'comment',
-      data: {
-        author: data.author,
-        body: data.body,
-        createdAt: data.createdAt,
-        issueBody: true,
-      },
-    }
-
-    return [
-      {
-        elName: 'header',
-        data,
-        actions: [],
-        height: 50,
-      },
-      firstComment,
-      ...comments,
-      {
-        height: 100,
-        elName: 'response',
-        data: {
-          onSubmit: this.onSubmit,
-        },
-      },
-    ]
   }
 }

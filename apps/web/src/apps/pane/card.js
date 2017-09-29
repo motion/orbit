@@ -48,14 +48,7 @@ export default class PaneCard {
     })
 
     return (
-      <card
-        style={{ width, ...style }}
-        css={{
-          transition: 'all ease-in 80ms',
-          zIndex: 1000,
-          //transform: { y: paneStore.col === 1 && paneStore.isActive ? -5 : 0 },
-        }}
-      >
+      <card style={{ width, ...style }}>
         <content if={!items}>{children}</content>
 
         <content if={items}>
@@ -99,9 +92,10 @@ export default class PaneCard {
   static style = {
     card: {
       flex: 1,
+      transition: 'all ease-in 80ms',
+      zIndex: 1000,
       position: 'relative',
       overflowY: 'scroll',
-      transition: 'width 300ms ease-in',
     },
     content: {
       overflowY: 'scroll',

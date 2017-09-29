@@ -7,6 +7,7 @@ const log = debug('sync')
 
 export default class GoogleCalSync extends SyncerAction {
   fetch = (path, opts) => this.helpers.fetch(`/calendar/v3${path}`, opts)
+  lastSyncTokens = {}
 
   get activeCals() {
     return this.setting.values.calendarsActive
@@ -17,6 +18,12 @@ export default class GoogleCalSync extends SyncerAction {
   run = async () => {
     await this.setupSettings()
     await this.syncAllCalendars()
+  }
+
+  async reset() {
+    for (const cal of this.activeCals) {
+      await this.resetCalendarData(cal)
+    }
   }
 
   async resetCalendarData(calendar: string) {
@@ -61,22 +68,36 @@ export default class GoogleCalSync extends SyncerAction {
     const created = await this.createInChunks(allEvents, item =>
       this.createEvent(calendar, item)
     )
+    log('created events, updating sync token')
+    await this.setting.mergeUpdate({
+      values: {
+        syncTokens: {
+          [calendar]: this.lastSyncTokens[calendar],
+        },
+      },
+    })
     return created
   }
 
   async createEvent(calendar: string, data: Object): Promise<Event> {
     const { id, created, updated } = data
-    return await Event.findOrUpdateByTimestamps({
-      id,
-      integration: 'google',
-      type: 'calendar',
-      author: data.organizer.email,
-      org: calendar,
-      parentId: calendar,
-      created,
-      updated,
-      data,
-    })
+    try {
+      return await Event.findOrUpdate({
+        id,
+        integration: 'google',
+        type: 'calendar',
+        action: '',
+        author: data.organizer.email,
+        org: calendar,
+        parentId: calendar,
+        created,
+        updated,
+        data,
+      })
+    } catch (err) {
+      console.error(err)
+      return null
+    }
   }
 
   async getEvents(
@@ -85,7 +106,7 @@ export default class GoogleCalSync extends SyncerAction {
     fetchAll = true,
     tries = 0
   ): Promise<Array<Object>> {
-    let finalQuery = { ...query }
+    const finalQuery = { ...query }
     const syncToken = this.setting.values.syncTokens[calendarId]
     if (syncToken) {
       log('using sync token from previous fetch', syncToken)
@@ -104,20 +125,23 @@ export default class GoogleCalSync extends SyncerAction {
         },
       })
       // continue fetching
-      if (lastQuery) {
-        results = [...results, ...lastQuery.items]
-        if (fetchAll && lastQuery.nextPageToken) {
-          results = [
-            ...results,
-            ...(await this.getEvents(
-              calendarId,
-              { ...query, pageToken: lastQuery.nextPageToken },
-              fetchAll,
-              tries
-            )),
-          ]
-        }
+      results = [...results, ...lastQuery.items]
+      if (fetchAll && lastQuery.nextPageToken) {
+        results = [
+          ...results,
+          ...(await this.getEvents(
+            calendarId,
+            { ...query, pageToken: lastQuery.nextPageToken },
+            fetchAll,
+            tries
+          )),
+        ]
       }
+      // store here until we write events and persist
+      if (lastQuery.nextSyncToken) {
+        this.lastSyncTokens[calendarId] = lastQuery.nextSyncToken
+      }
+      return results
     } catch (error) {
       if (tries > 0) {
         console.log('out of tries')
@@ -133,15 +157,5 @@ export default class GoogleCalSync extends SyncerAction {
       }
       return []
     }
-    if (lastQuery.nextPageToken) {
-      await this.setting.mergeUpdate({
-        values: {
-          syncTokens: {
-            [calendarId]: lastQuery.nextPageToken,
-          },
-        },
-      })
-    }
-    return results
   }
 }

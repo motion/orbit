@@ -9,7 +9,7 @@ export default class GithubSync extends Syncer {
   static settings = {
     type: 'github',
     actions: {
-      issues: { every: 60 * 60 * 6 },
+      issues: { every: 60 * 5 },
       feed: { every: 60 * 5 },
     },
     syncers: {

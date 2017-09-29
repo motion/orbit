@@ -19,6 +19,8 @@ const weeks = stamps => {
 @view
 export default class Chart {
   render({ store }) {
+    return null
+
     const things = store.currentChart
     if (things.length === 0) {
       return <div />

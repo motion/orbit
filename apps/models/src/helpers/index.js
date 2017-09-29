@@ -1,4 +1,10 @@
 // @flow
+import cleanId_ from './cleanId'
+import findOrUpdate_ from './findOrUpdate'
+
+export const cleanId = cleanId_
+export const findOrUpdate = findOrUpdate_
+
 export const isBrowser = typeof window !== 'undefined'
 export const isNode = !isBrowser
 

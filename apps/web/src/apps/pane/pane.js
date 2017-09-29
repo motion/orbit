@@ -15,7 +15,7 @@ export default class Pane extends React.Component {
     }
   }
 
-  render({ pane, paneStore, index, width, millerStore, type }) {
+  render({ pane, paneStore, index, width, type }) {
     const ChildPane = pane
 
     if (!ChildPane) {
@@ -24,7 +24,10 @@ export default class Pane extends React.Component {
     }
 
     return (
-      <pane css={{ width }} ref={this.handleRef}>
+      <pane
+        css={{ width, borderTop: index > 0 ? [1, [0, 0, 0, 0.075]] : null }}
+        ref={this.handleRef}
+      >
         <ChildPane index={index} paneStore={paneStore} />
       </pane>
     )

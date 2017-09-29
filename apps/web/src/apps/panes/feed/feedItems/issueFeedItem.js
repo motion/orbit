@@ -2,18 +2,22 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { format } from '~/apps/panes/task/helpers'
 import * as UI from '@mcro/ui'
-import GithubCommit from './githubCommit'
+import Commit from './views/commit'
 import Task from '~/apps/panes/task'
 
 @view
-export default class GithubFeedItem {
+export default class IssueFeedItem {
   getBody(event) {
     const { payload } = event.data
-    switch (event.type) {
+    switch (event.action) {
       case 'IssuesEvent':
+        console.log('event', event)
         return (
           <Task
-            paneStore={{ activeIndex: 1, data: { data: event.data, id: 0 } }}
+            paneStore={{
+              activeIndex: 1,
+              data: { ...event, data: payload.issue },
+            }}
           />
         )
       case 'PushEvent':
@@ -54,7 +58,7 @@ export default class GithubFeedItem {
                 borderRadius={5}
                 padding={15}
               >
-                <GithubCommit sha={payload.commits[0].sha} />
+                <Commit sha={payload.commits[0].sha} />
               </UI.Surface>
             </cards>
           </content>
@@ -73,7 +77,7 @@ export default class GithubFeedItem {
     const { data } = event
     const { payload } = data
     const branch = payload.ref ? payload.ref.replace('refs/heads/', '') : ''
-    switch (event.type) {
+    switch (event.action) {
       case 'DeleteEvent':
         return (
           <UI.Text>

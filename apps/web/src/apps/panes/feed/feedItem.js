@@ -12,25 +12,34 @@ export default class FeedItem {
       return null
     }
     const { actor } = data
-    const GetFeedItem = FeedItems[event.integration]
+    const GetFeedItem = FeedItems[event.type]
+    if (!GetFeedItem) {
+      return (
+        <null>
+          no feed item for {event.integration} {event.type}
+        </null>
+      )
+    }
     return (
       <GetFeedItem event={event}>
-        {({ extraInfo, body }) => (
-          <feeditem style={style}>
-            <info if={actor}>
-              <avatar
-                css={{
-                  background: `url(${actor.avatar_url})`,
-                }}
-              />
-              <UI.Text $name>{actor.login} </UI.Text>
-              <UI.Text $action>{verb} </UI.Text>
-              {extraInfo}
-              <UI.Date $date>{event.updated || event.created}</UI.Date>
-            </info>
-            <body if={body}>{body}</body>
-          </feeditem>
-        )}
+        {({ extraInfo, body }) => {
+          return (
+            <feeditem style={style}>
+              <info if={actor}>
+                <avatar
+                  css={{
+                    background: `url(${actor.avatar_url})`,
+                  }}
+                />
+                <UI.Text $name>{actor.login} </UI.Text>
+                <UI.Text $action>{verb} </UI.Text>
+                {extraInfo || null}
+                <UI.Date $date>{event.updated || event.created}</UI.Date>
+              </info>
+              <body if={body}>{body}</body>
+            </feeditem>
+          )
+        }}
       </GetFeedItem>
     )
   }

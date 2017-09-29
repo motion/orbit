@@ -25,8 +25,8 @@ export default class Sync {
   syncers: ?Object = null
 
   start() {
-    this.watchJobs()
-    this.watchSyncers()
+    this.startJobs()
+    this.startSyncers()
   }
 
   async dispose() {
@@ -47,7 +47,7 @@ export default class Sync {
     }
   }
 
-  async watchSyncers() {
+  async startSyncers() {
     const user = CurrentUser
     if (!user) {
       throw new Error('No CurrentUser')
@@ -68,7 +68,7 @@ export default class Sync {
     }
   }
 
-  watchJobs() {
+  startJobs() {
     this.react(
       () => this.nonPending,
       jobs => {
@@ -90,7 +90,7 @@ export default class Sync {
     this.react(
       () => this.pending,
       async jobs => {
-        log('watchJobs jobs:', jobs ? jobs.length : 0)
+        log('startJobs jobs:', jobs ? jobs.length : 0)
         if (!jobs || !jobs.length) {
           return
         }

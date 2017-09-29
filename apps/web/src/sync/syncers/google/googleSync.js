@@ -10,8 +10,8 @@ export default class GoogleSync extends Syncer {
   static settings = {
     type: 'google',
     actions: {
-      drive: { every: 60 },
-      cal: { every: 60 },
+      // drive: { every: 60 },
+      cal: { every: 60 * 5 }, // 5 minutes
     },
     syncers: {
       drive: GoogleDriveSync,
@@ -52,7 +52,9 @@ export default class GoogleSync extends Syncer {
         return await this.helpers.fetch(path, { ...opts, isRetrying: true })
       }
 
-      throw new Error(`Bad status from fetch: ${res.status} ${res.statusText}`)
+      // gapi returns json errors
+      const { error } = await res.json()
+      throw error
     },
   }
 }

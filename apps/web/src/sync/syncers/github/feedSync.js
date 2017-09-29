@@ -122,7 +122,8 @@ export default class GithubFeedSync extends SyncerAction {
           page++
           res = [...res, ...lastFetch]
         } else {
-          console.log('weird thing', lastFetch)
+          console.error(lastFetch)
+          throw new Error('weird thing')
         }
       }
     }
@@ -143,22 +144,13 @@ export default class GithubFeedSync extends SyncerAction {
   }
 
   insertEvents = async (allEvents: Array<Object>): Promise<Array<Object>> => {
-    const createdEvents = []
+    const creating = []
     for (const event of allEvents) {
       const id = `${event.id}`
       const created = event.created_at || ''
       const updated = event.updated_at || created
-      // stale event removal
-      const stale = await Event.get({ id, created: { $ne: created } })
-      if (stale) {
-        log('Removing stale event', id)
-        await stale.remove()
-      }
-      if (
-        !stale &&
-        !await Event.get(updated ? { id, updated } : { id, created })
-      ) {
-        const inserted = await Event.update({
+      creating.push(
+        Event.findOrUpdateByTimestamps({
           id,
           integration: 'github',
           type: event.type,
@@ -169,10 +161,11 @@ export default class GithubFeedSync extends SyncerAction {
           updated,
           data: event,
         })
-        createdEvents.push(inserted)
-      }
+      )
     }
-    return createdEvents
+    const all = await Promise.all(creating)
+    const created = all.filter(Boolean)
+    return created
   }
 
   epochToGMTDate = (epochDate: number | string): string => {

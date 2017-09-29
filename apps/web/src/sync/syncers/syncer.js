@@ -1,10 +1,11 @@
 // @flow
-import { ensureJob } from '../helpers'
+import * as Helpers from '../helpers'
 import { CurrentUser } from '~/app'
 import type { Setting } from '@mcro/models'
 import debug from 'debug'
 
 const log = debug('sync')
+const DEFAULT_CHECK_INTERVAL = 1000 * 60 // 1 minute
 
 export default class Syncer {
   // external interface, must set:
@@ -44,7 +45,7 @@ export default class Syncer {
     // every so often
     this.jobWatcher = setInterval(
       () => this.check(false),
-      1000 * 10 // 10 seconds
+      settings.checkInterval || DEFAULT_CHECK_INTERVAL
     )
     this.check(false)
   }
@@ -83,17 +84,18 @@ export default class Syncer {
     return await this.user.refreshToken(this.type)
   }
 
-  async check(loud: boolean = true) {
+  async check(loud: boolean = true): Array<any> {
     const { type, actions } = this
+    log('Syncer.check', actions)
     if (!actions) {
       return
     }
     const syncers = []
     for (const action of Object.keys(actions)) {
       const job = actions[action]
-      syncers.push(ensureJob(type, action, job, loud))
+      syncers.push(Helpers.ensureJob(type, action, job, loud))
     }
-    await Promise.all(syncers)
+    return await Promise.all(syncers)
   }
 
   ensureSetting() {

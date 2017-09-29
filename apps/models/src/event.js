@@ -25,9 +25,6 @@ export const methods = {
   get hasData(): boolean {
     return this.data.payload && this.data.payload.commits
   },
-  get height() {
-    return this.hasData ? 200 : 50
-  },
 }
 
 export type EventType = typeof methods & {
@@ -62,18 +59,25 @@ export class Event extends Model {
 
   settings = {
     database: 'events',
-    // version: 1,
   }
 
-  // migrations = {
-  //   1: async () => {
-  //     console.log('run migration')
-  //     // const all = await this.getAll()
-  //     // if (all) {
-  //     //   all.map(_ => _.remove())
-  //     // }
-  //   },
-  // }
+  findOrUpdateByTimestamps = async (info: Object) => {
+    const { id, created, updated } = info
+    if (!id || !created || !updated) {
+      throw new Error('Object must have properties: id, created, updated')
+    }
+    const stale = await this.get({ id, created: { $ne: created } })
+    if (stale) {
+      await stale.remove()
+    }
+    // already exists
+    if (updated && (await this.get({ id, updated }))) {
+      return false
+    }
+    // update
+    const res = await this.update(info)
+    return res
+  }
 }
 
 const EventInstance = new Event()

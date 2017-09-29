@@ -6,8 +6,8 @@ import App, { CurrentUser } from '~/app'
 
 @view
 export default class GoogleSetting {
-  componentWillMount() {
-    App.sync.google.cal.syncSettings()
+  componentDidMount() {
+    App.sync.google.cal.setupSettings()
   }
 
   render() {

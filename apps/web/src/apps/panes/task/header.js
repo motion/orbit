@@ -10,7 +10,6 @@ export default class TaskHeader {
     paneStore: { data: { parentId, orgName, title, number } },
     store: { labels, assigned },
   }) {
-    debugger
     const minSize = 1.4
     const maxSize = 2.5
     const titleSize = 3.4 - title.length * 0.05

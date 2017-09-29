@@ -63,7 +63,7 @@ export class Event extends Model {
   }
 
   hooks = {
-    preCreate: (doc: Object) => {
+    preInsert: (doc: Object) => {
       doc.id = `${doc.integration}-${doc.type}-${cleanId(doc.id)}`
     },
   }

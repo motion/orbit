@@ -7,9 +7,9 @@ import App, { CurrentUser } from '~/app'
 @view
 export default class GoogleSetting {
   componentDidMount() {
-    if (App.sync.google) {
+    setTimeout(() => {
       App.sync.google.cal.setupSettings()
-    }
+    }, 100)
   }
 
   render() {

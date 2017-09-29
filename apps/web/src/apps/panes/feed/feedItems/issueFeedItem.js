@@ -9,7 +9,7 @@ import Task from '~/apps/panes/task'
 export default class IssueFeedItem {
   getBody(event) {
     const { payload } = event.data
-    switch (event.type) {
+    switch (event.action) {
       case 'IssuesEvent':
         console.log('event', event)
         return (
@@ -77,7 +77,7 @@ export default class IssueFeedItem {
     const { data } = event
     const { payload } = data
     const branch = payload.ref ? payload.ref.replace('refs/heads/', '') : ''
-    switch (event.type) {
+    switch (event.action) {
       case 'DeleteEvent':
         return (
           <UI.Text>

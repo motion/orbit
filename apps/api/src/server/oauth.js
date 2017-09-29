@@ -78,8 +78,11 @@ export default class Oauth {
     })
 
     Passport.deserializeUser(async (id, done) => {
-      const info = await this.findInfo()
-      done(null, info)
+      if (this.findInfo) {
+        const info = await this.findInfo()
+        return done(null, info)
+      }
+      done(null, {})
     })
   }
 }

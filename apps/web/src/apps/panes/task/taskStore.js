@@ -1,4 +1,5 @@
 // @flow
+import { watch } from '@mcro/black'
 import { Thing } from '~/app'
 import GithubStore from '~/stores/githubStore'
 
@@ -30,15 +31,19 @@ export default class TaskStore {
     { id: 'wontfix' },
   ]
 
+  @watch thing = () => Thing.findOne(this.taskId)
+  @watch
+  allIssues = () =>
+    this.thing &&
+    GithubStore.api
+      .repos(this.thing.orgName, this.thing.parentId)
+      .issues.fetch()
+
   async willMount() {
     const { data } = this.props.paneStore
     if (data.labels) {
       this.labels = data.labels.map(({ name }) => name)
     }
-    const thing = await Thing.findOne(this.taskId).exec()
-    this.allIssues = await GithubStore.api
-      .repos(thing.orgName, thing.parentId)
-      .issues.fetch()
   }
 
   get results() {

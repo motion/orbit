@@ -68,9 +68,12 @@ export default class TaskPane extends React.Component<{
 
   static style = {
     card: {
+      padding: 15,
       flex: 1,
       width: '100%',
       background: '#fff',
+      boxShadow: [[0, 0, 10, [0, 0, 0, 0.1]]],
+      borderRadius: 3,
     },
   }
 }

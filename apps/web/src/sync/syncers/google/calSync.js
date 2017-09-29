@@ -17,7 +17,7 @@ export default class GoogleCalSync extends SyncerAction {
 
   run = async () => {
     await this.setupSettings()
-    // await this.syncAllCalendars()
+    await this.syncAllCalendars()
   }
 
   async reset() {

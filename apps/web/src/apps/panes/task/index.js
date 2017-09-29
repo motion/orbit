@@ -60,6 +60,7 @@ export default class TaskPane extends React.Component<{
               },
             ]}
           />
+          <TaskResponse paneStore={paneStore} store={store} />
         </UI.Theme>
       </card>
     )

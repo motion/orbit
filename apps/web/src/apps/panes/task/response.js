@@ -9,11 +9,11 @@ import * as React from 'react'
   },
 })
 export default class TaskResponse {
-  render({ store, isActive, data: { onSubmit } }) {
+  render({ store, paneStore: { data: { onSubmit } } }) {
     const commentButtonActive = store.response.trim().length > 0
 
     return (
-      <container $isActive={isActive}>
+      <container>
         <textarea
           value={store.response}
           onChange={e => (store.response = e.target.value)}
@@ -52,7 +52,6 @@ export default class TaskResponse {
       flex: 1,
       padding: [0, 10],
     },
-    isActive: {},
     info: {
       margin: [5, 0],
       justifyContent: 'space-between',

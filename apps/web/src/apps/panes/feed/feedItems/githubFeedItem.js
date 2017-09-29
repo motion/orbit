@@ -12,7 +12,9 @@ export default class GithubFeedItem {
     switch (event.type) {
       case 'IssuesEvent':
         return (
-          <Task paneStore={{ activeIndex: 1, data: { data: event.data } }} />
+          <Task
+            paneStore={{ activeIndex: 1, data: { ...event, data: payload } }}
+          />
         )
       case 'PushEvent':
         return (

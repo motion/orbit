@@ -21,6 +21,7 @@ export const SHORTCUTS = {
   cmdR: 'command+r',
   delete: ['delete', 'backspace'],
   togglePane: 'shift+tab',
+  fullscreen: ['command+b', 'command+\\'],
 }
 
 export default class RootStore {

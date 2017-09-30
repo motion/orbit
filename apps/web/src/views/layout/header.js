@@ -20,55 +20,53 @@ export default class Header {
     }
 
     return (
-      <UI.Theme name="clear-dark">
-        <header $$draggable>
-          <UI.Glint color={[255, 255, 255, 0.1]} borderRadius={5} />
+      <header $$draggable>
+        <UI.Glint color={[255, 255, 255, 0.1]} borderRadius={5} />
 
-          <leftside $$row $$centered>
+        <leftside $$row $$centered>
+          <UI.Button
+            if={false && Constants.IS_ELECTRON}
+            {...btnProps}
+            theme="light"
+            icon="minimal-left"
+            disabled={Router.atBack}
+            onClick={() => !Router.atBack && Router.back()}
+          />
+        </leftside>
+
+        <centerside
+          css={{
+            position: 'absolute',
+            width: '40%',
+            overflow: 'hidden',
+            //marginLeft: '-20%',
+            userSelect: 'none',
+            top: 0,
+            bottom: 0,
+            left: '20%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          My App
+        </centerside>
+
+        <rightside $$row $$centered>
+          <UI.Row>
+            <UI.Button onClick={this.onClose} chromeless margin={[0, 2]}>
+              Share
+            </UI.Button>
             <UI.Button
-              if={false && Constants.IS_ELECTRON}
-              {...btnProps}
-              theme="light"
-              icon="minimal-left"
-              disabled={Router.atBack}
-              onClick={() => !Router.atBack && Router.back()}
+              chromeless
+              margin={[0, 2]}
+              onClick={() => {
+                OS.send('app-bar-toggle', Constants.APP_KEY)
+              }}
+              icon="add"
             />
-          </leftside>
-
-          <centerside
-            css={{
-              position: 'absolute',
-              width: '40%',
-              overflow: 'hidden',
-              //marginLeft: '-20%',
-              userSelect: 'none',
-              top: 0,
-              bottom: 0,
-              left: '20%',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            My App
-          </centerside>
-
-          <rightside $$row $$centered>
-            <UI.Row>
-              <UI.Button onClick={this.onClose} chromeless margin={[0, 2]}>
-                Share
-              </UI.Button>
-              <UI.Button
-                chromeless
-                margin={[0, 2]}
-                onClick={() => {
-                  OS.send('app-bar-toggle', Constants.APP_KEY)
-                }}
-                icon="add"
-              />
-            </UI.Row>
-          </rightside>
-        </header>
-      </UI.Theme>
+          </UI.Row>
+        </rightside>
+      </header>
     )
   }
 

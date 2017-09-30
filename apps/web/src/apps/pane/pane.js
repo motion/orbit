@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import PaneStore from './paneStore'
 
-@view.attach('millerStore')
+@view.attach('barStore', 'millerStore')
 @view.provide({
   paneStore: PaneStore,
 })

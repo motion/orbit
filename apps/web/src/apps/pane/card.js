@@ -48,44 +48,51 @@ export default class PaneCard {
     })
 
     return (
-      <card style={{ width, ...style }}>
-        <content if={!items}>{children}</content>
+      <UI.Theme name={paneStore.fullscreen ? 'light' : 'clear-dark'}>
+        <card style={{ width, ...style }} $fullscreen={paneStore.fullscreen}>
+          <content if={!items}>{children}</content>
 
-        <content if={items}>
-          <UI.List
-            getRef={paneStore.setList}
-            groupKey={groupKey}
-            onSelect={this.onSelect}
-            virtualized={{
-              measure: true,
-              ...virtualProps,
-            }}
-            itemProps={{
-              ...paneStore.itemProps,
-              ...itemProps,
-            }}
-            items={items}
-            getItem={getItem || getItemDefault}
-            {...listProps}
-          />
-        </content>
+          <content if={items}>
+            <UI.List
+              getRef={paneStore.setList}
+              groupKey={groupKey}
+              onSelect={this.onSelect}
+              virtualized={{
+                measure: true,
+                ...virtualProps,
+              }}
+              itemProps={{
+                ...paneStore.itemProps,
+                ...itemProps,
+              }}
+              items={items}
+              getItem={getItem || getItemDefault}
+              {...listProps}
+            />
+          </content>
 
-        <UI.Drawer
-          if={false}
-          from="bottom"
-          open={paneStore.showAction}
-          onClickOverlay={paneStore.ref('showAction').toggle}
-          showOverlay
-          overlayBlur
-          css={{ right: 6, left: 6 }}
-        >
-          <UI.Theme name="light">
-            <UI.Surface background="#fff" flex padding={20} borderTopRadius={6}>
-              <UI.Title>Have a nice day</UI.Title>
-            </UI.Surface>
-          </UI.Theme>
-        </UI.Drawer>
-      </card>
+          <UI.Drawer
+            if={false}
+            from="bottom"
+            open={paneStore.showAction}
+            onClickOverlay={paneStore.ref('showAction').toggle}
+            showOverlay
+            overlayBlur
+            css={{ right: 6, left: 6 }}
+          >
+            <UI.Theme name="light">
+              <UI.Surface
+                background="#fff"
+                flex
+                padding={20}
+                borderTopRadius={6}
+              >
+                <UI.Title>Have a nice day</UI.Title>
+              </UI.Surface>
+            </UI.Theme>
+          </UI.Drawer>
+        </card>
+      </UI.Theme>
     )
   }
 
@@ -100,6 +107,15 @@ export default class PaneCard {
     content: {
       overflowY: 'scroll',
       height: '100%',
+    },
+    fullscreen: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: '#fff',
+      zIndex: 10000000,
     },
   }
 }

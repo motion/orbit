@@ -11,6 +11,10 @@ export default class PaneStore {
     return this.props.millerStore
   }
 
+  get fullscreen() {
+    return this.col !== 0 && this.props.barStore.fullscreen
+  }
+
   get actions() {
     return this.miller.actions[this.col]
   }

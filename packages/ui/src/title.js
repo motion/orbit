@@ -115,10 +115,8 @@ export default class Title extends React.PureComponent<Props> {
           fontWeight={fontWeight}
           {...textProps}
         >
-          <el $display={display} $$row>
-            {children}
-            <stat if={stat}>{stat}</stat>
-          </el>
+          {children}
+          <stat if={stat}>{stat}</stat>
         </Text>
         <after if={after}>{after}</after>
       </titleroot>
@@ -156,6 +154,5 @@ export default class Title extends React.PureComponent<Props> {
       marginLeft: 8,
       opacity: 0.7,
     },
-    display: display => ({ display }),
   }
 }

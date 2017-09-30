@@ -13,7 +13,8 @@ export default class TaskHeader {
     const { title = '', number = 0 } = paneStore.data.data || {}
     const minSize = 1.8
     const maxSize = 2.2
-    const titleSize = 3.4 - title.length * 0.05
+    const ogSize = 3.4 - title.length * 0.05
+    const titleSize = Math.min(maxSize, Math.max(ogSize, minSize))
     let labelsText = labels.length + ' Labels'
     if (labels.length === 0) labelsText = 'No Labels'
     if (labels.length === 1) labelsText = 'One Label'
@@ -21,14 +22,9 @@ export default class TaskHeader {
     return (
       <header>
         <meta css={{ padding: 10 }}>
-          <title $$row css={{ alignItems: 'center' }}>
-            <UI.Title
-              fontWeight={200}
-              size={Math.min(maxSize, Math.max(titleSize, minSize))}
-            >
-              {title}
-            </UI.Title>
-          </title>
+          <UI.Title flex={1} fontWeight={200} size={titleSize}>
+            {title}
+          </UI.Title>
           <left>
             <UI.Icon size={22} name="github" css={{ marginRight: 10 }} />
           </left>

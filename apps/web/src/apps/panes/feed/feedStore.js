@@ -133,7 +133,7 @@ export default class FeedStore {
   events = () =>
     Event.find({ created: { $ne: null } })
       .sort({ created: 'desc' })
-      .limit(20)
+      .limit(500)
 
   get allItems() {
     return this.events || []

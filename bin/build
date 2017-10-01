@@ -33,6 +33,7 @@ elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   rm -rf build
   npm run build
+  ls -lah apps/web/build/js
 else
   link-flow &
 

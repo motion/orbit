@@ -24,6 +24,8 @@ module.exports = function(context, givenOpts) {
     opts.env || {}
   )
 
+  console.log('opts.presets', opts.presets)
+
   const config = {
     plugins: [
       // getPlugin('babel-plugin-transform-runtime'),
@@ -49,7 +51,7 @@ module.exports = function(context, givenOpts) {
         ],
       }),
     ],
-    presets: [
+    presets: opts.presets || [
       [getPlugin('babel-preset-env'), envOpts],
       getPlugin('babel-preset-react'),
       isAsync && getPlugin('babel-preset-stage-1-without-async'),

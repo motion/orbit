@@ -8,7 +8,7 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-import { User } from '@mcro/models'
+// import { User } from '@mcro/models'
 import PouchRouter from 'express-pouchdb'
 
 const port = Constants.SERVER_PORT

@@ -24,8 +24,6 @@ module.exports = function(context, givenOpts) {
     opts.env || {}
   )
 
-  console.log('opts.presets', opts.presets)
-
   const config = {
     plugins: [
       // getPlugin('babel-plugin-transform-runtime'),

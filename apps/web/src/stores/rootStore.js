@@ -27,7 +27,7 @@ export const SHORTCUTS = {
 export default class RootStore {
   showBrowse = false
 
-  start() {
+  willMount() {
     // listen to Ionize
     if (Constants.APP_KEY) {
       OS.on('app-goto', (event, arg) => {

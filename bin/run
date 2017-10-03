@@ -11,6 +11,33 @@ killgroup() {
   kill 0
 }
 
+function run-api() {
+  cd $ROOT/apps/api
+  if [ "$ARG1" = "--prod" ]; then
+    npm run start-prod
+  else
+    npm run start-dev
+  fi
+}
+
+function run-web() {
+  cd apps/web
+  if [ "$ARG1" = "--clean" ]; then
+    motion watch --debug --disable-cache
+  elif [ "$ARG1" = "--prod" ]; then
+    npm run start-prod
+  elif [ "$ARG1" = "--webpack" ]; then
+    node scripts/run.js
+  else
+    motion watch --debug ${@:2}
+  fi
+}
+
+function run-site() {
+  cd apps/site
+  npm start
+}
+
 if [ "$ACTION" = "backend" ]; then
   echo "Open about:inspect in Chrome to debug Node"
   compose up ${@:2}
@@ -20,30 +47,17 @@ elif [ "$ACTION" = "electron" ]; then
   sleep 3
   npm start &
   wait
+elif [ "$ACTION" =  "site" ]; then
+  run-site
+elif [ "$ACTION" =  "api" ]; then
+  run-api
 elif [ "$ACTION" =  "web" ]; then
   if [ ! -d "$ROOT/packages/ui/lib" ]; then
     echo "Make sure to run 'build --watch' before running web"
     exit 0
   fi
-
-  cd apps/web
-  if [ "$ARG1" = "--clean" ]; then
-    motion watch --debug --disable-cache &
-  elif [ "$ARG1" = "--prod" ]; then
-    npm run start-prod &
-  elif [ "$ARG1" = "--webpack" ]; then
-    node scripts/run.js &
-  else
-    motion watch --debug ${@:2} &
-  fi
-
-  cd $ROOT/apps/api
-  if [ "$ARG1" = "--prod" ]; then
-    npm run start-prod &
-  else
-    npm run start-dev &
-  fi
-
+  run-web &
+  run-api &
   wait
 else
   npm run $1 ${@:2}

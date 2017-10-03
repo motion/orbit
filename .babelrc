@@ -11,9 +11,10 @@
           "@mcro/preset-motion",
           {
             "disable": ["@mcro/hmr", "@mcro/hmr-view", "babel-plugin-sitrep"],
-            "presets": []
+            "async": false
           }
-        ]
+        ],
+        "minify"
       ]
     }
   }

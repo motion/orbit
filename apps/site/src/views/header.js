@@ -41,6 +41,7 @@ export default class Header {
       border: [1, [0, 0, 0, 0.1]],
       borderRadius: 100000000,
       zIndex: 0,
+      pointerEvents: 'none',
     },
   }
 }

@@ -12,7 +12,7 @@ const Text = props => (
   />
 )
 
-const SubText = props => <Text size={1.2} lineHeight="1.7rem" {...props} />
+const SubText = props => <Text size={1.2} lineHeight="1.65rem" {...props} />
 const Hl = props => <UI.Text {...props} />
 
 @view
@@ -28,16 +28,15 @@ export default class HomePage {
             <Hl>internal company visibility</Hl> amazing.
           </Text>
 
-          <Text>
+          <SubText>
             We were inspired by tooling that high tech companies use to unify
             their cloud tools and knowledge.
-          </Text>
+          </SubText>
 
-          <Text>
-            For example Stripe & Facebook both build an internal app thats
-            improves internal visibility with easy search and feeds for any
-            team.
-          </Text>
+          <SubText>
+            Companies like Stripe & Facebook build tools that improve their
+            internal visibility with easy search and feeds for any team.
+          </SubText>
 
           <Text>Our goal: to democratize that & make it best in class.</Text>
           <img $screen src="/screenshot.png" />
@@ -50,66 +49,70 @@ export default class HomePage {
           <ul $mainList>
             <li>
               <Text fontWeight={800} color="#000">
-                Security First
+                Security First 🔒
               </Text>
             </li>
 
-            <SubText>
+            <Text>
               Let's face it: you don't want to trust a company with all your
-              internal data. Neither would we. That's why we designed Orbit to
-              follow the <Hl>Secure Offline Infrastructure EE2014 Spec</Hl>.
-            </SubText>
+              internal data. Neither would we.
+            </Text>
 
             <SubText>
-              The cloud may be trendy, but security is cooler. Every piece of
-              Orbit was designed to work fully offline, and without ever syncing
-              either your keys or your data to our servers.
+              That's why we designed Orbit to follow the{' '}
+              <Hl>Secure Offline IEE2014 Spec</Hl>. Your data never leaves your
+              company firewall and respects all your internal permissions.
             </SubText>
 
-            <SubText>
-              That also comes with a few upsides: you can test it out easily on
-              a per-individual level, without any extra setup, and without any
-              specially priveleged account, all while keeping your privacy
-              permissions in place.
-            </SubText>
+            <break />
 
             <li>
               <Text fontWeight={800} color="#000">
-                Exposing the Right Things
+                Removing Invisibles 👀
               </Text>
             </li>
 
-            <SubText>
-              A tool to help your company stay in sync needs to do one thing
-              really well: expose whats happening.
-            </SubText>
+            <Text>
+              What's are our companies big projects? How are they doing? What's
+              happening on team X this week? What was that document Lisa was
+              working on? Who is in charge of new feature X?
+            </Text>
 
             <SubText>
-              This is best explained through some of the features we've built:
+              Whether or not you expose it, these questions are being asked
+              every day within your company. Orbit makes them clear to everyone.
             </SubText>
+
+            <break />
+
+            <li>
+              <Text fontWeight={800} color="#000">
+                Control 🚀
+              </Text>
+            </li>
+
+            <Text>
+              Orbit is a tool made for <em>your company</em>, not ours. So it
+              should work like you do. That's why we give you all the control
+              you need:
+            </Text>
 
             <ul $subList>
               <li>
-                <SubText>something else</SubText>
+                <SubText>
+                  Control your internal search by pinning any results to the
+                  top.
+                </SubText>
               </li>
               <li>
-                <SubText>something else</SubText>
+                <SubText>
+                  Choose which important documents and tickets to expose.
+                </SubText>
               </li>
               <li>
-                <SubText>something else</SubText>
+                <SubText>Display your KPIs to the rest of the org.</SubText>
               </li>
             </ul>
-
-            <li>
-              <Text fontWeight={800} color="#000">
-                The Rest
-              </Text>
-            </li>
-
-            <SubText>
-              Sure, we could go on about many cool features. But the proof is in
-              how it helps your team day to day.
-            </SubText>
           </ul>
         </section>
 
@@ -170,8 +173,11 @@ export default class HomePage {
       '& > li': {
         listStylePosition: 'auto',
         listStyleType: 'decimal',
-        margin: [0, 0, 0, 20],
+        margin: [0, 0, -15, 30],
       },
+    },
+    break: {
+      height: 30,
     },
   }
 }

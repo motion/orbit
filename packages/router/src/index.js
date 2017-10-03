@@ -107,7 +107,6 @@ export class ObservableRouter {
     } else {
       path = path[0] === '/' ? path : `/${path}`
     }
-    console.log('going to path', path)
     if (path === this.path) {
       // avoid going to same url
       return

@@ -6,11 +6,93 @@ import { Miller } from './miller'
 
 @view
 export default class MasterPage {
-  render({ store }) {
+  render() {
     const paneProps = {
       highlightBackground: [0, 0, 0, 0.15],
       highlightColor: [255, 255, 255, 1],
     }
+
+    return (
+      <UI.Theme name="light">
+        <header $$draggable $$flex css={{ height: 40, background: '#fff' }} />
+        <UI.Surface flex padding={20}>
+          <UI.Title size={2} fontWeight={800} color="#000">
+            My Day
+          </UI.Title>
+
+          <UI.List
+            items={[1, 2]}
+            itemProps={{
+              size: 1.3,
+              padding: [12, 10],
+              highlightBackground: [0, 0, 0, 0.08],
+              highlightColor: [255, 255, 255, 1],
+            }}
+            getItem={item => ({
+              primary: 'Hello world',
+              children: 'lorem ipsum dolor sit amet.',
+              icon: '123',
+            })}
+          />
+
+          <br />
+
+          <UI.Title size={1} fontWeight={800} color="#000">
+            Team
+          </UI.Title>
+          <UI.List
+            items={[1, 2]}
+            itemProps={{
+              size: 1.3,
+              padding: [12, 10],
+              highlightBackground: [0, 0, 0, 0.08],
+              highlightColor: [255, 255, 255, 1],
+            }}
+            getItem={item => ({
+              primary: 'Hello world',
+              children: 'lorem ipsum dolor sit amet.',
+              icon: '123',
+            })}
+          />
+
+          <UI.Title size={1} fontWeight={800} color="#000">
+            Conversations
+          </UI.Title>
+          <UI.List
+            items={[1]}
+            itemProps={{
+              size: 1.3,
+              padding: [12, 10],
+              highlightBackground: [0, 0, 0, 0.08],
+              highlightColor: [255, 255, 255, 1],
+            }}
+            getItem={item => ({
+              primary: 'Hello world',
+              children: 'lorem ipsum dolor sit amet.',
+              icon: '123',
+            })}
+          />
+
+          <UI.Title size={1} fontWeight={800} color="#000">
+            Documents
+          </UI.Title>
+          <UI.List
+            items={[1]}
+            itemProps={{
+              size: 1.3,
+              padding: [12, 10],
+              highlightBackground: [0, 0, 0, 0.08],
+              highlightColor: [255, 255, 255, 1],
+            }}
+            getItem={item => ({
+              primary: 'Hello world',
+              children: 'lorem ipsum dolor sit amet.',
+              icon: '123',
+            })}
+          />
+        </UI.Surface>
+      </UI.Theme>
+    )
 
     return (
       <UI.Surface flex>

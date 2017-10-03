@@ -31,6 +31,8 @@ export default class Layout {
       return <CurrentPage />
     }
 
+    console.log('@@@', Router.key, Router.path)
+
     return (
       <UI.Theme name="light">
         <layout>

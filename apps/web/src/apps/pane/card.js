@@ -48,7 +48,7 @@ export default class PaneCard {
     })
 
     return (
-      <UI.Theme name={paneStore.fullscreen ? 'light' : 'clear-dark'}>
+      <UI.Theme name={paneStore.col === 1 ? 'light' : 'clear-dark'}>
         <card style={{ width, ...style }} $fullscreen={paneStore.fullscreen}>
           <content if={!items}>{children}</content>
 

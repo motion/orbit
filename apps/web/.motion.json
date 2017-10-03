@@ -1,7 +1,7 @@
 {
   "pathType": "filePath",
   "webServerPort": 3002,
-  "saveNpmModules": true,
+  "saveNpmModules": false,
   "bundleDirectory": ".",
   "outputDirectory": "./public",
   "includePolyfills": true

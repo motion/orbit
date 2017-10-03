@@ -26,7 +26,7 @@ export default class Header {
       marginBottom: 40,
     },
     logo: {
-      width: 100,
+      width: 90,
     },
   }
 }

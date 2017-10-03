@@ -14,8 +14,7 @@ export default class MasterPage {
 
     return (
       <UI.Theme name="light">
-        <header $$draggable $$flex css={{ height: 40, background: '#fff' }} />
-        <UI.Surface flex padding={20}>
+        <UI.Surface flex padding={[30, 20, 20]}>
           <UI.Title size={2} fontWeight={800} color="#000">
             My Day
           </UI.Title>

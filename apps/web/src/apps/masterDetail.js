@@ -20,106 +20,98 @@ export default class MasterPage {
             My Day
           </UI.Title>
 
-          <UI.List
-            items={[1, 2]}
-            itemProps={{
-              size: 1.3,
-              padding: [12, 10],
-              highlightBackground: [0, 0, 0, 0.08],
-              highlightColor: [255, 255, 255, 1],
-            }}
-            getItem={item => ({
-              primary: 'Hello world',
-              children: 'lorem ipsum dolor sit amet.',
-              icon: '123',
-            })}
-          />
+          <section>
+            <UI.List
+              items={[1, 2]}
+              itemProps={{
+                size: 1.3,
+                padding: [12, 10],
+                highlightBackground: [0, 0, 0, 0.08],
+                highlightColor: [255, 255, 255, 1],
+              }}
+              getItem={item => ({
+                primary: 'Hello world',
+                children: 'lorem ipsum dolor sit amet.',
+                icon: '123',
+              })}
+            />
+          </section>
 
-          <br />
+          <section>
+            <UI.Title size={1} fontWeight={800} color="#000">
+              Team
+            </UI.Title>
+            <UI.List
+              items={[1, 2]}
+              itemProps={{
+                size: 1.3,
+                padding: [12, 10],
+                highlightBackground: [0, 0, 0, 0.08],
+                highlightColor: [255, 255, 255, 1],
+              }}
+              getItem={item => ({
+                primary: 'Hello world',
+                children: 'lorem ipsum dolor sit amet.',
+                icon: 'team',
+              })}
+            />
+          </section>
 
-          <UI.Title size={1} fontWeight={800} color="#000">
-            Team
-          </UI.Title>
-          <UI.List
-            items={[1, 2]}
-            itemProps={{
-              size: 1.3,
-              padding: [12, 10],
-              highlightBackground: [0, 0, 0, 0.08],
-              highlightColor: [255, 255, 255, 1],
-            }}
-            getItem={item => ({
-              primary: 'Hello world',
-              children: 'lorem ipsum dolor sit amet.',
-              icon: 'team',
-            })}
-          />
+          <section>
+            <UI.Title size={1} fontWeight={800} color="#000">
+              Conversations
+            </UI.Title>
+            <UI.List
+              items={[1]}
+              itemProps={{
+                size: 1.3,
+                padding: [12, 10],
+                highlightBackground: [0, 0, 0, 0.08],
+                highlightColor: [255, 255, 255, 1],
+              }}
+              getItem={item => ({
+                primary: 'Hello world',
+                children: 'lorem ipsum dolor sit amet.',
+                icon: 'chat',
+              })}
+            />
+          </section>
 
-          <br />
+          <div css={{ flex: 1 }} />
 
-          <UI.Title size={1} fontWeight={800} color="#000">
-            Conversations
-          </UI.Title>
-          <UI.List
-            items={[1]}
-            itemProps={{
-              size: 1.3,
-              padding: [12, 10],
-              highlightBackground: [0, 0, 0, 0.08],
-              highlightColor: [255, 255, 255, 1],
-            }}
-            getItem={item => ({
-              primary: 'Hello world',
-              children: 'lorem ipsum dolor sit amet.',
-              icon: 'chat',
-            })}
-          />
+          <section>
+            <UI.Title size={1} fontWeight={800} color="#000">
+              Documents
+            </UI.Title>
+            <div
+              $$row
+              css={{
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: [10, 20],
+              }}
+            >
+              <UI.Icon color="blue" size={30} name="gdoc" />
+              <UI.Icon color="red" size={30} name="doc" />
+              <UI.Icon color="yellow" size={30} name="google" />
+              <UI.Icon color="green" size={30} name="paper" />
+            </div>
+          </section>
 
-          <br />
-
-          <UI.Title size={1} fontWeight={800} color="#000">
-            Documents
-          </UI.Title>
-          <UI.List
-            items={[1]}
-            itemProps={{
-              size: 1.3,
-              padding: [12, 10],
-              highlightBackground: [0, 0, 0, 0.08],
-              highlightColor: [255, 255, 255, 1],
-            }}
-            getItem={item => ({
-              primary: 'Hello world',
-              children: 'lorem ipsum dolor sit amet.',
-              icon: 'doc',
-            })}
-          />
+          <bottom $$row $$centered>
+            <UI.Button circular size={2} icon="speak" />
+          </bottom>
         </UI.Surface>
       </UI.Theme>
-    )
-
-    return (
-      <UI.Surface flex>
-        <UI.Theme name="light">
-          <container>
-            <UI.Button onClick={this.onClose}>close me</UI.Button>
-            <Miller
-              animate
-              search={''}
-              state={store.millerState}
-              panes={Panes}
-              onChange={store.onMillerStateChange}
-              paneProps={paneProps}
-            />
-          </container>
-        </UI.Theme>
-      </UI.Surface>
     )
   }
 
   static style = {
     container: {
       flex: 1,
+    },
+    section: {
+      marginBottom: 20,
     },
   }
 }

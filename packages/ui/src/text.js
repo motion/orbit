@@ -22,7 +22,6 @@ export type Props = {
 export default class Text extends React.PureComponent<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
-    size: 1,
   }
 
   editableReaction: ?Function
@@ -206,7 +205,7 @@ export default class Text extends React.PureComponent<Props> {
 
   static style = {
     text: {
-      display: 'block',
+      display: 'inline-block',
       userSelect: 'none',
       cursor: 'default',
       maxWidth: '100%',
@@ -226,7 +225,9 @@ export default class Text extends React.PureComponent<Props> {
 
   static theme = (props, theme) => {
     const fontSize =
-      (typeof props.fontSize === 'number' && props.fontSize) || props.size * 14
+      (typeof props.fontSize === 'number' && props.fontSize) || props.size
+        ? props.size * 14
+        : 'auto'
     return {
       text: {
         fontSize,

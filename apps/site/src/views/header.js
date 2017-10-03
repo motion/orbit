@@ -5,19 +5,28 @@ import * as UI from '@mcro/ui'
 @view
 export default class Header {
   render() {
-    return <header>123</header>
+    return (
+      <header>
+        <img $icon src="/orbit.svg" />
+        <img $logo src="/orbit-logo.svg" />
+      </header>
+    )
   }
 
   static style = {
     header: {
       position: 'relative',
       background: 'transparent',
-      zIndex: 500,
-      padding: [0, 10],
-      flexFlow: 'row',
+      padding: [80, 10, 50],
       alignItems: 'center',
-      transition: 'all ease-out 300ms',
-      transitionDelay: '400ms',
+      justifyContent: 'center',
+    },
+    icon: {
+      width: 60,
+      marginBottom: 40,
+    },
+    logo: {
+      width: 100,
     },
   }
 }

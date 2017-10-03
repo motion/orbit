@@ -1,0 +1,528 @@
+.line-ellipse {
+  width: 100%;
+}
+
+.chart text {
+  transform: translateY(-6px);
+}
+
+tspan {
+  font-size: 13px !important;
+  font: 'Helvetica' !important;
+  font-weight: 500;
+  fill: white !important;
+  opacity: 0.7;
+  padding: 4px !important;
+}
+
+/* for highlighting words */
+mark {
+  display: inline !important;
+  white-space: pre-wrap;
+}
+
+div[data-slate-editor='true'] > div {
+  display: block;
+}
+
+.showPlaceholder {
+  position: relative;
+}
+.showPlaceholder:before {
+  pointer-events: none;
+  position: absolute;
+  opacity: 0.6;
+  left: 0;
+  top: 0;
+  content: attr(placeholder);
+}
+
+.dark-textarea::-webkit-input-placeholder {
+  color: #ccc;
+}
+
+/* github html embed */
+.task-list-item {
+  list-style: none;
+}
+
+.task-list-item input {
+  display: inline;
+}
+
+.html-content ul {
+  padding-left: 20px;
+}
+
+.html-content ul.contains-task-list {
+  padding: 0px;
+}
+.html-content code {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+}
+
+.html-content ol {
+  padding: 5px 22px;
+}
+
+.html-content code {
+  margin: 10px;
+}
+
+.html-content img {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.html-content h3 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1.3rem;
+  font-weight: 300;
+  -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #000;
+  background-color: inherit;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Strikethrough */
+
+.strikethrough > p > span {
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.strikethrough > p > span:after {
+  transition: transform 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+  position: absolute;
+  top: 12px;
+  transform-origin: center left;
+  height: 2px;
+  box-shadow: 0 1px rgba(255, 255, 255, 0.6);
+  left: 0px;
+  width: 100%;
+  content: '';
+  display: block;
+  opacity: 0.6;
+  background: rgba(0, 0, 0, 1);
+  transform: scaleX(1);
+}
+
+.strikethrough:not(.active) > p > span:after {
+  transform: scaleX(0);
+  transform-origin: center right;
+  transition: transform 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.strikethrough.active > p > span:after {
+  transition: transform 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+  transform: scaleX(1);
+}
+
+::selection {
+  background: blue;
+  color: #fff;
+}
+*::selection {
+  background: blue;
+  color: #fff;
+}
+
+body.dragging * {
+  cursor: ew-resize !important;
+  user-select: none;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  80% {
+    transform: scale(1.05);
+  }
+
+  90% {
+    transform: scale(0.975);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes rotate-backwards {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-359deg);
+  }
+}
+
+@keyframes turnaway {
+  0% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+
+  20% {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: rotate(180deg) translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(180deg) translateY(-8px);
+    opacity: 0;
+  }
+}
+
+input,
+textarea,
+select {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+body,
+body * {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  /* flex-wrap: nowrap;*/
+  flex-shrink: 0;
+  -webkit-flex-flow: column;
+  -webkit-align-items: stretch;
+  outline: 0;
+}
+
+/* prevent overscroll bounce */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+  position: relative;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* reset elements from flex */
+
+a,
+input,
+textarea {
+  align-self: flex-start;
+}
+
+a,
+span,
+em,
+b,
+strong,
+i {
+  white-space: pre-wrap;
+  display: inline;
+}
+
+script,
+meta,
+link {
+  display: none;
+}
+
+a,
+input,
+textarea,
+select {
+  outline: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+br {
+  display: block;
+}
+
+ol,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+code,
+pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+pre,
+code {
+  margin: 0;
+  display: block;
+}
+
+code {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  display: block;
+}
+
+li {
+  display: list-item;
+}
+
+p code {
+  display: inline-block;
+  padding: 0;
+}
+
+table {
+  display: table;
+}
+tr {
+  display: table-row;
+}
+thead {
+  display: table-header-group;
+}
+tbody {
+  display: table-row-group;
+}
+tfoot {
+  display: table-footer-group;
+}
+col {
+  display: table-column;
+}
+colgroup {
+  display: table-column-group;
+}
+td,
+th {
+  display: table-cell;
+}
+caption {
+  display: table-caption;
+}
+
+/* reset mark */
+mark {
+  background: none;
+  color: auto;
+}
+
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+
+/* Reset 2.0 */
+
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+html {
+  color: #222;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/*
+ * Remove text-shadow in selection highlight:
+ * https://twitter.com/miketaylr/status/12228805301
+ *
+ * These selection rule sets have to be separate.
+ * Customize the background color to match your design.
+ */
+
+::selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+/*
+ * Remove the gap between audio, canvas, iframes,
+ * images, videos and the bottom of their containers:
+ * https://github.com/h5bp/html5-boilerplate/issues/440
+ */
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.react-grid-layout {
+  position: relative;
+  transition: height 200ms ease;
+}
+
+.react-grid-item > .react-resizable-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: 0;
+  right: -5px;
+  background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg08IS0tIEdlbmVyYXRvcjogQWRvYmUgRmlyZXdvcmtzIENTNiwgRXhwb3J0IFNWRyBFeHRlbnNpb24gYnkgQWFyb24gQmVhbGwgKGh0dHA6Ly9maXJld29ya3MuYWJlYWxsLmNvbSkgLiBWZXJzaW9uOiAwLjYuMSAgLS0+DTwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DTxzdmcgaWQ9IlVudGl0bGVkLVBhZ2UlMjAxIiB2aWV3Qm94PSIwIDAgNiA2IiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmZmZmMDAiIHZlcnNpb249IjEuMSINCXhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiDQl4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjZweCIgaGVpZ2h0PSI2cHgiDT4NCTxnIG9wYWNpdHk9IjAuMzAyIj4NCQk8cGF0aCBkPSJNIDYgNiBMIDAgNiBMIDAgNC4yIEwgNCA0LjIgTCA0LjIgNC4yIEwgNC4yIDAgTCA2IDAgTCA2IDYgTCA2IDYgWiIgZmlsbD0iIzAwMDAwMCIvPg0JPC9nPg08L3N2Zz4=');
+  background-position: bottom right;
+  padding: 0 3px 3px 0;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  cursor: se-resize;
+}
+
+.react-grid-item {
+  display: block;
+  transition: all 200ms ease;
+  transition-property: left, top;
+}
+
+.react-grid-item.cssTransforms {
+  transition-property: transform;
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: #ddd;
+  opacity: 0.2;
+  transition-duration: 100ms;
+  z-index: 2;
+  user-select: none;
+}
+
+.react-grid-item.react-draggable-dragging {
+  transition: none;
+  z-index: 3;
+  will-change: transform;
+  box-shadow: 0 10px 70px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.react-grid-item.resizing {
+  z-index: 4;
+  will-change: width, height;
+}

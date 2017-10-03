@@ -2,7 +2,9 @@ import { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactDom from 'react-dom'
 
-const useCreatePortal = typeof ReactDom.unstable_createPortal === 'function'
+window.ReactDom = ReactDom
+
+const useCreatePortal = typeof ReactDom.createPortal === 'function'
 
 export default class Portal extends Component {
   static propTypes = {
@@ -38,7 +40,7 @@ export default class Portal extends Component {
 
   render() {
     if (useCreatePortal) {
-      return ReactDom.unstable_createPortal(this.props.children, this.popup)
+      return ReactDom.createPortal(this.props.children, this.popup)
     }
     return null
   }

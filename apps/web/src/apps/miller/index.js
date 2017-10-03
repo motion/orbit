@@ -1,2 +1,2 @@
 export Miller from './component'
-export MillerStore from './store'
+export MillerStore from './millerStore'

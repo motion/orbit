@@ -30,12 +30,9 @@ export default class HomePage {
 
           <SubText>
             We were inspired by tooling that high tech companies use to unify
-            their cloud tools and knowledge.
-          </SubText>
-
-          <SubText>
-            Companies like Stripe & Facebook build tools that improve their
-            internal visibility with easy search and feeds for any team.
+            their cloud tools and knowledge. Companies like Stripe & Facebook
+            build tools that improve their internal visibility with easy search
+            and feeds for any team.
           </SubText>
 
           <Text>Our goal: to democratize that & make it best in class.</Text>
@@ -49,7 +46,7 @@ export default class HomePage {
           <ul $mainList>
             <li>
               <Text fontWeight={800} color="#000">
-                Security First 🔒
+                Security First &nbsp;&nbsp;🔒
               </Text>
             </li>
 
@@ -68,7 +65,7 @@ export default class HomePage {
 
             <li>
               <Text fontWeight={800} color="#000">
-                Removing Invisibles 👀
+                Removing Invisibles &nbsp;&nbsp;👀
               </Text>
             </li>
 
@@ -87,7 +84,7 @@ export default class HomePage {
 
             <li>
               <Text fontWeight={800} color="#000">
-                Control 🚀
+                Control &nbsp;&nbsp;🚀
               </Text>
             </li>
 

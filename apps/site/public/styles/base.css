@@ -26,6 +26,11 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+#app {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 ::selection {
   background: blue;
   color: #fff;

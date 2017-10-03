@@ -21,4 +21,12 @@ export default class Root {
       </UI.Theme>
     )
   }
+
+  static style = {
+    layout: {
+      width: '100%',
+      maxWidth: '100%',
+      overflow: 'hidden',
+    },
+  }
 }

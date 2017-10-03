@@ -9,7 +9,7 @@ import LayoutWrap from '~/views/layout/wrap'
 import Header from './header'
 import * as UI from '@mcro/ui'
 
-@view.ui
+@view
 export default class Layout {
   state = {
     error: null,

@@ -51,9 +51,11 @@ export default class MasterPage {
             getItem={item => ({
               primary: 'Hello world',
               children: 'lorem ipsum dolor sit amet.',
-              icon: '123',
+              icon: 'team',
             })}
           />
+
+          <br />
 
           <UI.Title size={1} fontWeight={800} color="#000">
             Conversations
@@ -69,9 +71,11 @@ export default class MasterPage {
             getItem={item => ({
               primary: 'Hello world',
               children: 'lorem ipsum dolor sit amet.',
-              icon: '123',
+              icon: 'chat',
             })}
           />
+
+          <br />
 
           <UI.Title size={1} fontWeight={800} color="#000">
             Documents
@@ -87,7 +91,7 @@ export default class MasterPage {
             getItem={item => ({
               primary: 'Hello world',
               children: 'lorem ipsum dolor sit amet.',
-              icon: '123',
+              icon: 'doc',
             })}
           />
         </UI.Surface>

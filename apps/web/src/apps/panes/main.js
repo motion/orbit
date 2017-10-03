@@ -166,6 +166,12 @@ class BarMainStore {
       type: 'topic',
       category: 'Tests',
     },
+    {
+      id: 503,
+      title: ':stats',
+      type: 'stats',
+      category: 'Tests',
+    },
   ]
 
   extras = [
@@ -173,7 +179,7 @@ class BarMainStore {
       id: 30,
       title: 'Settings',
       icon: 'gear',
-      type: 'message',
+      type: 'newSettings',
       data: {
         message: 'Open Settings',
         icon: 'gear',

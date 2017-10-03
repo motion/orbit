@@ -1,5 +1,6 @@
 export main from './main'
 export login from './login'
 export task from './task'
-export topic from './topic'
+export topic from './testing/topic'
+export newSettings from './newSettings'
 export feed from './feed'

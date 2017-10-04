@@ -18,7 +18,7 @@ export default class Header {
     header: {
       position: 'relative',
       background: 'transparent',
-      padding: [80, 10, 30],
+      padding: [75, 10, 0],
       alignItems: 'center',
       justifyContent: 'center',
       // maxWidth: 800,
@@ -26,11 +26,11 @@ export default class Header {
       // margin: [0, 'auto'],
     },
     icon: {
-      width: 60,
-      marginBottom: 40,
+      width: 50,
+      marginBottom: 20,
     },
     logo: {
-      width: 90,
+      width: 110,
     },
     orbital: {
       width: 2000,

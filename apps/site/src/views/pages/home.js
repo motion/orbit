@@ -26,12 +26,16 @@ export default class HomePage {
     return (
       <page>
         <section>
-          <Text>Hi,</Text>
-
-          <Text>
-            We're a Founders Fund startup working on {' '}
-            <Hl>internal company visibility</Hl> tools.
+          <Text size={2} marginBottom={30} textAlign="center">
+            👋
           </Text>
+
+          <Text textAlign="center">
+            We're a Founders Fund startup working on an all-in-one{' '}
+            <Hl>internal company visibility</Hl> app.
+          </Text>
+
+          <hr />
 
           <SubText>
             We were inspired by tooling that high tech companies use to unify
@@ -40,7 +44,7 @@ export default class HomePage {
             and feeds for any team.
           </SubText>
 
-          <Text>Our goal: to make running a company a snap.</Text>
+          <Text>Our goal: to make your intranet better than theirs.</Text>
           <img $screen src="/screenshot.png" />
         </section>
         <section $bordered>
@@ -179,6 +183,14 @@ export default class HomePage {
         listStyleType: 'decimal',
         margin: [0, 0, -15, 30],
       },
+    },
+    hr: {
+      display: 'flex',
+      height: 0,
+      border: 'none',
+      borderTop: [1, [0, 0, 0, 0.05]],
+      margin: [20, 0],
+      padding: [10, 0],
     },
     break: {
       height: 30,

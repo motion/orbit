@@ -3,7 +3,6 @@ import * as React from 'react'
 import deepExtend from 'deep-extend'
 import tags from 'html-tags'
 
-const IS_PROD = process.env.NODE_ENV === 'production'
 const $ = '$'
 const ogCreateElement: Function = React.createElement.bind(React)
 const VALID_TAGS: { [string]: boolean } = tags.reduce(
@@ -169,19 +168,10 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     // styles => props
     if (finalStyles.length) {
       if (isTag) {
-        const css = (...styles) =>
-          styles.map(x => x.className || x.selectorText.slice(1)).join(' ')
-
         // tags get className
-        if (IS_PROD) {
-          finalProps.className = css(...finalStyles)
-        } else {
-          try {
-            finalProps.className = css(...finalStyles)
-          } catch (e) {
-            console.error('Error applying style to', name, finalStyles, this)
-          }
-        }
+        finalProps.className = finalStyles
+          .map(x => x.className || x.selectorText.slice(1))
+          .join(' ')
 
         // keep original finalStyles
         if (props && props.className) {

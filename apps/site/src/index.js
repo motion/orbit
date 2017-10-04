@@ -4,19 +4,19 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 import createElement from '@mcro/black/lib/createElement'
 import Themes from '~/themes'
-import Root from '~/views/root'
 import { ThemeProvide } from '@mcro/ui'
 
 // Gloss: all <tag />s can use $$styleProps or css={{}}
 React.createElement = createElement
 
 function main() {
-  let ROOT = document.querySelector('#app')
+  const RootNode = document.querySelector('#app')
+  const Root = require('./views/root').default
   ReactDOM.render(
     <ThemeProvide {...Themes}>
       <Root />
     </ThemeProvide>,
-    ROOT
+    RootNode
   )
 }
 

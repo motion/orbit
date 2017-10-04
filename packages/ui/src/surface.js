@@ -92,8 +92,6 @@ export type Props = {
   borderRadius?: number,
 }
 
-const IS_PROD = process.env.NODE_ENV === 'production'
-
 const ICON_PAD = 10
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
@@ -116,7 +114,6 @@ export default class Surface extends React.PureComponent<Props> {
   }
 
   static defaultProps = {
-    tagName: IS_PROD ? 'div' : 'surface',
     borderStyle: 'solid',
     borderWidth: 0,
   }

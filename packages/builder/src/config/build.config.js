@@ -105,7 +105,12 @@ module.exports = Object.assign(config, {
       inject: true,
       template: paths.appHtml,
     }),
-    new webpack.DefinePlugin(env.stringified),
+    //
+    // 🚨
+    // warning: disabling this fixed styles not attaching:
+    // new webpack.DefinePlugin(env.stringified),
+    // ⏰
+    //
     new CaseSensitivePathsPlugin(),
     // hmr
     IS_DEV && new webpack.HotModuleReplacementPlugin(),
@@ -122,8 +127,12 @@ module.exports = Object.assign(config, {
           return context && context.indexOf('node_modules') >= 0
         },
       }),
-    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    IS_PROD && new BabelMinifyPlugin(),
+    // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    IS_PROD &&
+      new BabelMinifyPlugin({
+        deadcode: true,
+        mangle: { topLevel: true },
+      }),
 
     // bundle analyzer
     process.env.DEBUG && new BundleAnalyzerPlugin(),

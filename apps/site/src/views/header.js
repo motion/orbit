@@ -7,7 +7,7 @@ export default class Header {
   render() {
     return (
       <header>
-        <img $icon src="/icon.jpg" />
+        <img $icon src="/icon.png" />
         <img $logo src="/orbit-logo.svg" />
         <orbital />
       </header>
@@ -38,10 +38,11 @@ export default class Header {
       position: 'absolute',
       top: -1000,
       right: -400,
-      border: [1, [0, 0, 0, 0.1]],
+      border: [2, '#EFEDFF'],
       borderRadius: 100000000,
-      zIndex: 0,
+      zIndex: -1,
       pointerEvents: 'none',
+      background: 'linear-gradient(#fff, #FDFDFF)',
     },
   }
 }

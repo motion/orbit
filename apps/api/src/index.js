@@ -1,3 +1,4 @@
+import 'regenerator-runtime'
 import 'source-map-support/register'
 import 'isomorphic-fetch'
 import global from 'global'

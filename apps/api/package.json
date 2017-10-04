@@ -48,7 +48,8 @@
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.4.16",
     "superlogin": "github:colinskow/superlogin",
-    "wait-for-port": "^0.0.2"
+    "wait-for-port": "^0.0.2",
+    "regenerator-runtime": "^0.11.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0",

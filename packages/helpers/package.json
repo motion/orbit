@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "module": "lib/index.js",
-  "es5": "dist/index.js",
+  "module:production": "dist/index.js",
   "author": "Motion (motion.io)",
   "license": "MIT",
   "dependencies": {

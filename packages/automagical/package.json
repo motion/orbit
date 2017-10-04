@@ -2,7 +2,7 @@
   "name": "@mcro/automagical",
   "main": "lib/index.js",
   "module": "lib/index.js",
-  "es5": "dist/index.js",
+  "module:production": "dist/index.js",
   "version": "1.3.2",
   "scripts": {},
   "dependencies": {

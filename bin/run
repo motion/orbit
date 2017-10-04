@@ -29,7 +29,7 @@ function run-web() {
   elif [ "$ARG1" = "--webpack" ]; then
     node scripts/run.js
   else
-    motion watch --debug ${@:2}
+    motion watch --debug
   fi
 }
 
@@ -48,16 +48,17 @@ elif [ "$ACTION" = "electron" ]; then
   npm start &
   wait
 elif [ "$ACTION" =  "site" ]; then
-  run-site
+  run-site ${@:2} &
+  wait
 elif [ "$ACTION" =  "api" ]; then
-  run-api
+  run-api ${@:2}
 elif [ "$ACTION" =  "web" ]; then
   if [ ! -d "$ROOT/packages/ui/lib" ]; then
     echo "Make sure to run 'build --watch' before running web"
     exit 0
   fi
-  run-web &
-  run-api &
+  run-web ${@:2} &
+  run-api ${@:2} &
   wait
 else
   npm run $1 ${@:2}

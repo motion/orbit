@@ -4,7 +4,7 @@
   "description": "Higher order component for nicer component styles",
   "main": "lib/index.js",
   "module": "lib/index.js",
-  "es5": "dist/index.js",
+  "module:production": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/motion/gloss.git"

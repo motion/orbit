@@ -4,8 +4,8 @@ import * as UI from '@mcro/ui'
 
 const Text = props => (
   <UI.Text
-    size={1.5}
-    lineHeight="2rem"
+    size={1.45}
+    lineHeight="1.9rem"
     marginBottom={20}
     color={[0, 0, 0, 0.5]}
     {...props}
@@ -13,7 +13,12 @@ const Text = props => (
 )
 
 const SubText = props => <Text size={1.2} lineHeight="1.65rem" {...props} />
-const Hl = props => <UI.Text {...props} />
+const Hl = props => <UI.Text display="inline" {...props} />
+
+const Title = props => <Text fontWeight={800} color="#000" {...props} />
+const SubTitle = props => (
+  <UI.Title fontWeight={800} marginBottom={30} {...props} />
+)
 
 @view
 export default class HomePage {
@@ -21,11 +26,11 @@ export default class HomePage {
     return (
       <page>
         <section>
-          <Text>Hello,</Text>
+          <Text>Hi,</Text>
 
           <Text>
-            We're a Founders Fund startup working on an app to make {' '}
-            <Hl>internal company visibility</Hl> amazing.
+            We're a Founders Fund startup working on {' '}
+            <Hl>internal company visibility</Hl> tools.
           </Text>
 
           <SubText>
@@ -35,57 +40,35 @@ export default class HomePage {
             and feeds for any team.
           </SubText>
 
-          <Text>Our goal: to democratize that & make it best in class.</Text>
+          <Text>Our goal: to make running a company a snap.</Text>
           <img $screen src="/screenshot.png" />
         </section>
         <section $bordered>
-          <UI.Title fontWeight={800} marginBottom={30}>
-            How?
-          </UI.Title>
+          <SubTitle>How?</SubTitle>
 
           <ul $mainList>
             <li>
-              <Text fontWeight={800} color="#000">
-                Security First &nbsp;&nbsp;🔒
-              </Text>
+              <Title>See &nbsp;&nbsp;👀</Title>
             </li>
 
             <Text>
-              Let's face it: you don't want to trust a company with all your
-              internal data. Neither would we.
-            </Text>
-
-            <SubText>
-              That's why we designed Orbit to follow the{' '}
-              <Hl>Secure Offline IEE2014 Spec</Hl>. Your data never leaves your
-              company firewall and respects all your internal permissions.
-            </SubText>
-
-            <break />
-
-            <li>
-              <Text fontWeight={800} color="#000">
-                Removing Invisibles &nbsp;&nbsp;👀
-              </Text>
-            </li>
-
-            <Text>
-              What's are our companies big projects? How are they doing? What's
-              happening on team X this week? What was that document Lisa was
-              working on? Who is in charge of new feature X?
+              Which are our company's big projects?
+              <br />How are they doing?
+              <br />What's happening on team X?
+              <br />What was that document Lisa was working on?
+              <br />What was the slack discussion about issue #244?
             </Text>
 
             <SubText>
               Whether or not you expose it, these questions are being asked
-              every day within your company. Orbit makes them clear to everyone.
+              every day within your company. Orbit makes them clear to everyone
+              and lets you choose which to display.
             </SubText>
 
             <break />
 
             <li>
-              <Text fontWeight={800} color="#000">
-                Control &nbsp;&nbsp;🚀
-              </Text>
+              <Title>Control &nbsp;&nbsp;🚀</Title>
             </li>
 
             <Text>
@@ -96,43 +79,67 @@ export default class HomePage {
 
             <ul $subList>
               <li>
-                <SubText>
-                  Control your internal search by pinning any results to the
-                  top.
-                </SubText>
+                <SubText>Pin important docs to any search.</SubText>
               </li>
               <li>
                 <SubText>
-                  Choose which important documents and tickets to expose.
+                  Customize a feed of everything you care about.
                 </SubText>
               </li>
               <li>
                 <SubText>Display your KPIs to the rest of the org.</SubText>
               </li>
             </ul>
+
+            <break />
+
+            <li>
+              <Title>Secure &nbsp;&nbsp;🔒</Title>
+            </li>
+
+            <Text>
+              You don't want to trust a company with all your internal data.
+              Neither would we.
+            </Text>
+
+            <SubText>
+              That's why we designed Orbit to be completely offline. It follows
+              the <Hl>Secure Offline IEE2014 Spec</Hl>. Your data never leaves
+              your computer, we never touch any of your data or any of your
+              keys, and Orbit respects all your internal permissions.
+            </SubText>
           </ul>
         </section>
 
         <section $bordered>
-          <UI.Title fontWeight={800} marginBottom={30}>
-            When?
-          </UI.Title>
+          <SubTitle>When?</SubTitle>
 
-          <Text fontWeight={800} color="#000">
-            Soon
+          <Title>Orbit launches in beta in 2 months</Title>
+
+          <Text>
+            Until then, let us know you're interested and give us some
+            information on the tools you use today, so we can gather some data
+            on how Orbit could make your workday better.
           </Text>
 
-          <SubText>
-            Let's face it: you don't want to trust a company with all your
-            internal data. Neither would we. That's why we designed Orbit to
-            follow the <Hl>Secure Offline Infrastructure EE2014 Spec</Hl>.
-          </SubText>
-
           <UI.Form>
-            <UI.Field label="email" />
-            <UI.Button>Signup</UI.Button>
+            <UI.Field size={1.2} label="Name" />
+            <UI.Field size={1.2} label="Email" />
+            <UI.Field
+              size={1.2}
+              label="What you use"
+              type="textarea"
+              elementProps={{
+                rows: 10,
+                css: { borderColor: 'red', width: '100%' },
+              }}
+            />
+            <br />
+            <UI.Button size={1.5}>Send 👋</UI.Button>
           </UI.Form>
         </section>
+
+        <footer />
       </page>
     )
   }
@@ -175,6 +182,9 @@ export default class HomePage {
     },
     break: {
       height: 30,
+    },
+    footer: {
+      height: 150,
     },
   }
 }

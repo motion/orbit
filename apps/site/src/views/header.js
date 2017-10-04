@@ -18,7 +18,7 @@ export default class Header {
     header: {
       position: 'relative',
       background: 'transparent',
-      padding: [80, 10, 50],
+      padding: [80, 10, 30],
       alignItems: 'center',
       justifyContent: 'center',
       // maxWidth: 800,

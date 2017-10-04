@@ -46,6 +46,13 @@ const Themes = {
       borderColor: [0, 0, 0, 0.1],
     }),
   },
+  gray: Theme.fromStyles({
+    highlightBackground,
+    highlightColor,
+    background: '#eee',
+    color: '#666',
+    borderColor: '#eee',
+  }),
   dark: Theme.fromStyles({
     highlightBackground: [0, 0, 0, 0.05],
     highlightColor,

@@ -231,6 +231,7 @@ export default class Text extends React.PureComponent<Props> {
     return {
       text: {
         fontSize,
+        display: props.display,
         fontWeight: props.fontWeight,
         lineHeight:
           typeof props.lineHeight === 'number'

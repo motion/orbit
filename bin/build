@@ -29,12 +29,15 @@ function build-es5() {
 if [ "$APP" = "electron" ]; then
   cd $ROOT/apps/electron
   npm run dist
+elif [ "$APP" = "site" ]; then
+  cd $ROOT/apps/site
+  npm run build
 elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   rm -rf build
   npm run build
   ls -lah apps/web/build/js
-else
+elif [ "$APP" = "" ]; then
   link-flow &
 
   # only build modern during dev-watch

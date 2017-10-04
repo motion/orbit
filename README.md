@@ -1,8 +1,6 @@
 ## install
 
 ```sh
-git clone git@github.com:motion/starter.git
-cd starter
 bin/bootstrap
 ```
 

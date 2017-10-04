@@ -7,7 +7,7 @@ export default class Header {
   render() {
     return (
       <header>
-        <img $icon src="/orbit.svg" />
+        <img $icon src="/icon.jpg" />
         <img $logo src="/orbit-logo.svg" />
         <orbital />
       </header>

@@ -6,6 +6,6 @@
   "outputDirectory": "./public",
   "includePolyfills": true,
   "pundleOptions": {
-    "packageMains": ["test"]
+    "packageMains": ["module", "browser", "main"]
   }
 }

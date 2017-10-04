@@ -19,7 +19,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 // const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
 // const PrepackPlugin = require('prepack-webpack-plugin').default
 // const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
-// const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
+const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 //   .BundleAnalyzerPlugin
 
@@ -134,7 +134,7 @@ module.exports = Object.assign(config, {
     //     },
     //   }),
     // IS_PROD && new PrepackPlugin(),
-    // IS_PROD && new BabelMinifyPlugin(),
+    IS_PROD && new BabelMinifyPlugin(),
 
     // bundle analyzer
     // process.env.DEBUG && new BundleAnalyzerPlugin(),

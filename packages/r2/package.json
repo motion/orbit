@@ -1,6 +1,6 @@
 {
   "name": "@mcro/r2",
-  "main": "es5/index.js",
+  "main": "lib/index.js",
   "module": "lib/index.js",
   "module:production": "dist/index.js",
   "version": "1.3.3",

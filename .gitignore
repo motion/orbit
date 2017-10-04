@@ -15,6 +15,7 @@ apps/web/public/_/*
 apps/site/public/_/*
 apps/web/build
 apps/api/build
+apps/site/build
 apps/electron/dist
 apps/electron/build
 

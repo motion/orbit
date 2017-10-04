@@ -15,6 +15,7 @@ killgroup() {
 function build-dev() {
   npx lerna exec --parallel \
     --ignore @mcro/web \
+    --ignore @mcro/site \
       -- \
       babel src --out-dir lib -s true $1
 }
@@ -22,8 +23,17 @@ function build-dev() {
 function build-es5() {
   npx lerna exec --parallel \
     --ignore @mcro/web \
+    --ignore @mcro/site \
       -- \
-      NODE_ENV=es5 babel src --out-dir dist -s true $1
+        BABEL_ENV=es5 babel src --out-dir es5 -s true $1
+}
+
+function build-prod() {
+  npx lerna exec --parallel \
+    --ignore @mcro/web \
+    --ignore @mcro/site \
+      -- \
+        BABEL_ENV=dist babel src --out-dir dist -s true $1
 }
 
 if [ "$APP" = "electron" ]; then
@@ -37,16 +47,18 @@ elif [ "$APP" = "web" ]; then
   rm -rf build
   npm run build
   ls -lah apps/web/build/js
-elif [ "$APP" = "" ]; then
+else
   link-flow &
 
   # only build modern during dev-watch
   if [ "$ARGS" = "--watch" ]; then
     build-dev --watch &
     build-es5 --watch &
+    build-prod --watch &
   else
     build-dev &
     build-es5 &
+    build-prod &
   fi
 
   wait

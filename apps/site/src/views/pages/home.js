@@ -7,7 +7,7 @@ const Text = props => (
     size={1.45}
     lineHeight="1.9rem"
     marginBottom={20}
-    color={[0, 0, 0, 0.5]}
+    color={[0, 0, 0, 0.75]}
     {...props}
   />
 )

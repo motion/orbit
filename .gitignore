@@ -1,6 +1,7 @@
 node_modules
 lib
 dist
+es5
 *.log
 log.txt
 .DS_Store

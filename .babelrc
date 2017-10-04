@@ -15,15 +15,26 @@
         ]
       ]
     },
-    "production": {
+    "dist": {
       "presets": [
-        "es2015",
-        "babel-preset-react",
         [
           "@mcro/preset-motion",
           {
             "disable": ["@mcro/hmr", "@mcro/hmr-view", "babel-plugin-sitrep"],
             "async": false
+          }
+        ]
+      ]
+    },
+    "production": {
+      "presets": [
+        "es2015",
+        [
+          "@mcro/preset-motion",
+          {
+            "disable": ["@mcro/hmr", "@mcro/hmr-view", "babel-plugin-sitrep"],
+            "async": false,
+            "rootSuffix": ""
           }
         ],
         [

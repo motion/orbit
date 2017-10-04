@@ -4,5 +4,8 @@
   "saveNpmModules": false,
   "bundleDirectory": ".",
   "outputDirectory": "./public",
-  "includePolyfills": true
+  "includePolyfills": true,
+  "pundleOptions": {
+    "packageMains": ["test"]
+  }
 }

@@ -17,12 +17,12 @@
     "babel-helper-builder-react-jsx": "^6.24.1",
     "deep-extend": "^0.5.0",
     "html-tags": "^2.0.0",
-    "jss": "^8.1.0",
-    "jss-cache": "^2.0.0",
-    "jss-default-unit": "^7.0.0",
-    "jss-global": "^2.0.0",
-    "jss-nested": "^5.0.0",
-    "jss-props-sort": "^5.0.0"
+    "jss": "^9.0.0",
+    "jss-cache": "^3.0.0",
+    "jss-default-unit": "^8.0.0",
+    "jss-global": "^3.0.0",
+    "jss-nested": "^6.0.0",
+    "jss-props-sort": "^6.0.0"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0",

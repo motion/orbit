@@ -4955,7 +4955,7 @@ is-in-browser@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-in-browser/-/is-in-browser-1.0.2.tgz#f688bea8f1e5aadc3244ebc870d188cfb9b613cf"
 
-is-in-browser@^1.0.2:
+is-in-browser@^1.0.2, is-in-browser@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/is-in-browser/-/is-in-browser-1.1.3.tgz#56ff4db683a078c6082eb95dad7dc62e1d04f835"
 
@@ -5019,6 +5019,12 @@ is-object-like-x@^1.5.1:
 is-object@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-object/-/is-object-1.0.1.tgz#8952688c5ec2ffd6b03ecc85e769e02903083470"
+
+is-observable@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/is-observable/-/is-observable-0.2.0.tgz#b361311d83c6e5d726cabf5e250b0237106f5ae2"
+  dependencies:
+    symbol-observable "^0.2.2"
 
 is-odd@^1.0.0:
   version "1.0.0"
@@ -5273,9 +5279,9 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jss-cache@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/jss-cache/-/jss-cache-2.0.0.tgz#6394bdf6741b1cb9fad953ae4f5949f319f5a675"
+jss-cache@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jss-cache/-/jss-cache-3.0.0.tgz#c76848a486e6a00730d0996297db588ef265914f"
 
 jss-camel-case@^3.0.0:
   version "3.0.0"
@@ -5305,9 +5311,11 @@ jss-default-unit@^6.0.0:
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/jss-default-unit/-/jss-default-unit-6.1.2.tgz#6c460154129b7be304a4a4dcd2b283584954aec5"
 
-jss-default-unit@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/jss-default-unit/-/jss-default-unit-7.0.0.tgz#176c1db91da870e3ad16301f6f4b4cfc6fe1e90a"
+jss-default-unit@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/jss-default-unit/-/jss-default-unit-8.0.0.tgz#a308ead4f587ebe17cc845f9870867400de90910"
+  dependencies:
+    is-observable "^0.2.0"
 
 jss-expand@^2.0.3:
   version "2.1.0"
@@ -5337,9 +5345,9 @@ jss-global@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/jss-global/-/jss-global-1.0.1.tgz#36731778f6d8649110611f7c178dbcd60fd92b24"
 
-jss-global@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/jss-global/-/jss-global-2.0.0.tgz#a162f822f17e5d760151d908bdb41d7f2824c28f"
+jss-global@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jss-global/-/jss-global-3.0.0.tgz#e19e5c91ab2b96353c227e30aa2cbd938cdaafa2"
 
 jss-nested@^3.0.1:
   version "3.0.1"
@@ -5353,9 +5361,9 @@ jss-nested@^4.0.0:
   dependencies:
     warning "^3.0.0"
 
-jss-nested@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/jss-nested/-/jss-nested-5.0.0.tgz#c0752f31f2d465110d7de6ac83583dbed669faa0"
+jss-nested@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/jss-nested/-/jss-nested-6.0.0.tgz#aa5d0ff60c2aa25f8cd7968a71e2b75dbfa4ef68"
   dependencies:
     warning "^3.0.0"
 
@@ -5395,9 +5403,9 @@ jss-props-sort@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/jss-props-sort/-/jss-props-sort-4.0.0.tgz#ef4239c6795ca304c18dce9e0395a1789ed9f78a"
 
-jss-props-sort@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/jss-props-sort/-/jss-props-sort-5.0.0.tgz#8839c88433f64e8c1dab1a7068796f19b84f9195"
+jss-props-sort@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/jss-props-sort/-/jss-props-sort-6.0.0.tgz#9105101a3b5071fab61e2d85ea74cc22e9b16323"
 
 jss-vendor-prefixer@^4.0.0:
   version "4.0.0"
@@ -5425,11 +5433,12 @@ jss@^7.1.2:
     is-in-browser "1.0.2"
     warning "3.0.0"
 
-jss@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/jss/-/jss-8.1.0.tgz#b32f15efcce22446dfda4c2be09a04f38431da0a"
+jss@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/jss/-/jss-9.0.0.tgz#cc5264b16ae0d605ce5e293295c8a03caf3e8413"
   dependencies:
-    is-in-browser "^1.0.2"
+    is-in-browser "^1.1.3"
+    is-observable "^0.2.0"
     warning "^3.0.0"
 
 jstransform@~11.0.0:
@@ -9338,6 +9347,10 @@ supports-color@^4.0.0, supports-color@^4.2.1:
 "sylvester@>= 0.0.12", "sylvester@>= 0.0.8":
   version "0.0.21"
   resolved "https://registry.yarnpkg.com/sylvester/-/sylvester-0.0.21.tgz#2987b1ce2bd2f38b0dce2a34388884bfa4400ea7"
+
+symbol-observable@^0.2.2:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-0.2.4.tgz#95a83db26186d6af7e7a18dbd9760a2f86d08f40"
 
 symbol-observable@^1.0.1:
   version "1.0.4"

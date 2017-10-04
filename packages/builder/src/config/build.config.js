@@ -16,12 +16,9 @@ const publicPath = '/'
 const publicUrl = ''
 const env = getClientEnvironment(publicUrl)
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-// const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
-// const PrepackPlugin = require('prepack-webpack-plugin').default
-// const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-//   .BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
 const ROOT = Path.join(__dirname, '..')
 const IS_PROD = process.env.NODE_ENV === 'production'
@@ -69,7 +66,7 @@ module.exports = Object.assign(config, {
     // NOTE: 'es5'
     mainFields: IS_DEV
       ? ['module', 'browser', 'main', 'es5']
-      : ['module:production', 'module', 'browser', 'main', 'es5'],
+      : ['browser', 'module:production', 'module', 'main', 'es5'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -126,18 +123,10 @@ module.exports = Object.assign(config, {
         },
       }),
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    // IS_PROD && new ButternutWebpackPlugin({}),
-    // IS_PROD &&
-    //   new UglifyJSPlugin({
-    //     compress: {
-    //       warnings: false,
-    //     },
-    //   }),
-    // IS_PROD && new PrepackPlugin(),
     IS_PROD && new BabelMinifyPlugin(),
 
     // bundle analyzer
-    // process.env.DEBUG && new BundleAnalyzerPlugin(),
+    process.env.DEBUG && new BundleAnalyzerPlugin(),
   ]),
   node: {
     fs: 'empty',

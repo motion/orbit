@@ -48,8 +48,6 @@ elif [ "$APP" = "web" ]; then
   npm run build
   ls -lah apps/web/build/js
 else
-  link-flow &
-
   # only build modern during dev-watch
   if [ "$ARGS" = "--watch" ]; then
     build-dev --watch &

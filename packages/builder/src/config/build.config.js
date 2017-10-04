@@ -22,6 +22,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 
 const ROOT = Path.join(__dirname, '..')
 const IS_PROD = process.env.NODE_ENV === 'production'
+const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
@@ -128,7 +129,8 @@ module.exports = Object.assign(config, {
         },
       }),
     // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    IS_PROD &&
+    MINIFY &&
+      IS_PROD &&
       new BabelMinifyPlugin({
         deadcode: true,
         mangle: { topLevel: true },

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "motion watch",
     "start-prod": "static-server -p 3002 -n public/index.html public",
-    "build": "NODE_ENV=production BUILD_DIR=. mcro-build"
+    "build": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build"
   },
   "dependencies": {
     "@mcro/black": "^1.3.2",

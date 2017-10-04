@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "motion",
-    "start-prod": "static-server -p 3002 -n public/index.html public",
+    "start-prod": "static-server -p 3002 -n build/index.html build",
     "start-debug": "motion --debug",
     "build": "NODE_ENV=production BUILD_DIR=. mcro-build"
   },

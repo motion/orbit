@@ -35,6 +35,7 @@ export default class Title extends React.PureComponent<Props> {
         display="inline-block"
         {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
         tagName={tagName}
+        size={size}
         {...props}
       >
         {children}
@@ -46,6 +47,7 @@ export default class Title extends React.PureComponent<Props> {
   static style = {
     title: {
       width: '100%',
+      fontWeight: 200,
     },
     size1: {
       textTransform: 'uppercase',

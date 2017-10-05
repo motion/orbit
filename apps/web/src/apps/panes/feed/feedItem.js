@@ -28,6 +28,7 @@ export default class FeedItem {
                 <avatar
                   css={{
                     background: `url(${avatar})`,
+                    backgroundSize: 'cover',
                   }}
                 />
                 <UI.Text $name>{name} </UI.Text>
@@ -69,8 +70,8 @@ export default class FeedItem {
     },
     avatar: {
       backgroundSize: 'cover',
-      width: 18,
-      height: 18,
+      width: 26,
+      height: 26,
       borderRadius: 100,
       marginRight: 8,
     },

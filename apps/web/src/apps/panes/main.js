@@ -15,7 +15,12 @@ const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
   title: thing.title,
   type: thing.type,
-  icon: thing.type,
+  icon: (
+    <img
+      src={`/images/${thing.integration}-icon-light.svg`}
+      style={{ opacity: 0.5, width: 20 }}
+    />
+  ),
   data: thing.toJSON(),
   category: 'Recently',
 })
@@ -42,16 +47,13 @@ class BarMainStore {
   }
 
   get searchResult() {
-    if (!this.parserResult) return null
-
+    if (!this.parserResult) {
+      return null
+    }
     const { people, startDate, endDate, service } = this.parserResult
-
     const person = people.length > 0 ? people[0] : undefined
-
     const actuallyFeed = ['docs', 'issues', 'github', 'calendar', 'tasks']
-
     const type = (includes(actuallyFeed, service) ? 'feed' : service) || 'feed'
-
     const val = {
       id: `type:${people.join(':')}`,
       title: type,
@@ -69,7 +71,6 @@ class BarMainStore {
       startDate,
       endDate,
     }
-
     return val
   }
 

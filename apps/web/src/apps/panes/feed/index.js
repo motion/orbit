@@ -91,11 +91,15 @@ class Calendar {
     calendar: {
       height: 180,
       position: 'relative',
+      borderTop: [1, '#eee'],
+      borderBottom: [1, '#eee'],
+      margin: [0, -20],
+      flex: 1,
     },
     controls: {
       position: 'fixed',
-      top: -8,
-      left: 50,
+      top: -13,
+      left: 20,
       zIndex: 100,
     },
     currentTime: {
@@ -275,24 +279,77 @@ export default class SetView extends React.Component<Props> {
           () => (
             <section
               $$row
-              css={{ padding: [26, 15, 18], alignItems: 'flex-end' }}
+              css={{ padding: [26, 15, 25], alignItems: 'flex-end' }}
             >
-              {store.filters.people.map(person => (
-                <person $$row css={{ marginRight: 20 }}>
+              <title css={{ flex: 1, justifyContent: 'flex-end' }}>
+                <main>
                   <UI.Title
                     onClick={store.ref('isOpen').toggle}
                     size={1.8}
                     fontWeight={800}
                     color="#000"
                   >
-                    {person}
+                    Feed
                   </UI.Title>
-                </person>
-              ))}
+                </main>
+
+                <sub>
+                  {store.filters.people.map(person => (
+                    <person $$row css={{ marginRight: 20 }}>
+                      <UI.Text size={1.3}>{person}</UI.Text>
+                    </person>
+                  ))}
+                </sub>
+              </title>
+
+              <aside css={{ maxHeight: 55 }}>
+                <cardsFade
+                  $$fullscreen
+                  css={{
+                    top: '80%',
+                    background:
+                      'linear-gradient(transparent, rgba(0,0,0,0.05))',
+                  }}
+                />
+
+                <card
+                  css={{
+                    flexShrink: 0,
+                    borderRadius: 8,
+                    padding: [5, 10],
+                    border: [1, 'dashed', [0, 0, 0, 0.15]],
+                  }}
+                >
+                  <content $$row css={{ alignItems: 'center' }}>
+                    <avatar
+                      css={{
+                        width: 50,
+                        height: 50,
+                        marginRight: 15,
+                        borderRadius: 1000,
+                        background: 'url(/images/me.jpg)',
+                        backgroundSize: 'cover',
+                      }}
+                    />
+                    <stats css={{ padding: [10, 0] }}>
+                      <stat css={{ fontWeight: 600, color: '#333' }}>
+                        Nate Wienert
+                      </stat>
+                      <stat>natewienert@gmail.com</stat>
+                      <stat>Teams: Motion</stat>
+                    </stats>
+                  </content>
+                </card>
+              </aside>
             </section>
           ),
           () => <Calendar />,
-          () => <FeedNavBar store={store} />,
+          //() => <FeedNavBar store={store} />,
+          () => (
+            <UI.Title margin={[35, 0, 0, 15]} color="#000" fontWeight="800">
+              Recently
+            </UI.Title>
+          ),
           ...store.activeItems.map(item => () => (
             <FeedItem store={store} event={item} />
           )),

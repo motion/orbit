@@ -36,8 +36,9 @@ export default class Card {
     card: {
       flex: 1,
       padding: 8,
-      background: [250, 250, 250, 1],
-      boxShadow: [[0, 0, 0, 2, [0, 0, 0, 0.1]]],
+      background: '#fff',
+      border: [1, [0, 0, 0, 0.1]],
+      borderRadius: 5,
       overflow: 'hidden',
       overflowY: 'scroll',
     },

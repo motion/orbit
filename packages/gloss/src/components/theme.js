@@ -1,8 +1,9 @@
 import React from 'react'
 import { object, string } from 'prop-types'
 
-export default class Theme extends React.Component {
+export default class GlossTheme extends React.Component {
   static contextTypes = {
+    uiActiveTheme: string,
     uiTheme: object,
   }
 
@@ -18,6 +19,10 @@ export default class Theme extends React.Component {
         uiActiveTheme,
         theme: this.context.uiTheme[uiActiveTheme],
       }
+    }
+    return {
+      uiActiveTheme: this.context.uiActiveTheme || '',
+      theme: this.context.theme || {},
     }
   }
 

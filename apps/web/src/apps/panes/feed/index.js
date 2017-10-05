@@ -13,13 +13,13 @@ import { capitalize, isUndefined } from 'lodash'
 type Props = PaneProps & { store: FeedStore }
 
 @view
-class ItemsSection {
+class FeedNavBar {
   render({ store }) {
     return (
       <UI.Row
         stretch
         css={{
-          margin: [0, 10],
+          margin: [0, -10],
         }}
         itemProps={{
           size: 1,
@@ -36,9 +36,9 @@ class ItemsSection {
               key={type}
               icon={type.icon}
               highlight={highlight}
-              highlightBackground={[0, 0, 0, 0.1]}
               glow={!highlight}
               padding={[0, 15]}
+              borderRadius={0}
               onClick={() => {
                 store.setFilter(
                   'type',
@@ -72,6 +72,10 @@ export default class SetView extends React.Component<Props> {
 
     return (
       <Pane.Card
+        theme="light"
+        css={{
+          borderRadius: 5,
+        }}
         items={[
           () => (
             <section $$row css={{ padding: [15, 15] }}>
@@ -84,7 +88,7 @@ export default class SetView extends React.Component<Props> {
               ))}
             </section>
           ),
-          () => <ItemsSection store={store} />,
+          () => <FeedNavBar store={store} />,
           () => (
             <section>
               <chart className="chart">
@@ -92,7 +96,7 @@ export default class SetView extends React.Component<Props> {
               </chart>
             </section>
           ),
-          false && store.filters.type === 'calendar'
+          store.filters.type === 'calendar'
             ? () => (
                 <section
                   if={store.filters.type === 'calendar'}
@@ -114,7 +118,7 @@ export default class SetView extends React.Component<Props> {
           ...store.activeItems.map(item => () => (
             <FeedItem store={store} event={item} />
           )),
-        ].filter(i => !!i)}
+        ]}
       />
     )
   }

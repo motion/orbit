@@ -82,13 +82,12 @@ class BarMainStore {
   pinned: Array<PaneResult> = [
     {
       id: 1100,
-      title: 'My Projects',
+      title: 'Me',
       type: 'feed',
       icon: 'list',
-      category: 'Pinned',
       data: {
         special: true,
-        people: ['My Projects'],
+        people: ['Me'],
       },
       actions: ['respond to recent'],
     },
@@ -97,7 +96,6 @@ class BarMainStore {
       title: 'My Team',
       icon: 'list',
       type: 'feed',
-      category: 'Pinned',
       data: {
         team: 'Product',
         people: [],
@@ -130,22 +128,6 @@ class BarMainStore {
       category: 'Projects',
       type: 'message',
       icon: 'tool',
-    },
-    {
-      id: 1030,
-      title: (
-        <UI.Text opacity={0.5} size={1.2}>
-          + 10 more...
-        </UI.Text>
-      ),
-      icon: 'list',
-      type: 'feed',
-      category: 'Projects',
-      data: {
-        team: 'Motion',
-        people: [],
-      },
-      actions: ['like motion'],
     },
   ]
 
@@ -234,7 +216,7 @@ export default class BarMain extends React.Component<Props> {
     return (
       <Pane.Card
         items={mainStore.results}
-        width={305}
+        width={290}
         groupKey="category"
         itemProps={{
           fontSize: 26,
@@ -266,7 +248,7 @@ export default class BarMain extends React.Component<Props> {
             style: {
               alignSelf: 'flex-start',
               paddingTop: 2,
-              opacity: 0.4,
+              opacity: 0,
             },
           },
           icon:

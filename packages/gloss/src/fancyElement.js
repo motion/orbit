@@ -69,14 +69,16 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     const { glossUID } = this.constructor
 
     const addStyle = (obj, key, val, checkTheme): ?Object => {
-      const style = obj[key] || obj.getRule ? obj.getRule(key) : obj[key]
+      let style = obj[key]
+      if (!style) {
+        style = obj.getRule ? obj.getRule(key) : obj[key]
+      }
       if (!style) {
         return null
       }
       // dynamic
       if (typeof style === 'function') {
-        const res = css(style(val))
-        return res
+        return css(style(val))
       } else {
         finalStyles.push(style)
       }

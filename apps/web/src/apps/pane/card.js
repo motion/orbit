@@ -42,6 +42,7 @@ export default class PaneCard {
     style,
     width,
     theme,
+    primary,
   }) {
     const getItemDefault = (item, index) => ({
       highlight: () => index === paneStore.activeIndex,
@@ -50,7 +51,12 @@ export default class PaneCard {
 
     return (
       <UI.Theme name={theme}>
-        <card style={{ width, ...style }} $fullscreen={paneStore.fullscreen}>
+        <card
+          style={{ width, ...style }}
+          $fullscreen={paneStore.fullscreen}
+          $primary={primary}
+          $secondary={!primary}
+        >
           <content if={!items}>{children}</content>
 
           <content if={items}>
@@ -104,6 +110,11 @@ export default class PaneCard {
       zIndex: 1000,
       position: 'relative',
       overflowY: 'scroll',
+    },
+    secondary: {
+      transform: {
+        y: -5,
+      },
     },
     content: {
       overflowY: 'scroll',

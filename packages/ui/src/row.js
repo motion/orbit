@@ -155,7 +155,6 @@ export default class Row extends React.Component<Props> {
   static style = {
     row: {
       flexFlow: 'row',
-      maxWidth: '100%',
       alignItems: 'center',
       userSelect: 'none',
     },

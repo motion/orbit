@@ -215,6 +215,7 @@ export default class BarMain extends React.Component<Props> {
     }
     return (
       <Pane.Card
+        primary
         items={mainStore.results}
         width={290}
         groupKey="category"

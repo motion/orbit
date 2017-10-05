@@ -223,6 +223,7 @@ export default class BarMain extends React.Component<Props> {
           fontSize: 26,
           size: 1.2,
           glow: true,
+          padding: [12, 10],
         }}
         getItem={(result, index) => ({
           key: `${index}${result.id}`,

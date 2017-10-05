@@ -48,14 +48,15 @@ export default class FeedItem {
       width: '100%',
       justifyContent: 'flex-start',
       overflow: 'hidden',
-      padding: [10, 15],
+      padding: [20, 15],
     },
     info: {
       flexFlow: 'row',
       flexWrap: 'wrap',
       alignItems: 'center',
       whiteSpace: 'pre',
-      fontSize: 13,
+      fontSize: 16,
+      marginBottom: 10,
     },
     name: {
       fontWeight: 500,
@@ -72,6 +73,9 @@ export default class FeedItem {
       height: 18,
       borderRadius: 100,
       marginRight: 8,
+    },
+    body: {
+      padding: 10,
     },
   }
 }

@@ -19,12 +19,14 @@ class FeedNavBar {
       <UI.Row
         stretch
         css={{
-          margin: [0, -10],
+          margin: [0, -10, 10],
+          borderBottom: [1, [0, 0, 0, 0.1]],
         }}
         itemProps={{
-          size: 1,
+          size: 1.1,
+          height: 42,
           borderWidth: 0,
-          height: 36,
+          highlightBackground: '#000',
         }}
       >
         {store.types.map(type => {
@@ -108,13 +110,17 @@ export default class SetView extends React.Component<Props> {
         }}
         items={[
           () => (
-            <section $$row css={{ padding: [10, 15] }}>
+            <section
+              $$row
+              css={{ padding: [26, 15, 18], alignItems: 'flex-end' }}
+            >
               {store.filters.people.map(person => (
                 <person $$row css={{ marginRight: 20 }}>
                   <UI.Title
                     onClick={store.ref('isOpen').toggle}
-                    size={2}
+                    size={1.8}
                     fontWeight={800}
+                    color="#000"
                   >
                     {person}
                   </UI.Title>
@@ -134,7 +140,7 @@ export default class SetView extends React.Component<Props> {
   static style = {
     section: {
       flex: 1,
-      padding: [6, 15],
+      padding: [0, 15],
     },
     image: {
       width: 30,

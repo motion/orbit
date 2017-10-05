@@ -93,7 +93,7 @@ class Calendar {
       position: 'relative',
       borderTop: [1, '#eee'],
       borderBottom: [1, '#eee'],
-      margin: [0, -20],
+      margin: [0, -20, 8],
       flex: 1,
     },
     controls: {
@@ -116,7 +116,7 @@ class Calendar {
       height: 12,
       marginLeft: -6,
       position: 'absolute',
-      bottom: -5,
+      bottom: -12,
       left: '50%',
       right: 0,
       alignItems: 'center',
@@ -172,7 +172,7 @@ class Calendar {
     hourMark: {
       color: '#000',
       opacity: 0.3,
-      bottom: 0,
+      bottom: -2,
       padding: [0, 0, 0, 5],
       fontSize: 12,
     },
@@ -279,7 +279,7 @@ export default class SetView extends React.Component<Props> {
           () => (
             <section
               $$row
-              css={{ padding: [26, 15, 25], alignItems: 'flex-end' }}
+              css={{ padding: [20, 15, 25], alignItems: 'flex-end' }}
             >
               <title css={{ flex: 1, justifyContent: 'flex-end' }}>
                 <main>
@@ -289,11 +289,13 @@ export default class SetView extends React.Component<Props> {
                     fontWeight={800}
                     color="#000"
                   >
-                    Feed
+                    {store.filters.people.length === 1
+                      ? store.filters.people[0]
+                      : 'Feed'}
                   </UI.Title>
                 </main>
 
-                <sub>
+                <sub if={store.filters.people.length > 1}>
                   {store.filters.people.map(person => (
                     <person $$row css={{ marginRight: 20 }}>
                       <UI.Text size={1.3}>{person}</UI.Text>

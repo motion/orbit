@@ -26,6 +26,7 @@ export default class Title extends React.PureComponent<Props> {
   static defaultProps = {
     size: 1,
     tagName: 'title',
+    fontWeight: 200,
   }
 
   render({ stat, size, children, tagName, ...props }: Props) {
@@ -47,7 +48,6 @@ export default class Title extends React.PureComponent<Props> {
   static style = {
     title: {
       width: '100%',
-      fontWeight: 200,
     },
     size1: {
       textTransform: 'uppercase',

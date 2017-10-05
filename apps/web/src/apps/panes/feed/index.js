@@ -70,6 +70,36 @@ export default class SetView extends React.Component<Props> {
       )
     }
 
+    // CHART
+    // false && () => (
+    //   <section>
+    //     <chart className="chart">
+    //       <Chart store={store} />
+    //     </chart>
+    //   </section>
+    // ),
+
+    // CALENDAR
+    // false && store.filters.type === 'calendar'
+    //   ? () => (
+    //       <section
+    //         if={store.filters.type === 'calendar'}
+    //         css={{ width: '100%' }}
+    //       >
+    //         <div
+    //           $$row
+    //           css={{
+    //             width: '100%',
+    //             alignItems: 'flex-start',
+    //             maxHeight: '100%',
+    //           }}
+    //         >
+    //           <Calendar isSmall={!store.calendarActive} />
+    //         </div>
+    //       </section>
+    //     )
+    //   : null,
+
     return (
       <Pane.Card
         theme="light"
@@ -78,10 +108,14 @@ export default class SetView extends React.Component<Props> {
         }}
         items={[
           () => (
-            <section $$row css={{ padding: [15, 15] }}>
+            <section $$row css={{ padding: [10, 15] }}>
               {store.filters.people.map(person => (
                 <person $$row css={{ marginRight: 20 }}>
-                  <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
+                  <UI.Title
+                    onClick={store.ref('isOpen').toggle}
+                    size={2}
+                    fontWeight={800}
+                  >
                     {person}
                   </UI.Title>
                 </person>
@@ -89,32 +123,6 @@ export default class SetView extends React.Component<Props> {
             </section>
           ),
           () => <FeedNavBar store={store} />,
-          () => (
-            <section>
-              <chart className="chart">
-                <Chart store={store} />
-              </chart>
-            </section>
-          ),
-          store.filters.type === 'calendar'
-            ? () => (
-                <section
-                  if={store.filters.type === 'calendar'}
-                  css={{ width: '100%' }}
-                >
-                  <div
-                    $$row
-                    css={{
-                      width: '100%',
-                      alignItems: 'flex-start',
-                      maxHeight: '100%',
-                    }}
-                  >
-                    <Calendar isSmall={!store.calendarActive} />
-                  </div>
-                </section>
-              )
-            : null,
           ...store.activeItems.map(item => () => (
             <FeedItem store={store} event={item} />
           )),

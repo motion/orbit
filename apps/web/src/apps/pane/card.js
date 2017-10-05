@@ -111,10 +111,13 @@ export default class PaneCard {
       position: 'relative',
       overflowY: 'scroll',
     },
+    primary: {
+      marginTop: 5,
+    },
     secondary: {
-      transform: {
-        y: -5,
-      },
+      // transform: {
+      //   y: -5,
+      // },
     },
     content: {
       overflowY: 'scroll',

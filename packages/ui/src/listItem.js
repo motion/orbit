@@ -246,10 +246,10 @@ export default class ListItem extends React.Component<Props> {
     },
     children: {
       flexFlow: 'row',
-      margin: [0, -8],
+      margin: [0, -10],
       flex: 1,
       lineHeight: '1.38rem',
-      padding: [0, 8],
+      padding: [0, 10],
       overflow: 'hidden',
     },
   }

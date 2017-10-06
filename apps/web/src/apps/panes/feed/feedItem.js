@@ -38,7 +38,9 @@ export default class FeedItem {
                 {extraInfo || null}
                 <UI.Date $date>{event.updated || event.created}</UI.Date>
               </info>
-              <body if={body}>{body}</body>
+              <body if={body}>
+                <UI.Text>{body}</UI.Text>
+              </body>
             </feeditem>
           )
         }}

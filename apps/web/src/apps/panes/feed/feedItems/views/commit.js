@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
+import * as UI from '@mcro/ui'
 import App from '~/app'
 
 const CommitInfo = {}
@@ -26,9 +27,15 @@ export default class Commit {
       return null
     }
     return (
-      <commit css={{ maxHeight: 400 }}>
+      <UI.Card>
         <pre>{store.info.files.map(file => file.patch)}</pre>
-      </commit>
+      </UI.Card>
     )
+  }
+
+  static style = {
+    commit: {
+      border: [2, 'red'],
+    },
   }
 }

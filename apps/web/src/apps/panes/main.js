@@ -15,6 +15,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
   title: thing.title,
   type: thing.type,
+  iconAfter: true,
   icon: (
     <img
       src={`/images/${thing.integration}-icon-light.svg`}
@@ -129,6 +130,28 @@ class BarMainStore {
       category: 'Projects',
       type: 'message',
       icon: 'tool',
+    },
+
+    {
+      id: 1300,
+      title: 'Google Docs',
+      category: 'Services',
+      type: 'message',
+      data: { image: 'google-docs-icon.svg' },
+    },
+    {
+      id: 1300,
+      title: 'Github',
+      category: 'Services',
+      type: 'message',
+      data: { image: 'github-icon.svg' },
+    },
+    {
+      id: 1300,
+      title: 'Google Drive',
+      category: 'Services',
+      type: 'message',
+      data: { image: 'drive-icon.svg' },
     },
   ]
 
@@ -246,17 +269,16 @@ export default class BarMain extends React.Component<Props> {
               {this.getDate(result)}
             </UI.Text>,
           ].filter(Boolean),
-          iconAfter: true,
+          iconAfter: result.iconAfter,
           iconProps: {
             style: {
               alignSelf: 'flex-start',
               paddingTop: 2,
-              opacity: 0,
             },
           },
           icon:
             result.data && result.data.image ? (
-              <img $image src={`/images/${result.data.image}.jpg`} />
+              <img $image src={`/images/${result.data.image}`} />
             ) : (
               result.icon
             ),

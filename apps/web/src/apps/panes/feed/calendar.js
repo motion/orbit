@@ -2,8 +2,11 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-const hourOffset = hour => hour - 10
-const colors = ['green', 'red', 'blue', 'orange', 'purple']
+const HOUR_WIDTH = 85
+const START_HOUR = 9
+
+const hourOffset = hour => hour - START_HOUR
+const colors = ['darkgreen', 'darkred', 'darkblue', 'darkorange', 'darkpurple']
 const rc = () => colors[Math.floor(colors.length * Math.random())]
 
 @view
@@ -11,11 +14,22 @@ export default class Calendar {
   render() {
     return (
       <calendar>
+        <fadeRight
+          css={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            width: 200,
+            //background: 'linear-gradient(to right, transparent, #fff 90%)',
+            zIndex: 1000,
+          }}
+        />
         <controls $$row>
           <UI.Row>
-            <UI.Button size={0.9} icon="arrowminleft" />
+            <UI.Button size={0.9} color={[0, 0, 0, 0.3]} icon="arrowminleft" />
             <UI.Button size={0.9}>Jan 12th</UI.Button>
-            <UI.Button size={0.9} icon="arrowminright" />
+            <UI.Button size={0.9} color={[0, 0, 0, 0.3]} icon="arrowminright" />
           </UI.Row>
           <div css={{ marginRight: 10 }} />
           <UI.Row>
@@ -29,7 +43,7 @@ export default class Calendar {
           <dot />
         </currentTime>
         <events>
-          <event $$background={rc()} $atTime={11}>
+          <event $$background={rc()} $atTime={10} $hours={2}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
@@ -53,7 +67,7 @@ export default class Calendar {
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={15}>
+          <event $$background={rc()} $atTime={16}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
@@ -63,12 +77,12 @@ export default class Calendar {
           </event>
         </events>
         <period>
-          {[10, 11, 12, 13, 14, 15, 16, 17].map(time => (
+          {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
             <mark key={time} $atTime={time} />
           ))}
         </period>
         <hours>
-          {[10, 11, 12, 13, 14, 15, 16, 17].map(time => (
+          {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
             <hourMark key={time} $atTime={time}>
               {time % 12}
               {time > 12 ? 'pm' : 'am'}
@@ -81,7 +95,7 @@ export default class Calendar {
 
   static style = {
     calendar: {
-      height: 170,
+      height: 166,
       position: 'relative',
       borderTop: [1, '#eee'],
       borderBottom: [1, '#eee'],
@@ -118,7 +132,7 @@ export default class Calendar {
     atTime: hour => ({
       position: 'absolute',
       border: '10px red',
-      left: hourOffset(hour) * 100,
+      left: hourOffset(hour) * HOUR_WIDTH,
     }),
     events: {
       position: 'absolute',
@@ -126,19 +140,19 @@ export default class Calendar {
       right: 0,
       bottom: 0,
       zIndex: 10,
-      top: 25,
+      top: 22,
     },
     event: {
-      width: 100,
+      width: HOUR_WIDTH,
       height: 38,
       background: 'green',
       color: '#fff',
       padding: [5, 10],
       borderRadius: 6,
-      lineHeight: '1rem',
+      lineHeight: '14px',
     },
     title: {
-      marginBottom: -2,
+      margin: [1, 0],
     },
     sub: {
       fontSize: '80%',
@@ -148,7 +162,7 @@ export default class Calendar {
       top: 40 * x,
     }),
     hours: x => ({
-      width: 100 * x,
+      width: HOUR_WIDTH * x,
     }),
     period: {
       position: 'absolute',
@@ -170,6 +184,7 @@ export default class Calendar {
       bottom: -2,
       padding: [0, 0, 0, 5],
       fontSize: 12,
+      fontWeight: 600,
     },
   }
 }

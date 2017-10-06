@@ -7,8 +7,7 @@ import type { PaneProps } from '~/types'
 import Calendar from './calendar'
 import FeedItem from './feedItem'
 import FeedStore from './feedStore'
-import Chart from './chart'
-import _, { capitalize, isUndefined } from 'lodash'
+import { capitalize, isUndefined } from 'lodash'
 
 type Props = PaneProps & { store: FeedStore }
 
@@ -83,40 +82,27 @@ export default class SetView extends React.Component<Props> {
     //   </section>
     // ),
 
-    // CALENDAR
-    // false && store.filters.type === 'calendar'
-    //   ? () => (
-    //       <section
-    //         if={store.filters.type === 'calendar'}
-    //         css={{ width: '100%' }}
-    //       >
-    //         <div
-    //           $$row
-    //           css={{
-    //             width: '100%',
-    //             alignItems: 'flex-start',
-    //             maxHeight: '100%',
-    //           }}
-    //         >
-    //           <Calendar isSmall={!store.calendarActive} />
-    //         </div>
-    //       </section>
-    //     )
-    //   : null,
-
     return (
       <Pane.Card
         theme="light"
         css={{
           borderRadius: 5,
+          boxShadow: [[0, 2, 10, [0, 0, 0, 0.15]]],
         }}
         items={[
           () => (
             <section
               $$row
-              css={{ padding: [20, 15, 25], alignItems: 'flex-end' }}
+              css={{ padding: [10, 15, 0], alignItems: 'flex-end' }}
             >
-              <title css={{ flex: 1, justifyContent: 'flex-end' }}>
+              <title
+                css={{
+                  paddingTop: 30,
+                  paddingBottom: 25,
+                  flex: 1,
+                  justifyContent: 'flex-end',
+                }}
+              >
                 <main>
                   <UI.Title
                     onClick={store.ref('isOpen').toggle}
@@ -139,45 +125,53 @@ export default class SetView extends React.Component<Props> {
                 </sub>
               </title>
 
-              <aside css={{ maxHeight: 55 }}>
-                <cardsFade
-                  $$fullscreen
-                  css={{
-                    top: '80%',
-                    background:
-                      'linear-gradient(transparent, rgba(0,0,0,0.05))',
-                  }}
-                />
+              <cardsFade
+                $$fullscreen
+                css={{
+                  top: '85%',
+                  background: 'linear-gradient(transparent, rgba(0,0,0,0.04))',
+                  //left: '50%',
+                }}
+              />
 
-                <card
-                  css={{
-                    flexShrink: 0,
-                    borderRadius: 8,
-                    padding: [5, 10],
-                    border: [1, 'dashed', [0, 0, 0, 0.15]],
-                  }}
-                >
-                  <content $$row css={{ alignItems: 'center' }}>
-                    <avatar
-                      css={{
-                        width: 50,
-                        height: 50,
-                        marginRight: 15,
-                        borderRadius: 1000,
-                        background: 'url(/images/me.jpg)',
-                        backgroundSize: 'cover',
-                      }}
-                    />
-                    <stats css={{ padding: [10, 0] }}>
-                      <stat css={{ fontWeight: 600, color: '#333' }}>
-                        Nate Wienert
-                      </stat>
-                      <stat>natewienert@gmail.com</stat>
-                      <stat>Teams: Motion</stat>
-                    </stats>
-                  </content>
-                </card>
-              </aside>
+              <rightSide
+                css={{
+                  position: 'relative',
+                  height: '100%',
+                  lineHeight: '1.2rem',
+                }}
+              >
+                <aside css={{ maxHeight: 55 }}>
+                  <card
+                    css={{
+                      flexShrink: 0,
+                      borderRadius: 8,
+                      padding: [5, 10],
+                      border: [1, 'dashed', [0, 0, 0, 0.15]],
+                    }}
+                  >
+                    <content $$row css={{ alignItems: 'center' }}>
+                      <avatar
+                        css={{
+                          width: 50,
+                          height: 50,
+                          marginRight: 15,
+                          borderRadius: 1000,
+                          background: 'url(/images/me.jpg)',
+                          backgroundSize: 'cover',
+                        }}
+                      />
+                      <stats css={{ padding: [10, 0] }}>
+                        <stat css={{ fontWeight: 600, color: '#333' }}>
+                          Nate Wienert
+                        </stat>
+                        <stat>natewienert@gmail.com</stat>
+                        <stat>Teams: Motion</stat>
+                      </stats>
+                    </content>
+                  </card>
+                </aside>
+              </rightSide>
             </section>
           ),
           () => <Calendar />,

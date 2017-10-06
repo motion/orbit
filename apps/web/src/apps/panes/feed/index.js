@@ -11,54 +11,130 @@ import { capitalize, isUndefined } from 'lodash'
 
 type Props = PaneProps & { store: FeedStore }
 
+const SubTitle = props => (
+  <UI.Title
+    fontWeight={400}
+    color={[0, 0, 0, 0.5]}
+    marginBottom={10}
+    {...props}
+  />
+)
+
+const Link = props => (
+  <UI.Text fontWeight={400} color="darkblue" display="inline" {...props} />
+)
+
+@view
+class FeedRecently {
+  render() {
+    const itemProps = {
+      padding: [7, 0],
+      size: 1.2,
+    }
+
+    return (
+      <recently $$row>
+        <section>
+          <SubTitle>Recently</SubTitle>
+          <UI.List
+            size={1.2}
+            itemProps={itemProps}
+            items={[
+              {
+                primary: 'Some Doc',
+                icon: '/images/google-docs-icon.svg',
+              },
+              {
+                primary: 'User Research',
+                icon: '/images/google-docs-icon.svg',
+              },
+              { primary: 'motion/orbit', icon: '/images/github-icon.svg' },
+              { primary: 'motion/something', icon: '/images/github-icon.svg' },
+            ]}
+          />
+        </section>
+        <section>
+          <SubTitle>Currently</SubTitle>
+          <UI.Card title="#532 Something" />
+        </section>
+      </recently>
+    )
+  }
+
+  static style = {
+    recently: {
+      padding: [30, 15],
+      flex: 1,
+    },
+    section: {
+      width: '50%',
+    },
+  }
+}
+
+//<UI.Row
+//        stretch
+//        css={{
+//          margin: [0, -10, 10],
+//          background: '#eee',
+//        }}
+//        itemProps={{
+//          size: 1,
+//          height: 42,
+//          borderWidth: 0,
+//          highlightBackground: '#fff',
+//          highlightColor: '#000',
+//        }}
+//      >
+//        {store.types.map(type => {
+//          const highlight =
+//            (isUndefined(type.type) ? type.name : type.type) ===
+//            store.filters.type
+//          return (
+//            <UI.Button
+//              key={type}
+//              icon={type.icon}
+//              highlight={highlight}
+//              glow={!highlight}
+//              padding={[0, 15]}
+//              borderRadius={0}
+//              opacity={highlight ? 1 : 0.5}
+//              css={{
+//                borderBottom: [1, 'solid', '#fff'],
+//                borderColor: highlight ? 'transparent' : '#eee',
+//              }}
+//              onClick={() => {
+//                store.setFilter(
+//                  'type',
+//                  isUndefined(type.type) ? type.name : type.type
+//                )
+//              }}
+//            >
+//              {capitalize(type.name)}
+//            </UI.Button>
+//          )
+//        })}
+//      </UI.Row>
+
 @view
 class FeedNavBar {
   render({ store }) {
     return (
-      <UI.Row
-        stretch
-        css={{
-          margin: [0, -10, 10],
-          background: '#eee',
-        }}
-        itemProps={{
-          size: 1,
-          height: 42,
-          borderWidth: 0,
-          highlightBackground: '#fff',
-          highlightColor: '#000',
-        }}
-      >
-        {store.types.map(type => {
-          const highlight =
-            (isUndefined(type.type) ? type.name : type.type) ===
-            store.filters.type
-          return (
-            <UI.Button
-              key={type}
-              icon={type.icon}
-              highlight={highlight}
-              glow={!highlight}
-              padding={[0, 15]}
-              borderRadius={0}
-              opacity={highlight ? 1 : 0.5}
-              css={{
-                borderBottom: [1, 'solid', '#fff'],
-                borderColor: highlight ? 'transparent' : '#eee',
-              }}
-              onClick={() => {
-                store.setFilter(
-                  'type',
-                  isUndefined(type.type) ? type.name : type.type
-                )
-              }}
-            >
-              {capitalize(type.name)}
-            </UI.Button>
-          )
-        })}
-      </UI.Row>
+      <navbar>
+        <SubTitle>History</SubTitle>
+
+        <UI.Button borderRadius={50}>Filter</UI.Button>
+      </navbar>
     )
+  }
+  static style = {
+    navbar: {
+      flex: 1,
+      padding: [0, 15],
+      flexFlow: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
   }
 }
 
@@ -97,7 +173,7 @@ export default class SetView extends React.Component<Props> {
           () => (
             <section
               $$row
-              css={{ padding: [10, 15, 0], alignItems: 'flex-end' }}
+              css={{ padding: [10, 15, 5], alignItems: 'flex-end' }}
             >
               <title
                 css={{
@@ -107,26 +183,43 @@ export default class SetView extends React.Component<Props> {
                   justifyContent: 'flex-end',
                 }}
               >
-                <main>
-                  <UI.Title
-                    onClick={store.ref('isOpen').toggle}
-                    size={1.8}
-                    fontWeight={800}
-                    color="#000"
-                  >
-                    {store.filters.people.length === 1
-                      ? store.filters.people[0]
-                      : 'Feed'}
-                  </UI.Title>
+                <main css={{ flexFlow: 'row', alignItems: 'flex-end' }}>
+                  <avatar
+                    css={{
+                      width: 50,
+                      height: 50,
+                      marginRight: 15,
+                      borderRadius: 1000,
+                      background: 'url(/images/me.jpg)',
+                      backgroundSize: 'cover',
+                    }}
+                  />
+                  <titles css={{ flex: 1 }}>
+                    <UI.Title
+                      onClick={store.ref('isOpen').toggle}
+                      size={1.8}
+                      fontWeight={800}
+                      color="#000"
+                      marginBottom={4}
+                    >
+                      {store.filters.people[0] === 'Me'
+                        ? 'Nate Wienert'
+                        : store.filters.people.join(', ')}
+                    </UI.Title>
+                    <subtitle
+                      $$row
+                      css={{
+                        flex: 1,
+                        alignItems: 'center',
+                        fontSize: 16,
+                        opacity: 0.7,
+                      }}
+                    >
+                      <UI.Text>Currently:&nbsp;</UI.Text>
+                      <Link>#58 Something With a Long Title</Link>
+                    </subtitle>
+                  </titles>
                 </main>
-
-                <sub if={store.filters.people.length > 1}>
-                  {store.filters.people.map(person => (
-                    <person $$row css={{ marginRight: 20 }}>
-                      <UI.Text size={1.3}>{person}</UI.Text>
-                    </person>
-                  ))}
-                </sub>
               </title>
 
               <cardsFade
@@ -144,34 +237,24 @@ export default class SetView extends React.Component<Props> {
                   position: 'relative',
                   height: '100%',
                   lineHeight: '1.2rem',
+                  justifyContent: 'flex-end',
+                  paddingBottom: 20,
                 }}
               >
                 <aside css={{ maxHeight: 55 }}>
                   <card
                     css={{
                       flexShrink: 0,
-                      borderRadius: 8,
-                      padding: [5, 10],
-                      border: [1, 'dashed', [0, 0, 0, 0.15]],
+                      textAlign: 'right',
+                      flex: 1,
                     }}
                   >
                     <content $$row css={{ alignItems: 'center' }}>
-                      <avatar
-                        css={{
-                          width: 50,
-                          height: 50,
-                          marginRight: 15,
-                          borderRadius: 1000,
-                          background: 'url(/images/me.jpg)',
-                          backgroundSize: 'cover',
-                        }}
-                      />
                       <stats css={{ padding: [10, 0] }}>
-                        <stat css={{ fontWeight: 600, color: '#333' }}>
-                          Nate Wienert
-                        </stat>
-                        <stat>natewienert@gmail.com</stat>
-                        <stat>Teams: Motion</stat>
+                        <UI.Text>natewienert@gmail.com</UI.Text>
+                        <UI.Text>
+                          Team: <Link>Motion</Link>
+                        </UI.Text>
                       </stats>
                     </content>
                   </card>
@@ -185,6 +268,7 @@ export default class SetView extends React.Component<Props> {
           //    Recently
           //  </UI.Title>
           //),
+          () => <FeedRecently />,
           () => <FeedNavBar store={store} />,
           ...store.activeItems.map(item => () => (
             <FeedItem

@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
 import $ from 'color'
 import Popover from './popover'
 import names from './iconNames'
@@ -45,9 +44,7 @@ export default class Icon extends React.PureComponent<Props> {
       type,
       className,
       onClick,
-      attach,
       children,
-      button,
       margin,
       opacity,
       style,
@@ -57,8 +54,7 @@ export default class Icon extends React.PureComponent<Props> {
       height,
       ...props
     } = this.props
-    const iconName = findMatch(name)
-    let content = children || !iconName ? name : ''
+    let content
 
     if (type === 'detailed') {
       content = (
@@ -70,9 +66,9 @@ export default class Icon extends React.PureComponent<Props> {
 
     const styles = {
       margin,
-      alignSelf: alignSelf,
+      opacity,
+      alignSelf,
       alignItems: 'center',
-      opacity: opacity,
       color: color ? $(color).toString() : '',
       width: width || size,
       height: height || size,
@@ -82,6 +78,13 @@ export default class Icon extends React.PureComponent<Props> {
         color: hoverColor.toString(),
       },
     }
+
+    if (name[0] === '/') {
+      return <img style={{ ...styles, ...style }} src={name} />
+    }
+
+    const iconName = findMatch(name)
+    content = content || children || !iconName ? name : ''
 
     return (
       <div

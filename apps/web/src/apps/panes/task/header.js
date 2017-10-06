@@ -21,8 +21,13 @@ export default class TaskHeader {
 
     return (
       <header>
-        <meta css={{ padding: 10 }}>
-          <UI.Title flex={1} fontWeight={200} size={titleSize}>
+        <meta css={{ padding: 10, paddingTop: 20 }}>
+          <UI.Title
+            flex={1}
+            fontWeight={800}
+            color={[0, 0, 0]}
+            size={titleSize}
+          >
             {title}
           </UI.Title>
           <left>

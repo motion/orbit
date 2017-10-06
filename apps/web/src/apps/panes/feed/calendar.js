@@ -113,7 +113,7 @@ export default class Calendar {
       flex: 1,
     },
     showRows: num => ({
-      height: 55 * num + 20,
+      height: 55 * num + 30,
       overflow: 'hidden',
     }),
     controls: {
@@ -154,7 +154,7 @@ export default class Calendar {
       right: 0,
       bottom: 0,
       zIndex: 10,
-      top: 22,
+      top: 28,
     },
     event: {
       width: HOUR_WIDTH,

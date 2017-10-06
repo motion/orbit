@@ -46,9 +46,6 @@ export default class Title extends React.PureComponent<Props> {
   }
 
   static style = {
-    title: {
-      width: '100%',
-    },
     size1: {
       textTransform: 'uppercase',
     },

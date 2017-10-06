@@ -40,7 +40,7 @@ export default class Button extends React.PureComponent {
         hoverable
         borderRadius
         sizeFont
-        sizePadding={1.2}
+        sizePadding={1.5}
         sizeRadius
         sizeHeight
         sizeIcon={1.1}

@@ -272,8 +272,8 @@ export default class BarMain extends React.Component<Props> {
           iconAfter: result.iconAfter,
           iconProps: {
             style: {
-              alignSelf: 'flex-start',
-              paddingTop: 2,
+              //alignSelf: 'flex-start',
+              //paddingTop: 2,
             },
           },
           icon:

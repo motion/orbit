@@ -5,7 +5,7 @@ import * as FeedItems from './feedItems'
 
 @view
 export default class FeedItem {
-  render({ event, style }) {
+  render({ hideName, event, style }) {
     const { data } = event
     if (!data) {
       console.log('no data')
@@ -31,7 +31,9 @@ export default class FeedItem {
                     backgroundSize: 'cover',
                   }}
                 />
-                <UI.Text $name>{name} </UI.Text>
+                <UI.Text $name if={!hideName}>
+                  {name}{' '}
+                </UI.Text>
                 <UI.Text $action>{verb} </UI.Text>
                 {extraInfo || null}
                 <UI.Date $date>{event.updated || event.created}</UI.Date>
@@ -56,8 +58,7 @@ export default class FeedItem {
       flexWrap: 'wrap',
       alignItems: 'center',
       whiteSpace: 'pre',
-      fontSize: 16,
-      marginBottom: 10,
+      fontSize: 15,
     },
     name: {
       fontWeight: 500,
@@ -76,7 +77,7 @@ export default class FeedItem {
       marginRight: 8,
     },
     body: {
-      padding: 10,
+      padding: [10, 15],
     },
   }
 }

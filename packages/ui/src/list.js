@@ -482,6 +482,8 @@ class List extends React.PureComponent<Props, { selected: number }> {
       justifyContent: 'center',
       // background: [0, 0, 0, 0.02],
       color: [255, 255, 255, 0.35],
+      pointerEvents: 'none',
+      userSelect: 'none',
     },
     firstSeparator: {
       paddingTop: 10,

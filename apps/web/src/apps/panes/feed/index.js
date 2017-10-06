@@ -182,7 +182,13 @@ export default class SetView extends React.Component<Props> {
           //),
           () => <FeedNavBar store={store} />,
           ...store.activeItems.map(item => () => (
-            <FeedItem store={store} event={item} />
+            <FeedItem
+              store={store}
+              event={item}
+              hideName={
+                store.filters.people && store.filters.people[0] === 'Me'
+              }
+            />
           )),
         ]}
       />

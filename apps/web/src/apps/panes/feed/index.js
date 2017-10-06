@@ -4,180 +4,13 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/pane'
 import type { PaneProps } from '~/types'
-// import Calendar from '../views/calendar'
+import Calendar from './calendar'
 import FeedItem from './feedItem'
 import FeedStore from './feedStore'
 import Chart from './chart'
 import _, { capitalize, isUndefined } from 'lodash'
 
 type Props = PaneProps & { store: FeedStore }
-
-const hourOffset = hour => hour - 10
-const colors = ['green', 'red', 'blue', 'orange', 'purple']
-const rc = () => colors[Math.floor(colors.length * Math.random())]
-
-@view
-class Calendar {
-  render() {
-    return (
-      <calendar>
-        <controls $$row>
-          <UI.Row>
-            <UI.Button icon="arrowminleft" />
-            <UI.Button>Tues, Jan 12th</UI.Button>
-            <UI.Button icon="arrowminright" />
-          </UI.Row>
-          <div css={{ marginRight: 10 }} />
-          <UI.Row>
-            <UI.Button>Week</UI.Button>
-            <UI.Button>Month</UI.Button>
-          </UI.Row>
-        </controls>
-        <currentTime $atTime={11}>
-          <dot />
-        </currentTime>
-        <events>
-          <event $$background={rc()} $atTime={11}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $$background={rc()} $atTime={11} $hours={2} $offset={1}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $$background={rc()} $atTime={11} $hours={2} $offset={2}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $$background={rc()} $atTime={13} $offset={1}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $$background={rc()} $atTime={14} $offset={2}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $$background={rc()} $atTime={14} $hours={2}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $$background={rc()} $atTime={15}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $$background={rc()} $atTime={17}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-        </events>
-        <period>
-          {[10, 11, 12, 13, 14, 15, 16, 17].map(time => (
-            <mark key={time} $atTime={time} />
-          ))}
-        </period>
-        <hours>
-          {[10, 11, 12, 13, 14, 15, 16, 17].map(time => (
-            <hourMark key={time} $atTime={time}>
-              {time % 12}
-              {time > 12 ? 'pm' : 'am'}
-            </hourMark>
-          ))}
-        </hours>
-      </calendar>
-    )
-  }
-
-  static style = {
-    calendar: {
-      height: 180,
-      position: 'relative',
-      borderTop: [1, '#eee'],
-      borderBottom: [1, '#eee'],
-      margin: [0, -20, 8],
-      flex: 1,
-    },
-    controls: {
-      position: 'fixed',
-      top: -13,
-      left: 20,
-      zIndex: 100,
-    },
-    currentTime: {
-      width: 4,
-      background: 'black',
-      bottom: 5,
-      top: 0,
-      position: 'absolute',
-      zIndex: 12,
-      boxShadow: [[0, 0, 10, [0, 0, 0, 0.1]]],
-    },
-    dot: {
-      width: 12,
-      height: 12,
-      marginLeft: -6,
-      position: 'absolute',
-      bottom: -12,
-      left: '50%',
-      right: 0,
-      alignItems: 'center',
-      borderRadius: 1000,
-      background: 'black',
-    },
-    atTime: hour => ({
-      position: 'absolute',
-      border: '10px red',
-      left: hourOffset(hour) * 100,
-    }),
-    events: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 10,
-      top: 30,
-    },
-    event: {
-      width: 100,
-      height: 40,
-      background: 'green',
-      color: '#fff',
-      padding: [5, 10],
-      borderRadius: 10,
-      lineHeight: '1rem',
-    },
-    sub: {
-      fontSize: '80%',
-      opacity: 0.5,
-    },
-    offset: x => ({
-      top: 45 * x,
-    }),
-    hours: x => ({
-      width: 100 * x,
-    }),
-    period: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 8,
-    },
-    mark: {
-      bottom: 0,
-      top: 0,
-      width: 1,
-      background: [0, 0, 0, 0.05],
-    },
-    hourMark: {
-      color: '#000',
-      opacity: 0.3,
-      bottom: -2,
-      padding: [0, 0, 0, 5],
-      fontSize: 12,
-    },
-  }
-}
 
 @view
 class FeedNavBar {
@@ -187,13 +20,14 @@ class FeedNavBar {
         stretch
         css={{
           margin: [0, -10, 10],
-          borderBottom: [1, [0, 0, 0, 0.1]],
+          borderBottom: [1, [0, 0, 0, 0.05]],
         }}
         itemProps={{
-          size: 1.1,
+          size: 1,
           height: 42,
           borderWidth: 0,
-          highlightBackground: '#000',
+          highlightBackground: '#fff',
+          highlightColor: '#000',
         }}
       >
         {store.types.map(type => {
@@ -208,6 +42,7 @@ class FeedNavBar {
               glow={!highlight}
               padding={[0, 15]}
               borderRadius={0}
+              opacity={highlight ? 1 : 0.5}
               onClick={() => {
                 store.setFilter(
                   'type',
@@ -346,12 +181,12 @@ export default class SetView extends React.Component<Props> {
             </section>
           ),
           () => <Calendar />,
-          //() => <FeedNavBar store={store} />,
-          () => (
-            <UI.Title margin={[35, 0, 0, 15]} color="#000" fontWeight="800">
-              Recently
-            </UI.Title>
-          ),
+          //() => (
+          //  <UI.Title margin={[15, 0, 0, 15]} color="#000" fontWeight="800">
+          //    Recently
+          //  </UI.Title>
+          //),
+          () => <FeedNavBar store={store} />,
           ...store.activeItems.map(item => () => (
             <FeedItem store={store} event={item} />
           )),

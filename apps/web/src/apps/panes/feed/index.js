@@ -19,7 +19,7 @@ class FeedNavBar {
         stretch
         css={{
           margin: [0, -10, 10],
-          borderBottom: [1, [0, 0, 0, 0.05]],
+          background: '#eee',
         }}
         itemProps={{
           size: 1,
@@ -42,6 +42,10 @@ class FeedNavBar {
               padding={[0, 15]}
               borderRadius={0}
               opacity={highlight ? 1 : 0.5}
+              css={{
+                borderBottom: [1, 'solid', '#fff'],
+                borderColor: highlight ? 'transparent' : '#eee',
+              }}
               onClick={() => {
                 store.setFilter(
                   'type',
@@ -126,6 +130,7 @@ export default class SetView extends React.Component<Props> {
               </title>
 
               <cardsFade
+                if={false}
                 $$fullscreen
                 css={{
                   top: '85%',

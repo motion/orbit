@@ -13,7 +13,7 @@ const rc = () => colors[Math.floor(colors.length * Math.random())]
 export default class Calendar {
   render() {
     return (
-      <calendar>
+      <calendar $showRows={2}>
         <fadeRight
           css={{
             position: 'absolute',
@@ -28,18 +28,22 @@ export default class Calendar {
         <controls $$row>
           <UI.Row>
             <UI.Button size={0.9} color={[0, 0, 0, 0.3]} icon="arrowminleft" />
-            <UI.Button size={0.9}>Jan 12th</UI.Button>
+            <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
+              Jan 12th
+            </UI.Button>
             <UI.Button size={0.9} color={[0, 0, 0, 0.3]} icon="arrowminright" />
           </UI.Row>
           <div css={{ marginRight: 10 }} />
           <UI.Row>
-            <UI.Button size={0.9} fontWeight={800}>
+            <UI.Button size={0.9} fontWeight={800} color={[0, 0, 0, 0.5]}>
               Day
             </UI.Button>
-            <UI.Button size={0.9}>Week</UI.Button>
+            <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
+              Week
+            </UI.Button>
           </UI.Row>
         </controls>
-        <currentTime $atTime={11}>
+        <currentTime $atTime={10}>
           <dot />
         </currentTime>
         <events>
@@ -51,7 +55,13 @@ export default class Calendar {
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={11} $hours={2} $offset={2}>
+          <event
+            if={false}
+            $$background={rc()}
+            $atTime={11}
+            $hours={2}
+            $offset={2}
+          >
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
@@ -59,11 +69,11 @@ export default class Calendar {
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={14} $offset={2}>
+          <event if={false} $$background={rc()} $atTime={14} $offset={2}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={14} $hours={2}>
+          <event if={false} $$background={rc()} $atTime={14} $hours={2}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
@@ -84,8 +94,8 @@ export default class Calendar {
         <hours>
           {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
             <hourMark key={time} $atTime={time}>
-              {time % 12}
-              {time > 12 ? 'pm' : 'am'}
+              {time === 12 ? 12 : time % 12}
+              {time >= 12 ? 'pm' : 'am'}
             </hourMark>
           ))}
         </hours>
@@ -95,13 +105,17 @@ export default class Calendar {
 
   static style = {
     calendar: {
-      height: 166,
       position: 'relative',
       borderTop: [1, '#eee'],
       borderBottom: [1, '#eee'],
-      margin: [0, -20, 8],
+      margin: [0, -20, 0],
+      paddingBottom: 10,
       flex: 1,
     },
+    showRows: num => ({
+      height: 55 * num + 20,
+      overflow: 'hidden',
+    }),
     controls: {
       position: 'fixed',
       top: -13,
@@ -109,7 +123,7 @@ export default class Calendar {
       zIndex: 100,
     },
     currentTime: {
-      width: 4,
+      width: 3,
       background: 'black',
       bottom: 5,
       top: 0,
@@ -176,7 +190,7 @@ export default class Calendar {
       bottom: 0,
       top: 0,
       width: 1,
-      background: [0, 0, 0, 0.05],
+      background: [0, 0, 0, 0.025],
     },
     hourMark: {
       color: '#000',

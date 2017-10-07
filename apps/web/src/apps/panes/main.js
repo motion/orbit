@@ -230,7 +230,7 @@ export default class BarMain extends React.Component<Props> {
       <Pane.Card
         primary
         items={mainStore.results}
-        width={290}
+        width={270}
         groupKey="category"
         itemProps={{
           fontSize: 26,

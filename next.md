@@ -39,6 +39,9 @@ lets you create, edit tickets, comment, close quickly
 ## replace email
 if it integrated with email it could basically add your jira/github/docs into an email like interface
 
+## unified interface for apps
+basically station or going far with actions -- custom browser like interface that
+
 ---
 
 # strategy

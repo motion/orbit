@@ -1,7 +1,7 @@
 {
   "name": "@mcro/ui",
   "private": true,
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -9,17 +9,17 @@
   "author": "Motion (motion.io)",
   "license": "MIT",
   "dependencies": {
-    "@mcro/black": "^1.3.2",
-    "@mcro/gloss": "^1.3.2",
-    "@mcro/react-tunnel": "^1.3.3",
+    "@mcro/black": "^1.4.0",
+    "@mcro/gloss": "^1.4.0",
+    "@mcro/react-tunnel": "^1.4.0",
     "color": "^2.0.0",
     "element-resize-detector": "^1.1.12",
     "fuzzy": "^0.1.3",
     "hoist-non-react-statics": "^2.3.0",
     "keycode": "^2.1.9",
     "react-hotkeys": "^0.10.0",
-    "react-virtualized": "^9.9.0",
-    "react-tilt": "^0.1.4"
+    "react-tilt": "^0.1.4",
+    "react-virtualized": "^9.9.0"
   },
   "peerDependencies": {
     "lodash": "*",

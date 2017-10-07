@@ -1,9 +1,9 @@
 {
   "name": "@mcro/preset-motion",
   "main": "lib/index.js",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "dependencies": {
-    "@mcro/gloss": "^1.3.2",
+    "@mcro/gloss": "^1.4.0",
     "@mcro/hmr": "^1.3.2",
     "@mcro/hmr-view": "^1.3.2",
     "babel-plugin-root-import": "^5.1.0",

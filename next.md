@@ -1,38 +1,50 @@
-micro:
-  - team pane:
-    - show integrations they use
-    - github pulse like stats
-    - aggregate people
-      - show list of them
-      - show their feeds
-  - project pane:
-    - combining multiple functionality
-    - shows whats combined
-    - mockup design
-  - calendar integration
-  - main bar entries:
-    - able to see a repos issues
+# features
 
-macro:
-  - integrations:
-      - jira
-  - teams:
-    - onboarding process
-    - figuring who is who across integrations
-    - feeds on a person-basis
-  - search:
-    - potentially filter by source
-    - combine multiple topics into feeds
-  - quick actions:
-    - jira/github cards w actions
-  - orbits:
-    - some test of sharing to team orbit
+## search
+fast, offline, cross platform, cross service, smart
 
-later:
-  - notifications
-    - if we have apps that have feeds, may want notifications
+## answers
+"docs dave edited last week"
+"conversations about x"
+"cto"
+"frontend developers"
+"developers active today"
 
--fast pouch
-  - looks into shared array buffers and webworkers
-  - https://github.com/pouchdb-community/socket-pouch (web sockets)
-  - https://github.com/jkleinsc/telegraph (web workers)
+## visibility
+"lisa" shows everything about her, and whats she is doing
+
+## cohesion
+attaches slack conversations to relevant tickets
+auto groups projects
+auto figures out teams
+
+## extensibility
+this is a platform not a product, you can extend it
+gives you data input, custom apps
+lets you expose features easily
+  - zappos had a "give someone a bonus feature", could add that to profile
+  - could add arbitraty info to internal profiles easily
+  - can have custom feeds into what shows in search
+
+---
+
+# potential features
+
+## notifications
+lets you know when someone edits a document, issue, etc that you're interested in
+
+## actions
+lets you create, edit tickets, comment, close quickly
+
+## replace email
+if it integrated with email it could basically add your jira/github/docs into an email like interface
+
+---
+
+# strategy
+
+## offline, security first
+
+## bottom up, appeals to any individual employee or team
+
+---

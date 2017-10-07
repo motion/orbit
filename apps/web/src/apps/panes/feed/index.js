@@ -54,8 +54,8 @@ class FeedRecently {
           />
         </section>
         <section>
-          <SubTitle>Currently</SubTitle>
-          <UI.Card title="#532 Something" />
+          <SubTitle>Stats</SubTitle>
+          <UI.Card title="Active in: Slack" />
         </section>
       </recently>
     )
@@ -122,7 +122,6 @@ class FeedNavBar {
     return (
       <navbar>
         <SubTitle>History</SubTitle>
-
         <UI.Button borderRadius={50}>Filter</UI.Button>
       </navbar>
     )
@@ -133,7 +132,7 @@ class FeedNavBar {
       padding: [0, 15],
       flexFlow: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'flex-end',
     },
   }
 }
@@ -200,7 +199,7 @@ export default class SetView extends React.Component<Props> {
                       size={1.8}
                       fontWeight={800}
                       color="#000"
-                      marginBottom={4}
+                      marginBottom={1}
                     >
                       {store.filters.people[0] === 'Me'
                         ? 'Nate Wienert'
@@ -213,6 +212,7 @@ export default class SetView extends React.Component<Props> {
                         alignItems: 'center',
                         fontSize: 16,
                         opacity: 0.7,
+                        marginBottom: 2,
                       }}
                     >
                       <UI.Text>Currently:&nbsp;</UI.Text>
@@ -250,7 +250,13 @@ export default class SetView extends React.Component<Props> {
                     }}
                   >
                     <content $$row css={{ alignItems: 'center' }}>
-                      <stats css={{ padding: [10, 0] }}>
+                      <stats
+                        css={{
+                          padding: [10, 0],
+                          opacity: 0.7,
+                          lineHeight: '1.4rem',
+                        }}
+                      >
                         <UI.Text>natewienert@gmail.com</UI.Text>
                         <UI.Text>
                           Team: <Link>Motion</Link>

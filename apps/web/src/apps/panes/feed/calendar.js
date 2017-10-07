@@ -34,7 +34,7 @@ export default class Calendar {
             <UI.Button size={0.9} color={[0, 0, 0, 0.3]} icon="arrowminright" />
           </UI.Row>
           <div css={{ marginRight: 10 }} />
-          <UI.Row>
+          <UI.Row if={false}>
             <UI.Button size={0.9} fontWeight={800} color={[0, 0, 0, 0.5]}>
               Day
             </UI.Button>

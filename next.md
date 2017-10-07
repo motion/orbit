@@ -47,4 +47,6 @@ if it integrated with email it could basically add your jira/github/docs into an
 
 ## bottom up, appeals to any individual employee or team
 
+## heavy on launch (branding/ux/virality/onboarding)
+
 ---

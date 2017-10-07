@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react'
-import { Theme } from '@mcro/gloss'
+import Theme from './helpers/theme'
 import { view } from '@mcro/black'
-import inject from './helpers/inject'
 import $ from 'color'
 import Icon from './icon'
 import HoverGlow from './effects/hoverGlow'

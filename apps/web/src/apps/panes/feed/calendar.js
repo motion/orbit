@@ -26,22 +26,32 @@ export default class Calendar {
           }}
         />
         <controls $$row>
-          <UI.Row>
-            <UI.Button size={0.9} color={[0, 0, 0, 0.3]} icon="arrowminleft" />
-            <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
-              Jan 12th
-            </UI.Button>
-            <UI.Button size={0.9} color={[0, 0, 0, 0.3]} icon="arrowminright" />
-          </UI.Row>
-          <div css={{ marginRight: 10 }} />
-          <UI.Row if={false}>
-            <UI.Button size={0.9} fontWeight={800} color={[0, 0, 0, 0.5]}>
-              Day
-            </UI.Button>
-            <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
-              Week
-            </UI.Button>
-          </UI.Row>
+          <UI.Theme name="light">
+            <UI.Row>
+              <UI.Button
+                size={0.9}
+                color={[0, 0, 0, 0.3]}
+                icon="arrowminleft"
+              />
+              <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
+                Jan 12th
+              </UI.Button>
+              <UI.Button
+                size={0.9}
+                color={[0, 0, 0, 0.3]}
+                icon="arrowminright"
+              />
+            </UI.Row>
+            <div css={{ marginRight: 10 }} />
+            <UI.Row if={false}>
+              <UI.Button size={0.9} fontWeight={800} color={[0, 0, 0, 0.5]}>
+                Day
+              </UI.Button>
+              <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
+                Week
+              </UI.Button>
+            </UI.Row>
+          </UI.Theme>
         </controls>
         <currentTime $atTime={10}>
           <dot />
@@ -93,10 +103,10 @@ export default class Calendar {
         </period>
         <hours>
           {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
-            <hourMark key={time} $atTime={time}>
+            <UI.Text $hourMark key={time} $atTime={time}>
               {time === 12 ? 12 : time % 12}
               {time >= 12 ? 'pm' : 'am'}
-            </hourMark>
+            </UI.Text>
           ))}
         </hours>
       </calendar>
@@ -106,18 +116,16 @@ export default class Calendar {
   static style = {
     calendar: {
       position: 'relative',
-      borderTop: [1, '#eee'],
-      borderBottom: [1, '#eee'],
       margin: [0, -20, 0],
       paddingBottom: 10,
       flex: 1,
     },
     showRows: num => ({
       height: 55 * num + 30,
-      overflow: 'hidden',
+      //overflow: 'hidden',
     }),
     controls: {
-      position: 'fixed',
+      position: 'absolute',
       top: -13,
       left: 20,
       zIndex: 100,
@@ -193,7 +201,6 @@ export default class Calendar {
       background: [0, 0, 0, 0.025],
     },
     hourMark: {
-      color: '#000',
       opacity: 0.3,
       bottom: -2,
       padding: [0, 0, 0, 5],

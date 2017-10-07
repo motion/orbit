@@ -7,7 +7,7 @@ import { Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from '~/apps/pane'
-import TestIssue from './test_data/issue'
+import TestIssue from './task/test_data/issue'
 import type { PaneProps, PaneResult } from '~/types'
 import { includes } from 'lodash'
 
@@ -86,12 +86,18 @@ class BarMainStore {
       id: 1040,
       title: 'Home',
       icon: 'home',
+      type: 'home',
+      data: {},
+    },
+    {
+      id: 1040,
+      title: 'Me',
+      icon: 'usersingle',
       type: 'feed',
       data: {
         team: 'Product',
-        people: ['Nate', 'Nick', 'Carol'],
+        people: ['Nate'],
       },
-      actions: ['like motion'],
     },
   ]
 

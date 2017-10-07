@@ -15,6 +15,10 @@ export default class GlossTheme extends React.Component {
   getChildContext() {
     if (this.props.name) {
       const uiActiveTheme = this.props.name || this.props.theme
+      if (!this.context.uiTheme) {
+        console.error('No theme in the context!')
+        return { uiActiveTheme }
+      }
       return {
         uiActiveTheme,
         theme: this.context.uiTheme[uiActiveTheme],

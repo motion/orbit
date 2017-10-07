@@ -3,6 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { keycode } from '@mcro/ui'
 import { observable } from 'mobx'
+import $ from 'color'
 
 export type Props = {
   editable?: boolean,
@@ -15,6 +16,7 @@ export type Props = {
   tagName: string,
   fontWeight?: number,
   lines?: number,
+  textOpacity?: number,
 }
 
 // click away from edit clears it
@@ -228,8 +230,16 @@ export default class Text extends React.PureComponent<Props> {
       (typeof props.fontSize === 'number' && props.fontSize) || props.size
         ? props.size * 14
         : 'auto'
+
+    let color = props.color || theme.base.color
+    // allow textOpacity adjustments
+    if (typeof props.textOpacity === 'number') {
+      color = $(color).alpha(props.textOpacity)
+    }
+
     return {
       text: {
+        color,
         fontSize,
         display: props.display,
         fontWeight: props.fontWeight,
@@ -237,11 +247,10 @@ export default class Text extends React.PureComponent<Props> {
           typeof props.lineHeight === 'number'
             ? `${props.lineHeight}px`
             : props.lineHeight || `${fontSize + 5}px`,
-        color: props.color || theme.base.color,
         opacity: props.opacity,
       },
       ellipse: {
-        color: props.color || theme.base.color,
+        color,
         wordBreak: 'inherit',
       },
     }

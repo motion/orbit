@@ -83,24 +83,13 @@ class BarMainStore {
 
   pinned: Array<PaneResult> = [
     {
-      id: 1100,
-      title: 'Me',
-      type: 'feed',
-      icon: 'list',
-      data: {
-        special: true,
-        people: ['Me'],
-      },
-      actions: ['respond to recent'],
-    },
-    {
       id: 1040,
-      title: 'My Team',
-      icon: 'list',
+      title: 'Home',
+      icon: 'home',
       type: 'feed',
       data: {
         team: 'Product',
-        people: [],
+        people: ['Nate', 'Nick', 'Carol'],
       },
       actions: ['like motion'],
     },
@@ -110,49 +99,49 @@ class BarMainStore {
     {
       id: 1300,
       data: { message: 'my team' },
-      title: 'Orbit Mac App',
-      category: 'Projects',
+      title: 'Team: Foxwoods',
+      category: 'Pinned',
       type: 'message',
-      icon: 'tool',
+      icon: 'social-slack',
     },
     {
       id: 1400,
       data: { message: 'from company' },
       title: 'Orbit Launch',
-      category: 'Projects',
+      category: 'Pinned',
       type: 'message',
-      icon: 'tool',
+      icon: 'social-dropbox',
     },
     {
       id: 1400,
       data: { message: 'from company' },
       title: 'User Research',
-      category: 'Projects',
+      category: 'Pinned',
       type: 'message',
-      icon: 'tool',
+      icon: 'social-trello',
     },
 
-    {
-      id: 1300,
-      title: 'Google Docs',
-      category: 'Services',
-      type: 'message',
-      data: { image: 'google-docs-icon.svg' },
-    },
-    {
-      id: 1300,
-      title: 'Github',
-      category: 'Services',
-      type: 'message',
-      data: { image: 'github-icon.svg' },
-    },
-    {
-      id: 1300,
-      title: 'Google Drive',
-      category: 'Services',
-      type: 'message',
-      data: { image: 'drive-icon.svg' },
-    },
+    // {
+    //   id: 1300,
+    //   title: 'Google Docs',
+    //   category: 'Services',
+    //   type: 'message',
+    //   data: { image: 'google-docs-icon.svg' },
+    // },
+    // {
+    //   id: 1300,
+    //   title: 'Github',
+    //   category: 'Services',
+    //   type: 'message',
+    //   data: { image: 'github-icon.svg' },
+    // },
+    // {
+    //   id: 1300,
+    //   title: 'Google Drive',
+    //   category: 'Services',
+    //   type: 'message',
+    //   data: { image: 'drive-icon.svg' },
+    // },
   ]
 
   tests: Array<PaneResult> = [

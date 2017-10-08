@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
-const HOUR_WIDTH = 85
+const HOUR_WIDTH = 80
 const START_HOUR = 9
 
 const hourOffset = hour => hour - START_HOUR
@@ -116,8 +116,8 @@ export default class Calendar {
   static style = {
     calendar: {
       position: 'relative',
-      margin: [0, -20, 0],
       paddingBottom: 10,
+      margin: [15, 0],
       flex: 1,
     },
     showRows: num => ({
@@ -163,6 +163,8 @@ export default class Calendar {
       bottom: 0,
       zIndex: 10,
       top: 28,
+      borderTop: [1, '#000'],
+      borderBottom: [1, '#000'],
     },
     event: {
       width: HOUR_WIDTH,

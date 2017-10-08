@@ -422,7 +422,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (!children) {
       return null
     }
-    const { virtualized, parentSize, scrollable, style, attach } = this.props
+    const {
+      virtualized,
+      parentSize,
+      scrollable,
+      style,
+      attach,
+      horizontal,
+    } = this.props
     if (virtualized && !parentSize) {
       return null
     }
@@ -436,6 +443,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       <Surface
         $list
         $visible={!virtualized || this.state.started}
+        flexFlow={horizontal ? 'row' : 'inherit'}
         tagName="list"
         align="stretch"
         height={height}

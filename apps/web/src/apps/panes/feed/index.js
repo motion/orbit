@@ -35,8 +35,9 @@ class FeedRecently {
     return (
       <recently $$row>
         <section>
-          <SubTitle>Recently</SubTitle>
+          <SubTitle>Recently Edited</SubTitle>
           <UI.List
+            horizontal
             size={1.2}
             itemProps={itemProps}
             items={[
@@ -53,7 +54,7 @@ class FeedRecently {
             ]}
           />
         </section>
-        <section>
+        <section if={false}>
           <SubTitle>Stats</SubTitle>
           <UI.Card title="Active in: Slack" />
         </section>
@@ -66,9 +67,6 @@ class FeedRecently {
       padding: [30, 15],
       flex: 1,
     },
-    section: {
-      width: '50%',
-    },
   }
 }
 
@@ -77,7 +75,7 @@ class FeedNavBar {
   render({ store }) {
     return (
       <navbar>
-        <SubTitle>History</SubTitle>
+        <SubTitle>Previously</SubTitle>
         <UI.Button borderRadius={50}>Filter</UI.Button>
       </navbar>
     )
@@ -117,105 +115,132 @@ export default class SetView extends React.Component<Props> {
         }}
         items={[
           () => (
-            <section
-              $$row
-              css={{ padding: [10, 15, 5], alignItems: 'flex-end' }}
-            >
-              <title
+            <section>
+              <topbar
+                $$row
                 css={{
-                  paddingTop: 30,
-                  paddingBottom: 25,
-                  flex: 1,
-                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: [6, 0, 0],
+                  margin: [0, -15, -5],
                 }}
               >
-                <main css={{ flexFlow: 'row', alignItems: 'flex-end' }}>
-                  <avatar
-                    css={{
-                      width: 50,
-                      height: 50,
-                      marginRight: 15,
-                      borderRadius: 1000,
-                      background: 'url(/images/me.jpg)',
-                      backgroundSize: 'cover',
-                    }}
+                <left />
+                <right $$row $$centered>
+                  <UI.Input borderRadius={50} height={28} width={200} />
+                  <UI.Button
+                    size={1}
+                    circular
+                    icon="fullscreen71"
+                    opacity={0.4}
                   />
-                  <titles css={{ flex: 1 }}>
-                    <UI.Title
-                      onClick={store.ref('isOpen').toggle}
-                      size={1.8}
-                      fontWeight={800}
-                      color="#000"
-                      marginBottom={1}
-                    >
-                      {store.filters.people[0] === 'Me'
-                        ? 'Nate Wienert'
-                        : store.filters.people.join(', ')}
-                    </UI.Title>
-                    <subtitle
-                      $$row
-                      css={{
-                        flex: 1,
-                        alignItems: 'center',
-                        fontSize: 16,
-                        opacity: 0.7,
-                        marginBottom: 2,
-                      }}
-                    >
-                      <UI.Text>Currently:&nbsp;</UI.Text>
-                      <Link>#58 Something With a Long Title</Link>
-                    </subtitle>
-                  </titles>
-                </main>
-              </title>
+                </right>
+              </topbar>
 
-              <cardsFade
-                if={false}
-                $$fullscreen
-                css={{
-                  top: '85%',
-                  background: 'linear-gradient(transparent, rgba(0,0,0,0.04))',
-                  //left: '50%',
-                }}
-              />
-
-              <rightSide
-                css={{
-                  position: 'relative',
-                  height: '100%',
-                  lineHeight: '1.2rem',
-                  justifyContent: 'flex-end',
-                  paddingBottom: 20,
-                }}
+              <content
+                $$row
+                css={{ padding: [10, 0, 5], alignItems: 'flex-end' }}
               >
-                <aside css={{ maxHeight: 55 }}>
-                  <card
-                    css={{
-                      flexShrink: 0,
-                      textAlign: 'right',
-                      flex: 1,
-                    }}
-                  >
-                    <content $$row css={{ alignItems: 'center' }}>
-                      <stats
+                <title
+                  css={{
+                    paddingBottom: 25,
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <main css={{ flexFlow: 'row', alignItems: 'flex-end' }}>
+                    <avatar
+                      css={{
+                        width: 50,
+                        height: 50,
+                        marginRight: 15,
+                        borderRadius: 1000,
+                        background: 'url(/images/me.jpg)',
+                        backgroundSize: 'cover',
+                      }}
+                    />
+                    <titles css={{ flex: 1 }}>
+                      <UI.Title
+                        onClick={store.ref('isOpen').toggle}
+                        size={1.8}
+                        fontWeight={800}
+                        color="#000"
+                        marginBottom={1}
+                      >
+                        {store.filters.people[0] === 'Me'
+                          ? 'Nate Wienert'
+                          : store.filters.people.join(', ')}
+                      </UI.Title>
+                      <subtitle
+                        $$row
                         css={{
-                          padding: [10, 0],
+                          flex: 1,
+                          alignItems: 'center',
+                          fontSize: 16,
                           opacity: 0.7,
-                          lineHeight: '1.4rem',
+                          marginBottom: 2,
                         }}
                       >
-                        <UI.Text>natewienert@gmail.com</UI.Text>
-                        <UI.Text>
-                          Team: <Link>Motion</Link>
-                        </UI.Text>
-                      </stats>
-                    </content>
-                  </card>
-                </aside>
-              </rightSide>
+                        <UI.Text>Now:&nbsp;</UI.Text>
+                        <Link>#58 Something With a Long Title</Link>
+                      </subtitle>
+                    </titles>
+                  </main>
+                </title>
+
+                <cardsFade
+                  if={false}
+                  $$fullscreen
+                  css={{
+                    top: '85%',
+                    background:
+                      'linear-gradient(transparent, rgba(0,0,0,0.04))',
+                    //left: '50%',
+                  }}
+                />
+
+                <rightSide
+                  css={{
+                    position: 'relative',
+                    height: '100%',
+                    lineHeight: '1.2rem',
+                    justifyContent: 'flex-end',
+                    paddingBottom: 20,
+                  }}
+                >
+                  <aside css={{ maxHeight: 55 }}>
+                    <card
+                      css={{
+                        flexShrink: 0,
+                        textAlign: 'right',
+                        flex: 1,
+                      }}
+                    >
+                      <content $$row css={{ alignItems: 'center' }}>
+                        <stats
+                          css={{
+                            padding: [10, 0],
+                            opacity: 0.7,
+                            lineHeight: '1.4rem',
+                          }}
+                        >
+                          <UI.Text>natewienert@gmail.com</UI.Text>
+                          <UI.Text>
+                            Team: <Link>Motion</Link>
+                          </UI.Text>
+                        </stats>
+                      </content>
+                    </card>
+                  </aside>
+                </rightSide>
+              </content>
             </section>
           ),
-          () => <Calendar />,
+          () => (
+            <cal css={{ margin: [-10, 0] }}>
+              <Calendar />
+            </cal>
+          ),
           () => <FeedRecently />,
           () => <FeedNavBar store={store} />,
           ...store.activeItems.map(item => () => (

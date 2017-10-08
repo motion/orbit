@@ -251,7 +251,6 @@ export default class ListItem extends React.Component<Props> {
       flex: 1,
       lineHeight: '1.38rem',
       padding: [0, 10],
-      overflow: 'hidden',
     },
   }
 }

@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 const HOUR_WIDTH = 80
-const START_HOUR = 9
+const START_HOUR = 9.5
 
 const hourOffset = hour => hour - START_HOUR
 const colors = ['darkgreen', 'darkred', 'darkblue', 'darkorange', 'darkpurple']
@@ -57,21 +57,11 @@ export default class Calendar {
           <dot />
         </currentTime>
         <events>
-          <event $$background={rc()} $atTime={10} $hours={2}>
+          <event $$background={rc()} $atTime={10} $hours={2} $offset={1}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={11} $hours={2} $offset={1}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event
-            if={false}
-            $$background={rc()}
-            $atTime={11}
-            $hours={2}
-            $offset={2}
-          >
+          <event $$background={rc()} $atTime={11} $hours={2} $offset={2}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
@@ -87,11 +77,11 @@ export default class Calendar {
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={16}>
+          <event $$background={rc()} $atTime={16} $offset={1}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={17}>
+          <event $$background={rc()} $atTime={17} $offset={1}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
@@ -117,7 +107,6 @@ export default class Calendar {
     calendar: {
       position: 'relative',
       paddingBottom: 10,
-      margin: [15, 0],
       flex: 1,
     },
     showRows: num => ({
@@ -126,8 +115,8 @@ export default class Calendar {
     }),
     controls: {
       position: 'absolute',
-      top: -13,
-      left: 20,
+      top: -10,
+      right: 20,
       zIndex: 100,
     },
     currentTime: {
@@ -153,18 +142,16 @@ export default class Calendar {
     },
     atTime: hour => ({
       position: 'absolute',
-      border: '10px red',
       left: hourOffset(hour) * HOUR_WIDTH,
     }),
     events: {
       position: 'absolute',
+      top: 1,
       left: 0,
       right: 0,
-      bottom: 0,
+      bottom: 1,
       zIndex: 10,
-      top: 28,
-      borderTop: [1, '#000'],
-      borderBottom: [1, '#000'],
+      borderBottom: [1, '#eee'],
     },
     event: {
       width: HOUR_WIDTH,
@@ -183,7 +170,7 @@ export default class Calendar {
       opacity: 0.5,
     },
     offset: x => ({
-      top: 40 * x,
+      top: 40 * x - 15,
     }),
     hours: x => ({
       width: HOUR_WIDTH * x,
@@ -204,10 +191,11 @@ export default class Calendar {
     },
     hourMark: {
       opacity: 0.3,
-      bottom: -2,
+      bottom: 0,
       padding: [0, 0, 0, 5],
       fontSize: 12,
       fontWeight: 600,
+      width: 100,
     },
   }
 }

@@ -210,7 +210,6 @@ export default class Text extends React.PureComponent<Props> {
       display: 'inline-block',
       userSelect: 'none',
       cursor: 'default',
-      maxWidth: '100%',
       wordBreak: 'break-word',
       position: 'relative',
     },

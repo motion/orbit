@@ -20,6 +20,7 @@ export const methods = {
       info = await fetch(`/auth/refreshToken/${provider}`)
     } catch (error) {
       console.log('refreshToken error', error)
+      return null
     }
     info = await info.json()
     if (info && info instanceof Object) {
@@ -32,6 +33,7 @@ export const methods = {
       }
       await this.mergeUpdate(update)
     }
+    return info.refreshToken
   },
 }
 

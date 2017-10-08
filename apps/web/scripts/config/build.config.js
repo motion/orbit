@@ -18,7 +18,6 @@ const publicPath = '/'
 const publicUrl = ''
 const env = getClientEnvironment(publicUrl)
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const BabiliPlugin = require('babili-webpack-plugin')
 const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
 const PrepackPlugin = require('prepack-webpack-plugin').default
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
@@ -34,6 +33,7 @@ const filtered = ls => ls.filter(x => !!x)
 // const includes = Fs.readdirSync(ORG).map(folder => Path.resolve(ORG, folder))
 
 console.log('running webpack for:', process.env.NODE_ENV)
+console.log(env.stringified)
 
 let config
 
@@ -129,8 +129,12 @@ module.exports = Object.assign(config, {
       }),
     IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
     // IS_PROD && new ButternutWebpackPlugin({}),
-    // IS_PROD && new BabiliPlugin(),
-    // IS_PROD && new UglifyJSPlugin(),
+    // IS_PROD &&
+    //   new UglifyJSPlugin({
+    //     compress: {
+    //       warnings: false,
+    //     },
+    //   }),
     // IS_PROD && new PrepackPlugin(),
     // IS_PROD && new BabelMinifyPlugin(),
 

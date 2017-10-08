@@ -90,6 +90,7 @@ export default class ExampleApp extends React.Component {
 
   listenToApps = () => {
     ipcMain.on('where-to', (event, key) => {
+      console.log('where-to from', key)
       const win = AppWindows.findBy(key)
       if (win) {
         win.onHasPath(() => {
@@ -276,53 +277,52 @@ export default class ExampleApp extends React.Component {
             }}
           />
         }
-        {false &&
-          appWindows.map(win => {
-            return (
-              <Window
-                key={win.key}
-                file={`${Constants.JOT_URL}?key=${win.key}`}
-                show={win.active}
-                {...appWindow}
-                defaultSize={win.size}
-                size={win.size}
-                position={win.position}
-                onMoved={x => {
-                  win.setPosition(x)
-                  this.updateWindows()
-                }}
-                onResize={x => {
-                  win.setSize(x)
-                  this.updateWindows()
-                }}
-                onClose={() => {
-                  AppWindows.removeByKey(win.key)
-                  this.updateWindows()
-                }}
-                onFocus={() => {
-                  //win.showDevTools = true
-                  win.focused = true
-                  this.activeWindow = win
-                  this.updateWindows()
-                }}
-                onBlur={() => {
-                  if (!win) {
-                    console.log('no window weird')
-                    return
-                  }
-                  win.focused = false
-                  if (this.activeWindow.key === win.key) {
-                    this.activeWindow = null
-                  }
-                  this.updateWindows()
-                }}
-                showDevTools={win.showDevTools}
-                titleBarStyle={
-                  win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
+        {appWindows.map(win => {
+          return (
+            <Window
+              key={win.key}
+              file={`${Constants.JOT_URL}?key=${win.key}`}
+              show={win.active}
+              {...appWindow}
+              defaultSize={win.size}
+              size={win.size}
+              position={win.position}
+              onMoved={x => {
+                win.setPosition(x)
+                this.updateWindows()
+              }}
+              onResize={x => {
+                win.setSize(x)
+                this.updateWindows()
+              }}
+              onClose={() => {
+                AppWindows.removeByKey(win.key)
+                this.updateWindows()
+              }}
+              onFocus={() => {
+                win.showDevTools = true
+                win.focused = true
+                this.activeWindow = win
+                this.updateWindows()
+              }}
+              onBlur={() => {
+                if (!win) {
+                  console.log('no window weird')
+                  return
                 }
-              />
-            )
-          })}
+                win.focused = false
+                if (this.activeWindow.key === win.key) {
+                  this.activeWindow = null
+                }
+                this.updateWindows()
+              }}
+              showDevTools={win.showDevTools}
+              titleBarStyle={
+                win.showBar ? 'hidden-inset' : 'customButtonsOnHover'
+              }
+            />
+          )
+        })}
       </app>
     )
   }

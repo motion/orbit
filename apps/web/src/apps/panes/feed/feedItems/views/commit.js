@@ -2,12 +2,22 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import App from '~/app'
 
+const CommitInfo = {}
+
 @view({
   store: class CommitStore {
-    info = App.services.Github.github
-      .repos('motion', 'orbit')
-      .commits(this.props.sha)
-      .fetch()
+    info = null
+
+    async willMount() {
+      const { sha } = this.props
+      CommitInfo[sha] =
+        CommitInfo[sha] ||
+        (await App.services.Github.github
+          .repos('motion', 'orbit')
+          .commits(sha)
+          .fetch())
+      this.info = CommitInfo[sha]
+    }
   },
 })
 export default class Commit {

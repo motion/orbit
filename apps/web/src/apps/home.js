@@ -13,6 +13,6 @@ export default class HomePage extends React.Component {
       return <null>weird no org</null>
     }
 
-    return <home $$centered>...</home>
+    return <home $$centered>... home ...</home>
   }
 }

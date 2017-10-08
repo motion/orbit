@@ -1,10 +1,11 @@
 import { without, sortBy, last, countBy, flatten } from 'lodash'
 
-import { Thing, Job, CurrentUser } from '~/app'
+import { Thing, Event, Job, CurrentUser } from '~/app'
 
-export default class StatsStore {
+export default class ServicesStore {
   things = Thing.find()
   jobs = Job.find()
+  events = Event.find()
 
   get types() {
     return without(Object.keys(CurrentUser.setting), 'type')
@@ -30,10 +31,6 @@ export default class StatsStore {
 
   get countByType() {
     return countBy(this.things, 'integration')
-  }
-
-  runJob = (type, action) => {
-    Job.create({ type, action })
   }
 
   actions = type => Object.keys(App.sync[type].syncers)

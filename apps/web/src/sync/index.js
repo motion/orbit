@@ -20,13 +20,46 @@ function getRxError(error: Error) {
 @store
 export default class Sync {
   locks: Set<string> = new Set()
-  pending: ?Array<Job> = Job.pending()
-  nonPending: ?Array<Job> = Job.nonPending()
+  @watch pending: ?Array<Job> = () => Job.pending()
+  @watch nonPending: ?Array<Job> = () => Job.nonPending()
   syncers: ?Object = null
+  enabled = localStorage.getItem('runSyncers') === 'true'
 
   start() {
-    this.watchJobs()
-    this.watchSyncers()
+    this.startJobs()
+    this.startSyncers()
+    this.watch(() => {
+      const title = this.enabled ? 'SYNCING ✅' : 'SYNC DISABLED'
+      log(`----${title}----`)
+    })
+  }
+
+  async stop() {
+    await this.disposeSyncers()
+  }
+
+  runAll() {
+    for (const name of Object.keys(this.syncers)) {
+      this.syncers[name].runAll()
+    }
+  }
+
+  run(integration?: string, action?: string) {
+    if (!integration) {
+      console.log('Needs parameters')
+    } else {
+      this.syncers[integration][action ? 'run' : 'runAll'](action)
+    }
+  }
+
+  enable() {
+    this.enabled = true
+    localStorage.setItem('runSyncers', true)
+  }
+
+  disable() {
+    this.enabled = false
+    localStorage.setItem('runSyncers', false)
   }
 
   async dispose() {
@@ -45,9 +78,10 @@ export default class Sync {
         await this.syncers[name].dispose()
       }
     }
+    this.syncers = null
   }
 
-  async watchSyncers() {
+  async startSyncers() {
     const user = CurrentUser
     if (!user) {
       throw new Error('No CurrentUser')
@@ -55,7 +89,7 @@ export default class Sync {
     if (!this.syncers) {
       this.syncers = {}
       for (const name of Object.keys(Syncers)) {
-        const syncer = new Syncers[name]({ user: CurrentUser })
+        const syncer = new Syncers[name]({ user: CurrentUser, sync: this })
         if (syncer.start) {
           await syncer.start()
         }
@@ -68,7 +102,7 @@ export default class Sync {
     }
   }
 
-  watchJobs() {
+  startJobs() {
     this.react(
       () => this.nonPending,
       jobs => {
@@ -90,7 +124,7 @@ export default class Sync {
     this.react(
       () => this.pending,
       async jobs => {
-        log('watchJobs jobs:', jobs ? jobs.length : 0)
+        log('startJobs jobs:', jobs ? jobs.length : 0)
         if (!jobs || !jobs.length) {
           return
         }

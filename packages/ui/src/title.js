@@ -108,17 +108,15 @@ export default class Title extends React.PureComponent<Props> {
           $title
           {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
           tagName={tagName}
-          size={size * 1.02}
+          size={size}
           color={color}
           opacity={opacity}
           fontSize={fontSize}
           fontWeight={fontWeight}
           {...textProps}
         >
-          <el $display={display} $$row>
-            {children}
-            <stat if={stat}>{stat}</stat>
-          </el>
+          {children}
+          <stat if={stat}>{stat}</stat>
         </Text>
         <after if={after}>{after}</after>
       </titleroot>
@@ -137,12 +135,6 @@ export default class Title extends React.PureComponent<Props> {
     size1: {
       textTransform: 'uppercase',
     },
-    size2: {
-      fontWeight: 200,
-    },
-    size3: {
-      fontWeight: 200,
-    },
     collapse: {
       marginRight: 4,
     },
@@ -156,6 +148,5 @@ export default class Title extends React.PureComponent<Props> {
       marginLeft: 8,
       opacity: 0.7,
     },
-    display: display => ({ display }),
   }
 }

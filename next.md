@@ -10,14 +10,14 @@ micro:
     - shows whats combined
     - mockup design
   - calendar integration
+  - main bar entries:
+    - able to see a repos issues
 
 macro:
   - integrations:
-      - google (docs, calendar)
       - jira
   - teams:
     - onboarding process
-      -
     - figuring who is who across integrations
     - feeds on a person-basis
   - search:

@@ -6,31 +6,25 @@ import ColorBlock from './colorBlock'
 @view
 export default class TaskHeader {
   render({
-    data: { title, number },
     paneStore,
     paneStore: { data: { parentId, orgName } },
     store: { labels, assigned },
-    isActive,
   }) {
-    const minSize = 1.4
-    const maxSize = 2.5
-    const titleSize = 3.4 - title.length * 0.05
+    const { title = '', number = 0 } = paneStore.data.data || {}
+    const minSize = 1.8
+    const maxSize = 2.2
+    const ogSize = 3.4 - title.length * 0.05
+    const titleSize = Math.min(maxSize, Math.max(ogSize, minSize))
     let labelsText = labels.length + ' Labels'
     if (labels.length === 0) labelsText = 'No Labels'
     if (labels.length === 1) labelsText = 'One Label'
 
     return (
-      <header $isActive={isActive}>
-        <meta css={{ padding: [0, 10] }}>
-          <title $$row css={{ alignItems: 'center' }}>
-            <UI.Title
-              fontWeight={200}
-              color="#fff"
-              size={Math.min(maxSize, Math.max(titleSize, minSize))}
-            >
-              {title}
-            </UI.Title>
-          </title>
+      <header>
+        <meta css={{ padding: 10 }}>
+          <UI.Title flex={1} fontWeight={200} size={titleSize}>
+            {title}
+          </UI.Title>
           <left>
             <UI.Icon size={22} name="github" css={{ marginRight: 10 }} />
           </left>
@@ -42,7 +36,10 @@ export default class TaskHeader {
                 #{number + ''}
               </UI.Text>
               <UI.Text opacity={1} size={1} $id>
-                {orgName}/{parentId}
+                in{' '}
+                <a href="">
+                  {orgName}/{parentId}
+                </a>
               </UI.Text>
             </left>
             {labels.map(label => (

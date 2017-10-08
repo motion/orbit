@@ -1,6 +1,5 @@
 // @flow
 import * as Helpers from '../helpers'
-import { CurrentUser } from '~/app'
 import type { Setting } from '@mcro/models'
 import debug from 'debug'
 
@@ -15,8 +14,9 @@ export default class Syncer {
     actions: Object,
   }
 
-  get user() {
-    return CurrentUser
+  constructor({ user, sync }) {
+    this.user = user
+    this.sync = sync
   }
 
   // internal
@@ -24,7 +24,6 @@ export default class Syncer {
   jobWatcher: ?number
 
   start() {
-    log('starting syncer', this.constructor.name)
     const { settings } = this.constructor
     const { syncers } = settings
 
@@ -80,13 +79,15 @@ export default class Syncer {
   }
 
   async refreshToken() {
-    console.log('this.user', this.user)
     return await this.user.refreshToken(this.type)
   }
 
   async check(loud: boolean = true): Array<any> {
     const { type, actions } = this
-    log('Syncer.check', actions)
+    log('Syncer.check', this.sync.enabled, actions)
+    if (!this.sync.enabled) {
+      return
+    }
     if (!actions) {
       return
     }

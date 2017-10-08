@@ -49,7 +49,7 @@ module.exports = function(context, givenOpts) {
         ],
       }),
     ],
-    presets: [
+    presets: opts.presets || [
       [getPlugin('babel-preset-env'), envOpts],
       getPlugin('babel-preset-react'),
       isAsync && getPlugin('babel-preset-stage-1-without-async'),

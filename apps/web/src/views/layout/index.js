@@ -9,7 +9,7 @@ import LayoutWrap from '~/views/layout/wrap'
 import Header from './header'
 import * as UI from '@mcro/ui'
 
-@view.ui
+@view
 export default class Layout {
   state = {
     error: null,
@@ -30,6 +30,8 @@ export default class Layout {
     if (Constants.IS_BAR) {
       return <CurrentPage />
     }
+
+    console.log('@@@', Router.key, Router.path)
 
     return (
       <UI.Theme name="light">

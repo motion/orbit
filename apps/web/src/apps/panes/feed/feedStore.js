@@ -28,22 +28,12 @@ export default class FeedStore {
     endDate: null,
     people: [],
   }
-
   brushDomain = null
-
   setBrush = debounce(domain => {
     this.brushDomain = domain
     this.setFilter('startDate', +new Date(domain.x[0]))
     this.setFilter('endDate', +new Date(domain.x[1]))
   }, 20)
-
-  setFilter = (key, val) => {
-    this.filters = {
-      ...this.filters,
-      [key]: val,
-    }
-  }
-
   types = [
     { name: 'all', type: null, icon: 'list' },
     { name: 'cal', icon: 'cal' },
@@ -53,24 +43,6 @@ export default class FeedStore {
     { name: 'jira', icon: 'atl' },
     // { name: 'tasks', type: 'task', icon: 'github' },
   ]
-
-  get currentLogins() {
-    return this.filters.people.map(name => nameToLogin[name])
-  }
-
-  toggleLogin = login => {
-    this.togglePerson(loginToName[login])
-  }
-
-  togglePerson = name => {
-    console.log('toggling person', name)
-    this.setFilter(
-      'people',
-      includes(this.filters.people, name)
-        ? without(this.filters.people, name)
-        : [...this.filters.people, name]
-    )
-  }
 
   willMount() {
     const { people, person } = this.props.paneStore.data
@@ -118,6 +90,10 @@ export default class FeedStore {
     )
   }
 
+  get currentLogins() {
+    return this.filters.people.map(name => nameToLogin[name])
+  }
+
   get titleDesc() {
     const { type } = this.filters
     return `${this.activeItems.length} ${(type || 'item') + 's'}`
@@ -132,11 +108,32 @@ export default class FeedStore {
     return `${fmt(startDate)} - ${fmt(endDate)}`
   }
 
+  setFilter = (key, val) => {
+    this.filters = {
+      ...this.filters,
+      [key]: val,
+    }
+  }
+
+  toggleLogin = login => {
+    this.togglePerson(loginToName[login])
+  }
+
+  togglePerson = name => {
+    console.log('toggling person', name)
+    this.setFilter(
+      'people',
+      includes(this.filters.people, name)
+        ? without(this.filters.people, name)
+        : [...this.filters.people, name]
+    )
+  }
+
   @watch
   events = () =>
     Event.find({ created: { $ne: null } })
       .sort({ created: 'desc' })
-      .limit(20)
+      .limit(500)
 
   get allItems() {
     return this.events || []

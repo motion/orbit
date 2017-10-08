@@ -9,11 +9,11 @@ import * as React from 'react'
   },
 })
 export default class TaskResponse {
-  render({ store, isActive, data: { onSubmit } }) {
+  render({ store, paneStore: { data: { onSubmit } } }) {
     const commentButtonActive = store.response.trim().length > 0
 
     return (
-      <container $isActive={isActive}>
+      <container>
         <textarea
           value={store.response}
           onChange={e => (store.response = e.target.value)}
@@ -28,7 +28,7 @@ export default class TaskResponse {
           <UI.Text $shortcut $bright={commentButtonActive}>
             cmd+enter to post
           </UI.Text>
-          <buttons $$row>
+          <UI.Row spaced>
             <UI.Button size={0.9}>Archive</UI.Button>
             <UI.Button
               size={0.9}
@@ -38,48 +38,43 @@ export default class TaskResponse {
             >
               Comment
             </UI.Button>
-          </buttons>
+          </UI.Row>
         </info>
       </container>
     )
   }
 
   static style = {
-    flex: {
-      flex: 1,
-    },
     container: {
-      flex: 1,
-      padding: [0, 10],
+      borderTop: [1, [0, 0, 0, 0.1]],
+      minHeight: 140,
+      padding: [10, 25],
+      margin: [0, -15],
     },
-    isActive: {},
     info: {
-      margin: [5, 0],
+      margin: [5, 0, 0],
       justifyContent: 'space-between',
     },
     buttons: {
-      flex: 1,
       maxWidth: 190,
       justifyContent: 'space-between',
     },
     shortcut: {
       flex: 2,
       alignSelf: 'center',
-      marginLeft: 5,
       opacity: 0.4,
     },
     bright: {
       opacity: 1,
     },
     textarea: {
-      margin: [5, 0],
+      margin: [5, -10],
+      padding: 10,
       background: 'transparent',
-      color: '#eee',
       border: '1px solid rgba(255,255,255,0.2)',
       width: '100%',
       height: 80,
       borderRadius: 3,
-      padding: 10,
       fontSize: 14,
     },
   }

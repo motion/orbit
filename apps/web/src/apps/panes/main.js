@@ -15,7 +15,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
   title: thing.title,
   type: thing.type,
-  // icon: 'icon',
+  icon: thing.type,
   data: thing.toJSON(),
   category: 'Recently',
 })
@@ -133,7 +133,11 @@ class BarMainStore {
     },
     {
       id: 1030,
-      title: 'Motion',
+      title: (
+        <UI.Text opacity={0.5} size={1.2}>
+          + 10 more...
+        </UI.Text>
+      ),
       icon: 'list',
       type: 'feed',
       category: 'Projects',
@@ -177,17 +181,10 @@ class BarMainStore {
   extras = [
     {
       id: 30,
-      title: 'Settings',
-      icon: 'gear',
-      type: 'newSettings',
-      data: {
-        message: 'Open Settings',
-        icon: 'gear',
-      },
-      onSelect: () => {
-        OS.send('open-settings')
-      },
-      category: 'Settings',
+      title: 'services',
+      icon: 'orbit',
+      type: 'services',
+      category: 'Services',
     },
   ]
 
@@ -252,6 +249,7 @@ export default class BarMain extends React.Component<Props> {
         getItem={(result, index) => ({
           key: `${index}${result.id}`,
           highlight: () => index === paneStore.activeIndex,
+          //color: [255, 255, 255, 0.6],
           primary: result.title,
           primaryEllipse: !mainStore.hasContent(result),
           children: [
@@ -273,6 +271,7 @@ export default class BarMain extends React.Component<Props> {
             style: {
               alignSelf: 'flex-start',
               paddingTop: 2,
+              opacity: 0.4,
             },
           },
           icon:

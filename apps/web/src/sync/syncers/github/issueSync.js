@@ -44,20 +44,16 @@ edges {
 `
 
 const repoGetIssues = `
-edges {
-  node {
     id
     name
     issues(first: 100) {
       ${issueGet}
     }
-  }
-}
 `
 
 export default class GithubIssueSync extends SyncerAction {
   run = async () => {
-    const res = await this.syncOrgs()
+    const res = await this.syncRepos()
     console.log('Created', res ? res.length : 0, 'issues', res)
   }
 
@@ -67,6 +63,15 @@ export default class GithubIssueSync extends SyncerAction {
     }
     const issues = await Promise.all(orgs.map(this.syncOrg))
     return flatten(issues).filter(Boolean)
+  }
+
+  syncRepos = (repos: Array<boolean> = this.setting.values.repos) => {
+    return Promise.all(
+      Object.keys(repos || {}).map(repo => {
+        const split = repo.split('/')
+        this.syncRepo(split[0], split[1])
+      })
+    )
   }
 
   syncOrg = async (org: string): Promise<Array<Object>> => {
@@ -87,10 +92,11 @@ export default class GithubIssueSync extends SyncerAction {
       }
     `,
     })
+    console.log('results are', results)
     if (!results) {
       return
     }
-    const repository = results.data.organization.repository.node
+    const repository = results.data.organization.repository
     return await this.createIssues(org, this.getIssuesForRepo(repository))
   }
 
@@ -121,7 +127,7 @@ export default class GithubIssueSync extends SyncerAction {
     // ensure if one is set, the other gets set too
     const created = issue.createdAt || issue.updatedAt || ''
     const updated = issue.updatedAt || created
-    return await Thing.findOrUpdateByTimestamps({
+    return await Thing.findOrUpdate({
       id,
       integration: 'github',
       type: 'task',

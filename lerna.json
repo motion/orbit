@@ -20,7 +20,8 @@
         "react-virtualized",
         "@mcro/css",
         "@mcro/gloss",
-        "victory"
+        "victory",
+        "electron-builder"
       ]
     }
   }

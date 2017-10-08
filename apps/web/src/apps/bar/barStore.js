@@ -12,6 +12,8 @@ export default class BarStore {
   smartRes = []
   resultCount = 0
   filters = {}
+  fullscreen = false
+  traps = {}
 
   _millerStore = null
   setMillerStore = val => {
@@ -39,14 +41,16 @@ export default class BarStore {
     })
   }
 
-  attachTrap = (name, el) => {
-    const _name = `${name}Trap`
-    this[_name] = new Mousetrap(el)
+  attachTrap = (attachName, el) => {
+    this.traps[attachName] = new Mousetrap(el)
     for (const name of Object.keys(SHORTCUTS)) {
-      if (this.actions[name]) {
-        const chord = SHORTCUTS[name]
-        this[_name].bind(chord, this.actions[name])
-      }
+      const chord = SHORTCUTS[name]
+      this.traps[attachName].bind(chord, event => {
+        this.emit('shortcut', name)
+        if (this.actions[name]) {
+          this.actions[name](event)
+        }
+      })
     }
   }
 
@@ -165,6 +169,9 @@ export default class BarStore {
         this.millerKeyActions.left()
         e.preventDefault()
       }
+    },
+    fullscreen: () => {
+      this.fullscreen = !this.fullscreen
     },
   }
 }

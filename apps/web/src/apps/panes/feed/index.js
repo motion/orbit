@@ -70,13 +70,11 @@ export default class FeedView extends React.Component<Props> {
       )
     }
 
-    const avatar = s => `/images/${s === 'nate' ? 'me' : s}.jpg`
-
     return (
       <Pane.Card
         items={[
           () => (
-            <section $$row>
+            <section $$row css={{ padding: [15, 15] }}>
               {store.filters.people.map(person => (
                 <person $$row css={{ marginRight: 20 }}>
                   <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
@@ -124,7 +122,7 @@ export default class FeedView extends React.Component<Props> {
   static style = {
     section: {
       flex: 1,
-      padding: [4, 10],
+      padding: [6, 15],
     },
     image: {
       width: 30,

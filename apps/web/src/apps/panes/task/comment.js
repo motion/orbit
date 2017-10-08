@@ -20,7 +20,7 @@ export default class TaskComment {
               <UI.Text size={1.1} $name>
                 {author.login}
               </UI.Text>
-              <UI.Date $when color={[255, 255, 255, 0.5]}>
+              <UI.Date $when opacity={0.5}>
                 {createdAt}
               </UI.Date>
             </userheader>

@@ -28,7 +28,7 @@ export default class SyncerAction {
       creating.push(callback(item))
     }
     await waitForCreating()
-    return finished
+    return finished.filter(Boolean)
   }
 
   get setting() {

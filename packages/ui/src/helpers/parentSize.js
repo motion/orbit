@@ -47,6 +47,9 @@ export default prop => Child => {
     }
 
     render() {
+      if (!this.isActive) {
+        return <Child {...this.props} parentSize={null} />
+      }
       const { dimensions } = this.state
       let parentSize
 

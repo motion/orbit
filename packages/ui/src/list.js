@@ -442,6 +442,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
         width={width}
         style={{
           overflowY: scrollable ? 'scroll' : 'auto',
+          height: virtualized ? '100%' : 'auto',
           ...style,
         }}
         {...attach}
@@ -468,7 +469,6 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
   static style = {
     list: {
-      height: '100%',
       overflowX: 'visible',
       visibility: 'hidden',
     },
@@ -476,11 +476,12 @@ class List extends React.PureComponent<Props, { selected: number }> {
       visibility: 'visible',
     },
     separator: {
-      fontWeight: 200,
-      padding: [5, 10],
+      fontSize: 13,
+      fontWeight: 400,
+      padding: [15, 10, 6],
       justifyContent: 'center',
-      background: [0, 0, 0, 0.02],
-      color: [255, 255, 255, 0.3],
+      // background: [0, 0, 0, 0.02],
+      color: [255, 255, 255, 0.35],
     },
   }
 }

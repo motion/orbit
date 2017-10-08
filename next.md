@@ -19,7 +19,7 @@ auto groups projects
 auto figures out teams
 
 ## extensibility
-this is a platform not a product, you can extend it
+platform not a product, you can extend it
 gives you data input, custom apps
 lets you expose features easily
   - zappos had a "give someone a bonus feature", could add that to profile
@@ -33,14 +33,8 @@ lets you expose features easily
 ## notifications
 lets you know when someone edits a document, issue, etc that you're interested in
 
-## actions
-lets you create, edit tickets, comment, close quickly
-
-## replace email
-if it integrated with email it could basically add your jira/github/docs into an email like interface
-
-## unified interface for apps
-basically station or going far with actions -- custom browser like interface that
+## UI for your day to day
+station.co / going far with actions -- custom browser
 
 ---
 

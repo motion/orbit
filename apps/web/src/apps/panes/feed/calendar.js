@@ -4,7 +4,7 @@ import * as UI from '@mcro/ui'
 
 const HOUR_WIDTH = 80
 const START_HOUR = 9.5
-const VERTICAL_PAD = 50
+const VERTICAL_PAD = 46
 
 const hourOffset = hour => hour - START_HOUR
 const colors = ['darkgreen', 'darkred', 'darkblue', 'darkorange', 'darkpurple']
@@ -49,31 +49,31 @@ export default class Calendar {
           <dot />
         </currentTime>
         <events>
-          <event $$background={rc()} $atTime={10} $hours={2} $offset={1}>
+          <event $color={rc()} $atTime={10} $hours={2} $offset={1}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={11} $hours={2} $offset={2}>
+          <event $color={rc()} $atTime={11} $hours={2} $offset={2}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={13} $offset={1}>
+          <event $color={rc()} $atTime={13} $offset={1}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event if={false} $$background={rc()} $atTime={14} $offset={2}>
+          <event if={false} $color={rc()} $atTime={14} $offset={2}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event if={false} $$background={rc()} $atTime={14} $hours={2}>
+          <event if={false} $color={rc()} $atTime={14} $hours={2}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={16} $offset={1}>
+          <event $color={rc()} $atTime={16} $offset={1}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
-          <event $$background={rc()} $atTime={17} $offset={1}>
+          <event $color={rc()} $atTime={17} $offset={1}>
             <title>Meet carol</title>
             <sub $$ellipse>Something or other</sub>
           </event>
@@ -88,7 +88,7 @@ export default class Calendar {
               top: 0,
               right: 0,
               bottom: 0,
-              width: 200,
+              width: 100,
               background: 'linear-gradient(to right, transparent, #fff 90%)',
               zIndex: 1000,
             }}
@@ -122,16 +122,16 @@ export default class Calendar {
       zIndex: 100,
     },
     currentTime: {
-      width: 4,
-      background: '#333',
+      width: 3,
+      background: '#ccc',
       bottom: 5,
       top: 0,
       position: 'absolute',
-      zIndex: 12,
+      zIndex: 9,
     },
     dot: {
-      width: 12,
-      height: 12,
+      width: 11,
+      height: 11,
       marginLeft: -6,
       position: 'absolute',
       bottom: -10,
@@ -139,7 +139,7 @@ export default class Calendar {
       right: 0,
       alignItems: 'center',
       borderRadius: 1000,
-      background: '#333',
+      background: '#ccc',
     },
     atTime: hour => ({
       position: 'absolute',
@@ -156,12 +156,17 @@ export default class Calendar {
     event: {
       width: HOUR_WIDTH,
       height: 40,
-      background: 'green',
+      background: '#fff',
       color: '#fff',
-      padding: [4, 8],
+      padding: [3, 8],
       borderRadius: 6,
       lineHeight: '15px',
+      overflow: 'hidden',
     },
+    color: color => ({
+      border: [1, color],
+      color,
+    }),
     title: {
       margin: [1, 0],
       fontSize: 15,
@@ -171,7 +176,7 @@ export default class Calendar {
       opacity: 0.5,
     },
     offset: x => ({
-      top: 40 * x - VERTICAL_PAD / 4,
+      top: 42 * x - VERTICAL_PAD / 4,
     }),
     hours: x => ({
       width: HOUR_WIDTH * x,
@@ -188,7 +193,8 @@ export default class Calendar {
       bottom: 0,
       top: 0,
       width: 1,
-      background: 'linear-gradient(#eee, rgba(0,0,0,0.05))',
+      background: 'linear-gradient(#eee, transparent)',
+      // borderRight: '1px dotted #eee',
     },
     hourMark: {
       opacity: 0.5,

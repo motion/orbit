@@ -12,7 +12,7 @@ export default class FeedRecently {
       borderRadius: 5,
       size: 1.2,
       background: 'transparent',
-      margin: [0, 8, 0, 5],
+      margin: [0, 12, 0, 5],
       css: {
         '&:hover': {
           background: [0, 0, 0, 0.1],

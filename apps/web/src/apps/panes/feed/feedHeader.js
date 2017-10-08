@@ -50,8 +50,9 @@ export default class FeedHeader {
               <main css={{ flexFlow: 'row', alignItems: 'flex-end' }}>
                 <avatar
                   css={{
-                    width: 50,
-                    height: 50,
+                    alignSelf: 'center',
+                    width: 42,
+                    height: 42,
                     marginRight: 15,
                     borderRadius: 1000,
                     background: 'url(/images/me.jpg)',
@@ -61,9 +62,9 @@ export default class FeedHeader {
                 <titles css={{ flex: 1 }}>
                   <UI.Title
                     onClick={store.ref('isOpen').toggle}
-                    size={1.8}
+                    size={1.7}
                     fontWeight={800}
-                    marginBottom={3}
+                    marginBottom={5}
                   >
                     {store.filters.people[0] === 'Me'
                       ? 'Nate Wienert'
@@ -78,10 +79,17 @@ export default class FeedHeader {
                       opacity: 0.7,
                     }}
                   >
-                    <UI.Text size={1.2} opacity={0.8}>
+                    <UI.Text size={1.1} opacity={0.8}>
                       Now:&nbsp;
                     </UI.Text>
-                    <Link size={1.2}>#58 Something With a Long Title</Link>
+                    <UI.Button
+                      inline
+                      borderRadius={50}
+                      size={1.1}
+                      marginBottom={-5}
+                    >
+                      #58 Something With a Long Title
+                    </UI.Button>
                   </subtitle>
                 </titles>
               </main>

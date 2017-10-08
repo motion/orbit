@@ -26,7 +26,7 @@ class FeedNavBar {
   static style = {
     navbar: {
       flex: 1,
-      padding: [0, 25],
+      padding: [10, 25, 0],
       marginTop: 25,
       flexFlow: 'row',
       justifyContent: 'space-between',

@@ -5,7 +5,7 @@ import * as FeedItems from './feedItems'
 
 @view
 export default class FeedItem {
-  render({ hideName, event, style }) {
+  render({ index, hideName, event, style }) {
     const { data } = event
     if (!data) {
       console.log('no data')
@@ -24,6 +24,8 @@ export default class FeedItem {
         {({ name, verb, avatar, extraInfo, body }) => {
           return (
             <feeditem style={style}>
+              <fade if={index === 0} />
+              <line />
               <info>
                 <avatar
                   css={{
@@ -53,7 +55,25 @@ export default class FeedItem {
       width: '100%',
       justifyContent: 'flex-start',
       overflow: 'hidden',
-      padding: [20, 15],
+      padding: [15, 15, 15, 29],
+    },
+    fade: {
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      left: 0,
+      height: 50,
+      background: 'linear-gradient(#fff, transparent)',
+      zIndex: -1,
+    },
+    line: {
+      width: 3,
+      background: '#eee',
+      position: 'absolute',
+      top: 0,
+      left: 40,
+      bottom: 0,
+      zIndex: -2,
     },
     info: {
       flexFlow: 'row',

@@ -15,23 +15,27 @@ export default class FeedHeader {
             css={{
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: [6, 0, 0],
+              padding: [0, 0, 0],
               marginRight: -8,
+              marginBottom: -5,
+              visibility: 'hidden',
             }}
           >
-            <left />
+            <left>
+              <UI.Button
+                size={0.9}
+                circular
+                icon="fullscreen71"
+                borderWidth={0}
+                opacity={0.5}
+              />
+            </left>
             <right $$row $$centered>
               <UI.Input
                 borderRadius={50}
                 marginRight={10}
                 height={28}
                 width={200}
-              />
-              <UI.Button
-                size={0.9}
-                circular
-                icon="fullscreen71"
-                borderWidth={0}
               />
             </right>
           </topbar>
@@ -59,7 +63,7 @@ export default class FeedHeader {
                     onClick={store.ref('isOpen').toggle}
                     size={1.8}
                     fontWeight={800}
-                    marginBottom={1}
+                    marginBottom={3}
                   >
                     {store.filters.people[0] === 'Me'
                       ? 'Nate Wienert'
@@ -72,11 +76,12 @@ export default class FeedHeader {
                       alignItems: 'center',
                       fontSize: 16,
                       opacity: 0.7,
-                      marginBottom: 2,
                     }}
                   >
-                    <UI.Text>Now:&nbsp;</UI.Text>
-                    <Link>#58 Something With a Long Title</Link>
+                    <UI.Text size={1.2} opacity={0.8}>
+                      Now:&nbsp;
+                    </UI.Text>
+                    <Link size={1.2}>#58 Something With a Long Title</Link>
                   </subtitle>
                 </titles>
               </main>
@@ -105,8 +110,8 @@ export default class FeedHeader {
   static style = {
     section: {
       background: '#fff',
-      borderBottom: [1, '#eee'],
-      padding: [0, 15, 10],
+      borderBottom: [1, [0, 0, 0, 0.08]],
+      padding: [0, 15, 20],
       position: 'relative',
       flex: 1,
     },

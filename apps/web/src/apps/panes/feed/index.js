@@ -18,7 +18,7 @@ class FeedNavBar {
   render({ store }) {
     return (
       <navbar>
-        <SubTitle>Previously</SubTitle>
+        <SubTitle>Activity</SubTitle>
         <UI.Button borderRadius={50}>Filter</UI.Button>
       </navbar>
     )
@@ -26,7 +26,7 @@ class FeedNavBar {
   static style = {
     navbar: {
       flex: 1,
-      padding: [0, 20],
+      padding: [0, 25],
       marginTop: 25,
       flexFlow: 'row',
       justifyContent: 'space-between',
@@ -62,10 +62,11 @@ export default class SetView extends React.Component<Props> {
           () => <FeedRecently />,
           () => <Calendar />,
           () => <FeedNavBar store={store} />,
-          ...store.activeItems.map(item => () => (
+          ...store.activeItems.map((item, index) => () => (
             <FeedItem
               store={store}
               event={item}
+              index={index}
               hideName={
                 store.filters.people && store.filters.people[0] === 'Me'
               }

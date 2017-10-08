@@ -4,6 +4,7 @@ import * as UI from '@mcro/ui'
 
 const HOUR_WIDTH = 80
 const START_HOUR = 9.5
+const VERTICAL_PAD = 50
 
 const hourOffset = hour => hour - START_HOUR
 const colors = ['darkgreen', 'darkred', 'darkblue', 'darkorange', 'darkpurple']
@@ -14,17 +15,6 @@ export default class Calendar {
   render() {
     return (
       <calendar $showRows={2}>
-        <fadeRight
-          css={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            width: 200,
-            //background: 'linear-gradient(to right, transparent, #fff 90%)',
-            zIndex: 1000,
-          }}
-        />
         <controls $$row>
           <UI.Theme name="light">
             <UI.Row>
@@ -32,14 +22,16 @@ export default class Calendar {
                 size={0.9}
                 color={[0, 0, 0, 0.3]}
                 icon="arrowminleft"
+                sizePadding={1}
               />
-              <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
+              <UI.Button size={0.9} color={[0, 0, 0, 0.8]}>
                 Jan 12th
               </UI.Button>
               <UI.Button
                 size={0.9}
                 color={[0, 0, 0, 0.3]}
                 icon="arrowminright"
+                sizePadding={1}
               />
             </UI.Row>
             <div css={{ marginRight: 10 }} />
@@ -90,6 +82,17 @@ export default class Calendar {
           {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
             <mark key={time} $atTime={time} />
           ))}
+          <fadeRight
+            css={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: 200,
+              background: 'linear-gradient(to right, transparent, #fff 90%)',
+              zIndex: 1000,
+            }}
+          />
         </period>
         <hours>
           {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
@@ -106,39 +109,37 @@ export default class Calendar {
   static style = {
     calendar: {
       position: 'relative',
-      paddingBottom: 10,
       flex: 1,
     },
     showRows: num => ({
-      height: 55 * num + 30,
+      height: 55 * num + VERTICAL_PAD,
       //overflow: 'hidden',
     }),
     controls: {
       position: 'absolute',
-      top: -10,
+      top: -12,
       right: 20,
       zIndex: 100,
     },
     currentTime: {
-      width: 3,
-      background: 'black',
+      width: 4,
+      background: '#333',
       bottom: 5,
       top: 0,
       position: 'absolute',
       zIndex: 12,
-      boxShadow: [[0, 0, 10, [0, 0, 0, 0.1]]],
     },
     dot: {
       width: 12,
       height: 12,
       marginLeft: -6,
       position: 'absolute',
-      bottom: -12,
+      bottom: -10,
       left: '50%',
       right: 0,
       alignItems: 'center',
       borderRadius: 1000,
-      background: 'black',
+      background: '#333',
     },
     atTime: hour => ({
       position: 'absolute',
@@ -151,26 +152,26 @@ export default class Calendar {
       right: 0,
       bottom: 1,
       zIndex: 10,
-      borderBottom: [1, '#eee'],
     },
     event: {
       width: HOUR_WIDTH,
-      height: 38,
+      height: 40,
       background: 'green',
       color: '#fff',
-      padding: [5, 10],
+      padding: [4, 8],
       borderRadius: 6,
-      lineHeight: '14px',
+      lineHeight: '15px',
     },
     title: {
       margin: [1, 0],
+      fontSize: 15,
     },
     sub: {
       fontSize: '80%',
       opacity: 0.5,
     },
     offset: x => ({
-      top: 40 * x - 15,
+      top: 40 * x - VERTICAL_PAD / 4,
     }),
     hours: x => ({
       width: HOUR_WIDTH * x,
@@ -187,14 +188,14 @@ export default class Calendar {
       bottom: 0,
       top: 0,
       width: 1,
-      background: [0, 0, 0, 0.025],
+      background: 'linear-gradient(#eee, rgba(0,0,0,0.02))',
     },
     hourMark: {
-      opacity: 0.3,
+      opacity: 0.5,
       bottom: 0,
       padding: [0, 0, 0, 5],
-      fontSize: 12,
-      fontWeight: 600,
+      fontSize: 14,
+      //fontWeight: 600,
       width: 100,
     },
   }

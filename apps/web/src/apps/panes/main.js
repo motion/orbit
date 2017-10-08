@@ -77,54 +77,90 @@ class BarMainStore {
 
   get things(): Array<PaneResult> {
     return fuzzy(this.topThings || [], this.search)
-      .slice(0, this.search.length ? 200 : 8)
+      .slice(0, this.search.length ? 100 : 8)
       .map(thingToResult)
   }
 
   pinned: Array<PaneResult> = [
     {
-      id: 1040,
       title: 'Home',
       icon: 'home',
       type: 'home',
       data: {},
     },
     {
-      id: 1040,
       title: 'Me',
       icon: 'usersingle',
       type: 'feed',
       data: {
         team: 'Product',
-        people: ['Nate'],
+        people: ['Nate Wienert'],
       },
     },
   ]
 
   top: Array<PaneResult> = [
     {
-      id: 1300,
       data: { message: 'my team' },
-      title: 'Team: Foxwoods',
-      category: 'Pinned',
+      title: 'Product',
+      category: 'Teams',
       type: 'message',
-      icon: 'social-slack',
+      icon: 'objbowl',
     },
     {
-      id: 1400,
       data: { message: 'from company' },
-      title: 'Orbit Launch',
-      category: 'Pinned',
+      title: 'Search',
+      category: 'Teams',
       type: 'message',
-      icon: 'social-dropbox',
+      icon: 'objbowl',
     },
     {
-      id: 1400,
       data: { message: 'from company' },
-      title: 'User Research',
-      category: 'Pinned',
+      title: <UI.Text opacity={0.5}>25 more</UI.Text>,
+      category: 'Teams',
       type: 'message',
-      icon: 'social-trello',
+      icon: 'objbowl',
+    },
+
+    {
+      data: { message: 'my team' },
+      title: 'Foxwoods',
+      category: 'Projects',
+      type: 'message',
+      icon: 'objspace',
+    },
+    {
+      data: { message: 'from company' },
+      title: '16: Fiber',
+      category: 'Projects',
+      type: 'message',
+      icon: 'objspace',
+    },
+    {
+      data: { message: 'from company' },
+      title: <UI.Text opacity={0.5}>200 more</UI.Text>,
+      category: 'Projects',
+      type: 'message',
+      icon: 'objspace',
+    },
+
+    {
+      data: { message: 'my team', image: 'steph.jpg' },
+      title: 'Stephanie He',
+      category: 'People',
+      type: 'message',
+    },
+    {
+      data: { message: 'my team', image: 'nick.jpg' },
+      title: 'Carol Long',
+      category: 'People',
+      type: 'message',
+    },
+    {
+      data: { message: 'my team', image: 'me.jpg' },
+      title: 'Dave Bond',
+      category: 'People',
+      type: 'message',
     },
 
     // {
@@ -152,14 +188,12 @@ class BarMainStore {
 
   tests: Array<PaneResult> = [
     {
-      id: 500,
       title: ':Github issue about performance',
       type: 'task',
       data: TestIssue,
       category: 'Tests',
     },
     {
-      id: 501,
       title: `:Nick's Calendar`,
       type: 'calendar',
       data: {},
@@ -169,7 +203,6 @@ class BarMainStore {
 
   extras = [
     {
-      id: 30,
       title: 'Settings',
       icon: 'gear',
       type: 'message',
@@ -236,7 +269,7 @@ export default class BarMain extends React.Component<Props> {
       <Pane.Card
         primary
         items={mainStore.results}
-        width={270}
+        width={260}
         groupKey="category"
         itemProps={{
           fontSize: 26,

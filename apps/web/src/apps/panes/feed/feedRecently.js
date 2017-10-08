@@ -7,19 +7,38 @@ import { SubTitle } from '~/views'
 export default class FeedRecently {
   render() {
     const itemProps = {
-      padding: [7, 0],
-      size: 1.1,
+      padding: [7],
+      paddingRight: 0,
+      borderRadius: 5,
+      size: 1.2,
       background: 'transparent',
       margin: [0, 8, 0, 5],
+      css: {
+        '&:hover': {
+          background: [0, 0, 0, 0.1],
+        },
+      },
       primaryProps: {
         fontWeight: 400,
-        opacity: 0.6,
       },
     }
 
     return (
       <recently>
-        <SubTitle marginBottom={0}>Recently: &nbsp;</SubTitle>
+        <SubTitle
+          css={{
+            position: 'absolute',
+            top: -10,
+            background: '#f9f9f9',
+            padding: [2, 12],
+            marginLeft: -2,
+            borderRadius: 8,
+            color: '#aaa',
+          }}
+          marginBottom={0}
+        >
+          Recent
+        </SubTitle>
         <UI.List
           horizontal
           itemProps={itemProps}
@@ -29,8 +48,8 @@ export default class FeedRecently {
               icon: '/images/google-docs-icon.svg',
             },
             {
-              primary: 'User Research',
-              icon: '/images/google-docs-icon.svg',
+              primary: '#general',
+              icon: 'social-slack',
             },
             { primary: 'motion/orbit', icon: '/images/github-icon.svg' },
             { primary: 'motion/something', icon: '/images/github-icon.svg' },
@@ -42,11 +61,11 @@ export default class FeedRecently {
 
   static style = {
     recently: {
-      padding: [12, 20, 14],
+      padding: [15, 20],
       alignItems: 'center',
       flexFlow: 'row',
       background: '#fafafa',
-      borderBottom: [1, '#eee'],
+      borderBottom: [1, [0, 0, 0, 0.08]],
       flex: 1,
     },
   }

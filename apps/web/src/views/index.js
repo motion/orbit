@@ -10,5 +10,5 @@ export const SubTitle = props => (
 )
 
 export const Link = props => (
-  <UI.Text fontWeight={400} color="#000" display="inline" {...props} />
+  <UI.Text fontWeight={400} color="#8b2bec" display="inline" {...props} />
 )

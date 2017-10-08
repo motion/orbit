@@ -96,7 +96,7 @@ export default class Calendar {
         </period>
         <hours>
           {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
-            <UI.Text $hourMark key={time} $atTime={time}>
+            <UI.Text $hourMark $bold={time === 12} key={time} $atTime={time}>
               {time === 12 ? 12 : time % 12}
               {time >= 12 ? 'pm' : 'am'}
             </UI.Text>
@@ -188,7 +188,7 @@ export default class Calendar {
       bottom: 0,
       top: 0,
       width: 1,
-      background: 'linear-gradient(#eee, rgba(0,0,0,0.02))',
+      background: 'linear-gradient(#eee, rgba(0,0,0,0.05))',
     },
     hourMark: {
       opacity: 0.5,
@@ -197,6 +197,9 @@ export default class Calendar {
       fontSize: 14,
       //fontWeight: 600,
       width: 100,
+    },
+    bold: {
+      fontWeight: 600,
     },
   }
 }

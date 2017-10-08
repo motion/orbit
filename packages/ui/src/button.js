@@ -18,9 +18,10 @@ export default class Button extends React.PureComponent {
     glow,
     glowProps,
     badgeProps,
+    onClick: _onClick,
     ...props
   }) {
-    let onClick = props.onClick
+    let onClick = _onClick
 
     // patch until figure out why this doesnt trigger onSubmit
     if (type === 'submit') {
@@ -30,6 +31,7 @@ export default class Button extends React.PureComponent {
         return (ogOnClick && ogOnClick(...args)) || null
       }
     }
+
     return (
       <SizedSurface
         tagName="button"
@@ -38,7 +40,7 @@ export default class Button extends React.PureComponent {
         hoverable
         borderRadius
         sizeFont
-        sizePadding={1.2}
+        sizePadding={1.5}
         sizeRadius
         sizeHeight
         sizeIcon={1.1}

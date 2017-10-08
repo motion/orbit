@@ -26,125 +26,31 @@ export default class Title extends React.PureComponent<Props> {
   static defaultProps = {
     size: 1,
     tagName: 'title',
+    fontWeight: 200,
   }
 
-  onDoubleClick = (event: MouseEvent) => {
-    if (this.props.onDoubleClick) {
-      this.props.onDoubleClick(event)
-    }
-    this.onCollapse(event)
-  }
-
-  onCollapse = (event: MouseEvent) => {
-    if (this.props.collapsable && this.props.onCollapse) {
-      this.props.onCollapse(event)
-    }
-  }
-
-  render({
-    collapsable,
-    collapsed,
-    before,
-    after,
-    sub,
-    stat,
-    color,
-    opacity,
-    size,
-    onCollapse,
-    textProps,
-    children,
-    tagName,
-    fontSize,
-    fontWeight,
-    onClick,
-    onMouseEnter,
-    onMouseLeave,
-    onFocus,
-    onBlur,
-    style,
-    display,
-    css,
-    ...props
-  }: Props) {
-    const eventProps = {
-      onClick,
-      onMouseEnter,
-      onMouseLeave,
-      onFocus,
-      onBlur,
-    }
+  render({ stat, size, children, tagName, ...props }: Props) {
     return (
-      <titleroot
-        style={style}
-        css={{ ...props, ...css }}
-        {...eventProps}
-        onDoubleClick={this.onDoubleClick}
+      <Text
+        $title
+        display="inline-block"
+        {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
+        tagName={tagName}
+        size={size}
+        {...props}
       >
-        {/* bugfix: having onDoubleClick here as well forces this to trigger when toggling fast */}
-        <collapse
-          if={collapsable}
-          onClick={this.onCollapse}
-          onDoubleClick={this.onCollapse}
-        >
-          <Button
-            icon={collapsed ? 'arrow-bold-right' : 'arrow-bold-down'}
-            iconProps={{
-              size: 8,
-              color: $(color)
-                .alpha(0.5)
-                .toString() || [255, 255, 255, 0.3],
-            }}
-            circular
-            chromeless
-            padding={8}
-            size={1}
-            margin={[-2, -2, -2, -7]}
-            height="auto"
-          />
-        </collapse>
-        <before if={before}>{before}</before>
-        <Text
-          $title
-          {...{ [`\$size${Math.floor(size * 1.8)}`]: true }}
-          tagName={tagName}
-          size={size}
-          color={color}
-          opacity={opacity}
-          fontSize={fontSize}
-          fontWeight={fontWeight}
-          {...textProps}
-        >
-          {children}
-          <stat if={stat}>{stat}</stat>
-        </Text>
-        <after if={after}>{after}</after>
-      </titleroot>
+        {children}
+        <stat if={stat}>{stat}</stat>
+      </Text>
     )
   }
 
   static style = {
-    titleroot: {
-      padding: [2, 0],
-      flexFlow: 'row',
-      alignItems: 'center',
-      userSelect: 'none',
-      cursor: 'default',
-      flex: 'default',
-    },
     size1: {
       textTransform: 'uppercase',
     },
-    collapse: {
-      marginRight: 4,
-    },
-    title: {
-      flexFlow: 'row',
-      // display: 'block',
-      width: '100%',
-    },
     stat: {
-      fontSize: 12,
+      fontSize: '50%',
       marginLeft: 8,
       opacity: 0.7,
     },

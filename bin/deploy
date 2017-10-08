@@ -1,0 +1,13 @@
+#!/bin/bash
+
+. $(dirname $0)/__/common
+
+cd $ROOT
+
+APP=$1
+ARGS=${@:1}
+
+echo "$ cd $ROOT/apps/$APP"
+cd $ROOT/apps/$APP
+echo "$ npm run deploy $ARGS"
+npm run deploy $ARGS

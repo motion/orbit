@@ -132,9 +132,10 @@ export default class ListItem extends React.Component<Props> {
         onClick={onClick}
         glow={glow}
         glowProps={glowProps}
+        sizeIcon={1.1}
         iconProps={{
           alignSelf: 'center',
-          opacity: 0.7,
+          opacity: 0.8,
           ...iconProps,
         }}
         style={style}
@@ -246,11 +247,10 @@ export default class ListItem extends React.Component<Props> {
     },
     children: {
       flexFlow: 'row',
-      margin: [0, -8],
+      margin: [0, -10],
       flex: 1,
       lineHeight: '1.38rem',
-      padding: [0, 8],
-      overflow: 'hidden',
+      padding: [0, 10],
     },
   }
 }

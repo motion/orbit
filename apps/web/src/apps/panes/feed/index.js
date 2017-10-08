@@ -4,54 +4,90 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/pane'
 import type { PaneProps } from '~/types'
-import Calendar from '../views/calendar'
+import Calendar from './calendar'
 import FeedItem from './feedItem'
 import FeedStore from './feedStore'
-import Chart from './chart'
 import { capitalize, isUndefined } from 'lodash'
 
 type Props = PaneProps & { store: FeedStore }
 
+const SubTitle = props => (
+  <UI.Title
+    fontWeight={400}
+    color={[0, 0, 0, 0.5]}
+    marginBottom={10}
+    {...props}
+  />
+)
+
+const Link = props => (
+  <UI.Text fontWeight={400} color="darkblue" display="inline" {...props} />
+)
+
 @view
-class ItemsSection {
+class FeedRecently {
+  render() {
+    const itemProps = {
+      padding: [7, 0],
+      size: 1.2,
+    }
+
+    return (
+      <recently $$row>
+        <section>
+          <SubTitle>Recently Edited</SubTitle>
+          <UI.List
+            horizontal
+            size={1.2}
+            itemProps={itemProps}
+            items={[
+              {
+                primary: 'Some Doc',
+                icon: '/images/google-docs-icon.svg',
+              },
+              {
+                primary: 'User Research',
+                icon: '/images/google-docs-icon.svg',
+              },
+              { primary: 'motion/orbit', icon: '/images/github-icon.svg' },
+              { primary: 'motion/something', icon: '/images/github-icon.svg' },
+            ]}
+          />
+        </section>
+        <section if={false}>
+          <SubTitle>Stats</SubTitle>
+          <UI.Card title="Active in: Slack" />
+        </section>
+      </recently>
+    )
+  }
+
+  static style = {
+    recently: {
+      padding: [30, 15],
+      flex: 1,
+    },
+  }
+}
+
+@view
+class FeedNavBar {
   render({ store }) {
     return (
-      <UI.Row
-        stretch
-        css={{
-          margin: [0, 10],
-        }}
-        itemProps={{
-          size: 1,
-          borderWidth: 0,
-          height: 36,
-        }}
-      >
-        {store.types.map(type => {
-          const highlight =
-            (isUndefined(type.type) ? type.name : type.type) ===
-            store.filters.type
-          return (
-            <UI.Button
-              key={type}
-              icon={type.icon}
-              highlight={highlight}
-              highlightBackground={[0, 0, 0, 0.1]}
-              glow={!highlight}
-              padding={[0, 15]}
-              onClick={() => {
-                store.setFilter(
-                  'type',
-                  isUndefined(type.type) ? type.name : type.type
-                )
-              }}
-            >
-              {capitalize(type.name)}
-            </UI.Button>
-          )
-        })}
-      </UI.Row>
+      <navbar>
+        <SubTitle>Previously</SubTitle>
+        <UI.Button borderRadius={50}>Filter</UI.Button>
+      </navbar>
     )
+  }
+  static style = {
+    navbar: {
+      flex: 1,
+      padding: [0, 15],
+      flexFlow: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+    },
   }
 }
 
@@ -72,49 +108,151 @@ export default class FeedView extends React.Component<Props> {
 
     return (
       <Pane.Card
+        theme="light"
+        css={{
+          borderRadius: 5,
+          boxShadow: [[0, 2, 10, [0, 0, 0, 0.15]]],
+        }}
         items={[
           () => (
-            <section $$row css={{ padding: [15, 15] }}>
-              {store.filters.people.map(person => (
-                <person $$row css={{ marginRight: 20 }}>
-                  <UI.Title onClick={store.ref('isOpen').toggle} size={2}>
-                    {person}
-                  </UI.Title>
-                </person>
-              ))}
-            </section>
-          ),
-          () => <ItemsSection store={store} />,
-          () => (
             <section>
-              <chart className="chart">
-                <Chart store={store} />
-              </chart>
+              <topbar
+                $$row
+                css={{
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: [6, 0, 0],
+                  margin: [0, -15, -5],
+                }}
+              >
+                <left />
+                <right $$row $$centered>
+                  <UI.Input borderRadius={50} height={28} width={200} />
+                  <UI.Button
+                    size={1}
+                    circular
+                    icon="fullscreen71"
+                    opacity={0.4}
+                  />
+                </right>
+              </topbar>
+
+              <content
+                $$row
+                css={{ padding: [10, 0, 5], alignItems: 'flex-end' }}
+              >
+                <title
+                  css={{
+                    paddingBottom: 25,
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <main css={{ flexFlow: 'row', alignItems: 'flex-end' }}>
+                    <avatar
+                      css={{
+                        width: 50,
+                        height: 50,
+                        marginRight: 15,
+                        borderRadius: 1000,
+                        background: 'url(/images/me.jpg)',
+                        backgroundSize: 'cover',
+                      }}
+                    />
+                    <titles css={{ flex: 1 }}>
+                      <UI.Title
+                        onClick={store.ref('isOpen').toggle}
+                        size={1.8}
+                        fontWeight={800}
+                        color="#000"
+                        marginBottom={1}
+                      >
+                        {store.filters.people[0] === 'Me'
+                          ? 'Nate Wienert'
+                          : store.filters.people.join(', ')}
+                      </UI.Title>
+                      <subtitle
+                        $$row
+                        css={{
+                          flex: 1,
+                          alignItems: 'center',
+                          fontSize: 16,
+                          opacity: 0.7,
+                          marginBottom: 2,
+                        }}
+                      >
+                        <UI.Text>Now:&nbsp;</UI.Text>
+                        <Link>#58 Something With a Long Title</Link>
+                      </subtitle>
+                    </titles>
+                  </main>
+                </title>
+
+                <cardsFade
+                  if={false}
+                  $$fullscreen
+                  css={{
+                    top: '85%',
+                    background:
+                      'linear-gradient(transparent, rgba(0,0,0,0.04))',
+                    //left: '50%',
+                  }}
+                />
+
+                <rightSide
+                  css={{
+                    position: 'relative',
+                    height: '100%',
+                    lineHeight: '1.2rem',
+                    justifyContent: 'flex-end',
+                    paddingBottom: 20,
+                  }}
+                >
+                  <aside css={{ maxHeight: 55 }}>
+                    <card
+                      css={{
+                        flexShrink: 0,
+                        textAlign: 'right',
+                        flex: 1,
+                      }}
+                    >
+                      <content $$row css={{ alignItems: 'center' }}>
+                        <stats
+                          css={{
+                            padding: [10, 0],
+                            opacity: 0.7,
+                            lineHeight: '1.4rem',
+                          }}
+                        >
+                          <UI.Text>natewienert@gmail.com</UI.Text>
+                          <UI.Text>
+                            Team: <Link>Motion</Link>
+                          </UI.Text>
+                        </stats>
+                      </content>
+                    </card>
+                  </aside>
+                </rightSide>
+              </content>
             </section>
           ),
-          false && store.filters.type === 'calendar'
-            ? () => (
-                <section
-                  if={store.filters.type === 'calendar'}
-                  css={{ width: '100%' }}
-                >
-                  <div
-                    $$row
-                    css={{
-                      width: '100%',
-                      alignItems: 'flex-start',
-                      maxHeight: '100%',
-                    }}
-                  >
-                    <Calendar isSmall={!store.calendarActive} />
-                  </div>
-                </section>
-              )
-            : null,
+          () => (
+            <cal css={{ margin: [-10, 0] }}>
+              <Calendar />
+            </cal>
+          ),
+          () => <FeedRecently />,
+          () => <FeedNavBar store={store} />,
           ...store.activeItems.map(item => () => (
-            <FeedItem store={store} event={item} />
+            <FeedItem
+              store={store}
+              event={item}
+              hideName={
+                store.filters.people && store.filters.people[0] === 'Me'
+              }
+            />
           )),
-        ].filter(i => !!i)}
+        ]}
       />
     )
   }
@@ -122,7 +260,7 @@ export default class FeedView extends React.Component<Props> {
   static style = {
     section: {
       flex: 1,
-      padding: [6, 15],
+      padding: [0, 15],
     },
     image: {
       width: 30,

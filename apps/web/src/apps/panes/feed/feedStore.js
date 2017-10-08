@@ -35,8 +35,7 @@ export default class FeedStore {
     this.setFilter('endDate', +new Date(domain.x[1]))
   }, 20)
   types = [
-    { name: 'all', type: null, icon: 'list' },
-    { name: 'cal', icon: 'cal' },
+    { name: 'recently', type: null, icon: 'list' },
     { name: 'github', icon: 'github' },
     { name: 'slack', type: 'convo', icon: 'slack' },
     { name: 'docs', icon: 'hard' },

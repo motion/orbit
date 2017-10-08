@@ -39,7 +39,7 @@ export class Gloss {
   baseStyles: ?Object
   createElement: Function
   Helpers: Object = Helpers
-  attachedStyles: Object = {}
+  themeSheets = {}
 
   constructor(opts: Options = DEFAULT_OPTS) {
     this.options = opts
@@ -66,7 +66,9 @@ export class Gloss {
       const hasTheme = Child.theme && typeof Child.theme === 'function'
       const themeSheet = JSS.createStyleSheet().attach()
       const ViewCache = {}
-      const id = `${Math.random()}`.replace('.', '')
+      const id = uid()
+      Child.glossUID = id
+      this.themeSheets[id] = themeSheet
 
       if (hasTheme) {
         Child.prototype.glossUpdateTheme = function(props) {
@@ -158,9 +160,6 @@ export class Gloss {
       // on first mount, attach styles
       const ogComponentWillMount = Child.prototype.componentWillMount
       Child.prototype.componentWillMount = function(...args) {
-        if (!Child.glossUID) {
-          Child.glossUID = uid()
-        }
         if (hasTheme) {
           this.glossUpdateTheme(this.props)
         }

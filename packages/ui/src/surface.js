@@ -1,8 +1,7 @@
 // @flow
 import * as React from 'react'
-import { Theme } from '@mcro/gloss'
+import Theme from './helpers/theme'
 import { view } from '@mcro/black'
-import inject from './helpers/inject'
 import $ from 'color'
 import Icon from './icon'
 import HoverGlow from './effects/hoverGlow'
@@ -92,8 +91,6 @@ export type Props = {
   borderRadius?: number,
 }
 
-const IS_PROD = process.env.NODE_ENV === 'production'
-
 const ICON_PAD = 10
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
@@ -116,7 +113,6 @@ export default class Surface extends React.PureComponent<Props> {
   }
 
   static defaultProps = {
-    tagName: IS_PROD ? 'div' : 'surface',
     borderStyle: 'solid',
     borderWidth: 0,
   }
@@ -360,6 +356,7 @@ export default class Surface extends React.PureComponent<Props> {
     },
     icon: {
       pointerEvents: 'none',
+      height: 'auto',
     },
     hasIconBefore: {
       // this adjusts for height

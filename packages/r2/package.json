@@ -1,8 +1,9 @@
 {
   "name": "@mcro/r2",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "module": "lib/index.js",
-  "version": "1.3.3",
+  "module:production": "dist/index.js",
+  "version": "1.4.0",
   "dependencies": {
     "caseless": "^0.12.0",
     "isomorphic-fetch": "^2.2.1",

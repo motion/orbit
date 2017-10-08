@@ -5,7 +5,7 @@ import * as FeedItems from './feedItems'
 
 @view
 export default class FeedItem {
-  render({ event, style }) {
+  render({ hideName, event, style }) {
     const { data } = event
     if (!data) {
       console.log('no data')
@@ -28,14 +28,19 @@ export default class FeedItem {
                 <avatar
                   css={{
                     background: `url(${avatar})`,
+                    backgroundSize: 'cover',
                   }}
                 />
-                <UI.Text $name>{name} </UI.Text>
+                <UI.Text $name if={!hideName}>
+                  {name}{' '}
+                </UI.Text>
                 <UI.Text $action>{verb} </UI.Text>
                 {extraInfo || null}
                 <UI.Date $date>{event.updated || event.created}</UI.Date>
               </info>
-              <body if={body}>{body}</body>
+              <body if={body}>
+                <UI.Text>{body}</UI.Text>
+              </body>
             </feeditem>
           )
         }}
@@ -48,15 +53,14 @@ export default class FeedItem {
       width: '100%',
       justifyContent: 'flex-start',
       overflow: 'hidden',
-      padding: [0, 10],
+      padding: [20, 15],
     },
     info: {
       flexFlow: 'row',
       flexWrap: 'wrap',
       alignItems: 'center',
       whiteSpace: 'pre',
-      fontSize: 13,
-      height: 40,
+      fontSize: 15,
     },
     name: {
       fontWeight: 500,
@@ -69,10 +73,13 @@ export default class FeedItem {
     },
     avatar: {
       backgroundSize: 'cover',
-      width: 18,
-      height: 18,
+      width: 26,
+      height: 26,
       borderRadius: 100,
       marginRight: 8,
+    },
+    body: {
+      padding: [10, 15],
     },
   }
 }

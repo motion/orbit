@@ -388,7 +388,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
 
       for (const { index, name } of groups) {
         let child = (extraProps: Object) => (
-          <separator key={name} {...extraProps}>
+          <separator $firstSeparator={index === 0} key={name} {...extraProps}>
             {name}
           </separator>
         )
@@ -422,7 +422,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
     if (!children) {
       return null
     }
-    const { virtualized, parentSize, scrollable, style, attach } = this.props
+    const {
+      virtualized,
+      parentSize,
+      scrollable,
+      style,
+      attach,
+      horizontal,
+    } = this.props
     if (virtualized && !parentSize) {
       return null
     }
@@ -436,6 +443,7 @@ class List extends React.PureComponent<Props, { selected: number }> {
       <Surface
         $list
         $visible={!virtualized || this.state.started}
+        flexFlow={horizontal ? 'row' : 'inherit'}
         tagName="list"
         align="stretch"
         height={height}
@@ -478,10 +486,15 @@ class List extends React.PureComponent<Props, { selected: number }> {
     separator: {
       fontSize: 13,
       fontWeight: 400,
-      padding: [15, 10, 6],
+      padding: [20, 10, 6],
       justifyContent: 'center',
       // background: [0, 0, 0, 0.02],
       color: [255, 255, 255, 0.35],
+      pointerEvents: 'none',
+      userSelect: 'none',
+    },
+    firstSeparator: {
+      paddingTop: 10,
     },
   }
 }

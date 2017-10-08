@@ -15,6 +15,7 @@ const fields = {
   select: Select,
   toggle: Toggle,
   checkbox: Checkbox,
+  textarea: props => <Input sizeHeight={false} {...props} />,
 }
 
 const TYPE_TO_ELEMENT_MAP = {
@@ -22,7 +23,7 @@ const TYPE_TO_ELEMENT_MAP = {
 }
 
 type Props = {
-  type: 'input' | 'select' | 'toggle' | 'password' | 'checkbox',
+  type: 'input' | 'select' | 'toggle' | 'password' | 'checkbox' | 'textarea',
   spacing: number,
   row?: boolean,
   name?: string,
@@ -118,11 +119,10 @@ export default class Field extends React.Component<Props> {
   static style = {
     field: {
       textAlign: 'left',
-      alignItems: 'center',
     },
     label: {
       overflow: 'hidden',
-      width: '100%',
+      padding: [10, 0, 10, 0],
     },
   }
 

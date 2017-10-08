@@ -20,7 +20,7 @@ const Themes = {
     highlightBackground,
     highlightColor,
     background: '#fff',
-    color: '#555',
+    color: [0, 0, 0, 0.8],
     borderColor: '#eee',
     buttonBackground: 'linear-gradient(#fff, #fefefe)',
   }),

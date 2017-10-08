@@ -1,0 +1,29 @@
+{
+  "name": "@mcro/site",
+  "private": true,
+  "version": "1.4.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "motion watch",
+    "start-prod": "static-server -p 3002 -n public/index.html public",
+    "build": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
+    "deploy": "surge ./build orbitbeta.surge.sh"
+  },
+  "dependencies": {
+    "@mcro/black": "^1.4.0",
+    "@mcro/gloss": "^1.4.0",
+    "@mcro/router": "^1.4.0",
+    "@mcro/ui": "^1.4.0",
+    "babel-polyfill": "^6.23.0",
+    "lodash": "^4.17.4",
+    "mobx": "^3.2.2",
+    "mobx-formatters": "^1.0.0",
+    "prop-types": "^15.5.10",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "redbox-react": "^1.5.0"
+  },
+  "devDependencies": {
+    "@mcro/builder": "^1.4.0"
+  }
+}

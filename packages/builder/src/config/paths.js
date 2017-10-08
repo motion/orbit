@@ -2,7 +2,9 @@ var path = require('path')
 var fs = require('fs')
 var url = require('url')
 
-var appDirectory = fs.realpathSync(process.cwd())
+const dir = process.env.BUILD_DIR || process.cwd()
+var appDirectory = fs.realpathSync(dir)
+
 function resolveApp(relativePath) {
   return path.resolve(appDirectory, relativePath)
 }
@@ -40,9 +42,8 @@ function getServedPath(appPackageJson) {
 module.exports = {
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('public/index.html'),
-  appIndexJs: resolveApp('src/index.js'),
-  appSrc: resolveApp('app'),
+  appHtml: resolveApp('index.html'),
+  appIndexJs: resolveApp('./src'),
   appPackageJson: resolveApp('package.json'),
   appNodeModules: resolveApp('node_modules'),
   modelsNodeModules: resolveApp('../models/node_modules'),

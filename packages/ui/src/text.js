@@ -3,6 +3,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import { keycode } from '@mcro/ui'
 import { observable } from 'mobx'
+import $ from 'color'
 
 export type Props = {
   editable?: boolean,
@@ -15,6 +16,7 @@ export type Props = {
   tagName: string,
   fontWeight?: number,
   lines?: number,
+  textOpacity?: number,
 }
 
 // click away from edit clears it
@@ -22,7 +24,6 @@ export type Props = {
 export default class Text extends React.PureComponent<Props> {
   static defaultProps = {
     tagName: 'text', // TODO: prod p mode
-    size: 1,
   }
 
   editableReaction: ?Function
@@ -206,7 +207,7 @@ export default class Text extends React.PureComponent<Props> {
 
   static style = {
     text: {
-      display: 'block',
+      display: 'inline-block',
       userSelect: 'none',
       cursor: 'default',
       maxWidth: '100%',
@@ -226,20 +227,30 @@ export default class Text extends React.PureComponent<Props> {
 
   static theme = (props, theme) => {
     const fontSize =
-      (typeof props.fontSize === 'number' && props.fontSize) || props.size * 14
+      (typeof props.fontSize === 'number' && props.fontSize) || props.size
+        ? props.size * 14
+        : 'auto'
+
+    let color = props.color || theme.base.color
+    // allow textOpacity adjustments
+    if (typeof props.textOpacity === 'number') {
+      color = $(color).alpha(props.textOpacity)
+    }
+
     return {
       text: {
+        color,
         fontSize,
+        display: props.display,
         fontWeight: props.fontWeight,
         lineHeight:
           typeof props.lineHeight === 'number'
             ? `${props.lineHeight}px`
             : props.lineHeight || `${fontSize + 5}px`,
-        color: props.color || theme.base.color,
         opacity: props.opacity,
       },
       ellipse: {
-        color: props.color || theme.base.color,
+        color,
         wordBreak: 'inherit',
       },
     }

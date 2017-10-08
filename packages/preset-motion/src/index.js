@@ -36,7 +36,11 @@ module.exports = function(context, givenOpts) {
         jsxIf: opts.jsxIf || true,
       }),
       getPlugin('babel-plugin-root-import', [
-        { rootPathPrefix: '~', rootPathSuffix: 'src' },
+        {
+          rootPathPrefix: '~',
+          rootPathSuffix:
+            typeof opts.rootSuffix === 'undefined' ? 'src' : opts.rootSuffix,
+        },
       ]),
       getPlugin('@mcro/hmr', {
         decoratorName: opts.decorator || 'view',

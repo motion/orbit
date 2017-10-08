@@ -5,26 +5,24 @@
 // WARNING
 
 const Path = require('path')
-const Fs = require('fs')
+// const Fs = require('fs')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin')
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
 const getClientEnvironment = require('./env')
 const paths = require('./paths')
 const publicPath = '/'
 const publicUrl = ''
 const env = getClientEnvironment(publicUrl)
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const ButternutWebpackPlugin = require('butternut-webpack-plugin').default
-const PrepackPlugin = require('prepack-webpack-plugin').default
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
-const ROOT = Path.join(__dirname, '..', '..', '..', '..')
+const ROOT = Path.join(__dirname, '..')
 const IS_PROD = process.env.NODE_ENV === 'production'
+const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
 
@@ -48,8 +46,6 @@ if (IS_PROD) {
   }
 }
 
-console.log(Path.resolve(ROOT, 'node_modules', '@mcro', 'ui'))
-
 module.exports = Object.assign(config, {
   entry: {
     app: filtered([
@@ -70,8 +66,8 @@ module.exports = Object.assign(config, {
     // avoid module field so we pick up our prod build stuff
     // NOTE: 'es5'
     mainFields: IS_DEV
-      ? ['module', 'browser', 'es5', 'main']
-      : ['es5', 'browser', 'main'],
+      ? ['module', 'browser', 'main', 'es5']
+      : ['browser', 'module:production', 'module', 'main', 'es5'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -110,7 +106,12 @@ module.exports = Object.assign(config, {
       inject: true,
       template: paths.appHtml,
     }),
-    new webpack.DefinePlugin(env.stringified),
+    //
+    // 🚨
+    // warning: disabling this fixed styles not attaching:
+    // new webpack.DefinePlugin(env.stringified),
+    // ⏰
+    //
     new CaseSensitivePathsPlugin(),
     // hmr
     IS_DEV && new webpack.HotModuleReplacementPlugin(),
@@ -127,19 +128,16 @@ module.exports = Object.assign(config, {
           return context && context.indexOf('node_modules') >= 0
         },
       }),
-    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
-    // IS_PROD && new ButternutWebpackPlugin({}),
-    // IS_PROD &&
-    //   new UglifyJSPlugin({
-    //     compress: {
-    //       warnings: false,
-    //     },
-    //   }),
-    // IS_PROD && new PrepackPlugin(),
-    // IS_PROD && new BabelMinifyPlugin(),
+    // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    MINIFY &&
+      IS_PROD &&
+      new BabelMinifyPlugin({
+        deadcode: true,
+        mangle: { topLevel: true },
+      }),
 
     // bundle analyzer
-    // process.env.DEBUG && new BundleAnalyzerPlugin(),
+    process.env.DEBUG && new BundleAnalyzerPlugin(),
   ]),
   node: {
     fs: 'empty',

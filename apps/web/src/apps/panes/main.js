@@ -7,7 +7,7 @@ import { Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import * as Pane from '~/apps/pane'
-import TestIssue from './test_data/issue'
+import TestIssue from './task/test_data/issue'
 import type { PaneProps, PaneResult } from '~/types'
 import { includes } from 'lodash'
 
@@ -15,7 +15,13 @@ const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
   title: thing.title,
   type: thing.type,
-  icon: thing.type,
+  iconAfter: true,
+  icon: (
+    <img
+      src={`/images/${thing.integration}-icon-light.svg`}
+      style={{ opacity: 0.5, width: 20 }}
+    />
+  ),
   data: thing.toJSON(),
   category: 'Recently',
 })
@@ -42,16 +48,13 @@ class BarMainStore {
   }
 
   get searchResult() {
-    if (!this.parserResult) return null
-
+    if (!this.parserResult) {
+      return null
+    }
     const { people, startDate, endDate, service } = this.parserResult
-
     const person = people.length > 0 ? people[0] : undefined
-
     const actuallyFeed = ['docs', 'issues', 'github', 'calendar', 'tasks']
-
     const type = (includes(actuallyFeed, service) ? 'feed' : service) || 'feed'
-
     const val = {
       id: `type:${people.join(':')}`,
       title: type,
@@ -69,7 +72,6 @@ class BarMainStore {
       startDate,
       endDate,
     }
-
     return val
   }
 
@@ -81,28 +83,21 @@ class BarMainStore {
 
   pinned: Array<PaneResult> = [
     {
-      id: 1100,
-      title: 'My Projects',
-      type: 'feed',
-      icon: 'list',
-      category: 'Pinned',
-      data: {
-        special: true,
-        people: ['My Projects'],
-      },
-      actions: ['respond to recent'],
+      id: 1040,
+      title: 'Home',
+      icon: 'home',
+      type: 'home',
+      data: {},
     },
     {
       id: 1040,
-      title: 'My Team',
-      icon: 'list',
+      title: 'Me',
+      icon: 'usersingle',
       type: 'feed',
-      category: 'Pinned',
       data: {
         team: 'Product',
-        people: [],
+        people: ['Nate'],
       },
-      actions: ['like motion'],
     },
   ]
 
@@ -110,43 +105,49 @@ class BarMainStore {
     {
       id: 1300,
       data: { message: 'my team' },
-      title: 'Orbit Mac App',
-      category: 'Projects',
+      title: 'Team: Foxwoods',
+      category: 'Pinned',
       type: 'message',
-      icon: 'tool',
+      icon: 'social-slack',
     },
     {
       id: 1400,
       data: { message: 'from company' },
       title: 'Orbit Launch',
-      category: 'Projects',
+      category: 'Pinned',
       type: 'message',
-      icon: 'tool',
+      icon: 'social-dropbox',
     },
     {
       id: 1400,
       data: { message: 'from company' },
       title: 'User Research',
-      category: 'Projects',
+      category: 'Pinned',
       type: 'message',
-      icon: 'tool',
+      icon: 'social-trello',
     },
-    {
-      id: 1030,
-      title: (
-        <UI.Text opacity={0.5} size={1.2}>
-          + 10 more...
-        </UI.Text>
-      ),
-      icon: 'list',
-      type: 'feed',
-      category: 'Projects',
-      data: {
-        team: 'Motion',
-        people: [],
-      },
-      actions: ['like motion'],
-    },
+
+    // {
+    //   id: 1300,
+    //   title: 'Google Docs',
+    //   category: 'Services',
+    //   type: 'message',
+    //   data: { image: 'google-docs-icon.svg' },
+    // },
+    // {
+    //   id: 1300,
+    //   title: 'Github',
+    //   category: 'Services',
+    //   type: 'message',
+    //   data: { image: 'github-icon.svg' },
+    // },
+    // {
+    //   id: 1300,
+    //   title: 'Google Drive',
+    //   category: 'Services',
+    //   type: 'message',
+    //   data: { image: 'drive-icon.svg' },
+    // },
   ]
 
   tests: Array<PaneResult> = [
@@ -238,13 +239,15 @@ export default class BarMain extends React.Component<Props> {
     }
     return (
       <Pane.Card
+        primary
         items={mainStore.results}
-        width={305}
+        width={270}
         groupKey="category"
         itemProps={{
           fontSize: 26,
           size: 1.2,
           glow: true,
+          padding: [12, 10],
         }}
         getItem={(result, index) => ({
           key: `${index}${result.id}`,
@@ -266,17 +269,16 @@ export default class BarMain extends React.Component<Props> {
               {this.getDate(result)}
             </UI.Text>,
           ].filter(Boolean),
-          iconAfter: true,
+          iconAfter: result.iconAfter,
           iconProps: {
             style: {
-              alignSelf: 'flex-start',
-              paddingTop: 2,
-              opacity: 0.4,
+              //alignSelf: 'flex-start',
+              //paddingTop: 2,
             },
           },
           icon:
             result.data && result.data.image ? (
-              <img $image src={`/images/${result.data.image}.jpg`} />
+              <img $image src={`/images/${result.data.image}`} />
             ) : (
               result.icon
             ),

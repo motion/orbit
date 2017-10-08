@@ -3,15 +3,43 @@
     "development": {
       "presets": ["@mcro/preset-motion"]
     },
-    "production": {
+    "es5": {
       "presets": [
         "es2015",
         "babel-preset-react",
         [
           "@mcro/preset-motion",
           {
+            "async": false
+          }
+        ]
+      ]
+    },
+    "dist": {
+      "presets": [
+        [
+          "@mcro/preset-motion",
+          {
+            "disable": ["@mcro/hmr", "@mcro/hmr-view", "babel-plugin-sitrep"]
+          }
+        ]
+      ]
+    },
+    "production": {
+      "presets": [
+        "es2015",
+        [
+          "@mcro/preset-motion",
+          {
             "disable": ["@mcro/hmr", "@mcro/hmr-view", "babel-plugin-sitrep"],
-            "presets": []
+            "async": false,
+            "rootSuffix": ""
+          }
+        ],
+        [
+          "minify",
+          {
+            "mangle": false
           }
         ]
       ]

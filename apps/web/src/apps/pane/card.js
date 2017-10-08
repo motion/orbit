@@ -27,7 +27,11 @@ export default class PaneCard {
   }
 
   onSelect = (item, index) => {
-    this.props.paneStore.selectRow(index)
+    if (item.onClick) {
+      item.onClick()
+    } else {
+      this.props.paneStore.selectRow(index)
+    }
   }
 
   render({

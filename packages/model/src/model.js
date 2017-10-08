@@ -26,6 +26,7 @@ type PromiseFunction = () => Promise<any>
 const idFn = _ => _
 const queryKey = query =>
   `${query.op}(${JSON.stringify(query.mquery._conditions)})`
+
 const modelMerge = (subjectModel: Object, object: Object) => {
   const subject = subjectModel.toJSON()
   for (const key of Object.keys(object)) {

@@ -11,6 +11,8 @@ import TestIssue from './task/test_data/issue'
 import type { PaneProps, PaneResult } from '~/types'
 import { includes } from 'lodash'
 
+const MAIN_WIDTH = 260
+
 const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
   title: thing.title,
@@ -28,6 +30,8 @@ const thingToResult = (thing: Thing): PaneResult => ({
 
 class BarMainStore {
   props: PaneProps
+
+  colIndex = 0
 
   @watch
   topThingsRaw: ?Array<Thing> = (() =>
@@ -117,6 +121,9 @@ class BarMainStore {
     {
       data: { message: 'from company' },
       title: <UI.Text opacity={0.5}>25 more</UI.Text>,
+      onClick: () => {
+        this.colIndex = 1
+      },
       category: 'Teams',
       type: 'message',
       icon: 'objbowl',
@@ -246,30 +253,50 @@ class BarMainStore {
   }
 }
 
-type Props = {
-  mainStore: BarMainStore,
-  paneStore: Class<any>,
-}
+const getDate = (result: PaneResult) =>
+  result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
 
-@view.attach('barStore')
-@view({
-  mainStore: BarMainStore,
+const getItem = ({ paneStore, mainStore }) => (result, index) => ({
+  key: `${index}${result.id}`,
+  highlight: () => index === paneStore.activeIndex,
+  //color: [255, 255, 255, 0.6],
+  primary: result.title,
+  primaryEllipse: !mainStore.hasContent(result),
+  children: [
+    result.data &&
+      result.data.body && (
+        <UI.Text key={0} lineHeight={20} opacity={0.5}>
+          {getDate(result) + ' · '}
+          {(result.data.body && result.data.body.slice(0, 120)) || ''}
+        </UI.Text>
+      ),
+    !result.data && <UI.Text key={1}>{getDate(result)}</UI.Text>,
+  ].filter(Boolean),
+  iconAfter: result.iconAfter,
+  icon:
+    result.data && result.data.image ? (
+      <img
+        style={{
+          width: 20,
+          height: 20,
+          borderRadius: 1000,
+          margin: 'auto',
+        }}
+        src={`/images/${result.data.image}`}
+      />
+    ) : (
+      result.icon
+    ),
 })
-export default class BarMain extends React.Component<Props> {
-  getDate = (result: PaneResult) =>
-    result.data && result.data.updated
-      ? UI.Date.format(result.data.updated)
-      : ''
 
-  render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
-    if (!mainStore.results) {
-      return null
-    }
+@view
+class PrimaryColumn {
+  render({ mainStore }) {
     return (
       <Pane.Card
         primary
         items={mainStore.results}
-        width={260}
+        width={MAIN_WIDTH}
         groupKey="category"
         itemProps={{
           fontSize: 26,
@@ -277,40 +304,53 @@ export default class BarMain extends React.Component<Props> {
           glow: true,
           padding: [12, 10],
         }}
-        getItem={(result, index) => ({
-          key: `${index}${result.id}`,
-          highlight: () => index === paneStore.activeIndex,
-          //color: [255, 255, 255, 0.6],
-          primary: result.title,
-          primaryEllipse: !mainStore.hasContent(result),
-          children: [
-            <UI.Text
-              if={result.data && result.data.body}
-              key={0}
-              lineHeight={20}
-              opacity={0.5}
-            >
-              {this.getDate(result) + ' · '}
-              {(result.data.body && result.data.body.slice(0, 120)) || ''}
-            </UI.Text>,
-            <UI.Text if={!result.data} key={1}>
-              {this.getDate(result)}
-            </UI.Text>,
-          ].filter(Boolean),
-          iconAfter: result.iconAfter,
-          iconProps: {
-            style: {
-              //alignSelf: 'flex-start',
-              //paddingTop: 2,
-            },
+        getItem={getItem(this.props)}
+      />
+    )
+  }
+}
+
+@view
+class SecondaryColumn {
+  render({ mainStore }) {
+    return (
+      <Pane.Card
+        primary
+        items={[
+          {
+            data: { message: 'my team' },
+            title: 'Product',
+            category: 'Teams',
+            type: 'message',
+            icon: 'objbowl',
           },
-          icon:
-            result.data && result.data.image ? (
-              <img $image src={`/images/${result.data.image}`} />
-            ) : (
-              result.icon
-            ),
-        })}
+          {
+            data: { message: 'from company' },
+            title: 'Search',
+            category: 'Teams',
+            type: 'message',
+            icon: 'objbowl',
+          },
+          {
+            data: { message: 'from company' },
+            title: <UI.Text opacity={0.5}>25 more</UI.Text>,
+            onClick: () => {
+              mainStore.colIndex = 0
+            },
+            category: 'Teams',
+            type: 'message',
+            icon: 'objbowl',
+          },
+        ]}
+        width={MAIN_WIDTH}
+        groupKey="category"
+        itemProps={{
+          fontSize: 26,
+          size: 1.2,
+          glow: true,
+          padding: [12, 10],
+        }}
+        getItem={getItem(this.props)}
       />
     )
   }
@@ -321,6 +361,63 @@ export default class BarMain extends React.Component<Props> {
       height: 20,
       borderRadius: 1000,
       margin: 'auto',
+    },
+  }
+}
+
+type Props = {
+  mainStore: BarMainStore,
+  paneStore: Class<any>,
+}
+
+@view.attach('barStore')
+@view({
+  mainStore: BarMainStore,
+})
+export default class BarMain extends React.Component<Props> {
+  render({ mainStore, paneStore }: PaneProps & { mainStore: BarMainStore }) {
+    if (!mainStore.results) {
+      return null
+    }
+
+    const { colIndex } = mainStore
+
+    return (
+      <main>
+        <column $position={[0, colIndex]}>
+          <PrimaryColumn mainStore={mainStore} paneStore={paneStore} />
+        </column>
+        <column $position={[1, colIndex]}>
+          <SecondaryColumn mainStore={mainStore} paneStore={paneStore} />
+        </column>
+      </main>
+    )
+  }
+
+  static style = {
+    main: {
+      flex: 1,
+      flexFlow: 'row',
+      width: MAIN_WIDTH,
+    },
+    active: {
+      //background: 'red',
+    },
+    column: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      transition: 'all ease-in 100ms',
+    },
+    position: ([curIndex, activeIndex]) => {
+      return {
+        opacity: curIndex === activeIndex ? 1 : 0,
+        transform: {
+          x: (curIndex - activeIndex) * MAIN_WIDTH,
+        },
+      }
     },
   }
 }

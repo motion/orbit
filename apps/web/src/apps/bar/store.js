@@ -82,10 +82,14 @@ export default class BarStore {
     this.inputRef && this.inputRef.blur()
   }
 
-  setSearch = text => {
-    this.search = text
-    this.millerStore.setActiveRow(0)
-  }
+  setSearch = debounce(
+    text => {
+      this.search = text
+      this.millerStore.setActiveRow(0)
+    },
+    80,
+    true
+  )
 
   onSearchChange = e => {
     this.textboxVal = e.target.value

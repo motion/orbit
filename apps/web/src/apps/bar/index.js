@@ -2,7 +2,7 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as Pane from '~/apps/pane'
-import BarStore from './barStore'
+import BarStore from './store'
 import * as PaneTypes from '~/apps/panes'
 import { Miller, MillerStore } from '../miller'
 
@@ -129,6 +129,7 @@ export default class BarPage {
             <Underline if={false} key={2} width={100} left={250} />
           </header>
           <Miller
+            key={1}
             pane={Pane.Pane}
             panes={PaneTypes}
             onKeyActions={barStore.ref('millerKeyActions').set}

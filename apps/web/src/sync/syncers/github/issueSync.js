@@ -92,7 +92,7 @@ export default class GithubIssueSync extends SyncerAction {
       }
     `,
     })
-    console.log('results are', results)
+
     if (!results) {
       return
     }

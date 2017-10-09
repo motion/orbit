@@ -27,7 +27,10 @@ export default class ServicesStore {
     }, {})
   }
 
-  lastSync = (type, action) => this.lastJobs[type + ':' + action]
+  lastSync = (type, action) => {
+    this.jobs
+    return this.lastJobs[type + ':' + action]
+  }
 
   get countByType() {
     return countBy(this.things, 'integration')

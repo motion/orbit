@@ -111,6 +111,14 @@ class BarMainStore {
       icon: 'social-slack',
     },
     {
+      id: 1402,
+      data: { message: 'from company' },
+      title: 'Services',
+      category: 'Pinned',
+      type: 'services',
+      icon: 'orbit',
+    },
+    {
       id: 1400,
       data: { message: 'from company' },
       title: 'Orbit Launch',
@@ -179,15 +187,7 @@ class BarMainStore {
     },
   ]
 
-  extras = [
-    {
-      id: 30,
-      title: 'services',
-      icon: 'orbit',
-      type: 'services',
-      category: 'Services',
-    },
-  ]
+  extras = []
 
   get results(): Array<PaneResult> {
     const includeTests = this.search.indexOf(':') === 0

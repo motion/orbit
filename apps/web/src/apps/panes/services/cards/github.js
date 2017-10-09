@@ -2,7 +2,8 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
 import { Thing } from '~/app'
-import CollapseArrow from '../collapseArrow'
+import Things from '../views/things'
+import * as Collapse from '../views/collapse'
 
 @view.attach('githubStore')
 @view
@@ -23,44 +24,33 @@ class Repo {
             defaultValue={githubStore.isSyncing(repo)}
           />
           <repo>
-            <UI.Title $repoTitle size={1.2}>
+            <UI.Title size={1.2} fontWeight={600} color="#000" marginBottom={1}>
               {repo.name}
             </UI.Title>
             <info $$row>
-              <UI.Text>last update</UI.Text>
-              <UI.Date $updatedAt>{repo.updatedAt}</UI.Date>
+              <left $$row>
+                <UI.Text size={0.9}>last commit</UI.Text>
+                <UI.Date size={0.9} $updatedAt>
+                  {repo.pushedAt}
+                </UI.Date>
+              </left>
+              <private
+                css={{ marginLeft: 10, alignItems: 'center' }}
+                if={repo.private}
+                $$row
+              >
+                <UI.Icon name="lock" size={12} />
+                <UI.Text size={0.9} css={{ marginLeft: 5 }} fontWeight={500}>
+                  private
+                </UI.Text>
+              </private>
             </info>
           </repo>
         </left>
 
         <syncers>
-          <content if={githubStore.isSyncing(repo)} $$row>
-            <UI.Text>
-              <b>
-                {
-                  (githubStore.things || []).filter(
-                    t =>
-                      t.type === 'task' &&
-                      t.orgName + '/' + t.parentId === repo.fullName
-                  ).length
-                }{' '}
-                issues
-              </b>
-            </UI.Text>
-          </content>
-          <content if={false && githubStore.isSyncing(repo)} $$row>
-            <feed $sync $$row>
-              <UI.Title $syncTitle size={1.2}>
-                Feed
-              </UI.Title>
-              <UI.Field row size={1.2} type="toggle" defaultValue={true} />
-            </feed>
-            <issues $sync $$row>
-              <UI.Title $syncTitle size={1.2}>
-                Issues
-              </UI.Title>
-              <UI.Field row size={1.2} type="toggle" defaultValue={true} />
-            </issues>
+          <content $$row>
+            <UI.Text>{repo.openIssuesCount} open issues</UI.Text>
           </content>
         </syncers>
       </container>
@@ -103,11 +93,13 @@ class Repos {
     const oneMonth = 2628000000
     const recent = store.showAll
       ? repos
-      : repos.filter(r => +Date.now() - +new Date(r.updatedAt) < oneMonth * 2)
+      : repos.filter(r => +Date.now() - +new Date(r.pushedAt) < oneMonth * 2)
 
     return (
       <repos>
-        {recent.map(repo => <Repo store={store} repo={repo} />)}
+        {reverse(sortBy(recent, 'pushedAt')).map(repo => (
+          <Repo store={store} repo={repo} />
+        ))}
         <buttons $$row>
           <UI.Button
             if={repos.length !== recent.length}
@@ -124,7 +116,7 @@ class Repos {
 
   static style = {
     repos: {
-      margin: 10,
+      margin: [5, 20],
     },
     buttons: {
       justifyContent: 'center',
@@ -162,7 +154,7 @@ class Org {
     return (
       <org>
         <bar onClick={() => (store.open = !store.open)} $$row>
-          <CollapseArrow open={store.open} iconSize={18} />
+          <Collapse.Arrow open={store.open} iconSize={18} />
           <UI.Title size={1.2} fontWeight={500} css={{ userSelect: 'none' }}>
             {name}
           </UI.Title>
@@ -173,11 +165,17 @@ class Org {
             size={1.2}
             opacity={0.5}
           >
-            syncing {repos.filter(githubStore.isSyncing).length} /{' '}
-            {store.repos.length} repos
+            syncing{' '}
+            <b>
+              {repos.filter(githubStore.isSyncing).length} /{' '}
+              {store.repos.length}
+            </b>{' '}
+            repos
           </UI.Title>
         </bar>
-        <Repos if={store.open} repos={repos} />
+        <Collapse.Body open={store.open}>
+          <Repos repos={repos} />
+        </Collapse.Body>
       </org>
     )
   }
@@ -188,6 +186,7 @@ class Org {
     },
     bar: {
       alignItems: 'center',
+      userSelect: 'none',
     },
     repos: {
       padding: [5, 10],
@@ -220,8 +219,13 @@ class Org {
 class GithubStore {
   // org/repo: 'feed' 'issue' 'all'
   things = Thing.find()
+  active = 'repos'
   syncing = {}
   syncVersion = 0
+
+  get issues() {
+    return (this.things || []).filter(t => t.type === 'task')
+  }
 
   onSync = (repo, val) => {
     /*
@@ -232,6 +236,8 @@ class GithubStore {
     }
     */
     const { Github } = App.services
+
+    this.syncVersion++
 
     Github.setting.mergeUpdate({
       values: {
@@ -260,23 +266,46 @@ class GithubStore {
 @view
 export default class Github {
   render({ githubStore: store }) {
+    const active = { background: 'rgba(0,0,0,0.15)' }
+
     return (
       <container>
-        <orgs>{store.orgs.map(org => <Org name={org} />)}</orgs>
-        <add>
-          <UI.Input
-            width={200}
-            size={1}
-            autofocus
-            placeholder="Add Organization"
-            value={store.newOrg}
-            onKeyDown={e => {
-              if (e.keyCode === 13) store.addOrg()
-              if (e.keyCode === 27) store.newOrg = ''
-            }}
-            onChange={e => (store.newOrg = e.target.value)}
-          />
-        </add>
+        <UI.Row css={{ margin: [10, 0] }}>
+          <UI.Button
+            onClick={() => (store.active = 'repos')}
+            color={[0, 0, 0, 0.8]}
+            {...(store.active === 'repos' ? active : {})}
+          >
+            Repos
+          </UI.Button>
+          <UI.Button
+            {...(store.active === 'issues' ? active : {})}
+            onClick={() => (store.active = 'issues')}
+            color={[0, 0, 0, 0.8]}
+          >
+            Issues ({store.issues.length})
+          </UI.Button>
+        </UI.Row>
+        <repos if={store.active === 'repos'}>
+          <orgs>{store.orgs.map(org => <Org name={org} />)}</orgs>
+          <add>
+            <UI.Input
+              width={200}
+              size={1}
+              autofocus
+              placeholder="Add Organization"
+              value={store.newOrg}
+              onKeyDown={e => {
+                if (e.keyCode === 13) store.addOrg()
+                if (e.keyCode === 27) store.newOrg = ''
+              }}
+              onChange={e => (store.newOrg = e.target.value)}
+            />
+          </add>
+        </repos>
+        <issues if={store.active === 'issues'}>
+          <Things things={store.issues} />
+        </issues>
       </container>
     )
   }

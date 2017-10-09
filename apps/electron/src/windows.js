@@ -121,8 +121,8 @@ export default class ExampleApp extends React.Component {
       event.sender.send('app-bar-toggle', 'success')
     })
 
-    ipcMain.on('open-settings', (event, key) => {
-      open('http://jot.dev/settings')
+    ipcMain.on('open-settings', (event, service) => {
+      open('http://jot.dev/settings?service=' + service)
     })
   }
 

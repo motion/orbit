@@ -31,7 +31,13 @@ export default class Services {
                       }}
                     >
                       <left $$row>
-                        <UI.Title fontWeight={200} size={2.3}>
+                        <UI.Title
+                          onClick={store.ref('isOpen').toggle}
+                          size={1.8}
+                          fontWeight={800}
+                          color="#000"
+                          marginBottom={1}
+                        >
                           Services
                         </UI.Title>
                       </left>
@@ -52,12 +58,12 @@ export default class Services {
                       </right>
                     </title>
                     <UI.Title
-                      css={{ alignSelf: 'center', marginTop: 10 }}
+                      css={{ alignSelf: 'center', marginTop: 30 }}
                       opacity={0.8}
                       fontWeight={200}
                       size={1.2}
                     >
-                      You have connected <b>3 services</b>, and Orbit has
+                      You have connected <b>3 services</b> and Orbit has
                       downloaded <b>{(store.things || []).length} items</b>
                     </UI.Title>
                     <gradual if={false} css={{ marginTop: 15 }}>

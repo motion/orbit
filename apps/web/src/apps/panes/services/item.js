@@ -2,54 +2,11 @@ import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import App, { Job } from '~/app'
 import * as Cards from './cards'
-import CollapseArrow from './collapseArrow'
+import { OS } from '~/helpers'
+import * as Collapse from './views/collapse'
 import Logo from './logo'
 import { formatDistance } from 'date-fns'
-import { includes, uniq, min, invert, capitalize } from 'lodash'
-
-@view
-class Action {
-  render({ type, action, store }) {
-    const { lastSync } = store
-    const job = lastSync(type, action) || null
-    const running = job && includes([0, 1], job.status)
-    const status = job && invert(Job.status)[job.status]
-
-    return (
-      <action $$row key={action}>
-        <header>
-          <left $$row css={{ alignItems: 'center' }}>
-            <UI.Title size={1.2} css={{ marginRight: 8, fontWeight: 'bold' }}>
-              {capitalize(action)}
-            </UI.Title>
-            <UI.Button
-              if={!running}
-              icon="refresh2"
-              iconSize={13}
-              size={0.8}
-              onClick={() => store.runJob(type, action)}
-            >
-              sync all
-            </UI.Button>
-          </left>
-          <lastSync $$row if={job} style={{ marginTop: 3, opacity: 0.5 }}>
-            <UI.Text css={{ marginRight: 5 }}>refreshed </UI.Text>
-            <UI.Date $when>{job.createdAt}</UI.Date>
-          </lastSync>
-        </header>
-
-        <UI.Text if={running}>job {status}</UI.Text>
-      </action>
-    )
-  }
-
-  static style = {
-    action: {
-      marginTop: 10,
-      justifyContent: 'space-between',
-    },
-  }
-}
+import { uniq, min, includes, capitalize } from 'lodash'
 
 @view
 class SyncStatus {
@@ -137,8 +94,12 @@ class NotFound {
       Job.create({ type: service, action })
     }
 
+    get authName() {
+      const { type } = this.props
+      return includes(['drive', 'calendar'], type) ? 'google' : type
+    }
     get auth() {
-      return CurrentUser.authorizations[this.props.type]
+      return CurrentUser.authorizations[this.authName]
     }
 
     get lastJob() {
@@ -146,7 +107,7 @@ class NotFound {
       const { action, service } = this.typeToJob[type]
 
       const job = this.props.serviceStore.lastJobs[service + ':' + action]
-      return job && new Date(job.createdAt)
+      return job
     }
   },
 })
@@ -161,25 +122,42 @@ export default class Item {
             <top $$row>
               <left $$row css={{ width: 100 }}>
                 <toggle $$row onClick={() => (store.open = !store.open)}>
-                  <CollapseArrow if={store.auth} open={store.open} />
+                  <Collapse.Arrow if={store.auth} open={store.open} />
                   <logo>
                     <Logo service={type} />
                   </logo>
                 </toggle>
               </left>
               <auth if={!store.auth} $$row>
-                <UI.Button size={0.9} css={{ marginBottom: 2 }}>
+                <UI.Button
+                  onClick={() => OS.send('open-settings', type)}
+                  size={0.9}
+                  css={{ marginBottom: 2 }}
+                >
                   authorize
                 </UI.Button>
               </auth>
               <right if={store.auth} $$row css={{ alignItems: 'center' }}>
                 <UI.Text
-                  if={store.lastJob}
+                  if={store.lastJob && store.lastJob.status === 2}
                   size={0.9}
                   opacity={0.7}
                   css={{ marginLeft: 10 }}
                 >
-                  synced {formatDistance(store.lastJob, Date.now())} ago
+                  synced{' '}
+                  {formatDistance(
+                    new Date(store.lastJob.createdAt),
+                    Date.now()
+                  )}{' '}
+                  ago
+                </UI.Text>
+                <UI.Text
+                  if={store.lastJob && store.lastJob.status < 2}
+                  size={0.9}
+                  opacity={0.7}
+                  css={{ marginLeft: 10 }}
+                >
+                  syncing now
                 </UI.Text>
                 <UI.Button
                   icon="refresh2"
@@ -193,26 +171,30 @@ export default class Item {
               <SyncStatus store={serviceStore} service={type} />
             </sub>
           </header>
-          <contents if={store.open && store.auth}>
-            <Card if={store.auth} store={store} />
-          </contents>
-          <actions if={false}>
-            {store
-              .actions(type)
-              .map(action => (
-                <Action store={store} type={type} action={action} />
-              ))}
-          </actions>
+          <Collapse.Body open={store.open && store.auth}>
+            <card>
+              <Card store={store} />
+            </card>
+          </Collapse.Body>
         </service>
       </UI.Theme>
     )
   }
 
   static style = {
+    service: {
+      marginTop: 30,
+    },
+    card: {
+      margin: [5, 15],
+    },
     left: {
       alignItems: 'center',
     },
     logo: {
+      userSelect: 'none',
+    },
+    toggle: {
       userSelect: 'none',
     },
     top: {

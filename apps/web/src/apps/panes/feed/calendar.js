@@ -4,10 +4,11 @@ import * as UI from '@mcro/ui'
 // import { Pattern } from '~/views'
 
 const VERTICAL_PADDING = 38
-const ROW_HEIGHT = 52
+const ROW_HEIGHT = 50
 const ROW_PAD = 5
 const HOUR_WIDTH = 80
 const START_HOUR = 9.5
+const EVENT_BORDER_WIDTH = 3
 
 const hourOffset = hour => hour - START_HOUR
 const colors = ['#226322', '#8c3030', '#30308c', '#ffb357']
@@ -17,7 +18,7 @@ const rc = () => colors[Math.floor((colors.length - 1) * Math.random())]
 export default class Calendar {
   render() {
     return (
-      <calendar $showRows={2}>
+      <calendar $calendarHeight={2}>
         <controls $$row>
           <UI.Theme name="light">
             <UI.Row>
@@ -115,9 +116,8 @@ export default class Calendar {
       flex: 1,
       // borderBottom: [1, [0, 0, 0, 0.04]],
     },
-    showRows: num => ({
-      height: ROW_HEIGHT * num + VERTICAL_PADDING * 1.2,
-      //overflow: 'hidden',
+    calendarHeight: rows => ({
+      height: ROW_HEIGHT * rows + VERTICAL_PADDING * 1,
     }),
     offset: x => ({
       top: (ROW_HEIGHT - ROW_PAD) * x - VERTICAL_PADDING / 1.5,
@@ -162,14 +162,16 @@ export default class Calendar {
     },
     event: {
       width: HOUR_WIDTH,
-      height: 40,
+      height: ROW_HEIGHT - ROW_PAD - EVENT_BORDER_WIDTH,
       color: '#fff',
       padding: [3, 4],
       lineHeight: '15px',
       overflow: 'hidden',
+      borderRadius: 4,
     },
     color: color => ({
-      borderBottom: [5, color],
+      borderBottom: [EVENT_BORDER_WIDTH, color],
+      background: UI.color(color).alpha(0.1),
       color,
     }),
     title: {

@@ -6,9 +6,10 @@ import * as UI from '@mcro/ui'
 const VERTICAL_PADDING = 38
 const ROW_HEIGHT = 50
 const ROW_PAD = 5
-const HOUR_WIDTH = 80
-const START_HOUR = 9.5
+const HOUR_WIDTH = 75
+const START_HOUR = 8.5
 const EVENT_BORDER_WIDTH = 3
+const CURRENT_TIME = 9
 
 const hourOffset = hour => hour - START_HOUR
 const colors = ['#226322', '#8c3030', '#30308c', '#ffb357']
@@ -49,16 +50,22 @@ export default class Calendar {
             </UI.Row>
           </UI.Theme>
         </controls>
-        <currentTime $atTime={10}>
+        <currentTime $atTime={CURRENT_TIME}>
           <dot />
         </currentTime>
         <events>
+          <event $color={rc()} $atTime={9} $hours={0.5} $offset={1}>
+            <title>Standup</title>
+          </event>
+          <event $color={rc()} $atTime={9.5} $hours={0.5} $offset={1}>
+            <title>Call with Seth</title>
+          </event>
           <event $color={rc()} $atTime={10} $hours={2} $offset={1}>
-            <title>Meet carol</title>
+            <title>All Hands Q4</title>
             <sub $$ellipse>Something or other</sub>
           </event>
           <event $color={rc()} $atTime={11} $hours={2} $offset={2}>
-            <title>Meet carol</title>
+            <title>Product Page Launch Celebration</title>
             <sub $$ellipse>Something or other</sub>
           </event>
           <event $color={rc()} $atTime={13} $offset={1}>
@@ -83,7 +90,7 @@ export default class Calendar {
           </event>
         </events>
         <period>
-          {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
+          {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(time => (
             <mark key={time} $atTime={time} $bold={time === 12} />
           ))}
           <fadeRight
@@ -99,7 +106,7 @@ export default class Calendar {
           />
         </period>
         <hours>
-          {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
+          {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(time => (
             <UI.Text $hourMark $bold={time === 12} key={time} $atTime={time}>
               {time === 12 ? 12 : time % 12}
               {time >= 12 ? 'pm' : 'am'}

@@ -3,9 +3,11 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 // import { Pattern } from '~/views'
 
+const VERTICAL_PADDING = 38
+const ROW_HEIGHT = 52
+const ROW_PAD = 5
 const HOUR_WIDTH = 80
 const START_HOUR = 9.5
-const VERTICAL_PAD = 40
 
 const hourOffset = hour => hour - START_HOUR
 const colors = ['#226322', '#8c3030', '#30308c', '#ffb357']
@@ -111,11 +113,14 @@ export default class Calendar {
     calendar: {
       position: 'relative',
       flex: 1,
-      borderBottom: [1, [0, 0, 0, 0.04]],
+      // borderBottom: [1, [0, 0, 0, 0.04]],
     },
     showRows: num => ({
-      height: 55 * num + VERTICAL_PAD,
+      height: ROW_HEIGHT * num + VERTICAL_PADDING * 1.2,
       //overflow: 'hidden',
+    }),
+    offset: x => ({
+      top: (ROW_HEIGHT - ROW_PAD) * x - VERTICAL_PADDING / 1.5,
     }),
     controls: {
       position: 'absolute',
@@ -164,7 +169,7 @@ export default class Calendar {
       overflow: 'hidden',
     },
     color: color => ({
-      borderBottom: [3, color],
+      borderBottom: [5, color],
       color,
     }),
     title: {
@@ -176,9 +181,6 @@ export default class Calendar {
       fontSize: '80%',
       opacity: 0.5,
     },
-    offset: x => ({
-      top: 48 * x - VERTICAL_PAD / 1.75,
-    }),
     hours: x => ({
       width: HOUR_WIDTH * x,
     }),
@@ -202,7 +204,7 @@ export default class Calendar {
       opacity: 0.5,
       bottom: 0,
       padding: [0, 0, 0, 5],
-      fontSize: 14,
+      fontSize: 13,
       //fontWeight: 600,
       width: 100,
       borderColor: 'transparent',

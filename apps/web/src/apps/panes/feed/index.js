@@ -64,7 +64,7 @@ class FeedNavBar {
       <navbar>
         <line
           css={{
-            background: 'linear-gradient(to right, #fff, rgba(0,0,0,0.08))',
+            background: 'linear-gradient(to left, #fff, rgba(0,0,0,0.08))',
             position: 'absolute',
             zIndex: -1,
             height: 1,
@@ -76,7 +76,12 @@ class FeedNavBar {
         />
         <UI.Popover
           target={
-            <UI.Button icon="funnel" borderRadius={50}>
+            <UI.Button
+              icon="funnel"
+              borderRadius={50}
+              marginLeft={-4}
+              iconColor="red"
+            >
               Feed
             </UI.Button>
           }

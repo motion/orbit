@@ -83,9 +83,29 @@ export default class BarMainStore {
 
   pinned: Array<PaneResult> = [
     {
-      title: 'Foxwoods',
-      icon: 'fox',
+      title: 'GSD',
+      icon: 'pin',
       type: 'feed',
+      icon: (
+        <icon css={{}}>
+          {['steph.jpg', 'nick.jpg', 'me.jpg'].map((path, index) => (
+            <img
+              key={index}
+              style={{
+                borderRadius: 12,
+                width: 20,
+                height: 20,
+                transform: `rotate(${{
+                  0: '-15%',
+                  1: '0',
+                  2: '15%',
+                }[index]})`,
+              }}
+              src={`/images/${path}`}
+            />
+          ))}
+        </icon>
+      ),
       data: {
         team: 'Product',
         people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],

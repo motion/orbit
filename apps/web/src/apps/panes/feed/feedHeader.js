@@ -6,7 +6,11 @@ import { Link } from '~/views'
 
 @view
 export default class FeedHeader {
-  render({ store }) {
+  render({ feedStore }) {
+    const avatars = feedStore.filters.people
+      .slice(0, 2)
+      .map(x => x.split(' ')[0])
+
     return (
       <UI.Theme name="light">
         <section>
@@ -48,17 +52,27 @@ export default class FeedHeader {
               }}
             >
               <main css={{ flexFlow: 'row', alignItems: 'flex-end' }}>
-                <avatar
-                  css={{
-                    alignSelf: 'center',
-                    width: 42,
-                    height: 42,
-                    marginRight: 15,
-                    borderRadius: 1000,
-                    background: 'url(/images/me.jpg)',
-                    backgroundSize: 'cover',
-                  }}
-                />
+                {avatars.map((name, index) => (
+                  <avatar
+                    key={index}
+                    css={{
+                      alignSelf: 'center',
+                      width: 42,
+                      height: 42,
+                      marginRight: index === avatars.length - 1 ? 18 : -35,
+                      borderRadius: 12,
+                      transform: {
+                        rotate: {
+                          0: '-15deg',
+                          1: '0deg',
+                          2: '15deg',
+                        }[index],
+                      },
+                      background: `url(/images/${name}.jpg)`,
+                      backgroundSize: 'cover',
+                    }}
+                  />
+                ))}
                 <titles css={{ flex: 1 }}>
                   <UI.Title
                     onClick={store.ref('isOpen').toggle}

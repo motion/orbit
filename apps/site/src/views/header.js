@@ -18,7 +18,7 @@ export default class Header {
     header: {
       position: 'relative',
       background: 'transparent',
-      padding: [75, 10, 0],
+      padding: [50, 10, 0],
       alignItems: 'center',
       justifyContent: 'center',
       // maxWidth: 800,
@@ -26,17 +26,17 @@ export default class Header {
       // margin: [0, 'auto'],
     },
     icon: {
-      width: 50,
+      width: 36,
       marginBottom: 20,
     },
     logo: {
-      width: 110,
+      width: 90,
     },
     orbital: {
       width: 2000,
       height: 2000,
       position: 'absolute',
-      top: -1000,
+      top: -1400,
       right: -400,
       border: [2, '#EFEDFF'],
       borderRadius: 100000000,

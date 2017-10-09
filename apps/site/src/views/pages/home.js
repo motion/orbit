@@ -155,8 +155,9 @@ export default class HomePage {
       marginTop: 25,
       marginBottom: -25,
       zIndex: 1000,
-      width: 2140 / 4,
-      height: 1828 / 4,
+      width: 2054 / 3,
+      height: 1762 / 3,
+      alignSelf: 'center',
     },
     liTitle: {
       marginLeft: 15,

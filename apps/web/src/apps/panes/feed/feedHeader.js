@@ -7,9 +7,15 @@ import { Link } from '~/views'
 @view
 export default class FeedHeader {
   render({ feedStore }) {
-    const avatars = feedStore.filters.people
-      .slice(0, 2)
-      .map(x => x.split(' ')[0])
+    const NAME_TO_AVATAR = {
+      'Nate Wienert': 'me',
+      'Carol Hienz': 'jacob',
+      'Jacob Bovee': 'jacob',
+      Steel: 'steel',
+      'Nick Cammarata': 'nick',
+    }
+    const bg = name => `url(/images/${NAME_TO_AVATAR[name]}.jpg)`
+    const avatars = feedStore.filters.people.slice(0, 2)
 
     return (
       <UI.Theme name="light">
@@ -68,21 +74,23 @@ export default class FeedHeader {
                           2: '15deg',
                         }[index],
                       },
-                      background: `url(/images/${name}.jpg)`,
+                      backgroundImage: bg(name),
                       backgroundSize: 'cover',
                     }}
                   />
                 ))}
                 <titles css={{ flex: 1 }}>
                   <UI.Title
-                    onClick={store.ref('isOpen').toggle}
+                    onClick={feedStore.ref('isOpen').toggle}
                     size={1.7}
                     fontWeight={800}
                     marginBottom={5}
                   >
-                    {store.filters.people[0] === 'Me'
+                    {feedStore.filters.people[0] === 'Me'
                       ? 'Nate Wienert'
-                      : store.filters.people.join(', ')}
+                      : feedStore.filters.people
+                          .map(x => x.replace(/ .*/, ''))
+                          .join(', ')}
                   </UI.Title>
                   <subtitle
                     $$row

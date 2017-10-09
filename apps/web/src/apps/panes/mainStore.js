@@ -84,10 +84,9 @@ export default class BarMainStore {
   pinned: Array<PaneResult> = [
     {
       title: 'GSD',
-      icon: 'pin',
       type: 'feed',
       icon: (
-        <icon css={{}}>
+        <icon style={{ flexFlow: 'row', marginRight: 10 }}>
           {['steph.jpg', 'nick.jpg', 'me.jpg'].map((path, index) => (
             <img
               key={index}
@@ -95,6 +94,7 @@ export default class BarMainStore {
                 borderRadius: 12,
                 width: 20,
                 height: 20,
+                marginRight: -10,
                 transform: `rotate(${{
                   0: '-15%',
                   1: '0',
@@ -119,14 +119,14 @@ export default class BarMainStore {
       title: 'Product',
       category: 'Teams',
       type: 'message',
-      icon: 'objbowl',
+      icon: 'pin',
     },
     {
       data: { message: 'from company' },
       title: 'Search',
       category: 'Teams',
       type: 'message',
-      icon: 'objbowl',
+      icon: 'objspace',
     },
     {
       data: { message: 'from company' },
@@ -136,7 +136,6 @@ export default class BarMainStore {
       },
       category: 'Teams',
       type: 'message',
-      icon: 'objbowl',
     },
 
     {
@@ -157,26 +156,6 @@ export default class BarMainStore {
       data: { message: 'from company' },
       title: <UI.Text opacity={0.5}>200 more</UI.Text>,
       category: 'Projects',
-      type: 'message',
-      icon: 'objspace',
-    },
-
-    {
-      data: { message: 'my team', image: 'steph.jpg' },
-      title: 'Stephanie He',
-      category: 'People',
-      type: 'message',
-    },
-    {
-      data: { message: 'my team', image: 'nick.jpg' },
-      title: 'Carol Long',
-      category: 'People',
-      type: 'message',
-    },
-    {
-      data: { message: 'my team', image: 'me.jpg' },
-      title: 'Dave Bond',
-      category: 'People',
       type: 'message',
     },
 

@@ -9,14 +9,14 @@ import FeedItem from './feedItem'
 import FeedStore from './feedStore'
 import FeedHeader from './feedHeader'
 import FeedRecently from './feedRecently'
-import { SubTitle } from '~/views'
+// import { SubTitle } from '~/views'
+import { isUndefined, capitalize } from 'lodash'
 
 type Props = PaneProps & { store: FeedStore }
 
-
 @view
 class FeedFilters {
-  render({ store }) {
+  render({ feedStore }) {
     return (
       <UI.List
         stretch
@@ -29,10 +29,10 @@ class FeedFilters {
           height: 36,
         }}
       >
-        {store.types.map(type => {
+        {feedStore.types.map(type => {
           const highlight =
             (isUndefined(type.type) ? type.name : type.type) ===
-            store.filters.type
+            feedStore.filters.type
           return (
             <UI.ListItem
               key={type}
@@ -42,7 +42,7 @@ class FeedFilters {
               glow={!highlight}
               padding={[0, 15]}
               onClick={() => {
-                store.setFilter(
+                feedStore.setFilter(
                   'type',
                   isUndefined(type.type) ? type.name : type.type
                 )
@@ -52,14 +52,14 @@ class FeedFilters {
             </UI.ListItem>
           )
         })}
-      </UI.Row>
+      </UI.List>
     )
   }
 }
 
 @view
 class FeedNavBar {
-  render() {
+  render({ feedStore }) {
     return (
       <navbar>
         <line
@@ -81,7 +81,7 @@ class FeedNavBar {
             </UI.Button>
           }
         >
-          <FeedFilters />
+          <FeedFilters feedStore={feedStore} />
         </UI.Popover>
       </navbar>
     )
@@ -125,7 +125,7 @@ export default class SetView extends React.Component<Props> {
           () => <FeedHeader feedStore={feedStore} />,
           () => <FeedRecently />,
           () => <Calendar />,
-          () => <FeedNavBar />,
+          () => <FeedNavBar feedStore={feedStore} />,
           ...feedStore.activeItems.map((item, index) => () => (
             <FeedItem
               event={item}

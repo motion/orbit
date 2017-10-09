@@ -8,7 +8,7 @@ const VERTICAL_PAD = 46
 
 const hourOffset = hour => hour - START_HOUR
 const colors = ['darkgreen', 'darkred', 'darkblue', 'darkorange', 'darkpurple']
-const rc = () => colors[Math.floor(colors.length * Math.random())]
+const rc = () => colors[Math.floor((colors.length - 1) * Math.random())]
 
 @view
 export default class Calendar {

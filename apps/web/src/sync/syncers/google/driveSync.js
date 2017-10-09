@@ -86,15 +86,18 @@ export default class GoogleDriveSync extends SyncerAction {
     if (!pageToken) {
       pageToken = (await this.fetch('/changes/startPageToken')).startPageToken
     }
+    const query = {
+      supportsTeamDrives: true,
+      includeRemoved: true,
+      includeTeamDriveItems: true,
+      pageSize: Math.min(1000, total),
+      spaces: 'drive',
+    }
+    if (pageToken) {
+      query.pageToken = pageToken
+    }
     return await this.fetch('/changes', {
-      query: {
-        pageToken,
-        supportsTeamDrives: true,
-        includeRemoved: true,
-        includeTeamDriveItems: true,
-        pageSize: Math.min(1000, total),
-        spaces: 'drive',
-      },
+      query,
     })
   }
 
@@ -137,7 +140,9 @@ export default class GoogleDriveSync extends SyncerAction {
       const res = await this.fetchFiles(query)
       if (res) {
         all = [...all, ...res.files]
-        query.pageToken = res.nextPageToken
+        if (res.nextPageToken) {
+          query.pageToken = res.nextPageToken
+        }
       } else {
         throw new Error('No res')
       }

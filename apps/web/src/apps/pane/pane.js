@@ -34,7 +34,6 @@ export default class Pane extends React.Component {
     pane: {
       flex: 1,
       height: '100%',
-      borderLeft: [1, [0, 0, 0, 0.05]],
     },
   }
 }

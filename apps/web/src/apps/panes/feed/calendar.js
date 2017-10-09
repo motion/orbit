@@ -80,7 +80,7 @@ export default class Calendar {
         </events>
         <period>
           {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17].map(time => (
-            <mark key={time} $atTime={time} />
+            <mark key={time} $atTime={time} $bold={time === 12} />
           ))}
           <fadeRight
             css={{
@@ -110,6 +110,7 @@ export default class Calendar {
     calendar: {
       position: 'relative',
       flex: 1,
+      borderBottom: [1, [0, 0, 0, 0.04]],
     },
     showRows: num => ({
       height: 55 * num + VERTICAL_PAD,
@@ -117,7 +118,7 @@ export default class Calendar {
     }),
     controls: {
       position: 'absolute',
-      top: -12,
+      top: -10,
       right: 20,
       zIndex: 100,
     },
@@ -158,18 +159,19 @@ export default class Calendar {
       height: 40,
       background: '#fff',
       color: '#fff',
-      padding: [3, 8],
+      padding: [3, 4],
       borderRadius: 6,
       lineHeight: '15px',
       overflow: 'hidden',
     },
     color: color => ({
-      border: [1, color],
+      border: [2, color],
       color,
     }),
     title: {
       margin: [1, 0],
       fontSize: 15,
+      fontWeight: 400,
     },
     sub: {
       fontSize: '80%',
@@ -193,8 +195,9 @@ export default class Calendar {
       bottom: 0,
       top: 0,
       width: 1,
-      background: 'linear-gradient(#eee, transparent)',
-      // borderRight: '1px dotted #eee',
+      // background: 'linear-gradient(#eee, transparent)',
+      borderRight: '1px dotted #ddd',
+      opacity: 0.5,
     },
     hourMark: {
       opacity: 0.5,
@@ -203,9 +206,13 @@ export default class Calendar {
       fontSize: 14,
       //fontWeight: 600,
       width: 100,
+      borderColor: 'transparent',
     },
     bold: {
       fontWeight: 600,
+      opacity: 0.8,
+      borderRightStyle: 'solid',
+      borderWidth: 2,
     },
   }
 }

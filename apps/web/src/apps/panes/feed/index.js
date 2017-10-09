@@ -19,15 +19,17 @@ class FeedNavBar {
     return (
       <navbar>
         <SubTitle>Activity</SubTitle>
-        <UI.Button borderRadius={50}>Filter</UI.Button>
+        <UI.Button icon="funnel" borderRadius={50}>
+          Filter
+        </UI.Button>
       </navbar>
     )
   }
   static style = {
     navbar: {
       flex: 1,
-      padding: [10, 25, 0],
-      marginTop: 25,
+      padding: [10, 25],
+      marginTop: 15,
       flexFlow: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
@@ -54,7 +56,7 @@ export default class SetView extends React.Component<Props> {
         theme="light"
         css={{
           background: '#fff',
-          borderRadius: 5,
+          borderRadius: 6,
           boxShadow: [[0, 2, 10, [0, 0, 0, 0.15]]],
         }}
         items={[

@@ -27,29 +27,34 @@ export default function SizedSurface(props: Props) {
   const size = num(props.size)
 
   // sizes
-  const height = sizeHeight
+  let height = sizeHeight
     ? Math.round(sizeHeight && size * LINE_HEIGHT * num(sizeHeight))
     : props.height || undefined
-  const fontSize = sizeFont && height * 0.45 * num(sizeFont)
-  const padWithWrap = props.wrapElement ? 0 : height ? height / 3.5 : 8
-  const padding = (sizePadding && [0, padWithWrap * num(sizePadding)]) || 0
-  const margin = (sizeMargin && num(sizeMargin) * 0.25) || 0
-  const radius = (sizeRadius && num(sizeRadius) * 4) || 0
+
+  // adjust for border x 2 (just looks good)
+  if (props.inline) {
+    height = height - 4
+  }
 
   const pass = {}
   if (sizeHeight) {
     pass.height = height
   }
   if (sizeFont) {
+    const fontSize = sizeFont && height * 0.45 * num(sizeFont)
     pass.fontSize = fontSize
   }
   if (sizePadding) {
+    const padWithWrap = props.wrapElement ? 0 : height ? height / 3.5 : 8
+    const padding = (sizePadding && [0, padWithWrap * num(sizePadding)]) || 0
     pass.padding = padding
   }
   if (sizeMargin) {
+    const margin = (sizeMargin && num(sizeMargin) * 0.25) || 0
     pass.margin = margin
   }
   if (sizeRadius) {
+    const radius = (sizeRadius && num(sizeRadius) * 4) || 0
     pass.borderRadius = radius
   }
 

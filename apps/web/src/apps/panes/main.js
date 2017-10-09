@@ -6,12 +6,11 @@ import * as Pane from '~/apps/pane'
 import type { PaneResult } from '~/types'
 import BarMainStore from './mainStore'
 
-const MAIN_WIDTH = 260
+const MAIN_WIDTH = 240
 const itemProps = {
-  fontSize: 26,
-  size: 1.2,
+  size: 1.1,
   glow: true,
-  padding: [12, 10],
+  padding: [10, 12],
 }
 
 const getDate = (result: PaneResult) =>

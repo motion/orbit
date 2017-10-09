@@ -18,9 +18,20 @@ class FeedNavBar {
   render({ store }) {
     return (
       <navbar>
-        <SubTitle>Activity</SubTitle>
+        <line
+          css={{
+            background: 'linear-gradient(to right, #fff, rgba(0,0,0,0.08))',
+            position: 'absolute',
+            zIndex: -1,
+            height: 1,
+            top: '50%',
+            left: 0,
+            right: 0,
+            marginTop: -0.5,
+          }}
+        />
         <UI.Button icon="funnel" borderRadius={50}>
-          Filter
+          Feed
         </UI.Button>
       </navbar>
     )
@@ -33,6 +44,7 @@ class FeedNavBar {
       flexFlow: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
+      position: 'relative',
     },
   }
 }

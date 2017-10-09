@@ -191,11 +191,11 @@ export default class Text extends React.PureComponent<Props> {
         suppressContentEditableWarning={editable}
         onKeyDown={this.handleKeydown}
         ref={this.getRef}
-        style={style}
         css={{ ...props, ...css }}
+        style={style}
         $ellipseText={ellipse}
         {...eventProps}
-        {...attach}
+        {...props}
       >
         {!ellipse && inner}
         <span if={ellipse} $$ellipse>

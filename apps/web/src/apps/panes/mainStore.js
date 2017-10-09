@@ -83,18 +83,12 @@ export default class BarMainStore {
 
   pinned: Array<PaneResult> = [
     {
-      title: 'Home',
-      icon: 'home',
-      type: 'home',
-      data: {},
-    },
-    {
-      title: 'Me',
-      icon: 'usersingle',
+      title: 'Foxwoods',
+      icon: 'fox',
       type: 'feed',
       data: {
         team: 'Product',
-        people: ['Nate Wienert'],
+        people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
       },
     },
   ]

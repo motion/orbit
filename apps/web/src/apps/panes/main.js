@@ -8,9 +8,10 @@ import BarMainStore from './mainStore'
 
 const MAIN_WIDTH = 240
 const itemProps = {
-  size: 1.1,
+  size: 1.14,
   glow: true,
   padding: [10, 12],
+  iconAfter: true,
 }
 
 const getDate = (result: PaneResult) =>
@@ -32,7 +33,7 @@ const getItem = ({ paneStore, mainStore }) => (result, index) => ({
       ),
     !result.data && <UI.Text key={1}>{getDate(result)}</UI.Text>,
   ].filter(Boolean),
-  iconAfter: result.iconAfter,
+  iconAfter: result.iconAfter !== false,
   icon:
     result.data && result.data.image ? (
       <img

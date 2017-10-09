@@ -5,6 +5,7 @@ export const SubTitle = props => (
     fontWeight={400}
     color={[0, 0, 0, 0.4]}
     marginBottom={5}
+    size={1.1}
     {...props}
   />
 )

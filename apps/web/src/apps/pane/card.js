@@ -81,27 +81,6 @@ export default class PaneCard {
               {...listProps}
             />
           </content>
-
-          <UI.Drawer
-            if={false}
-            from="bottom"
-            open={paneStore.showAction}
-            onClickOverlay={paneStore.ref('showAction').toggle}
-            showOverlay
-            overlayBlur
-            css={{ right: 6, left: 6 }}
-          >
-            <UI.Theme name="light">
-              <UI.Surface
-                background="#fff"
-                flex
-                padding={20}
-                borderTopRadius={6}
-              >
-                <UI.Title>Have a nice day</UI.Title>
-              </UI.Surface>
-            </UI.Theme>
-          </UI.Drawer>
         </card>
       </UI.Theme>
     )

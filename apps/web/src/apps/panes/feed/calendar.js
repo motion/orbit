@@ -1,13 +1,14 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+// import { Pattern } from '~/views'
 
 const HOUR_WIDTH = 80
 const START_HOUR = 9.5
-const VERTICAL_PAD = 46
+const VERTICAL_PAD = 40
 
 const hourOffset = hour => hour - START_HOUR
-const colors = ['darkgreen', 'darkred', 'darkblue', 'darkorange', 'darkpurple']
+const colors = ['#226322', '#8c3030', '#30308c', '#ffb357']
 const rc = () => colors[Math.floor((colors.length - 1) * Math.random())]
 
 @view
@@ -157,15 +158,13 @@ export default class Calendar {
     event: {
       width: HOUR_WIDTH,
       height: 40,
-      background: '#fff',
       color: '#fff',
       padding: [3, 4],
-      borderRadius: 6,
       lineHeight: '15px',
       overflow: 'hidden',
     },
     color: color => ({
-      border: [2, color],
+      borderBottom: [3, color],
       color,
     }),
     title: {
@@ -178,7 +177,7 @@ export default class Calendar {
       opacity: 0.5,
     },
     offset: x => ({
-      top: 42 * x - VERTICAL_PAD / 4,
+      top: 48 * x - VERTICAL_PAD / 1.75,
     }),
     hours: x => ({
       width: HOUR_WIDTH * x,

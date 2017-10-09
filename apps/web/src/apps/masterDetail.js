@@ -1,17 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Panes from './panes'
-import { Miller } from './miller'
 
 @view
 export default class MasterPage {
   render() {
-    const paneProps = {
-      highlightBackground: [0, 0, 0, 0.15],
-      highlightColor: [255, 255, 255, 1],
-    }
-
     return (
       <UI.Theme name="light">
         <UI.Surface flex padding={[30, 20, 20]}>

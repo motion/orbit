@@ -6,7 +6,7 @@ import * as UI from '@mcro/ui'
 const VERTICAL_PADDING = 30
 const ROW_HEIGHT = 45
 const ROW_PAD = 2
-const HOUR_WIDTH = 75
+const HOUR_WIDTH = (window.innerWidth - 250) / 10
 const START_HOUR = 8.5
 const EVENT_BORDER_WIDTH = 3
 const CURRENT_TIME = 9

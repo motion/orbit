@@ -31,6 +31,7 @@ export type Props = {
   primaryEllipse?: boolean,
   glow?: boolean,
   fontWeight?: number | string,
+  fontSize?: number | string,
   primaryProps?: Object,
 }
 
@@ -102,6 +103,7 @@ export default class ListItem extends React.Component<Props> {
       childrenProps,
       fontWeight,
       primaryProps,
+      fontSize,
       ...props
     } = this.props
     const radiusProps = segmented
@@ -153,11 +155,8 @@ export default class ListItem extends React.Component<Props> {
             <prop if={primary || secondary} $col>
               <Text
                 $text
-                fontSize="inherit"
-                css={{
-                  wordWrap: 'break-word',
-                  maxHeight: '2.8rem',
-                }}
+                $primaryText
+                fontSize={fontSize || 'inherit'}
                 size={size}
                 color="inherit"
                 editable={editable}
@@ -228,10 +227,12 @@ export default class ListItem extends React.Component<Props> {
     text: {
       width: '100%',
     },
+    primaryText: {
+      wordWrap: 'break-word',
+      maxHeight: '2.8rem',
+    },
     date: {
-      // alignSelf: 'flex-end',
       justifyContent: 'flex-end',
-      // flex: 'inherit',
       margin: ['-1.2rem', 0, 0],
       userSelect: 'none',
       fontSize: 12,

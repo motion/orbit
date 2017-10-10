@@ -122,13 +122,12 @@ export default class SetView extends React.Component<Props> {
                 Team GSD
               </UI.Button>
             </div>
-            <UI.Row spaced={10}>
-              <UI.Button inline size={1.2}>
-                Create group chat
-              </UI.Button>
-              <UI.Button inline size={1.2}>
-                Define as team
-              </UI.Button>
+            <UI.Row
+              spaced={10}
+              itemProps={{ size: 1.2, inline: true, chromeless: true }}
+            >
+              <UI.Button>Create group chat</UI.Button>
+              <UI.Button>Define as team</UI.Button>
             </UI.Row>
           </bar>
         }

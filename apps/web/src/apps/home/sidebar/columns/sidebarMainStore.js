@@ -37,7 +37,7 @@ export default class SidebarMainStore {
   }
 
   get search() {
-    return this.props.barStore.search
+    return this.props.homeStore.search
   }
 
   get parserResult() {
@@ -169,20 +169,12 @@ export default class SidebarMainStore {
 
   get results(): Array<PaneResult> {
     const all = [...this.pinned, ...this.top, ...this.things, ...this.extras]
-
-    const getRowHeight = item => {
-      const height = this.hasContent(item)
-        ? 100
-        : item.data && item.data.updated ? 58 : 38
-      return { ...item, height }
+    const search = fuzzy(all, this.search)
+    if (this.searchResult) {
+      return [this.searchResult, ...search]
     }
-
-    const search = fuzzy(all, this.search).map(getRowHeight)
-    if (this.searchResult) return [getRowHeight(this.searchResult), ...search]
     return search
   }
-
-  hasContent = (result: PaneResult) => result && result.data && result.data.body
 
   select = (index: number) => {
     this.props.navigate(this.results[index])

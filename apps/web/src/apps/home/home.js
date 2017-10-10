@@ -43,7 +43,6 @@ export default class HomePage {
               <fwdcontents>{homeStore.peekItem}</fwdcontents>
             </forwardcomplete>
           </header>
-
           <Sidebar homeStore={homeStore} />
           <Main homeStore={homeStore} />
         </bar>

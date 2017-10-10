@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react'
-import * as Panes from '~/apps/panes'
 import { view } from '@mcro/black'
 
 @view

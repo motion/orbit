@@ -1,36 +1,16 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
+import PaneStore from './paneStore'
 
-@view.attach('paneStore', 'millerStore')
-@view
+@view({
+  paneStore: PaneStore,
+})
 export default class PaneCard {
-  setActions = ({ paneStore, millerStore, actions }) => {
-    if (actions) {
-      millerStore.setPaneActions(paneStore.props.index, actions)
-    }
-  }
-
-  setResults = props => {
-    if (props.items) {
-      props.paneStore.setResults(() => props.items)
-    }
-  }
-
-  componentWillMount() {
-    this.setResults(this.props)
-    this.setActions(this.props)
-  }
-
-  componentWillUpdate(nextProps) {
-    this.setResults(nextProps)
-    this.setActions(nextProps)
-  }
-
   onSelect = (item, index) => {
     if (item.onClick) {
       item.onClick()
     } else {
-      this.props.paneStore.selectRow(index)
+      this.props.onSelect(index)
     }
   }
 
@@ -63,7 +43,6 @@ export default class PaneCard {
           $secondary={!primary}
         >
           <content if={!items}>{children}</content>
-
           <content if={items}>
             <UI.List
               getRef={paneStore.setList}
@@ -74,7 +53,9 @@ export default class PaneCard {
                 ...virtualProps,
               }}
               itemProps={{
-                ...paneStore.itemProps,
+                padding: 0,
+                highlightBackground: [0, 0, 0, 0.08],
+                highlightColor: [255, 255, 255, 1],
                 ...itemProps,
               }}
               items={items}
@@ -82,7 +63,6 @@ export default class PaneCard {
               {...listProps}
             />
           </content>
-
           <actions if={actionBar}>{actionBar}</actions>
         </card>
       </UI.Theme>
@@ -99,11 +79,6 @@ export default class PaneCard {
     },
     primary: {
       marginTop: 5,
-    },
-    secondary: {
-      // transform: {
-      //   y: -5,
-      // },
     },
     content: {
       overflowY: 'scroll',

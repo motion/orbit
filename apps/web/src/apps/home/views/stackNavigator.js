@@ -4,10 +4,11 @@ import { view } from '@mcro/black'
 @view
 export default class StackNavigator {
   render({ stack, children }) {
-    return stack.lastTwo.map((data, index) =>
+    const { length } = stack
+    return stack.lastTwo.map((stackItem, index) =>
       children({
-        data,
-        index: stack.length - index,
+        stackItem,
+        index: length - index - 1,
         currentIndex: stack.currentIndex,
         navigate: stack.navigate,
       })

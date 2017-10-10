@@ -1,15 +1,13 @@
 // @flow
 import Router from '@mcro/router'
 import HomePage from './apps/home'
-import WindowPage from './apps/windowDetail'
-import SettingsPage from './apps/settings'
+import WindowPage from './apps/window'
 
 function runRouter() {
   return new Router({
     routes: {
       '/': HomePage,
       window: WindowPage,
-      settings: SettingsPage,
     },
   })
 }

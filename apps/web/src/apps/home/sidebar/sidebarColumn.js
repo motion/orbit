@@ -9,8 +9,12 @@ const columns = {
 }
 
 export default class SidebarColumn extends React.Component {
-  render({ data, navigate, paneProps }) {
-    const Column = columns[data.type]
-    return <Column data={data} navigate={navigate} paneProps={paneProps} />
+  render() {
+    const { stackItem, navigate, paneProps } = this.props
+    const Column = columns[stackItem.data.type]
+    console.log('sidebarcolumn', stackItem, Column)
+    return (
+      <Column stackItem={stackItem} navigate={navigate} paneProps={paneProps} />
+    )
   }
 }

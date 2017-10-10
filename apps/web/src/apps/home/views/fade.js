@@ -21,6 +21,7 @@ export default class Fade {
 
   static theme = ({ width, index, currentIndex }) => ({
     fadeCol: {
+      width,
       opacity: currentIndex === index ? 1 : 0,
       pointerEvents: currentIndex === index ? 'auto' : 'none',
       transform: {

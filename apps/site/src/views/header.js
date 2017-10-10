@@ -1,6 +1,5 @@
 import React from 'react'
 import { view } from '@mcro/black'
-import * as UI from '@mcro/ui'
 
 @view
 export default class Header {

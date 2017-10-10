@@ -16,18 +16,6 @@ export default class PassProps extends React.Component {
       return getChild(children)
     }
 
-    return (
-      <div
-        style={{
-          flexOrder: 'inherit',
-          flexBasis: 'inherit',
-          flexDirection: 'inherit',
-          flexFlow: 'inherit',
-        }}
-        {...containerProps}
-      >
-        {React.Children.map(children, getChild)}
-      </div>
-    )
+    return React.Children.map(children, getChild)
   }
 }

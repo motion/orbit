@@ -47,6 +47,23 @@ export default class HomePage {
             or team.
           </Text>
 
+          <logos
+            css={{
+              flexFlow: 'row',
+              flex: 1,
+              justifyContent: 'space-around',
+              margin: [20, 0, 40],
+            }}
+          >
+            <UI.PassProps size={40}>
+              <UI.Icon name="social-slack" />
+              <UI.Icon name="social-github" />
+              <UI.Icon name="social-google" />
+              <UI.Icon name="social-dropbox" />
+              <UI.Icon name="social-trello" />
+            </UI.PassProps>
+          </logos>
+
           <SubText textAlign="center">
             We were inspired by tools Stripe & Facebook built to power their
             company. We want to make yours better than theirs.

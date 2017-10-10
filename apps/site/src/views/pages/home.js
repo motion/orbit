@@ -36,18 +36,20 @@ export default class HomePage {
             Search everything.<br />See everything.
           </Title>
 
-          <Title textAlign="center">An app for teams that get shit done.</Title>
-
           <img $screen src="/screenshot.png" />
 
           <br />
           <br />
           <br />
 
+          <Text textAlign="center" size={1.7}>
+            Instantly search everything across every service and see an activity
+            feed for any project or team.
+          </Text>
+
           <SubText textAlign="center">
             We were inspired by tools Stripe & Facebook built to power their
-            company. It's instant search for everything + dynamic feeds on
-            projects and teams.
+            company. We want to make yours better than theirs.
           </SubText>
 
           <hr css={{ marginBottom: -70 }} />
@@ -58,10 +60,17 @@ export default class HomePage {
               <Title $liTitle>Search</Title>
             </li>
 
-            <Text>
-              It's pretty simple: find anything across any service. Pin
-              important docs to the top of any search.
-            </Text>
+            <ul $subList>
+              <li>
+                <Text>Smart search across every service.</Text>
+              </li>
+              <li>
+                <Text>Pin what's important.</Text>
+              </li>
+              <li>
+                <Text>Stale files fade away.</Text>
+              </li>
+            </ul>
 
             <break />
 
@@ -69,30 +78,18 @@ export default class HomePage {
               <Title $liTitle>See</Title>
             </li>
 
-            <Text>
-              Beautiful feeds that show you exactly what you need to know to see
-              what's happening with any team, project, and person.
-            </Text>
-
             <ul $subList>
               <li>
-                <Text>Whats happening on that big project?</Text>
-              </li>
-              <li>
-                <Text>Who is working on it?</Text>
-              </li>
-              <li>
-                <Text>What are the important documents for X?</Text>
+                <Text>Whats happening on that project?</Text>
               </li>
               <li>
                 <Text>What's happening on team X?</Text>
               </li>
-
               <li>
                 <Text>Where's that document Lisa was editing?</Text>
               </li>
               <li>
-                <Text>Didn't we have a slack discussion about issue #244?</Text>
+                <Text>What was the slack discussion about #244?</Text>
               </li>
             </ul>
 
@@ -161,8 +158,11 @@ export default class HomePage {
     },
     liTitle: {
       marginLeft: 15,
+      marginBottom: 0,
     },
     mainList: {
+      padding: [0, 20],
+
       '& > li': {
         listStylePosition: 'inside',
         listStyleType: 'decimal-leading-zero',

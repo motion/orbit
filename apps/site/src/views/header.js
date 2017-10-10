@@ -35,12 +35,12 @@ export default class Header {
     space: {
       height: 500,
       position: 'absolute',
-      top: 450,
+      top: 390,
       right: 0,
       left: 0,
       zIndex: -1,
       pointerEvents: 'none',
-      background: 'url(/space.jpg) no-repeat',
+      background: 'url(/space.jpg) center center no-repeat',
       backgroundSize: 'contain',
     },
   }

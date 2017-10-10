@@ -6,7 +6,7 @@ import * as Pane from '~/apps/pane'
 import type { PaneResult } from '~/types'
 import BarMainStore from './mainStore'
 
-const MAIN_WIDTH = 240
+const MAIN_WIDTH = 250
 const itemProps = {
   size: 1.14,
   glow: true,

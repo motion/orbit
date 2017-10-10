@@ -113,7 +113,7 @@ export default class BarPage {
             <UI.Input
               $searchInput
               onClick={barStore.onClickBar}
-              size={2.2}
+              size={1.8}
               getRef={barStore.onInputRef}
               borderRadius={0}
               onChange={barStore.onSearchChange}
@@ -150,7 +150,7 @@ export default class BarPage {
     },
     header: {
       position: 'relative',
-      height: 75,
+      height: 60,
       marginTop: -1,
     },
     searchIcon: {

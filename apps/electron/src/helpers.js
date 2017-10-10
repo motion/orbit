@@ -1,8 +1,8 @@
 import { screen } from 'electron'
 
-const MIN_WIDTH = 750
-const MIN_HEIGHT = 700
-const MAX_WIDTH = 950
+const MIN_WIDTH = 800
+const MIN_HEIGHT = 750
+const MAX_WIDTH = 1250 // should be pct or constraint(pct, px)
 const MAX_HEIGHT = 800
 const TOPBAR_HEIGHT = 30
 

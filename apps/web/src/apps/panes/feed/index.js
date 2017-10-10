@@ -62,18 +62,6 @@ class FeedNavBar {
   render({ feedStore }) {
     return (
       <navbar>
-        <line
-          css={{
-            background: 'linear-gradient(to left, #fff, rgba(0,0,0,0.08))',
-            position: 'absolute',
-            zIndex: -1,
-            height: 1,
-            top: '50%',
-            left: 0,
-            right: 0,
-            marginTop: -0.5,
-          }}
-        />
         <UI.Popover
           target={
             <UI.Button
@@ -81,8 +69,9 @@ class FeedNavBar {
               borderRadius={50}
               marginLeft={-4}
               iconColor="red"
+              borderWidth={0}
             >
-              Feed
+              <UI.Title>Feed</UI.Title>
             </UI.Button>
           }
         >

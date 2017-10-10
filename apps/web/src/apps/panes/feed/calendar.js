@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 // import { Pattern } from '~/views'
 
-const VERTICAL_PADDING = 38
+const VERTICAL_PADDING = 42
 const ROW_HEIGHT = 50
 const ROW_PAD = 5
 const HOUR_WIDTH = 75
@@ -124,10 +124,10 @@ export default class Calendar {
       // borderBottom: [1, [0, 0, 0, 0.04]],
     },
     calendarHeight: rows => ({
-      height: ROW_HEIGHT * rows + VERTICAL_PADDING * 1,
+      height: ROW_HEIGHT * rows + VERTICAL_PADDING,
     }),
     offset: x => ({
-      top: (ROW_HEIGHT - ROW_PAD) * x - VERTICAL_PADDING / 1.5,
+      top: (ROW_HEIGHT - ROW_PAD) * x - VERTICAL_PADDING / 2,
     }),
     controls: {
       position: 'absolute',
@@ -178,7 +178,7 @@ export default class Calendar {
     },
     color: color => ({
       borderBottom: [EVENT_BORDER_WIDTH, color],
-      background: UI.color(color).alpha(0.1),
+      background: UI.color(color).lightness(95),
       color,
     }),
     title: {
@@ -207,7 +207,7 @@ export default class Calendar {
       width: 1,
       // background: 'linear-gradient(#eee, transparent)',
       borderRight: '1px dotted #ddd',
-      opacity: 0.5,
+      opacity: 0.75,
     },
     hourMark: {
       opacity: 0.5,

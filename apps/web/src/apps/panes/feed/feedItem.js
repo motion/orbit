@@ -25,7 +25,8 @@ export default class FeedItem {
           return (
             <feeditem style={style}>
               <fade if={index === 0} />
-              <line />
+              <sideLine />
+              <bottomLine />
               <info>
                 <avatar
                   css={{
@@ -67,7 +68,6 @@ export default class FeedItem {
       justifyContent: 'flex-start',
       overflow: 'hidden',
       padding: [20, 25, 20, 29],
-      borderBottom: [1, 'dotted', [0, 0, 0, 0.08]],
     },
     fade: {
       position: 'absolute',
@@ -78,13 +78,22 @@ export default class FeedItem {
       background: 'linear-gradient(#fff, transparent)',
       zIndex: -1,
     },
-    line: {
-      width: 3,
+    sideLine: {
+      width: 2,
       background: '#eee',
       position: 'absolute',
       top: 0,
       left: 40,
       bottom: 0,
+      zIndex: -2,
+    },
+    bottomLine: {
+      height: 1,
+      background: 'linear-gradient(to right, #eee, transparent)',
+      position: 'absolute',
+      bottom: 0,
+      left: 42,
+      right: 0,
       zIndex: -2,
     },
     info: {

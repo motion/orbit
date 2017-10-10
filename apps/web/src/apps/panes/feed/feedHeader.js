@@ -20,36 +20,6 @@ export default class FeedHeader {
     return (
       <UI.Theme name="light">
         <section>
-          <topbar
-            $$row
-            css={{
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: [0, 0, 0],
-              marginRight: -8,
-              marginBottom: -5,
-              visibility: 'hidden',
-            }}
-          >
-            <left>
-              <UI.Button
-                size={0.9}
-                circular
-                icon="fullscreen71"
-                borderWidth={0}
-                opacity={0.5}
-              />
-            </left>
-            <right $$row $$centered>
-              <UI.Input
-                borderRadius={50}
-                marginRight={10}
-                height={28}
-                width={200}
-              />
-            </right>
-          </topbar>
-
           <content>
             <title
               css={{
@@ -82,7 +52,7 @@ export default class FeedHeader {
                 <titles css={{ flex: 1 }}>
                   <UI.Title
                     onClick={feedStore.ref('isOpen').toggle}
-                    size={1.7}
+                    size={1.8}
                     fontWeight={800}
                     marginBottom={5}
                   >
@@ -107,7 +77,7 @@ export default class FeedHeader {
                     <UI.Button
                       inline
                       borderRadius={50}
-                      size={1.1}
+                      size={1.2}
                       marginBottom={-5}
                     >
                       #58 Something With a Long Title
@@ -145,7 +115,11 @@ export default class FeedHeader {
       position: 'relative',
       flex: 1,
     },
-    content: { padding: [10, 0, 5], alignItems: 'flex-end', flexFlow: 'row' },
+    content: {
+      padding: [20, 0, 5],
+      alignItems: 'flex-end',
+      flexFlow: 'row',
+    },
     rightSide: {
       position: 'relative',
       height: '100%',
@@ -162,7 +136,12 @@ export default class FeedHeader {
       textAlign: 'right',
       flex: 1,
     },
-    aside: { maxHeight: 55 },
-    asideContent: { alignItems: 'center', padding: [0, 15] },
+    aside: {
+      maxHeight: 55,
+    },
+    asideContent: {
+      alignItems: 'center',
+      padding: [0, 15],
+    },
   }
 }

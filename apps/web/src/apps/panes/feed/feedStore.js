@@ -20,6 +20,7 @@ const loginToName = Object.keys(nameToLogin).reduce(
 
 export default class FeedStore {
   isOpen = false
+
   filters = {
     type: null,
     search: '',
@@ -27,12 +28,14 @@ export default class FeedStore {
     endDate: null,
     people: [],
   }
+
   brushDomain = null
   setBrush = debounce(domain => {
     this.brushDomain = domain
     this.setFilter('startDate', +new Date(domain.x[0]))
     this.setFilter('endDate', +new Date(domain.x[1]))
   }, 20)
+
   types = [
     { name: 'recently', type: null, icon: 'list' },
     { name: 'github', icon: 'github' },
@@ -41,6 +44,10 @@ export default class FeedStore {
     { name: 'jira', icon: 'atl' },
     // { name: 'tasks', type: 'task', icon: 'github' },
   ]
+
+  get firstNames() {
+    return this.filters.people.map(x => x.replace(/ .*/, ''))
+  }
 
   @watch
   events = () =>

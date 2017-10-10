@@ -34,11 +34,19 @@ export default class FeedItem {
                     backgroundSize: 'cover',
                   }}
                 />
-                <UI.Text $name if={!hideName}>
-                  {name}{' '}
-                </UI.Text>
-                <UI.Text $action>{verb} </UI.Text>
-                {extraInfo || null}
+                <UI.Icon
+                  $icon
+                  size={24}
+                  name={event.integration}
+                  color={UI.color(event.integrationColor).lightness(70)}
+                />
+                <text>
+                  <UI.Text $name if={!hideName}>
+                    {name}{' '}
+                  </UI.Text>
+                  <UI.Text $action>{verb} </UI.Text>
+                  {extraInfo || null}
+                </text>
 
                 <div $$flex={1} />
                 <after>
@@ -49,7 +57,6 @@ export default class FeedItem {
                     opacity={0.4}
                     name={event.type}
                   />
-                  <UI.Icon $icon size={24} name={event.integration} />
                 </after>
               </info>
               <body if={body}>
@@ -79,15 +86,16 @@ export default class FeedItem {
       zIndex: -1,
     },
     sideLine: {
-      width: 2,
+      width: 1,
       background: '#eee',
       position: 'absolute',
       top: 0,
-      left: 40,
+      left: 42,
       bottom: 0,
       zIndex: -2,
     },
     bottomLine: {
+      opacity: 0,
       height: 1,
       background: 'linear-gradient(to right, #eee, transparent)',
       position: 'absolute',
@@ -117,7 +125,12 @@ export default class FeedItem {
       width: 26,
       height: 26,
       borderRadius: 100,
-      marginRight: 8,
+      marginRight: 5,
+    },
+    text: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      margin: [0, 5],
     },
     body: {
       padding: [10, 15],
@@ -128,7 +141,7 @@ export default class FeedItem {
       alignItems: 'center',
     },
     icon: {
-      marginLeft: 10,
+      margin: [0, 5],
     },
     typeIcon: {
       marginLeft: 10,

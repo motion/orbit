@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 // import { Pattern } from '~/views'
 
-const VERTICAL_PADDING = 50
+const VERTICAL_PADDING = 30
 const ROW_HEIGHT = 45
 const ROW_PAD = 2
 const HOUR_WIDTH = 75
@@ -17,121 +17,158 @@ const rc = () => colors[Math.floor((colors.length - 1) * Math.random())]
 
 @view
 export default class Calendar {
-  render() {
+  render({ labels }) {
     return (
-      <calendar $calendarHeight={2}>
-        <controls $$row>
-          <UI.Theme name="light">
-            <UI.Row>
-              <UI.Button
-                size={0.9}
-                color={[0, 0, 0, 0.3]}
-                icon="arrowminleft"
-                sizePadding={1}
-              />
-              <UI.Button size={0.9} color={[0, 0, 0, 0.8]}>
-                Jan 12th
-              </UI.Button>
-              <UI.Button
-                size={0.9}
-                color={[0, 0, 0, 0.3]}
-                icon="arrowminright"
-                sizePadding={1}
-              />
-            </UI.Row>
-            <div css={{ marginRight: 10 }} />
-            <UI.Row if={false}>
-              <UI.Button size={0.9} fontWeight={800} color={[0, 0, 0, 0.5]}>
-                Day
-              </UI.Button>
-              <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
-                Week
-              </UI.Button>
-            </UI.Row>
-          </UI.Theme>
-        </controls>
-        <currentTime $atTime={CURRENT_TIME}>
-          <dot />
-        </currentTime>
-        <events>
-          <event $color={rc()} $atTime={9} $hours={0.5} $offset={1}>
-            <title>Standup</title>
-          </event>
-          <event $color={rc()} $atTime={9.5} $hours={0.5} $offset={1}>
-            <title>Call with Seth</title>
-          </event>
-          <event $color={rc()} $atTime={10} $hours={2} $offset={1}>
-            <title>All Hands Q4</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $color={rc()} $atTime={11} $hours={2} $offset={2}>
-            <title>Product Page Launch Celebration</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $color={rc()} $atTime={13} $offset={1}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event if={false} $color={rc()} $atTime={14} $offset={2}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event if={false} $color={rc()} $atTime={14} $hours={2}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $color={rc()} $atTime={16} $offset={1}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-          <event $color={rc()} $atTime={17} $offset={1}>
-            <title>Meet carol</title>
-            <sub $$ellipse>Something or other</sub>
-          </event>
-        </events>
-        <period>
-          {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(time => (
-            <mark key={time} $atTime={time} $bold={time === 12} />
+      <calendar>
+        <labels>
+          {labels.map((label, i) => (
+            <lbl $color={colors[i]} key={label}>
+              {label} <lblSq $bg={colors[i]} />
+            </lbl>
           ))}
-          <fadeRight
-            css={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              width: 100,
-              background: 'linear-gradient(to right, transparent, #fff 90%)',
-              zIndex: 1000,
-            }}
-          />
-        </period>
-        <hours>
-          {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(time => (
-            <UI.Text $hourMark $bold={time === 12} key={time} $atTime={time}>
-              {time === 12 ? 12 : time % 12}
-              {time >= 12 ? 'pm' : 'am'}
-            </UI.Text>
-          ))}
-        </hours>
+        </labels>
+        <calendarRow $calendarHeight={2}>
+          <controls $$row>
+            <UI.Theme name="light">
+              <UI.Row>
+                <UI.Button
+                  size={0.9}
+                  color={[0, 0, 0, 0.3]}
+                  icon="arrowminleft"
+                  sizePadding={1}
+                />
+                <UI.Button size={0.9} color={[0, 0, 0, 0.8]}>
+                  Jan 12th
+                </UI.Button>
+                <UI.Button
+                  size={0.9}
+                  color={[0, 0, 0, 0.3]}
+                  icon="arrowminright"
+                  sizePadding={1}
+                />
+              </UI.Row>
+              <div css={{ marginRight: 10 }} />
+              <UI.Row if={false}>
+                <UI.Button size={0.9} fontWeight={800} color={[0, 0, 0, 0.5]}>
+                  Day
+                </UI.Button>
+                <UI.Button size={0.9} color={[0, 0, 0, 0.4]}>
+                  Week
+                </UI.Button>
+              </UI.Row>
+            </UI.Theme>
+          </controls>
+          <currentTime $atTime={CURRENT_TIME}>
+            <dot />
+          </currentTime>
+          <events>
+            <event $color={rc()} $atTime={9} $hours={0.5} $offset={1}>
+              <title>Standup</title>
+            </event>
+            <event $color={rc()} $atTime={9.5} $hours={0.5} $offset={1}>
+              <title>Call with Seth</title>
+            </event>
+            <event $color={rc()} $atTime={10} $hours={2} $offset={1}>
+              <title>All Hands Q4</title>
+              <sub $$ellipse>Something or other</sub>
+            </event>
+            <event $color={rc()} $atTime={11} $hours={2} $offset={2}>
+              <title>Product Page Launch Celebration</title>
+              <sub $$ellipse>Something or other</sub>
+            </event>
+            <event $color={rc()} $atTime={13} $offset={1}>
+              <title>Meet carol</title>
+              <sub $$ellipse>Something or other</sub>
+            </event>
+            <event if={false} $color={rc()} $atTime={14} $offset={2}>
+              <title>Meet carol</title>
+              <sub $$ellipse>Something or other</sub>
+            </event>
+            <event if={false} $color={rc()} $atTime={14} $hours={2}>
+              <title>Meet carol</title>
+              <sub $$ellipse>Something or other</sub>
+            </event>
+            <event $color={rc()} $atTime={16} $offset={1}>
+              <title>Meet carol</title>
+              <sub $$ellipse>Something or other</sub>
+            </event>
+            <event $color={rc()} $atTime={17} $offset={1}>
+              <title>Meet carol</title>
+              <sub $$ellipse>Something or other</sub>
+            </event>
+          </events>
+          <period>
+            {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(time => (
+              <mark key={time} $atTime={time} $bold={time === 12} />
+            ))}
+            <fadeRight
+              css={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                bottom: 0,
+                width: 100,
+                background: 'linear-gradient(to right, transparent, #fff 90%)',
+                zIndex: 1000,
+              }}
+            />
+          </period>
+          <hours>
+            {[8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(time => (
+              <UI.Text $hourMark $bold={time === 12} key={time} $atTime={time}>
+                {time === 12 ? 12 : time % 12}
+                {time >= 12 ? 'pm' : 'am'}
+              </UI.Text>
+            ))}
+          </hours>
+        </calendarRow>
       </calendar>
     )
   }
 
   static style = {
     calendar: {
+      flex: 1,
+      // marginTop: 10,
+    },
+    calendarRow: {
       position: 'relative',
       flex: 1,
+      borderTop: [1, [0, 0, 0, 0.08]],
       borderBottom: [1, [0, 0, 0, 0.08]],
     },
     calendarHeight: rows => ({
-      height: ROW_HEIGHT * rows + VERTICAL_PADDING,
+      height: (ROW_HEIGHT + ROW_PAD) * rows + VERTICAL_PADDING * 2,
     }),
     offset: x => ({
-      top: (ROW_HEIGHT - ROW_PAD) * x - VERTICAL_PADDING / 2 + 4,
+      top: ROW_HEIGHT * x - ROW_PAD * x - VERTICAL_PADDING / 2,
     }),
+    color: color => ({
+      borderColor: UI.color(color).lightness(70),
+      background: UI.color(color).lightness(95),
+      color,
+    }),
+    bg: background => ({
+      background,
+    }),
+    labels: {
+      flexFlow: 'row',
+      paddingRight: 350,
+      paddingLeft: 25,
+      '&:hover > .lbl': {
+        filter: 'none',
+        opacity: 1,
+      },
+    },
+    lbl: {
+      padding: [0, 10],
+      flex: 1,
+      opacity: 0.5,
+      filter: 'grayscale(100%) brightness(99.999%)',
+    },
     controls: {
       position: 'absolute',
-      top: -10,
+      top: -13,
       right: 20,
       zIndex: 100,
     },
@@ -175,12 +212,8 @@ export default class Calendar {
       lineHeight: '15px',
       overflow: 'hidden',
       borderRadius: 4,
+      borderBottom: [EVENT_BORDER_WIDTH, 'transparent'],
     },
-    color: color => ({
-      borderBottom: [EVENT_BORDER_WIDTH, UI.color(color).lightness(70)],
-      background: UI.color(color).lightness(95),
-      color,
-    }),
     title: {
       margin: [1, 0],
       fontSize: 16,

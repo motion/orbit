@@ -52,7 +52,7 @@ export default class FeedHeader {
                 <titles css={{ flex: 1 }}>
                   <UI.Title
                     onClick={feedStore.ref('isOpen').toggle}
-                    size={1.8}
+                    size={2}
                     fontWeight={800}
                     marginBottom={5}
                   >
@@ -76,6 +76,7 @@ export default class FeedHeader {
                     </UI.Text>
                     <UI.Button
                       inline
+                      chromeless
                       borderRadius={50}
                       size={1.2}
                       marginBottom={-5}

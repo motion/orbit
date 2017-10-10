@@ -195,8 +195,13 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     }
 
     if (isTag) {
+      if (!finalProps.className) {
+        finalProps.className = type_
+      } else {
+        finalProps.className += ` ${type_}`
+      }
+
       if (!VALID_TAGS[type]) {
-        finalProps['data-tagname'] = type
         type = 'div'
       }
       type = TAG_NAME_MAP[type] || type

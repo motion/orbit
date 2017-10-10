@@ -52,7 +52,7 @@ export default class FeedRecently {
 
   static style = {
     recently: {
-      padding: [12, 20],
+      padding: [10, 20],
       alignItems: 'center',
       flexFlow: 'row',
       borderBottom: [1, [0, 0, 0, 0.08]],
@@ -65,7 +65,7 @@ export default class FeedRecently {
       left: 0,
       right: 0,
       bottom: 0,
-      background: '#fafafa',
+      background: '#fff',
     },
     title: {
       fontSize: 12,
@@ -78,7 +78,7 @@ export default class FeedRecently {
       zIndex: 1,
     },
     titleBackground: {
-      background: '#f9f9f9',
+      background: '#fff',
       border: [1, [0, 0, 0, 0.08]],
       zIndex: -1,
       color: 'transparent',

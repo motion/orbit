@@ -135,7 +135,7 @@ export default class SetView extends React.Component<Props> {
         items={[
           () => <FeedHeader feedStore={feedStore} />,
           () => <FeedRecently />,
-          () => <Calendar />,
+          () => <Calendar labels={feedStore.firstNames} />,
           () => <FeedNavBar feedStore={feedStore} />,
           ...feedStore.activeItems.map((item, index) => () => (
             <FeedItem

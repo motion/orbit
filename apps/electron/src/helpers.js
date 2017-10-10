@@ -11,11 +11,11 @@ export const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
 
   const boundedHeight = Math.min(MAX_HEIGHT, height - 100)
-  const maxWidthPct = boundedHeight * MAX_WIDTH_TO_HEIGHT // at most 1.5x width of height
-  const boundedWidth = Math.min(maxWidthPct, MAX_WIDTH)
+  const maxWidthByPercentOfHeight = boundedHeight * MAX_WIDTH_TO_HEIGHT // at most 1.5x width of height
+  const boundedWidth = Math.min(maxWidthByPercentOfHeight, MAX_WIDTH)
 
   const size = [
-    Math.min(boundedWidth, Math.max(MIN_WIDTH, Math.round(width / 2.25))),
+    Math.min(boundedWidth, Math.max(MIN_WIDTH, Math.round(width / 1.75))),
     Math.min(boundedHeight, Math.max(MIN_HEIGHT, Math.round(height / 1.2))),
   ]
   const middleX = Math.round(width / 2 - size[0] / 2)

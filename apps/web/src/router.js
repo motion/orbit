@@ -1,18 +1,14 @@
 // @flow
 import Router from '@mcro/router'
 import HomePage from './apps/home'
-import BarPage from './apps/bar'
-import EmptyPage from './apps/empty'
-import MasterDetailPage from './apps/masterDetail'
+import WindowPage from './apps/windowDetail'
 import SettingsPage from './apps/settings'
 
 function runRouter() {
   return new Router({
     routes: {
       '/': HomePage,
-      '/vibrancy': EmptyPage,
-      bar: BarPage,
-      master: MasterDetailPage,
+      window: WindowPage,
       settings: SettingsPage,
     },
   })

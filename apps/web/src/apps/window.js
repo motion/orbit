@@ -3,7 +3,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
 @view
-export default class MasterPage {
+export default class WindowPage {
   render() {
     return (
       <UI.Theme name="light">

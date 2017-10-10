@@ -1,5 +1,4 @@
 // @flow
-import TestIssue from './task/test_data/issue'
 import * as UI from '@mcro/ui'
 import { includes } from 'lodash'
 import { watch } from '@mcro/black'
@@ -7,7 +6,7 @@ import type { PaneProps, PaneResult } from '~/types'
 import { Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
-import parser from '../bar/parser'
+import parser from './parser'
 
 const thingToResult = (thing: Thing): PaneResult => ({
   id: thing.id || thing.data.id,
@@ -24,10 +23,8 @@ const thingToResult = (thing: Thing): PaneResult => ({
   category: 'Recently',
 })
 
-export default class BarMainStore {
+export default class SidebarMainStore {
   props: PaneProps
-
-  colIndex = 0
 
   @watch
   topThingsRaw: ?Array<Thing> = (() =>
@@ -130,9 +127,6 @@ export default class BarMainStore {
     {
       data: { message: 'from company' },
       title: <UI.Text opacity={0.5}>25 more</UI.Text>,
-      onClick: () => {
-        this.colIndex = 1
-      },
       category: 'Teams',
       type: 'message',
     },
@@ -155,43 +149,6 @@ export default class BarMainStore {
       category: 'Projects',
       type: 'message',
     },
-
-    // {
-    //   id: 1300,
-    //   title: 'Google Docs',
-    //   category: 'Services',
-    //   type: 'message',
-    //   data: { image: 'google-docs-icon.svg' },
-    // },
-    // {
-    //   id: 1300,
-    //   title: 'Github',
-    //   category: 'Services',
-    //   type: 'message',
-    //   data: { image: 'github-icon.svg' },
-    // },
-    // {
-    //   id: 1300,
-    //   title: 'Google Drive',
-    //   category: 'Services',
-    //   type: 'message',
-    //   data: { image: 'drive-icon.svg' },
-    // },
-  ]
-
-  tests: Array<PaneResult> = [
-    {
-      title: ':Github issue about performance',
-      type: 'task',
-      data: TestIssue,
-      category: 'Tests',
-    },
-    {
-      title: `:Nick's Calendar`,
-      type: 'calendar',
-      data: {},
-      category: 'Calendar',
-    },
   ]
 
   extras = [
@@ -211,14 +168,7 @@ export default class BarMainStore {
   ]
 
   get results(): Array<PaneResult> {
-    const includeTests = this.search.indexOf(':') === 0
-    const all = [
-      ...this.pinned,
-      ...this.top,
-      ...this.things,
-      ...(includeTests ? this.tests : []),
-      ...this.extras,
-    ]
+    const all = [...this.pinned, ...this.top, ...this.things, ...this.extras]
 
     const getRowHeight = item => {
       const height = this.hasContent(item)

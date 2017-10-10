@@ -68,10 +68,11 @@ export default class FeedRecently {
       background: '#fafafa',
     },
     title: {
-      fontSize: 11,
+      fontSize: 12,
       position: 'absolute',
       top: -10,
       padding: [3, 10],
+      border: [1, 'transparent'],
       borderRadius: 6,
       color: '#aaa',
       zIndex: 1,

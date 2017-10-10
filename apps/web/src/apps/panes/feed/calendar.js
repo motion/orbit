@@ -3,9 +3,9 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 // import { Pattern } from '~/views'
 
-const VERTICAL_PADDING = 42
-const ROW_HEIGHT = 50
-const ROW_PAD = 5
+const VERTICAL_PADDING = 50
+const ROW_HEIGHT = 45
+const ROW_PAD = 2
 const HOUR_WIDTH = 75
 const START_HOUR = 8.5
 const EVENT_BORDER_WIDTH = 3
@@ -121,13 +121,13 @@ export default class Calendar {
     calendar: {
       position: 'relative',
       flex: 1,
-      // borderBottom: [1, [0, 0, 0, 0.04]],
+      borderBottom: [1, [0, 0, 0, 0.08]],
     },
     calendarHeight: rows => ({
       height: ROW_HEIGHT * rows + VERTICAL_PADDING,
     }),
     offset: x => ({
-      top: (ROW_HEIGHT - ROW_PAD) * x - VERTICAL_PADDING / 2,
+      top: (ROW_HEIGHT - ROW_PAD) * x - VERTICAL_PADDING / 2 + 4,
     }),
     controls: {
       position: 'absolute',
@@ -137,23 +137,23 @@ export default class Calendar {
     },
     currentTime: {
       width: 3,
-      background: '#ccc',
-      bottom: 5,
+      background: '#7c50d2',
+      bottom: 2,
       top: 0,
       position: 'absolute',
-      zIndex: 9,
+      zIndex: 11,
     },
     dot: {
-      width: 11,
-      height: 11,
-      marginLeft: -6,
+      width: 9,
+      height: 9,
+      marginLeft: -4,
+      bottom: -8,
       position: 'absolute',
-      bottom: -10,
       left: '50%',
       right: 0,
       alignItems: 'center',
       borderRadius: 1000,
-      background: '#ccc',
+      background: '#7c50d2',
     },
     atTime: hour => ({
       position: 'absolute',
@@ -177,14 +177,17 @@ export default class Calendar {
       borderRadius: 4,
     },
     color: color => ({
-      borderBottom: [EVENT_BORDER_WIDTH, color],
+      borderBottom: [EVENT_BORDER_WIDTH, UI.color(color).lightness(70)],
       background: UI.color(color).lightness(95),
       color,
     }),
     title: {
       margin: [1, 0],
-      fontSize: 15,
+      fontSize: 16,
+      lineHeight: '15px',
       fontWeight: 400,
+      overflow: 'hidden',
+      maxHeight: '100%',
     },
     sub: {
       fontSize: '80%',

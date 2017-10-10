@@ -150,7 +150,7 @@ export default class BarPage {
     },
     header: {
       position: 'relative',
-      height: 60,
+      height: 70,
       marginTop: -1,
     },
     searchIcon: {

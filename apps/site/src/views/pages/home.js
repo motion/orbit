@@ -43,8 +43,8 @@ export default class HomePage {
           <br />
 
           <Text textAlign="center" size={1.7}>
-            Instantly search everything across every service and see an activity
-            feed for any project or team.
+            Search across every service and see an activity feed for any project
+            or team.
           </Text>
 
           <SubText textAlign="center">

@@ -9,7 +9,8 @@ export default class Header {
       <header>
         <img $icon src="/icon.png" />
         <img $logo src="/orbit-logo.svg" />
-        <orbital />
+        <orbital if={false} />
+        <space />
       </header>
     )
   }
@@ -26,23 +27,22 @@ export default class Header {
       // margin: [0, 'auto'],
     },
     icon: {
-      width: 36,
-      marginBottom: 20,
+      width: 30,
+      marginBottom: 15,
     },
     logo: {
-      width: 90,
+      width: 85,
     },
-    orbital: {
-      width: 2000,
-      height: 2000,
+    space: {
+      height: 500,
       position: 'absolute',
-      top: -1400,
-      right: -400,
-      border: [2, '#EFEDFF'],
-      borderRadius: 100000000,
+      top: 450,
+      right: 0,
+      left: 0,
       zIndex: -1,
       pointerEvents: 'none',
-      background: 'linear-gradient(#fff, #FDFDFF)',
+      background: 'url(/space.jpg) no-repeat',
+      backgroundSize: 'contain',
     },
   }
 }

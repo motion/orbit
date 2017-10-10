@@ -12,7 +12,6 @@ export default class SidebarColumn extends React.Component {
   render() {
     const { stackItem, navigate, paneProps } = this.props
     const Column = columns[stackItem.data.type]
-    console.log('sidebarcolumn', stackItem, Column)
     return (
       <Column stackItem={stackItem} navigate={navigate} paneProps={paneProps} />
     )

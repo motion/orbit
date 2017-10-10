@@ -11,11 +11,10 @@ import getItem from './getItem'
 })
 export default class SidebarMainColumn {
   render({ sidebarMainStore, paneProps }) {
-    console.log('main', sidebarMainStore.results)
     return (
       <Pane.Card
         items={sidebarMainStore.results}
-        getItem={getItem(sidebarMainStore)}
+        getItem={getItem(paneProps.getActiveIndex)}
         {...paneProps}
       />
     )

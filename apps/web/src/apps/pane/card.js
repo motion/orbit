@@ -22,6 +22,7 @@ export default class PaneCard {
     itemProps,
     items,
     paneStore,
+    getActiveIndex,
     children,
     style,
     width,
@@ -30,7 +31,7 @@ export default class PaneCard {
     actionBar,
   }) {
     const getItemDefault = (item, index) => ({
-      highlight: () => index === paneStore.activeIndex,
+      highlight: () => index === getActiveIndex(),
       children: item,
     })
 

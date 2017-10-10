@@ -6,12 +6,6 @@ import StackNavigator from '../views/stackNavigator'
 import SidebarColumn from './sidebarColumn'
 
 const width = 250
-const itemProps = {
-  size: 1.14,
-  glow: true,
-  padding: [10, 12],
-  iconAfter: true,
-}
 
 @view
 export default class Sidebar extends React.Component<Props> {
@@ -32,10 +26,18 @@ export default class Sidebar extends React.Component<Props> {
                 navigate={navigate}
                 paneProps={{
                   primary: true,
-                  itemProps,
+                  getActiveIndex: () => {
+                    console.log('GET ME', homeStore.stack.last.activeRow[0])
+                    return homeStore.stack.last.activeRow[0]
+                  },
+                  itemProps: {
+                    size: 1.14,
+                    glow: true,
+                    padding: [10, 12],
+                    iconAfter: true,
+                  },
                   width,
                   groupKey: 'category',
-                  activeIndex: () => homeStore.stack.activeIndex(0),
                 }}
               />
             </Fade>

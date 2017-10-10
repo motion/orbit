@@ -8,10 +8,10 @@ const hasContent = (result: PaneResult) =>
 const getDate = (result: PaneResult) =>
   result.data && result.data.updated ? UI.Date.format(result.data.updated) : ''
 
-export default function getItem(store) {
+export default function getItem(getActiveIndex) {
   return (result, index) => ({
     key: `${index}${result.id}`,
-    highlight: () => index === store.activeIndex,
+    highlight: () => index === getActiveIndex(),
     //color: [255, 255, 255, 0.6],
     primary: result.title,
     primaryEllipse: !hasContent(result),

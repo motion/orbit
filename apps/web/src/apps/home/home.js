@@ -19,7 +19,7 @@ export default class HomePage {
   render({ homeStore }) {
     return (
       <UI.Theme name="clear-dark">
-        <bar ref={homeStore.ref('barRef').set} $$fullscreen>
+        <home ref={homeStore.ref('barRef').set} $$fullscreen>
           <header $$draggable>
             <UI.Icon
               $searchIcon
@@ -43,17 +43,24 @@ export default class HomePage {
               <fwdcontents>{homeStore.peekItem}</fwdcontents>
             </forwardcomplete>
           </header>
-          <Sidebar homeStore={homeStore} />
-          <Main homeStore={homeStore} />
-        </bar>
+          <content>
+            <Sidebar homeStore={homeStore} />
+            <Main homeStore={homeStore} />
+          </content>
+        </home>
       </UI.Theme>
     )
   }
 
   static style = {
-    bar: {
+    home: {
       background: [135, 135, 135, 0.6],
       flex: 1,
+    },
+    content: {
+      flexFlow: 'row',
+      flex: 1,
+      position: 'relative',
     },
     header: {
       position: 'relative',

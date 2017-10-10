@@ -5,6 +5,7 @@ import * as UI from '@mcro/ui'
 import type { PaneResult } from '~/types'
 import Fade from '../views/fade'
 import StackNavigator from '../views/stackNavigator'
+import SidebarColumn from './sidebarColumn'
 
 const MAIN_WIDTH = 250
 const itemProps = {
@@ -59,10 +60,11 @@ export default class Sidebar extends React.Component<Props> {
       <StackNavigator stack={homeStore.stack}>
         {({ data, index, currentIndex, navigate }) => (
           <Fade width={width} index={index} currentIndex={currentIndex}>
-            <Column
+            <SidebarColumn
               data={data}
               navigate={navigate}
               paneProps={{
+                primary: true,
                 itemProps,
                 width,
                 groupKey: 'category',

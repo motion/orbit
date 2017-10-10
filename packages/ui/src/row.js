@@ -82,12 +82,7 @@ export default class Row extends React.Component<Props> {
 
     if (spaced) {
       itemProps = itemProps || {}
-      itemProps.margin = [
-        0,
-        0,
-        0,
-        typeof props.spaced === 'number' ? spaced : 5,
-      ]
+      itemProps.marginLeft = typeof props.spaced === 'number' ? spaced : 5
     }
 
     if (stretch) {

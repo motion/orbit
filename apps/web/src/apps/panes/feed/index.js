@@ -83,7 +83,7 @@ class FeedNavBar {
   static style = {
     navbar: {
       flex: 1,
-      padding: [10, 25],
+      padding: [10, 25, 0],
       marginTop: 15,
       flexFlow: 'row',
       justifyContent: 'space-between',
@@ -115,6 +115,23 @@ export default class SetView extends React.Component<Props> {
           borderRadius: 6,
           boxShadow: [[0, 2, 10, [0, 0, 0, 0.15]]],
         }}
+        actionBar={
+          <bar>
+            <div $$flex={2} $$row>
+              <UI.Button chromeless inline icon="funnel" opacity={0.5}>
+                Team GSD
+              </UI.Button>
+            </div>
+            <UI.Row spaced={10}>
+              <UI.Button inline size={1.2}>
+                Create group chat
+              </UI.Button>
+              <UI.Button inline size={1.2}>
+                Define as team
+              </UI.Button>
+            </UI.Row>
+          </bar>
+        }
         items={[
           () => <FeedHeader feedStore={feedStore} />,
           () => <FeedRecently />,
@@ -132,5 +149,14 @@ export default class SetView extends React.Component<Props> {
         ]}
       />
     )
+  }
+
+  static style = {
+    bar: {
+      padding: [10, 15],
+      borderTop: [1, [0, 0, 0, 0.05]],
+      flexFlow: 'row',
+      alignItems: 'center',
+    },
   }
 }

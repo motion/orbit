@@ -47,6 +47,7 @@ export default class PaneCard {
     width,
     theme,
     primary,
+    actionBar,
   }) {
     const getItemDefault = (item, index) => ({
       highlight: () => index === paneStore.activeIndex,
@@ -81,6 +82,8 @@ export default class PaneCard {
               {...listProps}
             />
           </content>
+
+          <actions if={actionBar}>{actionBar}</actions>
         </card>
       </UI.Theme>
     )
@@ -104,7 +107,7 @@ export default class PaneCard {
     },
     content: {
       overflowY: 'scroll',
-      height: '100%',
+      flex: 1,
     },
     fullscreen: {
       position: 'absolute',

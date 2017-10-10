@@ -78,14 +78,12 @@ class SecondaryColumn {
             title: 'Product',
             category: 'Teams',
             type: 'message',
-            icon: 'objbowl',
           },
           {
             data: { message: 'from company' },
             title: 'Search',
             category: 'Teams',
             type: 'message',
-            icon: 'objbowl',
           },
           {
             data: { message: 'from company' },
@@ -95,7 +93,6 @@ class SecondaryColumn {
             },
             category: 'Teams',
             type: 'message',
-            icon: 'objbowl',
           },
         ]}
         width={MAIN_WIDTH}

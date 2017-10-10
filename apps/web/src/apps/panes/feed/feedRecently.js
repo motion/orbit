@@ -9,7 +9,7 @@ export default class FeedRecently {
     const itemProps = {
       padding: [6, 0, 5, 6],
       borderRadius: 6,
-      size: 1.2,
+      size: 1.1,
       background: 'transparent',
       margin: [0, 12, 0, 5],
       css: {
@@ -52,7 +52,7 @@ export default class FeedRecently {
 
   static style = {
     recently: {
-      padding: [13, 20],
+      padding: [12, 20],
       alignItems: 'center',
       flexFlow: 'row',
       borderBottom: [1, [0, 0, 0, 0.08]],

@@ -111,7 +111,7 @@ export default class FeedHeader {
     section: {
       background: '#fff',
       borderBottom: [1, [0, 0, 0, 0.08]],
-      padding: [8, 15, 25],
+      padding: [8, 15, 20],
       position: 'relative',
       flex: 1,
     },

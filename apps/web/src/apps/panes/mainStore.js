@@ -126,7 +126,6 @@ export default class BarMainStore {
       title: 'Search',
       category: 'Teams',
       type: 'message',
-      icon: 'objspace',
     },
     {
       data: { message: 'from company' },
@@ -143,14 +142,12 @@ export default class BarMainStore {
       title: 'Foxwoods',
       category: 'Projects',
       type: 'message',
-      icon: 'objspace',
     },
     {
       data: { message: 'from company' },
       title: '16: Fiber',
       category: 'Projects',
       type: 'message',
-      icon: 'objspace',
     },
     {
       data: { message: 'from company' },

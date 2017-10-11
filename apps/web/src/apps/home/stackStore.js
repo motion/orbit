@@ -5,7 +5,7 @@ import { store } from '@mcro/black'
 class StackItem {
   store = null
   data = null
-  activeColumn = 0
+  col = 0
   active = [0, 0]
   constructor(data) {
     this.data = data
@@ -14,10 +14,10 @@ class StackItem {
     this.store = store
   }
   get results() {
-    return this.store ? this.store.results : null
+    return this.store ? this.store.results : []
   }
   get selectedIndex() {
-    return this.active[this.activeColumn]
+    return this.active[this.col]
   }
   get selectedResult() {
     if (!this.results) {
@@ -32,18 +32,21 @@ class StackItem {
     return this.active[1]
   }
   down() {
-    this.active[this.activeColumn]++
+    this.active[this.col] = Math.min(
+      this.results.length - 1,
+      this.active[this.col] + 1
+    )
     this.active = [...this.active]
   }
   up() {
-    this.active[this.activeColumn]--
+    this.active[this.col] = Math.max(0, this.active[this.col] - 1)
     this.active = [...this.active]
   }
   right() {
-    this.activeColumn += 1
+    this.col += 1
   }
   left() {
-    this.activeColumn -= 1
+    this.col -= 1
   }
 }
 

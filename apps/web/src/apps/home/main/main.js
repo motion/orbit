@@ -21,7 +21,9 @@ export default class Main {
           return (
             <Fade
               key={index}
-              width="100%"
+              style={{
+                flex: 1,
+              }}
               index={index}
               currentIndex={currentIndex}
             >

@@ -34,6 +34,7 @@ export default class Sidebar extends React.Component<Props> {
                 paneProps={{
                   primary: true,
                   getActiveIndex: () => stackItem.firstIndex,
+                  onSelect: stackItem.onSelect,
                   itemProps: {
                     size: 1.14,
                     glow: true,

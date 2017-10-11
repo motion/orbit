@@ -231,7 +231,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={`${Constants.JOT_URL}/bar?cachebust=${this.uid}`}
+          file={Constants.JOT_URL}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size.map(x => x + bgPadding * 2)}

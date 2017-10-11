@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import * as Pane from '~/apps/pane'
+import Pane from '~/apps/pane'
 import type { PaneProps } from '~/types'
 import Calendar from './calendar'
 import FeedItem from './feedItem'
@@ -97,8 +97,8 @@ class FeedNavBar {
 @view({
   feedStore: FeedStore,
 })
-export default class SetView extends React.Component<Props> {
-  render({ feedStore }: Props) {
+export default class Feed extends React.Component<Props> {
+  render({ feedStore, paneProps }: Props) {
     if (!feedStore.allItems.length) {
       return (
         <div css={{ width: '100%', padding: 20 }}>
@@ -108,7 +108,8 @@ export default class SetView extends React.Component<Props> {
     }
 
     return (
-      <Pane.Card
+      <Pane
+        {...paneProps}
         theme="light"
         css={{
           background: '#fff',

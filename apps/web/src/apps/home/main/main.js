@@ -19,6 +19,7 @@ export default class Main {
           }
           const Pane = Panes[stackItem.sidebarSelected.type]
           if (!Pane) {
+            console.log('notfound', stackItem.sidebarSelected)
             return <null>not found {stackItem.sidebarSelected.type}</null>
           }
           return (

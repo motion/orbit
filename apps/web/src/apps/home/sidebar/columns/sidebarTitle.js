@@ -8,8 +8,8 @@ export default class SidebarTitle {
   render({ data, onBack }) {
     return (
       <title onClick={onBack}>
-        <UI.Button $backButton circular icon="arrominleft" />
-        <UI.Title size={1.5}>{data.title}</UI.Title>
+        <UI.Button $backButton size={1.1} circular icon="arrominleft" />
+        <UI.Title size={1.6}>{data.title}</UI.Title>
       </title>
     )
   }
@@ -18,10 +18,11 @@ export default class SidebarTitle {
     title: {
       flexFlow: 'row',
       alignItems: 'center',
-      padding: [5, 10],
+      padding: [0, 10],
     },
     backButton: {
-      marginRight: 10,
+      marginRight: 8,
+      marginLeft: -15,
     },
   }
 }

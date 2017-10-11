@@ -11,6 +11,7 @@ class SidebarTaskStore {
       type: 'task',
       parent: this.props.data,
       display: <SidebarTitle {...this.props} />,
+      onClick: this.props.onBack,
       id: this.props.data.id,
     },
     {

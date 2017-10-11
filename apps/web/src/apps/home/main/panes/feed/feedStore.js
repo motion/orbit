@@ -46,6 +46,14 @@ export default class FeedStore {
   }
 
   get result() {
+    console.log(
+      'FeedStore this.props.stackItem.sidebarSelected',
+      this.props.stackItem.sidebarSelected
+    )
+    if (this.props.stackItem.sidebarSelected.parent) {
+      console.log('123', this.props.stackItem.sidebarSelected.parent)
+      return this.props.stackItem.sidebarSelected.parent
+    }
     return this.props.stackItem.sidebarSelected
   }
 

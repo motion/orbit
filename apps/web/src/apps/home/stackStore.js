@@ -18,7 +18,9 @@ class StackItem {
     return this.store ? this.store.results : []
   }
   onSelect(item: Object) {
-    this.props.navigate(item)
+    if (this.props) {
+      this.props.navigate(item)
+    }
   }
   get selectedIndex() {
     return this.active[this.col]
@@ -34,6 +36,10 @@ class StackItem {
   }
   get sidebarActive() {
     return this.data
+  }
+  get selectedKey() {
+    const { sidebarSelected } = this
+    return `${sidebarSelected.type}${sidebarSelected.id}`
   }
   get firstIndex() {
     return this.active[0]

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import App from '~/app'
 
@@ -7,9 +7,11 @@ const CommitInfo = {}
 
 @view({
   store: class CommitStore {
-    info = null
-
-    async willMount() {
+    @watch
+    info = async () => {
+      if (!App.services.Github) {
+        return null
+      }
       const { sha } = this.props
       CommitInfo[sha] =
         CommitInfo[sha] ||
@@ -17,7 +19,8 @@ const CommitInfo = {}
           .repos('motion', 'orbit')
           .commits(sha)
           .fetch())
-      this.info = CommitInfo[sha]
+
+      return CommitInfo[sha]
     }
   },
 })

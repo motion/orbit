@@ -7,8 +7,8 @@ import * as UI from '@mcro/ui'
 export default class SidebarTitle {
   render({ data, onBack }) {
     return (
-      <title>
-        <UI.Button $backButton circular icon="arrominleft" onClick={onBack} />
+      <title onClick={onBack}>
+        <UI.Button $backButton circular icon="arrominleft" />
         <UI.Title size={1.5}>{data.title}</UI.Title>
       </title>
     )

@@ -19,13 +19,11 @@ export default class Main {
           }
           const Pane = Panes[stackItem.sidebarSelected.type]
           if (!Pane) {
-            return (
-              <null>not found {JSON.stringify(stackItem.sidebarSelected)}</null>
-            )
+            return <null>not found {stackItem.sidebarSelected.type}</null>
           }
           return (
             <Pane
-              key={index}
+              key={stackItem.selectedKey}
               stackItem={stackItem}
               navigate={navigate}
               data={stackItem.sidebarSelected}

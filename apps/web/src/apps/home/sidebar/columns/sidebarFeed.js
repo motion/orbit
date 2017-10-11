@@ -5,35 +5,35 @@ import Pane from '~/apps/pane'
 import getItem from './getItem'
 import SidebarTitle from './sidebarTitle'
 
-class SidebarTaskStore {
+class SidebarFeedStore {
   results = [
     {
-      type: 'task',
+      type: 'Feed',
       parent: this.props.data,
       display: <SidebarTitle {...this.props} />,
       id: this.props.data.id,
     },
     {
       title: 'Product',
-      category: 'Teams',
+      category: 'People',
       type: 'message',
       icon: 'pin',
     },
     {
       title: 'Product',
-      category: 'Teams',
+      category: 'People',
       type: 'message',
       icon: 'pin',
     },
     {
       title: 'Product',
-      category: 'Teams',
+      category: 'People',
       type: 'message',
       icon: 'pin',
     },
     {
       title: 'Product',
-      category: 'Teams',
+      category: 'People',
       type: 'message',
       icon: 'pin',
     },
@@ -41,10 +41,11 @@ class SidebarTaskStore {
 }
 
 @view({
-  store: SidebarTaskStore,
+  store: SidebarFeedStore,
 })
-export default class SidebarTaskColumn {
+export default class SidebarFeedColumn {
   componentDidMount() {
+    console.log('moutn feed sidebar', this.props)
     this.props.setStore(this.props.store)
   }
 

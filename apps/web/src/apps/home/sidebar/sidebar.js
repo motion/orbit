@@ -3,13 +3,13 @@ import { view } from '@mcro/black'
 import Fade from '../views/fade'
 import StackNavigator from '../views/stackNavigator'
 import SidebarMain from './columns/sidebarMain'
-import SidebarOther from './columns/sidebarOther'
+import SidebarFeed from './columns/sidebarFeed'
 import SidebarTask from './columns/sidebarTask'
 
 const width = 250
 const Columns = {
   main: SidebarMain,
-  feed: SidebarOther,
+  feed: SidebarFeed,
   task: SidebarTask,
 }
 
@@ -46,10 +46,10 @@ export default class Sidebar {
                   navigate={navigate}
                   setStore={stackItem.setStore}
                   data={stackItem.data}
+                  onBack={homeStore.stack.pop}
                   paneProps={{
                     index,
                     primary: true,
-                    onBack: homeStore.stack.pop,
                     getActiveIndex: () => stackItem.firstIndex,
                     onSelect: stackItem.onSelect,
                     itemProps: {

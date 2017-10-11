@@ -94,11 +94,12 @@ export default class StackStore {
     }
   }
   right() {
+    console.log('go right', this.last)
     if (!this.last) {
       return
     }
-    if (this.last.selectedResult) {
-      this.navigate(this.last.selectedResult)
+    if (this.last.sidebarSelected) {
+      this.navigate(this.last.sidebarSelected)
     }
   }
   push(item) {

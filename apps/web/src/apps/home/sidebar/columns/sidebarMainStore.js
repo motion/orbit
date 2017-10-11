@@ -23,6 +23,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
     id: thing.id,
     integration: thing.integration,
     type: thing.type,
+    body: thing.body,
   },
   category: 'Recently',
 })

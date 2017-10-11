@@ -29,6 +29,9 @@ export default class Pane {
     theme,
     primary,
     actionBar,
+    index,
+    title,
+    onBack,
   }) {
     const getItemDefault = (item, index) => ({
       highlight: () => index === getActiveIndex(),
@@ -43,6 +46,16 @@ export default class Pane {
           $primary={primary}
           $secondary={!primary}
         >
+          <title if={title}>
+            <UI.Button
+              $backButton
+              if={index > 0}
+              circular
+              icon="arrominleft"
+              onClick={onBack}
+            />
+            <UI.Title size={1.5}>{title}</UI.Title>
+          </title>
           <content if={!items}>{children}</content>
           <content if={items}>
             <UI.List
@@ -93,6 +106,14 @@ export default class Pane {
       bottom: 0,
       background: '#fff',
       zIndex: 10000000,
+    },
+    title: {
+      flexFlow: 'row',
+      alignItems: 'center',
+      padding: [5, 10],
+    },
+    backButton: {
+      marginRight: 10,
     },
   }
 }

@@ -10,6 +10,9 @@ export default class Main {
     return (
       <StackNavigator stack={homeStore.stack}>
         {({ stackItem, index, currentIndex, navigate }) => {
+          if (index !== currentIndex) {
+            return null
+          }
           const active = stackItem.selectedResult
           if (!active) {
             return <null>Nothing selected</null>

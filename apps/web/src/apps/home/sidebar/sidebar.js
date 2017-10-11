@@ -20,6 +20,9 @@ export default class Sidebar {
       <sidebar css={{ width }}>
         <StackNavigator stack={homeStore.stack}>
           {({ stackItem, index, currentIndex, navigate }) => {
+            if (index + 1 < currentIndex) {
+              return null
+            }
             if (!stackItem.data) {
               return <null>bad data</null>
             }
@@ -38,8 +41,11 @@ export default class Sidebar {
                   stackItem={stackItem}
                   navigate={navigate}
                   setStore={stackItem.setStore}
+                  data={stackItem.data}
                   paneProps={{
+                    index,
                     primary: true,
+                    onBack: homeStore.stack.pop,
                     getActiveIndex: () => stackItem.firstIndex,
                     onSelect: stackItem.onSelect,
                     itemProps: {

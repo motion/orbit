@@ -41,11 +41,12 @@ export default class SidebarTaskColumn {
     this.props.setStore(this.props.store)
   }
 
-  render({ store, paneProps }) {
+  render({ store, data, paneProps }) {
     return (
       <Pane
         items={store.results}
         getItem={getItem(paneProps.getActiveIndex)}
+        title={data.title}
         {...paneProps}
       />
     )

@@ -25,7 +25,7 @@ export default class Fade {
       opacity: currentIndex === index ? 1 : 0,
       pointerEvents: currentIndex === index ? 'auto' : 'none',
       transform: {
-        x: (currentIndex - index) * width / 10,
+        x: (index - currentIndex) * width / 10,
       },
     },
   })

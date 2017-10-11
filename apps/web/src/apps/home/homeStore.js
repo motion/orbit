@@ -1,4 +1,4 @@
-import { isNumber, find } from 'lodash'
+import { find } from 'lodash'
 import { SHORTCUTS } from '~/stores/rootStore'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
@@ -25,6 +25,7 @@ export default class HomeStore {
   traps = {}
 
   willMount() {
+    window.homeStore = this
     this.attachTrap('window', window)
     this.watchFocusBar()
   }
@@ -33,10 +34,6 @@ export default class HomeStore {
 
   get peekItem() {
     return find(peeks, peek => peek.indexOf(this.search) === 0)
-  }
-
-  get hasSelectedItem() {
-    return isNumber(this.activeRow)
   }
 
   onInputRef = el => {
@@ -52,8 +49,7 @@ export default class HomeStore {
   }
 
   onSearchChange = e => {
-    this.textboxVal = e.target.value
-    this.setSearch(this.textboxVal)
+    this.setSearch(e.target.value)
   }
 
   // private
@@ -89,27 +85,21 @@ export default class HomeStore {
   }
 
   setSearch = text => {
+    this.textboxVal = text
     this.search = text
-    // this.millerStore.setActiveRow(0)
   }
 
   actions = {
     down: e => {
-      // this.down()
       e.preventDefault()
+      this.stack.down()
     },
     up: e => {
-      if (this.activeRow > 0) {
-        // this.up()
-      }
       e.preventDefault()
+      this.stack.up()
     },
     esc: e => {
       e.preventDefault()
-      if (this.activeAction) {
-        // this.millerStore.setActiveAction(null)
-        return
-      }
       if (this.search !== '') {
         this.search = ''
         this.textboxVal = ''
@@ -122,35 +112,24 @@ export default class HomeStore {
     },
     enter: e => {
       e.preventDefault()
-      if (this.activeAction) {
-        return
-      }
-      if (this.currentItem.static) {
+      if (this.stack.selected.static) {
         console.log('static item, no action')
         return
       }
-      if (this.currentItem.onSelect) {
-        this.currentItem.onSelect()
+      if (this.stack.selected.onSelect) {
+        this.stack.selected.onSelect()
       } else {
-        const schema = JSON.stringify(this.currentItem)
+        const schema = JSON.stringify(this.stack.selected)
         OS.send('bar-goto', `http://jot.dev/master?schema=${schema}`)
       }
     },
     right: e => {
-      if (this.hasSelectedItem) {
-        // this.millerKeyActions.right()
-        e.preventDefault()
-      } else {
-        if (this.peekItem) {
-          this.search = this.peekItem
-        }
-      }
+      e.preventDefault()
+      this.stack.right()
     },
     left: e => {
-      if (this.hasSelectedItem) {
-        // this.millerKeyActions.left()
-        e.preventDefault()
-      }
+      e.preventDefault()
+      this.stack.left()
     },
     fullscreen: () => {
       this.fullscreen = !this.fullscreen

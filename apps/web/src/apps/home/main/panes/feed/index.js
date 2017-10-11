@@ -93,7 +93,7 @@ class FeedNavBar {
   }
 }
 
-@view.attach('barStore')
+@view.attach('homeStore')
 @view({
   feedStore: FeedStore,
 })
@@ -101,7 +101,7 @@ export default class SetView extends React.Component<Props> {
   render({ feedStore }: Props) {
     if (!feedStore.allItems.length) {
       return (
-        <div $$padded>
+        <div css={{ width: '100%', padding: 20 }}>
           <UI.FakeText lines={5} />
         </div>
       )

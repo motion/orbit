@@ -10,6 +10,10 @@ import getItem from './getItem'
   sidebarMainStore: SidebarMainStore,
 })
 export default class SidebarMainColumn {
+  componentDidMount() {
+    this.props.setStore(this.props.sidebarMainStore)
+  }
+
   render({ sidebarMainStore, paneProps }) {
     return (
       <Pane.Card

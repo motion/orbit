@@ -3,54 +3,95 @@ import { store } from '@mcro/black'
 
 @store
 class StackItem {
+  store = null
   data = null
   activeColumn = 0
-  activeRow = [0, 0]
+  active = [0, 0]
   constructor(data) {
     this.data = data
   }
+  setStore(store) {
+    this.store = store
+  }
+  get results() {
+    return this.store.results
+  }
+  get selectedIndex() {
+    return this.active[this.activeColumn]
+  }
+  get selectedResult() {
+    return this.results[this.active[0]]
+  }
+  get firstIndex() {
+    return this.active[0]
+  }
+  get secondIndex() {
+    return this.active[1]
+  }
   down() {
-    this.activeRow[this.activeColumn]++
+    this.active[this.activeColumn]++
+    this.active = [...this.active]
   }
   up() {
-    this.activeRow[this.activeColumn]--
+    this.active[this.activeColumn]--
+    this.active = [...this.active]
   }
   right() {
-    this.activeColumn++
+    this.activeColumn += 1
   }
   left() {
-    this.activeColumn--
+    this.activeColumn -= 1
   }
 }
 
 @store
 export default class StackStore {
-  stack = []
+  items = []
   currentIndex = 0
 
   constructor(stack: Array<Object>) {
     const all = stack || []
-    this.stack = all.map(x => new StackItem(x))
+    this.items = all.map(x => new StackItem(x))
   }
 
   get length() {
-    return this.stack.length
+    return this.items.length
   }
 
   get last() {
-    return this.stack[this.stack.length - 1]
+    return this.items[this.items.length - 1]
   }
 
   get lastTwo() {
-    return this.stack.slice(this.length - 2, this.length)
+    return this.items.slice(this.length - 2, this.length)
+  }
+
+  get selected() {
+    return this.last.selected
+  }
+
+  get down() {
+    return this.last.down
+  }
+
+  get up() {
+    return this.last.up
+  }
+
+  get left() {
+    return this.last.left
+  }
+
+  get right() {
+    return this.last.right
   }
 
   push(item) {
-    this.stack = [...this.stack, item]
+    this.items = [...this.items, item]
   }
 
   pop() {
-    this.stack = this.stack.slice(0, this.stack.length - 1)
+    this.items = this.items.slice(0, this.items.length - 1)
   }
 
   navigate(item) {

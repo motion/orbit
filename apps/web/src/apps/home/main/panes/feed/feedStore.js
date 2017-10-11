@@ -9,7 +9,6 @@ const nameToLogin = {
   nick: 'ncammarata',
   steel: 'steelbrain',
 }
-
 const loginToName = Object.keys(nameToLogin).reduce(
   (acc, name) => ({
     [nameToLogin[name]]: name,
@@ -19,8 +18,6 @@ const loginToName = Object.keys(nameToLogin).reduce(
 )
 
 export default class FeedStore {
-  isOpen = false
-
   filters = {
     type: null,
     search: '',
@@ -42,11 +39,18 @@ export default class FeedStore {
     { name: 'slack', type: 'convo', icon: 'slack' },
     { name: 'docs', icon: 'hard' },
     { name: 'jira', icon: 'atl' },
-    // { name: 'tasks', type: 'task', icon: 'github' },
   ]
 
   get firstNames() {
     return this.filters.people.map(x => x.replace(/ .*/, ''))
+  }
+
+  get result() {
+    return this.props.stackItem.selectedResult
+  }
+
+  get data() {
+    return this.result.data
   }
 
   @watch
@@ -56,11 +60,11 @@ export default class FeedStore {
       .limit(200)
 
   willMount() {
-    const { people, person } = this.props.paneStore.data
+    const { people, person } = this.data
     this.setFilter(people ? people : [person])
 
     this.react(
-      () => this.props.paneStore.data.people,
+      () => this.data.people,
       () => {
         this.setFilter('people', people)
       },
@@ -68,9 +72,9 @@ export default class FeedStore {
     )
 
     this.react(
-      () => this.props.paneStore.data.service,
+      () => this.data.service,
       () => {
-        const { service, startDate, endDate } = this.props.paneStore.data
+        const { service, startDate, endDate } = this.data
         this.setFilter(
           'type',
           (service === 'issues' ? 'task' : service) || null
@@ -89,14 +93,14 @@ export default class FeedStore {
     this.react(
       () => this.filters,
       () => {
-        this.props.barStore.filters = this.filters
+        this.props.homeStore.filters = this.filters
       }
     )
 
     this.react(
       () => this.activeItems.length,
       () => {
-        this.props.barStore.resultCount = this.activeItems.length
+        this.props.homeStore.resultCount = this.activeItems.length
       }
     )
   }

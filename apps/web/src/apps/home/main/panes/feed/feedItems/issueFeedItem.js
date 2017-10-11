@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import { format } from '~/apps/panes/task/helpers'
 import * as UI from '@mcro/ui'
+import { format } from '~/apps/home/main/panes/task/helpers'
+import Task from '~/apps/home/main/panes/task'
 import Commit from './views/commit'
-import Task from '~/apps/panes/task'
 
 @view
 export default class IssueFeedItem {

@@ -13,6 +13,9 @@ export default class Fade {
   }
 
   static style = {
+    fade: {
+      position: 'relative',
+    },
     fadeCol: {
       position: 'absolute',
       top: 0,

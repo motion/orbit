@@ -4,7 +4,8 @@ import { view } from '@mcro/black'
 
 @view
 export default class Fade {
-  render({ width, style, children }) {
+  render({ width, style, children, index, currentIndex }) {
+    console.log('id', index, currentIndex)
     return (
       <fade style={{ width, ...style }}>
         <fadeCol>{children}</fadeCol>

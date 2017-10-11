@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Fade from '../views/fade'
@@ -7,19 +6,24 @@ import SidebarMain from './columns/sidebarMain'
 import SidebarOther from './columns/sidebarOther'
 
 const width = 250
-
 const columns = {
   main: SidebarMain,
-  other: SidebarOther,
+  feed: SidebarOther,
 }
 
 @view
-export default class Sidebar extends React.Component<Props> {
-  render({ homeStore }: Props) {
+export default class Sidebar {
+  render({ homeStore }) {
     return (
       <StackNavigator stack={homeStore.stack}>
         {({ stackItem, index, currentIndex, navigate }) => {
+          if (!stackItem.data) {
+            return <null>bad data</null>
+          }
           const Column = columns[stackItem.data.type]
+          if (!Column) {
+            return <null>not found column {stackItem.data.type}</null>
+          }
           return (
             <Fade
               key={index}

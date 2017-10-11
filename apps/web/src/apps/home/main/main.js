@@ -19,22 +19,13 @@ export default class Main {
             return <null>not found</null>
           }
           return (
-            <Fade
-              key={index}
-              style={{
-                flex: 1,
+            <Pane
+              stackItem={stackItem}
+              navigate={navigate}
+              paneProps={{
+                getActiveIndex: () => stackItem.firstIndex,
               }}
-              index={index}
-              currentIndex={currentIndex}
-            >
-              <Pane
-                stackItem={stackItem}
-                navigate={navigate}
-                paneProps={{
-                  getActiveIndex: () => stackItem.firstIndex,
-                }}
-              />
-            </Fade>
+            />
           )
         }}
       </StackNavigator>

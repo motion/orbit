@@ -79,8 +79,8 @@ export default class StackStore {
   get left() {
     return this.last.left
   }
-  get right() {
-    return this.last.right
+  right() {
+    return this.navigate(this.last.selectedResult)
   }
   push(item) {
     this.items = [...this.items, item]
@@ -89,6 +89,6 @@ export default class StackStore {
     this.items = this.items.slice(0, this.items.length - 1)
   }
   navigate(item) {
-    this.push(item)
+    this.push(new StackItem(item))
   }
 }

@@ -9,7 +9,7 @@ export default class StackNavigator {
       children({
         stackItem,
         index: length - index - 1,
-        currentIndex: stack.currentIndex,
+        currentIndex: stackItem.col,
         navigate: stack.navigate,
       })
     )

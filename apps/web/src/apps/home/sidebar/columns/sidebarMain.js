@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import * as Pane from '~/apps/pane'
+import Pane from '~/apps/pane'
 import SidebarMainStore from './sidebarMainStore'
 import getItem from './getItem'
 
@@ -16,7 +16,7 @@ export default class SidebarMainColumn {
 
   render({ sidebarMainStore, paneProps }) {
     return (
-      <Pane.Card
+      <Pane
         items={sidebarMainStore.results}
         getItem={getItem(paneProps.getActiveIndex)}
         {...paneProps}

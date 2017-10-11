@@ -40,18 +40,14 @@ export default class TaskStore {
       .issues.fetch()
 
   async willMount() {
-    const { data } = this.props.paneStore
+    const { data } = this.props
     if (data.labels) {
       this.labels = data.labels.map(({ name }) => name)
     }
   }
 
-  get result() {
-    return this.props.stackItem ? this.props.stackItem.selectedResult : {}
-  }
-
   get data() {
-    return this.result.data
+    return this.props.data
   }
 
   get results() {
@@ -79,7 +75,7 @@ export default class TaskStore {
   }
 
   get taskId() {
-    return this.props.paneStore.data.id
+    return this.props.data.id
   }
 
   setLabels = labels => {

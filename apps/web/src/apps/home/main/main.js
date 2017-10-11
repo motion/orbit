@@ -13,19 +13,21 @@ export default class Main {
           if (index !== currentIndex) {
             return null
           }
-          const active = stackItem.selectedResult
+          const active = stackItem.data
           if (!active) {
             return <null>Nothing selected</null>
           }
           const Pane = Panes[active.type]
           if (!Pane) {
-            return <null>not found</null>
+            return <null>not found {active.type}</null>
           }
           return (
             <Pane
               stackItem={stackItem}
               navigate={navigate}
+              data={stackItem.data}
               paneProps={{
+                index,
                 getActiveIndex: () => stackItem.firstIndex,
               }}
             />

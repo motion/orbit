@@ -14,12 +14,15 @@ class StackItem {
     this.store = store
   }
   get results() {
-    return this.store.results
+    return this.store ? this.store.results : null
   }
   get selectedIndex() {
     return this.active[this.activeColumn]
   }
   get selectedResult() {
+    if (!this.results) {
+      return null
+    }
     return this.results[this.active[0]]
   }
   get firstIndex() {
@@ -48,52 +51,40 @@ class StackItem {
 export default class StackStore {
   items = []
   currentIndex = 0
-
   constructor(stack: Array<Object>) {
     const all = stack || []
     this.items = all.map(x => new StackItem(x))
   }
-
   get length() {
     return this.items.length
   }
-
   get last() {
     return this.items[this.items.length - 1]
   }
-
   get lastTwo() {
     return this.items.slice(this.length - 2, this.length)
   }
-
   get selected() {
     return this.last.selected
   }
-
   get down() {
     return this.last.down
   }
-
   get up() {
     return this.last.up
   }
-
   get left() {
     return this.last.left
   }
-
   get right() {
     return this.last.right
   }
-
   push(item) {
     this.items = [...this.items, item]
   }
-
   pop() {
     this.items = this.items.slice(0, this.items.length - 1)
   }
-
   navigate(item) {
     this.push(item)
   }

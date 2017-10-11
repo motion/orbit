@@ -46,8 +46,16 @@ export default class TaskStore {
     }
   }
 
+  get result() {
+    return this.props.stackItem.selectedResult
+  }
+
+  get data() {
+    return this.result.data
+  }
+
   get results() {
-    const { data: { data } } = this.props.paneStore
+    const data = this.data
     if (!data) {
       return []
     }

@@ -5,12 +5,10 @@ import ColorBlock from './colorBlock'
 
 @view
 export default class TaskHeader {
-  render({
-    paneStore,
-    paneStore: { data: { parentId, orgName } },
-    store: { labels, assigned },
-  }) {
-    const { title = '', number = 0 } = paneStore.data.data || {}
+  render({ taskStore }) {
+    const { labels, assigned } = taskStore
+    const { parentId, orgName } = taskStore.data
+    const { title = '', number = 0 } = taskStore.data
     const minSize = 1.8
     const maxSize = 2.2
     const ogSize = 3.4 - title.length * 0.05
@@ -65,18 +63,10 @@ export default class TaskHeader {
             ))}
           </badges>
           <buttons>
-            <UI.Button
-              onClick={() => paneStore.runAction('labels')}
-              className="target-labels"
-              $button
-            >
+            <UI.Button onClick={() => {}} className="target-labels" $button>
               {labelsText}
             </UI.Button>
-            <UI.Button
-              onClick={() => paneStore.runAction('assign')}
-              className="target-assign"
-              $button
-            >
+            <UI.Button onClick={() => {}} className="target-assign" $button>
               Assign
             </UI.Button>
           </buttons>

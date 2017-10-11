@@ -1,6 +1,6 @@
 // @flow
 import { view } from '@mcro/black'
-import * as Pane from '~/apps/pane'
+import Pane from '~/apps/pane'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import Comment from './comment'
@@ -19,32 +19,31 @@ const typeToElement = type =>
   }[type] || <h3>{type} not found</h3>)
 
 @view({
-  store: TaskStore,
+  taskStore: TaskStore,
 })
 export default class TaskPane extends React.Component<{
   paneStore: PaneStorish,
 }> {
-  render({ store, paneStore }) {
-    if (!store.results.length) {
+  render({ taskStore, paneStore, paneProps }) {
+    if (!taskStore.results.length) {
       return null
     }
     return (
       <card>
         <UI.Theme name="light">
-          <TaskHeader paneStore={paneStore} store={store} />
-          <Pane.Card
-            items={store.results}
+          <TaskHeader taskStore={taskStore} />
+          <Pane
+            {...paneProps}
+            items={taskStore.results}
             getItem={({ elName, data }, index) => {
               const El = typeToElement(elName)
               return {
-                highlight: () => index === paneStore.activeIndex,
                 children: () => (
                   <El
                     data={data}
-                    store={store}
+                    store={taskStore}
                     paneStore={paneStore}
                     key={index}
-                    isActive={index === paneStore.activeIndex}
                   />
                 ),
               }
@@ -52,15 +51,15 @@ export default class TaskPane extends React.Component<{
             actions={[
               {
                 name: 'labels',
-                popover: props => <LabelAction store={store} {...props} />,
+                popover: props => <LabelAction store={taskStore} {...props} />,
               },
               {
                 name: 'assign',
-                popover: props => <AssignAction store={store} {...props} />,
+                popover: props => <AssignAction store={taskStore} {...props} />,
               },
             ]}
           />
-          <TaskResponse paneStore={paneStore} store={store} />
+          <TaskResponse taskStore={taskStore} />
         </UI.Theme>
       </card>
     )

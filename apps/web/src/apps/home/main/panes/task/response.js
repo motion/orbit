@@ -9,20 +9,21 @@ import * as React from 'react'
   },
 })
 export default class TaskResponse {
-  render({ store, paneStore: { data: { onSubmit } } }) {
-    const commentButtonActive = store.response.trim().length > 0
+  render({ taskStore }) {
+    const { data: { onSubmit } } = taskStore
+    const commentButtonActive = taskStore.response.trim().length > 0
 
     return (
       <container>
         <textarea
-          value={store.response}
-          onChange={e => (store.response = e.target.value)}
+          value={taskStore.response}
+          onChange={e => (taskStore.response = e.target.value)}
           onKeyDown={e => {
-            if (e.keyCode === 13 && e.metaKey) onSubmit(store.response)
+            if (e.keyCode === 13 && e.metaKey) onSubmit(taskStore.response)
           }}
           placeholder="Leave a comment"
           className="dark-textarea"
-          ref={store.ref('textbox').set}
+          ref={taskStore.ref('textbox').set}
         />
         <info $$row>
           <UI.Text $shortcut $bright={commentButtonActive}>
@@ -33,7 +34,7 @@ export default class TaskResponse {
             <UI.Button
               size={0.9}
               disabled={!commentButtonActive}
-              onClick={() => onSubmit(store.response)}
+              onClick={() => onSubmit(taskStore.response)}
               icon="send"
             >
               Comment

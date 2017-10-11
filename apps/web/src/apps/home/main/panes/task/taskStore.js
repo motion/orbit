@@ -31,13 +31,11 @@ export default class TaskStore {
     { id: 'wontfix' },
   ]
 
-  @watch thing = () => Thing.findOne(this.taskId)
+  @watch task = () => Thing.findOne(this.taskId)
   @watch
   allIssues = () =>
-    this.thing &&
-    GithubStore.api
-      .repos(this.thing.orgName, this.thing.parentId)
-      .issues.fetch()
+    this.task &&
+    GithubStore.api.repos(this.task.orgName, this.task.parentId).issues.fetch()
 
   async willMount() {
     const { data } = this.props

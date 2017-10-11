@@ -6,9 +6,12 @@ import ColorBlock from './colorBlock'
 @view
 export default class TaskHeader {
   render({ taskStore }) {
+    if (!taskStore.task) {
+      return null
+    }
     const { labels, assigned } = taskStore
     const { parentId, orgName } = taskStore.data
-    const { title = '', number = 0 } = taskStore.data
+    const { title, number = 0 } = taskStore.task
     const minSize = 1.8
     const maxSize = 2.2
     const ogSize = 3.4 - title.length * 0.05

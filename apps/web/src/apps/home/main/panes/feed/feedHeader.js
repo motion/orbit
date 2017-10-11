@@ -15,6 +15,7 @@ export default class FeedHeader {
       'Nick Cammarata': 'nick',
     }
     const bg = name => `url(/images/${NAME_TO_AVATAR[name]}.jpg)`
+    console.log('feedStore.filters', feedStore.filters)
     const avatars = feedStore.filters.people.slice(0, 2)
 
     return (

@@ -23,11 +23,17 @@ class StackItem {
   get selectedIndex() {
     return this.active[this.col]
   }
-  get selectedResult() {
-    if (!this.results) {
-      return null
-    }
-    return this.results[this.active[0]]
+  get sidebarSelectedIndex() {
+    return this.active[0]
+  }
+  get mainSelectedIndex() {
+    return this.active[1]
+  }
+  get sidebarSelected() {
+    return this.results[this.sidebarSelectedIndex] || this.data
+  }
+  get sidebarActive() {
+    return this.data
   }
   get firstIndex() {
     return this.active[0]

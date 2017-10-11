@@ -23,12 +23,14 @@ export default class Sidebar {
             if (index + 1 < currentIndex) {
               return null
             }
-            if (!stackItem.data) {
+            if (!stackItem.sidebarActive) {
               return <null>bad data</null>
             }
-            const Column = Columns[stackItem.data.type]
+            const Column = Columns[stackItem.sidebarActive.type]
             if (!Column) {
-              return <null>not found column {stackItem.data.type}</null>
+              return (
+                <null>not found column {stackItem.sidebarActive.type}</null>
+              )
             }
             return (
               <Fade

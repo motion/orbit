@@ -17,10 +17,12 @@ export default class Main {
           if (!active) {
             return <null>Nothing selected</null>
           }
-          const Pane =
-            Panes[active.type] || Panes[stackItem.selectedResult.type]
+          console.log('stackItem.sidebarSelected', stackItem.sidebarSelected)
+          const Pane = Panes[stackItem.sidebarSelected.type]
           if (!Pane) {
-            return <null>not found {active.type}</null>
+            return (
+              <null>not found {JSON.stringify(stackItem.sidebarSelected)}</null>
+            )
           }
           return (
             <Pane

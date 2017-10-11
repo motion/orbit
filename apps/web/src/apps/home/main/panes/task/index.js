@@ -13,10 +13,9 @@ declare class PaneStorish {
   activeIndex: number,
 }
 
-const typeToElement = type =>
-  ({
-    comment: Comment,
-  }[type] || <h3>{type} not found</h3>)
+const typeToElement = {
+  comment: Comment,
+}
 
 @view({
   taskStore: TaskStore,
@@ -36,7 +35,7 @@ export default class TaskPane extends React.Component<{
             {...paneProps}
             items={taskStore.results}
             getItem={({ elName, data }, index) => {
-              const El = typeToElement(elName)
+              const El = typeToElement[elName] || (() => <null>not found</null>)
               return {
                 children: () => (
                   <El

@@ -46,7 +46,7 @@ export default class FeedStore {
   }
 
   get result() {
-    return this.props.stackItem.selectedResult
+    return this.props.stackItem.sidebarSelected
   }
 
   get data() {

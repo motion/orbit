@@ -10,7 +10,7 @@ export default class Pane {
     if (item.onClick) {
       item.onClick()
     } else {
-      this.props.onSelect(index)
+      this.props.onSelect(item, index)
     }
   }
 

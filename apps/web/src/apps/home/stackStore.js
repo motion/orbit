@@ -10,10 +10,6 @@ class StackItem {
   constructor(data, props) {
     this.data = data
     this.props = props
-
-    this.watch(() => {
-      console.log(this.store, this.results, this.col, this.active)
-    })
   }
   setStore(store) {
     this.store = store
@@ -92,6 +88,9 @@ export default class StackStore {
     }
   }
   right() {
+    if (!this.last) {
+      return
+    }
     if (this.last.selectedResult) {
       this.navigate(this.last.selectedResult)
     }
@@ -100,7 +99,9 @@ export default class StackStore {
     this.items = [...this.items, item]
   }
   pop() {
-    this.items = this.items.slice(0, this.items.length - 1)
+    if (this.items.length > 1) {
+      this.items = this.items.slice(0, this.items.length - 1)
+    }
   }
   navigate = item => {
     this.push(new StackItem(item))

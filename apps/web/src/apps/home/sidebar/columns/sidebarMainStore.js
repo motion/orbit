@@ -19,7 +19,11 @@ const thingToResult = (thing: Thing): PaneResult => ({
       style={{ opacity: 0.5, width: 20 }}
     />
   ),
-  data: thing.toJSON(),
+  data: {
+    id: thing.id,
+    integration: thing.integration,
+    type: thing.type,
+  },
   category: 'Recently',
 })
 

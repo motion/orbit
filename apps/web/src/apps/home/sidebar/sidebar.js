@@ -4,11 +4,13 @@ import Fade from '../views/fade'
 import StackNavigator from '../views/stackNavigator'
 import SidebarMain from './columns/sidebarMain'
 import SidebarOther from './columns/sidebarOther'
+import SidebarTask from './columns/sidebarTask'
 
 const width = 250
 const Columns = {
   main: SidebarMain,
   feed: SidebarOther,
+  task: SidebarTask,
 }
 
 @view
@@ -25,7 +27,6 @@ export default class Sidebar {
             if (!Column) {
               return <null>not found column {stackItem.data.type}</null>
             }
-            console.log('currentIndex', currentIndex, 'index', index)
             return (
               <Fade
                 key={index}

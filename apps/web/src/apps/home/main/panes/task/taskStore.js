@@ -47,7 +47,7 @@ export default class TaskStore {
   }
 
   get result() {
-    return this.props.stackItem.selectedResult
+    return this.props.stackItem ? this.props.stackItem.selectedResult : {}
   }
 
   get data() {

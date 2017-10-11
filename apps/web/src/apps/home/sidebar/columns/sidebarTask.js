@@ -3,13 +3,14 @@ import * as React from 'react'
 import { view } from '@mcro/black'
 import Pane from '~/apps/pane'
 import getItem from './getItem'
+import SidebarTitle from './sidebarTitle'
 
 class SidebarTaskStore {
   results = [
     {
-      title: this.props.data.title,
       type: 'task',
-      data: this.props.data,
+      display: <SidebarTitle {...this.props} />,
+      id: this.props.data.id,
     },
     {
       title: 'Product',

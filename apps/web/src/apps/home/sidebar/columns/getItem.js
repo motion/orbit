@@ -14,17 +14,19 @@ export default function getItem(getActiveIndex) {
     highlight: () => index === getActiveIndex(),
     primary: result.title,
     primaryEllipse: !hasContent(result),
-    children: [
-      result.data &&
-        result.data.body && (
-          <UI.Text key={0} lineHeight={20} opacity={0.5}>
-            {getDate(result) + ' · '}
-            {(result.data.body && result.data.body.slice(0, 120)) || ''}
-          </UI.Text>
-        ),
-      !result.data &&
-        getDate(result) && <UI.Text key={1}>{getDate(result)}</UI.Text>,
-    ].filter(Boolean),
+    children:
+      result.display ||
+      [
+        result.data &&
+          result.data.body && (
+            <UI.Text key={0} lineHeight={20} opacity={0.5}>
+              {getDate(result) + ' · '}
+              {(result.data.body && result.data.body.slice(0, 120)) || ''}
+            </UI.Text>
+          ),
+        !result.data &&
+          getDate(result) && <UI.Text key={1}>{getDate(result)}</UI.Text>,
+      ].filter(Boolean),
     iconAfter: result.iconAfter !== false,
     icon:
       result.data && result.data.image ? (

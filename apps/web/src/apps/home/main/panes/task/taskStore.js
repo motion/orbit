@@ -45,6 +45,10 @@ export default class TaskStore {
     }
   }
 
+  get taskId() {
+    return this.props.data.id
+  }
+
   get data() {
     return this.props.data
   }
@@ -71,10 +75,6 @@ export default class TaskStore {
       },
     }
     return [firstComment, ...comments]
-  }
-
-  get taskId() {
-    return this.props.data.id
   }
 
   setLabels = labels => {

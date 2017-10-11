@@ -7,14 +7,18 @@ class StackItem {
   data = null
   col = 0
   active = [0, 0]
-  constructor(data) {
+  constructor(data, props) {
     this.data = data
+    this.props = props
   }
   setStore(store) {
     this.store = store
   }
   get results() {
     return this.store ? this.store.results : []
+  }
+  onSelect(item: Object) {
+    this.props.navigate(item)
   }
   get selectedIndex() {
     return this.active[this.col]
@@ -56,7 +60,7 @@ export default class StackStore {
   currentIndex = 0
   constructor(stack: Array<Object>) {
     const all = stack || []
-    this.items = all.map(x => new StackItem(x))
+    this.items = all.map(x => new StackItem(x, { navigate: this.navigate }))
   }
   get length() {
     return this.items.length
@@ -88,7 +92,7 @@ export default class StackStore {
   pop() {
     this.items = this.items.slice(0, this.items.length - 1)
   }
-  navigate(item) {
+  navigate = item => {
     this.push(new StackItem(item))
   }
 }

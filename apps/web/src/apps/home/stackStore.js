@@ -10,6 +10,10 @@ class StackItem {
   constructor(data, props) {
     this.data = data
     this.props = props
+
+    this.watch(() => {
+      console.log(this.store, this.results, this.col, this.active)
+    })
   }
   setStore(store) {
     this.store = store
@@ -47,10 +51,10 @@ class StackItem {
     this.active = [...this.active]
   }
   right() {
-    this.col += 1
+    this.col = Math.min(1, this.col + 1)
   }
   left() {
-    this.col -= 1
+    this.col = Math.max(0, this.col - 1)
   }
 }
 
@@ -80,11 +84,17 @@ export default class StackStore {
   get up() {
     return this.last.up
   }
-  get left() {
-    return this.last.left
+  left() {
+    if (this.last.col) {
+      this.last.left()
+    } else {
+      this.pop()
+    }
   }
   right() {
-    return this.navigate(this.last.selectedResult)
+    if (this.last.selectedResult) {
+      this.navigate(this.last.selectedResult)
+    }
   }
   push(item) {
     this.items = [...this.items, item]

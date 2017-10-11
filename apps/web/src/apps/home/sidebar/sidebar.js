@@ -25,7 +25,7 @@ export default class Sidebar {
             if (!Column) {
               return <null>not found column {stackItem.data.type}</null>
             }
-            console.log('at', index, currentIndex)
+            console.log('currentIndex', currentIndex, 'index', index)
             return (
               <Fade
                 key={index}

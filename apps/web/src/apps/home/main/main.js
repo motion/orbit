@@ -17,7 +17,8 @@ export default class Main {
           if (!active) {
             return <null>Nothing selected</null>
           }
-          const Pane = Panes[active.type]
+          const Pane =
+            Panes[active.type] || Panes[stackItem.selectedResult.type]
           if (!Pane) {
             return <null>not found {active.type}</null>
           }

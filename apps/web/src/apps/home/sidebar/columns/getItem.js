@@ -12,7 +12,6 @@ export default function getItem(getActiveIndex) {
   return (result, index) => ({
     key: `${index}${result.id}`,
     highlight: () => index === getActiveIndex(),
-    //color: [255, 255, 255, 0.6],
     primary: result.title,
     primaryEllipse: !hasContent(result),
     children: [
@@ -23,7 +22,8 @@ export default function getItem(getActiveIndex) {
             {(result.data.body && result.data.body.slice(0, 120)) || ''}
           </UI.Text>
         ),
-      !result.data && <UI.Text key={1}>{getDate(result)}</UI.Text>,
+      !result.data &&
+        getDate(result) && <UI.Text key={1}>{getDate(result)}</UI.Text>,
     ].filter(Boolean),
     iconAfter: result.iconAfter !== false,
     icon:

@@ -39,6 +39,7 @@ export default class TaskStore {
 
   async willMount() {
     const { data } = this.props
+    console.log('got', data)
     if (data.labels) {
       this.labels = data.labels.map(({ name }) => name)
     }

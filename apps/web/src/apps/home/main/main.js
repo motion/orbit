@@ -17,7 +17,6 @@ export default class Main {
           if (!active) {
             return <null>Nothing selected</null>
           }
-          console.log('stackItem.sidebarSelected', stackItem.sidebarSelected)
           const Pane = Panes[stackItem.sidebarSelected.type]
           if (!Pane) {
             return (
@@ -26,9 +25,10 @@ export default class Main {
           }
           return (
             <Pane
+              key={index}
               stackItem={stackItem}
               navigate={navigate}
-              data={stackItem.data}
+              data={stackItem.sidebarSelected}
               paneProps={{
                 index,
                 getActiveIndex: () => stackItem.firstIndex,

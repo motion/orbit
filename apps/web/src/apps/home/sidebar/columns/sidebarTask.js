@@ -7,6 +7,11 @@ import getItem from './getItem'
 class SidebarTaskStore {
   results = [
     {
+      title: this.props.data.title,
+      type: 'task',
+      data: this.props.data,
+    },
+    {
       title: 'Product',
       category: 'Teams',
       type: 'message',
@@ -46,7 +51,6 @@ export default class SidebarTaskColumn {
       <Pane
         items={store.results}
         getItem={getItem(paneProps.getActiveIndex)}
-        title={data.title}
         {...paneProps}
       />
     )

@@ -33,7 +33,7 @@ class StackItemStore {
   get sidebarSelected() {
     const selected = this.results[this.sidebarSelectedIndex]
     if (selected && selected.isParent) {
-      return this.parent.sidebarSelected
+      return { ...this.parent.sidebarSelected, isParent: true }
     }
     return selected || this.result
   }
@@ -102,6 +102,10 @@ export default class StackStore {
   }
   right() {
     if (!this.last) {
+      return
+    }
+    if (this.last.sidebarSelected.isParent) {
+      console.log('ignore drill in on nav')
       return
     }
     if (this.last.sidebarSelected) {

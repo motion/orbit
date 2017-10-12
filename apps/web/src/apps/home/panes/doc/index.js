@@ -12,7 +12,7 @@ import DocSidebar from './sidebar'
   },
 })
 class DocMain {
-  getDoc = () => {
+  getDoc() {
     const { store } = this.props
     const { title, data: { contents, modifiedTime, owners } } = store.thing
     return (
@@ -69,7 +69,7 @@ class DocMain {
     )
   }
 
-  loading = () => {
+  loading() {
     return (
       <doc>
         <UI.Title size={1.4} fontWeight={800} color="#000" marginBottom={1}>
@@ -78,6 +78,7 @@ class DocMain {
       </doc>
     )
   }
+
   render({ store }) {
     return (
       <card>

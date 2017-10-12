@@ -11,6 +11,7 @@ const truncate = (s, n) => (s.length > n ? s.substring(0, n) + '...' : s)
 
 @view
 class Folder {
+  // recursive use of stores was raising issues
   state = { open: false, showAllFiles: false }
 
   render({ id = baseId, folders, files }) {

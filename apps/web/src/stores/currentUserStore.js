@@ -226,7 +226,6 @@ class CurrentUser {
     try {
       const info = await passportLink(provider, options)
       if (info) {
-        console.log('Merging new oauth', info)
         await this.user.mergeUpdate({
           authorizations: {
             [provider]: info,

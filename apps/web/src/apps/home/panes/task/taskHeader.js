@@ -5,8 +5,8 @@ import ColorBlock from './colorBlock'
 
 @view
 export default class TaskHeader {
-  render({ taskStore }) {
-    const { title } = taskStore.result
+  render({ taskStore, result }) {
+    const { title } = result
     const { task } = taskStore
     const labels = (task && task.data.labals) || []
 

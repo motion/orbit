@@ -17,11 +17,11 @@ const typeToElement = {
   taskStore: TaskStore,
 })
 class TaskMain {
-  render({ taskStore, paneStore, paneProps }) {
+  render({ taskStore, paneStore, paneProps, result }) {
     return (
       <card>
         <UI.Theme name="light">
-          <TaskHeader taskStore={taskStore} />
+          <TaskHeader taskStore={taskStore} result={result} />
           <Pane
             {...paneProps}
             items={taskStore.results}

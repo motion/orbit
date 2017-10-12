@@ -162,6 +162,7 @@ export default class Text extends React.PureComponent<Props> {
     lineHeight,
     lines,
     attach,
+    className,
     html,
     ...props
   }: Props) {
@@ -198,6 +199,7 @@ export default class Text extends React.PureComponent<Props> {
     }
     return (
       <text
+        className={className}
         tagName={tagName}
         contentEditable={editable}
         $selectable={selectable}

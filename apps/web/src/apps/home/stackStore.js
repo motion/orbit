@@ -4,11 +4,11 @@ import { store } from '@mcro/black'
 @store
 class StackItemStore {
   store = null
-  data = null
+  result = null
   col = 0
   active = [0, 0]
-  constructor({ data, navigate, parent }) {
-    this.data = data
+  constructor({ result, navigate, parent }) {
+    this.result = result
     this.navigate = navigate
     this.parent = parent
   }
@@ -35,7 +35,7 @@ class StackItemStore {
     if (selected && selected.isParent) {
       return this.parent.sidebarSelected
     }
-    return selected || this.data
+    return selected || this.result
   }
   get selectedKey() {
     const { sidebarSelected } = this
@@ -73,9 +73,9 @@ export default class StackStore {
   constructor(stack: Array<Object>) {
     const all = stack || []
     this.items = all.map(
-      (data, index) =>
+      (result, index) =>
         new StackItemStore({
-          data,
+          result,
           navigate: this.navigate,
           parent: all[index - 1],
         })
@@ -108,12 +108,12 @@ export default class StackStore {
       this.navigate(this.last.sidebarSelected)
     }
   }
-  push(data) {
+  push(result) {
     const { last } = this
     this.items = [
       ...this.items,
       new StackItemStore({
-        data,
+        result,
         parent: last,
         navigate: this.navigate,
       }),
@@ -124,7 +124,7 @@ export default class StackStore {
       this.items = this.items.slice(0, this.items.length - 1)
     }
   }
-  navigate = data => {
-    this.push(data)
+  navigate = result => {
+    this.push(result)
   }
 }

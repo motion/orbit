@@ -40,27 +40,33 @@ export default class Pane {
     virtualProps,
     itemProps,
     store,
-    items,
+    items: items_,
     paneStore,
     getActiveIndex,
     children,
     style,
     width,
-    theme,
     sidebar,
     actionBar,
+    light,
   }) {
+    let { theme } = this.props
+
     const getItemDefault = (item, index) => ({
       highlight: () => index === getActiveIndex(),
       children: item,
     })
 
-    let all
+    let items
 
     if (store) {
-      all = store.results
+      items = store.results
     } else {
-      all = items
+      items = items_
+    }
+
+    if (light) {
+      theme = 'light'
     }
 
     return (
@@ -68,10 +74,11 @@ export default class Pane {
         <card
           style={{ width, ...style }}
           $fullscreen={paneStore.fullscreen}
+          $light={light}
           $sidebar={sidebar}
         >
-          <content if={!all}>{children}</content>
-          <content if={all}>
+          <content if={children}>{children}</content>
+          <content if={items}>
             <UI.List
               getRef={paneStore.setList}
               groupKey={groupKey}
@@ -86,7 +93,7 @@ export default class Pane {
                 highlightColor: [255, 255, 255, 1],
                 ...itemProps,
               }}
-              items={all}
+              items={items}
               getItem={getItem || getItemDefault}
               {...listProps}
             />
@@ -104,6 +111,11 @@ export default class Pane {
       zIndex: 1000,
       position: 'relative',
       overflowY: 'scroll',
+    },
+    light: {
+      background: '#fff',
+      borderRadius: 6,
+      boxShadow: [[0, 2, 10, [0, 0, 0, 0.15]]],
     },
     sidebar: {
       marginTop: 5,

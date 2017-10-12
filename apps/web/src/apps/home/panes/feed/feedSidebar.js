@@ -7,7 +7,7 @@ export default class FeedSidebarStore {
     {
       type: 'feed',
       isParent: true,
-      data: this.props.data,
+      result: this.props.result,
       display: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
     },

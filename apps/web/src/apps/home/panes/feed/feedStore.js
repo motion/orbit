@@ -46,10 +46,10 @@ export default class FeedStore {
   }
 
   get result() {
-    if (this.props.stackItem.sidebarSelected.parent) {
-      return this.props.stackItem.sidebarSelected.parent
-    }
-    return this.props.stackItem.sidebarSelected
+    return (
+      this.props.stackItem.sidebarSelected.parent ||
+      this.props.stackItem.sidebarSelected
+    )
   }
 
   get data() {

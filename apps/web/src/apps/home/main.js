@@ -12,7 +12,7 @@ export default class Main {
           if (index !== currentIndex) {
             return null
           }
-          const active = stackItem.data
+          const active = stackItem.result
           if (!active) {
             return <null>Nothing selected</null>
           }
@@ -26,7 +26,8 @@ export default class Main {
               key={stackItem.selectedKey}
               stackItem={stackItem}
               navigate={navigate}
-              data={stackItem.sidebarSelected}
+              result={stackItem.sidebarSelected}
+              data={stackItem.sidebarSelected.data}
               paneProps={{
                 index,
                 stack: homeStore.stack,

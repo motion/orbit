@@ -99,13 +99,9 @@ class FeedNavBar {
 })
 class FeedMain extends React.Component<Props> {
   render({ feedStore, paneProps }: Props) {
-    if (!feedStore.allItems.length) {
-      return (
-        <div css={{ width: '100%', padding: 20 }}>
-          <UI.FakeText lines={5} />
-        </div>
-      )
-    }
+    const fakeItems = feedStore.allItems.length
+      ? null
+      : [() => <UI.FakeText lines={5} />]
 
     return (
       <Pane
@@ -132,21 +128,24 @@ class FeedMain extends React.Component<Props> {
             </UI.Row>
           </bar>
         }
-        items={[
-          () => <FeedHeader feedStore={feedStore} />,
-          () => <FeedRecently />,
-          () => <Calendar labels={feedStore.firstNames} />,
-          () => <FeedNavBar feedStore={feedStore} />,
-          ...feedStore.activeItems.map((item, index) => () => (
-            <FeedItem
-              event={item}
-              index={index}
-              hideName={
-                feedStore.filters.people && feedStore.filters.people[0] === 'Me'
-              }
-            />
-          )),
-        ]}
+        items={
+          fakeItems || [
+            () => <FeedHeader feedStore={feedStore} />,
+            () => <FeedRecently />,
+            () => <Calendar labels={feedStore.firstNames} />,
+            () => <FeedNavBar feedStore={feedStore} />,
+            ...feedStore.activeItems.map((item, index) => () => (
+              <FeedItem
+                event={item}
+                index={index}
+                hideName={
+                  feedStore.filters.people &&
+                  feedStore.filters.people[0] === 'Me'
+                }
+              />
+            )),
+          ]
+        }
       />
     )
   }

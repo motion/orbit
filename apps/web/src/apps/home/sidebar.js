@@ -40,12 +40,13 @@ export default class Sidebar {
             if (index + 1 < currentIndex) {
               return null
             }
-            if (!stackItem.data) {
-              return <null>bad data</null>
+            console.log('stackItem', stackItem)
+            if (!stackItem.result) {
+              return <null>bad result</null>
             }
-            const Pane = Panes[stackItem.data.type]
+            const Pane = Panes[stackItem.result.type]
             if (!Pane || !Pane.Sidebar) {
-              return <null>not found Pane {stackItem.data.type}</null>
+              return <null>not found Pane {stackItem.result.type}</null>
             }
 
             const paneProps = {
@@ -75,7 +76,8 @@ export default class Sidebar {
                   stackItem={stackItem}
                   navigate={navigate}
                   setStore={stackItem.setStore}
-                  data={stackItem.data}
+                  data={stackItem.result.data}
+                  result={stackItem.result}
                   onBack={homeStore.stack.pop}
                   paneProps={paneProps}
                   sidebarStore={Pane.Sidebar}

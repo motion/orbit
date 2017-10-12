@@ -7,25 +7,27 @@ import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import parser from './parser'
 
-const thingToResult = (thing: Thing): PaneResult => ({
-  id: thing.id || thing.data.id,
-  title: thing.title,
-  type: thing.type,
-  iconAfter: true,
-  icon: (
-    <img
-      src={`/images/${thing.integration}-icon-light.svg`}
-      style={{ opacity: 0.5, width: 20 }}
-    />
-  ),
-  data: {
-    id: thing.id,
-    integration: thing.integration,
+function thingToResult(thing: Thing): PaneResult {
+  return {
+    id: thing.id || thing.data.id,
+    title: thing.title,
     type: thing.type,
-    body: thing.body,
-  },
-  category: 'Recently',
-})
+    iconAfter: true,
+    icon: (
+      <img
+        src={`/images/${thing.integration}-icon-light.svg`}
+        style={{ opacity: 0.5, width: 20 }}
+      />
+    ),
+    data: {
+      id: thing.id,
+      integration: thing.integration,
+      type: thing.type,
+      body: thing.body,
+    },
+    category: 'Recently',
+  }
+}
 
 export default class MainSidebarStore {
   props: PaneProps

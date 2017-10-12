@@ -3,6 +3,7 @@ import { SHORTCUTS } from '~/stores/rootStore'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import StackStore from './stackStore'
+import { debounce } from 'lodash'
 
 const peeks = [
   'remind',
@@ -27,10 +28,35 @@ export default class HomeStore {
   willMount() {
     window.homeStore = this
     this.attachTrap('window', window)
-    this.watchFocusBar()
+    this._watchFocusBar()
+    this._watchInput()
   }
 
-  // public
+  _watchInput() {
+    let lastChar = null
+    this.watch(() => {
+      const char = this.search[this.search.length - 1]
+      if (lastChar && this.search.length === 0) {
+        this.stack.navigate({
+          type: 'main',
+        })
+      }
+      lastChar = char
+    })
+  }
+
+  _watchFocusBar() {
+    let lastActiveCol = null
+    this.watch(() => {
+      if (this.activeCol === 0 && lastActiveCol !== 0) {
+        this.focusBar()
+      }
+      if (this.activeCol !== 0 && lastActiveCol === 0) {
+        this.blurBar()
+      }
+      lastActiveCol = this.activeCol
+    })
+  }
 
   get peekItem() {
     return find(peeks, peek => peek.indexOf(this.search) === 0)
@@ -49,23 +75,13 @@ export default class HomeStore {
   }
 
   onSearchChange = e => {
+    this.textboxVal = e.target.value
     this.setSearch(e.target.value)
   }
 
-  // private
-
-  watchFocusBar() {
-    let lastActiveCol = null
-    this.watch(() => {
-      if (this.activeCol === 0 && lastActiveCol !== 0) {
-        this.focusBar()
-      }
-      if (this.activeCol !== 0 && lastActiveCol === 0) {
-        this.blurBar()
-      }
-      lastActiveCol = this.activeCol
-    })
-  }
+  setSearch = debounce(text => {
+    this.search = text
+  }, 200)
 
   attachTrap(attachName, el) {
     this.traps[attachName] = new Mousetrap(el)
@@ -84,11 +100,6 @@ export default class HomeStore {
     this.inputRef && this.inputRef.blur()
   }
 
-  setSearch = text => {
-    this.textboxVal = text
-    this.search = text
-  }
-
   actions = {
     down: e => {
       e.preventDefault()
@@ -99,13 +110,10 @@ export default class HomeStore {
       this.stack.up()
     },
     esc: e => {
-      e.preventDefault()
-      if (this.search !== '') {
-        this.search = ''
-        this.textboxVal = ''
-        return
+      if (this.search === '') {
+        e.preventDefault()
+        OS.send('bar-hide')
       }
-      OS.send('bar-hide')
     },
     cmdA: () => {
       this.inputRef.select()

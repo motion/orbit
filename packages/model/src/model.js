@@ -525,7 +525,8 @@ export default class Model {
     this.collection.findOne(this.paramsToObject(params))
 
   // find or create, doesnt require primary key usage
-  findOrCreate = async (object: Object = {}): Promise<Object> => {
+  findOrCreate = async (params: Object = {}): Promise<Object> => {
+    const object = this.paramsToObject(params)
     if (!this._collection) {
       await this.onConnection()
     }

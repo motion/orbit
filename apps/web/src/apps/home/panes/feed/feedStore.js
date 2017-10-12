@@ -63,8 +63,6 @@ export default class FeedStore {
       .limit(200)
 
   willMount() {
-    console.log('feed ghot data', this.props.data)
-
     this.react(
       () => this.data.people,
       people => {

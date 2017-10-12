@@ -3,6 +3,7 @@ import { store } from '@mcro/black/store'
 import Syncer from '../syncer'
 import GithubFeedSync from './githubFeedSync'
 import GithubTaskSync from './githubTaskSync'
+import GithubPeopleSync from './githubPeopleSync'
 
 @store
 export default class GithubSync extends Syncer {
@@ -11,17 +12,21 @@ export default class GithubSync extends Syncer {
     actions: {
       task: { every: 60 * 5 },
       feed: { every: 60 * 5 },
+      people: { every: 60 * 5 },
     },
     syncers: {
       task: GithubTaskSync,
       feed: GithubFeedSync,
+      people: GithubPeopleSync,
     },
   }
+
+  lastSyncs = {}
 
   fetchHeaders = (uri: string, extraHeaders: Object = {}) => {
     const lastSync = this.setting.values.lastSyncs[uri]
     if (lastSync && lastSync.date) {
-      const modifiedSince = this.epochToGMTDate(lastSync.date)
+      const modifiedSince = this.helpers.epochToGMTDate(lastSync.date)
       const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''
       return new Headers({
         'If-Modified-Since': modifiedSince,
@@ -69,6 +74,21 @@ export default class GithubSync extends Syncer {
 
       const text = await res.text()
       return JSON.parse(text)
+    },
+
+    epochToGMTDate: (epochDate: number | string): string => {
+      const date = new Date(0)
+      date.setUTCSeconds(epochDate)
+      return date.toGMTString()
+    },
+
+    writeLastSyncs: async () => {
+      const { lastSyncs } = this
+      await this.setting.mergeUpdate({
+        values: {
+          lastSyncs,
+        },
+      })
     },
   }
 }

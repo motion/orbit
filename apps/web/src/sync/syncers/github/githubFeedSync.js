@@ -12,26 +12,12 @@ export default class GithubFeedSync {
     this.helpers = helpers
   }
 
-  lastSyncs = {}
-
   run = async () => {
-    if (!this.token) {
-      throw new Error('No CurrentUser.authorizations.github.token!')
-    }
     if (this.setting.activeOrgs) {
       await Promise.all(this.setting.activeOrgs.map(this.syncFeed))
     } else {
       log('No orgs selected')
     }
-  }
-
-  writeLastSyncs = async () => {
-    const { lastSyncs } = this
-    await this.setting.mergeUpdate({
-      values: {
-        lastSyncs,
-      },
-    })
   }
 
   syncFeed = async (orgLogin: string) => {
@@ -46,7 +32,7 @@ export default class GithubFeedSync {
       'for org',
       orgLogin
     )
-    await this.writeLastSyncs()
+    await this.helpers.writeLastSyncs()
   }
 
   getRepoEventsPage = async (
@@ -83,18 +69,14 @@ export default class GithubFeedSync {
     if (events && events.length) {
       let moreEvents = true
       let last
-
       while (moreEvents) {
         const prev = last
         last = events[events.length - 1]
-
         if (prev && last && prev.id === last.id) {
           moreEvents = false
           continue
         }
-
         const existingLastEvent = await Event.get(last.id)
-
         if (!existingLastEvent) {
           const nextEvents = await this.getRepoEventsPage(
             org,
@@ -185,11 +167,5 @@ export default class GithubFeedSync {
     const all = await Promise.all(creating)
     const created = all.filter(Boolean)
     return created
-  }
-
-  epochToGMTDate = (epochDate: number | string): string => {
-    const date = new Date(0)
-    date.setUTCSeconds(epochDate)
-    return date.toGMTString()
   }
 }

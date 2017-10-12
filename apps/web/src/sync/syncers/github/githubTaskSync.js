@@ -1,5 +1,5 @@
 // @flow
-import { Thing, Person } from '~/app'
+import { Thing } from '~/app'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
 import { createInChunks } from '~/sync/helpers'

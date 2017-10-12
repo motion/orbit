@@ -12,7 +12,7 @@ export default function getItem(getActiveIndex) {
   return (result, index) => ({
     key: `${index}${result.id}`,
     highlight: () => index === getActiveIndex(),
-    primary: result.title,
+    primary: result.display ? null : result.title,
     primaryEllipse: !hasContent(result),
     children:
       result.display ||

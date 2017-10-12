@@ -14,11 +14,8 @@ export default class TaskSidebarStore {
   results = [
     {
       type: 'task',
-      parent: {
-        type: 'task',
-        id: this.props.data.id,
-        data: this.props.data,
-      },
+      parent: this.props.result,
+      title: this.props.result.title,
       display: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
       id: this.props.data.id,

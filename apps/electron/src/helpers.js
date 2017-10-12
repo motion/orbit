@@ -4,14 +4,14 @@ const MIN_WIDTH = 800
 const MIN_HEIGHT = 750
 const MAX_HEIGHT = 1000
 const MAX_WIDTH = 1450
-const MAX_WIDTH_TO_HEIGHT = 1.25
+const MAX_WIDTH_TO_HEIGHT = 1.15
 const TOPBAR_HEIGHT = 30
 
 export const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
 
   const boundedHeight = Math.min(MAX_HEIGHT, height - 100)
-  const maxWidthByPercentOfHeight = boundedHeight * MAX_WIDTH_TO_HEIGHT // at most 1.5x width of height
+  const maxWidthByPercentOfHeight = boundedHeight * MAX_WIDTH_TO_HEIGHT // at most x width of height
   const boundedWidth = Math.min(maxWidthByPercentOfHeight, MAX_WIDTH)
 
   const size = [

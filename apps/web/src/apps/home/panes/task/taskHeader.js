@@ -5,19 +5,22 @@ import ColorBlock from './colorBlock'
 
 @view
 export default class TaskHeader {
-  render({ taskStore }) {
-    if (!taskStore.task) {
-      return null
-    }
-    const { labels, assigned } = taskStore
-    const { number, parentId, orgName, title = '' } = taskStore.task.data
+  render({ taskStore, result }) {
+    const { title } = result
+    const { task } = taskStore
+    const labels = (task && task.data.labals) || []
+
     const minSize = 1.8
     const maxSize = 2.2
     const ogSize = 3.4 - title.length * 0.05
     const titleSize = Math.min(maxSize, Math.max(ogSize, minSize))
     let labelsText = labels.length + ' Labels'
-    if (labels.length === 0) labelsText = 'No Labels'
-    if (labels.length === 1) labelsText = 'One Label'
+    if (labels.length === 0) {
+      labelsText = 'No Labels'
+    }
+    if (labels.length === 1) {
+      labelsText = 'One Label'
+    }
 
     return (
       <header>
@@ -34,16 +37,16 @@ export default class TaskHeader {
             <UI.Icon size={22} name="github" css={{ marginRight: 10 }} />
           </left>
         </meta>
-        <below>
+        <below if={task}>
           <badges>
             <left $$row>
               <UI.Text opacity={0.7} size={1.2} $id>
-                #{number + ''}
+                #{task.data.number + ''}
               </UI.Text>
               <UI.Text opacity={1} size={1} $id>
                 in{' '}
                 <a href="">
-                  {orgName}/{parentId}
+                  {task.data.orgName}/{task.data.parentId}
                 </a>
               </UI.Text>
             </left>
@@ -58,7 +61,7 @@ export default class TaskHeader {
                 {label}
               </UI.Button>
             ))}
-            {assigned.map(id => (
+            {(task.data.assigned || []).map(id => (
               <UI.Button key={id} chromeless iconSize={12} $badge>
                 {id}
               </UI.Button>

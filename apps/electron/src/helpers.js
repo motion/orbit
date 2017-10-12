@@ -4,6 +4,7 @@ const MIN_WIDTH = 750
 const MIN_HEIGHT = 700
 const MAX_WIDTH = 950
 const MAX_HEIGHT = 800
+const TOPBAR_HEIGHT = 30
 
 export const measure = () => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -12,7 +13,7 @@ export const measure = () => {
     Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, Math.round(height / 1.3))),
   ]
   const middleX = Math.round(width / 2 - size[0] / 2)
-  const middleY = Math.round(height / 2 - size[1] / 2)
+  const middleY = Math.round(height / 2 - size[1] / 2) + TOPBAR_HEIGHT
   // const endX = width - size[0] - 20
   // const endY = height - size[1] - 20
 

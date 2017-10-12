@@ -206,13 +206,6 @@ class Org {
     toggle: {
       marginLeft: 10,
     },
-    arrow: {
-      transition: 'transform 100ms ease-in',
-      marginRight: 7,
-    },
-    flip: {
-      transform: { rotate: '90deg' },
-    },
   }
 }
 

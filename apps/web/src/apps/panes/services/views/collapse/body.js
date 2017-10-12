@@ -14,11 +14,9 @@ export default class CollapseBody {
         <Measure
           bounds
           onMeasure={contentRect => {
-            console.log('content is', contentRect)
             store.height = contentRect.bounds.height
           }}
           onResize={contentRect => {
-            console.log('content is', contentRect)
             store.height = contentRect.bounds.height
           }}
         >

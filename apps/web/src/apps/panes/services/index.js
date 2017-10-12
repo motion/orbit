@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import * as Pane from '~/apps/pane'
 import * as UI from '@mcro/ui'
 import ServicesStore from './store'
+import Progress from './progress'
 import Item from './item'
 
 @view({
@@ -80,6 +81,7 @@ export default class Services {
             ]}
           />
         </UI.Theme>
+        <Progress if={false} />
       </card>
     )
   }
@@ -88,6 +90,7 @@ export default class Services {
     card: {
       padding: 15,
       flex: 1,
+      position: 'relative',
       width: '100%',
       background: '#fff',
       boxShadow: [[0, 0, 10, [0, 0, 0, 0.1]]],

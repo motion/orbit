@@ -183,7 +183,7 @@ export default class CalSettings {
             Events ({(store.events || []).length})
           </UI.Button>
         </UI.Row>
-        <UI.Form if={calendars && store.active === 'calendars'}>
+        <UI.Form $noSelect if={calendars && store.active === 'calendars'}>
           <Calendars
             title="Yours"
             openDefault
@@ -205,6 +205,9 @@ export default class CalSettings {
       overflowY: 'scroll',
       margin: [0, -20],
       padding: [0, 20],
+    },
+    noSelect: {
+      userSelect: 'none',
     },
     field: {
       padding: [5, 0],

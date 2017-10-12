@@ -15,7 +15,9 @@ const Text = props => (
 const SubText = props => <Text size={1.25} lineHeight="1.7rem" {...props} />
 const Hl = props => <UI.Text display="inline" {...props} />
 
-const Title = props => <Text fontWeight={800} color="#000" {...props} />
+const Title = props => (
+  <Text fontWeight={800} color="#000" lineHeight="3.5rem" {...props} />
+)
 const SubTitle = props => (
   <UI.Title fontWeight={800} marginBottom={30} opacity={0.6} {...props} />
 )
@@ -26,39 +28,51 @@ export default class HomePage {
     return (
       <page>
         <section>
-          <Text size={2} marginBottom={30} textAlign="center">
+          <Text if={false} size={2} marginBottom={30} textAlign="center">
             👋
           </Text>
 
-          <Text textAlign="center">
-            We're a Founders Fund company making an all-in-one{' '}
-            <Hl>internal company visibility</Hl> app.
-          </Text>
+          <Title textAlign="center" size={3}>
+            Search everything.<br />See everything.
+          </Title>
 
-          <hr />
-
-          <SubText>
-            We were inspired by tooling that high tech companies use to unify
-            their cloud tools and knowledge. Companies like Stripe & Facebook
-            build tools that improve their internal visibility with easy search
-            and feeds for any team.
-          </SubText>
-
-          <hr />
-
-          <Text textAlign="center" color="#000">
-            Our goal: to make your intranet better than theirs
-          </Text>
+          <Title textAlign="center">An app for teams that get shit done.</Title>
 
           <img $screen src="/screenshot.png" />
+
+          <br />
+          <br />
+          <br />
+
+          <SubText textAlign="center">
+            We were inspired by tools Stripe & Facebook built to power their
+            company. It's instant search for everything + dynamic feeds on
+            projects and teams.
+          </SubText>
+
+          <hr css={{ marginBottom: -70 }} />
         </section>
         <section $bordered>
-          <SubTitle>How?</SubTitle>
-
           <ul $mainList>
+            <li>
+              <Title $liTitle>Search</Title>
+            </li>
+
+            <Text>
+              It's pretty simple: find anything across any service. Pin
+              important docs to the top of any search.
+            </Text>
+
+            <break />
+
             <li>
               <Title $liTitle>See</Title>
             </li>
+
+            <Text>
+              Beautiful feeds that show you exactly what you need to know to see
+              what's happening with any team, project, and person.
+            </Text>
 
             <ul $subList>
               <li>
@@ -84,69 +98,31 @@ export default class HomePage {
 
             <break />
 
-            <SubText>
-              Whether or not you expose it, these questions are important in
-              your company. Orbit makes them clear to everyone and lets you
-              choose which to display.
-            </SubText>
-
-            <break />
-
-            <li>
-              <Title $liTitle>Control</Title>
-            </li>
-
-            <Text>
-              Orbit is a tool made for <em>your company</em>, not ours. So it
-              should work like you do.
-            </Text>
-
-            <ul $subList>
-              <li>
-                <SubText>Pin important docs to top any search.</SubText>
-              </li>
-              <li>
-                <SubText>
-                  Customize your feed to show what you care about.
-                </SubText>
-              </li>
-              <li>
-                <SubText>
-                  Display your team KPIs to the rest of the org.
-                </SubText>
-              </li>
-            </ul>
-
-            <break />
-
             <li>
               <Title $liTitle>Secure</Title>
             </li>
 
             <Text>
-              You don't want to trust a company with all your internal data.
-              Neither would we.
+              <strong>We never touch your company data.</strong>
             </Text>
 
-            <SubText>
-              Orbit never sends us your data. It follows the{' '}
-              <Hl>Secure IEE2014 Spec</Hl>. We never touch the keys, and Orbit
-              respects all your internal permissions.
-            </SubText>
+            <Text>
+              Not only that, we don't collect metadata, we never handle your
+              keys, and your data never leaves your computer. We even use your
+              existing credentials, so you only see what you should.
+            </Text>
           </ul>
         </section>
 
         <section $bordered>
           <SubTitle>When?</SubTitle>
 
-          <Title>Orbit beta is rolling out</Title>
+          <Text>If this sounds interesting, we'd love to hear from you:</Text>
 
-          <Text>
-            If you're interested, fill out our survey and we'll get in touch!
-          </Text>
+          <break />
 
           <UI.Button
-            theme="green"
+            theme="#7c50d2"
             size={2}
             onClick={() => {
               window.open(
@@ -155,7 +131,7 @@ export default class HomePage {
               )
             }}
           >
-            🚀 Join the beta
+            Beta survey
           </UI.Button>
         </section>
 
@@ -179,8 +155,9 @@ export default class HomePage {
       marginTop: 25,
       marginBottom: -25,
       zIndex: 1000,
-      width: 2140 / 4,
-      height: 1828 / 4,
+      width: 2054 / 3,
+      height: 1762 / 3,
+      alignSelf: 'center',
     },
     liTitle: {
       marginLeft: 15,

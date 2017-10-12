@@ -443,11 +443,12 @@ class List extends React.PureComponent<Props, { selected: number }> {
       <Surface
         $list
         $visible={!virtualized || this.state.started}
-        /*flexFlow={horizontal ? 'row' : 'inherit'}*/
+        flexFlow={horizontal ? 'row' : null}
         tagName="list"
         align="stretch"
         height={height}
         width={width}
+        background="transparent"
         style={{
           overflowY: scrollable ? 'scroll' : 'auto',
           height: virtualized ? '100%' : 'auto',

@@ -23,6 +23,7 @@
     "date-fns": "2.0.0-alpha.3",
     "debug": "^2.6.9",
     "emojinize": "^1.0.0",
+    "triangulr": "^1.0.0",
     "keycode": "^2.1.9",
     "lodash": "^4.17.4",
     "lodash-decorators": "^3.0.2",

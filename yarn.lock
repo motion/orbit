@@ -1586,7 +1586,7 @@ bower-config@^1.4.0:
     osenv "^0.1.3"
     untildify "^2.1.0"
 
-boxen@^1.0.0:
+boxen@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/boxen/-/boxen-1.2.1.tgz#0f11e7fe344edb9397977fc13ede7f64d956481d"
   dependencies:
@@ -4172,6 +4172,12 @@ glob@^5.0.15:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
+global-dirs@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/global-dirs/-/global-dirs-0.1.0.tgz#10d34039e0df04272e262cf24224f7209434df4f"
+  dependencies:
+    ini "^1.3.4"
+
 global-modules@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/global-modules/-/global-modules-1.0.0.tgz#6d770f0eb523ac78164d72b5e71a8877265cc3ea"
@@ -4943,6 +4949,13 @@ is-index-x@^1.0.0:
     safe-to-string-x "^2.0.1"
     to-integer-x "^2.0.1"
     to-number-x "^1.0.1"
+
+is-installed-globally@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/is-installed-globally/-/is-installed-globally-0.1.0.tgz#0dfd98f5a9111716dd535dda6492f67bf3d25a80"
+  dependencies:
+    global-dirs "^0.1.0"
+    is-path-inside "^1.0.0"
 
 is-my-json-valid@2.16.1, is-my-json-valid@^2.10.0, is-my-json-valid@^2.16.0:
   version "2.16.1"
@@ -5828,8 +5841,8 @@ lodash@^4.0.0, lodash@^4.1.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.4, lo
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
 loglevel@^1.4.1:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.5.0.tgz#3863984a2c326b986fbb965f378758a6dc8a4324"
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.5.1.tgz#189078c94ab9053ee215a0acdbf24244ea0f6502"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -9614,6 +9627,10 @@ tough-cookie@~2.3.0, tough-cookie@~2.3.3:
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.3.9.tgz#717b8f220cc0bb7b44e40514c22b2e8bbc70d8b9"
 
+triangulr@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/triangulr/-/triangulr-1.0.0.tgz#8413de73717cb643c3a1f2c92324feec140f8127"
+
 trim-left-x@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/trim-left-x/-/trim-left-x-2.0.1.tgz#92b071ff6ae9aa8026c21aefca2a9f0a7f8d48c6"
@@ -9849,13 +9866,14 @@ unzip@^0.1.11:
     setimmediate ">= 1.0.1 < 2"
 
 update-notifier@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/update-notifier/-/update-notifier-2.2.0.tgz#1b5837cf90c0736d88627732b661c138f86de72f"
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/update-notifier/-/update-notifier-2.3.0.tgz#4e8827a6bb915140ab093559d7014e3ebb837451"
   dependencies:
-    boxen "^1.0.0"
-    chalk "^1.0.0"
+    boxen "^1.2.1"
+    chalk "^2.0.1"
     configstore "^3.0.0"
     import-lazy "^2.1.0"
+    is-installed-globally "^0.1.0"
     is-npm "^1.0.0"
     latest-version "^3.0.0"
     semver-diff "^2.0.0"

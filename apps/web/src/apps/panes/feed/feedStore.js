@@ -1,9 +1,8 @@
 import { watch } from '@mcro/black'
-import { Event, Thing } from '~/app'
+import { Event } from '~/app'
 import { format } from 'date-fns'
 import { includes, debounce, without } from 'lodash'
 
-const convos = []
 const nameToLogin = {
   nate: 'natew',
   me: 'natew',
@@ -42,6 +41,12 @@ export default class FeedStore {
     { name: 'jira', icon: 'atl' },
     // { name: 'tasks', type: 'task', icon: 'github' },
   ]
+
+  @watch
+  events = () =>
+    Event.find({ created: { $ne: null } })
+      .sort({ created: 'desc' })
+      .limit(200)
 
   willMount() {
     const { people, person } = this.props.paneStore.data
@@ -107,33 +112,6 @@ export default class FeedStore {
     return `${fmt(startDate)} - ${fmt(endDate)}`
   }
 
-  setFilter = (key, val) => {
-    this.filters = {
-      ...this.filters,
-      [key]: val,
-    }
-  }
-
-  toggleLogin = login => {
-    this.togglePerson(loginToName[login])
-  }
-
-  togglePerson = name => {
-    console.log('toggling person', name)
-    this.setFilter(
-      'people',
-      includes(this.filters.people, name)
-        ? without(this.filters.people, name)
-        : [...this.filters.people, name]
-    )
-  }
-
-  @watch
-  events = () =>
-    Event.find({ created: { $ne: null } })
-      .sort({ created: 'desc' })
-      .limit(500)
-
   get allItems() {
     return this.events || []
   }
@@ -191,12 +169,6 @@ export default class FeedStore {
     return this.filters.people.length > 0
   }
 
-  createdAt = item => {
-    return item.date
-      ? +new Date(item.date)
-      : +new Date(item.created || item.data.createdAt || item.date.created_at)
-  }
-
   get activeItems() {
     const { filters: { startDate, endDate } } = this
     const val = this.currentChart.filter(item => {
@@ -211,5 +183,32 @@ export default class FeedStore {
       return true
     })
     return val
+  }
+
+  setFilter = (key, val) => {
+    this.filters = {
+      ...this.filters,
+      [key]: val,
+    }
+  }
+
+  toggleLogin = login => {
+    this.togglePerson(loginToName[login])
+  }
+
+  togglePerson = name => {
+    console.log('toggling person', name)
+    this.setFilter(
+      'people',
+      includes(this.filters.people, name)
+        ? without(this.filters.people, name)
+        : [...this.filters.people, name]
+    )
+  }
+
+  createdAt = item => {
+    return item.date
+      ? +new Date(item.date)
+      : +new Date(item.created || item.data.createdAt || item.date.created_at)
   }
 }

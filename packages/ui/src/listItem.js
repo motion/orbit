@@ -30,6 +30,8 @@ export type Props = {
   childrenProps?: Object,
   primaryEllipse?: boolean,
   glow?: boolean,
+  fontWeight?: number | string,
+  primaryProps?: Object,
 }
 
 @view
@@ -98,6 +100,8 @@ export default class ListItem extends React.Component<Props> {
       highlight,
       glow,
       childrenProps,
+      fontWeight,
+      primaryProps,
       ...props
     } = this.props
     const radiusProps = segmented
@@ -160,6 +164,8 @@ export default class ListItem extends React.Component<Props> {
                 autoselect={autoselect}
                 onFinishEdit={onFinishEdit}
                 ellipse={primaryEllipse}
+                fontWeight={fontWeight}
+                {...primaryProps}
               >
                 {primary}
               </Text>

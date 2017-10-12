@@ -36,13 +36,14 @@ export default class GoogleDriveSync extends SyncerAction {
     const { name, contents, ...data } = info
     const created = info.createdTime
     const updated = info.modifiedTime
+
     return await Thing.findOrUpdate({
       id: info.id,
       integration: 'google',
       type: 'doc',
       title: name,
-      body: contents,
-      data,
+      body: contents.text,
+      data: { ...data, contents },
       orgName: info.spaces ? info.spaces[0] : '',
       parentId: info.parents ? info.parents[0] : '',
       created,
@@ -86,15 +87,18 @@ export default class GoogleDriveSync extends SyncerAction {
     if (!pageToken) {
       pageToken = (await this.fetch('/changes/startPageToken')).startPageToken
     }
+    const query = {
+      supportsTeamDrives: true,
+      includeRemoved: true,
+      includeTeamDriveItems: true,
+      pageSize: Math.min(1000, total),
+      spaces: 'drive',
+    }
+    if (pageToken) {
+      query.pageToken = pageToken
+    }
     return await this.fetch('/changes', {
-      query: {
-        pageToken,
-        supportsTeamDrives: true,
-        includeRemoved: true,
-        includeTeamDriveItems: true,
-        pageSize: Math.min(1000, total),
-        spaces: 'drive',
-      },
+      query,
     })
   }
 
@@ -137,12 +141,30 @@ export default class GoogleDriveSync extends SyncerAction {
       const res = await this.fetchFiles(query)
       if (res) {
         all = [...all, ...res.files]
-        query.pageToken = res.nextPageToken
+        if (res.nextPageToken) {
+          query.pageToken = res.nextPageToken
+        }
       } else {
         throw new Error('No res')
       }
     }
     return all
+  }
+
+  async fetchFolders(query?: Object) {
+    return await this.fetch('/files', {
+      query: {
+        orderBy: [
+          'modifiedByMeTime desc',
+          'modifiedTime desc',
+          'sharedWithMeTime desc',
+          'viewedByMeTime desc',
+        ],
+        fields: 'files(id,name,parents)',
+        q: `mimeType='application/vnd.google-apps.folder'`,
+        ...query,
+      },
+    })
   }
 
   async fetchFiles(query?: Object) {
@@ -198,13 +220,19 @@ export default class GoogleDriveSync extends SyncerAction {
   }
 
   async getFileContents(id: string) {
-    return await this.fetch(`/files/${id}/export`, {
-      type: 'text',
-      query: {
-        mimeType: 'text/plain',
-        alt: 'media',
-      },
-    })
+    const getMimeType = mimeType =>
+      this.fetch(`/files/${id}/export`, {
+        type: 'text',
+        query: {
+          mimeType,
+          alt: 'media',
+        },
+      })
+
+    return {
+      html: await getMimeType('text/html'),
+      text: await getMimeType('text/plain'),
+    }
   }
 
   async getTeamDrives() {

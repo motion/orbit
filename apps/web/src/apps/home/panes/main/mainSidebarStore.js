@@ -79,6 +79,7 @@ export default class MainSidebarStore {
   }
 
   get things(): Array<PaneResult> {
+    console.log('this.topThings', this.topThings)
     return fuzzy(this.topThings || [], this.search)
       .slice(0, this.search.length ? 100 : 8)
       .map(thingToResult)

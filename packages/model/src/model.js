@@ -22,6 +22,49 @@ type ModelArgs = {
 type Queryish = RxQuery | { query: RxQuery }
 type PromiseFunction = () => Promise<any>
 
+// mquery methods to wrap
+const WRAP_WORM_KEYS = {
+  count: true,
+  distinct: true,
+  all: true,
+  and: true,
+  box: true,
+  circle: true,
+  elemMatch: true,
+  equals: true,
+  exists: true,
+  geometry: true,
+  gt: true,
+  gte: true,
+  in: true,
+  intersects: true,
+  lt: true,
+  lte: true,
+  maxDistance: true,
+  mod: true,
+  ne: true,
+  nin: true,
+  nor: true,
+  near: true,
+  or: true,
+  polygon: true,
+  regex: true,
+  select: true,
+  selected: true,
+  selectedInclusively: true,
+  selectedExclusively: true,
+  size: true,
+  slice: true,
+  within: true,
+  where: true,
+  batchSize: true,
+  limit: true,
+  maxScan: true,
+  maxTime: true,
+  skip: true,
+  sort: true,
+}
+
 // HELPERS
 const idFn = _ => _
 const queryKey = query =>
@@ -179,7 +222,7 @@ export default class Model {
     return this._filteredProxy
   }
 
-  _createFindProxy = (target: Object, method: string) => {
+  _createFindProxy = (target: Object, baseMethod: string) => {
     const { defaultFilter = idFn } = this.constructor
     // assign here to avoid changed `this` in proxy
     const { asyncFirstSync } = this.options
@@ -187,42 +230,53 @@ export default class Model {
 
     return (queryParams: Object | string) => {
       const finalParams = defaultFilter(queryObject(queryParams))
-      const query = target[method](finalParams)
-      const sync = opts =>
-        this.syncQuery(query, { live: method === '$', ...opts })
+      const query = target[baseMethod](finalParams)
+      const sync = opts => this.syncQuery(query, opts)
       const executeQuery = query.exec.bind(query)
 
-      return new Proxy(query, {
-        get(target, method) {
-          switch (method) {
-            case 'sync':
-              return sync
-            case '$':
-              sync()
-              return target[method]
-            case 'exec':
-              // console.log('--', `${target.op}.${method}`, finalParams)
-              return () =>
-                new Promise(async resolve => {
-                  if (!asyncFirstSync) {
-                    await sync()
-                  }
-                  const value = await executeQuery()
-                  if (
-                    // patch: null === empty response
-                    value instanceof Object &&
-                    Object.keys(value).length === 0
-                  ) {
-                    resolve(null)
-                  } else {
-                    resolve(value)
-                  }
-                })
-            default:
-              return target[method]
-          }
-        },
-      })
+      const worm = object =>
+        new Proxy(object, {
+          get(target, method) {
+            switch (method) {
+              case 'then':
+                return target[method]
+              case 'sync':
+                return sync
+              case '$':
+                sync({ live: true })
+                return target[method]
+              case 'exec':
+                return () =>
+                  new Promise(async resolve => {
+                    if (!asyncFirstSync) {
+                      await sync()
+                    }
+                    const value = await executeQuery()
+                    if (
+                      // patch: null === empty response
+                      value instanceof Object &&
+                      Object.keys(value).length === 0
+                    ) {
+                      resolve(null)
+                    } else {
+                      resolve(value)
+                    }
+                  })
+              default:
+                const result = target[method]
+                if (
+                  WRAP_WORM_KEYS[method] &&
+                  result &&
+                  result instanceof Object
+                ) {
+                  return worm(result)
+                }
+                return result
+            }
+          },
+        })
+
+      return worm(query)
     }
   }
 

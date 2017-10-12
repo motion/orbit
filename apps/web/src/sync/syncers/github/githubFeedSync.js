@@ -1,12 +1,17 @@
 // @flow
 import { Event } from '~/app'
 import { flatten } from 'lodash'
-import SyncerAction from '../syncerAction'
 import debug from 'debug'
 
 const log = debug('sync')
 
-export default class GithubFeedSync extends SyncerAction {
+export default class GithubFeedSync {
+  constructor({ setting, token, helpers }) {
+    this.setting = setting
+    this.token = token
+    this.helpers = helpers
+  }
+
   lastSyncs = {}
 
   run = async () => {
@@ -49,9 +54,12 @@ export default class GithubFeedSync extends SyncerAction {
     repoName: string,
     page: number
   ): Promise<Array<Object>> => {
-    const events = await this.fetch(`/repos/${org}/${repoName}/events`, {
-      search: { page },
-    })
+    const events = await this.helpers.fetch(
+      `/repos/${org}/${repoName}/events`,
+      {
+        search: { page },
+      }
+    )
     if (events && Array.isArray(events)) {
       return events
     }
@@ -112,7 +120,10 @@ export default class GithubFeedSync extends SyncerAction {
 
   getAllRepos = async (org: string): Promise<Array<Object>> => {
     const getPage = (page: number) =>
-      this.fetch(`/orgs/${org}/repos`, { force: true, search: { page } })
+      this.helpers.fetch(`/orgs/${org}/repos`, {
+        force: true,
+        search: { page },
+      })
     let res = []
     let done = false
     let page = 1
@@ -180,57 +191,5 @@ export default class GithubFeedSync extends SyncerAction {
     const date = new Date(0)
     date.setUTCSeconds(epochDate)
     return date.toGMTString()
-  }
-
-  fetchHeaders = (uri: string, extraHeaders: Object = {}) => {
-    const lastSync = this.setting.values.lastSyncs[uri]
-    if (lastSync && lastSync.date) {
-      const modifiedSince = this.epochToGMTDate(lastSync.date)
-      const etag = lastSync.etag ? lastSync.etag.replace('W/', '') : ''
-      return new Headers({
-        'If-Modified-Since': modifiedSince,
-        'If-None-Match': etag,
-        ...extraHeaders,
-      })
-    }
-    return new Headers(extraHeaders)
-  }
-
-  fetch = async (path: string, options: Object = {}) => {
-    if (!this.token) {
-      console.log('no App.sync.github.feed.token')
-      return null
-    }
-    const { search, headers, force, ...opts } = options
-    // setup options
-    const syncDate = Date.now()
-    const requestSearch = new URLSearchParams(
-      Object.entries({ ...search, access_token: this.token })
-    )
-    const uri = `https://api.github.com${path}?${requestSearch.toString()}`
-
-    const requestHeaders = force ? null : this.fetchHeaders(uri, headers)
-    if (requestHeaders) {
-      opts.headers = requestHeaders
-    }
-    const res = await fetch(uri, opts)
-
-    // update lastSyncs
-    this.lastSyncs[uri] = {
-      date: syncDate,
-      etag: res.headers.get('etag'),
-      rateLimit: res.headers.get('x-ratelimit-limit'),
-      rateLimitRemaining: res.headers.get('x-ratelimit-remaining'),
-      rateLimitReset: res.headers.get('x-rate-limit-reset'),
-      pollInterval: res.headers.get('x-poll-interval'),
-    }
-
-    // if not modified return null
-    if (res.status === 304) {
-      return null
-    }
-
-    const text = await res.text()
-    return JSON.parse(text)
   }
 }

@@ -10,6 +10,10 @@ export default class TaskHeader {
     const { task } = taskStore
     const labels = (task && task.data.labals) || []
 
+    if (!title) {
+      return null
+    }
+
     const minSize = 1.8
     const maxSize = 2.2
     const ogSize = 3.4 - title.length * 0.05

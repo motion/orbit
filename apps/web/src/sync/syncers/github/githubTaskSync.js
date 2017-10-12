@@ -1,8 +1,8 @@
 // @flow
-import { Thing } from '~/app'
+import { Thing, Person } from '~/app'
 import { createApolloFetch } from 'apollo-fetch'
 import { omit, flatten } from 'lodash'
-import SyncerAction from '../syncerAction'
+import { createInChunks } from '~/sync/helpers'
 import debug from 'debug'
 
 const log = debug('sync')
@@ -55,7 +55,13 @@ edges {
 }
 `
 
-export default class GithubIssueSync extends SyncerAction {
+export default class GithubIssueSync {
+  constructor({ setting, token, helpers }) {
+    this.setting = setting
+    this.token = token
+    this.helpers = helpers
+  }
+
   run = async () => {
     const res = await this.syncOrgs()
     console.log('Created', res ? res.length : 0, 'issues', res)
@@ -95,7 +101,7 @@ export default class GithubIssueSync extends SyncerAction {
   }
 
   createIssues = async (org: string, issues: Array<Object>, chunk = 10) => {
-    return await this.createInChunks(
+    return await createInChunks(
       issues,
       item => this.createIssue(item, org),
       chunk

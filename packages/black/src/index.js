@@ -3,9 +3,11 @@
 import view_ from './view'
 import store_ from './store'
 import * as Helpers from './helpers'
+import ProvideStore_ from './provideStore'
 
 export const view = view_
 export const store = store_
+export const ProvideStore = ProvideStore_
 
 for (const name of Object.keys(Helpers)) {
   exports[name] = Helpers[name]

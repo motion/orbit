@@ -18,7 +18,7 @@ import debug from 'debug'
 // Mobx.useStrict(true)
 
 // install console formatters
-// mobxFormatters(Mobx)
+mobxFormatters(Mobx)
 
 // the heavy hitters
 window.React = React

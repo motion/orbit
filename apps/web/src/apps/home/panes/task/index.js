@@ -1,4 +1,3 @@
-// @flow
 import { view } from '@mcro/black'
 import Pane from '../pane'
 import * as React from 'react'
@@ -10,10 +9,6 @@ import TaskResponse from './taskResponse'
 import TaskHeader from './taskHeader'
 import TaskSidebar from './taskSidebar'
 
-declare class PaneStorish {
-  activeIndex: number,
-}
-
 const typeToElement = {
   comment: Comment,
 }
@@ -21,9 +16,7 @@ const typeToElement = {
 @view({
   taskStore: TaskStore,
 })
-class TaskMain extends React.Component<{
-  paneStore: PaneStorish,
-}> {
+class TaskMain {
   render({ taskStore, paneStore, paneProps }) {
     if (!taskStore.results.length) {
       return null

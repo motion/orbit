@@ -1,6 +1,5 @@
 // @flow
 import * as UI from '@mcro/ui'
-import { includes } from 'lodash'
 import { watch } from '@mcro/black'
 import type { PaneProps, PaneResult } from '~/types'
 import { Thing } from '~/app'

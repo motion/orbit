@@ -1,10 +1,8 @@
 // @flow
 import * as React from 'react'
-import { view } from '@mcro/black'
-import Pane from '../pane'
-import { SidebarTitle, getItem } from '../helpers'
+import { SidebarTitle } from '../helpers'
 
-class SidebarTaskStore {
+export default class TaskSidebarStore {
   results = [
     {
       type: 'task',
@@ -42,23 +40,4 @@ class SidebarTaskStore {
       icon: 'pin',
     },
   ]
-}
-
-@view({
-  store: SidebarTaskStore,
-})
-export default class SidebarTaskColumn {
-  componentDidMount() {
-    this.props.setStore(this.props.store)
-  }
-
-  render({ store, data, paneProps }) {
-    return (
-      <Pane
-        items={store.results}
-        getItem={getItem(paneProps.getActiveIndex)}
-        {...paneProps}
-      />
-    )
-  }
 }

@@ -1,12 +1,12 @@
 {
   "name": "@mcro/models",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "lib/index.js",
   "module": "lib/index.js",
   "es5": "lib/index.js",
   "dependencies": {
-    "@mcro/model": "^1.4.0",
+    "@mcro/model": "^1.4.1",
     "debug": "^3.1.0",
     "global": "^4.3.2",
     "lodash": "^4.17.4",

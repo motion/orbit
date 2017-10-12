@@ -4,6 +4,19 @@ import { view } from '@mcro/black'
 import { keycode } from '@mcro/ui'
 import { observable } from 'mobx'
 import $ from 'color'
+import { pick } from 'lodash'
+
+const DOM_EVENTS = [
+  'onClick',
+  'onDoubleClick',
+  'onMouseEnter',
+  'onMouseLeave',
+  'onMouseOver',
+  'onMouseOut',
+  'onHover',
+  'onFocus',
+  'onBlur',
+]
 
 export type Props = {
   editable?: boolean,
@@ -195,7 +208,7 @@ export default class Text extends React.PureComponent<Props> {
         style={style}
         $ellipseText={ellipse}
         {...eventProps}
-        {...props}
+        {...pick(props, DOM_EVENTS)}
       >
         {!ellipse && inner}
         <span if={ellipse} $$ellipse>

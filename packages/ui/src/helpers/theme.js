@@ -22,6 +22,7 @@ export default class Theme extends React.Component {
     if (context) {
       return context
     }
+    return this.context
   }
 
   render() {

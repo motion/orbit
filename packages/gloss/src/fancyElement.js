@@ -54,9 +54,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     let type = type_
     if (!type) {
       throw new Error(
-        `Didn't get a valid type: ${type}, props: ${JSON.stringify(
-          props
-        )}, children: ${children ? children.toString() : children}`
+        `Didn't get a valid type: ${type}, children: ${children
+          ? children.toString()
+          : children}`
       )
     }
 

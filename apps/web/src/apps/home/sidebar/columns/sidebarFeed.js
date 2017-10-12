@@ -9,10 +9,11 @@ class SidebarFeedStore {
   results = [
     {
       type: 'feed',
+      isParent: true,
       data: this.props.data,
       display: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
-      id: this.props.data.id,
+      id: this.props.id,
     },
     {
       title: 'Product',

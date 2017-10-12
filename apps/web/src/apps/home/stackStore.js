@@ -7,9 +7,10 @@ class StackItem {
   data = null
   col = 0
   active = [0, 0]
-  constructor(data, props) {
+  constructor({ data, navigate, parent }) {
     this.data = data
-    this.props = props
+    this.navigate = navigate
+    this.parent = parent
   }
   setStore(store) {
     this.store = store
@@ -32,10 +33,11 @@ class StackItem {
     return this.active[1]
   }
   get sidebarSelected() {
-    return this.results[this.sidebarSelectedIndex] || this.data
-  }
-  get sidebarActive() {
-    return this.data
+    const selected = this.results[this.sidebarSelectedIndex]
+    if (selected && selected.isParent) {
+      return this.parent.sidebarSelected
+    }
+    return selected || this.data
   }
   get selectedKey() {
     const { sidebarSelected } = this
@@ -72,7 +74,14 @@ export default class StackStore {
   currentIndex = 0
   constructor(stack: Array<Object>) {
     const all = stack || []
-    this.items = all.map(x => new StackItem(x, { navigate: this.navigate }))
+    this.items = all.map(
+      (data, index) =>
+        new StackItem({
+          data,
+          navigate: this.navigate,
+          parent: all[index - 1],
+        })
+    )
   }
   get length() {
     return this.items.length
@@ -108,15 +117,19 @@ export default class StackStore {
       this.navigate(this.last.sidebarSelected)
     }
   }
-  push(item) {
-    this.items = [...this.items, item]
+  push(data) {
+    const { last } = this
+    this.items = [
+      ...this.items,
+      new StackItem({ data, parent: last, navigate: this.navigate }),
+    ]
   }
   pop() {
     if (this.items.length > 1) {
       this.items = this.items.slice(0, this.items.length - 1)
     }
   }
-  navigate = item => {
-    this.push(new StackItem(item))
+  navigate = data => {
+    this.push(data)
   }
 }

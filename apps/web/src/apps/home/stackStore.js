@@ -18,7 +18,11 @@ class StackItemStore {
   get results() {
     return this.store ? this.store.results : []
   }
-  onSelect(item: Object) {
+  onSelect(item: Object, index: number) {
+    // update the highlighted item after we animate
+    this.setTimeout(() => {
+      this.setActive(0, index)
+    }, 50)
     this.navigate(item)
   }
   get selectedIndex() {
@@ -29,6 +33,9 @@ class StackItemStore {
   }
   get mainSelectedIndex() {
     return this.active[1]
+  }
+  get sidebarSelectedIsNav() {
+    return !!this.results[this.sidebarSelectedIndex].parent
   }
   get sidebarSelected() {
     const selected = this.results[this.sidebarSelectedIndex]
@@ -48,21 +55,23 @@ class StackItemStore {
     return this.active[1]
   }
   down() {
-    this.active[this.col] = Math.min(
-      this.results.length - 1,
-      this.active[this.col] + 1
+    this.setActive(
+      this.col,
+      Math.min(this.results.length - 1, this.active[this.col] + 1)
     )
-    this.active = [...this.active]
   }
   up() {
-    this.active[this.col] = Math.max(0, this.active[this.col] - 1)
-    this.active = [...this.active]
+    this.active.setActive(this.col, Math.max(0, this.active[this.col] - 1))
   }
   right() {
     this.col = Math.min(1, this.col + 1)
   }
   left() {
     this.col = Math.max(0, this.col - 1)
+  }
+  setActive(col: number, value: number) {
+    this.active[col] = value
+    this.active = [...this.active]
   }
 }
 
@@ -102,6 +111,9 @@ export default class StackStore {
   }
   right() {
     if (!this.last) {
+      return
+    }
+    if (this.last.sidebarSelectedIsNav) {
       return
     }
     if (this.last.sidebarSelected) {

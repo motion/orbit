@@ -4,6 +4,7 @@ import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import StackStore from './stackStore'
 import { debounce } from 'lodash'
+import keycode from 'keycode'
 
 const peeks = [
   'remind',
@@ -24,6 +25,7 @@ export default class HomeStore {
   textboxVal = ''
   fullscreen = false
   traps = {}
+  lastKey = null
 
   willMount() {
     window.homeStore = this
@@ -37,9 +39,10 @@ export default class HomeStore {
     this.watch(() => {
       const char = this.search[this.search.length - 1]
       if (lastChar && this.search.length === 0) {
-        this.stack.navigate({
-          type: 'main',
-        })
+        this.emit('clearSearch')
+      }
+      if (!lastChar && this.search.length) {
+        this.emit('startSearch')
       }
       lastChar = char
     })
@@ -63,8 +66,18 @@ export default class HomeStore {
   }
 
   onInputRef = el => {
+    if (!el) {
+      return
+    }
     this.inputRef = el
     this.attachTrap('bar', el)
+    this._watchKeyEvents()
+  }
+
+  _watchKeyEvents() {
+    this.on(this.inputRef, 'keydown', e => {
+      this.lastKey = keycode(e.keyCode)
+    })
   }
 
   focusBar = () => {
@@ -76,7 +89,7 @@ export default class HomeStore {
 
   onSearchChange = e => {
     this.textboxVal = e.target.value
-    this.setSearch(e.target.value)
+    this.setSearch(this.textboxVal)
   }
 
   setSearch = debounce(text => {

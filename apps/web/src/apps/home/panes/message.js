@@ -15,7 +15,7 @@ class MessageMain extends React.Component<Props> {
         <div $$fullscreen $$centered>
           123
           <UI.Title size={3} color="red">
-            {data.message || 'no mesage'}
+            {(data && data.message) || 'no mesage'}
           </UI.Title>
         </div>
       </Pane>

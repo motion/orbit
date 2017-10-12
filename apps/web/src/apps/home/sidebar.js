@@ -39,7 +39,6 @@ export default class Sidebar {
           if (index + 1 < lastIndex) {
             return null
           }
-          console.log('stackItem', stackItem)
           if (!stackItem.result) {
             return <null>bad result</null>
           }

@@ -4,6 +4,10 @@ sup {
   display: none !important;
 }
 
+.github-comment img {
+  max-width: 100%;
+}
+
 .line-ellipse {
   width: 100%;
 }

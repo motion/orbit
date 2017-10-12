@@ -36,6 +36,29 @@ function thingToResult(thing: Thing): PaneResult {
 
 export default class MainSidebarStore {
   props: PaneProps
+  list = null
+
+  onListRef(ref) {
+    if (!this.list) {
+      this.list = ref
+      this._watchLastKey()
+    }
+  }
+
+  _watchLastKey() {
+    let lastKey = null
+    this.react(
+      () => this.props.homeStore.lastKey,
+      key => {
+        if (key !== lastKey) {
+          lastKey = key
+          this.setTimeout(() => {
+            this.list.scrollToRow(0)
+          }, 100)
+        }
+      }
+    )
+  }
 
   @watch
   topThingsRaw: ?Array<Thing> = (() =>

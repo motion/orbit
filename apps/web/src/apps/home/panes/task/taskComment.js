@@ -38,7 +38,12 @@ export default class TaskComment {
               />
             </buttons>
           </info>
-          <UI.Text $body html={format(body)} />
+          <UI.Text
+            size={1.2}
+            className="github-comment"
+            $body
+            html={format(body)}
+          />
         </content>
       </comment>
     )
@@ -47,9 +52,10 @@ export default class TaskComment {
   static style = {
     comment: {
       width: '100%',
-      padding: [5, 10],
+      padding: [10, 10],
       border: [1, [0, 0, 0, 0]],
       transition: 'all 150ms ease-in',
+      borderBottom: [1, 'dotted', '#eee'],
     },
     user: {
       userSelect: 'none',
@@ -57,18 +63,20 @@ export default class TaskComment {
     info: {
       flexFlow: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       userSelect: 'none',
+      padding: [4, 0],
     },
     userheader: {
       flexFlow: 'row',
+      alignItems: 'center',
     },
     avatar: {
       alignSelf: 'center',
-      width: 20,
-      height: 20,
+      width: 30,
+      height: 30,
       borderRadius: 100,
       marginRight: 16,
-      marginTop: 0,
     },
     content: {
       flex: 1,
@@ -77,7 +85,7 @@ export default class TaskComment {
       marginLeft: 5,
     },
     body: {
-      padding: [5, 0, 8],
+      padding: [15, 0, 0],
       flex: 1,
       width: '95%',
     },

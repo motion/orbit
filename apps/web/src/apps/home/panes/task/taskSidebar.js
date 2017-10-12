@@ -3,6 +3,14 @@ import * as React from 'react'
 import { SidebarTitle } from '../helpers'
 
 export default class TaskSidebarStore {
+  get taskStore() {
+    return this.props.stackItem.store
+  }
+
+  get task() {
+    return this.taskStore && this.taskStore.task
+  }
+
   results = [
     {
       type: 'task',

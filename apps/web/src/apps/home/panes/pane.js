@@ -1,12 +1,18 @@
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 
+// add types
+
 @view({
   paneStore: class PaneStore {
     listRef = null
     setList = ref => {
       if (!this.listRef) {
         this.listRef = ref
+
+        if (this.props.store && this.props.store.onListRef) {
+          this.props.store.onListRef(this.listRef)
+        }
 
         const { sidebar, stack } = this.props
 

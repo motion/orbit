@@ -43,8 +43,8 @@ export default class Logo {
       </drive>
     )
   }
-  // google cal
-  renderGoogle() {
+
+  renderCalendar() {
     return (
       <cal $$row css={{ alignItems: 'center' }}>
         <img

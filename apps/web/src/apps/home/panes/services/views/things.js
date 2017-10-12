@@ -25,7 +25,6 @@ export default class Things {
 
   getCalendar = cal => {
     const { summary, start, attendees } = cal.data
-    console.log('start is', start)
 
     return {
       key: cal.id,

@@ -1,13 +1,12 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import App, { Thing, CurrentUser } from '~/app'
-import Things from '../views/things'
-import * as Collapse from '../views/collapse'
+import Things from '../../views/things'
+import * as Collapse from '../../views/collapse'
 
 @view
 class Calendar {
   render({ cal, isActive }) {
-    console.log('cal is', cal)
     return (
       <container $$row>
         <left $$row>

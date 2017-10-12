@@ -13,9 +13,10 @@ class Services {
   render({ store }) {
     const { types } = store
 
-    const serviceItems = [...types, 'slack', 'drive'].map(type => () => (
-      <Item serviceStore={store} type={type} />
-    ))
+    // lets turn google into calendar
+    const serviceItems = [...types, 'slack', 'drive']
+      .map(type => (type === 'google' ? 'calendar' : type))
+      .map(type => () => <Item serviceStore={store} type={type} />)
 
     return (
       <card>

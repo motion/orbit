@@ -18,7 +18,8 @@ class SyncStatus {
     )
   }
 
-  renderCalendar() {
+  // cal
+  renderGoogle() {
     const { store } = this.props
 
     const events = (store.events || []).filter(({ integration, type }) => {
@@ -63,7 +64,6 @@ class SyncStatus {
 
   render({ service, store }) {
     store.things
-    console.log('service is', service)
     return this['render' + capitalize(service)]()
   }
 }
@@ -82,7 +82,7 @@ class NotFound {
     typeToJob = {
       drive: { action: 'drive', service: 'google' },
       slack: { action: 'gather', service: 'slack' },
-      calendar: { action: 'cal', service: 'google' },
+      google: { action: 'cal', service: 'google' },
       github: { action: 'issues', service: 'github' },
     }
 
@@ -98,7 +98,6 @@ class NotFound {
       const { type } = this.props
       return includes(['drive', 'calendar'], type) ? 'google' : type
     }
-
     get auth() {
       return CurrentUser.authorizations[this.authName]
     }
@@ -114,7 +113,7 @@ class NotFound {
 })
 export default class Item {
   render({ store, serviceStore, type }) {
-    console.log('type is', type)
+    console.log('type is', type, Cards[type])
     const Card = Cards[type] || NotFound
 
     return (
@@ -175,7 +174,7 @@ export default class Item {
           </header>
           <Collapse.Body open={store.open && store.auth}>
             <card>
-              <Card if={store.open && store.auth} store={store} />
+              <Card store={store} />
             </card>
           </Collapse.Body>
         </service>

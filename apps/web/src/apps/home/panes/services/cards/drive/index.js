@@ -1,9 +1,8 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import { sortBy, reverse, uniq } from 'lodash'
+import { sortBy, reverse } from 'lodash'
 import { Thing } from '~/app'
-import Things from '../views/things'
-import * as Collapse from '../views/collapse'
+import * as Collapse from '../../views/collapse'
 import { formatDistance } from 'date-fns'
 
 const baseId = '0AKfTFZu-thXbUk9PVA'
@@ -145,7 +144,6 @@ class Folder {
 export default class Drive {
   render({ store }) {
     const loading = !store.things || store.folders === null
-    console.log('files are', store.files)
 
     return (
       <container>

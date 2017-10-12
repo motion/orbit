@@ -54,7 +54,7 @@ export default class Server {
 
     const app = express()
     app.set('port', port)
-    app.use(logger('dev'))
+    // app.use(logger('dev'))
 
     this.app = app
 

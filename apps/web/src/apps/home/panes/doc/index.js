@@ -12,68 +12,78 @@ import DocSidebar from './sidebar'
   },
 })
 class DocMain {
-  render({ store }) {
-    if (!store.thing) return <h3>loading</h3>
-
+  getDoc = () => {
+    const { store } = this.props
     const { title, data: { contents, modifiedTime, owners } } = store.thing
+    return (
+      <doc>
+        <UI.Theme name="light">
+          <info css={{ width: '100%', flex: 1 }}>
+            <title
+              $$row
+              css={{
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <left $$row>
+                <UI.Title
+                  onClick={store.ref('isOpen').toggle}
+                  size={1.4}
+                  fontWeight={800}
+                  color="#000"
+                  marginBottom={1}
+                >
+                  {title}
+                </UI.Title>
+              </left>
+              <right $$row>
+                <UI.Text
+                  fontWeight={300}
+                  css={{ marginTop: 10, marginLeft: 20 }}
+                  opacity={0.7}
+                >
+                  edited {formatDistance(modifiedTime, Date.now())} ago
+                </UI.Text>
+                <owner>
+                  <UI.Text
+                    fontWeight={300}
+                    css={{ marginTop: 10, marginLeft: 20 }}
+                    opacity={0.7}
+                  >
+                    owned by {(owners || []).map(o => o.displayName).join(', ')}
+                  </UI.Text>
+                </owner>
+              </right>
+            </title>
+          </info>
+          <content>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: contents.html,
+              }}
+            />
+          </content>
+        </UI.Theme>
+      </doc>
+    )
+  }
 
+  loading = () => {
+    return (
+      <doc>
+        <UI.Title size={1.4} fontWeight={800} color="#000" marginBottom={1}>
+          {this.props.result.title}
+        </UI.Title>
+      </doc>
+    )
+  }
+  render({ store }) {
     return (
       <card>
         <UI.Theme name="light">
           <Pane
-            items={[
-              () => (
-                <meta css={{ width: '100%', flex: 1 }}>
-                  <UI.Theme name="light">
-                    <title
-                      $$row
-                      css={{
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <left $$row>
-                        <UI.Title
-                          onClick={store.ref('isOpen').toggle}
-                          size={1.4}
-                          fontWeight={800}
-                          color="#000"
-                          marginBottom={1}
-                        >
-                          {title}
-                        </UI.Title>
-                      </left>
-                      <right $$row>
-                        <UI.Text
-                          fontWeight={300}
-                          css={{ marginTop: 10, marginLeft: 20 }}
-                          opacity={0.7}
-                        >
-                          edited {formatDistance(modifiedTime, Date.now())} ago
-                        </UI.Text>
-                        <owner>
-                          <UI.Text
-                            fontWeight={300}
-                            css={{ marginTop: 10, marginLeft: 20 }}
-                            opacity={0.7}
-                          >
-                            owned by{' '}
-                            {(owners || []).map(o => o.displayName).join(', ')}
-                          </UI.Text>
-                        </owner>
-                      </right>
-                    </title>
-                    <content>
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: contents.html,
-                        }}
-                      />
-                    </content>
-                  </UI.Theme>
-                </meta>
-              ),
-            ]}
+            items={[() => (store.thing ? this.getDoc() : this.loading())]}
           />
         </UI.Theme>
       </card>

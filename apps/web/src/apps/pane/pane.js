@@ -27,7 +27,7 @@ export default class Pane {
     style,
     width,
     theme,
-    primary,
+    sidebar,
     actionBar,
   }) {
     const getItemDefault = (item, index) => ({
@@ -40,8 +40,7 @@ export default class Pane {
         <card
           style={{ width, ...style }}
           $fullscreen={paneStore.fullscreen}
-          $primary={primary}
-          $secondary={!primary}
+          $sidebar={sidebar}
         >
           <content if={!items}>{children}</content>
           <content if={items}>
@@ -78,7 +77,7 @@ export default class Pane {
       position: 'relative',
       overflowY: 'scroll',
     },
-    primary: {
+    sidebar: {
       marginTop: 5,
     },
     content: {

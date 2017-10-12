@@ -39,7 +39,8 @@ export default class Sidebar {
                   onBack={homeStore.stack.pop}
                   paneProps={{
                     index,
-                    primary: true,
+                    stack: homeStore.stack,
+                    sidebar: true,
                     getActiveIndex: () => stackItem.firstIndex,
                     onSelect: stackItem.onSelect,
                     itemProps: {

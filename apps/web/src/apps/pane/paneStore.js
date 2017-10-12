@@ -5,13 +5,16 @@ export default class PaneStore {
     if (!this.listRef) {
       this.listRef = ref
 
+      const { sidebar, stack } = this.props
+
       // scroll to row in list
       this.react(
-        () => this.activeIndex,
-        row => {
-          if (this.isActive) {
-            this.listRef.scrollToRow(row)
-          }
+        () =>
+          sidebar
+            ? stack.last.sidebarSelectedIndex
+            : stack.last.mainSelectedIndex,
+        index => {
+          this.listRef.scrollToRow(index)
         }
       )
     }

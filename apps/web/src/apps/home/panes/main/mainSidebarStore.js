@@ -49,34 +49,6 @@ export default class MainSidebarStore {
     return this.search ? parser(this.search) : null
   }
 
-  get searchResult() {
-    if (!this.parserResult) {
-      return null
-    }
-    const { people, startDate, endDate, service } = this.parserResult
-    const person = people.length > 0 ? people[0] : undefined
-    const actuallyFeed = ['docs', 'issues', 'github', 'calendar', 'tasks']
-    const type = (includes(actuallyFeed, service) ? 'feed' : service) || 'feed'
-    const val = {
-      id: `type:${people.join(':')}`,
-      title: type,
-      type,
-      data: {
-        startDate,
-        endDate,
-        type,
-        person,
-        image: person,
-        service,
-        people,
-      },
-      people,
-      startDate,
-      endDate,
-    }
-    return val
-  }
-
   get things(): Array<PaneResult> {
     return fuzzy(this.topThings || [], this.search)
       .slice(0, this.search.length ? 100 : 8)
@@ -175,9 +147,6 @@ export default class MainSidebarStore {
   get results(): Array<PaneResult> {
     const all = [...this.pinned, ...this.top, ...this.things, ...this.extras]
     const search = fuzzy(all, this.search)
-    if (this.searchResult) {
-      return [this.searchResult, ...search]
-    }
     return search
   }
 

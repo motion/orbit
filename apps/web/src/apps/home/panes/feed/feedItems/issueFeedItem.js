@@ -11,9 +11,8 @@ export default class IssueFeedItem {
     const { payload } = event.data
     switch (event.action) {
       case 'IssuesEvent':
-        console.log('event', event)
         return (
-          <Task
+          <Task.Main
             paneStore={{
               activeIndex: 1,
               data: { ...event, data: payload.issue },

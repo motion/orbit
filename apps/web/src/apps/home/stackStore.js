@@ -90,9 +90,6 @@ export default class StackStore {
   get lastTwo() {
     return this.items.slice(this.length - 2, this.length)
   }
-  get selected() {
-    return this.last.selected
-  }
   get down() {
     return this.last.down
   }

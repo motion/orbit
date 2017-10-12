@@ -29,6 +29,7 @@ export default class Main {
               data={stackItem.sidebarSelected}
               paneProps={{
                 index,
+                stack: homeStore.stack,
                 getActiveIndex: () => stackItem.firstIndex,
               }}
             />

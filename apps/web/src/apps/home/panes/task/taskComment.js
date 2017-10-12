@@ -5,7 +5,10 @@ import { format } from './helpers'
 
 @view
 export default class TaskComment {
-  render({ store, data: { id, issueBody = false, body, createdAt, author } }) {
+  render({
+    taskStore,
+    data: { id, issueBody = false, body, createdAt, author },
+  }) {
     const { github } = CurrentUser.authorizations
     const isOwner = author && github && github.info.username === author.login
 
@@ -28,7 +31,7 @@ export default class TaskComment {
               <UI.Button if={isOwner} chromeless icon="edit" opacity={0.7} />
               <UI.Button
                 if={!issueBody && isOwner}
-                onClick={() => store.deleteComment(id)}
+                onClick={() => taskStore.deleteComment(id)}
                 chromeless
                 icon="remove"
                 opacity={0.7}

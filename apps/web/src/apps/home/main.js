@@ -6,7 +6,7 @@ import * as Panes from './panes'
 export default class Main {
   render({ homeStore, homeStore: { stack } }) {
     const lastIndex = stack.length - 1
-    const results = stack.items.map((stackItem, index) => {
+    return stack.items.map((stackItem, index) => {
       if (index !== lastIndex) {
         return null
       }
@@ -34,8 +34,5 @@ export default class Main {
         />
       )
     })
-
-    console.log('results', results)
-    return results
   }
 }

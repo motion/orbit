@@ -68,13 +68,12 @@ export default class FeedStore {
       .limit(200)
 
   willMount() {
-    const { people, person } = this.data
-    this.setFilter(people ? people : [person])
+    console.log('feed ghot data', this.props.data)
 
     this.react(
       () => this.data.people,
-      () => {
-        this.setFilter('people', people)
+      people => {
+        this.setFilter('people', people || [])
       },
       true
     )

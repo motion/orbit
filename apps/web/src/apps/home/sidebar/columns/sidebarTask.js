@@ -9,7 +9,11 @@ class SidebarTaskStore {
   results = [
     {
       type: 'task',
-      parent: this.props.data,
+      parent: {
+        type: 'task',
+        id: this.props.data.id,
+        data: this.props.data,
+      },
       display: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
       id: this.props.data.id,

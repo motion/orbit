@@ -8,8 +8,8 @@ import SidebarTitle from './sidebarTitle'
 class SidebarFeedStore {
   results = [
     {
-      type: 'Feed',
-      parent: this.props.data,
+      type: 'feed',
+      data: this.props.data,
       display: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
       id: this.props.data.id,

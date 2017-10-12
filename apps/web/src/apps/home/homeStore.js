@@ -37,9 +37,10 @@ export default class HomeStore {
     this.watch(() => {
       const char = this.search[this.search.length - 1]
       if (lastChar && this.search.length === 0) {
-        this.stack.navigate({
-          type: 'main',
-        })
+        this.emit('clearSearch')
+      }
+      if (!lastChar && this.search.length) {
+        this.emit('startSearch')
       }
       lastChar = char
     })

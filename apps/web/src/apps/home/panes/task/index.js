@@ -3,11 +3,12 @@ import { view } from '@mcro/black'
 import Pane from '~/apps/pane'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
-import Comment from './comment'
+import Comment from './taskComment'
 import TaskStore from './taskStore'
-import { LabelAction, AssignAction } from './actions'
-import TaskResponse from './response'
-import TaskHeader from './header'
+import { LabelAction, AssignAction } from './taskActions'
+import TaskResponse from './taskResponse'
+import TaskHeader from './taskHeader'
+import TaskSidebar from './taskSidebar'
 
 declare class PaneStorish {
   activeIndex: number,
@@ -20,7 +21,7 @@ const typeToElement = {
 @view({
   taskStore: TaskStore,
 })
-export default class TaskPane extends React.Component<{
+class TaskMain extends React.Component<{
   paneStore: PaneStorish,
 }> {
   render({ taskStore, paneStore, paneProps }) {
@@ -74,4 +75,9 @@ export default class TaskPane extends React.Component<{
       borderRadius: 3,
     },
   }
+}
+
+export default {
+  Sidebar: TaskSidebar,
+  Main: TaskMain,
 }

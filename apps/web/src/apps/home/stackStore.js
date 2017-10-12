@@ -2,7 +2,7 @@
 import { store } from '@mcro/black'
 
 @store
-class StackItem {
+class StackItemStore {
   store = null
   data = null
   col = 0
@@ -74,7 +74,7 @@ export default class StackStore {
     const all = stack || []
     this.items = all.map(
       (data, index) =>
-        new StackItem({
+        new StackItemStore({
           data,
           navigate: this.navigate,
           parent: all[index - 1],
@@ -107,7 +107,6 @@ export default class StackStore {
     }
   }
   right() {
-    console.log('go right', this.last)
     if (!this.last) {
       return
     }
@@ -119,7 +118,11 @@ export default class StackStore {
     const { last } = this
     this.items = [
       ...this.items,
-      new StackItem({ data, parent: last, navigate: this.navigate }),
+      new StackItemStore({
+        data,
+        parent: last,
+        navigate: this.navigate,
+      }),
     ]
   }
   pop() {

@@ -28,7 +28,7 @@ const thingToResult = (thing: Thing): PaneResult => ({
   category: 'Recently',
 })
 
-export default class SidebarMainStore {
+export default class MainSidebarStore {
   props: PaneProps
 
   @watch

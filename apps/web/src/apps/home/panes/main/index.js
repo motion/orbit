@@ -2,14 +2,14 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Pane from '~/apps/pane'
-import SidebarMainStore from './sidebarMainStore'
-import getItem from './getItem'
+import SidebarMainStore from './mainSidebarStore'
+import { getItem } from '../helpers'
 
 @view.attach('homeStore')
 @view({
   sidebarMainStore: SidebarMainStore,
 })
-export default class SidebarMainColumn {
+class MainSidebar {
   componentDidMount() {
     this.props.setStore(this.props.sidebarMainStore)
   }
@@ -23,4 +23,8 @@ export default class SidebarMainColumn {
       />
     )
   }
+}
+
+export default {
+  Sidebar: MainSidebar,
 }

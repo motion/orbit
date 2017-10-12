@@ -1,17 +1,10 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Fade from '../views/fade'
-import StackNavigator from '../views/stackNavigator'
-import SidebarMain from './columns/sidebarMain'
-import SidebarFeed from './columns/sidebarFeed'
-import SidebarTask from './columns/sidebarTask'
+import Fade from './views/fade'
+import StackNavigator from './views/stackNavigator'
+import * as Panes from './panes'
 
 const width = 250
-const Columns = {
-  main: SidebarMain,
-  feed: SidebarFeed,
-  task: SidebarTask,
-}
 
 @view
 export default class Sidebar {
@@ -27,9 +20,9 @@ export default class Sidebar {
             if (!stackItem.data) {
               return <null>bad data</null>
             }
-            const Column = Columns[stackItem.data.type]
-            if (!Column) {
-              return <null>not found column {stackItem.data.type}</null>
+            const Pane = Panes[stackItem.data.type]
+            if (!Pane || !Pane.Sidebar) {
+              return <null>not found Pane {stackItem.data.type}</null>
             }
             return (
               <Fade
@@ -38,7 +31,7 @@ export default class Sidebar {
                 index={index}
                 currentIndex={currentIndex}
               >
-                <Column
+                <Pane.Sidebar
                   stackItem={stackItem}
                   navigate={navigate}
                   setStore={stackItem.setStore}

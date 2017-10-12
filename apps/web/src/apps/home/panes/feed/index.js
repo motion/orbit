@@ -9,8 +9,8 @@ import FeedItem from './feedItem'
 import FeedStore from './feedStore'
 import FeedHeader from './feedHeader'
 import FeedRecently from './feedRecently'
-// import { SubTitle } from '~/views'
 import { isUndefined, capitalize } from 'lodash'
+import FeedSidebar from './feedSidebar'
 
 type Props = PaneProps & { store: FeedStore }
 
@@ -97,7 +97,7 @@ class FeedNavBar {
 @view({
   feedStore: FeedStore,
 })
-export default class Feed extends React.Component<Props> {
+class FeedMain extends React.Component<Props> {
   render({ feedStore, paneProps }: Props) {
     if (!feedStore.allItems.length) {
       return (
@@ -159,4 +159,9 @@ export default class Feed extends React.Component<Props> {
       alignItems: 'center',
     },
   }
+}
+
+export default {
+  Sidebar: FeedSidebar,
+  Main: FeedMain,
 }

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { format } from '~/apps/home/main/panes/task/helpers'
-import Task from '~/apps/home/main/panes/task'
+import { format } from '~/apps/home/panes/task/helpers'
+import Task from '~/apps/home/panes/task'
 import Commit from './views/commit'
 
 @view

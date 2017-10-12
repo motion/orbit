@@ -2,8 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import Pane from '~/apps/pane'
-import getItem from './getItem'
-import SidebarTitle from './sidebarTitle'
+import { SidebarTitle, getItem } from '../helpers'
 
 class SidebarTaskStore {
   results = [

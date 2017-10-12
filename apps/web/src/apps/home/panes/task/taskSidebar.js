@@ -3,10 +3,6 @@ import * as React from 'react'
 import { SidebarTitle } from '../helpers'
 
 export default class TaskSidebarStore {
-  willMount() {
-    console.log('TAASAS', this.props)
-  }
-
   get taskStore() {
     return this.props.stackItem.store
   }
@@ -19,6 +15,7 @@ export default class TaskSidebarStore {
     {
       type: 'task',
       parent: this.props.result,
+      title: this.props.result.title,
       display: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
       id: this.props.data.id,

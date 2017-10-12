@@ -32,9 +32,13 @@ export default class GithubPeopleSync {
   createPerson = async (info: Object) => {
     // use email for UID for now
     // use login as github primary id key
-    const person = await Person.findOrCreate({
-      ids: { $eq: { github: { $eq: info.login } } },
-    })
+    const person =
+      (await Person.find({
+        ids: { $eq: { github: { $eq: info.login } } },
+      })) ||
+      (await Person.create({
+        ids: { github: info.login },
+      }))
     return await person.mergeUpdate({
       location: info.location || '',
       bio: info.bio || '',

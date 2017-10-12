@@ -31,7 +31,7 @@ export class Person extends Model {
   }
 
   static defaultProps = {
-    // map of service: id
+    // ids: { [service: string]: [id: Array] }
     ids: {},
     emails: [],
     name: '',

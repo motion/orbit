@@ -142,6 +142,7 @@ export default class GithubIssueSync {
       data,
       orgName: orgLogin,
       parentId: issue.repositoryName,
+      author: issue.author.login,
       created,
       updated,
     })

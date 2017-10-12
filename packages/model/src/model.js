@@ -581,4 +581,27 @@ export default class Model {
     }
     return await this.create(object)
   }
+
+  // destroyAll
+  async destroyAll() {
+    return {
+      confirm: async () => {
+        const remove = async item => {
+          try {
+            await item.remove()
+          } catch (e) {
+            // loop on document conflcits to delete all revisions
+            console.log('err', e)
+            await remove(item)
+          }
+          return true
+        }
+        const all = await this.getAll()
+        if (!all) {
+          return
+        }
+        return await Promise.all(all.map(remove))
+      },
+    }
+  }
 }

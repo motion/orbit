@@ -1,7 +1,7 @@
 {
   "name": "@mcro/ui",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -9,8 +9,8 @@
   "author": "Motion (motion.io)",
   "license": "MIT",
   "dependencies": {
-    "@mcro/black": "^1.4.0",
-    "@mcro/gloss": "^1.4.0",
+    "@mcro/black": "^1.4.1",
+    "@mcro/gloss": "^1.4.1",
     "@mcro/react-tunnel": "^1.4.0",
     "color": "^2.0.0",
     "element-resize-detector": "^1.1.12",

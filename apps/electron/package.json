@@ -11,7 +11,7 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
-    "@mcro/black": "^1.4.0",
+    "@mcro/black": "^1.4.1",
     "@mcro/ionize": "^1.4.0",
     "electron-localshortcut": "^2.0.2",
     "lodash": "^4.17.4",
@@ -33,5 +33,5 @@
       "category": "pro"
     }
   },
-  "version": "1.4.0"
+  "version": "1.4.1"
 }

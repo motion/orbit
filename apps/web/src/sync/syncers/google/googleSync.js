@@ -1,8 +1,8 @@
 // @flow
 import { store } from '@mcro/black/store'
 import Syncer from '../syncer'
-import GoogleDriveSync from './driveSync'
-import GoogleCalSync from './calSync'
+import GoogleDriveSync from './googleDriveSync'
+import GoogleCalSync from './googleCalSync'
 import * as Constants from '~/constants'
 
 @store

@@ -1,13 +1,19 @@
 // @flow
-import SyncerAction from '../syncerAction'
 import { Event } from '~/app'
+import { createInChunks } from '~/sync/helpers'
 import debug from 'debug'
 
 const log = debug('sync')
 
-export default class GoogleCalSync extends SyncerAction {
+export default class GoogleCalSync {
   fetch = (path, opts) => this.helpers.fetch(`/calendar/v3${path}`, opts)
   lastSyncTokens = {}
+
+  constructor({ setting, token, helpers }) {
+    this.setting = setting
+    this.token = token
+    this.helpers = helpers
+  }
 
   get activeCals() {
     return this.setting.values.calendarsActive
@@ -65,7 +71,7 @@ export default class GoogleCalSync extends SyncerAction {
   syncCalendar = async (calendar: string): Promise<Array<Event>> => {
     const allEvents = await this.getEvents(calendar)
     log('cal got all events', calendar, allEvents, 'creating...')
-    const created = await this.createInChunks(allEvents, item =>
+    const created = await createInChunks(allEvents, item =>
       this.createEvent(calendar, item)
     )
     log('created events, updating sync token')

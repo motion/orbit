@@ -1,7 +1,7 @@
 {
   "name": "@mcro/site",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "index.js",
   "scripts": {
     "start": "motion watch",
@@ -10,10 +10,10 @@
     "deploy": "surge ./build orbitbeta.surge.sh"
   },
   "dependencies": {
-    "@mcro/black": "^1.4.0",
-    "@mcro/gloss": "^1.4.0",
+    "@mcro/black": "^1.4.1",
+    "@mcro/gloss": "^1.4.1",
     "@mcro/router": "^1.4.0",
-    "@mcro/ui": "^1.4.0",
+    "@mcro/ui": "^1.4.1",
     "babel-polyfill": "^6.23.0",
     "lodash": "^4.17.4",
     "mobx": "^3.2.2",
@@ -24,6 +24,6 @@
     "redbox-react": "^1.5.0"
   },
   "devDependencies": {
-    "@mcro/builder": "^1.4.0"
+    "@mcro/builder": "^1.4.1"
   }
 }

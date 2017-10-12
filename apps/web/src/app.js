@@ -23,6 +23,7 @@ export const Thing = Models.Thing
 export const Job = Models.Job
 export const Setting = Models.Setting
 export const Event = Models.Event
+export const Person = Models.Person
 export const CurrentUser = CurrentUser_
 
 class App {

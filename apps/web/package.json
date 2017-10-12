@@ -1,7 +1,7 @@
 {
   "name": "@mcro/web",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "index.js",
   "scripts": {
     "start": "motion",
@@ -10,20 +10,19 @@
     "build": "NODE_ENV=production BUILD_DIR=. mcro-build"
   },
   "dependencies": {
-    "@mcro/black": "^1.4.0",
-    "@mcro/gloss": "^1.4.0",
-    "@mcro/model": "^1.4.0",
-    "@mcro/models": "^1.4.0",
+    "@mcro/black": "^1.4.1",
+    "@mcro/gloss": "^1.4.1",
+    "@mcro/model": "^1.4.1",
+    "@mcro/models": "^1.4.1",
     "@mcro/r2": "^1.4.0",
     "@mcro/router": "^1.4.0",
-    "@mcro/ui": "^1.4.0",
+    "@mcro/ui": "^1.4.1",
     "apollo-fetch": "^0.6.0",
     "babel-polyfill": "^6.23.0",
     "color": "^2.0.0",
     "date-fns": "2.0.0-alpha.3",
     "debug": "^2.6.9",
     "emojinize": "^1.0.0",
-    "triangulr": "^1.0.0",
     "keycode": "^2.1.9",
     "lodash": "^4.17.4",
     "lodash-decorators": "^3.0.2",
@@ -46,11 +45,12 @@
     "sherlockjs": "*",
     "superlogin-client": "^0.7.1",
     "time-ago": "^0.1.0",
+    "triangulr": "^1.0.0",
     "victory": "0.22.2",
     "worker-pouch": "^2.0.0",
     "react-measure": "2.0.2"
   },
   "devDependencies": {
-    "@mcro/builder": "^1.4.0"
+    "@mcro/builder": "^1.4.1"
   }
 }

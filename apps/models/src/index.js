@@ -18,12 +18,16 @@ import ThingInstance from './thing'
 import JobInstance from './job'
 import SettingInstance from './setting'
 import EventInstance from './event'
+import PersonInstance from './person'
+
+// AND THEN HERE:
 
 export const User = UserInstance
 export const Thing = ThingInstance
 export const Job = JobInstance
 export const Setting = SettingInstance
 export const Event = EventInstance
+export const Person = PersonInstance
 
 // ⭐️ DONT FORGET TO ADD HERE TOO:
 
@@ -33,6 +37,7 @@ export const Models = {
   Job: JobInstance,
   Setting: SettingInstance,
   Event: EventInstance,
+  Person: PersonInstance,
 }
 
 // ⭐️ YOU'RE ALL SET

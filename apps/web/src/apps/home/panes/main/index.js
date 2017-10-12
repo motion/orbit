@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react'
 import { view } from '@mcro/black'
-import Pane from '~/apps/pane'
+import Pane from '../pane'
 import SidebarMainStore from './mainSidebarStore'
 import { getItem } from '../helpers'
 

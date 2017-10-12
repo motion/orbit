@@ -54,7 +54,7 @@ export default class TaskStore {
   }
 
   get results() {
-    const data = this.data
+    const data = this.task && this.task.data
     if (!data) {
       return []
     }

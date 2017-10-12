@@ -11,7 +11,7 @@ export default class TaskHeader {
     }
     const { labels, assigned } = taskStore
     const { parentId, orgName } = taskStore.data
-    const { title, number = 0 } = taskStore.task
+    const { title, number = 0 } = taskStore.task.data
     const minSize = 1.8
     const maxSize = 2.2
     const ogSize = 3.4 - title.length * 0.05

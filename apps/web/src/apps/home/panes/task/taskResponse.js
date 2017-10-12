@@ -19,7 +19,9 @@ export default class TaskResponse {
           value={taskStore.response}
           onChange={e => (taskStore.response = e.target.value)}
           onKeyDown={e => {
-            if (e.keyCode === 13 && e.metaKey) onSubmit(taskStore.response)
+            if (e.keyCode === 13 && e.metaKey) {
+              onSubmit(taskStore.response)
+            }
           }}
           placeholder="Leave a comment"
           className="dark-textarea"

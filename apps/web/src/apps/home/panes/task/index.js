@@ -1,6 +1,6 @@
 // @flow
 import { view } from '@mcro/black'
-import Pane from '~/apps/pane'
+import Pane from '../pane'
 import * as React from 'react'
 import * as UI from '@mcro/ui'
 import Comment from './taskComment'
@@ -36,6 +36,7 @@ class TaskMain extends React.Component<{
             {...paneProps}
             items={taskStore.results}
             getItem={({ elName, data }, index) => {
+              console.log('datais', data)
               const El = typeToElement[elName] || (() => <null>not found</null>)
               return {
                 children: () => (

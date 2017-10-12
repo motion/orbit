@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import Pane from '~/apps/pane'
+import Pane from '../pane'
 import type { PaneProps } from '~/types'
 import Calendar from './calendar'
 import FeedItem from './feedItem'

@@ -20,7 +20,6 @@ export default class Sidebar {
       <sidebar css={{ width }}>
         <StackNavigator stack={homeStore.stack}>
           {({ stackItem, index, currentIndex, navigate }) => {
-            console.log('sidebar render index', index)
             // only show last two
             if (index + 1 < currentIndex) {
               return null

@@ -19,9 +19,7 @@ class StackItem {
     return this.store ? this.store.results : []
   }
   onSelect(item: Object) {
-    if (this.props) {
-      this.props.navigate(item)
-    }
+    this.navigate(item)
   }
   get selectedIndex() {
     return this.active[this.col]

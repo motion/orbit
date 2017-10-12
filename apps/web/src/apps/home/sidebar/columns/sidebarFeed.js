@@ -13,7 +13,6 @@ class SidebarFeedStore {
       data: this.props.data,
       display: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
-      id: this.props.id,
     },
     {
       title: 'Product',
@@ -47,7 +46,6 @@ class SidebarFeedStore {
 })
 export default class SidebarFeedColumn {
   componentDidMount() {
-    console.log('moutn feed sidebar', this.props)
     this.props.setStore(this.props.store)
   }
 

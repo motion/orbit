@@ -1,3 +1,9 @@
+/* for google docs */
+style,
+sup {
+  display: none !important;
+}
+
 .github-comment img {
   max-width: 100%;
 }

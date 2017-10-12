@@ -59,7 +59,7 @@ export default class Pane {
     let { theme } = this.props
 
     const getItemDefault = (item, index) => ({
-      highlight: () => index === getActiveIndex(),
+      highlight: () => (getActiveIndex ? index === getActiveIndex() : false),
       children: item,
     })
 
@@ -89,10 +89,12 @@ export default class Pane {
               getRef={paneStore.setList}
               groupKey={groupKey}
               onSelect={this.onSelect}
+              /*
               virtualized={{
                 measure: true,
                 ...virtualProps,
               }}
+              */
               itemProps={{
                 padding: 0,
                 highlightBackground: [0, 0, 0, 0.08],

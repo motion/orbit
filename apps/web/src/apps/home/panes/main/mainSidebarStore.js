@@ -8,6 +8,11 @@ import { OS } from '~/helpers'
 import parser from './parser'
 
 function thingToResult(thing: Thing): PaneResult {
+  const icon =
+    thing.integration === 'google'
+      ? thing.integration + '-' + thing.type
+      : thing.integration
+
   return {
     id: thing.id || thing.data.id,
     title: thing.title,
@@ -15,7 +20,7 @@ function thingToResult(thing: Thing): PaneResult {
     iconAfter: true,
     icon: (
       <img
-        src={`/images/${thing.integration}-icon-light.svg`}
+        src={`/images/${icon}-icon-light.svg`}
         style={{ opacity: 0.5, width: 20 }}
       />
     ),
@@ -154,17 +159,10 @@ export default class MainSidebarStore {
 
   extras = [
     {
-      title: 'Settings',
+      title: 'Services',
       icon: 'gear',
-      type: 'message',
-      data: {
-        message: 'Open Settings',
-        icon: 'gear',
-      },
-      onSelect: () => {
-        OS.send('open-settings')
-      },
-      category: 'Settings',
+      type: 'services',
+      category: 'Services',
     },
   ]
 

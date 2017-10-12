@@ -1,5 +1,7 @@
 export login from './login'
 export task from './task'
+export doc from './doc'
+export services from './services'
 export feed from './feed'
 export main from './main'
 export message from './message'

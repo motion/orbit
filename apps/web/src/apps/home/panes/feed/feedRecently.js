@@ -36,7 +36,7 @@ export default class FeedRecently {
           items={[
             {
               primary: 'Some Doc',
-              icon: '/images/google-docs-icon.svg',
+              icon: '/images/google-doc-icon.svg',
             },
             {
               primary: '#general',

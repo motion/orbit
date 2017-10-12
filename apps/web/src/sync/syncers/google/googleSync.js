@@ -45,6 +45,10 @@ export default class GoogleSync extends Syncer {
         return await res[opts.type || 'json']()
       }
 
+      if (res.status === 403) {
+        return null
+      }
+
       if (res.status === 401 && !opts.isRetrying) {
         // refresh token
         const token = await this.user.refreshToken('google')
@@ -52,6 +56,7 @@ export default class GoogleSync extends Syncer {
         if (token) {
           return await this.helpers.fetch(path, { ...opts, isRetrying: true })
         }
+
         return null
       }
 

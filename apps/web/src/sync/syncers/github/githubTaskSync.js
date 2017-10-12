@@ -44,15 +44,11 @@ edges {
 `
 
 const repoGetIssues = `
-edges {
-  node {
     id
     name
     issues(first: 100) {
       ${issueGet}
     }
-  }
-}
 `
 
 export default class GithubIssueSync {
@@ -63,7 +59,7 @@ export default class GithubIssueSync {
   }
 
   run = async () => {
-    const res = await this.syncOrgs()
+    const res = await this.syncRepos()
     console.log('Created', res ? res.length : 0, 'issues', res)
   }
 
@@ -73,6 +69,15 @@ export default class GithubIssueSync {
     }
     const issues = await Promise.all(orgs.map(this.syncOrg))
     return flatten(issues).filter(Boolean)
+  }
+
+  syncRepos = (repos: Array<boolean> = this.setting.values.repos) => {
+    return Promise.all(
+      Object.keys(repos || {}).map(repo => {
+        const split = repo.split('/')
+        this.syncRepo(split[0], split[1])
+      })
+    )
   }
 
   syncOrg = async (org: string): Promise<Array<Object>> => {
@@ -93,10 +98,11 @@ export default class GithubIssueSync {
       }
     `,
     })
+
     if (!results) {
       return
     }
-    const repository = results.data.organization.repository.node
+    const repository = results.data.organization.repository
     return await this.createIssues(org, this.getIssuesForRepo(repository))
   }
 

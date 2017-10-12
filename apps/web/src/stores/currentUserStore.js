@@ -1,6 +1,7 @@
 // @flow
 import { User, Setting } from '@mcro/models'
 import { store, watch } from '@mcro/black'
+import { omit } from 'lodash'
 import SuperLoginClient from 'superlogin-client'
 
 // TODO: Constants.API_HOST
@@ -222,20 +223,27 @@ class CurrentUser {
     if (!this.user) {
       throw new Error(`No user`)
     }
-    const info = await passportLink(provider, options)
-    if (info) {
-      console.log('Merging new oauth', info)
-      await this.user.mergeUpdate({
-        authorizations: {
-          [provider]: info,
-        },
-      })
+    try {
+      const info = await passportLink(provider, options)
+      if (info) {
+        await this.user.mergeUpdate({
+          authorizations: {
+            [provider]: info,
+          },
+        })
+      }
+    } catch (err) {
+      return false
     }
   }
 
-  // unlink = async provider => {
-  //   // return await this.superlogin.unlink(provider)
-  // }
+  unlink = async provider => {
+    const user = this.user
+    console.log('omitted is', omit(user.authorizations, [provider]))
+    user.authorizations = omit(user.authorizations, [provider])
+
+    await user.save()
+  }
 
   setUserSession = async () => {
     try {

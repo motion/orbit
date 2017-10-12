@@ -47,7 +47,8 @@
     "time-ago": "^0.1.0",
     "triangulr": "^1.0.0",
     "victory": "0.22.2",
-    "worker-pouch": "^2.0.0"
+    "worker-pouch": "^2.0.0",
+    "react-measure": "2.0.2"
   },
   "devDependencies": {
     "@mcro/builder": "^1.4.1"

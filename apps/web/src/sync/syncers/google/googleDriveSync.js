@@ -40,13 +40,14 @@ export default class GoogleDriveSync {
     const { name, contents, ...data } = info
     const created = info.createdTime
     const updated = info.modifiedTime
+
     return await Thing.findOrUpdate({
       id: info.id,
       integration: 'google',
       type: 'doc',
       title: name,
-      body: contents,
-      data,
+      body: contents.text,
+      data: { ...data, contents },
       orgName: info.spaces ? info.spaces[0] : '',
       parentId: info.parents ? info.parents[0] : '',
       created,
@@ -154,6 +155,22 @@ export default class GoogleDriveSync {
     return all
   }
 
+  async fetchFolders(query?: Object) {
+    return await this.fetch('/files', {
+      query: {
+        orderBy: [
+          'modifiedByMeTime desc',
+          'modifiedTime desc',
+          'sharedWithMeTime desc',
+          'viewedByMeTime desc',
+        ],
+        fields: 'files(id,name,parents)',
+        q: `mimeType='application/vnd.google-apps.folder'`,
+        ...query,
+      },
+    })
+  }
+
   async fetchFiles(query?: Object) {
     return await this.fetch('/files', {
       query: {
@@ -207,13 +224,19 @@ export default class GoogleDriveSync {
   }
 
   async getFileContents(id: string) {
-    return await this.fetch(`/files/${id}/export`, {
-      type: 'text',
-      query: {
-        mimeType: 'text/plain',
-        alt: 'media',
-      },
-    })
+    const getMimeType = mimeType =>
+      this.fetch(`/files/${id}/export`, {
+        type: 'text',
+        query: {
+          mimeType,
+          alt: 'media',
+        },
+      })
+
+    return {
+      html: await getMimeType('text/html'),
+      text: await getMimeType('text/plain'),
+    }
   }
 
   async getTeamDrives() {

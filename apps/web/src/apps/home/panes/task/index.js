@@ -18,9 +18,6 @@ const typeToElement = {
 })
 class TaskMain {
   render({ taskStore, paneStore, paneProps }) {
-    if (!taskStore.results.length) {
-      return null
-    }
     return (
       <card>
         <UI.Theme name="light">

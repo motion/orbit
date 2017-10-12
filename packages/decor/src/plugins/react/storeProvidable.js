@@ -100,7 +100,7 @@ export default function storeProvidable(options, Helpers) {
         }
 
         componentDidCatch(error) {
-          console.error('StoreProvidable.handleError', error)
+          console.warn('StoreProvidable.handleError', error)
           this.setState({ error })
         }
 

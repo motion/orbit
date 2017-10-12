@@ -61,7 +61,7 @@ class StackItemStore {
     )
   }
   up() {
-    this.active.setActive(this.col, Math.max(0, this.active[this.col] - 1))
+    this.setActive(this.col, Math.max(0, this.active[this.col] - 1))
   }
   right() {
     this.col = Math.min(1, this.col + 1)

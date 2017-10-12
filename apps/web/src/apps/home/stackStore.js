@@ -87,9 +87,6 @@ export default class StackStore {
   get last() {
     return this.items[this.items.length - 1]
   }
-  get lastTwo() {
-    return this.items.slice(this.length - 2, this.length)
-  }
   get down() {
     return this.last.down
   }

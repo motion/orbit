@@ -39,6 +39,7 @@ export default class Pane {
     listProps,
     virtualProps,
     itemProps,
+    store,
     items,
     paneStore,
     getActiveIndex,
@@ -54,6 +55,14 @@ export default class Pane {
       children: item,
     })
 
+    let all
+
+    if (store) {
+      all = store.results
+    } else {
+      all = items
+    }
+
     return (
       <UI.Theme name={theme}>
         <card
@@ -61,8 +70,8 @@ export default class Pane {
           $fullscreen={paneStore.fullscreen}
           $sidebar={sidebar}
         >
-          <content if={!items}>{children}</content>
-          <content if={items}>
+          <content if={!all}>{children}</content>
+          <content if={all}>
             <UI.List
               getRef={paneStore.setList}
               groupKey={groupKey}
@@ -77,7 +86,7 @@ export default class Pane {
                 highlightColor: [255, 255, 255, 1],
                 ...itemProps,
               }}
-              items={items}
+              items={all}
               getItem={getItem || getItemDefault}
               {...listProps}
             />

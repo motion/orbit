@@ -8,7 +8,6 @@ import PaneView from './panes/pane'
 
 const width = 250
 
-// wierd little ditty
 @view.attach('homeStore')
 @view.ui
 class SidebarContainer {
@@ -19,7 +18,7 @@ class SidebarContainer {
           this.props.setStore(store)
           return (
             <PaneView
-              items={store.results}
+              store={store}
               getItem={getItem(paneProps.getActiveIndex)}
               {...paneProps}
             />

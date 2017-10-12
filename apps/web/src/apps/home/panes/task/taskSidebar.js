@@ -21,6 +21,7 @@ export default class TaskSidebarStore {
       },
       display: <SidebarTitle {...this.props} />,
       onClick: this.props.onBack,
+      id: this.props.data.id,
     },
     {
       title: 'Product',

@@ -3,10 +3,19 @@ import global from 'global'
 import { Model, str, object } from '@mcro/model'
 import { cleanId, findOrUpdate } from './helpers'
 
+const COLORS = {
+  google: '#204bce',
+  github: 'black',
+}
+
 // keep here so we can use as generic
 export const methods = {
   get hasData(): boolean {
     return this.data.payload && this.data.payload.commits
+  },
+
+  get integrationColor() {
+    return COLORS[this.integration]
   },
 }
 

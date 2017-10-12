@@ -6,6 +6,22 @@ import { pickBy, difference, isEqual } from 'lodash'
 import hoistStatics from 'hoist-non-react-statics'
 import Redbox from 'redbox-react'
 
+// keep action out of class directly because of hmr bug
+const updateProps = Mobx.action('updateProps', (props, nextProps) => {
+  const curPropKeys = Object.keys(props)
+  const nextPropsKeys = Object.keys(nextProps)
+  // change granular so reactions are granular
+  for (const prop of nextPropsKeys) {
+    if (!isEqual(props[prop], nextProps[prop])) {
+      props[prop] = nextProps[prop]
+    }
+  }
+  // remove
+  for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
+    props[extraProp] = undefined
+  }
+})
+
 export default function storeProvidable(options, Helpers) {
   return {
     name: 'store-providable',
@@ -33,25 +49,6 @@ export default function storeProvidable(options, Helpers) {
       }
 
       decorateStores()
-
-      // keep action out of class directly because of hmr bug
-      const updateProps = Mobx.action(
-        `${Klass.name}.updateProps`,
-        (props, nextProps) => {
-          const curPropKeys = Object.keys(props)
-          const nextPropsKeys = Object.keys(nextProps)
-          // change granular so reactions are granular
-          for (const prop of nextPropsKeys) {
-            if (!isEqual(props[prop], nextProps[prop])) {
-              props[prop] = nextProps[prop]
-            }
-          }
-          // remove
-          for (const extraProp of difference(curPropKeys, nextPropsKeys)) {
-            props[extraProp] = undefined
-          }
-        }
-      )
 
       // return HoC
       class StoreProvider extends React.PureComponent {
@@ -162,7 +159,9 @@ export default function storeProvidable(options, Helpers) {
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            Helpers.emitter.emit('store.mount', { name, thing: store })
+            if (Helpers) {
+              Helpers.emitter.emit('store.mount', { name, thing: store })
+            }
             if (options.onStoreDidMount) {
               options.onStoreDidMount(store, this.props)
             }
@@ -176,7 +175,9 @@ export default function storeProvidable(options, Helpers) {
           }
           for (const name of Object.keys(this.stores)) {
             const store = this.stores[name]
-            Helpers.emitter.emit('store.unmount', { name, thing: store })
+            if (Helpers) {
+              Helpers.emitter.emit('store.unmount', { name, thing: store })
+            }
             if (options.onStoreUnmount) {
               options.onStoreUnmount(store)
             }

@@ -54,9 +54,9 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     let type = type_
     if (!type) {
       throw new Error(
-        `Didn't get a valid type: ${type}, props: ${JSON.stringify(
-          props
-        )}, children: ${children ? children.toString() : children}`
+        `Didn't get a valid type: ${type}, children: ${children
+          ? children.toString()
+          : children}`
       )
     }
 
@@ -195,8 +195,13 @@ export default function fancyElementFactory(Gloss: Gloss, styles?: Object) {
     }
 
     if (isTag) {
+      if (!finalProps.className) {
+        finalProps.className = type_
+      } else {
+        finalProps.className += ` ${type_}`
+      }
+
       if (!VALID_TAGS[type]) {
-        finalProps['data-tagname'] = type
         type = 'div'
       }
       type = TAG_NAME_MAP[type] || type

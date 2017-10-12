@@ -6,7 +6,7 @@ type FuzzyOpts = {
 }
 
 const toSearchable = thing => {
-  const getText = data => data.contents.text
+  const getText = data => (data.contents ? data.contents.text : '')
   if (thing.type === 'doc') {
     thing.searchable = thing.data.data
       ? getText(thing.data.data)

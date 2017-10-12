@@ -210,73 +210,47 @@ export default class ExampleApp extends React.Component {
       },
     }
 
-    const bgWindow = Object.assign({}, appWindow, {
-      vibrancy: 'dark',
-      hasShadow: true,
-    })
-
     if (error) {
       console.log('recover render from error')
       return null
     }
 
     const bgPadding = 30
+    const bgWindow = {
+      ...appWindow,
+      vibrancy: 'dark',
+    }
 
     return (
       <app onBeforeQuit={() => console.log('hi')}>
         <Menu />
-        {false && (
-          <window
-            key={'bg'}
-            {...bgWindow}
-            defaultSize={this.initialSize || this.state.size}
-            size={this.state.size}
-            ref={this.onWindow}
-            file={`${Constants.JOT_URL}/vibrancy`}
-            titleBarStyle="customButtonsOnHover"
-            show={this.state.show}
-            onReadyToShow={this.onReadyToShow}
-            size={this.state.size}
-            position={this.state.position}
-            webPreferences={{
-              nativeWindowOpen: true,
-            }}
-          />
-        )}
-        {
-          <window
-            key={'bar'}
-            {...appWindow}
-            defaultSize={this.initialSize || this.state.size}
-            size={this.state.size}
-            ref={this.onWindow}
-            showDevTools
-            file={`${Constants.JOT_URL}/bar?cachebust=${this.uid}`}
-            titleBarStyle="customButtonsOnHover"
-            show={this.state.show}
-            size={this.state.size.map(x => x + bgPadding * 2)}
-            position={this.state.position.map(val => val - bgPadding)}
-            onResize={size =>
-              this.setState({ size: size.map(x => x - bgPadding * 2) })}
-            onMoved={position =>
-              this.setState({ position: position.map(v => v + bgPadding) })}
-            onMove={position => {
-              console.log('called move')
-              this.setState({ position: position.map(v => v + bgPadding) })
-            }}
-            onFocus={() => {
-              this.activeWindow = this.windowRef
-            }}
-            // onResize={size => this.setState({ size })}
-            //onMoved={position => this.setState({ position })}
-            //onFocus={() => {
-            //this.activeWindow = this.windowRef
-            //}}
-            webPreferences={{
-              nativeWindowOpen: true,
-            }}
-          />
-        }
+        <window
+          key="bar"
+          {...bgWindow}
+          defaultSize={this.initialSize || this.state.size}
+          size={this.state.size}
+          ref={this.onWindow}
+          showDevTools
+          file={Constants.JOT_URL}
+          titleBarStyle="customButtonsOnHover"
+          show={this.state.show}
+          size={this.state.size.map(x => x + bgPadding * 2)}
+          position={this.state.position.map(val => val - bgPadding)}
+          onResize={size =>
+            this.setState({ size: size.map(x => x - bgPadding * 2) })}
+          onMoved={position =>
+            this.setState({ position: position.map(v => v + bgPadding) })}
+          onMove={position => {
+            console.log('called move')
+            this.setState({ position: position.map(v => v + bgPadding) })
+          }}
+          onFocus={() => {
+            this.activeWindow = this.windowRef
+          }}
+          webPreferences={{
+            nativeWindowOpen: true,
+          }}
+        />
         {appWindows.map(win => {
           return (
             <Window

@@ -29,13 +29,12 @@ class TaskMain {
             {...paneProps}
             items={taskStore.results}
             getItem={({ elName, data }, index) => {
-              console.log('datais', data)
               const El = typeToElement[elName] || (() => <null>not found</null>)
               return {
                 children: () => (
                   <El
                     data={data}
-                    store={taskStore}
+                    taskStore={taskStore}
                     paneStore={paneStore}
                     key={index}
                   />

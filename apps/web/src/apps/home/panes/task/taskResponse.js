@@ -2,25 +2,20 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 
-@view({
-  store: class ResponseStore {
-    textbox = null
-    response = ''
-  },
-})
+@view
 export default class TaskResponse {
   render({ taskStore }) {
-    const { data: { onSubmit } } = taskStore
-    const commentButtonActive = taskStore.response.trim().length > 0
+    const { onSubmit } = taskStore.result
+    const commentButtonActive = taskStore.responseVal.trim().length > 0
 
     return (
       <container>
         <textarea
-          value={taskStore.response}
-          onChange={e => (taskStore.response = e.target.value)}
+          value={taskStore.responseVal}
+          onChange={e => (taskStore.responseVal = e.target.value)}
           onKeyDown={e => {
             if (e.keyCode === 13 && e.metaKey) {
-              onSubmit(taskStore.response)
+              onSubmit(taskStore.responseVal)
             }
           }}
           placeholder="Leave a comment"
@@ -36,7 +31,7 @@ export default class TaskResponse {
             <UI.Button
               size={0.9}
               disabled={!commentButtonActive}
-              onClick={() => onSubmit(taskStore.response)}
+              onClick={() => onSubmit(taskStore.responseVal)}
               icon="send"
             >
               Comment

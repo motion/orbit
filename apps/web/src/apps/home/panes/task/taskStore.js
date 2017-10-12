@@ -15,7 +15,7 @@ type TaskProps = {
 
 export default class TaskStore {
   props: TaskProps
-  response = ''
+  responseVal = ''
   count = 0
   labels = []
   assigned = []
@@ -45,12 +45,12 @@ export default class TaskStore {
     }
   }
 
-  get taskId() {
-    return this.props.data.id
+  get result() {
+    return this.props.result
   }
 
-  get data() {
-    return this.props.data
+  get taskId() {
+    return this.props.result.id
   }
 
   get results() {

@@ -5,11 +5,11 @@ import * as UI from '@mcro/ui'
 
 @view
 export default class SidebarTitle {
-  render({ data, onBack }) {
+  render({ result, onBack }) {
     return (
       <title onClick={onBack}>
         <UI.Button $backButton size={1.1} circular icon="arrominleft" />
-        <UI.Title size={1.6}>{data.title}</UI.Title>
+        <UI.Title size={1.6}>{result.title}</UI.Title>
       </title>
     )
   }

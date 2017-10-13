@@ -21,12 +21,16 @@ export default class GithubPeopleSync {
   }
 
   syncMembers = async (org: string) => {
-    log('SYNC github people')
+    log('SYNC github people', org)
     const people = await this.helpers.fetch(`/orgs/${org}/members`)
+    if (!people) {
+      console.log('no people found')
+      return null
+    }
     const fullPeople = await Promise.all(
       people.map(person => this.helpers.fetch(`/users/${person.login}`))
     )
-    await createInChunks(fullPeople, this.createPerson)
+    return await createInChunks(fullPeople, this.createPerson)
   }
 
   createPerson = async (info: Object) => {

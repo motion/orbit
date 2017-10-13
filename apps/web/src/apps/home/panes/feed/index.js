@@ -103,20 +103,27 @@ class FeedMain extends React.Component<Props> {
       <Pane
         {...paneProps}
         actionBar={
-          <bar>
-            <div $$flex={2} $$row>
-              <UI.Button chromeless inline icon="funnel" opacity={0.5}>
-                Team GSD
-              </UI.Button>
-            </div>
-            <UI.Row
-              spaced={10}
-              itemProps={{ size: 1.2, inline: true, chromeless: true }}
-            >
-              <UI.Button>Create group chat</UI.Button>
-              <UI.Button>Define as team</UI.Button>
-            </UI.Row>
-          </bar>
+          <UI.Theme name="dark">
+            <bar>
+              <div $$flex={2} $$row>
+                <UI.Button chromeless inline icon="funnel" opacity={0.5}>
+                  Team GSD
+                </UI.Button>
+              </div>
+              <UI.Row
+                spaced={10}
+                itemProps={{
+                  size: 1.3,
+                  inline: true,
+                  chromeless: true,
+                  glow: true,
+                }}
+              >
+                <UI.Button>Create group chat</UI.Button>
+                <UI.Button>Define as team</UI.Button>
+              </UI.Row>
+            </bar>
+          </UI.Theme>
         }
         items={[
           () => <FeedHeader feedStore={feedStore} />,
@@ -139,10 +146,11 @@ class FeedMain extends React.Component<Props> {
 
   static style = {
     bar: {
-      padding: [10, 15],
+      padding: [7, 15],
       borderTop: [1, [0, 0, 0, 0.05]],
       flexFlow: 'row',
       alignItems: 'center',
+      background: '#8f108f',
     },
   }
 }

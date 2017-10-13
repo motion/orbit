@@ -11,12 +11,9 @@ class MessageSidebar {
 class MessageMain extends React.Component<Props> {
   render({ data, paneProps }) {
     return (
-      <Pane {...paneProps} light>
+      <Pane {...paneProps}>
         <div $$fullscreen $$centered>
-          123
-          <UI.Title size={3} color="red">
-            {(data && data.message) || 'no mesage'}
-          </UI.Title>
+          <UI.Title size={3}>{(data && data.message) || 'no mesage'}</UI.Title>
         </div>
       </Pane>
     )

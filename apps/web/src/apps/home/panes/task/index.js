@@ -37,7 +37,6 @@ class TaskMain {
 
     return (
       <Pane
-        light
         {...paneProps}
         items={taskStore.results}
         getItem={(item, index) => {

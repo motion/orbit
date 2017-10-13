@@ -106,12 +106,6 @@ class FeedMain extends React.Component<Props> {
     return (
       <Pane
         {...paneProps}
-        theme="light"
-        css={{
-          background: '#fff',
-          borderRadius: 6,
-          boxShadow: [[0, 2, 10, [0, 0, 0, 0.15]]],
-        }}
         actionBar={
           <bar>
             <div $$flex={2} $$row>

@@ -17,54 +17,52 @@ class DocMain {
     const { title, data: { contents, modifiedTime, owners } } = store.thing
     return (
       <doc>
-        <UI.Theme name="light">
-          <info css={{ width: '100%', flex: 1 }}>
-            <title
-              $$row
-              css={{
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <left $$row>
-                <UI.Title
-                  onClick={store.ref('isOpen').toggle}
-                  size={1.4}
-                  fontWeight={800}
-                  color="#000"
-                  marginBottom={1}
-                >
-                  {title}
-                </UI.Title>
-              </left>
-              <right $$row>
+        <info css={{ width: '100%', flex: 1 }}>
+          <title
+            $$row
+            css={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <left $$row>
+              <UI.Title
+                onClick={store.ref('isOpen').toggle}
+                size={1.4}
+                fontWeight={800}
+                color="#000"
+                marginBottom={1}
+              >
+                {title}
+              </UI.Title>
+            </left>
+            <right $$row>
+              <UI.Text
+                fontWeight={300}
+                css={{ marginTop: 10, marginLeft: 20 }}
+                opacity={0.7}
+              >
+                edited {formatDistance(modifiedTime, Date.now())} ago
+              </UI.Text>
+              <owner>
                 <UI.Text
                   fontWeight={300}
                   css={{ marginTop: 10, marginLeft: 20 }}
                   opacity={0.7}
                 >
-                  edited {formatDistance(modifiedTime, Date.now())} ago
+                  owned by {(owners || []).map(o => o.displayName).join(', ')}
                 </UI.Text>
-                <owner>
-                  <UI.Text
-                    fontWeight={300}
-                    css={{ marginTop: 10, marginLeft: 20 }}
-                    opacity={0.7}
-                  >
-                    owned by {(owners || []).map(o => o.displayName).join(', ')}
-                  </UI.Text>
-                </owner>
-              </right>
-            </title>
-          </info>
-          <content>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: contents.html,
-              }}
-            />
-          </content>
-        </UI.Theme>
+              </owner>
+            </right>
+          </title>
+        </info>
+        <content>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: contents.html,
+            }}
+          />
+        </content>
       </doc>
     )
   }
@@ -79,14 +77,13 @@ class DocMain {
     )
   }
 
-  render({ store }) {
+  render({ store, paneProps }) {
     return (
       <card>
-        <UI.Theme name="light">
-          <Pane
-            items={[() => (store.thing ? this.getDoc() : this.loading())]}
-          />
-        </UI.Theme>
+        <Pane
+          {...paneProps}
+          items={[() => (store.thing ? this.getDoc() : this.loading())]}
+        />
       </card>
     )
   }

@@ -29,6 +29,7 @@ export default class Main {
           setMainStore={stackItem.setMainStore}
           paneProps={{
             index,
+            light: true,
             stack: homeStore.stack,
             getActiveIndex: () => stackItem.firstIndex,
           }}

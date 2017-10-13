@@ -72,6 +72,33 @@ export class Thing extends Model {
   setCurrentUser = (currentUser: CurrentUser) => {
     this.currentUser = currentUser
   }
+
+  toResult(thing: Thing, extra: ?Object): PaneResult {
+    const icon =
+      thing.integration === 'google'
+        ? thing.integration + '-' + thing.type
+        : thing.integration
+
+    return {
+      id: thing.id || thing.data.id,
+      title: thing.title,
+      type: thing.type,
+      iconAfter: true,
+      icon: (
+        <img
+          src={`/images/${icon}-icon-light.svg`}
+          style={{ opacity: 0.5, width: 20 }}
+        />
+      ),
+      data: {
+        id: thing.id,
+        integration: thing.integration,
+        type: thing.type,
+        body: thing.body,
+      },
+      ...extra,
+    }
+  }
 }
 
 const ThingInstance = new Thing()

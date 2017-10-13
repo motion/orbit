@@ -4,6 +4,7 @@ import { store } from '@mcro/black'
 @store
 class StackItemStore {
   store = null
+  mainStore = null
   result = null
   col = 0
   active = [0, 0]
@@ -14,6 +15,9 @@ class StackItemStore {
   }
   setStore(store) {
     this.store = store
+  }
+  setMainStore(store) {
+    this.mainStore = store
   }
   get results() {
     return this.store ? this.store.results : []

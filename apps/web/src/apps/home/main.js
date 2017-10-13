@@ -26,6 +26,7 @@ export default class Main {
           navigate={stack.navigate}
           result={stackItem.sidebarSelected}
           data={stackItem.sidebarSelected.data}
+          setMainStore={stackItem.setMainStore}
           paneProps={{
             index,
             stack: homeStore.stack,

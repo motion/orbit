@@ -7,33 +7,6 @@ import { fuzzy } from '~/helpers'
 import { OS } from '~/helpers'
 import parser from './parser'
 
-function thingToResult(thing: Thing): PaneResult {
-  const icon =
-    thing.integration === 'google'
-      ? thing.integration + '-' + thing.type
-      : thing.integration
-
-  return {
-    id: thing.id || thing.data.id,
-    title: thing.title,
-    type: thing.type,
-    iconAfter: true,
-    icon: (
-      <img
-        src={`/images/${icon}-icon-light.svg`}
-        style={{ opacity: 0.5, width: 20 }}
-      />
-    ),
-    data: {
-      id: thing.id,
-      integration: thing.integration,
-      type: thing.type,
-      body: thing.body,
-    },
-    category: 'Recently',
-  }
-}
-
 export default class MainSidebarStore {
   props: PaneProps
   list = null
@@ -81,7 +54,7 @@ export default class MainSidebarStore {
   get things(): Array<PaneResult> {
     return fuzzy(this.topThings || [], this.search)
       .slice(0, this.search.length ? 100 : 8)
-      .map(thingToResult)
+      .map(x => Thing.toResult(x, { category: 'Recently' }))
   }
 
   pinned: Array<PaneResult> = [

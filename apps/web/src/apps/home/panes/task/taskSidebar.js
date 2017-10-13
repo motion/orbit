@@ -6,7 +6,7 @@ import { SidebarTitle } from '../helpers'
 
 export default class TaskSidebarStore {
   get taskStore() {
-    return this.props.stackItem.store
+    return this.props.stackItem.mainStore
   }
 
   get task() {
@@ -20,40 +20,23 @@ export default class TaskSidebarStore {
   @watch
   people = () =>
     this.task &&
-    Person.find({ ids: { $eq: { github: { $in: this.authorIds } } } })
+    Person.find()
+      .where('ids.github')
+      .in(this.authorIds)
 
-  results = [
-    {
-      type: 'task',
-      parent: this.props.result,
-      title: this.props.result.title,
-      display: <SidebarTitle {...this.props} />,
-      onClick: this.props.onBack,
-      id: this.props.data.id,
-    },
-    {
-      title: 'Product',
-      category: 'Teams',
-      type: 'message',
-      icon: 'pin',
-    },
-    {
-      title: 'Product',
-      category: 'Teams',
-      type: 'message',
-      icon: 'pin',
-    },
-    {
-      title: 'Product',
-      category: 'Teams',
-      type: 'message',
-      icon: 'pin',
-    },
-    {
-      title: 'Product',
-      category: 'Teams',
-      type: 'message',
-      icon: 'pin',
-    },
-  ]
+  get results() {
+    return [
+      {
+        type: 'task',
+        parent: this.props.result,
+        title: this.props.result.title,
+        display: <SidebarTitle {...this.props} />,
+        onClick: this.props.onBack,
+        id: this.props.data.id,
+      },
+      ...(this.people || []).map(x =>
+        Person.toResult(x, { category: 'People' })
+      ),
+    ]
+  }
 }

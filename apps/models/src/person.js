@@ -42,6 +42,21 @@ export class Person extends Model {
   settings = {
     database: 'people',
   }
+
+  toResult(person: PersonType, extra: ?Object) {
+    return {
+      id: person.id,
+      type: 'person',
+      title:
+        person.name ||
+        person.ids[Object.keys(person.ids)[0]] ||
+        person.emails[0],
+      icon: (
+        <img src={person.avatar} style={{ borderRadius: 100, width: 20 }} />
+      ),
+      ...extra,
+    }
+  }
 }
 
 const PersonInstance = new Person()

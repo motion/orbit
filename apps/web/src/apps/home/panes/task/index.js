@@ -17,7 +17,10 @@ const typeToElement = {
   taskStore: TaskStore,
 })
 class TaskMain {
-  render({ taskStore, paneStore, paneProps, result }) {
+  render({ taskStore, paneStore, paneProps, result, setMainStore }) {
+    // TODO automate this probably
+    setMainStore(taskStore)
+
     const getElement = ({ elName, data }, index) => {
       const Element = typeToElement[elName]
       return {

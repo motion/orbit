@@ -44,7 +44,7 @@ export default class HomeStore {
       .where('author')
       .in(['natew'])
       .sort({ updated: 'desc' })
-      .limit(5000)
+      .limit(5)
 
   willMount() {
     window.homeStore = this

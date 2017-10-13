@@ -40,6 +40,7 @@ export default class HomePage {
               css={inputStyle}
             />
             <dock
+              if={false}
               css={{
                 position: 'absolute',
                 top: 0,
@@ -60,16 +61,24 @@ export default class HomePage {
                       chromeless
                       key={item.id}
                       size={2}
-                      iconSize={30}
+                      iconSize={36}
                       icon={`social${item.integration}`}
+                      iconProps={{
+                        color: ['yellow', 'darkorange', 'purple', 'darkblue'][
+                          Math.floor(Math.random() * 5)
+                        ],
+                        style: {
+                          marginTop: -14,
+                        },
+                      }}
                       glow
                       badge={`#${item.data.number}`}
                     />
                     <UI.Text
                       ellipse
-                      size={0.9}
-                      fontWeight={600}
-                      color="#fff"
+                      size={0.8}
+                      fontWeight={200}
+                      opacity={0.6}
                       css={{
                         textAlign: 'center',
                         position: 'absolute',

@@ -93,7 +93,7 @@ export default class Button extends React.PureComponent {
       fontWeight: 600,
       borderRadius: 120000,
       justifyContent: 'center',
-      background: '#000',
+      background: '#555',
       color: '#fff',
       overflow: 'hidden',
       pointerEvents: 'none',

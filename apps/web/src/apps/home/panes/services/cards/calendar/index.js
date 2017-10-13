@@ -16,6 +16,7 @@ class Calendar {
             type="toggle"
             defaultValue={isActive}
             onChange={val => {
+              const Setting = CurrentUser.setting.google
               Setting.mergeUpdate({
                 values: {
                   calendarsActive: {

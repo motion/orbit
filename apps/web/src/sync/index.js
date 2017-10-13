@@ -29,8 +29,10 @@ export default class Sync {
     this.startJobs()
     this.startSyncers()
     this.watch(() => {
-      const title = this.enabled ? 'SYNCING ✅' : 'SYNC DISABLED'
-      log(`----${title}----`)
+      const title = this.enabled
+        ? 'SYNC ENABLED ✅ (disable: App.sync.disable())'
+        : 'SYNC DISABLED (enable: App.sync.enable())'
+      console.log(`%c----${title}----`, 'background: orange')
     })
   }
 
@@ -55,6 +57,7 @@ export default class Sync {
   enable() {
     this.enabled = true
     localStorage.setItem('runSyncers', true)
+    this.runAll()
   }
 
   disable() {

@@ -63,7 +63,6 @@ class SyncStatus {
 
   render({ service, store }) {
     store.things
-    console.log('service is', service)
     return this['render' + capitalize(service)]()
   }
 }
@@ -120,7 +119,7 @@ export default class Item {
       <service key={type}>
         <header>
           <top $$row>
-            <left $$row css={{ width: 100 }}>
+            <left $$row css={{ flex: 1 }}>
               <toggle $$row onClick={() => (store.open = !store.open)}>
                 <Collapse.Arrow if={store.auth} open={store.open} />
                 <logo>
@@ -128,15 +127,6 @@ export default class Item {
                 </logo>
               </toggle>
             </left>
-            <auth $$row>
-              <UI.Button
-                onClick={() => OS.send('open-settings', type)}
-                size={0.9}
-                css={{ marginBottom: 2 }}
-              >
-                authorize
-              </UI.Button>
-            </auth>
             <right if={store.auth} $$row css={{ alignItems: 'center' }}>
               <UI.Text
                 if={store.lastJob && store.lastJob.status === 2}
@@ -159,6 +149,13 @@ export default class Item {
               >
                 syncing now
               </UI.Text>
+              <UI.Button
+                onClick={() => OS.send('open-settings', type)}
+                size={0.9}
+                css={{ marginBottom: 2 }}
+              >
+                authorize
+              </UI.Button>
               <UI.Button
                 icon="refresh2"
                 onClick={store.runJob}

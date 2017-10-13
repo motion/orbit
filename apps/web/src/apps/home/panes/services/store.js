@@ -35,7 +35,7 @@ export default class ServicesStore {
     return countBy(this.things, 'integration')
   }
 
-  actions = type => Object.keys(App.sync[type].syncers)
+  actions = type => (App.sync[type] ? Object.keys(App.sync[type].syncers) : [])
 
   clearType = async name => {
     const things = await Thing.getAll()

@@ -1,4 +1,3 @@
-- syncer settings
 - sync everything
 - people context on everything
 - fix stack animations

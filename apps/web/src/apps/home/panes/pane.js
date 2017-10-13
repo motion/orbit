@@ -55,6 +55,7 @@ export default class Pane {
     sidebar,
     actionBar,
     light,
+    virtualized,
   }) {
     let { theme } = this.props
 

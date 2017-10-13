@@ -145,8 +145,8 @@ export async function start(recreate?: boolean) {
   }
   if (recreate || !app) {
     app = new App()
-    await app.start(recreate)
     window.App = app
+    await app.start(recreate)
   }
   window.appDisposing = false
 }

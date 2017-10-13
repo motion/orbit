@@ -114,72 +114,69 @@ class NotFound {
 })
 export default class Item {
   render({ store, serviceStore, type }) {
-    console.log('type is', type)
     const Card = Cards[type] || NotFound
 
     return (
-      <UI.Theme name="light">
-        <service key={type} css={{ flex: 1 }}>
-          <header>
-            <top $$row>
-              <left $$row css={{ width: 100 }}>
-                <toggle $$row onClick={() => (store.open = !store.open)}>
-                  <Collapse.Arrow if={store.auth} open={store.open} />
-                  <logo>
-                    <Logo service={type} />
-                  </logo>
-                </toggle>
-              </left>
-              <auth if={!store.auth} $$row>
-                <UI.Button
-                  onClick={() => OS.send('open-settings', type)}
-                  size={0.9}
-                  css={{ marginBottom: 2 }}
-                >
-                  authorize
-                </UI.Button>
-              </auth>
-              <right if={store.auth} $$row css={{ alignItems: 'center' }}>
-                <UI.Text
-                  if={store.lastJob && store.lastJob.status === 2}
-                  size={0.9}
-                  opacity={0.7}
-                  css={{ marginLeft: 10 }}
-                >
-                  synced{' '}
-                  {formatDistance(
-                    new Date(store.lastJob.createdAt),
-                    Date.now()
-                  )}{' '}
-                  ago
-                </UI.Text>
-                <UI.Text
-                  if={store.lastJob && store.lastJob.status < 2}
-                  size={0.9}
-                  opacity={0.7}
-                  css={{ marginLeft: 10 }}
-                >
-                  syncing now
-                </UI.Text>
-                <UI.Button
-                  icon="refresh2"
-                  onClick={store.runJob}
-                  size={0.8}
-                  css={{ marginLeft: 10 }}
-                />
-              </right>
-            </top>
-            <sub if={store.auth}>
-              <SyncStatus store={serviceStore} service={type} />
-            </sub>
-          </header>
-          <Collapse.Body open={store.open && store.auth}>
-            <card>
-              <Card if={store.open && store.auth} store={store} />
-            </card>
-          </Collapse.Body>
-        </service>
-      </UI.Theme>
+      <service key={type}>
+        <header>
+          <top $$row>
+            <left $$row css={{ width: 100 }}>
+              <toggle $$row onClick={() => (store.open = !store.open)}>
+                <Collapse.Arrow if={store.auth} open={store.open} />
+                <logo>
+                  <Logo service={type} />
+                </logo>
+              </toggle>
+            </left>
+            <auth if={!store.auth} $$row>
+              <UI.Button
+                onClick={() => OS.send('open-settings', type)}
+                size={0.9}
+                css={{ marginBottom: 2 }}
+              >
+                authorize
+              </UI.Button>
+            </auth>
+            <right if={store.auth} $$row css={{ alignItems: 'center' }}>
+              <UI.Text
+                if={store.lastJob && store.lastJob.status === 2}
+                size={0.9}
+                opacity={0.7}
+                css={{ marginLeft: 10 }}
+              >
+                synced{' '}
+                {formatDistance(
+                  new Date(store.lastJob.createdAt),
+                  Date.now()
+                )}{' '}
+                ago
+              </UI.Text>
+              <UI.Text
+                if={store.lastJob && store.lastJob.status < 2}
+                size={0.9}
+                opacity={0.7}
+                css={{ marginLeft: 10 }}
+              >
+                syncing now
+              </UI.Text>
+              <UI.Button
+                icon="refresh2"
+                onClick={store.runJob}
+                size={0.8}
+                css={{ marginLeft: 10 }}
+              />
+            </right>
+          </top>
+          <sub if={store.auth}>
+            <SyncStatus store={serviceStore} service={type} />
+          </sub>
+        </header>
+        <Collapse.Body open={store.open && store.auth}>
+          <card>
+            <Card if={store.open && store.auth} store={store} />
+          </card>
+        </Collapse.Body>
+      </service>
     )
   }
 

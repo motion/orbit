@@ -75,6 +75,27 @@ export default class Pane {
       theme = 'light'
     }
 
+    const list = items && (
+      <UI.List
+        getRef={paneStore.setList}
+        groupKey={groupKey}
+        onSelect={this.onSelect}
+        virtualized={{
+          measure: true,
+          ...virtualProps,
+        }}
+        itemProps={{
+          padding: 0,
+          highlightBackground: [0, 0, 0, 0.08],
+          highlightColor: [255, 255, 255, 1],
+          ...itemProps,
+        }}
+        items={items}
+        getItem={getItem || getItemDefault}
+        {...listProps}
+      />
+    )
+
     return (
       <UI.Theme name={theme}>
         <card
@@ -83,27 +104,10 @@ export default class Pane {
           $light={light}
           $sidebar={sidebar}
         >
-          <content if={children}>{children}</content>
-          <content if={items}>
-            <UI.List
-              getRef={paneStore.setList}
-              groupKey={groupKey}
-              onSelect={this.onSelect}
-              virtualized={{
-                measure: true,
-                ...virtualProps,
-              }}
-              itemProps={{
-                padding: 0,
-                highlightBackground: [0, 0, 0, 0.08],
-                highlightColor: [255, 255, 255, 1],
-                ...itemProps,
-              }}
-              items={items}
-              getItem={getItem || getItemDefault}
-              {...listProps}
-            />
+          <content if={children}>
+            {typeof children === 'function' ? children(list) : children}
           </content>
+          <content if={!children}>{list}</content>
           <actions if={actionBar}>{actionBar}</actions>
         </card>
       </UI.Theme>

@@ -14,6 +14,7 @@ class SidebarContainer {
     return (
       <ProvideStore store={sidebarStore} storeProps={rest}>
         {store => {
+          window.sidebarStore = store // TODO: remove, TEMP
           this.props.setStore(store)
           return (
             <PaneView

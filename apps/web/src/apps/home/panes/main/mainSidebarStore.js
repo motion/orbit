@@ -94,17 +94,17 @@ export default class MainSidebarStore {
 
   pinned: Array<PaneResult> = [
     {
-      title: 'GSD',
+      title: <UI.Title size={1.5}>Team GSD</UI.Title>,
       type: 'feed',
       icon: (
-        <icon style={{ flexFlow: 'row', marginRight: 10 }}>
+        <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>
           {['steph.jpg', 'nick.jpg', 'me.jpg'].map((path, index) => (
             <img
               key={index}
               style={{
                 borderRadius: 12,
-                width: 20,
-                height: 20,
+                width: 25,
+                height: 25,
                 marginRight: -10,
                 transform: `rotate(${{
                   0: '-15%',

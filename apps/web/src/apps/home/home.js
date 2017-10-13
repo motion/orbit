@@ -39,6 +39,51 @@ export default class HomePage {
               fontWeight={200}
               css={inputStyle}
             />
+            <dock
+              css={{
+                position: 'absolute',
+                top: 0,
+                right: 20,
+                bottom: 0,
+                alignItems: 'center',
+                flexFlow: 'row',
+              }}
+            >
+              <UI.Row spaced>
+                {(homeStore.myrecent || []).map(item => (
+                  <wrap
+                    key={item.id}
+                    css={{ position: 'relative', marginLeft: 15 }}
+                  >
+                    <UI.Button
+                      circular
+                      chromeless
+                      key={item.id}
+                      size={2}
+                      iconSize={30}
+                      icon={`social${item.integration}`}
+                      glow
+                      badge={`#${item.data.number}`}
+                    />
+                    <UI.Text
+                      ellipse
+                      size={0.9}
+                      fontWeight={600}
+                      color="#fff"
+                      css={{
+                        textAlign: 'center',
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                      }}
+                    >
+                      {item.title}
+                    </UI.Text>
+                  </wrap>
+                ))}
+              </UI.Row>
+            </dock>
             <forwardcomplete>
               <fwdcontents>{homeStore.peekItem}</fwdcontents>
             </forwardcomplete>

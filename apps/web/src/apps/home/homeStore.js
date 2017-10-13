@@ -1,3 +1,5 @@
+import { watch } from '@mcro/black'
+import { Thing } from '~/app'
 import { find } from 'lodash'
 import { SHORTCUTS } from '~/stores/rootStore'
 import Mousetrap from 'mousetrap'
@@ -35,6 +37,14 @@ export default class HomeStore {
   fullscreen = false
   traps = {}
   lastKey = null
+
+  @watch
+  myrecent = () =>
+    Thing.find()
+      .where('author')
+      .in(['natew'])
+      .sort({ updated: 'desc' })
+      .limit(5000)
 
   willMount() {
     window.homeStore = this

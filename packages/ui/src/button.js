@@ -16,6 +16,7 @@ export default class Button extends React.PureComponent {
     chromeless,
     type,
     glow,
+    glint,
     glowProps,
     badgeProps,
     onClick: _onClick,
@@ -45,7 +46,7 @@ export default class Button extends React.PureComponent {
         sizeHeight
         sizeIcon={1.1}
         borderWidth={1}
-        glint={!chromeless}
+        glint={typeof glint === 'undefined' ? !chromeless : glint}
         chromeless={chromeless}
         row
         align="center"
@@ -62,7 +63,6 @@ export default class Button extends React.PureComponent {
           ...glowProps,
           ...(theme && theme.glow),
         }}
-        {...props}
         onClick={onClick}
         noElement
         after={
@@ -74,6 +74,7 @@ export default class Button extends React.PureComponent {
             <contents>{badge}</contents>
           </badge>
         }
+        {...props}
       >
         {children}
       </SizedSurface>
@@ -92,15 +93,14 @@ export default class Button extends React.PureComponent {
       fontWeight: 600,
       borderRadius: 120000,
       justifyContent: 'center',
-      background: 'linear-gradient(left, red, purple)',
+      background: '#000',
       color: '#fff',
       overflow: 'hidden',
       pointerEvents: 'none',
-      border: [8, '#fff'],
       zIndex: 100000000,
       transform: {
-        scale: 0.14,
-        x: '345%',
+        scale: 0.1,
+        x: '465%',
         y: 0,
         z: 0,
       },
@@ -114,7 +114,7 @@ export default class Button extends React.PureComponent {
     contents: {
       alignItems: 'center',
       justifyContent: 'center',
-      margin: [0, 18],
+      padding: [0, 33],
     },
   }
 }

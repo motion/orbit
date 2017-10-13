@@ -47,7 +47,7 @@ export default class MainSidebarStore {
       .where('author')
       .in(['natew'])
       .sort({ updated: 'desc' })
-      .limit(15000)
+      .limit(5000)
 
   @watch
   teamrecent = () =>
@@ -55,46 +55,20 @@ export default class MainSidebarStore {
       .where('author')
       .ne('natew')
       .sort({ updated: 'desc' })
-      .limit(15000)
+      .limit(5000)
 
   get recently() {
     const chop = 3
-
-    let moreMine = []
-    let moreTheirs = []
     const mine = this.myrecent || []
     const theirs = this.teamrecent || []
-
-    if (mine.length > chop) {
-      moreMine = [
-        {
-          title: (
-            <UI.Title opacity={0.5}>{mine.length - chop} more...</UI.Title>
-          ),
-          type: 'main',
-        },
-      ]
-    }
-    if (theirs.length > chop) {
-      moreTheirs = [
-        {
-          title: (
-            <UI.Title opacity={0.5}>{theirs.length - chop} more...</UI.Title>
-          ),
-          type: 'main',
-        },
-      ]
-    }
 
     return [
       ...mine
         .slice(0, !this.props.homeStore.search ? chop : Number.MAX_VALUE)
         .map(x => Thing.toResult(x, { category: 'My Recent' })),
-      ...moreMine,
       ...theirs
         .slice(0, !this.props.homeStore.search ? chop : Number.MAX_VALUE)
         .map(x => Thing.toResult(x, { category: 'Team Recent' })),
-      ...moreTheirs,
     ]
   }
 

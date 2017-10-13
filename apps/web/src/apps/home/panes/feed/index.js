@@ -103,10 +103,16 @@ class FeedMain extends React.Component<Props> {
       <Pane
         {...paneProps}
         actionBar={
-          <UI.Theme name="dark">
+          <UI.Theme name="clear-light">
             <bar>
               <div $$flex={2} $$row>
-                <UI.Button chromeless inline icon="funnel" opacity={0.5}>
+                <UI.Button
+                  chromeless
+                  inline
+                  icon="funnel"
+                  opacity={0.5}
+                  size={1.3}
+                >
                   Team GSD
                 </UI.Button>
               </div>
@@ -146,11 +152,16 @@ class FeedMain extends React.Component<Props> {
 
   static style = {
     bar: {
-      padding: [7, 15],
+      padding: [10, 15],
       borderTop: [1, [0, 0, 0, 0.05]],
       flexFlow: 'row',
       alignItems: 'center',
-      background: '#8f108f',
+      position: 'fixed',
+      bottom: 0,
+      left: 250,
+      right: 0,
+      background: [255, 255, 255, 0.3],
+      backdropFilter: 'blur(10px)',
     },
   }
 }

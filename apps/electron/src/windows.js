@@ -249,6 +249,8 @@ export default class ExampleApp extends React.Component {
           }}
           webPreferences={{
             nativeWindowOpen: true,
+            experimentalFeatures: true,
+            transparentVisuals: true,
           }}
         />
         {appWindows.map(win => {

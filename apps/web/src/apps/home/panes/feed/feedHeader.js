@@ -18,91 +18,75 @@ export default class FeedHeader {
     const avatars = feedStore.filters.people.slice(0, 2)
 
     return (
-      <UI.Theme name="light">
-        <section>
-          <title
-            css={{
-              flex: 1,
-              justifyContent: 'flex-end',
-            }}
-          >
-            <main css={{ flexFlow: 'row', alignItems: 'flex-end' }}>
-              {avatars.map((name, index) => (
-                <avatar
-                  key={index}
-                  css={{
-                    alignSelf: 'center',
-                    width: 42,
-                    height: 42,
-                    marginRight: index === avatars.length - 1 ? 18 : -35,
-                    borderRadius: 12,
-                    transform: {
-                      rotate: {
-                        0: '-15deg',
-                        1: '0deg',
-                        2: '15deg',
-                      }[index],
-                    },
-                    backgroundImage: bg(name),
-                    backgroundSize: 'cover',
-                  }}
-                />
-              ))}
-              <titles css={{ flex: 1 }}>
-                <UI.Title
-                  onClick={feedStore.ref('isOpen').toggle}
-                  size={2}
-                  fontWeight={800}
-                  marginBottom={5}
-                >
+      <section>
+        <title>
+          <main css={{ flexFlow: 'row', alignItems: 'flex-end' }}>
+            {avatars.map((name, index) => (
+              <avatar
+                key={index}
+                css={{
+                  alignSelf: 'center',
+                  width: 42,
+                  height: 42,
+                  marginRight: index === avatars.length - 1 ? 18 : -35,
+                  borderRadius: 12,
+                  transform: {
+                    rotate: {
+                      0: '-15deg',
+                      1: '0deg',
+                      2: '15deg',
+                    }[index],
+                  },
+                  backgroundImage: bg(name),
+                  backgroundSize: 'cover',
+                }}
+              />
+            ))}
+            <titles css={{ flex: 1 }}>
+              <UI.Title
+                onClick={feedStore.ref('isOpen').toggle}
+                size={2}
+                fontWeight={800}
+                marginBottom={5}
+              >
+                {feedStore.result.title}
+              </UI.Title>
+              <subtitle
+                $$row
+                css={{
+                  flex: 1,
+                  alignItems: 'center',
+                  fontSize: 16,
+                  opacity: 0.7,
+                }}
+              >
+                <UI.Text size={1.1} opacity={0.8}>
                   {feedStore.filters.people[0] === 'Me'
                     ? 'Nate Wienert'
                     : feedStore.filters.people
                         .map(x => x.replace(/ .*/, ''))
                         .join(', ')}
-                </UI.Title>
-                <subtitle
-                  $$row
-                  css={{
-                    flex: 1,
-                    alignItems: 'center',
-                    fontSize: 16,
-                    opacity: 0.7,
-                  }}
-                >
-                  <UI.Text size={1.1} opacity={0.8}>
-                    Now:&nbsp;
-                  </UI.Text>
-                  <UI.Button
-                    inline
-                    chromeless
-                    borderRadius={50}
-                    size={1.2}
-                    marginBottom={-5}
-                  >
-                    #58 Something With a Long Title
-                  </UI.Button>
-                </subtitle>
-              </titles>
-            </main>
-          </title>
+                </UI.Text>
+              </subtitle>
+            </titles>
+          </main>
+        </title>
 
-          <rightSide>
-            <aside>
-              <card>
-                <asideContent>
-                  <stats>
-                    <UI.Text>natewienert@gmail.com</UI.Text>
-                    <UI.Text>
-                      Team: <Link>Motion</Link>
-                    </UI.Text>
-                  </stats>
-                </asideContent>
-              </card>
-            </aside>
-          </rightSide>
-        </section>
-      </UI.Theme>
+        <rightSide>
+          <aside>
+            <card>
+              <asideContent>
+                <stats>
+                  <UI.Text>natewienert@gmail.com</UI.Text>
+                  <UI.Text>
+                    Team: <Link>Motion</Link>
+                  </UI.Text>
+                </stats>
+              </asideContent>
+            </card>
+          </aside>
+        </rightSide>
+      </section>
     )
   }
 
@@ -115,6 +99,10 @@ export default class FeedHeader {
       flex: 1,
       alignItems: 'flex-end',
       flexFlow: 'row',
+    },
+    title: {
+      flex: 1,
+      justifyContent: 'flex-end',
     },
     rightSide: {
       position: 'relative',

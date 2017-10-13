@@ -94,7 +94,8 @@ export default class MainSidebarStore {
 
   pinned: Array<PaneResult> = [
     {
-      title: <UI.Title size={1.5}>Team GSD</UI.Title>,
+      title: 'Team GSD',
+      displayTitle: <UI.Title size={1.5}>Team GSD</UI.Title>,
       type: 'feed',
       icon: (
         <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>

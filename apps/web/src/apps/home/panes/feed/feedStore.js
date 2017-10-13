@@ -60,7 +60,7 @@ export default class FeedStore {
   events = () =>
     Event.find({ created: { $ne: null } })
       .sort({ created: 'desc' })
-      .limit(200)
+      .limit(100)
 
   willMount() {
     this.react(

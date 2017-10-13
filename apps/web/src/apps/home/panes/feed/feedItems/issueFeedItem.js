@@ -31,7 +31,6 @@ export default class IssueFeedItem {
             </main>
             <cards
               css={{
-                height: 100,
                 overflow: 'hidden',
                 justifyContent: 'flex-start',
               }}
@@ -51,7 +50,12 @@ export default class IssueFeedItem {
                 </nav>
               </header>
               <UI.Surface
-                color="black"
+                css={{
+                  position: 'absolute',
+                  top: 0,
+                  width: 500,
+                  right: -400,
+                }}
                 background="#fff"
                 flex={1}
                 borderRadius={5}

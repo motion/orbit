@@ -1,7 +1,7 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
-import { Thing } from '~/app'
+import App, { Thing } from '~/app'
 import Things from '../../views/things'
 import * as Collapse from '../../views/collapse'
 import Repos from './repos'
@@ -122,7 +122,9 @@ class GithubStore {
 
   isSyncing = repo => {
     const { Github } = App.services
-
+    if (!Github.setting.values.repos) {
+      return false
+    }
     return Github.setting.values.repos[repo.fullName] || false
   }
 

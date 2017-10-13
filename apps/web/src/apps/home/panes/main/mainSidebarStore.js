@@ -131,7 +131,7 @@ export default class MainSidebarStore {
     {
       title: 'Team GSD',
       type: 'feed',
-      icon: 'fox',
+      icon: 'social-slack',
       data: {
         people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
       },

@@ -1,6 +1,6 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
-import App, { Job } from '~/app'
+import { CurrentUser, Job } from '~/app'
 import * as Cards from './cards'
 import { OS } from '~/helpers'
 import * as Collapse from './views/collapse'

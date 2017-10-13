@@ -3,8 +3,17 @@ import { SHORTCUTS } from '~/stores/rootStore'
 import Mousetrap from 'mousetrap'
 import { OS } from '~/helpers'
 import StackStore from './stackStore'
-import { debounce } from 'lodash'
+//import { debounce } from 'lodash'
 import keycode from 'keycode'
+
+const debounce = (fn, timeout) => {
+  let clearId = null
+  return (...args) => {
+    if (clearId) cancelIdleCallback(clearId)
+
+    clearId = requestIdleCallback(() => fn(...args), { timeout })
+  }
+}
 
 const peeks = [
   'remind',
@@ -93,8 +102,9 @@ export default class HomeStore {
   }
 
   setSearch = debounce(text => {
+    console.log('debounced', text)
     this.search = text
-  }, 200)
+  }, 20)
 
   attachTrap(attachName, el) {
     this.traps[attachName] = new Mousetrap(el)

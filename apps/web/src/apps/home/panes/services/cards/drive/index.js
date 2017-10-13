@@ -1,7 +1,7 @@
 import * as UI from '@mcro/ui'
 import { view } from '@mcro/black'
 import { sortBy, reverse } from 'lodash'
-import { Thing } from '~/app'
+import App, { Thing } from '~/app'
 import * as Collapse from '../../views/collapse'
 import { formatDistance } from 'date-fns'
 

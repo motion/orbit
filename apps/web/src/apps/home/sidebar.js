@@ -59,6 +59,7 @@ export default class Sidebar {
               glow: true,
               padding: [10, 12],
               iconAfter: true,
+              //iconSize: 22,
             },
             width,
             groupKey: 'category',

@@ -138,10 +138,10 @@ export default class ListItem extends React.Component<Props> {
         onClick={onClick}
         glow={glow}
         glowProps={glowProps}
-        sizeIcon={1.2}
+        sizeIcon={1.5}
         iconProps={{
           alignSelf: 'flex-start',
-          opacity: 0.8,
+          opacity: 0.6,
           ...iconProps,
         }}
         style={style}

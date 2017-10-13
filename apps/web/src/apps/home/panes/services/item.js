@@ -128,7 +128,7 @@ export default class Item {
                 </logo>
               </toggle>
             </left>
-            <auth if={!store.auth} $$row>
+            <auth $$row>
               <UI.Button
                 onClick={() => OS.send('open-settings', type)}
                 size={0.9}

@@ -84,17 +84,12 @@ export class Thing extends Model {
       title: thing.title,
       type: thing.type,
       iconAfter: true,
-      icon: (
-        <img
-          src={`/images/${icon}-icon-light.svg`}
-          style={{ opacity: 0.5, width: 20 }}
-        />
-      ),
+      icon: `social-${icon}`,
       data: {
         id: thing.id,
         integration: thing.integration,
         type: thing.type,
-        body: thing.body,
+        body: (thing.body || '').slice(0, 200),
       },
       ...extra,
     }

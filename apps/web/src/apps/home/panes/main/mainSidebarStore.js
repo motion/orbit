@@ -4,12 +4,14 @@ import { watch } from '@mcro/black'
 import type { PaneProps, PaneResult } from '~/types'
 import { Thing } from '~/app'
 import { fuzzy } from '~/helpers'
-import { OS } from '~/helpers'
-import parser from './parser'
 
 export default class MainSidebarStore {
   props: PaneProps
   list = null
+
+  get search() {
+    return this.props.homeStore.search
+  }
 
   onListRef(ref) {
     if (!this.list) {
@@ -34,27 +36,60 @@ export default class MainSidebarStore {
   }
 
   @watch
-  topThingsRaw: ?Array<Thing> = (() =>
+  myrecent = () =>
     Thing.find()
+      .where('author')
+      .in(['natew'])
       .sort({ updated: 'desc' })
-      .limit(3000): any)
+      .limit(5)
 
-  get topThings() {
-    return this.topThingsRaw || []
-  }
+  @watch
+  teamrecent = () =>
+    Thing.find()
+      .where('author')
+      .ne('natew')
+      .sort({ updated: 'desc' })
+      .limit(5)
 
-  get search() {
-    return this.props.homeStore.search
-  }
+  get recently() {
+    const chop = 3
 
-  get parserResult() {
-    return this.search ? parser(this.search) : null
-  }
+    let moreMine = []
+    let moreTheirs = []
+    const mine = this.myrecent || []
+    const theirs = this.teamrecent || []
 
-  get things(): Array<PaneResult> {
-    return fuzzy(this.topThings || [], this.search)
-      .slice(0, this.search.length ? 100 : 8)
-      .map(x => Thing.toResult(x, { category: 'Recently' }))
+    if (mine.length > chop) {
+      moreMine = [
+        {
+          title: (
+            <UI.Title opacity={0.5}>{mine.length - chop} more...</UI.Title>
+          ),
+          type: 'main',
+        },
+      ]
+    }
+    if (theirs.length > chop) {
+      moreTheirs = [
+        {
+          title: (
+            <UI.Title opacity={0.5}>{theirs.length - chop} more...</UI.Title>
+          ),
+          type: 'main',
+        },
+      ]
+    }
+
+    return [
+      ...mine
+        .slice(0, chop)
+        .map(x => Thing.toResult(x, { category: 'My Recent' })),
+      ...moreMine,
+      ...theirs
+        .slice(0, chop)
+        .map(x => Thing.toResult(x, { category: 'Team Recent' })),
+      ...moreTheirs,
+    ]
   }
 
   pinned: Array<PaneResult> = [
@@ -89,47 +124,6 @@ export default class MainSidebarStore {
     },
   ]
 
-  top: Array<PaneResult> = [
-    {
-      data: { message: 'my team' },
-      title: 'Product',
-      category: 'Teams',
-      type: 'message',
-      icon: 'pin',
-    },
-    {
-      data: { message: 'from company' },
-      title: 'Search',
-      category: 'Teams',
-      type: 'message',
-    },
-    {
-      data: { message: 'from company' },
-      title: <UI.Text opacity={0.5}>25 more</UI.Text>,
-      category: 'Teams',
-      type: 'message',
-    },
-
-    {
-      data: { message: 'my team' },
-      title: 'Foxwoods',
-      category: 'Projects',
-      type: 'message',
-    },
-    {
-      data: { message: 'from company' },
-      title: '16: Fiber',
-      category: 'Projects',
-      type: 'message',
-    },
-    {
-      data: { message: 'from company' },
-      title: <UI.Text opacity={0.5}>200 more</UI.Text>,
-      category: 'Projects',
-      type: 'message',
-    },
-  ]
-
   extras = [
     {
       title: 'Services',
@@ -140,7 +134,7 @@ export default class MainSidebarStore {
   ]
 
   get results(): Array<PaneResult> {
-    const all = [...this.pinned, ...this.top, ...this.things, ...this.extras]
+    const all = [...this.pinned, ...this.recently, ...this.extras]
     const search = fuzzy(all, this.search)
     return search
   }

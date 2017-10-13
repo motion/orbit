@@ -21,7 +21,7 @@ export default function getItem(getActiveIndex) {
           result.data.body && (
             <UI.Text key={0} lineHeight={20} opacity={0.5}>
               {getDate(result) + ' · '}
-              {(result.data.body && result.data.body.slice(0, 120)) || ''}
+              {(result.data.body && result.data.body.slice(0, 50)) || ''}
             </UI.Text>
           ),
         !result.data &&

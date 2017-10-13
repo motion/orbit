@@ -91,6 +91,7 @@ export type Props = {
   borderRadius?: number,
 }
 
+const ICON_SCALE = 16
 const ICON_PAD = 10
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]
@@ -357,6 +358,8 @@ export default class Surface extends React.PureComponent<Props> {
     icon: {
       pointerEvents: 'none',
       height: 'auto',
+      marginTop: 2,
+      marginBottom: 2,
     },
     hasIconBefore: {
       // this adjusts for height
@@ -557,7 +560,7 @@ export default class Surface extends React.PureComponent<Props> {
     }
 
     const iconSize =
-      props.iconSize || Math.round(size * 11 * (props.sizeIcon || 1))
+      props.iconSize || Math.round(size * ICON_SCALE * (props.sizeIcon || 1))
 
     // TODO figure out better pattern for this
     self.themeValues = {

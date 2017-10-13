@@ -85,7 +85,9 @@ class CurrentUser {
   @watch
   setting = () =>
     (this.settings &&
-      this.settings.reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})) ||
+      this.settings
+        .filter(x => x.type && x.type !== 'undefined')
+        .reduce((acc, cur) => ({ ...acc, [cur.type]: cur }), {})) ||
     {}
 
   constructor(options: Object) {

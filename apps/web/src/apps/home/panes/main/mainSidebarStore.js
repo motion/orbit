@@ -35,21 +35,27 @@ export default class MainSidebarStore {
     )
   }
 
-  people = Person.find()
-    .sort({ updatedAt: 'desc' })
-    .limit(3)
+  @watch
+  people = () =>
+    Person.find()
+      .sort({ updatedAt: 'desc' })
+      .limit(3)
 
-  myrecent = Thing.find()
-    .where('author')
-    .in(['natew'])
-    .sort({ updated: 'desc' })
-    .limit(5)
+  @watch
+  myrecent = () =>
+    Thing.find()
+      .where('author')
+      .in(['natew'])
+      .sort({ updated: 'desc' })
+      .limit(5)
 
-  teamrecent = Thing.find()
-    .where('author')
-    .ne('natew')
-    .sort({ updated: 'desc' })
-    .limit(5)
+  @watch
+  teamrecent = () =>
+    Thing.find()
+      .where('author')
+      .ne('natew')
+      .sort({ updated: 'desc' })
+      .limit(5)
 
   get recently() {
     const chop = 3

@@ -10,7 +10,7 @@ export default class SidebarTitle {
       <sidebartitle onClick={onBack}>
         <UI.Button
           $backButton
-          size={1.2}
+          size={1}
           circular
           theme="light"
           icon="arrominleft"

@@ -91,7 +91,7 @@ export type Props = {
   borderRadius?: number,
 }
 
-const ICON_SCALE = 16
+const ICON_SCALE = 12
 const ICON_PAD = 10
 const LINE_HEIGHT = 30
 const DEFAULT_GLOW_COLOR = [255, 255, 255]

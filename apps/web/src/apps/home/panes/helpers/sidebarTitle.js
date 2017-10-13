@@ -16,7 +16,7 @@ export default class SidebarTitle {
           icon="arrominleft"
           boxShadow="0 0 10px rgba(0,0,0,0.1)"
         />
-        <UI.Title $title size={1.2}>
+        <UI.Title $title size={1.3}>
           {result.title}
         </UI.Title>
       </sidebartitle>
@@ -34,12 +34,9 @@ export default class SidebarTitle {
     title: {
       display: 'flex',
       flex: 1,
-      padding: [5, 0],
     },
     backButton: {
-      marginTop: 5,
-      marginRight: 8,
-      marginLeft: 5,
+      margin: [0, 8],
       alignSelf: 'flex-start',
     },
   }

@@ -62,7 +62,7 @@ export class UserModel extends Model {
   settings = {
     database: 'users',
     autoSync: {
-      push: Constants.AUTH_SERVICE,
+      push: !!Constants.AUTH_SERVICE,
       pull: 'basic',
     },
   }

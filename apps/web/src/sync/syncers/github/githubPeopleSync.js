@@ -43,8 +43,6 @@ export default class GithubPeopleSync {
       })
     }
 
-    console.log('person is now', person)
-
     return await person.mergeUpdate({
       location: info.location || '',
       bio: info.bio || '',

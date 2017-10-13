@@ -1,6 +1,7 @@
 // @flow
 import global from 'global'
-import { Model, query, array, object, str } from '@mcro/model'
+import { Model, array, object, str } from '@mcro/model'
+import * as Constants from '~/constants'
 
 export const methods = {
   token(provider: string) {
@@ -61,7 +62,7 @@ export class UserModel extends Model {
   settings = {
     database: 'users',
     autoSync: {
-      push: true,
+      push: Constants.AUTH_SERVICE,
       pull: 'basic',
     },
   }

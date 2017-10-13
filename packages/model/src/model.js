@@ -350,7 +350,7 @@ export default class Model {
     this.options = options || {}
 
     // avoid re-connect on hmr
-    if (this.database) {
+    if (this.database || this.connected) {
       return
     }
 

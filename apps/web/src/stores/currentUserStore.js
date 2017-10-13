@@ -230,7 +230,10 @@ class CurrentUser {
       if (info) {
         await this.user.mergeUpdate({
           authorizations: {
-            [provider]: info,
+            [provider]: {
+              ...info,
+              updatedAt: Date.now(),
+            },
           },
         })
       }

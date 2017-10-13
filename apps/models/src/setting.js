@@ -1,6 +1,7 @@
 // @flow
 import global from 'global'
 import { Model, object, str } from '@mcro/model'
+import * as Constants from '~/constants'
 
 export class SettingModel extends Model {
   static props = {
@@ -17,7 +18,8 @@ export class SettingModel extends Model {
   settings = {
     database: 'settings',
     autoSync: {
-      push: true,
+      // push settings if auth pane
+      push: Constants.AUTH_SERVICE,
       pull: 'basic',
     },
   }

@@ -18,10 +18,7 @@ function Strategy(options, verify) {
     options.profileUrl || 'https://slack.com/api/users.identity?token=' // requires 'identity.basic' scope
   this._team = options.team
 
-  OAuth2Strategy.call(this, options, function(...args) {
-    console.log('incoming', args, 'outgoing', verify(...args))
-    return verify(...args)
-  })
+  OAuth2Strategy.call(this, options, verify)
   this.name = options.name || 'slack'
 
   // warn is not enough scope
@@ -55,7 +52,6 @@ Strategy.prototype.userProfile = function(accessToken, done) {
   if (!accessToken) {
     throw new Error('error')
   }
-  console.log('first get', accessToken, arguments)
   // this._oauth2.setAccessTokenName('token')
 
   this.get(this.profileUrl + accessToken, function(err, body, res) {
@@ -64,8 +60,6 @@ Strategy.prototype.userProfile = function(accessToken, done) {
     } else {
       try {
         var profile = JSON.parse(body)
-
-        console.log('got back profile', profile)
 
         if (profile.user && profile.user.email) {
           profile.emails = [{ value: profile.user.email }]
@@ -84,7 +78,6 @@ Strategy.prototype.userProfile = function(accessToken, done) {
           profile.id = profile.user.id
           profile.displayName = profile.user.name
           profile.error = null
-          profile._json = profile
           profile._raw = body
 
           done(null, profile)
@@ -100,7 +93,6 @@ Strategy.prototype.userProfile = function(accessToken, done) {
   * which is a violation of the RFC so lets override and not add the header and supply only the token for qs.
   */
 Strategy.prototype.get = function(url, callback) {
-  console.log('get', url)
   this._oauth2._request('GET', url, {}, '', '', callback)
 }
 
@@ -117,7 +109,6 @@ Strategy.prototype.authorizationParams = function(options) {
   if (team) {
     params.team = team
   }
-  console.log('auth params', options)
   return params
 }
 

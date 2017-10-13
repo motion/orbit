@@ -2,16 +2,20 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
+import * as Constants from '~/constants'
 
-const integration = window.location.search.match(/service\=(.*)/)[1]
+const ALL_INTEGRATIONS = ['slack', 'github', 'google']
+const integration = Constants.AUTH_SERVICE
 
 @view
 export default class AuthApp {
   componentDidMount() {
-    this.link()
+    if (integration) {
+      this.link(integration)()
+    }
   }
 
-  link = () => CurrentUser.link(integration)
+  link = name => () => CurrentUser.link(name)
 
   render() {
     return (
@@ -26,10 +30,26 @@ export default class AuthApp {
               key={integration}
               size={2}
               icon={`social${integration}`}
-              onClick={this.link}
+              onClick={this.link(integration)}
             >
               Authorize {integration}
             </UI.Button>
+
+            <br />
+            <br />
+
+            <UI.Row stretch>
+              {ALL_INTEGRATIONS.filter(x => x !== integration).map(name => (
+                <UI.Button
+                  key={name}
+                  size={1.2}
+                  icon={`social${name}`}
+                  onClick={this.link(name)}
+                >
+                  Authorize {name}
+                </UI.Button>
+              ))}
+            </UI.Row>
           </content>
         </settings>
       </UI.Theme>

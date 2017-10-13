@@ -27,6 +27,9 @@ export const TRAY_HEIGHT = 500
 
 export const IS_BAR = window.location.pathname === '/'
 
+const authService = window.location.search.match(/service\=(.*)/)
+export const AUTH_SERVICE = authService ? authService[1] : null
+
 const keysearch = window.location.search.match(/key=(.*)/)
 export const APP_KEY = keysearch ? keysearch[1] : ''
 

@@ -52,7 +52,7 @@ export default class Sidebar {
             index,
             stack: homeStore.stack,
             sidebar: true,
-            getActiveIndex: () => stackItem.firstIndex,
+            getActiveIndex: () => stackItem.col === 0 && stackItem.firstIndex,
             onSelect: stackItem.onSelect,
             itemProps: {
               size: 1.14,

@@ -39,7 +39,7 @@ class StackItemStore {
     return this.active[1]
   }
   get sidebarSelectedIsNav() {
-    return !!this.results[this.sidebarSelectedIndex].parent
+    return this.results && !!this.results[this.sidebarSelectedIndex].isParent
   }
   get sidebarSelected() {
     const selected = this.results[this.sidebarSelectedIndex]
@@ -118,10 +118,12 @@ export default class StackStore {
       return
     }
     if (this.last.sidebarSelectedIsNav) {
+      this.last.right()
       return
     }
     if (this.last.sidebarSelected) {
       this.navigate(this.last.sidebarSelected)
+      this.last.right()
     }
   }
   push(result) {

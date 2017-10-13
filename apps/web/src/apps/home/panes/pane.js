@@ -99,10 +99,9 @@ export default class Pane {
 
     return (
       <UI.Theme name={theme}>
-        <card
+        <pane
           style={{ width, ...style }}
           $fullscreen={paneStore.fullscreen}
-          $light={light}
           $sidebar={sidebar}
         >
           <content if={children}>
@@ -110,24 +109,15 @@ export default class Pane {
           </content>
           <content if={!children}>{list}</content>
           <actions if={actionBar}>{actionBar}</actions>
-        </card>
+        </pane>
       </UI.Theme>
     )
   }
 
   static style = {
-    card: {
+    pane: {
       flex: 1,
-      transition: 'all ease-in 80ms',
-      zIndex: 1000,
       position: 'relative',
-      overflowY: 'scroll',
-    },
-    light: {
-      background: '#fff',
-      borderRadius: 6,
-      borderBottomRightRadius: 0,
-      boxShadow: [[0, 2, 10, [0, 0, 0, 0.15]]],
     },
     sidebar: {
       marginTop: 5,

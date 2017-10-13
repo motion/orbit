@@ -2,7 +2,7 @@
 import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
 import type { PaneProps, PaneResult } from '~/types'
-import { Thing } from '~/app'
+import { Person, Thing } from '~/app'
 import { fuzzy } from '~/helpers'
 
 export default class MainSidebarStore {
@@ -35,21 +35,21 @@ export default class MainSidebarStore {
     )
   }
 
-  @watch
-  myrecent = () =>
-    Thing.find()
-      .where('author')
-      .in(['natew'])
-      .sort({ updated: 'desc' })
-      .limit(5)
+  people = Person.find()
+    .sort({ updatedAt: 'desc' })
+    .limit(3)
 
-  @watch
-  teamrecent = () =>
-    Thing.find()
-      .where('author')
-      .ne('natew')
-      .sort({ updated: 'desc' })
-      .limit(5)
+  myrecent = Thing.find()
+    .where('author')
+    .in(['natew'])
+    .sort({ updated: 'desc' })
+    .limit(5)
+
+  teamrecent = Thing.find()
+    .where('author')
+    .ne('natew')
+    .sort({ updated: 'desc' })
+    .limit(5)
 
   get recently() {
     const chop = 3
@@ -124,17 +124,24 @@ export default class MainSidebarStore {
     },
   ]
 
-  extras = [
+  settings = [
     {
       title: 'Services',
       icon: 'gear',
       type: 'services',
-      category: 'Services',
+      category: 'Settings',
     },
   ]
 
   get results(): Array<PaneResult> {
-    const all = [...this.pinned, ...this.recently, ...this.extras]
+    const all = [
+      ...this.pinned,
+      ...this.recently,
+      ...(this.people || []).map(x =>
+        Person.toResult(x, { category: 'People' })
+      ),
+      ...this.settings,
+    ]
     const search = fuzzy(all, this.search)
     return search
   }

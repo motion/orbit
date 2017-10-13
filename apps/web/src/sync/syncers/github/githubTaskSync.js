@@ -73,7 +73,7 @@ export default class GithubIssueSync {
 
   syncRepos = (repos: Array<boolean>) => {
     return Promise.all(
-      (repos || Object.keys(this.setting.values.repos)).map(repo => {
+      (repos || Object.keys(this.setting.values.repos || {})).map(repo => {
         const split = repo.split('/')
         return this.syncRepo(split[0], split[1])
       })

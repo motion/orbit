@@ -14,7 +14,12 @@ export default class TaskSidebarStore {
   }
 
   get authorIds() {
-    return this.task && [this.task.author]
+    return (
+      this.task && [
+        this.task.author,
+        ...this.task.data.comments.map(comment => comment.author.login),
+      ]
+    )
   }
 
   @watch

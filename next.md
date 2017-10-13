@@ -1,9 +1,10 @@
-- sync everything
 - people context on everything
-- fix stack animations
+- people page (basically feed)
 - focus into main pane on drill in
-- scroll main pane smooth
+- calendars/profiles
 - action bars
+- scroll main pane smooth
+- fix some stack correctness/animations
 
 # features
 

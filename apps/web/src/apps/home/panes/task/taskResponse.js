@@ -7,10 +7,12 @@ export default class TaskResponse {
   render({ taskStore }) {
     const { onSubmit } = taskStore.result
     const commentButtonActive = taskStore.responseVal.trim().length > 0
+    const isOpen = false
 
     return (
-      <container>
+      <container $open={isOpen}>
         <textarea
+          if={isOpen}
           value={taskStore.responseVal}
           onChange={e => (taskStore.responseVal = e.target.value)}
           onKeyDown={e => {
@@ -45,9 +47,11 @@ export default class TaskResponse {
   static style = {
     container: {
       borderTop: [1, [0, 0, 0, 0.1]],
-      minHeight: 140,
       padding: [10, 25],
       margin: [0, -15],
+    },
+    open: {
+      minHeight: 140,
     },
     info: {
       margin: [5, 0, 0],

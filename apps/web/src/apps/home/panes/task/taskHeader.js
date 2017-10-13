@@ -2,6 +2,7 @@ import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import * as React from 'react'
 import ColorBlock from './colorBlock'
+import { Title } from '~/views'
 
 @view
 export default class TaskHeader {
@@ -14,10 +15,6 @@ export default class TaskHeader {
       return null
     }
 
-    const minSize = 1.8
-    const maxSize = 2.2
-    const ogSize = 3.4 - title.length * 0.05
-    const titleSize = Math.min(maxSize, Math.max(ogSize, minSize))
     let labelsText = labels.length + ' Labels'
     if (labels.length === 0) {
       labelsText = 'No Labels'
@@ -29,28 +26,21 @@ export default class TaskHeader {
     return (
       <header>
         <meta css={{ padding: 10, paddingTop: 20 }}>
-          <UI.Title
-            flex={1}
-            fontWeight={800}
-            color={[0, 0, 0]}
-            size={titleSize}
-          >
-            {title}
-          </UI.Title>
+          <Title>{title}</Title>
           <left>
-            <UI.Icon size={22} name="github" css={{ marginRight: 10 }} />
+            <UI.Text if={task} opacity={0.7} size={2} css={{ marginRight: 20 }}>
+              #{task.data.number + ''}
+            </UI.Text>
+            <UI.Icon size={36} name="github" css={{ marginRight: 10 }} />
           </left>
         </meta>
         <below if={task}>
           <badges>
             <left $$row>
-              <UI.Text opacity={0.7} size={1.2} $id>
-                #{task.data.number + ''}
-              </UI.Text>
-              <UI.Text opacity={1} size={1} $id>
+              <UI.Text opacity={1} size={1.3} $id>
                 in{' '}
                 <a href="">
-                  {task.data.orgName}/{task.data.parentId}
+                  {task.orgName}/{task.parentId}
                 </a>
               </UI.Text>
             </left>
@@ -72,10 +62,20 @@ export default class TaskHeader {
             ))}
           </badges>
           <buttons>
-            <UI.Button onClick={() => {}} className="target-labels" $button>
+            <UI.Button
+              size={1.1}
+              onClick={() => {}}
+              className="target-labels"
+              $button
+            >
               {labelsText}
             </UI.Button>
-            <UI.Button onClick={() => {}} className="target-assign" $button>
+            <UI.Button
+              size={1.1}
+              onClick={() => {}}
+              className="target-assign"
+              $button
+            >
               Assign
             </UI.Button>
           </buttons>
@@ -86,12 +86,12 @@ export default class TaskHeader {
 
   static style = {
     header: {
-      width: '100%',
+      padding: [10, 15, 0],
     },
     below: {
       flexFlow: 'row',
-      alignItems: 'center',
-      padding: [5, 10],
+      alignItems: 'flex-start',
+      padding: [0, 10],
       justifyContent: 'space-between',
     },
     meta: {
@@ -104,9 +104,6 @@ export default class TaskHeader {
     },
     badge: {
       marginLeft: 6,
-    },
-    id: {
-      marginRight: 10,
     },
     left: {
       flexFlow: 'row',

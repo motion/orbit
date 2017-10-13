@@ -100,8 +100,8 @@ export default class MainSidebarStore {
 
   pinned: Array<PaneResult> = [
     {
-      title: 'Team GSD',
-      displayTitle: <UI.Title size={1.5}>Team GSD</UI.Title>,
+      title: 'Orbit',
+      displayTitle: <UI.Title size={1.5}>Orbit</UI.Title>,
       type: 'feed',
       icon: (
         <icon style={{ alignSelf: 'center', flexFlow: 'row', marginRight: 10 }}>
@@ -125,7 +125,14 @@ export default class MainSidebarStore {
         </icon>
       ),
       data: {
-        team: 'Product',
+        people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
+      },
+    },
+    {
+      title: 'Team GSD',
+      type: 'feed',
+      icon: 'fox',
+      data: {
         people: ['Carol Hienz', 'Nate Wienert', 'Steel', 'Nick Cammarata'],
       },
     },

@@ -20,7 +20,7 @@ export default class TaskComment {
         <content>
           <info>
             <userheader>
-              <UI.Text size={1.1} $name>
+              <UI.Text size={1.2} $name>
                 {author.login}
               </UI.Text>
               <UI.Date $when opacity={0.5}>
@@ -39,7 +39,7 @@ export default class TaskComment {
             </buttons>
           </info>
           <UI.Text
-            size={1.2}
+            size={1.1}
             className="github-comment"
             $body
             html={format(body)}
@@ -52,7 +52,7 @@ export default class TaskComment {
   static style = {
     comment: {
       width: '100%',
-      padding: [10, 10],
+      padding: [10, 20],
       border: [1, [0, 0, 0, 0]],
       transition: 'all 150ms ease-in',
       borderBottom: [1, 'dotted', '#eee'],
@@ -76,7 +76,7 @@ export default class TaskComment {
       width: 30,
       height: 30,
       borderRadius: 100,
-      marginRight: 16,
+      marginRight: 10,
     },
     content: {
       flex: 1,

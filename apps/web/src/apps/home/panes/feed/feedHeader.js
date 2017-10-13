@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
-import { Link } from '~/views'
+import { Link, Title } from '~/views'
 
 @view
 export default class FeedHeader {
@@ -43,14 +43,9 @@ export default class FeedHeader {
               />
             ))}
             <titles css={{ flex: 1 }}>
-              <UI.Title
-                onClick={feedStore.ref('isOpen').toggle}
-                size={2}
-                fontWeight={800}
-                marginBottom={5}
-              >
+              <Title onClick={feedStore.ref('isOpen').toggle}>
                 {feedStore.result.title}
-              </UI.Title>
+              </Title>
               <subtitle
                 $$row
                 css={{
@@ -103,6 +98,7 @@ export default class FeedHeader {
     title: {
       flex: 1,
       justifyContent: 'flex-end',
+      paddingTop: 5,
     },
     rightSide: {
       position: 'relative',

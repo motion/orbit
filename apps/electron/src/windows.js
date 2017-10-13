@@ -122,7 +122,7 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('open-settings', (event, service) => {
-      open('http://jot.dev/settings?service=' + service)
+      open('http://jot.dev/auth?service=' + service)
     })
   }
 

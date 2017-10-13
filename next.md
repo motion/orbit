@@ -1,3 +1,13 @@
+- syncer settings
+- sync everything
+- people context on everything
+- fix stack animations
+- focus into main pane on drill in
+
+correctness
+- scroll main pane smooth
+- action bars
+
 # features
 
 ## search

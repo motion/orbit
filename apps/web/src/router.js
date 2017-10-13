@@ -2,11 +2,13 @@
 import Router from '@mcro/router'
 import HomePage from './apps/home'
 import WindowPage from './apps/window'
+import AuthPage from './apps/auth'
 
 function runRouter() {
   return new Router({
     routes: {
       '/': HomePage,
+      auth: AuthPage,
       window: WindowPage,
     },
   })

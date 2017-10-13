@@ -26,7 +26,7 @@ export default class Sync {
   enabled = localStorage.getItem('runSyncers') === 'true'
 
   start() {
-    this.startJobs()
+    this.watchJobs()
     this.startSyncers()
     this.watch(() => {
       const title = this.enabled
@@ -105,7 +105,7 @@ export default class Sync {
     }
   }
 
-  startJobs() {
+  watchJobs() {
     this.react(
       () => this.nonPending,
       jobs => {
@@ -128,6 +128,9 @@ export default class Sync {
       () => this.pending,
       async jobs => {
         log('startJobs jobs:', jobs ? jobs.length : 0)
+        if (!this.enabled) {
+          return
+        }
         if (!jobs || !jobs.length) {
           return
         }

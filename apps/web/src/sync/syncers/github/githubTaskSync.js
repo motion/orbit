@@ -71,11 +71,11 @@ export default class GithubIssueSync {
     return flatten(issues).filter(Boolean)
   }
 
-  syncRepos = (repos: Array<boolean> = this.setting.values.repos) => {
+  syncRepos = (repos: Array<boolean>) => {
     return Promise.all(
-      Object.keys(repos || {}).map(repo => {
+      (repos || Object.keys(this.setting.values.repos)).map(repo => {
         const split = repo.split('/')
-        this.syncRepo(split[0], split[1])
+        return this.syncRepo(split[0], split[1])
       })
     )
   }
@@ -98,6 +98,7 @@ export default class GithubIssueSync {
       }
     `,
     })
+    console.log('got', results)
 
     if (!results) {
       return

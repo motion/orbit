@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { view } from '@mcro/black'
+import { view, watch } from '@mcro/black'
 import * as UI from '@mcro/ui'
 // import { Pattern } from '~/views'
 
@@ -15,9 +15,18 @@ const hourOffset = hour => hour - START_HOUR
 const colors = ['#226322', '#8c3030', '#30308c', '#ffb357']
 const rc = () => colors[Math.floor((colors.length - 1) * Math.random())]
 
-@view
+@view({
+  calendarStore: class CalendarStore {
+    @watch
+    events = () =>
+      Event.find()
+        .where('created')
+        .gte(new Date().toISOString())
+        .limit(100)
+  },
+})
 export default class Calendar {
-  render({ labels }) {
+  render({ calendarStore, labels }) {
     return (
       <calendar>
         <labels>

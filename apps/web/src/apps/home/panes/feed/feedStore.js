@@ -60,6 +60,8 @@ export default class FeedStore {
   events = () =>
     Event.find({ created: { $ne: null } })
       .sort({ created: 'desc' })
+      .where('created')
+      .lte(new Date().toISOString())
       .limit(100)
 
   willMount() {

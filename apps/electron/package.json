@@ -31,7 +31,8 @@
       "category": "pro"
     },
     "directories": {
-      "output": "./app"
+      "output": "./app",
+      "buildResources": "resources"
     }
   },
   "version": "1.4.1"

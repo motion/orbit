@@ -34,7 +34,8 @@
     },
     "files": [
       "**/*",
-      "../api/**/*"
+      "../api/**/*",
+      "resources"
     ],
     "directories": {
       "output": "./app",

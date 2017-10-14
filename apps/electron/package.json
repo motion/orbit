@@ -7,7 +7,7 @@
   "scripts": {
     "dist": "electron-builder --mac",
     "pack": "electron-builder --mac --dir",
-    "start": "node ./index.js",
+    "start": "electron build/out",
     "build": "webpack",
     "watch": "webpack --watch"
   },
@@ -23,8 +23,8 @@
   },
   "devDependencies": {
     "electron": "^1.7.0",
-    "electron-builder": "^19.37.1",
-    "webpack": "^3.4.1"
+    "webpack": "^3.4.1",
+    "electron-builder": "19.37.2"
   },
   "build": {
     "asar": false,
@@ -32,6 +32,10 @@
     "mac": {
       "category": "pro"
     },
+    "files": [
+      "**/*",
+      "../api/**/*"
+    ],
     "directories": {
       "output": "./app",
       "buildResources": "resources"

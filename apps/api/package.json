@@ -14,8 +14,6 @@
     "ignore": ["**/*.map", "lib", "dist"]
   },
   "dependencies": {
-    "@mcro/black": "^1.4.1",
-    "@mcro/models": "^1.4.1",
     "@mcro/passport-slack": "^1.2.0",
     "babel-polyfill": "^6.23.0",
     "better-stack-traces": "^1.1.0",
@@ -33,7 +31,6 @@
     "mobx": "^3.2.2",
     "mobx-utils": "^3.0.0",
     "morgan": "^1.8.2",
-    "natural": "^0.5.4",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",
@@ -46,7 +43,6 @@
     "pouchdb-adapter-memory": "^6.3.4",
     "pouchdb-express-router": "^0.0.9",
     "regenerator-runtime": "^0.11.0",
-    "rxjs": "^5.4.3",
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.4.16",
     "superlogin": "github:colinskow/superlogin",

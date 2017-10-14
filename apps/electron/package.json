@@ -12,6 +12,7 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
+    "@mcro/api": "*",
     "@mcro/black": "^1.4.1",
     "@mcro/ionize": "^1.4.0",
     "electron-localshortcut": "^2.0.2",
@@ -26,7 +27,8 @@
     "webpack": "^3.4.1"
   },
   "build": {
-    "appId": "jot.id",
+    "electronVersion": "1.7.0",
+    "appId": "orbit.id",
     "mac": {
       "category": "pro"
     },

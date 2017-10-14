@@ -27,6 +27,7 @@
     "webpack": "^3.4.1"
   },
   "build": {
+    "asar": false,
     "electronVersion": "1.7.0",
     "appId": "orbit.id",
     "mac": {

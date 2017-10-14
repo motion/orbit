@@ -53,6 +53,7 @@
         "pouchdb-express-router",
         "regenerator-runtime",
         "rxjs",
+        "rxdb",
         "sb-promisify",
         "source-map-support",
         "superlogin",

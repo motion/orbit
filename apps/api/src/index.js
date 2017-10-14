@@ -32,7 +32,7 @@ process.title = 'orbit-api'
 
 const API = require('./api').default
 
-async function run() {
+export default async function run() {
   const Api = new API()
   global.API = Api
   try {
@@ -41,5 +41,3 @@ async function run() {
     console.log('error', err)
   }
 }
-
-run()

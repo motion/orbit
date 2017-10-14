@@ -1,7 +1,7 @@
 import React from 'react'
 import { app, globalShortcut, ipcMain } from 'electron'
 import repl from 'repl'
-import localShortcut from 'electron-localshortcut'
+// import localShortcut from 'electron-localshortcut'
 import open from 'opn'
 import Menu from '~/menu'
 import { measure } from '~/helpers'
@@ -26,6 +26,7 @@ export default class ExampleApp extends React.Component {
   }
 
   componentDidMount() {
+    console.log('did mount windows')
     this.measureAndShow()
     this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
@@ -77,14 +78,14 @@ export default class ExampleApp extends React.Component {
         this.updateWindows()
       }
 
-      localShortcut.register(
-        Constants.IS_MAC ? 'Cmd+Alt+I' : 'Ctrl+Shift+I',
-        toggleDevTools
-      )
-      localShortcut.register('F12', toggleDevTools)
-      localShortcut.register('CmdOrCtrl+R', () => {
-        electron.webContents.reloadIgnoringCache()
-      })
+      // localShortcut.register(
+      //   Constants.IS_MAC ? 'Cmd+Alt+I' : 'Ctrl+Shift+I',
+      //   toggleDevTools
+      // )
+      // localShortcut.register('F12', toggleDevTools)
+      // localShortcut.register('CmdOrCtrl+R', () => {
+      //   electron.webContents.reloadIgnoringCache()
+      // })
     }
   }
 

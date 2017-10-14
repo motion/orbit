@@ -6,66 +6,8 @@ import { OS } from '~/helpers'
 import * as Collapse from './views/collapse'
 import Logo from './logo'
 import { formatDistance } from 'date-fns'
-import { uniq, min, includes, capitalize } from 'lodash'
-
-@view
-class SyncStatus {
-  renderDrive() {
-    return (
-      <UI.Text size={1} opacity={0.6}>
-        syncing <b>3,320 files</b> across <b>130 folders</b>
-      </UI.Text>
-    )
-  }
-
-  renderCalendar() {
-    const { store } = this.props
-
-    const events = (store.events || []).filter(({ integration, type }) => {
-      return integration === 'google' && type === 'calendar'
-    })
-
-    const personCount = uniq(events.map(i => i.author)).length
-    const minVal = min(events, e => +new Date(e.data.created))
-    const firstDate = minVal && minVal.data.created
-
-    return (
-      <UI.Text size={1} opacity={0.6}>
-        syncing <b>{events.length} events</b> with <b>{personCount} people</b>{' '}
-        across <b>{formatDistance(new Date(firstDate), Date.now())}</b>
-      </UI.Text>
-    )
-  }
-
-  renderGithub() {
-    const { store } = this.props
-
-    const issues = (store.things || []).filter(({ integration, type }) => {
-      return integration === 'github' && type === 'task'
-    })
-
-    const repoCount = uniq(issues.map(i => i.orgName + ':' + i.parentId)).length
-
-    return (
-      <UI.Text size={1} opacity={0.6}>
-        syncing <b>{issues.length} issues</b> across <b>{repoCount} repos</b>
-      </UI.Text>
-    )
-  }
-
-  renderSlack() {
-    return (
-      <UI.Text size={1} opacity={0.6}>
-        syncing <b>4,200 conversations</b> across <b>13 channels</b>
-      </UI.Text>
-    )
-  }
-
-  render({ service, store }) {
-    store.things
-    return this['render' + capitalize(service)]()
-  }
-}
+import { includes } from 'lodash'
+import SyncStatus from './syncStatus'
 
 @view
 class NotFound {
@@ -74,47 +16,47 @@ class NotFound {
   }
 }
 
+class ItemStore {
+  open = false
+  typeToJob = {
+    drive: { action: 'drive', service: 'google' },
+    slack: { action: 'gather', service: 'slack' },
+    calendar: { action: 'cal', service: 'google' },
+    github: { action: 'issues', service: 'github' },
+  }
+
+  runJob = () => {
+    const { type } = this.props
+    const { action, service } = this.typeToJob[type]
+    console.log('running', { type: service, action })
+
+    Job.create({ type: service, action })
+  }
+
+  get authName() {
+    const { type } = this.props
+    return includes(['drive', 'calendar'], type) ? 'google' : type
+  }
+
+  get auth() {
+    return CurrentUser.authorizations[this.authName]
+  }
+
+  get lastJob() {
+    const { type } = this.props
+    const { action, service } = this.typeToJob[type]
+
+    const job = this.props.serviceStore.lastJobs[service + ':' + action]
+    return job
+  }
+}
+
 @view({
-  store: class ItemStore {
-    open = false
-
-    typeToJob = {
-      drive: { action: 'drive', service: 'google' },
-      slack: { action: 'gather', service: 'slack' },
-      calendar: { action: 'cal', service: 'google' },
-      github: { action: 'issues', service: 'github' },
-    }
-
-    runJob = () => {
-      const { type } = this.props
-      const { action, service } = this.typeToJob[type]
-      console.log('running', { type: service, action })
-
-      Job.create({ type: service, action })
-    }
-
-    get authName() {
-      const { type } = this.props
-      return includes(['drive', 'calendar'], type) ? 'google' : type
-    }
-
-    get auth() {
-      return CurrentUser.authorizations[this.authName]
-    }
-
-    get lastJob() {
-      const { type } = this.props
-      const { action, service } = this.typeToJob[type]
-
-      const job = this.props.serviceStore.lastJobs[service + ':' + action]
-      return job
-    }
-  },
+  store: ItemStore,
 })
 export default class Item {
   render({ store, serviceStore, type }) {
     const Card = Cards[type] || NotFound
-
     return (
       <service key={type}>
         <header>

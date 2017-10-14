@@ -1,5 +1,6 @@
 {
   "name": "@mcro/electron",
+  "productName": "Orbit",
   "private": true,
   "description": "Description",
   "author": "Orbit",
@@ -17,9 +18,7 @@
     "lodash": "^4.17.4",
     "opn": "^5.1.0",
     "react": "16.0.0-alpha.5",
-    "react-dom": "16.0.0-alpha.5",
-    "react-motion": "^0.5.0",
-    "watch": "1.0.2"
+    "react-dom": "16.0.0-alpha.5"
   },
   "devDependencies": {
     "electron": "^1.7.0",
@@ -30,6 +29,9 @@
     "appId": "jot.id",
     "mac": {
       "category": "pro"
+    },
+    "directories": {
+      "output": "./app"
     }
   },
   "version": "1.4.1"

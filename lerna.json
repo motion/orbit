@@ -1,9 +1,6 @@
 {
   "lerna": "2.0.0",
-  "packages": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packages": ["apps/*", "packages/*"],
   "npmClient": "yarn",
   "version": "1.4.1",
   "commands": {
@@ -24,7 +21,10 @@
         "@mcro/css",
         "@mcro/gloss",
         "victory",
-        "electron-builder"
+        "electron-builder",
+        "electron-localshortcut",
+        "opn",
+        "lodash"
       ]
     }
   }

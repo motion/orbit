@@ -122,7 +122,7 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('open-settings', (event, service) => {
-      open('http://jot.dev/auth?service=' + service)
+      open(`http://${Constants.APP_URL}/auth?service=` + service)
     })
   }
 
@@ -231,7 +231,7 @@ export default class ExampleApp extends React.Component {
           size={this.state.size}
           ref={this.onWindow}
           showDevTools
-          file={Constants.JOT_URL}
+          file={Constants.APP_URL}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size.map(x => x + bgPadding * 2)}
@@ -257,7 +257,7 @@ export default class ExampleApp extends React.Component {
           return (
             <Window
               key={win.key}
-              file={`${Constants.JOT_URL}?key=${win.key}`}
+              file={`${Constants.APP_URL}?key=${win.key}`}
               show={win.active}
               {...appWindow}
               defaultSize={win.size}

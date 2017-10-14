@@ -1,6 +1,7 @@
 {
   "name": "@mcro/electron",
   "productName": "Orbit",
+  "version": "1.4.1",
   "private": true,
   "description": "Description",
   "author": "Orbit",
@@ -34,13 +35,11 @@
     },
     "files": [
       "**/*",
-      "../api/**/*",
-      "resources"
+      "../api/**/*"
     ],
     "directories": {
       "output": "./app",
       "buildResources": "resources"
     }
-  },
-  "version": "1.4.1"
+  }
 }

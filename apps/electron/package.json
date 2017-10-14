@@ -22,7 +22,7 @@
     "react-dom": "16.0.0-alpha.5"
   },
   "devDependencies": {
-    "electron": "^1.8.0",
+    "electron": "^1.7.0",
     "electron-builder": "^19.37.1",
     "webpack": "^3.4.1"
   },

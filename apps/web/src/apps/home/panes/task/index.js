@@ -38,21 +38,17 @@ class TaskMain {
     return (
       <Pane
         {...paneProps}
-        items={taskStore.results}
+        items={[
+          () => <TaskHeader taskStore={taskStore} result={result} />,
+          ...taskStore.results,
+          () => <TaskResponse taskStore={taskStore} />,
+        ]}
         getItem={(item, index) => {
           return item.elName
             ? getElement(item, index)
-            : item || (() => <null>not found</null>)
+            : { children: item } || (() => <null>not found</null>)
         }}
-      >
-        {list => (
-          <content $$flex={1}>
-            <TaskHeader taskStore={taskStore} result={result} />
-            {list}
-            <TaskResponse taskStore={taskStore} />
-          </content>
-        )}
-      </Pane>
+      />
     )
   }
 }

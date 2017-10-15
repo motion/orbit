@@ -47,6 +47,8 @@ if (IS_PROD) {
 }
 
 module.exports = Object.assign(config, {
+  watch: !!process.argv.indexOf('--watch'),
+
   entry: {
     app: filtered([
       IS_DEV && require.resolve('webpack-dev-server/client') + '?/',
@@ -109,7 +111,7 @@ module.exports = Object.assign(config, {
     //
     // 🚨
     // warning: disabling this fixed styles not attaching:
-    // new webpack.DefinePlugin(env.stringified),
+    new webpack.DefinePlugin({ 'process.env': { NODE_ENV: '"production"' } }),
     // ⏰
     //
     new CaseSensitivePathsPlugin(),

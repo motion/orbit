@@ -16,7 +16,7 @@
     "@mcro/ui": "^1.4.1",
     "babel-polyfill": "^6.23.0",
     "lodash": "^4.17.4",
-    "mobx": "^3.2.2",
+    "mobx": "^3.3.1",
     "mobx-formatters": "^1.0.0",
     "prop-types": "^15.5.10",
     "react": "^16.0.0",

@@ -9,7 +9,7 @@ const CommitInfo = {}
   store: class CommitStore {
     @watch
     info = async () => {
-      if (!App.services.Github) {
+      if (!App.services || !App.services.Github) {
         return null
       }
       const { sha } = this.props

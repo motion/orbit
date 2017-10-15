@@ -9,8 +9,6 @@ export const DB_URL = `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}`
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
-export const APP_HOST = IS_PROD ? 'seemirai.com' : 'jot.dev'
-export const APP_PROTOCOL = 'http://'
-export const APP_URL = `${APP_PROTOCOL}${APP_HOST}`
+export const API_HOST = IS_PROD ? 'api.seemirai.com' : 'jot.dev'
 
 export const SERVER_PORT = process.env.PORT || 3001

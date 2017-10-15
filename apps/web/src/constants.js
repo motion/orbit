@@ -5,9 +5,9 @@ import { IS_ELECTRON } from '@mcro/black'
 export * from '@mcro/black/lib/constants'
 
 const protocol = `${window.location.protocol}//`
-export const API_HOST = `jot.dev`
+export const API_HOST = `api.seemirai.com`
 export const API_URL = `${protocol}${API_HOST}`
-export const COUCH_HOST = `api.jot.dev`
+export const COUCH_HOST = API_HOST
 export const COUCH_URL = `${protocol}${COUCH_HOST}/couch`
 
 export const DB_CONFIG = {

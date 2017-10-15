@@ -2,16 +2,13 @@
 import Server from './server'
 import PouchDBBrowser from 'pouchdb-browser'
 import PouchHttp from 'pouchdb-adapter-http'
-import PouchMapReduce from 'pouchdb-mapreduce'
 import PouchMemory from 'pouchdb-adapter-memory'
 import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
 
-const PouchDB = PouchDBBrowser.plugin(PouchHttp)
-  .plugin(PouchMapReduce)
-  .plugin(PouchMemory)
+const PouchDB = PouchDBBrowser.plugin(PouchHttp).plugin(PouchMemory)
 
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)

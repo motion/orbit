@@ -67,7 +67,7 @@ module.exports = Object.assign(config, {
     // NOTE: 'es5'
     mainFields: IS_DEV
       ? ['module', 'browser', 'main', 'es5']
-      : ['browser', 'module:production', 'module', 'main', 'es5'],
+      : ['browser', 'module:production', 'main', 'es5'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit

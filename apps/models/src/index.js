@@ -2,8 +2,7 @@
 import RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pHTTP from 'pouchdb-adapter-http'
-// import pValidate from 'pouchdb-validation'
-// import pSearch from 'pouchdb-quick-search'
+import pMapReduce from 'pouchdb-mapreduce'
 import * as Constants from '~/constants'
 import type { Model } from '@mcro/model'
 export type { Model }
@@ -102,6 +101,8 @@ export default class Database {
 
     RxDB.plugin(pHTTP)
     PouchDB.plugin(pHTTP)
+    PouchDB.plugin(pMapReduce)
+    RxDB.plugin(pMapReduce)
   }
 
   get pouch() {

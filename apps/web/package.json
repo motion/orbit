@@ -7,7 +7,7 @@
     "start": "motion",
     "start-prod": "static-server -p 3002 -n build/index.html build",
     "start-debug": "motion --debug",
-    "build": "MINIFY=true NODE_ENV=production BUILD_DIR=. mcro-build",
+    "build": "NODE_ENV=production BUILD_DIR=. mcro-build",
     "deploy": "surge ./build seemirai.com"
   },
   "dependencies": {
@@ -35,6 +35,7 @@
     "mousetrap": "^1.6.1",
     "octokat": "^0.9.2",
     "pouchdb-adapter-idb": "^6.3.4",
+    "pouchdb-mapreduce-utils": "^6.3.4",
     "pouchdb-core": "^6.3.0",
     "prop-types": "^15.5.10",
     "react": "16.0.0",

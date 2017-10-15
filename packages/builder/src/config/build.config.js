@@ -111,7 +111,9 @@ module.exports = Object.assign(config, {
     //
     // 🚨
     // warning: disabling this fixed styles not attaching:
-    new webpack.DefinePlugin({ 'process.env': { NODE_ENV: '"production"' } }),
+    // new webpack.DefinePlugin({
+    //   'process.env': { NODE_ENV: '"production"', IS_PROD: true },
+    // }),
     // ⏰
     //
     new CaseSensitivePathsPlugin(),

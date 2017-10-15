@@ -2,8 +2,11 @@
 // export constants from @mcro/black
 import { Constants } from '@mcro/black'
 
+console.log('process.env.IS_PROD', process.env.IS_PROD)
+
 export const IS_ELECTRON = Constants.IS_ELECTRON
-export const IS_PROD = process.env.NODE_ENV === 'production'
+export const IS_PROD =
+  process.env.NODE_ENV === 'production' || process.env.IS_PROD
 
 const protocol = `${window.location.protocol}//`
 export const API_HOST = `orbit.dev`

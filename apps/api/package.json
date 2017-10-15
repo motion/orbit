@@ -2,7 +2,7 @@
   "name": "@mcro/api",
   "private": true,
   "version": "1.4.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "start": "node lib",
     "start-prod": "node lib",

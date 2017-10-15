@@ -11,7 +11,7 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "fix-build": "npm run fix-build-nm; npm run fix-build-el",
-    "fix-build-nm": "cpx -L './node_modules/@mcro/**/*{.js,.json,.html}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro",
+    "fix-build-nm": "cpx -L './node_modules/@mcro/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro",
     "fix-build-el": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron",
     "test-build": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit"
   },

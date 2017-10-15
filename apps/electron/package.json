@@ -6,13 +6,16 @@
   "description": "Description",
   "author": "Orbit",
   "scripts": {
-    "dist": "DEBUG=electron-packager electron-packager . --out app --overwrite && npm run fix-build",
+    "dist":
+      "DEBUG=electron-packager electron-packager . --out app --overwrite && npm run fix-build",
     "start": "electron build/out",
     "build": "webpack",
     "watch": "webpack --watch",
     "fix-build": "npm run fix-build-nm; npm run fix-build-el",
-    "fix-build-nm": "cpx -L './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
-    "fix-build-el": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron",
+    "fix-build-nm":
+      "cpx -L './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+    "fix-build-el":
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron",
     "test-build": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit"
   },
   "dependencies": {

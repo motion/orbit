@@ -14,6 +14,7 @@ kubeconfig
 apps/web/public/_/*
 apps/site/public/_/*
 apps/web/build
+apps/api/prod
 apps/api/build
 apps/site/build
 apps/electron/dist

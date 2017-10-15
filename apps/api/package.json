@@ -3,10 +3,11 @@
   "private": true,
   "version": "1.4.1",
   "main": "es5/index.js",
+  "module": "lib/index.js",
   "scripts": {
-    "start": "node lib",
-    "start-prod": "node lib",
-    "start-dev": "nodemon --inspect=0.0.0.0:5858 lib",
+    "start": "node index.js",
+    "start-prod": "node index.js",
+    "start-dev": "nodemon --inspect=0.0.0.0:5858 index.js",
     "start-watch": "../../bin/build --watch",
     "watch": "webpack --watch"
   },
@@ -45,8 +46,9 @@
     "pouchdb-express-router": "^0.0.9",
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.4.16",
-    "superlogin": "github:colinskow/superlogin",
-    "wait-for-port": "^0.0.2"
+    "wait-for-port": "^0.0.2",
+    "hostile": "^1.3.0",
+    "sudo-prompt": "^7.1.1"
   },
   "devDependencies": {
     "nodemon": "^1.11.0",

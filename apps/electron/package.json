@@ -7,7 +7,7 @@
   "author": "Orbit",
   "scripts": {
     "dist":
-      "DEBUG=electron-packager electron-packager . --out app --overwrite && npm run fix-build",
+      "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns && npm run fix-build",
     "start": "electron build/out",
     "build": "webpack",
     "watch": "webpack --watch",

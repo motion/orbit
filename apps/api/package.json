@@ -44,6 +44,7 @@
     "pouchdb-adapter-http": "^6.3.4",
     "pouchdb-adapter-memory": "^6.3.4",
     "pouchdb-express-router": "^0.0.9",
+    "memdown": "^1.4.1",
     "sb-promisify": "^2.0.2",
     "source-map-support": "^0.4.16",
     "wait-for-port": "^0.0.2",

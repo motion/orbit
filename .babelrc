@@ -10,7 +10,8 @@
         [
           "@mcro/preset-motion",
           {
-            "async": false
+            "async": false,
+            "nodeTarget": 6
           }
         ]
       ]

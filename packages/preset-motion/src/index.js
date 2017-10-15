@@ -15,7 +15,7 @@ module.exports = function(context, givenOpts) {
     {
       useBuiltIns: true,
       targets: {
-        node: 8,
+        node: opts.nodeTarget || 8,
       },
       exclude: isAsync
         ? ['transform-regenerator', 'transform-async-to-generator']

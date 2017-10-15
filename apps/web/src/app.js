@@ -36,7 +36,7 @@ class App {
     this.store = new AppStore({
       config: {
         ...Constants.DB_CONFIG,
-        remoteUrl: `http://${window.location.hostname}/db`,
+        remoteUrl: `${Constants.API_URL}/db`,
         adapter,
         adapterName: 'idb',
       },

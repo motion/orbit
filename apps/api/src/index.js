@@ -1,4 +1,4 @@
-import 'regenerator-runtime'
+import 'babel-polyfill'
 import 'source-map-support/register'
 import 'isomorphic-fetch'
 import cleanStack from 'clean-stacktrace'
@@ -33,7 +33,6 @@ const API = require('./api').default
 
 export default async function run() {
   const Api = new API()
-  global.API = Api
   try {
     await Api.start()
   } catch (err) {

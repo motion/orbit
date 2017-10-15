@@ -1,11 +1,8 @@
 const { spawn } = require('child_process')
 const startApi = require('@mcro/api').default
 
-// require so it gets bundled
-require('./electron')
-require('electron')
-
+console.log('run api')
 startApi().then(() => {
-  console.log('running electron')
+  console.log('run electron')
   spawn('./node_modules/.bin/electron', ['./electron.js', '--start'])
 })

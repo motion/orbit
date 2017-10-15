@@ -60,7 +60,19 @@ export default class Server {
     app.set('port', port)
     // app.use(logger('dev'))
 
-    app.use(cors(corsOptions))
+    const HEADER_ALLOWED =
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
+
+    app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', req.headers.origin)
+      res.header('Access-Control-Allow-Credentials', 'true')
+      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
+      res.header(
+        'Access-Control-Allow-Methods',
+        'GET,HEAD,POST,PUT,DELETE,OPTIONS'
+      )
+      next()
+    })
 
     this.app = app
 
@@ -132,11 +144,7 @@ export default class Server {
     )
 
     // pouch routes
-    this.app.use(
-      '/db2',
-      cors(corsOptions),
-      expressPouch(this.pouch, { inMemoryConfig: true })
-    )
+    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
   }
 
   setupPassportRoutes() {

@@ -249,7 +249,7 @@ export default class ExampleApp extends React.Component {
           onFocus={() => {
             this.activeWindow = this.windowRef
           }}
-          backgroundColor="transparent"
+          backgroundColor="#00000000"
           webPreferences={{
             nativeWindowOpen: true,
             experimentalFeatures: true,

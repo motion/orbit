@@ -21,18 +21,6 @@ apps/electron/dist
 apps/electron/build
 apps/electron/app
 
-# until we can get pouch-server to cooperate
-apps/api/events
-apps/api/jobs
-apps/api/settings
-apps/api/things
-apps/api/users
-**/*/_replicator
-**/*/_users
-apps/api/config.json
-**/*/pouch__all_dbs__
-
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib
 !packages/hmr-view/lib
-packages/hmr-view/lib/*.js.flow

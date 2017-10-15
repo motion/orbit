@@ -5,10 +5,12 @@
   "version": "1.4.1",
   "commands": {
     "bootstrap": {
-      "hoist": false,
+      "hoist": true,
       "nohoist": [
         "react*",
         "react",
+        "disposable-event",
+        "object-path",
         "react-dom",
         "react-tilt",
         "react-native",

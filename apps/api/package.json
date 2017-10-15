@@ -31,7 +31,6 @@
     "lodash": "^4.17.4",
     "longjohn": "^0.2.12",
     "mobx": "^3.2.2",
-    "mobx-utils": "^3.0.0",
     "morgan": "^1.8.2",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",

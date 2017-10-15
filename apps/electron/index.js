@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'production'
 
-const electronApp = require('./electron')
+const electronApp = require('./build/out')
 electronApp()
 
 setTimeout(() => {

@@ -36,8 +36,8 @@ function build-prod() {
         BABEL_ENV=dist babel src --out-dir dist -s true $1
 }
 
-function build-api() {
-  npx lerna exec --parallel --scope @mcro/api --scope @mcro/electron -- \
+function build-other() {
+  npx lerna exec --parallel --scope @mcro/electron -- \
     BABEL_ENV=es5 babel src --out-dir es5 -s true $1
 }
 
@@ -48,7 +48,7 @@ elif [ "$APP" = "site" ]; then
   cd $ROOT/apps/site
   npm run build
 elif [ "$APP" = "api" ]; then
-  build-api
+  build-other
 elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   rm -rf build
@@ -59,11 +59,11 @@ else
   if [ "$ARGS" = "--watch" ]; then
     build-dev --watch &
     build-prod --watch &
-    build-api --watch &
+    build-other --watch &
   else
     build-dev &
     build-prod &
-    build-api &
+    build-other &
   fi
 
   wait

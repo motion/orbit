@@ -8,7 +8,7 @@
   "scripts": {
     "dist":
       "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns && npm run fix-build",
-    "start": "electron build/out",
+    "start": "electron build/out --start",
     "build": "webpack",
     "watch": "webpack --watch",
     "fix-build":

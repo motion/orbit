@@ -21,6 +21,8 @@ function run-api() {
 }
 
 function run-web() {
+  # bugfix for bad bundles coming from uncompoled exports
+  rm -r packages/automagical/node_modules/mobx-utils/lib
   cd apps/web
   if [ "$ARG1" = "--clean" ]; then
     motion watch --debug --disable-cache

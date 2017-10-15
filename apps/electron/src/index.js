@@ -4,19 +4,14 @@ import Windows, { onWindow } from './windows'
 
 let app = null
 
-console.log('hi')
-
 export default function start() {
-  console.log('React', React.version)
   Ionize.start(<Windows />)
   onWindow(ref => {
     app = ref
   })
 }
 
-console.log(process.argv, process.argv.find(x => x === '--start'))
 if (process.argv.find(x => x === '--start')) {
-  console.log('starting')
   start()
 }
 

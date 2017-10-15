@@ -9,6 +9,8 @@ import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
 
+console.log(Constants.APP_URL)
+
 let onWindows = []
 export function onWindow(cb) {
   onWindows.push(cb)
@@ -232,7 +234,7 @@ export default class ExampleApp extends React.Component {
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           ref={this.onWindow}
-          showDevTools={!Constants.IS_PROD}
+          showDevTools={true || !Constants.IS_PROD}
           file={Constants.APP_URL}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}

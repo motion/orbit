@@ -11,7 +11,10 @@
     "start": "electron build/out",
     "build": "webpack",
     "watch": "webpack --watch",
-    "fix-build": "npm run fix-build-nm; npm run fix-build-el",
+    "fix-build":
+      "npm run fix-build-log; npm run fix-build-nm; npm run fix-build-el",
+    "fix-build-log":
+      "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
     "fix-build-nm":
       "cpx -L './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
     "fix-build-el":

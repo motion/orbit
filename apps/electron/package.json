@@ -29,6 +29,7 @@
   },
   "build": {
     "asar": false,
+    "npmRebuild": false,
     "appId": "orbit.id",
     "mac": {
       "category": "pro"

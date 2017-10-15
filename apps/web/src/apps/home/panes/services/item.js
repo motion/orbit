@@ -39,7 +39,9 @@ class ItemStore {
   }
 
   get auth() {
-    return CurrentUser.authorizations[this.authName]
+    return (
+      CurrentUser.authorizations && CurrentUser.authorizations[this.authName]
+    )
   }
 
   get lastJob() {

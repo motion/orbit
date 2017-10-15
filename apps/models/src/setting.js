@@ -20,7 +20,7 @@ export class SettingModel extends Model {
     autoSync: {
       // push settings if auth pane
       push: Constants.AUTH_SERVICE,
-      pull: 'basic',
+      pull: false, //'basic',
     },
   }
 

@@ -337,7 +337,6 @@ export default class Model {
     return (autoSync && (autoSync === true || autoSync.push)) || false
   }
 
-  // sitrep
   get shouldSyncPull(): boolean {
     if (!this.remote) {
       return false
@@ -440,7 +439,7 @@ export default class Model {
 
   syncQuery = (
     queryish: Queryish,
-    options: Object = { live: true, retry: true }
+    options: Object = { live: true, retry: false }
   ): Promise<boolean> => {
     const { shouldSyncPull } = this
 

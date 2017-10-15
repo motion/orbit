@@ -54,11 +54,11 @@ class App {
       console.time('startModels')
       jobs = await Job.pending().exec()
     }
-    await Promise.all([
-      Setting.find().sync(),
-      User.find().sync(),
-      ...(jobs || []).map(job => job.remove()),
-    ])
+    // await Promise.all([
+    //   Setting.find().sync(),
+    //   User.find().sync(),
+    //   ...(jobs || []).map(job => job.remove()),
+    // ])
     if (!quiet) {
       console.timeEnd('startModels')
     }

@@ -20,8 +20,8 @@ const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 
-const ROOT = Path.join(__dirname, '..')
 const IS_PROD = process.env.NODE_ENV === 'production'
+console.log('IS_PROD', IS_PROD)
 const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
@@ -128,7 +128,7 @@ module.exports = Object.assign(config, {
           return context && context.indexOf('node_modules') >= 0
         },
       }),
-    // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
     MINIFY &&
       IS_PROD &&
       new BabelMinifyPlugin({

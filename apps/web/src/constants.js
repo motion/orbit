@@ -1,8 +1,9 @@
 // @flow
 // export constants from @mcro/black
-import { IS_ELECTRON } from '@mcro/black'
+import { Constants } from '@mcro/black'
 
-export * from '@mcro/black/lib/constants'
+export const IS_ELECTRON = Constants.IS_ELECTRON
+export const IS_PROD = process.env.NODE_ENV === 'production'
 
 const protocol = `${window.location.protocol}//`
 export const API_HOST = `orbit.dev`

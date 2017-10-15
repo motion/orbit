@@ -7,6 +7,14 @@
     "bootstrap": {
       "hoist": true,
       "nohoist": [
+        "hostile",
+        "sudo-prompt",
+        "pouchdb-mapreduce",
+        "pouchdb-replication",
+        "pouchdb-adapter-http",
+        "pouchdb-adapter-memory",
+        "pouchdb-express-router",
+        "pouchdb-browser",
         "react*",
         "react",
         "disposable-event",

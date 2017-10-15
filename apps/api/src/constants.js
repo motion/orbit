@@ -9,7 +9,7 @@ export const DB_URL = `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}`
 
 export const IS_PROD = process.env.NODE_ENV === 'production'
 
-export const APP_HOST = IS_PROD ? 'orbitapp.surge.sh' : 'jot.dev'
+export const APP_HOST = IS_PROD ? 'orbitapp2.surge.sh' : 'jot.dev'
 export const APP_PROTOCOL = 'http://'
 export const APP_URL = `${APP_PROTOCOL}${APP_HOST}`
 

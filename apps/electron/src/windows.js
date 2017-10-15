@@ -9,8 +9,6 @@ import * as Constants from '~/constants'
 import WindowsStore from './windowsStore'
 import Window from './window'
 
-console.log(Constants.APP_URL)
-
 let onWindows = []
 export function onWindow(cb) {
   onWindows.push(cb)

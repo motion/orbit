@@ -8,7 +8,7 @@
     "start-prod": "static-server -p 3002 -n build/index.html build",
     "start-debug": "motion --debug",
     "build": "NODE_ENV=production BUILD_DIR=. mcro-build",
-    "deploy": "surge ./build orbitapp.surge.sh"
+    "deploy": "surge ./build orbitapp2.surge.sh"
   },
   "dependencies": {
     "@mcro/black": "^1.4.1",

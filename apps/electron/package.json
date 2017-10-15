@@ -12,7 +12,9 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "fix-build":
-      "npm run fix-build-log; npm run fix-build-nm; npm run fix-build-el",
+      "npm run fix-build-mobx; npm run fix-build-log; npm run fix-build-nm; npm run fix-build-el",
+    "fix-build-mobx":
+      "cp -r ../../node_modules/mobx ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
     "fix-build-log":
       "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
     "fix-build-nm":

@@ -2,5 +2,15 @@
   "dir": "/tmp/pouch",
   "couchdb": {
     "uuid": "dd84e529-fa29-4f31-8634-5354d0f05c7f"
+  },
+  "httpd": {
+    "enable_cors": true
+  },
+  "cors": {
+    "credentials": true,
+    "methods": "GET, PUT, POST, HEAD, DELETE, OPTIONS",
+    "origins": "*",
+    "headers":
+      "accept, authorization, content-type, origin, referer, x-csrf-token"
   }
 }

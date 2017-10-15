@@ -1,6 +1,7 @@
 import http from 'http'
 import logger from 'morgan'
 import express from 'express'
+import cors from 'cors'
 import proxy from 'http-proxy-middleware'
 import session from 'express-session'
 import bodyParser from 'body-parser'
@@ -12,6 +13,9 @@ import Passport from 'passport'
 import PouchRouter from 'express-pouchdb'
 
 const port = Constants.SERVER_PORT
+const corsOptions = {
+  origin: '*',
+}
 
 export default class Server {
   login = null
@@ -55,6 +59,8 @@ export default class Server {
     const app = express()
     app.set('port', port)
     // app.use(logger('dev'))
+
+    app.use(cors(corsOptions))
 
     this.app = app
 
@@ -126,7 +132,11 @@ export default class Server {
     )
 
     // pouch routes
-    this.app.use('/db2', PouchRouter(this.pouch, { inMemoryConfig: true }))
+    this.app.use(
+      '/db2',
+      cors(corsOptions),
+      PouchRouter(this.pouch, { inMemoryConfig: true })
+    )
   }
 
   setupPassportRoutes() {

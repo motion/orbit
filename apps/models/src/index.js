@@ -94,6 +94,11 @@ export default class Database {
       RxDB.plugin(this.databaseConfig.adapter)
       PouchDB.plugin(this.databaseConfig.adapter)
     }
+    if (this.databaseConfig.plugins) {
+      for (const plugin of this.databaseConfig.plugins) {
+        RxDB.plugin(plugin)
+      }
+    }
 
     RxDB.plugin(pHTTP)
     PouchDB.plugin(pHTTP)

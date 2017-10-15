@@ -39,6 +39,7 @@
     "passport-oauth": "^1.0.0",
     "passport-oauth2-refresh": "^1.0.0",
     "passport-slack-ponycode": "0.0.2",
+    "pouchdb": "^6.3.4",
     "pouchdb-browser": "^6.3.4",
     "pouchdb-replication": "^6.3.4",
     "pouchdb-adapter-http": "^6.3.4",

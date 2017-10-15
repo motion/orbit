@@ -10,7 +10,7 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 // import { User } from '@mcro/models'
-import PouchRouter from 'express-pouchdb'
+import expressPouch from 'express-pouchdb'
 
 const port = Constants.SERVER_PORT
 const corsOptions = {
@@ -135,7 +135,7 @@ export default class Server {
     this.app.use(
       '/db2',
       cors(corsOptions),
-      PouchRouter(this.pouch, { inMemoryConfig: true })
+      expressPouch(this.pouch, { inMemoryConfig: true })
     )
   }
 

@@ -1,14 +1,11 @@
 // @flow
 import Server from './server'
-import PouchDBBrowser from 'pouchdb-browser'
-import PouchHttp from 'pouchdb-adapter-http'
-import PouchMemory from 'pouchdb-adapter-memory'
+import Database, { Models } from '@mcro/models'
+import PouchAdapterMemory from 'pouchdb-adapter-memory'
 import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-
-const PouchDB = PouchDBBrowser.plugin(PouchHttp).plugin(PouchMemory)
 
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
@@ -17,13 +14,36 @@ export default class API {
   server: Server
 
   constructor() {
-    const pouch = PouchDB.defaults({ adapter: 'memory' })
-    this.server = new Server({ pouch })
+    this.database = new Database(
+      {
+        name: 'username',
+        password: 'password',
+        adapter: PouchAdapterMemory,
+        adapterName: 'memory',
+        plugins: [
+          {
+            hooks: {
+              preCreatePouchDb(options) {
+                options.settings.prefix = '/tmp/my-temp-pouch/'
+              },
+            },
+          },
+        ],
+      },
+      Models
+    )
+    this.pouch = this.database.pouch
+    this.server = new Server({ pouch: this.pouch })
   }
 
   async start() {
     this.setupHosts()
     const port = this.server.start()
+    await this.database.start({
+      modelOptions: {
+        debug: true,
+      },
+    })
     console.log('API on port', port)
   }
 

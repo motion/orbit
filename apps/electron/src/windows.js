@@ -232,7 +232,7 @@ export default class ExampleApp extends React.Component {
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           ref={this.onWindow}
-          showDevTools
+          showDevTools={!Constants.IS_PROD}
           file={Constants.APP_URL}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}

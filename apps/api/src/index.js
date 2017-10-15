@@ -1,7 +1,6 @@
 import 'regenerator-runtime'
 import 'source-map-support/register'
 import 'isomorphic-fetch'
-import global from 'global'
 import cleanStack from 'clean-stacktrace'
 
 process.on('unhandledRejection', function(error, p) {

@@ -23,6 +23,7 @@
         "@mcro/gloss",
         "victory",
         "electron-prebuilt-compile",
+        "electron-packager",
         "electron-forge",
         "electron-compile",
         "electron-squirrel-startup",

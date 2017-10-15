@@ -6,11 +6,14 @@
   "description": "Description",
   "author": "Orbit",
   "scripts": {
-    "dist": "electron-builder --mac",
-    "pack": "electron-builder --mac --dir",
+    "dist": "DEBUG=electron-packager electron-packager . --out app --overwrite && npm run fix-build",
     "start": "electron build/out",
     "build": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "fix-build": "npm run fix-build-nm; npm run fix-build-el",
+    "fix-build-nm": "cpx -L './node_modules/@mcro/**/*{.js,.json,.html}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro",
+    "fix-build-el": "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron",
+    "test-build": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit"
   },
   "dependencies": {
     "@mcro/api": "*",
@@ -25,22 +28,7 @@
   "devDependencies": {
     "electron": "^1.7.0",
     "webpack": "^3.4.1",
-    "electron-builder": "19.37.2"
-  },
-  "build": {
-    "asar": false,
-    "npmRebuild": false,
-    "appId": "orbit.id",
-    "mac": {
-      "category": "pro"
-    },
-    "files": [
-      "**/*",
-      "../api/**/*"
-    ],
-    "directories": {
-      "output": "./app",
-      "buildResources": "resources"
-    }
+    "electron-packager": "^9.1.0",
+    "cpx": "^1.5.0"
   }
 }

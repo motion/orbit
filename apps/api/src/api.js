@@ -18,7 +18,6 @@ export default class API {
       Models
     )
     const pouch = this.database.pouch
-    global.pouch = pouch
     this.server = new Server({ pouch })
   }
 

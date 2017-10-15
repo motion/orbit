@@ -4,7 +4,10 @@ import Windows, { onWindow } from './windows'
 
 let app = null
 
+console.log('hi')
+
 export default function start() {
+  console.log('React', React.version)
   Ionize.start(<Windows />)
   onWindow(ref => {
     app = ref

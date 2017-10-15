@@ -1,2 +1,2 @@
 // process.env.NODE_ENV = 'production'
-require('./dist/index')
+module.exports = require('./es5/index').default

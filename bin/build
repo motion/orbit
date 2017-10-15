@@ -37,8 +37,8 @@ function build-prod() {
 }
 
 function build-api() {
-  cd apps/api
-  BABEL_ENV=es5 babel src --out-dir es5 -s true $1
+  npx lerna exec --parallel --scope @mcro/api --scope @mcro/electron -- \
+    BABEL_ENV=es5 babel src --out-dir es5 -s true $1
 }
 
 if [ "$APP" = "electron" ]; then

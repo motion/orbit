@@ -27,10 +27,10 @@ apps/api/jobs
 apps/api/settings
 apps/api/things
 apps/api/users
-apps/api/_replicator
-apps/api/_users
+**/*/_replicator
+**/*/_users
 apps/api/config.json
-apps/api/pouch__all_dbs__
+**/*/pouch__all_dbs__
 
 # keep these lib folders because these are babel plugins
 !packages/hmr/lib

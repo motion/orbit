@@ -204,6 +204,7 @@ export default class ExampleApp extends React.Component {
       defaultSize: [700, 500],
       vibrancy: 'dark',
       transparent: true,
+      backgroundColor: 'transparent',
       hasShadow: true,
       webPreferences: {
         experimentalFeatures: true,
@@ -248,6 +249,7 @@ export default class ExampleApp extends React.Component {
           onFocus={() => {
             this.activeWindow = this.windowRef
           }}
+          backgroundColor="transparent"
           webPreferences={{
             nativeWindowOpen: true,
             experimentalFeatures: true,

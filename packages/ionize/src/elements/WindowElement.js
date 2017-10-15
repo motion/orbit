@@ -127,6 +127,7 @@ export default class WindowElement extends BaseElement {
       transparent: !!props.transparent,
       webPreferences: props.webPreferences,
       hasShadow: props.hasShadow,
+      backgroundColor: props.backgroundColor,
     })
 
     this.parentWindow = null

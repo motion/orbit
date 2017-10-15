@@ -29,5 +29,8 @@ module.exports = (fatalError, stats) => {
   if (firstTime) {
     console.log('\ncool, now:')
     console.log('run web --prod')
+    if (!process.argv.indexOf('--watch')) {
+      process.exit()
+    }
   }
 }

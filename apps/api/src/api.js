@@ -6,7 +6,6 @@ import hostile_ from 'hostile'
 import * as Constants from '~/constants'
 import { promisifyAll } from 'sb-promisify'
 import sudoPrompt_ from 'sudo-prompt'
-import memdown from 'memdown'
 
 const hostile = promisifyAll(hostile_)
 const sudoPrompt = promisifyAll(sudoPrompt_)
@@ -19,13 +18,17 @@ export default class API {
       {
         name: 'username',
         password: 'password',
-        adapter: memdown,
+        adapter: PouchAdapterMemory,
+        adapterName: 'memory',
         plugins: [
-          require('pouchdb-adapter-leveldb'),
+          PouchAdapterMemory,
           {
             hooks: {
               preCreatePouchDb(options) {
-                options.settings.prefix = '/tmp/my-temp-pouch/'
+                options.settings = {
+                  ...options.settings,
+                  prefix: '/tmp/my-temp-pouch/',
+                }
               },
             },
           },

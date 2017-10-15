@@ -86,7 +86,7 @@ class CurrentUser {
           },
         })
         // double ensure sync
-        await User.sync({ direction: { push: true } })
+        // await User.sync({ direction: { push: true } })
       }
     } catch (err) {
       return false

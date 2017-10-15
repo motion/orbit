@@ -1,7 +1,6 @@
 import http from 'http'
 import logger from 'morgan'
 import express from 'express'
-import cors from 'cors'
 import proxy from 'http-proxy-middleware'
 import session from 'express-session'
 import bodyParser from 'body-parser'
@@ -13,9 +12,6 @@ import Passport from 'passport'
 import expressPouch from 'express-pouchdb'
 
 const port = Constants.SERVER_PORT
-const corsOptions = {
-  origin: '*',
-}
 
 export default class Server {
   login = null
@@ -61,9 +57,8 @@ export default class Server {
     // app.use(logger('dev'))
 
     const HEADER_ALLOWED =
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
-
-    app.use((req, res, next) => {
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers, Access-Control-Allow-Credentials, Access-Control-Allow-Origin, Content-Length'
+    const corsAllow = (req, res, next) => {
       res.header('Access-Control-Allow-Origin', req.headers.origin)
       res.header('Access-Control-Allow-Credentials', 'true')
       res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
@@ -72,7 +67,8 @@ export default class Server {
         'GET,HEAD,POST,PUT,DELETE,OPTIONS'
       )
       next()
-    })
+    }
+    app.use(corsAllow)
 
     this.app = app
 

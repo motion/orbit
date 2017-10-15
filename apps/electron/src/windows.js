@@ -123,7 +123,7 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('open-settings', (event, service) => {
-      open(`http://${Constants.APP_URL}/auth?service=` + service)
+      open(`${Constants.APP_URL}/settings?service=` + service)
     })
   }
 

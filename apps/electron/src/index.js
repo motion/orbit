@@ -1,9 +1,16 @@
-import 'electron-simple-updater'
+import updater from 'electron-simple-updater'
 import React from 'react'
 import Ionize from '@mcro/ionize'
 import Windows, { onWindow } from './windows'
 
 let app = null
+
+// if (Constants.IS_PROD) {
+
+// }
+const updateUrl = require('../package.json').updater.url
+console.log('updateUrl', updateUrl)
+updater.init(updateUrl)
 
 export default function start() {
   Ionize.start(<Windows />)

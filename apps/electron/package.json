@@ -19,7 +19,7 @@
     "prepare-publish":
       "cp ./app/Orbit.dmg ./app/Orbit-$npm_package_version.dmg && zip -r ./app/Orbit-$npm_package_version-mac.zip ./app/Orbit-darwin-x64/Orbit.app",
     "bundle-app":
-      "electron-installer-dmg --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
+      "electron-installer-dmg --overwrite --out ./app --icon ./resources/icon.icns ./app/Orbit-darwin-x64/Orbit.app Orbit",
     "package-app":
       "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --prune && npm run fix-build",
     "fix-build-clean": "npm run clean-build-modules; npm run fix-build",

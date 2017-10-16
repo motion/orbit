@@ -76,7 +76,11 @@ export default class Syncer {
     }
     this.ensureSetting()
     log(`Running ${this.type} ${action}`)
-    await this.syncers[action].run()
+    if (!this.syncers[action]) {
+      console.log('NO SYNCER FOUND', action)
+    } else {
+      await this.syncers[action].run()
+    }
   }
 
   async runAll() {

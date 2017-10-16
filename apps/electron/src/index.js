@@ -8,9 +8,6 @@ import * as Constants from '~/constants'
 
 let app = null
 
-electronContextMenu()
-electronDebug()
-
 // update checker
 if (Constants.IS_PROD) {
   const updateUrl = require('../package.json').updater.url
@@ -20,6 +17,10 @@ if (Constants.IS_PROD) {
 
 export default function start() {
   Ionize.start(<Windows />)
+
+  electronContextMenu()
+  electronDebug()
+
   onWindow(ref => {
     app = ref
   })

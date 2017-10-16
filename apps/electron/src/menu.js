@@ -1,6 +1,6 @@
-import React from 'react'
+import * as React from 'react'
 
-export default () =>
+export default () => (
   <menu>
     <submenu label="Electron">
       <about />
@@ -20,10 +20,8 @@ export default () =>
       <paste />
       <selectall />
     </submenu>
-    <submenu label="Custom Menu">
-      <item label="Foo the bars" />
-      <item label="Baz the quuxes" />
-      <sep />
+    <submenu label="Window">
       <togglefullscreen />
     </submenu>
   </menu>
+)

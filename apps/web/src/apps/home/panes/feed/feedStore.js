@@ -67,7 +67,7 @@ export default class FeedStore {
 
   willMount() {
     this.react(
-      () => this.data.people,
+      () => this.data && this.data.people,
       people => {
         this.setFilter('people', people || [])
       },
@@ -75,7 +75,7 @@ export default class FeedStore {
     )
 
     this.react(
-      () => this.data.service,
+      () => this.data && this.data.service,
       () => {
         const { service, startDate, endDate } = this.data
         this.setFilter(

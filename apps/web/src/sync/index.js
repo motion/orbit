@@ -23,7 +23,7 @@ export default class Sync {
   @watch pending: ?Array<Job> = () => Job.pending()
   @watch nonPending: ?Array<Job> = () => Job.nonPending()
   syncers: ?Object = null
-  enabled = localStorage.getItem('runSyncers') === 'true'
+  enabled = localStorage.getItem('runSyncers') !== 'false'
 
   start() {
     this.watchJobs()
@@ -56,13 +56,13 @@ export default class Sync {
 
   enable() {
     this.enabled = true
-    localStorage.setItem('runSyncers', true)
+    localStorage.setItem('runSyncers', 'true')
     this.runAll()
   }
 
   disable() {
     this.enabled = false
-    localStorage.setItem('runSyncers', false)
+    localStorage.setItem('runSyncers', 'false')
   }
 
   async dispose() {

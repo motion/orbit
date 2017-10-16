@@ -337,7 +337,6 @@ export default class Model {
     return (autoSync && (autoSync === true || autoSync.push)) || false
   }
 
-  // sitrep
   get shouldSyncPull(): boolean {
     if (!this.remote) {
       return false
@@ -357,11 +356,12 @@ export default class Model {
     this.remote = options.remote
     this.database = database
     const name = options.remoteOnly ? options.remote : this.title
+
     this._collection = await database.collection({
       name,
       schema: this.compiledSchema,
       statics: this.statics,
-      pouchSettings: this.options.pouchSettings,
+      pouchSettings: options.pouchSettings,
       migrationStrategies: this.migrations,
     })
 
@@ -440,7 +440,7 @@ export default class Model {
 
   syncQuery = (
     queryish: Queryish,
-    options: Object = { live: true, retry: true }
+    options: Object = { live: true, retry: false }
   ): Promise<boolean> => {
     const { shouldSyncPull } = this
 
@@ -555,6 +555,10 @@ export default class Model {
     return await this._collection.sync({
       remote: this.remote,
       waitForLeadership: false,
+      options: {
+        live: false,
+        retry: false,
+      },
       ...options,
     })
   }

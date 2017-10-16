@@ -151,6 +151,14 @@ class List extends React.PureComponent<Props, { selected: number }> {
     this.virtualListRef.scrollToRow(row)
   }
 
+  focus() {
+    if (!this.virtualListRef) {
+      return
+    }
+    console.log('should focus but need a dom node')
+    // this.virtualListRef.focus()
+  }
+
   measure = () => {
     if (this.virtualListRef) {
       this.virtualListRef.recomputeRowHeights(0)

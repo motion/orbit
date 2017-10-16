@@ -1,16 +1,30 @@
 {
   "name": "@mcro/electron",
+  "productName": "Orbit",
+  "version": "1.4.1",
   "private": true,
   "description": "Description",
   "author": "Orbit",
   "scripts": {
-    "dist": "electron-builder --mac",
-    "pack": "electron-builder --mac --dir",
-    "start": "electron build/out",
+    "dist":
+      "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns && npm run fix-build",
+    "start": "electron build/out --start",
     "build": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "fix-build":
+      "npm run fix-build-mobx; npm run fix-build-log; npm run fix-build-nm; npm run fix-build-el",
+    "fix-build-mobx":
+      "cp -r ../../node_modules/mobx ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+    "fix-build-log":
+      "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
+    "fix-build-nm":
+      "cpx -L './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+    "fix-build-el":
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron",
+    "test-build": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit"
   },
   "dependencies": {
+    "@mcro/api": "*",
     "@mcro/black": "^1.4.1",
     "@mcro/ionize": "^1.4.0",
     "electron-localshortcut": "^2.0.2",
@@ -18,19 +32,12 @@
     "opn": "^5.1.0",
     "react": "16.0.0-alpha.5",
     "react-dom": "16.0.0-alpha.5",
-    "react-motion": "^0.5.0",
-    "watch": "1.0.2"
+    "mobx": "^3.3.1"
   },
   "devDependencies": {
-    "electron": "^1.7.0",
-    "electron-builder": "^19.32.2",
-    "webpack": "^3.4.1"
-  },
-  "build": {
-    "appId": "jot.id",
-    "mac": {
-      "category": "pro"
-    }
-  },
-  "version": "1.4.1"
+    "electron": "^1.8.0",
+    "webpack": "^3.4.1",
+    "electron-packager": "^9.1.0",
+    "cpx": "^1.5.0"
+  }
 }

@@ -8,9 +8,8 @@
   "author": "Motion (motion.io)",
   "license": "MIT",
   "dependencies": {
-    "babel-runtime": "^6.23.0",
     "history": "^4.7.2",
-    "mobx": "^3.2.2",
+    "mobx": "^3.3.1",
     "url-pattern": "^1.0.3"
   },
   "publishConfig": {

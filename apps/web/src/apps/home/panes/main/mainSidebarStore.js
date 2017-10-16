@@ -1,4 +1,5 @@
 // @flow
+import * as React from 'react'
 import * as UI from '@mcro/ui'
 import { watch } from '@mcro/black'
 import type { PaneProps, PaneResult } from '~/types'
@@ -8,6 +9,13 @@ import { fuzzy } from '~/helpers'
 export default class MainSidebarStore {
   props: PaneProps
   list = null
+  started = false
+
+  willMount() {
+    this.setTimeout(() => {
+      this.started = true
+    }, 200)
+  }
 
   get search() {
     return this.props.homeStore.search
@@ -36,6 +44,13 @@ export default class MainSidebarStore {
   }
 
   @watch
+  searchable = () =>
+    this.started &&
+    Thing.find()
+      .sort({ updated: 'desc' })
+      .limit(8000)
+
+  @watch
   people = () =>
     Person.find()
       .sort({ updatedAt: 'desc' })
@@ -47,7 +62,7 @@ export default class MainSidebarStore {
       .where('author')
       .in(['natew'])
       .sort({ updated: 'desc' })
-      .limit(5000)
+      .limit(8)
 
   @watch
   teamrecent = () =>
@@ -55,20 +70,21 @@ export default class MainSidebarStore {
       .where('author')
       .ne('natew')
       .sort({ updated: 'desc' })
-      .limit(5000)
+      .limit(8)
 
-  get recently() {
-    const chop = 3
-    const mine = this.myrecent || []
-    const theirs = this.teamrecent || []
-
+  get things() {
+    if (this.search) {
+      return fuzzy(this.searchable, this.search)
+        .slice(0, 30)
+        .map(x => Thing.toResult(x, { category: 'Search Results' }))
+    }
     return [
-      ...mine
-        .slice(0, !this.props.homeStore.search ? chop : Number.MAX_VALUE)
-        .map(x => Thing.toResult(x, { category: 'My Recent' })),
-      ...theirs
-        .slice(0, !this.props.homeStore.search ? chop : Number.MAX_VALUE)
-        .map(x => Thing.toResult(x, { category: 'Team Recent' })),
+      ...(this.myrecent || []).map(x =>
+        Thing.toResult(x, { category: 'My Recent' })
+      ),
+      ...(this.teamrecent || []).map(x =>
+        Thing.toResult(x, { category: 'Team Recent' })
+      ),
     ]
   }
 
@@ -103,7 +119,8 @@ export default class MainSidebarStore {
       },
     },
     {
-      title: 'Team GSD',
+      title: 'My Team',
+      displayTitle: <UI.Title size={1.5}>My Team</UI.Title>,
       type: 'feed',
       icon: 'social-slack',
       data: {
@@ -128,8 +145,8 @@ export default class MainSidebarStore {
   get results(): Array<PaneResult> {
     const all = [
       ...this.pinned,
+      ...this.things,
       ...this.testing,
-      ...this.recently,
       ...(this.people || []).map(x =>
         Person.toResult(x, { category: 'People' })
       ),

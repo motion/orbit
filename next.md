@@ -1,3 +1,7 @@
+- flatten builds to single file in root of app
+  - es6.main.js
+  - es5.main.js
+  - prod.main.js
 - people context on everything
 - people page (basically feed)
 - focus into main pane on drill in

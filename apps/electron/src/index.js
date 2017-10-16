@@ -2,12 +2,18 @@ import React from 'react'
 import Ionize from '@mcro/ionize'
 import Windows, { onWindow } from './windows'
 
-Ionize.start(<Windows />)
-
 let app = null
-onWindow(ref => {
-  app = ref
-})
+
+export default function start() {
+  Ionize.start(<Windows />)
+  onWindow(ref => {
+    app = ref
+  })
+}
+
+if (process.argv.find(x => x === '--start')) {
+  start()
+}
 
 function restart() {
   console.log('got a restart from hmr')

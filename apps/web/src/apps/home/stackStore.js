@@ -39,7 +39,11 @@ class StackItemStore {
     return this.active[1]
   }
   get sidebarSelectedIsNav() {
-    return this.results && !!this.results[this.sidebarSelectedIndex].isParent
+    if (!this.results) {
+      return false
+    }
+    const result = this.results[this.sidebarSelectedIndex]
+    return result && result.isParent
   }
   get sidebarSelected() {
     const selected = this.results[this.sidebarSelectedIndex]

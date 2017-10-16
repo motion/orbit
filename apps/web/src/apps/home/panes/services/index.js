@@ -13,7 +13,7 @@ class Services {
     const { types } = store
 
     // lets turn google into calendar
-    const serviceItems = [...types, 'slack', 'drive']
+    const serviceItems = types
       .map(type => (type === 'google' ? 'calendar' : type))
       .map(type => <Item key={type} serviceStore={store} type={type} />)
 

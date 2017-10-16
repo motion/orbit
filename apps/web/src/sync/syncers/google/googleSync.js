@@ -33,7 +33,7 @@ export default class GoogleSync extends Syncer {
           ...opts,
           headers: new Headers({
             Authorization: `Bearer ${this.token}`,
-            'Access-Control-Allow-Origin': 'jot.dev',
+            'Access-Control-Allow-Origin': Constants.API_HOST,
             'Access-Control-Allow-Methods': 'GET',
             ...opts.headers,
           }),

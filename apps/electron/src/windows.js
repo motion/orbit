@@ -1,7 +1,7 @@
 import React from 'react'
 import { app, globalShortcut, ipcMain } from 'electron'
 import repl from 'repl'
-import localShortcut from 'electron-localshortcut'
+// import localShortcut from 'electron-localshortcut'
 import open from 'opn'
 import Menu from '~/menu'
 import { measure } from '~/helpers'
@@ -26,6 +26,7 @@ export default class ExampleApp extends React.Component {
   }
 
   componentDidMount() {
+    console.log('did mount windows')
     this.measureAndShow()
     this.next() // preload one app window
     onWindows.forEach(cb => cb(this))
@@ -77,14 +78,14 @@ export default class ExampleApp extends React.Component {
         this.updateWindows()
       }
 
-      localShortcut.register(
-        Constants.IS_MAC ? 'Cmd+Alt+I' : 'Ctrl+Shift+I',
-        toggleDevTools
-      )
-      localShortcut.register('F12', toggleDevTools)
-      localShortcut.register('CmdOrCtrl+R', () => {
-        electron.webContents.reloadIgnoringCache()
-      })
+      // localShortcut.register(
+      //   Constants.IS_MAC ? 'Cmd+Alt+I' : 'Ctrl+Shift+I',
+      //   toggleDevTools
+      // )
+      // localShortcut.register('F12', toggleDevTools)
+      // localShortcut.register('CmdOrCtrl+R', () => {
+      //   electron.webContents.reloadIgnoringCache()
+      // })
     }
   }
 
@@ -122,7 +123,7 @@ export default class ExampleApp extends React.Component {
     })
 
     ipcMain.on('open-settings', (event, service) => {
-      open('http://jot.dev/auth?service=' + service)
+      open(`${Constants.APP_URL}/settings?service=` + service)
     })
   }
 
@@ -203,6 +204,7 @@ export default class ExampleApp extends React.Component {
       defaultSize: [700, 500],
       vibrancy: 'dark',
       transparent: true,
+      backgroundColor: 'transparent',
       hasShadow: true,
       webPreferences: {
         experimentalFeatures: true,
@@ -230,8 +232,8 @@ export default class ExampleApp extends React.Component {
           defaultSize={this.initialSize || this.state.size}
           size={this.state.size}
           ref={this.onWindow}
-          showDevTools
-          file={Constants.JOT_URL}
+          showDevTools={true || !Constants.IS_PROD}
+          file={Constants.APP_URL}
           titleBarStyle="customButtonsOnHover"
           show={this.state.show}
           size={this.state.size.map(x => x + bgPadding * 2)}
@@ -247,6 +249,7 @@ export default class ExampleApp extends React.Component {
           onFocus={() => {
             this.activeWindow = this.windowRef
           }}
+          backgroundColor="#00000000"
           webPreferences={{
             nativeWindowOpen: true,
             experimentalFeatures: true,
@@ -257,7 +260,7 @@ export default class ExampleApp extends React.Component {
           return (
             <Window
               key={win.key}
-              file={`${Constants.JOT_URL}?key=${win.key}`}
+              file={`${Constants.APP_URL}?key=${win.key}`}
               show={win.active}
               {...appWindow}
               defaultSize={win.size}

@@ -17,7 +17,7 @@ batch-processor@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/batch-processor/-/batch-processor-1.0.0.tgz#75c95c32b748e0850d10c2b168f6bdbe9891ace8"
 
-classnames@^2.2.3, classnames@^2.2.5:
+classnames@^2.2.3:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -45,10 +45,6 @@ color@^2.0.0:
     color-convert "^1.8.2"
     color-string "^1.4.0"
 
-commander@2:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
-
 core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
@@ -57,29 +53,17 @@ core-js@^2.4.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.0.tgz#569c050918be6486b3837552028ae0466b717086"
 
-create-react-class@^15.6.0:
-  version "15.6.0"
-  resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.0.tgz#ab448497c26566e1e29413e883207d57cfe7bed4"
+create-react-class@^15.5.2:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.2.tgz#cf1ed15f12aad7f14ef5f2dfe05e6c42f91ef02a"
   dependencies:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-d3-array@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.0.tgz#147d269720e174c4057a7f42be8b0f3f2ba53108"
-
-d3-polygon@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/d3-polygon/-/d3-polygon-1.0.3.tgz#16888e9026460933f2b179652ad378224d382c62"
-
 "dom-helpers@^2.4.0 || ^3.0.0":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-3.2.1.tgz#3203e07fed217bd1f424b019735582fc37b2825a"
-
-earcut@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/earcut/-/earcut-2.1.1.tgz#157634e5f3ebb42224e475016e86a5b6ce556b45"
 
 element-resize-detector@^1.1.12:
   version "1.1.12"
@@ -105,30 +89,17 @@ fbjs@^0.8.9:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
 
-flubber@^0.3.0:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/flubber/-/flubber-0.3.1.tgz#8658e61724173b0e08657ede412171c84b831c9e"
-  dependencies:
-    d3-array "^1.2.0"
-    d3-polygon "^1.0.3"
-    earcut "^2.1.1"
-    svg-path-properties "^0.2.1"
-    svgpath "^2.2.1"
-    topojson-client "^3.0.0"
-
 fuzzy@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/fuzzy/-/fuzzy-0.1.3.tgz#4c76ec2ff0ac1a36a9dccf9a00df8623078d4ed8"
 
+hoist-non-react-statics@^2.3.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.3.1.tgz#343db84c6018c650778898240135a1420ee22ce0"
+
 iconv-lite@~0.4.13:
   version "0.4.18"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.18.tgz#23d8656b16aae6742ac29732ea8f0336a4789cf2"
-
-invariant@2.x.x:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
-  dependencies:
-    loose-envify "^1.0.0"
 
 is-arrayish@^0.3.1:
   version "0.3.1"
@@ -153,19 +124,19 @@ keycode@^2.1.9:
   version "2.1.9"
   resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.1.9.tgz#964a23c54e4889405b4861a5c9f0480d45141dfa"
 
-lodash.isequal@^4.0.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+lodash@^4.13.1:
+  version "4.17.4"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
-loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.0, loose-envify@^1.3.1:
+loose-envify@^1.0.0, loose-envify@^1.3.0, loose-envify@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.3.1.tgz#d1a8ad33fa9ce0e713d65fdd0ac8b748d478c848"
   dependencies:
     js-tokens "^3.0.0"
 
-mitt@^1.1.0:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/mitt/-/mitt-1.1.2.tgz#380e61480d6a615b660f07abb60d51e0a4e4bed6"
+mousetrap@^1.5.2:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/mousetrap/-/mousetrap-1.6.1.tgz#2a085f5c751294c75e7e81f6ec2545b29cbf42d9"
 
 node-fetch@^1.0.1:
   version "1.7.2"
@@ -184,73 +155,25 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8:
+prop-types@^15.5.4, prop-types@^15.5.8:
   version "15.5.10"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
   dependencies:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
 
-randomcolor@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/randomcolor/-/randomcolor-0.5.3.tgz#7f90f2f2a7f6d5a52232161eeaeeaea9ac3b5815"
-
-react-dom@^15.5.4:
-  version "15.6.1"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.1.tgz#2cb0ed4191038e53c209eb3a79a23e2a4cf99470"
+react-hotkeys@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-0.10.0.tgz#d1e78bd63f16d6db58d550d33c8eb071f35d94fb"
   dependencies:
-    fbjs "^0.8.9"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-    prop-types "^15.5.10"
-
-react-draggable@^2.2.6:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-2.2.6.tgz#3a806e10f2da6babfea4136be6510e89b0d76901"
-  dependencies:
-    classnames "^2.2.5"
-
-react-grid-layout@^0.14.6:
-  version "0.14.7"
-  resolved "https://registry.yarnpkg.com/react-grid-layout/-/react-grid-layout-0.14.7.tgz#aaa0d090007a4d482d39a95bd63c8ef12901eab4"
-  dependencies:
-    classnames "^2.2.5"
-    lodash.isequal "^4.0.0"
-    prop-types "^15.5.8"
-    react-draggable "^2.2.6"
-    react-resizable "^1.4.0"
-
-react-portal@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-portal/-/react-portal-3.1.0.tgz#865c44fb72a1da106c649206936559ce891ee899"
-  dependencies:
+    create-react-class "^15.5.2"
+    lodash "^4.13.1"
+    mousetrap "^1.5.2"
     prop-types "^15.5.8"
 
-react-resizable@^1.4.0:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/react-resizable/-/react-resizable-1.7.1.tgz#e8fd2c2247c9299d117fb245dbeed9c68c0e004c"
-  dependencies:
-    prop-types "^15.5.8"
-    react-draggable "^2.2.6"
-
-react-slot-fill@^1.0.0-alpha.12:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-slot-fill/-/react-slot-fill-1.0.1.tgz#01bbbdb669286623e9d29e8e3a9cbfde9b594091"
-  dependencies:
-    mitt "^1.1.0"
-
-react-tilt@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/react-tilt/-/react-tilt-0.1.3.tgz#7ebe2407cb85b104e04115a806a02dc54be3c2fb"
-  dependencies:
-    react "^15.5.4"
-    react-dom "^15.5.4"
-
-react-tunnel@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-tunnel/-/react-tunnel-0.1.0.tgz#5179c1cdef37020caea9eccd8169b65807890385"
-  dependencies:
-    invariant "2.x.x"
+react-tilt@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/react-tilt/-/react-tilt-0.1.4.tgz#0ac1f33674a3fff6c617cf411002d7ecdd2ebcb1"
 
 react-virtualized@^9.9.0:
   version "9.9.0"
@@ -261,16 +184,6 @@ react-virtualized@^9.9.0:
     dom-helpers "^2.4.0 || ^3.0.0"
     loose-envify "^1.3.0"
     prop-types "^15.5.4"
-
-react@^15.5.4:
-  version "15.6.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-15.6.1.tgz#baa8434ec6780bde997cdc380b79cd33b96393df"
-  dependencies:
-    create-react-class "^15.6.0"
-    fbjs "^0.8.9"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-    prop-types "^15.5.10"
 
 regenerator-runtime@^0.11.0:
   version "0.11.0"
@@ -285,20 +198,6 @@ simple-swizzle@^0.2.2:
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
   dependencies:
     is-arrayish "^0.3.1"
-
-svg-path-properties@^0.2.1:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/svg-path-properties/-/svg-path-properties-0.2.2.tgz#b073d81be7292eae0e233ab8a83f58dc27113296"
-
-svgpath@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/svgpath/-/svgpath-2.2.1.tgz#0834bb67c89a76472b2bd06cc101fa7b517b222c"
-
-topojson-client@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/topojson-client/-/topojson-client-3.0.0.tgz#1f99293a77ef42a448d032a81aa982b73f360d2f"
-  dependencies:
-    commander "2"
 
 ua-parser-js@^0.7.9:
   version "0.7.14"

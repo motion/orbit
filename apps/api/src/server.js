@@ -9,7 +9,7 @@ import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
 // import { User } from '@mcro/models'
-import PouchRouter from 'express-pouchdb'
+import expressPouch from 'express-pouchdb'
 
 const port = Constants.SERVER_PORT
 
@@ -56,9 +56,26 @@ export default class Server {
     app.set('port', port)
     // app.use(logger('dev'))
 
+    const HEADER_ALLOWED =
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
+    const corsAllow = (req, res, next) => {
+      res.header('Access-Control-Allow-Origin', req.headers.origin)
+      res.header('Access-Control-Allow-Credentials', 'true')
+      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
+      res.header(
+        'Access-Control-Allow-Methods',
+        'GET,HEAD,POST,PUT,DELETE,OPTIONS'
+      )
+      next()
+    }
+    app.use(corsAllow)
+
     this.app = app
 
     // ROUTES
+    this.app.use('/auth', bodyParser.json())
+    this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
+    this.setupCredPass()
     this.setupPassportRoutes()
     this.setupPouch()
     this.setupProxy()
@@ -71,6 +88,26 @@ export default class Server {
 
   dispose() {
     console.log('dispose server')
+  }
+
+  creds = {}
+  setupCredPass() {
+    this.app.use(bodyParser.json())
+    this.app.use(bodyParser.urlencoded({ extended: false }))
+    this.app.use('/getCreds', (req, res) => {
+      if (Object.keys(this.creds).length) {
+        res.json(this.creds)
+      } else {
+        res.json({ error: 'no creds' })
+      }
+    })
+    this.app.use('/setCreds', (req, res) => {
+      console.log('set', typeof req.body, req.body)
+      if (req.body) {
+        this.creds = req.body
+      }
+      res.sendStatus(200)
+    })
   }
 
   verifySession = async (username, token) => {
@@ -126,25 +163,18 @@ export default class Server {
     )
 
     // pouch routes
-    this.app.use('/db2', PouchRouter(this.pouch, { inMemoryConfig: true }))
+    this.app.use('/db2', expressPouch(this.pouch, { inMemoryConfig: true }))
   }
 
   setupPassportRoutes() {
-    this.setupAuthRoutes()
-    this.setupAuthRefreshRoutes()
-    this.setupAuthReplyRoutes()
-  }
-
-  setupAuthRoutes() {
-    this.app.use('/auth', bodyParser.json())
-    this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
-    // TODO change secret
     this.app.use(
-      '/auth',
+      '/auth', // TODO change secret
       session({ secret: 'orbit', resave: false, saveUninitialized: true })
     )
     this.app.use('/auth', Passport.initialize())
     this.app.use('/auth', Passport.session())
+    this.setupAuthRefreshRoutes()
+    this.setupAuthReplyRoutes()
   }
 
   setupAuthRefreshRoutes() {

@@ -8,7 +8,7 @@ function runRouter() {
   return new Router({
     routes: {
       '/': HomePage,
-      auth: AuthPage,
+      settings: AuthPage,
       window: WindowPage,
     },
   })

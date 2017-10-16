@@ -1,15 +1,18 @@
 // @flow
 // export constants from @mcro/black
-import { IS_ELECTRON } from '@mcro/black'
+import { Constants } from '@mcro/black'
 
-export * from '@mcro/black/lib/constants'
+console.log('process.env.IS_PROD', process.env.IS_PROD)
 
-export const PROTOCOL = `${window.location.protocol}//`
-export const HOST = window.location.host
-export const API_HOST = `api.${HOST}`
-export const API_URL = `${PROTOCOL}${API_HOST}`
-export const COUCH_HOST = `api.${HOST}`
-export const COUCH_URL = `${PROTOCOL}${COUCH_HOST}/couch`
+export const IS_ELECTRON = Constants.IS_ELECTRON
+export const IS_PROD =
+  process.env.NODE_ENV === 'production' || process.env.IS_PROD
+
+const protocol = `${window.location.protocol}//`
+export const API_HOST = `orbit.dev`
+export const API_URL = `${protocol}${API_HOST}`
+export const COUCH_HOST = API_HOST
+export const COUCH_URL = `${protocol}${COUCH_HOST}/couch`
 
 export const DB_CONFIG = {
   name: 'username',

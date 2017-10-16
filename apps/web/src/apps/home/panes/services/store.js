@@ -7,7 +7,8 @@ export default class ServicesStore {
   events = Event.find()
 
   get types() {
-    return without(Object.keys(CurrentUser.setting), 'type').filter(Boolean)
+    return ['github', 'calendar', 'drive', 'slack']
+    // return without(Object.keys(CurrentUser.setting), 'type').filter(Boolean)
   }
 
   // creates a map of { 'type:action': job, .. }

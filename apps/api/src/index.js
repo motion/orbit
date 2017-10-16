@@ -1,7 +1,6 @@
-import 'regenerator-runtime'
+import 'babel-polyfill'
 import 'source-map-support/register'
 import 'isomorphic-fetch'
-import global from 'global'
 import cleanStack from 'clean-stacktrace'
 
 process.on('unhandledRejection', function(error, p) {
@@ -32,14 +31,11 @@ process.title = 'orbit-api'
 
 const API = require('./api').default
 
-async function run() {
+export default async function run() {
   const Api = new API()
-  global.API = Api
   try {
     await Api.start()
   } catch (err) {
     console.log('error', err)
   }
 }
-
-run()

@@ -6,6 +6,26 @@ import * as UI from '@mcro/ui'
 @view({
   paneStore: class PaneStore {
     listRef = null
+
+    willMount() {
+      this.watchDrillIn()
+    }
+
+    watchDrillIn = () => {
+      if (this.props.sidebar) {
+        return
+      }
+      this.react(
+        () => this.props.stack.last.col,
+        col => {
+          // focusing on main
+          if (col === 1 && this.listRef) {
+            this.listRef.focus()
+          }
+        }
+      )
+    }
+
     setList = ref => {
       if (!this.listRef) {
         this.listRef = ref
@@ -14,19 +34,23 @@ import * as UI from '@mcro/ui'
           this.props.store.onListRef(this.listRef)
         }
 
-        const { sidebar, stack } = this.props
-
-        // scroll to row in list
-        this.react(
-          () =>
-            sidebar
-              ? stack.last.sidebarSelectedIndex
-              : stack.last.mainSelectedIndex,
-          index => {
-            this.listRef.scrollToRow(index)
-          }
-        )
+        this.watchSelection()
       }
+    }
+
+    watchSelection = () => {
+      const { sidebar, stack } = this.props
+
+      // scroll to row in list
+      this.react(
+        () =>
+          sidebar
+            ? stack.last.sidebarSelectedIndex
+            : stack.last.mainSelectedIndex,
+        index => {
+          this.listRef.scrollToRow(index)
+        }
+      )
     }
   },
 })
@@ -34,7 +58,7 @@ export default class Pane {
   onSelect = (item, index) => {
     if (item.onClick) {
       item.onClick()
-    } else {
+    } else if (this.props.onSelect) {
       this.props.onSelect(item, index)
     }
   }
@@ -55,7 +79,6 @@ export default class Pane {
     sidebar,
     actionBar,
     light,
-    virtualized,
   }) {
     let { theme } = this.props
 

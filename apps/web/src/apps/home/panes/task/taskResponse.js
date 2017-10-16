@@ -10,7 +10,7 @@ export default class TaskResponse {
     const isOpen = false
 
     return (
-      <container $open={isOpen}>
+      <response $open={isOpen}>
         <textarea
           if={isOpen}
           value={taskStore.responseVal}
@@ -40,12 +40,13 @@ export default class TaskResponse {
             </UI.Button>
           </UI.Row>
         </info>
-      </container>
+      </response>
     )
   }
 
   static style = {
-    container: {
+    response: {
+      width: '100%',
       borderTop: [1, [0, 0, 0, 0.1]],
       padding: [10, 25],
       margin: [0, -15],

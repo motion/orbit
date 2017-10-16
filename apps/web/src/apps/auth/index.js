@@ -2,66 +2,36 @@ import React from 'react'
 import { view } from '@mcro/black'
 import * as UI from '@mcro/ui'
 import { CurrentUser } from '~/app'
-import * as Constants from '~/constants'
 
-const ALL_INTEGRATIONS = ['slack', 'github', 'google']
-const integration = Constants.AUTH_SERVICE
-
-@view
-export default class AuthApp {
-  componentDidMount() {
-    if (integration) {
-      this.link(integration)()
+const service = (window.location + '').split('service=')[1]
+@view({
+  store: class SettingsStore {
+    link = async service => {
+      const clearId = setInterval(async () => {
+        if (CurrentUser.user) {
+          clearInterval(clearId)
+          await CurrentUser.link(service)
+          // setTimeout(() => {
+          //   window.close()
+          // }, 100)
+        }
+      }, 200)
     }
+  },
+})
+export default class SettingsPage {
+  componentWillMount() {
+    //this.props.store.link(service)
   }
 
-  link = name => () => CurrentUser.link(name)
-
-  render() {
+  render({ store }) {
     return (
-      <UI.Theme name="light">
-        <settings>
-          <header>
-            <UI.Title size={4}>Setup Orbit</UI.Title>
-          </header>
-
-          <content>
-            <UI.Button
-              key={integration}
-              size={2}
-              icon={`social${integration}`}
-              onClick={this.link(integration)}
-            >
-              Authorize {integration}
-            </UI.Button>
-
-            <br />
-            <br />
-
-            <UI.Row stretch>
-              {ALL_INTEGRATIONS.filter(x => x !== integration).map(name => (
-                <UI.Button
-                  key={name}
-                  size={1.2}
-                  icon={`social${name}`}
-                  onClick={this.link(name)}
-                >
-                  Authorize {name}
-                </UI.Button>
-              ))}
-            </UI.Row>
-          </content>
-        </settings>
-      </UI.Theme>
+      <h5 css={{ padding: 30 }}>
+        loading {service} integration{' '}
+        <button onClick={() => store.link(service)}>link</button>
+      </h5>
     )
   }
 
-  static style = {
-    settings: {
-      padding: 20,
-    },
-    header: {
-      padding: 20,
-    },
-  }
+  static style = {}
 }

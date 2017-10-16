@@ -2,8 +2,7 @@
 import RxDB from 'rxdb'
 import PouchDB from 'pouchdb-core'
 import pHTTP from 'pouchdb-adapter-http'
-// import pValidate from 'pouchdb-validation'
-// import pSearch from 'pouchdb-quick-search'
+import pMapReduce from 'pouchdb-mapreduce'
 import * as Constants from '~/constants'
 import type { Model } from '@mcro/model'
 export type { Model }
@@ -94,9 +93,27 @@ export default class Database {
       RxDB.plugin(this.databaseConfig.adapter)
       PouchDB.plugin(this.databaseConfig.adapter)
     }
+    if (this.databaseConfig.plugins) {
+      for (const plugin of this.databaseConfig.plugins) {
+        RxDB.plugin(plugin)
+      }
+    }
 
     RxDB.plugin(pHTTP)
     PouchDB.plugin(pHTTP)
+    PouchDB.plugin(pMapReduce)
+    RxDB.plugin(pMapReduce)
+
+    RxDB.plugin({
+      hooks: {
+        preCreatePouchDb: options => {
+          options.settings = {
+            ...options.settings,
+            ...this.pouchOptions,
+          }
+        },
+      },
+    })
   }
 
   get pouch() {
@@ -110,7 +127,6 @@ export default class Database {
       name: this.databaseConfig.name,
       password: this.databaseConfig.password,
       multiInstance: false,
-      withCredentials: false,
       ...options,
     })
 
@@ -130,48 +146,38 @@ export default class Database {
     }
   }
 
-  attachModels = async () => {
-    const connections = []
+  get pouchOptions() {
+    return {
+      skip_setup: true,
+      ajax: {
+        withCredentials: false,
+        headers: {
+          'X-Token': `${User.name}*|*${User.token}`,
+        },
+      },
+    }
+  }
 
+  async attachModels() {
+    const connections = []
     // attach Models to app and connect if need be
     for (const name of Object.keys(this.modelsConfig)) {
       const model = this.modelsConfig[name]
       this.models[name] = model
-
       if (typeof model.connect !== 'function') {
         throw new Error(
           `No connect found for model ${model.name} connect = ${typeof model.connect}`
         )
       }
-
-      let settings = {
-        pouch: PouchDB,
-        pouchSettings: {
-          skip_setup: true,
-        },
-        ...this.modelOptions,
-      }
-
-      if (this.databaseConfig.remoteUrl) {
-        settings = {
+      connections.push(
+        model.connect(this.database, {
+          pouch: PouchDB,
           remote: `${this.databaseConfig.remoteUrl}/${model.title}/`,
-          remoteOptions: {
-            skip_setup: true,
-            skipSetup: true,
-            adapter: this.databaseConfig.adapterName,
-            ajax: {
-              headers: {
-                'X-Token': `${User.name}*|*${User.token}`,
-              },
-            },
-          },
-          ...settings,
-        }
-      }
-
-      connections.push(model.connect(this.database, settings))
+          ...this.modelOptions,
+          pouchSettings: this.pouchOptions,
+        })
+      )
     }
-
     return await Promise.all(connections)
   }
 }

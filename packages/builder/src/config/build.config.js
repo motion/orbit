@@ -20,8 +20,8 @@ const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 
-const ROOT = Path.join(__dirname, '..')
 const IS_PROD = process.env.NODE_ENV === 'production'
+console.log('IS_PROD', IS_PROD)
 const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
@@ -47,6 +47,8 @@ if (IS_PROD) {
 }
 
 module.exports = Object.assign(config, {
+  watch: !!process.argv.indexOf('--watch'),
+
   entry: {
     app: filtered([
       IS_DEV && require.resolve('webpack-dev-server/client') + '?/',
@@ -67,7 +69,7 @@ module.exports = Object.assign(config, {
     // NOTE: 'es5'
     mainFields: IS_DEV
       ? ['module', 'browser', 'main', 'es5']
-      : ['browser', 'module:production', 'module', 'main', 'es5'],
+      : ['browser', 'module:production', 'main', 'es5'],
     extensions: ['.js', '.json'],
     // WARNING: messing with this order is dangerous af
     // TODO: can add root monorepo node_modules and then remove a lot of babel shit
@@ -109,7 +111,9 @@ module.exports = Object.assign(config, {
     //
     // 🚨
     // warning: disabling this fixed styles not attaching:
-    // new webpack.DefinePlugin(env.stringified),
+    // new webpack.DefinePlugin({
+    //   'process.env': { NODE_ENV: '"production"', IS_PROD: true },
+    // }),
     // ⏰
     //
     new CaseSensitivePathsPlugin(),
@@ -128,7 +132,7 @@ module.exports = Object.assign(config, {
           return context && context.indexOf('node_modules') >= 0
         },
       }),
-    // IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
+    IS_PROD && new webpack.optimize.OccurrenceOrderPlugin(),
     MINIFY &&
       IS_PROD &&
       new BabelMinifyPlugin({

@@ -6,7 +6,7 @@
   "module": "lib/index.js",
   "scripts": {
     "start": "node index.js",
-    "start-prod": "node index.js",
+    "start-prod": "NODE_ENV=production IS_PROD=true node index.js",
     "start-dev": "nodemon --inspect=0.0.0.0:5858 index.js",
     "start-watch": "../../bin/build --watch",
     "watch": "webpack --watch"

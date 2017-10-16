@@ -57,9 +57,9 @@ export default class API {
 
   async setupHosts() {
     const lines = await hostile.get(true)
-    const exists = lines.map(line => line[1]).indexOf(Constants.API_HOST) > -1
+    const exists = lines.map(line => line[1]).indexOf(Constants.HOST) > -1
     if (!exists) {
-      await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Constants.API_HOST}`, {
+      await sudoPrompt.exec(`npx hostile set 127.0.0.1 ${Constants.HOST}`, {
         name: 'Orbit',
       })
     }

@@ -130,7 +130,7 @@ export default class Server {
     this.app.use(
       '/',
       proxy({
-        target: 'http://localhost:3002',
+        target: Constants.APP_URL,
         changeOrigin: true,
         secure: false,
         ws: true,

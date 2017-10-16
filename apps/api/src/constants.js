@@ -10,6 +10,8 @@ export const DB_URL = `${DB_PROTOCOL}${DB_USER}:${DB_PASSWORD}@${DB_HOST}`
 export const IS_PROD =
   process.env.NODE_ENV === 'production' || process.env.IS_PROD
 
+export const HOST = IS_PROD ? 'seemirai.com' : 'jot.dev'
 export const API_HOST = IS_PROD ? 'orbit.dev' : 'jot.dev'
+export const APP_URL = IS_PROD ? `http://${HOST}` : 'http://localhost:3002'
 
 export const SERVER_PORT = process.env.PORT || 3001

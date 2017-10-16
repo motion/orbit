@@ -60,9 +60,7 @@ class ItemStore {
     if (error) {
       console.log('no creds')
     } else {
-      await CurrentUser.mergeUpdate({
-        authorizations,
-      })
+      await CurrentUser.setAuthorizations(authorizations)
       return authorizations
     }
   }

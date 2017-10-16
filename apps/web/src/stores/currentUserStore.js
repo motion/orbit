@@ -80,7 +80,10 @@ class CurrentUser {
       throw new Error(`No user`)
     }
     try {
-      const info = await passportLink(provider, options)
+      const info = await passportLink(
+        `${Constants.API_URL}/auth/${provider}`,
+        options
+      )
       if (info) {
         await this.user.mergeUpdate({
           authorizations: {

@@ -18,7 +18,7 @@ function popup(url, title, win, w, h) {
 }
 
 export default function passportLink(
-  provider: string,
+  path: string,
   options: Object = {}
 ): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -28,7 +28,6 @@ export default function passportLink(
       height: 600,
       ...options,
     }
-    const path = `/auth/${provider}`
 
     // setup new response object
     let resolved = false

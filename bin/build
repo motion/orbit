@@ -52,8 +52,7 @@ elif [ "$APP" = "api" ]; then
 elif [ "$APP" = "web" ]; then
   cd $ROOT/apps/web
   rm -rf build
-  npm run build -- ${ARGS} &
-  wait
+  npm run build -- ${ARGS}
 else
   # only build modern during dev-watch
   if [ "$ARGS" = "--watch" ]; then

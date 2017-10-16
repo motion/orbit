@@ -8,7 +8,6 @@ import * as Constants from '~/constants'
 import OAuth from './server/oauth'
 import OAuthStrategies from './server/oauth.strategies'
 import Passport from 'passport'
-// import { User } from '@mcro/models'
 import expressPouch from 'express-pouchdb'
 
 const port = Constants.SERVER_PORT
@@ -18,16 +17,9 @@ export default class Server {
 
   constructor() {
     this.cache = {}
-    // this.pouch = pouch
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
       onSuccess: async (service, token, refreshToken, info) => {
-        // const user = await User.findOrCreate('a@b.com')
-        // await user.mergeUpdate({
-        //   authorizations: {
-        //     [service]: res,
-        //   },
-        // })
         return { token, refreshToken, info }
       },
       findInfo: provider => {
@@ -36,47 +28,22 @@ export default class Server {
       updateInfo: (provider, info) => {
         this.cache[provider] = info
       },
-      // updateUser: async res => {
-      //   if (!res.info || !res.info.provider) {
-      //     throw new Error(`Don't see a provider for ${res}`)
-      //   }
-      //   const user = await User.findOrCreate('a@b.com')
-      //   if (!user) {
-      //     throw new Error(`Don't see a user`)
-      //   }
-      //   await user.mergeUpdate({
-      //     authorizations: {
-      //       [res.info.provider]: res,
-      //     },
-      //   })
-      // },
     })
 
     const app = express()
     app.set('port', port)
+
     if (Constants.IS_PROD) {
       app.use(logger('dev'))
     }
 
-    const HEADER_ALLOWED =
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
-    const corsAllow = (req, res, next) => {
-      res.header('Access-Control-Allow-Origin', req.headers.origin)
-      res.header('Access-Control-Allow-Credentials', 'true')
-      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-      res.header(
-        'Access-Control-Allow-Methods',
-        'GET,HEAD,POST,PUT,DELETE,OPTIONS'
-      )
-      next()
-    }
-    app.use(corsAllow)
-
     this.app = app
 
+    app.use(this.cors())
+
     // ROUTES
-    this.app.use('/auth', bodyParser.json())
-    this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
+    app.use('/auth', bodyParser.json())
+    app.use('/auth', bodyParser.urlencoded({ extended: false }))
     this.setupCredPass()
     this.setupPassportRoutes()
     // this.setupPouch()
@@ -90,6 +57,21 @@ export default class Server {
 
   dispose() {
     console.log('dispose server')
+  }
+
+  cors() {
+    const HEADER_ALLOWED =
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Token, Access-Control-Allow-Headers'
+    return (req, res, next) => {
+      res.header('Access-Control-Allow-Origin', req.headers.origin)
+      res.header('Access-Control-Allow-Credentials', 'true')
+      res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
+      res.header(
+        'Access-Control-Allow-Methods',
+        'GET,HEAD,POST,PUT,DELETE,OPTIONS'
+      )
+      next()
+    }
   }
 
   creds = {}

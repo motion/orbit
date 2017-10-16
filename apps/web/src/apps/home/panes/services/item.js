@@ -150,18 +150,20 @@ export default class Item {
                 syncing now
               </UI.Text>
               <UI.Button
+                icon="refresh2"
+                onClick={store.runJob}
+                size={0.8}
+                css={{ marginLeft: 10 }}
+              />
+            </right>
+            <right if={!store.auth}>
+              <UI.Button
                 onClick={() => OS.send('open-settings', type)}
                 size={0.9}
                 css={{ marginBottom: 2 }}
               >
                 authorize
               </UI.Button>
-              <UI.Button
-                icon="refresh2"
-                onClick={store.runJob}
-                size={0.8}
-                css={{ marginLeft: 10 }}
-              />
             </right>
           </top>
           <sub if={store.auth}>

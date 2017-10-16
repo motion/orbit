@@ -112,6 +112,10 @@ export default class MainSidebarStore {
     },
   ]
 
+  testing = [
+    { title: 'Context', type: 'context', category: 'testing', icon: 'gear' },
+  ]
+
   settings = [
     {
       title: 'Services',
@@ -124,6 +128,7 @@ export default class MainSidebarStore {
   get results(): Array<PaneResult> {
     const all = [
       ...this.pinned,
+      ...this.testing,
       ...this.recently,
       ...(this.people || []).map(x =>
         Person.toResult(x, { category: 'People' })

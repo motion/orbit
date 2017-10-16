@@ -56,6 +56,7 @@ elif [ "$APP" = "web" ]; then
     npm run build -- --watch
   else
     npm run build
+    echo "finished build web"
   fi
 else
   # only build modern during dev-watch

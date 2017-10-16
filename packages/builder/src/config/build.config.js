@@ -25,7 +25,7 @@ console.log('IS_PROD', IS_PROD)
 const MINIFY = process.env.MINIFY === 'true'
 const IS_DEV = !IS_PROD
 const filtered = ls => ls.filter(x => !!x)
-const watch = !!process.argv.indexOf('--watch')
+const watch = process.argv.indexOf('--watch') > 0
 
 // if you want to parse our modules directly use this, but we have dist/ folder now
 // const ORG = Path.resolve(__dirname, '..', '..', 'node_modules', '@mcro')

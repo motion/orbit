@@ -57,6 +57,7 @@ class CurrentUser {
   }
 
   get authorizations() {
+    this.version
     return this.user && this.user.authorizations
   }
 

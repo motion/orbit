@@ -2,7 +2,7 @@
   "name": "@mcro/api",
   "private": true,
   "version": "1.4.1",
-  "main": "es5/index.js",
+  "main": "dist/index.js",
   "module": "lib/index.js",
   "scripts": {
     "start": "node index.js",
@@ -15,7 +15,6 @@
     "ignore": ["**/*.map", "lib", "dist"]
   },
   "dependencies": {
-    "@mcro/models": "*",
     "@mcro/passport-slack": "^1.2.0",
     "babel-polyfill": "^6.23.0",
     "better-stack-traces": "^1.1.0",

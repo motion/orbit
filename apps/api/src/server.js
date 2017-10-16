@@ -16,9 +16,9 @@ const port = Constants.SERVER_PORT
 export default class Server {
   login = null
 
-  constructor({ pouch }) {
+  constructor() {
     this.cache = {}
-    this.pouch = pouch
+    // this.pouch = pouch
     this.oauth = new OAuth({
       strategies: OAuthStrategies,
       onSuccess: async (service, token, refreshToken, info) => {
@@ -77,7 +77,7 @@ export default class Server {
     this.app.use('/auth', bodyParser.urlencoded({ extended: false }))
     this.setupCredPass()
     this.setupPassportRoutes()
-    this.setupPouch()
+    // this.setupPouch()
     this.setupProxy()
   }
 
@@ -127,10 +127,11 @@ export default class Server {
   }
 
   setupProxy() {
+    console.log('proxying', Constants.PUBLIC_URL)
     this.app.use(
       '/',
       proxy({
-        target: Constants.APP_URL,
+        target: Constants.PUBLIC_URL,
         changeOrigin: true,
         secure: false,
         ws: true,

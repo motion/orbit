@@ -7,18 +7,18 @@
   "author": "Orbit",
   "scripts": {
     "dist":
-      "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns && npm run fix-build",
+      "DEBUG=electron-packager electron-packager . --out app --overwrite --icon ./resources/icon.icns --prune && npm run fix-build",
     "start": "electron build/out --start",
     "build": "webpack",
     "watch": "webpack --watch",
     "fix-build":
-      "npm run fix-build-mobx; npm run fix-build-log; npm run fix-build-nm; npm run fix-build-el",
+      "npm run fix-build-log; npm run fix-build-nm; npm run fix-build-el; npm run fix-build-mobx",
     "fix-build-mobx":
       "cp -r ../../node_modules/mobx ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
     "fix-build-log":
       "touch ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/log.txt",
     "fix-build-nm":
-      "cpx -L './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
+      "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/*; cpx -L './node_modules/**/*{.js,.json,.html,.map}' ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules",
     "fix-build-el":
       "rm -r ./app/Orbit-darwin-x64/Orbit.app/Contents/Resources/app/node_modules/@mcro/ionize/node_modules/electron",
     "test-build": "app/Orbit-darwin-x64/Orbit.app/Contents/MacOS/Orbit"
